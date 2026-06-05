@@ -1,0 +1,838 @@
+---
+title: Cloudflare Wrangler Config Guard Hook for Claude Code
+slug: cloudflare-wrangler-config-guard-hook
+category: hooks
+description: >-
+  Read-only Claude Code PostToolUse hook that checks edited Cloudflare Wrangler
+  config files for required Worker fields, environment inheritance traps,
+  secret-like vars, deprecated Workers Sites usage, and source-of-truth drift
+  before Claude continues.
+cardDescription: >-
+  Guard Cloudflare Wrangler config edits with static checks for required fields,
+  env binding drift, secret-like vars, and deprecated config patterns.
+seoTitle: Cloudflare Wrangler Config Guard Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code hook for reviewing wrangler.toml, wrangler.json, and
+  wrangler.jsonc edits without running deploys, package scripts, auth checks, or
+  network calls.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+documentationUrl: "https://developers.cloudflare.com/workers/wrangler/configuration/"
+repoUrl: "https://github.com/cloudflare/workers-sdk"
+installable: true
+installCommand: "mkdir -p .claude/hooks && touch .claude/hooks/wrangler-config-guard.sh && chmod +x .claude/hooks/wrangler-config-guard.sh"
+usageSnippet: "Add the script to `.claude/hooks/wrangler-config-guard.sh` and configure it as a PostToolUse hook for Write/Edit/MultiEdit."
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/wrangler-config-guard.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/wrangler-config-guard.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -uo pipefail
+
+  input="$(cat)"
+
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "Wrangler config guard skipped: jq is required to parse Claude Code hook input." >&2
+    exit 0
+  fi
+
+  if ! command -v node >/dev/null 2>&1; then
+    echo "Wrangler config guard skipped: Node.js is required for static config checks." >&2
+    exit 0
+  fi
+
+  tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+  file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+
+  case "$(basename "$file_path")" in
+    wrangler.toml|wrangler.json|wrangler.jsonc) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -z "$file_path" ] || [ ! -f "$file_path" ]; then
+    exit 0
+  fi
+
+  WRANGLER_CONFIG_PATH="$file_path" node <<'NODE'
+  const fs = require("node:fs");
+  const path = process.env.WRANGLER_CONFIG_PATH;
+  const raw = fs.readFileSync(path, "utf8");
+  const name = path.split(/[\\/]/).pop();
+  const errors = [];
+  const warnings = [];
+
+  function displayName(value) {
+    return JSON.stringify(String(value)).replace(/[\u007f-\u009f]/g, (char) => {
+      return `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`;
+    });
+  }
+
+  function stripJsonc(value) {
+    let out = "";
+    let inString = false;
+    let quote = "";
+    let escaped = false;
+    let lineComment = false;
+    let blockComment = false;
+
+    for (let i = 0; i < value.length; i += 1) {
+      const char = value[i];
+      const next = value[i + 1];
+
+      if (lineComment) {
+        if (char === "\n") {
+          lineComment = false;
+          out += char;
+        }
+        continue;
+      }
+
+      if (blockComment) {
+        if (char === "*" && next === "/") {
+          blockComment = false;
+          i += 1;
+        }
+        continue;
+      }
+
+      if (inString) {
+        out += char;
+        if (escaped) {
+          escaped = false;
+        } else if (char === "\\") {
+          escaped = true;
+        } else if (char === quote) {
+          inString = false;
+        }
+        continue;
+      }
+
+      if (char === "\"" || char === "'") {
+        inString = true;
+        quote = char;
+        out += char;
+        continue;
+      }
+
+      if (char === "/" && next === "/") {
+        lineComment = true;
+        i += 1;
+        continue;
+      }
+
+      if (char === "/" && next === "*") {
+        blockComment = true;
+        i += 1;
+        continue;
+      }
+
+      out += char;
+    }
+
+    return out.replace(/,\s*([}\]])/g, "$1");
+  }
+
+  function looksSecretLike(key) {
+    return /(secret|token|password|private|credential|api[_-]?key|client[_-]?secret)/i.test(key);
+  }
+
+  function checkConfigObject(config) {
+    if (!config || typeof config !== "object" || Array.isArray(config)) {
+      errors.push("Config did not parse to an object.");
+      return;
+    }
+
+    if (!config.name) errors.push("Missing top-level `name`.");
+    if (!config.compatibility_date) errors.push("Missing top-level `compatibility_date`.");
+
+    if (!config.main && !config.assets && !config.pages_build_output_dir) {
+      warnings.push("No `main`, `assets`, or `pages_build_output_dir` found. `main` is optional only for assets-only Workers.");
+    }
+
+    if (config.site) {
+      warnings.push("`site` is present. Workers Sites is deprecated in Wrangler v4; prefer Workers Static Assets for new projects.");
+    }
+
+    if (config.send_metrics !== false) {
+      warnings.push("`send_metrics` is not set to false. Review Cloudflare telemetry expectations for this repository.");
+    }
+
+    if (config.vars && typeof config.vars === "object") {
+      for (const key of Object.keys(config.vars)) {
+        if (looksSecretLike(key)) {
+          warnings.push(`Top-level vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
+        }
+      }
+    }
+
+    const bindingKeys = [
+      "vars",
+      "kv_namespaces",
+      "r2_buckets",
+      "d1_databases",
+      "queues",
+      "durable_objects",
+      "services",
+      "analytics_engine_datasets",
+      "vectorize",
+      "ai",
+    ];
+
+    if (config.env && typeof config.env === "object") {
+      for (const [envName, envConfig] of Object.entries(config.env)) {
+        if (!envConfig || typeof envConfig !== "object") continue;
+
+        for (const key of bindingKeys) {
+          if (config[key] && !Object.prototype.hasOwnProperty.call(envConfig, key)) {
+            warnings.push(`Environment ${displayName(envName)} does not define ${displayName(key)}; Wrangler treats bindings and vars as non-inheritable.`);
+          }
+        }
+
+        if (envConfig.vars && typeof envConfig.vars === "object") {
+          for (const key of Object.keys(envConfig.vars)) {
+            if (looksSecretLike(key)) {
+              warnings.push(`Environment ${displayName(envName)} vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function stripTomlComment(line) {
+    let out = "";
+    let inString = false;
+    let quote = "";
+    let escaped = false;
+
+    for (const char of line) {
+      if (inString) {
+        out += char;
+        if (escaped) {
+          escaped = false;
+        } else if (char === "\\") {
+          escaped = true;
+        } else if (char === quote) {
+          inString = false;
+        }
+        continue;
+      }
+
+      if (char === "\"" || char === "'") {
+        inString = true;
+        quote = char;
+        out += char;
+        continue;
+      }
+
+      if (char === "#") break;
+      out += char;
+    }
+
+    return out.trim();
+  }
+
+  function checkToml() {
+    const top = new Set();
+    const sections = new Set();
+    const envSections = new Set();
+    const envKeys = new Map();
+    const bindingKeys = [
+      "vars",
+      "kv_namespaces",
+      "r2_buckets",
+      "d1_databases",
+      "queues",
+      "durable_objects",
+      "services",
+      "analytics_engine_datasets",
+      "vectorize",
+      "ai",
+    ];
+    let section = "";
+
+    for (const originalLine of raw.split(/\r?\n/)) {
+      const line = stripTomlComment(originalLine);
+      if (!line) continue;
+
+      const sectionMatch = line.match(/^\s*\[+\s*([A-Za-z0-9_.-]+)\s*\]+/);
+      if (sectionMatch) {
+        section = sectionMatch[1];
+        sections.add(section);
+        const envMatch = section.match(/^env\.([A-Za-z0-9_-]+)(?:\.([A-Za-z0-9_.-]+))?/);
+        if (envMatch) {
+          envSections.add(envMatch[1]);
+          if (!envKeys.has(envMatch[1])) envKeys.set(envMatch[1], new Set());
+          if (envMatch[2]) envKeys.get(envMatch[1]).add(envMatch[2].split(".")[0]);
+        }
+        continue;
+      }
+
+      const keyMatch = line.match(/^([A-Za-z0-9_$-]+)\s*=/);
+      if (!keyMatch) continue;
+
+      const key = keyMatch[1];
+      if (!section) {
+        top.add(key);
+      } else if (section === "vars" && looksSecretLike(key)) {
+        warnings.push(`Top-level vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
+      } else {
+        const envVarMatch = section.match(/^env\.([A-Za-z0-9_-]+)\.vars$/);
+        if (envVarMatch && looksSecretLike(key)) {
+          warnings.push(`Environment ${displayName(envVarMatch[1])} vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
+        }
+      }
+    }
+
+    if (!top.has("name")) errors.push("Missing top-level `name`.");
+    if (!top.has("compatibility_date")) errors.push("Missing top-level `compatibility_date`.");
+    if (!top.has("main") && !sections.has("assets") && !top.has("pages_build_output_dir")) {
+      warnings.push("No `main`, `[assets]`, or `pages_build_output_dir` found. `main` is optional only for assets-only Workers.");
+    }
+    if (sections.has("site")) {
+      warnings.push("`site` is present. Workers Sites is deprecated in Wrangler v4; prefer Workers Static Assets for new projects.");
+    }
+    if (!top.has("send_metrics")) {
+      warnings.push("`send_metrics` is not set. Review Cloudflare telemetry expectations for this repository.");
+    }
+
+    for (const envName of envSections) {
+      const keys = envKeys.get(envName) || new Set();
+      for (const key of bindingKeys) {
+        if (sections.has(key) && !keys.has(key)) {
+          warnings.push(`Environment ${displayName(envName)} does not define ${displayName(key)}; Wrangler treats bindings and vars as non-inheritable.`);
+        }
+      }
+    }
+  }
+
+  console.error(`Wrangler config guard: checking ${name}`);
+
+  try {
+    if (name === "wrangler.json" || name === "wrangler.jsonc") {
+      checkConfigObject(JSON.parse(stripJsonc(raw)));
+    } else {
+      checkToml();
+    }
+  } catch (error) {
+    errors.push(`Parse failed: ${error.message}`);
+  }
+
+  for (const warning of warnings) console.error(`[warn] ${warning}`);
+  for (const error of errors) console.error(`[error] ${error}`);
+
+  if (!warnings.length && !errors.length) {
+    console.error("Wrangler config guard: no issues found.");
+  }
+
+  process.exit(errors.length ? 1 : 0);
+  NODE
+trigger: PostToolUse
+prerequisites:
+  - "Claude Code project where hooks are allowed by user or project policy."
+  - "Cloudflare Workers or Pages project with `wrangler.toml`, `wrangler.json`, or `wrangler.jsonc` checked into the repository."
+  - "`jq` available locally to parse Claude Code hook input."
+  - "Node.js available locally for static JSON/JSONC/TOML heuristics."
+  - "A reviewed `.claude/settings.json` or user settings hook configuration scoped to `Write`, `Edit`, and `MultiEdit`."
+safetyNotes:
+  - "This hook is static and read-only. It reads the edited Wrangler config file and does not run `wrangler deploy`, `wrangler dev`, `wrangler whoami`, `wrangler secret list`, package scripts, build plugins, or network commands."
+  - "The hook exits non-zero only for parse failures or missing required top-level Worker fields such as `name` and `compatibility_date`; warnings remain advisory so the user can review them."
+  - "The TOML checks are heuristic and do not replace Wrangler's own parser or a trusted pre-deploy dry run. Use them as a fast edit-time guard, then run official Wrangler validation in a trusted repository."
+  - "Do not expand this hook into a dry-run deploy hook unless the team has reviewed local build-script execution, inherited environment variables, and output-directory cleanup."
+  - "Keep matchers scoped to config file edits. Running config checks after every tool call adds noise without improving Cloudflare safety."
+privacyNotes:
+  - "The hook reads `wrangler.toml`, `wrangler.json`, or `wrangler.jsonc`; those files can contain worker names, route patterns, account identifiers, resource IDs, binding names, environment names, analytics settings, and non-secret vars."
+  - "Hook output may include file paths, config key names, environment names, and secret-like variable names, so avoid pasting terminal logs into public issue comments without review."
+  - "If a Wrangler config currently contains real secrets in `vars`, the hook can reveal the key names and the surrounding configuration context. Move sensitive values to Wrangler secrets before sharing output."
+sourceUrls:
+  - "https://developers.cloudflare.com/workers/wrangler/configuration/"
+  - "https://developers.cloudflare.com/workers/wrangler/environments/"
+  - "https://developers.cloudflare.com/workers/wrangler/"
+  - "https://github.com/cloudflare/workers-sdk"
+tags:
+  - cloudflare
+  - wrangler
+  - claude-code
+  - hooks
+  - configuration
+  - workers
+keywords:
+  - "Cloudflare Wrangler config guard hook"
+  - "Claude Code Wrangler hook"
+  - "wrangler.toml hook"
+  - "wrangler.jsonc guard"
+  - "Cloudflare Workers config"
+  - "PostToolUse hook"
+readingTime: 9
+difficultyScore: 68
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+This hook checks Cloudflare Wrangler config files immediately after Claude Code
+edits them. It focuses on static issues that are easy to miss during AI-assisted
+config changes:
+
+- Required top-level Worker fields such as `name` and `compatibility_date`.
+- Missing entrypoint/static-asset hints when neither `main`, `assets`, nor
+  `pages_build_output_dir` is present.
+- Environment binding drift for `vars`, KV, R2, D1, queues, Durable Objects,
+  services, analytics datasets, Vectorize, and Workers AI.
+- Secret-like keys placed in `vars` instead of Wrangler secrets.
+- Deprecated Workers Sites `site` configuration.
+- Project telemetry review via `send_metrics`.
+
+It deliberately does not run Wrangler. That keeps the hook useful for reviewing
+untrusted or partially reviewed config edits, because `wrangler deploy --dry-run`
+can still execute local build commands and bundler plugins.
+
+## Requirements
+
+- Claude Code hooks enabled in user or project settings.
+- A Cloudflare Workers or Pages project with a Wrangler config file.
+- `jq` installed locally.
+- Node.js installed locally.
+- A reviewed hook configuration scoped to `Write`, `Edit`, and `MultiEdit`.
+
+## Hook Configuration
+
+Add the hook command to `.claude/settings.json` or the appropriate user-level
+Claude Code settings file:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/wrangler-config-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Hook Script
+
+Save this as `.claude/hooks/wrangler-config-guard.sh` and make it executable:
+
+```bash
+#!/usr/bin/env bash
+set -uo pipefail
+
+input="$(cat)"
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "Wrangler config guard skipped: jq is required to parse Claude Code hook input." >&2
+  exit 0
+fi
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "Wrangler config guard skipped: Node.js is required for static config checks." >&2
+  exit 0
+fi
+
+tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+case "$tool_name" in
+  Write|Edit|MultiEdit|write|edit|multiedit) ;;
+  *) exit 0 ;;
+esac
+
+case "$(basename "$file_path")" in
+  wrangler.toml|wrangler.json|wrangler.jsonc) ;;
+  *) exit 0 ;;
+esac
+
+if [ -z "$file_path" ] || [ ! -f "$file_path" ]; then
+  exit 0
+fi
+
+WRANGLER_CONFIG_PATH="$file_path" node <<'NODE'
+const fs = require("node:fs");
+const path = process.env.WRANGLER_CONFIG_PATH;
+const raw = fs.readFileSync(path, "utf8");
+const name = path.split(/[\\/]/).pop();
+const errors = [];
+const warnings = [];
+
+function displayName(value) {
+  return JSON.stringify(String(value)).replace(/[\u007f-\u009f]/g, (char) => {
+    return `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`;
+  });
+}
+
+function stripJsonc(value) {
+  let out = "";
+  let inString = false;
+  let quote = "";
+  let escaped = false;
+  let lineComment = false;
+  let blockComment = false;
+
+  for (let i = 0; i < value.length; i += 1) {
+    const char = value[i];
+    const next = value[i + 1];
+
+    if (lineComment) {
+      if (char === "\n") {
+        lineComment = false;
+        out += char;
+      }
+      continue;
+    }
+
+    if (blockComment) {
+      if (char === "*" && next === "/") {
+        blockComment = false;
+        i += 1;
+      }
+      continue;
+    }
+
+    if (inString) {
+      out += char;
+      if (escaped) {
+        escaped = false;
+      } else if (char === "\\") {
+        escaped = true;
+      } else if (char === quote) {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (char === "\"" || char === "'") {
+      inString = true;
+      quote = char;
+      out += char;
+      continue;
+    }
+
+    if (char === "/" && next === "/") {
+      lineComment = true;
+      i += 1;
+      continue;
+    }
+
+    if (char === "/" && next === "*") {
+      blockComment = true;
+      i += 1;
+      continue;
+    }
+
+    out += char;
+  }
+
+  return out.replace(/,\s*([}\]])/g, "$1");
+}
+
+function looksSecretLike(key) {
+  return /(secret|token|password|private|credential|api[_-]?key|client[_-]?secret)/i.test(key);
+}
+
+function checkConfigObject(config) {
+  if (!config || typeof config !== "object" || Array.isArray(config)) {
+    errors.push("Config did not parse to an object.");
+    return;
+  }
+
+  if (!config.name) errors.push("Missing top-level `name`.");
+  if (!config.compatibility_date) errors.push("Missing top-level `compatibility_date`.");
+
+  if (!config.main && !config.assets && !config.pages_build_output_dir) {
+    warnings.push("No `main`, `assets`, or `pages_build_output_dir` found. `main` is optional only for assets-only Workers.");
+  }
+
+  if (config.site) {
+    warnings.push("`site` is present. Workers Sites is deprecated in Wrangler v4; prefer Workers Static Assets for new projects.");
+  }
+
+  if (config.send_metrics !== false) {
+    warnings.push("`send_metrics` is not set to false. Review Cloudflare telemetry expectations for this repository.");
+  }
+
+  if (config.vars && typeof config.vars === "object") {
+    for (const key of Object.keys(config.vars)) {
+      if (looksSecretLike(key)) {
+        warnings.push(`Top-level vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
+      }
+    }
+  }
+
+  const bindingKeys = [
+    "vars",
+    "kv_namespaces",
+    "r2_buckets",
+    "d1_databases",
+    "queues",
+    "durable_objects",
+    "services",
+    "analytics_engine_datasets",
+    "vectorize",
+    "ai",
+  ];
+
+  if (config.env && typeof config.env === "object") {
+    for (const [envName, envConfig] of Object.entries(config.env)) {
+      if (!envConfig || typeof envConfig !== "object") continue;
+
+      for (const key of bindingKeys) {
+        if (config[key] && !Object.prototype.hasOwnProperty.call(envConfig, key)) {
+          warnings.push(`Environment ${displayName(envName)} does not define ${displayName(key)}; Wrangler treats bindings and vars as non-inheritable.`);
+        }
+      }
+
+      if (envConfig.vars && typeof envConfig.vars === "object") {
+        for (const key of Object.keys(envConfig.vars)) {
+          if (looksSecretLike(key)) {
+            warnings.push(`Environment ${displayName(envName)} vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
+          }
+        }
+      }
+    }
+  }
+}
+
+function stripTomlComment(line) {
+  let out = "";
+  let inString = false;
+  let quote = "";
+  let escaped = false;
+
+  for (const char of line) {
+    if (inString) {
+      out += char;
+      if (escaped) {
+        escaped = false;
+      } else if (char === "\\") {
+        escaped = true;
+      } else if (char === quote) {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (char === "\"" || char === "'") {
+      inString = true;
+      quote = char;
+      out += char;
+      continue;
+    }
+
+    if (char === "#") break;
+    out += char;
+  }
+
+  return out.trim();
+}
+
+function checkToml() {
+  const top = new Set();
+  const sections = new Set();
+  const envSections = new Set();
+  const envKeys = new Map();
+  const bindingKeys = [
+    "vars",
+    "kv_namespaces",
+    "r2_buckets",
+    "d1_databases",
+    "queues",
+    "durable_objects",
+    "services",
+    "analytics_engine_datasets",
+    "vectorize",
+    "ai",
+  ];
+  let section = "";
+
+  for (const originalLine of raw.split(/\r?\n/)) {
+    const line = stripTomlComment(originalLine);
+    if (!line) continue;
+
+    const sectionMatch = line.match(/^\s*\[+\s*([A-Za-z0-9_.-]+)\s*\]+/);
+    if (sectionMatch) {
+      section = sectionMatch[1];
+      sections.add(section);
+      const envMatch = section.match(/^env\.([A-Za-z0-9_-]+)(?:\.([A-Za-z0-9_.-]+))?/);
+      if (envMatch) {
+        envSections.add(envMatch[1]);
+        if (!envKeys.has(envMatch[1])) envKeys.set(envMatch[1], new Set());
+        if (envMatch[2]) envKeys.get(envMatch[1]).add(envMatch[2].split(".")[0]);
+      }
+      continue;
+    }
+
+    const keyMatch = line.match(/^([A-Za-z0-9_$-]+)\s*=/);
+    if (!keyMatch) continue;
+
+    const key = keyMatch[1];
+    if (!section) {
+      top.add(key);
+    } else if (section === "vars" && looksSecretLike(key)) {
+      warnings.push(`Top-level vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
+    } else {
+      const envVarMatch = section.match(/^env\.([A-Za-z0-9_-]+)\.vars$/);
+      if (envVarMatch && looksSecretLike(key)) {
+        warnings.push(`Environment ${displayName(envVarMatch[1])} vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
+      }
+    }
+  }
+
+  if (!top.has("name")) errors.push("Missing top-level `name`.");
+  if (!top.has("compatibility_date")) errors.push("Missing top-level `compatibility_date`.");
+  if (!top.has("main") && !sections.has("assets") && !top.has("pages_build_output_dir")) {
+    warnings.push("No `main`, `[assets]`, or `pages_build_output_dir` found. `main` is optional only for assets-only Workers.");
+  }
+  if (sections.has("site")) {
+    warnings.push("`site` is present. Workers Sites is deprecated in Wrangler v4; prefer Workers Static Assets for new projects.");
+  }
+  if (!top.has("send_metrics")) {
+    warnings.push("`send_metrics` is not set. Review Cloudflare telemetry expectations for this repository.");
+  }
+
+  for (const envName of envSections) {
+    const keys = envKeys.get(envName) || new Set();
+    for (const key of bindingKeys) {
+      if (sections.has(key) && !keys.has(key)) {
+        warnings.push(`Environment ${displayName(envName)} does not define ${displayName(key)}; Wrangler treats bindings and vars as non-inheritable.`);
+      }
+    }
+  }
+}
+
+console.error(`Wrangler config guard: checking ${name}`);
+
+try {
+  if (name === "wrangler.json" || name === "wrangler.jsonc") {
+    checkConfigObject(JSON.parse(stripJsonc(raw)));
+  } else {
+    checkToml();
+  }
+} catch (error) {
+  errors.push(`Parse failed: ${error.message}`);
+}
+
+for (const warning of warnings) console.error(`[warn] ${warning}`);
+for (const error of errors) console.error(`[error] ${error}`);
+
+if (!warnings.length && !errors.length) {
+  console.error("Wrangler config guard: no issues found.");
+}
+
+process.exit(errors.length ? 1 : 0);
+NODE
+```
+
+## How It Works
+
+1. Reads Claude Code hook input from `stdin`.
+2. Ignores non-edit tools.
+3. Runs only for files named `wrangler.toml`, `wrangler.json`, or
+   `wrangler.jsonc`.
+4. Parses JSON and JSONC with a small comment/trailing-comma stripper.
+5. Parses TOML with conservative section/key heuristics.
+6. Reports required-field errors and advisory warnings.
+7. Exits non-zero only when a parse or required-field error is found.
+
+## Safety Notes
+
+This hook is intentionally narrower than a Cloudflare deploy-readiness command.
+It does not authenticate to Cloudflare, list secrets, execute a dry run, run
+project package scripts, invoke bundlers, write output directories, or contact
+the network. That makes it suitable as a first-line edit guard before any
+trusted pre-deploy workflow.
+
+The tradeoff is that it is not a full Wrangler validator. TOML parsing is
+heuristic, and Cloudflare can add new config keys over time. Treat warnings as
+review prompts, not a complete deployment decision.
+
+## Privacy Notes
+
+Wrangler config files are not always harmless. They can expose worker names,
+route patterns, account identifiers, resource IDs, environment names, analytics
+preferences, and non-secret vars. If the hook reports secret-like `vars`, move
+those values to Wrangler secrets before sharing logs or PR comments.
+
+## Source Notes
+
+- Cloudflare documents `wrangler.toml`, `wrangler.json`, and `wrangler.jsonc`
+  as supported config formats and recommends `wrangler.jsonc` for new projects.
+- The Wrangler configuration docs describe the config file as the Worker source
+  of truth and show required fields such as `name`, `main`, and
+  `compatibility_date`.
+- Cloudflare documents bindings and environment variables as non-inheritable,
+  meaning environments should define their own binding values where applicable.
+- The workers-sdk repository is the official Wrangler source repository.
+
+## Duplicate Check
+
+This entry is distinct from the existing `/deploy-readiness` command, which can
+run Wrangler auth, secret-list, and deploy dry-run checks in a trusted project.
+This hook is limited to static config-file review after Claude edits
+`wrangler.toml`, `wrangler.json`, or `wrangler.jsonc`.
+
+Existing Cloudflare skills and guides cover broader Workers development and
+deployment workflows. This entry is specifically a Claude Code `PostToolUse`
+hook for edit-time Wrangler config safety.
+
+## Troubleshooting
+
+- If the hook never runs, confirm the settings file uses `PostToolUse` with a
+  `Write|Edit|MultiEdit` matcher.
+- If it prints a `jq` message, install `jq` or replace the shell parser with a
+  project-approved hook wrapper.
+- If it prints a Node.js message, install Node.js or move the static checker
+  into a language already required by the project.
+- If TOML warnings are too noisy, keep the static hook as advisory and run the
+  official Wrangler checks in a trusted pre-deploy workflow.

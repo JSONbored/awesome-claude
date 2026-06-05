@@ -1,0 +1,277 @@
+---
+title: PostHog MCP Server for Claude
+slug: posthog-mcp-server
+category: mcp
+description: >-
+  Connect Claude to PostHog's official MCP server for product analytics,
+  feature flags, experiments, dashboards, error tracking, logs, surveys,
+  data warehouse, and project operations.
+cardDescription: >-
+  Official PostHog MCP server for asking Claude to query and manage PostHog
+  projects through a scoped personal API key.
+seoTitle: PostHog MCP Server for Claude
+seoDescription: >-
+  Use PostHog MCP Server with Claude to query analytics, inspect feature flags,
+  review dashboards, investigate errors, and manage PostHog project resources
+  with explicit tool and feature filtering.
+author: PostHog
+authorProfileUrl: "https://posthog.com/"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+websiteUrl: "https://posthog.com/"
+documentationUrl: "https://posthog.com/docs/model-context-protocol"
+repoUrl: "https://github.com/PostHog/posthog/tree/master/services/mcp"
+packageUrl: "https://www.npmjs.com/package/@posthog/wizard"
+installable: true
+installCommand: "npx @posthog/wizard@latest mcp add"
+usageSnippet: "Ask Claude to use PostHog MCP to summarize signup trends for the last 7 days before drafting a product note."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "posthog": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-remote@latest",
+          "https://mcp.posthog.com/mcp?features=docs,insights,error_tracking,events,data_schema",
+          "--header",
+          "Authorization:${POSTHOG_AUTH_HEADER}"
+        ],
+        "env": {
+          "POSTHOG_AUTH_HEADER": "Bearer phx_your_personal_api_key"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "posthog": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-remote@latest",
+          "https://mcp.posthog.com/mcp?features=docs,insights,error_tracking,events,data_schema",
+          "--header",
+          "Authorization:${POSTHOG_AUTH_HEADER}"
+        ],
+        "env": {
+          "POSTHOG_AUTH_HEADER": "Bearer phx_your_personal_api_key"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - PostHog Cloud or self-hosted PostHog project that you are allowed to connect to an MCP client.
+  - Personal PostHog API key created with the MCP Server preset or an equivalent least-privilege scope set.
+  - Node.js and `npx` available to the MCP client for the PostHog wizard or `mcp-remote`.
+  - MCP-capable client such as Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Zed, or another Streamable HTTP-compatible client.
+  - Decision on whether to use the US endpoint, the EU endpoint, or a self-hosted/local MCP server.
+  - Approval rules for who may let an assistant create or change feature flags, experiments, dashboards, workflows, alerts, cohorts, surveys, or data warehouse objects.
+safetyNotes:
+  - >-
+    The hosted PostHog MCP endpoint is authenticated with a personal API key.
+    Treat that key as a production credential and grant only the read or write
+    scopes needed for the current task.
+  - >-
+    The example configuration uses PostHog's documented `features` query
+    parameter to reduce the exposed tool surface. Feature and tool filtering
+    helps the model choose fewer tools, but API-key scopes remain the real
+    authorization boundary.
+  - >-
+    If no features or tools are specified, PostHog documents that all available
+    tools are exposed. Review the tool list before using an unrestricted
+    endpoint in a production project.
+  - >-
+    Some PostHog MCP tools are mutating or destructive, including tools for
+    creating, updating, archiving, deleting, publishing, enabling, or running
+    product configuration. Keep MCP client approval prompts enabled for those
+    calls.
+  - >-
+    Workflows, alerts, feature flags, experiments, surveys, CDP functions, and
+    data warehouse changes can affect real users, messages, experiments,
+    dashboards, or operational pipelines. Use a development project first.
+  - >-
+    SQL, analytics, error-tracking, log, person, cohort, replay, and data
+    warehouse queries can return large or sensitive result sets. Limit date
+    ranges, filters, and row counts before approving broad queries.
+  - >-
+    Use `https://mcp-eu.posthog.com/mcp` for EU PostHog projects when you need
+    OAuth flows to route to the EU PostHog instance, as documented by PostHog.
+privacyNotes:
+  - >-
+    PostHog MCP can return project metadata, event names, event properties,
+    person and group identifiers, cohorts, feature flag rules, experiment
+    results, dashboards, recordings metadata, errors, logs, warehouse query
+    results, prompts, and LLM analytics data into the model conversation.
+  - >-
+    The MCP server acts as a proxy to your PostHog instance. PostHog documents
+    that queries execute against the connected project and results are returned
+    directly to the AI client, with active project or organization session state
+    cached temporarily using an API-key hash.
+  - >-
+    The hosted server runs on Cloudflare infrastructure. Review PostHog's data
+    processing note, your PostHog region, and your own data-processing
+    agreements before sending regulated customer analytics through an AI client.
+  - >-
+    Do not paste personal API keys, project secrets, raw session recordings,
+    customer identifiers, email addresses, support transcripts, payment data,
+    or exported warehouse rows into prompts or PR comments.
+  - >-
+    Claude transcripts, MCP client logs, screenshots, issue comments, and
+    generated runbooks can retain sensitive PostHog query results outside the
+    access controls and retention settings of the original PostHog project.
+tags:
+  - posthog
+  - analytics
+  - feature-flags
+  - observability
+  - mcp
+keywords:
+  - PostHog MCP Server
+  - PostHog Claude MCP
+  - mcp.posthog.com
+  - PostHog feature flags MCP
+  - PostHog analytics MCP
+  - PostHog error tracking MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+PostHog MCP Server is PostHog's official Model Context Protocol server for
+connecting Claude and other MCP-capable clients to a PostHog project. It is
+documented as a hosted endpoint at `https://mcp.posthog.com/mcp`, with an EU
+endpoint at `https://mcp-eu.posthog.com/mcp`, and the server source lives in
+the PostHog monorepo under `services/mcp`.
+
+The server is useful when a product, growth, support, or engineering workflow
+needs current PostHog context inside the assistant: recent trends, dashboard
+state, feature flag configuration, experiment results, error groups, event
+schemas, logs, LLM analytics, surveys, and project configuration. Because the
+same MCP surface can also create or change PostHog resources, start with a
+small feature set and a scoped personal API key.
+
+## Features
+
+- Official PostHog documentation page for MCP setup, available tools, filtering,
+  data processing, self-hosted use, and examples.
+- Hosted Streamable HTTP endpoint at `https://mcp.posthog.com/mcp`.
+- EU endpoint at `https://mcp-eu.posthog.com/mcp`.
+- Public server source in `PostHog/posthog` under `services/mcp`.
+- Quick install through the official PostHog wizard.
+- Manual MCP configuration through `mcp-remote` and an Authorization header.
+- Feature filtering with the `features` query parameter.
+- Exact tool allowlisting with the `tools` query parameter.
+- `tools` mode for one MCP tool per PostHog tool and `cli` mode for a single
+  CLI-like wrapper tool.
+- Consumer attribution through query parameters or headers for plugin and proxy
+  installers.
+- Local development and self-hosting path with `POSTHOG_BASE_URL`.
+
+## Tool Surface
+
+PostHog documents feature groups for workspace and project management, actions,
+activity logs, alerts, annotations, cohorts, dashboards, data schema, data
+warehouse, docs search, early access features, error tracking, events,
+experiments, feature flags, CDP functions, insights, LLM analytics, prompts,
+logs, notebooks, persons, reverse proxy records, search, SQL, surveys, and
+workflows.
+
+Many tools are read-only, but not all. The source schema marks some tools with
+write scopes and destructive hints, including deletion, workflow execution,
+workflow scheduling, feature management, and product-configuration changes.
+
+## Installation
+
+### Quick Install
+
+Use the official PostHog wizard to install the MCP server into supported
+clients:
+
+```bash
+npx @posthog/wizard@latest mcp add
+```
+
+The wizard can install into Cursor, Claude, Claude Code, VS Code, and Zed.
+
+### Manual MCP Config
+
+Create a personal API key using PostHog's MCP Server preset, then configure a
+compatible client with `mcp-remote`:
+
+```json
+{
+  "mcpServers": {
+    "posthog": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote@latest",
+        "https://mcp.posthog.com/mcp?features=docs,insights,error_tracking,events,data_schema",
+        "--header",
+        "Authorization:${POSTHOG_AUTH_HEADER}"
+      ],
+      "env": {
+        "POSTHOG_AUTH_HEADER": "Bearer phx_your_personal_api_key"
+      }
+    }
+  }
+}
+```
+
+The example above narrows the starting feature set. To expose a different
+surface, change the `features` list or use PostHog's exact `tools` allowlist:
+
+```text
+https://mcp.posthog.com/mcp?tools=dashboard-get,feature-flag-get-all,execute-sql
+```
+
+For EU PostHog projects, use:
+
+```text
+https://mcp-eu.posthog.com/mcp
+```
+
+## Use Cases
+
+- Ask Claude to summarize signup, activation, retention, or funnel movement
+  from current PostHog insights.
+- Review recent errors and affected user counts while triaging a regression.
+- Inspect active feature flags before planning a rollout or cleanup.
+- Draft a dashboard or insight plan after searching existing dashboards and
+  event schemas.
+- Compare experiment status and conversion metrics before writing a release
+  update.
+- Query logs, LLM analytics, or prompt performance while debugging an AI
+  product workflow.
+- Search PostHog docs from the same MCP client when implementing analytics,
+  flags, replay, or warehouse changes.
+- Use a local or self-hosted MCP server with `POSTHOG_BASE_URL` for self-hosted
+  PostHog instances.
+
+## Safety Checklist
+
+- Create a dedicated personal API key for MCP use.
+- Grant only the required PostHog scopes and rotate the key after temporary
+  work.
+- Start with feature or tool filtering instead of exposing every PostHog tool.
+- Confirm the active PostHog project and region before approving queries.
+- Keep approval prompts enabled for writes, deletes, workflow runs, alerts,
+  surveys, experiments, and feature flag changes.
+- Use short date ranges and row limits for SQL, logs, warehouse, person, and
+  event queries.
+- Avoid unrestricted production access while testing a new client setup.
+- Replace placeholder keys in config files and never commit real
+  `POSTHOG_AUTH_HEADER` values.
+
+## Source Links
+
+- PostHog MCP docs: https://posthog.com/docs/model-context-protocol
+- Server source: https://github.com/PostHog/posthog/tree/master/services/mcp
+- Installer package: https://www.npmjs.com/package/@posthog/wizard
+- MCP specification: https://modelcontextprotocol.io/specification/2025-06-18/

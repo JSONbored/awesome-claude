@@ -1,0 +1,182 @@
+---
+title: Privacy-First Research Workflow
+slug: privacy-first-research-workflow
+category: collections
+description: >-
+  A source-backed collection for private research workflows: local-first
+  planning, reproducible notebooks, local analytical processing, redaction,
+  human review datasets, trace review, and secret scanning before outputs are
+  shared.
+cardDescription: >-
+  Local-first research bundle for private notes, notebooks, analysis, redaction,
+  labels, traces, and secret checks.
+seoTitle: Privacy-First Research Workflow Collection
+seoDescription: >-
+  Build a privacy-first research workflow with local-first AI setup, Marimo,
+  DuckDB, Polars, Label Studio, TruLens, Gitleaks, and prompt/context hygiene.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.nist.gov/privacy-framework"
+sourceUrls:
+  - "https://www.nist.gov/privacy-framework"
+  - "https://duckdb.org/docs/stable/clients/overview"
+  - "https://docs.marimo.io/getting_started/"
+  - "https://docs.pola.rs/user-guide/getting-started/"
+  - "https://labelstud.io/guide/"
+  - "https://www.trulens.org/getting_started/quickstarts/quickstart/"
+  - "https://github.com/gitleaks/gitleaks"
+installable: false
+usageSnippet: >-
+  Start with local-first research boundaries, keep notebooks and data processing
+  reviewable, redact before labeling or evaluation, then scan exported notes,
+  datasets, prompts, and reports before sharing.
+items:
+  - slug: local-first-ai-dev-stack
+    category: guides
+  - slug: prompt-context-hygiene-long-coding-sessions
+    category: guides
+  - slug: marimo
+    category: tools
+  - slug: duckdb
+    category: tools
+  - slug: polars
+    category: tools
+  - slug: label-studio
+    category: tools
+  - slug: trulens
+    category: tools
+  - slug: gitleaks
+    category: tools
+  - slug: sensitive-data-alert-scanner
+    category: hooks
+  - slug: pre-write-secret-scanner
+    category: hooks
+installationOrder:
+  - local-first-ai-dev-stack
+  - prompt-context-hygiene-long-coding-sessions
+  - marimo
+  - duckdb
+  - polars
+  - label-studio
+  - trulens
+  - sensitive-data-alert-scanner
+  - pre-write-secret-scanner
+  - gitleaks
+estimatedSetupTime: 70 minutes
+difficulty: intermediate
+prerequisites:
+  - A written research data boundary that separates public sources, licensed material, private notes, customer data, and restricted datasets.
+  - A local or approved private workspace for notebooks, data files, labels, traces, prompts, and exports.
+  - Redaction rules for prompts, extracted passages, tabular data, labels, traces, screenshots, and final reports.
+  - Agreement on which outputs can leave the local workspace and which require review before sharing.
+safetyNotes:
+  - "This collection is workflow guidance; each linked notebook, database, labeling, tracing, or scanning tool can still execute code or process sensitive data."
+  - Keep private research data out of hosted model prompts, public notebooks, shared traces, and exported datasets unless the data owner has approved that route.
+  - Run secret and sensitive-data checks before committing notes, prompts, labels, notebook outputs, or generated reports.
+privacyNotes:
+  - Research workspaces can contain source documents, interview notes, citations, prompt drafts, labels, embeddings, traces, screenshots, and derived conclusions.
+  - Notebook outputs, DuckDB files, Polars exports, Label Studio projects, TruLens traces, and scanner reports may retain private content after the original source is deleted.
+  - Local-first tools reduce unnecessary sharing, but backups, sync folders, telemetry, browser downloads, and collaboration platforms still need retention and access-control review.
+tags:
+  - privacy
+  - research
+  - local-first
+  - notebooks
+  - redaction
+  - data-analysis
+  - source-review
+keywords:
+  - privacy-first research workflow
+  - local-first research collection
+  - private AI research workflow
+  - redact research data before sharing
+  - research notebook privacy bundle
+---
+
+## What this collection sets up
+
+This collection helps researchers and AI-assisted teams keep sensitive research
+work close to the operator until it has been reviewed. It combines local-first
+workspace planning, reproducible notebooks, local analytical tools, human label
+review, trace inspection, and secret scanning into a workflow that separates
+private source material from shareable findings.
+
+It is not a guarantee of privacy by itself. The goal is to make data movement
+visible: what enters the workspace, what tools process it, what gets logged,
+what becomes an export, and what must be redacted before a teammate, model
+provider, or public repository sees it.
+
+## Layers
+
+### 1. Local-first research boundary
+
+- **local-first-ai-dev-stack** establishes the starting posture: keep private
+  work in a controlled local or approved private environment before using
+  hosted services.
+- **prompt-context-hygiene-long-coding-sessions** helps keep prompts, handoff
+  notes, and long-running context summaries free of unnecessary private data.
+
+### 2. Reproducible notebooks and local analysis
+
+- **marimo** gives research notebooks a reviewable, git-friendly Python source
+  format and supports local notebook, app, and script workflows.
+- **duckdb** handles local analytical queries against files and embedded
+  datasets without starting a separate database service.
+- **polars** supports fast DataFrame processing for tabular cleanup, joins,
+  filtering, and export preparation.
+
+### 3. Review, traces, and redaction checks
+
+- **label-studio** supports human review and annotation, but should receive only
+  data that has passed the team's redaction policy.
+- **trulens** is useful for inspecting RAG or agent traces, with special care
+  around retrieved context and model-provider payloads.
+- **sensitive-data-alert-scanner**, **pre-write-secret-scanner**, and
+  **gitleaks** help catch secrets or sensitive content before research outputs
+  become commits, shared files, or public artifacts.
+
+## Suggested order
+
+Start by writing the data boundary and deciding which sources are allowed in the
+workspace. Set up the local-first environment and prompt hygiene rules before
+importing private material. Use Marimo, DuckDB, and Polars for reproducible
+analysis. Add Label Studio or TruLens only after redaction and retention rules
+are clear. Finish by scanning final notes, labels, prompt sets, notebook
+exports, and report drafts before sharing them.
+
+## Review checklist
+
+- [ ] {"task": "Data classes are named", "description": "Public, licensed, internal, customer, and restricted data are separated before analysis"}
+- [ ] {"task": "Workspace is local or approved", "description": "Research artifacts stay in a reviewed location with access controls and backup policy"}
+- [ ] {"task": "Prompt payloads are filtered", "description": "Hosted model calls do not receive raw private notes, secrets, or unnecessary source excerpts"}
+- [ ] {"task": "Exports are reviewed", "description": "CSV, Parquet, notebook, screenshot, trace, and report outputs are checked before sharing"}
+- [ ] {"task": "Labels are scoped", "description": "Human review tools receive only the fields reviewers need"}
+- [ ] {"task": "Scanners run before commit", "description": "Sensitive-data and secret scanners check exported artifacts and repository changes"}
+
+## Source and references
+
+- NIST Privacy Framework: https://www.nist.gov/privacy-framework
+- DuckDB clients overview: https://duckdb.org/docs/stable/clients/overview
+- Marimo getting started: https://docs.marimo.io/getting_started/
+- Polars getting started: https://docs.pola.rs/user-guide/getting-started/
+- Label Studio guide: https://labelstud.io/guide/
+- TruLens quickstart: https://www.trulens.org/getting_started/quickstarts/quickstart/
+- Gitleaks repository: https://github.com/gitleaks/gitleaks
+
+## Duplicate check
+
+Checked existing collections, guides, tools, MCP entries, skills, hooks, open
+PRs, and issue history for `privacy-first-research-workflow`, privacy-first
+research, local-first research, private research, notebook privacy, DuckDB,
+Polars, Marimo, Label Studio, TruLens, Gitleaks, and redaction workflows.
+Existing collections cover open-source evals, secure workstations, data
+engineering, production readiness, and frontend QA. They do not provide a
+focused privacy-first research workflow that combines local-first boundaries,
+reviewable notebooks, local data processing, labeling, trace review, and
+pre-share secret or sensitive-data checks.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.

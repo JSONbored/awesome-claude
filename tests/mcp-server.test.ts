@@ -668,10 +668,21 @@ describe("HeyClaude read-only MCP helpers", () => {
       goal: "skill workflow",
       category: "skills",
       count: expect.any(Number),
-      plannerNotes: expect.arrayContaining([
-        expect.stringContaining("does not execute or install"),
+      recommendedNextTools: expect.arrayContaining([
+        "get_entry_detail",
+        "explain_entry_trust",
+        "compare_entries",
+        "get_copyable_asset",
       ]),
+      categoryMix: expect.any(Array),
+      trustSummary: expect.any(Object),
+      plannerNotes: expect.any(Array),
     });
+    const plannerNoteText = result.plannerNotes.join(" ");
+    expect(plannerNoteText).toContain("metadata review only");
+    expect(plannerNoteText).toContain("not install approval");
+    expect(plannerNoteText).toContain("malware scanning");
+    expect(plannerNoteText).toContain("does not execute or install");
     expect(result.entries.length).toBeGreaterThan(0);
     expect(result.entries.length).toBeLessThanOrEqual(3);
     expect(result.entries[0]).toMatchObject({
@@ -682,8 +693,123 @@ describe("HeyClaude read-only MCP helpers", () => {
       caveats: expect.any(Array),
       nextActions: expect.arrayContaining([
         expect.stringContaining("get_entry_detail"),
+        expect.stringContaining("explain_entry_trust"),
+        expect.stringContaining("compare_entries"),
+        expect.stringContaining("get_copyable_asset"),
       ]),
     });
+  });
+
+  it("returns trust-aware planner metadata with bounded category diversity", async () => {
+    const readJsonArtifact = async (relativePath: string) => {
+      expect(relativePath).toBe("search-index.json");
+      return {
+        entries: [
+          {
+            category: "mcp",
+            slug: "workflow-audit-mcp",
+            title: "Workflow Audit MCP",
+            description: "Audits automation workflow plans.",
+            tags: ["automation", "workflow"],
+            keywords: ["audit"],
+            platforms: ["Claude"],
+            downloadUrl: "https://example.com/workflow-audit.tgz",
+            downloadTrust: "external",
+            safetyNotes: ["Runs an MCP server process for review."],
+            privacyNotes: ["Reads submitted workflow metadata."],
+            trustSignals: {
+              sourceStatus: "available",
+            },
+          },
+          {
+            category: "mcp",
+            slug: "workflow-source-mcp",
+            title: "Workflow Source MCP",
+            description: "Finds source context for automation workflow review.",
+            tags: ["automation", "workflow"],
+            keywords: ["source"],
+            platforms: ["Claude"],
+            trustSignals: {
+              packageVerified: true,
+              sourceStatus: "available",
+            },
+          },
+          {
+            category: "mcp",
+            slug: "workflow-third-mcp",
+            title: "Workflow Third MCP",
+            description: "Another automation workflow server.",
+            tags: ["automation", "workflow"],
+            keywords: ["third"],
+            platforms: ["Claude"],
+          },
+          {
+            category: "agents",
+            slug: "workflow-review-agent",
+            title: "Workflow Review Agent",
+            description: "Reviews automation workflow plans.",
+            tags: ["automation", "workflow"],
+            keywords: ["review"],
+            platforms: ["Claude"],
+          },
+        ],
+      };
+    };
+
+    const result = await planWorkflowToolbox(
+      { goal: "automation workflow", limit: 3 },
+      { readJsonArtifact },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      count: 3,
+      recommendedNextTools: [
+        "get_entry_detail",
+        "explain_entry_trust",
+        "compare_entries",
+        "get_copyable_asset",
+      ],
+      categoryMix: expect.arrayContaining([
+        { category: "agents", count: 1 },
+        { category: "mcp", count: 2 },
+      ]),
+      trustSummary: {
+        sourceBacked: 2,
+        firstPartyOrVerifiedPackages: 1,
+        entriesWithSafetyNotes: 1,
+        entriesWithPrivacyNotes: 1,
+        externalPackages: 1,
+        missingSource: 1,
+      },
+    });
+    expect(result.entries.map((entry: any) => entry.slug)).toEqual([
+      "workflow-audit-mcp",
+      "workflow-source-mcp",
+      "workflow-review-agent",
+    ]);
+    expect(result.entries[0].toolboxReasons).toEqual(
+      expect.arrayContaining([
+        "source-backed metadata",
+        "actionable setup surface",
+        "safety and privacy notes present",
+      ]),
+    );
+    expect(result.entries[0].caveats).toEqual(
+      expect.arrayContaining([
+        "Package/download is external; verify upstream before use.",
+        "Download checksum metadata is not present.",
+        "Risk-bearing workflow surface; inspect commands, permissions, and data access before use.",
+      ]),
+    );
+    expect(result.entries[0].nextActions).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("get_entry_detail"),
+        expect.stringContaining("explain_entry_trust"),
+        expect.stringContaining("compare_entries"),
+        expect.stringContaining("get_copyable_asset"),
+      ]),
+    );
   });
 
   it("does not fill planner results with unrelated trust-only matches", async () => {
@@ -770,6 +896,38 @@ describe("HeyClaude read-only MCP helpers", () => {
       (entry: any) => entry.slug === "kubernetes-cluster-helper",
     );
     expect(matched.searchScore).toBeGreaterThan(0);
+  });
+
+  it("rejects blank planner goals when called directly", async () => {
+    const readJsonArtifact = async () => {
+      throw new Error("Expected direct planner validation before artifact read.");
+    };
+
+    await expect(
+      planWorkflowToolbox({ goal: "   " }, { readJsonArtifact }),
+    ).resolves.toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_request",
+        message: "Planner goal must be at least 2 characters.",
+      },
+    });
+  });
+
+  it("rejects 1-character planner goals when called directly", async () => {
+    const readJsonArtifact = async () => {
+      throw new Error("Expected direct planner validation before artifact read.");
+    };
+
+    await expect(
+      planWorkflowToolbox({ goal: "x" }, { readJsonArtifact }),
+    ).resolves.toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_request",
+        message: "Planner goal must be at least 2 characters.",
+      },
+    });
   });
 
   it("clamps the planner runtime limit to 10 even when called directly", async () => {

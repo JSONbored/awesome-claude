@@ -1,0 +1,262 @@
+---
+title: Drizzle ORM Schema Migrations Skill
+slug: drizzle-orm-schema-migrations
+category: skills
+description: >-
+  Design and review Drizzle ORM schemas, typed SQL queries, drizzle-kit
+  migrations, database-first pulls, codebase-first generates, and production
+  migration safety plans.
+cardDescription: >-
+  Design Drizzle schemas, typed queries, drizzle-kit migrations, and production
+  database safety checks.
+seoTitle: Drizzle ORM Schema Migrations Skill
+seoDescription: >-
+  Reusable AI skill for Drizzle ORM schema design, drizzle-kit generate, migrate,
+  push, pull, export, typed SQL queries, driver selection, database migrations,
+  and production safety review.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+repoUrl: "https://github.com/drizzle-team/drizzle-orm"
+documentationUrl: "https://orm.drizzle.team/docs/migrations"
+downloadUrl: "https://github.com/drizzle-team/drizzle-orm/archive/refs/heads/main.zip"
+installable: true
+installCommand: "pnpm add drizzle-orm && pnpm add -D drizzle-kit"
+usageSnippet: >-
+  Use this skill when a TypeScript project needs Drizzle schema modeling,
+  database driver setup, typed query review, generated SQL migrations, schema
+  pulls, or a safe production migration workflow.
+copySnippet: |-
+  # Trigger
+  "Apply the Drizzle ORM schema migrations skill to this project."
+
+  # Required output
+  1) Current database, schema source-of-truth, and migration inventory
+  2) Drizzle package, driver, config, schema, and query plan
+  3) Migration generation, review, apply, and rollback checklist
+  4) Safety, privacy, connection-string, and production data notes
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://orm.drizzle.team/docs/migrations"
+  - "https://orm.drizzle.team/docs/get-started"
+  - "https://orm.drizzle.team/"
+  - "https://github.com/drizzle-team/drizzle-orm"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "TypeScript or JavaScript project with a known runtime, package manager, and database target."
+  - "Database engine and driver decision, such as PostgreSQL, MySQL, SQLite, Turso, Neon, Cloudflare D1, Supabase, PlanetScale, or another supported target."
+  - "Migration source-of-truth decision: database-first pull, codebase-first push, generated SQL migrations, runtime migration, external migration tool, or SQL export."
+  - "`DATABASE_URL` or equivalent connection string managed through local, preview, staging, and production secret configuration."
+  - "`drizzle.config.ts` ownership and generated migration folder policy."
+  - "Rollback, backup, and review path for schema changes that touch production data."
+safetyNotes:
+  - "The download URL is Drizzle ORM's external source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "`drizzle-kit push`, `drizzle-kit migrate`, manual SQL, runtime migrators, and external migration tools can mutate live databases; confirm the target environment first."
+  - "Review generated SQL before applying it, especially renames, drops, constraint changes, enum changes, index changes, backfills, and large-table operations."
+  - "Do not commit database URLs, migration credentials, read replicas, production connection strings, Drizzle Studio credentials, or copied dashboard values."
+  - "Avoid running schema-changing commands from app startup unless the deployment model, locking behavior, retry behavior, and rollback plan are explicit."
+  - "Use least-privilege database credentials for app runtime; migration roles should be separate where the platform supports it."
+  - "Treat Drizzle Studio and generated query logs as database access surfaces that need local-only or authenticated access controls."
+privacyNotes:
+  - "Drizzle projects can expose table names, column names, relationships, row data, migrations, query logs, connection strings, and production data shapes."
+  - "Generated SQL, schema snapshots, Drizzle Studio screenshots, CI logs, error traces, and AI prompts can leak customer fields, IDs, emails, tenant names, or internal schema details."
+  - "Use synthetic schemas and seed data for examples, issue reports, screenshots, demos, and AI-assisted troubleshooting."
+  - "Review database-provider, hosting-provider, analytics, error-tracking, and AI-assistant retention policies before using real schema or row data."
+  - "When validating migrations against copied production data, document where the copy lives, who can access it, and when it will be destroyed."
+tags:
+  - drizzle
+  - orm
+  - migrations
+  - typescript
+  - database
+keywords:
+  - "Drizzle ORM schema migrations"
+  - "drizzle-kit generate"
+  - "drizzle-kit migrate"
+  - "drizzle-kit push"
+  - "drizzle config"
+  - "TypeScript SQL ORM"
+  - "Drizzle typed queries"
+readingTime: 8
+difficultyScore: 77
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on Drizzle ORM's migration docs, get-started docs, official
+website, and `drizzle-team/drizzle-orm` repository reviewed on **2026-06-04**.
+The current migration docs describe database-first and codebase-first flows with
+`drizzle-kit pull`, `push`, `generate`, `migrate`, and `export`, while the
+repository describes Drizzle as a headless TypeScript ORM with Drizzle Kit for
+SQL migration generation and direct schema changes.
+
+## Retrieval Sources
+
+- https://orm.drizzle.team/docs/migrations
+- https://orm.drizzle.team/docs/get-started
+- https://orm.drizzle.team/
+- https://github.com/drizzle-team/drizzle-orm
+
+Prefer the live Drizzle docs and official repository over model memory for
+driver imports, migration commands, `drizzle.config.ts` options, supported
+database targets, query APIs, schema APIs, and Drizzle Kit behavior.
+
+## Scope Note
+
+Use this skill for Drizzle ORM schema, query, and migration work in TypeScript
+or JavaScript projects. It is not a generic SQL tutorial, not a replacement for
+database administration review, and not a license to run production migrations
+from an AI session without explicit environment confirmation.
+
+## Core Workflow
+
+1. Inventory the current runtime, package manager, database provider, driver,
+   existing schema files, migration folder, `drizzle.config.ts`, CI migration
+   steps, and production deployment process.
+2. Decide the schema source of truth: database-first pull, codebase-first direct
+   push, generated SQL migrations, runtime migration, external migration tool,
+   or SQL export.
+3. Add `drizzle-orm` and `drizzle-kit` with the project package manager, then
+   choose the correct Drizzle driver package and imports for the database target.
+4. Create or review `drizzle.config.ts` with explicit schema path, output path,
+   dialect, credentials strategy, casing, and environment loading behavior.
+5. Model tables, columns, constraints, indexes, relations, enums, views, and
+   custom types from product requirements rather than from guessed field names.
+6. Review generated SQL from `drizzle-kit generate` before applying it. Treat
+   destructive diffs, renames, type changes, and constraint additions as
+   production migration risks.
+7. Use `drizzle-kit push` only when direct schema application is appropriate for
+   the environment and the team accepts its review model.
+8. Use `drizzle-kit pull` when the database is the source of truth and the task
+   is to generate TypeScript schema from an existing database.
+9. Add typed query helpers, transactions, and shared filters close to data
+   access code, keeping authorization checks near the database boundary.
+10. If using Drizzle Studio, document access controls, local-only assumptions,
+    credentials, and whether real production data is visible.
+11. Add validation for generated migrations in CI without exposing database
+    credentials or running destructive operations against production by default.
+12. Produce a rollout plan with backup, lock-risk review, migration apply step,
+    application deploy order, smoke tests, monitoring, and rollback.
+
+## Required Inputs
+
+- Runtime, framework, package manager, deployment platform, and database target.
+- Existing ORM or query layer, migration tool, schema files, generated files,
+  and CI/deploy migration behavior.
+- Drizzle source-of-truth decision: pull, push, generate/migrate, runtime
+  migrate, external migration tool, or SQL export.
+- Database URL management path for local, preview, staging, and production.
+- Tables, columns, relations, indexes, constraints, tenants, user ownership,
+  soft-delete policy, audit fields, and data retention needs.
+- Production data size, lock tolerance, backup path, rollback path, and
+  maintenance-window expectations for risky migrations.
+- Whether Drizzle Studio, seed scripts, generated migrations, and schema
+  snapshots are allowed in local, CI, preview, or production contexts.
+
+## Production Rules
+
+- Never run schema-mutating commands until the target database environment is
+  explicit. Local, preview, staging, and production URLs must be visually
+  distinct in commands and logs.
+- Review generated SQL before apply. Do not blindly trust a migration that drops
+  columns, renames objects, rewrites large tables, adds non-null constraints, or
+  changes enum semantics.
+- Keep migration credentials separate from application runtime credentials when
+  possible. App runtime usually should not have schema-owner permissions.
+- Commit migration files only when the team has chosen generated SQL migrations
+  as the source of truth. Avoid hand-editing generated snapshots without a clear
+  reason and review path.
+- Prefer expand-contract migrations for production column renames, type changes,
+  and data backfills. Separate data backfills from schema changes when blast
+  radius is high.
+- Treat Drizzle Studio as a privileged database browser. Keep it local or
+  protected, and avoid exposing production data through screenshots or tunnels.
+- Use synthetic schemas and data in examples. Do not paste real table exports,
+  connection strings, migration logs, or customer rows into AI prompts.
+- Include rollback limits honestly. Some schema changes can be rolled back only
+  from backup or a forward-fix migration.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for Drizzle schema
+  design, query implementation, migration review, and rollout planning.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions when editing
+  TypeScript projects that use Drizzle ORM.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: adapt the trigger,
+  workflow, safety notes, privacy notes, and output contract into repository
+  rules for Drizzle database work.
+
+## Output Contract
+
+1. Source evidence: Drizzle docs, website, and repository URLs reviewed, with
+   date.
+2. Inventory: database target, schema source of truth, existing ORM/query layer,
+   migration folder, Drizzle config, generated files, and deployment flow.
+3. Implementation plan: packages, driver, config, schema files, queries,
+   relations, indexes, migrations, Studio usage, and CI validation.
+4. Safety and privacy review: target environment, secrets, generated SQL,
+   destructive changes, database locks, Studio exposure, logs, prompts, and
+   production data handling.
+5. Validation checklist: typecheck, generated migration review, dry-run or
+   staging apply, rollback review, app smoke test, query authorization test,
+   performance check, and production deploy notes.
+
+## Duplicate And Source Review
+
+Current HeyClaude content mentions Drizzle inside generic agent and command
+examples, but there is no dedicated Drizzle, Drizzle Kit, `drizzle-orm`, or
+`orm.drizzle.team` content entry. This skill is specifically scoped to Drizzle
+ORM schema and migration workflows and is source-backed by the current Drizzle
+docs, website, and official repository.
+
+## Troubleshooting
+
+**Issue:** `drizzle-kit generate` creates an unexpected migration
+
+**Fix:** Check the schema source of truth, prior migration folder, snapshots,
+renames, casing, dialect, and config path before applying anything to a shared
+database.
+
+**Issue:** A migration targets the wrong database
+
+**Fix:** Stop before apply, print the sanitized environment name, inspect the
+loaded config, and verify the connection source. Do not rely on shell history or
+default `.env` behavior for production migrations.
+
+**Issue:** `drizzle-kit push` wants to drop or rewrite objects
+
+**Fix:** Switch to generated SQL review or an external migration process,
+confirm whether the diff represents a rename or destructive change, and plan an
+expand-contract rollout if production data is involved.
+
+**Issue:** App queries are typed but still leak tenant data
+
+**Fix:** Add server-side authorization filters near the query boundary. Type
+safety does not replace ownership, tenant, role, or row-level access checks.
+
+**Issue:** Drizzle Studio exposes sensitive data
+
+**Fix:** Disable public access, avoid tunnels to real production data, rotate any
+credentials that were exposed, and use synthetic or scrubbed datasets for demos.

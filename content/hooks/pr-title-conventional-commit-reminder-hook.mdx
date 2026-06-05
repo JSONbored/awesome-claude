@@ -1,0 +1,323 @@
+---
+title: PR Title Conventional Commit Reminder - Claude Code Hook
+slug: pr-title-conventional-commit-reminder-hook
+category: hooks
+description: >-
+  Read-only Claude Code Stop hook that checks the current GitHub pull request
+  title against a Conventional Commits style pattern before the session ends,
+  then falls back to the latest commit subject when no PR title is available.
+cardDescription: >-
+  Remind Claude and contributors when the current PR title or latest commit
+  subject is not release-tool friendly.
+seoTitle: PR Title Conventional Commit Reminder Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code Stop hook for checking GitHub PR titles and latest
+  commit subjects against a configurable Conventional Commits pattern.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://www.conventionalcommits.org/en/v1.0.0/"
+repoUrl: "https://github.com/conventional-commits/conventionalcommits.org"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/pr-title-conventional-commit-reminder.sh && chmod +x
+  .claude/hooks/pr-title-conventional-commit-reminder.sh
+usageSnippet: >-
+  PR title reminder: current PR title does not look like a Conventional Commits
+  title.
+copySnippet: |-
+  {
+    "hooks": {
+      "Stop": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/pr-title-conventional-commit-reminder.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "Stop": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/pr-title-conventional-commit-reminder.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code Stop hook. Checks the current PR title with GitHub CLI when a
+  # branch has an open PR, then falls back to the latest commit subject. The
+  # default mode is advisory and exits 0. Set PR_TITLE_REMINDER_STRICT=1 to exit
+  # 2 on a mismatch.
+
+  DEFAULT_TYPE_PATTERN="build|chore|ci|content|docs|feat|fix|perf|refactor|revert|style|test"
+  TYPE_PATTERN="${PR_TITLE_CONVENTIONAL_TYPES:-$DEFAULT_TYPE_PATTERN}"
+  TYPE_PATTERN=$(printf '%s' "$TYPE_PATTERN" | tr ',' '|')
+  CONVENTIONAL_RE="^(${TYPE_PATTERN})(\\([A-Za-z0-9._/-]+\\))?!?: .+"
+
+  is_conventional() {
+    printf '%s\n' "$1" | grep -Eq "$CONVENTIONAL_RE"
+  }
+
+  finish_mismatch() {
+    label="$1"
+    value="$2"
+    extra="${3:-}"
+
+    echo "PR title reminder: $label does not look like a Conventional Commits title." >&2
+    echo "  Found: $value" >&2
+    echo "  Expected: type(scope): summary, for example content(hooks): add reminder hook" >&2
+    echo "  Allowed types: ${TYPE_PATTERN}" >&2
+    if [ -n "$extra" ]; then
+      echo "  $extra" >&2
+    fi
+
+    if [ "${PR_TITLE_REMINDER_STRICT:-0}" = "1" ]; then
+      exit 2
+    fi
+    exit 0
+  }
+
+  if ! command -v git >/dev/null 2>&1; then
+    exit 0
+  fi
+
+  PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || true)
+  if [ -z "$PROJECT_ROOT" ]; then
+    exit 0
+  fi
+
+  cd "$PROJECT_ROOT" 2>/dev/null || exit 0
+
+  BRANCH=$(git branch --show-current 2>/dev/null || true)
+  if [ -z "$BRANCH" ]; then
+    exit 0
+  fi
+
+  case "$BRANCH" in
+    main|master|trunk)
+      if [ "${PR_TITLE_REMINDER_CHECK_DEFAULT:-0}" != "1" ]; then
+        exit 0
+      fi
+      ;;
+  esac
+
+  if [ "${PR_TITLE_REMINDER_OFFLINE:-0}" != "1" ] && command -v gh >/dev/null 2>&1; then
+    PR_DATA=$(gh pr view --json title,url,headRefName --template '{{.title}}{{"\n"}}{{.url}}{{"\n"}}{{.headRefName}}{{"\n"}}' 2>/dev/null || true)
+    PR_TITLE=$(printf '%s\n' "$PR_DATA" | sed -n '1p')
+    PR_URL=$(printf '%s\n' "$PR_DATA" | sed -n '2p')
+    PR_HEAD=$(printf '%s\n' "$PR_DATA" | sed -n '3p')
+
+    if [ -n "$PR_TITLE" ]; then
+      if is_conventional "$PR_TITLE"; then
+        exit 0
+      fi
+
+      EXTRA="PR: $PR_URL"
+      if [ -n "$PR_HEAD" ]; then
+        EXTRA="PR: $PR_URL (head: $PR_HEAD)"
+      fi
+      finish_mismatch "current PR title" "$PR_TITLE" "$EXTRA"
+    fi
+  fi
+
+  SUBJECT=$(git log -1 --pretty=%s 2>/dev/null || true)
+  if [ -z "$SUBJECT" ]; then
+    exit 0
+  fi
+
+  if is_conventional "$SUBJECT"; then
+    exit 0
+  fi
+
+  finish_mismatch "latest commit subject on $BRANCH" "$SUBJECT" "No current PR title was available; install and authenticate gh, or set PR_TITLE_REMINDER_OFFLINE=1 for commit-only mode."
+trigger: Stop
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash, git, grep, sed, and tr available on PATH."
+  - "GitHub CLI is optional but recommended; the hook uses `gh pr view` only for read-only PR-title lookup."
+  - "A repository PR-title policy based on Conventional Commits or a custom `PR_TITLE_CONVENTIONAL_TYPES` allowlist."
+safetyNotes:
+  - "Runs as a Claude Code Stop hook at the end of a session, not after every file edit."
+  - "Reads the current git branch, repository root, latest commit subject, and, when GitHub CLI is available, the current branch's PR title and URL."
+  - "Read-only by default: it does not edit PRs, rewrite commits, stage files, push branches, or create release notes."
+  - "Default mode is advisory and exits 0 on mismatches so it will not block Claude Code from stopping."
+  - "Set `PR_TITLE_REMINDER_STRICT=1` only after review; strict mode exits 2 when the PR title or fallback commit subject does not match the configured pattern."
+  - "Set `PR_TITLE_REMINDER_OFFLINE=1` to skip GitHub CLI lookup and use the latest commit subject only."
+privacyNotes:
+  - "The GitHub CLI lookup may send the repository remote, current branch, authentication context, and PR lookup request to GitHub."
+  - "Hook output can print the PR title, PR URL, branch name, latest commit subject, and allowed type pattern to local stderr."
+  - "No files are uploaded by the script itself, but terminal logs, CI transcripts, screenshots, or support bundles can retain the printed metadata."
+  - "Use commit-only offline mode for repositories where branch names, PR titles, or private remote metadata should not be queried through GitHub CLI."
+sourceUrls:
+  - "https://www.conventionalcommits.org/en/v1.0.0/"
+  - "https://github.com/conventional-commits/conventionalcommits.org"
+  - "https://cli.github.com/manual/gh_pr_view"
+  - "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github"
+  - "https://code.claude.com/docs/en/hooks"
+tags:
+  - git
+  - github
+  - pull-requests
+  - conventional-commits
+  - hooks
+keywords:
+  - "PR title conventional commit reminder hook"
+  - "Claude Code PR title hook"
+  - "Conventional Commits pull request title"
+  - "Stop hook release title reminder"
+  - "GitHub CLI PR title check"
+readingTime: 6
+difficultyScore: 31
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+This hook gives a final local reminder before a Claude Code session stops: is
+the current PR title ready for release tooling?
+
+It uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+as the default title shape, including the repository-specific `content` type
+used by this directory's content PR workflow. When `gh` is installed and
+authenticated, the hook reads the current branch's PR title with
+`gh pr view`. When no PR is available, it falls back to the latest commit
+subject so a contributor still gets a useful reminder before pushing or opening
+a PR.
+
+## Features
+
+- Checks the current GitHub PR title at session stop, after Claude has finished
+  editing and before a human is likely to open or update a PR.
+- Falls back to the latest commit subject when GitHub CLI is missing,
+  unauthenticated, offline, or the current branch has no PR.
+- Accepts common Conventional Commits types plus `content` by default:
+  `build`, `chore`, `ci`, `content`, `docs`, `feat`, `fix`, `perf`,
+  `refactor`, `revert`, `style`, and `test`.
+- Supports custom type policy with `PR_TITLE_CONVENTIONAL_TYPES`, using either
+  a pipe-separated or comma-separated list.
+- Stays advisory by default and can be made blocking only with the explicit
+  `PR_TITLE_REMINDER_STRICT=1` opt-in.
+
+## How It Works
+
+On `Stop`, the hook confirms it is running inside a git work tree and skips
+default branches such as `main`, `master`, and `trunk` unless
+`PR_TITLE_REMINDER_CHECK_DEFAULT=1` is set.
+
+For feature branches, it first tries a read-only `gh pr view --json
+title,url,headRefName`. If a PR title is found, the title must match:
+
+```text
+type(scope): summary
+```
+
+The scope is optional and a breaking-change bang is allowed, so
+`feat!: remove legacy endpoint` and `fix(api): handle empty cursor` both pass.
+If no PR title is available, the same check runs against `git log -1
+--pretty=%s`.
+
+## Use Cases
+
+- Keep squash-merge PR titles release-note ready in repositories that generate
+  changelogs or release notes from merge commit subjects.
+- Nudge Claude to update a vague title such as `updates` before the contributor
+  requests review.
+- Support content repositories whose PR titles use a custom type like
+  `content(hooks): add package policy hook`.
+- Keep the reminder local and lightweight instead of adding a repository-wide
+  required check.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file:
+   `touch .claude/hooks/pr-title-conventional-commit-reminder.sh`
+3. Paste the script body into that file and make it executable:
+   `chmod +x .claude/hooks/pr-title-conventional-commit-reminder.sh`
+4. Add the configuration below to `.claude/settings.json` for a project hook or
+   `~/.claude/settings.json` for a user hook.
+5. Authenticate GitHub CLI with `gh auth login` if you want PR-title lookup.
+
+## Hook Configuration
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/pr-title-conventional-commit-reminder.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Configuration
+
+- `PR_TITLE_CONVENTIONAL_TYPES` - allowed type names, separated by `|` or `,`.
+  Defaults to `build|chore|ci|content|docs|feat|fix|perf|refactor|revert|style|test`.
+- `PR_TITLE_REMINDER_STRICT=1` - exit `2` on a mismatch. Leave unset for the
+  default advisory behavior.
+- `PR_TITLE_REMINDER_OFFLINE=1` - skip GitHub CLI lookup and check only the
+  latest commit subject.
+- `PR_TITLE_REMINDER_CHECK_DEFAULT=1` - check `main`, `master`, or `trunk`
+  instead of skipping default branches.
+
+## Limitations
+
+- The hook checks title shape, not whether the title accurately describes the
+  diff.
+- GitHub CLI looks up the PR for the current branch, so forks, renamed remotes,
+  or multiple matching PRs can require normal `gh` configuration first.
+- Custom scopes are treated syntactically; the hook does not know whether
+  `api`, `docs`, or `hooks` are approved scopes for a repository.
+- Strict mode can interrupt a stop workflow, so enable it only after the team
+  agrees on title policy and false-positive handling.
+
+## Related Content Fit
+
+This entry is intentionally narrower than the existing git-smart-commit command,
+git pre-commit validator hook, Husky commit governance skill, and contributor
+commit/changelog rules. Those entries help create or review commits and release
+policy. This hook adds a session-end runtime reminder focused on the current PR
+title, with explicit GitHub CLI network/account disclosure and an offline
+fallback.
+
+## Source and References
+
+- Conventional Commits 1.0.0: https://www.conventionalcommits.org/en/v1.0.0/
+- Conventional Commits source repository: https://github.com/conventional-commits/conventionalcommits.org
+- GitHub CLI `gh pr view` manual: https://cli.github.com/manual/gh_pr_view
+- GitHub Docs: About merge methods on GitHub: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github
+- Claude Code hooks documentation: https://code.claude.com/docs/en/hooks

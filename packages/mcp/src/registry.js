@@ -761,7 +761,9 @@ function entryTrustSummary(entry) {
     package: {
       downloadUrl: source.downloadUrl,
       downloadTrust: packageTrust,
-      packageVerified: Boolean(entry.packageVerified),
+      packageVerified: Boolean(
+        entry.packageVerified || entry.trustSignals?.packageVerified,
+      ),
       checksum:
         entry.checksum ||
         entry.packageChecksum ||
@@ -945,35 +947,126 @@ function selectDiverseRankedEntries(ranked, limit) {
 }
 
 function toolboxFitReasons(entry, ranking) {
-  const reasons = [...(ranking.reasons || [])];
+  const reasons = [...(ranking.reasons || []).slice(0, 4)];
+  if (entry.category) {
+    reasons.push(`${entry.category} workflow surface`);
+  }
+  if (entrySourceStatus(entry) === "available") {
+    reasons.push("source-backed metadata");
+  }
+  if (
+    entryPackageTrust(entry) === "first-party" ||
+    entry.packageVerified ||
+    entry.trustSignals?.packageVerified
+  ) {
+    reasons.push("first-party or verified package signal");
+  }
+  if (notes(entry.safetyNotes).length && notes(entry.privacyNotes).length) {
+    reasons.push("safety and privacy notes present");
+  } else if (notes(entry.safetyNotes).length) {
+    reasons.push("safety notes present");
+  } else if (notes(entry.privacyNotes).length) {
+    reasons.push("privacy notes present");
+  }
   if (entry.installCommand || entry.downloadUrl || entry.configSnippet) {
     reasons.push("actionable setup surface");
   }
   if ((entry.platforms || []).length) {
-    reasons.push("platform compatibility metadata");
+    reasons.push(
+      `platform compatibility: ${(entry.platforms || []).slice(0, 3).join(", ")}`,
+    );
   }
-  return unique(reasons).slice(0, 6);
+  if ((entry.supportLevels || []).length) {
+    reasons.push("support levels documented");
+  }
+  if (entry.claimStatus === "verified" || entry.reviewedBy) {
+    reasons.push("review/provenance metadata");
+  }
+  return unique(reasons).slice(0, 8);
 }
 
 function toolboxCaveats(entry) {
   const caveats = [];
+  const packageTrust = entryPackageTrust(entry);
+  const safetyNotes = notes(entry.safetyNotes);
+  const privacyNotes = notes(entry.privacyNotes);
   if (entrySourceStatus(entry) !== "available") {
     caveats.push("Source metadata is missing or incomplete.");
   }
-  if (entryPackageTrust(entry) === "external") {
+  if (packageTrust === "external") {
     caveats.push("Package/download is external; verify upstream before use.");
   }
-  if (!notes(entry.safetyNotes).length) {
+  if (entry.downloadUrl && !entryTrustSummary(entry).package.checksum) {
+    caveats.push("Download checksum metadata is not present.");
+  }
+  if (!safetyNotes.length) {
     caveats.push("No structured safety notes are present.");
   }
-  if (!notes(entry.privacyNotes).length) {
+  if (!privacyNotes.length) {
     caveats.push("No structured privacy notes are present.");
   }
-  return caveats.slice(0, 4);
+  if (
+    ["mcp", "hooks", "commands", "skills", "statuslines"].includes(
+      entry.category,
+    )
+  ) {
+    caveats.push(
+      "Risk-bearing workflow surface; inspect commands, permissions, and data access before use.",
+    );
+  }
+  return unique(caveats).slice(0, 5);
+}
+
+function toolboxNextActions(entry) {
+  return [
+    `Inspect get_entry_detail with category=${entry.category} and slug=${entry.slug}.`,
+    `Run explain_entry_trust with category=${entry.category} and slug=${entry.slug}; this is still metadata review only.`,
+    "Use compare_entries with nearby candidates before recommending a final stack.",
+    `Use get_copyable_asset with category=${entry.category} and slug=${entry.slug} only after trust review.`,
+  ];
+}
+
+function toolboxCategoryMix(entries) {
+  const counts = new Map();
+  for (const entry of entries) {
+    const category = entry.category || "unknown";
+    counts.set(category, (counts.get(category) || 0) + 1);
+  }
+  return [...counts]
+    .map(([category, count]) => ({ category, count }))
+    .sort((left, right) => left.category.localeCompare(right.category));
+}
+
+function toolboxTrustSummary(entries) {
+  return {
+    sourceBacked: entries.filter(
+      (entry) => entry.trust?.source?.status === "available",
+    ).length,
+    firstPartyOrVerifiedPackages: entries.filter(
+      (entry) =>
+        entry.trust?.package?.downloadTrust === "first-party" ||
+        entry.trust?.package?.packageVerified,
+    ).length,
+    entriesWithSafetyNotes: entries.filter(
+      (entry) => entry.trust?.disclosures?.hasSafetyNotes,
+    ).length,
+    entriesWithPrivacyNotes: entries.filter(
+      (entry) => entry.trust?.disclosures?.hasPrivacyNotes,
+    ).length,
+    externalPackages: entries.filter(
+      (entry) => entry.trust?.package?.downloadTrust === "external",
+    ).length,
+    missingSource: entries.filter(
+      (entry) => entry.trust?.source?.status !== "available",
+    ).length,
+  };
 }
 
 export async function planWorkflowToolbox(args = {}, options = {}) {
   const goal = String(args.goal || "").trim();
+  if (goal.length < 2) {
+    return invalid("Planner goal must be at least 2 characters.");
+  }
   const query = normalizeText(goal);
   const category = normalizeText(args.category);
   const platform = normalizePlatform(args.platform);
@@ -998,11 +1091,7 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
     searchReasons: item.reasons,
     toolboxReasons: toolboxFitReasons(item.entry, item),
     caveats: toolboxCaveats(item.entry),
-    nextActions: [
-      `Inspect get_entry_detail with category=${item.entry.category} and slug=${item.entry.slug}.`,
-      `Run explain_entry_trust before copying install or config content.`,
-      `Use compare_entries with nearby candidates before recommending a final stack.`,
-    ],
+    nextActions: toolboxNextActions(item.entry),
   }));
 
   return {
@@ -1012,10 +1101,19 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
     platform: platform || "",
     count: selected.length,
     entries: selected,
+    categoryMix: toolboxCategoryMix(selected),
+    trustSummary: toolboxTrustSummary(selected),
+    recommendedNextTools: [
+      "get_entry_detail",
+      "explain_entry_trust",
+      "compare_entries",
+      "get_copyable_asset",
+    ],
     plannerNotes: [
-      "This planner ranks public registry metadata only; it does not execute or install entries.",
+      "This planner is metadata review only; it is not install approval or malware scanning, and it does not execute or install entries.",
+      "Recommendations are bounded and category-diverse where matching entries allow it.",
       "Prefer source-backed entries with safety/privacy notes for risk-bearing MCP, hooks, skills, commands, and statuslines.",
-      "Use get_copyable_asset only after reviewing trust metadata and upstream source.",
+      "Use get_entry_detail, explain_entry_trust, compare_entries, and get_copyable_asset before relying on any entry.",
     ],
   };
 }

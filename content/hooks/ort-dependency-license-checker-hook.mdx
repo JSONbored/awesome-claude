@@ -1,0 +1,288 @@
+---
+title: ORT Dependency License Checker - Claude Code Hook
+slug: ort-dependency-license-checker-hook
+category: hooks
+description: >-
+  PostToolUse hook that watches dependency manifest and lockfile edits, then
+  prompts or runs an OSS Review Toolkit dependency license analysis.
+cardDescription: >-
+  Warn on dependency manifest changes and optionally run ORT license analysis
+  before dependency-license drift reaches a PR.
+seoTitle: ORT Dependency License Checker - Claude Code Hook
+seoDescription: >-
+  A Claude Code PostToolUse hook that detects dependency manifest changes and
+  uses OSS Review Toolkit guidance to run or prompt an ORT dependency license
+  analysis.
+author: OSS Review Toolkit
+authorProfileUrl: "https://oss-review-toolkit.org/ort/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+websiteUrl: "https://oss-review-toolkit.org/ort/"
+documentationUrl: "https://oss-review-toolkit.org/ort/docs/getting-started/usage"
+repoUrl: "https://github.com/oss-review-toolkit/ort"
+brandName: OSS Review Toolkit
+brandDomain: oss-review-toolkit.org
+brandAssetSource: manual
+brandVerifiedAt: "2026-06-04"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/ort-dependency-license-checker.sh && chmod +x
+  .claude/hooks/ort-dependency-license-checker.sh
+usageSnippet: >-
+  ORT license check suggested for package-lock.json; set
+  ORT_LICENSE_HOOK_RUN=1 to run `ort analyze` locally.
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/ort-dependency-license-checker.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/ort-dependency-license-checker.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PostToolUse hook. Detects dependency manifest or lockfile edits
+  # and either prints the ORT license-analysis command to run, or runs
+  # `ort analyze` locally when ORT_LICENSE_HOOK_RUN=1 is set.
+  #
+  # Default behavior is advisory and exits 0. Strict mode
+  # (ORT_LICENSE_HOOK_STRICT=1) exits 2 when the opted-in ORT run fails.
+
+  INPUT=$(cat)
+
+  if command -v jq >/dev/null 2>&1; then
+    FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
+  else
+    FILE=""
+  fi
+
+  [ -n "$FILE" ] || exit 0
+
+  case "$FILE" in
+    *package.json|*package-lock.json|*npm-shrinkwrap.json|*pnpm-lock.yaml|*yarn.lock|*bun.lockb|*bun.lock) ;;
+    *Cargo.toml|*Cargo.lock|*go.mod|*go.sum|*pyproject.toml|*poetry.lock|*requirements.txt) ;;
+    *Pipfile|*Pipfile.lock|*pom.xml|*build.gradle|*build.gradle.kts|*settings.gradle) ;;
+    *Gemfile|*Gemfile.lock|*composer.json|*composer.lock) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -n "${CLAUDE_PROJECT_DIR:-}" ]; then
+    PROJECT_DIR="$CLAUDE_PROJECT_DIR"
+  else
+    PROJECT_DIR=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+  fi
+
+  cd "$PROJECT_DIR" 2>/dev/null || exit 0
+
+  REL_FILE="$FILE"
+  case "$FILE" in
+    "$PROJECT_DIR"/*) REL_FILE=${FILE#"$PROJECT_DIR"/} ;;
+  esac
+
+  echo "ORT dependency license check: ${REL_FILE}" >&2
+
+  if [ "${ORT_LICENSE_HOOK_RUN:-0}" != "1" ]; then
+    echo "Advisory mode only. To run ORT locally, install ORT and set ORT_LICENSE_HOOK_RUN=1." >&2
+    echo "Suggested command: ort --info analyze -f JSON -i . -o .claude/ort-license-checks/analyzer" >&2
+    exit 0
+  fi
+
+  if ! command -v ort >/dev/null 2>&1; then
+    echo "ORT is not installed or not on PATH. See https://oss-review-toolkit.org/ort/docs/getting-started/installation" >&2
+    [ "${ORT_LICENSE_HOOK_STRICT:-0}" = "1" ] && exit 2
+    exit 0
+  fi
+
+  OUT_DIR="${ORT_LICENSE_HOOK_OUT:-.claude/ort-license-checks/$(date +%Y%m%d-%H%M%S)}"
+  mkdir -p "$OUT_DIR" || exit 0
+
+  ORT_TIMEOUT="${ORT_LICENSE_HOOK_TIMEOUT:-300}"
+  if command -v timeout >/dev/null 2>&1; then
+    timeout "$ORT_TIMEOUT" ort --info analyze -f JSON -i . -o "$OUT_DIR"
+    STATUS=$?
+  else
+    ort --info analyze -f JSON -i . -o "$OUT_DIR"
+    STATUS=$?
+  fi
+
+  if [ "$STATUS" -ne 0 ]; then
+    echo "ORT analyze did not complete cleanly. Review package-manager setup, network access, and ORT requirements." >&2
+    [ "${ORT_LICENSE_HOOK_STRICT:-0}" = "1" ] && exit 2
+    exit 0
+  fi
+
+  echo "ORT analyzer output written to ${OUT_DIR}. Review dependency license metadata, then run evaluator/report rules if your project has an ORT policy." >&2
+  exit 0
+trigger: PostToolUse
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash available on PATH; jq is recommended for parsing hook input."
+  - "OSS Review Toolkit installed and available as `ort` only when `ORT_LICENSE_HOOK_RUN=1` is used."
+  - "Java, package managers, and any project-specific ORT requirements prepared before running a real ORT analysis."
+  - "A repository-level license policy or review process for interpreting ORT analyzer output, evaluator rules, reports, and exceptions."
+safetyNotes:
+  - "Runs after Write, Edit, and MultiEdit and inspects only the edited file path to decide whether a dependency manifest or lockfile changed."
+  - "Default mode is advisory, prints the ORT command to run, and always exits 0 without reading dependency contents, creating reports, or contacting registries."
+  - "When `ORT_LICENSE_HOOK_RUN=1` is set, it runs `ort analyze` in the project root and writes reports under `.claude/ort-license-checks/` by default."
+  - "An opted-in ORT run may invoke package managers, inspect dependency graphs, read project configuration, fetch package metadata, and take several minutes on large repositories."
+  - "Strict mode exits 2 only when `ORT_LICENSE_HOOK_STRICT=1` is also set and the opted-in ORT analysis fails."
+privacyNotes:
+  - "Default advisory mode prints only the changed dependency file path and the suggested local ORT command."
+  - "Opted-in ORT runs can record dependency names, versions, package metadata, source URLs, license findings, project paths, package-manager output, and configuration details in local report files."
+  - "Package managers or ORT integrations may contact configured package registries, VCS hosts, or metadata services during analysis."
+  - "Review generated reports before sharing them because internal package names, private registry hostnames, source URLs, and license-policy exceptions can be sensitive."
+tags:
+  - licensing
+  - supply-chain
+  - dependency-management
+  - compliance
+  - ort
+  - hooks
+keywords:
+  - "ORT dependency license checker hook"
+  - "OSS Review Toolkit Claude Code hook"
+  - "dependency license compliance hook"
+  - "package license drift warning"
+  - "dependency manifest license check"
+robotsIndex: true
+robotsFollow: true
+---
+
+## Features
+
+- Watches dependency manifest and lockfile edits through a Claude Code `PostToolUse` hook.
+- Uses the official OSS Review Toolkit workflow as the source-backed license-analysis path: ORT's analyzer determines dependencies and metadata across package managers, and its evaluator/reporter stages can apply policy and produce license reports.
+- Keeps the default hook safe and lightweight: it prints the exact ORT command to run and exits `0`.
+- Supports an explicit local execution mode with `ORT_LICENSE_HOOK_RUN=1` for teams that already have ORT installed and understand the package-manager/network behavior.
+- Supports optional strict failure behavior with `ORT_LICENSE_HOOK_STRICT=1` only after local ORT execution is enabled.
+
+## How it works
+
+The hook reads the Claude Code tool input, extracts the edited file path, and exits unless the file is a dependency manifest or lockfile. For relevant edits, it prints a local ORT license-analysis command. If `ORT_LICENSE_HOOK_RUN=1` is set, it runs `ort --info analyze -f JSON -i . -o .claude/ort-license-checks/<timestamp>` from the project root.
+
+The output is intentionally analyzer-focused. ORT's own documentation describes the analyzer as the stage that determines project dependencies and metadata, and the evaluator/reporter stages as the right places to apply license policy and generate reviewable artifacts. That keeps this hook from pretending every organization has the same license policy.
+
+## Supported edit targets
+
+- npm: `package.json`, `package-lock.json`, `npm-shrinkwrap.json`
+- pnpm and Yarn: `pnpm-lock.yaml`, `yarn.lock`
+- Bun: `bun.lock`, `bun.lockb`
+- Rust: `Cargo.toml`, `Cargo.lock`
+- Go: `go.mod`, `go.sum`
+- Python: `pyproject.toml`, `poetry.lock`, `requirements.txt`, `Pipfile`, `Pipfile.lock`
+- JVM: `pom.xml`, `build.gradle`, `build.gradle.kts`, `settings.gradle`
+- Ruby: `Gemfile`, `Gemfile.lock`
+- PHP: `composer.json`, `composer.lock`
+
+## Use cases
+
+- Remind Claude and the developer to review license impact immediately after an agent edits dependencies.
+- Run a local ORT analyzer pass before opening a PR that changes package manifests.
+- Keep license-policy interpretation in the project's ORT evaluator rules rather than baking one organization's policy into a generic hook.
+- Create a low-friction local guardrail before heavier CI-based ORT, SBOM, or legal-compliance review.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file: `touch .claude/hooks/ort-dependency-license-checker.sh`
+3. Paste the script body into that file and make it executable: `chmod +x .claude/hooks/ort-dependency-license-checker.sh`
+4. Add the configuration below to `.claude/settings.json` for a project hook or `~/.claude/settings.json` for a user hook.
+5. Install and configure ORT only if you want the hook to run analysis locally.
+
+## Hook configuration
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/ort-dependency-license-checker.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Optional local execution
+
+Keep advisory mode for most projects:
+
+```bash
+unset ORT_LICENSE_HOOK_RUN
+```
+
+Run ORT locally when dependency edits happen:
+
+```bash
+export ORT_LICENSE_HOOK_RUN=1
+```
+
+Fail the Claude tool call when the opted-in ORT analysis fails:
+
+```bash
+export ORT_LICENSE_HOOK_RUN=1
+export ORT_LICENSE_HOOK_STRICT=1
+```
+
+Customize report location and timeout:
+
+```bash
+export ORT_LICENSE_HOOK_OUT=.claude/ort-license-checks/current
+export ORT_LICENSE_HOOK_TIMEOUT=600
+```
+
+## Limitations
+
+- Default mode is a reminder, not a completed license review.
+- ORT analyzer output is metadata, not a legal decision. Use evaluator rules, project policy, and human review for license approval.
+- Running ORT may need Java, package-manager CLIs, network access, registry credentials, and project-specific configuration.
+- Large monorepos can take longer than an interactive hook budget; keep heavy ORT runs in CI if local hook latency becomes disruptive.
+
+## Source and references
+
+- OSS Review Toolkit: https://oss-review-toolkit.org/ort/
+- ORT usage documentation: https://oss-review-toolkit.org/ort/docs/getting-started/usage
+- ORT repository: https://github.com/oss-review-toolkit/ort
+- Claude Code hooks documentation: https://docs.anthropic.com/en/docs/claude-code/hooks
+
+## Duplicate check
+
+Checked current content for `OSS Review Toolkit`, `oss-review-toolkit/ort`, `ORT`, `dependency license checker`, `LicenseFinder`, `licensed`, and `go-licenses`. Existing entries cover broader security scanners, secret scanners, dependency vulnerability checks, lockfile provenance, Socket MCP security reports, and a SLSA provenance review skill, but no existing hook or open content PR covers an ORT-backed dependency license-compliance hook.

@@ -1,0 +1,197 @@
+---
+title: Claude Code Output Styles Without Losing Coding Instructions
+slug: claude-code-output-styles-keep-coding-instructions
+category: guides
+description: >-
+  A practical Claude Code guide for using output styles, keeping software
+  engineering behavior intact, choosing the right settings scope, and avoiding
+  durable-instruction drift.
+cardDescription: Use Claude Code output styles without weakening coding behavior.
+seoTitle: Claude Code Output Styles Without Losing Coding Instructions
+seoDescription: >-
+  Learn how to create Claude Code output styles with keep-coding-instructions,
+  choose user, project, local, or managed settings, compare output styles with
+  agents and skills, and debug configuration drift.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+usageSnippet: >-
+  Use output styles for recurring response format, role, or tone changes; set
+  keep-coding-instructions when Claude Code should still behave like a coding
+  agent, and keep repository conventions in CLAUDE.md or project settings.
+prerequisites:
+  - Claude Code installed with access to `/config`.
+  - A clear distinction between response style, repository instructions, subagent behavior, and reusable skill workflows.
+  - Permission to edit user, project, local, or managed Claude Code settings for the intended scope.
+  - A test session where you can run `/clear` or start a new session after changing output style configuration.
+safetyNotes:
+  - Output styles modify Claude Code's system prompt for the session, so a broad or careless style can change how the assistant plans, explains, or formats work.
+  - Leave `keep-coding-instructions` enabled when the style should change communication but preserve normal coding behavior, validation expectations, and file-edit discipline.
+  - Do not use output styles as a substitute for security policy, tool permissions, managed settings, or repository review rules.
+privacyNotes:
+  - Output style files can reveal team preferences, project names, workflow policy, and internal communication norms when committed or shared.
+  - Keep secrets, customer names, private repository paths, and unpublished incident details out of reusable style text.
+  - Local settings are useful for personal experiments because they are not intended to be committed with shared project configuration.
+sourceUrls:
+  - "https://code.claude.com/docs/en/output-styles"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/agents"
+  - "https://code.claude.com/docs/en/skills"
+tags:
+  - claude-code
+  - output-styles
+  - settings
+  - customization
+  - prompts
+  - teams
+keywords:
+  - Claude Code output styles
+  - keep coding instructions Claude Code
+  - Claude Code custom output style
+  - Claude Code outputStyle settings
+  - Claude Code style vs agents skills
+readingTime: 8
+difficultyScore: 42
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Use Claude Code output styles when you want a repeated response format, voice,
+role, or explanation pattern. Do not use them as the place for repository
+policy, tool permissions, or durable project facts. If you are still asking
+Claude Code to do software engineering work, set `keep-coding-instructions:
+true` in custom styles so the style changes communication without dropping the
+normal coding-agent behavior.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Style goal", "description": "You know whether the change is tone, role, explanation format, or something else"}
+- [ ] {"task": "Scope chosen", "description": "You know whether the style belongs at user, project, local, or managed scope"}
+- [ ] {"task": "Coding behavior decision", "description": "You know whether to keep Claude Code's default coding instructions"}
+- [ ] {"task": "Restart plan", "description": "You can run /clear or start a new session after changing the style"}
+- [ ] {"task": "Fallback route", "description": "Repository conventions still live in CLAUDE.md, settings, agents, or skills as appropriate"}
+
+## Core Concepts Explained
+
+### Output styles change the response layer
+
+Claude Code output styles modify how Claude responds. They can change role,
+tone, explanation shape, and default output format. That makes them useful for
+recurring preferences such as "diagram first", "teach as you implement", or
+"summarize every answer in a terse operator format".
+
+They are not the right surface for facts about the current repository. Put
+durable project rules, validation commands, ownership notes, and engineering
+conventions in `CLAUDE.md` or project settings instead.
+
+### `keep-coding-instructions` is the important switch
+
+Custom output styles can either keep or omit Claude Code's built-in software
+engineering instructions. If the style is still meant for coding work, keep the
+coding instructions. Otherwise a style that looks harmless can weaken expected
+behavior around scoping edits, validating changes, or explaining file changes.
+
+Use this frontmatter pattern for a coding-compatible style:
+
+```md
+---
+name: Diagrams first
+description: Lead architecture explanations with a compact diagram
+keep-coding-instructions: true
+---
+
+When explaining architecture, request flow, or dependency structure, start with
+a small Mermaid diagram, then explain the tradeoffs in prose.
+```
+
+### Scope controls who gets the style
+
+Claude Code settings have multiple scopes. Use user scope for personal defaults,
+project scope for team-shared behavior, local scope for private experiments, and
+managed scope for organization policy. Output styles can also be packaged by
+plugins, which is useful when a style belongs with a bundle of related skills,
+hooks, and configuration.
+
+## Step-by-Step Workflow
+
+1. **Write the style objective.** Keep it to one job: response format, review
+   voice, teaching mode, diagram convention, or another communication pattern.
+
+2. **Choose the smallest scope.** Start local for experiments. Move to project
+   only when collaborators should get the same style. Reserve managed scope for
+   organization-wide policy.
+
+3. **Decide whether this is still coding.** If Claude should keep editing,
+   testing, and reviewing code normally, set `keep-coding-instructions: true`.
+
+4. **Create the style file.** Use a Markdown file with frontmatter and concise
+   instructions. Avoid turning the style into a large project manual.
+
+5. **Select the style through `/config`.** Claude Code saves the selection in
+   settings. You can also edit the `outputStyle` setting directly.
+
+6. **Restart the prompt context.** Output style is read at session start. Run
+   `/clear` or start a new session after changing the selected style.
+
+7. **Run a representative coding task.** Ask for a small explanation, a small
+   patch, and a validation summary. Confirm the style changed communication
+   without breaking normal engineering behavior.
+
+## Decision Table
+
+| Need                                           | Best surface                    |
+| ---------------------------------------------- | ------------------------------- |
+| Same tone or format every answer               | Output style                    |
+| Repository-specific build and test rules       | `CLAUDE.md` or project settings |
+| A focused specialist helper                    | Agent                           |
+| Reusable workflow instructions with references | Skill                           |
+| One-off session constraint                     | Prompt or command-line append   |
+| Tool permission, hook, or security policy      | Settings or managed settings    |
+
+## Troubleshooting
+
+### The new style did not apply
+
+Check the selected `outputStyle` setting and start a new session or run `/clear`.
+Some settings update live, but output style is part of the system prompt and is
+read at session start.
+
+### Claude stopped behaving like a coding agent
+
+Add `keep-coding-instructions: true` to the style frontmatter if you still want
+normal software engineering behavior. Then restart the session.
+
+### The style contains too much project policy
+
+Move durable repository facts into `CLAUDE.md` or project settings. Keep the
+output style focused on response shape and communication behavior.
+
+### A team member sees a different style
+
+Check scope. Local settings are private. Project settings are shared when
+committed. Managed settings can override lower scopes.
+
+## Best Practices
+
+- Keep output styles short enough that they do not waste context or conflict
+  with the task.
+- Use project-local experiments before committing shared project styles.
+- Treat plugin-provided forced styles as product behavior, not personal
+  preference.
+- Keep security and permission controls in settings, not prose.
+- Re-test after Claude Code release changes because settings names and command
+  routes can move over time.
+
+## Related Learning Resources
+
+- Claude Code output styles - https://code.claude.com/docs/en/output-styles
+- Claude Code settings - https://code.claude.com/docs/en/settings
+- Claude Code agents - https://code.claude.com/docs/en/agents
+- Claude Code skills - https://code.claude.com/docs/en/skills

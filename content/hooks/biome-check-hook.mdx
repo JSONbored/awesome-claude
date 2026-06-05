@@ -1,0 +1,311 @@
+---
+title: Biome Check Hook for Claude Code
+slug: biome-check-hook
+category: hooks
+description: >-
+  Read-only Claude Code PostToolUse hook that runs Biome's formatter, linter,
+  and import-sorting checks on edited JavaScript, TypeScript, JSON, CSS, and
+  GraphQL files without auto-writing changes.
+cardDescription: >-
+  Run read-only Biome checks after Claude edits JS, TS, JSON, CSS, or GraphQL
+  files, without auto-writing changes.
+seoTitle: Biome Check Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code hook for running Biome check after file edits using
+  a project-local Biome install, read-only diagnostics, safe matcher scope, and
+  explicit privacy guidance for source excerpts and file paths.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+documentationUrl: "https://biomejs.dev/reference/cli/#biome-check"
+repoUrl: "https://github.com/biomejs/biome"
+installable: true
+installCommand: "mkdir -p .claude/hooks && touch .claude/hooks/biome-check.sh && chmod +x .claude/hooks/biome-check.sh"
+usageSnippet: "Install Biome locally, add the script to `.claude/hooks/biome-check.sh`, and configure it as a PostToolUse hook for Write/Edit/MultiEdit."
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/biome-check.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/biome-check.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -uo pipefail
+
+  input="$(cat)"
+
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "Biome hook skipped: jq is required to parse Claude Code hook input." >&2
+    exit 0
+  fi
+
+  tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+  file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -z "$file_path" ] || [ ! -f "$file_path" ]; then
+    exit 0
+  fi
+
+  case "$file_path" in
+    *.js|*.jsx|*.ts|*.tsx|*.mjs|*.mts|*.cjs|*.cts|*.json|*.jsonc|*.css|*.graphql|*.gql) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -x ./node_modules/.bin/biome ]; then
+    biome_cmd=(./node_modules/.bin/biome)
+  elif command -v biome >/dev/null 2>&1; then
+    biome_cmd=(biome)
+  elif command -v pnpm >/dev/null 2>&1 && pnpm exec biome --version >/dev/null 2>&1; then
+    biome_cmd=(pnpm exec biome)
+  elif command -v npm >/dev/null 2>&1 && npx --no-install biome --version >/dev/null 2>&1; then
+    biome_cmd=(npx --no-install biome)
+  else
+    echo "Biome hook skipped: install @biomejs/biome in this project to enable read-only checks." >&2
+    exit 0
+  fi
+
+  echo "Biome hook: checking $file_path" >&2
+  "${biome_cmd[@]}" check --no-errors-on-unmatched "$file_path"
+  status=$?
+
+  if [ "$status" -ne 0 ]; then
+    echo "Biome hook: diagnostics found. Review output before asking Claude to continue." >&2
+  fi
+
+  exit "$status"
+trigger: PostToolUse
+prerequisites:
+  - "Claude Code project where hooks are allowed by user or project policy."
+  - "Project-local Biome install, usually `pnpm add -D @biomejs/biome` or the equivalent package-manager command."
+  - "`jq` available on the machine to parse Claude Code hook input."
+  - "A reviewed `.claude/settings.json` or user settings hook configuration for `Write`, `Edit`, and `MultiEdit`."
+safetyNotes:
+  - "This hook runs `biome check` without `--write`, so it reports formatter, linter, and import-sorting diagnostics but does not modify files."
+  - "Do not add `--write` or `--unsafe` until the team has reviewed the hook behavior, backup expectations, and failure mode for generated edits."
+  - "The hook exits non-zero when Biome reports diagnostics. Depending on Claude Code settings, this can interrupt the current workflow until issues are reviewed."
+  - "Use a project-pinned Biome package when possible. The script prefers `./node_modules/.bin/biome` and avoids network-install fallbacks."
+  - "Keep matchers scoped to write/edit tools. Running Biome after every tool call can add noise and slow down large projects."
+privacyNotes:
+  - "Biome diagnostics can include file paths, rule names, code excerpts, import names, comments, and source snippets from edited files."
+  - "Claude Code hook logs, terminal scrollback, screenshots, support tickets, and AI transcripts can retain Biome diagnostics outside the repository."
+  - "Avoid pasting real customer code, private filenames, generated secrets, or proprietary source excerpts from hook output into public issue comments."
+sourceUrls:
+  - "https://biomejs.dev/reference/cli/#biome-check"
+  - "https://biomejs.dev/guides/getting-started/"
+  - "https://github.com/biomejs/biome"
+tags:
+  - biome
+  - claude-code
+  - hooks
+  - linting
+  - formatting
+keywords:
+  - "Biome check hook"
+  - "Claude Code Biome hook"
+  - "biome check"
+  - "@biomejs/biome"
+  - "PostToolUse hook"
+  - "read-only lint hook"
+readingTime: 7
+difficultyScore: 63
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+This hook runs Biome's `check` command after Claude Code writes or edits a file
+that Biome can handle. It is intentionally read-only: it reports diagnostics and
+exits non-zero when Biome finds issues, but it does not pass `--write`,
+`--unsafe`, start the Biome daemon, or create formatter changes automatically.
+
+Use it when a project already uses Biome and you want immediate feedback after
+Claude changes JavaScript, TypeScript, JSON, CSS, or GraphQL files.
+
+## Requirements
+
+- Claude Code hooks enabled in user or project settings.
+- Biome installed in the project, preferably as a pinned dev dependency.
+- `jq` installed locally so the script can read Claude Code hook input.
+- A reviewed hook configuration scoped to `Write`, `Edit`, and `MultiEdit`.
+
+## Hook Configuration
+
+Add the hook command to `.claude/settings.json` or the appropriate user-level
+Claude Code settings file:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/biome-check.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Hook Script
+
+Save this as `.claude/hooks/biome-check.sh` and make it executable:
+
+```bash
+#!/usr/bin/env bash
+set -uo pipefail
+
+input="$(cat)"
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "Biome hook skipped: jq is required to parse Claude Code hook input." >&2
+  exit 0
+fi
+
+tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+case "$tool_name" in
+  Write|Edit|MultiEdit|write|edit|multiedit) ;;
+  *) exit 0 ;;
+esac
+
+if [ -z "$file_path" ] || [ ! -f "$file_path" ]; then
+  exit 0
+fi
+
+case "$file_path" in
+  *.js|*.jsx|*.ts|*.tsx|*.mjs|*.mts|*.cjs|*.cts|*.json|*.jsonc|*.css|*.graphql|*.gql) ;;
+  *) exit 0 ;;
+esac
+
+if [ -x ./node_modules/.bin/biome ]; then
+  biome_cmd=(./node_modules/.bin/biome)
+elif command -v biome >/dev/null 2>&1; then
+  biome_cmd=(biome)
+elif command -v pnpm >/dev/null 2>&1 && pnpm exec biome --version >/dev/null 2>&1; then
+  biome_cmd=(pnpm exec biome)
+elif command -v npm >/dev/null 2>&1 && npx --no-install biome --version >/dev/null 2>&1; then
+  biome_cmd=(npx --no-install biome)
+else
+  echo "Biome hook skipped: install @biomejs/biome in this project to enable read-only checks." >&2
+  exit 0
+fi
+
+echo "Biome hook: checking $file_path" >&2
+"${biome_cmd[@]}" check --no-errors-on-unmatched "$file_path"
+status=$?
+
+if [ "$status" -ne 0 ]; then
+  echo "Biome hook: diagnostics found. Review output before asking Claude to continue." >&2
+fi
+
+exit "$status"
+```
+
+## How It Works
+
+1. Reads Claude Code hook input from `stdin`.
+2. Ignores non-edit tools.
+3. Ignores unsupported file extensions.
+4. Prefers a project-local `./node_modules/.bin/biome` executable.
+5. Falls back to an existing global `biome`, `pnpm exec biome`, or
+   `npx --no-install biome` without installing packages from the network.
+6. Runs `biome check --no-errors-on-unmatched <file>`.
+7. Exits with Biome's status so the user sees diagnostics before continuing.
+
+## Safety Notes
+
+- This is a diagnostic hook, not an auto-fixer.
+- Keep it read-only until a team explicitly accepts automated formatting after
+  every AI edit.
+- Avoid broad matchers such as all tool calls or all file paths.
+- Treat non-zero exits as a review stop, not proof that Claude should blindly
+  rewrite the file.
+- Keep the project-local Biome version pinned so local and CI results match.
+
+## Privacy Notes
+
+Biome diagnostics may include source excerpts, file paths, import specifiers,
+rule names, and snippets of edited code. Treat hook output as potentially
+sensitive and avoid copying it into public comments when it contains proprietary
+source or customer data.
+
+## Duplicate And Source Review
+
+Current HeyClaude content already has a Biome rules entry and generic hook
+generator examples that mention `biome check --write`. This entry is different:
+it is a dedicated Claude Code hook, defaults to read-only diagnostics, and is
+source-backed by Biome's CLI docs and official repository.
+
+## Troubleshooting
+
+**Issue:** The hook never runs
+
+**Fix:** Check the Claude Code hook matcher, script path, executable bit, and
+whether the edited file extension is included in the script allowlist.
+
+**Issue:** The hook says Biome is not installed
+
+**Fix:** Install Biome as a project dev dependency, for example
+`pnpm add -D @biomejs/biome`, then confirm `./node_modules/.bin/biome version`
+works from the project root.
+
+**Issue:** The hook blocks too often
+
+**Fix:** Keep the hook read-only but narrow the matcher or extension list.
+Consider running it only for files that already live under Biome-managed paths.
+
+**Issue:** The hook output exposes private code
+
+**Fix:** Keep diagnostics local, redact snippets before sharing, and avoid
+posting hook output to public PRs, issues, chats, or screenshots.
+
+**Issue:** Claude keeps trying to auto-fix every diagnostic
+
+**Fix:** Tell Claude to summarize Biome diagnostics first, group them by rule,
+and ask before applying changes. Do not add `--write` unless that behavior is
+explicitly approved.

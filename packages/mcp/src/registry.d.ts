@@ -27,6 +27,11 @@ export function searchRegistry(
   options?: RegistryArtifactLoaders,
 ): Promise<RegistryToolResult>;
 
+export function planWorkflowToolbox(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
 export function getServerInfo(
   args?: Record<string, unknown>,
   options?: RegistryArtifactLoaders,
@@ -197,6 +202,7 @@ export function callRegistryTool(
 
 export {
   SearchRegistryInputSchema,
+  PlanWorkflowToolboxInputSchema,
   ServerInfoInputSchema,
   ListCategoryEntriesInputSchema,
   RecentUpdatesInputSchema,

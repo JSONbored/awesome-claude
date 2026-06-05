@@ -1,0 +1,235 @@
+---
+title: Contributor Commit And Changelog Rules
+slug: contributor-commit-changelog-rules
+category: rules
+description: >-
+  Source-backed rules for contributor pull requests that need clear commit
+  messages, release-note-ready changelog entries, issue links, breaking-change
+  markers, and privacy-safe history.
+cardDescription: >-
+  Keep contributor PR history release-ready with Conventional Commits,
+  changelog discipline, SemVer impact notes, issue links, and privacy checks.
+seoTitle: Contributor Commit And Changelog Rules
+seoDescription: >-
+  Practical commit message and changelog rules for contributor pull requests:
+  Conventional Commits, Keep a Changelog, SemVer impact, linked issues,
+  release notes, breaking changes, and privacy-safe commit history.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.conventionalcommits.org/en/v1.0.0/"
+sourceUrls:
+  - "https://www.conventionalcommits.org/en/v1.0.0/"
+  - "https://keepachangelog.com/en/1.1.0/"
+  - "https://semver.org/spec/v2.0.0.html"
+  - "https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue"
+  - "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases"
+installable: false
+usageSnippet: >-
+  Apply these rules before approving a contributor PR that changes user-visible
+  behavior, public APIs, dependencies, configuration, docs, migrations, or any
+  release-note-worthy surface.
+copySnippet: |-
+  You are reviewing commit messages and changelog evidence for a contributor
+  pull request.
+
+  Rules:
+  1. Require a Conventional Commits style PR title or final squash commit when
+     the repository uses automated changelog or release tooling.
+  2. Keep the changelog's Unreleased section aligned with user-visible,
+     operator-visible, security, compatibility, and breaking changes.
+  3. Mark breaking changes explicitly with a bang or BREAKING CHANGE footer and
+     document the SemVer impact.
+  4. Link issues from the PR body when the project expects automatic closure or
+     traceability.
+  5. Block merge when commit text, changelog notes, or release evidence expose
+     secrets, customer data, private incident details, or unreleased partner
+     names.
+estimatedSetupTime: 15 minutes
+difficulty: beginner
+prerequisites:
+  - A contributor pull request with commit history, PR title, PR body, and enough diff context to decide whether release notes are needed.
+  - Repository guidance for commit style, squash/merge behavior, changelog format, issue-linking expectations, and release process.
+  - Access to the current changelog, release notes, linked issues, and any generated release-preview output used by maintainers.
+  - Permission to request a title, commit, changelog, or PR body update before merge.
+safetyNotes:
+  - "Commit messages, PR titles, and changelog entries become durable release history; misleading text can cause incorrect SemVer bumps, missed migrations, or hidden breaking changes."
+  - "Do not hide security fixes, data migrations, dependency trust changes, deprecations, or public API changes inside vague commit messages such as update, cleanup, or misc."
+  - "When release tooling parses commit history, malformed types, missing breaking-change markers, or noisy commits can publish incorrect release notes."
+privacyNotes:
+  - "Commit subjects, changelog entries, issue links, and release notes can expose customer names, account IDs, private roadmap items, vulnerability details, incident context, internal hostnames, or partner information."
+  - "Use synthetic examples and public-safe wording in changelog entries; move sensitive incident or vulnerability details to approved private advisories or security channels."
+  - "Review generated release notes before publication because they may combine private branch names, issue titles, commit bodies, and contributor text."
+tags:
+  - commits
+  - changelog
+  - conventional-commits
+  - semver
+  - release-notes
+  - contributor-prs
+keywords:
+  - contributor commit message rules
+  - changelog rules for pull requests
+  - Conventional Commits PR policy
+  - Keep a Changelog contributor workflow
+  - SemVer breaking change notes
+readingTime: 6
+difficultyScore: 34
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when a contributor PR needs release-ready history. The goal is
+not to force every tiny commit into ceremony. The goal is to make user-visible
+changes, breaking changes, security fixes, migrations, and operator impact easy
+to find when maintainers generate a release.
+
+Clean commit and changelog discipline helps reviewers answer three questions:
+what changed, who needs to know, and what release impact does it have?
+
+## When A Changelog Entry Is Required
+
+Require a changelog or release-note entry when the PR changes any public or
+operator-visible behavior.
+
+1. **User-visible behavior.** Features, fixes, UI text, CLI output, errors,
+   docs-visible behavior, or changed defaults.
+2. **Public contracts.** APIs, schemas, events, webhooks, file formats, config,
+   environment variables, packages, or extension points.
+3. **Breaking changes.** Removed behavior, renamed fields, incompatible
+   migrations, changed auth, unsupported runtimes, or required manual steps.
+4. **Security and privacy.** Vulnerability fixes, secret handling, logging,
+   telemetry, permissions, data retention, or access-control changes.
+5. **Operations.** Deployments, migrations, feature flags, monitoring,
+   dependency updates, release automation, or rollback behavior.
+6. **Deprecations.** Any behavior that remains available but has a planned
+   removal path.
+
+Do not require a changelog entry for purely internal refactors, tests, formatting
+changes, or typo fixes unless they affect users, operators, integrators, or the
+release process.
+
+## Commit Message Rules
+
+- Use the repository's documented style first; when none exists, prefer
+  Conventional Commits for machine-readable history.
+- Start the subject with a meaningful type such as `feat`, `fix`, `docs`,
+  `perf`, `refactor`, `test`, `build`, `ci`, or `chore`.
+- Add a scope when it helps reviewers identify the subsystem, package, or
+  public surface.
+- Keep the subject specific enough to explain behavior, not just activity.
+- Use `!` after the type or scope for breaking changes, and add a
+  `BREAKING CHANGE:` footer with migration details.
+- Put issue closure keywords in the PR body when the project wants linked
+  issues closed on merge.
+- Avoid mixing unrelated changes under one broad message; split commits or PRs
+  when the release impact differs.
+- Do not include secrets, customer names, private URLs, raw logs, exploit
+  details, or internal incident notes in commit text.
+
+For squash-merge repositories, the final PR title and squash body matter more
+than every intermediate commit. Review the merge commit text before approval.
+
+## Changelog Rules
+
+Use the repository's changelog format first. When a project follows Keep a
+Changelog, place unreleased entries under categories such as Added, Changed,
+Deprecated, Removed, Fixed, and Security.
+
+- Write entries for readers, not only maintainers.
+- Name the user, operator, API, security, or migration impact.
+- Include issue or PR references only when they help traceability.
+- Keep internal implementation details out of public notes unless they affect
+  users.
+- Mark breaking changes and required manual actions near the entry, not hidden
+  in a commit body.
+- Do not duplicate the same change across multiple categories.
+- Keep unreleased entries concise enough to survive into release notes.
+- Remove speculative or future-tense notes that are not part of the PR.
+
+If the project generates release notes from commits, compare the generated
+preview with the hand-written changelog before merge.
+
+## SemVer Impact Rules
+
+Map the PR's release impact before approving release-note text.
+
+- Patch: backward-compatible bug fix, documentation correction, internal test
+  improvement, or safe dependency/security patch.
+- Minor: backward-compatible feature, new option, new API field, new command, or
+  deprecation notice.
+- Major: incompatible API, config, runtime, data, CLI, auth, schema, migration,
+  or behavior change.
+
+When the impact is uncertain, make the uncertainty explicit in the PR. Do not
+let ambiguous commit messages choose the version bump silently.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- the PR title or squash commit is too vague for release history;
+- a breaking change lacks a `!` marker or `BREAKING CHANGE:` footer;
+- a user-visible change has no changelog or release-note evidence;
+- the changelog entry promises behavior that the diff does not implement;
+- the SemVer impact is missing for public API, config, schema, runtime, or CLI
+  changes;
+- issue links, closure keywords, or migration notes point to the wrong work;
+- generated release notes include private names, raw logs, branch names,
+  incident details, or vulnerability exploit context;
+- unrelated changes with different release impact are bundled into one commit
+  or one changelog entry.
+
+## Review Checklist
+
+- [ ] {"task": "Style follows project policy", "description": "Commit title, PR title, or squash message follows the repository's documented convention"}
+- [ ] {"task": "Change type is clear", "description": "The message explains whether the PR is a feature, fix, docs update, build change, CI change, refactor, or chore"}
+- [ ] {"task": "Changelog need decided", "description": "The reviewer decided whether the PR needs an Unreleased changelog or release-note entry"}
+- [ ] {"task": "Breaking changes marked", "description": "Any incompatible behavior has a visible marker, migration note, and SemVer impact"}
+- [ ] {"task": "Issue links correct", "description": "Linked issues and closure keywords point to the intended work"}
+- [ ] {"task": "Privacy safe", "description": "Commit text, changelog notes, and generated release notes avoid private data and sensitive security details"}
+
+## Troubleshooting
+
+- **The contributor used vague commits:** use a squash commit or ask for a
+  history cleanup before merge.
+- **The changelog entry is too technical:** rewrite it around the user,
+  operator, API, or security impact.
+- **A release tool generated noisy notes:** fix the commit type, scope, or body
+  before merging instead of editing only the generated output later.
+- **The PR has both breaking and non-breaking work:** split it or clearly mark
+  the major-version impact.
+- **Security details are sensitive:** use public-safe wording and move exploit
+  details to the approved private advisory process.
+
+## Duplicate And History Check
+
+Checked existing rules, guides, hooks, commands, skills, open PRs, and closed
+PR history for commit message rules, changelog rules, Conventional Commits,
+Keep a Changelog, SemVer release notes, git commit generators, changelog
+commands, pre-commit validators, and release automation skills.
+
+Adjacent content includes the release-notes drafting command, git-smart-commit
+command, git pre-commit validator hook, git-cliff changelog skill, and
+documentation freshness rules. This entry is distinct because it is a portable
+review policy for contributor PRs: it tells reviewers when commit text,
+changelog entries, linked issues, breaking-change markers, SemVer impact, and
+privacy-safe release notes are required before merge.
+
+The earlier PR for this slot was closed after public content validation failed.
+This submission uses the current rules schema, includes practical safety and
+privacy notes, and adds exactly one source rules file.
+
+## Sources
+
+- Conventional Commits 1.0.0 - https://www.conventionalcommits.org/en/v1.0.0/
+- Keep a Changelog 1.1.0 - https://keepachangelog.com/en/1.1.0/
+- Semantic Versioning 2.0.0 - https://semver.org/spec/v2.0.0.html
+- GitHub Docs: Linking a pull request to an issue - https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue
+- GitHub Docs: About releases - https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases

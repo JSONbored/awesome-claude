@@ -1,0 +1,188 @@
+---
+title: Evaluate AI Coding Tools with Repeatable Benchmarks
+slug: repeatable-ai-coding-tool-benchmarks
+category: guides
+description: >-
+  A practical guide for comparing AI coding tools with repeatable benchmarks,
+  fixed task sets, controlled environments, transparent scoring, and
+  privacy-safe artifacts.
+cardDescription: Compare AI coding tools with repeatable benchmark runs.
+seoTitle: Evaluate AI Coding Tools with Repeatable Benchmarks
+seoDescription: >-
+  Build repeatable AI coding tool benchmarks with scoped tasks, frozen
+  environments, consistent prompts, budget controls, test-based scoring, human
+  review, and privacy-safe result artifacts.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Define the decision you need to make, freeze task inputs and environment,
+  give every tool the same budget and permissions, collect patches and traces,
+  then score outcomes with tests, review, cost, and repeatability.
+prerequisites:
+  - A shortlist of AI coding tools, models, or agent configurations to compare.
+  - A benchmark task set with fixed repository snapshots, expected outcomes, and scoring rules.
+  - A controlled runtime such as a clean checkout, sandbox, container, or disposable development environment.
+  - Agreement on allowed tools, time limits, cost budgets, data retention, and human review policy.
+safetyNotes:
+  - Run benchmark tasks in disposable environments because AI coding tools may execute commands, install dependencies, edit files, or call configured tools.
+  - Do not give benchmark runs production credentials, broad cloud access, private customer data, or write access to shared systems.
+  - Treat benchmark scores as decision evidence, not proof that a tool is safe, secure, or best for every repository.
+privacyNotes:
+  - Benchmark artifacts can include prompts, repository code, generated patches, terminal output, dependency names, issue text, traces, and model responses.
+  - Redact secrets and private customer data before sharing benchmark logs, trajectories, screenshots, or result tables.
+  - Public benchmark submissions and leaderboards may reveal tool choices, task failures, repository characteristics, and internal evaluation criteria.
+sourceUrls:
+  - "https://www.swebench.com/"
+  - "https://github.com/SWE-bench/SWE-bench"
+  - "https://www.tbench.ai/"
+  - "https://github.com/harbor-framework/terminal-bench"
+tags:
+  - ai-coding-tools
+  - benchmarking
+  - evals
+  - swe-bench
+  - terminal-bench
+  - tool-selection
+keywords:
+  - ai coding tool benchmark
+  - repeatable coding agent evaluation
+  - SWE-bench methodology
+  - Terminal-Bench evaluation
+  - compare AI coding assistants
+readingTime: 8
+difficultyScore: 56
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Do not choose an AI coding tool from a single leaderboard number. Build a small,
+repeatable benchmark that reflects your own work: fixed tasks, clean
+environments, identical budgets, clear scoring, and preserved artifacts. Public
+benchmarks such as SWE-bench and Terminal-Bench are useful reference points, but
+your decision should also include local repository tasks, human review, cost,
+latency, reliability, and privacy constraints.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Decision question", "description": "The benchmark answers a concrete choice such as tool selection, model routing, or workflow readiness"}
+- [ ] {"task": "Task corpus", "description": "Tasks have fixed inputs, repository versions, expected outcomes, and scoring criteria"}
+- [ ] {"task": "Clean environment", "description": "Each run starts from the same checkout, dependencies, permissions, and tool configuration"}
+- [ ] {"task": "Budget policy", "description": "Time, token, cost, retry, and tool-use limits are the same for every candidate"}
+- [ ] {"task": "Artifact plan", "description": "Patches, logs, traces, scores, and reviewer notes are retained safely"}
+
+## Core Concepts Explained
+
+### Benchmarks answer a decision, not every question
+
+A useful benchmark starts with the decision it needs to support. Are you
+choosing a default coding assistant, deciding which tool can handle bug-fix
+issues, validating a terminal agent, or comparing cost for refactoring tasks?
+Different decisions need different task sets and metrics.
+
+### Public benchmarks are references
+
+SWE-bench focuses on real software engineering issues and reproducible patch
+evaluation. Terminal-Bench focuses on agent work in terminal environments.
+These benchmarks help define repeatable evaluation patterns, but they should
+not replace local testing on your own repositories and workflows.
+
+### Reproducibility depends on the harness
+
+The same prompt can produce different outcomes if the repository state, tool
+permissions, dependency cache, model version, or time budget changes. A harness
+should fix those inputs and record anything that changes between runs.
+
+### Scoring should mix automation and review
+
+Passing tests is important, but it is not the whole evaluation. Track whether
+the patch is minimal, maintainable, secure, aligned with the issue, and easy for
+a human reviewer to understand.
+
+## Step-by-Step Benchmark Workflow
+
+1. **Define the decision.** Write the exact question the benchmark should
+   answer. Avoid vague goals like "find the best tool."
+
+2. **Choose representative tasks.** Include small bug fixes, multi-file changes,
+   test failures, refactors, documentation changes, and terminal-heavy tasks
+   only if they reflect real work your team delegates.
+
+3. **Freeze the task inputs.** Record repository commit, issue text, failing
+   tests, dependency lockfiles, environment variables, and any allowed external
+   documentation.
+
+4. **Normalize prompts and permissions.** Give each candidate the same task
+   brief, allowed tools, budget, retry policy, and stop condition.
+
+5. **Run in disposable environments.** Reset the workspace between candidates.
+   Keep production credentials and shared systems out of the benchmark.
+
+6. **Capture artifacts.** Save final patches, test output, command summaries,
+   tool-call traces, cost, elapsed time, retries, and any human intervention.
+
+7. **Score with multiple signals.** Combine automated test pass rate, patch
+   correctness, review quality, security concerns, cost, latency, and
+   consistency across repeated runs.
+
+8. **Repeat a subset.** Re-run a smaller representative set to estimate
+   variance. One lucky or unlucky run should not decide the tool.
+
+9. **Document limitations.** State what the benchmark does not measure, which
+   tools had special integrations, and what data was excluded for privacy.
+
+## Metrics Matrix
+
+| Metric | What it measures | Watch out for |
+| --- | --- | --- |
+| Test pass rate | Whether the patch satisfies automated checks | Tests may be incomplete |
+| Human correctness review | Whether the fix matches intent | Reviewer bias and inconsistency |
+| Patch size | How much code changed | Tiny patches can still be wrong |
+| Time to usable patch | Operator wait time | Tool setup time may be hidden |
+| Cost per accepted task | Budget impact | Pricing and token accounting can change |
+| Retry rate | Stability under same task | Retries can hide poor first-pass behavior |
+| Safety incidents | Risky commands, secrets, broad actions | Needs manual trace review |
+
+## Review Checklist
+
+- [ ] {"task": "Same starting state", "description": "Every candidate begins from the same repository commit and environment"}
+- [ ] {"task": "Same budget", "description": "Time, retries, tool access, and cost limits are comparable"}
+- [ ] {"task": "Artifacts retained", "description": "Patches, logs, traces, and reviewer notes are available for audit"}
+- [ ] {"task": "Privacy filtered", "description": "Benchmark outputs omit secrets and private customer data"}
+- [ ] {"task": "Local tasks included", "description": "Public benchmark insight is paired with organization-specific tasks"}
+- [ ] {"task": "Limitations stated", "description": "The report explains what the benchmark does not prove"}
+
+## Troubleshooting
+
+- **Results swing wildly between runs**: reduce task ambiguity, fix model and
+  tool versions, and repeat a smaller subset to measure variance.
+- **A tool passes tests with a messy patch**: add human review criteria for
+  maintainability, minimality, and security.
+- **Benchmark runs leak sensitive data**: remove private tasks, redact logs, and
+  run on synthetic or sanitized repositories.
+- **One tool has extra integrations**: either give equivalent access to every
+  tool or mark the comparison as workflow-specific.
+- **Leaderboard results disagree with local results**: document the difference
+  in task type, environment, permissions, and scoring.
+
+## Duplicate Check
+
+This guide focuses on evaluating AI coding tools with repeatable benchmark
+methodology. Existing entries include AI tool comparisons, eval tools, and an
+open-source evals collection, but they do not provide a focused source-backed
+guide for designing coding-tool benchmark runs with fixed inputs, disposable
+environments, comparable budgets, artifacts, and local decision criteria.
+
+## References
+
+- SWE-bench official site - https://www.swebench.com/
+- SWE-bench repository - https://github.com/SWE-bench/SWE-bench
+- Terminal-Bench official site - https://www.tbench.ai/
+- Terminal-Bench repository - https://github.com/harbor-framework/terminal-bench

@@ -1,0 +1,153 @@
+---
+title: MCP OAuth Token Audience Checklist
+slug: mcp-oauth-token-audience-checklist
+category: guides
+description: >-
+  Practical checklist for reviewing remote MCP server authorization, resource
+  indicators, bearer-token handling, HTTPS transport, PKCE, and token
+  passthrough risks before connecting an AI client.
+cardDescription: Review remote MCP OAuth and token-audience handling before connecting clients.
+seoTitle: MCP OAuth Token Audience Checklist for Remote MCP Servers
+seoDescription: >-
+  Use this source-backed MCP OAuth checklist to verify resource indicators,
+  token audience binding, bearer-token handling, HTTPS transport, PKCE, and
+  confused-deputy protections for remote MCP servers.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+usageSnippet: >-
+  Apply this before adding a remote MCP server to Claude, VS Code, Cursor, or
+  another client: confirm HTTPS, OAuth discovery, resource-bound tokens, PKCE,
+  and no token passthrough.
+prerequisites:
+  - A remote MCP server endpoint that uses Streamable HTTP or another HTTP-based transport.
+  - Access to the server's documentation or metadata endpoints.
+  - Ability to inspect how the client stores credentials and sends bearer tokens.
+safetyNotes:
+  - A remote MCP server can act as a bridge to privileged downstream APIs, so bad token audience checks can turn one integration into access to another.
+  - Do not accept setup instructions that place access tokens in URLs or screenshots.
+  - Treat every remote MCP server as a distributed system dependency with auth, rate-limit, logging, and outage behavior.
+privacyNotes:
+  - OAuth tokens, refresh tokens, authorization codes, and MCP request logs can reveal account identity and downstream resource access.
+  - Remote servers may receive user prompts, tool arguments, and retrieved data; review retention and logging language before connecting sensitive workspaces.
+sourceUrls:
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/transports"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/server/tools"
+  - "https://modelcontextprotocol.io/docs/getting-started/intro"
+tags:
+  - mcp
+  - oauth
+  - security
+  - remote-servers
+  - token-audience
+keywords:
+  - MCP OAuth checklist
+  - remote MCP token audience
+  - MCP resource indicators
+  - MCP bearer token security
+  - MCP token passthrough
+readingTime: 8
+difficultyScore: 67
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Remote MCP servers are convenient because the client can connect to a hosted
+endpoint instead of launching a local process. They also move trust into a
+networked authorization flow. The MCP authorization specification is explicit:
+HTTP-based transports should use OAuth 2.1-style flows, protected resource
+metadata, authorization server metadata, resource indicators, bearer tokens, and
+token audience validation.
+
+This checklist is for maintainers and operators reviewing a remote MCP server
+before connecting it to an AI client. It is intentionally practical: each item is
+something you can verify from docs, metadata, client config, or a small test.
+
+## Review Checklist
+
+### Endpoint and transport
+
+- The endpoint uses HTTPS.
+- The server clearly identifies whether it uses Streamable HTTP, stdio, or a
+  custom transport.
+- Client setup does not place bearer tokens in query strings.
+- The endpoint path is stable enough to serve as a resource identifier.
+
+### Discovery and client registration
+
+- The server documents where OAuth metadata is discovered.
+- The authorization server supports appropriate OAuth metadata.
+- Dynamic client registration is supported or the docs explain the alternative.
+- Redirect URI handling is exact and does not allow open redirects.
+
+### Resource indicators and audience
+
+- Authorization and token requests include a `resource` value for the target MCP
+  server.
+- Tokens are audience-bound to the MCP server that will receive them.
+- The MCP server rejects tokens issued for another resource.
+- The server does not pass the client token through to unrelated downstream APIs.
+
+### Token storage and logging
+
+- Client config stores secrets in environment variables, secure keychain storage,
+  or an approved credential store.
+- Logs redact bearer tokens, authorization codes, and refresh tokens.
+- Error messages do not echo tokens or private resource identifiers.
+- Access tokens are short-lived where the authorization server supports it.
+
+### Tool risk
+
+- Tool names and descriptions are clear enough for a model to use correctly.
+- Write or delete tools require explicit user approval or narrower scopes.
+- Tools that return private data document the data class they can expose.
+- Rate limits and timeout behavior are visible in docs or error responses.
+
+## Red Flags
+
+| Red flag               | Why it matters                                         | Safer pattern                                          |
+| ---------------------- | ------------------------------------------------------ | ------------------------------------------------------ |
+| Token in URL           | URLs leak through browser history, logs, and analytics | Use Authorization headers or environment-backed config |
+| No audience validation | A token for one service can be reused against another  | Bind tokens to the MCP server resource                 |
+| Token passthrough      | The MCP server becomes a confused deputy               | Exchange or mint separate downstream tokens            |
+| Broad write tools      | The model can trigger account-changing actions         | Scope tools and require approval for mutations         |
+| Unclear retention      | Prompts and tool outputs may be stored                 | Document retention and redact sensitive logs           |
+
+## Troubleshooting
+
+### The client receives 401 responses
+
+Confirm the MCP server advertises protected resource metadata and that the client
+can parse `WWW-Authenticate`. Check whether the token request included the same
+resource URI the server expects.
+
+### The server accepts a token from another audience
+
+Treat this as a blocking security issue. Audience validation is the core control
+that prevents cross-service token reuse.
+
+### Docs recommend a URL with the token embedded
+
+Prefer a header-based or environment-backed configuration. If that is impossible,
+use the server only for low-sensitivity data until the provider supports safer
+credential handling.
+
+## Duplicate Check
+
+Existing MCP security content covers least privilege and threat modeling. This
+entry focuses specifically on OAuth, resource indicators, audience binding, and
+remote MCP token handling.
+
+## References
+
+- MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
+- MCP transports specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/transports
+- MCP tools specification - https://modelcontextprotocol.io/specification/2025-06-18/server/tools
+- MCP introduction - https://modelcontextprotocol.io/docs/getting-started/intro

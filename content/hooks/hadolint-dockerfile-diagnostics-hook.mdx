@@ -1,0 +1,336 @@
+---
+title: Hadolint Dockerfile Diagnostics Hook for Claude Code
+slug: hadolint-dockerfile-diagnostics-hook
+category: hooks
+description: >-
+  Read-only Claude Code PostToolUse hook that runs Hadolint diagnostics after
+  Claude writes or edits Dockerfile-like files, surfacing Dockerfile best
+  practice, inline shell, trusted registry, label, and configuration findings
+  without rewriting files.
+cardDescription: >-
+  Run read-only Hadolint diagnostics after Claude edits Dockerfiles, without
+  auto-installing tools, running containers, or rewriting files.
+seoTitle: Hadolint Dockerfile Diagnostics Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code hook for running Hadolint after Dockerfile edits
+  using an installed Hadolint binary, Dockerfile-scoped matching, read-only
+  diagnostics, project config support, and explicit privacy guidance for image
+  names, labels, paths, and build arguments.
+author: Hadolint
+authorProfileUrl: "https://github.com/hadolint"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+websiteUrl: "https://hadolint.github.io/hadolint/"
+documentationUrl: "https://github.com/hadolint/hadolint/blob/master/README.md"
+repoUrl: "https://github.com/hadolint/hadolint"
+brandName: Hadolint
+brandDomain: hadolint.github.io
+brandAssetSource: manual
+brandVerifiedAt: "2026-06-04"
+installable: true
+installCommand: "mkdir -p .claude/hooks && touch .claude/hooks/hadolint-dockerfile-diagnostics.sh && chmod +x .claude/hooks/hadolint-dockerfile-diagnostics.sh"
+usageSnippet: >-
+  Install Hadolint locally, save the script as
+  `.claude/hooks/hadolint-dockerfile-diagnostics.sh`, and configure it as a
+  PostToolUse hook for Write, Edit, and MultiEdit.
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/hadolint-dockerfile-diagnostics.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/hadolint-dockerfile-diagnostics.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -uo pipefail
+
+  input="$(cat)"
+
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "Hadolint hook skipped: jq is required to parse Claude Code hook input." >&2
+    exit 0
+  fi
+
+  tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+  file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -z "$file_path" ] || [ ! -f "$file_path" ] || [ ! -r "$file_path" ]; then
+    exit 0
+  fi
+
+  file_name="$(basename "$file_path")"
+  case "$file_name" in
+    Dockerfile|Dockerfile.*|*.Dockerfile|*.dockerfile|Containerfile|Containerfile.*|*.Containerfile|*.containerfile) ;;
+    *) exit 0 ;;
+  esac
+
+  if ! command -v hadolint >/dev/null 2>&1; then
+    echo "Hadolint hook skipped: install hadolint to enable Dockerfile diagnostics." >&2
+    exit 0
+  fi
+
+  echo "Hadolint hook: checking $file_path" >&2
+  hadolint --format gnu "$file_path"
+  status=$?
+
+  if [ "$status" -ne 0 ]; then
+    echo "Hadolint hook: diagnostics found. Review Dockerfile rules, inline shell, pinned images, labels, and trusted registry policy before asking Claude to continue." >&2
+  fi
+
+  exit "$status"
+trigger: PostToolUse
+prerequisites:
+  - "Claude Code project where hooks are allowed by user or project policy."
+  - "Hadolint installed locally and available on `PATH`, for example through an operating system package manager or official release path."
+  - "`jq` available on the machine to parse Claude Code hook input."
+  - "A reviewed `.claude/settings.json` or user settings hook configuration for `Write`, `Edit`, and `MultiEdit`."
+  - "Agreement that Dockerfile diagnostics should be blocking or interrupting when Hadolint reports findings."
+  - "Optional project `.hadolint.yaml` or equivalent config reviewed before relying on ignored rules, trusted registries, required labels, or severity thresholds."
+safetyNotes:
+  - "This hook runs a local `hadolint --format gnu` command only. It does not build images, run containers, pull base images, install Hadolint, rewrite files, or execute Dockerfile instructions."
+  - "The hook exits non-zero when Hadolint reports diagnostics. Depending on Claude Code settings, this can interrupt the workflow until a human reviews the output."
+  - "Keep the hook scoped to write/edit tools. Running Hadolint after every tool call can add noise and slow down projects with generated Dockerfiles."
+  - "Hadolint findings are static-analysis findings, not proof that an image build is safe, reproducible, minimal, or vulnerability-free."
+  - "Hadolint can respect project configuration files and inline ignore pragmas. Review `.hadolint.yaml` and ignored rules before treating a clean result as sufficient."
+  - "This script intentionally avoids the official Docker and Podman invocation paths so a hook run does not require Docker socket access or container image pulls."
+  - "Review base image trust, package manager commands, copied files, build secrets, and runtime privileges separately from this hook."
+privacyNotes:
+  - "Hadolint diagnostics can include file paths, image names, registry hostnames, labels, build arguments, environment variable names, comments, and Dockerfile snippets."
+  - "Dockerfiles can reveal private registry names, internal service names, proprietary package mirrors, deployment paths, and application structure."
+  - "Hook output can be retained in Claude Code logs, terminal scrollback, screenshots, support tickets, issue comments, or AI transcripts."
+  - "Avoid pasting proprietary Dockerfiles, private image names, customer deployment paths, secret variable names, or internal registry details into public comments or prompts."
+sourceUrls:
+  - "https://hadolint.github.io/hadolint/"
+  - "https://github.com/hadolint/hadolint"
+  - "https://github.com/hadolint/hadolint/blob/master/README.md"
+  - "https://raw.githubusercontent.com/hadolint/hadolint/master/README.md"
+tags:
+  - hadolint
+  - dockerfile
+  - containers
+  - claude-code
+  - hooks
+keywords:
+  - "Hadolint hook"
+  - "Claude Code Hadolint hook"
+  - "Dockerfile diagnostics hook"
+  - "PostToolUse Dockerfile lint"
+  - "Dockerfile best practices"
+  - "container lint hook"
+readingTime: 7
+difficultyScore: 60
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+This hook runs Hadolint after Claude Code writes or edits a Dockerfile-like
+file. It is intentionally read-only: it reports diagnostics and exits non-zero
+when Hadolint reports findings, but it does not build images, run containers,
+pull base images, install packages, rewrite Dockerfiles, or execute Dockerfile
+instructions.
+
+Use it when a project contains Dockerfiles and you want immediate feedback on
+Dockerfile best practices, inline shell in `RUN` instructions, pinned images,
+trusted registries, label policy, package manager usage, and project Hadolint
+configuration after Claude edits a file.
+
+## Source Review
+
+- https://hadolint.github.io/hadolint/
+- https://github.com/hadolint/hadolint
+- https://github.com/hadolint/hadolint/blob/master/README.md
+- https://raw.githubusercontent.com/hadolint/hadolint/master/README.md
+
+These sources were reviewed on **2026-06-04**. The official Hadolint README
+describes Hadolint as a Dockerfile linter that parses Dockerfiles into an AST,
+applies rules, and uses ShellCheck for Bash inside `RUN` instructions. It also
+documents local binary use, Docker and Podman invocation options, CLI output
+formats, ignored rules, trusted registries, label checks, severity thresholds,
+and configuration file lookup.
+
+## Installation
+
+1. Install Hadolint locally through an operating system package manager or the
+   official Hadolint release path.
+2. Confirm `hadolint --help` works in the same environment Claude Code uses.
+3. Confirm `jq` is available.
+4. Save the script as `.claude/hooks/hadolint-dockerfile-diagnostics.sh`.
+5. Make it executable.
+6. Add the hook configuration to `.claude/settings.json` or user settings after
+   reviewing the behavior with your team.
+
+## Hook Configuration
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/hadolint-dockerfile-diagnostics.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Hook Script
+
+Save this as `.claude/hooks/hadolint-dockerfile-diagnostics.sh` and make it
+executable:
+
+```bash
+#!/usr/bin/env bash
+set -uo pipefail
+
+input="$(cat)"
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "Hadolint hook skipped: jq is required to parse Claude Code hook input." >&2
+  exit 0
+fi
+
+tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+case "$tool_name" in
+  Write|Edit|MultiEdit|write|edit|multiedit) ;;
+  *) exit 0 ;;
+esac
+
+if [ -z "$file_path" ] || [ ! -f "$file_path" ] || [ ! -r "$file_path" ]; then
+  exit 0
+fi
+
+file_name="$(basename "$file_path")"
+case "$file_name" in
+  Dockerfile|Dockerfile.*|*.Dockerfile|*.dockerfile|Containerfile|Containerfile.*|*.Containerfile|*.containerfile) ;;
+  *) exit 0 ;;
+esac
+
+if ! command -v hadolint >/dev/null 2>&1; then
+  echo "Hadolint hook skipped: install hadolint to enable Dockerfile diagnostics." >&2
+  exit 0
+fi
+
+echo "Hadolint hook: checking $file_path" >&2
+hadolint --format gnu "$file_path"
+status=$?
+
+if [ "$status" -ne 0 ]; then
+  echo "Hadolint hook: diagnostics found. Review Dockerfile rules, inline shell, pinned images, labels, and trusted registry policy before asking Claude to continue." >&2
+fi
+
+exit "$status"
+```
+
+## What It Checks
+
+- Dockerfile-like files such as `Dockerfile`, `Dockerfile.prod`,
+  `service.Dockerfile`, and `Containerfile`.
+- Hadolint's Dockerfile rules and output in `gnu` format.
+- Inline shell diagnostics for Bash code inside `RUN` instructions through
+  Hadolint's ShellCheck-backed behavior.
+- Project-level Hadolint configuration when present and discoverable by the
+  Hadolint binary.
+
+## What It Does Not Do
+
+- It does not build images.
+- It does not run Docker, Podman, or containerized Hadolint.
+- It does not pull base images or contact registries.
+- It does not install Hadolint.
+- It does not rewrite Dockerfiles or apply auto-fixes.
+- It does not scan image layers, packages, CVEs, SBOMs, or runtime
+  capabilities.
+- It does not approve secrets, credentials, private registries, or production
+  deployment settings.
+
+## Troubleshooting
+
+### Hook says Hadolint is missing
+
+Install Hadolint through an operating system package manager, official release,
+or another reviewed local installation path. Confirm `command -v hadolint`
+works in the same shell environment Claude Code uses.
+
+### Hook does not run for a Dockerfile
+
+This script intentionally matches Dockerfile-like basenames. Rename generated or
+custom files to a recognized Dockerfile pattern, or extend the case statement
+after reviewing the project naming convention.
+
+### Hadolint reports findings that the team intentionally ignores
+
+Prefer a reviewed project Hadolint configuration or scoped inline ignore
+comments. Keep ignored rules visible in review so the team understands why a
+rule is suppressed.
+
+### Dockerfile passes but the image is still unsafe
+
+Hadolint is static Dockerfile analysis. Pair it with image builds, vulnerability
+scans, SBOM review, secret scanning, runtime user checks, and registry policy
+where those controls matter.
+
+## Duplicate Check
+
+No existing `content/hooks`, `content/skills`, `content/agents`,
+`content/mcp`, or `content/tools` entry in this checkout matches Hadolint,
+`hadolint/hadolint`, `hadolint.github.io`, or a Dockerfile diagnostics hook.
+Open PR titles, branch names, changed files, issue titles, issue bodies, and
+source URLs were also checked before drafting this entry.
+
+This entry is distinct from the existing ShellCheck hook. ShellCheck is focused
+on shell scripts; this hook is focused on Dockerfile best-practice diagnostics
+and Hadolint's Dockerfile parser/rule set, while still benefiting from
+Hadolint's ShellCheck-backed `RUN` instruction analysis.
+
+## Editorial Disclosure
+
+This is an independent, source-backed HeyClaude content entry submitted by
+`oktofeesh1`. It is not sponsored by Hadolint or the Hadolint maintainers. The
+hook expects a user-installed Hadolint binary and does not package,
+redistribute, or verify a Hadolint release artifact.

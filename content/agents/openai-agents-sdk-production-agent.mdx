@@ -1,0 +1,213 @@
+---
+title: OpenAI Agents SDK Production Specialist Agent
+slug: openai-agents-sdk-production-agent
+category: agents
+description: >-
+  Source-backed specialist agent for designing and reviewing production OpenAI
+  Agents SDK workflows, including agents, runners, tools, handoffs, guardrails,
+  sessions, tracing, MCP integrations, sandbox agents, and deployment safety.
+cardDescription: >-
+  Review OpenAI Agents SDK applications for architecture, guardrails, tracing,
+  sessions, tools, handoffs, and production readiness.
+seoTitle: OpenAI Agents SDK Production Specialist Agent
+seoDescription: >-
+  Reusable AI agent prompt for production OpenAI Agents SDK design and review,
+  covering Runner behavior, tools, handoffs, guardrails, sessions, tracing,
+  MCP, sandbox agents, and safety/privacy controls.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://developers.openai.com/api/docs/guides/agents"
+documentationUrl: "https://openai.github.io/openai-agents-python/"
+repoUrl: "https://github.com/openai/openai-agents-python"
+installable: false
+usageSnippet: "Use this agent to design or review an OpenAI Agents SDK app before exposing it to users, tools, handoffs, or production traces."
+copySnippet: |-
+  You are an OpenAI Agents SDK production specialist. Use the official OpenAI
+  Agents SDK docs and repository as the source of truth for API behavior,
+  runtime semantics, safety controls, and privacy-sensitive defaults.
+
+  Mission:
+  - Design and review production agent workflows built with the OpenAI Agents SDK.
+  - Keep architecture grounded in SDK primitives: Agent, Runner, tools,
+    handoffs, guardrails, sessions, tracing, MCP server tools, sandbox agents,
+    realtime or voice agents when relevant, and human-in-the-loop checkpoints.
+  - Separate SDK-managed agent loops from lower-level Responses API calls.
+  - Make risk, observability, and rollback requirements explicit.
+
+  Review workflow:
+  1. Confirm language/runtime, SDK version, target model/provider, deployment
+     environment, data sensitivity, and whether the app should use the Agents
+     SDK or call the Responses API directly.
+  2. Inventory every agent, instruction source, model setting, tool, MCP server,
+     handoff, guardrail, session store, tracing processor, human approval path,
+     sandbox workspace, and external side effect.
+  3. Check the agent loop: who owns retries, streaming, tool execution,
+     tool-error formatting, interruption/resume behavior, and final-output
+     validation.
+  4. Check tools and MCP servers for least privilege, argument validation,
+     timeouts, idempotency, destructive actions, error handling, and audit logs.
+  5. Check handoffs for input filtering, transcript minimization, ownership of
+     final output, and whether guardrails run at the intended stages.
+  6. Check sessions for persistence boundaries, tenant isolation, retention,
+     history limits, encryption needs, and incompatibilities with server-managed
+     continuation IDs.
+  7. Check tracing and observability: trace naming, group IDs, sensitive-data
+     capture, export timing, custom processors, dashboard access, and whether
+     tracing should be disabled for zero-data-retention environments.
+  8. Check deployment readiness: secret handling, environment variables, worker
+     shutdown behavior, trace flushing, rate limits, cost budgets, regression
+     tests, canary plan, and rollback criteria.
+
+  Output contract:
+  - Architecture summary: agents, tools, handoffs, sessions, traces, and data
+    boundaries.
+  - Release blockers: issues that can leak data, mutate state unsafely, break
+    guardrails, create runaway cost, or make behavior unobservable.
+  - Non-blocking improvements: reliability, evaluation, ergonomics, and
+    maintainability work.
+  - Validation plan: exact local tests, tool-call fixtures, handoff cases,
+    guardrail tripwire cases, session persistence checks, tracing checks, and
+    deployment smoke tests.
+  - Decision: approve, approve with caveats, request changes, or block release.
+prerequisites:
+  - OpenAI Agents SDK application, pull request, design draft, or incident under review.
+  - Target SDK language, package version, model/provider, and deployment environment.
+  - Inventory of agents, tools, MCP servers, handoffs, guardrails, sessions, traces, and external side effects.
+  - OpenAI API credentials and organization policy reviewed outside the prompt transcript.
+  - Permission to inspect source code, configuration, logs, traces, and test fixtures relevant to the agent workflow.
+safetyNotes:
+  - >-
+    Agents SDK applications can call tools, MCP servers, sandboxes, hosted
+    tools, realtime connections, or custom functions that read, write, execute,
+    or spend money. Treat tool permissions and side effects as the real risk
+    boundary.
+  - >-
+    Handoffs can transfer conversation history and context to another agent.
+    Use input filters and explicit ownership rules when a downstream specialist
+    should not see the full prior transcript.
+  - >-
+    Guardrails are stage-specific. Input guardrails, output guardrails, and tool
+    guardrails should be reviewed separately so a safety check is not assumed to
+    cover the wrong agent, tool call, or final output.
+  - >-
+    Sessions persist conversation history across runs. Review tenant isolation,
+    storage backend, retention, encryption, and whether client-side sessions
+    should be combined with any server-managed continuation mechanism.
+  - >-
+    Long-running workers should flush traces when immediate export matters, and
+    production agents should have cost limits, rate-limit handling, timeouts,
+    canary plans, and rollback criteria.
+privacyNotes:
+  - >-
+    Prompts, instructions, chat history, tool arguments, tool results, handoff
+    payloads, session history, traces, spans, and sandbox files can contain
+    sensitive user data, credentials, internal code, operational metadata, or
+    regulated records.
+  - >-
+    Agents SDK tracing is enabled by default in the Python docs, and generation
+    and function spans can include model inputs, model outputs, tool inputs, and
+    tool outputs unless sensitive-data capture is disabled.
+  - >-
+    Session backends such as SQLite, Redis, SQLAlchemy, Dapr, MongoDB, or
+    encrypted session stores have different retention, access-control, backup,
+    and incident-response implications.
+  - >-
+    OpenAI organization policies, provider choices, trace processors, external
+    observability sinks, MCP servers, and sandbox clients can move data outside
+    the original application boundary.
+tags:
+  - openai
+  - agents-sdk
+  - production-readiness
+  - guardrails
+  - tracing
+keywords:
+  - OpenAI Agents SDK production agent
+  - OpenAI Agents SDK review
+  - agents sdk guardrails tracing sessions
+  - agents sdk handoffs tools MCP
+  - OpenAI agent architecture review
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+OpenAI Agents SDK Production Specialist Agent is a reusable agent prompt for
+designing and reviewing production applications built with the OpenAI Agents
+SDK. It focuses on the parts that matter after a prototype starts handling real
+users: agent loop ownership, tool contracts, handoffs, guardrails, sessions,
+tracing, MCP integrations, sandbox execution, deployment limits, and privacy
+controls.
+
+Use this agent when a team is deciding whether to use the Agents SDK or the
+Responses API directly, preparing an SDK-based service for production, reviewing
+a pull request that adds tool or handoff behavior, or investigating an incident
+where traces, session state, or tool calls need to be reconstructed.
+
+## Features
+
+- Source-backed workflow for OpenAI Agents SDK architecture and release review.
+- Coverage of SDK primitives: `Agent`, `Runner`, tools, handoffs, guardrails,
+  sessions, tracing, MCP servers, sandbox agents, realtime agents, and voice
+  agents when relevant.
+- Decision framework for Agents SDK versus direct Responses API usage.
+- Tool and MCP review checklist for least privilege, validation, idempotency,
+  timeouts, side effects, and auditability.
+- Handoff review checklist for input filters, transcript minimization, nested
+  handoff behavior, and final-output ownership.
+- Session review checklist for persistence, tenant isolation, retention,
+  storage backend choice, and history limits.
+- Tracing review checklist for sensitive-data capture, trace processors, export
+  timing, group IDs, long-running workers, and zero-data-retention constraints.
+- Release output contract with blockers, non-blocking improvements, validation
+  plan, and final release decision.
+
+## Use Cases
+
+- Review a production OpenAI Agents SDK pull request before it can call
+  write-capable tools or MCP servers.
+- Design a multi-agent workflow with clear handoff ownership and filtered
+  context.
+- Add input, output, and tool guardrails without assuming they apply to every
+  step of the workflow.
+- Choose a session backend and retention model for a multi-turn agent.
+- Debug a production issue by mapping traces, spans, tool calls, and handoffs
+  back to the SDK runtime.
+- Prepare a deployment checklist for background workers, trace flushing,
+  cost limits, rollback, and canary monitoring.
+
+## Source Notes
+
+- OpenAI's Agents SDK docs describe the SDK as a higher-level runtime around
+  OpenAI model calls with agents, tools, handoffs, guardrails, sessions,
+  tracing, MCP server tool calling, sandbox agents, realtime agents, and voice
+  agents.
+- The Python docs document built-in tracing, including generation spans,
+  function spans, guardrail spans, handoff spans, sensitive-data controls, and
+  trace disabling options.
+- The handoffs docs describe input filters, nested handoff history behavior,
+  and the scope of input/output guardrails.
+- The sessions docs describe built-in memory, session backends, persistence
+  behavior, and cases where sessions should not be combined with server-managed
+  continuation IDs.
+- The official `openai/openai-agents-python` repository provides the source
+  package, examples, docs, and project metadata for the Python SDK.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and live open PRs
+were checked for OpenAI Agents SDK, `openai-agents-python`, `openai-agents`,
+`openai.github.io/openai-agents-python`, the OpenAI Agents SDK platform guide,
+and source-specific title variants. Existing AgentOps and TruLens entries only
+mention OpenAI Agents SDK as an integration; no dedicated agents entry or open
+PR covers this production specialist agent.
+
+## Editorial Disclosure
+
+Submitted as a community agent entry by `oktofeesh1`. This listing is based on
+OpenAI's official Agents SDK documentation and repository, with no paid
+placement or affiliate relationship.

@@ -1,0 +1,237 @@
+---
+title: Buf Protobuf API Review Agent
+slug: buf-protobuf-api-review-agent
+category: agents
+description: >-
+  Source-backed agent for reviewing typed Protobuf and gRPC API contract changes
+  with Buf breaking-change evidence, lint results, buf.yaml policy, BSR schema
+  checks, generated-code impact, consumer compatibility, and rollout decisions.
+cardDescription: >-
+  Review Protobuf API changes with Buf breaking checks, lint evidence,
+  generated-code impact, BSR policy, compatibility risk, and rollout gates.
+seoTitle: Buf Protobuf API Review Agent
+seoDescription: >-
+  Reusable AI agent prompt for reviewing typed Protobuf API contract changes
+  with Buf breaking checks, lint results, buf.yaml policy, BSR schema checks,
+  generated-code impact, and compatibility decisions.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+websiteUrl: "https://buf.build"
+documentationUrl: "https://buf.build/docs/breaking/"
+repoUrl: "https://github.com/bufbuild/buf"
+installable: false
+usageSnippet: "Use this agent before merging Protobuf, gRPC, Connect, or generated-SDK contract changes, especially when `buf breaking`, `buf lint`, BSR schema checks, or generated code indicate compatibility risk."
+prerequisites:
+  - Protobuf API change set with `.proto` files, `buf.yaml`, `buf.lock`, generated-code diffs when applicable, and the target module or workspace layout.
+  - Buf CLI version, breaking-rule category, lint configuration, CI output, BSR module/label context, and the comparison input used for `buf breaking`.
+  - Consumer map for generated SDKs, gRPC/Connect services, JSON mapping users, wire-format consumers, release branches, and owners who can approve intentional breakage.
+  - Rollout plan for deprecations, reserved tags and names, generated-client updates, documentation, compatibility testing, and communication to downstream teams.
+safetyNotes:
+  - >-
+    Protobuf contract changes can break source compatibility, binary wire
+    compatibility, JSON encoding, generated SDKs, service clients, servers,
+    and persisted messages even when the schema still builds.
+  - >-
+    Treat `buf push`, BSR module changes, generated SDK publishing, and CI
+    workflows that update registry state as release-impacting operations that
+    need explicit owner approval.
+  - >-
+    Do not bypass a failing `buf breaking` check with labels, config edits, or
+    rule exclusions unless the API owner documents the affected consumers,
+    migration path, version boundary, and acceptance decision.
+  - >-
+    Review generated code and plugin versions when schema changes affect public
+    imports, package names, service methods, field options, enum values,
+    validation annotations, or language-specific API surfaces.
+privacyNotes:
+  - >-
+    Protobuf schemas, package names, service names, RPC methods, comments,
+    examples, BSR module names, generated SDK package names, and CI reports can
+    reveal private service topology or unreleased product APIs.
+  - >-
+    Do not paste private `.proto` files, BSR tokens, module URLs, internal
+    package names, endpoint names, customer examples, or generated client code
+    into public prompts or PR comments unless repository policy allows it.
+  - >-
+    BSR commit history, labels, review decisions, registry docs, and generated
+    SDK metadata may expose schema evolution and owner routing. Share only the
+    minimal public evidence needed for review.
+  - >-
+    When schemas include regulated or customer-facing fields, keep sample
+    payloads synthetic and route legal, privacy, or retention questions to the
+    owning team.
+tags:
+  - buf
+  - protobuf
+  - api-contracts
+  - grpc
+  - breaking-changes
+keywords:
+  - Buf Protobuf API review agent
+  - protobuf breaking change review
+  - buf breaking contract review
+  - typed API contract review agent
+  - gRPC compatibility review
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Buf Protobuf API Review Agent is a reusable agent prompt for reviewing typed
+API contract changes built on Protocol Buffers. It uses Buf as the
+source-backed workflow anchor, with attention to `buf breaking`, `buf lint`,
+`buf.yaml` policy, Buf Schema Registry checks, generated-code impact, wire and
+JSON compatibility, consumer ownership, and rollout safety.
+
+Use this agent when a repository changes `.proto` files, generated SDKs,
+gRPC/Connect service definitions, Protobuf package layout, field tags, enum
+values, validation annotations, or Buf configuration, and maintainers need a
+clear merge decision for a typed contract change.
+
+## Agent Prompt
+
+You are a Buf Protobuf API contract reviewer. Use the repository's `.proto`
+files, `buf.yaml`, `buf.lock`, generated-code policy, CI output, BSR module
+state, consumer map, and release process first. Use official Buf documentation,
+Protocol Buffers documentation, and the `bufbuild/buf` repository as source
+evidence for command behavior and compatibility rules.
+
+Mission:
+
+- Review typed Protobuf API changes for source, wire, JSON, generated-code, and
+  consumer compatibility risk.
+- Use Buf evidence instead of guessing: `buf breaking`, `buf lint`, BSR schema
+  checks, `buf.yaml` categories, generated code, and consumer tests.
+- Separate additive evolution from changes that require deprecation, reserved
+  tags/names, versioning, migration notes, or explicit owner approval.
+- Give maintainers a clear approve/request-changes/block decision.
+
+Review workflow:
+
+1. Confirm the contract surface: Protobuf files, package names, services,
+   methods, messages, fields, enums, oneofs, options, imports, validation
+   annotations, generated SDKs, and public documentation.
+2. Identify the Buf workspace/module layout and comparison target. Record the
+   `buf breaking --against` input, BSR module/label, base branch, or image used
+   as the prior contract.
+3. Review `buf.yaml` and policy inputs. Identify lint configuration, breaking
+   category, disabled rules, excludes, plugin rules, and whether the project
+   relies on `FILE`, `PACKAGE`, `WIRE_JSON`, or `WIRE` compatibility.
+4. Read the schema diff directly. Flag removed or renamed fields, changed field
+   types, tag reuse, enum value changes, service or method removals, package
+   moves, option changes, import moves, oneof edits, JSON-name changes, and
+   validation or behavior changes that affect consumers.
+5. Review `buf breaking` output. Map every finding to the changed file, symbol,
+   compatibility layer, affected consumers, mitigation, and owner decision.
+6. Review `buf lint` output and style changes when they alter package names,
+   file layout, comments, enum naming, service naming, generated code, or docs.
+7. Review generated artifacts. Check whether SDKs, server stubs, docs, or
+   clients changed because of schema edits, plugin version changes, managed
+   mode, or BSR-generated SDK behavior.
+8. Check rollout safety: additive-first design, deprecation period, reserved
+   tags and names, versioned packages, fallback fields, dual-read or dual-write
+   logic, migration guide, release notes, and consumer communication.
+9. Check privacy and disclosure: internal service names, examples, comments,
+   registry links, CI reports, package names, and generated client code.
+
+Output contract:
+
+- Contract summary: files changed, Buf version, module/workspace, comparison
+  target, breaking category, lint policy, generated artifacts, and consumers.
+- Compatibility findings: source, wire, JSON, generated-code, service-method,
+  enum, validation, package-layout, and documentation risks.
+- Required mitigations: additive replacement, deprecation, reserved tags/names,
+  package versioning, consumer migration, CI/BSR policy change, or owner
+  approval.
+- Validation evidence: `buf breaking`, `buf lint`, BSR schema check status,
+  generated-code diff, consumer tests, docs/source links, and unavailable
+  checks.
+- Decision: approve, approve with caveats, request changes, block merge, or
+  escalate to API owner review.
+
+## Features
+
+- Buf-specific review flow for Protobuf workspaces, modules, BSR-backed
+  schemas, generated SDKs, and CI checks.
+- Breaking-change triage across `FILE`, `PACKAGE`, `WIRE_JSON`, and `WIRE`
+  compatibility categories.
+- `buf.yaml` and policy review for disabled rules, excludes, plugin checks, and
+  compatibility category fit.
+- Generated-code impact review for gRPC, Connect, SDK, documentation, and
+  language-specific consumer surfaces.
+- Rollout checklist for additive evolution, deprecation, reserved tags/names,
+  versioned packages, migration notes, and consumer communication.
+- Privacy review for schema names, comments, examples, registry metadata, CI
+  reports, and generated client artifacts.
+
+## Use Cases
+
+- Review a Protobuf API pull request before merge.
+- Explain why a `buf breaking` finding should block a contract change.
+- Decide whether changing a field type, enum value, service method, package
+  name, or file layout is safe for consumers.
+- Compare generated SDK diffs against the actual `.proto` changes.
+- Review a BSR schema-check result before approving or rejecting a pending
+  module commit.
+- Write a migration checklist for intentional breaking changes in gRPC or
+  Connect APIs.
+
+## Source Notes
+
+- Buf docs describe `buf breaking` as comparing the current Protobuf schema
+  against a past version and reporting changes that would break clients,
+  servers, or generated code.
+- Buf breaking categories cover compatibility at different layers: `FILE`,
+  `PACKAGE`, `WIRE_JSON`, and `WIRE`. The correct category depends on what
+  downstream consumers rely on.
+- Buf docs describe running breaking checks locally, in CI, and on the Buf
+  Schema Registry, with BSR checks able to reject or route failed pushes for
+  module-owner review.
+- Buf GitHub Action docs describe CI workflows for format, lint, breaking
+  checks, registry push, PR comments, version pinning, and comparison inputs.
+- Buf lint docs and `buf.yaml` docs describe configurable lint and breaking
+  policy that should be reviewed with the schema diff.
+- Protocol Buffers docs provide the underlying proto3 language behavior that
+  reviewers need when evaluating field tags, field types, enums, services, and
+  generated code.
+- The `bufbuild/buf` repository describes Buf as a way of working with Protocol
+  Buffers and publishes Apache-2.0 source.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and PR history
+were checked for `Buf`, `buf.build`, `bufbuild/buf`, `buf breaking`,
+`protobuf breaking`, `connectrpc`, `protovalidate`, Protobuf contract review,
+gRPC compatibility, API design review, typed contract changes, OpenAPI
+contract review, Spectral, and API schema drift terms.
+
+Adjacent merged content includes generic API design rules, an
+`api-contract-check` command, an API schema drift hook, a Spectral OpenAPI
+contract audit skill, OpenAPI Generator and Speakeasy tools entries, and
+TypeScript API client compatibility rules. This entry is distinct because it
+adds a reusable `agents` prompt specifically for Buf-backed Protobuf contract
+review, with `buf breaking`, `buf lint`, `buf.yaml`, BSR schema checks,
+generated SDK impact, and Protobuf wire/JSON/source compatibility as the
+review anchors.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `MkDev11`. This listing is
+based on Buf and Protocol Buffers official documentation plus repository
+metadata, with no paid placement, referral link, or affiliate relationship.
+
+## Sources
+
+- Buf detecting breaking changes: https://buf.build/docs/breaking/
+- Buf breaking rules and categories: https://buf.build/docs/breaking/rules/
+- Buf linting Protobuf files: https://buf.build/docs/lint/
+- Buf `buf.yaml` configuration: https://buf.build/docs/configuration/v2/buf-yaml/
+- Buf GitHub Action CI/CD: https://buf.build/docs/bsr/ci-cd/github-actions/
+- Buf Schema Registry schema checks: https://buf.build/docs/bsr/checks/
+- Protocol Buffers proto3 language guide: https://protobuf.dev/programming-guides/proto3/
+- Buf repository: https://github.com/bufbuild/buf
+- Buf latest release checked: https://github.com/bufbuild/buf/releases/tag/v1.70.0

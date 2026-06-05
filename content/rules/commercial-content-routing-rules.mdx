@@ -1,0 +1,233 @@
+---
+title: Commercial Content Routing Rules
+slug: commercial-content-routing-rules
+category: rules
+description: >-
+  Source-backed rules for AI workflow directories that need to classify
+  commercial, sponsored, affiliate, vendor-authored, and thin promotional
+  submissions before they enter the ordinary editorial content queue.
+cardDescription: >-
+  Route commercial and promotional directory submissions with clear disclosure,
+  source evidence, reviewer ownership, and rejection criteria.
+seoTitle: Commercial Content Routing Rules for AI Workflow Directories
+seoDescription: >-
+  Practical rules for routing sponsored, affiliate, vendor-authored, and
+  promotional directory submissions without mixing them into ordinary editorial
+  content review.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://developers.google.com/search/docs/essentials/spam-policies"
+sourceUrls:
+  - "https://developers.google.com/search/docs/essentials/spam-policies"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links"
+  - "https://www.asa.org.uk/advice-online/recognising-ads-social-media.html"
+  - "https://www.asa.org.uk/type/non_broadcast/code_section/02.html"
+  - "https://www.asa.org.uk/type/non_broadcast/code_section/03.html"
+  - "https://schema.org/sponsor"
+installable: false
+usageSnippet: >-
+  Apply these rules before accepting a directory submission that includes paid
+  placement, affiliate links, vendor claims, sponsored language, promotional
+  copy, or unclear author relationships.
+copySnippet: |-
+  You are reviewing a commercial or promotional submission for an AI workflow
+  directory.
+
+  Rules:
+  1. Classify the submitter relationship before judging quality.
+  2. Route paid, sponsored, affiliate, claimed, or vendor-authored submissions to
+     maintainer-owned commercial review instead of ordinary editorial review.
+  3. Reject affiliate or referral URLs in free contributor content.
+  4. Require clear disclosure when a listing is sponsored, affiliate-backed,
+     vendor-authored, or commercially claimed.
+  5. Keep editorial listings source-backed, comparative, and non-promotional.
+  6. Do not merge thin product copy, unsupported superlatives, or tracking links.
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - A directory submission policy that separates ordinary editorial content from sponsored, affiliate, claimed, or vendor-submitted listings.
+  - Permission to block, reroute, or request edits when a submission includes commercial claims, tracking URLs, or unclear sponsorship.
+  - Access to the submitted source URLs, repo/package metadata, pricing or plan pages, and any disclosed author or vendor relationship.
+  - A maintainer-owned path for commercial review so contributors do not need to negotiate paid placement inside ordinary pull requests.
+safetyNotes:
+  - "Commercial routing is an editorial control, not a legal compliance guarantee; escalate uncertain sponsorship, endorsement, or advertising questions to the maintainer or counsel."
+  - "Do not let generated copy invent rankings, endorsements, security claims, customer counts, pricing promises, or benchmark results."
+  - "Treat paid placement, affiliate links, vendor claims, and product submissions as higher-review-risk even when the linked product is technically useful."
+privacyNotes:
+  - "Commercial submissions may include submitter identity, company relationship, pricing terms, sales contacts, invite links, private roadmap claims, or analytics parameters."
+  - "Remove tracking parameters and do not expose private sponsorship negotiations, vendor emails, account IDs, coupon codes, or referral IDs in public review threads."
+  - "Keep reviewer notes focused on observable source evidence and directory policy rather than private commercial discussions."
+tags:
+  - commercial-review
+  - sponsored-content
+  - affiliate-links
+  - directory-policy
+  - editorial-review
+  - disclosure
+keywords:
+  - commercial content routing rules
+  - promotional directory submission review
+  - sponsored AI workflow listing policy
+  - affiliate link rejection rules
+  - vendor-authored directory content
+readingTime: 6
+difficultyScore: 34
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when an AI workflow directory receives a submission that might
+be commercial, sponsored, affiliate-backed, vendor-authored, vendor-claimed, or
+promotional. The goal is to keep ordinary editorial content review separate from
+commercial placement and to make disclosure decisions before copy quality is
+debated.
+
+These rules do not decide whether a product is good. They decide which review
+path a submission belongs in and what evidence must exist before it can appear
+in a public directory.
+
+## Classification Rules
+
+Classify the submission before editing prose.
+
+1. **Editorial.** A contributor independently documents a tool, workflow, rule,
+   guide, or directory entry without payment, affiliate benefit, vendor control,
+   or claimed ownership.
+2. **Vendor-authored.** The author works for, owns, maintains, represents, or is
+   formally connected to the listed product or service.
+3. **Claimed.** A vendor or maintainer asks to own or correct an existing entry.
+4. **Sponsored.** Placement, ordering, copy, links, or visibility are connected
+   to payment, campaign value, or a commercial arrangement.
+5. **Affiliate or referral.** A URL, coupon, invite code, tracking parameter, or
+   account-specific link can create attribution, compensation, credits, or lead
+   tracking.
+6. **Thin promotion.** The submission mostly repeats sales copy, superlatives,
+   launch language, pricing promises, or unsupported competitive claims.
+
+When the classification is unclear, route the submission to maintainer review.
+Do not merge it as ordinary editorial content while the relationship is unknown.
+
+## Routing Rules
+
+- Route sponsored, affiliate, referral, claimed, and vendor-authored submissions
+  out of the free contributor queue.
+- Keep commercial review maintainer-owned. Contributors can supply evidence, but
+  they should not decide paid placement, sponsorship labels, or affiliate terms.
+- Reject affiliate and referral URLs in ordinary contributor PRs.
+- Replace tracking URLs with canonical documentation, repository, package, or
+  product URLs before editorial review continues.
+- Require disclosure text when the submitter has a vendor, sponsor, affiliate,
+  or ownership relationship.
+- Do not accept a commercial submission that lacks public source evidence for
+  the claims it wants the directory to repeat.
+
+## Editorial Quality Rules
+
+Ordinary editorial content should describe verifiable utility rather than sell.
+
+Accept content that:
+
+- cites canonical docs, repos, packages, policies, or product pages;
+- explains concrete use cases, prerequisites, limits, safety notes, and privacy
+  notes;
+- distinguishes open-source project code from hosted, paid, enterprise, or
+  managed offerings;
+- states commercial status plainly without making the entry sound endorsed;
+- removes tracking parameters, marketing campaign fragments, and unverifiable
+  rankings.
+
+Request changes or reject content that:
+
+- says a product is best, leading, official, trusted, secure, fastest, or most
+  popular without source-backed evidence;
+- imports landing-page copy without adding directory-specific context;
+- hides paid plans, hosted services, enterprise upsells, or vendor control when
+  they affect user expectations;
+- uses affiliate links, invite links, coupon links, UTM-heavy links, or short
+  links as source URLs;
+- asks the directory to publish private roadmap, sales, customer, or pricing
+  claims that users cannot verify.
+
+## Disclosure Rules
+
+Commercial status should be visible to reviewers and users.
+
+- Say when a listing is editorial and has no paid placement or affiliate link.
+- Say when a product has open-source code plus hosted, commercial, enterprise,
+  marketplace, or paid support offerings.
+- Say when a submission is vendor-authored, vendor-claimed, sponsored, or
+  affiliate-backed.
+- Use sponsored or affiliate link attributes when a published outbound link is
+  commercial in that way.
+- Keep disclosure close to the listing rather than hiding it only in PR comments
+  or internal notes.
+
+Disclosure does not rescue thin content. A sponsored or vendor-authored entry
+still needs source evidence, safety notes, privacy notes, and directory-specific
+editorial value.
+
+## Reviewer Checklist
+
+- [ ] {"task": "Relationship classified", "description": "The submitter relationship is editorial, vendor-authored, claimed, sponsored, affiliate, referral, or unknown"}
+- [ ] {"task": "Correct route", "description": "Commercial or unclear submissions are routed to maintainer-owned review, not merged through the ordinary contributor queue"}
+- [ ] {"task": "Canonical links", "description": "Source URLs are canonical and do not contain affiliate, referral, coupon, short-link, or campaign tracking parameters"}
+- [ ] {"task": "Disclosure present", "description": "Paid placement, sponsorship, affiliate status, vendor authorship, or commercial ownership is disclosed where relevant"}
+- [ ] {"task": "Claims verified", "description": "Feature, pricing, license, security, popularity, benchmark, and compatibility claims have public source evidence"}
+- [ ] {"task": "Editorial value", "description": "The entry explains use case, prerequisites, limits, safety, and privacy instead of repeating promotional copy"}
+
+## Do Not Merge When
+
+- the author relationship is unknown and may be commercial;
+- the PR contains affiliate, referral, coupon, invite, short-link, or tracking
+  URLs in contributor content;
+- a vendor-authored entry is presented as independent editorial review;
+- sponsored placement is requested without maintainer-owned commercial review;
+- public claims depend on private emails, sales decks, or unverified launch
+  language;
+- generated text turns source facts into endorsements, rankings, or unsupported
+  comparative claims.
+
+## Troubleshooting
+
+- **The tool is useful but the PR is promotional:** reroute it first, then ask
+  for source-backed, neutral copy.
+- **The contributor says there is no sponsorship:** ask them to remove tracking
+  URLs and state whether they have a vendor, affiliate, or ownership
+  relationship.
+- **A vendor submits corrections to an existing entry:** separate factual fixes
+  from placement, ordering, or promotional requests.
+- **A link looks canonical but includes parameters:** remove UTM, referral,
+  coupon, invite, and partner parameters before using it as a source.
+- **A claim is plausible but unsourced:** keep the neutral fact that can be
+  verified and drop the unsupported superlative.
+
+## Duplicate Check
+
+Checked existing rules, guides, collections, tools, MCP entries, statuslines,
+submission validators, and recent PRs for commercial routing rules, sponsored
+directory submissions, affiliate link rejection, vendor-authored content,
+promotional copy review, and disclosure policy.
+
+Existing entries often include per-listing disclosure text such as "no paid
+placement or affiliate link is used," and the submission pipeline rejects
+affiliate/referral URLs. This rules entry is distinct because it gives portable
+do/don't behavior for deciding whether a directory submission belongs in
+ordinary editorial review, maintainer-owned commercial review, or rejection.
+
+## References
+
+- Google Search Central spam policies: https://developers.google.com/search/docs/essentials/spam-policies
+- Google Search Central guide to helpful, reliable, people-first content: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+- Google Search Central guide to qualifying outbound links: https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links
+- ASA guidance on recognizing ads: https://www.asa.org.uk/advice-online/recognising-ads-social-media.html
+- ASA CAP Code Section 2 on recognition of marketing communications: https://www.asa.org.uk/type/non_broadcast/code_section/02.html
+- ASA CAP Code Section 3 on misleading advertising: https://www.asa.org.uk/type/non_broadcast/code_section/03.html
+- Schema.org sponsor property: https://schema.org/sponsor
