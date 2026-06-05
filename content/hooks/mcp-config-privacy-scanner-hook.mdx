@@ -132,7 +132,7 @@ scriptBody: |-
       | select(
           (.key | test("(TOKEN|KEY|SECRET|PASSWORD|PAT|COOKIE|SESSION|PRIVATE|CREDENTIAL|AUTHORIZATION)"; "i"))
           and (.value | type == "string")
-          and ((.value | test("^(Bearer\\s+)?\\$\\{?[A-Za-z_][A-Za-z0-9_]*(:-[^}]*)?\\}?$|^<[^>]+>$|^$|^REPLACE_|^your-|^example"; "i")) | not)
+          and ((.value | test("^(Bearer\\s+)?(\\$[A-Za-z_][A-Za-z0-9_]*|\\$\\{[A-Za-z_][A-Za-z0-9_]*\\})$|^<[^>]+>$|^$|^REPLACE_|^your-|^example"; "i")) | not)
         )
       | .key
     ' 2>/dev/null | sort -u)
@@ -165,9 +165,14 @@ scriptBody: |-
 
   secret_name_re='(TOKEN|KEY|SECRET|PASSWORD|PAT|COOKIE|SESSION|PRIVATE|CREDENTIAL|AUTHORIZATION)'
   literal_secret_re="\"[A-Za-z0-9_ -]*${secret_name_re}[A-Za-z0-9_ -]*\"[[:space:]]*:[[:space:]]*\"(Bearer[[:space:]]+)?[^\"\\$<{][^\"]{8,}\""
+  default_expansion_secret_re="\"[A-Za-z0-9_ -]*${secret_name_re}[A-Za-z0-9_ -]*\"[[:space:]]*:[[:space:]]*\"(Bearer[[:space:]]+)?\\$\{[A-Za-z_][A-Za-z0-9_]*:-[^}\"]{8,}\}\""
   credential_url_re='https?://[^[:space:]"<>]+[?&](access_token|api_key|token|password|client_secret)='
 
   if printf '%s\n' "$content" | grep -Eiq -- "$literal_secret_re"; then
+    add_finding "inline credential value in env or headers"
+  fi
+
+  if printf '%s\n' "$content" | grep -Eiq -- "$default_expansion_secret_re"; then
     add_finding "inline credential value in env or headers"
   fi
 
