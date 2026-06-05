@@ -31,14 +31,14 @@ copySnippet: |-
   2. Require an OAuth resource indicator tied to the exact MCP resource.
   3. Reject tokens accepted for the wrong audience or another MCP server.
   4. Verify scopes are narrow enough for the advertised tools.
-  5. Block token forwarding unless the source and destination trust boundary is explicit.
+  5. Block forwarding incoming user tokens across MCP servers or backend services.
   6. Document revocation, refresh, storage, and user consent behavior.
   7. Keep source evidence public and credential details private.
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:
   - Remote MCP server URL, transport type, and authorization server metadata.
-  - Protected resource metadata or documented reason it is not required.
+  - Protected resource metadata discovery path for the exact MCP endpoint.
   - Scope list, token audience expectations, and tool permission map.
 safetyNotes:
   - "These rules do not execute the MCP server; they define review requirements before a server is connected to a real account."
@@ -90,7 +90,8 @@ scope map, or public source evidence, mark the submission as incomplete.
 
 - Reject a remote MCP server that accepts a token minted for another resource.
 - Reject a server that requires broad account scopes when narrower scopes exist.
-- Reject silent token forwarding across MCP servers or backend services.
+- Reject forwarding incoming user tokens across MCP servers or backend services;
+  documentation of a trust boundary is not a substitute for token isolation.
 - Reject documentation that says "OAuth supported" without showing issuer,
   resource, scopes, and consent behavior.
 - Reject tools that can write account data without explicit safety and privacy
