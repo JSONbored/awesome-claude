@@ -53,8 +53,11 @@ describe("submission automation workflows", () => {
         env: {
           ...process.env,
           BASE_SHA: baseSha,
+          BASE_REF: "",
           FORCE_FULL_VALIDATION: "0",
+          GITHUB_BASE_REF: "",
           GITHUB_EVENT_NAME: "pull_request",
+          HEAD_SHA: "",
           GITHUB_OUTPUT: outputPath,
           GITHUB_HEAD_REF: "contributor/source-entry",
           HEAD_REF: "contributor/source-entry",
@@ -342,7 +345,13 @@ describe("submission automation workflows", () => {
     expect(source).toContain("required-pr-gate:");
     expect(source).toContain("validate-content-${{ matrix.category }}");
     expect(source).toContain(
+      "always() && needs.classify-pr.outputs.content == 'true'",
+    );
+    expect(source).toContain(
       "fromJson(needs.classify-pr.outputs.content_categories_json)",
+    );
+    expect(source).toContain(
+      "changed_files_json: ${{ steps.classify.outputs.changed_files_json }}",
     );
     expect(source).toContain("Summarize required PR validation");
     expect(source).toContain('trunk check --ci --upstream "$BASE_SHA"');
@@ -376,6 +385,8 @@ describe("submission automation workflows", () => {
     expect(source).toContain("trusted_policy");
     expect(source).toContain("trusted_policy_dir");
     expect(source).toContain("runtime_lock_path");
+    expect(source).toContain("CHANGED_FILES_JSON:");
+    expect(source).toContain('--files-json "$changed_files_json_path"');
     expect(source).toContain(
       "scripts/ci/content-policy-runtime/package-lock.json",
     );
