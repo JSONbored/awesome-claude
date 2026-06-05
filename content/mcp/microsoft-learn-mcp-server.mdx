@@ -1,0 +1,125 @@
+---
+title: Microsoft Learn MCP Server
+slug: microsoft-learn-mcp-server
+category: mcp
+description: >-
+  Official Microsoft Learn remote MCP server that gives AI agents real-time
+  access to Microsoft documentation search, page fetch, and code sample search.
+cardDescription: Ground Microsoft stack answers in official Learn docs through a remote MCP server.
+seoTitle: Microsoft Learn MCP Server for Claude and AI Coding Agents
+seoDescription: >-
+  Connect Claude, VS Code, Copilot, or another MCP client to the official
+  Microsoft Learn MCP server for documentation search, page fetch, and code
+  sample retrieval from Microsoft Learn.
+author: Microsoft
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://devblogs.microsoft.com/engineering-at-microsoft/how-we-built-the-microsoft-learn-mcp-server/"
+repoUrl: "https://github.com/microsoft/mcp"
+installable: true
+installCommand: "claude mcp add --transport http microsoft-learn https://learn.microsoft.com/api/mcp"
+usageSnippet: "Ask Claude to search Microsoft Learn for the current Azure, .NET, Power Platform, or Microsoft 365 docs before drafting implementation guidance."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "microsoft-learn": {
+        "url": "https://learn.microsoft.com/api/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "microsoft-learn": {
+        "url": "https://learn.microsoft.com/api/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - An MCP-compatible client that supports remote HTTP MCP servers.
+  - Network access to learn.microsoft.com.
+  - A Microsoft technology question where official Learn grounding is useful.
+safetyNotes:
+  - The server is documentation-focused, but retrieved docs can still influence generated commands; review commands before running them.
+  - Remote MCP availability and schema can change, so verify client compatibility before depending on it in automation.
+privacyNotes:
+  - Prompts and queries sent to a remote MCP server can reveal product names, architecture details, or error messages.
+  - Avoid sending customer identifiers or private tenant data when documentation search is enough.
+sourceUrls:
+  - "https://github.com/microsoft/mcp"
+  - "https://devblogs.microsoft.com/engineering-at-microsoft/how-we-built-the-microsoft-learn-mcp-server/"
+  - "https://learn.microsoft.com/api/mcp"
+tags:
+  - microsoft
+  - learn
+  - docs
+  - remote-mcp
+  - official
+keywords:
+  - Microsoft Learn MCP server
+  - Learn MCP Claude config
+  - Microsoft docs MCP
+  - remote MCP documentation search
+  - official Microsoft MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Microsoft Learn MCP Server exposes Microsoft Learn documentation through Model
+Context Protocol so agents can search and fetch official Microsoft content while
+answering development questions. Microsoft describes the server as a remote MCP
+endpoint backed by the Learn knowledge service, with tools for documentation
+search, full-page fetch, and code sample search.
+
+## Features
+
+- Remote MCP endpoint at `https://learn.microsoft.com/api/mcp`.
+- Official Microsoft source for Learn documentation grounding.
+- Documentation search that returns titles, content sections, and source URLs.
+- Page fetch for full article context.
+- Code sample search for language-specific examples.
+- Useful for Azure, .NET, Microsoft 365, Power Platform, Microsoft Foundry, and other Microsoft stack workflows.
+
+## Installation
+
+For clients that support remote HTTP MCP servers, register the endpoint as a
+remote server. In Claude Code, start with:
+
+```sh
+claude mcp add --transport http microsoft-learn https://learn.microsoft.com/api/mcp
+```
+
+If your client has a JSON configuration file, add the endpoint as a remote MCP
+server and restart the client. Verify by asking for a Microsoft Learn-backed docs
+search on a small topic.
+
+## Example Prompt
+
+```text
+Use Microsoft Learn MCP to find the current Azure Functions timer trigger docs,
+then summarize the required CRON expression format and cite the source URL.
+```
+
+## Safety and Privacy
+
+This server is documentation-oriented and does not need access to your local
+files. The main risk is overtrusting generated implementation commands. Treat the
+retrieved docs as source material, then review generated code and deployment
+commands normally.
+
+## Duplicate Check
+
+Existing entries cover Azure MCP and GitHub MCP. This entry is specific to the
+Microsoft Learn documentation server and its remote `learn.microsoft.com` MCP
+endpoint.
+
+## References
+
+- Microsoft MCP catalog - https://github.com/microsoft/mcp
+- Engineering write-up - https://devblogs.microsoft.com/engineering-at-microsoft/how-we-built-the-microsoft-learn-mcp-server/
+- Remote endpoint - https://learn.microsoft.com/api/mcp
