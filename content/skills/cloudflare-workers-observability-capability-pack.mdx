@@ -1,0 +1,87 @@
+---
+title: Cloudflare Workers Observability Capability Pack
+slug: cloudflare-workers-observability-capability-pack
+category: skills
+description: >-
+  Reusable skill for reviewing Cloudflare Workers logs, traces, AI Gateway
+  traffic, error patterns, tail output, and deployment observability before
+  production rollout.
+cardDescription: Review Workers and AI Gateway observability signals before scaling edge AI apps.
+seoTitle: Cloudflare Workers Observability Capability Pack
+seoDescription: >-
+  Capability pack for auditing Cloudflare Workers observability, Wrangler tail,
+  logs, traces, AI Gateway signals, error budgets, and rollout diagnostics.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://developers.cloudflare.com/workers/observability/"
+downloadUrl: "https://github.com/cloudflare/workers-sdk/archive/refs/heads/main.zip"
+installable: true
+installCommand: "wrangler tail"
+usageSnippet: "Use before or after a Worker deploy when logs, request IDs, AI Gateway traffic, or error spikes need review."
+copySnippet: |-
+  # Cloudflare Workers Observability Skill
+  Inspect deploy output, Worker logs, request IDs, error rates, tail output, AI
+  Gateway signals, and rollback criteria. Return current state, evidence, and
+  next action.
+skillType: capability-pack
+skillLevel: advanced
+verificationStatus: draft
+verifiedAt: "2026-06-05"
+retrievalSources:
+  - "https://developers.cloudflare.com/workers/observability/"
+  - "https://developers.cloudflare.com/workers/wrangler/commands/#tail"
+  - "https://developers.cloudflare.com/ai-gateway/features/observability/"
+  - "https://github.com/cloudflare/workers-sdk"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cloudflare Workers
+prerequisites:
+  - Worker name, deployment version, and environment.
+  - Access to Cloudflare logs or Wrangler tail output.
+safetyNotes:
+  - Logs may include request metadata, user-provided input, and error traces.
+privacyNotes:
+  - Redact tokens, IP addresses, account IDs, and private prompts before publishing diagnostics.
+tags:
+  - cloudflare
+  - workers
+  - observability
+  - wrangler
+  - ai-gateway
+keywords:
+  - Cloudflare Workers observability skill
+  - wrangler tail debugging
+  - AI Gateway monitoring capability pack
+readingTime: 5
+difficultyScore: 63
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Usage
+
+Use this skill during deploy verification, incident triage, or AI traffic review.
+It separates dashboard truth, Worker runtime truth, and gateway/provider truth
+instead of assuming one healthy surface proves all of them.
+
+## Output Contract
+
+- Worker version and route checked.
+- Error and latency evidence.
+- Tail/log excerpts with redactions.
+- AI Gateway request/provider signals if applicable.
+- Rollback criteria.
+- Next action.
+
+## Retrieval Sources
+
+- https://developers.cloudflare.com/workers/observability/
+- https://developers.cloudflare.com/workers/wrangler/commands/#tail
+- https://developers.cloudflare.com/ai-gateway/features/observability/
+- https://github.com/cloudflare/workers-sdk
