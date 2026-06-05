@@ -47,6 +47,12 @@ function compactWhitespace(value) {
 
 const GITHUB_LOGIN_PATTERN =
   /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?(?:\[bot\])?$/;
+const FINANCIAL_OR_IDENTITY_PATTERN =
+  /\b(private key|wallet|kyc|usdc|x402|payment|crypto|on-chain)\b/i;
+const IDENTITY_ATTESTATION_PATTERN =
+  /\battestations?\b[\s\S]{0,120}\b(wallet|kyc|payment|crypto|on-chain identity|identity proof|identity verification|proof of personhood|verifiable credential)\b/i;
+const IDENTITY_ATTESTATION_REVERSE_PATTERN =
+  /\b(wallet|kyc|payment|crypto|on-chain identity|identity proof|identity verification|proof of personhood|verifiable credential)\b[\s\S]{0,120}\battestations?\b/i;
 
 // Keep these Markdown/login helpers in sync with CI policy reporting so issue
 // and PR review summaries escape contributor-controlled text consistently.
@@ -89,6 +95,14 @@ function markdownLabelValue(value) {
       : escapeMarkdownText(label);
   }
   return markdownCodeSpan(text);
+}
+
+function hasFinancialOrIdentitySensitiveSignal(text) {
+  return (
+    FINANCIAL_OR_IDENTITY_PATTERN.test(text) ||
+    IDENTITY_ATTESTATION_PATTERN.test(text) ||
+    IDENTITY_ATTESTATION_REVERSE_PATTERN.test(text)
+  );
 }
 
 function lower(value) {
@@ -878,11 +892,7 @@ function addContentRiskSignals(report, fields, text) {
     );
   }
 
-  if (
-    /\b(private key|wallet|kyc|usdc|x402|payment|crypto|on-chain|attestation)\b/i.test(
-      text,
-    )
-  ) {
+  if (hasFinancialOrIdentitySensitiveSignal(text)) {
     addFlag(
       report,
       "high",
