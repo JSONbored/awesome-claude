@@ -1,0 +1,83 @@
+---
+title: OpenAI Evals
+slug: openai-evals
+category: tools
+description: >-
+  Open-source framework from OpenAI for evaluating LLM and agent behavior with
+  reusable eval definitions, grading logic, datasets, and regression workflows.
+cardDescription: Build repeatable LLM and agent evals with OpenAI's open-source framework.
+seoTitle: OpenAI Evals Tool
+seoDescription: >-
+  OpenAI Evals is an open-source framework for defining, running, and tracking
+  LLM and agent evaluations, regression tests, graders, and benchmark datasets.
+author: OpenAI
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+websiteUrl: "https://github.com/openai/evals"
+documentationUrl: "https://github.com/openai/evals"
+repoUrl: "https://github.com/openai/evals"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+installable: true
+installCommand: "pip install evals"
+usageSnippet: "oaieval <completion-fn> <eval-name>"
+prerequisites:
+  - Python environment suitable for installing and running eval tooling.
+  - Representative prompts, expected outputs, graders, and datasets for the behavior being tested.
+  - Model-provider credentials only when the selected completion function requires them.
+safetyNotes:
+  - "Eval scores are regression and quality signals, not proof that a model or agent is safe, fair, or production-ready."
+  - "Run adversarial, prompt-injection, or tool-use evals against isolated environments and reviewed credentials."
+  - "Large eval runs can issue many model calls; set budgets, rate limits, and stop conditions before running them."
+privacyNotes:
+  - "Prompts, model outputs, labels, traces, retrieved documents, and grader notes can contain user, customer, or proprietary data."
+  - "Completion functions may send eval payloads to the configured model provider unless a reviewed local model path is used."
+  - "Store eval datasets and results according to the same retention and redaction rules used for production AI data."
+tags:
+  - evals
+  - llmops
+  - testing
+  - regression
+  - open-source
+keywords:
+  - OpenAI Evals
+  - LLM eval framework
+  - agent evaluation tool
+  - prompt regression tests
+  - AI benchmark tooling
+robotsIndex: true
+robotsFollow: true
+---
+
+## Editorial notes
+
+OpenAI Evals gives teams a code-first way to define and run repeatable language
+model evaluations. It is useful when a Claude or AI-agent workflow needs a
+regression suite instead of one-off prompt testing: expected outputs, graders,
+fixtures, completion functions, and run results can be kept close to the code
+that depends on them.
+
+## Why it belongs
+
+- Canonical open-source repository maintained by OpenAI.
+- Useful for prompt regression tests, model comparison, and agent behavior checks.
+- Fits Claude and AI workflow teams that need repeatable evaluation before release.
+- Can be combined with human review and trace tools when automated graders are not enough.
+
+## Review guidance
+
+Treat eval results as evidence, not authority. A passing eval suite can still
+miss distribution shift, tool misuse, privacy leakage, security issues, or
+unfair behavior. Keep holdout cases, redaction rules, and human escalation paths
+separate from the framework itself.
+
+## References
+
+- OpenAI Evals repository - https://github.com/openai/evals
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

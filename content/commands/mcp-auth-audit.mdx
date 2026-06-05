@@ -1,0 +1,89 @@
+---
+title: /mcp-auth-audit - MCP Authorization Audit Command
+slug: mcp-auth-audit
+category: commands
+description: >-
+  Slash command for auditing a remote MCP server authorization setup, including
+  protected resource metadata, authorization server discovery, OAuth resource
+  indicators, token audience validation, scopes, and token passthrough risk.
+cardDescription: Audit MCP OAuth metadata, resource indicators, audience validation, and scopes.
+seoTitle: /mcp-auth-audit - MCP Authorization Audit Command
+seoDescription: >-
+  Claude Code slash command for MCP authorization audits covering protected
+  resource metadata, OAuth resource indicators, token audience validation,
+  token passthrough, and scopes.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+sourceUrls:
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+  - "https://www.rfc-editor.org/rfc/rfc8707"
+  - "https://www.rfc-editor.org/rfc/rfc9728"
+installable: true
+installCommand: "/mcp-auth-audit <server-url>"
+commandSyntax: "/mcp-auth-audit <server-url>"
+usageSnippet: "/mcp-auth-audit https://mcp.example.com"
+copySnippet: "/mcp-auth-audit <server-url>"
+prerequisites:
+  - Remote MCP server URL and expected canonical resource URI.
+  - Approved staging credentials or metadata-only access for authorization review.
+  - Permission to inspect HTTP responses, authorization metadata, and token-flow evidence.
+safetyNotes:
+  - "The command may ask the assistant to inspect authentication metadata and token-flow evidence; do not paste production bearer tokens into the prompt."
+  - "Treat missing resource metadata, wrong-audience token acceptance, or token passthrough as blocking findings."
+privacyNotes:
+  - "Metadata and audit output can expose identity providers, scopes, tenant identifiers, redirect URLs, and private server URLs."
+  - "Redact token claims and account identifiers before sharing command output publicly."
+tags:
+  - mcp
+  - oauth
+  - slash-command
+  - security-audit
+  - authorization
+keywords:
+  - MCP auth audit command
+  - MCP OAuth slash command
+  - remote MCP authorization check
+  - token audience audit command
+robotsIndex: true
+robotsFollow: true
+---
+
+The /mcp-auth-audit command turns the MCP authorization specification into a
+repeatable review workflow for remote servers. It is useful before adding a new
+MCP endpoint to Claude Code, Cursor, a gateway, or an internal agent platform.
+
+## Usage
+
+/mcp-auth-audit <server-url>
+
+## What it does
+
+1. Captures the unauthenticated 401 challenge and checks whether it advertises
+   protected resource metadata.
+2. Fetches resource metadata and authorization server metadata.
+3. Checks that the client flow includes the MCP server as the resource.
+4. Reviews audience binding and wrong-audience rejection evidence.
+5. Reviews scopes, redirect handling, dynamic client registration, and error
+   behavior.
+6. Flags token passthrough or acceptance of tokens issued for another resource.
+7. Produces a public-safe summary plus private evidence handling notes.
+
+## Output format
+
+- Server reviewed
+- Metadata discovery result
+- Authorization server result
+- Resource indicator result
+- Audience validation result
+- Scope and redirect notes
+- Blockers
+- Decision
+
+## References
+
+- MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
+- OAuth Resource Indicators - https://www.rfc-editor.org/rfc/rfc8707
+- OAuth Protected Resource Metadata - https://www.rfc-editor.org/rfc/rfc9728

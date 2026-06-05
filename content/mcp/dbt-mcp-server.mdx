@@ -1,0 +1,94 @@
+---
+title: dbt MCP Server
+slug: dbt-mcp-server
+category: mcp
+description: >-
+  Official dbt Labs MCP server that gives AI agents context from dbt Core, dbt
+  Fusion, dbt Platform, project metadata, SQL tools, lineage, Admin API, and
+  dbt documentation search.
+cardDescription: Connect AI agents to dbt project context, docs, SQL tools, lineage, and platform metadata.
+seoTitle: dbt MCP Server for Claude and AI Data Agents
+seoDescription: >-
+  Use the official dbt MCP server to give Claude and other AI agents access to
+  dbt project context, dbt Platform metadata, SQL tools, lineage, and dbt docs.
+author: dbt Labs
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://github.com/dbt-labs/dbt-mcp"
+repoUrl: "https://github.com/dbt-labs/dbt-mcp"
+installable: true
+installCommand: "Install from the dbt MCP repository or latest release assets according to the official README."
+usageSnippet: "Use dbt MCP when an AI agent needs dbt project context, docs, lineage, run metadata, or dbt Platform administration details."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "dbt": {
+        "command": "uvx",
+        "args": ["dbt-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "dbt": {
+        "command": "uvx",
+        "args": ["dbt-mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - dbt project, dbt Core/Fusion environment, or dbt Platform account.
+  - MCP client and credentials appropriate to the dbt features enabled.
+safetyNotes:
+  - SQL and admin tools can inspect or affect real analytics environments depending on credentials.
+  - Start with read-oriented docs and metadata tools before enabling execution paths.
+privacyNotes:
+  - dbt metadata, SQL, lineage, model names, run artifacts, and platform account details can expose private analytics structure.
+sourceUrls:
+  - "https://github.com/dbt-labs/dbt-mcp"
+tags:
+  - dbt
+  - data-engineering
+  - analytics
+  - lineage
+  - official
+keywords:
+  - dbt MCP server
+  - dbt Claude integration
+  - dbt AI agent context
+  - dbt Platform MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+dbt MCP Server is dbt Labs' official Model Context Protocol server for exposing
+dbt context to AI agents. The repository describes tools for dbt Core, dbt Fusion,
+dbt Platform, SQL workflows, Admin API data, lineage, and dbt documentation.
+
+## Use Cases
+
+- Ask Claude to inspect model lineage before changing a transformation.
+- Search dbt documentation from an agent workflow.
+- Review job runs, artifacts, or project metadata from dbt Platform.
+- Use SQL-oriented tools where credentials and approval flow are appropriate.
+
+## Safety and Privacy
+
+Treat dbt MCP as access to your analytics operating context. It can surface model
+names, SQL, warehouse details, run artifacts, and platform metadata. Keep write or
+execution paths behind human approval until the workflow is tested.
+
+## Duplicate Check
+
+No dedicated dbt MCP entry exists in `content/mcp`. This is distinct from generic
+data or orchestration tool listings.
+
+## References
+
+- dbt MCP repository - https://github.com/dbt-labs/dbt-mcp

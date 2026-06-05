@@ -3,6 +3,8 @@ import fs from "node:fs";
 
 const eventName = process.env.GITHUB_EVENT_NAME || "";
 const baseSha = process.env.BASE_SHA || "";
+const baseRef = process.env.BASE_REF || process.env.GITHUB_BASE_REF || "";
+const headSha = process.env.HEAD_SHA || "";
 const forceFull =
   process.env.FORCE_FULL_VALIDATION === "1" ||
   eventName === "workflow_dispatch" ||
@@ -22,15 +24,50 @@ const CONTENT_CATEGORIES = [
   "tools",
 ];
 
+function gitCommitExists(revision) {
+  if (!revision) return false;
+  try {
+    execFileSync("git", ["rev-parse", "--verify", `${revision}^{commit}`], {
+      stdio: "ignore",
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function pullRequestDiffRange() {
+  const head =
+    /^[0-9a-f]{40}$/i.test(headSha) && gitCommitExists(headSha)
+      ? headSha
+      : "HEAD";
+  const candidates = [];
+
+  if (baseRef) {
+    candidates.push(`refs/remotes/origin/${baseRef}`);
+    candidates.push(`origin/${baseRef}`);
+    candidates.push(baseRef);
+  }
+
+  for (const candidate of candidates) {
+    if (gitCommitExists(candidate)) {
+      return [`${candidate}...${head}`];
+    }
+  }
+
+  if (/^[0-9a-f]{40}$/i.test(baseSha)) {
+    return [`${baseSha}...${head}`];
+  }
+
+  throw new Error("BASE_SHA must be a full Git commit SHA for PR validation");
+}
+
 function changedFiles() {
   if (forceFull) return [];
   if (eventName !== "pull_request") return [];
-  if (!/^[0-9a-f]{40}$/i.test(baseSha)) {
-    throw new Error("BASE_SHA must be a full Git commit SHA for PR validation");
-  }
   const output = execFileSync(
     "git",
-    ["diff", "--name-only", `${baseSha}...HEAD`],
+    ["diff", "--name-only", ...pullRequestDiffRange()],
     {
       encoding: "utf8",
     },

@@ -419,6 +419,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("strictDuplicatePolicy:");
     expect(source).toContain("relatedContentPolicy:");
     expect(source).toContain("collectionPolicy:");
+    expect(source).toContain("defensiveSecurityPolicy:");
+    expect(source).toContain(
+      "Do not close a submission merely because it defensively discusses OAuth",
+    );
     expect(source).toContain("deterministicDuplicateReview");
     expect(source).toContain('eventType: "duplicate_shadow_review"');
     expect(source).toContain('decision: "related_not_strict_duplicate"');
@@ -1710,6 +1714,44 @@ sourceUrl: "https://learn.microsoft.com/api/mcp"
           reasons: expect.arrayContaining([
             expect.stringContaining(
               "same multi-entry catalog source URL https://github.com/microsoft/mcp in mcp",
+            ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
+  it("treats generic Claude docs pages as related context for statuslines", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/statuslines/context-pressure-statusline.mdx",
+      content: `---
+title: Context Pressure Statusline
+slug: context-pressure-statusline
+category: statuslines
+description: Claude Code statusline for context pressure.
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+---
+`,
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/statuslines/mcp-auth-surface-statusline.mdx",
+      content: `---
+title: MCP Auth Surface Statusline
+slug: mcp-auth-surface-statusline
+category: statuslines
+description: Claude Code statusline for MCP authorization surface hints.
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same multi-entry catalog source URL https://code.claude.com/docs/en/statusline in statuslines",
             ),
           ]),
         }),
