@@ -245,9 +245,15 @@ function packageFromNpxArgs(args: string[]) {
   return candidates[0] || "";
 }
 
+// Normalize a command to its lowercased basename so path-qualified runners
+// (e.g. "/usr/bin/npx") are detected the same as a bare "npx".
+function runnerName(command: string) {
+  return command.split(/[\\/]/).pop()?.toLowerCase() ?? "";
+}
+
 function packageFromRunner(command: string, args: string[]) {
-  const lower = command.toLowerCase();
-  if (lower.endsWith("npx") || lower === "npx") return packageFromNpxArgs(args);
+  const lower = runnerName(command);
+  if (lower === "npx") return packageFromNpxArgs(args);
   if (["uvx", "bunx"].includes(lower)) {
     return args.find((arg) => arg && !arg.startsWith("-")) || "";
   }
@@ -376,7 +382,7 @@ function validateServer(name: string, raw: unknown) {
     // package). pnpm/yarn/npm only run one with dlx/exec, so checking them here
     // would misread "pnpm install" as a package and is left out.
     const isPackageRunner = ["npx", "uvx", "bunx"].includes(
-      command.toLowerCase(),
+      runnerName(command),
     );
     if (isPackageRunner && !packageName) {
       errors.push(`${command} server is missing a package name in args.`);

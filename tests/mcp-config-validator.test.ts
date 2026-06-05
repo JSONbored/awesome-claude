@@ -391,4 +391,20 @@ describe("MCP config validator", () => {
       ),
     ).toBe(false);
   });
+
+  it("detects path-qualified package runners (e.g. /usr/bin/npx)", () => {
+    const result = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: {
+          svc: { command: "/usr/bin/npx", args: ["-y", "@scope/server"] },
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    expect(result.warnings).toEqual(
+      expect.arrayContaining([
+        'svc: /usr/bin/npx runs "@scope/server" without a pinned version; pin it (for example "@scope/server@1.2.3") so the MCP server cannot change between runs.',
+      ]),
+    );
+  });
 });
