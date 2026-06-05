@@ -3,7 +3,6 @@ description: Propose contributor work for HeyClaude product, website, API, MCP, 
 title: "feat: "
 labels:
   - help wanted
-  - gittensor:feature
 body:
   - type: markdown
     attributes:
