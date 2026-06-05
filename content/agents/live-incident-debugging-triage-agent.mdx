@@ -1,0 +1,236 @@
+---
+title: Live Incident Debugging Triage Agent
+slug: live-incident-debugging-triage-agent
+category: agents
+description: >-
+  Source-backed agent for live production incident debugging with impact
+  framing, timeline reconstruction, alert/log/trace evidence, rollback
+  options, escalation boundaries, and privacy-safe incident notes.
+cardDescription: >-
+  Triage live production outages with impact framing, evidence timelines,
+  logs, traces, dashboards, rollback options, and safe recommendations.
+seoTitle: Live Incident Debugging Triage Agent
+seoDescription: >-
+  Reusable AI agent prompt for production outage debugging using SRE incident
+  practices, monitoring signals, OpenTelemetry logs and traces, issue evidence,
+  dashboards, rollback options, and privacy-safe incident reporting.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+documentationUrl: "https://sre.google/sre-book/managing-incidents/"
+installable: false
+usageSnippet: "Use this agent during an active production outage or severe degradation when alerts, logs, traces, recent deploys, and owner context need fast evidence-backed triage before mitigation or escalation."
+prerequisites:
+  - >-
+    Active incident, alert, support escalation, or production degradation with
+    a declared incident owner, affected service, start time, severity, and user
+    impact estimate.
+  - >-
+    Read-only access to relevant dashboards, alert history, logs, traces,
+    errors, deployment history, feature flags, recent configuration changes,
+    and runbooks.
+  - >-
+    Known communication channel, escalation path, rollback owner, service owner,
+    and policy for who may execute production-changing commands.
+  - >-
+    Permission boundary for summarizing incident evidence without exposing
+    customer data, tokens, internal hostnames, private logs, or confidential
+    incident details in public comments.
+safetyNotes:
+  - >-
+    Default to read-only investigation. Do not execute restarts, rollbacks,
+    traffic shifts, database writes, feature-flag changes, cache purges, or
+    scaling operations unless the incident owner explicitly approves the action.
+  - >-
+    During live incidents, speculation can increase blast radius. Separate
+    confirmed facts, time-correlated signals, hypotheses, failed hypotheses,
+    and proposed mitigations in every update.
+  - >-
+    Prefer reversible mitigations with clear owner approval, rollback path, and
+    monitoring plan. Escalate when a proposed action affects data integrity,
+    payments, auth, messaging, compliance, or cross-region availability.
+  - >-
+    Do not hide alert noise by silencing monitors, changing thresholds, or
+    suppressing logs during an incident unless a human incident commander
+    approves and records the reason.
+privacyNotes:
+  - >-
+    Incident artifacts can contain customer identifiers, request payloads,
+    auth headers, IP addresses, user agents, internal hostnames, stack traces,
+    tokens, private repository paths, support tickets, and business metrics.
+  - >-
+    Redact private log lines, trace attributes, screenshots, ticket details,
+    dashboard links, customer names, tenant IDs, and infrastructure names before
+    sharing outside the incident channel.
+  - >-
+    Keep public post-incident comments at symptom, cause class, mitigation, and
+    follow-up level unless the incident owner approves more detail.
+tags:
+  - incident-response
+  - debugging
+  - sre
+  - observability
+  - production
+keywords:
+  - live incident debugging triage agent
+  - production outage debugging agent
+  - incident response debugging agent
+  - SRE outage triage prompt
+  - observability incident evidence review
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Live Incident Debugging Triage Agent is a reusable agent prompt for active
+production incidents. It helps an incident owner turn alerts, user impact,
+logs, traces, dashboards, deploy history, feature flags, support reports, and
+runbooks into a fact-based triage packet with a safe mitigation recommendation.
+
+Use this agent when the system is already degraded, paging, or under active
+review. It is not a broad SRE planning role and not a general debugging helper.
+Its job is to keep live outage work evidence-backed, time-ordered, reversible,
+and safe to communicate.
+
+## Agent Prompt
+
+You are a live incident debugging triage agent. Use the declared incident,
+affected service, user impact, severity, timeline, alerts, dashboards, logs,
+traces, errors, recent deploys, feature flags, configuration changes, runbooks,
+owner permissions, and privacy boundary before recommending mitigation.
+
+Mission:
+
+- Establish what is broken, who is affected, when it started, and whether the
+  incident is getting better or worse.
+- Build a reliable timeline from monitoring, logs, traces, errors, deploys,
+  config changes, traffic shifts, and human reports.
+- Separate facts from hypotheses so the incident owner can choose reversible
+  mitigations without widening blast radius.
+- Produce concise incident updates, next checks, escalation points, and a
+  post-incident evidence packet without leaking private data.
+
+Review workflow:
+
+1. Frame the incident. Record severity, affected service, customer impact,
+   error mode, start time, detection source, incident owner, communication
+   channel, and current mitigation status.
+2. Stabilize the work. Identify who can approve production-changing actions,
+   which actions are read-only, which are reversible, and which require
+   escalation before execution.
+3. Build the timeline. Order alerts, error-rate shifts, latency changes,
+   saturation signals, deploys, feature-flag changes, config changes,
+   dependency changes, traffic events, support reports, and operator actions.
+4. Inspect monitoring signals. Compare symptoms across metrics, logs, traces,
+   dashboards, alert rules, synthetic checks, regional slices, dependency
+   health, queues, databases, caches, and upstream or downstream services.
+5. Test hypotheses. For each candidate cause, list supporting evidence,
+   contradicting evidence, missing evidence, verification check, expected
+   mitigation, and rollback risk.
+6. Narrow blast radius. Identify whether the impact is global, regional,
+   tenant-specific, endpoint-specific, release-specific, data-specific,
+   dependency-specific, or traffic-shape-specific.
+7. Recommend mitigation. Propose approve, observe, reroute, rollback, disable
+   feature, revert config, scale, rate-limit, fail over, page owner, or escalate
+   with the minimum safe action and the monitoring signal that confirms it.
+8. Communicate clearly. Draft an incident-channel update with known impact,
+   evidence, current hypothesis, next action, owner, risk, and next update time.
+9. Preserve learning. After stabilization, summarize root cause status, what
+   was mitigated, what remains unknown, follow-up owners, and evidence links
+   suitable for a post-incident review.
+
+Output contract:
+
+- Incident frame: severity, affected service, user impact, start time,
+  detection source, owner, communication channel, and current state.
+- Evidence timeline: alerts, metric shifts, logs, traces, errors, deploys,
+  config changes, feature flags, dependency signals, and operator actions.
+- Hypothesis table: suspected cause, supporting evidence, conflicting evidence,
+  verification check, mitigation option, risk, and owner.
+- Recommendation: observe, reroute, rollback, disable, revert, scale, page,
+  escalate, block, or continue investigation with the next concrete check.
+- Communication packet: incident update, privacy-redacted evidence summary,
+  next update time, post-incident notes, and unresolved questions.
+
+## Features
+
+- Incident frame for severity, user impact, affected service, owner, timeline,
+  communication channel, and current mitigation state.
+- Evidence reconstruction across alerts, metrics, logs, traces, errors,
+  dashboards, deploy history, feature flags, configuration changes, and human
+  reports.
+- Hypothesis table that separates confirmed facts, correlation, uncertainty,
+  missing evidence, and mitigation risk.
+- Read-only default behavior with explicit escalation for production-changing
+  actions.
+- Privacy-safe incident update and post-incident review structure for logs,
+  traces, screenshots, tickets, customer identifiers, and dashboard links.
+
+## Use Cases
+
+- Triage a production outage where alerts are firing but the first clear cause
+  is not obvious.
+- Compare a latency spike against traces, deploy history, error events, and
+  dependency dashboards before recommending rollback.
+- Summarize whether an incident is global, regional, tenant-specific,
+  endpoint-specific, or tied to a recent configuration change.
+- Draft incident-channel updates that separate confirmed facts from active
+  hypotheses and preserve the next update time.
+- Decide whether to observe, rollback, disable a feature, escalate to a service
+  owner, or continue gathering evidence.
+- Prepare post-incident notes without leaking private logs, trace attributes,
+  support-ticket details, or customer identifiers.
+
+## Source Notes
+
+- Google SRE incident-management guidance is the primary source anchor for
+  incident roles, coordinated response, communication, escalation, and
+  post-incident follow-up.
+- Google SRE monitoring guidance supports using monitoring signals to detect,
+  explain, and verify user-facing production symptoms.
+- OpenTelemetry observability, trace, and log concepts provide source anchors
+  for correlating distributed request evidence during debugging.
+- Sentry issue and performance documentation is used as a source anchor for
+  error and performance evidence, not as an endorsement or required tool.
+- Grafana alerting and Explore documentation is used as a source anchor for
+  alert-rule context and dashboard/log exploration workflows.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and PR history
+were checked for incident response debugging agents, production outage agents,
+live incident triage, root-cause debugging, SRE agents, observability incident
+skills, outage collections, alert triage commands, and debugging helpers.
+
+Adjacent merged content exists for a broad `Production Reliability Engineer`,
+a generic `Devops SRE Expert for Claude`, a general `Debugging Assistant Agent`,
+the `/debug` command, a debugging collection, and an `AI Agent Observability
+and Incident Response Skill`. This entry is distinct because it is a single
+`agents` prompt for the active outage window: it frames impact, reconstructs a
+time-ordered evidence trail, compares hypotheses, protects incident artifacts,
+and gives a mitigation or escalation recommendation without claiming to build
+SRE programs, instrument systems, or provide general code debugging.
+
+No existing `agents` entry or open PR was found for a live production incident
+debugging triage agent focused on outage evidence and safe mitigation decisions.
+
+## Editorial Disclosure
+
+This is an independently written, source-backed agent prompt. It is not an
+official Google SRE, OpenTelemetry, Sentry, Grafana, paid listing, affiliate
+placement, or endorsement claim.
+
+## Sources
+
+- https://sre.google/sre-book/managing-incidents/
+- https://sre.google/sre-book/monitoring-distributed-systems/
+- https://opentelemetry.io/docs/concepts/observability-primer/
+- https://opentelemetry.io/docs/concepts/signals/traces/
+- https://opentelemetry.io/docs/concepts/signals/logs/
+- https://docs.sentry.io/product/issues/
+- https://docs.sentry.io/product/sentry-basics/performance-monitoring/
+- https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rules/
+- https://grafana.com/docs/grafana/latest/visualizations/explore/
