@@ -1,0 +1,126 @@
+---
+title: Building In-Process MCP Tools with the Claude Agent SDK
+slug: building-in-process-mcp-tools-with-the-claude-agent-sdk
+category: guides
+description: >-
+  A practical walkthrough of defining in-process custom tools for the Claude
+  Agent SDK with createSdkMcpServer and the tool helper, wiring them into query
+  via mcpServers, allowing them, error handling, and returning images or
+  structured data.
+cardDescription: >-
+  Define in-process MCP tools for the Claude Agent SDK with createSdkMcpServer
+  and the tool helper, then wire them into query.
+seoTitle: Building In-Process MCP Tools with the Claude Agent SDK
+seoDescription: >-
+  How to define in-process custom tools in the Claude Agent SDK using
+  createSdkMcpServer and the tool/@tool helper, register them via mcpServers,
+  allow them, handle errors, and return images or structured data.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/custom-tools"
+usageSnippet: "Use this guide to give a Claude Agent SDK app custom functions Claude can call, defined as in-process MCP tools rather than a separate server process."
+prerequisites:
+  - "The Claude Agent SDK installed for Python (claude-agent-sdk) or TypeScript (@anthropic-ai/claude-agent-sdk)."
+  - "For TypeScript, Zod for input schemas; for Python, a dict or JSON Schema per tool."
+  - "An Anthropic API key or other configured provider credentials for the SDK."
+safetyNotes:
+  - "Custom tool handlers run your code in-process whenever Claude calls them; validate inputs and gate destructive actions inside the handler."
+  - "List each tool in allowedTools (mcp__server__tool) so it runs without a prompt only when you intend; otherwise it goes through the permission flow."
+  - "Return isError instead of throwing so a failed tool keeps the agent loop alive rather than crashing the whole query."
+  - "Tool annotations like readOnlyHint are metadata, not enforcement; keep them accurate to what the handler actually does."
+privacyNotes:
+  - "In-process tools run inside your application, so data they touch stays in your process unless the handler sends it elsewhere."
+  - "Tool descriptions, inputs, and results are sent to the model provider as part of the conversation; avoid placing secrets in them."
+  - "Every tool definition consumes context on each turn; for large tool sets, load them on demand rather than sending all schemas."
+tags:
+  - claude-agent-sdk
+  - mcp
+  - custom-tools
+  - developer-tools
+  - agents
+keywords:
+  - claude agent sdk custom tools
+  - createSdkMcpServer
+  - in-process mcp tools
+  - claude agent sdk tool helper
+  - mcp__server__tool
+---
+
+## Overview
+
+Custom tools let Claude call your own functions during an Agent SDK session.
+Using the SDK's in-process MCP server, you define tools with an input schema and
+a handler, bundle them into a server that runs inside your application (not a
+separate process), and pass them to `query`.
+
+## Define a tool
+
+A tool has a name, description, input schema, and async handler. Use the `tool()`
+helper (TypeScript, Zod schema) or the `@tool` decorator (Python, dict or JSON
+Schema), then wrap tools in a server.
+
+```typescript
+import { tool, createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk";
+import { z } from "zod";
+
+const getTemperature = tool(
+  "get_temperature",
+  "Get the current temperature at a location",
+  { latitude: z.number(), longitude: z.number() },
+  async (args) => ({ content: [{ type: "text", text: `...` }] }),
+);
+
+const weatherServer = createSdkMcpServer({
+  name: "weather",
+  version: "1.0.0",
+  tools: [getTemperature],
+});
+```
+
+Python uses `@tool(...)` and `create_sdk_mcp_server(...)` with the same shape.
+
+## Register and allow the tool
+
+Pass the server via `mcpServers`. The key becomes the `{server_name}` segment of
+the fully qualified name `mcp__{server_name}__{tool_name}`; list that in
+`allowedTools` so it runs without a prompt.
+
+```typescript
+for await (const message of query({
+  prompt: "What's the temperature in San Francisco?",
+  options: {
+    mcpServers: { weather: weatherServer },
+    allowedTools: ["mcp__weather__get_temperature"],
+  },
+})) { /* ... */ }
+```
+
+Use the wildcard `mcp__weather__*` to allow every tool a server exposes.
+
+## Handle errors
+
+Return `isError: true` (TS) / `"is_error": True` (Python) from the handler when a
+call fails. The agent loop continues and Claude can retry or explain. An uncaught
+exception stops the loop and fails the `query` call.
+
+## Return images and structured data
+
+A handler's `content` array accepts `text`, `image` (base64, no data URI prefix),
+and `resource` blocks. Set `structuredContent` to return machine-readable JSON
+alongside the content. (In Python, `structuredContent` requires a standalone MCP
+server rather than the in-process `@tool` decorator.)
+
+## Annotations and scaling
+
+Pass annotations like `readOnlyHint: true` so Claude can batch parallel-safe
+calls. Every tool definition consumes context each turn; for dozens of tools, use
+tool search to load them on demand.
+
+## Source
+
+- Give Claude custom tools: https://code.claude.com/docs/en/agent-sdk/custom-tools
+- Connect MCP servers: https://code.claude.com/docs/en/agent-sdk/mcp

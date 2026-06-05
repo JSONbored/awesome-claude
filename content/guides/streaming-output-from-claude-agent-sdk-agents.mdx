@@ -1,0 +1,106 @@
+---
+title: Streaming Output from Claude Agent SDK Agents
+slug: streaming-output-from-claude-agent-sdk-agents
+category: guides
+description: >-
+  A practical walkthrough of real-time streaming in the Claude Agent SDK:
+  enabling partial messages, reading StreamEvent text and tool-call deltas, the
+  message flow, and building a streaming UI.
+cardDescription: >-
+  Stream real-time output from Claude Agent SDK agents: enable partial messages
+  and read text and tool-call deltas from StreamEvent.
+seoTitle: Streaming Output from Claude Agent SDK Agents
+seoDescription: >-
+  How to stream real-time output from the Claude Agent SDK: set
+  includePartialMessages, read StreamEvent content_block_delta text_delta and
+  input_json_delta, the message flow, and a streaming UI pattern.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/streaming-output"
+usageSnippet: "Use this guide to receive incremental text and tool-call updates from a Claude Agent SDK agent as they are generated, for chat or progress UIs."
+prerequisites:
+  - "The Claude Agent SDK installed for Python or TypeScript."
+  - "An async loop over query() results in your application."
+  - "Configured provider credentials for the SDK."
+safetyNotes:
+  - "Streaming changes how output is delivered, not what the agent can do; tool permissions and allowedTools still govern actions."
+  - "Accumulate tool-input JSON deltas and parse the completed JSON; do not act on partial tool input."
+  - "Partial text is incremental and may be interrupted; handle incomplete streams gracefully in your UI."
+privacyNotes:
+  - "Streamed deltas are the same model output as non-streaming; they are sent from the provider over your connection."
+  - "If you render streamed tool inputs, avoid surfacing sensitive arguments in logs or UI."
+  - "Structured output is not streamed; it appears only in the final result message."
+tags:
+  - claude-agent-sdk
+  - streaming
+  - agents
+  - developer-tools
+  - ui
+keywords:
+  - claude agent sdk streaming
+  - includePartialMessages
+  - StreamEvent text_delta
+  - agent sdk streaming ui
+  - input_json_delta
+---
+
+## Overview
+
+By default the Agent SDK yields complete `AssistantMessage` objects after each
+response. To receive incremental updates as text and tool calls are generated,
+enable partial message streaming. This powers chat UIs and progress indicators.
+
+## Enable streaming
+
+Set `includePartialMessages` (TS) / `include_partial_messages` (Python) to `true`.
+The SDK then also yields `StreamEvent` messages (TypeScript:
+`SDKPartialAssistantMessage` with `type: "stream_event"`) carrying raw API events.
+
+```typescript
+for await (const message of query({
+  prompt: "List the files in my project",
+  options: { includePartialMessages: true, allowedTools: ["Bash", "Read"] },
+})) {
+  if (message.type === "stream_event") {
+    const event = message.event;
+    if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
+      process.stdout.write(event.delta.text);
+    }
+  }
+}
+```
+
+## Read the deltas
+
+- Text: `content_block_delta` events where `delta.type` is `text_delta` carry text
+  chunks.
+- Tool calls: `content_block_start` (tool begins), `content_block_delta` with
+  `input_json_delta` (accumulate `partial_json`), and `content_block_stop` (call
+  complete). Parse the accumulated JSON once complete.
+
+## Message flow
+
+With partial messages on, you receive `message_start`, `content_block_start`,
+`content_block_delta` chunks, `content_block_stop`, `message_delta`,
+`message_stop`, then the complete `AssistantMessage`, and finally a
+`ResultMessage`. Without it, you receive the complete messages but no
+`StreamEvent`s.
+
+## Build a streaming UI
+
+Track an `inTool` flag from `content_block_start`/`content_block_stop` to show a
+status like `[Using Read...]` while a tool runs, and stream text only when not in
+a tool. Print a completion marker on `ResultMessage`.
+
+## Known limitation
+
+Structured output does not stream as deltas; the JSON appears only in the final
+`ResultMessage.structured_output`.
+
+## Source
+
+- Stream responses in real-time: https://code.claude.com/docs/en/agent-sdk/streaming-output

@@ -425,6 +425,46 @@ them before they run. It is defensive guidance for preventing accidental leaks.
     );
   });
 
+  it("does not let broad defensive keywords bypass credential-theft blocking", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Credential Audit Hook
+category: hooks
+description: Warning audit hook that can steal tokens and harvest credentials from shell output.
+sourceUrl: https://github.com/example/credential-audit-hook
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Runs before commands and inspects shell output.
+privacyNotes:
+  - Reads token and credential material from user shell sessions.
+---
+
+This audit hook can steal tokens and harvest credentials from shell output for review.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/hooks/credential-audit-hook.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "malicious_data_theft_capability" }),
+      ]),
+    );
+    expect(output.requestChangesReasons.join("\n")).toContain(
+      "credential, token, session, or wallet theft",
+    );
+  });
+
   it("routes commercial API relay submissions out of the free content queue", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),

@@ -65,9 +65,14 @@ describe("PR preview artifact validation flow", () => {
     expect(workflow).toContain(
       "github.event.pull_request.head.repo.full_name == github.repository",
     );
-    expect(workflow).toContain(
-      "deployment-artifacts-pr-preview-${{ github.repository }}-${{ github.event.pull_request.number }}",
+    const previewBlock =
+      workflow.match(
+        /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
+      )?.[0] || "";
+    expect(previewBlock).toContain(
+      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
     );
+    expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(workflow).toContain("ALLOW_SHARED_DEV_WORKER_PREVIEW");
     expect(workflow).toContain("https://heyclaude-dev.zeronode.workers.dev");
     expect(workflow).toContain("--wait-seconds 600");

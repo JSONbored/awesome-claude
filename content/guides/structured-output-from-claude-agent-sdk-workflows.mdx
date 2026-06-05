@@ -1,0 +1,122 @@
+---
+title: Structured Output from Claude Agent SDK Workflows
+slug: structured-output-from-claude-agent-sdk-workflows
+category: guides
+description: >-
+  A practical walkthrough of structured outputs in the Claude Agent SDK:
+  defining a JSON Schema via the outputFormat option, reading validated
+  structured_output, type-safe schemas with Zod or Pydantic, and handling
+  validation failures.
+cardDescription: >-
+  Get validated JSON from Claude Agent SDK workflows via the outputFormat option,
+  with Zod or Pydantic schemas and error handling.
+seoTitle: Structured Output from Claude Agent SDK Workflows
+seoDescription: >-
+  How to get validated JSON from the Claude Agent SDK: define a JSON Schema via
+  outputFormat/output_format, read structured_output, use Zod or Pydantic for
+  type safety, and handle error_max_structured_output_retries.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/structured-outputs"
+usageSnippet: "Use this guide to make a Claude Agent SDK workflow return validated JSON matching your schema after multi-turn tool use."
+prerequisites:
+  - "The Claude Agent SDK installed for Python or TypeScript."
+  - "A JSON Schema for the output shape, or Zod (TypeScript) / Pydantic (Python) to generate one."
+  - "Configured provider credentials for the SDK."
+safetyNotes:
+  - "If validation does not succeed within the retry limit, the result is an error (error_max_structured_output_retries), not structured data; handle that subtype."
+  - "Structured outputs constrain the final result shape, not what tools the agent may use; tool permissions still apply."
+  - "Keep schemas focused: deeply nested schemas with many required fields are harder to satisfy and more likely to fail."
+privacyNotes:
+  - "The agent may use tools (search, bash) to gather data before producing output; that activity sends data to the provider and any tools you allow."
+  - "Validated output is returned to your application in the final result message; handle it like any data you persist or display."
+  - "Do not embed secrets in schema field descriptions; they are sent to the model as part of the request."
+tags:
+  - claude-agent-sdk
+  - structured-output
+  - agents
+  - developer-tools
+  - json-schema
+keywords:
+  - claude agent sdk structured output
+  - outputFormat json_schema
+  - structured_output field
+  - zod pydantic agent sdk
+  - validated json agent
+---
+
+## Overview
+
+Structured outputs let you define the exact shape of data an Agent SDK workflow
+returns. The agent can use any tools it needs, and you still get validated JSON
+matching your schema at the end. The SDK validates the output and re-prompts on
+mismatch.
+
+## Quick start
+
+Pass a JSON Schema via `outputFormat` (TypeScript) / `output_format` (Python). The
+final result message includes a `structured_output` field with validated data.
+
+```typescript
+const schema = {
+  type: "object",
+  properties: {
+    company_name: { type: "string" },
+    founded_year: { type: "number" },
+    headquarters: { type: "string" },
+  },
+  required: ["company_name"],
+};
+
+for await (const message of query({
+  prompt: "Research Anthropic and provide key company information",
+  options: { outputFormat: { type: "json_schema", schema } },
+})) {
+  if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+    console.log(message.structured_output);
+  }
+}
+```
+
+## Type-safe schemas
+
+Generate the JSON Schema from Zod (`z.toJSONSchema(...)`) or Pydantic
+(`.model_json_schema()`), then validate the response with `safeParse()` /
+`model_validate()` for a fully typed object. The SDK supports standard JSON Schema
+features: basic types, `enum`, `const`, `required`, nested objects, and `$ref`.
+
+## Works with multi-step tool use
+
+The agent can run tools (for example Grep to find TODOs, Bash for git blame)
+across multiple turns, then return one structured result. Make fields that might
+be unavailable optional so the agent can omit them.
+
+## Handle validation failures
+
+Check the result `subtype`:
+
+- `success` - output generated and validated.
+- `error_max_structured_output_retries` - the agent could not produce valid output
+  after multiple attempts; fall back or retry with a simpler prompt/schema.
+
+```typescript
+if (msg.type === "result") {
+  if (msg.subtype === "success" && msg.structured_output) { /* use it */ }
+  else if (msg.subtype === "error_max_structured_output_retries") { /* handle failure */ }
+}
+```
+
+## Tips
+
+- Keep schemas focused; start simple and add complexity as needed.
+- Make optional anything the task might not provide.
+- Use clear prompts so the agent knows what output to produce.
+- Note: structured output is not streamed; it appears only in the final result.
+
+## Source
+
+- Get structured output from agents: https://code.claude.com/docs/en/agent-sdk/structured-outputs

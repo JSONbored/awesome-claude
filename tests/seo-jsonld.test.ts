@@ -267,4 +267,45 @@ describe("SEO JSON-LD policy", () => {
       ),
     ).toBeNull();
   });
+
+  it("shares a k suffix across salary bounds and rejects inverted ranges", () => {
+    const baseSalaryFor = (compensation: string) =>
+      buildJobPostingJsonLd(
+        {
+          slug: "salary-range",
+          title: "AI Engineer",
+          company: "Example",
+          description:
+            "Build Claude workflow systems for a verified employer listing with production AI integrations, source-backed role details, and developer-facing infrastructure ownership.",
+          descriptionMd:
+            "## Role brief\n\nOwn integrations across Claude workflow systems and developer-facing AI infrastructure for a team shipping production agent and MCP surfaces. The reviewed detail gives candidates enough context about responsibilities, requirements, source verification, and the employer-owned application path before they continue.",
+          postedAt: "2026-04-26",
+          expiresAt: "2026-05-26",
+          applyUrl: "https://example.com/jobs/ai-engineer",
+          sourceUrl: "https://example.com/jobs/ai-engineer",
+          sourceCheckedAt: "2026-04-26",
+          isRemote: true,
+          compensation,
+        },
+        { siteUrl: "https://heyclau.de" },
+      )?.baseSalary;
+
+    // A "k" suffix on only the upper bound applies to both endpoints.
+    expect(baseSalaryFor("$150-190k")).toMatchObject({
+      "@type": "MonetaryAmount",
+      value: { minValue: 150000, maxValue: 190000 },
+    });
+    expect(baseSalaryFor("$80–120k")).toMatchObject({
+      value: { minValue: 80000, maxValue: 120000 },
+    });
+
+    // Both endpoints suffixed still works.
+    expect(baseSalaryFor("$150k-$190k")).toMatchObject({
+      value: { minValue: 150000, maxValue: 190000 },
+    });
+
+    // Inverted ranges are rejected rather than emitting minValue > maxValue.
+    expect(baseSalaryFor("$190-150k")).toBeUndefined();
+    expect(baseSalaryFor("$190k-150k")).toBeUndefined();
+  });
 });
