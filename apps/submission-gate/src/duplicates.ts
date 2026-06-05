@@ -83,6 +83,8 @@ const DOMAIN_ONLY_EXCLUSIONS = new Set([
 ]);
 
 const MULTI_ENTRY_CATALOG_URLS = new Set([
+  "https://code.claude.com/docs/en/hooks",
+  "https://code.claude.com/docs/en/statusline",
   "https://github.com/awslabs/mcp",
   "https://github.com/microsoft/mcp",
   "https://github.com/modelcontextprotocol/servers",

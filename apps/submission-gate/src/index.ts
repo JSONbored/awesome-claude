@@ -3168,6 +3168,8 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
                 "Cross-category source overlap, same ecosystem/project ownership, and collection-member overlap are related/complementary context, not automatic duplicates.",
               collectionPolicy:
                 "Collections may bundle existing entries when they add distinct workflow value, ordering, prerequisites, source-backed rationale, and safety/privacy guidance; repeated same-scope collection variants can still close as duplicates.",
+              defensiveSecurityPolicy:
+                "Do not close a submission merely because it defensively discusses OAuth, tokens, credentials, authorization, attestations, artifacts, packages, downloads, security, privacy, or destructive-risk prevention. These topics require careful evidence review, but source-backed guides, rules, skills, collections, hooks, tools, and statuslines about safe review practices can merge when validation, sources, scope, and safety/privacy notes pass. A hard safety, secret, package, or abuse close must cite concrete unsafe behavior or a concrete policy violation such as credential theft, exposed secrets, destructive defaults, malware/abuse tooling, unverified package hosting, packageVerified:true by an external contributor, broken source evidence, or promotional/affiliate content. Generic phrases like 'contains patterns that cannot be accepted' are not sufficient evidence for a close verdict.",
             },
           },
         });
