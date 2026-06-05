@@ -1,0 +1,129 @@
+---
+title: OpenAI Agents Trace Grading Skill
+slug: openai-agents-trace-grading-skill
+category: skills
+description: >-
+  Reusable skill for reviewing OpenAI Agents SDK traces, grading workflow runs,
+  finding tool-call failures, and turning trace evidence into regression evals.
+cardDescription: Grade OpenAI agent traces and turn failures into regression evals.
+seoTitle: OpenAI Agents Trace Grading Skill
+seoDescription: >-
+  Use this skill to inspect OpenAI Agents SDK traces, grade workflow behavior,
+  identify tool-call and handoff failures, and convert trace evidence into
+  repeatable agent eval cases.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://openai.github.io/openai-agents-js/guides/tracing/"
+installCommand: "Use as a local SKILL.md or project prompt; no package install required."
+usageSnippet: >-
+  Run this skill after an agent workflow changes, a trace shows unexpected tool
+  behavior, or a production task needs a regression eval from trace evidence.
+copySnippet: |-
+  # OpenAI Agents Trace Grading Skill
+  Review the supplied trace or trace summary. Identify the task goal, tool calls,
+  handoffs, guardrail events, model outputs, and failure points. Grade the run as
+  pass, partial, or fail, then propose a regression eval with expected behavior.
+skillType: general
+skillLevel: advanced
+verificationStatus: draft
+verifiedAt: "2026-06-05"
+retrievalSources:
+  - "https://openai.github.io/openai-agents-js/guides/tracing/"
+  - "https://openai.github.io/openai-agents-python/tracing/"
+  - "https://platform.openai.com/docs/guides/trace-grading"
+  - "https://platform.openai.com/docs/guides/agent-evals"
+testedPlatforms:
+  - Codex
+  - Claude
+  - OpenAI Agents SDK
+prerequisites:
+  - Access to an agent trace, trace URL, exported trace data, or a structured trace summary.
+  - A clear user task or acceptance criterion for the run being graded.
+  - Permission to inspect tool arguments, outputs, and handoff metadata in the trace.
+safetyNotes:
+  - Traces can include prompts, tool arguments, retrieved records, file paths, and model outputs that should not be pasted into public issues.
+  - Do not grade against hidden private policy unless the evaluation environment is authorized to read it.
+privacyNotes:
+  - Redact user identifiers, API keys, account IDs, and private document text before sharing trace excerpts.
+  - OpenAI tracing behavior can differ under organization data-retention settings; verify where trace data is sent before use.
+tags:
+  - openai-agents
+  - tracing
+  - evals
+  - quality-assurance
+  - regression-testing
+keywords:
+  - OpenAI Agents trace grading
+  - agent trace eval skill
+  - OpenAI Agents SDK tracing
+  - tool call regression evals
+  - agent workflow quality review
+readingTime: 6
+difficultyScore: 72
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Skill Purpose
+
+This skill turns an agent trace into an engineering artifact. It looks for what
+actually happened: model turns, tool calls, handoffs, guardrail events, custom
+events, latency hotspots, missing context, and recovery behavior. The output is a
+short grade plus concrete regression coverage.
+
+## When To Use
+
+- A new tool, handoff, or guardrail was added to an OpenAI Agents SDK workflow.
+- A run succeeded but took too many steps or used the wrong tool.
+- A run failed and the team needs a reproducible eval case.
+- A trace contains enough detail to compare intended behavior with actual behavior.
+
+## Review Procedure
+
+1. **Restate the task.** Capture the user's goal and the expected outcome.
+2. **Map trace phases.** Separate planning, tool use, handoffs, guardrails, and final response.
+3. **Score tool choices.** Mark each tool call as necessary, optional, wrong, unsafe, or missing.
+4. **Check evidence.** Confirm that final claims are supported by tool outputs or retrieved data.
+5. **Find waste.** Note repeated calls, avoidable handoffs, unnecessary retrieval, or slow spans.
+6. **Grade the run.** Use pass, partial, or fail with one sentence of evidence.
+7. **Create an eval.** Define input, expected outcome, critical assertions, and failure signals.
+
+## Output Contract
+
+Return:
+
+- `grade`: pass, partial, or fail.
+- `confidence`: high, medium, or low, based on trace completeness.
+- `critical_events`: the trace events that determined the grade.
+- `failure_mode`: tool selection, missing context, hallucinated claim, guardrail miss, handoff error, latency, or no issue.
+- `regression_eval`: a minimal test case with expected behavior and assertions.
+- `redactions_needed`: any trace content that should not be published.
+
+## Troubleshooting
+
+### The trace is incomplete
+
+Grade confidence as low and request the missing phases. Do not infer tool output
+that is not in the trace.
+
+### The final answer is correct but the path is risky
+
+Use a partial grade. Correct output with unnecessary write-capable tool calls or
+unredacted private data still needs regression coverage.
+
+### There is no clear expected behavior
+
+Write the expected behavior from the user task, then ask for confirmation before
+adding an eval to CI.
+
+## Retrieval Sources
+
+- https://openai.github.io/openai-agents-js/guides/tracing/
+- https://openai.github.io/openai-agents-python/tracing/
+- https://platform.openai.com/docs/guides/trace-grading
+- https://platform.openai.com/docs/guides/agent-evals
