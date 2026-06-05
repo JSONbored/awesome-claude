@@ -1,0 +1,133 @@
+---
+title: GitHub Artifact Attestation Review Skill
+slug: github-artifact-attestation-review-skill
+category: skills
+description: >-
+  Review GitHub Actions artifact attestations, OIDC permissions, provenance
+  claims, SBOM attestation flow, and downstream verification steps before a
+  release is trusted.
+cardDescription: Review GitHub artifact attestations and release provenance before trusting build outputs.
+seoTitle: GitHub Artifact Attestation Review Skill
+seoDescription: >-
+  Reusable skill for checking GitHub Actions artifact attestations, provenance,
+  OIDC permissions, SBOM attestations, and verification commands in release
+  workflows.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations"
+installCommand: "Use as a local SKILL.md or review prompt; no package install required."
+usageSnippet: >-
+  Run this skill when a release workflow creates packages, containers, archives,
+  SBOMs, or signatures and maintainers need to verify provenance before publish.
+copySnippet: |-
+  # GitHub Artifact Attestation Review Skill
+  Inspect the release workflow, artifact names, OIDC permissions, attestation
+  steps, subject digests, SBOM flow, and verification command. Return blocking
+  findings first, then the minimum patch to make provenance reviewable.
+skillType: general
+skillLevel: advanced
+verificationStatus: draft
+verifiedAt: "2026-06-05"
+retrievalSources:
+  - "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations"
+  - "https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers"
+  - "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/generating-an-artifact-attestation-for-an-sbom"
+testedPlatforms:
+  - Claude
+  - Codex
+  - GitHub Actions
+prerequisites:
+  - Release workflow YAML and the artifact publish path.
+  - Expected artifact names, package names, image tags, or archive digests.
+  - Access to the verification command or downstream consumer policy.
+safetyNotes:
+  - A passing build does not prove provenance unless the artifact subject and digest match what downstream users install.
+  - OIDC permissions should be scoped to jobs that actually need token issuance.
+privacyNotes:
+  - Workflow logs and attestations can reveal repository names, package coordinates, runner metadata, and build paths.
+  - Do not paste private attestation bundles or internal package URLs into public review comments.
+tags:
+  - github-actions
+  - artifact-attestations
+  - provenance
+  - release-security
+  - sbom
+keywords:
+  - GitHub artifact attestation review
+  - GitHub Actions provenance skill
+  - OIDC release security checklist
+  - SBOM artifact attestation
+  - release provenance verification
+readingTime: 6
+difficultyScore: 75
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Skill Purpose
+
+This skill checks whether a GitHub Actions release artifact is traceable to the
+workflow that built it. It does not treat attestation as a checkbox. It verifies
+subject identity, digest, permissions, workflow placement, SBOM handling, and the
+consumer-side verification story.
+
+## Review Steps
+
+1. **Identify the artifact subject.** Record the exact file, image, package, or
+   SBOM being attested.
+2. **Check digest binding.** Confirm the attestation binds to the digest that is
+   actually published or consumed.
+3. **Inspect OIDC permissions.** The job that signs or attests needs token
+   access; unrelated jobs should not inherit it.
+4. **Check workflow trigger risk.** Release attestations should not be produced
+   from untrusted fork code or unaudited pull request contexts.
+5. **Review SBOM flow.** If an SBOM is generated, verify that it names the same
+   artifact and is attested separately when required.
+6. **Verify downstream command.** Require a copy/paste-ready verification command
+   or documented policy for consumers.
+7. **Report gaps as blockers.** Missing subject, mismatched digest, broad token
+   permissions, or no verification path are release blockers.
+
+## Output Contract
+
+Return:
+
+- `verdict`: pass, needs-fix, or block.
+- `artifact_subjects`: files, images, packages, or SBOMs reviewed.
+- `oidc_scope`: which jobs can mint identity tokens.
+- `attestation_steps`: workflow steps that create provenance.
+- `verification_command`: command or policy that proves the artifact.
+- `blocking_findings`: findings that invalidate provenance.
+- `patch_plan`: minimal YAML or release-process changes.
+
+## Common Findings
+
+- Attestation is created for a build directory but the release uploads a zipped
+  archive with a different digest.
+- `id-token: write` is set at workflow level instead of the narrow signing job.
+- The workflow can run on untrusted pull request code.
+- The SBOM is generated after publish or is not tied to the released artifact.
+- The release notes say provenance exists but provide no verification command.
+
+## Troubleshooting
+
+### The attestation exists but verification fails
+
+Compare the subject name and digest against the artifact that was actually
+downloaded. Most failures are mismatched subject paths or post-build packaging.
+
+### The workflow needs cloud deploy OIDC and attestation OIDC
+
+Keep each permission as narrow as possible. Separate deploy identity from artifact
+provenance when the trust boundary differs.
+
+## Retrieval Sources
+
+- https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations
+- https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers
+- https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/generating-an-artifact-attestation-for-an-sbom
