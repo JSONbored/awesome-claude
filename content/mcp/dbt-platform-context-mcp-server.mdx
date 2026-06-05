@@ -1,0 +1,81 @@
+---
+title: dbt Platform Context MCP Server
+slug: dbt-platform-context-mcp-server
+category: mcp
+description: >-
+  Duplicate probe for the official dbt Labs MCP server that exposes dbt Core,
+  dbt Fusion, dbt Platform metadata, lineage, SQL tools, and dbt documentation
+  search to AI agents.
+cardDescription: Duplicate probe for dbt MCP project context, docs, SQL tools, lineage, and metadata.
+seoTitle: dbt Platform Context MCP Server
+seoDescription: >-
+  Duplicate probe for the official dbt MCP server, intended to verify strict
+  duplicate detection against an already accepted dbt MCP listing.
+author: dbt Labs
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://github.com/dbt-labs/dbt-mcp"
+repoUrl: "https://github.com/dbt-labs/dbt-mcp"
+installable: true
+installCommand: "Install from the dbt MCP repository or latest release assets according to the official README."
+usageSnippet: "Use dbt MCP when an AI agent needs dbt project context, docs, lineage, run metadata, or dbt Platform administration details."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "dbt-platform-context": {
+        "command": "uvx",
+        "args": ["dbt-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "dbt-platform-context": {
+        "command": "uvx",
+        "args": ["dbt-mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - dbt project, dbt Core/Fusion environment, or dbt Platform account.
+  - MCP client and credentials appropriate to the dbt features enabled.
+safetyNotes:
+  - "SQL and admin tools can inspect or affect real analytics environments depending on credentials."
+  - "Start with read-oriented docs and metadata tools before enabling execution paths."
+privacyNotes:
+  - "dbt metadata, SQL, lineage, model names, run artifacts, and platform account details can expose private analytics structure."
+sourceUrls:
+  - "https://github.com/dbt-labs/dbt-mcp"
+tags:
+  - dbt
+  - data-engineering
+  - analytics
+  - lineage
+  - duplicate-probe
+keywords:
+  - dbt Platform MCP server
+  - dbt MCP duplicate probe
+  - dbt AI agent context
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+This entry intentionally points at the same canonical dbt Labs MCP repository as
+the existing dbt MCP listing. It is a live duplicate-detection probe for the
+maintainer gate and should not be merged as a second directory entry.
+
+## Duplicate signal
+
+- Same canonical source: https://github.com/dbt-labs/dbt-mcp
+- Same product family and use case: dbt context for AI agents
+- Same installation guidance and tool surface
+
+## References
+
+- dbt MCP repository - https://github.com/dbt-labs/dbt-mcp
