@@ -417,6 +417,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("REVIEWING_STALE_SECONDS");
     expect(source).toContain("QUEUED_STALE_SECONDS");
     expect(source).toContain("PRIVATE_REVIEW_TIMEOUT_MS = 45_000");
+    expect(source).toContain("withPrivateReviewTimeout(");
+    expect(source).toContain("Private corpus review response body timed out.");
+    expect(source).toContain("controller.abort()");
+    expect(source).toContain("response.text()");
     expect(source).toContain("const RETRY_BACKOFF_SECONDS = [60, 120, 300");
     expect(source).toContain("const RETRY_BUDGETS");
     expect(source).toContain("invalid_private_response: 5");

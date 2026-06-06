@@ -3121,46 +3121,78 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
   }
   const body = JSON.stringify(message);
   const signature = await signInternalPayload(env.INTERNAL_SHARED_SECRET, body);
-  let response: Response;
-  try {
-    response = await fetch(env.PRIVATE_GATE_REVIEW_URL, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-heyclaude-internal-signature": signature,
-      },
-      body,
-      signal: AbortSignal.timeout(PRIVATE_REVIEW_TIMEOUT_MS),
-    });
-  } catch {
-    return privateReviewErrorDecision(
-      "Private corpus review request failed.",
-      "private_reviewer_unavailable",
-    );
-  }
-  if (!response.ok) {
-    return privateReviewErrorDecision(
-      `Private corpus review returned ${response.status}.`,
-      "private_reviewer_unavailable",
-    );
-  }
-  const raw = parsePrivateGateDecisionResponseBody(
-    await response.text().catch(() => ""),
+  const deadline = Date.now() + PRIVATE_REVIEW_TIMEOUT_MS;
+  const controller = new AbortController();
+  const abortId = setTimeout(
+    () => controller.abort(),
+    PRIVATE_REVIEW_TIMEOUT_MS,
   );
-  const normalized = normalizePrivateGateDecisionPayload(raw);
-  if (normalized.error || !normalized.decision) {
-    const error = normalized.error || {
-      code: "invalid_private_response",
-      retryable: true,
-      message: "Private corpus review returned an unexpected payload.",
-    };
-    return privateReviewErrorDecision(
-      error.message || "Private corpus review returned an unexpected payload.",
-      error.code,
-      error.retryable !== false,
+  try {
+    const response = await withPrivateReviewTimeout(
+      fetch(env.PRIVATE_GATE_REVIEW_URL, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-heyclaude-internal-signature": signature,
+        },
+        body,
+        signal: controller.signal,
+      }),
+      deadline,
+      "Private corpus review request timed out.",
     );
+    if (!response.ok) {
+      return privateReviewErrorDecision(
+        `Private corpus review returned ${response.status}.`,
+        "private_reviewer_unavailable",
+      );
+    }
+    const responseText = await withPrivateReviewTimeout(
+      response.text(),
+      deadline,
+      "Private corpus review response body timed out.",
+    );
+    const raw = parsePrivateGateDecisionResponseBody(responseText);
+    const normalized = normalizePrivateGateDecisionPayload(raw);
+    if (normalized.error || !normalized.decision) {
+      const error = normalized.error || {
+        code: "invalid_private_response",
+        retryable: true,
+        message: "Private corpus review returned an unexpected payload.",
+      };
+      return privateReviewErrorDecision(
+        error.message || "Private corpus review returned an unexpected payload.",
+        error.code,
+        error.retryable !== false,
+      );
+    }
+    return normalized.decision;
+  } catch (error) {
+    const message =
+      error instanceof Error && error.message
+        ? error.message
+        : "Private corpus review request failed.";
+    return privateReviewErrorDecision(message, "private_reviewer_unavailable");
+  } finally {
+    clearTimeout(abortId);
   }
-  return normalized.decision;
+}
+
+async function withPrivateReviewTimeout<T>(
+  promise: Promise<T>,
+  deadline: number,
+  message: string,
+): Promise<T> {
+  const remainingMs = Math.max(1, deadline - Date.now());
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(message)), remainingMs);
+  });
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
 }
 
 async function persistRetryableGateDecision(params: {
