@@ -546,6 +546,20 @@ function retryableTargetErrorDecision(error: unknown) {
   );
 }
 
+function retryableValidationReadDecision(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (isGitHubRateLimitError(error)) {
+    return privateReviewErrorDecision(
+      "Submission gate hit a GitHub rate limit while reading public validation checks.",
+      "github_rate_limited",
+    );
+  }
+  return privateReviewErrorDecision(
+    `Submission gate could not read public validation checks: ${message}`,
+    "github_api_unavailable",
+  );
+}
+
 function normalizeOneShotDecision(decision: GateDecision): GateDecision {
   if (decision.verdict === "close" && !decision.close) {
     return {
@@ -3200,8 +3214,11 @@ async function persistRetryableGateDecision(params: {
   message: QueueMessage;
   decision: GateDecision;
   retryState: ReturnType<typeof retryStateForDecision>;
+  nextReviewAt?: string | null;
+  retryStage?: "validation" | "private_review";
   auditDecision: string;
 }) {
+  const nextReviewAt = params.nextReviewAt ?? params.retryState.nextReviewAt;
   await upsertPrState(params.env.SUBMISSION_GATE_DB, {
     repo: params.target.repoFullName,
     number: params.target.number,
@@ -3211,7 +3228,7 @@ async function persistRetryableGateDecision(params: {
     baseRef: params.target.baseRef || contentGateBaseRef(params.env),
     installationId: params.target.installationId,
     status: "error_retryable",
-    nextReviewAt: params.retryState.nextReviewAt,
+    nextReviewAt,
     lastError: truncateForQueue(params.decision.summary),
     lastErrorCode: params.retryState.code,
     lastRetryFingerprint: params.retryState.fingerprint,
@@ -3228,10 +3245,11 @@ async function persistRetryableGateDecision(params: {
     body: retryingReviewComment(
       params.env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
       {
+        stage: params.retryStage,
         code: params.retryState.code,
         attempt: params.retryState.count,
         maxAttempts: params.retryState.maxAttempts,
-        nextReviewAt: params.retryState.nextReviewAt,
+        nextReviewAt,
         summary: truncateForQueue(params.decision.summary, 320),
       },
     ),
@@ -3246,7 +3264,7 @@ async function persistRetryableGateDecision(params: {
     baseRef: params.target.baseRef || contentGateBaseRef(params.env),
     installationId: params.target.installationId,
     status: "error_retryable",
-    nextReviewAt: params.retryState.nextReviewAt,
+    nextReviewAt,
     lastError: truncateForQueue(params.decision.summary),
     lastErrorCode: params.retryState.code,
     lastRetryFingerprint: params.retryState.fingerprint,
@@ -3717,10 +3735,31 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             lastCheckSummary: validation.summary,
           });
         }
-      } catch {
-        decision = defaultManualDecision(
-          "Submission gate could not read public validation checks.",
+      } catch (error) {
+        const retryableDecision = retryableValidationReadDecision(error);
+        const retryState = retryStateForDecision(
+          existing,
+          target,
+          retryableDecision,
         );
+        if (!retryState.exhausted) {
+          await persistRetryableGateDecision({
+            env,
+            token,
+            repo,
+            target,
+            message,
+            decision: retryableDecision,
+            retryState,
+            nextReviewAt: isGitHubRateLimitError(error)
+              ? nextReviewForError(error)
+              : retryState.nextReviewAt,
+            retryStage: "validation",
+            auditDecision: "validation_check_read_retryable",
+          });
+          return;
+        }
+        decision = retryExhaustedDecision(retryableDecision, retryState);
       }
 
       if (!decision && contentScopeForPrivateReview) {

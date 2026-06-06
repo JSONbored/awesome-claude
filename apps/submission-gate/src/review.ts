@@ -105,6 +105,7 @@ export type GateDecision = {
 };
 
 export type RetryReviewCommentDetails = {
+  stage?: "validation" | "private_review";
   code?: string;
   attempt?: number;
   maxAttempts?: number;
@@ -1257,6 +1258,8 @@ export function retryingReviewComment(
   marker = DEFAULT_REVIEW_MARKER,
   details: RetryReviewCommentDetails = {},
 ) {
+  const validationReadRetry =
+    details.stage === "validation" || details.code === "github_api_unavailable";
   const retryLine =
     details.attempt && details.maxAttempts
       ? `- ⚠️ **Retry:** \`${details.attempt}/${details.maxAttempts}\``
@@ -1272,12 +1275,18 @@ export function retryingReviewComment(
     : "";
   return renderAlertCard(marker, "IMPORTANT", [
     "## ⚠️ Review retrying",
-    "Public validation is green, but the private reviewer returned a retryable infrastructure result.",
+    validationReadRetry
+      ? "HeyClaude could not read the public validation result yet, so the gate will retry automatically."
+      : "Public validation is green, but the private reviewer returned a retryable infrastructure result.",
     "",
     "**Progress**",
     "",
-    "- ✅ **Public validation:** `passed`",
-    "- ⚠️ **Private maintainer gate:** `retrying`",
+    validationReadRetry
+      ? "- ⚠️ **Public validation:** `retrying`"
+      : "- ✅ **Public validation:** `passed`",
+    validationReadRetry
+      ? "- ⏸️ **Private maintainer gate:** `waiting`"
+      : "- ⚠️ **Private maintainer gate:** `retrying`",
     retryLine,
     codeLine,
     nextLine,

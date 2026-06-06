@@ -435,9 +435,15 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("retryExhaustedReason");
     expect(source).toContain('"invalid_private_response"');
     expect(source).toContain('"private_reviewer_unavailable"');
+    expect(source).toContain("retryableValidationReadDecision(error)");
+    expect(source).toContain('retryStage: "validation"');
+    expect(source).toContain('"validation_check_read_retryable"');
     expect(source).not.toContain("summary.includes");
     expect(source).not.toContain(
       "ai maintainer review returned an unexpected payload",
+    );
+    expect(source).not.toContain(
+      'defaultManualDecision(\n          "Submission gate could not read public validation checks.',
     );
     expect(source).toContain('status: "error_retryable"');
     expect(source).toContain("retryingReviewComment(");
@@ -804,6 +810,34 @@ packageUrl: "https://hub.docker.com/r/example/project"
         summary: "packageUrl returned HTTP 429.",
       }),
     ).toContain("> - ⚠️ **Retry:** `2/6`");
+    const validationRetry = retryingReviewComment(
+      "<!-- heyclaude-submission-gate -->",
+      {
+        stage: "validation",
+        code: "github_api_unavailable",
+        attempt: 1,
+        maxAttempts: 5,
+        nextReviewAt: "2026-06-06T09:15:00.000Z",
+        summary: "check-runs API returned 503.",
+      },
+    );
+    expect(validationRetry).toContain(
+      "> - ⚠️ **Public validation:** `retrying`",
+    );
+    expect(validationRetry).toContain(
+      "> - ⏸️ **Private maintainer gate:** `waiting`",
+    );
+    expect(validationRetry).not.toContain("Public validation is green");
+    expect(
+      retryingReviewComment("<!-- heyclaude-submission-gate -->", {
+        stage: "validation",
+        code: "github_rate_limited",
+        attempt: 1,
+        maxAttempts: 6,
+        nextReviewAt: "2026-06-06T09:15:00.000Z",
+        summary: "GitHub rate limit while reading validation checks.",
+      }),
+    ).toContain("> - ⚠️ **Public validation:** `retrying`");
     expect(
       supersededReviewComment(
         "<!-- heyclaude-submission-gate -->",
