@@ -223,6 +223,7 @@ export async function upsertPrState(
     deliveryId?: string;
     nextReviewAt?: string | null;
     incrementAttempt?: boolean;
+    resetAttemptCount?: boolean;
     lastError?: string | null;
     lastCheckSummary?: string | null;
     terminalAt?: string | null;
@@ -277,6 +278,8 @@ export async function upsertPrState(
         last_review_key = COALESCE(excluded.last_review_key, submission_prs.last_review_key),
         next_review_at = excluded.next_review_at,
         attempt_count = CASE
+          WHEN ? AND ? THEN 1
+          WHEN ? THEN 0
           WHEN ? THEN submission_prs.attempt_count + 1
           ELSE submission_prs.attempt_count
         END,
@@ -332,6 +335,9 @@ export async function upsertPrState(
       params.clearTerminal ? 1 : 0,
       params.clearVerdict ? 1 : 0,
       params.clearVerdict ? 1 : 0,
+      params.resetAttemptCount ? 1 : 0,
+      params.incrementAttempt ? 1 : 0,
+      params.resetAttemptCount ? 1 : 0,
       params.incrementAttempt ? 1 : 0,
       params.clearTerminal ? 1 : 0,
     )

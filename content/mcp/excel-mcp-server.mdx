@@ -1,0 +1,159 @@
+---
+title: Excel MCP Server
+slug: excel-mcp-server
+category: mcp
+description: >-
+  MCP server for creating, reading, updating, formatting, charting, validating,
+  and analyzing Excel workbooks without requiring Microsoft Excel.
+cardDescription: >-
+  Let Claude create and manipulate Excel workbooks, worksheets, tables, charts,
+  formulas, formatting, and pivot tables.
+seoTitle: Excel MCP Server for Claude
+seoDescription: >-
+  Configure Excel MCP Server with Claude and other MCP clients to create, read,
+  update, format, validate, chart, and analyze Excel workbooks through local or
+  remote transports.
+author: haris-musa
+authorProfileUrl: "https://github.com/haris-musa"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Excel MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/haris-musa/excel-mcp-server"
+documentationUrl: "https://github.com/haris-musa/excel-mcp-server/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/excel-mcp-server/json"
+installable: true
+installCommand: "uvx excel-mcp-server stdio"
+usageSnippet: "Run `uvx excel-mcp-server stdio` for local MCP clients, or deploy the server with Streamable HTTP transport and set `EXCEL_FILES_PATH` on the server side."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "excel": {
+        "command": "uvx",
+        "args": ["excel-mcp-server", "stdio"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "excel": {
+        "command": "uvx",
+        "args": ["excel-mcp-server", "stdio"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Python environment with `uvx` available to the MCP client runtime.
+  - Excel workbooks or a directory where new workbook files can be created.
+  - For remote transports, an `EXCEL_FILES_PATH` directory configured on the server side.
+  - Review rules for which workbooks an agent may read, overwrite, or create.
+safetyNotes:
+  - Excel MCP Server can create, read, update, rename, copy, delete, format, validate, chart, and analyze workbook and worksheet content.
+  - File-writing tools can overwrite reports, templates, formulas, charts, and analysis outputs, so review diffs or backups before using it on important workbooks.
+  - For Streamable HTTP transport, keep file paths relative to the configured `EXCEL_FILES_PATH` directory and restrict server access to trusted users.
+  - Generated formulas, charts, pivot tables, and validation rules should be reviewed before use in financial, operational, or customer-facing work.
+privacyNotes:
+  - Workbooks can contain personal data, financial records, customer lists, credentials, proprietary metrics, formulas, hidden sheets, comments, and metadata.
+  - Workbook contents, file names, formulas, charts, prompts, tool arguments, and generated outputs may be visible to the MCP client and model provider.
+  - Protect remote deployments, logs, generated files, and shared workbook paths when handling private or regulated data.
+sourceUrls:
+  - "https://github.com/haris-musa/excel-mcp-server"
+  - "https://github.com/haris-musa/excel-mcp-server/blob/main/README.md"
+  - "https://github.com/haris-musa/excel-mcp-server/blob/main/pyproject.toml"
+  - "https://pypi.org/pypi/excel-mcp-server/json"
+tags:
+  - excel
+  - spreadsheets
+  - data-analysis
+  - charts
+  - workbooks
+keywords:
+  - Excel MCP
+  - Excel MCP Server
+  - excel-mcp-server
+  - spreadsheet MCP
+  - workbook automation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Excel MCP Server lets MCP clients create, read, and modify Excel workbooks
+without requiring Microsoft Excel. It supports workbook and worksheet
+operations, formulas, formatting, tables, charts, pivot tables, validation, and
+data-analysis workflows.
+
+The upstream README documents stdio, deprecated SSE, and Streamable HTTP
+transports. The `excel-mcp-server` PyPI package exposes the `excel-mcp-server`
+command, and the stdio mode can be launched directly with `uvx`.
+
+## Source Review
+
+- https://github.com/haris-musa/excel-mcp-server
+- https://github.com/haris-musa/excel-mcp-server/blob/main/README.md
+- https://github.com/haris-musa/excel-mcp-server/blob/main/pyproject.toml
+- https://pypi.org/pypi/excel-mcp-server/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+PyPI metadata for current transport support, package version, command name,
+environment variables, and tool documentation.
+
+## Features
+
+- Create, read, and update Excel workbooks and worksheets.
+- Formula, formatting, font, border, alignment, and conditional-formatting
+  operations.
+- Excel table creation and table styling.
+- Chart generation for common chart types.
+- Pivot-table creation for data analysis.
+- Worksheet copy, rename, delete, and management tools.
+- Range, formula, and data-integrity validation.
+- Stdio, deprecated SSE, and Streamable HTTP transports.
+
+## Installation
+
+For local stdio MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "excel": {
+      "command": "uvx",
+      "args": ["excel-mcp-server", "stdio"]
+    }
+  }
+}
+```
+
+For Streamable HTTP deployments, configure `EXCEL_FILES_PATH` on the server side
+and keep tool file paths relative to that directory.
+
+## Use Cases
+
+- Ask Claude to create a workbook from structured data.
+- Update formulas, formatting, tables, and charts in an existing workbook.
+- Generate pivot tables for exploratory analysis.
+- Validate ranges and formulas before sharing a spreadsheet.
+- Use a remote Excel file workspace with path restrictions for team workflows.
+
+## Safety and Privacy
+
+Workbook automation can change important reports quickly. Use reviewed file
+scopes, backups, and human approval before overwriting production spreadsheets,
+financial models, templates, or customer-facing deliverables.
+
+Excel files often contain hidden sheets, formulas, metadata, private business
+metrics, and personal data. Treat workbook contents and generated outputs as
+sensitive, especially when using remote transports or model providers.
+
+## Duplicate Check
+
+No `haris-musa/excel-mcp-server` entry, `excel-mcp-server` package entry, or
+matching source URL was found in `content/mcp`. This is distinct from database,
+chart, and document MCP servers because it focuses specifically on Excel
+workbook manipulation.

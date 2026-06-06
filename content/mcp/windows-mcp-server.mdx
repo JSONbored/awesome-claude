@@ -1,0 +1,156 @@
+---
+title: Windows MCP Server
+slug: windows-mcp-server
+category: mcp
+description: >-
+  Windows computer-use MCP server that lets AI agents interact with the Windows
+  operating system through UI state, keyboard and mouse actions, application
+  control, file navigation, QA testing, and browser DOM mode.
+cardDescription: >-
+  Automate Windows apps, UI flows, and desktop QA tasks from MCP clients with
+  Windows MCP.
+seoTitle: Windows MCP Server for Claude
+seoDescription: >-
+  Configure Windows MCP with Claude Desktop, Perplexity Desktop, Gemini CLI,
+  Qwen Code, and other MCP clients for Windows UI automation, application
+  control, file navigation, keyboard and mouse actions, QA testing, and browser
+  DOM workflows.
+author: CursorTouch
+authorProfileUrl: "https://github.com/CursorTouch"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Windows MCP
+repoUrl: "https://github.com/CursorTouch/Windows-MCP"
+documentationUrl: "https://github.com/CursorTouch/Windows-MCP"
+packageUrl: "https://pypi.org/project/windows-mcp/"
+installable: true
+installCommand: "uvx windows-mcp serve"
+usageSnippet: "Install uv, then configure an MCP client to run `uvx windows-mcp serve` for Windows UI automation."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "windows-mcp": {
+        "command": "uvx",
+        "args": ["windows-mcp", "serve"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "windows-mcp": {
+        "command": "uvx",
+        "args": ["windows-mcp", "serve"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Windows 7, 8, 8.1, 10, or 11.
+  - Python 3.13 or newer.
+  - uv package manager installed.
+  - English as the preferred Windows language, or the App tool disabled for other languages.
+  - MCP client such as Claude Desktop, Perplexity Desktop, Gemini CLI, Qwen Code, or another compatible host.
+safetyNotes:
+  - Windows MCP can interact with native Windows UI, open applications, control windows, simulate keyboard and mouse input, capture UI state, and automate browser content.
+  - Agents may interact with logged-in apps, desktop files, system dialogs, browsers, email clients, terminals, or enterprise software visible on the desktop.
+  - Use a test Windows account or VM for automation and require human approval before sending messages, submitting forms, changing settings, deleting files, or controlling sensitive applications.
+  - Background installation creates a per-user scheduled task and log files; review whether persistent background automation is appropriate before installing it.
+privacyNotes:
+  - Window titles, UI text, file names, desktop state, browser content, application data, logs, and user input may be exposed to the MCP client and model.
+  - Automation logs can include private document names, customer data, credentials shown on screen, internal URLs, and enterprise application state.
+  - Browser DOM mode may expose page content from logged-in Chrome, Edge, or Firefox sessions.
+sourceUrls:
+  - "https://github.com/CursorTouch/Windows-MCP"
+  - "https://pypi.org/project/windows-mcp/"
+  - "https://github.com/modelcontextprotocol/registry"
+tags:
+  - windows
+  - desktop
+  - automation
+  - computer-use
+  - testing
+keywords:
+  - Windows MCP
+  - Windows-MCP Claude
+  - Windows computer use MCP
+  - Windows UI automation MCP
+  - windows-mcp uvx
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Windows MCP is a computer-use MCP server for Windows. It bridges AI agents to
+the Windows operating system so they can inspect UI state, control apps and
+windows, simulate keyboard and mouse input, navigate files, and automate QA
+testing or desktop tasks.
+
+The project also documents a browser DOM mode that focuses on web page content
+for Chrome, Edge, and Firefox automation.
+
+## Source Review
+
+- https://github.com/CursorTouch/Windows-MCP
+- https://pypi.org/project/windows-mcp/
+- https://github.com/modelcontextprotocol/registry
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository for
+current client snippets, Windows requirements, transport options, persistent
+login-task behavior, and troubleshooting details.
+
+## Features
+
+- Native Windows UI automation for apps, windows, keyboard, and mouse actions.
+- UI state capture for agent reasoning.
+- File navigation and desktop workflow automation.
+- QA testing support for Windows applications.
+- Browser DOM mode for cleaner web automation in Chrome, Edge, and Firefox.
+- PyPI package with `uvx windows-mcp serve` setup.
+- Optional background task install for running the server at login.
+
+## Installation
+
+Install uv, then configure your MCP client to run Windows MCP from PyPI:
+
+```json
+{
+  "mcpServers": {
+    "windows-mcp": {
+      "command": "uvx",
+      "args": ["windows-mcp", "serve"]
+    }
+  }
+}
+```
+
+Restart the client after saving the configuration. See the README for
+client-specific notes for Claude Desktop, Perplexity Desktop, Gemini CLI, Qwen
+Code, and other Windows MCP hosts.
+
+## Use Cases
+
+- Automate Windows desktop QA flows from an AI assistant.
+- Test application UI behavior by clicking, typing, and inspecting state.
+- Drive repetitive desktop workflows in a controlled Windows VM.
+- Use browser DOM mode for web automation that focuses on page content.
+- Let an agent open apps and gather UI state during troubleshooting.
+
+## Safety and Privacy
+
+Windows MCP acts on the real Windows desktop. Use a test VM or dedicated account
+for automation, keep sensitive apps closed, and require confirmation before
+messages, purchases, account changes, system settings changes, or file deletion.
+
+Treat UI state, browser DOM content, window titles, logs, file names, and screen
+text as sensitive. These can expose personal data, enterprise data, credentials,
+and private application state to the MCP client and model.
+
+## Duplicate Check
+
+No `CursorTouch/Windows-MCP` entry or source URL was found in `content/mcp`.
+This entry is separate from browser-only automation servers and general terminal
+or filesystem MCP servers because it focuses on native Windows computer use.

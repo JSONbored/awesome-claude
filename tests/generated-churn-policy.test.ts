@@ -115,8 +115,12 @@ describe("generated churn policy", () => {
 
   it("keeps README refresh as a single README-only accumulator PR", () => {
     const source = read(".github/workflows/readme-refresh-pr.yml");
-    expect(source).toContain("branch: automation/readme-refresh");
-    expect(source).toContain("add-paths:");
+    expect(source).toContain("BRANCH_NAME: automation/readme-refresh");
+    expect(source).toContain("refresh-readme-automation-readme-refresh");
+    expect(source).toContain("git diff --quiet origin/main -- README.md");
+    expect(source).toContain('git switch -C "$BRANCH_NAME" origin/main');
+    expect(source).toContain("unexpected_files");
+    expect(source).toContain("git diff --name-only -- . ':!README.md'");
     expect(source).toContain("README.md");
     expect(source).not.toContain("apps/web/public/data");
     expect(source).not.toContain("apps/web/src/generated");

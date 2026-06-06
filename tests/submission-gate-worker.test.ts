@@ -41,6 +41,11 @@ import {
   validationFailedDecision,
 } from "../apps/submission-gate/src/review";
 import {
+  checkSubmittedSourceEvidence,
+  extractSubmittedSourceUrls,
+  sourceEvidenceCloseDecision,
+} from "../apps/submission-gate/src/source-evidence";
+import {
   buildDiscordDecisionPayload,
   postDiscordDecisionNotification,
 } from "../apps/submission-gate/src/notifications";
@@ -430,6 +435,16 @@ describe("Cloudflare submission gate helpers", () => {
     );
     expect(source).toContain('status: "error_retryable"');
     expect(source).toContain("retryingReviewComment(");
+    expect(source).toContain("checkSubmittedSourceEvidence(candidateContent)");
+    expect(source).toContain("sourceEvidenceCloseDecision(sourceEvidence)");
+    expect(source).toContain("deterministicSourceEvidence");
+    expect(source).toContain("sourceEvidencePolicy:");
+    expect(source).toContain("privateSourceHardFailureContradicted(");
+    expect(source).toContain('"source_evidence_conflict"');
+    expect(source).toContain("sourceEvidenceConflictMergeDecision(");
+    expect(source).toContain('"duplicate_evidence_conflict"');
+    expect(source).toContain("privateStrictDuplicateContradicted(");
+    expect(source).toContain("duplicateEvidenceConflictMergeDecision(");
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
@@ -442,6 +457,9 @@ describe("Cloudflare submission gate helpers", () => {
     );
     expect(source).toContain("closeEvidenceContract:");
     expect(source).toContain("Every close verdict must include reasonCode");
+    expect(source).toContain(
+      "strict_duplicate closes must identify the duplicated entry path",
+    );
     expect(source).toContain("deterministicDuplicateReview");
     expect(source).toContain('eventType: "duplicate_shadow_review"');
     expect(source).toContain('decision: "related_not_strict_duplicate"');
@@ -497,8 +515,15 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"COLLABORATOR"');
     expect(source).toContain("targetFromIssueCommentRecheck");
     expect(source).toContain("shouldResetManualTerminal");
+    expect(source).toContain("shouldResetClosedTerminal");
+    expect(source).toContain(
+      "resetAttemptCount: shouldResetManualTerminal || shouldResetClosedTerminal",
+    );
     expect(source).toContain(
       'forceRecheck === true && String(existing?.status || "") === "manual"',
+    );
+    expect(source).toContain(
+      "forceRecheck === true ||\n      isReopenedPullRequestEvent",
     );
     expect(issueCommentBlock).toContain("payload,\n      true,");
   });
@@ -615,6 +640,9 @@ describe("Cloudflare submission gate helpers", () => {
         {
           ruleId: "source_url_reachability",
           source: "https://example.com/docs",
+          matchedUrl: "https://example.com/docs",
+          status: "hard_failure",
+          httpStatus: "404",
           behavior: "documentationUrl returned 404",
           fix: "Replace or remove the dead documentationUrl.",
         },
@@ -629,7 +657,93 @@ describe("Cloudflare submission gate helpers", () => {
     expect(body).toContain("> ℹ️ **Reason:** `source_hard_failure`");
     expect(body).toContain("Decision Evidence");
     expect(body).toContain("source_url_reachability");
+    expect(body).toContain("matched URL: https://example.com/docs");
+    expect(body).toContain("HTTP: 404");
     expect(body).toContain("documentationUrl returned 404");
+  });
+
+  it("extracts and checks deterministic submitted source evidence", async () => {
+    const source = `---
+title: Source Evidence Fixture
+repoUrl: "https://github.com/example/repo"
+documentationUrl: "https://example.com/docs"
+sourceUrls:
+  - "https://example.com/guide"
+  - https://example.com/docs
+---
+`;
+
+    expect(extractSubmittedSourceUrls(source)).toEqual([
+      { field: "documentationUrl", url: "https://example.com/docs" },
+      { field: "repoUrl", url: "https://github.com/example/repo" },
+      { field: "sourceUrls", url: "https://example.com/guide" },
+      { field: "sourceUrls", url: "https://example.com/docs" },
+    ]);
+
+    const fetchImpl = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(new Response(null, { status: 405 }))
+      .mockResolvedValueOnce(new Response("ok", { status: 200 }))
+      .mockResolvedValue(new Response(null, { status: 200 }));
+    const first = await checkSubmittedSourceEvidence(source, fetchImpl);
+    const second = await checkSubmittedSourceEvidence(source, fetchImpl);
+
+    expect(first.status).toBe("passed");
+    expect(first.urls[0]).toMatchObject({
+      field: "documentationUrl",
+      url: "https://example.com/docs",
+      status: "passed",
+      httpStatus: 200,
+    });
+    expect(first.hash).toBe(second.hash);
+  });
+
+  it("turns deterministic source hard failures into close evidence", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Dead Source Fixture
+documentationUrl: "https://example.com/missing"
+---
+`,
+      vi
+        .fn<typeof fetch>()
+        .mockResolvedValue(new Response(null, { status: 404 })),
+    );
+    const decision = sourceEvidenceCloseDecision(report);
+
+    expect(report.status).toBe("failed");
+    expect(decision).toMatchObject({
+      verdict: "close",
+      reasonCode: "source_hard_failure",
+      close: true,
+      evidence: [
+        {
+          field: "documentationUrl",
+          matchedUrl: "https://example.com/missing",
+          httpStatus: "404",
+        },
+      ],
+    });
+  });
+
+  it("keeps transient source evidence failures retryable", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Retry Source Fixture
+documentationUrl: "https://example.com/temporarily-down"
+packageUrl: "https://example.com/rate-limited"
+---
+`,
+      vi
+        .fn<typeof fetch>()
+        .mockResolvedValueOnce(new Response(null, { status: 500 }))
+        .mockResolvedValueOnce(new Response(null, { status: 500 }))
+        .mockResolvedValueOnce(new Response(null, { status: 429 }))
+        .mockResolvedValueOnce(new Response(null, { status: 429 })),
+    );
+
+    expect(report.status).toBe("retryable");
+    expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 
   it("renders pending, retrying, and superseded gate comments as GitHub cards", () => {
@@ -833,6 +947,116 @@ describe("Cloudflare submission gate helpers", () => {
     ).toMatchObject({
       code: "invalid_private_response",
       retryable: true,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "close",
+        confidence: 0.9,
+        reasonCode: "source_hard_failure",
+        evidence: [
+          {
+            ruleId: "source_url_reachability",
+            matchedUrl: "https://example.com/missing",
+            outcome: "hard-failure",
+            status: 404,
+          },
+        ],
+        summary: "Summary:\n- documentationUrl returned 404.",
+        labels: ["submission-closed-by-gate"],
+        checks: [{ name: "validate-content", status: "passed" }],
+        sections: [
+          {
+            id: "source_review",
+            status: "fail",
+            bullets: ["documentationUrl returned 404."],
+          },
+        ],
+      }).decision,
+    ).toMatchObject({
+      verdict: "close",
+      reasonCode: "source_hard_failure",
+      evidence: [
+        {
+          ruleId: "source_url_reachability",
+          matchedUrl: "https://example.com/missing",
+          outcome: "hard-failure",
+          status: "404",
+          httpStatus: "404",
+        },
+      ],
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "close",
+        confidence: 0.86,
+        reasonCode: "strict_duplicate",
+        evidence: [
+          {
+            ruleId: "strict_duplicate",
+            policy: "strict_duplicate",
+            behavior:
+              "PR adds a new MCP entry for ACI MCP Servers (slug aci-mcp-servers).",
+            source: "private-reviewer",
+          },
+        ],
+        summary:
+          "Summary:\n- Duplicate review: no strict duplicate.\n- No blocking issues; approve direct merge.",
+        labels: ["submission-closed-by-gate"],
+        checks: [{ name: "validate-content", status: "passed" }],
+        sections: [
+          {
+            id: "duplicate_history",
+            status: "pass",
+            bullets: ["No duplicate entry exists."],
+          },
+        ],
+      }).error,
+    ).toMatchObject({
+      code: "duplicate_evidence_conflict",
+      retryable: true,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "close",
+        confidence: 0.9,
+        reasonCode: "strict_duplicate",
+        evidence: [
+          {
+            ruleId: "strict_duplicate",
+            matchedPath: "content/mcp/existing-server.mdx",
+            matchedSourceUrl: "https://github.com/example/server",
+            behavior: "same category slug and canonical source",
+            fix: "Resubmit only if the resource is distinct.",
+          },
+        ],
+        summary:
+          "Summary:\n- Matches existing `content/mcp/existing-server.mdx`.",
+        labels: ["submission-closed-by-gate"],
+        checks: [{ name: "validate-content", status: "passed" }],
+        sections: [
+          {
+            id: "duplicate_history",
+            status: "fail",
+            bullets: ["Existing content item is the same resource."],
+          },
+        ],
+      }).decision,
+    ).toMatchObject({
+      verdict: "close",
+      reasonCode: "strict_duplicate",
+      evidence: [
+        {
+          ruleId: "strict_duplicate",
+          matchedPath: "content/mcp/existing-server.mdx",
+          matchedSourceUrl: "https://github.com/example/server",
+        },
+      ],
     });
 
     expect(
@@ -1255,6 +1479,9 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("existingReviewKey !== reviewScanKey");
     expect(source).toContain("shouldResetIgnoredScan");
     expect(source).toContain("shouldResetManualTerminal");
+    expect(source).toContain(
+      "resetAttemptCount: shouldResetManualTerminal || shouldResetClosedTerminal",
+    );
     expect(source).toContain("clearTerminal:");
     expect(source).toContain("lastReviewKey: reviewScanKey || undefined");
     expect(source).toContain('reason: "already_reviewed"');

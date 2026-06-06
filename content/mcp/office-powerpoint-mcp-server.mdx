@@ -1,0 +1,157 @@
+---
+title: Office PowerPoint MCP Server
+slug: office-powerpoint-mcp-server
+category: mcp
+description: >-
+  MCP server for creating, editing, formatting, and analyzing Microsoft
+  PowerPoint presentations through python-pptx.
+cardDescription: >-
+  Let Claude build, inspect, format, and update PowerPoint decks with slides,
+  tables, charts, images, shapes, themes, and transitions.
+seoTitle: Office PowerPoint MCP Server for Claude
+seoDescription: >-
+  Configure Office PowerPoint MCP Server with Claude and other MCP clients to
+  create, edit, format, analyze, and automate Microsoft PowerPoint
+  presentations.
+author: GongRzhe
+authorProfileUrl: "https://github.com/gongrzhe"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Office PowerPoint MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/gongrzhe/Office-PowerPoint-MCP-Server"
+documentationUrl: "https://github.com/gongrzhe/Office-PowerPoint-MCP-Server/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/office-powerpoint-mcp-server/json"
+installable: true
+installCommand: "uvx --from office-powerpoint-mcp-server ppt_mcp_server"
+usageSnippet: "Run `uvx --from office-powerpoint-mcp-server ppt_mcp_server` from an MCP client to create, edit, format, and analyze PowerPoint presentations."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "powerpoint": {
+        "command": "uvx",
+        "args": ["--from", "office-powerpoint-mcp-server", "ppt_mcp_server"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "powerpoint": {
+        "command": "uvx",
+        "args": ["--from", "office-powerpoint-mcp-server", "ppt_mcp_server"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.11 or newer available to the MCP client runtime.
+  - uvx available for package execution.
+  - PowerPoint presentation files or a working directory where new decks can be created.
+  - Review rules for decks the agent may overwrite, export, or share.
+safetyNotes:
+  - Office PowerPoint MCP Server can create, open, save, inspect, and modify presentation files.
+  - Editing tools can add or change slides, text, images, shapes, tables, charts, themes, templates, transitions, hyperlinks, connectors, and slide masters.
+  - Review generated decks before using them for customers, sales, training, executive briefings, financial plans, legal reviews, or public communication.
+  - Keep backups before running broad formatting, template, master-slide, image, or chart changes on important presentations.
+privacyNotes:
+  - Presentations can contain confidential plans, customer names, product screenshots, business metrics, embedded images, speaker context, and hidden metadata.
+  - Filenames, prompts, tool arguments, generated slide text, extracted deck content, and save/export logs may be visible to the MCP client and model provider.
+  - Review generated presentations and extracted content before sharing logs, prompts, or decks outside the trusted project boundary.
+sourceUrls:
+  - "https://github.com/gongrzhe/Office-PowerPoint-MCP-Server"
+  - "https://github.com/gongrzhe/Office-PowerPoint-MCP-Server/blob/main/README.md"
+  - "https://github.com/gongrzhe/Office-PowerPoint-MCP-Server/blob/main/pyproject.toml"
+  - "https://pypi.org/pypi/office-powerpoint-mcp-server/json"
+tags:
+  - powerpoint
+  - presentations
+  - office
+  - slides
+  - deck-automation
+keywords:
+  - Office PowerPoint MCP
+  - PowerPoint MCP Server
+  - office-powerpoint-mcp-server
+  - Microsoft PowerPoint MCP
+  - presentation automation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Office PowerPoint MCP Server lets MCP clients create, inspect, format, and update
+Microsoft PowerPoint presentations. It exposes deck management, content
+creation, text formatting, image handling, shapes, tables, charts, themes,
+templates, fonts, hyperlinks, slide masters, connectors, and transition tools.
+
+The upstream README documents local installation and `uvx` usage through the
+`office-powerpoint-mcp-server` PyPI package. The package exposes the
+`ppt_mcp_server` command for MCP clients.
+
+## Source Review
+
+- https://github.com/gongrzhe/Office-PowerPoint-MCP-Server
+- https://github.com/gongrzhe/Office-PowerPoint-MCP-Server/blob/main/README.md
+- https://github.com/gongrzhe/Office-PowerPoint-MCP-Server/blob/main/pyproject.toml
+- https://pypi.org/pypi/office-powerpoint-mcp-server/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+PyPI metadata for current package version, command name, Python requirement,
+dependencies, tool coverage, and setup guidance.
+
+## Features
+
+- Create and open presentation files.
+- Add, delete, duplicate, reorder, and inspect slides.
+- Add and format text boxes, paragraphs, tables, images, shapes, and charts.
+- Apply themes, templates, fonts, transitions, connectors, and slide masters.
+- Inspect presentation structure and slide content.
+- Save updated decks for later review or sharing.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "powerpoint": {
+      "command": "uvx",
+      "args": ["--from", "office-powerpoint-mcp-server", "ppt_mcp_server"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to draft a structured slide deck from an outline.
+- Add charts, tables, and diagrams to an existing presentation.
+- Apply consistent typography and theme choices across slides.
+- Generate presentation templates for repeatable reporting workflows.
+- Inspect a deck before review and extract slide-level structure.
+- Update product, sales, training, or executive briefing decks with new content.
+
+## Safety and Privacy
+
+Presentation automation can quickly change important decks. Keep backups, use a
+review step before sharing outputs, and require human approval before exporting,
+publishing, deleting, or broadly reformatting important presentations.
+
+PowerPoint files can contain sensitive business plans, customer data, product
+screenshots, charts, embedded images, and hidden metadata. Review generated
+files, extracted content, and any saved deck before sharing it outside the
+trusted project boundary.
+
+## Duplicate Check
+
+No `gongrzhe/Office-PowerPoint-MCP-Server` entry,
+`office-powerpoint-mcp-server` package entry, or matching source URL was found
+in `content/mcp`. This is distinct from Word and Excel MCP servers because it
+focuses specifically on Microsoft PowerPoint presentation workflows.

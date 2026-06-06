@@ -1,0 +1,168 @@
+---
+title: bb-browser MCP Server
+slug: bb-browser-mcp-server
+category: mcp
+description: >-
+  Browser-control MCP server and CLI that lets AI agents use a real Chrome
+  session, including logged-in browser state, site adapters, DOM snapshots,
+  authenticated fetches, network traces, screenshots, and page actions.
+cardDescription: >-
+  Connect Claude, Codex, Cursor, and other agents to a local Chrome session with
+  bb-browser's MCP mode, local daemon, Chrome extension, 100+ site commands,
+  browser automation tools, and local-only privacy model.
+seoTitle: bb-browser MCP Server for Claude
+seoDescription: >-
+  Configure bb-browser MCP with Claude and other agents to control Chrome,
+  inspect pages, call site adapters, use authenticated browser sessions, capture
+  network data, run screenshots, and automate browser workflows safely.
+author: epiral
+authorProfileUrl: "https://github.com/epiral"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: bb-browser
+brandDomain: github.com
+repoUrl: "https://github.com/epiral/bb-browser"
+documentationUrl: "https://github.com/epiral/bb-browser/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/bb-browser"
+installable: true
+installCommand: "npx -y bb-browser --mcp"
+usageSnippet: "Configure your MCP client with `npx -y bb-browser --mcp`, run the local daemon/extension path documented upstream, and start with read-only page inspection before actions."
+copySnippet: |-
+  npx -y bb-browser --mcp
+configSnippet: |-
+  {
+    "mcpServers": {
+      "bb-browser": {
+        "command": "npx",
+        "args": ["-y", "bb-browser", "--mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 18 or newer.
+  - Chrome session, local daemon, and Chrome extension or supported OpenClaw browser path configured according to the upstream README.
+  - MCP client such as Claude Code, Codex, Cursor, or another compatible host.
+  - Explicit approval to let an agent use the active browser's logged-in state.
+  - Site adapter updates reviewed before using community adapters against sensitive accounts.
+safetyNotes:
+  - bb-browser can control a real browser session, inspect pages, click elements, fill inputs, evaluate JavaScript, fetch URLs with browser authentication, capture screenshots, and inspect network traffic.
+  - Commands may act as the logged-in user on social, finance, job, developer, shopping, and knowledge websites.
+  - Keep the daemon bound to trusted local interfaces unless you deliberately configure remote access through a private network.
+  - Review community site adapters before using them with authenticated accounts or valuable sessions.
+  - Require human approval before posting, submitting forms, changing account settings, applying to jobs, making purchases, or running destructive site actions.
+privacyNotes:
+  - Tab URLs, titles, DOM snapshots, page content, selected elements, screenshots, network requests, responses, console output, traces, and authenticated fetch results may be exposed to the MCP client and model.
+  - Browser login state is used by the page and browser; even if cookies are not extracted directly, commands can act through authenticated sessions.
+  - Network request bodies and response data may contain tokens, account data, personal messages, search history, customer information, or internal application data.
+  - The upstream privacy doc says communication is local and there is no telemetry or external server, but model providers still receive any data your MCP client sends in prompts or tool results.
+sourceUrls:
+  - "https://github.com/epiral/bb-browser"
+  - "https://github.com/epiral/bb-browser/blob/main/README.md"
+  - "https://github.com/epiral/bb-browser/blob/main/PRIVACY.md"
+  - "https://github.com/epiral/bb-browser/blob/main/package.json"
+  - "https://registry.npmjs.org/bb-browser"
+  - "https://github.com/epiral/bb-sites"
+tags:
+  - browser
+  - chrome
+  - automation
+  - web
+  - local-first
+keywords:
+  - bb-browser MCP
+  - BadBoy Browser MCP
+  - Chrome login state MCP
+  - browser automation MCP
+  - authenticated browser fetch MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+bb-browser is a browser-control CLI and MCP server for AI agents. It connects
+agents to a real Chrome session through a local daemon and browser extension, so
+the agent can inspect pages, use site adapters, capture screenshots, evaluate
+page JavaScript, inspect network traffic, and call authenticated browser fetches
+with the active user's login state.
+
+The project positions the browser itself as the API. That makes it powerful for
+sites without public APIs, but also means the agent can interact with real
+accounts and logged-in pages.
+
+## Source Review
+
+- https://github.com/epiral/bb-browser
+- https://github.com/epiral/bb-browser/blob/main/README.md
+- https://github.com/epiral/bb-browser/blob/main/PRIVACY.md
+- https://github.com/epiral/bb-browser/blob/main/package.json
+- https://registry.npmjs.org/bb-browser
+- https://github.com/epiral/bb-sites
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, privacy document, package metadata, npm registry metadata, and
+community adapter repository for current MCP configuration, daemon behavior,
+site commands, privacy claims, and adapter coverage.
+
+## Features
+
+- Run an MCP server with `npx -y bb-browser --mcp`.
+- Control a real Chrome session through a local daemon and extension.
+- Use site adapters for search, social, news, developer, video, finance, jobs,
+  knowledge, shopping, and tool workflows.
+- Inspect DOM snapshots and accessibility trees.
+- Click elements, fill inputs, evaluate JavaScript, and open pages.
+- Capture screenshots and network request data.
+- Fetch URLs using the browser's authenticated session.
+- Use OpenClaw mode for supported browser workflows without the Chrome extension.
+- Update and recommend community site adapters.
+
+## Installation
+
+Configure bb-browser in an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "bb-browser": {
+      "command": "npx",
+      "args": ["-y", "bb-browser", "--mcp"]
+    }
+  }
+}
+```
+
+Follow the upstream README for the daemon, Chrome extension, OpenClaw path, and
+site adapter setup. Start with read-only commands such as page inspection,
+search, or summaries before enabling page actions.
+
+## Use Cases
+
+- Let an agent inspect a logged-in page without separate API credentials.
+- Search or summarize data from websites that do not provide useful public APIs.
+- Capture page structure, screenshots, console output, and network context for
+  debugging.
+- Use community adapters for social, developer, finance, video, job, and
+  knowledge sites.
+- Build new site adapters from observed browser network and DOM behavior.
+
+## Safety and Privacy
+
+bb-browser can act through a real browser session. Treat every command as if it
+could use the privileges of the logged-in human. Keep the daemon local, use
+non-critical accounts for experiments, and require approval before any command
+that posts, submits, purchases, deletes, changes settings, or sends messages.
+
+The upstream privacy document says bb-browser communication is local and does
+not send telemetry or data to an external service. That does not make tool
+outputs automatically safe for models. DOM text, screenshots, network bodies,
+authenticated fetch results, and adapter output can still be sent to the MCP
+client and model provider.
+
+## Duplicate Check
+
+No `epiral/bb-browser` entry, bb-browser MCP entry, or matching source URL was
+found in `content/mcp`.

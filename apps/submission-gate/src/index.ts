@@ -59,6 +59,12 @@ import {
 } from "./review";
 import { postDiscordDecisionNotification } from "./notifications";
 import {
+  checkSubmittedSourceEvidence,
+  sourceEvidenceCloseDecision,
+  sourceEvidenceSummary,
+  type SourceEvidenceReport,
+} from "./source-evidence";
+import {
   decryptText,
   encryptText,
   randomToken,
@@ -147,6 +153,13 @@ class SubmissionMergePendingError extends Error {
   }
 }
 
+class SourceEvidenceRetryableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "SourceEvidenceRetryableError";
+  }
+}
+
 const TERMINAL_GATE_VERDICTS = new Set(["close", "manual", "ignore"]);
 const TERMINAL_PR_STATUSES = new Set(["merged", "closed", "manual", "ignored"]);
 const VALIDATION_REQUEUE_SECONDS = 90;
@@ -157,6 +170,8 @@ const RETRYABLE_ERROR_SECONDS = 60;
 const GITHUB_RATE_LIMIT_FALLBACK_SECONDS = 15 * 60;
 const PRIVATE_REVIEW_TIMEOUT_MS = 45_000;
 const INVALID_PRIVATE_RESPONSE_MAX_RETRIES = 3;
+const SOURCE_EVIDENCE_CONFLICT_MAX_RETRIES = 2;
+const DUPLICATE_EVIDENCE_CONFLICT_MAX_RETRIES = 2;
 const DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR_TEXT = String(
   DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
 );
@@ -469,6 +484,9 @@ function isTimeoutError(error: unknown) {
 }
 
 function retryablePrecheckDecision(error: unknown) {
+  if (error instanceof SourceEvidenceRetryableError) {
+    return privateReviewErrorDecision(error.message, "source_evidence_timeout");
+  }
   if (isGitHubRateLimitError(error)) {
     return privateReviewErrorDecision(
       "Submission gate deterministic duplicate/edit review hit a GitHub rate limit.",
@@ -530,6 +548,28 @@ function shouldStopRetryingInvalidPrivateResponse(
   );
 }
 
+function shouldStopRetryingSourceEvidenceConflict(
+  decision: GateDecision,
+  existing: Record<string, unknown> | null,
+) {
+  return (
+    hasPrivateReviewErrorCode(decision, "source_evidence_conflict") &&
+    invalidPrivateResponseAttempts(existing) >=
+      SOURCE_EVIDENCE_CONFLICT_MAX_RETRIES
+  );
+}
+
+function shouldStopRetryingDuplicateEvidenceConflict(
+  decision: GateDecision,
+  existing: Record<string, unknown> | null,
+) {
+  return (
+    hasPrivateReviewErrorCode(decision, "duplicate_evidence_conflict") &&
+    invalidPrivateResponseAttempts(existing) >=
+      DUPLICATE_EVIDENCE_CONFLICT_MAX_RETRIES
+  );
+}
+
 function invalidPrivateResponseExhaustedDecision(
   decision: GateDecision,
   existing: Record<string, unknown> | null,
@@ -546,6 +586,215 @@ function invalidPrivateResponseExhaustedDecision(
       retryable: false,
       message: decision.summary,
     },
+  );
+}
+
+function sourceEvidenceConflictDecision(
+  decision: GateDecision,
+  sourceEvidence: SourceEvidenceReport,
+) {
+  const conflict = privateReviewErrorDecision(
+    "Private review claimed source_hard_failure, but deterministic source evidence found the submitted source URLs reachable.",
+    "source_evidence_conflict",
+  );
+  return {
+    ...conflict,
+    confidence: decision.confidence,
+    sourceEvidenceHash: sourceEvidence.hash,
+    sections: [
+      {
+        id: "source_review",
+        title: "Source Review",
+        status: "warn" as const,
+        bullets: [
+          "Private review reported a source hard failure that conflicts with deterministic source evidence.",
+          sourceEvidenceSummary(sourceEvidence),
+          "The gate will retry with the deterministic source artifact before falling back to the clean merge path.",
+        ],
+      },
+    ],
+  };
+}
+
+function sourceEvidenceConflictMergeDecision(
+  decision: GateDecision,
+  sourceEvidence: SourceEvidenceReport,
+): GateDecision {
+  return {
+    schemaVersion: 2,
+    verdict: "merge",
+    confidence: Math.max(
+      decision.confidence || 0,
+      DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
+    ),
+    sourceEvidenceHash: sourceEvidence.hash,
+    labels: [LABELS.merged],
+    summary: [
+      "Summary:",
+      "- Public validation and deterministic source evidence passed.",
+      "- Private review returned a source_hard_failure that contradicted reachable source evidence.",
+      "- No deterministic blocker remains, so the gate is accepting the source-backed one-file content PR.",
+      "",
+      "Source Review:",
+      `- ${sourceEvidenceSummary(sourceEvidence)}`,
+      "",
+      "Recommended Action:",
+      "- Merge this PR.",
+    ].join("\n"),
+    sections: [
+      {
+        id: "source_review",
+        title: "Source Review",
+        status: "pass",
+        bullets: [
+          "Deterministic source evidence found submitted source URLs reachable.",
+          sourceEvidenceSummary(sourceEvidence),
+        ],
+      },
+      {
+        id: "recommended_action",
+        title: "Recommended Action",
+        status: "pass",
+        bullets: ["Merge this PR."],
+      },
+    ],
+  };
+}
+
+function duplicateReviewSummaryLine(duplicateReview: ContentDuplicateReview) {
+  const relatedCount = duplicateReview.relatedCandidates.length;
+  return duplicateReview.strictDuplicate
+    ? `strict duplicate: ${
+        duplicateReview.strictDuplicate.existing.label ||
+        duplicateReview.strictDuplicate.existing.filePath
+      }`
+    : `no strict duplicate${
+        relatedCount ? `; ${relatedCount} related candidate(s)` : ""
+      }`;
+}
+
+function duplicateEvidenceConflictDecision(
+  decision: GateDecision,
+  duplicateReview: ContentDuplicateReview,
+) {
+  const conflict = privateReviewErrorDecision(
+    "Private review claimed strict_duplicate, but deterministic duplicate review found no strict duplicate.",
+    "duplicate_evidence_conflict",
+  );
+  return {
+    ...conflict,
+    confidence: decision.confidence,
+    sections: [
+      {
+        id: "duplicate_history",
+        title: "Duplicate and History Review",
+        status: "warn" as const,
+        bullets: [
+          "Private review reported a strict duplicate that conflicts with deterministic duplicate review.",
+          duplicateReviewSummaryLine(duplicateReview),
+          "The gate will retry with the deterministic duplicate artifact before falling back to the clean merge path.",
+        ],
+      },
+    ],
+  };
+}
+
+function duplicateEvidenceConflictMergeDecision(
+  decision: GateDecision,
+  duplicateReview: ContentDuplicateReview,
+  sourceEvidence: SourceEvidenceReport | null,
+): GateDecision {
+  const sourceBullets =
+    sourceEvidence?.status === "passed"
+      ? [
+          {
+            id: "source_review",
+            title: "Source Review",
+            status: "pass" as const,
+            bullets: [
+              "Deterministic source evidence found submitted source URLs reachable.",
+              sourceEvidenceSummary(sourceEvidence),
+            ],
+          },
+        ]
+      : [];
+  return {
+    schemaVersion: 2,
+    verdict: "merge",
+    confidence: Math.max(
+      decision.confidence || 0,
+      DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
+    ),
+    sourceEvidenceHash: sourceEvidence?.hash,
+    labels: [LABELS.merged],
+    summary: [
+      "Summary:",
+      "- Public validation and deterministic duplicate review passed.",
+      "- Private review returned a strict_duplicate decision that contradicted deterministic duplicate evidence.",
+      "- No deterministic blocker remains, so the gate is accepting the one-file content PR.",
+      "",
+      "Duplicate / History Review:",
+      `- ${duplicateReviewSummaryLine(duplicateReview)}.`,
+      "",
+      ...(sourceEvidence
+        ? ["Source Review:", `- ${sourceEvidenceSummary(sourceEvidence)}.`, ""]
+        : []),
+      "Recommended Action:",
+      "- Merge this PR.",
+    ].join("\n"),
+    sections: [
+      {
+        id: "duplicate_history",
+        title: "Duplicate and History Review",
+        status: "pass",
+        bullets: [
+          "Deterministic duplicate review found no strict duplicate.",
+          duplicateReviewSummaryLine(duplicateReview),
+        ],
+      },
+      ...sourceBullets,
+      {
+        id: "recommended_action",
+        title: "Recommended Action",
+        status: "pass",
+        bullets: ["Merge this PR."],
+      },
+    ],
+  };
+}
+
+function privateSourceHardFailureContradicted(
+  decision: GateDecision,
+  sourceEvidence: SourceEvidenceReport | null,
+) {
+  return (
+    decision.verdict === "close" &&
+    decision.reasonCode === "source_hard_failure" &&
+    sourceEvidence?.status === "passed" &&
+    sourceEvidence.urls.length > 0
+  );
+}
+
+function privateStrictDuplicateContradicted(
+  decision: GateDecision,
+  duplicateReview: ContentDuplicateReview | null,
+) {
+  return (
+    decision.verdict === "close" &&
+    decision.reasonCode === "strict_duplicate" &&
+    Boolean(duplicateReview) &&
+    !duplicateReview?.strictDuplicate
+  );
+}
+
+function duplicateConflictRetryableContradicted(
+  decision: GateDecision,
+  duplicateReview: ContentDuplicateReview | null,
+) {
+  return (
+    hasPrivateReviewErrorCode(decision, "duplicate_evidence_conflict") &&
+    Boolean(duplicateReview) &&
+    !duplicateReview?.strictDuplicate
   );
 }
 
@@ -2315,6 +2564,21 @@ async function deterministicContentPrecheck(params: {
     }
   }
 
+  const sourceEvidence = await checkSubmittedSourceEvidence(candidateContent);
+  const sourceDecision = sourceEvidenceCloseDecision(sourceEvidence);
+  if (sourceDecision) {
+    return {
+      content: candidateContent,
+      decision: sourceDecision,
+      sourceEvidence,
+    };
+  }
+  if (sourceEvidence.status === "retryable") {
+    throw new SourceEvidenceRetryableError(
+      `Submission gate deterministic source evidence check was retryable: ${sourceEvidenceSummary(sourceEvidence)}.`,
+    );
+  }
+
   const candidate = extractContentDuplicateSignals({
     filePath: params.scope.filePath,
     content: candidateContent,
@@ -2342,6 +2606,7 @@ async function deterministicContentPrecheck(params: {
       candidate,
     ),
     duplicateReview: summarizeDuplicateReview(duplicateReview),
+    sourceEvidence,
   };
 }
 
@@ -2367,7 +2632,8 @@ async function enqueueReviewTarget(
     existingReviewKey !== reviewScanKey;
   const shouldResetClosedTerminal =
     String(existing?.status || "") === "closed" &&
-    (isReopenedPullRequestEvent(eventName, webhook) ||
+    (forceRecheck === true ||
+      isReopenedPullRequestEvent(eventName, webhook) ||
       eventName === "scheduled");
   const shouldResetManualTerminal =
     forceRecheck === true && String(existing?.status || "") === "manual";
@@ -2390,6 +2656,7 @@ async function enqueueReviewTarget(
     deliveryId,
     nextReviewAt: null,
     incrementAttempt: true,
+    resetAttemptCount: shouldResetManualTerminal || shouldResetClosedTerminal,
     lastReviewKey: reviewScanKey || undefined,
     clearVerdict:
       shouldResetIgnoredScan ||
@@ -3126,6 +3393,8 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         checks?: Array<{ name: string; status: string; details?: string }>;
       } | null = null;
       let contentScopeForPrivateReview: DirectContentScope | null = null;
+      let sourceEvidenceForPrivateReview: SourceEvidenceReport | null = null;
+      let duplicateReviewForPrivateReview: ContentDuplicateReview | null = null;
       const reviewability = await directContentReviewabilityForPr({
         token,
         repo,
@@ -3281,7 +3550,17 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             target,
             scope: contentScopeForPrivateReview,
           });
+          if (precheck.sourceEvidence) {
+            sourceEvidenceForPrivateReview = precheck.sourceEvidence;
+            validationForPrivateReview = {
+              ...(isRecord(validationForPrivateReview)
+                ? validationForPrivateReview
+                : {}),
+              deterministicSourceEvidence: precheck.sourceEvidence,
+            };
+          }
           if (precheck.duplicateReview) {
+            duplicateReviewForPrivateReview = precheck.duplicateReview;
             validationForPrivateReview = {
               ...(isRecord(validationForPrivateReview)
                 ? validationForPrivateReview
@@ -3312,6 +3591,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               deterministicPrecheck: {
                 status: "passed",
                 contentStatus: contentScopeForPrivateReview.status,
+                sourceEvidenceHash: sourceEvidenceForPrivateReview?.hash,
               },
             };
           }
@@ -3353,6 +3633,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             },
             validation: validationForPrivateReview,
             contentScope: contentScopeForPrivateReview,
+            sourceEvidence: sourceEvidenceForPrivateReview,
             privateReviewRequirements: {
               finalAction: "merge_or_close",
               duplicateHistoryRequired: true,
@@ -3382,10 +3663,76 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               defensiveSecurityPolicy:
                 "Do not close a submission merely because it defensively discusses OAuth, tokens, credentials, authorization, attestations, artifacts, packages, downloads, security, privacy, or destructive-risk prevention. These topics require careful evidence review, but source-backed guides, rules, skills, collections, hooks, tools, and statuslines about safe review practices can merge when validation, sources, scope, and safety/privacy notes pass. A hard safety, secret, package, or abuse close must cite concrete unsafe behavior or a concrete policy violation such as credential theft, exposed secrets, destructive defaults, malware/abuse tooling, unverified package hosting, packageVerified:true by an external contributor, broken source evidence, or promotional/affiliate content. Generic phrases like 'contains patterns that cannot be accepted' are not sufficient evidence for a close verdict.",
               closeEvidenceContract:
-                "Every close verdict must include reasonCode and evidence. Supported reasonCode values are scope_failure, validation_failure, provenance_failure, protected_metadata_edit, strict_duplicate, source_hard_failure, commercial_listing_route, embedded_secret, unsafe_install_pipeline, malicious_data_theft, prohibited_content, and policy_fit_failure. Safety closes must include ruleId, matched snippet or behavior, and whyNotDefensive. Defensive security examples like Claude Code permission auditing or env-leak warning hooks should not close on keyword matches alone.",
+                "Every close verdict must include reasonCode and evidence. Supported reasonCode values are scope_failure, validation_failure, provenance_failure, protected_metadata_edit, strict_duplicate, source_hard_failure, commercial_listing_route, embedded_secret, unsafe_install_pipeline, malicious_data_theft, prohibited_content, and policy_fit_failure. strict_duplicate closes must identify the duplicated entry path, source URL, or PR in evidence. Safety closes must include ruleId, matched snippet or behavior, and whyNotDefensive. Defensive security examples like Claude Code permission auditing or env-leak warning hooks should not close on keyword matches alone.",
+              sourceEvidencePolicy:
+                "Use deterministicSourceEvidence/sourceEvidence for URL reachability. Do not invent HTTP status. If your source_hard_failure finding disagrees with deterministic source evidence, return a retryable source_evidence_conflict error with the conflicting URL instead of a close verdict. You may still close semantic source failures such as unsupported claims, thin promotional content, or policy fit issues, but not by claiming reachable links are dead.",
+              duplicateEvidencePolicy:
+                "Use deterministicDuplicateReview for duplicate status. If your strict_duplicate finding disagrees with deterministic duplicate review, return a retryable duplicate_evidence_conflict error with the conflicting duplicate target instead of a close verdict.",
             },
           },
         });
+        if (
+          privateSourceHardFailureContradicted(
+            decision,
+            sourceEvidenceForPrivateReview,
+          )
+        ) {
+          const conflictDecision = sourceEvidenceConflictDecision(
+            decision,
+            sourceEvidenceForPrivateReview!,
+          );
+          decision = shouldStopRetryingSourceEvidenceConflict(
+            conflictDecision,
+            existing,
+          )
+            ? sourceEvidenceConflictMergeDecision(
+                decision,
+                sourceEvidenceForPrivateReview!,
+              )
+            : conflictDecision;
+        }
+        if (
+          privateStrictDuplicateContradicted(
+            decision,
+            duplicateReviewForPrivateReview,
+          )
+        ) {
+          const conflictDecision = duplicateEvidenceConflictDecision(
+            decision,
+            duplicateReviewForPrivateReview!,
+          );
+          decision = shouldStopRetryingDuplicateEvidenceConflict(
+            conflictDecision,
+            existing,
+          )
+            ? duplicateEvidenceConflictMergeDecision(
+                decision,
+                duplicateReviewForPrivateReview!,
+                sourceEvidenceForPrivateReview,
+              )
+            : conflictDecision;
+        } else if (
+          duplicateConflictRetryableContradicted(
+            decision,
+            duplicateReviewForPrivateReview,
+          ) &&
+          shouldStopRetryingDuplicateEvidenceConflict(decision, existing)
+        ) {
+          decision = duplicateEvidenceConflictMergeDecision(
+            decision,
+            duplicateReviewForPrivateReview!,
+            sourceEvidenceForPrivateReview,
+          );
+        }
+        if (
+          !decision.sourceEvidenceHash &&
+          sourceEvidenceForPrivateReview?.hash
+        ) {
+          decision = {
+            ...decision,
+            sourceEvidenceHash: sourceEvidenceForPrivateReview.hash,
+          };
+        }
         if (
           isRetryableGateDecision(decision) &&
           shouldStopRetryingInvalidPrivateResponse(decision, existing)

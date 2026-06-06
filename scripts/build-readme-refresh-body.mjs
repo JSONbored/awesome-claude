@@ -12,9 +12,12 @@ const categoryRank = new Map(
 );
 const readmeLinePrefix = "- **[";
 const readmeUrlPrefix = "https://heyclau.de/";
+const readmeEntryRoutePrefix = "entry/";
 const readmeUrlSuffix = ")** - ";
+const githubUrlPrefix = "https://github.com/";
 const githubLoginPattern =
   /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?(?:\[bot\])?$/;
+const repositoryPattern = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 
 function escapeMarkdownText(value) {
   return String(value || "")
@@ -42,6 +45,54 @@ function cleanGithubHandle(value) {
   return githubLoginPattern.test(handle) ? `@${handle}` : "";
 }
 
+function cleanGithubLogin(value) {
+  return cleanGithubHandle(value).replace(/^@/, "");
+}
+
+function cleanRepository(value) {
+  const repository = String(value || "").trim();
+  return repositoryPattern.test(repository) ? repository : "";
+}
+
+function formatGithubProfileLink(login) {
+  const cleanLogin = cleanGithubLogin(login);
+  if (!cleanLogin) return "";
+  return `[@${cleanLogin}](${githubUrlPrefix}${cleanLogin})`;
+}
+
+function formatPullRequestLink({ number, repository, htmlUrl }) {
+  if (!number) return "";
+
+  const numericNumber = Number(number);
+  const label = Number.isFinite(numericNumber) ? `#${numericNumber}` : "";
+  if (!label) return "";
+
+  if (htmlUrl) {
+    try {
+      const parsed = new URL(htmlUrl);
+      if (parsed.hostname.toLowerCase() === "github.com") {
+        return `[${label}](${parsed.href})`;
+      }
+    } catch {
+      // Fall back to repository-based links below.
+    }
+  }
+
+  const cleanRepo = cleanRepository(repository);
+  return cleanRepo
+    ? `[${label}](${githubUrlPrefix}${cleanRepo}/pull/${numericNumber})`
+    : label;
+}
+
+function formatReadmeEntryLink(change, frontmatter = {}) {
+  const title = escapeMarkdownText(frontmatter.title || change.title);
+  if (!change.category || !change.slug) return title;
+
+  return `[${title}](https://heyclau.de/entry/${encodeURIComponent(
+    change.category,
+  )}/${encodeURIComponent(change.slug)})`;
+}
+
 function parseReadmeEntryLine(line) {
   if (!line.startsWith(readmeLinePrefix)) return null;
 
@@ -57,7 +108,10 @@ function parseReadmeEntryLine(line) {
   const url = line.slice(urlStart, urlEnd);
   if (!url.startsWith(readmeUrlPrefix)) return null;
 
-  const route = url.slice(readmeUrlPrefix.length);
+  let route = url.slice(readmeUrlPrefix.length);
+  if (route.startsWith(readmeEntryRoutePrefix)) {
+    route = route.slice(readmeEntryRoutePrefix.length);
+  }
   const separator = route.indexOf("/");
   if (separator <= 0 || separator === route.length - 1) return null;
 
@@ -82,6 +136,19 @@ function parseReadmeDiffLine(line) {
   const diffKind = line.startsWith("+") ? "added" : "removed";
   const entry = parseReadmeEntryLine(line.slice(1));
   return entry ? { ...entry, diffKind } : null;
+}
+
+function countAddedReadmeCatalogLines(diffText) {
+  return String(diffText || "")
+    .split("\n")
+    .filter((rawLine) => {
+      const line = rawLine.replace(/\r$/, "");
+      return (
+        line.startsWith("+") &&
+        !line.startsWith("+++") &&
+        line.slice(1).startsWith(readmeLinePrefix)
+      );
+    }).length;
 }
 
 export function extractReadmeEntryChanges(diffText) {
@@ -117,6 +184,16 @@ export function extractReadmeEntryChanges(diffText) {
     });
 }
 
+export function assertReadmeEntryExtraction(diffText, changes) {
+  const addedCatalogLineCount = countAddedReadmeCatalogLines(diffText);
+  const parsedChangeCount = changes.length;
+  if (addedCatalogLineCount !== parsedChangeCount) {
+    throw new Error(
+      `README diff includes ${addedCatalogLineCount} added catalog entry line(s), but ${parsedChangeCount} parsed change(s) were produced. Update the README refresh parser before publishing a misleading accumulator summary.`,
+    );
+  }
+}
+
 function getReadmeDiff(repoRoot) {
   return execFileSync("git", ["diff", "--unified=0", "--", "README.md"], {
     cwd: repoRoot,
@@ -132,11 +209,39 @@ function latestCommitForPath(repoRoot, relativePath) {
       {
         cwd: repoRoot,
         encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
       },
     ).trim();
   } catch {
     return "";
   }
+}
+
+function addedCommitForPath(repoRoot, relativePath) {
+  try {
+    return execFileSync(
+      "git",
+      ["log", "-n", "1", "--diff-filter=A", "--format=%H", "--", relativePath],
+      {
+        cwd: repoRoot,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      },
+    ).trim();
+  } catch {
+    return "";
+  }
+}
+
+function commitForReadmeChange(repoRoot, relativePath, changeType) {
+  if (changeType === "added") {
+    return (
+      addedCommitForPath(repoRoot, relativePath) ||
+      latestCommitForPath(repoRoot, relativePath)
+    );
+  }
+
+  return latestCommitForPath(repoRoot, relativePath);
 }
 
 async function fetchAssociatedPullRequest({ repository, commitSha, token }) {
@@ -216,18 +321,27 @@ export function summarizeReadmeEntryChange({
   change,
   frontmatter = {},
   associatedPullRequest = null,
+  repository = "",
 }) {
   const action = change.changeType === "updated" ? "Updated" : "Added";
-  const title = escapeMarkdownText(frontmatter.title || change.title);
+  const title = formatReadmeEntryLink(change, frontmatter);
   const sourceSubmissionNumber = frontmatter.sourceSubmissionNumber;
   const pullRequestNumber =
     frontmatter.importPrNumber ?? associatedPullRequest?.number;
+  const pullRequestLink = formatPullRequestLink({
+    number: pullRequestNumber,
+    repository,
+    htmlUrl:
+      pullRequestNumber === associatedPullRequest?.number
+        ? associatedPullRequest?.html_url
+        : "",
+  });
   const contributor = frontmatter.submittedBy
-    ? cleanGithubHandle(frontmatter.submittedBy)
-    : cleanGithubHandle(associatedPullRequest?.user?.login);
+    ? formatGithubProfileLink(frontmatter.submittedBy)
+    : formatGithubProfileLink(associatedPullRequest?.user?.login);
 
   const pieces = [`${action} ${title} content submission`];
-  if (pullRequestNumber) pieces.push(`(#${pullRequestNumber})`);
+  if (pullRequestLink) pieces.push(`(${pullRequestLink})`);
   if (contributor) pieces.push(`by ${contributor}`);
   if (sourceSubmissionNumber) {
     pieces.push(`via submission #${sourceSubmissionNumber}`);
@@ -239,9 +353,14 @@ export function summarizeReadmeEntryChange({
 export async function resolveReadmeEntryChange(change, options = {}) {
   const repoRoot = options.repoRoot ?? process.cwd();
   const { relativePath, data } = readContentFrontmatter(repoRoot, change);
-  const commitSha = latestCommitForPath(repoRoot, relativePath);
+  const repository = options.repository ?? process.env.GITHUB_REPOSITORY;
+  const commitSha = commitForReadmeChange(
+    repoRoot,
+    relativePath,
+    change.changeType,
+  );
   const associatedPullRequest = await fetchAssociatedPullRequest({
-    repository: options.repository ?? process.env.GITHUB_REPOSITORY,
+    repository,
     commitSha,
     token: options.token ?? process.env.GITHUB_TOKEN,
   });
@@ -255,6 +374,7 @@ export async function resolveReadmeEntryChange(change, options = {}) {
       change,
       frontmatter: data,
       associatedPullRequest,
+      repository,
     }),
   };
 }
@@ -310,6 +430,7 @@ export async function main(argv = process.argv.slice(2)) {
     ? fs.readFileSync(path.resolve(repoRoot, args.diffFile), "utf8")
     : getReadmeDiff(repoRoot);
   const changes = extractReadmeEntryChanges(diffText);
+  assertReadmeEntryExtraction(diffText, changes);
   const resolvedChanges = [];
 
   for (const change of changes) {

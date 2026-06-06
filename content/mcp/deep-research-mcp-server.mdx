@@ -1,0 +1,183 @@
+---
+title: Deep Research MCP Server
+slug: deep-research-mcp-server
+category: mcp
+description: >-
+  Self-hostable deep research app with MCP and SSE APIs for generating
+  multi-step research reports using configurable LLM and search providers.
+cardDescription: >-
+  Connect Claude to a self-hosted deep research service with Streamable HTTP or
+  SSE MCP transport.
+seoTitle: Deep Research MCP Server for Claude
+seoDescription: >-
+  Configure Deep Research with Claude and other MCP clients to generate
+  research reports through a self-hosted MCP service backed by LLM and web
+  search providers.
+author: u14app
+authorProfileUrl: "https://github.com/u14app"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Deep Research
+brandDomain: research.u14.app
+repoUrl: "https://github.com/u14app/deep-research"
+documentationUrl: "https://github.com/u14app/deep-research#model-context-protocol-mcp-server"
+websiteUrl: "https://research.u14.app"
+packageUrl: "https://hub.docker.com/r/xiangfa/deep-research"
+installable: true
+installCommand: "docker run -d --name deep-research -p 3333:3000 xiangfa/deep-research"
+usageSnippet: "Deploy Deep Research, configure the MCP model and search environment variables, then connect your MCP client to the `/api/mcp` endpoint with a longer timeout."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "deep-research": {
+        "url": "https://YOUR_DEEP_RESEARCH_DEPLOYMENT/api/mcp",
+        "transportType": "streamable-http",
+        "timeout": 600,
+        "headers": {
+          "Authorization": "Bearer YOUR_ACCESS_PASSWORD"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "deep-research": {
+        "url": "https://YOUR_DEEP_RESEARCH_DEPLOYMENT/api/mcp",
+        "transportType": "streamable-http",
+        "timeout": 600,
+        "headers": {
+          "Authorization": "Bearer YOUR_ACCESS_PASSWORD"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Deployed Deep Research instance on Docker, Vercel, Cloudflare Pages, or another supported host.
+  - LLM provider credentials for the configured thinking and task models.
+  - Search provider credentials when using Tavily, Firecrawl, Exa, Bocha, Brave, Searxng, or another non-model search path.
+  - MCP client with Streamable HTTP or SSE transport support and timeout settings long enough for research runs.
+safetyNotes:
+  - Deep Research can make repeated model and search-provider calls, so set budgets, rate limits, and provider quotas before exposing it to broad agent workflows.
+  - Generated reports can contain stale, incomplete, or misinterpreted sources; require citation review before using output in legal, medical, financial, security, or customer-facing decisions.
+  - Protect public deployments with an access password or equivalent gateway controls before enabling MCP access.
+  - Uploaded documents and local knowledge bases should be reviewed for copyright, sensitive data, and permission to process before research begins.
+privacyNotes:
+  - Research prompts, uploaded files, generated reports, search queries, citations, model inputs, model outputs, provider API keys, access passwords, and deployment logs can contain sensitive data.
+  - Browser-local history and knowledge-base storage are local to the deployed app context, but server-side API mode can route data through the deployment host, model providers, and search providers.
+  - Review hosting logs, cache behavior, environment variable handling, and third-party provider retention before using Deep Research with private or regulated material.
+sourceUrls:
+  - "https://github.com/u14app/deep-research"
+  - "https://github.com/u14app/deep-research#model-context-protocol-mcp-server"
+  - "https://github.com/u14app/deep-research/blob/main/docs/deep-research-api-doc.md"
+  - "https://research.u14.app"
+  - "https://hub.docker.com/r/xiangfa/deep-research"
+tags:
+  - research
+  - web-search
+  - reports
+  - self-hosted
+  - multi-llm
+keywords:
+  - Deep Research MCP
+  - deep-research MCP server
+  - u14app deep research
+  - research report MCP
+  - Streamable HTTP MCP research
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Deep Research MCP Server exposes a self-hostable deep research workflow to MCP
+clients. It can generate research plans, gather information from configured web
+search providers or local knowledge sources, and produce structured reports
+using separate thinking and task model settings.
+
+The upstream project supports both Server-Sent Events and Model Context
+Protocol access. Its README documents Streamable HTTP at `/api/mcp` and SSE at
+`/api/mcp/sse`, plus MCP-specific environment variables for provider, search,
+thinking model, and task model configuration.
+
+## Source Review
+
+- https://github.com/u14app/deep-research
+- https://github.com/u14app/deep-research#model-context-protocol-mcp-server
+- https://github.com/u14app/deep-research/blob/main/docs/deep-research-api-doc.md
+- https://research.u14.app
+- https://hub.docker.com/r/xiangfa/deep-research
+
+These sources were reviewed on **2026-06-05**. Prefer the live README and API
+docs for current deployment paths, MCP endpoints, environment variables, model
+provider options, search provider options, and transport support.
+
+## Features
+
+- MCP support through Streamable HTTP and SSE transports.
+- Deep research report generation with configurable thinking and task models.
+- Search provider support for model-native search and external search services.
+- Multi-LLM support across Gemini, OpenAI, Anthropic, DeepSeek, Grok, Mistral,
+  Azure OpenAI, OpenRouter, Ollama, and OpenAI-compatible providers.
+- Local knowledge-base workflows with uploaded text, Office, PDF, and other
+  resource files.
+- Research history, further research, report editing, translation, and knowledge
+  graph features in the web app.
+- Docker, Vercel, Cloudflare Pages, static export, and local development
+  deployment paths.
+
+## Installation
+
+Deploy Deep Research first, configure the MCP environment variables for model
+and search provider behavior, and then point your MCP client at the deployed
+MCP endpoint:
+
+```json
+{
+  "mcpServers": {
+    "deep-research": {
+      "url": "https://YOUR_DEEP_RESEARCH_DEPLOYMENT/api/mcp",
+      "transportType": "streamable-http",
+      "timeout": 600,
+      "headers": {
+        "Authorization": "Bearer YOUR_ACCESS_PASSWORD"
+      }
+    }
+  }
+}
+```
+
+The upstream README also documents an SSE MCP endpoint. Use a longer timeout
+than a simple lookup tool because deep research jobs can run for several
+minutes.
+
+## Use Cases
+
+- Ask Claude to run a structured research workflow from an MCP client.
+- Compare different thinking, task, and search providers for the same topic.
+- Generate first-pass research briefs with citations for later human review.
+- Use uploaded documents as a local knowledge source for research reports.
+- Self-host a research service for teams that want explicit provider and
+  deployment control.
+
+## Safety and Privacy
+
+Deep Research can make many web search and model-provider calls from one agent
+request. Configure provider budgets, access controls, rate limits, and timeout
+behavior before exposing it to shared or autonomous workflows. Treat generated
+reports as drafts until citations and source quality are reviewed by a person.
+
+Research prompts, uploaded files, search queries, local knowledge-base content,
+reports, citations, API keys, access passwords, and deployment logs can contain
+sensitive data. Review deployment hosting, model-provider, and search-provider
+retention policies before routing private or regulated information through the
+service.
+
+## Duplicate Check
+
+No `u14app/deep-research` entry or matching source URL was found in
+`content/mcp`. Existing deep-research mentions in the repository are role or
+workflow references, not this self-hosted MCP research service.

@@ -1,0 +1,183 @@
+---
+title: Google Workspace MCP Server
+slug: google-workspace-mcp-server
+category: mcp
+description: >-
+  Comprehensive Google Workspace MCP server and CLI for Gmail, Drive, Calendar,
+  Docs, Sheets, Slides, Forms, Chat, Apps Script, Tasks, Contacts, and Custom
+  Search workflows.
+cardDescription: >-
+  Connect Claude, Codex, and other MCP clients to Google Workspace tools with
+  OAuth-backed Gmail, Drive, Calendar, Docs, Sheets, and more.
+seoTitle: Google Workspace MCP Server for Claude
+seoDescription: >-
+  Configure Google Workspace MCP with Claude, Codex, and other MCP clients for
+  OAuth-backed Gmail, Drive, Calendar, Docs, Sheets, Slides, Forms, Chat, Apps
+  Script, Tasks, Contacts, and Custom Search automation.
+author: Taylor Wilsdon
+authorProfileUrl: "https://github.com/taylorwilsdon"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Google Workspace MCP
+brandDomain: workspacemcp.com
+repoUrl: "https://github.com/taylorwilsdon/google_workspace_mcp"
+documentationUrl: "https://workspacemcp.com/docs"
+websiteUrl: "https://workspacemcp.com"
+packageUrl: "https://pypi.org/project/workspace-mcp/"
+installable: true
+installCommand: "uvx workspace-mcp --tool-tier core"
+usageSnippet: "Create Google OAuth credentials, set the required environment variables, then run `uvx workspace-mcp --tool-tier core` or another documented tool tier."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "google-workspace": {
+        "command": "uvx",
+        "args": ["workspace-mcp", "--tool-tier", "core"],
+        "env": {
+          "GOOGLE_OAUTH_CLIENT_ID": "YOUR_GOOGLE_OAUTH_CLIENT_ID",
+          "GOOGLE_OAUTH_CLIENT_SECRET": "YOUR_GOOGLE_OAUTH_CLIENT_SECRET"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "google-workspace": {
+        "command": "uvx",
+        "args": ["workspace-mcp", "--tool-tier", "core"],
+        "env": {
+          "GOOGLE_OAUTH_CLIENT_ID": "YOUR_GOOGLE_OAUTH_CLIENT_ID",
+          "GOOGLE_OAUTH_CLIENT_SECRET": "YOUR_GOOGLE_OAUTH_CLIENT_SECRET"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer and uv or uvx.
+  - Google Cloud project with OAuth credentials.
+  - Required Google Workspace APIs enabled for the services you plan to use.
+  - OAuth consent, scopes, and redirect settings reviewed for the target account or organization.
+  - MCP client such as Claude, Codex, or another compatible host.
+safetyNotes:
+  - Google Workspace MCP can read, create, edit, send, share, delete, and manage data across Gmail, Drive, Calendar, Docs, Sheets, Slides, Forms, Chat, Apps Script, Tasks, Contacts, and Search depending on configured scopes and tool tier.
+  - Start with the smallest useful tool tier and read-only or service-specific scopes where possible.
+  - Require human approval before sending email or chat messages, sharing Drive files, changing permissions, deleting content, editing business documents, or executing Apps Script workflows.
+  - Protect OAuth client secrets, refresh tokens, service account keys, and credential stores.
+privacyNotes:
+  - Emails, attachments, Drive files, calendar events, documents, spreadsheets, presentations, form responses, chat messages, contacts, search queries, OAuth tokens, and tool logs may be exposed to the MCP client and model.
+  - The repository describes a self-hosted data path to Google APIs, but prompts and tool results still flow through the chosen AI client and model provider.
+  - Review organization data retention, Workspace admin policies, OAuth app verification, and model-provider retention before connecting production accounts.
+sourceUrls:
+  - "https://github.com/taylorwilsdon/google_workspace_mcp"
+  - "https://workspacemcp.com"
+  - "https://workspacemcp.com/docs"
+  - "https://workspacemcp.com/quick-start"
+  - "https://pypi.org/project/workspace-mcp/"
+  - "https://www.pulsemcp.com/servers/taylorwilsdon-google-workspace"
+tags:
+  - google-workspace
+  - gmail
+  - drive
+  - calendar
+  - productivity
+keywords:
+  - Google Workspace MCP
+  - workspace-mcp Claude
+  - Gmail MCP server
+  - Google Drive MCP
+  - Google Calendar MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Google Workspace MCP Server, published as `workspace-mcp`, connects MCP clients
+to Google Workspace services. It covers Gmail, Drive, Calendar, Docs, Sheets,
+Slides, Forms, Chat, Apps Script, Tasks, Contacts, and Custom Search through a
+single server and CLI.
+
+The project supports local stdio-style usage, HTTP transport, OAuth 2.0 and
+OAuth 2.1 patterns, multi-user bearer-token deployments, stateless operation,
+tool tiers, service-specific tool selection, and CLI access to local or remote
+instances.
+
+## Source Review
+
+- https://github.com/taylorwilsdon/google_workspace_mcp
+- https://workspacemcp.com
+- https://workspacemcp.com/docs
+- https://workspacemcp.com/quick-start
+- https://pypi.org/project/workspace-mcp/
+- https://www.pulsemcp.com/servers/taylorwilsdon-google-workspace
+
+These sources were reviewed on **2026-06-05**. Prefer the live docs for current
+OAuth setup, API enablement, service coverage, tool tiers, remote deployment
+guidance, and security recommendations.
+
+## Features
+
+- Broad Google Workspace coverage across Gmail, Drive, Calendar, Docs, Sheets,
+  Slides, Forms, Chat, Apps Script, Tasks, Contacts, and Custom Search.
+- CLI plus MCP server usage.
+- Tool tiers such as core, extended, and complete.
+- Service-specific tool selection for narrowing the exposed surface.
+- OAuth 2.0 and OAuth 2.1 support, including multi-user deployment patterns.
+- Credential store options and stateless/container-friendly modes.
+- Read-only and permission-oriented configuration options documented by the
+  project.
+
+## Installation
+
+Create a Google Cloud project, configure OAuth credentials, enable the required
+Google APIs, and set the required environment variables. Then configure your MCP
+client to launch the core tool tier:
+
+```json
+{
+  "mcpServers": {
+    "google-workspace": {
+      "command": "uvx",
+      "args": ["workspace-mcp", "--tool-tier", "core"],
+      "env": {
+        "GOOGLE_OAUTH_CLIENT_ID": "YOUR_GOOGLE_OAUTH_CLIENT_ID",
+        "GOOGLE_OAUTH_CLIENT_SECRET": "YOUR_GOOGLE_OAUTH_CLIENT_SECRET"
+      }
+    }
+  }
+}
+```
+
+Use the README and quick-start guide for OAuth consent setup, service-specific
+API enablement, HTTP transport, multi-user OAuth, read-only mode, and narrower
+tool selection.
+
+## Use Cases
+
+- Search and triage Gmail messages with assistant help.
+- Draft or update Docs, Sheets, and Slides after human review.
+- Summarize Drive files or calendar context for planning.
+- Manage tasks and contacts from an agent workflow.
+- Build controlled internal automations around Google Workspace APIs.
+
+## Safety and Privacy
+
+This server can expose and modify high-value business data. Start with the
+smallest useful scope, keep credentials out of shared configs, and require human
+approval before sending messages, sharing files, deleting data, changing
+permissions, editing critical documents, or running Apps Script actions.
+
+Treat prompts, tool outputs, OAuth credentials, email contents, attachments,
+Drive files, documents, spreadsheets, calendar events, and chat messages as
+sensitive. Review both Google Workspace admin controls and AI provider retention
+before connecting production accounts.
+
+## Duplicate Check
+
+No `taylorwilsdon/google_workspace_mcp` entry or source URL was found in
+`content/mcp`. This entry is separate from individual Google service or search
+MCP entries because it covers the broad Google Workspace suite.

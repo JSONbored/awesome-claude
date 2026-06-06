@@ -1,0 +1,161 @@
+---
+title: Markdownify MCP Server
+slug: markdownify-mcp-server
+category: mcp
+description: >-
+  MCP server that converts PDFs, Office files, images, audio, webpages, YouTube
+  transcripts, and existing Markdown files into Markdown.
+cardDescription: >-
+  Let Claude convert documents, images, audio, webpages, search results, and
+  local Markdown files into model-friendly Markdown.
+seoTitle: Markdownify MCP Server for Claude
+seoDescription: >-
+  Configure Markdownify MCP Server with Claude and other MCP clients to convert
+  PDFs, DOCX, XLSX, PPTX, images, audio, webpages, YouTube transcripts, Bing
+  results, and local Markdown files into Markdown.
+author: zcaceres
+authorProfileUrl: "https://github.com/zcaceres"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Markdownify MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/zcaceres/markdownify-mcp"
+documentationUrl: "https://github.com/zcaceres/markdownify-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/mcp-markdownify-server"
+installable: true
+installCommand: "npx mcp-markdownify-server"
+usageSnippet: "Run `npx mcp-markdownify-server` from an MCP client to let Claude convert files, webpages, transcripts, and search results into Markdown."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "markdownify": {
+        "command": "npx",
+        "args": ["mcp-markdownify-server"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "markdownify": {
+        "command": "npx",
+        "args": ["mcp-markdownify-server"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js and npx available to the MCP client runtime.
+  - Python and markitdown dependencies available for file conversion features.
+  - Optional Docker setup if you want mounted read-only directories and explicit allowed paths.
+  - MD_ALLOWED_PATHS configured when the server should be restricted to specific file directories.
+  - Network policy reviewed before enabling webpage, YouTube, or Bing conversion tools.
+safetyNotes:
+  - Markdownify MCP Server can read local files and convert documents, spreadsheets, presentations, images, audio files, and Markdown files.
+  - File conversion tools should be restricted with MD_ALLOWED_PATHS or container mounts before using the server with sensitive directories.
+  - Audio transcription, image OCR, document conversion, and webpage extraction can expose hidden text, metadata, comments, and embedded content.
+  - Webpage, YouTube, and Bing tools retrieve external content that can contain prompt-injection text or unsafe instructions.
+  - Review converted Markdown before using it as source material for decisions, publications, or further tool calls.
+privacyNotes:
+  - File paths, file contents, extracted text, OCR output, audio transcripts, webpage text, search results, prompts, tool arguments, and conversion errors may be visible to the MCP client and model provider.
+  - Documents and media can contain personal data, customer material, credentials, internal plans, meeting recordings, legal drafts, and proprietary screenshots.
+  - Avoid pointing the server at broad home, workspace, downloads, or cloud-sync directories unless every file in scope is approved for model access.
+sourceUrls:
+  - "https://github.com/zcaceres/markdownify-mcp"
+  - "https://github.com/zcaceres/markdownify-mcp/blob/main/README.md"
+  - "https://github.com/zcaceres/markdownify-mcp/blob/main/package.json"
+  - "https://registry.npmjs.org/mcp-markdownify-server"
+tags:
+  - markdown
+  - documents
+  - conversion
+  - ocr
+  - transcription
+keywords:
+  - Markdownify MCP
+  - mcp-markdownify-server
+  - file conversion MCP
+  - document to Markdown MCP
+  - OCR transcription MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Markdownify MCP Server converts files and web content into Markdown that Claude
+can read more easily. It includes tools for PDFs, images, audio transcription,
+DOCX, XLSX, PPTX, YouTube transcripts, Bing search results, general webpages,
+and existing Markdown files.
+
+The upstream README documents local and Docker usage, including `MD_ALLOWED_PATHS`
+for constraining file-input tools. The NPM package exposes the
+`mcp-markdownify-server` binary.
+
+## Source Review
+
+- https://github.com/zcaceres/markdownify-mcp
+- https://github.com/zcaceres/markdownify-mcp/blob/main/README.md
+- https://github.com/zcaceres/markdownify-mcp/blob/main/package.json
+- https://registry.npmjs.org/mcp-markdownify-server
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+NPM registry metadata for current package version, command name, dependency
+setup, file boundary configuration, tools, and setup guidance.
+
+## Features
+
+- Convert PDFs to Markdown.
+- Convert images to Markdown with metadata and OCR-style extraction.
+- Convert audio files to Markdown with transcription.
+- Convert DOCX, XLSX, and PPTX files to Markdown.
+- Convert YouTube transcripts and webpages to Markdown.
+- Convert Bing search results to Markdown.
+- Retrieve existing Markdown files.
+- Restrict file-input tools with `MD_ALLOWED_PATHS`.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "markdownify": {
+      "command": "npx",
+      "args": ["mcp-markdownify-server"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to summarize a PDF after conversion to Markdown.
+- Convert an Office document or spreadsheet into text for review.
+- Extract text from an image or presentation slide.
+- Transcribe an audio file into Markdown for analysis.
+- Convert a webpage or YouTube transcript into Markdown for research.
+- Retrieve a local Markdown file through an MCP client.
+
+## Safety and Privacy
+
+File conversion can expose more than the visible document text. OCR,
+transcription, Office extraction, and Markdown conversion may reveal comments,
+metadata, embedded text, hidden sheets, notes, or screenshots. Use explicit file
+allowlists or read-only container mounts before pointing this server at local
+directories.
+
+Converted files, search results, webpages, transcripts, prompts, and tool
+outputs may contain sensitive or untrusted content. Review converted Markdown
+before using it as instructions or feeding it into workflows with write,
+messaging, shell, browser, or database tools.
+
+## Duplicate Check
+
+No `zcaceres/markdownify-mcp` entry, `mcp-markdownify-server` package entry, or
+matching source URL was found in `content/mcp`.

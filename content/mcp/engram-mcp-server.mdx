@@ -1,0 +1,166 @@
+---
+title: Engram MCP Server
+slug: engram-mcp-server
+category: mcp
+description: >-
+  Local-first persistent memory MCP server for AI coding agents, backed by a
+  single Go binary, SQLite, FTS5 search, CLI, HTTP API, and TUI.
+cardDescription: >-
+  Give Claude and other coding agents persistent project memory that survives
+  sessions and compaction.
+seoTitle: Engram MCP Server for Claude
+seoDescription: >-
+  Configure Engram with Claude, Codex, OpenCode, Gemini CLI, Cursor, Windsurf,
+  VS Code, and other MCP clients for local-first persistent project memory.
+author: Gentleman Programming
+authorProfileUrl: "https://github.com/Gentleman-Programming"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Engram
+repoUrl: "https://github.com/Gentleman-Programming/engram"
+documentationUrl: "https://github.com/Gentleman-Programming/engram/blob/main/docs/AGENT-SETUP.md"
+packageUrl: "https://github.com/Gentleman-Programming/engram/releases"
+installable: true
+installCommand: "brew install gentleman-programming/tap/engram"
+usageSnippet: "Install the `engram` binary, then configure your MCP client to run `engram mcp` or use `engram setup codex`, `engram setup opencode`, or another supported setup helper."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "engram": {
+        "command": "engram",
+        "args": ["mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "engram": {
+        "command": "engram",
+        "args": ["mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Engram binary installed through Homebrew, GitHub Releases, Go install, or a source build.
+  - MCP-compatible coding agent such as Claude Code, Codex, OpenCode, Gemini CLI, VS Code, Cursor, or Windsurf.
+  - Project selection rules for where memories should be written, especially in monorepos or parent workspaces.
+  - Optional cloud server configuration only when shared or cross-machine memory replication is desired.
+safetyNotes:
+  - Engram can save, update, delete, search, compare, judge, merge, and summarize project memories that may influence future agent behavior.
+  - Incorrect or stale memories can steer an agent toward bad assumptions, so review saved decisions, architecture notes, and task learnings periodically.
+  - Use explicit project selection or repo-local configuration when multiple projects are visible to the MCP server.
+  - Cloud sync is opt-in; review project scope, tokens, allowed projects, and repair flows before enabling shared replication.
+privacyNotes:
+  - Memories can contain product plans, architecture decisions, code paths, prompts, implementation notes, incident details, and sensitive lessons learned.
+  - Local SQLite storage, exported sync chunks, Git-tracked memory files, cloud replication, HTTP API logs, and TUI copy actions can expose memory content.
+  - Do not store secrets, credentials, customer data, or unreleased security details unless the local store and any sync targets are approved for that data.
+sourceUrls:
+  - "https://github.com/Gentleman-Programming/engram"
+  - "https://github.com/Gentleman-Programming/engram/blob/main/docs/INSTALLATION.md"
+  - "https://github.com/Gentleman-Programming/engram/blob/main/docs/AGENT-SETUP.md"
+  - "https://github.com/Gentleman-Programming/engram/blob/main/DOCS.md#mcp-tools-19-tools"
+  - "https://github.com/Gentleman-Programming/engram/blob/main/docs/engram-cloud/README.md"
+  - "https://github.com/Gentleman-Programming/engram/releases"
+tags:
+  - memory
+  - coding-agents
+  - sqlite
+  - local-first
+  - search
+keywords:
+  - Engram MCP
+  - Engram MCP Server
+  - coding agent memory MCP
+  - persistent memory MCP
+  - local SQLite memory for agents
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Engram MCP Server gives AI coding agents persistent project memory through a
+local-first Go binary backed by SQLite and FTS5 search. It exposes memory tools
+over MCP stdio while also offering CLI, HTTP API, sync, and TUI interfaces for
+manual inspection and maintenance.
+
+The upstream README describes Engram as agent-agnostic and compatible with MCP
+clients including Claude Code, Codex, OpenCode, Gemini CLI, VS Code, Cursor, and
+Windsurf. The core MCP path is `engram mcp`; setup helpers are available for
+several agents.
+
+## Source Review
+
+- https://github.com/Gentleman-Programming/engram
+- https://github.com/Gentleman-Programming/engram/blob/main/docs/INSTALLATION.md
+- https://github.com/Gentleman-Programming/engram/blob/main/docs/AGENT-SETUP.md
+- https://github.com/Gentleman-Programming/engram/blob/main/DOCS.md#mcp-tools-19-tools
+- https://github.com/Gentleman-Programming/engram/blob/main/docs/engram-cloud/README.md
+- https://github.com/Gentleman-Programming/engram/releases
+
+These sources were reviewed on **2026-06-05**. Prefer the live installation and
+agent setup docs for current binary distribution, setup helpers, MCP tool modes,
+project detection, and cloud sync behavior.
+
+## Features
+
+- Single Go binary with no Node, Python, or Docker runtime dependency for local
+  MCP usage.
+- Local SQLite and FTS5-backed memory search.
+- MCP tools for saving, updating, deleting, searching, contextualizing,
+  summarizing, judging, comparing, and merging memories.
+- Session lifecycle helpers for start, end, and summary workflows.
+- Project detection and explicit project selection rules.
+- TUI for inspecting and searching memories outside the agent.
+- Git sync and optional cloud replication for cross-machine or team workflows.
+- Setup helpers for multiple MCP-compatible coding agents.
+
+## Installation
+
+After installing the `engram` binary, configure an MCP client to launch the
+stdio server:
+
+```json
+{
+  "mcpServers": {
+    "engram": {
+      "command": "engram",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+The upstream docs also provide setup helpers such as `engram setup codex`,
+`engram setup opencode`, and client-specific manual configuration.
+
+## Use Cases
+
+- Preserve architecture decisions and implementation lessons across agent
+  sessions.
+- Recover relevant context after conversation compaction.
+- Search prior work before changing a project again.
+- Share project memories across machines through reviewed sync workflows.
+- Use memory conflict tools to surface contradictory decisions or stale notes.
+
+## Safety and Privacy
+
+Persistent memory can be quietly powerful. Review what agents save, prune stale
+or incorrect entries, and make project selection explicit when the MCP server
+can see multiple repositories. Bad memories can become bad future instructions.
+
+Memory content may include private architecture, project strategy, prompts,
+paths, code details, incidents, and customer context. Treat local stores,
+exported sync chunks, Git sync files, cloud replicas, HTTP API logs, and copied
+TUI output as sensitive project data.
+
+## Duplicate Check
+
+No `Gentleman-Programming/engram` entry, Engram MCP entry, or matching source
+URL was found in `content/mcp`. This is distinct from general memory or notes
+tools because Engram exposes a coding-agent memory protocol over MCP with local
+SQLite search and optional sync.
