@@ -46,6 +46,7 @@ import {
   approvalReviewBody,
   DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
   defaultManualDecision,
+  duplicateEvidenceContractExhaustedDecision,
   enforceAutoMergeConfidenceFloor,
   GATE_COMMENT_FORMATTER_VERSION,
   isRetryableGateDecision,
@@ -832,75 +833,23 @@ function duplicateEvidenceConflictDecision(
         bullets: [
           "Private review reported a strict duplicate that conflicts with deterministic duplicate review.",
           duplicateReviewSummaryLine(duplicateReview),
-          "The gate will retry with the deterministic duplicate artifact before falling back to the clean merge path.",
+          "The gate will retry with the deterministic duplicate artifact before falling back to manual review.",
         ],
       },
     ],
   };
 }
 
-function duplicateEvidenceConflictMergeDecision(
+function duplicateEvidenceConflictExhaustedDecision(
   decision: GateDecision,
   duplicateReview: ContentDuplicateReview,
   sourceEvidence: SourceEvidenceReport | null,
 ): GateDecision {
-  const sourceBullets =
-    sourceEvidence?.status === "passed"
-      ? [
-          {
-            id: "source_review",
-            title: "Source Review",
-            status: "pass" as const,
-            bullets: [
-              "Deterministic source evidence found submitted source URLs reachable.",
-              sourceEvidenceSummary(sourceEvidence),
-            ],
-          },
-        ]
-      : [];
-  return {
-    schemaVersion: 2,
-    verdict: "merge",
-    confidence: Math.max(
-      decision.confidence || 0,
-      DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
-    ),
-    sourceEvidenceHash: sourceEvidence?.hash,
-    labels: [LABELS.merged],
-    summary: [
-      "Summary:",
-      "- Public validation and deterministic duplicate review passed.",
-      "- Private review returned a strict_duplicate decision that contradicted deterministic duplicate evidence.",
-      "- No deterministic blocker remains, so the gate is accepting the one-file content PR.",
-      "",
-      "Duplicate / History Review:",
-      `- ${duplicateReviewSummaryLine(duplicateReview)}.`,
-      "",
-      ...(sourceEvidence
-        ? ["Source Review:", `- ${sourceEvidenceSummary(sourceEvidence)}.`, ""]
-        : []),
-      "Recommended Action:",
-      "- Merge this PR.",
-    ].join("\n"),
-    sections: [
-      {
-        id: "duplicate_history",
-        title: "Duplicate and History Review",
-        status: "pass",
-        bullets: [
-          "Deterministic duplicate review found no strict duplicate.",
-          duplicateReviewSummaryLine(duplicateReview),
-        ],
-      },
-      ...sourceBullets,
-      {
-        id: "recommended_action",
-        title: "Recommended Action",
-        status: "pass",
-        bullets: ["Merge this PR."],
-      },
-    ],
-  };
+  return duplicateEvidenceContractExhaustedDecision({
+    decision,
+    duplicateSummary: duplicateReviewSummaryLine(duplicateReview),
+    sourceSummary: sourceEvidence ? sourceEvidenceSummary(sourceEvidence) : null,
+  });
 }
 
 function privateSourceHardFailureContradicted(
@@ -3948,7 +3897,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             conflictDecision,
           );
           decision = retryState.exhausted
-            ? duplicateEvidenceConflictMergeDecision(
+            ? duplicateEvidenceConflictExhaustedDecision(
                 decision,
                 duplicateReviewForPrivateReview!,
                 sourceEvidenceForPrivateReview,
@@ -3961,7 +3910,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           ) &&
           retryStateForDecision(existing, target, decision).exhausted
         ) {
-          decision = duplicateEvidenceConflictMergeDecision(
+          decision = duplicateEvidenceConflictExhaustedDecision(
             decision,
             duplicateReviewForPrivateReview!,
             sourceEvidenceForPrivateReview,

@@ -31,6 +31,7 @@ import {
 } from "../apps/submission-gate/src/duplicates";
 import {
   approvalReviewBody,
+  duplicateEvidenceContractExhaustedDecision,
   enforceAutoMergeConfidenceFloor,
   isRetryableGateDecision,
   markerComment,
@@ -54,6 +55,13 @@ import { repoRoot } from "./helpers/registry-fixtures";
 function readWorkerSource() {
   return fs.readFileSync(
     path.join(repoRoot, "apps/submission-gate/src/index.ts"),
+    "utf8",
+  );
+}
+
+function readReviewSource() {
+  return fs.readFileSync(
+    path.join(repoRoot, "apps/submission-gate/src/review.ts"),
     "utf8",
   );
 }
@@ -456,7 +464,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("sourceEvidenceConflictMergeDecision(");
     expect(source).toContain('"duplicate_evidence_conflict"');
     expect(source).toContain("privateStrictDuplicateContradicted(");
-    expect(source).toContain("duplicateEvidenceConflictMergeDecision(");
+    expect(source).toContain("duplicateEvidenceConflictExhaustedDecision(");
+    expect(source).toContain("duplicateEvidenceContractExhaustedDecision(");
+    expect(readReviewSource()).toContain("duplicate_evidence_contract_exhausted");
+    expect(source).not.toContain("duplicateEvidenceConflictMergeDecision(");
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
@@ -1047,6 +1058,34 @@ ${urls}
     );
   });
 
+  it("routes exhausted duplicate-evidence conflicts to non-retryable manual review", () => {
+    const decision = duplicateEvidenceContractExhaustedDecision({
+      decision: {
+        verdict: "close",
+        reasonCode: "strict_duplicate",
+        summary:
+          "Summary:\n- Private reviewer reported a strict duplicate without deterministic support.",
+        labels: ["submission-closed-by-gate"],
+        confidence: 0.9,
+      },
+      duplicateSummary: "no strict duplicate; 2 related candidate(s)",
+      sourceSummary: "repoUrl https://github.com/example/repo -> HTTP 200",
+    });
+
+    expect(decision).toMatchObject({
+      verdict: "manual",
+      labels: ["submission-manual-review"],
+      errors: [
+        {
+          code: "duplicate_evidence_contract_exhausted",
+          retryable: false,
+        },
+      ],
+    });
+    expect(decision.summary).toContain("no strict duplicate");
+    expect(decision.summary).toContain("Last private reviewer error");
+  });
+
   it("normalizes GateDecisionV2 and rejects malformed private review payloads", () => {
     const validMergeDecision = {
       schemaVersion: 2,
@@ -1213,7 +1252,7 @@ ${urls}
         ],
       }).error,
     ).toMatchObject({
-      code: "duplicate_evidence_conflict",
+      code: "invalid_private_response",
       retryable: true,
     });
 

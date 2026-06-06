@@ -613,10 +613,7 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
     if (closeContractError) {
       return {
         error: {
-          code:
-            reasonCode === "strict_duplicate"
-              ? "duplicate_evidence_conflict"
-              : "invalid_private_response",
+          code: "invalid_private_response",
           retryable: true,
           message: closeContractError,
         },
@@ -1341,6 +1338,29 @@ export function defaultManualDecision(
     labels: [LABELS.manual],
     errors: error ? [error] : undefined,
   };
+}
+
+export function duplicateEvidenceContractExhaustedDecision(params: {
+  decision: GateDecision;
+  duplicateSummary: string;
+  sourceSummary?: string | null;
+}) {
+  return defaultManualDecision(
+    [
+      "Private review repeatedly returned duplicate evidence that conflicts with deterministic duplicate review.",
+      `Duplicate review: ${params.duplicateSummary}.`,
+      params.sourceSummary ? `Source review: ${params.sourceSummary}.` : "",
+      "Automatic retries are stopped for this head SHA so a maintainer can review category, safety, privacy, policy, and duplicate evidence before merging.",
+      `Last private reviewer error: ${params.decision.summary}`,
+    ]
+      .filter(Boolean)
+      .join(" "),
+    {
+      code: "duplicate_evidence_contract_exhausted",
+      retryable: false,
+      message: params.decision.summary,
+    },
+  );
 }
 
 export function enforceAutoMergeConfidenceFloor(
