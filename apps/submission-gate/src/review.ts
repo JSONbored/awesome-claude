@@ -432,27 +432,21 @@ function looksLikeGenericSafetyClose(summary: string) {
   );
 }
 
-function extractJsonFromText(value: string): unknown {
+function parseJsonString(value: string): unknown {
   const trimmed = value.trim();
   if (!trimmed) return null;
 
-  const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  const candidates = fenced ? [fenced[1].trim(), trimmed] : [trimmed];
-  for (const candidate of candidates) {
-    if (!candidate) continue;
-    try {
-      return JSON.parse(candidate);
-    } catch {
-      continue;
-    }
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    return value;
   }
-  return value;
 }
 
 function unwrapPrivateGatePayload(raw: unknown, depth = 0): unknown {
   if (depth > 3) return raw;
   if (typeof raw === "string") {
-    const parsed = extractJsonFromText(raw);
+    const parsed = parseJsonString(raw);
     return parsed === raw ? raw : unwrapPrivateGatePayload(parsed, depth + 1);
   }
   if (!isRecord(raw)) return raw;

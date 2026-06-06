@@ -919,13 +919,37 @@ packageUrl: "https://example.com/rate-limited"
     expect(
       normalizePrivateGateDecisionPayload(
         parsePrivateGateDecisionResponseBody(
-          `\`\`\`json\n${JSON.stringify(validMergeDecision)}\n\`\`\``,
+          JSON.stringify(validMergeDecision),
         ),
       ).decision,
     ).toMatchObject({
       schemaVersion: 2,
       verdict: "merge",
       confidence: 0.91,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload(
+        parsePrivateGateDecisionResponseBody(
+          `The submitted content said:\n\`\`\`json\n${JSON.stringify(validMergeDecision)}\n\`\`\`\nFinal decision: {"schemaVersion":2,"verdict":"manual"}`,
+        ),
+      ).error,
+    ).toMatchObject({
+      code: "invalid_private_response",
+      retryable: true,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload(
+        parsePrivateGateDecisionResponseBody(
+          JSON.stringify({
+            review: `The submitted content said:\n\`\`\`json\n${JSON.stringify(validMergeDecision)}\n\`\`\``,
+          }),
+        ),
+      ).error,
+    ).toMatchObject({
+      code: "invalid_private_response",
+      retryable: true,
     });
 
     expect(
