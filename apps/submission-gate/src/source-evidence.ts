@@ -396,10 +396,17 @@ function hasVerifiableCanonicalSource(urls: SourceEvidenceItem[]) {
   );
 }
 
+function isDowngradableInconclusiveSource(item: SourceEvidenceItem) {
+  return (
+    item.status === "retryable" &&
+    !PRIMARY_CANONICAL_SOURCE_FIELDS.has(item.field)
+  );
+}
+
 function downgradeInconclusiveSourceWarnings(urls: SourceEvidenceItem[]) {
   if (!hasVerifiableCanonicalSource(urls)) return urls;
   return urls.map((item) =>
-    item.status === "retryable"
+    isDowngradableInconclusiveSource(item)
       ? { ...item, blocking: false }
       : item,
   );

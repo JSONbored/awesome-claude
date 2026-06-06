@@ -835,6 +835,38 @@ sourceUrls:
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 
+  it("keeps retryable primary source fields blocking when other canonical evidence passes", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Primary Source Retry Fixture
+githubUrl: "https://github.com/example/project"
+repoUrl: "https://github.com/example/private-or-rate-limited"
+sourceUrls:
+  - "https://github.com/example/project/blob/main/README.md"
+---
+`,
+      vi.fn<typeof fetch>().mockImplementation(async (url) => {
+        if (String(url).includes("private-or-rate-limited")) {
+          return new Response(null, { status: 403 });
+        }
+        return new Response(null, { status: 200 });
+      }),
+    );
+
+    expect(report.status).toBe("retryable");
+    expect(report.warnings).toHaveLength(0);
+    expect(report.urls).toContainEqual(
+      expect.objectContaining({
+        field: "repoUrl",
+        status: "retryable",
+        role: "canonical",
+        blocking: true,
+        httpStatus: 403,
+      }),
+    );
+    expect(sourceEvidenceCloseDecision(report)).toBeNull();
+  });
+
   it("does not fetch source URLs outside the trusted evidence hosts", async () => {
     const fetchImpl = vi.fn<typeof fetch>();
     const report = await checkSubmittedSourceEvidence(
