@@ -2632,7 +2632,8 @@ async function enqueueReviewTarget(
     existingReviewKey !== reviewScanKey;
   const shouldResetClosedTerminal =
     String(existing?.status || "") === "closed" &&
-    (isReopenedPullRequestEvent(eventName, webhook) ||
+    (forceRecheck === true ||
+      isReopenedPullRequestEvent(eventName, webhook) ||
       eventName === "scheduled");
   const shouldResetManualTerminal =
     forceRecheck === true && String(existing?.status || "") === "manual";
@@ -2655,7 +2656,7 @@ async function enqueueReviewTarget(
     deliveryId,
     nextReviewAt: null,
     incrementAttempt: true,
-    resetAttemptCount: shouldResetManualTerminal,
+    resetAttemptCount: shouldResetManualTerminal || shouldResetClosedTerminal,
     lastReviewKey: reviewScanKey || undefined,
     clearVerdict:
       shouldResetIgnoredScan ||

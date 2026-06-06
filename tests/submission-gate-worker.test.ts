@@ -515,9 +515,15 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"COLLABORATOR"');
     expect(source).toContain("targetFromIssueCommentRecheck");
     expect(source).toContain("shouldResetManualTerminal");
-    expect(source).toContain("resetAttemptCount: shouldResetManualTerminal");
+    expect(source).toContain("shouldResetClosedTerminal");
+    expect(source).toContain(
+      "resetAttemptCount: shouldResetManualTerminal || shouldResetClosedTerminal",
+    );
     expect(source).toContain(
       'forceRecheck === true && String(existing?.status || "") === "manual"',
+    );
+    expect(source).toContain(
+      "forceRecheck === true ||\n      isReopenedPullRequestEvent",
     );
     expect(issueCommentBlock).toContain("payload,\n      true,");
   });
@@ -1473,7 +1479,9 @@ packageUrl: "https://example.com/rate-limited"
     expect(source).toContain("existingReviewKey !== reviewScanKey");
     expect(source).toContain("shouldResetIgnoredScan");
     expect(source).toContain("shouldResetManualTerminal");
-    expect(source).toContain("resetAttemptCount: shouldResetManualTerminal");
+    expect(source).toContain(
+      "resetAttemptCount: shouldResetManualTerminal || shouldResetClosedTerminal",
+    );
     expect(source).toContain("clearTerminal:");
     expect(source).toContain("lastReviewKey: reviewScanKey || undefined");
     expect(source).toContain('reason: "already_reviewed"');
