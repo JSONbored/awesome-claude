@@ -25,7 +25,7 @@ repoUrl: "https://github.com/samanhappy/mcphub"
 documentationUrl: "https://docs.mcphub.app"
 packageUrl: "https://hub.docker.com/r/samanhappy/mcphub"
 installable: true
-installCommand: "docker run -p 3000:3000 -v ./mcp_settings.json:/app/mcp_settings.json -v ./data:/app/data -e ADMIN_PASSWORD=YOUR_ADMIN_PASSWORD samanhappy/mcphub"
+installCommand: 'docker run -p 127.0.0.1:3000:3000 -v ./mcp_settings.json:/app/mcp_settings.json -v ./data:/app/data -e ADMIN_PASSWORD="$(openssl rand -hex 24)" samanhappy/mcphub'
 usageSnippet: "Run MCPHub with a mounted mcp_settings.json file, log in to the dashboard, create bearer keys or groups, then connect Claude to the all-server, group, single-server, or smart routing endpoint."
 copySnippet: |-
   {
@@ -57,10 +57,12 @@ prerequisites:
   - Docker available for the documented container deployment.
   - A reviewed `mcp_settings.json` file for the MCP servers the hub should launch or proxy.
   - A durable mounted data directory so credentials, generated passwords, sessions, and state survive restarts.
+  - OpenSSL or another secure random generator available to create a unique administrator password.
   - Administrator password, bearer-key policy, and dashboard access controls configured before exposing endpoints.
   - PostgreSQL and pgvector planned if using database mode, social login, or smart routing in production.
 safetyNotes:
   - MCPHub centralizes many downstream MCP servers, so one hub endpoint can expose broad read, write, file, shell, browser, database, or account capabilities depending on the registered servers.
+  - The Docker command binds the dashboard and gateway to 127.0.0.1 by default; use a reverse proxy with TLS and explicit access controls before exposing MCPHub on a network interface.
   - MCP endpoints require authentication by default; do not disable bearer authentication outside trusted local testing.
   - Smart routing can discover and invoke tools by semantic similarity, so keep group visibility and bearer-key scopes narrow.
   - Hot-swappable configuration can add, remove, or change downstream MCP server access while the hub is running.
@@ -166,13 +168,15 @@ smart-routing behavior.
 ## Installation
 
 Create a reviewed `mcp_settings.json` file for the downstream MCP servers you
-want MCPHub to launch or proxy, then run the Docker image with persistent data:
+want MCPHub to launch or proxy, then run the Docker image with persistent data.
+This example binds MCPHub to loopback and generates a unique administrator
+password for the container:
 
 ```bash
-docker run -p 3000:3000 \
+docker run -p 127.0.0.1:3000:3000 \
   -v ./mcp_settings.json:/app/mcp_settings.json \
   -v ./data:/app/data \
-  -e ADMIN_PASSWORD=YOUR_ADMIN_PASSWORD \
+  -e ADMIN_PASSWORD="$(openssl rand -hex 24)" \
   samanhappy/mcphub
 ```
 
