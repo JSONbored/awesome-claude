@@ -442,6 +442,9 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("privateSourceHardFailureContradicted(");
     expect(source).toContain('"source_evidence_conflict"');
     expect(source).toContain("sourceEvidenceConflictMergeDecision(");
+    expect(source).toContain('"duplicate_evidence_conflict"');
+    expect(source).toContain("privateStrictDuplicateContradicted(");
+    expect(source).toContain("duplicateEvidenceConflictMergeDecision(");
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
@@ -454,6 +457,9 @@ describe("Cloudflare submission gate helpers", () => {
     );
     expect(source).toContain("closeEvidenceContract:");
     expect(source).toContain("Every close verdict must include reasonCode");
+    expect(source).toContain(
+      "strict_duplicate closes must identify the duplicated entry path",
+    );
     expect(source).toContain("deterministicDuplicateReview");
     expect(source).toContain('eventType: "duplicate_shadow_review"');
     expect(source).toContain('decision: "related_not_strict_duplicate"');
@@ -972,6 +978,77 @@ packageUrl: "https://example.com/rate-limited"
           outcome: "hard-failure",
           status: "404",
           httpStatus: "404",
+        },
+      ],
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "close",
+        confidence: 0.86,
+        reasonCode: "strict_duplicate",
+        evidence: [
+          {
+            ruleId: "strict_duplicate",
+            policy: "strict_duplicate",
+            behavior:
+              "PR adds a new MCP entry for ACI MCP Servers (slug aci-mcp-servers).",
+            source: "private-reviewer",
+          },
+        ],
+        summary:
+          "Summary:\n- Duplicate review: no strict duplicate.\n- No blocking issues; approve direct merge.",
+        labels: ["submission-closed-by-gate"],
+        checks: [{ name: "validate-content", status: "passed" }],
+        sections: [
+          {
+            id: "duplicate_history",
+            status: "pass",
+            bullets: ["No duplicate entry exists."],
+          },
+        ],
+      }).error,
+    ).toMatchObject({
+      code: "duplicate_evidence_conflict",
+      retryable: true,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "close",
+        confidence: 0.9,
+        reasonCode: "strict_duplicate",
+        evidence: [
+          {
+            ruleId: "strict_duplicate",
+            matchedPath: "content/mcp/existing-server.mdx",
+            matchedSourceUrl: "https://github.com/example/server",
+            behavior: "same category slug and canonical source",
+            fix: "Resubmit only if the resource is distinct.",
+          },
+        ],
+        summary:
+          "Summary:\n- Matches existing `content/mcp/existing-server.mdx`.",
+        labels: ["submission-closed-by-gate"],
+        checks: [{ name: "validate-content", status: "passed" }],
+        sections: [
+          {
+            id: "duplicate_history",
+            status: "fail",
+            bullets: ["Existing content item is the same resource."],
+          },
+        ],
+      }).decision,
+    ).toMatchObject({
+      verdict: "close",
+      reasonCode: "strict_duplicate",
+      evidence: [
+        {
+          ruleId: "strict_duplicate",
+          matchedPath: "content/mcp/existing-server.mdx",
+          matchedSourceUrl: "https://github.com/example/server",
         },
       ],
     });

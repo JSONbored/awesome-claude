@@ -69,6 +69,14 @@ export type GateDecisionEvidence = {
   policy?: string;
   source?: string;
   field?: string;
+  duplicatePath?: string;
+  duplicateTitle?: string;
+  duplicateSlug?: string;
+  duplicateUrl?: string;
+  matchedPath?: string;
+  matchedTitle?: string;
+  matchedSlug?: string;
+  matchedSourceUrl?: string;
   url?: string;
   matchedUrl?: string;
   finalUrl?: string;
@@ -144,6 +152,7 @@ const RETRYABLE_PRIVATE_REVIEW_CODES = new Set([
   "github_rate_limited",
   "source_evidence_timeout",
   "source_evidence_conflict",
+  "duplicate_evidence_conflict",
 ]);
 
 const VERDICT_HEADLINES: Record<GateVerdict, string> = {
@@ -309,6 +318,14 @@ function normalizeEvidence(value: unknown): GateDecisionEvidence | null {
     policy: cleanText(value.policy) || undefined,
     source: cleanText(value.source) || undefined,
     field: cleanText(value.field) || undefined,
+    duplicatePath: cleanText(value.duplicatePath) || undefined,
+    duplicateTitle: cleanText(value.duplicateTitle) || undefined,
+    duplicateSlug: cleanText(value.duplicateSlug) || undefined,
+    duplicateUrl: cleanText(value.duplicateUrl) || undefined,
+    matchedPath: cleanText(value.matchedPath) || undefined,
+    matchedTitle: cleanText(value.matchedTitle) || undefined,
+    matchedSlug: cleanText(value.matchedSlug) || undefined,
+    matchedSourceUrl: cleanText(value.matchedSourceUrl) || undefined,
     url: cleanText(value.url) || undefined,
     matchedUrl: cleanText(value.matchedUrl) || undefined,
     finalUrl: cleanText(value.finalUrl) || undefined,
@@ -329,6 +346,14 @@ function evidenceHasConcreteDetail(evidence: GateDecisionEvidence[]) {
       item.policy,
       item.source,
       item.field,
+      item.duplicatePath,
+      item.duplicateTitle,
+      item.duplicateSlug,
+      item.duplicateUrl,
+      item.matchedPath,
+      item.matchedTitle,
+      item.matchedSlug,
+      item.matchedSourceUrl,
       item.url,
       item.matchedUrl,
       item.finalUrl,
@@ -338,6 +363,30 @@ function evidenceHasConcreteDetail(evidence: GateDecisionEvidence[]) {
       item.fix,
       item.whyNotDefensive,
     ].some(Boolean),
+  );
+}
+
+function hasStrictDuplicateTargetEvidence(evidence: GateDecisionEvidence[]) {
+  const joined = evidence
+    .flatMap((item) => [
+      item.duplicatePath,
+      item.duplicateUrl,
+      item.matchedPath,
+      item.matchedSourceUrl,
+      item.url,
+      item.matchedUrl,
+      item.finalUrl,
+      item.source && item.source !== "private-reviewer" ? item.source : "",
+      item.behavior,
+      item.snippet,
+    ])
+    .filter(Boolean)
+    .join("\n");
+  return (
+    /(?:^|[\s`"'(])content\/[\w-]+\/[\w.-]+\.mdx\b/i.test(joined) ||
+    /https?:\/\/\S+/i.test(joined) ||
+    /(?:^|[\s`"'(])#\d+\b/.test(joined) ||
+    /\/pull\/\d+\b/i.test(joined)
   );
 }
 
@@ -351,6 +400,12 @@ function closeEvidenceContractError(params: {
   const evidence = params.evidence || [];
   if (!evidence.length || !evidenceHasConcreteDetail(evidence)) {
     return "Private close decisions must include public-safe evidence.";
+  }
+  if (
+    params.reasonCode === "strict_duplicate" &&
+    !hasStrictDuplicateTargetEvidence(evidence)
+  ) {
+    return "Private strict_duplicate close decisions must identify the duplicated entry path, source URL, or PR.";
   }
   if (SAFETY_CLOSE_REASON_CODES.has(params.reasonCode)) {
     const hasRule = evidence.some((item) => item.ruleId);
@@ -534,7 +589,10 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
     if (closeContractError) {
       return {
         error: {
-          code: "invalid_private_response",
+          code:
+            reasonCode === "strict_duplicate"
+              ? "duplicate_evidence_conflict"
+              : "invalid_private_response",
           retryable: true,
           message: closeContractError,
         },
@@ -783,6 +841,16 @@ function decisionEvidenceSection(
         item.snippet ? `snippet: \`${item.snippet}\`` : "",
         item.source ? `source: ${item.source}` : "",
         item.field ? `field: \`${item.field}\`` : "",
+        item.duplicatePath ? `duplicate path: \`${item.duplicatePath}\`` : "",
+        item.duplicateTitle ? `duplicate title: ${item.duplicateTitle}` : "",
+        item.duplicateSlug ? `duplicate slug: \`${item.duplicateSlug}\`` : "",
+        item.duplicateUrl ? `duplicate URL: ${item.duplicateUrl}` : "",
+        item.matchedPath ? `matched path: \`${item.matchedPath}\`` : "",
+        item.matchedTitle ? `matched title: ${item.matchedTitle}` : "",
+        item.matchedSlug ? `matched slug: \`${item.matchedSlug}\`` : "",
+        item.matchedSourceUrl
+          ? `matched source URL: ${item.matchedSourceUrl}`
+          : "",
         item.url ? `url: ${item.url}` : "",
         item.matchedUrl ? `matched URL: ${item.matchedUrl}` : "",
         item.finalUrl ? `final URL: ${item.finalUrl}` : "",
