@@ -69,6 +69,13 @@ export type GateDecisionEvidence = {
   behavior?: string;
   policy?: string;
   source?: string;
+  field?: string;
+  url?: string;
+  matchedUrl?: string;
+  finalUrl?: string;
+  outcome?: string;
+  status?: string;
+  httpStatus?: string;
   fix?: string;
   whyNotDefensive?: string;
 };
@@ -137,6 +144,7 @@ const RETRYABLE_PRIVATE_REVIEW_CODES = new Set([
   "private_reviewer_unavailable",
   "github_rate_limited",
   "source_evidence_timeout",
+  "source_evidence_conflict",
 ]);
 
 const VERDICT_HEADLINES: Record<GateVerdict, string> = {
@@ -292,12 +300,22 @@ function normalizeReasonCode(
 
 function normalizeEvidence(value: unknown): GateDecisionEvidence | null {
   if (!isRecord(value)) return null;
+  const rawStatus = cleanText(value.status);
+  const httpStatus =
+    cleanText(value.httpStatus) || (/^\d{3}$/.test(rawStatus) ? rawStatus : "");
   const evidence: GateDecisionEvidence = {
     ruleId: cleanText(value.ruleId) || undefined,
     snippet: cleanText(value.snippet) || undefined,
     behavior: cleanText(value.behavior) || undefined,
     policy: cleanText(value.policy) || undefined,
     source: cleanText(value.source) || undefined,
+    field: cleanText(value.field) || undefined,
+    url: cleanText(value.url) || undefined,
+    matchedUrl: cleanText(value.matchedUrl) || undefined,
+    finalUrl: cleanText(value.finalUrl) || undefined,
+    outcome: cleanText(value.outcome) || undefined,
+    status: rawStatus || undefined,
+    httpStatus: httpStatus || undefined,
     fix: cleanText(value.fix) || undefined,
     whyNotDefensive: cleanText(value.whyNotDefensive) || undefined,
   };
@@ -311,6 +329,13 @@ function evidenceHasConcreteDetail(evidence: GateDecisionEvidence[]) {
       item.behavior,
       item.policy,
       item.source,
+      item.field,
+      item.url,
+      item.matchedUrl,
+      item.finalUrl,
+      item.outcome,
+      item.status,
+      item.httpStatus,
       item.fix,
       item.whyNotDefensive,
     ].some(Boolean),
@@ -815,6 +840,13 @@ function decisionEvidenceSection(
         item.behavior ? `behavior: ${item.behavior}` : "",
         item.snippet ? `snippet: \`${item.snippet}\`` : "",
         item.source ? `source: ${item.source}` : "",
+        item.field ? `field: \`${item.field}\`` : "",
+        item.url ? `url: ${item.url}` : "",
+        item.matchedUrl ? `matched URL: ${item.matchedUrl}` : "",
+        item.finalUrl ? `final URL: ${item.finalUrl}` : "",
+        item.outcome ? `outcome: ${item.outcome}` : "",
+        item.status ? `status: ${item.status}` : "",
+        item.httpStatus ? `HTTP: ${item.httpStatus}` : "",
         item.fix ? `fix: ${item.fix}` : "",
         item.whyNotDefensive
           ? `why not defensive: ${item.whyNotDefensive}`
