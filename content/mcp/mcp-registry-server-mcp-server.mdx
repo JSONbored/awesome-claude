@@ -33,7 +33,7 @@ copySnippet: |-
 configSnippet: |-
   MCP_REGISTRY_DATABASE_URL=postgres://registry:registry@postgres:5432/registry
   MCP_REGISTRY_SEED_FROM=data/seed.json
-  MCP_REGISTRY_ENABLE_REGISTRY_VALIDATION=false
+  MCP_REGISTRY_ENABLE_REGISTRY_VALIDATION=true
 estimatedSetupTime: 20 minutes
 difficulty: advanced
 prerequisites:
@@ -47,7 +47,7 @@ safetyNotes:
   - Publishing uses namespace ownership checks. Keep GitHub, DNS, HTTP verification, and OIDC configuration limited to namespaces you control.
   - Local development seeding can mirror production registry behavior or load local seed data; review seed sources before using them in tests or demonstrations.
   - Do not treat registry inclusion as a security audit of listed MCP servers. Review each referenced server, package, transport, and permission model independently.
-  - Running the prebuilt container outside the compose setup requires a correctly configured database connection and deployment controls.
+  - Running the prebuilt container outside the compose setup requires a correctly configured database connection, deployment controls, and registry validation enabled before exposure.
 privacyNotes:
   - Published server metadata can include repository URLs, package URLs, remote endpoints, website URLs, organization names, namespaces, versions, and server descriptions.
   - Publisher authentication and namespace verification can involve GitHub identities, GitHub Actions OIDC claims, DNS records, or HTTP challenge material.
@@ -133,8 +133,9 @@ make dev-compose
 The development compose setup builds the registry image, starts PostgreSQL, and
 seeds the service with registry data for local testing.
 
-When using the prebuilt container image, provide your own PostgreSQL database
-and configure the registry database URL before exposing the service.
+When using the prebuilt container image, provide your own PostgreSQL database,
+configure the registry database URL, and keep registry validation enabled before
+exposing the service.
 
 ## Publisher Workflow
 
