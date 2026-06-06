@@ -3161,21 +3161,35 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
         message: "Private corpus review returned an unexpected payload.",
       };
       return privateReviewErrorDecision(
-        error.message || "Private corpus review returned an unexpected payload.",
+        error.message ||
+          "Private corpus review returned an unexpected payload.",
         error.code,
         error.retryable !== false,
       );
     }
     return normalized.decision;
   } catch (error) {
-    const message =
-      error instanceof Error && error.message
-        ? error.message
-        : "Private corpus review request failed.";
-    return privateReviewErrorDecision(message, "private_reviewer_unavailable");
+    return privateReviewErrorDecision(
+      privateReviewPublicFailureReason(error),
+      "private_reviewer_unavailable",
+    );
   } finally {
     clearTimeout(abortId);
   }
+}
+function privateReviewPublicFailureReason(error: unknown) {
+  if (error instanceof Error) {
+    if (error.message === "Private corpus review request timed out.") {
+      return error.message;
+    }
+    if (error.message === "Private corpus review response body timed out.") {
+      return error.message;
+    }
+    if (isTimeoutError(error)) {
+      return "Private corpus review request timed out.";
+    }
+  }
+  return "Private corpus review request failed.";
 }
 
 async function withPrivateReviewTimeout<T>(
