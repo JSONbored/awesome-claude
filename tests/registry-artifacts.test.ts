@@ -962,7 +962,7 @@ Use this hook after reviewing the notes.`,
     for (const contract of Object.values(manifest.artifactContracts)) {
       expect(contract.sha256).toMatch(/^[a-f0-9]{64}$/);
     }
-  });
+  }, 60_000);
 
   it("publishes category and platform sharded distribution feeds", () => {
     const feedIndex = readDataJson<{

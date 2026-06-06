@@ -118,6 +118,9 @@ describe("generated churn policy", () => {
     expect(source).toContain("BRANCH_NAME: automation/readme-refresh");
     expect(source).toContain("refresh-readme-automation-readme-refresh");
     expect(source).toContain("git diff --quiet origin/main -- README.md");
+    expect(source).toContain(
+      "git restore --worktree --staged -- . ':!README.md'",
+    );
     expect(source).toContain('git switch -C "$BRANCH_NAME" origin/main');
     expect(source).toContain("unexpected_files");
     expect(source).toContain("git diff --name-only -- . ':!README.md'");

@@ -63,6 +63,11 @@ jobs:
             exit 0
           fi
 
+          # Hosted installs can normalize tracked dependency metadata. This
+          # accumulator publishes README.md only, so discard workspace churn
+          # before carrying README onto the shared branch.
+          git restore --worktree --staged -- . ':!README.md'
+
           cp README.md "$RUNNER_TEMP/README.md"
           git fetch origin "refs/heads/$BRANCH_NAME:refs/remotes/origin/$BRANCH_NAME" || true
           git switch -C "$BRANCH_NAME" origin/main
