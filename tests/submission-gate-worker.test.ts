@@ -800,6 +800,37 @@ packageUrl: "https://hub.docker.com/r/example/project"
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 
+  it("treats isolated auxiliary source fetch errors as warnings when canonical evidence passes", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: GitHub Blob Warning Fixture
+repoUrl: "https://github.com/example/project"
+packageUrl: "https://pypi.org/project/example-project/"
+sourceUrls:
+  - "https://github.com/example/project/blob/main/README.md"
+  - "https://github.com/example/project/blob/main/flaky-source.py"
+---
+`,
+      vi.fn<typeof fetch>().mockImplementation(async (url) => {
+        if (String(url).includes("flaky-source.py")) {
+          throw new Error("edge fetch timeout");
+        }
+        return new Response(null, { status: 200 });
+      }),
+    );
+
+    expect(report.status).toBe("passed");
+    expect(report.warnings).toHaveLength(1);
+    expect(report.warnings[0]).toMatchObject({
+      field: "sourceUrls",
+      status: "retryable",
+      outcome: "fetch_error",
+      role: "canonical",
+      blocking: false,
+    });
+    expect(sourceEvidenceCloseDecision(report)).toBeNull();
+  });
+
   it("does not fetch source URLs outside the trusted evidence hosts", async () => {
     const fetchImpl = vi.fn<typeof fetch>();
     const report = await checkSubmittedSourceEvidence(

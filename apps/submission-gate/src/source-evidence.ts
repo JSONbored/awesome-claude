@@ -79,6 +79,12 @@ const TRUSTED_SOURCE_HOSTS = new Set([
 ]);
 
 const TRUSTED_SOURCE_HOST_SUFFIXES = [] as const;
+const PRIMARY_CANONICAL_SOURCE_FIELDS = new Set([
+  "githubUrl",
+  "repoUrl",
+  "repositoryUrl",
+  "sourceUrl",
+]);
 
 function stripYamlComment(value: string) {
   return value.replace(/\s+#.*$/, "").trim();
@@ -375,16 +381,25 @@ function sourceEvidenceHashInput(urls: SourceEvidenceItem[]) {
   );
 }
 
-function downgradeNonCanonicalRetryWarnings(urls: SourceEvidenceItem[]) {
-  const hasCanonicalPass = urls.some(
+function hasVerifiableCanonicalSource(urls: SourceEvidenceItem[]) {
+  const reachableCanonical = urls.filter(
     (item) =>
       item.role === "canonical" &&
       item.status === "passed" &&
       item.outcome === "reachable",
   );
-  if (!hasCanonicalPass) return urls;
+  return (
+    reachableCanonical.length >= 2 ||
+    reachableCanonical.some((item) =>
+      PRIMARY_CANONICAL_SOURCE_FIELDS.has(item.field),
+    )
+  );
+}
+
+function downgradeInconclusiveSourceWarnings(urls: SourceEvidenceItem[]) {
+  if (!hasVerifiableCanonicalSource(urls)) return urls;
   return urls.map((item) =>
-    item.role === "distribution" && item.status === "retryable"
+    item.status === "retryable"
       ? { ...item, blocking: false }
       : item,
   );
@@ -406,7 +421,7 @@ export async function checkSubmittedSourceEvidence(
       error: `Only ${MAX_SOURCE_EVIDENCE_URLS} source URLs can be checked automatically.`,
     }));
   }
-  const urls = downgradeNonCanonicalRetryWarnings(checkedUrls);
+  const urls = downgradeInconclusiveSourceWarnings(checkedUrls);
   const blockingUrls = urls.filter((item) => item.blocking);
   const status = blockingUrls.some((item) => item.status === "hard_failure")
     ? "failed"
