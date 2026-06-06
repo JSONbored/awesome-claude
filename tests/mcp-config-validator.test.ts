@@ -323,6 +323,39 @@ describe("MCP config validator", () => {
     expect(result.errors.join("\n")).toContain("command must be a string");
   });
 
+  it("extracts the package operand across runner forms and -- separators", () => {
+    const result = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: {
+          npmExecSep: {
+            command: "npm",
+            args: ["exec", "my-package", "--", "--verbose"],
+          },
+          npmScopedSep: {
+            command: "npm",
+            args: ["x", "@scope/pkg", "--", "-y"],
+          },
+          npxSepFirst: {
+            command: "npx",
+            args: ["--", "leading-sep-pkg"],
+          },
+        },
+      }),
+    );
+
+    expect(
+      result.servers.find((server) => server.name === "npmExecSep"),
+    ).toMatchObject({ packageName: "my-package" });
+    expect(
+      result.servers.find((server) => server.name === "npmScopedSep"),
+    ).toMatchObject({ packageName: "@scope/pkg" });
+    expect(
+      result.servers.find((server) => server.name === "npxSepFirst"),
+    ).toMatchObject({ packageName: "leading-sep-pkg" });
+    // A real package after `--` must not trip the "missing package name" error.
+    expect(result.errors.join("\n")).not.toContain("missing a package name");
+  });
+
   it("wraps bare server objects and warns on placeholders", () => {
     const result = validateMcpConfigText(
       JSON.stringify({

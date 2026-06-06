@@ -235,44 +235,33 @@ function sanitizeConfigValue(key: string, value: unknown): SanitizedValue {
   };
 }
 
-function packageFromNpxArgs(args: string[]) {
-  const stopAt = args.indexOf("--");
-  const candidates = (stopAt >= 0 ? args.slice(0, stopAt) : args).filter(
-    (arg) => arg && !arg.startsWith("-"),
-  );
-  return candidates[0] || "";
+// First package operand of a runner's args: the first token that is neither a
+// flag nor the `--` separator. The package is the first operand regardless of
+// where `--` sits, so this works for both `<runner> pkg -- args` (args follow
+// the package) and `<runner> -- pkg` (the separator precedes the package).
+function firstPackageOperand(args: string[]) {
+  return args.find((arg) => arg && arg !== "--" && !arg.startsWith("-")) || "";
 }
 
 function packageFromRunner(command: string, args: string[]) {
   const lower = command.toLowerCase();
-  if (lower.endsWith("npx") || lower === "npx") return packageFromNpxArgs(args);
-  if (["uvx", "bunx"].includes(lower)) {
-    return args.find((arg) => arg && !arg.startsWith("-")) || "";
-  }
+  if (lower.endsWith("npx") || lower === "npx") return firstPackageOperand(args);
+  if (["uvx", "bunx"].includes(lower)) return firstPackageOperand(args);
   if (lower === "pnpm" || lower === "yarn") {
     const runnerIndex = args.findIndex((arg) => arg === "dlx");
-    const candidates = (
-      runnerIndex >= 0 ? args.slice(runnerIndex + 1) : args
-    ).filter((arg) => arg && !arg.startsWith("-"));
-    return candidates[0] || "";
+    return firstPackageOperand(
+      runnerIndex >= 0 ? args.slice(runnerIndex + 1) : args,
+    );
   }
   if (lower === "npm") {
     const runnerIndex = args.findIndex((arg) => ["exec", "x"].includes(arg));
-    const scopedArgs = runnerIndex >= 0 ? args.slice(runnerIndex + 1) : args;
-    const separatorIndex = scopedArgs.indexOf("--");
-    const candidates = (
-      separatorIndex >= 0 ? scopedArgs.slice(separatorIndex + 1) : scopedArgs
-    ).filter((arg) => arg && !arg.startsWith("-"));
-    return candidates[0] || "";
+    return firstPackageOperand(
+      runnerIndex >= 0 ? args.slice(runnerIndex + 1) : args,
+    );
   }
   if (lower === "docker") {
-    const imageIndex = args.findIndex((arg) => arg === "run");
-    if (imageIndex >= 0) {
-      return (
-        args.slice(imageIndex + 1).find((arg) => arg && !arg.startsWith("-")) ||
-        ""
-      );
-    }
+    const runIndex = args.findIndex((arg) => arg === "run");
+    return runIndex >= 0 ? firstPackageOperand(args.slice(runIndex + 1)) : "";
   }
   return "";
 }
