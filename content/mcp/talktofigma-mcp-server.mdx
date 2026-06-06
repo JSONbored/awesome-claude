@@ -1,0 +1,173 @@
+---
+title: TalkToFigma MCP Server
+slug: talktofigma-mcp-server
+category: mcp
+description: >-
+  Figma MCP bridge that connects Claude Code, Cursor, and other agents to a
+  Figma plugin through WebSocket channels so they can read designs and modify
+  nodes, text, layouts, styles, annotations, and components.
+cardDescription: >-
+  Control Figma from MCP clients with document inspection, selection reads,
+  node creation, text replacement, auto-layout edits, styling tools, prototype
+  connection helpers, component overrides, and image export support.
+seoTitle: TalkToFigma MCP Server for Claude
+seoDescription: >-
+  Configure TalkToFigma MCP with Claude Code, Cursor, and Figma to read and
+  modify design files through a Bun-based MCP server, WebSocket bridge, and
+  Figma plugin with clear safety and privacy boundaries.
+author: Grab
+authorProfileUrl: "https://github.com/grab"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: TalkToFigma
+brandDomain: github.com
+repoUrl: "https://github.com/grab/cursor-talk-to-figma-mcp"
+documentationUrl: "https://github.com/grab/cursor-talk-to-figma-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/cursor-talk-to-figma-mcp"
+installable: true
+installCommand: "bunx cursor-talk-to-figma-mcp@latest"
+usageSnippet: "Add `bunx cursor-talk-to-figma-mcp@latest` to your MCP client, run `bun socket`, open the Figma plugin, join a channel, and start with read-only inspection before edits."
+copySnippet: |-
+  bunx cursor-talk-to-figma-mcp@latest
+configSnippet: |-
+  {
+    "mcpServers": {
+      "TalkToFigma": {
+        "command": "bunx",
+        "args": ["cursor-talk-to-figma-mcp@latest"]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Bun installed through a trusted installation path.
+  - Figma desktop or browser session with access to the design file you are authorized to inspect or modify.
+  - The TalkToFigma Figma plugin installed from the documented upstream path or linked locally from the repository.
+  - WebSocket bridge running with `bun socket`.
+  - MCP client such as Claude Code, Cursor, or another compatible host configured with the `cursor-talk-to-figma-mcp` package.
+safetyNotes:
+  - TalkToFigma can read and modify Figma documents, selected nodes, text content, annotations, auto-layout settings, fills, strokes, component instances, prototype reactions, and exported node images.
+  - Agents can create, move, resize, clone, and delete nodes, so use a duplicate file or branch-like design workflow before broad edits.
+  - Always join the intended WebSocket channel and verify the active Figma document before running write tools.
+  - Review batch text replacements, component override propagation, annotation conversion, and connector generation before sharing or handing off design files.
+  - Keep the WebSocket bridge local or otherwise protected so untrusted clients cannot attach to an active Figma session.
+privacyNotes:
+  - Figma document structure, node names, selected content, annotations, component metadata, local styles, exported images, text content, and prototype information may be exposed to the MCP client and model.
+  - Design files often contain unreleased product UI, customer data in mockups, brand assets, internal names, tokens, pricing, screenshots, or partner/client IP.
+  - Exported images can include visual details that are more sensitive than node metadata alone.
+  - Channel names, WebSocket messages, local logs, and MCP prompts may reveal active file context and design intent.
+sourceUrls:
+  - "https://github.com/grab/cursor-talk-to-figma-mcp"
+  - "https://github.com/grab/cursor-talk-to-figma-mcp/blob/main/README.md"
+  - "https://github.com/grab/cursor-talk-to-figma-mcp/blob/main/package.json"
+  - "https://registry.npmjs.org/cursor-talk-to-figma-mcp"
+tags:
+  - figma
+  - design
+  - web-socket
+  - prototyping
+  - automation
+keywords:
+  - TalkToFigma MCP
+  - cursor-talk-to-figma-mcp
+  - Figma MCP plugin
+  - Figma Claude Code MCP
+  - Figma design automation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+TalkToFigma MCP Server connects an MCP client to Figma through a TypeScript MCP
+server, a local WebSocket bridge, and a Figma plugin. It lets agents read Figma
+documents and selected nodes, then perform design operations such as creating
+frames and text, changing layout settings, editing styles, replacing copy,
+managing annotations, exporting nodes, and working with component instances.
+
+This is a write-capable design automation bridge. It is distinct from
+read-only Figma context extraction because it can modify the active Figma file
+through the plugin once the WebSocket channel is connected.
+
+## Source Review
+
+- https://github.com/grab/cursor-talk-to-figma-mcp
+- https://github.com/grab/cursor-talk-to-figma-mcp/blob/main/README.md
+- https://github.com/grab/cursor-talk-to-figma-mcp/blob/main/package.json
+- https://registry.npmjs.org/cursor-talk-to-figma-mcp
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, package metadata, and npm registry metadata for current commands,
+server package names, WebSocket setup, plugin setup, and supported Figma tools.
+
+## Features
+
+- Read Figma document and selection metadata.
+- Inspect individual or multiple node records.
+- Create rectangles, frames, text nodes, component instances, and connectors.
+- Move, resize, clone, delete, and focus nodes.
+- Update fills, strokes, corner radius, auto-layout mode, padding, axis
+  alignment, layout sizing, and item spacing.
+- Scan and batch-replace text content.
+- Read and write annotations.
+- Extract and apply component instance overrides.
+- Export nodes as images.
+- Route communication through WebSocket channels between the MCP server and the
+  Figma plugin.
+
+## Installation
+
+Install Bun first, then configure the MCP server in your client:
+
+```json
+{
+  "mcpServers": {
+    "TalkToFigma": {
+      "command": "bunx",
+      "args": ["cursor-talk-to-figma-mcp@latest"]
+    }
+  }
+}
+```
+
+Start the WebSocket bridge from a checkout of the repository:
+
+```bash
+bun socket
+```
+
+Open Figma, run the TalkToFigma plugin, join a channel with `join_channel`, and
+verify the active file before allowing write tools.
+
+## Use Cases
+
+- Let Claude inspect selected Figma nodes while implementing UI.
+- Create rough frames, text, rectangles, and component instances from prompts.
+- Batch update design copy across many text nodes.
+- Convert manual annotations into native Figma annotations.
+- Propagate component instance overrides to repeated UI patterns.
+- Generate connector lines from prototype reactions for FigJam-style flow maps.
+
+## Safety and Privacy
+
+Start with read tools such as `get_document_info`, `get_selection`, and
+`read_my_design`. Move to write tools only after confirming the active Figma
+document, selected node, and WebSocket channel.
+
+Use duplicate files for experiments. Batch operations such as text replacement,
+annotation conversion, component override propagation, and node deletion can
+change large parts of a design quickly.
+
+Treat design data as sensitive model context. Node names, text layers,
+component metadata, exported images, and prototype flows can reveal product
+strategy, unreleased UI, customer information, brand assets, and implementation
+details.
+
+## Duplicate Check
+
+No `grab/cursor-talk-to-figma-mcp` entry, TalkToFigma entry, or matching
+TalkToFigma source URL was found in `content/mcp`. Existing Figma-related
+entries cover different projects and do not document this write-capable
+TalkToFigma bridge.

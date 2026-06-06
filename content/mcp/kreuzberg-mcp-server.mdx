@@ -1,0 +1,183 @@
+---
+title: Kreuzberg MCP Server
+slug: kreuzberg-mcp-server
+category: mcp
+description: >-
+  Document intelligence MCP server for extracting text, metadata, OCR output,
+  structured data, embeddings, chunks, cache state, and supported-format
+  information from PDFs, Office files, images, code, and many other formats.
+cardDescription: >-
+  Run `kreuzberg mcp` to give Claude and other MCP clients stdio access to
+  Kreuzberg's document extraction engine, embedding tools, chunking, cache
+  management, structured extraction, and Docker-backed deployment options.
+seoTitle: Kreuzberg MCP Server for Claude
+seoDescription: >-
+  Configure Kreuzberg MCP with Claude, Cursor, and custom MCP clients to extract
+  text, metadata, OCR, embeddings, chunks, and structured data from PDFs, Office
+  documents, images, code, archives, email, and more.
+author: Kreuzberg
+authorProfileUrl: "https://github.com/kreuzberg-dev"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Kreuzberg
+brandDomain: kreuzberg.dev
+repoUrl: "https://github.com/kreuzberg-dev/kreuzberg"
+documentationUrl: "https://docs.kreuzberg.dev/guides/mcp-integration/"
+packageUrl: "https://pypi.org/pypi/kreuzberg/json"
+installable: true
+installCommand: "pip install \"kreuzberg[all]\" && kreuzberg mcp"
+usageSnippet: "Install Kreuzberg with `pip install \"kreuzberg[all]\"`, configure your MCP client to run `kreuzberg mcp`, and start with a small document extraction request."
+copySnippet: |-
+  pip install "kreuzberg[all]"
+  kreuzberg mcp
+configSnippet: |-
+  {
+    "mcpServers": {
+      "kreuzberg": {
+        "command": "kreuzberg",
+        "args": ["mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python environment suitable for installing `kreuzberg[all]`, or Docker if using the container path.
+  - MCP-capable client such as Claude Desktop, Cursor, or a custom stdio MCP client.
+  - Local file paths or mounted volumes limited to documents you are authorized to process.
+  - Optional OCR, embeddings, VLM OCR, and LLM provider dependencies configured only when those features are needed.
+  - Understanding of document sensitivity before extracting, OCRing, embedding, or chunking private files.
+safetyNotes:
+  - Kreuzberg MCP can read local files supplied to extraction tools and can process batches of files when paths are provided.
+  - OCR, structured extraction, embeddings, and VLM features may invoke local or provider-hosted models depending on configuration.
+  - Cache tools can warm, inspect, or clear model/cache state; review cache directories and mounted volumes in shared environments.
+  - Docker deployments should mount only the directories the agent is allowed to read.
+  - Treat extracted text, metadata, structured fields, embeddings, and chunks as sensitive outputs when source documents are private.
+privacyNotes:
+  - Documents may contain PII, contracts, invoices, source code, screenshots, medical data, financial data, credentials, or proprietary design information.
+  - Extracted metadata can reveal filenames, authors, timestamps, document structure, attachments, image details, and software fingerprints.
+  - OCR and structured extraction can expose text that was not previously copyable from scanned PDFs or images.
+  - Embedding and VLM/LLM configuration may send document-derived content to external model providers if configured that way.
+  - Cache directories, logs, model downloads, and MCP transcripts may retain document-derived context.
+sourceUrls:
+  - "https://github.com/kreuzberg-dev/kreuzberg"
+  - "https://github.com/kreuzberg-dev/kreuzberg/blob/main/README.md"
+  - "https://docs.kreuzberg.dev/guides/mcp-integration/"
+  - "https://docs.kreuzberg.dev/cli/usage/"
+  - "https://docs.kreuzberg.dev/guides/docker/"
+  - "https://github.com/kreuzberg-dev/kreuzberg/pkgs/container/kreuzberg"
+  - "https://pypi.org/pypi/kreuzberg/json"
+tags:
+  - documents
+  - extraction
+  - ocr
+  - embeddings
+  - chunking
+keywords:
+  - Kreuzberg MCP
+  - kreuzberg mcp
+  - document extraction MCP
+  - OCR MCP server
+  - PDF extraction MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Kreuzberg MCP Server exposes Kreuzberg's document intelligence engine through
+the Model Context Protocol. It lets Claude, Cursor, and custom MCP clients
+extract content from files, generate embeddings, chunk text, manage cache state,
+detect formats, and inspect supported extraction capabilities without writing
+custom extraction code.
+
+The upstream MCP guide documents stdio mode with `kreuzberg mcp` as the default
+local setup. Docker can also run the same MCP mode when file access and cache
+volumes need to be controlled more explicitly.
+
+## Source Review
+
+- https://github.com/kreuzberg-dev/kreuzberg
+- https://github.com/kreuzberg-dev/kreuzberg/blob/main/README.md
+- https://docs.kreuzberg.dev/guides/mcp-integration/
+- https://docs.kreuzberg.dev/cli/usage/
+- https://docs.kreuzberg.dev/guides/docker/
+- https://github.com/kreuzberg-dev/kreuzberg/pkgs/container/kreuzberg
+- https://pypi.org/pypi/kreuzberg/json
+
+These sources were reviewed on **2026-06-06**. Prefer the live MCP integration
+guide, CLI usage docs, Docker guide, repository README, container package, and
+PyPI metadata for current install commands, server modes, feature flags, and
+runtime dependencies.
+
+## Features
+
+- Run an MCP server over stdio with `kreuzberg mcp`.
+- Extract file content and metadata from PDFs, Office documents, images, HTML,
+  XML, email, archives, academic formats, text files, and code.
+- Detect MIME types and list supported formats.
+- Batch-extract several files.
+- Generate embeddings and chunk text when configured.
+- Extract structured data when the required LLM feature is available.
+- Inspect and clear cache state.
+- Use config files to apply extraction defaults.
+- Run the MCP server through Docker with controlled file and cache mounts.
+
+## Installation
+
+Install Kreuzberg with its optional feature bundle:
+
+```bash
+pip install "kreuzberg[all]"
+```
+
+Start the stdio MCP server:
+
+```bash
+kreuzberg mcp
+```
+
+Configure an MCP client with the documented command:
+
+```json
+{
+  "mcpServers": {
+    "kreuzberg": {
+      "command": "kreuzberg",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+For containerized setups, mount only the document directories and config files
+the agent should access.
+
+## Use Cases
+
+- Extract text and metadata from PDFs, Office files, images, and email for
+  analysis in Claude.
+- OCR scanned documents or screenshots before summarization.
+- Chunk long documents for RAG and agent workflows.
+- Generate embeddings for document-derived text when configured.
+- Detect file types before choosing an extraction path.
+- Build a local document-processing MCP workflow without exposing documents to
+  a hosted extraction service.
+
+## Safety and Privacy
+
+Kreuzberg can turn private files into model-visible text. That is useful, but it
+also means access boundaries matter. Mount or expose only approved directories,
+avoid broad workspace paths, and start with a small file before batch
+processing.
+
+Review OCR, embedding, VLM, and LLM provider configuration before enabling
+features that can send document-derived content outside the local machine. Keep
+cache directories, logs, and extracted outputs out of shared repos unless they
+are approved for publication.
+
+## Duplicate Check
+
+No `kreuzberg-dev/kreuzberg` entry, Kreuzberg MCP entry, or matching Kreuzberg
+source URL was found in `content/mcp`.
