@@ -59,9 +59,9 @@ prerequisites:
   - Yuque personal, group, or legacy API token with the minimum scope needed for the workflow.
   - Yuque Cloud account or approved private Yuque deployment base URL.
   - Read-only token for search and retrieval workflows whenever document or book writes are not required.
-  - Approval before creating or updating books, documents, notes, resources, or table-of-contents entries.
+  - Approval before creating, updating, or deleting books, documents, notes, resources, or table-of-contents entries.
 safetyNotes:
-  - Yuque MCP Server can search and read content, but it also exposes create and update workflows for books, documents, notes, resources, and tables of contents.
+  - Yuque MCP Server can search and read content, but it also exposes create, update, and delete workflows for books, documents, notes, resources, and tables of contents.
   - The upstream security policy recommends read-only tokens when only read access is needed.
   - Tokens passed as CLI arguments can appear in shell history, process listings, or client logs; prefer environment variables or a secrets manager.
   - Custom YUQUE_BASE_URL values should point only to trusted Yuque deployments and should use HTTPS for remote services.
