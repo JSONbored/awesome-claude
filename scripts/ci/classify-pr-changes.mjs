@@ -5,9 +5,20 @@ const eventName = process.env.GITHUB_EVENT_NAME || "";
 const baseSha = process.env.BASE_SHA || "";
 const baseRef = process.env.BASE_REF || process.env.GITHUB_BASE_REF || "";
 const headSha = process.env.HEAD_SHA || "";
+const headRef =
+  process.env.HEAD_REF ||
+  process.env.GITHUB_HEAD_REF ||
+  process.env.GITHUB_REF_NAME ||
+  "";
+const workflowDispatchBaseRef =
+  process.env.WORKFLOW_DISPATCH_BASE_REF || "main";
+const workflowDispatchDiff =
+  eventName === "workflow_dispatch" &&
+  (headRef === "automation/readme-refresh" ||
+    process.env.GITHUB_REF_NAME === "automation/readme-refresh");
 const forceFull =
   process.env.FORCE_FULL_VALIDATION === "1" ||
-  eventName === "workflow_dispatch" ||
+  (eventName === "workflow_dispatch" && !workflowDispatchDiff) ||
   eventName === "schedule";
 const outputPath = process.env.GITHUB_OUTPUT || "";
 const summaryPath = process.env.GITHUB_STEP_SUMMARY || "";
@@ -43,7 +54,11 @@ function pullRequestDiffRange() {
       : "HEAD";
   const candidates = [];
 
-  if (baseRef) {
+  if (workflowDispatchDiff) {
+    candidates.push(`refs/remotes/origin/${workflowDispatchBaseRef}`);
+    candidates.push(`origin/${workflowDispatchBaseRef}`);
+    candidates.push(workflowDispatchBaseRef);
+  } else if (baseRef) {
     candidates.push(`refs/remotes/origin/${baseRef}`);
     candidates.push(`origin/${baseRef}`);
     candidates.push(baseRef);
@@ -64,7 +79,7 @@ function pullRequestDiffRange() {
 
 function changedFiles() {
   if (forceFull) return [];
-  if (eventName !== "pull_request") return [];
+  if (eventName !== "pull_request" && !workflowDispatchDiff) return [];
   const output = execFileSync(
     "git",
     ["diff", "--name-only", ...pullRequestDiffRange()],
@@ -81,6 +96,8 @@ function changedFiles() {
 
 const files = changedFiles();
 const all = forceFull;
+const diffClassifiedEvent =
+  eventName === "pull_request" || workflowDispatchDiff;
 
 function touches(...patterns) {
   if (all) return true;
@@ -107,17 +124,14 @@ function contentCategoriesFromFiles() {
 const contentCategories = contentCategoriesFromFiles();
 const contentCategoryTouched = contentCategories.length > 0;
 const sourceContentOnly =
-  eventName === "pull_request" &&
+  diffClassifiedEvent &&
   !all &&
   files.length > 0 &&
   files.every((file) => /^content\/[^/]+\/[^/]+\.mdx$/i.test(file));
 const readmeOnly =
-  eventName === "pull_request" &&
-  !all &&
-  files.length === 1 &&
-  files[0] === "README.md";
+  diffClassifiedEvent && !all && files.length === 1 && files[0] === "README.md";
 const directSubmission =
-  eventName === "pull_request" &&
+  diffClassifiedEvent &&
   !all &&
   files.length === 1 &&
   contentCategories.length === 1 &&
