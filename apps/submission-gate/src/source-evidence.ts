@@ -39,7 +39,9 @@ const SOURCE_URL_FIELDS = [
 ] as const;
 
 const SOURCE_URL_LIST_FIELDS = new Set(["sourceUrls"]);
-const SOURCE_EVIDENCE_TIMEOUT_MS = 10_000;
+const SOURCE_EVIDENCE_TIMEOUT_MS = 1_500;
+const MAX_SOURCE_EVIDENCE_URLS = 10;
+const MAX_SOURCE_EVIDENCE_REDIRECTS = 2;
 const DISTRIBUTION_SOURCE_FIELDS = new Set(["downloadUrl", "packageUrl"]);
 const DISTRIBUTION_SOURCE_HOSTS = new Set([
   "crates.io",
@@ -57,6 +59,26 @@ const DISTRIBUTION_SOURCE_HOSTS = new Set([
   "rubygems.org",
   "www.npmjs.com",
 ]);
+
+const TRUSTED_SOURCE_HOSTS = new Set([
+  "bitbucket.org",
+  "crates.io",
+  "deno.land",
+  "docs.anthropic.com",
+  "docs.github.com",
+  "gist.github.com",
+  "github.com",
+  "gitlab.com",
+  "jsr.io",
+  "marketplace.visualstudio.com",
+  "npmjs.com",
+  "pkg.go.dev",
+  "pypi.org",
+  "raw.githubusercontent.com",
+  "www.npmjs.com",
+]);
+
+const TRUSTED_SOURCE_HOST_SUFFIXES = [] as const;
 
 function stripYamlComment(value: string) {
   return value.replace(/\s+#.*$/, "").trim();
@@ -169,31 +191,127 @@ function sourceStatusFromHttpStatus(status: number) {
   return "retryable" as const;
 }
 
+function normalizeHostname(hostname: string) {
+  return hostname.toLowerCase().replace(/\.$/, "");
+}
+
+function sourceHostIsTrusted(hostname: string) {
+  const normalized = normalizeHostname(hostname);
+  return (
+    TRUSTED_SOURCE_HOSTS.has(normalized) ||
+    DISTRIBUTION_SOURCE_HOSTS.has(normalized) ||
+    TRUSTED_SOURCE_HOST_SUFFIXES.some((suffix) => normalized.endsWith(suffix))
+  );
+}
+
+function validateFetchableSourceUrl(url: string) {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch (error) {
+    return {
+      ok: false as const,
+      outcome: "invalid_url",
+      error: error instanceof Error ? error.message : "Invalid source URL.",
+    };
+  }
+  if (!["http:", "https:"].includes(parsed.protocol)) {
+    return {
+      ok: false as const,
+      outcome: "invalid_url",
+      error: "Source URL must use http or https.",
+    };
+  }
+  if (!sourceHostIsTrusted(parsed.hostname)) {
+    return {
+      ok: false as const,
+      outcome: "source_host_not_checked",
+      error:
+        "Source URL host is outside the deterministic reachability allowlist.",
+    };
+  }
+  return { ok: true as const, parsed };
+}
+
+function redirectLocation(response: Response, currentUrl: string) {
+  const location = response.headers.get("location");
+  if (!location) return "";
+  try {
+    return new URL(location, currentUrl).toString();
+  } catch {
+    return "";
+  }
+}
+
 async function fetchSourceUrl(
   item: SubmittedSourceUrl,
   method: "HEAD" | "GET",
   fetchImpl: typeof fetch,
 ): Promise<SourceEvidenceItem> {
-  const response = await fetchImpl(item.url, {
-    method,
-    redirect: "follow",
-    headers: {
-      accept: "text/html,application/json,text/plain,*/*",
-      "user-agent": "heyclaude-submission-gate",
-    },
-    signal: AbortSignal.timeout(SOURCE_EVIDENCE_TIMEOUT_MS),
-  });
-  const status = sourceStatusFromHttpStatus(response.status);
+  let currentUrl = item.url;
+  for (
+    let redirects = 0;
+    redirects <= MAX_SOURCE_EVIDENCE_REDIRECTS;
+    redirects += 1
+  ) {
+    const validation = validateFetchableSourceUrl(currentUrl);
+    if (!validation.ok) {
+      return withSourceDefaults(item, {
+        status: "hard_failure",
+        outcome: validation.outcome,
+        error: validation.error,
+      });
+    }
+
+    const response = await fetchImpl(currentUrl, {
+      method,
+      redirect: "manual",
+      headers: {
+        accept: "text/html,application/json,text/plain,*/*",
+        "user-agent": "heyclaude-submission-gate",
+      },
+      signal: AbortSignal.timeout(SOURCE_EVIDENCE_TIMEOUT_MS),
+    });
+
+    if (response.status >= 300 && response.status < 400) {
+      const nextUrl = redirectLocation(response, currentUrl);
+      if (!nextUrl) {
+        return withSourceDefaults(item, {
+          status: "retryable",
+          outcome: "redirect_without_location",
+          httpStatus: response.status,
+          finalUrl: currentUrl,
+        });
+      }
+      if (redirects === MAX_SOURCE_EVIDENCE_REDIRECTS) {
+        return withSourceDefaults(item, {
+          status: "retryable",
+          outcome: "too_many_redirects",
+          httpStatus: response.status,
+          finalUrl: currentUrl,
+        });
+      }
+      currentUrl = nextUrl;
+      continue;
+    }
+
+    const status = sourceStatusFromHttpStatus(response.status);
+    return withSourceDefaults(item, {
+      status,
+      outcome:
+        status === "passed"
+          ? "reachable"
+          : status === "hard_failure"
+            ? "http_hard_failure"
+            : "source_inconclusive",
+      httpStatus: response.status,
+      finalUrl: currentUrl,
+    });
+  }
+
   return withSourceDefaults(item, {
-    status,
-    outcome:
-      status === "passed"
-        ? "reachable"
-        : status === "hard_failure"
-          ? "http_hard_failure"
-          : "source_inconclusive",
-    httpStatus: response.status,
-    finalUrl: response.url || item.url,
+    status: "retryable",
+    outcome: "too_many_redirects",
   });
 }
 
@@ -201,20 +319,13 @@ async function checkOneSourceUrl(
   item: SubmittedSourceUrl,
   fetchImpl: typeof fetch,
 ): Promise<SourceEvidenceItem> {
-  try {
-    const parsed = new URL(item.url);
-    if (!["http:", "https:"].includes(parsed.protocol)) {
-      return withSourceDefaults(item, {
-        status: "hard_failure",
-        outcome: "invalid_url",
-        error: "Source URL must use http or https.",
-      });
-    }
-  } catch (error) {
+  const validation = validateFetchableSourceUrl(item.url);
+  if (!validation.ok) {
+    const invalidProtocol = validation.outcome === "invalid_url";
     return withSourceDefaults(item, {
-      status: "hard_failure",
-      outcome: "invalid_url",
-      error: error instanceof Error ? error.message : "Invalid source URL.",
+      status: invalidProtocol ? "hard_failure" : "passed",
+      outcome: validation.outcome,
+      error: validation.error,
     });
   }
 
@@ -266,7 +377,10 @@ function sourceEvidenceHashInput(urls: SourceEvidenceItem[]) {
 
 function downgradeNonCanonicalRetryWarnings(urls: SourceEvidenceItem[]) {
   const hasCanonicalPass = urls.some(
-    (item) => item.role === "canonical" && item.status === "passed",
+    (item) =>
+      item.role === "canonical" &&
+      item.status === "passed" &&
+      item.outcome === "reachable",
   );
   if (!hasCanonicalPass) return urls;
   return urls.map((item) =>
@@ -280,11 +394,18 @@ export async function checkSubmittedSourceEvidence(
   source: string,
   fetchImpl: typeof fetch = fetch,
 ): Promise<SourceEvidenceReport> {
-  const checkedUrls = await Promise.all(
-    extractSubmittedSourceUrls(source).map((item) =>
-      checkOneSourceUrl(item, fetchImpl),
-    ),
-  );
+  const extracted = extractSubmittedSourceUrls(source);
+  const checkedUrls: SourceEvidenceItem[] = [];
+  for (const item of extracted.slice(0, MAX_SOURCE_EVIDENCE_URLS)) {
+    checkedUrls.push(await checkOneSourceUrl(item, fetchImpl));
+  }
+  for (const item of extracted.slice(MAX_SOURCE_EVIDENCE_URLS)) {
+    checkedUrls.push(withSourceDefaults(item, {
+      status: "hard_failure",
+      outcome: "too_many_source_urls",
+      error: `Only ${MAX_SOURCE_EVIDENCE_URLS} source URLs can be checked automatically.`,
+    }));
+  }
   const urls = downgradeNonCanonicalRetryWarnings(checkedUrls);
   const blockingUrls = urls.filter((item) => item.blocking);
   const status = blockingUrls.some((item) => item.status === "hard_failure")

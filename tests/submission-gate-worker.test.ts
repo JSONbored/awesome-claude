@@ -678,18 +678,18 @@ describe("Cloudflare submission gate helpers", () => {
     const source = `---
 title: Source Evidence Fixture
 repoUrl: "https://github.com/example/repo"
-documentationUrl: "https://example.com/docs"
+documentationUrl: "https://github.com/example/docs"
 sourceUrls:
-  - "https://example.com/guide"
-  - https://example.com/docs
+  - "https://github.com/example/guide"
+  - https://github.com/example/docs
 ---
 `;
 
     expect(extractSubmittedSourceUrls(source)).toEqual([
-      { field: "documentationUrl", url: "https://example.com/docs" },
+      { field: "documentationUrl", url: "https://github.com/example/docs" },
       { field: "repoUrl", url: "https://github.com/example/repo" },
-      { field: "sourceUrls", url: "https://example.com/guide" },
-      { field: "sourceUrls", url: "https://example.com/docs" },
+      { field: "sourceUrls", url: "https://github.com/example/guide" },
+      { field: "sourceUrls", url: "https://github.com/example/docs" },
     ]);
 
     const fetchImpl = vi
@@ -703,7 +703,7 @@ sourceUrls:
     expect(first.status).toBe("passed");
     expect(first.urls[0]).toMatchObject({
       field: "documentationUrl",
-      url: "https://example.com/docs",
+      url: "https://github.com/example/docs",
       status: "passed",
       httpStatus: 200,
     });
@@ -714,7 +714,7 @@ sourceUrls:
     const report = await checkSubmittedSourceEvidence(
       `---
 title: Dead Source Fixture
-documentationUrl: "https://example.com/missing"
+documentationUrl: "https://github.com/example/missing"
 ---
 `,
       vi
@@ -731,7 +731,7 @@ documentationUrl: "https://example.com/missing"
       evidence: [
         {
           field: "documentationUrl",
-          matchedUrl: "https://example.com/missing",
+          matchedUrl: "https://github.com/example/missing",
           httpStatus: "404",
         },
       ],
@@ -742,8 +742,8 @@ documentationUrl: "https://example.com/missing"
     const report = await checkSubmittedSourceEvidence(
       `---
 title: Retry Source Fixture
-documentationUrl: "https://example.com/temporarily-down"
-packageUrl: "https://example.com/rate-limited"
+documentationUrl: "https://github.com/example/temporarily-down"
+packageUrl: "https://www.npmjs.com/package/rate-limited"
 ---
 `,
       vi
@@ -787,6 +787,99 @@ packageUrl: "https://hub.docker.com/r/example/project"
       httpStatus: 429,
     });
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
+  });
+
+  it("does not fetch source URLs outside the trusted evidence hosts", async () => {
+    const fetchImpl = vi.fn<typeof fetch>();
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Unsafe Source Fixture
+documentationUrl: "http://127.0.0.1/internal-secret"
+websiteUrl: "https://attacker.example/redirect"
+---
+`,
+      fetchImpl,
+    );
+
+    expect(fetchImpl).not.toHaveBeenCalled();
+    expect(report.status).toBe("passed");
+    expect(report.urls).toEqual([
+      expect.objectContaining({
+        field: "documentationUrl",
+        status: "passed",
+        outcome: "source_host_not_checked",
+      }),
+      expect.objectContaining({
+        field: "websiteUrl",
+        status: "passed",
+        outcome: "source_host_not_checked",
+      }),
+    ]);
+  });
+
+  it("validates redirect targets before following source evidence URLs", async () => {
+    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(null, {
+        status: 302,
+        headers: { location: "http://127.0.0.1/internal-secret" },
+      }),
+    );
+
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Redirect Source Fixture
+documentationUrl: "https://github.com/example/redirect"
+---
+`,
+      fetchImpl,
+    );
+
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    expect(fetchImpl).toHaveBeenNthCalledWith(
+      1,
+      "https://github.com/example/redirect",
+      expect.objectContaining({ method: "HEAD", redirect: "manual" }),
+    );
+    expect(fetchImpl).toHaveBeenNthCalledWith(
+      2,
+      "https://github.com/example/redirect",
+      expect.objectContaining({ method: "GET", redirect: "manual" }),
+    );
+    expect(report.status).toBe("failed");
+    expect(report.urls[0]).toMatchObject({
+      field: "documentationUrl",
+      status: "hard_failure",
+      outcome: "source_host_not_checked",
+    });
+    expect(report.urls[0]?.finalUrl).toBeUndefined();
+  });
+
+  it("caps deterministic source evidence fetches", async () => {
+    const urls = Array.from(
+      { length: 12 },
+      (_, index) => `  - "https://github.com/example/source-${index}"`,
+    ).join("\n");
+    const fetchImpl = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(new Response(null, { status: 200 }));
+
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Many Source Fixture
+sourceUrls:
+${urls}
+---
+`,
+      fetchImpl,
+    );
+
+    expect(fetchImpl).toHaveBeenCalledTimes(10);
+    expect(report.status).toBe("failed");
+    expect(report.urls).toHaveLength(12);
+    expect(report.urls.slice(10)).toEqual([
+      expect.objectContaining({ outcome: "too_many_source_urls" }),
+      expect.objectContaining({ outcome: "too_many_source_urls" }),
+    ]);
   });
 
   it("renders pending, retrying, and superseded gate comments as GitHub cards", () => {
@@ -1062,7 +1155,7 @@ packageUrl: "https://hub.docker.com/r/example/project"
         evidence: [
           {
             ruleId: "source_url_reachability",
-            matchedUrl: "https://example.com/missing",
+            matchedUrl: "https://github.com/example/missing",
             outcome: "hard-failure",
             status: 404,
           },
@@ -1084,7 +1177,7 @@ packageUrl: "https://hub.docker.com/r/example/project"
       evidence: [
         {
           ruleId: "source_url_reachability",
-          matchedUrl: "https://example.com/missing",
+          matchedUrl: "https://github.com/example/missing",
           outcome: "hard-failure",
           status: "404",
           httpStatus: "404",

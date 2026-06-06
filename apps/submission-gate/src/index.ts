@@ -911,7 +911,8 @@ function privateSourceHardFailureContradicted(
     decision.verdict === "close" &&
     decision.reasonCode === "source_hard_failure" &&
     sourceEvidence?.status === "passed" &&
-    sourceEvidence.urls.length > 0
+    sourceEvidence.urls.length > 0 &&
+    sourceEvidence.urls.every((item) => item.outcome === "reachable")
   );
 }
 
