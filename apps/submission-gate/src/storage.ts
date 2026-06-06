@@ -238,6 +238,11 @@ export async function upsertPrState(
     decisionId?: string | null;
     confidence?: number | null;
     sourceEvidenceHash?: string | null;
+    lastErrorCode?: string | null;
+    lastRetryFingerprint?: string | null;
+    retryFingerprintCount?: number | null;
+    retryExhaustedAt?: string | null;
+    retryExhaustedReason?: string | null;
   },
 ) {
   const timestamp = now();
@@ -250,8 +255,8 @@ export async function upsertPrState(
   await db
     .prepare(
       `INSERT INTO submission_prs
-        (repo, number, head_repo, head_ref, head_sha, base_ref, installation_id, status, verdict, verdict_summary, last_delivery_id, last_review_key, next_review_at, attempt_count, last_error, last_check_summary, terminal_at, comment_id, comment_url, review_id, schema_version, formatter_version, decision_id, confidence, source_evidence_hash, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (repo, number, head_repo, head_ref, head_sha, base_ref, installation_id, status, verdict, verdict_summary, last_delivery_id, last_review_key, next_review_at, attempt_count, last_error, last_check_summary, terminal_at, comment_id, comment_url, review_id, schema_version, formatter_version, decision_id, confidence, source_evidence_hash, last_error_code, last_retry_fingerprint, retry_fingerprint_count, retry_exhausted_at, retry_exhausted_reason, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(repo, number) DO UPDATE SET
         head_repo = COALESCE(excluded.head_repo, submission_prs.head_repo),
         head_ref = COALESCE(excluded.head_ref, submission_prs.head_ref),
@@ -302,6 +307,31 @@ export async function upsertPrState(
         decision_id = COALESCE(excluded.decision_id, submission_prs.decision_id),
         confidence = COALESCE(excluded.confidence, submission_prs.confidence),
         source_evidence_hash = COALESCE(excluded.source_evidence_hash, submission_prs.source_evidence_hash),
+        last_error_code = CASE
+          WHEN excluded.last_error_code IS NOT NULL THEN excluded.last_error_code
+          WHEN excluded.status IN ('queued', 'validation_pending', 'reviewing') THEN NULL
+          ELSE submission_prs.last_error_code
+        END,
+        last_retry_fingerprint = CASE
+          WHEN excluded.last_retry_fingerprint IS NOT NULL THEN excluded.last_retry_fingerprint
+          WHEN excluded.status IN ('queued', 'validation_pending', 'reviewing') THEN NULL
+          ELSE submission_prs.last_retry_fingerprint
+        END,
+        retry_fingerprint_count = CASE
+          WHEN excluded.last_retry_fingerprint IS NOT NULL THEN excluded.retry_fingerprint_count
+          WHEN excluded.status IN ('queued', 'validation_pending', 'reviewing') THEN 0
+          ELSE submission_prs.retry_fingerprint_count
+        END,
+        retry_exhausted_at = CASE
+          WHEN excluded.retry_exhausted_at IS NOT NULL THEN excluded.retry_exhausted_at
+          WHEN excluded.status IN ('queued', 'validation_pending', 'reviewing') THEN NULL
+          ELSE submission_prs.retry_exhausted_at
+        END,
+        retry_exhausted_reason = CASE
+          WHEN excluded.retry_exhausted_reason IS NOT NULL THEN excluded.retry_exhausted_reason
+          WHEN excluded.status IN ('queued', 'validation_pending', 'reviewing') THEN NULL
+          ELSE submission_prs.retry_exhausted_reason
+        END,
         updated_at = excluded.updated_at`,
     )
     .bind(
@@ -330,6 +360,11 @@ export async function upsertPrState(
       params.decisionId ?? null,
       params.confidence ?? null,
       params.sourceEvidenceHash ?? null,
+      params.lastErrorCode ?? null,
+      params.lastRetryFingerprint ?? null,
+      params.retryFingerprintCount ?? 0,
+      params.retryExhaustedAt ?? null,
+      params.retryExhaustedReason ?? null,
       timestamp,
       timestamp,
       params.clearTerminal ? 1 : 0,
@@ -362,6 +397,11 @@ export async function getPrState(
         review_id AS reviewId, schema_version AS schemaVersion,
         formatter_version AS formatterVersion, decision_id AS decisionId,
         confidence, source_evidence_hash AS sourceEvidenceHash,
+        last_error_code AS lastErrorCode,
+        last_retry_fingerprint AS lastRetryFingerprint,
+        retry_fingerprint_count AS retryFingerprintCount,
+        retry_exhausted_at AS retryExhaustedAt,
+        retry_exhausted_reason AS retryExhaustedReason,
         created_at AS createdAt, updated_at AS updatedAt
        FROM submission_prs
        WHERE repo = ? AND number = ?`,
@@ -394,6 +434,11 @@ export async function listDuePrStates(
         review_id AS reviewId, schema_version AS schemaVersion,
         formatter_version AS formatterVersion, decision_id AS decisionId,
         confidence, source_evidence_hash AS sourceEvidenceHash,
+        last_error_code AS lastErrorCode,
+        last_retry_fingerprint AS lastRetryFingerprint,
+        retry_fingerprint_count AS retryFingerprintCount,
+        retry_exhausted_at AS retryExhaustedAt,
+        retry_exhausted_reason AS retryExhaustedReason,
         created_at AS createdAt, updated_at AS updatedAt
        FROM submission_prs
        WHERE (
@@ -453,6 +498,11 @@ export async function listRecentPrStates(
         review_id AS reviewId, schema_version AS schemaVersion,
         formatter_version AS formatterVersion, decision_id AS decisionId,
         confidence, source_evidence_hash AS sourceEvidenceHash,
+        last_error_code AS lastErrorCode,
+        last_retry_fingerprint AS lastRetryFingerprint,
+        retry_fingerprint_count AS retryFingerprintCount,
+        retry_exhausted_at AS retryExhaustedAt,
+        retry_exhausted_reason AS retryExhaustedReason,
         created_at AS createdAt, updated_at AS updatedAt
        FROM submission_prs
        ORDER BY updated_at DESC

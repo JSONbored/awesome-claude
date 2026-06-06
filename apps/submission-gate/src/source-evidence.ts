@@ -7,8 +7,12 @@ export type SubmittedSourceUrl = {
   url: string;
 };
 
+export type SourceEvidenceRole = "canonical" | "distribution";
+
 export type SourceEvidenceItem = SubmittedSourceUrl & {
   status: "passed" | "hard_failure" | "retryable";
+  role: SourceEvidenceRole;
+  blocking: boolean;
   outcome: string;
   httpStatus?: number;
   finalUrl?: string;
@@ -19,6 +23,7 @@ export type SourceEvidenceReport = {
   status: "passed" | "failed" | "retryable";
   hash: string;
   urls: SourceEvidenceItem[];
+  warnings: SourceEvidenceItem[];
 };
 
 const SOURCE_URL_FIELDS = [
@@ -35,6 +40,23 @@ const SOURCE_URL_FIELDS = [
 
 const SOURCE_URL_LIST_FIELDS = new Set(["sourceUrls"]);
 const SOURCE_EVIDENCE_TIMEOUT_MS = 10_000;
+const DISTRIBUTION_SOURCE_FIELDS = new Set(["downloadUrl", "packageUrl"]);
+const DISTRIBUTION_SOURCE_HOSTS = new Set([
+  "crates.io",
+  "files.pythonhosted.org",
+  "hub.docker.com",
+  "marketplace.visualstudio.com",
+  "mvnrepository.com",
+  "npmjs.com",
+  "packagist.org",
+  "pkg.go.dev",
+  "plugins.gradle.org",
+  "pypi.org",
+  "registry.npmjs.org",
+  "repo1.maven.org",
+  "rubygems.org",
+  "www.npmjs.com",
+]);
 
 function stripYamlComment(value: string) {
   return value.replace(/\s+#.*$/, "").trim();
@@ -114,11 +136,35 @@ export function extractSubmittedSourceUrls(source: string) {
   });
 }
 
+function sourceRole(item: SubmittedSourceUrl): SourceEvidenceRole {
+  if (DISTRIBUTION_SOURCE_FIELDS.has(item.field)) return "distribution";
+  try {
+    const host = new URL(item.url).hostname.toLowerCase();
+    if (DISTRIBUTION_SOURCE_HOSTS.has(host)) return "distribution";
+  } catch {
+    // Malformed URLs are classified separately as hard failures.
+  }
+  return "canonical";
+}
+
+function withSourceDefaults(
+  item: SubmittedSourceUrl,
+  values: Omit<SourceEvidenceItem, keyof SubmittedSourceUrl | "role" | "blocking">,
+): SourceEvidenceItem {
+  return {
+    ...item,
+    ...values,
+    role: sourceRole(item),
+    blocking: true,
+  };
+}
+
 function sourceStatusFromHttpStatus(status: number) {
   if (status >= 200 && status < 400) return "passed" as const;
-  if (status === 408 || status === 429 || status >= 500) {
+  if ([401, 403, 408, 425, 429].includes(status) || status >= 500) {
     return "retryable" as const;
   }
+  if (status === 404 || status === 410) return "hard_failure" as const;
   if (status >= 400 && status < 500) return "hard_failure" as const;
   return "retryable" as const;
 }
@@ -138,18 +184,17 @@ async function fetchSourceUrl(
     signal: AbortSignal.timeout(SOURCE_EVIDENCE_TIMEOUT_MS),
   });
   const status = sourceStatusFromHttpStatus(response.status);
-  return {
-    ...item,
+  return withSourceDefaults(item, {
     status,
     outcome:
       status === "passed"
         ? "reachable"
         : status === "hard_failure"
           ? "http_hard_failure"
-          : "http_retryable",
+          : "source_inconclusive",
     httpStatus: response.status,
     finalUrl: response.url || item.url,
-  };
+  });
 }
 
 async function checkOneSourceUrl(
@@ -159,20 +204,18 @@ async function checkOneSourceUrl(
   try {
     const parsed = new URL(item.url);
     if (!["http:", "https:"].includes(parsed.protocol)) {
-      return {
-        ...item,
+      return withSourceDefaults(item, {
         status: "hard_failure",
         outcome: "invalid_url",
         error: "Source URL must use http or https.",
-      };
+      });
     }
   } catch (error) {
-    return {
-      ...item,
+    return withSourceDefaults(item, {
       status: "hard_failure",
       outcome: "invalid_url",
       error: error instanceof Error ? error.message : "Invalid source URL.",
-    };
+    });
   }
 
   try {
@@ -185,15 +228,14 @@ async function checkOneSourceUrl(
   try {
     return await fetchSourceUrl(item, "GET", fetchImpl);
   } catch (error) {
-    return {
-      ...item,
+    return withSourceDefaults(item, {
       status: "retryable",
       outcome: "fetch_error",
       error:
         error instanceof Error
           ? error.message
           : "Source URL fetch failed before a response was returned.",
-    };
+    });
   }
 }
 
@@ -216,7 +258,21 @@ function sourceEvidenceHashInput(urls: SourceEvidenceItem[]) {
       status: item.status,
       outcome: item.outcome,
       httpStatus: item.httpStatus || null,
+      role: item.role,
+      blocking: item.blocking,
     })),
+  );
+}
+
+function downgradeNonCanonicalRetryWarnings(urls: SourceEvidenceItem[]) {
+  const hasCanonicalPass = urls.some(
+    (item) => item.role === "canonical" && item.status === "passed",
+  );
+  if (!hasCanonicalPass) return urls;
+  return urls.map((item) =>
+    item.role === "distribution" && item.status === "retryable"
+      ? { ...item, blocking: false }
+      : item,
   );
 }
 
@@ -224,19 +280,24 @@ export async function checkSubmittedSourceEvidence(
   source: string,
   fetchImpl: typeof fetch = fetch,
 ): Promise<SourceEvidenceReport> {
-  const urls = await Promise.all(
+  const checkedUrls = await Promise.all(
     extractSubmittedSourceUrls(source).map((item) =>
       checkOneSourceUrl(item, fetchImpl),
     ),
   );
-  const status = urls.some((item) => item.status === "hard_failure")
+  const urls = downgradeNonCanonicalRetryWarnings(checkedUrls);
+  const blockingUrls = urls.filter((item) => item.blocking);
+  const status = blockingUrls.some((item) => item.status === "hard_failure")
     ? "failed"
-    : urls.some((item) => item.status === "retryable")
+    : blockingUrls.some((item) => item.status === "retryable")
       ? "retryable"
       : "passed";
   return {
     status,
     urls,
+    warnings: urls.filter(
+      (item) => !item.blocking && item.status !== "passed",
+    ),
     hash: await sha256Hex(sourceEvidenceHashInput(urls)),
   };
 }
@@ -246,7 +307,10 @@ export function sourceEvidenceSummary(report: SourceEvidenceReport) {
   return report.urls
     .map((item) => {
       const status = item.httpStatus ? `HTTP ${item.httpStatus}` : item.outcome;
-      return `${item.field} ${item.url} -> ${status}`;
+      const suffix = item.blocking
+        ? ""
+        : " (non-blocking source-inconclusive warning)";
+      return `${item.field} ${item.url} -> ${status}${suffix}`;
     })
     .join("; ");
 }
@@ -255,7 +319,7 @@ export function sourceEvidenceToDecisionEvidence(
   report: SourceEvidenceReport,
 ): GateDecisionEvidence[] {
   return report.urls
-    .filter((item) => item.status === "hard_failure")
+    .filter((item) => item.blocking && item.status === "hard_failure")
     .map((item) => ({
       ruleId: "source_url_reachability",
       field: item.field,
