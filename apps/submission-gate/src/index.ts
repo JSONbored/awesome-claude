@@ -2518,6 +2518,7 @@ async function enqueueReviewTarget(
     deliveryId,
     nextReviewAt: null,
     incrementAttempt: true,
+    resetAttemptCount: shouldResetManualTerminal,
     lastReviewKey: reviewScanKey || undefined,
     clearVerdict:
       shouldResetIgnoredScan ||
