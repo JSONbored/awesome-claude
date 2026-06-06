@@ -156,6 +156,40 @@ describe("PR change classifier", () => {
     });
   });
 
+  it("forces full validation for dispatched README refresh content changes", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+
+    git(cwd, ["update-ref", "refs/remotes/origin/main", baseSha]);
+    const contentDir = path.join(cwd, "content", "agents");
+    fs.mkdirSync(contentDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(contentDir, "example.mdx"),
+      "---\ntitle: Example\n---\n",
+    );
+    git(cwd, ["add", "content/agents/example.mdx"]);
+    git(cwd, ["commit", "-m", "add content entry"]);
+
+    const outputs = runClassifier(cwd, baseSha, {
+      FORCE_FULL_VALIDATION: "0",
+      GITHUB_EVENT_NAME: "workflow_dispatch",
+      GITHUB_HEAD_REF: "",
+      GITHUB_REF_NAME: "automation/readme-refresh",
+      HEAD_REF: "",
+    });
+    expect(outputs).toMatchObject({
+      full: "true",
+      readme_only: "false",
+      direct_submission: "false",
+      source_content_only: "false",
+      content: "true",
+      content_agents: "true",
+      registry: "true",
+      ci: "true",
+      web: "true",
+      raycast: "true",
+    });
+  });
+
   it("uses the current base ref and PR head SHA instead of stale merge refs", () => {
     const { cwd, baseSha } = createFixtureRepo();
 

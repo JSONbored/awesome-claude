@@ -16,7 +16,7 @@ const workflowDispatchDiff =
   eventName === "workflow_dispatch" &&
   (headRef === "automation/readme-refresh" ||
     process.env.GITHUB_REF_NAME === "automation/readme-refresh");
-const forceFull =
+const forceFullFromEvent =
   process.env.FORCE_FULL_VALIDATION === "1" ||
   (eventName === "workflow_dispatch" && !workflowDispatchDiff) ||
   eventName === "schedule";
@@ -78,7 +78,7 @@ function pullRequestDiffRange() {
 }
 
 function changedFiles() {
-  if (forceFull) return [];
+  if (forceFullFromEvent) return [];
   if (eventName !== "pull_request" && !workflowDispatchDiff) return [];
   const output = execFileSync(
     "git",
@@ -95,9 +95,12 @@ function changedFiles() {
 }
 
 const files = changedFiles();
-const all = forceFull;
+const workflowDispatchReadmeOnly =
+  workflowDispatchDiff && files.length === 1 && files[0] === "README.md";
+const all =
+  forceFullFromEvent || (workflowDispatchDiff && !workflowDispatchReadmeOnly);
 const diffClassifiedEvent =
-  eventName === "pull_request" || workflowDispatchDiff;
+  eventName === "pull_request" || workflowDispatchReadmeOnly;
 
 function touches(...patterns) {
   if (all) return true;
