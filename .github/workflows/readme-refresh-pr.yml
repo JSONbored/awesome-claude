@@ -79,7 +79,13 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add README.md
           git commit -m "docs(readme): refresh generated catalog index"
-          git push --force-with-lease origin "$BRANCH_NAME:$BRANCH_NAME"
+
+          remote_branch_sha="$(git ls-remote --heads origin "$BRANCH_NAME" | awk '{print $1}')"
+          if [[ -n "$remote_branch_sha" ]]; then
+            git push --force-with-lease="refs/heads/$BRANCH_NAME:$remote_branch_sha" origin "$BRANCH_NAME:$BRANCH_NAME"
+          else
+            git push --force-with-lease="refs/heads/$BRANCH_NAME:" origin "$BRANCH_NAME:$BRANCH_NAME"
+          fi
           echo "has-changes=true" >> "$GITHUB_OUTPUT"
 
       - name: Create or update README refresh PR

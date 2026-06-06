@@ -878,6 +878,11 @@ scriptBody: |-
     expect(source).toContain("refresh-readme-automation-readme-refresh");
     expect(source).toContain("git diff --quiet origin/main -- README.md");
     expect(source).toContain("unexpected_files");
+    expect(source).toContain('git ls-remote --heads origin "$BRANCH_NAME"');
+    expect(source).toContain(
+      '--force-with-lease="refs/heads/$BRANCH_NAME:$remote_branch_sha"',
+    );
+    expect(source).toContain('--force-with-lease="refs/heads/$BRANCH_NAME:"');
     expect(source).toContain("git push --force-with-lease");
     expect(source).toContain("Create or update README refresh PR");
     expect(source).toContain(
