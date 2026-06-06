@@ -1,0 +1,69 @@
+---
+title: TWZRD Agent Intel
+slug: twzrd-agent-intel
+category: mcp
+description: >-
+  Trust scoring and x402 micropayment verification MCP server for AI agents
+  operating on Solana. Provides on-chain wallet trust scores, pre-dispatch
+  preflight checks, and signed trust receipts via HTTP 402 USDC micropayment.
+cardDescription: Score Solana AI agent wallets and gate payments with on-chain trust data.
+seoTitle: TWZRD Agent Intel MCP Server for Claude
+seoDescription: >-
+  Configure TWZRD Agent Intel MCP Server with Claude Code and other MCP clients
+  to score Solana AI agent wallets, run pre-dispatch trust checks, and obtain
+  signed V5 trust receipts via x402 HTTP 402 micropayment before agent-to-agent
+  transactions.
+author: TWZRD
+authorProfileUrl: "https://intel.twzrd.xyz"
+dateAdded: "2026-06-06"
+brandName: TWZRD Agent Intel
+brandDomain: intel.twzrd.xyz
+installable: false
+copySnippet: |-
+  {
+    "mcpServers": {
+      "twzrd-agent-intel": {
+        "url": "https://intel.twzrd.xyz/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "twzrd-agent-intel": {
+        "url": "https://intel.twzrd.xyz/mcp"
+      }
+    }
+  }
+tags:
+  - solana
+  - blockchain
+  - ai-agents
+  - trust
+  - x402
+  - micropayments
+  - mcp
+---
+
+TWZRD Agent Intel is a streamable-http MCP server that brings on-chain Solana trust data into any MCP-compatible AI agent workflow. Use it to score agent wallets before dispatching payments, verify transaction receipts, and gate agent interactions based on on-chain reputation.
+
+## Tools
+
+- **score_agent** — Returns an on-chain trust score for a Solana wallet address, drawing from transaction history, stake state, and protocol interactions.
+- **preflight_check** — Runs a pre-dispatch trust gate check against a wallet; returns go/no-go with reasoning for use before agent-to-agent payments.
+- **verify_trust_receipt** — Verifies a signed TWZRD trust receipt (V5 format) without making a payment.
+- **get_trust_receipt** — Fetches a signed V5 trust receipt via HTTP 402 + USDC micropayment (<$0.01). Requires a funded x402 wallet.
+
+## Zero-install
+
+No binary or npm package required. Add the MCP URL directly:
+
+```json
+{
+  "mcpServers": {
+    "twzrd-agent-intel": {
+      "url": "https://intel.twzrd.xyz/mcp"
+    }
+  }
+}
+```
