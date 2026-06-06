@@ -409,7 +409,11 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("REVIEWING_STALE_SECONDS");
     expect(source).toContain("QUEUED_STALE_SECONDS");
     expect(source).toContain("PRIVATE_REVIEW_TIMEOUT_MS = 45_000");
-    expect(source).toContain("INVALID_PRIVATE_RESPONSE_MAX_RETRIES = 3");
+    expect(source).toContain("const RETRY_BACKOFF_SECONDS = [60, 120, 300");
+    expect(source).toContain("const RETRY_BUDGETS");
+    expect(source).toContain("invalid_private_response: 5");
+    expect(source).toContain("source_evidence_timeout: 6");
+    expect(source).toContain("github_api_unavailable: 5");
     expect(source).toContain("queuedStaleBeforeIso");
     expect(source).toContain("reviewingStaleBeforeIso");
     expect(source).toContain("lastCheckSummary: validation.summary");
@@ -423,10 +427,12 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("retryablePrecheckDecision(error)");
     expect(source).toContain('"deterministic_precheck_retryable"');
     expect(source).toContain('"source_evidence_timeout"');
-    expect(source).toContain(
-      "shouldStopRetryingInvalidPrivateResponse(decision, existing)",
-    );
-    expect(source).toContain('"private_review_contract_exhausted"');
+    expect(source).toContain("retryStateForDecision(");
+    expect(source).toContain("retryExhaustedDecision(");
+    expect(source).toContain("retryableTargetErrorDecision(error)");
+    expect(source).toContain("await recordRetryableTargetError(");
+    expect(source).toContain("retryFingerprintCount");
+    expect(source).toContain("retryExhaustedReason");
     expect(source).toContain('"invalid_private_response"');
     expect(source).toContain('"private_reviewer_unavailable"');
     expect(source).not.toContain("summary.includes");
@@ -746,6 +752,37 @@ packageUrl: "https://example.com/rate-limited"
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 
+  it("treats isolated package registry rate limits as warnings when canonical sources pass", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Docker Hub Warning Fixture
+repoUrl: "https://github.com/example/project"
+documentationUrl: "https://example.com/docs"
+packageUrl: "https://hub.docker.com/r/example/project"
+---
+`,
+      vi
+        .fn<typeof fetch>()
+        .mockImplementation(async (url) => {
+          const hostname = new URL(String(url)).hostname;
+          return new Response(null, {
+            status: hostname === "hub.docker.com" ? 429 : 200,
+          });
+        }),
+    );
+
+    expect(report.status).toBe("passed");
+    expect(report.warnings).toHaveLength(1);
+    expect(report.warnings[0]).toMatchObject({
+      field: "packageUrl",
+      status: "retryable",
+      role: "distribution",
+      blocking: false,
+      httpStatus: 429,
+    });
+    expect(sourceEvidenceCloseDecision(report)).toBeNull();
+  });
+
   it("renders pending, retrying, and superseded gate comments as GitHub cards", () => {
     expect(markerComment()).toContain("> ## ℹ️ Public validation running");
     expect(markerComment()).toContain(
@@ -758,6 +795,15 @@ packageUrl: "https://example.com/rate-limited"
     expect(retryingReviewComment()).toContain(
       "> - ⚠️ **Private maintainer gate:** `retrying`",
     );
+    expect(
+      retryingReviewComment("<!-- heyclaude-submission-gate -->", {
+        code: "source_evidence_timeout",
+        attempt: 2,
+        maxAttempts: 6,
+        nextReviewAt: "2026-06-06T09:15:00.000Z",
+        summary: "packageUrl returned HTTP 429.",
+      }),
+    ).toContain("> - ⚠️ **Retry:** `2/6`");
     expect(
       supersededReviewComment(
         "<!-- heyclaude-submission-gate -->",
