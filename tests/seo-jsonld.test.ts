@@ -161,6 +161,26 @@ describe("SEO JSON-LD policy", () => {
     expect(facts).toContain("Last verified: 2026-04-27");
   });
 
+  it("drops empty/whitespace safety and privacy notes from citation facts", () => {
+    const facts = buildEntryCitationFacts(
+      {
+        category: "skills",
+        slug: "noisy-notes-skill",
+        title: "Noisy Notes Skill",
+        description: "Example skill.",
+        safetyNotes: ["", "  ", "Writes to disk"],
+        privacyNotes: ["Sends telemetry", "   "],
+      } as any,
+      { siteUrl: "https://heyclau.de" },
+    );
+
+    // Blank entries must not leak into the joined note lines.
+    expect(facts).toContain("Safety notes: Writes to disk");
+    expect(facts).toContain("Privacy notes: Sends telemetry");
+    expect(facts).not.toContain("Safety notes:   ");
+    expect(facts).not.toContain("Sends telemetry,");
+  });
+
   it("does not emit SoftwareApplication until visible required fields exist", () => {
     expect(
       buildToolSoftwareApplicationJsonLd(
