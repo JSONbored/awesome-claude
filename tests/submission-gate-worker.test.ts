@@ -1761,6 +1761,21 @@ packageUrl: "https://hub.docker.com/r/example/project"
     expect(enqueueBlock).toContain("shouldResetIgnoredScan");
     expect(enqueueBlock).toContain("shouldResetClosedTerminal");
     expect(enqueueBlock).toContain("if (!shouldQueueReview) return false");
+    expect(enqueueBlock).toContain("const shouldPreserveRetryState");
+    expect(enqueueBlock).toContain(
+      'String(existing?.status || "") === "error_retryable"',
+    );
+    expect(enqueueBlock).toContain(
+      'String(existing?.headSha || "") === String(target.headSha || "")',
+    );
+    expect(source).toContain("preserveRetryState: shouldPreserveRetryState");
+    expect(storageSource).toContain("preserveRetryState?: boolean");
+    expect(storageSource).toContain(
+      "WHEN ? THEN submission_prs.last_retry_fingerprint",
+    );
+    expect(storageSource).toContain(
+      "WHEN ? THEN submission_prs.retry_fingerprint_count",
+    );
     expect(reviewBlock).toContain("if (hasTerminalGateDecision(existing))");
     expect(enqueueBlock).not.toContain(
       "if (!forceRecheck && hasTerminalGateDecision(existing))",

@@ -243,6 +243,7 @@ export async function upsertPrState(
     retryFingerprintCount?: number | null;
     retryExhaustedAt?: string | null;
     retryExhaustedReason?: string | null;
+    preserveRetryState?: boolean;
   },
 ) {
   const timestamp = now();
@@ -309,16 +310,19 @@ export async function upsertPrState(
         source_evidence_hash = COALESCE(excluded.source_evidence_hash, submission_prs.source_evidence_hash),
         last_error_code = CASE
           WHEN excluded.last_error_code IS NOT NULL THEN excluded.last_error_code
+          WHEN ? THEN submission_prs.last_error_code
           WHEN excluded.status IN ('queued', 'validation_pending', 'reviewing') THEN NULL
           ELSE submission_prs.last_error_code
         END,
         last_retry_fingerprint = CASE
           WHEN excluded.last_retry_fingerprint IS NOT NULL THEN excluded.last_retry_fingerprint
+          WHEN ? THEN submission_prs.last_retry_fingerprint
           WHEN excluded.status IN ('queued', 'validation_pending', 'reviewing') THEN NULL
           ELSE submission_prs.last_retry_fingerprint
         END,
         retry_fingerprint_count = CASE
           WHEN excluded.last_retry_fingerprint IS NOT NULL THEN excluded.retry_fingerprint_count
+          WHEN ? THEN submission_prs.retry_fingerprint_count
           WHEN excluded.status IN ('queued', 'validation_pending', 'reviewing') THEN 0
           ELSE submission_prs.retry_fingerprint_count
         END,
@@ -375,6 +379,9 @@ export async function upsertPrState(
       params.resetAttemptCount ? 1 : 0,
       params.incrementAttempt ? 1 : 0,
       params.clearTerminal ? 1 : 0,
+      params.preserveRetryState ? 1 : 0,
+      params.preserveRetryState ? 1 : 0,
+      params.preserveRetryState ? 1 : 0,
     )
     .run();
 }

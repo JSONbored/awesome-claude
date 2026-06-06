@@ -2773,6 +2773,12 @@ async function enqueueReviewTarget(
     shouldResetClosedTerminal ||
     shouldResetManualTerminal;
   if (!shouldQueueReview) return false;
+  const shouldPreserveRetryState =
+    String(existing?.status || "") === "error_retryable" &&
+    String(existing?.headSha || "") === String(target.headSha || "") &&
+    !shouldResetIgnoredScan &&
+    !shouldResetClosedTerminal &&
+    !shouldResetManualTerminal;
 
   await upsertPrState(env.SUBMISSION_GATE_DB, {
     repo: target.repoFullName,
@@ -2796,6 +2802,7 @@ async function enqueueReviewTarget(
       shouldResetIgnoredScan ||
       shouldResetClosedTerminal ||
       shouldResetManualTerminal,
+    preserveRetryState: shouldPreserveRetryState,
   });
   await env.SUBMISSION_REVIEW_QUEUE.send({
     kind: "review_pr",
