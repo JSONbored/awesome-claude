@@ -1,0 +1,213 @@
+---
+title: TWZRD Agent Intel
+slug: twzrd-agent-intel
+category: mcp
+description: >-
+  Trust scoring and x402 micropayment verification for AI agents on Solana.
+  Resolve agent identity, score trust, verify USDC payment receipts, and issue
+  machine-readable trust receipts with zero installation required.
+cardDescription: >-
+  Connect Claude to the TWZRD Agent Intel API for Solana agent trust scoring,
+  x402 USDC micropayment verification, and identity resolution. Free read
+  tools; paid trust receipts use HTTP 402 per-call billing.
+seoTitle: TWZRD Agent Intel MCP Server for Claude
+seoDescription: >-
+  Configure the TWZRD Agent Intel MCP server with Claude for Solana agent
+  identity resolution, trust scoring, x402 micropayment verification, and
+  trust receipt issuance. Remote streamable-HTTP server, zero install, free
+  tier included.
+author: TWZRD
+authorProfileUrl: "https://intel.twzrd.xyz"
+submittedBy: twzrd-sol
+submittedByUrl: "https://github.com/twzrd-sol"
+dateAdded: "2026-06-06"
+brandName: TWZRD Agent Intel
+brandDomain: intel.twzrd.xyz
+repoUrl: "https://github.com/twzrd-sol/twzrd-agent-intel"
+documentationUrl: "https://intel.twzrd.xyz"
+websiteUrl: "https://intel.twzrd.xyz"
+packageUrl: "https://pypi.org/pypi/twzrd-agent-intel/json"
+pricingModel: freemium
+disclosure: >-
+  This entry was submitted by the TWZRD team. The server is operated by TWZRD.
+  Free-tier tools (resolve_agent, score_agent, preflight_check,
+  verify_trust_receipt) return public on-chain data. The paid
+  get_trust_receipt tool issues a signed USDC micropayment receipt via HTTP 402
+  and charges a per-call fee.
+installable: true
+installCommand: "uvx twzrd-agent-intel"
+usageSnippet: "Use the remote streamable-HTTP endpoint at https://intel.twzrd.xyz/mcp with no credentials required for free tools. For get_trust_receipt, a USDC balance on Solana mainnet is required and a per-call HTTP 402 fee applies."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "twzrd-agent-intel": {
+        "url": "https://intel.twzrd.xyz/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add twzrd-agent-intel --scope user --transport http https://intel.twzrd.xyz/mcp
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - No installation required for the remote endpoint; access https://intel.twzrd.xyz/mcp directly.
+  - For local stdio mode, Python 3.10 or newer and uv or uvx available.
+  - For get_trust_receipt (paid), a Solana mainnet wallet with USDC balance to cover the HTTP 402 per-call fee.
+safetyNotes:
+  - Free tools (resolve_agent, score_agent, preflight_check, verify_trust_receipt) query public on-chain data on Solana mainnet and return read-only results. No wallet credentials are required.
+  - get_trust_receipt issues a signed trust receipt and charges a per-call USDC micropayment via the x402 HTTP 402 protocol. Confirm the fee amount before enabling this tool in automated workflows.
+  - Trust scores and receipts reflect on-chain activity at query time and are not financial or legal guarantees about an agent's future behavior.
+  - Do not use trust score outputs as the sole gate for high-value transactions without additional human review.
+privacyNotes:
+  - resolve_agent and score_agent query public Solana on-chain data. No private keys or wallet secrets are sent to the server.
+  - Queries include the agent wallet address being looked up. Treat agent addresses as operational identifiers and limit logging in sensitive contexts.
+  - The server does not persist query history. Review intel.twzrd.xyz for the current privacy policy.
+sourceUrls:
+  - https://intel.twzrd.xyz
+  - https://pypi.org/pypi/twzrd-agent-intel/json
+tags:
+  - solana
+  - web3
+  - blockchain
+  - agent-identity
+  - micropayments
+  - trust-scoring
+  - x402
+keywords:
+  - solana
+  - agent trust
+  - x402
+  - micropayments
+  - USDC
+  - agent identity
+  - trust scoring
+  - blockchain
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+TWZRD Agent Intel is a remote MCP server that exposes Solana on-chain data as
+tools for AI agents. It provides four free read-only tools and one paid tool
+that issues cryptographically signed trust receipts for agent-to-agent commerce.
+
+The server uses the x402 HTTP 402 Payment Required protocol for the paid tool:
+when Claude calls `get_trust_receipt`, the server first returns a 402 with
+payment details, the client pays a small USDC amount on Solana, and the server
+issues the receipt. Free tools incur no charges.
+
+**Free tools:**
+
+- **resolve_agent** — look up a Solana wallet address and return verified
+  identity metadata: display name, profile, associated domains, and on-chain
+  registration status.
+- **score_agent** — compute a real-time trust score for an agent wallet based
+  on transaction history, staking state, CCM holdings, and behavioral signals.
+- **preflight_check** — run a readiness check before initiating a paid
+  interaction: confirm the agent wallet exists, is active, and meets a
+  configurable minimum trust threshold.
+- **verify_trust_receipt** — validate a previously issued trust receipt
+  signature and confirm it has not expired or been tampered with.
+
+**Paid tool:**
+
+- **get_trust_receipt** — issue a signed, machine-readable trust receipt for an
+  agent wallet. Uses HTTP 402 + USDC on Solana mainnet. Per-call fee applies.
+
+The server is hosted at `https://intel.twzrd.xyz/mcp` as a streamable-HTTP
+transport. No API key is required for free tools. The PyPI package
+`twzrd-agent-intel` provides a local stdio mode via `uvx twzrd-agent-intel`.
+
+## Source Review
+
+- https://intel.twzrd.xyz
+- https://pypi.org/pypi/twzrd-agent-intel/json
+
+These sources were reviewed on **2026-06-06**. Prefer the live endpoint and
+PyPI metadata for current tool definitions and pricing.
+
+## Features
+
+- Zero-install remote MCP server at `https://intel.twzrd.xyz/mcp`.
+- Four free read-only tools requiring no credentials or wallet setup.
+- Paid `get_trust_receipt` via HTTP 402 + USDC micropayment on Solana mainnet.
+- Real-time trust scores derived from on-chain Solana activity.
+- Agent identity resolution against the TWZRD registry.
+- Preflight readiness checks before initiating paid agent-to-agent interactions.
+- Trust receipt verification for downstream agents to validate payment proofs.
+- PyPI package `twzrd-agent-intel` for local stdio deployment.
+
+## Installation
+
+The simplest configuration uses the remote streamable-HTTP endpoint directly:
+
+```json
+{
+  "mcpServers": {
+    "twzrd-agent-intel": {
+      "url": "https://intel.twzrd.xyz/mcp"
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add twzrd-agent-intel --scope user --transport http https://intel.twzrd.xyz/mcp
+```
+
+For local stdio mode using the PyPI package:
+
+```json
+{
+  "mcpServers": {
+    "twzrd-agent-intel": {
+      "command": "uvx",
+      "args": ["twzrd-agent-intel"]
+    }
+  }
+}
+```
+
+No API key is required for free tools. For `get_trust_receipt`, a Solana
+mainnet wallet with USDC is required to cover the HTTP 402 per-call fee.
+
+## Use Cases
+
+- Ask Claude to score the trust of a Solana agent wallet before initiating a
+  paid interaction.
+- Resolve an agent's on-chain identity and display its profile and registration
+  status.
+- Run a preflight check to confirm an agent meets a minimum trust threshold
+  before routing work to it.
+- Issue a trust receipt to prove payment and identity in agent-to-agent
+  commerce workflows.
+- Verify a trust receipt received from another agent to confirm it is valid and
+  unexpired.
+- Integrate trust scoring into Claude-driven workflows that coordinate multiple
+  autonomous agents on Solana.
+
+## Safety and Privacy
+
+Free tools query public Solana on-chain data and return read-only results.
+Trust scores reflect on-chain signals at query time and are not guarantees about
+future behavior. Do not use trust score outputs as the sole gate for
+high-value automated transactions without additional human review.
+
+`get_trust_receipt` charges a per-call USDC fee via HTTP 402. Confirm the fee
+amount before enabling this tool in high-frequency or automated workflows.
+Review the current fee schedule at intel.twzrd.xyz before deployment.
+
+Agent wallet addresses sent to `resolve_agent` and `score_agent` are treated as
+operational identifiers. The server does not persist query history, but wallet
+addresses included in MCP tool calls may appear in Claude conversation logs.
+Treat agent address lookups as operational data in sensitive contexts.
+
+## Duplicate Check
+
+No existing entry for TWZRD Agent Intel, `intel.twzrd.xyz`, `twzrd-agent-intel`
+PyPI package, or x402 micropayment MCP server was found in `content/mcp`.
+Existing Solana-related entries cover infrastructure tooling but not agent trust
+scoring or x402 payment receipt workflows.
