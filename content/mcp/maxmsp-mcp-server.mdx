@@ -1,0 +1,208 @@
+---
+title: MaxMSP MCP Server
+slug: maxmsp-mcp-server
+category: mcp
+description: >-
+  Source-install MCP server that connects Claude to Max, Max/MSP, and Jitter
+  patches so it can inspect patch objects, add and remove objects, connect and
+  disconnect patch cords, set attributes, send messages, trigger bangs, and use
+  bundled Max object documentation while building or explaining patches.
+cardDescription: Connect Claude to Max/MSP patch inspection and editing workflows.
+seoTitle: MaxMSP MCP Server for Claude
+seoDescription: >-
+  Configure MaxMSP MCP Server with Claude to inspect, explain, modify, and
+  generate Max, Max/MSP, and Jitter patches through a Python MCP server and
+  local Socket.IO bridge inside Max.
+author: Haokun Tian and Shuoyang Zheng
+authorProfileUrl: "https://github.com/tiianhk"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MaxMSP MCP Server
+brandDomain: github.com/tiianhk/MaxMSP-MCP-Server
+websiteUrl: "https://github.com/tiianhk/MaxMSP-MCP-Server"
+repoUrl: "https://github.com/tiianhk/MaxMSP-MCP-Server"
+documentationUrl: "https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/README.md"
+installable: true
+installCommand: "git clone https://github.com/tiianhk/MaxMSP-MCP-Server.git && cd MaxMSP-MCP-Server && uv venv && uv pip install -r requirements.txt"
+usageSnippet: "Clone the source project, install its Python requirements, add the MaxMSP_Agent bridge to a copy of your patch, start the Max bridge, then let Claude inspect or edit only the approved patch."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "MaxMSPMCP": {
+        "command": "mcp",
+        "args": ["run", "<path-to-MaxMSP-MCP-Server/server.py>"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "MaxMSPMCP": {
+        "command": "mcp",
+        "args": ["run", "<path-to-MaxMSP-MCP-Server/server.py>"],
+        "env": {
+          "SOCKETIO_SERVER_URL": "<socketio-server-url>",
+          "SOCKETIO_SERVER_PORT": "<socketio-server-port>",
+          "NAMESPACE": "<socketio-namespace>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.8 or newer, uv, and the Python MCP CLI available to the configured MCP client.
+  - Max 9 or newer, according to the upstream README.
+  - npm available inside Max for the bundled MaxMSP_Agent bridge dependencies.
+  - A cloned copy of the source repository and the MaxMSP_Agent bridge installed in the patch you want Claude to inspect or edit.
+  - A backup or disposable copy of the Max patch before allowing Claude to modify objects, patch cords, messages, or attributes.
+safetyNotes:
+  - MaxMSP MCP Server can add and remove Max objects, connect and disconnect patch cords, set object attributes, change message text, set number boxes, and send messages or bangs to named objects.
+  - These actions can alter a patch, trigger audio or visual behavior, destabilize a live performance patch, or change saved creative work if used on an important project.
+  - The Max-side bridge starts a Socket.IO server inside Max with permissive CORS in the reviewed source, so keep it bound to trusted local workflows and avoid exposing it to untrusted networks.
+  - The installer writes MCP client configuration files, so review paths and generated config before running it on shared or managed machines.
+  - The setup installs Python and npm dependencies from the source project; review dependency manifests before installing or running the bridge.
+privacyNotes:
+  - Patch object names, arguments, comments, selected objects, subpatch structure, and generated Max documentation context can be sent to the MCP client and model.
+  - Prompts and transcripts can reveal unreleased music, audiovisual systems, installation designs, performance patches, plugin ideas, or teaching material.
+  - Socket.IO traffic between the Python server and Max can carry patch structure and command payloads, so keep the bridge on trusted local interfaces.
+  - Back up patches and avoid exposing proprietary samples, cue logic, show-control data, or private project notes through the MCP session.
+sourceUrls:
+  - "https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/server.py"
+  - "https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/install.py"
+  - "https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/requirements.txt"
+  - "https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/MaxMSP_Agent/max_mcp.js"
+  - "https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/MaxMSP_Agent/max_mcp_node.js"
+  - "https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/MaxMSP_Agent/package.json"
+  - "https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/LICENSE"
+tags:
+  - maxmsp
+  - music
+  - creative-coding
+  - audio
+  - patching
+keywords:
+  - MaxMSP MCP Server
+  - Max MSP MCP
+  - Max MCP
+  - Jitter MCP
+  - creative coding MCP
+  - audio patch MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MaxMSP MCP Server is a source-install Model Context Protocol server for Max,
+Max/MSP, and Jitter patch workflows. It connects a Python MCP server to a
+Socket.IO bridge running inside Max so Claude can inspect patch contents, explain
+objects, create objects, remove objects, connect and disconnect objects, set
+attributes, update message boxes, set number values, and send messages or bangs
+to named objects.
+
+The project includes a bundled Max bridge patch and JavaScript helpers, a Python
+MCP server, generated Max object documentation, and an installer that can add the
+server to supported MCP clients. It is a third-party implementation and is not
+made by Cycling '74.
+
+## Source Review
+
+- https://github.com/tiianhk/MaxMSP-MCP-Server
+- https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/README.md
+- https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/server.py
+- https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/install.py
+- https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/requirements.txt
+- https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/MaxMSP_Agent/max_mcp.js
+- https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/MaxMSP_Agent/max_mcp_node.js
+- https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/MaxMSP_Agent/package.json
+- https://github.com/tiianhk/MaxMSP-MCP-Server/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, Python server, installer, dependency manifests, Max-side JavaScript
+bridge files, and license file for current setup requirements, tool behavior,
+bridge behavior, dependencies, and licensing.
+
+## Features
+
+- Source-install Python MCP server using FastMCP and python-socketio.
+- Local Socket.IO bridge between the MCP server and a Max patch.
+- Tools to add and remove Max objects, connect and disconnect objects, set
+  attributes, set message text, set number values, and send messages or bangs.
+- Tools to inspect objects in the current patch, inspect selected objects, read
+  object attributes, and find an avoid-rectangle position for new objects.
+- Bundled MaxMSP_Agent demo patch and Max JavaScript bridge files.
+- Bundled Max object documentation data used to help Claude explain and generate
+  patch elements.
+- Installer support for Claude, Cursor, and VS Code style MCP configuration
+  files.
+- MIT license.
+
+## Installation
+
+Clone the project and install its Python dependencies:
+
+```sh
+git clone https://github.com/tiianhk/MaxMSP-MCP-Server.git
+cd MaxMSP-MCP-Server
+uv venv
+uv pip install -r requirements.txt
+```
+
+Configure your MCP client to launch the checked-out server:
+
+```json
+{
+  "mcpServers": {
+    "MaxMSPMCP": {
+      "command": "mcp",
+      "args": ["run", "<path-to-MaxMSP-MCP-Server/server.py>"]
+    }
+  }
+}
+```
+
+Open a copy of the patch in Max, install the MaxMSP_Agent dependencies as
+documented upstream, start the bridge inside Max, and then connect Claude to the
+MCP server.
+
+## Use Cases
+
+- Ask Claude to explain the objects, connections, and signal flow in an approved
+  Max patch.
+- Generate a simple synthesizer, effect, controller, or Jitter patch structure
+  from natural-language instructions.
+- Debug a patch by inspecting selected objects and their attributes.
+- Add comments, messages, number boxes, or patch objects while iterating on a
+  teaching sketch.
+- Prototype Max/MSP ideas with Claude while keeping a human in control of
+  listening, testing, and saving.
+- Use object documentation context to choose valid Max objects and arguments.
+
+## Safety and Privacy
+
+MaxMSP MCP Server is write-capable creative tooling. Run it on copies or
+versioned patches first, especially for performance rigs, installations, class
+materials, or paid client work. Claude can request object creation, deletion,
+connection changes, attribute updates, and message/bang dispatches that may
+produce sound, visuals, CPU spikes, feedback, or patch instability.
+
+The bridge runs through a local Socket.IO server inside Max and can carry patch
+structure plus edit commands. Keep it on a trusted local machine, avoid exposing
+it to networks you do not control, and stop the bridge when you are done.
+Review Python and npm dependencies before installing them, and inspect any MCP
+client config generated by the installer before committing or sharing files.
+
+Patch object names, comments, arguments, selected objects, subpatch structure,
+and documentation-assisted prompts can reveal creative or commercial project
+details. Avoid sending unreleased compositions, show-control logic, proprietary
+patches, or private notes to a model session unless that use is approved.
+
+## Duplicate Check
+
+No MaxMSP MCP Server, Max/MSP MCP, Jitter MCP, or
+`tiianhk/MaxMSP-MCP-Server` entry was found in `content/mcp`, `content/agents`,
+`content/guides`, or `content/skills`. This entry is scoped to the third-party
+source-install Max/MSP MCP server and does not duplicate general creative-coding
+or audio-production resources.

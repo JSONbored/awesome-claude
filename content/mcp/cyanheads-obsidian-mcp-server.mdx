@@ -1,0 +1,212 @@
+---
+title: Cyanheads Obsidian MCP Server
+slug: cyanheads-obsidian-mcp-server
+category: mcp
+description: >-
+  Apache-licensed TypeScript MCP server for Obsidian vaults with stdio and
+  Streamable HTTP transports, Local REST API access, note search, section-aware
+  edits, tag/frontmatter management, path policies, and read-only controls.
+cardDescription: >-
+  Give Claude scoped access to Obsidian vault notes, tags, frontmatter,
+  sections, search, UI opening, and guarded write tools through the Local REST
+  API plugin.
+seoTitle: Cyanheads Obsidian MCP Server for Claude
+seoDescription: >-
+  Configure Cyanheads Obsidian MCP Server with Claude, Cursor, VS Code, or other
+  MCP clients to read, search, edit, tag, and manage Obsidian notes with
+  path-scoped permissions, read-only mode, and command-palette safeguards.
+author: cyanheads
+authorProfileUrl: "https://github.com/cyanheads"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Cyanheads Obsidian MCP
+brandDomain: github.com/cyanheads/obsidian-mcp-server
+repoUrl: "https://github.com/cyanheads/obsidian-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/README.md"
+packageUrl: "https://registry.npmjs.org/obsidian-mcp-server"
+installable: true
+installCommand: "npx -y obsidian-mcp-server@latest"
+usageSnippet: "Install the Obsidian Local REST API plugin, generate an API key, start in read-only mode, then use `npx -y obsidian-mcp-server@latest` from an MCP client."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "cyanheads-obsidian": {
+        "command": "npx",
+        "args": ["-y", "obsidian-mcp-server@latest"],
+        "env": {
+          "MCP_TRANSPORT_TYPE": "stdio",
+          "OBSIDIAN_API_KEY": "{obsidian-local-rest-api-key}",
+          "OBSIDIAN_READ_ONLY": "true"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "cyanheads-obsidian": {
+        "command": "npx",
+        "args": ["-y", "obsidian-mcp-server@latest"],
+        "env": {
+          "MCP_TRANSPORT_TYPE": "stdio",
+          "OBSIDIAN_API_KEY": "{obsidian-local-rest-api-key}",
+          "OBSIDIAN_READ_ONLY": "true"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 24 or newer, or Bun 1.3.11 or newer.
+  - Obsidian vault with the Obsidian Local REST API community plugin enabled.
+  - Local REST API key stored in the MCP client environment.
+  - Stdio MCP client, or reviewed Streamable HTTP deployment with authentication.
+  - Vault path allowlists and read-only policy reviewed before allowing write tools.
+safetyNotes:
+  - Cyanheads Obsidian MCP can read, list, search, create, append, patch, replace, delete, tag, and edit frontmatter in the configured vault through the Local REST API plugin.
+  - The server defaults to full-vault access unless read paths, write paths, or read-only mode are configured.
+  - "Set `OBSIDIAN_READ_ONLY=true` for research-only workflows, then narrow writes with `OBSIDIAN_WRITE_PATHS` before allowing note edits."
+  - Delete operations are permanent in the vault and should require human review even when the MCP host supports destructive-tool prompts.
+  - Command-palette tools are disabled unless `OBSIDIAN_ENABLE_COMMANDS=true`; command execution can trigger opaque or destructive Obsidian plugin behavior.
+  - Streamable HTTP deployments should use JWT or OAuth auth before being exposed beyond a trusted local machine.
+privacyNotes:
+  - Vault notes, headings, block references, frontmatter, tags, file metadata, outgoing links, search queries, command names, plugin status, and edit history may be exposed to the MCP client and model provider.
+  - API keys, local plugin endpoints, HTTP auth settings, path allowlists, logs, OpenTelemetry traces, and Docker environment variables can reveal private vault structure or credentials.
+  - Tag listing is vault-wide in upstream behavior and can reveal tag names outside narrowed read paths.
+  - Notes may contain personal journals, client work, credentials, meeting notes, research plans, health data, or other sensitive knowledge-base content.
+sourceUrls:
+  - "https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/LICENSE"
+  - "https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/package.json"
+  - "https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/server.json"
+  - "https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/src/mcp-server/tools/definitions/index.ts"
+  - "https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/src/config/server-config.ts"
+  - "https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/src/services/obsidian/path-policy.ts"
+tags:
+  - obsidian
+  - notes
+  - knowledge-base
+  - local-first
+  - markdown
+keywords:
+  - Cyanheads Obsidian MCP
+  - cyanheads obsidian-mcp-server
+  - Obsidian Local REST API MCP
+  - Obsidian vault MCP server
+  - Obsidian notes MCP
+  - markdown knowledge base MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Cyanheads Obsidian MCP Server is a TypeScript MCP server for working with an
+Obsidian vault through the Obsidian Local REST API plugin. It provides both
+stdio and Streamable HTTP transports, with tools for reading notes, listing
+paths, searching content, managing tags and frontmatter, opening notes in the
+Obsidian UI, and editing vault content.
+
+This entry covers the separate `cyanheads/obsidian-mcp-server` implementation.
+The catalog also includes `MarkusPfundstein/mcp-obsidian`, which is a different
+Python package with a smaller Obsidian Local REST API bridge.
+
+## Source Review
+
+- https://github.com/cyanheads/obsidian-mcp-server
+- https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/README.md
+- https://registry.npmjs.org/obsidian-mcp-server
+- https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/LICENSE
+- https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/package.json
+- https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/server.json
+- https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/src/mcp-server/tools/definitions/index.ts
+- https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/src/config/server-config.ts
+- https://raw.githubusercontent.com/cyanheads/obsidian-mcp-server/main/src/services/obsidian/path-policy.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm package metadata, server manifest, license, tool-registration
+source, configuration source, and path-policy implementation for current setup,
+runtime requirements, tool behavior, and safety controls.
+
+## Features
+
+- NPM package `obsidian-mcp-server` with an `obsidian-mcp-server` binary.
+- Stdio and Streamable HTTP transport modes.
+- Obsidian Local REST API integration for vault access.
+- Read tools for notes, directories, tags, selected files, and vault status.
+- Text, JSONLogic, and optional Omnisearch-backed note search.
+- Section-aware note reads across content, full metadata, document maps, and
+  single sections.
+- Write tools for creating, appending, patching, replacing, deleting, and
+  opening notes.
+- Frontmatter and tag management tools.
+- Optional command-palette listing and execution behind an explicit
+  `OBSIDIAN_ENABLE_COMMANDS` flag.
+- Folder-scoped read and write allowlists through `OBSIDIAN_READ_PATHS` and
+  `OBSIDIAN_WRITE_PATHS`.
+- Global `OBSIDIAN_READ_ONLY` kill switch for suppressing write and command
+  tools.
+- Resources for vault notes, tags, and Obsidian/server status.
+- Optional Streamable HTTP authentication through the underlying MCP framework.
+
+## Installation
+
+Install and enable the Obsidian Local REST API community plugin in the target
+vault, then generate an API key from the plugin settings. Start with read-only
+mode enabled:
+
+```json
+{
+  "mcpServers": {
+    "cyanheads-obsidian": {
+      "command": "npx",
+      "args": ["-y", "obsidian-mcp-server@latest"],
+      "env": {
+        "MCP_TRANSPORT_TYPE": "stdio",
+        "OBSIDIAN_API_KEY": "{obsidian-local-rest-api-key}",
+        "OBSIDIAN_READ_ONLY": "true"
+      }
+    }
+  }
+}
+```
+
+Only disable read-only mode after defining which vault paths the agent may read
+or write. For repeated local use, keep API keys in MCP client environment
+configuration rather than prompts, notes, or committed files.
+
+## Use Cases
+
+- Ask Claude to retrieve a note, heading, block reference, or frontmatter field
+  from an Obsidian vault.
+- Search project notes with text, JSONLogic, or Omnisearch when the optional
+  plugin is reachable.
+- Create draft notes in a scoped inbox folder.
+- Patch a known section after using a document map to identify the target.
+- Manage frontmatter or tags for a controlled set of project notes.
+- Open a note in the Obsidian UI for human review.
+- Run a read-only knowledge-base assistant over public or work-approved vault
+  paths.
+
+## Safety and Privacy
+
+Treat this server as direct vault access. Start in read-only mode, use
+`OBSIDIAN_READ_PATHS` and `OBSIDIAN_WRITE_PATHS` to narrow the blast radius, and
+require human approval before creating, replacing, patching, deleting, or
+retagging notes. Avoid enabling command-palette tools unless each command ID
+and installed Obsidian plugin has been reviewed.
+
+Vault contents often include sensitive or personal material. Even path-scoped
+read access can reveal filenames, tags, headings, frontmatter keys, links, and
+search intent. Keep the Local REST API key private, prefer local stdio for
+personal use, and add authentication before exposing Streamable HTTP beyond a
+trusted local environment.
+
+## Duplicate Check
+
+No `cyanheads/obsidian-mcp-server`, `obsidian-mcp-server` npm package entry, or
+matching source URL was found in `content/mcp` or `README.md`. The existing
+Obsidian MCP entry covers `MarkusPfundstein/mcp-obsidian`; this entry covers a
+separate TypeScript server with stdio/HTTP transports, path policies, read-only
+mode, command-palette gating, and a broader Local REST API tool surface.

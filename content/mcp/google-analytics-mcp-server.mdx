@@ -1,0 +1,199 @@
+---
+title: Google Analytics MCP Server
+slug: google-analytics-mcp-server
+category: mcp
+description: >-
+  Experimental Google Analytics MCP server that lets Claude retrieve GA4
+  account and property details, Google Ads links, custom dimensions and
+  metrics, core reports, funnel reports, and realtime reports.
+cardDescription: >-
+  Query Google Analytics accounts, GA4 properties, Google Ads links, custom
+  dimensions, core reports, funnel reports, and realtime data from Claude.
+seoTitle: Google Analytics MCP Server for Claude
+seoDescription: >-
+  Configure Google Analytics MCP Server with Claude and other MCP clients to
+  query GA4 Admin and Data APIs for account summaries, property details,
+  reports, funnels, realtime metrics, and custom dimensions.
+author: Google Analytics
+authorProfileUrl: "https://github.com/googleanalytics"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Google Analytics MCP Server
+brandDomain: google.com
+repoUrl: "https://github.com/googleanalytics/google-analytics-mcp"
+documentationUrl: "https://github.com/googleanalytics/google-analytics-mcp/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/analytics-mcp/json"
+installable: true
+installCommand: "pipx run analytics-mcp"
+usageSnippet: "Configure Google Application Default Credentials with the analytics readonly scope, run analytics-mcp through pipx, then ask Claude to inspect GA4 properties or run reports."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "analytics-mcp": {
+        "command": "pipx",
+        "args": ["run", "analytics-mcp"],
+        "env": {
+          "GOOGLE_APPLICATION_CREDENTIALS": "PATH_TO_CREDENTIALS_JSON",
+          "GOOGLE_PROJECT_ID": "YOUR_PROJECT_ID"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "analytics-mcp": {
+        "command": "pipx",
+        "args": ["run", "analytics-mcp"],
+        "env": {
+          "GOOGLE_APPLICATION_CREDENTIALS": "PATH_TO_CREDENTIALS_JSON",
+          "GOOGLE_PROJECT_ID": "YOUR_PROJECT_ID"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer with pipx available.
+  - Google Cloud project with Google Analytics Admin API and Google Analytics Data API enabled.
+  - Google Application Default Credentials for a user or service account with access to the intended Google Analytics accounts or properties.
+  - OAuth consent and credential setup that includes the `https://www.googleapis.com/auth/analytics.readonly` scope.
+  - Agreement on which GA4 properties, date ranges, dimensions, metrics, audiences, and Google Ads links an agent may inspect.
+safetyNotes:
+  - Google Analytics MCP Server is marked experimental upstream, so verify tool behavior and API coverage before relying on it for operational reporting.
+  - The server uses Google Analytics Admin and Data APIs through the permissions granted to the configured credentials.
+  - Report prompts can generate expensive or broad API queries if date ranges, dimensions, metrics, filters, or funnels are left open-ended.
+  - Analytics results can influence marketing, product, or revenue decisions; validate important findings in Google Analytics or internal BI tools before acting.
+  - The server is read-oriented, but it still exposes business-sensitive analytics data to the MCP client and model context.
+privacyNotes:
+  - Google Application Default Credentials, OAuth client files, service account impersonation details, project IDs, and local credential paths are sensitive and should not be committed or pasted into prompts.
+  - Account names, property IDs, Google Ads links, event names, custom dimensions, custom metrics, audiences, funnel steps, realtime activity, and report outputs can reveal business performance and user behavior.
+  - GA4 reports can include location, device, campaign, source, medium, conversion, revenue, or audience information that may be regulated or contractually restricted.
+  - Tool responses may be retained by MCP clients, model providers, logs, screenshots, and chat transcripts outside Google Analytics retention controls.
+sourceUrls:
+  - "https://github.com/googleanalytics/google-analytics-mcp/blob/main/LICENSE"
+  - "https://github.com/googleanalytics/google-analytics-mcp/blob/main/pyproject.toml"
+  - "https://github.com/googleanalytics/google-analytics-mcp/blob/main/analytics_mcp/server.py"
+  - "https://github.com/googleanalytics/google-analytics-mcp/blob/main/analytics_mcp/coordinator.py"
+  - "https://github.com/googleanalytics/google-analytics-mcp/blob/main/analytics_mcp/tools/admin/info.py"
+  - "https://github.com/googleanalytics/google-analytics-mcp/blob/main/analytics_mcp/tools/reporting/core.py"
+  - "https://github.com/googleanalytics/google-analytics-mcp/blob/main/analytics_mcp/tools/reporting/realtime.py"
+tags:
+  - google-analytics
+  - analytics
+  - ga4
+  - reporting
+  - marketing
+keywords:
+  - Google Analytics MCP
+  - GA4 MCP server
+  - analytics-mcp
+  - Google Analytics Data API MCP
+  - Google Analytics Admin API MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Google Analytics MCP Server is an experimental local MCP server from the Google
+Analytics GitHub organization. It connects Claude-compatible MCP clients to the
+Google Analytics Admin API and Data API so they can inspect GA4 account and
+property metadata, list Google Ads links, retrieve custom dimensions and
+metrics, and run core, funnel, and realtime reports.
+
+Use it when an agent needs current analytics context from authorized GA4
+properties before summarizing traffic, campaign performance, conversions,
+events, funnels, or realtime activity. The server is read-oriented, but its
+outputs can still contain sensitive business and user-behavior data.
+
+## Source Review
+
+- https://github.com/googleanalytics/google-analytics-mcp
+- https://github.com/googleanalytics/google-analytics-mcp/blob/main/README.md
+- https://pypi.org/pypi/analytics-mcp/json
+- https://github.com/googleanalytics/google-analytics-mcp/blob/main/LICENSE
+- https://github.com/googleanalytics/google-analytics-mcp/blob/main/pyproject.toml
+- https://github.com/googleanalytics/google-analytics-mcp/blob/main/analytics_mcp/server.py
+- https://github.com/googleanalytics/google-analytics-mcp/blob/main/analytics_mcp/coordinator.py
+- https://github.com/googleanalytics/google-analytics-mcp/blob/main/analytics_mcp/tools/admin/info.py
+- https://github.com/googleanalytics/google-analytics-mcp/blob/main/analytics_mcp/tools/reporting/core.py
+- https://github.com/googleanalytics/google-analytics-mcp/blob/main/analytics_mcp/tools/reporting/realtime.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, license, package manifest, MCP server entrypoint,
+coordinator, Admin API tools, and reporting tools for current installation and
+behavior details.
+
+## Features
+
+- Retrieve Google Analytics account summaries and property information.
+- List Google Ads links for a GA4 property.
+- Retrieve custom dimensions and metrics.
+- Run GA4 core reports with the Google Analytics Data API.
+- Run funnel reports for defined funnel steps.
+- Run realtime reports for current user activity and dimensions.
+- Authenticate through Google Application Default Credentials.
+- Run locally over stdio through the `analytics-mcp` Python package.
+
+## Installation
+
+Enable the Google Analytics Admin API and Google Analytics Data API in a Google
+Cloud project, then configure Application Default Credentials with the
+analytics readonly scope.
+
+Add the server to an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "analytics-mcp": {
+      "command": "pipx",
+      "args": ["run", "analytics-mcp"],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "PATH_TO_CREDENTIALS_JSON",
+        "GOOGLE_PROJECT_ID": "YOUR_PROJECT_ID"
+      }
+    }
+  }
+}
+```
+
+Restart the MCP client and verify that `analytics-mcp` appears in the client's
+MCP server list before asking Claude to inspect accounts, properties, or
+reports.
+
+## Use Cases
+
+- Ask Claude to summarize available GA4 accounts and properties.
+- Retrieve property metadata before building a reporting prompt or dashboard.
+- Run traffic, event, conversion, revenue, campaign, or audience reports.
+- Compare funnel performance for a defined path.
+- Inspect realtime activity during a campaign launch or incident review.
+- List Google Ads links connected to a property.
+- Discover custom dimensions and metrics before requesting a report.
+
+## Safety and Privacy
+
+Treat Google Analytics MCP Server as access to business analytics. Even when
+credentials are read-only, report outputs can reveal traffic trends, campaign
+performance, revenue, conversions, geography, devices, audience behavior, and
+other sensitive signals.
+
+Keep OAuth client files, ADC credential files, service account details, and
+project IDs out of prompts and repository files. Use least-privilege accounts
+and only expose the GA4 properties a specific workflow needs.
+
+Validate important business decisions against Google Analytics, your warehouse,
+or another approved reporting system. LLM summaries can misread date ranges,
+metrics, dimensions, sampling, attribution, or funnel definitions without
+human review.
+
+## Duplicate Check
+
+Existing entries cover Google Workspace, Google Cloud-oriented servers, ads and
+marketing tools, and analytics-adjacent services, but no Google Analytics MCP
+Server entry, `googleanalytics/google-analytics-mcp`, `analytics-mcp` package,
+or matching source URL was found in `content/mcp`.

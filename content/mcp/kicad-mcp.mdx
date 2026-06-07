@@ -1,0 +1,190 @@
+---
+title: KiCad MCP Server
+slug: kicad-mcp
+category: mcp
+description: >-
+  MCP server for KiCad projects that lets Claude discover boards, inspect
+  project structure, analyze PCB and schematic files, extract netlists,
+  review BOMs, run design-rule workflows, and generate board thumbnails.
+cardDescription: Connect Claude to local KiCad project discovery and PCB analysis.
+seoTitle: KiCad MCP Server for Claude
+seoDescription: >-
+  Configure KiCad MCP Server with Claude and other MCP clients to inspect local
+  KiCad projects, analyze schematics and PCB layouts, extract netlists, review
+  BOM data, run DRC workflows, and generate visual board thumbnails.
+author: Lama Al Rajih
+authorProfileUrl: "https://github.com/lamaalrajih"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: KiCad MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/lamaalrajih/kicad-mcp"
+documentationUrl: "https://github.com/lamaalrajih/kicad-mcp/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/kicad-mcp/json"
+installable: true
+installCommand: "pip install kicad-mcp"
+usageSnippet: "Ask Claude to inspect an approved KiCad project, summarize its schematic or PCB structure, and flag DRC or BOM items for review."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "kicad": {
+        "command": "kicad-mcp",
+        "env": {
+          "KICAD_SEARCH_PATHS": ""
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "kicad": {
+        "command": "kicad-mcp",
+        "env": {
+          "KICAD_SEARCH_PATHS": "",
+          "KICAD_USER_DIR": "",
+          "KICAD_APP_PATH": ""
+        }
+      }
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: intermediate
+prerequisites:
+  - KiCad 9.0 or newer with `kicad-cli` available for CLI-backed operations.
+  - Python 3.11 or newer for the current PyPI package, or a compatible source checkout following the README.
+  - A configured set of approved KiCad project search paths.
+  - Permission for the MCP client to read project files and run local KiCad CLI operations.
+safetyNotes:
+  - KiCad MCP can discover local projects, inspect design files, launch KiCad, run `kicad-cli`, and generate files such as PCB thumbnails.
+  - Design-rule checks, netlists, BOMs, and pattern analysis are advisory and should be verified in KiCad and by qualified hardware reviewers.
+  - Generated thumbnails and exports can write files into the project directory.
+  - External CLI operations can fail, time out, or return stale results if KiCad, project paths, or environment variables are misconfigured.
+  - Use approved project paths only and avoid broad search directories that expose unrelated designs.
+privacyNotes:
+  - KiCad project paths, board layouts, schematics, netlists, BOMs, component choices, footprints, and DRC findings can reveal proprietary hardware design details.
+  - The server logs runtime information locally and may include search paths, project names, and operation status.
+  - Generated exports, thumbnails, temporary files, and model transcripts can contain sensitive design information.
+  - Do not expose customer, regulated, unreleased, or export-controlled hardware designs unless the local environment and model workflow are approved.
+sourceUrls:
+  - "https://github.com/lamaalrajih/kicad-mcp/blob/main/README.md"
+  - "https://github.com/lamaalrajih/kicad-mcp/blob/main/pyproject.toml"
+  - "https://github.com/lamaalrajih/kicad-mcp/blob/main/kicad_mcp/server.py"
+  - "https://github.com/lamaalrajih/kicad-mcp/blob/main/kicad_mcp/config.py"
+  - "https://github.com/lamaalrajih/kicad-mcp/blob/main/kicad_mcp/tools/export_tools.py"
+  - "https://github.com/lamaalrajih/kicad-mcp/blob/main/LICENSE"
+tags:
+  - kicad
+  - pcb
+  - electronics
+  - hardware
+  - eda
+keywords:
+  - KiCad MCP
+  - KiCad MCP Server
+  - PCB MCP
+  - electronics design MCP
+  - schematic MCP
+  - BOM MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+KiCad MCP Server is a Model Context Protocol server for inspecting and working
+with local KiCad electronic design automation projects. It exposes resources,
+tools, and prompts for project discovery, file inspection, PCB and schematic
+analysis, netlist extraction, BOM review, design-rule checking, thumbnail
+generation, and circuit pattern recognition.
+
+The server is useful when Claude needs project-aware context about an approved
+board design, but it should be treated as an assistant for review and analysis,
+not as a replacement for KiCad, electrical engineering review, manufacturing
+checks, or formal sign-off.
+
+## Source Review
+
+- https://github.com/lamaalrajih/kicad-mcp
+- https://github.com/lamaalrajih/kicad-mcp/blob/main/README.md
+- https://pypi.org/pypi/kicad-mcp/json
+- https://github.com/lamaalrajih/kicad-mcp/blob/main/pyproject.toml
+- https://github.com/lamaalrajih/kicad-mcp/blob/main/kicad_mcp/server.py
+- https://github.com/lamaalrajih/kicad-mcp/blob/main/kicad_mcp/config.py
+- https://github.com/lamaalrajih/kicad-mcp/blob/main/kicad_mcp/tools/export_tools.py
+- https://github.com/lamaalrajih/kicad-mcp/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, package metadata, server implementation, configuration
+module, export tool implementation, and license file for current setup,
+supported KiCad versions, tool behavior, file outputs, and licensing.
+
+## Features
+
+- Python package `kicad-mcp`.
+- FastMCP server launched with the `kicad-mcp` console command or from source.
+- Project discovery through configured KiCad search paths.
+- Resources for projects, files, DRC data, BOM data, netlists, and circuit patterns.
+- Tools for project management, PCB analysis, exports, DRC workflows, BOM review,
+  netlist extraction, and pattern recognition.
+- Prompt templates for PCB debugging, DRC review, BOM work, and pattern analysis.
+- KiCad CLI-backed thumbnail/export operations.
+- MIT license.
+
+## Installation
+
+Install the package, configure approved KiCad search paths, then add the server
+to your MCP client:
+
+```sh
+pip install kicad-mcp
+```
+
+```json
+{
+  "mcpServers": {
+    "kicad": {
+      "command": "kicad-mcp",
+      "env": {
+        "KICAD_SEARCH_PATHS": ""
+      }
+    }
+  }
+}
+```
+
+After restarting the MCP client, ask Claude to inspect an approved KiCad
+project, summarize board structure, review BOM data, or run a DRC-oriented
+workflow for human review.
+
+## Use Cases
+
+- List and identify local KiCad projects.
+- Explain the structure of a selected board project.
+- Summarize schematic, PCB, netlist, or BOM information.
+- Run a design-rule-check workflow and summarize findings.
+- Generate a board thumbnail for visual review.
+- Identify common circuit patterns in a schematic.
+- Ask Claude to prepare hardware-review questions from design artifacts.
+
+## Safety and Privacy
+
+KiCad MCP works with local hardware design files and can run local KiCad CLI
+operations. Restrict `KICAD_SEARCH_PATHS` to approved project folders, verify
+results in KiCad, and keep human engineering review in the loop before acting on
+BOM, DRC, netlist, footprint, or manufacturing conclusions.
+
+Hardware designs often contain sensitive intellectual property. Treat project
+paths, schematics, board layouts, BOMs, netlists, component selections,
+generated thumbnails, logs, and model transcripts as sensitive design data.
+Avoid exposing regulated, export-controlled, customer, or unreleased hardware
+unless the environment and model workflow are approved for that use.
+
+## Duplicate Check
+
+Existing MCP content includes CAD, browser, and developer-tool integrations, but
+no dedicated entry for `lamaalrajih/kicad-mcp` or the `kicad-mcp` PyPI package
+was found in `content/mcp`. This entry is distinct because it covers local
+KiCad project discovery, PCB analysis, DRC, BOM, netlist, export, and circuit
+pattern workflows.

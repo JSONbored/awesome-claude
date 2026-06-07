@@ -1,0 +1,184 @@
+---
+title: Trello MCP Server
+slug: trello-mcp-server
+category: mcp
+description: >-
+  MCP server for Trello boards, cards, lists, comments, checklists,
+  attachments, labels, board activity, workspace selection, and rate-limited
+  Trello API automation from Claude.
+cardDescription: >-
+  Connect Claude to Trello boards for supervised card, list, checklist,
+  comment, attachment, workspace, and activity workflows.
+seoTitle: Trello MCP Server for Claude
+seoDescription: >-
+  Configure Trello MCP Server with Claude to read and update Trello cards,
+  lists, checklists, comments, attachments, labels, board activity, workspaces,
+  and board selections through MCP.
+author: Jarad DeLorenzo
+authorProfileUrl: "https://github.com/delorenj"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Trello MCP Server
+brandDomain: trello.com
+repoUrl: "https://github.com/delorenj/mcp-server-trello"
+documentationUrl: "https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/README.md"
+packageUrl: "https://registry.npmjs.org/@delorenj%2Fmcp-server-trello"
+installable: true
+installCommand: "npx @delorenj/mcp-server-trello"
+usageSnippet: "Set TRELLO_API_KEY and TRELLO_TOKEN, optionally restrict TRELLO_ALLOWED_WORKSPACES, then run the stdio server with npx."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "trello": {
+        "command": "npx",
+        "args": ["@delorenj/mcp-server-trello"],
+        "env": {
+          "TRELLO_API_KEY": "your-api-key",
+          "TRELLO_TOKEN": "your-token",
+          "TRELLO_ALLOWED_WORKSPACES": "workspace-id-1,workspace-id-2"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add trello -- npx @delorenj/mcp-server-trello
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Trello API key and token with access to the boards and workspaces Claude may use.
+  - Bun-compatible published package runtime or an MCP client that can launch the packaged stdio server through npx.
+  - Optional `TRELLO_BOARD_ID` or `TRELLO_WORKSPACE_ID` when a default board or workspace should be selected at startup.
+  - Optional `TRELLO_ALLOWED_WORKSPACES` to constrain the token to specific approved Trello workspaces.
+  - Review of which boards, lists, cards, labels, comments, checklists, attachments, members, and workspace actions the token can read or change.
+safetyNotes:
+  - Trello MCP Server can create, read, update, move, archive, and delete board data depending on token permissions and requested tools.
+  - Card, checklist, label, due-date, start-date, comment, attachment, board, list, workspace, and active-board changes can affect real team workflows.
+  - File attachments are added from URLs; review source URLs and destination cards before allowing an agent to attach files.
+  - Use `TRELLO_ALLOWED_WORKSPACES` to limit workspace access, especially when a token can see personal, client, or production boards.
+  - Require confirmation before creating boards, adding attachments, deleting or archiving cards, changing due dates, moving cards between lists, or posting comments on behalf of a user.
+privacyNotes:
+  - Trello API keys, tokens, board IDs, workspace IDs, card IDs, member names, labels, comments, checklists, attachments, due dates, and activity logs can be exposed to the MCP client.
+  - Active board and workspace selections may persist locally in Trello MCP configuration.
+  - Card descriptions, comments, attachments, and activity histories can contain private customer, roadmap, incident, or operational data.
+  - Proxy settings, Trello credentials, and workspace allowlists should be kept out of shared MCP configs, logs, screenshots, and transcripts.
+  - Response previews reduce some large card-description exposure, but full-card and activity tools can still return sensitive Trello content.
+disclosure: >-
+  Community-maintained MIT MCP server for the Trello API. Trello is an
+  Atlassian product; users must follow Trello and workspace access policies
+  when connecting an API token.
+sourceUrls:
+  - "https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/LICENSE"
+  - "https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/package.json"
+  - "https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/src/index.ts"
+  - "https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/src/trello-client.ts"
+  - "https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/src/health/health-endpoints.ts"
+  - "https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/skill/SKILL.md"
+  - "https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/skill/references/trello-mcp/configuration.md"
+tags:
+  - trello
+  - project-management
+  - kanban
+  - productivity
+  - task-management
+keywords:
+  - Trello MCP
+  - Trello MCP Server
+  - kanban MCP
+  - project management MCP
+  - task management MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Trello MCP Server connects Claude and other MCP clients to Trello boards through
+the Trello API. It provides tools for cards, lists, board activity, comments,
+checklists, attachments, labels, workspace selection, board selection, and
+health checks while respecting Trello API rate limits.
+
+Use it when Claude needs supervised access to Trello planning, triage,
+operations, product, support, or kanban workflows.
+
+## Source Review
+
+- https://github.com/delorenj/mcp-server-trello
+- https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/README.md
+- https://registry.npmjs.org/@delorenj%2Fmcp-server-trello
+- https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/LICENSE
+- https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/package.json
+- https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/src/index.ts
+- https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/src/trello-client.ts
+- https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/src/health/health-endpoints.ts
+- https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/skill/SKILL.md
+- https://raw.githubusercontent.com/delorenj/mcp-server-trello/main/skill/references/trello-mcp/configuration.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package metadata, server entrypoint, Trello API
+client, health endpoints, skill instructions, and setup reference for current
+setup and behavior details.
+
+## Features
+
+- List boards, workspaces, lists, cards, comments, checklists, labels, and
+  board activity.
+- Create cards, update card details, move cards, manage due dates and start
+  dates, and work with labels.
+- Add, update, delete, and retrieve comments on Trello cards.
+- Fetch complete card data including checklists, attachments, labels, members,
+  comments, and markdown-formatted output.
+- Add file attachments from URLs.
+- Switch active boards and workspaces without restarting the MCP server.
+- Restrict accessible workspaces with `TRELLO_ALLOWED_WORKSPACES`.
+- Use built-in Trello API rate-limit handling and health endpoints.
+
+## Installation
+
+Create a Trello API key and token, then configure the MCP server with the
+credentials and any desired workspace restrictions:
+
+```json
+{
+  "mcpServers": {
+    "trello": {
+      "command": "npx",
+      "args": ["@delorenj/mcp-server-trello"],
+      "env": {
+        "TRELLO_API_KEY": "your-api-key",
+        "TRELLO_TOKEN": "your-token",
+        "TRELLO_ALLOWED_WORKSPACES": "workspace-id-1,workspace-id-2"
+      }
+    }
+  }
+}
+```
+
+Set a default board or workspace only when you want the server to start scoped
+to that location:
+
+```bash
+TRELLO_BOARD_ID=your-board-id
+TRELLO_WORKSPACE_ID=your-workspace-id
+```
+
+## Use Cases
+
+- Summarize recent activity across a project board.
+- Create cards from meeting notes or support follow-ups.
+- Update due dates, labels, comments, and checklist items after review.
+- Find cards by list, label, name, due date, or board context.
+- Export card data as markdown for reports or handoffs.
+- Limit an assistant to specific Trello workspaces for safer operational use.
+
+## Safety and Privacy
+
+Trello MCP Server acts through a real Trello API token. Scope the token and
+workspace allowlist tightly, keep destructive operations behind confirmation,
+and test workflows on non-production boards before using Claude on shared team
+boards.
+
+Treat Trello board names, card descriptions, comments, attachments, labels,
+checklists, members, due dates, activity logs, API keys, tokens, board IDs, and
+workspace IDs as sensitive operational data. Avoid placing credentials or
+private card content in shared prompts, logs, screenshots, or public examples.

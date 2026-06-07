@@ -1,0 +1,201 @@
+---
+title: MCPJungle Gateway
+slug: mcpjungle-gateway
+category: mcp
+description: >-
+  Self-hosted MCP gateway for registering HTTP and stdio MCP servers once,
+  exposing them through a unified MCP endpoint, and using tool groups,
+  access-control, and upstream authentication for shared agent deployments.
+cardDescription: Put multiple MCP servers behind one managed gateway endpoint for Claude and team agents.
+seoTitle: MCPJungle Gateway for Claude
+seoDescription: >-
+  Configure MCPJungle with Claude to proxy registered MCP servers, expose
+  canonical tool names, create tool groups, manage client access, and handle
+  upstream authentication in a self-hosted MCP gateway.
+author: mcpjungle
+authorProfileUrl: "https://github.com/mcpjungle"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MCPJungle
+brandDomain: mcpjungle.com
+repoUrl: "https://github.com/mcpjungle/MCPJungle"
+documentationUrl: "https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/quickstart.mdx"
+installable: true
+installCommand: "Run MCPJungle with Docker Compose or the `mcpjungle` binary, register upstream MCP servers, and point Claude at the gateway `/mcp` endpoint."
+usageSnippet: "Register upstream MCP servers once, inspect canonical tool names, then use tool groups or enterprise client allow-lists before connecting production agents."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcpjungle": {
+        "type": "http",
+        "url": "https://<mcpjungle-host>/mcp",
+        "headers": {
+          "Authorization": "Bearer <mcpjungle-client-token>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "name": "context7",
+    "transport": "streamable_http",
+    "description": "Context7 MCP Server",
+    "url": "https://mcp.context7.com/mcp"
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Docker Compose or installed MCPJungle binary.
+  - SQLite or PostgreSQL persistence selected for gateway state.
+  - Upstream MCP server list, auth strategy, and transport type reviewed.
+  - MCP client support for streamable HTTP, or a reviewed bridge for clients that need one.
+  - Access-control plan for development mode, enterprise mode, tool groups, and client tokens.
+safetyNotes:
+  - MCPJungle centralizes access to many upstream MCP servers, so a broad gateway token can expose every registered tool, prompt, and resource.
+  - Registered stdio MCP servers run as child processes on the MCPJungle host or container and inherit the configured command, args, environment, and mounted filesystem access.
+  - Upstream HTTP servers can store bearer tokens, custom headers, and beta OAuth credentials in gateway configuration.
+  - Tool groups can reduce context and capability exposure, but they must be reviewed whenever upstream servers or tools change.
+  - Use enterprise mode, explicit client allow-lists, least-privilege upstream credentials, TLS, and audit/observability controls for shared deployments.
+privacyNotes:
+  - MCPJungle can store registered server URLs, command arguments, environment variables, headers, bearer tokens, OAuth tokens, client access tokens, tool schemas, prompt names, resource URIs, and gateway database state.
+  - Tool calls, prompts, resources, logs, metrics, CLI output, dashboard views, and upstream responses may contain sensitive project data or third-party service data.
+  - The proxy source strips client-sent headers before forwarding upstream calls, but configured upstream credentials and tool payloads remain sensitive.
+  - Redact gateway URLs, access tokens, upstream tokens, OAuth client secrets, command args, environment values, resource URIs, and tool outputs before sharing logs or screenshots.
+disclosure: >-
+  MPL-2.0-licensed open-source MCP gateway. It is a management and proxy layer,
+  not a replacement for reviewing the safety of every upstream MCP server it
+  exposes.
+sourceUrls:
+  - "https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/LICENSE"
+  - "https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/core-concepts.mdx"
+  - "https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/guides/register-stdio-servers.mdx"
+  - "https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/guides/register-http-servers.mdx"
+  - "https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/guides/tool-groups.mdx"
+  - "https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/governance/access-control.mdx"
+  - "https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/governance/upstream-authentication.mdx"
+  - "https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/internal/service/mcp/proxy.go"
+tags:
+  - gateway
+  - proxy
+  - self-hosted
+  - access-control
+  - team-workflows
+keywords:
+  - MCPJungle
+  - MCP gateway
+  - MCP proxy
+  - MCP tool groups
+  - self-hosted MCP gateway
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCPJungle is a self-hosted MCP gateway for registering upstream MCP servers and
+exposing them through a single MCP endpoint. It discovers tools, prompts, and
+resources from registered servers, rewrites names into canonical
+`server__tool` and `server__prompt` formats, and proxies client calls to the
+correct upstream server.
+
+Use it when an individual or team has more MCP servers than they want to wire
+into every client separately, or when a shared deployment needs tool groups,
+client allow-lists, upstream authentication, and centralized observability.
+
+## Source Review
+
+- https://github.com/mcpjungle/MCPJungle
+- https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/quickstart.mdx
+- https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/LICENSE
+- https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/core-concepts.mdx
+- https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/guides/register-stdio-servers.mdx
+- https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/guides/register-http-servers.mdx
+- https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/guides/tool-groups.mdx
+- https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/governance/access-control.mdx
+- https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/docs/governance/upstream-authentication.mdx
+- https://raw.githubusercontent.com/mcpjungle/MCPJungle/main/internal/service/mcp/proxy.go
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+quickstart, license, core concepts, registration guides, tool-group guide,
+access-control guide, upstream-authentication guide, and MCP proxy source for
+current setup and behavior.
+
+## Features
+
+- Expose a unified streamable HTTP MCP gateway endpoint.
+- Register upstream streamable HTTP MCP servers.
+- Register stdio MCP servers from JSON configuration files.
+- Discover and proxy upstream tools, prompts, and resources.
+- Use canonical names to avoid collisions across registered servers.
+- Create tool groups with curated tools or entire upstream servers.
+- Run development mode for personal/local use.
+- Run enterprise mode with MCP client identities and server allow-lists.
+- Store upstream bearer tokens, custom headers, and beta OAuth credentials for
+  registered HTTP MCP servers.
+- Use stateless sessions by default or stateful sessions for slow-starting
+  upstream servers.
+
+## Installation
+
+Run MCPJungle with Docker Compose or the standalone binary, register upstream MCP
+servers, and expose the gateway behind TLS before sharing it with agents:
+
+```bash
+brew install mcpjungle/mcpjungle/mcpjungle
+mcpjungle register --name context7 --url https://mcp.context7.com/mcp
+```
+
+Connect Claude or another MCP client to the gateway endpoint:
+
+```json
+{
+  "mcpServers": {
+    "mcpjungle": {
+      "type": "http",
+      "url": "https://<mcpjungle-host>/mcp",
+      "headers": {
+        "Authorization": "Bearer <mcpjungle-client-token>"
+      }
+    }
+  }
+}
+```
+
+For local development deployments that use a plain local endpoint, follow the
+upstream quickstart and keep that configuration out of shared or production
+clients.
+
+## Use Cases
+
+- Register Context7, filesystem, time, GitHub, and internal MCP servers once.
+- Give Claude one MCP endpoint instead of many individual server configs.
+- Expose only a curated set of tools through a tool-group endpoint.
+- Create separate client identities for Cursor, Claude, Copilot, and internal
+  agents.
+- Manage upstream bearer tokens or OAuth for hosted MCP servers in one gateway.
+- Avoid name collisions by using canonical `server__tool` tool names.
+- Run a shared team MCP gateway with PostgreSQL, observability, and access
+  controls.
+
+## Safety and Privacy
+
+MCPJungle concentrates capability. Treat access to the gateway as access to the
+registered upstream tools, prompts, resources, and credentials. In shared
+deployments, use enterprise mode, create one client identity per integration,
+avoid wildcard allow-lists, and prefer tool groups that expose only the tools a
+client needs.
+
+Be careful with stdio servers because they run as child processes on the
+MCPJungle host or container and may receive environment variables or mounted
+filesystem access. Upstream HTTP registrations can store bearer tokens, custom
+headers, or OAuth credentials. Protect the gateway database, CLI config files,
+dashboard, logs, metrics, resource URIs, tool payloads, and client access tokens.
+
+## Duplicate Check
+
+No `mcpjungle/MCPJungle`, MCPJungle gateway, MCPJungle proxy, or matching source
+URL entry was found in `content/mcp` or `README.md`. The existing MCPHub Server
+Manager entry covers a different server-management project; it does not cover
+MCPJungle's gateway, canonical proxying, tool groups, enterprise client
+allow-lists, and upstream-authentication model.

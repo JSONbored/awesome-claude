@@ -1,0 +1,209 @@
+---
+title: MCP Unity Editor Server
+slug: mcp-unity-editor-server
+category: mcp
+description: >-
+  Unity Editor MCP bridge from CoderGamester that lets Claude and other MCP
+  clients inspect scenes, manage GameObjects, edit components and materials,
+  run tests, read console logs, and automate Unity project workflows through a
+  Node.js stdio server connected to a Unity WebSocket bridge.
+cardDescription: Automate Unity Editor scenes, assets, tests, and logs from Claude.
+seoTitle: MCP Unity Editor Server for Claude
+seoDescription: >-
+  Configure CoderGamester's MCP Unity Editor Server with Claude, Codex, Cursor,
+  Windsurf, GitHub Copilot, and other MCP clients to control Unity Editor
+  scenes, GameObjects, packages, materials, tests, resources, and console logs.
+author: CoderGamester
+authorProfileUrl: "https://github.com/CoderGamester"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MCP Unity
+brandDomain: github.com
+repoUrl: "https://github.com/CoderGamester/mcp-unity"
+documentationUrl: "https://github.com/CoderGamester/mcp-unity/blob/main/README.md"
+installable: true
+installCommand: "Add https://github.com/CoderGamester/mcp-unity.git through Unity Package Manager, then configure the client from Tools > MCP Unity > Server Window."
+usageSnippet: "Install the Unity package from the git URL, start the WebSocket server in Tools > MCP Unity > Server Window, and connect your MCP client to the generated Node.js server config."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcp-unity": {
+        "command": "node",
+        "args": ["Library/PackageCache/com.gamelovers.mcp-unity@<hash>/Server~/build/index.js"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mcp-unity": {
+        "command": "node",
+        "args": ["Library/PackageCache/com.gamelovers.mcp-unity@<hash>/Server~/build/index.js"],
+        "env": {
+          "UNITY_HOST": "localhost",
+          "UNITY_PORT": "8090"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Unity Editor project you are authorized to inspect and modify.
+  - Review of the current upstream Unity version requirement before installing; the README and package manifest should be treated as the source of truth.
+  - Node.js available for the package's Node-based MCP bridge.
+  - Unity Package Manager access to add the package from the repository git URL.
+  - Version control, backups, or a disposable test Unity project before allowing an agent to edit scenes, scripts, packages, or assets.
+  - MCP client such as Claude Code, Claude Desktop, Codex CLI, Cursor, Windsurf, GitHub Copilot, OpenCode, or another compatible host.
+safetyNotes:
+  - MCP Unity can create, update, duplicate, move, rotate, scale, reparent, and delete GameObjects, scenes, materials, prefabs, components, and packages in the active Unity project.
+  - Unity Editor actions can trigger imports, script compilation, package installs, tests, play-mode reloads, custom menu items, or project-specific editor scripts.
+  - The Unity-side WebSocket bridge defaults to localhost, but the README documents optional remote connections; expose remote host or port settings only on trusted networks.
+  - Re-run the Unity client configuration after package updates because Unity Package Manager cache paths include a changing package hash.
+  - Review batched operations carefully because a single MCP call can execute multiple Unity actions.
+privacyNotes:
+  - Unity projects can contain proprietary game logic, unreleased assets, licensed packages, customer IP, local paths, console logs, test names, build settings, and credentials embedded in custom tooling.
+  - MCP resources can expose scene hierarchy, GameObject details, package lists, assets, tests, and console logs to the MCP client and model.
+  - Console logs and generated error traces may include file paths, stack traces, tokens, URLs, player data, analytics IDs, or internal service names.
+  - If remote bridge connections are enabled, protect the Unity host and WebSocket port with network controls and avoid exposing the editor to untrusted machines.
+sourceUrls:
+  - "https://github.com/CoderGamester/mcp-unity/blob/main/package.json"
+  - "https://github.com/CoderGamester/mcp-unity/blob/main/Server~/package.json"
+  - "https://github.com/CoderGamester/mcp-unity/blob/main/Server~/src/index.ts"
+  - "https://github.com/CoderGamester/mcp-unity/blob/main/Server~/src/unity/mcpUnity.ts"
+  - "https://github.com/CoderGamester/mcp-unity/blob/main/Editor/UnityBridge/McpUnityServer.cs"
+  - "https://github.com/CoderGamester/mcp-unity/blob/main/LICENSE.md"
+tags:
+  - game-development
+  - unity
+  - editor-automation
+  - developer-tools
+  - local-first
+keywords:
+  - MCP Unity
+  - MCP Unity Editor
+  - CoderGamester mcp-unity
+  - Unity Editor MCP
+  - Unity Claude MCP
+  - GameObject MCP
+  - Unity scene automation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Unity Editor Server connects MCP-capable AI clients to the Unity Editor
+through a two-part bridge: a Node.js stdio MCP server and a Unity Editor
+WebSocket server. The project lets Claude, Codex, Cursor, Windsurf, GitHub
+Copilot, OpenCode, and other compatible clients inspect Unity project state and
+run editor operations without manually clicking through the Unity interface.
+
+The server registers tools for menu items, GameObject selection and transforms,
+component updates, package installation, scene creation and loading, prefab and
+material workflows, test execution, console logs, and batch execution. It also
+registers MCP resources for menu items, scene hierarchy, GameObjects, logs,
+packages, assets, and tests, plus a GameObject-handling prompt.
+
+## Source Review
+
+- https://github.com/CoderGamester/mcp-unity
+- https://github.com/CoderGamester/mcp-unity/blob/main/README.md
+- https://github.com/CoderGamester/mcp-unity/blob/main/package.json
+- https://github.com/CoderGamester/mcp-unity/blob/main/Server~/package.json
+- https://github.com/CoderGamester/mcp-unity/blob/main/Server~/src/index.ts
+- https://github.com/CoderGamester/mcp-unity/blob/main/Server~/src/unity/mcpUnity.ts
+- https://github.com/CoderGamester/mcp-unity/blob/main/Editor/UnityBridge/McpUnityServer.cs
+- https://github.com/CoderGamester/mcp-unity/blob/main/LICENSE.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, Unity package manifest, Node server manifest, stdio server entrypoint,
+Unity connection layer, Unity WebSocket bridge, and license file for current
+install paths, client configuration, tools, resources, host/port behavior,
+version compatibility, and licensing.
+
+## Features
+
+- Unity Package Manager install path from the repository git URL.
+- Node.js stdio MCP server that connects to the Unity Editor bridge.
+- Unity-side WebSocket server with default localhost binding and configurable
+  port/host behavior.
+- Tools for creating, loading, saving, unloading, and deleting scenes.
+- Tools for selecting, creating, updating, duplicating, deleting, reparenting,
+  moving, rotating, scaling, and inspecting GameObjects.
+- Component, prefab, package, material, console-log, test-runner, and menu-item
+  operations.
+- Batch execution for multi-step Unity operations in a single MCP call.
+- Resources for menu items, scene hierarchy, GameObjects, console logs,
+  packages, assets, and Unity tests.
+- Client configuration guidance for Claude Code, Claude Desktop, Codex CLI,
+  Cursor, Windsurf, GitHub Copilot, OpenCode, and other MCP hosts.
+- MIT license.
+
+## Installation
+
+Install the Unity package through Unity Package Manager with the repository URL:
+
+```text
+https://github.com/CoderGamester/mcp-unity.git
+```
+
+Open the Unity Editor, then use:
+
+```text
+Tools > MCP Unity > Server Window
+```
+
+Use the server window to configure the target MCP client and start the Unity
+WebSocket server. The generated client config points to the package cache path
+for the Node.js MCP server, for example:
+
+```json
+{
+  "mcpServers": {
+    "mcp-unity": {
+      "command": "node",
+      "args": ["Library/PackageCache/com.gamelovers.mcp-unity@<hash>/Server~/build/index.js"]
+    }
+  }
+}
+```
+
+Re-run the configure step after updating the Unity package because the package
+cache hash can change.
+
+## Use Cases
+
+- Prototype a Unity scene layout from a natural-language prompt.
+- Inspect the active scene hierarchy, selected GameObjects, components, assets,
+  package lists, test lists, or console logs before editing.
+- Add or update GameObjects, transforms, materials, prefabs, and components.
+- Run Unity edit-mode tests and inspect failures from the MCP client.
+- Execute Unity menu items or custom editor automation exposed by the project.
+- Batch scene and asset changes during prototyping, then review them in Unity
+  and version control.
+
+## Safety and Privacy
+
+MCP Unity Editor Server gives an agent direct control over a live Unity Editor
+project. Use it with version control and start in a disposable scene or branch.
+Review scene, prefab, material, package, and script changes before committing
+them. Be especially cautious with `execute_menu_item`, `add_package`,
+`batch_execute`, scene deletion, GameObject deletion, and any custom editor
+scripts that can run project-specific logic.
+
+The Unity bridge exposes project structure, asset names, package lists, tests,
+console logs, stack traces, scene hierarchy, and GameObject details. Treat that
+data as source code and proprietary design information. Keep remote connections
+disabled unless they are intentionally required, and avoid exposing the WebSocket
+port outside trusted development machines.
+
+## Duplicate Check
+
+Existing content includes the separate CoplayDev Unity MCP Server entry. No
+`CoderGamester/mcp-unity`, `com.gamelovers.mcp-unity`, or
+`io.github.codergamester/mcp-unity` entry was found in `content/mcp`. This entry
+is distinct because it documents CoderGamester's Unity Package Manager package,
+Node stdio server, Unity WebSocket bridge, tool/resource registry, client
+configuration flow, and package-cache setup.

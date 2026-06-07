@@ -1,0 +1,185 @@
+---
+title: Omnisearch MCP Server
+slug: omnisearch-mcp-server
+category: mcp
+description: >-
+  MCP server that unifies web search, AI answer, GitHub search, and web
+  extraction providers including Tavily, Brave, Kagi, Exa, Linkup, Firecrawl,
+  and GitHub behind four consolidated tools.
+cardDescription: >-
+  Connect Claude to a multi-provider search and extraction layer for web
+  search, AI answers, GitHub search, scraping, crawling, summaries, and content
+  retrieval.
+seoTitle: Omnisearch MCP Server for Claude
+seoDescription: >-
+  Configure Omnisearch MCP Server with Claude to use Tavily, Brave, Kagi, Exa,
+  Linkup, Firecrawl, and GitHub for web search, AI answers, GitHub search, web
+  extraction, crawling, scraping, and summaries through MCP.
+author: Scott Spence
+authorProfileUrl: "https://github.com/spences10"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Omnisearch MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/spences10/mcp-omnisearch"
+documentationUrl: "https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/README.md"
+packageUrl: "https://registry.npmjs.org/mcp-omnisearch"
+installable: true
+installCommand: "npx mcp-omnisearch"
+usageSnippet: "Set the provider API keys you want to use, then run the stdio server with npx. Providers without keys are skipped."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "omnisearch": {
+        "command": "npx",
+        "args": ["mcp-omnisearch"],
+        "env": {
+          "TAVILY_API_KEY": "your-tavily-key",
+          "KAGI_API_KEY": "your-kagi-key",
+          "BRAVE_API_KEY": "your-brave-key",
+          "GITHUB_API_KEY": "your-github-token",
+          "EXA_API_KEY": "your-exa-key",
+          "LINKUP_API_KEY": "your-linkup-key",
+          "FIRECRAWL_API_KEY": "your-firecrawl-key"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  npx mcp-omnisearch
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 22 or newer for the published npm package.
+  - At least one provider API key for Tavily, Kagi, Brave Search, GitHub, Exa, Linkup, or Firecrawl.
+  - Optional `FIRECRAWL_BASE_URL` when using a self-hosted Firecrawl instance.
+  - Optional `OMNISEARCH_LARGE_RESULT_MODE` choice for file or inline handling of large results.
+  - Review of which providers, quotas, search indexes, URLs, GitHub scopes, and extraction/crawling modes Claude may use.
+safetyNotes:
+  - Omnisearch MCP Server can query multiple third-party search, AI answer, GitHub search, extraction, scraping, crawling, summarization, and content-processing providers.
+  - Firecrawl crawl, scrape, map, extract, and action modes can interact with websites and may trigger robots.txt, TOS, rate-limit, or authentication concerns.
+  - GitHub search depends on the configured token scope and can reveal private code, repositories, users, or organization metadata when a broad token is used.
+  - Large result mode can write response content to files; review where those files are stored before using it with private or regulated data.
+  - Require confirmation before crawling sites, extracting private URLs, using authenticated providers on sensitive targets, or running broad GitHub searches against private organizations.
+privacyNotes:
+  - Provider API keys, GitHub tokens, search queries, URLs, extracted page content, crawled site maps, scraped text, summaries, AI answers, GitHub search results, and large-result files can be exposed to the MCP client.
+  - Search and extraction providers may log queries, URLs, source content, account identifiers, usage metadata, and generated responses according to their own policies.
+  - Web extraction can capture personal data, paywalled content, internal URLs, or proprietary documents if supplied by the user or available to an authenticated provider.
+  - GitHub search output may include repository names, code snippets, file paths, commit metadata, and organization details.
+  - Keep provider credentials in local MCP configuration only, and avoid sharing transcripts that contain private queries, URLs, source text, or tokens.
+disclosure: >-
+  Community-maintained MIT MCP server that wraps multiple external search,
+  extraction, AI-answer, and GitHub providers. Users must follow each provider's
+  API, quota, billing, retention, and website-use policies.
+sourceUrls:
+  - "https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/LICENSE"
+  - "https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/package.json"
+  - "https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/server.json"
+  - "https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/docs/provider-selection.md"
+  - "https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/docs/large-results.md"
+  - "https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/src/index.ts"
+  - "https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/src/server/tools/index.ts"
+tags:
+  - search
+  - web-extraction
+  - github-search
+  - crawling
+  - multi-provider
+keywords:
+  - Omnisearch MCP
+  - Omnisearch MCP Server
+  - multi provider search MCP
+  - web extraction MCP
+  - GitHub search MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Omnisearch MCP Server connects Claude and other MCP clients to multiple search,
+AI-answer, GitHub search, and web-extraction providers through four consolidated
+tools: `web_search`, `ai_search`, `github_search`, and `web_extract`.
+
+Use it when Claude needs one MCP interface for provider-backed web search,
+sourced AI answers, GitHub search, URL extraction, crawling, scraping,
+summaries, similar-content discovery, or content retrieval.
+
+## Source Review
+
+- https://github.com/spences10/mcp-omnisearch
+- https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/README.md
+- https://registry.npmjs.org/mcp-omnisearch
+- https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/LICENSE
+- https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/package.json
+- https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/server.json
+- https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/docs/provider-selection.md
+- https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/docs/large-results.md
+- https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/src/index.ts
+- https://raw.githubusercontent.com/spences10/mcp-omnisearch/main/src/server/tools/index.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package metadata, server manifest, provider
+selection guide, large-results guide, server entrypoint, and tool registry for
+current setup and behavior details.
+
+## Features
+
+- Search the web through Tavily, Brave Search, Kagi, Exa, or Kagi Enrichment.
+- Get sourced AI answers through Kagi FastGPT, Exa Answer, or Linkup.
+- Search GitHub code, repositories, and users.
+- Extract, scrape, crawl, map, summarize, or find similar content through
+  Tavily, Kagi, Firecrawl, or Exa.
+- Skip unavailable providers when API keys are not configured.
+- Use provider-selection documentation to choose a provider by task, key, mode,
+  and capability.
+- Route large results either inline or through file mode.
+
+## Installation
+
+Configure at least one provider API key, then launch the server:
+
+```json
+{
+  "mcpServers": {
+    "omnisearch": {
+      "command": "npx",
+      "args": ["mcp-omnisearch"],
+      "env": {
+        "TAVILY_API_KEY": "your-tavily-key",
+        "KAGI_API_KEY": "your-kagi-key",
+        "BRAVE_API_KEY": "your-brave-key",
+        "GITHUB_API_KEY": "your-github-token",
+        "EXA_API_KEY": "your-exa-key",
+        "LINKUP_API_KEY": "your-linkup-key",
+        "FIRECRAWL_API_KEY": "your-firecrawl-key"
+      }
+    }
+  }
+}
+```
+
+Only include the provider keys you actually intend Claude to use. Use a
+least-privilege GitHub token when enabling GitHub search.
+
+## Use Cases
+
+- Search current web results through a preferred provider.
+- Ask for a sourced AI answer and compare providers.
+- Search public or approved private GitHub code for examples.
+- Extract a long article, documentation page, or site map.
+- Crawl an approved documentation site and summarize relevant pages.
+- Switch providers when one service is unavailable, rate-limited, or poorly
+  suited to the task.
+
+## Safety and Privacy
+
+Omnisearch MCP Server is a broker over multiple external providers. Scope API
+keys carefully, confirm before crawling or scraping, and respect website terms,
+robots policies, provider quotas, billing, and retention behavior.
+
+Treat provider keys, GitHub tokens, queries, URLs, extracted content, crawled
+pages, GitHub results, AI answers, summaries, and large-result files as
+sensitive. Avoid sending private URLs, proprietary source text, or broad GitHub
+tokens through providers that should not receive them.

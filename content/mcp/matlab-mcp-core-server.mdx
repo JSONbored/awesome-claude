@@ -1,0 +1,219 @@
+---
+title: MATLAB MCP Core Server
+slug: matlab-mcp-core-server
+category: mcp
+description: >-
+  Official MathWorks MCP server that lets Claude detect MATLAB installations,
+  inspect toolboxes, analyze MATLAB files, evaluate MATLAB code, run scripts,
+  run tests, and expose reviewed custom MATLAB functions as MCP tools.
+cardDescription: >-
+  Connect Claude to a licensed MATLAB install for code analysis, script
+  execution, toolbox detection, testing, and custom MATLAB tools.
+seoTitle: MATLAB MCP Core Server for Claude
+seoDescription: >-
+  Configure the official MathWorks MATLAB MCP Core Server with Claude Code,
+  Claude Desktop, or VS Code to run MATLAB code, analyze MATLAB files, detect
+  toolboxes, run MATLAB tests, manage MATLAB sessions, and review telemetry and
+  license constraints.
+author: MathWorks
+authorProfileUrl: "https://github.com/matlab"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MATLAB
+brandDomain: mathworks.com
+repoUrl: "https://github.com/matlab/matlab-mcp-core-server"
+documentationUrl: "https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/README.md"
+installable: true
+installCommand: "Download the release binary or Claude Desktop MCPB bundle, review the MathWorks license terms, then add the stdio server command to your MCP client."
+usageSnippet: "Use MATLAB MCP Core Server when Claude needs to inspect toolboxes, check MATLAB code, evaluate reviewed MATLAB snippets, or run selected MATLAB scripts and tests."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "matlab": {
+        "command": "{path-to-matlab-mcp-core-server}",
+        "args": ["--disable-telemetry=true"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "matlab": {
+        "command": "{path-to-matlab-mcp-core-server}",
+        "args": [
+          "--disable-telemetry=true",
+          "--initial-working-folder={project-folder}"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - MATLAB R2021a or later installed under a valid MathWorks license.
+  - Claude Code, Claude Desktop, VS Code, or another MCP client that can run a local stdio server.
+  - Release binary, source build, or Claude Desktop MCPB bundle downloaded from the upstream repository.
+  - Project folders and MATLAB files reviewed before allowing Claude to run code against them.
+  - Optional MATLAB extension-file JSON reviewed before enabling custom tools.
+safetyNotes:
+  - MATLAB MCP Core Server can start MATLAB, connect to an existing MATLAB instance, evaluate arbitrary MATLAB code, run scripts, and run MATLAB test files.
+  - The evaluate and run tools can change files, workspace state, figures, models, generated artifacts, or external systems depending on the MATLAB code being executed.
+  - Custom extension files can expose additional MATLAB functions as MCP tools, so review the JSON definition and the corresponding MATLAB functions before startup.
+  - The README advises reviewing all tool calls and keeping a human in the loop before running important actions.
+  - Shared or centralized server use is restricted by upstream licensing guidance; check MathWorks terms before team or service deployments.
+privacyNotes:
+  - Tool calls can expose MATLAB code, command-window output, project folder names, installed toolbox versions, add-ons, scripts, tests, model outputs, plots, logs, and local file paths.
+  - The README states anonymized usage data collection is on by default and can be disabled with `--disable-telemetry=true`.
+  - Log folders, stderr duplication, extension-file paths, MATLAB roots, and initial working folders can reveal local machine or project context.
+  - If MATLAB code calls external services, reads private data, or writes generated outputs, those effects are part of the approved tool call and may be visible to the MCP client and model provider.
+disclosure: >-
+  Official MathWorks source-available MCP server. The repository license permits
+  redistribution with conditions and restricts use to MathWorks products and
+  service offerings; MATLAB itself requires an appropriate MathWorks license.
+sourceUrls:
+  - "https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/LICENSE.md"
+  - "https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/cmd/matlab-mcp-core-server/main.go"
+  - "https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/internal/adaptors/application/parameter/defaultparameters/defaultparameters.go"
+  - "https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/internal/adaptors/mcp/tools/singlesession/evalmatlabcode/definition.go"
+  - "https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/internal/adaptors/mcp/tools/singlesession/runmatlabfile/definition.go"
+  - "https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/internal/adaptors/mcp/tools/singlesession/runmatlabtestfile/definition.go"
+  - "https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/guides/custom-tools.md"
+  - "https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/internal/adaptors/telemetry/factory.go"
+tags:
+  - matlab
+  - code-execution
+  - testing
+  - scientific-computing
+  - developer-tools
+keywords:
+  - MATLAB MCP Core Server
+  - MATLAB MCP
+  - MathWorks MCP server
+  - MATLAB code execution MCP
+  - MATLAB test MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MATLAB MCP Core Server is the official MathWorks MCP server for connecting AI
+applications to MATLAB. It runs as a local stdio server and can connect Claude
+Code, Claude Desktop, VS Code, or another MCP client to a licensed MATLAB
+installation.
+
+Use it when Claude needs MATLAB-specific context instead of generic file access:
+installed toolbox discovery, MATLAB Code Analyzer findings, reviewed code
+evaluation, script execution, MATLAB test execution, or custom tools backed by
+MATLAB functions already on the MATLAB path.
+
+## Source Review
+
+- https://github.com/matlab/matlab-mcp-core-server
+- https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/README.md
+- https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/LICENSE.md
+- https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/cmd/matlab-mcp-core-server/main.go
+- https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/internal/adaptors/application/parameter/defaultparameters/defaultparameters.go
+- https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/internal/adaptors/mcp/tools/singlesession/evalmatlabcode/definition.go
+- https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/internal/adaptors/mcp/tools/singlesession/runmatlabfile/definition.go
+- https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/internal/adaptors/mcp/tools/singlesession/runmatlabtestfile/definition.go
+- https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/guides/custom-tools.md
+- https://raw.githubusercontent.com/matlab/matlab-mcp-core-server/main/internal/adaptors/telemetry/factory.go
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, server entry point, CLI parameter definitions, tool definition
+source, custom tool guide, and telemetry factory for current behavior.
+
+## Features
+
+- Run as a local stdio MCP server named `matlab-mcp-core-server`.
+- Detect installed MATLAB versions and toolboxes.
+- Start MATLAB on demand or initialize MATLAB when the server starts.
+- Connect to a new MATLAB process, an existing MATLAB instance, or automatic
+  session selection.
+- Analyze `.m` files with MATLAB Code Analyzer without modifying the file.
+- Evaluate reviewed MATLAB code in an existing MATLAB context.
+- Run selected MATLAB scripts and return command-window output.
+- Run MATLAB test files through MATLAB's test framework.
+- Expose custom MATLAB functions as MCP tools through reviewed extension-file
+  JSON definitions.
+- Provide MATLAB coding guideline and plain-text live-code resources.
+- Disable upstream usage telemetry with `--disable-telemetry=true`.
+
+## Installation
+
+Download the upstream release binary, build from source, or install the Claude
+Desktop MCPB bundle from the repository release page. Then add the stdio server
+to your MCP client.
+
+Example MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "matlab": {
+      "command": "{path-to-matlab-mcp-core-server}",
+      "args": ["--disable-telemetry=true"]
+    }
+  }
+}
+```
+
+For project-specific work, pass an initial folder only after confirming that
+Claude should be allowed to work in that project:
+
+```json
+{
+  "mcpServers": {
+    "matlab": {
+      "command": "{path-to-matlab-mcp-core-server}",
+      "args": [
+        "--disable-telemetry=true",
+        "--initial-working-folder={project-folder}"
+      ]
+    }
+  }
+}
+```
+
+When using Claude Desktop, review the upstream MCPB and any filesystem access
+you grant through other extensions. When using custom MATLAB tools, inspect the
+extension JSON and the MATLAB functions it exposes before starting the server.
+
+## Use Cases
+
+- Ask Claude to identify installed MATLAB toolboxes before choosing an analysis
+  approach.
+- Run MATLAB Code Analyzer on a reviewed `.m` file and discuss warnings.
+- Execute a small MATLAB snippet after checking the exact code Claude plans to
+  run.
+- Run a project script in a known working folder and inspect command-window
+  output.
+- Run MATLAB unit tests after a code change.
+- Expose a narrow, reviewed MATLAB function as a custom MCP tool for repeatable
+  calculations.
+- Pair Claude with MATLAB for scientific computing, simulation, signal
+  processing, control systems, image processing, or engineering workflows where
+  MATLAB is already the approved environment.
+
+## Safety and Privacy
+
+Treat this server as a code-execution bridge into MATLAB, not as a passive
+documentation helper. MATLAB code can read and write files, start computations,
+open graphical tools, create models and figures, call external services, and
+change project state. Review the exact tool arguments before approving
+evaluation, script execution, test execution, or custom tool calls.
+
+The server can reveal sensitive context through command-window output, installed
+toolbox lists, add-ons, project folders, code paths, logs, generated results,
+and test output. Upstream documentation says anonymized usage telemetry is on by
+default; add `--disable-telemetry=true` when you do not want that collection.
+Check MathWorks licensing guidance before shared, centralized, classroom,
+enterprise, or service-style deployments.
+
+## Duplicate Check
+
+No `matlab/matlab-mcp-core-server`, MATLAB MCP Core Server, MathWorks MCP
+server, or matching MATLAB MCP source URL entry was found in `content/mcp` or
+`README.md`.

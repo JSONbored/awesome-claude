@@ -1,0 +1,222 @@
+---
+title: DevDocs MCP Server
+slug: devdocs-mcp-server
+category: mcp
+description: >-
+  Self-hosted documentation crawler and Markdown MCP server that lets Claude
+  query crawled technical documentation, list files, read sections, search
+  content, inspect metadata, and keep generated Markdown in sync.
+cardDescription: >-
+  Turn crawled documentation into a local Markdown knowledge base Claude can
+  query through Docker-backed MCP tools.
+seoTitle: DevDocs MCP Server for Claude
+seoDescription: >-
+  Configure DevDocs with Claude to run a Docker-backed Fast Markdown MCP server
+  for crawled documentation, section lookup, full-text search, tag search,
+  table-of-contents access, and Markdown file synchronization.
+author: CyberAGI
+authorProfileUrl: "https://github.com/cyberagiinc"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: DevDocs
+brandDomain: github.com
+repoUrl: "https://github.com/cyberagiinc/DevDocs"
+documentationUrl: "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docs/mcp/MCP_DOCKER_SETUP.md"
+installable: true
+installCommand: "Clone the DevDocs repository, run the Docker start script, then configure Claude to call the `devdocs-mcp` container with `docker exec -i`."
+usageSnippet: "Start the DevDocs Docker stack, point Claude at the `fast_markdown_mcp.server` command inside `devdocs-mcp`, and ask it to list or search the crawled Markdown files."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "fast-markdown": {
+        "command": "docker",
+        "args": [
+          "exec",
+          "-i",
+          "devdocs-mcp",
+          "python",
+          "-m",
+          "fast_markdown_mcp.server",
+          "/app/storage/markdown"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "fast-markdown": {
+        "command": "docker",
+        "args": [
+          "exec",
+          "-i",
+          "devdocs-mcp",
+          "python",
+          "-m",
+          "fast_markdown_mcp.server",
+          "/app/storage/markdown"
+        ],
+        "env": {},
+        "disabled": false
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Docker and Docker Compose available on the host that will run DevDocs.
+  - Git access to clone the DevDocs repository and run the Docker startup script.
+  - MCP client support for launching stdio servers through `docker exec -i`.
+  - Documentation URLs reviewed for crawling permissions, robots rules, and terms of service.
+  - Storage, logs, crawl results, and Markdown output directories scoped to documentation you are authorized to crawl and query.
+safetyNotes:
+  - DevDocs runs a multi-container Docker stack with frontend, backend, MCP, and Crawl4AI services.
+  - The crawler can fetch and process external websites, so review crawl targets, rate limits, robots rules, and site terms before crawling.
+  - The backend and crawler use a Crawl4AI API token; replace the demo token before shared or production use.
+  - The MCP container mounts generated Markdown and logs, and its tools can read, search, sync, and expose that content to the MCP client.
+  - Local services are exposed on development ports by the Docker stack; do not expose them on untrusted networks without authentication and network controls.
+privacyNotes:
+  - Crawled pages, generated Markdown, JSON metadata, source URLs, tags, search queries, local logs, and MCP tool outputs may contain proprietary documentation, customer data, internal architecture, or third-party website content.
+  - The Markdown MCP server can reveal full document text, section contents, table of contents, metadata, and search snippets to the connected model provider.
+  - Logs, crawl results, mounted volumes, and container transcripts can retain documentation-derived content after an MCP session ends.
+  - Optional LLM-related Crawl4AI environment variables can route documentation-derived content to external model providers if configured.
+  - Keep storage directories, crawl outputs, API tokens, and generated documentation artifacts out of public repositories unless publication is explicitly approved.
+disclosure: >-
+  Apache-2.0-licensed open-source project. The entry focuses on the repository's
+  Docker-backed Fast Markdown MCP server and documentation-crawling workflow.
+sourceUrls:
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/README.md"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/LICENSE"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/claude_mcp_settings.json"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docker/dockerfiles/Dockerfile.mcp"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docker/compose/docker-compose.yml"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/pyproject.toml"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/src/fast_markdown_mcp/server.py"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/src/fast_markdown_mcp/document_structure.py"
+tags:
+  - documentation
+  - crawler
+  - markdown
+  - docker
+  - developer-tools
+keywords:
+  - DevDocs MCP
+  - CyberAGI DevDocs
+  - documentation MCP server
+  - markdown MCP server
+  - Crawl4AI MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+DevDocs combines a documentation crawler, a local web UI, and a Docker-backed
+Fast Markdown MCP server. The crawler writes documentation into local Markdown
+and metadata files, while the MCP server exposes those files to Claude through
+tools for listing files, reading Markdown, searching content, finding tagged
+documents, inspecting sections, and getting document statistics.
+
+Use it when you want Claude to work from a private or self-hosted copy of
+technical documentation instead of repeatedly searching the live web. The
+upstream Docker setup runs the MCP process over stdin/stdout through
+`docker exec -i`, so the client communicates with the `devdocs-mcp` container
+rather than a public network endpoint.
+
+## Source Review
+
+- https://github.com/cyberagiinc/DevDocs
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docs/mcp/MCP_DOCKER_SETUP.md
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/README.md
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/LICENSE
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/claude_mcp_settings.json
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docker/dockerfiles/Dockerfile.mcp
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docker/compose/docker-compose.yml
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/pyproject.toml
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/src/fast_markdown_mcp/server.py
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/src/fast_markdown_mcp/document_structure.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+Docker setup guide, Claude MCP settings, Dockerfiles, Compose file, Python
+package metadata, MCP server implementation, and document-structure parser for
+current behavior.
+
+## Features
+
+- Crawl and store technical documentation as Markdown and JSON metadata.
+- Run a local Fast Markdown MCP server inside the DevDocs Docker stack.
+- List available Markdown files.
+- Read full Markdown files with basic metadata.
+- Search across generated Markdown content.
+- Search metadata tags.
+- Return document statistics.
+- Retrieve a specific section by generated section ID.
+- Generate a table of contents from Markdown headings.
+- Run advanced section search with ranking and confidence scores.
+- Watch Markdown and metadata files so changes can be synchronized.
+
+## Installation
+
+Clone the repository and start the Docker stack using the upstream scripts:
+
+```bash
+git clone https://github.com/cyberagiinc/DevDocs.git
+cd DevDocs
+./docker-start.sh
+```
+
+Connect Claude or another MCP client to the containerized MCP process:
+
+```json
+{
+  "mcpServers": {
+    "fast-markdown": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "devdocs-mcp",
+        "python",
+        "-m",
+        "fast_markdown_mcp.server",
+        "/app/storage/markdown"
+      ]
+    }
+  }
+}
+```
+
+Restart the MCP client after changing its server configuration. Keep the
+generated Markdown storage mounted only where DevDocs and the approved MCP
+client need access.
+
+## Use Cases
+
+- Give Claude a searchable local copy of framework or library docs.
+- Crawl internal engineering documentation for private agent workflows.
+- Ask Claude to find relevant sections across generated Markdown docs.
+- Query a table of contents before reading a large document.
+- Keep documentation snapshots available when live pages change.
+- Build a local research workflow around Crawl4AI output and Markdown MCP
+  search.
+
+## Safety and Privacy
+
+DevDocs can crawl websites and convert them into model-visible local Markdown.
+Before crawling, confirm that the target permits automated access and that the
+depth, concurrency, and selected URLs are appropriate. Avoid crawling customer
+portals, authenticated pages, or internal knowledge bases unless you have
+explicit approval and a retention plan.
+
+The MCP server exposes generated Markdown files, metadata, sections, tags,
+search snippets, and document statistics to the connected model provider. Treat
+the `storage`, `logs`, and `crawl_results` directories as sensitive. Replace
+the default Crawl4AI demo token before shared use, avoid exposing local service
+ports on untrusted networks, and keep optional LLM provider API keys out of
+logs, shell history, screenshots, and repository files.
+
+## Duplicate Check
+
+No `cyberagiinc/DevDocs`, DevDocs MCP Server, Fast Markdown MCP from DevDocs,
+or matching source URL entry was found in `content/mcp` or `README.md`.

@@ -1,0 +1,214 @@
+---
+title: LeanCTX MCP Server
+slug: leanctx-mcp-server
+category: mcp
+description: >-
+  Local-first context-engineering MCP server and CLI that gives Claude
+  token-efficient file reads, shell-output compression, code search, graph
+  queries, persistent session memory, context packaging, verification tools,
+  and dashboard-style token accounting through a single Rust binary.
+cardDescription: Add local context compression, memory, search, graph, and verification tools to Claude.
+seoTitle: LeanCTX MCP Server for Claude
+seoDescription: >-
+  Configure LeanCTX MCP Server with Claude to use context-aware file reads,
+  compressed shell output, code search, graph analysis, persistent session
+  memory, context packages, verification, tool budgeting, and token-savings
+  telemetry from a local Rust binary.
+author: Yves Gude
+authorProfileUrl: "https://github.com/yvgude"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: LeanCTX
+brandDomain: leanctx.com
+websiteUrl: "https://leanctx.com"
+repoUrl: "https://github.com/yvgude/lean-ctx"
+documentationUrl: "https://leanctx.com/docs/getting-started"
+packageUrl: "https://registry.npmjs.org/lean-ctx-bin"
+installable: true
+installCommand: "npm install -g lean-ctx-bin"
+usageSnippet: "Run `lean-ctx onboard` or `lean-ctx setup`, review the generated MCP and shell-hook configuration, then restart your shell and AI client."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "lean-ctx": {
+        "command": "lean-ctx"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "lean-ctx": {
+        "command": "lean-ctx",
+        "env": {
+          "LEAN_CTX_IO_BOUNDARY_MODE": "enforce",
+          "LEAN_CTX_NO_UPDATE_CHECK": "1"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: advanced
+prerequisites:
+  - npm for the `lean-ctx-bin` package, or another upstream-supported install path such as release binaries, Homebrew, Cargo, or AUR.
+  - A local repository workspace where LeanCTX is allowed to read files, run configured shell commands, and store session metadata.
+  - Review of generated MCP client config, shell hooks, per-project `.lean-ctx.toml`, and global `~/.config/lean-ctx/config.toml`.
+  - Explicit allow-listing for any paths outside the current project root that LeanCTX should be permitted to access.
+safetyNotes:
+  - LeanCTX can read local files, run shell commands invoked through its tools, cache outputs, install shell/editor hooks, and persist session state.
+  - Review generated MCP and shell-hook changes before enabling them across all agents or shells.
+  - Keep path jail enforcement enabled for normal use, and allow extra roots only when a project genuinely needs them.
+  - Disable or restrict command-execution and unsafe I/O tools for regulated repositories, untrusted workspaces, or shared team environments.
+  - Treat compressed shell output and cached reads as summaries; switch to full reads or raw command output when exact source text matters.
+privacyNotes:
+  - Local code, file paths, command output, search terms, session notes, context packages, knowledge graph data, token metrics, and dashboard statistics can be sent to the MCP client and model.
+  - LeanCTX stores local stats and session state under its own configuration/data directories; protect these files if they contain project decisions, findings, or sensitive paths.
+  - Secret-like paths are blocked or role-gated by default according to upstream security docs, but users should still avoid prompting agents to read credentials, private keys, tokens, or ignored files.
+  - The upstream security policy describes optional update checks and opt-in anonymous stats sharing; disable network checks when working in confidential or offline environments.
+sourceUrls:
+  - "https://github.com/yvgude/lean-ctx/blob/main/README.md"
+  - "https://github.com/yvgude/lean-ctx/releases/tag/v3.7.5"
+  - "https://github.com/yvgude/lean-ctx/blob/main/rust/src/mcp_stdio.rs"
+  - "https://github.com/yvgude/lean-ctx/blob/main/rust/src/server/registry.rs"
+  - "https://github.com/yvgude/lean-ctx/blob/main/docs/reference/generated/mcp-tools.md"
+  - "https://github.com/yvgude/lean-ctx/blob/main/SECURITY.md"
+tags:
+  - developer-tools
+  - code-search
+  - context-engineering
+  - memory
+  - local-first
+keywords:
+  - LeanCTX MCP Server
+  - lean-ctx MCP
+  - context engineering MCP
+  - token compression MCP
+  - code graph MCP
+  - persistent memory MCP
+  - Claude Code context MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+LeanCTX MCP Server connects Claude and other coding agents to a local
+context-engineering layer. The server exposes `ctx_*` tools for compact file
+reads, shell-output compression, code search, code graph analysis, context
+packages, persistent session memory, multi-agent handoffs, token accounting,
+verification, and context-budget control.
+
+The project is local-first and runs as the user. Its security documentation
+describes project-root path jailing, explicit allow roots, secret-like path
+checks, output caps, deterministic redaction, JSON-RPC size limits, optional
+update checks, and opt-in anonymous stats sharing.
+
+## Source Review
+
+- https://github.com/yvgude/lean-ctx
+- https://github.com/yvgude/lean-ctx/blob/main/README.md
+- https://leanctx.com/docs/getting-started
+- https://registry.npmjs.org/lean-ctx-bin
+- https://github.com/yvgude/lean-ctx/releases/tag/v3.7.5
+- https://github.com/yvgude/lean-ctx/blob/main/rust/src/mcp_stdio.rs
+- https://github.com/yvgude/lean-ctx/blob/main/rust/src/server/registry.rs
+- https://github.com/yvgude/lean-ctx/blob/main/docs/reference/generated/mcp-tools.md
+- https://github.com/yvgude/lean-ctx/blob/main/SECURITY.md
+- https://github.com/yvgude/lean-ctx/blob/main/docs/guides/claude-code.md
+- https://github.com/yvgude/lean-ctx/blob/main/docs/guides/codex-cli.md
+- https://github.com/yvgude/lean-ctx/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, getting-started docs, npm registry metadata, release page, stdio
+transport implementation, tool registry, generated MCP tool reference, security
+policy, and license for current install paths, tool counts, transport behavior,
+security boundaries, optional network activity, and licensing.
+
+## Features
+
+- Local Rust binary distributed through release archives, npm `lean-ctx-bin`,
+  Homebrew, Cargo, AUR, and other upstream-supported install paths.
+- MCP server configured by `lean-ctx onboard` or `lean-ctx setup`.
+- Stdio transport implementation for MCP clients.
+- Context tools for file reads, directory maps, code search, deltas, shell
+  compression, cache operations, token accounting, and context retrieval.
+- Graph and architecture tools for symbols, call graphs, impact analysis,
+  route discovery, code smells, and project overviews.
+- Session memory, knowledge, task, handoff, multi-agent, and workflow tools.
+- Context package, verification, proof, feedback, metrics, and budgeting tools.
+- Security controls for project-boundary path jailing, allow roots, secret-like
+  paths, output caps, redaction, message limits, and role-based restrictions.
+- Apache-2.0 license.
+
+## Installation
+
+Install the binary through npm:
+
+```sh
+npm install -g lean-ctx-bin
+```
+
+Run the guided setup:
+
+```sh
+lean-ctx onboard
+```
+
+Or configure a compatible MCP client manually:
+
+```json
+{
+    "mcpServers": {
+      "lean-ctx": {
+        "command": "lean-ctx"
+      }
+    }
+  }
+```
+
+Review the generated MCP client config, shell hooks, and per-project settings
+before enabling LeanCTX across all AI clients. Run `lean-ctx doctor` after setup
+and restart your shell and AI tool once so MCP tools and hooks load cleanly.
+
+## Use Cases
+
+- Let Claude read large source files through compact map, signature, diff,
+  task, or cached full modes.
+- Compress noisy shell output from git, npm, cargo, Docker, kubectl, Terraform,
+  and similar tools before it reaches the model.
+- Search a codebase, inspect symbols, trace call graphs, and estimate impact
+  without repeatedly dumping full files into context.
+- Persist task facts, decisions, handoffs, and session memory across long
+  coding sessions.
+- Build context packs for pull requests, reviews, debugging, or multi-agent
+  handoffs.
+- Track token savings, context utilization, and tool-level cost attribution.
+
+## Safety and Privacy
+
+LeanCTX runs locally, but it sits directly between an AI agent and the user's
+repository. Treat it as a privileged developer tool. Its MCP tools can read
+files, summarize directories, search code, compress command output, persist
+session data, and execute shell commands that the user or agent invokes.
+
+Keep project-boundary enforcement on unless you intentionally allow more roots.
+Review role settings before enabling unsafe I/O, ignored-file search, command
+execution, team-server access, or context-package export. For sensitive
+repositories, disable optional update checks and any opt-in stats sharing, and
+store session data and context packages under the same controls as source code.
+
+Even compressed outputs can disclose source code, secrets, filenames, incident
+details, architecture, customer names, or unreleased product plans if sent to an
+MCP client and model. Do not ask the agent to read credentials, private keys,
+tokens, `.env` files, ignored files, or unrelated directories unless that access
+is explicitly approved and scoped.
+
+## Duplicate Check
+
+Existing MCP content includes code-search, repository-context, and coding-agent
+helpers, but no dedicated LeanCTX, `lean-ctx`, `lean-ctx-bin`, or
+`yvgude/lean-ctx` MCP entry was found in `content/mcp`. LeanCTX MCP Server is
+distinct because it documents the local Rust binary's context compression,
+stdio MCP server, code graph, session memory, shell-output compression,
+verification, and token-accounting workflows.
