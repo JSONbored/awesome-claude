@@ -22,7 +22,7 @@ brandDomain: ref.tools
 repoUrl: "https://github.com/ref-tools/ref-tools-mcp"
 documentationUrl: "https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/README.md"
 installable: true
-installCommand: "Use the hosted streamable HTTP endpoint with a Ref API key, or run the legacy stdio package with `npx -y ref-tools-mcp@latest` and `REF_API_KEY`."
+installCommand: "REF_API_KEY=ref_api_key_here npx -y ref-tools-mcp@3.0.3"
 usageSnippet: "Use `ref_search_documentation` for a specific library, API, or framework question, then pass an exact result URL to `ref_read_url`."
 copySnippet: |-
   {
@@ -38,7 +38,7 @@ configSnippet: |-
     "mcpServers": {
       "Ref": {
         "command": "npx",
-        "args": ["-y", "ref-tools-mcp@latest"],
+        "args": ["-y", "ref-tools-mcp@3.0.3"],
         "env": {
           "REF_API_KEY": "<ref-api-key>"
         }
@@ -154,7 +154,7 @@ For the legacy stdio package, use the npm package with `REF_API_KEY`:
   "mcpServers": {
     "Ref": {
       "command": "npx",
-      "args": ["-y", "ref-tools-mcp@latest"],
+      "args": ["-y", "ref-tools-mcp@3.0.3"],
       "env": {
         "REF_API_KEY": "<ref-api-key>"
       }
