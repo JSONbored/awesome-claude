@@ -1,4 +1,4 @@
-name: Raycast Release Watch
+name: Raycast Upstream Update Watch
 
 on:
   workflow_dispatch:
@@ -29,22 +29,22 @@ jobs:
         with:
           node-version: 24.16.0
 
-      - name: Check Raycast release status
+      - name: Check Raycast upstream update status
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/check-raycast-release-due.mjs --output raycast-release-due.json --upsert-issue
 
-      - name: Summarize Raycast release status
+      - name: Summarize Raycast upstream update status
         run: |
           node <<'NODE'
           const fs = require("node:fs");
           const report = JSON.parse(fs.readFileSync("raycast-release-due.json", "utf8"));
           const lines = [
-            "## Raycast Release Watch",
+            "## Raycast Upstream Update Watch",
             "",
             `- Due: \`${report.due}\``,
             `- Proposed version: \`${report.proposedVersion}\``,
-            `- Latest tag: \`${report.latestTag ?? "none"}\``,
+            `- Latest upstream-sync tag: \`${report.latestTag ?? "none"}\``,
             `- Raycast-related commits: \`${report.commits.length}\``,
           ];
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);

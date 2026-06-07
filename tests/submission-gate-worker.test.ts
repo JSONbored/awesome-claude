@@ -547,12 +547,15 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"COLLABORATOR"');
     expect(source).toContain("targetFromIssueCommentRecheck");
     expect(source).toContain("shouldResetManualTerminal");
-    expect(source).toContain("shouldResetClosedTerminal");
+    expect(source).toContain("shouldResetTerminalState");
     expect(source).toContain(
-      "resetAttemptCount: shouldResetManualTerminal || shouldResetClosedTerminal",
+      "resetAttemptCount: shouldResetManualTerminal || shouldResetTerminalState",
     );
     expect(source).toContain(
       'forceRecheck === true && String(existing?.status || "") === "manual"',
+    );
+    expect(source).toContain(
+      '["closed", "merged"].includes(String(existing?.status || ""))',
     );
     expect(source).toContain(
       "forceRecheck === true ||\n      isReopenedPullRequestEvent",
@@ -730,7 +733,7 @@ sourceUrls:
     expect(first.hash).toBe(second.hash);
   });
 
-  it("turns deterministic source hard failures into close evidence", async () => {
+  it("routes a single dead authoritative source to manual review", async () => {
     const report = await checkSubmittedSourceEvidence(
       `---
 title: Dead Source Fixture
@@ -745,15 +748,50 @@ documentationUrl: "https://github.com/example/missing"
 
     expect(report.status).toBe("failed");
     expect(decision).toMatchObject({
-      verdict: "close",
+      verdict: "manual",
       reasonCode: "source_hard_failure",
-      close: true,
+      close: false,
       evidence: [
         {
           field: "documentationUrl",
           matchedUrl: "https://github.com/example/missing",
           httpStatus: "404",
         },
+      ],
+    });
+  });
+
+  it("turns all-dead authoritative source evidence into close evidence", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: All Dead Source Fixture
+repoUrl: "https://github.com/example/missing"
+documentationUrl: "https://github.com/example/missing-docs"
+---
+`,
+      vi.fn<typeof fetch>().mockImplementation(async (url) => {
+        const status = String(url).includes("missing-docs") ? 410 : 404;
+        return new Response(null, { status });
+      }),
+    );
+    const decision = sourceEvidenceCloseDecision(report);
+
+    expect(report.status).toBe("failed");
+    expect(decision).toMatchObject({
+      verdict: "close",
+      reasonCode: "source_hard_failure",
+      close: true,
+      evidence: [
+        expect.objectContaining({
+          field: "documentationUrl",
+          matchedUrl: "https://github.com/example/missing-docs",
+          httpStatus: "410",
+        }),
+        expect.objectContaining({
+          field: "repoUrl",
+          matchedUrl: "https://github.com/example/missing",
+          httpStatus: "404",
+        }),
       ],
     });
   });
@@ -1788,7 +1826,7 @@ ${urls}
     expect(source).toContain("shouldResetIgnoredScan");
     expect(source).toContain("shouldResetManualTerminal");
     expect(source).toContain(
-      "resetAttemptCount: shouldResetManualTerminal || shouldResetClosedTerminal",
+      "resetAttemptCount: shouldResetManualTerminal || shouldResetTerminalState",
     );
     expect(source).toContain("clearTerminal:");
     expect(source).toContain("lastReviewKey: reviewScanKey || undefined");
@@ -1961,43 +1999,66 @@ ${urls}
     expect(source).toContain('"manual"');
     expect(source).toContain('"ignored"');
     expect(source).toContain(
-      "Skipped because this submission already has a terminal gate decision.",
+      "Skipped trusted recheck because this submission already has a terminal gate decision and GitHub is still open.",
     );
     expect(source).toContain(
-      "Skipped trusted recheck because this submission already has a terminal gate decision.",
+      "Skipped because this submission is in manual review and GitHub is still open.",
+    );
+    expect(source).toContain(
+      "Terminal gate state did not match open GitHub PR; requeued for reconciliation.",
     );
     expect(source).toContain("function isOpenPullRequest");
     expect(source).toContain("function terminalStatusFromPullRequest");
+    expect(source).toContain("function terminalVerdictFromPullRequest");
+    expect(source).toContain("function terminalSummaryFromPullRequest");
+    expect(source).toContain("function terminalLabelsToRemove");
+    expect(source).toContain("async function issueLabelNames");
     expect(source).toContain("async function reconcileTerminalPullRequest");
     expect(source).toContain("function isReopenedPullRequestEvent");
-    expect(source).toContain("shouldResetClosedTerminal");
-    expect(source).toContain('String(state?.status || "") === "closed"');
-    expect(source).toContain("labels: [LABELS.underReview]");
+    expect(source).toContain("shouldResetTerminalState");
+    expect(source).toContain(
+      '["closed", "merged"].includes(String(existing?.status || ""))',
+    );
+    expect(source).toContain(
+      "labels: [LABELS.underReview, ...gateLabelsForCategory(scope?.category)]",
+    );
     expect(source).toContain(
       "Terminal gate state did not match open GitHub PR",
     );
     expect(source).toContain("GitHub terminal state verified.");
     expect(source).toContain(
-      "GitHub PR was already closed; removed transient review label and skipped review continuation.",
+      "GitHub PR is merged; submission gate terminal state was reconciled from live GitHub.",
+    );
+    expect(source).toContain(
+      "GitHub PR is closed; submission gate terminal state was reconciled from live GitHub.",
+    );
+    expect(source).toContain(
+      "removed incompatible gate labels and skipped review continuation.",
     );
     expect(source).toContain('decision: "github_terminal_reconciled"');
     expect(source).toContain("clearVerdict: true");
     expect(source).toContain("clearTerminal: true");
+    expect(source).toContain("clearLastCheckSummary: true");
+    expect(source).toContain("listIssueLabels(params)");
     expect(reconcileBlock).not.toContain("clearVerdict");
     expect(storageSource).toContain(
       "COALESCE(last_error, '') != 'GitHub terminal state verified.'",
     );
     expect(storageSource).toContain("terminal_at IS NOT NULL");
     expect(storageSource).toContain("status = 'closed'");
+    expect(storageSource).toContain("listTerminalPrStatesForReconciliation");
+    expect(storageSource).toContain(
+      "WHERE status IN ('merged', 'closed', 'manual', 'ignored')",
+    );
     expect(storageSource).toContain(
       "excluded.status NOT IN ('merged', 'closed', 'manual', 'ignored')",
     );
     expect(storageSource).toContain("THEN submission_prs.status");
-    expect(enqueueBlock).toContain("shouldResetClosedTerminal");
+    expect(enqueueBlock).toContain("shouldResetTerminalState");
     expect(enqueueBlock).toContain("const shouldQueueReview");
     expect(enqueueBlock).toContain("!hasTerminalGateDecision(existing)");
     expect(enqueueBlock).toContain("shouldResetIgnoredScan");
-    expect(enqueueBlock).toContain("shouldResetClosedTerminal");
+    expect(enqueueBlock).toContain("shouldResetTerminalState");
     expect(enqueueBlock).toContain("if (!shouldQueueReview) return false");
     expect(enqueueBlock).toContain("const shouldPreserveRetryState");
     expect(enqueueBlock).toContain(
@@ -2041,9 +2102,9 @@ ${urls}
     expect(source).toContain("listOpenPullRequests({");
     expect(source).toContain("scheduled-discovery-");
     expect(source).toContain(
-      'const closedTerminalButOpen = String(state?.status || "") === "closed"',
+      '["closed", "merged"].includes(String(state?.status || ""))',
     );
-    expect(source).toContain("!closedTerminalButOpen");
+    expect(source).toContain("terminalStateButOpen");
     expect(source).toContain(
       "await applyUnderReviewToTarget(env, target, reviewScope)",
     );
@@ -2067,9 +2128,15 @@ ${urls}
     const source = readWorkerSource();
 
     expect(source).toContain('url.pathname === "/queue"');
+    expect(source).toContain('url.pathname === "/queue/reconcile"');
     expect(source).toContain("function hasInternalBearer");
     expect(source).toContain("Bearer ${env.INTERNAL_SHARED_SECRET}");
     expect(source).toContain("listRecentPrStates(env.SUBMISSION_GATE_DB");
+    expect(source).toContain("listTerminalPrStatesForReconciliation");
+    expect(source).toContain("async function terminalReconciliationRoute");
+    expect(source).toContain("async function terminalRepairPlanForRow");
+    expect(source).toContain("dryRun: !apply");
+    expect(source).toContain('url.searchParams.get("apply") === "1"');
     expect(source).toContain("lastCheckSummary");
     expect(source).toContain("attemptCount");
     expect(source).toContain("retryReasons");
@@ -2350,6 +2417,42 @@ websiteUrl: "https://example-agent-tool.dev/pricing"
         },
       ],
     });
+  });
+
+  it("treats same-category title reuse from different sources as related, not strict duplicate", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/agents/release-readiness-reviewer-agent.mdx",
+      content: `---
+title: Release Readiness Reviewer
+slug: release-readiness-reviewer-agent
+category: agents
+description: Reviews package release notes, versioning, and CI status before publishing.
+repoUrl: "https://github.com/example/release-readiness-reviewer"
+---
+`,
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/agents/release-readiness-reviewer-checklist.mdx",
+      content: `---
+title: Release Readiness Reviewer
+slug: release-readiness-reviewer-checklist
+category: agents
+description: Checks deployment runbooks, rollback criteria, and post-release monitoring.
+repoUrl: "https://github.com/another-example/release-checklist-agent"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining("same normalized title in agents"),
+          ]),
+        }),
+      ]),
+    );
   });
 
   it("distinguishes related vendor resources from strict duplicates", () => {
