@@ -1,6 +1,10 @@
 ---
 title: Redis MCP Server for Claude
 slug: redis-mcp-server
+safetyNotes:
+  - Use a restricted Redis user or database because commands can expose, mutate, or delete cache, queue, and session data.
+privacyNotes:
+  - Keys, values, connection URLs, database metadata, and application data stored in Redis may be exposed through tool calls.
 category: mcp
 description: >-
   Official Redis MCP server providing natural language interface for Redis data

@@ -1,6 +1,10 @@
 ---
 title: Stripe MCP Server for Claude
 slug: stripe-mcp-server
+safetyNotes:
+  - Use restricted or sandbox Stripe keys because customer, payment, invoice, and subscription actions can affect billing.
+privacyNotes:
+  - Customer records, invoices, subscriptions, payment metadata, account identifiers, and transaction details may be sent through model context.
 category: mcp
 description: >-
   Payment processing, subscription management, and financial transaction
@@ -13,6 +17,7 @@ seoDescription: >-
   Payment processing, subscription management, and financial transaction
   handling Discover tools for AI development.
 author: Stripe
+authorProfileUrl: "https://stripe.com/"
 dateAdded: "2025-09-18"
 documentationUrl: "https://docs.stripe.com/mcp"
 downloadUrl: /downloads/mcp/stripe-mcp-server.mcpb

@@ -1,6 +1,10 @@
 ---
 title: Docker MCP Server for Claude
 slug: docker-mcp-server
+safetyNotes:
+  - Restrict Docker daemon access because container operations can start, stop, delete, or expose workloads and host-mounted paths.
+privacyNotes:
+  - Image names, container logs, environment variables, volume paths, compose files, and registry metadata may be exposed through tool calls.
 category: mcp
 description: >-
   Manage Docker containers, images, and services directly through Claude with

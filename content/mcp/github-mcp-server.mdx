@@ -1,6 +1,10 @@
 ---
 title: GitHub MCP Server for Claude
 slug: github-mcp-server
+safetyNotes:
+  - Use a least-privilege GitHub token because repository, issue, pull request, and file operations can modify public or private projects.
+privacyNotes:
+  - Repository contents, issues, pull requests, comments, org metadata, and user details may be sent through model context.
 category: mcp
 description: >-
   Official GitHub MCP server providing comprehensive GitHub API access for
@@ -14,6 +18,7 @@ seoDescription: >-
   repository management, file operations, and search functionality Discover
   tools for ...
 author: GitHub
+authorProfileUrl: "https://github.com/github"
 dateAdded: "2025-09-18"
 documentationUrl: "https://www.npmjs.com/package/@modelcontextprotocol/server-github"
 downloadUrl: /downloads/mcp/github-mcp-server.mcpb

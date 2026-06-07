@@ -1,6 +1,10 @@
 ---
 title: Kubernetes MCP Server - MCP Servers
 slug: kubernetes-mcp-server
+safetyNotes:
+  - Use a least-privilege kubeconfig and selected context because cluster operations can affect production workloads and infrastructure.
+privacyNotes:
+  - Resource specs, pod logs, namespaces, environment variables, secret names or values, and cluster metadata may be exposed.
 category: mcp
 description: >-
   Kubernetes cluster management and container orchestration through MCP
@@ -13,6 +17,7 @@ seoDescription: >-
   Kubernetes cluster management and container orchestration through MCP
   integration Discover tools for AI development.
 author: feiskyer
+authorProfileUrl: "https://github.com/feiskyer"
 dateAdded: "2025-09-20"
 repoUrl: "https://github.com/feiskyer/mcp-kubernetes-server"
 documentationUrl: "https://github.com/feiskyer/mcp-kubernetes-server"

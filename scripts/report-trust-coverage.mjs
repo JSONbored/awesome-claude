@@ -23,7 +23,12 @@ import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
  */
 
 const repoRoot = process.cwd();
-const contentRoot = path.join(repoRoot, "content");
+let configuredRepoRoot = repoRoot;
+let outputPath = "";
+let check = false;
+let minRiskCoverage = null;
+let minAttributionCoverage = null;
+let outputFormat = "text";
 
 const RISK_BEARING = new Set([
   "hooks",
@@ -57,17 +62,69 @@ for (let index = 2; index < process.argv.length; index += 1) {
       const normalized = category.trim();
       if (normalized) selectedCategories.add(normalized);
     }
+  } else if (arg === "--repo-root") {
+    configuredRepoRoot = path.resolve(process.argv[index + 1] || "");
+    index += 1;
+  } else if (arg.startsWith("--repo-root=")) {
+    configuredRepoRoot = path.resolve(arg.slice("--repo-root=".length));
+  } else if (arg === "--output") {
+    outputPath = process.argv[index + 1] || "";
+    index += 1;
+  } else if (arg.startsWith("--output=")) {
+    outputPath = arg.slice("--output=".length);
+  } else if (arg === "--check") {
+    check = true;
+  } else if (arg === "--min-risk-coverage") {
+    minRiskCoverage = Number(process.argv[index + 1]);
+    index += 1;
+  } else if (arg.startsWith("--min-risk-coverage=")) {
+    minRiskCoverage = Number(arg.slice("--min-risk-coverage=".length));
+  } else if (arg === "--min-attribution-coverage") {
+    minAttributionCoverage = Number(process.argv[index + 1]);
+    index += 1;
+  } else if (arg.startsWith("--min-attribution-coverage=")) {
+    minAttributionCoverage = Number(
+      arg.slice("--min-attribution-coverage=".length),
+    );
+  } else if (arg === "--format") {
+    outputFormat = process.argv[index + 1] || "text";
+    index += 1;
+  } else if (arg.startsWith("--format=")) {
+    outputFormat = arg.slice("--format=".length);
   }
 }
 
-const reportPath =
+const validatePercent = (value, flag) => {
+  if (value !== null && (!Number.isFinite(value) || value < 0 || value > 100)) {
+    console.error(`${flag} must be a number from 0 to 100.`);
+    process.exit(2);
+  }
+};
+
+if (minRiskCoverage !== null || minAttributionCoverage !== null) {
+  validatePercent(minRiskCoverage, "--min-risk-coverage");
+  validatePercent(minAttributionCoverage, "--min-attribution-coverage");
+}
+
+if (!["json", "text"].includes(outputFormat)) {
+  console.error("--format must be either json or text.");
+  process.exit(2);
+}
+
+const contentRoot = path.join(configuredRepoRoot, "content");
+
+const defaultReportPath =
   selectedCategories.size > 0
     ? path.join(
-        repoRoot,
+        configuredRepoRoot,
         "reports/trust-coverage",
         `${[...selectedCategories].sort().join("-")}.json`,
       )
-    : path.join(repoRoot, "content/data/trust-coverage.json");
+    : path.join(configuredRepoRoot, "content/data/trust-coverage.json");
+const explicitReportPath = outputPath
+  ? path.resolve(process.cwd(), outputPath)
+  : "";
+const reportPath = explicitReportPath || (check ? "" : defaultReportPath);
 
 const has = (value) =>
   Array.isArray(value)
@@ -112,7 +169,7 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
     entries.push({
       category,
       slug: String(data.slug ?? fileName.replace(/\.mdx$/, "")),
-      filePath: path.relative(repoRoot, filePath),
+      filePath: path.relative(configuredRepoRoot, filePath),
       riskBearing,
       trust,
       trustGaps,
@@ -239,36 +296,83 @@ const summary = {
 
 const out = { summary, gaps, entries };
 
-fs.mkdirSync(path.dirname(reportPath), { recursive: true });
-fs.writeFileSync(
-  reportPath,
-  await prettier.format(JSON.stringify(out), { parser: "json" }),
-);
-
-// --- console summary ---
-console.log(`Wrote ${path.relative(repoRoot, reportPath)}`);
-if (selectedCategories.size > 0) {
-  console.log(`Selected categories: ${[...selectedCategories].join(", ")}`);
-}
-console.log(`Entries scanned: ${entries.length}`);
-console.log(
-  `Risk-bearing entries (${riskCategories.join(", ")}): ${risk.length}`,
-);
-console.log(
-  `  with safety + privacy notes: ${riskWithBoth} (${summary.riskBearing.coveragePct}%), missing ${summary.riskBearing.missing}`,
-);
-console.log("By risk-bearing category (lowest coverage first):");
-for (const [category, value] of Object.entries(riskByCategory).sort(
-  (a, b) => a[1].coveragePct - b[1].coveragePct,
-)) {
-  console.log(
-    `  ${category.padEnd(12)} ${String(value.covered).padStart(3)}/${String(
-      value.entries,
-    ).padEnd(
-      4,
-    )} (${String(value.coveragePct).padStart(3)}%)  missing ${value.missing}`,
+if (reportPath) {
+  fs.mkdirSync(path.dirname(reportPath), { recursive: true });
+  fs.writeFileSync(
+    reportPath,
+    await prettier.format(JSON.stringify(out), { parser: "json" }),
   );
 }
-console.log(
-  `Provenance (all ${entries.length}): source-backed ${summary.coverage.sourceBacked}%, attributed ${summary.coverage.attributed}%`,
-);
+
+const thresholdFailures = [];
+if (
+  minRiskCoverage !== null &&
+  summary.riskBearing.coveragePct < minRiskCoverage
+) {
+  thresholdFailures.push(
+    `Risk-bearing safety/privacy coverage ${summary.riskBearing.coveragePct}% is below required ${minRiskCoverage}%.`,
+  );
+}
+if (
+  minAttributionCoverage !== null &&
+  summary.coverage.attributed < minAttributionCoverage
+) {
+  thresholdFailures.push(
+    `Attribution coverage ${summary.coverage.attributed}% is below required ${minAttributionCoverage}%.`,
+  );
+}
+
+function printTextSummary() {
+  if (reportPath) {
+    console.log(`Wrote ${path.relative(process.cwd(), reportPath)}`);
+  } else if (check) {
+    console.log("Check mode: no report file written.");
+  }
+  if (selectedCategories.size > 0) {
+    console.log(`Selected categories: ${[...selectedCategories].join(", ")}`);
+  }
+  console.log(`Entries scanned: ${entries.length}`);
+  console.log(
+    `Risk-bearing entries (${riskCategories.join(", ")}): ${risk.length}`,
+  );
+  console.log(
+    `  with safety + privacy notes: ${riskWithBoth} (${summary.riskBearing.coveragePct}%), missing ${summary.riskBearing.missing}`,
+  );
+  console.log("By risk-bearing category (lowest coverage first):");
+  for (const [category, value] of Object.entries(riskByCategory).sort(
+    (a, b) => a[1].coveragePct - b[1].coveragePct,
+  )) {
+    console.log(
+      `  ${category.padEnd(12)} ${String(value.covered).padStart(3)}/${String(
+        value.entries,
+      ).padEnd(
+        4,
+      )} (${String(value.coveragePct).padStart(3)}%)  missing ${value.missing}`,
+    );
+  }
+  console.log(
+    `Provenance (all ${entries.length}): source-backed ${summary.coverage.sourceBacked}%, attributed ${summary.coverage.attributed}%`,
+  );
+  for (const failure of thresholdFailures) {
+    console.error(failure);
+  }
+}
+
+// --- console summary ---
+if (outputFormat === "json") {
+  console.log(
+    JSON.stringify({
+      ok: thresholdFailures.length === 0,
+      check,
+      reportPath: reportPath || null,
+      summary,
+      failures: thresholdFailures,
+    }),
+  );
+} else {
+  printTextSummary();
+}
+
+if (thresholdFailures.length) {
+  process.exit(1);
+}
