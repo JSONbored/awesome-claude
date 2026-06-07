@@ -22,9 +22,9 @@ dateAdded: "2026-06-06"
 brandName: DevDocs
 brandDomain: github.com
 repoUrl: "https://github.com/cyberagiinc/DevDocs"
-documentationUrl: "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docs/mcp/MCP_DOCKER_SETUP.md"
+documentationUrl: "https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/docs/mcp/MCP_DOCKER_SETUP.md"
 installable: true
-installCommand: "Clone the DevDocs repository, run the Docker start script, then configure Claude to call the `devdocs-mcp` container with `docker exec -i`."
+installCommand: "Clone the DevDocs repository, check out reviewed commit 9845479d0aeb7523abaab85723d0dfcf832fe1d3, run the Docker start script from that pinned revision, then configure Claude to call the `devdocs-mcp` container with `docker exec -i`."
 usageSnippet: "Start the DevDocs Docker stack, point Claude at the `fast_markdown_mcp.server` command inside `devdocs-mcp`, and ask it to list or search the crawled Markdown files."
 copySnippet: |-
   {
@@ -66,12 +66,12 @@ estimatedSetupTime: 20 minutes
 difficulty: advanced
 prerequisites:
   - Docker and Docker Compose available on the host that will run DevDocs.
-  - Git access to clone the DevDocs repository and run the Docker startup script.
+  - Git access to clone the DevDocs repository and check out reviewed commit `9845479d0aeb7523abaab85723d0dfcf832fe1d3` before running the Docker startup script.
   - MCP client support for launching stdio servers through `docker exec -i`.
   - Documentation URLs reviewed for crawling permissions, robots rules, and terms of service.
   - Storage, logs, crawl results, and Markdown output directories scoped to documentation you are authorized to crawl and query.
 safetyNotes:
-  - DevDocs runs a multi-container Docker stack with frontend, backend, MCP, and Crawl4AI services.
+  - DevDocs runs a multi-container Docker stack with frontend, backend, MCP, and Crawl4AI services; use the reviewed commit below instead of executing a moving branch tip.
   - The crawler can fetch and process external websites, so review crawl targets, rate limits, robots rules, and site terms before crawling.
   - The backend and crawler use a Crawl4AI API token; replace the demo token before shared or production use.
   - The MCP container mounts generated Markdown and logs, and its tools can read, search, sync, and expose that content to the MCP client.
@@ -86,14 +86,16 @@ disclosure: >-
   Apache-2.0-licensed open-source project. The entry focuses on the repository's
   Docker-backed Fast Markdown MCP server and documentation-crawling workflow.
 sourceUrls:
-  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/README.md"
-  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/LICENSE"
-  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/claude_mcp_settings.json"
-  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docker/dockerfiles/Dockerfile.mcp"
-  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docker/compose/docker-compose.yml"
-  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/pyproject.toml"
-  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/src/fast_markdown_mcp/server.py"
-  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/src/fast_markdown_mcp/document_structure.py"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/README.md"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/LICENSE"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/claude_mcp_settings.json"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/docker/dockerfiles/Dockerfile.mcp"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/docker/compose/docker-compose.yml"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/docker-start.sh"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/scripts/docker/docker-start.sh"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/fast-markdown-mcp/pyproject.toml"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/fast-markdown-mcp/src/fast_markdown_mcp/server.py"
+  - "https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/fast-markdown-mcp/src/fast_markdown_mcp/document_structure.py"
 tags:
   - documentation
   - crawler
@@ -127,20 +129,22 @@ rather than a public network endpoint.
 ## Source Review
 
 - https://github.com/cyberagiinc/DevDocs
-- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docs/mcp/MCP_DOCKER_SETUP.md
-- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/README.md
-- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/LICENSE
-- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/claude_mcp_settings.json
-- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docker/dockerfiles/Dockerfile.mcp
-- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/docker/compose/docker-compose.yml
-- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/pyproject.toml
-- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/src/fast_markdown_mcp/server.py
-- https://raw.githubusercontent.com/cyberagiinc/DevDocs/feature-main/fast-markdown-mcp/src/fast_markdown_mcp/document_structure.py
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/docs/mcp/MCP_DOCKER_SETUP.md
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/README.md
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/LICENSE
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/claude_mcp_settings.json
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/docker/dockerfiles/Dockerfile.mcp
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/docker/compose/docker-compose.yml
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/docker-start.sh
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/scripts/docker/docker-start.sh
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/fast-markdown-mcp/pyproject.toml
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/fast-markdown-mcp/src/fast_markdown_mcp/server.py
+- https://raw.githubusercontent.com/cyberagiinc/DevDocs/9845479d0aeb7523abaab85723d0dfcf832fe1d3/fast-markdown-mcp/src/fast_markdown_mcp/document_structure.py
 
-These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
-Docker setup guide, Claude MCP settings, Dockerfiles, Compose file, Python
-package metadata, MCP server implementation, and document-structure parser for
-current behavior.
+These sources were reviewed on **2026-06-06** at commit
+`9845479d0aeb7523abaab85723d0dfcf832fe1d3`. Use the pinned commit for the
+Docker startup script and MCP setup reviewed here; inspect upstream changes
+before running newer branch tips.
 
 ## Features
 
@@ -158,11 +162,13 @@ current behavior.
 
 ## Installation
 
-Clone the repository and start the Docker stack using the upstream scripts:
+Clone the repository, check out the reviewed commit, and start the Docker stack
+using the pinned upstream scripts:
 
 ```bash
 git clone https://github.com/cyberagiinc/DevDocs.git
 cd DevDocs
+git checkout 9845479d0aeb7523abaab85723d0dfcf832fe1d3
 ./docker-start.sh
 ```
 

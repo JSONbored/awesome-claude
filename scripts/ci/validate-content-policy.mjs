@@ -37,6 +37,7 @@ const ARCHIVE_PACKAGE_EXTENSIONS = new Set([
 
 const SAFETY_NOTE_REQUIRED_FLAGS = new Set([
   "unsafe_install_pipeline",
+  "mutable_script_install_source",
   "financial_or_identity_sensitive",
   "external_write_capability",
   "destructive_actions",
@@ -63,6 +64,9 @@ const CREDENTIAL_THEFT_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b/i;
 const ABUSE_ENABLEMENT_PATTERN =
   /\b(build|create|generate|run|deploy|use|ship)\b[\s\S]{0,80}\b(credential stealer|password stealer|cookie stealer|keylogger|steal credentials|exfiltrat(?:e|ion)|harvest cookies|dump tokens?)\b/i;
+const FULL_COMMIT_SHA_PATTERN = /^[0-9a-f]{40}$/i;
+const LOCAL_SCRIPT_REFERENCE_PATTERN =
+  /(?:^|[\s`;&|])(?:(?:bash|sh|zsh|pwsh|powershell)\s+)?(?:\.{1,2}\/|[\w.-]+\/)?[\w./-]*(?:install|setup|start|bootstrap|init)[\w.-]*\.(?:sh|bash|zsh|ps1)\b/im;
 
 const SAFE_MATTER_OPTIONS = {
   engines: {
@@ -347,6 +351,61 @@ function collectUrls(text) {
   return [...matches].map((match) => match[0]).slice(0, 50);
 }
 
+function githubSourceRef(value) {
+  const raw = normalizeText(value);
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    const parts = url.pathname.split("/").filter(Boolean);
+    if (url.protocol !== "https:") return null;
+    if (url.hostname.toLowerCase() === "raw.githubusercontent.com") {
+      if (parts.length < 4) return null;
+      return {
+        ref: parts[2],
+        path: parts.slice(3).join("/"),
+      };
+    }
+    if (
+      url.hostname.toLowerCase() === "github.com" &&
+      parts.length >= 5 &&
+      (parts[2] === "blob" || parts[2] === "raw")
+    ) {
+      return {
+        ref: parts[3],
+        path: parts.slice(4).join("/"),
+      };
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function isScriptPath(value) {
+  return /\.(?:sh|bash|zsh|ps1)$/i.test(normalizeText(value));
+}
+
+function isImmutableGithubScriptSourceUrl(value) {
+  const source = githubSourceRef(value);
+  return Boolean(
+    source &&
+    FULL_COMMIT_SHA_PATTERN.test(source.ref) &&
+    isScriptPath(source.path),
+  );
+}
+
+function isMutableGithubSourceUrl(value) {
+  const source = githubSourceRef(value);
+  return Boolean(source && !FULL_COMMIT_SHA_PATTERN.test(source.ref));
+}
+
+function referencesClonedLocalScriptInstall(value) {
+  const text = normalizeText(value);
+  return (
+    /\bgit\s+clone\b/i.test(text) && LOCAL_SCRIPT_REFERENCE_PATTERN.test(text)
+  );
+}
+
 function sameGitHubLogin(value, login) {
   const expected = normalizeText(login).replace(/^@/, "").toLowerCase();
   if (!expected) return false;
@@ -404,6 +463,7 @@ function frontmatterFields(data = {}, category = "") {
     slug: normalizeText(data.slug),
     github_url: normalizeText(data.repoUrl),
     source_url: normalizeText(data.sourceUrl),
+    source_urls: stringList(data.sourceUrls).join("\n"),
     website_url: normalizeText(data.websiteUrl),
     docs_url: normalizeText(data.documentationUrl || data.projectUrl),
     download_url: normalizeText(data.downloadUrl),
@@ -558,6 +618,7 @@ function addContentRiskSignals(report, fields, content) {
   const text = [
     fields.github_url,
     fields.source_url,
+    fields.source_urls,
     fields.website_url,
     fields.docs_url,
     fields.download_url,
@@ -577,6 +638,7 @@ function addContentRiskSignals(report, fields, content) {
   const submittedSourceUrls = [
     fields.github_url,
     fields.source_url,
+    ...stringList(fields.source_urls),
     fields.website_url,
     fields.docs_url,
     fields.download_url,
@@ -665,6 +727,22 @@ function addContentRiskSignals(report, fields, content) {
       "critical",
       "unsafe_install_pipeline",
       "Install instructions include a destructive or remote-code execution pipeline",
+    );
+  }
+
+  if (
+    referencesClonedLocalScriptInstall(installText) &&
+    !submittedSourceUrls.some(isImmutableGithubScriptSourceUrl)
+  ) {
+    const mutableSources = submittedSourceUrls.filter(isMutableGithubSourceUrl);
+    addFlag(
+      report,
+      "critical",
+      "mutable_script_install_source",
+      "Install instructions run a cloned local installer script without immutable script source evidence",
+      mutableSources.length
+        ? `Mutable GitHub source refs: ${mutableSources.slice(0, 5).join(", ")}`
+        : "Add a raw GitHub URL pinned to a full commit SHA for the executed installer script, or replace the script execution with reviewed commands.",
     );
   }
 
@@ -933,6 +1011,8 @@ function directContentRequestChangesReasons(report = {}) {
       "Install or usage instructions fetch executable content from a non-HTTPS URL.",
     unsafe_install_pipeline:
       "Install instructions include a destructive or remote-code execution pipeline.",
+    mutable_script_install_source:
+      "Install instructions run a cloned local installer script without immutable script source evidence.",
     embedded_secret:
       "Submission appears to include a real secret or API token.",
     malicious_data_theft_capability:
