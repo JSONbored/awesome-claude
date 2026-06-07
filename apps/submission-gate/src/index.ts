@@ -28,6 +28,7 @@ import {
   createUserForkContentPr,
   exchangeGitHubUserCode,
   getCommitValidationState,
+  GitHubApiError,
   githubRetryDelaySeconds,
   getInstallationToken,
   getPullRequest,
@@ -1824,6 +1825,13 @@ async function ignoreOutOfScopeReviewTarget(params: {
 }
 
 function isRetryableMergeError(error: unknown) {
+  if (isTimeoutError(error) || isGitHubRateLimitError(error)) return true;
+  if (error instanceof GitHubApiError) {
+    return (
+      error.status === 429 ||
+      (error.status >= 500 && error.status <= 599)
+    );
+  }
   const message = error instanceof Error ? error.message : String(error || "");
   return /required status check|required approving review|not mergeable|merge conflict|base branch was modified|head branch was modified|sha does not match|review_required|status check/i.test(
     message,
@@ -4178,10 +4186,10 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               decision.summary.trim(),
               "",
               "Merge Result:",
-              `- Accepted by private review, but GitHub is not merge-ready yet: ${
+              `- Accepted by private review; merge retry pending after GitHub returned: ${
                 error instanceof Error ? error.message : "unknown merge state"
               }`,
-              "- The gate will retry after branch protection and required review state settle.",
+              "- The gate will retry after transient GitHub merge state settles.",
             ].join("\n");
             await upsertPrState(env.SUBMISSION_GATE_DB, {
               repo: target.repoFullName,

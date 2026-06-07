@@ -1905,6 +1905,35 @@ ${urls}
     );
   });
 
+  it("keeps transient accepted-merge failures pending for retry", () => {
+    const source = readWorkerSource();
+    const classifier =
+      source.match(
+        /function isRetryableMergeError[\s\S]*?\nfunction importContentPathParts/,
+      )?.[0] || "";
+    const retryBranch =
+      source.match(
+        /if \(isRetryableMergeError\(error\)\) \{[\s\S]*?throw new SubmissionMergePendingError\(pendingSummary\);/,
+      )?.[0] || "";
+
+    expect(classifier).toContain("isTimeoutError(error)");
+    expect(classifier).toContain("isGitHubRateLimitError(error)");
+    expect(classifier).toContain("error instanceof GitHubApiError");
+    expect(classifier).toContain("error.status === 429");
+    expect(classifier).toContain("error.status >= 500");
+    expect(classifier).toContain("error.status <= 599");
+    expect(classifier).toContain("required approving review");
+    expect(classifier).toContain("merge conflict");
+    expect(retryBranch).toContain('status: "merge_pending"');
+    expect(retryBranch).toContain('decision: "merge_pending"');
+    expect(retryBranch).toContain("merge retry pending");
+    expect(retryBranch).toContain(
+      "The gate will retry after transient GitHub merge state settles.",
+    );
+    expect(retryBranch).not.toContain('status: "manual"');
+    expect(retryBranch).not.toContain("submission-manual-review");
+  });
+
   it("closes direct content PRs when required validation fails", () => {
     const source = readWorkerSource();
     const validationBlock =
