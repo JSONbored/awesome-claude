@@ -479,11 +479,70 @@ export function sourceEvidenceToDecisionEvidence(
     }));
 }
 
+function authoritativeSourceItems(report: SourceEvidenceReport) {
+  return report.urls.filter(
+    (item) =>
+      item.blocking &&
+      (item.role === "canonical" ||
+        PRIMARY_CANONICAL_SOURCE_FIELDS.has(item.field)),
+  );
+}
+
+function shouldHardCloseSourceEvidence(report: SourceEvidenceReport) {
+  const authoritative = authoritativeSourceItems(report);
+  if (!authoritative.length) return false;
+  const hardFailures = authoritative.filter(
+    (item) => item.status === "hard_failure",
+  );
+  if (!hardFailures.length) return false;
+  const allAuthoritativeFailed = hardFailures.length === authoritative.length;
+  return allAuthoritativeFailed && authoritative.length > 1;
+}
+
+function sourceEvidenceManualDecision(
+  report: SourceEvidenceReport,
+  evidence: GateDecisionEvidence[],
+): GateDecision {
+  return {
+    verdict: "manual",
+    reasonCode: "source_hard_failure",
+    evidence,
+    sourceEvidenceHash: report.hash,
+    confidence: 1,
+    summary: [
+      "Summary:",
+      "- Deterministic source evidence found one or more dead or invalid source URLs, but not enough to hard-close automatically.",
+      "- A maintainer should decide whether to request a source fix, merge with stronger source evidence, or close if the source issue is real.",
+      "",
+      "Source Review:",
+      ...evidence.map((item) =>
+        [
+          `- \`${item.field || "source"}\` ${item.url || item.matchedUrl}`,
+          item.httpStatus ? `returned HTTP ${item.httpStatus}` : item.outcome,
+          item.finalUrl && item.finalUrl !== item.url
+            ? `(final URL: ${item.finalUrl})`
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" "),
+      ),
+      "",
+      "Recommended Action:",
+      "- Review the source manually. Request a source update if the submitted entry is otherwise useful.",
+    ].join("\n"),
+    labels: [LABELS.manual],
+    close: false,
+  };
+}
+
 export function sourceEvidenceCloseDecision(
   report: SourceEvidenceReport,
 ): GateDecision | null {
   const evidence = sourceEvidenceToDecisionEvidence(report);
   if (!evidence.length) return null;
+  if (!shouldHardCloseSourceEvidence(report)) {
+    return sourceEvidenceManualDecision(report, evidence);
+  }
   return {
     verdict: "close",
     reasonCode: "source_hard_failure",

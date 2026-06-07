@@ -42,12 +42,18 @@ function sectionText(entry) {
 }
 
 function listValue(values) {
-  return values?.length ? values.join(", ") : "";
+  const items = Array.isArray(values)
+    ? values.map((value) => clean(value)).filter(Boolean)
+    : [];
+  return items.length ? items.join(", ") : "";
 }
 
 function bulletList(values) {
-  return Array.isArray(values) && values.length
-    ? values.map((value) => `- ${clean(value)}`).filter((line) => line !== "-")
+  return Array.isArray(values)
+    ? values
+        .map((value) => clean(value))
+        .filter(Boolean)
+        .map((value) => `- ${value}`)
     : [];
 }
 

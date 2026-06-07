@@ -367,6 +367,21 @@ export async function getPullRequest(params: {
   );
 }
 
+export async function listIssueLabels(params: {
+  token: string;
+  repo: GitHubRepo;
+  issueNumber: number;
+  apiVersion?: string;
+}) {
+  return githubJson<Array<{ name?: string }>>(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/issues/${params.issueNumber}/labels?per_page=100`,
+    {
+      token: params.token,
+      apiVersion: params.apiVersion,
+    },
+  );
+}
+
 export async function listPullRequestFiles(params: {
   token: string;
   repo: GitHubRepo;
@@ -774,7 +789,22 @@ async function ensureManagedLabel(params: {
       },
     );
   } catch (error) {
-    if (error instanceof GitHubApiError && error.status === 422) return;
+    if (error instanceof GitHubApiError && error.status === 422) {
+      await githubJson(
+        `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/labels/${encodeURIComponent(params.label)}`,
+        {
+          method: "PATCH",
+          token: params.token,
+          apiVersion: params.apiVersion,
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            color: definition.color,
+            description: definition.description,
+          }),
+        },
+      );
+      return;
+    }
     throw error;
   }
 }

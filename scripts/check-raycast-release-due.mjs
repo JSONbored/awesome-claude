@@ -38,8 +38,8 @@ async function main() {
   if (!args.json && !args.output) {
     process.stdout.write(
       report.due
-        ? `Raycast update due: ${report.proposedVersion}\n`
-        : "No Raycast update due.\n",
+        ? `Raycast upstream update due: ${report.proposedVersion}\n`
+        : "No Raycast upstream update due.\n",
     );
   }
 }

@@ -34,6 +34,7 @@ import {
   getRepositoryInstallationId,
   getRepositoryFileContent,
   isGitHubRateLimitError,
+  listIssueLabels,
   listOpenPullRequests,
   listPullRequestFiles,
   listPullRequestsForCommit,
@@ -81,6 +82,7 @@ import {
   insertAudit,
   listDuePrStates,
   listRecentPrStates,
+  listTerminalPrStatesForReconciliation,
   markPrNotificationSent,
   storeDraftUserToken,
   updateDraftAuthState,
@@ -166,6 +168,7 @@ class SourceEvidenceRetryableError extends Error {
 
 const TERMINAL_GATE_VERDICTS = new Set(["close", "manual", "ignore"]);
 const TERMINAL_PR_STATUSES = new Set(["merged", "closed", "manual", "ignored"]);
+const GITHUB_TERMINAL_VERIFICATION_ERROR = "GitHub terminal state verified.";
 const VALIDATION_REQUEUE_SECONDS = 90;
 const QUEUED_STALE_SECONDS = 60;
 const REVIEWING_STALE_SECONDS = 180;
@@ -1634,16 +1637,90 @@ function hasTerminalGateDecision(
   return TERMINAL_GATE_VERDICTS.has(String(state.verdict || ""));
 }
 
+type TerminalPullRequest = {
+  state?: string;
+  merged_at?: string | null;
+  head?: { sha?: string; ref?: string; repo?: { full_name?: string } };
+  base?: { ref?: string };
+};
+
 function isOpenPullRequest(pull: { state?: string }) {
   return String(pull.state || "").toLowerCase() === "open";
 }
 
-function terminalStatusFromPullRequest(pull: {
-  state?: string;
-  merged_at?: string | null;
-}) {
+function terminalStatusFromPullRequest(pull: TerminalPullRequest) {
   if (isOpenPullRequest(pull)) return null;
   return pull.merged_at ? "merged" : "closed";
+}
+
+function terminalVerdictFromPullRequest(params: {
+  status: "merged" | "closed";
+  labels: Set<string> | null;
+  existing?: Record<string, unknown> | null;
+}): GateVerdict {
+  if (params.status === "merged") return "merge";
+  const existingVerdict = String(params.existing?.verdict || "");
+  if (params.labels?.has(LABELS.close)) return "close";
+  if (params.labels?.has(LABELS.manual)) return "manual";
+  if (TERMINAL_GATE_VERDICTS.has(existingVerdict)) {
+    return existingVerdict as GateVerdict;
+  }
+  return "close";
+}
+
+function terminalSummaryFromPullRequest(params: {
+  status: "merged" | "closed";
+  verdict: GateVerdict;
+}) {
+  if (params.status === "merged") {
+    return "GitHub PR is merged; submission gate terminal state was reconciled from live GitHub.";
+  }
+  if (params.verdict === "manual") {
+    return "GitHub PR is closed after manual review; submission gate terminal state was reconciled from live GitHub.";
+  }
+  return "GitHub PR is closed; submission gate terminal state was reconciled from live GitHub.";
+}
+
+function terminalLabelsToRemove(params: {
+  status: "merged" | "closed";
+  verdict: GateVerdict;
+  labels: Set<string> | null;
+}) {
+  const labels = new Set<string>([LABELS.underReview]);
+  if (params.status === "merged") {
+    labels.add(LABELS.manual);
+    labels.add(LABELS.close);
+  } else {
+    labels.add(LABELS.merged);
+    if (params.verdict === "close") labels.add(LABELS.manual);
+    if (params.verdict === "manual") labels.add(LABELS.close);
+  }
+  const candidates = [...labels];
+  return params.labels
+    ? candidates.filter((label) => params.labels?.has(label))
+    : candidates;
+}
+
+async function issueLabelNames(params: {
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  issueNumber: number;
+  apiVersion?: string;
+}) {
+  try {
+    const labels = await listIssueLabels(params);
+    return new Set(
+      labels
+        .map((label) => String(label.name || "").trim())
+        .filter(Boolean),
+    );
+  } catch (error) {
+    console.warn("submission gate could not read issue labels", {
+      issueNumber: params.issueNumber,
+      error,
+    });
+    return null;
+  }
 }
 
 async function reconcileTerminalPullRequest(params: {
@@ -1652,20 +1729,29 @@ async function reconcileTerminalPullRequest(params: {
   repo: ReturnType<typeof parseRepo>;
   target: ReviewTarget;
   message: QueueMessage;
-  pull: {
-    state?: string;
-    merged_at?: string | null;
-    head?: { sha?: string; ref?: string; repo?: { full_name?: string } };
-    base?: { ref?: string };
-  };
+  pull: TerminalPullRequest;
+  existing?: Record<string, unknown> | null;
 }) {
   const status = terminalStatusFromPullRequest(params.pull);
   if (!status) return false;
+  const labels = await issueLabelNames({
+    token: params.token,
+    repo: params.repo,
+    issueNumber: params.target.number,
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  const verdict = terminalVerdictFromPullRequest({
+    status,
+    labels,
+    existing: params.existing,
+  });
+  const summary = terminalSummaryFromPullRequest({ status, verdict });
+  const labelsToRemove = terminalLabelsToRemove({ status, verdict, labels });
   await removeLabels({
     token: params.token,
     repo: params.repo,
     issueNumber: params.target.number,
-    labels: [LABELS.underReview],
+    labels: labelsToRemove,
     apiVersion: params.env.GITHUB_API_VERSION,
   });
   await upsertPrState(params.env.SUBMISSION_GATE_DB, {
@@ -1680,10 +1766,12 @@ async function reconcileTerminalPullRequest(params: {
       contentGateBaseRef(params.env),
     installationId: params.target.installationId,
     status,
-    verdict: status === "merged" ? "merge" : undefined,
+    verdict,
+    verdictSummary: summary,
     deliveryId: String(params.message.payload.deliveryId || ""),
     nextReviewAt: null,
-    lastError: "GitHub terminal state verified.",
+    lastError: GITHUB_TERMINAL_VERIFICATION_ERROR,
+    lastCheckSummary: summary,
     terminalAt: nowIso(),
   });
   await insertAudit(params.env.SUBMISSION_GATE_DB, {
@@ -1693,8 +1781,8 @@ async function reconcileTerminalPullRequest(params: {
     decision: "github_terminal_reconciled",
     summary:
       status === "merged"
-        ? "GitHub PR was already merged; removed transient review label and skipped review continuation."
-        : "GitHub PR was already closed; removed transient review label and skipped review continuation.",
+        ? "GitHub PR was already merged; removed incompatible gate labels and skipped review continuation."
+        : "GitHub PR was already closed; removed incompatible gate labels and skipped review continuation.",
   });
   return true;
 }
@@ -2724,8 +2812,8 @@ async function enqueueReviewTarget(
     String(existing?.status || "") === "ignored" &&
     reviewScanKey &&
     existingReviewKey !== reviewScanKey;
-  const shouldResetClosedTerminal =
-    String(existing?.status || "") === "closed" &&
+  const shouldResetTerminalState =
+    ["closed", "merged"].includes(String(existing?.status || "")) &&
     (forceRecheck === true ||
       isReopenedPullRequestEvent(eventName, webhook) ||
       eventName === "scheduled");
@@ -2734,14 +2822,14 @@ async function enqueueReviewTarget(
   const shouldQueueReview =
     !hasTerminalGateDecision(existing) ||
     shouldResetIgnoredScan ||
-    shouldResetClosedTerminal ||
+    shouldResetTerminalState ||
     shouldResetManualTerminal;
   if (!shouldQueueReview) return false;
   const shouldPreserveRetryState =
     String(existing?.status || "") === "error_retryable" &&
     String(existing?.headSha || "") === String(target.headSha || "") &&
     !shouldResetIgnoredScan &&
-    !shouldResetClosedTerminal &&
+    !shouldResetTerminalState &&
     !shouldResetManualTerminal;
 
   await upsertPrState(env.SUBMISSION_GATE_DB, {
@@ -2756,15 +2844,15 @@ async function enqueueReviewTarget(
     deliveryId,
     nextReviewAt: null,
     incrementAttempt: true,
-    resetAttemptCount: shouldResetManualTerminal || shouldResetClosedTerminal,
+    resetAttemptCount: shouldResetManualTerminal || shouldResetTerminalState,
     lastReviewKey: reviewScanKey || undefined,
     clearVerdict:
       shouldResetIgnoredScan ||
-      shouldResetClosedTerminal ||
+      shouldResetTerminalState ||
       shouldResetManualTerminal,
     clearTerminal:
       shouldResetIgnoredScan ||
-      shouldResetClosedTerminal ||
+      shouldResetTerminalState ||
       shouldResetManualTerminal,
     preserveRetryState: shouldPreserveRetryState,
   });
@@ -3415,19 +3503,6 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       }
       const repo = parseRepo(target.repoFullName);
       if (hasTerminalGateDecision(existing)) {
-        const existingStatus = String(existing?.status || "");
-        if (existingStatus !== "closed") {
-          await insertAudit(env.SUBMISSION_GATE_DB, {
-            id: crypto.randomUUID(),
-            targetKey: message.targetKey,
-            eventType: message.kind,
-            decision: "ignored",
-            summary: forceRecheck
-              ? "Skipped trusted recheck because this submission already has a terminal gate decision."
-              : "Skipped because this submission already has a terminal gate decision.",
-          });
-          return;
-        }
         try {
           const pull = await getPullRequest({
             token,
@@ -3436,31 +3511,27 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             apiVersion: env.GITHUB_API_VERSION,
           });
           if (!isOpenPullRequest(pull)) {
-            await upsertPrState(env.SUBMISSION_GATE_DB, {
-              repo: target.repoFullName,
-              number: target.number,
-              headRepo: pull.head?.repo?.full_name || target.headRepo,
-              headRef: pull.head?.ref || target.headRef,
-              headSha: pull.head?.sha || target.headSha,
-              baseRef:
-                pull.base?.ref || target.baseRef || contentGateBaseRef(env),
-              installationId: target.installationId,
-              status: String(existing?.status || "closed"),
-              deliveryId: String(message.payload.deliveryId || ""),
-              lastError: "GitHub terminal state verified.",
-              terminalAt:
-                typeof existing?.terminalAt === "string"
-                  ? existing.terminalAt
-                  : nowIso(),
+            await reconcileTerminalPullRequest({
+              env,
+              token,
+              repo,
+              target,
+              message,
+              pull,
+              existing,
             });
+            return;
+          }
+          const existingStatus = String(existing?.status || "");
+          if (existingStatus === "manual" && !forceRecheck) {
             await insertAudit(env.SUBMISSION_GATE_DB, {
               id: crypto.randomUUID(),
               targetKey: message.targetKey,
               eventType: message.kind,
               decision: "ignored",
               summary: forceRecheck
-                ? "Skipped trusted recheck because this submission already has a terminal gate decision and GitHub is terminal."
-                : "Skipped because this submission already has a terminal gate decision and GitHub is terminal.",
+                ? "Skipped trusted recheck because this submission already has a terminal gate decision and GitHub is still open."
+                : "Skipped because this submission is in manual review and GitHub is still open.",
             });
             return;
           }
@@ -3479,6 +3550,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             deliveryId: String(message.payload.deliveryId || ""),
             clearVerdict: true,
             clearTerminal: true,
+            clearLastCheckSummary: true,
           });
           target.headSha = pull.head?.sha || target.headSha;
           target.headRef = pull.head?.ref || target.headRef;
@@ -3555,6 +3627,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             target,
             message,
             pull: pullForNotification,
+            existing,
           })
         ) {
           return;
@@ -3899,7 +3972,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               closeEvidenceContract:
                 "Every close verdict must include reasonCode and evidence. Supported reasonCode values are scope_failure, validation_failure, provenance_failure, protected_metadata_edit, strict_duplicate, source_hard_failure, commercial_listing_route, embedded_secret, unsafe_install_pipeline, malicious_data_theft, prohibited_content, and policy_fit_failure. strict_duplicate closes must identify the duplicated entry path, source URL, or PR in evidence. Safety closes must include ruleId, matched snippet or behavior, and whyNotDefensive. Defensive security examples like Claude Code permission auditing or env-leak warning hooks should not close on keyword matches alone.",
               sourceEvidencePolicy:
-                "Use deterministicSourceEvidence/sourceEvidence for URL reachability. Do not invent HTTP status. If your source_hard_failure finding disagrees with deterministic source evidence, return a retryable source_evidence_conflict error with the conflicting URL instead of a close verdict. You may still close semantic source failures such as unsupported claims, thin promotional content, or policy fit issues, but not by claiming reachable links are dead.",
+                "Use deterministicSourceEvidence/sourceEvidence for URL reachability. Do not invent HTTP status. Treat 403, 429, timeout, and fetch errors as retryable/inconclusive. A single dead URL or partial source failure should go to manual/request-changes unless every authoritative source is dead or invalid. If your source_hard_failure finding disagrees with deterministic source evidence, return a retryable source_evidence_conflict error with the conflicting URL instead of a close verdict. You may still close semantic source failures such as unsupported claims, thin promotional content, or policy fit issues, but not by claiming reachable links are dead.",
               duplicateEvidencePolicy:
                 "Use deterministicDuplicateReview for duplicate status. If your strict_duplicate finding disagrees with deterministic duplicate review, return a retryable duplicate_evidence_conflict error with the conflicting duplicate target instead of a close verdict.",
             },
@@ -4364,14 +4437,21 @@ async function discoverOpenContentPullRequests(
       repo: target.repoFullName,
       number: target.number,
     });
-    const closedTerminalButOpen = String(state?.status || "") === "closed";
-    if (hasTerminalGateDecision(state) && !closedTerminalButOpen) continue;
     const reviewScanKey = reviewScanKeyForTarget(target);
+    const existingReviewKey = String(state?.lastReviewKey || "");
+    const shouldResetIgnoredScan =
+      String(state?.status || "") === "ignored" &&
+      reviewScanKey &&
+      existingReviewKey !== reviewScanKey;
+    const terminalStateButOpen =
+      ["closed", "merged"].includes(String(state?.status || "")) ||
+      shouldResetIgnoredScan;
+    if (hasTerminalGateDecision(state) && !terminalStateButOpen) continue;
     if (
       state &&
-      !closedTerminalButOpen &&
+      !terminalStateButOpen &&
       String(state.status || "") !== "error_retryable" &&
-      (!reviewScanKey || String(state.lastReviewKey || "") === reviewScanKey)
+      (!reviewScanKey || existingReviewKey === reviewScanKey)
     ) {
       continue;
     }
@@ -4546,6 +4626,224 @@ async function queueStatusRoute(request: Request, env: Env) {
   });
 }
 
+function targetFromPrStateRow(
+  row: Record<string, unknown>,
+  env: Env,
+): ReviewTarget | null {
+  const repoFullName = String(row.repo || "");
+  const number = Number(row.number || 0);
+  if (!repoFullName || !number) return null;
+  return {
+    repoFullName,
+    number,
+    baseRef: String(row.baseRef || contentGateBaseRef(env)),
+    headRepo: typeof row.headRepo === "string" ? row.headRepo : undefined,
+    headRef: typeof row.headRef === "string" ? row.headRef : undefined,
+    headSha: typeof row.headSha === "string" ? row.headSha : undefined,
+    installationId: Number(row.installationId || 0) || undefined,
+  };
+}
+
+function terminalRowNeedsSummaryRepair(
+  row: Record<string, unknown>,
+  summary: string,
+) {
+  const current = String(row.lastCheckSummary || "");
+  return (
+    current !== summary &&
+    (!current ||
+      /\b(?:pending|waiting|validation|superagent|required checks?)\b/i.test(
+        current,
+      ))
+  );
+}
+
+async function terminalRepairPlanForRow(params: {
+  env: Env;
+  row: Record<string, unknown>;
+  apply: boolean;
+}) {
+  const target = targetFromPrStateRow(params.row, params.env);
+  if (!target) {
+    return {
+      number: params.row.number,
+      action: "skip_invalid_row",
+      apply: false,
+    };
+  }
+  target.baseRef = target.baseRef || contentGateBaseRef(params.env);
+  const repo = parseRepo(target.repoFullName);
+  const token = await installationTokenForTarget(params.env, target);
+  if (!token) {
+    return {
+      repo: target.repoFullName,
+      number: target.number,
+      action: "skip_no_installation_token",
+      apply: false,
+    };
+  }
+  const pull = await getPullRequest({
+    token,
+    repo,
+    number: target.number,
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  target.headSha = pull.head?.sha || target.headSha;
+  target.headRef = pull.head?.ref || target.headRef;
+  target.headRepo = pull.head?.repo?.full_name || target.headRepo;
+  target.baseRef =
+    pull.base?.ref || target.baseRef || contentGateBaseRef(params.env);
+
+  if (isOpenPullRequest(pull)) {
+    const shouldReset =
+      String(params.row.status || "") !== "manual" ||
+      String(params.row.verdict || "") !== "manual";
+    const plan = {
+      repo: target.repoFullName,
+      number: target.number,
+      action: shouldReset ? "reset_open_terminal_row" : "skip_open_manual",
+      githubState: "open",
+      currentStatus: params.row.status,
+      currentVerdict: params.row.verdict,
+      desiredStatus: shouldReset ? "error_retryable" : params.row.status,
+      desiredVerdict: shouldReset ? null : params.row.verdict,
+      labelsToRemove: [] as string[],
+      applied: false,
+    };
+    if (params.apply && shouldReset) {
+      await upsertPrState(params.env.SUBMISSION_GATE_DB, {
+        repo: target.repoFullName,
+        number: target.number,
+        headRepo: target.headRepo,
+        headRef: target.headRef,
+        headSha: target.headSha,
+        baseRef: target.baseRef || contentGateBaseRef(params.env),
+        installationId: target.installationId,
+        status: "error_retryable",
+        nextReviewAt: null,
+        lastError: "Terminal gate state did not match open GitHub PR.",
+        clearVerdict: true,
+        clearTerminal: true,
+        clearLastCheckSummary: true,
+      });
+      plan.applied = true;
+    }
+    return plan;
+  }
+
+  const status = terminalStatusFromPullRequest(pull);
+  if (!status) {
+    return {
+      repo: target.repoFullName,
+      number: target.number,
+      action: "skip_unknown_github_state",
+      githubState: String(pull.state || ""),
+      apply: false,
+    };
+  }
+  const labels = await issueLabelNames({
+    token,
+    repo,
+    issueNumber: target.number,
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  const verdict = terminalVerdictFromPullRequest({
+    status,
+    labels,
+    existing: params.row,
+  });
+  const summary = terminalSummaryFromPullRequest({ status, verdict });
+  const labelsToRemove = terminalLabelsToRemove({ status, verdict, labels });
+  const needsRepair =
+    String(params.row.status || "") !== status ||
+    String(params.row.verdict || "") !== verdict ||
+    String(params.row.verdictSummary || "") !== summary ||
+    terminalRowNeedsSummaryRepair(params.row, summary) ||
+    labelsToRemove.length > 0;
+  const plan = {
+    repo: target.repoFullName,
+    number: target.number,
+    action: needsRepair ? "reconcile_terminal_row" : "skip_already_consistent",
+    githubState: pull.merged_at ? "merged" : "closed",
+    currentStatus: params.row.status,
+    currentVerdict: params.row.verdict,
+    desiredStatus: status,
+    desiredVerdict: verdict,
+    desiredSummary: summary,
+    labelsToRemove,
+    applied: false,
+  };
+  if (params.apply && needsRepair) {
+    if (labelsToRemove.length) {
+      await removeLabels({
+        token,
+        repo,
+        issueNumber: target.number,
+        labels: labelsToRemove,
+        apiVersion: params.env.GITHUB_API_VERSION,
+      });
+    }
+    await upsertPrState(params.env.SUBMISSION_GATE_DB, {
+      repo: target.repoFullName,
+      number: target.number,
+      headRepo: target.headRepo,
+      headRef: target.headRef,
+      headSha: target.headSha,
+      baseRef: target.baseRef || contentGateBaseRef(params.env),
+      installationId: target.installationId,
+      status,
+      verdict,
+      verdictSummary: summary,
+      nextReviewAt: null,
+      lastError: GITHUB_TERMINAL_VERIFICATION_ERROR,
+      lastCheckSummary: summary,
+      terminalAt: nowIso(),
+    });
+    plan.applied = true;
+  }
+  return plan;
+}
+
+async function terminalReconciliationRoute(request: Request, env: Env) {
+  if (!hasInternalBearer(request, env)) {
+    return json({ ok: false, error: "forbidden" }, { status: 403 });
+  }
+  const url = new URL(request.url);
+  const apply = url.searchParams.get("apply") === "1";
+  const limit = Math.max(
+    1,
+    Math.min(100, Number(url.searchParams.get("limit") || 50)),
+  );
+  const rows = await listTerminalPrStatesForReconciliation(
+    env.SUBMISSION_GATE_DB,
+    { limit },
+  );
+  const plans = [];
+  for (const row of rows.results || []) {
+    try {
+      plans.push(await terminalRepairPlanForRow({ env, row, apply }));
+    } catch (error) {
+      plans.push({
+        repo: row.repo,
+        number: row.number,
+        action: "error",
+        applied: false,
+        error: truncateForQueue(
+          error instanceof Error ? error.message : String(error),
+          240,
+        ),
+      });
+    }
+  }
+  return json({
+    ok: true,
+    dryRun: !apply,
+    apply,
+    scanned: rows.results?.length || 0,
+    plans,
+  });
+}
+
 async function route(request: Request, env: Env, ctx: ExecutionContext) {
   const url = new URL(request.url);
   if (request.method === "OPTIONS") return json({ ok: true });
@@ -4554,6 +4852,9 @@ async function route(request: Request, env: Env, ctx: ExecutionContext) {
   }
   if (request.method === "GET" && url.pathname === "/queue") {
     return queueStatusRoute(request, env);
+  }
+  if (request.method === "GET" && url.pathname === "/queue/reconcile") {
+    return terminalReconciliationRoute(request, env);
   }
   if (request.method === "POST" && url.pathname === "/drafts") {
     return createDraftRoute(request, env);

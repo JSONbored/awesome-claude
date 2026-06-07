@@ -367,26 +367,6 @@ export function findStrictContentDuplicateMatch(
       );
     }
 
-    if (
-      candidate.category &&
-      candidate.normalizedTitle &&
-      candidate.category === existing.category &&
-      candidate.normalizedTitle === existing.normalizedTitle
-    ) {
-      reasons.push(`same normalized title in ${candidate.category}`);
-    }
-
-    const sharedDomains = intersection(candidate.domains, existing.domains);
-    if (
-      sharedDomains.length &&
-      candidate.category &&
-      candidate.category === existing.category &&
-      candidate.normalizedTitle &&
-      candidate.normalizedTitle === existing.normalizedTitle
-    ) {
-      reasons.push(`same source domain ${sharedDomains[0]} and title`);
-    }
-
     if (reasons.length) return { existing, reasons };
   }
   return null;
@@ -438,6 +418,17 @@ export function findRelatedContentMatches(
         candidate.category === existing.category
           ? `same non-generic source domain ${relatedDomain} in ${candidate.category}`
           : `same non-generic source domain ${relatedDomain} across ${candidate.category}/${existing.category}`,
+      );
+    }
+
+    if (
+      candidate.category &&
+      candidate.normalizedTitle &&
+      candidate.category === existing.category &&
+      candidate.normalizedTitle === existing.normalizedTitle
+    ) {
+      reasons.push(
+        `same normalized title in ${candidate.category}, but not a strict duplicate without the same slug, path, source, or purpose`,
       );
     }
 

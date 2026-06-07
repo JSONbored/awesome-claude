@@ -277,10 +277,14 @@ export function buildJobPostingJsonLd(job, params = {}) {
   ) {
     return null;
   }
-  const exposureReport = validateJobPublicExposure({
-    ...job,
-    status: job.status || "active",
-  });
+  // Only active jobs may be publicly surfaced as JobPosting structured data.
+  // validateJobPublicExposure short-circuits to { ok: true } for any non-active
+  // status (it treats them as "not exposed, no content gate needed"), so the
+  // builder must refuse non-active jobs itself — otherwise closed/expired/
+  // archived/draft roles get a full JobPosting (stale-listing SEO penalty).
+  const status = String(job.status || "active").trim().toLowerCase();
+  if (status !== "active") return null;
+  const exposureReport = validateJobPublicExposure({ ...job, status: "active" });
   if (!exposureReport.ok) return null;
 
   const siteUrl = params.siteUrl || "https://heyclau.de";
