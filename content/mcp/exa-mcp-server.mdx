@@ -1,0 +1,169 @@
+---
+title: Exa MCP Server
+slug: exa-mcp-server
+category: mcp
+description: >-
+  Web search and web fetch MCP server that connects AI assistants to Exa's
+  hosted search, crawling, code search, and research capabilities.
+cardDescription: >-
+  Give Claude, Codex, Cursor, VS Code, and other MCP clients Exa-powered web
+  search and page fetching.
+seoTitle: Exa MCP Server for Claude
+seoDescription: >-
+  Configure Exa MCP with Claude Desktop, Claude Code, Codex, Cursor, VS Code,
+  Windsurf, Gemini CLI, Roo Code, and other MCP clients for web search, page
+  fetching, advanced search, code search, and research workflows.
+author: Exa Labs
+authorProfileUrl: "https://github.com/exa-labs"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Exa
+brandDomain: exa.ai
+repoUrl: "https://github.com/exa-labs/exa-mcp-server"
+documentationUrl: "https://exa.ai/docs/reference/exa-mcp"
+websiteUrl: "https://exa.ai"
+packageUrl: "https://www.npmjs.com/package/exa-mcp-server"
+installable: true
+installCommand: "npx -y mcp-remote https://mcp.exa.ai/mcp"
+usageSnippet: "Use the hosted `https://mcp.exa.ai/mcp` endpoint for remote MCP clients, or run the npm package with an `EXA_API_KEY` environment variable."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "exa": {
+        "url": "https://mcp.exa.ai/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "exa": {
+        "url": "https://mcp.exa.ai/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - MCP client with hosted or remote MCP support, or mcp-remote for clients that need a stdio bridge.
+  - Exa API key for higher limits, production usage, or npm-package configuration.
+  - Network access to the Exa hosted MCP endpoint and target webpages.
+safetyNotes:
+  - Web search and fetch results may be incomplete, stale, biased, or adversarial; verify important claims against primary sources.
+  - Fetching pages can retrieve untrusted web content that may contain prompt injection or malicious instructions.
+  - Advanced search filters and domain targeting should be reviewed when used for compliance, hiring, due diligence, or security research.
+  - Protect Exa API keys and avoid placing real keys in shared config files, screenshots, logs, or prompts.
+privacyNotes:
+  - Search queries, fetched URLs, tool parameters, page contents, API keys, and surrounding prompts may be sent to Exa and the MCP client.
+  - Research topics can reveal product plans, customers, vulnerabilities, hiring activity, legal matters, or personal interests.
+  - Review Exa's current data handling, account, and rate-limit policies before using it with proprietary or regulated workflows.
+sourceUrls:
+  - "https://github.com/exa-labs/exa-mcp-server"
+  - "https://exa.ai/docs/reference/exa-mcp"
+  - "https://www.npmjs.com/package/exa-mcp-server"
+  - "https://dashboard.exa.ai/api-keys"
+tags:
+  - search
+  - research
+  - web
+  - crawling
+  - remote
+keywords:
+  - Exa MCP
+  - Exa MCP Server
+  - web search MCP
+  - web fetch MCP
+  - exa-mcp-server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Exa MCP Server connects MCP clients to Exa's web search and page-fetching
+capabilities. It can be used as a hosted remote MCP server or through the
+`exa-mcp-server` npm package with an Exa API key.
+
+The current README and docs emphasize web search, web fetch, and advanced web
+search tools, with deprecated tool names retained for backwards compatibility.
+The hosted endpoint has setup examples for Cursor, VS Code, Claude Code, Claude
+Desktop, Codex, OpenCode, Antigravity, Windsurf, Zed, Gemini CLI, v0, Warp,
+Kiro, Roo Code, and other clients.
+
+## Source Review
+
+- https://github.com/exa-labs/exa-mcp-server
+- https://exa.ai/docs/reference/exa-mcp
+- https://www.npmjs.com/package/exa-mcp-server
+- https://dashboard.exa.ai/api-keys
+
+These sources were reviewed on **2026-06-05**. Prefer the live docs for current
+hosted endpoint behavior, API key options, enabled tools, deprecated tools, rate
+limits, and client-specific setup.
+
+## Features
+
+- Hosted remote MCP endpoint for clients with remote MCP support.
+- Stdio bridge support through `mcp-remote`.
+- npm package option for API-key-backed local configuration.
+- `web_search_exa` for web search with clean result content.
+- `web_fetch_exa` for fetching full content from known URLs.
+- Optional `web_search_advanced_exa` for filters, domains, dates, and content
+  options.
+- Setup examples for many MCP clients and AI editors.
+
+## Installation
+
+For clients that support hosted MCP endpoints, add Exa directly:
+
+```json
+{
+  "mcpServers": {
+    "exa": {
+      "url": "https://mcp.exa.ai/mcp"
+    }
+  }
+}
+```
+
+For clients that need a stdio bridge, use `mcp-remote`:
+
+```json
+{
+  "mcpServers": {
+    "exa": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.exa.ai/mcp"]
+    }
+  }
+}
+```
+
+For npm-package usage, follow the README and provide `EXA_API_KEY` through your
+client's environment configuration.
+
+## Use Cases
+
+- Search for recent API documentation, changelog notes, or implementation
+  examples.
+- Fetch and summarize a known webpage from a model-assisted workflow.
+- Ground research prompts in fresh web content before drafting a report.
+- Use advanced search filters to narrow results by domain or recency.
+- Give coding agents live search context without building a custom search tool.
+
+## Safety and Privacy
+
+Web content can contain prompt injection, incorrect claims, or malicious
+instructions. Keep model instructions separate from fetched content and verify
+important answers against primary sources.
+
+Search queries and fetched URLs can reveal sensitive research topics. Protect API
+keys and review Exa's current privacy and retention posture before using this
+server with proprietary, regulated, or customer-specific work.
+
+## Duplicate Check
+
+No `exa-labs/exa-mcp-server` entry or source URL was found in `content/mcp`.
+This entry is separate from Tavily, Perplexity, Firecrawl, and other search or
+crawling MCP servers because it covers Exa's hosted endpoint and npm package.

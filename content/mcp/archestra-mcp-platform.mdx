@@ -1,0 +1,202 @@
+---
+title: Archestra MCP Platform
+slug: archestra-mcp-platform
+category: mcp
+description: >-
+  AGPL-licensed MCP-native platform with a private MCP registry, MCP gateway,
+  Kubernetes MCP orchestrator, access control, credential resolution,
+  observability, and deterministic tool guardrails for shared AI deployments.
+cardDescription: >-
+  Self-host Archestra to curate approved MCP servers, run self-hosted MCP
+  servers in Kubernetes, expose curated MCP gateway endpoints to clients such as
+  Claude, and apply auth, access control, observability, and tool-use policies.
+seoTitle: Archestra MCP Platform for Claude
+seoDescription: >-
+  Configure Archestra with Claude and other MCP clients to use private MCP
+  registries, managed gateway endpoints, Kubernetes-hosted MCP servers,
+  credential resolution, access control, observability, and guardrails.
+author: archestra-ai
+authorProfileUrl: "https://github.com/archestra-ai"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Archestra
+brandDomain: archestra.ai
+repoUrl: "https://github.com/archestra-ai/archestra"
+documentationUrl: "https://www.archestra.ai/docs/platform-quickstart"
+packageUrl: "https://hub.docker.com/r/archestra/platform"
+installable: true
+installCommand: "docker pull archestra/platform:latest"
+usageSnippet: "Run the reviewed Archestra deployment path, add MCP servers to the private registry, assign selected tools to an MCP gateway, then connect Claude or another MCP client to the copied gateway endpoint with the scoped bearer token."
+copySnippet: |-
+  docker pull archestra/platform:latest
+configSnippet: |-
+  {
+    "mcpServers": {
+      "archestra": {
+        "url": "LOCAL_ARCHESTRA_MCP_GATEWAY_URL",
+        "headers": {
+          "Authorization": "Bearer ARCHESTRA_GATEWAY_TOKEN"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 45 minutes
+difficulty: advanced
+prerequisites:
+  - Docker for local evaluation, or Kubernetes and Helm/Terraform-style deployment planning for production use.
+  - Organization policy for which MCP servers, credentials, teams, environments, and external network destinations may be exposed.
+  - LLM provider keys or local model configuration if using Archestra's built-in chat, agents, or LLM proxy features.
+  - Admin review of the quickstart container command before mounting the Docker socket.
+  - Scoped gateway token and copied MCP gateway URL from Archestra before connecting Claude or another external MCP client.
+safetyNotes:
+  - Archestra is a platform/control-plane entry, not a single-purpose local MCP helper; admins can expose many MCP servers, agents, tools, and credentials through one gateway.
+  - The upstream quickstart mounts the host Docker socket so the platform can run MCP servers; treat that as highly privileged host access and avoid using it on sensitive machines without isolation.
+  - Self-hosted MCP servers may run as Kubernetes workloads with injected environment variables, secrets, images, network policies, and restart controls.
+  - Tool assignments, gateway visibility, credential resolution, custom headers, and load-tools-on-demand settings should be reviewed per team and environment.
+  - Deterministic tool guardrails can reduce some unsafe tool chains, but they depend on correct policies and do not make untrusted MCP servers safe by default.
+privacyNotes:
+  - MCP server definitions, tool schemas, gateway tokens, upstream credentials, OAuth tokens, API keys, custom headers, logs, traces, and tool results may be stored or processed by the platform.
+  - Built-in observability, LLM proxy, chat, agents, and policy features can reveal prompts, tool arguments, tool outputs, token usage, user identities, team membership, and trace metadata.
+  - Registry entries and installations can use personal, team-scoped, or shared credentials; choose the narrowest scope that matches the use case.
+  - When external MCP clients call an Archestra gateway, downstream tool results can still be sent by the MCP client to the configured model provider.
+sourceUrls:
+  - "https://github.com/archestra-ai/archestra"
+  - "https://github.com/archestra-ai/archestra/blob/main/README.md"
+  - "https://github.com/archestra-ai/archestra/blob/main/platform/package.json"
+  - "https://github.com/archestra-ai/archestra/blob/main/platform/.env.example"
+  - "https://www.archestra.ai/docs/platform-quickstart"
+  - "https://www.archestra.ai/docs/platform-mcp-gateway"
+  - "https://www.archestra.ai/docs/platform-private-registry"
+  - "https://www.archestra.ai/docs/platform-orchestrator"
+  - "https://www.archestra.ai/docs/platform-ai-tool-guardrails"
+  - "https://www.archestra.ai/docs/platform-observability"
+  - "https://www.archestra.ai/docs/platform-deployment"
+  - "https://hub.docker.com/r/archestra/platform"
+tags:
+  - gateway
+  - registry
+  - kubernetes
+  - governance
+  - observability
+keywords:
+  - Archestra MCP
+  - Archestra MCP gateway
+  - private MCP registry
+  - MCP orchestrator
+  - MCP tool guardrails
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Archestra is an MCP-native platform for teams that want a private MCP registry,
+managed MCP gateway endpoints, and runtime governance for shared AI tools. It
+lets admins approve MCP servers, create installations with personal or
+team-scoped credentials, assign selected tools to gateway endpoints, and connect
+clients such as Claude, Cursor, Open WebUI, or custom agents to those curated
+MCP surfaces.
+
+The project is source-available under AGPL-3.0 and ships a Docker-based
+quickstart. Its MCP Orchestrator can run self-hosted MCP servers in Kubernetes,
+while remote MCP servers can be registered and exposed through gateways without
+Archestra owning their runtime.
+
+## Source Review
+
+- https://github.com/archestra-ai/archestra
+- https://github.com/archestra-ai/archestra/blob/main/README.md
+- https://github.com/archestra-ai/archestra/blob/main/platform/package.json
+- https://github.com/archestra-ai/archestra/blob/main/platform/.env.example
+- https://www.archestra.ai/docs/platform-quickstart
+- https://www.archestra.ai/docs/platform-mcp-gateway
+- https://www.archestra.ai/docs/platform-private-registry
+- https://www.archestra.ai/docs/platform-orchestrator
+- https://www.archestra.ai/docs/platform-ai-tool-guardrails
+- https://www.archestra.ai/docs/platform-observability
+- https://www.archestra.ai/docs/platform-deployment
+- https://hub.docker.com/r/archestra/platform
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, platform package metadata, example environment, quickstart, MCP gateway
+docs, private registry docs, orchestrator docs, tool guardrail docs,
+observability docs, deployment docs, and Docker Hub page for current setup,
+runtime, authentication, and deployment behavior.
+
+## Features
+
+- Curate approved MCP servers in a private organization registry.
+- Expose selected tools through named MCP gateway endpoints.
+- Connect external MCP clients with copied gateway URLs and scoped bearer tokens.
+- Install personal or team-scoped MCP connections with static credentials,
+  OAuth, client credentials, enterprise token exchange, or JWKS-based identity.
+- Run self-hosted MCP servers in Kubernetes through the MCP Orchestrator.
+- Support stdio and streamable-http server transports for self-hosted MCP
+  workloads.
+- Assign tools explicitly or resolve credentials at call time based on caller
+  identity.
+- Use access control, team visibility, environment restrictions, egress policy,
+  observability, and deterministic tool call/result guardrails.
+
+## Installation
+
+Start from the upstream quickstart or deployment docs. For local evaluation, the
+published image can be pulled with:
+
+```bash
+docker pull archestra/platform:latest
+```
+
+After Archestra is running, create or install MCP registry entries, assign the
+approved tools to an MCP gateway, and copy the generated client configuration.
+A sanitized client configuration looks like:
+
+```json
+{
+  "mcpServers": {
+    "archestra": {
+      "url": "LOCAL_ARCHESTRA_MCP_GATEWAY_URL",
+      "headers": {
+        "Authorization": "Bearer ARCHESTRA_GATEWAY_TOKEN"
+      }
+    }
+  }
+}
+```
+
+Review the upstream deployment docs before production use, especially Docker
+socket access, Kubernetes permissions, secrets storage, identity provider
+settings, network policy, and gateway token scope.
+
+## Use Cases
+
+- Give a team one approved MCP gateway instead of many individual desktop MCP
+  configs.
+- Separate approved registry templates from each user's or team's actual
+  credentialed installation.
+- Run self-hosted MCP servers in Kubernetes with logs, status, secrets, and
+  restart controls.
+- Expose different tool sets for engineering, support, operations, or internal
+  agents.
+- Apply deterministic policy to risky tool chains, prompt-injection exposure,
+  and sensitive tool results.
+
+## Safety and Privacy
+
+Archestra centralizes MCP access, which makes its admin and runtime boundaries
+important. The quickstart's Docker socket mount gives the platform privileged
+control over the host Docker daemon. Use an isolated evaluation host, review
+container permissions, and prefer hardened Kubernetes deployment patterns for
+shared environments.
+
+Credential resolution is a major part of the platform. Be explicit about
+personal versus team-scoped installs, gateway visibility, bearer token scope,
+header passthrough, OAuth refresh, external identity exchange, and network
+egress. Observability is useful, but logs and traces can include sensitive MCP
+tool metadata, prompts, arguments, results, user IDs, and team context.
+
+## Duplicate Check
+
+No `archestra-ai/archestra` entry, Archestra MCP Platform entry, Archestra MCP
+gateway entry, or matching source URL was found in `content/mcp`.

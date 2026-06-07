@@ -1,0 +1,213 @@
+---
+title: Scrapling MCP Server
+slug: scrapling-mcp-server
+category: mcp
+description: >-
+  MCP server for Scrapling web scraping workflows, including HTTP scraping,
+  browser-backed dynamic fetching, stealth fetching, screenshots, persistent
+  browser sessions, selectors, proxies, and prompt-injection sanitization.
+cardDescription: Scrape pages, dynamic sites, screenshots, and browser sessions through Scrapling MCP.
+seoTitle: Scrapling MCP Server for Claude
+seoDescription: >-
+  Configure Scrapling MCP Server with Claude and other MCP clients to scrape
+  pages, use CSS selectors, fetch dynamic content, run stealth browser sessions,
+  capture screenshots, and manage web scraping sessions from Claude.
+author: Karim Shoair
+authorProfileUrl: "https://github.com/D4Vinci"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Scrapling
+brandDomain: scrapling.readthedocs.io
+repoUrl: "https://github.com/D4Vinci/Scrapling"
+documentationUrl: "https://scrapling.readthedocs.io/en/latest/ai/mcp-server.html"
+packageUrl: "https://pypi.org/project/scrapling/"
+installable: true
+installCommand: "claude mcp add ScraplingServer scrapling mcp"
+usageSnippet: "Ask Claude to use Scrapling's selector-targeted fetch tools on an allowed page, then review extracted content before using it downstream."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ScraplingServer": {
+        "command": "scrapling",
+        "args": ["mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "ScraplingServer": {
+        "command": "uvx",
+        "args": ["scrapling", "mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer and the `scrapling[ai]` package installed from PyPI or run through `uvx`.
+  - Browser dependencies installed with `scrapling install` before using browser-backed, stealth, screenshot, or session tools.
+  - Permission to scrape the target sites under their terms, robots guidance, copyright, privacy, and rate-limit requirements.
+  - Optional proxy configuration only when proxy use is allowed by policy and the target site's terms.
+  - Review process for model-visible web content because scraped pages may contain prompt-injection text or sensitive data.
+safetyNotes:
+  - Scrapling MCP can issue HTTP requests, launch browser-backed fetches, run stealth fetches, reuse persistent browser sessions, capture screenshots, and scrape multiple URLs concurrently.
+  - Stealth and anti-bot features can interact with Cloudflare Turnstile, interstitial pages, and other protection systems; use them only where scraping is permitted.
+  - Bulk tools, persistent sessions, proxies, browser impersonation, and ad/tracker blocking can create high-volume automated traffic if an agent loops or broadens scope.
+  - Persistent browser sessions stay open until closed; use `list_sessions` and `close_session` to avoid leaked browser processes.
+  - Selector-targeted extraction reduces irrelevant content, but model decisions based on scraped data still need review before filing reports, publishing datasets, or making operational changes.
+privacyNotes:
+  - Tool calls and outputs can expose target URLs, selectors, page content, screenshots, cookies or session-derived state, proxy choices, geo-targeting intent, and scrape strategy to the MCP client and model provider.
+  - Screenshots are returned as image content blocks that the model can inspect, so they may reveal account pages, customer data, internal dashboards, or authenticated browsing state.
+  - Scraped public pages can contain secrets, personal data, copyrighted content, or hidden prompt-injection text; keep `main_content_only` enabled unless there is a clear reason to inspect hidden content.
+  - Proxy providers, target websites, and any browser services used by the deployment may receive request metadata, IP address information, headers, or fingerprint data.
+  - Do not scrape private, login-gated, regulated, copyrighted, or personal-data-heavy pages without legal, privacy, and security review.
+sourceUrls:
+  - "https://github.com/D4Vinci/Scrapling/blob/main/README.md"
+  - "https://github.com/D4Vinci/Scrapling/blob/main/server.json"
+  - "https://github.com/D4Vinci/Scrapling/blob/main/docs/ai/mcp-server.md"
+  - "https://github.com/D4Vinci/Scrapling/blob/main/docs/api-reference/mcp-server.md"
+  - "https://github.com/D4Vinci/Scrapling/blob/main/pyproject.toml"
+  - "https://github.com/D4Vinci/Scrapling/blob/main/LICENSE"
+tags:
+  - web-scraping
+  - browser-automation
+  - data-extraction
+  - screenshots
+  - security
+keywords:
+  - Scrapling MCP
+  - Scrapling MCP Server
+  - web scraping MCP
+  - stealth scraping MCP
+  - Cloudflare bypass MCP
+  - CSS selector scraping MCP
+  - browser session MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Scrapling MCP Server brings Scrapling's scraping and browser-fetching
+capabilities into MCP clients. Claude can ask it to make fast HTTP requests,
+fetch dynamic content through Chromium or Chrome, use stealth fetching for
+protected pages, target specific elements with CSS selectors, capture screenshots
+from open sessions, and manage persistent browser sessions across requests.
+
+The project publishes MCP metadata in `server.json`, documents a PyPI package
+runtime with `scrapling mcp`, and provides source and hosted documentation for
+the MCP server. Scrapling is especially relevant when an agent needs targeted
+extraction before handing page content to the model, which can reduce token use
+and avoid passing full pages when a selector is enough.
+
+## Source Review
+
+- https://github.com/D4Vinci/Scrapling
+- https://scrapling.readthedocs.io/en/latest/ai/mcp-server.html
+- https://pypi.org/project/scrapling/
+- https://github.com/D4Vinci/Scrapling/blob/main/README.md
+- https://github.com/D4Vinci/Scrapling/blob/main/server.json
+- https://github.com/D4Vinci/Scrapling/blob/main/docs/ai/mcp-server.md
+- https://github.com/D4Vinci/Scrapling/blob/main/docs/api-reference/mcp-server.md
+- https://github.com/D4Vinci/Scrapling/blob/main/pyproject.toml
+- https://github.com/D4Vinci/Scrapling/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, MCP metadata, source docs, API reference, package metadata, hosted docs,
+PyPI page, and license for current install commands, package versions, tool
+names, transport options, and scraping guidance.
+
+## Features
+
+- Stdio MCP server through `scrapling mcp`.
+- PyPI package metadata and MCP `server.json` package metadata for `uvx` usage.
+- Optional Streamable HTTP mode through the Scrapling CLI.
+- Basic HTTP scraping with `get` and `bulk_get`.
+- Browser-backed dynamic fetching with `fetch` and `bulk_fetch`.
+- Stealth browser fetching with `stealthy_fetch` and `bulk_stealthy_fetch`.
+- Screenshot capture from an existing dynamic or stealth browser session.
+- Persistent session management with `open_session`, `close_session`, and `list_sessions`.
+- CSS selector targeting before content is handed to the model.
+- Proxy support, browser impersonation, parallel processing, and session reuse.
+- Automatic hidden-content sanitization when `main_content_only` is enabled.
+
+## Installation
+
+Install Scrapling with MCP dependencies, then install browser dependencies before
+using browser-backed tools:
+
+```sh
+pip install "scrapling[ai]"
+scrapling install
+```
+
+For Claude Code, add the stdio server after confirming the `scrapling`
+executable is on the PATH:
+
+```sh
+claude mcp add ScraplingServer scrapling mcp
+```
+
+For MCP clients that use JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "ScraplingServer": {
+      "command": "scrapling",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+The project's MCP metadata also documents `uvx` with the fixed `mcp` package
+argument:
+
+```json
+{
+  "mcpServers": {
+    "ScraplingServer": {
+      "command": "uvx",
+      "args": ["scrapling", "mcp"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Extract a specific product field, table, article body, or listing element with a CSS selector.
+- Use basic HTTP scraping for simple pages where browser automation is unnecessary.
+- Fetch JavaScript-rendered pages through a browser-backed dynamic fetch.
+- Use stealth fetching only for allowed workflows where normal fetching fails on protection pages.
+- Capture screenshots from an existing session so Claude can inspect visual page state.
+- Reuse a persistent session while scraping multiple pages from the same allowed site.
+- Use bulk tools to scrape a small reviewed list of URLs more efficiently than repeated single requests.
+- Keep hidden-content sanitization enabled to reduce prompt-injection exposure from scraped pages.
+
+## Safety and Privacy
+
+Scrapling MCP is an automation-capable scraping server. Confirm permission,
+scope, rate limits, and legal basis before letting an agent scrape or screenshot
+a site. Its own documentation advises checking robots guidance, respecting rate
+limits, complying with site terms, and respecting copyright.
+
+Use the least invasive tool that works. Prefer selector-targeted `get` requests
+for simple public pages, and reserve browser, stealth, proxy, screenshot, and
+bulk workflows for cases where they are allowed and necessary. Close persistent
+sessions when finished, and review scraped content for prompt injection,
+personal data, secrets, and copyrighted material before forwarding it into
+reports, datasets, or other tools.
+
+## Duplicate Check
+
+Existing entries cover Browserbase, BrowserMCP, Bright Data, Chrome MCP,
+Playwright MCP, and related browser automation or scraping tools. No
+`D4Vinci/Scrapling`, Scrapling MCP, `scrapling mcp`, Scrapling selector
+scraping, or Scrapling stealth scraping entry was found in `content/mcp`,
+`content/tools`, `content/guides`, `content/agents`, or `content/skills`.

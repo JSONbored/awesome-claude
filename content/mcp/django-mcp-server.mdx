@@ -1,0 +1,176 @@
+---
+title: Django MCP Server
+slug: django-mcp-server
+category: mcp
+description: >-
+  Django extension that exposes MCP endpoints and stdio transport for Django
+  apps, with declarative model query tools, custom toolsets, DRF create/list/
+  update/delete tool publishing, serializer output, and MCP inspection.
+cardDescription: >-
+  Connect Claude to Django apps through MCP endpoints, stdio transport, model
+  query tools, custom toolsets, DRF tools, serializers, and inspection commands.
+seoTitle: Django MCP Server for Claude
+seoDescription: >-
+  Configure Django MCP Server with Claude to expose Django model query tools,
+  custom MCP toolsets, DRF create/list/update/delete tools, serializer output,
+  streamable HTTP endpoints, and stdio transport.
+author: Smart GTS
+authorProfileUrl: "https://github.com/gts360"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Django MCP Server
+brandDomain: djangoproject.com
+repoUrl: "https://github.com/gts360/django-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/gts360/django-mcp-server/main/README.md"
+packageUrl: "https://pypi.org/project/django-mcp-server/"
+installable: true
+installCommand: "pip install django-mcp-server"
+usageSnippet: "Install django-mcp-server, add mcp_server to INSTALLED_APPS, include mcp_server.urls, and define model or DRF tools in your Django app."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "django": {
+        "command": "python",
+        "args": ["manage.py", "stdio_server"]
+      }
+    }
+  }
+configSnippet: |-
+  python manage.py mcp_inspect
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Django 4 or 5 application with Python 3.10 or newer.
+  - "mcp_server added to INSTALLED_APPS and mcp_server.urls included in the Django URL configuration."
+  - Review of which Django models, querysets, custom methods, DRF views, serializers, and request context should be exposed to MCP clients.
+  - "Authentication classes configured through DJANGO_MCP_AUTHENTICATION_CLASSES before exposing non-public data over streamable HTTP."
+  - Local or deployment-specific plan for stdio, WSGI, ASGI, OAuth2, sessions, and Dynamic Client Registration when remote clients need access.
+safetyNotes:
+  - Django MCP Server can expose Django model querysets, custom Python methods, DRF create/list/update/delete views, serializers, resources, and low-level FastMCP tools to an MCP client.
+  - Published DRF create, update, and delete tools can mutate application data if their serializers, views, and authentication rules permit it.
+  - The README notes that built-in DRF authentication classes, permission classes, filter backends, and pagination are disabled for published DRF tools in favor of MCP authentication; review this carefully before reusing production views.
+  - Query tools can evaluate QuerySets and return database records; restrict queryset scope and fields before exposing sensitive models.
+  - Require confirmation and application-level authorization before exposing write tools, email-sending methods, admin-like actions, or tools that touch customer, employee, financial, health, or regulated data.
+privacyNotes:
+  - Django sessions, request headers, model names, field names, primary keys, QuerySet results, serializer output, DRF request bodies, custom tool arguments, and tool responses can be exposed to the MCP client.
+  - Exposed models may contain user accounts, permissions, customer records, orders, messages, files, logs, internal notes, audit trails, or application-specific secrets.
+  - Remote streamable HTTP deployments can move application data outside the original Django UI and audit path if MCP auth, OAuth metadata, and retention are not configured correctly.
+  - Stdio usage can still expose data through local MCP client logs, transcripts, and tool traces.
+  - Keep MCP endpoint access, serializer fields, queryset filters, and tool docstrings intentionally narrow for each app.
+disclosure: >-
+  Community-maintained MIT Django extension for exposing MCP tools and
+  endpoints inside Django apps. Users are responsible for app-level
+  authentication, authorization, data retention, and compliance behavior.
+sourceUrls:
+  - "https://raw.githubusercontent.com/gts360/django-mcp-server/main/LICENCE.md"
+  - "https://raw.githubusercontent.com/gts360/django-mcp-server/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/gts360/django-mcp-server/main/mcp_server/djangomcp.py"
+  - "https://raw.githubusercontent.com/gts360/django-mcp-server/main/mcp_server/query_tool.py"
+  - "https://raw.githubusercontent.com/gts360/django-mcp-server/main/mcp_server/urls.py"
+  - "https://raw.githubusercontent.com/gts360/django-mcp-server/main/mcp_server/management/commands/stdio_server.py"
+  - "https://raw.githubusercontent.com/gts360/django-mcp-server/main/examples/mcpexample/bird_counter/mcp.py"
+tags:
+  - django
+  - python
+  - web-framework
+  - drf
+  - model-tools
+keywords:
+  - Django MCP
+  - Django MCP Server
+  - Django Model Context Protocol
+  - DRF MCP tools
+  - Python web framework MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Django MCP Server adds MCP support to Django applications. It can expose model
+query tools, custom `MCPToolset` methods, DRF create/list/update/delete views,
+serializer output, low-level FastMCP tools, streamable HTTP endpoints, and a
+local stdio management command.
+
+Use it when Claude needs supervised access to a Django application's approved
+models, business logic, or REST framework operations through MCP.
+
+## Source Review
+
+- https://github.com/gts360/django-mcp-server
+- https://raw.githubusercontent.com/gts360/django-mcp-server/main/README.md
+- https://pypi.org/project/django-mcp-server/
+- https://raw.githubusercontent.com/gts360/django-mcp-server/main/LICENCE.md
+- https://raw.githubusercontent.com/gts360/django-mcp-server/main/pyproject.toml
+- https://raw.githubusercontent.com/gts360/django-mcp-server/main/mcp_server/djangomcp.py
+- https://raw.githubusercontent.com/gts360/django-mcp-server/main/mcp_server/query_tool.py
+- https://raw.githubusercontent.com/gts360/django-mcp-server/main/mcp_server/urls.py
+- https://raw.githubusercontent.com/gts360/django-mcp-server/main/mcp_server/management/commands/stdio_server.py
+- https://raw.githubusercontent.com/gts360/django-mcp-server/main/examples/mcpexample/bird_counter/mcp.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI project, license file, Python package metadata, core Django MCP
+implementation, query tool implementation, URL routing, stdio command, and
+example MCP toolset for current setup and behavior details.
+
+## Features
+
+- Serve an MCP endpoint inside an existing Django app.
+- Run a local stdio MCP server through `python manage.py stdio_server`.
+- Expose Django models with declarative `ModelQueryToolset` classes.
+- Publish custom Python methods through `MCPToolset`.
+- Publish DRF create, list, update, and delete views as MCP tools.
+- Serialize tool output through Django REST Framework serializers.
+- Register low-level FastMCP tools and resources from Django code.
+- Inspect declared tools with `python manage.py mcp_inspect`.
+
+## Installation
+
+Install the package and add it to the Django project:
+
+```bash
+pip install django-mcp-server
+```
+
+Add `mcp_server` to `INSTALLED_APPS`, include `mcp_server.urls`, then define
+approved tools in an app-level `mcp.py` file. For local stdio clients:
+
+```json
+{
+  "mcpServers": {
+    "django": {
+      "command": "python",
+      "args": ["manage.py", "stdio_server"]
+    }
+  }
+}
+```
+
+Use the inspection command before connecting an agent:
+
+```bash
+python manage.py mcp_inspect
+```
+
+## Use Cases
+
+- Let Claude query approved Django model records through scoped querysets.
+- Expose safe business operations as custom MCP tools.
+- Wrap selected DRF list, create, update, or delete views for agent workflows.
+- Serialize tool responses through DRF serializers.
+- Test local Django MCP tools through Claude Desktop or other stdio clients.
+- Add OAuth-backed streamable HTTP MCP access for remote agents after an
+  explicit authentication and authorization review.
+
+## Safety and Privacy
+
+Django MCP Server inherits the risk profile of the Django app it exposes. Keep
+toolsets narrow, review every queryset and serializer field, enable MCP
+authentication for non-public data, and require confirmation before publishing
+write-capable DRF views or custom methods with side effects.
+
+Treat Django model data, primary keys, user records, sessions, request metadata,
+serializer output, tool arguments, tool responses, logs, and MCP transcripts as
+sensitive application data. Avoid exposing broad querysets, admin-like actions,
+or production write paths without app-specific authorization controls.

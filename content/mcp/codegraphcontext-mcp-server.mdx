@@ -1,0 +1,190 @@
+---
+title: CodeGraphContext MCP Server
+slug: codegraphcontext-mcp-server
+category: mcp
+description: >-
+  MCP server and CLI toolkit that indexes local code into a graph database so
+  Claude can query functions, call chains, dependencies, and repository structure.
+cardDescription: >-
+  Give Claude graph-backed context for local repositories, including callers,
+  callees, class relationships, search, complexity, and dead-code analysis.
+seoTitle: CodeGraphContext MCP Server for Claude
+seoDescription: >-
+  Configure CodeGraphContext MCP Server with Claude and other MCP clients to
+  index repositories, query code relationships, inspect call chains, and explore
+  local codebases through a graph database.
+author: CodeGraphContext
+authorProfileUrl: "https://github.com/CodeGraphContext"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: CodeGraphContext
+brandDomain: github.com
+repoUrl: "https://github.com/CodeGraphContext/CodeGraphContext"
+documentationUrl: "https://github.com/CodeGraphContext/CodeGraphContext/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/codegraphcontext/json"
+installable: true
+installCommand: "pip install codegraphcontext"
+usageSnippet: "Run `codegraphcontext mcp setup`, then launch `codegraphcontext mcp start` from an MCP client to query indexed code graphs."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "codegraphcontext": {
+        "command": "codegraphcontext",
+        "args": ["mcp", "start"],
+        "env": {
+          "NEO4J_URI": "YOUR_GRAPH_DATABASE_URI",
+          "NEO4J_USER": "YOUR_GRAPH_DATABASE_USER",
+          "NEO4J_PASSWORD": "YOUR_GRAPH_DATABASE_PASSWORD"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "codegraphcontext": {
+        "command": "codegraphcontext",
+        "args": ["mcp", "start"],
+        "env": {
+          "NEO4J_URI": "YOUR_GRAPH_DATABASE_URI",
+          "NEO4J_USER": "YOUR_GRAPH_DATABASE_USER",
+          "NEO4J_PASSWORD": "YOUR_GRAPH_DATABASE_PASSWORD"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer available for the CodeGraphContext package.
+  - A local repository you are allowed to index and share with an MCP client.
+  - Optional graph database backend reviewed if you use Neo4j, FalkorDB, KuzuDB, LadybugDB, or another supported backend.
+  - Optional SCIP indexers configured if you need more precise language-specific call and inheritance data.
+  - Sensitive files, generated artifacts, credentials, and ignored paths reviewed before indexing.
+safetyNotes:
+  - CodeGraphContext indexes repository contents and can expose code structure, symbols, dependencies, comments, filenames, and relationships to Claude.
+  - Live file watching can keep graph data updated as files change, so verify the watched tree before enabling it on private workspaces.
+  - External graph databases can retain indexed source metadata after the MCP session ends.
+  - Generated graph context may include prompt-injection text from comments, documentation, fixtures, tests, or vendored files.
+  - Review database credentials, ignored paths, and repository scope before connecting the server to an MCP client.
+privacyNotes:
+  - Source code, file paths, symbol names, comments, dependency names, call graphs, class hierarchies, search terms, prompts, graph queries, and tool outputs may be visible to the MCP client and model provider.
+  - Indexing proprietary repositories can reveal architecture, product plans, credentials accidentally committed to code, internal package names, or security-sensitive paths.
+  - If using a remote graph backend, review its authentication, retention, backups, logging, and access controls before indexing private code.
+  - Remove or ignore secrets, customer data, generated dumps, logs, and vendor directories before building code graphs for model access.
+sourceUrls:
+  - "https://github.com/CodeGraphContext/CodeGraphContext"
+  - "https://github.com/CodeGraphContext/CodeGraphContext/blob/main/README.md"
+  - "https://github.com/CodeGraphContext/CodeGraphContext/blob/main/pyproject.toml"
+  - "https://github.com/CodeGraphContext/CodeGraphContext/blob/main/SECURITY.md"
+  - "https://pypi.org/pypi/codegraphcontext/json"
+tags:
+  - code-analysis
+  - graph
+  - repository
+  - static-analysis
+  - developer-tools
+keywords:
+  - CodeGraphContext MCP
+  - codegraphcontext
+  - code graph MCP
+  - repository indexing MCP
+  - static analysis MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+CodeGraphContext is an MCP server and CLI toolkit for turning repositories into
+queryable code graphs. Claude can use it to ask about callers, callees, class
+hierarchies, call chains, complexity, dead code, search results, and repository
+structure after a project has been indexed.
+
+The upstream README documents both CLI mode and MCP server mode. The Python
+package exposes the `codegraphcontext` command, with `codegraphcontext mcp setup`
+for client configuration and `codegraphcontext mcp start` for launching the MCP
+server.
+
+## Source Review
+
+- https://github.com/CodeGraphContext/CodeGraphContext
+- https://github.com/CodeGraphContext/CodeGraphContext/blob/main/README.md
+- https://github.com/CodeGraphContext/CodeGraphContext/blob/main/pyproject.toml
+- https://github.com/CodeGraphContext/CodeGraphContext/blob/main/SECURITY.md
+- https://pypi.org/pypi/codegraphcontext/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, security policy, and PyPI metadata for current package version,
+supported commands, database backend options, language support, and MCP setup
+behavior.
+
+## Features
+
+- Index local repositories into a graph database.
+- Query callers, callees, class hierarchies, dependencies, and call chains.
+- Search code and inspect complexity or dead-code signals.
+- Watch directories and update graph data as files change.
+- Use embedded or external graph database backends.
+- Support multiple programming languages through tree-sitter and optional SCIP indexing.
+- Configure MCP clients through the built-in setup wizard or manual server config.
+
+## Installation
+
+Install the Python package:
+
+```bash
+pip install codegraphcontext
+```
+
+Run the setup wizard, then start the MCP server:
+
+```bash
+codegraphcontext mcp setup
+codegraphcontext mcp start
+```
+
+For MCP clients that launch stdio servers manually:
+
+```json
+{
+  "mcpServers": {
+    "codegraphcontext": {
+      "command": "codegraphcontext",
+      "args": ["mcp", "start"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude which functions call a risky API before refactoring.
+- Trace call chains across modules in a large repository.
+- Explore class hierarchies and dependency relationships.
+- Search for feature-specific code and understand nearby symbols.
+- Find complexity hotspots or possible dead code.
+- Keep a code graph updated while working on an active branch.
+
+## Safety and Privacy
+
+CodeGraphContext is useful because it indexes real source trees. That also means
+it can expose private code, filenames, architecture, comments, fixtures, test
+data, generated files, and accidentally committed secrets to an MCP client and
+model provider.
+
+Limit indexing to repositories and directories approved for model access. Review
+ignore rules before enabling live file watching, and avoid indexing broad
+workspace roots that contain unrelated private projects.
+
+If you use an external graph database, treat it as a secondary copy of source
+metadata. Review authentication, network access, backups, and retention before
+using it with proprietary code.
+
+## Duplicate Check
+
+No `CodeGraphContext/CodeGraphContext` entry, `codegraphcontext` package entry,
+or matching source URL was found in `content/mcp`.

@@ -1,0 +1,200 @@
+---
+title: Korean Law MCP Server
+slug: korean-law-mcp-server
+category: mcp
+description: >-
+  MCP server and CLI for searching Korean statutes, precedents, ordinances,
+  treaties, interpretations, citation checks, amendment timelines, and legal
+  scenario workflows through Korea's official law APIs.
+cardDescription: Search and verify Korean legal sources from Claude with official API-backed tools.
+seoTitle: Korean Law MCP Server for Claude
+seoDescription: >-
+  Configure Korean Law MCP Server with Claude to search Korea's official legal
+  databases, retrieve law text, verify legal citations, compare amendments, map
+  article impact, and build Korean legal research workflows.
+author: Chris
+authorProfileUrl: "https://github.com/chrisryugj"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Korean Law MCP
+brandDomain: github.com
+repoUrl: "https://github.com/chrisryugj/korean-law-mcp"
+documentationUrl: "https://github.com/chrisryugj/korean-law-mcp/blob/main/README-EN.md"
+packageUrl: "https://registry.npmjs.org/korean-law-mcp"
+installable: true
+installCommand: "npm install -g korean-law-mcp"
+usageSnippet: "Install `korean-law-mcp`, set `LAW_OC` to a Korea Law Open API key, and connect Claude to the `korean-law-mcp` command."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "korean-law": {
+        "command": "korean-law-mcp",
+        "env": {
+          "LAW_OC": "YOUR_KOREA_LAW_OPEN_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "korean-law": {
+        "command": "korean-law-mcp",
+        "env": {
+          "LAW_OC": "YOUR_KOREA_LAW_OPEN_API_KEY",
+          "LAW_API_PROTOCOL": "https"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 12 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 20.19 or newer, matching the upstream package metadata.
+  - Korea Law Open API key stored as `LAW_OC`.
+  - Korean legal research context where Korea's statutes, precedents, ordinances, treaties, or interpretations are relevant.
+  - Korean-language legal terminology familiarity or access to qualified review.
+  - Agreement that MCP output is research support, not legal advice.
+safetyNotes:
+  - Do not treat model output, tool summaries, scenario workflows, citation checks, or amendment comparisons as legal advice.
+  - Verify legal conclusions against official Korean legal sources and a qualified professional before using them for compliance, litigation, contracts, immigration, employment, taxation, or public guidance.
+  - Legal APIs can return stale, partial, unavailable, mistranslated, or context-dependent results; review dates, jurisdiction, document type, article numbers, and official text.
+  - Chain tools and scenario tools can combine many sources into persuasive narratives; require citation review before relying on generated explanations.
+  - Remote HTTP deployments must protect API keys, rate limits, and access to legal research workflows.
+privacyNotes:
+  - "`LAW_OC` and any API-key delivery method must be treated as secret and kept out of repositories, shared prompts, logs, and screenshots."
+  - Legal questions can reveal disputes, investigations, clients, employers, contracts, personal facts, regulated matters, or litigation strategy.
+  - Queries, citations, law names, case numbers, document text, and generated legal analysis may be visible to the MCP client and model provider.
+  - Avoid sending confidential client facts, privileged material, personal data, or non-public legal strategy through prompts or tool arguments.
+disclosure: >-
+  Uses Korea Law Open API and related official or public legal information
+  sources; usage may require API registration, rate-limit awareness, and
+  jurisdiction-specific review.
+sourceUrls:
+  - "https://github.com/chrisryugj/korean-law-mcp"
+  - "https://github.com/chrisryugj/korean-law-mcp/blob/main/README-EN.md"
+  - "https://github.com/chrisryugj/korean-law-mcp/blob/main/package.json"
+  - "https://github.com/chrisryugj/korean-law-mcp/blob/main/docs/API.md"
+  - "https://github.com/chrisryugj/korean-law-mcp/blob/main/docs/ARCHITECTURE.md"
+  - "https://github.com/chrisryugj/korean-law-mcp/blob/main/src/server/http-server.ts"
+  - "https://github.com/chrisryugj/korean-law-mcp/blob/main/src/tools/verify-citations.ts"
+  - "https://github.com/chrisryugj/korean-law-mcp/blob/main/src/tools/scenarios/action-plan.ts"
+  - "https://github.com/chrisryugj/korean-law-mcp/blob/main/.env.example"
+  - "https://github.com/chrisryugj/korean-law-mcp/blob/main/LICENSE"
+  - "https://registry.npmjs.org/korean-law-mcp"
+  - "https://open.law.go.kr/LSO/openApi/guideResult.do"
+tags:
+  - legal
+  - korea
+  - research
+  - citations
+  - government-data
+keywords:
+  - Korean Law MCP
+  - korean-law-mcp
+  - Korea Law Open API MCP
+  - Korean legal research Claude
+  - legal citation verification MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Korean Law MCP is an MCP server and CLI for Korean legal research. It wraps
+Korea Law Open API and related legal information sources so Claude can search
+statutes, retrieve law text, inspect precedents and decisions, compare amendment
+history, verify article citations, map article impact, and run scenario-style
+legal research workflows.
+
+The package exposes `korean-law-mcp` for MCP clients and `korean-law` for CLI
+use. The upstream package metadata requires Node.js 20.19 or newer and the
+configuration examples use `LAW_OC` for the Korea Law Open API key.
+
+## Source Review
+
+- https://github.com/chrisryugj/korean-law-mcp
+- https://github.com/chrisryugj/korean-law-mcp/blob/main/README-EN.md
+- https://github.com/chrisryugj/korean-law-mcp/blob/main/package.json
+- https://github.com/chrisryugj/korean-law-mcp/blob/main/docs/API.md
+- https://github.com/chrisryugj/korean-law-mcp/blob/main/docs/ARCHITECTURE.md
+- https://github.com/chrisryugj/korean-law-mcp/blob/main/src/server/http-server.ts
+- https://github.com/chrisryugj/korean-law-mcp/blob/main/src/tools/verify-citations.ts
+- https://github.com/chrisryugj/korean-law-mcp/blob/main/src/tools/scenarios/action-plan.ts
+- https://github.com/chrisryugj/korean-law-mcp/blob/main/.env.example
+- https://github.com/chrisryugj/korean-law-mcp/blob/main/LICENSE
+- https://registry.npmjs.org/korean-law-mcp
+- https://open.law.go.kr/LSO/openApi/guideResult.do
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+English README, package metadata, API documentation, architecture notes, server
+source, citation-verification source, scenario source, environment example, NPM
+registry metadata, and official Open API guide for current tool counts,
+installation requirements, API-key handling, supported domains, and rate limits.
+
+## Features
+
+- Search Korean statutes and retrieve official law text.
+- Search and retrieve precedents, Constitutional Court decisions, administrative appeals, tax tribunal decisions, customs interpretations, treaties, and related decision domains.
+- Verify legal article citations against official data to detect nonexistent laws, articles, or paragraph references.
+- Compare law text across dates and inspect amendment timelines.
+- Generate article impact maps across cited and citing legal materials.
+- Run scenario workflows for action basis, dispute preparation, procedures, ordinance comparison, amendment tracking, document review, and related research.
+- Search ordinances, administrative rules, annexes, forms, and legal-system trees.
+- Use the same package as an MCP server or CLI.
+
+## Installation
+
+Install the package and configure the Korea Law Open API key:
+
+```bash
+npm install -g korean-law-mcp
+```
+
+Then add the MCP server to Claude or another MCP client:
+
+```json
+{
+  "mcpServers": {
+    "korean-law": {
+      "command": "korean-law-mcp",
+      "env": {
+        "LAW_OC": "YOUR_KOREA_LAW_OPEN_API_KEY",
+        "LAW_API_PROTOCOL": "https"
+      }
+    }
+  }
+}
+```
+
+Test with low-risk lookups before using scenario workflows for real legal
+research, and verify the returned official source text manually.
+
+## Use Cases
+
+- Check whether a Korean legal citation exists before trusting a model-written answer.
+- Retrieve the current text of a statute article for research notes.
+- Compare how an article changed between two effective dates.
+- Gather statutes, precedents, interpretations, and ordinances for a Korean legal issue.
+- Explore which lower-level rules or ordinances may be affected by a law article.
+- Build an initial checklist for a Korean administrative or compliance procedure.
+
+## Safety and Privacy
+
+Legal tooling needs a higher bar than ordinary search. Korean Law MCP can help
+retrieve and structure official legal information, but it cannot replace a
+qualified legal professional, official filing guidance, or jurisdiction-specific
+review. Treat all model-generated explanations as drafts and verify source text,
+dates, citations, and procedural details.
+
+Do not send privileged facts, confidential client material, or sensitive dispute
+strategy through an MCP client unless that workflow has been approved. Keep
+`LAW_OC` secret, and avoid remote deployments that expose API keys or legal
+research endpoints without authentication and rate limits.
+
+## Duplicate Check
+
+Existing legal entries cover other jurisdictions or providers, but no
+`chrisryugj/korean-law-mcp`, Korean Law MCP, or matching source URL was found in
+`content/mcp`.

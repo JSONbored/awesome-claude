@@ -1,0 +1,209 @@
+---
+title: ENScan_GO MCP Server
+slug: enscan-go-mcp-server
+category: mcp
+description: >-
+  Go-based enterprise-information gathering MCP server for authorized security
+  research, exposing local SSE tools for company search, ICP records, apps,
+  Weibo, WeChat public accounts, mini programs, recruiting data, copyright
+  records, suppliers, investments, branches, and paginated data-source queries.
+cardDescription: Connect Claude to ENScan_GO company, ICP, app, and public-data gathering tools.
+seoTitle: ENScan_GO MCP Server for Claude
+seoDescription: >-
+  Configure ENScan_GO MCP Server with Claude to query company records, ICP
+  filings, apps, Weibo, WeChat public accounts, mini programs, jobs, software
+  copyright, suppliers, investments, branches, and enterprise data sources.
+author: WgpSec
+authorProfileUrl: "https://github.com/wgpsec"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: ENScan_GO
+repoUrl: "https://github.com/wgpsec/ENScan_GO"
+documentationUrl: "https://github.com/wgpsec/ENScan_GO/blob/master/README.md"
+packageUrl: "https://github.com/wgpsec/ENScan_GO/releases/tag/v2.0.5"
+installable: true
+installCommand: "Download an ENScan_GO release archive, configure credentials with ./enscan -v, then run ./enscan --mcp"
+usageSnippet: "Run `./enscan --mcp` only for authorized security research, use request delays, and connect MCP clients to the local SSE endpoint."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "enscan-go": {
+        "url": "<loopback-sse-url>"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "enscan-go": {
+        "url": "<loopback-sse-url>"
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Downloaded ENScan_GO release binary for your operating system, or Go 1.23-compatible tooling to build from source.
+  - First-run configuration generated with `./enscan -v`.
+  - Valid, authorized cookies or API credentials for the selected enterprise-data sources.
+  - Local MCP client support for SSE transport, or a trusted stdio-to-SSE bridge if your client does not connect to SSE endpoints directly.
+  - Authorization to collect and process the company, supplier, app, ICP, recruiting, and public-account data requested.
+safetyNotes:
+  - ENScan_GO is security-research tooling intended for authorized HW/SRC and red-team-style enterprise information gathering.
+  - Use only public data sources and authorized accounts; the upstream README says it does not provide cracking or protection-bypass capabilities.
+  - Configure request delays, narrow fields, and scoped targets to reduce load on upstream data platforms and avoid account anomalies.
+  - Do not use the tool for harassment, doxxing, unauthorized profiling, commercial scraping outside provider terms, or unlawful intelligence gathering.
+  - The local SSE MCP server can expose configured data-source access to any MCP client that can reach the endpoint; bind it locally and avoid exposing the port on shared networks.
+privacyNotes:
+  - Queries, company names, PIDs, ICP records, apps, Weibo accounts, WeChat public accounts, mini programs, recruiting data, copyright records, suppliers, investments, branches, and exported results can be sent to the MCP client and model.
+  - ENScan_GO configuration can contain cookies, Tianyancha IDs, auth tokens, API tokens, RiskBird cookies, Qimai cookies, MIIT API endpoints, proxy settings, and user-agent strings.
+  - Generated JSON, XLSX, cache files, logs, prompts, and transcripts can reveal target organizations, subsidiaries, suppliers, public accounts, and investigation scope.
+  - Keep cookies and API tokens out of prompts, restrict file permissions on the generated config, and clean up exports or `enscan.gob` cache files according to engagement rules.
+sourceUrls:
+  - "https://github.com/wgpsec/ENScan_GO/blob/master/CLAUDE.md"
+  - "https://github.com/wgpsec/ENScan_GO/blob/master/runner/mcpServer.go"
+  - "https://github.com/wgpsec/ENScan_GO/blob/master/common/config.go"
+  - "https://github.com/wgpsec/ENScan_GO/blob/master/common/flag.go"
+  - "https://github.com/wgpsec/ENScan_GO/blob/master/go.mod"
+  - "https://github.com/wgpsec/ENScan_GO/blob/master/LICENSE"
+tags:
+  - security
+  - osint
+  - red-team
+  - company-data
+  - sse
+keywords:
+  - ENScan_GO MCP Server
+  - ENScan GO MCP
+  - enscan MCP
+  - enterprise information MCP
+  - ICP records MCP
+  - company data MCP
+  - red team OSINT MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+ENScan_GO MCP Server exposes ENScan_GO's enterprise-information gathering
+workflows to Claude and other MCP clients through a local SSE server started
+with `./enscan --mcp`. It can search companies, retrieve normalized enterprise
+field maps, fetch company base information by PID, page through selected data
+categories, and collect scoped company details such as ICP records, apps,
+Weibo, WeChat public accounts, jobs, mini programs, copyright records,
+suppliers, investments, branches, and multi-level subsidiaries.
+
+The project is aimed at authorized security research and red-team information
+gathering. Its README states that it uses public data, does not provide
+cracking or bypass methods, and warns that use can cause account anomalies on
+upstream data platforms.
+
+## Source Review
+
+- https://github.com/wgpsec/ENScan_GO
+- https://github.com/wgpsec/ENScan_GO/blob/master/README.md
+- https://github.com/wgpsec/ENScan_GO/releases/tag/v2.0.5
+- https://github.com/wgpsec/ENScan_GO/blob/master/CLAUDE.md
+- https://github.com/wgpsec/ENScan_GO/blob/master/runner/mcpServer.go
+- https://github.com/wgpsec/ENScan_GO/blob/master/common/config.go
+- https://github.com/wgpsec/ENScan_GO/blob/master/common/flag.go
+- https://github.com/wgpsec/ENScan_GO/blob/master/go.mod
+- https://github.com/wgpsec/ENScan_GO/blob/master/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, latest release page, Claude guidance, MCP server implementation,
+configuration defaults, CLI flag definitions, Go module file, and license file
+for current binaries, setup flow, SSE endpoint defaults, required credentials,
+supported fields, data-source behavior, and licensing.
+
+## Features
+
+- Go binary distribution with release archives for macOS, Linux, and Windows.
+- MCP mode started with `./enscan --mcp`.
+- Local SSE transport, with default config using a loopback endpoint on port
+  8080.
+- Tools for enterprise search, field-map retrieval, company base info by PID,
+  paginated category fetches, and keyword-driven detail collection.
+- Supported collection categories include ICP records, apps, Weibo, WeChat
+  public accounts, jobs, mini programs, software copyright, suppliers,
+  investments, branches, and holding-company relationships.
+- Data-source options include Aiqicha, Tianyancha, Kuaicha, RiskBird, MIIT ICP,
+  Coolapk, and Qimai, depending on configuration and source availability.
+- Request-delay, timeout, proxy, field-filtering, batch-query, output, and deep
+  search options.
+- Apache-2.0 license.
+
+## Installation
+
+Download the release archive for your operating system, then generate the
+configuration file:
+
+```sh
+./enscan -v
+```
+
+Add only the data-source cookies and API credentials you are authorized to use,
+then start the MCP server:
+
+```sh
+./enscan --mcp
+```
+
+For MCP clients that support local SSE endpoints, connect to the default SSE
+server on loopback host `127.0.0.1`, port `8080`, and path `/sse`:
+
+```json
+{
+    "mcpServers": {
+      "enscan-go": {
+        "url": "<loopback-sse-url>"
+      }
+    }
+  }
+```
+
+If your MCP client only supports stdio servers, use a trusted local SSE bridge
+and keep the ENScan_GO endpoint bound to localhost.
+
+## Use Cases
+
+- Search for a company and inspect candidate enterprise records before a
+  sanctioned security assessment.
+- Collect ICP, app, mini-program, WeChat public-account, Weibo, or recruiting
+  data for an authorized organization.
+- Explore investment, branch, holding-company, supplier, and subsidiary
+  relationships with explicit scope boundaries.
+- Ask Claude to summarize exported JSON data from a scoped ENScan_GO query.
+- Use request delays and field filters to keep public-data collection narrow and
+  reviewable.
+
+## Safety and Privacy
+
+ENScan_GO MCP Server can materially expand the amount of organization,
+subsidiary, supplier, app, public-account, recruiting, and registration data an
+assistant can gather. Use it only for authorized security research, compliance,
+or internal asset-discovery workflows with clear target scope and written rules
+of engagement.
+
+The server depends on cookies or API credentials for upstream data sources.
+Keep those credentials in the generated config file, not in prompts. Use request
+delays, narrow field selections, and source-specific terms of service review
+before collecting data. Do not expose the local SSE port beyond the machine that
+needs it, and do not allow untrusted MCP clients to connect.
+
+Outputs, logs, cache files, spreadsheets, prompts, and transcripts can reveal
+investigation targets, corporate structures, supplier relationships, public
+accounts, app inventories, and data-source account usage. Store exports in an
+approved engagement workspace, restrict access, and remove cache files such as
+`enscan.gob` when they are no longer needed.
+
+## Duplicate Check
+
+Existing MCP content includes other security and OSINT-adjacent tools, but no
+dedicated ENScan_GO, ENScan, `wgpsec/ENScan_GO`, or Chinese enterprise-data MCP
+entry was found in `content/mcp`. ENScan_GO MCP Server is distinct because it
+documents the Go binary's local SSE MCP mode for scoped company, ICP, app,
+public-account, supplier, investment, branch, and enterprise data-source
+queries.

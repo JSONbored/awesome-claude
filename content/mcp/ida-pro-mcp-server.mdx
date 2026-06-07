@@ -1,0 +1,155 @@
+---
+title: IDA Pro MCP Server
+slug: ida-pro-mcp-server
+category: mcp
+description: >-
+  MCP server and Claude Code plugin for connecting IDA Pro or headless idalib to
+  AI assistants for reverse engineering, decompilation, xref lookup, renaming,
+  commenting, and binary analysis workflows.
+cardDescription: >-
+  Connect Claude Code and other MCP clients to IDA Pro or idalib for assisted
+  reverse engineering.
+seoTitle: IDA Pro MCP Server for Claude
+seoDescription: >-
+  Configure IDA Pro MCP with Claude Code and other MCP clients to analyze
+  binaries through IDA Pro, idalib, decompilation, xrefs, comments, renaming, and
+  reverse-engineering helpers.
+author: mrexodia
+authorProfileUrl: "https://github.com/mrexodia"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: IDA Pro MCP
+repoUrl: "https://github.com/mrexodia/ida-pro-mcp"
+documentationUrl: "https://github.com/mrexodia/ida-pro-mcp"
+installable: true
+installCommand: "claude plugin marketplace add mrexodia/claude-marketplace && claude plugin install ida-pro-mcp@mrexodia"
+usageSnippet: "Use IDA Pro MCP from Claude Code after installing the plugin, or run `uv run idalib-mcp --stdio` for headless stdio workflows."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ida-pro": {
+        "command": "uv",
+        "args": ["run", "idalib-mcp", "--stdio"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "ida-pro": {
+        "command": "uv",
+        "args": ["run", "idalib-mcp", "--stdio"]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - IDA Pro 8.3 or newer, with IDA Pro 9 recommended; IDA Free is not supported.
+  - Python 3.11 or newer and uv.
+  - Globally activated idalib for the headless Claude Code plugin path.
+  - Supported MCP client such as Claude Code, Claude Desktop, Codex, Cursor, Gemini CLI, or another documented host.
+  - Authorization to analyze each binary, firmware image, sample, or database used with the tool.
+safetyNotes:
+  - Reverse engineering may be legally or contractually restricted; confirm authorization before analyzing proprietary binaries or third-party samples.
+  - Malware samples and exploit tooling should be handled in isolated environments with network and filesystem controls.
+  - LLMs can hallucinate reverse-engineering conclusions; verify findings against disassembly, decompiler output, xrefs, and reproducible scripts.
+  - Do not let an agent patch, rename, comment, or save IDA databases used for evidence without review and backups.
+privacyNotes:
+  - Binaries, IDA databases, symbol names, strings, comments, decompiler output, and vulnerability findings may be sent to the MCP client and model.
+  - Proprietary firmware, customer crash samples, malware indicators, license keys, and embedded secrets can appear in extracted strings or decompiled code.
+  - Reports and prompts may reveal unreleased product internals or sensitive security research.
+sourceUrls:
+  - "https://github.com/mrexodia/ida-pro-mcp"
+  - "https://plugins.hex-rays.com/mrexodia/ida-pro-mcp"
+  - "https://github.com/mrexodia/mcp-reversing-dataset"
+tags:
+  - ida-pro
+  - reverse-engineering
+  - binary-analysis
+  - security
+  - decompilation
+keywords:
+  - IDA Pro MCP
+  - ida-pro-mcp Claude Code
+  - idalib MCP
+  - reverse engineering MCP server
+  - binary analysis MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+IDA Pro MCP connects IDA Pro and headless idalib workflows to MCP clients. It
+lets an AI assistant retrieve decompilation, inspect disassembly, follow xrefs,
+rename functions and variables, add comments, and build reverse-engineering
+reports from actual IDA analysis.
+
+The project supports a Claude Code plugin path and manual MCP server options for
+GUI IDA or headless idalib sessions.
+
+## Source Review
+
+- https://github.com/mrexodia/ida-pro-mcp
+- https://plugins.hex-rays.com/mrexodia/ida-pro-mcp
+- https://github.com/mrexodia/mcp-reversing-dataset
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository for
+current IDA version support, plugin status, `idalib-mcp` commands, transport
+options, and supported MCP clients.
+
+## Features
+
+- Claude Code plugin install through the documented marketplace.
+- GUI IDA plugin integration and headless `idalib-mcp` support.
+- Decompilation, disassembly, xref, naming, typing, and commenting workflows.
+- Stdio, SSE/HTTP, and shared stdio modes documented by the project.
+- Multi-database headless session support.
+- Prompting guidance for reverse-engineering workflows.
+
+## Installation
+
+For Claude Code plugin setup:
+
+```sh
+claude plugin marketplace add mrexodia/claude-marketplace
+claude plugin install ida-pro-mcp@mrexodia
+```
+
+For a headless stdio MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "ida-pro": {
+      "command": "uv",
+      "args": ["run", "idalib-mcp", "--stdio"]
+    }
+  }
+}
+```
+
+Follow the repository instructions for activating idalib and choosing GUI,
+headless, stdio, shared stdio, or SSE transports.
+
+## Use Cases
+
+- Analyze a crackme or malware sample with decompiler and xref context.
+- Rename functions, variables, and types after human-reviewed analysis.
+- Generate reverse-engineering notes from IDA evidence.
+- Ask a model to compare decompilation with disassembly for tricky functions.
+- Use headless idalib to analyze multiple binaries from one MCP server.
+
+## Safety and Privacy
+
+Reverse-engineering workflows can involve sensitive or regulated material. Work
+only on binaries you are authorized to inspect, isolate suspicious samples, and
+verify every model-generated conclusion against IDA output. Keep backups before
+allowing an agent to modify comments, names, types, or saved database state.
+
+## Duplicate Check
+
+No `mrexodia/ida-pro-mcp` entry or source URL was found in `content/mcp`. This
+entry is separate from Ghidra MCP and other security-analysis content.

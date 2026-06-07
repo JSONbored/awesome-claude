@@ -1,0 +1,186 @@
+---
+title: Financial Datasets MCP Server
+slug: financial-datasets-mcp-server
+category: mcp
+description: >-
+  Python MCP server that lets Claude query Financial Datasets for stock
+  statements, prices, company news, crypto prices, and SEC filings.
+cardDescription: Connect Claude to Financial Datasets for market data research.
+seoTitle: Financial Datasets MCP Server for Claude
+seoDescription: >-
+  Configure the Financial Datasets MCP Server with Claude to retrieve company
+  financial statements, stock prices, crypto prices, company news, and SEC
+  filings through the Financial Datasets API.
+author: Financial Datasets
+authorProfileUrl: "https://github.com/financial-datasets"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Financial Datasets
+brandDomain: financialdatasets.ai
+repoUrl: "https://github.com/financial-datasets/mcp-server"
+documentationUrl: "https://github.com/financial-datasets/mcp-server/blob/main/README.md"
+installable: true
+installCommand: "uv run server.py"
+usageSnippet: "Clone the repository, set `FINANCIAL_DATASETS_API_KEY`, run `uv run server.py`, and ask Claude to retrieve statements, prices, filings, or news for a ticker."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "financial-datasets": {
+        "command": "uv",
+        "args": ["--directory", "PATH_TO_FINANCIAL_DATASETS_MCP", "run", "server.py"],
+        "env": {
+          "FINANCIAL_DATASETS_API_KEY": "YOUR_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "financial-datasets": {
+        "command": "uv",
+        "args": ["--directory", "PATH_TO_FINANCIAL_DATASETS_MCP", "run", "server.py"],
+        "env": {
+          "FINANCIAL_DATASETS_API_KEY": "YOUR_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 12 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.11 or newer, matching the upstream project metadata.
+  - uv installed on the machine running the MCP server.
+  - A cloned checkout of `financial-datasets/mcp-server`.
+  - Financial Datasets API key stored as `FINANCIAL_DATASETS_API_KEY`.
+  - Understanding of the Financial Datasets API plan, rate limits, market-data coverage, and terms.
+safetyNotes:
+  - This server retrieves financial market data; do not treat tool output or model summaries as investment, trading, tax, or legal advice.
+  - Current prices, crypto prices, filings, and news can be delayed, incomplete, rate limited, or unavailable depending on API plan and market conditions.
+  - Review generated analysis before using it in portfolio decisions, trading workflows, client reports, or compliance-sensitive research.
+  - The server sends ticker symbols, date ranges, filing filters, and research queries to the Financial Datasets API.
+privacyNotes:
+  - API keys must be stored in environment variables or local secret managers and never committed to configuration files.
+  - Queried tickers, crypto symbols, time ranges, filings, and news requests can reveal research interests, watchlists, client assignments, or trading hypotheses.
+  - Tool outputs may include financial statements, prices, filings, and news that become part of the model context and logs.
+  - Avoid sending private portfolio holdings, customer identifiers, or material non-public information through prompts or tool arguments.
+disclosure: >-
+  Uses the Financial Datasets API, which may require an account, API key, and
+  plan-specific usage limits.
+sourceUrls:
+  - "https://github.com/financial-datasets/mcp-server"
+  - "https://github.com/financial-datasets/mcp-server/blob/main/README.md"
+  - "https://github.com/financial-datasets/mcp-server/blob/main/server.py"
+  - "https://github.com/financial-datasets/mcp-server/blob/main/pyproject.toml"
+  - "https://github.com/financial-datasets/mcp-server/blob/main/.env.example"
+  - "https://github.com/financial-datasets/mcp-server/blob/main/LICENSE"
+  - "https://www.financialdatasets.ai/"
+  - "https://api.financialdatasets.ai/"
+tags:
+  - finance
+  - market-data
+  - stocks
+  - sec-filings
+  - crypto
+keywords:
+  - Financial Datasets MCP
+  - stock market data MCP
+  - SEC filings MCP
+  - financial statements Claude
+  - crypto prices MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Financial Datasets MCP Server is a Python FastMCP server that connects Claude
+and other MCP clients to the Financial Datasets stock market API. The upstream
+README describes tools for retrieving company financial statements, stock
+prices, market news, crypto prices, and SEC filings through a stdio MCP server.
+
+The server loads `FINANCIAL_DATASETS_API_KEY` from the environment, sends API
+requests to the Financial Datasets API, and returns JSON-formatted tool results
+to the MCP client.
+
+## Source Review
+
+- https://github.com/financial-datasets/mcp-server
+- https://github.com/financial-datasets/mcp-server/blob/main/README.md
+- https://github.com/financial-datasets/mcp-server/blob/main/server.py
+- https://github.com/financial-datasets/mcp-server/blob/main/pyproject.toml
+- https://github.com/financial-datasets/mcp-server/blob/main/.env.example
+- https://github.com/financial-datasets/mcp-server/blob/main/LICENSE
+- https://www.financialdatasets.ai/
+- https://api.financialdatasets.ai/
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, source file, project metadata, environment example, and API pages for
+current tool names, setup requirements, API endpoints, and usage limits.
+
+## Features
+
+- Retrieve income statements for a ticker.
+- Retrieve balance sheets for a ticker.
+- Retrieve cash flow statements for a ticker.
+- Retrieve the current or latest stock price for a ticker.
+- Retrieve historical stock prices by ticker, date range, interval, and interval multiplier.
+- Retrieve company news by ticker.
+- List available crypto tickers.
+- Retrieve current and historical crypto prices.
+- Retrieve SEC filings by ticker, limit, and optional filing type.
+- Run as a stdio MCP server through `uv run server.py`.
+
+## Installation
+
+Clone the repository and install dependencies with `uv` following the upstream
+README. Create a local environment file or configure the MCP client environment
+with `FINANCIAL_DATASETS_API_KEY`.
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "financial-datasets": {
+      "command": "uv",
+      "args": ["--directory", "PATH_TO_FINANCIAL_DATASETS_MCP", "run", "server.py"],
+      "env": {
+        "FINANCIAL_DATASETS_API_KEY": "YOUR_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server, then test with a low-risk ticker
+lookup before using it for a larger research workflow.
+
+## Use Cases
+
+- Ask Claude to summarize recent income statements for a public company.
+- Compare balance sheet and cash flow trends over several periods.
+- Retrieve current and historical prices for a ticker before building a research note.
+- Pull recent company news alongside financial statement context.
+- Gather SEC filing metadata for a ticker and filing type.
+- Retrieve crypto price history for supported symbols.
+
+## Safety and Privacy
+
+Financial Datasets MCP Server is useful for research, but market-data tooling is
+not a substitute for professional financial advice, official filings, broker
+records, or compliance-reviewed analysis. Treat model-generated conclusions as
+draft research, verify source data independently, and avoid using automated
+outputs directly in trading, client recommendations, or regulatory reporting.
+
+Keep the Financial Datasets API key out of repositories and shared logs. Ticker
+queries, filing filters, date ranges, and news searches can reveal research
+targets or trading intent, so avoid including private portfolio details,
+customer identifiers, or material non-public information in prompts.
+
+## Duplicate Check
+
+Existing entries cover other financial-data and finance-adjacent MCP servers,
+but no `financial-datasets/mcp-server`, Financial Datasets API MCP entry, or
+matching source URL was found in `content/mcp`.

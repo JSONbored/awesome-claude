@@ -1,0 +1,210 @@
+---
+title: SonarQube MCP Server
+slug: sonarqube-mcp-server
+category: mcp
+description: >-
+  Official SonarSource MCP server that connects Claude to SonarQube Server or
+  SonarQube Cloud for code quality, security issues, hotspots, measures,
+  quality gates, branches, pull requests, snippets, and system context.
+cardDescription: >-
+  Connect Claude to SonarQube Server or Cloud for code quality, security,
+  issues, hotspots, measures, quality gates, branches, and snippets.
+seoTitle: SonarQube MCP Server for Claude
+seoDescription: >-
+  Configure SonarQube MCP Server with Claude and other MCP clients to inspect
+  SonarQube Server or Cloud projects, issues, security hotspots, measures,
+  quality gates, branches, pull requests, snippets, and selected server data.
+author: SonarSource
+authorProfileUrl: "https://github.com/SonarSource"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: SonarQube MCP Server
+brandDomain: sonarsource.com
+repoUrl: "https://github.com/SonarSource/sonarqube-mcp-server"
+documentationUrl: "https://github.com/SonarSource/sonarqube-mcp-server/blob/master/README.md"
+packageUrl: "https://hub.docker.com/r/mcp/sonarqube"
+installable: true
+installCommand: "docker run --init --pull=always -i --rm -e SONARQUBE_TOKEN -e SONARQUBE_ORG mcp/sonarqube"
+usageSnippet: "Provide a SonarQube token and either SONARQUBE_ORG for SonarQube Cloud or SONARQUBE_URL for SonarQube Server, then run the mcp/sonarqube container from your MCP client."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "sonarqube": {
+        "command": "docker",
+        "args": [
+          "run",
+          "--init",
+          "--pull=always",
+          "-i",
+          "--rm",
+          "-e",
+          "SONARQUBE_TOKEN",
+          "-e",
+          "SONARQUBE_ORG",
+          "mcp/sonarqube"
+        ],
+        "env": {
+          "SONARQUBE_TOKEN": "YOUR_TOKEN",
+          "SONARQUBE_ORG": "YOUR_ORG"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add sonarqube \
+    --env SONARQUBE_TOKEN=$SONAR_TOKEN \
+    --env SONARQUBE_ORG=$SONAR_ORG \
+    -- docker run --init --pull=always -i --rm -e SONARQUBE_TOKEN -e SONARQUBE_ORG mcp/sonarqube
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Docker or another OCI-compatible container runtime.
+  - SonarQube Cloud organization key or SonarQube Server URL.
+  - SonarQube user token scoped to the projects and actions Claude should access.
+  - Organization policy for whether an agent may inspect source snippets, issues, hotspots, measures, quality gates, pull requests, server logs, or system data.
+  - Approval process before allowing issue status changes, hotspot status changes, automatic-analysis changes, webhooks, or server-level actions.
+safetyNotes:
+  - SonarQube MCP Server uses the permissions of the provided SonarQube token and can expose project, issue, hotspot, measure, branch, pull request, rule, source, and system information.
+  - Source code snippets, raw source, SCM details, coverage information, security findings, dependency risks, duplicated files, system logs, and health data can be sensitive.
+  - The source tree includes tools for changing issue status, changing security hotspot status, toggling automatic analysis, and creating webhooks; require human approval for actions that mutate SonarQube state.
+  - Use least-privilege tokens and separate development, staging, and production SonarQube contexts where possible.
+  - Container execution pulls and runs `mcp/sonarqube`; pin image versions or use reviewed container controls if your environment requires reproducible artifacts.
+privacyNotes:
+  - SonarQube tokens, organization keys, server URLs, project keys, branch names, pull request identifiers, source snippets, issue messages, hotspot details, logs, and system metadata may appear in MCP client logs, model transcripts, and tool outputs.
+  - The repository includes telemetry sample documentation; review SonarSource telemetry, product, and data-processing policies before enabling the server in regulated environments.
+  - Do not paste SonarQube tokens, private server URLs, raw source, or security findings into public prompts, issues, screenshots, or repository files.
+  - Security issue and hotspot data can reveal exploitable weaknesses before fixes are released; limit model and user access accordingly.
+disclosure: >-
+  Official SonarSource MCP server for SonarQube Server and SonarQube Cloud. The
+  repository is source-available under SonarSource licensing, and use of
+  SonarQube products, cloud services, container images, and telemetry may be
+  subject to SonarSource terms and policies.
+sourceUrls:
+  - "https://github.com/SonarSource/sonarqube-mcp-server/blob/master/LICENSE"
+  - "https://github.com/SonarSource/sonarqube-mcp-server/blob/master/build.gradle.kts"
+  - "https://github.com/SonarSource/sonarqube-mcp-server/blob/master/server.json"
+  - "https://raw.githubusercontent.com/SonarSource/sonarqube-mcp-server/master/telemetry-sample.md"
+  - "https://raw.githubusercontent.com/SonarSource/sonarqube-mcp-server/master/src/main/java/org/sonarsource/sonarqube/mcp/SonarQubeMcpServer.java"
+  - "https://raw.githubusercontent.com/SonarSource/sonarqube-mcp-server/master/src/main/java/org/sonarsource/sonarqube/mcp/tools/issues/ChangeIssueStatusTool.java"
+  - "https://raw.githubusercontent.com/SonarSource/sonarqube-mcp-server/master/src/main/java/org/sonarsource/sonarqube/mcp/tools/hotspots/ChangeSecurityHotspotStatusTool.java"
+tags:
+  - sonarqube
+  - code-quality
+  - security
+  - devops
+  - analysis
+keywords:
+  - SonarQube MCP
+  - SonarSource MCP
+  - SonarQube Cloud MCP
+  - code quality MCP
+  - security hotspot MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+SonarQube MCP Server is the official SonarSource MCP server for connecting
+Claude-compatible clients to SonarQube Server or SonarQube Cloud. It lets an
+agent work with code quality and security context such as projects, issues,
+security hotspots, measures, quality gates, branches, pull requests, rules,
+source snippets, duplications, dependency risks, and selected system
+information.
+
+Use it when Claude needs SonarQube-backed evidence while reviewing code,
+triaging findings, explaining quality gate failures, summarizing security
+hotspots, or preparing remediation plans. Because the server can also expose
+source and change selected SonarQube state, it should be configured with
+least-privilege tokens and human approval for write actions.
+
+## Source Review
+
+- https://github.com/SonarSource/sonarqube-mcp-server
+- https://github.com/SonarSource/sonarqube-mcp-server/blob/master/README.md
+- https://hub.docker.com/r/mcp/sonarqube
+- https://github.com/SonarSource/sonarqube-mcp-server/blob/master/LICENSE
+- https://github.com/SonarSource/sonarqube-mcp-server/blob/master/build.gradle.kts
+- https://github.com/SonarSource/sonarqube-mcp-server/blob/master/server.json
+- https://raw.githubusercontent.com/SonarSource/sonarqube-mcp-server/master/telemetry-sample.md
+- https://raw.githubusercontent.com/SonarSource/sonarqube-mcp-server/master/src/main/java/org/sonarsource/sonarqube/mcp/SonarQubeMcpServer.java
+- https://raw.githubusercontent.com/SonarSource/sonarqube-mcp-server/master/src/main/java/org/sonarsource/sonarqube/mcp/tools/issues/ChangeIssueStatusTool.java
+- https://raw.githubusercontent.com/SonarSource/sonarqube-mcp-server/master/src/main/java/org/sonarsource/sonarqube/mcp/tools/hotspots/ChangeSecurityHotspotStatusTool.java
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, Docker Hub package page, license, build manifest, MCP registry metadata,
+telemetry sample, server implementation, and representative issue and hotspot
+mutation tools for current installation and behavior details.
+
+## Features
+
+- Connect to SonarQube Cloud with `SONARQUBE_TOKEN` and `SONARQUBE_ORG`.
+- Connect to SonarQube Server with `SONARQUBE_TOKEN` and `SONARQUBE_URL`.
+- Search projects, branches, pull requests, issues, security hotspots,
+  measures, metrics, quality gates, rules, dependency risks, duplicated files,
+  source information, and system data.
+- Analyze code snippets directly inside the agent context.
+- Retrieve source, SCM, coverage, and duplications context when the token has
+  permission.
+- Change issue status and security hotspot status when allowed by the token.
+- Toggle automatic analysis and create webhooks in supported configurations.
+- Run as the `mcp/sonarqube` container over stdio for local MCP clients.
+
+## Installation
+
+For SonarQube Cloud, provide a token and organization key:
+
+```bash
+claude mcp add sonarqube \
+  --env SONARQUBE_TOKEN=$SONAR_TOKEN \
+  --env SONARQUBE_ORG=$SONAR_ORG \
+  -- docker run --init --pull=always -i --rm -e SONARQUBE_TOKEN -e SONARQUBE_ORG mcp/sonarqube
+```
+
+For SonarQube Server, provide a token and server URL:
+
+```bash
+claude mcp add sonarqube \
+  --env SONARQUBE_TOKEN=$SONAR_USER_TOKEN \
+  --env SONARQUBE_URL=$SONAR_URL \
+  -- docker run --init --pull=always -i --rm -e SONARQUBE_TOKEN -e SONARQUBE_URL mcp/sonarqube
+```
+
+Use SonarQube Cloud US by also setting `SONARQUBE_URL` to
+`https://sonarqube.us`.
+
+## Use Cases
+
+- Ask Claude to explain why a quality gate failed.
+- Summarize open code quality, security, or dependency-risk findings for a
+  project or branch.
+- Investigate a security hotspot and draft remediation steps.
+- Pull project measures, coverage, duplications, or metrics into a code review.
+- Inspect branch and pull request context before deciding what to fix first.
+- Analyze a snippet inside the MCP workflow.
+- Prepare issue status or hotspot status updates for human review.
+
+## Safety and Privacy
+
+Treat SonarQube MCP Server as access to code quality, source, and security
+intelligence. A broadly scoped token can expose source snippets, SCM data,
+security findings, dependency risks, logs, system metadata, and project
+relationships to the model context.
+
+The server includes state-changing tools. Keep a human approval step before
+changing issue status, changing security hotspot status, toggling automatic
+analysis, creating webhooks, or taking any action that could alter audit trails
+or project configuration.
+
+Review SonarSource licensing, product terms, container image practices, and
+telemetry behavior before using the server in regulated, confidential, or
+commercial environments. Keep tokens and server URLs in environment variables
+or secret stores, not prompts or repository files.
+
+## Duplicate Check
+
+Existing entries cover other code quality, security, DevOps, and repository
+analysis tools, but no SonarQube MCP Server entry,
+`SonarSource/sonarqube-mcp-server`, `mcp/sonarqube` container entry, or matching
+source URL was found in `content/mcp`.

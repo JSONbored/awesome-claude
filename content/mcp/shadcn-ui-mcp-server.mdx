@@ -1,0 +1,156 @@
+---
+title: shadcn/ui MCP Server
+slug: shadcn-ui-mcp-server
+category: mcp
+description: >-
+  MCP server that gives Claude access to shadcn/ui component source, demos,
+  blocks, metadata, and multi-framework implementations.
+cardDescription: >-
+  Let Claude inspect shadcn/ui components, demos, blocks, metadata, and
+  framework variants for UI development.
+seoTitle: shadcn/ui MCP Server for Claude
+seoDescription: >-
+  Configure shadcn/ui MCP Server with Claude and other MCP clients to retrieve
+  component source code, demos, blocks, metadata, dependencies, and React,
+  Svelte, Vue, or React Native implementations.
+author: Jpisnice
+authorProfileUrl: "https://github.com/Jpisnice"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: shadcn/ui MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/Jpisnice/shadcn-ui-mcp-server"
+documentationUrl: "https://github.com/Jpisnice/shadcn-ui-mcp-server/blob/master/README.md"
+packageUrl: "https://registry.npmjs.org/%40jpisnice%2Fshadcn-ui-mcp-server"
+installable: true
+installCommand: "npx @jpisnice/shadcn-ui-mcp-server"
+usageSnippet: "Run `npx @jpisnice/shadcn-ui-mcp-server` from an MCP client to let Claude retrieve shadcn/ui component source, demos, blocks, and metadata."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "shadcn": {
+        "command": "npx",
+        "args": ["@jpisnice/shadcn-ui-mcp-server"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "shadcn": {
+        "command": "npx",
+        "args": ["@jpisnice/shadcn-ui-mcp-server"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js and npx available to the MCP client runtime.
+  - Optional GitHub personal access token for higher GitHub API rate limits.
+  - A selected framework target such as React, Svelte, Vue, or React Native.
+  - A project where copied component code and dependencies can be reviewed before use.
+safetyNotes:
+  - shadcn/ui MCP Server retrieves component source, demos, blocks, metadata, dependencies, and repository structures from upstream component repositories.
+  - Generated component suggestions can add UI dependencies, copy code, or change frontend architecture when acted on by an agent.
+  - Review copied component code, dependency additions, styling choices, accessibility behavior, and framework-specific assumptions before committing changes.
+  - SSE and Docker deployment modes need normal network, CORS, and host binding review before multi-client or production use.
+privacyNotes:
+  - Component names, framework choices, GitHub API tokens, prompts, tool arguments, and generated UI code may be visible to the MCP client and model provider.
+  - UI prompts can reveal unreleased product workflows, internal design systems, customer-facing screens, or implementation plans.
+  - Treat GitHub personal access tokens as secrets and avoid pasting them into prompts, logs, screenshots, or shared configuration snippets.
+sourceUrls:
+  - "https://github.com/Jpisnice/shadcn-ui-mcp-server"
+  - "https://github.com/Jpisnice/shadcn-ui-mcp-server/blob/master/README.md"
+  - "https://github.com/Jpisnice/shadcn-ui-mcp-server/blob/master/package.json"
+  - "https://registry.npmjs.org/%40jpisnice%2Fshadcn-ui-mcp-server"
+tags:
+  - shadcn
+  - ui
+  - components
+  - frontend
+  - design-system
+keywords:
+  - shadcn MCP
+  - shadcn/ui MCP server
+  - shadcn-ui-mcp-server
+  - component source MCP
+  - frontend components MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+shadcn/ui MCP Server gives MCP clients access to shadcn/ui component source
+code, demos, blocks, metadata, dependency details, and directory browsing. It
+supports React, Svelte, Vue, and React Native implementations, with React
+options for Radix UI or Base UI primitives.
+
+The upstream README documents stdio, SSE, Docker, and MCPB installation paths.
+The scoped NPM package exposes the `shadcn-mcp` binary and can be launched with
+`npx @jpisnice/shadcn-ui-mcp-server`.
+
+## Source Review
+
+- https://github.com/Jpisnice/shadcn-ui-mcp-server
+- https://github.com/Jpisnice/shadcn-ui-mcp-server/blob/master/README.md
+- https://github.com/Jpisnice/shadcn-ui-mcp-server/blob/master/package.json
+- https://registry.npmjs.org/%40jpisnice%2Fshadcn-ui-mcp-server
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+NPM registry metadata for current package version, binary name, framework
+support, transport options, dependencies, and setup guidance.
+
+## Features
+
+- Retrieve shadcn/ui component source code.
+- Inspect component demos and usage patterns.
+- Browse complete block implementations such as dashboards, calendars, and forms.
+- Access component metadata, dependencies, descriptions, and configuration
+  details.
+- Choose React, Svelte, Vue, or React Native component implementations.
+- Use GitHub API token support for higher rate limits.
+- Run with stdio, SSE, Docker, or MCPB packaging paths.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": ["@jpisnice/shadcn-ui-mcp-server"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to inspect available shadcn/ui components before building a screen.
+- Retrieve a component demo and adapt it to a project.
+- Compare React, Svelte, Vue, or React Native implementations.
+- Pull block examples for dashboards, calendars, forms, and other UI patterns.
+- Check dependency and metadata requirements before adding a component.
+
+## Safety and Privacy
+
+Component-aware code generation can still change production UI behavior. Review
+copied source, dependencies, accessibility, styling, framework assumptions, and
+design-system fit before committing generated UI changes.
+
+GitHub tokens, component names, framework choices, prompts, and generated UI
+code can expose private product direction or unreleased interface details. Keep
+tokens out of prompts and logs, and review generated screens before sharing.
+
+## Duplicate Check
+
+No `Jpisnice/shadcn-ui-mcp-server` entry,
+`@jpisnice/shadcn-ui-mcp-server` package entry, or matching source URL was found
+in `content/mcp`.

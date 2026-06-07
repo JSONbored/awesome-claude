@@ -1,0 +1,194 @@
+---
+title: iOS Simulator MCP Server
+slug: ios-simulator-mcp-server
+category: mcp
+description: >-
+  MCP server for controlling iOS simulators from AI agents, including simulator
+  discovery, UI taps, typing, swipes, accessibility inspection, screenshots,
+  video recording, app install, and app launch.
+cardDescription: >-
+  Let Claude inspect and automate an iOS Simulator with accessibility trees,
+  screen views, taps, swipes, text input, screenshots, videos, app install, and app launch.
+seoTitle: iOS Simulator MCP Server for Claude
+seoDescription: >-
+  Configure iOS Simulator MCP with Claude Code, Cursor, and other MCP clients to
+  inspect accessibility elements, automate simulator UI actions, capture
+  screenshots or videos, install apps, and launch bundles on macOS.
+author: Joshua Yoes
+authorProfileUrl: "https://github.com/joshuayoes"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: iOS Simulator MCP
+brandDomain: github.com
+repoUrl: "https://github.com/joshuayoes/ios-simulator-mcp"
+documentationUrl: "https://github.com/joshuayoes/ios-simulator-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/ios-simulator-mcp/latest"
+installable: true
+installCommand: "claude mcp add ios-simulator -- npx -y ios-simulator-mcp"
+usageSnippet: "Install Xcode simulators and IDB, add `ios-simulator-mcp` to your MCP client, then ask Claude to inspect the accessibility tree, tap, type, swipe, screenshot, record, install, or launch apps."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ios-simulator": {
+        "command": "npx",
+        "args": ["-y", "ios-simulator-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "ios-simulator": {
+        "command": "npx",
+        "args": ["-y", "ios-simulator-mcp"],
+        "env": {
+          "IOS_SIMULATOR_MCP_FILTERED_TOOLS": "screenshot,record_video,stop_recording",
+          "IOS_SIMULATOR_MCP_DEFAULT_OUTPUT_DIR": "SIMULATOR_OUTPUT_DIR",
+          "IOS_SIMULATOR_MCP_IDB_PATH": "IDB_EXECUTABLE_PATH"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - macOS with Xcode and iOS simulators installed.
+  - Node.js and npx available for running the npm package.
+  - Facebook IDB installed and available on PATH, or configured through `IOS_SIMULATOR_MCP_IDB_PATH`.
+  - A booted simulator, or permission for the agent to open and interact with Simulator.
+  - Team agreement on which simulator actions, screenshots, recordings, app bundles, and output directories are allowed.
+safetyNotes:
+  - Use version 1.3.3 or newer. The upstream security policy documents command-injection vulnerabilities in older versions and states that they were fixed in v1.3.3.
+  - The server invokes simulator, IDB, and host commands to tap, type, swipe, screenshot, record video, install apps, launch apps, and stop recordings.
+  - Filter high-risk or noisy tools with `IOS_SIMULATOR_MCP_FILTERED_TOOLS` when an agent should only inspect UI state.
+  - App install and launch tools can execute simulator app code, change simulator state, and interact with test credentials or local development services.
+  - Screenshots and recordings can overwrite or create files in configured output directories; review paths before letting an agent write artifacts.
+privacyNotes:
+  - Tool results may expose app screens, accessibility labels, text fields, screenshots, videos, bundle identifiers, simulator UDIDs, file paths, output directories, app paths, and environment variables.
+  - Simulator apps may contain test accounts, customer fixtures, tokens, unreleased UI, internal URLs, logs, or private feature flags.
+  - MCP transcripts, client logs, screenshots, videos, and saved artifacts can retain sensitive UI and app-state data outside the simulator.
+  - Do not share recordings, screenshots, simulator data, app bundles, UDIDs, or output directories from proprietary apps unless the team has approved that disclosure.
+sourceUrls:
+  - "https://github.com/joshuayoes/ios-simulator-mcp"
+  - "https://github.com/joshuayoes/ios-simulator-mcp/blob/main/README.md"
+  - "https://github.com/joshuayoes/ios-simulator-mcp/blob/main/SECURITY.md"
+  - "https://github.com/joshuayoes/ios-simulator-mcp/blob/main/TROUBLESHOOTING.md"
+  - "https://github.com/joshuayoes/ios-simulator-mcp/blob/main/QA.md"
+  - "https://github.com/joshuayoes/ios-simulator-mcp/blob/main/package.json"
+  - "https://github.com/joshuayoes/ios-simulator-mcp/blob/main/src/index.ts"
+  - "https://github.com/joshuayoes/ios-simulator-mcp/blob/main/LICENSE"
+  - "https://registry.npmjs.org/ios-simulator-mcp/latest"
+tags:
+  - ios
+  - simulator
+  - mobile
+  - qa
+  - automation
+keywords:
+  - iOS Simulator MCP
+  - ios-simulator-mcp
+  - Claude iOS simulator
+  - mobile QA MCP
+  - Xcode simulator MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+iOS Simulator MCP Server gives MCP clients a tool surface for inspecting and
+controlling iOS simulators on macOS. It can find the booted simulator, open
+Simulator, describe accessibility elements, tap, type, swipe, inspect a point,
+view the current screen, take screenshots, record or stop videos, install apps,
+and launch bundles.
+
+The server is most useful for mobile development and QA loops where an agent
+needs to verify a UI after code changes. It can inspect accessibility labels and
+visual state, perform common interactions, and capture screenshots or videos for
+review.
+
+## Source Review
+
+- https://github.com/joshuayoes/ios-simulator-mcp
+- https://github.com/joshuayoes/ios-simulator-mcp/blob/main/README.md
+- https://github.com/joshuayoes/ios-simulator-mcp/blob/main/SECURITY.md
+- https://github.com/joshuayoes/ios-simulator-mcp/blob/main/TROUBLESHOOTING.md
+- https://github.com/joshuayoes/ios-simulator-mcp/blob/main/QA.md
+- https://github.com/joshuayoes/ios-simulator-mcp/blob/main/package.json
+- https://github.com/joshuayoes/ios-simulator-mcp/blob/main/src/index.ts
+- https://github.com/joshuayoes/ios-simulator-mcp/blob/main/LICENSE
+- https://registry.npmjs.org/ios-simulator-mcp/latest
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, security policy, troubleshooting notes, QA notes, package metadata,
+source file, license, and npm registry metadata for current tool behavior,
+security status, package version, and setup requirements.
+
+## Features
+
+- Get the currently booted iOS simulator ID.
+- Open the Simulator app.
+- Describe all visible accessibility elements.
+- Tap, type, and swipe in the simulator.
+- Find UI elements by accessibility label, unique ID, or element type.
+- Inspect the accessibility element at a screen coordinate.
+- View the current simulator screen.
+- Capture screenshots and simulator video recordings.
+- Stop an active simulator recording.
+- Install `.app` or `.ipa` bundles on the simulator.
+- Launch apps by bundle identifier with optional environment variables.
+- Filter tools and configure output directories through environment variables.
+
+## Installation
+
+Install Xcode simulators, Node.js, and IDB first. Then add the server to Claude
+Code:
+
+```bash
+claude mcp add ios-simulator -- npx -y ios-simulator-mcp
+```
+
+For JSON-based MCP clients, use:
+
+```json
+{
+  "mcpServers": {
+    "ios-simulator": {
+      "command": "npx",
+      "args": ["-y", "ios-simulator-mcp"]
+    }
+  }
+}
+```
+
+Use `IOS_SIMULATOR_MCP_FILTERED_TOOLS` to remove actions that should not be
+available in a particular workflow, such as screenshots, video recording, or app
+installation.
+
+## Use Cases
+
+- Ask Claude to verify an iOS screen after implementing a feature.
+- Inspect accessibility labels and element types for UI quality checks.
+- Tap through a flow and confirm expected screen changes.
+- Type test input into forms in a booted simulator.
+- Capture screenshots or recordings for bug reports and review artifacts.
+- Install and launch a local app bundle during development.
+- Restrict a QA workflow to read-only screen inspection by filtering action tools.
+
+## Safety and Privacy
+
+Use the current package version and avoid unsupported versions below 1.3.3. The
+upstream security policy documents older command-injection issues and the fixed
+version threshold.
+
+Simulator automation can expose sensitive UI and mutate app state. Limit tool
+availability for each task, keep output directories scoped, and avoid recording
+or screenshotting proprietary screens without approval. Treat accessibility
+trees, screenshots, videos, app paths, simulator IDs, and MCP transcripts as
+potentially sensitive test data.
+
+## Duplicate Check
+
+No `joshuayoes/ios-simulator-mcp` entry, iOS Simulator MCP entry, or matching
+source URL was found in `content/mcp`.

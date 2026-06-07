@@ -1,0 +1,197 @@
+---
+title: AWS FinOps MCP Server
+slug: aws-finops-mcp-server
+category: mcp
+description: >-
+  Read-only AWS FinOps MCP server that lets Claude query Cost Explorer cost and
+  usage data, compare AWS CLI profiles, filter by tags or dimensions, check AWS
+  Budgets, and audit for stopped EC2 instances, unattached EBS volumes, and
+  unassociated Elastic IP addresses across selected regions.
+cardDescription: Connect Claude to AWS cost analysis, budgets, and waste-audit checks.
+seoTitle: AWS FinOps MCP Server for Claude
+seoDescription: >-
+  Configure AWS FinOps MCP Server with Claude to analyze AWS costs through Cost
+  Explorer, inspect AWS Budgets, and audit stopped EC2 instances, unattached EBS
+  volumes, and unassociated Elastic IPs using local AWS CLI profiles.
+author: Ravi Kiran Vallamkonda
+authorProfileUrl: "https://github.com/ravikiranvm"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: AWS FinOps MCP Server
+brandDomain: github.com/ravikiranvm/aws-finops-mcp-server
+websiteUrl: "https://github.com/ravikiranvm/aws-finops-mcp-server"
+repoUrl: "https://github.com/ravikiranvm/aws-finops-mcp-server"
+documentationUrl: "https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/aws-finops-mcp-server/json"
+installable: true
+installCommand: "pipx install aws-finops-mcp-server"
+usageSnippet: "Configure a read-only AWS profile, then ask Claude for approved cost, budget, or waste-audit questions against explicit profiles and regions."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "aws_finops": {
+        "command": "aws-finops-mcp-server",
+        "args": []
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "aws_finops": {
+        "command": "aws-finops-mcp-server",
+        "args": [],
+        "env": {
+          "AWS_PROFILE": "<least-privilege-profile>",
+          "AWS_REGION": "<default-region>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer and pipx, pip, or uv.
+  - AWS CLI installed with one or more approved profiles.
+  - IAM permissions for ce:GetCostAndUsage, budgets:ViewBudget, ec2:DescribeInstances, ec2:DescribeVolumes, ec2:DescribeAddresses, and sts:GetCallerIdentity.
+  - Cost allocation tags activated in AWS when tag-based cost filtering is required.
+  - Approval to query the selected AWS accounts, profiles, regions, tags, and cost dimensions.
+safetyNotes:
+  - The reviewed MCP tools are annotated read-only and call AWS APIs for cost, budget, identity, EC2 instance, EBS volume, and Elastic IP inspection.
+  - Cost Explorer API calls can incur AWS charges; the upstream README notes get_cost makes Cost Explorer calls that are billed by AWS.
+  - all_profiles can query every locally configured AWS CLI profile, so use explicit profiles unless broad account comparison is approved.
+  - Cost, budget, stopped-instance, unattached-volume, and unassociated-EIP findings are advisory FinOps signals, not deletion instructions or guaranteed savings.
+  - AWS pricing, budget forecasts, tags, and resource state can be delayed, incomplete, or affected by account configuration.
+privacyNotes:
+  - Results can expose AWS account IDs, profile names, service spend, usage dimensions, cost allocation tags, budget names, budget limits, forecasted spend, region names, instance IDs, instance types, EBS volume IDs and sizes, Elastic IP allocation IDs, and public IP addresses.
+  - AWS credentials stay in the local AWS CLI profile, but MCP client logs, model transcripts, generated reports, screenshots, and shared prompts can still reveal sensitive financial and infrastructure context.
+  - Restrict AWS profiles to least privilege, avoid long-lived static keys where possible, and do not paste access keys or secret keys into prompts or committed config files.
+sourceUrls:
+  - "https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/pyproject.toml"
+  - "https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/requirements.txt"
+  - "https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/aws_finops_mcp_server/main.py"
+  - "https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/aws_finops_mcp_server/helpers/util.py"
+  - "https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/LICENSE"
+tags:
+  - aws
+  - finops
+  - cost-management
+  - cloud
+  - budgets
+keywords:
+  - AWS FinOps MCP Server
+  - AWS cost MCP
+  - FinOps MCP
+  - AWS Budgets MCP
+  - AWS Cost Explorer MCP
+  - cloud cost MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+AWS FinOps MCP Server is a Python stdio MCP server for AWS cost analysis and
+read-only waste-audit workflows. It lets Claude query Cost Explorer for
+UnblendedCost data, group costs by AWS dimensions, filter by tags or dimensions,
+compare selected AWS CLI profiles, check AWS Budgets, and identify stopped EC2
+instances, unattached EBS volumes, and unassociated Elastic IP addresses in
+specified regions.
+
+The server runs locally and uses boto3 with the AWS CLI profiles already
+configured on the user's machine. The reviewed implementation exposes two
+read-only MCP tools: `get_cost` and `run_finops_audit`.
+
+## Source Review
+
+- https://github.com/ravikiranvm/aws-finops-mcp-server
+- https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/README.md
+- https://pypi.org/pypi/aws-finops-mcp-server/json
+- https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/pyproject.toml
+- https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/requirements.txt
+- https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/aws_finops_mcp_server/main.py
+- https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/aws_finops_mcp_server/helpers/util.py
+- https://github.com/ravikiranvm/aws-finops-mcp-server/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, Python package metadata, dependency file, MCP server
+implementation, helper implementation, and license file for current install
+commands, AWS permissions, tool behavior, API scope, and licensing.
+
+## Features
+
+- Python package `aws-finops-mcp-server` with the `aws-finops-mcp-server`
+  console command.
+- Local stdio MCP transport.
+- `get_cost` tool for AWS Cost Explorer cost and usage data.
+- Date-range, last-N-days, tag, dimension, and group-by options for cost
+  queries.
+- Multi-profile or all-profile cost comparison through local AWS CLI profiles.
+- `run_finops_audit` tool for stopped EC2 instances, unattached EBS volumes,
+  unassociated Elastic IPs, and AWS Budgets status.
+- Read-only AWS API permission model documented in the README.
+- MIT license.
+
+## Installation
+
+Install the package with pipx:
+
+```sh
+pipx install aws-finops-mcp-server
+```
+
+Configure a least-privilege AWS CLI profile, then add the MCP server:
+
+```json
+{
+  "mcpServers": {
+    "aws_finops": {
+      "command": "aws-finops-mcp-server",
+      "args": []
+    }
+  }
+}
+```
+
+Restart the MCP client and ask Claude for an approved profile, region, and date
+range. Use explicit profiles before enabling all-profile analysis.
+
+## Use Cases
+
+- Summarize current-month AWS spend by service for one approved profile.
+- Compare service costs across staging and production profiles for a specific
+  date range.
+- Filter Cost Explorer results by cost allocation tags or AWS dimensions.
+- Check whether selected accounts are under, over, or forecasted to exceed AWS
+  Budgets.
+- Audit approved regions for stopped EC2 instances, unattached EBS volumes, and
+  unassociated Elastic IP addresses.
+- Draft a FinOps report that a human owner can verify against AWS Console or
+  source billing data.
+
+## Safety and Privacy
+
+AWS FinOps MCP Server is read-only in the reviewed implementation, but it still
+touches sensitive cloud financial and infrastructure metadata. Use an IAM role or
+profile with only the documented read permissions, prefer explicit profile and
+region arguments, and verify any savings recommendation before deleting or
+changing AWS resources.
+
+Cost Explorer calls may be billed by AWS, and repeated broad queries across many
+profiles, dates, dimensions, or tags can create avoidable charges and noisy
+reports. Budget forecasts, tag filters, and resource state can also lag behind
+actual infrastructure changes.
+
+Treat generated reports, model transcripts, screenshots, account IDs, profile
+names, cost data, budget names, resource IDs, public IP addresses, and tag values
+as sensitive FinOps data. Do not paste AWS access keys, secret keys, session
+tokens, or full local credential files into prompts or committed configuration.
+
+## Duplicate Check
+
+Existing MCP content includes broader AWS and cloud infrastructure entries, but
+no AWS FinOps MCP Server, `ravikiranvm/aws-finops-mcp-server`, dedicated AWS
+Cost Explorer MCP, or FinOps-focused AWS cost-audit MCP entry was found in
+`content/mcp`, `content/agents`, `content/guides`, or `content/skills`. This
+entry is scoped to the read-only AWS FinOps cost, budget, and waste-audit server.

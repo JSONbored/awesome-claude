@@ -1,0 +1,202 @@
+---
+title: Dagu MCP Server
+slug: dagu-mcp-server
+category: mcp
+description: >-
+  Built-in Streamable HTTP MCP server for Dagu that lets AI agents read workflow
+  state, inspect DAG specs and logs, preview or apply workflow changes, and
+  start, enqueue, retry, or stop DAG runs.
+cardDescription: >-
+  Connect Claude, Codex, Gemini CLI, and other MCP clients to a running Dagu
+  server so agents can manage local-first YAML workflows through `dagu_read`,
+  `dagu_change`, and `dagu_execute` with Dagu's audit, API key, and secrets
+  controls.
+seoTitle: Dagu MCP Server for Claude
+seoDescription: >-
+  Configure Dagu's built-in MCP server with Claude and other MCP clients to
+  read workflow state, edit DAG YAML, inspect logs, and control workflow runs
+  through a local-first scheduler and Web UI.
+author: dagucloud
+authorProfileUrl: "https://github.com/dagucloud"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Dagu
+brandDomain: dagu.sh
+repoUrl: "https://github.com/dagucloud/dagu"
+documentationUrl: "https://docs.dagu.sh/mcp/"
+packageUrl: "https://github.com/dagucloud/dagu/releases"
+installable: true
+installCommand: "brew install dagu"
+usageSnippet: "Start Dagu, create an MCP-scoped API key when auth is enabled, then connect your MCP client to the Dagu Streamable HTTP endpoint with a scoped bearer token."
+copySnippet: |-
+  brew install dagu
+configSnippet: |-
+  {
+    "mcpServers": {
+      "dagu": {
+        "url": "LOCAL_DAGU_MCP_URL",
+        "headers": {
+          "Authorization": "Bearer DAGU_MCP_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Dagu installed from Homebrew, GitHub Releases, npm, Docker/GHCR, Helm, or another upstream-supported installation path.
+  - A running Dagu HTTP server with the built-in MCP endpoint enabled through the normal server path.
+  - MCP client that supports Streamable HTTP server configuration.
+  - API key with MCP surface access when Dagu authentication is enabled.
+  - Existing DAG/workflow directory and policy for which agents may read, change, start, retry, stop, or enqueue workflow runs.
+safetyNotes:
+  - Dagu is a workflow engine; MCP access can expose shell commands, Docker containers, Kubernetes Jobs, SSH commands, SQL queries, HTTP calls, agent harnesses, and other workflow steps.
+  - The MCP server registers `dagu_change` and `dagu_execute` as destructive-capable tools, so require preview/review before applying DAG changes or starting/stopping production runs.
+  - API keys can be scoped to the MCP surface; avoid reusing broad admin credentials for agent access.
+  - Workflow edits may change schedules, parameters, retries, secrets usage, queues, resource limits, notifications, and downstream infrastructure actions.
+  - Keep the Dagu server and MCP endpoint behind trusted network boundaries, TLS, and authentication for shared or remote deployments.
+privacyNotes:
+  - DAG specs, run parameters, logs, documents, audit records, secrets references, API keys, environment variables, and workflow outputs may be exposed to the MCP client.
+  - Workflow logs can contain credentials, customer data, internal hostnames, database query results, command output, file paths, or incident context.
+  - Dagu stores state locally by default and can also run distributed workers; review where DAG files, logs, audit entries, and secrets are persisted.
+  - Any workflow state returned through the MCP client may be sent onward to the configured model provider.
+sourceUrls:
+  - "https://github.com/dagucloud/dagu"
+  - "https://github.com/dagucloud/dagu/blob/main/README.md"
+  - "https://github.com/dagucloud/dagu/blob/main/LICENSE"
+  - "https://github.com/dagucloud/dagu/blob/main/LICENSING.md"
+  - "https://github.com/dagucloud/dagu/blob/main/internal/service/mcp/server.go"
+  - "https://docs.dagu.sh/mcp/"
+  - "https://docs.dagu.sh/mcp/clients"
+  - "https://docs.dagu.sh/mcp/tools"
+  - "https://docs.dagu.sh/mcp/authentication"
+  - "https://docs.dagu.sh/mcp/auditability"
+  - "https://docs.dagu.sh/getting-started/installation"
+  - "https://docs.dagu.sh/overview/deployment-models"
+  - "https://docs.dagu.sh/web-ui/secrets"
+  - "https://github.com/dagucloud/dagu/releases"
+  - "https://github.com/dagucloud/dagu/pkgs/container/dagu"
+tags:
+  - workflows
+  - automation
+  - scheduler
+  - devops
+  - streamable-http
+keywords:
+  - Dagu MCP
+  - Dagu MCP server
+  - workflow scheduler MCP
+  - dagu_read dagu_change dagu_execute
+  - Streamable HTTP MCP workflow engine
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Dagu is a local-first workflow engine for defining and operating YAML DAGs with
+a Web UI, single-binary deployment, and no required external DBMS. Its built-in
+MCP server exposes a compact Streamable HTTP interface for AI agents to read
+Dagu state, inspect DAG specs and logs, preview or apply workflow changes, and
+control DAG runs.
+
+The MCP implementation registers three core tools: `dagu_read` for read-only
+state, specs, run details, and logs; `dagu_change` for previewing or applying
+DAG YAML changes; and `dagu_execute` for starting, enqueueing, retrying, or
+stopping DAG runs.
+
+## Source Review
+
+- https://github.com/dagucloud/dagu
+- https://github.com/dagucloud/dagu/blob/main/README.md
+- https://github.com/dagucloud/dagu/blob/main/LICENSE
+- https://github.com/dagucloud/dagu/blob/main/LICENSING.md
+- https://github.com/dagucloud/dagu/blob/main/internal/service/mcp/server.go
+- https://docs.dagu.sh/mcp/
+- https://docs.dagu.sh/mcp/clients
+- https://docs.dagu.sh/mcp/tools
+- https://docs.dagu.sh/mcp/authentication
+- https://docs.dagu.sh/mcp/auditability
+- https://docs.dagu.sh/getting-started/installation
+- https://docs.dagu.sh/overview/deployment-models
+- https://docs.dagu.sh/web-ui/secrets
+- https://github.com/dagucloud/dagu/releases
+- https://github.com/dagucloud/dagu/pkgs/container/dagu
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license notes, MCP server implementation, MCP docs, authentication
+docs, auditability docs, installation docs, deployment model docs, secrets docs,
+GitHub Releases, and GHCR package page for current setup, endpoint, tools, API
+key, and deployment behavior.
+
+## Features
+
+- Expose a built-in Streamable HTTP MCP endpoint from the running Dagu server.
+- Read DAG lists, DAG details, DAG specs, run details, run logs, and Dagu MCP
+  reference resources.
+- Preview or apply DAG YAML changes through `dagu_change`.
+- Start, enqueue, retry, or stop workflow runs through `dagu_execute`.
+- Use resources such as current DAG specs and run logs.
+- Use prompts for creating DAGs, editing DAGs, and debugging failed runs.
+- Scope API keys to the MCP surface when Dagu authentication is enabled.
+- Keep MCP-triggered actions visible through Dagu's audit and Web UI surfaces.
+
+## Installation
+
+Install Dagu through an upstream-supported path such as Homebrew, GitHub
+Releases, npm, Docker/GHCR, or Helm. For Homebrew:
+
+```bash
+brew install dagu
+```
+
+Start the Dagu server, enable authentication if required for your environment,
+and create an API key that is allowed to use the MCP surface. A sanitized MCP
+client configuration looks like:
+
+```json
+{
+  "mcpServers": {
+    "dagu": {
+      "url": "LOCAL_DAGU_MCP_URL",
+      "headers": {
+        "Authorization": "Bearer DAGU_MCP_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Follow the upstream MCP clients and authentication docs for the exact local or
+remote endpoint, API key setup, and client-specific configuration.
+
+## Use Cases
+
+- Let an AI coding agent inspect workflow state and logs before editing a DAG.
+- Draft new Dagu YAML workflows from a natural-language goal, then preview
+  validation before applying.
+- Debug failed workflow runs by reading run metadata and logs through MCP.
+- Start or enqueue approved workflow runs from Claude, Codex, Gemini CLI, or
+  another MCP-capable agent.
+- Operate scheduled automation from a local, self-hosted, managed, or hybrid
+  Dagu deployment.
+
+## Safety and Privacy
+
+Dagu can run real automation, including shell commands, Docker steps,
+Kubernetes Jobs, SSH actions, SQL queries, HTTP requests, file operations,
+notifications, and AI-agent harness steps. Treat `dagu_change` and
+`dagu_execute` as high-impact tools. Require review before applying workflow
+changes, launching production jobs, retrying expensive work, stopping incident
+response workflows, or changing schedules and credentials.
+
+MCP clients can see DAG specs, logs, parameters, outputs, resource references,
+and audit context. Review log redaction, secrets management, API key scope, and
+model-provider exposure before giving an agent access to sensitive workflows or
+customer data.
+
+## Duplicate Check
+
+No `dagucloud/dagu` entry, Dagu MCP Server entry, Dagu workflow MCP entry, or
+matching source URL was found in `content/mcp`.

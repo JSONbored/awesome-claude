@@ -1,0 +1,156 @@
+---
+title: Time MCP Server
+slug: time-mcp-server
+category: mcp
+description: >-
+  Official MCP server that gives Claude current time and timezone conversion
+  tools using IANA timezone names.
+cardDescription: >-
+  Let Claude get current time in a timezone and convert times between IANA
+  timezones through the official reference server.
+seoTitle: Time MCP Server for Claude
+seoDescription: >-
+  Configure the official Time MCP Server with Claude and other MCP clients to
+  get current time information, detect local timezone settings, and convert
+  times between IANA timezones.
+author: Model Context Protocol
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Time MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/time"
+documentationUrl: "https://github.com/modelcontextprotocol/servers/blob/main/src/time/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-server-time/json"
+installable: true
+installCommand: "uvx mcp-server-time"
+usageSnippet: "Run `uvx mcp-server-time` from an MCP client to let Claude get current time information and convert between IANA timezones."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "time": {
+        "command": "uvx",
+        "args": ["mcp-server-time"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "time": {
+        "command": "uvx",
+        "args": ["mcp-server-time"]
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - Python 3.10 or newer available to the MCP client runtime.
+  - uvx available for package execution.
+  - IANA timezone names for any timezone you want Claude to query or convert.
+  - Optional local timezone override if system timezone detection is not desired.
+safetyNotes:
+  - Time MCP Server can provide current time values and convert times between timezones.
+  - Incorrect timezone assumptions can cause missed meetings, bad deadlines, broken cron schedules, or confusing customer communications.
+  - Require human review before using generated time conversions for travel, incident response, legal deadlines, medication timing, billing, payroll, or production scheduling.
+  - Use the local timezone override when the runtime environment timezone differs from the user's expected working timezone.
+privacyNotes:
+  - Timezone names and local timezone detection can reveal approximate location, travel patterns, work region, or operational context.
+  - Time conversion prompts, meeting times, schedule details, target regions, and tool arguments may be visible to the MCP client and model provider.
+  - Avoid using sensitive calendar, travel, incident, or personnel timing data unless it is approved for the current model session.
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/servers"
+  - "https://github.com/modelcontextprotocol/servers/tree/main/src/time"
+  - "https://github.com/modelcontextprotocol/servers/blob/main/src/time/README.md"
+  - "https://github.com/modelcontextprotocol/servers/blob/main/src/time/pyproject.toml"
+  - "https://pypi.org/pypi/mcp-server-time/json"
+tags:
+  - time
+  - timezone
+  - scheduling
+  - reference
+  - official
+keywords:
+  - Time MCP
+  - mcp-server-time
+  - timezone conversion MCP
+  - current time MCP
+  - official MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Time MCP Server is an official Model Context Protocol reference server for time
+queries and timezone conversion. It exposes tools for getting the current time
+in a specific timezone or the system timezone, and for converting a time between
+source and target IANA timezones.
+
+The upstream README documents `uvx`, pip, and Docker configuration. The PyPI
+package exposes the `mcp-server-time` command for MCP clients.
+
+## Source Review
+
+- https://github.com/modelcontextprotocol/servers
+- https://github.com/modelcontextprotocol/servers/tree/main/src/time
+- https://github.com/modelcontextprotocol/servers/blob/main/src/time/README.md
+- https://github.com/modelcontextprotocol/servers/blob/main/src/time/pyproject.toml
+- https://pypi.org/pypi/mcp-server-time/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+PyPI metadata for current package version, command name, Python requirement,
+dependencies, supported tools, timezone behavior, and setup guidance.
+
+## Features
+
+- Get the current time for an IANA timezone.
+- Use automatic system timezone detection when appropriate.
+- Convert a 24-hour time from one IANA timezone to another.
+- Override the local timezone when the runtime environment differs from the user
+  context.
+- Run as an official reference MCP server through `uvx`, pip, or Docker.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "time": {
+      "command": "uvx",
+      "args": ["mcp-server-time"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude for the current time in another region.
+- Convert meeting times between teammates' timezones.
+- Check whether a remote team is inside normal working hours.
+- Translate launch, support, or maintenance windows into local time.
+- Avoid hard-coding timezone math in planning prompts.
+
+## Safety and Privacy
+
+Timezone tools are simple, but wrong assumptions still matter. Confirm IANA
+timezone names, daylight-saving behavior, and local timezone overrides before
+using model-produced conversions for deadlines, travel, support coverage,
+incident response, finance, payroll, legal, medical, or production scheduling.
+
+Timezone names, meeting times, schedule windows, travel plans, and target
+regions can reveal location and operational context. Keep sensitive timing data
+out of model sessions unless it is approved for that workflow.
+
+## Duplicate Check
+
+No dedicated `modelcontextprotocol/servers` Time entry, `mcp-server-time`
+package entry, or matching source URL was found in `content/mcp`. The existing
+Sequential Thinking and Fetch entries are from the same official server monorepo
+but cover separate servers and packages.

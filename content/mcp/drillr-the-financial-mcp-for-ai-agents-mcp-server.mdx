@@ -1,0 +1,281 @@
+---
+title: Drillr - The Financial MCP for AI Agents MCP Server
+slug: drillr-the-financial-mcp-for-ai-agents-mcp-server
+category: mcp
+description: >-
+  Streamable HTTP MCP server for financial research workflows, including
+  standardized financial data, SEC filing search, company discovery, market
+  signals, ticker resolution, and alternative-data table exploration.
+cardDescription: >-
+  Connect MCP clients to Drillr financial research data, SEC filing search,
+  live signals, and structured market datasets.
+seoTitle: Drillr Financial MCP Server for Claude
+seoDescription: >-
+  Use Drillr MCP Server with Claude and other AI clients to query financial
+  statements, SEC filings, market signals, ticker metadata, and alternative
+  datasets through a Streamable HTTP MCP endpoint.
+author: Drillr
+authorProfileUrl: "https://drillr.ai"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Drillr
+brandDomain: drillr.ai
+repoUrl: "https://github.com/Little-Grebe-Inc/drillr-mcp-server"
+documentationUrl: "https://drillr.ai/developer/docs"
+installable: true
+installCommand: "claude mcp add drillr https://gateway.drillr.ai/mcp/data --transport http --header \"Authorization: Bearer $DRILLR_API_KEY\""
+usageSnippet: "Create an external-scope Drillr API key, connect https://gateway.drillr.ai/mcp/data with an Authorization bearer header, and ask for cited financial research rather than trade execution."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "drillr": {
+        "type": "http",
+        "url": "https://gateway.drillr.ai/mcp/data",
+        "headers": {
+          "Authorization": "Bearer ${DRILLR_API_KEY}"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "drillr": {
+        "type": "http",
+        "url": "https://gateway.drillr.ai/mcp/data",
+        "headers": {
+          "Authorization": "Bearer ${DRILLR_API_KEY}"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Drillr account at `https://drillr.ai`.
+  - External-scope Drillr API key from `https://drillr.ai/developer/keys`.
+  - MCP client that supports Streamable HTTP servers with bearer headers.
+  - Secure secret storage for `DRILLR_API_KEY` outside prompts, repository files, screenshots, and shell history.
+  - Financial-research workflow that can tolerate source coverage limits, data latency, credit usage, and human review before decisions.
+safetyNotes:
+  - Drillr's MCP endpoint is a remote Streamable HTTP server at `https://gateway.drillr.ai/mcp/data` and requires a bearer API key.
+  - Tool calls can consume Drillr credits or billable API usage. Check plan limits and remaining credit balance before high-volume research loops.
+  - run_sql is documented as read-only SELECT access, but broad queries across 90-plus tables can still be expensive, slow, or noisy.
+  - Treat outputs as research inputs, not investment, legal, accounting, tax, or trading advice.
+  - Drillr documents that it does not place trades, manage brokerage positions, expose options chains, or provide its own price forecasts.
+  - Review cited SEC filing paragraphs, table schemas, ticker resolution, and source coverage before relying on results in reports or decisions.
+privacyNotes:
+  - Prompts, ticker lists, research themes, SQL queries, and retrieved financial context are sent to Drillr's hosted gateway and the connected MCP client.
+  - Drillr API keys are sensitive credentials. Keep them out of prompts, shared configs, issue comments, logs, screenshots, and repository files.
+  - Research prompts may reveal portfolio interests, watchlists, investment theses, client names, diligence topics, or confidential strategy.
+  - SEC filing excerpts, analyst consensus, alt-data, market signals, and generated summaries may be retained by MCP clients, AI providers, logs, or downstream tools.
+  - Use synthetic prompts or public tickers for demos, screenshots, and examples when client, portfolio, or internal research strategy is sensitive.
+tags:
+  - drillr
+  - mcp
+  - finance
+  - sec-filings
+  - market-data
+  - research
+keywords:
+  - drillr mcp
+  - financial mcp server
+  - sec filing mcp
+  - financial research mcp
+  - market data mcp
+  - streamable http mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Drillr is a financial research MCP server for AI agents. It exposes a single
+Streamable HTTP endpoint for standardized financial data, SEC filing search,
+company discovery, live market signals, ticker resolution, table discovery,
+schema inspection, and fiscal-period utilities.
+
+The MCP endpoint is:
+
+```text
+https://gateway.drillr.ai/mcp/data
+```
+
+Drillr uses bearer API-key authentication. The public repository includes setup
+docs, tool references, REST API docs, and Claude Code plugin metadata.
+
+## Source Review
+
+- https://github.com/Little-Grebe-Inc/drillr-mcp-server
+- https://github.com/Little-Grebe-Inc/drillr-mcp-server/blob/main/docs/tools.md
+- https://github.com/Little-Grebe-Inc/drillr-mcp-server/blob/main/docs/rest-api.md
+- https://drillr.ai/developer/docs
+- https://modelcontextprotocol.io/registry/about
+- https://code.claude.com/docs/en/mcp
+
+These sources were reviewed on **2026-06-05**. Prefer live Drillr docs over
+model memory for endpoint behavior, tool coverage, API-key requirements, credit
+usage, data coverage, and REST/MCP response details.
+
+## Features
+
+- Streamable HTTP MCP endpoint with bearer API-key auth.
+- MCP tools backed by corresponding REST API endpoints.
+- Structured financial data over 90-plus tables, including statements, ratios,
+  earnings, insider and ownership data, prices, and alternative datasets.
+- Paragraph-level semantic search over indexed SEC filings.
+- Filing list lookup by ticker, form type, and date range.
+- Company discovery from natural-language descriptions.
+- Cross-asset signal feed for recent market events.
+- Ticker resolution from company names, brands, or ticker substrings.
+- Alternative-data table discovery and schema inspection.
+- Fiscal-period helper for companies with non-calendar fiscal years.
+
+## Tools
+
+- `run_sql`: read-only PostgreSQL SELECT queries over structured financial,
+  market, and alternative-data tables.
+- `sec_report_search`: paragraph-level semantic search across SEC filings such
+  as 10-K, 10-Q, 20-F, 6-K, S-1, and DEF 14A.
+- `sec_report_list`: list indexed filings for a ticker by form type and date
+  range.
+- `company_search`: discover companies by business model, supply chain,
+  competitors, industry, or thematic fit.
+- `signal_list`: retrieve recent news and market-event signals by ticker,
+  sector, or time window.
+- `ticker_resolve`: map company names, brands, or ticker fragments to canonical
+  tickers before calling ticker-keyed tools.
+- `list_tables`: discover available alternative-data SQL tables by category.
+- `get_table_schema`: inspect columns and types for a selected table.
+- `fiscal_utility`: convert fiscal years and quarters to calendar months, or
+  resolve calendar months back to fiscal periods.
+
+## Installation
+
+1. Sign up at `https://drillr.ai`.
+2. Create an external-scope API key at `https://drillr.ai/developer/keys`.
+3. Store the key as `DRILLR_API_KEY` or paste it only into the target MCP
+   client's secure configuration.
+4. Add the MCP endpoint with an `Authorization: Bearer ...` header.
+
+### Claude Code
+
+```bash
+export DRILLR_API_KEY="drl_..."
+
+claude mcp add drillr https://gateway.drillr.ai/mcp/data \
+  --transport http \
+  --header "Authorization: Bearer $DRILLR_API_KEY"
+```
+
+### Generic MCP Client
+
+```json
+{
+  "mcpServers": {
+    "drillr": {
+      "type": "http",
+      "url": "https://gateway.drillr.ai/mcp/data",
+      "headers": {
+        "Authorization": "Bearer ${DRILLR_API_KEY}"
+      }
+    }
+  }
+}
+```
+
+### Smithery
+
+Drillr also documents a Smithery install path:
+
+```bash
+npx -y @smithery/cli install drillr/drillr --client claude
+```
+
+Smithery prompts for the `drl_*` API key and writes client configuration during
+installation. Review the generated config before using it in a shared machine or
+team environment.
+
+### Claude Code Plugin
+
+The Drillr repository also acts as a Claude Code plugin marketplace:
+
+```text
+/plugin marketplace add Little-Grebe-Inc/drillr-mcp-server
+/plugin install drillr
+```
+
+After plugin installation, set `DRILLR_API_KEY` in the environment used by the
+host or add the key through the generated configuration flow.
+
+## Use Cases
+
+- Compare company margins, ratios, growth, valuation, or price history across
+  tickers.
+- Search SEC filings for specific risk factors, accounting policies, segment
+  commentary, related-party transactions, or guidance language.
+- Resolve a company name to a canonical ticker before querying ticker-keyed
+  data.
+- Discover public companies by business description, supply-chain role, peer
+  group, or investment theme.
+- Inspect alternative datasets such as data centers, semiconductors, compute
+  pricing, AI model benchmarks, macro, trade, contracts, patents, papers, or
+  developer-skill demand.
+- Pull recent market signals for specific tickers or sectors.
+- Convert fiscal-period language into calendar ranges before querying
+  company-reported data.
+
+## Coverage And Limits
+
+Drillr's public docs describe coverage for US and Japan equities, financials
+back to the 1980s, SEC filings, earnings transcripts and summaries, markets,
+analyst coverage, news and signals, and AI value-chain alternative data.
+
+Documented out-of-scope areas include private or unlisted companies, on-chain
+crypto metrics, options chains, real-time order books, intraday tick data,
+retail brokerage actions, and Drillr-produced price forecasts.
+
+## Safe Usage
+
+- Run `ticker_resolve` before ticker-keyed tools when the user gives a company
+  name, brand, or ambiguous ticker.
+- Use `list_tables` and `get_table_schema` before writing SQL against unfamiliar
+  alternative-data tables.
+- Keep SQL narrowly filtered by ticker, date, table, and row limit.
+- Prefer `sec_report_search` for narrative SEC filing content and `run_sql` for
+  structured financial values.
+- Compare cited paragraphs, table definitions, and source dates before including
+  results in investment memos, diligence reports, or client-facing material.
+- Monitor credit balance and avoid automated loops that repeatedly run broad
+  SQL, SEC search, or signal queries.
+
+## Troubleshooting
+
+### The MCP client cannot connect
+
+Confirm the URL is `https://gateway.drillr.ai/mcp/data`, the transport is HTTP,
+and the config includes `Authorization: Bearer <YOUR_DRILLR_API_KEY>`.
+
+### Authentication fails
+
+Check that the key is an external-scope Drillr key and has not been copied with
+angle brackets, extra spaces, or shell-escaping errors.
+
+### SQL queries fail
+
+Use `list_tables` and `get_table_schema` first. Drillr documents SQL
+constraints for `run_sql`, including read-only SELECT usage and table-specific
+filtering requirements.
+
+### Results do not match the company the user intended
+
+Use `ticker_resolve` before searching filings or structured financial data. Some
+brand names, ADRs, indexes, ETFs, and foreign listings need explicit
+disambiguation.
+
+### Credit usage is higher than expected
+
+Narrow the query, lower result limits, and avoid repeated broad searches.
+Drillr's REST responses document credit metadata, while MCP responses follow
+standard JSON-RPC and do not include per-call credit details inline.

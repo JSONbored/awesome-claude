@@ -1,0 +1,183 @@
+---
+title: Ghidra MCP Server by bethington
+slug: bethington-ghidra-mcp-server
+category: mcp
+description: >-
+  Apache-licensed Ghidra MCP bridge with GUI and headless workflows for binary
+  analysis, decompilation, scripting, debugger access, batch operations, and
+  Ghidra Server collaboration.
+cardDescription: >-
+  Connect Claude to Ghidra through a Python bridge and Java extension with
+  decompiler, P-code, debugger, scripting, batch-edit, and headless analysis tools.
+seoTitle: Ghidra MCP Server by bethington for Claude
+seoDescription: >-
+  Configure the bethington Ghidra MCP server with Claude and other MCP clients
+  for authorized reverse engineering workflows including decompilation, xrefs,
+  P-code analysis, debugger access, scripts, comments, renaming, and headless runs.
+author: bethington
+authorProfileUrl: "https://github.com/bethington"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Ghidra MCP
+brandDomain: github.com
+repoUrl: "https://github.com/bethington/ghidra-mcp"
+documentationUrl: "https://github.com/bethington/ghidra-mcp/blob/main/README.md"
+packageUrl: "https://github.com/bethington/ghidra-mcp/releases"
+installable: true
+installCommand: "git clone https://github.com/bethington/ghidra-mcp.git && cd ghidra-mcp && python -m tools.setup preflight --ghidra-path GHIDRA_INSTALL_DIR"
+usageSnippet: "Build and deploy the Ghidra extension with `python -m tools.setup`, enable the plugin in Ghidra, then run `python bridge_mcp_ghidra.py` from an MCP client config."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ghidra-bethington": {
+        "command": "python",
+        "args": ["GHIDRA_MCP_REPO/bridge_mcp_ghidra.py"]
+      }
+    }
+  }
+configSnippet: |-
+  python -m tools.setup preflight --ghidra-path GHIDRA_INSTALL_DIR
+  python -m tools.setup ensure-prereqs --ghidra-path GHIDRA_INSTALL_DIR
+  python -m tools.setup build
+  python -m tools.setup deploy --ghidra-path GHIDRA_INSTALL_DIR
+estimatedSetupTime: 35 minutes
+difficulty: advanced
+prerequisites:
+  - Ghidra 12.1 or a compatible version installed and available on the local machine or analysis host.
+  - Java 21, Maven 3.9 or newer, Python 3.10 or newer, and Python package installation available.
+  - Ghidra extension deployment permissions for the user profile or headless environment.
+  - Authorization to analyze the binaries, firmware, traces, symbols, and shared Ghidra projects loaded into the tool.
+  - Review of script execution, debugger, Ghidra Server, Docker, and headless-analysis settings before use.
+safetyNotes:
+  - Use this server only for binaries and systems you are authorized to inspect, debug, emulate, modify, document, or reverse engineer.
+  - The tool surface includes write-capable operations such as renaming, typing, commenting, label changes, script execution, structure creation, and project/version-control workflows.
+  - Unknown binaries, malware samples, debugger targets, and imported scripts can be dangerous; isolate analysis environments and avoid running untrusted code on a primary workstation.
+  - Headless, Docker, CI, and Ghidra Server workflows can affect shared repositories or automated pipelines if configured with write access.
+  - Keep human review on operations that change analysis state, scripts, project metadata, or shared Ghidra Server content.
+privacyNotes:
+  - Tool calls may expose binary names, file paths, hashes, strings, imports, exports, symbols, decompiled code, comments, type names, project names, repository URLs, debugger state, memory reads, and trace metadata.
+  - Reverse engineering projects often contain proprietary firmware, customer binaries, vulnerability findings, credentials embedded in samples, exploit indicators, and private research notes.
+  - MCP client logs, model transcripts, Ghidra project history, Docker volumes, CI logs, and Ghidra Server repositories may retain sensitive analysis data.
+  - Do not commit private binaries, generated Ghidra projects, debugger traces, analysis exports, credentials, proprietary symbols, or customer-specific reverse engineering notes.
+sourceUrls:
+  - "https://github.com/bethington/ghidra-mcp"
+  - "https://github.com/bethington/ghidra-mcp/blob/main/README.md"
+  - "https://github.com/bethington/ghidra-mcp/blob/main/LICENSE"
+  - "https://github.com/bethington/ghidra-mcp/blob/main/SECURITY.md"
+  - "https://github.com/bethington/ghidra-mcp/blob/main/bridge_mcp_ghidra.py"
+  - "https://github.com/bethington/ghidra-mcp/blob/main/pom.xml"
+  - "https://github.com/bethington/ghidra-mcp/blob/main/requirements.txt"
+  - "https://github.com/bethington/ghidra-mcp/blob/main/.mcp.json"
+  - "https://github.com/bethington/ghidra-mcp/blob/main/docker/Dockerfile"
+  - "https://github.com/bethington/ghidra-mcp/blob/main/docker/docker-compose.yml"
+  - "https://github.com/bethington/ghidra-mcp/releases"
+tags:
+  - reverse-engineering
+  - ghidra
+  - security
+  - debugger
+  - binary-analysis
+keywords:
+  - bethington Ghidra MCP
+  - Ghidra MCP server
+  - Claude Ghidra
+  - reverse engineering MCP
+  - binary analysis MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Ghidra MCP Server by bethington is a Ghidra extension and Python MCP bridge for
+authorized reverse engineering workflows. It exposes Ghidra analysis context to
+MCP clients so an agent can inspect decompilation output, cross-references,
+symbols, strings, data structures, memory, P-code, debugger state, project
+metadata, scripts, comments, labels, and batch analysis operations.
+
+This entry covers the separate `bethington/ghidra-mcp` project. The catalog also
+includes LaurieWired's GhidraMCP server, which is a different repository and
+implementation. Choose between them based on the Ghidra version, setup path,
+tool surface, transport, and workflow style your reverse engineering task needs.
+
+## Source Review
+
+- https://github.com/bethington/ghidra-mcp
+- https://github.com/bethington/ghidra-mcp/blob/main/README.md
+- https://github.com/bethington/ghidra-mcp/blob/main/LICENSE
+- https://github.com/bethington/ghidra-mcp/blob/main/SECURITY.md
+- https://github.com/bethington/ghidra-mcp/blob/main/bridge_mcp_ghidra.py
+- https://github.com/bethington/ghidra-mcp/blob/main/pom.xml
+- https://github.com/bethington/ghidra-mcp/blob/main/requirements.txt
+- https://github.com/bethington/ghidra-mcp/blob/main/.mcp.json
+- https://github.com/bethington/ghidra-mcp/blob/main/docker/Dockerfile
+- https://github.com/bethington/ghidra-mcp/blob/main/docker/docker-compose.yml
+- https://github.com/bethington/ghidra-mcp/releases
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, license, security policy, bridge script, Maven build metadata, Python
+requirements, example MCP config, Docker files, and release page for current
+Ghidra compatibility, setup, transports, build steps, and safety guidance.
+
+## Features
+
+- Bridge MCP clients to Ghidra through a Python bridge and Java extension.
+- Inspect decompiled functions, call graphs, references, strings, memory, imports, exports, symbols, and data types.
+- Perform write-capable analysis updates such as renaming, typing, comments, labels, and structure work.
+- Run Ghidra scripts and automate repeatable reverse engineering workflows.
+- Use batch operations for larger analysis passes.
+- Work with P-code emulation and debugger-oriented workflows.
+- Run in GUI, headless, Docker, or CI-oriented analysis environments.
+- Integrate with Ghidra Server project and version-control workflows.
+
+## Installation
+
+Clone the repository and run the setup preflight against your Ghidra install:
+
+```bash
+git clone https://github.com/bethington/ghidra-mcp.git
+cd ghidra-mcp
+python -m tools.setup preflight --ghidra-path GHIDRA_INSTALL_DIR
+```
+
+Then install prerequisites, build, and deploy the extension:
+
+```bash
+python -m tools.setup ensure-prereqs --ghidra-path GHIDRA_INSTALL_DIR
+python -m tools.setup build
+python -m tools.setup deploy --ghidra-path GHIDRA_INSTALL_DIR
+```
+
+Enable the Ghidra plugin, open an authorized project, and configure your MCP
+client to run `bridge_mcp_ghidra.py`.
+
+## Use Cases
+
+- Ask Claude to explain functions from a loaded Ghidra project.
+- Summarize strings, imports, exports, references, and call graph neighborhoods.
+- Generate consistent comments, names, and type improvements for reviewed functions.
+- Investigate data structures and field usage in firmware or malware samples.
+- Run repeatable documentation workflows across related binaries.
+- Use headless or Docker analysis jobs for CI-style reverse engineering pipelines.
+- Coordinate Ghidra Server project workflows with shared analysis teams.
+
+## Safety and Privacy
+
+Reverse engineering tools can touch sensitive and dangerous material. Use an
+isolated analysis environment, especially for unknown binaries, malware,
+debugger sessions, scripts, and CI/headless jobs. Keep human approval on any
+operation that writes comments, names, types, labels, structures, scripts,
+version-control state, or shared project data.
+
+Treat binary metadata and analysis output as sensitive. Decompiled code,
+strings, paths, hashes, symbols, debugger state, memory reads, comments, and
+Ghidra project data can reveal proprietary software internals, vulnerability
+findings, customer artifacts, credentials embedded in samples, and private
+research notes.
+
+## Duplicate Check
+
+No `bethington/ghidra-mcp` entry or matching source URL was found in
+`content/mcp`. The existing `LaurieWired/GhidraMCP` entry covers a separate
+Ghidra MCP repository and implementation.

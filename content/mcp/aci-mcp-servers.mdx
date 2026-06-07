@@ -1,0 +1,198 @@
+---
+title: ACI MCP Servers
+slug: aci-mcp-servers
+category: mcp
+description: >-
+  Open-source MCP servers for accessing ACI.dev managed functions through
+  app-specific tools or a unified search-and-execute interface.
+cardDescription: >-
+  Connect Claude and other MCP clients to ACI.dev managed functions through
+  unified or app-specific MCP servers.
+seoTitle: ACI MCP Servers for Claude
+seoDescription: >-
+  Configure ACI MCP Servers with Claude and other MCP clients to use ACI.dev
+  managed functions through app-specific tools or a unified search and execute
+  workflow.
+author: Aipolabs
+authorProfileUrl: "https://github.com/aipotheosis-labs"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: ACI.dev
+brandDomain: aci.dev
+repoUrl: "https://github.com/aipotheosis-labs/aci-mcp"
+documentationUrl: "https://www.aci.dev/docs/mcp-servers/introduction"
+websiteUrl: "https://www.aci.dev"
+packageUrl: "https://pypi.org/project/aci-mcp/"
+pricingModel: freemium
+disclosure: editorial
+installable: true
+installCommand: "uvx aci-mcp unified-server --linked-account-owner-id YOUR_LINKED_ACCOUNT_OWNER_ID"
+usageSnippet: "Run `uvx aci-mcp unified-server --linked-account-owner-id YOUR_LINKED_ACCOUNT_OWNER_ID` with an ACI API key, or use `apps-server` with an explicit app list."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "aci": {
+        "command": "uvx",
+        "args": [
+          "aci-mcp",
+          "unified-server",
+          "--linked-account-owner-id",
+          "YOUR_LINKED_ACCOUNT_OWNER_ID"
+        ],
+        "env": {
+          "ACI_API_KEY": "YOUR_ACI_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "aci": {
+        "command": "uvx",
+        "args": [
+          "aci-mcp",
+          "unified-server",
+          "--linked-account-owner-id",
+          "YOUR_LINKED_ACCOUNT_OWNER_ID"
+        ],
+        "env": {
+          "ACI_API_KEY": "YOUR_ACI_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - ACI.dev account, API key, and linked account owner ID.
+  - Connected app credentials or linked accounts for the tools the agent should use.
+  - MCP client that can launch Python package commands with environment variables.
+  - Clear allowlist of apps, functions, and user accounts before exposing write-capable tools.
+safetyNotes:
+  - The unified server can discover and execute many ACI.dev managed functions, so restrict permissions before connecting it to an autonomous agent.
+  - App-specific servers should be preferred when a workflow only needs a small set of integrations.
+  - Connected apps may read, create, update, delete, or send data depending on the selected functions and linked account permissions.
+  - Require human approval before email, calendar, CRM, ticketing, infrastructure, billing, deployment, or account-administration actions.
+privacyNotes:
+  - Tool names, function arguments, prompts, linked account identifiers, execution results, logs, and connected-service data may pass through ACI.dev, the selected third-party apps, the MCP client, and the model provider.
+  - API keys and linked-account credentials must be protected in client config, environment files, logs, screenshots, and shared prompts.
+  - Review ACI.dev account, tenant, retention, audit-log, and OAuth settings before routing production or customer data through the server.
+sourceUrls:
+  - "https://github.com/aipotheosis-labs/aci-mcp"
+  - "https://github.com/aipotheosis-labs/aci"
+  - "https://www.aci.dev/docs/mcp-servers/introduction"
+  - "https://www.aci.dev/docs/mcp-servers/unified-server"
+  - "https://www.aci.dev/docs/mcp-servers/apps-server"
+  - "https://pypi.org/project/aci-mcp/"
+tags:
+  - integrations
+  - tools
+  - automation
+  - oauth
+  - platform
+keywords:
+  - ACI MCP
+  - ACI.dev MCP
+  - aci-mcp
+  - unified MCP server
+  - app-specific MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+ACI MCP Servers provide MCP access to ACI.dev managed functions. The package
+offers a unified server with search-and-execute meta tools and an app-specific
+server for exposing functions from selected apps.
+
+This entry points at the open-source `aipotheosis-labs/aci-mcp` package rather
+than the broader ACI.dev platform repository. The upstream README describes two
+server modes: `aci-mcp-unified` for searching and executing available functions,
+and `aci-mcp-apps` for direct access to functions from explicitly selected apps.
+
+## Source Review
+
+- https://github.com/aipotheosis-labs/aci-mcp
+- https://github.com/aipotheosis-labs/aci
+- https://www.aci.dev/docs/mcp-servers/introduction
+- https://www.aci.dev/docs/mcp-servers/unified-server
+- https://www.aci.dev/docs/mcp-servers/apps-server
+- https://pypi.org/project/aci-mcp/
+
+These sources were reviewed on **2026-06-05**. Prefer the live ACI.dev docs for
+current API key, linked account owner, app selection, client configuration, and
+deployment behavior.
+
+## Features
+
+- Unified MCP server with search and execution tools for ACI.dev functions.
+- App-specific MCP server for exposing selected app functions directly.
+- PyPI package runnable with `uvx`.
+- Docker usage documented by the upstream project.
+- ACI.dev-managed authentication, linked accounts, app integrations, and
+  function execution.
+- Documentation for unified and app-specific MCP client integration.
+
+## Installation
+
+For the unified server:
+
+```json
+{
+  "mcpServers": {
+    "aci": {
+      "command": "uvx",
+      "args": [
+        "aci-mcp",
+        "unified-server",
+        "--linked-account-owner-id",
+        "YOUR_LINKED_ACCOUNT_OWNER_ID"
+      ],
+      "env": {
+        "ACI_API_KEY": "YOUR_ACI_API_KEY"
+      }
+    }
+  }
+}
+```
+
+For narrower access, use the upstream `apps-server` mode and pass only the apps
+needed for the workflow.
+
+## Use Cases
+
+- Give Claude one MCP connection for many ACI.dev-managed integrations.
+- Use the unified server to discover relevant functions during exploratory
+  workflows.
+- Use the app-specific server for safer, narrower access to approved apps.
+- Prototype assistants that need calendars, email, search, CRM, ticketing, or
+  developer-platform tools behind a common MCP interface.
+- Compare unified tool discovery with explicit function allowlisting before
+  production use.
+
+## Safety and Privacy
+
+ACI MCP Servers can expose high-impact third-party actions through one MCP
+connection. Prefer the smallest useful app set, review linked account scopes,
+and require human approval for write, send, deployment, billing, admin, or
+destructive operations.
+
+Treat ACI API keys, linked account IDs, prompts, function arguments, execution
+results, OAuth data, logs, and connected-service records as sensitive. Review
+ACI.dev account controls and connected app permissions before using the server
+with production or customer data.
+
+## Duplicate Check
+
+No `aipotheosis-labs/aci-mcp` entry or source URL was found in `content/mcp`.
+This is distinct from individual app MCP servers because it focuses on ACI.dev's
+unified and app-specific function gateway rather than one service-specific API.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The MCP package
+is open source, but the workflow depends on an ACI.dev account and managed
+function infrastructure.

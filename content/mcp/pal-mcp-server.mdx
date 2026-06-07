@@ -1,0 +1,184 @@
+---
+title: PAL MCP Server
+slug: pal-mcp-server
+category: mcp
+description: >-
+  Provider Abstraction Layer MCP server for orchestrating multiple AI models,
+  external AI CLIs, planning, consensus, code review, debugging, and delegated
+  sub-agent workflows from one MCP client.
+cardDescription: >-
+  Let Claude Code, Codex, Gemini CLI, Cursor, and other clients consult multiple
+  models and CLI subagents through PAL MCP.
+seoTitle: PAL MCP Server for Claude
+seoDescription: >-
+  Configure PAL MCP Server with Claude Code, Codex, Gemini CLI, Cursor, and
+  other MCP clients to coordinate multiple model providers, local models, and
+  external CLI subagents in a single workflow.
+author: Beehive Innovations
+authorProfileUrl: "https://github.com/BeehiveInnovations"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: PAL MCP
+repoUrl: "https://github.com/BeehiveInnovations/pal-mcp-server"
+documentationUrl: "https://github.com/BeehiveInnovations/pal-mcp-server"
+installable: true
+installCommand: "git clone https://github.com/BeehiveInnovations/pal-mcp-server.git && cd pal-mcp-server && ./run-server.sh"
+usageSnippet: "Use PAL MCP when an MCP client should ask other model providers or CLI subagents for reviews, plans, debugging, consensus, or handoff work."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "pal": {
+        "command": "bash",
+        "args": [
+          "-c",
+          "uvx --from git+https://github.com/BeehiveInnovations/pal-mcp-server.git pal-mcp-server"
+        ],
+        "env": {
+          "DEFAULT_MODEL": "auto",
+          "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY",
+          "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "pal": {
+        "command": "bash",
+        "args": [
+          "-c",
+          "uvx --from git+https://github.com/BeehiveInnovations/pal-mcp-server.git pal-mcp-server"
+        ],
+        "env": {
+          "DEFAULT_MODEL": "auto",
+          "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY",
+          "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer, Git, and uv or uvx.
+  - API keys for at least one configured provider such as Gemini, OpenAI, OpenRouter, Azure OpenAI, xAI, DIAL, or a local Ollama setup.
+  - MCP client such as Claude Code, Codex CLI, Gemini CLI, Cursor, or another compatible host.
+  - Clear policy for what code, prompts, screenshots, and context may be shared with external model providers or CLI subagents.
+safetyNotes:
+  - PAL can send code, prompts, files, findings, and conversation context to multiple external model providers.
+  - CLI subagents may inspect the workspace, run tools, and return results from separate contexts; restrict roles and provider access.
+  - Keep disabled tools disabled unless the workflow needs them, and review tool configuration before broad code analysis or security review.
+  - Multi-model consensus can still be wrong; use it as review input, not automatic approval.
+privacyNotes:
+  - Provider API keys, OpenRouter keys, Azure credentials, local model endpoints, and CLI auth tokens are sensitive secrets.
+  - Cross-model conversations can reveal proprietary code, customer data, vulnerability details, business plans, and private prompts to several providers.
+  - Conversation continuity means earlier context may be forwarded into later tool calls or subagent handoffs.
+sourceUrls:
+  - "https://github.com/BeehiveInnovations/pal-mcp-server"
+  - "https://github.com/BeehiveInnovations/pal-mcp-server/blob/main/docs/getting-started.md"
+  - "https://github.com/BeehiveInnovations/pal-mcp-server/blob/main/docs/tools/clink.md"
+  - "https://github.com/BeehiveInnovations/pal-mcp-server/blob/main/docs/tools/consensus.md"
+tags:
+  - multi-model
+  - cli
+  - planning
+  - code-review
+  - orchestration
+keywords:
+  - PAL MCP
+  - Provider Abstraction Layer MCP
+  - pal-mcp-server Claude Code
+  - multi model MCP server
+  - clink MCP tool
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+PAL MCP is a Provider Abstraction Layer MCP server for coordinating multiple AI
+models and external AI CLIs from one MCP client. It lets a primary agent ask
+other providers or CLI subagents for planning, debugging, code review,
+consensus, pre-commit review, and implementation handoff support.
+
+The project was formerly known as Zen MCP and now documents PAL MCP plus a
+`clink` tool for connecting external CLIs such as Gemini CLI, Codex CLI, and
+Claude Code into a workflow.
+
+## Source Review
+
+- https://github.com/BeehiveInnovations/pal-mcp-server
+- https://github.com/BeehiveInnovations/pal-mcp-server/blob/main/docs/getting-started.md
+- https://github.com/BeehiveInnovations/pal-mcp-server/blob/main/docs/tools/clink.md
+- https://github.com/BeehiveInnovations/pal-mcp-server/blob/main/docs/tools/consensus.md
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository for
+current provider names, model defaults, tool availability, setup scripts, and
+configuration flags.
+
+## Features
+
+- Multi-model chat, planning, consensus, debugging, and code-review workflows.
+- `clink` bridge for delegating to external AI CLI subagents.
+- Conversation continuity across PAL tools and model handoffs.
+- Provider support for Gemini, OpenAI, Anthropic, xAI, Azure OpenAI, OpenRouter,
+  DIAL, Ollama, and local models when configured.
+- Optional tool disabling and model defaults through environment configuration.
+- Support for Claude Code, Codex CLI, Gemini CLI, Cursor, and other MCP clients.
+
+## Installation
+
+Clone and run the automatic setup:
+
+```sh
+git clone https://github.com/BeehiveInnovations/pal-mcp-server.git
+cd pal-mcp-server
+./run-server.sh
+```
+
+The repository also documents an `uvx` setup shape for MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "pal": {
+      "command": "bash",
+      "args": [
+        "-c",
+        "uvx --from git+https://github.com/BeehiveInnovations/pal-mcp-server.git pal-mcp-server"
+      ],
+      "env": {
+        "DEFAULT_MODEL": "auto",
+        "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY",
+        "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Configure only the provider keys and tools needed for the workflow.
+
+## Use Cases
+
+- Ask a second model to review an implementation plan.
+- Run multi-model consensus before a risky architectural decision.
+- Delegate a security review or bug hunt to a CLI subagent.
+- Continue a discussion through another provider after context compaction.
+- Compare local model feedback against hosted model feedback.
+
+## Safety and Privacy
+
+PAL is powerful because it can route context to many providers and CLI
+subagents. Treat every enabled provider as a data-sharing destination. Use
+minimal provider keys, limit tools, and avoid forwarding proprietary code,
+customer data, or vulnerability details unless the provider and workflow are
+approved.
+
+## Duplicate Check
+
+`content/mcp/paypal-mcp-server.mdx` is unrelated despite the similar text
+substring. No `BeehiveInnovations/pal-mcp-server` entry or source URL was found
+in `content/mcp`.

@@ -1,0 +1,189 @@
+---
+title: Spec Workflow MCP Server
+slug: spec-workflow-mcp-server
+category: mcp
+description: >-
+  MCP server for spec-driven development workflows, requirements, design docs,
+  task breakdowns, approvals, implementation logs, and a real-time dashboard.
+cardDescription: >-
+  Guide Claude through requirements, design, tasks, approvals, steering docs,
+  and implementation tracking with a spec-driven MCP workflow.
+seoTitle: Spec Workflow MCP Server for Claude
+seoDescription: >-
+  Configure Spec Workflow MCP Server with Claude, Codex, Cursor, VS Code, and
+  other MCP clients to create requirements, design docs, task plans, approvals,
+  steering documents, and project dashboards.
+author: Pimzino
+authorProfileUrl: "https://github.com/Pimzino"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Spec Workflow MCP
+brandDomain: github.com
+repoUrl: "https://github.com/Pimzino/spec-workflow-mcp"
+documentationUrl: "https://github.com/Pimzino/spec-workflow-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40pimzino%2Fspec-workflow-mcp"
+installable: true
+installCommand: "claude mcp add spec-workflow npx @pimzino/spec-workflow-mcp@latest -- PROJECT_PATH"
+usageSnippet: "Run the dashboard separately with `npx -y @pimzino/spec-workflow-mcp@latest --dashboard`, then configure the MCP server with a project path."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "spec-workflow": {
+        "command": "npx",
+        "args": ["-y", "@pimzino/spec-workflow-mcp@latest", "PROJECT_PATH"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "spec-workflow": {
+        "command": "npx",
+        "args": ["-y", "@pimzino/spec-workflow-mcp@latest", "PROJECT_PATH"],
+        "env": {
+          "SPEC_WORKFLOW_HOME": "WRITABLE_SPEC_WORKFLOW_HOME"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js and npx available to the MCP client runtime.
+  - A project workspace you are authorized to organize with generated specs and steering documents.
+  - A writable `.spec-workflow` project directory and, for sandboxed runtimes, a writable `SPEC_WORKFLOW_HOME`.
+  - Optional dashboard process started separately before using visual approvals or project tracking.
+  - Approval workflow expectations agreed with the team before letting an agent mark tasks complete.
+safetyNotes:
+  - Spec Workflow MCP writes requirements, design, task, steering, approval, archive, and implementation-log files under `.spec-workflow`.
+  - The dashboard uses a local web server and WebSocket updates; keep it bound to localhost unless you add external authentication, TLS, and network restrictions.
+  - The README documents rate limiting, audit logging, security headers, default localhost binding, and CORS restrictions, but also notes that built-in HTTPS/TLS and user authentication are not yet implemented.
+  - Task and approval tools can make an agent appear to advance project state; require human review before accepting specs, completing tasks, or using generated implementation prompts.
+  - Docker deployment should be reviewed for volume mounts, writable directories, and dashboard exposure before using it in shared environments.
+privacyNotes:
+  - Requirements, designs, task lists, steering documents, approval comments, implementation logs, filenames, project paths, prompts, and task progress may be visible to the MCP client and model provider.
+  - Persistent global state may be stored under `SPEC_WORKFLOW_HOME`, including active project registry, dashboard session data, settings, job history, and migration logs.
+  - The `.spec-workflow` directory can contain unreleased product plans, architecture decisions, customer requirements, and implementation details.
+  - Review generated specs, logs, approval files, and dashboard screenshots before committing, sharing, or uploading them.
+sourceUrls:
+  - "https://github.com/Pimzino/spec-workflow-mcp"
+  - "https://github.com/Pimzino/spec-workflow-mcp/blob/main/README.md"
+  - "https://github.com/Pimzino/spec-workflow-mcp/blob/main/package.json"
+  - "https://github.com/Pimzino/spec-workflow-mcp/blob/main/docs/PROMPTING-GUIDE.md"
+  - "https://github.com/Pimzino/spec-workflow-mcp/blob/main/docs/TOOLS-REFERENCE.md"
+  - "https://github.com/Pimzino/spec-workflow-mcp/blob/main/docs/CONFIGURATION.md"
+  - "https://github.com/Pimzino/spec-workflow-mcp/blob/main/docs/INTERFACES.md"
+  - "https://registry.npmjs.org/%40pimzino%2Fspec-workflow-mcp"
+  - "https://marketplace.visualstudio.com/items?itemName=Pimzino.spec-workflow-mcp"
+tags:
+  - planning
+  - workflow
+  - approvals
+  - project-management
+  - developer-tools
+keywords:
+  - Spec Workflow MCP
+  - spec-workflow-mcp
+  - spec-driven development MCP
+  - requirements MCP server
+  - approval workflow MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Spec Workflow MCP is an MCP server for structured, spec-driven development. It
+helps Claude create and manage requirements, design documents, task breakdowns,
+approval states, steering documents, and implementation logs inside a project
+workspace.
+
+The upstream README documents client setup for Claude Code, Claude Desktop,
+Codex, Cursor, Windsurf, OpenCode, Continue, Cline, and Augment. It also
+provides a separate dashboard mode and a VS Code extension for reviewing specs,
+task progress, approvals, comments, and implementation activity.
+
+## Source Review
+
+- https://github.com/Pimzino/spec-workflow-mcp
+- https://github.com/Pimzino/spec-workflow-mcp/blob/main/README.md
+- https://github.com/Pimzino/spec-workflow-mcp/blob/main/package.json
+- https://github.com/Pimzino/spec-workflow-mcp/blob/main/docs/PROMPTING-GUIDE.md
+- https://github.com/Pimzino/spec-workflow-mcp/blob/main/docs/TOOLS-REFERENCE.md
+- https://github.com/Pimzino/spec-workflow-mcp/blob/main/docs/CONFIGURATION.md
+- https://github.com/Pimzino/spec-workflow-mcp/blob/main/docs/INTERFACES.md
+- https://registry.npmjs.org/%40pimzino%2Fspec-workflow-mcp
+- https://marketplace.visualstudio.com/items?itemName=Pimzino.spec-workflow-mcp
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, package metadata, docs, NPM registry metadata, and VS Code Marketplace
+listing for current install commands, dashboard behavior, supported clients,
+tool names, extension status, package versions, and security notes.
+
+## Features
+
+- Create requirements, design, and task documents for named specs.
+- Track task status, completion, notes, and overall spec progress.
+- Request, approve, reject, and revise documents through an approval workflow.
+- Maintain product, technical, and structure steering documents.
+- View project progress through a real-time dashboard with WebSocket updates.
+- Use a VS Code extension sidebar for spec review and approval actions.
+- Store implementation logs and code statistics for completed tasks.
+- Configure workspace-local or shared git-worktree spec storage.
+- Localize the dashboard interface across multiple supported languages.
+
+## Installation
+
+Start the dashboard separately when you want the visual approval and tracking
+interface:
+
+```bash
+npx -y @pimzino/spec-workflow-mcp@latest --dashboard
+```
+
+For MCP clients that launch stdio servers, configure the server with the project
+path it should manage:
+
+```json
+{
+  "mcpServers": {
+    "spec-workflow": {
+      "command": "npx",
+      "args": ["-y", "@pimzino/spec-workflow-mcp@latest", "PROJECT_PATH"]
+    }
+  }
+}
+```
+
+For sandboxed runtimes with a read-only home directory, set
+`SPEC_WORKFLOW_HOME` to a writable workspace location before launching the
+server or dashboard.
+
+## Use Cases
+
+- Turn a feature request into requirements, design, and task documents.
+- Keep an implementation plan reviewable before Claude starts coding.
+- Track which tasks are pending, in progress, completed, or waiting for approval.
+- Add steering documents so future specs follow project conventions.
+- Review generated requirements and design proposals in a dashboard.
+- Keep implementation logs for later project review.
+- Share spec state across git worktrees when a team works from multiple branches.
+
+## Safety and Privacy
+
+Spec Workflow MCP deliberately writes durable planning state. Treat
+`.spec-workflow` as project data, not disposable chat history, because it can
+contain product requirements, design decisions, implementation prompts, approval
+comments, and task logs.
+
+Keep the dashboard on localhost unless you add a reverse proxy with
+authentication, TLS, and firewall restrictions. The upstream README documents
+localhost binding, rate limiting, audit logging, security headers, CORS
+restrictions, and Docker hardening, but it also states that built-in HTTPS/TLS
+and user authentication are not yet implemented.
+
+## Duplicate Check
+
+No `Pimzino/spec-workflow-mcp` entry, `@pimzino/spec-workflow-mcp` package
+entry, or matching source URL was found in `content/mcp`.

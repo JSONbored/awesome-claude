@@ -1,0 +1,191 @@
+---
+title: Wassette MCP Server
+slug: wassette-mcp-server
+category: mcp
+description: >-
+  Microsoft-maintained MCP server and security-oriented WebAssembly component
+  runtime for loading sandboxed tools, managing component permissions, and
+  exposing Wasm component tools to Claude through MCP.
+cardDescription: Run sandboxed WebAssembly component tools from Claude through the Wassette MCP server.
+seoTitle: Wassette MCP Server for Claude
+seoDescription: >-
+  Configure Wassette with Claude to load WebAssembly components, list tools,
+  grant storage, network, and environment permissions, and run component tools
+  through a security-oriented MCP runtime.
+author: Microsoft
+authorProfileUrl: "https://github.com/microsoft"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Wassette
+brandDomain: microsoft.github.io
+repoUrl: "https://github.com/microsoft/wassette"
+documentationUrl: "https://raw.githubusercontent.com/microsoft/wassette/main/docs/mcp-clients.md"
+installable: true
+installCommand: "Install Wassette with a reviewed package-manager or release path, then register `wassette run` as a local stdio MCP server."
+usageSnippet: "Start with `search-components` or `load-component`, inspect the loaded tools, then grant storage, network, or environment permissions only when the component needs them."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "wassette": {
+        "command": "wassette",
+        "args": ["run"]
+      }
+    }
+  }
+configSnippet: |-
+  # Optional config.toml
+  component_dir = "./wassette-components"
+  secrets_dir = "./wassette-secrets"
+
+  [environment_vars]
+  LOG_LEVEL = "info"
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Reviewed Wassette release or package-manager installation for the target platform.
+  - MCP client that supports local stdio servers.
+  - Agreement on which WebAssembly components may be loaded from local files or OCI registries.
+  - Permission policy for storage, network, and environment-variable access before components are granted capabilities.
+  - Separate secrets and component storage locations with appropriate filesystem permissions.
+safetyNotes:
+  - Wassette can load WebAssembly components from local paths or OCI registries and expose their tools to Claude.
+  - Built-in MCP tools can load and unload components, search the component registry, list loaded components, and grant or revoke storage, network, and environment-variable permissions.
+  - Components are sandboxed and deny access by default, but granted permissions can still allow file reads, file writes, outbound network calls, and secret access.
+  - Review component source, registry provenance, policy files, requested permissions, and update channels before loading a component in a trusted workspace.
+  - Require human approval before granting write access, broad filesystem scopes, production network hosts, or sensitive environment variables.
+privacyNotes:
+  - Loaded components may process prompts, files, environment variables, network responses, secrets, and generated tool outputs depending on granted permissions.
+  - Component directories, secrets directories, policy files, MCP transcripts, logs, registry URIs, and tool-call arguments can reveal sensitive project or credential details.
+  - Wassette source includes argument log sanitization for keys, tokens, secrets, and passwords, but prompts and outputs can still contain private data.
+  - Redact component ids, registry locations, local component names, granted URI scopes, environment keys, and tool outputs before sharing debug traces.
+disclosure: >-
+  MIT-licensed Microsoft open-source project. Upstream documentation warns that
+  Wassette is in early development and not production ready, so verify release
+  maturity and permission behavior before deploying it broadly.
+sourceUrls:
+  - "https://raw.githubusercontent.com/microsoft/wassette/main/README.md"
+  - "https://raw.githubusercontent.com/microsoft/wassette/main/LICENSE"
+  - "https://raw.githubusercontent.com/microsoft/wassette/main/docs/installation.md"
+  - "https://raw.githubusercontent.com/microsoft/wassette/main/docs/reference/built-in-tools.md"
+  - "https://raw.githubusercontent.com/microsoft/wassette/main/docs/reference/permissions.md"
+  - "https://raw.githubusercontent.com/microsoft/wassette/main/docs/reference/configuration-files.md"
+  - "https://raw.githubusercontent.com/microsoft/wassette/main/crates/mcp-server/src/tools.rs"
+  - "https://raw.githubusercontent.com/microsoft/wassette/main/crates/mcp-server/src/components.rs"
+tags:
+  - webassembly
+  - security
+  - sandbox
+  - tools
+  - microsoft
+keywords:
+  - Wassette MCP
+  - Microsoft Wassette
+  - WebAssembly MCP server
+  - Wasm component tools
+  - sandboxed MCP tools
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Wassette MCP Server is Microsoft's security-oriented MCP runtime for loading
+WebAssembly components as tools. It runs as a local MCP server, exposes built-in
+component-management and permission-management tools, and lets Claude call tools
+provided by loaded Wasm components.
+
+Use it when you want reusable WebAssembly component tools behind a sandboxed MCP
+runtime, with explicit storage, network, and environment-variable permissions
+instead of giving a component broad host access by default.
+
+## Source Review
+
+- https://github.com/microsoft/wassette
+- https://raw.githubusercontent.com/microsoft/wassette/main/docs/mcp-clients.md
+- https://raw.githubusercontent.com/microsoft/wassette/main/README.md
+- https://raw.githubusercontent.com/microsoft/wassette/main/LICENSE
+- https://raw.githubusercontent.com/microsoft/wassette/main/docs/installation.md
+- https://raw.githubusercontent.com/microsoft/wassette/main/docs/reference/built-in-tools.md
+- https://raw.githubusercontent.com/microsoft/wassette/main/docs/reference/permissions.md
+- https://raw.githubusercontent.com/microsoft/wassette/main/docs/reference/configuration-files.md
+- https://raw.githubusercontent.com/microsoft/wassette/main/crates/mcp-server/src/tools.rs
+- https://raw.githubusercontent.com/microsoft/wassette/main/crates/mcp-server/src/components.rs
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+client guide, README, license, installation guide, built-in tools reference,
+permission reference, configuration reference, and MCP server source for current
+setup and behavior.
+
+## Features
+
+- Run Wassette as a local stdio MCP server with `wassette run`.
+- Load WebAssembly components from local files or OCI registry references.
+- List, unload, and inspect loaded components.
+- Search the known component registry for loadable tools.
+- Expose loaded component tools through the MCP tool list.
+- Grant and revoke storage permissions for specific file or directory scopes.
+- Grant and revoke outbound network access for specific hosts.
+- Grant and revoke environment-variable access for specific keys.
+- Keep components deny-by-default until permissions are explicitly granted.
+
+## Installation
+
+Install Wassette with a reviewed release or package-manager workflow for the
+target platform. For example, the upstream docs include Homebrew installation on
+macOS and Linux:
+
+```bash
+brew tap microsoft/wassette https://github.com/microsoft/wassette
+brew install wassette
+```
+
+Then register Wassette as a local stdio MCP server:
+
+```json
+{
+  "mcpServers": {
+    "wassette": {
+      "command": "wassette",
+      "args": ["run"]
+    }
+  }
+}
+```
+
+Review the upstream MCP client guide for client-specific setup, then load only
+components that have been reviewed for source, provenance, and permissions.
+
+## Use Cases
+
+- Load a reviewed WebAssembly component and expose its tools to Claude.
+- Give a component access only to the files, network hosts, or environment
+  variables it needs.
+- Test reusable tool components without writing a dedicated MCP server for each
+  tool.
+- Manage component permissions through MCP built-in tools during an agent
+  session.
+- Use OCI-hosted components as portable tools across MCP clients.
+- Experiment with sandboxed component tooling while Wassette is still early in
+  development.
+
+## Safety and Privacy
+
+Wassette gives components a sandbox and deny-by-default permissions, but the
+MCP server also exposes tools that can grant capabilities. Treat every loaded
+component as code from a supply chain: review its source, registry path, policy,
+requested permissions, update channel, and expected outputs before granting
+access.
+
+Be especially careful with storage write scopes, broad filesystem paths,
+production network hosts, and environment variables that contain credentials.
+MCP transcripts, component ids, registry URIs, policy files, secrets
+directories, logs, and tool outputs may reveal sensitive project details. Redact
+those values before sharing troubleshooting material.
+
+## Duplicate Check
+
+No `microsoft/wassette`, Wassette MCP, WebAssembly component MCP, Wasm component
+tools, or matching source URL entry was found in `content/mcp` or `README.md`.
+Existing security, runtime, and tool-hosting MCP entries do not cover
+Wassette's Microsoft-maintained WebAssembly component runtime.

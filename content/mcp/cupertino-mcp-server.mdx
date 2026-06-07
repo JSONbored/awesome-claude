@@ -1,0 +1,211 @@
+---
+title: Cupertino MCP Server
+slug: cupertino-mcp-server
+category: mcp
+description: >-
+  Local Apple documentation CLI and MCP server that gives Claude searchable
+  offline access to Apple Developer Documentation, Swift Evolution proposals,
+  Human Interface Guidelines, sample code, Swift.org pages, the Swift Book, and
+  Swift package metadata.
+cardDescription: >-
+  Search local Apple API docs, Swift Evolution proposals, HIG pages, sample
+  code, Swift packages, and Swift.org content from Claude through Cupertino's
+  Swift-based MCP server.
+seoTitle: Cupertino MCP Server for Claude
+seoDescription: >-
+  Configure Cupertino with Claude, Codex, Cursor, and other MCP clients to give
+  agents local searchable Apple documentation, Swift APIs, HIG pages, sample
+  code, Swift Evolution proposals, and Swift package metadata.
+author: mihaelamj
+authorProfileUrl: "https://github.com/mihaelamj"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Cupertino
+brandDomain: github.com
+repoUrl: "https://github.com/mihaelamj/cupertino"
+documentationUrl: "https://github.com/mihaelamj/cupertino/blob/main/README.md"
+installable: true
+installCommand: "brew tap mihaelamj/tap && brew install cupertino && cupertino setup"
+usageSnippet: "Install Cupertino, run cupertino setup to download the local databases, then add the binary as a stdio MCP server with cupertino serve."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "cupertino": {
+        "command": "/opt/homebrew/bin/cupertino",
+        "args": ["serve"]
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add cupertino --scope user -- $(which cupertino)
+
+  # Codex users should keep --no-reap enabled.
+  codex mcp add cupertino -- $(which cupertino) serve --no-reap
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - macOS with Cupertino's current upstream-supported binary or build toolchain.
+  - Homebrew or a manual install path for the Cupertino binary.
+  - Approximately 4.2 GB of free disk space for the full pre-built documentation bundle.
+  - Network access for the initial database download, or time to crawl and index the documentation sources yourself.
+  - An MCP client that supports stdio servers, such as Claude Code, Claude Desktop, Codex, Cursor, VS Code, Zed, Windsurf, or opencode.
+safetyNotes:
+  - Cupertino is an independent third-party project, not an official Apple project.
+  - The setup flow downloads a large local documentation bundle; review available disk space and cache locations before installing on managed machines.
+  - Self-building or refreshing the corpus can crawl Apple documentation and related public sources; respect Apple site terms and internal network policies.
+  - Codex users should pass `serve --no-reap` because upstream documents Codex process spawning behavior that can otherwise close the transport during tool calls.
+  - Documentation answers can be stale or incomplete after Apple platform releases, so verify compatibility-sensitive API, beta, and deprecation guidance against live Apple documentation before shipping code.
+privacyNotes:
+  - Cupertino serves local public documentation over stdio, but prompts and tool results can still expose app architecture, API choices, platform targets, package interests, and sample-code queries to the MCP client, model provider, and logs.
+  - The server writes operational output to stderr and uses structured logging; avoid including proprietary source code, unreleased product names, customer data, private bundle identifiers, or internal roadmap details in documentation prompts.
+  - Local databases and bundle paths may reveal the developer's Apple-platform focus or package interests to anyone with access to the machine or MCP client logs.
+sourceUrls:
+  - "https://github.com/mihaelamj/cupertino/blob/main/LICENSE"
+  - "https://github.com/mihaelamj/cupertino/blob/main/Packages/Package.swift"
+  - "https://github.com/mihaelamj/cupertino/blob/main/docs/mcp-clients.md"
+  - "https://github.com/mihaelamj/cupertino/blob/main/docs/commands/serve/README.md"
+  - "https://github.com/mihaelamj/cupertino/blob/main/docs/tools/search/README.md"
+  - "https://github.com/mihaelamj/cupertino/blob/main/Packages/Sources/CLI/Commands/CLIImpl.Command.Serve.swift"
+  - "https://github.com/mihaelamj/cupertino/blob/main/Packages/Sources/MCP/Core/Server/MCP.Core.Server.swift"
+  - "https://github.com/mihaelamj/cupertino/blob/main/Packages/Sources/MCP/Core/Transport/MCP.Core.Transport.Stdio.swift"
+tags:
+  - apple
+  - documentation
+  - ios
+  - swift
+  - offline
+keywords:
+  - Cupertino MCP
+  - Apple documentation MCP
+  - Swift documentation MCP
+  - Human Interface Guidelines MCP
+  - Apple sample code MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Cupertino is a Swift-based Apple documentation CLI and MCP server. It gives
+Claude and other MCP clients a local searchable index for Apple Developer
+Documentation, Swift.org pages, Swift Evolution proposals, Human Interface
+Guidelines, Apple Archive guides, the Swift Book, Swift package metadata, and
+Apple sample-code files.
+
+Use it when an Apple-platform project needs fast API lookup, framework search,
+sample-code discovery, HIG checks, or Swift language context without manually
+opening multiple documentation sites. The same local index powers terminal
+commands such as `cupertino search` and the stdio MCP server launched by
+`cupertino serve`.
+
+## Source Review
+
+- https://github.com/mihaelamj/cupertino
+- https://github.com/mihaelamj/cupertino/blob/main/README.md
+- https://github.com/mihaelamj/cupertino/blob/main/LICENSE
+- https://github.com/mihaelamj/cupertino/blob/main/Packages/Package.swift
+- https://github.com/mihaelamj/cupertino/blob/main/docs/mcp-clients.md
+- https://github.com/mihaelamj/cupertino/blob/main/docs/commands/serve/README.md
+- https://github.com/mihaelamj/cupertino/blob/main/docs/tools/search/README.md
+- https://github.com/mihaelamj/cupertino/blob/main/Packages/Sources/CLI/Commands/CLIImpl.Command.Serve.swift
+- https://github.com/mihaelamj/cupertino/blob/main/Packages/Sources/MCP/Core/Server/MCP.Core.Server.swift
+- https://github.com/mihaelamj/cupertino/blob/main/Packages/Sources/MCP/Core/Transport/MCP.Core.Transport.Stdio.swift
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, Swift package manifest, MCP client setup guide, `serve`
+command documentation, search tool documentation, CLI serve implementation, MCP
+server implementation, and stdio transport implementation for current install
+and behavior details.
+
+## Features
+
+- Search Apple Developer Documentation, Swift Evolution, Swift.org, the Swift
+  Book, HIG pages, Apple Archive guides, Swift package metadata, and Apple
+  sample-code files.
+- Read documentation through MCP resources such as `apple-docs://`,
+  `swift-evolution://`, and `hig://` URIs.
+- Run unified full-text search through the `search` MCP tool with source,
+  framework, language, archive, limit, and platform-version filters.
+- List frameworks and read selected documents from the local index.
+- Explore sample projects with `list_samples`, `read_sample`, and
+  `read_sample_file`.
+- Search extracted Swift symbols, property wrappers, concurrency APIs,
+  conformances, generics, and inheritance relationships.
+- Use the same local databases from the terminal CLI or from stdio MCP clients.
+
+## Installation
+
+Install with Homebrew and download the pre-built databases:
+
+```bash
+brew tap mihaelamj/tap
+brew install cupertino
+cupertino setup
+```
+
+Add Cupertino to Claude Code:
+
+```bash
+claude mcp add cupertino --scope user -- $(which cupertino)
+```
+
+For JSON-based MCP clients, use the installed binary path:
+
+```json
+{
+  "mcpServers": {
+    "cupertino": {
+      "command": "/opt/homebrew/bin/cupertino",
+      "args": ["serve"]
+    }
+  }
+}
+```
+
+Codex users should include `--no-reap` as documented upstream:
+
+```bash
+codex mcp add cupertino -- $(which cupertino) serve --no-reap
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to look up current SwiftUI, UIKit, AppKit, Foundation, or
+  platform-framework APIs.
+- Check Human Interface Guidelines while designing an Apple-platform interface.
+- Find Swift Evolution proposals related to a language feature.
+- Search Apple sample code before implementing a framework integration.
+- Compare framework availability across iOS, macOS, tvOS, watchOS, visionOS,
+  or Swift versions.
+- Keep local documentation access available during offline development.
+- Give an agent deterministic Apple API context before it proposes code.
+
+## Safety and Privacy
+
+Cupertino primarily serves public documentation from a local database, but
+documentation prompts can still disclose private development context. Keep
+proprietary source code, unreleased app plans, customer requirements, private
+bundle identifiers, and internal roadmap details out of prompts unless that
+disclosure is approved.
+
+The initial setup downloads a large bundle and self-refresh workflows can crawl
+public documentation sources. Review disk space, cache locations, organization
+network policy, and Apple documentation terms before using it on shared or
+managed machines.
+
+Documentation can change quickly around new platform releases. Verify
+compatibility-sensitive, beta, deprecated, or security-relevant guidance against
+live Apple documentation before shipping code.
+
+## Duplicate Check
+
+`content/mcp/apple-docs-mcp-server.mdx` already covers
+`kimsungwhee/apple-docs-mcp`, an npm-based third-party Apple Docs server.
+Cupertino is a distinct implementation from `mihaelamj/cupertino`: it is a
+Swift CLI plus MCP server with a local offline documentation bundle,
+per-source SQLite indexes, HIG, Swift Evolution, Swift.org, Swift Book, Swift
+package, sample-code, and AST-symbol search coverage. No `mihaelamj/cupertino`
+entry or matching source URL was found in `content/mcp`.

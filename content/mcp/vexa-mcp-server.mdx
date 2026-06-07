@@ -1,0 +1,221 @@
+---
+title: Vexa MCP Server
+slug: vexa-mcp-server
+category: mcp
+description: >-
+  MCP server for Vexa meeting bots, real-time transcripts, recordings, meeting
+  chat, bot speech, calendar workflows, webhooks, and self-hosted meeting APIs.
+cardDescription: >-
+  Let Claude control Vexa meeting bots, fetch transcripts, manage recordings,
+  send chat, speak in meetings, and work with meeting data through MCP.
+seoTitle: Vexa MCP Server for Claude
+seoDescription: >-
+  Configure Vexa MCP Server with Claude and other MCP clients to send bots to
+  Google Meet, Microsoft Teams, or Zoom, read transcripts, manage recordings,
+  create share links, control bot speech and chat, and use meeting APIs.
+author: Vexa AI
+authorProfileUrl: "https://github.com/Vexa-ai"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Vexa
+brandDomain: vexa.ai
+repoUrl: "https://github.com/Vexa-ai/vexa"
+documentationUrl: "https://github.com/Vexa-ai/vexa/blob/main/docs/vexa-mcp.mdx"
+websiteUrl: "https://vexa.ai"
+installable: true
+installCommand: "git clone https://github.com/Vexa-ai/vexa.git && cd vexa && make lite"
+usageSnippet: "Deploy Vexa Lite or connect to the hosted Vexa API, then configure an MCP client with `mcp-remote`, the Vexa MCP endpoint, and an approved `VEXA_API_KEY`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "vexa": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-remote",
+          "VEXA_MCP_ENDPOINT_URL",
+          "--header",
+          "X-API-Key: ${VEXA_API_KEY}"
+        ],
+        "env": {
+          "VEXA_API_KEY": "${VEXA_API_KEY}"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "vexa": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-remote",
+          "VEXA_MCP_ENDPOINT_URL",
+          "--header",
+          "Authorization: Bearer ${VEXA_API_KEY}"
+        ],
+        "env": {
+          "VEXA_API_KEY": "${VEXA_API_KEY}"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js and npx available for the `mcp-remote` client bridge.
+  - Vexa API key for hosted Vexa or an approved self-hosted Vexa deployment.
+  - Meeting organizer permission and participant consent before joining, recording, transcribing, chatting, speaking, or screen-sharing through a bot.
+  - Platform policy review for Google Meet, Microsoft Teams, and Zoom bot participation.
+  - Storage, transcript retention, recording retention, webhook, calendar, and share-link policies reviewed before use.
+safetyNotes:
+  - Vexa MCP can request bots to join meetings, stop bots, parse meeting links, read transcripts, manage recordings, create transcript share links, send and read meeting chat, make the bot speak, share screen content, update bot config, connect calendars, and configure webhooks.
+  - Meeting URLs, IDs, passcodes, bot names, platform names, participant data, recordings, transcript share links, and API keys require careful handling.
+  - Public transcript share links and recording download URLs should be short-lived and shared only with approved recipients.
+  - Interactive bot tools can visibly act in live meetings; require human approval before using chat, speech, or screen-sharing tools.
+  - The service README includes a DoD table that marks several MCP checks as untested, so validate the exact deployment path before production use.
+privacyNotes:
+  - Audio, transcripts, speaker labels, meeting metadata, chat messages, recordings, screenshots, participant names, calendar events, webhook payloads, meeting notes, API keys, and tool results may be visible to the MCP client and model provider.
+  - Hosted Vexa sends meeting data to Vexa-operated infrastructure; self-hosted deployments still may use hosted transcription tokens unless fully self-hosting transcription.
+  - Browser bot sessions can persist authenticated browser state through storage such as S3-compatible backends.
+  - Logs, databases, object storage, share links, webhook receivers, and AI prompts can retain sensitive meeting content after a call ends.
+sourceUrls:
+  - "https://github.com/Vexa-ai/vexa"
+  - "https://github.com/Vexa-ai/vexa/blob/main/README.md"
+  - "https://github.com/Vexa-ai/vexa/blob/main/docs/vexa-mcp.mdx"
+  - "https://github.com/Vexa-ai/vexa/blob/main/services/mcp/README.md"
+  - "https://github.com/Vexa-ai/vexa/blob/main/services/mcp/main.py"
+  - "https://github.com/Vexa-ai/vexa/blob/main/services/mcp/config.json"
+  - "https://github.com/Vexa-ai/vexa/blob/main/services/mcp/requirements.txt"
+  - "https://github.com/Vexa-ai/vexa/blob/main/deploy/lite/README.md"
+  - "https://github.com/Vexa-ai/vexa/blob/main/deploy/compose/README.md"
+  - "https://docs.vexa.ai"
+  - "https://docs.vexa.ai/user_api_guide"
+  - "https://docs.vexa.ai/websocket"
+tags:
+  - meetings
+  - transcription
+  - recordings
+  - automation
+  - self-hosted
+keywords:
+  - Vexa MCP
+  - Vexa meeting bot
+  - meeting transcription MCP
+  - Google Meet MCP
+  - Teams Zoom MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Vexa MCP Server exposes Vexa meeting bot and transcription capabilities through
+MCP. It lets Claude request bots for Google Meet, Microsoft Teams, and Zoom,
+fetch transcripts, manage recordings, create transcript share links, control
+meeting chat or bot speech, configure webhooks, and work with meeting metadata.
+
+The MCP service is implemented as a FastAPI proxy over Vexa's API gateway. The
+repo supports hosted Vexa API usage, Vexa Lite for a single-container
+self-hosted deployment, Docker Compose for multi-service deployments, and
+service-specific MCP docs for client setup.
+
+## Source Review
+
+- https://github.com/Vexa-ai/vexa
+- https://github.com/Vexa-ai/vexa/blob/main/README.md
+- https://github.com/Vexa-ai/vexa/blob/main/docs/vexa-mcp.mdx
+- https://github.com/Vexa-ai/vexa/blob/main/services/mcp/README.md
+- https://github.com/Vexa-ai/vexa/blob/main/services/mcp/main.py
+- https://github.com/Vexa-ai/vexa/blob/main/services/mcp/config.json
+- https://github.com/Vexa-ai/vexa/blob/main/services/mcp/requirements.txt
+- https://github.com/Vexa-ai/vexa/blob/main/deploy/lite/README.md
+- https://github.com/Vexa-ai/vexa/blob/main/deploy/compose/README.md
+- https://docs.vexa.ai
+- https://docs.vexa.ai/user_api_guide
+- https://docs.vexa.ai/websocket
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, MCP docs, MCP service source, service config, requirements, deployment
+guides, and Vexa docs for current tool names, deployment paths, API key handling,
+platform support, transcript APIs, WebSocket behavior, and service maturity.
+
+## Features
+
+- Parse meeting links into platform, meeting ID, and passcode fields.
+- Request or stop meeting bots for Google Meet, Microsoft Teams, and Zoom.
+- Fetch live or post-meeting transcripts with speaker attribution.
+- Create temporary transcript share links and meeting bundles.
+- List, fetch, download, and delete recordings.
+- Send or read meeting chat messages through an interactive bot.
+- Make the bot speak with text-to-speech or stop speaking.
+- Configure recording defaults, webhooks, calendar connection, and meeting metadata.
+- Use a hosted Vexa endpoint or self-host Vexa Lite, Docker Compose, or Helm deployments.
+
+## Installation
+
+For the quickest self-hosted evaluation, the repository documents Vexa Lite:
+
+```bash
+git clone https://github.com/Vexa-ai/vexa.git
+cd vexa
+make lite
+```
+
+For MCP clients, configure `mcp-remote` with the hosted or self-hosted MCP
+endpoint and an API key:
+
+```json
+{
+  "mcpServers": {
+    "vexa": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "VEXA_MCP_ENDPOINT_URL",
+        "--header",
+        "X-API-Key: ${VEXA_API_KEY}"
+      ],
+      "env": {
+        "VEXA_API_KEY": "${VEXA_API_KEY}"
+      }
+    }
+  }
+}
+```
+
+Use the hosted Vexa endpoint only when your meeting data handling policy allows
+it. For self-hosted deployments, use the MCP service endpoint from your own Vexa
+environment.
+
+## Use Cases
+
+- Ask Claude to join a meeting as an approved notetaking bot.
+- Fetch the current transcript during a live call.
+- Build a post-meeting summary from transcripts, recordings, and meeting metadata.
+- Send a short approved chat message from the bot.
+- Trigger post-meeting transcription of a recording.
+- Configure webhooks for meeting events.
+- Connect calendar data for upcoming meeting workflows.
+- Use self-hosting when meeting data must remain under your infrastructure.
+
+## Safety and Privacy
+
+Meeting automation is high-trust. Obtain organizer permission and participant
+consent before joining, recording, transcribing, chatting, speaking, sharing
+screen content, or creating share links. Review Google Meet, Microsoft Teams,
+Zoom, and local legal requirements before use.
+
+Treat transcripts, recordings, share links, browser sessions, chat messages,
+calendar events, and webhook payloads as sensitive meeting data. Hosted Vexa may
+send data to Vexa-operated infrastructure, while self-hosted deployments still
+need careful storage, retention, token, logging, and transcription-service
+configuration.
+
+## Duplicate Check
+
+No `Vexa-ai/vexa` entry, Vexa MCP Server entry, or matching source URL was found
+in `content/mcp`.

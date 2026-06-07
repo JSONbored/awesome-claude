@@ -1,0 +1,207 @@
+---
+title: MeiGen AI Design MCP Server
+slug: meigen-ai-design-mcp-server
+category: mcp
+description: >-
+  MCP server and CLI for AI image and video generation with gallery search,
+  prompt enhancement, model listing, local preferences, ComfyUI workflows,
+  MeiGen Cloud, and OpenAI-compatible provider support.
+cardDescription: >-
+  Turn Claude into a design assistant for inspiration search, prompt
+  enhancement, image generation, video generation, and ComfyUI workflows.
+seoTitle: MeiGen AI Design MCP Server for Claude
+seoDescription: >-
+  Configure MeiGen AI Design MCP Server with Claude Code, Codex, Cursor,
+  Windsurf, OpenClaw, or another MCP client to search design inspiration,
+  enhance prompts, generate images or videos, manage preferences, use ComfyUI,
+  and review API-key and generated-media privacy notes.
+author: MeiGen
+authorProfileUrl: "https://github.com/jau123"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MeiGen AI Design MCP
+brandDomain: meigen.ai
+repoUrl: "https://github.com/jau123/MeiGen-AI-Design-MCP"
+documentationUrl: "https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/README.md"
+packageUrl: "https://registry.npmjs.org/meigen"
+installable: true
+installCommand: "Run `npx -y meigen` from an MCP client, or use the upstream plugin/init commands after reviewing provider credentials and generated-media costs."
+usageSnippet: "Use free tools for inspiration and prompt enhancement, then configure MeiGen, ComfyUI, or an OpenAI-compatible provider before approving image or video generation."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "meigen": {
+        "command": "npx",
+        "args": ["-y", "meigen"],
+        "env": {
+          "MEIGEN_API_TOKEN": "{meigen-api-token}"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "meigen": {
+        "command": "npx",
+        "args": ["-y", "meigen"],
+        "env": {
+          "MEIGEN_API_TOKEN": "{meigen-api-token}"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 18 or newer.
+  - MCP client that can launch a local Node stdio server.
+  - Optional MeiGen API token, OpenAI-compatible API key, or local ComfyUI workflow configuration for generation tools.
+  - Provider pricing, credits, model limits, and content policy reviewed before image or video generation.
+  - Local reference images, prompts, and generated outputs reviewed for rights, consent, and privacy.
+safetyNotes:
+  - MeiGen can submit image and video generation jobs to external providers or a local ComfyUI backend.
+  - Image and video generation may spend credits, use paid APIs, or consume local GPU resources depending on the configured provider.
+  - Local reference images can be compressed and uploaded through the configured upload gateway before being sent to API providers.
+  - Video generation can take minutes, may time out at the MCP client, and should not be retried blindly because jobs or credits may already be in progress.
+  - ComfyUI workflow import and modification can run local workflows; review workflow JSON and custom nodes before use.
+privacyNotes:
+  - API tokens, OpenAI-compatible credentials, provider base URLs, upload gateway URLs, ComfyUI URLs, preferences, recent generations, prompts, model IDs, and output paths can reveal private creative workflows.
+  - Uploaded reference images may become public URLs through the configured upload gateway before generation.
+  - Prompts, reference images, generated image URLs, generated video URLs, saved outputs, and favorite prompts can contain client work, brand plans, product images, personal likenesses, or unreleased campaigns.
+  - Keep secrets in MCP client environment configuration, review generated media before sharing, and remove local outputs when retention is no longer needed.
+disclosure: >-
+  MIT-licensed open-source MCP server and CLI. Some generation paths use paid or
+  credit-based external services, while free tools and local ComfyUI workflows
+  can be used without a MeiGen API token.
+sourceUrls:
+  - "https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/LICENSE"
+  - "https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/package.json"
+  - "https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/src/server.ts"
+  - "https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/src/config.ts"
+  - "https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/src/tools/generate-image.ts"
+  - "https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/src/tools/generate-video.ts"
+  - "https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/src/lib/upload.ts"
+tags:
+  - image-generation
+  - video-generation
+  - design
+  - comfyui
+  - prompt-engineering
+keywords:
+  - MeiGen MCP
+  - MeiGen AI Design MCP
+  - meigen
+  - ComfyUI MCP server
+  - image video generation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MeiGen AI Design MCP Server is a Node-based MCP server and CLI for creative
+image and video workflows. It exposes tools for searching an inspiration
+gallery, retrieving prompt examples, enhancing prompts, listing models,
+generating images, generating videos, managing ComfyUI workflows, and storing
+local preferences.
+
+Use it when Claude needs a dedicated design-generation interface rather than a
+generic image prompt. MeiGen can route generation through MeiGen Cloud,
+OpenAI-compatible image APIs, or local ComfyUI workflows, so provider setup and
+cost review matter before calling generation tools.
+
+## Source Review
+
+- https://github.com/jau123/MeiGen-AI-Design-MCP
+- https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/README.md
+- https://registry.npmjs.org/meigen
+- https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/LICENSE
+- https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/package.json
+- https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/src/server.ts
+- https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/src/config.ts
+- https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/src/tools/generate-image.ts
+- https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/src/tools/generate-video.ts
+- https://raw.githubusercontent.com/jau123/MeiGen-AI-Design-MCP/main/src/lib/upload.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package metadata, server registration, config
+loader, image/video generation tools, and upload helper for current behavior.
+
+## Features
+
+- Run as an npm stdio MCP server with `npx -y meigen`.
+- Search a curated prompt and inspiration gallery.
+- Retrieve prompt examples and associated image metadata.
+- Enhance short creative ideas into richer image prompts.
+- List available image and video models across configured providers.
+- Generate images through MeiGen Cloud, OpenAI-compatible APIs, or local
+  ComfyUI workflows.
+- Generate videos through the MeiGen provider with model, duration, resolution,
+  aspect-ratio, first-frame, last-frame, and reference-video options.
+- Compress and upload local reference images for API providers.
+- Manage user preferences, preferred styles, favorite prompts, and recent
+  generations.
+- Import, view, modify, delete, and use ComfyUI workflow templates.
+- Use the same package as a standalone CLI for scripted generation.
+
+## Installation
+
+Add the server to an MCP client with npm:
+
+```json
+{
+  "mcpServers": {
+    "meigen": {
+      "command": "npx",
+      "args": ["-y", "meigen"],
+      "env": {
+        "MEIGEN_API_TOKEN": "{meigen-api-token}"
+      }
+    }
+  }
+}
+```
+
+The inspiration, prompt-enhancement, model-listing, workflow, and preference
+tools can be useful before generation credentials are configured. For image or
+video generation, configure one of the provider paths supported by upstream:
+MeiGen API token, OpenAI-compatible API credentials, or local ComfyUI workflows.
+
+## Use Cases
+
+- Search a prompt gallery for visual direction before drafting a campaign
+  image.
+- Expand a terse product, logo, poster, or social-media idea into a stronger
+  prompt.
+- Generate a small set of reviewed image directions through a configured
+  provider.
+- Generate a short video only after confirming model, duration, resolution, and
+  expected cost.
+- Use local ComfyUI workflows from Claude while keeping workflow files under
+  review.
+- Save preferred visual style, aspect ratio, model, and favorite prompts for
+  repeated design sessions.
+- Use the package as a CLI in controlled scripts after reviewing secrets and
+  output paths.
+
+## Safety and Privacy
+
+Treat MeiGen as a generation and upload bridge. Local reference images may be
+compressed and uploaded to a public URL before API-provider generation, while
+ComfyUI workflows can run locally and may depend on local models, custom nodes,
+or GPU resources. Review source images, prompts, workflow JSON, and model
+choices before approving generation.
+
+Generated image and video calls can spend credits or hit paid APIs. The server
+source instructs clients not to parallelize videos and warns that timed-out
+video jobs may still be running. Confirm expensive, slow, multi-image, video,
+high-resolution, or reference-video calls before use, and review rights,
+likeness, brand, platform, and client confidentiality obligations before
+sharing outputs.
+
+## Duplicate Check
+
+No `jau123/MeiGen-AI-Design-MCP`, MeiGen AI Design MCP Server, `meigen` package
+entry, or matching source URL entry was found in `content/mcp` or `README.md`.

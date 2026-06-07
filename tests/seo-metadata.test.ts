@@ -126,4 +126,35 @@ describe("SEO metadata snippets", () => {
       expect(description.length, description).toBeLessThanOrEqual(170);
     }
   });
+
+  it("preserves distinct tech keywords through deriveSeoFields", () => {
+    const { keywords } = deriveSeoFields(
+      {
+        title: "C++ Helper",
+        keywords: ["c++", "c#", "css", ".net", "node.js", "f#"],
+      },
+      "tools",
+    );
+
+    // +, #, and . are meaningful, so each tech keyword survives distinctly
+    // instead of collapsing (c++ and c# both becoming a single "c").
+    expect(keywords).toEqual(
+      expect.arrayContaining(["c++", "c#", "css", ".net", "node.js", "f#"]),
+    );
+    expect(keywords).not.toContain("c");
+    expect(keywords).not.toContain("node js");
+
+    // Case-insensitive and hyphen/space dedup still collapse equivalents.
+    const deduped = deriveSeoFields(
+      {
+        title: "Tool",
+        keywords: ["Claude", "claude", "objective-c", "objective c"],
+      },
+      "tools",
+    ).keywords;
+    expect(deduped.filter((keyword) => keyword === "claude")).toHaveLength(1);
+    expect(deduped.filter((keyword) => keyword === "objective-c")).toHaveLength(
+      1,
+    );
+  });
 });

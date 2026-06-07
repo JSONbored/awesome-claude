@@ -1,0 +1,188 @@
+---
+title: Todoist MCP Server
+slug: todoist-mcp-server
+category: mcp
+description: >-
+  MCP server for Todoist task and project management, with tools for tasks,
+  subtasks, projects, sections, labels, comments, reminders, filters, activity,
+  backups, collaboration, bulk operations, and dry-run testing.
+cardDescription: >-
+  Connect Claude to Todoist for supervised task, project, section, label,
+  comment, reminder, collaboration, backup, and bulk-management workflows.
+seoTitle: Todoist MCP Server for Claude
+seoDescription: >-
+  Configure Todoist MCP Server with Claude to manage Todoist tasks, projects,
+  sections, labels, comments, reminders, filters, activity, backups,
+  collaboration, and bulk operations through MCP.
+author: greirson
+authorProfileUrl: "https://github.com/greirson"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Todoist MCP Server
+brandDomain: todoist.com
+repoUrl: "https://github.com/greirson/mcp-todoist"
+documentationUrl: "https://raw.githubusercontent.com/greirson/mcp-todoist/main/README.md"
+packageUrl: "https://registry.npmjs.org/@greirson%2Fmcp-todoist"
+installable: true
+installCommand: "npx @greirson/mcp-todoist"
+usageSnippet: "Set TODOIST_API_TOKEN, optionally enable DRYRUN=true or TODOIST_UNIFIED_TOOLS=true, then run the stdio server with npx."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "todoist": {
+        "command": "npx",
+        "args": ["@greirson/mcp-todoist"],
+        "env": {
+          "TODOIST_API_TOKEN": "your-api-token",
+          "DRYRUN": "true",
+          "TODOIST_UNIFIED_TOOLS": "true"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add todoist -e TODOIST_API_TOKEN=your-token -- npx @greirson/mcp-todoist
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Todoist API token from Todoist integrations developer settings.
+  - Node.js 18 or newer for the npm stdio server.
+  - Review of whether the token has access to personal, shared, Pro, Business, or workspace features.
+  - Optional `DRYRUN=true` for simulating mutation tools while still validating against real Todoist data.
+  - Optional `TODOIST_UNIFIED_TOOLS=true` when the consolidated 19-tool interface is preferred over the legacy 60-plus-tool surface.
+safetyNotes:
+  - Todoist MCP Server can create, update, delete, complete, reopen, reorder, archive, and bulk-modify tasks, subtasks, projects, sections, labels, comments, reminders, filters, shared labels, and collaboration state.
+  - Bulk create, bulk update, bulk delete, bulk complete, project deletion, section deletion, label deletion, reminder changes, and duplicate merge operations can alter many Todoist records at once.
+  - Dry-run mode simulates mutation operations but still queries real Todoist data for validation.
+  - Pro and Business features such as reminders, filters, shared labels, collaboration, backups, and workspace operations may expose or modify team data.
+  - Require confirmation before deleting tasks or projects, changing due dates in bulk, completing groups of tasks, modifying shared projects, creating reminders, downloading backups, or changing collaboration state.
+privacyNotes:
+  - Todoist API tokens, task IDs, project IDs, section IDs, label IDs, reminder IDs, comment IDs, user IDs, collaborator details, activity logs, completed tasks, backups, and productivity statistics can be exposed to the MCP client.
+  - Task names, descriptions, comments, due dates, deadlines, labels, reminders, attachments, project notes, and completed-task history can contain private work or personal planning data.
+  - Bulk and filter tools may reveal larger slices of a Todoist workspace than a single-task request.
+  - Backup download tools can expose a broad historical snapshot of Todoist data.
+  - Keep Todoist tokens in local MCP configuration only, and avoid sharing MCP logs, dry-run traces, or transcripts that include private task or project data.
+disclosure: >-
+  Community-maintained MIT MCP server for the Todoist API. Todoist is a
+  separate task-management service; users must follow Todoist API, account,
+  workspace, and plan restrictions.
+sourceUrls:
+  - "https://raw.githubusercontent.com/greirson/mcp-todoist/main/LICENSE"
+  - "https://raw.githubusercontent.com/greirson/mcp-todoist/main/package.json"
+  - "https://raw.githubusercontent.com/greirson/mcp-todoist/main/TOOLS_REFERENCE.md"
+  - "https://raw.githubusercontent.com/greirson/mcp-todoist/main/src/index.ts"
+  - "https://raw.githubusercontent.com/greirson/mcp-todoist/main/src/utils/dry-run-wrapper.ts"
+  - "https://raw.githubusercontent.com/greirson/mcp-todoist/main/src/tools/unified/index.ts"
+  - "https://raw.githubusercontent.com/greirson/mcp-todoist/main/mcpb/manifest.json"
+tags:
+  - todoist
+  - task-management
+  - productivity
+  - project-management
+  - reminders
+keywords:
+  - Todoist MCP
+  - Todoist MCP Server
+  - task management MCP
+  - productivity MCP
+  - Todoist Claude integration
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Todoist MCP Server connects Claude and other MCP clients to Todoist through the
+Todoist API. It supports task, project, section, label, comment, reminder,
+filter, activity, backup, collaboration, completed-task, shared-label, and bulk
+operation workflows.
+
+Use it when Claude needs supervised access to personal or team Todoist planning
+workflows, especially when dry-run testing is useful before applying changes.
+
+## Source Review
+
+- https://github.com/greirson/mcp-todoist
+- https://raw.githubusercontent.com/greirson/mcp-todoist/main/README.md
+- https://registry.npmjs.org/@greirson%2Fmcp-todoist
+- https://raw.githubusercontent.com/greirson/mcp-todoist/main/LICENSE
+- https://raw.githubusercontent.com/greirson/mcp-todoist/main/package.json
+- https://raw.githubusercontent.com/greirson/mcp-todoist/main/TOOLS_REFERENCE.md
+- https://raw.githubusercontent.com/greirson/mcp-todoist/main/src/index.ts
+- https://raw.githubusercontent.com/greirson/mcp-todoist/main/src/utils/dry-run-wrapper.ts
+- https://raw.githubusercontent.com/greirson/mcp-todoist/main/src/tools/unified/index.ts
+- https://raw.githubusercontent.com/greirson/mcp-todoist/main/mcpb/manifest.json
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package metadata, tool reference, server
+entrypoint, dry-run wrapper, unified tool registry, and MCPB manifest for
+current setup and behavior details.
+
+## Features
+
+- Manage Todoist tasks with create, get, update, delete, complete, reopen, and
+  quick-add actions.
+- Run bulk create, update, delete, and complete operations across multiple
+  matching tasks.
+- Manage subtasks, hierarchy, projects, sections, labels, comments, reminders,
+  filters, activity logs, completed tasks, backups, project notes, shared
+  labels, and collaboration features.
+- Use Todoist natural-language parsing for quick-add task creation.
+- Enable dry-run mode to simulate mutation operations while validating against
+  real Todoist data.
+- Choose the consolidated 19-tool interface or the legacy 60-plus individual
+  tools.
+- Use packaged Claude Desktop MCPB release artifacts when preferred by supported
+  clients.
+
+## Installation
+
+Create a Todoist API token, then add the stdio server to your MCP client:
+
+```bash
+claude mcp add todoist -e TODOIST_API_TOKEN=your-token -- npx @greirson/mcp-todoist
+```
+
+Manual configuration can include dry-run mode and the consolidated tool surface:
+
+```json
+{
+  "mcpServers": {
+    "todoist": {
+      "command": "npx",
+      "args": ["@greirson/mcp-todoist"],
+      "env": {
+        "TODOIST_API_TOKEN": "your-api-token",
+        "DRYRUN": "true",
+        "TODOIST_UNIFIED_TOOLS": "true"
+      }
+    }
+  }
+}
+```
+
+Remove `DRYRUN` or set it to `false` only after testing the target workflow.
+
+## Use Cases
+
+- Review today's tasks, overdue tasks, or high-priority work.
+- Create tasks from meeting notes with due dates, labels, priorities, and
+  sections.
+- Simulate bulk cleanup or due-date changes before applying them.
+- Add comments or project notes during review and planning.
+- Summarize Todoist activity, completed work, productivity stats, or backups.
+- Manage shared projects, collaborators, workspace labels, filters, and
+  reminders with explicit confirmation.
+
+## Safety and Privacy
+
+Todoist MCP Server can modify real task and project data. Start with
+`DRYRUN=true`, require confirmation before destructive or bulk operations, and
+be especially careful with shared projects, reminders, backups, workspace
+labels, and collaboration tools.
+
+Treat Todoist API tokens, IDs, task names, descriptions, comments, due dates,
+deadlines, labels, reminders, completed-task history, backups, collaborators,
+activity logs, and productivity statistics as sensitive personal or team data.
+Keep credentials and transcripts out of shared configs and public examples.

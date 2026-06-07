@@ -1,0 +1,158 @@
+---
+title: Fetch MCP Server
+slug: fetch-mcp-server
+category: mcp
+description: >-
+  Official MCP server that fetches web content and converts HTML pages into
+  markdown for model-friendly reading.
+cardDescription: >-
+  Let Claude fetch URLs, extract page content as markdown, and read long pages
+  in chunks through the official reference server.
+seoTitle: Fetch MCP Server for Claude
+seoDescription: >-
+  Configure the official Fetch MCP Server with Claude and other MCP clients to
+  retrieve web pages, convert HTML to markdown, and inspect page content in
+  chunks.
+author: Model Context Protocol
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Fetch MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch"
+documentationUrl: "https://github.com/modelcontextprotocol/servers/blob/main/src/fetch/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-server-fetch/json"
+installable: true
+installCommand: "uvx mcp-server-fetch"
+usageSnippet: "Run `uvx mcp-server-fetch` from an MCP client to let Claude fetch URLs and convert page content to markdown."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "fetch": {
+        "command": "uvx",
+        "args": ["mcp-server-fetch"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "fetch": {
+        "command": "uvx",
+        "args": ["mcp-server-fetch"]
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - Python 3.10 or newer available to the MCP client runtime.
+  - uvx available for package execution.
+  - Network policy that allows the MCP client to fetch approved URLs.
+  - Optional Node.js installation if you want the more robust HTML simplifier noted by upstream.
+safetyNotes:
+  - Fetch MCP Server can retrieve arbitrary URLs requested through the MCP client.
+  - Upstream warns that the server can access local or internal IP addresses, which can expose sensitive internal services if network access is not constrained.
+  - The fetch tool can return raw content or markdown-converted content and supports chunked reads with a start index.
+  - Review allowlists, network boundaries, proxy settings, and robots.txt behavior before enabling this server in sensitive environments.
+privacyNotes:
+  - Requested URLs, page contents, internal hostnames, response text, prompts, tool arguments, and fetch errors may be visible to the MCP client and model provider.
+  - Fetching authenticated, private, internal, customer, or confidential pages can expose their content to the model session.
+  - Be careful with custom user-agent and proxy settings because they may reveal organization or environment details to requested sites.
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/servers"
+  - "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch"
+  - "https://github.com/modelcontextprotocol/servers/blob/main/src/fetch/README.md"
+  - "https://github.com/modelcontextprotocol/servers/blob/main/src/fetch/pyproject.toml"
+  - "https://pypi.org/pypi/mcp-server-fetch/json"
+tags:
+  - fetch
+  - web
+  - markdown
+  - reference
+  - official
+keywords:
+  - Fetch MCP
+  - mcp-server-fetch
+  - web fetch MCP
+  - HTML to markdown MCP
+  - official MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Fetch MCP Server is an official Model Context Protocol reference server for
+retrieving web content. It exposes a `fetch` tool that requests a URL, extracts
+page content, and returns markdown for easier model consumption. It can also
+return raw content and read long pages in chunks using a start index.
+
+The upstream README documents `uvx`, pip, and Docker configuration. The PyPI
+package exposes the `mcp-server-fetch` command for MCP clients.
+
+## Source Review
+
+- https://github.com/modelcontextprotocol/servers
+- https://github.com/modelcontextprotocol/servers/tree/main/src/fetch
+- https://github.com/modelcontextprotocol/servers/blob/main/src/fetch/README.md
+- https://github.com/modelcontextprotocol/servers/blob/main/src/fetch/pyproject.toml
+- https://pypi.org/pypi/mcp-server-fetch/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+PyPI metadata for current package version, command name, Python requirement,
+dependencies, tool behavior, robots.txt behavior, and setup guidance.
+
+## Features
+
+- Fetch a URL and extract page content as markdown.
+- Request raw content when markdown conversion is not desired.
+- Limit returned content with a maximum character length.
+- Continue reading long pages by passing a start index.
+- Use optional proxy, user-agent, and robots.txt behavior settings.
+- Run as an official reference MCP server through `uvx`, pip, or Docker.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "fetch": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to retrieve a public documentation page and summarize it.
+- Convert an HTML article or reference page into markdown for review.
+- Let Claude inspect long pages in chunks when the first response is truncated.
+- Use controlled web fetching in workflows where a general browser MCP server is
+  unnecessary.
+- Compare page content across public URLs during research.
+
+## Safety and Privacy
+
+Web fetching can become a data exposure path if the server can reach internal
+services, private pages, or authenticated resources. Keep network access
+constrained, review proxy and user-agent settings, and consider URL allowlists
+or policy controls before enabling this server in sensitive environments.
+
+Fetched URLs, response bodies, internal hostnames, prompts, tool arguments, and
+errors may become part of the model context. Avoid fetching confidential,
+customer, authenticated, or internal pages unless the data is approved for the
+current model session.
+
+## Duplicate Check
+
+No dedicated `modelcontextprotocol/servers` Fetch entry, `mcp-server-fetch`
+package entry, or matching source URL was found in `content/mcp`. The existing
+Sequential Thinking entry is from the same official server monorepo but covers
+a separate server and package.

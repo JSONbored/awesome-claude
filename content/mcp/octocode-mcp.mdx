@@ -1,0 +1,182 @@
+---
+title: Octocode MCP
+slug: octocode-mcp
+category: mcp
+description: >-
+  Code research MCP server that gives Claude GitHub code search, repository
+  exploration, PR search, local ripgrep, local file reading, LSP definitions,
+  references, call hierarchy, and package-to-source discovery.
+cardDescription: Add GitHub, local, LSP, and package research tools to Claude.
+seoTitle: Octocode MCP Server for Claude
+seoDescription: >-
+  Configure Octocode MCP with Claude and other MCP clients to research code
+  across GitHub repositories, local workspaces, package registries, and LSP
+  symbol relationships with scoped GitHub authentication.
+author: Guy Bary
+authorProfileUrl: "https://github.com/bgauryy"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Octocode
+brandDomain: github.com
+repoUrl: "https://github.com/bgauryy/octocode"
+documentationUrl: "https://github.com/bgauryy/octocode/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/octocode-mcp"
+installable: true
+installCommand: "npx -y octocode-mcp@latest"
+usageSnippet: "Ask Claude to use Octocode to gather evidence from approved GitHub repos, local files, LSP symbols, or package sources before planning or changing code."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "octocode": {
+        "command": "npx",
+        "args": ["-y", "octocode-mcp@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "octocode": {
+        "command": "npx",
+        "args": ["-y", "octocode-mcp@latest"],
+        "env": {
+          "GITHUB_TOKEN": "",
+          "LOG": "false"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 20 or newer and npx available to the MCP client runtime.
+  - GitHub authentication through Octocode login, GitHub CLI, or a scoped token for GitHub-backed tools.
+  - Approval for the MCP client to search and read any local workspace paths used with local tools.
+  - Review of telemetry, cache, and private-repository handling before connecting sensitive workspaces.
+safetyNotes:
+  - Octocode can search and read public or private GitHub repositories according to the authenticated GitHub identity's permissions.
+  - Local tools can search local files, read file content, inspect directory structure, and use LSP features such as definitions, references, and call hierarchy.
+  - Clone and cache workflows can write local repository caches and should be monitored on shared or space-constrained machines.
+  - Package search can resolve npm and PyPI packages to source repositories, but package ownership and source links should still be verified before use.
+  - Octocode provides research evidence; generated implementation plans and code changes still need review, tests, and repository-specific policy checks.
+privacyNotes:
+  - GitHub queries, repository names, PR searches, local paths, file snippets, symbol names, package names, and code excerpts may be visible to the MCP client and model provider.
+  - GitHub tokens should be scoped to the minimum repositories and permissions needed for research.
+  - The reviewed privacy policy describes de-identified telemetry for command/tool usage, performance, errors, and session IDs, with opt-out support through `LOG=false`.
+  - Searching private repositories or local workspaces can expose confidential source code and architecture context in model transcripts.
+  - Review local Octocode caches, logs, and config files before sharing machines or artifacts.
+sourceUrls:
+  - "https://github.com/bgauryy/octocode/blob/main/README.md"
+  - "https://github.com/bgauryy/octocode/blob/main/packages/octocode-mcp/package.json"
+  - "https://github.com/bgauryy/octocode/blob/main/packages/octocode-mcp/server.json"
+  - "https://github.com/bgauryy/octocode/blob/main/packages/octocode-mcp/src/index.ts"
+  - "https://github.com/bgauryy/octocode/blob/main/PRIVACY.md"
+  - "https://github.com/bgauryy/octocode/blob/main/docs/configuration/providers/AUTHENTICATION_SETUP.md"
+  - "https://github.com/bgauryy/octocode/blob/main/LICENSE"
+tags:
+  - code-search
+  - github
+  - lsp
+  - research
+  - developer-tools
+keywords:
+  - Octocode MCP
+  - Octocode MCP server
+  - GitHub code search MCP
+  - local code search MCP
+  - LSP MCP
+  - package search MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Octocode MCP is a Model Context Protocol server for code research and context
+gathering. It gives Claude tools for GitHub code search, repository search, pull
+request search, remote file reads, repository structure browsing, local ripgrep,
+local file reads, local directory views, LSP go-to-definition, LSP references,
+LSP call hierarchy, package search, and optional repository cloning.
+
+It is aimed at evidence-first coding workflows: ask the model to inspect real
+implementations, trace local symbols, compare package sources, or research
+public and private GitHub code before it drafts a plan or proposes a change.
+
+## Source Review
+
+- https://github.com/bgauryy/octocode
+- https://github.com/bgauryy/octocode/blob/main/README.md
+- https://registry.npmjs.org/octocode-mcp
+- https://github.com/bgauryy/octocode/blob/main/packages/octocode-mcp/package.json
+- https://github.com/bgauryy/octocode/blob/main/packages/octocode-mcp/server.json
+- https://github.com/bgauryy/octocode/blob/main/packages/octocode-mcp/src/index.ts
+- https://github.com/bgauryy/octocode/blob/main/PRIVACY.md
+- https://github.com/bgauryy/octocode/blob/main/docs/configuration/providers/AUTHENTICATION_SETUP.md
+- https://github.com/bgauryy/octocode/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm registry metadata, MCP package metadata, server manifest, server
+entrypoint, privacy policy, authentication guide, and license file for current
+install commands, tool behavior, authentication, telemetry, and licensing.
+
+## Features
+
+- npm package `octocode-mcp`.
+- Stdio MCP server launched with `npx -y octocode-mcp@latest`.
+- GitHub tools for code search, repository search, pull request search, remote
+  file content, repository structure, and optional clone workflows.
+- Local tools for ripgrep search, file discovery, file reads, and directory views.
+- LSP tools for go-to-definition, references, and call hierarchy.
+- Package search for npm and PyPI packages mapped to source repositories.
+- GitHub authentication through Octocode login, GitHub CLI, or token-based setup.
+- MIT license.
+
+## Installation
+
+Configure the MCP server in your client:
+
+```json
+{
+  "mcpServers": {
+    "octocode": {
+      "command": "npx",
+      "args": ["-y", "octocode-mcp@latest"]
+    }
+  }
+}
+```
+
+Authenticate GitHub through the documented Octocode or GitHub CLI flow before
+using GitHub-backed tools against private repositories.
+
+## Use Cases
+
+- Search public GitHub repositories for real implementation patterns.
+- Search private repositories available to the authenticated GitHub identity.
+- Read specific remote files without fetching an entire repository.
+- Search local code with ripgrep before editing.
+- Use LSP definitions, references, or call hierarchy to trace a symbol.
+- Resolve a package name to its source repository.
+- Gather evidence for a PR review or implementation plan.
+
+## Safety and Privacy
+
+Octocode can expose real code from GitHub and local workspaces. Scope GitHub
+tokens carefully, avoid querying private repositories unless the model session is
+approved for that code, and keep local paths restricted to projects you intend
+Claude to inspect.
+
+The reviewed privacy policy describes de-identified telemetry for usage and
+performance data, with `LOG=false` documented as an opt-out. Review telemetry,
+cache, and config behavior before using Octocode in regulated or highly
+confidential environments.
+
+## Duplicate Check
+
+Existing MCP content includes GitHub, GitMCP, repository, and developer-tool
+entries. This entry is distinct because it covers `bgauryy/octocode` and the
+`octocode-mcp` npm package, combining GitHub code research, local file search,
+LSP symbol tools, package-to-source discovery, and optional clone/cache
+workflows. No matching Octocode source URL or dedicated Octocode MCP entry was
+found in `content/mcp`.

@@ -1,0 +1,192 @@
+---
+title: ROS MCP Server
+slug: ros-mcp-server
+category: mcp
+description: >-
+  MCP server that connects Claude and other MCP clients to ROS and ROS 2 robots
+  through rosbridge for topic, service, action, parameter, sensor, and robot
+  state workflows.
+cardDescription: >-
+  Connect Claude to ROS and ROS 2 robots through rosbridge for topics,
+  services, actions, parameters, sensors, and robot state.
+seoTitle: ROS MCP Server for Claude
+seoDescription: >-
+  Configure ROS MCP Server with Claude and other MCP clients to inspect ROS
+  topics, call services and actions, set parameters, read sensor data, and
+  monitor robot state through rosbridge.
+author: robotmcp
+authorProfileUrl: "https://github.com/robotmcp"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: ROS MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/robotmcp/ros-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/docs/install/installation.md"
+packageUrl: "https://pypi.org/pypi/ros-mcp/json"
+installable: true
+installCommand: "uvx ros-mcp --transport=stdio"
+usageSnippet: "Run `uvx ros-mcp --transport=stdio`, launch rosbridge on the robot machine, then ask Claude to connect to the robot host and inspect ROS topics, services, actions, parameters, and sensor data."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ros-mcp": {
+        "command": "uvx",
+        "args": ["ros-mcp", "--transport=stdio"]
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add ros-mcp -- uvx ros-mcp --transport=stdio
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer on the machine running the MCP client.
+  - A ROS or ROS 2 robot, simulator, or development machine with rosbridge available.
+  - Network access from the MCP server machine to the rosbridge WebSocket endpoint.
+  - Familiarity with the robot's topics, services, actions, parameters, frames, and safety limits.
+  - A simulation, test bench, or supervised robot environment for validating prompts before live operation.
+safetyNotes:
+  - ROS MCP Server can expose robot observation and control surfaces to an AI client, including topic publishing, topic subscription, service calls, action calls, parameter updates, sensor reads, and robot state inspection.
+  - Treat every topic, service, action, and parameter exposed through rosbridge as potentially capable of moving hardware, changing robot behavior, altering safety limits, or interrupting active tasks.
+  - Validate workflows in simulation or with the robot immobilized before allowing commands on mobile bases, manipulators, drones, industrial equipment, or other physical systems.
+  - Keep an operator, emergency stop, physical safety perimeter, and robot-specific lockout procedures in place for live hardware.
+  - Restrict rosbridge to trusted networks, approved clients, and the minimum reachable robot namespace needed for the task.
+  - Review generated commands before execution when using custom message types, services, actions, or parameters that the model has inferred from live ROS metadata.
+privacyNotes:
+  - ROS topics and services can expose camera frames, sensor data, maps, robot poses, facility layouts, task names, device identifiers, hostnames, IP addresses, and operational telemetry.
+  - Images, logs, maps, and robot state returned to the MCP client may also be sent to the model provider or stored by the MCP client, terminal, or chat application.
+  - rosbridge traffic crosses the local network or VPN; protect robot networks from untrusted clients and avoid exposing rosbridge directly to the public internet.
+  - Review launch files, client configs, environment variables, and connection prompts for credentials, robot addresses, VPN details, or internal network names before sharing transcripts.
+disclosure: >-
+  Open-source Apache-2.0 MCP server published as the `ros-mcp` PyPI package and
+  designed for ROS and ROS 2 robots through rosbridge.
+sourceUrls:
+  - "https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/LICENSE"
+  - "https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/README.md"
+  - "https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/server.json"
+  - "https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/docs/install/rosbridge.md"
+  - "https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/ros_mcp/main.py"
+  - "https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/ros_mcp/tools/topics.py"
+tags:
+  - ros
+  - robotics
+  - ros2
+  - automation
+  - sensors
+keywords:
+  - ROS MCP
+  - ROS MCP Server
+  - ros-mcp
+  - robotics MCP server
+  - rosbridge MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+ROS MCP Server connects MCP clients to robots and simulations running ROS or
+ROS 2. It runs on the AI client machine, connects to rosbridge on the robot or
+ROS host, and lets Claude inspect and use live ROS topics, services, actions,
+parameters, sensor streams, and robot state.
+
+Use it when Claude needs to explore a ROS graph, debug a robot, operate a
+simulator, or help with supervised robotics workflows without modifying the
+robot's existing source code. It is best suited to robotics teams that already
+understand their robot's ROS interfaces and safety limits.
+
+## Source Review
+
+- https://github.com/robotmcp/ros-mcp-server
+- https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/docs/install/installation.md
+- https://pypi.org/pypi/ros-mcp/json
+- https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/LICENSE
+- https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/README.md
+- https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/pyproject.toml
+- https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/server.json
+- https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/docs/install/rosbridge.md
+- https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/ros_mcp/main.py
+- https://raw.githubusercontent.com/robotmcp/ros-mcp-server/main/ros_mcp/tools/topics.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+installation guide, PyPI metadata, license, README, package manifest, MCP
+registry metadata, rosbridge setup guide, server entrypoint, and topic tool
+implementation for current setup and behavior details.
+
+## Features
+
+- Connect an MCP client to a ROS or ROS 2 system through rosbridge.
+- Discover available topics, services, actions, parameters, and message types.
+- Publish and subscribe to ROS topics.
+- Call ROS services and actions.
+- Inspect and set parameters.
+- Read sensor data and monitor robot state.
+- Work with custom ROS message and service types exposed through the robot's
+  rosbridge environment.
+- Run from Claude Code, Claude Desktop, Codex CLI, Gemini CLI, ChatGPT,
+  Cursor, and other MCP-compatible clients.
+
+## Installation
+
+For MCP clients that can run Python packages with `uvx`, use:
+
+```json
+{
+  "mcpServers": {
+    "ros-mcp": {
+      "command": "uvx",
+      "args": ["ros-mcp", "--transport=stdio"]
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add ros-mcp -- uvx ros-mcp --transport=stdio
+```
+
+On the robot or ROS host, install and launch rosbridge. For ROS 2, the upstream
+docs use:
+
+```bash
+sudo apt install ros-<your-distro>-rosbridge-server
+ros2 launch rosbridge_server rosbridge_websocket_launch.xml
+```
+
+Then connect from the MCP client to the robot host or simulator running
+rosbridge.
+
+## Use Cases
+
+- Ask Claude to inspect topics and services on a ROS 2 robot.
+- Debug robot state by reading sensors, parameters, and live ROS metadata.
+- Operate simulated robots from natural-language prompts.
+- Explore custom ROS message and service types before writing integration code.
+- Test robot services or actions under human supervision.
+- Bridge AI assistant workflows into ROS labs, demos, and test benches.
+
+## Safety and Privacy
+
+This server can connect Claude to physical robot control surfaces. Test in
+simulation first, narrow the available ROS namespace, and keep human supervision
+and emergency-stop procedures in place before using it with live hardware.
+
+Rosbridge should be reachable only from trusted hosts on a protected local
+network or VPN. Avoid exposing it directly to the public internet, and avoid
+connecting an AI client to production, industrial, mobile, aerial, or heavy
+robotics systems without explicit operational approval.
+
+ROS data can include camera frames, maps, facility layout, robot location,
+hardware identifiers, network details, telemetry, and logs. Treat transcripts
+and MCP responses as sensitive when they include robot observations or commands.
+
+## Duplicate Check
+
+Existing MCP entries cover developer tools, browsers, databases, observability,
+and automation servers, but no ROS MCP Server, `robotmcp/ros-mcp-server`,
+`ros-mcp` PyPI package, or matching rosbridge robotics MCP entry was found in
+`content/mcp`.

@@ -1,0 +1,199 @@
+---
+title: ComfyUI MCP Server
+slug: comfyui-mcp-server
+category: mcp
+description: >-
+  Source-install MCP server for controlling a local ComfyUI instance so Claude
+  can generate, view, regenerate, manage, and publish image, audio, and video
+  assets through workflow-backed tools.
+cardDescription: Let Claude drive local ComfyUI generation and asset iteration.
+seoTitle: ComfyUI MCP Server for Claude
+seoDescription: >-
+  Configure ComfyUI MCP Server with Claude and other MCP clients to generate
+  images, audio, and video through a local ComfyUI instance, manage generation
+  jobs, inspect assets, run custom workflows, and publish approved outputs.
+author: Joe Norton
+authorProfileUrl: "https://github.com/joenorton"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: ComfyUI MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/joenorton/comfyui-mcp-server"
+documentationUrl: "https://github.com/joenorton/comfyui-mcp-server/blob/main/README.md"
+installable: true
+installCommand: "git clone https://github.com/joenorton/comfyui-mcp-server && cd comfyui-mcp-server && pip install -r requirements.txt"
+usageSnippet: "Ask Claude to generate or refine an approved ComfyUI asset, then review the output before publishing or reusing it."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "comfyui-mcp-server": {
+        "command": "python",
+        "args": ["server.py", "--stdio"],
+        "env": {
+          "COMFYUI_URL": "",
+          "COMFY_MCP_WORKFLOW_DIR": ""
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "comfyui-mcp-server": {
+        "command": "python",
+        "args": ["server.py", "--stdio"],
+        "env": {
+          "COMFYUI_URL": "",
+          "COMFY_MCP_WORKFLOW_DIR": "",
+          "COMFYUI_OUTPUT_ROOT": "",
+          "COMFY_MCP_ASSET_TTL_HOURS": "24"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - A local ComfyUI installation with required models and workflows.
+  - Python and the repository requirements installed from the source checkout.
+  - The MCP server launched from the cloned repository or with paths adjusted for your client.
+  - Approved prompts, source assets, model licenses, and publish locations for generated media.
+safetyNotes:
+  - ComfyUI MCP Server can submit prompts and workflows to a local ComfyUI instance, create generated media, poll jobs, cancel jobs, and publish assets into project directories.
+  - Generated images, audio, and video can contain unsafe, infringing, biased, misleading, or policy-sensitive content depending on prompts, models, LoRAs, and workflows.
+  - Publishing tools can copy, compress, convert, overwrite, and update manifest entries for assets, so verify target filenames and directories before use.
+  - Custom workflows can expose arbitrary parameters and may run heavy GPU workloads or fail if nodes, models, or paths are missing.
+  - Keep the server bound to local trusted clients unless you have added appropriate authentication and network controls.
+privacyNotes:
+  - Prompts, negative prompts, generated media, workflow parameters, model names, job IDs, asset metadata, and publish paths can appear in MCP responses, logs, and model transcripts.
+  - Generated assets may be stored in ComfyUI output folders, the MCP asset registry, project publish directories, or manifests.
+  - Do not feed private images, brand assets, customer materials, or regulated media into workflows unless the local model environment is approved for that data.
+  - Review model and workflow licenses before publishing or redistributing generated assets.
+sourceUrls:
+  - "https://github.com/joenorton/comfyui-mcp-server/blob/main/README.md"
+  - "https://github.com/joenorton/comfyui-mcp-server/blob/main/requirements.txt"
+  - "https://github.com/joenorton/comfyui-mcp-server/blob/main/server.py"
+  - "https://github.com/joenorton/comfyui-mcp-server/blob/main/comfyui_client.py"
+  - "https://github.com/joenorton/comfyui-mcp-server/blob/main/tools/generation.py"
+  - "https://github.com/joenorton/comfyui-mcp-server/blob/main/tools/publish.py"
+  - "https://github.com/joenorton/comfyui-mcp-server/blob/main/LICENSE"
+tags:
+  - comfyui
+  - image-generation
+  - media
+  - workflows
+  - local-first
+keywords:
+  - ComfyUI MCP
+  - ComfyUI MCP Server
+  - local image generation MCP
+  - AI image MCP
+  - ComfyUI workflow MCP
+  - media generation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+ComfyUI MCP Server is a source-install Model Context Protocol server that lets
+Claude control a local ComfyUI instance. It exposes tools for generating media,
+viewing generated images, regenerating assets with parameter overrides, polling
+jobs, listing assets, inspecting metadata, configuring defaults, running custom
+workflows, and publishing approved assets into project directories.
+
+The project is aimed at local iterative media workflows. It can be useful for
+design exploration, web assets, prompt iteration, and custom ComfyUI workflow
+automation, but generated media still needs human review before it is shipped,
+published, or reused.
+
+## Source Review
+
+- https://github.com/joenorton/comfyui-mcp-server
+- https://github.com/joenorton/comfyui-mcp-server/blob/main/README.md
+- https://github.com/joenorton/comfyui-mcp-server/blob/main/requirements.txt
+- https://github.com/joenorton/comfyui-mcp-server/blob/main/server.py
+- https://github.com/joenorton/comfyui-mcp-server/blob/main/comfyui_client.py
+- https://github.com/joenorton/comfyui-mcp-server/blob/main/tools/generation.py
+- https://github.com/joenorton/comfyui-mcp-server/blob/main/tools/publish.py
+- https://github.com/joenorton/comfyui-mcp-server/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, Python requirements, server implementation, ComfyUI client, generation
+tool, publish tool, and license file for current setup, transport options,
+tool behavior, asset handling, and licensing.
+
+## Features
+
+- Source-install Python MCP server for local ComfyUI.
+- Stdio mode available from `server.py --stdio`; upstream also documents local
+  streamable HTTP usage.
+- Workflow-backed generation tools such as `generate_image`, `generate_song`,
+  `regenerate`, and custom workflow tools discovered from workflow JSON files.
+- Asset tools for viewing images, listing recent assets, and reading metadata.
+- Job tools for queue status, job polling, and cancellation.
+- Configuration tools for defaults and model listing.
+- Publish tools for copying, optimizing, and manifesting approved generated assets.
+- Apache-2.0 license.
+
+## Installation
+
+Clone the repository, install dependencies, start ComfyUI locally, and configure
+the MCP server from the source checkout:
+
+```sh
+git clone https://github.com/joenorton/comfyui-mcp-server
+cd comfyui-mcp-server
+pip install -r requirements.txt
+```
+
+```json
+{
+  "mcpServers": {
+    "comfyui-mcp-server": {
+      "command": "python",
+      "args": ["server.py", "--stdio"],
+      "env": {
+        "COMFYUI_URL": "",
+        "COMFY_MCP_WORKFLOW_DIR": ""
+      }
+    }
+  }
+}
+```
+
+After restarting the MCP client, ask Claude to generate an approved asset,
+inspect the result, and iterate only after reviewing the output.
+
+## Use Cases
+
+- Generate image concepts from approved prompts.
+- Iterate on a generated asset without restating all parameters.
+- Run custom ComfyUI workflows exposed as MCP tools.
+- Ask Claude to list available models and defaults before generation.
+- Poll or cancel long-running ComfyUI jobs.
+- View generated image assets inside the client workflow.
+- Publish reviewed assets into a web project directory with controlled filenames.
+
+## Safety and Privacy
+
+ComfyUI MCP Server can create and publish generated media. Review prompts,
+models, workflow licenses, source inputs, and output rights before using assets
+in public or commercial contexts. Generated media can include unsafe,
+misleading, copyrighted, trademarked, biased, or otherwise sensitive content,
+even when prompts look harmless.
+
+The server can store generated assets, metadata, workflow history, job IDs,
+publish paths, and manifest updates. Keep it connected only to trusted local
+clients, review publish targets before writing, and avoid sending private
+images, brand assets, customer materials, or regulated media through workflows
+unless your environment is approved for that data.
+
+## Duplicate Check
+
+Existing MCP content includes image, browser, and design-related integrations,
+but no dedicated entry for `joenorton/comfyui-mcp-server` was found in
+`content/mcp`. This entry is distinct because it covers a local ComfyUI MCP
+bridge for generated media workflows, job management, asset inspection, custom
+workflow execution, and publish tools.

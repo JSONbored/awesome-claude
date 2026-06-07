@@ -1,0 +1,170 @@
+---
+title: Desktop Commander MCP Server
+slug: desktop-commander-mcp-server
+category: mcp
+description: >-
+  Local MCP server that gives AI assistants terminal control, process
+  management, filesystem operations, search, diff editing, and document handling
+  for desktop automation and development workflows.
+cardDescription: >-
+  Let Claude and other MCP clients run terminal commands, manage files, search
+  code, and edit documents through Desktop Commander.
+seoTitle: Desktop Commander MCP Server for Claude
+seoDescription: >-
+  Configure Desktop Commander MCP with Claude Desktop and other MCP clients for
+  terminal commands, process control, filesystem search, diff editing, Excel,
+  PDF, DOCX, and local development automation.
+author: wonderwhy-er
+authorProfileUrl: "https://github.com/wonderwhy-er"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Desktop Commander
+brandDomain: desktopcommander.app
+repoUrl: "https://github.com/wonderwhy-er/DesktopCommanderMCP"
+documentationUrl: "https://github.com/wonderwhy-er/DesktopCommanderMCP"
+websiteUrl: "https://desktopcommander.app/"
+packageUrl: "https://www.npmjs.com/package/@wonderwhy-er/desktop-commander"
+installable: true
+installCommand: "npx @wonderwhy-er/desktop-commander@latest setup"
+usageSnippet: "Run the setup command for Claude Desktop, or add the documented `npx -y @wonderwhy-er/desktop-commander@latest` server config manually."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "desktop-commander": {
+        "command": "npx",
+        "args": ["-y", "@wonderwhy-er/desktop-commander@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "desktop-commander": {
+        "command": "npx",
+        "args": ["-y", "@wonderwhy-er/desktop-commander@latest"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js for the npx installation path, or Docker for the isolated installation path.
+  - Claude Desktop or another MCP client that can launch local stdio servers.
+  - Clear list of directories, commands, and long-running processes an assistant may access.
+  - Backups or version control for files the agent may edit.
+safetyNotes:
+  - Desktop Commander can run shell commands, stream process output, start and stop processes, read and write files, edit documents, search directories, and change local configuration.
+  - The project's security policy describes built-in restrictions as guardrails rather than hardened security boundaries.
+  - Directory restrictions and command blocklists may be bypassed through terminal access, symlinks, absolute paths, or command substitution.
+  - Use Docker with selective folder mounts when stronger isolation is required.
+  - Review file edits, command execution, process termination, and document rewrites before letting an agent act on important systems.
+privacyNotes:
+  - Local files, terminal output, environment-derived paths, process listings, command arguments, audit logs, spreadsheets, PDFs, DOCX files, and source code may be exposed to the MCP client and model.
+  - Tool logs can contain secrets, customer data, credentials, private repository paths, database output, and internal documents.
+  - If using remote AI clients or the project's remote MCP option, review where prompts, tool calls, and file content are transmitted and retained.
+sourceUrls:
+  - "https://github.com/wonderwhy-er/DesktopCommanderMCP"
+  - "https://github.com/wonderwhy-er/DesktopCommanderMCP/blob/main/SECURITY.md"
+  - "https://desktopcommander.app/"
+  - "https://www.npmjs.com/package/@wonderwhy-er/desktop-commander"
+tags:
+  - terminal
+  - filesystem
+  - automation
+  - editing
+  - local
+keywords:
+  - Desktop Commander MCP
+  - desktop-commander Claude
+  - terminal MCP server
+  - filesystem editing MCP
+  - local automation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Desktop Commander MCP gives AI assistants local terminal, filesystem, process,
+search, and document-editing capabilities. It builds on MCP filesystem concepts
+and adds process control, command streaming, recursive search, diff editing,
+document support, configuration management, audit logging, and optional Docker
+isolation.
+
+The project is useful when a user wants Claude Desktop or another MCP client to
+work with local code, text files, spreadsheets, PDFs, DOCX files, and long
+running development processes from one chat workflow.
+
+## Source Review
+
+- https://github.com/wonderwhy-er/DesktopCommanderMCP
+- https://github.com/wonderwhy-er/DesktopCommanderMCP/blob/main/SECURITY.md
+- https://desktopcommander.app/
+- https://www.npmjs.com/package/@wonderwhy-er/desktop-commander
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository for
+current setup options, Docker guidance, security notes, supported file formats,
+and command behavior.
+
+## Features
+
+- Terminal command execution with streaming output, timeouts, and background
+  process support.
+- Process listing, process termination, and long-running command session
+  management.
+- Filesystem read, write, move, directory listing, metadata, recursive search,
+  and diff-style editing tools.
+- Excel, PDF, and DOCX read/edit workflows described by the project.
+- In-memory execution for Python, Node.js, and R snippets.
+- Audit logging and configuration management.
+- Docker installation path for stronger isolation and selective folder mounts.
+
+## Installation
+
+For the Claude Desktop npx setup path:
+
+```sh
+npx @wonderwhy-er/desktop-commander@latest setup
+```
+
+For manual MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "desktop-commander": {
+      "command": "npx",
+      "args": ["-y", "@wonderwhy-er/desktop-commander@latest"]
+    }
+  }
+}
+```
+
+Use the Docker setup documented in the README when you need stronger isolation
+or want to restrict which host folders are mounted into the tool environment.
+
+## Use Cases
+
+- Let an assistant search, inspect, and edit a local repository.
+- Stream and monitor development servers, test commands, or database shells.
+- Convert rough instructions into file edits while preserving a reviewable diff.
+- Read and update local spreadsheets, PDFs, or DOCX files from a chat workflow.
+- Run controlled local automation tasks with audit logs.
+
+## Safety and Privacy
+
+Desktop Commander is a high-trust local automation server. Treat it like giving
+an agent shell and filesystem access. Keep important work under version control,
+limit mounted directories, prefer Docker for sensitive environments, and review
+commands and file edits before they affect production systems or private data.
+
+Audit logs and tool outputs may contain sensitive local data. Protect or rotate
+logs when working with credentials, customer data, internal documents, or private
+repositories.
+
+## Duplicate Check
+
+No `wonderwhy-er/DesktopCommanderMCP` entry or source URL was found in
+`content/mcp`. This entry is separate from the reference filesystem MCP server
+and other editor-specific local automation tools.

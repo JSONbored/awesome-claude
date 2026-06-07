@@ -1,0 +1,185 @@
+---
+title: MarkItDown MCP Server
+slug: markitdown-mcp-server
+category: mcp
+description: >-
+  Microsoft-maintained MCP server for converting HTTP, HTTPS, file, and data
+  URIs into Markdown through the MarkItDown document-conversion library.
+cardDescription: Convert files and web resources to Markdown with Microsoft's MarkItDown MCP package.
+seoTitle: MarkItDown MCP Server for Claude
+seoDescription: >-
+  Configure MarkItDown MCP Server with Claude and other MCP clients to convert
+  local files, remote resources, and data URIs into Markdown through Microsoft's
+  MarkItDown conversion library.
+author: Microsoft
+authorProfileUrl: "https://github.com/microsoft"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MarkItDown
+brandDomain: github.com
+repoUrl: "https://github.com/microsoft/markitdown"
+documentationUrl: "https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/README.md"
+packageUrl: "https://pypi.org/project/markitdown-mcp/"
+installable: true
+installCommand: "claude mcp add markitdown markitdown-mcp"
+usageSnippet: "Ask Claude to convert a reviewed local file URI to Markdown, then inspect the converted text before using it as source material."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "markitdown": {
+        "command": "markitdown-mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "markitdown": {
+        "command": "docker",
+        "args": ["run", "--rm", "-i", "markitdown-mcp:latest"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Python 3.10 or newer and the `markitdown-mcp` package installed, or a locally built Docker image from the package Dockerfile.
+  - Local files or remote resources that the MCP server's user is allowed to read and convert.
+  - Sandboxed user, virtual machine, or container setup when exposing document conversion to an agent.
+  - Explicit file and directory boundaries before mounting local data into a container.
+  - Network policy reviewed before allowing conversions from remote HTTP or HTTPS resources.
+safetyNotes:
+  - MarkItDown MCP exposes one `convert_to_markdown(uri)` tool that accepts `http:`, `https:`, `file:`, and `data:` URIs.
+  - The server runs with the privileges of the user that starts it and can read any file that user can access when given a matching file URI.
+  - Streamable HTTP and SSE modes are local-use alternatives to stdio; the README warns not to bind them to non-localhost interfaces unless the security implications are understood.
+  - The HTTP and SSE server modes have no authentication, so any local process or user that can reach the bound interface can use the conversion tool.
+  - Use a container, virtual machine, or dedicated low-privilege user when converting untrusted documents or when file access must be tightly bounded.
+privacyNotes:
+  - File paths, file contents, extracted Markdown, conversion errors, remote URLs, data URIs, and document metadata may become visible to the MCP client and model provider.
+  - Converting Office files, PDFs, media, web pages, or archives can reveal hidden text, comments, tracked changes, metadata, notes, image text, links, and embedded objects.
+  - Docker mounts make every mounted file readable to the MCP server path inside the container; mount only approved directories and prefer read-only mounts when possible.
+  - Remote URI conversion can reveal research targets, customer URLs, internal endpoints, or private document locations to upstream servers and to the model transcript.
+sourceUrls:
+  - "https://github.com/microsoft/markitdown"
+  - "https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/README.md"
+  - "https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/pyproject.toml"
+  - "https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/src/markitdown_mcp/__main__.py"
+  - "https://github.com/microsoft/markitdown/blob/main/LICENSE"
+  - "https://pypi.org/project/markitdown-mcp/"
+  - "https://pypi.org/project/markitdown/"
+tags:
+  - markdown
+  - documents
+  - conversion
+  - microsoft
+  - local-mcp
+keywords:
+  - MarkItDown MCP
+  - markitdown-mcp
+  - Microsoft MarkItDown MCP
+  - file conversion MCP
+  - document to Markdown MCP
+  - convert URI to Markdown MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MarkItDown MCP Server is Microsoft's MCP wrapper around the MarkItDown
+conversion library. It exposes a single tool, `convert_to_markdown(uri)`, that
+turns a supported HTTP, HTTPS, file, or data URI into Markdown for Claude and
+other MCP clients.
+
+The dedicated `markitdown-mcp` package is separate from the core `markitdown`
+library package. It supports stdio by default and can also run Streamable HTTP
+or SSE for local trusted agents. The package README is explicit that the server
+is meant for local use, does not support authentication, and should not be bound
+to non-localhost interfaces unless the operator understands the security risks.
+
+## Source Review
+
+- https://github.com/microsoft/markitdown
+- https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/README.md
+- https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/pyproject.toml
+- https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/src/markitdown_mcp/__main__.py
+- https://github.com/microsoft/markitdown/blob/main/LICENSE
+- https://pypi.org/project/markitdown-mcp/
+- https://pypi.org/project/markitdown/
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+package README, package metadata, MCP server entrypoint, PyPI pages, and license
+for current command names, supported transports, URI behavior, and security
+guidance.
+
+## Features
+
+- Microsoft-maintained MCP package for the MarkItDown conversion library.
+- Stdio server through `markitdown-mcp`.
+- Streamable HTTP and SSE modes for local trusted agents.
+- One `convert_to_markdown(uri)` tool.
+- URI support for HTTP, HTTPS, file, and data resources.
+- Docker guidance for running the server in a container.
+- Directory-mount pattern for exposing only selected local files to containerized conversion.
+- Localhost-by-default behavior for HTTP and SSE transports.
+- Security warning for non-localhost binding and unauthenticated access.
+
+## Installation
+
+Install the package:
+
+```sh
+pip install markitdown-mcp
+```
+
+For Claude Code, add the stdio server:
+
+```sh
+claude mcp add markitdown markitdown-mcp
+```
+
+For MCP clients that use JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "markitdown": {
+      "command": "markitdown-mcp"
+    }
+  }
+}
+```
+
+For stronger file boundaries, build and run the Docker image documented by the
+package README, mounting only directories that the agent is allowed to convert.
+
+## Use Cases
+
+- Convert a reviewed PDF, Office document, or local file URI into Markdown for summarization.
+- Convert a remote public resource into Markdown before asking Claude to extract key points.
+- Use a containerized server to expose only a small approved document directory to Claude.
+- Standardize document conversion around Microsoft's MarkItDown library in MCP workflows.
+- Compare converted Markdown with the original source before using it in reports or decisions.
+
+## Safety and Privacy
+
+MarkItDown MCP is intentionally simple, but the URI surface is sensitive. A
+model that can call the tool can ask the server to read local files that the
+server user can access, fetch network resources reachable by that user, and
+convert data URIs supplied in prompts. Run it with limited permissions and keep
+file mounts narrow.
+
+Do not bind the HTTP or SSE transport to a broader interface without additional
+network controls. The server has no built-in authentication and the README
+warns that reachable processes or users can use it to read files and fetch
+network resources available to the server process.
+
+## Duplicate Check
+
+An existing `markdownify-mcp-server` entry mentions MarkItDown as a dependency
+for some file conversion features, but it covers the separate
+`zcaceres/markdownify-mcp` npm server. No dedicated `microsoft/markitdown`,
+`markitdown-mcp`, Microsoft MarkItDown MCP, or matching source URL entry was
+found in `content/mcp`, `content/tools`, `content/guides`, `content/agents`, or
+`content/skills`.

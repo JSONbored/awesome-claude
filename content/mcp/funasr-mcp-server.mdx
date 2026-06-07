@@ -1,0 +1,185 @@
+---
+title: FunASR MCP Server
+slug: funasr-mcp-server
+category: mcp
+description: >-
+  MCP server example from FunASR that lets Claude transcribe local audio files
+  with local speech recognition, automatic language handling, timestamps, and
+  speaker labels when available.
+cardDescription: Transcribe local audio files through FunASR's MCP server example with local ASR, timestamps, and speaker labels.
+seoTitle: FunASR MCP Server for Claude
+seoDescription: >-
+  Configure the FunASR MCP server example with Claude to transcribe local WAV,
+  MP3, FLAC, M4A, or OGG files through a stdio MCP tool backed by FunASR local
+  speech recognition models.
+author: FunASR
+authorProfileUrl: "https://github.com/modelscope"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: FunASR
+brandDomain: modelscope.github.io
+repoUrl: "https://github.com/modelscope/FunASR"
+documentationUrl: "https://raw.githubusercontent.com/modelscope/FunASR/main/examples/mcp_server/README.md"
+packageUrl: "https://pypi.org/project/funasr/"
+installable: true
+installCommand: "pip install funasr"
+usageSnippet: "Install FunASR, point your MCP client at the example `funasr_mcp.py` script, then ask Claude to transcribe an approved local audio file path."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "funasr": {
+        "command": "python",
+        "args": ["<path-to-FunASR>/examples/mcp_server/funasr_mcp.py"],
+        "env": {
+          "FUNASR_DEVICE": "cpu"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  pip install funasr
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - Python environment with FunASR installed from PyPI or a reviewed source checkout.
+  - Local checkout or copy of `examples/mcp_server/funasr_mcp.py` from the FunASR repository.
+  - Audio files in an approved location and format such as WAV, MP3, FLAC, M4A, or OGG.
+  - Optional GPU, Apple silicon, or CPU device selection through `FUNASR_DEVICE`.
+  - Review of model-download behavior, storage location, compute requirements, and organization policy for processing speech recordings locally.
+safetyNotes:
+  - The MCP server exposes a `transcribe_audio` tool that reads the local file path supplied by the agent.
+  - Configure clients so Claude can only request audio files from approved directories; do not expose arbitrary private folders or shared drives.
+  - First use can download FunASR model weights and dependencies from upstream model hosts; review network policy, cache location, and disk usage before use in restricted environments.
+  - Long recordings and GPU transcription can consume significant CPU, GPU, memory, and disk cache resources.
+  - Require confirmation before transcribing meetings, calls, interviews, voice notes, customer audio, regulated recordings, or files containing other people.
+privacyNotes:
+  - Audio recordings can contain voices, names, accents, speaker identity, background speech, locations, health details, financial details, customer data, credentials spoken aloud, or other sensitive personal information.
+  - The upstream MCP example performs local inference and does not require an API key, but MCP clients, model providers, logs, terminal output, transcripts, screenshots, and shared chats can still retain audio paths and transcription text.
+  - Generated transcripts, timestamps, and speaker labels may identify individuals or reveal confidential conversations.
+  - Model downloads and package installation can contact PyPI, ModelScope, Hugging Face, or other dependency hosts depending on the environment and model configuration.
+disclosure: >-
+  MIT-licensed FunASR repository with an MCP server example for local speech
+  transcription. Verify model licenses, recording consent, and data-handling
+  requirements before using it with real meeting, call, or customer audio.
+sourceUrls:
+  - "https://raw.githubusercontent.com/modelscope/FunASR/main/README.md"
+  - "https://raw.githubusercontent.com/modelscope/FunASR/main/LICENSE"
+  - "https://raw.githubusercontent.com/modelscope/FunASR/main/setup.py"
+  - "https://raw.githubusercontent.com/modelscope/FunASR/main/examples/mcp_server/funasr_mcp.py"
+  - "https://raw.githubusercontent.com/modelscope/FunASR/main/docs/model_selection.md"
+  - "https://raw.githubusercontent.com/modelscope/FunASR/main/docs/deployment_matrix.md"
+  - "https://raw.githubusercontent.com/modelscope/FunASR/main/docs/migration_from_whisper.md"
+tags:
+  - speech-to-text
+  - transcription
+  - audio
+  - local-ai
+  - python
+keywords:
+  - FunASR MCP
+  - FunASR MCP Server
+  - speech recognition MCP
+  - audio transcription MCP
+  - local ASR MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+FunASR MCP Server is the MCP server example included with the FunASR speech
+recognition toolkit. It exposes a stdio MCP tool named `transcribe_audio` so
+Claude can transcribe approved local audio files through FunASR's local ASR
+models.
+
+Use it when Claude needs to turn a meeting recording, interview, voice memo,
+podcast clip, or other approved local audio file into text without sending the
+audio to a hosted transcription API by default.
+
+## Source Review
+
+- https://github.com/modelscope/FunASR
+- https://raw.githubusercontent.com/modelscope/FunASR/main/examples/mcp_server/README.md
+- https://pypi.org/project/funasr/
+- https://raw.githubusercontent.com/modelscope/FunASR/main/README.md
+- https://raw.githubusercontent.com/modelscope/FunASR/main/LICENSE
+- https://raw.githubusercontent.com/modelscope/FunASR/main/setup.py
+- https://raw.githubusercontent.com/modelscope/FunASR/main/examples/mcp_server/funasr_mcp.py
+- https://raw.githubusercontent.com/modelscope/FunASR/main/docs/model_selection.md
+- https://raw.githubusercontent.com/modelscope/FunASR/main/docs/deployment_matrix.md
+- https://raw.githubusercontent.com/modelscope/FunASR/main/docs/migration_from_whisper.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+example README, PyPI package page, main README, license, setup metadata, MCP
+server script, model-selection guide, deployment matrix, and migration guide for
+current setup and model behavior.
+
+## Features
+
+- Expose one MCP tool, `transcribe_audio`, over stdio.
+- Accept a local `audio_path` for WAV, MP3, FLAC, M4A, OGG, and similar audio
+  files supported by the FunASR stack.
+- Return transcription text and, when available from the model output, segment
+  timestamps and speaker labels.
+- Run local inference with no service API key required by the MCP example.
+- Select CPU, CUDA, or Apple `mps` execution through `FUNASR_DEVICE`.
+- Use FunASR's speech recognition stack for multilingual ASR, VAD, punctuation,
+  and diarization workflows.
+
+## Installation
+
+Install FunASR in a Python environment:
+
+```bash
+pip install funasr
+```
+
+Then configure your MCP client to launch the example server script from a
+reviewed FunASR checkout:
+
+```json
+{
+  "mcpServers": {
+    "funasr": {
+      "command": "python",
+      "args": ["<path-to-FunASR>/examples/mcp_server/funasr_mcp.py"],
+      "env": {
+        "FUNASR_DEVICE": "cpu"
+      }
+    }
+  }
+}
+```
+
+Use `cuda` or `mps` only on machines where those accelerators are approved and
+available.
+
+## Use Cases
+
+- Transcribe a meeting recording saved in an approved local folder.
+- Convert a voice memo into text before summarizing it.
+- Extract timestamped segments from an interview or podcast clip.
+- Compare local ASR output against a hosted transcription result.
+- Draft meeting notes while keeping the raw audio on the local machine.
+- Prototype speech-to-text workflows before deploying a dedicated FunASR API
+  server.
+
+## Safety and Privacy
+
+FunASR MCP Server reads local audio paths supplied through the MCP client. Keep
+the configured script and working directory scoped to approved recordings, and
+require explicit approval before transcribing files from Downloads, shared
+drives, customer folders, or private meeting archives.
+
+Treat audio files, file paths, transcripts, timestamps, speaker labels, terminal
+logs, and MCP conversation history as sensitive. Local inference avoids a hosted
+transcription API by default, but package installation, model downloads, logs,
+and connected AI clients can still expose metadata or transcript content.
+
+## Duplicate Check
+
+No `modelscope/FunASR`, FunASR MCP, FunASR MCP Server, `funasr_mcp.py`, or
+matching source URL entry was found in `content/mcp` or `README.md`. Existing
+audio, media conversion, and local AI entries do not cover FunASR's MCP
+transcription example.

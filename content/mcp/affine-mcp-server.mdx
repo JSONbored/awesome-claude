@@ -1,0 +1,212 @@
+---
+title: AFFiNE MCP Server
+slug: affine-mcp-server
+category: mcp
+description: >-
+  MCP server for connecting Claude to AFFiNE Cloud or self-hosted AFFiNE
+  workspaces, documents, databases, comments, collections, folders, tags,
+  notifications, blobs, access tokens, semantic page composition, templates,
+  edgeless canvas data, and workspace organization workflows over stdio or HTTP.
+cardDescription: Connect Claude to AFFiNE workspace, document, database, and collaboration APIs.
+seoTitle: AFFiNE MCP Server for Claude
+seoDescription: >-
+  Configure AFFiNE MCP Server with Claude to read and author AFFiNE workspaces,
+  documents, databases, comments, collections, tags, blobs, access tokens,
+  notifications, templates, and edgeless canvas data with tool-scope controls.
+author: DAWNCR0W
+authorProfileUrl: "https://github.com/DAWNCR0W"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: AFFiNE MCP Server
+brandDomain: github.com/DAWNCR0W/affine-mcp-server
+websiteUrl: "https://github.com/DAWNCR0W/affine-mcp-server"
+repoUrl: "https://github.com/DAWNCR0W/affine-mcp-server"
+documentationUrl: "https://github.com/DAWNCR0W/affine-mcp-server/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/affine-mcp-server"
+installable: true
+installCommand: "npm i -g affine-mcp-server"
+usageSnippet: "Run `affine-mcp login`, start with `AFFINE_TOOL_PROFILE=read_only`, and enable write/admin/destructive tools only for approved AFFiNE workspaces."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "affine": {
+        "command": "affine-mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "affine": {
+        "command": "affine-mcp",
+        "env": {
+          "AFFINE_BASE_URL": "<affine-base-url>",
+          "AFFINE_API_TOKEN": "<affine-api-token>",
+          "AFFINE_TOOL_PROFILE": "read_only"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js and npm for installing the affine-mcp-server package.
+  - AFFiNE Cloud API token or approved self-hosted AFFiNE credentials.
+  - AFFiNE base URL for the Cloud or self-hosted deployment.
+  - Clear workspace scope and least-privilege tool profile before enabling write, admin, destructive, blob, or access-token tools.
+  - HTTPS, bearer-token, or OAuth planning before exposing HTTP mode beyond a local trusted client.
+safetyNotes:
+  - The full tool surface can create, update, publish, revoke, move, replace, and delete AFFiNE workspaces, documents, folders, collections, comments, database rows, blobs, surface elements, tags, and access tokens.
+  - Start with AFFINE_TOOL_PROFILE=read_only or disable groups such as destructive, admin, blobs, users, access_tokens, docs.database, or write when the assistant only needs discovery or reading.
+  - HTTP mode exposes MCP endpoints and must be protected with bearer or OAuth authentication, HTTPS, allowed origins, and deployment-level access controls.
+  - AFFiNE Cloud requires API tokens for MCP usage; avoid trying to automate email/password login against Cloud deployments.
+  - Cookie and password-based auth can grant broad account access and should be avoided for unattended or shared deployments.
+privacyNotes:
+  - Workspaces, document titles, document bodies, comments, tags, database schemas, database rows, edgeless canvas data, notifications, user profiles, access-token metadata, blobs, and exported markdown can be sent to the MCP client and model.
+  - API tokens, cookies, passwords, bearer tokens, OAuth config, and saved config files should be treated as secrets and kept out of prompts, logs, screenshots, issues, and committed MCP config.
+  - Generated or modified documents can persist in AFFiNE and may become visible to collaborators depending on workspace permissions and sharing state.
+  - Blob upload, cleanup, export, and publish/revoke workflows can expose files, generated content, or collaboration state beyond the current prompt.
+sourceUrls:
+  - "https://github.com/DAWNCR0W/affine-mcp-server/blob/main/package.json"
+  - "https://github.com/DAWNCR0W/affine-mcp-server/blob/main/tool-manifest.json"
+  - "https://github.com/DAWNCR0W/affine-mcp-server/blob/main/src/index.ts"
+  - "https://github.com/DAWNCR0W/affine-mcp-server/blob/main/src/toolSurface.ts"
+  - "https://github.com/DAWNCR0W/affine-mcp-server/blob/main/docs/configuration-and-deployment.md"
+  - "https://github.com/DAWNCR0W/affine-mcp-server/blob/main/LICENSE"
+tags:
+  - affine
+  - knowledge-base
+  - documents
+  - collaboration
+  - databases
+keywords:
+  - AFFiNE MCP Server
+  - AFFiNE MCP
+  - affine-mcp-server
+  - AFFiNE workspace MCP
+  - AFFiNE document MCP
+  - knowledge base MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+AFFiNE MCP Server connects Claude and other MCP clients to AFFiNE Cloud or
+self-hosted AFFiNE deployments. It exposes a large tool surface for workspaces,
+documents, markdown import/export, semantic pages, templates, document trees,
+collections, folders, tags, databases, comments, history, notifications, user
+settings, personal access tokens, blob storage, and edgeless canvas data.
+
+The server supports local stdio usage for desktop or CLI MCP clients and HTTP
+mode for remote deployments. Authentication can use AFFiNE API tokens, saved
+interactive login config, cookies, or self-hosted email/password credentials,
+with API tokens recommended for stable automation.
+
+## Source Review
+
+- https://github.com/DAWNCR0W/affine-mcp-server
+- https://github.com/DAWNCR0W/affine-mcp-server/blob/main/README.md
+- https://registry.npmjs.org/affine-mcp-server
+- https://github.com/DAWNCR0W/affine-mcp-server/blob/main/package.json
+- https://github.com/DAWNCR0W/affine-mcp-server/blob/main/tool-manifest.json
+- https://github.com/DAWNCR0W/affine-mcp-server/blob/main/src/index.ts
+- https://github.com/DAWNCR0W/affine-mcp-server/blob/main/src/toolSurface.ts
+- https://github.com/DAWNCR0W/affine-mcp-server/blob/main/docs/configuration-and-deployment.md
+- https://github.com/DAWNCR0W/affine-mcp-server/blob/main/SECURITY.md
+- https://github.com/DAWNCR0W/affine-mcp-server/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, package metadata, tool manifest, server entrypoint, tool
+filter implementation, configuration and deployment guide, security policy, and
+license file for current install commands, supported transports, auth strategy,
+tool profiles, tool groups, and licensing.
+
+## Features
+
+- NPM package `affine-mcp-server` with the `affine-mcp` CLI.
+- Local stdio transport for Claude Code, Claude Desktop, Codex CLI, Cursor, and
+  other local MCP clients.
+- HTTP transport with `/mcp`, `/sse`, `/messages`, `/healthz`, and `/readyz`
+  endpoints for remote deployments.
+- AFFiNE Cloud and self-hosted AFFiNE support through GraphQL and WebSocket APIs.
+- API token, saved config, cookie, and self-hosted email/password auth modes.
+- Tool profiles for `full`, `read_only`, `core`, and `authoring` surfaces.
+- Tool-group and exact-tool disabling through environment variables.
+- Workspace, document, database, comment, history, user, access-token,
+  notification, blob, organization, folder, collection, tag, template, semantic
+  page, and edgeless canvas workflows.
+- MIT license.
+
+## Installation
+
+Install the CLI package:
+
+```sh
+npm i -g affine-mcp-server
+affine-mcp login
+```
+
+Configure a local MCP client:
+
+```json
+{
+  "mcpServers": {
+    "affine": {
+      "command": "affine-mcp",
+      "env": {
+        "AFFINE_BASE_URL": "<affine-base-url>",
+        "AFFINE_API_TOKEN": "<affine-api-token>",
+        "AFFINE_TOOL_PROFILE": "read_only"
+      }
+    }
+  }
+}
+```
+
+Verify the connection with `affine-mcp status` and `affine-mcp doctor`, then
+broaden tool access only when the workflow requires authoring, admin, blob,
+database, or destructive operations.
+
+## Use Cases
+
+- Search, read, and export AFFiNE documents from Claude.
+- Create or update workspace docs, tags, folders, collections, comments, and
+  database rows under a controlled tool profile.
+- Compose structured pages, semantic sections, markdown imports, templates, or
+  edgeless canvas elements from approved prompts.
+- Inspect workspace trees, document fidelity, capabilities, history,
+  notifications, and orphaned docs.
+- Run a constrained remote HTTP MCP endpoint for a team-owned AFFiNE deployment.
+- Generate or revoke AFFiNE access tokens only in an explicitly approved admin
+  workflow.
+
+## Safety and Privacy
+
+AFFiNE MCP Server can be read-only or highly write-capable depending on its tool
+profile and disabled groups. Start with `AFFINE_TOOL_PROFILE=read_only` for
+research and discovery. For authoring workflows, explicitly choose which write
+groups are allowed, and disable destructive or admin groups unless the assistant
+really needs them.
+
+The full surface can create and delete workspaces, replace documents with
+markdown, modify databases, publish or revoke documents, upload or delete blobs,
+update settings and profiles, and generate or revoke access tokens. Run these
+tools only against approved workspaces, and verify important changes in AFFiNE
+before relying on them.
+
+AFFiNE content can include sensitive personal notes, team docs, comments,
+databases, attachments, notifications, profile data, and collaboration metadata.
+Protect API tokens, cookies, saved config files, HTTP bearer tokens, OAuth
+settings, exported markdown, logs, prompts, and transcripts. For HTTP mode, use
+HTTPS, strong auth, constrained allowed origins, and deployment-level network
+controls.
+
+## Duplicate Check
+
+No AFFiNE MCP Server, `DAWNCR0W/affine-mcp-server`, `affine-mcp-server`, or
+dedicated AFFiNE workspace/document MCP entry was found in `content/mcp`,
+`content/agents`, `content/guides`, or `content/skills`. This entry is scoped to
+the AFFiNE MCP server for Cloud and self-hosted AFFiNE APIs and does not
+duplicate general note-taking, document, or database MCP entries.
