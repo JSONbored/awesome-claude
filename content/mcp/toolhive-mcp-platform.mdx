@@ -1,0 +1,200 @@
+---
+title: ToolHive MCP Platform
+slug: toolhive-mcp-platform
+category: mcp
+description: >-
+  Open-source MCP platform for running MCP servers in isolated containers,
+  managing registries, enforcing access policy, and operating local or
+  Kubernetes-based MCP infrastructure.
+cardDescription: >-
+  Run and manage MCP servers with the `thv` CLI, container isolation,
+  registries, secrets, client setup, gateway controls, and Kubernetes operator
+  support.
+seoTitle: ToolHive MCP Platform for Claude
+seoDescription: >-
+  Configure ToolHive with Claude and other MCP clients to run MCP servers in
+  isolated containers, manage registries, set up clients, enforce policy,
+  handle secrets, and operate local or Kubernetes MCP infrastructure.
+author: stacklok
+authorProfileUrl: "https://github.com/stacklok"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: ToolHive
+brandDomain: stacklok.com
+repoUrl: "https://github.com/stacklok/toolhive"
+documentationUrl: "https://docs.stacklok.com/toolhive"
+packageUrl: "https://github.com/stacklok/toolhive/releases"
+websiteUrl: "https://stacklok.com/download/"
+installable: true
+installCommand: "brew tap stacklok/tap && brew install thv"
+usageSnippet: "Install the `thv` CLI, list trusted registry entries, run an approved MCP server, and use `thv client setup` to connect supported local MCP clients."
+copySnippet: |-
+  thv registry list
+  thv registry info toolhive-doc-mcp
+  thv run toolhive-doc-mcp
+  thv client setup
+configSnippet: |-
+  thv run --proxy-port 8081 toolhive-doc-mcp
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Docker or Podman available for local containerized MCP server runtime.
+  - ToolHive CLI installed through Homebrew, winget, release archive, or source build.
+  - MCP client configuration reviewed before running `thv client setup`.
+  - Registry entries, server images, permissions, secrets, and network access reviewed before running MCP servers.
+  - Kubernetes cluster, operator permissions, ingress, identity provider, and observability stack planned before cluster deployment.
+safetyNotes:
+  - ToolHive runs MCP servers and can connect them to local clients or Kubernetes infrastructure, so every selected server image and registry entry should be treated as executable supply-chain input.
+  - Container isolation reduces local risk but does not remove the need to review server permissions, mounted files, network access, secrets, and tool behavior.
+  - Registry, gateway, and operator features can centralize access to many MCP servers; enforce least privilege, approval workflows, and audit review before broad rollout.
+  - OIDC/OAuth, authorization policy, remote MCP authentication, and Kubernetes operator controls should be configured before exposing shared endpoints.
+  - Built-in client setup can modify local MCP client configuration; review generated changes before connecting sensitive workspaces.
+privacyNotes:
+  - ToolHive may handle MCP server configs, registry metadata, container images, permission files, secrets, client config paths, prompts, tool arguments, tool outputs, traces, metrics, audit logs, and identity claims.
+  - Local configuration, keyring entries, runtime logs, OpenTelemetry traces, Prometheus metrics, Kubernetes custom resources, and registry contents can reveal private server names, endpoints, credentials, and tool schemas.
+  - Downstream MCP servers may forward workspace files, cloud data, database results, tickets, browser state, or account data through ToolHive to connected clients and model providers.
+  - Do not commit real ToolHive configs, registry overrides, secrets, permission files, kubeconfigs, OIDC credentials, telemetry exports, or generated client configs.
+sourceUrls:
+  - "https://github.com/stacklok/toolhive"
+  - "https://github.com/stacklok/toolhive/blob/main/README.md"
+  - "https://github.com/stacklok/toolhive/blob/main/LICENSE"
+  - "https://github.com/stacklok/toolhive/blob/main/SECURITY.md"
+  - "https://github.com/stacklok/toolhive/blob/main/docs/arch/README.md"
+  - "https://github.com/stacklok/toolhive/blob/main/docs/authz.md"
+  - "https://github.com/stacklok/toolhive/blob/main/docs/observability.md"
+  - "https://github.com/stacklok/toolhive/blob/main/docs/remote-mcp-authentication.md"
+  - "https://github.com/stacklok/toolhive/blob/main/docs/arch/04-secrets-management.md"
+  - "https://github.com/stacklok/toolhive/blob/main/docs/arch/05-runconfig-and-permissions.md"
+  - "https://github.com/stacklok/toolhive/blob/main/deploy/charts/operator/values.yaml"
+  - "https://github.com/stacklok/toolhive/releases"
+  - "https://docs.stacklok.com/toolhive"
+  - "https://docs.stacklok.com/toolhive/guides-cli/install"
+  - "https://docs.stacklok.com/toolhive/guides-cli/quickstart"
+  - "https://docs.stacklok.com/toolhive/guides-ui/quickstart"
+  - "https://docs.stacklok.com/toolhive/guides-k8s/quickstart"
+  - "https://docs.stacklok.com/toolhive/reference/cli/thv"
+  - "https://docs.stacklok.com/toolhive/guides-mcp"
+  - "https://stacklok.com/download/"
+tags:
+  - runtime
+  - registry
+  - gateway
+  - kubernetes
+  - security
+keywords:
+  - ToolHive
+  - thv
+  - MCP runtime
+  - MCP registry
+  - Kubernetes MCP operator
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+ToolHive is an open-source platform for running and managing MCP servers. Its
+`thv` CLI can discover registry entries, run approved MCP servers in isolated
+containers, set up supported MCP clients, and manage local server lifecycle.
+The same project also includes gateway, registry, runtime, and Kubernetes
+operator components for teams that need central governance around MCP usage.
+
+The repo positions ToolHive as a production-oriented MCP platform rather than a
+single-purpose server. It is useful when a developer or platform team wants to
+run MCP servers through container isolation, curated registries, secrets
+handling, authorization policy, audit logs, observability, and Kubernetes-based
+deployment patterns.
+
+## Source Review
+
+- https://github.com/stacklok/toolhive
+- https://github.com/stacklok/toolhive/blob/main/README.md
+- https://github.com/stacklok/toolhive/blob/main/LICENSE
+- https://github.com/stacklok/toolhive/blob/main/SECURITY.md
+- https://github.com/stacklok/toolhive/blob/main/docs/arch/README.md
+- https://github.com/stacklok/toolhive/blob/main/docs/authz.md
+- https://github.com/stacklok/toolhive/blob/main/docs/observability.md
+- https://github.com/stacklok/toolhive/blob/main/docs/remote-mcp-authentication.md
+- https://github.com/stacklok/toolhive/blob/main/docs/arch/04-secrets-management.md
+- https://github.com/stacklok/toolhive/blob/main/docs/arch/05-runconfig-and-permissions.md
+- https://github.com/stacklok/toolhive/blob/main/deploy/charts/operator/values.yaml
+- https://github.com/stacklok/toolhive/releases
+- https://docs.stacklok.com/toolhive
+- https://docs.stacklok.com/toolhive/guides-cli/install
+- https://docs.stacklok.com/toolhive/guides-cli/quickstart
+- https://docs.stacklok.com/toolhive/guides-ui/quickstart
+- https://docs.stacklok.com/toolhive/guides-k8s/quickstart
+- https://docs.stacklok.com/toolhive/reference/cli/thv
+- https://docs.stacklok.com/toolhive/guides-mcp
+- https://stacklok.com/download/
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, license, security policy, architecture notes, authorization notes,
+observability notes, remote MCP authentication notes, secrets and permissions
+docs, operator values, release page, CLI docs, UI docs, Kubernetes docs, MCP
+guides, and download page for current installation and operating guidance.
+
+## Features
+
+- Run MCP servers locally through the `thv` CLI.
+- Use Docker or Podman-backed container isolation for MCP servers.
+- Discover approved servers through registries.
+- Set up supported local MCP clients from the CLI.
+- Manage server lifecycle with list, run, stop, remove, restart, and proxy-port options.
+- Store and manage secrets for MCP server runtime.
+- Apply authorization and remote MCP authentication patterns.
+- Export logs, OpenTelemetry traces, Prometheus metrics, and audit signals.
+- Operate MCP servers through a Kubernetes operator.
+- Use gateway, registry server, runtime, and portal components for larger deployments.
+
+## Installation
+
+Install the CLI with Homebrew on macOS or Linux:
+
+```bash
+brew tap stacklok/tap
+brew install thv
+```
+
+The install guide also documents winget, release archives, and source builds.
+After installing, start with a registry entry from the quickstart:
+
+```bash
+thv registry list
+thv registry info toolhive-doc-mcp
+thv run toolhive-doc-mcp
+thv client setup
+```
+
+Review the registry entry, server image, permissions, and generated client
+configuration before connecting the server to a sensitive workspace.
+
+## Use Cases
+
+- Run MCP servers locally without giving each server direct host-level access.
+- Curate registry entries that developers can discover and launch consistently.
+- Connect Claude, Cursor, VS Code, or other clients to approved MCP servers.
+- Centralize secrets and permission review for MCP server runtime.
+- Add observability and audit data around MCP usage.
+- Run MCP infrastructure in Kubernetes with operator-managed resources.
+- Standardize MCP adoption across a team that needs policy and identity controls.
+
+## Safety and Privacy
+
+ToolHive improves MCP server operations, but it is still executing and exposing
+tools. Review every registry entry, server image, run configuration, permission
+file, secret, and network path before connecting an agent. Keep approval in the
+loop for servers that can read local files, execute code, mutate cloud services,
+send messages, change tickets, or access production data.
+
+Treat ToolHive's local and cluster state as sensitive. Runtime logs,
+OpenTelemetry traces, Prometheus metrics, audit logs, Kubernetes resources,
+secret stores, permission files, and generated client configs can reveal private
+tooling, endpoints, credentials, prompts, arguments, responses, and identity
+claims.
+
+## Duplicate Check
+
+No `stacklok/toolhive` entry, ToolHive MCP Platform entry, or matching source
+URL was found in `content/mcp`.

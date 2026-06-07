@@ -1,0 +1,197 @@
+---
+title: LINE Bot MCP Server
+slug: line-bot-mcp-server
+category: mcp
+description: >-
+  Official LINE MCP server that connects Claude and other AI agents to the LINE
+  Messaging API for push messages, broadcasts, profile lookup, quotas, follower
+  IDs, and rich-menu management.
+cardDescription: >-
+  Connect Claude to a LINE Official Account for push messages, broadcasts,
+  profiles, quotas, followers, and rich-menu workflows.
+seoTitle: LINE Bot MCP Server for Claude
+seoDescription: >-
+  Configure LINE Bot MCP Server with Claude to use the LINE Messaging API for
+  text and flex messages, broadcasts, profile lookup, message quotas, follower
+  IDs, and rich-menu management.
+author: LINE
+authorProfileUrl: "https://github.com/line"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: LINE Bot MCP Server
+brandDomain: line.me
+repoUrl: "https://github.com/line/line-bot-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/line/line-bot-mcp-server/main/README.md"
+packageUrl: "https://registry.npmjs.org/@line%2Fline-bot-mcp-server"
+installable: true
+installCommand: "npx -y @line/line-bot-mcp-server"
+usageSnippet: "Run `npx -y @line/line-bot-mcp-server` with `CHANNEL_ACCESS_TOKEN` and, optionally, `DESTINATION_USER_ID` to let Claude work with a LINE Official Account through the Messaging API."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "line-bot": {
+        "command": "npx",
+        "args": ["-y", "@line/line-bot-mcp-server"],
+        "env": {
+          "NPM_CONFIG_IGNORE_SCRIPTS": "true",
+          "CHANNEL_ACCESS_TOKEN": "YOUR_CHANNEL_ACCESS_TOKEN",
+          "DESTINATION_USER_ID": "OPTIONAL_DEFAULT_USER_ID"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add line-bot --env CHANNEL_ACCESS_TOKEN=YOUR_CHANNEL_ACCESS_TOKEN -- npx -y @line/line-bot-mcp-server
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 22 or newer for the published npm package.
+  - A LINE Official Account with the Messaging API enabled.
+  - A LINE channel access token with the permissions needed for the intended tools.
+  - A destination user ID when using the default recipient flow for push-message tools.
+  - Review of broadcast recipients, rich-menu changes, quota limits, and account policies before enabling autonomous use.
+safetyNotes:
+  - LINE Bot MCP Server can push text and flex messages to users, broadcast messages to all followers, retrieve follower IDs, inspect profiles, check message quotas, create rich menus, set default rich menus, cancel defaults, and delete rich menus.
+  - Broadcast and rich-menu tools can affect every user following the connected LINE Official Account, so require human approval before running them in production.
+  - Push-message tools can contact individual users directly; confirm the target `userId`, message body, and account context before sending.
+  - Rich-menu tools can upload generated menu images and change user-facing navigation for the account.
+  - Use least-privilege channel tokens where possible, keep test and production LINE accounts separate, and monitor quota consumption.
+  - The upstream README marks the project as a preview version for experimental use with potentially incomplete functionality or support.
+privacyNotes:
+  - Channel access tokens, destination user IDs, follower IDs, profile display names, profile picture URLs, status messages, language, message contents, flex-message JSON, and rich-menu IDs can be exposed to the MCP client.
+  - Broadcast prompts, generated messages, user IDs, and profile results may be retained in MCP client logs, terminal history, model context, or chat transcripts.
+  - Treat LINE Official Account credentials and recipient identifiers as secrets, and avoid pasting real tokens or user IDs into shared logs.
+  - Review LINE platform policies and internal consent requirements before retrieving follower IDs or using AI-generated outbound messages.
+disclosure: >-
+  Official preview MCP server from LINE, published as the
+  `@line/line-bot-mcp-server` npm package under Apache-2.0.
+sourceUrls:
+  - "https://raw.githubusercontent.com/line/line-bot-mcp-server/main/LICENSE"
+  - "https://raw.githubusercontent.com/line/line-bot-mcp-server/main/package.json"
+  - "https://raw.githubusercontent.com/line/line-bot-mcp-server/main/manifest.json"
+  - "https://raw.githubusercontent.com/line/line-bot-mcp-server/main/Dockerfile"
+  - "https://raw.githubusercontent.com/line/line-bot-mcp-server/main/src/index.ts"
+  - "https://raw.githubusercontent.com/line/line-bot-mcp-server/main/src/tools/pushTextMessage.ts"
+  - "https://raw.githubusercontent.com/line/line-bot-mcp-server/main/src/tools/broadcastTextMessage.ts"
+tags:
+  - line
+  - messaging
+  - chatbots
+  - marketing
+  - customer-support
+keywords:
+  - LINE MCP
+  - LINE Bot MCP Server
+  - LINE Messaging API MCP
+  - LINE Official Account MCP
+  - LINE Claude integration
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+LINE Bot MCP Server is LINE's MCP server for connecting AI agents to a LINE
+Official Account through the LINE Messaging API. It exposes tools for sending
+messages, broadcasting to followers, reading profile and quota information,
+listing follower IDs, and managing rich menus.
+
+Use it when Claude needs to assist with supervised LINE Official Account
+operations such as drafting test messages, checking quotas, preparing rich menu
+updates, or retrieving account context during support and marketing workflows.
+
+## Source Review
+
+- https://github.com/line/line-bot-mcp-server
+- https://raw.githubusercontent.com/line/line-bot-mcp-server/main/README.md
+- https://registry.npmjs.org/@line%2Fline-bot-mcp-server
+- https://raw.githubusercontent.com/line/line-bot-mcp-server/main/LICENSE
+- https://raw.githubusercontent.com/line/line-bot-mcp-server/main/package.json
+- https://raw.githubusercontent.com/line/line-bot-mcp-server/main/manifest.json
+- https://raw.githubusercontent.com/line/line-bot-mcp-server/main/Dockerfile
+- https://raw.githubusercontent.com/line/line-bot-mcp-server/main/src/index.ts
+- https://raw.githubusercontent.com/line/line-bot-mcp-server/main/src/tools/pushTextMessage.ts
+- https://raw.githubusercontent.com/line/line-bot-mcp-server/main/src/tools/broadcastTextMessage.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm registry metadata, license, package manifest, MCP manifest, Docker
+setup, server entrypoint, and push and broadcast tool implementations for
+current setup and behavior details.
+
+## Features
+
+- Push text messages to a LINE user.
+- Push flex messages with custom layout JSON.
+- Broadcast text or flex messages to users who follow the LINE Official
+  Account.
+- Retrieve LINE user profile details.
+- Check monthly message quota and consumption.
+- List rich menus associated with the account.
+- Create, set, cancel, and delete default rich menus.
+- Retrieve follower user IDs with pagination.
+- Run through the published npm package or a locally built Docker image.
+
+## Installation
+
+Create or configure a LINE Official Account, enable the Messaging API, and
+create a channel access token. Then configure an MCP client with the npm
+package:
+
+```json
+{
+  "mcpServers": {
+    "line-bot": {
+      "command": "npx",
+      "args": ["-y", "@line/line-bot-mcp-server"],
+      "env": {
+        "NPM_CONFIG_IGNORE_SCRIPTS": "true",
+        "CHANNEL_ACCESS_TOKEN": "YOUR_CHANNEL_ACCESS_TOKEN",
+        "DESTINATION_USER_ID": "OPTIONAL_DEFAULT_USER_ID"
+      }
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add line-bot --env CHANNEL_ACCESS_TOKEN=YOUR_CHANNEL_ACCESS_TOKEN -- npx -y @line/line-bot-mcp-server
+```
+
+Add `DESTINATION_USER_ID` when you want push-message tools to default to a
+specific test user.
+
+## Use Cases
+
+- Draft and send a supervised test message to a LINE user.
+- Prepare a flex message payload for a campaign or support workflow.
+- Check message quota before a broadcast.
+- Retrieve profile context for a known LINE user ID.
+- List follower IDs for an approved operational workflow.
+- Create and test a rich menu before making it the default.
+- Inspect existing rich menus and remove obsolete ones.
+
+## Safety and Privacy
+
+LINE Bot MCP Server can send real messages and update real account surfaces.
+Keep production tokens out of test clients, require review before broadcasts or
+rich-menu changes, and verify the target account and recipient IDs before any
+send operation.
+
+Follower IDs, profile data, message contents, flex-message JSON, rich-menu
+configuration, and channel tokens are sensitive. Treat MCP transcripts and logs
+as account records, and avoid using real users for prompt experiments unless the
+workflow has explicit approval.
+
+The upstream README identifies the project as a preview release, so test against
+a non-production LINE Official Account before connecting it to customer-facing
+operations.
+
+## Duplicate Check
+
+Existing MCP entries cover customer support, communications, and automation
+tools, but no LINE Bot MCP Server, `line/line-bot-mcp-server`,
+`@line/line-bot-mcp-server`, or LINE Messaging API MCP entry was found in
+`content/mcp`.

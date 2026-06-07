@@ -1,0 +1,197 @@
+---
+title: Argo CD MCP Server
+slug: argocd-mcp-server
+category: mcp
+description: >-
+  Argo Project Labs MCP server for connecting Claude to Argo CD applications,
+  clusters, managed resources, workload logs, events, sync operations, and
+  resource actions through stdio or HTTP stream transports.
+cardDescription: Connect Claude to Argo CD applications, clusters, resources, logs, syncs, and actions.
+seoTitle: Argo CD MCP Server for Claude
+seoDescription: >-
+  Configure Argo CD MCP Server with Claude, VS Code, Cursor, and other MCP
+  clients to inspect Argo CD clusters and applications, read managed resources
+  and workload logs, and optionally create, update, delete, sync, or run actions
+  on applications.
+author: Argo Project Labs
+authorProfileUrl: "https://github.com/argoproj-labs"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Argo CD
+brandDomain: argo-cd.readthedocs.io
+websiteUrl: "https://argo-cd.readthedocs.io/en/stable/"
+repoUrl: "https://github.com/argoproj-labs/mcp-for-argocd"
+documentationUrl: "https://github.com/argoproj-labs/mcp-for-argocd#readme"
+packageUrl: "https://registry.npmjs.org/argocd-mcp"
+installable: true
+installCommand: "npx argocd-mcp@latest stdio"
+usageSnippet: "Ask Claude to list applications, inspect a resource tree, review workload logs, and require approval before sync, prune, delete, or run-resource-action calls."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "argocd-mcp": {
+        "command": "npx",
+        "args": ["argocd-mcp@latest", "stdio"],
+        "env": {
+          "ARGOCD_BASE_URL": "<argocd-url>",
+          "ARGOCD_API_TOKEN": "<argocd-token>",
+          "MCP_READ_ONLY": "true"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "argocd-mcp": {
+        "command": "npx",
+        "args": ["argocd-mcp@latest", "stdio"],
+        "env": {
+          "ARGOCD_BASE_URL": "<argocd-url>",
+          "ARGOCD_API_TOKEN": "<argocd-token>",
+          "MCP_READ_ONLY": "true"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 18 or newer.
+  - Argo CD instance with API access.
+  - Argo CD API token scoped to the minimum applications, projects, clusters, and actions Claude should use.
+  - Read-only mode enabled unless the workflow explicitly needs application or resource mutations.
+  - TLS and network-access review before disabling certificate verification or exposing HTTP transport.
+  - Human approval policy for sync, prune, delete, create, update, and run-resource-action operations.
+safetyNotes:
+  - Argo CD MCP can inspect clusters, applications, resource trees, managed resources, workload logs, and resource events.
+  - By default all tools are available; setting MCP_READ_ONLY to true disables create_application, update_application, delete_application, sync_application, and run_resource_action.
+  - sync_application can apply changes to Kubernetes resources and may prune resources depending on options.
+  - delete_application can remove Argo CD applications and may cascade deletion to child resources depending on options.
+  - run_resource_action can trigger actions on resources managed by an application.
+  - Disabling TLS certificate validation with NODE_TLS_REJECT_UNAUTHORIZED weakens transport security and should be limited to reviewed development contexts.
+privacyNotes:
+  - Argo CD application specs, cluster names, repository URLs, revisions, namespaces, Kubernetes manifests, resource events, and workload logs can reveal secrets, internal topology, deployment history, incident details, or customer data.
+  - ARGOCD_BASE_URL, ARGOCD_API_TOKEN, stateless HTTP request headers, cluster names, namespace names, and application names should stay out of prompts, issues, logs, screenshots, and committed files.
+  - Workload logs and resource events may include credentials, tokens, environment variables, error traces, or production incident context.
+  - HTTP transport should be authenticated and network-restricted so Argo CD tools are not reachable by untrusted clients.
+sourceUrls:
+  - "https://github.com/argoproj-labs/mcp-for-argocd/blob/main/README.md"
+  - "https://github.com/argoproj-labs/mcp-for-argocd/blob/main/package.json"
+  - "https://github.com/argoproj-labs/mcp-for-argocd/blob/main/src/server/server.ts"
+  - "https://github.com/argoproj-labs/mcp-for-argocd/blob/main/src/cmd/cmd.ts"
+  - "https://github.com/argoproj-labs/mcp-for-argocd/blob/main/LICENSE"
+tags:
+  - argo-cd
+  - gitops
+  - kubernetes
+  - deployment
+  - devops
+keywords:
+  - Argo CD MCP
+  - ArgoCD MCP Server
+  - argocd-mcp
+  - GitOps MCP
+  - Kubernetes deployment MCP
+  - Argo Project Labs MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Argo CD MCP Server is an Argo Project Labs implementation of the Model Context
+Protocol for Argo CD. It lets Claude and other MCP clients inspect Argo CD
+clusters, applications, managed resources, workload logs, resource events, and
+resource actions through natural-language workflows.
+
+The server supports stdio, SSE, and HTTP stream transports. It can also run in a
+read-only mode that omits modifying tools, which is the safer default for
+inspection and troubleshooting workflows.
+
+## Source Review
+
+- https://argo-cd.readthedocs.io/en/stable/
+- https://github.com/argoproj-labs/mcp-for-argocd
+- https://github.com/argoproj-labs/mcp-for-argocd#readme
+- https://registry.npmjs.org/argocd-mcp
+- https://github.com/argoproj-labs/mcp-for-argocd/blob/main/README.md
+- https://github.com/argoproj-labs/mcp-for-argocd/blob/main/package.json
+- https://github.com/argoproj-labs/mcp-for-argocd/blob/main/src/server/server.ts
+- https://github.com/argoproj-labs/mcp-for-argocd/blob/main/src/cmd/cmd.ts
+- https://github.com/argoproj-labs/mcp-for-argocd/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the Argo CD docs,
+repository README, package metadata, server source, transport command source,
+and license for current setup commands, transport modes, tool behavior, and
+read-only controls.
+
+## Features
+
+- Argo Project Labs MCP server for Argo CD.
+- NPM package `argocd-mcp`.
+- Stdio, SSE, and HTTP stream transport modes.
+- Stateless HTTP mode for multi-replica deployments without sticky sessions.
+- Cluster listing with filters.
+- Application listing, retrieval, creation, update, deletion, and sync tools.
+- Resource tree and managed-resource inspection.
+- Workload log retrieval for application workloads.
+- Resource and application event retrieval.
+- Resource action discovery and execution.
+- Read-only mode that removes mutation tools.
+- Cursor, VS Code, and Claude Desktop configuration examples.
+
+## Installation
+
+Configure a local stdio MCP server with an Argo CD URL and API token. Start in
+read-only mode for inspection workflows:
+
+```json
+{
+  "mcpServers": {
+    "argocd-mcp": {
+      "command": "npx",
+      "args": ["argocd-mcp@latest", "stdio"],
+      "env": {
+        "ARGOCD_BASE_URL": "<argocd-url>",
+        "ARGOCD_API_TOKEN": "<argocd-token>",
+        "MCP_READ_ONLY": "true"
+      }
+    }
+  }
+}
+```
+
+Only remove read-only mode after reviewing the API token scope, target
+applications, and approval process for sync or mutation tools.
+
+## Use Cases
+
+- List Argo CD applications and clusters from Claude.
+- Inspect an application's resource tree before debugging a rollout.
+- Retrieve workload logs for a managed Pod, Deployment, or StatefulSet.
+- Review resource events for a failing application.
+- Compare managed resources before a sync.
+- Trigger an application sync after human review.
+- Run a resource action when the exact target and action are approved.
+- Use stateless HTTP mode for reviewed multi-replica MCP deployments.
+
+## Safety and Privacy
+
+Argo CD MCP can affect live Kubernetes deployments. Use read-only mode by
+default, keep API tokens least-privilege, and require human approval before
+create, update, delete, sync, prune, or resource-action calls. Dry-run syncs are
+safer but still need target and revision review.
+
+Treat logs, events, manifests, repository URLs, revisions, cluster names, and
+resource metadata as sensitive operational data. Avoid disabling TLS
+verification except in tightly controlled development environments, and restrict
+HTTP transport to trusted clients and networks.
+
+## Duplicate Check
+
+No Argo CD MCP Server, ArgoCD MCP, `argoproj-labs/mcp-for-argocd`, or
+`argocd-mcp` entry was found in `content/mcp`, `content/tools`,
+`content/guides`, `content/agents`, or `content/skills`. Existing Argo CD
+mentions are incidental DevOps/SRE examples.

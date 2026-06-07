@@ -1,0 +1,186 @@
+---
+title: MCP Proxy for AWS
+slug: aws-mcp-proxy-for-aws
+category: mcp
+description: >-
+  AWS-maintained proxy and Python library that lets MCP clients and agent
+  frameworks connect to IAM-secured MCP servers on AWS by signing requests with
+  AWS SigV4 credentials.
+cardDescription: >-
+  Bridge Claude, Kiro, and Python agent frameworks to MCP servers on AWS with
+  automatic SigV4 signing, AWS profile selection, read-only mode, retries,
+  timeouts, and public ECR or PyPI installs.
+seoTitle: MCP Proxy for AWS for Claude
+seoDescription: >-
+  Configure MCP Proxy for AWS with Claude and other MCP clients to reach
+  IAM-secured AWS MCP endpoints, sign requests with SigV4, switch AWS profiles,
+  use read-only mode, and integrate with LangChain, LlamaIndex, Strands Agents,
+  or Microsoft Agent Framework.
+author: aws
+authorProfileUrl: "https://github.com/aws"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MCP Proxy for AWS
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/aws/mcp-proxy-for-aws"
+documentationUrl: "https://github.com/aws/mcp-proxy-for-aws/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-proxy-for-aws/json"
+installable: true
+installCommand: "uvx mcp-proxy-for-aws@latest SIGV4_MCP_ENDPOINT_URL"
+usageSnippet: "Run `uvx mcp-proxy-for-aws@latest SIGV4_MCP_ENDPOINT_URL --region AWS_REGION --profile AWS_PROFILE` from an MCP client to bridge requests to an IAM-secured AWS MCP server."
+copySnippet: |-
+  uvx mcp-proxy-for-aws@latest SIGV4_MCP_ENDPOINT_URL --region AWS_REGION --profile AWS_PROFILE
+configSnippet: |-
+  {
+    "mcpServers": {
+      "aws": {
+        "command": "uvx",
+        "args": [
+          "mcp-proxy-for-aws@latest",
+          "SIGV4_MCP_ENDPOINT_URL",
+          "--region",
+          "AWS_REGION",
+          "--profile",
+          "AWS_PROFILE",
+          "--read-only"
+        ],
+        "env": {
+          "AWS_MCP_PROXY_PROFILES": "prod-readonly dev staging"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10+ and `uv`, or Docker for the public ECR image path.
+  - AWS credentials configured through AWS CLI profiles, environment variables, or IAM roles.
+  - The SigV4-protected MCP endpoint URL, AWS region, and optional AWS service name for signing.
+  - Least-privilege AWS profiles prepared before enabling multi-profile switching for agents.
+  - A decision on read-only mode, retries, timeouts, logging level, and telemetry settings before use.
+safetyNotes:
+  - MCP Proxy for AWS signs MCP requests with local AWS credentials, so tool calls can inherit the AWS permissions of the selected profile or role.
+  - Multi-profile mode injects an `aws_profile` parameter into auth-requiring tools; restrict the profile list to accounts and roles an agent may safely use.
+  - The `--read-only` flag disables tools that require write permissions when the upstream tool annotations identify them, but it is not a substitute for IAM least privilege.
+  - The `--skip-auth` option can bypass request signing when credentials are unavailable; avoid it unless the endpoint is intentionally unauthenticated.
+  - Docker examples mount AWS credential directories read-only; keep mounts scoped and avoid sharing long-lived credentials with untrusted containers.
+privacyNotes:
+  - The proxy may process AWS access keys, session tokens, profile names, regions, SigV4 headers, MCP endpoint URLs, metadata, prompts, tool names, tool arguments, tool results, logs, telemetry, and framework session data.
+  - AWS profile names and metadata can reveal account structure, environment names, regions, and service ownership.
+  - Logs from clients, containers, or frameworks can expose endpoint URLs, selected profiles, tool arguments, and AWS error details.
+  - Store AWS credentials through standard credential providers or IAM roles, rotate temporary sessions, and avoid committing MCP client configs with real endpoints or profile names.
+sourceUrls:
+  - "https://github.com/aws/mcp-proxy-for-aws/blob/main/README.md"
+  - "https://github.com/aws/mcp-proxy-for-aws/blob/main/LICENSE"
+  - "https://github.com/aws/mcp-proxy-for-aws/blob/main/pyproject.toml"
+  - "https://github.com/aws/mcp-proxy-for-aws/blob/main/mcp_proxy_for_aws/server.py"
+  - "https://github.com/aws/mcp-proxy-for-aws/blob/main/mcp_proxy_for_aws/sigv4_helper.py"
+  - "https://github.com/aws/mcp-proxy-for-aws/blob/main/mcp_proxy_for_aws/client.py"
+tags:
+  - proxy
+  - aws
+  - security
+  - cloud
+  - infrastructure
+keywords:
+  - MCP Proxy for AWS
+  - AWS MCP Proxy
+  - SigV4 MCP
+  - IAM MCP server
+  - Bedrock AgentCore MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Proxy for AWS is an AWS-maintained proxy and Python library for connecting
+MCP clients and agent frameworks to MCP servers on AWS that use IAM SigV4
+authentication. It handles request signing with local AWS credentials so
+standard MCP clients do not need to implement SigV4 support themselves.
+
+The package can run as a stdio bridge for clients such as Claude Desktop and
+Kiro CLI, or it can be imported as a library for Python agent frameworks such
+as LangChain, LlamaIndex, Strands Agents, and Microsoft Agent Framework.
+
+## Source Review
+
+- https://github.com/aws/mcp-proxy-for-aws
+- https://github.com/aws/mcp-proxy-for-aws/blob/main/README.md
+- https://github.com/aws/mcp-proxy-for-aws/blob/main/LICENSE
+- https://github.com/aws/mcp-proxy-for-aws/blob/main/pyproject.toml
+- https://github.com/aws/mcp-proxy-for-aws/blob/main/mcp_proxy_for_aws/server.py
+- https://github.com/aws/mcp-proxy-for-aws/blob/main/mcp_proxy_for_aws/sigv4_helper.py
+- https://github.com/aws/mcp-proxy-for-aws/blob/main/mcp_proxy_for_aws/client.py
+- https://pypi.org/pypi/mcp-proxy-for-aws/json
+- https://gallery.ecr.aws/mcp-proxy-for-aws/mcp-proxy-for-aws
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, package metadata, server implementation, SigV4 helper, client library,
+PyPI JSON, public ECR gallery page, and license file for current install,
+credential, profile, signing, and integration behavior.
+
+## Features
+
+- Sign MCP requests to AWS-hosted MCP endpoints with SigV4.
+- Resolve AWS credentials from profiles, environment variables, shared credential files, or IAM roles.
+- Run as a stdio bridge for MCP clients that cannot sign AWS IAM requests.
+- Use multi-profile switching so agents can call allowed AWS profiles per tool call.
+- Infer or accept the AWS service name used for SigV4 signing.
+- Inject metadata such as region into MCP requests.
+- Enable read-only mode for tools that are annotated as write-capable by the upstream server.
+- Configure retries, connect/read/write timeouts, tool-call timeout, and log level.
+- Run from PyPI with `uvx`, from source with `uv`, or from the public AWS ECR image.
+- Import the Python client helpers in LangChain, LlamaIndex, Strands Agents, or Microsoft Agent Framework workflows.
+
+## Installation
+
+Run the proxy with `uvx` and the SigV4-protected MCP endpoint:
+
+```bash
+uvx mcp-proxy-for-aws@latest SIGV4_MCP_ENDPOINT_URL --region AWS_REGION --profile AWS_PROFILE
+```
+
+For multiple allowed profiles, pass profiles on the command line or set
+`AWS_MCP_PROXY_PROFILES`. The first profile is the default, and later profiles
+can be selected per call through the injected `aws_profile` parameter.
+
+Use `--read-only` when the agent should avoid write-capable tools, and combine
+it with least-privilege IAM credentials. The README also documents a public ECR
+image for Docker-based MCP client configs.
+
+## Use Cases
+
+- Connect Claude to an MCP server on AWS that requires IAM SigV4 signing.
+- Let Kiro CLI or another MCP client use AWS credentials without custom signing code.
+- Bridge Bedrock AgentCore-style MCP endpoints into local MCP clients.
+- Give an agent a constrained set of AWS profiles for cross-account inspection.
+- Use read-only mode while still enforcing least privilege through IAM.
+- Build Python agents that call IAM-secured MCP servers through framework-specific client helpers.
+- Run the proxy in Docker with a read-only AWS credential mount for local development.
+
+## Safety and Privacy
+
+MCP Proxy for AWS makes AWS credentials usable by agent tool calls. Keep IAM
+permissions narrow, prefer short-lived credentials, and restrict multi-profile
+mode to profiles that are appropriate for the task. The `--read-only` flag helps
+filter write-capable tools when annotations are available, but IAM permissions
+remain the real enforcement boundary.
+
+Avoid `--skip-auth` unless the upstream MCP endpoint is intentionally public or
+protected by another control. Be careful with Docker credential mounts and
+framework logs; profile names, endpoint URLs, AWS errors, SigV4 metadata, tool
+arguments, and tool results can all reveal sensitive account or workload data.
+
+Treat MCP client configs, `.env` files, AWS credential directories, session
+tokens, endpoint URLs, telemetry, and logs as sensitive. Rotate credentials and
+avoid giving agents profiles that can modify production systems unless the host
+workflow includes explicit approval.
+
+## Duplicate Check
+
+No `aws/mcp-proxy-for-aws` source entry, MCP Proxy for AWS entry, or matching
+source URL was found in `content/mcp`. Existing AWS Labs MCP coverage is
+distinct from this SigV4 proxy and Python client bridge for IAM-secured MCP
+servers on AWS.

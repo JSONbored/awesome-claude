@@ -1,0 +1,177 @@
+---
+title: Kordoc MCP Server
+slug: kordoc-mcp-server
+category: mcp
+description: >-
+  MCP server for parsing Korean HWP, HWPX, HWPML, PDF, XLSX, and DOCX files into
+  Markdown, with tools for metadata extraction, page ranges, tables, document
+  diffs, form extraction, and HWPX form filling.
+cardDescription: >-
+  Let Claude parse Korean office documents, extract metadata and tables, compare
+  versions, and fill HWPX form templates through a local MCP server.
+seoTitle: Kordoc MCP Server for Claude
+seoDescription: >-
+  Configure Kordoc MCP Server with Claude to parse HWP, HWPX, HWPML, PDF, XLSX,
+  and DOCX files into Markdown, extract metadata and tables, compare documents,
+  and fill HWPX forms.
+author: chrisryugj
+authorProfileUrl: "https://github.com/chrisryugj"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: kordoc
+brandDomain: github.com
+repoUrl: "https://github.com/chrisryugj/kordoc"
+documentationUrl: "https://raw.githubusercontent.com/chrisryugj/kordoc/main/README-EN.md"
+packageUrl: "https://registry.npmjs.org/kordoc"
+installable: true
+installCommand: "npx -y kordoc setup"
+usageSnippet: "Run `npx -y kordoc setup`, then configure your MCP client to launch `npx -y kordoc mcp`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "kordoc": {
+        "command": "npx",
+        "args": ["-y", "kordoc", "mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  npx -y kordoc setup
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 18 or newer.
+  - A local MCP client that can launch stdio servers with access to the documents you want parsed.
+  - Optional `pdfjs-dist` support if you need PDF parsing in environments where the package is not already installed.
+  - Approved directories for source documents and generated Markdown or HWPX output.
+  - Hancom Office on Windows if you rely on the repository's documented COM fallback for protected HWP or HWPX files.
+safetyNotes:
+  - Kordoc MCP Server reads local document files by absolute path and, by default, does not restrict access to a workspace directory.
+  - The MCP source allowlists `.hwp`, `.hwpx`, `.pdf`, `.xlsx`, and `.docx` files, resolves symlinks, and applies a 500MB full-parse file limit.
+  - Metadata-only parsing has a smaller 50MB limit, while archive, PDF, HWP5, and table parsers have additional resource limits documented in the security policy.
+  - Form filling can write Markdown or HWPX files to an `output_path`; require confirmation before allowing an agent to create or overwrite documents.
+  - Kordoc processes untrusted binary formats; keep the Node.js runtime and parser dependencies updated and avoid running it on high-privilege accounts.
+  - The CLI also has watch and webhook flows; keep those separate from the MCP server unless you have reviewed outbound notification behavior.
+privacyNotes:
+  - Parsed content can include full document text, tables, titles, authors, page counts, metadata, warnings, form labels, and filled values.
+  - Document paths and resolved output paths can appear in MCP responses, CLI output, logs, or saved artifacts.
+  - Government, legal, HR, finance, or customer documents may contain sensitive identifiers that become Markdown or JSON in the MCP client context.
+  - HWPX form filling can preserve and rewrite original templates; store generated files only in approved directories.
+  - Webhook or watch-mode workflows can send converted document information to third-party endpoints if enabled outside the MCP server.
+disclosure: >-
+  Community-maintained MIT MCP server and document parser for Korean HWP,
+  HWPX, HWPML, PDF, XLSX, and DOCX workflows.
+sourceUrls:
+  - "https://raw.githubusercontent.com/chrisryugj/kordoc/main/LICENSE"
+  - "https://raw.githubusercontent.com/chrisryugj/kordoc/main/package.json"
+  - "https://raw.githubusercontent.com/chrisryugj/kordoc/main/SECURITY.md"
+  - "https://raw.githubusercontent.com/chrisryugj/kordoc/main/src/mcp.ts"
+  - "https://raw.githubusercontent.com/chrisryugj/kordoc/main/src/cli.ts"
+  - "https://raw.githubusercontent.com/chrisryugj/kordoc/main/src/index.ts"
+tags:
+  - hwp
+  - hwpx
+  - document-parsing
+  - korean-documents
+  - office-documents
+keywords:
+  - Kordoc MCP
+  - Kordoc MCP Server
+  - HWP MCP
+  - HWPX MCP
+  - Korean document MCP
+  - document parsing MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Kordoc MCP Server connects Claude and other MCP clients to the Kordoc document
+parser. It focuses on Korean document workflows where HWP, HWPX, HWPML, PDF,
+XLSX, and DOCX files need to become Markdown or structured metadata before an
+AI assistant can review them.
+
+Use it when Claude needs supervised local access to parse documents, inspect
+metadata, extract a page range, pull one table, compare two versions, detect form
+fields, or fill an HWPX form template.
+
+## Source Review
+
+- https://github.com/chrisryugj/kordoc
+- https://raw.githubusercontent.com/chrisryugj/kordoc/main/README-EN.md
+- https://registry.npmjs.org/kordoc
+- https://raw.githubusercontent.com/chrisryugj/kordoc/main/LICENSE
+- https://raw.githubusercontent.com/chrisryugj/kordoc/main/package.json
+- https://raw.githubusercontent.com/chrisryugj/kordoc/main/SECURITY.md
+- https://raw.githubusercontent.com/chrisryugj/kordoc/main/src/mcp.ts
+- https://raw.githubusercontent.com/chrisryugj/kordoc/main/src/cli.ts
+- https://raw.githubusercontent.com/chrisryugj/kordoc/main/src/index.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+English README, npm metadata, license, security policy, MCP server source, CLI
+source, and parser exports for current setup and behavior details.
+
+## Features
+
+- Parse HWP, HWPX, HWPML, PDF, XLSX, and DOCX files into Markdown.
+- Detect document format from file headers.
+- Extract document metadata without a full parse when supported.
+- Parse selected page or section ranges.
+- Extract a specific table by index.
+- Compare two documents across supported formats.
+- Extract structured form fields from Korean form templates.
+- Fill form fields and optionally write Markdown or HWPX output.
+- Return outlines, warnings, and quality signals when parser support is
+  available.
+
+## Installation
+
+Run the setup command from the upstream package:
+
+```bash
+npx -y kordoc setup
+```
+
+Then add the MCP server to your client configuration:
+
+```json
+{
+  "mcpServers": {
+    "kordoc": {
+      "command": "npx",
+      "args": ["-y", "kordoc", "mcp"]
+    }
+  }
+}
+```
+
+The npm package exposes both a `kordoc` CLI and a `kordoc-mcp` binary. The
+README recommends launching the MCP server through the `kordoc mcp` subcommand.
+
+## Use Cases
+
+- Convert Korean public-sector HWP or HWPX files into Markdown for Claude
+  review.
+- Ask Claude to extract metadata, document outlines, warnings, or table content
+  before summarizing a file.
+- Compare old and new versions of a document and identify added, removed, or
+  changed blocks.
+- Pull fields from an application template and draft candidate fill values for
+  user approval.
+- Fill an HWPX template and write the result to an approved output path.
+- Flag PDFs that likely need OCR before sending them through a separate OCR
+  workflow.
+
+## Safety and Privacy
+
+Kordoc MCP Server is a local document parser, not a sandbox. It resolves absolute
+paths and can read any allowlisted document file the server process can access,
+so run it under a least-privilege account and keep sensitive directories out of
+reach.
+
+Treat parsed Markdown, metadata, form values, document paths, warnings, and
+generated HWPX files as sensitive. Review output paths before allowing writes,
+and avoid enabling watch or webhook workflows unless their network behavior is
+part of your data-handling plan.

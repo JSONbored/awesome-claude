@@ -1,0 +1,188 @@
+---
+title: Vibe Check MCP
+slug: vibe-check-mcp
+category: mcp
+description: >-
+  Maintenance-mode MCP server that adds metacognitive oversight tools for
+  challenging an agent's plan, recording recurring mistakes, and applying
+  session rules before complex or high-risk work continues.
+cardDescription: Add mentor-style plan review and session rules to Claude agent workflows.
+seoTitle: Vibe Check MCP Server for Claude
+seoDescription: >-
+  Configure Vibe Check MCP with Claude and other MCP clients to call
+  `vibe_check`, `vibe_learn`, and session constitution tools that help agents
+  pause, review assumptions, and avoid reasoning lock-in.
+author: PV Bhat
+authorProfileUrl: "https://github.com/PV-Bhat"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Vibe Check MCP
+brandDomain: github.com
+repoUrl: "https://github.com/PV-Bhat/vibe-check-mcp-server"
+documentationUrl: "https://github.com/PV-Bhat/vibe-check-mcp-server/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40pv-bhat%2Fvibe-check-mcp"
+installable: true
+installCommand: "npx -y @pv-bhat/vibe-check-mcp start --stdio"
+usageSnippet: "Ask Claude to call Vibe Check before an irreversible, ambiguous, or high-risk plan, then use the critique to revise the next step."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "vibe-check-mcp": {
+        "command": "npx",
+        "args": ["-y", "@pv-bhat/vibe-check-mcp", "start", "--stdio"],
+        "env": {
+          "GEMINI_API_KEY": ""
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "vibe-check-mcp": {
+        "command": "npx",
+        "args": ["-y", "@pv-bhat/vibe-check-mcp", "start", "--stdio"],
+        "env": {
+          "GEMINI_API_KEY": "",
+          "OPENAI_API_KEY": "",
+          "OPENROUTER_API_KEY": "",
+          "ANTHROPIC_API_KEY": "",
+          "DEFAULT_LLM_PROVIDER": "gemini"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 20 or newer and npx available to the MCP client runtime.
+  - At least one supported LLM provider credential, such as Gemini, OpenAI, OpenRouter, or Anthropic.
+  - Review of the project's maintenance notice before relying on it for long-lived workflows.
+  - Clear policy for what agent plans, prompts, progress notes, and session context may be sent to a second model provider.
+safetyNotes:
+  - Vibe Check MCP is in final maintenance mode according to the project README, so check the repository and package state before adopting it broadly.
+  - The server is an advisory oversight layer; it can challenge assumptions but cannot guarantee safe, correct, or complete decisions.
+  - The `vibe_check` tool sends the goal, plan, optional user prompt, progress, uncertainties, and task context to a configured LLM provider for critique.
+  - The `vibe_learn` tool can record mistakes, preferences, successes, categories, and solutions for later reflection.
+  - Constitution tools can help apply session rules, but they do not enforce external system permissions or prevent client-side actions by themselves.
+privacyNotes:
+  - Agent plans, prompts, progress, uncertainties, session identifiers, mistakes, and learned preferences can reveal confidential project details.
+  - Provider API keys are loaded from environment variables and should be scoped, stored, and rotated according to local policy.
+  - Depending on provider selection, request metadata and prompt content may be processed by Gemini, OpenAI, OpenRouter, Anthropic, or compatible endpoints.
+  - Avoid sending secrets, private code, customer data, or regulated information in `vibe_check` or `vibe_learn` inputs unless approved for the selected provider.
+sourceUrls:
+  - "https://github.com/PV-Bhat/vibe-check-mcp-server/blob/main/README.md"
+  - "https://github.com/PV-Bhat/vibe-check-mcp-server/blob/main/package.json"
+  - "https://github.com/PV-Bhat/vibe-check-mcp-server/blob/main/server.json"
+  - "https://github.com/PV-Bhat/vibe-check-mcp-server/blob/main/src/index.ts"
+  - "https://github.com/PV-Bhat/vibe-check-mcp-server/blob/main/LICENSE"
+tags:
+  - agent-oversight
+  - reflection
+  - ai-safety
+  - prompt-engineering
+  - planning
+keywords:
+  - Vibe Check MCP
+  - Vibe Check MCP server
+  - vibe_check
+  - metacognitive MCP
+  - agent oversight MCP
+  - reasoning lock-in MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Vibe Check MCP is a maintenance-mode Model Context Protocol server for adding
+mentor-style plan review to agent workflows. It gives Claude tools for asking a
+second model to critique a goal and plan, recording recurring lessons, and
+checking session-specific rules before continuing complex work.
+
+The server is designed for moments where an agent may be over-engineering,
+following an unsupported assumption, or preparing to take an irreversible step.
+It does not replace human review, tests, access control, or policy enforcement.
+
+## Source Review
+
+- https://github.com/PV-Bhat/vibe-check-mcp-server
+- https://github.com/PV-Bhat/vibe-check-mcp-server/blob/main/README.md
+- https://registry.npmjs.org/%40pv-bhat%2Fvibe-check-mcp
+- https://github.com/PV-Bhat/vibe-check-mcp-server/blob/main/package.json
+- https://github.com/PV-Bhat/vibe-check-mcp-server/blob/main/server.json
+- https://github.com/PV-Bhat/vibe-check-mcp-server/blob/main/src/index.ts
+- https://github.com/PV-Bhat/vibe-check-mcp-server/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm registry metadata, package metadata, MCP registry manifest, source
+implementation, and license file for current install commands, maintenance
+status, supported providers, tool schemas, transport options, and licensing.
+
+## Features
+
+- npm package `@pv-bhat/vibe-check-mcp`.
+- Stdio MCP server launched with `npx -y @pv-bhat/vibe-check-mcp start --stdio`.
+- Optional HTTP transport documented upstream for clients that support it.
+- `vibe_check` tool for goal and plan critique with optional prompt, progress,
+  uncertainty, task context, session ID, and provider override fields.
+- `vibe_learn` tool for recording mistakes, preferences, successes, categories,
+  and solutions.
+- `update_constitution`, `reset_constitution`, and `check_constitution` tools
+  for session rules.
+- Gemini, OpenAI, OpenRouter, Anthropic, and Anthropic-compatible endpoint
+  support in the source implementation.
+- MIT license.
+
+## Installation
+
+Configure the stdio server in your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "vibe-check-mcp": {
+      "command": "npx",
+      "args": ["-y", "@pv-bhat/vibe-check-mcp", "start", "--stdio"],
+      "env": {
+        "GEMINI_API_KEY": ""
+      }
+    }
+  }
+}
+```
+
+After restarting the MCP client, ask Claude to call `vibe_check` before a
+high-risk, ambiguous, or irreversible plan, then use the critique to revise the
+next step.
+
+## Use Cases
+
+- Challenge a coding agent's plan before a large refactor.
+- Ask for an independent critique before running destructive commands.
+- Record recurring mistakes and fixes with `vibe_learn`.
+- Attach temporary session rules to a long agent workflow.
+- Add a lightweight reflection step before ambiguous product or architecture work.
+- Compare a proposed plan against uncertainties and task context.
+
+## Safety and Privacy
+
+Vibe Check MCP should be treated as advisory. A second model can provide useful
+critique, but it can also misunderstand context, miss risks, or produce
+overconfident guidance. Continue to rely on tests, review, access controls, and
+human judgment for important changes.
+
+Inputs to `vibe_check` and `vibe_learn` may include private plans, prompts,
+progress notes, code context, lessons learned, and session identifiers. Those
+values can be sent to the configured model provider, so keep secrets, customer
+data, regulated information, and unreleased project details out of requests
+unless that provider and environment are approved.
+
+## Duplicate Check
+
+Existing MCP content includes planning, coding, browser, and automation servers,
+but no dedicated entry for `PV-Bhat/vibe-check-mcp-server` or the
+`@pv-bhat/vibe-check-mcp` package was found in `content/mcp`. This entry is
+distinct because it covers metacognitive agent oversight tools rather than a
+general coding, browser, or task-management MCP server.

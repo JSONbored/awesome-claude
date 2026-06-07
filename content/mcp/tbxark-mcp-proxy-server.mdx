@@ -1,0 +1,203 @@
+---
+title: tbxark MCP Proxy Server
+slug: tbxark-mcp-proxy-server
+category: mcp
+description: >-
+  MIT-licensed MCP proxy server that aggregates multiple downstream MCP servers
+  behind one HTTP service, exposing each configured server through SSE or
+  Streamable HTTP endpoints with auth tokens and tool filtering.
+cardDescription: >-
+  Put several stdio, SSE, or Streamable HTTP MCP servers behind one proxy,
+  configure per-server routes, auth tokens, logging, and allow/block tool
+  filters, then serve clients over HTTP.
+seoTitle: tbxark MCP Proxy Server for Claude
+seoDescription: >-
+  Configure tbxark MCP Proxy Server with Claude and other MCP clients to
+  aggregate multiple MCP servers behind one HTTP entrypoint, expose SSE or
+  Streamable HTTP routes, require auth tokens, filter tools, and deploy with Go
+  or Docker.
+author: tbxark
+authorProfileUrl: "https://github.com/tbxark"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MCP Proxy Server
+brandDomain: github.com/tbxark
+repoUrl: "https://github.com/tbxark/mcp-proxy"
+documentationUrl: "https://github.com/tbxark/mcp-proxy/blob/master/README.md"
+installable: true
+installCommand: "go install github.com/tbxark/mcp-proxy@latest"
+usageSnippet: "Create a v2 JSON config with `mcpProxy` settings and downstream `mcpServers`, then run `mcp-proxy --config ./config.json` or the GHCR image to expose per-server SSE or Streamable HTTP routes."
+copySnippet: |-
+  mcp-proxy --config ./config.json
+configSnippet: |-
+  {
+    "mcpProxy": {
+      "baseURL": "MCP_PROXY_BASE_URL",
+      "addr": ":9090",
+      "name": "MCP Proxy",
+      "version": "1.0.0",
+      "type": "streamable-http",
+      "options": {
+        "authTokens": [
+          "REPLACE_WITH_PROXY_TOKEN"
+        ]
+      }
+    },
+    "mcpServers": {
+      "fetch": {
+        "command": "uvx",
+        "args": [
+          "mcp-server-fetch"
+        ],
+        "options": {
+          "toolFilter": {
+            "mode": "allow",
+            "list": [
+              "fetch"
+            ]
+          }
+        }
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - Go toolchain for source install, or Docker for the GHCR image deployment path.
+  - A v2 JSON configuration file defining `mcpProxy` and downstream `mcpServers`.
+  - Downstream MCP server commands, URLs, headers, environment variables, and secrets prepared before proxy startup.
+  - Public base URL, bind address, route type, auth token policy, logging policy, and tool filters reviewed before exposing the proxy beyond localhost.
+safetyNotes:
+  - tbxark MCP Proxy Server can spawn stdio subprocess MCP servers and connect to remote SSE or Streamable HTTP MCP endpoints.
+  - Every exposed route inherits the permissions of its downstream server; use per-server `authTokens` and tool filters instead of exposing all tools broadly.
+  - The docs support remote config URLs and an `--insecure` TLS flag; avoid untrusted configs and do not disable TLS verification outside controlled testing.
+  - Token-in-route fallback can expose credentials through browser history, proxy logs, metrics, and referrers; prefer authorization headers when clients support them.
+  - Logging can be enabled globally or per server, so review logs before routing secrets, prompts, tool arguments, or tool outputs.
+privacyNotes:
+  - The proxy may process downstream server commands, environment variables, headers, auth tokens, remote config URLs, tool names, tool arguments, tool outputs, prompts, resources, logs, and route keys.
+  - Stdio subprocesses inherit configured environment variables and can access whatever local paths, network services, or credentials those commands can reach.
+  - Remote config files can reveal internal MCP server names, endpoint URLs, auth headers, tool filters, and secret placeholders.
+  - Keep config files, tokens, `.env` values, logs, and Docker volume mounts out of public repositories and shared support output.
+sourceUrls:
+  - "https://github.com/tbxark/mcp-proxy/blob/master/README.md"
+  - "https://github.com/tbxark/mcp-proxy/blob/master/LICENSE"
+  - "https://github.com/tbxark/mcp-proxy/blob/master/docs/CONFIGURATION.md"
+  - "https://github.com/tbxark/mcp-proxy/blob/master/docs/USAGE.md"
+  - "https://github.com/tbxark/mcp-proxy/blob/master/docs/DEPLOYMENT.md"
+  - "https://github.com/tbxark/mcp-proxy/blob/master/go.mod"
+tags:
+  - proxy
+  - gateway
+  - orchestration
+  - security
+  - infrastructure
+keywords:
+  - tbxark MCP Proxy
+  - MCP Proxy Server
+  - MCP aggregation proxy
+  - Streamable HTTP MCP proxy
+  - SSE MCP proxy
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+tbxark MCP Proxy Server is a Go-based MCP aggregation proxy. It reads a JSON
+configuration, starts or connects to multiple downstream MCP servers, and
+exposes each configured server through a single HTTP service using SSE or
+Streamable HTTP routes.
+
+The proxy supports stdio subprocess clients, SSE clients, and Streamable HTTP
+clients. Configuration can set a public base URL, bind address, proxy identity,
+transport type, default options, per-server auth tokens, logging, and allow or
+block tool filters.
+
+## Source Review
+
+- https://github.com/tbxark/mcp-proxy
+- https://github.com/tbxark/mcp-proxy/blob/master/README.md
+- https://github.com/tbxark/mcp-proxy/blob/master/LICENSE
+- https://github.com/tbxark/mcp-proxy/blob/master/docs/CONFIGURATION.md
+- https://github.com/tbxark/mcp-proxy/blob/master/docs/USAGE.md
+- https://github.com/tbxark/mcp-proxy/blob/master/docs/DEPLOYMENT.md
+- https://github.com/tbxark/mcp-proxy/blob/master/go.mod
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, configuration guide, usage guide, deployment guide, Go module metadata,
+and license file for current install, route, config, auth, logging, and
+deployment behavior.
+
+## Features
+
+- Aggregate multiple downstream MCP servers behind one HTTP service.
+- Expose downstream servers through SSE or Streamable HTTP routes.
+- Support stdio subprocess, SSE, and Streamable HTTP downstream client types.
+- Configure downstream commands, arguments, environment variables, URLs, and headers.
+- Set proxy defaults and per-server overrides for logging, auth tokens, and startup validation.
+- Allowlist or blocklist exposed tools per downstream server.
+- Fetch configuration from a local file or remote config URL.
+- Deploy from source with Go or run the GHCR container image with a mounted config.
+- Convert Claude-style MCP configs with the project's hosted converter.
+
+## Installation
+
+Install from source with Go:
+
+```bash
+go install github.com/tbxark/mcp-proxy@latest
+```
+
+Then run the proxy with a local configuration file:
+
+```bash
+mcp-proxy --config ./config.json
+```
+
+The Docker image can also run with a mounted config file:
+
+```bash
+docker run -d -p 9090:9090 -v ./config.json:/config/config.json ghcr.io/tbxark/mcp-proxy:latest
+```
+
+For each downstream server key, clients use the generated route based on
+`mcpProxy.baseURL` and the selected proxy type. For example, a `fetch` server
+uses a `/fetch/sse` route for SSE mode or a `/fetch/mcp` route for Streamable
+HTTP mode.
+
+## Use Cases
+
+- Expose a small team-approved set of MCP servers behind one HTTP entrypoint.
+- Move local stdio MCP servers into a managed proxy process.
+- Give clients one base URL while keeping per-server routes and tool filters.
+- Require a token for each downstream server route.
+- Disable risky tools from a broad MCP server before exposing it to agents.
+- Deploy an MCP proxy container that can launch `npx` and `uvx` servers.
+- Serve remote configs for repeatable deployments when the config source is trusted.
+
+## Safety and Privacy
+
+tbxark MCP Proxy Server is only as safe as its config and downstream servers.
+Review each command, URL, header, environment variable, and enabled tool before
+exposing a route. Prefer explicit per-server tokens and allowlists for high-risk
+servers that can write files, call cloud APIs, modify databases, or run shell
+commands.
+
+Avoid the `--insecure` flag outside controlled testing. Be careful with remote
+config URLs because whoever controls the config can change the downstream
+servers, exposed tools, headers, tokens, and logging behavior. If a client
+cannot set headers and you embed a token in the route path, treat that URL as a
+secret because it can leak through logs and history.
+
+The proxy can see prompts, tool arguments, tool outputs, downstream resources,
+auth tokens, headers, environment variables, config contents, and logs. Keep
+config files, tokens, remote config credentials, Docker mounts, and logs out of
+public repositories.
+
+## Duplicate Check
+
+No `tbxark/mcp-proxy` source entry or tbxark MCP Proxy Server entry was found in
+`content/mcp`. The existing `sparfenyuk/mcp-proxy` entry is a distinct
+transport bridge for stdio, SSE, and Streamable HTTP conversion rather than this
+multi-server aggregation proxy.

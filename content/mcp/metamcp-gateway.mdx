@@ -1,0 +1,188 @@
+---
+title: MetaMCP Gateway
+slug: metamcp-gateway
+category: mcp
+description: >-
+  Docker-deployed MCP gateway that aggregates downstream MCP servers into
+  namespaces, endpoints, SSE, Streamable HTTP, OpenAPI, auth, and rate limits.
+cardDescription: >-
+  Host grouped MCP servers behind managed MetaMCP endpoints with namespaces,
+  API keys, OAuth, tool overrides, inspection, and traffic controls.
+seoTitle: MetaMCP Gateway for Claude
+seoDescription: >-
+  Configure MetaMCP Gateway with Claude and other MCP clients to aggregate MCP
+  servers into namespaces, expose SSE or Streamable HTTP endpoints, manage auth,
+  apply rate limits, inspect tools, and proxy stdio-only clients.
+author: metatool-ai
+authorProfileUrl: "https://github.com/metatool-ai"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: MetaMCP
+brandDomain: metamcp.com
+repoUrl: "https://github.com/metatool-ai/metamcp"
+documentationUrl: "https://docs.metamcp.com"
+packageUrl: "https://github.com/metatool-ai/metamcp/pkgs/container/metamcp"
+installable: true
+installCommand: "git clone https://github.com/metatool-ai/metamcp.git && cd metamcp && cp example.env .env && docker compose up -d"
+usageSnippet: "Deploy MetaMCP with Docker Compose, create namespaces and endpoints, then connect MCP clients to the generated SSE or Streamable HTTP endpoint with the approved auth mode."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "metamcp": {
+        "url": "METAMCP_ENDPOINT_MCP_URL",
+        "headers": {
+          "Authorization": "Bearer ${METAMCP_API_KEY}"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "metamcp": {
+        "command": "uvx",
+        "args": [
+          "mcp-proxy",
+          "--transport",
+          "streamablehttp",
+          "METAMCP_ENDPOINT_MCP_URL"
+        ],
+        "env": {
+          "API_ACCESS_TOKEN": "${METAMCP_API_KEY}"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - Docker and Docker Compose available for the recommended deployment.
+  - Postgres storage, app URL, CORS, bootstrap users, API keys, and registration settings reviewed before first start.
+  - Downstream MCP server commands, environment variables, and secrets prepared for the MetaMCP container runtime.
+  - A decision on endpoint auth mode: API key header, query auth where appropriate, or MCP OAuth.
+  - Network exposure, TLS, reverse proxy, and rate limit policies reviewed before making endpoints available beyond a trusted local network.
+safetyNotes:
+  - MetaMCP can start, aggregate, and expose multiple downstream MCP servers through a single managed endpoint.
+  - Public endpoints and public API keys can expose tool surfaces broadly if bootstrap settings or UI registration controls are left permissive.
+  - The README notes that APP_URL and CORS settings must match the URL used to access the service.
+  - Stdio-only clients generally need a proxy such as `mcp-proxy` to reach MetaMCP's remote endpoints.
+  - Rate limits, endpoint ownership, namespace visibility, OIDC, and registration controls should be configured before production use.
+privacyNotes:
+  - MetaMCP can receive prompts, tool names, tool arguments, resource data, downstream MCP responses, endpoint metadata, API keys, OAuth tokens, user identifiers, and logs.
+  - Downstream stdio server environment variables may include secrets that are resolved from the MetaMCP container environment.
+  - Postgres persistence, file logs, bootstrap configuration, API keys, namespace definitions, and endpoint settings may retain sensitive operational data.
+  - Do not commit real `.env` files, bootstrap passwords, API keys, OIDC secrets, downstream service credentials, or exported gateway configs.
+sourceUrls:
+  - "https://github.com/metatool-ai/metamcp"
+  - "https://github.com/metatool-ai/metamcp/blob/main/README.md"
+  - "https://github.com/metatool-ai/metamcp/blob/main/README-oauth.md"
+  - "https://github.com/metatool-ai/metamcp/blob/main/example.env"
+  - "https://github.com/metatool-ai/metamcp/blob/main/docker-compose.yml"
+  - "https://github.com/metatool-ai/metamcp/blob/main/package.json"
+  - "https://github.com/metatool-ai/metamcp/pkgs/container/metamcp"
+  - "https://docs.metamcp.com"
+tags:
+  - gateway
+  - orchestration
+  - proxy
+  - security
+  - infrastructure
+keywords:
+  - MetaMCP
+  - MetaMCP Gateway
+  - MCP aggregator
+  - MCP namespace gateway
+  - MCP rate limit
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MetaMCP is a Docker-deployed MCP gateway for aggregating downstream MCP servers
+into managed namespaces and endpoints. It can expose those grouped tools as SSE
+or Streamable HTTP endpoints, provide OpenAPI endpoints for compatible clients,
+inspect saved server configs, override tool names and annotations, and apply
+auth or rate-limit controls.
+
+The upstream README describes MetaMCP as a proxy, aggregator, orchestrator,
+middleware layer, and gateway. It is itself an MCP-facing service, so clients
+can connect to one MetaMCP endpoint while MetaMCP coordinates the selected
+downstream MCP servers behind it.
+
+## Source Review
+
+- https://github.com/metatool-ai/metamcp
+- https://github.com/metatool-ai/metamcp/blob/main/README.md
+- https://github.com/metatool-ai/metamcp/blob/main/README-oauth.md
+- https://github.com/metatool-ai/metamcp/blob/main/example.env
+- https://github.com/metatool-ai/metamcp/blob/main/docker-compose.yml
+- https://github.com/metatool-ai/metamcp/blob/main/package.json
+- https://github.com/metatool-ai/metamcp/pkgs/container/metamcp
+- https://docs.metamcp.com
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, OAuth notes, environment example, Docker Compose file, package metadata,
+GHCR package page, and documentation site for current deployment, auth,
+transport, namespace, endpoint, bootstrap, and rate-limit behavior.
+
+## Features
+
+- Group one or more downstream MCP servers into a namespace.
+- Enable or disable servers and tools within a namespace.
+- Expose namespaces through SSE or Streamable HTTP endpoints.
+- Provide OpenAPI endpoints for compatible tool-calling clients.
+- Authenticate endpoints with API keys or MCP OAuth.
+- Configure endpoint and per-client rate limits.
+- Edit tool names, titles, descriptions, and custom MCP annotations.
+- Inspect saved server configs and debug MetaMCP endpoints.
+- Bootstrap users, API keys, namespaces, and endpoints from environment settings.
+- Deploy with Docker Compose and Postgres persistence.
+
+## Installation
+
+The repository documents Docker Compose as the recommended quick start:
+
+```bash
+git clone https://github.com/metatool-ai/metamcp.git
+cd metamcp
+cp example.env .env
+docker compose up -d
+```
+
+Review `.env` before starting the service. Replace default secrets, bootstrap
+users, bootstrap passwords, API key settings, app URL, registration settings,
+Postgres credentials, and OIDC settings before exposing the service.
+
+For MCP clients that support remote servers, connect to the MetaMCP endpoint URL
+with the approved auth header. For stdio-only clients, the README recommends
+bridging through `mcp-proxy` for API-key-authenticated MetaMCP endpoints.
+
+## Use Cases
+
+- Give Claude one managed endpoint for a curated group of internal MCP servers.
+- Publish separate namespaces for development, production, analytics, or admin workflows.
+- Apply endpoint-level or user-level rate limits to shared agent tool surfaces.
+- Centralize API key or OAuth access for MCP endpoints.
+- Debug downstream MCP tool definitions through a saved-config inspector.
+- Override tool metadata and annotations for a safer client experience.
+- Host MCP-backed OpenAPI endpoints for compatible clients.
+
+## Safety and Privacy
+
+MetaMCP is gateway infrastructure. Treat it like an access layer for every
+downstream tool it exposes. Restrict namespaces, default endpoints, public API
+keys, UI registration, SSO registration, and network access before connecting
+production systems.
+
+The example environment file includes bootstrap users, API keys, namespaces,
+endpoints, registration controls, OIDC variables, and Postgres settings. Replace
+defaults and keep real values out of version control. Review logs and Postgres
+data as sensitive because they may contain endpoint metadata, tool traffic,
+user identifiers, prompts, arguments, responses, and downstream service details.
+
+## Duplicate Check
+
+No `metatool-ai/metamcp` entry, MetaMCP Gateway entry, or matching source URL
+was found in `content/mcp`.

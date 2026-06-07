@@ -1,0 +1,189 @@
+---
+title: CLI for Microsoft 365 MCP Server
+slug: cli-microsoft365-mcp-server
+category: mcp
+description: >-
+  MCP server for CLI for Microsoft 365 that lets Claude use natural language to
+  search command docs and run Microsoft 365 management commands for Entra ID,
+  SharePoint, Teams, Outlook, OneDrive, Planner, Power Platform, and more.
+cardDescription: Manage Microsoft 365 tenants through CLI for Microsoft 365 from Claude.
+seoTitle: CLI for Microsoft 365 MCP Server for Claude
+seoDescription: >-
+  Configure CLI for Microsoft 365 MCP Server with Claude, VS Code, Cursor, and
+  other MCP clients to search CLI command docs, inspect best practices, and run
+  Microsoft 365 management commands through an existing m365 login context.
+author: Microsoft 365 and Power Platform Community
+authorProfileUrl: "https://github.com/pnp"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: CLI for Microsoft 365
+brandDomain: pnp.github.io
+websiteUrl: "https://pnp.github.io/cli-microsoft365/"
+repoUrl: "https://github.com/pnp/cli-microsoft365-mcp-server"
+documentationUrl: "https://pnp.github.io/cli-microsoft365/user-guide/using-cli-mcp-server/"
+packageUrl: "https://registry.npmjs.org/%40pnp%2Fcli-microsoft365-mcp-server"
+installable: true
+installCommand: "npx -y @pnp/cli-microsoft365-mcp-server@latest"
+usageSnippet: "Ask Claude to search for the right m365 command, show the docs and proposed command, then wait for approval before running tenant-changing operations."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "CLI-Microsoft365": {
+        "command": "npx",
+        "args": ["-y", "@pnp/cli-microsoft365-mcp-server@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "CLI-Microsoft365": {
+        "command": "npx",
+        "args": ["-y", "@pnp/cli-microsoft365-mcp-server@latest"]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 20 or newer.
+  - CLI for Microsoft 365 installed globally.
+  - Authenticated CLI for Microsoft 365 session created with an approved m365 login method.
+  - CLI configuration reviewed for prompt handling, output format, and detailed error help.
+  - Least-privilege Microsoft 365 permissions for the tenant areas Claude should manage.
+  - Human approval policy for tenant-changing commands, especially create, update, delete, disable, permission, and message-posting operations.
+safetyNotes:
+  - The MCP server does not authenticate by itself; it reuses the existing CLI for Microsoft 365 authentication context.
+  - The m365RunCommand tool can run CLI for Microsoft 365 commands that manage Entra ID, OneDrive, OneNote, Outlook, Planner, Power Apps, Power Automate, Power Platform, SharePoint Embedded, SharePoint Online, Teams, Viva Engage, and other tenant surfaces.
+  - Natural-language prompts may result in a chain of CLI commands, so review the resolved command docs and exact proposed operations before execution.
+  - Commands can create teams, lists, columns, items, Planner plans, Power Platform changes, flow state changes, posts, permissions, and other tenant resources.
+  - Prefer MFA-capable interactive or browser authentication for user sessions and certificate or secret authentication only for reviewed automation scenarios.
+  - Avoid username and password authentication when possible because the upstream best-practices guide notes MFA limitations.
+privacyNotes:
+  - CLI output can expose tenant IDs, user profiles, group membership, emails, calendar or Outlook data, Teams messages, SharePoint URLs, list contents, Planner tasks, flow names, app metadata, and Power Platform environment details.
+  - Microsoft 365 tokens, certificates, client secrets, tenant IDs, site URLs, user IDs, and generated command output should stay out of prompts, issues, logs, screenshots, and committed files.
+  - Tenant-management transcripts may contain regulated business data, employee data, customer data, or internal collaboration records.
+  - Configure output and error handling carefully so sensitive command output is not written into persistent chat logs or debug logs unnecessarily.
+sourceUrls:
+  - "https://github.com/pnp/cli-microsoft365-mcp-server/blob/main/README.md"
+  - "https://github.com/pnp/cli-microsoft365-mcp-server/blob/main/server.json"
+  - "https://github.com/pnp/cli-microsoft365-mcp-server/blob/main/package.json"
+  - "https://github.com/pnp/cli-microsoft365-mcp-server/blob/main/best-practices.md"
+  - "https://github.com/pnp/cli-microsoft365-mcp-server/blob/main/LICENSE"
+tags:
+  - microsoft-365
+  - sharepoint
+  - teams
+  - entra-id
+  - tenant-management
+keywords:
+  - CLI for Microsoft 365 MCP
+  - Microsoft 365 MCP Server
+  - m365 MCP
+  - SharePoint MCP
+  - Teams MCP
+  - Entra ID MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+CLI for Microsoft 365 MCP Server lets Claude and other MCP clients use natural
+language to work through CLI for Microsoft 365. It can search command docs, get
+command documentation, run `m365` commands, and retrieve best-practice guidance
+for authentication, error handling, output handling, and configuration.
+
+The server does not log in by itself. It uses the same authentication context as
+the globally installed CLI for Microsoft 365, so the permissions available to
+Claude match the authenticated CLI session.
+
+## Source Review
+
+- https://pnp.github.io/cli-microsoft365/
+- https://github.com/pnp/cli-microsoft365-mcp-server
+- https://pnp.github.io/cli-microsoft365/user-guide/using-cli-mcp-server/
+- https://registry.npmjs.org/%40pnp%2Fcli-microsoft365-mcp-server
+- https://github.com/pnp/cli-microsoft365-mcp-server/blob/main/README.md
+- https://github.com/pnp/cli-microsoft365-mcp-server/blob/main/server.json
+- https://github.com/pnp/cli-microsoft365-mcp-server/blob/main/package.json
+- https://github.com/pnp/cli-microsoft365-mcp-server/blob/main/best-practices.md
+- https://github.com/pnp/cli-microsoft365-mcp-server/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live CLI for
+Microsoft 365 docs, repository README, MCP metadata, package metadata,
+best-practices guide, and license for current install commands, authentication
+requirements, tool behavior, and safety guidance.
+
+## Features
+
+- MCP server for CLI for Microsoft 365 from the PnP GitHub organization.
+- NPM package `@pnp/cli-microsoft365-mcp-server`.
+- Stdio usage through `npx -y @pnp/cli-microsoft365-mcp-server@latest`.
+- Reuses an existing CLI for Microsoft 365 login context.
+- `m365SearchCommands` for fuzzy command search.
+- `m365GetCommandDocs` for command documentation, examples, use cases, and options.
+- `m365RunCommand` for executing CLI for Microsoft 365 commands.
+- `m365GetBestPractices` for authentication, error handling, output handling, and configuration guidance.
+- Microsoft 365 areas including Entra ID, OneDrive, OneNote, Outlook, Planner, Power Apps, Power Automate, Power Platform, SharePoint Embedded, SharePoint Online, Teams, and Viva Engage.
+- Setup guidance for VS Code, GitHub Copilot CLI, Claude Desktop, and Cursor.
+
+## Installation
+
+Install and authenticate CLI for Microsoft 365 first:
+
+```sh
+npm i -g @pnp/cli-microsoft365
+m365 setup
+m365 login
+```
+
+Then configure the MCP server:
+
+```json
+{
+  "mcpServers": {
+    "CLI-Microsoft365": {
+      "command": "npx",
+      "args": ["-y", "@pnp/cli-microsoft365-mcp-server@latest"]
+    }
+  }
+}
+```
+
+The README recommends configuring CLI output, prompt behavior, and help mode so
+the MCP server receives useful command output and error details.
+
+## Use Cases
+
+- Search for the correct CLI command before changing Microsoft 365 resources.
+- Ask Claude to explain a command's options before running it.
+- Create SharePoint lists, columns, and items after reviewing the proposed command chain.
+- Create or manage Teams resources with a human-approved prompt.
+- Inspect or change Power Automate flow state.
+- Create Planner plans, buckets, and tasks.
+- Draft repeatable Microsoft 365 administration scripts from best-practice guidance.
+- Keep CLI prompt handling disabled for non-interactive MCP command execution.
+
+## Safety and Privacy
+
+This is a tenant-management control surface. Treat it as access to the signed-in
+Microsoft 365 account, not as a documentation helper. Review the exact command
+and tenant target before allowing writes, and use least-privilege identities for
+the task.
+
+Natural-language prompts can become chains of CLI commands. Require explicit
+approval for create, update, delete, disable, permission, membership, posting,
+messaging, flow, app, and tenant-configuration operations. Keep tokens,
+certificates, secrets, tenant URLs, and sensitive command output out of prompts,
+issues, logs, screenshots, and committed files.
+
+## Duplicate Check
+
+Existing Microsoft Learn content covers Microsoft documentation search, and
+Dropbox Dash mentions Microsoft 365 as a connected source. No CLI for Microsoft
+365 MCP Server, `pnp/cli-microsoft365-mcp-server`,
+`@pnp/cli-microsoft365-mcp-server`, or tenant-management Microsoft 365 MCP entry
+was found in `content/mcp`, `content/tools`, `content/guides`,
+`content/agents`, or `content/skills`.

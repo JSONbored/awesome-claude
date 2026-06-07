@@ -46,6 +46,7 @@ import {
   approvalReviewBody,
   DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
   defaultManualDecision,
+  duplicateEvidenceContractExhaustedDecision,
   enforceAutoMergeConfidenceFloor,
   GATE_COMMENT_FORMATTER_VERSION,
   isRetryableGateDecision,
@@ -154,9 +155,12 @@ class SubmissionMergePendingError extends Error {
 }
 
 class SourceEvidenceRetryableError extends Error {
-  constructor(message: string) {
+  sourceEvidence: SourceEvidenceReport;
+
+  constructor(message: string, sourceEvidence: SourceEvidenceReport) {
     super(message);
     this.name = "SourceEvidenceRetryableError";
+    this.sourceEvidence = sourceEvidence;
   }
 }
 
@@ -169,9 +173,16 @@ const MERGE_RETRY_SECONDS = 30;
 const RETRYABLE_ERROR_SECONDS = 60;
 const GITHUB_RATE_LIMIT_FALLBACK_SECONDS = 15 * 60;
 const PRIVATE_REVIEW_TIMEOUT_MS = 45_000;
-const INVALID_PRIVATE_RESPONSE_MAX_RETRIES = 3;
-const SOURCE_EVIDENCE_CONFLICT_MAX_RETRIES = 2;
-const DUPLICATE_EVIDENCE_CONFLICT_MAX_RETRIES = 2;
+const RETRY_BACKOFF_SECONDS = [60, 120, 300, 600, 1_200, 1_800] as const;
+const RETRY_BUDGETS: Record<string, number> = {
+  source_evidence_timeout: 6,
+  private_reviewer_unavailable: 5,
+  invalid_private_response: 5,
+  github_rate_limited: 6,
+  github_api_unavailable: 5,
+  source_evidence_conflict: 2,
+  duplicate_evidence_conflict: 2,
+};
 const DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR_TEXT = String(
   DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
 );
@@ -456,7 +467,7 @@ function nextReviewForStatus(status: string) {
     return isoAfter(MERGE_RETRY_SECONDS);
   }
   if (status === "error_retryable") {
-    return isoAfter(RETRYABLE_ERROR_SECONDS);
+    return isoAfter(RETRY_BACKOFF_SECONDS[0]);
   }
   return null;
 }
@@ -485,7 +496,21 @@ function isTimeoutError(error: unknown) {
 
 function retryablePrecheckDecision(error: unknown) {
   if (error instanceof SourceEvidenceRetryableError) {
-    return privateReviewErrorDecision(error.message, "source_evidence_timeout");
+    return {
+      ...privateReviewErrorDecision(error.message, "source_evidence_timeout"),
+      sourceEvidenceHash: error.sourceEvidence.hash,
+      sections: [
+        {
+          id: "source_review",
+          title: "Source Review",
+          status: "warn" as const,
+          bullets: [
+            "Deterministic source evidence could not conclusively verify all canonical source URLs.",
+            sourceEvidenceSummary(error.sourceEvidence),
+          ],
+        },
+      ],
+    };
   }
   if (isGitHubRateLimitError(error)) {
     return privateReviewErrorDecision(
@@ -500,6 +525,40 @@ function retryablePrecheckDecision(error: unknown) {
     );
   }
   return null;
+}
+
+function retryableTargetErrorDecision(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (isGitHubRateLimitError(error)) {
+    return privateReviewErrorDecision(
+      "Submission gate hit a GitHub rate limit while inspecting the pull request.",
+      "github_rate_limited",
+    );
+  }
+  if (isTimeoutError(error)) {
+    return privateReviewErrorDecision(
+      `Submission gate timed out while inspecting the pull request: ${message}`,
+      "github_api_unavailable",
+    );
+  }
+  return privateReviewErrorDecision(
+    `Submission gate could not inspect the pull request: ${message}`,
+    "github_api_unavailable",
+  );
+}
+
+function retryableValidationReadDecision(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (isGitHubRateLimitError(error)) {
+    return privateReviewErrorDecision(
+      "Submission gate hit a GitHub rate limit while reading public validation checks.",
+      "github_rate_limited",
+    );
+  }
+  return privateReviewErrorDecision(
+    `Submission gate could not read public validation checks: ${message}`,
+    "github_api_unavailable",
+  );
 }
 
 function normalizeOneShotDecision(decision: GateDecision): GateDecision {
@@ -530,63 +589,145 @@ function hasPrivateReviewErrorCode(decision: GateDecision, code: string) {
   return Boolean(decision.errors?.some((error) => error.code === code));
 }
 
-function invalidPrivateResponseAttempts(
-  existing: Record<string, unknown> | null,
-) {
-  const attempts = Number(existing?.attemptCount || 0);
-  return Number.isFinite(attempts) && attempts > 0 ? attempts : 0;
+function retryErrorCode(decision: GateDecision) {
+  const retryableError = decision.errors?.find(
+    (error) => error.retryable || error.code,
+  );
+  return retryableError?.code || "private_reviewer_unavailable";
 }
 
-function shouldStopRetryingInvalidPrivateResponse(
-  decision: GateDecision,
-  existing: Record<string, unknown> | null,
-) {
-  return (
-    hasPrivateReviewErrorCode(decision, "invalid_private_response") &&
-    invalidPrivateResponseAttempts(existing) >=
-      INVALID_PRIVATE_RESPONSE_MAX_RETRIES
-  );
+function retryBudgetForCode(code: string) {
+  return RETRY_BUDGETS[code] ?? 3;
 }
 
-function shouldStopRetryingSourceEvidenceConflict(
-  decision: GateDecision,
-  existing: Record<string, unknown> | null,
-) {
-  return (
-    hasPrivateReviewErrorCode(decision, "source_evidence_conflict") &&
-    invalidPrivateResponseAttempts(existing) >=
-      SOURCE_EVIDENCE_CONFLICT_MAX_RETRIES
-  );
+function retryBackoffSecondsForCount(count: number) {
+  const index = Math.max(0, Math.min(count - 1, RETRY_BACKOFF_SECONDS.length - 1));
+  return RETRY_BACKOFF_SECONDS[index];
 }
 
-function shouldStopRetryingDuplicateEvidenceConflict(
-  decision: GateDecision,
-  existing: Record<string, unknown> | null,
-) {
-  return (
-    hasPrivateReviewErrorCode(decision, "duplicate_evidence_conflict") &&
-    invalidPrivateResponseAttempts(existing) >=
-      DUPLICATE_EVIDENCE_CONFLICT_MAX_RETRIES
-  );
+function normalizeRetryFingerprintPart(value: unknown, maxLength = 220) {
+  return String(value || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, maxLength);
 }
 
-function invalidPrivateResponseExhaustedDecision(
-  decision: GateDecision,
+function retryFingerprintForDecision(decision: GateDecision) {
+  const code = retryErrorCode(decision);
+  const sourceHash = decision.sourceEvidenceHash
+    ? `source:${decision.sourceEvidenceHash}`
+    : "";
+  const errorText =
+    decision.errors
+      ?.map((error) => `${error.code}:${error.message || ""}`)
+      .join("|") || "";
+  return [
+    code,
+    sourceHash,
+    normalizeRetryFingerprintPart(errorText || decision.summary),
+  ]
+    .filter(Boolean)
+    .join(":");
+}
+
+function retryStateForDecision(
   existing: Record<string, unknown> | null,
+  target: ReviewTarget,
+  decision: GateDecision,
 ) {
-  const attempts = invalidPrivateResponseAttempts(existing);
-  return defaultManualDecision(
-    [
-      `Private corpus review returned invalid response payloads after ${attempts} automatic attempt(s).`,
-      `Last private reviewer error: ${decision.summary}`,
-      "Automatic retries are stopped for this head SHA so the queue cannot loop indefinitely.",
-    ].join(" "),
-    {
-      code: "private_review_contract_exhausted",
-      retryable: false,
-      message: decision.summary,
-    },
-  );
+  const code = retryErrorCode(decision);
+  const fingerprint = retryFingerprintForDecision(decision);
+  const previousSameFingerprint =
+    String(existing?.headSha || "") === String(target.headSha || "") &&
+    String(existing?.lastErrorCode || "") === code &&
+    String(existing?.lastRetryFingerprint || "") === fingerprint;
+  const previousCount = previousSameFingerprint
+    ? Number(existing?.retryFingerprintCount || 0)
+    : 0;
+  const count =
+    Number.isFinite(previousCount) && previousCount > 0
+      ? previousCount + 1
+      : 1;
+  const maxAttempts = retryBudgetForCode(code);
+  const nextReviewAt = isoAfter(retryBackoffSecondsForCount(count));
+  return {
+    code,
+    fingerprint,
+    count,
+    maxAttempts,
+    nextReviewAt,
+    exhausted: count > maxAttempts,
+  };
+}
+
+function retryExhaustedDecision(
+  decision: GateDecision,
+  retryState: ReturnType<typeof retryStateForDecision>,
+): GateDecision {
+  const exhaustedSummary = [
+    "Summary:",
+    `- Automation stopped after ${retryState.maxAttempts} retry attempt(s) for \`${retryState.code}\`.`,
+    "- This is not a content rejection; the gate could not complete an infrastructure-dependent check.",
+    `- Last retry reason: ${decision.summary.trim()}`,
+    "",
+    "Recommended Action:",
+    "- A maintainer can recheck after the external service recovers, merge manually if review confirms no blocker, or close if review finds a real content issue.",
+  ].join("\n");
+  return {
+    verdict: "manual",
+    labels: [LABELS.manual],
+    confidence: decision.confidence,
+    sourceEvidenceHash: decision.sourceEvidenceHash,
+    summary: exhaustedSummary,
+    errors: [
+      {
+        code: retryState.code,
+        retryable: false,
+        message: `Retry budget exhausted after ${retryState.maxAttempts} automatic attempt(s).`,
+      },
+    ],
+    sections: [
+      {
+        id: "summary",
+        title: "Summary",
+        status: "warn",
+        bullets: [
+          `Automation stopped after ${retryState.maxAttempts} retry attempt(s) for \`${retryState.code}\`.`,
+          "This is not a content rejection; the gate could not complete an infrastructure-dependent check.",
+          `Last retry reason: ${decision.summary.trim()}`,
+        ],
+      },
+      {
+        id: "recommended_action",
+        title: "Recommended Action",
+        status: "warn",
+        bullets: [
+          "Recheck after the external service recovers.",
+          "Merge manually if maintainer review confirms no blocker.",
+          "Close only if manual review finds a real content issue.",
+        ],
+      },
+      ...(decision.sections || []),
+    ],
+    retryState,
+  } as GateDecision & { retryState: ReturnType<typeof retryStateForDecision> };
+}
+
+function retryExhaustedStorageMetadata(decision: GateDecision) {
+  const retryState = (
+    decision as GateDecision & {
+      retryState?: ReturnType<typeof retryStateForDecision>;
+    }
+  ).retryState;
+  if (!retryState?.exhausted) return {};
+  return {
+    lastError: truncateForQueue(decision.summary),
+    lastErrorCode: retryState.code,
+    lastRetryFingerprint: retryState.fingerprint,
+    retryFingerprintCount: retryState.maxAttempts,
+    retryExhaustedAt: nowIso(),
+    retryExhaustedReason: truncateForQueue(decision.summary),
+  };
 }
 
 function sourceEvidenceConflictDecision(
@@ -692,75 +833,23 @@ function duplicateEvidenceConflictDecision(
         bullets: [
           "Private review reported a strict duplicate that conflicts with deterministic duplicate review.",
           duplicateReviewSummaryLine(duplicateReview),
-          "The gate will retry with the deterministic duplicate artifact before falling back to the clean merge path.",
+          "The gate will retry with the deterministic duplicate artifact before falling back to manual review.",
         ],
       },
     ],
   };
 }
 
-function duplicateEvidenceConflictMergeDecision(
+function duplicateEvidenceConflictExhaustedDecision(
   decision: GateDecision,
   duplicateReview: ContentDuplicateReview,
   sourceEvidence: SourceEvidenceReport | null,
 ): GateDecision {
-  const sourceBullets =
-    sourceEvidence?.status === "passed"
-      ? [
-          {
-            id: "source_review",
-            title: "Source Review",
-            status: "pass" as const,
-            bullets: [
-              "Deterministic source evidence found submitted source URLs reachable.",
-              sourceEvidenceSummary(sourceEvidence),
-            ],
-          },
-        ]
-      : [];
-  return {
-    schemaVersion: 2,
-    verdict: "merge",
-    confidence: Math.max(
-      decision.confidence || 0,
-      DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
-    ),
-    sourceEvidenceHash: sourceEvidence?.hash,
-    labels: [LABELS.merged],
-    summary: [
-      "Summary:",
-      "- Public validation and deterministic duplicate review passed.",
-      "- Private review returned a strict_duplicate decision that contradicted deterministic duplicate evidence.",
-      "- No deterministic blocker remains, so the gate is accepting the one-file content PR.",
-      "",
-      "Duplicate / History Review:",
-      `- ${duplicateReviewSummaryLine(duplicateReview)}.`,
-      "",
-      ...(sourceEvidence
-        ? ["Source Review:", `- ${sourceEvidenceSummary(sourceEvidence)}.`, ""]
-        : []),
-      "Recommended Action:",
-      "- Merge this PR.",
-    ].join("\n"),
-    sections: [
-      {
-        id: "duplicate_history",
-        title: "Duplicate and History Review",
-        status: "pass",
-        bullets: [
-          "Deterministic duplicate review found no strict duplicate.",
-          duplicateReviewSummaryLine(duplicateReview),
-        ],
-      },
-      ...sourceBullets,
-      {
-        id: "recommended_action",
-        title: "Recommended Action",
-        status: "pass",
-        bullets: ["Merge this PR."],
-      },
-    ],
-  };
+  return duplicateEvidenceContractExhaustedDecision({
+    decision,
+    duplicateSummary: duplicateReviewSummaryLine(duplicateReview),
+    sourceSummary: sourceEvidence ? sourceEvidenceSummary(sourceEvidence) : null,
+  });
 }
 
 function privateSourceHardFailureContradicted(
@@ -771,7 +860,8 @@ function privateSourceHardFailureContradicted(
     decision.verdict === "close" &&
     decision.reasonCode === "source_hard_failure" &&
     sourceEvidence?.status === "passed" &&
-    sourceEvidence.urls.length > 0
+    sourceEvidence.urls.length > 0 &&
+    sourceEvidence.urls.every((item) => item.outcome === "reachable")
   );
 }
 
@@ -2150,6 +2240,7 @@ async function applyTerminalGateDecision(params: {
   } | null;
   deliveryId?: string;
 }) {
+  const retryStorageMetadata = retryExhaustedStorageMetadata(params.decision);
   await upsertPrState(params.env.SUBMISSION_GATE_DB, {
     repo: params.target.repoFullName,
     number: params.target.number,
@@ -2163,6 +2254,7 @@ async function applyTerminalGateDecision(params: {
     nextReviewAt: null,
     clearVerdict: true,
     clearTerminal: true,
+    ...retryStorageMetadata,
   });
   await removeLabels({
     token: params.token,
@@ -2231,6 +2323,7 @@ async function applyTerminalGateDecision(params: {
     verdictSummary: displayDecision.summary,
     nextReviewAt: null,
     terminalAt: TERMINAL_PR_STATUSES.has(params.status) ? nowIso() : null,
+    ...retryStorageMetadata,
     ...decisionMetadata(displayDecision, reportComment),
   });
 }
@@ -2576,6 +2669,7 @@ async function deterministicContentPrecheck(params: {
   if (sourceEvidence.status === "retryable") {
     throw new SourceEvidenceRetryableError(
       `Submission gate deterministic source evidence check was retryable: ${sourceEvidenceSummary(sourceEvidence)}.`,
+      sourceEvidence,
     );
   }
 
@@ -2643,6 +2737,12 @@ async function enqueueReviewTarget(
     shouldResetClosedTerminal ||
     shouldResetManualTerminal;
   if (!shouldQueueReview) return false;
+  const shouldPreserveRetryState =
+    String(existing?.status || "") === "error_retryable" &&
+    String(existing?.headSha || "") === String(target.headSha || "") &&
+    !shouldResetIgnoredScan &&
+    !shouldResetClosedTerminal &&
+    !shouldResetManualTerminal;
 
   await upsertPrState(env.SUBMISSION_GATE_DB, {
     repo: target.repoFullName,
@@ -2666,6 +2766,7 @@ async function enqueueReviewTarget(
       shouldResetIgnoredScan ||
       shouldResetClosedTerminal ||
       shouldResetManualTerminal,
+    preserveRetryState: shouldPreserveRetryState,
   });
   await env.SUBMISSION_REVIEW_QUEUE.send({
     kind: "review_pr",
@@ -2681,6 +2782,42 @@ async function recordRetryableTargetError(
   deliveryId: string,
   error: unknown,
 ) {
+  const existing = await getPrState(env.SUBMISSION_GATE_DB, {
+    repo: target.repoFullName,
+    number: target.number,
+  });
+  const decision = retryableTargetErrorDecision(error);
+  const retryState = retryStateForDecision(existing, target, decision);
+  const nextReviewAt = isGitHubRateLimitError(error)
+    ? nextReviewForError(error)
+    : retryState.nextReviewAt;
+  if (retryState.exhausted) {
+    const exhaustedDecision = retryExhaustedDecision(decision, retryState);
+    await upsertPrState(env.SUBMISSION_GATE_DB, {
+      repo: target.repoFullName,
+      number: target.number,
+      headRepo: target.headRepo,
+      headRef: target.headRef,
+      headSha: target.headSha,
+      baseRef: target.baseRef || contentGateBaseRef(env),
+      installationId: target.installationId,
+      status: "manual",
+      verdict: "manual",
+      verdictSummary: exhaustedDecision.summary,
+      nextReviewAt: null,
+      terminalAt: nowIso(),
+      lastError: truncateForQueue(exhaustedDecision.summary),
+      lastErrorCode: retryState.code,
+      lastRetryFingerprint: retryState.fingerprint,
+      retryFingerprintCount: retryState.maxAttempts,
+      retryExhaustedAt: nowIso(),
+      retryExhaustedReason: truncateForQueue(exhaustedDecision.summary),
+      deliveryId,
+      ...decisionMetadata(exhaustedDecision),
+    });
+    return;
+  }
+  const errorMessage = error instanceof Error ? error.message : String(error);
   await upsertPrState(env.SUBMISSION_GATE_DB, {
     repo: target.repoFullName,
     number: target.number,
@@ -2690,10 +2827,11 @@ async function recordRetryableTargetError(
     baseRef: target.baseRef || contentGateBaseRef(env),
     installationId: target.installationId,
     status: "error_retryable",
-    nextReviewAt: nextReviewForError(error),
-    lastError: truncateForQueue(
-      error instanceof Error ? error.message : String(error),
-    ),
+    nextReviewAt,
+    lastError: truncateForQueue(errorMessage),
+    lastErrorCode: retryState.code,
+    lastRetryFingerprint: retryState.fingerprint,
+    retryFingerprintCount: retryState.count,
     deliveryId,
     clearVerdict: true,
     clearTerminal: true,
@@ -2983,46 +3121,92 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
   }
   const body = JSON.stringify(message);
   const signature = await signInternalPayload(env.INTERNAL_SHARED_SECRET, body);
-  let response: Response;
-  try {
-    response = await fetch(env.PRIVATE_GATE_REVIEW_URL, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-heyclaude-internal-signature": signature,
-      },
-      body,
-      signal: AbortSignal.timeout(PRIVATE_REVIEW_TIMEOUT_MS),
-    });
-  } catch {
-    return privateReviewErrorDecision(
-      "Private corpus review request failed.",
-      "private_reviewer_unavailable",
-    );
-  }
-  if (!response.ok) {
-    return privateReviewErrorDecision(
-      `Private corpus review returned ${response.status}.`,
-      "private_reviewer_unavailable",
-    );
-  }
-  const raw = parsePrivateGateDecisionResponseBody(
-    await response.text().catch(() => ""),
+  const deadline = Date.now() + PRIVATE_REVIEW_TIMEOUT_MS;
+  const controller = new AbortController();
+  const abortId = setTimeout(
+    () => controller.abort(),
+    PRIVATE_REVIEW_TIMEOUT_MS,
   );
-  const normalized = normalizePrivateGateDecisionPayload(raw);
-  if (normalized.error || !normalized.decision) {
-    const error = normalized.error || {
-      code: "invalid_private_response",
-      retryable: true,
-      message: "Private corpus review returned an unexpected payload.",
-    };
-    return privateReviewErrorDecision(
-      error.message || "Private corpus review returned an unexpected payload.",
-      error.code,
-      error.retryable !== false,
+  try {
+    const response = await withPrivateReviewTimeout(
+      fetch(env.PRIVATE_GATE_REVIEW_URL, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-heyclaude-internal-signature": signature,
+        },
+        body,
+        signal: controller.signal,
+      }),
+      deadline,
+      "Private corpus review request timed out.",
     );
+    if (!response.ok) {
+      return privateReviewErrorDecision(
+        `Private corpus review returned ${response.status}.`,
+        "private_reviewer_unavailable",
+      );
+    }
+    const responseText = await withPrivateReviewTimeout(
+      response.text(),
+      deadline,
+      "Private corpus review response body timed out.",
+    );
+    const raw = parsePrivateGateDecisionResponseBody(responseText);
+    const normalized = normalizePrivateGateDecisionPayload(raw);
+    if (normalized.error || !normalized.decision) {
+      const error = normalized.error || {
+        code: "invalid_private_response",
+        retryable: true,
+        message: "Private corpus review returned an unexpected payload.",
+      };
+      return privateReviewErrorDecision(
+        error.message ||
+          "Private corpus review returned an unexpected payload.",
+        error.code,
+        error.retryable !== false,
+      );
+    }
+    return normalized.decision;
+  } catch (error) {
+    return privateReviewErrorDecision(
+      privateReviewPublicFailureReason(error),
+      "private_reviewer_unavailable",
+    );
+  } finally {
+    clearTimeout(abortId);
   }
-  return normalized.decision;
+}
+function privateReviewPublicFailureReason(error: unknown) {
+  if (error instanceof Error) {
+    if (error.message === "Private corpus review request timed out.") {
+      return error.message;
+    }
+    if (error.message === "Private corpus review response body timed out.") {
+      return error.message;
+    }
+    if (isTimeoutError(error)) {
+      return "Private corpus review request timed out.";
+    }
+  }
+  return "Private corpus review request failed.";
+}
+
+async function withPrivateReviewTimeout<T>(
+  promise: Promise<T>,
+  deadline: number,
+  message: string,
+): Promise<T> {
+  const remainingMs = Math.max(1, deadline - Date.now());
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(message)), remainingMs);
+  });
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
 }
 
 async function persistRetryableGateDecision(params: {
@@ -3032,8 +3216,12 @@ async function persistRetryableGateDecision(params: {
   target: ReviewTarget;
   message: QueueMessage;
   decision: GateDecision;
+  retryState: ReturnType<typeof retryStateForDecision>;
+  nextReviewAt?: string | null;
+  retryStage?: "validation" | "private_review";
   auditDecision: string;
 }) {
+  const nextReviewAt = params.nextReviewAt ?? params.retryState.nextReviewAt;
   await upsertPrState(params.env.SUBMISSION_GATE_DB, {
     repo: params.target.repoFullName,
     number: params.target.number,
@@ -3043,8 +3231,11 @@ async function persistRetryableGateDecision(params: {
     baseRef: params.target.baseRef || contentGateBaseRef(params.env),
     installationId: params.target.installationId,
     status: "error_retryable",
-    nextReviewAt: nextReviewForStatus("error_retryable"),
+    nextReviewAt,
     lastError: truncateForQueue(params.decision.summary),
+    lastErrorCode: params.retryState.code,
+    lastRetryFingerprint: params.retryState.fingerprint,
+    retryFingerprintCount: params.retryState.count,
     deliveryId: String(params.message.payload.deliveryId || ""),
     clearVerdict: true,
     clearTerminal: true,
@@ -3056,6 +3247,14 @@ async function persistRetryableGateDecision(params: {
     marker: params.env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
     body: retryingReviewComment(
       params.env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+      {
+        stage: params.retryStage,
+        code: params.retryState.code,
+        attempt: params.retryState.count,
+        maxAttempts: params.retryState.maxAttempts,
+        nextReviewAt,
+        summary: truncateForQueue(params.decision.summary, 320),
+      },
     ),
     apiVersion: params.env.GITHUB_API_VERSION,
   });
@@ -3068,7 +3267,11 @@ async function persistRetryableGateDecision(params: {
     baseRef: params.target.baseRef || contentGateBaseRef(params.env),
     installationId: params.target.installationId,
     status: "error_retryable",
-    nextReviewAt: nextReviewForStatus("error_retryable"),
+    nextReviewAt,
+    lastError: truncateForQueue(params.decision.summary),
+    lastErrorCode: params.retryState.code,
+    lastRetryFingerprint: params.retryState.fingerprint,
+    retryFingerprintCount: params.retryState.count,
     ...decisionMetadata(params.decision, retryComment),
   });
   await insertAudit(params.env.SUBMISSION_GATE_DB, {
@@ -3535,10 +3738,31 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             lastCheckSummary: validation.summary,
           });
         }
-      } catch {
-        decision = defaultManualDecision(
-          "Submission gate could not read public validation checks.",
+      } catch (error) {
+        const retryableDecision = retryableValidationReadDecision(error);
+        const retryState = retryStateForDecision(
+          existing,
+          target,
+          retryableDecision,
         );
+        if (!retryState.exhausted) {
+          await persistRetryableGateDecision({
+            env,
+            token,
+            repo,
+            target,
+            message,
+            decision: retryableDecision,
+            retryState,
+            nextReviewAt: isGitHubRateLimitError(error)
+              ? nextReviewForError(error)
+              : retryState.nextReviewAt,
+            retryStage: "validation",
+            auditDecision: "validation_check_read_retryable",
+          });
+          return;
+        }
+        decision = retryExhaustedDecision(retryableDecision, retryState);
       }
 
       if (!decision && contentScopeForPrivateReview) {
@@ -3598,22 +3822,32 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         } catch (error) {
           const retryableDecision = retryablePrecheckDecision(error);
           if (retryableDecision) {
-            await persistRetryableGateDecision({
-              env,
-              token,
-              repo,
+            const retryState = retryStateForDecision(
+              existing,
               target,
-              message,
-              decision: retryableDecision,
-              auditDecision: "deterministic_precheck_retryable",
-            });
-            return;
+              retryableDecision,
+            );
+            if (!retryState.exhausted) {
+              await persistRetryableGateDecision({
+                env,
+                token,
+                repo,
+                target,
+                message,
+                decision: retryableDecision,
+                retryState,
+                auditDecision: "deterministic_precheck_retryable",
+              });
+              return;
+            }
+            decision = retryExhaustedDecision(retryableDecision, retryState);
+          } else {
+            decision = defaultManualDecision(
+              `Submission gate could not complete deterministic duplicate/edit review: ${
+                error instanceof Error ? error.message : "unknown error"
+              }.`,
+            );
           }
-          decision = defaultManualDecision(
-            `Submission gate could not complete deterministic duplicate/edit review: ${
-              error instanceof Error ? error.message : "unknown error"
-            }.`,
-          );
         }
       }
 
@@ -3681,10 +3915,12 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             decision,
             sourceEvidenceForPrivateReview!,
           );
-          decision = shouldStopRetryingSourceEvidenceConflict(
-            conflictDecision,
+          const retryState = retryStateForDecision(
             existing,
-          )
+            target,
+            conflictDecision,
+          );
+          decision = retryState.exhausted
             ? sourceEvidenceConflictMergeDecision(
                 decision,
                 sourceEvidenceForPrivateReview!,
@@ -3701,11 +3937,13 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             decision,
             duplicateReviewForPrivateReview!,
           );
-          decision = shouldStopRetryingDuplicateEvidenceConflict(
-            conflictDecision,
+          const retryState = retryStateForDecision(
             existing,
-          )
-            ? duplicateEvidenceConflictMergeDecision(
+            target,
+            conflictDecision,
+          );
+          decision = retryState.exhausted
+            ? duplicateEvidenceConflictExhaustedDecision(
                 decision,
                 duplicateReviewForPrivateReview!,
                 sourceEvidenceForPrivateReview,
@@ -3716,9 +3954,9 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             decision,
             duplicateReviewForPrivateReview,
           ) &&
-          shouldStopRetryingDuplicateEvidenceConflict(decision, existing)
+          retryStateForDecision(existing, target, decision).exhausted
         ) {
-          decision = duplicateEvidenceConflictMergeDecision(
+          decision = duplicateEvidenceConflictExhaustedDecision(
             decision,
             duplicateReviewForPrivateReview!,
             sourceEvidenceForPrivateReview,
@@ -3735,14 +3973,9 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         }
         if (
           isRetryableGateDecision(decision) &&
-          shouldStopRetryingInvalidPrivateResponse(decision, existing)
+          !retryStateForDecision(existing, target, decision).exhausted
         ) {
-          decision = invalidPrivateResponseExhaustedDecision(
-            decision,
-            existing,
-          );
-        }
-        if (isRetryableGateDecision(decision)) {
+          const retryState = retryStateForDecision(existing, target, decision);
           await persistRetryableGateDecision({
             env,
             token,
@@ -3750,9 +3983,16 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             target,
             message,
             decision,
+            retryState,
             auditDecision: "private_review_retryable",
           });
           return;
+        }
+        if (isRetryableGateDecision(decision)) {
+          decision = retryExhaustedDecision(
+            decision,
+            retryStateForDecision(existing, target, decision),
+          );
         }
       }
       decision = normalizeOneShotDecision(decision);
@@ -4025,22 +4265,12 @@ async function recordRetryableQueueError(
   if (message.kind !== "review_pr") return;
   const target = reviewTargetFromMessage(message);
   if (!target) return;
-  const errorMessage = error instanceof Error ? error.message : String(error);
-  await upsertPrState(env.SUBMISSION_GATE_DB, {
-    repo: target.repoFullName,
-    number: target.number,
-    headRepo: target.headRepo,
-    headRef: target.headRef,
-    headSha: target.headSha,
-    baseRef: target.baseRef || contentGateBaseRef(env),
-    installationId: target.installationId,
-    status: "error_retryable",
-    nextReviewAt: nextReviewForError(error),
-    lastError: truncateForQueue(errorMessage),
-    deliveryId: String(message.payload.deliveryId || ""),
-    clearVerdict: true,
-    clearTerminal: true,
-  });
+  await recordRetryableTargetError(
+    env,
+    target,
+    String(message.payload.deliveryId || ""),
+    error,
+  );
 }
 
 async function sweepSubmissionQueue(env: Env) {
@@ -4214,11 +4444,38 @@ async function queueStatusRoute(request: Request, env: Env) {
      ORDER BY status ASC`,
   ).all<Record<string, unknown>>();
   const retryReasons = await env.SUBMISSION_GATE_DB.prepare(
-    `SELECT COALESCE(last_error, 'unknown') AS reason, COUNT(*) AS count,
+    `SELECT COALESCE(last_error_code, 'unknown') AS code,
+        COALESCE(last_error, 'unknown') AS reason,
+        COUNT(*) AS count,
+        MAX(retry_fingerprint_count) AS maxRetryFingerprintCount,
         MIN(updated_at) AS oldestAt, MAX(updated_at) AS newestAt
      FROM submission_prs
      WHERE status = 'error_retryable'
-     GROUP BY COALESCE(last_error, 'unknown')
+     GROUP BY COALESCE(last_error_code, 'unknown'), COALESCE(last_error, 'unknown')
+     ORDER BY count DESC, oldestAt ASC
+     LIMIT 20`,
+  ).all<Record<string, unknown>>();
+  const retryFingerprints = await env.SUBMISSION_GATE_DB.prepare(
+    `SELECT COALESCE(last_error_code, 'unknown') AS code,
+        COALESCE(last_retry_fingerprint, 'unknown') AS fingerprint,
+        COUNT(*) AS count,
+        MAX(retry_fingerprint_count) AS maxRetryFingerprintCount,
+        MIN(updated_at) AS oldestAt,
+        MAX(updated_at) AS newestAt
+     FROM submission_prs
+     WHERE status = 'error_retryable'
+     GROUP BY COALESCE(last_error_code, 'unknown'), COALESCE(last_retry_fingerprint, 'unknown')
+     ORDER BY count DESC, maxRetryFingerprintCount DESC, oldestAt ASC
+     LIMIT 20`,
+  ).all<Record<string, unknown>>();
+  const exhaustedRetries = await env.SUBMISSION_GATE_DB.prepare(
+    `SELECT COALESCE(last_error_code, 'unknown') AS code,
+        COUNT(*) AS count,
+        MIN(retry_exhausted_at) AS oldestAt,
+        MAX(retry_exhausted_at) AS newestAt
+     FROM submission_prs
+     WHERE retry_exhausted_at IS NOT NULL
+     GROUP BY COALESCE(last_error_code, 'unknown')
      ORDER BY count DESC, oldestAt ASC
      LIMIT 20`,
   ).all<Record<string, unknown>>();
@@ -4248,6 +4505,8 @@ async function queueStatusRoute(request: Request, env: Env) {
     ok: true,
     counts: counts.results || [],
     retryReasons: retryReasons.results || [],
+    retryFingerprints: retryFingerprints.results || [],
+    exhaustedRetries: exhaustedRetries.results || [],
     staleStates: staleStates.results || [],
     recentTerminal: recentTerminal.results || [],
     deadLetterQueue: {
@@ -4276,6 +4535,11 @@ async function queueStatusRoute(request: Request, env: Env) {
       decisionId: row.decisionId,
       confidence: row.confidence,
       sourceEvidenceHash: row.sourceEvidenceHash,
+      lastErrorCode: row.lastErrorCode,
+      lastRetryFingerprint: truncateForQueue(row.lastRetryFingerprint, 240),
+      retryFingerprintCount: row.retryFingerprintCount,
+      retryExhaustedAt: row.retryExhaustedAt,
+      retryExhaustedReason: truncateForQueue(row.retryExhaustedReason, 240),
       terminalAt: row.terminalAt,
       updatedAt: row.updatedAt,
     })),

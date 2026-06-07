@@ -1,0 +1,187 @@
+---
+title: GraphQL MCP Server
+slug: graphql-mcp-server
+category: mcp
+description: >-
+  Generic GraphQL MCP server for schema introspection, schema resources, and
+  GraphQL query execution against a configured endpoint.
+cardDescription: Let Claude inspect GraphQL schemas and run approved queries against an endpoint.
+seoTitle: GraphQL MCP Server for Claude
+seoDescription: >-
+  Configure GraphQL MCP Server with Claude and other MCP clients to introspect
+  GraphQL schemas, expose schema resources, run queries with custom headers, and
+  keep mutations disabled unless explicitly approved.
+author: blurrah
+authorProfileUrl: "https://github.com/blurrah"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: mcp-graphql
+brandDomain: github.com
+repoUrl: "https://github.com/blurrah/mcp-graphql"
+documentationUrl: "https://github.com/blurrah/mcp-graphql/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/mcp-graphql"
+installable: true
+installCommand: "npx mcp-graphql"
+usageSnippet: "Point GraphQL MCP at a non-production endpoint, introspect the schema first, and keep ALLOW_MUTATIONS=false unless a human approves exact mutations."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "graphql": {
+        "command": "npx",
+        "args": ["mcp-graphql"],
+        "env": {
+          "ENDPOINT": "https://api.example.com/graphql",
+          "HEADERS": "{\"Authorization\":\"Bearer <token>\"}",
+          "ALLOW_MUTATIONS": "false",
+          "NAME": "graphql"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "graphql": {
+        "command": "npx",
+        "args": ["mcp-graphql"],
+        "env": {
+          "ENDPOINT": "https://api.example.com/graphql",
+          "HEADERS": "{\"Authorization\":\"Bearer <token>\"}",
+          "ALLOW_MUTATIONS": "false",
+          "NAME": "graphql"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js and npx available to the MCP client runtime.
+  - GraphQL endpoint URL that Claude is allowed to introspect and query.
+  - Optional HEADERS JSON for authentication, using least-privilege API credentials.
+  - Decision on whether schema introspection should use the endpoint, a local schema file, or a schema URL.
+  - Explicit human approval before setting ALLOW_MUTATIONS to true.
+safetyNotes:
+  - GraphQL MCP can introspect a schema and execute arbitrary GraphQL queries against the configured endpoint.
+  - Mutations are blocked by default, but setting ALLOW_MUTATIONS=true allows model-generated mutation operations.
+  - Custom HEADERS can grant access to production APIs, admin scopes, customer data, or internal services.
+  - Schema introspection can expose object types, fields, arguments, enum values, deprecated fields, and API structure.
+  - Even read queries can be expensive, trigger resolver side effects, expose broad data, or hit rate and complexity limits.
+  - Prefer staging endpoints, read-only tokens, query depth/complexity limits, persisted operations, and human review for sensitive APIs.
+privacyNotes:
+  - Endpoint URLs, headers, bearer tokens, schema text, GraphQL queries, variables, response data, errors, and server descriptions may be visible to the MCP client and model provider.
+  - GraphQL responses can include personal data, customer records, internal IDs, permissions, audit data, billing data, or proprietary business objects.
+  - HEADERS values and authorization tokens should stay out of prompts, issues, logs, screenshots, and committed configuration files.
+  - Error messages and introspection results can reveal internal schema design and service implementation details.
+sourceUrls:
+  - "https://github.com/blurrah/mcp-graphql/blob/main/package.json"
+  - "https://github.com/blurrah/mcp-graphql/blob/main/src/index.ts"
+  - "https://github.com/blurrah/mcp-graphql/blob/main/LICENSE"
+tags:
+  - graphql
+  - api
+  - schema
+  - data-access
+  - developer-tools
+keywords:
+  - GraphQL MCP
+  - GraphQL MCP Server
+  - mcp-graphql
+  - GraphQL schema MCP
+  - GraphQL query MCP
+  - GraphQL introspection MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+GraphQL MCP Server, published as `mcp-graphql`, is a generic Model Context
+Protocol server for connecting Claude and other MCP clients to a configured
+GraphQL endpoint. It can expose the GraphQL schema as an MCP resource,
+introspect schemas, and execute GraphQL queries with optional custom headers.
+
+The server blocks GraphQL mutations by default. Operators can enable mutations
+with `ALLOW_MUTATIONS=true`, but that turns the server into a write-capable API
+surface and should be reserved for reviewed workflows.
+
+## Source Review
+
+- https://github.com/blurrah/mcp-graphql
+- https://github.com/blurrah/mcp-graphql/blob/main/README.md
+- https://registry.npmjs.org/mcp-graphql
+- https://github.com/blurrah/mcp-graphql/blob/main/package.json
+- https://github.com/blurrah/mcp-graphql/blob/main/src/index.ts
+- https://github.com/blurrah/mcp-graphql/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm registry metadata, package metadata, source implementation, and
+license for current package names, environment variables, tools, mutation
+behavior, and licensing.
+
+## Features
+
+- npm package `mcp-graphql`.
+- Stdio MCP server launched with `npx mcp-graphql`.
+- ENDPOINT environment variable for the GraphQL endpoint.
+- HEADERS environment variable for JSON-formatted request headers.
+- ALLOW_MUTATIONS flag, disabled by default.
+- NAME environment variable for custom server naming.
+- SCHEMA environment variable for local schema files or schema URLs.
+- `graphql-schema` resource for schema access.
+- `introspect-schema` tool for retrieving schema text.
+- `query-graphql` tool for executing GraphQL operations.
+- MIT license.
+
+## Installation
+
+Configure the GraphQL endpoint and keep mutations disabled by default:
+
+```json
+{
+  "mcpServers": {
+    "graphql": {
+      "command": "npx",
+      "args": ["mcp-graphql"],
+      "env": {
+        "ENDPOINT": "https://api.example.com/graphql",
+        "HEADERS": "{\"Authorization\":\"Bearer <token>\"}",
+        "ALLOW_MUTATIONS": "false",
+        "NAME": "graphql"
+      }
+    }
+  }
+}
+```
+
+Use a least-privilege token and a staging endpoint first. If the endpoint
+supports query cost, depth, or persisted operation controls, configure those
+before giving Claude access.
+
+## Use Cases
+
+- Ask Claude to introspect a GraphQL schema before drafting a query.
+- Generate a query against an unfamiliar endpoint using live schema details.
+- Run approved read queries against a development API.
+- Use a local or hosted schema file when endpoint introspection is disabled.
+- Debug GraphQL errors by comparing the query with schema fields and arguments.
+- Prototype a dedicated, narrower MCP server for a specific GraphQL API.
+
+## Safety and Privacy
+
+GraphQL MCP is intentionally generic, so credentials and endpoint choice define
+its blast radius. Keep mutations disabled, use read-only credentials, prefer
+staging APIs, and require review before running broad queries, expensive nested
+queries, or anything that could trigger resolver side effects.
+
+Do not put production bearer tokens or admin headers in shared MCP configs.
+Schema introspection and error responses can reveal internal API design, while
+query results can expose sensitive records to the model session.
+
+## Duplicate Check
+
+Existing catalog content mentions GraphQL in entries for Shopify, Square,
+monday.com, Linear, Supabase, and several skills, but no generic GraphQL MCP
+Server, `blurrah/mcp-graphql`, `mcp-graphql`, or matching source URL entry was
+found in `content/mcp`.

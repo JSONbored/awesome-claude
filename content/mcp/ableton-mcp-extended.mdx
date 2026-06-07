@@ -1,0 +1,215 @@
+---
+title: Ableton MCP Extended
+slug: ableton-mcp-extended
+category: mcp
+description: >-
+  Source-install MCP server for controlling Ableton Live from Claude, including
+  session inspection, track and clip creation, MIDI note editing, tempo and
+  transport control, browser item loading, arrangement workflows, device
+  parameters, automation, external plugins, audio imports, and optional
+  ElevenLabs voice-generation workflows.
+cardDescription: Connect Claude to Ableton Live session, clip, device, and arrangement control.
+seoTitle: Ableton MCP Extended for Claude
+seoDescription: >-
+  Configure Ableton MCP Extended with Claude to control Ableton Live through a
+  Python MCP server and Ableton Remote Script for tracks, clips, MIDI notes,
+  devices, automation, arrangement controls, plugins, and generated audio.
+author: uisato
+authorProfileUrl: "https://github.com/uisato"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Ableton MCP Extended
+brandDomain: github.com/uisato/ableton-mcp-extended
+websiteUrl: "https://github.com/uisato/ableton-mcp-extended"
+repoUrl: "https://github.com/uisato/ableton-mcp-extended"
+documentationUrl: "https://github.com/uisato/ableton-mcp-extended/blob/main/README.md"
+installable: true
+installCommand: "git clone https://github.com/uisato/ableton-mcp-extended.git && cd ableton-mcp-extended && pip install -e ."
+usageSnippet: "Install the Ableton Remote Script in a copy-safe Live setup, start Ableton, then ask Claude to inspect or modify only the approved session."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "AbletonMCP": {
+        "command": "python",
+        "args": ["<path-to-ableton-mcp-extended/MCP_Server/server.py>"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "AbletonMCP": {
+        "command": "python",
+        "args": ["<path-to-ableton-mcp-extended/MCP_Server/server.py>"],
+        "env": {
+          "ELEVENLABS_API_KEY": "",
+          "ELEVENLABS_OUTPUT_DIR": "<approved-ableton-audio-output-directory>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Ableton Live 11 or newer.
+  - Python 3.10 or newer and pip for the source-install MCP server.
+  - Git for cloning the source repository.
+  - The AbletonMCP Remote Script copied into Ableton Live's User Remote Scripts directory and selected as a control surface.
+  - An approved Live Set backup before Claude edits tracks, clips, notes, devices, automation, arrangement clips, cue points, or plugins.
+  - Optional ElevenLabs API key and approved audio output directory when using the bundled voice-generation workflows.
+safetyNotes:
+  - Ableton MCP Extended can create, rename, delete, arm, mute, solo, pan, and adjust tracks; create clips; add and delete MIDI notes; set tempo; start and stop playback; fire and stop clips; and manipulate arrangement content.
+  - Device and plugin tools can load instruments or effects, enable or disable devices, delete devices, navigate presets, and change normalized parameters that may affect volume, routing, feedback, CPU load, or project sound.
+  - Automation, cue point, loop, view, browser, sample import, and arrangement controls can make broad session changes that should be reviewed before saving.
+  - The Ableton Remote Script runs a local TCP socket server inside Live; keep it available only to trusted local clients and close Ableton or remove the control surface when finished.
+  - Voice generation and audio import workflows can create new audio files and may incur third-party API costs or licensing restrictions.
+privacyNotes:
+  - Live Set names, track names, clip names, MIDI notes, device names, plugin lists, browser paths, sample paths, cue points, arrangement details, and generated audio prompts can be sent to the MCP client and model.
+  - Optional ElevenLabs use can send voice prompts, generated-speech requests, and account metadata to a third-party API.
+  - Local logs, model transcripts, imported audio files, and configured output directories can reveal unreleased music, client work, sample libraries, voice concepts, or performance plans.
+  - Keep API keys scoped and out of committed MCP config, screenshots, issue comments, and shared prompt transcripts.
+sourceUrls:
+  - "https://github.com/uisato/ableton-mcp-extended/blob/main/INSTALLATION.md"
+  - "https://github.com/uisato/ableton-mcp-extended/blob/main/pyproject.toml"
+  - "https://github.com/uisato/ableton-mcp-extended/blob/main/MCP_Server/server.py"
+  - "https://github.com/uisato/ableton-mcp-extended/blob/main/AbletonMCP_Remote_Script/__init__.py"
+  - "https://github.com/uisato/ableton-mcp-extended/blob/main/.env.example"
+  - "https://github.com/uisato/ableton-mcp-extended/blob/main/LICENSE"
+  - "https://github.com/uisato/ableton-mcp-extended/blob/main/Ableton-MCP_hybrid-server/AbletonMCP_UDP/__init__.py"
+tags:
+  - ableton
+  - music-production
+  - daw
+  - audio
+  - midi
+keywords:
+  - Ableton MCP Extended
+  - Ableton MCP
+  - Ableton Live MCP
+  - DAW MCP
+  - music production MCP
+  - MIDI MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Ableton MCP Extended is a source-install Model Context Protocol server for
+controlling Ableton Live from Claude and other MCP clients. It pairs a Python
+MCP server with an Ableton Remote Script so model-driven tool calls can inspect a
+Live Set and perform track, clip, MIDI, device, browser, arrangement, transport,
+automation, plugin, and audio-import actions.
+
+The project extends the original Ableton MCP idea with a larger tool surface,
+optional high-performance UDP examples, and bundled ElevenLabs integration for
+voice or sound-effect generation workflows. It is a community project and is not
+an official Ableton product.
+
+## Source Review
+
+- https://github.com/uisato/ableton-mcp-extended
+- https://github.com/uisato/ableton-mcp-extended/blob/main/README.md
+- https://github.com/uisato/ableton-mcp-extended/blob/main/INSTALLATION.md
+- https://github.com/uisato/ableton-mcp-extended/blob/main/pyproject.toml
+- https://github.com/uisato/ableton-mcp-extended/blob/main/MCP_Server/server.py
+- https://github.com/uisato/ableton-mcp-extended/blob/main/AbletonMCP_Remote_Script/__init__.py
+- https://github.com/uisato/ableton-mcp-extended/blob/main/.env.example
+- https://github.com/uisato/ableton-mcp-extended/blob/main/Ableton-MCP_hybrid-server/AbletonMCP_UDP/__init__.py
+- https://github.com/uisato/ableton-mcp-extended/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, installation guide, Python package metadata, MCP server, Ableton Remote
+Script, environment template, UDP example source, and license file for current
+setup requirements, tool behavior, local socket behavior, optional credentials,
+and licensing.
+
+## Features
+
+- Python MCP server for Ableton Live control through a local Remote Script.
+- Ableton Remote Script that listens for MCP-server commands and executes them
+  through the Live API.
+- Session and transport tools for session info, tempo, playback, clip firing,
+  stopping, song time, cue points, loop ranges, and view controls.
+- Track, clip, and MIDI workflows for creating tracks, naming tracks, adjusting
+  volume and pan, creating clips, adding notes, naming clips, and manipulating
+  arrangement clips.
+- Browser, instrument, effect, sample, plugin, and preset workflows for loading
+  devices or audio into the Live Set.
+- Device and automation workflows for reading parameters, setting normalized
+  parameter values, enabling or disabling devices, deleting devices, and managing
+  clip automation.
+- Optional ElevenLabs integration and audio output configuration for generated
+  voice or sound-effect imports.
+- MIT license.
+
+## Installation
+
+Clone and install the source project:
+
+```sh
+git clone https://github.com/uisato/ableton-mcp-extended.git
+cd ableton-mcp-extended
+pip install -e .
+```
+
+Copy the Ableton Remote Script into Live's User Remote Scripts folder, select
+`AbletonMCP` as a control surface in Ableton Live, then configure the MCP client:
+
+```json
+{
+  "mcpServers": {
+    "AbletonMCP": {
+      "command": "python",
+      "args": ["<path-to-ableton-mcp-extended/MCP_Server/server.py>"]
+    }
+  }
+}
+```
+
+Restart the MCP client and open Ableton Live with a backed-up or disposable Live
+Set before testing write-capable commands.
+
+## Use Cases
+
+- Ask Claude to summarize the tracks, clips, tempo, devices, and arrangement
+  state of an approved Live Set.
+- Create MIDI or audio tracks, clips, notes, and arrangement sections from a
+  structured production prompt.
+- Load instruments, effects, plugins, presets, or samples while sketching an
+  arrangement.
+- Adjust volume, pan, tempo, loop ranges, cue points, and device parameters
+  during a supervised production session.
+- Generate or import spoken-word, narration, or sound-effect audio with an
+  approved ElevenLabs key and output folder.
+- Prototype Live performance controllers or low-latency parameter workflows with
+  the optional UDP examples.
+
+## Safety and Privacy
+
+Ableton MCP Extended is write-capable DAW control software. Use it first with
+copies of Live Sets and keep a human producer in the loop before saving,
+rendering, performing, or sending project files. Claude can trigger playback,
+change tempo, fire clips, create or delete content, alter device parameters,
+load plugins, import files, and modify arrangement or automation state.
+
+The Remote Script opens a local socket server inside Ableton Live. Keep that
+server available only to trusted local clients, avoid running it on untrusted
+networks, and remove or disable the control surface when you no longer need MCP
+control. Review generated clips, automation, device changes, and imported audio
+before committing changes to an important Live Set.
+
+Live Set structure, track names, plugin names, sample paths, MIDI notes, cue
+points, generated voice prompts, and model conversations can reveal unreleased
+music, client material, commercial sample libraries, or performance plans.
+Protect ElevenLabs API keys, generated audio folders, logs, screenshots, and MCP
+client configuration as project-sensitive data.
+
+## Duplicate Check
+
+No Ableton MCP Extended, `uisato/ableton-mcp-extended`, Ableton Live MCP, DAW
+MCP, or dedicated Ableton MCP entry was found in `content/mcp`, `content/agents`,
+`content/guides`, or `content/skills`. This entry is scoped to the community
+Ableton MCP Extended source project and does not duplicate Max/MSP or other
+creative-coding MCP entries.

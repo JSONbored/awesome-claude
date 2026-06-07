@@ -1,0 +1,216 @@
+---
+title: TradingView MCP Server
+slug: tradingview-mcp-server
+category: mcp
+description: >-
+  Python MCP server that connects Claude to market screening, TradingView-style
+  technical analysis, Yahoo Finance prices, financial news, Reddit sentiment,
+  backtesting, options-chain lookups, and multi-timeframe trading research
+  workflows for crypto and stock markets.
+cardDescription: Connect Claude to market screeners, technical indicators, backtests, news, and sentiment.
+seoTitle: TradingView MCP Server for Claude
+seoDescription: >-
+  Configure TradingView MCP Server with Claude to run stock and crypto
+  screeners, technical analysis, Bollinger scans, strategy backtests,
+  walk-forward tests, financial news, Reddit sentiment, Yahoo Finance prices,
+  and options-chain lookups.
+author: Atila Ahmettaner
+authorProfileUrl: "https://github.com/atilaahmettaner"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: TradingView MCP
+brandDomain: cryptosieve.com
+websiteUrl: "https://cryptosieve.com/mcp-server"
+repoUrl: "https://github.com/atilaahmettaner/tradingview-mcp"
+documentationUrl: "https://github.com/atilaahmettaner/tradingview-mcp/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/tradingview-mcp-server/json"
+installable: true
+installCommand: "uvx --from tradingview-mcp-server tradingview-mcp"
+usageSnippet: "Use for informational market research only; verify market data independently and do not treat MCP output as financial advice or trade instructions."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "tradingview": {
+        "command": "uvx",
+        "args": ["--from", "tradingview-mcp-server", "tradingview-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "tradingview": {
+        "command": "uvx",
+        "args": ["--from", "tradingview-mcp-server", "tradingview-mcp"],
+        "env": {
+          "HOST": "127.0.0.1",
+          "PORT": "8000"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer.
+  - uv or another Python package runner that can launch the `tradingview-mcp-server` package.
+  - Network access to third-party market-data, news, Reddit, Yahoo Finance, and TradingView-related data providers used by the server.
+  - Review of local rules, exchange/data-provider terms, rate limits, and financial-compliance constraints before using live market data.
+safetyNotes:
+  - TradingView MCP Server is an informational analysis tool and does not execute trades, manage money, or guarantee market outcomes.
+  - Treat screeners, technical indicators, backtests, walk-forward results, sentiment, options data, and generated trade-plan language as research signals that require independent verification.
+  - Market data, news feeds, Reddit sentiment, and third-party technical-analysis providers can be delayed, incomplete, rate-limited, unavailable, or inaccurate.
+  - Do not use MCP output as investment, legal, tax, accounting, or trading advice; consult qualified professionals for financial decisions.
+  - Keep automated agents from turning analysis output into orders unless a separate, human-approved trading system and compliance process handles execution.
+privacyNotes:
+  - Symbols, watchlists, exchanges, timeframes, strategy parameters, backtest assumptions, portfolio-like prompts, and research questions may be sent to the MCP client, model, and third-party data providers.
+  - Generated analyses can reveal trading interests, research hypotheses, position-like intent, risk preferences, or account-related context if pasted into prompts.
+  - Avoid sharing brokerage credentials, account balances, order history, private portfolio allocations, API keys, or non-public investment information through prompts or environment variables.
+  - Hosted connector usage may expose prompts and market-research requests to the hosted provider under its terms; self-hosting keeps the MCP server local but still calls external data sources.
+disclosure: >-
+  The upstream README describes free self-hosting and a paid hosted connector
+  option from CryptoSieve. This entry documents the open-source self-hosted MCP
+  package and notes the hosted option only as upstream context.
+sourceUrls:
+  - "https://github.com/atilaahmettaner/tradingview-mcp/blob/main/INSTALLATION.md"
+  - "https://github.com/atilaahmettaner/tradingview-mcp/blob/main/pyproject.toml"
+  - "https://github.com/atilaahmettaner/tradingview-mcp/blob/main/.codex-mcp.json"
+  - "https://github.com/atilaahmettaner/tradingview-mcp/blob/main/src/tradingview_mcp/server.py"
+  - "https://github.com/atilaahmettaner/tradingview-mcp/blob/main/src/tradingview_mcp/core/services/backtest_service.py"
+  - "https://github.com/atilaahmettaner/tradingview-mcp/blob/main/LICENSE"
+tags:
+  - finance
+  - trading
+  - market-data
+  - technical-analysis
+  - research
+keywords:
+  - TradingView MCP Server
+  - tradingview-mcp-server
+  - trading MCP
+  - market data MCP
+  - technical analysis MCP
+  - backtesting MCP
+  - Yahoo Finance MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+TradingView MCP Server exposes market-research tools to Claude and other MCP
+clients through the `tradingview-mcp` Python entry point. It can scan crypto and
+stock markets, run Bollinger Band and candle-pattern analysis, fetch Yahoo
+Finance prices, summarize financial news, inspect Reddit sentiment, compare
+backtest strategies, run walk-forward checks, and retrieve options-chain or
+unusual-options activity for supported symbols.
+
+The project is designed for analysis and education, not trade execution. Its
+README includes an explicit financial-advice disclaimer and positions the server
+as an informational tool whose outputs must be independently verified before any
+financial decision.
+
+## Source Review
+
+- https://github.com/atilaahmettaner/tradingview-mcp
+- https://github.com/atilaahmettaner/tradingview-mcp/blob/main/README.md
+- https://pypi.org/pypi/tradingview-mcp-server/json
+- https://github.com/atilaahmettaner/tradingview-mcp/blob/main/INSTALLATION.md
+- https://github.com/atilaahmettaner/tradingview-mcp/blob/main/pyproject.toml
+- https://github.com/atilaahmettaner/tradingview-mcp/blob/main/.codex-mcp.json
+- https://github.com/atilaahmettaner/tradingview-mcp/blob/main/src/tradingview_mcp/server.py
+- https://github.com/atilaahmettaner/tradingview-mcp/blob/main/src/tradingview_mcp/core/services/backtest_service.py
+- https://github.com/atilaahmettaner/tradingview-mcp/blob/main/LICENSE
+- https://cryptosieve.com/mcp-server
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, installation guide, PyPI package metadata, Codex MCP config, Python
+package metadata, MCP server implementation, backtesting service, license file,
+and project homepage for current install commands, tool coverage, hosted-option
+context, financial disclaimers, and licensing.
+
+## Features
+
+- Python package `tradingview-mcp-server` with the `tradingview-mcp` entry point.
+- MCP configuration for `uvx --from tradingview-mcp-server tradingview-mcp`.
+- Market screeners for top gainers, top losers, Bollinger squeezes, ratings,
+  volume breakouts, candle patterns, and multi-timeframe analysis.
+- Technical-analysis workflows for crypto exchanges and stock markets.
+- Yahoo Finance price and market snapshot helpers.
+- Financial news, Reddit sentiment, and combined analysis tools.
+- Strategy backtesting, strategy comparison, walk-forward validation, trade-log,
+  and equity-curve workflows.
+- Options-chain and unusual-options activity tools for US stock symbols.
+- MIT license.
+
+## Installation
+
+Install or launch the MCP package with uv:
+
+```sh
+uvx --from tradingview-mcp-server tradingview-mcp
+```
+
+Configure an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "tradingview": {
+      "command": "uvx",
+      "args": ["--from", "tradingview-mcp-server", "tradingview-mcp"]
+    }
+  }
+}
+```
+
+The upstream documentation also includes source-based and Windows-specific
+setup paths. Use the `tradingview-mcp-server` package name; `tradingview-mcp` on
+PyPI is a different package from a different repository.
+
+## Use Cases
+
+- Ask Claude for a top-gainers or top-losers scan for a supported exchange.
+- Run Bollinger Band, candle-pattern, volume-breakout, or multi-timeframe
+  analysis for a symbol.
+- Compare technical-analysis output with Reddit sentiment and current financial
+  news for research.
+- Backtest a supported strategy and compare the result with a walk-forward
+  validation check.
+- Inspect Yahoo Finance prices, broad market snapshots, extended-hours moves,
+  options chains, or unusual options activity.
+- Explore crypto and stock market data without wiring Claude to a brokerage or
+  trade-execution API.
+
+## Safety and Privacy
+
+TradingView MCP Server should be treated as an analysis assistant, not a trading
+system. Its outputs can contain trade-plan language, ratings, indicators,
+targets, stop-loss-like values, sentiment summaries, and backtest statistics,
+but those outputs are not financial advice and can be wrong. Independently
+verify data quality, timestamp freshness, exchange coverage, assumptions, fees,
+slippage, and provider terms before using any result.
+
+Keep execution separate from analysis. Do not connect MCP-generated conclusions
+directly to automated order placement without a separate human-approved trading,
+risk, and compliance process. Watch for rate limits, provider outages, delayed
+feeds, symbol mismatches, stale prices, and overfit backtests.
+
+Prompts and results can reveal watched symbols, market interests, strategy
+ideas, timeframes, private research notes, and position-like intent. Do not
+paste brokerage credentials, balances, order history, account identifiers, API
+keys, or confidential portfolio information into the MCP client. The self-hosted
+server runs locally, but its tools still call external market, news, and
+sentiment data sources; the upstream hosted connector is a separate commercial
+option with its own trust boundary.
+
+## Duplicate Check
+
+Existing MCP content includes finance and market-data entries such as Financial
+Datasets MCP Server, SEC EDGAR entries, Drillr, and blockchain-oriented servers.
+TradingView MCP Server is distinct because it documents
+`atilaahmettaner/tradingview-mcp` and the `tradingview-mcp-server` package for
+TradingView-style screeners, technical indicators, sentiment/news aggregation,
+backtesting, walk-forward validation, Yahoo Finance lookups, and options-chain
+research. No dedicated TradingView MCP entry was found in `content/mcp`.

@@ -1,0 +1,188 @@
+---
+title: Coolify MCP Server
+slug: coolify-mcp-server
+category: mcp
+description: >-
+  MCP server for Coolify infrastructure management, diagnostics, deployments,
+  logs, projects, environments, applications, databases, services, env vars,
+  storage, scheduled tasks, private keys, cloud tokens, teams, and docs search.
+cardDescription: >-
+  Connect Claude to Coolify for supervised self-hosted PaaS diagnostics,
+  deployments, resource management, logs, env vars, cloud tokens, and docs.
+seoTitle: Coolify MCP Server for Claude
+seoDescription: >-
+  Configure Coolify MCP Server with Claude to inspect and manage Coolify
+  servers, projects, applications, databases, services, deployments, logs, env
+  vars, storage, scheduled tasks, private keys, teams, cloud tokens, and docs.
+author: Stuart Mason
+authorProfileUrl: "https://github.com/StuMason"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Coolify MCP Server
+brandDomain: coolify.io
+repoUrl: "https://github.com/StuMason/coolify-mcp"
+documentationUrl: "https://raw.githubusercontent.com/StuMason/coolify-mcp/main/README.md"
+packageUrl: "https://registry.npmjs.org/@masonator%2Fcoolify-mcp"
+installable: true
+installCommand: "npx -y @masonator/coolify-mcp"
+usageSnippet: "Set COOLIFY_BASE_URL and COOLIFY_ACCESS_TOKEN, then run the stdio server with npx. Use --header flags only for trusted auth-proxy headers."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "coolify": {
+        "command": "npx",
+        "args": ["-y", "@masonator/coolify-mcp"],
+        "env": {
+          "COOLIFY_BASE_URL": "https://your-coolify-instance.example",
+          "COOLIFY_ACCESS_TOKEN": "your-api-token"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add coolify -e COOLIFY_BASE_URL=https://your-coolify-instance.example -e COOLIFY_ACCESS_TOKEN=your-token -- npx @masonator/coolify-mcp@latest
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Running Coolify instance with API access enabled.
+  - Coolify API access token scoped to the resources Claude may inspect or manage.
+  - Node.js 20 or newer for the published npm server.
+  - Review of which servers, projects, applications, databases, services, deployments, env vars, private keys, teams, cloud tokens, and scheduled tasks the token can access.
+  - Optional auth-proxy headers only when required by trusted Cloudflare Access or similar middleware.
+safetyNotes:
+  - Coolify MCP Server can start, stop, restart, redeploy, cancel deployments, update env vars, create or delete projects, environments, applications, databases, services, backups, storages, scheduled tasks, private keys, GitHub apps, and cloud tokens depending on API permissions.
+  - Batch tools such as `restart_project_apps`, `bulk_env_update`, `stop_all_apps`, and `redeploy_project` can affect multiple production services at once.
+  - Deployment, control, backup, storage, private key, cloud token, GitHub app, and scheduled-task operations should require explicit confirmation.
+  - Custom `--header` values may carry auth-proxy secrets; never let an agent invent, log, or modify them casually.
+  - Test on non-production projects or staging resources before allowing Claude to operate live Coolify infrastructure.
+privacyNotes:
+  - Coolify access tokens, base URLs, custom headers, application UUIDs, server IPs, domains, logs, env vars, deployment logs, private keys, cloud-provider tokens, GitHub app data, team membership, backups, database metadata, and service configuration can be exposed to the MCP client.
+  - Application and deployment logs may contain secrets, customer data, build output, container metadata, private repository details, and runtime errors.
+  - Environment variable and cloud-token tools can reveal or mutate sensitive infrastructure credentials.
+  - Documentation search is local to the server, but Coolify API calls contact the configured Coolify instance.
+  - Keep tokens and auth-proxy headers in local MCP client configuration only, and avoid sharing transcripts that include infrastructure identifiers or logs.
+disclosure: >-
+  Community-maintained MIT MCP server for Coolify. Coolify is a separate
+  self-hosted PaaS; users must follow their infrastructure, team, cloud
+  provider, repository, and deployment policies.
+sourceUrls:
+  - "https://raw.githubusercontent.com/StuMason/coolify-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/StuMason/coolify-mcp/main/package.json"
+  - "https://raw.githubusercontent.com/StuMason/coolify-mcp/main/server.json"
+  - "https://raw.githubusercontent.com/StuMason/coolify-mcp/main/site/guide/quickstart.md"
+  - "https://raw.githubusercontent.com/StuMason/coolify-mcp/main/site/concepts/security.md"
+  - "https://raw.githubusercontent.com/StuMason/coolify-mcp/main/src/index.ts"
+  - "https://raw.githubusercontent.com/StuMason/coolify-mcp/main/src/lib/mcp-server.ts"
+tags:
+  - coolify
+  - devops
+  - infrastructure
+  - deployments
+  - self-hosted
+keywords:
+  - Coolify MCP
+  - Coolify MCP Server
+  - infrastructure MCP
+  - deployment MCP
+  - self-hosted PaaS MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Coolify MCP Server connects Claude and other MCP clients to Coolify through the
+Coolify API. It exposes optimized tools for infrastructure overview,
+diagnostics, servers, projects, environments, applications, databases, services,
+deployments, logs, env vars, storage, scheduled tasks, private keys, GitHub
+apps, teams, cloud tokens, Hetzner helpers, and Coolify documentation search.
+
+Use it when Claude needs supervised access to inspect, troubleshoot, deploy, or
+manage self-hosted Coolify infrastructure.
+
+## Source Review
+
+- https://github.com/StuMason/coolify-mcp
+- https://raw.githubusercontent.com/StuMason/coolify-mcp/main/README.md
+- https://registry.npmjs.org/@masonator%2Fcoolify-mcp
+- https://raw.githubusercontent.com/StuMason/coolify-mcp/main/LICENSE
+- https://raw.githubusercontent.com/StuMason/coolify-mcp/main/package.json
+- https://raw.githubusercontent.com/StuMason/coolify-mcp/main/server.json
+- https://raw.githubusercontent.com/StuMason/coolify-mcp/main/site/guide/quickstart.md
+- https://raw.githubusercontent.com/StuMason/coolify-mcp/main/site/concepts/security.md
+- https://raw.githubusercontent.com/StuMason/coolify-mcp/main/src/index.ts
+- https://raw.githubusercontent.com/StuMason/coolify-mcp/main/src/lib/mcp-server.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package metadata, server manifest, quickstart,
+security guide, server entrypoint, and MCP server implementation for current
+setup and behavior details.
+
+## Features
+
+- Get infrastructure overviews across servers, projects, applications,
+  databases, and services.
+- Diagnose applications and servers by UUID, name, domain, IP address, or
+  infrastructure state.
+- List and manage Coolify servers, projects, environments, applications,
+  databases, services, deployments, logs, env vars, storages, backups, and
+  scheduled tasks.
+- Start, stop, restart, redeploy, cancel, and inspect resources through
+  consolidated action tools.
+- Manage private keys, GitHub apps, team information, cloud tokens, and Hetzner
+  provisioning helpers when the API token permits it.
+- Search bundled Coolify documentation for troubleshooting and setup guidance.
+- Return compact, token-optimized summaries with suggested next actions and
+  pagination.
+
+## Installation
+
+Create a Coolify API token, then configure the stdio server:
+
+```json
+{
+  "mcpServers": {
+    "coolify": {
+      "command": "npx",
+      "args": ["-y", "@masonator/coolify-mcp"],
+      "env": {
+        "COOLIFY_BASE_URL": "https://your-coolify-instance.example",
+        "COOLIFY_ACCESS_TOKEN": "your-api-token"
+      }
+    }
+  }
+}
+```
+
+For Claude Code, the project recommends the package tag form:
+
+```bash
+claude mcp add coolify -e COOLIFY_BASE_URL=https://your-coolify-instance.example -e COOLIFY_ACCESS_TOKEN=your-token -- npx @masonator/coolify-mcp@latest
+```
+
+Use custom `--header` flags only for trusted authentication proxies and never
+store proxy secrets in shared project files.
+
+## Use Cases
+
+- Ask Claude for a compact overview of running Coolify infrastructure.
+- Diagnose a failing app by name, domain, or UUID.
+- Inspect deployment logs before deciding whether to redeploy or roll back.
+- Update environment variables after review.
+- Restart a staging project or redeploy approved applications.
+- Search Coolify docs for health checks, Docker Compose, bad gateway errors, or
+  deployment configuration.
+
+## Safety and Privacy
+
+Coolify MCP Server can operate production infrastructure. Keep API tokens
+least-privileged, start in staging, and require explicit confirmation for
+starts, stops, restarts, deployments, deletions, batch operations, env-var
+changes, private-key changes, cloud-token changes, backup actions, and GitHub
+app changes.
+
+Treat Coolify tokens, auth-proxy headers, server IPs, domains, UUIDs, logs,
+deployment output, env vars, private keys, cloud-provider tokens, team data,
+database metadata, and service configuration as sensitive infrastructure data.
+Avoid sharing MCP transcripts that include logs or secrets.

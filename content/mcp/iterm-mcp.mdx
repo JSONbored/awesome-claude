@@ -1,0 +1,172 @@
+---
+title: iTerm MCP
+slug: iterm-mcp
+category: mcp
+description: >-
+  MCP server that gives Claude access to the active iTerm2 session for writing
+  terminal input, reading terminal output, and sending control characters.
+cardDescription: Let Claude read and write to the active iTerm2 terminal session.
+seoTitle: iTerm MCP for Claude
+seoDescription: >-
+  Configure iTerm MCP with Claude and other MCP clients to inspect terminal
+  output, write commands into the active iTerm2 session, and send control
+  characters with explicit local shell safety guidance.
+author: Ferris Lucas
+authorProfileUrl: "https://github.com/ferrislucas"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: iTerm MCP
+brandDomain: github.com
+repoUrl: "https://github.com/ferrislucas/iterm-mcp"
+documentationUrl: "https://github.com/ferrislucas/iterm-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/iterm-mcp"
+installable: true
+installCommand: "npx -y iterm-mcp"
+usageSnippet: "Run iTerm MCP only while supervising the active iTerm2 tab, and review every command before Claude writes to the terminal."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "iterm-mcp": {
+        "command": "npx",
+        "args": ["-y", "iterm-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "iterm-mcp": {
+        "command": "npx",
+        "args": ["-y", "iterm-mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: advanced
+prerequisites:
+  - macOS with iTerm2 running.
+  - Node.js 18 or newer available to the MCP client runtime.
+  - macOS Automation and accessibility permissions reviewed for controlling iTerm2.
+  - Active iTerm2 tab selected intentionally before allowing Claude to use the server.
+  - Human supervision and an abort plan for multi-step terminal tasks.
+safetyNotes:
+  - iTerm MCP gives Claude direct access to the active iTerm2 terminal session.
+  - The README states that the server has no built-in command safety restrictions and does not evaluate command risk.
+  - The write_to_terminal tool can run shell commands, paste multiline input, interact with REPLs, trigger builds, modify files, start network tools, or run destructive commands.
+  - The send_control_character tool can send Control-C, Control-Z, Escape, telnet escape, and other control characters that interrupt or alter running processes.
+  - The source uses AppleScript through osascript to write text to iTerm2, read the active session buffer, retrieve the TTY, and send control characters.
+  - The model may not know whether a command succeeded until it reads terminal output, and the README expects the user to monitor and abort when needed.
+privacyNotes:
+  - Terminal output can expose secrets, API keys, tokens, environment variables, shell history, prompts, hostnames, usernames, file paths, git remotes, logs, stack traces, credentials, and local project data.
+  - Commands typed by Claude may be stored in shell history, terminal scrollback, logs, audit systems, or process histories.
+  - Reading the active session buffer may reveal unrelated work already visible in iTerm2.
+  - Do not use this server in terminals connected to production systems, customer data, privileged shells, or secret-bearing sessions unless that exposure is approved.
+sourceUrls:
+  - "https://github.com/ferrislucas/iterm-mcp/blob/main/package.json"
+  - "https://github.com/ferrislucas/iterm-mcp/blob/main/src/index.ts"
+  - "https://github.com/ferrislucas/iterm-mcp/blob/main/src/CommandExecutor.ts"
+  - "https://github.com/ferrislucas/iterm-mcp/blob/main/src/TtyOutputReader.ts"
+  - "https://github.com/ferrislucas/iterm-mcp/blob/main/src/SendControlCharacter.ts"
+  - "https://github.com/ferrislucas/iterm-mcp/blob/main/LICENSE.md"
+tags:
+  - terminal
+  - iterm2
+  - shell
+  - local-mcp
+  - developer-tools
+keywords:
+  - iTerm MCP
+  - iterm-mcp
+  - iTerm2 MCP server
+  - terminal MCP
+  - shell MCP
+  - command execution MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+iTerm MCP is a local Model Context Protocol server that connects Claude to the
+active iTerm2 terminal session. It lets the model write text into the terminal,
+read a requested number of output lines, and send control characters such as
+Control-C or Escape.
+
+The server is designed for supervised local terminal assistance, REPL workflows,
+and CLI sessions where the user wants to watch what Claude is doing. It is not a
+sandbox and does not include command safety restrictions.
+
+## Source Review
+
+- https://github.com/ferrislucas/iterm-mcp
+- https://github.com/ferrislucas/iterm-mcp/blob/main/README.md
+- https://registry.npmjs.org/iterm-mcp
+- https://github.com/ferrislucas/iterm-mcp/blob/main/package.json
+- https://github.com/ferrislucas/iterm-mcp/blob/main/src/index.ts
+- https://github.com/ferrislucas/iterm-mcp/blob/main/src/CommandExecutor.ts
+- https://github.com/ferrislucas/iterm-mcp/blob/main/src/TtyOutputReader.ts
+- https://github.com/ferrislucas/iterm-mcp/blob/main/src/SendControlCharacter.ts
+- https://github.com/ferrislucas/iterm-mcp/blob/main/LICENSE.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm registry metadata, package metadata, source implementation, terminal
+executor, output reader, control-character sender, and license for current
+installation steps, tool behavior, terminal control details, and safety notes.
+
+## Features
+
+- npm package `iterm-mcp`.
+- Stdio MCP server launched with `npx -y iterm-mcp`.
+- `write_to_terminal` tool for writing text to the active iTerm2 session.
+- `read_terminal_output` tool for reading a requested number of terminal output lines.
+- `send_control_character` tool for sending terminal control characters.
+- AppleScript integration through `osascript`.
+- Active iTerm2 session and TTY detection.
+- Support for REPL and interactive CLI workflows.
+- MIT license.
+
+## Installation
+
+Configure an MCP client on macOS with iTerm2 running:
+
+```json
+{
+  "mcpServers": {
+    "iterm-mcp": {
+      "command": "npx",
+      "args": ["-y", "iterm-mcp"]
+    }
+  }
+}
+```
+
+Before using the server, select the intended iTerm2 tab and keep the terminal
+visible. Start with small, reversible commands until the workflow is trusted.
+
+## Use Cases
+
+- Ask Claude to inspect the last few lines of a long-running command.
+- Let Claude help inside a supervised REPL session.
+- Run small CLI commands while watching the active terminal.
+- Send Control-C to interrupt a command after human approval.
+- Debug command output without copying terminal text into chat manually.
+- Pair with a developer who wants model help in the same shell session they are watching.
+
+## Safety and Privacy
+
+iTerm MCP is effectively local terminal control. It can type commands into the
+active shell, interact with REPLs, interrupt processes, and read terminal
+scrollback. Use it only when you can supervise the active tab and stop the model
+if it goes off course.
+
+Avoid using it in privileged shells, production SSH sessions, terminals with
+secrets in scrollback, or workspaces where accidental commands could damage
+data. Review commands before execution, and keep destructive operations outside
+model control unless a human explicitly approves the exact action.
+
+## Duplicate Check
+
+Existing content mentions iTerm2 incidentally in a terminal setup guide, but no
+iTerm MCP, `ferrislucas/iterm-mcp`, `iterm-mcp`, or matching source URL entry
+was found in `content/mcp`.

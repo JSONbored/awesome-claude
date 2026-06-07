@@ -1,0 +1,210 @@
+---
+title: Rails MCP Server
+slug: rails-mcp-server
+category: mcp
+description: >-
+  Ruby gem MCP server for Rails projects that lets Claude inspect files,
+  routes, models, schema, controller-view relationships, environment config,
+  and framework guides.
+cardDescription: >-
+  Give Claude Rails-aware project exploration with progressive tool discovery,
+  analyzers, guide loading, and read-only Ruby helpers.
+seoTitle: Rails MCP Server for Claude
+seoDescription: >-
+  Configure Rails MCP Server with Claude to explore Rails projects, inspect
+  routes, models, database schema, controller views, environment config, and
+  Rails documentation.
+author: Mario Alberto Chavez Cardenas
+authorProfileUrl: "https://github.com/maquina-app"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Rails MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/maquina-app/rails-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/README.md"
+packageUrl: "https://rubygems.org/api/v1/gems/rails-mcp-server.json"
+installable: true
+installCommand: "gem install rails-mcp-server"
+usageSnippet: "Install the gem, run `rails-mcp-config` to register approved Rails projects, then start `rails-mcp-server` over stdio."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "railsMcpServer": {
+        "command": "rails-mcp-server"
+      }
+    }
+  }
+configSnippet: |-
+  rails-mcp-config
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Ruby 3.2 or newer and a working `gem` installation.
+  - One or more approved Rails project paths configured through `rails-mcp-config`, `projects.yml`, `RAILS_MCP_PROJECT_PATH`, or single-project mode.
+  - Review of which project files, schema data, routes, guides, and local docs should be visible to the MCP client.
+  - Optional guide downloads for Rails, Turbo, Stimulus, Kamal, or custom documentation.
+safetyNotes:
+  - "Rails MCP Server can read Rails project files, routes, model definitions, database schema files, environment configuration, controller-view relationships, and downloaded guides."
+  - "The `execute_ruby` tool runs constrained Ruby code with a timeout, static forbidden-pattern checks, read-only helper methods, path validation, and sensitive-file filtering."
+  - "Sandbox checks reduce risk but do not make untrusted model-generated Ruby equivalent to a formally isolated runtime; keep access scoped to projects you are comfortable exposing."
+  - "Do not configure broad parent folders, unrelated repositories, production secret directories, dependency caches, logs, storage folders, or private customer data as Rails project paths."
+  - "HTTP mode and network binding should stay local or behind trusted access controls; avoid exposing a project-inspection server on untrusted networks."
+privacyNotes:
+  - "Tool calls can expose filenames, source code, routes, model associations, validations, schema details, controller actions, view names, environment settings, guide content, and project paths to the MCP client and model context."
+  - "Project files can contain proprietary code, customer workflows, internal URLs, database table names, sensitive business logic, and credentials accidentally committed outside excluded patterns."
+  - "The server filters common sensitive files such as `.env`, keys, credentials, secrets, SSH files, database config, storage config, logs, temp files, and ignored files, but users should still audit project contents."
+  - "Configuration tools can update local MCP client settings and create project config files, so review generated configs before sharing or committing them."
+disclosure: >-
+  MIT-licensed Ruby gem for Rails project analysis through MCP. This entry is
+  distinct from general code-search or editor-control servers because it
+  provides Rails-specific analyzers, guide resources, and read-only Ruby helpers
+  for configured Rails projects.
+sourceUrls:
+  - "https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/LICENSE.txt"
+  - "https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/README.md"
+  - "https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/rails-mcp-server.gemspec"
+  - "https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/lib/rails-mcp-server/tools/execute_ruby.rb"
+  - "https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/lib/rails-mcp-server/utilities/path_validator.rb"
+  - "https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/lib/rails-mcp-server/tools/switch_project.rb"
+  - "https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/docs/AGENT.md"
+tags:
+  - rails
+  - ruby
+  - code-analysis
+  - schema
+  - development
+keywords:
+  - Rails MCP Server
+  - rails-mcp-server
+  - Ruby on Rails MCP
+  - Rails project MCP
+  - Rails schema MCP
+  - Claude Rails analyzer
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Rails MCP Server is a Ruby gem that gives Claude and other MCP clients a
+Rails-aware way to inspect configured projects. It exposes a compact MCP tool
+surface for switching projects, discovering available tools, invoking internal
+analyzers, and running constrained read-only Ruby helpers inside a Rails project
+context.
+
+Use it when a coding assistant needs Rails-specific context such as routes,
+Active Record models, associations, validations, database schema, controllers,
+views, environment configuration, or framework guides without granting a broad
+shell server.
+
+## Source Review
+
+- https://github.com/maquina-app/rails-mcp-server
+- https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/README.md
+- https://rubygems.org/api/v1/gems/rails-mcp-server.json
+- https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/LICENSE.txt
+- https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/rails-mcp-server.gemspec
+- https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/lib/rails-mcp-server/tools/execute_ruby.rb
+- https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/lib/rails-mcp-server/utilities/path_validator.rb
+- https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/lib/rails-mcp-server/tools/switch_project.rb
+- https://raw.githubusercontent.com/maquina-app/rails-mcp-server/main/docs/AGENT.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, RubyGems metadata, license, gemspec, Ruby execution tool, path
+validator, project-switching tool, and agent guide for current setup and
+operating details.
+
+## Features
+
+- Configure multiple Rails projects through `projects.yml` or the
+  `rails-mcp-config` terminal UI.
+- Auto-detect a single Rails project from `RAILS_MCP_PROJECT_PATH`, current
+  working directory, or single-project mode.
+- Switch between configured projects with `switch_project`.
+- Discover available analyzers with `search_tools`.
+- Invoke internal analyzers through `execute_tool`.
+- Inspect project overview, files, routes, database schema, models, controller
+  and view relationships, and environment configuration.
+- Analyze Active Record associations, validations, callbacks, scopes, and model
+  methods.
+- Load Rails, Turbo, Stimulus, Kamal, or custom documentation guides.
+- Run constrained read-only Ruby snippets with helper methods such as
+  `read_file`, `file_exists?`, `list_files`, and `project_root`.
+- Start over stdio by default, or use HTTP/SSE mode for advanced local proxy
+  workflows.
+- Provide setup helpers for Claude Desktop and GitHub Copilot Agent workflows.
+
+## Installation
+
+Install the gem:
+
+```bash
+gem install rails-mcp-server
+```
+
+Run the interactive configuration tool:
+
+```bash
+rails-mcp-config
+```
+
+Add the server to an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "railsMcpServer": {
+      "command": "rails-mcp-server"
+    }
+  }
+}
+```
+
+For a single project, set an explicit project path before starting the server:
+
+```json
+{
+  "mcpServers": {
+    "rails": {
+      "command": "rails-mcp-server",
+      "env": {
+        "RAILS_MCP_PROJECT_PATH": "ABSOLUTE_PATH_TO_RAILS_PROJECT"
+      }
+    }
+  }
+}
+```
+
+## Use Cases
+
+- Ask Claude to summarize a Rails application's structure before editing.
+- Inspect routes, controllers, views, models, associations, validations, and
+  database schema from one MCP workflow.
+- Find files and read source through Rails-aware path validation.
+- Load framework guides while implementing Rails, Turbo, Stimulus, or Kamal
+  features.
+- Query a Rails project with constrained read-only Ruby helpers instead of
+  granting shell access.
+- Support GitHub Copilot Agent or Claude Desktop with Rails-specific project
+  context.
+
+## Safety and Privacy
+
+Rails MCP Server is a local code and project-inspection tool. It can expose
+source code, routes, schema details, model relationships, configuration names,
+and framework docs to the MCP client. Scope it to one approved Rails project or
+a small reviewed project list, and avoid adding directories that contain
+secrets, logs, private customer data, dependency caches, or unrelated projects.
+
+The `execute_ruby` tool is intentionally read-only and blocks common dangerous
+patterns, file writes, shell execution, network access, environment reads, and
+sensitive files. Treat those checks as defense in depth, not permission to run
+arbitrary unreviewed code in high-risk repositories.
+
+## Duplicate Notes
+
+Existing catalog entries cover general code indexing, repository search, and
+editor-control tools. This entry covers the separate
+`maquina-app/rails-mcp-server` Ruby gem and its Rails-specific analyzers,
+project switching, guide resources, and read-only Ruby execution workflow.

@@ -1,0 +1,211 @@
+---
+title: Neo4j MCP Server
+slug: neo4j-mcp-server
+category: mcp
+description: >-
+  Official Neo4j MCP server for giving Claude structured access to Neo4j graph
+  schema introspection, read-only Cypher, optional write Cypher, and Graph Data
+  Science procedure discovery.
+cardDescription: Connect Claude to Neo4j graph schema, Cypher queries, and GDS procedure discovery.
+seoTitle: Neo4j MCP Server for Claude
+seoDescription: >-
+  Configure the official Neo4j MCP Server with Claude, Cursor, VS Code, and
+  other MCP clients to inspect graph schema, run read-only Cypher, optionally
+  run write Cypher, and list Graph Data Science procedures.
+author: Neo4j
+authorProfileUrl: "https://github.com/neo4j"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Neo4j
+brandDomain: neo4j.com
+websiteUrl: "https://neo4j.com/docs/mcp/current/"
+repoUrl: "https://github.com/neo4j/mcp"
+documentationUrl: "https://neo4j.com/docs/mcp/current/configuration/"
+packageUrl: "https://pypi.org/pypi/neo4j-mcp-server/json"
+installable: true
+installCommand: "pip install neo4j-mcp-server"
+usageSnippet: "Ask Claude to inspect the graph schema, run read-only Cypher for a specific question, and keep write mode disabled unless a human approves the exact mutation."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "neo4j": {
+        "command": "python",
+        "args": ["-m", "neo4j_mcp_server"],
+        "env": {
+          "NEO4J_URI": "bolt://localhost:7687",
+          "NEO4J_USERNAME": "neo4j",
+          "NEO4J_PASSWORD": "<your-neo4j-password>",
+          "NEO4J_DATABASE": "neo4j",
+          "NEO4J_READ_ONLY": "true",
+          "NEO4J_TELEMETRY": "false"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "neo4j": {
+        "command": "python",
+        "args": ["-m", "neo4j_mcp_server"],
+        "env": {
+          "NEO4J_URI": "bolt://localhost:7687",
+          "NEO4J_USERNAME": "neo4j",
+          "NEO4J_PASSWORD": "<your-neo4j-password>",
+          "NEO4J_DATABASE": "neo4j",
+          "NEO4J_READ_ONLY": "true",
+          "NEO4J_TELEMETRY": "false"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Python runtime and neo4j-mcp-server package installed for stdio usage.
+  - Neo4j database URI, username, password, and database name.
+  - Read-only mode enabled unless the workflow explicitly needs write Cypher.
+  - Least-privilege Neo4j user or role scoped to the database and operations Claude should perform.
+  - Review of telemetry, log level, schema sample size, and graph data sensitivity before connecting production databases.
+safetyNotes:
+  - Neo4j MCP can expose graph schema, labels, relationship types, property keys, nodes, relationships, paths, and procedure availability.
+  - The read-cypher tool is documented as read-only and uses EXPLAIN plus Neo4j query-type classification, but custom procedures or functions incorrectly classified as read-only may bypass that check.
+  - The write-cypher tool can execute database mutations and is disabled when NEO4J_READ_ONLY is true.
+  - GDS procedure discovery can reveal installed analytics capabilities and graph-processing surface area.
+  - Connecting to production graph databases should use least-privilege credentials, read-only mode by default, and human approval for any write query.
+  - Telemetry is configurable with `NEO4J_TELEMETRY`; teams should decide whether to disable it before sensitive use.
+privacyNotes:
+  - Graph schema, sampled properties, returned nodes, relationships, paths, query text, and GDS procedure lists can expose customer data, internal topology, access patterns, business logic, or sensitive relationships.
+  - NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD, database names, Aura details, and query logs should stay out of prompts, issues, logs, screenshots, and committed files.
+  - Claude outputs based on graph data may re-expose retrieved private data in transcripts or downstream tickets.
+  - Log format, log level, schema sample size, and telemetry settings should be reviewed before connecting regulated or production datasets.
+sourceUrls:
+  - "https://github.com/neo4j/mcp/blob/main/README.md"
+  - "https://github.com/neo4j/mcp/blob/main/manifest.json"
+  - "https://github.com/neo4j/mcp/blob/main/go.mod"
+  - "https://github.com/neo4j/mcp/blob/main/LICENSE.txt"
+  - "https://github.com/neo4j/mcp/blob/main/NOTICE.txt"
+tags:
+  - neo4j
+  - graph-database
+  - cypher
+  - database
+  - graph-data-science
+keywords:
+  - Neo4j MCP
+  - Neo4j MCP Server
+  - official Neo4j MCP
+  - Cypher MCP
+  - graph database MCP
+  - GDS MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Neo4j MCP Server is the official Model Context Protocol server for Neo4j. It
+lets Claude and other MCP clients inspect graph schema, execute read-only
+Cypher, optionally execute write Cypher, and list available Graph Data Science
+procedures against a configured Neo4j database.
+
+The official server lives in `neo4j/mcp` and is separate from the Neo4j Labs MCP
+server bundle in `neo4j-contrib/mcp-neo4j`. The Labs bundle contains
+experimental servers, while this entry is scoped to Neo4j's official product
+MCP server.
+
+## Source Review
+
+- https://neo4j.com/docs/mcp/current/
+- https://github.com/neo4j/mcp
+- https://neo4j.com/docs/mcp/current/configuration/
+- https://pypi.org/pypi/neo4j-mcp-server/json
+- https://github.com/neo4j/mcp/blob/main/README.md
+- https://github.com/neo4j/mcp/blob/main/manifest.json
+- https://github.com/neo4j/mcp/blob/main/go.mod
+- https://github.com/neo4j/mcp/blob/main/LICENSE.txt
+- https://github.com/neo4j/mcp/blob/main/NOTICE.txt
+
+These sources were reviewed on **2026-06-06**. Prefer the official Neo4j MCP
+docs, repository README, package metadata, manifest, license, and notice file
+for current install commands, supported tools, configuration, telemetry, and
+licensing.
+
+## Features
+
+- Official Neo4j MCP server from `neo4j/mcp`.
+- PyPI package `neo4j-mcp-server`.
+- Stdio configuration for Python module launch.
+- `get-schema` tool for labels, relationship types, and property keys.
+- `read-cypher` tool for read-only Cypher queries.
+- `write-cypher` tool for write queries when read-only mode is not enabled.
+- `list-gds-procedures` tool for Graph Data Science procedure discovery.
+- Environment configuration for URI, username, password, database, read-only mode, telemetry, logs, and schema sampling.
+- Manifest metadata for packaged MCPB-style installs.
+- Documentation for installation and configuration in Neo4j's official docs.
+
+## Installation
+
+Install the package:
+
+```sh
+pip install neo4j-mcp-server
+```
+
+Then configure an MCP client with Neo4j credentials. For safer browsing, start
+with read-only mode enabled:
+
+```json
+{
+  "mcpServers": {
+    "neo4j": {
+      "command": "python",
+      "args": ["-m", "neo4j_mcp_server"],
+      "env": {
+        "NEO4J_URI": "bolt://localhost:7687",
+        "NEO4J_USERNAME": "neo4j",
+        "NEO4J_PASSWORD": "<your-neo4j-password>",
+        "NEO4J_DATABASE": "neo4j",
+        "NEO4J_READ_ONLY": "true",
+        "NEO4J_TELEMETRY": "false"
+      }
+    }
+  }
+}
+```
+
+## Use Cases
+
+- Ask Claude to inspect graph schema before writing Cypher.
+- Run read-only Cypher to answer graph questions from nodes, relationships, and paths.
+- Generate graph summaries from a bounded query result.
+- Explore which Graph Data Science procedures are available in the instance.
+- Compare schema changes before and after a migration.
+- Keep write mode disabled for analyst workflows and enable it only for reviewed maintenance tasks.
+- Use least-privilege Neo4j credentials for a single approved database.
+
+## Safety and Privacy
+
+Neo4j MCP connects Claude to a graph database, so schema inspection alone can
+reveal sensitive business structure. Query results can expose private
+relationships, customer records, identity data, infrastructure topology,
+fraud-investigation graphs, or other high-context data.
+
+Use read-only mode by default, scope credentials tightly, and require human
+approval for any write query. Review generated Cypher before execution, and be
+careful with custom procedures or functions because the README documents that
+misclassified read-only procedures can bypass the read-only check.
+
+## Disclosure
+
+Neo4j offers open-source and commercial graph database products and Aura cloud
+services. This listing is not sponsored, paid, or affiliate-driven, and it is
+scoped to the official source-backed MCP server.
+
+## Duplicate Check
+
+No Neo4j MCP Server, `neo4j/mcp`, `neo4j-mcp-server`, or official Neo4j MCP
+entry was found in `content/mcp`, `content/tools`, `content/guides`,
+`content/agents`, or `content/skills`. Existing mentions of Neo4j are
+incidental examples in other database and graph-related entries.

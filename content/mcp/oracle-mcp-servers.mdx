@@ -1,0 +1,201 @@
+---
+title: Oracle MCP Servers
+slug: oracle-mcp-servers
+category: mcp
+description: >-
+  Official Oracle repository of MCP reference servers for OCI CLI, OCI SDK,
+  Oracle Database services, Cloud Guard, Object Storage, Monitoring, Logging,
+  and Oracle Database documentation workflows.
+cardDescription: Connect Claude to Oracle MCP reference servers for OCI, database, and documentation workflows.
+seoTitle: Oracle MCP Servers for Claude
+seoDescription: >-
+  Configure Oracle MCP Servers with Claude and other MCP clients to explore OCI
+  CLI commands, invoke OCI SDK operations, inspect Oracle Database service
+  resources, and search Oracle Database documentation with source-backed safety
+  guidance.
+author: Oracle
+authorProfileUrl: "https://github.com/oracle"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Oracle
+brandDomain: oracle.com
+repoUrl: "https://github.com/oracle/mcp"
+documentationUrl: "https://github.com/oracle/mcp/blob/main/README.md"
+installable: true
+installCommand: "uvx oracle.oci-api-mcp-server@latest"
+usageSnippet: "Start with a least-privilege OCI profile and a narrow server such as oracle.oci-api-mcp-server before allowing Claude to inspect or run OCI operations."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "oracle-oci-api": {
+        "type": "stdio",
+        "command": "uvx",
+        "args": ["oracle.oci-api-mcp-server@latest"],
+        "env": {
+          "OCI_CONFIG_PROFILE": "<least-privilege-profile>",
+          "FASTMCP_LOG_LEVEL": "ERROR"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "oracle-oci-api": {
+        "type": "stdio",
+        "command": "uvx",
+        "args": ["oracle.oci-api-mcp-server@latest"],
+        "env": {
+          "OCI_CONFIG_PROFILE": "<least-privilege-profile>",
+          "FASTMCP_LOG_LEVEL": "ERROR"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - uvx available to the MCP client runtime for Python-based Oracle servers.
+  - OCI CLI configured when using stdio-based OCI servers that rely on local OCI profiles.
+  - Least-privilege OCI IAM policies and a dedicated profile for the specific compartment and service workflow.
+  - Server-specific README reviewed before enabling any server under `src/`.
+  - OCI IAM confidential application configured before exposing HTTP-capable servers beyond local stdio.
+  - Downloaded Oracle Database documentation and a built local index when using the Oracle Database Documentation MCP server.
+safetyNotes:
+  - Oracle describes this repository as proof-of-concept and reference implementations for exploration, prototyping, and learning rather than production use.
+  - The OCI API MCP server can run OCI CLI commands using the configured OCI CLI profile.
+  - The OCI Cloud MCP server can discover and invoke OCI Python SDK client operations, including operations that may create, update, delete, or expose cloud resources.
+  - Service-specific servers cover high-impact areas such as Compute, Database, Identity, Object Storage, Networking, Load Balancer, Monitoring, Logging, Usage, Support, and Cloud Guard.
+  - All cloud actions run with the permissions granted to the OCI profile or authenticated OCI IAM user, so use dedicated least-privilege credentials and human review for write operations.
+  - HTTP-capable servers require OAuth/IAM setup, confidential client secrets, restricted host binding, and careful redirect URI configuration before non-local use.
+privacyNotes:
+  - OCI profiles, OCIDs, compartment names, tenancy details, resource names, API parameters, command text, responses, logs, and errors can reveal sensitive cloud infrastructure details.
+  - OCI actions may expose customer data, backups, logs, object names, support metadata, database resource state, IAM configuration, or billing and usage information.
+  - IDCS client IDs, client secrets, OCI config files, private keys, security tokens, region names, and profile names should stay out of prompts, issues, logs, screenshots, and committed files.
+  - Oracle Database Documentation MCP builds and stores a local documentation index, so review index location, update cadence, and log retention.
+sourceUrls:
+  - "https://github.com/oracle/mcp/tree/main/src"
+  - "https://github.com/oracle/mcp/blob/main/src/oci-api-mcp-server/README.md"
+  - "https://github.com/oracle/mcp/blob/main/src/oci-cloud-mcp-server/README.md"
+  - "https://github.com/oracle/mcp/blob/main/src/oci-database-mcp-server/README.md"
+  - "https://github.com/oracle/mcp/blob/main/src/oracle-db-doc-mcp-server/README.md"
+  - "https://github.com/oracle/mcp/blob/main/BEST_PRACTICES.md"
+  - "https://github.com/oracle/mcp/blob/main/LICENSE.txt"
+tags:
+  - oracle
+  - oci
+  - cloud
+  - database
+  - infrastructure
+keywords:
+  - Oracle MCP
+  - Oracle MCP Servers
+  - OCI MCP server
+  - Oracle Cloud MCP
+  - Oracle Database MCP
+  - Oracle Database documentation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Oracle MCP Servers is Oracle's official repository of Model Context Protocol
+reference servers for Oracle products and OCI workflows. The repository contains
+multiple server implementations under `src/`, including OCI API, OCI Cloud,
+OCI Database, Cloud Guard, Compute, Object Storage, Logging, Monitoring, Usage,
+Support, and Oracle Database documentation servers.
+
+Oracle describes the repository as proof-of-concept and reference
+implementations for exploration, prototyping, and learning. Treat these servers
+as powerful cloud and database control surfaces, and review each server-specific
+README before enabling it in a Claude workflow.
+
+## Source Review
+
+- https://github.com/oracle/mcp
+- https://github.com/oracle/mcp/blob/main/README.md
+- https://github.com/oracle/mcp/tree/main/src
+- https://github.com/oracle/mcp/blob/main/src/oci-api-mcp-server/README.md
+- https://github.com/oracle/mcp/blob/main/src/oci-cloud-mcp-server/README.md
+- https://github.com/oracle/mcp/blob/main/src/oci-database-mcp-server/README.md
+- https://github.com/oracle/mcp/blob/main/src/oracle-db-doc-mcp-server/README.md
+- https://github.com/oracle/mcp/blob/main/BEST_PRACTICES.md
+- https://github.com/oracle/mcp/blob/main/LICENSE.txt
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+top-level README, server-specific READMEs, best-practices guide, and license
+for current server availability, package names, transport modes, authentication
+requirements, and safety guidance.
+
+## Features
+
+- Official Oracle MCP reference repository.
+- Multiple MCP servers under `src/` for OCI and Oracle product workflows.
+- `oracle.oci-api-mcp-server` for OCI CLI command help and command execution.
+- `oracle.oci-cloud-mcp-server` for OCI SDK client discovery, operation description, and operation invocation.
+- OCI Database server covering many Oracle Database service list, get, create, update, and delete operations.
+- Service-specific servers for Compute, Identity, Networking, Object Storage, Monitoring, Logging, Usage, Support, Cloud Guard, and more.
+- Oracle Database Documentation MCP server for searching a locally built Oracle Database documentation index.
+- Stdio examples for local MCP clients.
+- HTTP-capable server guidance for OCI IAM authenticated deployments.
+- Universal Permissive License v1.0 licensing.
+
+## Installation
+
+Start with the narrowest server for the task. For OCI CLI-backed workflows, the
+top-level README shows `oracle.oci-api-mcp-server` over stdio:
+
+```json
+{
+  "mcpServers": {
+    "oracle-oci-api": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["oracle.oci-api-mcp-server@latest"],
+      "env": {
+        "OCI_CONFIG_PROFILE": "<least-privilege-profile>",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+}
+```
+
+Use a dedicated OCI profile with only the permissions required for the workflow.
+For other servers, follow the server-specific README under `src/`.
+
+## Use Cases
+
+- Ask Claude to look up OCI CLI help before a human runs an infrastructure command.
+- Discover OCI SDK clients and operations for a narrow compartment-scoped task.
+- Describe an OCI SDK operation before deciding whether it should be invoked.
+- Inspect Oracle Database service resources such as DB systems, VM clusters, backups, and Autonomous Database resources.
+- Search a locally indexed copy of Oracle Database documentation while working on SQL or database administration tasks.
+- Prototype OCI support, logging, monitoring, usage, object storage, and networking workflows with a controlled OCI profile.
+
+## Safety and Privacy
+
+Oracle MCP Servers can put Claude close to real cloud infrastructure. Use
+read-only or narrowly scoped IAM policies where possible, require human review
+for create, update, delete, ticket, support, billing, or resource-changing
+operations, and keep high-impact servers disabled until the exact workflow is
+approved.
+
+Do not paste OCI private keys, security tokens, client secrets, tenancy details,
+or raw configuration files into prompts or issues. Review logs and model
+transcripts for OCIDs, compartment names, database resource details, object
+names, support metadata, billing data, and other cloud inventory before sharing.
+
+## Disclosure
+
+Oracle offers commercial cloud, database, and support services. This listing is
+not sponsored, paid, or affiliate-driven, and it is scoped to the source-backed
+open Oracle MCP repository.
+
+## Duplicate Check
+
+No dedicated Oracle MCP Servers, `oracle/mcp`, OCI MCP, or Oracle Database MCP
+entry was found in `content/mcp`, `content/tools`, `content/guides`,
+`content/agents`, or `content/skills`.
