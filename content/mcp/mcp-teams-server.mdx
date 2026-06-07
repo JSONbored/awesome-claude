@@ -1,0 +1,214 @@
+---
+title: MCP Teams Server
+slug: mcp-teams-server
+category: mcp
+description: >-
+  MCP server for Microsoft Teams channel workflows, including reading threads,
+  posting new threads, replying to threads, mentioning members, and listing team
+  members.
+cardDescription: Connect Claude to Microsoft Teams channels, threads, replies, mentions, and members.
+seoTitle: Microsoft Teams MCP Server for Claude
+seoDescription: >-
+  Configure MCP Teams Server with Claude and other MCP clients to read Microsoft
+  Teams channel threads, post messages, reply to threads, mention members, and
+  list team members through Azure Bot and Microsoft Graph setup.
+author: InditexTech
+authorProfileUrl: "https://github.com/InditexTech"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MCP Teams Server
+brandDomain: github.com
+repoUrl: "https://github.com/InditexTech/mcp-teams-server"
+documentationUrl: "https://github.com/InditexTech/mcp-teams-server/blob/master/README.md"
+installable: true
+installCommand: "uv run mcp-teams-server"
+usageSnippet: "Use MCP Teams Server only with a dedicated Azure Bot app, a scoped Team ID and Channel ID, and human review before Claude posts or mentions anyone."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "msteams": {
+        "command": "uv",
+        "args": ["run", "mcp-teams-server"],
+        "env": {
+          "TEAMS_APP_ID": "<entra-app-id>",
+          "TEAMS_APP_PASSWORD": "<client-secret>",
+          "TEAMS_APP_TYPE": "SingleTenant",
+          "TEAMS_APP_TENANT_ID": "<tenant-id>",
+          "TEAM_ID": "<team-id>",
+          "TEAMS_CHANNEL_ID": "<channel-id>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "msteams": {
+        "command": "uv",
+        "args": ["run", "mcp-teams-server"],
+        "env": {
+          "TEAMS_APP_ID": "<entra-app-id>",
+          "TEAMS_APP_PASSWORD": "<client-secret>",
+          "TEAMS_APP_TYPE": "SingleTenant",
+          "TEAMS_APP_TENANT_ID": "<tenant-id>",
+          "TEAM_ID": "<team-id>",
+          "TEAMS_CHANNEL_ID": "<channel-id>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 and uv available to the MCP client runtime.
+  - Microsoft Teams account and a Team/Channel where the bot app is installed.
+  - Microsoft Entra ID application registration with client secret credentials.
+  - Azure Bot registration connected to the Microsoft Teams channel.
+  - Microsoft Graph and Teams application permissions scoped to the intended team or group.
+  - TEAMS_APP_ID, TEAMS_APP_PASSWORD, TEAMS_APP_TYPE, TEAMS_APP_TENANT_ID, TEAM_ID, and TEAMS_CHANNEL_ID configured securely.
+safetyNotes:
+  - MCP Teams Server can start new channel threads, reply to existing threads, mention members, read thread replies, list channel threads, look up members by name, and list team members.
+  - Posting or replying in Microsoft Teams can notify real teammates and create persistent workplace records.
+  - Mentioning a member can trigger direct notifications, so require human review before allowing model-generated mentions.
+  - Channel read tools can expose existing conversations, replies, message IDs, pagination cursors, and team member context to the model.
+  - The required Microsoft Graph permission includes ChannelMessage.Read.All resource-specific consent, and Teams app permissions include message send/read and member read scopes.
+  - Use a dedicated bot application, scoped Team ID, scoped Channel ID, least-privilege permissions, and explicit approval for every write operation.
+privacyNotes:
+  - Teams channels can contain customer data, employee names, emails, incident details, roadmap discussions, support conversations, credentials, links, and confidential attachments or references.
+  - Tool calls and logs can expose TEAMS_APP_ID, tenant IDs, team IDs, channel IDs, thread IDs, message IDs, member names, member emails, message bodies, replies, mentions, and pagination cursors.
+  - TEAMS_APP_PASSWORD, client secrets, tenant IDs, bot configuration, and `.env` files should stay out of prompts, issues, logs, screenshots, and committed files.
+  - Claude-generated messages may become discoverable records under organization retention, compliance, and eDiscovery policies.
+sourceUrls:
+  - "https://github.com/InditexTech/mcp-teams-server/blob/master/pyproject.toml"
+  - "https://github.com/InditexTech/mcp-teams-server/blob/master/doc/MS-Teams-setup.md"
+  - "https://github.com/InditexTech/mcp-teams-server/blob/master/llms-install.md"
+  - "https://github.com/InditexTech/mcp-teams-server/blob/master/src/mcp_teams_server/__init__.py"
+  - "https://github.com/InditexTech/mcp-teams-server/blob/master/src/mcp_teams_server/teams.py"
+  - "https://github.com/InditexTech/mcp-teams-server/blob/master/sample.env"
+  - "https://github.com/InditexTech/mcp-teams-server/blob/master/LICENSE.txt"
+tags:
+  - microsoft-teams
+  - collaboration
+  - chat
+  - microsoft-graph
+  - workplace
+keywords:
+  - Microsoft Teams MCP
+  - MCP Teams Server
+  - Teams channel MCP
+  - Microsoft Graph MCP
+  - Teams bot MCP
+  - InditexTech MCP Teams
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Teams Server is an MCP server implementation for Microsoft Teams channel
+workflows. It lets Claude and other MCP clients read channel threads and
+replies, start new channel threads, reply to existing threads, mention members,
+look up members by name, and list team members.
+
+The server is maintained by InditexTech and uses Microsoft Entra ID, Azure Bot,
+Microsoft Teams app setup, Bot Framework, and Microsoft Graph configuration. It
+is scoped by `TEAM_ID` and `TEAMS_CHANNEL_ID`, so teams should configure a
+dedicated bot app for the exact channel Claude may access.
+
+## Source Review
+
+- https://github.com/InditexTech/mcp-teams-server
+- https://github.com/InditexTech/mcp-teams-server/blob/master/README.md
+- https://github.com/InditexTech/mcp-teams-server/blob/master/pyproject.toml
+- https://github.com/InditexTech/mcp-teams-server/blob/master/doc/MS-Teams-setup.md
+- https://github.com/InditexTech/mcp-teams-server/blob/master/llms-install.md
+- https://github.com/InditexTech/mcp-teams-server/blob/master/src/mcp_teams_server/__init__.py
+- https://github.com/InditexTech/mcp-teams-server/blob/master/src/mcp_teams_server/teams.py
+- https://github.com/InditexTech/mcp-teams-server/blob/master/sample.env
+- https://github.com/InditexTech/mcp-teams-server/blob/master/LICENSE.txt
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, Teams setup guide, LLM installation guide, package metadata, source
+implementation, sample environment file, and license for current setup steps,
+required permissions, environment variables, tool behavior, and licensing.
+
+## Features
+
+- Microsoft Teams channel integration through Bot Framework and Microsoft Graph.
+- `start_thread` tool for creating a new channel thread with title and content.
+- `update_thread` tool for replying to an existing thread.
+- `read_thread` tool for reading replies in a thread.
+- `list_threads` tool for paginated channel thread listing.
+- `get_member_by_name` tool for finding a member by display name.
+- `list_members` tool for listing team members.
+- Optional member mentions when starting or updating a thread.
+- Environment configuration for Entra app ID, client secret, tenant, team, and channel.
+- Local uv execution and pre-built GHCR container image documented upstream.
+- Apache-2.0 license.
+
+## Installation
+
+After registering the Entra application, Azure Bot, Teams application, and
+required permissions from the upstream setup guide, configure an MCP client with
+the dedicated bot credentials:
+
+```json
+{
+  "mcpServers": {
+    "msteams": {
+      "command": "uv",
+      "args": ["run", "mcp-teams-server"],
+      "env": {
+        "TEAMS_APP_ID": "<entra-app-id>",
+        "TEAMS_APP_PASSWORD": "<client-secret>",
+        "TEAMS_APP_TYPE": "SingleTenant",
+        "TEAMS_APP_TENANT_ID": "<tenant-id>",
+        "TEAM_ID": "<team-id>",
+        "TEAMS_CHANNEL_ID": "<channel-id>"
+      }
+    }
+  }
+}
+```
+
+Use a channel created for model-assisted workflows first, and test reads before
+allowing the model to post or mention teammates.
+
+## Use Cases
+
+- Ask Claude to list recent threads in an approved Teams channel.
+- Read a specific thread before drafting a response.
+- Post a reviewed incident summary or deployment note to a team channel.
+- Reply to a thread with a human-approved update.
+- Mention a named teammate only after confirming the target person.
+- List members to validate a mention target before posting.
+- Route model-generated summaries into a dedicated operational Teams channel.
+
+## Safety and Privacy
+
+MCP Teams Server can create visible workplace messages. Require human approval
+before posting, replying, or mentioning anyone, and keep the bot scoped to a
+specific team and channel. Test in a non-production channel before connecting it
+to incident, customer, executive, HR, legal, or security channels.
+
+Teams conversations often contain confidential business context and personal
+data. Protect client secrets and tenant details, review organization retention
+and eDiscovery policies, and avoid exposing private messages or member data to
+model sessions that are not approved for that workspace.
+
+## Disclosure
+
+This project is maintained by InditexTech and integrates with Microsoft Teams,
+Microsoft Entra ID, Azure Bot, and Microsoft Graph. This listing is not
+sponsored, paid, or affiliate-driven, and it is scoped to the source-backed MCP
+server repository.
+
+## Duplicate Check
+
+Existing content includes a CLI for Microsoft 365 MCP Server that can cover
+broader Microsoft 365 tasks, and a meeting bot entry that mentions Microsoft
+Teams. This entry is distinct because it covers `InditexTech/mcp-teams-server`,
+an MCP server focused specifically on Microsoft Teams channel threads, replies,
+mentions, and member listing. No matching source URL entry was found in
+`content/mcp`.
