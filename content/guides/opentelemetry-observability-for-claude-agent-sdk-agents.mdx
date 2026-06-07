@@ -1,0 +1,121 @@
+---
+title: OpenTelemetry Observability for Claude Agent SDK Agents
+slug: opentelemetry-observability-for-claude-agent-sdk-agents
+category: guides
+description: >-
+  A practical walkthrough of exporting OpenTelemetry traces, metrics, and events
+  from the Claude Agent SDK: enabling telemetry, configuring OTLP exporters,
+  reading agent spans, linking traces to your app, and controlling sensitive data.
+cardDescription: >-
+  Export OpenTelemetry traces, metrics, and events from the Claude Agent SDK with
+  OTLP, and control what content is exported.
+seoTitle: OpenTelemetry Observability for Claude Agent SDK Agents
+seoDescription: >-
+  How to export OpenTelemetry traces, metrics, and events from the Claude Agent
+  SDK: CLAUDE_CODE_ENABLE_TELEMETRY, OTEL exporters and endpoint, agent spans,
+  trace-context linking, and controlling sensitive data in exports.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/observability"
+usageSnippet: "Use this guide to export Claude Agent SDK telemetry (traces, metrics, events) to an OpenTelemetry backend and to control what content is exported."
+prerequisites:
+  - "The Claude Agent SDK installed for Python or TypeScript."
+  - "An OTLP-compatible backend or collector (Honeycomb, Datadog, Grafana, Jaeger, etc.)."
+  - "Ability to set environment variables for the process or via options.env."
+safetyNotes:
+  - "Telemetry is off until you set CLAUDE_CODE_ENABLE_TELEMETRY=1 and choose an exporter; turning it on starts exporting usage data, so confirm the destination is approved."
+  - "Do not use the console exporter through the SDK; stdout is the SDK's message channel. Point OTLP at a collector or local Jaeger instead."
+  - "Traces are beta and require CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1; span names and attributes may change between releases."
+privacyNotes:
+  - "By default telemetry is structural (durations, model/tool names, token counts), not content; opt-in vars (OTEL_LOG_USER_PROMPTS, OTEL_LOG_TOOL_DETAILS, OTEL_LOG_TOOL_CONTENT, OTEL_LOG_RAW_API_BODIES) add prompt and tool content."
+  - "Exporter headers can carry tokens; supply them via the environment, not committed config."
+  - "End-user attribution via OTEL_RESOURCE_ATTRIBUTES creates a per-user audit trail; handle that data per your policy and percent-encode values."
+tags:
+  - claude-agent-sdk
+  - opentelemetry
+  - observability
+  - telemetry
+  - developer-tools
+keywords:
+  - claude agent sdk opentelemetry
+  - CLAUDE_CODE_ENABLE_TELEMETRY
+  - agent sdk traces metrics
+  - OTEL exporter sdk
+  - agent sdk observability
+---
+
+## Overview
+
+The Claude Agent SDK can export traces, metrics, and log events as OpenTelemetry
+data to any OTLP backend. The SDK runs the Claude Code CLI as a child process; the
+CLI has the OpenTelemetry instrumentation and exports directly, while the SDK
+passes configuration through as environment variables.
+
+## Enable export
+
+Telemetry is off until you set `CLAUDE_CODE_ENABLE_TELEMETRY=1` and choose at
+least one exporter. The three signals are independent:
+
+| Signal | Enable with |
+| --- | --- |
+| Metrics | `OTEL_METRICS_EXPORTER` |
+| Log events | `OTEL_LOGS_EXPORTER` |
+| Traces | `OTEL_TRACES_EXPORTER` plus `CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1` |
+
+```typescript
+const otelEnv = {
+  CLAUDE_CODE_ENABLE_TELEMETRY: "1",
+  CLAUDE_CODE_ENHANCED_TELEMETRY_BETA: "1",
+  OTEL_TRACES_EXPORTER: "otlp",
+  OTEL_METRICS_EXPORTER: "otlp",
+  OTEL_LOGS_EXPORTER: "otlp",
+  OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf",
+  OTEL_EXPORTER_OTLP_ENDPOINT: "https://collector.example.com:4318",
+};
+// TS replaces the inherited env, so spread process.env:
+const options = { env: { ...process.env, ...otelEnv } };
+```
+
+In Python, `env` merges over the inherited environment. Do not use the `console`
+exporter through the SDK; stdout is its message channel.
+
+## Read agent traces
+
+With traces enabled, each step becomes a span: `claude_code.interaction` (a turn),
+`claude_code.llm_request` (each model call), `claude_code.tool` (each tool, with
+permission-wait and execution children), and `claude_code.hook`. Spans carry a
+`session.id` attribute so you can group multiple `query()` calls in one session.
+
+## Link traces to your app
+
+The SDK propagates W3C trace context into the CLI: if you call `query()` while an
+OpenTelemetry span is active, the agent run nests inside your span. Set
+`TRACEPARENT` in `options.env` to pin a specific parent.
+
+## Tag and attribute
+
+Override `OTEL_SERVICE_NAME` and add `OTEL_RESOURCE_ATTRIBUTES` to filter by agent
+and attach deployment metadata. For multi-user apps, inject percent-encoded
+`enduser.id`/`tenant.id` resource attributes per call to build a per-user audit
+trail.
+
+## Control sensitive data
+
+Telemetry is structural by default (durations, model/tool names, token counts).
+Content is added only with opt-in vars: `OTEL_LOG_USER_PROMPTS`,
+`OTEL_LOG_TOOL_DETAILS`, `OTEL_LOG_TOOL_CONTENT`, and `OTEL_LOG_RAW_API_BODIES`.
+Leave these unset unless your pipeline is approved to store that data.
+
+## Flush short runs
+
+Metrics export every 60s, traces/logs every 5s by default. For short tasks, lower
+`OTEL_METRIC_EXPORT_INTERVAL`, `OTEL_LOGS_EXPORT_INTERVAL`, and
+`OTEL_TRACES_EXPORT_INTERVAL` so data reaches the collector before exit.
+
+## Source
+
+- Observability with OpenTelemetry: https://code.claude.com/docs/en/agent-sdk/observability

@@ -1,0 +1,199 @@
+---
+title: Agentset MCP Server
+slug: agentset-mcp-server
+category: mcp
+description: >-
+  Official Agentset MCP server that lets Claude retrieve cited knowledge-base
+  results from an Agentset namespace through the `knowledge-base-retrieve` tool,
+  with optional tenant scoping and custom tool descriptions.
+cardDescription: >-
+  Query Agentset RAG namespaces from Claude through the official
+  `@agentset/mcp` server.
+seoTitle: Agentset MCP Server for Claude
+seoDescription: >-
+  Configure Agentset MCP Server with Claude to search an Agentset knowledge
+  base namespace, retrieve RAG chunks, pass tenant IDs for multi-tenant data
+  segregation, and keep API keys in MCP environment variables.
+author: Agentset
+authorProfileUrl: "https://github.com/agentset-ai"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Agentset
+brandDomain: agentset.ai
+repoUrl: "https://github.com/agentset-ai/mcp-server"
+documentationUrl: "https://docs.agentset.ai/production/mcp-server.md"
+packageUrl: "https://registry.npmjs.org/@agentset/mcp"
+installable: true
+installCommand: "Run `npx @agentset/mcp --ns <namespace-id>` with `AGENTSET_API_KEY` set in the MCP server environment."
+usageSnippet: "Configure Claude with `@agentset/mcp@latest`, set `AGENTSET_API_KEY` and `AGENTSET_NAMESPACE_ID`, then ask Claude to retrieve relevant knowledge-base context."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "agentset": {
+        "command": "npx",
+        "args": ["-y", "@agentset/mcp@latest"],
+        "env": {
+          "AGENTSET_API_KEY": "agentset_xxx",
+          "AGENTSET_NAMESPACE_ID": "ns_xxx"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agentset": {
+        "command": "npx",
+        "args": ["-y", "@agentset/mcp@latest", "--ns", "ns_xxx"],
+        "env": {
+          "AGENTSET_API_KEY": "agentset_xxx"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Agentset account or self-hosted Agentset deployment with a populated namespace.
+  - Agentset API key with access to the namespace Claude should query.
+  - Node.js 18.17 or newer for running the `@agentset/mcp` package.
+  - Namespace ID selected with `--ns` or `AGENTSET_NAMESPACE_ID`.
+  - Optional tenant ID reviewed before enabling multi-tenant retrieval.
+safetyNotes:
+  - The MCP server sends Claude's retrieval queries to the Agentset API using the configured API key and namespace.
+  - The `knowledge-base-retrieve` tool can return up to 100 results per call and can rerank results by relevance.
+  - Namespace and tenant selection control which indexed documents are searchable; review them before connecting a shared agent.
+  - API keys should be scoped, rotated, and stored only in the MCP server environment or a secret manager.
+  - Custom tool descriptions can influence when the model calls the retrieval tool, so review them before use in production workflows.
+privacyNotes:
+  - Retrieved chunks can include private documents, product specs, policies, support content, internal procedures, historical project information, or customer-specific data.
+  - Retrieval queries, namespace IDs, tenant IDs, document chunks, citations, and tool outputs may be visible to the MCP client, model provider, Agentset logs, and application telemetry.
+  - Tenant IDs are useful for data segregation, but incorrect tenant or namespace configuration can expose the wrong knowledge base.
+  - Do not paste API keys, namespace IDs, tenant IDs, or retrieved private chunks into shared issue reports, screenshots, or repository files.
+disclosure: >-
+  MIT-licensed official MCP package for Agentset. Agentset offers hosted and
+  self-hosted RAG infrastructure; review the service or deployment terms that
+  apply to your environment.
+sourceUrls:
+  - "https://raw.githubusercontent.com/agentset-ai/mcp-server/main/README.md"
+  - "https://raw.githubusercontent.com/agentset-ai/mcp-server/main/LICENSE"
+  - "https://raw.githubusercontent.com/agentset-ai/mcp-server/main/package.json"
+  - "https://raw.githubusercontent.com/agentset-ai/mcp-server/main/src/index.ts"
+  - "https://raw.githubusercontent.com/agentset-ai/mcp-server/main/src/utils.ts"
+  - "https://raw.githubusercontent.com/agentset-ai/agentset/main/README.md"
+  - "https://docs.agentset.ai/search-and-retrieval/search.md"
+tags:
+  - rag
+  - retrieval
+  - knowledge-base
+  - citations
+  - developer-tools
+keywords:
+  - Agentset MCP
+  - agentset mcp server
+  - "@agentset/mcp"
+  - RAG MCP server
+  - knowledge base retrieval MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Agentset MCP Server is the official `@agentset/mcp` package for connecting
+Claude to an Agentset knowledge base. It runs as a stdio MCP server and exposes
+a `knowledge-base-retrieve` tool that searches a configured namespace, returns
+matching chunks, and optionally reranks results.
+
+Use it when an Agentset namespace already contains the documents Claude should
+consult, such as product documentation, support articles, policies, or internal
+technical knowledge. The server requires an Agentset API key and namespace ID,
+and it can optionally pass a tenant ID for multi-tenant data segregation.
+
+## Source Review
+
+- https://github.com/agentset-ai/mcp-server
+- https://docs.agentset.ai/production/mcp-server.md
+- https://registry.npmjs.org/@agentset/mcp
+- https://raw.githubusercontent.com/agentset-ai/mcp-server/main/README.md
+- https://raw.githubusercontent.com/agentset-ai/mcp-server/main/LICENSE
+- https://raw.githubusercontent.com/agentset-ai/mcp-server/main/package.json
+- https://raw.githubusercontent.com/agentset-ai/mcp-server/main/src/index.ts
+- https://raw.githubusercontent.com/agentset-ai/mcp-server/main/src/utils.ts
+- https://raw.githubusercontent.com/agentset-ai/agentset/main/README.md
+- https://docs.agentset.ai/search-and-retrieval/search.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live MCP docs, NPM
+package metadata, MCP server source, option parser, Agentset platform README,
+and search documentation for current package versions and retrieval behavior.
+
+## Features
+
+- Run the official `@agentset/mcp` package with `npx`, `pnpm dlx`, `yarn dlx`,
+  or `bunx`.
+- Search an Agentset namespace through the `knowledge-base-retrieve` MCP tool.
+- Pass namespace ID through `--ns` or `AGENTSET_NAMESPACE_ID`.
+- Pass a tenant ID with `-t` for multi-tenant data segregation.
+- Override the default tool description with `-d`.
+- Control result count with `topK`, capped by the server schema.
+- Enable or disable reranking per retrieval call.
+- Use Agentset's hosted API or a self-hosted Agentset deployment depending on
+  your environment.
+
+## Installation
+
+Run the MCP package with an Agentset API key and namespace:
+
+```bash
+AGENTSET_API_KEY=your-api-key npx @agentset/mcp --ns your-namespace-id
+```
+
+Add the server to Claude or another MCP client:
+
+```json
+{
+  "mcpServers": {
+    "agentset": {
+      "command": "npx",
+      "args": ["-y", "@agentset/mcp@latest"],
+      "env": {
+        "AGENTSET_API_KEY": "agentset_xxx",
+        "AGENTSET_NAMESPACE_ID": "ns_xxx"
+      }
+    }
+  }
+}
+```
+
+For multi-tenant applications, add the documented tenant option only after
+confirming the namespace and tenant mapping.
+
+## Use Cases
+
+- Let Claude answer questions from an Agentset product documentation namespace.
+- Retrieve relevant support articles with citations before drafting a response.
+- Give an internal assistant access to policies or procedures without exposing
+  unrelated namespaces.
+- Use tenant scoping for customer-specific knowledge bases.
+- Override the tool description so Claude knows when to use Agentset for a
+  specific workflow.
+
+## Safety and Privacy
+
+Agentset MCP is a retrieval bridge into a knowledge base, so access boundaries
+matter. Use least-privilege API keys, connect only the namespace Claude should
+query, and check tenant IDs carefully in multi-tenant applications. If a shared
+agent uses the server, document which namespace and tenant scope it can access.
+
+Treat retrieval queries, chunks, citations, namespace IDs, tenant IDs, and API
+keys as sensitive. Retrieved content can include private documentation, support
+history, policies, product details, or customer data. Keep keys in environment
+variables or a secret manager, rotate them when shared configs change, and avoid
+copying private retrieval output into public issues, screenshots, or commits.
+
+## Duplicate Check
+
+No `agentset-ai/mcp-server`, `agentset-ai/agentset`, `@agentset/mcp`, Agentset
+MCP Server, or matching source URL entry was found in `content/mcp` or
+`README.md`.

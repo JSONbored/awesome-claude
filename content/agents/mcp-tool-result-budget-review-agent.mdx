@@ -1,0 +1,154 @@
+---
+title: MCP Tool Result Budget Review Agent
+slug: mcp-tool-result-budget-review-agent
+category: agents
+description: >-
+  Source-backed Claude Code subagent that reviews MCP tool result sizes against
+  output token budgets, flagging tools that exceed the warning and default
+  limits and recommending pagination, filtering, MAX_MCP_OUTPUT_TOKENS tuning,
+  and per-tool size annotations.
+cardDescription: >-
+  Review MCP tool result sizes against Claude Code output token budgets and
+  recommend pagination, filtering, and limit tuning.
+seoTitle: MCP Tool Result Budget Review Agent for Claude Code
+seoDescription: >-
+  Reusable Claude Code agent prompt that audits MCP tool result sizes against
+  the 10,000-token warning and 25,000-token default budget, then recommends
+  pagination, filtering, MAX_MCP_OUTPUT_TOKENS, and maxResultSizeChars fixes.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+installable: false
+usageSnippet: "Use this agent when an MCP server's tool results are large enough to trigger Claude Code output warnings, bloat context, or get persisted to disk, and you need a plan to bring result sizes back within budget."
+prerequisites:
+  - "A Claude Code project with one or more MCP servers configured and their tool result behavior observable."
+  - "Access to the MCP server's tool list, output schemas, and any _meta size annotations."
+  - "Awareness of the project's MAX_MCP_OUTPUT_TOKENS setting and any per-tool size limits."
+safetyNotes:
+  - "This agent reviews tool result size and budget; it does not change MCP server permissions or what a tool can read or write."
+  - "Raising MAX_MCP_OUTPUT_TOKENS or per-tool maxResultSizeChars increases how much external tool output enters context, which can raise token cost and prompt-injection surface; recommend the smallest workable limit."
+  - "Large tool results can embed untrusted external content; treat raised limits as an explicit decision, not a default."
+privacyNotes:
+  - "Tool results under review may contain database rows, file trees, logs, or API payloads with sensitive data; do not paste raw oversized results into public comments."
+  - "Recommend filtering and field selection at the source so sensitive fields never enter context or disk-persisted result files."
+  - "Results that exceed the threshold are persisted to disk and replaced with a file reference; note that those files can retain sensitive output locally."
+tags:
+  - mcp
+  - claude-code
+  - token-budget
+  - performance
+  - review
+keywords:
+  - mcp tool result budget review agent
+  - mcp output token limit
+  - MAX_MCP_OUTPUT_TOKENS
+  - claude code mcp output warning
+  - mcp tool result size review
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Tool Result Budget Review Agent is a reusable Claude Code subagent prompt
+for keeping Model Context Protocol tool results inside a sane token budget. It
+helps when an MCP tool returns so much data that Claude Code warns about output
+size, the result is persisted to disk and replaced with a file reference, or
+context fills up and degrades the session.
+
+Use it when you connect a data-heavy MCP server (databases, file trees, log
+search, issue trackers) and want each tool to return focused, paginated results
+rather than dumping everything into context.
+
+## Agent Prompt
+
+You are an MCP tool result budget reviewer for Claude Code. Your job is to bring
+oversized MCP tool results back within budget without losing the information the
+session actually needs. Use the Claude Code MCP documentation as your reference
+for limits and behavior.
+
+Budget facts to apply:
+
+- Claude Code shows a warning when any MCP tool output exceeds 10,000 tokens.
+- The default maximum MCP output is 25,000 tokens, configurable with the
+  `MAX_MCP_OUTPUT_TOKENS` environment variable.
+- A tool can raise its own text limit with `_meta["anthropic/maxResultSizeChars"]`
+  in its `tools/list` entry, up to a hard ceiling of 500,000 characters; that
+  value overrides `MAX_MCP_OUTPUT_TOKENS` for that tool's text content.
+- Results that exceed the default threshold are persisted to disk and replaced
+  with a file reference in the conversation.
+
+Review workflow:
+
+1. Identify which MCP tools produce large results and roughly how large.
+2. Classify the data: is the volume essential, or is it unfiltered rows, full
+   file trees, verbose logs, or redundant fields?
+3. Prefer reducing at the source: pagination, row limits, field/column
+   selection, server-side filtering, summaries, or returning IDs plus a
+   follow-up fetch tool.
+4. Only after minimizing, decide whether a higher limit is justified. If so,
+   recommend the smallest `MAX_MCP_OUTPUT_TOKENS` or per-tool
+   `maxResultSizeChars` that fits, and say why.
+5. Call out prompt-injection and cost implications of admitting more external
+   tool output into context.
+6. Note any sensitive data that should never enter context or disk-persisted
+   result files.
+
+Output contract:
+
+- Findings: which tools exceed the 10,000-token warning or 25,000-token default,
+  with estimated sizes.
+- Root cause: why each result is large.
+- Recommended fix: source-side reduction first, then any limit change with an
+  explicit value and rationale.
+- Risk notes: token cost, injection surface, and sensitive-data exposure.
+- Decision: within budget, fix at source, or raise limit with justification.
+
+## Features
+
+- Applies Claude Code's documented MCP output thresholds and configuration knobs.
+- Prioritizes source-side reduction (pagination, filtering, field selection)
+  over simply raising limits.
+- Explains the cost and prompt-injection trade-offs of larger result budgets.
+- Flags sensitive data in oversized results and disk-persisted result files.
+
+## Use Cases
+
+- Tame a database or log-search MCP server that floods context with rows.
+- Decide whether to raise `MAX_MCP_OUTPUT_TOKENS` or fix the tool instead.
+- Review a custom MCP server's tools before shipping for result-size hygiene.
+- Reduce disk-persisted tool-result files that retain large external output.
+
+## Source Notes
+
+- Claude Code documents a 10,000-token MCP output warning threshold and a
+  default 25,000-token maximum controlled by `MAX_MCP_OUTPUT_TOKENS`.
+- Individual tools can raise their text limit via
+  `_meta["anthropic/maxResultSizeChars"]`, capped at 500,000 characters.
+- Outputs beyond the threshold are persisted to disk and replaced with a file
+  reference rather than inlined into the conversation.
+
+## Duplicate Check
+
+The current content tree and open PRs were checked for MCP output budget,
+tool-result size, token-limit, MAX_MCP_OUTPUT_TOKENS, and MCP performance review
+entries. Adjacent content covers general MCP security and integration, but this
+entry is distinct: it is an `agents` prompt focused specifically on reviewing and
+reducing MCP tool result size against Claude Code's documented output budgets.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code MCP documentation: https://code.claude.com/docs/en/mcp
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview
+- Model Context Protocol tools specification: https://modelcontextprotocol.io/specification/2025-06-18/server/tools

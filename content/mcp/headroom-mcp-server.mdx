@@ -1,0 +1,165 @@
+---
+title: Headroom MCP Server
+slug: headroom-mcp-server
+category: mcp
+description: >-
+  Local-first context compression MCP server for reducing tool outputs, logs,
+  files, RAG chunks, and agent context before they reach the model.
+cardDescription: >-
+  Compress and retrieve large agent context through Headroom MCP tools for
+  token-efficient coding and research workflows.
+seoTitle: Headroom MCP Server for Claude
+seoDescription: >-
+  Use Headroom's MCP server with Claude Code, Codex, Cursor, and other MCP
+  clients to compress tool outputs, retrieve originals on demand, and track
+  context savings in local-first agent workflows.
+author: Tejas Chopra
+authorProfileUrl: "https://github.com/chopratejas"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Headroom
+brandDomain: headroom-docs.vercel.app
+repoUrl: "https://github.com/chopratejas/headroom"
+documentationUrl: "https://headroom-docs.vercel.app/docs/mcp"
+packageUrl: "https://pypi.org/project/headroom-ai/"
+installable: true
+installCommand: "pip install \"headroom-ai[mcp]\" && headroom mcp install"
+usageSnippet: "Install Headroom with MCP support, run `headroom mcp install`, and use `headroom_compress`, `headroom_retrieve`, and `headroom_stats` for large outputs."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "headroom": {
+        "command": "headroom",
+        "args": ["mcp", "serve"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "headroom": {
+        "command": "headroom",
+        "args": ["mcp", "serve"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer.
+  - Headroom package installed with MCP support.
+  - Local disk space for reversible compression, memory, and retrieval stores.
+  - MCP client such as Claude Code, Codex, Cursor, Aider, or another compatible host.
+  - Team agreement on what content can be compressed, stored, and retrieved by an agent.
+safetyNotes:
+  - Compression can omit details from the active model context; use retrieval tools when exact logs, code, or evidence matter.
+  - Do not treat compressed summaries as authoritative for security, legal, financial, or incident-response decisions without checking originals.
+  - Local memory and reversible compression stores should be protected, purged, or excluded from backups when they contain sensitive data.
+  - Evaluate compression behavior on your own task types before relying on it for critical workflows.
+privacyNotes:
+  - Tool outputs, logs, source files, prompts, RAG chunks, and conversation context may be stored locally for compression and retrieval.
+  - Local stores can include secrets, customer data, stack traces, repository paths, and proprietary code unless filtered upstream.
+  - If using proxy or provider integrations beyond local MCP tools, review which data is forwarded to external model providers.
+sourceUrls:
+  - "https://github.com/chopratejas/headroom"
+  - "https://headroom-docs.vercel.app/docs"
+  - "https://headroom-docs.vercel.app/docs/mcp"
+  - "https://headroom-docs.vercel.app/docs/architecture"
+  - "https://headroom-docs.vercel.app/docs/ccr"
+  - "https://pypi.org/project/headroom-ai/"
+  - "https://www.npmjs.com/package/headroom-ai"
+tags:
+  - context
+  - compression
+  - tokens
+  - memory
+  - local-first
+keywords:
+  - Headroom MCP
+  - headroom-ai MCP server
+  - context compression MCP
+  - token reduction MCP
+  - reversible compression MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Headroom is a context compression layer for AI agents. Its MCP mode exposes
+tools for compressing large inputs, retrieving originals when needed, and
+inspecting savings. The project is designed for tool outputs, logs, files, RAG
+chunks, and conversation history in coding-agent workflows.
+
+The repository describes Headroom as local-first and reversible: originals are
+stored locally so a model can retrieve more detail when a compressed result is
+not enough.
+
+## Source Review
+
+- https://github.com/chopratejas/headroom
+- https://headroom-docs.vercel.app/docs
+- https://headroom-docs.vercel.app/docs/mcp
+- https://headroom-docs.vercel.app/docs/architecture
+- https://headroom-docs.vercel.app/docs/ccr
+- https://pypi.org/project/headroom-ai/
+- https://www.npmjs.com/package/headroom-ai
+
+These sources were reviewed on **2026-06-05**. Prefer live docs for current MCP
+commands, package extras, supported agents, storage behavior, and retrieval
+semantics.
+
+## Features
+
+- MCP tools for compression, retrieval, and savings stats.
+- Compression for logs, tool outputs, files, RAG chunks, code, JSON, and prose.
+- Reversible compression with local storage of originals.
+- Agent wrappers for Claude Code, Codex, Cursor, Aider, Copilot CLI, and
+  OpenClaw.
+- Proxy and SDK modes for non-MCP integrations.
+- Cross-agent memory and deduplication features.
+
+## Installation
+
+Install the Python package with MCP support:
+
+```sh
+pip install "headroom-ai[mcp]"
+headroom mcp install
+```
+
+Use the current project docs for the exact MCP install or serve command for your
+client. A typical stdio server configuration shape is:
+
+```json
+{
+  "mcpServers": {
+    "headroom": {
+      "command": "headroom",
+      "args": ["mcp", "serve"]
+    }
+  }
+}
+```
+
+## Use Cases
+
+- Compress large command output before it fills the model context window.
+- Let an agent inspect logs while keeping originals retrievable.
+- Reduce repeated RAG chunks or file reads during codebase exploration.
+- Track context savings and compression behavior during long coding sessions.
+- Share compressed context across compatible local agent workflows.
+
+## Safety and Privacy
+
+Compression trades context volume for abstraction. For debugging, security
+review, and incident work, retrieve and inspect originals before drawing final
+conclusions. Protect local storage because it may contain exactly the sensitive
+material that was removed from the active prompt.
+
+## Duplicate Check
+
+Existing context-window optimizer entries cover agent behavior and workflow
+guidance. No `chopratejas/headroom` MCP entry or source URL was found in
+`content/mcp`.

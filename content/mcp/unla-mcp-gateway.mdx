@@ -1,0 +1,185 @@
+---
+title: Unla MCP Gateway
+slug: unla-mcp-gateway
+category: mcp
+description: >-
+  Lightweight Go MCP gateway that turns existing MCP servers and REST APIs into
+  managed SSE or Streamable HTTP MCP endpoints through configuration.
+cardDescription: >-
+  Run a management UI and gateway for converting REST APIs or existing MCP
+  servers into multi-tenant SSE and Streamable HTTP MCP endpoints.
+seoTitle: Unla MCP Gateway for Claude
+seoDescription: >-
+  Configure Unla with Claude and other MCP clients to proxy existing MCP
+  servers, convert REST APIs into MCP tools, manage gateway configs, and expose
+  SSE or Streamable HTTP endpoints.
+author: AmoyLab
+authorProfileUrl: "https://github.com/AmoyLab"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Unla
+brandDomain: docs.unla.amoylab.com
+repoUrl: "https://github.com/AmoyLab/Unla"
+documentationUrl: "https://docs.unla.amoylab.com"
+packageUrl: "https://github.com/AmoyLab/Unla/pkgs/container/unla%2Fallinone"
+installable: true
+installCommand: "docker run --name unla -p 8080:80 -p 5235:5235 -e ENV=production -e APISERVER_JWT_SECRET_KEY=YOUR_RANDOM_SECRET -e SUPER_ADMIN_USERNAME=YOUR_ADMIN_USER -e SUPER_ADMIN_PASSWORD=YOUR_ADMIN_PASSWORD ghcr.io/amoylab/unla/allinone:latest"
+usageSnippet: "Start the Unla all-in-one container, add an MCP server or REST API config in the management UI, then connect Claude to the generated SSE or Streamable HTTP endpoint."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "unla": {
+        "url": "UNLA_STREAMABLE_HTTP_ENDPOINT"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "unla-sse": {
+        "url": "UNLA_SSE_ENDPOINT"
+      }
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Docker available for the all-in-one deployment, or Kubernetes and Helm if using the packaged cluster deployment.
+  - Administrator username, administrator password, and JWT secret replaced before first start.
+  - At least one existing MCP server or REST API configuration ready to import into the gateway.
+  - Network, TLS, reverse proxy, and port exposure reviewed before sharing generated MCP endpoints.
+  - Storage choice and config persistence model reviewed for disk, SQLite, PostgreSQL, or MySQL backed deployments.
+safetyNotes:
+  - Unla can expose existing MCP servers and REST APIs as new MCP endpoints, so the final tool surface depends on every imported config.
+  - Generated endpoints may proxy read/write API operations; review tool descriptions and permissions before connecting an autonomous agent.
+  - The upstream README notes that Unla is under rapid development and that documentation can lag behind implementation.
+  - Replace default admin credentials and secrets before exposing the management UI or gateway outside a trusted development network.
+  - Hot-loaded gateway configuration, multi-tenant routing, OAuth pre-authentication, and management UI access should be governed like production API infrastructure.
+privacyNotes:
+  - Unla may receive prompts, tool names, tool arguments, REST API parameters, upstream MCP responses, generated endpoint metadata, logs, admin credentials, JWT secrets, OAuth tokens, and configuration history.
+  - Imported REST API and MCP server configs can include private upstream URLs, headers, tokens, tenant identifiers, and service credentials.
+  - Persisted config backends and container logs may retain sensitive endpoint definitions and operational metadata.
+  - Do not commit real gateway configs, API credentials, admin passwords, JWT secrets, OAuth client secrets, or exported tenant data.
+sourceUrls:
+  - "https://github.com/AmoyLab/Unla"
+  - "https://github.com/AmoyLab/Unla/blob/main/README.md"
+  - "https://github.com/AmoyLab/Unla/blob/main/.env.example"
+  - "https://github.com/AmoyLab/Unla/blob/main/configs/mcp-gateway.yaml"
+  - "https://github.com/AmoyLab/Unla/blob/main/configs/apiserver.yaml"
+  - "https://github.com/AmoyLab/Unla/blob/main/configs/proxy-mock-server.yaml"
+  - "https://github.com/AmoyLab/Unla/blob/main/deploy/docker/allinone/docker-compose.yml"
+  - "https://github.com/AmoyLab/Unla/blob/main/deploy/helm/values.yaml"
+  - "https://github.com/AmoyLab/Unla/blob/main/LICENSE"
+  - "https://github.com/AmoyLab/Unla/releases"
+  - "https://github.com/AmoyLab/Unla/pkgs/container/unla%2Fallinone"
+  - "https://docs.unla.amoylab.com"
+tags:
+  - gateway
+  - proxy
+  - rest-api
+  - streamable-http
+  - management-ui
+keywords:
+  - Unla
+  - MCP Gateway
+  - AmoyLab Unla
+  - REST API to MCP
+  - MCP Streamable HTTP gateway
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Unla is a Go-based MCP gateway for converting existing MCP servers and REST APIs
+into managed MCP endpoints without changing the upstream service code. It can
+proxy MCP servers, map REST API definitions into MCP tools, and expose the
+result through SSE or Streamable HTTP endpoints.
+
+The project includes an all-in-one container, a management UI, configuration
+examples, config persistence options, hot reload support, OAuth pre-authentication,
+and Kubernetes or Helm deployment assets. It is most useful when a team wants one
+operational gateway for several MCP-facing integrations instead of wiring each
+MCP client directly to every upstream server or API.
+
+## Source Review
+
+- https://github.com/AmoyLab/Unla
+- https://github.com/AmoyLab/Unla/blob/main/README.md
+- https://github.com/AmoyLab/Unla/blob/main/.env.example
+- https://github.com/AmoyLab/Unla/blob/main/configs/mcp-gateway.yaml
+- https://github.com/AmoyLab/Unla/blob/main/configs/apiserver.yaml
+- https://github.com/AmoyLab/Unla/blob/main/configs/proxy-mock-server.yaml
+- https://github.com/AmoyLab/Unla/blob/main/deploy/docker/allinone/docker-compose.yml
+- https://github.com/AmoyLab/Unla/blob/main/deploy/helm/values.yaml
+- https://github.com/AmoyLab/Unla/blob/main/LICENSE
+- https://github.com/AmoyLab/Unla/releases
+- https://github.com/AmoyLab/Unla/pkgs/container/unla%2Fallinone
+- https://docs.unla.amoylab.com
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, environment example, gateway configs, deployment files, release page,
+container package page, and documentation site for current setup, supported
+transports, management UI behavior, and upgrade notes.
+
+## Features
+
+- Convert REST API configurations into MCP tools.
+- Proxy existing MCP servers behind Unla-managed endpoints.
+- Expose MCP SSE and Streamable HTTP transports.
+- Serve a browser-based management UI for adding and editing gateway configs.
+- Persist configuration through disk, SQLite, PostgreSQL, or MySQL.
+- Hot reload configuration through signals, HTTP, or Redis PubSub.
+- Support multi-tenant deployment patterns and recoverable sessions.
+- Use OAuth-based pre-authentication for MCP servers.
+- Deploy through Docker, Kubernetes, or Helm.
+
+## Installation
+
+The README documents an all-in-one container for quick starts:
+
+```bash
+docker run --name unla \
+  -p 8080:80 \
+  -p 5235:5235 \
+  -e ENV=production \
+  -e APISERVER_JWT_SECRET_KEY=YOUR_RANDOM_SECRET \
+  -e SUPER_ADMIN_USERNAME=YOUR_ADMIN_USER \
+  -e SUPER_ADMIN_PASSWORD=YOUR_ADMIN_PASSWORD \
+  ghcr.io/amoylab/unla/allinone:latest
+```
+
+After startup, sign in to the management UI, add an MCP server or REST API
+configuration, and connect your MCP client to the generated `/sse` or `/mcp`
+endpoint for that server namespace. Replace the placeholder secret and
+administrator credentials before using the service with real integrations.
+
+## Use Cases
+
+- Put a managed MCP gateway in front of several internal MCP servers.
+- Convert legacy REST APIs into MCP tools through YAML configuration.
+- Provide separate gateway endpoints for teams, tenants, or environments.
+- Test API-to-MCP mappings through the built-in management UI.
+- Add OAuth pre-authentication and centralized routing before MCP traffic
+  reaches upstream services.
+- Package an MCP gateway with Docker, Kubernetes, or Helm for repeatable
+  deployment.
+
+## Safety and Privacy
+
+Unla is access infrastructure. Treat every imported API and downstream MCP
+server as part of the exposed tool surface. Generated endpoints should stay
+behind trusted network, TLS, authentication, and tenant-boundary controls until
+the mapped tools have been reviewed.
+
+The gateway can retain sensitive configuration and route sensitive tool traffic.
+Protect the management UI, container environment, config persistence backend,
+logs, OAuth settings, upstream headers, and imported API definitions. Keep real
+admin credentials, JWT secrets, API tokens, OAuth secrets, and tenant-specific
+configs out of repositories and PR discussions.
+
+## Duplicate Check
+
+No `AmoyLab/Unla` entry, Unla MCP Gateway entry, or matching source URL was
+found in `content/mcp`.

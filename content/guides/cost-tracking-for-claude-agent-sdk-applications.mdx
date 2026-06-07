@@ -1,0 +1,117 @@
+---
+title: Cost Tracking for Claude Agent SDK Applications
+slug: cost-tracking-for-claude-agent-sdk-applications
+category: guides
+description: >-
+  A practical walkthrough of tracking token usage and cost in the Claude Agent
+  SDK: the result message total_cost_usd estimate, per-step and per-model usage,
+  deduplicating parallel tool calls, accumulating across calls, and cache tokens.
+cardDescription: >-
+  Track token usage and cost in the Claude Agent SDK via the result message
+  estimate, per-step/per-model usage, and cache tokens.
+seoTitle: Cost Tracking for Claude Agent SDK Applications
+seoDescription: >-
+  How to track token usage and cost in the Claude Agent SDK: read total_cost_usd
+  and usage from the result message, per-step and per-model breakdowns,
+  deduplicate parallel tool calls, accumulate across calls, and read cache tokens.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/cost-tracking"
+usageSnippet: "Use this guide to read token usage and estimated cost from the Claude Agent SDK, broken down per step, per model, and accumulated across calls."
+prerequisites:
+  - "The Claude Agent SDK installed for Python or TypeScript."
+  - "An async loop over query() results so you can read assistant and result messages."
+  - "For authoritative billing, access to the Usage and Cost API or the Console."
+safetyNotes:
+  - "total_cost_usd / costUSD are client-side estimates from a bundled price table, not authoritative billing; do not bill end users or trigger financial decisions from them."
+  - "Estimates can drift when pricing changes or the SDK version does not recognize a model; use the Usage and Cost API or Console for real billing."
+  - "Both success and error result messages include usage and cost; read cost regardless of subtype so failed runs are still accounted for."
+privacyNotes:
+  - "Usage data is token counts and cost, not content; it is safe to log, though it can reveal activity volume."
+  - "Per-model and end-user attribution may be sent to an observability backend if you also enable telemetry; govern that data accordingly."
+  - "The SDK uses prompt caching automatically; cache token fields reveal reuse patterns but not content."
+tags:
+  - claude-agent-sdk
+  - cost-tracking
+  - usage
+  - observability
+  - developer-tools
+keywords:
+  - claude agent sdk cost tracking
+  - total_cost_usd
+  - modelUsage breakdown
+  - agent sdk token usage
+  - cache_read_input_tokens
+---
+
+## Overview
+
+The Claude Agent SDK reports detailed token usage for each interaction. This
+guide covers reading cost and usage correctly, especially with parallel tool use
+and multi-step conversations.
+
+## Scopes
+
+- **query() call**: one `query()` invocation; produces one `result` message.
+- **Step**: one request/response cycle within a call; produces assistant messages
+  with usage.
+- **Session**: multiple `query()` calls linked by a session id (`resume`); each
+  call reports its own cost.
+
+## Get the total for a call
+
+The `result` message includes `total_cost_usd` (estimated) and cumulative usage:
+
+```typescript
+for await (const message of query({ prompt: "Summarize this project" })) {
+  if (message.type === "result") {
+    console.log(`Total cost: $${message.total_cost_usd}`);
+  }
+}
+```
+
+This is a **client-side estimate** from a bundled price table, not authoritative
+billing. Use the Usage and Cost API or the Console for real charges.
+
+## Per-step and per-model usage
+
+Each assistant message carries `usage` (input/output tokens) and an `id`. Parallel
+tool calls in one turn share an `id`, so deduplicate by id to avoid double
+counting:
+
+```typescript
+const seen = new Set();
+let input = 0, output = 0;
+for await (const message of query({ prompt: "..." })) {
+  if (message.type === "assistant" && !seen.has(message.message.id)) {
+    seen.add(message.message.id);
+    input += message.message.usage.input_tokens;
+    output += message.message.usage.output_tokens;
+  }
+}
+```
+
+The result message's `modelUsage` (TS) / `model_usage` (Python) breaks cost and
+tokens down per model, useful when subagents run a cheaper model.
+
+## Accumulate across calls
+
+The SDK has no session-level total; sum each call's `total_cost_usd` yourself when
+running multiple `query()` calls.
+
+## Cache tokens and failures
+
+The SDK uses prompt caching automatically. The usage object includes
+`cache_creation_input_tokens` (written, higher rate) and `cache_read_input_tokens`
+(read, reduced rate); track them to understand caching savings. Both success and
+error results include cost, so always read it regardless of subtype. To extend
+cache TTL to one hour on API-key/Bedrock/Vertex/Foundry, set
+`ENABLE_PROMPT_CACHING_1H`.
+
+## Source
+
+- Track cost and usage: https://code.claude.com/docs/en/agent-sdk/cost-tracking

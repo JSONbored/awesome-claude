@@ -1,0 +1,175 @@
+---
+title: LinkedIn MCP Server
+slug: linkedin-mcp-server
+category: mcp
+description: >-
+  MCP server that lets Claude use an authenticated LinkedIn browser session to
+  inspect profiles, companies, jobs, feeds, inboxes, and conversations.
+cardDescription: >-
+  Let Claude search LinkedIn profiles, companies, jobs, feeds, messages, and job
+  details through a persisted browser session.
+seoTitle: LinkedIn MCP Server for Claude
+seoDescription: >-
+  Configure LinkedIn MCP Server with Claude and other MCP clients to search
+  LinkedIn people, companies, jobs, feeds, profiles, inboxes, conversations, and
+  job details through an authenticated browser profile.
+author: Daniel Sticker
+authorProfileUrl: "https://github.com/stickerdaniel"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: LinkedIn MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/stickerdaniel/linkedin-mcp-server"
+documentationUrl: "https://github.com/stickerdaniel/linkedin-mcp-server/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/linkedin-scraper-mcp/json"
+installable: true
+installCommand: "uvx linkedin-scraper-mcp@latest"
+usageSnippet: "Run `uvx linkedin-scraper-mcp@latest` from an MCP client to let Claude use an authenticated LinkedIn browser session for profile, company, job, feed, and messaging workflows."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "linkedin": {
+        "command": "uvx",
+        "args": ["linkedin-scraper-mcp@latest"],
+        "env": {
+          "UV_HTTP_TIMEOUT": "300"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "linkedin": {
+        "command": "uvx",
+        "args": ["linkedin-scraper-mcp@latest"],
+        "env": {
+          "UV_HTTP_TIMEOUT": "300"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.12 through 3.14 available to the MCP client runtime.
+  - uvx available for package execution.
+  - LinkedIn account access for the workflows you want Claude to perform.
+  - One-time browser login, including any LinkedIn two-factor, mobile confirmation, or captcha challenge.
+  - Local storage available for the persisted LinkedIn browser profile and Patchright browser cache.
+safetyNotes:
+  - LinkedIn MCP Server uses browser automation against an authenticated LinkedIn account.
+  - Tools can read profile, company, job, feed, inbox, and conversation data available to the authenticated session.
+  - Some tools can initiate social or messaging actions, such as sending messages or connection requests, so require explicit human confirmation before any account-write action.
+  - The server stores browser profile state locally and provides logout/profile management options that can clear authentication state.
+  - Respect LinkedIn account rules, rate limits, consent boundaries, and workplace policies before scraping, messaging, or automating professional-network workflows.
+privacyNotes:
+  - LinkedIn profile data, search queries, company data, job details, inbox metadata, conversation text, feed posts, messages, connection notes, browser cookies, prompts, and tool outputs may be visible to the MCP client and model provider.
+  - LinkedIn data can include personal information, employment history, contact details, recruiting plans, sales targets, private messages, and relationship context.
+  - Treat the persisted browser profile as sensitive account state and avoid exposing it through logs, screenshots, shared volumes, or untrusted containers.
+sourceUrls:
+  - "https://github.com/stickerdaniel/linkedin-mcp-server"
+  - "https://github.com/stickerdaniel/linkedin-mcp-server/blob/main/README.md"
+  - "https://github.com/stickerdaniel/linkedin-mcp-server/blob/main/pyproject.toml"
+  - "https://pypi.org/pypi/linkedin-scraper-mcp/json"
+tags:
+  - linkedin
+  - recruiting
+  - sales
+  - jobs
+  - social
+keywords:
+  - LinkedIn MCP
+  - linkedin-scraper-mcp
+  - LinkedIn profile MCP
+  - LinkedIn jobs MCP
+  - LinkedIn messaging MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+LinkedIn MCP Server connects MCP clients to LinkedIn through an authenticated
+browser session. It can inspect people profiles, the authenticated user's own
+profile, sidebar profile recommendations, inboxes, conversations, companies,
+company posts, employees, people search, job search, job details, and feed
+content. It also exposes action-oriented tools for messages and connection
+requests that should stay behind explicit approval.
+
+The upstream README documents `uvx`, Docker, MCPB, and Streamable HTTP setup
+paths. The supported PyPI package is `linkedin-scraper-mcp`, which exposes both
+`linkedin-scraper-mcp` and `linkedin-mcp-server` console scripts.
+
+## Source Review
+
+- https://github.com/stickerdaniel/linkedin-mcp-server
+- https://github.com/stickerdaniel/linkedin-mcp-server/blob/main/README.md
+- https://github.com/stickerdaniel/linkedin-mcp-server/blob/main/pyproject.toml
+- https://pypi.org/pypi/linkedin-scraper-mcp/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+PyPI metadata for current package version, command name, Python requirement,
+dependencies, authentication behavior, supported tools, and setup guidance.
+
+## Features
+
+- Read LinkedIn person profiles with selectable sections.
+- Read the authenticated user's own profile.
+- Search people by keyword, location, connection degree, and company.
+- Inspect company profiles, company posts, employees, and company search.
+- Search jobs and retrieve job details.
+- Read recent feed posts from the authenticated account.
+- Read inbox and conversation data available to the session.
+- Send messages or connection requests when explicitly approved.
+- Reuse a persisted browser profile after interactive login.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "linkedin": {
+      "command": "uvx",
+      "args": ["linkedin-scraper-mcp@latest"],
+      "env": {
+        "UV_HTTP_TIMEOUT": "300"
+      }
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server. On first use, complete the
+interactive LinkedIn login flow in the browser window before retrying LinkedIn
+tools.
+
+## Use Cases
+
+- Ask Claude to inspect a LinkedIn profile before a recruiting or sales call.
+- Search for people by company, location, keyword, or connection degree.
+- Research company profiles, posts, employees, and open roles.
+- Summarize job details for a candidate or hiring workflow.
+- Review inbox or conversation context before drafting a reply.
+- Draft a connection note or message for human approval before sending.
+
+## Safety and Privacy
+
+LinkedIn automation operates through a real authenticated account. Keep message
+sending, connection requests, and other account-write actions behind explicit
+human confirmation. Avoid broad scraping, high-volume automation, or workflows
+that violate LinkedIn rules, workplace policy, or recipient consent.
+
+The persisted browser profile, cookies, LinkedIn messages, profile data,
+company research, job searches, feed content, and relationship context are
+sensitive. Treat local profile directories and mounted volumes as account
+secrets, and avoid sharing logs or screenshots that expose LinkedIn session
+state.
+
+## Duplicate Check
+
+No `stickerdaniel/linkedin-mcp-server` entry, `linkedin-scraper-mcp` package
+entry, or matching source URL was found in `content/mcp`.

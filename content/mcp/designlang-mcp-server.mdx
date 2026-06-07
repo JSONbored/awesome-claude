@@ -1,0 +1,179 @@
+---
+title: designlang MCP Server
+slug: designlang-mcp-server
+category: mcp
+description: >-
+  MCP server for extracting design systems from live websites, including design
+  tokens, regions, components, contrast data, Tailwind themes, Figma variables,
+  and prompt packs.
+cardDescription: >-
+  Let Claude inspect live website design systems through design tokens, regions,
+  components, accessibility findings, Tailwind themes, Figma variables, and reports.
+seoTitle: designlang MCP Server for Claude
+seoDescription: >-
+  Configure designlang MCP Server with Claude and other MCP clients to extract
+  website design tokens, components, regions, contrast data, Tailwind config,
+  Figma variables, and design-system reports.
+author: Manavarya09
+authorProfileUrl: "https://github.com/Manavarya09"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: designlang
+brandDomain: github.com
+repoUrl: "https://github.com/Manavarya09/design-extract"
+documentationUrl: "https://github.com/Manavarya09/design-extract/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/designlang"
+installable: true
+installCommand: "npx -y designlang mcp"
+usageSnippet: "Run `npx -y designlang mcp` from an MCP client to expose website design extraction tools and resources to Claude."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "designlang": {
+        "command": "npx",
+        "args": ["-y", "designlang", "mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "designlang": {
+        "command": "npx",
+        "args": ["-y", "designlang", "mcp", "--output-dir", "./design-extract-output"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 20 or newer available to the MCP client runtime.
+  - Network access to the websites you plan to extract.
+  - Permission to crawl and analyze the target sites.
+  - Playwright or Chromium installation behavior reviewed for the local environment.
+  - Output directory reviewed before writing extracted tokens, screenshots, reports, and generated project files.
+safetyNotes:
+  - designlang uses Playwright to crawl live pages and can capture DOM-derived styles, responsive behavior, interaction states, screenshots, and accessibility findings.
+  - Authenticated extraction options can use cookies, cookie files, headers, and custom user agents, so never pass production session cookies or credentials unless approved.
+  - Generated outputs may include design tokens, Tailwind config, shadcn variables, Figma variables, component anatomy, prompts, screenshots, reports, and cloned starter code.
+  - Commands such as apply, clone, sync, drift, visual-diff, and MCP extraction can read live websites and write files in the configured output or project directory.
+  - Review extracted prompt packs and generated code before using them in another agent workflow or committing them.
+privacyNotes:
+  - URLs, page content, DOM text, CSS, screenshots, fonts, images, design tokens, cookies, headers, prompts, tool arguments, reports, and generated files may be visible to the MCP client and model provider.
+  - Authenticated or internal sites can expose product plans, unreleased UI, customer data, analytics identifiers, private brand assets, and implementation details.
+  - Output directories can retain extracted website data after the MCP session ends.
+  - Avoid running the server against private, paid, internal, or authenticated properties without legal and security approval.
+sourceUrls:
+  - "https://github.com/Manavarya09/design-extract"
+  - "https://github.com/Manavarya09/design-extract/blob/main/README.md"
+  - "https://github.com/Manavarya09/design-extract/blob/main/package.json"
+  - "https://github.com/Manavarya09/design-extract/blob/main/SECURITY.md"
+  - "https://github.com/Manavarya09/design-extract/blob/main/docs/MCP-REGISTRY.md"
+  - "https://registry.npmjs.org/designlang"
+tags:
+  - design
+  - design-tokens
+  - accessibility
+  - playwright
+  - frontend
+keywords:
+  - designlang MCP
+  - Design Extract MCP
+  - website design extraction MCP
+  - design tokens MCP
+  - Figma variables MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+designlang is an MCP server and CLI for extracting design systems from live
+websites. It can expose design tokens, semantic regions, components, contrast
+pairs, Tailwind themes, Figma variables, prompt packs, screenshots, and design
+reports to Claude-compatible MCP clients.
+
+The upstream README documents `designlang mcp` as the stdio MCP server command.
+The package metadata exposes the `designlang` binary, and the MCP registry docs
+show the `npx -y designlang mcp` configuration.
+
+## Source Review
+
+- https://github.com/Manavarya09/design-extract
+- https://github.com/Manavarya09/design-extract/blob/main/README.md
+- https://github.com/Manavarya09/design-extract/blob/main/package.json
+- https://github.com/Manavarya09/design-extract/blob/main/SECURITY.md
+- https://github.com/Manavarya09/design-extract/blob/main/docs/MCP-REGISTRY.md
+- https://registry.npmjs.org/designlang
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, package metadata, security policy, MCP registry notes, and NPM registry
+metadata for current command names, Node requirements, extraction behavior,
+supported outputs, and safety guidance.
+
+## Features
+
+- Extract colors, typography, spacing, shadows, radii, CSS variables, breakpoints, animations, and components.
+- Emit W3C DTCG design tokens, Tailwind config, shadcn theme variables, CSS variables, and Figma variable data.
+- Inspect responsive behavior, hover/focus/active interaction states, semantic page regions, component anatomy, and motion tokens.
+- Score WCAG contrast and generate remediation guidance.
+- Produce design reports, prompt packs, screenshots, clone starters, and platform-specific outputs.
+- Run drift, lint, visual-diff, sync, grade, battle, remix, pack, theme-swap, and brand-book workflows from the CLI.
+- Expose extracted design data through a stdio MCP server for Claude Code, Cursor, Windsurf, and other MCP clients.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "designlang": {
+      "command": "npx",
+      "args": ["-y", "designlang", "mcp"]
+    }
+  }
+}
+```
+
+Optionally add `--output-dir` to keep generated files in a specific directory:
+
+```json
+{
+  "mcpServers": {
+    "designlang": {
+      "command": "npx",
+      "args": ["-y", "designlang", "mcp", "--output-dir", "./design-extract-output"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to extract design tokens from a public website before building a matching UI.
+- Generate Tailwind, shadcn, CSS variable, or Figma variable handoff files.
+- Compare two sites and explain design differences.
+- Review WCAG contrast findings and remediation suggestions.
+- Capture component anatomy, responsive behavior, motion patterns, and brand voice.
+- Create prompt packs for frontend generation workflows.
+
+## Safety and Privacy
+
+designlang crawls live pages with Playwright and can write detailed outputs.
+Treat extraction results as a copy of website content and design intelligence,
+especially when using authenticated pages, private staging sites, cookie files,
+custom headers, or internal URLs.
+
+Review output directories before sharing or committing generated files. Screenshots,
+tokens, prompts, Figma variables, Tailwind configs, reports, and clone starters
+may reveal proprietary design systems, unpublished pages, analytics identifiers,
+or user-visible data from the crawled page.
+
+## Duplicate Check
+
+No `Manavarya09/design-extract` entry, `designlang` package entry, or matching
+source URL was found in `content/mcp`.

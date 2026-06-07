@@ -1,0 +1,239 @@
+---
+title: Dreamlit MCP Server
+slug: dreamlit-mcp-server
+category: mcp
+description: >-
+  Hosted Streamable HTTP MCP server for creating, inspecting, testing,
+  publishing, unpublishing, analyzing, and styling Dreamlit notification
+  workflows from AI clients.
+cardDescription: >-
+  Connect MCP clients to Dreamlit notification workflow authoring, publishing,
+  and analytics tools.
+seoTitle: Dreamlit MCP Server for Claude
+seoDescription: >-
+  Use Dreamlit MCP Server with Claude and other MCP clients to create, inspect,
+  test, publish, unpublish, analyze, and style notification workflows through a
+  hosted Streamable HTTP server.
+author: Dreamlit
+authorProfileUrl: "https://dreamlit.ai"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Dreamlit
+brandDomain: dreamlit.ai
+repoUrl: "https://github.com/dreamlit-ai/dreamlit-mcp"
+documentationUrl: "https://github.com/dreamlit-ai/dreamlit-mcp"
+installable: true
+installCommand: "codex mcp add dreamlit --url https://mcp.dreamlit.ai/mcp && codex mcp login dreamlit"
+usageSnippet: "Connect an MCP client to https://mcp.dreamlit.ai/mcp, authorize the target Dreamlit workspace, and request only the workflow or analytics scopes needed for the task."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "dreamlit": {
+        "url": "https://mcp.dreamlit.ai/mcp",
+        "transport": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "dreamlit": {
+        "url": "https://mcp.dreamlit.ai/mcp",
+        "transport": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Dreamlit workspace and project access for the notification workflows being managed.
+  - MCP client that supports remote Streamable HTTP servers and Dreamlit OAuth, or a client path that can use Dreamlit personal access tokens.
+  - Workspace decision on which scopes to grant, such as `workflows:read`, `workflows:write`, `workflows:publish`, and `analytics:read`.
+  - Human review process for workflow tests, publishing, scheduling, and unpublishing actions.
+safetyNotes:
+  - Dreamlit MCP is a hosted remote server at `https://mcp.dreamlit.ai/mcp`; the public repository contains setup docs and registry metadata, not the production backend source.
+  - Write scopes can create or update workflow drafts and send workflow tests; publish scopes can publish, schedule, or unpublish live notification workflows.
+  - Publishing is a separate explicit step in Dreamlit's recommended flow; keep a human confirmation gate before `confirm_publish` or `unpublish_workflow`.
+  - Use least-privilege OAuth scopes. Read-only review clients should not receive `workflows:write` or `workflows:publish`.
+  - Test important email or Slack notification drafts before publishing, especially when prompts include personalization rules, timing, timezone, or unsubscribe behavior.
+privacyNotes:
+  - Dreamlit MCP can expose workflow metadata, saved brand kit summaries, connected project context, preview or builder URLs, and bounded notification analytics.
+  - Analytics access can reveal recipient engagement and workflow run data; filter narrowly and paginate instead of requesting broad reporting dumps.
+  - Do not paste database credentials, raw secrets, private tokens, or integration credentials into prompts or shared MCP configs.
+  - Review Dreamlit, MCP client, AI-provider, and downstream-tool retention policies before using real customer, recipient, or workspace data.
+tags:
+  - dreamlit
+  - mcp
+  - notifications
+  - workflows
+  - analytics
+  - oauth
+keywords:
+  - dreamlit mcp
+  - dreamlit mcp server
+  - notification workflow mcp
+  - workflow analytics mcp
+  - streamable http mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Dreamlit MCP Server connects MCP-capable AI clients to Dreamlit's hosted
+notification workflow platform for Supabase and Postgres applications. It is
+designed for outcome-oriented workflow authoring: create drafts from prompts,
+inspect existing workflows, send tests, apply saved brand kits, publish or
+unpublish workflows, and answer bounded analytics questions about notification
+performance.
+
+The production server endpoint is:
+
+```text
+https://mcp.dreamlit.ai/mcp
+```
+
+Dreamlit documents the transport as Streamable HTTP. Authentication is OAuth,
+with a personal access token fallback for clients that do not support OAuth.
+
+## Source Review
+
+- https://github.com/dreamlit-ai/dreamlit-mcp
+- https://modelcontextprotocol.io/registry/about
+- https://code.claude.com/docs/en/mcp
+
+These sources were reviewed on **2026-06-05**. Prefer the live Dreamlit
+repository and current MCP client documentation over model memory for endpoint
+behavior, scopes, token handling, and tool coverage.
+
+## Features
+
+- Hosted remote MCP endpoint at `https://mcp.dreamlit.ai/mcp`.
+- Streamable HTTP transport for compatible MCP clients.
+- OAuth workspace authorization, with project-scoped personal access token
+  fallback for clients that do not support OAuth.
+- Workflow discovery through project and workflow listing tools.
+- Draft authoring and updates from natural-language workflow prompts.
+- Brand kit lookup before applying saved styling to generated email drafts.
+- Preview and builder URLs for human review before publishing.
+- Workflow test sending without making a workflow live.
+- Two-step publishing flow with `prepare_publish` followed by
+  `confirm_publish`.
+- Bounded, filtered, cursor-paginated notification analytics access.
+
+## Tools
+
+- `get_status`: read Dreamlit guidance, workspace context, project setup,
+  schema hints, workflow state, and app URLs.
+- `list_projects`: find accessible projects in the approved workspace.
+- `list_workflows`: find workflows by name, description, trigger type, and
+  pagination.
+- `list_brand_kits`: inspect saved brand kit IDs and style summaries.
+- `get_workflow_and_preview_url`: inspect a draft and get a preview or builder
+  URL before editing or publishing.
+- `get_analytics`: query bounded recipient engagement and workflow run data.
+- `create_or_update_workflow`: create a new draft or update an existing draft.
+- `send_workflow_test`: confirm and send a draft email or Slack test.
+- `prepare_publish`: validate a workflow and return confirmation fields.
+- `confirm_publish`: publish or schedule a workflow after explicit user
+  confirmation.
+- `unpublish_workflow`: disable live triggers or schedules.
+
+## Installation
+
+### Codex CLI
+
+```bash
+codex mcp add dreamlit --url https://mcp.dreamlit.ai/mcp
+codex mcp login dreamlit
+```
+
+To request every documented v1 scope explicitly:
+
+```bash
+codex mcp login dreamlit --scopes workflows:read,workflows:write,workflows:publish,analytics:read
+```
+
+For a narrower read-only setup, request only the scopes needed for the client,
+such as `workflows:read` or `analytics:read`.
+
+### Generic Remote MCP Client
+
+Use the client's remote server flow and enter:
+
+```text
+https://mcp.dreamlit.ai/mcp
+```
+
+The client should open a Dreamlit authorization page. Choose the workspace the
+AI client may access, then approve only the requested scopes that match the
+workflow.
+
+## Access Model
+
+Dreamlit OAuth access is scoped to the workspace selected during authorization.
+Personal access tokens are project scoped and can be created from Dreamlit
+project settings.
+
+Documented scopes:
+
+- `workflows:read`
+- `workflows:write`
+- `workflows:publish`
+- `analytics:read`
+
+Use the smallest scope set that fits the job. A review-only assistant generally
+needs `workflows:read`; analytics-only tasks should request `analytics:read`;
+authoring and publishing should be separated when possible.
+
+## Recommended Workflow
+
+1. Call `get_status` first to understand workspace context and project setup.
+2. Use `list_projects` and `list_workflows` when the user gives names instead
+   of IDs.
+3. Use `list_brand_kits` before applying a saved style to generated email
+   drafts.
+4. Use `get_workflow_and_preview_url` before editing an existing workflow.
+5. Use `get_analytics` only for bounded questions, with filters and cursor
+   pagination.
+6. Create or update a draft with `create_or_update_workflow`.
+7. Open the returned preview or builder URL and send tests for important email
+   or Slack messages.
+8. Publish only after explicit confirmation, using `prepare_publish` followed
+   by `confirm_publish`.
+
+## Data Handling
+
+Dreamlit MCP can access workflow metadata, saved brand kit summaries, connected
+project context, preview URLs, and bounded analytics needed for the requested
+action. The public docs state that clients do not need to send database
+credentials through MCP.
+
+Avoid putting secrets, raw credentials, private tokens, or integration
+credentials in prompts. Use Dreamlit's app settings for integrations and
+credential management.
+
+## Troubleshooting
+
+### The client does not open Dreamlit authorization
+
+Confirm the client supports remote Streamable HTTP MCP servers and OAuth. If it
+does not, use Dreamlit's documented personal access token fallback.
+
+### The assistant cannot see a workflow
+
+Check that the authorized workspace and project are the ones the user expects.
+Then verify that the granted token includes `workflows:read`.
+
+### A draft exists but is not live
+
+That is expected. Dreamlit's documented flow keeps authoring and publishing
+separate. Run tests, open the preview or builder URL, then publish only after a
+human confirms the workflow.
+
+### Analytics requests return incomplete results
+
+Use narrower filters and follow returned cursors for larger result sets. The
+Dreamlit docs describe analytics access as structured and paginated rather than
+bulk CSV export.

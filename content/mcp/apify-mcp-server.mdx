@@ -1,0 +1,207 @@
+---
+title: Apify MCP Server
+slug: apify-mcp-server
+category: mcp
+description: >-
+  Official Apify MCP server for connecting Claude to Apify Actors, Actor runs,
+  datasets, key-value stores, and Apify documentation through hosted Streamable
+  HTTP or local stdio transports.
+cardDescription: Run Apify Actors, inspect runs, and retrieve scraping datasets from Claude.
+seoTitle: Apify MCP Server for Claude
+seoDescription: >-
+  Configure Apify MCP Server with Claude, Claude Code, Cursor, VS Code, and
+  other MCP clients to discover Apify Actors, run web scraping and automation
+  workflows, inspect Actor runs, and retrieve dataset or key-value store data.
+author: Apify
+authorProfileUrl: "https://github.com/apify"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Apify
+brandDomain: apify.com
+repoUrl: "https://github.com/apify/apify-mcp-server"
+documentationUrl: "https://docs.apify.com/platform/integrations/mcp"
+packageUrl: "https://registry.npmjs.org/%40apify%2Factors-mcp-server"
+installable: true
+installCommand: "npx @apify/actors-mcp-server --tools actors,docs,apify/rag-web-browser"
+usageSnippet: "Ask Claude to search for an Apify Actor, inspect the input schema, run it only after approval, then retrieve the resulting dataset items."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "apify": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@apify/actors-mcp-server",
+          "--tools",
+          "actors,docs,apify/rag-web-browser"
+        ],
+        "env": {
+          "APIFY_TOKEN": "<your-apify-token>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "apify": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@apify/actors-mcp-server",
+          "--tools",
+          "actors,docs,apify/rag-web-browser"
+        ],
+        "env": {
+          "APIFY_TOKEN": "<your-apify-token>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 22 or newer available in the MCP client runtime for local stdio usage.
+  - Apify account, OAuth session, API token, x402 wallet, or Skyfire payment setup depending on the chosen transport and payment mode.
+  - Explicit tool selection for production use, because the default tool configuration may change in future versions.
+  - Team approval policy for Actor runs, paid scraping workflows, agentic payments, dataset access, and aborting active runs.
+  - Review of target websites' terms of service, robots guidance, rate limits, and privacy requirements before launching scraping or automation Actors.
+safetyNotes:
+  - Apify MCP can run Apify Actors that browse, scrape, crawl, automate websites, call third-party services, and produce billable Actor runs.
+  - The hosted server supports OAuth and bearer-token authentication; local stdio uses APIFY_TOKEN in the MCP client environment.
+  - Actor tools can access external websites and may trigger anti-abuse systems, platform-policy violations, rate limits, or paid usage.
+  - The server exposes run, dataset, key-value store, and abort tools when Actor workflows are enabled.
+  - Agentic payments can fund Actor runs through x402 USDC on Base or Skyfire PAY tokens, so spending limits and human approval should be enforced outside the model.
+  - Telemetry is enabled by default for tool calls, and the stdio transport uses Sentry for error tracking unless telemetry is opted out.
+privacyNotes:
+  - Actor inputs and requests are sent to the Apify API for execution, and returned datasets or key-value store records can contain scraped personal data, customer records, credentials, contact details, private URLs, or regulated information.
+  - APIFY_TOKEN, OAuth tokens, Skyfire API keys, wallet private keys, payment IDs, dataset IDs, key-value store keys, and Actor run IDs should not be pasted into prompts, issues, logs, screenshots, or committed files.
+  - Search, maps, social, ecommerce, and browser Actors can collect third-party content that may be subject to site terms, privacy law, copyright, or data-retention obligations.
+  - Telemetry and Sentry error tracking should be reviewed before using the local stdio server with sensitive prompts, Actor inputs, or operational data.
+sourceUrls:
+  - "https://github.com/apify/apify-mcp-server/blob/master/README.md"
+  - "https://github.com/apify/apify-mcp-server/blob/master/server.json"
+  - "https://github.com/apify/apify-mcp-server/blob/master/package.json"
+  - "https://github.com/apify/apify-mcp-server/blob/master/LICENSE.md"
+tags:
+  - apify
+  - web-scraping
+  - automation
+  - actors
+  - datasets
+keywords:
+  - Apify MCP
+  - Apify MCP Server
+  - Apify Actors MCP
+  - web scraping MCP
+  - Actor runs MCP
+  - dataset MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Apify MCP Server is the official Model Context Protocol server for Apify. It
+lets Claude and other MCP clients discover Apify Actors, run scraping and web
+automation workflows, inspect Actor runs, and retrieve dataset or key-value
+store data from the Apify platform.
+
+The server supports a hosted Streamable HTTP endpoint with OAuth or bearer-token
+authentication, plus a local stdio package for clients that run MCP servers
+locally. The README recommends explicitly configuring tools for production use
+because default tool loading may change across versions.
+
+## Source Review
+
+- https://github.com/apify/apify-mcp-server
+- https://docs.apify.com/platform/integrations/mcp
+- https://registry.npmjs.org/%40apify%2Factors-mcp-server
+- https://github.com/apify/apify-mcp-server/blob/master/README.md
+- https://github.com/apify/apify-mcp-server/blob/master/server.json
+- https://github.com/apify/apify-mcp-server/blob/master/package.json
+- https://github.com/apify/apify-mcp-server/blob/master/LICENSE.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live Apify docs,
+repository, MCP server metadata, npm package metadata, and license for current
+setup commands, supported transports, tool configuration, payment behavior, and
+telemetry controls.
+
+## Features
+
+- Official Apify MCP server from `apify/apify-mcp-server`.
+- Hosted Streamable HTTP server with OAuth or bearer-token authentication.
+- Local stdio server via `npx @apify/actors-mcp-server`.
+- Actor discovery with `search-actors` and `fetch-actor-details`.
+- Actor execution through `call-actor` and configured Actor-specific tools.
+- Default access to Apify documentation search and fetch tools.
+- Run inspection, run-log retrieval, and optional run abort tools.
+- Dataset metadata, schema, pagination, and item retrieval tools.
+- Key-value store metadata, key listing, and record retrieval tools.
+- Optional `add-actor` workflow for adding Actors as tools.
+- Tool-selection controls for limiting the exposed Actor, docs, storage, run, or experimental tools.
+- Hosted support for output schema inference, MCP Apps UI mode, and agentic payments.
+- Telemetry opt-out through CLI flag, environment variable, or hosted URL parameter.
+
+## Installation
+
+For local stdio usage, configure an MCP client to run the official npm package
+and provide an Apify API token in the client environment:
+
+```json
+{
+  "mcpServers": {
+    "apify": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@apify/actors-mcp-server",
+        "--tools",
+        "actors,docs,apify/rag-web-browser"
+      ],
+      "env": {
+        "APIFY_TOKEN": "<your-apify-token>"
+      }
+    }
+  }
+}
+```
+
+For hosted usage, configure the Streamable HTTP endpoint through the Apify MCP
+configuration page and authenticate with OAuth or an Apify bearer token. Avoid
+SSE configurations for new setups because Apify documents a transition to
+Streamable HTTP.
+
+## Use Cases
+
+- Discover a suitable Apify Actor for a scraping or automation task.
+- Inspect an Actor's input schema before allowing Claude to run it.
+- Run the RAG Web Browser Actor for research workflows.
+- Retrieve dataset items after an Actor run finishes.
+- Inspect Actor run metadata and logs during debugging.
+- Fetch Apify documentation into the conversation for setup or troubleshooting.
+- Limit a production client to a single approved Actor tool.
+- Use hosted output schema inference for structured Actor results.
+- Abort an Actor run when the model launched the wrong workflow or parameters.
+
+## Safety and Privacy
+
+Treat Apify MCP as a live automation and data-extraction control surface. Actor
+runs can cost money, access third-party websites, trigger anti-abuse systems,
+and collect regulated or personal data. Require human approval before launching
+Actors, adding new Actor tools, enabling payment modes, or retrieving sensitive
+datasets.
+
+Use the narrowest `tools` configuration that fits the workflow. Keep Apify API
+tokens, OAuth credentials, payment credentials, dataset IDs, and run identifiers
+out of prompts and logs. Review telemetry settings before using local stdio with
+sensitive prompts or Actor inputs, and confirm that scraping targets and data
+retention practices are allowed for the project.
+
+## Duplicate Check
+
+Existing content includes a general Apify platform listing in `content/tools`,
+but no Apify-specific MCP entry was found in `content/mcp`. This submission is
+scoped to `apify/apify-mcp-server`, the official MCP server, and does not change
+the existing tool listing.

@@ -1,0 +1,213 @@
+---
+title: MCPHub Server Manager
+slug: mcphub-server-manager
+category: mcp
+description: >-
+  Dashboard, CLI, and gateway for centrally managing many MCP servers and
+  exposing them as authenticated all-server, group, single-server, or smart
+  routing endpoints.
+cardDescription: >-
+  Manage multiple MCP servers from one hub with dashboard controls, groups,
+  bearer keys, OAuth, smart routing, Docker deployment, and PostgreSQL mode.
+seoTitle: MCPHub Server Manager for Claude
+seoDescription: >-
+  Configure MCPHub with Claude and other MCP clients to route many MCP servers
+  through authenticated HTTP/SSE endpoints, group visibility controls, smart
+  routing, OAuth, CLI operations, and PostgreSQL-backed production mode.
+author: samanhappy
+authorProfileUrl: "https://github.com/samanhappy"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: MCPHub
+brandDomain: mcphub.app
+repoUrl: "https://github.com/samanhappy/mcphub"
+documentationUrl: "https://docs.mcphub.app"
+packageUrl: "https://hub.docker.com/r/samanhappy/mcphub"
+installable: true
+installCommand: 'docker run -p 127.0.0.1:3000:3000 -v ./mcp_settings.json:/app/mcp_settings.json -v ./data:/app/data -e ADMIN_PASSWORD="$(openssl rand -hex 24)" samanhappy/mcphub'
+usageSnippet: "Run MCPHub with a mounted mcp_settings.json file, log in to the dashboard, create bearer keys or groups, then connect Claude to the all-server, group, single-server, or smart routing endpoint."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcphub": {
+        "url": "MCPHUB_ALL_SERVERS_ENDPOINT",
+        "headers": {
+          "Authorization": "Bearer ${MCPHUB_API_KEY}"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "time": {
+        "command": "npx",
+        "args": ["-y", "time-mcp"]
+      },
+      "fetch": {
+        "command": "uvx",
+        "args": ["mcp-server-fetch"]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Docker available for the documented container deployment.
+  - A reviewed `mcp_settings.json` file for the MCP servers the hub should launch or proxy.
+  - A durable mounted data directory so credentials, generated passwords, sessions, and state survive restarts.
+  - OpenSSL or another secure random generator available to create a unique administrator password.
+  - Administrator password, bearer-key policy, and dashboard access controls configured before exposing endpoints.
+  - PostgreSQL and pgvector planned if using database mode, social login, or smart routing in production.
+safetyNotes:
+  - MCPHub centralizes many downstream MCP servers, so one hub endpoint can expose broad read, write, file, shell, browser, database, or account capabilities depending on the registered servers.
+  - The Docker command binds the dashboard and gateway to 127.0.0.1 by default; use a reverse proxy with TLS and explicit access controls before exposing MCPHub on a network interface.
+  - MCP endpoints require authentication by default; do not disable bearer authentication outside trusted local testing.
+  - Smart routing can discover and invoke tools by semantic similarity, so keep group visibility and bearer-key scopes narrow.
+  - Hot-swappable configuration can add, remove, or change downstream MCP server access while the hub is running.
+  - OAuth server mode, OAuth client mode, social login, and database mode introduce additional credential and session management responsibilities.
+privacyNotes:
+  - MCPHub may handle prompts, tool names, tool arguments, tool results, server configs, resource data, bearer keys, OAuth tokens, login sessions, user identities, logs, and CLI command history.
+  - Mounted config files, data directories, database rows, vector indexes, generated passwords, and dashboard screenshots can reveal sensitive server names, environment variables, credentials, and tool schemas.
+  - Downstream MCP servers may forward private workspace, browser, database, cloud, ticketing, or account data through MCPHub to connected clients and model providers.
+  - Do not commit real `mcp_settings.json` files, bearer keys, OAuth secrets, social-login credentials, database URLs, generated admin passwords, or exported hub data.
+sourceUrls:
+  - "https://github.com/samanhappy/mcphub"
+  - "https://github.com/samanhappy/mcphub/blob/main/README.md"
+  - "https://github.com/samanhappy/mcphub/blob/main/package.json"
+  - "https://github.com/samanhappy/mcphub/blob/main/mcp_settings.json"
+  - "https://github.com/samanhappy/mcphub/blob/main/.env.example"
+  - "https://github.com/samanhappy/mcphub/blob/main/docker-compose.db.yml"
+  - "https://github.com/samanhappy/mcphub/blob/main/Dockerfile"
+  - "https://github.com/samanhappy/mcphub/blob/main/servers.json"
+  - "https://github.com/samanhappy/mcphub/blob/main/LICENSE"
+  - "https://docs.mcphub.app"
+  - "https://docs.mcphub.app/quickstart"
+  - "https://docs.mcphub.app/configuration/mcp-settings"
+  - "https://docs.mcphub.app/configuration/database-configuration"
+  - "https://docs.mcphub.app/configuration/docker-setup"
+  - "https://docs.mcphub.app/features/oauth"
+  - "https://docs.mcphub.app/features/smart-routing"
+  - "https://docs.mcphub.app/features/mcp-apps"
+  - "https://docs.mcphub.app/features/cli"
+  - "https://docs.mcphub.app/api-reference"
+  - "https://hub.docker.com/r/samanhappy/mcphub"
+tags:
+  - management
+  - gateway
+  - orchestration
+  - oauth
+  - smart-routing
+keywords:
+  - MCPHub
+  - MCP server manager
+  - MCP hub
+  - MCP smart routing
+  - MCP bearer authentication
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCPHub is a dashboard, CLI, and gateway for managing multiple MCP servers from a
+single service. It can expose all registered servers, individual servers, or
+logical groups through HTTP/SSE endpoints, with bearer-key authentication enabled
+by default for MCP access.
+
+The project is especially useful when a team wants an operational control plane
+for many MCP servers. MCPHub can hot-swap server configuration, control tool,
+prompt, and resource visibility inside groups, proxy interactive MCP Apps,
+manage bearer keys, run OAuth client or server flows, and use PostgreSQL-backed
+database mode for production deployments.
+
+## Source Review
+
+- https://github.com/samanhappy/mcphub
+- https://github.com/samanhappy/mcphub/blob/main/README.md
+- https://github.com/samanhappy/mcphub/blob/main/package.json
+- https://github.com/samanhappy/mcphub/blob/main/mcp_settings.json
+- https://github.com/samanhappy/mcphub/blob/main/.env.example
+- https://github.com/samanhappy/mcphub/blob/main/docker-compose.db.yml
+- https://github.com/samanhappy/mcphub/blob/main/Dockerfile
+- https://github.com/samanhappy/mcphub/blob/main/servers.json
+- https://github.com/samanhappy/mcphub/blob/main/LICENSE
+- https://docs.mcphub.app
+- https://docs.mcphub.app/quickstart
+- https://docs.mcphub.app/configuration/mcp-settings
+- https://docs.mcphub.app/configuration/database-configuration
+- https://docs.mcphub.app/configuration/docker-setup
+- https://docs.mcphub.app/features/oauth
+- https://docs.mcphub.app/features/smart-routing
+- https://docs.mcphub.app/features/mcp-apps
+- https://docs.mcphub.app/features/cli
+- https://docs.mcphub.app/api-reference
+- https://hub.docker.com/r/samanhappy/mcphub
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, package metadata, example settings, environment example, database
+compose file, Dockerfile, server registry, license, documentation site, and
+Docker Hub page for current deployment, auth, endpoint, CLI, group, OAuth, and
+smart-routing behavior.
+
+## Features
+
+- Manage multiple MCP servers from a dashboard.
+- Route all servers, a group, one server, or smart routing through separate endpoints.
+- Control tool, prompt, and resource visibility per server inside a group.
+- Require bearer authentication for MCP endpoints by default.
+- Create and manage access keys from the dashboard or CLI.
+- Hot-swap server configuration without downtime.
+- Proxy interactive MCP Apps on single-server routes.
+- Use vector-backed smart routing for semantic tool discovery.
+- Run OAuth 2.0 client and server modes.
+- Store production configuration in PostgreSQL with optional social login.
+- Manage servers, tools, calls, keys, and marketplace discovery from the CLI.
+
+## Installation
+
+Create a reviewed `mcp_settings.json` file for the downstream MCP servers you
+want MCPHub to launch or proxy, then run the Docker image with persistent data.
+This example binds MCPHub to loopback and generates a unique administrator
+password for the container:
+
+```bash
+docker run -p 127.0.0.1:3000:3000 \
+  -v ./mcp_settings.json:/app/mcp_settings.json \
+  -v ./data:/app/data \
+  -e ADMIN_PASSWORD="$(openssl rand -hex 24)" \
+  samanhappy/mcphub
+```
+
+After the container starts, log in to the dashboard, verify the loaded servers,
+create a bearer key, and connect your MCP client to the appropriate hub endpoint
+for all servers, a group, a single server, or smart routing.
+
+## Use Cases
+
+- Give Claude one authenticated endpoint for a curated set of team MCP servers.
+- Split MCP access by group, environment, project, or user workflow.
+- Keep sensitive tools hidden from groups that should only expose read-only context.
+- Use smart routing to select relevant tools from a large MCP inventory.
+- Manage MCPHub keys and server definitions from CI or terminal workflows.
+- Deploy MCPHub with PostgreSQL for production state, OAuth, and social login.
+- Proxy MCP Apps while keeping server routing centralized.
+
+## Safety and Privacy
+
+MCPHub is a control plane for other MCP servers. Review the downstream server
+permissions before adding them, and keep bearer keys, groups, smart-routing
+access, and dashboard permissions narrow. A single overly broad hub endpoint can
+give an agent access to many unrelated tools.
+
+Treat the mounted data directory, `mcp_settings.json`, database contents, vector
+indexes, OAuth config, bearer keys, generated admin passwords, logs, and CLI
+profiles as sensitive. They may contain downstream server commands, environment
+variables, tool schemas, private URLs, account tokens, prompts, arguments, and
+tool responses.
+
+## Duplicate Check
+
+No `samanhappy/mcphub` entry, MCPHub Server Manager entry, or matching source
+URL was found in `content/mcp`.

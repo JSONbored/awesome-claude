@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildReadmeRefreshBody,
   extractReadmeEntryChanges,
+  main as buildReadmeRefreshBodyMain,
   resolveReadmeEntryChange,
   summarizeReadmeEntryChange,
 } from "../scripts/build-readme-refresh-body.mjs";
@@ -173,6 +174,7 @@ describe("submission automation workflows", () => {
     );
 
     expect(source).toContain("Product or feature improvement");
+    expect(source).not.toContain("gittensor:feature");
     expect(source).toContain("id: quality_evidence");
     expect(source).toContain("desktop and mobile screenshots");
     expect(source).toContain("No visual impact");
@@ -214,9 +216,14 @@ describe("submission automation workflows", () => {
     expect(source).toContain(
       "github.event.pull_request.head.repo.full_name == github.repository",
     );
-    expect(source).toContain(
-      "deployment-artifacts-pr-preview-${{ github.repository }}-${{ github.event.pull_request.number }}",
+    const previewBlock =
+      source.match(
+        /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
+      )?.[0] || "";
+    expect(previewBlock).toContain(
+      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
     );
+    expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).not.toContain("CLOUDFLARE_API_TOKEN");
     expect(source).not.toContain("CLOUDFLARE_ACCOUNT_ID");
     expect(source).not.toContain("pnpm --filter web run deploy:dev");
@@ -367,9 +374,14 @@ describe("submission automation workflows", () => {
     expect(source).toContain(
       "github.event.pull_request.head.repo.full_name == github.repository",
     );
-    expect(source).toContain(
-      "deployment-artifacts-pr-preview-${{ github.repository }}-${{ github.event.pull_request.number }}",
+    const previewBlock =
+      source.match(
+        /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
+      )?.[0] || "";
+    expect(previewBlock).toContain(
+      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
     );
+    expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).toContain("Resolve PR preview URL");
     expect(source).toContain("--wait-seconds 600");
     expect(source).not.toContain("--allow-missing");
@@ -862,8 +874,22 @@ scriptBody: |-
     expect(source).toContain("fetch-depth: 0");
     expect(source).toContain("scripts/build-readme-refresh-body.mjs");
     expect(source).toContain("Build README refresh body");
+    expect(source).toContain("Publish README refresh branch");
+    expect(source).toContain("refresh-readme-automation-readme-refresh");
+    expect(source).toContain("git diff --quiet origin/main -- README.md");
     expect(source).toContain(
-      "body-path: ${{ runner.temp }}/readme-refresh-body.md",
+      "git restore --worktree --staged -- . ':!README.md'",
+    );
+    expect(source).toContain("unexpected_files");
+    expect(source).toContain('git ls-remote --heads origin "$BRANCH_NAME"');
+    expect(source).toContain(
+      '--force-with-lease="refs/heads/$BRANCH_NAME:$remote_branch_sha"',
+    );
+    expect(source).toContain('--force-with-lease="refs/heads/$BRANCH_NAME:"');
+    expect(source).toContain("git push --force-with-lease");
+    expect(source).toContain("Create or update README refresh PR");
+    expect(source).toContain(
+      '--body-file "$RUNNER_TEMP/readme-refresh-body.md"',
     );
     expect(source).toContain("actions: write");
     expect(source).toContain("Trigger content validation for README PR");
@@ -871,6 +897,7 @@ scriptBody: |-
       'gh workflow run content-validation.yml --ref "$VALIDATION_REF"',
     );
     expect(source).toContain(".github/workflows/readme-refresh-pr.yml");
+    expect(source).not.toContain("peter-evans/create-pull-request");
     expect(source).not.toContain("body: |");
   });
 
@@ -878,8 +905,8 @@ scriptBody: |-
     const changes = extractReadmeEntryChanges(`
 diff --git a/README.md b/README.md
 @@ -1,2 +1,3 @@
-+- **[Xquik MCP Server](https://heyclau.de/mcp/xquik-mcp-server)** - Remote X and Twitter MCP server.
-+- **[Memesio MCP Server](https://heyclau.de/mcp/memesio-mcp-server)** - Hosted meme generation MCP server.
++- **[Xquik MCP Server](https://heyclau.de/entry/mcp/xquik-mcp-server)** - Remote X and Twitter MCP server.
++- **[Memesio MCP Server](https://heyclau.de/entry/mcp/memesio-mcp-server)** - Hosted meme generation MCP server.
 -- **[Existing Tool](https://heyclau.de/tools/existing-tool)** - Old copy.
 +- **[Existing Tool](https://heyclau.de/tools/existing-tool)** - New copy.
 `);
@@ -903,24 +930,54 @@ diff --git a/README.md b/README.md
     ]);
   });
 
+  it("extracts PR 1727-style accumulated README entries", () => {
+    const changes = extractReadmeEntryChanges(`
+diff --git a/README.md b/README.md
+@@ -1,2 +1,4 @@
++- **[Agent SDK Production Architect Agent](https://heyclau.de/entry/agents/agent-sdk-production-architect-agent)** - Designs production Claude Agent SDK deployments.
++- **[Slash Commands in Claude Agent SDK Sessions](https://heyclau.de/entry/guides/slash-commands-claude-agent-sdk-sessions)** - Use slash commands in long-running agent sessions.
+`);
+
+    expect(changes).toMatchObject([
+      {
+        changeType: "added",
+        category: "agents",
+        slug: "agent-sdk-production-architect-agent",
+      },
+      {
+        changeType: "added",
+        category: "guides",
+        slug: "slash-commands-claude-agent-sdk-sessions",
+      },
+    ]);
+  });
+
   it("summarizes direct PR and source-submission README provenance", () => {
     expect(
       summarizeReadmeEntryChange({
         change: {
           changeType: "added",
+          category: "mcp",
+          slug: "xquik-mcp-server",
           title: "Xquik MCP Server",
         },
         associatedPullRequest: {
           number: 326,
+          html_url: "https://github.com/JSONbored/awesome-claude/pull/326",
           user: { login: "kriptoburak" },
         },
+        repository: "JSONbored/awesome-claude",
       }),
-    ).toBe("Added Xquik MCP Server content submission (#326) by @kriptoburak");
+    ).toBe(
+      "Added [Xquik MCP Server](https://heyclau.de/entry/mcp/xquik-mcp-server) content submission ([#326](https://github.com/JSONbored/awesome-claude/pull/326)) by [@kriptoburak](https://github.com/kriptoburak)",
+    );
 
     expect(
       summarizeReadmeEntryChange({
         change: {
           changeType: "added",
+          category: "mcp",
+          slug: "memesio-mcp-server",
           title: "Memesio MCP Server",
         },
         frontmatter: {
@@ -932,27 +989,28 @@ diff --git a/README.md b/README.md
           number: 330,
           user: { login: "JSONbored" },
         },
+        repository: "JSONbored/awesome-claude",
       }),
     ).toBe(
-      "Added Memesio MCP Server content submission (#330) by @vy35 via submission #325",
+      "Added [Memesio MCP Server](https://heyclau.de/entry/mcp/memesio-mcp-server) content submission ([#330](https://github.com/JSONbored/awesome-claude/pull/330)) by [@vy35](https://github.com/vy35) via submission #325",
     );
 
     const body = buildReadmeRefreshBody([
       {
         summary:
-          "Added Xquik MCP Server content submission (#326) by @kriptoburak",
+          "Added [Xquik MCP Server](https://heyclau.de/entry/mcp/xquik-mcp-server) content submission ([#326](https://github.com/JSONbored/awesome-claude/pull/326)) by [@kriptoburak](https://github.com/kriptoburak)",
       },
       {
         summary:
-          "Added Memesio MCP Server content submission (#330) by @vy35 via submission #325",
+          "Added [Memesio MCP Server](https://heyclau.de/entry/mcp/memesio-mcp-server) content submission ([#330](https://github.com/JSONbored/awesome-claude/pull/330)) by [@vy35](https://github.com/vy35) via submission #325",
       },
     ]);
 
     expect(body).toContain(
-      "- Added Xquik MCP Server content submission (#326) by @kriptoburak",
+      "- Added [Xquik MCP Server](https://heyclau.de/entry/mcp/xquik-mcp-server) content submission ([#326](https://github.com/JSONbored/awesome-claude/pull/326)) by [@kriptoburak](https://github.com/kriptoburak)",
     );
     expect(body).toContain(
-      "- Added Memesio MCP Server content submission (#330) by @vy35 via submission #325",
+      "- Added [Memesio MCP Server](https://heyclau.de/entry/mcp/memesio-mcp-server) content submission ([#330](https://github.com/JSONbored/awesome-claude/pull/330)) by [@vy35](https://github.com/vy35) via submission #325",
     );
     expect(body).toContain(
       "pending README changes accumulate in one reviewable PR",
@@ -989,7 +1047,114 @@ description: Example description
 
     expect(resolved.relativePath).toBe("content/mcp/example-file.mdx");
     expect(resolved.summary).toContain(
-      "Added Example Entry content submission",
+      "Added [Example Entry](https://heyclau.de/entry/mcp/example) content submission",
+    );
+  });
+
+  it("uses the add commit for newly added README entries", async () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "heyclaude-readme-"));
+    git(tmpDir, ["init", "-b", "main"]);
+    git(tmpDir, ["config", "user.name", "HeyClaude Test"]);
+    git(tmpDir, ["config", "user.email", "test@example.com"]);
+    git(tmpDir, ["config", "commit.gpgsign", "false"]);
+    git(tmpDir, ["config", "tag.gpgsign", "false"]);
+
+    writeFile(
+      path.join(tmpDir, "content", "guides", "example-guide.mdx"),
+      `---
+title: Example Guide
+description: Example description
+---
+`,
+    );
+    git(tmpDir, ["add", "."]);
+    git(tmpDir, ["commit", "-m", "test: add guide"]);
+    const addCommit = git(tmpDir, ["rev-parse", "HEAD"]);
+
+    fs.appendFileSync(
+      path.join(tmpDir, "content", "guides", "example-guide.mdx"),
+      "\nUpdated content.\n",
+      "utf8",
+    );
+    git(tmpDir, ["add", "."]);
+    git(tmpDir, ["commit", "-m", "test: update guide"]);
+    const updateCommit = git(tmpDir, ["rev-parse", "HEAD"]);
+
+    const added = await resolveReadmeEntryChange(
+      {
+        changeType: "added",
+        category: "guides",
+        slug: "example-guide",
+        title: "Example Guide",
+        description: "Example description",
+        key: "guides/example-guide",
+      },
+      { repoRoot: tmpDir, repository: "", token: "" },
+    );
+    const updated = await resolveReadmeEntryChange(
+      {
+        changeType: "updated",
+        category: "guides",
+        slug: "example-guide",
+        title: "Example Guide",
+        description: "Example description",
+        key: "guides/example-guide",
+      },
+      { repoRoot: tmpDir, repository: "", token: "" },
+    );
+
+    expect(added.commitSha).toBe(addCommit);
+    expect(updated.commitSha).toBe(updateCommit);
+  });
+
+  it("fails when added README catalog lines are not parseable", async () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "heyclaude-readme-"));
+    writeFile(
+      path.join(tmpDir, "readme.diff"),
+      `
+diff --git a/README.md b/README.md
+@@ -1,2 +1,3 @@
++- **[Future Entry](https://heyclau.de/catalog/guides/future-entry)** - Parser should not silently ignore this.
+`,
+    );
+
+    await expect(
+      buildReadmeRefreshBodyMain([
+        "--repo-root",
+        tmpDir,
+        "--diff-file",
+        "readme.diff",
+        "--output",
+        "body.md",
+      ]),
+    ).rejects.toThrow(
+      /1 added catalog entry line\(s\), but 0 parsed change\(s\)/,
+    );
+  });
+
+  it("fails when README catalog extraction misses only some added lines", async () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "heyclaude-readme-"));
+    writeFile(
+      path.join(tmpDir, "readme.diff"),
+      `
+diff --git a/README.md b/README.md
+@@ -1,2 +1,4 @@
++- **[Valid Entry](https://heyclau.de/entry/guides/valid-entry)** - Parser should find this entry.
++- **[Future Entry](https://heyclau.de/catalog/guides/future-entry)** - Parser should not silently ignore this.
+`,
+    );
+
+    await expect(
+      buildReadmeRefreshBodyMain([
+        "--repo-root",
+        tmpDir,
+        "--diff-file",
+        "readme.diff",
+        "--output",
+        "body.md",
+      ]),
+    ).rejects.toThrow(
+      /2 added catalog entry line\(s\), but 1 parsed change\(s\)/,
     );
   });
 

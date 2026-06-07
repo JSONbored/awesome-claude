@@ -1,0 +1,114 @@
+---
+title: External Session Storage for Claude Agent SDK Hosts
+slug: external-session-storage-for-claude-agent-sdk-hosts
+category: guides
+description: >-
+  A practical walkthrough of mirroring Claude Agent SDK session transcripts to
+  external storage: the SessionStore interface, the SessionKey shape, resuming
+  across hosts, reference adapters for S3/Redis/Postgres, and behavior notes.
+cardDescription: >-
+  Mirror Claude Agent SDK session transcripts to S3, Redis, or a database with a
+  SessionStore so any host can resume them.
+seoTitle: External Session Storage for Claude Agent SDK Hosts
+seoDescription: >-
+  How to persist Claude Agent SDK sessions to external storage with a
+  SessionStore adapter (append/load), the SessionKey shape, resuming across
+  hosts, S3/Redis/Postgres reference adapters, and dual-write behavior.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/session-storage"
+usageSnippet: "Use this guide to mirror Claude Agent SDK session transcripts to external storage so any host can resume a session, with a SessionStore adapter."
+prerequisites:
+  - "The Claude Agent SDK installed for Python or TypeScript."
+  - "An external backend (S3, Redis, a database) and its client library."
+  - "A working-directory layout where local transcript writes are available (the store mirrors them)."
+safetyNotes:
+  - "The store is a mirror, not a replacement: the CLI writes locally first, then append() forwards. sessionStore cannot combine with persistSession: false or enableFileCheckpointing."
+  - "Mirror writes are best-effort; a failed append emits a system mirror_error message and the query continues, so monitor for mirror_error to detect store data loss."
+  - "Deleting the main session key must cascade to subagent subkeys; implement delete carefully or treat the backend as append-only."
+privacyNotes:
+  - "Transcripts contain the full conversation, tool inputs, and outputs; store them in a backend you govern with your own encryption, access controls, and retention."
+  - "The SDK never deletes from your store; retention (TTLs, S3 lifecycle, scheduled cleanup) is your responsibility."
+  - "Keep backend credentials out of code; pass a pre-configured client to the adapter so you control TLS, region, and pooling."
+tags:
+  - claude-agent-sdk
+  - sessions
+  - storage
+  - deployment
+  - developer-tools
+keywords:
+  - claude agent sdk session storage
+  - SessionStore adapter
+  - resume session across hosts
+  - s3 redis postgres session store
+  - sessionStore option
+---
+
+## Overview
+
+By default the Agent SDK writes session transcripts to local JSONL files under
+`~/.claude/projects/`. A `SessionStore` adapter mirrors those transcripts to your
+own backend (S3, Redis, a database) so a session created on one host can be
+resumed on another. This matters for multi-host deployments, durability, and
+compliance.
+
+## The SessionStore interface
+
+A `SessionStore` has two required methods, `append` and `load`, plus optional
+`listSessions`, `delete`, and `listSubkeys`:
+
+- `append(key, entries)` - called after each batch of transcript entries is
+  written locally.
+- `load(key)` - called once before the subprocess spawns when `resume` is set;
+  returns `null` for an unknown session.
+
+A `SessionKey` is `{ projectKey, sessionId, subpath? }`. `subpath` is set for
+subagent transcripts or sidecar files (treat it as an opaque suffix). Implement
+the optional methods to enable `listSessions()`, `deleteSession()`, and subagent
+resume.
+
+## Quick start
+
+The SDK ships `InMemorySessionStore` for development. Pass a store via
+`sessionStore` and resume with the captured session id:
+
+```typescript
+import { query, InMemorySessionStore } from "@anthropic-ai/claude-agent-sdk";
+const store = new InMemorySessionStore();
+let sessionId;
+for await (const m of query({ prompt: "...", options: { sessionStore: store } })) {
+  if (m.type === "result") sessionId = m.session_id;
+}
+for await (const m of query({ prompt: "...", options: { sessionStore: store, resume: sessionId } })) {
+  /* full context from the first call */
+}
+```
+
+## Write your own adapter
+
+Implement `append` and `load` against your backend; add the optional methods for
+full functionality. Treat entries as opaque JSON-safe values: persist in order and
+return them deep-equal from `load` (key reordering is fine, so Postgres `jsonb`
+works). The TypeScript repo includes runnable S3, Redis, and Postgres reference
+adapters under `examples/session-stores/`, and both SDKs ship a conformance suite
+to validate your adapter.
+
+## Behavior notes
+
+- **Dual-write**: the CLI writes locally first; the store mirrors. To make the
+  local copy ephemeral, point `CLAUDE_CONFIG_DIR` at a temp dir.
+- **Best-effort mirror**: a failed `append` logs, emits a `mirror_error` system
+  message, and continues; failed batches are not retried.
+- **Compaction**: `getSessionMessages` returns the post-compaction chain; call
+  `store.load(key)` for raw history.
+- **Fork**: `forkSession` rewrites session ids and message UUIDs rather than doing
+  a byte copy.
+- **Retention**: the SDK never deletes from your store; you own TTLs and cleanup.
+
+## Source
+
+- Persist sessions to external storage: https://code.claude.com/docs/en/agent-sdk/session-storage

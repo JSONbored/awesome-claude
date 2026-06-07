@@ -1,0 +1,167 @@
+---
+title: AntV MCP Server Chart
+slug: antv-mcp-server-chart
+category: mcp
+description: >-
+  Visualization MCP server for generating charts, diagrams, maps, graphs,
+  spreadsheets, and data-analysis visuals with AntV.
+cardDescription: >-
+  Generate 25+ chart and diagram types from Claude through AntV-powered MCP
+  tools.
+seoTitle: AntV MCP Server Chart for Claude
+seoDescription: >-
+  Configure AntV MCP Server Chart with Claude and other MCP clients to generate
+  charts, diagrams, maps, graphs, spreadsheets, and visualization assets from
+  structured data.
+author: AntV
+authorProfileUrl: "https://github.com/antvis"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: AntV MCP Server Chart
+brandDomain: github.com
+repoUrl: "https://github.com/antvis/mcp-server-chart"
+documentationUrl: "https://github.com/antvis/mcp-server-chart/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40antv%2Fmcp-server-chart/latest"
+installable: true
+installCommand: "npx -y @antv/mcp-server-chart"
+usageSnippet: "Run `npx -y @antv/mcp-server-chart` for stdio MCP clients, or deploy the server with SSE or Streamable HTTP transport when your client supports remote MCP endpoints."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcp-server-chart": {
+        "command": "npx",
+        "args": ["-y", "@antv/mcp-server-chart"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mcp-server-chart": {
+        "command": "npx",
+        "args": ["-y", "@antv/mcp-server-chart"],
+        "env": {
+          "DISABLED_TOOLS": "generate_fishbone_diagram,generate_mind_map"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js and npm available to the MCP client runtime.
+  - Structured data or a clear visualization request.
+  - Optional private chart rendering service if default remote rendering is not appropriate for the data.
+  - Optional tool filtering plan for chart types that should not be exposed to a given agent workflow.
+safetyNotes:
+  - AntV MCP Server Chart can generate visual outputs from provided data, so review charts before using them in reports, dashboards, or customer-facing material.
+  - Geographic visualization tools may depend on external map services and have regional limitations described by the upstream project.
+  - Disable unsupported or unwanted chart tools with `DISABLED_TOOLS` when an MCP client has compatibility issues or a workflow should expose fewer visualization actions.
+  - Use private rendering infrastructure through `VIS_REQUEST_SERVER` when sensitive datasets should not be sent to the default chart generation service.
+privacyNotes:
+  - Chart data, labels, prompts, generated images, service identifiers, and rendering requests may contain business metrics, personal data, locations, or customer information.
+  - Default chart rendering can involve AntV-hosted services; review data sensitivity before sending private datasets.
+  - Protect custom rendering endpoints, service identifiers, and any generated record links in client configs, logs, screenshots, and shared prompts.
+sourceUrls:
+  - "https://github.com/antvis/mcp-server-chart"
+  - "https://github.com/antvis/mcp-server-chart/blob/main/README.md"
+  - "https://github.com/antvis/mcp-server-chart/blob/main/package.json"
+  - "https://registry.npmjs.org/%40antv%2Fmcp-server-chart/latest"
+tags:
+  - charts
+  - visualization
+  - data-analysis
+  - diagrams
+  - antv
+keywords:
+  - AntV MCP
+  - AntV MCP Server Chart
+  - mcp-server-chart
+  - chart generation MCP
+  - visualization MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+AntV MCP Server Chart gives MCP clients chart and diagram generation tools
+powered by AntV. It supports common statistical charts, flow diagrams, mind
+maps, organization charts, network graphs, geographic maps, word clouds,
+spreadsheets, and pivot-style tabular views.
+
+The upstream README describes stdio usage through the `@antv/mcp-server-chart`
+npm package, plus SSE and Streamable HTTP transports for remote deployments. It
+also documents tool filtering, optional record generation, and private rendering
+through a custom visualization request server.
+
+## Source Review
+
+- https://github.com/antvis/mcp-server-chart
+- https://github.com/antvis/mcp-server-chart/blob/main/README.md
+- https://github.com/antvis/mcp-server-chart/blob/main/package.json
+- https://registry.npmjs.org/%40antv%2Fmcp-server-chart/latest
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+registry metadata for current chart tools, package version, transport options,
+environment variables, and private deployment guidance.
+
+## Features
+
+- Stdio MCP server through the `@antv/mcp-server-chart` npm package.
+- SSE and Streamable HTTP transport options for deployed MCP endpoints.
+- Area, bar, boxplot, column, dual-axis, funnel, histogram, line, liquid, pie,
+  radar, sankey, scatter, treemap, venn, violin, and word-cloud charts.
+- Flowchart, fishbone, mind-map, network, and organization diagrams.
+- District, path, and pin map generation with the upstream regional limitation.
+- Spreadsheet and pivot-table style output.
+- Tool filtering through `DISABLED_TOOLS`.
+- Optional private rendering service through `VIS_REQUEST_SERVER`.
+
+## Installation
+
+For stdio MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "mcp-server-chart": {
+      "command": "npx",
+      "args": ["-y", "@antv/mcp-server-chart"]
+    }
+  }
+}
+```
+
+For remote deployments, run the server with SSE or Streamable HTTP transport and
+configure the MCP client with your deployed HTTPS endpoint. Keep the endpoint
+behind the same access controls you would use for any service that receives
+private chart data.
+
+## Use Cases
+
+- Turn tabular data into a quick line, bar, pie, scatter, or radar chart.
+- Generate flowcharts, mind maps, fishbone diagrams, or organization charts from
+  structured prompts.
+- Create visual drafts for reports, notebooks, and dashboards.
+- Use tool filtering to expose only approved chart types to a given agent.
+- Route sensitive chart rendering to a private visualization service.
+
+## Safety and Privacy
+
+Generated charts can make data look more certain than it is. Review chart type,
+axis labels, units, aggregation, outliers, and source data before using outputs
+in decisions or public materials.
+
+Treat chart inputs and generated visuals as sensitive when they include business
+metrics, personal data, customer records, locations, or unreleased plans. Use a
+private rendering service when default remote rendering is not appropriate for
+the dataset.
+
+## Duplicate Check
+
+No `antvis/mcp-server-chart` entry, `@antv/mcp-server-chart` package entry, or
+matching source URL was found in `content/mcp`. This is distinct from browser,
+database, and research MCP servers because it focuses specifically on chart and
+diagram generation.

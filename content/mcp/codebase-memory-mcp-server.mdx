@@ -1,0 +1,181 @@
+---
+title: Codebase Memory MCP Server
+slug: codebase-memory-mcp-server
+category: mcp
+description: >-
+  High-performance MCP server that indexes codebases into a persistent
+  knowledge graph for structural search, call tracing, architecture summaries,
+  dead-code detection, and cross-repo analysis.
+cardDescription: >-
+  Give Claude a persistent code knowledge graph for search, call paths,
+  architecture, impact analysis, ADRs, dead code, and cross-service links.
+seoTitle: Codebase Memory MCP Server for Claude
+seoDescription: >-
+  Configure Codebase Memory MCP Server with Claude and other MCP clients to
+  index local repositories, query code graphs, trace call paths, inspect
+  architecture, detect changes, and analyze dead code.
+author: DeusData
+authorProfileUrl: "https://github.com/DeusData"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Codebase Memory
+brandDomain: github.com
+repoUrl: "https://github.com/DeusData/codebase-memory-mcp"
+documentationUrl: "https://github.com/DeusData/codebase-memory-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/codebase-memory-mcp"
+installable: true
+installCommand: "npm install -g codebase-memory-mcp"
+usageSnippet: "Install `codebase-memory-mcp`, restart the MCP client, then ask Claude to index the current project with Codebase Memory MCP."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "codebase-memory": {
+        "command": "npx",
+        "args": ["-y", "codebase-memory-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "codebase-memory": {
+        "command": "npx",
+        "args": ["-y", "codebase-memory-mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: advanced
+prerequisites:
+  - A local repository or workspace you are authorized to index.
+  - Platform-compatible Codebase Memory MCP release binary verified before use.
+  - Agent configuration write access reviewed before running the installer.
+  - Sensitive paths, generated files, vendored code, secrets, and private repositories reviewed before indexing.
+  - Optional graph UI, auto-indexing, background watcher, and shared graph artifact behavior reviewed before enabling.
+safetyNotes:
+  - Codebase Memory MCP reads source files across indexed repositories and writes MCP entries, instruction files, skills, hooks, and agent configuration files during install.
+  - The background watcher and auto-index features can keep graph data updated as source files change.
+  - The optional graph UI exposes a local visualization server on a localhost port.
+  - Shared graph artifacts and SQLite databases can persist source metadata after an MCP session ends.
+  - Verify downloaded release binaries, checksums, signatures, and provenance before running them in sensitive environments.
+privacyNotes:
+  - Source code, filenames, paths, symbols, comments, imports, routes, call graphs, architecture summaries, ADRs, graph queries, prompts, and tool outputs may be visible to the MCP client and model provider.
+  - Persistent graph databases and shared artifacts can retain proprietary architecture, internal package names, route names, service boundaries, and accidentally committed secrets.
+  - Auto-indexing broad workspace roots can include unrelated private repositories or generated files.
+  - Avoid committing shared graph artifacts unless the repository owners explicitly approve storing derived code intelligence in version control.
+sourceUrls:
+  - "https://github.com/DeusData/codebase-memory-mcp"
+  - "https://github.com/DeusData/codebase-memory-mcp/blob/main/README.md"
+  - "https://github.com/DeusData/codebase-memory-mcp/blob/main/server.json"
+  - "https://github.com/DeusData/codebase-memory-mcp/blob/main/SECURITY.md"
+  - "https://github.com/DeusData/codebase-memory-mcp/releases/latest"
+  - "https://registry.npmjs.org/codebase-memory-mcp"
+  - "https://pypi.org/pypi/codebase-memory-mcp/json"
+tags:
+  - code-analysis
+  - graph
+  - repository
+  - architecture
+  - developer-tools
+keywords:
+  - Codebase Memory MCP
+  - codebase-memory-mcp
+  - code knowledge graph MCP
+  - call graph MCP
+  - architecture analysis MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Codebase Memory MCP indexes repositories into a persistent code knowledge graph
+that Claude can query through MCP. It supports structural search, call tracing,
+architecture summaries, impact analysis, dead-code detection, cross-service
+links, ADR management, and cross-repo graph intelligence.
+
+The upstream README documents release binaries, package manager availability,
+agent auto-configuration, optional graph visualization, auto-indexing, and the
+`codebase-memory-mcp` command. The repository also ships a `server.json`
+manifest for MCP registry metadata and release package hashes.
+
+## Source Review
+
+- https://github.com/DeusData/codebase-memory-mcp
+- https://github.com/DeusData/codebase-memory-mcp/blob/main/README.md
+- https://github.com/DeusData/codebase-memory-mcp/blob/main/server.json
+- https://github.com/DeusData/codebase-memory-mcp/blob/main/SECURITY.md
+- https://github.com/DeusData/codebase-memory-mcp/releases/latest
+- https://registry.npmjs.org/codebase-memory-mcp
+- https://pypi.org/pypi/codebase-memory-mcp/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, server manifest, security policy, latest release metadata, and package
+registry metadata for current binaries, checksums, install options, supported
+platforms, MCP tools, and verification guidance.
+
+## Features
+
+- Index local repositories into a persistent SQLite-backed code graph.
+- Query architecture summaries, call graphs, dead code, impact analysis, and changed symbols.
+- Search symbols, graph nodes, code, routes, packages, and cross-service links.
+- Manage Architecture Decision Records across sessions.
+- Build cross-repo graph edges for multi-service workspaces.
+- Use optional auto-indexing and background watchers for active projects.
+- Open an optional local graph visualization UI with the UI binary variant.
+- Install as a static release binary for macOS, Linux, and Windows.
+
+## Installation
+
+Install the NPM package globally:
+
+```bash
+npm install -g codebase-memory-mcp
+```
+
+For MCP clients that launch stdio servers without a global install:
+
+```json
+{
+  "mcpServers": {
+    "codebase-memory": {
+      "command": "npx",
+      "args": ["-y", "codebase-memory-mcp"]
+    }
+  }
+}
+```
+
+Restart the MCP client after installing the package and adding or refreshing the
+server configuration. For manual binary installs, download a platform archive
+from the latest release and verify checksums before running it.
+
+## Use Cases
+
+- Ask Claude to index a repository before a refactor.
+- Trace inbound or outbound calls for a function.
+- Summarize architecture, entry points, packages, routes, and hotspots.
+- Map uncommitted changes to affected symbols and risk areas.
+- Find dead code or cross-service route relationships.
+- Keep architecture decisions available across sessions.
+- Share an approved graph artifact with a team to avoid repeated full indexing.
+
+## Safety and Privacy
+
+Codebase Memory MCP is intentionally deep in the local development environment.
+It reads source files, stores derived graph data, and can write agent
+configuration, skills, hooks, and instruction files during installation. Audit
+the source and verify release artifacts before running it in sensitive
+workspaces.
+
+Limit indexing to approved repositories and review ignored paths before turning
+on auto-indexing or watchers. Treat persistent graph databases and shared graph
+artifacts as derived copies of source intelligence that may reveal proprietary
+architecture, route names, service boundaries, comments, and accidentally
+committed secrets.
+
+## Duplicate Check
+
+No `DeusData/codebase-memory-mcp` entry, `codebase-memory-mcp` command entry, or
+matching source URL was found in `content/mcp`.

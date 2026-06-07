@@ -1,0 +1,188 @@
+---
+title: Draw.io MCP Server
+slug: drawio-mcp-server
+category: mcp
+description: >-
+  MCP server for controlling Draw.io and diagrams.net diagrams from Claude,
+  including document discovery, page management, layers, shapes, edges,
+  Mermaid import, diagram import/export, and a built-in editor mode.
+cardDescription: >-
+  Let Claude create, inspect, edit, import, and export Draw.io diagrams through
+  a local MCP server with built-in editor and browser-extension options.
+seoTitle: Draw.io MCP Server for Claude
+seoDescription: >-
+  Configure Draw.io MCP Server with Claude to create, inspect, edit, import,
+  and export diagrams using Draw.io pages, layers, shapes, connectors, Mermaid,
+  SVG, PNG, and XML workflows.
+author: Lukas Gazo
+authorProfileUrl: "https://github.com/lgazo"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Draw.io MCP Server
+brandDomain: diagrams.net
+repoUrl: "https://github.com/lgazo/drawio-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/README.md"
+packageUrl: "https://registry.npmjs.org/drawio-mcp-server"
+installable: true
+installCommand: "npx -y drawio-mcp-server --editor"
+usageSnippet: "Run `npx -y drawio-mcp-server --editor` to start the MCP server with its built-in Draw.io editor enabled."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "drawio": {
+        "command": "npx",
+        "args": ["-y", "drawio-mcp-server", "--editor"],
+        "env": {
+          "NPM_CONFIG_IGNORE_SCRIPTS": "true"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add-json drawio '{"type":"stdio","command":"npx","args":["-y","drawio-mcp-server","--editor"]}'
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 22 or newer for the published npm package.
+  - An MCP client such as Claude Desktop or Claude Code.
+  - A browser for the built-in editor, or the Draw.io MCP browser extension when controlling an existing diagrams.net tab.
+  - Review of which diagrams, browser tabs, pages, and export locations Claude is allowed to modify.
+  - TLS planning when using Firefox, browser-extension WebSocket connections, reverse proxies, or network-accessible transports.
+safetyNotes:
+  - Draw.io MCP Server can create, edit, delete, import, export, rename, copy, and reorganize diagram pages, layers, shapes, edges, labels, metadata, and Mermaid-derived content.
+  - Live operations target connected Draw.io browser tabs or the built-in editor; verify the selected document and page before allowing destructive edits.
+  - The server can run local HTTP and WebSocket endpoints, optionally with TLS or auto-generated self-signed certificates; avoid binding it to untrusted network interfaces.
+  - Browser-extension mode links a browser tab to the MCP server, so only connect tabs containing diagrams that the agent is allowed to inspect or modify.
+  - Export tools can write or return XML, SVG, and PNG files with embedded diagram data; review outputs before sharing them externally.
+  - Use trusted package sources, pin versions for repeatable workflows, and review generated diagrams before committing architectural or security documentation.
+privacyNotes:
+  - Diagrams can include private architecture, network topology, cloud account names, customer systems, credentials embedded in labels, incident details, internal process maps, or product plans.
+  - The MCP client can receive diagram XML, SVG, PNG exports, page names, layer names, selected-cell data, shape metadata, browser tab document metadata, and imported Mermaid content.
+  - Local editor and browser-extension workflows may leave diagrams, exported files, browser state, TLS material, and logs on disk.
+  - Treat exported SVG or PNG files with embedded XML as source files, because they can contain full editable diagram data beyond the visible image.
+  - Clear temporary files, generated certificates, and MCP logs when they are no longer needed for the diagram workflow.
+disclosure: >-
+  Community-maintained open source MCP server for Draw.io/diagrams.net,
+  published as the `drawio-mcp-server` npm package under the MIT license.
+sourceUrls:
+  - "https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/LICENSE.md"
+  - "https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/package.json"
+  - "https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/CONFIG.md"
+  - "https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/TOOLS.md"
+  - "https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/packages/drawio-mcp-server/package.json"
+  - "https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/packages/drawio-mcp-server/src/index.ts"
+  - "https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/packages/drawio-mcp-server/src/tools/index.ts"
+tags:
+  - drawio
+  - diagrams
+  - architecture
+  - mermaid
+  - visualization
+keywords:
+  - Draw.io MCP
+  - Draw.io MCP Server
+  - diagrams.net MCP
+  - diagram MCP server
+  - Mermaid import MCP
+  - architecture diagram MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Draw.io MCP Server lets Claude control Draw.io and diagrams.net diagrams through
+MCP. It can inspect connected documents, work across pages and layers, add and
+edit shapes or edges, import Mermaid diagrams, export XML/SVG/PNG files, and run
+a built-in editor without requiring a separate browser extension.
+
+Use it when Claude needs supervised access to create or maintain architecture
+diagrams, flowcharts, cloud diagrams, process maps, or visual documentation in a
+Draw.io-compatible format.
+
+## Source Review
+
+- https://github.com/lgazo/drawio-mcp-server
+- https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/README.md
+- https://registry.npmjs.org/drawio-mcp-server
+- https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/LICENSE.md
+- https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/package.json
+- https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/CONFIG.md
+- https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/TOOLS.md
+- https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/packages/drawio-mcp-server/package.json
+- https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/packages/drawio-mcp-server/src/index.ts
+- https://raw.githubusercontent.com/lgazo/drawio-mcp-server/main/packages/drawio-mcp-server/src/tools/index.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package manifests, configuration guide, tools
+reference, server entrypoint, and tool registry for current setup and behavior
+details.
+
+## Features
+
+- Run a built-in Draw.io editor from the MCP server.
+- Connect to Draw.io or diagrams.net browser tabs through the companion
+  extension.
+- List connected documents and target a specific document in multi-tab
+  workflows.
+- List, create, copy, rename, and inspect pages.
+- Inspect selected cells, page models, layers, shape libraries, and vendor
+  stencil categories.
+- Add rectangles, library shapes, edges, labels, parent-child relationships,
+  layer assignments, and custom cell data.
+- Edit or delete existing shapes and edges by ID.
+- Import Draw.io XML, SVG, PNG, or Mermaid diagrams.
+- Export diagrams as XML, SVG, or PNG, including formats with embedded XML.
+- Enable HTTP transport, custom ports, host binding, WebSocket overrides, TLS,
+  and auto-generated local certificates when needed.
+
+## Installation
+
+Configure your MCP client with the published npm package and the built-in
+editor mode:
+
+```json
+{
+  "mcpServers": {
+    "drawio": {
+      "command": "npx",
+      "args": ["-y", "drawio-mcp-server", "--editor"],
+      "env": {
+        "NPM_CONFIG_IGNORE_SCRIPTS": "true"
+      }
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add-json drawio '{"type":"stdio","command":"npx","args":["-y","drawio-mcp-server","--editor"]}'
+```
+
+After the MCP server starts, open the local editor URL printed by the server or
+configure the browser extension to connect to the matching WebSocket settings.
+
+## Use Cases
+
+- Generate an architecture diagram from a written system description.
+- Convert Mermaid diagrams into editable Draw.io pages.
+- Add cloud, network, or Cisco stencil shapes to infrastructure diagrams.
+- Create a multi-page visual design document from separate agent tasks.
+- Inspect a diagram's pages, layers, selected cells, and exported XML.
+- Update labels, connectors, layer organization, or metadata in an existing
+  Draw.io file.
+- Export diagrams for review while preserving embedded editable XML.
+
+## Safety and Privacy
+
+Draw.io MCP Server can mutate diagrams directly. Confirm the connected document,
+target page, and cell IDs before running edits, especially when multiple tabs or
+agents are active.
+
+Architecture diagrams often reveal sensitive implementation details. Keep
+diagram XML, embedded SVG/PNG exports, browser-extension state, generated TLS
+material, and MCP logs within approved storage, and review all generated visuals
+before publishing or committing them.

@@ -1,0 +1,192 @@
+---
+title: WebDriverIO MCP Server
+slug: webdriverio-mcp-server
+category: mcp
+description: >-
+  WebDriverIO MCP server that lets Claude automate browsers and mobile apps
+  with navigation, clicks, typing, screenshots, accessibility snapshots,
+  cookies, geolocation, native app sessions, and Appium-style gestures.
+cardDescription: >-
+  Automate browsers, mobile apps, screenshots, accessibility snapshots,
+  cookies, geolocation, and gestures from Claude with WebDriverIO.
+seoTitle: WebDriverIO MCP Server for Claude
+seoDescription: >-
+  Configure WebDriverIO MCP Server with Claude and other MCP clients to control
+  Chrome, Firefox, Edge, Safari, iOS, and Android sessions using WebDriverIO
+  tools for navigation, interaction, screenshots, cookies, and app testing.
+author: WebdriverIO
+authorProfileUrl: "https://github.com/webdriverio"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: WebDriverIO MCP Server
+brandDomain: webdriver.io
+repoUrl: "https://github.com/webdriverio/mcp"
+documentationUrl: "https://github.com/webdriverio/mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/@wdio%2fmcp"
+installable: true
+installCommand: "npx -y @wdio/mcp@latest"
+usageSnippet: "Run the @wdio/mcp server from an MCP client, then ask Claude to start a browser or mobile session and inspect, navigate, click, type, capture screenshots, or run test steps."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "wdio-mcp": {
+        "command": "npx",
+        "args": ["-y", "@wdio/mcp@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add wdio-mcp -- npx -y @wdio/mcp@latest
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js and npm or another package runner that can execute `@wdio/mcp`.
+  - MCP client that can run local stdio servers, or a reviewed HTTP transport setup when using the server's HTTP mode.
+  - Local browser, WebDriver, or WebDriverIO-compatible environment for the browser sessions you want Claude to control.
+  - Appium, simulator, emulator, device, or cloud-device credentials when using iOS or Android automation.
+  - Test accounts, non-production targets, and approval rules before allowing an agent to click, type, submit forms, or change application state.
+safetyNotes:
+  - WebDriverIO MCP Server can navigate pages, click elements, type values, scroll, switch frames or tabs, execute scripts, set cookies, delete cookies, set geolocation, and capture screenshots.
+  - Mobile tools can tap, swipe, drag, rotate devices, hide keyboards, switch native or web contexts, upload apps, and interact with iOS or Android sessions through WebDriverIO-compatible backends.
+  - Treat browser and mobile sessions as active automation, not passive inspection; use test accounts and avoid production workflows that can submit forms, trigger purchases, send messages, or mutate customer data.
+  - Script execution, cookie mutation, geolocation spoofing, and cloud-device provider integrations should be limited to reviewed test environments.
+  - HTTP transport mode can expose automation tools beyond a local stdio process; bind it carefully and require network controls before shared use.
+privacyNotes:
+  - Screenshots, accessibility trees, app state, cookies, URLs, page content, form values, device metadata, geolocation, trace artifacts, and generated test code can be visible to the MCP client, model provider, logs, and local files.
+  - Browser sessions can inherit logged-in state, cookies, local storage, and private tabs from a test profile if profiles are reused.
+  - Mobile testing can expose app screens, notification content, identifiers, credentials, uploaded app binaries, device logs, and cloud-device provider metadata.
+  - Keep BrowserStack, Sauce Labs, Appium, application, and test-account credentials in secret storage or MCP environment configuration rather than prompts or repository files.
+sourceUrls:
+  - "https://github.com/webdriverio/mcp/blob/main/LICENSE"
+  - "https://github.com/webdriverio/mcp/blob/main/package.json"
+  - "https://github.com/webdriverio/mcp/blob/main/server.json"
+  - "https://github.com/webdriverio/mcp/blob/main/src/server.ts"
+  - "https://github.com/webdriverio/mcp/blob/main/src/tools/session.tool.ts"
+  - "https://github.com/webdriverio/mcp/blob/main/src/tools/navigate.tool.ts"
+  - "https://github.com/webdriverio/mcp/blob/main/src/tools/screenshot.tool.ts"
+tags:
+  - webdriverio
+  - browser
+  - mobile
+  - testing
+  - automation
+keywords:
+  - WebDriverIO MCP
+  - WebdriverIO MCP server
+  - browser automation MCP
+  - mobile testing MCP
+  - Appium MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+WebDriverIO MCP Server connects Claude-compatible MCP clients to WebDriverIO so
+they can automate browsers and mobile applications through structured tools. It
+supports browser navigation and interaction, screenshots, accessibility
+snapshots, cookies, geolocation, frames, tabs, iOS and Android contexts, app
+state, Appium-style gestures, and optional cloud-device workflows.
+
+Use it when an agent needs to inspect or exercise real browser and mobile app
+behavior instead of reasoning from static code alone. It is especially useful
+for QA, regression triage, accessibility review, mobile workflow exploration,
+and generating reproducible WebDriverIO steps from live sessions.
+
+## Source Review
+
+- https://github.com/webdriverio/mcp
+- https://github.com/webdriverio/mcp/blob/main/README.md
+- https://registry.npmjs.org/@wdio%2fmcp
+- https://github.com/webdriverio/mcp/blob/main/LICENSE
+- https://github.com/webdriverio/mcp/blob/main/package.json
+- https://github.com/webdriverio/mcp/blob/main/server.json
+- https://github.com/webdriverio/mcp/blob/main/src/server.ts
+- https://github.com/webdriverio/mcp/blob/main/src/tools/session.tool.ts
+- https://github.com/webdriverio/mcp/blob/main/src/tools/navigate.tool.ts
+- https://github.com/webdriverio/mcp/blob/main/src/tools/screenshot.tool.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm registry metadata, license, package manifest, MCP registry metadata,
+server implementation, and representative session, navigation, and screenshot
+tool implementations for current installation and behavior details.
+
+## Features
+
+- Start, close, and inspect WebDriverIO sessions.
+- Navigate pages, switch tabs, switch frames, and inspect open tabs.
+- Click elements, set form values, scroll, and retrieve matching elements.
+- Capture screenshots, accessibility snapshots, cookies, app state, and
+  generated session steps.
+- Set or delete cookies and set geolocation for controlled test scenarios.
+- Execute JavaScript in the active browser context.
+- Use mobile gestures such as tap, swipe, drag and drop, context switching,
+  rotation, and keyboard hiding in compatible Appium sessions.
+- Work with BrowserStack or Sauce Labs local binaries and app upload flows when
+  cloud-device testing is configured.
+- Run over stdio by default, with an HTTP mode available for reviewed server
+  deployments.
+
+## Installation
+
+Add the npm package to an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "wdio-mcp": {
+      "command": "npx",
+      "args": ["-y", "@wdio/mcp@latest"]
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add wdio-mcp -- npx -y @wdio/mcp@latest
+```
+
+Restart the MCP client, then start a browser or mobile session that matches the
+environment you want Claude to inspect.
+
+## Use Cases
+
+- Ask Claude to reproduce a browser bug against a local or staging web app.
+- Generate WebDriverIO test steps from a live browser session.
+- Inspect accessibility snapshots and screenshots while debugging UI flows.
+- Exercise mobile app flows through an Appium-compatible iOS or Android
+  session.
+- Capture test traces and screenshots for regression reports.
+- Explore selectors, frames, tabs, cookies, and geolocation-dependent behavior
+  before writing automated tests.
+
+## Safety and Privacy
+
+WebDriverIO MCP Server gives an agent active control over browsers and mobile
+sessions. Keep it pointed at local, staging, or disposable test environments
+unless a human has approved the workflow and reviewed the account, data, and
+state-change risks.
+
+Do not give the server a browser profile, mobile app, cloud-device account, or
+test account that contains secrets or private production data. Browser cookies,
+local storage, screenshots, app screens, form values, traces, and logs can
+leave the target application and appear in the MCP client, model transcript, or
+local artifacts.
+
+Use extra care with script execution, cookie editing, geolocation spoofing,
+mobile gestures, app uploads, and HTTP transport. Those capabilities are useful
+for testing, but they can also alter state, bypass normal user intent, or expose
+automation tools to other hosts if deployed loosely.
+
+## Duplicate Check
+
+Existing entries cover Playwright, Chrome DevTools, BrowserMCP, Chrome MCP,
+Browserbase, bb-browser, Cypress Cloud, and other browser-adjacent servers.
+WebDriverIO MCP Server is distinct because it exposes WebDriverIO browser and
+mobile automation, including Appium-style mobile sessions, cloud-device
+resources, session traces, and WebDriverIO-oriented test step generation. No
+`webdriverio/mcp`, `@wdio/mcp`, or matching source URL was found in
+`content/mcp`.

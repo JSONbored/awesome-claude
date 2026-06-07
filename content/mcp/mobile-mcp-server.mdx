@@ -1,0 +1,162 @@
+---
+title: Mobile MCP Server
+slug: mobile-mcp-server
+category: mcp
+description: >-
+  Cross-platform mobile automation MCP server for iOS and Android simulators,
+  emulators, and real devices using accessibility snapshots, screenshots,
+  coordinate taps, app management, and input tools.
+cardDescription: >-
+  Automate iOS and Android apps from MCP clients across simulators, emulators,
+  and real devices.
+seoTitle: Mobile MCP Server for Claude
+seoDescription: >-
+  Configure Mobile MCP with Claude Code, Claude Desktop, Codex, Cursor, Cline,
+  Gemini CLI, Goose, Kiro, Windsurf, and other MCP clients for iOS and Android
+  automation, screenshots, accessibility snapshots, app management, input, and
+  device testing.
+author: mobile-next
+authorProfileUrl: "https://github.com/mobile-next"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Mobile MCP
+brandDomain: mobilenext.ai
+repoUrl: "https://github.com/mobile-next/mobile-mcp"
+documentationUrl: "https://github.com/mobile-next/mobile-mcp/wiki"
+websiteUrl: "https://mobilenext.ai"
+packageUrl: "https://www.npmjs.com/package/@mobilenext/mobile-mcp"
+installable: true
+installCommand: "npx -y @mobilenext/mobile-mcp@latest"
+usageSnippet: "Configure an MCP client to run `npx -y @mobilenext/mobile-mcp@latest`, then connect an iOS or Android simulator, emulator, or real device."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mobile-mcp": {
+        "command": "npx",
+        "args": ["-y", "@mobilenext/mobile-mcp@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mobile-mcp": {
+        "command": "npx",
+        "args": ["-y", "@mobilenext/mobile-mcp@latest"]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 18 or newer.
+  - iOS Simulator, Android Emulator, or connected real iOS or Android device.
+  - Platform tooling required for the target device, such as Xcode tooling for iOS or ADB for Android.
+  - MCP client such as Claude Code, Claude Desktop, Codex, Cursor, Cline, Gemini CLI, Goose, Kiro, or Windsurf.
+  - Test accounts and test devices for workflows that may touch private data.
+safetyNotes:
+  - Mobile MCP can list devices, launch apps, terminate apps, install or uninstall apps, take screenshots, inspect UI elements, tap coordinates, type text, press device buttons, swipe, and open URLs.
+  - Real devices may contain personal accounts, private notifications, photos, messages, payment apps, health data, location data, and authentication prompts.
+  - Use simulators, emulators, or dedicated test devices for automation, and require approval before installing apps, uninstalling apps, sending messages, making purchases, changing settings, or entering credentials.
+  - Coordinate-based taps can hit the wrong UI when layouts change; verify critical actions with screenshots or accessibility snapshots.
+privacyNotes:
+  - Screenshots, accessibility trees, app lists, device names, package identifiers, typed input, visible notifications, and app contents may be sent to the MCP client and model.
+  - Real-device automation can expose personal data, customer data, tokens, one-time codes, location, contacts, photos, and private app state.
+  - Saved screenshots and logs should be protected or deleted after sensitive testing.
+sourceUrls:
+  - "https://github.com/mobile-next/mobile-mcp"
+  - "https://github.com/mobile-next/mobile-mcp/wiki"
+  - "https://www.npmjs.com/package/@mobilenext/mobile-mcp"
+  - "https://mobilenext.ai"
+tags:
+  - mobile
+  - ios
+  - android
+  - automation
+  - testing
+keywords:
+  - Mobile MCP
+  - mobile-mcp Claude
+  - iOS MCP server
+  - Android MCP server
+  - mobile automation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Mobile MCP Server lets AI agents automate mobile apps across iOS and Android
+simulators, emulators, and real devices. It provides a platform-agnostic MCP
+interface over accessibility snapshots, screenshots, coordinate-based taps,
+device management, app management, input, and navigation.
+
+The project is designed for native app automation, mobile testing, scripted
+flows, form interaction, data extraction, and agent-driven mobile workflows.
+
+## Source Review
+
+- https://github.com/mobile-next/mobile-mcp
+- https://github.com/mobile-next/mobile-mcp/wiki
+- https://www.npmjs.com/package/@mobilenext/mobile-mcp
+- https://mobilenext.ai
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+wiki for current platform support, client-specific setup, device requirements,
+and debugging guidance.
+
+## Features
+
+- iOS Simulator and iOS real-device support.
+- Android Emulator and Android real-device support.
+- Accessibility snapshots plus screenshot and coordinate fallback workflows.
+- Device listing, screen size, and orientation tools.
+- App listing, launch, terminate, install, and uninstall tools.
+- Screenshot, UI element listing, tap, double-tap, long-press, swipe, type,
+  device button, and open-URL tools.
+- Client examples for Claude Code, Claude Desktop, Codex, Cursor, Cline, Gemini
+  CLI, Goose, Kiro, Windsurf, and more.
+
+## Installation
+
+Add the standard MCP server config:
+
+```json
+{
+  "mcpServers": {
+    "mobile-mcp": {
+      "command": "npx",
+      "args": ["-y", "@mobilenext/mobile-mcp@latest"]
+    }
+  }
+}
+```
+
+Connect an iOS or Android simulator, emulator, or real device with the platform
+tooling required by the Mobile MCP wiki.
+
+## Use Cases
+
+- Let an AI assistant test native mobile app flows.
+- Capture screenshots and accessibility snapshots for debugging.
+- Automate repetitive mobile QA tasks on emulators or simulators.
+- Drive multi-step data entry flows in controlled test apps.
+- Inspect visible mobile UI state before generating test scripts.
+
+## Safety and Privacy
+
+Prefer simulators, emulators, or dedicated test devices. Real phones can expose
+private notifications, messages, photos, contacts, payment apps, health data,
+and authentication prompts. Require confirmation before installing or
+uninstalling apps, sending messages, submitting forms, entering credentials, or
+touching production accounts.
+
+Treat screenshots, accessibility snapshots, app lists, typed input, and device
+metadata as sensitive test artifacts.
+
+## Duplicate Check
+
+No `mobile-next/mobile-mcp` entry or source URL was found in `content/mcp`.
+This entry is separate from browser, desktop, Windows, and Xcode automation MCP
+servers because it targets mobile devices and native mobile apps.

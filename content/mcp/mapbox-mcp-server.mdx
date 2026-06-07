@@ -1,0 +1,204 @@
+---
+title: Mapbox MCP Server
+slug: mapbox-mcp-server
+category: mcp
+description: >-
+  Official Mapbox MCP server for geocoding, POI search, routing, travel-time
+  matrices, isochrones, static maps, and geospatial calculations in Claude.
+cardDescription: >-
+  Give Claude Mapbox location intelligence, route planning, static map images,
+  MCP Apps previews, and offline Turf.js geospatial tools.
+seoTitle: Mapbox MCP Server for Claude
+seoDescription: >-
+  Configure the official Mapbox MCP Server with Claude for geocoding, point of
+  interest search, directions, map matching, isochrones, static maps, and
+  geospatial analysis.
+author: Mapbox
+authorProfileUrl: "https://github.com/mapbox"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Mapbox MCP Server
+brandDomain: mapbox.com
+repoUrl: "https://github.com/mapbox/mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/mapbox/mcp-server/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40mapbox%2Fmcp-server"
+installable: true
+installCommand: "npx -y @mapbox/mcp-server"
+usageSnippet: "Set `MAPBOX_ACCESS_TOKEN`, then run `npx -y @mapbox/mcp-server`; alternatively connect compatible clients to the hosted `https://mcp.mapbox.com/mcp` endpoint."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mapbox": {
+        "command": "npx",
+        "args": ["-y", "@mapbox/mcp-server"],
+        "env": {
+          "MAPBOX_ACCESS_TOKEN": "YOUR_MAPBOX_ACCESS_TOKEN"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  npx -y @mapbox/mcp-server --disable-tools static_map_image_tool
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js and npm or another runtime capable of running `npx -y @mapbox/mcp-server`.
+  - A Mapbox access token with the scopes needed for the APIs and endpoints you plan to expose.
+  - Review of Mapbox pricing, rate limits, token scopes, geocoding rules, routing behavior, and static map usage.
+  - Optional hosted MCP setup review if connecting to `https://mcp.mapbox.com/mcp` through OAuth or bearer-token authentication.
+  - Optional tool allowlist or denylist planning with `--enable-tools` or `--disable-tools`.
+safetyNotes:
+  - Mapbox MCP can send addresses, coordinates, routes, POI searches, GPS traces, travel-time matrices, and map-rendering requests to Mapbox APIs.
+  - API-backed tools can consume Mapbox quota or create billing activity; restrict autonomous routing, matrix, map matching, and static map loops.
+  - Location workflows can affect navigation, logistics, delivery planning, and accessibility decisions; verify critical routes and travel-time results outside the model.
+  - Static map and MCP Apps preview tools can create visual outputs that include user-supplied coordinates, markers, routes, and geographic data.
+  - Use `--enable-tools` or `--disable-tools` to limit high-impact tools such as static map generation, matrix calculations, route optimization, and map matching when needed.
+privacyNotes:
+  - Mapbox receives access tokens, geocoding queries, addresses, place names, coordinates, routes, GPS traces, POI searches, request parameters, and usage metadata.
+  - MCP clients and logs can retain location questions, returned coordinates, route summaries, travel-time matrices, static map image data, and embedded map-preview context.
+  - Hosted MCP connections may use OAuth or bearer-token authentication; avoid exposing tokens in client configs, browser history, server logs, proxies, or screenshots.
+  - Location data can reveal home, workplace, customer, route, delivery, mobility, or sensitive site information.
+disclosure: >-
+  MIT-licensed official Mapbox MCP server published as the `@mapbox/mcp-server`
+  npm package, with a hosted streamable HTTP endpoint and a local stdio package
+  path. This entry is separate from generic mapping or geospatial libraries
+  because it exposes Mapbox APIs, MCP resources, prompts, and MCP Apps previews
+  directly to MCP clients.
+sourceUrls:
+  - "https://raw.githubusercontent.com/mapbox/mcp-server/main/LICENSE.md"
+  - "https://raw.githubusercontent.com/mapbox/mcp-server/main/README.md"
+  - "https://raw.githubusercontent.com/mapbox/mcp-server/main/package.json"
+  - "https://raw.githubusercontent.com/mapbox/mcp-server/main/server.json"
+  - "https://raw.githubusercontent.com/mapbox/mcp-server/main/TOOL_CONFIGURATION.md"
+  - "https://raw.githubusercontent.com/mapbox/mcp-server/main/docs/hosted-mcp-guide.md"
+  - "https://raw.githubusercontent.com/mapbox/mcp-server/main/src/index.ts"
+tags:
+  - maps
+  - geocoding
+  - routing
+  - geospatial
+  - travel
+keywords:
+  - Mapbox MCP Server
+  - Mapbox MCP
+  - Mapbox geocoding MCP
+  - Mapbox routing MCP
+  - geospatial MCP server
+  - static map MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Mapbox MCP Server connects Claude and other MCP clients to Mapbox location
+intelligence. It can geocode addresses, reverse geocode coordinates, search for
+points of interest, get directions, calculate travel-time matrices, match GPS
+traces to roads, generate isochrones, render static maps, and run offline
+geospatial calculations with Turf.js.
+
+Use it when a Claude workflow needs location-aware reasoning, travel planning,
+logistics analysis, route optimization, or map visualization backed by Mapbox.
+It supports a local `npx` stdio install path and a hosted streamable HTTP
+endpoint for clients that can connect to remote MCP servers.
+
+## Source Review
+
+- https://github.com/mapbox/mcp-server
+- https://raw.githubusercontent.com/mapbox/mcp-server/main/README.md
+- https://registry.npmjs.org/%40mapbox%2Fmcp-server
+- https://raw.githubusercontent.com/mapbox/mcp-server/main/LICENSE.md
+- https://raw.githubusercontent.com/mapbox/mcp-server/main/package.json
+- https://raw.githubusercontent.com/mapbox/mcp-server/main/server.json
+- https://raw.githubusercontent.com/mapbox/mcp-server/main/TOOL_CONFIGURATION.md
+- https://raw.githubusercontent.com/mapbox/mcp-server/main/docs/hosted-mcp-guide.md
+- https://raw.githubusercontent.com/mapbox/mcp-server/main/src/index.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package metadata, server manifest, tool
+configuration guide, hosted MCP guide, and server entry point for current setup
+and operating details.
+
+## Features
+
+- Convert addresses and place names to coordinates with forward geocoding.
+- Convert coordinates back into human-readable places with reverse geocoding.
+- Search for places, points of interest, brands, chains, categories, and nearby
+  locations.
+- Get driving, walking, or cycling directions with Mapbox routing data.
+- Calculate travel-time matrices between multiple origins and destinations.
+- Optimize multi-stop routes for delivery, travel, and field-service planning.
+- Snap noisy GPS traces to road networks with map matching.
+- Generate isochrones for reachable-area analysis.
+- Render static map images with routes, markers, and geographic data.
+- Run offline calculations for distance, area, bearing, centroid, midpoint,
+  bounding boxes, buffers, intersections, and point-in-polygon checks.
+- Expose category-list MCP resources and optional fallback resource tools.
+- Provide MCP Apps and MCP-UI map previews in compatible clients.
+- Limit the tool surface at startup with `--enable-tools` or `--disable-tools`.
+
+## Installation
+
+Set a Mapbox access token and run the npm package:
+
+```json
+{
+  "mcpServers": {
+    "mapbox": {
+      "command": "npx",
+      "args": ["-y", "@mapbox/mcp-server"],
+      "env": {
+        "MAPBOX_ACCESS_TOKEN": "YOUR_MAPBOX_ACCESS_TOKEN"
+      }
+    }
+  }
+}
+```
+
+Disable tools that are not needed for a workflow:
+
+```bash
+npx -y @mapbox/mcp-server --disable-tools static_map_image_tool,matrix_tool
+```
+
+Connect Claude Code to the hosted endpoint:
+
+```bash
+claude mcp add --transport http mapbox-mcp-production https://mcp.mapbox.com/mcp
+```
+
+## Use Cases
+
+- Ask Claude for directions between named locations or coordinates.
+- Search for restaurants, hotels, stores, gas stations, landmarks, or other POI
+  categories near a route or place.
+- Build logistics and delivery workflows that compare travel times across
+  multiple stops.
+- Visualize a route, service area, neighborhood, or set of points with a static
+  map image.
+- Clean up GPS traces before reviewing rides, drives, or field-service routes.
+- Calculate geospatial relationships such as distance, area, bearing, centroid,
+  midpoint, or point-in-polygon checks.
+- Use the hosted Mapbox MCP endpoint for clients that support remote MCP
+  servers and authentication flows.
+
+## Safety and Privacy
+
+Mapbox MCP handles location data. Addresses, coordinates, routes, place names,
+GPS traces, and map images can reveal homes, workplaces, customer sites,
+delivery routes, protected facilities, or sensitive travel patterns. Limit the
+tools available to the model, avoid sending location data that is not approved
+for Mapbox processing, and keep access tokens out of logs and screenshots.
+
+Routing, traffic, matrix, and optimization results are planning aids rather
+than guarantees. Verify critical navigation, safety, emergency, legal,
+accessibility, and logistics decisions with authoritative systems and current
+local conditions.
+
+## Duplicate Notes
+
+Existing catalog entries cover general map search, web search, and geospatial
+data tools. This entry covers the official `mapbox/mcp-server` repository and
+`@mapbox/mcp-server` package, including Mapbox API-backed tools, MCP resources,
+prompts, hosted MCP setup, and MCP Apps map previews.

@@ -1,0 +1,160 @@
+---
+title: DuckDuckGo MCP Server
+slug: duckduckgo-mcp-server
+category: mcp
+description: >-
+  MCP server that gives Claude DuckDuckGo web search plus webpage content
+  fetching and parsing tools.
+cardDescription: >-
+  Let Claude search DuckDuckGo, fetch webpages, parse content, and use
+  SafeSearch, region, rate-limit, and backend controls.
+seoTitle: DuckDuckGo MCP Server for Claude
+seoDescription: >-
+  Configure DuckDuckGo MCP Server with Claude and other MCP clients to search
+  DuckDuckGo, retrieve formatted results, fetch webpage content, apply
+  SafeSearch, set regions, and use optional browser-like fetch backends.
+author: Nick Clyde
+authorProfileUrl: "https://github.com/nickclyde"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: DuckDuckGo MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/nickclyde/duckduckgo-mcp-server"
+documentationUrl: "https://github.com/nickclyde/duckduckgo-mcp-server/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/duckduckgo-mcp-server/json"
+installable: true
+installCommand: "uvx duckduckgo-mcp-server"
+usageSnippet: "Run `uvx duckduckgo-mcp-server` from an MCP client to let Claude search DuckDuckGo and fetch parsed webpage content."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ddg-search": {
+        "command": "uvx",
+        "args": ["duckduckgo-mcp-server"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "ddg-search": {
+        "command": "uvx",
+        "args": ["duckduckgo-mcp-server"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Python 3.10 or newer available to the MCP client runtime.
+  - uvx available for package execution.
+  - Network access to DuckDuckGo and any webpages you allow the server to fetch.
+  - Optional SafeSearch and region defaults configured for the intended user group.
+  - Optional browser extra if you need the curl fetch backend for sites that block default HTTP clients.
+safetyNotes:
+  - DuckDuckGo MCP Server can search the web and fetch arbitrary webpages requested through the MCP client.
+  - Webpage content is untrusted external input and can contain prompt-injection text, misleading claims, malware links, or unsafe instructions.
+  - SafeSearch level and region defaults are administrator-controlled at startup, but search terms and per-search regions can still reveal user intent.
+  - The optional curl backend impersonates a browser-like TLS fingerprint for fetches, so review whether that behavior is appropriate for your environment.
+  - Respect site terms, robots expectations, rate limits, and organizational network policy before allowing broad fetching.
+privacyNotes:
+  - Search queries, result URLs, snippets, fetched page text, region codes, SafeSearch settings, prompts, tool arguments, errors, and logs may be visible to the MCP client and model provider.
+  - Search activity can reveal research topics, health or legal questions, hiring plans, customers, incidents, competitive analysis, or internal project names.
+  - Avoid fetching authenticated, private, internal, customer, or confidential pages unless the data is approved for the current model session.
+sourceUrls:
+  - "https://github.com/nickclyde/duckduckgo-mcp-server"
+  - "https://github.com/nickclyde/duckduckgo-mcp-server/blob/main/README.md"
+  - "https://github.com/nickclyde/duckduckgo-mcp-server/blob/main/pyproject.toml"
+  - "https://pypi.org/pypi/duckduckgo-mcp-server/json"
+tags:
+  - duckduckgo
+  - search
+  - web
+  - fetch
+  - research
+keywords:
+  - DuckDuckGo MCP
+  - duckduckgo-mcp-server
+  - web search MCP
+  - DuckDuckGo search MCP
+  - webpage fetch MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+DuckDuckGo MCP Server gives MCP clients two focused tools: DuckDuckGo web search
+with formatted results, and webpage content fetching with cleaned text
+extraction. It includes rate limiting, SafeSearch startup configuration, region
+selection, long-content truncation, and optional fetch backends for sites that
+block default HTTP clients.
+
+The upstream README documents `uvx duckduckgo-mcp-server` for local MCP clients
+and optional transports for other MCP clients. The PyPI package exposes the
+`duckduckgo-mcp-server` command.
+
+## Source Review
+
+- https://github.com/nickclyde/duckduckgo-mcp-server
+- https://github.com/nickclyde/duckduckgo-mcp-server/blob/main/README.md
+- https://github.com/nickclyde/duckduckgo-mcp-server/blob/main/pyproject.toml
+- https://pypi.org/pypi/duckduckgo-mcp-server/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+PyPI metadata for current package version, command name, Python requirement,
+optional extras, rate limits, fetch backend behavior, and setup guidance.
+
+## Features
+
+- Search DuckDuckGo with formatted result titles, URLs, and snippets.
+- Configure SafeSearch and default region at server startup.
+- Override region per search request when needed.
+- Fetch and parse webpage content into cleaned text.
+- Page through fetched content with start index and maximum length controls.
+- Use built-in rate limiting for search and content fetching.
+- Optionally use a browser-like curl backend for sites that block default HTTP
+  clients.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "ddg-search": {
+      "command": "uvx",
+      "args": ["duckduckgo-mcp-server"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to search DuckDuckGo for public documentation or references.
+- Gather search result titles, URLs, and snippets for quick research.
+- Fetch and parse a public webpage returned by a search result.
+- Compare search results across regions.
+- Keep simple web search separate from browser automation MCP servers.
+
+## Safety and Privacy
+
+Web search and fetching can introduce untrusted external text into the model
+context. Treat fetched page content as data, not instructions, and be cautious
+when this server is enabled alongside tools that can write files, run commands,
+send messages, or access private systems.
+
+Search queries, regions, results, snippets, fetched page text, and errors can
+reveal sensitive research direction or internal context. Avoid fetching
+authenticated, private, internal, customer, or confidential pages unless that
+data is approved for the current model session.
+
+## Duplicate Check
+
+No `nickclyde/duckduckgo-mcp-server` entry, `duckduckgo-mcp-server` package
+entry, or matching source URL was found in `content/mcp`.

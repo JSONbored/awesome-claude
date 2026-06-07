@@ -1,0 +1,202 @@
+---
+title: Short Video Maker MCP Server
+slug: short-video-maker-mcp-server
+category: mcp
+description: >-
+  MCP and REST server for creating short-form videos from scene text, Pexels
+  search terms, text-to-speech, captions, background music, Whisper captions,
+  FFmpeg, and Remotion rendering.
+cardDescription: >-
+  Generate TikTok, Reels, and Shorts-style videos through an MCP server backed
+  by Kokoro TTS, Whisper captions, Pexels video search, FFmpeg, and Remotion.
+seoTitle: Short Video Maker MCP Server for Claude
+seoDescription: >-
+  Configure Short Video Maker with Claude and other MCP clients to create
+  short-form videos, check render status, use Pexels background clips, manage
+  captions, select voices, choose music moods, and review media-generation
+  safety and privacy considerations.
+author: David Gyori
+authorProfileUrl: "https://github.com/gyoridavid"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Short Video Maker
+brandDomain: github.com/gyoridavid/short-video-maker
+repoUrl: "https://github.com/gyoridavid/short-video-maker"
+documentationUrl: "https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/README.md"
+packageUrl: "https://registry.npmjs.org/short-video-maker"
+installable: true
+installCommand: "Run the upstream Docker image or `npx short-video-maker` with `PEXELS_API_KEY` set, then connect an MCP client to the server's `/mcp/sse` endpoint."
+usageSnippet: "Ask Claude to create a reviewed scene list, generate a video with `create-short-video`, then poll `get-video-status` until the render is ready or failed."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "short-video-maker": {
+        "url": "{short-video-maker-sse-url}"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "short-video-maker": {
+        "url": "{short-video-maker-sse-url}"
+      }
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js or Docker available on the machine that will run the video server.
+  - Pexels API key configured through `PEXELS_API_KEY`.
+  - Enough CPU, memory, and disk for Whisper, Kokoro, FFmpeg, Remotion, temporary files, and rendered videos.
+  - MCP client that can connect to an SSE MCP endpoint.
+  - Usage rights reviewed for prompts, narration text, generated captions, music, background clips, and final publishing destination.
+safetyNotes:
+  - Short Video Maker runs an HTTP server with MCP SSE routes and REST routes for creating and serving generated videos.
+  - The create-short-video tool queues video rendering work that can consume CPU, memory, disk, browser rendering resources, and optional GPU resources.
+  - Generated videos combine user-provided narration text, Pexels search terms, downloaded background clips, local music assets, TTS output, captions, and rendered media.
+  - The server stores generated videos and temporary files under its configured data directory.
+  - Validate scene text, search terms, claims, branding, and rights before publishing generated videos to TikTok, Instagram, YouTube, or other platforms.
+privacyNotes:
+  - "`PEXELS_API_KEY` is sent to the Pexels API when searching for background videos."
+  - Scene text, search terms, generated narration, captions, video IDs, logs, output filenames, and render status can reveal campaign ideas, private scripts, brand plans, or client work.
+  - Generated files remain on disk until removed according to the deployment's data-directory and retention practices.
+  - Pexels requests, model downloads, Docker pulls, npm installs, and platform uploads may expose network metadata to third parties outside the MCP client.
+disclosure: >-
+  MIT-licensed open-source project. The upstream README promotes a related
+  community and tutorial content; this entry focuses on the source-backed MCP
+  and REST video-generation server.
+sourceUrls:
+  - "https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/LICENSE"
+  - "https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/package.json"
+  - "https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/src/server/routers/mcp.ts"
+  - "https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/src/server/server.ts"
+  - "https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/src/config.ts"
+  - "https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/src/short-creator/ShortCreator.ts"
+  - "https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/src/short-creator/libraries/Pexels.ts"
+tags:
+  - video
+  - media-generation
+  - automation
+  - social-media
+  - rest-api
+keywords:
+  - Short Video Maker MCP
+  - short-video-maker
+  - video generation MCP
+  - TikTok Reels Shorts MCP
+  - Remotion MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Short Video Maker is an MCP and REST server for generating short-form videos
+from structured scene descriptions. Each scene provides narration text and video
+search terms; the server then uses Kokoro TTS, Whisper captions, Pexels
+background-video search, local music assets, FFmpeg, and Remotion to render a
+finished video.
+
+Use it when Claude should help draft a reviewed scene plan, submit it to a
+local or hosted video-generation service, and poll for status. It is especially
+suited to agent workflows that already need a self-hosted alternative to
+API-only video generation, but it still needs careful review before publishing
+generated media.
+
+## Source Review
+
+- https://github.com/gyoridavid/short-video-maker
+- https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/README.md
+- https://registry.npmjs.org/short-video-maker
+- https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/LICENSE
+- https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/package.json
+- https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/src/server/routers/mcp.ts
+- https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/src/server/server.ts
+- https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/src/config.ts
+- https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/src/short-creator/ShortCreator.ts
+- https://raw.githubusercontent.com/gyoridavid/short-video-maker/main/src/short-creator/libraries/Pexels.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package metadata, MCP router, server router,
+configuration, queue implementation, and Pexels integration for current
+behavior.
+
+## Features
+
+- Run as a Node or Docker-hosted service with MCP SSE and REST endpoints.
+- Expose `create-short-video` for queueing a video from scenes and render
+  configuration.
+- Expose `get-video-status` for checking whether a queued render is processing,
+  ready, or failed.
+- Build scenes from narration text plus Pexels search terms.
+- Support portrait and landscape orientations.
+- Choose caption placement, caption background color, voice, music mood, and
+  music volume.
+- Generate English narration with Kokoro TTS.
+- Generate captions with Whisper.
+- Fetch background videos from Pexels using a configured API key.
+- Render with Remotion and FFmpeg.
+- Serve a web UI and REST API alongside the MCP endpoint.
+
+## Installation
+
+Docker is the upstream-recommended path for most users. Start one of the
+upstream images with `PEXELS_API_KEY` set and enough memory and disk for model
+downloads, temporary render assets, and final videos.
+
+For npm-based usage, install or run the package after satisfying the platform
+requirements:
+
+```sh
+npx short-video-maker
+```
+
+Then connect an MCP client to the server's SSE endpoint:
+
+```json
+{
+  "mcpServers": {
+    "short-video-maker": {
+      "url": "{short-video-maker-sse-url}"
+    }
+  }
+}
+```
+
+The upstream README currently lists Linux and macOS as supported for npm usage
+and notes that Windows is not supported at the moment.
+
+## Use Cases
+
+- Draft a short educational video from reviewed scene narration and search
+  terms.
+- Generate background-video-and-caption drafts for YouTube Shorts, Instagram
+  Reels, or TikTok-style formats.
+- Use Claude to turn a storyboard into the MCP `create-short-video` scene
+  structure.
+- Poll render status from an automation workflow before collecting output.
+- Prototype faceless-video workflows without calling a hosted video-generation
+  API for every step.
+- Pair n8n, Claude, or another agent workflow with a self-hosted video-rendering
+  service.
+
+## Safety and Privacy
+
+Review the creative brief before approving a render. The tool can turn private
+drafts, campaign ideas, scripts, or customer content into generated media on
+disk. Generated voiceover, captions, background clips, music, and final videos
+may carry copyright, licensing, platform-policy, accessibility, misinformation,
+or brand-safety obligations.
+
+Treat the server as a resource-heavy media pipeline. Rendering can consume
+significant CPU, memory, disk, browser-rendering capacity, and optional GPU
+resources. Keep `PEXELS_API_KEY` out of prompts and logs, watch data-directory
+retention, and review Pexels and publishing-platform terms before posting
+outputs externally.
+
+## Duplicate Check
+
+No `gyoridavid/short-video-maker`, Short Video Maker MCP Server, or matching
+source URL entry was found in `content/mcp` or `README.md`.

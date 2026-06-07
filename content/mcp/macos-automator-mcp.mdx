@@ -1,0 +1,201 @@
+---
+title: macOS Automator MCP
+slug: macos-automator-mcp
+category: mcp
+description: >-
+  MCP server for running AppleScript and JavaScript for Automation on macOS,
+  with a searchable knowledge base of automation recipes for apps, files,
+  browsers, system settings, Terminal, and productivity workflows.
+cardDescription: >-
+  Run AppleScript and JXA from Claude on macOS, with a searchable knowledge
+  base of app, file, browser, system, and productivity scripts.
+seoTitle: macOS Automator MCP for Claude
+seoDescription: >-
+  Configure macOS Automator MCP with Claude to execute AppleScript and JXA,
+  discover scripting tips, use knowledge-base script IDs, and automate macOS
+  apps under Automation and Accessibility permissions.
+author: Peter Steinberger
+authorProfileUrl: "https://github.com/steipete"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: macOS Automator MCP
+brandDomain: github.com/steipete
+repoUrl: "https://github.com/steipete/macos-automator-mcp"
+documentationUrl: "https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/README.md"
+packageUrl: "https://registry.npmjs.org/@steipete%2Fmacos-automator-mcp"
+installable: true
+installCommand: "npx -y --package @steipete/macos-automator-mcp macos-automator-mcp"
+usageSnippet: "Run `npx -y --package @steipete/macos-automator-mcp macos-automator-mcp` on macOS, grant the host app needed Automation and Accessibility permissions, then ask Claude to discover or run AppleScript and JXA automations."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "macos_automator": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "--package",
+          "@steipete/macos-automator-mcp",
+          "macos-automator-mcp"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add macos-automator -- npx -y --package @steipete/macos-automator-mcp macos-automator-mcp
+estimatedSetupTime: 10 minutes
+difficulty: advanced
+prerequisites:
+  - macOS on the machine running the MCP server.
+  - Node.js 24 or newer for the published npm package.
+  - Automation permissions for the terminal, editor, or app that launches the MCP server.
+  - Accessibility permissions when scripts need UI scripting, clicks, keystrokes, or System Events access.
+  - A clear boundary for which apps, files, accounts, and workflows Claude is allowed to automate.
+safetyNotes:
+  - macOS Automator MCP executes AppleScript or JavaScript for Automation through `osascript`, either from inline script content, an absolute script path, or a knowledge-base script ID.
+  - AppleScript and JXA can control local applications, read and write files, run shell commands through scripting additions, manipulate browser tabs, send keystrokes, change settings, and trigger app-specific actions depending on macOS permissions.
+  - Do not grant broad Automation or Accessibility permissions to the host process unless you trust the MCP client, prompts, and scripts it will run.
+  - Review generated scripts before execution, use short timeouts for untrusted automations, and avoid running scripts against Mail, Messages, Contacts, Calendar, browsers, password managers, terminals, or cloud-sync folders without explicit approval.
+  - Knowledge-base scripts and custom local knowledge-base overrides can change the behavior of reusable script IDs; review local overrides before relying on them.
+  - Use separate macOS user accounts or test machines when experimenting with destructive file, shell, browser, or system-setting automation.
+privacyNotes:
+  - Scripts can expose local file paths, file contents, clipboard data, browser URLs and page data, email subjects, contacts, calendar events, messages, app state, system settings, shell output, and account-specific metadata.
+  - Error responses and optional debugging settings can include attempted script content, script paths, substitution logs, stderr, and execution details.
+  - The local knowledge base defaults to `~/.macos-automator/knowledge_base` when configured and may contain private automation recipes or paths.
+  - MCP clients, model providers, terminal history, and application logs may retain script inputs and outputs, including data read from local apps.
+disclosure: >-
+  Open-source MIT-licensed MCP server published as the
+  `@steipete/macos-automator-mcp` npm package.
+sourceUrls:
+  - "https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/package.json"
+  - "https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/start.sh"
+  - "https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/src/server.ts"
+  - "https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/src/ScriptExecutor.ts"
+  - "https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/src/schemas.ts"
+  - "https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/src/services/knowledgeBaseService.ts"
+tags:
+  - macos
+  - applescript
+  - jxa
+  - automation
+  - productivity
+keywords:
+  - macOS Automator MCP
+  - AppleScript MCP
+  - JXA MCP
+  - macOS automation MCP
+  - osascript MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+macOS Automator MCP lets Claude execute AppleScript and JavaScript for
+Automation on macOS. It exposes an `execute_script` tool for inline scripts,
+absolute script paths, or knowledge-base script IDs, plus a `get_scripting_tips`
+tool for discovering reusable automation recipes.
+
+Use it when Claude needs supervised access to macOS automation tasks such as
+controlling apps, reading browser or Finder state, preparing scripts, searching
+the built-in knowledge base, or running vetted scripts under the permissions of
+the host application.
+
+## Source Review
+
+- https://github.com/steipete/macos-automator-mcp
+- https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/README.md
+- https://registry.npmjs.org/@steipete%2Fmacos-automator-mcp
+- https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/LICENSE
+- https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/package.json
+- https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/start.sh
+- https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/src/server.ts
+- https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/src/ScriptExecutor.ts
+- https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/src/schemas.ts
+- https://raw.githubusercontent.com/steipete/macos-automator-mcp/main/src/services/knowledgeBaseService.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm registry metadata, license, package manifest, launcher script,
+server entrypoint, script executor, input schemas, and knowledge-base service
+for current installation and behavior details.
+
+## Features
+
+- Run AppleScript through `osascript`.
+- Run JavaScript for Automation by passing the JavaScript language option.
+- Execute inline script content, absolute script paths, or knowledge-base script
+  IDs.
+- Pass positional arguments or structured `input_data` into supported scripts.
+- Configure execution timeout and AppleScript output formatting.
+- Optionally include executed script content, substitution logs, and execution
+  timing in responses.
+- Search a built-in knowledge base of macOS automation tips and reusable script
+  IDs.
+- Load custom knowledge-base overrides from a local path.
+- Control logging verbosity and lazy or eager knowledge-base parsing through
+  environment variables.
+
+## Installation
+
+Add the npm package to an MCP client on macOS:
+
+```json
+{
+  "mcpServers": {
+    "macos_automator": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "--package",
+        "@steipete/macos-automator-mcp",
+        "macos-automator-mcp"
+      ]
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add macos-automator -- npx -y --package @steipete/macos-automator-mcp macos-automator-mcp
+```
+
+After adding the server, grant the terminal, editor, or app that launches the
+server only the macOS Automation and Accessibility permissions needed for the
+apps and workflows you intend to automate.
+
+## Use Cases
+
+- Ask Claude to find an existing AppleScript recipe before writing a new one.
+- Run a vetted script that reads the current Safari tab URL.
+- Automate Finder file organization on a test folder.
+- Control app windows or settings under macOS Automation permissions.
+- Prototype JXA scripts with explicit timeouts and visible output.
+- Build a private local knowledge base of approved automation recipes.
+- Debug script permissions and output formatting for a macOS workflow.
+
+## Safety and Privacy
+
+This server runs scripts on the local Mac. Treat `execute_script` like a local
+automation and code-execution capability, not a read-only helper. Review scripts
+before running them, keep permissions narrow, and test destructive or app-writing
+workflows on disposable files or a separate macOS user account.
+
+Automation and Accessibility permissions can allow the host process to control
+apps, inspect UI state, send keystrokes, click buttons, read windows, and change
+settings. Give those permissions only to trusted launchers and only for the apps
+needed by the workflow.
+
+Script output can include private local data from files, browser tabs,
+clipboard, messages, email, calendars, contacts, shell commands, and app state.
+Avoid sharing transcripts that include script inputs, outputs, paths, local
+knowledge-base entries, or permission errors.
+
+## Duplicate Check
+
+Existing entries include narrower macOS automation surfaces such as iTerm MCP,
+but no macOS Automator MCP, `steipete/macos-automator-mcp`,
+`@steipete/macos-automator-mcp`, or general AppleScript/JXA automation MCP entry
+was found in `content/mcp`.

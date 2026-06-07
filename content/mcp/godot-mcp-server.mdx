@@ -1,0 +1,174 @@
+---
+title: Godot MCP Server
+slug: godot-mcp-server
+category: mcp
+description: >-
+  MCP server for controlling the Godot game engine, launching the editor,
+  running projects, capturing debug output, and editing scenes and resources.
+cardDescription: >-
+  Let Claude run and inspect Godot projects through editor, project, scene, and
+  debug-output tools.
+seoTitle: Godot MCP Server for Claude
+seoDescription: >-
+  Configure Godot MCP Server with Claude and other MCP clients to launch the
+  Godot editor, run projects, capture debug output, inspect projects, and manage
+  scenes and resources.
+author: Coding Solo
+authorProfileUrl: "https://github.com/coding-solo"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Godot MCP
+brandDomain: github.com
+repoUrl: "https://github.com/coding-solo/godot-mcp"
+documentationUrl: "https://github.com/coding-solo/godot-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40coding-solo%2Fgodot-mcp/latest"
+installable: true
+installCommand: "npx @coding-solo/godot-mcp"
+usageSnippet: "Run `npx @coding-solo/godot-mcp` from an MCP client after installing Godot and Node.js, and set `GODOT_PATH` when automatic Godot detection is not enough."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "godot": {
+        "command": "npx",
+        "args": ["@coding-solo/godot-mcp"],
+        "env": {
+          "GODOT_PATH": "PATH_TO_GODOT_EXECUTABLE",
+          "DEBUG": "true"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "godot": {
+        "command": "npx",
+        "args": ["@coding-solo/godot-mcp"],
+        "env": {
+          "GODOT_PATH": "PATH_TO_GODOT_EXECUTABLE",
+          "DEBUG": "true"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Godot Engine installed on the development machine.
+  - Node.js 18 or newer and npm available to the MCP client runtime.
+  - Godot project directory containing a `project.godot` file.
+  - Clear approval rules for when an agent may run, stop, or edit a project.
+safetyNotes:
+  - Godot MCP can launch the editor, run projects, stop projects, inspect project structure, create scenes, add nodes, load sprites, export MeshLibrary resources, save scenes, and update UID references.
+  - Running a Godot project can execute project scripts, editor plugins, tool scripts, and asset import logic, so use trusted projects and review side effects before agent-driven runs.
+  - Scene and resource tools can modify project files; review generated changes before committing or overwriting assets.
+  - Debug logging can be verbose and may expose paths, errors, project internals, or runtime state.
+privacyNotes:
+  - Project paths, scene names, asset names, debug output, errors, source structure, node trees, generated resources, and prompts may be visible to the MCP client and model provider.
+  - Godot projects may contain unreleased game content, licensed assets, gameplay logic, credentials in config files, or private build paths.
+  - Avoid sharing debug logs or generated scene diffs publicly until they are reviewed for sensitive project details.
+sourceUrls:
+  - "https://github.com/coding-solo/godot-mcp"
+  - "https://github.com/coding-solo/godot-mcp/blob/main/README.md"
+  - "https://github.com/coding-solo/godot-mcp/blob/main/package.json"
+  - "https://registry.npmjs.org/%40coding-solo%2Fgodot-mcp/latest"
+tags:
+  - godot
+  - game-development
+  - debugging
+  - scene-editing
+  - automation
+keywords:
+  - Godot MCP
+  - Godot MCP Server
+  - godot-mcp
+  - Godot game engine MCP
+  - game development MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Godot MCP Server connects MCP clients to the Godot game engine. It can launch
+the editor, run projects, capture debug output, inspect project structure,
+manage execution, create scenes, add nodes, load sprites, export MeshLibrary
+resources, save scenes, and work with Godot UID references.
+
+The upstream README documents the `@coding-solo/godot-mcp` npm package, Claude
+Code setup, generic MCP client configuration, `GODOT_PATH` and `DEBUG`
+environment variables, and source-build instructions.
+
+## Source Review
+
+- https://github.com/coding-solo/godot-mcp
+- https://github.com/coding-solo/godot-mcp/blob/main/README.md
+- https://github.com/coding-solo/godot-mcp/blob/main/package.json
+- https://registry.npmjs.org/%40coding-solo%2Fgodot-mcp/latest
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+registry metadata for current package name, Node requirement, Godot tool list,
+environment variables, and setup details.
+
+## Features
+
+- Launch the Godot editor for a project.
+- Run and stop Godot projects in debug mode.
+- Capture console output and error messages.
+- Get the installed Godot version.
+- List Godot projects in a directory and inspect project structure.
+- Create scenes, add nodes, load sprites and textures, export MeshLibrary
+  resources, and save scenes.
+- Get and update UID references for Godot 4.4 and newer projects.
+- Optional debug logging through the `DEBUG` environment variable.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "godot": {
+      "command": "npx",
+      "args": ["@coding-solo/godot-mcp"],
+      "env": {
+        "GODOT_PATH": "PATH_TO_GODOT_EXECUTABLE",
+        "DEBUG": "true"
+      }
+    }
+  }
+}
+```
+
+Omit `GODOT_PATH` when automatic Godot detection works for your environment.
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Let Claude run a Godot project and inspect debug output before suggesting a
+  fix.
+- Ask an agent to summarize project structure or verify the installed Godot
+  version.
+- Generate or update scenes and nodes during prototyping.
+- Capture runtime errors after a project launch.
+- Add an agent feedback loop for Godot game development tasks.
+
+## Safety and Privacy
+
+Godot MCP gives an agent direct access to a real game project. Keep runs scoped
+to trusted projects, review file changes before committing, and require human
+approval before overwriting scenes, modifying resources, or running unfamiliar
+tool scripts and editor plugins.
+
+Debug output, project paths, scene names, assets, node trees, generated files,
+and runtime errors can reveal unreleased game content or private project
+structure. Review logs and diffs before sharing them outside the project.
+
+## Duplicate Check
+
+No `coding-solo/godot-mcp` entry, `@coding-solo/godot-mcp` package entry, or
+matching source URL was found in `content/mcp`. This entry is distinct from
+general automation servers because it focuses specifically on Godot editor,
+project, scene, and debug workflows.

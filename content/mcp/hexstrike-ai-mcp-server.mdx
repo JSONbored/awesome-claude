@@ -1,0 +1,190 @@
+---
+title: HexStrike AI MCP Server
+slug: hexstrike-ai-mcp-server
+category: mcp
+description: >-
+  Offensive security MCP framework that connects AI agents to a large toolkit
+  for authorized penetration testing, vulnerability discovery, CTF, OSINT, and
+  security research workflows.
+cardDescription: >-
+  Run authorized pentesting and security research workflows through HexStrike
+  AI's MCP server and security-tool orchestration layer.
+seoTitle: HexStrike AI MCP Server for Claude
+seoDescription: >-
+  Configure HexStrike AI MCP with Claude Desktop, Cursor, VS Code Copilot, Roo
+  Code, and other MCP clients for authorized penetration testing, vulnerability
+  discovery, CTF, OSINT, and cybersecurity automation workflows.
+author: 0x4m4
+authorProfileUrl: "https://github.com/0x4m4"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: HexStrike AI
+brandDomain: hexstrike.com
+repoUrl: "https://github.com/0x4m4/hexstrike-ai"
+documentationUrl: "https://github.com/0x4m4/hexstrike-ai"
+websiteUrl: "https://www.hexstrike.com/"
+installable: true
+installCommand: "git clone https://github.com/0x4m4/hexstrike-ai.git && cd hexstrike-ai && python3 -m venv hexstrike-env && pip3 install -r requirements.txt"
+usageSnippet: "Start `python3 hexstrike_server.py`, then configure your MCP client to run `hexstrike_mcp.py` with the server argument documented in the repository."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "hexstrike-ai": {
+        "command": "python3",
+        "args": [
+          "/ABSOLUTE_PATH_TO/hexstrike-ai/hexstrike_mcp.py",
+          "--server",
+          "LOCAL_HEXSTRIKE_SERVER_URL"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "hexstrike-ai": {
+        "command": "python3",
+        "args": [
+          "/ABSOLUTE_PATH_TO/hexstrike-ai/hexstrike_mcp.py",
+          "--server",
+          "LOCAL_HEXSTRIKE_SERVER_URL"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 45 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.8 or newer.
+  - Security tooling required for the selected modules, such as network, web, cloud, password, binary-analysis, OSINT, or CTF tools.
+  - MCP client such as Claude Desktop, Cursor, VS Code Copilot, Roo Code, 5ire, or another compatible host.
+  - Isolated lab, test network, bug bounty scope, or written authorization for every target.
+  - Operator who understands penetration-testing law, safe-scope rules, and tool impact.
+safetyNotes:
+  - HexStrike AI orchestrates offensive security tools and can perform scanning, enumeration, exploitation support, password attacks, OSINT, and vulnerability research.
+  - Use only on systems, domains, networks, binaries, accounts, and datasets where you have explicit authorization.
+  - Agent-driven scans can create high traffic, trigger alarms, lock accounts, alter evidence, or disrupt services if scope and rate limits are not enforced.
+  - Do not allow autonomous exploit generation, credential attacks, or destructive actions against third-party systems without human review and written permission.
+  - Run in an isolated environment with controlled credentials, logging, allowlists, and clear stop conditions.
+privacyNotes:
+  - Targets, scan results, credentials, tokens, exploit notes, screenshots, OSINT findings, and vulnerability reports may be sent to the MCP client and model.
+  - Tool logs can contain customer data, secrets, infrastructure details, private IP ranges, bug bounty findings, and regulated incident information.
+  - Review retention, telemetry, and sharing settings for every AI client and security tool connected to the workflow.
+sourceUrls:
+  - "https://github.com/0x4m4/hexstrike-ai"
+  - "https://www.hexstrike.com/"
+  - "https://www.youtube.com/watch?v=pSoftCagCm8"
+tags:
+  - cybersecurity
+  - penetration-testing
+  - security
+  - osint
+  - ctf
+keywords:
+  - HexStrike AI MCP
+  - HexStrike MCP server
+  - cybersecurity MCP server
+  - penetration testing MCP
+  - offensive security MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+HexStrike AI MCP Server is an offensive-security automation framework for MCP
+clients. The project connects AI agents to a security-tool orchestration layer
+covering reconnaissance, web application testing, cloud security, password and
+authentication testing, reverse engineering, OSINT, CTF workflows, vulnerability
+intelligence, and reporting.
+
+The README describes a multi-agent architecture with a decision engine, process
+management, caching, and a large catalog of security tools. It is intended for
+authorized penetration testing, bug bounty, CTF, and security research rather
+than general browser or coding automation.
+
+## Source Review
+
+- https://github.com/0x4m4/hexstrike-ai
+- https://www.hexstrike.com/
+- https://www.youtube.com/watch?v=pSoftCagCm8
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository for
+current client integration examples, supported security tools, server options,
+and platform-specific setup steps.
+
+## Features
+
+- MCP integration for Claude Desktop, Cursor, VS Code Copilot, Roo Code, 5ire,
+  and other MCP-compatible agents.
+- Large security-tool catalog across network, web application, cloud, password,
+  binary-analysis, CTF, and OSINT workflows.
+- Autonomous agent architecture for bug bounty, CTF, CVE intelligence, exploit
+  generation support, and reporting workflows.
+- Local server process with Python MCP bridge configuration.
+- Visual reporting and vulnerability-card style output described by the project.
+
+## Installation
+
+Clone the repository and install the Python dependencies:
+
+```sh
+git clone https://github.com/0x4m4/hexstrike-ai.git
+cd hexstrike-ai
+python3 -m venv hexstrike-env
+pip3 install -r requirements.txt
+```
+
+Install only the security tools needed for your authorized workflow, then start
+the server:
+
+```sh
+python3 hexstrike_server.py
+```
+
+Configure your MCP client to run the repository's `hexstrike_mcp.py` bridge and
+provide the server argument documented in the README.
+
+```json
+{
+  "mcpServers": {
+    "hexstrike-ai": {
+      "command": "python3",
+      "args": [
+        "/ABSOLUTE_PATH_TO/hexstrike-ai/hexstrike_mcp.py",
+        "--server",
+        "LOCAL_HEXSTRIKE_SERVER_URL"
+      ]
+    }
+  }
+}
+```
+
+## Use Cases
+
+- Run scoped reconnaissance and vulnerability discovery in a lab or bug bounty
+  program.
+- Coordinate web application testing tools under a single MCP workflow.
+- Explore CTF challenges with binary-analysis, OSINT, and exploitation helpers.
+- Summarize authorized scan findings into triage notes and reports.
+- Compare tool results and ask an assistant to propose next safe test steps.
+
+## Safety and Privacy
+
+HexStrike AI is powerful offensive-security infrastructure. Treat it as a
+penetration-testing workstation, not a general assistant plugin. Use explicit
+target allowlists, rate limits, isolated networks, disposable credentials, and
+human approval for exploitation, credential attacks, persistence, destructive
+actions, or reporting to third parties.
+
+Assume prompts, logs, scan output, screenshots, exploit notes, and generated
+reports can contain sensitive or regulated security data. Keep findings in
+approved systems and remove secrets before sharing outputs with external model
+providers.
+
+## Duplicate Check
+
+No `0x4m4/hexstrike-ai` entry or source URL was found in `content/mcp`. This
+entry is separate from general security scanners and from reverse-engineering
+entries such as IDA Pro MCP and GhidraMCP.

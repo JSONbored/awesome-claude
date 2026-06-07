@@ -1,0 +1,123 @@
+---
+title: File Checkpointing in Claude Agent SDK Workflows
+slug: file-checkpointing-in-claude-agent-sdk-workflows
+category: guides
+description: >-
+  A practical walkthrough of file checkpointing in the Claude Agent SDK:
+  enabling it, capturing checkpoint UUIDs from user messages, rewinding files by
+  resuming the session, multiple restore points, and the limitations you must
+  know.
+cardDescription: >-
+  Use file checkpointing in the Claude Agent SDK: enable it, capture checkpoint
+  UUIDs, and rewind files by resuming the session.
+seoTitle: File Checkpointing in Claude Agent SDK Workflows
+seoDescription: >-
+  How to use file checkpointing in the Claude Agent SDK: enableFileCheckpointing,
+  replay-user-messages to capture checkpoint UUIDs, rewindFiles/rewind_files by
+  resuming the session, multiple restore points, and limitations.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/file-checkpointing"
+usageSnippet: "Use this guide to track and rewind file changes in a Claude Agent SDK session before risky edits, capturing checkpoints and restoring on demand."
+prerequisites:
+  - "A recent Claude Agent SDK (Python claude-agent-sdk or TypeScript @anthropic-ai/claude-agent-sdk)."
+  - "A session that edits files through the Write, Edit, or NotebookEdit tools."
+  - "The replay-user-messages extra arg set so checkpoint UUIDs appear in the stream."
+safetyNotes:
+  - "Only changes made through Write, Edit, and NotebookEdit are tracked; changes made by Bash (echo >, sed -i, rm) are NOT captured and cannot be rewound."
+  - "Rewinding restores files on disk but does not rewind the conversation; history and context remain intact."
+  - "Checkpoints are tied to the session that created them and cover file content only, not directory creation/move/delete; treat this as session-level undo, not version control."
+privacyNotes:
+  - "Checkpoint backups are stored locally for the session; they hold prior file content, so be mindful of sensitive files captured during a session."
+  - "Rewinding is a local file operation and does not transmit anything beyond the normal model requests."
+  - "Capturing and reusing a session ID lets you resume and rewind later; protect session IDs like other local state."
+tags:
+  - claude-agent-sdk
+  - checkpointing
+  - recovery
+  - agents
+  - workflow
+keywords:
+  - claude agent sdk checkpointing
+  - enableFileCheckpointing
+  - rewindFiles rewind_files
+  - replay-user-messages
+  - agent sdk rewind files
+---
+
+## Overview
+
+File checkpointing tracks file modifications made through the Write, Edit, and
+NotebookEdit tools during an Agent SDK session, so you can rewind files to a
+previous state. It is useful for undoing unwanted changes, exploring
+alternatives, and recovering from errors before a risky refactor.
+
+## Enable checkpointing
+
+Set `enableFileCheckpointing` (TS) / `enable_file_checkpointing` (Python), and add
+the `replay-user-messages` extra arg so each user message in the stream carries a
+checkpoint UUID:
+
+```typescript
+const opts = {
+  enableFileCheckpointing: true,
+  permissionMode: "acceptEdits" as const,
+  extraArgs: { "replay-user-messages": null },
+};
+```
+
+## Capture the checkpoint and session id
+
+Each user message in the response stream has a `uuid` that serves as a checkpoint;
+capture the first one to restore all files to their original state. Capture
+`session_id` too if you want to rewind after the stream completes.
+
+```typescript
+for await (const message of response) {
+  if (message.type === "user" && message.uuid && !checkpointId) checkpointId = message.uuid;
+  if ("session_id" in message && !sessionId) sessionId = message.session_id;
+}
+```
+
+## Rewind files
+
+After the stream completes, resume the session with an empty prompt and call
+`rewindFiles()` (TS) / `rewind_files()` (Python):
+
+```typescript
+const rewindQuery = query({ prompt: "", options: { ...opts, resume: sessionId } });
+for await (const msg of rewindQuery) {
+  await rewindQuery.rewindFiles(checkpointId);
+  break;
+}
+```
+
+You can also rewind during the stream (keep the latest UUID and rewind on a revert
+condition), or from the CLI:
+`claude -p --resume <session-id> --rewind-files <checkpoint-uuid>`.
+
+## Multiple restore points
+
+Store each user-message UUID in an array to rewind to an intermediate state (for
+example, keep a refactor but undo later test changes).
+
+## Limitations
+
+- Write/Edit/NotebookEdit tools only; Bash-driven changes are not tracked.
+- Checkpoints are tied to their session.
+- File content only; directory create/move/delete is not undone.
+- Local files only.
+
+## Troubleshooting
+
+- No UUIDs on user messages: add the `replay-user-messages` extra arg.
+- "ProcessTransport is not ready for writing": rewinding after the loop finished;
+  resume with an empty prompt, then call rewind on the new query.
+
+## Source
+
+- Rewind file changes with checkpointing: https://code.claude.com/docs/en/agent-sdk/file-checkpointing

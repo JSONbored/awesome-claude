@@ -1,0 +1,245 @@
+---
+title: CalendarMCP MCP Server
+slug: calendarmcp-mcp-server
+category: mcp
+description: >-
+  Hosted Google Calendar MCP server that lets compatible AI clients read,
+  create, update, delete, search, and batch-edit calendar events through an
+  HTTP endpoint and API-key authentication.
+cardDescription: >-
+  Connect MCP clients to Google Calendar with hosted HTTP transport and
+  per-calendar read/write controls.
+seoTitle: CalendarMCP MCP Server for Claude
+seoDescription: >-
+  Use CalendarMCP with Claude and other MCP clients to read and write Google
+  Calendar events, find free time, manage attendees, and batch-update events
+  through a hosted HTTP MCP server.
+author: CalendarMCP
+authorProfileUrl: "https://calendarmcp.ai"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: CalendarMCP
+brandDomain: calendarmcp.ai
+repoUrl: "https://github.com/Full-Vibe/calendarmcp-public"
+documentationUrl: "https://calendarmcp.ai/docs"
+installable: true
+installCommand: "claude mcp add calendar https://calendarmcp.ai/api/mcp --transport http --header \"Authorization: Bearer YOUR_CALENDARMCP_API_KEY\""
+usageSnippet: "Connect Google Calendar in the CalendarMCP dashboard, copy an API key, then add https://calendarmcp.ai/api/mcp to an MCP client with an Authorization bearer header."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "calendar": {
+        "url": "https://calendarmcp.ai/api/mcp",
+        "headers": {
+          "Authorization": "Bearer YOUR_CALENDARMCP_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "calendar": {
+        "url": "https://calendarmcp.ai/api/mcp",
+        "headers": {
+          "Authorization": "Bearer YOUR_CALENDARMCP_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - CalendarMCP account and dashboard access at `https://calendarmcp.ai`.
+  - Google account or shared calendars that may be connected to CalendarMCP.
+  - CalendarMCP API key stored outside prompts, screenshots, logs, and repository files.
+  - MCP client that supports remote HTTP MCP servers and bearer-header authentication.
+  - Per-calendar read/write policy for which calendars an assistant may inspect or modify.
+  - Human confirmation process for creating, updating, deleting, or batch-editing events.
+safetyNotes:
+  - CalendarMCP is a hosted remote MCP service at `https://calendarmcp.ai/api/mcp`; the public repository contains docs, manifests, and client examples, not the hosted backend source.
+  - Calendar write tools can create, update, delete, quick-add, batch-update, and manage attendees for calendar events when the API key has write access.
+  - Batch updates can affect up to 50 events in one call, so review target filters, recurrence handling, and proposed edits before allowing broad changes.
+  - Use CalendarMCP's per-calendar read/write matrix to limit which calendars each assistant can access.
+  - Run `find_free_time` or manually confirm availability before creating meetings that invite other people or reserve shared resources.
+  - Keep destructive actions such as deleting events or changing recurring meetings behind explicit human confirmation.
+privacyNotes:
+  - Calendar results can expose meeting titles, attendees, email addresses, locations, descriptions, links, reminders, recurrence patterns, availability, and private schedule context.
+  - One CalendarMCP API key can cover multiple connected Google accounts; review which accounts and calendars are attached before sharing a config.
+  - Google OAuth tokens and CalendarMCP API keys are sensitive credentials. Keep them out of prompts, issue comments, screenshots, shell history, logs, and repository files.
+  - Hosted access means calendar data and tool calls pass through CalendarMCP and the connected MCP client; review retention and data-processing policies before connecting sensitive calendars.
+  - Use synthetic calendars or narrow test calendars for demos, screenshots, and workflow testing.
+tags:
+  - calendarmcp
+  - mcp
+  - google-calendar
+  - scheduling
+  - calendar
+  - http
+keywords:
+  - calendarmcp
+  - calendarmcp mcp server
+  - google calendar mcp
+  - claude calendar mcp
+  - calendar scheduling mcp
+  - hosted calendar mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+CalendarMCP is a hosted Model Context Protocol server for Google Calendar. It
+lets MCP-compatible clients read and write calendar data through a remote HTTP
+endpoint after the user connects Google Calendar and creates a CalendarMCP API
+key.
+
+The production endpoint is:
+
+```text
+https://calendarmcp.ai/api/mcp
+```
+
+The public repository contains documentation, manifests, and client examples.
+The hosted CalendarMCP service is not open source.
+
+## Source Review
+
+- https://github.com/Full-Vibe/calendarmcp-public
+- https://calendarmcp.ai/docs
+- https://calendarmcp.ai/api/docs
+- https://modelcontextprotocol.io/registry/about
+- https://code.claude.com/docs/en/mcp
+
+These sources were reviewed on **2026-06-05**. Prefer the live CalendarMCP docs
+over model memory for endpoint behavior, auth headers, tool names, rate limits,
+pricing, and client configuration.
+
+## Features
+
+- Hosted HTTP MCP endpoint for Google Calendar.
+- API-key authentication using an `Authorization: Bearer ...` header.
+- Google account connection through the CalendarMCP dashboard.
+- Per-calendar read/write controls enforced server-side.
+- Multi-account support under one API key.
+- Event listing, creation, update, deletion, and natural-language quick add.
+- Free/busy lookup before creating events.
+- Attendee management for existing events.
+- Batch event updates for up to 50 events in one concurrent call.
+- Google Advanced Protection support through service-account sharing, according
+  to the CalendarMCP docs.
+
+## Tools
+
+- `list_events`: list events across one or all connected calendars in a time
+  range.
+- `get_event`: retrieve full details for one event.
+- `create_event`: create an event with attendees, location, reminders,
+  recurrence, or all-day settings.
+- `update_event`: partially update an existing event.
+- `delete_event`: delete an event.
+- `quick_add_event`: create an event from natural language.
+- `list_calendars`: list calendars visible to the API key with read/write
+  permissions.
+- `find_free_time`: query free/busy availability across calendars.
+- `manage_attendees`: add or remove attendees from an event.
+- `batch_update_events`: update up to 50 events in one concurrent call.
+
+## Installation
+
+1. Sign in at `https://calendarmcp.ai`.
+2. Connect the Google account or calendars the assistant may access.
+3. Copy an API key from the CalendarMCP dashboard.
+4. Add the MCP server to the target client using HTTP transport and a bearer
+   auth header.
+
+### Claude Code
+
+```bash
+claude mcp add calendar https://calendarmcp.ai/api/mcp \
+  --transport http \
+  --header "Authorization: Bearer YOUR_CALENDARMCP_API_KEY"
+```
+
+### Cursor or Generic Remote HTTP Client
+
+```json
+{
+  "mcpServers": {
+    "calendar": {
+      "url": "https://calendarmcp.ai/api/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_CALENDARMCP_API_KEY"
+      }
+    }
+  }
+}
+```
+
+### Claude Desktop Through server-fetch
+
+CalendarMCP also documents a Claude Desktop configuration using
+`@modelcontextprotocol/server-fetch`:
+
+```json
+{
+  "mcpServers": {
+    "calendar": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-fetch",
+        "https://calendarmcp.ai/api/mcp"
+      ],
+      "env": {
+        "MCP_AUTH_HEADER": "Authorization: Bearer YOUR_CALENDARMCP_API_KEY"
+      }
+    }
+  }
+}
+```
+
+## Access Model
+
+CalendarMCP API keys are issued from the dashboard. One key can include multiple
+connected Google accounts, and per-calendar read/write permissions are enforced
+server-side.
+
+Before sharing a config with an assistant, inspect the calendars attached to the
+key and remove write access for calendars that should remain read-only. Create
+separate keys for separate agents when their calendar access should differ.
+
+## Safe Usage
+
+- Start by asking the assistant to call `list_calendars` and summarize what it
+  can read or write.
+- Use read-only access for agenda summaries, daily planning, or availability
+  checks.
+- Use `find_free_time` before asking the assistant to create meetings.
+- Require confirmation before inviting attendees, moving recurring meetings,
+  deleting events, or running batch updates.
+- Keep work, personal, executive, HR, legal, and customer calendars separated
+  unless there is a clear approval path for combined access.
+
+## Troubleshooting
+
+### The client cannot authenticate
+
+Check that the `Authorization` header uses `Bearer YOUR_CALENDARMCP_API_KEY` and
+that the key is active in the CalendarMCP dashboard.
+
+### The assistant cannot see an expected calendar
+
+Confirm the calendar is connected to the CalendarMCP account and that the API
+key has read access to that calendar.
+
+### Event writes fail
+
+Check the per-calendar read/write matrix. A key with read access can list events
+but cannot create, update, delete, or batch-edit them.
+
+### The assistant edits too many events
+
+Pause the workflow, inspect the target event IDs and filters, and split broad
+changes into smaller batches. Treat recurring-event edits and `batch_update_events`
+as high-risk operations.

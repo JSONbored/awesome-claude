@@ -1,0 +1,121 @@
+---
+title: Channels and Webhooks into Running Claude Code Sessions
+slug: channels-and-webhooks-into-running-claude-code-sessions
+category: guides
+description: >-
+  A practical walkthrough of Claude Code channels: how an MCP-server channel
+  pushes messages, alerts, and webhooks into a running session, how to install
+  and enable Telegram, Discord, or iMessage, sender allowlists, and enterprise
+  controls.
+cardDescription: >-
+  Push messages, alerts, and webhooks into a running Claude Code session with
+  channels, with sender allowlists and enterprise controls.
+seoTitle: Channels and Webhooks into Running Claude Code Sessions
+seoDescription: >-
+  How Claude Code channels push messages, alerts, and webhooks into a running
+  session: install and enable Telegram, Discord, or iMessage with --channels,
+  pair and allowlist senders, and govern with enterprise controls.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/channels"
+usageSnippet: "Use this guide to push external messages, alerts, and webhooks into a running Claude Code session via a channel plugin, and to lock down who can send them."
+prerequisites:
+  - "Claude Code v2.1.80 or later, authenticated through claude.ai or a Console API key (channels are not available on Bedrock, Vertex AI, or Foundry)."
+  - "Bun installed, since the channel plugins are Bun scripts."
+  - "On Team, Enterprise, or managed Console orgs, an admin must enable channels first."
+safetyNotes:
+  - "Channel input is untrusted external content; treat incoming messages as data, not as instructions that should widen permissions."
+  - "Events only arrive while the session is open; for unattended use, --dangerously-skip-permissions bypasses prompts and should be used only in trusted environments."
+  - "Each channel keeps a sender allowlist; only paired/allowlisted IDs can push messages, and anyone who can reply can also approve permission relays if enabled, so allowlist only trusted senders."
+privacyNotes:
+  - "A channel is an MCP server you configure with your own credentials; tokens are stored locally (for example ~/.claude/channels/telegram/.env)."
+  - "Incoming and outgoing messages pass through the third-party platform (Telegram, Discord, Apple Messages); review what data flows there."
+  - "The iMessage channel reads your Messages database and requires Full Disk Access; understand that exposure before enabling it."
+tags:
+  - claude-code
+  - channels
+  - webhooks
+  - automation
+  - integrations
+keywords:
+  - claude code channels
+  - claude code webhooks
+  - claude code telegram discord
+  - push events into claude session
+  - claude code --channels
+---
+
+## Overview
+
+A channel is an MCP server that pushes events into your running Claude Code
+session, so Claude can react to things that happen while you are away from the
+terminal. Channels can be two-way: Claude reads the event and replies through the
+same channel. Events only arrive while the session is open, so for an always-on
+setup you run Claude in a background or persistent terminal. Channels are a
+research preview and require Anthropic authentication through claude.ai or a
+Console API key.
+
+## Install and enable a channel
+
+Channel plugins require Bun. Using Telegram as an example:
+
+1. Create a bot with BotFather and copy the token.
+2. Install the plugin: `/plugin install telegram@claude-plugins-official` (run
+   `/reload-plugins` afterward).
+3. Configure the token: `/telegram:configure <token>` (saved to
+   `~/.claude/channels/telegram/.env`).
+4. Restart with the channel enabled:
+
+```bash
+claude --channels plugin:telegram@claude-plugins-official
+```
+
+5. Message your bot to get a pairing code, then run
+   `/telegram:access pair <code>` and lock it down with
+   `/telegram:access policy allowlist`.
+
+Discord and iMessage follow the same pattern. Try the `fakechat` localhost demo
+first to learn the flow with nothing to authenticate.
+
+## Webhook receiver
+
+Because a channel is an MCP server, you can build one that receives webhooks from
+CI, an error tracker, or a deploy pipeline, so the event arrives in the session
+where Claude already has your files open and remembers what you were debugging.
+See the Channels reference for building your own.
+
+## Security
+
+- Every channel keeps a sender allowlist; only paired or explicitly allowed IDs
+  can push messages, and everyone else is silently dropped.
+- Being listed in `.mcp.json` is not enough; a server must also be named in
+  `--channels` for the session.
+- If permission relay is enabled, anyone who can reply through the channel can
+  approve or deny tool use, so allowlist only senders you trust with that.
+
+## Enterprise controls
+
+Admins govern availability with managed settings:
+
+- `channelsEnabled` is the master switch (blocked by default on Team and
+  Enterprise; allowed by default on Console unless managed settings are
+  deployed).
+- `allowedChannelPlugins` replaces the default allowlist with a specific set of
+  approved plugins and marketplaces.
+
+In all cases, no channel runs until a user opts it in with `--channels`.
+
+## How channels compare
+
+Channels push events into your already-running local session. That differs from
+Claude Code on the web (fresh cloud session), Claude in Slack (spawns a web
+session from a mention), a standard MCP server (queried on demand, nothing
+pushed), and Remote Control (you drive the local session from your phone).
+
+## Source
+
+- Push events into a running session with channels: https://code.claude.com/docs/en/channels

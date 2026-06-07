@@ -1,0 +1,187 @@
+---
+title: Memory Bank MCP Server
+slug: memory-bank-mcp-server
+category: mcp
+description: >-
+  MCP server for remote project memory-bank management, with multi-project
+  directories, file listing, read/write/update tools, and path isolation.
+cardDescription: >-
+  Manage Cline-style project memory banks through MCP with project listing,
+  file listing, read, write, update, validation, and isolated storage roots.
+seoTitle: Memory Bank MCP Server for Claude
+seoDescription: >-
+  Configure Memory Bank MCP Server with Claude, Cline, Roo Code, Cursor, or
+  another MCP client to manage project memory-bank files from an isolated root.
+author: Aliosh Pimenta
+authorProfileUrl: "https://github.com/alioshr"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Memory Bank MCP
+brandDomain: github.com
+repoUrl: "https://github.com/alioshr/memory-bank-mcp"
+documentationUrl: "https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40allpepper%2Fmemory-bank-mcp"
+installable: true
+installCommand: "MEMORY_BANK_ROOT=ABSOLUTE_PATH_TO_MEMORY_BANK npx -y @allpepper/memory-bank-mcp@latest"
+usageSnippet: "Set `MEMORY_BANK_ROOT` to a dedicated memory-bank directory, then run `npx -y @allpepper/memory-bank-mcp@latest` from your MCP client."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "memory-bank": {
+        "command": "npx",
+        "args": ["-y", "@allpepper/memory-bank-mcp@latest"],
+        "env": {
+          "MEMORY_BANK_ROOT": "ABSOLUTE_PATH_TO_MEMORY_BANK"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  MEMORY_BANK_ROOT=ABSOLUTE_PATH_TO_MEMORY_BANK npx -y @allpepper/memory-bank-mcp@latest
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js and npm available for `npx`.
+  - A dedicated memory-bank root directory, separate from source repositories and secrets.
+  - Project-specific subdirectories created under `MEMORY_BANK_ROOT`.
+  - MCP client approval rules reviewed before allowing write or update operations.
+  - Optional Docker volume path reviewed if running the server in a container.
+safetyNotes:
+  - Memory Bank MCP can read, create, and update files inside the configured memory-bank root.
+  - Do not point `MEMORY_BANK_ROOT` at a home directory, source repository root, cloud-sync folder, or any directory containing secrets.
+  - Avoid auto-approving write and update tools until the expected file structure and naming rules are established.
+  - The path validator rejects path traversal and slash-containing file/project names, but users should still keep the root directory narrow and dedicated.
+  - Docker mode requires a bind mount for the memory bank; review the host path and container path before granting write access.
+privacyNotes:
+  - Memory-bank files can contain project plans, architecture notes, decisions, credentials accidentally pasted into notes, customer context, meeting details, or personal information.
+  - Tool calls may expose project names, file names, memory contents, root-path assumptions, and update text to the MCP client and model provider.
+  - Multi-project listing can reveal all projects stored under the memory-bank root.
+  - Auto-approved memory tools can persist model-generated statements as project memory without human review.
+  - Back up important memory-bank directories and review retention expectations before sharing them across clients or machines.
+disclosure: >-
+  MIT-licensed TypeScript MCP server inspired by Cline Memory Bank. It manages
+  project memory files from a configured root and is separate from broader
+  knowledge-graph, note-taking, or long-term memory servers in the catalog.
+sourceUrls:
+  - "https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/README.md"
+  - "https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/package.json"
+  - "https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/custom-instructions.md"
+  - "https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/src/validators/path-security-validator.ts"
+  - "https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/src/main/protocols/mcp/routes.ts"
+  - "https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/src/infra/filesystem/repositories/fs-file-repository.ts"
+tags:
+  - memory
+  - project-management
+  - documentation
+  - cline
+  - filesystem
+keywords:
+  - Memory Bank MCP
+  - memory-bank-mcp
+  - Cline memory bank MCP
+  - project memory MCP
+  - remote memory bank
+  - Claude memory files
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Memory Bank MCP Server turns Cline-style project memory banks into an MCP
+service. It stores project-specific memory files under a configured root and
+exposes tools for listing projects, listing project files, reading files,
+writing new files, and updating existing memory files.
+
+Use it when a team wants a consistent file-backed memory-bank structure across
+Claude, Cline, Roo Code, Cursor, or another MCP client. Keep it scoped to a
+dedicated memory directory so the agent manages notes rather than arbitrary
+local files.
+
+## Source Review
+
+- https://github.com/alioshr/memory-bank-mcp
+- https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/README.md
+- https://registry.npmjs.org/%40allpepper%2Fmemory-bank-mcp
+- https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/LICENSE
+- https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/package.json
+- https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/custom-instructions.md
+- https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/src/validators/path-security-validator.ts
+- https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/src/main/protocols/mcp/routes.ts
+- https://raw.githubusercontent.com/alioshr/memory-bank-mcp/main/src/infra/filesystem/repositories/fs-file-repository.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package metadata, custom instructions, path
+validator, MCP route definitions, and filesystem repository implementation for
+current setup and behavior details.
+
+## Features
+
+- Manage memory-bank files through a TypeScript MCP server.
+- Use `MEMORY_BANK_ROOT` to define the storage root.
+- List available projects under the memory-bank root.
+- List files for one project.
+- Read memory-bank file contents.
+- Write new memory-bank files.
+- Update existing memory-bank files.
+- Validate required parameters and reject path traversal or slash-containing
+  file/project names.
+- Run through `npx`, Smithery, or Docker with a mounted memory-bank directory.
+
+## Installation
+
+Create or choose a dedicated memory-bank directory, then configure the server:
+
+```json
+{
+  "mcpServers": {
+    "memory-bank": {
+      "command": "npx",
+      "args": ["-y", "@allpepper/memory-bank-mcp@latest"],
+      "env": {
+        "MEMORY_BANK_ROOT": "ABSOLUTE_PATH_TO_MEMORY_BANK"
+      }
+    }
+  }
+}
+```
+
+For a direct shell check:
+
+```bash
+MEMORY_BANK_ROOT=ABSOLUTE_PATH_TO_MEMORY_BANK npx -y @allpepper/memory-bank-mcp@latest
+```
+
+If running with Docker, bind-mount only the memory-bank directory that should be
+visible to the server.
+
+## Use Cases
+
+- Maintain project context files shared by Claude, Cline, Roo Code, and Cursor.
+- Keep architecture notes, decisions, active tasks, progress summaries, and
+  project conventions in a consistent memory-bank structure.
+- Let an agent read memory before starting a task and update memory after a
+  reviewed milestone.
+- Manage separate memory directories for multiple projects from one MCP server.
+- Pair memory-bank updates with human review before writing durable project
+  state.
+
+## Safety and Privacy
+
+Memory Bank MCP is intentionally file-backed. That makes it simple to inspect
+and back up, but it also means write tools create durable notes. Use a dedicated
+root, do not store secrets in memory files, and keep write/update operations out
+of auto-approval until the workflow is trusted.
+
+Review memory files periodically. Project memories can drift, accumulate stale
+decisions, or accidentally preserve sensitive context that should have stayed in
+the chat session.
+
+## Duplicate Notes
+
+Existing catalog entries cover other memory systems, knowledge graphs,
+note-taking integrations, and agent memory tools. This entry covers the separate
+`alioshr/memory-bank-mcp` package for file-backed, Cline-style project memory
+bank management.

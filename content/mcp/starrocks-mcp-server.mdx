@@ -1,0 +1,214 @@
+---
+title: StarRocks MCP Server
+slug: starrocks-mcp-server
+category: mcp
+description: >-
+  Official StarRocks MCP server for SQL execution, database exploration,
+  StarRocks resource templates, system information, table/database overviews,
+  and Plotly chart generation.
+cardDescription: Connect Claude to StarRocks SQL, schemas, system resources, overviews, and charts.
+seoTitle: StarRocks MCP Server for Claude
+seoDescription: >-
+  Configure StarRocks MCP Server with Claude and other MCP clients to query
+  StarRocks databases, inspect schemas, run DDL/DML when approved, generate
+  table overviews, access proc resources, and create Plotly charts.
+author: StarRocks
+authorProfileUrl: "https://github.com/StarRocks"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: StarRocks
+brandDomain: starrocks.io
+websiteUrl: "https://www.starrocks.io/"
+repoUrl: "https://github.com/StarRocks/mcp-server-starrocks"
+documentationUrl: "https://github.com/StarRocks/mcp-server-starrocks/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-server-starrocks/json"
+installable: true
+installCommand: "uv run --with mcp-server-starrocks mcp-server-starrocks"
+usageSnippet: "Start StarRocks MCP with least-privilege credentials, keep writes disabled by policy, and review SQL before allowing Claude to run read_query or write_query."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "starrocks": {
+        "command": "uv",
+        "args": ["run", "--with", "mcp-server-starrocks", "mcp-server-starrocks"],
+        "env": {
+          "STARROCKS_HOST": "<starrocks-fe-host>",
+          "STARROCKS_PORT": "9030",
+          "STARROCKS_USER": "<least-privilege-user>",
+          "STARROCKS_PASSWORD": "<starrocks-password>",
+          "STARROCKS_DB": "<approved-database>",
+          "MCP_TRANSPORT_MODE": "stdio",
+          "STARROCKS_MCP_OUTPUT_DIR": "<approved-output-dir>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "starrocks": {
+        "command": "uv",
+        "args": ["run", "--with", "mcp-server-starrocks", "mcp-server-starrocks"],
+        "env": {
+          "STARROCKS_HOST": "<starrocks-fe-host>",
+          "STARROCKS_PORT": "9030",
+          "STARROCKS_USER": "<least-privilege-user>",
+          "STARROCKS_PASSWORD": "<starrocks-password>",
+          "STARROCKS_DB": "<approved-database>",
+          "MCP_TRANSPORT_MODE": "stdio",
+          "STARROCKS_MCP_OUTPUT_DIR": "<approved-output-dir>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer and uv available to the MCP client runtime.
+  - StarRocks FE host, MySQL protocol port, database, username, and password.
+  - Least-privilege StarRocks user with only the approved databases and operations.
+  - Written policy for whether `write_query` may be used in the workspace.
+  - Approved output directory when allowing `read_query` to write large results to disk.
+safetyNotes:
+  - StarRocks MCP can execute SQL through `read_query` and DDL/DML through `write_query`.
+  - The `write_query` tool is documented for CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, and other commands that do not return a result set.
+  - The `read_query` tool can write full query results to files when `output_file` is provided; relative paths use STARROCKS_MCP_OUTPUT_DIR, while absolute and home-relative paths bypass that directory.
+  - Overview tools can sample rows, count rows, cache table summaries in memory, and return cached errors or stale summaries until refreshed.
+  - The `query_and_plotly_chart` tool executes a SQL query and uses a Python Plotly expression to generate chart output from the result DataFrame.
+  - Resource templates can expose database, table, proc, transaction, job, task, catalog, frontend, backend, and compute-node information.
+  - SSE mode is documented as deprecated; prefer stdio or streamable HTTP with explicit network controls.
+privacyNotes:
+  - StarRocks credentials, connection URLs, database names, table names, schemas, SQL text, query results, sample rows, proc output, generated chart images, errors, and output-file paths may be visible to the MCP client and model provider.
+  - StarRocks datasets can contain customer records, telemetry, analytics, business metrics, security data, billing data, or other regulated information.
+  - Output files created by `read_query` remain on the machine where the MCP server runs, which may be local for desktop clients or remote for HTTP deployments.
+  - STARROCKS_URL, STARROCKS_PASSWORD, Keychain service names, database credentials, and generated result files should stay out of prompts, issues, logs, screenshots, and committed files.
+sourceUrls:
+  - "https://github.com/StarRocks/mcp-server-starrocks/blob/main/README.md"
+  - "https://github.com/StarRocks/mcp-server-starrocks/blob/main/pyproject.toml"
+  - "https://github.com/StarRocks/mcp-server-starrocks/blob/main/src/mcp_server_starrocks/__init__.py"
+  - "https://github.com/StarRocks/mcp-server-starrocks/blob/main/src/mcp_server_starrocks/server.py"
+  - "https://github.com/StarRocks/mcp-server-starrocks/blob/main/LICENSE"
+tags:
+  - starrocks
+  - database
+  - sql
+  - analytics
+  - visualization
+keywords:
+  - StarRocks MCP
+  - StarRocks MCP Server
+  - official StarRocks MCP
+  - StarRocks SQL MCP
+  - analytics database MCP
+  - Plotly MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+StarRocks MCP Server is the official StarRocks Model Context Protocol server for
+connecting Claude and other MCP clients to StarRocks databases. It supports SQL
+execution, database and table exploration, StarRocks resource templates, system
+information through proc paths, table and database overviews, and Plotly chart
+generation from query results.
+
+The package is published as `mcp-server-starrocks` and exposes the
+`mcp-server-starrocks` command. The README documents stdio, HTTP, and
+streamable HTTP modes, while noting that SSE mode is deprecated and no longer
+maintained.
+
+## Source Review
+
+- https://www.starrocks.io/
+- https://github.com/StarRocks/mcp-server-starrocks
+- https://github.com/StarRocks/mcp-server-starrocks/blob/main/README.md
+- https://pypi.org/pypi/mcp-server-starrocks/json
+- https://github.com/StarRocks/mcp-server-starrocks/blob/main/pyproject.toml
+- https://github.com/StarRocks/mcp-server-starrocks/blob/main/src/mcp_server_starrocks/__init__.py
+- https://github.com/StarRocks/mcp-server-starrocks/blob/main/src/mcp_server_starrocks/server.py
+- https://github.com/StarRocks/mcp-server-starrocks/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, package metadata, server entry point, implementation,
+and license for current install commands, transport modes, environment
+variables, tool behavior, resource templates, and licensing.
+
+## Features
+
+- Official StarRocks MCP server.
+- PyPI package `mcp-server-starrocks`.
+- Stdio, HTTP, streamable HTTP, and deprecated SSE transport modes.
+- `read_query` for SELECT, SHOW, DESCRIBE, and other result-returning commands.
+- `write_query` for DDL, DML, and other non-result commands.
+- `analyze_query` for query profile or explain-analyze output.
+- `query_and_plotly_chart` for SQL-backed Plotly chart generation.
+- `table_overview` and `db_overview` with row counts, schema details, sample rows, and in-memory caching.
+- `starrocks://` resource templates for databases, tables, and schemas.
+- `proc://` resource template for StarRocks internal system information.
+- Environment configuration through individual connection variables or STARROCKS_URL.
+- Optional macOS Keychain password lookup.
+
+## Installation
+
+For local stdio usage with uv:
+
+```json
+{
+  "mcpServers": {
+    "starrocks": {
+      "command": "uv",
+      "args": ["run", "--with", "mcp-server-starrocks", "mcp-server-starrocks"],
+      "env": {
+        "STARROCKS_HOST": "<starrocks-fe-host>",
+        "STARROCKS_PORT": "9030",
+        "STARROCKS_USER": "<least-privilege-user>",
+        "STARROCKS_PASSWORD": "<starrocks-password>",
+        "STARROCKS_DB": "<approved-database>",
+        "MCP_TRANSPORT_MODE": "stdio",
+        "STARROCKS_MCP_OUTPUT_DIR": "<approved-output-dir>"
+      }
+    }
+  }
+}
+```
+
+Use a dedicated StarRocks user with only the permissions needed for the
+workflow. Do not enable `write_query` workflows unless writes are intended and
+reviewed.
+
+## Use Cases
+
+- Ask Claude to inspect StarRocks databases and tables before drafting SQL.
+- Run reviewed SELECT queries for analytics and debugging.
+- Generate table or database overviews with schema details, row counts, and sample rows.
+- Analyze a query with profile or explain-analyze output.
+- Create a Plotly chart from an approved query result.
+- Explore StarRocks proc paths for frontend, backend, compute-node, transaction, job, task, and catalog information.
+- Write large read-query results to an approved output directory when model context is too small.
+
+## Safety and Privacy
+
+StarRocks MCP is a database execution surface. Use least-privilege credentials,
+review generated SQL, and require explicit approval for `write_query`, DDL,
+DML, broad reads, output-file writes, proc inspection, and chart generation over
+sensitive datasets.
+
+`read_query` can write files on the server host, and absolute paths bypass the
+configured output directory. Keep result paths controlled, avoid exposing
+production credentials, and treat generated charts and cached overviews as
+derived data that may reveal private rows or schema details.
+
+## Disclosure
+
+StarRocks offers open-source and commercial analytics database products. This
+listing is not sponsored, paid, or affiliate-driven, and it is scoped to the
+source-backed official StarRocks MCP server.
+
+## Duplicate Check
+
+No StarRocks MCP Server, `StarRocks/mcp-server-starrocks`,
+`mcp-server-starrocks`, or matching source URL entry was found in
+`content/mcp`, `content/tools`, `content/guides`, `content/agents`, or
+`content/skills`.

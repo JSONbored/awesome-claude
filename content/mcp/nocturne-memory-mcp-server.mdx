@@ -1,0 +1,194 @@
+---
+title: Nocturne Memory MCP Server
+slug: nocturne-memory-mcp-server
+category: mcp
+description: >-
+  Long-term memory MCP server for agents, with URI-addressed memories,
+  namespaces, search, aliases, glossary triggers, a visual dashboard, and
+  reviewable rollback snapshots backed by SQLite or PostgreSQL.
+cardDescription: Give Claude a self-hosted, reviewable long-term memory graph with MCP tools.
+seoTitle: Nocturne Memory MCP Server for Claude
+seoDescription: >-
+  Configure Nocturne Memory with Claude to read, search, create, update, alias,
+  trigger, and review long-term memory nodes through a self-hosted MCP server.
+author: Dataojitori
+authorProfileUrl: "https://github.com/Dataojitori"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Nocturne Memory
+brandDomain: misaligned.top
+repoUrl: "https://github.com/Dataojitori/nocturne_memory"
+documentationUrl: "https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/README_EN.md"
+installable: true
+installCommand: "Clone the repository, install `backend/requirements.txt`, and configure an MCP client to run `backend/mcp_server.py` with Python."
+usageSnippet: "Start with `read_memory(\"system://boot\")`, use `search_memory` for recall, and require review before memory writes or cleanup."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "nocturne_memory": {
+        "command": "python",
+        "args": ["<repo>/backend/mcp_server.py"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "host": "127.0.0.1",
+    "web_port": 8233,
+    "api_token": "<long-random-token>",
+    "public_readonly_mcp": false
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer.
+  - Node.js if the dashboard frontend needs to be built on first startup.
+  - MCP client that supports stdio, SSE, or streamable HTTP depending on deployment mode.
+  - SQLite or PostgreSQL storage selected and backed up before storing important memories.
+  - API token configured before exposing the web, SSE, or HTTP server beyond localhost.
+safetyNotes:
+  - Nocturne Memory can create, update, delete, alias, trigger, and search persistent memory nodes.
+  - Stdio startup can launch a local admin dashboard, initialize the database, and build the frontend if dependencies are present.
+  - Network-facing SSE or HTTP mode refuses to start without an API token when bound to a reachable host, but localhost-only deployments should still set one.
+  - Write tools can change long-term agent behavior; review snapshots and rollback queues before accepting broad edits or cleanup operations.
+  - Keep `public_readonly_mcp` enabled only for demos or intentionally read-only deployments.
+privacyNotes:
+  - Memories can contain personal history, health details, credentials accidentally pasted into chats, private project context, relationship content, strategies, drafts, and agent identity instructions.
+  - Database files, PostgreSQL URLs, API tokens, config files, snapshots, dashboard views, MCP transcripts, and search results can expose the full memory graph.
+  - The README includes public demo guidance, but private memories should be stored only in a controlled self-hosted instance.
+  - Redact memory URIs, node content, boot URIs, glossary triggers, search terms, database paths, API tokens, and snapshot diffs before sharing logs or screenshots.
+disclosure: >-
+  MIT-licensed open-source memory server. The project uses strong AI-persona
+  framing in its README; this entry describes the source-backed MCP memory
+  behavior without endorsing storing sensitive personal data unreviewed.
+sourceUrls:
+  - "https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/LICENSE"
+  - "https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/docs/TOOLS.md"
+  - "https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/mcp_server.py"
+  - "https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/config.py"
+  - "https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/auth.py"
+  - "https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/run_sse.py"
+  - "https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/db/snapshot.py"
+  - "https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/requirements.txt"
+tags:
+  - memory
+  - knowledge-graph
+  - sqlite
+  - rollback
+  - python
+keywords:
+  - Nocturne Memory MCP
+  - long-term memory MCP
+  - agent memory server
+  - MCP memory graph
+  - rollbackable memory
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Nocturne Memory MCP Server is a self-hosted long-term memory server for agents.
+It stores URI-addressed memory nodes, supports aliases and glossary triggers,
+offers search and system views, and includes review and rollback mechanics for
+changes made to the memory graph.
+
+Use it when a team wants Claude or another MCP client to share durable memory
+across sessions while keeping the memory database, dashboard, and write-review
+process under local control.
+
+## Source Review
+
+- https://github.com/Dataojitori/nocturne_memory
+- https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/README_EN.md
+- https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/LICENSE
+- https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/docs/TOOLS.md
+- https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/mcp_server.py
+- https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/config.py
+- https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/auth.py
+- https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/run_sse.py
+- https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/db/snapshot.py
+- https://raw.githubusercontent.com/Dataojitori/nocturne_memory/main/backend/requirements.txt
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+English README, license, MCP tool reference, MCP server implementation,
+configuration, auth, SSE runner, snapshot store, and Python requirements for
+current setup and behavior.
+
+## Features
+
+- Read a memory by URI with `read_memory`.
+- Create child memories with priority, disclosure text, and optional titles.
+- Update memory content through append or exact patch modes.
+- Delete a memory path without necessarily deleting the underlying node body.
+- Add alias paths that point to existing memories.
+- Manage glossary triggers for cross-linking memory recall.
+- Search memories by keyword, domain, and result limit.
+- Read system views such as boot memory, recent memories, glossary, indexes, and
+  diagnostics.
+- Use namespace isolation for separate agents or personas.
+- Review changes and roll back memory edits through snapshot tracking.
+- Run over stdio locally or expose SSE/streamable HTTP through the combined
+  server when properly authenticated.
+
+## Installation
+
+Clone the repository, install backend dependencies, and configure an MCP client
+to run the Python MCP server:
+
+```bash
+git clone https://github.com/Dataojitori/nocturne_memory.git
+cd nocturne_memory
+pip install -r backend/requirements.txt
+```
+
+Example stdio MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "nocturne_memory": {
+      "command": "python",
+      "args": ["<repo>/backend/mcp_server.py"]
+    }
+  }
+}
+```
+
+For network-facing deployments, configure `api_token`, keep the host local unless
+the server is intentionally exposed, and use the SSE or streamable HTTP runner
+only behind reviewed access controls.
+
+## Use Cases
+
+- Give Claude durable project memory across coding sessions.
+- Store boot memories that orient an agent at the start of a session.
+- Keep separate memory namespaces for different agents, clients, or workspaces.
+- Search remembered facts without embedding the entire memory database in a
+  prompt.
+- Track memory changes before accepting or rolling them back.
+- Use glossary triggers to cross-link concepts that should be recalled together.
+- Run a visual dashboard for reviewing and editing the memory graph.
+
+## Safety and Privacy
+
+Long-term memory changes future agent behavior. Read existing memories before
+editing them, keep write operations small, and review snapshots before accepting
+large restructures, cleanup, or deletion. Require an API token before exposing
+Nocturne over SSE or HTTP, and keep local deployments bound to localhost unless
+there is a clear access-control plan.
+
+Treat the memory database as sensitive. Memory nodes may contain personal
+history, private project strategy, credentials pasted by mistake, emotional
+support context, relationship content, health details, drafts, and agent
+instructions. Protect database files, PostgreSQL URLs, config files, API tokens,
+snapshots, dashboard access, MCP transcripts, search results, and boot URIs.
+
+## Duplicate Check
+
+No `Dataojitori/nocturne_memory`, Nocturne Memory MCP, rollbackable memory MCP,
+agent memory graph, or matching source URL entry was found in `content/mcp` or
+`README.md`. Existing memory entries cover different memory servers and do not
+cover Nocturne's URI-addressed graph, dashboard, namespace, glossary, and
+rollback workflow.

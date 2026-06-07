@@ -1,0 +1,187 @@
+---
+title: Fli Google Flights MCP Server
+slug: fli-google-flights-mcp-server
+category: mcp
+description: >-
+  Google Flights MCP server, CLI, and Python library for searching flights,
+  flexible travel dates, airports, and booking options through a reverse
+  engineered Google Flights API workflow.
+cardDescription: >-
+  Search Google Flights, flexible travel dates, airport codes, and booking
+  options from Claude with Fli.
+seoTitle: Fli Google Flights MCP Server for Claude
+seoDescription: >-
+  Configure Fli with Claude and other MCP clients to search Google Flights,
+  compare one-way, round-trip, multi-airport, alliance, cabin, fare, and date
+  options, and retrieve booking links from a Python MCP server.
+author: punitarani
+authorProfileUrl: "https://github.com/punitarani"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Fli
+brandDomain: github.com
+repoUrl: "https://github.com/punitarani/fli"
+documentationUrl: "https://github.com/punitarani/fli/blob/main/README.md"
+packageUrl: "https://pypi.org/project/flights/"
+installable: true
+installCommand: "pipx install \"flights[mcp]\""
+usageSnippet: "Install the flights package with MCP extras, run fli-mcp over stdio, then ask Claude to search flights, date ranges, airports, or booking options."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "fli": {
+        "command": "fli-mcp",
+        "args": []
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add fli -- fli-mcp
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer with pipx, pip, or another Python package runner.
+  - MCP optional dependencies installed, for example with `pipx install "flights[mcp]"`.
+  - Network access to Google Flights endpoints from the machine running the MCP server.
+  - Review of Google Flights terms, travel-search rate limits, and internal travel-data policies.
+  - Agreement on whether route, date, passenger, cabin, alliance, and fare queries may be sent to Google and the MCP client.
+safetyNotes:
+  - Fli is not an official Google project; upstream describes reverse engineered Google Flights API access.
+  - Flight availability, fares, booking options, baggage fees, cabin details, and vendor links can change quickly and must be verified on the airline or booking provider before purchase.
+  - The search client impersonates browser-like requests, rate limits calls, and retries failures; excessive automated searches may be blocked or violate service expectations.
+  - The MCP server returns booking links but does not buy tickets, spend money, or manage reservations.
+  - Travel results should not be treated as legal, immigration, visa, safety, or airline-policy advice.
+privacyNotes:
+  - Search queries can reveal travel plans, home or work locations, dates, passenger counts, cabin preferences, airline preferences, alliances, budgets, and destination interests.
+  - Requests and returned results may be visible to Google Flights, MCP client logs, model providers, and local process logs.
+  - Booking URLs and vendor options can contain itinerary parameters that should not be shared publicly when travel plans are sensitive.
+  - Avoid entering passport data, loyalty account credentials, payment details, traveler names, or private booking confirmations into prompts.
+sourceUrls:
+  - "https://github.com/punitarani/fli/blob/main/LICENSE.txt"
+  - "https://github.com/punitarani/fli/blob/main/pyproject.toml"
+  - "https://github.com/punitarani/fli/blob/main/docs/guides/mcp.md"
+  - "https://github.com/punitarani/fli/blob/main/fli/mcp/server.py"
+  - "https://github.com/punitarani/fli/blob/main/fli/mcp/_entry.py"
+  - "https://github.com/punitarani/fli/blob/main/fli/search/client.py"
+  - "https://github.com/punitarani/fli/blob/main/fli/search/flights.py"
+tags:
+  - travel
+  - flights
+  - google-flights
+  - search
+  - booking
+keywords:
+  - Fli MCP
+  - Google Flights MCP
+  - flight search MCP
+  - travel MCP server
+  - flights Python MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Fli is a Google Flights MCP server, CLI, and Python library. It lets Claude and
+other MCP clients search one-way and round-trip flights, flexible travel dates,
+airports, and booking options using a reverse engineered Google Flights API
+workflow.
+
+Use it when an agent needs structured flight-search context before a human
+checks current fare details. Fli can return flight options, prices, currencies,
+legs, cabin filters, airline and alliance filters, layover constraints, airport
+search results, Google Flights deep links, and vendor booking options when
+available.
+
+## Source Review
+
+- https://github.com/punitarani/fli
+- https://github.com/punitarani/fli/blob/main/README.md
+- https://pypi.org/project/flights/
+- https://github.com/punitarani/fli/blob/main/LICENSE.txt
+- https://github.com/punitarani/fli/blob/main/pyproject.toml
+- https://github.com/punitarani/fli/blob/main/docs/guides/mcp.md
+- https://github.com/punitarani/fli/blob/main/fli/mcp/server.py
+- https://github.com/punitarani/fli/blob/main/fli/mcp/_entry.py
+- https://github.com/punitarani/fli/blob/main/fli/search/client.py
+- https://github.com/punitarani/fli/blob/main/fli/search/flights.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI package page, license, Python package metadata, MCP guide, MCP
+server, MCP entrypoint wrapper, search client, and flight-search implementation
+for current installation, tool, and request behavior.
+
+## Features
+
+- Search flights by origin, destination, departure date, return date, cabin,
+  stops, airlines, alliances, layover bounds, currency, language, country, and
+  passenger count.
+- Search flexible travel dates across a date range.
+- Retrieve booking options for a selected itinerary when Google surfaces vendor
+  data.
+- Search airport codes and names.
+- Generate Google Flights deep links for result review.
+- Run over stdio with `fli-mcp` or Streamable HTTP with `fli-mcp-http`.
+- Configure defaults with `FLI_MCP_` environment variables for passenger count,
+  currency, cabin class, sorting, departure window, and result limits.
+
+## Installation
+
+Install the package with MCP extras:
+
+```bash
+pipx install "flights[mcp]"
+```
+
+Add it to Claude Code:
+
+```bash
+claude mcp add fli -- fli-mcp
+```
+
+For JSON-based MCP clients, use:
+
+```json
+{
+  "mcpServers": {
+    "fli": {
+      "command": "fli-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to compare one-way or round-trip options for a route and date.
+- Search flexible date ranges for cheaper travel windows.
+- Filter by cabin class, maximum stops, departure window, airline, alliance, or
+  layover duration.
+- Resolve airport codes before searching.
+- Retrieve booking links and vendor options for a flight found by
+  `search_flights`.
+- Generate a structured shortlist that a traveler can verify in Google Flights
+  or with an airline.
+
+## Safety and Privacy
+
+Fli is not an official Google Flights API. It relies on reverse engineered API
+behavior, browser-like request handling, rate limiting, and retries. Review
+Google Flights terms and keep automated search volume reasonable.
+
+Flight information changes quickly. Prices, seats, schedules, baggage fees,
+fare classes, booking links, and vendor availability must be verified in Google
+Flights, the airline site, or the booking provider before a traveler acts.
+
+Searches can disclose travel intent. Keep sensitive trips, traveler identities,
+loyalty accounts, passport data, payment details, and private booking
+confirmations out of prompts and MCP configuration.
+
+## Duplicate Check
+
+No Fli entry, `punitarani/fli`, Google Flights MCP entry, `flights` package
+entry, or matching source URL was found in `content/mcp`.

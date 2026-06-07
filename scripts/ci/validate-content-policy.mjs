@@ -37,6 +37,7 @@ const ARCHIVE_PACKAGE_EXTENSIONS = new Set([
 
 const SAFETY_NOTE_REQUIRED_FLAGS = new Set([
   "unsafe_install_pipeline",
+  "mutable_script_install_source",
   "financial_or_identity_sensitive",
   "external_write_capability",
   "destructive_actions",
@@ -55,6 +56,17 @@ const PRIVACY_NOTE_REQUIRED_FLAGS = new Set([
 
 const UNSAFE_FRONTMATTER_LANGUAGE_ERROR =
   "Executable JavaScript frontmatter is not allowed in content policy validation";
+const DEFENSIVE_SECURITY_MITIGATION_PATTERN =
+  /\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b[\s\S]{0,160}\b(?:(?:credential|password|cookie|session|token|wallet|secret|leak)s?|expos(?:e|ing|ure))\b|\b(?:credential|password|cookie|session|token|wallet|secret)s?\b[\s\S]{0,160}\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b/i;
+const RESOURCE_THEFT_CAPABILITY_PATTERN =
+  /\b(?:this|the|our)?\s*(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b[\s\S]{0,40}\b(?:can|will|does|advertises?|offers?|enables?|designed to|built to)\b[\s\S]{0,80}\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b|\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(?:with|using|through|by)\b[\s\S]{0,40}\b(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b/i;
+const CREDENTIAL_THEFT_PATTERN =
+  /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b/i;
+const ABUSE_ENABLEMENT_PATTERN =
+  /\b(build|create|generate|run|deploy|use|ship)\b[\s\S]{0,80}\b(credential stealer|password stealer|cookie stealer|keylogger|steal credentials|exfiltrat(?:e|ion)|harvest cookies|dump tokens?)\b/i;
+const FULL_COMMIT_SHA_PATTERN = /^[0-9a-f]{40}$/i;
+const LOCAL_SCRIPT_REFERENCE_PATTERN =
+  /(?:^|[\s`;&|])(?:(?:bash|sh|zsh|pwsh|powershell)\s+)?(?:\.{1,2}\/|[\w.-]+\/)?[\w./-]*(?:install|setup|start|bootstrap|init)[\w.-]*\.(?:sh|bash|zsh|ps1)\b/im;
 
 const SAFE_MATTER_OPTIONS = {
   engines: {
@@ -87,6 +99,42 @@ function normalizeText(value) {
 
 function normalizeRepo(value) {
   return normalizeText(value).toLowerCase();
+}
+
+function hasDefensiveSecuritySafeHarbor(text) {
+  return (
+    DEFENSIVE_SECURITY_MITIGATION_PATTERN.test(text) &&
+    !RESOURCE_THEFT_CAPABILITY_PATTERN.test(text) &&
+    !ABUSE_ENABLEMENT_PATTERN.test(text)
+  );
+}
+
+function lower(value) {
+  return normalizeText(value).toLowerCase();
+}
+
+function looksLikeCommercialApiRelay(fields, text) {
+  const body = lower(
+    [
+      text,
+      fields.title,
+      fields.description,
+      fields.pricing_model,
+      fields.pricingModel,
+      fields.disclosure,
+      fields.website_url,
+      fields.websiteUrl,
+    ].join("\n"),
+  );
+  const relaySignal =
+    /\b(api relay|api proxy|llm api relay|llm proxy|model gateway|api gateway)\b/i.test(
+      body,
+    );
+  const commercialSignal =
+    /\b(pay[- ]?per[- ]?use|paid|pricing|credits?|billing|subscription|commercial|monetiz(?:e|ation))\b/i.test(
+      body,
+    );
+  return relaySignal && commercialSignal;
 }
 
 function annotationText(value) {
@@ -303,6 +351,61 @@ function collectUrls(text) {
   return [...matches].map((match) => match[0]).slice(0, 50);
 }
 
+function githubSourceRef(value) {
+  const raw = normalizeText(value);
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    const parts = url.pathname.split("/").filter(Boolean);
+    if (url.protocol !== "https:") return null;
+    if (url.hostname.toLowerCase() === "raw.githubusercontent.com") {
+      if (parts.length < 4) return null;
+      return {
+        ref: parts[2],
+        path: parts.slice(3).join("/"),
+      };
+    }
+    if (
+      url.hostname.toLowerCase() === "github.com" &&
+      parts.length >= 5 &&
+      (parts[2] === "blob" || parts[2] === "raw")
+    ) {
+      return {
+        ref: parts[3],
+        path: parts.slice(4).join("/"),
+      };
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function isScriptPath(value) {
+  return /\.(?:sh|bash|zsh|ps1)$/i.test(normalizeText(value));
+}
+
+function isImmutableGithubScriptSourceUrl(value) {
+  const source = githubSourceRef(value);
+  return Boolean(
+    source &&
+    FULL_COMMIT_SHA_PATTERN.test(source.ref) &&
+    isScriptPath(source.path),
+  );
+}
+
+function isMutableGithubSourceUrl(value) {
+  const source = githubSourceRef(value);
+  return Boolean(source && !FULL_COMMIT_SHA_PATTERN.test(source.ref));
+}
+
+function referencesClonedLocalScriptInstall(value) {
+  const text = normalizeText(value);
+  return (
+    /\bgit\s+clone\b/i.test(text) && LOCAL_SCRIPT_REFERENCE_PATTERN.test(text)
+  );
+}
+
 function sameGitHubLogin(value, login) {
   const expected = normalizeText(login).replace(/^@/, "").toLowerCase();
   if (!expected) return false;
@@ -360,6 +463,7 @@ function frontmatterFields(data = {}, category = "") {
     slug: normalizeText(data.slug),
     github_url: normalizeText(data.repoUrl),
     source_url: normalizeText(data.sourceUrl),
+    source_urls: stringList(data.sourceUrls).join("\n"),
     website_url: normalizeText(data.websiteUrl),
     docs_url: normalizeText(data.documentationUrl || data.projectUrl),
     download_url: normalizeText(data.downloadUrl),
@@ -514,6 +618,7 @@ function addContentRiskSignals(report, fields, content) {
   const text = [
     fields.github_url,
     fields.source_url,
+    fields.source_urls,
     fields.website_url,
     fields.docs_url,
     fields.download_url,
@@ -533,11 +638,22 @@ function addContentRiskSignals(report, fields, content) {
   const submittedSourceUrls = [
     fields.github_url,
     fields.source_url,
+    ...stringList(fields.source_urls),
     fields.website_url,
     fields.docs_url,
     fields.download_url,
     fields.affiliate_url,
   ].filter(Boolean);
+
+  if (looksLikeCommercialApiRelay(fields, text)) {
+    addFlag(
+      report,
+      "high",
+      "commercial_listing_route",
+      "Commercial API relays, paid gateways, and pay-per-use proxy services belong in the tools/listing flow",
+      "Use the commercial listing route instead of the free content queue",
+    );
+  }
 
   if (submittedSourceUrls.some(isLikelyAffiliateUrl)) {
     addFlag(
@@ -615,12 +731,24 @@ function addContentRiskSignals(report, fields, content) {
   }
 
   if (
-    /\b(credential|password|cookie|session|token|wallet)\b[\s\S]{0,80}\b(steal|exfiltrat|harvest|dump)\b/i.test(
-      text,
-    ) ||
-    /\b(steal|exfiltrat|harvest|dump)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)\b/i.test(
-      text,
-    )
+    referencesClonedLocalScriptInstall(installText) &&
+    !submittedSourceUrls.some(isImmutableGithubScriptSourceUrl)
+  ) {
+    const mutableSources = submittedSourceUrls.filter(isMutableGithubSourceUrl);
+    addFlag(
+      report,
+      "critical",
+      "mutable_script_install_source",
+      "Install instructions run a cloned local installer script without immutable script source evidence",
+      mutableSources.length
+        ? `Mutable GitHub source refs: ${mutableSources.slice(0, 5).join(", ")}`
+        : "Add a raw GitHub URL pinned to a full commit SHA for the executed installer script, or replace the script execution with reviewed commands.",
+    );
+  }
+
+  if (
+    !hasDefensiveSecuritySafeHarbor(text) &&
+    CREDENTIAL_THEFT_PATTERN.test(text)
   ) {
     addFlag(
       report,
@@ -875,12 +1003,16 @@ function directContentRequestChangesReasons(report = {}) {
       "Content file could not be read through the GitHub API.",
     community_local_download_request:
       "Community PRs cannot request HeyClaude-hosted /downloads package URLs.",
+    commercial_listing_route:
+      "Commercial API relays, paid gateways, and pay-per-use proxy services belong in the tools/listing flow.",
     affiliate_referral_url:
       "Contributor content cannot include affiliate or referral URL parameters.",
     non_https_executable_source:
       "Install or usage instructions fetch executable content from a non-HTTPS URL.",
     unsafe_install_pipeline:
       "Install instructions include a destructive or remote-code execution pipeline.",
+    mutable_script_install_source:
+      "Install instructions run a cloned local installer script without immutable script source evidence.",
     embedded_secret:
       "Submission appears to include a real secret or API token.",
     malicious_data_theft_capability:

@@ -1,0 +1,139 @@
+---
+title: Claude Code Enterprise Rollout Agent
+slug: claude-code-enterprise-rollout-agent
+category: agents
+description: >-
+  Source-backed agent that plans and reviews an enterprise Claude Code rollout,
+  covering server-managed settings, permission deny lists, managed MCP policy,
+  fail-closed startup, hooks for audit, and what users cannot override, grounded
+  in the official docs.
+cardDescription: >-
+  Plan an enterprise Claude Code rollout: server-managed settings, deny lists,
+  managed MCP policy, fail-closed startup, and audit hooks.
+seoTitle: Claude Code Enterprise Rollout Agent
+seoDescription: >-
+  Reusable agent prompt that plans and reviews an enterprise Claude Code rollout
+  using server-managed settings: permission deny lists, managed MCP policy,
+  fail-closed startup, audit hooks, and non-overridable controls.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/server-managed-settings"
+installable: false
+usageSnippet: "Use this agent to plan or review an enterprise Claude Code rollout using server-managed settings: deny lists, managed MCP policy, fail-closed startup, and audit hooks."
+prerequisites:
+  - "Claude for Teams or Claude for Enterprise, with admin access to the managed-settings console."
+  - "A target policy: which tools, commands, and MCP servers to allow or deny, and which login org to enforce."
+  - "Knowledge of whether devices are MDM-managed (endpoint-managed settings) or unmanaged (server-managed settings)."
+safetyNotes:
+  - "Server-managed settings are a client-side control; on unmanaged devices, users with admin access can modify the binary or network. For stronger enforcement, use endpoint-managed settings on MDM-enrolled devices."
+  - "Recommend permissions.deny for must-never-run actions, disableBypassPermissionsMode to block bypass, and allowManagedPermissionRulesOnly to prevent users widening rules."
+  - "Managed hooks execute shell commands and trigger a user security-approval dialog; review hook commands before distributing them org-wide."
+privacyNotes:
+  - "Settings are delivered from Anthropic's servers at authentication; review what configuration (hooks, env vars) is distributed and to whom."
+  - "Server-managed settings are bypassed when users configure a third-party provider (Bedrock, Vertex, Foundry) or a custom base URL; account for that in the threat model."
+  - "Audit-logging hooks can capture file paths and command output; ensure their destinations meet your retention and access policy."
+tags:
+  - claude-code
+  - enterprise
+  - managed-settings
+  - rollout
+  - governance
+keywords:
+  - claude code enterprise rollout agent
+  - server-managed settings
+  - managed permission rules
+  - disableBypassPermissionsMode
+  - claude code enterprise governance
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Claude Code Enterprise Rollout Agent is a reusable agent prompt for planning and
+reviewing an organization-wide Claude Code deployment. It centers on
+server-managed settings (for orgs without device management) and the controls
+that make a rollout safe: permission deny lists, managed MCP policy, fail-closed
+startup, audit hooks, and the limits of client-side enforcement.
+
+Use it when standing up Claude Code across a team or enterprise, or when
+reviewing whether an existing managed configuration is sound.
+
+## Agent Prompt
+
+You are an enterprise rollout specialist for Claude Code. Help an administrator
+design and review a managed configuration that is safe, enforceable, and clear
+about its limits. Use the official Claude Code documentation as your reference.
+
+Rollout workflow:
+
+1. Delivery method. Choose server-managed settings (no MDM needed; delivered at
+   authentication) or endpoint-managed settings (MDM/OS policy; stronger
+   enforcement). If devices are MDM-enrolled, prefer endpoint-managed for
+   tamper resistance.
+2. Permission policy. Recommend `permissions.deny` for must-never-run actions
+   (for example reading `.env`, `curl`), `disableBypassPermissionsMode` to block
+   bypass, and `allowManagedPermissionRulesOnly` so users cannot widen rules.
+3. MCP policy. Note that managed MCP allow/deny lists are delivered via the
+   managed MCP policy file, not server-managed settings; plan that channel
+   separately.
+4. Fail-closed startup. For environments where the brief unenforced window is
+   unacceptable, recommend `forceRemoteSettingsRefresh: true`, after confirming
+   network access to the settings endpoint.
+5. Audit. Recommend hooks (for example a PostToolUse audit script) and note they
+   trigger a user security-approval dialog and must be reviewed.
+6. Limits. Make clear server-managed settings are client-side, are bypassed by
+   third-party providers, and that admin-access users on unmanaged devices can
+   tamper; use ConfigChange hooks to detect changes.
+
+Output contract:
+
+- Rollout plan: delivery method, permission/MCP policy, fail-closed decision.
+- Findings: gaps that let users widen access or bypass policy.
+- Required settings with exact keys, and the enforcement caveats.
+- A go/iterate decision for org-wide deployment.
+
+## Features
+
+- Chooses server-managed vs endpoint-managed delivery by device posture.
+- Recommends deny lists, managed-only rules, and bypass disabling.
+- Plans fail-closed startup and audit hooks with their caveats.
+- States the client-side enforcement limits honestly.
+
+## Use Cases
+
+- Stand up Claude Code across a team or enterprise.
+- Lock down permissions and block bypass org-wide.
+- Plan managed MCP allow/deny policy distribution.
+- Review an existing managed configuration for gaps.
+
+## Source Notes
+
+- Server-managed settings deliver configuration from Anthropic's servers at
+  authentication and support deny lists, bypass disabling, managed-only rules,
+  hooks, and fail-closed startup, but are a client-side control.
+- Managed MCP allow/deny lists ship through a separate managed MCP policy file,
+  and server-managed settings are bypassed by third-party providers.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for enterprise rollout, managed
+settings, and Claude Code governance agents. No enterprise rollout agent exists.
+This entry is distinct: it is an `agents` prompt focused on planning an
+enterprise Claude Code rollout via server-managed settings.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Configure server-managed settings: https://code.claude.com/docs/en/server-managed-settings
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview

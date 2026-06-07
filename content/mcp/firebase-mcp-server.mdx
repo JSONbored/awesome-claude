@@ -1,0 +1,197 @@
+---
+title: Firebase MCP Server
+slug: firebase-mcp-server
+category: mcp
+description: >-
+  Official Firebase MCP server bundled with Firebase CLI, giving Claude project,
+  app, Auth, Firestore, Realtime Database, Storage, Crashlytics, Data Connect,
+  Functions, Messaging, Remote Config, rules, and deploy capabilities.
+cardDescription: Connect Claude to Firebase projects, apps, databases, Auth, Crashlytics, messaging, and config.
+seoTitle: Firebase MCP Server for Claude
+seoDescription: >-
+  Configure Firebase MCP Server with Claude Code, Cursor, Windsurf, Firebase
+  Studio, Gemini CLI, VS Code Copilot, and other MCP clients to work with
+  Firebase projects, apps, Auth users, databases, rules, Crashlytics, Functions,
+  Messaging, Remote Config, Data Connect, and deploy workflows.
+author: Firebase
+authorProfileUrl: "https://github.com/firebase"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Firebase
+brandDomain: firebase.google.com
+websiteUrl: "https://firebase.google.com/"
+repoUrl: "https://github.com/firebase/firebase-tools"
+documentationUrl: "https://firebase.google.com/docs/ai-assistance/mcp-server"
+packageUrl: "https://registry.npmjs.org/firebase-tools"
+installable: true
+installCommand: "claude mcp add firebase npx -- -y firebase-tools@latest mcp"
+usageSnippet: "Ask Claude to inspect the active Firebase project and propose a change, then require approval before deploys, database writes, Auth updates, messaging sends, or Remote Config updates."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "firebase": {
+        "command": "npx",
+        "args": ["-y", "firebase-tools@latest", "mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "firebase": {
+        "command": "npx",
+        "args": ["-y", "firebase-tools@latest", "mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js and npm available in the MCP client runtime.
+  - Firebase CLI credentials for the Google account or service context Claude should use.
+  - Firebase project selected and access scoped to the minimum roles needed for the planned work.
+  - Team approval policy for write-capable tools such as deploys, Auth updates, database writes, messaging sends, Remote Config updates, and Crashlytics issue changes.
+  - Privacy review before sending project data, user identifiers, crash data, logs, database records, or Gemini in Firebase prompts through the MCP client.
+safetyNotes:
+  - Firebase MCP uses the same user credentials that authorize the Firebase CLI in the environment where it runs.
+  - Tools can create Firebase projects and apps, add Android SHA hashes, inspect and update environment settings, validate and retrieve security rules, deploy resources, and check deploy status.
+  - Auth tools can retrieve users, update a user's disabled state or custom claims, and set SMS region policies.
+  - Firestore and Realtime Database tools can query, read, delete, and write data depending on the active project and credentials.
+  - Messaging and Remote Config tools can send Firebase Cloud Messaging messages and publish or roll back Remote Config templates.
+  - Crashlytics tools can inspect issues, events, notes, reports, and update issue state; Functions tools can list deployed functions and query logs.
+privacyNotes:
+  - Tool results can expose Firebase project IDs, app IDs, SDK configuration, Auth user identifiers, custom claims, Firestore documents, Realtime Database paths, Storage object URLs, Crashlytics events, Functions logs, FCM targets, and Remote Config templates.
+  - Gemini in Firebase features may generate plausible but incorrect output; Firebase documentation warns to validate output and not enter personally identifiable information or user data into chat.
+  - Firebase CLI credentials, refresh tokens, service context, project aliases, and environment configuration should stay out of prompts, issues, logs, screenshots, and committed files.
+  - Storage download URLs, Crashlytics stack traces, Functions logs, database records, and Auth data may contain customer data, credentials, unreleased feature names, or production incident details.
+sourceUrls:
+  - "https://firebase.google.com/docs/ai-assistance/mcp-server"
+  - "https://github.com/firebase/firebase-tools"
+  - "https://github.com/firebase/firebase-tools/blob/main/src/mcp/README.md"
+  - "https://github.com/firebase/firebase-tools/blob/main/src/mcp/server.json"
+  - "https://github.com/firebase/firebase-tools/blob/main/package.json"
+  - "https://github.com/firebase/firebase-tools/blob/main/LICENSE"
+tags:
+  - firebase
+  - google-cloud
+  - database
+  - auth
+  - deployment
+keywords:
+  - Firebase MCP
+  - Firebase MCP Server
+  - firebase-tools MCP
+  - Firestore MCP
+  - Firebase Auth MCP
+  - Firebase Remote Config MCP
+  - Firebase Crashlytics MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Firebase MCP Server is the official Firebase Model Context Protocol server
+bundled with Firebase CLI. It gives Claude and other MCP clients access to
+Firebase-specific project, app, Auth, database, rules, Crashlytics, App Hosting,
+Data Connect, Functions, Messaging, Storage, Remote Config, and deployment
+workflows through the same credentials used by the Firebase CLI.
+
+The Firebase MCP README documents setup for Claude Code, Cursor, Windsurf,
+Firebase Studio, Gemini CLI, VS Code Copilot, Cline, and other MCP clients. It
+also documents server capabilities, prompts, and resources for Firebase docs and
+workflow guides.
+
+## Source Review
+
+- https://firebase.google.com/docs/ai-assistance/mcp-server
+- https://github.com/firebase/firebase-tools
+- https://github.com/firebase/firebase-tools/blob/main/src/mcp/README.md
+- https://github.com/firebase/firebase-tools/blob/main/src/mcp/server.json
+- https://github.com/firebase/firebase-tools/blob/main/package.json
+- https://github.com/firebase/firebase-tools/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live Firebase docs,
+MCP README, MCP metadata, package metadata, and license for current setup
+commands, available tools, credential behavior, and Gemini in Firebase guidance.
+
+## Features
+
+- Official MCP server bundled with `firebase-tools`.
+- Stdio setup with `npx -y firebase-tools@latest mcp`.
+- Firebase CLI credential reuse for project access.
+- Project and app tools for listing, creating, inspecting, and retrieving SDK configuration.
+- Security rules retrieval and validation for Firebase products.
+- Deploy and deploy-status tools.
+- Firebase Auth user lookup, user update, custom-claim, disabled-state, and SMS region policy tools.
+- Firestore document and collection query tools.
+- Realtime Database read and write tools.
+- Storage download URL retrieval.
+- Crashlytics issues, events, notes, reports, and issue-state tools.
+- Data Connect compile, service list, and operation execution tools.
+- Cloud Functions listing and log retrieval.
+- Firebase Cloud Messaging send tool.
+- Remote Config template get and update tools.
+- Resources for Firebase docs and workflow-specific guides.
+
+## Installation
+
+For Claude Code, the Firebase README documents an official plugin path and a
+manual MCP server path. To add the MCP server manually:
+
+```sh
+claude mcp add firebase npx -- -y firebase-tools@latest mcp
+```
+
+For MCP clients that use JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "firebase": {
+      "command": "npx",
+      "args": ["-y", "firebase-tools@latest", "mcp"]
+    }
+  }
+}
+```
+
+Sign in with the Firebase CLI in the same environment, then verify the MCP
+client shows the Firebase server as connected.
+
+## Use Cases
+
+- Ask Claude to inspect the active Firebase project and list apps before making setup changes.
+- Validate or retrieve security rules while reviewing Firestore, Storage, or Realtime Database access.
+- Query Firestore or Realtime Database during local development and debugging.
+- Review Crashlytics issues, events, notes, and reports before prioritizing fixes.
+- Retrieve Cloud Functions logs while diagnosing a backend issue.
+- Compile and execute Data Connect operations against a service or emulator.
+- Send a reviewed Firebase Cloud Messaging message to a token or topic.
+- Retrieve or update Remote Config templates with explicit approval.
+- Deploy Firebase resources only after reviewing the proposed changes and active project.
+
+## Safety and Privacy
+
+Firebase MCP is a live cloud-service control surface. Treat it as access to the
+Firebase project, not as a read-only documentation helper. Use least-privilege
+Firebase roles, check the active project before every write, and require human
+approval before deploys, database writes, Auth user changes, FCM sends, Remote
+Config publishes, Crashlytics issue updates, or production-facing changes.
+
+The server can expose sensitive operational and customer data. Avoid putting
+credentials, tokens, PII, production records, crash details, logs, or private
+project context into prompts unless the MCP client, model provider, and Firebase
+data-use policy have been approved for that data. Validate Gemini in Firebase
+output before applying it, and do not use untested generated code or rules in
+production.
+
+## Duplicate Check
+
+Existing entries cover related databases, Supabase, Google Cloud-style
+workflows, and Firebase-alternative skills. No `firebase/firebase-tools`,
+`firebase-tools mcp`, Firebase MCP Server, Firestore MCP, Firebase Auth MCP,
+Crashlytics MCP, Firebase Messaging MCP, or Remote Config MCP entry was found in
+`content/mcp`, `content/tools`, `content/guides`, `content/agents`, or
+`content/skills`.

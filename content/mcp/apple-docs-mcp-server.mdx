@@ -1,0 +1,185 @@
+---
+title: Apple Docs MCP Server
+slug: apple-docs-mcp-server
+category: mcp
+description: >-
+  Third-party MCP server for searching Apple Developer Documentation, framework
+  APIs, Swift and Objective-C references, sample code, platform compatibility,
+  documentation updates, and WWDC session data.
+cardDescription: >-
+  Bring Apple Developer Documentation, SwiftUI, UIKit, framework search, sample
+  code, compatibility data, updates, and WWDC videos into Claude.
+seoTitle: Apple Docs MCP Server for Claude
+seoDescription: >-
+  Configure Apple Docs MCP with Claude, Cursor, and other MCP clients to search
+  Apple Developer Documentation, framework symbols, API references, sample
+  code, documentation updates, platform compatibility, and WWDC videos.
+author: kimsungwhee
+authorProfileUrl: "https://github.com/kimsungwhee"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Apple Docs MCP
+brandDomain: github.com
+repoUrl: "https://github.com/kimsungwhee/apple-docs-mcp"
+documentationUrl: "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/@kimsungwhee%2Fapple-docs-mcp/latest"
+installable: true
+installCommand: "claude mcp add apple-docs -- npx -y @kimsungwhee/apple-docs-mcp@latest"
+usageSnippet: "Add the npm package to your MCP client, then ask Claude to search Apple frameworks, fetch API documentation, compare platform compatibility, find sample code, or search WWDC sessions."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "apple-docs": {
+        "command": "npx",
+        "args": ["-y", "@kimsungwhee/apple-docs-mcp@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add apple-docs -- npx -y @kimsungwhee/apple-docs-mcp@latest
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js and npx available for running the npm package.
+  - An MCP client that supports stdio servers, such as Claude Code, Claude Desktop, Cursor, VS Code, Windsurf, Zed, or Cline.
+  - Network access to retrieve public Apple Developer Documentation, sample-code, and WWDC metadata.
+  - Agreement on whether user prompts may include private project names, unreleased app details, or proprietary API usage questions.
+safetyNotes:
+  - This is a third-party MCP server, not an official Apple project.
+  - The server retrieves public documentation and metadata, but user queries can still reveal private project context to the MCP client, model provider, logs, and network services.
+  - Documentation answers should be checked against the live Apple documentation before shipping platform-specific, beta, deprecated, or compatibility-sensitive code.
+  - Use `@latest` intentionally when you want the newest package; pin a version when reproducible builds or locked team tooling are required.
+privacyNotes:
+  - Prompts and tool calls may include framework names, API choices, platform targets, WWDC interests, sample-code requests, app architecture details, feature plans, and compatibility constraints.
+  - MCP client logs and model transcripts can retain documentation queries and returned API text outside Apple's documentation site.
+  - Avoid sending proprietary source code, unreleased product names, customer requirements, private bundle identifiers, or internal roadmap details when a public documentation lookup is enough.
+sourceUrls:
+  - "https://github.com/kimsungwhee/apple-docs-mcp"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/README.md"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/package.json"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/LICENSE"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/index.ts"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/definitions.ts"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/doc-fetcher.ts"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/get-sample-code.ts"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/get-documentation-updates.ts"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/get-technology-overviews.ts"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/search-framework-symbols.ts"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/wwdc/wwdc-handlers.ts"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/wwdc/video-list-extractor.ts"
+  - "https://github.com/kimsungwhee/apple-docs-mcp/tree/main/data/wwdc"
+  - "https://registry.npmjs.org/@kimsungwhee%2Fapple-docs-mcp/latest"
+tags:
+  - apple
+  - documentation
+  - ios
+  - swift
+  - wwdc
+keywords:
+  - Apple Docs MCP
+  - Apple Developer Documentation MCP
+  - SwiftUI MCP
+  - WWDC MCP
+  - iOS documentation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Apple Docs MCP Server is a third-party MCP server for querying Apple Developer
+Documentation from Claude and other MCP clients. It can search framework
+symbols, fetch documentation pages, retrieve sample code references, summarize
+documentation updates, inspect platform compatibility, explore technology
+overviews, and search WWDC session metadata.
+
+Use it when an Apple-platform task needs current API context without manually
+opening multiple Apple documentation pages. It is especially useful for Swift,
+SwiftUI, UIKit, macOS, iOS, watchOS, tvOS, visionOS, sample-code, and WWDC
+research prompts.
+
+## Source Review
+
+- https://github.com/kimsungwhee/apple-docs-mcp
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/README.md
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/package.json
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/LICENSE
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/index.ts
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/definitions.ts
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/doc-fetcher.ts
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/get-sample-code.ts
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/get-documentation-updates.ts
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/get-technology-overviews.ts
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/search-framework-symbols.ts
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/wwdc/wwdc-handlers.ts
+- https://github.com/kimsungwhee/apple-docs-mcp/blob/main/src/tools/wwdc/video-list-extractor.ts
+- https://github.com/kimsungwhee/apple-docs-mcp/tree/main/data/wwdc
+- https://registry.npmjs.org/@kimsungwhee%2Fapple-docs-mcp/latest
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, package metadata, license, server entrypoint, tool definitions, doc
+fetcher, sample-code tool, updates tool, technology overview tool, framework
+symbol search, WWDC handlers, WWDC data, and npm registry metadata for current
+installation and tool behavior.
+
+## Features
+
+- Search Apple Developer Documentation with natural language prompts.
+- Search framework symbols for SwiftUI, UIKit, Foundation, and other Apple APIs.
+- Fetch detailed API documentation and related references.
+- List technologies and retrieve technology overviews.
+- Retrieve platform compatibility information for APIs and frameworks.
+- Search sample-code references.
+- Retrieve documentation update information.
+- Search WWDC sessions and video metadata.
+- Run as a stdio MCP server through `npx`.
+
+## Installation
+
+Add the package to Claude Code:
+
+```bash
+claude mcp add apple-docs -- npx -y @kimsungwhee/apple-docs-mcp@latest
+```
+
+For JSON-based MCP clients, use:
+
+```json
+{
+  "mcpServers": {
+    "apple-docs": {
+      "command": "npx",
+      "args": ["-y", "@kimsungwhee/apple-docs-mcp@latest"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to find SwiftUI APIs for a UI behavior.
+- Compare UIKit, SwiftUI, and framework documentation while implementing a feature.
+- Look up platform availability before using an Apple API.
+- Find sample-code projects related to a framework.
+- Search WWDC sessions for a topic before implementing a new capability.
+- Check documentation update notes for platform changes.
+- Explore Apple technology overviews before scoping an app feature.
+
+## Safety and Privacy
+
+This server is for public documentation lookup, but prompts can still leak
+private development context. Keep proprietary code, unreleased app plans,
+customer requirements, internal project names, private bundle identifiers, and
+roadmap details out of documentation prompts unless that disclosure is approved.
+
+Documentation can change, and beta or deprecated APIs need extra care. Verify
+compatibility-sensitive guidance against the live Apple documentation before
+shipping platform code.
+
+## Duplicate Check
+
+No `kimsungwhee/apple-docs-mcp` entry, Apple Docs MCP entry, or matching source
+URL was found in `content/mcp`.

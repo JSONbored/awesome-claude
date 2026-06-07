@@ -61,10 +61,10 @@ function runClassifier(
         HEAD_SHA: "",
         GITHUB_HEAD_REF: "contributor/source-entry",
         HEAD_REF: "contributor/source-entry",
-        ...extraEnv,
         BASE_SHA: baseSha,
         GITHUB_EVENT_NAME: "pull_request",
         GITHUB_OUTPUT: outputPath,
+        ...extraEnv,
       },
       encoding: "utf8",
     },
@@ -124,6 +124,69 @@ describe("PR change classifier", () => {
       docs: "true",
       web: "false",
       raycast: "false",
+    });
+  });
+
+  it("routes dispatched README refresh validation as README-only", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+
+    git(cwd, ["update-ref", "refs/remotes/origin/main", baseSha]);
+    fs.writeFileSync(path.join(cwd, "README.md"), "# refreshed\n");
+    git(cwd, ["add", "README.md"]);
+    git(cwd, ["commit", "-m", "refresh readme"]);
+
+    const outputs = runClassifier(cwd, baseSha, {
+      FORCE_FULL_VALIDATION: "0",
+      GITHUB_EVENT_NAME: "workflow_dispatch",
+      GITHUB_HEAD_REF: "",
+      GITHUB_REF_NAME: "automation/readme-refresh",
+      HEAD_REF: "",
+    });
+    expect(outputs).toMatchObject({
+      full: "false",
+      readme_only: "true",
+      direct_submission: "false",
+      source_content_only: "false",
+      content: "false",
+      registry: "true",
+      ci: "false",
+      docs: "true",
+      web: "false",
+      raycast: "false",
+    });
+  });
+
+  it("forces full validation for dispatched README refresh content changes", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+
+    git(cwd, ["update-ref", "refs/remotes/origin/main", baseSha]);
+    const contentDir = path.join(cwd, "content", "agents");
+    fs.mkdirSync(contentDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(contentDir, "example.mdx"),
+      "---\ntitle: Example\n---\n",
+    );
+    git(cwd, ["add", "content/agents/example.mdx"]);
+    git(cwd, ["commit", "-m", "add content entry"]);
+
+    const outputs = runClassifier(cwd, baseSha, {
+      FORCE_FULL_VALIDATION: "0",
+      GITHUB_EVENT_NAME: "workflow_dispatch",
+      GITHUB_HEAD_REF: "",
+      GITHUB_REF_NAME: "automation/readme-refresh",
+      HEAD_REF: "",
+    });
+    expect(outputs).toMatchObject({
+      full: "true",
+      readme_only: "false",
+      direct_submission: "false",
+      source_content_only: "false",
+      content: "true",
+      content_agents: "true",
+      registry: "true",
+      ci: "true",
+      web: "true",
+      raycast: "true",
     });
   });
 

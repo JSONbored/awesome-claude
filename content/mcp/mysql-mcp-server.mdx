@@ -1,0 +1,199 @@
+---
+title: MySQL MCP Server
+slug: mysql-mcp-server
+category: mcp
+description: >-
+  MCP server for connecting Claude to MySQL databases with schema inspection,
+  SQL query execution, SSH tunnel support, multi-database mode, and configurable
+  write-operation controls.
+cardDescription: >-
+  Let Claude inspect MySQL schemas and run controlled SQL queries with
+  environment-based permissions, multi-database mode, and SSH tunnel support.
+seoTitle: MySQL MCP Server for Claude
+seoDescription: >-
+  Configure MySQL MCP Server with Claude and other MCP clients to inspect
+  database schemas, run SQL queries, use SSH tunnels, and control MySQL write
+  permissions through environment variables.
+author: benborla
+authorProfileUrl: "https://github.com/benborla"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: MySQL MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/benborla/mcp-server-mysql"
+documentationUrl: "https://github.com/benborla/mcp-server-mysql/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40benborla29%2Fmcp-server-mysql"
+installable: true
+installCommand: "npx -y @benborla29/mcp-server-mysql"
+usageSnippet: "Run `npx -y @benborla29/mcp-server-mysql` from an MCP client with MySQL connection environment variables and write permissions disabled unless explicitly needed."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mysql": {
+        "command": "npx",
+        "args": ["-y", "@benborla29/mcp-server-mysql"],
+        "env": {
+          "MYSQL_HOST": "127.0.0.1",
+          "MYSQL_PORT": "3306",
+          "MYSQL_USER": "YOUR_MYSQL_USER",
+          "MYSQL_PASS": "YOUR_MYSQL_PASSWORD",
+          "MYSQL_DB": "YOUR_DATABASE",
+          "ALLOW_INSERT_OPERATION": "false",
+          "ALLOW_UPDATE_OPERATION": "false",
+          "ALLOW_DELETE_OPERATION": "false",
+          "ALLOW_DDL_OPERATION": "false"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mysql": {
+        "command": "npx",
+        "args": ["-y", "@benborla29/mcp-server-mysql"],
+        "env": {
+          "MYSQL_HOST": "127.0.0.1",
+          "MYSQL_PORT": "3306",
+          "MYSQL_USER": "YOUR_MYSQL_USER",
+          "MYSQL_PASS": "YOUR_MYSQL_PASSWORD",
+          "MYSQL_DB": "YOUR_DATABASE",
+          "ALLOW_INSERT_OPERATION": "false",
+          "ALLOW_UPDATE_OPERATION": "false",
+          "ALLOW_DELETE_OPERATION": "false",
+          "ALLOW_DDL_OPERATION": "false"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 20 or newer available to the MCP client runtime.
+  - MySQL 5.7 or newer, with MySQL 8.0 or newer recommended upstream.
+  - Dedicated MySQL user with only the database grants required for the intended workflow.
+  - MySQL host, port, credentials, database name, SSL, and optional SSH tunnel settings prepared.
+  - Insert, update, delete, DDL, multi-database, and schema-specific permissions reviewed before enabling them.
+safetyNotes:
+  - MySQL MCP Server can inspect schemas and run SQL queries against configured databases.
+  - Write and DDL operations can be enabled through environment variables, so keep insert, update, delete, and DDL permissions disabled unless explicitly required.
+  - Use a least-privilege MySQL user and avoid connecting the server to production databases with broad grants.
+  - Multi-database mode can expose every database visible to the configured MySQL user.
+  - SSH tunnel settings, query timeouts, cache settings, logging, and rate limits should be reviewed before connecting an MCP client.
+privacyNotes:
+  - Database hostnames, schema names, table names, column names, query text, query results, credentials, prompts, logs, and tool outputs may be visible to the MCP client and model provider.
+  - Query results may contain customer data, credentials, tokens, personal data, financial data, internal IDs, or regulated records.
+  - MCP client configs, shell history, logs, screenshots, and shared project files can leak MySQL credentials if not handled carefully.
+  - Prefer local or user-scoped MCP configuration for database credentials instead of committing project-scoped configs.
+sourceUrls:
+  - "https://github.com/benborla/mcp-server-mysql"
+  - "https://github.com/benborla/mcp-server-mysql/blob/main/README.md"
+  - "https://github.com/benborla/mcp-server-mysql/blob/main/package.json"
+  - "https://github.com/benborla/mcp-server-mysql/blob/main/README-MULTI-DB.md"
+  - "https://registry.npmjs.org/%40benborla29%2Fmcp-server-mysql"
+tags:
+  - mysql
+  - database
+  - sql
+  - ssh
+  - developer-tools
+keywords:
+  - MySQL MCP
+  - mcp-server-mysql
+  - MySQL Claude
+  - SQL MCP server
+  - database MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MySQL MCP Server connects Claude-compatible MCP clients to MySQL databases. It
+can inspect schema resources, execute SQL queries, work through SSH tunnels,
+support multi-database mode, and enforce configurable insert, update, delete,
+and DDL permissions.
+
+The upstream README documents the `@benborla29/mcp-server-mysql` NPM package,
+Claude Code and Codex CLI configuration, global install and NPX usage, SSH
+tunnel setup, multi-database mode, and environment-variable based operation
+controls.
+
+## Source Review
+
+- https://github.com/benborla/mcp-server-mysql
+- https://github.com/benborla/mcp-server-mysql/blob/main/README.md
+- https://github.com/benborla/mcp-server-mysql/blob/main/package.json
+- https://github.com/benborla/mcp-server-mysql/blob/main/README-MULTI-DB.md
+- https://registry.npmjs.org/%40benborla29%2Fmcp-server-mysql
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, multi-database guide, package metadata, and NPM registry metadata for
+current package name, environment variables, write-permission controls, and SSH
+tunnel behavior.
+
+## Features
+
+- Inspect MySQL schemas and database connections.
+- Execute SQL queries through an MCP tool surface.
+- Disable insert, update, delete, and DDL operations by default through environment variables.
+- Configure schema-specific permissions for multi-database workflows.
+- Use MySQL host/port, socket, SSL, SSH tunnel, query timeout, cache, and rate-limit settings.
+- Run in single-database mode or multi-database mode.
+- Install globally or run with NPX from MCP clients such as Claude Code and Codex CLI.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "mysql": {
+      "command": "npx",
+      "args": ["-y", "@benborla29/mcp-server-mysql"],
+      "env": {
+        "MYSQL_HOST": "127.0.0.1",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "YOUR_MYSQL_USER",
+        "MYSQL_PASS": "YOUR_MYSQL_PASSWORD",
+        "MYSQL_DB": "YOUR_DATABASE",
+        "ALLOW_INSERT_OPERATION": "false",
+        "ALLOW_UPDATE_OPERATION": "false",
+        "ALLOW_DELETE_OPERATION": "false",
+        "ALLOW_DDL_OPERATION": "false"
+      }
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server and verify the configured MySQL
+user has only the grants needed for the intended workflow.
+
+## Use Cases
+
+- Ask Claude to inspect tables and columns before writing application code.
+- Query development data while debugging a local feature.
+- Review schema shape across one database or several databases.
+- Use SSH tunnels for remote development databases.
+- Keep production schemas read-only while allowing write operations in development or test schemas.
+- Add explicit DDL controls before asking an agent to help with migrations.
+
+## Safety and Privacy
+
+Database MCP tools need careful boundaries. Even when write operations are
+disabled in the MCP server configuration, the configured MySQL user should also
+use least-privilege database grants. Do not rely on a single layer of MCP-side
+configuration to protect production data.
+
+Keep credentials out of project-scoped files unless the project is private and
+the credentials are placeholders. Review logs, shell history, client config,
+and screenshots for leaked MySQL passwords, hostnames, schema names, and query
+results.
+
+## Duplicate Check
+
+No `benborla/mcp-server-mysql` entry, `@benborla29/mcp-server-mysql` package
+entry, or matching source URL was found in `content/mcp`.
