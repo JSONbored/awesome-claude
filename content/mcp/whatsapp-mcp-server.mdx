@@ -1,0 +1,180 @@
+---
+title: WhatsApp MCP Server
+slug: whatsapp-mcp-server
+category: mcp
+description: >-
+  Personal WhatsApp MCP server with a Go bridge and Python MCP server for
+  searching contacts and chats, reading messages, sending messages, sending
+  media, and downloading WhatsApp media.
+cardDescription: >-
+  Connect Claude or Cursor to a personal WhatsApp account for message search,
+  contact lookup, and reviewed sending workflows.
+seoTitle: WhatsApp MCP Server for Claude
+seoDescription: >-
+  Configure WhatsApp MCP with Claude Desktop, Cursor, and other MCP clients to
+  search contacts and chats, read WhatsApp messages, send messages, send media,
+  and download media through a local bridge.
+author: Luke Harries
+authorProfileUrl: "https://github.com/lharries"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: WhatsApp MCP
+repoUrl: "https://github.com/lharries/whatsapp-mcp"
+documentationUrl: "https://github.com/lharries/whatsapp-mcp"
+installable: true
+installCommand: "git clone https://github.com/lharries/whatsapp-mcp.git && cd whatsapp-mcp/whatsapp-bridge && go run main.go"
+usageSnippet: "Run the Go WhatsApp bridge, scan the QR code with WhatsApp, then configure the Python MCP server with uv from `whatsapp-mcp-server`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "whatsapp": {
+        "command": "uv",
+        "args": [
+          "--directory",
+          "PATH_TO_REPO/whatsapp-mcp-server",
+          "run",
+          "main.py"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "whatsapp": {
+        "command": "uv",
+        "args": [
+          "--directory",
+          "PATH_TO_REPO/whatsapp-mcp-server",
+          "run",
+          "main.py"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Go for the WhatsApp bridge.
+  - Python and uv for the MCP server.
+  - WhatsApp mobile app with permission to link a device via QR code.
+  - FFmpeg if you want automatic conversion for playable WhatsApp voice messages.
+  - MCP client such as Claude Desktop, Cursor, or another compatible host.
+safetyNotes:
+  - WhatsApp MCP can search and read personal messages, contacts, chats, media metadata, and message context.
+  - Tools can send messages and files to individuals or groups; require human approval before every send action.
+  - Prompt injection in messages or media metadata can attempt to exfiltrate private chat data through the agent.
+  - Use only with accounts you control and understand the risks of linking third-party automation to WhatsApp.
+  - Re-authentication may be required when WhatsApp linked-device sessions expire.
+privacyNotes:
+  - Personal and group messages, contacts, phone numbers, group identifiers, media metadata, downloaded media paths, attachments, and outgoing message drafts may be exposed to the MCP client and model.
+  - Message history is stored locally in SQLite databases under the bridge directory, and media can be downloaded locally on demand.
+  - Chat content may include other people's personal data, confidential business information, authentication codes, health data, financial data, or private media.
+sourceUrls:
+  - "https://github.com/lharries/whatsapp-mcp"
+  - "https://github.com/tulir/whatsmeow"
+  - "https://x.com/LukeHarries_/status/1905986562388635913"
+tags:
+  - whatsapp
+  - messaging
+  - contacts
+  - media
+  - local
+keywords:
+  - WhatsApp MCP
+  - WhatsApp MCP Server
+  - whatsapp-mcp Claude
+  - WhatsApp messages MCP
+  - WhatsApp automation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+WhatsApp MCP Server connects MCP clients to a personal WhatsApp account through
+a local Go bridge and Python MCP server. It can search contacts, list chats,
+read messages, retrieve context, send messages, send media files, send audio
+messages, and download media from WhatsApp messages.
+
+The Go bridge authenticates through WhatsApp's linked-device flow and stores
+message history in local SQLite databases. The Python MCP server exposes the
+tools to Claude Desktop, Cursor, or other MCP clients.
+
+## Source Review
+
+- https://github.com/lharries/whatsapp-mcp
+- https://github.com/tulir/whatsmeow
+- https://x.com/LukeHarries_/status/1905986562388635913
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository for
+current bridge setup, Python server requirements, Windows compatibility notes,
+media behavior, and troubleshooting.
+
+## Features
+
+- Personal WhatsApp account connection through the WhatsApp web multidevice API.
+- Local SQLite storage for chat and message history.
+- Contact search, chat listing, message listing, and message context tools.
+- Direct and group message sending.
+- Image, video, document, raw audio, and voice-message support.
+- Media download tool for retrieving WhatsApp media locally.
+- Claude Desktop and Cursor setup examples.
+
+## Installation
+
+Clone the repository and start the WhatsApp bridge:
+
+```sh
+git clone https://github.com/lharries/whatsapp-mcp.git
+cd whatsapp-mcp/whatsapp-bridge
+go run main.go
+```
+
+Scan the QR code with WhatsApp to authenticate, then configure your MCP client to
+run the Python server:
+
+```json
+{
+  "mcpServers": {
+    "whatsapp": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "PATH_TO_REPO/whatsapp-mcp-server",
+        "run",
+        "main.py"
+      ]
+    }
+  }
+}
+```
+
+Install FFmpeg if you need automatic conversion for playable WhatsApp voice
+messages.
+
+## Use Cases
+
+- Search personal WhatsApp history from an assistant.
+- Find the last interaction with a contact or group.
+- Summarize recent chat context before replying.
+- Draft and review a message before sending it.
+- Send approved images, videos, documents, or audio files to a selected chat.
+
+## Safety and Privacy
+
+WhatsApp messages are deeply personal and often include other people's private
+data. Do not let an agent send messages or files without explicit review. Treat
+all message content, media, contacts, group names, and phone numbers as
+sensitive.
+
+The project README warns that prompt injection can lead to private data
+exfiltration. Keep high-trust chats out of automated workflows and avoid asking
+the model to process untrusted messages alongside tools that can send data out.
+
+## Duplicate Check
+
+No `lharries/whatsapp-mcp` entry or source URL was found in `content/mcp`. This
+entry is separate from general browser, messaging, or filesystem MCP servers
+because it targets a personal WhatsApp account through a local bridge.

@@ -1,0 +1,182 @@
+---
+title: data.gouv.fr MCP Server
+slug: datagouv-mcp-server
+category: mcp
+description: >-
+  Official data.gouv.fr MCP server for searching French national open datasets,
+  exploring organizations and data services, inspecting resources, querying
+  tabular data, and retrieving dataset metrics through Claude.
+cardDescription: >-
+  Search and analyze French national open-data datasets, resources, metrics,
+  organizations, and data services from Claude.
+seoTitle: data.gouv.fr MCP Server for Claude
+seoDescription: >-
+  Connect Claude, ChatGPT, Cursor, VS Code, and other MCP clients to the
+  official data.gouv.fr MCP server to search French open datasets, inspect
+  resources, query tabular data, retrieve metrics, and explore public data
+  services.
+author: data.gouv.fr
+authorProfileUrl: "https://github.com/datagouv"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: data.gouv.fr
+brandDomain: data.gouv.fr
+repoUrl: "https://github.com/datagouv/datagouv-mcp"
+documentationUrl: "https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/README.md"
+installable: true
+installCommand: "claude mcp add --transport http datagouv https://mcp.data.gouv.fr/mcp"
+usageSnippet: "Add the hosted Streamable HTTP endpoint, then ask Claude to search datasets, list resources, inspect metadata, query tabular rows, or retrieve data.gouv.fr metrics."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "datagouv": {
+        "url": "https://mcp.data.gouv.fr/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add --transport http datagouv https://mcp.data.gouv.fr/mcp
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - MCP client that supports Streamable HTTP or a remote MCP bridge such as mcp-remote.
+  - Agreement on whether hosted data.gouv.fr MCP requests may be sent to the public hosted endpoint.
+  - Public-data review process for datasets that may contain personal, sensitive, stale, or jurisdiction-specific information.
+  - Python 3.13 or newer only if self-hosting the repository instead of using the hosted endpoint.
+safetyNotes:
+  - The hosted endpoint is documented as publicly available without access restrictions, so treat requests and returned public-data context as externally visible.
+  - Tools are read-only but can retrieve dataset metadata, resource URLs, rows from tabular resources, service OpenAPI specs, metrics, and organization details that may influence decisions.
+  - Public open data can be stale, incomplete, licensed with reuse conditions, or unsuitable for operational decisions without checking the dataset publisher and update cadence.
+  - Tabular queries can return rows from large resources; use small page sizes and pagination instead of asking an agent to pull entire datasets through chat.
+  - If self-hosting, review MCP_HOST, allowed hosts, allowed origins, Sentry, Matomo, and API-environment settings before exposing the server.
+privacyNotes:
+  - Search terms, dataset interests, resource IDs, user-agent headers, request URLs, tool names, and returned dataset rows may be visible to the hosted MCP service, MCP client, model provider, and logs.
+  - The server includes optional Matomo and Sentry instrumentation in source; hosted deployments may apply their own analytics and error-reporting policies.
+  - Public datasets can still contain personal data, geographic sensitivity, business identifiers, or regulated information; review source metadata and reuse terms before sharing results.
+  - Avoid placing private investigation notes, customer context, or unpublished analysis inside prompts when a generic dataset search is enough.
+sourceUrls:
+  - "https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/main.py"
+  - "https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/tools/__init__.py"
+  - "https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/tools/search_datasets.py"
+  - "https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/tools/query_resource_data.py"
+  - "https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/helpers/matomo.py"
+tags:
+  - open-data
+  - datasets
+  - government
+  - france
+  - analytics
+keywords:
+  - data.gouv.fr MCP
+  - French open data MCP
+  - datagouv MCP
+  - public datasets MCP
+  - government data MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+data.gouv.fr MCP Server is the official MCP server for France's national open
+data platform. It lets Claude and other MCP clients search datasets and
+organizations, discover data services, inspect dataset and resource metadata,
+query tabular resources, retrieve metrics, and read data-service OpenAPI specs
+through the hosted Streamable HTTP endpoint.
+
+Use it when a research, civic-tech, policy, data-journalism, or analytics
+workflow needs conversational access to French public datasets without manually
+browsing the data.gouv.fr website first. The hosted endpoint is documented by
+the project as publicly available at `https://mcp.data.gouv.fr/mcp`.
+
+## Source Review
+
+- https://github.com/datagouv/datagouv-mcp
+- https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/README.md
+- https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/LICENSE
+- https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/pyproject.toml
+- https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/main.py
+- https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/tools/__init__.py
+- https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/tools/search_datasets.py
+- https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/tools/query_resource_data.py
+- https://raw.githubusercontent.com/datagouv/datagouv-mcp/main/helpers/matomo.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, Python package metadata, server entrypoint, tool registration,
+dataset search tool, tabular query tool, and Matomo helper for current hosted
+endpoint, self-hosting, tool, and instrumentation behavior.
+
+## Features
+
+- Search data.gouv.fr datasets by keyword, sort order, and update range.
+- Search organizations and data services.
+- Retrieve dataset, resource, organization, and data-service details.
+- List resources attached to a dataset.
+- Query tabular resource rows through the Tabular API without downloading the
+  original CSV or XLSX file.
+- Retrieve metrics for supported datasets or resources.
+- Read OpenAPI specs for data services.
+- Run as a public hosted Streamable HTTP endpoint or self-host the Python
+  server.
+
+## Installation
+
+Add the hosted endpoint to Claude Code:
+
+```bash
+claude mcp add --transport http datagouv https://mcp.data.gouv.fr/mcp
+```
+
+For clients that use JSON configuration, use:
+
+```json
+{
+  "mcpServers": {
+    "datagouv": {
+      "url": "https://mcp.data.gouv.fr/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+Claude Desktop and some older local clients may need `mcp-remote` as documented
+in the upstream README.
+
+## Use Cases
+
+- Ask Claude to find French public datasets for a policy, journalism, or civic
+  research question.
+- List resources for a dataset and inspect the available CSV, XLSX, or API
+  files.
+- Preview tabular rows before deciding whether to download the full source
+  file.
+- Explore organizations that publish data on a topic.
+- Retrieve metrics for dataset usage and visibility.
+- Read a data service's OpenAPI specification before integrating it into an
+  application.
+
+## Safety and Privacy
+
+The server is read-only, but public data is not automatically correct, current,
+complete, or safe to reuse without context. Check publisher metadata, resource
+freshness, licenses, and data quality before using outputs in operational,
+legal, policy, or public-facing decisions.
+
+Hosted use sends prompts and tool calls to the public data.gouv.fr MCP endpoint.
+The source includes Matomo and Sentry integration points, so treat request URLs,
+user-agent context, tool names, errors, and dataset interests as potentially
+observable under the hosted service's policies.
+
+Tabular resources may contain personal or sensitive public-sector data. Avoid
+asking an agent to collect large volumes of rows into chat, and review reuse
+terms before sharing or republishing results.
+
+## Duplicate Check
+
+No data.gouv.fr MCP Server, `datagouv/datagouv-mcp`, `datagouv-mcp`, or
+matching data.gouv.fr MCP source URL was found in `content/mcp`.

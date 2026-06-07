@@ -1,0 +1,174 @@
+---
+title: XcodeBuildMCP Server
+slug: xcodebuildmcp-server
+category: mcp
+description: >-
+  MCP server and CLI for AI-assisted iOS and macOS development with Xcode
+  project discovery, simulator management, builds, tests, app utilities, and
+  device workflows.
+cardDescription: >-
+  Give Claude, Codex, Cursor, and other MCP clients Xcode build, test,
+  simulator, and device tools through XcodeBuildMCP.
+seoTitle: XcodeBuildMCP Server for Claude
+seoDescription: >-
+  Configure XcodeBuildMCP with Claude Code, Codex, Cursor, Claude Desktop, VS
+  Code, Windsurf, and other MCP clients for iOS and macOS builds, tests,
+  simulator management, app utilities, and Xcode project workflows.
+author: Sentry
+authorProfileUrl: "https://github.com/getsentry"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: XcodeBuildMCP
+brandDomain: xcodebuildmcp.com
+repoUrl: "https://github.com/getsentry/XcodeBuildMCP"
+documentationUrl: "https://xcodebuildmcp.com/docs"
+websiteUrl: "https://www.xcodebuildmcp.com"
+packageUrl: "https://www.npmjs.com/package/xcodebuildmcp"
+installable: true
+installCommand: "npm install -g xcodebuildmcp@latest"
+usageSnippet: "Run `xcodebuildmcp mcp` after a global install, or configure clients to launch `npx -y xcodebuildmcp@latest mcp` on demand."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "XcodeBuildMCP": {
+        "command": "npx",
+        "args": ["-y", "xcodebuildmcp@latest", "mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "XcodeBuildMCP": {
+        "command": "npx",
+        "args": ["-y", "xcodebuildmcp@latest", "mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - macOS 14.5 or later.
+  - Xcode 16 or later.
+  - Node.js 18 or later for the npm or npx path, unless installing through Homebrew.
+  - Xcode project, workspace, simulator, or device target the agent is authorized to build and test.
+  - Code signing configured in Xcode for physical-device workflows.
+safetyNotes:
+  - XcodeBuildMCP can build, test, launch, inspect, and manage simulator or device app workflows.
+  - Device operations may depend on code signing, provisioning profiles, bundle identifiers, and Apple developer account configuration.
+  - Build and test logs can reveal secrets, internal endpoints, customer fixtures, signing errors, and unreleased product details.
+  - Require human review before allowing an agent to change signing settings, delete derived data, run device workflows, or modify project configuration.
+privacyNotes:
+  - Project paths, scheme names, bundle identifiers, build logs, simulator logs, test output, screenshots, crash data, and device details may be sent to the MCP client and model.
+  - The README says XcodeBuildMCP uses Sentry for internal runtime error telemetry and links to opt-out instructions.
+  - Review telemetry settings and model-provider retention before using the tool on proprietary or regulated apps.
+sourceUrls:
+  - "https://github.com/getsentry/XcodeBuildMCP"
+  - "https://xcodebuildmcp.com/docs"
+  - "https://xcodebuildmcp.com/docs/clients"
+  - "https://xcodebuildmcp.com/docs/tools"
+  - "https://xcodebuildmcp.com/docs/privacy"
+  - "https://www.npmjs.com/package/xcodebuildmcp"
+tags:
+  - xcode
+  - ios
+  - macos
+  - testing
+  - simulator
+keywords:
+  - XcodeBuildMCP
+  - Xcode MCP server
+  - iOS MCP server
+  - xcodebuild MCP
+  - macOS app testing MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+XcodeBuildMCP is a Model Context Protocol server and CLI for iOS and macOS
+projects. It gives AI coding agents a structured way to discover Xcode projects,
+build and test schemes, manage simulators, launch apps, inspect logs, and work
+with device-oriented app utilities.
+
+The package ships as one tool with two modes: an MCP server for AI agents and a
+CLI for direct terminal use. The docs include drop-in configs for Claude Code,
+Codex, Cursor, Claude Desktop, VS Code, Windsurf, Kiro, Trae, Xcode agents, and
+other clients.
+
+## Source Review
+
+- https://github.com/getsentry/XcodeBuildMCP
+- https://xcodebuildmcp.com/docs
+- https://xcodebuildmcp.com/docs/clients
+- https://xcodebuildmcp.com/docs/tools
+- https://xcodebuildmcp.com/docs/privacy
+- https://www.npmjs.com/package/xcodebuildmcp
+
+These sources were reviewed on **2026-06-05**. Prefer the live documentation for
+current client snippets, tool names, Xcode requirements, telemetry settings,
+device signing guidance, and CLI behavior.
+
+## Features
+
+- MCP server and CLI modes from the same package.
+- Project and workspace discovery for iOS and macOS codebases.
+- Simulator build, test, launch, and app utility workflows.
+- Device workflows when signing is configured.
+- Tools reference and workflow docs for common Xcode tasks.
+- Optional agent skills for MCP and CLI usage.
+- Homebrew and npm installation paths.
+
+## Installation
+
+Install globally with npm:
+
+```sh
+npm install -g xcodebuildmcp@latest
+xcodebuildmcp mcp
+```
+
+Or configure an MCP client to launch the server on demand:
+
+```json
+{
+  "mcpServers": {
+    "XcodeBuildMCP": {
+      "command": "npx",
+      "args": ["-y", "xcodebuildmcp@latest", "mcp"]
+    }
+  }
+}
+```
+
+Homebrew users can install from the documented tap and run `xcodebuildmcp mcp`
+directly. Follow the client docs for Claude Code, Codex, Cursor, Claude Desktop,
+VS Code, Windsurf, Kiro, Trae, and Xcode agent setup.
+
+## Use Cases
+
+- Ask an agent to discover an Xcode workspace and available schemes.
+- Build and test an iOS app on a simulator from a coding assistant.
+- Launch an app, inspect logs, and iterate on UI or integration failures.
+- Run CLI workflows directly when debugging agent-generated commands.
+- Use device workflows after provisioning and signing are configured.
+
+## Safety and Privacy
+
+Xcode build and test output often contains sensitive implementation details.
+Review build logs, test logs, screenshots, crash output, and device metadata
+before sharing them outside approved systems. Keep signing and provisioning
+changes under human control.
+
+The project documents Sentry runtime error telemetry. Review the privacy docs
+and opt-out settings before using XcodeBuildMCP on confidential applications or
+regulated projects.
+
+## Duplicate Check
+
+No `getsentry/XcodeBuildMCP` entry or source URL was found in `content/mcp`.
+This entry is separate from generic terminal, filesystem, and browser automation
+MCP servers because it focuses on Xcode, iOS, macOS, simulator, and device app
+workflows.

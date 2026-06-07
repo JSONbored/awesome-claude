@@ -1,0 +1,208 @@
+---
+title: Cypress Cloud MCP Server
+slug: cypress-cloud-mcp-server
+category: mcp
+description: >-
+  Official remote MCP server for connecting Claude and other AI coding tools to
+  Cypress Cloud runs, failures, flake data, accessibility reports, and UI
+  Coverage results.
+cardDescription: Connect Claude to Cypress Cloud test results, flake data, accessibility reports, and UI Coverage.
+seoTitle: Cypress Cloud MCP Server for Claude
+seoDescription: >-
+  Configure Cypress Cloud MCP Server with Claude Code, Claude Desktop, Cursor,
+  VS Code, GitHub Copilot, and Codex to query run statuses, failed tests, flaky
+  tests, accessibility reports, UI Coverage, and Test Replay links.
+author: Cypress
+authorProfileUrl: "https://www.cypress.io/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Cypress Cloud
+brandDomain: cypress.io
+websiteUrl: "https://www.cypress.io/"
+documentationUrl: "https://docs.cypress.io/cloud/integrations/cloud-mcp"
+repoUrl: "https://github.com/cypress-io/ai-toolkit"
+installable: true
+installCommand: "claude mcp add cypress-cloud https://mcp.cypress.io/mcp --transport http"
+usageSnippet: "Ask Claude to check Cypress Cloud for the latest run on this branch, then require review before applying proposed test or app fixes."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "cypress-cloud": {
+        "type": "http",
+        "url": "https://mcp.cypress.io/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "cypress-cloud": {
+        "type": "http",
+        "url": "https://mcp.cypress.io/mcp",
+        "headers": {
+          "Authorization": "Bearer YOUR_CYPRESS_MCP_TOKEN"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Cypress Cloud organization with the Cloud MCP integration enabled by an administrator.
+  - Cypress Cloud user account with access to the projects, runs, branches, and reports Claude should inspect.
+  - MCP client with remote HTTP support and OAuth, or a Cypress Cloud MCP personal access token for clients without OAuth.
+  - Cypress Cloud plan/subscriptions for any plan-specific data Claude should use, such as flaky test reporting, Accessibility, or UI Coverage data.
+  - Team policy for whether an AI assistant may use Cypress Cloud failure details to propose code changes or report feedback to Cypress.
+safetyNotes:
+  - Cypress Cloud MCP is a remote server hosted by Cypress and authenticated through OAuth or a Cypress MCP personal access token.
+  - OAuth sessions and personal access tokens are scoped to the user's Cypress Cloud role and permissions in MCP-enabled organizations.
+  - Tools can expose test run status, failed test details, stack traces, flaky test data, Accessibility reports, UI Coverage reports, UI element coverage, and Test Replay links.
+  - The `cypress_feedback` tool can send feedback directly to Cypress from the agentic environment; require review before using it in team workflows.
+  - Use least-privilege Cypress Cloud roles, revoke OAuth sessions or PATs when no longer needed, and keep tokens out of config files, issues, logs, and screenshots.
+privacyNotes:
+  - Cypress Cloud MCP results can reveal project names, run URLs, branch names, commit context, test names, specs, failure messages, stack traces, Test Replay links, Accessibility findings, DOM selectors, view names, and UI Coverage details.
+  - Test failures and replay links may expose application UI, customer-facing flows, internal routes, test data, accessibility issues, or unreleased feature names.
+  - Personal access tokens are shown once in Cypress Cloud; store them only in approved secret stores or environment variables and rotate them when exposed.
+  - Tool outputs become part of the MCP client and model transcript, so treat Cloud MCP sessions as access to live engineering quality data.
+sourceUrls:
+  - "https://docs.cypress.io/cloud/integrations/cloud-mcp"
+  - "https://docs.cypress.io/cloud/features/cypress-ai-features"
+  - "https://github.com/cypress-io/ai-toolkit"
+  - "https://github.com/cypress-io/ai-toolkit/blob/main/README.md"
+  - "https://github.com/cypress-io/ai-toolkit/blob/main/mcp/README.md"
+  - "https://github.com/cypress-io/ai-toolkit/blob/main/mcp/.mcp.claude.json"
+  - "https://github.com/cypress-io/ai-toolkit/blob/main/mcp/.mcp.cursor.json"
+  - "https://github.com/cypress-io/ai-toolkit/blob/main/LICENSE"
+tags:
+  - testing
+  - cypress
+  - ci
+  - accessibility
+  - debugging
+keywords:
+  - Cypress Cloud MCP
+  - Cypress MCP Server
+  - Cloud MCP Cypress
+  - Cypress test results MCP
+  - Cypress Accessibility MCP
+  - Cypress UI Coverage MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Cypress Cloud MCP Server is Cypress' official remote Model Context Protocol
+server for agentic debugging and quality workflows. It connects AI coding tools
+to Cypress Cloud so Claude can query real-time test run context, summarize
+failures, identify flake patterns, retrieve Test Replay links, and inspect
+Accessibility or UI Coverage data when those products are available to the
+organization.
+
+The Cypress documentation says Cloud MCP reached general availability on
+2026-05-20 and is included on every Cypress Cloud plan at no additional cost.
+Access is controlled through organization enablement plus per-user OAuth or a
+personal access token. OAuth is the recommended setup path when the MCP client
+supports browser-based authentication.
+
+## Source Review
+
+- https://docs.cypress.io/cloud/integrations/cloud-mcp
+- https://docs.cypress.io/cloud/features/cypress-ai-features
+- https://github.com/cypress-io/ai-toolkit
+- https://github.com/cypress-io/ai-toolkit/blob/main/README.md
+- https://github.com/cypress-io/ai-toolkit/blob/main/mcp/README.md
+- https://github.com/cypress-io/ai-toolkit/blob/main/mcp/.mcp.claude.json
+- https://github.com/cypress-io/ai-toolkit/blob/main/mcp/.mcp.cursor.json
+- https://github.com/cypress-io/ai-toolkit/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live Cypress Cloud
+MCP documentation and the official Cypress AI Toolkit repository for current
+setup commands, supported clients, authentication behavior, tool names, and plan
+availability.
+
+## Features
+
+- Remote HTTP MCP server hosted by Cypress.
+- OAuth setup for clients that support browser-based authentication.
+- Personal access token fallback for clients that do not support OAuth.
+- Project discovery with `cypress_get_projects`.
+- Run summaries with project name, run number, status, run URL, tags, and test status counts.
+- Failed test details including test names, spec files, attempt errors, stack traces, and Test Replay links.
+- Flaky test lookup for distinguishing known flake from likely regressions.
+- Cypress Accessibility report summaries, view-level browsing, and rule failure details.
+- UI Coverage report summaries, view-level browsing, and tested or untested element details.
+- Agent feedback path through `cypress_feedback`.
+
+## Installation
+
+Enable Cloud MCP for the Cypress Cloud organization first, then authenticate as
+the user whose Cloud permissions should apply.
+
+For Claude Code with OAuth:
+
+```sh
+claude mcp add cypress-cloud https://mcp.cypress.io/mcp --transport http
+```
+
+Start a Claude Code session, use `/mcp`, and complete the Cypress Cloud browser
+sign-in when prompted.
+
+For clients that support JSON remote MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "cypress-cloud": {
+      "type": "http",
+      "url": "https://mcp.cypress.io/mcp"
+    }
+  }
+}
+```
+
+For clients that need a personal access token, keep the token in an environment
+variable or approved secret store:
+
+```json
+{
+  "mcpServers": {
+    "cypress-cloud": {
+      "type": "http",
+      "url": "https://mcp.cypress.io/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_CYPRESS_MCP_TOKEN"
+      }
+    }
+  }
+}
+```
+
+## Use Cases
+
+- Ask Claude for a high-level summary of the latest Cypress Cloud run on the current branch.
+- Pull failed test details and Test Replay links before fixing a regression.
+- Compare recent run failures to known flaky tests.
+- Summarize critical or serious Accessibility violations by rule and impacted view.
+- Find untested interactive elements from UI Coverage reports.
+- Standardize agentic debugging prompts for Cypress-heavy teams.
+- Let an assistant gather test evidence before a human reviews the proposed code or test change.
+
+## Safety and Privacy
+
+Cypress Cloud MCP exposes live quality and debugging data to the connected AI
+client. Treat it as access to Cypress Cloud, not as a generic public testing
+tool. The assistant may see branch names, run URLs, stack traces, selectors,
+view names, failure messages, and replay links that reveal internal product
+behavior.
+
+Keep OAuth sessions and MCP personal access tokens scoped to approved users.
+Use the Cypress Cloud profile page to revoke OAuth sessions or rotate PATs when
+needed. Require human review before acting on model-suggested fixes, filing
+feedback to Cypress, or sharing run/replay details outside the engineering team.
+
+## Duplicate Check
+
+No `mcp.cypress.io`, Cypress Cloud MCP, or `cypress-io/ai-toolkit` MCP entry was
+found in `content/mcp`, `content/tools`, `content/guides`, or `content/agents`.

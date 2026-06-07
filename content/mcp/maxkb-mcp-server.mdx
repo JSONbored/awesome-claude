@@ -1,0 +1,189 @@
+---
+title: MaxKB MCP Server
+slug: maxkb-mcp-server
+category: mcp
+description: >-
+  MCP endpoint in MaxKB that exposes a published MaxKB application as an
+  authenticated tool, letting Claude send messages into a configured
+  enterprise agent, RAG workflow, or knowledge-base-backed application.
+cardDescription: Expose a published MaxKB application to Claude as an authenticated MCP tool.
+seoTitle: MaxKB MCP Server for Claude
+seoDescription: >-
+  Connect Claude to MaxKB MCP support for calling a published MaxKB application
+  through an application API key, with notes on RAG data, workflow tools, model
+  providers, and chat transcript privacy.
+author: 1Panel-dev
+authorProfileUrl: "https://github.com/1Panel-dev"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MaxKB
+brandDomain: maxkb.cn
+repoUrl: "https://github.com/1Panel-dev/MaxKB"
+documentationUrl: "https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/README.md"
+installable: true
+installCommand: "Publish a reviewed MaxKB application, create an active application API key, and configure an MCP client for the MaxKB chat MCP endpoint with the key as a bearer token."
+usageSnippet: "Ask Claude to call the generated `agent_<application-prefix>` tool only for the published MaxKB application that should answer the request."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "maxkb": {
+        "url": "https://<maxkb-host>/chat/api/mcp",
+        "headers": {
+          "Authorization": "Bearer <maxkb-application-api-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  Default route:
+  - chat path: /chat
+  - chat API prefix: /chat/api/
+  - MCP route: /chat/api/mcp
+
+  If MaxKB is deployed with a custom CHAT_PATH, use that configured chat path instead.
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Running MaxKB v2 deployment with the web service reachable by the MCP client.
+  - Published MaxKB application that is safe to expose as an MCP tool.
+  - Active MaxKB application API key for that application.
+  - Reviewed model provider, knowledge base, workflow, function, and MCP-tool settings inside the MaxKB application.
+  - TLS, reverse proxy, access controls, and logging appropriate for the deployment environment.
+safetyNotes:
+  - MaxKB checks the Authorization bearer token against active application API keys and only exposes published applications.
+  - The MCP handler exposes one tool named from the published application id prefix and sends each tool call message into a new MaxKB chat session.
+  - The published MaxKB application may retrieve knowledge-base content, call configured workflows or functions, use connected model providers, and trigger any tools enabled for that application.
+  - Do not expose test applications, broad internal knowledge bases, high-privilege workflows, or unreviewed function tools to MCP clients.
+  - Use least-privilege application keys, rotate keys regularly, avoid default deployment credentials, and require human approval before workflows that can change external systems.
+privacyNotes:
+  - Tool calls can expose user prompts, chat transcripts, application names, application descriptions, retrieved knowledge-base snippets, workflow outputs, and model-provider payloads.
+  - Knowledge bases may contain uploaded documents, crawled web pages, customer support material, internal runbooks, or other sensitive enterprise content.
+  - Application API keys, bearer headers, MCP URLs, request bodies, response text, logs, and MaxKB chat history should be treated as sensitive operational data.
+  - Redact prompts, retrieved passages, generated answers, application ids, API keys, and model-provider traces before sharing logs or screenshots.
+disclosure: >-
+  GPL-3.0-licensed open-source MaxKB project. The MCP endpoint is source-backed
+  in the v2 branch; verify current MaxKB release notes and deployment settings
+  before exposing production applications.
+sourceUrls:
+  - "https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/LICENSE"
+  - "https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/maxkb/urls/web.py"
+  - "https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/maxkb/conf.py"
+  - "https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/chat/urls.py"
+  - "https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/chat/views/mcp.py"
+  - "https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/chat/mcp/tools.py"
+  - "https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/application/models/application_api_key.py"
+  - "https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/application/serializers/application_api_key.py"
+tags:
+  - agents
+  - rag
+  - knowledge-base
+  - workflow
+  - django
+keywords:
+  - MaxKB MCP
+  - MaxKB MCP server
+  - MaxKB Claude
+  - MaxKB agent tool
+  - enterprise agent MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MaxKB MCP Server is the MCP endpoint built into MaxKB v2 for exposing a
+published MaxKB application as a tool. The source-backed handler implements MCP
+initialization, tool listing, and tool calls over the chat API path, then routes
+each call into a MaxKB chat session for the application tied to the supplied API
+key.
+
+Use it when a team already runs MaxKB for enterprise agents, RAG workflows, or
+knowledge-base-backed applications and wants Claude to call one reviewed,
+published MaxKB application through an MCP client.
+
+## Source Review
+
+- https://github.com/1Panel-dev/MaxKB
+- https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/README.md
+- https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/LICENSE
+- https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/maxkb/urls/web.py
+- https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/maxkb/conf.py
+- https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/chat/urls.py
+- https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/chat/views/mcp.py
+- https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/chat/mcp/tools.py
+- https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/application/models/application_api_key.py
+- https://raw.githubusercontent.com/1Panel-dev/MaxKB/v2/apps/application/serializers/application_api_key.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, v2
+README, license, URL routing, MCP view, MCP tool handler, and application API
+key sources for current behavior.
+
+## Features
+
+- Expose a published MaxKB application as a single MCP tool.
+- Authenticate MCP calls with an active MaxKB application API key.
+- Return MCP server metadata with the `maxkb-mcp` server name.
+- List a generated `agent_<application-prefix>` tool using the application name
+  and description.
+- Accept a `message` input and send it into a new MaxKB chat session.
+- Stream the MaxKB response back to the MCP client as text.
+- Keep the MCP tool scoped to the published application associated with the API
+  key.
+- Follow the configured MaxKB chat path, with `/chat/api/mcp` as the default
+  route in the reviewed source.
+
+## Installation
+
+Deploy MaxKB, review the application that should be callable by Claude, publish
+that application, and create an active application API key for it. Then configure
+the MCP client with the MaxKB MCP endpoint and bearer token:
+
+```json
+{
+  "mcpServers": {
+    "maxkb": {
+      "url": "https://<maxkb-host>/chat/api/mcp",
+      "headers": {
+        "Authorization": "Bearer <maxkb-application-api-key>"
+      }
+    }
+  }
+}
+```
+
+If the deployment overrides MaxKB's `CHAT_PATH`, replace `/chat` with the
+configured chat path before connecting the MCP client.
+
+## Use Cases
+
+- Let Claude query a reviewed MaxKB knowledge-base application.
+- Route support questions into a MaxKB customer-service agent.
+- Call a MaxKB workflow application from Claude while keeping the agent
+  configuration centralized in MaxKB.
+- Test a published MaxKB application from an MCP client before widening access.
+- Provide one scoped application tool instead of exposing the entire MaxKB admin
+  surface.
+- Use MaxKB as the RAG and workflow runtime while Claude handles conversation
+  planning.
+
+## Safety and Privacy
+
+Treat the MaxKB MCP endpoint as access to the published application behind the
+API key. The application can retrieve knowledge-base material, call configured
+workflow steps, use model providers, and return tool output selected by the
+MaxKB app design. Review the application, knowledge sources, function tools,
+model providers, and workflow permissions before enabling MCP clients.
+
+Protect application API keys like production credentials. MCP transcripts, chat
+history, retrieved passages, model payloads, workflow outputs, application ids,
+URLs, logs, and generated answers may contain sensitive business or personal
+data. Use TLS, least-privilege applications, key rotation, audit logs, and
+redaction before sharing prompts, screenshots, or debug traces.
+
+## Duplicate Check
+
+No `1Panel-dev/MaxKB`, MaxKB MCP, `maxkb-mcp`, MaxKB agent tool, or matching
+source URL entry was found in `content/mcp` or `README.md`. Existing RAG,
+knowledge-base, and workflow MCP entries do not cover MaxKB's built-in source
+MCP endpoint for published MaxKB applications.

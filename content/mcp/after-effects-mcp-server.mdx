@@ -1,0 +1,201 @@
+---
+title: After Effects MCP Server
+slug: after-effects-mcp-server
+category: mcp
+description: >-
+  MCP server for controlling Adobe After Effects through a local Node bridge and
+  ScriptUI panel for compositions, layers, keyframes, expressions, masks, and
+  effects.
+cardDescription: >-
+  Let Claude queue predefined After Effects commands for compositions, text,
+  shapes, solids, cameras, keyframes, expressions, masks, and layer edits.
+seoTitle: After Effects MCP Server for Claude
+seoDescription: >-
+  Configure After Effects MCP Server with Claude to create compositions, manage
+  layers, set properties, add keyframes, apply expressions, and inspect project
+  data through a local bridge.
+author: Dakkshin
+authorProfileUrl: "https://github.com/Dakkshin"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: After Effects MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/Dakkshin/after-effects-mcp"
+documentationUrl: "https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/README.md"
+installable: true
+installCommand: "git clone https://github.com/Dakkshin/after-effects-mcp.git && cd after-effects-mcp && npm install && npm run build"
+usageSnippet: "Build the server, install the bridge panel with `npm run install-bridge`, open the panel in After Effects, then point your MCP client at the built `build/index.js` file."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "AfterEffectsMCP": {
+        "command": "node",
+        "args": ["ABSOLUTE_PATH_TO_AFTER_EFFECTS_MCP/build/index.js"]
+      }
+    }
+  }
+configSnippet: |-
+  npm run build && npm run install-bridge
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Adobe After Effects 2022 or newer.
+  - Node.js, npm, and a local checkout of the repository.
+  - Permission to install the ScriptUI panel into the After Effects ScriptUI Panels folder.
+  - After Effects scripting preferences reviewed, including whether scripts may write files and access the network.
+  - A current project backup before allowing model-driven composition or layer edits.
+safetyNotes:
+  - "After Effects MCP queues predefined commands to a local bridge directory and relies on an open After Effects ScriptUI panel to execute them."
+  - "The bridge can create compositions, text layers, shape layers, solid layers, cameras, null objects, masks, keyframes, expressions, effects, and layer property changes."
+  - "Layer duplication, layer deletion, expression changes, masks, timing edits, and batch property updates can materially alter an After Effects project."
+  - "The install script may copy files into Adobe application folders and may require elevated privileges on some systems."
+  - "Enabling After Effects scripting permissions can let scripts write files and access network resources, so keep the bridge limited to trusted projects."
+  - "Use only the predefined script list exposed by the MCP server; do not modify it to accept arbitrary scripts unless that risk is understood."
+privacyNotes:
+  - "Tool calls and results can expose composition names, project structure, layer names, layer properties, timing, expressions, effect names, masks, and local bridge file paths."
+  - "Project contents may include client work, unreleased media, brand assets, filenames, text layers, and animation details."
+  - "The command and result files in the local bridge directory can persist recent instructions and After Effects output."
+  - "MCP client logs and model context may retain prompts, layer names, generated expressions, and project metadata."
+disclosure: >-
+  MIT-licensed source-install MCP server for Adobe After Effects. This entry is
+  distinct from generic design or image tools because it controls After Effects
+  through a local Node MCP server plus an ExtendScript ScriptUI bridge panel.
+sourceUrls:
+  - "https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/README.md"
+  - "https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/package.json"
+  - "https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/src/index.ts"
+  - "https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/src/scripts/mcp-bridge-auto.jsx"
+  - "https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/install-bridge.js"
+  - "https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/.mcp.json"
+tags:
+  - adobe
+  - after-effects
+  - video
+  - animation
+  - creative
+keywords:
+  - After Effects MCP Server
+  - after-effects-mcp
+  - Adobe After Effects MCP
+  - ExtendScript MCP
+  - animation MCP server
+  - Claude After Effects control
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+After Effects MCP Server connects Claude and other MCP clients to Adobe After
+Effects through a local Node.js MCP server and an ExtendScript ScriptUI bridge
+panel. The MCP server writes command files, the panel polls for those commands
+inside After Effects, and results are returned through a local result file.
+
+Use it when a motion-design or video workflow needs Claude to create
+compositions, add layers, inspect project information, set keyframes, apply
+expressions, or adjust layer properties with predefined commands rather than
+open-ended script execution.
+
+## Source Review
+
+- https://github.com/Dakkshin/after-effects-mcp
+- https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/README.md
+- https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/LICENSE
+- https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/package.json
+- https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/src/index.ts
+- https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/src/scripts/mcp-bridge-auto.jsx
+- https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/install-bridge.js
+- https://raw.githubusercontent.com/Dakkshin/after-effects-mcp/main/.mcp.json
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, package metadata, MCP server implementation, bridge panel
+script, install script, and sample MCP config for current setup and operating
+details.
+
+## Features
+
+- Create After Effects compositions with custom name, size, frame rate,
+  duration, and background color.
+- List compositions and inspect project or layer information.
+- Create text layers with position, font, size, color, alignment, start time,
+  and duration.
+- Create rectangle, ellipse, polygon, and star shape layers with fill, stroke,
+  size, position, and timing settings.
+- Create solid or adjustment layers.
+- Create camera and null layers for animation control.
+- Set layer position, scale, rotation, opacity, blend mode, 2D or 3D mode,
+  enabled state, timing, and track matte settings.
+- Add keyframes and expressions to layer properties.
+- Apply effects and effect templates.
+- Duplicate or delete layers.
+- Create or modify masks with feather, expansion, and opacity settings.
+- Batch apply layer properties to multiple layers.
+- Read bridge results through the `get-results` tool.
+
+## Installation
+
+Clone and build the server:
+
+```bash
+git clone https://github.com/Dakkshin/after-effects-mcp.git
+cd after-effects-mcp
+npm install
+npm run build
+```
+
+Install the After Effects bridge panel:
+
+```bash
+npm run install-bridge
+```
+
+Configure an MCP client to run the built server:
+
+```json
+{
+  "mcpServers": {
+    "AfterEffectsMCP": {
+      "command": "node",
+      "args": ["ABSOLUTE_PATH_TO_AFTER_EFFECTS_MCP/build/index.js"]
+    }
+  }
+}
+```
+
+Open After Effects, enable the required scripting preference only if you trust
+the bridge workflow, then open the `mcp-bridge-auto.jsx` panel from the Window
+menu.
+
+## Use Cases
+
+- Generate a new composition layout from a design prompt.
+- Add text, shape, solid, camera, and null layers for a motion-graphics scene.
+- Adjust layer timing, opacity, position, scale, rotation, blend mode, and 3D
+  state.
+- Add expressions or keyframes for procedural animation.
+- Inspect composition and layer metadata before planning edits.
+- Apply a sequence of predefined layer changes across multiple selected or named
+  layers.
+- Prototype animation ideas while keeping commands constrained to a known script
+  list.
+
+## Safety and Privacy
+
+After Effects MCP Server changes local creative project files through Adobe's
+scripting system. Back up projects before experimenting, keep the bridge panel
+closed when not in use, and review commands that delete layers, alter
+expressions, change masks, or batch-edit many layers.
+
+Because the bridge uses local command and result files, recent prompts,
+composition names, layer metadata, and generated expressions may remain on disk
+and in MCP client logs. Treat project details and media names as client or
+studio data.
+
+## Duplicate Notes
+
+Existing catalog entries cover design handoff, image generation, and other
+creative tools. This entry covers the separate `Dakkshin/after-effects-mcp`
+project for controlling Adobe After Effects through a Node MCP server and
+ExtendScript bridge panel.

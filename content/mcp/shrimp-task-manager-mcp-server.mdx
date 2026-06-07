@@ -1,0 +1,196 @@
+---
+title: Shrimp Task Manager MCP Server
+slug: shrimp-task-manager-mcp-server
+category: mcp
+description: >-
+  MCP server for AI-assisted development task planning, decomposition,
+  dependency tracking, execution workflow state, reflection, and research mode.
+cardDescription: Break development work into persistent, dependency-aware MCP tasks.
+seoTitle: Shrimp Task Manager MCP Server for Claude
+seoDescription: >-
+  Configure Shrimp Task Manager MCP Server with Claude to plan, analyze, split,
+  execute, verify, query, and persist development tasks across agent sessions.
+author: cjo4m06
+authorProfileUrl: "https://github.com/cjo4m06"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Shrimp Task Manager
+brandDomain: github.com
+repoUrl: "https://github.com/cjo4m06/mcp-shrimp-task-manager"
+documentationUrl: "https://cjo4m06.github.io/mcp-shrimp-task-manager/"
+packageUrl: "https://registry.npmjs.org/mcp-shrimp-task-manager"
+installable: true
+installCommand: "npm install -g mcp-shrimp-task-manager"
+usageSnippet: "Install or build `mcp-shrimp-task-manager`, set a writable `DATA_DIR`, and connect Claude to the built `dist/index.js` server."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "shrimp-task-manager": {
+        "command": "node",
+        "args": ["PATH_TO_SHRIMP_TASK_MANAGER/dist/index.js"],
+        "env": {
+          "DATA_DIR": "WRITABLE_SHRIMP_DATA_DIR",
+          "TEMPLATES_USE": "en",
+          "ENABLE_GUI": "false"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "shrimp-task-manager": {
+        "command": "node",
+        "args": ["PATH_TO_SHRIMP_TASK_MANAGER/dist/index.js"],
+        "env": {
+          "DATA_DIR": "WRITABLE_SHRIMP_DATA_DIR",
+          "TEMPLATES_USE": "en",
+          "ENABLE_GUI": "false"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 18 or newer and npm available to the MCP client runtime.
+  - A cloned, installed, and built checkout of `mcp-shrimp-task-manager`, or an installed package that exposes the built server.
+  - A writable `DATA_DIR` for persistent task data and backups.
+  - Agreement on how generated plans, task status, agent assignments, and research notes should be reviewed.
+  - Optional GUI dependencies and network controls if `ENABLE_GUI` is enabled.
+safetyNotes:
+  - Shrimp Task Manager persists task plans, project rules, research notes, task status, dependencies, and execution history in `DATA_DIR`.
+  - Tools such as `execute_task`, `complete_task`, `delete_task`, `clear_all_tasks`, and `update_task` can change workflow state and should be reviewed before treating status as authoritative.
+  - Agent-assignment and planning features can make generated work look more complete than it is; require human review before accepting implementation progress.
+  - The optional GUI starts a web interface when enabled; keep it local or protect it with appropriate network controls.
+  - Avoid launching development agents with broad permission-bypass flags solely because an example command suggests it.
+privacyNotes:
+  - Task descriptions, project rules, research notes, dependency graphs, agent assignments, prompts, and execution history may include private implementation details.
+  - Persisted task data and backups can reveal roadmap items, security work, customer requests, or internal architecture decisions.
+  - Tool arguments and task records may be visible to the MCP client and model provider during planning and execution.
+  - Review `DATA_DIR` before committing, sharing, archiving, or uploading generated task state.
+sourceUrls:
+  - "https://github.com/cjo4m06/mcp-shrimp-task-manager"
+  - "https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/README.md"
+  - "https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/package.json"
+  - "https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/docs/tools.md"
+  - "https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/docs/agents.md"
+  - "https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/src/index.ts"
+  - "https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/LICENSE"
+  - "https://registry.npmjs.org/mcp-shrimp-task-manager"
+  - "https://cjo4m06.github.io/mcp-shrimp-task-manager/"
+tags:
+  - task-management
+  - planning
+  - workflow
+  - developer-tools
+  - project-management
+keywords:
+  - Shrimp Task Manager
+  - mcp-shrimp-task-manager
+  - task planning MCP
+  - AI development workflow MCP
+  - Claude task manager MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Shrimp Task Manager is an MCP server for structuring AI-assisted development
+work into persistent tasks. It exposes tools for planning work, analyzing
+requirements, splitting complex tasks, listing and querying task state,
+executing a selected task, verifying completion, reflecting on approach,
+recording research, and initializing project rules.
+
+The project is implemented as a Node.js MCP server. It stores task state in a
+configured data directory and can optionally start a web GUI for task viewing.
+
+## Source Review
+
+- https://github.com/cjo4m06/mcp-shrimp-task-manager
+- https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/README.md
+- https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/package.json
+- https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/docs/tools.md
+- https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/docs/agents.md
+- https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/src/index.ts
+- https://github.com/cjo4m06/mcp-shrimp-task-manager/blob/main/LICENSE
+- https://registry.npmjs.org/mcp-shrimp-task-manager
+- https://cjo4m06.github.io/mcp-shrimp-task-manager/
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, package metadata, tools documentation, agent documentation, server
+source, license, NPM registry metadata, and generated docs site for current
+installation commands, environment variables, supported tools, and GUI behavior.
+
+## Features
+
+- Plan development tasks from natural-language descriptions.
+- Analyze task requirements before implementation.
+- Split complex tasks into smaller subtasks with dependencies.
+- List, query, update, delete, and inspect task records.
+- Execute and verify tasks through a structured workflow.
+- Reflect on a task approach before continuing.
+- Store persistent task history in a configured data directory.
+- Initialize project rules and enter research mode.
+- Assign specialized agent profiles to tasks.
+- Optionally run a web task viewer or GUI for visual status review.
+
+## Installation
+
+Install dependencies, build the server, and configure a writable data directory
+following the upstream README:
+
+```bash
+npm install
+npm run build
+```
+
+Then connect the built server to Claude or another MCP client:
+
+```json
+{
+  "mcpServers": {
+    "shrimp-task-manager": {
+      "command": "node",
+      "args": ["PATH_TO_SHRIMP_TASK_MANAGER/dist/index.js"],
+      "env": {
+        "DATA_DIR": "WRITABLE_SHRIMP_DATA_DIR",
+        "TEMPLATES_USE": "en",
+        "ENABLE_GUI": "false"
+      }
+    }
+  }
+}
+```
+
+Start with project rules and a small planning task before using continuous
+execution patterns.
+
+## Use Cases
+
+- Break a large development request into dependency-aware implementation tasks.
+- Keep task state available across model-context resets or new sessions.
+- Ask Claude to research a technical decision before turning it into a plan.
+- Track which subtasks are pending, in progress, complete, or blocked.
+- Review a generated implementation approach before executing the next task.
+- Assign specialized task personas for frontend, backend, QA, documentation, or security work.
+
+## Safety and Privacy
+
+Shrimp Task Manager is most useful when it persists project context, but that
+means its data directory can become a durable project record. Treat generated
+tasks, project rules, agent assignments, research notes, and backups as project
+data that may need review before sharing or committing.
+
+Do not let task status replace human verification. A model can mark tasks
+complete, update task text, or clear task state through tools, but code,
+documentation, tests, and product decisions still need normal review. If the
+GUI is enabled, keep its server on trusted interfaces only.
+
+## Duplicate Check
+
+Existing planning entries cover spec and approval workflows, but no
+`cjo4m06/mcp-shrimp-task-manager`, Shrimp Task Manager, or matching source URL
+was found in `content/mcp`.

@@ -1,0 +1,189 @@
+---
+title: iMCP MCP Server
+slug: imcp-mcp-server
+category: mcp
+description: >-
+  macOS app and bundled stdio MCP server that lets Claude access selected local
+  services such as Calendar, Contacts, Messages, Location, Maps, Reminders,
+  camera, microphone, screenshots, Shortcuts, utilities, and Weather.
+cardDescription: >-
+  Connect Claude to reviewed macOS personal-data services through iMCP's
+  app-mediated permissions and bundled `imcp-server`.
+seoTitle: iMCP MCP Server for Claude
+seoDescription: >-
+  Configure iMCP with Claude Desktop or Claude Code to expose approved macOS
+  services, route stdio MCP traffic through the bundled imcp-server, and control
+  access to messages, contacts, calendar, reminders, location, capture tools,
+  maps, Shortcuts, and weather.
+author: Mattt
+authorProfileUrl: "https://github.com/mattt"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: iMCP
+brandDomain: imcp.app
+repoUrl: "https://github.com/mattt/iMCP"
+documentationUrl: "https://raw.githubusercontent.com/mattt/iMCP/main/README.md"
+installable: true
+installCommand: "Install the iMCP macOS app, enable only the services you need, then configure the bundled `imcp-server` from the app menu or your MCP client."
+usageSnippet: "Open iMCP, approve the specific macOS services Claude should use, then connect an MCP client to the bundled `imcp-server` command."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "iMCP": {
+        "command": "{path-to-imcp-server}"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "iMCP": {
+        "command": "{path-to-imcp-server}"
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - macOS 15.3 or later.
+  - iMCP app installed from the upstream release or Homebrew cask.
+  - Claude Desktop, Claude Code, Cursor, Amp, or another MCP client that can launch the bundled stdio server.
+  - macOS permissions reviewed for each enabled service.
+  - Human approval workflow for first-time client connections and trusted-client settings.
+safetyNotes:
+  - iMCP can expose highly sensitive personal macOS services to Claude through MCP tools.
+  - Calendar, Contacts, Reminders, and Shortcuts tools can create, update, or run actions, not only read data.
+  - Capture tools can take pictures, record microphone audio, and capture screenshots when the corresponding service is enabled and macOS permission is granted.
+  - Messages access can read local message history after the user grants access to the Messages database.
+  - The app can add or update the iMCP entry in Claude Desktop MCP configuration while preserving other server entries.
+  - Enable only the services needed for a task and do not mark clients as trusted unless you want repeated connections to bypass prompts.
+privacyNotes:
+  - Tool calls can expose contacts, phone numbers, email addresses, calendars, event details, reminders, message text, participants, location, routes, map queries, screenshots, camera images, audio snippets, shortcut names, and weather/location context.
+  - iMCP's README states that iMCP does not collect or store user data, but MCP clients and model providers can receive tool-call data as part of the conversation.
+  - Local logs, screenshots, approval dialogs, MCP transcripts, Claude Desktop config, and trusted-client settings may reveal private service access and personal-data context.
+  - Review every service toggle and macOS permission before enabling iMCP for personal accounts, shared machines, work devices, or regulated data.
+disclosure: >-
+  MIT-licensed open-source macOS app and MCP server. This entry emphasizes
+  iMCP's personal-data permissions and bundled stdio proxy rather than treating
+  it as a generic low-risk desktop utility.
+sourceUrls:
+  - "https://raw.githubusercontent.com/mattt/iMCP/main/LICENSE.md"
+  - "https://raw.githubusercontent.com/mattt/iMCP/main/CLI/main.swift"
+  - "https://raw.githubusercontent.com/mattt/iMCP/main/App/Controllers/ServerController.swift"
+  - "https://raw.githubusercontent.com/mattt/iMCP/main/App/Integrations/ClaudeDesktop.swift"
+  - "https://raw.githubusercontent.com/mattt/iMCP/main/App/Services/Messages.swift"
+  - "https://raw.githubusercontent.com/mattt/iMCP/main/App/Services/Calendar.swift"
+  - "https://raw.githubusercontent.com/mattt/iMCP/main/App/Services/Contacts.swift"
+  - "https://raw.githubusercontent.com/mattt/iMCP/main/App/Services/Capture.swift"
+tags:
+  - macos
+  - personal-data
+  - desktop
+  - calendar
+  - messages
+keywords:
+  - iMCP
+  - iMCP MCP server
+  - macOS MCP server
+  - Messages MCP
+  - Calendar Contacts Reminders MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+iMCP is a macOS app that bundles a stdio MCP executable called `imcp-server`.
+The app handles service toggles, macOS permission prompts, and client approval,
+while the CLI proxies MCP traffic between stdin/stdout and the local app over a
+local-only Bonjour-discovered connection.
+
+Use it when Claude needs narrowly scoped access to personal macOS services such
+as Calendar, Contacts, Messages, Location, Maps, Reminders, capture tools,
+Shortcuts, utilities, or Weather. Because these tools can expose personal data
+and some tools can write or run actions, enable only the services required for a
+specific workflow.
+
+## Source Review
+
+- https://github.com/mattt/iMCP
+- https://raw.githubusercontent.com/mattt/iMCP/main/README.md
+- https://raw.githubusercontent.com/mattt/iMCP/main/LICENSE.md
+- https://raw.githubusercontent.com/mattt/iMCP/main/CLI/main.swift
+- https://raw.githubusercontent.com/mattt/iMCP/main/App/Controllers/ServerController.swift
+- https://raw.githubusercontent.com/mattt/iMCP/main/App/Integrations/ClaudeDesktop.swift
+- https://raw.githubusercontent.com/mattt/iMCP/main/App/Services/Messages.swift
+- https://raw.githubusercontent.com/mattt/iMCP/main/App/Services/Calendar.swift
+- https://raw.githubusercontent.com/mattt/iMCP/main/App/Services/Contacts.swift
+- https://raw.githubusercontent.com/mattt/iMCP/main/App/Services/Capture.swift
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, CLI proxy source, server controller, Claude Desktop integration
+source, and permission-sensitive service source files for current behavior.
+
+## Features
+
+- Bundle a macOS menu-bar app with a stdio MCP executable.
+- Toggle individual macOS services on or off.
+- Require macOS permission prompts for sensitive services.
+- Approve or trust connecting MCP clients from the app.
+- Read Calendar, Contacts, Messages, Location, Maps, Reminders, and Weather
+  data when the corresponding service is enabled.
+- Create or update Calendar events, Contacts, and Reminders.
+- Take pictures, record audio, and take screenshots through capture tools.
+- Run Shortcuts when that service is enabled.
+- Add or update the iMCP server entry in Claude Desktop configuration.
+- Return structured JSON-LD style results for many tool calls.
+
+## Installation
+
+Install the iMCP macOS app from the upstream release or Homebrew cask, then open
+the menu-bar app and enable only the services you want Claude to access.
+
+Use the app's Claude Desktop configuration action, or manually configure an MCP
+client with the bundled server command:
+
+```json
+{
+  "mcpServers": {
+    "iMCP": {
+      "command": "{path-to-imcp-server}"
+    }
+  }
+}
+```
+
+After connecting, approve the client in iMCP before using the tools. Avoid
+trusting a client permanently until you are comfortable with the service set it
+can access.
+
+## Use Cases
+
+- Ask Claude to summarize upcoming events from an approved calendar.
+- Search recent Messages with specific participants and date ranges.
+- Look up contact details before drafting a reply.
+- Create a reminder or calendar event after reviewing the proposed fields.
+- Ask for route, ETA, place, weather, or location context.
+- Capture a screenshot or image only when visual context is needed.
+- Run a reviewed local Shortcut as part of a personal workflow.
+
+## Safety and Privacy
+
+iMCP is powerful because it connects Claude to personal macOS data. That also
+makes it high-trust software. Start with all optional services disabled, enable
+one service at a time, and test with low-sensitivity data before using it for
+private calendars, personal messages, work contacts, location data, screenshots,
+audio, or camera capture.
+
+Pay special attention to write-capable tools. Creating reminders, calendar
+events, contacts, and running Shortcuts can change local state or trigger other
+automation. Review the exact tool call before approving it, and use client trust
+settings sparingly.
+
+## Duplicate Check
+
+No `mattt/iMCP`, iMCP MCP Server, or matching iMCP source URL entry was found in
+`content/mcp` or `README.md`. Existing Mac Messages and Calendar entries cover
+narrower standalone projects; this entry covers iMCP's app-mediated,
+multi-service macOS MCP server.

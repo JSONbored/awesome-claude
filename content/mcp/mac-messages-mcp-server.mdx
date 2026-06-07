@@ -1,0 +1,191 @@
+---
+title: Mac Messages MCP Server
+slug: mac-messages-mcp-server
+category: mcp
+description: >-
+  macOS Messages MCP server that lets Claude read recent conversations, search
+  messages, inspect contacts and chats, fetch attachments, and send iMessage or
+  SMS/RCS messages.
+cardDescription: >-
+  Connect Claude to macOS Messages with Full Disk Access, contact lookup,
+  attachment search, fuzzy message search, and explicit outbound send tools.
+seoTitle: Mac Messages MCP Server for Claude
+seoDescription: >-
+  Configure Mac Messages MCP Server with Claude to query macOS Messages, search
+  iMessage conversations, inspect contacts and attachments, and send Messages
+  with confirmation.
+author: Carter Lasalle
+authorProfileUrl: "https://github.com/carterlasalle"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Mac Messages MCP
+brandDomain: github.com
+repoUrl: "https://github.com/carterlasalle/mac_messages_mcp"
+documentationUrl: "https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/README.md"
+packageUrl: "https://pypi.org/pypi/mac-messages-mcp/json"
+installable: true
+installCommand: "uvx mac-messages-mcp"
+usageSnippet: "Grant Full Disk Access to the host app, keep Messages configured on macOS, then run `uvx mac-messages-mcp` from an MCP client."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "messages": {
+        "command": "uvx",
+        "args": ["mac-messages-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  uvx mac-messages-mcp
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - macOS with Messages configured for iMessage, SMS, or RCS delivery.
+  - Python 3.10 or newer and uv for the recommended `uvx` launch path.
+  - Full Disk Access granted to the terminal, Claude Desktop, Cursor, or other host application that runs the MCP server.
+  - Contacts or AddressBook permission if using contact lookup.
+  - Automation permission for Messages before sending outbound messages.
+  - Review of which conversations, attachments, contacts, and group chats may be exposed to the MCP client.
+safetyNotes:
+  - "Mac Messages MCP can send real outbound iMessage or SMS/RCS messages through the signed-in macOS Messages app."
+  - "Confirm recipient, contact match, group chat ID, message text, delivery method, and timing before allowing `tool_send_message`."
+  - "Read tools query the local Messages SQLite database and AddressBook data; they require Full Disk Access and can expose broad conversation history."
+  - "Attachment tools can return image bytes inline or local filesystem paths for non-image, large, audio, video, PDF, or other files."
+  - "Proxy or container bridge setups can expose the local Messages server to other processes or networks; bind narrowly and add authentication if used."
+privacyNotes:
+  - "Tool calls can expose message text, timestamps, participants, phone numbers, email addresses, contact names, group chat names, chat IDs, attachment metadata, filenames, MIME types, local paths, and inline image data."
+  - "Messages may contain personal, medical, legal, financial, work, customer, family, or authentication information."
+  - "Fetched attachment paths and inline images can reveal private media, documents, screenshots, PDFs, audio, or video files."
+  - "MCP client logs and model context may retain conversation snippets, contact matches, message-search queries, and outbound message drafts."
+disclosure: >-
+  MIT-licensed Python MCP server published as the `mac-messages-mcp` package.
+  This entry is distinct from chat-platform and notification entries because it
+  reads the local macOS Messages database and sends through the user's Messages
+  app via local macOS permissions.
+sourceUrls:
+  - "https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/manifest.json"
+  - "https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/mac_messages_mcp/server.py"
+  - "https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/mac_messages_mcp/messages.py"
+  - "https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/glama.json"
+tags:
+  - macos
+  - messages
+  - imessage
+  - contacts
+  - communication
+keywords:
+  - Mac Messages MCP
+  - mac-messages-mcp
+  - macOS Messages MCP
+  - iMessage MCP server
+  - SMS MCP server
+  - Claude Messages app
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Mac Messages MCP Server connects Claude and other MCP clients to the local
+macOS Messages app. It can read recent messages, search conversations, list
+group chats, resolve contacts, check iMessage availability, search attachment
+metadata, fetch attachments, and send outbound messages through Messages.
+
+Use it when a macOS automation workflow needs local Messages context or
+explicitly approved outbound messaging. Because it reads personal
+communications and can send real messages, start with read/search workflows and
+require confirmation for every outbound send.
+
+## Source Review
+
+- https://github.com/carterlasalle/mac_messages_mcp
+- https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/README.md
+- https://pypi.org/pypi/mac-messages-mcp/json
+- https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/LICENSE
+- https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/pyproject.toml
+- https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/manifest.json
+- https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/mac_messages_mcp/server.py
+- https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/mac_messages_mcp/messages.py
+- https://raw.githubusercontent.com/carterlasalle/mac_messages_mcp/main/glama.json
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, license, package metadata, MCPB manifest, server tool
+definitions, Messages implementation, and registry metadata for current setup
+and operating details.
+
+## Features
+
+- Read recent Messages within a configurable time window.
+- Filter recent messages by contact, phone number, email address, or group chat
+  ID.
+- Fuzzy-search message content with match scoring.
+- Find contacts by fuzzy name matching.
+- Check Messages database, Contacts, and AddressBook access diagnostics.
+- List named group chats and chat IDs.
+- Check whether a recipient appears reachable through iMessage.
+- Send one outbound message to an individual contact or group chat.
+- Search attachment metadata by date range, contact, MIME type, and limit.
+- Fetch attachments by ID, returning small images inline or local paths for
+  larger and non-image files.
+- Normalize common phone-number formats before sending.
+- Run as a local Python MCP server through `uvx`.
+- Package an MCPB extension for Claude Desktop from the repository manifest.
+
+## Installation
+
+Grant Full Disk Access to the host application that will run the server, then
+add it to an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "messages": {
+      "command": "uvx",
+      "args": ["mac-messages-mcp"]
+    }
+  }
+}
+```
+
+Use diagnostic tools first:
+
+```text
+tool_check_db_access
+tool_check_addressbook
+tool_check_contacts
+```
+
+Only after permissions and contact matching are verified should you allow
+outbound message sends.
+
+## Use Cases
+
+- Summarize recent messages from a specific contact or group chat.
+- Search older conversations for a phrase, decision, date, or attachment.
+- Find a contact before drafting a response.
+- Retrieve an image or document attachment after confirming the attachment ID.
+- Check whether a number is reachable through iMessage.
+- Draft and send a single confirmed message through the local Messages app.
+- Build local notification, follow-up, or personal assistant workflows on macOS.
+
+## Safety and Privacy
+
+Mac Messages MCP Server touches personal communications. Full Disk Access can
+expose the local Messages database, Contacts permission can expose address-book
+entries, and attachment fetches can expose private media or documents. Keep
+message reads scoped by contact, time window, or chat ID whenever possible.
+
+The send tool has real-world consequences. Confirm ambiguous contact matches,
+group chat IDs, recipient phone numbers, message body, and whether the message
+will use iMessage, SMS, or RCS before sending. Do not run network-exposed proxy
+setups without authentication and tight binding.
+
+## Duplicate Notes
+
+Existing catalog entries cover WhatsApp, Telegram, LINE, and general messaging
+workflows. This entry covers the separate `carterlasalle/mac_messages_mcp`
+project and `mac-messages-mcp` package for local macOS Messages database access,
+attachment retrieval, contact lookup, and outbound Messages app sends.

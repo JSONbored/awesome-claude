@@ -1,0 +1,183 @@
+---
+title: Overture MCP
+slug: overture-mcp
+category: mcp
+description: >-
+  MCP server that turns an AI coding agent's plan into a local interactive
+  flowchart, approval workflow, execution tracker, branch selector, and plan
+  history before code changes proceed.
+cardDescription: Visualize, approve, and track AI coding-agent plans before execution.
+seoTitle: Overture MCP Server for Claude
+seoDescription: >-
+  Configure Overture MCP with Claude and other coding agents to render plans as
+  local interactive flowcharts, require approval, attach context, track node
+  execution, pause or rerun steps, and persist plan history.
+author: Sixth
+authorProfileUrl: "https://github.com/SixHq"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Overture
+brandDomain: github.com
+repoUrl: "https://github.com/SixHq/Overture"
+documentationUrl: "https://github.com/SixHq/Overture/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/overture-mcp"
+installable: true
+installCommand: "npx -y overture-mcp"
+usageSnippet: "Ask Claude to submit a plan to Overture, review the local visual graph, then approve only the branch and steps you want executed."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "overture": {
+        "command": "npx",
+        "args": ["-y", "overture-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "overture": {
+        "command": "npx",
+        "args": ["-y", "overture-mcp"],
+        "env": {
+          "OVERTURE_AUTO_OPEN": "false",
+          "OVERTURE_HTTP_PORT": "3031",
+          "OVERTURE_WS_PORT": "3030"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 18 or newer and npx available to the MCP client runtime.
+  - A coding-agent workflow that will call Overture planning tools before making changes.
+  - Review of local browser, file attachment, and plan-history storage behavior before using it with private workspaces.
+safetyNotes:
+  - Overture is an approval and visualization layer; it does not replace code review, tests, access controls, or human judgment.
+  - The server starts a local web UI and WebSocket service for plan review and execution tracking.
+  - Plan approval, pause, rerun, branch selection, and node-status tools affect what the agent is instructed to do next, but they do not sandbox the agent's other tools.
+  - File attachments and node metadata can influence later agent steps, so review attached context and secret fields before approval.
+  - If local UI ports are exposed beyond trusted local clients, plan data and attachments could be visible to unintended users.
+privacyNotes:
+  - Plans can include workspace paths, task descriptions, risks, expected outputs, user inputs, selected branches, node outputs, and agent execution status.
+  - Overture stores project history in a project `.overture.json` file when possible and falls back to local user-level storage.
+  - Uploaded attachments are saved under local Overture attachment storage and can include code, documents, images, or secrets if the user provides them.
+  - The UI includes file-reading and attachment endpoints for local plan review, so use it only with trusted local clients and approved workspaces.
+  - The marketplace panel can fetch remote MCP marketplace data, so network policy should account for that optional UI feature.
+sourceUrls:
+  - "https://github.com/SixHq/Overture/blob/main/README.md"
+  - "https://github.com/SixHq/Overture/blob/main/packages/mcp-server/package.json"
+  - "https://github.com/SixHq/Overture/blob/main/packages/mcp-server/src/index.ts"
+  - "https://github.com/SixHq/Overture/blob/main/packages/mcp-server/src/http/server.ts"
+  - "https://github.com/SixHq/Overture/blob/main/packages/mcp-server/src/storage/project-storage.ts"
+  - "https://github.com/SixHq/Overture/blob/main/LICENSE"
+tags:
+  - planning
+  - coding-agents
+  - visualization
+  - approval-workflow
+  - orchestration
+keywords:
+  - Overture MCP
+  - Overture MCP server
+  - AI agent plan visualizer
+  - coding agent approval MCP
+  - plan visualization MCP
+  - Claude Code planning MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Overture MCP is a Model Context Protocol server for visualizing and approving
+AI coding-agent plans before execution. It lets an agent submit plan XML, opens
+a local interactive graph UI, waits for human approval, tracks node status,
+handles branches, supports plan updates, and records plan history for later
+review.
+
+It is most useful when the user wants a structured checkpoint between "the
+agent has a plan" and "the agent starts editing." Overture can make the plan
+more inspectable, but the actual safety still depends on approvals, tests,
+review, and the permissions of the coding agent's other tools.
+
+## Source Review
+
+- https://github.com/SixHq/Overture
+- https://github.com/SixHq/Overture/blob/main/README.md
+- https://registry.npmjs.org/overture-mcp
+- https://github.com/SixHq/Overture/blob/main/packages/mcp-server/package.json
+- https://github.com/SixHq/Overture/blob/main/packages/mcp-server/src/index.ts
+- https://github.com/SixHq/Overture/blob/main/packages/mcp-server/src/http/server.ts
+- https://github.com/SixHq/Overture/blob/main/packages/mcp-server/src/storage/project-storage.ts
+- https://github.com/SixHq/Overture/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm registry metadata, MCP package metadata, server source, local HTTP
+server source, storage source, and license file for current install commands,
+tool behavior, UI behavior, storage paths, and licensing.
+
+## Features
+
+- npm package `overture-mcp`.
+- Stdio MCP server launched with `npx -y overture-mcp`.
+- Local visual plan canvas with plan nodes, branches, complexity, risks, and status.
+- Approval workflow through `submit_plan` and `get_approval`.
+- Execution tracking tools for node status, plan completion, failures, pause,
+  rerun, resume information, and plan updates.
+- Node detail update tools for titles, descriptions, expected outputs, and risks.
+- Local project history and global fallback history storage.
+- Local UI, WebSocket updates, attachment saving, and file viewing endpoints.
+- MIT license.
+
+## Installation
+
+Configure the MCP server in your client:
+
+```json
+{
+  "mcpServers": {
+    "overture": {
+      "command": "npx",
+      "args": ["-y", "overture-mcp"]
+    }
+  }
+}
+```
+
+After restarting the MCP client, ask Claude to create a plan in Overture before
+editing, then review the local plan graph and approve only the steps and branch
+you want executed.
+
+## Use Cases
+
+- Review an AI coding agent's plan before it edits files.
+- Compare branches in a proposed implementation approach.
+- Attach context files or meta-instructions to specific plan nodes.
+- Pause, resume, rerun, or mark execution progress during long tasks.
+- Persist plan history for a project.
+- Track which plan nodes produced outputs, failures, or follow-up work.
+- Add a human approval checkpoint to high-risk coding workflows.
+
+## Safety and Privacy
+
+Overture improves visibility into an agent plan, but it does not sandbox the
+agent or guarantee that approved steps are correct. Keep normal safeguards in
+place: scoped tool permissions, tests, code review, and careful handling of
+destructive operations.
+
+Plan data can contain private task details, workspace paths, attached files,
+secret fields, node outputs, and execution history. Overture stores history and
+attachments locally and exposes them through a local UI. Use it only with
+trusted local clients, avoid attaching secrets unless needed, and review
+project-level Overture files before committing or sharing a repository.
+
+## Duplicate Check
+
+Existing MCP content includes code assistants, review tools, and workflow
+helpers, but no dedicated entry for `SixHq/Overture` or the `overture-mcp` npm
+package was found in `content/mcp`. This entry is distinct because it focuses
+on visual plan approval, branch selection, execution tracking, and plan history
+for AI coding agents.

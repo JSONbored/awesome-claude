@@ -1,0 +1,175 @@
+---
+title: Laravel Boost MCP Server
+slug: laravel-boost-mcp-server
+category: mcp
+description: >-
+  Official Laravel MCP server and AI development toolkit that gives Claude
+  Laravel-specific docs, application context, logs, database tools, and coding
+  guidelines.
+cardDescription: >-
+  Add Laravel-aware MCP tools for docs search, app introspection, logs,
+  database schema, database queries, browser errors, and generated AI guidelines.
+seoTitle: Laravel Boost MCP Server for Claude
+seoDescription: >-
+  Configure Laravel Boost MCP Server with Claude and other MCP clients to query
+  Laravel documentation, inspect application context, read logs, inspect
+  database schema, and run Laravel-aware development tools.
+author: laravel
+authorProfileUrl: "https://github.com/laravel"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Laravel Boost
+brandDomain: laravel.com
+repoUrl: "https://github.com/laravel/boost"
+documentationUrl: "https://laravel.com/docs/13.x/boost"
+packageUrl: "https://repo.packagist.org/p2/laravel/boost.json"
+installable: true
+installCommand: "composer require laravel/boost --dev"
+usageSnippet: "Install with Composer, run `php artisan boost:install`, then register the MCP server with `php artisan boost:mcp`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "laravel-boost": {
+        "command": "php",
+        "args": ["artisan", "boost:mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "laravel-boost": {
+        "command": "php",
+        "args": ["artisan", "boost:mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - A Laravel application you are authorized to expose to an MCP client.
+  - PHP 8.2 or newer and Composer available in the Laravel project.
+  - Laravel version compatibility reviewed against the installed Boost release.
+  - Database, logs, browser integration, and application code access reviewed before enabling tools.
+  - Generated agent guidelines and skill files reviewed before committing or sharing them.
+safetyNotes:
+  - Laravel Boost can expose tools that inspect application structure, read logs, read browser errors, inspect database connections and schema, execute database queries, and execute Laravel-aware code paths.
+  - Treat database query access as potentially destructive because an agent may run statements that change data unless restricted by environment and permissions.
+  - Run Boost against development or staging data first, and review tool calls before allowing changes against production-like systems.
+  - Logs, errors, generated guidelines, and package context can contain secrets, customer data, stack traces, internal URLs, or implementation details.
+  - Review generated MCP configuration, guideline files, and skills before committing them to a repository.
+privacyNotes:
+  - Application structure, PHP and Laravel versions, installed package names and versions, Eloquent model names, database engine, schema, query results, logs, browser errors, prompts, and tool outputs may be visible to the MCP client and model provider.
+  - Documentation search uses Laravel-hosted documentation APIs and may include package/version context so results match the application.
+  - Avoid connecting Boost to databases, logs, or local applications that contain personal data, credentials, production customer data, or regulated information.
+  - Rotate credentials and review logs if a Boost-enabled MCP client, shell, or project configuration is shared or compromised.
+sourceUrls:
+  - "https://github.com/laravel/boost"
+  - "https://github.com/laravel/boost/blob/main/README.md"
+  - "https://github.com/laravel/boost/blob/main/composer.json"
+  - "https://github.com/laravel/boost/security/policy"
+  - "https://laravel.com/docs/13.x/boost"
+  - "https://repo.packagist.org/p2/laravel/boost.json"
+tags:
+  - laravel
+  - php
+  - database
+  - docs
+  - developer-tools
+keywords:
+  - Laravel Boost MCP
+  - laravel/boost
+  - Laravel MCP server
+  - PHP MCP server
+  - Laravel Claude Code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Laravel Boost is Laravel's official MCP server and AI development toolkit. It
+provides Laravel-specific context for AI agents, generated guidelines and
+skills, and MCP tools that can inspect a Laravel application, search Laravel
+documentation, read logs, inspect database schema, and run database queries.
+
+The official documentation lists `composer require laravel/boost --dev` for
+installation, `php artisan boost:install` for generating Boost resources, and
+`php artisan boost:mcp` as the MCP server command.
+
+## Source Review
+
+- https://github.com/laravel/boost
+- https://github.com/laravel/boost/blob/main/README.md
+- https://github.com/laravel/boost/blob/main/composer.json
+- https://github.com/laravel/boost/security/policy
+- https://laravel.com/docs/13.x/boost
+- https://repo.packagist.org/p2/laravel/boost.json
+
+These sources were reviewed on **2026-06-05**. Prefer the live Laravel
+documentation, repository, Composer metadata, security policy, and Packagist
+metadata for current installation commands, supported Laravel versions, MCP
+tools, and update behavior.
+
+## Features
+
+- Search Laravel documentation using application package and version context.
+- Read PHP and Laravel versions, database engine, installed ecosystem packages, and Eloquent models.
+- Inspect database connections and database schema.
+- Execute database queries from the MCP tool surface.
+- Read Laravel log entries and the last application error.
+- Read browser logs and errors for debugging local development.
+- Generate and update agent guidelines and skills for supported AI coding tools.
+- Manually register the MCP server with command `php` and args `artisan`, `boost:mcp`.
+
+## Installation
+
+Install Boost in a Laravel project:
+
+```bash
+composer require laravel/boost --dev
+php artisan boost:install
+```
+
+For MCP clients that launch stdio servers manually:
+
+```json
+{
+  "mcpServers": {
+    "laravel-boost": {
+      "command": "php",
+      "args": ["artisan", "boost:mcp"]
+    }
+  }
+}
+```
+
+Run the MCP client from the Laravel project root so `artisan` resolves to the
+intended application.
+
+## Use Cases
+
+- Ask Claude to check Laravel docs that match the app's installed packages.
+- Inspect Laravel, PHP, database, and package versions before making changes.
+- Debug a failing route by reviewing logs, browser errors, and schema context.
+- Ask for migration or Eloquent guidance with current application structure available.
+- Query development database tables while investigating feature behavior.
+- Keep generated AI guidelines and skills aligned with the Laravel project.
+
+## Safety and Privacy
+
+Laravel Boost is designed for local development context, but the MCP tool
+surface can reach sensitive parts of an application. Database queries may expose
+or change data, logs may contain secrets or personal information, and app
+introspection can reveal internal package choices, models, routes, and schema.
+
+Use Boost first with development data and least-privilege database credentials.
+Review generated guidelines, skills, and MCP configuration before committing
+them. Be especially careful before connecting an MCP client to production logs,
+production databases, or applications containing regulated data.
+
+## Duplicate Check
+
+No `laravel/boost` entry, `laravel-boost` MCP entry, or matching source URL was
+found in `content/mcp`.

@@ -2,6 +2,7 @@ import { base64UrlEncode } from "./security";
 import { supersededReviewComment } from "./review";
 
 const encoder = new TextEncoder();
+const decoder = new TextDecoder();
 const PKCS8_PEM_HEADER = ["-----BEGIN", "PRIVATE", "KEY-----"].join(" ");
 const RSA_PEM_HEADER = ["-----BEGIN", "RSA", "PRIVATE", "KEY-----"].join(" ");
 const DEFAULT_GITHUB_TIMEOUT_MS = 15_000;
@@ -420,7 +421,9 @@ export async function getRepositoryFileContent(params: {
   if (payload.type !== "file" || payload.encoding !== "base64") {
     throw new Error("GitHub content API did not return a base64 file blob.");
   }
-  return atob(String(payload.content || "").replace(/\s+/g, ""));
+  const binary = atob(String(payload.content || "").replace(/\s+/g, ""));
+  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  return decoder.decode(bytes);
 }
 
 export async function getRepositoryTree(params: {

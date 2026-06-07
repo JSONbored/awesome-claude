@@ -1,0 +1,180 @@
+---
+title: Searchcode MCP Server
+slug: searchcode-mcp-server
+category: mcp
+description: >-
+  Remote MCP server for analyzing, searching, retrieving, and auditing code from
+  public Git repositories without cloning them into the local workspace.
+cardDescription: Analyze and search public Git repositories through a remote code intelligence MCP server.
+seoTitle: Searchcode MCP Server for Claude
+seoDescription: >-
+  Connect Claude to Searchcode MCP Server to analyze public repositories, search
+  code, retrieve files and symbols, inspect file trees, and review code quality
+  or credential findings through Streamable HTTP.
+author: searchcode.com
+authorProfileUrl: "https://searchcode.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: searchcode.com
+brandDomain: searchcode.com
+websiteUrl: "https://searchcode.com/"
+documentationUrl: "https://searchcode.com/"
+installable: true
+installCommand: "claude mcp add searchcode --transport http https://api.searchcode.com/v1/mcp"
+usageSnippet: "Ask Claude to analyze a public repository with Searchcode before deciding which files need deeper review."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "searchcode": {
+        "url": "https://api.searchcode.com/v1/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "searchcode": {
+        "url": "https://api.searchcode.com/v1/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - MCP client with remote Streamable HTTP support, or `mcp-remote` for clients that still need a stdio bridge.
+  - Public Git repository URLs or `owner/repo` names for the repositories Claude should inspect.
+  - Team agreement that public repository metadata, code snippets, file paths, and static-analysis results may be sent through a hosted third-party MCP service.
+  - Client-side policy for whether model-generated findings should be treated as triage hints or reviewed security results.
+safetyNotes:
+  - Searchcode analyzes public repositories through a hosted remote service; do not point it at private repository URLs unless you have a private/enterprise arrangement and have reviewed the current access controls.
+  - The service can return code snippets, file contents, symbols, file trees, static-analysis findings, and credential-scan findings from public repositories.
+  - Treat tool results as machine-assisted code intelligence. Confirm security findings, complexity claims, and dependency conclusions against the repository before making merge, hiring, acquisition, or incident decisions.
+  - Large or repeated repository analysis can create automated traffic to Searchcode; keep agent loops bounded and avoid broad unattended scans.
+privacyNotes:
+  - Prompts and tool inputs can reveal which public repositories, symbols, files, dependencies, security concerns, or candidate portfolios a team is investigating.
+  - Returned code snippets, findings, file paths, and repository metadata become part of the MCP client transcript and may be processed by the connected model provider.
+  - Public code can still contain secrets, personal data, proprietary code accidentally committed upstream, or prompt-injection text. Review returned snippets before forwarding them into other tools or reports.
+  - Searchcode's public page says the hosted MCP server is free during beta and does not require signup or an API key; review the live site before production use because pricing and private-code options may change.
+sourceUrls:
+  - "https://searchcode.com/"
+  - "https://searchcode.com/llms.txt"
+  - "https://searchcode.com/openapi.json"
+  - "https://api.searchcode.com/.well-known/mcp.json"
+  - "https://github.com/boyter/scc"
+  - "https://github.com/boyter/cs"
+tags:
+  - code-search
+  - code-analysis
+  - developer-tools
+  - security
+  - remote
+keywords:
+  - Searchcode MCP
+  - searchcode.com MCP
+  - public repository analysis MCP
+  - code intelligence MCP
+  - code search MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Searchcode MCP Server is a hosted Streamable HTTP MCP server that gives Claude
+structured code intelligence for public Git repositories. Instead of cloning a
+repository and reading files one by one, Claude can ask Searchcode for a
+repository overview, code search results, file trees, file contents, batches of
+files, and detailed code-quality or credential findings.
+
+The Searchcode site describes six MCP tools mirrored by a REST API:
+`code_analyze`, `code_search`, `code_get_file`, `code_get_files`,
+`code_file_tree`, and `code_get_findings`. The public page also says the service
+is free during beta, needs no signup or API key, and is built on the author's
+open-source `scc` and `cs` projects for code counting, complexity analysis, and
+code search.
+
+## Source Review
+
+- https://searchcode.com/
+- https://searchcode.com/llms.txt
+- https://searchcode.com/openapi.json
+- https://api.searchcode.com/.well-known/mcp.json
+- https://github.com/boyter/scc
+- https://github.com/boyter/cs
+
+These sources were reviewed on **2026-06-06**. Prefer the live Searchcode page,
+`llms.txt`, OpenAPI spec, well-known MCP metadata, and upstream open-source tool
+repositories for current endpoint, tool, pricing, and implementation details.
+
+## Features
+
+- Analyze public repositories for language breakdowns, complexity, file counts, tech stack, code quality, and credential-scan findings.
+- Search public repository code with boolean queries, regex, fuzzy matching, file/path/language filters, and structural filters.
+- Retrieve a specific file, line range, or symbol declaration after search results identify the target.
+- Retrieve batches of related files without making separate tool calls.
+- Browse file trees with language, path, depth, and fuzzy filename filters.
+- Drill into static-analysis findings by severity, category, path, and result offset.
+- Use the same six capabilities through a documented REST API when an MCP client is not available.
+
+## Installation
+
+For Claude Code, add the hosted remote server:
+
+```sh
+claude mcp add searchcode --transport http https://api.searchcode.com/v1/mcp
+```
+
+For MCP clients that accept JSON server configuration:
+
+```json
+{
+  "mcpServers": {
+    "searchcode": {
+      "url": "https://api.searchcode.com/v1/mcp"
+    }
+  }
+}
+```
+
+For Claude Desktop clients that still require a stdio command, use `mcp-remote`
+as documented by Searchcode:
+
+```json
+{
+  "mcpServers": {
+    "searchcode": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://api.searchcode.com/v1/mcp"]
+    }
+  }
+}
+```
+
+## Use Cases
+
+- Get a compact overview of an unfamiliar public repository before deciding what Claude should inspect.
+- Search for a symbol, API pattern, dependency use, or security-sensitive code path across a public repo.
+- Retrieve exact function or class definitions instead of asking an agent to read an entire file.
+- Compare public repositories when evaluating libraries, vendors, acquisition targets, or candidate portfolios.
+- Review code quality and credential findings as triage evidence before a human security review.
+- Reduce token use in public-code research by replacing repeated clone, grep, and file-read loops with structured results.
+
+## Safety and Privacy
+
+Searchcode is best treated as a public-code intelligence service. It can make
+repository exploration much cheaper for an agent, but its outputs should not be
+accepted as final security, licensing, architecture, or hiring conclusions
+without human review.
+
+Do not send private repository URLs, customer code, internal symbols, or
+confidential investigation context unless Searchcode's private-code offering and
+your organization's policy explicitly allow that use. Public repositories can
+contain malicious prompt text or accidentally committed sensitive data, so review
+returned snippets before asking Claude to summarize or act on them.
+
+## Duplicate Check
+
+No `searchcode.com`, `api.searchcode.com`, `boyter/scc`, `boyter/cs`, or
+Searchcode MCP entry was found in `content/mcp`, `content/tools`,
+`content/guides`, or `content/agents`.

@@ -1,0 +1,203 @@
+---
+title: Agentgateway MCP Gateway
+slug: agentgateway-mcp-gateway
+category: mcp
+description: >-
+  Apache-2.0 agentic proxy that can expose stdio, HTTP, SSE, and Streamable
+  HTTP MCP servers through a managed gateway with federation, OAuth/JWT
+  authentication, RBAC/CEL policy, CORS, TLS, observability, and Kubernetes
+  Gateway API support.
+cardDescription: >-
+  Put agentgateway in front of MCP tools to aggregate multiple targets, proxy
+  remote servers, spawn stdio servers, serve Streamable HTTP and SSE endpoints,
+  and add auth, policy, telemetry, guardrails, and Kubernetes-native routing.
+seoTitle: Agentgateway MCP Gateway for Claude
+seoDescription: >-
+  Configure agentgateway with Claude and other MCP clients to proxy stdio,
+  remote, SSE, and Streamable HTTP MCP servers with authentication, RBAC,
+  policy, observability, CORS, TLS, and Kubernetes Gateway API support.
+author: agentgateway
+authorProfileUrl: "https://github.com/agentgateway"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: agentgateway
+brandDomain: agentgateway.dev
+repoUrl: "https://github.com/agentgateway/agentgateway"
+documentationUrl: "https://agentgateway.dev/docs/mcp/"
+packageUrl: "https://github.com/agentgateway/agentgateway/pkgs/container/agentgateway"
+installable: true
+installCommand: "docker pull ghcr.io/agentgateway/agentgateway"
+usageSnippet: "Configure agentgateway with a reviewed MCP target, run it from the upstream release/container path, and connect your MCP client to the exposed Streamable HTTP or SSE route with the required auth headers."
+copySnippet: |-
+  docker pull ghcr.io/agentgateway/agentgateway
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agentgateway": {
+        "url": "LOCAL_AGENTGATEWAY_MCP_URL",
+        "headers": {
+          "Authorization": "Bearer AGENTGATEWAY_MCP_TOKEN"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 35 minutes
+difficulty: advanced
+prerequisites:
+  - Agentgateway binary, container image, or source checkout from the upstream release/container/docs path.
+  - At least one downstream MCP target, such as a stdio command, remote MCP server, SSE server, or Streamable HTTP server.
+  - MCP client that can connect to the exposed Streamable HTTP or SSE route.
+  - Auth, CORS, TLS, route, and policy configuration reviewed before shared or remote exposure.
+  - Kubernetes Gateway API environment if using the Kubernetes controller path.
+safetyNotes:
+  - Agentgateway can aggregate and expose many downstream MCP targets through one endpoint; every target's permissions become part of the gateway surface.
+  - Stdio targets are spawned by the gateway process, so commands such as package runners or containers inherit the gateway host's trust boundary.
+  - Demo configs use permissive CORS and local authorization servers; lock down origins, headers, issuers, audiences, JWKS, and resource metadata before production use.
+  - CEL/RBAC policies can inspect MCP tool names, arguments, results, prompts, resources, request bodies, JWT claims, API keys, and backend metadata; test policies before relying on them.
+  - Remote MCP proxying, OAuth provider adaptation, Kubernetes routing, TLS termination, and guardrails are infrastructure changes that should go through normal security review.
+privacyNotes:
+  - MCP requests, tool arguments, tool results, prompt names, resource names, session IDs, JWT/API-key claims, raw request/response bodies, logs, traces, and telemetry may pass through the gateway.
+  - CEL policy and observability features may buffer or inspect request and response bodies depending on configuration.
+  - OAuth/JWT metadata, bearer tokens, API keys, DCR secrets, Keycloak/Auth0/Okta settings, and upstream MCP credentials must be protected as secrets.
+  - Any data returned by downstream MCP tools can still be sent onward by the MCP client to the configured model provider.
+sourceUrls:
+  - "https://github.com/agentgateway/agentgateway"
+  - "https://github.com/agentgateway/agentgateway/blob/main/README.md"
+  - "https://github.com/agentgateway/agentgateway/blob/main/LICENSE"
+  - "https://agentgateway.dev/docs/"
+  - "https://agentgateway.dev/docs/quickstart"
+  - "https://agentgateway.dev/docs/mcp/"
+  - "https://agentgateway.dev/docs/kubernetes/latest"
+  - "https://github.com/agentgateway/agentgateway/blob/main/examples/README.md"
+  - "https://github.com/agentgateway/agentgateway/blob/main/examples/basic/README.md"
+  - "https://github.com/agentgateway/agentgateway/blob/main/examples/basic/config.yaml"
+  - "https://github.com/agentgateway/agentgateway/blob/main/examples/mcp-authentication/README.md"
+  - "https://github.com/agentgateway/agentgateway/blob/main/examples/mcp-authentication/config.yaml"
+  - "https://github.com/agentgateway/agentgateway/blob/main/crates/agentgateway/src/mcp/streamablehttp.rs"
+  - "https://github.com/agentgateway/agentgateway/blob/main/schema/cel.md"
+  - "https://github.com/agentgateway/agentgateway/releases"
+  - "https://github.com/agentgateway/agentgateway/pkgs/container/agentgateway"
+tags:
+  - gateway
+  - proxy
+  - auth
+  - kubernetes
+  - observability
+keywords:
+  - agentgateway MCP
+  - MCP gateway proxy
+  - MCP OAuth gateway
+  - Streamable HTTP MCP proxy
+  - MCP RBAC CEL policy
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Agentgateway is an open-source agentic proxy for AI-native traffic, including
+MCP, A2A, and LLM gateway use cases. Its MCP gateway mode can connect to
+downstream MCP servers over stdio, HTTP, SSE, or Streamable HTTP, then expose
+them through a managed gateway route for MCP clients.
+
+The basic example shows a stdio MCP target being exposed through a gateway that
+serves Streamable HTTP under `/mcp` and SSE under `/sse`. The MCP
+authentication example shows protected MCP routes with OAuth resource metadata,
+JWT validation, CORS policy, and provider adaptation for Keycloak, Auth0, and
+Okta-style environments.
+
+## Source Review
+
+- https://github.com/agentgateway/agentgateway
+- https://github.com/agentgateway/agentgateway/blob/main/README.md
+- https://github.com/agentgateway/agentgateway/blob/main/LICENSE
+- https://agentgateway.dev/docs/
+- https://agentgateway.dev/docs/quickstart
+- https://agentgateway.dev/docs/mcp/
+- https://agentgateway.dev/docs/kubernetes/latest
+- https://github.com/agentgateway/agentgateway/blob/main/examples/README.md
+- https://github.com/agentgateway/agentgateway/blob/main/examples/basic/README.md
+- https://github.com/agentgateway/agentgateway/blob/main/examples/basic/config.yaml
+- https://github.com/agentgateway/agentgateway/blob/main/examples/mcp-authentication/README.md
+- https://github.com/agentgateway/agentgateway/blob/main/examples/mcp-authentication/config.yaml
+- https://github.com/agentgateway/agentgateway/blob/main/crates/agentgateway/src/mcp/streamablehttp.rs
+- https://github.com/agentgateway/agentgateway/blob/main/schema/cel.md
+- https://github.com/agentgateway/agentgateway/releases
+- https://github.com/agentgateway/agentgateway/pkgs/container/agentgateway
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, docs, MCP docs, Kubernetes docs, basic example, MCP authentication
+example, Streamable HTTP implementation, CEL schema, GitHub Releases, and GHCR
+package page for current setup, transport, auth, policy, and deployment
+behavior.
+
+## Features
+
+- Proxy stdio MCP servers and expose them over gateway-managed HTTP routes.
+- Proxy remote MCP servers and serve OAuth protected-resource metadata.
+- Aggregate multiple MCP targets behind one gateway endpoint.
+- Serve MCP traffic over Streamable HTTP and SSE.
+- Add MCP authentication with JWT validation, JWKS, resource metadata,
+  Keycloak/Auth0/Okta provider adaptation, and DCR-related endpoints.
+- Apply CORS, TLS, API key, JWT, RBAC, and CEL policy controls.
+- Inspect MCP request context such as tool names, arguments, results, prompts,
+  resources, method names, and session IDs for policy and logging.
+- Deploy standalone or with the Kubernetes controller and Gateway API support.
+
+## Installation
+
+Install from the upstream release or container path. The published container
+package can be pulled with:
+
+```bash
+docker pull ghcr.io/agentgateway/agentgateway
+```
+
+Configure a reviewed MCP backend in agentgateway, start the gateway, and connect
+your MCP client to the exposed route:
+
+```json
+{
+  "mcpServers": {
+    "agentgateway": {
+      "url": "LOCAL_AGENTGATEWAY_MCP_URL",
+      "headers": {
+        "Authorization": "Bearer AGENTGATEWAY_MCP_TOKEN"
+      }
+    }
+  }
+}
+```
+
+Follow the upstream quickstart, MCP docs, basic example, and MCP authentication
+example for the current config schema, route paths, auth settings, and
+Kubernetes deployment path.
+
+## Use Cases
+
+- Put one governed gateway in front of several local or remote MCP servers.
+- Convert a stdio-only MCP server into a Streamable HTTP or SSE endpoint for
+  clients that cannot spawn the process directly.
+- Add OAuth/JWT protection and resource metadata to remote MCP access.
+- Apply CEL/RBAC policy to tool calls, prompts, resources, and request context.
+- Run MCP gateway routing as part of a Kubernetes Gateway API deployment.
+
+## Safety and Privacy
+
+Agentgateway sits on the trust boundary between clients and tools. Review every
+target, route, CORS rule, auth issuer, audience, JWKS URL, resource metadata
+field, TLS setting, and CEL policy before exposing it outside a local lab.
+Stdio targets can spawn commands on the gateway host, and aggregated targets can
+make a single endpoint much more powerful than any individual server appears.
+
+Observability and policy inspection are useful, but they can expose sensitive
+request details. MCP tool arguments, results, prompts, resource names, session
+IDs, request/response bodies, JWT claims, API keys, and upstream credentials may
+be visible to logs, traces, policy expressions, or model providers through the
+MCP client.
+
+## Duplicate Check
+
+No `agentgateway/agentgateway` entry, Agentgateway MCP Gateway entry,
+agentgateway MCP proxy entry, or matching source URL was found in `content/mcp`.

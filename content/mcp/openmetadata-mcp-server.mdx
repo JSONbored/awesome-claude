@@ -1,0 +1,177 @@
+---
+title: OpenMetadata MCP Server
+slug: openmetadata-mcp-server
+category: mcp
+description: >-
+  OpenMetadata MCP OAuth server that lets Claude-compatible clients access
+  OpenMetadata metadata tools through user SSO or Basic Auth, PKCE, dynamic
+  client registration, and OpenMetadata's normal permission model.
+cardDescription: Connect Claude to OpenMetadata metadata search, entity lookup, lineage, glossary, and catalog-governance tools through OAuth-backed MCP.
+seoTitle: OpenMetadata MCP Server for Claude
+seoDescription: >-
+  Configure OpenMetadata's MCP OAuth server with Claude to search metadata,
+  inspect entities, use semantic search, update catalog metadata, create
+  glossary entries, and edit lineage through OpenMetadata user permissions.
+author: OpenMetadata
+authorProfileUrl: "https://github.com/open-metadata"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: OpenMetadata
+brandDomain: open-metadata.org
+repoUrl: "https://github.com/open-metadata/OpenMetadata"
+documentationUrl: "https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/README.md"
+installable: true
+installCommand: "Enable OpenMetadata MCP configuration, then connect an OAuth-capable MCP client to the OpenMetadata MCP endpoint."
+usageSnippet: "Authenticate with your OpenMetadata user account, then ask Claude to search metadata, inspect lineage, or draft catalog changes within that user's permissions."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "openmetadata": {
+        "url": "https://<openmetadata-host>/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  Configure OpenMetadata MCP settings with a production baseUrl, explicit allowedOrigins, and enabled=true before connecting clients.
+estimatedSetupTime: 45 minutes
+difficulty: advanced
+prerequisites:
+  - Running OpenMetadata deployment with the MCP module and OAuth settings available.
+  - OpenMetadata user account authenticated through SSO or Basic Auth.
+  - MCP client support for OAuth discovery, dynamic client registration, and bearer-token authenticated requests.
+  - Reviewed `baseUrl`, `allowedOrigins`, token lifetime, CORS, SSO provider, and cluster configuration for the OpenMetadata MCP deployment.
+  - Catalog-governance policy for AI-assisted search, entity patching, glossary changes, lineage edits, and audit logging.
+safetyNotes:
+  - OpenMetadata MCP tools execute with the authenticated user's OpenMetadata permissions, not with a generic connector identity.
+  - OAuth support includes Authorization Code Flow with PKCE, dynamic client registration, refresh-token rotation, encrypted token storage, rate limiting, CORS configuration, and audit logging.
+  - Tools can search metadata, inspect entities, use semantic search, patch entities, create glossary resources, and edit lineage depending on the deployed tool set and user permissions.
+  - Metadata mutations can change catalog governance, lineage, ownership, descriptions, tags, glossary definitions, and downstream trust signals.
+  - Require approval before entity patching, glossary changes, lineage edits, or any action that changes catalog state used by analysts, data products, or compliance workflows.
+privacyNotes:
+  - OpenMetadata catalog content can reveal table names, columns, schemas, dashboards, pipelines, services, owners, tags, classifications, glossary terms, lineage, usage patterns, data-quality context, and internal business semantics.
+  - OAuth access tokens, refresh tokens, authorization codes, client IDs, redirect URIs, CORS origins, SSO identities, audit logs, and MCP transcripts can contain sensitive security or user information.
+  - Search and semantic-search results can surface restricted metadata if roles, policies, ownership, or impersonation settings are misconfigured.
+  - Redact tokens, user identifiers, internal hostnames, private service names, lineage diagrams, and regulated metadata before sharing prompts, logs, screenshots, or generated notes.
+disclosure: >-
+  Apache-2.0 OpenMetadata project module for OAuth-backed MCP access to the
+  metadata catalog. It should be enabled only where OpenMetadata user
+  permissions, audit logging, and governance workflows are ready for AI-assisted
+  metadata access and mutation.
+sourceUrls:
+  - "https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/LICENSE"
+  - "https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/server/transport/OAuthHttpStatelessServerTransportProvider.java"
+  - "https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/SearchMetadataTool.java"
+  - "https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/SemanticSearchTool.java"
+  - "https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/GetEntityTool.java"
+  - "https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/PatchEntityTool.java"
+  - "https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/GlossaryTool.java"
+  - "https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/LineageTool.java"
+tags:
+  - data-catalog
+  - metadata
+  - oauth
+  - governance
+  - lineage
+keywords:
+  - OpenMetadata MCP
+  - OpenMetadata MCP Server
+  - metadata catalog MCP
+  - data governance MCP
+  - lineage MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+OpenMetadata MCP Server is OpenMetadata's OAuth-backed MCP integration for
+Claude Desktop and other MCP clients. It uses OpenMetadata user authentication
+through SSO or Basic Auth, then runs MCP tools under the authenticated user's
+normal OpenMetadata permissions.
+
+Use it when Claude needs governed access to metadata search, semantic search,
+entity lookup, catalog updates, glossary workflows, or lineage edits inside an
+OpenMetadata deployment that already has roles, policies, SSO, and audit
+logging configured.
+
+## Source Review
+
+- https://github.com/open-metadata/OpenMetadata
+- https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/README.md
+- https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/LICENSE
+- https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/server/transport/OAuthHttpStatelessServerTransportProvider.java
+- https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/SearchMetadataTool.java
+- https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/SemanticSearchTool.java
+- https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/GetEntityTool.java
+- https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/PatchEntityTool.java
+- https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/GlossaryTool.java
+- https://raw.githubusercontent.com/open-metadata/OpenMetadata/main/openmetadata-mcp/src/main/java/org/openmetadata/mcp/tools/LineageTool.java
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+OAuth README, license, OAuth transport provider, search tools, entity tools,
+glossary tool, and lineage tool for current setup and behavior details.
+
+## Features
+
+- Authenticate MCP clients with OAuth Authorization Code Flow with PKCE.
+- Support SSO providers such as Google, Okta, Azure AD, Auth0, AWS Cognito,
+  Custom OIDC, LDAP, and SAML through OpenMetadata's existing authentication.
+- Support Basic Auth with OpenMetadata credentials where that mode is configured.
+- Use dynamic client registration and OAuth discovery endpoints.
+- Rotate refresh tokens and encrypt token storage.
+- Apply OpenMetadata authorizer checks using the authenticated user's identity.
+- Search metadata and run semantic search.
+- Inspect entities, patch catalog metadata, create glossary resources, and add
+  lineage edges when the user has permission.
+
+## Installation
+
+Enable and configure OpenMetadata's MCP settings with a production `baseUrl`,
+explicit `allowedOrigins`, and reviewed SSO settings. Then connect an OAuth-
+capable MCP client to the deployment's MCP endpoint:
+
+```json
+{
+  "mcpServers": {
+    "openmetadata": {
+      "url": "https://<openmetadata-host>/mcp"
+    }
+  }
+}
+```
+
+Use the endpoint and OAuth discovery details from the approved OpenMetadata
+deployment. Keep OAuth client details, access tokens, refresh tokens, and SSO
+configuration out of prompts, issue comments, and repository files.
+
+## Use Cases
+
+- Search catalog metadata before answering questions about trusted datasets.
+- Inspect ownership, descriptions, tags, classifications, and lineage for a
+  table, dashboard, pipeline, or service.
+- Use semantic search to find related data products or glossary terms.
+- Draft and review catalog metadata patches before applying them.
+- Create glossary resources through an approved governance workflow.
+- Add or review lineage edges with the same permissions used in OpenMetadata.
+- Help data stewards investigate root-cause or discovery questions without
+  bypassing OpenMetadata roles and policies.
+
+## Safety and Privacy
+
+OpenMetadata MCP Server can expose and mutate catalog metadata. Keep it tied to
+named user authentication, tested authorization policies, explicit CORS origins,
+short-lived tokens, and audit logging. Require human approval before any patch,
+glossary, lineage, or governance update.
+
+Treat metadata as sensitive. Dataset names, columns, owners, tags,
+classifications, lineage, service names, data-quality context, and glossary
+terms can reveal regulated systems, customer domains, business strategy, or
+security architecture even when raw data is not returned.
+
+## Duplicate Check
+
+No `open-metadata/OpenMetadata`, OpenMetadata MCP, OpenMetadata MCP Server,
+`openmetadata-mcp`, or matching source URL entry was found in `content/mcp` or
+`README.md`. Existing database, catalog, and governance entries do not cover
+OpenMetadata's OAuth-backed MCP server.

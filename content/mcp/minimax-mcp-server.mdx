@@ -1,0 +1,194 @@
+---
+title: MiniMax MCP Server
+slug: minimax-mcp-server
+category: mcp
+description: >-
+  Official MiniMax MCP server for using MiniMax text-to-speech, voice cloning,
+  voice design, image generation, video generation, music generation, and media
+  retrieval APIs from Claude and other MCP clients.
+cardDescription: >-
+  Connect Claude to MiniMax APIs for speech, voice cloning, image, video, and
+  music generation through the official Python MCP server.
+seoTitle: MiniMax MCP Server for Claude
+seoDescription: >-
+  Configure the official MiniMax MCP server with Claude, Cursor, Windsurf, and
+  other MCP clients to generate speech, clone voices, design voices, generate
+  images, generate video, create music, and query generation jobs.
+author: MiniMax-AI
+authorProfileUrl: "https://github.com/MiniMax-AI"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MiniMax
+brandDomain: minimax.io
+repoUrl: "https://github.com/MiniMax-AI/MiniMax-MCP"
+documentationUrl: "https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/README.md"
+packageUrl: "https://pypi.org/project/minimax-mcp/"
+installable: true
+installCommand: "uvx minimax-mcp"
+usageSnippet: "Set MINIMAX_API_KEY and the matching MINIMAX_API_HOST for your region, then run minimax-mcp from an MCP client before requesting media generation."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "minimax": {
+        "command": "uvx",
+        "args": ["minimax-mcp"],
+        "env": {
+          "MINIMAX_API_KEY": "insert-your-api-key-here",
+          "MINIMAX_API_HOST": "https://api.minimax.io",
+          "MINIMAX_API_RESOURCE_MODE": "url"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add minimax \
+    --env MINIMAX_API_KEY=insert-your-api-key-here \
+    --env MINIMAX_API_HOST=https://api.minimax.io \
+    --env MINIMAX_API_RESOURCE_MODE=url \
+    -- uvx minimax-mcp
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - MiniMax API key from the correct regional MiniMax platform.
+  - MINIMAX_API_HOST set to the matching Global or Mainland endpoint for the API key.
+  - uv or uvx available to run the Python package.
+  - Optional MINIMAX_MCP_BASE_PATH when using local output mode for generated media files.
+  - Policy for paid API usage, voice cloning consent, copyrighted prompts or lyrics, and generated media review.
+safetyNotes:
+  - Most generation tools call MiniMax APIs and can incur account costs; only enable them for users who are authorized to spend from the MiniMax account.
+  - Voice cloning and voice design can create synthetic voices; obtain consent and rights for any source audio or identity-like voice prompt before use.
+  - Image-to-video, voice cloning, audio playback, and local output modes can read local files or URLs and send media to MiniMax APIs.
+  - Generated image, audio, video, and music outputs should be reviewed for policy, copyright, likeness, brand, and release constraints before publication.
+  - The API key and API host must match the selected region or requests can fail with authentication errors.
+privacyNotes:
+  - Prompts, preview text, lyrics, source audio, first-frame images, uploaded files, generated media requests, and task IDs may be sent to MiniMax APIs and included in MCP client or model logs.
+  - MINIMAX_API_KEY must stay in environment variables or secret managers and should never be committed to MCP config files.
+  - Local output mode can write generated files under the configured base path, and returned file paths may reveal workstation directory structure to the MCP client.
+  - URL resource mode returns generated media URLs that may need access controls, retention review, and sharing policy before being pasted into chats or tickets.
+disclosure: >-
+  Official MiniMax API tooling. MiniMax account usage, model access, regional
+  hosts, quotas, and billing follow MiniMax's current platform terms.
+sourceUrls:
+  - "https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/LICENSE"
+  - "https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/pyproject.toml"
+  - "https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/minimax_mcp/server.py"
+  - "https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/minimax_mcp/client.py"
+  - "https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/minimax_mcp/utils.py"
+  - "https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/minimax_mcp/const.py"
+  - "https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/minimax_mcp/__main__.py"
+tags:
+  - audio
+  - image-generation
+  - video
+  - voice
+  - media
+keywords:
+  - MiniMax MCP
+  - MiniMax text to speech MCP
+  - MiniMax video generation MCP
+  - MiniMax image generation MCP
+  - voice cloning MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MiniMax MCP Server is the official Python MCP server for MiniMax generation
+APIs. It lets Claude and other MCP clients call MiniMax tools for
+text-to-speech, voice listing, voice cloning, voice design, image generation,
+video generation, video-generation status checks, music generation, and audio
+playback.
+
+Use it when a workflow needs agent-assisted media generation through a MiniMax
+account while keeping API keys and generated assets under explicit operational
+controls. It is especially useful for prototyping voice, image, video, and
+short music assets from Claude, Cursor, Windsurf, or other MCP-capable clients.
+
+## Source Review
+
+- https://github.com/MiniMax-AI/MiniMax-MCP
+- https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/README.md
+- https://pypi.org/project/minimax-mcp/
+- https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/LICENSE
+- https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/pyproject.toml
+- https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/minimax_mcp/server.py
+- https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/minimax_mcp/client.py
+- https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/minimax_mcp/utils.py
+- https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/minimax_mcp/const.py
+- https://github.com/MiniMax-AI/MiniMax-MCP/blob/main/minimax_mcp/__main__.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI package page, license, package manifest, server implementation,
+API client, utility helpers, constants, and package entrypoint for current
+installation and tool behavior.
+
+## Features
+
+- Convert text to speech with MiniMax voices.
+- List available system and voice-cloning voices.
+- Clone a voice from local audio files or audio URLs.
+- Design a voice from a prompt and preview text.
+- Generate images from prompts.
+- Generate videos from prompts or first-frame images, including async task
+  handling.
+- Query video-generation task status.
+- Generate short music from prompts and lyrics.
+- Return generated media as URLs or save media locally depending on resource
+  mode.
+
+## Installation
+
+Configure the MCP server with a MiniMax API key and the matching regional API
+host:
+
+```json
+{
+  "mcpServers": {
+    "minimax": {
+      "command": "uvx",
+      "args": ["minimax-mcp"],
+      "env": {
+        "MINIMAX_API_KEY": "insert-your-api-key-here",
+        "MINIMAX_API_HOST": "https://api.minimax.io",
+        "MINIMAX_API_RESOURCE_MODE": "url"
+      }
+    }
+  }
+}
+```
+
+Use `https://api.minimax.io` for the Global host or the Mainland host documented
+in the upstream README when using a Mainland API key. Restart the MCP client
+after adding the server.
+
+## Use Cases
+
+- Ask Claude to draft and generate narration audio for a prototype.
+- Clone an approved voice sample for internal review workflows.
+- Generate concept images or short video clips from prompt iterations.
+- Query a pending MiniMax video-generation task from the MCP client.
+- Generate short music drafts from a prompt and lyrics.
+- Return media as URLs for review or save outputs under a controlled local
+  base path.
+
+## Safety and Privacy
+
+MiniMax MCP Server can spend API credits and send prompts, audio, images, video
+frames, lyrics, and generated-media requests to MiniMax services. Keep the MCP
+server disabled for users who are not authorized to use the account, and review
+outputs before publishing or sending to customers.
+
+Voice cloning and voice design require special care. Use only audio and voice
+descriptions where consent, rights, and internal approval are clear, and avoid
+creating voice likenesses that could mislead listeners.
+
+Keep the API key out of committed config files. If local output mode is enabled,
+review the base path and file-retention policy because generated media files and
+paths can reveal project context or workstation details.
+
+## Duplicate Check
+
+No MiniMax MCP Server, `MiniMax-AI/MiniMax-MCP`, `minimax-mcp`, or matching
+MiniMax source URL was found in `content/mcp`.

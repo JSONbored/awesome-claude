@@ -1,0 +1,183 @@
+---
+title: WebClaw MCP Server
+slug: webclaw-mcp-server
+category: mcp
+description: >-
+  Local-first MCP server for web scraping, crawling, URL mapping, batch
+  extraction, structured extraction, summarization, diffing, brand extraction,
+  and optional hosted API fallback for bot-protected pages.
+cardDescription: >-
+  Connect Claude to WebClaw for local-first scraping, crawling, content
+  extraction, structured data, page diffs, brand assets, and public URL guards.
+seoTitle: WebClaw MCP Server for Claude
+seoDescription: >-
+  Configure WebClaw MCP Server with Claude to scrape pages, crawl sites, map
+  URLs, extract structured data, summarize content, compare snapshots, and
+  fetch public web content with SSRF protections.
+author: WebClaw
+authorProfileUrl: "https://github.com/0xMassi"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: WebClaw
+brandDomain: webclaw.io
+repoUrl: "https://github.com/0xMassi/webclaw"
+documentationUrl: "https://raw.githubusercontent.com/0xMassi/webclaw/main/README.md"
+packageUrl: "https://registry.npmjs.org/create-webclaw"
+installable: true
+installCommand: "npx create-webclaw"
+usageSnippet: "Run `npx create-webclaw` to configure the WebClaw MCP server for supported MCP clients, or point your client at the trusted `webclaw-mcp` binary installed by the setup flow."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "webclaw": {
+        "command": "PATH_TO_WEBCLAW_MCP_BINARY",
+        "env": {
+          "WEBCLAW_API_KEY": "OPTIONAL_WEBCLAW_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  npx create-webclaw
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js for the `create-webclaw` installer, or Rust/Cargo when building the MCP binary from source.
+  - Review of AGPL-3.0 obligations before redistributing or operating modified server versions.
+  - Review of target-site terms, robots expectations, rate limits, and scraping permissions.
+  - Optional `WEBCLAW_API_KEY` only when hosted API fallback is acceptable for bot-protected or JavaScript-heavy pages.
+  - Optional proxy, cookie, or LLM-provider configuration only for workflows that explicitly require it.
+safetyNotes:
+  - WebClaw MCP Server can scrape one URL, crawl same-origin links, map URLs, batch multiple URLs, extract structured data, summarize pages, compare snapshots, and extract brand metadata.
+  - Scraping, crawling, search, research, and hosted fallback can trigger target-site rate limits, bot protections, legal restrictions, or terms-of-service limits.
+  - The server validates public HTTP URLs and rejects private or internal destinations, but operators should still avoid fetching internal, secret, customer-specific, or credential-bearing URLs.
+  - Cookie-bearing requests, proxies, and browser profiles can expose authenticated sessions or route traffic through external infrastructure.
+  - Setting `WEBCLAW_API_KEY` enables hosted API fallback, which can send target URLs and page context to the WebClaw service.
+  - Structured extraction and summarization may use configured LLM providers; review provider data handling before enabling those tools with sensitive pages.
+privacyNotes:
+  - URLs, fetched page content, crawl results, extracted structured data, snapshots, brand metadata, cookies, proxy settings, API keys, and LLM prompts can be exposed to the MCP client.
+  - Crawled pages may include personal data, customer content, non-public links, access tokens embedded in URLs, or site-specific identifiers.
+  - Diff snapshots and exported JSON can preserve page content longer than expected; store and delete them according to the workflow's retention needs.
+  - Hosted fallback, proxy providers, search/research APIs, and LLM providers may observe target URLs, headers, cookies, prompts, and extracted content when enabled.
+  - Redact sensitive URLs and extracted data before sharing MCP transcripts, crawl results, logs, or generated RAG context.
+disclosure: >-
+  Open source AGPL-3.0 MCP server and extraction engine for WebClaw. Local tools
+  run without a hosted API key; optional hosted fallback through webclaw.io can
+  be enabled with `WEBCLAW_API_KEY`.
+sourceUrls:
+  - "https://raw.githubusercontent.com/0xMassi/webclaw/main/LICENSE"
+  - "https://raw.githubusercontent.com/0xMassi/webclaw/main/Cargo.toml"
+  - "https://raw.githubusercontent.com/0xMassi/webclaw/main/packages/create-webclaw/package.json"
+  - "https://raw.githubusercontent.com/0xMassi/webclaw/main/crates/webclaw-mcp/src/server.rs"
+  - "https://raw.githubusercontent.com/0xMassi/webclaw/main/crates/webclaw-mcp/src/tools.rs"
+  - "https://raw.githubusercontent.com/0xMassi/webclaw/main/crates/webclaw-fetch/src/url_security.rs"
+tags:
+  - web-scraping
+  - crawling
+  - extraction
+  - research
+  - rust
+keywords:
+  - WebClaw MCP
+  - WebClaw MCP Server
+  - web scraping MCP
+  - crawling MCP server
+  - structured extraction MCP
+  - local-first scraping MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+WebClaw MCP Server connects Claude and other MCP clients to the WebClaw
+extraction engine. It supports local-first scraping, crawling, URL mapping,
+batch extraction, structured extraction, summarization, page diffs, brand
+metadata extraction, and optional hosted fallback for bot-protected or
+JavaScript-heavy pages.
+
+Use it when Claude needs supervised access to clean web content for research,
+RAG preparation, documentation crawling, competitor-page comparison, or website
+metadata extraction, while keeping scraping limits and hosted fallback explicit.
+
+## Source Review
+
+- https://github.com/0xMassi/webclaw
+- https://raw.githubusercontent.com/0xMassi/webclaw/main/README.md
+- https://registry.npmjs.org/create-webclaw
+- https://raw.githubusercontent.com/0xMassi/webclaw/main/LICENSE
+- https://raw.githubusercontent.com/0xMassi/webclaw/main/Cargo.toml
+- https://raw.githubusercontent.com/0xMassi/webclaw/main/packages/create-webclaw/package.json
+- https://raw.githubusercontent.com/0xMassi/webclaw/main/crates/webclaw-mcp/src/server.rs
+- https://raw.githubusercontent.com/0xMassi/webclaw/main/crates/webclaw-mcp/src/tools.rs
+- https://raw.githubusercontent.com/0xMassi/webclaw/main/crates/webclaw-fetch/src/url_security.rs
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, installer package metadata, license, workspace manifest, installer
+package manifest, MCP server implementation, tool schemas, and URL safety guard
+for current setup and behavior details.
+
+## Features
+
+- Scrape a single public URL as markdown, text, JSON, LLM-optimized text, or
+  HTML.
+- Crawl same-origin links with configurable depth, page count, concurrency, and
+  optional sitemap discovery.
+- Map URLs without extracting every page.
+- Batch-scrape multiple URLs in parallel.
+- Extract structured data from a page with a prompt and JSON schema.
+- Summarize pages with configured local or remote LLM providers.
+- Compare a current page against a previous extraction snapshot.
+- Extract brand colors, fonts, logos, and metadata.
+- Run site-specific vertical extractors for supported platforms.
+- Reject private or internal fetch targets through server-side URL validation.
+- Enable optional hosted fallback with `WEBCLAW_API_KEY`.
+
+## Installation
+
+Run the installer from a trusted terminal:
+
+```bash
+npx create-webclaw
+```
+
+If configuring manually after installation, point the MCP client at the trusted
+`webclaw-mcp` binary installed by that setup flow:
+
+```json
+{
+  "mcpServers": {
+    "webclaw": {
+      "command": "PATH_TO_WEBCLAW_MCP_BINARY",
+      "env": {
+        "WEBCLAW_API_KEY": "OPTIONAL_WEBCLAW_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Leave `WEBCLAW_API_KEY` unset when local-only extraction is required. Set it
+only when hosted fallback is allowed for the target workflow.
+
+## Use Cases
+
+- Convert a public documentation page into clean markdown for Claude.
+- Crawl a small documentation site and prepare context for a RAG index.
+- Compare a pricing page against a saved snapshot.
+- Extract structured product, repository, or review metadata from supported
+  public pages.
+- Pull brand colors, fonts, logos, and metadata from a company website.
+- Batch-scrape a short list of approved public URLs.
+- Summarize public articles with configured LLM providers.
+
+## Safety and Privacy
+
+WebClaw is powerful web-fetching infrastructure. Confirm that each target URL is
+public, allowed by the site terms, and appropriate for automated extraction
+before scraping or crawling it.
+
+Keep local-only and hosted-fallback workflows separate. If proxies, cookies,
+LLM providers, or `WEBCLAW_API_KEY` are configured, document which third parties
+can observe target URLs, page content, prompts, and generated results.

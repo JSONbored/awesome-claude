@@ -1,0 +1,166 @@
+---
+title: Figma Context MCP Server
+slug: figma-context-mcp-server
+category: mcp
+description: >-
+  Framelink MCP server that gives AI coding agents simplified Figma layout,
+  styling, and design context for implementing Figma frames in code.
+cardDescription: >-
+  Give Claude and other coding agents Figma file context through the
+  `figma-developer-mcp` server.
+seoTitle: Figma Context MCP Server for Claude
+seoDescription: >-
+  Configure the Framelink Figma Context MCP server with Claude Code, Cursor, and
+  other MCP clients so agents can read Figma frame data and implement designs
+  with source-backed layout context.
+author: Framelink
+authorProfileUrl: "https://github.com/GLips"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Framelink MCP for Figma
+brandDomain: framelink.ai
+repoUrl: "https://github.com/GLips/Figma-Context-MCP"
+documentationUrl: "https://www.framelink.ai/docs/quickstart"
+packageUrl: "https://www.npmjs.com/package/figma-developer-mcp"
+installable: true
+installCommand: "claude mcp add figma-context -e FIGMA_API_KEY=your-token -- npx -y figma-developer-mcp --stdio"
+usageSnippet: "Add a Figma personal access token, connect `figma-developer-mcp`, and paste a Figma file, frame, or group link when asking an agent to implement a design."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "figma-context": {
+        "command": "npx",
+        "args": ["-y", "figma-developer-mcp", "--stdio"],
+        "env": {
+          "FIGMA_API_KEY": "YOUR_FIGMA_ACCESS_TOKEN"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "figma-context": {
+        "command": "npx",
+        "args": ["-y", "figma-developer-mcp", "--stdio"],
+        "env": {
+          "FIGMA_API_KEY": "YOUR_FIGMA_ACCESS_TOKEN"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Figma account with access to the files the agent should read.
+  - Figma personal access token stored outside prompts and repository files.
+  - Node.js and npx.
+  - MCP client such as Claude Code, Cursor, or another compatible coding assistant.
+  - Permission from the design owner before exposing private Figma files to an AI workflow.
+safetyNotes:
+  - The server reads Figma design data through a personal access token; use the least access practical.
+  - Review generated UI code before merging because layout context does not guarantee accessibility, responsive behavior, or product correctness.
+  - Do not point agents at confidential designs, unreleased product work, or customer-specific mocks unless that exposure is approved.
+privacyNotes:
+  - Figma file names, frame names, component names, layout metadata, styling, copy, and design tokens may be sent through the MCP server and AI client.
+  - Figma access tokens are sensitive credentials and should stay out of prompts, screenshots, shared configs, and commits.
+  - Design metadata can reveal product strategy, upcoming features, customer workflows, and brand assets.
+sourceUrls:
+  - "https://github.com/GLips/Figma-Context-MCP"
+  - "https://www.framelink.ai/docs/quickstart"
+  - "https://www.npmjs.com/package/figma-developer-mcp"
+  - "https://help.figma.com/hc/en-us/articles/8085703771159-Manage-personal-access-tokens"
+tags:
+  - figma
+  - design
+  - frontend
+  - layout
+  - framelink
+keywords:
+  - Figma Context MCP
+  - Framelink MCP for Figma
+  - figma-developer-mcp Claude Code
+  - Figma design MCP server
+  - Figma layout MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Figma Context MCP is the Framelink MCP server for Figma design data. It lets an
+MCP client fetch simplified Figma layout and styling context from a file, frame,
+or group link so a coding agent can implement designs with more structure than a
+screenshot-only workflow.
+
+The project is published as `figma-developer-mcp` and is designed for AI-powered
+coding tools such as Cursor and other MCP clients.
+
+## Source Review
+
+- https://github.com/GLips/Figma-Context-MCP
+- https://www.framelink.ai/docs/quickstart
+- https://www.npmjs.com/package/figma-developer-mcp
+- https://help.figma.com/hc/en-us/articles/8085703771159-Manage-personal-access-tokens
+
+These sources were reviewed on **2026-06-05**. Prefer live Framelink docs for
+current setup, command flags, client examples, and Figma token requirements.
+
+## Features
+
+- Fetch Figma file, frame, and group context from links.
+- Simplify Figma API responses before sending layout context to the model.
+- Provide styling and layout metadata that coding agents can map into UI code.
+- Support stdio MCP client configuration through `figma-developer-mcp`.
+- Reduce context noise compared with raw Figma API payloads.
+
+## Installation
+
+For Claude Code:
+
+```sh
+claude mcp add figma-context -e FIGMA_API_KEY=your-token -- npx -y figma-developer-mcp --stdio
+```
+
+For JSON-based MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "figma-context": {
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp", "--stdio"],
+      "env": {
+        "FIGMA_API_KEY": "YOUR_FIGMA_ACCESS_TOKEN"
+      }
+    }
+  }
+}
+```
+
+After setup, paste a Figma file, frame, or group link into the agent prompt and
+ask for implementation help.
+
+## Use Cases
+
+- Implement a Figma frame as a React, Vue, Svelte, or HTML/CSS component.
+- Extract layout, spacing, typography, and color context for a design handoff.
+- Compare generated UI against source design structure.
+- Give an agent source design metadata before building a first-pass interface.
+
+## Safety and Privacy
+
+Figma files often contain unreleased product direction, brand work, customer
+flows, and internal copy. Only use tokens and files that are approved for the AI
+workflow. Review generated code for accessibility, responsive behavior, design
+system fit, and product correctness before shipping.
+
+Keep Figma tokens in environment variables or client secret storage, never in
+repository files or screenshots.
+
+## Duplicate Check
+
+`content/mcp/figma-mcp-server.mdx` covers Figma's official MCP server. This
+entry covers the separate Framelink/GLips `Figma-Context-MCP` project and its
+`figma-developer-mcp` package.

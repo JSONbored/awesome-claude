@@ -1,0 +1,208 @@
+---
+title: Burp Suite MCP Server
+slug: burp-suite-mcp-server
+category: mcp
+description: >-
+  PortSwigger's Burp Suite MCP Server extension connects Burp Suite to MCP
+  clients through an SSE server or packaged stdio proxy for request, Repeater,
+  Intruder, history, scanner, Collaborator, and configuration workflows.
+cardDescription: >-
+  Connect Burp Suite to Claude through an MCP extension for HTTP requests,
+  Repeater, Intruder, proxy history, scanner issues, and Collaborator.
+seoTitle: Burp Suite MCP Server for Claude
+seoDescription: >-
+  Configure PortSwigger's Burp Suite MCP Server extension with Claude to send
+  HTTP requests, create Repeater tabs, inspect proxy history, view scanner
+  issues, use Collaborator payloads, and manage Burp workflows through MCP.
+author: PortSwigger
+authorProfileUrl: "https://github.com/PortSwigger"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Burp Suite MCP Server
+brandDomain: portswigger.net
+repoUrl: "https://github.com/PortSwigger/mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/PortSwigger/mcp-server/main/README.md"
+installable: true
+installCommand: "./gradlew embedProxyJar"
+usageSnippet: "Build `burp-mcp-all.jar` with `./gradlew embedProxyJar`, load it as a Java extension in Burp Suite, enable the MCP tab, then connect Claude to the extension's SSE server or packaged stdio proxy."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "burp": {
+        "command": "/path/to/packaged/burp/java",
+        "args": [
+          "-jar",
+          "/path/to/mcp-proxy-all.jar",
+          "--sse-url",
+          "BURP_MCP_SSE_URL"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  ./gradlew embedProxyJar
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Burp Suite Community or Professional with Java extension support.
+  - Java and the `jar` command available for building and loading the extension.
+  - Gradle wrapper execution allowed for building `build/libs/burp-mcp-all.jar` from source.
+  - An MCP client that can connect to the Burp SSE server or run the packaged stdio proxy.
+  - Explicit authorization to test the target applications, hosts, and network traffic exposed through Burp.
+safetyNotes:
+  - Burp Suite MCP Server can send HTTP/1.1 and HTTP/2 requests, create Repeater tabs, send requests to Intruder, toggle Proxy Intercept, pause or resume Burp's task execution engine, and update the active message editor.
+  - In Burp Suite Professional it can also expose scanner issues and generate or poll Collaborator payloads for out-of-band testing.
+  - The extension includes approval flows for outbound HTTP requests and sensitive data access, but users can configure always-allow targets and disable some approval requirements.
+  - Configuration editing tools can import project-level or user-level Burp options when enabled in the extension, which can change proxy, scanner, target, and other Burp behavior.
+  - Use only on systems and applications where testing is authorized; active requests, Intruder traffic, scanner workflows, and Collaborator payloads can affect third-party services.
+  - Keep the MCP server bound to trusted local interfaces and avoid exposing the SSE server to untrusted networks.
+privacyNotes:
+  - Proxy HTTP history, WebSocket history, Organizer items, scanner issues, request and response bodies, headers, cookies, tokens, session identifiers, and Collaborator interaction data may be returned to the MCP client.
+  - The extension can read project-level and user-level Burp configuration; upstream code filters some configuration credentials when configured, but users should still treat exported options as sensitive.
+  - MCP prompts, responses, Burp logs, and client transcripts can retain target URLs, credentials, payloads, vulnerability details, and proprietary application behavior.
+  - The stdio proxy and SSE server bridge Burp traffic into the MCP client process; keep client configs, proxy paths, and Burp project files protected.
+disclosure: >-
+  Source-backed Burp Suite extension from PortSwigger. The repository includes a
+  GPL-3.0 license file and a BApp manifest for the Java extension.
+sourceUrls:
+  - "https://raw.githubusercontent.com/PortSwigger/mcp-server/main/LICENSE"
+  - "https://raw.githubusercontent.com/PortSwigger/mcp-server/main/BappManifest.bmf"
+  - "https://raw.githubusercontent.com/PortSwigger/mcp-server/main/gradle.properties"
+  - "https://raw.githubusercontent.com/PortSwigger/mcp-server/main/build.gradle.kts"
+  - "https://raw.githubusercontent.com/PortSwigger/mcp-server/main/src/main/kotlin/net/portswigger/mcp/ExtensionBase.kt"
+  - "https://raw.githubusercontent.com/PortSwigger/mcp-server/main/src/main/kotlin/net/portswigger/mcp/tools/Tools.kt"
+  - "https://raw.githubusercontent.com/PortSwigger/mcp-server/main/src/main/kotlin/net/portswigger/mcp/security/DataAccessSecurity.kt"
+  - "https://raw.githubusercontent.com/PortSwigger/mcp-server/main/src/main/kotlin/net/portswigger/mcp/security/HttpRequestSecurity.kt"
+tags:
+  - burp-suite
+  - security-testing
+  - web-security
+  - proxy
+  - pentesting
+keywords:
+  - Burp MCP
+  - Burp Suite MCP Server
+  - PortSwigger MCP
+  - Burp Suite Claude
+  - web security MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Burp Suite MCP Server is PortSwigger's MCP extension for connecting Burp Suite
+to Claude and other MCP clients. It runs inside Burp, exposes an SSE MCP server
+by default on localhost, and includes a packaged stdio proxy for clients that
+only support stdio servers.
+
+Use it when Claude needs to work alongside a human tester in Burp Suite: sending
+requests, preparing Repeater or Intruder workflows, inspecting proxy history,
+reviewing scanner issues, using Collaborator payloads, or reading and updating
+Burp configuration under operator control.
+
+## Source Review
+
+- https://github.com/PortSwigger/mcp-server
+- https://raw.githubusercontent.com/PortSwigger/mcp-server/main/README.md
+- https://raw.githubusercontent.com/PortSwigger/mcp-server/main/LICENSE
+- https://raw.githubusercontent.com/PortSwigger/mcp-server/main/BappManifest.bmf
+- https://raw.githubusercontent.com/PortSwigger/mcp-server/main/gradle.properties
+- https://raw.githubusercontent.com/PortSwigger/mcp-server/main/build.gradle.kts
+- https://raw.githubusercontent.com/PortSwigger/mcp-server/main/src/main/kotlin/net/portswigger/mcp/ExtensionBase.kt
+- https://raw.githubusercontent.com/PortSwigger/mcp-server/main/src/main/kotlin/net/portswigger/mcp/tools/Tools.kt
+- https://raw.githubusercontent.com/PortSwigger/mcp-server/main/src/main/kotlin/net/portswigger/mcp/security/DataAccessSecurity.kt
+- https://raw.githubusercontent.com/PortSwigger/mcp-server/main/src/main/kotlin/net/portswigger/mcp/security/HttpRequestSecurity.kt
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, BApp manifest, Gradle metadata, build script, extension
+entrypoint, tool implementation, and request and data-access security code for
+current installation and behavior details.
+
+## Features
+
+- Run as a Burp Suite Java extension.
+- Expose a local SSE MCP server from the Burp extension.
+- Connect stdio-only MCP clients through the packaged MCP proxy JAR.
+- Send HTTP/1.1 and HTTP/2 requests through Burp.
+- Create Repeater tabs and send requests to Intruder.
+- URL encode, URL decode, Base64 encode, Base64 decode, and generate random
+  strings through Burp utilities.
+- Export project and user options, with credential filtering available in the
+  extension configuration.
+- Import project and user options when configuration-editing tools are enabled.
+- Read proxy HTTP history, proxy WebSocket history, Organizer items, and scanner
+  issues.
+- Generate and poll Collaborator payloads in Burp Suite Professional.
+- Toggle Proxy Intercept and the task execution engine state.
+
+## Installation
+
+Build the extension from source:
+
+```bash
+git clone https://github.com/PortSwigger/mcp-server.git
+cd mcp-server
+./gradlew embedProxyJar
+```
+
+Then load `build/libs/burp-mcp-all.jar` in Burp Suite from the Extensions tab
+as a Java extension. Configure the MCP tab in Burp and connect your MCP client
+to the local SSE server, usually:
+
+```text
+127.0.0.1:9876
+```
+
+For stdio-only clients, use the packaged proxy JAR extracted by the extension:
+
+```json
+{
+  "mcpServers": {
+    "burp": {
+      "command": "/path/to/packaged/burp/java",
+      "args": [
+          "-jar",
+          "/path/to/mcp-proxy-all.jar",
+          "--sse-url",
+          "BURP_MCP_SSE_URL"
+        ]
+      }
+    }
+}
+```
+
+## Use Cases
+
+- Ask Claude to prepare a Repeater tab for a raw HTTP request.
+- Send approved HTTP/1.1 or HTTP/2 requests through Burp.
+- Search and summarize proxy history for a target application.
+- Review scanner issues during a supervised Burp Suite Professional workflow.
+- Generate Collaborator payloads for authorized out-of-band testing.
+- Toggle Proxy Intercept or pause Burp's task execution engine during testing.
+- Inspect Burp project or user options before changing a test configuration.
+
+## Safety and Privacy
+
+Burp Suite MCP Server sits next to sensitive security-testing traffic. Use it
+only for targets where testing is authorized, and keep request approvals enabled
+unless the scope is tightly constrained. Intruder, scanner, Collaborator, and
+manual request tools can generate traffic that affects real services.
+
+The extension can expose HTTP history, WebSocket history, Organizer items,
+scanner issues, active editor contents, request and response bodies, cookies,
+authorization headers, session tokens, and vulnerability details. Treat MCP
+client transcripts and model context as sensitive security records.
+
+If configuration editing is enabled, Claude can apply project-level or
+user-level Burp option changes. Review exported configuration first, keep
+credential filtering enabled where appropriate, and bind the MCP server only to
+trusted local interfaces.
+
+## Duplicate Check
+
+Existing MCP entries cover security and vulnerability tools such as Snyk, CVE,
+Pentest AI, and CLI security workflows, but no Burp Suite MCP Server,
+`PortSwigger/mcp-server`, PortSwigger BApp MCP extension, or matching source URL
+was found in `content/mcp`.

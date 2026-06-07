@@ -1,0 +1,186 @@
+---
+title: Semble MCP Server
+slug: semble-mcp-server
+category: mcp
+description: >-
+  Local code-search MCP server for agents, using CPU-only hybrid retrieval to
+  index repositories and return focused snippets for natural-language queries.
+cardDescription: >-
+  Give Claude fast local and remote repository search with `search` and
+  `find_related` MCP tools backed by cached code indexes.
+seoTitle: Semble MCP Server for Claude
+seoDescription: >-
+  Configure Semble MCP Server with Claude, Codex, Cursor, OpenCode, VS Code, and
+  other MCP clients to search local or remote repositories, find related code,
+  and reduce broad grep/read context loading.
+author: MinishLab
+authorProfileUrl: "https://github.com/MinishLab"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Semble
+brandDomain: github.com
+repoUrl: "https://github.com/MinishLab/semble"
+documentationUrl: "https://github.com/MinishLab/semble/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/semble/json"
+installable: true
+installCommand: "uv tool install semble && semble install"
+usageSnippet: "Install Semble with `uv tool install semble`, run `semble install`, or configure an MCP client to launch `uvx --from \"semble[mcp]\" semble`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "semble": {
+        "command": "uvx",
+        "args": ["--from", "semble[mcp]", "semble"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "semble": {
+        "command": "uvx",
+        "args": ["--from", "semble[mcp]", "semble", "--content", "all"],
+        "env": {
+          "SEMBLE_CACHE_LOCATION": "ABSOLUTE_CACHE_PATH"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer and uv available to the MCP client runtime.
+  - A local repository or remote git repository you are authorized to index.
+  - Approval before the interactive installer modifies MCP client configs, AGENTS.md, CLAUDE.md, or sub-agent files.
+  - Cache location and retention reviewed before indexing proprietary repositories.
+  - Optional `--content docs`, `--content config`, or `--content all` scope chosen deliberately for sensitive projects.
+safetyNotes:
+  - Semble indexes local paths or remote git repositories and returns code chunks through MCP tools.
+  - The interactive installer can modify agent configuration files, instruction files, and sub-agent files for supported clients.
+  - In MCP mode, local paths can be watched for file changes and re-indexed automatically.
+  - Remote repository search accepts git URLs and clones or indexes source on demand.
+  - Cached indexes and usage statistics can persist after the MCP session ends.
+privacyNotes:
+  - Source code, filenames, directory structure, snippets, documentation, configuration files, search queries, related-code requests, cache keys, and tool results may be visible to the MCP client and model provider.
+  - Using `--content docs`, `--content config`, or `--content all` can include README files, deployment notes, YAML/TOML files, credentials accidentally present in config, and internal runbooks.
+  - Persistent cache data may reveal repository names, paths, symbols, comments, and source-derived chunks.
+  - Review `.gitignore` and `.sembleignore` coverage before indexing workspaces that contain generated files, vendored code, secrets, customer data, or unrelated private repositories.
+sourceUrls:
+  - "https://github.com/MinishLab/semble"
+  - "https://github.com/MinishLab/semble/blob/main/README.md"
+  - "https://github.com/MinishLab/semble/blob/main/docs/installation.md"
+  - "https://github.com/MinishLab/semble/blob/main/pyproject.toml"
+  - "https://github.com/MinishLab/semble/blob/main/src/semble/mcp.py"
+  - "https://github.com/MinishLab/semble/blob/main/src/semble/cache.py"
+  - "https://github.com/MinishLab/semble/blob/main/benchmarks/README.md"
+  - "https://github.com/MinishLab/semble/blob/main/LICENSE"
+  - "https://pypi.org/pypi/semble/json"
+tags:
+  - code-search
+  - repository
+  - semantic-search
+  - developer-tools
+  - local-first
+keywords:
+  - Semble MCP
+  - semble
+  - code search MCP
+  - semantic code search
+  - repository search MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Semble is a local-first code-search MCP server for coding agents. It indexes
+local paths or remote git repositories and exposes focused search results
+through MCP instead of making Claude grep broadly and read entire files.
+
+The MCP server provides `search` for natural-language or code queries and
+`find_related` for finding chunks similar to a known file and line. The project
+uses CPU-only hybrid retrieval with static code embeddings, BM25, tree-sitter
+chunking, and reranking. Indexes are cached and local repositories can be
+watched for automatic re-indexing during an MCP session.
+
+## Source Review
+
+- https://github.com/MinishLab/semble
+- https://github.com/MinishLab/semble/blob/main/README.md
+- https://github.com/MinishLab/semble/blob/main/docs/installation.md
+- https://github.com/MinishLab/semble/blob/main/pyproject.toml
+- https://github.com/MinishLab/semble/blob/main/src/semble/mcp.py
+- https://github.com/MinishLab/semble/blob/main/src/semble/cache.py
+- https://github.com/MinishLab/semble/blob/main/benchmarks/README.md
+- https://github.com/MinishLab/semble/blob/main/LICENSE
+- https://pypi.org/pypi/semble/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, installation guide, Python project metadata, MCP server implementation,
+cache implementation, benchmark notes, license, and PyPI metadata for current
+commands, package versions, supported clients, tool behavior, cache behavior,
+and benchmark claims.
+
+## Features
+
+- Search local repositories by natural-language or code query.
+- Search remote git repositories by passing an explicit repository URL.
+- Find code chunks related to a file path and line number from a prior result.
+- Cache indexes on disk for faster repeat queries.
+- Watch local paths in MCP mode and rebuild indexes after file changes.
+- Index code by default, with optional documentation, configuration, or all-file scopes.
+- Use `.gitignore` and `.sembleignore` rules to control indexed files.
+- Install MCP configs, usage instructions, or a dedicated search sub-agent for supported clients.
+- Run on CPU without requiring API keys, GPUs, or external vector services.
+
+## Installation
+
+The recommended installer uses uv:
+
+```bash
+uv tool install semble
+semble install
+```
+
+For manual MCP setup, configure the server to launch through `uvx`:
+
+```json
+{
+  "mcpServers": {
+    "semble": {
+      "command": "uvx",
+      "args": ["--from", "semble[mcp]", "semble"]
+    }
+  }
+}
+```
+
+To include documentation, configuration, or every supported file type, append
+`--content docs`, `--content config`, or `--content all` to the server command.
+
+## Use Cases
+
+- Ask Claude where a feature is implemented without loading every matched file.
+- Search unfamiliar repositories by behavior, API name, or architecture concept.
+- Find related implementations after inspecting one relevant search result.
+- Let a coding agent query documentation and config only when that scope is approved.
+- Add AGENTS.md or CLAUDE.md guidance so agents prefer Semble before broad grep/read.
+- Install a dedicated `semble-search` sub-agent in harnesses that support sub-agents.
+
+## Safety and Privacy
+
+Semble is intentionally close to source code. It can index local repositories,
+clone or index remote git repositories, persist cache data, and return source
+chunks to the MCP client. Scope each search to repositories you are authorized
+to expose to an AI assistant.
+
+Use `.gitignore` and `.sembleignore` to exclude generated files, vendored code,
+secrets, private fixtures, and unrelated projects. Treat caches and usage
+statistics as source-derived artifacts, especially when using documentation,
+configuration, or all-file indexing modes.
+
+## Duplicate Check
+
+No `MinishLab/semble` entry, `semble` PyPI package entry, or matching source URL
+was found in `content/mcp`.

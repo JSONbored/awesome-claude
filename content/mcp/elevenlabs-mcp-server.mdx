@@ -1,0 +1,192 @@
+---
+title: ElevenLabs MCP Server
+slug: elevenlabs-mcp-server
+category: mcp
+description: >-
+  Official ElevenLabs MCP server for generating speech, designing voices,
+  cloning voices, transcribing audio, creating sound effects, and working with
+  conversational audio agents through the ElevenLabs API.
+cardDescription: >-
+  Connect Claude to ElevenLabs for text-to-speech, voice design, voice cloning,
+  transcription, sound generation, and conversational audio workflows.
+seoTitle: ElevenLabs MCP Server for Claude
+seoDescription: >-
+  Configure the official ElevenLabs MCP Server with Claude to generate speech,
+  design or clone voices, transcribe audio, create sound effects, and manage
+  conversational audio agent workflows.
+author: ElevenLabs
+authorProfileUrl: "https://github.com/elevenlabs"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: ElevenLabs MCP Server
+brandDomain: elevenlabs.io
+repoUrl: "https://github.com/elevenlabs/elevenlabs-mcp"
+documentationUrl: "https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/README.md"
+packageUrl: "https://pypi.org/pypi/elevenlabs-mcp/json"
+installable: true
+installCommand: "uvx elevenlabs-mcp"
+usageSnippet: "Run `uvx elevenlabs-mcp` with `ELEVENLABS_API_KEY` set, then choose file, resource, or both output modes for generated audio files."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "elevenlabs": {
+        "command": "uvx",
+        "args": ["elevenlabs-mcp"],
+        "env": {
+          "ELEVENLABS_API_KEY": "YOUR_ELEVENLABS_API_KEY",
+          "ELEVENLABS_MCP_BASE_PATH": "/path/to/approved/audio-output",
+          "ELEVENLABS_MCP_OUTPUT_MODE": "files"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add elevenlabs --env ELEVENLABS_API_KEY=YOUR_ELEVENLABS_API_KEY -- uvx elevenlabs-mcp
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.11 or newer with `uvx` available.
+  - An ElevenLabs API key for the account and workspace you intend Claude to use.
+  - Review of ElevenLabs pricing, credits, voice-cloning policy, content rules, and data handling before enabling tools that generate or process audio.
+  - An approved output directory when using file-based generated audio output.
+  - Explicit consent and rights for any voice samples, transcripts, music, sound effects, or conversational-agent content processed through the server.
+safetyNotes:
+  - ElevenLabs MCP Server can call paid ElevenLabs API endpoints; text-to-speech, voice design, voice cloning, audio isolation, transcription, sound generation, music, and agent workflows can consume account credits.
+  - Voice cloning and voice conversion can create realistic synthetic speech, so require documented consent and review before processing a person's voice or publishing generated audio.
+  - Generated speech, sound effects, music, transcripts, and conversation-agent configuration can affect public-facing content; review prompts, voice IDs, output format, language, and destination before publishing or sending.
+  - File output mode writes generated files to disk under the configured base path; restrict that path to an approved directory and avoid broad home, desktop, or shared folders in production.
+  - Use separate API keys or workspaces for test and production clients, monitor credit usage, and disable tools in clients that should not spend credits.
+  - Some operations may take longer than normal MCP tool timeouts; do not retry expensive generation calls blindly.
+privacyNotes:
+  - The MCP client can expose ElevenLabs API keys, voice IDs, text prompts, voice descriptions, uploaded audio samples, generated audio paths, transcripts, diarized speaker labels, and conversational-agent settings.
+  - Uploaded audio and generated outputs may contain biometric voice characteristics, names, background sounds, private conversations, or copyrighted material.
+  - File, resource, and both output modes can retain generated audio locally, in MCP resources, in logs, or in chat transcripts depending on the client.
+  - Treat voice samples and transcripts as sensitive data, and delete generated files or cached resources when they are no longer needed.
+  - Review ElevenLabs account, retention, residency, and enterprise data-residency settings before using the server with regulated or customer data.
+disclosure: >-
+  Official ElevenLabs MCP server published as the `elevenlabs-mcp` Python
+  package under the MIT license; API usage requires an ElevenLabs account and
+  may consume paid credits.
+sourceUrls:
+  - "https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/server.json"
+  - "https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/ELEVENLABS.md"
+  - "https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/elevenlabs_mcp/server.py"
+  - "https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/elevenlabs_mcp/convai.py"
+  - "https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/elevenlabs_mcp/utils.py"
+tags:
+  - elevenlabs
+  - text-to-speech
+  - audio
+  - voice
+  - transcription
+keywords:
+  - ElevenLabs MCP
+  - ElevenLabs MCP Server
+  - text to speech MCP
+  - voice cloning MCP
+  - audio generation MCP
+  - speech to text MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+ElevenLabs MCP Server is the official MCP integration for using ElevenLabs audio
+APIs from Claude and other MCP clients. It exposes tools for text-to-speech,
+voice design, voice cloning, transcription, audio isolation, sound generation,
+music generation, and conversational audio-agent workflows.
+
+Use it when Claude needs supervised access to generate or transform audio while
+keeping API-key configuration, output-file handling, voice consent, and credit
+usage visible to the operator.
+
+## Source Review
+
+- https://github.com/elevenlabs/elevenlabs-mcp
+- https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/README.md
+- https://pypi.org/pypi/elevenlabs-mcp/json
+- https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/LICENSE
+- https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/pyproject.toml
+- https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/server.json
+- https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/ELEVENLABS.md
+- https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/elevenlabs_mcp/server.py
+- https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/elevenlabs_mcp/convai.py
+- https://raw.githubusercontent.com/elevenlabs/elevenlabs-mcp/main/elevenlabs_mcp/utils.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, license, package manifest, official MCP server manifest,
+agent context, server entrypoint, conversational-agent helper, and file-output
+utilities for current setup and behavior details.
+
+## Features
+
+- Generate speech from text with ElevenLabs voices and model settings.
+- Create or select voices by name or ID.
+- Design new voices from text descriptions.
+- Clone or convert voices from approved audio samples.
+- Transcribe audio and format diarized speaker output.
+- Generate sound effects, soundscapes, and music through ElevenLabs APIs.
+- Create and configure conversational audio agents.
+- Save generated files to disk, return generated data as MCP resources, or use
+  both output modes.
+- Configure optional API residency and base output paths through environment
+  variables.
+
+## Installation
+
+Create an ElevenLabs API key, then configure your MCP client with the published
+Python package:
+
+```json
+{
+  "mcpServers": {
+    "elevenlabs": {
+      "command": "uvx",
+      "args": ["elevenlabs-mcp"],
+      "env": {
+        "ELEVENLABS_API_KEY": "YOUR_ELEVENLABS_API_KEY",
+        "ELEVENLABS_MCP_BASE_PATH": "/path/to/approved/audio-output",
+        "ELEVENLABS_MCP_OUTPUT_MODE": "files"
+      }
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add elevenlabs --env ELEVENLABS_API_KEY=YOUR_ELEVENLABS_API_KEY -- uvx elevenlabs-mcp
+```
+
+Use `ELEVENLABS_MCP_OUTPUT_MODE=resources` when the client should receive
+generated files as MCP resources instead of writing them to disk, or `both`
+when you need both local files and resource access.
+
+## Use Cases
+
+- Generate narrated speech for a prototype, lesson, game, or accessibility
+  workflow.
+- Produce multiple voice variations for review before adding one to a voice
+  library.
+- Convert approved voice samples into a different voice style.
+- Transcribe audio and identify speakers for supervised review.
+- Create sound effects or soundscapes from text prompts.
+- Configure a conversational audio agent with a specific voice and prompt.
+- Compare output formats, models, and latency/cost tradeoffs before publishing
+  audio.
+
+## Safety and Privacy
+
+ElevenLabs MCP Server can spend API credits and create realistic synthetic
+audio. Keep human approval in front of voice cloning, public release, customer
+communications, or any workflow involving another person's voice.
+
+Set `ELEVENLABS_MCP_BASE_PATH` to an approved directory before using file output
+mode. Generated audio, transcripts, and conversation-agent files can persist on
+disk or in MCP resources, so clean up outputs and logs according to your data
+retention policy.

@@ -1,0 +1,172 @@
+---
+title: Obsidian MCP Server
+slug: obsidian-mcp-server
+category: mcp
+description: >-
+  MCP server that lets Claude interact with an Obsidian vault through the
+  Obsidian Local REST API community plugin.
+cardDescription: >-
+  Let Claude list, read, search, append, patch, and delete notes in an Obsidian
+  vault through MCP.
+seoTitle: Obsidian MCP Server for Claude
+seoDescription: >-
+  Configure Obsidian MCP Server with Claude and other MCP clients to list, read,
+  search, append, patch, and delete notes in an Obsidian vault through the Local
+  REST API plugin.
+author: Markus Pfundstein
+authorProfileUrl: "https://github.com/MarkusPfundstein"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Obsidian MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/MarkusPfundstein/mcp-obsidian"
+documentationUrl: "https://github.com/MarkusPfundstein/mcp-obsidian/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-obsidian/json"
+installable: true
+installCommand: "uvx mcp-obsidian"
+usageSnippet: "Run `uvx mcp-obsidian` from an MCP client after enabling the Obsidian Local REST API plugin and providing the vault API key."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcp-obsidian": {
+        "command": "uvx",
+        "args": ["mcp-obsidian"],
+        "env": {
+          "OBSIDIAN_API_KEY": "YOUR_OBSIDIAN_API_KEY",
+          "OBSIDIAN_HOST": "127.0.0.1",
+          "OBSIDIAN_PORT": "27124"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mcp-obsidian": {
+        "command": "uvx",
+        "args": ["mcp-obsidian"],
+        "env": {
+          "OBSIDIAN_API_KEY": "YOUR_OBSIDIAN_API_KEY",
+          "OBSIDIAN_HOST": "127.0.0.1",
+          "OBSIDIAN_PORT": "27124"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.11 or newer available to the MCP client runtime.
+  - uvx available for package execution.
+  - Obsidian installed with a vault you want Claude to access.
+  - Obsidian Local REST API community plugin enabled with an API key.
+  - Host and port values configured for the local Obsidian REST API service.
+safetyNotes:
+  - Obsidian MCP Server can read, search, append, patch, and delete files in the configured vault.
+  - Patch and append operations can change existing notes, create new notes, and insert content relative to headings, block references, or frontmatter fields.
+  - Delete operations can remove files or directories from the vault.
+  - Keep vault backups and require human review before allowing broad edits, deletes, generated summaries, or note reorganizations.
+privacyNotes:
+  - Obsidian vaults often contain private notes, meeting records, research, personal data, API keys, customer details, drafts, and internal decisions.
+  - Vault paths, note names, note contents, search terms, prompts, tool arguments, and generated notes may be visible to the MCP client and model provider.
+  - Treat the Obsidian API key as a secret and avoid exposing the Local REST API beyond the trusted host and port configuration.
+sourceUrls:
+  - "https://github.com/MarkusPfundstein/mcp-obsidian"
+  - "https://github.com/MarkusPfundstein/mcp-obsidian/blob/main/README.md"
+  - "https://github.com/MarkusPfundstein/mcp-obsidian/blob/main/pyproject.toml"
+  - "https://pypi.org/pypi/mcp-obsidian/json"
+tags:
+  - obsidian
+  - notes
+  - knowledge-base
+  - markdown
+  - personal-knowledge-management
+keywords:
+  - Obsidian MCP
+  - mcp-obsidian
+  - Obsidian Local REST API MCP
+  - Obsidian notes MCP
+  - vault search MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Obsidian MCP Server connects MCP clients to an Obsidian vault through the
+Obsidian Local REST API community plugin. It exposes tools for listing files,
+listing directories, reading note contents, searching across vault files,
+patching existing notes, appending content, and deleting files or directories.
+
+The upstream README documents published server configuration with `uvx`, and
+the PyPI package exposes the `mcp-obsidian` command for MCP clients.
+
+## Source Review
+
+- https://github.com/MarkusPfundstein/mcp-obsidian
+- https://github.com/MarkusPfundstein/mcp-obsidian/blob/main/README.md
+- https://github.com/MarkusPfundstein/mcp-obsidian/blob/main/pyproject.toml
+- https://pypi.org/pypi/mcp-obsidian/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+PyPI metadata for current package version, command name, Python requirement,
+dependencies, supported tools, and setup guidance.
+
+## Features
+
+- List files and directories in an Obsidian vault.
+- Read the contents of individual notes.
+- Search vault files for matching text.
+- Append content to new or existing notes.
+- Patch existing note content relative to headings, block references, or
+  frontmatter fields.
+- Delete files or directories from the vault.
+
+## Installation
+
+Enable the Obsidian Local REST API community plugin, copy its API key, then add
+the MCP server to a client that launches stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "mcp-obsidian": {
+      "command": "uvx",
+      "args": ["mcp-obsidian"],
+      "env": {
+        "OBSIDIAN_API_KEY": "YOUR_OBSIDIAN_API_KEY",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27124"
+      }
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to summarize recent meeting notes from an Obsidian vault.
+- Search a vault for mentions of a project, customer, decision, or incident.
+- Append a generated summary to a daily note or project note.
+- Patch an existing note under a specific heading or frontmatter field.
+- Build a lightweight knowledge-base workflow around Markdown notes.
+- Review vault structure before reorganizing notes manually.
+
+## Safety and Privacy
+
+Obsidian vault automation can touch important personal and organizational notes.
+Back up the vault, keep destructive operations gated by human review, and avoid
+broad patch, append, or delete requests unless the target files are clear.
+
+Vaults can contain sensitive personal notes, internal plans, meeting summaries,
+credentials, customer information, drafts, and private research. Treat the
+Obsidian API key as a secret, keep the Local REST API bound to trusted access,
+and review generated notes before syncing or sharing them.
+
+## Duplicate Check
+
+No `MarkusPfundstein/mcp-obsidian` entry, `mcp-obsidian` package entry, or
+matching source URL was found in `content/mcp`.

@@ -1,0 +1,191 @@
+---
+title: Telegram MCP Server
+slug: telegram-mcp-server
+category: mcp
+description: >-
+  Telethon-powered MCP server for connecting Claude to Telegram accounts,
+  chats, messages, contacts, media, folders, groups, channels, profile settings,
+  and read-only or full account workflows.
+cardDescription: >-
+  Connect Claude to Telegram with tools for chats, messages, contacts, media,
+  folders, groups, profile data, and optional read-only tool exposure.
+seoTitle: Telegram MCP Server for Claude
+seoDescription: >-
+  Configure Telegram MCP Server with Claude to read Telegram chats, inspect
+  messages and contacts, manage media and folders, and optionally enable
+  account-write workflows through Telethon.
+author: chigwell
+authorProfileUrl: "https://github.com/chigwell"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Telegram MCP Server
+brandDomain: telegram.org
+repoUrl: "https://github.com/chigwell/telegram-mcp"
+documentationUrl: "https://raw.githubusercontent.com/chigwell/telegram-mcp/main/README.md"
+installable: true
+installCommand: "uv --directory PATH_TO_TELEGRAM_MCP_CHECKOUT run main.py"
+usageSnippet: "Clone `https://github.com/chigwell/telegram-mcp`, run `uv sync`, generate a Telegram session string, then run `uv --directory PATH_TO_TELEGRAM_MCP_CHECKOUT run main.py`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "telegram-mcp": {
+        "command": "uv",
+        "args": ["--directory", "PATH_TO_TELEGRAM_MCP_CHECKOUT", "run", "main.py"],
+        "env": {
+          "TELEGRAM_API_ID": "YOUR_TELEGRAM_API_ID",
+          "TELEGRAM_API_HASH": "YOUR_TELEGRAM_API_HASH",
+          "TELEGRAM_SESSION_STRING": "YOUR_TELEGRAM_SESSION_STRING",
+          "TELEGRAM_EXPOSED_TOOLS": "read-only"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add telegram-mcp --env TELEGRAM_API_ID=YOUR_TELEGRAM_API_ID --env TELEGRAM_API_HASH=YOUR_TELEGRAM_API_HASH --env TELEGRAM_SESSION_STRING=YOUR_TELEGRAM_SESSION_STRING --env TELEGRAM_EXPOSED_TOOLS=read-only -- uv --directory PATH_TO_TELEGRAM_MCP_CHECKOUT run main.py
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer with `uv` available.
+  - A trusted checkout of `https://github.com/chigwell/telegram-mcp`; do not use the unrelated PyPI package with the same distribution name.
+  - Telegram API credentials from `my.telegram.org/apps`.
+  - A Telegram session string or file-based session generated from the trusted checkout.
+  - Review of which accounts, chats, groups, contacts, media paths, and write tools Claude is allowed to access.
+  - Start with `TELEGRAM_EXPOSED_TOOLS=read-only` unless the workflow explicitly needs message, account, contact, group, profile, or media mutations.
+safetyNotes:
+  - Telegram MCP Server can read chats and messages, send, schedule, edit, delete, forward, and pin messages, mark chats read, create polls, press inline buttons, manage contacts, manage groups and channels, upload or download media, and update profile settings when write tools are exposed.
+  - A Telegram session string has the normal authority of the Telegram account inside the server process; read-only mode limits the MCP tool surface but does not reduce the underlying session authority.
+  - The upstream README warns that the PyPI `telegram-mcp` name is owned by a different project, so do not pass Telegram API credentials or session strings to that package.
+  - File-path tools are disabled until allowed roots are configured; keep upload and download roots narrow when enabling media or file operations.
+  - Require human approval before sending, editing, deleting, forwarding, pinning, reacting, inviting, banning, changing permissions, or updating profile and privacy settings.
+  - Use separate Telegram accounts for testing, monitor Telegram rate limits and platform rules, and keep proxies or multi-account routing explicit.
+privacyNotes:
+  - Telegram API IDs, API hashes, session strings, account labels, chat titles, usernames, phone-adjacent identifiers, messages, media, contacts, group membership, profile photos, user status, read receipts, drafts, and folder metadata can be exposed to the MCP client.
+  - Chat history and media can contain private conversations, personal data, business records, access links, invite links, documents, photos, voice notes, stickers, GIFs, and user-controlled prompt-injection text.
+  - The project includes output sanitization for user-controlled content, but sanitized Telegram content should still be treated as untrusted model input.
+  - Store session strings like passwords, keep them out of shell history and shared logs, and revoke sessions if they are exposed.
+  - Review MCP transcripts, downloaded media folders, Telegram session files, and proxy logs before sharing or retaining them.
+disclosure: >-
+  Community-maintained Apache-2.0 MCP server for Telegram via Telethon. The
+  repository explicitly warns that the PyPI `telegram-mcp` name is unrelated, so
+  install from a trusted source checkout or explicit Git URL.
+sourceUrls:
+  - "https://raw.githubusercontent.com/chigwell/telegram-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/chigwell/telegram-mcp/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/chigwell/telegram-mcp/main/.env.example"
+  - "https://raw.githubusercontent.com/chigwell/telegram-mcp/main/main.py"
+  - "https://raw.githubusercontent.com/chigwell/telegram-mcp/main/sanitize.py"
+  - "https://raw.githubusercontent.com/chigwell/telegram-mcp/main/telegram_mcp/install_guard.py"
+  - "https://raw.githubusercontent.com/chigwell/telegram-mcp/main/telegram_mcp/runtime.py"
+tags:
+  - telegram
+  - messaging
+  - chat
+  - automation
+  - telethon
+keywords:
+  - Telegram MCP
+  - Telegram MCP Server
+  - Telethon MCP
+  - Telegram Claude integration
+  - messaging MCP server
+  - chat automation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Telegram MCP Server connects Claude and other MCP clients to Telegram through
+Telethon. It exposes tools for Telegram accounts, chats, messages, contacts,
+media, folders, groups, channels, profile settings, and multi-account routing.
+
+Use it when Claude needs supervised Telegram context or automation, starting
+with read-only tools for chat review and account inspection before enabling
+message or account-changing actions.
+
+## Source Review
+
+- https://github.com/chigwell/telegram-mcp
+- https://raw.githubusercontent.com/chigwell/telegram-mcp/main/README.md
+- https://raw.githubusercontent.com/chigwell/telegram-mcp/main/LICENSE
+- https://raw.githubusercontent.com/chigwell/telegram-mcp/main/pyproject.toml
+- https://raw.githubusercontent.com/chigwell/telegram-mcp/main/.env.example
+- https://raw.githubusercontent.com/chigwell/telegram-mcp/main/main.py
+- https://raw.githubusercontent.com/chigwell/telegram-mcp/main/sanitize.py
+- https://raw.githubusercontent.com/chigwell/telegram-mcp/main/telegram_mcp/install_guard.py
+- https://raw.githubusercontent.com/chigwell/telegram-mcp/main/telegram_mcp/runtime.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, package manifest, environment template, compatibility
+entrypoint, sanitizer, install guard, and runtime implementation for current
+setup and behavior details.
+
+## Features
+
+- List configured Telegram accounts and route calls by account label.
+- List chats, inspect chat metadata, and search message history.
+- Read messages, inspect context, mark chats read, and manage drafts.
+- Send, schedule, edit, delete, forward, pin, unpin, reply to, and react to
+  messages when write tools are exposed.
+- Create polls and inspect or press inline buttons.
+- Manage contacts, blocks, direct chats, and recent interactions.
+- Send, upload, download, and inspect media when allowed file roots are
+  configured.
+- Create and manage groups, channels, admins, bans, permissions, topics, slow
+  mode, invite links, and read receipts.
+- Inspect and update profile, privacy, bot-command, folder, and draft state.
+- Limit exposed MCP tools to read-only mode with `TELEGRAM_EXPOSED_TOOLS`.
+
+## Installation
+
+Clone the trusted repository, install dependencies, and generate a Telegram
+session string from the checkout before configuring Claude:
+
+```json
+{
+  "mcpServers": {
+    "telegram-mcp": {
+      "command": "uv",
+      "args": ["--directory", "PATH_TO_TELEGRAM_MCP_CHECKOUT", "run", "main.py"],
+      "env": {
+        "TELEGRAM_API_ID": "YOUR_TELEGRAM_API_ID",
+        "TELEGRAM_API_HASH": "YOUR_TELEGRAM_API_HASH",
+        "TELEGRAM_SESSION_STRING": "YOUR_TELEGRAM_SESSION_STRING",
+        "TELEGRAM_EXPOSED_TOOLS": "read-only"
+      }
+    }
+  }
+}
+```
+
+Claude Code users can add a read-only default configuration with:
+
+```bash
+claude mcp add telegram-mcp --env TELEGRAM_API_ID=YOUR_TELEGRAM_API_ID --env TELEGRAM_API_HASH=YOUR_TELEGRAM_API_HASH --env TELEGRAM_SESSION_STRING=YOUR_TELEGRAM_SESSION_STRING --env TELEGRAM_EXPOSED_TOOLS=read-only -- uv --directory PATH_TO_TELEGRAM_MCP_CHECKOUT run main.py
+```
+
+Only remove `TELEGRAM_EXPOSED_TOOLS=read-only` after reviewing the write tools
+and setting account, media-path, and approval boundaries.
+
+## Use Cases
+
+- Summarize unread Telegram chats for a supervised account.
+- Search chat history for a message, file, link, or conversation context.
+- Draft a response and ask for human approval before sending it manually or via
+  an exposed write tool.
+- Inspect group or channel metadata during community moderation.
+- Export selected contact or chat context for a customer-support workflow.
+- Download approved media into a narrow allowed root for later processing.
+- Manage drafts and folders for a dedicated automation account.
+
+## Safety and Privacy
+
+Telegram MCP Server should be treated as account automation. Use a dedicated
+Telegram account for testing, keep session strings secret, and leave read-only
+mode enabled unless the workflow truly needs account-changing tools.
+
+Never install this server from the unrelated PyPI package named `telegram-mcp`.
+Run it from a trusted checkout or an explicit Git URL, and do not paste real
+Telegram credentials into package managers, logs, issue comments, or shared
+model transcripts.

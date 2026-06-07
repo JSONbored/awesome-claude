@@ -1,0 +1,211 @@
+---
+title: IBM MCP Context Forge
+slug: ibm-mcp-context-forge
+category: mcp
+description: >-
+  Open-source MCP gateway, registry, and proxy from IBM that federates MCP
+  servers, A2A agents, REST APIs, and gRPC services behind centralized
+  discovery, governance, authentication, observability, and admin controls.
+cardDescription: >-
+  Run ContextForge as a Python or containerized MCP gateway, register downstream
+  tools and virtual servers, bridge HTTP/SSE services into stdio clients with
+  mcpgateway.wrapper, and manage auth, policies, logs, and tracing centrally.
+seoTitle: IBM MCP Context Forge for Claude
+seoDescription: >-
+  Configure IBM MCP Context Forge with Claude and other MCP clients to federate
+  MCP servers, REST and gRPC APIs, A2A agents, gateway policies, auth, tracing,
+  and the mcpgateway.wrapper stdio bridge.
+author: IBM
+authorProfileUrl: "https://github.com/IBM"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: ContextForge
+brandDomain: ibm.github.io
+repoUrl: "https://github.com/IBM/mcp-context-forge"
+documentationUrl: "https://github.com/IBM/mcp-context-forge/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-contextforge-gateway/json"
+installable: true
+installCommand: "uvx --from mcp-contextforge-gateway mcpgateway"
+usageSnippet: "Run the ContextForge gateway with reviewed environment settings, register a virtual server, then expose that server to stdio-only MCP clients through `python3 -m mcpgateway.wrapper` with `MCP_SERVER_URL` and `MCP_AUTH` set."
+copySnippet: |-
+  uvx --from mcp-contextforge-gateway mcpgateway
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mcpgateway-wrapper": {
+        "command": "python3",
+        "args": ["-m", "mcpgateway.wrapper"],
+        "env": {
+          "MCP_SERVER_URL": "LOCAL_CONTEXTFORGE_SERVER_URL",
+          "MCP_AUTH": "Bearer CONTEXTFORGE_JWT_TOKEN",
+          "MCP_TOOL_CALL_TIMEOUT": "120",
+          "MCP_WRAPPER_LOG_LEVEL": "OFF"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 35 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.11 or newer, or a Docker/Podman runtime for the published container image.
+  - uv, pip, or container deployment path selected from the upstream quick-start docs.
+  - Gateway environment reviewed before launch, including admin credentials, JWT settings, UI/API enablement, database configuration, and exposed host/port.
+  - At least one downstream MCP server, REST API, gRPC service, A2A agent, or virtual server to register behind the gateway.
+  - Bearer token and virtual server URL available before connecting stdio-only clients through `mcpgateway.wrapper`.
+safetyNotes:
+  - ContextForge is a gateway and control plane; it can expose many downstream tools, agents, prompts, resources, REST APIs, and gRPC methods through one MCP-facing surface.
+  - Downstream permissions are inherited by the gateway, so review every registered server, virtualized API, plugin, and route before giving an agent access.
+  - Binding the gateway to a network interface, enabling the Admin UI/API, or using weak platform admin credentials can expose powerful administrative controls.
+  - Use strong JWT configuration, environment-specific issuers/audiences, token expiration, RBAC, TLS, and production security settings before shared or remote deployments.
+  - Treat plugins, API virtualization, pass-through headers, retries, and federation as trust-boundary changes, not just convenience features.
+privacyNotes:
+  - Registered tool names, prompts, resources, API schemas, request headers, bearer tokens, upstream authorization headers, logs, traces, and tool results may pass through the gateway.
+  - OpenTelemetry, logging, admin views, and tracing backends can capture prompts, tool arguments, resource metadata, response data, errors, and user identifiers depending on configuration.
+  - User-scoped OAuth tokens, JWTs, platform admin credentials, Basic auth credentials, API keys, database URLs, and upstream service secrets should be stored in a secrets manager or protected environment, not committed to configuration files.
+  - Any data returned by downstream services can still be sent onward to the MCP client and model provider even when the gateway itself runs on trusted infrastructure.
+sourceUrls:
+  - "https://github.com/IBM/mcp-context-forge"
+  - "https://github.com/IBM/mcp-context-forge/blob/main/README.md"
+  - "https://github.com/IBM/mcp-context-forge/blob/main/pyproject.toml"
+  - "https://github.com/IBM/mcp-context-forge/blob/main/.env.example"
+  - "https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/overview/quick_start.md"
+  - "https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/using/mcpgateway-wrapper.md"
+  - "https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/using/clients/claude-desktop.md"
+  - "https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/manage/securing.md"
+  - "https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/manage/observability.md"
+  - "https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/deployment/container.md"
+  - "https://pypi.org/pypi/mcp-contextforge-gateway/json"
+  - "https://github.com/IBM/mcp-context-forge/pkgs/container/mcp-context-forge"
+tags:
+  - gateway
+  - registry
+  - proxy
+  - governance
+  - observability
+keywords:
+  - IBM MCP Context Forge
+  - ContextForge MCP gateway
+  - MCP gateway registry
+  - mcpgateway wrapper
+  - MCP A2A REST gRPC proxy
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+IBM MCP Context Forge is an open-source gateway, registry, and proxy for
+federating MCP servers, A2A agents, REST APIs, and gRPC services behind one
+managed control plane. It gives teams a place to register tools, prompts,
+resources, virtual servers, and adapted APIs, then expose selected gateway
+surfaces to MCP clients with centralized authentication, governance,
+observability, retries, and admin workflows.
+
+The project can run from the `mcp-contextforge-gateway` Python package or the
+published container image. For clients that need stdio, the package includes
+`mcpgateway.wrapper`, which connects a local MCP client to a selected
+ContextForge virtual server while forwarding the configured gateway bearer
+token.
+
+## Source Review
+
+- https://github.com/IBM/mcp-context-forge
+- https://github.com/IBM/mcp-context-forge/blob/main/README.md
+- https://github.com/IBM/mcp-context-forge/blob/main/pyproject.toml
+- https://github.com/IBM/mcp-context-forge/blob/main/.env.example
+- https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/overview/quick_start.md
+- https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/using/mcpgateway-wrapper.md
+- https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/using/clients/claude-desktop.md
+- https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/manage/securing.md
+- https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/manage/observability.md
+- https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/deployment/container.md
+- https://pypi.org/pypi/mcp-contextforge-gateway/json
+- https://github.com/IBM/mcp-context-forge/pkgs/container/mcp-context-forge
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+package metadata, quick-start docs, wrapper docs, Claude Desktop integration
+guide, security guide, observability docs, and container deployment docs for
+current gateway startup, authentication, admin, wrapper, and deployment
+behavior.
+
+## Features
+
+- Run a compliant MCP gateway from PyPI with `uvx --from mcp-contextforge-gateway mcpgateway`.
+- Deploy the gateway from the published container image.
+- Federate native MCP servers, A2A agents, REST APIs, and gRPC services.
+- Register tools, prompts, resources, virtual servers, and adapted APIs in one
+  gateway catalog.
+- Bridge ContextForge virtual servers to stdio-only MCP clients with
+  `mcpgateway.wrapper`.
+- Manage gateway configuration through Admin UI/API flows when explicitly
+  enabled.
+- Use JWT, platform admin accounts, RBAC, configurable auth headers, and
+  production security settings.
+- Add observability with structured logs, metrics, OpenTelemetry traces, and
+  supported tracing backends.
+- Use plugins, retries, rate limiting, database persistence, Redis-backed
+  caching, and multi-cluster federation for larger deployments.
+
+## Installation
+
+Start by running the gateway with reviewed environment settings:
+
+```bash
+uvx --from mcp-contextforge-gateway mcpgateway
+```
+
+Then register or import the downstream services you want the gateway to expose.
+For a stdio MCP client such as Claude Desktop, use the wrapper after selecting a
+specific ContextForge virtual server and creating an appropriate bearer token:
+
+```json
+{
+  "mcpServers": {
+    "mcpgateway-wrapper": {
+      "command": "python3",
+      "args": ["-m", "mcpgateway.wrapper"],
+      "env": {
+        "MCP_SERVER_URL": "LOCAL_CONTEXTFORGE_SERVER_URL",
+        "MCP_AUTH": "Bearer CONTEXTFORGE_JWT_TOKEN",
+        "MCP_TOOL_CALL_TIMEOUT": "120",
+        "MCP_WRAPPER_LOG_LEVEL": "OFF"
+      }
+    }
+  }
+}
+```
+
+Follow the upstream quick-start, wrapper, Claude Desktop, security, and
+deployment docs for the exact gateway URL, virtual server path, token
+generation, container options, database settings, and production hardening.
+
+## Use Cases
+
+- Give Claude one managed MCP-facing endpoint for several internal tools and
+  APIs.
+- Put authentication, RBAC, audit logs, retries, and observability in front of
+  multiple MCP servers.
+- Wrap existing REST or gRPC services as MCP tools without rewriting the
+  upstream service.
+- Expose different virtual servers for different teams, agents, or environments.
+- Evaluate MCP gateway architecture before moving from local experiments to
+  governed shared infrastructure.
+
+## Safety and Privacy
+
+ContextForge should be treated as infrastructure, not as a small desktop helper.
+Anyone who can administer the gateway or register downstream services can shape
+which tools and APIs agents can call. Keep default/example credentials out of
+real deployments, review Admin UI/API exposure, require strong JWT settings, and
+apply RBAC before sharing a gateway with other users or agents.
+
+Observability and gateway logs are useful for operations, but they can also
+capture sensitive tool arguments, resource identifiers, prompts, API responses,
+headers, and account data. Review logging, tracing, and telemetry destinations
+before routing production or customer data through the gateway.
+
+## Duplicate Check
+
+No `IBM/mcp-context-forge` entry, IBM MCP Context Forge entry, ContextForge MCP
+gateway entry, or matching source URL was found in `content/mcp`.

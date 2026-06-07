@@ -1,0 +1,182 @@
+---
+title: HttpRunner UIXT MCP Server
+slug: httprunner-uixt-mcp-server
+category: mcp
+description: >-
+  MCP server from HttpRunner that exposes UIXT device and browser automation
+  tools for Android, iOS, Harmony, and Web testing through the `hrp mcp-server`
+  command.
+cardDescription: >-
+  Give Claude supervised access to HttpRunner UIXT tools for test-device
+  discovery, taps, swipes, input, app control, screenshots, and browser actions.
+seoTitle: HttpRunner UIXT MCP Server for Claude
+seoDescription: >-
+  Configure HttpRunner UIXT MCP Server with Claude to automate Android, iOS,
+  Harmony, and Web UI testing through device, touch, input, app, screen, web, and
+  AI action tools.
+author: debugtalk
+authorProfileUrl: "https://github.com/debugtalk"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: HttpRunner
+brandDomain: httprunner.com
+repoUrl: "https://github.com/httprunner/httprunner"
+documentationUrl: "https://raw.githubusercontent.com/httprunner/httprunner/master/docs/uixt/mcp-server.md"
+installable: true
+installCommand: "git clone https://github.com/httprunner/httprunner.git && cd httprunner && go build -o hrp ./cmd/cli"
+usageSnippet: "Build the v5 `hrp` CLI from source, put it on PATH, then configure your MCP client to launch `hrp mcp-server`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "httprunner-uixt": {
+        "command": "hrp",
+        "args": ["mcp-server"]
+      }
+    }
+  }
+configSnippet: |-
+  hrp mcp-server
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - Go 1.23 or newer for building the current v5 CLI from source.
+  - A test Android, iOS, Harmony, or browser automation environment configured for HttpRunner UIXT.
+  - A trusted MCP client that can launch local stdio servers.
+  - Review of ADB, go-ios, WebDriver, OCR, computer-vision, and AI-action dependencies required by your target platform.
+  - Dedicated test devices, simulators, or browsers rather than personal or production devices.
+safetyNotes:
+  - HttpRunner UIXT MCP Server can control real devices and browsers through taps, swipes, text input, hardware buttons, selectors, OCR, CV, and AI action tools.
+  - App tools can launch, terminate, cold launch, install, uninstall, clear data, and inspect foreground apps on connected devices.
+  - Screen tools can capture screenshots, screen recordings, screen size, and UI hierarchy/source data.
+  - Media and utility tools can modify test-device albums, close popups, wait randomly, and interact with system UI state.
+  - Simulated gesture options and anti-risk-style behavior should be used only in authorized test automation environments.
+  - Require human review before running actions against logged-in accounts, payment flows, device settings, production apps, or customer data.
+privacyNotes:
+  - Screenshots, screen recordings, UI hierarchy, package names, foreground app names, OCR text, selector data, and logs can expose sensitive app or account state.
+  - Connected device identifiers, serial numbers, app package names, browser pages, and test artifacts may be visible to the MCP client.
+  - Input and paste actions can expose credentials, one-time codes, chat text, forms, or clipboard-like data if used on personal sessions.
+  - Test reports, MCP responses, and debugging logs may retain captured UI state after the session ends.
+  - Keep test devices resettable, avoid personal accounts, and isolate artifacts produced by automated UI runs.
+disclosure: >-
+  Apache-2.0 open source MCP server within HttpRunner v5. The MCP command is
+  source-backed in the current repository; build from source or follow upstream
+  v5 installation guidance when available.
+sourceUrls:
+  - "https://raw.githubusercontent.com/httprunner/httprunner/master/LICENSE"
+  - "https://raw.githubusercontent.com/httprunner/httprunner/master/README.md"
+  - "https://raw.githubusercontent.com/httprunner/httprunner/master/go.mod"
+  - "https://raw.githubusercontent.com/httprunner/httprunner/master/cmd/cli/main.go"
+  - "https://raw.githubusercontent.com/httprunner/httprunner/master/cmd/mcpserver.go"
+  - "https://raw.githubusercontent.com/httprunner/httprunner/master/uixt/mcp_server.go"
+  - "https://raw.githubusercontent.com/httprunner/httprunner/master/docs/cmd/hrp_mcp-server.md"
+  - "https://raw.githubusercontent.com/httprunner/httprunner/master/docs/uixt/mcp-tools.md"
+tags:
+  - ui-automation
+  - mobile-testing
+  - browser-testing
+  - android
+  - ios
+keywords:
+  - HttpRunner MCP
+  - HttpRunner UIXT MCP
+  - hrp mcp-server
+  - UI automation MCP
+  - mobile testing MCP
+  - browser testing MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+HttpRunner UIXT MCP Server exposes HttpRunner's UIXT automation layer through a
+stdio MCP server. It gives Claude and other MCP clients structured tools for
+discovering devices, selecting a test target, tapping, swiping, entering text,
+controlling apps, capturing screen state, and running browser actions.
+
+Use it when Claude needs supervised access to a prepared UI testing environment,
+not when an assistant should freely control a personal phone, desktop browser, or
+production account.
+
+## Source Review
+
+- https://github.com/httprunner/httprunner
+- https://raw.githubusercontent.com/httprunner/httprunner/master/docs/uixt/mcp-server.md
+- https://raw.githubusercontent.com/httprunner/httprunner/master/LICENSE
+- https://raw.githubusercontent.com/httprunner/httprunner/master/README.md
+- https://raw.githubusercontent.com/httprunner/httprunner/master/go.mod
+- https://raw.githubusercontent.com/httprunner/httprunner/master/cmd/cli/main.go
+- https://raw.githubusercontent.com/httprunner/httprunner/master/cmd/mcpserver.go
+- https://raw.githubusercontent.com/httprunner/httprunner/master/uixt/mcp_server.go
+- https://raw.githubusercontent.com/httprunner/httprunner/master/docs/cmd/hrp_mcp-server.md
+- https://raw.githubusercontent.com/httprunner/httprunner/master/docs/uixt/mcp-tools.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+server docs, license, README, Go module, CLI entrypoint, MCP command source, UIXT
+server source, Cobra command docs, and tool documentation for current setup and
+behavior details.
+
+## Features
+
+- Start a stdio MCP server with `hrp mcp-server`.
+- Discover and select Android, iOS, Harmony, simulator, or browser targets.
+- Tap by relative coordinates, absolute coordinates, OCR text, computer vision,
+  or selectors.
+- Swipe, drag, double tap, press buttons, go home, and go back.
+- Enter text, set input method behavior, and use simulated input actions.
+- Launch, terminate, cold launch, install, uninstall, clear, and inspect apps.
+- Capture screenshots, screen recordings, screen size, and UI hierarchy/source.
+- Run browser actions such as selector hover, selector tap, secondary click, and
+  closing tabs.
+- Use higher-level AI action and start-to-goal workflows when the target
+  environment is approved for autonomous testing.
+
+## Installation
+
+The current MCP server is part of HttpRunner v5 source. Build the CLI from the
+repository:
+
+```bash
+git clone https://github.com/httprunner/httprunner.git
+cd httprunner
+go build -o hrp ./cmd/cli
+```
+
+Then configure your MCP client to launch the `hrp mcp-server` command:
+
+```json
+{
+  "mcpServers": {
+    "httprunner-uixt": {
+      "command": "hrp",
+      "args": ["mcp-server"]
+    }
+  }
+}
+```
+
+Make sure the built `hrp` binary is on PATH for the MCP client process, or use
+the full path to the binary in your local configuration.
+
+## Use Cases
+
+- Let Claude inspect connected test devices before choosing a target.
+- Reproduce a mobile UI bug through controlled taps, swipes, and screenshots.
+- Launch a test app, clear state, and capture the resulting UI hierarchy.
+- Automate a browser flow using selectors and screenshots in a supervised test
+  session.
+- Generate exploratory UI actions against a simulator, then convert stable steps
+  into repeatable HttpRunner test assets.
+
+## Safety and Privacy
+
+HttpRunner UIXT MCP Server is powerful device automation. Use it only with
+authorized test devices, simulators, or browsers. Keep production accounts,
+personal devices, payment flows, device settings, and customer data outside the
+agent-controlled environment unless the task has explicit approval and rollback
+coverage.
+
+Review screenshots, recordings, package lists, UI hierarchy output, OCR text,
+selector data, and logs before sharing them. Reset devices or simulators between
+runs when tests may expose credentials, private messages, or internal app state.

@@ -1,0 +1,196 @@
+---
+title: AI Game Developer Unity MCP Server
+slug: ai-game-developer-unity-mcp-server
+category: mcp
+description: >-
+  Unity MCP server, plugin, CLI, and skill generator for controlling Unity
+  Editor and runtime projects from MCP clients through built-in game-dev tools.
+cardDescription: >-
+  Automate Unity assets, scenes, scripts, packages, tests, screenshots,
+  profiling, runtime connections, and generated Unity skills from an MCP client.
+seoTitle: AI Game Developer Unity MCP Server for Claude
+seoDescription: >-
+  Configure Ivan Murzak's Unity MCP project with Claude, Codex, Cursor, Gemini,
+  and other MCP clients to automate Unity Editor and runtime game workflows.
+author: Ivan Murzak
+authorProfileUrl: "https://github.com/IvanMurzak"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: AI Game Developer
+brandDomain: ai-game.dev
+repoUrl: "https://github.com/IvanMurzak/Unity-MCP"
+documentationUrl: "https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/docs/mcp-server.md"
+packageUrl: "https://registry.npmjs.org/unity-mcp-cli"
+installable: true
+installCommand: "npm install -g unity-mcp-cli && unity-mcp-cli install-plugin ./MyUnityProject"
+usageSnippet: "Install `unity-mcp-cli`, add the Unity plugin to a project, open Unity, and configure the `ai-game-developer` MCP server over streamable HTTP or stdio."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ai-game-developer": {
+        "type": "streamableHttp",
+        "url": "LOCAL_UNITY_MCP_ENDPOINT"
+      }
+    }
+  }
+configSnippet: |-
+  npm install -g unity-mcp-cli
+  unity-mcp-cli install-plugin ./MyUnityProject
+  unity-mcp-cli open ./MyUnityProject
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Unity project using Unity 2022.3 or newer for the current package metadata.
+  - Unity Hub or a local Unity Editor installation.
+  - Node.js 20.19 or newer, or Node.js 22.12 or newer, for `unity-mcp-cli`.
+  - An MCP client such as Claude Code, Claude Desktop, Codex, Cursor, Gemini CLI, GitHub Copilot, Cline, or another supported client.
+  - Project backup, version control, and a reviewed tool allowlist before granting an AI agent write access to a Unity project.
+safetyNotes:
+  - AI Game Developer can create, move, copy, modify, and delete Unity assets, scenes, GameObjects, components, scripts, packages, and generated project files.
+  - Tools include dynamic C# script execution, C# reflection method lookup and calls, package installation/removal, Unity test execution, editor state changes, play mode control, screenshots, and profiler access.
+  - The MCP server supports streamable HTTP and stdio; HTTP deployments should require a bearer token and stay bound to trusted interfaces.
+  - Server variables include optional authorization and webhook settings; webhook endpoints can receive tool, prompt, resource, connection, and authorization events.
+  - Unity runtime connections can expose compiled game state or in-game behavior to an MCP client, not just editor-only project data.
+  - Use source control, backups, tool filtering, and explicit review before allowing destructive tools such as asset deletion, package removal, script execution, or reflection calls.
+privacyNotes:
+  - Tool calls may expose Unity project paths, asset names, scene hierarchy, serialized object data, scripts, logs, screenshots, profiler metrics, test output, package metadata, and runtime state.
+  - MCP config files and Unity plugin config can contain server URLs, connection modes, bearer tokens, authorization settings, enabled tool IDs, and cloud or local endpoint details.
+  - Optional webhooks can receive tool, prompt, resource, connection, authorization, and token-bearing request data.
+  - Screenshots from Game View, Scene View, cameras, or isolated GameObjects may include proprietary artwork, level design, UI, debug overlays, or unreleased game content.
+  - Generated skills and AI-client configuration files can reveal available tools, project structure, installed packages, and local workflow assumptions.
+disclosure: >-
+  Apache-2.0 open source Unity MCP project by Ivan Murzak. It is a separate
+  project from the existing CoplayDev Unity MCP Server catalog entry.
+sourceUrls:
+  - "https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/LICENSE"
+  - "https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/README.md"
+  - "https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/docs/mcp-server.md"
+  - "https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/docs/default-mcp-tools.md"
+  - "https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/cli/README.md"
+  - "https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/cli/package.json"
+  - "https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/Unity-MCP-Plugin/Packages/com.ivanmurzak.unity.mcp/package.json"
+tags:
+  - unity
+  - game-development
+  - editor
+  - runtime
+  - automation
+keywords:
+  - AI Game Developer MCP
+  - IvanMurzak Unity MCP
+  - Unity MCP server
+  - Unity Editor MCP
+  - Claude Unity game development
+  - unity-mcp-cli
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+AI Game Developer Unity MCP Server is Ivan Murzak's Unity MCP project for
+connecting MCP clients to Unity Editor and runtime workflows. It combines a Unity
+plugin, an MCP server, a cross-platform CLI, generated AI skills, and a large
+default tool set for game-development automation.
+
+Use it when an agent needs to work inside a real Unity project: inspecting
+assets and scenes, creating or modifying GameObjects, updating scripts, running
+tests, installing packages, capturing screenshots, reading profiler data, or
+connecting to runtime builds. Treat it as a high-trust development bridge rather
+than a read-only reference server.
+
+## Source Review
+
+- https://github.com/IvanMurzak/Unity-MCP
+- https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/README.md
+- https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/docs/mcp-server.md
+- https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/docs/default-mcp-tools.md
+- https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/cli/README.md
+- https://registry.npmjs.org/unity-mcp-cli
+- https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/LICENSE
+- https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/cli/package.json
+- https://raw.githubusercontent.com/IvanMurzak/Unity-MCP/main/Unity-MCP-Plugin/Packages/com.ivanmurzak.unity.mcp/package.json
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+server docs, default tool reference, CLI docs, npm package metadata, license,
+and Unity package metadata for current setup details.
+
+## Features
+
+- Install and configure the Unity plugin through `unity-mcp-cli`.
+- Connect MCP clients over streamable HTTP or stdio.
+- Run local automatic server binaries, Docker, or manual release binaries.
+- Generate MCP client config and Unity-focused AI skills for supported clients.
+- Create, find, copy, move, modify, delete, refresh, and inspect Unity assets.
+- Create, open, save, unload, and inspect scenes and scene hierarchies.
+- Create, duplicate, destroy, find, parent, and modify GameObjects and
+  components.
+- Read, create, update, delete, compile, and execute C# scripts.
+- Search, add, list, and remove Unity packages.
+- Capture Game View, Scene View, camera, or isolated GameObject screenshots.
+- Run EditMode or PlayMode tests and inspect Unity console logs.
+- Read editor state, selection, profiler status, memory, rendering, and script
+  timing data.
+
+## Installation
+
+Install the CLI and add the plugin to a Unity project:
+
+```bash
+npm install -g unity-mcp-cli
+unity-mcp-cli install-plugin ./MyUnityProject
+unity-mcp-cli open ./MyUnityProject
+```
+
+The repository also documents Unity Editor UI setup through `Window/AI Game
+Developer`, OpenUPM installation, Docker, and release-binary deployments.
+
+For streamable HTTP, use the default local endpoint:
+
+```json
+{
+    "mcpServers": {
+      "ai-game-developer": {
+        "type": "streamableHttp",
+      "url": "LOCAL_UNITY_MCP_ENDPOINT"
+      }
+    }
+  }
+```
+
+For stdio or Docker, follow the server docs for the exact binary or Docker
+command and matching `--client-transport` value.
+
+## Use Cases
+
+- Ask an agent to create or modify Unity scene objects and prefabs.
+- Generate or update C# gameplay scripts and run Unity tests.
+- Inspect project assets, packages, shaders, scene data, and console logs.
+- Capture screenshots during visual debugging or gameplay iteration.
+- Run profiler queries while optimizing frame timing, rendering, memory, or
+  script execution.
+- Generate Unity-aware skills for AI clients so they use project-specific tools
+  more consistently.
+- Connect compiled Unity runtime builds to MCP for in-game debugging or AI
+  behavior experiments.
+
+## Safety and Privacy
+
+AI Game Developer Unity MCP can alter real Unity projects. Keep the project in
+version control, start with a small enabled-tool set, and avoid destructive tools
+until the agent's workflow is understood. Pay special attention to package
+installation, script execution, reflection method calls, scene saves, asset
+deletion, and runtime connections.
+
+If you expose the server over HTTP, use authentication, keep it on trusted
+interfaces, and review webhook configuration. Tool calls can reveal proprietary
+game assets, source code, scene design, screenshots, logs, profiler data, and
+runtime state to the MCP client and any configured webhooks.
+
+## Duplicate Notes
+
+The catalog already includes Unity-related MCP entries, including the separate
+CoplayDev Unity MCP Server. This entry covers `IvanMurzak/Unity-MCP`, its
+`unity-mcp-cli` package, AI Game Developer Unity plugin, generated skills, and
+HTTP/stdio server deployment path.

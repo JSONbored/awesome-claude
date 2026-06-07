@@ -1,0 +1,218 @@
+---
+title: Firefox DevTools MCP
+slug: firefox-devtools-mcp
+category: mcp
+description: >-
+  Mozilla-maintained MCP server for automating Firefox through WebDriver BiDi,
+  with tools for page navigation, snapshots, UID-based input, screenshots,
+  network requests, console messages, dialogs, history, viewport changes,
+  optional JavaScript evaluation, privileged Firefox contexts, preferences, and
+  WebExtension management.
+cardDescription: Connect Claude to local Firefox DevTools automation through WebDriver BiDi.
+seoTitle: Firefox DevTools MCP for Claude
+seoDescription: >-
+  Configure Firefox DevTools MCP with Claude to inspect and control local Firefox
+  pages using snapshots, screenshots, network and console inspection, UID-based
+  interactions, dialogs, viewport controls, optional scripts, privileged
+  contexts, Firefox prefs, and extensions.
+author: Mozilla
+authorProfileUrl: "https://github.com/mozilla"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Firefox DevTools MCP
+brandDomain: github.com/mozilla/firefox-devtools-mcp
+websiteUrl: "https://github.com/mozilla/firefox-devtools-mcp"
+repoUrl: "https://github.com/mozilla/firefox-devtools-mcp"
+documentationUrl: "https://github.com/mozilla/firefox-devtools-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/firefox-devtools-mcp"
+installable: true
+installCommand: "npx -y firefox-devtools-mcp@latest"
+usageSnippet: "Run Firefox DevTools MCP against a dedicated Firefox profile, start with snapshots and screenshots, and enable script or privileged-context tools only for isolated trusted work."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "firefox-devtools": {
+        "command": "npx",
+        "args": ["-y", "firefox-devtools-mcp@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "firefox-devtools": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "firefox-devtools-mcp@latest",
+          "--headless",
+          "--viewport",
+          "1280x720"
+        ],
+        "env": {
+          "START_URL": "about:home",
+          "FIREFOX_HEADLESS": "true"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 20.19.0 or newer.
+  - Local Firefox 100 or newer, or an explicit Firefox binary path passed through the documented CLI option.
+  - A dedicated Firefox automation profile with no personal cookies, saved passwords, or regular browsing sessions.
+  - Optional adb and Firefox for Android setup when using Android automation mode.
+  - Explicit approval before enabling JavaScript evaluation, privileged Firefox contexts, insecure certificates, extension management, or connect-existing mode.
+safetyNotes:
+  - Browser pages can contain prompt-injection text in visible content, hidden HTML, ARIA labels, console output, network responses, or page metadata.
+  - The server can navigate pages, click, hover, fill forms, drag, upload files, accept dialogs, dismiss dialogs, go through history, change viewport size, close tabs, and restart Firefox.
+  - Enabling evaluate_script allows arbitrary JavaScript in page context; compromised instructions could read page data, modify the DOM, or interact with accessible browser APIs.
+  - Enabling privileged context tools with the required Firefox system-access environment variable can expose privileged Firefox APIs and may extend beyond web-content sandbox boundaries.
+  - Connect-existing mode can attach to a real browsing session with cookies, logins, active tabs, history, and saved state, so avoid it unless the profile is dedicated to automation.
+  - Accepting insecure certificates weakens TLS validation and can hide man-in-the-middle or misconfiguration signals.
+privacyNotes:
+  - Page content, DOM snapshots, accessibility labels, console messages, network requests, headers, screenshots, uploaded file paths, extension names, Firefox prefs, and browser logs can be sent to the MCP client and model.
+  - A regular Firefox profile can expose cookies, saved sessions, browsing history, account data, extensions, and private tabs to browser automation.
+  - Screenshot save paths, uploaded files, downloaded artifacts, and model transcripts can reveal local project names, test data, credentials shown on pages, or customer information.
+  - Use a separate profile, minimize enabled capabilities, avoid sensitive sites, and review provider/browser data handling before automating logged-in sessions.
+sourceUrls:
+  - "https://github.com/mozilla/firefox-devtools-mcp/blob/main/package.json"
+  - "https://github.com/mozilla/firefox-devtools-mcp/blob/main/src/index.ts"
+  - "https://github.com/mozilla/firefox-devtools-mcp/blob/main/src/tools/index.ts"
+  - "https://github.com/mozilla/firefox-devtools-mcp/blob/main/SECURITY.md"
+  - "https://github.com/mozilla/firefox-devtools-mcp/blob/main/LICENSE-MIT"
+  - "https://github.com/mozilla/firefox-devtools-mcp/blob/main/LICENSE-APACHE"
+tags:
+  - firefox
+  - browser-automation
+  - devtools
+  - testing
+  - web
+keywords:
+  - Firefox DevTools MCP
+  - Firefox MCP
+  - Firefox browser automation MCP
+  - WebDriver BiDi MCP
+  - browser DevTools MCP
+  - Mozilla MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Firefox DevTools MCP is a Mozilla-maintained Model Context Protocol server for
+automating local Firefox through WebDriver BiDi and Selenium WebDriver. It lets
+Claude and other MCP clients inspect pages, navigate tabs, capture snapshots,
+interact with page elements by UID, collect network and console information,
+take screenshots, handle dialogs, adjust viewport size, restart Firefox, and
+optionally use script, privileged-context, preference, and WebExtension tools.
+
+The project runs locally through npm and requires a local Firefox installation.
+It is intended for development, debugging, testing, and controlled browser
+automation rather than cloud-hosted MCP execution.
+
+## Source Review
+
+- https://github.com/mozilla/firefox-devtools-mcp
+- https://github.com/mozilla/firefox-devtools-mcp/blob/main/README.md
+- https://registry.npmjs.org/firefox-devtools-mcp
+- https://registry.npmjs.org/%40mozilla%2Ffirefox-devtools-mcp
+- https://github.com/mozilla/firefox-devtools-mcp/blob/main/package.json
+- https://github.com/mozilla/firefox-devtools-mcp/blob/main/src/index.ts
+- https://github.com/mozilla/firefox-devtools-mcp/blob/main/src/tools/index.ts
+- https://github.com/mozilla/firefox-devtools-mcp/blob/main/SECURITY.md
+- https://github.com/mozilla/firefox-devtools-mcp/blob/main/LICENSE-MIT
+- https://github.com/mozilla/firefox-devtools-mcp/blob/main/LICENSE-APACHE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, package metadata, server entrypoint, tool exports, security
+policy, and license files for current install commands, Firefox requirements,
+tool behavior, risky flags, package naming, and licensing.
+
+## Features
+
+- Local stdio MCP server launched with `npx -y firefox-devtools-mcp@latest`.
+- Firefox automation through WebDriver BiDi and Selenium WebDriver.
+- Page tools for listing, creating, navigating, selecting, and closing pages.
+- Snapshot and UID workflows for element discovery and stable element actions.
+- Input tools for click, hover, fill, drag, form fill, and file upload.
+- Network request and console message inspection.
+- Screenshot tools for full-page or element-level captures.
+- Dialog, history, viewport, Firefox info, Firefox output, and restart tools.
+- Optional tools for JavaScript evaluation, privileged Firefox contexts, Firefox
+  preferences, and WebExtension management.
+- Dual MIT or Apache-2.0 license, at the user's option.
+
+## Installation
+
+Install and launch through npx:
+
+```sh
+npx -y firefox-devtools-mcp@latest
+```
+
+Configure your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "firefox-devtools": {
+      "command": "npx",
+      "args": ["-y", "firefox-devtools-mcp@latest"]
+    }
+  }
+}
+```
+
+Use a clean Firefox profile for automation. Add documented flags such as
+`--headless`, `--viewport`, `--profile-path`, or `--start-url` only when needed,
+and avoid risky flags unless the environment is isolated.
+
+## Use Cases
+
+- Inspect a local web app with snapshots, screenshots, console messages, and
+  network request details.
+- Navigate test pages and interact with elements through UID-based click, fill,
+  drag, form-fill, and upload tools.
+- Debug Firefox-specific behavior without switching to another browser MCP
+  server.
+- Capture browser logs, page screenshots, and network request evidence for a
+  development note or issue.
+- Automate Firefox for Android workflows when adb and the target package are
+  configured.
+- Use privileged context and preference tools only for browser-development or
+  isolated Firefox debugging tasks.
+
+## Safety and Privacy
+
+Browser automation gives an AI assistant access to whatever the controlled
+browser can reach. Use a dedicated Firefox profile, avoid sensitive sites, and
+assume web content can try to manipulate the agent through prompt injection in
+visible text, hidden markup, accessibility labels, console output, or network
+responses.
+
+Keep optional capabilities narrow. JavaScript evaluation, privileged context
+access, Firefox preference changes, extension installation, insecure-certificate
+acceptance, and connect-existing mode all expand the risk surface. The upstream
+security guidance warns that privileged context with system access can cross
+normal web-content boundaries and should be used only in fully isolated
+environments.
+
+Snapshots, screenshots, logs, headers, request URLs, file upload paths, extension
+lists, Firefox prefs, and browser state can expose credentials, customer data,
+private browsing context, local file names, or active sessions. Save screenshots
+and logs only to approved locations, and clear or discard dedicated profiles
+after sensitive test runs.
+
+## Duplicate Check
+
+Existing content includes browser automation entries such as Playwright, Chrome
+DevTools, Browser MCP, and Browserbase. Firefox DevTools MCP is distinct because
+it covers `mozilla/firefox-devtools-mcp`, a Mozilla-maintained server for local
+Firefox automation through WebDriver BiDi with Firefox-specific profile,
+preference, privileged-context, extension, Android, and browser-management
+workflows. No dedicated Firefox DevTools MCP or Mozilla Firefox MCP entry was
+found in `content/mcp`.

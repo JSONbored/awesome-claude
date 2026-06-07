@@ -1,0 +1,188 @@
+---
+title: open-webSearch MCP Server
+slug: open-websearch-mcp-server
+category: mcp
+description: >-
+  No-key multi-engine MCP server, CLI, and local daemon for web search and
+  public web content retrieval across engines such as Bing, DuckDuckGo, Brave,
+  Exa, Baidu, CSDN, Juejin, Startpage, and Sogou.
+cardDescription: >-
+  Give Claude no-key multi-engine web search and public page fetching through
+  open-webSearch with stdio, CLI, and optional local daemon modes.
+seoTitle: open-webSearch MCP Server for Claude
+seoDescription: >-
+  Configure open-webSearch with Claude for no-key multi-engine web search,
+  GitHub README fetching, public web page extraction, proxy support,
+  Playwright fallback, and local daemon workflows.
+author: Aas-ee
+authorProfileUrl: "https://github.com/Aas-ee"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: open-webSearch
+brandDomain: github.com
+repoUrl: "https://github.com/Aas-ee/open-webSearch"
+documentationUrl: "https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/README.md"
+packageUrl: "https://registry.npmjs.org/open-websearch"
+installable: true
+installCommand: "npx -y open-websearch@latest"
+usageSnippet: "Run `npx -y open-websearch@latest` with `MODE=stdio` for MCP stdio use, or start the local daemon explicitly with `open-websearch serve` when a reusable local HTTP service is needed."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "open-websearch": {
+        "command": "npx",
+        "args": ["-y", "open-websearch@latest"],
+        "env": {
+          "MODE": "stdio",
+          "DEFAULT_SEARCH_ENGINE": "duckduckgo",
+          "ALLOWED_SEARCH_ENGINES": "duckduckgo,startpage,bing",
+          "NPM_CONFIG_IGNORE_SCRIPTS": "true"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add open-websearch --env MODE=stdio --env DEFAULT_SEARCH_ENGINE=duckduckgo -- npx -y open-websearch@latest
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js 18 or newer for the published npm package.
+  - Review of search-engine terms, scraping limits, rate limits, and allowed use for the target websites.
+  - Optional proxy configuration only when live search or fetch traffic must route through an approved proxy.
+  - Optional Playwright or browser endpoint setup only when request-based search/fetch is insufficient.
+  - A decision about whether to use stdio-only MCP mode, CLI mode, or the local daemon mode.
+safetyNotes:
+  - open-webSearch can send search queries to multiple public engines and fetch public web pages, GitHub READMEs, CSDN articles, Juejin articles, and other supported targets.
+  - Search and fetch results can be incomplete, stale, rate-limited, blocked, region-dependent, or affected by search-engine ranking and scraping protections.
+  - Respect each target site's terms and robots expectations; do not use the server for abusive scraping, credentialed browsing, paywall bypass, or personal-data harvesting.
+  - The optional local daemon exposes HTTP endpoints for local tooling; keep it bound to trusted local interfaces and do not treat it as a public internet API.
+  - Proxy settings, Playwright WebSocket/CDP endpoints, and reused browser sessions can route traffic or cookies through external systems; configure them deliberately.
+  - Leave TLS verification enabled unless a specific target has a broken certificate chain and the risk has been accepted.
+privacyNotes:
+  - Search queries, fetched URLs, result titles, snippets, article content, proxy URLs, browser endpoints, and fetched page text can be exposed to MCP clients, logs, and model context.
+  - Live search engines and fetched websites may observe queries, IP address, proxy exit, browser fingerprints, cookies, timing, and request headers.
+  - Playwright fallback or CDP reuse can expose browser state, existing cookies, logged-in sessions, or verification state to fetched pages.
+  - The project includes public URL validation and private-network target protections, but operators should still avoid fetching internal, secret, or customer-specific URLs.
+  - Redact sensitive search terms and downloaded page content before sharing transcripts or logs.
+disclosure: >-
+  Community-maintained Apache-2.0 MCP server, CLI, and local daemon for no-key
+  web search and public content retrieval, published as the `open-websearch` npm
+  package.
+sourceUrls:
+  - "https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/LICENSE"
+  - "https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/package.json"
+  - "https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/docs/http-api.md"
+  - "https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/src/index.ts"
+  - "https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/src/config.ts"
+  - "https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/src/tools/setupTools.ts"
+  - "https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/src/utils/urlSafety.ts"
+tags:
+  - web-search
+  - search
+  - scraping
+  - research
+  - content-extraction
+keywords:
+  - open-webSearch
+  - open-websearch MCP
+  - no-key web search MCP
+  - multi-engine search MCP
+  - public web fetch MCP
+  - search daemon MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+open-webSearch gives Claude and other MCP clients no-key web search and public
+content retrieval. It supports multiple search engines, public page fetching,
+GitHub README fetching, CLI use, stdio MCP mode, and an optional local daemon
+for repeated local HTTP calls.
+
+Use it when Claude needs a lightweight search/fetch tool for public web
+research without provisioning a commercial search API key, while still keeping
+site terms, rate limits, query privacy, and local daemon exposure visible.
+
+## Source Review
+
+- https://github.com/Aas-ee/open-webSearch
+- https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/README.md
+- https://registry.npmjs.org/open-websearch
+- https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/LICENSE
+- https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/package.json
+- https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/docs/http-api.md
+- https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/src/index.ts
+- https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/src/config.ts
+- https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/src/tools/setupTools.ts
+- https://raw.githubusercontent.com/Aas-ee/open-webSearch/main/src/utils/urlSafety.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package manifest, local daemon API docs, server
+entrypoint, runtime configuration, tool setup, and URL safety helpers for
+current setup and behavior details.
+
+## Features
+
+- Search across supported engines such as Bing, DuckDuckGo, Brave, Exa, Baidu,
+  CSDN, Juejin, Startpage, and Sogou.
+- Limit available engines with `ALLOWED_SEARCH_ENGINES`.
+- Fetch generic public web pages and Markdown content.
+- Fetch GitHub repository README content.
+- Fetch supported article pages from CSDN and Juejin.
+- Run as a local MCP stdio server, a one-shot CLI, or an explicit local daemon.
+- Configure request-only, auto, or Playwright search mode for Bing workflows.
+- Reuse local or remote Playwright/Chromium sessions when manually configured.
+- Route requests through an approved HTTP proxy when needed.
+- Reject private or local network fetch targets through URL safety checks.
+
+## Installation
+
+Configure a stdio-only MCP setup first:
+
+```json
+{
+  "mcpServers": {
+    "open-websearch": {
+      "command": "npx",
+      "args": ["-y", "open-websearch@latest"],
+      "env": {
+        "MODE": "stdio",
+        "DEFAULT_SEARCH_ENGINE": "duckduckgo",
+        "ALLOWED_SEARCH_ENGINES": "duckduckgo,startpage,bing",
+        "NPM_CONFIG_IGNORE_SCRIPTS": "true"
+      }
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add open-websearch --env MODE=stdio --env DEFAULT_SEARCH_ENGINE=duckduckgo -- npx -y open-websearch@latest
+```
+
+Start the local daemon separately only when you need a reusable local HTTP
+service for scripts, skills, or plugin integrations.
+
+## Use Cases
+
+- Search the public web without provisioning a search API key.
+- Compare results across multiple search engines.
+- Fetch the readable content of a specific public page after search.
+- Retrieve a GitHub README for quick repository context.
+- Use a local daemon for repeated search/fetch calls from nearby tooling.
+- Route live search traffic through an approved proxy in restricted networks.
+- Use Playwright fallback for pages that need browser-rendered content.
+
+## Safety and Privacy
+
+open-webSearch is a public web search and fetch tool, so results can be noisy,
+blocked, biased, or incomplete. Verify important claims against primary sources
+and respect each site's current terms before repeated fetching.
+
+Keep stdio mode as the default for MCP clients. If you start the daemon, treat
+it as local-only tooling, keep CORS narrow when enabled, and avoid connecting it
+to browser sessions or proxies that expose sensitive cookies or network routes.

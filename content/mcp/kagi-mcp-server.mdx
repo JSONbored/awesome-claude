@@ -1,0 +1,196 @@
+---
+title: Kagi MCP Server
+slug: kagi-mcp-server
+category: mcp
+description: >-
+  Official Kagi MCP server that gives Claude web, news, video, podcast, image,
+  and page-extraction tools backed by the Kagi Search and Extract APIs.
+cardDescription: >-
+  Add Kagi-powered search and markdown page extraction to Claude with scoped
+  API-key configuration and stdio or HTTP transport.
+seoTitle: Kagi MCP Server for Claude
+seoDescription: >-
+  Configure the official Kagi MCP Server with Claude to search the web, fetch
+  news, videos, podcasts, images, and extract public pages through the Kagi API.
+author: Kagi Search
+authorProfileUrl: "https://github.com/kagisearch"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Kagi MCP Server
+brandDomain: kagi.com
+repoUrl: "https://github.com/kagisearch/kagimcp"
+documentationUrl: "https://raw.githubusercontent.com/kagisearch/kagimcp/main/README.md"
+packageUrl: "https://pypi.org/pypi/kagimcp/json"
+installable: true
+installCommand: "uvx kagimcp"
+usageSnippet: "Set `KAGI_API_KEY` for local stdio use, then run `uvx kagimcp`; in hosted HTTP mode, send the user's Kagi key as an `Authorization: Bearer` token."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "kagi": {
+        "command": "uvx",
+        "args": ["kagimcp"],
+        "env": {
+          "KAGI_API_KEY": "YOUR_KAGI_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  uvx kagimcp
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Python 3.12 and uv for the recommended `uvx kagimcp` install path.
+  - A Kagi API key stored in `KAGI_API_KEY` for local stdio use.
+  - Review of Kagi API billing, rate limits, search workflows, extraction behavior, and any client logs that may capture query text.
+  - Optional HTTP deployment review if exposing the streamable HTTP transport to multiple users.
+safetyNotes:
+  - Kagi MCP sends search queries, page URLs, filters, date ranges, lens IDs, and extraction requests to the Kagi API.
+  - Search and extraction calls can consume Kagi API quota or create API costs, especially when using high limits or inline page extraction.
+  - The `kagi_extract` tool fetches public page content as markdown; do not ask it to retrieve private, paywalled, or terms-restricted content unless you have permission.
+  - In HTTP mode, clients provide Kagi API keys through bearer tokens; expose the endpoint only behind trusted transport, access controls, and log redaction.
+  - The server supports configurable timeouts, retries, and hidden search parameters; tune these before giving broad agent access to current-web workflows.
+privacyNotes:
+  - Kagi receives search queries, requested URLs, search filters, result domains, lens IDs, extraction targets, API keys, and request metadata.
+  - MCP clients and logs may store user questions, result snippets, extracted markdown, trace IDs, and error bodies returned by the Kagi API.
+  - Hosted HTTP deployments can process keys for multiple users; avoid server, proxy, and platform logs that record `Authorization` headers.
+  - Extracted pages may include personal data, copyrighted text, internal URLs, or sensitive context if the user provides those URLs.
+disclosure: >-
+  MIT-licensed official Kagi MCP server published as the `kagimcp` Python
+  package. This entry is distinct from no-key public web search tools and
+  research agents because it uses the Kagi Search and Extract APIs directly.
+sourceUrls:
+  - "https://raw.githubusercontent.com/kagisearch/kagimcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/kagisearch/kagimcp/main/README.md"
+  - "https://raw.githubusercontent.com/kagisearch/kagimcp/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/kagisearch/kagimcp/main/src/kagimcp/server.py"
+  - "https://raw.githubusercontent.com/kagisearch/kagimcp/main/Dockerfile"
+tags:
+  - search
+  - web
+  - extraction
+  - research
+  - api
+keywords:
+  - Kagi MCP Server
+  - kagimcp
+  - Kagi Search MCP
+  - Kagi Extract MCP
+  - web search MCP
+  - Claude Kagi search
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Kagi MCP Server connects Claude and other MCP clients to Kagi's Search and
+Extract APIs. It exposes `kagi_search_fetch` for web, news, video, podcast, and
+image searches with optional filters, date limits, domains, file types, lenses,
+and inline page extracts. It also exposes `kagi_extract` for retrieving a
+public page as markdown.
+
+Use it when a Claude workflow needs current web results or page extraction from
+a Kagi-backed source instead of a generic scraping stack. For local desktop
+usage, run it over stdio with `KAGI_API_KEY`; for shared deployments, review the
+HTTP bearer-token flow and logging behavior before exposing the endpoint.
+
+## Source Review
+
+- https://github.com/kagisearch/kagimcp
+- https://raw.githubusercontent.com/kagisearch/kagimcp/main/README.md
+- https://pypi.org/pypi/kagimcp/json
+- https://raw.githubusercontent.com/kagisearch/kagimcp/main/LICENSE
+- https://raw.githubusercontent.com/kagisearch/kagimcp/main/pyproject.toml
+- https://raw.githubusercontent.com/kagisearch/kagimcp/main/src/kagimcp/server.py
+- https://raw.githubusercontent.com/kagisearch/kagimcp/main/Dockerfile
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, license, package metadata, server implementation, and
+Dockerfile for current setup and operating details.
+
+## Features
+
+- Search the web through Kagi's general search workflow.
+- Search news, videos, podcasts, and images with workflow-specific result types.
+- Fetch inline markdown extracts for top search results.
+- Extract a specific HTTPS page as markdown through the Kagi Extract API.
+- Restrict searches by included or excluded domains.
+- Filter by relative time, explicit date bounds, file type, or Kagi lens.
+- Hide selected optional search parameters from the LLM-facing schema with
+  `KAGI_HIDDEN_PARAMS`.
+- Configure API retries, search timeout, extract timeout, and log level.
+- Run over local stdio for desktop clients or streamable HTTP for hosted use.
+- Use bearer tokens per request in HTTP mode so one hosted instance can serve
+  multiple Kagi users without a shared server-wide key.
+
+## Installation
+
+Install uv, then add Kagi MCP to an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "kagi": {
+      "command": "uvx",
+      "args": ["kagimcp"],
+      "env": {
+        "KAGI_API_KEY": "YOUR_KAGI_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Claude Code can add the same server from the command line:
+
+```bash
+claude mcp add kagi -e KAGI_API_KEY="YOUR_KAGI_API_KEY" -- uvx kagimcp
+```
+
+For local development from a checkout:
+
+```bash
+KAGI_API_KEY=YOUR_KAGI_API_KEY uv run kagimcp
+```
+
+For streamable HTTP mode:
+
+```bash
+KAGI_API_KEY=YOUR_KAGI_API_KEY uv run kagimcp --http --host 0.0.0.0 --port 8000
+```
+
+## Use Cases
+
+- Give Claude current web results without leaving the MCP client workflow.
+- Search recent news or technical documentation with explicit domain and date
+  filters.
+- Fetch markdown extracts from public pages before summarizing or comparing
+  sources.
+- Use Kagi lenses to constrain research to curated source sets.
+- Add web, news, video, podcast, or image discovery to coding, writing, or
+  research agents.
+- Host a streamable HTTP endpoint for a controlled team environment where each
+  user supplies their own Kagi API key.
+
+## Safety and Privacy
+
+Kagi MCP is a networked search and extraction server. Treat every query, URL,
+filter, lens ID, and extracted result as data sent to both the MCP client and
+Kagi's API. Avoid sending private URLs, credentials, internal tickets, customer
+names, or confidential research topics unless that use is approved for your
+Kagi account and model provider workflow.
+
+When using HTTP mode, protect the endpoint like an API service. The server
+accepts bearer tokens and passes them to Kagi, so reverse proxies, platform
+logs, debugging middleware, and error reporting must not record authorization
+headers.
+
+## Duplicate Notes
+
+Existing catalog entries cover no-key public search, scraping/crawling tools,
+and research agents. This entry covers the official `kagisearch/kagimcp`
+repository and `kagimcp` package, which specifically wrap the Kagi Search and
+Extract APIs for MCP clients.

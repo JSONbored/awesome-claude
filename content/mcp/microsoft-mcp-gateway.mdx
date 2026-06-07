@@ -1,0 +1,188 @@
+---
+title: Microsoft MCP Gateway
+slug: microsoft-mcp-gateway
+category: mcp
+description: >-
+  MIT-licensed Kubernetes gateway and management layer for MCP servers, with
+  session-aware routing, adapter lifecycle APIs, tool registration, Entra ID
+  role authorization, and optional agent/session preview resources.
+cardDescription: >-
+  Deploy and manage MCP server adapters in Kubernetes, route clients through
+  session-aware gateway endpoints, register tools, and control access with
+  bearer auth and Entra ID app roles.
+seoTitle: Microsoft MCP Gateway for Claude
+seoDescription: >-
+  Configure Microsoft MCP Gateway with Claude and other MCP clients to route
+  streamable HTTP MCP traffic, deploy adapter pods in Kubernetes, register
+  tools, use Entra ID roles, inspect logs, and proxy local or remote MCP
+  servers.
+author: microsoft
+authorProfileUrl: "https://github.com/microsoft"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Microsoft MCP Gateway
+brandDomain: microsoft.com
+repoUrl: "https://github.com/microsoft/mcp-gateway"
+documentationUrl: "https://github.com/microsoft/mcp-gateway/blob/main/README.md"
+installable: true
+installCommand: "kubectl apply -f deployment/k8s/local-deployment.yml"
+usageSnippet: "Deploy the gateway services to Kubernetes, register MCP adapters or tools through the management API, then connect clients to the adapter `/mcp` route or the dynamic `/mcp` tool router with the required bearer token."
+copySnippet: |-
+  kubectl port-forward -n adapter svc/mcpgateway-service 8000:8000
+configSnippet: |-
+  {
+    "name": "sample-adapter",
+    "imageName": "mcp-example",
+    "imageVersion": "1.0.0",
+    "requiredRoles": [
+      "mcp.engineer"
+    ]
+  }
+estimatedSetupTime: 45 minutes
+difficulty: advanced
+prerequisites:
+  - Kubernetes cluster access with permission to deploy gateway, adapter, tool router, and sample MCP server workloads.
+  - .NET 8 SDK, Docker Desktop, local registry, and Kubernetes enabled for the documented local deployment flow.
+  - MCP server images built and pushed to the registry used by the gateway deployment.
+  - Bearer authentication, Entra ID app roles, `mcp.admin`, and per-resource `requiredRoles` configured before exposing management APIs.
+  - Deployment storage, Redis or session store settings, logs, and network routing reviewed before production use.
+safetyNotes:
+  - Microsoft MCP Gateway can deploy, update, delete, and route MCP server adapters in Kubernetes through its management API.
+  - The dynamic `/mcp` tool router can route tool calls to registered tool servers, so tool definitions and execution endpoints must be reviewed before registration.
+  - Adapter and tool write access is limited to the creator or `mcp.admin`, while read access depends on creator, admin, and configured required roles.
+  - The optional agents and sessions subsystem is documented as preview and single-replica; built-in bash and file tools run in the gateway pod and are not a production sandbox.
+  - Proxying local stdio servers into remotely accessible services can expose local tools and workload identity permissions if access controls are too broad.
+privacyNotes:
+  - The gateway may process bearer tokens, Entra ID role claims, adapter metadata, registered tool schemas, session IDs, MCP requests, tool arguments, tool results, logs, container image names, environment variables, and Kubernetes deployment status.
+  - Adapter logs and session streams can reveal prompts, tool inputs, tool outputs, upstream MCP responses, and internal service names.
+  - Workload identity, Azure resource access, Foundry settings, and MCP proxy environment variables can expose cloud permissions if logged or shared.
+  - Store tokens, role assignments, registry credentials, deployment payloads, and model provider settings in controlled secrets rather than committed examples.
+sourceUrls:
+  - "https://github.com/microsoft/mcp-gateway/blob/main/README.md"
+  - "https://github.com/microsoft/mcp-gateway/blob/main/LICENSE"
+  - "https://github.com/microsoft/mcp-gateway/blob/main/docs/entra-app-roles.md"
+  - "https://github.com/microsoft/mcp-gateway/blob/main/sample-servers/mcp-proxy/README.md"
+  - "https://github.com/microsoft/mcp-gateway/blob/main/openapi/mcp-gateway.openapi.json"
+  - "https://github.com/microsoft/mcp-gateway/blob/main/dotnet/Microsoft.McpGateway.Service/src/Session/AdapterSessionRoutingHandler.cs"
+tags:
+  - gateway
+  - kubernetes
+  - orchestration
+  - security
+  - infrastructure
+keywords:
+  - Microsoft MCP Gateway
+  - MCP Gateway
+  - Kubernetes MCP gateway
+  - MCP adapter management
+  - Entra ID MCP gateway
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Microsoft MCP Gateway is an open-source reverse proxy and management layer for
+MCP servers in Kubernetes. It provides a data plane for routing streamable HTTP
+MCP traffic with session affinity, plus a control plane for deploying,
+updating, deleting, and inspecting MCP server adapters and registered tool
+servers.
+
+The gateway can expose direct adapter routes such as `/adapters/{name}/mcp` and
+a dynamic `/mcp` tool router. The README also documents an optional preview
+agent/session layer that can run LLM-driven sessions on top of registered MCP
+tools when Azure AI Foundry settings are configured.
+
+## Source Review
+
+- https://github.com/microsoft/mcp-gateway
+- https://github.com/microsoft/mcp-gateway/blob/main/README.md
+- https://github.com/microsoft/mcp-gateway/blob/main/LICENSE
+- https://github.com/microsoft/mcp-gateway/blob/main/docs/entra-app-roles.md
+- https://github.com/microsoft/mcp-gateway/blob/main/sample-servers/mcp-proxy/README.md
+- https://github.com/microsoft/mcp-gateway/blob/main/openapi/mcp-gateway.openapi.json
+- https://github.com/microsoft/mcp-gateway/blob/main/dotnet/Microsoft.McpGateway.Service/src/Session/AdapterSessionRoutingHandler.cs
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, Entra app-role guide, MCP proxy sample, OpenAPI contract, session
+routing source, and license file for current deployment, authorization, adapter
+management, tool registration, and routing behavior.
+
+## Features
+
+- Deploy and register MCP server adapters with the `/adapters` management API.
+- Route streamable HTTP MCP traffic through `/adapters/{name}/mcp`.
+- Preserve MCP session affinity when routing requests to adapter instances.
+- Register tool definitions and tool servers through the `/tools` API.
+- Route dynamic tool calls through the gateway-level `/mcp` tool router.
+- Inspect adapter and tool metadata, status, and running logs.
+- Use bearer authentication and Entra ID app roles for resource access control.
+- Proxy local stdio MCP servers or remote streamable HTTP MCP servers through the gateway.
+- Deploy gateway and sample workloads into Kubernetes with local or Azure-oriented manifests.
+- Optionally evaluate preview agents and sessions backed by registered MCP tools.
+
+## Installation
+
+The README documents a local deployment flow that builds sample MCP server
+images, publishes the gateway and tool-router images, applies Kubernetes
+manifests, and port-forwards the gateway service:
+
+```bash
+kubectl apply -f deployment/k8s/local-deployment.yml
+kubectl port-forward -n adapter svc/mcpgateway-service 8000:8000
+```
+
+Before applying the manifests, build and push the sample MCP server, gateway,
+and tool-router images to the registry used by the deployment. The repository
+also includes Azure deployment assets for cloud setup.
+
+Create adapters through the management API with the image details and any
+required role values:
+
+```json
+{
+  "name": "sample-adapter",
+  "imageName": "mcp-example",
+  "imageVersion": "1.0.0",
+  "requiredRoles": [
+    "mcp.engineer"
+  ]
+}
+```
+
+## Use Cases
+
+- Put a Kubernetes-native reverse proxy in front of multiple MCP server deployments.
+- Keep MCP session traffic pinned to the correct adapter instance.
+- Manage MCP adapter lifecycle with REST APIs instead of manually editing workloads.
+- Expose registered tool servers through one dynamic MCP tool router.
+- Gate adapter and tool access with Entra ID app roles and bearer tokens.
+- Bridge local stdio MCP servers into remotely accessible streamable HTTP services.
+- Proxy internal streamable HTTP MCP servers while centralizing access and logging.
+- Evaluate agent/session prototypes that call registered MCP tools in a controlled test environment.
+
+## Safety and Privacy
+
+Microsoft MCP Gateway is infrastructure for deploying and routing other MCP
+servers. Limit who can call the management APIs because adapter and tool
+creation can deploy Kubernetes workloads, expose tool endpoints, and make logs
+available through gateway APIs. Configure `mcp.admin`, resource creators, and
+`requiredRoles` carefully before sharing the service.
+
+The README labels the agents and sessions subsystem as preview and
+single-replica. Built-in bash and file tools run inside the gateway pod with
+regex denylist, timeout, output, and path limits; the docs explicitly say to
+replace them with a real sandbox before multi-tenant or production use.
+
+Treat bearer tokens, role claims, adapter payloads, tool schemas, Foundry
+settings, workload identity permissions, MCP proxy environment variables, logs,
+session streams, prompts, arguments, and tool results as sensitive. Avoid
+registering untrusted MCP images or commands, and review Kubernetes RBAC,
+network policy, image provenance, and log retention before production use.
+
+## Duplicate Check
+
+No `microsoft/mcp-gateway` source entry, Microsoft MCP Gateway entry, or
+matching source URL was found in `content/mcp` or the broader content
+directories.

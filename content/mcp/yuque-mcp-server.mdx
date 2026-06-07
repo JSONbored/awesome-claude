@@ -1,0 +1,205 @@
+---
+title: Yuque MCP Server
+slug: yuque-mcp-server
+category: mcp
+description: >-
+  Official Yuque MCP server that connects Claude to Yuque knowledge bases for
+  user lookup, search, books, documents, notes, resources, and table-of-contents
+  workflows, including read, create, and update tools over stdio with personal
+  or group API tokens.
+cardDescription: Connect Claude to Yuque knowledge-base search, books, docs, notes, and resources.
+seoTitle: Yuque MCP Server for Claude
+seoDescription: >-
+  Configure Yuque MCP Server with Claude to search Yuque, read and create books,
+  documents, notes, resources, and tables of contents, and connect to Yuque Cloud
+  or private Yuque deployments with API tokens.
+author: Yuque
+authorProfileUrl: "https://github.com/yuque"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Yuque MCP Server
+brandDomain: github.com/yuque/yuque-mcp-server
+websiteUrl: "https://yuque.github.io/yuque-ecosystem/"
+repoUrl: "https://github.com/yuque/yuque-mcp-server"
+documentationUrl: "https://github.com/yuque/yuque-mcp-server/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/yuque-mcp"
+installable: true
+installCommand: "npx -y yuque-mcp"
+usageSnippet: "Use a read-only Yuque token for search and reading, then upgrade token scope only when Claude is approved to create or update knowledge-base content."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "yuque": {
+        "command": "npx",
+        "args": ["-y", "yuque-mcp"],
+        "env": {
+          "YUQUE_PERSONAL_TOKEN": ""
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "yuque": {
+        "command": "npx",
+        "args": ["-y", "yuque-mcp"],
+        "env": {
+          "YUQUE_PERSONAL_TOKEN": "<yuque-personal-token>",
+          "YUQUE_BASE_URL": "<yuque-api-base-url>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js 18 or newer and npx.
+  - Yuque personal, group, or legacy API token with the minimum scope needed for the workflow.
+  - Yuque Cloud account or approved private Yuque deployment base URL.
+  - Read-only token for search and retrieval workflows whenever document or book writes are not required.
+  - Approval before creating, updating, or deleting books, documents, notes, resources, or table-of-contents entries.
+safetyNotes:
+  - Yuque MCP Server can search and read content, but it also exposes create, update, and delete workflows for books, documents, notes, resources, and tables of contents.
+  - The upstream security policy recommends read-only tokens when only read access is needed.
+  - Tokens passed as CLI arguments can appear in shell history, process listings, or client logs; prefer environment variables or a secrets manager.
+  - Custom YUQUE_BASE_URL values should point only to trusted Yuque deployments and should use HTTPS for remote services.
+  - Rate limits, deleted resources, token expiration, private-deployment behavior, and Yuque API changes can affect tool results.
+privacyNotes:
+  - Yuque searches, user details, book metadata, document titles, document bodies, notes, resources, TOC data, group names, repo namespaces, slugs, and private deployment URLs can be sent to the MCP client and model.
+  - Created or updated Yuque content persists in the selected knowledge base and may be visible to collaborators according to Yuque permissions.
+  - Keep YUQUE_PERSONAL_TOKEN, YUQUE_GROUP_TOKEN, YUQUE_TOKEN, and private deployment URLs out of prompts, committed config, screenshots, public issues, and shared logs.
+sourceUrls:
+  - "https://github.com/yuque/yuque-mcp-server/blob/main/package.json"
+  - "https://github.com/yuque/yuque-mcp-server/blob/main/server.json"
+  - "https://github.com/yuque/yuque-mcp-server/blob/main/src/server.ts"
+  - "https://github.com/yuque/yuque-mcp-server/blob/main/src/services/yuque-client.ts"
+  - "https://github.com/yuque/yuque-mcp-server/blob/main/SECURITY.md"
+  - "https://github.com/yuque/yuque-mcp-server/blob/main/LICENSE"
+tags:
+  - yuque
+  - knowledge-base
+  - documents
+  - notes
+  - collaboration
+keywords:
+  - Yuque MCP Server
+  - Yuque MCP
+  - yuque-mcp
+  - Yuque knowledge base MCP
+  - Yuque docs MCP
+  - knowledge base MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Yuque MCP Server is the official Yuque Model Context Protocol server for
+connecting AI assistants to Yuque knowledge-base content. It exposes tools for
+the current user, search, books, documents, notes, structured resources, and
+table-of-contents workflows through a stdio MCP server.
+
+The server uses the `yuque-mcp` npm package. It authenticates with a Yuque token
+from an environment variable or CLI argument and defaults to the Yuque Cloud API,
+with optional `YUQUE_BASE_URL` support for private deployments.
+
+## Source Review
+
+- https://github.com/yuque/yuque-mcp-server
+- https://github.com/yuque/yuque-mcp-server/blob/main/README.md
+- https://registry.npmjs.org/yuque-mcp
+- https://github.com/yuque/yuque-mcp-server/blob/main/package.json
+- https://github.com/yuque/yuque-mcp-server/blob/main/server.json
+- https://github.com/yuque/yuque-mcp-server/blob/main/src/cli.ts
+- https://github.com/yuque/yuque-mcp-server/blob/main/src/server.ts
+- https://github.com/yuque/yuque-mcp-server/blob/main/src/services/yuque-client.ts
+- https://github.com/yuque/yuque-mcp-server/blob/main/src/tools/doc.ts
+- https://github.com/yuque/yuque-mcp-server/blob/main/SECURITY.md
+- https://github.com/yuque/yuque-mcp-server/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, package metadata, MCP server manifest, CLI entrypoint,
+server implementation, Yuque API client, document tools, security policy, and
+license file for current install commands, token options, tool behavior, base URL
+support, API scope, and licensing.
+
+## Features
+
+- NPM package `yuque-mcp` with an executable CLI.
+- Stdio MCP server for local clients and install/setup helpers for multiple MCP
+  clients.
+- Yuque Cloud API support plus custom `YUQUE_BASE_URL` for private deployments.
+- Token support through `YUQUE_PERSONAL_TOKEN`, group or legacy token variables,
+  or the documented CLI token flag.
+- User lookup and Yuque search tools.
+- Book workflows for listing, reading, creating, and updating books.
+- Document workflows for listing, reading, creating, and updating documents,
+  including markdown-compatible YMD/YFM flows.
+- Resource, note, and table-of-contents workflows.
+- MIT license.
+
+## Installation
+
+Run the package with npx:
+
+```sh
+npx -y yuque-mcp
+```
+
+Configure an MCP client with a Yuque token:
+
+```json
+{
+  "mcpServers": {
+    "yuque": {
+      "command": "npx",
+      "args": ["-y", "yuque-mcp"],
+      "env": {
+        "YUQUE_PERSONAL_TOKEN": "<yuque-personal-token>"
+      }
+    }
+  }
+}
+```
+
+For private deployments, add `YUQUE_BASE_URL` with the approved Yuque API base
+URL. Restart the MCP client and test with a read-only query before allowing
+create or update actions.
+
+## Use Cases
+
+- Search Yuque for relevant internal or personal knowledge-base documents.
+- List books and documents for an approved namespace.
+- Read Yuque document content into a Claude session for summarization or review.
+- Create a new document draft in a selected Yuque book.
+- Update an existing document, note, resource, or table-of-contents entry after
+  human approval.
+- Connect Claude to a private Yuque deployment by setting a custom API base URL.
+
+## Safety and Privacy
+
+Yuque MCP Server should be scoped by token permissions. Use a read-only token for
+retrieval and search, and switch to a write-capable token only for approved
+authoring workflows. The upstream security policy warns that the server can
+create, update, and delete content in a Yuque workspace, so understand token
+scope before granting access.
+
+Knowledge-base content can be sensitive. Search queries, document bodies, notes,
+book names, group names, repo namespaces, table-of-contents structure, resources,
+private deployment URLs, and generated updates may appear in model context,
+client logs, or transcripts. Protect Yuque tokens and avoid placing them in CLI
+arguments, shell history, screenshots, public issues, or committed MCP config.
+
+Created or updated content persists in Yuque and may be visible to collaborators.
+Verify book IDs, repo namespaces, document slugs, visibility settings, and
+private deployment URLs before allowing write operations.
+
+## Duplicate Check
+
+No Yuque MCP Server, `yuque/yuque-mcp-server`, `yuque-mcp`, or dedicated Yuque
+knowledge-base MCP entry was found in `content/mcp`, `content/agents`,
+`content/guides`, or `content/skills`. This entry is scoped to Yuque's official
+MCP server and does not duplicate general document, note-taking, or knowledge
+base MCP entries.

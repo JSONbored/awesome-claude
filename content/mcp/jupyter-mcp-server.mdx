@@ -1,0 +1,188 @@
+---
+title: Jupyter MCP Server
+slug: jupyter-mcp-server
+category: mcp
+description: >-
+  MCP server for connecting Claude to Jupyter notebooks, kernels, files, cells,
+  multimodal outputs, and JupyterLab workflows over stdio or Streamable HTTP.
+cardDescription: >-
+  Control Jupyter notebooks from Claude with tools for files, kernels,
+  notebooks, cells, code execution, and multimodal notebook outputs.
+seoTitle: Jupyter MCP Server for Claude
+seoDescription: >-
+  Configure Jupyter MCP Server with Claude to list files and kernels, manage
+  notebooks, edit cells, execute code, inspect outputs, and work with JupyterLab
+  notebook sessions.
+author: Datalayer
+authorProfileUrl: "https://github.com/datalayer"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Jupyter MCP Server
+brandDomain: jupyter.org
+repoUrl: "https://github.com/datalayer/jupyter-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/README.md"
+packageUrl: "https://pypi.org/pypi/jupyter-mcp-server/json"
+installable: true
+installCommand: "uvx jupyter-mcp-server@latest"
+usageSnippet: "Run `uvx jupyter-mcp-server@latest` with `JUPYTER_URL` and `JUPYTER_TOKEN` set for the target Jupyter server."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "jupyter": {
+        "command": "uvx",
+        "args": ["jupyter-mcp-server@latest"],
+        "env": {
+          "JUPYTER_URL": "YOUR_JUPYTER_SERVER_URL",
+          "JUPYTER_TOKEN": "YOUR_JUPYTER_TOKEN",
+          "ALLOW_IMG_OUTPUT": "true"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add jupyter --env JUPYTER_URL=YOUR_JUPYTER_SERVER_URL --env JUPYTER_TOKEN=YOUR_JUPYTER_TOKEN -- uvx jupyter-mcp-server@latest
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer with `uvx` available.
+  - A running JupyterLab, Jupyter Server, JupyterHub, or compatible notebook deployment.
+  - A Jupyter access token for the notebook server Claude is allowed to control.
+  - Review of notebook trust, kernel permissions, filesystem scope, and network access before enabling code-execution tools.
+  - An `MCP_TOKEN` or equivalent bearer-token plan when using Streamable HTTP transport; avoid unauthenticated HTTP deployments.
+safetyNotes:
+  - Jupyter MCP Server can list files, list kernels, create or switch notebooks, insert cells, edit cell source, delete cells, move cells, restart kernels, execute cells, and execute arbitrary code in a notebook kernel.
+  - Notebook code can read files available to the Jupyter process, access environment variables, call network services, start subprocesses, install packages, or mutate data depending on kernel permissions.
+  - File and notebook tools can alter important notebooks or delete work if pointed at the wrong server, path, notebook, or cell index.
+  - Keep Claude connected only to isolated kernels and directories that are appropriate for agent-driven execution.
+  - Use least-privilege Jupyter tokens, short-lived sessions, and a separate test notebook before allowing changes in production or shared JupyterHub environments.
+  - Streamable HTTP deployments require MCP client authentication unless explicitly started in insecure no-auth mode; do not expose no-auth transports beyond trusted local testing.
+privacyNotes:
+  - Jupyter tokens, notebook contents, code cells, markdown cells, outputs, plots, image data, file names, kernel lists, environment-derived values, and error traces can be exposed to the MCP client.
+  - Executed notebook cells may print secrets, local paths, database results, API responses, or private research data into model context or client logs.
+  - Multimodal output support can send generated plots and images to the MCP client; disable or scope `ALLOW_IMG_OUTPUT` when images may contain sensitive data.
+  - Shared notebooks and JupyterHub deployments may contain other users' work; confirm workspace boundaries before connecting an agent.
+  - Retain notebook execution logs, MCP logs, and generated outputs only as long as needed for the workflow.
+disclosure: >-
+  Datalayer-maintained open source MCP server for Jupyter, published as the
+  `jupyter-mcp-server` Python package under the BSD 3-Clause license.
+sourceUrls:
+  - "https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/LICENSE"
+  - "https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/ARCHITECTURE.md"
+  - "https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/jupyter_mcp_server/CLI.py"
+  - "https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/jupyter_mcp_server/server.py"
+  - "https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/jupyter_mcp_server/config.py"
+  - "https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/jupyter_mcp_server/tools/__init__.py"
+tags:
+  - jupyter
+  - notebooks
+  - data-science
+  - python
+  - code-execution
+keywords:
+  - Jupyter MCP
+  - Jupyter MCP Server
+  - notebook MCP
+  - JupyterLab MCP
+  - Python notebook MCP
+  - data science MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Jupyter MCP Server connects Claude and other MCP clients to Jupyter notebooks.
+It exposes tools for browsing server files and kernels, selecting notebooks,
+reading notebook contents, editing cells, executing code, restarting kernels,
+and returning notebook outputs including images and plots.
+
+Use it when Claude needs supervised access to a Jupyter environment for data
+science, research notebooks, reproducible experiments, interactive teaching,
+or notebook maintenance workflows.
+
+## Source Review
+
+- https://github.com/datalayer/jupyter-mcp-server
+- https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/README.md
+- https://pypi.org/pypi/jupyter-mcp-server/json
+- https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/LICENSE
+- https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/pyproject.toml
+- https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/ARCHITECTURE.md
+- https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/jupyter_mcp_server/CLI.py
+- https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/jupyter_mcp_server/server.py
+- https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/jupyter_mcp_server/config.py
+- https://raw.githubusercontent.com/datalayer/jupyter-mcp-server/main/jupyter_mcp_server/tools/__init__.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, license, package manifest, architecture notes, CLI
+entrypoint, server implementation, runtime configuration, and tool registry
+for current setup and behavior details.
+
+## Features
+
+- Connect to local, remote, or hosted Jupyter notebook deployments.
+- List files and directories visible to the Jupyter server.
+- List available and running kernel sessions.
+- Create, select, switch, read, restart, and disconnect notebooks.
+- Read individual cells and full notebook contents.
+- Insert, delete, move, overwrite, and surgically edit cell source.
+- Execute individual cells or direct kernel code.
+- Return text, image, plot, and other notebook output types.
+- Use stdio for local MCP clients or Streamable HTTP for hosted clients.
+- Integrate with selected JupyterLab commands through `jupyter-mcp-tools`.
+
+## Installation
+
+Start or identify the Jupyter server that Claude should control, then configure
+the MCP client with the published package:
+
+```json
+{
+  "mcpServers": {
+    "jupyter": {
+      "command": "uvx",
+      "args": ["jupyter-mcp-server@latest"],
+      "env": {
+        "JUPYTER_URL": "YOUR_JUPYTER_SERVER_URL",
+        "JUPYTER_TOKEN": "YOUR_JUPYTER_TOKEN",
+        "ALLOW_IMG_OUTPUT": "true"
+      }
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add jupyter --env JUPYTER_URL=YOUR_JUPYTER_SERVER_URL --env JUPYTER_TOKEN=YOUR_JUPYTER_TOKEN -- uvx jupyter-mcp-server@latest
+```
+
+For Streamable HTTP deployments, configure an `MCP_TOKEN` for bearer-token
+authentication unless the server is intentionally limited to trusted local
+testing.
+
+## Use Cases
+
+- Ask Claude to inspect a notebook and summarize its cells and outputs.
+- Insert or update code cells in a controlled analysis notebook.
+- Execute a cell and use the returned output to fix errors or refine analysis.
+- Generate, inspect, and iterate on plots from a data-science notebook.
+- Switch between notebooks in a shared Jupyter workspace.
+- Restart a kernel and rerun selected cells during troubleshooting.
+- Use Claude as a notebook assistant in teaching, research, or exploratory
+  prototyping environments.
+
+## Safety and Privacy
+
+Jupyter MCP Server gives Claude operational access to notebooks and kernels.
+Connect it to disposable notebooks first, review every code-execution request,
+and keep it away from notebooks that hold production credentials or sensitive
+research unless you have an explicit approval workflow.
+
+Notebook outputs and error traces often contain private paths, secrets, data
+samples, or screenshots. Treat MCP transcripts and notebook logs as sensitive
+artifacts, especially when `ALLOW_IMG_OUTPUT` is enabled or when the connected
+Jupyter server belongs to a shared team or JupyterHub deployment.

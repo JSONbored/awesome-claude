@@ -1,0 +1,187 @@
+---
+title: Graphlit MCP Server
+slug: graphlit-mcp-server
+category: mcp
+description: >-
+  MCP server for the Graphlit platform, enabling Claude to ingest, search,
+  retrieve, organize, and operate on files, web pages, feeds, collections,
+  conversations, memory, connectors, crawls, and RAG-ready project knowledge.
+cardDescription: >-
+  Connect Claude to Graphlit projects for ingestion, retrieval, web crawling,
+  feeds, collections, conversations, memory, and RAG workflows.
+seoTitle: Graphlit MCP Server for Claude
+seoDescription: >-
+  Configure Graphlit MCP Server with Claude to ingest, search, retrieve, crawl,
+  organize, and query files, web pages, feeds, collections, conversations,
+  memory, and connected SaaS knowledge through MCP.
+author: Graphlit
+authorProfileUrl: "https://github.com/graphlit"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Graphlit MCP Server
+brandDomain: graphlit.com
+repoUrl: "https://github.com/graphlit/graphlit-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/README.md"
+packageUrl: "https://registry.npmjs.org/graphlit-mcp-server"
+installable: true
+installCommand: "npx -y graphlit-mcp-server"
+usageSnippet: "Set GRAPHLIT_ORGANIZATION_ID, GRAPHLIT_ENVIRONMENT_ID, and GRAPHLIT_JWT_SECRET in your MCP client configuration before launching graphlit-mcp-server."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "graphlit": {
+        "command": "npx",
+        "args": ["-y", "graphlit-mcp-server"],
+        "env": {
+          "GRAPHLIT_ORGANIZATION_ID": "your-organization-id",
+          "GRAPHLIT_ENVIRONMENT_ID": "your-environment-id",
+          "GRAPHLIT_JWT_SECRET": "your-jwt-secret"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add graphlit -- npx -y graphlit-mcp-server
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - Active Graphlit platform account and project access.
+  - Graphlit organization ID, environment ID, and JWT secret from the Graphlit API settings dashboard.
+  - Node.js 18 or newer for the npm stdio server.
+  - Review of which files, URLs, feeds, SaaS connectors, memories, conversations, collections, and web crawls Claude may create or query.
+  - Understanding of Graphlit usage credits, LLM token usage, connector permissions, and any third-party service costs configured for the project.
+safetyNotes:
+  - Graphlit MCP Server can ingest files, web pages, messages, posts, emails, issues, text, memory, feeds, crawls, and connected SaaS data into a Graphlit project.
+  - Tools can create or delete contents, feeds, collections, conversations, specifications, and workflows, and can configure project defaults when explicitly requested.
+  - Web crawling, web search, screenshots, podcast search, feed scheduling, publishing, and connector operations may contact third-party services and process external content.
+  - Generated audio and image publishing can call configured model/provider services and consume credits or quota.
+  - Require confirmation before ingesting private repositories, emails, drive files, Slack/Teams/Discord data, customer documents, large crawls, generated media, deletion operations, or project configuration changes.
+privacyNotes:
+  - Graphlit environment IDs, organization IDs, JWT secrets, project IDs, resource IDs, connector tokens, URLs, files, emails, messages, issues, transcripts, screenshots, memories, conversations, usage records, and retrieved sources can be exposed to the MCP client.
+  - Ingested documents may be extracted to Markdown; audio and video may be transcribed; images and pages may be described or screenshot.
+  - Connected services such as Slack, Discord, Google Drive, Microsoft 365, GitHub, Jira, Linear, Notion, Dropbox, Box, Reddit, and Twitter/X can expose private workspace content.
+  - Usage records can include request, response, variables, token counts, bytes, units, and credit charges for project operations.
+  - Keep Graphlit secrets in local MCP client configuration only, and review retention, deletion, and connector policies before ingesting regulated or customer data.
+disclosure: >-
+  Official MIT MCP server for the Graphlit platform. The server is open source,
+  but use requires a Graphlit account and may consume Graphlit credits, LLM
+  tokens, connector quota, or third-party provider usage.
+sourceUrls:
+  - "https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/LICENSE"
+  - "https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/package.json"
+  - "https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/src/index.ts"
+  - "https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/src/tools.ts"
+  - "https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/src/resources.ts"
+  - "https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/smithery.yaml"
+  - "https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/glama.json"
+tags:
+  - graphlit
+  - rag
+  - knowledge-base
+  - web-crawling
+  - data-ingestion
+keywords:
+  - Graphlit MCP
+  - Graphlit MCP Server
+  - RAG MCP
+  - knowledge base MCP
+  - web crawling MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Graphlit MCP Server connects Claude and other MCP clients to the Graphlit
+platform. It can ingest and retrieve project knowledge across files, web pages,
+feeds, collections, conversations, memories, crawls, SaaS connectors, and
+RAG-ready search workflows.
+
+Use it when Claude needs supervised access to a Graphlit project for
+cross-source knowledge ingestion, retrieval, web crawling, memory, connector,
+and content workflow operations.
+
+## Source Review
+
+- https://github.com/graphlit/graphlit-mcp-server
+- https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/README.md
+- https://registry.npmjs.org/graphlit-mcp-server
+- https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/LICENSE
+- https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/package.json
+- https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/src/index.ts
+- https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/src/tools.ts
+- https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/src/resources.ts
+- https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/smithery.yaml
+- https://raw.githubusercontent.com/graphlit/graphlit-mcp-server/main/glama.json
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package metadata, server entrypoint, tool
+registry, resource registry, Smithery metadata, and Glama metadata for current
+setup and behavior details.
+
+## Features
+
+- Query contents, collections, feeds, conversations, relevant sources, similar
+  images, and project usage records.
+- Ingest files, web pages, messages, posts, emails, issues, text, and short-term
+  memory into a Graphlit project.
+- Work with connectors for services such as Slack, Discord, GitHub, Jira,
+  Linear, Notion, Google Drive, Microsoft 365, Dropbox, Box, Reddit, and
+  Twitter/X.
+- Run web crawling, web search, web mapping, podcast search, and page screenshot
+  tools.
+- Configure project defaults, workflows, specifications, collections, feeds,
+  conversations, and RAG behavior.
+- Publish generated audio or images through configured Graphlit services.
+- Enumerate connector-specific resources such as Slack channels, Teams channels,
+  SharePoint libraries, Linear projects, Notion pages, Dropbox folders, Box
+  folders, Discord channels, and calendars.
+
+## Installation
+
+Create a Graphlit project, collect the API settings values, and configure the
+stdio server in your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "graphlit": {
+      "command": "npx",
+      "args": ["-y", "graphlit-mcp-server"],
+      "env": {
+        "GRAPHLIT_ORGANIZATION_ID": "your-organization-id",
+        "GRAPHLIT_ENVIRONMENT_ID": "your-environment-id",
+        "GRAPHLIT_JWT_SECRET": "your-jwt-secret"
+      }
+    }
+  }
+}
+```
+
+Keep the Graphlit environment, organization, and JWT secret values in local MCP
+client configuration rather than shared project files.
+
+## Use Cases
+
+- Ingest a repository, project folder, document set, or website into Graphlit.
+- Query a cross-tool knowledge base from Claude.
+- Search project content, retrieve sources, and summarize relevant evidence.
+- Create short-term memory during research and promote final notes to long-term
+  knowledge.
+- Crawl approved documentation sites and map relevant pages.
+- Query usage records before running larger ingestion or generation jobs.
+
+## Safety and Privacy
+
+Graphlit MCP Server operates on a cloud-backed knowledge platform with
+connectors, crawling, ingestion, retrieval, generated media, and deletion tools.
+Require explicit user approval before ingesting private data, connecting SaaS
+workspaces, running large crawls, changing project defaults, publishing media,
+or deleting resources.
+
+Treat Graphlit secrets, connector tokens, project resource IDs, retrieved
+sources, ingested documents, transcripts, screenshots, usage records, memories,
+and conversation history as sensitive. Confirm retention and deletion behavior
+before sending customer, regulated, or proprietary content into a Graphlit
+project.

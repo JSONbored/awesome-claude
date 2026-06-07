@@ -1,0 +1,192 @@
+---
+title: Odoo MCP Server
+slug: odoo-mcp-server
+category: mcp
+description: >-
+  MCP server for Odoo ERP systems, with tools for reading records, discovering
+  models and fields, aggregating data, diagnosing access, scanning addons,
+  planning migrations, and running gated safe-write workflows.
+cardDescription: >-
+  Connect Claude to Odoo for supervised ERP record search, schema discovery,
+  diagnostics, addon audits, JSON-2 migration planning, and safe writes.
+seoTitle: Odoo MCP Server for Claude
+seoDescription: >-
+  Configure Odoo MCP Server with Claude to inspect Odoo models, read records,
+  aggregate ERP data, diagnose access, scan addons, plan JSON-2 migrations,
+  post chatter, and run approval-gated writes through MCP.
+author: Le Anh Tuan
+authorProfileUrl: "https://github.com/tuanle96"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Odoo MCP Server
+brandDomain: odoo.com
+repoUrl: "https://github.com/tuanle96/mcp-odoo"
+documentationUrl: "https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/README.md"
+packageUrl: "https://pypi.org/project/odoo-mcp/"
+installable: true
+installCommand: "uvx odoo-mcp --health"
+usageSnippet: "Set ODOO_URL, ODOO_DB, ODOO_USERNAME, and ODOO_PASSWORD or ODOO_API_KEY, then run odoo-mcp over stdio or local streamable HTTP."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "odoo": {
+        "command": "uvx",
+        "args": ["odoo-mcp"],
+        "env": {
+          "ODOO_URL": "https://your-odoo-instance.example",
+          "ODOO_DB": "your-database",
+          "ODOO_USERNAME": "your-user",
+          "ODOO_PASSWORD": "your-password-or-api-key",
+          "ODOO_TRANSPORT": "xmlrpc"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  uvx odoo-mcp --health
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Odoo 16 or newer instance reachable from the machine running the MCP server.
+  - Odoo database name, username, and password or API key for XML-RPC, or Odoo 19 JSON-2 credentials.
+  - Python 3.10 or newer with `uvx`, `pipx`, `pip`, or a container runtime.
+  - Review of the Odoo user's groups, record rules, companies, databases, modules, and model access before connecting Claude.
+  - Optional write gates such as `ODOO_MCP_ENABLE_WRITES`, `ODOO_MCP_ALLOWED_SIDE_EFFECT_METHODS`, and local HTTP host/origin allowlists when needed.
+safetyNotes:
+  - Odoo MCP Server can read ERP records, model fields, access rules, relationships, server profiles, addons, and aggregated business data from the connected Odoo database.
+  - Direct `create`, `write`, and `unlink` are blocked by default, but `execute_approved_write`, `execute_method`, and `chatter_post` can still modify ERP state when gates and approvals are enabled.
+  - Safe writes require preview, live metadata validation, a same-session approval token, explicit confirmation, and `ODOO_MCP_ENABLE_WRITES=1`.
+  - Side-effect model methods should be allowlisted exactly with `ODOO_MCP_ALLOWED_SIDE_EFFECT_METHODS`; broad unknown-method mode should be limited to trusted deployments.
+  - Streamable HTTP binds locally by default; non-local binds need external authentication, TLS, and network policy because the server does not provide built-in HTTP authentication.
+privacyNotes:
+  - Odoo URLs, database names, usernames, passwords, API keys, user context, company context, model names, record IDs, record fields, chatter messages, access diagnostics, addon paths, logs, and smoke-test output can be exposed to the MCP client.
+  - ERP records can include customer, employee, sales, inventory, accounting, HR, leave, product, warehouse, invoice, and custom-module data.
+  - Addon scanning can expose local source paths, model definitions, custom business logic, upgrade risks, and module names.
+  - Logs may include sanitized Odoo errors, method names, domains, model names, request metadata, and operational posture.
+  - Keep Odoo credentials in local MCP configuration only, and use least-privilege Odoo users, record rules, and company scopes for agent workflows.
+disclosure: >-
+  Community-maintained MIT MCP server for Odoo. Odoo is a separate ERP
+  platform; users must follow Odoo hosting, account, module, database, and
+  company access policies.
+sourceUrls:
+  - "https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/LICENSE"
+  - "https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/SECURITY.md"
+  - "https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/docs/client-configs.md"
+  - "https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/src/odoo_mcp/server.py"
+  - "https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/src/odoo_mcp/agent_tools.py"
+  - "https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/src/odoo_mcp/diagnostics.py"
+tags:
+  - odoo
+  - erp
+  - business-systems
+  - diagnostics
+  - safe-writes
+keywords:
+  - Odoo MCP
+  - Odoo MCP Server
+  - ERP MCP
+  - Odoo Claude integration
+  - safe write MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Odoo MCP Server connects Claude and other MCP clients to Odoo ERP systems using
+existing Odoo credentials. It supports read-only record access, model and field
+discovery, server-side aggregation, diagnostics, schema catalogs, addon scans,
+fit/gap reports, migration helpers, and approval-gated write workflows.
+
+Use it when Claude needs supervised Odoo context for ERP analysis, operations,
+support, upgrade planning, addon audits, or carefully reviewed record changes.
+
+## Source Review
+
+- https://github.com/tuanle96/mcp-odoo
+- https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/README.md
+- https://pypi.org/project/odoo-mcp/
+- https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/LICENSE
+- https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/pyproject.toml
+- https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/SECURITY.md
+- https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/docs/client-configs.md
+- https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/src/odoo_mcp/server.py
+- https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/src/odoo_mcp/agent_tools.py
+- https://raw.githubusercontent.com/tuanle96/mcp-odoo/main/src/odoo_mcp/diagnostics.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI project, license, Python package metadata, security notes, client
+configuration guide, server implementation, agent-tool helpers, and diagnostics
+implementation for current setup and behavior details.
+
+## Features
+
+- List Odoo models, inspect fields, read records, search records, and aggregate
+  data server-side.
+- Diagnose Odoo calls, access rules, record-rule visibility, model
+  relationships, and runtime posture.
+- Build validated Odoo domains and generate XML-RPC to JSON-2 migration
+  payloads.
+- Scan local addon source without importing addon code.
+- Generate fit/gap, business-pack, module-audit, and upgrade-risk reports.
+- Use approval-gated write flows for create, update, delete, chatter, and
+  reviewed side-effect methods.
+- Run over stdio or local streamable HTTP with host and origin protections.
+
+## Installation
+
+Configure Odoo connection values, then run the package health check:
+
+```bash
+uvx odoo-mcp --health
+```
+
+A typical stdio MCP configuration uses `uvx` and local environment variables:
+
+```json
+{
+  "mcpServers": {
+    "odoo": {
+      "command": "uvx",
+      "args": ["odoo-mcp"],
+      "env": {
+        "ODOO_URL": "https://your-odoo-instance.example",
+        "ODOO_DB": "your-database",
+        "ODOO_USERNAME": "your-user",
+        "ODOO_PASSWORD": "your-password-or-api-key",
+        "ODOO_TRANSPORT": "xmlrpc"
+      }
+    }
+  }
+}
+```
+
+Use `ODOO_TRANSPORT=json2` and the documented JSON-2 environment variables for
+Odoo 19 deployments that should use External JSON-2.
+
+## Use Cases
+
+- Ask Claude to find customers, products, orders, invoices, employees, or
+  inventory records that match an Odoo domain.
+- Inspect model fields and relationships before building reports or
+  integrations.
+- Diagnose access-rule failures or record-rule visibility for an Odoo user.
+- Scan local custom addons for upgrade and migration risks.
+- Plan XML-RPC to JSON-2 migration steps.
+- Preview and validate a proposed ERP write before enabling approval-gated
+  execution.
+
+## Safety and Privacy
+
+Odoo MCP Server touches ERP systems that may hold critical business data. Start
+with read-only analysis, use least-privilege Odoo credentials, keep HTTP
+transports local unless externally protected, and require explicit approval for
+any write, side-effect method, or chatter operation.
+
+Treat Odoo credentials, database names, model names, record IDs, domains, ERP
+records, employee data, customer data, accounting data, inventory data, addon
+source paths, logs, diagnostics, and migration reports as sensitive operational
+data. Avoid sharing MCP transcripts or screenshots that include private Odoo
+records.

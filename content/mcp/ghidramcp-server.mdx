@@ -1,0 +1,157 @@
+---
+title: GhidraMCP Server
+slug: ghidramcp-server
+category: mcp
+description: >-
+  Ghidra plugin and MCP bridge that lets AI assistants inspect, decompile,
+  rename, comment, and analyze binaries through Ghidra reverse-engineering
+  workflows.
+cardDescription: >-
+  Connect Claude and other MCP clients to Ghidra for assisted binary analysis
+  and reverse engineering.
+seoTitle: GhidraMCP Server for Claude
+seoDescription: >-
+  Configure GhidraMCP with Claude Desktop, Cline, 5ire, and other MCP clients to
+  connect AI assistants to Ghidra decompilation, symbols, imports, exports, and
+  reverse-engineering tools.
+author: LaurieWired
+authorProfileUrl: "https://github.com/LaurieWired"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: GhidraMCP
+repoUrl: "https://github.com/LaurieWired/GhidraMCP"
+documentationUrl: "https://github.com/LaurieWired/GhidraMCP"
+installable: true
+installCommand: "python bridge_mcp_ghidra.py --transport sse"
+usageSnippet: "Install the Ghidra extension, enable the GhidraMCP plugin, then run the Python bridge for an MCP client to inspect the active Ghidra project."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ghidra": {
+        "command": "python",
+        "args": ["/ABSOLUTE_PATH_TO/bridge_mcp_ghidra.py"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "ghidra": {
+        "command": "python",
+        "args": ["/ABSOLUTE_PATH_TO/bridge_mcp_ghidra.py"]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Installed Ghidra.
+  - Python 3.
+  - MCP Python SDK dependencies required by the project.
+  - Latest GhidraMCP release zip imported as a Ghidra extension.
+  - Authorization to analyze the target binary, firmware, sample, or project.
+safetyNotes:
+  - Reverse engineering may be legally restricted; confirm authorization before analyzing third-party or proprietary binaries.
+  - Malware, exploit samples, and unknown binaries should be handled in isolated environments with limited network and filesystem access.
+  - LLM-generated names, comments, and conclusions must be verified against Ghidra decompiler output, disassembly, imports, exports, and xrefs.
+  - Keep backups of Ghidra projects before allowing an agent to rename symbols, alter comments, or save project state.
+privacyNotes:
+  - Binaries, function names, strings, imports, exports, decompilation output, comments, and analysis notes may be sent to the MCP client and model.
+  - Extracted strings and decompiled code can expose proprietary logic, credentials, API endpoints, malware indicators, or customer data.
+  - Generated reports can reveal sensitive vulnerability research or product internals.
+sourceUrls:
+  - "https://github.com/LaurieWired/GhidraMCP"
+  - "https://github.com/LaurieWired/GhidraMCP/releases"
+  - "https://ghidra-sre.org"
+tags:
+  - ghidra
+  - reverse-engineering
+  - binary-analysis
+  - security
+  - decompilation
+keywords:
+  - GhidraMCP
+  - Ghidra MCP server
+  - Ghidra Claude MCP
+  - reverse engineering MCP
+  - binary analysis Ghidra MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+GhidraMCP is a Ghidra extension and MCP bridge for AI-assisted reverse
+engineering. It exposes Ghidra functionality to MCP clients so an assistant can
+inspect binaries, decompile functions, list methods, list classes, review
+imports and exports, rename methods and data, and build analysis notes.
+
+The project includes a Ghidra plugin and a Python bridge that connects MCP
+clients to the Ghidra plugin's local server. Its README documents default local
+ports and optional bridge arguments for Claude Desktop, Cline, and 5ire.
+
+## Source Review
+
+- https://github.com/LaurieWired/GhidraMCP
+- https://github.com/LaurieWired/GhidraMCP/releases
+- https://ghidra-sre.org
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+release page for the current extension zip, bridge arguments, default ports, and
+client-specific setup instructions.
+
+## Features
+
+- Ghidra plugin plus Python MCP bridge.
+- Decompile and analyze binaries through Ghidra.
+- Rename methods and data from an MCP client.
+- List methods, classes, imports, and exports.
+- Claude Desktop config example and SSE remote-server example for Cline.
+- Configurable Ghidra plugin server port and MCP bridge host/port.
+
+## Installation
+
+Install the latest GhidraMCP release zip as a Ghidra extension, restart Ghidra,
+and enable the GhidraMCP plugin under Ghidra's developer tools.
+
+For a Claude Desktop-style local bridge:
+
+```json
+{
+  "mcpServers": {
+    "ghidra": {
+      "command": "python",
+      "args": ["/ABSOLUTE_PATH_TO/bridge_mcp_ghidra.py"]
+    }
+  }
+}
+```
+
+For clients that use SSE, run the Python bridge with the transport option and
+follow the repository's current instructions for host, port, and Ghidra server
+arguments.
+
+```sh
+python bridge_mcp_ghidra.py --transport sse
+```
+
+## Use Cases
+
+- Ask an assistant to summarize a binary's entry points and imports.
+- Decompile selected functions and draft reverse-engineering notes.
+- Rename symbols after human-reviewed analysis.
+- Compare Ghidra decompiler output with disassembly for suspicious functions.
+- Build a report from imports, exports, functions, and strings.
+
+## Safety and Privacy
+
+Use GhidraMCP only on binaries you are authorized to analyze. Treat unknown
+binaries and malware samples as hostile, and isolate the environment before
+opening them. Verify all agent-generated comments, names, and reports before
+saving or sharing them.
+
+## Duplicate Check
+
+No `LaurieWired/GhidraMCP` entry or source URL was found in `content/mcp`. This
+entry is separate from IDA Pro MCP and other security-analysis content.
