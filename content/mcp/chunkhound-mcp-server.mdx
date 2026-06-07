@@ -1,0 +1,204 @@
+---
+title: ChunkHound MCP Server
+slug: chunkhound-mcp-server
+category: mcp
+description: >-
+  Local-first codebase intelligence MCP server that indexes repositories with
+  tree-sitter, stores searchable chunks in DuckDB, and gives Claude semantic
+  search, regex search, daemon status, and deep code research tools.
+cardDescription: >-
+  Run `chunkhound mcp` to give Claude local semantic and regex code search with
+  optional LLM-backed research over indexed repositories.
+seoTitle: ChunkHound MCP Server for Claude
+seoDescription: >-
+  Configure ChunkHound MCP Server with Claude, VS Code, Cursor, Windsurf, Zed,
+  and other MCP clients to index local codebases, search source chunks, run
+  regex queries, inspect daemon status, and perform code research.
+author: ChunkHound
+authorProfileUrl: "https://github.com/chunkhound"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: ChunkHound
+brandDomain: chunkhound.ai
+repoUrl: "https://github.com/chunkhound/chunkhound"
+documentationUrl: "https://raw.githubusercontent.com/chunkhound/chunkhound/main/site/src/pages/docs/cli-reference.md"
+packageUrl: "https://pypi.org/pypi/chunkhound/json"
+installable: true
+installCommand: "Install with `uv tool install chunkhound`, create `.chunkhound.json`, index the project, and run `chunkhound mcp` from the approved repository."
+usageSnippet: "Run `chunkhound index`, start `chunkhound mcp`, then ask Claude to search or research the indexed codebase."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "chunkhound": {
+        "command": "chunkhound",
+        "args": ["mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "chunkhound": {
+        "command": "chunkhound",
+        "args": ["mcp", "/path/to/approved/project"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer and the `uv` package manager.
+  - A local repository or workspace you are authorized to index.
+  - ChunkHound JSON config reviewed for database path, excludes, embeddings, and LLM provider settings.
+  - Optional embedding provider credentials for semantic search, or regex-only usage when no embedding key is configured.
+  - Optional LLM provider or local CLI reviewed before enabling `code_research`.
+safetyNotes:
+  - ChunkHound reads source files, Markdown, text, PDFs, and supported config files under the target directory and stores indexed chunks in a local database.
+  - Realtime indexing and daemon mode can continue watching project files after the initial MCP connection.
+  - Code research and web search tools require embedding, reranking, and LLM configuration and may invoke local CLIs or external model APIs depending on settings.
+  - Exclude generated files, vendored dependencies, secrets, large artifacts, and unrelated repositories before indexing broad workspace roots.
+  - Review MCP client configuration carefully when using an absolute project path in a global Claude Desktop config.
+privacyNotes:
+  - Indexed chunks, file paths, symbols, comments, Markdown, PDFs, configuration values, database files, daemon state, and search results can reveal proprietary source code and internal architecture.
+  - Embedding, reranking, LLM, and web search providers may receive code-derived queries or snippets if configured.
+  - Local ChunkHound database files, logs, daemon state, and MCP transcripts may retain code-derived context after the session ends.
+  - Avoid sharing ChunkHound databases, config files with API keys, verbose logs, research outputs, and screenshots from private repositories.
+disclosure: >-
+  MIT-licensed open-source codebase intelligence MCP server. Review provider
+  configuration before enabling semantic search, LLM research, reranking, or web
+  search features in sensitive repositories.
+sourceUrls:
+  - "https://raw.githubusercontent.com/chunkhound/chunkhound/main/README.md"
+  - "https://raw.githubusercontent.com/chunkhound/chunkhound/main/LICENSE"
+  - "https://raw.githubusercontent.com/chunkhound/chunkhound/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/chunkhound/chunkhound/main/site/src/pages/docs/configuration.md"
+  - "https://raw.githubusercontent.com/chunkhound/chunkhound/main/chunkhound/mcp_server/tools.py"
+  - "https://raw.githubusercontent.com/chunkhound/chunkhound/main/chunkhound/mcp_server/stdio.py"
+  - "https://raw.githubusercontent.com/chunkhound/chunkhound/main/chunkhound/api/cli/commands/mcp.py"
+tags:
+  - code-search
+  - semantic-search
+  - local-first
+  - repository
+  - developer-tools
+keywords:
+  - ChunkHound MCP
+  - chunkhound mcp
+  - local code search MCP
+  - semantic code search MCP
+  - code research MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+ChunkHound MCP Server connects Claude to a local-first codebase intelligence
+index. It parses repositories with tree-sitter, stores searchable chunks in
+DuckDB, and exposes MCP tools for code search, daemon status, deep code
+research, and optional web-backed research.
+
+Use it when Claude needs targeted context from a large repository without
+reading broad files repeatedly. Regex search can work without embedding keys,
+while semantic search and research workflows depend on the embedding, reranking,
+and LLM providers configured in `.chunkhound.json` or environment variables.
+
+## Source Review
+
+- https://github.com/chunkhound/chunkhound
+- https://raw.githubusercontent.com/chunkhound/chunkhound/main/site/src/pages/docs/cli-reference.md
+- https://pypi.org/pypi/chunkhound/json
+- https://raw.githubusercontent.com/chunkhound/chunkhound/main/README.md
+- https://raw.githubusercontent.com/chunkhound/chunkhound/main/LICENSE
+- https://raw.githubusercontent.com/chunkhound/chunkhound/main/pyproject.toml
+- https://raw.githubusercontent.com/chunkhound/chunkhound/main/site/src/pages/docs/configuration.md
+- https://raw.githubusercontent.com/chunkhound/chunkhound/main/chunkhound/mcp_server/tools.py
+- https://raw.githubusercontent.com/chunkhound/chunkhound/main/chunkhound/mcp_server/stdio.py
+- https://raw.githubusercontent.com/chunkhound/chunkhound/main/chunkhound/api/cli/commands/mcp.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+CLI reference, PyPI metadata, README, license, package metadata, configuration
+docs, MCP tool registry, stdio server, and MCP CLI command source for current
+setup and behavior.
+
+## Features
+
+- Run a stdio MCP server with `chunkhound mcp`.
+- Index local repositories into a DuckDB-backed code intelligence database.
+- Parse many programming, configuration, Markdown, text, and PDF formats.
+- Search code with semantic search when embeddings are configured.
+- Search with regex when no embedding provider is available.
+- Use realtime indexing and daemon mode for active repositories.
+- Inspect daemon status through MCP.
+- Run `code_research` when embeddings, reranking, and an LLM provider are
+  configured.
+- Configure VoyageAI, OpenAI, local-compatible embeddings, DuckDB, LanceDB
+  evaluation mode, indexing excludes, and LLM providers.
+
+## Installation
+
+Install ChunkHound with `uv`:
+
+```bash
+uv tool install chunkhound
+```
+
+Create a project-local `.chunkhound.json`, then index the repository:
+
+```bash
+chunkhound index
+```
+
+Start the MCP server from the project:
+
+```bash
+chunkhound mcp
+```
+
+Configure Claude or another MCP client:
+
+```json
+{
+  "mcpServers": {
+    "chunkhound": {
+      "command": "chunkhound",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+Use an explicit project path only when the global MCP client configuration must
+launch ChunkHound outside the repository directory.
+
+## Use Cases
+
+- Ask Claude to find authentication, routing, migration, or error-handling code
+  across a large repository.
+- Run regex searches against indexed files when semantic embeddings are not
+  configured.
+- Keep a local code index updated while switching branches.
+- Scope search to an approved repository instead of exposing a whole workspace.
+- Use `code_research` for higher-level architecture questions when the LLM and
+  reranking providers are approved.
+
+## Safety and Privacy
+
+ChunkHound is local-first, but it still creates a derived index of source code.
+Limit the target path, configure excludes, and verify what will be indexed
+before connecting a model to private repositories. Keep `.chunkhound` databases,
+logs, API keys, MCP transcripts, and research outputs out of public commits.
+
+Semantic search, reranking, LLM research, and web search can involve external
+providers depending on configuration. Review every provider endpoint, model, API
+key, timeout, and custom base URL before enabling those features for sensitive
+codebases.
+
+## Duplicate Check
+
+No `chunkhound/chunkhound`, ChunkHound MCP Server, `chunkhound mcp`, or matching
+source URL entry was found in `content/mcp` or `README.md`. Existing code index
+and codebase memory entries cover different projects; this entry documents
+ChunkHound's local-first tree-sitter, DuckDB, realtime indexing, and
+`code_research` MCP workflow.

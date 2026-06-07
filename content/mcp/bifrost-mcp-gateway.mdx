@@ -1,0 +1,212 @@
+---
+title: Bifrost MCP Gateway
+slug: bifrost-mcp-gateway
+category: mcp
+description: >-
+  Open-source AI gateway that can connect to downstream MCP servers and expose
+  their aggregated tools through a single HTTP or SSE MCP endpoint for Claude
+  Desktop, Cursor, and other MCP clients.
+cardDescription: >-
+  Aggregate MCP tools behind Bifrost's gateway, then expose them through a
+  governed /mcp endpoint with virtual keys, auth, tool filtering, logs, and
+  provider routing.
+seoTitle: Bifrost MCP Gateway for Claude
+seoDescription: >-
+  Configure Bifrost as an MCP gateway for Claude and other MCP clients, with
+  downstream stdio, HTTP, or SSE MCP servers, virtual-key auth, per-user
+  credentials, explicit tool execution, and gateway observability.
+author: maximhq
+authorProfileUrl: "https://github.com/maximhq"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Bifrost
+brandDomain: getbifrost.ai
+repoUrl: "https://github.com/maximhq/bifrost"
+documentationUrl: "https://github.com/maximhq/bifrost/blob/main/docs/mcp/overview.mdx"
+packageUrl: "https://hub.docker.com/r/maximhq/bifrost"
+installable: true
+installCommand: "npx -y @maximhq/bifrost"
+usageSnippet: "Run Bifrost Gateway, add downstream MCP clients through the UI, API, or config file, then point Claude Desktop or another MCP client at the Bifrost /mcp endpoint with the approved virtual-key header."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "bifrost": {
+        "url": "BIFROST_MCP_URL",
+        "headers": {
+          "Authorization": "Bearer ${BIFROST_VIRTUAL_KEY}"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcp": {
+      "client_configs": [
+        {
+          "name": "web_search",
+          "connection_type": "http",
+          "connection_string": "env.WEB_SEARCH_MCP_URL",
+          "auth_type": "headers",
+          "tools_to_execute": [
+            "search",
+            "fetch_url"
+          ]
+        }
+      ]
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js with `npx`, Docker, or another supported Bifrost Gateway deployment path.
+  - Bifrost Gateway version `v1.4.0-prerelease1` or newer for MCP gateway mode.
+  - Downstream MCP server commands or HTTP/SSE endpoint URLs prepared before registering clients.
+  - Provider API keys, virtual keys, gateway auth settings, and governance policies reviewed before sharing the endpoint.
+  - Network, TLS, storage, log retention, and secret management decisions made before exposing Bifrost outside a trusted environment.
+safetyNotes:
+  - Bifrost can expose all selected downstream MCP tools through one `/mcp` gateway endpoint, so treat the endpoint like an access layer for every connected tool.
+  - The docs state that default LLM tool calls are suggestions until an explicit tool execution API call is made, but agent mode can enable configured automatic execution.
+  - Gateway-mode auto-approval is controlled by the external MCP host, such as Claude Desktop, Cursor, Cline, or a custom client, not by Bifrost's `tools_to_auto_execute` setting.
+  - Stdio connections spawn local commands inside the Bifrost runtime; Docker deployments need images that include the requested executables.
+  - Use virtual keys, per-tool allowlists, auth headers, OAuth, per-user credentials, and network controls to limit which clients can reach high-impact tools.
+privacyNotes:
+  - Bifrost may process provider prompts, model responses, MCP tool names, tool arguments, tool results, headers, virtual keys, OAuth tokens, per-user credentials, logs, traces, metrics, and downstream server metadata.
+  - Per-user auth stores credentials against a signed-in user, virtual key, or session identity; review credential lifecycle, revocation, and orphaned-session behavior.
+  - Logs, config stores, provider settings, MCP sessions, and gateway analytics can contain sensitive operational or user data.
+  - Keep real provider keys, virtual keys, OAuth secrets, MCP endpoint URLs, and upstream service credentials in environment variables or secret stores, not committed config.
+sourceUrls:
+  - "https://github.com/maximhq/bifrost/blob/main/README.md"
+  - "https://github.com/maximhq/bifrost/blob/main/LICENSE"
+  - "https://github.com/maximhq/bifrost/blob/main/docs/mcp/overview.mdx"
+  - "https://github.com/maximhq/bifrost/blob/main/docs/mcp/gateway.mdx"
+  - "https://github.com/maximhq/bifrost/blob/main/docs/mcp/connecting-to-servers.mdx"
+  - "https://github.com/maximhq/bifrost/blob/main/docs/mcp/auth/overview.mdx"
+tags:
+  - gateway
+  - orchestration
+  - proxy
+  - security
+  - infrastructure
+keywords:
+  - Bifrost
+  - Bifrost MCP Gateway
+  - Maxim Bifrost
+  - MCP gateway
+  - MCP virtual keys
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Bifrost is an Apache-licensed AI gateway from Maxim that includes MCP client
+and MCP server capabilities. In gateway deployments, it can connect to
+downstream MCP servers over stdio, HTTP, or SSE, discover their tools, and
+expose the selected tools through a single `/mcp` endpoint for Claude Desktop,
+Cursor, Cline, and other MCP-compatible clients.
+
+The MCP docs distinguish two common modes. Bifrost can act as an MCP client for
+external servers, and it can also act as an MCP server that publishes an
+aggregated tool registry to external MCP hosts. The gateway endpoint supports
+JSON-RPC POST requests and SSE connections, with optional virtual-key
+authentication and per-key tool filtering.
+
+## Source Review
+
+- https://github.com/maximhq/bifrost
+- https://github.com/maximhq/bifrost/blob/main/README.md
+- https://github.com/maximhq/bifrost/blob/main/LICENSE
+- https://github.com/maximhq/bifrost/blob/main/docs/mcp/overview.mdx
+- https://github.com/maximhq/bifrost/blob/main/docs/mcp/gateway.mdx
+- https://github.com/maximhq/bifrost/blob/main/docs/mcp/connecting-to-servers.mdx
+- https://github.com/maximhq/bifrost/blob/main/docs/mcp/auth/overview.mdx
+- https://hub.docker.com/r/maximhq/bifrost
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+MCP overview, MCP gateway docs, connection docs, auth docs, Docker image page,
+and license file for current version requirements, deployment options, auth
+behavior, and MCP endpoint details.
+
+## Features
+
+- Connect Bifrost to downstream MCP servers over stdio, HTTP, or SSE.
+- Expose aggregated MCP tools through Bifrost's `/mcp` gateway endpoint.
+- Support JSON-RPC POST and SSE gateway connections for compatible MCP clients.
+- Configure virtual-key-specific MCP servers and per-key tool allowlists.
+- Use server-level headers, OAuth, per-user OAuth, or per-user header auth for HTTP and SSE upstreams.
+- Manage downstream MCP clients through the web UI, API, or `config.json`.
+- Inspect connected MCP tools and enable or disable selected tools.
+- Store per-user MCP credentials against user, virtual-key, or session identities.
+- Combine MCP routing with Bifrost's provider gateway, logging, metrics, governance, and config stores.
+- Register in-process custom tools when embedding Bifrost as a Go SDK application.
+
+## Installation
+
+The README documents `npx` and Docker gateway startup paths. The shortest local
+start is:
+
+```bash
+npx -y @maximhq/bifrost
+```
+
+After the gateway starts, register downstream MCP clients through the MCP
+Gateway UI, the management API, or the `mcp.client_configs` section in
+`config.json`. Use environment references for sensitive connection strings and
+secrets.
+
+For external MCP clients, configure the client to connect to the Bifrost MCP
+gateway endpoint and include any required virtual-key auth header:
+
+```json
+{
+  "mcpServers": {
+    "bifrost": {
+      "url": "BIFROST_MCP_URL",
+      "headers": {
+        "Authorization": "Bearer ${BIFROST_VIRTUAL_KEY}"
+      }
+    }
+  }
+}
+```
+
+The upstream docs note that Bifrost's MCP gateway feature requires the Gateway
+deployment and `v1.4.0-prerelease1` or newer.
+
+## Use Cases
+
+- Give Claude one governed endpoint for a curated group of internal MCP tools.
+- Publish separate MCP tool sets for production, development, admin, or analyst virtual keys.
+- Connect local stdio tools, remote HTTP tools, and SSE tools behind one gateway.
+- Require per-user OAuth or header credentials before a downstream tool executes.
+- Use Bifrost's provider gateway and MCP gateway together in agent workflows.
+- Audit MCP traffic through gateway logs, metrics, sessions, and config stores.
+- Filter risky file, database, browser, shell, or production tools before exposing them to a client.
+- Host custom in-process tools in a Go application that embeds Bifrost.
+
+## Safety and Privacy
+
+Bifrost is gateway infrastructure. A single MCP endpoint can expose many
+downstream tools, so configure virtual keys, tool allowlists, auth modes,
+network access, TLS, and host-side approval rules before sharing it with agent
+clients. Be especially careful with downstream servers that can read or write
+files, run shell commands, change infrastructure, query production databases, or
+modify third-party accounts.
+
+The docs emphasize that default LLM tool calls are not executed automatically
+without an explicit tool execution call, but agent mode can be configured for
+automatic execution. In pure MCP gateway mode, the external host decides whether
+tool calls need user approval. Review the approval settings in Claude Desktop,
+Cursor, Cline, or any custom MCP client that connects to Bifrost.
+
+Bifrost can handle provider credentials, virtual keys, MCP auth headers, OAuth
+tokens, per-user credentials, prompts, model responses, tool arguments, tool
+results, request logs, traces, metrics, and config-store data. Treat those
+stores as sensitive, keep secrets out of committed config, and define log
+retention before routing production traffic through the gateway.
+
+## Duplicate Check
+
+No `maximhq/bifrost` entry, Bifrost MCP Gateway entry, or matching source URL
+was found in `content/mcp` or the broader content directories.

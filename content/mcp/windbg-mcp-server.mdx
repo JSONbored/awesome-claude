@@ -1,0 +1,194 @@
+---
+title: WinDbg MCP Server
+slug: windbg-mcp-server
+category: mcp
+description: >-
+  MCP server that connects Claude to Windows CDB/WinDbg for crash dump
+  discovery, dump triage, remote debugging targets, custom debugger commands,
+  debugger cleanup, and CTRL+BREAK interrupts.
+cardDescription: >-
+  Analyze Windows crash dumps and remote CDB/WinDbg targets from Claude with
+  explicit debugger-command and symbol-path controls.
+seoTitle: WinDbg MCP Server for Claude
+seoDescription: >-
+  Configure MCP Server for WinDbg with Claude, VS Code, Cursor, Cline, Windsurf,
+  and other MCP clients to inspect Windows crash dumps, run CDB commands,
+  connect to remote debugging targets, and manage debugger processes.
+author: svnscha
+authorProfileUrl: "https://github.com/svnscha"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MCP Server for WinDbg
+brandDomain: github.com
+repoUrl: "https://github.com/svnscha/mcp-windbg"
+documentationUrl: "https://raw.githubusercontent.com/svnscha/mcp-windbg/main/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-windbg/json"
+installable: true
+installCommand: "Install with `pip install mcp-windbg` or run the PyPI package with uvx, then configure an MCP client to launch `mcp-windbg` over stdio."
+usageSnippet: "Install Windows Debugging Tools, configure `mcp-windbg`, then ask Claude to list dumps, open a dump, or run reviewed WinDbg commands."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcp_windbg": {
+        "command": "mcp-windbg",
+        "env": {
+          "_NT_SYMBOL_PATH": "<reviewed-symbol-path>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mcp_windbg": {
+        "command": "python",
+        "args": ["-m", "mcp_windbg"],
+        "env": {
+          "CDB_PATH": "<optional-cdb-executable-path>",
+          "_NT_SYMBOL_PATH": "<reviewed-symbol-path>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Windows environment with Debugging Tools for Windows, CDB, or WinDbg installed.
+  - Python 3.10 or newer.
+  - MCP client configuration access for stdio or reviewed streamable HTTP transport.
+  - Crash dumps, dump directories, or remote debugging targets you are authorized to inspect.
+  - Reviewed symbol path, CDB path, command timeout, and remote debugging policy.
+safetyNotes:
+  - WinDbg MCP starts CDB processes and can run arbitrary WinDbg commands supplied through the MCP tool call.
+  - Remote debugging tools can attach to live targets, inspect process state, send CTRL+BREAK, and interrupt execution.
+  - Crash dump analyses and remote connections remain active until closed or the CDB process is terminated.
+  - Symbol paths can fetch symbols from network symbol servers and can disclose module names, versions, and debugging context.
+  - Do not expose streamable HTTP mode beyond a trusted host without transport security, authentication, and network controls.
+privacyNotes:
+  - Crash dumps can contain memory, stack values, command lines, environment variables, file paths, registry data, sensitive values, PII, customer data, and proprietary code or symbols.
+  - WinDbg output, dump paths, remote connection strings, symbol paths, module lists, thread stacks, exception records, and debugger command output may be visible to the MCP client and model provider.
+  - Verbose logs, command transcripts, dump triage prompts, and saved analysis results can retain sensitive crash data after use.
+  - Redact dump paths, remote endpoints, symbols, process details, and command output before sharing logs, screenshots, or PR comments.
+disclosure: >-
+  MIT-licensed open-source MCP server for Windows debugging. It is a wrapper
+  around CDB/WinDbg, so users remain responsible for debugger permissions,
+  target authorization, and crash-dump handling.
+sourceUrls:
+  - "https://raw.githubusercontent.com/svnscha/mcp-windbg/main/LICENSE"
+  - "https://raw.githubusercontent.com/svnscha/mcp-windbg/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/svnscha/mcp-windbg/main/server.json"
+  - "https://raw.githubusercontent.com/svnscha/mcp-windbg/main/src/mcp_windbg/server.py"
+  - "https://raw.githubusercontent.com/svnscha/mcp-windbg/main/src/mcp_windbg/__init__.py"
+  - "https://raw.githubusercontent.com/svnscha/mcp-windbg/main/src/mcp_windbg/prompts/dump-triage.prompt.md"
+tags:
+  - debugging
+  - windows
+  - crash-dumps
+  - security
+  - developer-tools
+keywords:
+  - WinDbg MCP
+  - mcp-windbg
+  - CDB MCP server
+  - crash dump MCP
+  - Windows debugging MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Server for WinDbg connects Claude to Windows crash dump analysis and remote
+debugging through CDB/WinDbg. It can discover dump files, open crash dumps, run
+common triage commands, connect to remote debugging targets, execute reviewed
+WinDbg commands, send CTRL+BREAK, and close debugger processes when analysis is
+complete.
+
+Use it for Windows crash triage, dump comparison, and debugging workflows where
+an engineer wants Claude to help interpret debugger output. It is not an
+auto-fix tool; it launches CDB and sends debugger commands on behalf of the MCP
+client.
+
+## Source Review
+
+- https://github.com/svnscha/mcp-windbg
+- https://raw.githubusercontent.com/svnscha/mcp-windbg/main/README.md
+- https://pypi.org/pypi/mcp-windbg/json
+- https://raw.githubusercontent.com/svnscha/mcp-windbg/main/LICENSE
+- https://raw.githubusercontent.com/svnscha/mcp-windbg/main/pyproject.toml
+- https://raw.githubusercontent.com/svnscha/mcp-windbg/main/server.json
+- https://raw.githubusercontent.com/svnscha/mcp-windbg/main/src/mcp_windbg/server.py
+- https://raw.githubusercontent.com/svnscha/mcp-windbg/main/src/mcp_windbg/__init__.py
+- https://raw.githubusercontent.com/svnscha/mcp-windbg/main/src/mcp_windbg/prompts/dump-triage.prompt.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, license, package metadata, server manifest, MCP server
+source, CDB process wrapper, CLI entry point, and triage prompt for current
+setup and behavior.
+
+## Features
+
+- Run a stdio MCP server with `mcp-windbg` or `python -m mcp_windbg`.
+- Use optional streamable HTTP transport for reviewed local or controlled
+  deployments.
+- List Windows crash dump files from a configured or selected directory.
+- Open a crash dump and run common analysis commands.
+- Connect to remote debugging targets with CDB.
+- Execute custom WinDbg commands against a dump or remote connection.
+- Send CTRL+BREAK to an active remote debugging target.
+- Close crash dump and remote debugging targets to release resources.
+- Configure CDB executable path, symbol path, command timeout, and verbose mode.
+
+## Installation
+
+Install from PyPI:
+
+```bash
+pip install mcp-windbg
+```
+
+Configure a stdio MCP client:
+
+```json
+{
+  "mcpServers": {
+    "mcp_windbg": {
+      "command": "mcp-windbg",
+      "env": {
+        "_NT_SYMBOL_PATH": "<reviewed-symbol-path>"
+      }
+    }
+  }
+}
+```
+
+If the CDB executable is not auto-detected, pass a reviewed `CDB_PATH` or use
+the documented command-line flag for a custom CDB path.
+
+## Use Cases
+
+- Ask Claude to list available crash dumps in an approved dump directory.
+- Open a dump and summarize exception, thread, stack, and module output.
+- Run reviewed commands such as stack inspection, module listing, or heap
+  analysis.
+- Compare multiple dumps for repeated failure patterns.
+- Connect to a remote debugging target when live debugging is authorized.
+- Interrupt a hanging remote target with CTRL+BREAK and inspect thread state.
+
+## Safety and Privacy
+
+Debugger access is powerful. Use WinDbg MCP only on dumps, directories, and
+remote targets you are authorized to inspect. Review every command before it is
+sent to CDB, especially commands that modify debugger state, interrupt live
+targets, load extensions, or disclose broad memory and environment details.
+
+Crash dumps often contain sensitive memory and diagnostic context. Treat dump
+files, debugger output, symbol paths, remote connection strings, module names,
+stack traces, command logs, and analysis summaries as confidential unless they
+have been sanitized for sharing.
+
+## Duplicate Check
+
+No `svnscha/mcp-windbg`, WinDbg MCP Server, CDB MCP server, `mcp-windbg`, or
+matching source URL entry was found in `content/mcp` or `README.md`.

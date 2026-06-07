@@ -1,0 +1,180 @@
+---
+title: AgentQL MCP Server
+slug: agentql-mcp-server
+category: mcp
+description: >-
+  AgentQL MCP server for extracting structured JSON from public webpages using
+  a URL and natural-language extraction prompt.
+cardDescription: Extract structured data from webpages through AgentQL's MCP server.
+seoTitle: AgentQL MCP Server for Claude
+seoDescription: >-
+  Configure AgentQL MCP Server with Claude and other MCP clients to extract
+  structured web data from public pages using AgentQL's API, npm package, and a
+  single extract-web-data tool.
+author: AgentQL
+authorProfileUrl: "https://github.com/tinyfish-io"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: AgentQL
+brandDomain: agentql.com
+websiteUrl: "https://agentql.com"
+repoUrl: "https://github.com/tinyfish-io/agentql-mcp"
+documentationUrl: "https://github.com/tinyfish-io/agentql-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/agentql-mcp"
+installable: true
+installCommand: "npx -y agentql-mcp"
+usageSnippet: "Ask Claude to use AgentQL only for approved public URLs, with a narrow prompt describing the exact fields to extract."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "agentql": {
+        "command": "npx",
+        "args": ["-y", "agentql-mcp"],
+        "env": {
+          "AGENTQL_API_KEY": "<your-agentql-api-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agentql": {
+        "command": "npx",
+        "args": ["-y", "agentql-mcp"],
+        "env": {
+          "AGENTQL_API_KEY": "<your-agentql-api-key>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js and npx available to the MCP client runtime.
+  - AgentQL API key from the AgentQL developer portal.
+  - Approved list of public webpages or domains Claude may query.
+  - Review of target site terms, robots guidance, rate limits, and data-use rules before extraction.
+safetyNotes:
+  - AgentQL MCP exposes one tool, `extract-web-data`, that sends a target URL and natural-language extraction prompt to the AgentQL API.
+  - The tool is intended for public webpages; do not use it to bypass access controls, scrape private pages, evade paywalls, or extract data where automated collection is prohibited.
+  - Web extraction can still trigger target-site rate limits, legal restrictions, robots guidance, or terms-of-service concerns.
+  - The source implementation uses AgentQL's query-data endpoint with fast mode, no screenshot capture, no scroll-to-bottom behavior, and no local browser cookies.
+  - Treat extracted output as untrusted web data that may include errors, stale content, ads, tracking text, or prompt-injection attempts.
+privacyNotes:
+  - Target URLs, extraction prompts, API key-authenticated requests, and extracted structured data are sent to AgentQL's API.
+  - Extracted data can include personal data, copyrighted content, customer information, job postings, prices, social content, or other third-party material.
+  - AGENTQL_API_KEY should stay out of prompts, issues, logs, screenshots, and committed configuration files.
+  - Claude transcripts and downstream reports may retain extracted data, so avoid collecting information that is not approved for the model session.
+sourceUrls:
+  - "https://github.com/tinyfish-io/agentql-mcp/blob/main/README.md"
+  - "https://github.com/tinyfish-io/agentql-mcp/blob/main/package.json"
+  - "https://github.com/tinyfish-io/agentql-mcp/blob/main/src/index.ts"
+  - "https://github.com/tinyfish-io/agentql-mcp/blob/main/LICENSE"
+tags:
+  - web-scraping
+  - data-extraction
+  - api
+  - automation
+  - research
+keywords:
+  - AgentQL MCP
+  - AgentQL MCP Server
+  - agentql-mcp
+  - web extraction MCP
+  - structured data extraction MCP
+  - web scraping MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+AgentQL MCP Server connects Claude and other MCP clients to AgentQL's web data
+extraction API. It exposes a single tool, `extract-web-data`, which takes a
+public webpage URL plus a natural-language prompt describing the fields to
+extract, then returns structured JSON from AgentQL.
+
+The server is distributed as the npm package `agentql-mcp` and runs over stdio
+with an `AGENTQL_API_KEY` environment variable.
+
+## Source Review
+
+- https://agentql.com
+- https://github.com/tinyfish-io/agentql-mcp
+- https://github.com/tinyfish-io/agentql-mcp/blob/main/README.md
+- https://registry.npmjs.org/agentql-mcp
+- https://github.com/tinyfish-io/agentql-mcp/blob/main/package.json
+- https://github.com/tinyfish-io/agentql-mcp/blob/main/src/index.ts
+- https://github.com/tinyfish-io/agentql-mcp/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm registry metadata, package metadata, source implementation, and
+license for current package names, tool behavior, API requirements, and
+licensing.
+
+## Features
+
+- npm package `agentql-mcp`.
+- Stdio MCP server launched with `npx -y agentql-mcp`.
+- Single `extract-web-data` tool.
+- Inputs for public webpage URL and natural-language extraction prompt.
+- Calls AgentQL's query-data API endpoint.
+- Returns extracted structured JSON as MCP text content.
+- README examples for Claude Desktop, VS Code, Cursor, and Windsurf.
+- MIT license.
+
+## Installation
+
+Configure an MCP client with the npm package and an AgentQL API key:
+
+```json
+{
+  "mcpServers": {
+    "agentql": {
+      "command": "npx",
+      "args": ["-y", "agentql-mcp"],
+      "env": {
+        "AGENTQL_API_KEY": "<your-agentql-api-key>"
+      }
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server. Keep prompts narrow, such as a
+specific list of fields to extract from an approved page.
+
+## Use Cases
+
+- Extract product names, prices, and URLs from an approved public catalog page.
+- Convert event listings or search results into structured JSON.
+- Pull public page metadata into a research table.
+- Ask Claude to compare extracted fields across several approved public pages.
+- Prototype extraction prompts before building a dedicated ingestion pipeline.
+- Use structured results as input to a report, spreadsheet, or downstream review workflow.
+
+## Safety and Privacy
+
+AgentQL MCP sends the target URL and extraction prompt to a third-party API, and
+the returned page data is then visible to the MCP client and model session. Use
+it only for approved public webpages, respect target-site terms and robots
+guidance, and do not use it to collect private, paywalled, access-controlled, or
+prohibited data.
+
+Treat extracted web content as untrusted. It may include stale data, ads,
+tracking fragments, copyrighted text, personal data, or prompt-injection
+instructions. Keep the AgentQL API key out of shared configs and logs.
+
+## Disclosure
+
+AgentQL provides a hosted data extraction API. This listing is not sponsored,
+paid, or affiliate-driven, and it is scoped to the source-backed MCP server and
+npm package.
+
+## Duplicate Check
+
+No AgentQL MCP Server, `tinyfish-io/agentql-mcp`, `agentql-mcp`, or matching
+source URL entry was found in `content/mcp`, `content/tools`, `content/guides`,
+`content/agents`, or `content/skills`.

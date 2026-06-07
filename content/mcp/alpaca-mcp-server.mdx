@@ -1,0 +1,203 @@
+---
+title: Alpaca MCP Server
+slug: alpaca-mcp-server
+category: mcp
+description: >-
+  Official Alpaca MCP server for Trading API workflows, including account and
+  portfolio data, orders, positions, watchlists, assets, stocks, crypto,
+  options, news, corporate actions, and market data.
+cardDescription: >-
+  Connect Claude to Alpaca Trading API workflows for account data, market data,
+  orders, positions, watchlists, stocks, crypto, and options.
+seoTitle: Alpaca MCP Server for Claude
+seoDescription: >-
+  Configure Alpaca MCP Server with Claude to use Alpaca Trading API tools for
+  account data, market data, stock, crypto, and options orders, positions,
+  watchlists, assets, news, and corporate actions.
+author: Alpaca
+authorProfileUrl: "https://github.com/alpacahq"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Alpaca MCP Server
+brandDomain: alpaca.markets
+repoUrl: "https://github.com/alpacahq/alpaca-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/README.md"
+packageUrl: "https://pypi.org/pypi/alpaca-mcp-server/json"
+installable: true
+installCommand: "uvx alpaca-mcp-server"
+usageSnippet: "Run `uvx alpaca-mcp-server` with `ALPACA_API_KEY`, `ALPACA_SECRET_KEY`, and paper-trading defaults unless an approved live-trading workflow explicitly requires otherwise."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "alpaca": {
+        "command": "uvx",
+        "args": ["alpaca-mcp-server"],
+        "env": {
+          "ALPACA_API_KEY": "YOUR_ALPACA_API_KEY",
+          "ALPACA_SECRET_KEY": "YOUR_ALPACA_SECRET_KEY",
+          "ALPACA_PAPER_TRADE": "true",
+          "ALPACA_TOOLSETS": "account,stock-data,crypto-data"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add alpaca --scope user --transport stdio uvx alpaca-mcp-server --env ALPACA_API_KEY=YOUR_ALPACA_API_KEY --env ALPACA_SECRET_KEY=YOUR_ALPACA_SECRET_KEY
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer and uv or uvx available.
+  - Alpaca API key and secret key for a paper trading account or an explicitly approved live account.
+  - Review of Alpaca account permissions, paper versus live mode, options approval, crypto availability, and market data subscription limits.
+  - A narrow `ALPACA_TOOLSETS` allowlist for the workflow whenever full trading access is not required.
+  - Human review procedures for any order placement, cancellation, position closing, option exercise, or live account action.
+safetyNotes:
+  - Alpaca MCP Server can expose account balances, buying power, positions, orders, activities, watchlists, assets, market data, news, corporate actions, stocks, crypto, options data, and trading tools to the MCP client.
+  - Trading tools can place stock, ETF, crypto, and option orders, cancel orders, close positions, liquidate portfolios, replace orders, and exercise or mark do-not-exercise option contracts.
+  - Paper trading is the default documented mode; setting `ALPACA_PAPER_TRADE=false` points trading calls at live Alpaca accounts and can result in real financial losses.
+  - Require explicit human approval before any order placement, cancellation, liquidation, option exercise, live-account change, or strategy involving leverage, margin, extended hours, crypto, or options.
+  - Use `ALPACA_TOOLSETS` to restrict the server to read-only or data-only toolsets when trading tools are not needed.
+  - The upstream order override code warns that read timeouts may happen after an order was sent; users should check open orders before retrying to avoid duplicate trades.
+privacyNotes:
+  - Alpaca API keys, secret keys, account IDs, balances, buying power, portfolio history, activities, positions, orders, watchlists, option contracts, crypto holdings, and trade history can be exposed to the MCP client.
+  - Prompts and responses may include private trading strategy, portfolio allocation, order intent, symbols, quantities, prices, client order IDs, and market data queries.
+  - MCP clients, model providers, terminal history, logs, and chat transcripts may retain financial data and trading instructions.
+  - Upstream documentation states the server sends an Alpaca MCP user agent string for API calls; review Alpaca privacy and disclosure materials for account data handling.
+disclosure: >-
+  Official Alpaca MCP server published as the `alpaca-mcp-server` PyPI package
+  under an MIT license. Trading and market-data use is subject to Alpaca account,
+  brokerage, crypto, options, and data-plan terms.
+sourceUrls:
+  - "https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/LICENSE"
+  - "https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/server.json"
+  - "https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/src/alpaca_mcp_server/cli.py"
+  - "https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/src/alpaca_mcp_server/server.py"
+  - "https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/src/alpaca_mcp_server/toolsets.py"
+  - "https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/src/alpaca_mcp_server/overrides.py"
+tags:
+  - trading
+  - finance
+  - market-data
+  - stocks
+  - crypto
+keywords:
+  - Alpaca MCP
+  - Alpaca MCP Server
+  - Alpaca Trading API MCP
+  - stock trading MCP
+  - crypto options MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Alpaca MCP Server is Alpaca's official MCP server for the Alpaca Trading API. It
+uses FastMCP and Alpaca OpenAPI specs to expose account, trading, portfolio,
+asset, market data, watchlist, news, corporate action, stock, crypto, and
+options workflows to MCP clients.
+
+Use it for supervised paper-trading, account analysis, portfolio review, market
+data retrieval, and carefully gated trading workflows. Treat live-trading mode
+as a financial operations capability that requires human approval and explicit
+risk controls.
+
+## Source Review
+
+- https://github.com/alpacahq/alpaca-mcp-server
+- https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/README.md
+- https://pypi.org/pypi/alpaca-mcp-server/json
+- https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/LICENSE
+- https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/pyproject.toml
+- https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/server.json
+- https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/src/alpaca_mcp_server/cli.py
+- https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/src/alpaca_mcp_server/server.py
+- https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/src/alpaca_mcp_server/toolsets.py
+- https://raw.githubusercontent.com/alpacahq/alpaca-mcp-server/main/src/alpaca_mcp_server/overrides.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, license, package manifest, MCP registry metadata, CLI
+entrypoint, FastMCP server builder, toolset definitions, and order override
+implementation for current setup and behavior details.
+
+## Features
+
+- Run as a stdio MCP server with `uvx alpaca-mcp-server`.
+- Configure paper or live trading with `ALPACA_PAPER_TRADE`.
+- Restrict exposed capabilities with `ALPACA_TOOLSETS`.
+- Read account information, account configuration, portfolio history, and
+  account activities.
+- Retrieve and manage orders, positions, watchlists, assets, market calendar,
+  market clock, corporate actions, and news.
+- Place stock, ETF, crypto, and options orders through curated order tools.
+- Retrieve stock, crypto, options, fixed income, and index market data depending
+  on enabled toolsets and account/data access.
+- Use OpenAPI-derived tools plus hand-crafted overrides for complex order and
+  market-data endpoints.
+
+## Installation
+
+Configure the MCP client with Alpaca credentials. Keep paper trading enabled
+unless a live-trading workflow is explicitly approved:
+
+```json
+{
+  "mcpServers": {
+    "alpaca": {
+      "command": "uvx",
+      "args": ["alpaca-mcp-server"],
+      "env": {
+        "ALPACA_API_KEY": "YOUR_ALPACA_API_KEY",
+        "ALPACA_SECRET_KEY": "YOUR_ALPACA_SECRET_KEY",
+        "ALPACA_PAPER_TRADE": "true",
+        "ALPACA_TOOLSETS": "account,stock-data,crypto-data"
+      }
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add alpaca --scope user --transport stdio uvx alpaca-mcp-server --env ALPACA_API_KEY=YOUR_ALPACA_API_KEY --env ALPACA_SECRET_KEY=YOUR_ALPACA_SECRET_KEY
+```
+
+Set `ALPACA_TOOLSETS` to the smallest set needed. For data-only use, omit the
+`trading` toolset.
+
+## Use Cases
+
+- Ask Claude to summarize paper account balances and buying power.
+- Retrieve current positions and open orders for review.
+- Pull recent stock, crypto, or options market data.
+- Check market calendar, market clock, news, and corporate actions.
+- Manage watchlists for research workflows.
+- Test paper-trading order flows under human supervision.
+- Restrict Claude to market-data toolsets for analysis-only sessions.
+
+## Safety and Privacy
+
+Alpaca MCP Server can place real trades when configured for live trading. Keep
+paper mode enabled for experiments, use data-only toolsets whenever possible,
+and require human confirmation for every trading, cancellation, liquidation, or
+option-exercise action.
+
+Options, crypto, margin, extended-hours, bracket, stop, trailing-stop, and
+multi-leg strategies carry significant financial risk. Claude-generated orders
+are not investment advice and can be wrong, stale, incomplete, or unsuitable for
+the account.
+
+Alpaca credentials and account data are highly sensitive. Do not paste real API
+keys into prompts or shared logs. Treat MCP transcripts as financial records
+when they contain balances, positions, orders, symbols, quantities, prices,
+portfolio history, activities, or strategy details.
+
+## Duplicate Check
+
+Existing entries cover financial research and market data tools such as Drillr
+and TradingView, but no Alpaca MCP Server, `alpacahq/alpaca-mcp-server`,
+`alpaca-mcp-server` PyPI package, or Alpaca Trading API MCP entry was found in
+`content/mcp`.

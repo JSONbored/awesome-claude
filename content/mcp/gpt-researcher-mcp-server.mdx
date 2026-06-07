@@ -1,0 +1,191 @@
+---
+title: GPT Researcher MCP Server
+slug: gpt-researcher-mcp-server
+category: mcp
+description: >-
+  MCP server for GPT Researcher that gives Claude deep research, quick search,
+  report writing, source retrieval, research context, and research-resource
+  tools backed by web search and LLM providers.
+cardDescription: >-
+  Connect Claude to GPT Researcher for deep web research, quick search, report
+  generation, source lists, and reusable research context.
+seoTitle: GPT Researcher MCP Server for Claude
+seoDescription: >-
+  Configure GPT Researcher MCP Server with Claude to run deep research, quick
+  search, report generation, source retrieval, and research-context workflows
+  through MCP.
+author: Assaf Elovic
+authorProfileUrl: "https://github.com/assafelovic"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: GPT Researcher MCP Server
+brandDomain: gptr.dev
+repoUrl: "https://github.com/assafelovic/gptr-mcp"
+documentationUrl: "https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/README.md"
+installable: true
+installCommand: "git clone https://github.com/assafelovic/gptr-mcp.git && cd gptr-mcp && pip install -r requirements.txt"
+usageSnippet: "Clone the repository, install `requirements.txt`, pass your provider keys through the MCP client env block, and launch `python server.py`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "gptr-mcp": {
+        "command": "python",
+        "args": ["REPLACE_WITH_GPTR_MCP/server.py"],
+        "env": {
+          "OPENAI_API_KEY": "REPLACE_WITH_OPENAI_API_KEY",
+          "TAVILY_API_KEY": "REPLACE_WITH_TAVILY_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  python server.py
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.11 or newer.
+  - OpenAI API key, or another GPT Researcher-compatible LLM provider configuration.
+  - Tavily API key or another GPT Researcher-compatible search retriever.
+  - A cloned `assafelovic/gptr-mcp` repository with dependencies installed from `requirements.txt`.
+  - Review of whether local stdio, Docker SSE, or Streamable HTTP transport is appropriate for your MCP client.
+safetyNotes:
+  - GPT Researcher MCP Server sends research queries to configured search retrievers and LLM providers, which can create API costs and external data exposure.
+  - The server exposes `deep_research`, `quick_search`, `write_report`, source, context, prompt, and resource workflows that can gather and synthesize live web content.
+  - Docker mode auto-selects SSE transport on `0.0.0.0:8000`; bind it only on trusted networks and avoid exposing unauthenticated endpoints publicly.
+  - Generated reports can contain outdated, biased, incomplete, or hallucinated claims; review sources before acting on medical, legal, financial, or safety-critical output.
+  - Protect Claude Desktop or MCP client configuration files because they may contain API keys in the `env` block.
+privacyNotes:
+  - Research queries, prompts, source URLs, fetched snippets, research context, generated reports, and cost metadata can enter the MCP client context.
+  - Provider APIs and search retrievers may receive sensitive research topics, entity names, customer details, or internal strategy questions.
+  - The server keeps in-process research IDs, context, source lists, and source URLs for later report/source/context calls during the session.
+  - Docker, n8n, SSE, or Streamable HTTP deployments can expose research sessions and messages to other systems on the network if not isolated.
+  - Local logs and troubleshooting output may include queries, errors, endpoint names, provider configuration issues, or session identifiers.
+disclosure: >-
+  MIT-licensed open source MCP server for GPT Researcher. It requires separate
+  LLM and search provider credentials, and usage may incur provider costs.
+sourceUrls:
+  - "https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/LICENSE"
+  - "https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/server.py"
+  - "https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/utils.py"
+  - "https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/requirements.txt"
+  - "https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/.env.example"
+  - "https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/Dockerfile"
+  - "https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/docker-compose.yml"
+tags:
+  - research
+  - web-search
+  - reports
+  - sources
+  - deep-research
+keywords:
+  - GPT Researcher MCP
+  - GPT Researcher MCP Server
+  - GPTR MCP
+  - deep research MCP
+  - web research MCP
+  - research report MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+GPT Researcher MCP Server connects Claude and other MCP clients to GPT
+Researcher through a dedicated MCP server repository. It exposes tools for deep
+web research, faster search, report writing, source retrieval, context retrieval,
+and reusable research resources.
+
+Use it when Claude needs a supervised research workflow that can gather multiple
+sources, return citations, and produce a draft report instead of only returning a
+short web-search result list.
+
+## Source Review
+
+- https://github.com/assafelovic/gptr-mcp
+- https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/README.md
+- https://github.com/assafelovic/gpt-researcher
+- https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/LICENSE
+- https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/server.py
+- https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/utils.py
+- https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/requirements.txt
+- https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/.env.example
+- https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/Dockerfile
+- https://raw.githubusercontent.com/assafelovic/gptr-mcp/master/docker-compose.yml
+
+These sources were reviewed on **2026-06-06**. Prefer the dedicated MCP
+repository, README, linked GPT Researcher upstream, license, server source,
+utilities, dependency list, environment example, Dockerfile, and compose file for
+current setup and behavior details.
+
+## Features
+
+- Run `deep_research` for multi-source web research with source URLs and context.
+- Run `quick_search` for faster search-result snippets.
+- Generate reports from a previous research session with `write_report`.
+- Retrieve research sources and full research context by research ID.
+- Expose a `research://{topic}` resource for reusable research context.
+- Use a `research_query` prompt to shape a research task and report goal.
+- Run over local stdio for desktop MCP clients.
+- Use Docker/SSE or Streamable HTTP transport for containerized or web-oriented
+  integrations.
+
+## Installation
+
+Clone the dedicated MCP server repository and install its Python dependencies:
+
+```bash
+git clone https://github.com/assafelovic/gptr-mcp.git
+cd gptr-mcp
+pip install -r requirements.txt
+```
+
+Set provider credentials in the MCP client configuration. For a local stdio
+client, point to `server.py`:
+
+```json
+{
+  "mcpServers": {
+    "gptr-mcp": {
+      "command": "python",
+      "args": ["REPLACE_WITH_GPTR_MCP/server.py"],
+      "env": {
+        "OPENAI_API_KEY": "REPLACE_WITH_OPENAI_API_KEY",
+        "TAVILY_API_KEY": "REPLACE_WITH_TAVILY_API_KEY"
+      }
+    }
+  }
+}
+```
+
+The server can also run directly:
+
+```bash
+python server.py
+```
+
+Docker mode auto-detects container execution and switches to SSE transport on
+port 8000.
+
+## Use Cases
+
+- Ask Claude to research a current topic, company, market, library, or technical
+  question with source-backed context.
+- Generate a report from previously gathered research context.
+- Retrieve the source list or full research context behind an answer.
+- Compare quick search output against deeper research before spending more API
+  budget.
+- Connect a Dockerized MCP deployment to n8n or another client that expects SSE
+  endpoints.
+
+## Safety and Privacy
+
+GPT Researcher MCP Server is a networked research tool. Treat every query as
+data that may be sent to model providers, search retrievers, and fetched web
+sources. Keep prompts free of secrets and review provider retention rules before
+using it for customer, legal, medical, financial, or internal strategy research.
+
+For local use, protect MCP client config files that contain API keys. For Docker,
+n8n, SSE, or Streamable HTTP deployments, bind only to trusted networks, isolate
+containers, and avoid exposing research sessions or `/messages` endpoints without
+an authentication layer.

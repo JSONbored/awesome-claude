@@ -1,0 +1,197 @@
+---
+title: Plane MCP Server
+slug: plane-mcp-server
+category: mcp
+description: >-
+  Official Plane MCP server for connecting Claude to Plane projects, work
+  items, cycles, modules, initiatives, comments, links, work logs, pages, and
+  workspace metadata.
+cardDescription: Connect Claude to Plane workspaces, projects, work items, cycles, modules, and comments.
+seoTitle: Plane MCP Server for Claude
+seoDescription: >-
+  Configure Plane MCP Server with Claude and other MCP clients to list, create,
+  update, and delete Plane projects, work items, cycles, modules, initiatives,
+  comments, labels, work logs, and workspace resources.
+author: Plane
+authorProfileUrl: "https://github.com/makeplane"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Plane
+brandDomain: plane.so
+websiteUrl: "https://plane.so"
+repoUrl: "https://github.com/makeplane/plane-mcp-server"
+documentationUrl: "https://github.com/makeplane/plane-mcp-server/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/plane-mcp-server/json"
+installable: true
+installCommand: "uvx plane-mcp-server stdio"
+usageSnippet: "Run Plane MCP with a workspace-scoped API key, then ask Claude to inspect projects and work items before creating or updating anything."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "plane": {
+        "command": "uvx",
+        "args": ["plane-mcp-server", "stdio"],
+        "env": {
+          "PLANE_API_KEY": "<your-plane-api-key>",
+          "PLANE_WORKSPACE_SLUG": "<your-workspace-slug>",
+          "PLANE_BASE_URL": "https://api.plane.so"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "plane": {
+        "command": "uvx",
+        "args": ["plane-mcp-server", "stdio"],
+        "env": {
+          "PLANE_API_KEY": "<your-plane-api-key>",
+          "PLANE_WORKSPACE_SLUG": "<your-workspace-slug>",
+          "PLANE_BASE_URL": "https://api.plane.so"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer available through uvx for local stdio usage.
+  - Plane workspace slug and API key for stdio transport.
+  - Plane OAuth or Personal Access Token setup when using hosted remote HTTP transport.
+  - Clear project and workspace scope for what Claude may read or modify.
+  - Human review rules for any create, update, delete, archive, unarchive, transfer, or comment operation.
+safetyNotes:
+  - Plane MCP exposes 100+ tools across projects, work items, cycles, modules, initiatives, intake, labels, states, comments, links, work logs, pages, workspaces, and users.
+  - Many tools can create, update, delete, archive, unarchive, transfer, or otherwise change Plane workspace state.
+  - Remote OAuth and PAT transports grant read and write scopes, so configure the narrowest workspace access and review actions before execution.
+  - Stdio transport requires PLANE_API_KEY and PLANE_WORKSPACE_SLUG; protect API keys and rotate them if they are exposed.
+  - The server uses structured logging middleware with payloads enabled in source, so review logging behavior before sending sensitive issue data through the server.
+privacyNotes:
+  - Plane workspaces can contain roadmap plans, bug reports, customer requests, comments, assignees, estimates, links, work logs, labels, and internal operational metadata.
+  - Tool calls and logs can expose workspace slugs, project identifiers, work item IDs, titles, descriptions, comments, links, activity history, and user details to the MCP client and model provider.
+  - PLANE_API_KEY, PLANE_ACCESS_TOKEN, PAT values, OAuth client secrets, workspace slugs, and self-hosted Plane URLs should stay out of prompts, issues, logs, screenshots, and committed files.
+  - Claude-generated updates may notify teammates or alter shared planning state, so review visible changes before applying them.
+sourceUrls:
+  - "https://github.com/makeplane/plane-mcp-server/blob/main/README.md"
+  - "https://github.com/makeplane/plane-mcp-server/blob/main/pyproject.toml"
+  - "https://github.com/makeplane/plane-mcp-server/blob/main/plane_mcp/server.py"
+  - "https://github.com/makeplane/plane-mcp-server/blob/main/plane_mcp/__main__.py"
+  - "https://github.com/makeplane/plane-mcp-server/tree/main/plane_mcp/tools"
+  - "https://github.com/makeplane/plane-mcp-server/blob/main/LICENSE"
+tags:
+  - plane
+  - project-management
+  - issue-tracking
+  - work-items
+  - productivity
+keywords:
+  - Plane MCP
+  - Plane MCP Server
+  - official Plane MCP
+  - Plane project management MCP
+  - Plane work item MCP
+  - Plane issue tracker MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Plane MCP Server is Plane's official Model Context Protocol server for
+connecting Claude and other MCP clients to Plane workspaces. It exposes tools
+for reading and managing Plane projects, work items, cycles, modules,
+initiatives, intake work items, labels, states, comments, links, work logs,
+pages, workspace features, and user information.
+
+The current repository is the Python and FastMCP implementation. Its README
+notes that the older Node.js `@makeplane/plane-mcp-server` package is deprecated
+and directs users to migrate to this Python-based server.
+
+## Source Review
+
+- https://github.com/makeplane/plane-mcp-server
+- https://github.com/makeplane/plane-mcp-server/blob/main/README.md
+- https://pypi.org/pypi/plane-mcp-server/json
+- https://github.com/makeplane/plane-mcp-server/blob/main/pyproject.toml
+- https://github.com/makeplane/plane-mcp-server/blob/main/plane_mcp/server.py
+- https://github.com/makeplane/plane-mcp-server/blob/main/plane_mcp/__main__.py
+- https://github.com/makeplane/plane-mcp-server/tree/main/plane_mcp/tools
+- https://github.com/makeplane/plane-mcp-server/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, package metadata, server implementation, tool directory,
+and license for current package names, transport options, authentication
+requirements, tool coverage, and migration notes.
+
+## Features
+
+- Official MCP server from Plane.
+- Python package `plane-mcp-server` with `plane-mcp-server` console script.
+- Local stdio transport with `uvx plane-mcp-server stdio`.
+- Hosted remote HTTP transport with Plane OAuth.
+- Hosted remote HTTP transport with Personal Access Token headers.
+- Legacy SSE transport for backward compatibility.
+- 100+ tools across more than 20 Plane resource categories.
+- Project, work item, cycle, module, initiative, intake, property, epic, milestone, label, state, comment, link, relation, activity, work log, page, workspace, and user tools.
+- Pydantic model usage through the Plane SDK for typed tool inputs.
+- Structured logging for server runtime events.
+
+## Installation
+
+For local stdio usage with uvx:
+
+```json
+{
+  "mcpServers": {
+    "plane": {
+      "command": "uvx",
+      "args": ["plane-mcp-server", "stdio"],
+      "env": {
+        "PLANE_API_KEY": "<your-plane-api-key>",
+        "PLANE_WORKSPACE_SLUG": "<your-workspace-slug>",
+        "PLANE_BASE_URL": "https://api.plane.so"
+      }
+    }
+  }
+}
+```
+
+Use the README's hosted HTTP examples when you want Plane-managed OAuth or PAT
+authentication instead of local stdio environment variables.
+
+## Use Cases
+
+- Ask Claude to list Plane projects and summarize active work.
+- Search work items across a workspace before planning a sprint.
+- Retrieve a work item and its comments before drafting a response.
+- Create or update a work item after a human reviews the exact fields.
+- Add work items to a cycle, module, or milestone with explicit approval.
+- Summarize work logs, project membership, workspace features, or activity history.
+- Use hosted OAuth transport for a managed Plane connection when the MCP client supports it.
+
+## Safety and Privacy
+
+Plane MCP can alter shared planning and issue-tracking state. Treat create,
+update, delete, archive, unarchive, transfer, and comment tools as write
+operations that need human review. Use a workspace-scoped API key or OAuth grant
+with the minimum access needed for the workflow.
+
+Plane issues often contain customer names, product plans, security bugs,
+support conversations, implementation links, and internal assignments. Review
+which workspace and project Claude can access, protect API keys and PATs, and
+avoid forwarding sensitive issue bodies or comments to unapproved model
+sessions.
+
+## Disclosure
+
+Plane offers open-source and commercial project management products. This
+listing is not sponsored, paid, or affiliate-driven, and it is scoped to the
+source-backed official Plane MCP server.
+
+## Duplicate Check
+
+No dedicated Plane MCP Server, `makeplane/plane-mcp-server`, or
+`plane-mcp-server` source URL entry was found in `content/mcp`. Existing text
+matches were unrelated PlanetScale entries and incidental non-Plane mentions.

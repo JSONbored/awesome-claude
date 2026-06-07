@@ -1,0 +1,188 @@
+---
+title: PaperBanana MCP Server
+slug: paperbanana-mcp-server
+category: mcp
+description: >-
+  MCP server for generating academic diagrams, statistical plots, figure
+  packages, and visual evaluations from research context through PaperBanana's
+  multi-agent illustration pipeline.
+cardDescription: >-
+  Generate research diagrams, statistical plots, visual evaluations, batch
+  figures, and full-paper figure packages from Claude or another MCP client.
+seoTitle: PaperBanana MCP Server for Claude
+seoDescription: >-
+  Configure PaperBanana MCP with Claude to generate academic diagrams,
+  statistical plots, visual evaluations, and batch figure packages from research
+  context and datasets.
+author: PaperBanana Contributors
+authorProfileUrl: "https://github.com/llmsresearch"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: PaperBanana
+brandDomain: github.com
+repoUrl: "https://github.com/llmsresearch/paperbanana"
+documentationUrl: "https://raw.githubusercontent.com/llmsresearch/paperbanana/main/mcp_server/README.md"
+packageUrl: "https://pypi.org/pypi/paperbanana/json"
+installable: true
+installCommand: 'uvx --from "paperbanana[mcp]" paperbanana-mcp'
+usageSnippet: "Install with `uvx --from \"paperbanana[mcp]\" paperbanana-mcp`, then configure an OpenAI, Azure OpenAI, Google Gemini, or compatible provider key for generation."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "paperbanana": {
+        "command": "uvx",
+        "args": ["--from", "paperbanana[mcp]", "paperbanana-mcp"],
+        "env": {
+          "OPENAI_API_KEY": "REPLACE_WITH_OPENAI_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  uvx --from "paperbanana[mcp]" paperbanana-mcp
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer.
+  - uv or another Python package runner that can install the `paperbanana[mcp]` extra.
+  - An OpenAI, Azure OpenAI, Google Gemini, or compatible provider credential.
+  - Research context, captions, datasets, manifests, or reference images prepared for the figure workflow you want to run.
+  - A reviewed output directory for generated `run_*`, `batch_*`, metadata, report, and figure package files.
+safetyNotes:
+  - PaperBanana can send research context, paper excerpts, captions, datasets, prompts, generated images, and evaluation inputs to configured model providers.
+  - Generation, evaluation, batch, and orchestration tools may make many provider API calls and incur cost, especially with auto-refine or large manifests.
+  - The orchestration tool supports `dry_run` for planning only; use it before generating a full-paper figure package.
+  - The server writes output directories, final images, metadata, reports, LaTeX snippets, captions, and compressed `.mcp.jpg` files for oversized tool-result images.
+  - Generated academic diagrams and plots can be inaccurate, misleading, or overfit to prompt wording; review every figure before publication or citation.
+  - Avoid enabling `SKIP_SSL_VERIFICATION` unless you have an explicit proxy requirement and understand the transport risk.
+privacyNotes:
+  - Provider requests may include unpublished research text, PDFs, statistical data, captions, reference images, prompts, and visual critique feedback.
+  - Local `.env` files can contain OpenAI, Azure OpenAI, Google Gemini, OpenRouter, Ollama, or compatible provider configuration.
+  - Output folders may contain intermediate images, final figures, run inputs, metadata, batch reports, orchestration plans, captions, and paths to source files.
+  - Logs and progress events can include tool names, run identifiers, validation errors, file paths, manifest names, and generation status.
+  - Check model-provider retention, training, and data-processing terms before sending confidential manuscripts or sensitive datasets.
+disclosure: >-
+  MIT-licensed open source implementation inspired by the PaperBanana research
+  paper. The project describes itself as unofficial and not affiliated with or
+  endorsed by the original paper authors or Google Research.
+sourceUrls:
+  - "https://raw.githubusercontent.com/llmsresearch/paperbanana/main/LICENSE"
+  - "https://raw.githubusercontent.com/llmsresearch/paperbanana/main/README.md"
+  - "https://raw.githubusercontent.com/llmsresearch/paperbanana/main/mcp_server/README.md"
+  - "https://raw.githubusercontent.com/llmsresearch/paperbanana/main/mcp_server/server.py"
+  - "https://raw.githubusercontent.com/llmsresearch/paperbanana/main/server.json"
+  - "https://raw.githubusercontent.com/llmsresearch/paperbanana/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/llmsresearch/paperbanana/main/.env.example"
+tags:
+  - research
+  - diagrams
+  - plotting
+  - visualization
+  - academic
+keywords:
+  - PaperBanana MCP
+  - academic diagram MCP
+  - research figure generation
+  - statistical plot MCP
+  - MCP visual evaluation
+  - Claude research diagrams
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+PaperBanana MCP exposes an academic figure generation workflow through MCP. It
+lets Claude and other MCP clients generate methodology diagrams, statistical
+plots, visual critiques, batch outputs, and full-paper figure packages from
+research context, captions, datasets, manifests, and reference images.
+
+Use it when a research workflow needs fast visual drafts inside the same coding
+or writing environment that holds the paper context. It is best treated as a
+figure drafting and review assistant: generate, inspect, iterate, and verify
+before any publication or external use.
+
+## Source Review
+
+- https://github.com/llmsresearch/paperbanana
+- https://raw.githubusercontent.com/llmsresearch/paperbanana/main/README.md
+- https://raw.githubusercontent.com/llmsresearch/paperbanana/main/mcp_server/README.md
+- https://pypi.org/pypi/paperbanana/json
+- https://raw.githubusercontent.com/llmsresearch/paperbanana/main/LICENSE
+- https://raw.githubusercontent.com/llmsresearch/paperbanana/main/mcp_server/server.py
+- https://raw.githubusercontent.com/llmsresearch/paperbanana/main/server.json
+- https://raw.githubusercontent.com/llmsresearch/paperbanana/main/pyproject.toml
+- https://raw.githubusercontent.com/llmsresearch/paperbanana/main/.env.example
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+README, PyPI metadata, license, MCP implementation, registry metadata, package
+metadata, and environment template for current setup and provider details.
+
+## Features
+
+- Generate methodology diagrams from research context and a figure caption.
+- Generate statistical plots from JSON or CSV-style data and an intent
+  description.
+- Continue previous diagram or plot runs with additional feedback and refinement.
+- Evaluate generated diagrams or plots against human reference images.
+- Run batch diagram and batch plot jobs from YAML or JSON manifests.
+- Plan or generate full-paper figure packages, including reports, captions,
+  LaTeX snippets, and per-item summaries.
+- Download an expanded reference set for stronger retrieval.
+- Use OpenAI, Azure OpenAI, Google Gemini, OpenRouter, Ollama, local OpenAI-style
+  endpoints, or other configured providers supported by the package.
+- Return images through FastMCP while compressing oversized assets for MCP
+  client API limits.
+
+## Installation
+
+Run the MCP server directly with `uvx`:
+
+```bash
+uvx --from "paperbanana[mcp]" paperbanana-mcp
+```
+
+Add the server to your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "paperbanana": {
+      "command": "uvx",
+      "args": ["--from", "paperbanana[mcp]", "paperbanana-mcp"],
+      "env": {
+        "OPENAI_API_KEY": "REPLACE_WITH_OPENAI_API_KEY"
+      }
+    }
+  }
+}
+```
+
+For local development, install the MCP extra from a clone and use the generated
+console script:
+
+```bash
+pip install -e ".[mcp]"
+paperbanana-mcp
+```
+
+## Use Cases
+
+- Draft a methodology diagram from a paper section or architecture description.
+- Generate a benchmark plot from structured experiment data.
+- Continue a saved figure run after reviewer or collaborator feedback.
+- Evaluate a generated research figure against a human-designed reference.
+- Produce a batch of figures from a manifest for a larger manuscript.
+- Plan a figure package before spending model-provider calls on generation.
+
+## Safety and Privacy
+
+PaperBanana is most useful with detailed research context, which also makes it
+sensitive. Treat prompts, papers, datasets, generated figures, reference images,
+and output folders as research data. Review provider terms before sending
+unpublished work, confidential datasets, or embargoed manuscripts.
+
+Use `dry_run` for orchestration planning, start with small manifests, and review
+all outputs manually. Generated scientific figures can look polished while still
+misrepresenting methods, axes, statistics, causal relationships, or uncertainty.

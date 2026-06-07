@@ -1,0 +1,191 @@
+---
+title: pg-aiguide MCP Server
+slug: pg-aiguide-mcp-server
+category: mcp
+description: >-
+  PostgreSQL documentation and best-practice MCP server from Timescale that
+  gives Claude semantic and keyword search across PostgreSQL, TimescaleDB, and
+  PostGIS docs.
+cardDescription: Ground Postgres schema, indexing, and extension guidance in versioned docs.
+seoTitle: pg-aiguide MCP Server for Claude
+seoDescription: >-
+  Configure pg-aiguide with Claude and other MCP clients for semantic,
+  keyword, and hybrid search across PostgreSQL, TimescaleDB, Tiger Cloud, and
+  PostGIS documentation.
+author: Timescale
+authorProfileUrl: "https://github.com/timescale"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: pg-aiguide
+brandDomain: github.com
+repoUrl: "https://github.com/timescale/pg-aiguide"
+documentationUrl: "https://github.com/timescale/pg-aiguide/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40tigerdata%2Fpg-aiguide"
+installable: true
+installCommand: "claude mcp add --transport http pg-aiguide https://mcp.tigerdata.com/docs"
+usageSnippet: "Add the hosted pg-aiguide endpoint, then ask Claude to search current PostgreSQL, TimescaleDB, or PostGIS docs before designing schemas or indexes."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "pg-aiguide": {
+        "url": "https://mcp.tigerdata.com/docs"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "pg-aiguide": {
+        "type": "http",
+        "url": "https://mcp.tigerdata.com/docs"
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - An MCP-compatible client that supports remote HTTP MCP servers.
+  - Network access to `mcp.tigerdata.com`.
+  - PostgreSQL, TimescaleDB, Tiger Cloud, or PostGIS questions where documentation grounding is useful.
+  - Optional self-hosting dependencies if running the package locally, including a populated Postgres docs database and embedding provider key.
+safetyNotes:
+  - The hosted MCP endpoint is documentation-focused and read-only, but generated SQL and migration advice still needs human review before execution.
+  - Documentation search results can influence schema design, indexes, retention policies, and extension setup, so test generated SQL in development first.
+  - Self-hosted deployments need database credentials and embedding configuration; keep those scoped to the docs database, not production application data.
+  - The package can expose stdio and HTTP transports; bind local HTTP deployments only where intended and protect any non-local endpoint.
+privacyNotes:
+  - Queries sent to the hosted MCP endpoint may reveal database names, schema intent, performance problems, product plans, or internal architecture details.
+  - Self-hosted semantic search can send queries or documentation chunks to the configured embedding provider unless a local compatible endpoint is used.
+  - Tool outputs can contain excerpts from PostgreSQL, TimescaleDB, Tiger Cloud, or PostGIS documentation that are then included in the model context.
+  - Do not include customer data, credentials, production connection strings, or private incident details when a generalized documentation query is enough.
+sourceUrls:
+  - "https://github.com/timescale/pg-aiguide"
+  - "https://github.com/timescale/pg-aiguide/blob/main/README.md"
+  - "https://github.com/timescale/pg-aiguide/blob/main/API.md"
+  - "https://github.com/timescale/pg-aiguide/blob/main/mcp.json"
+  - "https://github.com/timescale/pg-aiguide/blob/main/package.json"
+  - "https://github.com/timescale/pg-aiguide/blob/main/.env.sample"
+  - "https://github.com/timescale/pg-aiguide/blob/main/src/index.ts"
+  - "https://github.com/timescale/pg-aiguide/blob/main/src/stdio.ts"
+  - "https://github.com/timescale/pg-aiguide/blob/main/src/httpServer.ts"
+  - "https://github.com/timescale/pg-aiguide/blob/main/src/apis/searchDocs.ts"
+  - "https://github.com/timescale/pg-aiguide/blob/main/LICENSE"
+  - "https://mcp.tigerdata.com/docs"
+  - "https://registry.npmjs.org/%40tigerdata%2Fpg-aiguide"
+tags:
+  - postgres
+  - timescaledb
+  - postgis
+  - documentation
+  - remote-mcp
+keywords:
+  - pg-aiguide MCP
+  - PostgreSQL docs MCP
+  - TimescaleDB MCP server
+  - PostGIS documentation search
+  - TigerData MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+pg-aiguide is a Timescale-maintained MCP server for grounding PostgreSQL work in
+versioned documentation and curated best-practice skills. It supports a hosted
+remote endpoint at https://mcp.tigerdata.com/docs, a Claude Code plugin path,
+and a packaged `@tigerdata/pg-aiguide` server for local or self-hosted use.
+
+The MCP API documents a `search_docs` tool for semantic, keyword, or hybrid
+search across PostgreSQL manual versions, Tiger Cloud and TimescaleDB docs, and
+PostGIS docs. The API also documents `view_skill` for curated PostgreSQL and
+TimescaleDB skills when the deployment has skills enabled.
+
+## Source Review
+
+- https://github.com/timescale/pg-aiguide
+- https://github.com/timescale/pg-aiguide/blob/main/README.md
+- https://github.com/timescale/pg-aiguide/blob/main/API.md
+- https://github.com/timescale/pg-aiguide/blob/main/mcp.json
+- https://github.com/timescale/pg-aiguide/blob/main/package.json
+- https://github.com/timescale/pg-aiguide/blob/main/.env.sample
+- https://github.com/timescale/pg-aiguide/blob/main/src/index.ts
+- https://github.com/timescale/pg-aiguide/blob/main/src/stdio.ts
+- https://github.com/timescale/pg-aiguide/blob/main/src/httpServer.ts
+- https://github.com/timescale/pg-aiguide/blob/main/src/apis/searchDocs.ts
+- https://github.com/timescale/pg-aiguide/blob/main/LICENSE
+- https://mcp.tigerdata.com/docs
+- https://registry.npmjs.org/%40tigerdata%2Fpg-aiguide
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, API documentation, `mcp.json`, package metadata, and hosted endpoint for
+current transport options, supported documentation sources, and setup commands.
+
+## Features
+
+- Hosted remote MCP endpoint for documentation search.
+- Packaged MCP server with stdio and HTTP entrypoints.
+- Semantic, keyword, and hybrid search modes through `search_docs`.
+- PostgreSQL manual coverage by version, including modern supported releases.
+- Tiger Cloud and TimescaleDB documentation search through the `tiger` source.
+- PostGIS documentation search for supported PostGIS versions.
+- Optional curated skills through `view_skill` when skills are enabled.
+- Claude Code plugin installation path for users who prefer plugin-managed setup.
+
+## Installation
+
+For Claude Code clients that support remote HTTP MCP servers:
+
+```sh
+claude mcp add --transport http pg-aiguide https://mcp.tigerdata.com/docs
+```
+
+For MCP clients that use JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "pg-aiguide": {
+      "type": "http",
+      "url": "https://mcp.tigerdata.com/docs"
+    }
+  }
+}
+```
+
+The repository also documents a Claude Code plugin path:
+
+```sh
+claude plugin marketplace add timescale/pg-aiguide
+claude plugin install pg@aiguide
+```
+
+Restart the MCP client after adding the remote endpoint or plugin.
+
+## Use Cases
+
+- Ask Claude to check the current PostgreSQL manual before writing schema DDL.
+- Compare indexing approaches for a query pattern using version-aware docs.
+- Ground TimescaleDB hypertable, compression, retention, and continuous aggregate advice.
+- Search PostGIS docs before adding spatial columns, indexes, or functions.
+- Retrieve curated PostgreSQL best-practice skills for schema design and performance work.
+
+## Safety and Privacy
+
+pg-aiguide is documentation-oriented, but it can still shape migration and
+database-design recommendations. Review generated DDL, indexes, constraints,
+extension setup, retention policies, and operational commands before applying
+them to a real database.
+
+When using the hosted endpoint, keep prompts focused on generalized docs
+questions instead of private schema names, customer identifiers, credentials, or
+incident details. When self-hosting, protect the docs database credentials and
+review whether embedding requests are sent to an external provider or a local
+OpenAI-compatible endpoint.
+
+## Duplicate Check
+
+Existing entries cover PostgreSQL database access, generic database MCP
+toolboxes, and hosted vendor services. No `timescale/pg-aiguide`,
+`@tigerdata/pg-aiguide`, or `mcp.tigerdata.com/docs` entry was found in
+`content/mcp`.

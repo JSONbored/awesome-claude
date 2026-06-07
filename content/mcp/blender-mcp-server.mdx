@@ -1,0 +1,217 @@
+---
+title: Blender MCP Server
+slug: blender-mcp-server
+category: mcp
+description: >-
+  MCP server and Blender add-on that let Claude inspect scenes, create and
+  modify 3D objects, run Blender Python, capture viewport screenshots, and use
+  asset or 3D-generation integrations from inside Blender.
+cardDescription: Control Blender scenes, objects, materials, assets, and viewport context from Claude.
+seoTitle: Blender MCP Server for Claude
+seoDescription: >-
+  Configure Blender MCP Server with Claude Code, Claude Desktop, Cursor, VS
+  Code, or OpenCode to connect Claude to a local Blender add-on for 3D scene
+  inspection, editing, Python execution, screenshots, Poly Haven, Sketchfab,
+  Hyper3D, and Hunyuan3D workflows.
+author: Siddharth Ahuja
+authorProfileUrl: "https://github.com/ahujasid"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Blender MCP
+brandDomain: github.com
+repoUrl: "https://github.com/ahujasid/blender-mcp"
+documentationUrl: "https://github.com/ahujasid/blender-mcp/blob/main/README.md"
+packageUrl: "https://pypi.org/project/blender-mcp/"
+installable: true
+installCommand: "claude mcp add blender uvx blender-mcp"
+usageSnippet: "Start the Blender add-on connection, then ask Claude to inspect the active scene before making a small reviewed object, material, or camera change."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "blender": {
+        "command": "uvx",
+        "args": ["blender-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "blender": {
+        "command": "uvx",
+        "args": ["blender-mcp"],
+        "env": {
+          "DISABLE_TELEMETRY": "true"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Blender installed locally with permission to install and enable the repository's `addon.py` file.
+  - uv or uvx available to run the packaged `blender-mcp` server.
+  - Blender MCP add-on running in Blender and connected through the local socket server, usually on `localhost:9876`.
+  - Optional API keys or account setup for third-party integrations such as Hyper3D, Sketchfab, Hunyuan3D, or asset-download workflows.
+  - Clear project policy for whether Claude may run generated Blender Python, download assets, upload screenshots through telemetry, or use scene prompts for model-training telemetry.
+safetyNotes:
+  - The MCP server talks to a Blender add-on over a socket and can create, modify, delete, import, and inspect objects in the active Blender scene.
+  - The `execute_blender_code` tool can run arbitrary Python code inside Blender, so save work before use and review generated scripts before allowing execution.
+  - Optional Poly Haven, Sketchfab, Hyper3D, and Hunyuan3D workflows can download assets, import generated models, or call external services that may have their own usage limits, licenses, and terms.
+  - The README warns to run only one MCP server instance for the same Blender connection to avoid confusing the socket workflow.
+  - Do not expose the Blender socket or any remote-host setup beyond trusted local or development networks without reviewing access controls.
+privacyNotes:
+  - Tool calls can expose scene names, object metadata, materials, generated Python snippets, viewport screenshots, prompt text, and asset queries to the connected MCP client and model provider.
+  - Blender MCP includes telemetry code and project terms describing collection of prompts, generated code, scene metadata, screenshots or viewport images when telemetry consent is enabled.
+  - The repository documents `DISABLE_TELEMETRY=true`, `BLENDER_MCP_DISABLE_TELEMETRY=true`, and `MCP_DISABLE_TELEMETRY=true` as environment-variable opt-outs for telemetry.
+  - The terms state that collected data may be retained, used for AI training or research, and shared in anonymized or aggregated datasets; review the current terms before using it on confidential client work.
+  - Third-party asset and generation services may receive prompts, image references, asset searches, downloads, or account identifiers depending on which integrations are enabled.
+sourceUrls:
+  - "https://github.com/ahujasid/blender-mcp"
+  - "https://github.com/ahujasid/blender-mcp/blob/main/README.md"
+  - "https://github.com/ahujasid/blender-mcp/blob/main/pyproject.toml"
+  - "https://github.com/ahujasid/blender-mcp/blob/main/src/blender_mcp/server.py"
+  - "https://github.com/ahujasid/blender-mcp/blob/main/src/blender_mcp/telemetry.py"
+  - "https://github.com/ahujasid/blender-mcp/blob/main/addon.py"
+  - "https://github.com/ahujasid/blender-mcp/blob/main/TERMS_AND_CONDITIONS.md"
+  - "https://github.com/ahujasid/blender-mcp/blob/main/LICENSE"
+  - "https://pypi.org/project/blender-mcp/"
+tags:
+  - blender
+  - 3d
+  - creative-tools
+  - assets
+  - local-mcp
+keywords:
+  - Blender MCP
+  - blender-mcp
+  - Claude Blender integration
+  - Blender Python MCP
+  - Poly Haven MCP
+  - Sketchfab MCP
+  - Hyper3D MCP
+  - Hunyuan3D MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Blender MCP Server connects Claude to Blender through a local MCP server and a
+Blender add-on. The add-on opens a socket inside Blender, while the Python MCP
+server exposes tools Claude can use to inspect the current scene, manipulate
+objects and materials, run Blender Python, capture viewport screenshots, and
+coordinate optional asset or 3D-generation workflows.
+
+The project is popular because it turns Blender into an interactive creative
+workspace for agent-assisted 3D work. Claude can ask for scene information,
+create or modify objects, update materials, position cameras, download Poly
+Haven or Sketchfab assets, and work with Hyper3D or Hunyuan3D generation when
+those integrations are enabled.
+
+## Source Review
+
+- https://github.com/ahujasid/blender-mcp
+- https://github.com/ahujasid/blender-mcp/blob/main/README.md
+- https://github.com/ahujasid/blender-mcp/blob/main/pyproject.toml
+- https://github.com/ahujasid/blender-mcp/blob/main/src/blender_mcp/server.py
+- https://github.com/ahujasid/blender-mcp/blob/main/src/blender_mcp/telemetry.py
+- https://github.com/ahujasid/blender-mcp/blob/main/addon.py
+- https://github.com/ahujasid/blender-mcp/blob/main/TERMS_AND_CONDITIONS.md
+- https://github.com/ahujasid/blender-mcp/blob/main/LICENSE
+- https://pypi.org/project/blender-mcp/
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, package metadata, server implementation, add-on source, telemetry code,
+terms, and PyPI page for current setup steps, tool behavior, telemetry controls,
+and third-party integration details.
+
+## Features
+
+- Local Blender add-on plus Python MCP server architecture.
+- Claude Code, Claude Desktop, Cursor, VS Code, and OpenCode configuration examples.
+- Scene inspection for objects, materials, cameras, and Blender state.
+- Object creation, editing, deletion, material assignment, and texture workflows.
+- Viewport screenshot capture so Claude can reason about the visible scene.
+- Arbitrary Blender Python execution through `execute_blender_code`.
+- Optional Poly Haven asset search and download support.
+- Optional Sketchfab model search, preview, and download support.
+- Optional Hyper3D Rodin and Hunyuan3D generation/import workflows.
+- Environment variables for Blender socket host and port configuration.
+- Telemetry opt-out controls through add-on preferences and environment variables.
+
+## Installation
+
+Install `uv` first if it is not already available, then add the MCP server to
+Claude Code:
+
+```sh
+claude mcp add blender uvx blender-mcp
+```
+
+For MCP clients that use JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "blender": {
+      "command": "uvx",
+      "args": ["blender-mcp"]
+    }
+  }
+}
+```
+
+To disable telemetry from the MCP server command, include the environment
+variable documented by the project:
+
+```json
+{
+  "mcpServers": {
+    "blender": {
+      "command": "uvx",
+      "args": ["blender-mcp"],
+      "env": {
+        "DISABLE_TELEMETRY": "true"
+      }
+    }
+  }
+}
+```
+
+Download `addon.py` from the repository, install it in Blender through
+Preferences > Add-ons, enable the Blender MCP add-on, and click the add-on's
+connect button from Blender's 3D View sidebar before using the MCP tools.
+
+## Use Cases
+
+- Ask Claude to inspect a scene and summarize objects, materials, and camera state.
+- Prototype simple 3D scenes, props, layouts, and material changes from text prompts.
+- Generate and review Blender Python before allowing it to run in the active scene.
+- Capture a viewport screenshot so Claude can adjust composition or object placement.
+- Search and import public assets or HDRIs when Poly Haven or Sketchfab workflows are enabled.
+- Generate rough 3D assets through Hyper3D or Hunyuan3D integrations for early concept work.
+- Use Claude as a scene assistant while keeping Blender as the local creative environment.
+
+## Safety and Privacy
+
+Blender MCP is powerful because it gives Claude direct control over a local
+creative application. Treat it as an execution-capable local tool, not a passive
+documentation server. Review generated Python, keep backups of important
+projects, and avoid running it against sensitive production assets without a
+clear review step.
+
+Telemetry deserves special attention. The README and telemetry source document
+ways to disable collection, while the project terms describe possible
+collection and use of prompts, generated code, scene metadata, and screenshots
+or viewport images when telemetry is enabled. Disable telemetry and review the
+current terms before using Blender MCP on confidential client scenes, unreleased
+models, or work that cannot be used for training or shared research datasets.
+
+## Duplicate Check
+
+No `ahujasid/blender-mcp`, `blender-mcp`, Blender socket add-on MCP, Poly Haven
+Blender MCP, Sketchfab Blender MCP, Hyper3D Blender MCP, or Hunyuan3D Blender
+MCP entry was found in `content/mcp`, `content/tools`, `content/guides`,
+`content/agents`, or `content/skills`.

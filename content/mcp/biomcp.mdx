@@ -1,0 +1,195 @@
+---
+title: BioMCP
+slug: biomcp
+category: mcp
+description: >-
+  Biomedical MCP server and CLI for searching genes, variants, articles,
+  clinical trials, drugs, diseases, pathways, proteins, adverse events,
+  pharmacogenomics, GWAS, phenotypes, and local study datasets.
+cardDescription: Connect Claude to read-only biomedical evidence retrieval and study analysis.
+seoTitle: BioMCP Server for Claude
+seoDescription: >-
+  Configure BioMCP with Claude and other MCP clients to search biomedical
+  evidence across PubMed, PubTator3, Europe PMC, ClinicalTrials.gov, MyGene,
+  MyVariant, OpenFDA, and other research data sources.
+author: GenomOncology
+authorProfileUrl: "https://genomoncology.com"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: BioMCP
+brandDomain: biomcp.org
+websiteUrl: "https://biomcp.org"
+repoUrl: "https://github.com/genomoncology/biomcp"
+documentationUrl: "https://github.com/genomoncology/biomcp/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/biomcp-cli/json"
+installable: true
+installCommand: "uv tool install biomcp-cli"
+usageSnippet: "Ask Claude to use BioMCP for an approved biomedical question, then verify important findings against the original cited sources."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "biomcp": {
+        "command": "biomcp",
+        "args": ["serve"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "biomcp": {
+        "command": "biomcp",
+        "args": ["serve"],
+        "env": {
+          "NCBI_API_KEY": "",
+          "S2_API_KEY": "",
+          "OPENFDA_API_KEY": "",
+          "NCI_API_KEY": "",
+          "ONCOKB_TOKEN": "",
+          "ALPHAGENOME_API_KEY": ""
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer and uv, pip, or another supported Python tool installer.
+  - Network access to the biomedical APIs needed for the selected searches.
+  - Optional API keys for NCBI, Semantic Scholar, OpenFDA, NCI, OncoKB, AlphaGenome, or DisGeNET when those integrations are required.
+  - Review by a qualified domain expert before using biomedical findings in clinical, diagnostic, treatment, or regulatory decisions.
+safetyNotes:
+  - BioMCP is an evidence retrieval and analysis tool, not medical advice, diagnosis, treatment guidance, or a substitute for professional review.
+  - Biomedical sources can be incomplete, stale, conflicting, preliminary, or restricted by licensing and terms of use.
+  - Trial status, eligibility criteria, drug labels, safety reports, variant interpretations, and disease associations can change after retrieval.
+  - The MCP server can return dense biomedical evidence that should be checked against primary sources before downstream decisions.
+  - Local study analytics can process downloaded study datasets and generate charts, so use only approved, de-identified, and policy-compliant data.
+privacyNotes:
+  - Biomedical queries can reveal research interests, genes, variants, diseases, drugs, phenotypes, trial searches, or cohort metadata to upstream APIs.
+  - Optional API keys and tokens may be sent to third-party data providers such as NCBI, Semantic Scholar, OpenFDA, NCI, OncoKB, AlphaGenome, or DisGeNET.
+  - Local study files, generated charts, caches, prompts, and model transcripts can contain sensitive cohort or patient-derived context.
+  - Avoid patient-identifiable data unless the environment, approvals, and data-use agreements explicitly allow it.
+  - The project documentation says BioMCP does not add telemetry, analytics, or remote log upload, but upstream biomedical APIs can still receive request metadata.
+sourceUrls:
+  - "https://github.com/genomoncology/biomcp/blob/main/README.md"
+  - "https://github.com/genomoncology/biomcp/blob/main/pyproject.toml"
+  - "https://github.com/genomoncology/biomcp/blob/main/Cargo.toml"
+  - "https://github.com/genomoncology/biomcp/blob/main/manifest.json"
+  - "https://github.com/genomoncology/biomcp/blob/main/LICENSE"
+tags:
+  - biomedical
+  - genomics
+  - pubmed
+  - clinical-trials
+  - research
+keywords:
+  - BioMCP
+  - BioMCP server
+  - biomedical MCP
+  - genomics MCP
+  - PubMed MCP
+  - clinical trials MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+BioMCP is a biomedical Model Context Protocol server and command-line tool for
+evidence retrieval, entity lookup, and local study analysis. It lets Claude use
+the `biomcp` command grammar through MCP to search articles, genes, variants,
+clinical trials, diagnostics, drugs, diseases, pathways, proteins, adverse
+events, pharmacogenomics, GWAS records, phenotypes, and approved local study
+datasets.
+
+The project focuses on read-only biomedical discovery. It aggregates public and
+optional authenticated data sources such as PubMed, PubTator3, Europe PMC,
+ClinicalTrials.gov, NCI CTS, MyGene.info, MyVariant.info, ClinVar, MyChem.info,
+OpenFDA, Reactome, UniProt, CIViC, OncoKB, g:Profiler, and Semantic Scholar.
+
+## Source Review
+
+- https://github.com/genomoncology/biomcp
+- https://github.com/genomoncology/biomcp/blob/main/README.md
+- https://pypi.org/pypi/biomcp-cli/json
+- https://github.com/genomoncology/biomcp/blob/main/pyproject.toml
+- https://github.com/genomoncology/biomcp/blob/main/Cargo.toml
+- https://github.com/genomoncology/biomcp/blob/main/manifest.json
+- https://github.com/genomoncology/biomcp/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, Python package metadata, Rust package metadata, MCP
+manifest, and license file for current install commands, supported entities,
+tool behavior, optional credentials, and licensing.
+
+## Features
+
+- Python package `biomcp-cli` with a Rust-backed `biomcp` binary.
+- Stdio MCP server launched with `biomcp serve`.
+- Read-only biomedical command grammar exposed through a `biomcp` MCP tool.
+- Literature search across PubTator3 and Europe PMC, with article detail,
+  citation, reference, recommendation, and entity workflows.
+- Gene, variant, disease, drug, diagnostic, pathway, protein, adverse-event,
+  pharmacogenomics, GWAS, and phenotype lookup workflows.
+- Clinical trial search through ClinicalTrials.gov API v2 and NCI CTS sources.
+- Local study analytics for approved downloaded datasets, including cohort,
+  survival, comparison, co-occurrence, and chart workflows.
+- Optional API keys for higher-rate or gated integrations.
+- MIT license.
+
+## Installation
+
+Install the package, then configure the MCP server:
+
+```sh
+uv tool install biomcp-cli
+```
+
+```json
+{
+  "mcpServers": {
+    "biomcp": {
+      "command": "biomcp",
+      "args": ["serve"]
+    }
+  }
+}
+```
+
+After restarting the MCP client, ask Claude to search or summarize an approved
+biomedical question and cite the returned source records.
+
+## Use Cases
+
+- Search biomedical literature for a gene, variant, disease, drug, or phenotype.
+- Compare article evidence with clinical trial records for a research question.
+- Retrieve structured detail pages for genes, variants, drugs, diseases, or trials.
+- Explore known gene, variant, disease, pathway, and drug relationships.
+- Summarize public clinical trial status and eligibility criteria for review.
+- Run approved local study analytics on de-identified datasets.
+- Generate evidence-backed biomedical research notes with source links.
+
+## Safety and Privacy
+
+BioMCP should be treated as a research aid. Its outputs are not medical advice
+and should not be used directly for diagnosis, treatment, eligibility
+determinations, regulatory submissions, or safety decisions without qualified
+human review and source verification.
+
+Biomedical searches can expose sensitive research direction, disease interests,
+drug names, variants, trial queries, and cohort context to third-party APIs.
+Local study workflows can also handle sensitive derived data and generated
+charts. Use only approved datasets, protect optional API keys, and avoid PHI or
+patient-identifiable records unless your environment and approvals explicitly
+permit that use.
+
+## Duplicate Check
+
+Existing content includes paper-search and PubMed-oriented MCP entries, plus
+life-sciences agent content. This entry is distinct because it covers
+`genomoncology/biomcp`, a unified biomedical MCP server and CLI spanning
+literature, genes, variants, trials, diagnostics, drugs, diseases, pathways,
+proteins, adverse events, pharmacogenomics, GWAS, phenotypes, and local study
+analytics. No matching BioMCP source URL or dedicated BioMCP entry was found in
+`content/mcp`.

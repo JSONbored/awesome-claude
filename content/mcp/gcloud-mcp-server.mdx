@@ -1,0 +1,192 @@
+---
+title: gcloud MCP Server
+slug: gcloud-mcp-server
+category: mcp
+description: >-
+  Google Cloud gcloud MCP server from googleapis that lets Claude run approved
+  gcloud CLI commands with allowlist and denylist controls for cloud resource
+  inspection, automation, and operations.
+cardDescription: >-
+  Run approved gcloud CLI commands from Claude with allowlist and denylist
+  controls for Google Cloud workflows.
+seoTitle: gcloud MCP Server for Claude
+seoDescription: >-
+  Configure gcloud MCP Server with Claude and other MCP clients to run approved
+  Google Cloud gcloud CLI commands, inspect resources, automate workflows, and
+  enforce command allowlists or denylists.
+author: Google APIs
+authorProfileUrl: "https://github.com/googleapis"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: gcloud MCP Server
+brandDomain: cloud.google.com
+repoUrl: "https://github.com/googleapis/gcloud-mcp"
+documentationUrl: "https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/README.md"
+packageUrl: "https://registry.npmjs.org/@google-cloud%2fgcloud-mcp"
+installable: true
+installCommand: "npx -y @google-cloud/gcloud-mcp"
+usageSnippet: "Authenticate the gcloud CLI with a least-privilege account, add @google-cloud/gcloud-mcp to your MCP client, then ask Claude to run a single approved gcloud command at a time."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "gcloud": {
+        "command": "npx",
+        "args": ["-y", "@google-cloud/gcloud-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add gcloud -- npx -y @google-cloud/gcloud-mcp
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 20 or newer with npm or another compatible package runner.
+  - Google Cloud CLI installed and authenticated.
+  - Active gcloud account, project, and configuration scoped to the intended environment.
+  - Least-privilege user or service account impersonation for the allowed cloud actions.
+  - Reviewed allowlist or denylist configuration before letting an agent run cloud operations.
+safetyNotes:
+  - gcloud MCP Server executes gcloud CLI commands with the permissions of the active gcloud account.
+  - Allowed commands can create, update, delete, deploy, scale, list, export, or configure Google Cloud resources depending on IAM permissions and selected services.
+  - The server blocks command substitution, pipes, redirection, SSH-style commands, interactive commands, and a default set of sensitive command prefixes, but allowed gcloud commands can still have real infrastructure, billing, IAM, and data impact.
+  - Use allowlists for narrow workflows and service account impersonation with limited roles when possible.
+  - Require human approval for IAM, billing, networking, firewall, storage, database, secret, deployment, delete, and production-impacting commands.
+privacyNotes:
+  - gcloud output can reveal project IDs, resource names, regions, IAM bindings, service accounts, logs, errors, labels, metadata, URLs, secrets references, billing context, and infrastructure topology.
+  - Authentication state, ADC files, service account impersonation details, access tokens, project IDs, and local gcloud configuration should stay out of prompts and repository files.
+  - Command output may be retained by the MCP client, model provider, terminal logs, shell history, and chat transcripts.
+  - Avoid broad listing or export commands against production projects unless data handling and retention have been reviewed.
+disclosure: >-
+  Preview Google Cloud MCP server hosted in the googleapis organization. The
+  upstream README says the repository provides a solution, is not an officially
+  supported Google product, is not covered under Google Cloud Terms of Service,
+  and may change as MCP and related SDKs evolve.
+sourceUrls:
+  - "https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/package.json"
+  - "https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/src/index.ts"
+  - "https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/src/tools/run_gcloud_command.ts"
+  - "https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/src/denylist.ts"
+  - "https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/src/gcloud_executor.ts"
+  - "https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/SECURITY.md"
+tags:
+  - google-cloud
+  - gcloud
+  - cloud
+  - devops
+  - infrastructure
+keywords:
+  - gcloud MCP
+  - Google Cloud MCP
+  - gcloud CLI MCP
+  - googleapis gcloud MCP
+  - cloud operations MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+gcloud MCP Server is a preview Google Cloud MCP server from the googleapis
+organization. It lets Claude-compatible MCP clients execute approved `gcloud`
+CLI commands through a single `run_gcloud_command` tool, with support for
+command allowlists and denylists.
+
+Use it when an agent needs Google Cloud context or can help automate a narrow,
+reviewed cloud workflow. Because gcloud commands can affect real
+infrastructure, IAM, data, deployments, and billing, configure it with
+least-privilege credentials and explicit command controls.
+
+## Source Review
+
+- https://github.com/googleapis/gcloud-mcp
+- https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/README.md
+- https://registry.npmjs.org/@google-cloud%2fgcloud-mcp
+- https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/LICENSE
+- https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/package.json
+- https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/src/index.ts
+- https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/src/tools/run_gcloud_command.ts
+- https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/src/denylist.ts
+- https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/packages/gcloud-mcp/src/gcloud_executor.ts
+- https://raw.githubusercontent.com/googleapis/gcloud-mcp/main/SECURITY.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+package README, npm registry metadata, license, package manifest, server
+implementation, `run_gcloud_command` tool, access-control implementation,
+gcloud executor, and security policy for current installation and behavior
+details.
+
+## Features
+
+- Run a single `gcloud` command at a time through the MCP tool.
+- Use the active gcloud account and configuration on the machine running the
+  server.
+- Install with `npx -y @google-cloud/gcloud-mcp`.
+- Initialize as a Gemini CLI extension with the package's `init` command.
+- Configure allowlists and denylists for command prefixes.
+- Use default denials for commands that are interactive, sensitive, or
+  inappropriate for autonomous agents.
+- Reject shell command substitution, pipes, and redirection.
+- Ask for access-control details through the debug config command.
+
+## Installation
+
+Install Node.js 20 or newer and the Google Cloud CLI, then authenticate gcloud
+with a user or service-account impersonation path scoped to the intended work.
+
+Add the server to an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "gcloud": {
+      "command": "npx",
+      "args": ["-y", "@google-cloud/gcloud-mcp"]
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add gcloud -- npx -y @google-cloud/gcloud-mcp
+```
+
+Review allowlist and denylist configuration before using the server against
+shared or production Google Cloud projects.
+
+## Use Cases
+
+- Ask Claude to list narrowly scoped Google Cloud resources.
+- Inspect configuration for a project, service, deployment, or region.
+- Generate and run a reviewed gcloud command for a routine operational task.
+- Query resource metadata with JSON output projections.
+- Debug permissions or project configuration with a human approving each step.
+- Automate a narrow runbook with an allowlist and service-account
+  impersonation.
+
+## Safety and Privacy
+
+gcloud MCP Server is active cloud automation. Even with its default denylist,
+commands that remain permitted can change infrastructure, expose data, affect
+availability, alter IAM, trigger spend, deploy code, or delete resources if the
+active account has those permissions.
+
+Use service-account impersonation and least-privilege roles rather than a broad
+personal account. Prefer allowlists for routine workflows, keep production
+projects separate from experiments, and require human approval for commands
+that can mutate resources or reveal sensitive data.
+
+Do not paste credentials, access tokens, private project details, or secret
+values into prompts. Treat gcloud command output as sensitive because it can
+include infrastructure topology, IAM bindings, resource names, logs, and other
+operational context.
+
+## Duplicate Check
+
+Existing entries cover BigQuery, Firebase, Google Analytics, Google Workspace,
+MCP Toolbox for Databases, and other cloud or database servers, but no gcloud
+MCP Server entry, `googleapis/gcloud-mcp`, `@google-cloud/gcloud-mcp`, or
+matching source URL was found in `content/mcp`.

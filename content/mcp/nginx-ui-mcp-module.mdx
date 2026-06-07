@@ -1,0 +1,173 @@
+---
+title: Nginx UI MCP Module
+slug: nginx-ui-mcp-module
+category: mcp
+description: >-
+  Built-in MCP interface for Nginx UI that lets Claude-compatible agents manage
+  Nginx configuration files, inspect Nginx status, reload Nginx, and restart the
+  Nginx service through an authenticated SSE endpoint.
+cardDescription: Manage Nginx UI configuration files and service operations through its built-in authenticated MCP module.
+seoTitle: Nginx UI MCP Module for Claude
+seoDescription: >-
+  Configure Nginx UI's built-in MCP module with Claude to manage Nginx
+  configuration files, list and edit configs, enable sites, inspect Nginx status,
+  reload configuration, and restart Nginx through an authenticated MCP endpoint.
+author: Nginx UI
+authorProfileUrl: "https://github.com/0xJacky"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Nginx UI
+brandDomain: nginxui.com
+repoUrl: "https://github.com/0xJacky/nginx-ui"
+documentationUrl: "https://raw.githubusercontent.com/0xJacky/nginx-ui/main/docs/guide/mcp.md"
+installable: true
+installCommand: "Install Nginx UI, then connect an MCP client to the authenticated /mcp endpoint with a node_secret."
+usageSnippet: "Connect to the Nginx UI MCP endpoint only from approved clients, then require review before modifying configuration files, enabling sites, reloading, or restarting Nginx."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "nginx-ui": {
+        "url": "https://<nginx-ui-host>/mcp?node_secret=<node-secret>"
+      }
+    }
+  }
+configSnippet: |-
+  Use the Nginx UI /mcp endpoint with the node_secret query parameter from the target Nginx UI node.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - Running Nginx UI deployment with the MCP module available.
+  - MCP client support for SSE or URL-based remote MCP server configuration.
+  - Valid `node_secret` for the target Nginx UI node.
+  - Review of which Nginx configuration base path, virtual hosts, enabled sites, and service controls the agent may access.
+  - Change-management policy for AI-assisted Nginx edits, reloads, restarts, and production traffic impact.
+safetyNotes:
+  - Nginx UI MCP exposes executable tools for listing, reading, creating, modifying, renaming, enabling, and organizing Nginx configuration files.
+  - Service tools can inspect status, reload Nginx, and restart the Nginx service, which can interrupt traffic or apply broken configuration.
+  - The MCP endpoint is authenticated through a `node_secret` query parameter; treat it as a secret and rotate it if exposed.
+  - Require human review, syntax validation, backups, and deployment windows before enabling configs, reloading, or restarting production Nginx.
+  - Limit MCP access to trusted networks and approved clients; do not expose the endpoint publicly without strong transport security and access controls.
+privacyNotes:
+  - Nginx configuration files can reveal domains, upstream services, internal IPs, ports, TLS paths, certificate references, proxy headers, auth settings, rewrite rules, and deployment topology.
+  - MCP requests, responses, logs, screenshots, and chat transcripts can retain configuration contents, node secrets, hostnames, service status, and change history.
+  - Restart and reload operations can create operational logs that identify users, timestamps, affected sites, and infrastructure state.
+  - Redact `node_secret`, private domains, internal addresses, certificate paths, and customer routing details before sharing prompts or PR notes.
+disclosure: >-
+  AGPL-3.0-licensed Nginx UI project with a built-in MCP module. Use it only on
+  Nginx deployments where AI-assisted configuration management and service
+  control are explicitly approved.
+sourceUrls:
+  - "https://raw.githubusercontent.com/0xJacky/nginx-ui/main/README.md"
+  - "https://raw.githubusercontent.com/0xJacky/nginx-ui/main/LICENSE"
+  - "https://raw.githubusercontent.com/0xJacky/nginx-ui/main/docs/guide/mcp-config.md"
+  - "https://raw.githubusercontent.com/0xJacky/nginx-ui/main/docs/guide/mcp-nginx.md"
+  - "https://raw.githubusercontent.com/0xJacky/nginx-ui/main/mcp/router.go"
+  - "https://raw.githubusercontent.com/0xJacky/nginx-ui/main/mcp/config/register.go"
+  - "https://raw.githubusercontent.com/0xJacky/nginx-ui/main/mcp/config/config_modify.go"
+  - "https://raw.githubusercontent.com/0xJacky/nginx-ui/main/mcp/nginx/restart.go"
+tags:
+  - nginx
+  - devops
+  - configuration
+  - server-management
+  - sse
+keywords:
+  - Nginx UI MCP
+  - Nginx MCP Module
+  - Nginx configuration MCP
+  - Nginx service MCP
+  - Nginx reload MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Nginx UI MCP Module is the built-in Model Context Protocol interface provided
+by Nginx UI. It exposes an authenticated `/mcp` endpoint so Claude-compatible
+agents can manage Nginx configuration files, inspect Nginx status, reload Nginx,
+and restart the Nginx service through Nginx UI.
+
+Use it when an operations team wants an MCP interface for Nginx configuration
+management with explicit review around every write, enable, reload, or restart
+operation.
+
+## Source Review
+
+- https://github.com/0xJacky/nginx-ui
+- https://raw.githubusercontent.com/0xJacky/nginx-ui/main/docs/guide/mcp.md
+- https://raw.githubusercontent.com/0xJacky/nginx-ui/main/README.md
+- https://raw.githubusercontent.com/0xJacky/nginx-ui/main/LICENSE
+- https://raw.githubusercontent.com/0xJacky/nginx-ui/main/docs/guide/mcp-config.md
+- https://raw.githubusercontent.com/0xJacky/nginx-ui/main/docs/guide/mcp-nginx.md
+- https://raw.githubusercontent.com/0xJacky/nginx-ui/main/mcp/router.go
+- https://raw.githubusercontent.com/0xJacky/nginx-ui/main/mcp/config/register.go
+- https://raw.githubusercontent.com/0xJacky/nginx-ui/main/mcp/config/config_modify.go
+- https://raw.githubusercontent.com/0xJacky/nginx-ui/main/mcp/nginx/restart.go
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+overview, README, license, configuration-management guide, Nginx service guide,
+router source, tool registration source, config modification source, and restart
+tool source for current setup and behavior details.
+
+## Features
+
+- Provide an authenticated MCP endpoint at the Nginx UI `/mcp` path.
+- Authenticate MCP access with the `node_secret` query parameter.
+- List, read, create, modify, rename, and organize Nginx configuration files.
+- Create configuration directories and inspect configuration history.
+- Enable previously created Nginx configurations.
+- Query Nginx status.
+- Reload Nginx configuration.
+- Restart the Nginx service.
+
+## Installation
+
+Deploy Nginx UI and identify the target node secret for the Nginx UI instance
+you want Claude to access. Then configure an MCP client with the authenticated
+MCP endpoint for that deployment:
+
+```json
+{
+  "mcpServers": {
+    "nginx-ui": {
+      "url": "https://<nginx-ui-host>/mcp?node_secret=<node-secret>"
+    }
+  }
+}
+```
+
+Use the actual scheme, host, path, and secret from the approved Nginx UI
+deployment. Store `node_secret` in a secret manager or local MCP config that is
+not committed to a repository.
+
+## Use Cases
+
+- Ask Claude to inspect available Nginx configuration files before proposing a
+  change.
+- Review a virtual host configuration and identify syntax or routing concerns.
+- Draft a config update, then apply it only after human approval.
+- Enable a staged site configuration with explicit confirmation.
+- Check Nginx status during an incident response workflow.
+- Reload Nginx after a reviewed configuration change.
+- Restart Nginx during a planned maintenance window.
+
+## Safety and Privacy
+
+Nginx UI MCP Module can change live web-server behavior. Treat every write,
+enable, reload, and restart operation as production-impacting unless you know the
+target node is a sandbox. Require human approval, config validation, backups, and
+a rollback plan before using the write or service-control tools.
+
+Treat `node_secret`, Nginx configuration contents, hostnames, internal upstreams,
+TLS paths, status output, change history, logs, and MCP transcripts as sensitive.
+Limit endpoint exposure to trusted networks and redact operational details before
+sharing prompts, screenshots, or validation notes.
+
+## Duplicate Check
+
+No `0xJacky/nginx-ui`, Nginx UI MCP, Nginx UI MCP Module, Nginx configuration
+MCP, or matching source URL entry was found in `content/mcp` or `README.md`.
+Existing web-server, DevOps, and browser automation entries do not cover Nginx
+UI's built-in MCP endpoint for Nginx configuration and service management.

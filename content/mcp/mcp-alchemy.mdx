@@ -1,0 +1,186 @@
+---
+title: MCP Alchemy
+slug: mcp-alchemy
+category: mcp
+description: >-
+  SQLAlchemy-backed MCP server for exploring relational databases, inspecting
+  schemas and relationships, and executing SQL queries from Claude.
+cardDescription: Connect Claude to SQLAlchemy-compatible databases for schemas, relationships, and SQL queries.
+seoTitle: MCP Alchemy for Claude
+seoDescription: >-
+  Configure MCP Alchemy with Claude Desktop and other MCP clients to inspect
+  PostgreSQL, MySQL, MariaDB, SQLite, Oracle, MS SQL Server, CrateDB, Vertica,
+  and other SQLAlchemy-compatible databases.
+author: Rune Kaagaard
+authorProfileUrl: "https://github.com/runekaagaard"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MCP Alchemy
+brandDomain: github.com
+repoUrl: "https://github.com/runekaagaard/mcp-alchemy"
+documentationUrl: "https://github.com/runekaagaard/mcp-alchemy/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-alchemy/json"
+installable: true
+installCommand: "uvx --from mcp-alchemy mcp-alchemy"
+usageSnippet: "Run MCP Alchemy with a least-privilege SQLAlchemy DB_URL, select only the driver needed for that database, and review SQL before Claude executes it."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcp-alchemy": {
+        "command": "uvx",
+        "args": ["--from", "mcp-alchemy", "mcp-alchemy"],
+        "env": {
+          "DB_URL": "<sqlalchemy-database-url>",
+          "EXECUTE_QUERY_MAX_CHARS": "4000"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mcp-alchemy": {
+        "command": "uvx",
+        "args": ["--from", "mcp-alchemy", "mcp-alchemy"],
+        "env": {
+          "DB_URL": "<sqlalchemy-database-url>",
+          "EXECUTE_QUERY_MAX_CHARS": "4000"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 and uvx available to the MCP client runtime.
+  - SQLAlchemy-compatible database URL for an approved database.
+  - Database driver selected with uvx `--with` when the target database requires one.
+  - Least-privilege database user with only the schemas and operations Claude should access.
+  - Explicit policy for whether Claude may run write SQL, DDL, or other state-changing statements.
+  - Optional Claude Local Files setup only when full result export is approved.
+safetyNotes:
+  - MCP Alchemy exposes database table discovery, schema inspection, relationship mapping, and SQL execution.
+  - The execute_query tool can run arbitrary SQL text against the configured SQLAlchemy database.
+  - The source creates SQLAlchemy connections with AUTOCOMMIT, so successful write, DDL, or administrative statements can commit immediately.
+  - The server does not enforce read-only SQL; use database permissions, read-only users, and human review to constrain writes.
+  - Query results are truncated by EXECUTE_QUERY_MAX_CHARS unless Claude Local Files output is configured.
+  - When CLAUDE_LOCAL_FILES_PATH is set, full result sets can be written to local files for artifact access.
+privacyNotes:
+  - DB_URL can contain database hostnames, usernames, passwords, database names, driver names, and connection options.
+  - Schemas, table names, column names, foreign keys, SQL text, query results, errors, row counts, and generated local result files may be visible to the MCP client and model provider.
+  - SQLAlchemy-compatible databases can contain customer records, credentials, analytics, payment data, healthcare data, source-code metadata, or other regulated information.
+  - DB_URL, DB_ENGINE_OPTIONS, CLAUDE_LOCAL_FILES_PATH, result files, and database credentials should stay out of prompts, issues, logs, screenshots, and committed files.
+sourceUrls:
+  - "https://github.com/runekaagaard/mcp-alchemy/blob/main/pyproject.toml"
+  - "https://github.com/runekaagaard/mcp-alchemy/blob/main/mcp_alchemy/server.py"
+  - "https://github.com/runekaagaard/mcp-alchemy/blob/main/LICENSE"
+tags:
+  - database
+  - sqlalchemy
+  - sql
+  - postgres
+  - mysql
+keywords:
+  - MCP Alchemy
+  - mcp-alchemy
+  - SQLAlchemy MCP
+  - database MCP server
+  - relational database MCP
+  - SQL MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Alchemy is a SQLAlchemy-backed Model Context Protocol server that connects
+Claude to relational databases. It can list table names, filter tables, inspect
+schemas and foreign-key relationships, and execute SQL queries against a
+configured database URL.
+
+The project supports SQLAlchemy-compatible databases, including PostgreSQL,
+MySQL, MariaDB, SQLite, Oracle, Microsoft SQL Server, CrateDB, Vertica, and
+other dialects when the matching Python driver is installed.
+
+## Source Review
+
+- https://github.com/runekaagaard/mcp-alchemy
+- https://github.com/runekaagaard/mcp-alchemy/blob/main/README.md
+- https://pypi.org/pypi/mcp-alchemy/json
+- https://github.com/runekaagaard/mcp-alchemy/blob/main/pyproject.toml
+- https://github.com/runekaagaard/mcp-alchemy/blob/main/mcp_alchemy/server.py
+- https://github.com/runekaagaard/mcp-alchemy/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, package metadata, server implementation, and license for
+current install commands, package versions, supported databases, environment
+variables, tool behavior, and licensing.
+
+## Features
+
+- PyPI package `mcp-alchemy`.
+- SQLAlchemy-based database connectivity.
+- Support for PostgreSQL, MySQL, MariaDB, SQLite, Oracle, MS SQL Server, CrateDB, Vertica, and other SQLAlchemy dialects.
+- `all_table_names` tool for listing database tables.
+- `filter_table_names` tool for matching tables by substring.
+- `schema_definitions` tool for columns, primary keys, nullable flags, and foreign-key relationships.
+- `execute_query` tool for SQL execution with optional parameters.
+- EXECUTE_QUERY_MAX_CHARS output truncation.
+- Optional DB_ENGINE_OPTIONS for SQLAlchemy engine settings.
+- Optional CLAUDE_LOCAL_FILES_PATH integration for full result sets.
+- Mozilla Public License 2.0 licensing.
+
+## Installation
+
+Configure MCP Alchemy with the database driver required by the target database.
+For example, start with the generic package and add the appropriate `--with`
+driver from the README when needed:
+
+```json
+{
+  "mcpServers": {
+    "mcp-alchemy": {
+      "command": "uvx",
+      "args": ["--from", "mcp-alchemy", "mcp-alchemy"],
+      "env": {
+        "DB_URL": "<sqlalchemy-database-url>",
+        "EXECUTE_QUERY_MAX_CHARS": "4000"
+      }
+    }
+  }
+}
+```
+
+Use a dedicated read-only database user for exploration workflows. Add write
+privileges only when the workflow is reviewed and intended to modify data.
+
+## Use Cases
+
+- Ask Claude to list tables before exploring an unfamiliar relational database.
+- Inspect schemas and foreign-key relationships before drafting SQL.
+- Run reviewed SQL queries against a development or analytics database.
+- Generate reports from query results with controlled truncation.
+- Connect to different database engines using SQLAlchemy dialects.
+- Use Claude Local Files for full result sets only when local result export is approved.
+
+## Safety and Privacy
+
+MCP Alchemy gives Claude a generic SQL execution surface. It does not enforce
+read-only behavior, and the source configures AUTOCOMMIT, so database
+permissions are the real guardrail. Use least-privilege credentials, prefer
+read-only users, and review every query before execution.
+
+Connection URLs and query results can expose sensitive database details. Avoid
+production credentials, regulated datasets, broad admin users, and exported
+full-result files unless the model session and storage location are approved for
+that data.
+
+## Duplicate Check
+
+Existing content includes DBHub, MariaDB MCP Server, DuckDB MCP Server,
+StarRocks MCP Server, and other database-specific MCP entries. This entry is
+distinct because it covers `runekaagaard/mcp-alchemy`, a SQLAlchemy-compatible
+multi-database MCP server with schema relationship inspection, vertical query
+output, and optional Claude Local Files integration. No matching source URL or
+dedicated MCP Alchemy entry was found in `content/mcp`.

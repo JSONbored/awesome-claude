@@ -1,0 +1,188 @@
+---
+title: Brave Search MCP Server
+slug: brave-search-mcp-server
+category: mcp
+description: >-
+  Official Brave Search MCP server for giving Claude web, local, place, image,
+  video, news, LLM context, and summarizer search tools backed by the Brave
+  Search API.
+cardDescription: Connect Claude to Brave Search API results, LLM context, news, places, images, and videos.
+seoTitle: Brave Search MCP Server for Claude
+seoDescription: >-
+  Configure Brave Search MCP Server with Claude, VS Code, and other MCP clients
+  to use Brave Search API tools for web search, local and place search, images,
+  videos, news, LLM context retrieval, and AI-powered summaries.
+author: Brave Software
+authorProfileUrl: "https://github.com/brave"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Brave Search
+brandDomain: brave.com
+websiteUrl: "https://brave.com/search/api/"
+repoUrl: "https://github.com/brave/brave-search-mcp-server"
+documentationUrl: "https://github.com/brave/brave-search-mcp-server#readme"
+packageUrl: "https://registry.npmjs.org/%40brave%2Fbrave-search-mcp-server"
+installable: true
+installCommand: "npx -y @brave/brave-search-mcp-server --transport stdio"
+usageSnippet: "Ask Claude to search Brave for a topic, request LLM context for selected results, then cite returned URLs before summarizing."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "brave-search": {
+        "command": "npx",
+        "args": ["-y", "@brave/brave-search-mcp-server", "--transport", "stdio"],
+        "env": {
+          "BRAVE_API_KEY": "<your-brave-search-api-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "brave-search": {
+        "command": "npx",
+        "args": ["-y", "@brave/brave-search-mcp-server", "--transport", "stdio"],
+        "env": {
+          "BRAVE_API_KEY": "<your-brave-search-api-key>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Brave Search API account and API key.
+  - Node.js and npm available in the MCP client runtime.
+  - API plan review for web, local, extra snippets, summarizer, and LLM context usage.
+  - Tool whitelist or blacklist if the client should expose only selected search tools.
+  - Privacy review for search queries, location inputs, query freshness, and returned result metadata.
+safetyNotes:
+  - Brave Search MCP uses BRAVE_API_KEY from the MCP client environment or command-line options.
+  - The server defaults to stdio transport in version 2.x and can also run an HTTP transport when explicitly configured.
+  - Tools can send web, news, image, video, local, place, and LLM-context queries to the Brave Search API.
+  - Local and place tools may use location strings, coordinates, postal codes, or optional location headers.
+  - Summarizer workflows depend on summary keys returned by web search and should be checked against cited source URLs.
+  - API usage may be metered or plan-limited, especially for Pro-only local search capabilities and extra snippets.
+privacyNotes:
+  - Search queries, location parameters, result filters, language settings, freshness windows, and optional headers may reveal user intent, location, research topics, or sensitive business context.
+  - BRAVE_API_KEY should stay out of prompts, issues, logs, screenshots, and committed files.
+  - Returned snippets, summaries, search results, local-business metadata, images, videos, and news items can include third-party copyrighted or sensitive content.
+  - HTTP transport should be bound and exposed carefully so the API key and search tools are not reachable by untrusted clients.
+sourceUrls:
+  - "https://github.com/brave/brave-search-mcp-server/blob/main/README.md"
+  - "https://github.com/brave/brave-search-mcp-server/blob/main/server.json"
+  - "https://github.com/brave/brave-search-mcp-server/blob/main/package.json"
+  - "https://github.com/brave/brave-search-mcp-server/blob/main/LICENSE"
+tags:
+  - search
+  - brave
+  - web-search
+  - news
+  - llm-context
+keywords:
+  - Brave Search MCP
+  - Brave Search MCP Server
+  - Brave API MCP
+  - web search MCP
+  - LLM context MCP
+  - news search MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Brave Search MCP Server is Brave's official Model Context Protocol server for
+the Brave Search API. It gives Claude and other MCP clients access to web
+search, local search, place search, image search, video search, news search,
+LLM-context retrieval, and summarizer tools.
+
+Version 2.x defaults to stdio transport to match common MCP client conventions.
+HTTP transport remains available when configured with an environment variable or
+runtime argument. The server requires a Brave Search API key.
+
+## Source Review
+
+- https://brave.com/search/api/
+- https://github.com/brave/brave-search-mcp-server
+- https://github.com/brave/brave-search-mcp-server#readme
+- https://registry.npmjs.org/%40brave%2Fbrave-search-mcp-server
+- https://github.com/brave/brave-search-mcp-server/blob/main/README.md
+- https://github.com/brave/brave-search-mcp-server/blob/main/server.json
+- https://github.com/brave/brave-search-mcp-server/blob/main/package.json
+- https://github.com/brave/brave-search-mcp-server/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the Brave Search API
+page, repository README, MCP metadata, package metadata, and license for current
+setup commands, tool names, transport behavior, API key requirements, and plan
+limitations.
+
+## Features
+
+- Official MCP server from `brave/brave-search-mcp-server`.
+- Stdio transport by default, with optional HTTP transport.
+- NPM package `@brave/brave-search-mcp-server`.
+- Required `BRAVE_API_KEY` environment variable.
+- Web search with country, language, result count, freshness, safe search, result filters, goggles, and summary-key options.
+- Local business search and place search with location-aware parameters.
+- Image, video, and news search tools.
+- LLM-context retrieval for RAG and grounded agent workflows.
+- Summarizer tool for AI-powered summaries based on summary keys.
+- Tool whitelist and blacklist controls through environment variables or command-line options.
+- Docker and VS Code installation examples in the README.
+
+## Installation
+
+For local stdio usage, configure an MCP client with the official npm package
+and provide a Brave Search API key:
+
+```json
+{
+  "mcpServers": {
+    "brave-search": {
+      "command": "npx",
+      "args": ["-y", "@brave/brave-search-mcp-server", "--transport", "stdio"],
+      "env": {
+        "BRAVE_API_KEY": "<your-brave-search-api-key>"
+      }
+    }
+  }
+}
+```
+
+To run HTTP transport instead, follow the README's `BRAVE_MCP_TRANSPORT` or
+`--transport http` guidance and bind the server only where trusted clients can
+reach it.
+
+## Use Cases
+
+- Ground Claude answers with current Brave web search results.
+- Retrieve LLM-optimized context for a research query.
+- Search current news with freshness controls.
+- Look up places, local businesses, ratings, hours, and contact metadata.
+- Compare image or video search results before selecting sources.
+- Generate a summary from a Brave web-search summary key.
+- Restrict an MCP client to only web search or LLM-context tools through tool whitelisting.
+- Use safe-search, country, language, and freshness options for repeatable research workflows.
+
+## Safety and Privacy
+
+Search MCP servers are read-only in the sense that they do not mutate a local
+project, but they still send user intent and sometimes location context to a
+third-party API. Treat queries as potentially sensitive, especially for product
+research, investigations, legal questions, medical topics, security research, or
+people-search workflows.
+
+Keep `BRAVE_API_KEY` secret, review plan limits before high-volume agent loops,
+and require source citation review before trusting generated summaries. If using
+HTTP transport, bind it carefully and avoid exposing the server to untrusted
+networks or clients.
+
+## Duplicate Check
+
+No Brave Search MCP Server, `brave/brave-search-mcp-server`,
+`@brave/brave-search-mcp-server`, or Brave Search API MCP entry was found in
+`content/mcp`, `content/tools`, `content/guides`, `content/agents`, or
+`content/skills`.

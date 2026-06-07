@@ -1,0 +1,209 @@
+---
+title: Solana MCP Server
+slug: solana-mcp-server
+category: mcp
+description: >-
+  Solana Agent Kit MCP server that lets Claude use a configured Solana wallet
+  and RPC endpoint for on-chain actions such as wallet balance checks, asset
+  lookup, token deployment, transfers, NFT minting, token trades, domain
+  resolution, TPS checks, and test-fund requests.
+cardDescription: Connect Claude to Solana wallet, asset, transfer, trade, mint, and token tools.
+seoTitle: Solana MCP Server for Claude
+seoDescription: >-
+  Configure Solana MCP Server with Claude to use Solana Agent Kit tools for
+  wallet address and balance checks, asset lookup, token deployment, transfers,
+  NFT minting, token trades, domain resolution, TPS checks, and development
+  fund requests.
+author: SendAI
+authorProfileUrl: "https://github.com/sendaifun"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Solana MCP Server
+brandDomain: github.com/sendaifun/solana-mcp
+websiteUrl: "https://github.com/sendaifun/solana-mcp"
+repoUrl: "https://github.com/sendaifun/solana-mcp"
+documentationUrl: "https://github.com/sendaifun/solana-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/solana-mcp"
+installable: true
+installCommand: "npm install -g solana-mcp"
+usageSnippet: "Use a dedicated low-balance devnet or testnet wallet first, never auto-approve on-chain actions, and verify every transfer, trade, mint, or token deployment before execution."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "solana-mcp": {
+        "command": "npx",
+        "args": ["-y", "solana-mcp"],
+        "env": {
+          "RPC_URL": "<solana-rpc-url>",
+          "SOLANA_PRIVATE_KEY": ""
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "solana-mcp": {
+        "command": "npx",
+        "args": ["-y", "solana-mcp"],
+        "env": {
+          "RPC_URL": "<solana-rpc-url>",
+          "SOLANA_PRIVATE_KEY": "<dedicated-wallet-private-key>",
+          "OPENAI_API_KEY": ""
+        },
+        "autoApprove": []
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 16 or newer and npm, pnpm, or yarn.
+  - Solana RPC URL for the intended network.
+  - Dedicated Solana wallet private key with only funds approved for agent experimentation.
+  - Devnet or testnet validation before any mainnet use.
+  - Human review for every transfer, trade, mint, token deployment, or other value-affecting operation.
+safetyNotes:
+  - Solana MCP Server can expose on-chain actions including transfers, token trades, NFT minting, token deployment, and wallet operations through Solana Agent Kit.
+  - Blockchain transactions can be irreversible and can lose funds through wrong recipients, bad slippage, malicious tokens, compromised prompts, or incorrect network selection.
+  - Use a dedicated low-balance wallet, keep autoApprove empty, and never connect a primary wallet or seed phrase to an AI-controlled tool session.
+  - The reviewed source decodes SOLANA_PRIVATE_KEY into a KeypairWallet and loads the Solana Agent Kit God Mode plugin, so the private key grants real signing authority to the MCP process.
+  - The reviewed installer script prints the entered private-key value during validation, so prefer manual npm configuration or review and patch the script before using it.
+  - RPC providers, token price sources, marketplaces, and Solana network state can be delayed, rate-limited, incomplete, or manipulated.
+privacyNotes:
+  - Wallet addresses, balances, token holdings, transaction intents, trade targets, domain lookups, NFT metadata, RPC URLs, and prompts can be sent to the MCP client, model, RPC provider, or downstream Solana services.
+  - SOLANA_PRIVATE_KEY is a signing secret and should never be pasted into prompts, public issues, screenshots, shell history, committed MCP config, or installer debug output.
+  - On-chain actions are public and can permanently link wallet addresses, timing, assets, counterparties, and strategy to the configured wallet.
+  - The repository license file is Apache-2.0 while README and package metadata currently mention MIT, so verify current licensing before redistribution or commercial reuse.
+sourceUrls:
+  - "https://github.com/sendaifun/solana-mcp/blob/main/package.json"
+  - "https://github.com/sendaifun/solana-mcp/blob/main/src/index.ts"
+  - "https://github.com/sendaifun/solana-mcp/blob/main/scripts/install.sh"
+  - "https://github.com/sendaifun/solana-mcp/blob/main/claude_desktop_config.json"
+  - "https://github.com/sendaifun/solana-mcp/blob/main/LICENSE"
+tags:
+  - solana
+  - blockchain
+  - crypto
+  - wallet
+  - trading
+keywords:
+  - Solana MCP Server
+  - Solana MCP
+  - solana-mcp
+  - Solana Agent Kit MCP
+  - blockchain MCP
+  - crypto wallet MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Solana MCP Server is a Solana Agent Kit based Model Context Protocol server for
+Claude and other MCP clients. It initializes a Solana wallet from a private key,
+connects to a configured RPC URL, loads Solana Agent Kit actions, and exposes
+on-chain tools for wallet, asset, token, NFT, transfer, trading, domain, and
+network queries.
+
+The reviewed implementation starts over stdio by default and can expose an SSE
+transport when a port is configured. Because the server signs with the configured
+wallet private key, treat it as high-risk financial infrastructure rather than a
+read-only blockchain data connector.
+
+## Source Review
+
+- https://github.com/sendaifun/solana-mcp
+- https://github.com/sendaifun/solana-mcp/blob/main/README.md
+- https://registry.npmjs.org/solana-mcp
+- https://github.com/sendaifun/solana-mcp/blob/main/package.json
+- https://github.com/sendaifun/solana-mcp/blob/main/src/index.ts
+- https://github.com/sendaifun/solana-mcp/blob/main/scripts/install.sh
+- https://github.com/sendaifun/solana-mcp/blob/main/claude_desktop_config.json
+- https://github.com/sendaifun/solana-mcp/blob/main/glama.json
+- https://github.com/sendaifun/solana-mcp/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, package metadata, server entrypoint, installer script,
+example client config, registry metadata, and license file for current install
+commands, environment variables, wallet behavior, tool surface, transports, and
+licensing.
+
+## Features
+
+- NPM package `solana-mcp` with a `solana-mcp` executable.
+- Solana Agent Kit and MCP adapter integration.
+- Wallet initialization from `SOLANA_PRIVATE_KEY` and `RPC_URL`.
+- Stdio transport by default, with optional SSE transport when `PORT` is set.
+- Tools described upstream for asset lookup, token deployment, token prices,
+  wallet address, balance, transfers, NFT minting, trades, fund requests, domain
+  resolution, and TPS checks.
+- Optional `OPENAI_API_KEY` environment variable.
+- Apache-2.0 license file, with MIT currently shown in README and package
+  metadata.
+
+## Installation
+
+Install from npm:
+
+```sh
+npm install -g solana-mcp
+```
+
+Configure the MCP client manually with a dedicated wallet:
+
+```json
+{
+  "mcpServers": {
+    "solana-mcp": {
+      "command": "npx",
+      "args": ["-y", "solana-mcp"],
+      "env": {
+        "RPC_URL": "<solana-rpc-url>",
+        "SOLANA_PRIVATE_KEY": "<dedicated-wallet-private-key>"
+      },
+      "autoApprove": []
+    }
+  }
+}
+```
+
+Start on devnet or testnet with a low-balance wallet. Do not use the interactive
+installer unless you have reviewed and adjusted its private-key handling.
+
+## Use Cases
+
+- Check an approved wallet address and balance.
+- Retrieve Solana asset or token information for research.
+- Resolve Solana domain names before a manual transaction.
+- Test token deployment, NFT minting, transfers, or trades on devnet.
+- Ask Claude to draft a transaction plan that a human reviews before execution.
+- Monitor Solana TPS or basic network context during development.
+
+## Safety and Privacy
+
+Solana MCP Server can sign blockchain transactions with the configured wallet.
+Use a dedicated wallet, keep the balance minimal, test on devnet or testnet, and
+never grant automatic approval for transfer, trade, token deployment, minting, or
+other value-affecting tools. Verify recipient addresses, token identities,
+slippage, network, fees, and expected outcomes outside the model conversation.
+
+The reviewed source decodes `SOLANA_PRIVATE_KEY` and creates a signing wallet
+for the MCP process. Anyone who can read the private key or control the MCP
+session can potentially move funds. The reviewed installer script also prints
+the entered private-key value during validation, so manual configuration is safer
+unless the script is reviewed and changed first.
+
+Wallet activity is public on-chain, and prompts can reveal strategy, holdings,
+counterparties, token interests, and intended transactions. Protect RPC URLs,
+private keys, generated configs, logs, screenshots, shell history, and model
+transcripts as sensitive financial data.
+
+## Duplicate Check
+
+No Solana MCP Server, `sendaifun/solana-mcp`, Solana Agent Kit MCP, blockchain
+wallet MCP, or dedicated Solana on-chain action MCP entry was found in
+`content/mcp`, `content/agents`, `content/guides`, or `content/skills`. This
+entry is scoped to the SendAI Solana MCP server and does not duplicate general
+Web3, database, or finance-oriented MCP entries.

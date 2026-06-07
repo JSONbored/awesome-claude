@@ -1,0 +1,181 @@
+---
+title: MCP-NixOS
+slug: mcp-nixos
+category: mcp
+description: >-
+  MCP server for live NixOS, nixpkgs, Home Manager, nix-darwin, Nixvim,
+  FlakeHub, Noogle, NixOS Wiki, nix.dev, NixHub, binary cache, and local flake
+  input lookups.
+cardDescription: Give Claude current Nix package, option, flake, and cache data.
+seoTitle: MCP-NixOS Server for Claude
+seoDescription: >-
+  Configure MCP-NixOS with Claude and other MCP clients to query current NixOS
+  packages, options, channels, Home Manager, nix-darwin, Nixvim, FlakeHub,
+  Noogle, NixOS Wiki, nix.dev, NixHub, binary cache, and local flake inputs.
+author: James Brink
+authorProfileUrl: "https://github.com/utensils"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MCP-NixOS
+brandDomain: github.com
+repoUrl: "https://github.com/utensils/mcp-nixos"
+documentationUrl: "https://github.com/utensils/mcp-nixos/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-nixos/json"
+installable: true
+installCommand: "uvx mcp-nixos"
+usageSnippet: "Ask Claude to use MCP-NixOS before recommending package names, NixOS options, channels, flake inputs, or binary cache status."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "nixos": {
+        "command": "uvx",
+        "args": ["mcp-nixos"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "nixos": {
+        "command": "uvx",
+        "args": ["mcp-nixos"],
+        "env": {
+          "MCP_NIXOS_TRANSPORT": "stdio"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Python 3.11 or newer when installing through uvx or pip.
+  - Network access to the NixOS, NixHub, FlakeHub, Noogle, wiki, nix.dev, cache, and related APIs used by selected queries.
+  - Optional local Nix installation when using local flake-input or Nix-store reading workflows.
+safetyNotes:
+  - MCP-NixOS is primarily a lookup server, but some actions can run local `nix` commands for flake-input inspection when Nix is installed.
+  - Package, option, channel, cache, and version results can change as upstream Nix data changes.
+  - Binary cache and version history answers are evidence for configuration work, not proof that a deployment or rebuild is safe.
+  - Local flake-input and store actions can list or read files under Nix store paths, subject to size and path validation in the source.
+  - Verify generated Nix expressions, overlays, and configuration changes with normal Nix evaluation and review before applying them.
+privacyNotes:
+  - Queries can reveal package names, configuration options, channel choices, flake names, binary cache interests, and local flake dependency structure.
+  - Local flake-input reads can expose pinned inputs, paths, and files from Nix store derivations to the MCP client and model provider.
+  - Public APIs such as search.nixos.org, FlakeHub, NixHub, Noogle, NixOS Wiki, nix.dev, cache.nixos.org, and GitHub may receive request metadata.
+  - Avoid asking the server to read local store files that contain sensitive generated material or private dependency context.
+sourceUrls:
+  - "https://github.com/utensils/mcp-nixos/blob/main/README.md"
+  - "https://github.com/utensils/mcp-nixos/blob/main/pyproject.toml"
+  - "https://github.com/utensils/mcp-nixos/blob/main/flake.nix"
+  - "https://github.com/utensils/mcp-nixos/blob/main/mcp_nixos/server.py"
+  - "https://github.com/utensils/mcp-nixos/blob/main/mcp_nixos/config.py"
+  - "https://github.com/utensils/mcp-nixos/blob/main/mcp_nixos/sources/flake_inputs.py"
+  - "https://github.com/utensils/mcp-nixos/blob/main/LICENSE"
+tags:
+  - nixos
+  - nix
+  - packages
+  - configuration
+  - developer-tools
+keywords:
+  - MCP-NixOS
+  - NixOS MCP
+  - nixpkgs MCP
+  - Home Manager MCP
+  - nix-darwin MCP
+  - FlakeHub MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP-NixOS is a Model Context Protocol server for giving Claude current Nix and
+NixOS ecosystem data. It exposes a compact two-tool surface for searching and
+reading NixOS packages, options, programs, channels, Home Manager options,
+nix-darwin options, Nixvim options, flakes, FlakeHub records, Noogle functions,
+NixOS Wiki pages, nix.dev docs, NixHub package metadata, binary cache status,
+and local flake inputs.
+
+It is designed to reduce hallucinated package names, stale option paths, and
+outdated Nix channel assumptions. It works without Nix for remote API lookups,
+while local flake-input and Nix-store actions require Nix and local path access.
+
+## Source Review
+
+- https://github.com/utensils/mcp-nixos
+- https://github.com/utensils/mcp-nixos/blob/main/README.md
+- https://pypi.org/pypi/mcp-nixos/json
+- https://github.com/utensils/mcp-nixos/blob/main/pyproject.toml
+- https://github.com/utensils/mcp-nixos/blob/main/flake.nix
+- https://github.com/utensils/mcp-nixos/blob/main/mcp_nixos/server.py
+- https://github.com/utensils/mcp-nixos/blob/main/mcp_nixos/config.py
+- https://github.com/utensils/mcp-nixos/blob/main/mcp_nixos/sources/flake_inputs.py
+- https://github.com/utensils/mcp-nixos/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, Python package metadata, Nix flake, server source,
+configuration constants, flake-input source, and license file for current setup,
+supported sources, tool behavior, network use, and licensing.
+
+## Features
+
+- Python package `mcp-nixos`.
+- Stdio MCP server launched with `uvx mcp-nixos`, `pip install mcp-nixos`, or Nix.
+- Unified `nix` tool for search, info, stats, browse, channels, flake-inputs,
+  cache, and store actions.
+- `nix_versions` tool for package version history, nixpkgs commit hashes,
+  attribute paths, and platform availability through NixHub data.
+- NixOS packages, options, programs, and channel queries.
+- Home Manager, nix-darwin, Nixvim, FlakeHub, Noogle, NixOS Wiki, nix.dev,
+  NixHub, and binary cache lookups.
+- Optional local flake-input listing, directory listing, and file reading.
+- MIT license.
+
+## Installation
+
+Configure the stdio server in your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "nixos": {
+      "command": "uvx",
+      "args": ["mcp-nixos"]
+    }
+  }
+}
+```
+
+After restarting the MCP client, ask Claude to query MCP-NixOS before
+recommending Nix packages, options, channels, flakes, binary cache status, or
+version-specific nixpkgs commits.
+
+## Use Cases
+
+- Verify whether a package exists in a NixOS channel.
+- Search NixOS, Home Manager, nix-darwin, or Nixvim options.
+- Find package version history and the nixpkgs commit that shipped a version.
+- Check binary cache availability before planning a build.
+- Search Noogle for Nix function documentation.
+- Read NixOS Wiki or nix.dev material through MCP.
+- Inspect local flake inputs and pinned store paths when Nix is installed.
+
+## Safety and Privacy
+
+MCP-NixOS helps with current Nix ecosystem facts, but it should not be treated
+as a deployment authority. Always evaluate generated Nix expressions, review
+configuration changes, and test rebuilds with the normal Nix workflow.
+
+Most lookups call public APIs. Local flake-input and store actions can also run
+Nix commands, list Nix store paths, and read validated store files. Those
+queries can expose package choices, configuration interests, pinned dependency
+structure, and local path context to the MCP client and model provider.
+
+## Duplicate Check
+
+Existing MCP content includes general developer tools and package-related
+servers, but no dedicated entry for `utensils/mcp-nixos` or the `mcp-nixos`
+PyPI package was found in `content/mcp`. This entry is distinct because it
+covers current NixOS, nixpkgs, Home Manager, nix-darwin, Nixvim, FlakeHub,
+Noogle, NixOS Wiki, nix.dev, NixHub, binary cache, and local flake-input data.

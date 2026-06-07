@@ -1,0 +1,187 @@
+---
+title: mcp-proxy Transport Bridge
+slug: mcp-proxy-transport-bridge
+category: mcp
+description: >-
+  MCP transport bridge that converts between stdio, SSE, and Streamable HTTP so
+  local MCP clients can reach remote servers, or remote clients can reach local
+  stdio servers.
+cardDescription: >-
+  Bridge stdio, SSE, and Streamable HTTP MCP transports with a Python proxy that
+  supports headers, OAuth, named servers, CORS, Docker, and config files.
+seoTitle: mcp-proxy Transport Bridge for Claude
+seoDescription: >-
+  Configure mcp-proxy with Claude to bridge MCP stdio, SSE, and Streamable HTTP
+  transports, pass headers or OAuth credentials, and expose named local servers.
+author: Sergey Parfenyuk
+authorProfileUrl: "https://github.com/sparfenyuk"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: mcp-proxy
+brandDomain: github.com
+repoUrl: "https://github.com/sparfenyuk/mcp-proxy"
+documentationUrl: "https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-proxy/json"
+installable: true
+installCommand: "uv tool install mcp-proxy"
+usageSnippet: "Install with `uv tool install mcp-proxy` or `pipx install mcp-proxy`, then launch it from your MCP client with the remote endpoint or local stdio command."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcp-proxy": {
+        "command": "mcp-proxy",
+        "args": ["https://example.com/sse"],
+        "env": {
+          "API_ACCESS_TOKEN": "REPLACE_WITH_ACCESS_TOKEN"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  mcp-proxy https://example.com/sse
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer.
+  - uv, pipx, or Docker for installation.
+  - A known MCP endpoint or local stdio MCP server to bridge.
+  - Review of required headers, OAuth client credentials, CORS origins, host, port, and named-server configuration.
+  - A plan for network binding if exposing local stdio servers through SSE or Streamable HTTP.
+safetyNotes:
+  - mcp-proxy can expose local stdio MCP servers as network services; keep the host bound to `127.0.0.1` unless remote access is intentional.
+  - Passing `--host=0.0.0.0`, permissive CORS, or named-server routes can make tools reachable by other systems on the network.
+  - Proxy configuration can include bearer tokens, OAuth client secrets, headers, server commands, environment variables, and working directories.
+  - The proxy can spawn arbitrary configured MCP server commands; only use trusted command strings and config files.
+  - Remote SSE or Streamable HTTP servers should be authenticated and trusted before forwarding client requests or tool outputs.
+privacyNotes:
+  - MCP requests, responses, tool outputs, progress events, headers, OAuth tokens, API access tokens, and session identifiers may pass through the proxy process.
+  - Named server config files can contain command arguments, environment variables, and credentials for downstream MCP servers.
+  - Exposed network endpoints can reveal tool names, server status, and results to clients that can reach the proxy.
+  - Logs and troubleshooting output may include endpoint URLs, command names, headers, connection errors, or server names.
+  - Store config files outside shared repositories when they include tokens or private server details.
+disclosure: >-
+  MIT-licensed Python MCP transport bridge. It does not provide domain-specific
+  tools itself; it proxies other MCP servers across transports.
+sourceUrls:
+  - "https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/LICENSE"
+  - "https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/config_example.json"
+  - "https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/src/mcp_proxy/__main__.py"
+  - "https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/src/mcp_proxy/mcp_server.py"
+  - "https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/src/mcp_proxy/proxy_server.py"
+tags:
+  - transport
+  - proxy
+  - sse
+  - streamable-http
+  - stdio
+keywords:
+  - mcp-proxy
+  - MCP proxy
+  - MCP transport bridge
+  - stdio SSE MCP
+  - Streamable HTTP MCP
+  - MCP named servers
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+mcp-proxy bridges MCP transports. It can let a stdio-only client such as Claude
+Desktop connect to a remote SSE or Streamable HTTP server, or expose a local
+stdio MCP server through SSE or Streamable HTTP for clients that need a network
+endpoint.
+
+Use it when transport mismatch is the blocker and the downstream MCP server is
+already trusted. It is especially useful for remote servers, containerized
+setups, named local servers, and client/server combinations that do not share the
+same MCP transport.
+
+## Source Review
+
+- https://github.com/sparfenyuk/mcp-proxy
+- https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/README.md
+- https://pypi.org/pypi/mcp-proxy/json
+- https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/LICENSE
+- https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/pyproject.toml
+- https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/config_example.json
+- https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/src/mcp_proxy/__main__.py
+- https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/src/mcp_proxy/mcp_server.py
+- https://raw.githubusercontent.com/sparfenyuk/mcp-proxy/main/src/mcp_proxy/proxy_server.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, license, package metadata, example config, CLI entrypoint,
+MCP server implementation, and proxy server implementation for current setup and
+behavior details.
+
+## Features
+
+- Bridge local stdio clients to remote SSE MCP servers.
+- Bridge local stdio clients to remote Streamable HTTP MCP servers.
+- Expose local stdio MCP servers through SSE or Streamable HTTP.
+- Pass authorization headers or an `API_ACCESS_TOKEN` environment variable to
+  remote servers.
+- Support OAuth2 client credentials through client ID, client secret, and token
+  URL options.
+- Configure host, port, CORS origins, exposed headers, working directory, and
+  environment variables for spawned servers.
+- Publish multiple named stdio MCP servers under separate URL paths.
+- Load named servers from a JSON MCP-style configuration file.
+- Run as a PyPI-installed CLI or container image.
+
+## Installation
+
+Install the PyPI package with `uv` or `pipx`:
+
+```bash
+uv tool install mcp-proxy
+```
+
+```bash
+pipx install mcp-proxy
+```
+
+For a stdio client connecting to a remote SSE endpoint:
+
+```json
+{
+  "mcpServers": {
+    "mcp-proxy": {
+      "command": "mcp-proxy",
+      "args": ["https://example.com/sse"],
+      "env": {
+        "API_ACCESS_TOKEN": "REPLACE_WITH_ACCESS_TOKEN"
+      }
+    }
+  }
+}
+```
+
+For exposing a local stdio server on a local network endpoint, bind carefully:
+
+```bash
+mcp-proxy --host=127.0.0.1 --port=8080 -- uvx mcp-server-fetch
+```
+
+## Use Cases
+
+- Connect Claude Desktop to a remote SSE MCP server.
+- Use a Streamable HTTP MCP server from a client that only supports stdio.
+- Expose a local stdio MCP server to an MCP client that expects an HTTP
+  endpoint.
+- Group several local stdio MCP servers behind named URL paths.
+- Wrap containerized MCP servers so tools can move between local desktop and
+  web-client workflows.
+
+## Safety and Privacy
+
+mcp-proxy is only as safe as the endpoints, commands, credentials, and network
+bindings you give it. Keep local bridges bound to loopback by default, avoid
+wildcard CORS unless required, and do not expose unauthenticated tool endpoints
+on shared networks.
+
+Treat proxy configs as sensitive. They can contain bearer tokens, OAuth secrets,
+server commands, environment variables, endpoint URLs, and downstream MCP server
+details that should not be committed to shared repositories.

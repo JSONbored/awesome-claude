@@ -1,0 +1,197 @@
+---
+title: Agent Device MCP Server
+slug: agent-device-mcp-server
+category: mcp
+description: >-
+  Official MCP server for agent-device, Callstack's device automation CLI for
+  inspecting, controlling, debugging, recording, and collecting evidence from
+  iOS, Android, TV, macOS, Linux, React Native, Expo, Flutter, and native apps.
+cardDescription: Inspect and control real app sessions with agent-device MCP tools.
+seoTitle: Agent Device MCP Server for Claude
+seoDescription: >-
+  Configure Agent Device MCP Server with Claude Code, Cursor, Windsurf, Cline,
+  Goose, Codex, and other MCP clients to inspect app UI, tap, type, scroll,
+  capture screenshots, logs, traces, network traffic, recordings, and replayable
+  device workflows.
+author: Callstack
+authorProfileUrl: "https://github.com/callstack"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: agent-device
+brandDomain: oss.callstack.com
+repoUrl: "https://github.com/callstack/agent-device"
+documentationUrl: "https://github.com/callstack/agent-device/blob/main/website/docs/docs/agent-setup.md"
+packageUrl: "https://registry.npmjs.org/agent-device"
+installable: true
+installCommand: "claude mcp add --transport stdio --scope user agent-device -- agent-device mcp"
+usageSnippet: "Ask Claude to open a test app, take an interactive snapshot, act on visible refs, verify with another snapshot, and close the session."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "agent-device": {
+        "command": "agent-device",
+        "args": ["mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agent-device": {
+        "command": "agent-device",
+        "args": ["mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 22 or newer and `agent-device` installed globally or project-locally.
+  - Xcode tooling for iOS, tvOS, or macOS targets, or Android SDK and ADB for Android targets.
+  - Device, simulator, emulator, TV, macOS, or Linux desktop target that the agent is allowed to automate.
+  - Required local permissions such as Android device trust, iOS Developer Mode, macOS Accessibility, and Screen Recording where applicable.
+  - Dedicated test apps, test accounts, and controlled artifact directories before using real-device automation.
+safetyNotes:
+  - Agent Device MCP exposes structured tools backed by `AgentDeviceClient`; the docs state it does not expose generic shell execution over MCP.
+  - Tools and CLI workflows can open apps, inspect UI, tap, type, scroll, perform gestures, wait, assert state, handle alerts, and close sessions.
+  - Evidence workflows can capture screenshots, recordings, logs, traces, network traffic, performance samples, crash context, React profiles, and replay files.
+  - Mutating commands should run serially against one session, and separate sessions or devices should be used for parallel work.
+  - Prefer dedicated test devices or simulators, and require approval before entering credentials, submitting forms, changing settings, installing apps, sending messages, or touching production accounts.
+privacyNotes:
+  - Screenshots, recordings, traces, logs, network dumps, replay files, reports, UI snapshots, typed input, and React profiles can contain private UI state, tokens, request data, customer information, or credentials.
+  - macOS, iOS, Android, and TV automation can expose local app state, notifications, device names, package identifiers, app content, system dialogs, and permission prompts.
+  - Network inspection artifacts may include headers, payloads, session identifiers, URLs, and API data; review before sharing or committing.
+  - Interactive CLI runs may check npm for newer package versions unless `AGENT_DEVICE_NO_UPDATE_NOTIFIER=1` is set.
+sourceUrls:
+  - "https://github.com/callstack/agent-device/blob/main/README.md"
+  - "https://github.com/callstack/agent-device/blob/main/server.json"
+  - "https://github.com/callstack/agent-device/blob/main/website/docs/docs/installation.md"
+  - "https://github.com/callstack/agent-device/blob/main/website/docs/docs/security-trust.md"
+  - "https://github.com/callstack/agent-device/blob/main/package.json"
+  - "https://github.com/callstack/agent-device/blob/main/LICENSE"
+tags:
+  - mobile
+  - testing
+  - automation
+  - debugging
+  - local-mcp
+keywords:
+  - Agent Device MCP
+  - agent-device MCP
+  - Callstack agent-device
+  - iOS automation MCP
+  - Android automation MCP
+  - React Native app testing MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Agent Device MCP Server exposes structured MCP tools for Callstack's
+`agent-device` CLI. It gives Claude and other agents a device-aware way to open
+apps, inspect current UI state, interact with visible refs and selectors, verify
+changes through fresh snapshots, collect debugging evidence, and close sessions.
+
+The project targets iOS, Android, tvOS, Android TV, macOS, Linux desktop, React
+Native, Expo, Flutter, and native apps. Its docs position the CLI as a live app
+verification layer for agents, with compact accessibility snapshots, semantic
+refs, screenshots, recordings, logs, traces, network evidence, performance
+samples, crash context, React profiles, and replayable `.ad` scripts.
+
+## Source Review
+
+- https://github.com/callstack/agent-device
+- https://github.com/callstack/agent-device/blob/main/website/docs/docs/agent-setup.md
+- https://registry.npmjs.org/agent-device
+- https://github.com/callstack/agent-device/blob/main/README.md
+- https://github.com/callstack/agent-device/blob/main/server.json
+- https://github.com/callstack/agent-device/blob/main/website/docs/docs/installation.md
+- https://github.com/callstack/agent-device/blob/main/website/docs/docs/security-trust.md
+- https://github.com/callstack/agent-device/blob/main/package.json
+- https://github.com/callstack/agent-device/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+agent setup docs, npm registry metadata, README, MCP metadata, installation
+docs, security guidance, package metadata, and license for current setup
+commands, supported targets, permissions, and trust guidance.
+
+## Features
+
+- Official stdio MCP server through `agent-device mcp`.
+- MCP metadata for the `agent-device` npm package.
+- Claude Code, Cursor, Windsurf, Cline, Goose, Codex, and project-rule setup guidance.
+- UI inspection through compact accessibility snapshots, interactive refs, selectors, and React Native component trees.
+- App interaction through open, tap, type, scroll, gestures, waits, assertions, alert handling, and session closing.
+- Evidence capture with screenshots, video recordings, logs, traces, network traffic, performance samples, crash context, and React profiles.
+- Replayable `.ad` workflow scripts for local runs, CI, and repeatable checks.
+- iOS Simulator, Android Emulator, physical device, tvOS, Android TV, macOS, and Linux desktop support.
+- Local security guidance for permissions, artifacts, update notices, network captures, and responsible disclosure.
+
+## Installation
+
+Install the CLI on the machine where the agent will run:
+
+```sh
+npm install -g agent-device@latest
+agent-device --version
+agent-device help workflow
+```
+
+For Claude Code, add the stdio MCP server:
+
+```sh
+claude mcp add --transport stdio --scope user agent-device -- agent-device mcp
+```
+
+For MCP clients that use JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "agent-device": {
+      "command": "agent-device",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+Use a project-local install or a human-selected pinned package version for
+unattended agent workflows. The docs warn against asking agents to choose a
+version or silently run mutable latest-version `npx` installs without an
+explicit trust decision.
+
+## Use Cases
+
+- Verify a mobile feature by opening an app, taking a snapshot, acting on refs, and re-checking state.
+- Capture screenshots, logs, traces, or network evidence for a regression before proposing a code fix.
+- Turn an exploratory interaction into a replayable workflow for later local or CI checks.
+- Inspect React Native component trees, props, state, hooks, slow renders, and rerenders when debugging UI behavior.
+- Use one agent-facing tool across iOS, Android, TV, desktop, Expo, Flutter, React Native, and native apps.
+- Keep device verification close to the coding workflow without exposing a generic shell through MCP.
+
+## Safety and Privacy
+
+Agent Device MCP can control real apps and capture rich evidence. Use test
+devices, simulators, emulators, and test accounts whenever possible. Require
+review before actions that enter credentials, submit forms, change settings,
+send messages, install apps, interact with production data, or automate personal
+devices.
+
+Treat artifacts as sensitive. Screenshots, recordings, logs, traces, network
+dumps, reports, replay files, app state, and React profiles can include tokens,
+credentials, private UI, customer data, API payloads, or unreleased product
+details. Store artifacts in controlled directories, sanitize before sharing, and
+avoid committing them unless they are intentional test fixtures.
+
+## Duplicate Check
+
+The catalog already has `mobile-next/mobile-mcp`, which focuses on Mobile MCP
+for iOS and Android automation. Agent Device is a separate Callstack package
+with its own npm package, MCP metadata, agent setup docs, security guidance,
+multi-target app verification workflow, evidence capture, replay, debugging,
+profiling, and desktop/TV support. No `callstack/agent-device`, `agent-device`
+MCP, or matching source URL entry was found in `content/mcp`, `content/tools`,
+`content/guides`, `content/agents`, or `content/skills`.

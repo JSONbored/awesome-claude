@@ -1,0 +1,192 @@
+---
+title: Anki MCP Server
+slug: anki-mcp-server
+category: mcp
+description: >-
+  MCP server for Anki flashcards that lets Claude review cards, manage decks,
+  create and update notes, handle tags and media, inspect stats, and drive Anki
+  desktop GUI workflows.
+cardDescription: >-
+  Connect Claude to Anki through AnkiConnect for study review, note creation,
+  deck management, media handling, and adaptive spaced-repetition workflows.
+seoTitle: Anki MCP Server for Claude
+seoDescription: >-
+  Configure Anki MCP Server with Claude to review due cards, rate answers,
+  create flashcards, manage decks and tags, handle media, and inspect Anki
+  study statistics.
+author: AnkiMCP
+authorProfileUrl: "https://github.com/ankimcp"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Anki MCP Server
+brandDomain: ankimcp.ai
+repoUrl: "https://github.com/ankimcp/anki-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40ankimcp%2Fanki-mcp-server"
+installable: true
+installCommand: "npx -y @ankimcp/anki-mcp-server --stdio"
+usageSnippet: "Install Anki with the AnkiConnect add-on, keep Anki running, then launch `npx -y @ankimcp/anki-mcp-server --stdio` from your MCP client."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "anki": {
+        "command": "npx",
+        "args": ["-y", "@ankimcp/anki-mcp-server", "--stdio"]
+      }
+    }
+  }
+configSnippet: |-
+  npx -y @ankimcp/anki-mcp-server --stdio --read-only
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Anki Desktop installed and running.
+  - The AnkiConnect add-on installed in Anki.
+  - Node.js 22.12 or newer for the npm package path.
+  - Review of which decks, cards, tags, media files, and note types the MCP client may access.
+  - Optional read-only mode for exploration before allowing note, deck, tag, model, media, sync, or review-write operations.
+safetyNotes:
+  - "Anki MCP Server can create, update, delete, move, tag, rate, and sync cards and notes through AnkiConnect."
+  - "Destructive tools include note deletion, media deletion, unused-tag clearing, deck moves, tag replacement, model styling changes, and review rating actions that affect scheduling."
+  - "The server supports read-only mode that blocks exposed write actions, but users should still review tool calls before enabling unrestricted study or collection-management workflows."
+  - "Media tools can store files from local paths, URLs, or base64 data and can retrieve media as base64 content."
+  - "GUI tools can open Anki windows, select cards, edit notes, show answers, and undo the last Anki action."
+  - "Remote tunnel or ngrok-style setups expose local Anki to cloud-hosted AI clients and require careful authentication, origin, and URL-sharing controls."
+privacyNotes:
+  - "Tool calls can expose deck names, note fields, card contents, tags, review history, media filenames, base64 media, selected notes, collection stats, scheduling metadata, and AnkiConnect errors."
+  - "Flashcards may contain medical, language-learning, school, work, personal, customer, or confidential study material."
+  - "Sync can send Anki collection changes to AnkiWeb according to the user's Anki account and sync settings."
+  - "Local media file paths, URLs imported into cards, and GUI-selected note IDs can enter MCP client context and model logs."
+  - "Remote tunnel providers and hosted clients may process connection metadata or traffic according to their own policies."
+disclosure: >-
+  MIT-licensed TypeScript MCP server published as the
+  `@ankimcp/anki-mcp-server` npm package. This entry is distinct from generic
+  note-taking or study tools because it talks to Anki through AnkiConnect and
+  exposes Anki-specific review, deck, tag, media, model, stats, and GUI tools.
+sourceUrls:
+  - "https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/LICENSE"
+  - "https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/README.md"
+  - "https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/package.json"
+  - "https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/server.json"
+  - "https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/src/mcp/clients/anki-connect.client.ts"
+  - "https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/src/http/guards/origin-validation.guard.ts"
+  - "https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/docs/reviewer-setup.md"
+tags:
+  - anki
+  - flashcards
+  - learning
+  - spaced-repetition
+  - productivity
+keywords:
+  - Anki MCP Server
+  - anki-mcp-server
+  - AnkiConnect MCP
+  - flashcard MCP
+  - spaced repetition MCP
+  - Claude Anki review
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Anki MCP Server connects Claude and other MCP clients to Anki through the
+AnkiConnect add-on. It exposes tools for review sessions, deck management, note
+creation, tag operations, media handling, model/template work, statistics, and
+Anki desktop GUI workflows.
+
+Use it when a learning workflow needs Claude to help review due cards, create
+new notes, update existing flashcards, explain answers, organize decks, or
+analyze spaced-repetition history. Start with read-only mode if the assistant
+only needs to inspect the collection.
+
+## Source Review
+
+- https://github.com/ankimcp/anki-mcp-server
+- https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/README.md
+- https://registry.npmjs.org/%40ankimcp%2Fanki-mcp-server
+- https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/LICENSE
+- https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/package.json
+- https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/server.json
+- https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/src/mcp/clients/anki-connect.client.ts
+- https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/src/http/guards/origin-validation.guard.ts
+- https://raw.githubusercontent.com/ankimcp/anki-mcp-server/main/docs/reviewer-setup.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package metadata, server manifest, AnkiConnect
+client, HTTP origin validation guard, and reviewer setup guide for current
+setup and operating details.
+
+## Features
+
+- Sync with AnkiWeb through Anki.
+- Fetch due, new, learning, suspended, buried, or deck-filtered cards.
+- Present card fronts and rate answers as Again, Hard, Good, or Easy.
+- List decks, create decks, move cards, and fetch deck statistics.
+- Create one note or batch-create up to 100 notes.
+- Search notes with Anki query syntax and inspect note fields, tags, and CSS.
+- Update note fields, delete notes, and manage tags.
+- List, retrieve, store, or delete media files.
+- List note types, inspect field names and styling, create models, and update
+  model CSS.
+- Inspect collection and review statistics.
+- Drive Anki desktop GUI flows such as browse, add cards, edit notes, show
+  question, show answer, and undo.
+- Run over stdio, local HTTP, or an authenticated remote tunnel flow.
+- Use read-only mode to block exposed write operations during exploration.
+
+## Installation
+
+Install Anki Desktop and the AnkiConnect add-on, then configure the npm package:
+
+```json
+{
+  "mcpServers": {
+    "anki": {
+      "command": "npx",
+      "args": ["-y", "@ankimcp/anki-mcp-server", "--stdio"]
+    }
+  }
+}
+```
+
+For exploration-only sessions, launch read-only mode:
+
+```bash
+npx -y @ankimcp/anki-mcp-server --stdio --read-only
+```
+
+The project also publishes an MCPB bundle through GitHub Releases for Claude
+Desktop users who prefer an extension-style install path.
+
+## Use Cases
+
+- Run a conversational review session for due cards in a specific deck.
+- Generate new vocabulary, exam, language-learning, or technical flashcards.
+- Add tags, reorganize decks, or update note fields after a study session.
+- Import images or media into selected notes.
+- Inspect retention, review streaks, deck counts, and collection statistics.
+- Create custom note types and styling for right-to-left or specialized cards.
+- Let Claude explain a missed answer while preserving the Anki scheduling flow.
+
+## Safety and Privacy
+
+Anki MCP Server can mutate a real Anki collection. Rating cards changes review
+scheduling, syncing can push changes to AnkiWeb, and note, tag, deck, model, and
+media tools can permanently change or delete study material. Start read-only,
+keep Anki backups, and require confirmation for destructive or broad batch
+actions.
+
+Flashcards often contain personal learning history, school material, medical
+notes, work facts, customer context, screenshots, and private media. Treat MCP
+tool results as study data that may enter the model context. Be especially
+careful with remote tunnel mode, imported media paths, and any setup that
+connects a cloud-hosted assistant to local Anki.
+
+## Duplicate Notes
+
+Existing catalog entries cover general note-taking, memory, and productivity
+tools. This entry covers the separate `ankimcp/anki-mcp-server` project and
+`@ankimcp/anki-mcp-server` package for AnkiConnect-backed flashcard review,
+collection management, media handling, and Anki GUI workflows.

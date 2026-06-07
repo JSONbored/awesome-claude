@@ -1,0 +1,183 @@
+---
+title: PDF Reader MCP
+slug: pdf-reader-mcp
+category: mcp
+description: >-
+  PDF-focused MCP server that lets Claude read one or more local or remote PDFs,
+  extract full text, page ranges, metadata, page counts, embedded images, and
+  table-like structures.
+cardDescription: Give Claude a fast dedicated PDF reader with page, image, and table extraction.
+seoTitle: PDF Reader MCP Server for Claude
+seoDescription: >-
+  Configure PDF Reader MCP with Claude and other MCP clients to read local or
+  remote PDFs, extract text, selected pages, metadata, embedded images, page
+  counts, and table-like structures with configurable file and URL safeguards.
+author: Sylphx
+authorProfileUrl: "https://github.com/SylphxAI"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: PDF Reader MCP
+brandDomain: github.com
+repoUrl: "https://github.com/SylphxAI/pdf-reader-mcp"
+documentationUrl: "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40sylphx%2Fpdf-reader-mcp"
+installable: true
+installCommand: "npx -y @sylphx/pdf-reader-mcp"
+usageSnippet: "Ask Claude to use PDF Reader MCP on an approved PDF path or URL, then summarize only the extracted pages and metadata you requested."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "pdf-reader": {
+        "command": "npx",
+        "args": ["-y", "@sylphx/pdf-reader-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "pdf-reader": {
+        "command": "npx",
+        "args": ["-y", "@sylphx/pdf-reader-mcp"],
+        "env": {
+          "MCP_TRANSPORT": "stdio",
+          "MCP_PDF_ALLOWED_DIRS": "",
+          "MCP_PDF_ALLOWED_HOSTS": "",
+          "MCP_PDF_ALLOW_HTTP": "true"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js 22.13 or newer and npx available to the MCP client runtime.
+  - Approved local PDF directories or approved remote PDF hosts when processing sensitive material.
+  - Review of copyright, document handling, and data retention policy before extracting PDF contents.
+safetyNotes:
+  - PDF Reader MCP can read local PDF paths and fetch remote PDF URLs unless runtime security settings restrict those sources.
+  - The source supports directory allowlists, host allowlists, disabling URL sources, and SSRF checks for private IPs.
+  - Large or malformed PDFs can still be slow, memory-intensive, partially parsed, or return extraction errors despite size and timeout controls.
+  - Extracted text, tables, images, and metadata may be incomplete or out of order for complex scanned, encrypted, or layout-heavy PDFs.
+  - If HTTP transport is enabled, bind and authenticate it carefully before exposing it beyond trusted local clients.
+privacyNotes:
+  - PDFs can contain confidential text, embedded images, hidden metadata, author fields, comments, form data, signatures, and document history.
+  - Local file paths, remote URLs, page selections, extracted text, base64 image data, table content, and metadata may be visible to the MCP client and model provider.
+  - Remote PDF fetching reveals requested URLs and request metadata to upstream hosts.
+  - Configure allowed directories and hosts before using the server with private documents, customer files, contracts, invoices, medical records, or regulated material.
+sourceUrls:
+  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/README.md"
+  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/package.json"
+  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/index.ts"
+  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/handlers/readPdf.ts"
+  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/pdf/loader.ts"
+  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/utils/config.ts"
+  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/LICENSE"
+tags:
+  - pdf
+  - document-processing
+  - extraction
+  - tables
+  - metadata
+keywords:
+  - PDF Reader MCP
+  - PDF MCP server
+  - PDF extraction MCP
+  - PDF metadata MCP
+  - PDF table extraction MCP
+  - PDF image extraction MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+PDF Reader MCP is a dedicated Model Context Protocol server for extracting
+content from PDFs. It exposes a `read_pdf` tool that can process multiple local
+files or remote URLs, select page ranges, return metadata and page counts,
+extract full text, include embedded images, and detect table-like structures.
+
+The project is focused on PDF reading rather than broad document conversion. It
+is useful when Claude needs page-aware PDF evidence while keeping the extraction
+surface limited to PDF files.
+
+## Source Review
+
+- https://github.com/SylphxAI/pdf-reader-mcp
+- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/README.md
+- https://registry.npmjs.org/%40sylphx%2Fpdf-reader-mcp
+- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/package.json
+- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/index.ts
+- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/handlers/readPdf.ts
+- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/pdf/loader.ts
+- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/utils/config.ts
+- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm registry metadata, package metadata, server entrypoint, `read_pdf`
+handler, PDF loader, security configuration source, and license file for current
+install commands, source restrictions, extraction behavior, and licensing.
+
+## Features
+
+- npm package `@sylphx/pdf-reader-mcp`.
+- Stdio MCP server launched with `npx -y @sylphx/pdf-reader-mcp`.
+- Single `read_pdf` tool for one or more sources.
+- Local path and remote URL sources.
+- Page-range extraction with numbers or range strings.
+- Optional full text, metadata, page count, image, and table extraction.
+- Batched source and page processing to limit memory pressure.
+- Directory allowlists, host allowlists, URL disable flag, and private-IP SSRF guard.
+- MIT license.
+
+## Installation
+
+Configure the stdio server in your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "pdf-reader": {
+      "command": "npx",
+      "args": ["-y", "@sylphx/pdf-reader-mcp"]
+    }
+  }
+}
+```
+
+After restarting the MCP client, ask Claude to read only approved PDF paths or
+URLs and specify whether you need full text, metadata, page counts, images,
+tables, or particular page ranges.
+
+## Use Cases
+
+- Extract text from a specific page range in a PDF.
+- Read metadata and page count before deciding whether to process a document.
+- Pull embedded images from selected PDF pages.
+- Extract table-like content for review.
+- Batch several approved PDFs in one tool call.
+- Summarize a report, contract, manual, or invoice from extracted text.
+- Restrict the server to approved directories or remote hosts for document workflows.
+
+## Safety and Privacy
+
+PDF Reader MCP can expose everything a PDF contains, including hidden metadata,
+embedded images, form fields, author information, comments, and text that was
+not obvious from a quick visual scan. Use directory and host allowlists for
+private workflows, and verify extraction quality before relying on important
+tables, page ranges, or scanned-document text.
+
+Remote URL fetching is enabled by default in the reviewed source, with
+configuration available to disable it or restrict hosts. Treat remote PDF URLs,
+local paths, extracted text, image data, tables, and metadata as sensitive
+unless the document is approved for the model session.
+
+## Duplicate Check
+
+Existing content includes MarkItDown, Kreuzberg, Markdownify, and research
+servers that can process PDFs among many other formats. This entry is distinct
+because it covers `SylphxAI/pdf-reader-mcp`, a dedicated PDF-only MCP server
+with page ranges, images, tables, metadata, local/URL sources, and configurable
+file/URL restrictions. No matching source URL or dedicated PDF Reader MCP entry
+was found in `content/mcp`.

@@ -1,0 +1,182 @@
+---
+title: Colab MCP Server
+slug: colab-mcp-server
+category: mcp
+description: >-
+  Google Colab MCP server that bridges a local MCP client to a Colab browser
+  session through a localhost websocket proxy, letting Claude work with tools
+  exposed by the connected Colab runtime.
+cardDescription: >-
+  Bridge Claude from a local MCP client to a Google Colab browser session and
+  connected runtime through Colab MCP.
+seoTitle: Colab MCP Server for Claude
+seoDescription: >-
+  Configure Colab MCP Server with Claude and other local MCP clients to connect
+  a Google Colab browser session through a localhost websocket proxy and work
+  with the connected Colab runtime.
+author: Google Colab
+authorProfileUrl: "https://github.com/googlecolab"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Colab MCP
+brandDomain: colab.research.google.com
+repoUrl: "https://github.com/googlecolab/colab-mcp"
+documentationUrl: "https://raw.githubusercontent.com/googlecolab/colab-mcp/main/README.md"
+installable: true
+installCommand: "uvx git+https://github.com/googlecolab/colab-mcp"
+usageSnippet: "Run colab-mcp from a local MCP client, open the generated Colab browser connection, and let Claude use the tools provided by the connected Colab session."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "colab-mcp": {
+        "command": "uvx",
+        "args": ["git+https://github.com/googlecolab/colab-mcp"],
+        "timeout": 30000
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "colab-mcp": {
+        "command": "uvx",
+        "args": ["git+https://github.com/googlecolab/colab-mcp"],
+        "timeout": 30000
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - uv or uvx available to run the server from the GitHub repository.
+  - Local MCP client that supports `notifications/tools/list_changed`.
+  - Google Colab account and browser session you are authorized to use.
+  - Local machine access, because upstream documents that the MCP client must run locally.
+  - Review of notebook, runtime, file, credential, and data access before connecting an agent to a Colab session.
+safetyNotes:
+  - Colab MCP runs a local websocket proxy and waits for a Google Colab browser session to connect before proxying session tools.
+  - The server creates a bearer-style proxy token and accepts a single authorized Colab-origin websocket connection at a time.
+  - A connected Colab runtime can execute code and interact with notebooks, outputs, files, variables, packages, and mounted resources depending on the session and tools exposed by Colab.
+  - Use disposable notebooks or reviewed development sessions before allowing Claude to run code or inspect outputs.
+  - Avoid connecting notebooks that have access to production data, cloud credentials, private datasets, paid accelerators, or long-running jobs unless the workflow has explicit approval.
+privacyNotes:
+  - Notebook code, prompts, outputs, logs, variables, datasets, file paths, runtime metadata, package lists, browser session details, and generated websocket tokens can be visible to the MCP client and model provider.
+  - Colab notebooks may contain API keys, OAuth tokens, mounted Drive paths, secrets in environment variables, private model weights, customer data, or unpublished research.
+  - Local log files are created under a temporary Colab MCP log directory by default unless a log directory is specified.
+  - Review Google Colab, MCP client, model provider, and organization retention policies before sending notebook or runtime context to an assistant.
+sourceUrls:
+  - "https://raw.githubusercontent.com/googlecolab/colab-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/googlecolab/colab-mcp/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/googlecolab/colab-mcp/main/src/colab_mcp/__init__.py"
+  - "https://raw.githubusercontent.com/googlecolab/colab-mcp/main/src/colab_mcp/session.py"
+  - "https://raw.githubusercontent.com/googlecolab/colab-mcp/main/src/colab_mcp/websocket_server.py"
+  - "https://raw.githubusercontent.com/googlecolab/colab-mcp/main/tests/session_test.py"
+  - "https://raw.githubusercontent.com/googlecolab/colab-mcp/main/tests/websocket_server_test.py"
+tags:
+  - colab
+  - notebooks
+  - python
+  - runtime
+  - google
+keywords:
+  - Colab MCP
+  - Google Colab MCP
+  - colab-mcp
+  - notebook MCP server
+  - Colab Claude MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Colab MCP Server is a Google Colab project that bridges a local MCP client to a
+Google Colab browser session. It starts a local FastMCP server, opens a
+localhost websocket proxy, waits for an authorized Colab-origin connection, and
+then proxies the tools exposed by the connected Colab session to the MCP
+client.
+
+Use it when Claude needs to work with a Colab notebook or runtime from a local
+MCP-capable client. It is useful for notebook exploration, code execution,
+runtime debugging, and interactive data-science workflows where the human wants
+Claude grounded in an active Colab session.
+
+## Source Review
+
+- https://github.com/googlecolab/colab-mcp
+- https://raw.githubusercontent.com/googlecolab/colab-mcp/main/README.md
+- https://raw.githubusercontent.com/googlecolab/colab-mcp/main/LICENSE
+- https://raw.githubusercontent.com/googlecolab/colab-mcp/main/pyproject.toml
+- https://raw.githubusercontent.com/googlecolab/colab-mcp/main/src/colab_mcp/__init__.py
+- https://raw.githubusercontent.com/googlecolab/colab-mcp/main/src/colab_mcp/session.py
+- https://raw.githubusercontent.com/googlecolab/colab-mcp/main/src/colab_mcp/websocket_server.py
+- https://raw.githubusercontent.com/googlecolab/colab-mcp/main/tests/session_test.py
+- https://raw.githubusercontent.com/googlecolab/colab-mcp/main/tests/websocket_server_test.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, package manifest, MCP entrypoint, session proxy, websocket
+server, and proxy tests for current installation and behavior details.
+
+## Features
+
+- Run a local FastMCP server for Colab workflows.
+- Open a browser connection to a Google Colab session.
+- Proxy a connected Colab session over a localhost websocket.
+- Use bearer token authorization and Colab-origin checks for websocket
+  connections.
+- Accept one connected Colab session at a time.
+- Notify compatible MCP clients when the proxied tool list changes.
+- Log Colab MCP activity to a temporary log directory by default.
+- Install directly from GitHub with `uvx`.
+
+## Installation
+
+Add the GitHub-backed server command to a local MCP client:
+
+```json
+{
+  "mcpServers": {
+    "colab-mcp": {
+      "command": "uvx",
+      "args": ["git+https://github.com/googlecolab/colab-mcp"],
+      "timeout": 30000
+    }
+  }
+}
+```
+
+The upstream README notes that the MCP client must run locally and support
+`notifications/tools/list_changed`. After starting the MCP server, use the
+connection tool to open the Colab browser connection and attach the session.
+
+## Use Cases
+
+- Let Claude inspect or work with an active Colab notebook session.
+- Run notebook code with a human watching the connected runtime.
+- Debug Python, package, data-loading, or runtime issues in Colab.
+- Explore notebook outputs and generated artifacts from a local MCP client.
+- Coordinate interactive data-science or machine-learning experiments where
+  Colab is the execution environment.
+
+## Safety and Privacy
+
+Colab MCP can connect an assistant to a live notebook runtime. Treat the
+connected session as code execution with access to whatever the notebook,
+runtime, browser session, and mounted resources can reach.
+
+Use clean notebooks, temporary runtimes, and test data for demos. Avoid
+connecting sessions with production datasets, private Drive mounts, cloud
+credentials, API keys, customer records, unpublished research, paid accelerator
+jobs, or long-running workloads unless the access has been reviewed.
+
+The local proxy uses websocket authorization and origin checks, but notebook
+data can still flow into the MCP client, model transcript, logs, and downstream
+tools. Review local log files and connected client retention settings before
+using the server with sensitive work.
+
+## Duplicate Check
+
+Existing entries cover Google Workspace, Google Cloud, notebook-style research
+tools, and Python execution-adjacent servers, but no Colab MCP entry,
+`googlecolab/colab-mcp`, or matching source URL was found in `content/mcp`.

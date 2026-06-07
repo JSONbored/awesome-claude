@@ -1,0 +1,196 @@
+---
+title: edgartools SEC MCP Server
+slug: edgartools-sec-mcp-server
+category: mcp
+description: >-
+  Local MCP server for the edgartools Python library, letting Claude search,
+  parse, read, compare, and analyze SEC EDGAR filings, companies, ownership,
+  funds, proxy statements, notes, trends, and live filing feeds.
+cardDescription: Query and analyze SEC EDGAR filings through the edgartools local MCP server.
+seoTitle: edgartools SEC MCP Server for Claude
+seoDescription: >-
+  Configure edgartools SEC MCP Server with Claude to query SEC EDGAR filings,
+  company profiles, 10-K and 10-Q sections, 8-Ks, notes, trends, insider
+  ownership, institutional holdings, funds, proxy data, and filing feeds.
+author: Dwight Gunning
+authorProfileUrl: "https://github.com/dgunning"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: edgartools
+brandDomain: github.com
+repoUrl: "https://github.com/dgunning/edgartools"
+documentationUrl: "https://github.com/dgunning/edgartools/blob/main/docs/ai/mcp-setup.md"
+packageUrl: "https://pypi.org/project/edgartools/"
+installable: true
+installCommand: "claude mcp add edgartools -- uvx --from \"edgartools[ai]\" edgartools-mcp"
+usageSnippet: "Set EDGAR_IDENTITY, then ask Claude to inspect a company's latest filing and cite the accession or section before using the analysis."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "edgartools": {
+        "command": "uvx",
+        "args": ["--from", "edgartools[ai]", "edgartools-mcp"],
+        "env": {
+          "EDGAR_IDENTITY": "Your Name your.email@example.com"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "edgartools": {
+        "command": "uvx",
+        "args": ["--from", "edgartools[ai]", "edgartools-mcp"],
+        "env": {
+          "EDGAR_IDENTITY": "Your Name your.email@example.com"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer and `uvx` available, or the `edgartools[ai]` package installed.
+  - EDGAR_IDENTITY set to the name and email required for automated SEC EDGAR access.
+  - Network access to SEC EDGAR endpoints and patience for rate limits or transient filing fetch failures.
+  - Understanding of the filing forms, companies, sections, and time periods being analyzed.
+  - Human review before using SEC filing analysis for investment, legal, accounting, compliance, or disclosure decisions.
+safetyNotes:
+  - edgartools MCP can query live SEC filings, parse structured filing data, search filing text, monitor recent filings, compare companies, inspect ownership, and extract proxy or fund information.
+  - SEC EDGAR access requires an identity string and can be rate-limited if automated requests are too frequent or unidentified.
+  - Filing analysis can produce plausible financial, legal, governance, compensation, or risk conclusions that still require expert review.
+  - The local server is stateless, but remote HTTP transport deployments still need normal network access controls if shared with a team.
+  - Do not treat model-generated summaries as investment advice, legal advice, accounting advice, or a substitute for reading the filing source.
+privacyNotes:
+  - Tool inputs can reveal watchlists, portfolio interests, deal research, diligence targets, litigation topics, trading hypotheses, or compliance questions.
+  - Tool outputs can expose filing excerpts, insider transactions, institutional holdings, compensation data, financial metrics, and query strategy in the MCP client transcript.
+  - EDGAR_IDENTITY includes a name and email address; keep it scoped to approved automation and avoid committing it to source control.
+  - If using hosted edgar.tools services instead of the local server, review the hosted service's tier, retention, processing, and data-use terms separately.
+sourceUrls:
+  - "https://github.com/dgunning/edgartools/blob/main/docs/ai/mcp-tools.md"
+  - "https://github.com/dgunning/edgartools/blob/main/pyproject.toml"
+  - "https://github.com/dgunning/edgartools/blob/main/LICENSE.txt"
+tags:
+  - sec
+  - finance
+  - filings
+  - research
+  - local-mcp
+keywords:
+  - edgartools MCP
+  - SEC EDGAR MCP
+  - SEC filings MCP
+  - 10-K MCP
+  - 10-Q MCP
+  - Form 4 MCP
+  - financial filings MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+edgartools SEC MCP Server connects Claude to the edgartools Python library for
+local SEC EDGAR research. It can retrieve company profiles, search filing
+metadata and full text, monitor recent filings, parse specific filings, read
+sections, inspect notes, analyze financial trends, compare companies, review
+ownership, look at fund holdings, and examine proxy compensation or governance
+data.
+
+The local MCP server is installed through the `edgartools[ai]` extra and runs
+with stdio by default. The setup docs also describe Streamable HTTP transport
+for shared deployments and distinguish the local open-source server from the
+hosted edgar.tools MCP service.
+
+## Source Review
+
+- https://github.com/dgunning/edgartools
+- https://github.com/dgunning/edgartools/blob/main/docs/ai/mcp-setup.md
+- https://pypi.org/project/edgartools/
+- https://github.com/dgunning/edgartools/blob/main/docs/ai/mcp-tools.md
+- https://github.com/dgunning/edgartools/blob/main/pyproject.toml
+- https://github.com/dgunning/edgartools/blob/main/LICENSE.txt
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+setup guide, PyPI page, MCP tools reference, package metadata, and license for
+current install commands, tool names, SEC identity requirements, and transport
+options.
+
+## Features
+
+- Local stdio MCP server through `uvx --from "edgartools[ai]" edgartools-mcp`.
+- `EDGAR_IDENTITY` configuration for SEC automated access identification.
+- 13 documented tools organized around SEC research intent.
+- Company profile, financial, filing, and ownership lookup through `edgar_company`.
+- Company and filing search through `edgar_search`.
+- Company screening by industry, exchange, state, or SIC through `edgar_screen`.
+- Full-text filing search through `edgar_text_search`.
+- Recent filing monitoring through `edgar_monitor`.
+- Structured filing parsing and section extraction through `edgar_filing` and `edgar_read`.
+- Notes, trends, company comparison, ownership, fund, and proxy tools.
+- Optional Streamable HTTP transport for shared deployments.
+
+## Installation
+
+For Claude Code:
+
+```sh
+claude mcp add edgartools -- uvx --from "edgartools[ai]" edgartools-mcp
+```
+
+Set the SEC identity required for automated EDGAR access:
+
+```sh
+export EDGAR_IDENTITY="Your Name your.email@example.com"
+```
+
+For MCP clients that use JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "edgartools": {
+      "command": "uvx",
+      "args": ["--from", "edgartools[ai]", "edgartools-mcp"],
+      "env": {
+        "EDGAR_IDENTITY": "Your Name your.email@example.com"
+      }
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to summarize a company's latest 10-K, 10-Q, or 8-K with filing identifiers.
+- Search recent filings for cybersecurity, AI, restructuring, revenue recognition, or risk-factor language.
+- Pull a specific filing section such as MD&A, risk factors, financials, controls, legal proceedings, or proxy compensation.
+- Compare financial trends across companies or periods using XBRL-sourced data.
+- Monitor recent SEC filings for a form type, company, or event-driven research workflow.
+- Inspect insider transactions, institutional holdings, fund data, or proxy governance details.
+
+## Safety and Privacy
+
+SEC filings are public, but research intent is not. Treat prompts and tool calls
+as sensitive if they reveal portfolio targets, diligence questions, legal
+theories, competitive monitoring, or trading hypotheses. Keep `EDGAR_IDENTITY`
+out of committed files and use an approved automation identity.
+
+Do not let a model's filing summary become the final decision. Verify citations,
+accession numbers, section text, filing dates, and financial figures against the
+source filing before using results for investment, legal, accounting,
+compliance, governance, or public reporting work.
+
+## Duplicate Check
+
+Existing financial MCP entries cover hosted financial datasets, standardized
+market data, or curated provider databases such as Financial Datasets, Drillr,
+and Daloopa. This entry covers the separate local MIT-licensed edgartools Python
+library and MCP server for SEC EDGAR filings. No `dgunning/edgartools`,
+`edgartools-mcp`, or dedicated edgartools SEC MCP entry was found in
+`content/mcp`, `content/tools`, `content/guides`, `content/agents`, or
+`content/skills`.

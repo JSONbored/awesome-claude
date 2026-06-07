@@ -1,0 +1,212 @@
+---
+title: Paper Search MCP Server
+slug: paper-search-mcp-server
+category: mcp
+description: >-
+  Python MCP server and CLI for searching, deduplicating, downloading, and
+  reading academic papers across open and public sources such as arXiv, PubMed,
+  bioRxiv, Semantic Scholar, OpenAlex, CORE, Europe PMC, Zenodo, HAL, and more.
+cardDescription: >-
+  Search academic literature, resolve open-access PDFs, read paper text, and
+  use optional source-specific API keys through an MCP server or Claude Code skill.
+seoTitle: Paper Search MCP Server for Claude
+seoDescription: >-
+  Configure Paper Search MCP with Claude to search academic papers, download
+  open-access PDFs, extract text, deduplicate multi-source results, and use
+  optional API keys for academic sources.
+author: openags
+authorProfileUrl: "https://github.com/openags"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Paper Search MCP
+brandDomain: github.com
+repoUrl: "https://github.com/openags/paper-search-mcp"
+documentationUrl: "https://github.com/openags/paper-search-mcp/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/paper-search-mcp/json"
+installable: true
+installCommand: "uvx paper-search-mcp"
+usageSnippet: "Run `paper-search-mcp` with uvx or uv, configure optional source API keys, then ask Claude to search papers, resolve open-access downloads, or read extracted paper text."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "paper-search-mcp": {
+        "command": "uvx",
+        "args": ["paper-search-mcp"],
+        "env": {
+          "PAPER_SEARCH_MCP_UNPAYWALL_EMAIL": "YOUR_EMAIL",
+          "PAPER_SEARCH_MCP_SEMANTIC_SCHOLAR_API_KEY": "OPTIONAL_API_KEY",
+          "PAPER_SEARCH_MCP_CORE_API_KEY": "OPTIONAL_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  uv tool install paper-search-mcp
+  uv tool run paper-search-mcp
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer, with uv recommended for the documented no-install and persistent-install paths.
+  - Network access to public academic sources and repositories.
+  - Optional API keys or emails configured only for sources the user is authorized to access.
+  - A policy decision on whether download, read, optional Sci-Hub fallback, paid-platform skeleton connectors, and proxy-based Google Scholar discovery are allowed.
+  - Output directories and downloaded PDF retention reviewed for research workflows.
+safetyNotes:
+  - Prefer open-access and publisher-permitted sources. The README describes Sci-Hub as optional, unstable, jurisdiction-dependent, and user-responsibility-only.
+  - Download and read tools can retrieve PDFs and extract text; confirm copyright, license, institutional, and project-policy requirements before downloading or sharing papers.
+  - Optional source credentials, proxy URLs, and API keys can change access levels and rate limits; store them as secrets rather than in prompts or committed configs.
+  - Google Scholar, SSRN, CORE, OpenAIRE, BASE, and other sources may rate-limit, block, or return incomplete results depending on network conditions and provider policies.
+  - Paid or restricted connectors should stay disabled unless the user has valid credentials and rights to use those services.
+privacyNotes:
+  - Queries may reveal research topics, grant interests, product plans, biomedical topics, legal theories, security research, or competitive intelligence.
+  - Downloaded PDFs, extracted text, search results, DOI lists, API keys, proxy URLs, emails, and source-specific logs can contain sensitive research or credential data.
+  - MCP transcripts and model-provider logs may retain paper queries, abstracts, titles, authors, downloaded text, and notes outside library or institutional systems.
+  - Do not paste private API keys, proxy credentials, unpublished manuscripts, review assignments, patient-adjacent research details, or embargoed paper content into prompts.
+sourceUrls:
+  - "https://github.com/openags/paper-search-mcp"
+  - "https://github.com/openags/paper-search-mcp/blob/main/README.md"
+  - "https://github.com/openags/paper-search-mcp/blob/main/LICENSE"
+  - "https://github.com/openags/paper-search-mcp/blob/main/pyproject.toml"
+  - "https://github.com/openags/paper-search-mcp/blob/main/.env.example"
+  - "https://github.com/openags/paper-search-mcp/blob/main/Dockerfile"
+  - "https://github.com/openags/paper-search-mcp/blob/main/smithery.yaml"
+  - "https://github.com/openags/paper-search-mcp/blob/main/claude-code/SKILL.md"
+  - "https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/server.py"
+  - "https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/cli.py"
+  - "https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/config.py"
+  - "https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/paper.py"
+  - "https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/arxiv.py"
+  - "https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/pubmed.py"
+  - "https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/openalex.py"
+  - "https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/semantic.py"
+  - "https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/core.py"
+  - "https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/unpaywall.py"
+  - "https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/sci_hub.py"
+  - "https://pypi.org/pypi/paper-search-mcp/json"
+tags:
+  - research
+  - papers
+  - academia
+  - retrieval
+  - open-access
+keywords:
+  - Paper Search MCP
+  - academic papers MCP
+  - paper search Claude
+  - PubMed MCP
+  - Semantic Scholar MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Paper Search MCP Server is a Python MCP server and CLI for academic literature
+workflows. It can search papers, deduplicate results across sources, download
+open-access PDFs where available, and extract text so an MCP client can work
+with paper metadata and content.
+
+The project is broader than a single-source server: the README describes
+connectors for arXiv, PubMed, bioRxiv, medRxiv, Semantic Scholar, Crossref,
+OpenAlex, PubMed Central, CORE, Europe PMC, dblp, OpenAIRE, CiteSeerX, DOAJ,
+BASE, Zenodo, HAL, SSRN, Unpaywall, and optional restricted or paid-platform
+connectors. It also includes a Claude Code skill path for users who prefer a
+skill plus CLI workflow instead of an MCP server.
+
+## Source Review
+
+- https://github.com/openags/paper-search-mcp
+- https://github.com/openags/paper-search-mcp/blob/main/README.md
+- https://github.com/openags/paper-search-mcp/blob/main/LICENSE
+- https://github.com/openags/paper-search-mcp/blob/main/pyproject.toml
+- https://github.com/openags/paper-search-mcp/blob/main/.env.example
+- https://github.com/openags/paper-search-mcp/blob/main/Dockerfile
+- https://github.com/openags/paper-search-mcp/blob/main/smithery.yaml
+- https://github.com/openags/paper-search-mcp/blob/main/claude-code/SKILL.md
+- https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/server.py
+- https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/cli.py
+- https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/config.py
+- https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/paper.py
+- https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/arxiv.py
+- https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/pubmed.py
+- https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/openalex.py
+- https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/semantic.py
+- https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/core.py
+- https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/unpaywall.py
+- https://github.com/openags/paper-search-mcp/blob/main/paper_search_mcp/academic_platforms/sci_hub.py
+- https://pypi.org/pypi/paper-search-mcp/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, license, Python package metadata, environment example, Dockerfile,
+Smithery config, Claude Code skill, server and CLI modules, config model, paper
+model, representative connectors, and PyPI metadata for current installation,
+source support, and caveats.
+
+## Features
+
+- Search papers across multiple academic sources.
+- Deduplicate and standardize search results.
+- Download open-access PDFs through source-native and fallback paths.
+- Extract readable paper text for MCP workflows.
+- Use optional API keys for Unpaywall, CORE, Semantic Scholar, DOAJ, Zenodo, and other supported services.
+- Use a Claude Code skill plus CLI workflow as an alternative to MCP configuration.
+- Run through uvx, uv tool install, pip, Smithery, Docker, or source checkout.
+- Keep optional restricted or unstable connectors separate from the open-access-first path.
+
+## Installation
+
+Run the MCP server with uvx:
+
+```bash
+uvx paper-search-mcp
+```
+
+For Claude Desktop-style JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "paper-search-mcp": {
+      "command": "uvx",
+      "args": ["paper-search-mcp"],
+      "env": {
+        "PAPER_SEARCH_MCP_UNPAYWALL_EMAIL": "YOUR_EMAIL",
+        "PAPER_SEARCH_MCP_SEMANTIC_SCHOLAR_API_KEY": "OPTIONAL_API_KEY",
+        "PAPER_SEARCH_MCP_CORE_API_KEY": "OPTIONAL_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Leave optional keys unset unless you need the corresponding provider and have
+permission to use it.
+
+## Use Cases
+
+- Search recent papers across several academic indexes.
+- Find open-access PDFs for a DOI or title.
+- Read paper text into a literature-review workflow.
+- Compare arXiv, PubMed, Semantic Scholar, Crossref, and OpenAlex metadata.
+- Use Claude Code skills to trigger paper search without MCP server setup.
+- Build a free-first research assistant for public academic sources.
+- Keep restricted connectors disabled unless policy and credentials allow them.
+
+## Safety and Privacy
+
+Paper search and download workflows can run into copyright, license, rate-limit,
+and institutional-access constraints. Prefer open-access sources, keep optional
+restricted connectors disabled by default, and treat Sci-Hub as a user-enabled
+fallback with jurisdiction and policy risk rather than a recommended path.
+
+Protect source credentials and research topics. Queries, DOI lists, downloaded
+PDFs, extracted text, abstracts, API keys, proxy URLs, and emails can reveal
+private research interests or restricted content. Keep sensitive literature
+review work out of shared prompts and logs unless approved.
+
+## Duplicate Check
+
+No `openags/paper-search-mcp` entry, Paper Search MCP entry, or matching source
+URL was found in `content/mcp`. The existing arXiv MCP entry covers a narrower
+single-source arXiv server.

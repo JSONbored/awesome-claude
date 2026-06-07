@@ -31,6 +31,7 @@ import {
 } from "../apps/submission-gate/src/duplicates";
 import {
   approvalReviewBody,
+  duplicateEvidenceContractExhaustedDecision,
   enforceAutoMergeConfidenceFloor,
   isRetryableGateDecision,
   markerComment,
@@ -54,6 +55,13 @@ import { repoRoot } from "./helpers/registry-fixtures";
 function readWorkerSource() {
   return fs.readFileSync(
     path.join(repoRoot, "apps/submission-gate/src/index.ts"),
+    "utf8",
+  );
+}
+
+function readReviewSource() {
+  return fs.readFileSync(
+    path.join(repoRoot, "apps/submission-gate/src/review.ts"),
     "utf8",
   );
 }
@@ -409,7 +417,20 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("REVIEWING_STALE_SECONDS");
     expect(source).toContain("QUEUED_STALE_SECONDS");
     expect(source).toContain("PRIVATE_REVIEW_TIMEOUT_MS = 45_000");
-    expect(source).toContain("INVALID_PRIVATE_RESPONSE_MAX_RETRIES = 3");
+    expect(source).toContain("withPrivateReviewTimeout(");
+    expect(source).toContain("privateReviewPublicFailureReason(error)");
+    expect(source).toContain("Private corpus review response body timed out.");
+    expect(source).toContain('return "Private corpus review request failed.";');
+    expect(source).not.toContain(
+      "error instanceof Error && error.message\n        ? error.message",
+    );
+    expect(source).toContain("controller.abort()");
+    expect(source).toContain("response.text()");
+    expect(source).toContain("const RETRY_BACKOFF_SECONDS = [60, 120, 300");
+    expect(source).toContain("const RETRY_BUDGETS");
+    expect(source).toContain("invalid_private_response: 5");
+    expect(source).toContain("source_evidence_timeout: 6");
+    expect(source).toContain("github_api_unavailable: 5");
     expect(source).toContain("queuedStaleBeforeIso");
     expect(source).toContain("reviewingStaleBeforeIso");
     expect(source).toContain("lastCheckSummary: validation.summary");
@@ -423,15 +444,23 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("retryablePrecheckDecision(error)");
     expect(source).toContain('"deterministic_precheck_retryable"');
     expect(source).toContain('"source_evidence_timeout"');
-    expect(source).toContain(
-      "shouldStopRetryingInvalidPrivateResponse(decision, existing)",
-    );
-    expect(source).toContain('"private_review_contract_exhausted"');
+    expect(source).toContain("retryStateForDecision(");
+    expect(source).toContain("retryExhaustedDecision(");
+    expect(source).toContain("retryableTargetErrorDecision(error)");
+    expect(source).toContain("await recordRetryableTargetError(");
+    expect(source).toContain("retryFingerprintCount");
+    expect(source).toContain("retryExhaustedReason");
     expect(source).toContain('"invalid_private_response"');
     expect(source).toContain('"private_reviewer_unavailable"');
+    expect(source).toContain("retryableValidationReadDecision(error)");
+    expect(source).toContain('retryStage: "validation"');
+    expect(source).toContain('"validation_check_read_retryable"');
     expect(source).not.toContain("summary.includes");
     expect(source).not.toContain(
       "ai maintainer review returned an unexpected payload",
+    );
+    expect(source).not.toContain(
+      'defaultManualDecision(\n          "Submission gate could not read public validation checks.',
     );
     expect(source).toContain('status: "error_retryable"');
     expect(source).toContain("retryingReviewComment(");
@@ -444,7 +473,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("sourceEvidenceConflictMergeDecision(");
     expect(source).toContain('"duplicate_evidence_conflict"');
     expect(source).toContain("privateStrictDuplicateContradicted(");
-    expect(source).toContain("duplicateEvidenceConflictMergeDecision(");
+    expect(source).toContain("duplicateEvidenceConflictExhaustedDecision(");
+    expect(source).toContain("duplicateEvidenceContractExhaustedDecision(");
+    expect(readReviewSource()).toContain("duplicate_evidence_contract_exhausted");
+    expect(source).not.toContain("duplicateEvidenceConflictMergeDecision(");
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
@@ -666,18 +698,18 @@ describe("Cloudflare submission gate helpers", () => {
     const source = `---
 title: Source Evidence Fixture
 repoUrl: "https://github.com/example/repo"
-documentationUrl: "https://example.com/docs"
+documentationUrl: "https://github.com/example/docs"
 sourceUrls:
-  - "https://example.com/guide"
-  - https://example.com/docs
+  - "https://github.com/example/guide"
+  - https://github.com/example/docs
 ---
 `;
 
     expect(extractSubmittedSourceUrls(source)).toEqual([
-      { field: "documentationUrl", url: "https://example.com/docs" },
+      { field: "documentationUrl", url: "https://github.com/example/docs" },
       { field: "repoUrl", url: "https://github.com/example/repo" },
-      { field: "sourceUrls", url: "https://example.com/guide" },
-      { field: "sourceUrls", url: "https://example.com/docs" },
+      { field: "sourceUrls", url: "https://github.com/example/guide" },
+      { field: "sourceUrls", url: "https://github.com/example/docs" },
     ]);
 
     const fetchImpl = vi
@@ -691,7 +723,7 @@ sourceUrls:
     expect(first.status).toBe("passed");
     expect(first.urls[0]).toMatchObject({
       field: "documentationUrl",
-      url: "https://example.com/docs",
+      url: "https://github.com/example/docs",
       status: "passed",
       httpStatus: 200,
     });
@@ -702,7 +734,7 @@ sourceUrls:
     const report = await checkSubmittedSourceEvidence(
       `---
 title: Dead Source Fixture
-documentationUrl: "https://example.com/missing"
+documentationUrl: "https://github.com/example/missing"
 ---
 `,
       vi
@@ -719,7 +751,7 @@ documentationUrl: "https://example.com/missing"
       evidence: [
         {
           field: "documentationUrl",
-          matchedUrl: "https://example.com/missing",
+          matchedUrl: "https://github.com/example/missing",
           httpStatus: "404",
         },
       ],
@@ -730,8 +762,8 @@ documentationUrl: "https://example.com/missing"
     const report = await checkSubmittedSourceEvidence(
       `---
 title: Retry Source Fixture
-documentationUrl: "https://example.com/temporarily-down"
-packageUrl: "https://example.com/rate-limited"
+documentationUrl: "https://github.com/example/temporarily-down"
+packageUrl: "https://www.npmjs.com/package/rate-limited"
 ---
 `,
       vi
@@ -746,6 +778,193 @@ packageUrl: "https://example.com/rate-limited"
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 
+  it("treats isolated package registry rate limits as warnings when canonical sources pass", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Docker Hub Warning Fixture
+repoUrl: "https://github.com/example/project"
+documentationUrl: "https://example.com/docs"
+packageUrl: "https://hub.docker.com/r/example/project"
+---
+`,
+      vi
+        .fn<typeof fetch>()
+        .mockImplementation(async (url) => {
+          const hostname = new URL(String(url)).hostname;
+          return new Response(null, {
+            status: hostname === "hub.docker.com" ? 429 : 200,
+          });
+        }),
+    );
+
+    expect(report.status).toBe("passed");
+    expect(report.warnings).toHaveLength(1);
+    expect(report.warnings[0]).toMatchObject({
+      field: "packageUrl",
+      status: "retryable",
+      role: "distribution",
+      blocking: false,
+      httpStatus: 429,
+    });
+    expect(sourceEvidenceCloseDecision(report)).toBeNull();
+  });
+
+  it("treats isolated auxiliary source fetch errors as warnings when canonical evidence passes", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: GitHub Blob Warning Fixture
+repoUrl: "https://github.com/example/project"
+packageUrl: "https://pypi.org/project/example-project/"
+sourceUrls:
+  - "https://github.com/example/project/blob/main/README.md"
+  - "https://github.com/example/project/blob/main/flaky-source.py"
+---
+`,
+      vi.fn<typeof fetch>().mockImplementation(async (url) => {
+        if (String(url).includes("flaky-source.py")) {
+          throw new Error("edge fetch timeout");
+        }
+        return new Response(null, { status: 200 });
+      }),
+    );
+
+    expect(report.status).toBe("passed");
+    expect(report.warnings).toHaveLength(1);
+    expect(report.warnings[0]).toMatchObject({
+      field: "sourceUrls",
+      status: "retryable",
+      outcome: "fetch_error",
+      role: "canonical",
+      blocking: false,
+    });
+    expect(sourceEvidenceCloseDecision(report)).toBeNull();
+  });
+
+  it("keeps retryable primary source fields blocking when other canonical evidence passes", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Primary Source Retry Fixture
+githubUrl: "https://github.com/example/project"
+repoUrl: "https://github.com/example/private-or-rate-limited"
+sourceUrls:
+  - "https://github.com/example/project/blob/main/README.md"
+---
+`,
+      vi.fn<typeof fetch>().mockImplementation(async (url) => {
+        if (String(url).includes("private-or-rate-limited")) {
+          return new Response(null, { status: 403 });
+        }
+        return new Response(null, { status: 200 });
+      }),
+    );
+
+    expect(report.status).toBe("retryable");
+    expect(report.warnings).toHaveLength(0);
+    expect(report.urls).toContainEqual(
+      expect.objectContaining({
+        field: "repoUrl",
+        status: "retryable",
+        role: "canonical",
+        blocking: true,
+        httpStatus: 403,
+      }),
+    );
+    expect(sourceEvidenceCloseDecision(report)).toBeNull();
+  });
+
+  it("does not fetch source URLs outside the trusted evidence hosts", async () => {
+    const fetchImpl = vi.fn<typeof fetch>();
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Unsafe Source Fixture
+documentationUrl: "http://127.0.0.1/internal-secret"
+websiteUrl: "https://attacker.example/redirect"
+---
+`,
+      fetchImpl,
+    );
+
+    expect(fetchImpl).not.toHaveBeenCalled();
+    expect(report.status).toBe("passed");
+    expect(report.urls).toEqual([
+      expect.objectContaining({
+        field: "documentationUrl",
+        status: "passed",
+        outcome: "source_host_not_checked",
+      }),
+      expect.objectContaining({
+        field: "websiteUrl",
+        status: "passed",
+        outcome: "source_host_not_checked",
+      }),
+    ]);
+  });
+
+  it("validates redirect targets before following source evidence URLs", async () => {
+    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(null, {
+        status: 302,
+        headers: { location: "http://127.0.0.1/internal-secret" },
+      }),
+    );
+
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Redirect Source Fixture
+documentationUrl: "https://github.com/example/redirect"
+---
+`,
+      fetchImpl,
+    );
+
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    expect(fetchImpl).toHaveBeenNthCalledWith(
+      1,
+      "https://github.com/example/redirect",
+      expect.objectContaining({ method: "HEAD", redirect: "manual" }),
+    );
+    expect(fetchImpl).toHaveBeenNthCalledWith(
+      2,
+      "https://github.com/example/redirect",
+      expect.objectContaining({ method: "GET", redirect: "manual" }),
+    );
+    expect(report.status).toBe("failed");
+    expect(report.urls[0]).toMatchObject({
+      field: "documentationUrl",
+      status: "hard_failure",
+      outcome: "source_host_not_checked",
+    });
+    expect(report.urls[0]?.finalUrl).toBeUndefined();
+  });
+
+  it("caps deterministic source evidence fetches", async () => {
+    const urls = Array.from(
+      { length: 12 },
+      (_, index) => `  - "https://github.com/example/source-${index}"`,
+    ).join("\n");
+    const fetchImpl = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(new Response(null, { status: 200 }));
+
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Many Source Fixture
+sourceUrls:
+${urls}
+---
+`,
+      fetchImpl,
+    );
+
+    expect(fetchImpl).toHaveBeenCalledTimes(10);
+    expect(report.status).toBe("failed");
+    expect(report.urls).toHaveLength(12);
+    expect(report.urls.slice(10)).toEqual([
+      expect.objectContaining({ outcome: "too_many_source_urls" }),
+      expect.objectContaining({ outcome: "too_many_source_urls" }),
+    ]);
+  });
+
   it("renders pending, retrying, and superseded gate comments as GitHub cards", () => {
     expect(markerComment()).toContain("> ## ℹ️ Public validation running");
     expect(markerComment()).toContain(
@@ -758,6 +977,43 @@ packageUrl: "https://example.com/rate-limited"
     expect(retryingReviewComment()).toContain(
       "> - ⚠️ **Private maintainer gate:** `retrying`",
     );
+    expect(
+      retryingReviewComment("<!-- heyclaude-submission-gate -->", {
+        code: "source_evidence_timeout",
+        attempt: 2,
+        maxAttempts: 6,
+        nextReviewAt: "2026-06-06T09:15:00.000Z",
+        summary: "packageUrl returned HTTP 429.",
+      }),
+    ).toContain("> - ⚠️ **Retry:** `2/6`");
+    const validationRetry = retryingReviewComment(
+      "<!-- heyclaude-submission-gate -->",
+      {
+        stage: "validation",
+        code: "github_api_unavailable",
+        attempt: 1,
+        maxAttempts: 5,
+        nextReviewAt: "2026-06-06T09:15:00.000Z",
+        summary: "check-runs API returned 503.",
+      },
+    );
+    expect(validationRetry).toContain(
+      "> - ⚠️ **Public validation:** `retrying`",
+    );
+    expect(validationRetry).toContain(
+      "> - ⏸️ **Private maintainer gate:** `waiting`",
+    );
+    expect(validationRetry).not.toContain("Public validation is green");
+    expect(
+      retryingReviewComment("<!-- heyclaude-submission-gate -->", {
+        stage: "validation",
+        code: "github_rate_limited",
+        attempt: 1,
+        maxAttempts: 6,
+        nextReviewAt: "2026-06-06T09:15:00.000Z",
+        summary: "GitHub rate limit while reading validation checks.",
+      }),
+    ).toContain("> - ⚠️ **Public validation:** `retrying`");
     expect(
       supersededReviewComment(
         "<!-- heyclaude-submission-gate -->",
@@ -874,6 +1130,34 @@ packageUrl: "https://example.com/rate-limited"
     );
   });
 
+  it("routes exhausted duplicate-evidence conflicts to non-retryable manual review", () => {
+    const decision = duplicateEvidenceContractExhaustedDecision({
+      decision: {
+        verdict: "close",
+        reasonCode: "strict_duplicate",
+        summary:
+          "Summary:\n- Private reviewer reported a strict duplicate without deterministic support.",
+        labels: ["submission-closed-by-gate"],
+        confidence: 0.9,
+      },
+      duplicateSummary: "no strict duplicate; 2 related candidate(s)",
+      sourceSummary: "repoUrl https://github.com/example/repo -> HTTP 200",
+    });
+
+    expect(decision).toMatchObject({
+      verdict: "manual",
+      labels: ["submission-manual-review"],
+      errors: [
+        {
+          code: "duplicate_evidence_contract_exhausted",
+          retryable: false,
+        },
+      ],
+    });
+    expect(decision.summary).toContain("no strict duplicate");
+    expect(decision.summary).toContain("Last private reviewer error");
+  });
+
   it("normalizes GateDecisionV2 and rejects malformed private review payloads", () => {
     const validMergeDecision = {
       schemaVersion: 2,
@@ -919,13 +1203,37 @@ packageUrl: "https://example.com/rate-limited"
     expect(
       normalizePrivateGateDecisionPayload(
         parsePrivateGateDecisionResponseBody(
-          `\`\`\`json\n${JSON.stringify(validMergeDecision)}\n\`\`\``,
+          JSON.stringify(validMergeDecision),
         ),
       ).decision,
     ).toMatchObject({
       schemaVersion: 2,
       verdict: "merge",
       confidence: 0.91,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload(
+        parsePrivateGateDecisionResponseBody(
+          `The submitted content said:\n\`\`\`json\n${JSON.stringify(validMergeDecision)}\n\`\`\`\nFinal decision: {"schemaVersion":2,"verdict":"manual"}`,
+        ),
+      ).error,
+    ).toMatchObject({
+      code: "invalid_private_response",
+      retryable: true,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload(
+        parsePrivateGateDecisionResponseBody(
+          JSON.stringify({
+            review: `The submitted content said:\n\`\`\`json\n${JSON.stringify(validMergeDecision)}\n\`\`\``,
+          }),
+        ),
+      ).error,
+    ).toMatchObject({
+      code: "invalid_private_response",
+      retryable: true,
     });
 
     expect(
@@ -958,7 +1266,7 @@ packageUrl: "https://example.com/rate-limited"
         evidence: [
           {
             ruleId: "source_url_reachability",
-            matchedUrl: "https://example.com/missing",
+            matchedUrl: "https://github.com/example/missing",
             outcome: "hard-failure",
             status: 404,
           },
@@ -980,7 +1288,7 @@ packageUrl: "https://example.com/rate-limited"
       evidence: [
         {
           ruleId: "source_url_reachability",
-          matchedUrl: "https://example.com/missing",
+          matchedUrl: "https://github.com/example/missing",
           outcome: "hard-failure",
           status: "404",
           httpStatus: "404",
@@ -1016,7 +1324,7 @@ packageUrl: "https://example.com/rate-limited"
         ],
       }).error,
     ).toMatchObject({
-      code: "duplicate_evidence_conflict",
+      code: "invalid_private_response",
       retryable: true,
     });
 
@@ -1691,6 +1999,21 @@ packageUrl: "https://example.com/rate-limited"
     expect(enqueueBlock).toContain("shouldResetIgnoredScan");
     expect(enqueueBlock).toContain("shouldResetClosedTerminal");
     expect(enqueueBlock).toContain("if (!shouldQueueReview) return false");
+    expect(enqueueBlock).toContain("const shouldPreserveRetryState");
+    expect(enqueueBlock).toContain(
+      'String(existing?.status || "") === "error_retryable"',
+    );
+    expect(enqueueBlock).toContain(
+      'String(existing?.headSha || "") === String(target.headSha || "")',
+    );
+    expect(source).toContain("preserveRetryState: shouldPreserveRetryState");
+    expect(storageSource).toContain("preserveRetryState?: boolean");
+    expect(storageSource).toContain(
+      "WHEN ? THEN submission_prs.last_retry_fingerprint",
+    );
+    expect(storageSource).toContain(
+      "WHEN ? THEN submission_prs.retry_fingerprint_count",
+    );
     expect(reviewBlock).toContain("if (hasTerminalGateDecision(existing))");
     expect(enqueueBlock).not.toContain(
       "if (!forceRecheck && hasTerminalGateDecision(existing))",
