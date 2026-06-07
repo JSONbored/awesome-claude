@@ -1,0 +1,217 @@
+---
+title: freee MCP Server
+slug: freee-mcp-server
+category: mcp
+description: >-
+  Official freee MCP server for connecting Claude to freee accounting, HR,
+  invoices, project time, sales, IT management, and e-signature APIs.
+cardDescription: >-
+  Use freee's official Remote MCP or local npm server for OAuth-backed business
+  operations across accounting, HR, invoices, sales, IT, and signing workflows.
+seoTitle: freee MCP Server for Claude
+seoDescription: >-
+  Configure freee MCP Server with Claude to call freee accounting, HR, invoice,
+  project, sales, IT management, and freee Sign APIs with OAuth and schema
+  validation.
+author: freee
+authorProfileUrl: "https://github.com/freee"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: freee MCP Server
+brandDomain: freee.co.jp
+repoUrl: "https://github.com/freee/freee-mcp"
+documentationUrl: "https://raw.githubusercontent.com/freee/freee-mcp/main/README.md"
+packageUrl: "https://registry.npmjs.org/freee-mcp"
+installable: true
+installCommand: "npx freee-mcp configure"
+usageSnippet: "Use the official Remote MCP endpoint at `https://mcp.freee.co.jp/mcp`, or run `npx freee-mcp configure` for a local OAuth-backed setup."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "freee": {
+        "url": "https://mcp.freee.co.jp/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  npx freee-mcp configure
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - A freee account and permission to access the intended company, office, or organization data.
+  - Review of freee API scopes for accounting, HR, invoices, project management, sales, IT management, and freee Sign.
+  - For local setup, a registered freee application with OAuth client credentials and an approved callback URL.
+  - Review of which company ID or office should be active before allowing API calls.
+  - Optional installation of the bundled freee API skill references and recipes for safer endpoint selection.
+safetyNotes:
+  - "freee MCP can perform GET, POST, PUT, PATCH, and DELETE requests against supported freee APIs after OAuth authorization."
+  - "Write and delete operations can create, update, or remove accounting deals, expense applications, invoices, quotations, payment requests, HR records, attendance data, project time, sales records, IT assets, and e-signature documents."
+  - "The server validates API paths against OpenAPI schemas and checks company ID consistency, but users must still confirm business, accounting, payroll, and legal actions before execution."
+  - "OAuth tokens, client secrets, selected company IDs, and request payloads should be protected in configs, local storage, logs, and screenshots."
+  - "Use the official Remote MCP URL only; do not connect clients to unofficial endpoints that claim to be freee."
+privacyNotes:
+  - "Tool calls can expose company IDs, user details, accounting transactions, bank and wallet metadata, invoices, receipts, expense applications, payroll and HR records, attendance data, employee profiles, project workloads, customer and partner data, IT assets, and e-signature documents."
+  - "freee receives API requests, OAuth tokens, request parameters, uploaded files, and business data according to the user's freee account, API scopes, and selected company."
+  - "Local mode stores OAuth configuration and tokens on the user's machine; remote mode authenticates through freee's hosted MCP flow."
+  - "Generated reports, request errors, API responses, and skill references can enter MCP client context and model logs."
+disclosure: >-
+  Apache-2.0 official freee MCP server published as the `freee-mcp` npm
+  package, with Remote MCP support and bundled API skill references. This entry
+  is distinct from generic billing or finance entries because it covers freee's
+  accounting, HR, invoices, project, sales, IT management, and freee Sign APIs.
+sourceUrls:
+  - "https://raw.githubusercontent.com/freee/freee-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/freee/freee-mcp/main/package.json"
+  - "https://raw.githubusercontent.com/freee/freee-mcp/main/mcp.json"
+  - "https://raw.githubusercontent.com/freee/freee-mcp/main/src/mcp/tools.ts"
+  - "https://raw.githubusercontent.com/freee/freee-mcp/main/src/api/client.ts"
+  - "https://raw.githubusercontent.com/freee/freee-mcp/main/src/auth/oauth.ts"
+  - "https://raw.githubusercontent.com/freee/freee-mcp/main/skills/freee-api-skill/SKILL.md"
+tags:
+  - accounting
+  - hr
+  - invoices
+  - oauth
+  - business
+keywords:
+  - freee MCP Server
+  - freee-mcp
+  - freee accounting MCP
+  - freee invoice MCP
+  - freee HR MCP
+  - freee Sign MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+freee MCP Server is freee's official MCP integration for AI agents. It connects
+Claude and other MCP clients to freee accounting, HR, invoices, project time,
+sales, IT management, and freee Sign APIs through schema-validated API tools and
+OAuth-backed authentication.
+
+Use it when a business workflow needs Claude to inspect or operate on freee
+data with the official Remote MCP endpoint or a local npm server. Pair it with
+the bundled freee API skill references when the assistant needs endpoint
+details, parameter guidance, recipes, or troubleshooting notes.
+
+## Source Review
+
+- https://github.com/freee/freee-mcp
+- https://raw.githubusercontent.com/freee/freee-mcp/main/README.md
+- https://registry.npmjs.org/freee-mcp
+- https://raw.githubusercontent.com/freee/freee-mcp/main/LICENSE
+- https://raw.githubusercontent.com/freee/freee-mcp/main/package.json
+- https://raw.githubusercontent.com/freee/freee-mcp/main/mcp.json
+- https://raw.githubusercontent.com/freee/freee-mcp/main/src/mcp/tools.ts
+- https://raw.githubusercontent.com/freee/freee-mcp/main/src/api/client.ts
+- https://raw.githubusercontent.com/freee/freee-mcp/main/src/auth/oauth.ts
+- https://raw.githubusercontent.com/freee/freee-mcp/main/skills/freee-api-skill/SKILL.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, package metadata, MCP config, MCP tool
+registration, API client, OAuth implementation, and bundled skill metadata for
+current setup and operating details.
+
+## Features
+
+- Connect to freee's official Remote MCP endpoint.
+- Run a local stdio server through the `freee-mcp` npm package.
+- Use OAuth 2.0 with PKCE and automatic token refresh.
+- Inspect authentication status and clear local authentication.
+- List companies, switch the active company, and retrieve the current user.
+- Call schema-validated freee API paths through GET, POST, PUT, PATCH, and
+  DELETE tools.
+- List available API paths for supported services.
+- Upload files for supported local-mode workflows.
+- Work with freee accounting data such as deals, journals, invoices, receipts,
+  payments, transfers, taxes, partners, sections, and reports.
+- Work with freee HR records such as employees, attendance, payroll statements,
+  paid leave, overtime, and year-end adjustment references.
+- Work with invoice, project management, sales management, IT management, and
+  freee Sign references through the bundled skill content.
+- Use company ID consistency checks to reduce cross-company request mistakes.
+
+## Installation
+
+For the official Remote MCP path, add the freee endpoint in clients that support
+remote MCP connectors:
+
+```json
+{
+  "mcpServers": {
+    "freee": {
+      "url": "https://mcp.freee.co.jp/mcp"
+    }
+  }
+}
+```
+
+For local setup, configure OAuth and the selected company:
+
+```bash
+npx freee-mcp configure
+```
+
+Then add the local server:
+
+```json
+{
+  "mcpServers": {
+    "freee": {
+      "command": "npx",
+      "args": ["freee-mcp"]
+    }
+  }
+}
+```
+
+freee Sign uses its own local command:
+
+```json
+{
+  "mcpServers": {
+    "freee-sign": {
+      "command": "npx",
+      "args": ["--package=freee-mcp", "--", "freee-sign-mcp"]
+    }
+  }
+}
+```
+
+## Use Cases
+
+- Retrieve and summarize accounting transactions, invoices, receipts, and trial
+  balance data.
+- Create or update invoices, expense applications, deals, payment requests, or
+  manual journals after explicit user confirmation.
+- Review HR attendance, employee, payroll, and leave data for an authorized
+  company.
+- Inspect project workloads, sales orders, IT assets, SaaS account records, or
+  freee Sign document metadata.
+- Use bundled recipes and references to choose API paths and parameters before
+  executing a business operation.
+- Check the active company and current user before running company-scoped API
+  calls.
+
+## Safety and Privacy
+
+freee MCP can operate on sensitive business systems. Treat every write or delete
+operation as a real accounting, HR, sales, IT, or e-signature action. Confirm
+the active company, service, API path, request body, and intended side effects
+before allowing POST, PUT, PATCH, DELETE, file upload, or e-signature calls.
+
+The data surface includes financial transactions, invoices, payroll, employees,
+attendance, customer and partner records, receipts, projects, IT assets, and
+legal documents. Keep OAuth tokens and client secrets private, avoid unofficial
+Remote MCP endpoints, and assume API responses can enter the MCP client and
+model context.
+
+## Duplicate Notes
+
+Existing catalog entries cover billing, payments, and finance tools. This entry
+covers the official `freee/freee-mcp` repository and `freee-mcp` package for
+freee's accounting, HR, invoice, project, sales, IT management, and freee Sign
+API workflows.

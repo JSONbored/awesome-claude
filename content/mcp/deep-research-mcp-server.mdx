@@ -25,8 +25,8 @@ documentationUrl: "https://github.com/u14app/deep-research#model-context-protoco
 websiteUrl: "https://research.u14.app"
 packageUrl: "https://hub.docker.com/r/xiangfa/deep-research"
 installable: true
-installCommand: "docker run -d --name deep-research -p 3333:3000 xiangfa/deep-research"
-usageSnippet: "Deploy Deep Research, configure the MCP model and search environment variables, then connect your MCP client to the `/api/mcp` endpoint with a longer timeout."
+installCommand: "docker run -d --name deep-research -p 127.0.0.1:3333:3000 -e ACCESS_PASSWORD=YOUR_ACCESS_PASSWORD xiangfa/deep-research"
+usageSnippet: "Deploy Deep Research with localhost-only port binding and ACCESS_PASSWORD set, configure the MCP model and search environment variables, then connect your MCP client to the `/api/mcp` endpoint with a longer timeout."
 copySnippet: |-
   {
     "mcpServers": {
@@ -56,14 +56,14 @@ configSnippet: |-
 estimatedSetupTime: 25 minutes
 difficulty: advanced
 prerequisites:
-  - Deployed Deep Research instance on Docker, Vercel, Cloudflare Pages, or another supported host.
+  - Deployed Deep Research instance on Docker, Vercel, Cloudflare Pages, or another supported host with `ACCESS_PASSWORD` or equivalent access controls configured.
   - LLM provider credentials for the configured thinking and task models.
   - Search provider credentials when using Tavily, Firecrawl, Exa, Bocha, Brave, Searxng, or another non-model search path.
   - MCP client with Streamable HTTP or SSE transport support and timeout settings long enough for research runs.
 safetyNotes:
   - Deep Research can make repeated model and search-provider calls, so set budgets, rate limits, and provider quotas before exposing it to broad agent workflows.
   - Generated reports can contain stale, incomplete, or misinterpreted sources; require citation review before using output in legal, medical, financial, security, or customer-facing decisions.
-  - Protect public deployments with an access password or equivalent gateway controls before enabling MCP access.
+  - Bind Docker deployments to localhost unless a trusted reverse proxy or firewall is in front of the service, and set `ACCESS_PASSWORD` or equivalent gateway controls before enabling MCP access.
   - Uploaded documents and local knowledge bases should be reviewed for copyright, sensitive data, and permission to process before research begins.
 privacyNotes:
   - Research prompts, uploaded files, generated reports, search queries, citations, model inputs, model outputs, provider API keys, access passwords, and deployment logs can contain sensitive data.
@@ -131,9 +131,10 @@ provider options, search provider options, and transport support.
 
 ## Installation
 
-Deploy Deep Research first, configure the MCP environment variables for model
-and search provider behavior, and then point your MCP client at the deployed
-MCP endpoint:
+Deploy Deep Research first, bind local Docker deployments to localhost, set
+`ACCESS_PASSWORD` or equivalent access controls, configure the MCP environment
+variables for model and search provider behavior, and then point your MCP client
+at the deployed MCP endpoint:
 
 ```json
 {

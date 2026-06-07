@@ -1,0 +1,175 @@
+---
+title: jscpd MCP Server
+slug: jscpd-mcp-server
+category: mcp
+description: >-
+  Copy-paste detection MCP server that scans a codebase and lets AI assistants
+  check snippets, inspect duplication statistics, and review current-directory
+  duplication through jscpd's detection engine.
+cardDescription: >-
+  Run `jscpd-server` beside a project to expose streamable HTTP MCP tools for
+  checking code duplication, retrieving project statistics, and detecting copy
+  paste across more than 225 programming languages and document formats.
+seoTitle: jscpd MCP Server for Claude
+seoDescription: >-
+  Configure jscpd MCP with Claude and other MCP clients to detect duplicated
+  source code, check snippets against a scanned project, inspect duplication
+  statistics, and use AI-ready copy-paste detection workflows.
+author: Andrey Kucherenko
+authorProfileUrl: "https://github.com/kucherenko"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: jscpd
+brandDomain: jscpd.dev
+repoUrl: "https://github.com/kucherenko/jscpd"
+documentationUrl: "https://github.com/kucherenko/jscpd/blob/master/apps/jscpd-server/README.md"
+packageUrl: "https://registry.npmjs.org/jscpd-server"
+installable: true
+installCommand: "npm install -g jscpd-server && jscpd-server PROJECT_DIR"
+usageSnippet: "Install `jscpd-server`, start it against the project directory you want to scan, then point your MCP client at the local server's `/mcp` endpoint."
+copySnippet: |-
+  npm install -g jscpd-server
+  jscpd-server PROJECT_DIR
+configSnippet: |-
+  {
+    "mcpServers": {
+      "jscpd": {
+        "type": "streamable-http",
+        "url": "LOCAL_JSCPD_SERVER_MCP_URL"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js and npm available for installing `jscpd-server`.
+  - A project directory you are authorized to scan for code duplication.
+  - MCP client with Streamable HTTP support.
+  - Port, host, and store settings chosen before exposing the server outside local development.
+  - >-
+    `.jscpd.json`, ignore patterns, gitignore behavior, and min-token/min-line
+    thresholds reviewed for the target codebase.
+safetyNotes:
+  - jscpd-server scans the configured project directory on startup and can compare submitted snippets against the scanned codebase.
+  - The MCP server exposes duplication checks and statistics over an HTTP server that currently does not require authentication.
+  - Bind the server to local interfaces for personal workflows and avoid exposing scanned proprietary codebases to untrusted networks.
+  - Persistent stores such as LevelDB may retain codebase token/index data between runs.
+  - Snippet checks can reveal copied code fragments, file paths, line ranges, and duplication percentages to the MCP client and model.
+privacyNotes:
+  - Source paths, snippets, duplicated fragments, clone locations, statistics, file formats, and project structure may be exposed through MCP tool results.
+  - Codebases may contain proprietary logic, credentials, customer identifiers, comments, internal APIs, security-sensitive code, or generated files.
+  - Reports and server logs can retain duplication evidence and scanned project metadata.
+  - Tune ignore rules before scanning vendored dependencies, generated files, test fixtures, secrets, or third-party code you do not want in model context.
+sourceUrls:
+  - "https://github.com/kucherenko/jscpd"
+  - "https://github.com/kucherenko/jscpd/blob/master/README.md"
+  - "https://github.com/kucherenko/jscpd/tree/master/apps/jscpd-server"
+  - "https://github.com/kucherenko/jscpd/blob/master/apps/jscpd-server/README.md"
+  - "https://github.com/kucherenko/jscpd/blob/master/apps/jscpd-server/package.json"
+  - "https://registry.npmjs.org/jscpd-server"
+  - "https://registry.npmjs.org/jscpd"
+tags:
+  - code-quality
+  - duplication
+  - static-analysis
+  - streamable-http
+  - refactoring
+keywords:
+  - jscpd MCP
+  - jscpd-server MCP
+  - copy paste detector MCP
+  - code duplication MCP
+  - duplicate code Claude MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+jscpd MCP Server exposes copy-paste detection to AI assistants through the
+`jscpd-server` package. The server scans a codebase, then provides MCP tools for
+checking snippets against that codebase, retrieving duplication statistics, and
+checking the current directory.
+
+The MCP server is useful for refactoring workflows where Claude or another
+agent needs to determine whether new or selected code duplicates existing
+patterns before suggesting an extraction, consolidation, or cleanup.
+
+## Source Review
+
+- https://github.com/kucherenko/jscpd
+- https://github.com/kucherenko/jscpd/blob/master/README.md
+- https://github.com/kucherenko/jscpd/tree/master/apps/jscpd-server
+- https://github.com/kucherenko/jscpd/blob/master/apps/jscpd-server/README.md
+- https://github.com/kucherenko/jscpd/blob/master/apps/jscpd-server/package.json
+- https://registry.npmjs.org/jscpd-server
+- https://registry.npmjs.org/jscpd
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+server README, package metadata, and npm registry metadata for current commands,
+server options, MCP endpoint behavior, supported tools, package names, and
+duplication detection capabilities.
+
+## Features
+
+- Start a project-scoped duplication server with `jscpd-server PROJECT_DIR`.
+- Expose a Streamable HTTP MCP endpoint from the local jscpd server.
+- Check submitted snippets against the scanned project.
+- Retrieve project duplication statistics.
+- Check duplication in the current directory.
+- Configure host, port, store, config file, format filters, ignore patterns,
+  minimum lines, minimum tokens, max source size, and detection mode.
+- Use persistent storage for production-style runs.
+- Support more than 225 programming languages and document formats through
+  jscpd's detection engine.
+
+## Installation
+
+Install the server package:
+
+```bash
+npm install -g jscpd-server
+```
+
+Start it against a project directory:
+
+```bash
+jscpd-server PROJECT_DIR
+```
+
+Configure your MCP client to use Streamable HTTP and the local server's `/mcp`
+route. Keep the service bound to a trusted local interface unless you have a
+separate access-control layer.
+
+## Tools
+
+- `check_duplication`: check a submitted snippet against the scanned codebase.
+- `get_statistics`: return duplication statistics for the scanned project.
+- `check_current_directory`: run a current-directory duplication check.
+
+## Use Cases
+
+- Ask Claude whether a proposed helper duplicates existing project code.
+- Check selected snippets before accepting generated code.
+- Drive duplication-aware refactoring sessions.
+- Review project duplication statistics from an editor or agent workflow.
+- Gate cleanup tasks with concrete clone locations and percentages.
+- Pair with jscpd's AI reporter and skills for token-efficient refactoring
+  workflows.
+
+## Safety and Privacy
+
+Run jscpd-server only on directories the agent is allowed to inspect. The server
+can expose source paths, clone locations, snippets, duplicated fragments, and
+project-level statistics. For proprietary repos, bind locally, avoid shared
+networks, and tune ignore rules before the initial scan.
+
+Persistent stores can retain scan data. Treat LevelDB stores, reports, server
+logs, and MCP transcripts as code-derived artifacts that may need the same
+handling as source code.
+
+## Duplicate Check
+
+No `kucherenko/jscpd` entry, jscpd MCP entry, `jscpd-server` MCP entry, or
+matching source URL was found in `content/mcp`.

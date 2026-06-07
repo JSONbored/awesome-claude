@@ -1,0 +1,180 @@
+---
+title: DBHub MCP Server
+slug: dbhub-mcp-server
+category: mcp
+description: >-
+  Token-efficient database MCP server for PostgreSQL, MySQL, MariaDB, SQL
+  Server, and SQLite.
+cardDescription: >-
+  Let Claude explore schemas, execute SQL, and use reusable database tools
+  across multiple database engines through DBHub.
+seoTitle: DBHub MCP Server for Claude
+seoDescription: >-
+  Configure DBHub with Claude and other MCP clients to explore schemas, execute
+  SQL, and connect to PostgreSQL, MySQL, MariaDB, SQL Server, and SQLite with
+  guardrails.
+author: Bytebase
+authorProfileUrl: "https://github.com/bytebase"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: DBHub
+brandDomain: dbhub.ai
+repoUrl: "https://github.com/bytebase/dbhub"
+documentationUrl: "https://dbhub.ai/installation"
+packageUrl: "https://registry.npmjs.org/%40bytebase%2Fdbhub"
+installable: true
+installCommand: "npx @bytebase/dbhub@latest --transport stdio --dsn YOUR_DATABASE_DSN"
+usageSnippet: "Run `npx @bytebase/dbhub@latest --transport stdio --dsn YOUR_DATABASE_DSN` from an MCP client to expose database tools through DBHub."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "dbhub": {
+        "command": "npx",
+        "args": [
+          "@bytebase/dbhub@latest",
+          "--transport",
+          "stdio",
+          "--dsn",
+          "YOUR_DATABASE_DSN"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "dbhub": {
+        "command": "npx",
+        "args": [
+          "@bytebase/dbhub@latest",
+          "--transport",
+          "stdio",
+          "--dsn",
+          "YOUR_DATABASE_DSN"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js and npx available to the MCP client runtime.
+  - A PostgreSQL, MySQL, MariaDB, SQL Server, or SQLite database connection.
+  - Database credentials with the minimum privileges needed for the workflow.
+  - Read-only permissions or DBHub guardrails configured before connecting production data.
+  - SSH tunneling or SSL/TLS settings configured when required by the database environment.
+safetyNotes:
+  - DBHub can execute SQL queries against configured databases.
+  - SQL execution can read, create, update, delete, or otherwise modify data depending on database permissions and requested queries.
+  - Configure read-only mode, row limits, query timeouts, least-privilege credentials, and human review before using DBHub with production or sensitive databases.
+  - Custom tools can wrap reusable parameterized SQL, so review their definitions before allowing agents to call them.
+privacyNotes:
+  - Database connection strings, hostnames, schemas, table names, column names, row data, query text, query results, traces, and errors may be visible to the MCP client and model provider.
+  - Databases can contain personal data, customer records, credentials, business metrics, audit logs, payment data, healthcare data, and proprietary operational state.
+  - Avoid exposing production databases or regulated data unless the database, MCP client, and model session are approved for that access.
+sourceUrls:
+  - "https://github.com/bytebase/dbhub"
+  - "https://github.com/bytebase/dbhub/blob/main/README.md"
+  - "https://github.com/bytebase/dbhub/blob/main/package.json"
+  - "https://registry.npmjs.org/%40bytebase%2Fdbhub"
+  - "https://dbhub.ai/installation"
+tags:
+  - database
+  - postgres
+  - mysql
+  - sqlite
+  - sql-server
+keywords:
+  - DBHub MCP
+  - Bytebase DBHub
+  - database MCP server
+  - SQL MCP server
+  - multi database MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+DBHub is a token-efficient database MCP server from Bytebase. It connects MCP
+clients to PostgreSQL, MySQL, MariaDB, SQL Server, and SQLite databases through
+a small tool surface focused on SQL execution, schema/object search, and custom
+reusable SQL tools.
+
+The upstream README documents NPM, Docker, demo, and multi-database
+configuration options. The scoped NPM package exposes the `dbhub` binary for
+MCP clients.
+
+## Source Review
+
+- https://github.com/bytebase/dbhub
+- https://github.com/bytebase/dbhub/blob/main/README.md
+- https://github.com/bytebase/dbhub/blob/main/package.json
+- https://registry.npmjs.org/%40bytebase%2Fdbhub
+- https://dbhub.ai/installation
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+installation docs, and NPM registry metadata for current package version,
+command options, supported databases, guardrails, and setup guidance.
+
+## Features
+
+- Connect to PostgreSQL, MySQL, MariaDB, SQL Server, and SQLite.
+- Execute SQL with transaction support and safety controls.
+- Search database schemas, tables, columns, indexes, and procedures.
+- Define reusable parameterized SQL operations as custom tools.
+- Connect to multiple databases with TOML configuration.
+- Use guardrails such as read-only mode, row limits, and query timeouts.
+- Support SSH tunneling and SSL/TLS encryption.
+- Use the built-in workbench interface for database tools and request traces.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "dbhub": {
+      "command": "npx",
+      "args": [
+        "@bytebase/dbhub@latest",
+        "--transport",
+        "stdio",
+        "--dsn",
+        "YOUR_DATABASE_DSN"
+      ]
+    }
+  }
+}
+```
+
+Replace `YOUR_DATABASE_DSN` with an approved database connection string and
+restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to inspect schema structure before writing a query.
+- Search tables, columns, indexes, and procedures in a development database.
+- Run approved read-only SQL queries for analytics or debugging.
+- Define reusable custom SQL tools for repeated safe database operations.
+- Connect several development or staging databases from one MCP server.
+- Use the workbench to inspect tool requests and query traces.
+
+## Safety and Privacy
+
+Database access is high impact. Use least-privilege credentials, prefer
+read-only mode, configure row limits and query timeouts, and require human
+approval before running writes, migrations, deletes, broad updates, or queries
+against production data.
+
+Connection strings, schemas, table names, row data, query results, traces, and
+errors can expose sensitive information. Do not connect databases containing
+regulated, customer, payment, healthcare, credential, or production data unless
+that access is approved for the MCP client and model session.
+
+## Duplicate Check
+
+No `bytebase/dbhub` entry, `@bytebase/dbhub` package entry, or matching source
+URL was found in `content/mcp`.

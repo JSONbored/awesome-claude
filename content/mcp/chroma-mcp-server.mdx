@@ -1,0 +1,186 @@
+---
+title: Chroma MCP Server
+slug: chroma-mcp-server
+category: mcp
+description: >-
+  Official Chroma MCP server for connecting Claude to Chroma collections,
+  documents, semantic search, full-text search, metadata filtering, persistent
+  storage, self-hosted Chroma, and Chroma Cloud.
+cardDescription: Connect Claude to Chroma collections, documents, vector search, and metadata filters.
+seoTitle: Chroma MCP Server for Claude
+seoDescription: >-
+  Configure Chroma MCP Server with Claude Desktop and other MCP clients to list,
+  create, modify, query, update, and delete Chroma collections and documents
+  across ephemeral, persistent, HTTP, and Chroma Cloud client modes.
+author: Chroma
+authorProfileUrl: "https://github.com/chroma-core"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Chroma
+brandDomain: trychroma.com
+websiteUrl: "https://www.trychroma.com"
+repoUrl: "https://github.com/chroma-core/chroma-mcp"
+documentationUrl: "https://docs.trychroma.com/integrations/frameworks/anthropic-mcp"
+packageUrl: "https://pypi.org/pypi/chroma-mcp/json"
+installable: true
+installCommand: "uvx chroma-mcp"
+usageSnippet: "Ask Claude to list Chroma collections, inspect collection counts, query a collection with filters, then cite retrieved document IDs before using the context."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "chroma": {
+        "command": "uvx",
+        "args": ["chroma-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "chroma": {
+        "command": "uvx",
+        "args": ["chroma-mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer available through uv for local stdio usage.
+  - Chroma client mode selected: ephemeral, persistent, HTTP, or cloud.
+  - Storage, backup, and retention plan for persistent collections before enabling write tools.
+  - Chroma Cloud tenant, database, and API key or self-hosted Chroma host credentials if using remote modes.
+  - Embedding provider API keys if using Cohere, OpenAI, Jina, Voyage AI, or Roboflow embedding functions.
+safetyNotes:
+  - Chroma MCP can create, modify, and delete collections.
+  - Document tools can add, update, query, retrieve, and delete documents, metadata, custom IDs, and embeddings.
+  - Persistent, HTTP, and cloud modes can mutate durable retrieval stores rather than temporary test collections.
+  - External embedding functions can send document text or image-derived content to third-party embedding providers.
+  - Chroma Cloud and self-hosted HTTP modes require careful handling of tenants, databases, API keys, custom auth credentials, SSL settings, and network exposure.
+  - Retrieved context can influence Claude output even when stale, irrelevant, over-broad, or not authorized for the task.
+privacyNotes:
+  - Collections can store source documents, chunks, embeddings, metadata, IDs, filters, and query results that reveal private project, customer, or research data.
+  - Query text, retrieved documents, metadata filters, and embedding inputs may expose sensitive information to Chroma Cloud, self-hosted operators, embedding providers, logs, or downstream model providers.
+  - CHROMA_API_KEY, custom auth credentials, embedding provider API keys, tenant IDs, database names, hostnames, and dotenv files should stay out of prompts, issues, logs, screenshots, and committed files.
+  - Persistent data directories and exported collections need the same access control, backup, encryption, and retention review as the source documents they index.
+sourceUrls:
+  - "https://github.com/chroma-core/chroma-mcp/blob/main/README.md"
+  - "https://github.com/chroma-core/chroma-mcp/blob/main/pyproject.toml"
+  - "https://github.com/chroma-core/chroma-mcp/blob/main/src/chroma_mcp/server.py"
+  - "https://github.com/chroma-core/chroma-mcp/blob/main/LICENSE"
+tags:
+  - chroma
+  - vector-database
+  - embeddings
+  - retrieval
+  - rag
+keywords:
+  - Chroma MCP
+  - Chroma MCP Server
+  - chroma-core chroma-mcp
+  - ChromaDB MCP
+  - vector database MCP
+  - retrieval MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Chroma MCP Server is the official Chroma Model Context Protocol server for
+self-hosting Claude access to Chroma data retrieval workflows. It connects MCP
+clients to Chroma collections and documents through ephemeral, persistent, HTTP,
+or Chroma Cloud client modes.
+
+The server supports collection management, document ingestion, semantic search,
+full-text search, metadata filtering, document retrieval, document updates, and
+document deletion. It can also use several embedding functions, including
+default, Cohere, OpenAI, Jina, Voyage AI, and Roboflow.
+
+## Source Review
+
+- https://www.trychroma.com
+- https://github.com/chroma-core/chroma-mcp
+- https://docs.trychroma.com/integrations/frameworks/anthropic-mcp
+- https://pypi.org/pypi/chroma-mcp/json
+- https://github.com/chroma-core/chroma-mcp/blob/main/README.md
+- https://github.com/chroma-core/chroma-mcp/blob/main/pyproject.toml
+- https://github.com/chroma-core/chroma-mcp/blob/main/src/chroma_mcp/server.py
+- https://github.com/chroma-core/chroma-mcp/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the Chroma docs,
+repository README, PyPI metadata, package metadata, server implementation, and
+license for current setup commands, supported tools, client modes, embedding
+providers, and authentication behavior.
+
+## Features
+
+- Official MCP server from `chroma-core/chroma-mcp`.
+- Local stdio launch with `uvx chroma-mcp`.
+- Ephemeral in-memory mode for testing and development.
+- Persistent mode for file-backed Chroma storage.
+- HTTP mode for self-hosted Chroma instances.
+- Cloud mode for Chroma Cloud via `api.trychroma.com`.
+- Collection listing, creation, metadata updates, count retrieval, peeking, and deletion.
+- Document add, query, get, update, and delete tools.
+- Semantic search, full-text search, metadata filtering, and pagination.
+- Optional HNSW configuration when creating collections.
+- Embedding functions for default, Cohere, OpenAI, Jina, Voyage AI, and Roboflow providers.
+- Environment variable and dotenv-file configuration for client modes, credentials, and embedding keys.
+
+## Installation
+
+For an ephemeral local client:
+
+```json
+{
+  "mcpServers": {
+    "chroma": {
+      "command": "uvx",
+      "args": ["chroma-mcp"]
+    }
+  }
+}
+```
+
+For durable or remote use, follow the README's persistent, HTTP, and cloud
+configuration examples. Prefer environment variables or a reviewed dotenv file
+for credentials instead of putting API keys directly into shared MCP config.
+
+## Use Cases
+
+- Let Claude search a Chroma collection before answering a project question.
+- Create temporary collections for experiments or evaluation runs.
+- Add curated documents to a persistent Chroma retrieval store.
+- Query documents with metadata and document-content filters.
+- Inspect collection counts and sample documents while debugging ingestion.
+- Use Chroma Cloud or a self-hosted Chroma instance as a shared retrieval backend.
+- Compare retrieval results before feeding context into a coding, support, or research workflow.
+- Delete stale collections only after verifying the target database and collection name.
+
+## Safety and Privacy
+
+Chroma MCP is a retrieval database control surface, not just a read-only search
+helper. It can add, update, and delete indexed content, and remote modes can
+touch shared production or team databases. Require explicit approval for
+collection creation, document writes, document updates, document deletion, and
+collection deletion.
+
+Treat retrieved context as untrusted input until it is checked for relevance,
+freshness, permissions, and prompt-injection risk. Keep API keys and custom auth
+credentials out of prompts and version control, and review whether embedding
+providers or Chroma Cloud are approved for the documents being indexed.
+
+## Disclosure
+
+Chroma includes an Apache-2.0 open-source project and hosted Chroma Cloud
+offerings. This listing is not sponsored, paid, or affiliate-driven, and it is
+scoped to the source-backed MCP server.
+
+## Duplicate Check
+
+Existing content includes a general Chroma tools entry in `content/tools`, but
+no Chroma MCP Server entry was found in `content/mcp`. This submission is scoped
+to `chroma-core/chroma-mcp`, the official MCP server, and does not change the
+existing Chroma database listing.

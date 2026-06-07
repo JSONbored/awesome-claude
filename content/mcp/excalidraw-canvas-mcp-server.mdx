@@ -1,0 +1,207 @@
+---
+title: Excalidraw Canvas MCP Server
+slug: excalidraw-canvas-mcp-server
+category: mcp
+description: >-
+  MCP server and live Excalidraw canvas toolkit that lets Claude create,
+  inspect, update, export, snapshot, and iteratively refine diagrams.
+cardDescription: Give Claude element-level control over a live Excalidraw canvas.
+seoTitle: Excalidraw Canvas MCP Server for Claude
+seoDescription: >-
+  Configure Excalidraw Canvas MCP Server with Claude to create diagrams, inspect
+  scene state, take screenshots, import and export Excalidraw files, convert
+  Mermaid diagrams, and sync with a live canvas.
+author: yctimlin
+authorProfileUrl: "https://github.com/yctimlin"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Excalidraw Canvas MCP
+brandDomain: github.com
+repoUrl: "https://github.com/yctimlin/mcp_excalidraw"
+documentationUrl: "https://github.com/yctimlin/mcp_excalidraw/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/mcp-excalidraw-server"
+installable: true
+installCommand: "npm ci && npm run build"
+usageSnippet: "Start the canvas with `PORT=3000 npm run canvas`, then launch the MCP server with `EXPRESS_SERVER_URL=LOCAL_CANVAS_URL node dist/index.js`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "excalidraw": {
+        "command": "node",
+        "args": ["PATH_TO_MCP_EXCALIDRAW/dist/index.js"],
+        "env": {
+          "EXPRESS_SERVER_URL": "LOCAL_CANVAS_URL",
+          "ENABLE_CANVAS_SYNC": "true"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "excalidraw": {
+        "command": "docker",
+        "args": [
+          "run", "-i", "--rm",
+          "-e", "EXPRESS_SERVER_URL=LOCAL_CANVAS_URL",
+          "-e", "ENABLE_CANVAS_SYNC=true",
+          "ghcr.io/yctimlin/mcp_excalidraw:latest"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 18 or newer and npm for local setup, or Docker for the container path.
+  - A running canvas server, started locally with `PORT=3000 npm run canvas` or through the canvas container image.
+  - The MCP server configured with `EXPRESS_SERVER_URL` pointing to the canvas server.
+  - Browser access to the canvas UI when using screenshot, viewport, or image export workflows.
+safetyNotes:
+  - The canvas server has no built-in authentication; keep it bound to localhost unless network access controls are in place.
+  - MCP tools can create, update, duplicate, group, delete, clear, import, export, snapshot, and restore diagram content.
+  - File import and export should stay inside an approved export directory; review `EXCALIDRAW_EXPORT_DIR` before enabling file workflows.
+  - The URL export tool can upload a scene to Excalidraw hosted sharing, so review the scene before sharing.
+  - In-memory canvas state can be lost on restart unless diagrams are exported or snapshots are preserved.
+privacyNotes:
+  - Diagrams may reveal infrastructure topology, unreleased product plans, customer names, credentials accidentally included as labels, or incident context.
+  - Screenshots, exported images, Excalidraw JSON files, snapshots, and share URLs may be visible to the MCP client, browser, logs, and model provider.
+  - Avoid exposing the local REST/WebSocket canvas API to shared networks without authentication or a trusted network boundary.
+  - Treat imported diagrams from untrusted sources as prompt-injection and data-exposure risks before asking a model to summarize them.
+sourceUrls:
+  - "https://github.com/yctimlin/mcp_excalidraw"
+  - "https://github.com/yctimlin/mcp_excalidraw/blob/main/README.md"
+  - "https://github.com/yctimlin/mcp_excalidraw/blob/main/package.json"
+  - "https://github.com/yctimlin/mcp_excalidraw/blob/main/src/index.ts"
+  - "https://github.com/yctimlin/mcp_excalidraw/blob/main/src/server.ts"
+  - "https://github.com/yctimlin/mcp_excalidraw/blob/main/skills/excalidraw-skill/SKILL.md"
+  - "https://github.com/yctimlin/mcp_excalidraw/blob/main/Dockerfile"
+  - "https://github.com/yctimlin/mcp_excalidraw/blob/main/Dockerfile.canvas"
+  - "https://github.com/yctimlin/mcp_excalidraw/blob/main/docker-compose.yml"
+  - "https://github.com/yctimlin/mcp_excalidraw/blob/main/LICENSE"
+  - "https://registry.npmjs.org/mcp-excalidraw-server"
+tags:
+  - excalidraw
+  - diagrams
+  - canvas
+  - visualization
+  - mermaid
+keywords:
+  - Excalidraw MCP
+  - Excalidraw Canvas MCP
+  - mcp-excalidraw-server
+  - Claude diagram MCP
+  - Mermaid to Excalidraw MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Excalidraw Canvas MCP Server gives Claude-compatible MCP clients programmatic
+control over a live Excalidraw canvas. The repository separates the canvas
+server from the stdio MCP server: the canvas provides the web UI, REST API, and
+WebSocket sync, while the MCP server exposes tools that create, inspect, update,
+export, snapshot, and refine scene elements.
+
+The upstream README positions this project as different from the official
+Excalidraw MCP: instead of a one-shot prompt-to-diagram generator, it provides
+element-level CRUD, scene awareness, screenshots, file import/export, snapshots,
+Mermaid conversion, and real-time canvas sync for iterative diagram work.
+
+## Source Review
+
+- https://github.com/yctimlin/mcp_excalidraw
+- https://github.com/yctimlin/mcp_excalidraw/blob/main/README.md
+- https://github.com/yctimlin/mcp_excalidraw/blob/main/package.json
+- https://github.com/yctimlin/mcp_excalidraw/blob/main/src/index.ts
+- https://github.com/yctimlin/mcp_excalidraw/blob/main/src/server.ts
+- https://github.com/yctimlin/mcp_excalidraw/blob/main/skills/excalidraw-skill/SKILL.md
+- https://github.com/yctimlin/mcp_excalidraw/blob/main/Dockerfile
+- https://github.com/yctimlin/mcp_excalidraw/blob/main/Dockerfile.canvas
+- https://github.com/yctimlin/mcp_excalidraw/blob/main/docker-compose.yml
+- https://github.com/yctimlin/mcp_excalidraw/blob/main/LICENSE
+- https://registry.npmjs.org/mcp-excalidraw-server
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, package metadata, server source, skill file, Docker files, and npm
+registry metadata for current setup commands, transport behavior, and tool list.
+
+## Features
+
+- Create, read, update, delete, query, batch create, and duplicate Excalidraw elements.
+- Align, distribute, group, ungroup, lock, and unlock elements.
+- Describe the current scene as structured text.
+- Capture a canvas screenshot when the browser-backed canvas is available.
+- Import and export `.excalidraw` JSON scenes.
+- Export images and shareable Excalidraw URLs.
+- Convert Mermaid diagrams into Excalidraw scenes.
+- Save and restore named snapshots.
+- Set viewport behavior, including zoom-to-content workflows.
+- Use an optional agent skill fallback for REST API mode.
+
+## Installation
+
+For local setup, clone the repository, install dependencies, and build:
+
+```sh
+npm ci
+npm run build
+```
+
+Start the canvas server in one terminal:
+
+```sh
+PORT=3000 npm run canvas
+```
+
+Then configure the MCP client to launch the stdio server:
+
+```json
+{
+  "mcpServers": {
+    "excalidraw": {
+      "command": "node",
+      "args": ["PATH_TO_MCP_EXCALIDRAW/dist/index.js"],
+      "env": {
+        "EXPRESS_SERVER_URL": "LOCAL_CANVAS_URL",
+        "ENABLE_CANVAS_SYNC": "true"
+      }
+    }
+  }
+}
+```
+
+For Docker users, the upstream README documents separate images for the canvas
+and MCP server. Start the canvas first, then point the MCP server at the canvas
+URL.
+
+## Use Cases
+
+- Ask Claude to create an architecture diagram on a live Excalidraw canvas.
+- Iterate on a diagram by describing the scene, taking a screenshot, and fixing layout issues.
+- Convert an existing Mermaid diagram into Excalidraw and then refine it element by element.
+- Export `.excalidraw` JSON or image artifacts after human review.
+- Snapshot a canvas before trying alternative layouts.
+- Share a reviewed scene through an Excalidraw URL when hosted sharing is acceptable.
+
+## Safety and Privacy
+
+Keep the canvas server local by default. The README notes that binding beyond
+localhost requires network-level access controls because the canvas API has no
+built-in authentication. Treat the REST and WebSocket canvas surfaces as trusted
+local tools, not public endpoints.
+
+Diagram content can include sensitive architecture, roadmap, customer, or
+incident details. Review any scene before exporting images, uploading a share
+URL, or including screenshots in prompts. Use `EXCALIDRAW_EXPORT_DIR` to keep
+file import/export operations inside an approved directory and avoid importing
+untrusted diagrams without review.
+
+## Duplicate Check
+
+No `yctimlin/mcp_excalidraw`, `mcp-excalidraw-server`, or matching Excalidraw
+canvas source URL was found in `content/mcp`. The README also distinguishes this
+project from the official Excalidraw MCP by emphasizing a persistent live canvas
+and element-level editing workflow.

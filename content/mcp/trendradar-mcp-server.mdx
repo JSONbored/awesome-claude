@@ -1,0 +1,216 @@
+---
+title: TrendRadar MCP Server
+slug: trendradar-mcp-server
+category: mcp
+description: >-
+  MCP server for querying, searching, analyzing, syncing, reading, and sending
+  alerts from a self-hosted TrendRadar news, RSS, and public-opinion monitoring
+  workspace.
+cardDescription: Analyze TrendRadar news, RSS, topic, storage, article, and notification data through MCP.
+seoTitle: TrendRadar MCP Server for Claude
+seoDescription: >-
+  Configure TrendRadar MCP Server with Claude, Cursor, Cline, Continue, Cherry
+  Studio, or other MCP clients to search local news/RSS data, analyze trends and
+  sentiment, read article bodies, sync remote storage, and send notifications.
+author: TrendRadar
+authorProfileUrl: "https://github.com/sansan0"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: TrendRadar
+brandDomain: github.com
+repoUrl: "https://github.com/sansan0/TrendRadar"
+documentationUrl: "https://github.com/sansan0/TrendRadar/blob/master/README-MCP-FAQ-EN.md"
+installable: true
+installCommand: "uv --directory /path/to/TrendRadar run python -m mcp_server.server"
+usageSnippet: "Ask Claude to search today's stored TrendRadar data for a topic, then summarize cross-platform coverage before sending any notification."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "trendradar": {
+        "command": "uv",
+        "args": [
+          "--directory",
+          "/path/to/TrendRadar",
+          "run",
+          "python",
+          "-m",
+          "mcp_server.server"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "trendradar": {
+        "command": "uv",
+        "args": [
+          "--directory",
+          "/path/to/TrendRadar",
+          "run",
+          "python",
+          "-m",
+          "mcp_server.server"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 25 minutes
+difficulty: intermediate
+prerequisites:
+  - Local or self-hosted TrendRadar checkout with `uv` available and dependencies installed.
+  - Local TrendRadar output data from crawls, RSS feeds, or synced remote storage before asking analysis questions.
+  - MCP client configured for stdio, or a manually started local HTTP server on loopback port 3333.
+  - Optional AI provider configuration for TrendRadar's analysis workflows, such as `AI_API_KEY`, `AI_MODEL`, and related LiteLLM settings.
+  - Optional notification, article-reader, and remote-storage credentials only for the channels and storage backends Claude should use.
+safetyNotes:
+  - TrendRadar can crawl public hotlists and RSS feeds, read article URLs, query local news databases, and trigger manual crawls through MCP tools.
+  - The MCP server can send messages to configured notification channels including Feishu, DingTalk, WeCom, Telegram, email, ntfy, Bark, Slack, and generic webhooks.
+  - The `sync_from_remote` tool can download stored news databases from configured S3-compatible storage such as Cloudflare R2 into the local output directory.
+  - Article-reading tools fetch URLs through Jina Reader and may fail on paywalled, login-gated, rate-limited, or restricted sites.
+  - Keep crawl frequency bounded and respect source-site terms, robots guidance, API limits, and the project's own warning about controlling Docker crawl frequency.
+privacyNotes:
+  - MCP outputs can reveal watched keywords, RSS subscriptions, platform lists, notification channels, local storage paths, remote bucket names, article URLs, and trend-analysis interests.
+  - Notification tools require webhook URLs, bot tokens, chat IDs, SMTP credentials, ntfy topics or tokens, Bark URLs, Slack webhooks, or generic webhook URLs in config or environment variables.
+  - Remote storage sync requires S3-compatible endpoint, bucket, access key ID, and secret access key configuration; keep these out of prompts, repository files, logs, and screenshots.
+  - AI analysis and translation settings can send stored news, RSS content, prompts, and summaries to the configured LiteLLM provider.
+  - Article-reading requests send target article URLs to Jina Reader unless the deployment is modified to use another reader.
+sourceUrls:
+  - "https://github.com/sansan0/TrendRadar"
+  - "https://github.com/sansan0/TrendRadar/blob/master/README-EN.md"
+  - "https://github.com/sansan0/TrendRadar/blob/master/README-MCP-FAQ-EN.md"
+  - "https://github.com/sansan0/TrendRadar/blob/master/pyproject.toml"
+  - "https://github.com/sansan0/TrendRadar/blob/master/mcp_server/server.py"
+  - "https://github.com/sansan0/TrendRadar/blob/master/mcp_server/tools/data_query.py"
+  - "https://github.com/sansan0/TrendRadar/blob/master/mcp_server/tools/notification.py"
+  - "https://github.com/sansan0/TrendRadar/blob/master/mcp_server/tools/storage_sync.py"
+  - "https://github.com/sansan0/TrendRadar/blob/master/docker/Dockerfile.mcp"
+  - "https://github.com/sansan0/TrendRadar/blob/master/version_mcp"
+  - "https://github.com/sansan0/TrendRadar/blob/master/LICENSE"
+tags:
+  - news
+  - rss
+  - monitoring
+  - analytics
+  - notifications
+keywords:
+  - TrendRadar MCP
+  - TrendRadar news MCP
+  - RSS analysis MCP
+  - public opinion monitoring MCP
+  - notification MCP
+  - trend analysis MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+TrendRadar MCP Server exposes the TrendRadar news and RSS monitoring workspace
+to Claude through the Model Context Protocol. It lets Claude query local
+TrendRadar data, search RSS and hotlist records, compare periods, analyze
+topics, read article bodies, inspect storage status, sync remote storage, and
+send notification messages through configured channels.
+
+The server is implemented with FastMCP and supports stdio and HTTP transports.
+The repository documents local MCP client configuration for Cursor, Cline,
+Continue, Cherry Studio, and other MCP-compatible clients, plus a Docker image
+path for running the loopback HTTP MCP service on port 3333.
+
+## Source Review
+
+- https://github.com/sansan0/TrendRadar
+- https://github.com/sansan0/TrendRadar/blob/master/README-EN.md
+- https://github.com/sansan0/TrendRadar/blob/master/README-MCP-FAQ-EN.md
+- https://github.com/sansan0/TrendRadar/blob/master/pyproject.toml
+- https://github.com/sansan0/TrendRadar/blob/master/mcp_server/server.py
+- https://github.com/sansan0/TrendRadar/blob/master/mcp_server/tools/data_query.py
+- https://github.com/sansan0/TrendRadar/blob/master/mcp_server/tools/notification.py
+- https://github.com/sansan0/TrendRadar/blob/master/mcp_server/tools/storage_sync.py
+- https://github.com/sansan0/TrendRadar/blob/master/docker/Dockerfile.mcp
+- https://github.com/sansan0/TrendRadar/blob/master/version_mcp
+- https://github.com/sansan0/TrendRadar/blob/master/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+English README, MCP FAQ, package metadata, server implementation, tool modules,
+Dockerfile, MCP version file, and license for current setup commands, tool
+names, supported transports, configuration behavior, and runtime risks.
+
+## Features
+
+- FastMCP-based server with stdio and HTTP transport support.
+- Local-source setup using `uv --directory /path/to/TrendRadar run python -m mcp_server.server`.
+- Docker HTTP service path for `trendradar-mcp`, listening on port 3333 by default.
+- News and RSS query tools for latest data, date ranges, platform filters, and available dates.
+- Search tools for keyword, fuzzy, entity, RSS-inclusive, and related-news workflows.
+- Trend analysis tools for topic hotness, lifecycle, viral signals, sentiment, period comparison, aggregation, and summary reports.
+- System tools for configuration inspection, version checks, status checks, and manual crawl triggering.
+- Storage tools for remote sync, local/remote date listing, and storage status.
+- Article reader tools that convert URLs into Markdown through Jina Reader.
+- Notification tools for channel status, channel-specific formatting guidance, and message sending.
+
+## Installation
+
+Clone TrendRadar, install dependencies with `uv`, and run the MCP server from
+the project checkout. For stdio clients, the repository documents a local
+command shaped like:
+
+```json
+{
+  "mcpServers": {
+    "trendradar": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/TrendRadar",
+        "run",
+        "python",
+        "-m",
+        "mcp_server.server"
+      ]
+    }
+  }
+}
+```
+
+The Docker MCP image starts the HTTP server with:
+
+```sh
+python -m mcp_server.server --transport http --host 0.0.0.0 --port ${MCP_PORT}
+```
+
+Keep the exposed HTTP endpoint local unless you add your own reverse proxy,
+authentication, and network controls.
+
+## Use Cases
+
+- Ask Claude to search today's TrendRadar output for a company, policy, product, or AI topic.
+- Compare how a topic appears across platforms, RSS feeds, and time periods.
+- Generate a daily or weekly briefing from locally accumulated hotlist and RSS data.
+- Read article bodies after search results identify source URLs worth deeper analysis.
+- Pull recent data from remote storage into a local MCP analysis workspace.
+- Check configured notification channels before sending a reviewed summary to team chat.
+- Inspect current TrendRadar configuration before changing crawl, RSS, storage, or notification workflows.
+
+## Safety and Privacy
+
+TrendRadar MCP is useful for news intelligence, but it is not read-only in every
+workflow. Claude can trigger crawls, sync remote storage, and send notifications
+to real channels if credentials are configured. Use review prompts or client
+approval settings before allowing notification sends, remote syncs, or broad
+crawl operations.
+
+Treat stored news data and configuration as sensitive operational context. Watch
+keywords, RSS feeds, webhook destinations, cloud bucket names, article URLs, and
+AI-analysis prompts can reveal business interests or monitoring strategy. Keep
+notification secrets, S3-compatible credentials, and AI provider keys in
+approved secret stores, and avoid exposing the HTTP MCP endpoint beyond trusted
+local environments.
+
+## Duplicate Check
+
+No `sansan0/TrendRadar`, `trendradar-mcp`, TrendRadar MCP, news trend analysis
+MCP, public-opinion monitoring MCP, or TrendRadar notification MCP entry was
+found in `content/mcp`, `content/tools`, `content/guides`, `content/agents`, or
+`content/skills`.

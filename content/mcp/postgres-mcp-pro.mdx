@@ -1,0 +1,195 @@
+---
+title: Postgres MCP Pro
+slug: postgres-mcp-pro
+category: mcp
+description: >-
+  PostgreSQL MCP server from Crystal DBA for schema inspection, SQL execution,
+  EXPLAIN plans, index tuning, top-query analysis, and database health checks
+  with configurable restricted or unrestricted access.
+cardDescription: >-
+  Inspect Postgres schemas, run guarded SQL, explain query plans, analyze slow
+  workloads, and get index or health recommendations from Claude.
+seoTitle: Postgres MCP Pro for Claude
+seoDescription: >-
+  Configure Postgres MCP Pro with Claude and other MCP clients to inspect
+  PostgreSQL schemas, run SQL in restricted or unrestricted modes, explain
+  query plans, analyze workload indexes, and review database health checks.
+author: Crystal DBA
+authorProfileUrl: "https://github.com/crystaldba"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Postgres MCP Pro
+brandDomain: github.com
+repoUrl: "https://github.com/crystaldba/postgres-mcp"
+documentationUrl: "https://github.com/crystaldba/postgres-mcp/blob/main/README.md"
+packageUrl: "https://pypi.org/project/postgres-mcp/"
+installable: true
+installCommand: "uvx postgres-mcp --access-mode=restricted"
+usageSnippet: "Set DATABASE_URI to a scoped PostgreSQL connection string, start postgres-mcp in restricted mode, then ask Claude to inspect schemas, explain queries, or analyze database health."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "postgres-pro": {
+        "command": "uvx",
+        "args": ["postgres-mcp", "--access-mode=restricted"],
+        "env": {
+          "DATABASE_URI": "postgresql://username:password@localhost:5432/dbname"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add postgres-pro \
+    --env DATABASE_URI=postgresql://username:password@localhost:5432/dbname \
+    -- uvx postgres-mcp --access-mode=restricted
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - PostgreSQL database connection URI for the database Claude should inspect.
+  - A database role scoped to the minimum permissions needed for the intended environment.
+  - Python 3.12 or higher with uvx, uv, pipx, or Docker available to run the server.
+  - Optional pg_stat_statements extension for workload and top-query analysis.
+  - Optional hypopg extension for hypothetical index simulation.
+  - Backup, restore, and human-approval process before allowing write-capable database access.
+safetyNotes:
+  - Postgres MCP Pro supports unrestricted mode, which can execute read/write SQL and modify data or schema; use it only against disposable development databases or after explicit approval.
+  - Restricted mode is the safer default, but it still allows database inspection, query execution through guarded paths, EXPLAIN analysis, health checks, and potentially expensive read workloads.
+  - EXPLAIN ANALYZE can execute a query to collect real runtime statistics, so review queries before using analyze mode on production data.
+  - Index tuning and health checks can depend on pg_stat_statements, hypopg, catalog access, and workload statistics; verify extension permissions and expected database load first.
+  - SSE or Streamable HTTP transports can expose database tooling beyond a local stdio process; bind carefully and add network controls before remote use.
+privacyNotes:
+  - Connection URIs contain credentials and should be provided through MCP client environment handling, secrets management, or local configuration that is not committed to source control.
+  - Schema names, table names, index definitions, query text, EXPLAIN plans, health findings, and top-query statistics can reveal application architecture, customer data models, usage patterns, and sensitive SQL.
+  - SQL results may contain regulated or customer data; use least-privilege roles, row-level access controls, redaction, and approval gates before connecting an agent to non-development databases.
+sourceUrls:
+  - "https://github.com/crystaldba/postgres-mcp/blob/main/LICENSE"
+  - "https://github.com/crystaldba/postgres-mcp/blob/main/pyproject.toml"
+  - "https://github.com/crystaldba/postgres-mcp/blob/main/src/postgres_mcp/server.py"
+  - "https://github.com/crystaldba/postgres-mcp/blob/main/src/postgres_mcp/sql/safe_sql.py"
+  - "https://github.com/crystaldba/postgres-mcp/blob/main/src/postgres_mcp/explain/README.md"
+  - "https://github.com/crystaldba/postgres-mcp/blob/main/src/postgres_mcp/database_health/database_health.py"
+  - "https://github.com/crystaldba/postgres-mcp/blob/main/src/postgres_mcp/index/dta_calc.py"
+tags:
+  - postgres
+  - database
+  - sql
+  - performance
+  - tuning
+keywords:
+  - Postgres MCP Pro
+  - Crystal DBA MCP
+  - PostgreSQL performance MCP
+  - Postgres index tuning MCP
+  - PostgreSQL health check MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Postgres MCP Pro is a PostgreSQL MCP server from Crystal DBA for database
+inspection, SQL execution, query-plan analysis, index tuning, and health checks.
+It connects Claude to a PostgreSQL database over stdio, SSE, or Streamable HTTP
+and exposes tools for schema exploration, EXPLAIN plans, slow-query analysis,
+workload index recommendations, and health checks.
+
+Use it when a Postgres-backed project needs more than a simple read-only query
+wrapper. It is especially useful for development and DBA workflows where Claude
+needs schema context, query plans, workload statistics, index recommendations,
+and repeatable health checks before proposing code or migration changes.
+
+## Source Review
+
+- https://github.com/crystaldba/postgres-mcp
+- https://github.com/crystaldba/postgres-mcp/blob/main/README.md
+- https://pypi.org/project/postgres-mcp/
+- https://github.com/crystaldba/postgres-mcp/blob/main/LICENSE
+- https://github.com/crystaldba/postgres-mcp/blob/main/pyproject.toml
+- https://github.com/crystaldba/postgres-mcp/blob/main/src/postgres_mcp/server.py
+- https://github.com/crystaldba/postgres-mcp/blob/main/src/postgres_mcp/sql/safe_sql.py
+- https://github.com/crystaldba/postgres-mcp/blob/main/src/postgres_mcp/explain/README.md
+- https://github.com/crystaldba/postgres-mcp/blob/main/src/postgres_mcp/database_health/database_health.py
+- https://github.com/crystaldba/postgres-mcp/blob/main/src/postgres_mcp/index/dta_calc.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI package page, license, package manifest, MCP server implementation,
+safe SQL driver, EXPLAIN tool documentation, database health implementation,
+and index tuning implementation for current installation and behavior details.
+
+## Features
+
+- List schemas and schema objects.
+- Inspect table, view, sequence, extension, column, constraint, and index
+  details.
+- Execute SQL with different behavior in unrestricted and restricted modes.
+- Explain queries, optionally with real execution statistics or hypothetical
+  indexes.
+- Report top queries from `pg_stat_statements`.
+- Analyze workload or specific queries for index recommendations.
+- Run database health checks for indexes, connections, vacuum, sequences,
+  replication, buffer cache, and constraints.
+- Run over stdio for local MCP clients or over SSE and Streamable HTTP for
+  shared server setups.
+
+## Installation
+
+Run with `uvx` and a scoped PostgreSQL connection string:
+
+```json
+{
+  "mcpServers": {
+    "postgres-pro": {
+      "command": "uvx",
+      "args": ["postgres-mcp", "--access-mode=restricted"],
+      "env": {
+        "DATABASE_URI": "postgresql://username:password@localhost:5432/dbname"
+      }
+    }
+  }
+}
+```
+
+The upstream README also documents Docker, pipx, uv, SSE, and Streamable HTTP
+setups. Use restricted mode for production-like databases and reserve
+unrestricted mode for approved development databases where write access is
+acceptable.
+
+## Use Cases
+
+- Ask Claude to inspect a Postgres schema before generating SQL or ORM code.
+- Explain a slow query and compare plans before and after hypothetical indexes.
+- Analyze top queries from `pg_stat_statements`.
+- Generate index recommendations for a specific query list or workload.
+- Check database health for invalid or duplicate indexes, connection pressure,
+  vacuum risk, sequence exhaustion, replication lag, buffer cache issues, and
+  invalid constraints.
+- Let an agent ground migration or performance work in actual database metadata
+  while keeping human review on destructive changes.
+
+## Safety and Privacy
+
+Treat Postgres MCP Pro as direct database access. Unrestricted mode can modify
+data or schema, so use restricted mode by default, use least-privilege database
+roles, and keep a human approval gate before destructive or production-impacting
+work.
+
+Even restricted database access can expose sensitive schema, query, and result
+data to the MCP client, model provider, logs, and chat transcripts. Avoid
+connecting agents to production databases unless access controls, redaction,
+audit logging, and data-handling approvals are already in place.
+
+EXPLAIN, health, and index-analysis tools can create load or rely on privileged
+extensions. Verify the database role, extension permissions, query timeout, and
+expected workload impact before running analysis against shared databases.
+
+## Duplicate Check
+
+Existing entries cover the official read-only PostgreSQL MCP server,
+Timescale's `pg-aiguide` documentation server, generic database servers such as
+MCP Toolbox and DBHub, and managed Postgres platforms such as Neon and
+Supabase. Postgres MCP Pro is distinct because it combines PostgreSQL schema
+inspection, configurable restricted or unrestricted SQL execution, EXPLAIN
+plans, workload index recommendations, top-query analysis, and database health
+checks from `crystaldba/postgres-mcp`. No `crystaldba/postgres-mcp` entry or
+matching source URL was found in `content/mcp`.

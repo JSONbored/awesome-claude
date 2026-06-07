@@ -1,0 +1,225 @@
+---
+title: Prometheus MCP Server
+slug: prometheus-mcp-server
+category: mcp
+description: >-
+  Direct Prometheus MCP server that lets Claude run PromQL instant and range
+  queries, discover metrics, inspect metadata, and review scrape targets.
+cardDescription: >-
+  Connect Claude directly to Prometheus metrics with Docker, Helm, auth,
+  query-timeout, and tool-prefix configuration.
+seoTitle: Prometheus MCP Server for Claude
+seoDescription: >-
+  Configure Prometheus MCP Server with Claude to query Prometheus, list metrics,
+  inspect metadata, review scrape targets, and analyze time-series observability
+  data.
+author: pab1it0
+authorProfileUrl: "https://github.com/pab1it0"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Prometheus MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/pab1it0/prometheus-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/README.md"
+installable: true
+installCommand: "docker run -i --rm -e PROMETHEUS_URL ghcr.io/pab1it0/prometheus-mcp-server:latest"
+usageSnippet: "Set `PROMETHEUS_URL` to one approved Prometheus endpoint, add auth variables if needed, and run the container over stdio for Claude."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "prometheus": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "-e",
+          "PROMETHEUS_URL",
+          "ghcr.io/pab1it0/prometheus-mcp-server:latest"
+        ],
+        "env": {
+          "PROMETHEUS_URL": "https://prometheus.example.com"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  docker run -i --rm -e PROMETHEUS_URL="https://prometheus.example.com" ghcr.io/pab1it0/prometheus-mcp-server:latest
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Docker for the recommended container install path, or Kubernetes and Helm for cluster deployment.
+  - A reachable Prometheus-compatible API endpoint in `PROMETHEUS_URL`.
+  - Optional basic auth, bearer token, mutual TLS certificate, organization ID, or custom headers for protected and multi-tenant Prometheus deployments.
+  - Review of Prometheus access policy, metric cardinality, retention, query limits, and incident-data handling before giving an agent query access.
+safetyNotes:
+  - "Prometheus MCP executes PromQL instant and range queries against the configured Prometheus endpoint."
+  - "Broad range queries, high-cardinality metric discovery, or repeated autonomous analysis can load Prometheus, remote storage, and network links."
+  - "Metrics can describe production systems, incidents, customer traffic, hostnames, Kubernetes namespaces, service names, deployment topology, and security-relevant labels."
+  - "`PROMETHEUS_URL_SSL_VERIFY=False` disables TLS verification and should not be used for production endpoints."
+  - "Protect `PROMETHEUS_PASSWORD`, `PROMETHEUS_TOKEN`, client certificate files, client key files, custom headers, and tenant IDs in MCP client configs and logs."
+  - "For Kubernetes use, review the Helm values, service exposure, ingress, ServiceMonitor, pod security context, and secret handling before deployment."
+privacyNotes:
+  - "Tool calls can expose PromQL queries, metric names, labels, target metadata, scrape health, tenant IDs, service URLs, and query results to the MCP client and model context."
+  - "Returned metrics may include usernames, customer IDs, IP addresses, internal routes, hostnames, pod names, error messages, or other sensitive labels if present in Prometheus."
+  - "Prometheus credentials, authentication variables, and custom headers can appear in local config, shell history, Kubernetes secrets, logs, or crash reports if not handled carefully."
+  - "Prometheus UI links in query results can reveal internal URLs unless `PROMETHEUS_DISABLE_LINKS=True` is used."
+disclosure: >-
+  MIT-licensed Python MCP server packaged as a GHCR container and Helm chart.
+  This entry is distinct from Grafana MCP integrations because it queries a
+  Prometheus-compatible API directly rather than going through Grafana
+  datasources.
+sourceUrls:
+  - "https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/LICENSE"
+  - "https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/README.md"
+  - "https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/server.json"
+  - "https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/src/prometheus_mcp_server/server.py"
+  - "https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/src/prometheus_mcp_server/main.py"
+  - "https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/charts/prometheus-mcp-server/values.yaml"
+  - "https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/Dockerfile"
+tags:
+  - observability
+  - prometheus
+  - metrics
+  - promql
+  - kubernetes
+keywords:
+  - Prometheus MCP Server
+  - prometheus-mcp-server
+  - PromQL MCP
+  - metrics MCP server
+  - observability MCP
+  - Claude Prometheus metrics
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Prometheus MCP Server gives Claude and other MCP clients direct access to
+Prometheus-compatible metrics. It can run PromQL instant queries, run range
+queries over a time window, list metric names, inspect metric metadata, fetch
+scrape targets, and report server health.
+
+Use it when an operations, SRE, or platform workflow needs Claude to inspect
+metrics without routing through Grafana. It supports Docker-based stdio setup,
+HTTP and SSE transport modes, Kubernetes deployment through Helm, optional auth,
+custom headers, request timeouts, and tool prefixes for multiple environments.
+
+## Source Review
+
+- https://github.com/pab1it0/prometheus-mcp-server
+- https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/README.md
+- https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/LICENSE
+- https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/pyproject.toml
+- https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/server.json
+- https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/src/prometheus_mcp_server/server.py
+- https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/src/prometheus_mcp_server/main.py
+- https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/charts/prometheus-mcp-server/values.yaml
+- https://raw.githubusercontent.com/pab1it0/prometheus-mcp-server/main/Dockerfile
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, Python package metadata, server manifest, server
+implementation, entry point, Helm values, and Dockerfile for current setup and
+operating details.
+
+## Features
+
+- Run PromQL instant queries with `execute_query`.
+- Run PromQL range queries with start time, end time, and step interval.
+- List available metric names with pagination and filtering.
+- Fetch metric metadata for one metric or bulk metadata.
+- Inspect scrape targets and their health.
+- Report MCP server and Prometheus connectivity health.
+- Configure basic auth, bearer token auth, mutual TLS, custom headers, and
+  organization IDs for multi-tenant setups.
+- Choose stdio, HTTP, or SSE MCP transport.
+- Set request timeouts to limit hanging or expensive queries.
+- Disable Prometheus UI links in responses to reduce context size and avoid
+  leaking internal URLs.
+- Prefix tool names so multiple instances can target different environments.
+- Deploy with Docker, Docker Desktop MCP Toolkit, or the bundled Helm chart.
+
+## Installation
+
+Run the GHCR container with a single Prometheus endpoint:
+
+```bash
+docker run -i --rm \
+  -e PROMETHEUS_URL="https://prometheus.example.com" \
+  ghcr.io/pab1it0/prometheus-mcp-server:latest
+```
+
+Add it to Claude Desktop:
+
+```json
+{
+  "mcpServers": {
+    "prometheus": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "PROMETHEUS_URL",
+        "ghcr.io/pab1it0/prometheus-mcp-server:latest"
+      ],
+      "env": {
+        "PROMETHEUS_URL": "https://prometheus.example.com"
+      }
+    }
+  }
+}
+```
+
+For a protected Prometheus endpoint:
+
+```bash
+docker run -i --rm \
+  -e PROMETHEUS_URL="https://prometheus.example.com" \
+  -e PROMETHEUS_TOKEN="YOUR_TOKEN" \
+  ghcr.io/pab1it0/prometheus-mcp-server:latest
+```
+
+Deploy to Kubernetes with Helm:
+
+```bash
+helm install prometheus-mcp-server \
+  oci://ghcr.io/pab1it0/charts/prometheus-mcp-server \
+  --set prometheus.url="https://prometheus.example.com"
+```
+
+## Use Cases
+
+- Ask Claude which services have elevated error rates or latency over a time
+  window.
+- Compare deployment, namespace, or tenant metrics during an incident review.
+- Discover available metrics and metadata before writing dashboards or alerts.
+- Inspect scrape target health and Prometheus connectivity.
+- Run read-only SRE investigations from an MCP client without opening broad
+  shell access.
+- Use tool prefixes to connect separate staging and production Prometheus
+  instances to the same MCP client.
+
+## Safety and Privacy
+
+Prometheus data often describes live infrastructure. Even read-only PromQL can
+surface sensitive service names, customers, traffic patterns, hostnames,
+incident details, and internal URLs. Limit the configured endpoint, prefer
+least-privilege credentials, use request timeouts, and disable UI links when
+internal Prometheus URLs should not enter the model context.
+
+Large or repeated range queries can create real operational load. Treat Claude's
+Prometheus access as production observability access: keep credentials secret,
+avoid broad autonomous loops, and verify incident-response conclusions before
+acting on them.
+
+## Duplicate Notes
+
+The catalog already includes Grafana MCP coverage, including querying
+Prometheus through Grafana datasources. This entry covers the separate
+`pab1it0/prometheus-mcp-server` project, which connects directly to a
+Prometheus-compatible API and ships Docker, GHCR, and Helm deployment paths.

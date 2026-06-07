@@ -1,0 +1,208 @@
+---
+title: Bright Data Web MCP Server
+slug: bright-data-web-mcp-server
+category: mcp
+description: >-
+  MCP server that connects Claude to Bright Data web search, scraping, browser
+  automation, public web datasets, and package metadata tools.
+cardDescription: Give Claude Bright Data-backed web search, scraping, and dataset tools.
+seoTitle: Bright Data Web MCP Server for Claude
+seoDescription: >-
+  Configure Bright Data Web MCP Server with Claude to search the web, scrape
+  pages, run browser automation, retrieve public web datasets, and query npm or
+  PyPI package metadata through Bright Data.
+author: Bright Data
+authorProfileUrl: "https://github.com/brightdata"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Bright Data
+brandDomain: brightdata.com
+repoUrl: "https://github.com/brightdata/brightdata-mcp"
+documentationUrl: "https://brightdata.com/ai/mcp-server"
+packageUrl: "https://registry.npmjs.org/%40brightdata%2Fmcp"
+installable: true
+installCommand: "npx @brightdata/mcp"
+usageSnippet: "Set `API_TOKEN`, choose optional `GROUPS` or `TOOLS`, then run `npx @brightdata/mcp` from the MCP client."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "bright-data": {
+        "command": "npx",
+        "args": ["@brightdata/mcp"],
+        "env": {
+          "API_TOKEN": "YOUR_BRIGHT_DATA_API_TOKEN"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "bright-data": {
+        "command": "npx",
+        "args": ["@brightdata/mcp"],
+        "env": {
+          "API_TOKEN": "YOUR_BRIGHT_DATA_API_TOKEN",
+          "GROUPS": "code,research",
+          "RATE_LIMIT": "100/1h"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js and npx available to the MCP client runtime.
+  - Bright Data account and API token stored as `API_TOKEN`.
+  - Review of Bright Data plan limits, free-tier scope, paid modes, and data-product terms.
+  - A decision about whether to use default rapid tools, `PRO_MODE`, `GROUPS`, or explicit `TOOLS`.
+  - Authorization to search, scrape, automate, or retrieve the target public web data.
+safetyNotes:
+  - This server sends web searches, URLs, scraping targets, browser actions, package names, and dataset requests to Bright Data APIs.
+  - Review website terms, robots policies, rate limits, jurisdictional requirements, and internal scraping policies before automating collection.
+  - "`PRO_MODE`, browser automation groups, data-product groups, and batch tools can increase cost, request volume, and operational impact."
+  - The server can create or use Bright Data zones through API calls; review account permissions and zone settings before running it with broad API tokens.
+  - Use `RATE_LIMIT`, group selection, and explicit tool allowlists to keep agent-driven browsing and scraping bounded.
+privacyNotes:
+  - Bright Data API tokens must stay in environment variables or secret managers and should never be committed to MCP configuration files.
+  - Queries, URLs, package names, web pages, scraping outputs, dataset filters, and browser activity may be visible to Bright Data, the MCP client, and the model provider.
+  - Public web data can still contain personal data, copyrighted content, customer information, or contractual restrictions.
+  - Tool outputs can include scraped page text, search results, social or ecommerce dataset fields, package metadata, and browser screenshots depending on enabled tools.
+disclosure: >-
+  Uses Bright Data services, which require an account and may include free-tier,
+  pay-as-you-go, or other plan-specific limits and charges.
+sourceUrls:
+  - "https://github.com/brightdata/brightdata-mcp"
+  - "https://github.com/brightdata/brightdata-mcp/blob/main/README.md"
+  - "https://github.com/brightdata/brightdata-mcp/blob/main/package.json"
+  - "https://github.com/brightdata/brightdata-mcp/blob/main/server.js"
+  - "https://github.com/brightdata/brightdata-mcp/blob/main/tool_groups.js"
+  - "https://github.com/brightdata/brightdata-mcp/blob/main/server.json"
+  - "https://github.com/brightdata/brightdata-mcp/blob/main/LICENSE"
+  - "https://registry.npmjs.org/%40brightdata%2Fmcp"
+  - "https://brightdata.com/ai/mcp-server"
+tags:
+  - web-search
+  - web-scraping
+  - browser-automation
+  - datasets
+  - developer-tools
+keywords:
+  - Bright Data MCP
+  - Bright Data Web MCP
+  - web scraping MCP server
+  - public web data MCP
+  - npm PyPI package MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Bright Data Web MCP Server connects Claude and other MCP clients to Bright
+Data-backed web access tools. The default server surface includes search and
+markdown scraping tools, while optional groups enable browser automation,
+ecommerce, social, finance, business, app store, travel, research, GEO, and code
+package-data workflows.
+
+The package is published as `@brightdata/mcp` and runs as a stdio MCP server
+with `API_TOKEN` configured. The upstream `server.json` documents the required
+API token and optional environment variables for zones, pro mode, tool groups,
+tool allowlists, polling timeout, request timeout, retries, and rate limiting.
+
+## Source Review
+
+- https://github.com/brightdata/brightdata-mcp
+- https://github.com/brightdata/brightdata-mcp/blob/main/README.md
+- https://github.com/brightdata/brightdata-mcp/blob/main/package.json
+- https://github.com/brightdata/brightdata-mcp/blob/main/server.js
+- https://github.com/brightdata/brightdata-mcp/blob/main/tool_groups.js
+- https://github.com/brightdata/brightdata-mcp/blob/main/server.json
+- https://github.com/brightdata/brightdata-mcp/blob/main/LICENSE
+- https://registry.npmjs.org/%40brightdata%2Fmcp
+- https://brightdata.com/ai/mcp-server
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, package metadata, server source, tool group definitions, server manifest,
+license, NPM registry metadata, and Bright Data documentation for current
+package versions, API-token requirements, tool groups, plan details, pricing,
+and usage limits.
+
+## Features
+
+- Search Google, Bing, or Yandex through a Bright Data-backed search tool.
+- Scrape single pages as markdown and run batch scraping when enabled.
+- Enable browser automation tools for navigation, snapshots, screenshots, clicks, form filling, scrolling, network requests, text, and HTML extraction.
+- Enable ecommerce, social, finance, business, app store, travel, research, GEO, or code tool groups.
+- Query npm and PyPI package metadata through the `code` tool group.
+- Use `GROUPS` or `TOOLS` to restrict the exposed tool set.
+- Use `RATE_LIMIT`, timeout, and retry environment variables to bound runtime behavior.
+- Run as a local stdio MCP server through `npx @brightdata/mcp`.
+
+## Installation
+
+Create a Bright Data API token, then configure the stdio MCP server:
+
+```json
+{
+  "mcpServers": {
+    "bright-data": {
+      "command": "npx",
+      "args": ["@brightdata/mcp"],
+      "env": {
+        "API_TOKEN": "YOUR_BRIGHT_DATA_API_TOKEN"
+      }
+    }
+  }
+}
+```
+
+For coding-agent package lookup and research workflows, keep the exposed tool
+surface narrow:
+
+```json
+{
+  "mcpServers": {
+    "bright-data": {
+      "command": "npx",
+      "args": ["@brightdata/mcp"],
+      "env": {
+        "API_TOKEN": "YOUR_BRIGHT_DATA_API_TOKEN",
+        "GROUPS": "code,research",
+        "RATE_LIMIT": "100/1h"
+      }
+    }
+  }
+}
+```
+
+Enable higher-impact groups only after reviewing Bright Data plan terms, request
+costs, and the target websites or datasets.
+
+## Use Cases
+
+- Ask Claude to retrieve current search results for a research topic.
+- Scrape a public webpage as markdown for summarization or extraction.
+- Check npm or PyPI package metadata without leaving a coding workflow.
+- Compare public ecommerce listings or travel data when permitted by policy and plan terms.
+- Run browser automation against public pages through a Bright Data-backed browser group.
+- Monitor public brand visibility outputs from supported LLM insight tools.
+
+## Safety and Privacy
+
+Bright Data Web MCP Server gives an agent access to live web collection and
+dataset APIs. Keep scraping and browser automation within legal, contractual,
+and organizational policy boundaries, especially for sites with personal data,
+authentication gates, rate limits, or anti-abuse controls.
+
+Use the smallest tool group that fits the task. The base search and markdown
+scraping tools have a different cost and risk profile than browser automation,
+data-product, social, or batch tools. Keep `API_TOKEN` and any account-specific
+zone configuration out of repositories, and add local rate limits before letting
+agents perform open-ended browsing or scraping.
+
+## Duplicate Check
+
+No `brightdata/brightdata-mcp`, `@brightdata/mcp`, Bright Data Web MCP, or
+matching source URL was found in `content/mcp`.

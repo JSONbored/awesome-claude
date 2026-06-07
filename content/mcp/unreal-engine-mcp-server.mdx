@@ -1,0 +1,189 @@
+---
+title: Unreal Engine MCP Server
+slug: unreal-engine-mcp-server
+category: mcp
+description: >-
+  MCP server and native Unreal Engine automation bridge for controlling UE5
+  projects, assets, actors, levels, Blueprints, Niagara, Sequencer, tests,
+  screenshots, logs, and editor automation from Claude.
+cardDescription: >-
+  Connect Claude to Unreal Engine through a native C++ automation bridge and
+  TypeScript MCP server for supervised game-development workflows.
+seoTitle: Unreal Engine MCP Server for Claude
+seoDescription: >-
+  Configure Unreal Engine MCP Server with Claude to automate UE5 asset,
+  actor, level, Blueprint, Niagara, Sequencer, screenshot, test, log, and
+  editor workflows through a native automation bridge.
+author: ChiR24
+authorProfileUrl: "https://github.com/ChiR24"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Unreal Engine MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/ChiR24/Unreal_mcp"
+documentationUrl: "https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/README.md"
+packageUrl: "https://registry.npmjs.org/unreal-engine-mcp-server"
+installable: true
+installCommand: "npx unreal-engine-mcp-server"
+usageSnippet: "Install the McpAutomationBridge plugin in an Unreal project, open the editor, then connect Claude through the native HTTP transport or the npx stdio bridge."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "unreal-engine": {
+        "command": "npx",
+        "args": ["unreal-engine-mcp-server"],
+        "env": {
+          "UE_PROJECT_PATH": "C:/Path/To/YourProject"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add unreal-engine -- npx unreal-engine-mcp-server
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - Unreal Engine 5.0 through 5.8 with a project that can load the included McpAutomationBridge plugin.
+  - Node.js 18 or newer when using the TypeScript stdio bridge; native MCP transport can run inside the plugin without Node.js.
+  - A code-enabled Unreal project or a prebuilt plugin package that matches the target Unreal Engine version.
+  - Required Unreal plugins such as MCP Automation Bridge, Editor Scripting Utilities, and Niagara enabled before automation starts.
+  - A reviewed `.uproject` path, screenshot directory, bridge host, bridge port, and client configuration for the workstation running the editor.
+safetyNotes:
+  - Unreal Engine MCP Server can create, import, duplicate, rename, move, delete, and modify project assets, actors, levels, Blueprints, Niagara systems, Sequencer tracks, materials, audio, tests, logs, console variables, and editor state.
+  - The bridge exposes editor automation through native HTTP/SSE or WebSocket transports; keep listeners on loopback unless you intentionally enable and secure LAN access.
+  - Capability-token authentication, TLS, command validation, path sanitization, rate limits, and loopback binding should be reviewed before using remote or multi-user setups.
+  - Require confirmation before running console commands, Python execution, UnrealBuildTool tasks, Play-In-Editor sessions, asset deletion, level saves, plugin changes, imports, exports, or source-control-affecting operations.
+  - Test against disposable projects before allowing an agent to automate production levels, gameplay systems, render settings, or content directories.
+privacyNotes:
+  - Project paths, asset names, level contents, screenshots, editor logs, test output, Blueprint graphs, console variables, and generated automation reports can be exposed to the MCP client.
+  - Screenshot and viewport tools may capture unpublished game content, UI, debug overlays, local paths, or proprietary assets.
+  - Native plugin logs, TypeScript bridge logs, metrics endpoints, and MCP transcripts can reveal project names, file-system paths, automation requests, and tool results.
+  - Treat capability tokens, project paths, LAN listener settings, and generated screenshots as sensitive local configuration.
+  - Keep automation output inside approved project or scratch directories and remove temporary artifacts before sharing traces or bug reports.
+disclosure: >-
+  Community-maintained MIT MCP server and Unreal Engine plugin. It is not an
+  Epic Games product; users must follow Unreal Engine, plugin, project, and
+  asset license requirements separately.
+sourceUrls:
+  - "https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/server.json"
+  - "https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/package.json"
+  - "https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/plugins/McpAutomationBridge/README.md"
+  - "https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/src/cli.ts"
+  - "https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/src/index.ts"
+  - "https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/plugins/McpAutomationBridge/Source/McpAutomationBridge/Private/MCP/McpNativeTransport.cpp"
+tags:
+  - unreal-engine
+  - game-development
+  - ue5
+  - automation
+  - blueprint
+keywords:
+  - Unreal Engine MCP
+  - Unreal MCP Server
+  - UE5 MCP
+  - game development MCP
+  - Blueprint automation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Unreal Engine MCP Server connects Claude and other MCP clients to Unreal Engine
+through the included McpAutomationBridge plugin. It supports a native
+HTTP/SSE MCP transport in the Unreal plugin and a TypeScript stdio bridge that
+can be launched through `npx unreal-engine-mcp-server`.
+
+Use it when Claude needs supervised access to Unreal Engine project structure,
+assets, actors, levels, Blueprints, Niagara effects, Sequencer workflows,
+screenshots, logs, tests, and editor automation.
+
+## Source Review
+
+- https://github.com/ChiR24/Unreal_mcp
+- https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/README.md
+- https://registry.npmjs.org/unreal-engine-mcp-server
+- https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/LICENSE
+- https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/server.json
+- https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/package.json
+- https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/plugins/McpAutomationBridge/README.md
+- https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/src/cli.ts
+- https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/src/index.ts
+- https://raw.githubusercontent.com/ChiR24/Unreal_mcp/main/plugins/McpAutomationBridge/Source/McpAutomationBridge/Private/MCP/McpNativeTransport.cpp
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, server manifest, package metadata, plugin
+README, TypeScript entrypoints, and native transport source for current setup
+and behavior details.
+
+## Features
+
+- Control Unreal Engine through a native C++ automation bridge plugin.
+- Connect through native MCP HTTP/SSE transport or the TypeScript stdio bridge.
+- Browse, import, duplicate, rename, delete, and create project assets.
+- Spawn, delete, transform, tag, and inspect actors and components.
+- Load, save, manage, and inspect levels, lighting, streaming, and viewport
+  state.
+- Work with Blueprint, Niagara, Material, Behavior Tree, animation, physics,
+  audio, Sequencer, PCG, landscape, foliage, and gameplay systems.
+- Run editor control tasks such as screenshots, Play-In-Editor sessions, logs,
+  tests, UnrealBuildTool actions, console variables, and project settings.
+- Use optional capability-token authentication, TLS, loopback binding, command
+  validation, path sanitization, and rate limits for safer local automation.
+
+## Installation
+
+Install the included McpAutomationBridge plugin into an Unreal Engine project
+and enable the required Unreal plugins. For the TypeScript bridge, add the npm
+server to Claude:
+
+```bash
+claude mcp add unreal-engine -- npx unreal-engine-mcp-server
+```
+
+Or add the stdio bridge manually:
+
+```json
+{
+  "mcpServers": {
+    "unreal-engine": {
+      "command": "npx",
+      "args": ["unreal-engine-mcp-server"],
+      "env": {
+        "UE_PROJECT_PATH": "C:/Path/To/YourProject"
+      }
+    }
+  }
+}
+```
+
+The plugin also supports a native MCP HTTP transport from inside Unreal. Enable
+Native MCP in the plugin settings, keep the listener on loopback unless you
+have a separate network-security plan, and connect clients to the configured
+local MCP endpoint.
+
+## Use Cases
+
+- Ask Claude to list project assets or inspect an Unreal content directory.
+- Spawn lights, cameras, actors, or debug shapes in a test level.
+- Create or update materials, Blueprint graphs, Niagara effects, or Behavior
+  Tree nodes under review.
+- Capture viewport screenshots for debugging, review, or iteration notes.
+- Query logs, run tests, inspect console variables, and summarize editor state.
+- Coordinate Sequencer, animation, audio, PCG, landscape, foliage, and level
+  design tasks from natural-language prompts.
+
+## Safety and Privacy
+
+Unreal Engine MCP Server can modify real project state through the editor. Keep
+the bridge scoped to local trusted clients, use token authentication when
+available, and require explicit approval before destructive operations,
+automation scripts, console commands, build actions, level saves, imports, or
+exports.
+
+Treat project paths, asset names, screenshots, logs, Blueprint graphs, generated
+reports, metrics, and MCP transcripts as sensitive production data. Test new
+automation flows against disposable projects before connecting Claude to
+production game content.

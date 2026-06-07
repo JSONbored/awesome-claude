@@ -1,0 +1,165 @@
+---
+title: arXiv MCP Server
+slug: arxiv-mcp-server
+category: mcp
+description: >-
+  MCP server for searching, downloading, reading, and analyzing arXiv papers
+  through Claude and other MCP clients.
+cardDescription: >-
+  Let Claude search arXiv, download papers, read local paper text, run semantic
+  search, inspect citation graphs, and set research alerts.
+seoTitle: arXiv MCP Server for Claude
+seoDescription: >-
+  Configure arXiv MCP Server with Claude and other MCP clients to search arXiv,
+  download papers, read paper text, run local semantic search, inspect citation
+  graphs, and support research workflows.
+author: Joseph Blazick
+authorProfileUrl: "https://github.com/blazickjp"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: arXiv MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/blazickjp/arxiv-mcp-server"
+documentationUrl: "https://github.com/blazickjp/arxiv-mcp-server/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/arxiv-mcp-server/json"
+installable: true
+installCommand: "uvx arxiv-mcp-server"
+usageSnippet: "Run `uvx arxiv-mcp-server` from an MCP client to let Claude search arXiv, download papers, and read local paper text."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "arxiv": {
+        "command": "uvx",
+        "args": ["arxiv-mcp-server"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "arxiv": {
+        "command": "uvx",
+        "args": ["arxiv-mcp-server"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.11 or newer available to the MCP client runtime.
+  - uvx available for package execution.
+  - Local storage available for downloaded papers.
+  - Optional PDF extra if you need older papers that do not have HTML content.
+  - Optional pro dependencies if you want semantic search and advanced research prompts.
+safetyNotes:
+  - arXiv MCP Server retrieves paper content from external, user-generated sources.
+  - Upstream explicitly warns that paper text is untrusted input and can contain prompt-injection attempts.
+  - Downloaded papers are stored locally for later reading and semantic search.
+  - Citation graph and alert workflows can expand research context beyond the original paper query.
+  - Treat model summaries of papers as data, not instructions, especially in multi-tool sessions with filesystem, shell, browser, database, or messaging tools enabled.
+privacyNotes:
+  - Search queries, paper IDs, downloaded paper text, local storage choices, semantic search terms, citation graph requests, alert topics, prompts, and tool outputs may be visible to the MCP client and model provider.
+  - Research queries and downloaded papers can reveal confidential research direction, product plans, academic review topics, legal strategy, or competitive analysis.
+  - Review locally stored papers and generated summaries before syncing, sharing, or committing them.
+sourceUrls:
+  - "https://github.com/blazickjp/arxiv-mcp-server"
+  - "https://github.com/blazickjp/arxiv-mcp-server/blob/main/README.md"
+  - "https://github.com/blazickjp/arxiv-mcp-server/blob/main/pyproject.toml"
+  - "https://pypi.org/pypi/arxiv-mcp-server/json"
+tags:
+  - arxiv
+  - research
+  - papers
+  - semantic-search
+  - citations
+keywords:
+  - arXiv MCP
+  - arxiv-mcp-server
+  - research paper MCP
+  - academic search MCP
+  - citation graph MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+arXiv MCP Server connects MCP clients to arXiv research workflows. It can search
+papers, download paper content, read locally downloaded papers, list local
+papers, run semantic search over the local collection, fetch citation graph
+data, save research alerts, and provide research-oriented prompts.
+
+The upstream README documents a portable `uvx arxiv-mcp-server` MCP
+configuration. The PyPI package exposes the `arxiv-mcp-server` command for MCP
+clients.
+
+## Source Review
+
+- https://github.com/blazickjp/arxiv-mcp-server
+- https://github.com/blazickjp/arxiv-mcp-server/blob/main/README.md
+- https://github.com/blazickjp/arxiv-mcp-server/blob/main/pyproject.toml
+- https://pypi.org/pypi/arxiv-mcp-server/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+PyPI metadata for current package version, command name, Python requirement,
+optional extras, tool behavior, security guidance, and setup guidance.
+
+## Features
+
+- Search arXiv papers with optional category, date, and boolean filters.
+- Download papers and store them locally for later reading.
+- Read downloaded paper text in bounded chunks for large papers.
+- List papers already downloaded into the local collection.
+- Run semantic search over locally downloaded papers when pro dependencies are
+  installed.
+- Fetch references and citing papers for arXiv IDs.
+- Save topic watches and poll for newly published papers.
+- Use research prompts for summaries, comparisons, literature review, and paper
+  analysis.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "arxiv": {
+      "command": "uvx",
+      "args": ["arxiv-mcp-server"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to search arXiv for recent papers on a topic.
+- Download a paper, read it in chunks, and summarize the core argument.
+- Compare several papers already saved in the local collection.
+- Search locally downloaded papers for related methods or terminology.
+- Explore references and citing papers around an arXiv ID.
+- Set watches for research topics and review newly published papers.
+
+## Safety and Privacy
+
+Paper content is untrusted external input. A malicious or adversarial paper can
+contain prompt-injection text that tries to override instructions or trigger
+unintended tool use. Treat paper text and model summaries as data, require human
+review before acting on paper-derived instructions, and be especially cautious
+when this server is used alongside tools that can write files, run commands,
+send messages, browse sites, or access private systems.
+
+Research workflows can reveal sensitive direction. Queries, downloaded papers,
+paper IDs, citation graph requests, semantic search terms, local storage
+choices, and generated summaries may expose private research, product,
+academic, legal, or competitive-analysis context. Review local paper storage and
+generated notes before sharing or syncing them.
+
+## Duplicate Check
+
+No `blazickjp/arxiv-mcp-server` entry, `arxiv-mcp-server` package entry, or
+matching source URL was found in `content/mcp`.

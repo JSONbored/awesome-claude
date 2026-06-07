@@ -1,0 +1,193 @@
+---
+title: MCP Feedback Enhanced
+slug: mcp-feedback-enhanced
+category: mcp
+description: >-
+  Interactive feedback MCP server that opens a web or Tauri desktop interface
+  so AI coding agents can ask the human for confirmation, structured feedback,
+  screenshots, prompt snippets, and follow-up direction during development.
+cardDescription: >-
+  Add a human-in-the-loop feedback tool to Claude, Cursor, Cline, Windsurf, and
+  other MCP clients with uvx, Web UI or desktop mode, session history,
+  multi-language support, image upload, timers, and prompt management.
+seoTitle: MCP Feedback Enhanced for Claude
+seoDescription: >-
+  Configure MCP Feedback Enhanced with Claude and other AI coding clients to
+  collect user feedback, screenshots, prompt choices, session notes, and
+  confirmations through a Web UI or desktop application.
+author: Minidoracat
+authorProfileUrl: "https://github.com/Minidoracat"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MCP Feedback Enhanced
+brandDomain: github.com
+repoUrl: "https://github.com/Minidoracat/mcp-feedback-enhanced"
+documentationUrl: "https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-feedback-enhanced/json"
+installable: true
+installCommand: "uvx mcp-feedback-enhanced@latest"
+usageSnippet: "Configure your MCP client to run `uvx mcp-feedback-enhanced@latest`, keep the web host bound locally unless remote access is intentional, and use the feedback tool before agents make speculative or high-impact changes."
+copySnippet: |-
+  uvx mcp-feedback-enhanced@latest
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mcp-feedback-enhanced": {
+        "command": "uvx",
+        "args": ["mcp-feedback-enhanced@latest"],
+        "timeout": 600,
+        "env": {
+          "MCP_DESKTOP_MODE": "false",
+          "MCP_WEB_HOST": "127.0.0.1",
+          "MCP_WEB_PORT": "8765",
+          "MCP_DEBUG": "false",
+          "MCP_LANGUAGE": "en"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.11 or newer with uv/uvx available.
+  - MCP client such as Claude, Cursor, Cline, Windsurf, Augment, Trae, or another compatible host.
+  - Browser access for Web UI mode, or a supported Windows, macOS, or Linux desktop environment for Tauri desktop mode.
+  - Decision on whether the feedback server should stay local-only or bind to a wider interface for SSH/remote development.
+  - Review of prompt presets, auto-submit timers, auto command execution settings, and session retention before using it in sensitive projects.
+safetyNotes:
+  - The server is designed to interrupt agent workflows for human feedback, but MCP client settings such as auto-approval can still let the tool launch without a fresh prompt.
+  - Version notes describe auto command execution for preset commands after sessions or commits; review and disable command presets unless they are intentional and safe.
+  - Keep `MCP_WEB_HOST` set to `127.0.0.1` unless remote access is required and protected by the surrounding development environment.
+  - Image upload, clipboard paste, desktop notifications, audio notifications, and session export can make feedback sessions more powerful but also easier to misuse on shared machines.
+  - Do not use feedback prompts as the only approval barrier for destructive file edits, shell commands, deployments, account changes, or data exfiltration-prone tasks.
+privacyNotes:
+  - Feedback text, AI work summaries, uploaded images, screenshots, prompt presets, session history, statistics, and exported records may include source code, paths, secrets, customer data, or personal information.
+  - WebSocket traffic between the MCP server and feedback UI carries the feedback session data.
+  - The README describes local file storage for session history and settings; review retention and export behavior before using it with confidential projects.
+  - If the web UI is bound beyond localhost for SSH or remote development, anyone with network access to that interface may be able to view or influence feedback sessions unless the environment adds protection.
+sourceUrls:
+  - "https://github.com/Minidoracat/mcp-feedback-enhanced"
+  - "https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/README.md"
+  - "https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/pyproject.toml"
+  - "https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/LICENSE"
+  - "https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/examples/mcp-config-desktop.json"
+  - "https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/examples/mcp-config-web.json"
+  - "https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/RELEASE_NOTES/CHANGELOG.en.md"
+  - "https://pypi.org/pypi/mcp-feedback-enhanced/json"
+tags:
+  - feedback
+  - human-in-the-loop
+  - coding
+  - web-ui
+  - desktop
+keywords:
+  - MCP Feedback Enhanced
+  - interactive feedback MCP
+  - human in the loop MCP
+  - AI coding feedback MCP
+  - desktop feedback MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Feedback Enhanced is an interactive feedback server for AI-assisted
+development. When an agent calls the feedback tool, the server opens a web or
+desktop interface so the human can review the agent's current work summary,
+enter feedback, upload images, choose saved prompts, and send structured
+direction back to the MCP client.
+
+The project is an enhanced fork of `interactive-feedback-mcp` with dual Web UI
+and Tauri desktop interfaces, environment detection for SSH/WSL workflows,
+session tracking, prompt management, timers, image handling, notifications, and
+multi-language support.
+
+## Source Review
+
+- https://github.com/Minidoracat/mcp-feedback-enhanced
+- https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/README.md
+- https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/pyproject.toml
+- https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/LICENSE
+- https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/examples/mcp-config-desktop.json
+- https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/examples/mcp-config-web.json
+- https://github.com/Minidoracat/mcp-feedback-enhanced/blob/main/RELEASE_NOTES/CHANGELOG.en.md
+- https://pypi.org/pypi/mcp-feedback-enhanced/json
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, package metadata, MIT license, example MCP configs, changelog, and PyPI
+metadata for current install commands, desktop/web mode behavior, version
+history, and command-execution notes.
+
+## Features
+
+- Run the MCP server with `uvx mcp-feedback-enhanced@latest`.
+- Open either a browser-based feedback UI or a native Tauri desktop interface.
+- Support local, SSH remote, and WSL development environments.
+- Send text feedback, selected prompts, images, and work-summary context back
+  to the agent.
+- Manage reusable prompts, auto-submit timers, session history, statistics, and
+  exports.
+- Use WebSocket status monitoring, reconnection behavior, audio notifications,
+  system notifications, clipboard image paste, and multi-language UI settings.
+- Configure host, port, desktop mode, debug mode, and language through
+  environment variables.
+
+## Installation
+
+Configure the MCP server in your client:
+
+```json
+{
+  "mcpServers": {
+    "mcp-feedback-enhanced": {
+      "command": "uvx",
+      "args": ["mcp-feedback-enhanced@latest"],
+      "timeout": 600,
+      "env": {
+        "MCP_DESKTOP_MODE": "false",
+        "MCP_WEB_HOST": "127.0.0.1",
+        "MCP_WEB_PORT": "8765",
+        "MCP_DEBUG": "false",
+        "MCP_LANGUAGE": "en"
+      }
+    }
+  }
+}
+```
+
+Switch `MCP_DESKTOP_MODE` to `true` if you want the native desktop interface.
+Keep `MCP_WEB_HOST` on localhost for ordinary local use, and only widen the
+binding when your remote development environment needs it and has appropriate
+network protection.
+
+## Use Cases
+
+- Ask the human to resolve ambiguity before a coding agent makes speculative
+  changes.
+- Collect screenshots or pasted images that explain a UI bug or design issue.
+- Reuse prompt snippets for common review, refactor, or verification workflows.
+- Keep a local history of feedback sessions for later audit or handoff.
+- Reduce long back-and-forth tool loops by collecting all requested decisions in
+  one structured feedback step.
+
+## Safety and Privacy
+
+This tool is useful because it interrupts automation, but it is still part of an
+agent toolchain. Review MCP client auto-approval settings, auto-submit timers,
+and auto command execution before relying on it in a sensitive repo. Treat
+remote web binding as an exposed control surface and prefer localhost whenever
+possible.
+
+Feedback sessions may contain source code, screenshots, copied terminal output,
+file paths, tokens accidentally pasted into summaries, and project-specific
+decisions. Review session history storage and export behavior before uploading
+confidential screenshots or using it in customer, employer, or regulated
+environments.
+
+## Duplicate Check
+
+No `Minidoracat/mcp-feedback-enhanced` entry, MCP Feedback Enhanced entry,
+interactive feedback MCP entry, or matching source URL was found in
+`content/mcp`.

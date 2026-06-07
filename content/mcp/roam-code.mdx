@@ -1,0 +1,194 @@
+---
+title: Roam Code
+slug: roam-code
+category: mcp
+description: >-
+  Local codebase intelligence CLI and MCP server that gives Claude a SQLite
+  code graph, change-safety gates, code health checks, impact analysis,
+  review tools, and audit evidence for agent-assisted coding.
+cardDescription: Let Claude query a local code graph before and after code changes.
+seoTitle: Roam Code MCP Server for Claude
+seoDescription: >-
+  Configure Roam Code with Claude and other MCP clients to expose local-first
+  codebase intelligence, preflight checks, impact analysis, retrieval, health,
+  review, and audit evidence tools for AI coding agents.
+author: Cranot
+authorProfileUrl: "https://github.com/Cranot"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Roam Code
+brandDomain: roam-code.com
+websiteUrl: "https://roam-code.com/"
+repoUrl: "https://github.com/Cranot/roam-code"
+documentationUrl: "https://github.com/Cranot/roam-code/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/roam-code/json"
+installable: true
+installCommand: "pip install \"roam-code[mcp]\""
+usageSnippet: "Ask Claude to use Roam Code for context, preflight, impact, or review checks before editing an indexed local repository."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "roam-code": {
+        "command": "roam",
+        "args": ["mcp"],
+        "env": {
+          "ROAM_MCP_PRESET": "core"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "roam-code": {
+        "command": "roam",
+        "args": ["mcp"],
+        "env": {
+          "ROAM_MCP_PRESET": "core",
+          "ROAM_AGENT_MODE": "read_only"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer.
+  - A local repository that can be indexed by Roam Code.
+  - Permission for the MCP client to read the target codebase and write Roam Code local index and evidence artifacts.
+  - Run `roam init` or `roam index` in the repository before expecting complete graph-aware answers.
+safetyNotes:
+  - Roam Code exposes many code-intelligence MCP tools; choose the narrowest `ROAM_MCP_PRESET` needed for the workflow.
+  - The server indexes local source code into a `.roam` SQLite-backed graph and may write run ledgers, decision receipts, caches, and generated evidence files.
+  - Some workflows can support change planning, review, and higher-authority modes, so keep `ROAM_AGENT_MODE` aligned with the MCP client's approval model.
+  - Static analysis, blast-radius, security, and health checks can miss runtime behavior or project-specific constraints.
+  - Treat Roam Code output as guidance for review and testing, not as proof that a change is safe to merge.
+privacyNotes:
+  - Local source paths, symbols, imports, call graphs, git history, dependency relationships, and run evidence can be written to local Roam Code artifacts.
+  - The README describes the project as local by default with no API keys required and opt-in summary-only metrics push as the outbound surface.
+  - Review `.roam` artifacts, generated evidence, SARIF, reports, and logs before sharing them outside the repository.
+  - Avoid indexing private, regulated, or customer code unless the local machine, MCP client, and model workflow are approved for that codebase.
+sourceUrls:
+  - "https://github.com/Cranot/roam-code/blob/main/README.md"
+  - "https://github.com/Cranot/roam-code/blob/main/pyproject.toml"
+  - "https://github.com/Cranot/roam-code/blob/main/server.json"
+  - "https://github.com/Cranot/roam-code/blob/main/src/roam/mcp_server.py"
+  - "https://github.com/Cranot/roam-code/blob/main/LICENSE"
+tags:
+  - codebase-intelligence
+  - code-review
+  - local-first
+  - static-analysis
+  - agents
+keywords:
+  - Roam Code
+  - Roam Code MCP
+  - codebase intelligence MCP
+  - local code graph MCP
+  - AI coding agent MCP
+  - preflight MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Roam Code is a local-first codebase intelligence CLI and Model Context Protocol
+server for AI coding agents. It builds a SQLite-backed graph of a repository so
+Claude can ask for focused code context, pre-change safety checks, impact
+analysis, health signals, retrieval, review evidence, and audit-oriented
+metadata without relying on a cloud account.
+
+The default MCP preset exposes the core tool surface for common coding-agent
+workflows. Additional presets are documented upstream for review, refactor,
+debugging, architecture, compliance, and full-tool scenarios.
+
+## Source Review
+
+- https://github.com/Cranot/roam-code
+- https://github.com/Cranot/roam-code/blob/main/README.md
+- https://pypi.org/pypi/roam-code/json
+- https://github.com/Cranot/roam-code/blob/main/pyproject.toml
+- https://github.com/Cranot/roam-code/blob/main/server.json
+- https://github.com/Cranot/roam-code/blob/main/src/roam/mcp_server.py
+- https://github.com/Cranot/roam-code/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, package metadata, MCP server manifest, MCP server source,
+and license file for current install commands, presets, tool counts, local-first
+behavior, write surfaces, and licensing.
+
+## Features
+
+- Python package `roam-code` with optional MCP extra.
+- Stdio MCP server launched with `roam mcp`.
+- Local SQLite code graph built from an indexed repository.
+- Core MCP preset for context, retrieval, preflight, impact, diff, PR risk,
+  affected tests, health, diagnostics, critique, and related coding-agent tasks.
+- Optional presets for review, refactor, debug, architecture, compliance, and
+  full tool exposure.
+- Local run ledgers, decision receipts, and ChangeEvidence-style audit artifacts
+  documented in the repository.
+- MCP mode and receipt controls documented for read-only and higher-authority
+  agent workflows.
+- Apache-2.0 license.
+
+## Installation
+
+Install Roam Code with the MCP extra, index a repository, then configure the
+stdio MCP server:
+
+```sh
+pip install "roam-code[mcp]"
+roam init
+```
+
+```json
+{
+  "mcpServers": {
+    "roam-code": {
+      "command": "roam",
+      "args": ["mcp"],
+      "env": {
+        "ROAM_MCP_PRESET": "core"
+      }
+    }
+  }
+}
+```
+
+After restarting the MCP client, ask Claude to use Roam Code for context,
+preflight, impact, or review checks before changing an indexed repository.
+
+## Use Cases
+
+- Ask for graph-aware context before editing a symbol.
+- Run preflight checks before a refactor.
+- Estimate blast radius and affected tests for a planned change.
+- Review an uncommitted diff against local code graph facts.
+- Query health, complexity, dependencies, cycles, and code smells.
+- Retrieve task-specific files and symbols without repeated raw search.
+- Produce local audit evidence for agent-assisted code changes.
+
+## Safety and Privacy
+
+Roam Code is powerful because it has local codebase visibility. It can read and
+index source files, derive graph facts, inspect git history, and write local
+artifacts under Roam Code-managed paths. Keep the MCP preset and agent mode as
+narrow as the workflow allows, and verify Roam Code findings with tests and
+human review before merging changes.
+
+The README describes Roam Code as local by default with no API keys required.
+Even so, indexed code facts, generated reports, run ledgers, receipts, SARIF,
+and evidence bundles may contain sensitive repository details. Review those
+artifacts before sharing them, and avoid indexing private or regulated code in
+unapproved model workflows.
+
+## Duplicate Check
+
+Existing MCP content includes code search, code review, repository, and
+developer-tool servers, but no dedicated entry for `Cranot/roam-code` or the
+`roam-code` PyPI package was found in `content/mcp`. This entry is distinct
+because it covers a local code graph and MCP server for preflight, retrieval,
+impact analysis, review evidence, and agent coding safety workflows.

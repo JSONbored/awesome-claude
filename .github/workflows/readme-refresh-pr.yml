@@ -63,6 +63,11 @@ jobs:
             exit 0
           fi
 
+          # Hosted installs can normalize tracked dependency metadata. This
+          # accumulator publishes README.md only, so discard workspace churn
+          # before carrying README onto the shared branch.
+          git restore --worktree --staged -- . ':!README.md'
+
           cp README.md "$RUNNER_TEMP/README.md"
           git fetch origin "refs/heads/$BRANCH_NAME:refs/remotes/origin/$BRANCH_NAME" || true
           git switch -C "$BRANCH_NAME" origin/main
@@ -79,7 +84,13 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add README.md
           git commit -m "docs(readme): refresh generated catalog index"
-          git push --force-with-lease origin "$BRANCH_NAME:$BRANCH_NAME"
+
+          remote_branch_sha="$(git ls-remote --heads origin "$BRANCH_NAME" | awk '{print $1}')"
+          if [[ -n "$remote_branch_sha" ]]; then
+            git push --force-with-lease="refs/heads/$BRANCH_NAME:$remote_branch_sha" origin "$BRANCH_NAME:$BRANCH_NAME"
+          else
+            git push --force-with-lease="refs/heads/$BRANCH_NAME:" origin "$BRANCH_NAME:$BRANCH_NAME"
+          fi
           echo "has-changes=true" >> "$GITHUB_OUTPUT"
 
       - name: Create or update README refresh PR

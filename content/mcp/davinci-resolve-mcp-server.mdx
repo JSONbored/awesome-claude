@@ -1,0 +1,186 @@
+---
+title: DaVinci Resolve MCP Server
+slug: davinci-resolve-mcp-server
+category: mcp
+description: >-
+  MCP server for controlling DaVinci Resolve Studio through the official
+  scripting API, with tools for projects, timelines, media pools, render setup,
+  review markers, grading, Fusion, Fairlight, and source-safe media analysis.
+cardDescription: >-
+  Connect Claude to DaVinci Resolve Studio for local editing, media pool,
+  timeline, render, marker, grading, Fusion, Fairlight, and analysis workflows.
+seoTitle: DaVinci Resolve MCP Server for Claude
+seoDescription: >-
+  Configure DaVinci Resolve MCP Server with Claude to control Resolve Studio
+  projects, timelines, media pools, render jobs, review markers, grading,
+  Fusion, Fairlight, and source-safe media analysis through MCP.
+author: Samuel Gursky
+authorProfileUrl: "https://github.com/samuelgursky"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: DaVinci Resolve MCP Server
+brandDomain: blackmagicdesign.com
+repoUrl: "https://github.com/samuelgursky/davinci-resolve-mcp"
+documentationUrl: "https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/README.md"
+packageUrl: "https://registry.npmjs.org/davinci-resolve-mcp"
+installable: true
+installCommand: "npx davinci-resolve-mcp setup"
+usageSnippet: "Run `npx davinci-resolve-mcp setup` after opening DaVinci Resolve Studio and enabling Local external scripting."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "davinci-resolve": {
+        "command": "npx",
+        "args": ["davinci-resolve-mcp", "server"]
+      }
+    }
+  }
+configSnippet: |-
+  npx davinci-resolve-mcp setup
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - DaVinci Resolve Studio 18.5 or newer; the free edition does not support the required external scripting API.
+  - Resolve external scripting set to `Local`.
+  - Python 3.10 or newer, with Python 3.10-3.12 recommended for the broadest Resolve compatibility.
+  - A local MCP client that can launch stdio servers under the same user account that operates Resolve.
+  - Review of which projects, timelines, media pools, scripts, render settings, and media-analysis roots Claude may modify.
+safetyNotes:
+  - DaVinci Resolve MCP Server can launch or reconnect to Resolve, switch pages, create or open projects, modify timelines, manage media pools, write markers, change render settings, and queue jobs.
+  - Extension-authoring tools can install or remove Resolve scripts, Fuses, DCTLs, ACES DCTLs, presets, and page scripts.
+  - Source media is intended to remain immutable by default, but operators must still review requests that relink, replace, transcode, proxy, render, export, or create media derivatives.
+  - The default server is local stdio, but the local control panel starts a single-user browser server; keep it on trusted local interfaces only.
+  - Require confirmation before deleting projects, replacing clips, changing project settings, installing extensions, updating metadata, or queuing renders.
+  - Keep Resolve external scripting set to `Local` unless you have a separate remote-control security plan.
+privacyNotes:
+  - Project names, timelines, clip names, media paths, markers, metadata, render paths, transcripts, thumbnails, analysis artifacts, logs, and Resolve scripting paths can be exposed to the MCP client.
+  - Media analysis can produce sidecar files, scratch artifacts, frame paths, transcripts, searchable indexes, and reports that may include private footage details.
+  - Host-chat visual analysis can expose selected frame images to the active MCP client or vision-capable model provider.
+  - Local logs and analysis reports may contain absolute media paths, project names, clip metadata, speaker text, visual descriptions, and render settings.
+  - Store generated analysis artifacts and exports inside approved project or scratch directories and delete them when no longer needed.
+disclosure: >-
+  Community-maintained MIT MCP server for DaVinci Resolve Studio. The server is
+  open source, but using it requires DaVinci Resolve Studio and Blackmagic
+  Design's local scripting API.
+sourceUrls:
+  - "https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/package.json"
+  - "https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/SECURITY.md"
+  - "https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/docs/install.md"
+  - "https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/docs/guides/media-analysis-guide.md"
+  - "https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/src/server.py"
+  - "https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/src/resolve_mcp_server.py"
+tags:
+  - davinci-resolve
+  - video-editing
+  - media-production
+  - color-grading
+  - post-production
+keywords:
+  - DaVinci Resolve MCP
+  - DaVinci Resolve MCP Server
+  - Resolve Studio MCP
+  - video editing MCP
+  - media production MCP
+  - color grading MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+DaVinci Resolve MCP Server connects Claude and other MCP clients to DaVinci
+Resolve Studio through Resolve's official scripting API. It provides a default
+compound server for lower context usage and an optional granular mode for users
+who need one tool per Resolve API method.
+
+Use it when Claude needs supervised local access to Resolve projects, timelines,
+media pools, renders, review markers, color workflows, Fusion, Fairlight, or
+source-safe media analysis.
+
+## Source Review
+
+- https://github.com/samuelgursky/davinci-resolve-mcp
+- https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/README.md
+- https://registry.npmjs.org/davinci-resolve-mcp
+- https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/LICENSE
+- https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/package.json
+- https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/SECURITY.md
+- https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/docs/install.md
+- https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/docs/guides/media-analysis-guide.md
+- https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/src/server.py
+- https://raw.githubusercontent.com/samuelgursky/davinci-resolve-mcp/main/src/resolve_mcp_server.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, security policy, installation guide, media
+analysis guide, compound server, and granular server entrypoint for current
+setup and behavior details.
+
+## Features
+
+- Launch or reconnect to DaVinci Resolve Studio.
+- Manage projects, project folders, databases, settings, presets, and archives.
+- Import, organize, normalize, relink, and inspect media pool items and bins.
+- Create, probe, edit, duplicate, move, and validate timelines and timeline
+  items.
+- Copy, move, export, and report review markers, flags, and annotations.
+- Validate render settings and queue render jobs.
+- Probe and update grading state, CDL payloads, Gallery stills, LUTs, and DRX
+  workflows.
+- Create and inspect Fusion compositions and guarded graph connections.
+- Inspect audio mappings, voice isolation, subtitles, and Fairlight properties.
+- Run source-safe media analysis jobs and write approved summaries or markers
+  back into Resolve project metadata.
+- Use a local browser control panel for status and analysis review.
+
+## Installation
+
+Open DaVinci Resolve Studio, enable Local external scripting, then run the npm
+setup command:
+
+```bash
+npx davinci-resolve-mcp setup
+```
+
+The installer detects Resolve paths, creates a managed Python environment, and
+can configure supported MCP clients. A manual MCP server command can be launched
+through the managed npm wrapper:
+
+```json
+{
+  "mcpServers": {
+    "davinci-resolve": {
+      "command": "npx",
+      "args": ["davinci-resolve-mcp", "server"]
+    }
+  }
+}
+```
+
+Use the default compound server unless you specifically need the full granular
+tool surface.
+
+## Use Cases
+
+- Ask Claude to open a Resolve project and summarize its timelines.
+- Create an assembly timeline from approved clips.
+- Detect gaps, overlaps, missing media, or source-frame ranges.
+- Prepare render settings and validate them before queueing a job.
+- Copy review markers and export a review report.
+- Snapshot a grade, validate CDL changes, or export a temporary LUT.
+- Build a Fusion TextPlus overlay and verify graph connections.
+- Run source-safe media analysis and review sidecar reports before publishing
+  metadata back into the Resolve project.
+
+## Safety and Privacy
+
+DaVinci Resolve MCP Server controls a local creative application with real
+project state. Keep the user confirmation boundary active for destructive or
+high-impact operations, and test workflows against duplicate projects before
+letting an agent touch production edits.
+
+Treat media paths, frame exports, transcripts, thumbnails, markers, render
+settings, and analysis reports as sensitive production artifacts. Store them in
+approved scratch or project directories and keep source media immutable unless
+the user explicitly requests a specific media-changing operation.

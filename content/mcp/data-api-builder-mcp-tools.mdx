@@ -1,0 +1,186 @@
+---
+title: Data API Builder MCP Tools
+slug: data-api-builder-mcp-tools
+category: mcp
+description: >-
+  MCP support in Azure Data API Builder for exposing configured database
+  entities as MCP tools, including entity discovery and DML operations over
+  Azure databases and supported on-premises data stores.
+cardDescription: Expose Data API Builder database entities to Claude through preview MCP tools for discovery and DML workflows.
+seoTitle: Data API Builder MCP Tools for Claude
+seoDescription: >-
+  Configure Azure Data API Builder MCP support with Claude to describe database
+  entities, read records, create records, update records, and work with DAB
+  database permissions through an MCP endpoint.
+author: Azure
+authorProfileUrl: "https://github.com/Azure"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Data API Builder
+brandDomain: aka.ms
+repoUrl: "https://github.com/Azure/data-api-builder"
+documentationUrl: "https://raw.githubusercontent.com/Azure/data-api-builder/main/docs/testing-guide/mcp-inspector-testing.md"
+installable: true
+installCommand: "Enable the DAB runtime MCP section, start Data API Builder with the reviewed configuration, and connect an MCP client to the configured MCP path."
+usageSnippet: "Start with `describe_entities`, confirm entity permissions and keys, then require approval before any create, update, delete, or execute operation."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "data-api-builder": {
+        "url": "https://<dab-host>/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  "mcp": {
+    "enabled": true,
+    "path": "/mcp"
+  }
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - Reviewed Azure Data API Builder configuration with the MCP runtime section enabled.
+  - Supported Azure or on-premises database connection configured through DAB.
+  - DAB entity permissions, role headers, DML tool flags, and per-entity MCP settings reviewed before exposing tools.
+  - MCP client support for the transport used by the deployed DAB server.
+  - Agreement on whether this preview/source-backed MCP support is appropriate for the target environment and release channel.
+safetyNotes:
+  - Data API Builder MCP tools can expose database entity metadata and perform DML operations depending on DAB configuration and permissions.
+  - Built-in tools include entity discovery and record read, create, update, delete, aggregate, and execute-style workflows in the MCP source tree.
+  - The upstream README still labels endpoint support as coming soon while source, samples, and testing docs expose MCP behavior; verify the exact release before production use.
+  - Use least-privilege roles, disable DML tools where not required, and require approval before write, delete, execute, or stored-procedure operations.
+  - Do not connect MCP clients to production databases without backups, audit logging, query limits, and rollback procedures.
+privacyNotes:
+  - Entity metadata can expose database names, table names, view names, stored procedure names, field names, key fields, relationships, permissions, and role design.
+  - Read and DML tool calls can expose or change customer records, internal data, regulated fields, identifiers, audit fields, and business workflow state.
+  - Connection strings, role headers, MCP URLs, logs, request bodies, result payloads, and MCP transcripts can contain sensitive operational or personal data.
+  - Redact database values, connection details, entity names, role names, and query results before sharing prompts, screenshots, logs, or generated notes.
+disclosure: >-
+  MIT-licensed Azure Data API Builder project with active MCP source, samples,
+  and testing guidance. Treat the MCP surface as release-sensitive and verify
+  current DAB release notes before using it outside a reviewed environment.
+sourceUrls:
+  - "https://raw.githubusercontent.com/Azure/data-api-builder/main/LICENSE.txt"
+  - "https://raw.githubusercontent.com/Azure/data-api-builder/main/samples/aspire/dab-config.json"
+  - "https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/Core/McpStdioServer.cs"
+  - "https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/BuiltInTools/DescribeEntitiesTool.cs"
+  - "https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/BuiltInTools/ReadRecordsTool.cs"
+  - "https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/BuiltInTools/CreateRecordTool.cs"
+  - "https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/BuiltInTools/UpdateRecordTool.cs"
+  - "https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/BuiltInTools/DeleteRecordTool.cs"
+tags:
+  - databases
+  - azure
+  - data-api
+  - crud
+  - dotnet
+keywords:
+  - Data API Builder MCP
+  - Azure Data API Builder MCP
+  - DAB MCP tools
+  - database CRUD MCP
+  - Azure database MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Data API Builder MCP Tools are the MCP support being added to Azure Data API
+Builder for exposing configured database entities as tools. The source tree
+includes MCP server code and built-in tools for describing entities, reading
+records, creating records, updating records, deleting records, and related DAB
+database operations.
+
+Use it when a team is already using Data API Builder and wants to evaluate an
+MCP interface to the same entity model, permissions, and database-backed CRUD
+surface that DAB exposes through its API configuration.
+
+## Source Review
+
+- https://github.com/Azure/data-api-builder
+- https://raw.githubusercontent.com/Azure/data-api-builder/main/docs/testing-guide/mcp-inspector-testing.md
+- https://raw.githubusercontent.com/Azure/data-api-builder/main/LICENSE.txt
+- https://raw.githubusercontent.com/Azure/data-api-builder/main/samples/aspire/dab-config.json
+- https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/Core/McpStdioServer.cs
+- https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/BuiltInTools/DescribeEntitiesTool.cs
+- https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/BuiltInTools/ReadRecordsTool.cs
+- https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/BuiltInTools/CreateRecordTool.cs
+- https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/BuiltInTools/UpdateRecordTool.cs
+- https://raw.githubusercontent.com/Azure/data-api-builder/main/src/Azure.DataApiBuilder.Mcp/BuiltInTools/DeleteRecordTool.cs
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+Inspector testing guide, license, sample configuration, MCP server source, and
+built-in DML tool sources for current setup and behavior details.
+
+## Features
+
+- Enable MCP at the DAB runtime level with a configured MCP path.
+- Describe configured entities, fields, parameters, key fields, and permissions.
+- Read records from configured entities when the role has permission.
+- Create records for approved entities.
+- Update records by primary or composite keys.
+- Delete records through the DAB MCP tool surface.
+- Respect DAB entity settings, DML tool flags, and role authorization context.
+- Use MCP tooling alongside DAB's REST and GraphQL configuration model.
+
+## Installation
+
+Enable the MCP runtime section in a reviewed Data API Builder configuration:
+
+```json
+{
+  "runtime": {
+    "mcp": {
+      "enabled": true,
+      "path": "/mcp"
+    }
+  }
+}
+```
+
+Start DAB with the approved configuration, then connect the MCP client to the
+configured MCP path:
+
+```json
+{
+  "mcpServers": {
+    "data-api-builder": {
+      "url": "https://<dab-host>/mcp"
+    }
+  }
+}
+```
+
+Because the public README still describes MCP endpoint support as coming soon,
+verify the exact DAB release, package, and deployment mode before relying on the
+MCP interface outside testing.
+
+## Use Cases
+
+- Ask Claude to call `describe_entities` before planning database work.
+- Inspect which entities expose read or write permissions to the current role.
+- Read approved records for debugging or support workflows.
+- Draft record updates, then apply them only after human review.
+- Test MCP access to a development database before exposing production data.
+- Compare DAB MCP behavior against the same DAB REST or GraphQL entity model.
+
+## Safety and Privacy
+
+Data API Builder MCP Tools can read and mutate database records. Treat the MCP
+endpoint as database access, not as documentation search. Start with read-only
+roles, disable DML tools where possible, and require explicit approval before
+create, update, delete, aggregate, execute, or stored-procedure workflows.
+
+Treat schema metadata, record payloads, primary keys, role headers, connection
+details, request bodies, query results, logs, and MCP transcripts as sensitive.
+Do not expose customer, production, regulated, or irreplaceable databases to an
+agent without backups, audit logging, query limits, and rollback procedures.
+
+## Duplicate Check
+
+No `Azure/data-api-builder`, Data API Builder MCP, DAB MCP tools, Azure database
+MCP, or matching source URL entry was found in `content/mcp` or `README.md`.
+Existing database MCP entries do not cover Azure Data API Builder's source-level
+MCP support for configured DAB entities.

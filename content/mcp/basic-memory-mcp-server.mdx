@@ -1,0 +1,193 @@
+---
+title: Basic Memory MCP Server
+slug: basic-memory-mcp-server
+category: mcp
+description: >-
+  Local-first Basic Memory MCP server for giving Claude a persistent Markdown
+  knowledge base with note editing, semantic search, recent activity, knowledge
+  graph context, projects, schema tools, and optional cloud sync.
+cardDescription: Give Claude a local-first Markdown memory graph with search, notes, and project tools.
+seoTitle: Basic Memory MCP Server for Claude
+seoDescription: >-
+  Configure Basic Memory MCP Server with Claude, Claude Code, Codex, Cursor, VS
+  Code, and other MCP clients to read, write, edit, search, and organize a
+  local-first Markdown knowledge base with semantic search and project routing.
+author: Basic Machines
+authorProfileUrl: "https://github.com/basicmachines-co"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Basic Memory
+brandDomain: basicmemory.com
+websiteUrl: "https://basicmemory.com"
+repoUrl: "https://github.com/basicmachines-co/basic-memory"
+documentationUrl: "https://docs.basicmemory.com"
+packageUrl: "https://pypi.org/pypi/basic-memory/json"
+installable: true
+installCommand: "claude mcp add basic-memory -- uvx basic-memory mcp"
+usageSnippet: "Ask Claude to create a note about an architecture decision, search related notes, then build context before continuing work."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "basic-memory": {
+        "command": "uvx",
+        "args": ["basic-memory", "mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "basic-memory": {
+        "command": "uvx",
+        "args": ["basic-memory", "mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.12 or newer available through uv for the local MCP server.
+  - A selected Basic Memory project directory for Markdown notes and generated metadata.
+  - Backups or version control for important notes before enabling model-assisted writes.
+  - Team agreement on whether notes stay local, sync through the optional cloud service, or route per project.
+  - Review of telemetry, promo, logging, and cloud settings before using the server with sensitive work.
+safetyNotes:
+  - Basic Memory MCP can create, edit, move, and delete notes in the configured project.
+  - The server exposes content, search, knowledge graph, project, schema, cloud, and release-note tools.
+  - Edit and delete tools should be reviewed carefully because the model can change the human-readable Markdown source of truth.
+  - Imports can ingest Claude, ChatGPT, or memory JSON exports and may bring old sensitive conversations into the knowledge base.
+  - Auto-update behavior can update uv tool and Homebrew installs, while uvx runs use the ephemeral runtime managed by uv.
+  - The optional cloud service changes the trust boundary by syncing notes through hosted storage and account authentication.
+privacyNotes:
+  - Local notes, frontmatter, wikilinks, observations, relations, embeddings, logs, and project metadata can contain personal data, credentials, customer details, unreleased plans, or private research.
+  - Cloud routing and hosted team workspaces may sync Markdown, metadata, snapshots, and backups outside the local machine.
+  - The README says telemetry records non-content usage events and does not collect file contents, note titles, knowledge base data, PII, IP addresses, or per-tool tracking.
+  - Logs are written to Basic Memory's local log file by default for MCP usage; review log level and retention before using sensitive prompts or notes.
+  - Keep API keys, cloud credentials, imported chat archives, and private project paths out of prompts, screenshots, issues, and committed files.
+sourceUrls:
+  - "https://github.com/basicmachines-co/basic-memory/blob/main/README.md"
+  - "https://github.com/basicmachines-co/basic-memory/blob/main/server.json"
+  - "https://github.com/basicmachines-co/basic-memory/blob/main/pyproject.toml"
+  - "https://github.com/basicmachines-co/basic-memory/blob/main/LICENSE"
+tags:
+  - memory
+  - notes
+  - knowledge-graph
+  - markdown
+  - search
+keywords:
+  - Basic Memory MCP
+  - Basic Memory MCP Server
+  - Claude memory MCP
+  - Markdown memory MCP
+  - knowledge graph MCP
+  - semantic search MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Basic Memory MCP Server gives Claude and other MCP clients a persistent
+knowledge base built from Markdown files. It combines note writing, editing,
+semantic search, recent activity, wikilinks, observations, and knowledge graph
+context so conversations can continue from project memory instead of restarting
+from scratch.
+
+The project is local-first and AGPL-licensed, with an optional paid cloud path
+for hosted sync, team workspaces, snapshots, and cross-device access. The same
+repository also includes host-native packages such as a Claude Code plugin and
+shared skills, but this entry is scoped to the MCP server exposed by
+`uvx basic-memory mcp`.
+
+## Source Review
+
+- https://basicmemory.com
+- https://github.com/basicmachines-co/basic-memory
+- https://docs.basicmemory.com
+- https://pypi.org/pypi/basic-memory/json
+- https://github.com/basicmachines-co/basic-memory/blob/main/README.md
+- https://github.com/basicmachines-co/basic-memory/blob/main/server.json
+- https://github.com/basicmachines-co/basic-memory/blob/main/pyproject.toml
+- https://github.com/basicmachines-co/basic-memory/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live website,
+documentation, repository, MCP metadata, PyPI metadata, and license for current
+install commands, supported clients, tool lists, cloud behavior, telemetry
+controls, and licensing.
+
+## Features
+
+- Local-first Markdown notes that humans and Claude can both read and write.
+- Stdio setup with `uvx basic-memory mcp`.
+- Claude Desktop, Claude Code, Codex, Cursor, VS Code, ChatGPT, Obsidian, and generic MCP-client guidance.
+- Content tools including `write_note`, `read_note`, `edit_note`, `move_note`, `delete_note`, `read_content`, and `view_note`.
+- Search and discovery tools including `search`, `search_notes`, `recent_activity`, and `list_directory`.
+- Knowledge graph tools including `build_context` and Obsidian canvas generation.
+- Project tools for listing, creating, selecting, routing, and checking sync status.
+- Schema tools for inferring, validating, and diffing knowledge-base structure.
+- Optional cloud tools and per-project cloud routing.
+- Semantic search with full-text and vector ranking.
+- Tool annotations for read-only, destructive, idempotent, and open-world behavior hints.
+
+## Installation
+
+For Claude Code, the README documents:
+
+```sh
+claude mcp add basic-memory -- uvx basic-memory mcp
+```
+
+For MCP clients that use JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "basic-memory": {
+      "command": "uvx",
+      "args": ["basic-memory", "mcp"]
+    }
+  }
+}
+```
+
+After connecting, choose the project that should hold the Markdown notes and
+verify that Claude can search existing notes before allowing write operations.
+
+## Use Cases
+
+- Ask Claude to create a note for an architecture decision, incident finding, or research summary.
+- Search project memory before starting a new implementation task.
+- Build context around a note or relation before continuing a conversation.
+- Track recent activity across project notes.
+- Keep Obsidian-readable Markdown in sync with agent-authored notes.
+- Import old Claude or ChatGPT conversations into a searchable knowledge base.
+- Validate the inferred schema of a shared project memory space.
+- Route selected projects through the cloud while keeping others local.
+- Pair Basic Memory's MCP server with its Claude Code plugin for session briefings and checkpoint workflows.
+
+## Safety and Privacy
+
+Basic Memory is a memory system, so its main risk is durable context. Notes can
+outlive a single conversation, be searched later, and be synced to other devices
+or teammates. Review proposed writes, edits, moves, deletes, imports, schema
+changes, and cloud-routing changes before allowing Claude to apply them.
+
+Keep sensitive credentials, customer records, private project paths, regulated
+data, and imported conversation archives out of notes unless the local storage,
+sync path, retention policy, and model provider are approved for that data.
+Back up important Markdown before model-assisted cleanup or schema work, and
+review telemetry, log level, promo, and cloud settings for sensitive projects.
+
+## Disclosure
+
+Basic Memory offers both an open-source local MCP server and an optional paid
+cloud service. This listing is not sponsored, paid, or affiliate-driven, and it
+is scoped to the source-backed MCP server.
+
+## Duplicate Check
+
+No Basic Memory, `basicmachines-co/basic-memory`, or `basic-memory mcp` entry
+was found in `content/mcp`, `content/tools`, `content/guides`,
+`content/agents`, or `content/skills`.

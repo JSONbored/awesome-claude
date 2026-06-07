@@ -1,0 +1,187 @@
+---
+title: Nuclear MCP Server
+slug: nuclear-mcp-server
+category: mcp
+description: >-
+  Built-in Streamable HTTP MCP server for Nuclear Music Player that lets Claude
+  inspect available music-player domains, discover method signatures, describe
+  data types, and control playback, queue, favorites, playlists, dashboard, and
+  provider workflows.
+cardDescription: Control Nuclear Music Player playback, queues, favorites, playlists, dashboard, and providers through its built-in local MCP server.
+seoTitle: Nuclear MCP Server for Claude
+seoDescription: >-
+  Configure Nuclear Music Player's built-in MCP server with Claude to control a
+  local music player through Streamable HTTP tools for discovery, playback,
+  queue management, favorites, playlists, dashboard, metadata, and providers.
+author: Nuclear
+authorProfileUrl: "https://github.com/nukeop"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Nuclear
+brandDomain: nuclearplayer.com
+repoUrl: "https://github.com/nukeop/nuclear"
+documentationUrl: "https://raw.githubusercontent.com/nukeop/nuclear/master/packages/docs/integrations/mcp-server.md"
+installable: true
+installCommand: "claude mcp add nuclear --transport http <copy-url-from-nuclear-settings>"
+usageSnippet: "Enable the MCP server in Nuclear's Settings > Integrations panel, copy the localhost URL, then connect a Streamable HTTP MCP client."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "nuclear": {
+        "url": "<copy the MCP Server URL from Nuclear Settings>"
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add nuclear --transport http <copy-url-from-nuclear-settings>
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Nuclear Music Player installed from the project's releases or platform packages.
+  - MCP server enabled in Nuclear under Settings > Integrations.
+  - MCP client support for Streamable HTTP or remote URL based server configuration.
+  - Review of the actual local URL shown by Nuclear because the server starts on ports 8800 through 8809.
+  - Agreement on whether an AI assistant may control local playback, queues, favorites, playlists, dashboard views, metadata, and music providers.
+safetyNotes:
+  - Nuclear MCP Server runs inside the local Nuclear desktop app and exposes a Streamable HTTP server on the localhost interface.
+  - The `call` tool can execute Nuclear API methods after discovery through `list_methods`, `method_details`, and `describe_type`.
+  - Available domains include Queue, Playback, Metadata, Favorites, Playlists, Dashboard, and Providers, so agents can change what is playing and modify local music-player state.
+  - Nuclear's plugin and provider system can retrieve streaming sources, metadata, playlists, and dashboard content from third-party services; use providers only where automated access is allowed.
+  - Keep the server bound to localhost, avoid exposing the MCP endpoint on a network interface, and require confirmation before letting an agent change playlists, favorites, queues, or provider settings.
+privacyNotes:
+  - Tool calls and transcripts can include listening history, search terms, artists, albums, track titles, playlist names, favorites, provider choices, dashboard content, and local player settings.
+  - The MCP endpoint is local, but connected MCP clients, model providers, logs, screenshots, and shared chat transcripts can still retain music-library and listening-behavior data.
+  - Streaming and metadata providers may receive searches, track identifiers, IP addresses, user-agent metadata, or plugin-specific account context according to their own policies.
+  - The MCP server URL and port are local connection details; do not publish screenshots or logs that include private player state or provider credentials.
+disclosure: >-
+  AGPL-3.0-only open-source desktop music player with a built-in local MCP
+  server. Users remain responsible for following Nuclear plugin, provider,
+  streaming-source, copyright, and service-use terms.
+sourceUrls:
+  - "https://raw.githubusercontent.com/nukeop/nuclear/master/README.md"
+  - "https://raw.githubusercontent.com/nukeop/nuclear/master/LICENSE"
+  - "https://raw.githubusercontent.com/nukeop/nuclear/master/package.json"
+  - "https://raw.githubusercontent.com/nukeop/nuclear/master/packages/docs/development/mcp-architecture.md"
+  - "https://raw.githubusercontent.com/nukeop/nuclear/master/packages/player/src-tauri/src/mcp/mod.rs"
+  - "https://raw.githubusercontent.com/nukeop/nuclear/master/packages/player/src-tauri/src/mcp/tools.rs"
+  - "https://raw.githubusercontent.com/nukeop/nuclear/master/packages/player/src-tauri/src/mcp/metadata.rs"
+  - "https://raw.githubusercontent.com/nukeop/nuclear/master/packages/player/src/services/mcp/mcpHandler.ts"
+tags:
+  - music
+  - media
+  - desktop-app
+  - playback
+  - streamable-http
+keywords:
+  - Nuclear MCP
+  - Nuclear Music Player MCP
+  - music player MCP
+  - playback MCP
+  - Streamable HTTP music MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Nuclear MCP Server is the built-in Model Context Protocol server in Nuclear
+Music Player. Once enabled in the desktop app, it exposes a local Streamable
+HTTP endpoint that lets Claude inspect available music-player methods, understand
+their parameters, describe return types, and execute approved player actions.
+
+Use it when Claude should help drive a local Nuclear session, inspect the queue,
+control playback, add tracks, work with favorites or playlists, browse dashboard
+data, or route through Nuclear's music providers without giving the assistant a
+general-purpose browser or shell.
+
+## Source Review
+
+- https://github.com/nukeop/nuclear
+- https://raw.githubusercontent.com/nukeop/nuclear/master/packages/docs/integrations/mcp-server.md
+- https://raw.githubusercontent.com/nukeop/nuclear/master/README.md
+- https://raw.githubusercontent.com/nukeop/nuclear/master/LICENSE
+- https://raw.githubusercontent.com/nukeop/nuclear/master/package.json
+- https://raw.githubusercontent.com/nukeop/nuclear/master/packages/docs/development/mcp-architecture.md
+- https://raw.githubusercontent.com/nukeop/nuclear/master/packages/player/src-tauri/src/mcp/mod.rs
+- https://raw.githubusercontent.com/nukeop/nuclear/master/packages/player/src-tauri/src/mcp/tools.rs
+- https://raw.githubusercontent.com/nukeop/nuclear/master/packages/player/src-tauri/src/mcp/metadata.rs
+- https://raw.githubusercontent.com/nukeop/nuclear/master/packages/player/src/services/mcp/mcpHandler.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+MCP integration guide, README, license, package metadata, MCP architecture
+guide, Rust server implementation, tool definitions, metadata source, and
+settings handler for current setup and behavior details.
+
+## Features
+
+- Enable a built-in local Streamable HTTP MCP server from Nuclear settings.
+- Discover API domains with `list_methods`.
+- Inspect method names, parameters, and return types with `method_details`.
+- Inspect complex data shapes such as tracks, queues, queue items, and
+  playlists with `describe_type`.
+- Execute player API methods through the `call` tool.
+- Work across Queue, Playback, Metadata, Favorites, Playlists, Dashboard, and
+  Providers domains.
+- Bind to localhost on port 8800, or the next available port through 8809.
+
+## Installation
+
+Install Nuclear Music Player, open Settings > Integrations, and enable the MCP
+server. Nuclear shows the actual local server URL after startup. The default
+host and path are:
+
+```text
+127.0.0.1:8800/mcp
+```
+
+Add it to Claude Code with Streamable HTTP transport:
+
+```bash
+claude mcp add nuclear --transport http <copy-url-from-nuclear-settings>
+```
+
+For MCP clients that accept URL-based server configuration:
+
+```json
+{
+  "mcpServers": {
+    "nuclear": {
+      "url": "<copy the MCP Server URL from Nuclear Settings>"
+    }
+  }
+}
+```
+
+If Nuclear chooses a different port, replace `8800` with the port shown in the
+MCP Server URL field.
+
+## Use Cases
+
+- Ask Claude what playback, queue, playlist, favorite, dashboard, metadata, or
+  provider methods are available before taking action.
+- Build a listening queue from a prompt, then review the proposed tracks before
+  adding them.
+- Create or update playlists from approved artists, albums, or tracks.
+- Inspect favorites or queue state while planning a listening session.
+- Control playback in a local desktop session without giving the assistant
+  shell access.
+- Explore Nuclear provider behavior with bounded, user-confirmed actions.
+
+## Safety and Privacy
+
+Nuclear MCP Server is local, but it still lets an agent change the state of a
+running desktop music player. Require confirmation before modifying playlists,
+favorites, queue entries, provider settings, or any action that starts playback.
+
+Treat searches, queue contents, listening history, favorites, playlists,
+provider choices, metadata, local settings, and MCP transcripts as personal
+data. Keep the server bound to localhost, and do not expose the local MCP
+endpoint over a network unless you have reviewed the access controls.
+
+## Duplicate Check
+
+No `nukeop/nuclear`, Nuclear Music Player MCP, Nuclear MCP Server, or matching
+source URL entry was found in `content/mcp` or `README.md`. Existing browser,
+media conversion, and search MCP entries do not cover Nuclear's built-in music
+player control server.

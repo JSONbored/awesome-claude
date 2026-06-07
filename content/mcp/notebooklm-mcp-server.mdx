@@ -1,0 +1,166 @@
+---
+title: NotebookLM MCP Server
+slug: notebooklm-mcp-server
+category: mcp
+description: >-
+  MCP server that lets Claude work with Google NotebookLM notebooks through a
+  real Chrome profile, source ingestion, citations, and audio overviews.
+cardDescription: >-
+  Let Claude ask questions against NotebookLM notebooks, manage a local notebook
+  library, add sources, extract citations, and generate audio overviews.
+seoTitle: NotebookLM MCP Server for Claude
+seoDescription: >-
+  Configure NotebookLM MCP Server with Claude and other MCP clients to ask
+  grounded questions, add sources, manage notebooks, reuse authenticated Chrome
+  profiles, extract citations, and generate NotebookLM audio overviews.
+author: PleasePrompto
+authorProfileUrl: "https://github.com/PleasePrompto"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: NotebookLM MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/PleasePrompto/notebooklm-mcp"
+documentationUrl: "https://github.com/PleasePrompto/notebooklm-mcp/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/notebooklm-mcp"
+installable: true
+installCommand: "npx notebooklm-mcp@latest"
+usageSnippet: "Run `npx notebooklm-mcp@latest` from an MCP client to let Claude ask questions against NotebookLM notebooks and manage a local notebook library."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "notebooklm": {
+        "command": "npx",
+        "args": ["notebooklm-mcp@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "notebooklm": {
+        "command": "npx",
+        "args": ["notebooklm-mcp@latest"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js and npx available to the MCP client runtime.
+  - Chrome or the bundled Patchright Chromium fallback available on the host.
+  - Google account access for the NotebookLM notebooks you want to use.
+  - One-time interactive authentication with setup_auth before headless reuse.
+  - Local storage for the persisted Chrome profile, notebook library, sessions, and downloaded audio.
+safetyNotes:
+  - NotebookLM MCP Server drives a real browser profile to interact with Google NotebookLM.
+  - setup_auth opens an interactive login flow and persists cookies in a local Chrome profile for later reuse.
+  - Tools can add sources, ask questions, generate and download audio overviews, manage notebook library metadata, close sessions, reset sessions, and clean up stored data.
+  - cleanup_data and re_auth can wipe stored browser state or local server data, so review tool arguments before allowing destructive maintenance actions.
+  - Bind Streamable HTTP mode only on trusted networks and keep stdio as the default for local desktop clients.
+privacyNotes:
+  - Google account cookies, NotebookLM notebook URLs, notebook metadata, source contents, questions, answers, citations, generated audio, browser session data, prompts, and tool outputs may be visible to the MCP client and model provider.
+  - The README notes there is no encrypted credential store; account separation is by Chrome profile directory.
+  - NotebookLM sources can contain private documents, internal research, customer material, legal drafts, meeting notes, and unreleased product plans.
+  - Review local profile and library storage before sharing machines, logs, screenshots, or exported artifacts.
+sourceUrls:
+  - "https://github.com/PleasePrompto/notebooklm-mcp"
+  - "https://github.com/PleasePrompto/notebooklm-mcp/blob/main/README.md"
+  - "https://github.com/PleasePrompto/notebooklm-mcp/blob/main/package.json"
+  - "https://registry.npmjs.org/notebooklm-mcp"
+tags:
+  - notebooklm
+  - research
+  - citations
+  - google
+  - documents
+keywords:
+  - NotebookLM MCP
+  - notebooklm-mcp
+  - Google NotebookLM MCP
+  - citation backed answers MCP
+  - grounded research MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+NotebookLM MCP Server connects MCP clients to Google NotebookLM through a real
+Chrome profile. It can ask questions against notebooks, add sources, generate
+and download audio overviews, manage a local notebook library, search notebooks,
+inspect sessions, expose read-only library resources, and return citation-aware
+answers.
+
+The upstream README documents stdio and Streamable HTTP transports. The NPM
+package exposes the `notebooklm-mcp` binary and the recommended local launch
+path is `npx notebooklm-mcp@latest`.
+
+## Source Review
+
+- https://github.com/PleasePrompto/notebooklm-mcp
+- https://github.com/PleasePrompto/notebooklm-mcp/blob/main/README.md
+- https://github.com/PleasePrompto/notebooklm-mcp/blob/main/package.json
+- https://registry.npmjs.org/notebooklm-mcp
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+NPM registry metadata for current package version, command name, transport
+support, browser requirements, authentication behavior, tools, and setup
+guidance.
+
+## Features
+
+- Ask questions against a selected NotebookLM notebook.
+- Add web or text sources to notebooks.
+- Generate and download NotebookLM audio overviews.
+- Store and search a local notebook library.
+- Select active notebooks for repeated questions.
+- Manage browser sessions and reset chat history.
+- Run one-time Google authentication with persisted browser profile reuse.
+- Use trimmed tool profiles to reduce host-agent context usage.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "notebooklm": {
+      "command": "npx",
+      "args": ["notebooklm-mcp@latest"]
+    }
+  }
+}
+```
+
+Restart the MCP client, then run the authentication setup tool before asking
+questions against NotebookLM notebooks.
+
+## Use Cases
+
+- Ask Claude grounded questions against a NotebookLM notebook.
+- Add a documentation source to a notebook for citation-backed Q&A.
+- Keep a local library of frequently used notebook share URLs.
+- Generate an audio overview for notebook sources.
+- Search and select notebooks before a research session.
+- Inspect citations returned from NotebookLM answers.
+
+## Safety and Privacy
+
+NotebookLM MCP Server uses browser automation and persisted Google account
+state. Review which account is authenticated, where browser profile data is
+stored, and which notebooks are available before enabling it for an agent.
+Destructive maintenance tools such as cleanup and re-authentication should stay
+behind human approval.
+
+NotebookLM notebooks can contain private documents and sensitive research.
+Questions, answers, citations, source contents, local library metadata, browser
+profile data, and generated audio may expose confidential context. Keep the
+server local by default and avoid broad network exposure unless the deployment
+is protected.
+
+## Duplicate Check
+
+No `PleasePrompto/notebooklm-mcp` entry, `notebooklm-mcp` package entry, or
+matching source URL was found in `content/mcp`.

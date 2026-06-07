@@ -1,0 +1,209 @@
+---
+title: Radar MCP Server
+slug: radar-mcp-server
+category: mcp
+description: >-
+  Built-in HTTP MCP server for Radar, the local-first Kubernetes UI that gives
+  Claude token-optimized cluster topology, health, events, logs, audit,
+  RBAC, GitOps, workload, and resource-management tools.
+cardDescription: >-
+  Connect Claude to a running Radar instance for Kubernetes troubleshooting,
+  topology, logs, audit findings, RBAC review, GitOps actions, and guarded
+  cluster operations.
+seoTitle: Radar MCP Server for Claude
+seoDescription: >-
+  Configure Radar's built-in MCP server with Claude, Cursor, Codex, Gemini CLI,
+  and other MCP clients to inspect Kubernetes clusters, review topology and
+  logs, query RBAC, and gate mutating cluster actions.
+author: Skyhook
+authorProfileUrl: "https://github.com/skyhook-io"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Radar
+brandDomain: radarhq.io
+websiteUrl: "https://radarhq.io"
+repoUrl: "https://github.com/skyhook-io/radar"
+documentationUrl: "https://raw.githubusercontent.com/skyhook-io/radar/main/docs/mcp.md"
+packageUrl: "https://github.com/skyhook-io/radar/releases"
+installable: true
+installCommand: "brew install skyhook-io/tap/radar"
+usageSnippet: "Run Radar locally with MCP enabled, then point an HTTP-capable MCP client at the Radar `/mcp` endpoint on the configured port."
+copySnippet: |-
+  claude mcp add radar --transport http RADAR_MCP_URL
+configSnippet: |-
+  {
+    "mcpServers": {
+      "radar": {
+        "url": "RADAR_MCP_URL"
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Radar installed from Homebrew, Krew, GitHub Releases, Scoop, or another upstream-supported path.
+  - Running Radar server or `kubectl radar` session with the MCP endpoint enabled.
+  - MCP client that supports Streamable HTTP server configuration.
+  - Kubernetes kubeconfig, context, namespace scope, or in-cluster service account reviewed before connecting an AI client.
+  - Human approval policy for apply, patch, workload, CronJob, GitOps, and node-management tools.
+safetyNotes:
+  - Radar MCP can inspect live Kubernetes resources, topology, warning events, logs, metrics, package inventory, audit findings, RBAC permissions, Helm releases, ArgoCD resources, and FluxCD resources.
+  - The MCP implementation includes mutating tools for applying YAML, patching resources, restarting or scaling workloads, triggering or suspending CronJobs, managing GitOps resources, and cordoning, uncordoning, or draining nodes.
+  - Mutating tools are RBAC-enforced and annotated as destructive-capable, but clients and operators should still require human review before running them.
+  - "`apply_resource` with forced ownership can take server-side-apply fields from other managers such as Helm or GitOps controllers."
+  - "`manage_node drain` can evict pods and affect live workloads."
+  - Radar provides flags and environment variables that disable MCP, disable exec/local terminal paths, or loosen localhost/origin protections; only relax those protections in trusted development contexts.
+privacyNotes:
+  - Kubeconfig paths, cluster names, namespaces, resource names, manifests, labels, annotations, topology edges, metrics, events, logs, RBAC rules, Helm release data, GitOps metadata, and audit findings may be exposed to the MCP client and model provider.
+  - Radar's MCP docs state that Secret data is not exposed and environment/log values are redacted for known sensitive patterns, but metadata, key names, errors, and operational context can still be sensitive.
+  - Workload logs can contain credentials, customer data, request payloads, internal hostnames, incident details, or proprietary deployment context.
+  - In-cluster deployments without authentication make all MCP callers share the pod service account view, so restrict network access, enable auth, and scope RBAC before exposing shared endpoints.
+disclosure: >-
+  Apache-2.0 open-source Kubernetes UI with a built-in MCP server. The upstream
+  project also mentions Radar Cloud for hosted team use.
+sourceUrls:
+  - "https://raw.githubusercontent.com/skyhook-io/radar/main/README.md"
+  - "https://raw.githubusercontent.com/skyhook-io/radar/main/docs/mcp.md"
+  - "https://raw.githubusercontent.com/skyhook-io/radar/main/LICENSE"
+  - "https://raw.githubusercontent.com/skyhook-io/radar/main/internal/mcp/server.go"
+  - "https://raw.githubusercontent.com/skyhook-io/radar/main/internal/mcp/tools.go"
+  - "https://raw.githubusercontent.com/skyhook-io/radar/main/internal/mcp/tools_apply.go"
+tags:
+  - kubernetes
+  - devops
+  - monitoring
+  - gitops
+  - rbac
+keywords:
+  - Radar MCP
+  - Radar Kubernetes MCP
+  - skyhook radar
+  - kubectl radar MCP
+  - Kubernetes topology MCP
+  - Kubernetes troubleshooting MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Radar is a local-first Kubernetes UI from Skyhook. Its built-in MCP server lets
+Claude and other MCP clients query a running Radar session through Streamable
+HTTP, using curated tools rather than raw `kubectl` output.
+
+The MCP surface is built for cluster troubleshooting and operations. It exposes
+token-optimized tools for dashboards, topology, neighborhoods, issues, events,
+logs, resource search, resource details, package inventory, Helm release
+inspection, RBAC review, and cluster audit findings. It also includes guarded
+write tools for Kubernetes resource changes, workload actions, GitOps actions,
+CronJob actions, and node management.
+
+## Source Review
+
+- https://github.com/skyhook-io/radar
+- https://radarhq.io
+- https://github.com/skyhook-io/radar/releases
+- https://raw.githubusercontent.com/skyhook-io/radar/main/README.md
+- https://raw.githubusercontent.com/skyhook-io/radar/main/docs/mcp.md
+- https://raw.githubusercontent.com/skyhook-io/radar/main/LICENSE
+- https://raw.githubusercontent.com/skyhook-io/radar/main/internal/mcp/server.go
+- https://raw.githubusercontent.com/skyhook-io/radar/main/internal/mcp/tools.go
+- https://raw.githubusercontent.com/skyhook-io/radar/main/internal/mcp/tools_apply.go
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+Radar website, releases page, MCP guide, license, MCP handler source, tool
+registration source, and apply-tool source for current setup, transport,
+security controls, and tool behavior.
+
+## Features
+
+- Built into the Radar binary and enabled by default unless Radar starts with
+  MCP disabled.
+- Streamable HTTP transport mounted on the running Radar server.
+- Client setup examples for Claude Code, Claude Desktop, Cursor, Windsurf, VS
+  Code Copilot, Cline, JetBrains AI, OpenAI Codex, and Gemini CLI.
+- Read tools for dashboards, top resource usage, resource lists, resource
+  detail, topology, neighborhoods, events, changes, pod logs, workload logs,
+  cluster audit, package inventory, Helm releases, namespaces, search, and RBAC
+  subject permissions.
+- Diagnostic tool that bundles resource context, logs, events, and startup
+  blockers for a workload.
+- Write tools for applying YAML, patching resources, restarting, scaling, or
+  rolling back workloads, managing CronJobs, managing ArgoCD/FluxCD resources,
+  and cordoning, uncordoning, or draining nodes.
+- Secret-data suppression, environment/log redaction, RBAC-aware access, and
+  destructive-tool annotations in the MCP implementation.
+- Local binary flow for personal cluster access and in-cluster deployment path
+  for shared team access with authentication and RBAC planning.
+
+## Installation
+
+Install Radar through an upstream-supported path such as Homebrew, Krew,
+GitHub Releases, Scoop, or the desktop installers. For Homebrew:
+
+```bash
+brew install skyhook-io/tap/radar
+```
+
+Start Radar with access to the intended Kubernetes context:
+
+```bash
+kubectl radar
+```
+
+Then configure an HTTP-capable MCP client with the Radar MCP endpoint for your
+chosen host and port:
+
+```json
+{
+  "mcpServers": {
+    "radar": {
+      "url": "RADAR_MCP_URL"
+    }
+  }
+}
+```
+
+Use a local endpoint for personal development. For shared or in-cluster
+deployments, review Radar authentication, Kubernetes RBAC, namespace scoping,
+and network exposure before connecting AI clients.
+
+## Use Cases
+
+- Ask Claude what is broken in a Kubernetes namespace before drilling into a
+  failing workload.
+- Summarize topology relationships around a Service, Deployment, Pod, or
+  GitOps-managed application.
+- Pull focused pod or workload logs after Radar has narrowed the affected
+  resource.
+- Review audit findings, RBAC permissions, package inventory, and warning
+  events from one MCP surface.
+- Investigate recent changes that may explain an incident.
+- Trigger a reviewed restart, scale, rollback, CronJob run, GitOps action, or
+  node operation only after confirming the exact scope.
+- Use Radar's minified resource output when raw Kubernetes YAML would be too
+  noisy for an LLM context window.
+
+## Safety and Privacy
+
+Radar MCP can operate against real Kubernetes clusters. Start with the smallest
+namespace and RBAC scope that supports the workflow, and require human approval
+before any apply, patch, workload action, CronJob action, GitOps action, or
+node-management call. Be especially careful with server-side apply ownership,
+node drains, production rollbacks, and actions that interact with Helm,
+ArgoCD, or FluxCD state.
+
+Treat cluster metadata as sensitive. Even with Secret data suppression and
+redaction controls, manifests, labels, annotations, logs, events, metrics,
+repository references, namespace names, RBAC rules, and topology edges can
+reveal customer data, security posture, incident details, or internal
+architecture. Keep the MCP endpoint local or authenticated, and do not expose
+unauthenticated in-cluster deployments to untrusted clients.
+
+## Duplicate Check
+
+No `skyhook-io/radar`, Radar MCP Server, `radarhq.io`, or `kubectl radar` entry
+was found in `content/mcp` or `README.md`. Existing Kubernetes and Argo CD MCP
+entries cover different direct server implementations; the TrendRadar entry is
+an unrelated news and RSS monitoring project.

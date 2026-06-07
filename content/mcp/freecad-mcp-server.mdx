@@ -1,0 +1,181 @@
+---
+title: FreeCAD MCP Server
+slug: freecad-mcp-server
+category: mcp
+description: >-
+  MCP server and FreeCAD add-on that lets Claude create, inspect, edit, delete,
+  view, and analyze FreeCAD documents and objects through an RPC bridge.
+cardDescription: >-
+  Connect Claude to FreeCAD for CAD document creation, object editing,
+  screenshots, parts-library insertion, Python execution, and FEM analysis.
+seoTitle: FreeCAD MCP Server for Claude
+seoDescription: >-
+  Configure FreeCAD MCP Server with Claude and other MCP clients to control
+  FreeCAD documents, objects, screenshots, parts-library insertion, Python code
+  execution, and FEM analysis through a local RPC server.
+author: neka-nat
+authorProfileUrl: "https://github.com/neka-nat"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: FreeCAD MCP
+brandDomain: github.com
+repoUrl: "https://github.com/neka-nat/freecad-mcp"
+documentationUrl: "https://github.com/neka-nat/freecad-mcp/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/freecad-mcp/json"
+installable: true
+installCommand: "uvx freecad-mcp"
+usageSnippet: "Install the FreeCAD add-on, start its RPC server, then run `uvx freecad-mcp` from an MCP client to let Claude control FreeCAD."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "freecad": {
+        "command": "uvx",
+        "args": ["freecad-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "freecad": {
+        "command": "uvx",
+        "args": ["freecad-mcp", "--only-text-feedback"]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - FreeCAD installed and available on the machine running the FreeCAD add-on.
+  - The repository's `addon/FreeCADMCP` directory copied into the correct FreeCAD add-on directory for the platform.
+  - FreeCAD restarted, MCP Addon workbench selected, and the RPC server started.
+  - uvx available to the MCP client runtime.
+  - Remote connection settings, allowed IPs, and host flags reviewed before controlling FreeCAD from another machine.
+safetyNotes:
+  - FreeCAD MCP can create, edit, and delete FreeCAD objects and documents.
+  - The `execute_code` tool can run arbitrary Python code inside FreeCAD, so only use it with trusted prompts and human review.
+  - Remote connections can bind the RPC server beyond localhost when enabled; keep allowed IPs narrow and restart the RPC server after changing access settings.
+  - FEM analysis and part-library insertion can create files, use local compute, and modify active FreeCAD documents.
+  - Screenshots and active-view feedback can expose proprietary CAD models or unreleased product designs.
+privacyNotes:
+  - CAD geometry, object names, document structure, screenshots, Python code, prompts, RPC host settings, FEM summaries, part-library selections, and tool outputs may be visible to the MCP client and model provider.
+  - FreeCAD documents may contain proprietary product designs, measurements, manufacturing details, customer data, or safety-critical engineering assumptions.
+  - Avoid enabling remote access or auto-start behavior on shared networks unless the allowed IP list and host firewall are reviewed.
+  - Keep generated CAD files and screenshots out of shared prompts, logs, and repositories unless they are approved for disclosure.
+sourceUrls:
+  - "https://github.com/neka-nat/freecad-mcp"
+  - "https://github.com/neka-nat/freecad-mcp/blob/main/README.md"
+  - "https://github.com/neka-nat/freecad-mcp/blob/main/pyproject.toml"
+  - "https://pypi.org/pypi/freecad-mcp/json"
+tags:
+  - freecad
+  - cad
+  - engineering
+  - python
+  - 3d
+keywords:
+  - FreeCAD MCP
+  - freecad-mcp
+  - CAD MCP server
+  - FreeCAD Claude
+  - engineering MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+FreeCAD MCP connects Claude-compatible MCP clients to FreeCAD through a FreeCAD
+add-on and Python MCP server. It can create documents, create and edit objects,
+delete objects, execute Python code inside FreeCAD, insert parts from the
+FreeCAD parts library, capture the active view, inspect objects, list parts,
+and run FEM analysis on an existing analysis.
+
+The upstream README documents copying the `addon/FreeCADMCP` directory into the
+platform-specific FreeCAD add-on directory, restarting FreeCAD, starting the RPC
+server from the MCP Addon workbench, and launching the MCP server with
+`uvx freecad-mcp`.
+
+## Source Review
+
+- https://github.com/neka-nat/freecad-mcp
+- https://github.com/neka-nat/freecad-mcp/blob/main/README.md
+- https://github.com/neka-nat/freecad-mcp/blob/main/pyproject.toml
+- https://pypi.org/pypi/freecad-mcp/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, package metadata, and PyPI metadata for current add-on paths, tool list,
+remote-connection behavior, Python package version, and launch commands.
+
+## Features
+
+- Create new FreeCAD documents.
+- Create, edit, inspect, and delete FreeCAD objects.
+- Execute Python code inside FreeCAD.
+- Insert parts from the FreeCAD parts library.
+- Capture screenshots of the active FreeCAD view.
+- List available parts and current document objects.
+- Run CalculiX FEM analysis on an existing FreeCAD FEM analysis.
+- Use text-only feedback mode to reduce token usage.
+- Configure remote RPC connections with explicit allowed IPs.
+
+## Installation
+
+Install the FreeCAD add-on first by copying `addon/FreeCADMCP` from the
+repository into the appropriate FreeCAD add-on directory for your platform.
+Restart FreeCAD, select the MCP Addon workbench, and start the RPC server.
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "freecad": {
+      "command": "uvx",
+      "args": ["freecad-mcp"]
+    }
+  }
+}
+```
+
+For text-only feedback:
+
+```json
+{
+  "mcpServers": {
+    "freecad": {
+      "command": "uvx",
+      "args": ["freecad-mcp", "--only-text-feedback"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to create a basic CAD document from a natural-language description.
+- Inspect or modify existing FreeCAD objects.
+- Generate quick design iterations while reviewing each tool call.
+- Insert standard parts from the FreeCAD parts library.
+- Capture the active view for design feedback.
+- Run a FEM analysis summary on a prepared FreeCAD analysis.
+
+## Safety and Privacy
+
+FreeCAD MCP can directly modify CAD documents and run arbitrary Python code
+inside FreeCAD. Treat it as a powerful local application-control bridge, not a
+read-only viewer. Review tool calls before allowing object deletion, code
+execution, remote RPC access, FEM solver runs, or changes to important models.
+
+CAD files and screenshots may reveal product designs, dimensions, tolerances,
+manufacturing details, or customer projects. Keep the RPC server local by
+default, use strict allowed IPs for remote access, and avoid sharing extracted
+model data with a model provider unless the design is approved for disclosure.
+
+## Duplicate Check
+
+No `neka-nat/freecad-mcp` entry, `freecad-mcp` package entry, or matching source
+URL was found in `content/mcp`.

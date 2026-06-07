@@ -1,0 +1,213 @@
+---
+title: Softeria Microsoft 365 Graph MCP Server
+slug: softeria-ms-365-graph-mcp-server
+category: mcp
+description: >-
+  Microsoft 365 Graph API MCP server for personal and organization accounts,
+  with OAuth, read-only mode, scope allowlists, presets, multi-account support,
+  and Streamable HTTP deployment.
+cardDescription: >-
+  Connect Claude to Microsoft Graph for Outlook, OneDrive, Excel, OneNote,
+  Tasks, Planner, Teams, SharePoint, users, search, and other Microsoft 365 data.
+seoTitle: Softeria Microsoft 365 Graph MCP Server for Claude
+seoDescription: >-
+  Configure Softeria's Microsoft 365 Graph MCP server with Claude to access
+  Microsoft Graph through read-only mode, presets, OAuth, and scoped tools.
+author: Softeria
+authorProfileUrl: "https://github.com/Softeria"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: ms-365-mcp-server
+brandDomain: github.com
+repoUrl: "https://github.com/Softeria/ms-365-mcp-server"
+documentationUrl: "https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40softeria%2Fms-365-mcp-server"
+installable: true
+installCommand: "npx -y @softeria/ms-365-mcp-server --read-only --preset outlook"
+usageSnippet: "Start with `--read-only` and a narrow `--preset`, authenticate through Microsoft, then expand tools, scopes, or org mode only after review."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ms365-graph": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@softeria/ms-365-mcp-server",
+          "--read-only",
+          "--preset",
+          "outlook"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  npx -y @softeria/ms-365-mcp-server --read-only --preset outlook
+estimatedSetupTime: 25 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 20 or newer recommended for the current package.
+  - Personal Microsoft account or Microsoft Entra work/school account with approved Graph access.
+  - Microsoft Graph permissions reviewed with `--list-permissions` for the selected preset, tools, org mode, and allowed scopes.
+  - Admin consent or tenant approval for organization tools such as Teams, SharePoint, shared mailboxes, users, presence, and meetings.
+  - A token storage plan for local stdio mode, or OAuth configuration for Streamable HTTP deployments.
+safetyNotes:
+  - Without `--read-only`, enabled Microsoft Graph tools can create, update, send, delete, or otherwise change Microsoft 365 data.
+  - Organization mode exposes broader work-account surfaces including Teams, SharePoint, shared mailboxes, online meetings, users, presence, and search.
+  - Use `--preset`, `--enabled-tools`, `--allowed-scopes`, and `--read-only` to keep the tool surface smaller than the default.
+  - HTTP mode requires OAuth bearer tokens for MCP requests and should be served only from trusted hosts with reviewed redirect URI allowlists.
+  - Local stdio mode can cache Microsoft tokens in the OS credential store or fallback files; protect cache paths and account pinning settings.
+  - Bring-your-own-token mode and Azure Key Vault integration require careful secret handling and rotation policies.
+privacyNotes:
+  - Tool calls can expose email, calendar events, contacts, OneDrive files, Excel workbook data, OneNote pages, tasks, Planner data, Teams chats, SharePoint lists, user directory data, meeting details, and search results.
+  - OAuth tokens, client IDs, tenant IDs, client secrets, selected account metadata, token cache paths, and Key Vault URLs are sensitive configuration.
+  - Multi-account mode can reveal account usernames, account selection state, and which account handled a request.
+  - Audit logs intentionally avoid tool parameters and Graph response bodies, but still record request IDs, user principal names, tool names, HTTP method, status, duration, and error classifications.
+  - Microsoft Graph data may be governed by tenant retention, legal hold, compliance, GDPR, HIPAA, PIPEDA, SOC 2, or customer confidentiality rules.
+disclosure: >-
+  MIT-licensed community Microsoft 365 MCP server from Softeria. This entry is
+  separate from the PnP CLI for Microsoft 365 MCP Server entry, which wraps CLI
+  for Microsoft 365 commands instead of exposing generated Microsoft Graph tools.
+sourceUrls:
+  - "https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/LICENSE"
+  - "https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/README.md"
+  - "https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/SECURITY.md"
+  - "https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/docs/deployment.md"
+  - "https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/package.json"
+  - "https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/src/tool-categories.ts"
+  - "https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/src/server.ts"
+tags:
+  - microsoft-365
+  - microsoft-graph
+  - outlook
+  - onedrive
+  - teams
+  - sharepoint
+keywords:
+  - Softeria Microsoft 365 MCP
+  - ms-365-mcp-server
+  - Microsoft Graph MCP
+  - Outlook MCP server
+  - OneDrive MCP server
+  - Teams Graph MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Softeria Microsoft 365 Graph MCP Server connects MCP clients to Microsoft 365
+through Microsoft Graph. It supports personal accounts by default and
+organization accounts with `--org-mode`, covering Outlook mail and calendar,
+OneDrive files, Excel, OneNote, contacts, tasks, Planner, search, Teams,
+SharePoint, users, shared mailboxes, meetings, and related Graph surfaces.
+
+Use it when the agent needs structured Microsoft Graph tools instead of a
+general Microsoft 365 command runner. Start with read-only mode and a small
+preset, then expand scopes only after the intended workflow and tenant
+permissions are clear.
+
+## Source Review
+
+- https://github.com/Softeria/ms-365-mcp-server
+- https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/README.md
+- https://registry.npmjs.org/%40softeria%2Fms-365-mcp-server
+- https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/LICENSE
+- https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/SECURITY.md
+- https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/docs/deployment.md
+- https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/package.json
+- https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/src/tool-categories.ts
+- https://raw.githubusercontent.com/Softeria/ms-365-mcp-server/main/src/server.ts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm package metadata, deployment guide, security policy, package
+metadata, tool category metadata, and server implementation for current setup
+details.
+
+## Features
+
+- Authenticate with Microsoft through device code flow, OAuth authorization code
+  flow in HTTP mode, or bring-your-own-token mode.
+- Use personal-account tools for Outlook, calendar, OneDrive, Excel, OneNote,
+  To Do, Planner, contacts, profile, and search.
+- Enable organization mode for Teams, SharePoint, shared mailboxes, shared
+  calendars, online meetings, transcripts, attendance reports, users, presence,
+  virtual events, and work search.
+- Restrict the tool surface with `--read-only`, `--preset`, `--enabled-tools`,
+  `--allowed-scopes`, and dynamic discovery.
+- List required Microsoft Graph permissions before deployment.
+- Support Global Microsoft 365 and China 21Vianet cloud endpoints.
+- Serve stdio locally or Streamable HTTP with OAuth 2.1 for hosted clients.
+- Support multi-account use, account pinning, token cache controls, audit logs,
+  Graph retry/circuit-breaker behavior, and optional TOON output.
+
+## Installation
+
+Start with a read-only, narrow preset:
+
+```bash
+npx -y @softeria/ms-365-mcp-server --read-only --preset outlook
+```
+
+Add it to an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "ms365-graph": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@softeria/ms-365-mcp-server",
+        "--read-only",
+        "--preset",
+        "outlook"
+      ]
+    }
+  }
+}
+```
+
+For work or school accounts, add `--org-mode` after tenant permissions are
+approved:
+
+```bash
+npx -y @softeria/ms-365-mcp-server --org-mode --read-only --preset teams
+```
+
+Before enabling broader tools, list the effective Graph permissions:
+
+```bash
+npx -y @softeria/ms-365-mcp-server --org-mode --preset teams --list-permissions
+```
+
+## Use Cases
+
+- Summarize recent Outlook messages or calendar events from a personal account.
+- Retrieve OneDrive files or Excel workbook data for a task-specific context.
+- Search Microsoft 365 content across mail, files, notes, tasks, and work data.
+- Let an agent inspect Teams or SharePoint data after admin consent and org-mode
+  approval.
+- Run a hosted Streamable HTTP MCP endpoint where each user authenticates with
+  their own Microsoft account.
+- Use read-only presets to keep initial context and permissions smaller.
+
+## Safety and Privacy
+
+Microsoft 365 data is often sensitive by default. Treat this server like access
+to a real Microsoft account, not like a documentation helper. Prefer read-only
+mode, exact presets, narrow enabled-tool regexes, and allowed-scope boundaries.
+Review `--list-permissions` output before asking an admin to consent.
+
+For production HTTP deployments, configure a dedicated Entra app, exact redirect
+URI allowlists, a public URL, managed identity or Key Vault for secrets, and
+audit logging. For stdio deployments, protect local token caches and pin the
+expected account so the wrong mailbox or tenant is not exposed by accident.
+
+## Duplicate Notes
+
+The catalog already includes CLI for Microsoft 365 MCP Server from the PnP
+organization. That entry lets agents run CLI for Microsoft 365 commands through
+an existing `m365` login context. This entry covers the separate Softeria Graph
+API server, npm package, OAuth modes, read-only flag, tool presets, scope
+allowlists, and generated Microsoft Graph tool surface.
