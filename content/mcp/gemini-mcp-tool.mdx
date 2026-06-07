@@ -1,0 +1,215 @@
+---
+title: Gemini MCP Tool
+slug: gemini-mcp-tool
+category: mcp
+description: >-
+  Stdio MCP server that lets Claude ask the Google Gemini CLI for large-file,
+  codebase, brainstorming, and sandboxed analysis while preserving MCP tool and
+  prompt workflows inside Claude Code or compatible MCP clients.
+cardDescription: Ask the Gemini CLI for large-context analysis from Claude.
+seoTitle: Gemini MCP Tool for Claude
+seoDescription: >-
+  Configure Gemini MCP Tool with Claude to call the Google Gemini CLI through a
+  stdio MCP server, use large-context file references, request brainstorming,
+  enable sandbox mode, and fetch chunked change-mode responses.
+author: jamubc
+authorProfileUrl: "https://github.com/jamubc"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Gemini MCP Tool
+brandDomain: github.io
+websiteUrl: "https://jamubc.github.io/gemini-mcp-tool/"
+repoUrl: "https://github.com/jamubc/gemini-mcp-tool"
+documentationUrl: "https://github.com/jamubc/gemini-mcp-tool/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/gemini-mcp-tool"
+installable: true
+installCommand: "npx -y gemini-mcp-tool"
+usageSnippet: "Install and authenticate the Google Gemini CLI first, then add Gemini MCP Tool with `claude mcp add gemini-cli -- npx -y gemini-mcp-tool`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "gemini-cli": {
+        "command": "npx",
+        "args": ["-y", "gemini-mcp-tool"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "gemini-cli": {
+        "command": "npx",
+        "args": ["-y", "gemini-mcp-tool"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 16 or newer.
+  - Google Gemini CLI installed, authenticated, and configured before starting the MCP server.
+  - A Claude Code, Claude Desktop, or compatible MCP client configuration that can run stdio servers.
+  - Review of any `@file` or `@directory` references before sending prompts through Gemini CLI.
+safetyNotes:
+  - Gemini MCP Tool runs locally but invokes the Gemini CLI, so prompts, file references, and command output can leave the local machine through the configured Google Gemini account or API path.
+  - The `ask-gemini` tool can pass `@` file or directory references to Gemini CLI; current source checks that references stay under the working directory, but users should still scope prompts carefully.
+  - Sandbox mode is exposed as an option on `ask-gemini` and forwards the Gemini CLI sandbox flag; review generated scripts, network calls, package installs, and filesystem changes before relying on sandboxed output.
+  - Change mode can generate structured edit suggestions for Claude to apply; inspect proposed OLD/NEW replacements before applying them to source files.
+  - Treat the project as an unofficial third-party bridge, not an official Google MCP server.
+privacyNotes:
+  - Prompts, selected source files, directory context, code snippets, local paths, command output, change-mode chunks, and brainstorming context may be sent to Gemini CLI and the configured Gemini service.
+  - Avoid referencing `.env` files, credentials, private keys, customer data, unreleased product plans, or regulated datasets in `@` references.
+  - The MCP server and Gemini CLI may log execution details locally; protect terminal history, MCP client logs, and Gemini CLI configuration files.
+  - Google account, project, retention, and telemetry behavior depends on the user's Gemini CLI configuration and Google service terms.
+disclosure: >-
+  Gemini MCP Tool is an unofficial third-party project and is not affiliated
+  with, endorsed by, or sponsored by Google. The npm package metadata reports
+  MIT, but the repository LICENSE file is titled "MIT License
+  (Non-Commercial)" and prohibits commercial use without written permission.
+sourceUrls:
+  - "https://github.com/jamubc/gemini-mcp-tool/blob/main/package.json"
+  - "https://github.com/jamubc/gemini-mcp-tool/blob/main/src/index.ts"
+  - "https://github.com/jamubc/gemini-mcp-tool/blob/main/src/tools/index.ts"
+  - "https://github.com/jamubc/gemini-mcp-tool/blob/main/src/tools/ask-gemini.tool.ts"
+  - "https://github.com/jamubc/gemini-mcp-tool/blob/main/src/utils/geminiExecutor.ts"
+  - "https://github.com/jamubc/gemini-mcp-tool/blob/main/LICENSE"
+tags:
+  - developer-tools
+  - code-analysis
+  - google
+  - llm-tools
+  - local-first
+keywords:
+  - Gemini MCP Tool
+  - gemini-mcp-tool
+  - Gemini CLI MCP
+  - Google Gemini CLI Claude
+  - large context MCP
+  - code analysis MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Gemini MCP Tool connects Claude to the Google Gemini CLI through a local stdio
+MCP server. It is designed for workflows where Claude should ask Gemini for a
+second-pass analysis, use Gemini's larger context window on selected files or
+directories, brainstorm alternatives, or request structured edit suggestions
+without leaving the MCP client.
+
+The server exposes MCP tools and prompts from a unified registry. Current
+source registers `ask-gemini`, `brainstorm`, `fetch-chunk`, `Ping`, and `Help`
+tools, with test-only tools gated behind an environment variable. The
+`ask-gemini` implementation supports optional model selection, sandbox mode,
+change mode, and chunk continuation. The Gemini executor validates `@` file
+references against the current working directory before passing prompts to the
+Gemini CLI.
+
+## Source Review
+
+- https://github.com/jamubc/gemini-mcp-tool
+- https://github.com/jamubc/gemini-mcp-tool/blob/main/README.md
+- https://jamubc.github.io/gemini-mcp-tool/
+- https://registry.npmjs.org/gemini-mcp-tool
+- https://github.com/jamubc/gemini-mcp-tool/blob/main/package.json
+- https://github.com/jamubc/gemini-mcp-tool/blob/main/src/index.ts
+- https://github.com/jamubc/gemini-mcp-tool/blob/main/src/tools/index.ts
+- https://github.com/jamubc/gemini-mcp-tool/blob/main/src/tools/ask-gemini.tool.ts
+- https://github.com/jamubc/gemini-mcp-tool/blob/main/src/tools/fetch-chunk.tool.ts
+- https://github.com/jamubc/gemini-mcp-tool/blob/main/src/utils/geminiExecutor.ts
+- https://github.com/jamubc/gemini-mcp-tool/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, docs site, npm registry metadata, package manifest, stdio server
+implementation, tool registry, `ask-gemini` implementation, Gemini CLI
+executor, chunk helper, and license file for current install paths, tool
+registration, sandbox behavior, file-reference handling, package metadata, and
+licensing.
+
+## Features
+
+- Local stdio MCP server distributed as the `gemini-mcp-tool` npm package.
+- Claude Code one-line setup through `claude mcp add gemini-cli -- npx -y gemini-mcp-tool`.
+- Claude Desktop configuration through `npx -y gemini-mcp-tool`, or global
+  `gemini-mcp` after package installation.
+- MCP tools and prompts for asking Gemini, brainstorming, fetching chunked
+  change-mode output, pinging the server, and showing help.
+- Optional Gemini model selection, with the README documenting
+  `gemini-2.5-pro` as the default.
+- Optional Gemini CLI sandbox flag from the verified `ask-gemini` tool path.
+- Change mode for structured OLD/NEW edit suggestions, including chunk cache
+  retrieval for large responses.
+- Working-directory checks for `@` file references before prompts reach Gemini
+  CLI's file-inlining parser.
+- Unofficial third-party project with a non-commercial repository license text.
+
+## Installation
+
+Install and configure the Google Gemini CLI first. Then add the MCP server to
+Claude Code:
+
+```sh
+claude mcp add gemini-cli -- npx -y gemini-mcp-tool
+```
+
+For Claude Desktop or another compatible MCP client, use the npm package through
+`npx`:
+
+```json
+{
+  "mcpServers": {
+    "gemini-cli": {
+      "command": "npx",
+      "args": ["-y", "gemini-mcp-tool"]
+    }
+  }
+}
+```
+
+Restart the MCP client after editing configuration, then use the client's MCP
+status view to confirm the `gemini-cli` server is active.
+
+## Use Cases
+
+- Ask Gemini to summarize a large file, dependency manifest, or directory using
+  the Gemini CLI `@` reference syntax.
+- Get a second-model review of code architecture, bug hypotheses, or refactor
+  options while keeping Claude as the primary coding assistant.
+- Use brainstorming prompts to compare approaches before changing a complex
+  codebase.
+- Request sandboxed Gemini CLI analysis for risky scripts, generated commands,
+  package installs, or code experiments.
+- Generate structured change-mode suggestions that Claude can inspect and apply
+  in smaller chunks.
+- Keep a local MCP workflow while using the separately installed Gemini CLI for
+  authentication and provider access.
+
+## Safety and Privacy
+
+Gemini MCP Tool is a bridge from Claude to another model provider path. Anything
+included in a prompt, selected through an `@` reference, shown in terminal
+output, or summarized in a change-mode response can be sent through Gemini CLI
+under the user's configured Google account or API context.
+
+Use the smallest useful file references, keep prompts inside the intended
+repository, and avoid secrets or regulated data. The source currently validates
+that `@` references stay inside the working directory, but that does not make
+the selected project files safe to disclose. Review proposed OLD/NEW changes
+before applying them, and treat sandboxed runs as risk-reducing rather than
+risk-free.
+
+The project is not affiliated with Google. Its package metadata and README
+describe MIT licensing, while the repository license text is non-commercial, so
+commercial users should review licensing with the project owner before adopting
+it.
+
+## Duplicate Check
+
+Existing MCP content includes Google, search, code-analysis, and local CLI
+servers, but no dedicated `gemini-mcp-tool`, `gemini-cli` MCP bridge, or
+`jamubc/gemini-mcp-tool` entry was found in `content/mcp`. Gemini MCP Tool is
+distinct because it documents the npm-distributed stdio server that calls the
+Google Gemini CLI from Claude and exposes verified Gemini analysis, brainstorm,
+change-mode, and chunk-retrieval workflows.

@@ -1,0 +1,208 @@
+---
+title: Google Search Console MCP Server
+slug: google-search-console-mcp-server
+category: mcp
+description: >-
+  MCP server for Google Search Console that lets Claude list properties, inspect
+  indexing status, query search analytics, compare performance periods, audit
+  sitemaps, and manage Search Console resources with guarded destructive tools.
+cardDescription: Analyze Google Search Console properties, queries, pages, indexing, and sitemaps from Claude.
+seoTitle: Google Search Console MCP Server for Claude
+seoDescription: >-
+  Configure the Google Search Console MCP server with Claude using OAuth or a
+  service account to inspect SEO data, URL indexing, search analytics, sitemap
+  status, and guarded Search Console management tools.
+author: Amin Foroutan
+authorProfileUrl: "https://github.com/AminForou"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Google Search Console MCP
+brandDomain: github.com
+repoUrl: "https://github.com/AminForou/mcp-gsc"
+documentationUrl: "https://raw.githubusercontent.com/AminForou/mcp-gsc/main/README.md"
+installable: true
+installCommand: "Run `uvx mcp-search-console` with either `GSC_OAUTH_CLIENT_SECRETS_FILE` for OAuth or `GSC_CREDENTIALS_PATH` plus `GSC_SKIP_OAUTH=true` for a service account."
+usageSnippet: "Call `get_capabilities`, then `list_properties`, then run analytics or inspection tools with the exact `site_url` returned by Search Console."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "gscServer": {
+        "command": "uvx",
+        "args": ["mcp-search-console"],
+        "env": {
+          "GSC_OAUTH_CLIENT_SECRETS_FILE": "<absolute-path-to-client-secrets-json>",
+          "GSC_DATA_STATE": "all"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  GSC_OAUTH_CLIENT_SECRETS_FILE=<absolute-path-to-client-secrets-json>
+  GSC_CREDENTIALS_PATH=<absolute-path-to-service-account-json>
+  GSC_SKIP_OAUTH=true
+  GSC_ALLOW_DESTRUCTIVE=false
+estimatedSetupTime: 25 minutes
+difficulty: intermediate
+prerequisites:
+  - Google Cloud project with the Search Console API enabled.
+  - OAuth desktop client secrets JSON or service account JSON stored outside the repository.
+  - Google Search Console properties where the authenticated user or service account has access.
+  - MCP client that can run uvx or a local Python clone.
+  - Agreement on whether destructive site and sitemap tools should remain disabled.
+safetyNotes:
+  - The server requests the Google Search Console webmasters scope and can access every property available to the authenticated account.
+  - add_site, delete_site, and delete_sitemap are disabled by default and only run when GSC_ALLOW_DESTRUCTIVE is true.
+  - manage_sitemaps can submit or delete sitemaps depending on action and destructive settings.
+  - URL inspection and analytics tools can reveal indexing issues, search terms, landing pages, countries, devices, click-through rates, and ranking positions.
+  - Use least-privilege service accounts, avoid full-access credentials where read-only analysis is enough, and confirm exact site_url values with list_properties.
+privacyNotes:
+  - OAuth client secrets, service account JSON, cached token files, Search Console properties, page URLs, query terms, sitemap URLs, countries, devices, clicks, impressions, CTR, and positions can be sensitive.
+  - The server stores OAuth tokens under a user config directory unless GSC_CONFIG_DIR is changed.
+  - Service account files and OAuth tokens must stay out of prompts, issue comments, logs, screenshots, and repository files.
+  - Redact property URLs, query data, page URLs, tokens, credential file paths, and inspection results before sharing MCP transcripts.
+disclosure: >-
+  MIT-licensed open-source server with README links to a separate paid hosted
+  offering. This entry covers the source-backed self-run MCP package, not the
+  hosted commercial product.
+sourceUrls:
+  - "https://raw.githubusercontent.com/AminForou/mcp-gsc/main/LICENSE"
+  - "https://raw.githubusercontent.com/AminForou/mcp-gsc/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/AminForou/mcp-gsc/main/gsc_server.py"
+  - "https://raw.githubusercontent.com/AminForou/mcp-gsc/main/mcp.json"
+  - "https://raw.githubusercontent.com/AminForou/mcp-gsc/main/requirements.txt"
+  - "https://raw.githubusercontent.com/AminForou/mcp-gsc/main/Dockerfile"
+  - "https://raw.githubusercontent.com/AminForou/mcp-gsc/main/test_gsc_server.py"
+  - "https://raw.githubusercontent.com/AminForou/mcp-gsc/main/.claude-plugin/plugin.json"
+tags:
+  - seo
+  - google
+  - search-console
+  - analytics
+  - indexing
+keywords:
+  - Google Search Console MCP
+  - GSC MCP
+  - Search Console MCP server
+  - SEO analytics MCP
+  - URL inspection MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Google Search Console MCP Server connects Claude to Google Search Console data.
+It exposes tools for capability discovery, property listing, search analytics,
+period comparison, page/query analysis, URL inspection, indexing audits, sitemap
+review, and guarded Search Console management operations.
+
+Use it when an SEO, developer, or content team wants Claude to analyze Search
+Console properties through OAuth or a service account while keeping credentials
+in a local MCP configuration.
+
+## Source Review
+
+- https://github.com/AminForou/mcp-gsc
+- https://raw.githubusercontent.com/AminForou/mcp-gsc/main/README.md
+- https://raw.githubusercontent.com/AminForou/mcp-gsc/main/LICENSE
+- https://raw.githubusercontent.com/AminForou/mcp-gsc/main/pyproject.toml
+- https://raw.githubusercontent.com/AminForou/mcp-gsc/main/gsc_server.py
+- https://raw.githubusercontent.com/AminForou/mcp-gsc/main/mcp.json
+- https://raw.githubusercontent.com/AminForou/mcp-gsc/main/requirements.txt
+- https://raw.githubusercontent.com/AminForou/mcp-gsc/main/Dockerfile
+- https://raw.githubusercontent.com/AminForou/mcp-gsc/main/test_gsc_server.py
+- https://raw.githubusercontent.com/AminForou/mcp-gsc/main/.claude-plugin/plugin.json
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, Python package metadata, server source, MCP config, dependency
+list, Dockerfile, tests, and plugin manifest for current setup and behavior.
+
+## Features
+
+- List Search Console properties and permission levels.
+- Get property details and verification information.
+- Query search analytics by query, page, country, device, and date range.
+- Compare performance between two periods.
+- Get a site-level performance overview.
+- Find search terms driving traffic to a specific page.
+- Inspect URL indexing and crawl status.
+- Batch-inspect up to ten URLs.
+- Check multiple URLs for indexing issues.
+- List, inspect, submit, or delete sitemaps depending on tool and safety flag.
+- Re-run OAuth authentication from the MCP client.
+- Toggle fresh versus final Search Console data with `GSC_DATA_STATE`.
+
+## Installation
+
+Enable the Google Search Console API, create OAuth desktop credentials or a
+service account, and grant access to the target Search Console properties.
+
+OAuth configuration:
+
+```json
+{
+  "mcpServers": {
+    "gscServer": {
+      "command": "uvx",
+      "args": ["mcp-search-console"],
+      "env": {
+        "GSC_OAUTH_CLIENT_SECRETS_FILE": "<absolute-path-to-client-secrets-json>",
+        "GSC_DATA_STATE": "all"
+      }
+    }
+  }
+}
+```
+
+Service account configuration:
+
+```json
+{
+  "mcpServers": {
+    "gscServer": {
+      "command": "uvx",
+      "args": ["mcp-search-console"],
+      "env": {
+        "GSC_CREDENTIALS_PATH": "<absolute-path-to-service-account-json>",
+        "GSC_SKIP_OAUTH": "true",
+        "GSC_ALLOW_DESTRUCTIVE": "false"
+      }
+    }
+  }
+}
+```
+
+After configuration, call `get_capabilities` and `list_properties` before using
+analytics or URL inspection tools.
+
+## Use Cases
+
+- Ask Claude which queries and pages are driving search traffic.
+- Compare Search Console performance across two time periods.
+- Inspect whether a page is indexed and when Google last crawled it.
+- Batch-check important URLs for indexing issues.
+- Review sitemap status and errors.
+- Submit a sitemap after human review.
+- Diagnose SEO drops by country, device, query, page, CTR, and position.
+- Generate weekly SEO summaries from Search Console analytics.
+
+## Safety and Privacy
+
+Search Console data can reveal site strategy, private URLs, search demand, page
+performance, crawl status, and technical SEO issues. Keep OAuth credentials,
+service account keys, cached tokens, property URLs, query exports, page-level
+reports, sitemap URLs, and URL inspection results out of public logs and
+screenshots.
+
+Destructive operations are disabled by default. Leave `GSC_ALLOW_DESTRUCTIVE`
+set to `false` for analysis-only workflows, and require explicit review before
+adding or deleting Search Console properties or deleting sitemaps.
+
+## Duplicate Check
+
+No `AminForou/mcp-gsc`, Google Search Console MCP, Search Console MCP server,
+GSC MCP, or matching source URL entry was found in `content/mcp` or `README.md`.
+Existing Google Workspace and Google Analytics entries do not cover Google
+Search Console properties, indexing inspection, search analytics, and sitemap
+management.

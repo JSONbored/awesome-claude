@@ -1,0 +1,190 @@
+---
+title: CodeDB MCP Server
+slug: codedb-mcp-server
+category: mcp
+description: >-
+  Code intelligence MCP server with a Zig core for local project indexing,
+  structural outlines, symbol lookup, search, dependency graphs, snapshots,
+  remote public-repo queries, and fallback edits.
+cardDescription: >-
+  Index local projects for fast code search, outlines, symbols, callers,
+  dependencies, snapshots, remote repo queries, and fallback edits.
+seoTitle: CodeDB MCP Server for Claude
+seoDescription: >-
+  Configure CodeDB MCP Server with Claude and other MCP clients to index local
+  projects, search code, inspect symbols, read files, query dependencies, use
+  snapshots, and retrieve context for coding agents.
+author: justrach
+authorProfileUrl: "https://github.com/justrach"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: CodeDB
+brandDomain: codegraff.com
+repoUrl: "https://github.com/justrach/codedb"
+documentationUrl: "https://raw.githubusercontent.com/justrach/codedb/main/docs/mcp.md"
+packageUrl: "https://registry.npmjs.org/codedeebee"
+installable: true
+installCommand: "npx -y codedeebee mcp"
+usageSnippet: "Run `npx -y codedeebee mcp` from an MCP client, then ask Claude to inspect the indexed project with CodeDB search, outline, symbol, dependency, read, and context tools."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "codedb": {
+        "command": "npx",
+        "args": ["-y", "codedeebee", "mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add codedb -- npx -y codedeebee mcp
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - macOS or Linux on x64 or arm64 for the published native binary launcher.
+  - Node.js 18 or newer when using the `codedeebee` npm launcher.
+  - A local project directory that the MCP client exposes through roots or launches from.
+  - Review of which local repositories, file types, generated artifacts, and secrets patterns may be indexed.
+  - Optional `CODEDB_NO_TELEMETRY=1` if local aggregate telemetry should not be synced upstream.
+safetyNotes:
+  - CodeDB indexes local projects and exposes file tree, outline, search, symbol, caller, dependency, read, snapshot, project, and context tools to the MCP client.
+  - CodeDB's `codedb_edit` tool exists as a fallback editing tool and can create, replace, insert, delete, or modify files when used by a client without native edit tooling.
+  - The npm package runs a postinstall step that downloads a native binary from GitHub Releases; review package and release provenance in environments that restrict native binaries.
+  - Remote repo queries use the public `api.wiki.codes` service and should be treated as network access outside the local repository.
+  - The upstream README marks the project as alpha software, with parser coverage and snapshot formats still stabilizing.
+privacyNotes:
+  - Local indexes, snapshots, file trees, symbol names, dependency graphs, snippets, read results, and search results can reveal proprietary code structure and implementation details.
+  - Upstream documents sensitive-file blocking for patterns such as environment files, credentials, and keys, but users should still review ignore rules and avoid indexing secret-heavy directories.
+  - CodeDB writes telemetry to `~/.codedb/telemetry.ndjson` unless `CODEDB_NO_TELEMETRY=1` is set, then syncs aggregate tool counts, latency, startup, file count, line count, language, version, and platform data on MCP session close.
+  - Upstream telemetry docs state that source code, file contents, file paths, and search queries are not collected.
+  - Remote public-repo queries and local MCP responses may still be logged by MCP clients, model providers, and terminal history.
+disclosure: >-
+  Alpha code intelligence MCP server. The npm package is named `codedeebee`
+  because the bare `codedb` name is restricted on npm, and it installs a native
+  `codedb` binary launcher.
+sourceUrls:
+  - "https://raw.githubusercontent.com/justrach/codedb/main/LICENSE"
+  - "https://raw.githubusercontent.com/justrach/codedb/main/README.md"
+  - "https://raw.githubusercontent.com/justrach/codedb/main/npm/package.json"
+  - "https://raw.githubusercontent.com/justrach/codedb/main/npm/bin/codedb.js"
+  - "https://raw.githubusercontent.com/justrach/codedb/main/src/mcp.zig"
+  - "https://raw.githubusercontent.com/justrach/codedb/main/src/edit.zig"
+  - "https://raw.githubusercontent.com/justrach/codedb/main/docs/telemetry.md"
+tags:
+  - code-search
+  - code-intelligence
+  - indexing
+  - developer-tools
+  - zig
+keywords:
+  - CodeDB MCP
+  - codedb MCP server
+  - codedeebee MCP
+  - code intelligence MCP
+  - local code index MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+CodeDB is a code intelligence MCP server with a Zig core. It indexes local
+projects and exposes MCP tools for file trees, outlines, symbol lookup,
+trigram-accelerated search, word lookup, callers, dependency graphs, context
+composition, hot files, reads, snapshots, remote public-repo queries, and
+fallback edits.
+
+Use it when Claude needs fast structural code context without reading entire
+files first. CodeDB is designed as a context engine for coding agents: it helps
+an agent find, understand, and retrieve relevant code while leaving most edits
+to the client's native editing tools.
+
+## Source Review
+
+- https://github.com/justrach/codedb
+- https://raw.githubusercontent.com/justrach/codedb/main/docs/mcp.md
+- https://registry.npmjs.org/codedeebee
+- https://raw.githubusercontent.com/justrach/codedb/main/LICENSE
+- https://raw.githubusercontent.com/justrach/codedb/main/README.md
+- https://raw.githubusercontent.com/justrach/codedb/main/npm/package.json
+- https://raw.githubusercontent.com/justrach/codedb/main/npm/bin/codedb.js
+- https://raw.githubusercontent.com/justrach/codedb/main/src/mcp.zig
+- https://raw.githubusercontent.com/justrach/codedb/main/src/edit.zig
+- https://raw.githubusercontent.com/justrach/codedb/main/docs/telemetry.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+setup guide, npm registry metadata, license, README, npm launcher manifest,
+launcher script, MCP implementation, fallback edit implementation, and
+telemetry documentation for current installation and behavior details.
+
+## Features
+
+- Index local project structure and maintain project snapshots.
+- Inspect trees, symbols, outlines, imports, callers, dependencies, changed
+  files, hot files, and project status.
+- Search with trigram and word indexes.
+- Read file ranges with compact output and hash guards.
+- Compose task-shaped context from natural-language requests.
+- Query indexed public GitHub repositories through the remote tool.
+- List locally indexed projects.
+- Use a fallback edit tool for clients that do not provide native file editing.
+- Run as a stdio MCP server through the native `codedb` binary or the
+  `codedeebee` npm launcher.
+
+## Installation
+
+For MCP clients that can run `npx`, use the npm launcher:
+
+```json
+{
+  "mcpServers": {
+    "codedb": {
+      "command": "npx",
+      "args": ["-y", "codedeebee", "mcp"]
+    }
+  }
+}
+```
+
+Claude Code users can add it with:
+
+```bash
+claude mcp add codedb -- npx -y codedeebee mcp
+```
+
+The upstream docs also describe a one-line installer and direct binary setup.
+Review the installer and native-binary download path before using those options
+in locked-down environments.
+
+## Use Cases
+
+- Ask Claude to locate a symbol definition before editing related code.
+- Retrieve outlines and dependencies instead of loading whole files.
+- Search a large repository quickly after indexing.
+- Build task-specific context from a natural-language coding request.
+- Inspect callers and dependency paths for a refactor.
+- Query an indexed public GitHub repository without cloning it locally.
+- Use fallback edits only when the MCP client has no native edit tool.
+
+## Safety and Privacy
+
+CodeDB is powerful because it indexes local code. Point it only at repositories
+that are appropriate for the MCP client and model provider to inspect. Review
+generated snapshots, ignored paths, and sensitive-file handling before indexing
+private workspaces.
+
+The `codedeebee` npm package downloads a native `codedb` binary during
+postinstall. Organizations with supply-chain controls should verify package,
+release, and checksum behavior before installing it automatically.
+
+Telemetry is enabled by default according to upstream docs, writes locally to
+`~/.codedb/telemetry.ndjson`, and syncs aggregate usage and performance data on
+MCP session close unless `CODEDB_NO_TELEMETRY=1` is set. Review this behavior
+before using CodeDB with confidential or regulated repositories.
+
+## Duplicate Check
+
+Existing entries cover Serena, Context Mode, CodeGraphContext, LeanCTX,
+language servers, repository search, and other code intelligence tools, but no
+CodeDB entry, `justrach/codedb`, `codedeebee` package, or matching source URL
+was found in `content/mcp`.

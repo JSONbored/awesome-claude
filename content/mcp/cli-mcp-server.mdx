@@ -1,0 +1,207 @@
+---
+title: CLI MCP Server
+slug: cli-mcp-server
+category: mcp
+description: >-
+  Secure command-line execution MCP server that lets Claude run allowlisted
+  commands inside a configured directory with command and flag whitelists, path
+  validation, shell-operator blocking, command-length limits, execution
+  timeouts, and a tool for showing the active security rules.
+cardDescription: Connect Claude to tightly scoped, allowlisted command execution.
+seoTitle: CLI MCP Server for Claude
+seoDescription: >-
+  Configure CLI MCP Server with Claude to run controlled command-line operations
+  inside an allowed directory using command and flag allowlists, shell-operator
+  controls, path validation, timeouts, and security-rule inspection.
+author: Mladen
+authorProfileUrl: "https://github.com/MladenSU"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: CLI MCP Server
+brandDomain: github.com/MladenSU/cli-mcp-server
+websiteUrl: "https://github.com/MladenSU/cli-mcp-server"
+repoUrl: "https://github.com/MladenSU/cli-mcp-server"
+documentationUrl: "https://github.com/MladenSU/cli-mcp-server/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/cli-mcp-server/json"
+installable: true
+installCommand: "uvx cli-mcp-server"
+usageSnippet: "Set ALLOWED_DIR to a disposable workspace, allow only the exact commands and flags needed, keep shell operators disabled, and ask Claude to show the active security rules first."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "cli-mcp-server": {
+        "command": "uvx",
+        "args": ["cli-mcp-server"],
+        "env": {
+          "ALLOWED_DIR": "<approved-working-directory>",
+          "ALLOWED_COMMANDS": "ls,cat,pwd",
+          "ALLOWED_FLAGS": "-l,-a,--help",
+          "ALLOW_SHELL_OPERATORS": "false"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "cli-mcp-server": {
+        "command": "uvx",
+        "args": ["cli-mcp-server"],
+        "env": {
+          "ALLOWED_DIR": "<approved-working-directory>",
+          "ALLOWED_COMMANDS": "ls,cat,pwd,echo",
+          "ALLOWED_FLAGS": "-l,-a,--help,--version",
+          "MAX_COMMAND_LENGTH": "1024",
+          "COMMAND_TIMEOUT": "30",
+          "ALLOW_SHELL_OPERATORS": "false"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer and uvx, uv, pipx, or another supported Python runner.
+  - A dedicated ALLOWED_DIR that contains only files Claude is approved to inspect or modify.
+  - A minimal command allowlist and flag allowlist for the intended workflow.
+  - External sandboxing, containerization, or a low-privilege OS user when running anything beyond read-only commands.
+safetyNotes:
+  - CLI MCP Server executes local commands, so allowed commands can read, write, delete, transform, upload, or run code depending on what is whitelisted.
+  - Never set ALLOWED_COMMANDS=all, ALLOWED_FLAGS=all, or ALLOW_SHELL_OPERATORS=true unless the environment is disposable and strongly sandboxed.
+  - Keep ALLOWED_DIR narrow; do not point it at a home directory, repository root with secrets, cloud credential directory, SSH directory, or production data.
+  - The reviewed implementation blocks shell operators by default and enforces timeouts, but those controls do not replace OS permissions, backups, or process isolation.
+  - Ask the show_security_rules tool to confirm the effective policy before allowing run_command.
+privacyNotes:
+  - Command output, file names, file contents, directory listings, environment-derived paths, error messages, and working-directory names can be sent to the MCP client and model.
+  - Whitelisted commands such as cat, grep, env, git, curl, package managers, or language runtimes can expose secrets or transmit data if enabled.
+  - Logs and transcripts can retain command output and local project context, so do not run against directories containing credentials, customer data, private keys, or unpublished source unless approved.
+sourceUrls:
+  - "https://github.com/MladenSU/cli-mcp-server/blob/main/pyproject.toml"
+  - "https://github.com/MladenSU/cli-mcp-server/blob/main/src/cli_mcp_server/__init__.py"
+  - "https://github.com/MladenSU/cli-mcp-server/blob/main/src/cli_mcp_server/server.py"
+  - "https://github.com/MladenSU/cli-mcp-server/blob/main/glama.json"
+  - "https://github.com/MladenSU/cli-mcp-server/blob/main/LICENSE"
+tags:
+  - cli
+  - shell
+  - command-line
+  - automation
+  - security
+keywords:
+  - CLI MCP Server
+  - cli-mcp-server
+  - secure CLI MCP
+  - command execution MCP
+  - shell MCP
+  - terminal MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+CLI MCP Server is a Python stdio MCP server for controlled command-line
+execution. It exposes a `run_command` tool for executing validated commands
+inside an allowed directory and a `show_security_rules` tool for inspecting the
+active working directory, command allowlist, flag allowlist, maximum command
+length, timeout, and shell-operator behavior.
+
+The server is designed to provide limited CLI access to an AI assistant while
+enforcing command whitelists, flag whitelists, path normalization, allowed
+directory checks, command-length limits, execution timeouts, and default blocking
+for shell operators such as pipes, redirects, semicolons, and boolean operators.
+
+## Source Review
+
+- https://github.com/MladenSU/cli-mcp-server
+- https://github.com/MladenSU/cli-mcp-server/blob/main/README.md
+- https://pypi.org/pypi/cli-mcp-server/json
+- https://github.com/MladenSU/cli-mcp-server/blob/main/pyproject.toml
+- https://github.com/MladenSU/cli-mcp-server/blob/main/src/cli_mcp_server/__init__.py
+- https://github.com/MladenSU/cli-mcp-server/blob/main/src/cli_mcp_server/server.py
+- https://github.com/MladenSU/cli-mcp-server/blob/main/glama.json
+- https://github.com/MladenSU/cli-mcp-server/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, package metadata, package entrypoint, server
+implementation, registry metadata, and license file for current install commands,
+environment variables, tool behavior, security controls, and licensing.
+
+## Features
+
+- Python package `cli-mcp-server` with a `cli-mcp-server` console command.
+- Stdio MCP server exposing `run_command` and `show_security_rules`.
+- Required `ALLOWED_DIR` base directory for command execution.
+- `ALLOWED_COMMANDS` and `ALLOWED_FLAGS` allowlists, with explicit all modes.
+- Shell operator blocking by default, with opt-in `ALLOW_SHELL_OPERATORS`.
+- Command length and timeout controls.
+- Path normalization and allowed-directory validation for path-like arguments.
+- MIT license.
+
+## Installation
+
+Run the package with uvx:
+
+```sh
+uvx cli-mcp-server
+```
+
+Configure a narrow command policy:
+
+```json
+{
+  "mcpServers": {
+    "cli-mcp-server": {
+      "command": "uvx",
+      "args": ["cli-mcp-server"],
+      "env": {
+        "ALLOWED_DIR": "<approved-working-directory>",
+        "ALLOWED_COMMANDS": "ls,cat,pwd",
+        "ALLOWED_FLAGS": "-l,-a,--help",
+        "MAX_COMMAND_LENGTH": "1024",
+        "COMMAND_TIMEOUT": "30",
+        "ALLOW_SHELL_OPERATORS": "false"
+      }
+    }
+  }
+}
+```
+
+After restart, call `show_security_rules` before running commands so the active
+policy is visible in the conversation.
+
+## Use Cases
+
+- Let Claude list and inspect files in a disposable working directory.
+- Give an assistant narrow read-only access to generated logs or reports.
+- Run tightly scoped diagnostic commands during a guided support session.
+- Expose only safe project scripts or read commands inside a sandboxed folder.
+- Confirm command policy and allowed flags before a human approves execution.
+
+## Safety and Privacy
+
+CLI MCP Server should be treated as local code execution. Its controls are useful
+guardrails, but the actual risk depends on the commands, flags, directory, OS
+permissions, and sandbox around the MCP process. Start with read-only commands,
+keep shell operators disabled, and do not use all-mode allowlists on a machine or
+directory that contains valuable data.
+
+Use a disposable folder, temporary checkout, container, VM, or low-privilege user
+for anything that can modify files or run scripts. Avoid allowing package
+managers, interpreters, network clients, credential tools, destructive commands,
+or broad filesystem commands unless the environment is intentionally isolated.
+
+Command output can contain secrets, source code, customer data, local paths, or
+environment details. Do not run this server against credential directories,
+private keys, cloud config folders, production data, or unpublished source unless
+that exposure has been approved.
+
+## Duplicate Check
+
+Existing content includes product-specific CLI servers such as Microsoft 365
+CLI MCP, but no `MladenSU/cli-mcp-server`, secure CLI execution MCP, or generic
+allowlisted command execution MCP entry was found in `content/mcp`,
+`content/agents`, `content/guides`, or `content/skills`. This entry is scoped to
+the Python `cli-mcp-server` package and does not duplicate product-specific CLI
+or infrastructure MCP entries.

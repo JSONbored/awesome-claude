@@ -1,0 +1,176 @@
+---
+title: MCP Installer Server
+slug: mcp-installer-server
+category: mcp
+description: >-
+  MCP server that lets Claude install other MCP servers into Claude Desktop by
+  writing MCP config entries for npm packages, uvx packages, or locally cloned
+  Node-based MCP server projects.
+cardDescription: >-
+  Let Claude add MCP server configs for reviewed npm, uvx, or local MCP
+  projects, with strong guardrails around packages and secrets.
+seoTitle: MCP Installer Server for Claude
+seoDescription: >-
+  Configure MCP Installer with Claude Desktop to install reviewed MCP server
+  packages, add args and environment variables, and update Claude Desktop MCP
+  configuration through an MCP tool.
+author: Anais Betts
+authorProfileUrl: "https://github.com/anaisbetts"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MCP Installer
+brandDomain: github.com
+repoUrl: "https://github.com/anaisbetts/mcp-installer"
+documentationUrl: "https://raw.githubusercontent.com/anaisbetts/mcp-installer/main/README.md"
+packageUrl: "https://registry.npmjs.org/@anaisbetts/mcp-installer"
+installable: true
+installCommand: "Run `npx @anaisbetts/mcp-installer` from Claude Desktop after reviewing the server source and package behavior."
+usageSnippet: "Ask Claude to install a reviewed MCP package only after confirming the package name, args, environment variables, and config-write behavior."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcp-installer": {
+        "command": "npx",
+        "args": ["@anaisbetts/mcp-installer"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mcp-installer": {
+        "command": "npx",
+        "args": ["@anaisbetts/mcp-installer"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: advanced
+prerequisites:
+  - Claude Desktop or another MCP client that can run stdio Node MCP servers.
+  - Node.js and npx available for npm-hosted MCP servers.
+  - uvx available before installing Python MCP servers through the uvx path.
+  - Package names, local paths, args, and environment variables reviewed before asking Claude to install anything.
+  - Permission to modify the Claude Desktop MCP configuration file on the host machine.
+safetyNotes:
+  - MCP Installer can write or update Claude Desktop MCP server configuration entries.
+  - The install_repo_mcp_server tool can add npx or uvx based MCP server commands from package names the model supplies.
+  - The install_local_mcp_server tool can run npm install in a local project with a package.json and configure Node to execute discovered package bins or main files.
+  - Environment variables passed to the installer are written into the MCP configuration for the installed server.
+  - Treat this as an administrative helper; review every package, version, local path, arg, and environment value before approving a tool call.
+privacyNotes:
+  - MCP configuration files can contain API keys, tokens, local paths, package names, arguments, and environment variables.
+  - The server reads and writes the user's Claude Desktop MCP config and may reveal existing MCP server names or config structure through tool results or logs.
+  - Local project paths can reveal usernames, repository names, client names, or private workspace layout.
+  - Do not ask the installer to write real secrets until you understand where the MCP client stores them and who can read the config file.
+disclosure: >-
+  MIT-licensed open-source MCP utility. It changes local MCP configuration and
+  can add package execution commands; it should be used only with reviewed
+  packages and least-privilege credentials.
+sourceUrls:
+  - "https://raw.githubusercontent.com/anaisbetts/mcp-installer/main/COPYING"
+  - "https://raw.githubusercontent.com/anaisbetts/mcp-installer/main/package.json"
+  - "https://raw.githubusercontent.com/anaisbetts/mcp-installer/main/src/index.mts"
+tags:
+  - installer
+  - configuration
+  - desktop
+  - npm
+  - developer-tools
+keywords:
+  - MCP Installer
+  - mcp-installer
+  - "@anaisbetts/mcp-installer"
+  - MCP server installer
+  - Claude Desktop MCP installer
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Installer is an MCP server that helps Claude add other MCP servers to
+Claude Desktop configuration. It exposes tools for installing package-based MCP
+servers through npx or uvx and for adding locally cloned Node MCP server
+projects after running npm install.
+
+This is most useful as an administrative helper when you already know which MCP
+server should be installed and want Claude to update the configuration for you.
+Because it can write config entries and store environment variables, treat every
+tool call as a local configuration change that needs human review.
+
+## Source Review
+
+- https://github.com/anaisbetts/mcp-installer
+- https://raw.githubusercontent.com/anaisbetts/mcp-installer/main/README.md
+- https://registry.npmjs.org/@anaisbetts/mcp-installer
+- https://raw.githubusercontent.com/anaisbetts/mcp-installer/main/COPYING
+- https://raw.githubusercontent.com/anaisbetts/mcp-installer/main/package.json
+- https://raw.githubusercontent.com/anaisbetts/mcp-installer/main/src/index.mts
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, NPM metadata, license, package metadata, and TypeScript source for
+current tool names, install behavior, and config-write paths.
+
+## Features
+
+- Run as a stdio MCP server with `npx @anaisbetts/mcp-installer`.
+- Install npm-hosted MCP servers by writing npx commands into Claude Desktop
+  MCP configuration.
+- Install uvx-based MCP servers when a package is not found on npm and uvx is
+  available.
+- Add command arguments to installed MCP server configs.
+- Add environment variables to installed MCP server configs.
+- Install locally cloned Node MCP servers by running npm install and wiring
+  discovered package bins or main files.
+- Expose separate tools for package-based and local-path installs.
+
+## Installation
+
+Add MCP Installer to Claude Desktop after reviewing the source and package:
+
+```json
+{
+  "mcpServers": {
+    "mcp-installer": {
+      "command": "npx",
+      "args": ["@anaisbetts/mcp-installer"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server. Before asking Claude to install
+another MCP server, confirm the exact package name, source repository, command
+arguments, environment variables, and whether the target server should run with
+npx, uvx, or a local Node entry point.
+
+## Use Cases
+
+- Add a reviewed npm MCP package to Claude Desktop without editing JSON by hand.
+- Add a reviewed uvx MCP package after confirming uv is installed.
+- Configure a locally cloned Node MCP server for testing.
+- Ask Claude to prepare a draft MCP config entry while you inspect the package
+  and environment variables.
+- Standardize local MCP setup instructions for a team that still reviews each
+  server before use.
+
+## Safety and Privacy
+
+MCP Installer can modify local MCP configuration, so it should not be treated as
+a passive catalog tool. Review package names for typosquatting, inspect source
+repositories, pin versions where possible, and avoid installing untrusted
+packages just because the model suggested them.
+
+Be especially careful with environment variables. Values passed to the installer
+are written into MCP config for the installed server and may include API keys or
+tokens. Local paths can also reveal private machine or project details. Keep
+config backups, review diffs manually, and remove unwanted entries before
+restarting the MCP client.
+
+## Duplicate Check
+
+No `anaisbetts/mcp-installer`, `@anaisbetts/mcp-installer`, MCP Installer
+Server, MCP server installer, or matching source URL entry was found in
+`content/mcp` or `README.md`.

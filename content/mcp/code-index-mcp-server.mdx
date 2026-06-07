@@ -1,0 +1,195 @@
+---
+title: Code Index MCP Server
+slug: code-index-mcp-server
+category: mcp
+description: >-
+  Local code indexing MCP server that lets AI assistants search repositories,
+  build symbol indexes, inspect file summaries, monitor changes, and navigate
+  multi-language codebases.
+cardDescription: >-
+  Give Claude local project indexes, advanced code search, file discovery,
+  symbol summaries, watcher refreshes, and cached repository navigation.
+seoTitle: Code Index MCP Server for Claude
+seoDescription: >-
+  Configure Code Index MCP with Claude to index local repositories, search code,
+  inspect file summaries, build deep symbol indexes, and monitor project changes.
+author: johnhuang316
+authorProfileUrl: "https://github.com/johnhuang316"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Code Index MCP
+brandDomain: github.com
+repoUrl: "https://github.com/johnhuang316/code-index-mcp"
+documentationUrl: "https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/README.md"
+packageUrl: "https://pypi.org/pypi/code-index-mcp/json"
+installable: true
+installCommand: "uvx code-index-mcp --project-path ABSOLUTE_PATH_TO_REPOSITORY"
+usageSnippet: "Run `uvx code-index-mcp --project-path ABSOLUTE_PATH_TO_REPOSITORY` so the server indexes one approved repository instead of broad filesystem locations."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "code-index": {
+        "command": "uvx",
+        "args": [
+          "code-index-mcp",
+          "--project-path",
+          "ABSOLUTE_PATH_TO_REPOSITORY"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  uvx code-index-mcp --project-path ABSOLUTE_PATH_TO_REPOSITORY
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer.
+  - uv or another Python package runner that can install `code-index-mcp`.
+  - An approved repository path that the MCP client is allowed to inspect.
+  - Optional native search tools such as ripgrep, ugrep, ag, or grep for faster search backends.
+  - Review of exclude patterns, file watcher behavior, temp/index storage, and deep-index cost for large repositories.
+safetyNotes:
+  - Code Index MCP reads repository files, builds shallow and deep indexes, exposes file summaries, and can return source snippets through search and file resources.
+  - Point `--project-path` at one approved repository; avoid broad parent directories, home directories, generated dependency trees, or secret-heavy paths.
+  - Deep indexing and watcher refreshes can consume CPU, memory, disk IO, and temp storage on large codebases.
+  - The server can create and clear index/cache settings and temporary directories used for stored index data.
+  - Search results, file summaries, and symbol bodies can surface credentials, private code, customer data, internal URLs, or proprietary implementation details if they exist in the repository.
+privacyNotes:
+  - Tool calls may expose file paths, filenames, source code snippets, imports, classes, methods, functions, symbols, search matches, complexity summaries, and project settings.
+  - Index data and temp directories can persist derived repository structure or symbol metadata outside the source tree.
+  - File watcher status, exclude patterns, and settings can reveal local project layout and development conventions.
+  - If an MCP client forwards tool results to a model provider, repository contents and search snippets may leave the local machine.
+  - Exclude secrets, generated artifacts, vendored dependencies, build output, and private data before indexing.
+disclosure: >-
+  MIT-licensed Python MCP server for local code indexing and analysis. This
+  entry is separate from semantic code agents and graph-indexing entries because
+  it focuses on local project indexes, file discovery, search backends, and
+  symbol summaries through the `code-index-mcp` package.
+sourceUrls:
+  - "https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/LICENSE"
+  - "https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/README.md"
+  - "https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/pyproject.toml"
+  - "https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/src/code_index_mcp/server.py"
+  - "https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/.well-known/mcp.json"
+  - "https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/fastmcp.json"
+  - "https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/docs/mcp-restart-playbook.md"
+tags:
+  - code-search
+  - indexing
+  - symbols
+  - repository
+  - local
+keywords:
+  - Code Index MCP
+  - code-index-mcp
+  - local code index MCP
+  - repository search MCP
+  - symbol index MCP
+  - Claude code search server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Code Index MCP is a local code-aware MCP server for indexing repositories and
+answering project navigation questions. It lets an AI assistant set a project
+path, refresh shallow file indexes, build deeper symbol indexes, search code,
+find files, inspect file summaries, retrieve symbol bodies, and monitor file
+watcher status.
+
+Use it when a coding agent needs fast, repeatable local context from a specific
+repository without granting a broader shell or editor-control server. It is best
+configured with an explicit project path and reviewed exclude patterns so only
+the intended source tree is indexed.
+
+## Source Review
+
+- https://github.com/johnhuang316/code-index-mcp
+- https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/README.md
+- https://pypi.org/pypi/code-index-mcp/json
+- https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/LICENSE
+- https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/pyproject.toml
+- https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/src/code_index_mcp/server.py
+- https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/.well-known/mcp.json
+- https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/fastmcp.json
+- https://raw.githubusercontent.com/johnhuang316/code-index-mcp/master/docs/mcp-restart-playbook.md
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, license, package metadata, MCP server implementation,
+well-known MCP manifest, FastMCP config, and restart playbook for current setup
+and operation details.
+
+## Features
+
+- Set or bootstrap a project path for repository-specific indexing.
+- Build shallow file indexes and optional deep symbol indexes.
+- Search code with native search backends such as ugrep, ripgrep, ag, or grep
+  when available.
+- Find files through glob patterns.
+- Summarize files, imports, symbols, methods, functions, and complexity data.
+- Retrieve symbol bodies after building a deep index.
+- Monitor file changes and configure watcher behavior.
+- Store indexes and settings in temp/index directories.
+- Support tree-sitter strategies for Python, JavaScript, TypeScript, Java,
+  Kotlin, C#, Go, Objective-C, Zig, and Rust, with fallback handling for many
+  other file types.
+- Publish `.well-known` and FastMCP metadata for clients that can import MCP
+  manifests.
+
+## Installation
+
+Run with `uvx` and an explicit project path:
+
+```bash
+uvx code-index-mcp --project-path ABSOLUTE_PATH_TO_REPOSITORY
+```
+
+Add it to an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "code-index": {
+      "command": "uvx",
+      "args": [
+        "code-index-mcp",
+        "--project-path",
+        "ABSOLUTE_PATH_TO_REPOSITORY"
+      ]
+    }
+  }
+}
+```
+
+You can also start without `--project-path` and call the `set_project_path` tool
+after launch, but an explicit startup path is easier to audit.
+
+## Use Cases
+
+- Find all files or functions related to a feature before editing.
+- Search for deprecated APIs, TODOs, config keys, routes, or error handling.
+- Summarize a file's imports, symbols, functions, and structural complexity.
+- Build a deep index before asking where a symbol is defined or used.
+- Keep a coding session's repository context fresh after file changes.
+- Compare project structure across Python, TypeScript, Java, Go, Rust, C#, and
+  other mixed-language repositories.
+
+## Safety and Privacy
+
+Code Index MCP is read-oriented, but it still grants the model visibility into
+local source code and derived repository metadata. Scope it to one repository,
+review exclude patterns, and avoid indexing generated artifacts, vendored
+dependencies, secret stores, customer data, or unrelated sibling projects.
+
+Remember that search snippets and summaries can contain secrets if the
+repository contains secrets. Treat MCP results as repository data, especially
+when the MCP client sends tool output to a remote model provider.
+
+## Duplicate Notes
+
+Existing catalog entries cover semantic code agents, graph-backed context
+servers, and token-efficient code search tools. This entry covers the separate
+`johnhuang316/code-index-mcp` Python package and its local repository indexing,
+file discovery, watcher refresh, and symbol-summary workflow.

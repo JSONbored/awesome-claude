@@ -1,0 +1,197 @@
+---
+title: MCP-Brasil
+slug: mcp-brasil
+category: mcp
+description: >-
+  Open source MCP server for querying Brazilian public data sources, including
+  economic, legislative, transparency, judicial, electoral, environmental,
+  health, education, public-safety, aviation, and infrastructure datasets.
+cardDescription: >-
+  Connect Claude to Brazilian public APIs and datasets for civic data,
+  transparency, policy, research, and public-interest analysis workflows.
+seoTitle: MCP-Brasil for Claude
+seoDescription: >-
+  Configure MCP-Brasil with Claude to query Brazilian public data APIs and
+  datasets covering government transparency, economy, legislation, health,
+  education, elections, courts, aviation, and more.
+author: mcp-brasil contributors
+authorProfileUrl: "https://github.com/Mcp-Brasil"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MCP-Brasil
+brandDomain: github.com
+repoUrl: "https://github.com/Mcp-Brasil/mcp-brasil"
+documentationUrl: "https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/README.md"
+packageUrl: "https://pypi.org/pypi/mcp-brasil/json"
+installable: true
+installCommand: "uvx --from mcp-brasil python -m mcp_brasil.server"
+usageSnippet: "Run MCP-Brasil with `uvx --from mcp-brasil python -m mcp_brasil.server`, then add optional API keys for the public data sources that require registration."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcp-brasil": {
+        "command": "uvx",
+        "args": ["--from", "mcp-brasil", "python", "-m", "mcp_brasil.server"],
+        "env": {
+          "TRANSPARENCIA_API_KEY": "OPTIONAL_TRANSPARENCIA_KEY",
+          "DATAJUD_API_KEY": "OPTIONAL_DATAJUD_KEY",
+          "META_ACCESS_TOKEN": "OPTIONAL_META_AD_LIBRARY_TOKEN",
+          "MCP_BRASIL_DATASETS": "OPTIONAL_DATASET_IDS"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add mcp-brasil -- uvx --from mcp-brasil python -m mcp_brasil.server
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer with `uvx` available.
+  - Review of the upstream acceptable-use policy and source license notes before using outputs in commercial, journalistic, legal, medical, financial, electoral, or civic-decision workflows.
+  - Optional API keys for data sources such as Portal da Transparencia, DataJud, or Meta Ad Library when those features are needed.
+  - Optional local dataset cache configuration when enabling large DuckDB-backed datasets through `MCP_BRASIL_DATASETS`.
+  - A plan for rate limiting, attribution, and human review when querying public agencies or redistributing analysis.
+safetyNotes:
+  - MCP-Brasil can query many Brazilian public data sources, some of which cover courts, elections, health, public safety, government contracts, public spending, and regulated sectors.
+  - The upstream acceptable-use policy prohibits doxing, stalking, unlawful electoral profiling, sensitive health-data misuse, unauthorized judicial data redistribution, re-identification, fake official claims, and other abusive uses.
+  - Outputs should not be treated as official government records without checking the original source, because the MCP server is an independent open source project and LLM clients can misread or hallucinate.
+  - Respect each upstream API's rate limits, license, attribution requirements, registration rules, and redistribution restrictions before batching or publishing results.
+  - Large local datasets are opt-in and can download sizable public data caches; review disk usage, refresh behavior, and cache retention before enabling them.
+  - Keep any optional DataJud, transparency, Meta, Anthropic, OAuth, or static bearer tokens scoped and separated from shared logs or test clients.
+privacyNotes:
+  - Public records can still contain personal data or sensitive context, including judicial parties, health professionals, election candidates, public servants, suppliers, property records, campaign information, or location-linked records.
+  - The upstream sources document highlights elevated risk for health, electoral, judicial, education, public-safety, and other datasets; operators remain responsible for LGPD compliance and source-specific terms.
+  - Local DuckDB caches, terminal output, MCP client logs, chat transcripts, and exported analysis may retain query terms, public-record results, API keys, and derived datasets.
+  - Do not disable PII masking or set `MCP_BRASIL_LGPD_ALLOW_PII` without a documented legal basis and a retention/deletion plan.
+  - Attribute public data sources and preserve source context when sharing results with users or publishing downstream analysis.
+disclosure: >-
+  Community-maintained open source MCP server for Brazilian public data,
+  published as the `mcp-brasil` Python package under the MIT license for code;
+  upstream data sources have separate licenses and restrictions.
+sourceUrls:
+  - "https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/LICENSE"
+  - "https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/ACCEPTABLE_USE.md"
+  - "https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/SOURCES.md"
+  - "https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/src/mcp_brasil/server.py"
+  - "https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/src/mcp_brasil/settings.py"
+tags:
+  - brazil
+  - public-data
+  - government
+  - civic-tech
+  - research
+keywords:
+  - MCP-Brasil
+  - Brazil MCP server
+  - Brazilian public data MCP
+  - government transparency MCP
+  - civic data MCP
+  - public APIs MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP-Brasil connects Claude and other MCP clients to Brazilian public APIs and
+datasets. It is useful for supervised research and civic data workflows that
+need to inspect economic series, government transparency data, legislation,
+public spending, courts, elections, environmental data, health datasets,
+education statistics, public safety, aviation, infrastructure, and related
+public records.
+
+Use it when an agent needs a source-aware way to search, plan, and execute
+Brazilian public-data queries while keeping attribution, acceptable-use limits,
+and privacy review in the workflow.
+
+## Source Review
+
+- https://github.com/Mcp-Brasil/mcp-brasil
+- https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/README.md
+- https://pypi.org/pypi/mcp-brasil/json
+- https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/LICENSE
+- https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/pyproject.toml
+- https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/ACCEPTABLE_USE.md
+- https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/SOURCES.md
+- https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/src/mcp_brasil/server.py
+- https://raw.githubusercontent.com/Mcp-Brasil/mcp-brasil/main/src/mcp_brasil/settings.py
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, PyPI metadata, license, package manifest, acceptable-use policy, data
+source notes, server entrypoint, and runtime settings for current setup,
+scope, and risk details.
+
+## Features
+
+- Query Brazilian public APIs across economic, legislative, transparency,
+  judicial, electoral, environmental, health, education, security, aviation,
+  energy, and infrastructure topics.
+- Search available features and tools before calling a specific data source.
+- Plan multi-step public-data queries with the `planejar_consulta` tool.
+- Execute batches of related calls through the server's batch-dispatch support.
+- Use optional API keys for data sources that require registration.
+- Enable large local DuckDB-backed datasets only when needed.
+- Run over stdio for local MCP clients or through FastMCP HTTP transport for
+  hosted deployments.
+- Configure optional static bearer-token or OAuth authentication for HTTP
+  deployments.
+
+## Installation
+
+Install and run the published Python package with `uvx`:
+
+```json
+{
+  "mcpServers": {
+    "mcp-brasil": {
+      "command": "uvx",
+      "args": ["--from", "mcp-brasil", "python", "-m", "mcp_brasil.server"],
+      "env": {
+        "TRANSPARENCIA_API_KEY": "OPTIONAL_TRANSPARENCIA_KEY",
+        "DATAJUD_API_KEY": "OPTIONAL_DATAJUD_KEY",
+        "META_ACCESS_TOKEN": "OPTIONAL_META_AD_LIBRARY_TOKEN",
+        "MCP_BRASIL_DATASETS": "OPTIONAL_DATASET_IDS"
+      }
+    }
+  }
+}
+```
+
+Claude Code users can add the server with:
+
+```bash
+claude mcp add mcp-brasil -- uvx --from mcp-brasil python -m mcp_brasil.server
+```
+
+Most sources can be explored without optional API keys, but restricted sources
+such as transparency, judicial, or third-party ad-library data may need their
+own credentials and terms review.
+
+## Use Cases
+
+- Compare public economic indicators against legislative or budget activity.
+- Research public procurement, spending, contracts, suppliers, and sanctions.
+- Inspect legislative proposals, votes, representatives, and committees.
+- Explore environmental, health, education, or public-safety datasets with
+  source attribution.
+- Combine multiple public sources into an auditable research plan.
+- Support civic-tech, journalism, policy research, and public-interest
+  investigation workflows with human review.
+- Prototype internal data assistants for Brazilian public-data teams.
+
+## Safety and Privacy
+
+MCP-Brasil is an access layer over public data, not an official source of truth.
+Review the upstream acceptable-use policy and source notes before using it for
+decisions, publication, compliance workflows, or redistribution.
+
+Treat public-record results as potentially privacy-sensitive. Keep PII masking
+enabled, avoid re-identification, do not present AI-written summaries as
+official records, and verify high-impact answers against the original agency or
+data-source page.
+
+Large local datasets can create durable DuckDB caches. Store them somewhere
+appropriate for the sensitivity of the queries, document who can access them,
+and delete caches when they are no longer needed.
