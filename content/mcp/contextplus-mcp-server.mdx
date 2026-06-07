@@ -1,0 +1,180 @@
+---
+title: Context+ MCP Server
+slug: contextplus-mcp-server
+category: mcp
+description: >-
+  MCP server for semantic codebase intelligence, combining AST structure,
+  embeddings, clustering, feature hubs, restore points, and memory graph tools.
+cardDescription: >-
+  Give Claude semantic and structural code context with AST trees, skeletons,
+  semantic search, blast radius, static analysis, memory graph, and restore points.
+seoTitle: Context+ MCP Server for Claude
+seoDescription: >-
+  Configure Context+ MCP Server with Claude and other MCP clients to search and
+  navigate codebases using AST structure, embeddings, feature hubs, static
+  analysis, code proposal restore points, and memory graph traversal.
+author: forloopcodes
+authorProfileUrl: "https://github.com/forloopcodes"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Context+
+brandDomain: github.com
+repoUrl: "https://github.com/forloopcodes/contextplus"
+documentationUrl: "https://github.com/forloopcodes/contextplus/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/contextplus"
+installable: true
+installCommand: "npx -y contextplus"
+usageSnippet: "Run `npx -y contextplus` from an MCP client to expose semantic code search, AST navigation, restore points, and memory graph tools."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "contextplus": {
+        "command": "npx",
+        "args": ["-y", "contextplus"],
+        "env": {
+          "CONTEXTPLUS_EMBED_PROVIDER": "ollama",
+          "OLLAMA_EMBED_MODEL": "nomic-embed-text"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "contextplus": {
+        "command": "npx",
+        "args": ["-y", "contextplus"],
+        "env": {
+          "CONTEXTPLUS_EMBED_PROVIDER": "ollama",
+          "OLLAMA_EMBED_MODEL": "nomic-embed-text",
+          "OLLAMA_CHAT_MODEL": "llama3.2"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js and npx available to the MCP client runtime.
+  - A repository or workspace you are authorized to index and expose to an MCP client.
+  - Ollama embedding model available, or an approved OpenAI-compatible embedding provider and API key.
+  - Static analysis tools installed if you want Context+ to run native linters or compilers.
+  - Code-write, restore-point, and memory-graph behavior reviewed before enabling in sensitive repositories.
+safetyNotes:
+  - Context+ can inspect source files, build AST and embedding indexes, run static analysis, create memory graph nodes, and propose code changes.
+  - The `propose_commit` tool is designed to write code after validation and creates shadow restore points before saving.
+  - Static analysis tools may invoke local compilers, linters, or language tools depending on the repository.
+  - Runtime caches and memory graph data can persist source-derived embeddings and relationships after the MCP session ends.
+  - External embedding providers can receive source-derived text, identifiers, prompts, and cluster-labeling context.
+privacyNotes:
+  - Source code, file paths, symbol names, comments, identifiers, embeddings, memory nodes, relations, prompts, API keys, static-analysis output, proposed diffs, and tool results may be visible to the MCP client and model provider.
+  - Proprietary codebases can expose internal architecture, feature maps, naming conventions, secrets accidentally present in code, and product plans.
+  - Keep API keys and provider base URLs out of committed MCP configs, logs, screenshots, and shared prompts.
+  - Review `.mcp_data` and generated restore-point data before sharing workspaces or artifacts.
+sourceUrls:
+  - "https://github.com/forloopcodes/contextplus"
+  - "https://github.com/forloopcodes/contextplus/blob/main/README.md"
+  - "https://github.com/forloopcodes/contextplus/blob/main/package.json"
+  - "https://registry.npmjs.org/contextplus"
+tags:
+  - code-analysis
+  - semantic-search
+  - repository
+  - memory
+  - developer-tools
+keywords:
+  - Context+ MCP
+  - contextplus
+  - semantic code search MCP
+  - AST MCP server
+  - memory graph MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Context+ is an MCP server for semantic and structural codebase intelligence. It
+combines AST parsing, semantic embeddings, spectral clustering, Obsidian-style
+feature hubs, static analysis, restore points, and memory graph tools so Claude
+can navigate large repositories with less file-by-file context loading.
+
+The upstream README documents `npx -y contextplus`, `bunx contextplus`, IDE MCP
+config generation, Ollama and OpenAI-compatible embedding providers, runtime
+caches, memory graph tools, and the `propose_commit` write path with shadow
+restore points.
+
+## Source Review
+
+- https://github.com/forloopcodes/contextplus
+- https://github.com/forloopcodes/contextplus/blob/main/README.md
+- https://github.com/forloopcodes/contextplus/blob/main/package.json
+- https://registry.npmjs.org/contextplus
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, package metadata, and NPM registry metadata for current package version,
+command names, tools, embedding provider settings, cache behavior, and supported
+agent config targets.
+
+## Features
+
+- Return structural AST trees and file skeletons.
+- Search code semantically by meaning or identifier.
+- Navigate clustered code areas with semantic labels.
+- Trace symbol blast radius across files and line ranges.
+- Run static analysis for supported language ecosystems.
+- Propose code changes with validation and shadow restore points.
+- Search and traverse a memory graph with typed relations.
+- Generate MCP config files for supported coding agents.
+- Cache file, identifier, and call-site embeddings for reuse.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "contextplus": {
+      "command": "npx",
+      "args": ["-y", "contextplus"],
+      "env": {
+        "CONTEXTPLUS_EMBED_PROVIDER": "ollama",
+        "OLLAMA_EMBED_MODEL": "nomic-embed-text"
+      }
+    }
+  }
+}
+```
+
+If using an OpenAI-compatible embedding provider, configure the provider, API
+key, base URL, embedding model, and optional chat model according to the upstream
+README. Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to find code by concept rather than exact text.
+- Inspect API surfaces through file skeletons without reading full bodies.
+- Trace every place a symbol is imported or used before refactoring.
+- Group a large repository into semantic feature areas.
+- Run static analysis before accepting a proposed change.
+- Store and retrieve feature notes through memory graph traversal.
+- Use shadow restore points to undo a Context+ proposed change.
+
+## Safety and Privacy
+
+Context+ can read source files, create persistent caches, invoke static-analysis
+tools, and write code through `propose_commit`. Review tool calls carefully in
+repositories containing proprietary code, customer data, secrets, or production
+configuration.
+
+Local embedding with Ollama can keep source-derived text on the machine, while
+OpenAI-compatible providers may receive snippets, identifiers, prompts, and
+cluster-labeling context. Make the provider choice deliberately, and keep API
+keys out of committed config files.
+
+## Duplicate Check
+
+No `forloopcodes/contextplus` entry, `contextplus` package entry, or matching
+source URL was found in `content/mcp`.

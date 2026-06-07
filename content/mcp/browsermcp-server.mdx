@@ -1,0 +1,165 @@
+---
+title: BrowserMCP Server
+slug: browsermcp-server
+category: mcp
+description: >-
+  Browser automation MCP server and Chrome extension that lets AI applications
+  control a connected tab in the user's existing browser profile.
+cardDescription: >-
+  Automate real browser tabs from Claude, Cursor, VS Code, Windsurf, and other
+  MCP clients through BrowserMCP.
+seoTitle: BrowserMCP Server for Claude
+seoDescription: >-
+  Configure BrowserMCP with Claude, Cursor, VS Code, Windsurf, and other MCP
+  clients to automate a connected browser tab using a Chrome extension and local
+  MCP server.
+author: BrowserMCP
+authorProfileUrl: "https://github.com/BrowserMCP"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: BrowserMCP
+brandDomain: browsermcp.io
+repoUrl: "https://github.com/BrowserMCP/mcp"
+documentationUrl: "https://docs.browsermcp.io"
+websiteUrl: "https://browsermcp.io"
+packageUrl: "https://www.npmjs.com/package/@browsermcp/mcp"
+installable: true
+installCommand: "npx @browsermcp/mcp@latest"
+usageSnippet: "Install the BrowserMCP extension, add the `npx @browsermcp/mcp@latest` server config, connect a tab, then automate browser actions from an MCP client."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "browsermcp": {
+        "command": "npx",
+        "args": ["@browsermcp/mcp@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "browsermcp": {
+        "command": "npx",
+        "args": ["@browsermcp/mcp@latest"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js installed for the MCP server.
+  - Chrome or compatible Chromium browser.
+  - BrowserMCP extension installed from the project site.
+  - MCP client such as Claude, Cursor, VS Code, Windsurf, or another compatible host.
+  - Dedicated browser profile or tab for agent automation when working with sensitive accounts.
+safetyNotes:
+  - BrowserMCP can navigate pages, click controls, type text, submit forms, capture screenshots, inspect accessibility snapshots, read console logs, and automate the connected tab.
+  - Because it uses the user's real browser profile, logged-in sessions and account permissions may be available to the agent.
+  - Require human approval before purchases, messages, account changes, destructive actions, or actions that violate a site's terms.
+  - Use a test profile or non-production account for end-to-end testing and repetitive automation.
+privacyNotes:
+  - Connected tab content, screenshots, form fields, console logs, and page state may be exposed to the MCP client and model.
+  - Logged-in pages can contain personal data, customer information, credentials, tokens, internal URLs, or private documents.
+  - Although the project describes local automation, prompts and tool results still flow through the chosen AI application and model provider.
+sourceUrls:
+  - "https://github.com/BrowserMCP/mcp"
+  - "https://browsermcp.io"
+  - "https://docs.browsermcp.io"
+  - "https://docs.browsermcp.io/setup-extension.md"
+  - "https://docs.browsermcp.io/setup-server.md"
+  - "https://docs.browsermcp.io/start-automating.md"
+tags:
+  - browser
+  - automation
+  - chrome
+  - testing
+  - local
+keywords:
+  - BrowserMCP
+  - Browser MCP Claude
+  - browsermcp Chrome extension
+  - browser automation MCP
+  - "@browsermcp/mcp"
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+BrowserMCP is a browser automation MCP server paired with a Chrome extension.
+It lets AI applications such as Claude, Cursor, VS Code, and Windsurf automate a
+connected tab in the user's existing browser profile rather than launching a
+fresh browser instance.
+
+The project emphasizes local automation, reuse of the user's current browser
+profile, and workflows where an AI assistant can test web apps or automate
+repetitive browser tasks.
+
+## Source Review
+
+- https://github.com/BrowserMCP/mcp
+- https://browsermcp.io
+- https://docs.browsermcp.io
+- https://docs.browsermcp.io/setup-extension.md
+- https://docs.browsermcp.io/setup-server.md
+- https://docs.browsermcp.io/start-automating.md
+
+These sources were reviewed on **2026-06-05**. Prefer the live docs for current
+extension installation, server config, supported clients, and troubleshooting.
+
+## Features
+
+- Chrome extension plus local MCP server package.
+- Setup examples for Claude, Cursor, VS Code, Windsurf, and other MCP clients.
+- Connected-tab automation using the user's existing browser profile.
+- Navigation, back/forward, wait, keyboard input, click, hover, drag and drop,
+  text entry, accessibility snapshots, screenshots, and console-log tools.
+- Local automation designed to reduce network latency.
+- Useful for browser task automation and end-to-end testing workflows.
+
+## Installation
+
+Install and pin the BrowserMCP extension from the project site, then add the MCP
+server to your AI application:
+
+```json
+{
+  "mcpServers": {
+    "browsermcp": {
+      "command": "npx",
+      "args": ["@browsermcp/mcp@latest"]
+    }
+  }
+}
+```
+
+Open the extension, click Connect on the tab you want the agent to control, and
+then issue browser automation requests through your MCP client.
+
+## Use Cases
+
+- Let an AI coding assistant run end-to-end checks against a local web app.
+- Automate repetitive browser tasks in a controlled profile.
+- Capture screenshots and accessibility snapshots for UI debugging.
+- Reproduce user flows that require an existing logged-in browser session.
+- Test form filling, navigation, and client-side behavior from an AI editor.
+
+## Safety and Privacy
+
+BrowserMCP is convenient because it uses a real browser profile, but that also
+makes it sensitive. Prefer a dedicated testing profile, keep unrelated accounts
+closed, and require approval for submissions, payments, account updates, data
+deletion, or communication with other people.
+
+Treat connected-tab content, screenshots, console output, and form fields as
+sensitive. They can contain personal data, credentials, customer records, or
+internal application state.
+
+## Duplicate Check
+
+`content/mcp/playwright-mcp-server.mdx` covers Playwright-driven browser
+automation, `content/mcp/chrome-devtools-mcp-server.mdx` covers the official
+Chrome DevTools server, and `content/mcp/chrome-mcp-server.mdx` covers the
+separate `hangwin/mcp-chrome` extension bridge. This entry covers the
+`BrowserMCP/mcp` project and its BrowserMCP extension workflow.

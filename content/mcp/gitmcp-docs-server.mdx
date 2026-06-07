@@ -1,0 +1,166 @@
+---
+title: GitMCP Docs Server
+slug: gitmcp-docs-server
+category: mcp
+description: >-
+  Remote MCP server that turns any GitHub repository or GitHub Pages site into a
+  documentation and code context source for AI coding assistants.
+cardDescription: >-
+  Connect Claude, Cursor, VS Code, Windsurf, and other MCP clients to live
+  GitHub project docs through GitMCP.
+seoTitle: GitMCP Docs Server for Claude
+seoDescription: >-
+  Configure GitMCP with Claude Desktop, Cursor, VS Code, Windsurf, Cline, Msty,
+  and other MCP clients to ground AI coding assistance in live GitHub repository
+  documentation and code context.
+author: idosal
+authorProfileUrl: "https://github.com/idosal"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: GitMCP
+brandDomain: gitmcp.io
+repoUrl: "https://github.com/idosal/git-mcp"
+documentationUrl: "https://github.com/idosal/git-mcp"
+websiteUrl: "https://gitmcp.io"
+installable: true
+installCommand: "npx mcp-remote https://gitmcp.io/{owner}/{repo}"
+usageSnippet: "Use a repository-specific endpoint such as `https://gitmcp.io/{owner}/{repo}` or the dynamic docs endpoint documented by the project."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "gitmcp": {
+        "command": "npx",
+        "args": [
+          "mcp-remote",
+          "https://gitmcp.io/{owner}/{repo}"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "gitmcp": {
+        "command": "npx",
+        "args": [
+          "mcp-remote",
+          "https://gitmcp.io/{owner}/{repo}"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - MCP client that supports remote MCP servers or an mcp-remote bridge.
+  - GitHub repository owner and repository name, GitHub Pages site, or the dynamic GitMCP docs endpoint.
+  - Network access to GitMCP and GitHub.
+  - Team agreement on which repositories can be queried through a hosted MCP service.
+safetyNotes:
+  - Repository-specific endpoints reduce the chance of an agent querying the wrong project, while the dynamic endpoint relies on correct target selection.
+  - Verify generated code against the upstream project documentation and changelog before applying it to production systems.
+  - Use caution with private, unreleased, or embargoed repositories unless you self-host and have reviewed access controls.
+privacyNotes:
+  - GitMCP may receive repository choices, documentation queries, tool calls, and surrounding prompts through the MCP client.
+  - The README states that the hosted service does not collect personal information or store queries, but teams should still review the current privacy posture before sending proprietary context.
+  - Self-hosting may be preferable for private repositories, regulated work, or sensitive customer projects.
+sourceUrls:
+  - "https://github.com/idosal/git-mcp"
+  - "https://gitmcp.io"
+  - "https://www.pulsemcp.com/servers/idosal-git-mcp"
+tags:
+  - github
+  - documentation
+  - code-context
+  - remote
+  - coding
+keywords:
+  - GitMCP
+  - gitmcp Claude
+  - GitHub docs MCP
+  - repository documentation MCP
+  - mcp-remote GitHub docs
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+GitMCP is a hosted, open-source MCP server that turns GitHub repositories and
+GitHub Pages sites into documentation and code-context sources for AI coding
+assistants. Instead of installing a project-specific MCP server, users point an
+MCP client at a GitMCP endpoint for the repository they are working with.
+
+The project supports repository-specific endpoints, GitHub Pages endpoints, and
+a dynamic docs endpoint. Repository-specific endpoints are best when an assistant
+should stay focused on one project; the dynamic endpoint is useful when the
+assistant needs to choose among projects during a session.
+
+## Source Review
+
+- https://github.com/idosal/git-mcp
+- https://gitmcp.io
+- https://www.pulsemcp.com/servers/idosal-git-mcp
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+GitMCP site for current endpoint formats, supported clients, privacy language,
+self-hosting details, and remote MCP compatibility.
+
+## Features
+
+- Remote MCP access to live GitHub repository documentation and code context.
+- Repository-specific, GitHub Pages, and dynamic docs endpoint modes.
+- Setup examples for Cursor, Claude Desktop, Windsurf, VS Code, Cline,
+  Highlight AI, Augment Code, and Msty.
+- Smart search over documentation and code sources.
+- Hosted zero-setup mode plus open-source self-hosting option.
+- PulseMCP top-pick listing as an external popularity signal.
+
+## Installation
+
+For Claude Desktop-style clients that need a bridge, configure `mcp-remote`:
+
+```json
+{
+  "mcpServers": {
+    "gitmcp": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://gitmcp.io/{owner}/{repo}"
+      ]
+    }
+  }
+}
+```
+
+For clients with native remote server support, add the repository-specific
+GitMCP endpoint directly. Replace `{owner}` and `{repo}` with the target GitHub
+project, or use the dynamic docs endpoint documented in the README.
+
+## Use Cases
+
+- Ground coding prompts in a library's current README, docs, and examples.
+- Ask an assistant to search a GitHub project before writing integration code.
+- Reduce hallucinated APIs for niche or rapidly changing packages.
+- Give Cursor, Claude Desktop, VS Code, or Windsurf repository-aware docs access
+  without writing a custom MCP server.
+- Self-host a GitMCP-compatible service for private documentation workflows.
+
+## Safety and Privacy
+
+Prefer repository-specific endpoints when a project should remain scoped to one
+codebase. Review all generated changes against the original documentation before
+committing them, especially for security-sensitive dependencies or production
+infrastructure.
+
+Hosted remote MCP services can see requests routed through them. For private
+repositories, customer projects, unreleased APIs, or regulated work, review the
+current privacy language and consider self-hosting.
+
+## Duplicate Check
+
+`content/mcp/git-mcp-server.mdx` covers the reference Git MCP server for local
+repository operations. This entry covers the separate `idosal/git-mcp` hosted
+documentation and code-context service for GitHub projects.

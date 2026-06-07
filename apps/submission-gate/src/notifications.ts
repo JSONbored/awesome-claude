@@ -49,12 +49,16 @@ const VERDICT_COLORS: Record<GateVerdict, number> = {
   ignore: 0x8b949e,
 };
 
-function truncate(value: unknown, limit: number) {
+export function truncate(value: unknown, limit: number) {
   const text = String(value || "")
     .replace(/\s+/g, " ")
     .trim();
-  if (text.length <= limit) return text;
-  return `${text.slice(0, Math.max(0, limit - 1)).trimEnd()}...`;
+  const codePoints = Array.from(text);
+  if (codePoints.length <= limit) return text;
+  return `${codePoints
+    .slice(0, Math.max(0, limit - 3))
+    .join("")
+    .trimEnd()}...`;
 }
 
 function stripHtmlComments(value: string) {

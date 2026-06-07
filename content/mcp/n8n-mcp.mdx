@@ -1,0 +1,168 @@
+---
+title: n8n MCP Server
+slug: n8n-mcp
+category: mcp
+description: >-
+  MCP server that gives Claude and other MCP clients structured access to n8n
+  node documentation, workflow templates, validation tools, and optional n8n API
+  workflow management.
+cardDescription: >-
+  Build, validate, and inspect n8n workflows with MCP tools for node docs,
+  templates, examples, and optional n8n instance access.
+seoTitle: n8n MCP Server for Claude
+seoDescription: >-
+  Connect Claude Code, Claude Desktop, Cursor, Windsurf, Codex, and other MCP
+  clients to n8n-MCP for n8n node documentation, workflow templates, validation,
+  and optional n8n API workflow operations.
+author: Romuald Czlonkowski
+authorProfileUrl: "https://github.com/czlonkowski"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: n8n-MCP
+brandDomain: n8n-mcp.com
+repoUrl: "https://github.com/czlonkowski/n8n-mcp"
+documentationUrl: "https://github.com/czlonkowski/n8n-mcp"
+packageUrl: "https://www.npmjs.com/package/n8n-mcp"
+installable: true
+installCommand: "claude mcp add n8n-mcp -- npx -y n8n-mcp"
+usageSnippet: "Use n8n-MCP to look up n8n nodes, search workflow templates, validate node configs, and manage workflows only after connecting an approved n8n API environment."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "n8n-mcp": {
+        "command": "npx",
+        "args": ["-y", "n8n-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "n8n-mcp": {
+        "command": "npx",
+        "args": ["-y", "n8n-mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js and npx, or a hosted n8n-MCP API key from the project dashboard.
+  - MCP client such as Claude Code, Claude Desktop, Cursor, Windsurf, Codex, or VS Code.
+  - n8n knowledge sufficient to review generated workflows before deployment.
+  - Optional n8n API credentials if enabling direct workflow create, update, or execution tools.
+safetyNotes:
+  - The project explicitly warns users not to edit production n8n workflows directly with AI.
+  - Copy workflows, export backups, test in development, and validate every generated workflow before deploying.
+  - Optional n8n API tools can create, update, validate, and execute workflows; restrict them to non-production or tightly scoped accounts.
+  - Template-based workflow generation can still produce invalid credentials, missing defaults, or unsafe automations without human review.
+privacyNotes:
+  - Workflow definitions can include business logic, customer data paths, webhook URLs, and credential names.
+  - n8n API credentials and hosted n8n-MCP API keys are secrets and should stay out of prompts, repository files, logs, and screenshots.
+  - Template searches, node lookups, validation payloads, and workflow metadata may be sent to the MCP server and the connected AI client.
+sourceUrls:
+  - "https://github.com/czlonkowski/n8n-mcp"
+  - "https://github.com/czlonkowski/n8n-mcp/blob/main/docs/CLAUDE_CODE_SETUP.md"
+  - "https://github.com/czlonkowski/n8n-mcp/blob/main/docs/SELF_HOSTING.md"
+  - "https://github.com/czlonkowski/n8n-mcp/blob/main/docs/N8N_DEPLOYMENT.md"
+  - "https://www.n8n-mcp.com/"
+tags:
+  - n8n
+  - automation
+  - workflow
+  - templates
+  - validation
+keywords:
+  - n8n MCP
+  - n8n-mcp Claude Code
+  - n8n workflow MCP server
+  - n8n templates MCP
+  - n8n node documentation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+n8n-MCP gives MCP clients structured access to n8n node metadata,
+documentation, examples, workflow templates, validation helpers, and optional
+n8n API operations. It is designed for AI-assisted workflow authoring across
+Claude Code, Claude Desktop, Cursor, Windsurf, Codex, VS Code, and other MCP
+clients.
+
+The project documents more than 1,800 n8n nodes, thousands of workflow
+templates, and validation tools for checking node configuration and full
+workflow structure before deployment.
+
+## Source Review
+
+- https://github.com/czlonkowski/n8n-mcp
+- https://github.com/czlonkowski/n8n-mcp/blob/main/docs/CLAUDE_CODE_SETUP.md
+- https://github.com/czlonkowski/n8n-mcp/blob/main/docs/SELF_HOSTING.md
+- https://github.com/czlonkowski/n8n-mcp/blob/main/docs/N8N_DEPLOYMENT.md
+- https://www.n8n-mcp.com/
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+project docs for current install commands, hosted quotas, n8n version support,
+tool coverage, and deployment guidance.
+
+## Features
+
+- Search n8n node metadata, operations, properties, and AI-capable node variants.
+- Search and inspect workflow templates before building from scratch.
+- Retrieve node documentation in minimal, standard, full, property-search, or
+  docs-focused modes.
+- Validate node configs and full workflows before deployment.
+- Optionally create, update, test, and inspect workflows through the n8n API.
+- Run as a local `npx` server, Docker deployment, Railway deployment, or hosted
+  dashboard-backed MCP server.
+- Use real examples from workflow templates to improve node configuration.
+
+## Installation
+
+For a basic local Claude Code setup:
+
+```sh
+claude mcp add n8n-mcp -- npx -y n8n-mcp
+```
+
+For clients that use JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "n8n-mcp": {
+      "command": "npx",
+      "args": ["-y", "n8n-mcp"]
+    }
+  }
+}
+```
+
+Use the project documentation for hosted dashboard setup, Docker deployment,
+Railway deployment, and optional n8n API access.
+
+## Use Cases
+
+- Find the right n8n node and operation for a workflow step.
+- Convert an automation requirement into a validated n8n workflow draft.
+- Search existing templates before generating a workflow from scratch.
+- Validate node parameters, expressions, and workflow wiring before import.
+- Review n8n AI nodes and tool variants while designing agentic workflows.
+- Safely test workflow edits in a development n8n instance before production.
+
+## Safety and Privacy
+
+Do not connect n8n-MCP directly to production workflow management without
+guardrails. Work from copies, export backups, use development environments, and
+require human approval before activating or deploying generated workflows.
+
+Workflow JSON may reveal webhooks, system integrations, credential labels,
+business process logic, and customer data paths. Keep n8n API keys and hosted
+n8n-MCP API keys in secret storage, not in prompts or repository files.
+
+## Duplicate Check
+
+`content/tools/n8n.mdx` covers n8n as a workflow automation tool. This entry is
+for the separate `czlonkowski/n8n-mcp` MCP server and belongs in `content/mcp`.

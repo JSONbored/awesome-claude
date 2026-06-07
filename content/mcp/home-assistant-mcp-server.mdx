@@ -1,0 +1,186 @@
+---
+title: Home Assistant MCP Server
+slug: home-assistant-mcp-server
+category: mcp
+description: >-
+  MCP server that lets Claude inspect, control, and manage Home Assistant
+  entities, automations, dashboards, add-ons, backups, and system state.
+cardDescription: >-
+  Connect Claude to Home Assistant for smart-home search, device control,
+  automation management, diagnostics, backups, dashboards, and add-ons.
+seoTitle: Home Assistant MCP Server for Claude
+seoDescription: >-
+  Configure Home Assistant MCP Server with Claude and other MCP clients to
+  control smart-home entities, manage automations, inspect logs, update
+  dashboards, and work with Home Assistant services.
+author: homeassistant-ai
+authorProfileUrl: "https://github.com/homeassistant-ai"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Home Assistant MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/homeassistant-ai/ha-mcp"
+documentationUrl: "https://github.com/homeassistant-ai/ha-mcp/blob/master/README.md"
+packageUrl: "https://pypi.org/pypi/ha-mcp/json"
+installable: true
+installCommand: "uvx ha-mcp"
+usageSnippet: "Run `uvx ha-mcp` from an MCP client with Home Assistant connection settings to let Claude query and manage a Home Assistant instance."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "home-assistant": {
+        "command": "uvx",
+        "args": ["ha-mcp"],
+        "env": {
+          "HA_URL": "YOUR_HOME_ASSISTANT_URL",
+          "HA_TOKEN": "YOUR_LONG_LIVED_ACCESS_TOKEN"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "home-assistant": {
+        "command": "uvx",
+        "args": ["ha-mcp"],
+        "env": {
+          "HA_URL": "YOUR_HOME_ASSISTANT_URL",
+          "HA_TOKEN": "YOUR_LONG_LIVED_ACCESS_TOKEN"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: advanced
+prerequisites:
+  - A Home Assistant instance you are authorized to administer.
+  - A Home Assistant long-lived access token or supported add-on/OAuth setup.
+  - uv and Python 3.13 available when using the PyPI command-line package.
+  - Home Assistant entity, service, automation, add-on, and backup permissions reviewed before connecting the server.
+  - Network exposure reviewed before enabling remote, HTTP, SSE, or OAuth transports.
+safetyNotes:
+  - Home Assistant MCP Server can control smart-home devices, call services, manage automations, edit dashboards, manage add-ons, inspect logs, and trigger backups.
+  - Use a least-privilege Home Assistant user and token where possible, because the server can act with the permissions granted by that token.
+  - Avoid exposing HTTP, SSE, OAuth, or webhook-proxy deployments to untrusted networks without authentication, TLS, and access controls.
+  - Camera snapshots, logs, history, file tools, YAML tools, backups, restarts, and add-on operations can be sensitive or disruptive.
+  - Review tool approvals carefully before allowing Claude to unlock doors, change security devices, disable automations, restart services, or modify configuration.
+privacyNotes:
+  - Entity names, device states, areas, zones, automations, scripts, dashboards, logs, camera images, history, statistics, Home Assistant URLs, tokens, prompts, and tool outputs may be visible to the MCP client and model provider.
+  - The upstream privacy policy says anonymous usage statistics were not collected as of May 2026 and that future telemetry is planned as opt-in.
+  - Bug reports and diagnostics should be reviewed before submission because they may include Home Assistant configuration details.
+  - Store long-lived access tokens only in trusted MCP client configuration and rotate them if a client, host, or remote endpoint is compromised.
+sourceUrls:
+  - "https://github.com/homeassistant-ai/ha-mcp"
+  - "https://github.com/homeassistant-ai/ha-mcp/blob/master/README.md"
+  - "https://github.com/homeassistant-ai/ha-mcp/blob/master/pyproject.toml"
+  - "https://github.com/homeassistant-ai/ha-mcp/blob/master/PRIVACY.md"
+  - "https://github.com/homeassistant-ai/ha-mcp/blob/master/SECURITY.md"
+  - "https://homeassistant-ai.github.io/ha-mcp/setup/"
+  - "https://pypi.org/pypi/ha-mcp/json"
+tags:
+  - home-assistant
+  - smart-home
+  - automation
+  - iot
+  - dashboards
+keywords:
+  - Home Assistant MCP
+  - ha-mcp
+  - smart home MCP
+  - automation MCP server
+  - Home Assistant Claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Home Assistant MCP Server connects Claude-compatible MCP clients to Home
+Assistant so they can search entities, read states, call services, manage
+automations, inspect system information, work with dashboards, and perform
+supported add-on and backup operations.
+
+The upstream project provides the `ha-mcp` Python package and command, a guided
+setup wizard, Claude Desktop and Claude Code instructions, Home Assistant OS
+add-on support, and transport options for local or remote deployments.
+
+## Source Review
+
+- https://github.com/homeassistant-ai/ha-mcp
+- https://github.com/homeassistant-ai/ha-mcp/blob/master/README.md
+- https://github.com/homeassistant-ai/ha-mcp/blob/master/pyproject.toml
+- https://github.com/homeassistant-ai/ha-mcp/blob/master/PRIVACY.md
+- https://github.com/homeassistant-ai/ha-mcp/blob/master/SECURITY.md
+- https://homeassistant-ai.github.io/ha-mcp/setup/
+- https://pypi.org/pypi/ha-mcp/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+setup wizard, security policy, privacy policy, and PyPI metadata for current
+version, supported transports, command names, Home Assistant add-on behavior,
+and tool availability.
+
+## Features
+
+- Search Home Assistant entities and read current state.
+- Call Home Assistant services and control devices in bulk.
+- Manage automations, scripts, helpers, scenes, groups, dashboards, areas, and zones.
+- Inspect logs, history, statistics, system health, updates, and add-ons.
+- Work with calendars, cameras, blueprints, HACS, energy settings, and todo lists.
+- Use local command-line, Home Assistant OS add-on, Docker, HTTP, SSE, webhook proxy, or OAuth deployment paths.
+- Configure and limit tools through the project's setup and settings guidance.
+
+## Installation
+
+For MCP clients that launch stdio servers with uvx:
+
+```json
+{
+  "mcpServers": {
+    "home-assistant": {
+      "command": "uvx",
+      "args": ["ha-mcp"],
+      "env": {
+        "HA_URL": "YOUR_HOME_ASSISTANT_URL",
+        "HA_TOKEN": "YOUR_LONG_LIVED_ACCESS_TOKEN"
+      }
+    }
+  }
+}
+```
+
+Use the upstream setup wizard or Home Assistant OS add-on documentation for
+client-specific configuration, remote access, and transport-specific settings.
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude what devices are currently on, unavailable, or misconfigured.
+- Create or revise Home Assistant automations and scripts from natural language.
+- Debug failing automations by reviewing traces, history, states, and logs.
+- Add dashboard resources or update Lovelace dashboard views.
+- Trigger Home Assistant services for lights, switches, climate devices, scenes, and helpers.
+- Review system health, updates, backups, HACS status, and add-on state.
+
+## Safety and Privacy
+
+Home Assistant MCP Server can be powerful because it bridges Claude to a real
+environment. Depending on token permissions and enabled tools, Claude may be
+able to change device state, alter automations, edit dashboards, inspect camera
+snapshots, manage add-ons, restart services, or trigger backups.
+
+Use the narrowest Home Assistant permissions available, keep tokens out of
+shared configs, and do not expose remote transports to untrusted networks
+without appropriate authentication and TLS. Treat the MCP client as a trusted
+operator of your smart home.
+
+Home Assistant data can include personal schedules, room names, presence data,
+security devices, camera images, logs, automation logic, and household routines.
+Review tool calls and model outputs before allowing destructive or sensitive
+operations.
+
+## Duplicate Check
+
+No `homeassistant-ai/ha-mcp` entry, `ha-mcp` package entry, or matching source
+URL was found in `content/mcp`.

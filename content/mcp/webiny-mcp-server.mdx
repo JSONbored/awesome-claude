@@ -1,0 +1,181 @@
+---
+title: Webiny MCP Server
+slug: webiny-mcp-server
+category: mcp
+description: >-
+  Webiny's MCP server for exposing Webiny-specific skills and development
+  instructions to Claude, Cursor, Copilot, Windsurf, opencode, and other AI
+  coding agents over stdio.
+cardDescription: >-
+  Give Claude a Webiny skill catalog and project-specific Webiny guidance
+  through the official @webiny/mcp package.
+seoTitle: Webiny MCP Server for Claude
+seoDescription: >-
+  Configure Webiny MCP with Claude and other coding agents to list and load
+  Webiny skills, project instructions, extension guidance, and optional custom
+  SKILL.md directories through a stdio MCP server.
+author: Webiny Ltd
+authorProfileUrl: "https://github.com/webiny"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Webiny
+brandDomain: webiny.com
+repoUrl: "https://github.com/webiny/webiny-js"
+documentationUrl: "https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/package.json"
+packageUrl: "https://registry.npmjs.org/@webiny%2Fmcp"
+installable: true
+installCommand: "npx @webiny/mcp serve"
+usageSnippet: "Run `npx @webiny/mcp serve` in a Webiny project, then ask Claude to list Webiny skills before loading the exact skill needed for the task."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "webiny": {
+        "command": "npx",
+        "args": ["@webiny/mcp", "serve"]
+      }
+    }
+  }
+configSnippet: |-
+  npx @webiny/mcp configure claude
+
+  # Or configure manually:
+  claude mcp add webiny -- npx @webiny/mcp serve
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js and npx available for running the @webiny/mcp package.
+  - A Webiny project or Webiny-related repository where the agent should use Webiny guidance.
+  - Review of the built-in skills and any custom SKILL.md directories before exposing them to a model.
+  - Agreement on whether project conventions, extension architecture, package internals, or private implementation notes may be sent to the MCP client and model provider.
+safetyNotes:
+  - Webiny MCP is a guidance and skill-loading server; it does not directly manage a Webiny CMS deployment or execute Webiny admin actions.
+  - The configure command can update supported agent configuration, so review generated MCP config changes before committing or sharing them.
+  - The --skills and --additional-skills flags make the server recursively discover SKILL.md files from local directories; point them only at trusted project guidance.
+  - Agent-loaded skills can strongly steer code changes, architecture decisions, and generated commands; review outputs before applying them to production Webiny projects.
+privacyNotes:
+  - Skill files can contain internal coding conventions, project architecture, extension patterns, package notes, and proprietary implementation guidance.
+  - Loaded skill content may be sent to MCP clients, model providers, chat transcripts, and logs when an agent requests it.
+  - Custom skill directories can reveal local repository structure and file paths through tool output or error messages.
+  - Keep credentials, customer data, private deployment details, and unpublished roadmap notes out of SKILL.md files exposed through the MCP server.
+sourceUrls:
+  - "https://raw.githubusercontent.com/webiny/webiny-js/next/LICENSE"
+  - "https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/src/cli.ts"
+  - "https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/src/cli/McpServer.ts"
+  - "https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/src/cli/ConfigureMcp.ts"
+  - "https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/src/agents/discover.ts"
+  - "https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/src/agents/instructions.ts"
+  - "https://raw.githubusercontent.com/webiny/webiny-js/next/.mcp.json"
+tags:
+  - webiny
+  - skills
+  - cms
+  - development
+  - coding-agents
+keywords:
+  - Webiny MCP
+  - Webiny MCP npm package
+  - Webiny skills MCP
+  - Webiny Claude MCP
+  - Webiny coding agent
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Webiny MCP Server is the official MCP package from Webiny for exposing Webiny
+skills and development guidance to AI coding agents. It runs over stdio and
+provides tools for listing available Webiny skills and loading the exact skill
+content an agent needs for a task.
+
+Use it when Claude, Cursor, Copilot, Windsurf, opencode, or another agent is
+working in a Webiny codebase and needs project-specific guidance before editing
+extensions, packages, configuration, or Webiny framework code.
+
+## Source Review
+
+- https://github.com/webiny/webiny-js
+- https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/package.json
+- https://registry.npmjs.org/@webiny%2Fmcp
+- https://raw.githubusercontent.com/webiny/webiny-js/next/LICENSE
+- https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/src/cli.ts
+- https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/src/cli/McpServer.ts
+- https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/src/cli/ConfigureMcp.ts
+- https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/src/agents/discover.ts
+- https://raw.githubusercontent.com/webiny/webiny-js/next/packages/mcp/src/agents/instructions.ts
+- https://raw.githubusercontent.com/webiny/webiny-js/next/.mcp.json
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository, MCP
+package metadata, npm registry metadata, root license, CLI implementation, MCP
+server implementation, agent configuration implementation, agent discovery,
+instruction output, and sample MCP config for current behavior.
+
+## Features
+
+- Run a stdio MCP server with `webiny-mcp serve` or `npx @webiny/mcp serve`.
+- List available Webiny skills with `list_webiny_skills`.
+- Load a specific Webiny skill with `get_webiny_skill`.
+- Discover built-in package skills plus custom SKILL.md directories.
+- Override the base skills directory with `--skills`.
+- Add higher-priority custom skill directories with repeated
+  `--additional-skills` flags.
+- Configure supported agents with `webiny-mcp configure <agent>`.
+
+## Installation
+
+Run directly with npx:
+
+```bash
+npx @webiny/mcp serve
+```
+
+Configure Claude with the Webiny helper:
+
+```bash
+npx @webiny/mcp configure claude
+```
+
+For manual JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "webiny": {
+      "command": "npx",
+      "args": ["@webiny/mcp", "serve"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to list available Webiny skills before making a Webiny code change.
+- Load Webiny extension guidance before editing `extensions/` or
+  `webiny.config.tsx`.
+- Load Webiny package guidance before editing core framework packages.
+- Add a project-local SKILL.md directory for organization-specific Webiny
+  conventions.
+- Keep multiple coding agents aligned on the same Webiny development guidance.
+
+## Safety and Privacy
+
+Webiny MCP Server exposes instructions rather than executing CMS operations,
+but those instructions can still shape large code changes. Review loaded skills
+and agent-generated edits before applying them to production Webiny projects.
+
+Only expose trusted SKILL.md directories. Skills may contain private
+architecture notes, repository conventions, extension patterns, deployment
+assumptions, or proprietary guidance that will be sent to the MCP client and
+model provider when requested.
+
+The `configure` command can write agent-specific configuration. Review those
+changes before committing config files or sharing them with a team.
+
+## Duplicate Check
+
+No Webiny MCP Server, `webiny/webiny-js` MCP package, `@webiny/mcp`, or matching
+Webiny MCP source URL was found in `content/mcp`.

@@ -1,0 +1,188 @@
+---
+title: MCP Language Server
+slug: mcp-language-server
+category: mcp
+description: >-
+  Go MCP server that launches an existing stdio language server and exposes
+  semantic code-navigation tools such as definitions, references, hover,
+  diagnostics, symbol rename, and file edits.
+cardDescription: >-
+  Give Claude language-server semantics for a workspace: definitions,
+  references, hover docs, diagnostics, rename, and structured file edits.
+seoTitle: MCP Language Server for Claude
+seoDescription: >-
+  Configure MCP Language Server with Claude and other MCP clients to run gopls,
+  rust-analyzer, pyright, typescript-language-server, clangd, or another stdio
+  LSP and expose semantic code tools.
+author: isaacphi
+authorProfileUrl: "https://github.com/isaacphi"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: MCP Language Server
+brandDomain: github.com
+repoUrl: "https://github.com/isaacphi/mcp-language-server"
+documentationUrl: "https://github.com/isaacphi/mcp-language-server/blob/main/README.md"
+packageUrl: "https://pkg.go.dev/github.com/isaacphi/mcp-language-server"
+installable: true
+installCommand: "go install github.com/isaacphi/mcp-language-server@latest"
+usageSnippet: "Install `mcp-language-server`, install a stdio language server such as gopls or rust-analyzer, then configure the MCP server with `--workspace WORKSPACE_PATH --lsp LANGUAGE_SERVER_COMMAND`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "language-server": {
+        "command": "mcp-language-server",
+        "args": ["--workspace", "WORKSPACE_PATH", "--lsp", "gopls"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "language-server": {
+        "command": "mcp-language-server",
+        "args": [
+          "--workspace",
+          "WORKSPACE_PATH",
+          "--lsp",
+          "typescript-language-server",
+          "--",
+          "--stdio"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Go installed for building the `mcp-language-server` binary.
+  - A stdio language server installed for the target language, such as gopls, rust-analyzer, pyright, typescript-language-server, or clangd.
+  - A workspace path the agent is allowed to inspect and, if enabled, edit.
+  - Language-server environment variables, PATH entries, caches, module paths, and compile-command directories configured for the target project.
+  - Team agreement on whether symbol rename and file-edit tools may be used automatically.
+safetyNotes:
+  - The server can expose write-capable tools such as symbol rename and structured file edits in addition to read-only navigation tools.
+  - It launches the configured language server process with the provided workspace and environment, so review PATH, arguments, environment variables, and workspace scope.
+  - Language servers may execute project-specific discovery, indexing, build-script, or plugin behavior depending on the ecosystem and configuration.
+  - Keep manual review on rename and edit operations in large workspaces because a language server can change many references across a project.
+  - The README describes the project as beta software; expect behavior and compatibility to evolve.
+privacyNotes:
+  - Tool results can expose source code, definitions, references, hover text, diagnostics, file paths, module names, package names, build configuration, and generated edits.
+  - Language-server logs, MCP client transcripts, model prompts, and debug output can retain proprietary code structure and project metadata.
+  - Environment variables passed to the language server may include paths, cache locations, tokens, private registry settings, or build-system credentials.
+  - Avoid connecting private workspaces to shared MCP clients or model providers without approval from the project owner.
+sourceUrls:
+  - "https://github.com/isaacphi/mcp-language-server"
+  - "https://github.com/isaacphi/mcp-language-server/blob/main/README.md"
+  - "https://github.com/isaacphi/mcp-language-server/blob/main/LICENSE"
+  - "https://github.com/isaacphi/mcp-language-server/blob/main/ATTRIBUTION"
+  - "https://github.com/isaacphi/mcp-language-server/blob/main/go.mod"
+  - "https://github.com/isaacphi/mcp-language-server/blob/main/main.go"
+  - "https://github.com/isaacphi/mcp-language-server/blob/main/tools.go"
+  - "https://pkg.go.dev/github.com/isaacphi/mcp-language-server"
+tags:
+  - code
+  - language-server
+  - lsp
+  - developer-tools
+  - refactoring
+keywords:
+  - MCP Language Server
+  - LSP MCP
+  - language server protocol MCP
+  - Claude code navigation
+  - semantic code MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Language Server is a Go MCP server that launches an existing stdio language
+server and exposes semantic code tools to MCP clients. Instead of relying only
+on text search, Claude can ask for definitions, references, diagnostics, hover
+information, symbol rename, and structured file edits from the language server
+that already understands the workspace.
+
+The README includes setup examples for gopls, rust-analyzer, pyright,
+typescript-language-server, clangd, and other stdio language servers. It is a
+useful fit for coding-agent workflows where semantic navigation can reduce
+guesswork and avoid reading broad file ranges just to find symbols.
+
+## Source Review
+
+- https://github.com/isaacphi/mcp-language-server
+- https://github.com/isaacphi/mcp-language-server/blob/main/README.md
+- https://github.com/isaacphi/mcp-language-server/blob/main/LICENSE
+- https://github.com/isaacphi/mcp-language-server/blob/main/ATTRIBUTION
+- https://github.com/isaacphi/mcp-language-server/blob/main/go.mod
+- https://github.com/isaacphi/mcp-language-server/blob/main/main.go
+- https://github.com/isaacphi/mcp-language-server/blob/main/tools.go
+- https://pkg.go.dev/github.com/isaacphi/mcp-language-server
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, license, attribution file, Go module metadata, entrypoint, tool
+implementation, and Go package documentation for current install and tool
+behavior.
+
+## Features
+
+- Launch a configured stdio language server for a workspace.
+- Retrieve source-code definitions for symbols.
+- Find references and usages across a project.
+- Get diagnostics for a file.
+- Display hover documentation or type information.
+- Rename symbols across a project.
+- Apply multiple structured text edits to a file.
+- Pass arguments after `--` through to the language server.
+- Configure language-server environment variables through the MCP client.
+
+## Installation
+
+Install the binary with Go:
+
+```bash
+go install github.com/isaacphi/mcp-language-server@latest
+```
+
+Install the language server for your project, then configure an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "language-server": {
+      "command": "mcp-language-server",
+      "args": ["--workspace", "WORKSPACE_PATH", "--lsp", "gopls"]
+    }
+  }
+}
+```
+
+For language servers that require additional arguments, pass them after `--`.
+
+## Use Cases
+
+- Ask Claude for the definition of a function, type, or constant.
+- Find all references before changing a symbol.
+- Inspect diagnostics for a file without opening an IDE.
+- Retrieve hover documentation and type hints for unfamiliar APIs.
+- Rename a symbol with language-server awareness.
+- Apply structured edits when search-and-replace would be too brittle.
+- Use semantic navigation in large workspaces where text search is noisy.
+
+## Safety and Privacy
+
+MCP Language Server exposes semantic access to a code workspace. Treat it like
+connecting an agent to your IDE's language intelligence and refactoring tools.
+Keep write operations reviewed, especially rename and edit tools that can affect
+many files.
+
+The server launches the language server you configure. Review the binary,
+arguments, environment variables, workspace path, caches, and language-specific
+plugins before use. Tool output can include proprietary source code, file paths,
+diagnostics, type names, dependencies, and generated edits.
+
+## Duplicate Check
+
+No `isaacphi/mcp-language-server` entry, MCP Language Server entry, or matching
+source URL was found in `content/mcp`.

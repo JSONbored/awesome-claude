@@ -1,0 +1,187 @@
+---
+title: Unity MCP Server
+slug: unity-mcp-server
+category: mcp
+description: >-
+  Unity Editor MCP bridge that lets AI assistants manage assets, edit scripts,
+  control scenes, run tests, and automate Unity workflows through the Model
+  Context Protocol.
+cardDescription: >-
+  Connect Claude, Codex, VS Code, Cursor, and other MCP clients to the Unity
+  Editor for scene authoring, asset management, script editing, testing,
+  multi-instance routing, tool groups, and optional remote server auth.
+seoTitle: Unity MCP Server for Claude
+seoDescription: >-
+  Configure Unity MCP with Claude and other MCP clients to automate Unity Editor
+  workflows, manage scenes and assets, edit scripts, run tests, route multiple
+  Unity instances, and control tool groups with clear safety boundaries.
+author: CoplayDev
+authorProfileUrl: "https://github.com/CoplayDev"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Unity MCP
+brandDomain: github.com
+repoUrl: "https://github.com/CoplayDev/unity-mcp"
+documentationUrl: "https://coplaydev.github.io/unity-mcp/"
+packageUrl: "https://pypi.org/pypi/mcpforunityserver/json"
+installable: true
+installCommand: "Add https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main through Unity Package Manager, then run Window > MCP for Unity > Configure All Detected Clients."
+usageSnippet: "Install the Unity package from the git URL, open Window > MCP for Unity > Configure All Detected Clients, then ask your MCP client to create or modify a test scene."
+copySnippet: |-
+  https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main
+configSnippet: |-
+  {
+    "mcpServers": {
+      "UnityMCP": {
+        "command": "uvx",
+        "args": [
+          "--from",
+          "mcpforunityserver",
+          "mcp-for-unity",
+          "--transport",
+          "stdio"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Unity Editor installed with a project you are authorized to modify.
+  - Unity Package Manager access to add a package from a git URL, or another install path documented by the project.
+  - Python 3.10 or newer for the MCP server side documented by the project.
+  - MCP-capable client such as Claude, Codex, VS Code, Cursor, or another supported host.
+  - Version control, backups, or a disposable test Unity project before allowing an agent to edit scenes, scripts, or assets.
+safetyNotes:
+  - Unity MCP can create, modify, delete, and inspect Unity project assets, scenes, scripts, tests, editor state, and generated files.
+  - Agents may execute Unity Editor actions that trigger imports, compilation, play mode, tests, package changes, or custom editor scripts.
+  - Use tool groups and project-level scoping to limit which Unity workflows an agent can access.
+  - Test automation in a disposable project before connecting the server to production game, simulation, AR, VR, or client work.
+  - Remote server auth and multi-instance routing should be configured carefully so an agent controls only the intended Unity Editor instance.
+privacyNotes:
+  - Scene names, asset paths, scripts, serialized object data, test results, editor logs, package metadata, and project structure may be exposed to the MCP client and model.
+  - Unity projects can contain proprietary artwork, gameplay systems, licensed assets, unpublished game logic, client IP, and credentials embedded in editor tooling.
+  - Remote server mode may expose project context over the network; require authentication and avoid sharing endpoints beyond trusted clients.
+  - Review generated scripts and asset changes before committing, shipping, or syncing them to shared repositories.
+sourceUrls:
+  - "https://github.com/CoplayDev/unity-mcp"
+  - "https://github.com/CoplayDev/unity-mcp/blob/beta/README.md"
+  - "https://github.com/CoplayDev/unity-mcp/blob/beta/Server/README.md"
+  - "https://github.com/CoplayDev/unity-mcp/blob/beta/Server/pyproject.toml"
+  - "https://coplaydev.github.io/unity-mcp/"
+  - "https://coplaydev.github.io/unity-mcp/getting-started/install"
+  - "https://coplaydev.github.io/unity-mcp/getting-started/first-prompt"
+  - "https://coplaydev.github.io/unity-mcp/guides/tool-groups"
+  - "https://coplaydev.github.io/unity-mcp/guides/multi-instance"
+  - "https://coplaydev.github.io/unity-mcp/guides/remote-server-auth"
+  - "https://pypi.org/pypi/mcpforunityserver/json"
+  - "https://github.com/CoplayDev/unity-mcp/releases"
+tags:
+  - unity
+  - game-development
+  - editor-automation
+  - testing
+  - assets
+keywords:
+  - Unity MCP
+  - MCP for Unity
+  - Unity Claude MCP
+  - Unity Editor automation MCP
+  - CoplayDev unity-mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Unity MCP Server bridges MCP-compatible AI assistants to the Unity Editor. It
+lets agents inspect and automate Unity workflows such as managing assets,
+controlling scenes, editing scripts, running tests, and authoring project
+content from natural-language prompts.
+
+The project provides a Unity package, a Python MCP server component, docs for
+first-run setup, and guides for multi-instance routing, tool groups, Roslyn
+validation, and remote server authentication.
+
+## Source Review
+
+- https://github.com/CoplayDev/unity-mcp
+- https://github.com/CoplayDev/unity-mcp/blob/beta/README.md
+- https://github.com/CoplayDev/unity-mcp/blob/beta/Server/README.md
+- https://github.com/CoplayDev/unity-mcp/blob/beta/Server/pyproject.toml
+- https://coplaydev.github.io/unity-mcp/
+- https://coplaydev.github.io/unity-mcp/getting-started/install
+- https://coplaydev.github.io/unity-mcp/getting-started/first-prompt
+- https://coplaydev.github.io/unity-mcp/guides/tool-groups
+- https://coplaydev.github.io/unity-mcp/guides/multi-instance
+- https://coplaydev.github.io/unity-mcp/guides/remote-server-auth
+- https://pypi.org/pypi/mcpforunityserver/json
+- https://github.com/CoplayDev/unity-mcp/releases
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository and
+documentation for current Unity package URLs, beta channel guidance, server
+commands, supported clients, release notes, and remote authentication behavior.
+
+## Features
+
+- Connect MCP clients to a running Unity Editor project.
+- Create and modify Unity scenes, objects, assets, and scripts.
+- Run tests and automate project workflows from an agent.
+- Configure detected clients from the Unity Editor menu.
+- Use tool groups to control which categories of Unity tools are exposed.
+- Route multiple Unity instances to the intended client/server pairing.
+- Support remote-hosted server setups with authentication.
+- Provide docs for first prompts, installation channels, and development setup.
+
+## Installation
+
+Install the Unity package through Unity Package Manager by adding the git URL:
+
+```text
+https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main
+```
+
+For the beta channel, use the upstream beta branch guidance from the docs.
+
+After the package is installed, open the Unity Editor menu and run:
+
+```text
+Window > MCP for Unity > Configure All Detected Clients
+```
+
+Then verify the server from your MCP client and start with a small disposable
+scene change before using it in a production project.
+
+For stdio MCP clients, the upstream server package documents this command:
+
+```bash
+uvx --from mcpforunityserver mcp-for-unity --transport stdio
+```
+
+## Use Cases
+
+- Prototype Unity scenes and object layouts from Claude or another MCP client.
+- Generate or revise Unity scripts while keeping the Editor in the loop.
+- Automate repetitive asset, scene, and test workflows.
+- Inspect Unity project structure before changing gameplay code.
+- Route several Unity Editor instances during multi-project development.
+- Limit exposed capabilities with tool groups for safer agent workflows.
+
+## Safety and Privacy
+
+Unity MCP gives an agent real editing power inside a Unity project. Treat it as
+write-capable project automation, not as a passive documentation source. Use a
+throwaway project first, keep version control clean, review diffs, and require
+human approval before broad asset, scene, package, or script changes.
+
+Projects may include unreleased game design, proprietary assets, client work,
+licensed store content, credentials in editor tooling, analytics keys, and
+internal build scripts. Connect only trusted MCP clients and avoid remote access
+unless authentication, network exposure, and instance routing are configured
+deliberately.
+
+## Duplicate Check
+
+No `CoplayDev/unity-mcp` entry, Unity MCP entry, or matching Unity MCP source
+URL was found in `content/mcp`.

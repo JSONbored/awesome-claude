@@ -423,10 +423,14 @@ function parseJobCompensation(value) {
     );
   };
 
-  const minSuffix = amounts[0].toLowerCase().endsWith("k") ? "k" : "";
-  const minValue = parseAmount(amounts[0]);
-  const maxValue = parseAmount(amounts[1], minSuffix);
-  if (!minValue || !maxValue) return undefined;
+  const minHasK = amounts[0].toLowerCase().endsWith("k");
+  const maxHasK = amounts[1].toLowerCase().endsWith("k");
+  // A "k" suffix on either endpoint sets the magnitude for the whole range.
+  const sharedSuffix = minHasK || maxHasK ? "k" : "";
+  const minValue = parseAmount(amounts[0], sharedSuffix);
+  const maxValue = parseAmount(amounts[1], sharedSuffix);
+  // Reject inverted ranges so JSON-LD never advertises minValue > maxValue.
+  if (!minValue || !maxValue || minValue > maxValue) return undefined;
 
   return {
     "@type": "MonetaryAmount",

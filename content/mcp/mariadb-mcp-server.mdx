@@ -1,0 +1,220 @@
+---
+title: MariaDB MCP Server
+slug: mariadb-mcp-server
+category: mcp
+description: >-
+  Official MariaDB MCP server for schema inspection, read-only SQL, optional
+  database creation, and vector-store search against MariaDB databases.
+cardDescription: Connect Claude to MariaDB schemas, read-only SQL, and optional vector-store tools.
+seoTitle: MariaDB MCP Server for Claude
+seoDescription: >-
+  Configure the MariaDB MCP Server with Claude and other MCP clients to list
+  databases, inspect tables, run read-only SQL, and use optional vector-store
+  tools with OpenAI, Gemini, or HuggingFace embeddings.
+author: MariaDB
+authorProfileUrl: "https://github.com/MariaDB"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: MariaDB
+brandDomain: mariadb.org
+repoUrl: "https://github.com/MariaDB/mcp"
+documentationUrl: "https://github.com/MariaDB/mcp#readme"
+installable: true
+installCommand: "uv run server.py"
+usageSnippet: "Run the MariaDB MCP server from a reviewed checkout with MCP_READ_ONLY=true and a least-privilege MariaDB user before asking Claude to inspect schemas or run SELECT queries."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mariadb": {
+        "command": "uv",
+        "args": [
+          "--directory",
+          "<mariadb-mcp-checkout>",
+          "run",
+          "server.py"
+        ],
+        "env": {
+          "DB_HOST": "<mariadb-host>",
+          "DB_PORT": "3306",
+          "DB_USER": "<least-privilege-user>",
+          "DB_PASSWORD": "<mariadb-password>",
+          "DB_NAME": "<approved-database>",
+          "MCP_READ_ONLY": "true"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mariadb": {
+        "command": "uv",
+        "args": ["--directory", "<mariadb-mcp-checkout>", "run", "server.py"],
+        "env": {
+          "DB_HOST": "<mariadb-host>",
+          "DB_PORT": "3306",
+          "DB_USER": "<least-privilege-user>",
+          "DB_PASSWORD": "<mariadb-password>",
+          "DB_NAME": "<approved-database>",
+          "MCP_READ_ONLY": "true"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.11 and uv available to the MCP client runtime.
+  - Reviewed checkout of the MariaDB MCP repository with dependencies installed.
+  - MariaDB database host, port, database name, username, and password.
+  - Least-privilege MariaDB user scoped to only the databases and operations Claude should access.
+  - Keep `MCP_READ_ONLY=true` for exploration workflows unless a human explicitly approves write-capable tools.
+  - Optional OpenAI, Gemini, or HuggingFace embedding configuration only when vector-store tools are needed.
+safetyNotes:
+  - MariaDB MCP connects Claude to a live database and exposes schema inspection plus SQL execution tools.
+  - The default read-only mode allows SELECT, SHOW, DESCRIBE, DESC, and USE-style queries, but the README warns that database privileges are the only reliable way to guarantee read-only access.
+  - The server includes a `create_database` tool and optional vector-store tools that can create, insert into, search, and delete vector-store tables when enabled.
+  - If `MCP_READ_ONLY=false` or credentials have broad privileges, model-generated SQL can create, modify, delete, or expose database state.
+  - The server checks for risky FILE privilege behavior, but teams should revoke FILE and other unnecessary global privileges from the connected MariaDB user.
+  - HTTP and SSE transports require explicit authentication and restricted host/origin settings before any non-local use.
+  - Embedding providers can receive document text or derived content when vector-store tooling is enabled.
+privacyNotes:
+  - Database credentials, hostnames, database names, schemas, table names, column names, SQL text, query results, errors, and log files may be visible to the MCP client and model provider.
+  - MariaDB data can include customer records, credentials, audit logs, business metrics, payment data, healthcare data, or other regulated information.
+  - Vector-store tables can persist source documents, embeddings, metadata, and semantic-search results inside MariaDB.
+  - OPENAI_API_KEY, GEMINI_API_KEY, HF_MODEL settings, SSL certificate paths, dotenv files, and database passwords should stay out of prompts, issues, logs, screenshots, and committed files.
+  - Review log retention because the server writes logs to `logs/mcp_server.log` by default.
+sourceUrls:
+  - "https://github.com/MariaDB/mcp/blob/main/README.md"
+  - "https://github.com/MariaDB/mcp/blob/main/pyproject.toml"
+  - "https://github.com/MariaDB/mcp/blob/main/src/server.py"
+  - "https://github.com/MariaDB/mcp/blob/main/src/config.py"
+  - "https://github.com/MariaDB/mcp/blob/main/LICENSE"
+tags:
+  - mariadb
+  - database
+  - sql
+  - vector-database
+  - embeddings
+keywords:
+  - MariaDB MCP
+  - MariaDB MCP Server
+  - official MariaDB MCP
+  - SQL MCP server
+  - database MCP server
+  - vector search MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MariaDB MCP Server is the official MariaDB Model Context Protocol server for
+connecting Claude and other MCP clients to MariaDB databases. It exposes tools
+for listing databases and tables, inspecting schemas, running read-only SQL, and
+optionally managing embedding-backed vector stores inside MariaDB.
+
+The server is implemented with FastMCP and `asyncmy`. It runs from a Python
+checkout with uv, supports stdio by default, and can also run over SSE or
+streamable HTTP when operators configure authentication and network controls.
+
+## Source Review
+
+- https://github.com/MariaDB/mcp
+- https://github.com/MariaDB/mcp#readme
+- https://github.com/MariaDB/mcp/blob/main/README.md
+- https://github.com/MariaDB/mcp/blob/main/pyproject.toml
+- https://github.com/MariaDB/mcp/blob/main/src/server.py
+- https://github.com/MariaDB/mcp/blob/main/src/config.py
+- https://github.com/MariaDB/mcp/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, package metadata, server implementation, configuration module, and
+license for current installation steps, environment variables, tool behavior,
+transport options, and safety notes.
+
+## Features
+
+- Official MariaDB MCP repository under `MariaDB/mcp`.
+- Python 3.11 server managed with uv.
+- Stdio transport by default, with optional SSE and streamable HTTP modes.
+- Database listing and table listing tools.
+- Schema inspection with column metadata and foreign-key relationships.
+- `execute_sql` tool for read-only SQL workflows when `MCP_READ_ONLY=true`.
+- `create_database` tool for database creation workflows.
+- Optional vector-store tools when an embedding provider is configured.
+- OpenAI, Gemini, and HuggingFace embedding provider support.
+- SSL/TLS environment variables for MariaDB connections.
+- Host, origin, log, pool-size, and read-only environment configuration.
+
+## Installation
+
+Clone the MariaDB MCP repository, install dependencies with uv, create a
+reviewed `.env`, and configure the MCP client to launch the server from that
+checkout:
+
+```json
+{
+  "mcpServers": {
+    "mariadb": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "<mariadb-mcp-checkout>",
+        "run",
+        "server.py"
+      ],
+      "env": {
+        "DB_HOST": "<mariadb-host>",
+        "DB_PORT": "3306",
+        "DB_USER": "<least-privilege-user>",
+        "DB_PASSWORD": "<mariadb-password>",
+        "DB_NAME": "<approved-database>",
+        "MCP_READ_ONLY": "true"
+      }
+    }
+  }
+}
+```
+
+Keep `MCP_READ_ONLY=true` for exploration, and enforce least privilege at the
+MariaDB user level before connecting important data.
+
+## Use Cases
+
+- Ask Claude to list accessible databases before choosing a target.
+- Inspect table schemas and foreign-key relationships before writing SQL.
+- Run reviewed SELECT queries against development or analytics databases.
+- Compare schema shape across MariaDB environments.
+- Prototype vector search over approved MariaDB tables.
+- Use OpenAI, Gemini, or HuggingFace embeddings for semantic search when that data flow is approved.
+- Keep database creation and vector-store mutation workflows behind human review.
+
+## Safety and Privacy
+
+MariaDB MCP is a database control surface. Treat every query as executable code,
+use dedicated least-privilege credentials, and rely on database permissions
+rather than client-side filters alone. Keep read-only mode enabled by default,
+review generated SQL before execution, revoke global FILE privileges, and avoid
+connecting production or regulated datasets unless the MCP client, model
+session, and operators are approved for that access.
+
+Vector-store features can persist documents, embeddings, and metadata in
+MariaDB, while external embedding providers may receive document text or derived
+content. Review provider terms, retention, logging, and data residency before
+turning those tools on.
+
+## Disclosure
+
+MariaDB offers open-source and commercial database products and services. This
+listing is not sponsored, paid, or affiliate-driven, and it is scoped to the
+source-backed open repository for the MariaDB MCP server.
+
+## Duplicate Check
+
+Existing content includes DBHub, a multi-database MCP server that can connect to
+MariaDB among other engines. This entry is distinct because it covers
+`MariaDB/mcp`, the official MariaDB-specific MCP server. No dedicated MariaDB
+MCP Server, `MariaDB/mcp`, or matching source URL entry was found in
+`content/mcp`.

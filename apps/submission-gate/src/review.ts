@@ -3,7 +3,6 @@ import { DEFAULT_REVIEW_MARKER, LABELS } from "./constants";
 export const GATE_DECISION_SCHEMA_VERSION = 2;
 export const GATE_COMMENT_FORMATTER_VERSION = 5;
 export const DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR = 0.85;
-const DEFAULT_CLEAN_MERGE_CONFIDENCE_FLOOR = 0.75;
 const HEYCLAUDE_SITE_URL = "https://heyclau.de";
 const HEYCLAUDE_REPO_URL = "https://github.com/JSONbored/awesome-claude";
 const HEYCLAUDE_FORK_URL = "https://github.com/JSONbored/awesome-claude/fork";
@@ -69,6 +68,21 @@ export type GateDecisionEvidence = {
   behavior?: string;
   policy?: string;
   source?: string;
+  field?: string;
+  duplicatePath?: string;
+  duplicateTitle?: string;
+  duplicateSlug?: string;
+  duplicateUrl?: string;
+  matchedPath?: string;
+  matchedTitle?: string;
+  matchedSlug?: string;
+  matchedSourceUrl?: string;
+  url?: string;
+  matchedUrl?: string;
+  finalUrl?: string;
+  outcome?: string;
+  status?: string;
+  httpStatus?: string;
   fix?: string;
   whyNotDefensive?: string;
 };
@@ -88,6 +102,15 @@ export type GateDecision = {
   errors?: GateDecisionError[];
   decisionId?: string;
   sourceEvidenceHash?: string;
+};
+
+export type RetryReviewCommentDetails = {
+  stage?: "validation" | "private_review";
+  code?: string;
+  attempt?: number;
+  maxAttempts?: number;
+  nextReviewAt?: string | null;
+  summary?: string;
 };
 
 export type GateDecisionV2 = GateDecision & {
@@ -137,6 +160,8 @@ const RETRYABLE_PRIVATE_REVIEW_CODES = new Set([
   "private_reviewer_unavailable",
   "github_rate_limited",
   "source_evidence_timeout",
+  "source_evidence_conflict",
+  "duplicate_evidence_conflict",
 ]);
 
 const VERDICT_HEADLINES: Record<GateVerdict, string> = {
@@ -292,12 +317,30 @@ function normalizeReasonCode(
 
 function normalizeEvidence(value: unknown): GateDecisionEvidence | null {
   if (!isRecord(value)) return null;
+  const rawStatus = cleanText(value.status);
+  const httpStatus =
+    cleanText(value.httpStatus) || (/^\d{3}$/.test(rawStatus) ? rawStatus : "");
   const evidence: GateDecisionEvidence = {
     ruleId: cleanText(value.ruleId) || undefined,
     snippet: cleanText(value.snippet) || undefined,
     behavior: cleanText(value.behavior) || undefined,
     policy: cleanText(value.policy) || undefined,
     source: cleanText(value.source) || undefined,
+    field: cleanText(value.field) || undefined,
+    duplicatePath: cleanText(value.duplicatePath) || undefined,
+    duplicateTitle: cleanText(value.duplicateTitle) || undefined,
+    duplicateSlug: cleanText(value.duplicateSlug) || undefined,
+    duplicateUrl: cleanText(value.duplicateUrl) || undefined,
+    matchedPath: cleanText(value.matchedPath) || undefined,
+    matchedTitle: cleanText(value.matchedTitle) || undefined,
+    matchedSlug: cleanText(value.matchedSlug) || undefined,
+    matchedSourceUrl: cleanText(value.matchedSourceUrl) || undefined,
+    url: cleanText(value.url) || undefined,
+    matchedUrl: cleanText(value.matchedUrl) || undefined,
+    finalUrl: cleanText(value.finalUrl) || undefined,
+    outcome: cleanText(value.outcome) || undefined,
+    status: rawStatus || undefined,
+    httpStatus: httpStatus || undefined,
     fix: cleanText(value.fix) || undefined,
     whyNotDefensive: cleanText(value.whyNotDefensive) || undefined,
   };
@@ -311,9 +354,48 @@ function evidenceHasConcreteDetail(evidence: GateDecisionEvidence[]) {
       item.behavior,
       item.policy,
       item.source,
+      item.field,
+      item.duplicatePath,
+      item.duplicateTitle,
+      item.duplicateSlug,
+      item.duplicateUrl,
+      item.matchedPath,
+      item.matchedTitle,
+      item.matchedSlug,
+      item.matchedSourceUrl,
+      item.url,
+      item.matchedUrl,
+      item.finalUrl,
+      item.outcome,
+      item.status,
+      item.httpStatus,
       item.fix,
       item.whyNotDefensive,
     ].some(Boolean),
+  );
+}
+
+function hasStrictDuplicateTargetEvidence(evidence: GateDecisionEvidence[]) {
+  const joined = evidence
+    .flatMap((item) => [
+      item.duplicatePath,
+      item.duplicateUrl,
+      item.matchedPath,
+      item.matchedSourceUrl,
+      item.url,
+      item.matchedUrl,
+      item.finalUrl,
+      item.source && item.source !== "private-reviewer" ? item.source : "",
+      item.behavior,
+      item.snippet,
+    ])
+    .filter(Boolean)
+    .join("\n");
+  return (
+    /(?:^|[\s`"'(])content\/[\w-]+\/[\w.-]+\.mdx\b/i.test(joined) ||
+    /https?:\/\/\S+/i.test(joined) ||
+    /(?:^|[\s`"'(])#\d+\b/.test(joined) ||
+    /\/pull\/\d+\b/i.test(joined)
   );
 }
 
@@ -327,6 +409,12 @@ function closeEvidenceContractError(params: {
   const evidence = params.evidence || [];
   if (!evidence.length || !evidenceHasConcreteDetail(evidence)) {
     return "Private close decisions must include public-safe evidence.";
+  }
+  if (
+    params.reasonCode === "strict_duplicate" &&
+    !hasStrictDuplicateTargetEvidence(evidence)
+  ) {
+    return "Private strict_duplicate close decisions must identify the duplicated entry path, source URL, or PR.";
   }
   if (SAFETY_CLOSE_REASON_CODES.has(params.reasonCode)) {
     const hasRule = evidence.some((item) => item.ruleId);
@@ -353,6 +441,55 @@ function looksLikeGenericSafetyClose(summary: string) {
   );
 }
 
+function parseJsonString(value: string): unknown {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    return value;
+  }
+}
+
+function unwrapPrivateGatePayload(raw: unknown, depth = 0): unknown {
+  if (depth > 3) return raw;
+  if (typeof raw === "string") {
+    const parsed = parseJsonString(raw);
+    return parsed === raw ? raw : unwrapPrivateGatePayload(parsed, depth + 1);
+  }
+  if (!isRecord(raw)) return raw;
+  for (const key of ["decision", "gateDecision", "result", "review"]) {
+    if (raw[key] !== undefined) {
+      return unwrapPrivateGatePayload(raw[key], depth + 1);
+    }
+  }
+  return raw;
+}
+
+export function parsePrivateGateDecisionResponseBody(body: string) {
+  return unwrapPrivateGatePayload(body);
+}
+
+function looksLikePrivateReviewInfrastructureManual(params: {
+  verdict: GateDecisionV2Verdict;
+  summary: string;
+  sections: GateDecisionSection[] | null;
+  errors?: GateDecisionError[];
+}) {
+  if (params.verdict !== "manual" || params.errors?.length) return false;
+  const text = [
+    params.summary,
+    ...(params.sections || []).flatMap((section) => [
+      section.title || section.id,
+      ...section.bullets,
+    ]),
+  ].join("\n");
+  return /(?:AI maintainer review returned an unexpected payload|private .*review.*unexpected payload|unexpected payload|invalid GateDecision|malformed private|could not parse|parse failure)/i.test(
+    text,
+  );
+}
+
 export function privateReviewErrorDecision(
   reason: string,
   code: string,
@@ -375,12 +512,36 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
   decision?: GateDecision;
   error?: GateDecisionError;
 } {
+  const unwrapped = unwrapPrivateGatePayload(raw);
+  if (unwrapped !== raw) return normalizePrivateGateDecisionPayload(unwrapped);
+
   if (!isRecord(raw)) {
     return {
       error: {
         code: "invalid_private_response",
         retryable: true,
         message: "Private corpus review returned an unexpected payload.",
+      },
+    };
+  }
+
+  if (isRecord(raw.error)) {
+    return {
+      error: normalizeError(raw.error) || {
+        code: "invalid_private_response",
+        retryable: true,
+        message: "Private corpus review returned an unexpected error payload.",
+      },
+    };
+  }
+
+  if (!raw.verdict && Array.isArray(raw.errors)) {
+    const error = raw.errors.map(normalizeError).find(Boolean);
+    return {
+      error: error || {
+        code: "invalid_private_response",
+        retryable: true,
+        message: "Private corpus review returned an unexpected error payload.",
       },
     };
   }
@@ -400,6 +561,11 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
           .map(normalizeSection)
           .filter((section): section is GateDecisionSection => Boolean(section))
       : null;
+    const errors = Array.isArray(raw.errors)
+      ? raw.errors
+          .map(normalizeError)
+          .filter((error): error is GateDecisionError => Boolean(error))
+      : undefined;
     const reasonCode = normalizeReasonCode(raw.reasonCode);
     const evidence = Array.isArray(raw.evidence)
       ? raw.evidence
@@ -420,6 +586,23 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
           retryable: true,
           message:
             "Private corpus review returned an invalid GateDecisionV2 payload.",
+        },
+      };
+    }
+    if (
+      looksLikePrivateReviewInfrastructureManual({
+        verdict,
+        summary,
+        sections,
+        errors,
+      })
+    ) {
+      return {
+        error: {
+          code: "invalid_private_response",
+          retryable: true,
+          message:
+            "Private corpus review surfaced an internal payload parsing failure.",
         },
       };
     }
@@ -444,11 +627,6 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
           slug: cleanText(raw.scope.slug) || undefined,
           status: cleanText(raw.scope.status) || undefined,
         }
-      : undefined;
-    const errors = Array.isArray(raw.errors)
-      ? raw.errors
-          .map(normalizeError)
-          .filter((error): error is GateDecisionError => Boolean(error))
       : undefined;
 
     return {
@@ -627,63 +805,6 @@ function normalizedConfidenceFloor(value: number) {
     : DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR;
 }
 
-function hasFailedChecks(decision: GateDecision) {
-  return (decision.checks || []).some((check) =>
-    ["failed", "error", "cancelled"].includes(check.status),
-  );
-}
-
-function hasBlockingOrAmbiguousSections(decision: GateDecision) {
-  return (decision.sections || []).some((section) =>
-    ["fail", "warn"].includes(section.status),
-  );
-}
-
-function mergeSummarySignalsAcceptance(summary: string) {
-  const value = summary.toLowerCase();
-  return (
-    value.includes("no blocking") ||
-    value.includes("none blocking") ||
-    value.includes("recommend direct merge") ||
-    value.includes("direct merge is recommended") ||
-    value.includes("can be merged directly") ||
-    value.includes("meets all repository policies")
-  );
-}
-
-function mergeSummarySignalsAmbiguity(summary: string) {
-  const value = summary.toLowerCase();
-  const nonBlocking =
-    value.includes("non-blocking") ||
-    value.includes("not a blocker") ||
-    value.includes("not blocking");
-  if (nonBlocking) return false;
-  return (
-    value.includes("unresolved") ||
-    value.includes("ambiguous") ||
-    value.includes("could not verify") ||
-    value.includes("contradictory") ||
-    value.includes("manual review")
-  );
-}
-
-function isCleanStructuredMergeDecision(
-  decision: GateDecision,
-  cleanFloor = DEFAULT_CLEAN_MERGE_CONFIDENCE_FLOOR,
-) {
-  return (
-    decision.verdict === "merge" &&
-    typeof decision.confidence === "number" &&
-    Number.isFinite(decision.confidence) &&
-    decision.confidence >= cleanFloor &&
-    !(decision.errors || []).length &&
-    !hasFailedChecks(decision) &&
-    !hasBlockingOrAmbiguousSections(decision) &&
-    mergeSummarySignalsAcceptance(decision.summary || "") &&
-    !mergeSummarySignalsAmbiguity(decision.summary || "")
-  );
-}
-
 function decisionConfidenceText(decision: GateDecision) {
   if (
     typeof decision.confidence === "number" &&
@@ -740,6 +861,23 @@ function decisionEvidenceSection(
         item.behavior ? `behavior: ${item.behavior}` : "",
         item.snippet ? `snippet: \`${item.snippet}\`` : "",
         item.source ? `source: ${item.source}` : "",
+        item.field ? `field: \`${item.field}\`` : "",
+        item.duplicatePath ? `duplicate path: \`${item.duplicatePath}\`` : "",
+        item.duplicateTitle ? `duplicate title: ${item.duplicateTitle}` : "",
+        item.duplicateSlug ? `duplicate slug: \`${item.duplicateSlug}\`` : "",
+        item.duplicateUrl ? `duplicate URL: ${item.duplicateUrl}` : "",
+        item.matchedPath ? `matched path: \`${item.matchedPath}\`` : "",
+        item.matchedTitle ? `matched title: ${item.matchedTitle}` : "",
+        item.matchedSlug ? `matched slug: \`${item.matchedSlug}\`` : "",
+        item.matchedSourceUrl
+          ? `matched source URL: ${item.matchedSourceUrl}`
+          : "",
+        item.url ? `url: ${item.url}` : "",
+        item.matchedUrl ? `matched URL: ${item.matchedUrl}` : "",
+        item.finalUrl ? `final URL: ${item.finalUrl}` : "",
+        item.outcome ? `outcome: ${item.outcome}` : "",
+        item.status ? `status: ${item.status}` : "",
+        item.httpStatus ? `HTTP: ${item.httpStatus}` : "",
         item.fix ? `fix: ${item.fix}` : "",
         item.whyNotDefensive
           ? `why not defensive: ${item.whyNotDefensive}`
@@ -1113,24 +1251,52 @@ export function markerComment(
   return renderDecisionComment(decision, marker);
 }
 
-export function retryingReviewComment(marker = DEFAULT_REVIEW_MARKER) {
+export function retryingReviewComment(
+  marker = DEFAULT_REVIEW_MARKER,
+  details: RetryReviewCommentDetails = {},
+) {
+  const validationReadRetry =
+    details.stage === "validation" || details.code === "github_api_unavailable";
+  const retryLine =
+    details.attempt && details.maxAttempts
+      ? `- ⚠️ **Retry:** \`${details.attempt}/${details.maxAttempts}\``
+      : "";
+  const codeLine = details.code
+    ? `- ℹ️ **Error code:** \`${details.code}\``
+    : "";
+  const nextLine = details.nextReviewAt
+    ? `- ⏭️ **Next retry:** \`${details.nextReviewAt}\``
+    : "";
+  const summaryLine = details.summary
+    ? `- **Last issue:** ${details.summary}`
+    : "";
   return renderAlertCard(marker, "IMPORTANT", [
     "## ⚠️ Review retrying",
-    "Public validation is green, but the private reviewer returned a retryable infrastructure result.",
+    validationReadRetry
+      ? "HeyClaude could not read the public validation result yet, so the gate will retry automatically."
+      : "Public validation is green, but the private reviewer returned a retryable infrastructure result.",
     "",
     "**Progress**",
     "",
-    "- ✅ **Public validation:** `passed`",
-    "- ⚠️ **Private maintainer gate:** `retrying`",
+    validationReadRetry
+      ? "- ⚠️ **Public validation:** `retrying`"
+      : "- ✅ **Public validation:** `passed`",
+    validationReadRetry
+      ? "- ⏸️ **Private maintainer gate:** `waiting`"
+      : "- ⚠️ **Private maintainer gate:** `retrying`",
+    retryLine,
+    codeLine,
+    nextLine,
     "",
     "<details>",
     "<summary><strong>Contributor action</strong></summary>",
     "",
     "- No contributor action is needed yet.",
     "- The submission gate will retry automatically.",
+    summaryLine,
     "",
     "</details>",
-  ]);
+  ].filter(Boolean));
 }
 
 export function supersededReviewComment(
@@ -1161,12 +1327,40 @@ export function defaultManualDecision(
   reason = "Private corpus review is not configured.",
   error?: GateDecisionError,
 ): GateDecision {
+  const suffix =
+    /maintainer needs to review/i.test(reason) ||
+    /manual review/i.test(reason)
+      ? ""
+      : " A maintainer needs to review category fit, source of truth, duplicate history, safety/privacy notes, and provenance before merge.";
   return {
     verdict: "manual" as const,
-    summary: `${reason} A maintainer needs to review category fit, source of truth, duplicate history, safety/privacy notes, and provenance before merge.`,
+    summary: `${reason}${suffix}`,
     labels: [LABELS.manual],
     errors: error ? [error] : undefined,
   };
+}
+
+export function duplicateEvidenceContractExhaustedDecision(params: {
+  decision: GateDecision;
+  duplicateSummary: string;
+  sourceSummary?: string | null;
+}) {
+  return defaultManualDecision(
+    [
+      "Private review repeatedly returned duplicate evidence that conflicts with deterministic duplicate review.",
+      `Duplicate review: ${params.duplicateSummary}.`,
+      params.sourceSummary ? `Source review: ${params.sourceSummary}.` : "",
+      "Automatic retries are stopped for this head SHA so a maintainer can review category, safety, privacy, policy, and duplicate evidence before merging.",
+      `Last private reviewer error: ${params.decision.summary}`,
+    ]
+      .filter(Boolean)
+      .join(" "),
+    {
+      code: "duplicate_evidence_contract_exhausted",
+      retryable: false,
+      message: params.decision.summary,
+    },
+  );
 }
 
 export function enforceAutoMergeConfidenceFloor(
@@ -1180,9 +1374,6 @@ export function enforceAutoMergeConfidenceFloor(
     Number.isFinite(decision.confidence) &&
     decision.confidence >= normalizedFloor
   ) {
-    return decision;
-  }
-  if (isCleanStructuredMergeDecision(decision)) {
     return decision;
   }
 

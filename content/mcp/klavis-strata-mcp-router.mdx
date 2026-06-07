@@ -1,0 +1,197 @@
+---
+title: Klavis Strata MCP Router
+slug: klavis-strata-mcp-router
+category: mcp
+description: >-
+  Open-source MCP router from Klavis AI that progressively exposes actions from
+  multiple configured MCP servers instead of flooding Claude with every tool.
+cardDescription: Route many MCP servers through a smaller progressive tool surface.
+seoTitle: Klavis Strata MCP Router for Claude
+seoDescription: >-
+  Configure the open-source Klavis Strata MCP router with Claude to discover,
+  inspect, and execute tools across multiple MCP servers through a compact
+  progressive interface.
+author: Klavis AI
+authorProfileUrl: "https://github.com/Klavis-AI"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Klavis Strata
+brandDomain: klavis.ai
+repoUrl: "https://github.com/Klavis-AI/klavis"
+documentationUrl: "https://www.klavis.ai/docs/concepts/strata"
+packageUrl: "https://pypi.org/pypi/strata-mcp/json"
+installable: true
+installCommand: "pipx install strata-mcp"
+usageSnippet: "Install `strata-mcp`, add one or more MCP servers with `strata add`, then run `strata` as the MCP server Claude connects to."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "strata": {
+        "command": "strata"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "strata": {
+        "command": "strata"
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer, matching the open-strata package metadata.
+  - pipx or pip available on the machine that will run the router.
+  - One or more MCP servers you already trust and are authorized to connect.
+  - Any API keys, OAuth credentials, headers, or environment variables required by the downstream MCP servers.
+  - A plan for where Strata should store its MCP server configuration file.
+safetyNotes:
+  - Strata can execute tools on every enabled downstream MCP server; treat it as a privileged router, not a harmless discovery layer.
+  - Review each downstream server before adding it, because Strata can route file, browser, database, SaaS, shell, or write-capable actions through one interface.
+  - The HTTP/SSE mode starts an ASGI server and the source currently binds uvicorn to all interfaces; restrict network exposure with firewall rules, reverse proxies, or local-only deployment.
+  - Store bearer tokens, OAuth credentials, headers, and environment variables in a secret manager or private config file rather than committing Strata configuration.
+  - Disable or remove servers that should not be available to a specific project, user, or model session.
+privacyNotes:
+  - Strata stores configured server names, commands, URLs, headers, and environment variables in a local JSON configuration file.
+  - User prompts, action discovery queries, tool schemas, tool arguments, and downstream server responses can all become visible to the MCP client and model provider.
+  - Routed tools may expose third-party account data, files, repositories, browser state, database rows, or workspace context depending on which servers are enabled.
+  - Hosted Klavis APIs and SDKs are separate from the local open-source router; review Klavis account, API-key, and data-handling terms before using hosted instances.
+disclosure: >-
+  Klavis AI also offers hosted MCP integration APIs and managed Strata services;
+  this entry focuses on the open-source `strata-mcp` router in the public repo.
+sourceUrls:
+  - "https://github.com/Klavis-AI/klavis"
+  - "https://github.com/Klavis-AI/klavis/blob/main/README.md"
+  - "https://github.com/Klavis-AI/klavis/blob/main/open-strata/README.md"
+  - "https://github.com/Klavis-AI/klavis/blob/main/open-strata/pyproject.toml"
+  - "https://github.com/Klavis-AI/klavis/blob/main/open-strata/src/strata/server.py"
+  - "https://github.com/Klavis-AI/klavis/blob/main/open-strata/src/strata/tools.py"
+  - "https://github.com/Klavis-AI/klavis/blob/main/open-strata/src/strata/config.py"
+  - "https://github.com/Klavis-AI/klavis/blob/main/open-strata/src/strata/cli.py"
+  - "https://github.com/Klavis-AI/klavis/blob/main/MCP_SERVER_GUIDE.md"
+  - "https://github.com/Klavis-AI/klavis/blob/main/LICENSE"
+  - "https://pypi.org/pypi/strata-mcp/json"
+  - "https://www.klavis.ai/docs/concepts/strata"
+  - "https://www.klavis.ai/docs/mcp-server/overview"
+tags:
+  - mcp-router
+  - tool-routing
+  - integrations
+  - oauth
+  - developer-tools
+keywords:
+  - Klavis Strata
+  - strata-mcp
+  - Klavis MCP router
+  - MCP tool router
+  - progressive MCP tools
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Klavis Strata is an open-source MCP router that sits between Claude and a set of
+configured MCP servers. Instead of exposing every downstream tool at once, it
+provides a smaller set of discovery, inspection, execution, documentation
+search, and authentication helper tools.
+
+The open-source implementation lives under `open-strata` in the Klavis
+repository and is published as the `strata-mcp` Python package. It can run in
+stdio mode for local MCP clients or in HTTP/SSE mode for deployments that need a
+network transport.
+
+## Source Review
+
+- https://github.com/Klavis-AI/klavis
+- https://github.com/Klavis-AI/klavis/blob/main/README.md
+- https://github.com/Klavis-AI/klavis/blob/main/open-strata/README.md
+- https://github.com/Klavis-AI/klavis/blob/main/open-strata/pyproject.toml
+- https://github.com/Klavis-AI/klavis/blob/main/open-strata/src/strata/server.py
+- https://github.com/Klavis-AI/klavis/blob/main/open-strata/src/strata/tools.py
+- https://github.com/Klavis-AI/klavis/blob/main/open-strata/src/strata/config.py
+- https://github.com/Klavis-AI/klavis/blob/main/open-strata/src/strata/cli.py
+- https://github.com/Klavis-AI/klavis/blob/main/MCP_SERVER_GUIDE.md
+- https://github.com/Klavis-AI/klavis/blob/main/LICENSE
+- https://pypi.org/pypi/strata-mcp/json
+- https://www.klavis.ai/docs/concepts/strata
+- https://www.klavis.ai/docs/mcp-server/overview
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+open-strata README, package metadata, router source files, PyPI metadata, and
+Klavis docs for current install commands, router modes, tool names, supported
+transports, and hosted-service boundaries.
+
+## Features
+
+- Discover available actions across configured downstream MCP servers.
+- Retrieve detailed tool schema and parameter information before execution.
+- Execute a selected action on a selected downstream server.
+- Search server documentation by keyword.
+- Handle authentication failure flows for configured servers.
+- Add, list, enable, disable, and remove downstream MCP server configurations through the `strata` CLI.
+- Run as a stdio MCP server for local clients.
+- Run as an HTTP/SSE router when a network transport is required.
+- Watch the configuration file and sync enabled server connections while running.
+
+## Installation
+
+Install the open-source router package:
+
+```bash
+pipx install strata-mcp
+```
+
+Add trusted downstream MCP servers with the Strata CLI. For example, a stdio
+server can be registered by name:
+
+```bash
+strata add --type stdio playwright npx @playwright/mcp@latest
+```
+
+Then configure Claude to launch Strata:
+
+```json
+{
+  "mcpServers": {
+    "strata": {
+      "command": "strata"
+    }
+  }
+}
+```
+
+For HTTP or SSE downstream servers, use private endpoint placeholders and
+secret-managed headers rather than committing real bearer tokens or URLs into
+project files.
+
+## Use Cases
+
+- Keep Claude's visible tool list smaller when a project uses many MCP servers.
+- Discover which downstream server action is relevant before executing it.
+- Route several trusted stdio and HTTP MCP servers behind one local MCP entry.
+- Search tool documentation before calling a risky or unfamiliar action.
+- Temporarily disable servers that should not be available in a given project.
+- Experiment with progressive tool discovery for agent workflows.
+
+## Safety and Privacy
+
+Strata concentrates access to many downstream tools. That is useful for context
+management, but it also means one MCP server entry can route to high-impact
+actions across files, browsers, SaaS APIs, databases, developer tools, and other
+systems. Audit each downstream server independently and keep the enabled set as
+small as the task allows.
+
+The open-source source code stores server configuration in a local JSON file and
+supports headers and environment variables for downstream servers. Treat this
+configuration as sensitive. The HTTP/SSE router mode should be deployed behind
+appropriate network controls because it can expose access to every enabled
+server action.
+
+## Duplicate Check
+
+No `Klavis-AI/klavis`, `strata-mcp`, Klavis Strata, or matching source URL was
+found in `content/mcp`.

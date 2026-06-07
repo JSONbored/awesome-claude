@@ -1,0 +1,163 @@
+---
+title: FastAPI-MCP Server
+slug: fastapi-mcp
+category: mcp
+description: >-
+  FastAPI-native package that exposes FastAPI endpoints as Model Context
+  Protocol tools while preserving schemas, docs, and existing authentication
+  dependencies.
+cardDescription: >-
+  Turn a FastAPI app into an MCP server with native schemas, docs, auth
+  dependencies, and ASGI transport.
+seoTitle: FastAPI-MCP Server for Claude
+seoDescription: >-
+  Use FastAPI-MCP to expose FastAPI endpoints as MCP tools for Claude and other
+  MCP clients while preserving request models, response models, documentation,
+  and authentication dependencies.
+author: Tadata
+authorProfileUrl: "https://github.com/tadata-org"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: FastAPI-MCP
+brandDomain: fastapi-mcp.tadata.com
+repoUrl: "https://github.com/tadata-org/fastapi_mcp"
+documentationUrl: "https://fastapi-mcp.tadata.com/"
+packageUrl: "https://pypi.org/project/fastapi-mcp/"
+installable: true
+installCommand: "uv add fastapi-mcp"
+usageSnippet: "Install `fastapi-mcp`, mount `FastApiMCP(app)` into a reviewed FastAPI app, and expose only endpoints that are safe for agent tool use."
+copySnippet: |-
+  from fastapi import FastAPI
+  from fastapi_mcp import FastApiMCP
+
+  app = FastAPI()
+
+  mcp = FastApiMCP(app)
+  mcp.mount()
+configSnippet: |-
+  from fastapi import FastAPI
+  from fastapi_mcp import FastApiMCP
+
+  app = FastAPI()
+
+  mcp = FastApiMCP(app)
+  mcp.mount()
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer, with Python 3.12 recommended by the project.
+  - Existing FastAPI application or a reviewed FastAPI service design.
+  - uv or pip for installing fastapi-mcp.
+  - Clear endpoint allowlist and authentication policy before exposing API operations to an agent.
+  - MCP client that can connect to the mounted or separately deployed MCP endpoint.
+safetyNotes:
+  - FastAPI-MCP can expose real API operations as tools; do not blindly expose admin, destructive, payment, credential, or production-write endpoints.
+  - Preserve and test FastAPI authentication dependencies before letting agents call protected tools.
+  - Review request models, side effects, rate limits, and authorization boundaries for each endpoint.
+  - Prefer explicit allowlists and non-production deployments for early MCP testing.
+privacyNotes:
+  - Request schemas, response schemas, OpenAPI docs, route names, validation errors, and endpoint outputs may be visible to the MCP client and model.
+  - Endpoint calls can expose user data, internal identifiers, tokens in payloads, and business logic.
+  - Keep API credentials, service secrets, and test-user tokens out of prompts, repository files, and logs.
+sourceUrls:
+  - "https://github.com/tadata-org/fastapi_mcp"
+  - "https://fastapi-mcp.tadata.com/"
+  - "https://pypi.org/project/fastapi-mcp/"
+tags:
+  - fastapi
+  - python
+  - api
+  - auth
+  - server-framework
+keywords:
+  - FastAPI MCP
+  - fastapi-mcp Claude
+  - expose FastAPI endpoints as MCP tools
+  - FastAPI Model Context Protocol
+  - FastAPI MCP auth
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+FastAPI-MCP is a FastAPI-native package for exposing FastAPI endpoints as MCP
+tools. It preserves request and response schemas, endpoint documentation, and
+FastAPI dependency-based authentication patterns instead of treating an API only
+as a generic OpenAPI document.
+
+The simplest documented pattern mounts an MCP server directly into a FastAPI app
+so the MCP endpoint becomes available from the application.
+
+## Source Review
+
+- https://github.com/tadata-org/fastapi_mcp
+- https://fastapi-mcp.tadata.com/
+- https://pypi.org/project/fastapi-mcp/
+
+These sources were reviewed on **2026-06-05**. Prefer live documentation for
+current installation, mounting, deployment, authentication, and endpoint
+selection options.
+
+## Features
+
+- Expose FastAPI endpoints as MCP tools.
+- Preserve request models, response models, and route documentation.
+- Use existing FastAPI dependencies for authentication and authorization.
+- Mount the MCP server into the same app or deploy it separately.
+- Use ASGI transport directly with the FastAPI app.
+- Add MCP support with minimal code for existing services.
+
+## Installation
+
+Install with `uv`:
+
+```sh
+uv add fastapi-mcp
+```
+
+Or install with `pip`:
+
+```sh
+pip install fastapi-mcp
+```
+
+Basic FastAPI integration:
+
+```python
+from fastapi import FastAPI
+from fastapi_mcp import FastApiMCP
+
+app = FastAPI()
+
+mcp = FastApiMCP(app)
+mcp.mount()
+```
+
+The generated MCP endpoint is available from the mounted application path
+documented by the package.
+
+## Use Cases
+
+- Give an internal agent controlled access to selected FastAPI operations.
+- Add MCP tooling to a FastAPI backend without writing a custom MCP server.
+- Preserve existing Pydantic schema descriptions as tool context.
+- Reuse FastAPI authentication dependencies for protected MCP tools.
+- Test an API as agent-callable tools in staging before production rollout.
+
+## Safety and Privacy
+
+Treat FastAPI-MCP as a way to expose live API capabilities, not just docs. Review
+which endpoints become tools, preserve authentication, and block destructive or
+sensitive operations unless they are explicitly intended for agent use.
+
+Endpoint schemas, payloads, validation errors, and responses may reveal internal
+data models or user data. Use redacted test data and non-production environments
+when experimenting.
+
+## Duplicate Check
+
+Existing entries include generic OpenAPI and API tooling, but no
+`tadata-org/fastapi_mcp` entry was found in `content/mcp`. This entry is for the
+FastAPI-native MCP package and belongs in `content/mcp`.

@@ -1,0 +1,205 @@
+---
+title: Docker MCP Gateway
+slug: docker-mcp-gateway
+category: mcp
+description: >-
+  Docker's MCP CLI plugin and gateway for running catalog, OCI, registry, or
+  local-file MCP servers in containers and exposing them to Claude, Cursor, VS
+  Code, and other MCP clients through a shared gateway profile.
+cardDescription: >-
+  Run selected MCP servers in Docker containers, organize them into profiles,
+  connect clients to one gateway, and manage catalogs, secrets, OAuth, tool
+  allowlists, logging, and container limits.
+seoTitle: Docker MCP Gateway for Claude
+seoDescription: >-
+  Configure Docker MCP Gateway with Claude and other MCP clients to run MCP
+  servers in containers, manage Docker MCP Catalog entries, use profiles,
+  restrict tools, handle secrets and OAuth, and expose stdio, SSE, or streaming
+  gateway transports.
+author: docker
+authorProfileUrl: "https://github.com/docker"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Docker MCP Gateway
+brandDomain: docker.com
+repoUrl: "https://github.com/docker/mcp-gateway"
+documentationUrl: "https://github.com/docker/mcp-gateway/blob/main/docs/mcp-gateway.md"
+packageUrl: "https://hub.docker.com/r/docker/mcp-gateway"
+installable: true
+installCommand: "docker mcp gateway run"
+usageSnippet: "Run `docker mcp gateway run` with the default profile, or pass a profile, selected servers, selected tools, a TCP port, and the desired transport before connecting Claude or another MCP client."
+copySnippet: |-
+  docker mcp gateway run --profile dev-tools
+configSnippet: |-
+  {
+    "mcpServers": {
+      "MCP_DOCKER": {
+        "command": "docker",
+        "args": [
+          "mcp",
+          "gateway",
+          "run"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Docker Desktop `4.59+` with the MCP Toolkit feature enabled, or the Docker MCP CLI plugin built and installed independently.
+  - Docker Engine access for running containerized MCP servers and the gateway.
+  - MCP server sources prepared from Docker MCP Catalog entries, OCI images, MCP Registry entries, or local YAML/JSON server files.
+  - Profiles feature enabled when using `docker mcp profile` and profile-based gateway runs outside Docker Desktop.
+  - Secrets, OAuth flows, allowed tools, network policy, filesystem mounts, CPU, memory, and image signature policy reviewed before sharing a gateway.
+safetyNotes:
+  - Docker MCP Gateway can start and route multiple MCP servers, so each connected client inherits the permissions of every enabled server and tool.
+  - Container isolation reduces host exposure, but Docker Engine or Docker socket access is still highly privileged and should be limited to trusted users.
+  - The gateway supports tool allowlists, CPU limits, memory limits, network blocking, secret blocking, image signature verification, and interceptors; review defaults before production use.
+  - Catalog, profile, local-file, and registry references can change which servers run behind the gateway, especially when watch mode or shared profiles are enabled.
+  - Tool-call logging is enabled by default in the documented flags, so avoid routing secrets or sensitive payloads unless logging and retention are controlled.
+privacyNotes:
+  - Docker MCP Gateway may process MCP server definitions, catalog entries, profile exports, local server files, secrets, OAuth tokens, tool names, tool arguments, tool outputs, logs, container metadata, and Docker Engine metadata.
+  - Secrets may come from Docker Desktop secrets or `.env` fallback files; keep those stores out of version control and restrict filesystem permissions.
+  - Tool outputs can include local files, API responses, credentials, account data, or infrastructure details depending on the enabled downstream MCP servers.
+  - Exported profiles and catalogs can reveal internal server names, image references, allowed tools, configuration values, and service endpoints.
+sourceUrls:
+  - "https://github.com/docker/mcp-gateway/blob/main/README.md"
+  - "https://github.com/docker/mcp-gateway/blob/main/LICENSE"
+  - "https://github.com/docker/mcp-gateway/blob/main/docs/mcp-gateway.md"
+  - "https://github.com/docker/mcp-gateway/blob/main/docs/security.md"
+  - "https://github.com/docker/mcp-gateway/blob/main/docs/profiles.md"
+  - "https://github.com/docker/mcp-gateway/blob/main/docs/generator/reference/docker_mcp_gateway_run.yaml"
+tags:
+  - gateway
+  - docker
+  - orchestration
+  - security
+  - infrastructure
+keywords:
+  - Docker MCP Gateway
+  - docker mcp
+  - Docker MCP Toolkit
+  - Docker MCP Catalog
+  - containerized MCP servers
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Docker MCP Gateway is the open-source Docker CLI plugin and gateway behind
+Docker Desktop's MCP Toolkit. It runs selected MCP servers in containers,
+groups them through profiles, and exposes them to MCP clients through one
+gateway command or network transport.
+
+The repository documents gateway runs over stdio by default, plus SSE or
+streaming transports when serving one or more clients over a TCP port. Servers
+can come from Docker MCP Catalog references, OCI images, MCP Registry entries,
+or local server definition files.
+
+## Source Review
+
+- https://github.com/docker/mcp-gateway
+- https://github.com/docker/mcp-gateway/blob/main/README.md
+- https://github.com/docker/mcp-gateway/blob/main/LICENSE
+- https://github.com/docker/mcp-gateway/blob/main/docs/mcp-gateway.md
+- https://github.com/docker/mcp-gateway/blob/main/docs/security.md
+- https://github.com/docker/mcp-gateway/blob/main/docs/profiles.md
+- https://github.com/docker/mcp-gateway/blob/main/docs/generator/reference/docker_mcp_gateway_run.yaml
+- https://hub.docker.com/r/docker/mcp-gateway
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, gateway guide, security guide, profiles guide, generated command
+reference, Docker image page, and license file for current gateway behavior,
+feature flags, deployment options, and security controls.
+
+## Features
+
+- Run MCP servers inside Docker containers with CPU and memory limits.
+- Expose a unified MCP gateway over stdio, SSE, or streaming transports.
+- Organize MCP servers into reusable profiles for client-specific tool sets.
+- Pull servers from Docker MCP Catalog, OCI images, MCP Registry entries, or local server files.
+- Connect clients such as Claude Desktop, Cursor, and VS Code to the selected profile.
+- Enable or disable selected tools per gateway run or profile.
+- Manage catalogs, server definitions, profile import/export, and OCI-backed profile sharing.
+- Handle secrets through Docker Desktop secrets or explicit fallback secret files.
+- Support OAuth flows for MCP servers that require service authentication.
+- Use logging, call tracing, network blocking, secret blocking, image signature verification, and interceptors.
+
+## Installation
+
+Recent Docker Desktop versions include the Docker MCP CLI plugin when the MCP
+Toolkit feature is enabled. The repository also documents building and
+installing the plugin manually:
+
+```bash
+git clone https://github.com/docker/mcp-gateway.git
+cd mcp-gateway
+mkdir -p "$HOME/.docker/cli-plugins/"
+make docker-mcp
+```
+
+Run the default stdio gateway with:
+
+```bash
+docker mcp gateway run
+```
+
+Connect Claude Desktop or another stdio MCP client with:
+
+```json
+{
+  "mcpServers": {
+    "MCP_DOCKER": {
+      "command": "docker",
+      "args": [
+        "mcp",
+        "gateway",
+        "run"
+      ]
+    }
+  }
+}
+```
+
+For shared client access, run the gateway with a port and streaming transport,
+or pass a profile, selected servers, selected tools, secret sources, and other
+gateway flags from the documented command reference.
+
+## Use Cases
+
+- Give Claude a single managed entrypoint to a curated Docker MCP Toolkit profile.
+- Run MCP servers from Docker MCP Catalog in isolated containers instead of directly on the host.
+- Share a team profile through exported profile files or OCI references.
+- Test one server image with `docker mcp gateway run --server` before adding it to a catalog.
+- Restrict risky tools with explicit tool allowlists before connecting a client.
+- Use the gateway's SSE or streaming transport for multi-client access.
+- Keep API keys in Docker Desktop secrets or a controlled secret file instead of ad hoc environment variables.
+- Review tool-call logs and container limits when evaluating an MCP server for production.
+
+## Safety and Privacy
+
+Docker MCP Gateway is a control point for other MCP servers. It can reduce risk
+by running servers in containers, limiting CPU and memory, blocking secrets,
+blocking network access, enforcing selected tools, and checking image
+signatures. Those controls still depend on the chosen catalog entries, profiles,
+server files, gateway flags, Docker permissions, and client approval settings.
+
+Treat Docker Engine access as privileged. A user or service that can run
+containers, mount host paths, access the Docker socket, or load arbitrary server
+definitions can affect the host. Review every server's volume mounts, allowed
+hosts, secrets, OAuth scopes, and enabled tools before connecting Claude or
+another agent client.
+
+The gateway and its downstream servers can see tool arguments, tool outputs,
+logs, traces, catalog metadata, profile exports, container image names, Docker
+metadata, secrets, OAuth tokens, and local file paths. Keep exported profiles,
+catalogs, `.env` files, and logs out of public repositories.
+
+## Duplicate Check
+
+No `docker/mcp-gateway` source entry or Docker MCP Gateway entry was found in
+`content/mcp`. The existing Docker MCP Server for Claude entry is distinct
+content about Docker API management from Claude rather than Docker's MCP
+Toolkit gateway and catalog runner.

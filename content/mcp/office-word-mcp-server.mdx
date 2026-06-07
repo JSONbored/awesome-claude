@@ -1,0 +1,161 @@
+---
+title: Office Word MCP Server
+slug: office-word-mcp-server
+category: mcp
+description: >-
+  MCP server for creating, reading, formatting, analyzing, converting, and
+  manipulating Microsoft Word documents.
+cardDescription: >-
+  Let Claude create, inspect, format, merge, protect, convert, and edit Word
+  documents through MCP tools.
+seoTitle: Office Word MCP Server for Claude
+seoDescription: >-
+  Configure Office Word MCP Server with Claude and other MCP clients to create,
+  read, format, merge, protect, convert, comment on, and manipulate Microsoft
+  Word documents.
+author: GongRzhe
+authorProfileUrl: "https://github.com/gongrzhe"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Office Word MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/gongrzhe/Office-Word-MCP-Server"
+documentationUrl: "https://github.com/gongrzhe/Office-Word-MCP-Server/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/office-word-mcp-server/json"
+installable: true
+installCommand: "uvx --from office-word-mcp-server word_mcp_server"
+usageSnippet: "Run `uvx --from office-word-mcp-server word_mcp_server` from an MCP client to create, read, format, and manipulate Word documents."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "word-document-server": {
+        "command": "uvx",
+        "args": ["--from", "office-word-mcp-server", "word_mcp_server"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "word-document-server": {
+        "command": "uvx",
+        "args": ["--from", "office-word-mcp-server", "word_mcp_server"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.11 or newer available to the MCP client runtime.
+  - uvx available for package execution.
+  - Word documents or a working directory where generated documents can be created.
+  - Review rules for documents the agent may overwrite, merge, convert, protect, or sign.
+safetyNotes:
+  - Office Word MCP Server can create, copy, merge, convert, protect, sign, and modify Word documents.
+  - Editing tools can alter paragraphs, tables, lists, images, footnotes, endnotes, formatting, styles, comments, and document properties.
+  - Review generated documents before sharing, signing, converting to PDF, or using them as legal, financial, HR, policy, or customer-facing material.
+  - Keep backups before running broad search-and-replace, merge, delete, protection, or formatting operations on important documents.
+privacyNotes:
+  - Word documents can contain personal data, comments, tracked decisions, hidden metadata, embedded images, confidential business text, signatures, and restricted-editing sections.
+  - Document text, filenames, comments, metadata, prompts, tool arguments, generated outputs, and conversion logs may be visible to the MCP client and model provider.
+  - Review generated files and extracted comments before sharing logs, diffs, or documents publicly.
+sourceUrls:
+  - "https://github.com/gongrzhe/Office-Word-MCP-Server"
+  - "https://github.com/gongrzhe/Office-Word-MCP-Server/blob/main/README.md"
+  - "https://github.com/gongrzhe/Office-Word-MCP-Server/blob/main/pyproject.toml"
+  - "https://pypi.org/pypi/office-word-mcp-server/json"
+tags:
+  - word
+  - documents
+  - office
+  - formatting
+  - document-automation
+keywords:
+  - Office Word MCP
+  - Word MCP Server
+  - office-word-mcp-server
+  - Microsoft Word MCP
+  - document automation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Office Word MCP Server lets MCP clients create, inspect, format, convert, merge,
+protect, and manipulate Microsoft Word documents. It exposes document
+management, content creation, rich text formatting, table formatting, comments,
+footnotes, endnotes, document protection, and conversion operations.
+
+The upstream README documents local installation and `uvx` usage through the
+`office-word-mcp-server` PyPI package. The package exposes the `word_mcp_server`
+command for MCP clients.
+
+## Source Review
+
+- https://github.com/gongrzhe/Office-Word-MCP-Server
+- https://github.com/gongrzhe/Office-Word-MCP-Server/blob/main/README.md
+- https://github.com/gongrzhe/Office-Word-MCP-Server/blob/main/pyproject.toml
+- https://pypi.org/pypi/office-word-mcp-server/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+PyPI metadata for current package version, command name, Python requirement,
+dependencies, tool coverage, and setup guidance.
+
+## Features
+
+- Create new Word documents with metadata.
+- Extract text, document outline, properties, statistics, and comments.
+- Add headings, paragraphs, tables, images, page breaks, lists, footnotes, and
+  endnotes.
+- Format text, table cells, borders, colors, alignment, padding, and styles.
+- Search and replace text.
+- Copy and merge documents.
+- Convert Word documents to PDF.
+- Add password protection, restricted editing sections, and digital signatures.
+- Verify document authenticity and integrity.
+
+## Installation
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "word-document-server": {
+      "command": "uvx",
+      "args": ["--from", "office-word-mcp-server", "word_mcp_server"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to create a structured report or proposal document.
+- Extract comments, outline, and document statistics for review.
+- Apply consistent formatting to headings, paragraphs, and tables.
+- Merge several documents into one draft.
+- Convert a reviewed document to PDF.
+- Add or inspect document protection and signature metadata.
+
+## Safety and Privacy
+
+Document automation can quickly change important files. Keep backups, use a
+review step before sharing outputs, and require human approval before signing,
+protecting, converting, merging, deleting, or broadly reformatting important
+documents.
+
+Word files can contain sensitive text, comments, metadata, embedded images,
+signatures, and hidden context. Review generated files, extracted comments, and
+conversion output before sharing them outside the trusted project boundary.
+
+## Duplicate Check
+
+No `gongrzhe/Office-Word-MCP-Server` entry, `office-word-mcp-server` package
+entry, or matching source URL was found in `content/mcp`. This is distinct from
+Excel and PowerPoint MCP servers because it focuses specifically on Microsoft
+Word document workflows.

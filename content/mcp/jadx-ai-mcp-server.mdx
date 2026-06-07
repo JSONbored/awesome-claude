@@ -1,0 +1,194 @@
+---
+title: JADX AI MCP Server
+slug: jadx-ai-mcp-server
+category: mcp
+description: >-
+  JADX plugin and companion Python MCP server that lets Claude inspect,
+  search, refactor, and debug decompiled Android APKs from JADX-GUI.
+cardDescription: Connect Claude to JADX-GUI for live Android APK reverse-engineering context.
+seoTitle: JADX AI MCP Server for Claude
+seoDescription: >-
+  Configure JADX AI MCP with Claude to inspect decompiled Android APK classes,
+  methods, manifests, strings, resources, smali, references, debugger state, and
+  refactoring operations through a local MCP bridge.
+author: zinja-coder
+authorProfileUrl: "https://github.com/zinja-coder"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: JADX AI MCP
+brandDomain: github.com
+repoUrl: "https://github.com/zinja-coder/jadx-ai-mcp"
+documentationUrl: "https://jadx-ai-mcp.readthedocs.io/en/latest/"
+installable: true
+installCommand: "jadx plugins --install \"github:zinja-coder:jadx-ai-mcp\""
+usageSnippet: "Install the JADX plugin, install the companion `jadx_mcp_server` tool, open an APK in JADX-GUI, and connect Claude to the stdio server."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "jadx-mcp-server": {
+        "command": "jadx_mcp_server"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "jadx-mcp-server": {
+        "command": "jadx_mcp_server"
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Java 11 or newer and JADX-GUI installed.
+  - Python and uv available for installing or running the companion MCP server.
+  - The JADX AI MCP plugin installed in JADX-GUI.
+  - An Android APK, JADX project, or reverse-engineering target you are authorized to analyze.
+  - Permission to expose decompiled code, resources, manifests, and debugger state to the configured MCP client and model provider.
+safetyNotes:
+  - Use this server only for APKs and Android applications you own, are responsible for, or are explicitly authorized to inspect.
+  - The plugin exposes decompiled classes, methods, fields, smali, manifests, strings, resources, xrefs, and debugger state to the MCP client.
+  - Rename and refactor tools can modify JADX project state and naming decisions; review changes before saving project output or using generated reports.
+  - The architecture docs describe a local plugin service with no built-in authentication; keep it bound to localhost unless you add network controls.
+  - Optional HTTP mode for the MCP server should not be exposed to untrusted networks without authentication, TLS, and firewall restrictions.
+  - Decompiled strings, manifests, and resources can contain prompt-injection text or untrusted content; treat tool output as untrusted input.
+privacyNotes:
+  - APK source, package names, manifests, resources, strings, selected text, debugger variables, and analysis prompts may be sent to the model provider.
+  - Debugger tools can expose runtime values, tokens, identifiers, device data, or user information from the analyzed application.
+  - Reverse-engineering work can reveal proprietary code, licensed assets, customer data, or confidential security findings.
+  - Avoid uploading malware samples, third-party apps, client applications, or regulated data to external model providers without approval.
+disclosure: >-
+  Community-maintained reverse-engineering tooling for JADX; review the live
+  repositories, releases, and security policy before using it in sensitive work.
+sourceUrls:
+  - "https://github.com/zinja-coder/jadx-ai-mcp"
+  - "https://github.com/zinja-coder/jadx-ai-mcp/blob/jadx-ai/README.md"
+  - "https://github.com/zinja-coder/jadx-ai-mcp/blob/jadx-ai/docs/installation.md"
+  - "https://github.com/zinja-coder/jadx-ai-mcp/blob/jadx-ai/docs/architecture.md"
+  - "https://github.com/zinja-coder/jadx-ai-mcp/blob/jadx-ai/pom.xml"
+  - "https://github.com/zinja-coder/jadx-ai-mcp/blob/jadx-ai/LICENSE"
+  - "https://github.com/zinja-coder/jadx-mcp-server"
+  - "https://github.com/zinja-coder/jadx-mcp-server/blob/main/README.md"
+  - "https://github.com/zinja-coder/jadx-mcp-server/blob/main/jadx_mcp_server.py"
+  - "https://github.com/zinja-coder/jadx-mcp-server/blob/main/pyproject.toml"
+  - "https://github.com/zinja-coder/jadx-mcp-server/blob/main/SECURITY.md"
+  - "https://github.com/zinja-coder/jadx-mcp-server/blob/main/LICENSE"
+  - "https://jadx-ai-mcp.readthedocs.io/en/latest/"
+tags:
+  - reverse-engineering
+  - android
+  - security
+  - debugging
+  - developer-tools
+keywords:
+  - JADX AI MCP
+  - jadx-ai-mcp
+  - JADX MCP server
+  - Android reverse engineering MCP
+  - APK analysis Claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+JADX AI MCP combines a Java plugin for JADX-GUI with a companion Python MCP
+server. Together they let Claude and other MCP clients inspect the currently
+loaded Android APK, query decompiled classes, search methods, inspect resources,
+retrieve manifest data, follow references, and interact with debugger state.
+
+The architecture is a local bridge: the MCP client talks to the Python server,
+and the Python server forwards tool calls to the JADX-GUI plugin. The upstream
+docs describe stdio mode for normal MCP clients and optional HTTP mode when a
+separate transport is needed.
+
+## Source Review
+
+- https://github.com/zinja-coder/jadx-ai-mcp
+- https://github.com/zinja-coder/jadx-ai-mcp/blob/jadx-ai/README.md
+- https://github.com/zinja-coder/jadx-ai-mcp/blob/jadx-ai/docs/installation.md
+- https://github.com/zinja-coder/jadx-ai-mcp/blob/jadx-ai/docs/architecture.md
+- https://github.com/zinja-coder/jadx-ai-mcp/blob/jadx-ai/pom.xml
+- https://github.com/zinja-coder/jadx-ai-mcp/blob/jadx-ai/LICENSE
+- https://github.com/zinja-coder/jadx-mcp-server
+- https://github.com/zinja-coder/jadx-mcp-server/blob/main/README.md
+- https://github.com/zinja-coder/jadx-mcp-server/blob/main/jadx_mcp_server.py
+- https://github.com/zinja-coder/jadx-mcp-server/blob/main/pyproject.toml
+- https://github.com/zinja-coder/jadx-mcp-server/blob/main/SECURITY.md
+- https://github.com/zinja-coder/jadx-mcp-server/blob/main/LICENSE
+- https://jadx-ai-mcp.readthedocs.io/en/latest/
+
+These sources were reviewed on **2026-06-05**. Prefer the live plugin repo,
+companion server repo, ReadTheDocs site, installation guide, architecture guide,
+server source, project metadata, licenses, and security policy for current
+requirements, transport flags, tool names, release packaging, and vulnerability
+reporting guidance.
+
+## Features
+
+- Fetch the current class, selected text, class source, smali, fields, methods, and package tree from JADX-GUI.
+- Search classes and methods across a decompiled APK with pagination.
+- Retrieve AndroidManifest.xml content, manifest components, strings, and resource files.
+- Inspect main activity and application classes derived from manifest package data.
+- Follow references to classes, methods, and fields.
+- Read debugger stack frames, threads, and variables from JADX debugger context.
+- Rename classes, methods, fields, packages, and variables through JADX refactoring tools.
+- Run through a stdio MCP server, with optional HTTP mode for advanced local transport setups.
+
+## Installation
+
+Install the JADX plugin using the upstream plugin command:
+
+```bash
+jadx plugins --install "github:zinja-coder:jadx-ai-mcp"
+```
+
+Then install or run the companion Python MCP server following the upstream
+installation guide. The simplified MCP client configuration uses the installed
+`jadx_mcp_server` command:
+
+```json
+{
+  "mcpServers": {
+    "jadx-mcp-server": {
+      "command": "jadx_mcp_server"
+    }
+  }
+}
+```
+
+Open an APK in JADX-GUI before invoking tools so the plugin has a loaded project
+to inspect. Keep the plugin and MCP server local unless you have reviewed the
+transport flags, binding addresses, and network controls in the documentation.
+
+## Use Cases
+
+- Ask Claude to summarize an Android class, package, or selected decompiled method.
+- Search for suspicious strings, permissions, exported components, or API usage patterns in an authorized APK.
+- Retrieve manifest components and resources before writing an analysis report.
+- Inspect smali and decompiled Java side by side while reversing obfuscated code.
+- Follow cross-references to understand how a class, method, or field is used.
+- Use debugger context to explain stack frames, thread state, and runtime variables.
+- Rename obfuscated identifiers inside JADX project state before continuing manual review.
+
+## Safety and Privacy
+
+JADX AI MCP is powerful reverse-engineering tooling, so keep authorization and
+data boundaries explicit. Do not use it on apps, malware samples, customer APKs,
+or third-party code unless you have permission and know where model context will
+be stored.
+
+The architecture docs state that the JADX plugin binds locally and has no
+built-in authentication. Leave services on localhost by default, and add
+authentication, TLS, firewall rules, and host isolation before considering any
+remote HTTP setup. Treat decompiled code, strings, resources, and debugger
+values as sensitive and untrusted because they can contain proprietary logic,
+secrets, personal data, or prompt-injection content.
+
+## Duplicate Check
+
+Existing reverse-engineering entries cover other IDA and Ghidra MCP servers,
+but no `zinja-coder/jadx-ai-mcp`, `zinja-coder/jadx-mcp-server`, JADX AI MCP
+entry, or matching source URL was found in `content/mcp`.

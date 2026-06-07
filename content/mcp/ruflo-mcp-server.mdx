@@ -1,0 +1,192 @@
+---
+title: Ruflo MCP Server
+slug: ruflo-mcp-server
+category: mcp
+description: >-
+  MCP server and CLI for Ruflo's multi-agent Claude Code and Codex workflow
+  harness, exposing tools for swarms, agents, memory, hooks, daemons, plugins,
+  federation, and project automation.
+cardDescription: >-
+  Connect Claude to Ruflo for supervised multi-agent coordination, persistent
+  memory, hooks, plugins, federation, and workflow automation.
+seoTitle: Ruflo MCP Server for Claude
+seoDescription: >-
+  Configure Ruflo MCP Server with Claude to use multi-agent swarms, memory,
+  hooks, daemons, plugins, federation, and project automation from a local MCP
+  server.
+author: RuvNet
+authorProfileUrl: "https://github.com/ruvnet"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Ruflo
+brandDomain: github.com
+repoUrl: "https://github.com/ruvnet/ruflo"
+documentationUrl: "https://raw.githubusercontent.com/ruvnet/ruflo/main/README.md"
+packageUrl: "https://registry.npmjs.org/ruflo"
+installable: true
+installCommand: "npx ruflo@latest init wizard"
+usageSnippet: "Register the MCP server with `claude mcp add ruflo -- npx -y ruflo@latest mcp start` or launch it from another MCP client with the same stdio command."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ruflo": {
+        "command": "npx",
+        "args": ["-y", "ruflo@latest", "mcp", "start"]
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add ruflo -- npx -y ruflo@latest mcp start
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Node.js 20 or newer.
+  - Claude Code or another MCP client that can launch stdio servers.
+  - A repository where Ruflo-generated `.claude`, `.claude-flow`, settings, helpers, hooks, and memory files are acceptable.
+  - Review of which MCP tool groups, hooks, plugins, providers, and background workers should be enabled.
+  - A plan for any optional HTTP transport, federation, remote model providers, or hosted UI integrations before enabling them.
+safetyNotes:
+  - Ruflo's full CLI install can add project files, MCP configuration, hooks, helper scripts, memory state, commands, skills, and background automation.
+  - The MCP surface includes tools for agent spawning, swarm coordination, memory operations, hook execution, daemon control, plugins, security scans, and federation.
+  - Background daemons and hooks can run automatically based on session, task, file, or worker events; inspect generated settings before relying on them.
+  - Some workflows can execute shell commands, edit project files, scan dependencies, start services, or dispatch multi-step agent tasks.
+  - Federation and HTTP transport modes can expose agent coordination outside the local stdio boundary; keep them disabled unless you have reviewed network trust.
+  - Use least-privilege repositories and require human review before accepting generated code, security fixes, plugin installs, or automated workflow changes.
+privacyNotes:
+  - Ruflo memory, hooks, logs, telemetry-style metrics, worker output, prompts, code snippets, file paths, and task history may be stored under project-local state.
+  - Agent memory and embeddings can preserve sensitive implementation details beyond the current chat session.
+  - Federation, hosted UI, remote provider, plugin, or HTTP transport workflows may move task context beyond the local machine if enabled.
+  - Security scans, dependency checks, and code analysis can reveal private package names, vulnerabilities, paths, branch names, and repository structure.
+  - Review `.claude`, `.claude-flow`, helper scripts, logs, and exported memory before sharing a repository or support bundle.
+disclosure: >-
+  MIT-licensed open source MCP server and CLI from RuvNet. Ruflo also references
+  hosted demos, plugins, sponsorship, and broader commercial ecosystem pages;
+  this entry covers the source-available local MCP server path.
+sourceUrls:
+  - "https://raw.githubusercontent.com/ruvnet/ruflo/main/LICENSE"
+  - "https://raw.githubusercontent.com/ruvnet/ruflo/main/SECURITY.md"
+  - "https://raw.githubusercontent.com/ruvnet/ruflo/main/docs/USERGUIDE.md"
+  - "https://raw.githubusercontent.com/ruvnet/ruflo/main/ruflo/package.json"
+  - "https://raw.githubusercontent.com/ruvnet/ruflo/main/ruflo/bin/ruflo.js"
+  - "https://raw.githubusercontent.com/ruvnet/ruflo/main/ruflo/src/mcp-bridge/index.js"
+  - "https://raw.githubusercontent.com/ruvnet/ruflo/main/v3/%40claude-flow/mcp/package.json"
+tags:
+  - agents
+  - swarm
+  - memory
+  - claude-code
+  - workflow-automation
+keywords:
+  - Ruflo MCP
+  - Ruflo MCP Server
+  - Claude Flow MCP
+  - multi-agent MCP
+  - swarm MCP
+  - Claude Code MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Ruflo MCP Server connects Claude and other MCP clients to Ruflo, a multi-agent
+workflow harness for Claude Code and Codex-style development environments. Its
+MCP mode exposes coordinated agents, swarms, memory, hooks, daemon controls,
+plugins, security workflows, and federation-oriented tools.
+
+Use it when Claude needs supervised access to a broad local agent-coordination
+system rather than a narrow single-purpose tool. Start with the minimal MCP
+server configuration, then enable hooks, daemons, plugins, and federation only
+after reviewing their generated files and runtime behavior.
+
+## Source Review
+
+- https://github.com/ruvnet/ruflo
+- https://raw.githubusercontent.com/ruvnet/ruflo/main/README.md
+- https://registry.npmjs.org/ruflo
+- https://raw.githubusercontent.com/ruvnet/ruflo/main/LICENSE
+- https://raw.githubusercontent.com/ruvnet/ruflo/main/SECURITY.md
+- https://raw.githubusercontent.com/ruvnet/ruflo/main/docs/USERGUIDE.md
+- https://raw.githubusercontent.com/ruvnet/ruflo/main/ruflo/package.json
+- https://raw.githubusercontent.com/ruvnet/ruflo/main/ruflo/bin/ruflo.js
+- https://raw.githubusercontent.com/ruvnet/ruflo/main/ruflo/src/mcp-bridge/index.js
+- https://raw.githubusercontent.com/ruvnet/ruflo/main/v3/%40claude-flow/mcp/package.json
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm metadata, license, security policy, user guide, Ruflo package
+metadata, CLI entrypoint, MCP bridge, and MCP package metadata for current setup
+and behavior details.
+
+## Features
+
+- Start a Ruflo MCP server for Claude Code or other stdio-compatible MCP
+  clients.
+- Coordinate agent swarms and spawn specialized agents for coding, review,
+  testing, docs, architecture, and security workflows.
+- Store and search persistent memory through Ruflo and AgentDB-backed workflows.
+- Use hook-based task routing, session lifecycle events, progress checks, and
+  worker dispatch.
+- Manage plugins that add tools, hooks, workers, providers, and domain-specific
+  workflows.
+- Run background daemon commands for audits, optimization, mapping, and worker
+  status.
+- Configure MCP tool groups to reduce the enabled surface for specific
+  workflows.
+- Use optional federation and HTTP transport modes when remote coordination is
+  intentionally required.
+
+## Installation
+
+Run the interactive initializer when you want Ruflo to set up a project:
+
+```bash
+npx ruflo@latest init wizard
+```
+
+For Claude Code MCP registration, use the upstream command:
+
+```bash
+claude mcp add ruflo -- npx -y ruflo@latest mcp start
+```
+
+Other MCP clients can launch the same stdio server:
+
+```json
+{
+  "mcpServers": {
+    "ruflo": {
+      "command": "npx",
+      "args": ["-y", "ruflo@latest", "mcp", "start"]
+    }
+  }
+}
+```
+
+Keep the initial install minimal until you know which hooks, daemons, plugins,
+memory backends, model providers, and transports your project actually needs.
+
+## Use Cases
+
+- Coordinate several specialized agents around a large feature, refactor, or
+  review plan.
+- Persist useful implementation patterns and retrieve them across later Claude
+  sessions.
+- Route tasks through review, testing, documentation, architecture, or security
+  agent roles.
+- Run progress checks and worker status commands from a Claude Code session.
+- Add a focused plugin only after reviewing the extra MCP tools, hooks, and
+  background behavior it enables.
+- Experiment with local-only swarm coordination before considering federation or
+  HTTP transport.
+
+## Safety and Privacy
+
+Ruflo is closer to an agent operating layer than a small utility server. Treat
+its MCP tools, generated project files, hooks, daemons, plugin installs, and
+memory state as changes to your development environment, not just chat context.
+
+Run it first in a disposable or low-risk repository, inspect generated files, and
+limit enabled tool groups. Do not enable federation, hosted UI, HTTP transport,
+remote providers, or autonomous background workers until your team has reviewed
+what task context, code, memory, logs, and credentials could be exposed.

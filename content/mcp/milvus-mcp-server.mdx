@@ -1,0 +1,204 @@
+---
+title: Milvus MCP Server
+slug: milvus-mcp-server
+category: mcp
+description: >-
+  MCP server from Zilliz for connecting Claude to Milvus vector database
+  collections, text search, vector search, hybrid search, inserts, deletes,
+  indexes, collection loading, database switching, and collection metadata.
+cardDescription: Connect Claude to Milvus collections, vector search, hybrid search, and database operations.
+seoTitle: Milvus MCP Server for Claude
+seoDescription: >-
+  Configure Milvus MCP Server with Claude Desktop, Cursor, and other MCP clients
+  to list collections, query and search Milvus, create collections, insert or
+  delete entities, manage indexes, load collections, and switch databases.
+author: Zilliz
+authorProfileUrl: "https://github.com/zilliztech"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Milvus
+brandDomain: milvus.io
+repoUrl: "https://github.com/zilliztech/mcp-server-milvus"
+documentationUrl: "https://github.com/zilliztech/mcp-server-milvus#readme"
+installable: true
+installCommand: "git clone https://github.com/zilliztech/mcp-server-milvus.git && cd mcp-server-milvus && uv run src/mcp_server_milvus/server.py --milvus-uri <milvus-uri>"
+usageSnippet: "Ask Claude to list collections, inspect schema and stats, run a filtered vector search, and require approval before inserts, deletes, index changes, database switches, or collection loading changes."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "milvus": {
+        "command": "uv",
+        "args": [
+          "--directory",
+          "mcp-server-milvus",
+          "run",
+          "src/mcp_server_milvus/server.py",
+          "--milvus-uri",
+          "<milvus-uri>"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "milvus": {
+        "command": "uv",
+        "args": [
+          "--directory",
+          "mcp-server-milvus",
+          "run",
+          "src/mcp_server_milvus/server.py",
+          "--milvus-uri",
+          "<milvus-uri>"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.10 or newer.
+  - uv installed for the README's recommended run path.
+  - Running local or remote Milvus instance.
+  - Milvus URI, token, and database name selected for the target environment.
+  - Review of whether stdio, SSE, or Streamable HTTP mode is appropriate for the MCP client.
+  - Human approval policy for collection creation, inserts, upserts, deletes, index changes, database switching, and collection loading or release operations.
+safetyNotes:
+  - Milvus MCP can read collection metadata, query collections, and run text, vector, text-similarity, multi-vector, and hybrid searches.
+  - Write-capable tools can create collections, insert data, upsert data, delete entities, create indexes, bulk insert records, load collections, release collections, and switch databases.
+  - The README notes that the environment file has higher priority than command-line arguments, so stale or unexpected environment settings can silently change the target Milvus instance.
+  - SSE and Streamable HTTP modes can expose database operations over HTTP and should be network-restricted.
+  - Remote Milvus or Zilliz Cloud credentials should be scoped to the collections and databases Claude is allowed to access.
+privacyNotes:
+  - Milvus collections can contain embeddings, sparse vectors, scalar fields, IDs, document chunks, metadata, image or multimodal references, query logs, and retrieval results that reveal sensitive project or user data.
+  - Milvus URI, tokens, database names, collection names, vector payloads, filter expressions, and retrieved records should stay out of prompts, issues, logs, screenshots, and committed files.
+  - Search results can include private source content that may be re-exposed in model transcripts or downstream tickets.
+  - HTTP transports, debug tools, query traces, failed-search artifacts, backups, and benchmark datasets need retention and access-control review.
+sourceUrls:
+  - "https://github.com/zilliztech/mcp-server-milvus/blob/main/README.md"
+  - "https://github.com/zilliztech/mcp-server-milvus/blob/main/pyproject.toml"
+  - "https://github.com/zilliztech/mcp-server-milvus/blob/main/src/mcp_server_milvus/server.py"
+  - "https://github.com/zilliztech/mcp-server-milvus/blob/main/LICENSE"
+tags:
+  - milvus
+  - vector-database
+  - embeddings
+  - retrieval
+  - zilliz
+keywords:
+  - Milvus MCP
+  - Milvus MCP Server
+  - mcp-server-milvus
+  - Zilliz MCP
+  - vector database MCP
+  - hybrid search MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Milvus MCP Server is a Zilliz-maintained Model Context Protocol server for
+Milvus vector database workflows. It gives Claude and other MCP clients access
+to Milvus collections, text search, vector search, hybrid search, query filters,
+collection metadata, index operations, inserts, deletes, database switching, and
+collection load or release operations.
+
+The README documents stdio, SSE, and Streamable HTTP modes. For local Claude or
+Cursor use, stdio is the safest starting point because the server process stays
+attached to the MCP client instead of exposing HTTP endpoints.
+
+## Source Review
+
+- https://github.com/zilliztech/mcp-server-milvus
+- https://github.com/zilliztech/mcp-server-milvus#readme
+- https://github.com/zilliztech/mcp-server-milvus/blob/main/README.md
+- https://github.com/zilliztech/mcp-server-milvus/blob/main/pyproject.toml
+- https://github.com/zilliztech/mcp-server-milvus/blob/main/src/mcp_server_milvus/server.py
+- https://github.com/zilliztech/mcp-server-milvus/blob/main/LICENSE
+
+These sources were reviewed on **2026-06-06**. The public Milvus website and
+docs blocked command-line URL checks, and PyPI metadata for the package name
+points to a different homepage, so this entry intentionally uses only reachable
+GitHub source evidence from `zilliztech/mcp-server-milvus`.
+
+## Features
+
+- Zilliz-maintained MCP server for Milvus.
+- Stdio, SSE, and Streamable HTTP modes.
+- Collection listing and collection information tools.
+- Text search, vector search, text-similarity search, multi-vector search, and hybrid search.
+- Filtered query operations.
+- Collection creation with schema and vector configuration.
+- Insert, upsert, bulk insert, and delete-entity operations.
+- Index creation and index information tools.
+- Collection stats, loading progress, load, and release tools.
+- Database listing and database switching.
+- Environment-file and command-line configuration for Milvus URI, token, and database.
+
+## Installation
+
+Clone the repository and run the server with `uv` as documented in the README:
+
+```sh
+git clone https://github.com/zilliztech/mcp-server-milvus.git
+cd mcp-server-milvus
+uv run src/mcp_server_milvus/server.py --milvus-uri <milvus-uri>
+```
+
+For an MCP client configuration that launches from a checked-out copy:
+
+```json
+{
+  "mcpServers": {
+    "milvus": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "mcp-server-milvus",
+        "run",
+        "src/mcp_server_milvus/server.py",
+        "--milvus-uri",
+        "<milvus-uri>"
+      ]
+    }
+  }
+}
+```
+
+Review the target URI, token, database, and environment file before starting the
+server. The README says the environment file takes priority over command-line
+arguments.
+
+## Use Cases
+
+- Ask Claude to list Milvus collections before selecting a retrieval source.
+- Inspect collection metadata and stats while debugging ingestion.
+- Run vector, text, or hybrid searches with explicit limits and output fields.
+- Query collections with filter expressions.
+- Create an experimental collection for a local evaluation.
+- Insert or upsert curated records after reviewing the target collection and schema.
+- Delete entities with a reviewed filter expression.
+- Load or release collections while troubleshooting serving state.
+
+## Safety and Privacy
+
+Milvus MCP is a database control surface. It can retrieve sensitive indexed
+content and can also mutate collections, indexes, entities, and database
+selection. Require human approval for writes, deletes, index creation, database
+switching, load, and release operations.
+
+Treat vectors and metadata as sensitive even when source text is not returned.
+Embeddings, IDs, filters, collection names, and retrieval results can reveal
+private context. Restrict SSE and Streamable HTTP modes to trusted networks and
+avoid leaking Milvus tokens or query results into prompts, logs, or committed
+configuration.
+
+## Duplicate Check
+
+Existing content includes a general Milvus tools entry in `content/tools`, but
+no Milvus MCP Server entry was found in `content/mcp`. This submission is scoped
+to `zilliztech/mcp-server-milvus`, the MCP server, and does not change the
+existing Milvus database listing.

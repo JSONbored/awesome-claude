@@ -1,0 +1,178 @@
+---
+title: Browserbase MCP Server
+slug: browserbase-mcp-server
+category: mcp
+description: >-
+  Browser automation MCP server that lets AI agents control cloud browser
+  sessions through Browserbase and Stagehand for navigation, actions,
+  observation, and extraction.
+cardDescription: >-
+  Give Claude, Cursor, VS Code, and other MCP clients cloud browser automation
+  through Browserbase and Stagehand.
+seoTitle: Browserbase MCP Server for Claude
+seoDescription: >-
+  Configure Browserbase MCP with Claude, Cursor, VS Code, and other MCP clients
+  to start cloud browser sessions, navigate pages, act on UI elements, observe
+  actionable elements, extract data, and close sessions.
+author: Browserbase
+authorProfileUrl: "https://github.com/browserbase"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Browserbase MCP
+brandDomain: browserbase.com
+repoUrl: "https://github.com/browserbase/mcp-server-browserbase"
+documentationUrl: "https://docs.browserbase.com/integrations/mcp/introduction"
+websiteUrl: "https://www.browserbase.com"
+packageUrl: "https://www.npmjs.com/package/@browserbasehq/mcp"
+installable: true
+installCommand: "npx @browserbasehq/mcp"
+usageSnippet: "Use the hosted `https://mcp.browserbase.com/mcp` endpoint, or run `npx @browserbasehq/mcp` with Browserbase project credentials and model API configuration."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "browserbase": {
+        "command": "npx",
+        "args": ["@browserbasehq/mcp"],
+        "env": {
+          "BROWSERBASE_API_KEY": "YOUR_BROWSERBASE_API_KEY",
+          "BROWSERBASE_PROJECT_ID": "YOUR_BROWSERBASE_PROJECT_ID",
+          "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "browserbase": {
+        "command": "npx",
+        "args": ["@browserbasehq/mcp"],
+        "env": {
+          "BROWSERBASE_API_KEY": "YOUR_BROWSERBASE_API_KEY",
+          "BROWSERBASE_PROJECT_ID": "YOUR_BROWSERBASE_PROJECT_ID",
+          "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Browserbase account, API key, and project ID for self-hosted npm usage.
+  - Model provider key when using a custom or self-hosted Stagehand model configuration.
+  - MCP client with hosted HTTP support or a stdio bridge.
+  - Clear target websites and automation boundaries for each browser session.
+safetyNotes:
+  - Browserbase MCP can create browser sessions, navigate URLs, perform page actions, observe actionable elements, extract data, and close sessions.
+  - Cloud browser automation can submit forms, change account state, trigger transactions, scrape sites, or violate website terms if not scoped.
+  - Require human approval before login, purchase, messaging, account-change, destructive, or high-volume browsing actions.
+  - Review proxy, verified identity, persisted context, and keep-alive options before using them with sensitive sites.
+privacyNotes:
+  - Browser session URLs, page content, extracted data, screenshots or observations, cookies or persisted context, API keys, and prompts may be sent to Browserbase, Stagehand/model providers, and the MCP client.
+  - Persisted browser contexts can retain login state, cookies, and site data across sessions.
+  - Protect Browserbase, project, and model-provider keys in config files, logs, screenshots, and shared prompts.
+sourceUrls:
+  - "https://github.com/browserbase/mcp-server-browserbase"
+  - "https://docs.browserbase.com/integrations/mcp/introduction"
+  - "https://www.npmjs.com/package/@browserbasehq/mcp"
+  - "https://stagehand.dev"
+  - "https://docs.stagehand.dev/"
+tags:
+  - browser
+  - automation
+  - cloud
+  - stagehand
+  - scraping
+keywords:
+  - Browserbase MCP
+  - Browserbase MCP Server
+  - Stagehand MCP
+  - cloud browser MCP
+  - browserbase automation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Browserbase MCP Server gives AI agents cloud browser automation through
+Browserbase and Stagehand. It exposes tools for starting or reusing a browser
+session, navigating to URLs, acting on pages, observing actionable elements,
+extracting data, and ending sessions.
+
+The repository describes this project as the self-hostable version of
+Browserbase's hosted MCP server, with support for hosted HTTP and self-hosted
+stdio usage through the `@browserbasehq/mcp` npm package.
+
+## Source Review
+
+- https://github.com/browserbase/mcp-server-browserbase
+- https://docs.browserbase.com/integrations/mcp/introduction
+- https://www.npmjs.com/package/@browserbasehq/mcp
+- https://stagehand.dev
+- https://docs.stagehand.dev/
+
+These sources were reviewed on **2026-06-05**. Prefer the live docs for current
+hosted endpoint behavior, package name, Stagehand model options, Browserbase
+flags, and client-specific setup.
+
+## Features
+
+- Hosted Browserbase MCP endpoint and self-hostable npm package.
+- Tools for `start`, `end`, `navigate`, `act`, `observe`, and `extract`.
+- Browserbase cloud browser sessions.
+- Stagehand-powered browser automation and extraction.
+- Optional proxies, verified identity, keep-alive, persisted contexts, viewport
+  sizing, and custom model configuration.
+- Docker and local build options for self-hosting.
+
+## Installation
+
+For self-hosted stdio usage through npm:
+
+```json
+{
+  "mcpServers": {
+    "browserbase": {
+      "command": "npx",
+      "args": ["@browserbasehq/mcp"],
+      "env": {
+        "BROWSERBASE_API_KEY": "YOUR_BROWSERBASE_API_KEY",
+        "BROWSERBASE_PROJECT_ID": "YOUR_BROWSERBASE_PROJECT_ID",
+        "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY"
+      }
+    }
+  }
+}
+```
+
+For clients with hosted MCP support, the docs also describe the hosted
+Browserbase MCP endpoint. Use the repository and Browserbase docs for current
+transport, key, and model-provider setup.
+
+## Use Cases
+
+- Give an agent a cloud browser for web UI testing.
+- Extract structured data from pages after navigation.
+- Use Stagehand actions to interact with web apps.
+- Run browser automation without launching a local browser.
+- Compare hosted MCP and self-hosted npm setups for different client support.
+
+## Safety and Privacy
+
+Cloud browser automation can affect real web accounts and third-party services.
+Keep sessions scoped, avoid high-volume automation unless authorized, and require
+review before submitting forms, making purchases, sending messages, changing
+account settings, or collecting personal data.
+
+Treat Browserbase contexts, cookies, extracted page content, prompts, API keys,
+and model-provider traffic as sensitive. Review persisted-context settings before
+automating logged-in workflows.
+
+## Duplicate Check
+
+No `browserbase/mcp-server-browserbase` entry or source URL was found in
+`content/mcp`. This entry is separate from local browser-profile tools,
+Playwright MCP, Chrome MCP, and BrowserMCP because it focuses on Browserbase
+cloud sessions and Stagehand.

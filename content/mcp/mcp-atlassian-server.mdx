@@ -1,0 +1,188 @@
+---
+title: MCP Atlassian Server
+slug: mcp-atlassian-server
+category: mcp
+description: >-
+  Community MCP server for Jira and Confluence that supports Atlassian Cloud and
+  Server/Data Center deployments with search, create, update, transition,
+  comments, attachments, pages, and agile tools.
+cardDescription: >-
+  Connect MCP clients to Jira and Confluence Cloud or Server/Data Center through
+  the self-hosted mcp-atlassian server.
+seoTitle: MCP Atlassian Server for Claude
+seoDescription: >-
+  Configure mcp-atlassian with Claude Desktop, Cursor, Windsurf, VS Code, and
+  other MCP clients for Jira and Confluence search, issue updates, page edits,
+  comments, attachments, agile boards, sprints, and service desk workflows.
+author: sooperset
+authorProfileUrl: "https://github.com/sooperset"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: MCP Atlassian
+brandDomain: mcp-atlassian.soomiles.com
+repoUrl: "https://github.com/sooperset/mcp-atlassian"
+documentationUrl: "https://mcp-atlassian.soomiles.com"
+packageUrl: "https://pypi.org/project/mcp-atlassian/"
+installable: true
+installCommand: "uvx mcp-atlassian"
+usageSnippet: "Set Jira and Confluence URLs plus API tokens or PATs in the MCP client environment, then run `uvx mcp-atlassian`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcp-atlassian": {
+        "command": "uvx",
+        "args": ["mcp-atlassian"],
+        "env": {
+          "JIRA_URL": "https://your-company.atlassian.net",
+          "JIRA_USERNAME": "YOUR_EMAIL",
+          "JIRA_API_TOKEN": "YOUR_JIRA_API_TOKEN",
+          "CONFLUENCE_URL": "https://your-company.atlassian.net/wiki",
+          "CONFLUENCE_USERNAME": "YOUR_EMAIL",
+          "CONFLUENCE_API_TOKEN": "YOUR_CONFLUENCE_API_TOKEN"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mcp-atlassian": {
+        "command": "uvx",
+        "args": ["mcp-atlassian"],
+        "env": {
+          "JIRA_URL": "https://your-company.atlassian.net",
+          "JIRA_USERNAME": "YOUR_EMAIL",
+          "JIRA_API_TOKEN": "YOUR_JIRA_API_TOKEN",
+          "CONFLUENCE_URL": "https://your-company.atlassian.net/wiki",
+          "CONFLUENCE_USERNAME": "YOUR_EMAIL",
+          "CONFLUENCE_API_TOKEN": "YOUR_CONFLUENCE_API_TOKEN"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer and uvx.
+  - Jira and/or Confluence Cloud, Server, or Data Center access.
+  - Atlassian API tokens, personal access tokens, or OAuth configuration with the required scopes.
+  - MCP client such as Claude Desktop, Cursor, Windsurf, VS Code, or another compatible host.
+  - Agreement on which Jira projects, Confluence spaces, and service desk queues an agent may access.
+safetyNotes:
+  - mcp-atlassian can search, create, update, transition, comment on, and delete Jira issues or Confluence pages depending on configured permissions.
+  - Tools can modify project status, issue fields, worklogs, comments, page content, attachments, labels, versions, components, and service desk data.
+  - Require human approval before creating or transitioning issues, changing permissions-sensitive fields, updating Confluence pages, deleting content, or posting comments.
+  - Protect API tokens, PATs, OAuth credentials, and environment files.
+privacyNotes:
+  - Jira issue content, Confluence pages, comments, attachments, user profiles, service desk data, agile metadata, internal links, and credentials may be exposed to the MCP client and model.
+  - Atlassian project data can contain customer incidents, security vulnerabilities, roadmap plans, HR data, legal notes, or internal runbooks.
+  - Review workspace permissions and model-provider retention before connecting production Atlassian instances.
+sourceUrls:
+  - "https://github.com/sooperset/mcp-atlassian"
+  - "https://mcp-atlassian.soomiles.com"
+  - "https://mcp-atlassian.soomiles.com/llms.txt"
+  - "https://mcp-atlassian.soomiles.com/docs/tools-reference.md"
+  - "https://pypi.org/project/mcp-atlassian/"
+tags:
+  - jira
+  - confluence
+  - atlassian
+  - project-management
+  - documentation
+keywords:
+  - mcp-atlassian
+  - Atlassian MCP server
+  - Jira MCP
+  - Confluence MCP
+  - Jira Confluence MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Atlassian is a community MCP server for Jira and Confluence. It supports
+Atlassian Cloud and Server/Data Center deployments and exposes tools for Jira
+issues, Confluence pages, search, comments, attachments, agile workflows, service
+desk data, fields, versions, links, and metrics.
+
+The project documents uvx, Docker, pip, and source installations plus stdio,
+SSE, and streamable HTTP transport options.
+
+## Source Review
+
+- https://github.com/sooperset/mcp-atlassian
+- https://mcp-atlassian.soomiles.com
+- https://mcp-atlassian.soomiles.com/llms.txt
+- https://mcp-atlassian.soomiles.com/docs/tools-reference.md
+- https://pypi.org/project/mcp-atlassian/
+
+These sources were reviewed on **2026-06-05**. Prefer the live docs for current
+authentication options, tool list, Cloud versus Server/Data Center compatibility,
+HTTP transport guidance, and troubleshooting.
+
+## Features
+
+- Jira Cloud and Jira Server/Data Center support.
+- Confluence Cloud and Confluence Server/Data Center support.
+- API token, personal access token, and OAuth authentication paths.
+- Jira JQL search, issue creation, issue updates, transitions, comments,
+  worklogs, attachments, agile boards, sprints, versions, and service desk
+  tools.
+- Confluence CQL search, page read/create/update/delete, comments, labels,
+  attachments, and page analytics tools.
+- uvx, Docker, pip, source, stdio, SSE, and streamable HTTP setup options.
+
+## Installation
+
+For a Cloud API-token setup:
+
+```json
+{
+  "mcpServers": {
+    "mcp-atlassian": {
+      "command": "uvx",
+      "args": ["mcp-atlassian"],
+      "env": {
+        "JIRA_URL": "https://your-company.atlassian.net",
+        "JIRA_USERNAME": "YOUR_EMAIL",
+        "JIRA_API_TOKEN": "YOUR_JIRA_API_TOKEN",
+        "CONFLUENCE_URL": "https://your-company.atlassian.net/wiki",
+        "CONFLUENCE_USERNAME": "YOUR_EMAIL",
+        "CONFLUENCE_API_TOKEN": "YOUR_CONFLUENCE_API_TOKEN"
+      }
+    }
+  }
+}
+```
+
+Server/Data Center deployments use personal access tokens instead of Cloud email
+and API-token pairs. See the authentication docs for OAuth and deployment
+details.
+
+## Use Cases
+
+- Search Jira issues with JQL and summarize active work.
+- Create or update Jira issues after human review.
+- Transition tickets through a workflow.
+- Search Confluence with CQL and retrieve relevant pages.
+- Update Confluence runbooks or release notes with reviewed edits.
+
+## Safety and Privacy
+
+Atlassian tools often hold operational and customer-sensitive data. Use
+least-privilege tokens, limit projects and spaces, and require approval before an
+agent changes issue state, page content, comments, attachments, or service desk
+records.
+
+Treat issue contents, Confluence pages, attachments, comments, project metadata,
+and API tokens as sensitive. Do not expose production Atlassian content to model
+providers without organizational approval.
+
+## Duplicate Check
+
+`content/mcp/jira-mcp-server.mdx` covers Atlassian's official Jira and
+Confluence MCP integration. This entry covers the separate
+`sooperset/mcp-atlassian` community server with Cloud and Server/Data Center
+self-hosted deployment options.

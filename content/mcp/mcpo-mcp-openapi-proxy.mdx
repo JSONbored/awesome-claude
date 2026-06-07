@@ -1,0 +1,162 @@
+---
+title: mcpo MCP OpenAPI Proxy
+slug: mcpo-mcp-openapi-proxy
+category: mcp
+description: >-
+  MCP-to-OpenAPI proxy server that wraps MCP servers and exposes their tools as
+  standard HTTP endpoints with generated OpenAPI schemas and docs.
+cardDescription: >-
+  Turn MCP servers into OpenAPI-compatible HTTP tool servers with API-key auth,
+  generated docs, config-file routing, hot reload, SSE, Streamable HTTP, and OAuth support.
+seoTitle: mcpo MCP OpenAPI Proxy for Claude
+seoDescription: >-
+  Configure mcpo with Claude, Open WebUI, and other agent tools to expose MCP
+  servers as OpenAPI-compatible HTTP endpoints with API-key auth, generated
+  docs, SSE, Streamable HTTP, config files, and OAuth support.
+author: open-webui
+authorProfileUrl: "https://github.com/open-webui"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: mcpo
+brandDomain: github.com
+repoUrl: "https://github.com/open-webui/mcpo"
+documentationUrl: "https://github.com/open-webui/mcpo/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/mcpo/json"
+installable: true
+installCommand: "uvx mcpo --port 8000 --api-key YOUR_API_KEY -- YOUR_MCP_SERVER_COMMAND"
+usageSnippet: "Run `uvx mcpo --port 8000 --api-key YOUR_API_KEY -- YOUR_MCP_SERVER_COMMAND` to expose an MCP server through OpenAPI-compatible HTTP endpoints."
+copySnippet: |-
+  uvx mcpo --port 8000 --api-key YOUR_API_KEY -- YOUR_MCP_SERVER_COMMAND
+configSnippet: |-
+  {
+    "mcpServers": {
+      "example": {
+        "command": "uvx",
+        "args": ["mcp-server-time", "--local-timezone=America/New_York"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: advanced
+prerequisites:
+  - Python 3.11 or newer, with uv recommended by the upstream project.
+  - An MCP server command, SSE endpoint, or Streamable HTTP endpoint you are authorized to proxy.
+  - API key or other access control planned before exposing the HTTP server beyond local testing.
+  - Network binding, reverse proxy, root path, and TLS settings reviewed before deployment.
+  - OAuth storage, headers, and config-file hot reload reviewed when proxying remote or authenticated MCP servers.
+safetyNotes:
+  - mcpo exposes proxied MCP tools as HTTP endpoints, so every tool permission from the wrapped MCP server becomes reachable through the OpenAPI surface.
+  - Use a strong API key and avoid publishing the server to untrusted networks without authentication, TLS, and network controls.
+  - Proxied tools may read, write, delete, send, deploy, or execute depending on the wrapped MCP server.
+  - Config-file and hot-reload mode can add or change proxied servers while mcpo is running.
+  - OAuth and custom header support can store or forward access tokens, bearer tokens, and service credentials.
+privacyNotes:
+  - Tool names, OpenAPI schemas, prompts, arguments, tool outputs, proxied server URLs, headers, API keys, OAuth tokens, logs, and generated docs may be visible to mcpo, connected clients, and model providers.
+  - OpenAPI docs can reveal the available tool surface and parameter shapes for sensitive MCP servers.
+  - Store config files and OAuth token storage in locations with appropriate filesystem permissions.
+  - Avoid proxying private MCP tools into shared OpenAPI workspaces unless all downstream users are authorized for the underlying tools.
+sourceUrls:
+  - "https://github.com/open-webui/mcpo"
+  - "https://github.com/open-webui/mcpo/blob/main/README.md"
+  - "https://github.com/open-webui/mcpo/blob/main/pyproject.toml"
+  - "https://github.com/open-webui/mcpo/blob/main/OAUTH_GUIDE.md"
+  - "https://pypi.org/pypi/mcpo/json"
+tags:
+  - openapi
+  - proxy
+  - gateway
+  - http
+  - oauth
+keywords:
+  - mcpo
+  - MCP OpenAPI proxy
+  - MCP to OpenAPI
+  - Open WebUI MCP
+  - MCP HTTP proxy
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+mcpo is an MCP-to-OpenAPI proxy server. It launches or connects to MCP servers
+and exposes their tools as OpenAPI-compatible HTTP endpoints with generated
+schemas and interactive docs, making MCP tools usable from agents and apps that
+expect OpenAPI servers.
+
+The upstream README documents `uvx mcpo`, direct Python installs, Docker usage,
+API-key authentication, config-file routing for multiple MCP servers, hot reload,
+SSE and Streamable HTTP MCP backends, root-path deployment, and OAuth support.
+
+## Source Review
+
+- https://github.com/open-webui/mcpo
+- https://github.com/open-webui/mcpo/blob/main/README.md
+- https://github.com/open-webui/mcpo/blob/main/pyproject.toml
+- https://github.com/open-webui/mcpo/blob/main/OAUTH_GUIDE.md
+- https://pypi.org/pypi/mcpo/json
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository,
+README, OAuth guide, package metadata, and PyPI metadata for current commands,
+Python requirements, deployment options, config-file behavior, auth settings,
+and supported MCP transports.
+
+## Features
+
+- Wrap stdio MCP server commands in OpenAPI-compatible HTTP endpoints.
+- Proxy SSE and Streamable HTTP MCP servers.
+- Generate OpenAPI schemas and interactive docs for proxied tools.
+- Require API-key authentication for OpenAPI access.
+- Serve several MCP servers from one config file.
+- Hot-reload config-file changes without restarting.
+- Support root-path deployment behind a reverse proxy.
+- Handle OAuth 2.1 flows for supported Streamable HTTP MCP servers.
+
+## Installation
+
+Run mcpo with uvx and an MCP server command:
+
+```bash
+uvx mcpo --port 8000 --api-key YOUR_API_KEY -- YOUR_MCP_SERVER_COMMAND
+```
+
+For a config-file based setup, use a Claude Desktop-style `mcpServers` config
+and start mcpo with that file:
+
+```bash
+uvx mcpo --config ./mcp-config.json
+```
+
+Add `--hot-reload` only when you want mcpo to watch the config file and reload
+server definitions while running.
+
+## Use Cases
+
+- Expose a local MCP server to OpenAPI-compatible agent runtimes.
+- Connect MCP tools to Open WebUI through generated OpenAPI endpoints.
+- Add API-key auth and generated docs around a stdio MCP server.
+- Proxy several MCP servers from a single config file.
+- Put MCP-backed tools behind an existing reverse proxy path.
+- Bridge OAuth-protected Streamable HTTP MCP servers into OpenAPI workflows.
+
+## Safety and Privacy
+
+mcpo does not make a wrapped tool safe by itself. It changes how the tool is
+reached. Any file, shell, browser, database, ticketing, messaging, deployment,
+or account-management power exposed by the underlying MCP server becomes
+available through the OpenAPI proxy.
+
+Use explicit API keys, bind carefully, and keep private MCP tools off shared
+networks unless every downstream client is authorized. Treat generated OpenAPI
+docs as a map of the available tool surface and protect them like the tools
+themselves.
+
+OAuth tokens, headers, API keys, and config files can become sensitive
+operational data. Keep them out of repositories, shared screenshots, logs, and
+prompts.
+
+## Duplicate Check
+
+No `open-webui/mcpo` entry, `mcpo` package entry, or matching source URL was
+found in `content/mcp`.

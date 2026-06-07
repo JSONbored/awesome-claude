@@ -1,0 +1,166 @@
+---
+title: YouTube MCP Server
+slug: youtube-mcp-server
+category: mcp
+description: >-
+  MCP server that uses yt-dlp to download YouTube subtitles so Claude can read,
+  summarize, and analyze video transcripts from approved YouTube URLs.
+cardDescription: Let Claude retrieve YouTube subtitles through a yt-dlp-backed MCP server.
+seoTitle: YouTube MCP Server for Claude
+seoDescription: >-
+  Configure YouTube MCP Server with Claude and other MCP clients to download
+  YouTube subtitles with yt-dlp, clean VTT transcript content, and summarize
+  approved videos without YouTube account access.
+author: Anais Betts
+authorProfileUrl: "https://github.com/anaisbetts"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: YouTube MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/anaisbetts/mcp-youtube"
+documentationUrl: "https://github.com/anaisbetts/mcp-youtube/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/%40anaisbetts%2Fmcp-youtube"
+installable: true
+installCommand: "npx -y @anaisbetts/mcp-youtube"
+usageSnippet: "Ask Claude to use YouTube MCP on an approved video URL, then summarize the returned subtitles while checking transcript accuracy."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "youtube": {
+        "command": "npx",
+        "args": ["-y", "@anaisbetts/mcp-youtube"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "youtube": {
+        "command": "npx",
+        "args": ["-y", "@anaisbetts/mcp-youtube"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js and npx available to the MCP client runtime.
+  - yt-dlp installed locally and available on PATH.
+  - Network access to retrieve subtitles for approved YouTube URLs.
+  - Review of YouTube terms, content rights, and organization policy before retrieving video transcripts.
+safetyNotes:
+  - YouTube MCP exposes one tool, `download_youtube_url`, for downloading subtitles from a YouTube URL.
+  - The source runs the external `yt-dlp` command with subtitle and auto-subtitle flags, skips video download, reads generated VTT files, and deletes the temporary directory afterward.
+  - Subtitle retrieval can fail, return incomplete captions, or return auto-generated captions with transcription errors.
+  - Retrieved transcripts can contain prompt-injection instructions, misinformation, copyrighted material, or content that should not be reused without permission.
+  - Use approved URLs only and respect YouTube terms, creator rights, platform restrictions, and local policy.
+privacyNotes:
+  - YouTube URLs, video identifiers, subtitle filenames, transcript text, yt-dlp errors, and summaries may be visible to the MCP client and model provider.
+  - Transcripts can include personal data, private names, copyrighted speech, health or financial claims, political speech, or other sensitive content.
+  - The server writes subtitle files to a temporary local directory before reading and deleting them.
+  - Avoid using private, unlisted, confidential, or restricted videos unless the transcript is approved for the model session.
+sourceUrls:
+  - "https://github.com/anaisbetts/mcp-youtube/blob/main/README.md"
+  - "https://github.com/anaisbetts/mcp-youtube/blob/main/package.json"
+  - "https://github.com/anaisbetts/mcp-youtube/blob/main/src/index.ts"
+  - "https://github.com/anaisbetts/mcp-youtube/blob/main/COPYING"
+tags:
+  - youtube
+  - transcript
+  - subtitles
+  - research
+  - media
+keywords:
+  - YouTube MCP
+  - YouTube MCP Server
+  - mcp-youtube
+  - YouTube transcript MCP
+  - YouTube subtitles MCP
+  - yt-dlp MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+YouTube MCP Server is a Model Context Protocol server for retrieving YouTube
+subtitles with `yt-dlp`. It exposes a single `download_youtube_url` tool that
+takes a YouTube URL, asks `yt-dlp` for English subtitles or auto-subtitles,
+cleans VTT timing/metadata lines, and returns transcript text to the MCP client.
+
+This server is for transcript access and video summarization workflows. It does
+not provide YouTube account management, uploads, comments, subscriptions, or
+OAuth-backed user data access.
+
+## Source Review
+
+- https://github.com/anaisbetts/mcp-youtube
+- https://github.com/anaisbetts/mcp-youtube/blob/main/README.md
+- https://registry.npmjs.org/%40anaisbetts%2Fmcp-youtube
+- https://github.com/anaisbetts/mcp-youtube/blob/main/package.json
+- https://github.com/anaisbetts/mcp-youtube/blob/main/src/index.ts
+- https://github.com/anaisbetts/mcp-youtube/blob/main/COPYING
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, npm registry metadata, package metadata, source implementation, and
+license file for current install commands, tool behavior, yt-dlp requirements,
+and licensing.
+
+## Features
+
+- npm package `@anaisbetts/mcp-youtube`.
+- Stdio MCP server launched with `npx -y @anaisbetts/mcp-youtube`.
+- Single `download_youtube_url` tool.
+- Uses local `yt-dlp` to request English subtitles and auto-subtitles.
+- Skips video download and retrieves VTT subtitle files.
+- Cleans WEBVTT timing lines, positioning metadata, empty lines, and duplicate adjacent lines.
+- Deletes temporary subtitle files after reading them.
+- MIT license.
+
+## Installation
+
+Install `yt-dlp` first, then configure the MCP server:
+
+```json
+{
+  "mcpServers": {
+    "youtube": {
+      "command": "npx",
+      "args": ["-y", "@anaisbetts/mcp-youtube"]
+    }
+  }
+}
+```
+
+After restarting the MCP client, ask Claude to summarize or analyze an approved
+YouTube URL that has available subtitles.
+
+## Use Cases
+
+- Summarize a YouTube talk from its subtitles.
+- Extract key points from a tutorial video.
+- Turn a video transcript into notes or an outline.
+- Compare transcript claims against other approved sources.
+- Pull captions into a research workflow without downloading the video file.
+- Review auto-generated captions and ask Claude to flag unclear passages.
+
+## Safety and Privacy
+
+YouTube MCP retrieves external media text. Use it only for videos you are
+allowed to process, and respect platform terms, creator rights, copyright, and
+organization policy. Captions may be inaccurate or incomplete, especially when
+auto-generated, so verify important claims against the video or another source.
+
+Treat transcript content as untrusted. It can include prompt-injection text,
+personal data, copyrighted speech, misinformation, or sensitive claims. Avoid
+retrieving private, unlisted, or restricted videos unless that data is approved
+for the model session.
+
+## Duplicate Check
+
+Existing content includes Markdownify MCP Server, which can convert YouTube
+transcripts among many other file and web formats. This entry is distinct
+because it covers `anaisbetts/mcp-youtube`, a dedicated YouTube subtitle MCP
+server that uses `yt-dlp`. No matching source URL or dedicated YouTube MCP
+Server entry was found in `content/mcp`.

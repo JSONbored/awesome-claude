@@ -109,6 +109,101 @@ Example body.
     );
   });
 
+  it("blocks cloned local scripts without immutable script source evidence", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Example MCP
+category: mcp
+description: Example MCP server with a Docker startup script.
+repoUrl: https://github.com/example/example-mcp
+documentationUrl: https://raw.githubusercontent.com/example/example-mcp/main/docs/setup.md
+installCommand: Clone the repository, then run ./docker-start.sh.
+safetyNotes:
+  - Runs a local Docker stack from the reviewed source.
+sourceUrls:
+  - https://raw.githubusercontent.com/example/example-mcp/main/README.md
+  - https://raw.githubusercontent.com/example/example-mcp/main/docker-compose.yml
+---
+
+Clone the repository and start the stack:
+
+\`\`\`bash
+git clone https://github.com/example/example-mcp.git
+cd example-mcp
+./docker-start.sh
+\`\`\`
+`;
+
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/mcp/example-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.ok).toBe(false);
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "mutable_script_install_source" }),
+      ]),
+    );
+    expect(output.failures.join("\n")).toContain(
+      "cloned local installer script without immutable script source evidence",
+    );
+  });
+
+  it("allows cloned local scripts with immutable script source evidence", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const revision = "9845479d0aeb7523abaab85723d0dfcf832fe1d3";
+    const content = `---
+title: Example MCP
+category: mcp
+description: Example MCP server with a pinned Docker startup script.
+repoUrl: https://github.com/example/example-mcp
+documentationUrl: https://raw.githubusercontent.com/example/example-mcp/${revision}/docs/setup.md
+installCommand: Clone the repository, check out reviewed commit ${revision}, then run ./docker-start.sh.
+safetyNotes:
+  - Runs a local Docker stack from the reviewed commit.
+sourceUrls:
+  - https://raw.githubusercontent.com/example/example-mcp/${revision}/README.md
+  - https://raw.githubusercontent.com/example/example-mcp/${revision}/docker-compose.yml
+  - https://raw.githubusercontent.com/example/example-mcp/${revision}/docker-start.sh
+---
+
+Clone the repository and start the stack:
+
+\`\`\`bash
+git clone https://github.com/example/example-mcp.git
+cd example-mcp
+git checkout ${revision}
+./docker-start.sh
+\`\`\`
+`;
+
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/mcp/example-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "mutable_script_install_source" }),
+      ]),
+    );
+  });
+
   it("allows maintainer-owned content to reference HeyClaude-hosted downloads when disclosures are present", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),
