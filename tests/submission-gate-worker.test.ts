@@ -418,7 +418,12 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("QUEUED_STALE_SECONDS");
     expect(source).toContain("PRIVATE_REVIEW_TIMEOUT_MS = 45_000");
     expect(source).toContain("withPrivateReviewTimeout(");
+    expect(source).toContain("privateReviewPublicFailureReason(error)");
     expect(source).toContain("Private corpus review response body timed out.");
+    expect(source).toContain('return "Private corpus review request failed.";');
+    expect(source).not.toContain(
+      "error instanceof Error && error.message\n        ? error.message",
+    );
     expect(source).toContain("controller.abort()");
     expect(source).toContain("response.text()");
     expect(source).toContain("const RETRY_BACKOFF_SECONDS = [60, 120, 300");
@@ -832,6 +837,38 @@ sourceUrls:
       role: "canonical",
       blocking: false,
     });
+    expect(sourceEvidenceCloseDecision(report)).toBeNull();
+  });
+
+  it("keeps retryable primary source fields blocking when other canonical evidence passes", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Primary Source Retry Fixture
+githubUrl: "https://github.com/example/project"
+repoUrl: "https://github.com/example/private-or-rate-limited"
+sourceUrls:
+  - "https://github.com/example/project/blob/main/README.md"
+---
+`,
+      vi.fn<typeof fetch>().mockImplementation(async (url) => {
+        if (String(url).includes("private-or-rate-limited")) {
+          return new Response(null, { status: 403 });
+        }
+        return new Response(null, { status: 200 });
+      }),
+    );
+
+    expect(report.status).toBe("retryable");
+    expect(report.warnings).toHaveLength(0);
+    expect(report.urls).toContainEqual(
+      expect.objectContaining({
+        field: "repoUrl",
+        status: "retryable",
+        role: "canonical",
+        blocking: true,
+        httpStatus: 403,
+      }),
+    );
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 

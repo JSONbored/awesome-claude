@@ -1,0 +1,200 @@
+---
+title: Ref Tools MCP Server
+slug: ref-tools-mcp-server
+category: mcp
+description: >-
+  MCP server for token-efficient documentation search and URL reading across
+  public docs plus Ref-indexed private repositories, PDFs, and documentation
+  sources.
+cardDescription: Search public and private technical docs from Claude with Ref's token-efficient MCP tools.
+seoTitle: Ref Tools MCP Server for Claude
+seoDescription: >-
+  Configure Ref Tools MCP with Claude to search documentation, read URLs as
+  markdown, use OpenAI deep-research compatible tool aliases, and handle API-key
+  and private-document privacy risks.
+author: Ref Tools
+authorProfileUrl: "https://github.com/ref-tools"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Ref Tools
+brandDomain: ref.tools
+repoUrl: "https://github.com/ref-tools/ref-tools-mcp"
+documentationUrl: "https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/README.md"
+installable: true
+installCommand: "REF_API_KEY=ref_api_key_here npx -y ref-tools-mcp@3.0.3"
+usageSnippet: "Use `ref_search_documentation` for a specific library, API, or framework question, then pass an exact result URL to `ref_read_url`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "Ref": {
+        "type": "http",
+        "url": "https://api.ref.tools/mcp?apiKey=<ref-api-key>"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "Ref": {
+        "command": "npx",
+        "args": ["-y", "ref-tools-mcp@3.0.3"],
+        "env": {
+          "REF_API_KEY": "<ref-api-key>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - Ref API key for hosted or stdio use.
+  - MCP client with streamable HTTP support, or Node.js and npm for the legacy stdio package.
+  - Agreement on whether the agent may search only public documentation or also Ref-indexed private resources.
+  - Private repositories, PDFs, and docs uploaded to Ref reviewed for sensitivity before enabling private search prompts.
+safetyNotes:
+  - Ref Tools sends search queries and read requests to the Ref API unless a custom `REF_URL` is configured.
+  - The server exposes `ref_search_documentation` and `ref_read_url`; OpenAI-style clients can receive compatible `search` and `fetch` tool names.
+  - Prompts can steer Ref toward private docs by using the private-source prompt path, so decide which users and clients may access private Ref resources.
+  - Protect Ref API keys, avoid placing keys in shareable config screenshots, and revoke keys when a client or workspace is retired.
+  - Review fetched URLs before relying on the returned markdown for security-sensitive implementation details.
+privacyNotes:
+  - Search queries, read URLs, Ref API keys, session ids, client identifiers, result URLs, module ids, and returned documentation snippets may be processed by the Ref service.
+  - Private Ref resources can include repository content, PDFs, internal docs, proprietary API references, architecture notes, and vendor documentation.
+  - The HTTP transport can receive API keys through headers, query parameters, or encoded config depending on the client path.
+  - Redact keys, private URLs, module ids, internal search terms, and returned passages before sharing MCP logs or transcripts.
+disclosure: >-
+  MIT-licensed MCP package for Ref Tools. The server depends on the Ref API and
+  requires an API key, so treat it as a third-party documentation-search service
+  rather than a fully local crawler.
+sourceUrls:
+  - "https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/LICENSE"
+  - "https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/package.json"
+  - "https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/server.json"
+  - "https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/manifest.json"
+  - "https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/index.ts"
+  - "https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/smithery.yaml"
+  - "https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/Dockerfile"
+tags:
+  - documentation
+  - search
+  - coding
+  - private-docs
+  - typescript
+keywords:
+  - Ref Tools MCP
+  - Ref MCP
+  - documentation search MCP
+  - private docs MCP
+  - ref-tools-mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Ref Tools MCP Server gives Claude documentation search and URL-reading tools for
+technical work. It can search public documentation and Ref-indexed private
+resources, then read selected URLs as markdown so agents can pull focused
+context for a specific library, API, service, or framework question.
+
+Use it when a coding agent needs current documentation without stuffing an
+entire docs page into context, or when a team has Ref-indexed private
+repositories, PDFs, or docs that should be searchable through an MCP client.
+
+## Source Review
+
+- https://github.com/ref-tools/ref-tools-mcp
+- https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/README.md
+- https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/LICENSE
+- https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/package.json
+- https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/server.json
+- https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/manifest.json
+- https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/index.ts
+- https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/smithery.yaml
+- https://raw.githubusercontent.com/ref-tools/ref-tools-mcp/main/Dockerfile
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, package metadata, MCP registry metadata, manifest, server
+implementation, Smithery configuration, and Dockerfile for current setup and
+transport details.
+
+## Features
+
+- Search documentation with `ref_search_documentation`.
+- Read a selected URL as markdown with `ref_read_url`.
+- Use OpenAI deep-research compatible `search` and `fetch` aliases when the
+  client identifies itself as an OpenAI MCP client.
+- Search public documentation by default.
+- Search private Ref resources through the private-docs prompt path.
+- Run through the hosted streamable HTTP endpoint with an API key.
+- Run the legacy stdio package with `REF_API_KEY`.
+- Support HTTP deployment through the included container and Smithery metadata.
+
+## Installation
+
+For the hosted streamable HTTP endpoint, configure the Ref MCP URL with a Ref
+API key:
+
+```json
+{
+  "mcpServers": {
+    "Ref": {
+      "type": "http",
+      "url": "https://api.ref.tools/mcp?apiKey=<ref-api-key>"
+    }
+  }
+}
+```
+
+For the legacy stdio package, use the npm package with `REF_API_KEY`:
+
+```json
+{
+  "mcpServers": {
+    "Ref": {
+      "command": "npx",
+      "args": ["-y", "ref-tools-mcp@3.0.3"],
+      "env": {
+        "REF_API_KEY": "<ref-api-key>"
+      }
+    }
+  }
+}
+```
+
+Use the hosted endpoint when the MCP client supports streamable HTTP, and use
+stdio when a local MCP package is required.
+
+## Use Cases
+
+- Ask Claude to search official docs before writing code against a library.
+- Read only the selected documentation URL that matches a search result.
+- Search private Ref-indexed repositories, PDFs, or internal docs when the user
+  is authorized to use them.
+- Reduce documentation context by searching first and reading the most relevant
+  page afterward.
+- Support OpenAI deep-research clients with compatible search and fetch tool
+  names.
+- Keep API-reference lookups separate from broad web search.
+
+## Safety and Privacy
+
+Ref Tools routes documentation searches and URL reads through the Ref API unless
+a deployment overrides `REF_URL`. Treat search queries, URLs, returned snippets,
+session ids, module ids, private-source prompts, and API keys as sensitive. Do
+not include private repository names, customer identifiers, unreleased product
+details, or proprietary API designs in search prompts unless the Ref workspace is
+approved for that data.
+
+The private-docs path can search resources uploaded or indexed in Ref, including
+repositories, PDFs, and internal documentation. Review which clients, users, and
+workspaces receive the Ref API key, and redact keys, private URLs, internal
+search terms, and returned passages from logs or screenshots.
+
+## Duplicate Check
+
+No `ref-tools/ref-tools-mcp`, Ref Tools MCP, Ref MCP, documentation-search MCP,
+private-docs MCP, or matching source URL entry was found in `content/mcp` or
+`README.md`. Existing search and documentation MCP entries do not cover Ref's
+API-backed public and private documentation search server.

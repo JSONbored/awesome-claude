@@ -1,0 +1,196 @@
+---
+title: Keeper.sh MCP Server
+slug: keeper-sh-mcp-server
+category: mcp
+description: >-
+  Self-hostable calendar MCP service for Keeper.sh that lets Claude list
+  calendars and accounts, read events, create or update events, delete events,
+  respond to invites, and retrieve iCal feed URLs through Keeper's API.
+cardDescription: Control self-hosted Keeper.sh calendars from Claude through its dedicated MCP service.
+seoTitle: Keeper.sh MCP Server for Claude
+seoDescription: >-
+  Configure Keeper.sh MCP with Claude to access connected Google, Microsoft,
+  iCloud, CalDAV, ICS, and other calendar sources through Keeper's authenticated
+  MCP service.
+author: ridafkih
+authorProfileUrl: "https://github.com/ridafkih"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-06"
+brandName: Keeper.sh
+brandDomain: keeper.sh
+repoUrl: "https://github.com/ridafkih/keeper.sh"
+documentationUrl: "https://raw.githubusercontent.com/ridafkih/keeper.sh/main/README.md"
+installable: true
+installCommand: "Deploy Keeper.sh with the MCP service enabled, configure `MCP_PUBLIC_URL`, and connect an MCP client to the Keeper MCP endpoint with an authorized bearer token."
+usageSnippet: "Use `list_calendars` first, read events with explicit date ranges, and require approval before `create_event`, `update_event`, `delete_event`, or `rsvp_event`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "keeper": {
+        "type": "http",
+        "url": "https://<keeper-host>/mcp",
+        "headers": {
+          "Authorization": "Bearer <keeper-mcp-token>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  BETTER_AUTH_URL=https://<keeper-host>
+  MCP_PUBLIC_URL=https://<keeper-host>/mcp
+  MCP_PORT=3002
+estimatedSetupTime: 45 minutes
+difficulty: advanced
+prerequisites:
+  - Self-hosted or hosted Keeper.sh deployment with the MCP service available.
+  - Keeper API, database, auth secret, and MCP public URL configured.
+  - Authorized Keeper bearer token with the required MCP read scope.
+  - Connected calendar accounts and calendars reviewed for read and write access.
+  - Clear approval policy for calendar creation, updates, deletes, RSVP changes, and invite handling.
+safetyNotes:
+  - Keeper's MCP tools can read calendar data and perform write operations including event creation, event updates, event deletion, and RSVP changes.
+  - The MCP handler requires an authenticated bearer token and checks for the Keeper MCP read scope before exposing tools.
+  - Tool calls proxy to Keeper API endpoints with the caller's bearer token, so the MCP client inherits the user's connected calendar permissions.
+  - Start by listing calendars and reading bounded date ranges; require human confirmation before modifying or deleting events.
+  - Review Google, Microsoft, iCloud, CalDAV, ICS, and self-hosted calendar account permissions before exposing them to an agent.
+privacyNotes:
+  - Calendar events can expose titles, descriptions, locations, free/busy status, account names, provider names, calendar names, calendar URLs, and iCal feed URLs.
+  - OAuth tokens, CalDAV credentials, session tokens, bearer tokens, auth secrets, encryption keys, database URLs, and MCP URLs are sensitive deployment data.
+  - Keeper stores and syncs calendar data across connected providers; logs, MCP transcripts, API responses, and monitoring traces can include private schedule details.
+  - Redact event ids, calendar ids, account names, feed URLs, bearer tokens, event text, locations, and provider details before sharing debug output.
+disclosure: >-
+  AGPL-3.0-licensed open-source Keeper.sh project with optional hosted service.
+  The MCP service is source-backed and self-hostable, but it controls sensitive
+  calendar data and should be deployed with production-grade auth and logging.
+sourceUrls:
+  - "https://raw.githubusercontent.com/ridafkih/keeper.sh/main/LICENSE"
+  - "https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/package.json"
+  - "https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/src/toolset.ts"
+  - "https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/src/mcp-handler.ts"
+  - "https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/src/context.ts"
+  - "https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/src/env.ts"
+  - "https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/src/routes/mcp.ts"
+  - "https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/Dockerfile"
+tags:
+  - calendar
+  - self-hosted
+  - scheduling
+  - oauth
+  - caldav
+keywords:
+  - Keeper.sh MCP
+  - Keeper calendar MCP
+  - self-hosted calendar MCP
+  - CalDAV MCP
+  - calendar sync MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Keeper.sh MCP Server is the dedicated MCP service in Keeper.sh, an open-source
+calendar sync platform. It exposes authenticated calendar tools for connected
+Keeper accounts, letting Claude list calendars and accounts, read events, create
+or update events, delete events, respond to invitations, and retrieve an iCal
+feed URL through Keeper's API.
+
+Use it when a team wants a self-hostable calendar MCP service that can sit behind
+Keeper's auth and connected-provider model rather than relying on a single
+hosted Google Calendar MCP integration.
+
+## Source Review
+
+- https://github.com/ridafkih/keeper.sh
+- https://raw.githubusercontent.com/ridafkih/keeper.sh/main/README.md
+- https://raw.githubusercontent.com/ridafkih/keeper.sh/main/LICENSE
+- https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/package.json
+- https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/src/toolset.ts
+- https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/src/mcp-handler.ts
+- https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/src/context.ts
+- https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/src/env.ts
+- https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/src/routes/mcp.ts
+- https://raw.githubusercontent.com/ridafkih/keeper.sh/main/services/mcp/Dockerfile
+
+These sources were reviewed on **2026-06-06**. Prefer the live repository,
+README, license, MCP package metadata, toolset, handler, context, environment,
+route, and Dockerfile for current setup and behavior details.
+
+## Features
+
+- Run Keeper's dedicated `@keeper.sh/mcp` service as part of a Keeper
+  deployment.
+- Authenticate MCP requests with Keeper's bearer-token and protected-resource
+  flow.
+- List connected calendars and calendar accounts.
+- Count events and fetch events by explicit date range.
+- Fetch a single event by id.
+- Create, update, and delete calendar events.
+- View pending invites and respond with accepted, declined, or tentative RSVP
+  status.
+- Retrieve the user's iCal feed URL.
+- Localize event times with an IANA timezone argument.
+
+## Installation
+
+Deploy Keeper.sh with the MCP service, set the required MCP environment
+variables, and expose the MCP route through the same trusted Keeper deployment:
+
+```env
+BETTER_AUTH_URL=https://<keeper-host>
+MCP_PUBLIC_URL=https://<keeper-host>/mcp
+MCP_PORT=3002
+```
+
+Then configure an MCP client with the Keeper MCP endpoint and an authorized
+bearer token:
+
+```json
+{
+  "mcpServers": {
+    "keeper": {
+      "type": "http",
+      "url": "https://<keeper-host>/mcp",
+      "headers": {
+        "Authorization": "Bearer <keeper-mcp-token>"
+      }
+    }
+  }
+}
+```
+
+Keep the MCP service behind TLS and the same access controls used for the Keeper
+web and API services.
+
+## Use Cases
+
+- Ask Claude what is on a calendar during a bounded time range.
+- Compare events across connected work, personal, or shared calendars.
+- Draft a new event and create it only after review.
+- Update event details when a meeting time or location changes.
+- Remove a stale event with explicit confirmation.
+- Respond to pending calendar invitations from an agent workflow.
+- Retrieve the user's iCal feed URL for a reviewed subscription workflow.
+
+## Safety and Privacy
+
+Keeper's MCP service can read and mutate calendar data. Require explicit
+approval before event creation, updates, deletes, or RSVP changes, and keep tool
+requests bounded to specific calendars and date ranges where possible. A bearer
+token used by the MCP client should be treated like calendar account access.
+
+Calendar data is highly personal and operationally sensitive. Event titles,
+descriptions, locations, free/busy status, account names, calendar names, feed
+URLs, OAuth tokens, CalDAV credentials, database URLs, auth secrets, logs, and
+MCP transcripts can expose private schedules or credentials. Use TLS,
+least-privilege tokens, encryption keys, audit logs, backups, and redaction
+before sharing any troubleshooting material.
+
+## Duplicate Check
+
+No `ridafkih/keeper.sh`, Keeper.sh MCP, Keeper calendar MCP, self-hosted
+calendar MCP, CalDAV MCP, or matching source URL entry was found in
+`content/mcp` or `README.md`. The existing CalendarMCP entry covers a hosted
+Google Calendar service; it does not cover Keeper's self-hostable multi-provider
+calendar sync platform and dedicated MCP service.
