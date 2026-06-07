@@ -41,6 +41,8 @@ import { entryDetailMetadata, entrySnippetKeyword } from "./raycast-ui";
 
 const cache = new Cache();
 const SEARCH_PAGE_SIZE = 20;
+const SERVER_SEARCH_UNAVAILABLE_MESSAGE =
+  "Search is temporarily unavailable. Try again shortly.";
 
 type RegistryCommandOptions = {
   fixedCategory?: string;
@@ -478,7 +480,7 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
       filter === "favorites"
         ? "Add favorites from any category to keep them here."
         : serverSearch.error && canUseServerSearch
-          ? serverSearch.error
+          ? SERVER_SEARCH_UNAVAILABLE_MESSAGE
           : "Try another query or filter.";
 
     return (

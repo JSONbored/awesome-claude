@@ -151,6 +151,7 @@ export type ParsedRegistrySearch = {
   limit: number;
   offset: number;
   nextOffset: number | null;
+  skippedMalformedEntries?: number;
 };
 
 export type RegistrySearchUrlOptions = {
@@ -555,22 +556,32 @@ export function parseRegistrySearch(value: string): ParsedRegistrySearch {
     throw new Error("Registry search payload was malformed");
   }
 
+  const total = readRequiredNumber(parsed.total, "total");
+  const limit = readRequiredNumber(parsed.limit, "limit");
+  const offset = readRequiredNumber(parsed.offset, "offset");
+  const nextOffset = readRequiredNextOffset(parsed.nextOffset);
   const normalizedEntries = parsed.results.map(normalizeRegistrySearchEntry);
   const entries = normalizedEntries.filter(
     (entry): entry is RaycastEntry => entry !== null,
   );
-  if (entries.length !== normalizedEntries.length) {
-    throw new Error("Registry search payload contained malformed entries");
+  const skippedMalformedEntries = normalizedEntries.length - entries.length;
+  if (skippedMalformedEntries > 0) {
+    console.warn(
+      `Skipped ${skippedMalformedEntries} malformed registry search result${
+        skippedMalformedEntries === 1 ? "" : "s"
+      }.`,
+    );
   }
 
   return {
     entries,
     query: optionalString(parsed.query),
     category: optionalString(parsed.category) || "all",
-    total: readRequiredNumber(parsed.total, "total"),
-    limit: readRequiredNumber(parsed.limit, "limit"),
-    offset: readRequiredNumber(parsed.offset, "offset"),
-    nextOffset: readRequiredNextOffset(parsed.nextOffset),
+    total,
+    limit,
+    offset,
+    nextOffset,
+    skippedMalformedEntries: skippedMalformedEntries || undefined,
   };
 }
 

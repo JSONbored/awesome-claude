@@ -108,6 +108,31 @@ const sampleEntry: RaycastEntry = {
   verificationStatus: "validated",
 };
 
+function sampleSearchResult(overrides: Record<string, unknown> = {}) {
+  return {
+    category: sampleEntry.category,
+    slug: sampleEntry.slug,
+    title: sampleEntry.title,
+    description: sampleEntry.description,
+    tags: sampleEntry.tags,
+    author: sampleEntry.author,
+    brandName: sampleEntry.brandName,
+    brandDomain: sampleEntry.brandDomain,
+    brandIconUrl: sampleEntry.brandIconUrl,
+    canonicalUrl: sampleEntry.webUrl,
+    repoUrl: sampleEntry.repoUrl,
+    documentationUrl: sampleEntry.documentationUrl,
+    llmsUrl: sampleEntry.llmsUrl,
+    apiUrl: sampleEntry.apiUrl,
+    downloadTrust: sampleEntry.downloadTrust,
+    verificationStatus: sampleEntry.verificationStatus,
+    platforms: ["claude-code"],
+    searchScore: 137,
+    searchReasons: ["title phrase", "source-backed"],
+    ...overrides,
+  };
+}
+
 const sampleJob: RaycastJob = {
   slug: "ai-systems-engineer",
   title: "AI Systems Engineer",
@@ -157,6 +182,19 @@ function response(body: unknown, init: ResponseInit = {}) {
     headers: { "content-type": "application/json" },
     ...init,
   });
+}
+
+async function captureConsoleWarnings<T>(callback: () => T | Promise<T>) {
+  const originalWarn = console.warn;
+  const warnings: string[] = [];
+  console.warn = (...messages: unknown[]) => {
+    warnings.push(messages.map(String).join(" "));
+  };
+  try {
+    return { value: await callback(), warnings };
+  } finally {
+    console.warn = originalWarn;
+  }
 }
 
 function readSourceFiles(dir: string): string[] {
@@ -272,29 +310,7 @@ describe("Raycast feed helpers", () => {
         limit: 1,
         offset: 0,
         nextOffset: 1,
-        results: [
-          {
-            category: sampleEntry.category,
-            slug: sampleEntry.slug,
-            title: sampleEntry.title,
-            description: sampleEntry.description,
-            tags: sampleEntry.tags,
-            author: sampleEntry.author,
-            brandName: sampleEntry.brandName,
-            brandDomain: sampleEntry.brandDomain,
-            brandIconUrl: sampleEntry.brandIconUrl,
-            canonicalUrl: sampleEntry.webUrl,
-            repoUrl: sampleEntry.repoUrl,
-            documentationUrl: sampleEntry.documentationUrl,
-            llmsUrl: sampleEntry.llmsUrl,
-            apiUrl: sampleEntry.apiUrl,
-            downloadTrust: sampleEntry.downloadTrust,
-            verificationStatus: sampleEntry.verificationStatus,
-            platforms: ["claude-code"],
-            searchScore: 137,
-            searchReasons: ["title phrase", "source-backed"],
-          },
-        ],
+        results: [sampleSearchResult()],
       }),
     );
 
@@ -310,10 +326,33 @@ describe("Raycast feed helpers", () => {
     assert.match(parsed.entries[0].copyText, /https:\/\/heyclau.de\/mcp/);
     assert.match(parsed.entries[0].detailMarkdown, /## Source/);
     assert.deepEqual(parsed.entries[0].platformCompatibility, ["claude-code"]);
+    assert.equal(parsed.skippedMalformedEntries, undefined);
+  });
+
+  it("skips malformed registry search rows without discarding valid results", async () => {
+    const { value: parsed, warnings } = await captureConsoleWarnings(() =>
+      parseRegistrySearch(
+        JSON.stringify({
+          schemaVersion: 1,
+          query: "context",
+          category: "mcp",
+          total: 2,
+          limit: 2,
+          offset: 0,
+          nextOffset: null,
+          results: [sampleSearchResult(), { slug: "bad" }],
+        }),
+      ),
+    );
+
+    assert.equal(parsed.entries.length, 1);
+    assert.equal(parsed.entries[0].slug, sampleEntry.slug);
+    assert.equal(parsed.skippedMalformedEntries, 1);
+    assert.match(warnings[0], /Skipped 1 malformed registry search result/);
 
     assert.throws(
       () => parseRegistrySearch(JSON.stringify({ results: [{ slug: "bad" }] })),
-      /malformed entries/,
+      /missing numeric total/,
     );
   });
 
@@ -826,6 +865,23 @@ describe("Raycast feed helpers", () => {
     assert.match(jobsSource, /Action\.CreateQuicklink/);
   });
 
+  it("keeps server search empty states user friendly", () => {
+    const registrySource = fs.readFileSync(
+      path.join(process.cwd(), "src", "registry-command.tsx"),
+      "utf8",
+    );
+
+    assert.match(
+      registrySource,
+      /Search is temporarily unavailable\. Try again shortly\./,
+    );
+    assert.match(
+      registrySource,
+      /\?\s*SERVER_SEARCH_UNAVAILABLE_MESSAGE\s*:/,
+    );
+    assert.doesNotMatch(registrySource, /\?\s*serverSearch\.error\s*:/);
+  });
+
   it("keeps the discovery Open Source action tied to repoUrl only", () => {
     const discoverySource = fs.readFileSync(
       path.join(process.cwd(), "src", "discovery-command.tsx"),
@@ -1078,13 +1134,22 @@ describe("Raycast feed helpers", () => {
     assert.equal(search.entries.length, 1);
     assert.equal(search.nextOffset, 20);
 
-    await assert.rejects(
+    const { value: tolerantSearch, warnings } = await captureConsoleWarnings(() =>
       fetchRegistrySearch({
         query: "context",
-        fetchFn: async () => response({ results: [{ slug: "broken" }] }),
+        fetchFn: async () =>
+          response({
+            total: 2,
+            limit: 20,
+            offset: 0,
+            nextOffset: null,
+            results: [sampleSearchResult(), { slug: "broken" }],
+          }),
       }),
-      /malformed entries/,
     );
+    assert.equal(tolerantSearch.entries.length, 1);
+    assert.equal(tolerantSearch.skippedMalformedEntries, 1);
+    assert.match(warnings[0], /Skipped 1 malformed registry search result/);
 
     await assert.rejects(
       fetchRegistrySearch({
