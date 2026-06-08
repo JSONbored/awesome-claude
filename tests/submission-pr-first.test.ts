@@ -148,6 +148,55 @@ Native macOS MCP server.`);
     expect(buildSubmissionFieldModel("prompts")).toBeNull();
   });
 
+  it("requires maintainer approval before tools listings enter the PR-first queue", () => {
+    const draft = buildSubmissionPrDraft({
+      name: "Acme Sponsored Claude Platform",
+      slug: "acme-sponsored-claude-platform",
+      category: "tools",
+      description:
+        "Paid SaaS platform with sponsored placement for Claude workflow teams.",
+      card_description: "Paid Claude workflow platform.",
+      website_url: "https://example.com/product",
+      docs_url: "https://example.com/docs",
+      pricing_model: "paid",
+      disclosure: "sponsored",
+      application_category: "Hosted platform",
+      operating_system: "Web",
+    });
+
+    const validation = validateSubmission(draft);
+
+    expect(validation.ok).toBe(false);
+    expect(validation.errors.join("\n")).toContain(
+      "not merged from the free resource queue without maintainer approval",
+    );
+  });
+
+  it("allows maintainer-accepted tools listings to keep existing metadata validation", () => {
+    const draft = {
+      ...buildSubmissionPrDraft({
+        name: "Maintainer Reviewed Claude Tool",
+        slug: "maintainer-reviewed-claude-tool",
+        category: "tools",
+        description:
+          "Editorially reviewed Claude tool with complete listing metadata.",
+        card_description: "Reviewed Claude tool listing.",
+        website_url: "https://example.com/product",
+        docs_url: "https://example.com/docs",
+        pricing_model: "free",
+        disclosure: "editorial",
+        application_category: "Developer tool",
+        operating_system: "Web",
+      }),
+      labels: [{ name: "accepted" }],
+    };
+
+    const validation = validateSubmission(draft);
+
+    expect(validation.ok).toBe(true);
+    expect(validation.errors).toEqual([]);
+  });
+
   it("blocks affiliate, referral, and unsafe source signals during draft risk review", () => {
     const draft = buildSubmissionPrDraft({
       ...validMcpFields,

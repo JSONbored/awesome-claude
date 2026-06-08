@@ -144,6 +144,36 @@ describe("website submission preflight API", () => {
     expect(body.routeSuggestion).toBe("route_away");
   });
 
+  it("routes tools listings without maintainer approval away from public PR submission", async () => {
+    const { POST } = await import("@/routes/api/submissions/preflight");
+    const response = await POST(
+      preflightRequest({
+        fields: validFields({
+          category: "tools",
+          name: "Paid Hosted Claude Platform",
+          slug: "paid-hosted-claude-platform",
+          description:
+            "Paid SaaS platform with sponsored placement and enterprise pricing for Claude workflow teams.",
+          card_description: "Paid Claude workflow platform.",
+          website_url: "https://example.com/product",
+          docs_url: "https://example.com/docs",
+          pricing_model: "paid",
+          disclosure: "sponsored",
+          application_category: "Hosted platform",
+          operating_system: "Web",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.routeSuggestion).toBe("route_away");
+    expect(body.valid).toBe(false);
+    expect(body.schema.errors.join("\n")).toContain(
+      "not merged from the free resource queue without maintainer approval",
+    );
+  });
+
   it("routes risky but potentially valid submissions to manual review", async () => {
     const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
