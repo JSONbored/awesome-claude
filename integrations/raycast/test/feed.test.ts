@@ -9,6 +9,7 @@ import {
   DETAIL_CACHE_PREFIX,
   REGISTRY_SEARCH_URL,
   RECENT_UPDATES_CACHE_KEY,
+  RAYCAST_FEED_OVERRIDE_ENV,
   TRENDING_CACHE_KEY,
   absoluteDataUrl,
   attachDiscoveryEntries,
@@ -38,6 +39,7 @@ import {
   recentUpdatesFeedUrl,
   registryManifestUrl,
   registrySearchUrl,
+  resolveConfiguredFeedUrl,
   resolveFeedUrl,
   serializeFavoriteKeys,
   sortedCategoryOptions,
@@ -83,6 +85,23 @@ import {
   normalizeSubmissionDraft,
   slugify,
 } from "../src/submission";
+import {
+  MCP_INSTALL_TARGETS,
+  buildMcpInstallPlan,
+  buildClaudeMcpInstallPlan,
+  defaultMcpConfigPath,
+  extractMcpServerConfig,
+  extractClaudeMcpServerConfig,
+  installMcpServer,
+  installClaudeMcpServer,
+  mcpConfigSupportsTarget,
+  mcpInstallTargetsForConfig,
+  mcpJsonConfigPathCandidates,
+  mcpServerExists,
+  resolveMcpJsonConfigPath,
+  resolveMcpCli,
+  resolveClaudeCli,
+} from "../src/mcp-installer";
 
 const sampleEntry: RaycastEntry = {
   category: "mcp",
@@ -95,6 +114,10 @@ const sampleEntry: RaycastEntry = {
   brandIconUrl:
     "https://cdn.brandfetch.io/domain/upstash.com/w/128/h/128/icon.png?c=test-client",
   brandAssetSource: "brandfetch",
+  installable: true,
+  hasInstallCommand: true,
+  hasConfigSnippet: false,
+  mcpInstallTargets: ["claude-code", "codex", "cursor", "antigravity"],
   installCommand: "claude mcp add context7",
   configSnippet: "",
   copyText: "complete asset",
@@ -107,6 +130,12 @@ const sampleEntry: RaycastEntry = {
   documentationUrl: "https://context7.com",
   downloadTrust: "external",
   verificationStatus: "validated",
+  trustSignals: {
+    sourceStatus: "available",
+    hasSafetyNotes: true,
+    hasPrivacyNotes: false,
+    platforms: ["claude-code"],
+  },
 };
 
 function sampleSearchResult(overrides: Record<string, unknown> = {}) {
@@ -128,6 +157,16 @@ function sampleSearchResult(overrides: Record<string, unknown> = {}) {
     downloadTrust: sampleEntry.downloadTrust,
     verificationStatus: sampleEntry.verificationStatus,
     platforms: ["claude-code"],
+    installable: true,
+    hasInstallCommand: true,
+    hasConfigSnippet: true,
+    mcpInstallTargets: ["claude-code", "codex", "cursor", "antigravity"],
+    trustSignals: {
+      sourceStatus: "available",
+      hasSafetyNotes: true,
+      hasPrivacyNotes: true,
+      platforms: ["claude-code"],
+    },
     searchScore: 137,
     searchReasons: ["title phrase", "source-backed"],
     ...overrides,
@@ -202,12 +241,16 @@ async function captureConsoleWarnings<T>(callback: () => T | Promise<T>) {
   }
 }
 
-function readSourceFiles(dir: string): string[] {
+function readSourceFiles(
+  dir: string,
+): Array<{ filePath: string; source: string }> {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const entryPath = path.join(dir, entry.name);
     if (entry.isDirectory()) return readSourceFiles(entryPath);
     if (!/\.(ts|tsx)$/.test(entry.name)) return [];
-    return fs.readFileSync(entryPath, "utf8");
+    return [
+      { filePath: entryPath, source: fs.readFileSync(entryPath, "utf8") },
+    ];
   });
 }
 
@@ -243,6 +286,12 @@ describe("Raycast feed helpers", () => {
     assert.equal(parsed.generatedAt, "2026-04-27T00:00:00.000Z");
     assert.equal(parsed.entries[0].slug, sampleEntry.slug);
     assert.deepEqual(parsed.entries[0].tags, sampleEntry.tags);
+    assert.deepEqual(parsed.entries[0].mcpInstallTargets, [
+      "claude-code",
+      "codex",
+      "cursor",
+      "antigravity",
+    ]);
     assert.equal(parsed.entries[0].brandDomain, sampleEntry.brandDomain);
     assert.deepEqual(parsed.entries[1].platformCompatibility, [
       "Claude: native-skill",
@@ -316,6 +365,16 @@ describe("Raycast feed helpers", () => {
         offset: 0,
         nextOffset: 1,
         results: [sampleSearchResult()],
+        facets: {
+          categories: { mcp: 2 },
+          platforms: { "claude-code": 2 },
+          installable: { true: 2 },
+          hasSafetyNotes: { true: 1, false: 1 },
+          hasPrivacyNotes: { true: 1, false: 1 },
+          downloadTrust: { external: 2 },
+          claimStatus: { unclaimed: 2 },
+          sourceStatus: { available: 2 },
+        },
       }),
     );
 
@@ -331,6 +390,21 @@ describe("Raycast feed helpers", () => {
     assert.match(parsed.entries[0].copyText, /https:\/\/heyclau.de\/mcp/);
     assert.match(parsed.entries[0].detailMarkdown, /## Source/);
     assert.deepEqual(parsed.entries[0].platformCompatibility, ["claude-code"]);
+    assert.deepEqual(parsed.entries[0].mcpInstallTargets, [
+      "claude-code",
+      "codex",
+      "cursor",
+      "antigravity",
+    ]);
+    assert.equal(parsed.entries[0].installable, true);
+    assert.equal(parsed.entries[0].hasConfigSnippet, true);
+    assert.equal(parsed.entries[0].searchScore, 137);
+    assert.deepEqual(parsed.entries[0].searchReasons, [
+      "title phrase",
+      "source-backed",
+    ]);
+    assert.equal(parsed.entries[0].trustSignals?.sourceStatus, "available");
+    assert.deepEqual(parsed.facets?.installable, { true: 2 });
     assert.equal(parsed.skippedMalformedEntries, undefined);
   });
 
@@ -516,6 +590,9 @@ describe("Raycast feed helpers", () => {
     const devFeed = resolveFeedUrl(
       " https://preview.example.com/data/raycast-index.json#ignored ",
     );
+    const localFeed = resolveFeedUrl(
+      "http://127.0.0.1:4173/data/raycast-index.json",
+    );
 
     assert.equal(
       devFeed,
@@ -524,6 +601,21 @@ describe("Raycast feed helpers", () => {
     assert.equal(
       resolveFeedUrl(""),
       "https://heyclau.de/data/raycast-index.json",
+    );
+    assert.equal(
+      localFeed,
+      "http://127.0.0.1:4173/data/raycast-index.json",
+    );
+    assert.equal(
+      resolveConfiguredFeedUrl(
+        { feedUrlOverride: devFeed },
+        { [RAYCAST_FEED_OVERRIDE_ENV]: localFeed },
+      ),
+      localFeed,
+    );
+    assert.equal(
+      resolveConfiguredFeedUrl({ feedUrlOverride: devFeed }, {}),
+      devFeed,
     );
     assert.throws(
       () =>
@@ -576,6 +668,10 @@ describe("Raycast feed helpers", () => {
       registrySearchUrl({
         query: " context server ",
         category: "mcp",
+        platform: "claude-code",
+        installable: "true",
+        sourceStatus: "available",
+        downloadTrust: "first-party",
         limit: 20,
         offset: 40,
       }),
@@ -584,6 +680,10 @@ describe("Raycast feed helpers", () => {
     assert.equal(url.origin + url.pathname, REGISTRY_SEARCH_URL);
     assert.equal(url.searchParams.get("q"), "context server");
     assert.equal(url.searchParams.get("category"), "mcp");
+    assert.equal(url.searchParams.get("platform"), "claude-code");
+    assert.equal(url.searchParams.get("installable"), "true");
+    assert.equal(url.searchParams.get("sourceStatus"), "available");
+    assert.equal(url.searchParams.get("downloadTrust"), "first-party");
     assert.equal(url.searchParams.get("limit"), "20");
     assert.equal(url.searchParams.get("offset"), "40");
 
@@ -596,6 +696,406 @@ describe("Raycast feed helpers", () => {
     const omitted = new URL(registrySearchUrl({ query: "context" }));
     assert.equal(omitted.searchParams.has("limit"), false);
     assert.equal(omitted.searchParams.has("offset"), false);
+  });
+
+  it("builds Claude Code MCP add-json plans from single-server configs", () => {
+    const detail = {
+      detailMarkdown: "# Context7",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          context7: {
+            command: "npx",
+            args: ["-y", "@upstash/context7-mcp"],
+            env: { API_KEY: "${CONTEXT7_API_KEY}" },
+          },
+        },
+      }),
+      safetyNotes: ["Runs a local MCP server command."],
+    };
+    const extracted = extractClaudeMcpServerConfig(detail.configSnippet);
+    const plan = buildClaudeMcpInstallPlan(sampleEntry, detail);
+
+    assert.equal(extracted.name, "context7");
+    assert.deepEqual(plan.addArgs.slice(0, 3), ["mcp", "add-json", "context7"]);
+    assert.deepEqual(plan.addArgs.slice(-2), ["--scope", "user"]);
+    assert.equal(plan.getArgs.join(" "), "mcp get context7");
+    assert.equal(plan.removeArgs.join(" "), "mcp remove context7");
+    assert.match(plan.configJson, /@upstash\/context7-mcp/);
+    assert.deepEqual(plan.envPlaceholders, ["${CONTEXT7_API_KEY}"]);
+    assert.match(plan.warnings.join(" "), /environment placeholders/i);
+  });
+
+  it("builds MCP install plans for Claude Code, Codex, Cursor, and Antigravity", () => {
+    const detail = {
+      detailMarkdown: "# Context7",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          context7: {
+            command: "npx",
+            args: ["-y", "@upstash/context7-mcp"],
+            env: { API_KEY: "${CONTEXT7_API_KEY}" },
+          },
+        },
+      }),
+    };
+    const plans = Object.fromEntries(
+      MCP_INSTALL_TARGETS.map((target) => [
+        target.id,
+        buildMcpInstallPlan(target.id, sampleEntry, detail),
+      ]),
+    );
+
+    assert.deepEqual(plans["claude-code"].addArgs?.slice(0, 3), [
+      "mcp",
+      "add-json",
+      "context7",
+    ]);
+    assert.deepEqual(plans.codex.addArgs?.slice(0, 3), [
+      "mcp",
+      "add",
+      "context7",
+    ]);
+    assert.deepEqual(plans.codex.addArgs?.slice(-3), [
+      "npx",
+      "-y",
+      "@upstash/context7-mcp",
+    ]);
+    assert.equal(plans.cursor.configPath, defaultMcpConfigPath("cursor"));
+    assert.equal(
+      plans.antigravity.configPath,
+      defaultMcpConfigPath("antigravity"),
+    );
+  });
+
+  it("normalizes remote MCP configs for target-specific install formats", () => {
+    const detail = {
+      detailMarkdown: "# Docs MCP",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          docs: {
+            type: "streamable-http",
+            url: "https://example.com/mcp",
+          },
+        },
+      }),
+    };
+
+    const codexPlan = buildMcpInstallPlan("codex", sampleEntry, detail);
+    const antigravityPlan = buildMcpInstallPlan(
+      "antigravity",
+      sampleEntry,
+      detail,
+    );
+
+    assert.deepEqual(codexPlan.addArgs, [
+      "mcp",
+      "add",
+      "docs",
+      "--url",
+      "https://example.com/mcp",
+    ]);
+    assert.equal(antigravityPlan.config.serverUrl, "https://example.com/mcp");
+    assert.equal("url" in antigravityPlan.config, false);
+    assert.equal(antigravityPlan.config.type, "http");
+  });
+
+  it("rejects ambiguous or malformed MCP configs", () => {
+    assert.throws(
+      () =>
+        extractMcpServerConfig(
+          JSON.stringify({
+            mcpServers: {
+              first: { command: "npx" },
+              second: { command: "uvx" },
+            },
+          }),
+        ),
+      /one MCP server/,
+    );
+    assert.throws(
+      () => extractMcpServerConfig(JSON.stringify({ nope: true })),
+      /compatible/,
+    );
+    assert.throws(
+      () =>
+        buildMcpInstallPlan("codex", sampleEntry, {
+          detailMarkdown: "# SSE",
+          configSnippet: JSON.stringify({
+            mcpServers: {
+              remote: { type: "sse", url: "https://example.com/sse" },
+            },
+          }),
+        }),
+      /not available/,
+    );
+    const sseConfig = { type: "sse", url: "https://example.com/sse" };
+    assert.equal(mcpConfigSupportsTarget(sseConfig, "codex"), false);
+    assert.deepEqual(mcpInstallTargetsForConfig(sseConfig), [
+      "claude-code",
+      "cursor",
+      "antigravity",
+    ]);
+    assert.throws(
+      () =>
+        buildMcpInstallPlan("codex", sampleEntry, {
+          detailMarkdown: "# SSE",
+          mcpInstallTargets: ["claude-code", "cursor", "antigravity"],
+          configSnippet: JSON.stringify({
+            mcpServers: {
+              remote: sseConfig,
+            },
+          }),
+        }),
+      /not available/,
+    );
+    assert.equal(
+      mcpConfigSupportsTarget(
+        {
+          type: "http",
+          url: "https://example.com/mcp",
+          headers: { Authorization: "Bearer ${MCP_TOKEN}" },
+        },
+        "codex",
+      ),
+      false,
+    );
+    assert.throws(
+      () =>
+        buildMcpInstallPlan("codex", sampleEntry, {
+          detailMarkdown: "# Headers",
+          configSnippet: JSON.stringify({
+            mcpServers: {
+              remote: {
+                type: "http",
+                url: "https://example.com/mcp",
+                headers: { Authorization: "Bearer ${MCP_TOKEN}" },
+              },
+            },
+          }),
+        }),
+      /not available/,
+    );
+  });
+
+  it("runs Claude Code installs through non-shell argv and verifies the server", async () => {
+    const detail = {
+      detailMarkdown: "# Context7",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          context7: { command: "npx", args: ["-y", "@upstash/context7-mcp"] },
+        },
+      }),
+    };
+    const plan = buildClaudeMcpInstallPlan(sampleEntry, detail);
+    const calls: Array<{ file: string; args: string[] }> = [];
+    const execFileFn = async (file: string, args: string[]) => {
+      calls.push({ file, args });
+      if (args.join(" ") === "mcp get context7" && calls.length === 2) {
+        throw new Error("not installed yet");
+      }
+      return {};
+    };
+
+    await installClaudeMcpServer(plan, { execFileFn });
+
+    assert.deepEqual(
+      calls.map((call) => [call.file, call.args[0], call.args[1]]),
+      [
+        ["claude", "--version", undefined],
+        ["claude", "mcp", "get"],
+        ["claude", "mcp", "add-json"],
+        ["claude", "mcp", "get"],
+      ],
+    );
+    assert.equal(calls[2].args[3], plan.configJson);
+  });
+
+  it("runs Codex installs through non-shell argv and verifies the server", async () => {
+    const detail = {
+      detailMarkdown: "# Context7",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          context7: {
+            command: "npx",
+            args: ["-y", "@upstash/context7-mcp"],
+          },
+        },
+      }),
+    };
+    const plan = buildMcpInstallPlan("codex", sampleEntry, detail);
+    const calls: Array<{ file: string; args: string[] }> = [];
+    const execFileFn = async (file: string, args: string[]) => {
+      calls.push({ file, args });
+      if (args.join(" ") === "mcp get context7 --json" && calls.length === 2) {
+        throw new Error("not installed yet");
+      }
+      return {};
+    };
+
+    await installMcpServer(plan, { execFileFn });
+
+    assert.deepEqual(
+      calls.map((call) => [call.file, call.args[0], call.args[1]]),
+      [
+        ["codex", "--version", undefined],
+        ["codex", "mcp", "get"],
+        ["codex", "mcp", "add"],
+        ["codex", "mcp", "get"],
+      ],
+    );
+    assert.deepEqual(calls[2].args.slice(-3), [
+      "npx",
+      "-y",
+      "@upstash/context7-mcp",
+    ]);
+  });
+
+  it("writes Cursor and Antigravity MCP configs with explicit replacement", async () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(process.env.TMPDIR || "/tmp", "heyclaude-raycast-"),
+    );
+    try {
+      const detail = {
+        detailMarkdown: "# Context7",
+        configSnippet: JSON.stringify({
+          mcpServers: {
+            context7: {
+              command: "npx",
+              args: ["-y", "@upstash/context7-mcp"],
+            },
+          },
+        }),
+      };
+      const cursorPath = path.join(tmpDir, "cursor", "mcp.json");
+      const cursorPlan = buildMcpInstallPlan("cursor", sampleEntry, detail);
+
+      assert.equal(
+        await mcpServerExists(cursorPlan, { configPath: cursorPath }),
+        false,
+      );
+      const firstInstall = await installMcpServer(cursorPlan, {
+        configPath: cursorPath,
+      });
+      assert.equal(firstInstall.replacedExisting, false);
+      assert.equal(
+        await mcpServerExists(cursorPlan, { configPath: cursorPath }),
+        true,
+      );
+      assert.deepEqual(
+        JSON.parse(fs.readFileSync(cursorPath, "utf8")).mcpServers.context7
+          .args,
+        ["-y", "@upstash/context7-mcp"],
+      );
+      await assert.rejects(
+        installMcpServer(cursorPlan, { configPath: cursorPath }),
+        /already exists/,
+      );
+
+      const replacement = await installMcpServer(cursorPlan, {
+        configPath: cursorPath,
+        replaceExisting: true,
+        now: new Date("2026-06-07T01:02:03.000Z"),
+      });
+      assert.equal(replacement.replacedExisting, true);
+      assert.match(
+        replacement.backupPath || "",
+        /mcp\.json\.bak\.heyclaude-20260607T010203Z$/,
+      );
+      assert.equal(fs.existsSync(replacement.backupPath || ""), true);
+
+      const antigravityCandidates = mcpJsonConfigPathCandidates(
+        "antigravity",
+        tmpDir,
+      );
+      assert.deepEqual(antigravityCandidates, [
+        path.join(tmpDir, ".gemini", "antigravity", "mcp_config.json"),
+        path.join(tmpDir, ".gemini", "config", "mcp_config.json"),
+      ]);
+      assert.equal(
+        await resolveMcpJsonConfigPath("antigravity", tmpDir),
+        antigravityCandidates[0],
+      );
+      const antigravityPath = antigravityCandidates[1];
+      fs.mkdirSync(path.dirname(antigravityPath), { recursive: true });
+      fs.writeFileSync(antigravityPath, "", "utf8");
+      assert.equal(
+        await resolveMcpJsonConfigPath("antigravity", tmpDir),
+        antigravityPath,
+      );
+      const antigravityPlan = buildMcpInstallPlan("antigravity", sampleEntry, {
+        detailMarkdown: "# Docs",
+        configSnippet: JSON.stringify({
+          mcpServers: {
+            docs: { url: "https://example.com/mcp" },
+          },
+        }),
+      });
+
+      await installMcpServer(antigravityPlan, {
+        configPath: antigravityPath,
+      });
+      assert.deepEqual(
+        JSON.parse(fs.readFileSync(antigravityPath, "utf8")).mcpServers.docs,
+        { type: "http", serverUrl: "https://example.com/mcp" },
+      );
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  it("resolves Claude Code from common local install paths when PATH misses it", async () => {
+    const calls: Array<{ file: string; args: string[] }> = [];
+    const execFileFn = async (file: string, args: string[]) => {
+      calls.push({ file, args });
+      if (file === "claude") throw new Error("not on PATH");
+      return {};
+    };
+
+    const resolved = await resolveClaudeCli(execFileFn);
+
+    assert.notEqual(resolved, "claude");
+    assert.match(resolved, /\/claude$/);
+    assert.deepEqual(calls[0], { file: "claude", args: ["--version"] });
+  });
+
+  it("resolves Codex from common local install paths when PATH misses it", async () => {
+    const calls: Array<{ file: string; args: string[] }> = [];
+    const execFileFn = async (file: string, args: string[]) => {
+      calls.push({ file, args });
+      if (file === "codex") throw new Error("not on PATH");
+      return {};
+    };
+
+    const resolved = await resolveMcpCli("codex", execFileFn);
+
+    assert.notEqual(resolved, "codex");
+    assert.match(resolved, /\/codex$/);
+    assert.deepEqual(calls[0], { file: "codex", args: ["--version"] });
+  });
+
+  it("reports a user-facing error when the Claude Code CLI cannot be resolved", async () => {
+    await assert.rejects(
+      resolveClaudeCli(async () => {
+        throw new Error("missing");
+      }),
+      /Install or reinstall Claude Code/,
+    );
+  });
+
+  it("requires explicit replacement before removing an existing Claude MCP server", async () => {
+    const detail = {
+      detailMarkdown: "# Context7",
+      configSnippet: JSON.stringify({
+        mcpServers: { context7: { command: "npx" } },
+      }),
+    };
+    const plan = buildClaudeMcpInstallPlan(sampleEntry, detail);
+    const execFileFn = async () => ({});
+
+    await assert.rejects(
+      installClaudeMcpServer(plan, { execFileFn }),
+      /already exists/,
+    );
   });
 
   it("resolves jobs feeds from the production HeyClaude host", () => {
@@ -690,19 +1190,39 @@ describe("Raycast feed helpers", () => {
   });
 
   it("validates and parses full detail payloads", () => {
-    const detail = { copyText: "full text", detailMarkdown: "# Detail" };
+    const detail = {
+      copyText: "full text",
+      detailMarkdown: "# Detail",
+      mcpInstallTargets: ["claude-code", "not-real", "codex"],
+    };
     const lazyDetail = {
       detailMarkdown: "# Detail",
       llmsUrl: "/data/llms/mcp/context7.txt",
     };
     assert.equal(isRaycastDetail(detail), true);
     assert.equal(isRaycastDetail(lazyDetail), true);
-    assert.deepEqual(parseDetail(JSON.stringify(detail)), detail);
-    assert.equal(parseDetail(JSON.stringify({ copyText: "missing md" })), null);
-    assert.deepEqual(fallbackDetail(sampleEntry), {
-      copyText: sampleEntry.copyText,
-      detailMarkdown: sampleEntry.detailMarkdown,
+    assert.deepEqual(parseDetail(JSON.stringify(detail)), {
+      copyText: "full text",
+      detailMarkdown: "# Detail",
+      mcpInstallTargets: ["claude-code", "codex"],
     });
+    assert.equal(parseDetail(JSON.stringify({ copyText: "missing md" })), null);
+    assert.deepEqual(
+      {
+        copyText: fallbackDetail(sampleEntry).copyText,
+        detailMarkdown: fallbackDetail(sampleEntry).detailMarkdown,
+        installable: fallbackDetail(sampleEntry).installable,
+        hasInstallCommand: fallbackDetail(sampleEntry).hasInstallCommand,
+        mcpInstallTargets: fallbackDetail(sampleEntry).mcpInstallTargets,
+      },
+      {
+        copyText: sampleEntry.copyText,
+        detailMarkdown: sampleEntry.detailMarkdown,
+        installable: true,
+        hasInstallCommand: true,
+        mcpInstallTargets: ["claude-code", "codex", "cursor", "antigravity"],
+      },
+    );
   });
 
   it("parses, filters, and summarizes Raycast jobs", () => {
@@ -810,12 +1330,20 @@ describe("Raycast feed helpers", () => {
     assert.deepEqual(filterEntriesBySearchText(entries, "@@@ ///"), []);
   });
 
-  it("keeps the v1 extension read-only and non-mutating", () => {
-    const source = readSourceFiles(path.join(process.cwd(), "src")).join("\n");
+  it("keeps local mutation scoped to the MCP installer", () => {
+    const sourceDir = path.join(process.cwd(), "src");
+    const sourceFiles = readSourceFiles(sourceDir);
+    const installerPath = path.join(sourceDir, "mcp-installer.ts");
+    const installerSource =
+      sourceFiles.find(({ filePath }) => filePath === installerPath)?.source ||
+      "";
+    const browseSource = sourceFiles
+      .filter(({ filePath }) => filePath !== installerPath)
+      .map(({ source }) => source)
+      .join("\n");
     const forbiddenPatterns = [
       /\bfrom\s+["'](?:node:)?fs(?:\/promises)?["']/,
       /\brequire\(["'](?:node:)?fs(?:\/promises)?["']\)/,
-      /\bfrom\s+["'](?:node:)?child_process["']/,
       /\brequire\(["'](?:node:)?child_process["']\)/,
       /\bwriteFile(?:Sync)?\b/,
       /\bappendFile(?:Sync)?\b/,
@@ -833,8 +1361,18 @@ describe("Raycast feed helpers", () => {
     ];
 
     for (const pattern of forbiddenPatterns) {
-      assert.doesNotMatch(source, pattern);
+      assert.doesNotMatch(browseSource, pattern);
     }
+    assert.doesNotMatch(
+      browseSource,
+      /\bfrom\s+["'](?:node:)?child_process["']/,
+    );
+    assert.match(installerSource, /\bfrom\s+["']node:child_process["']/);
+    assert.match(installerSource, /\bfrom\s+["']node:fs\/promises["']/);
+    assert.match(installerSource, /\bexecFile\b/);
+    assert.match(installerSource, /\bwriteFile\b/);
+    assert.match(installerSource, /\brename\b/);
+    assert.doesNotMatch(installerSource, /\bexec\(/);
   });
 
   it("keeps Raycast list rows compact enough for split-pane scanning", () => {
@@ -904,9 +1442,21 @@ describe("Raycast feed helpers", () => {
   it("keeps the production Raycast manifest fixed to HeyClaude endpoints", () => {
     const manifest = JSON.parse(
       fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8"),
-    ) as { preferences?: unknown; commands?: { name?: string }[] };
+    ) as {
+      preferences?: unknown;
+      commands?: { name?: string }[];
+    };
 
-    assert.equal(manifest.preferences, undefined);
+    assert.deepEqual(manifest.preferences, [
+      {
+        name: "feedUrlOverride",
+        title: "Feed URL Override",
+        description:
+          "Optional advanced feed URL for preview deployments or local ray develop smoke tests. Must end with /data/raycast-index.json.",
+        type: "textfield",
+        required: false,
+      },
+    ]);
     assert.deepEqual(
       (manifest.commands || []).map((command) => command.name),
       [

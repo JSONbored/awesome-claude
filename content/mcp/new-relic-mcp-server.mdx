@@ -38,9 +38,17 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  [mcp_servers.new-relic]
-  url = "https://mcp.newrelic.com/mcp/"
-  env_http_headers = { "api-key" = "NEW_RELIC_API_KEY" }
+  {
+    "mcpServers": {
+      "newrelic": {
+        "type": "http",
+        "url": "https://mcp.newrelic.com/mcp/",
+        "headers": {
+          "include-tags": "discovery,alerting"
+        }
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:

@@ -42,16 +42,19 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "aws": {
-      "env": {
-        "AWS_REGION": "${AWS_REGION:-us-east-1}",
-        "AWS_PROFILE": "${AWS_PROFILE}",
-        "FASTMCP_LOG_LEVEL": "${FASTMCP_LOG_LEVEL:-ERROR}"
-      },
-      "args": [
-        "awslabs.core-mcp-server@latest"
-      ],
-      "command": "uvx"
+    "mcpServers": {
+      "aws": {
+        "env": {
+          "AWS_REGION": "${AWS_REGION:-us-east-1}",
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "FASTMCP_LOG_LEVEL": "${FASTMCP_LOG_LEVEL:-ERROR}"
+        },
+        "args": [
+          "awslabs.core-mcp-server@latest"
+        ],
+        "command": "uvx",
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 2 minutes

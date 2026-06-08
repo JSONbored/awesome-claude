@@ -34,12 +34,17 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  # Optional config.toml
-  component_dir = "./wassette-components"
-  secrets_dir = "./wassette-secrets"
-
-  [environment_vars]
-  LOG_LEVEL = "info"
+  {
+    "mcpServers": {
+      "wassette": {
+        "command": "wassette",
+        "args": [
+          "run"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:

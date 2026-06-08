@@ -45,15 +45,18 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "redis": {
-      "args": [
-        "--from",
-        "git+https://github.com/redis/mcp-redis.git",
-        "redis-mcp-server",
-        "--url",
-        "redis://localhost:6379/0"
-      ],
-      "command": "uvx"
+    "mcpServers": {
+      "redis": {
+        "args": [
+          "--from",
+          "git+https://github.com/redis/mcp-redis.git",
+          "redis-mcp-server",
+          "--url",
+          "redis://localhost:6379/0"
+        ],
+        "command": "uvx",
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 2 minutes

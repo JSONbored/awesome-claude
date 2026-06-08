@@ -394,6 +394,12 @@ export async function fetchFreshFeed(options: {
 export async function fetchRegistrySearch(options: {
   query: string;
   category?: string;
+  platform?: string;
+  installable?: string;
+  hasSafetyNotes?: string;
+  hasPrivacyNotes?: string;
+  downloadTrust?: string;
+  sourceStatus?: string;
   limit?: number;
   offset?: number;
   searchUrl?: string;
@@ -403,6 +409,12 @@ export async function fetchRegistrySearch(options: {
   const requestUrl = registrySearchUrl({
     query: options.query,
     category: options.category,
+    platform: options.platform,
+    installable: options.installable,
+    hasSafetyNotes: options.hasSafetyNotes,
+    hasPrivacyNotes: options.hasPrivacyNotes,
+    downloadTrust: options.downloadTrust,
+    sourceStatus: options.sourceStatus,
     limit: options.limit,
     offset: options.offset,
     searchUrl: options.searchUrl,

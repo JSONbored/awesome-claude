@@ -39,13 +39,14 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  [mcp_servers.pagerduty-mcp-server]
-  command = "uvx"
-  args = ["pagerduty-mcp==0.17.0"]
-
-  [mcp_servers.pagerduty-mcp-server.env]
-  PAGERDUTY_USER_API_KEY = "<PAGERDUTY_USER_API_KEY>"
-  PAGERDUTY_API_HOST = "https://api.pagerduty.com"
+  {
+    "mcpServers": {
+      "pagerduty": {
+        "type": "http",
+        "url": "https://mcp.pagerduty.com/mcp"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:

@@ -26,7 +26,7 @@ documentationUrl: "https://fastapi-mcp.tadata.com/"
 packageUrl: "https://pypi.org/project/fastapi-mcp/"
 installable: true
 installCommand: "uv add fastapi-mcp"
-usageSnippet: "Install `fastapi-mcp`, mount `FastApiMCP(app)` into a reviewed FastAPI app, and expose only endpoints that are safe for agent tool use."
+usageSnippet: "Install `fastapi-mcp`, mount `FastApiMCP(app)` with HTTP transport, run the FastAPI app, then connect the MCP client to `http://localhost:8000/mcp`."
 copySnippet: |-
   from fastapi import FastAPI
   from fastapi_mcp import FastApiMCP
@@ -34,15 +34,16 @@ copySnippet: |-
   app = FastAPI()
 
   mcp = FastApiMCP(app)
-  mcp.mount()
+  mcp.mount_http()
 configSnippet: |-
-  from fastapi import FastAPI
-  from fastapi_mcp import FastApiMCP
-
-  app = FastAPI()
-
-  mcp = FastApiMCP(app)
-  mcp.mount()
+  {
+    "mcpServers": {
+      "fastapi-mcp": {
+        "url": "http://localhost:8000/mcp",
+        "type": "http"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:
@@ -63,6 +64,7 @@ privacyNotes:
 sourceUrls:
   - "https://github.com/tadata-org/fastapi_mcp"
   - "https://fastapi-mcp.tadata.com/"
+  - "https://fastapi-mcp.tadata.com/advanced/transport"
   - "https://pypi.org/project/fastapi-mcp/"
 tags:
   - fastapi
@@ -87,16 +89,18 @@ tools. It preserves request and response schemas, endpoint documentation, and
 FastAPI dependency-based authentication patterns instead of treating an API only
 as a generic OpenAPI document.
 
-The simplest documented pattern mounts an MCP server directly into a FastAPI app
-so the MCP endpoint becomes available from the application.
+The simplest documented pattern mounts an HTTP MCP server directly into a
+FastAPI app so the MCP endpoint becomes available from the application at
+`/mcp`.
 
 ## Source Review
 
 - https://github.com/tadata-org/fastapi_mcp
 - https://fastapi-mcp.tadata.com/
+- https://fastapi-mcp.tadata.com/advanced/transport
 - https://pypi.org/project/fastapi-mcp/
 
-These sources were reviewed on **2026-06-05**. Prefer live documentation for
+These sources were reviewed on **2026-06-07**. Prefer live documentation for
 current installation, mounting, deployment, authentication, and endpoint
 selection options.
 
@@ -132,11 +136,23 @@ from fastapi_mcp import FastApiMCP
 app = FastAPI()
 
 mcp = FastApiMCP(app)
-mcp.mount()
+mcp.mount_http()
 ```
 
-The generated MCP endpoint is available from the mounted application path
-documented by the package.
+When the app runs on port 8000, the generated Streamable HTTP MCP endpoint is
+available at `http://localhost:8000/mcp`.
+
+Client configuration:
+
+```json
+{
+  "mcpServers": {
+    "fastapi-mcp": {
+      "url": "http://localhost:8000/mcp"
+    }
+  }
+}
+```
 
 ## Use Cases
 
@@ -159,5 +175,6 @@ when experimenting.
 ## Duplicate Check
 
 Existing entries include generic OpenAPI and API tooling, but no
-`tadata-org/fastapi_mcp` entry was found in `content/mcp`. This entry is for the
-FastAPI-native MCP package and belongs in `content/mcp`.
+`tadata-org/fastapi_mcp` entry was found in `content/mcp`. This entry is for
+the FastAPI-native MCP framework package and uses the documented local
+Streamable HTTP endpoint.

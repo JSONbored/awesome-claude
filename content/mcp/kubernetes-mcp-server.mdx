@@ -44,14 +44,17 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "kubernetes": {
-      "env": {
-        "KUBECONFIG": "${KUBECONFIG:-~/.kube/config}"
-      },
-      "args": [
-        "mcp-kubernetes-server"
-      ],
-      "command": "uvx"
+    "mcpServers": {
+      "kubernetes": {
+        "env": {
+          "KUBECONFIG": "${KUBECONFIG:-~/.kube/config}"
+        },
+        "args": [
+          "mcp-kubernetes-server"
+        ],
+        "command": "uvx",
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 3 minutes

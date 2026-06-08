@@ -37,7 +37,18 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  npx davinci-resolve-mcp setup
+  {
+    "mcpServers": {
+      "davinci-resolve": {
+        "command": "npx",
+        "args": [
+          "davinci-resolve-mcp",
+          "server"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 25 minutes
 difficulty: advanced
 prerequisites:

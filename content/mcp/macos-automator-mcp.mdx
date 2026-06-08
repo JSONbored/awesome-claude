@@ -42,7 +42,20 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add macos-automator -- npx -y --package @steipete/macos-automator-mcp macos-automator-mcp
+  {
+    "mcpServers": {
+      "macos_automator": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "--package",
+          "@steipete/macos-automator-mcp",
+          "macos-automator-mcp"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 10 minutes
 difficulty: advanced
 prerequisites:

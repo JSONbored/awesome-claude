@@ -10,6 +10,7 @@ import {
 import { renderCorpusLlms, renderEntryLlms } from "./llms.js";
 import { buildEntryJsonLdSnapshot } from "./seo.js";
 import { buildSubmissionSpecs } from "./submission-spec.js";
+import { resolveMcpInstallConfig } from "./mcp-install-config.js";
 import {
   buildRegistryRelationGraph,
   relationLookupFromGraph,
@@ -165,6 +166,12 @@ function compactDefinedObject(value) {
 
 export function buildRaycastDetailMarkdown(entry) {
   const lines = [`# ${entry.title}`, "", entry.description];
+  const mcpInstallConfig =
+    entry.category === "mcp" ? resolveMcpInstallConfig(entry) : null;
+  const configSnippet =
+    entry.category === "mcp"
+      ? mcpInstallConfig?.configSnippet
+      : entry.configSnippet;
 
   pushRaycastTrustSection(lines, entry);
   pushNoteSection(lines, "Safety notes", entry.safetyNotes);
@@ -178,8 +185,8 @@ export function buildRaycastDetailMarkdown(entry) {
     );
   }
 
-  if (entry.configSnippet) {
-    lines.push("", "## Config", codeBlock("json", entry.configSnippet));
+  if (configSnippet) {
+    lines.push("", "## Config", codeBlock("json", configSnippet));
   }
 
   if (entry.usageSnippet) {
@@ -307,15 +314,11 @@ export function buildSearchEntries(entries) {
       ...buildEntryProvenanceFields(entry),
       ...buildEntryBrandFields(entry),
       dateAdded: entry.dateAdded || "",
-      installable: Boolean(
-        entry.installable || entry.installCommand || entry.downloadUrl,
-      ),
+      ...buildCompactInstallFields(entry),
       downloadUrl: entry.downloadUrl || "",
       downloadTrust: entry.downloadTrust ?? null,
       verificationStatus: entry.verificationStatus || "",
-      platforms: buildSkillPlatformCompatibility(entry).map(
-        (item) => item.platform,
-      ),
+      platforms: buildEntryPlatformNames(entry),
       supportLevels: buildSkillPlatformCompatibility(entry).map(
         (item) => item.supportLevel,
       ),
@@ -387,6 +390,47 @@ export function buildSkillPlatformCompatibility(entry) {
   ];
 }
 
+function buildEntryPlatformNames(entry) {
+  const platforms = new Set(
+    buildSkillPlatformCompatibility(entry)
+      .map((item) => item.platform)
+      .filter(Boolean),
+  );
+  const tokens = new Set(
+    [entry.category, ...(entry.tags ?? []), ...(entry.keywords ?? [])].map(
+      (item) => String(item || "").toLowerCase(),
+    ),
+  );
+
+  if (entry.category === "mcp") {
+    const mcpInstallConfig = resolveMcpInstallConfig(entry);
+    for (const target of mcpInstallConfig?.targets ?? []) {
+      platforms.add(target);
+    }
+  }
+  if (
+    ["agents", "commands", "hooks", "rules", "statuslines"].includes(
+      entry.category,
+    )
+  ) {
+    platforms.add("claude-code");
+  }
+  for (const platform of [
+    "cursor",
+    "codex",
+    "gemini",
+    "windsurf",
+    "raycast",
+    "aider",
+    "zed",
+    "continue",
+  ]) {
+    if (tokens.has(platform)) platforms.add(platform);
+  }
+
+  return [...platforms];
+}
+
 function sourceUrlsForEntry(entry) {
   return [
     entry.documentationUrl,
@@ -446,7 +490,7 @@ export function buildEntryTrustSignals(entry) {
     adapterGenerated,
     hasSafetyNotes,
     hasPrivacyNotes,
-    platforms: platformCompatibility.map((item) => item.platform),
+    platforms: buildEntryPlatformNames(entry),
     supportLevels: platformCompatibility.map((item) => item.supportLevel),
   };
 }
@@ -463,6 +507,56 @@ function buildListTrustSignals(entry) {
     platforms: trustSignals.platforms,
     supportLevels: trustSignals.supportLevels,
   };
+}
+
+function buildCompactInstallFields(entry) {
+  const mcpInstallConfig =
+    entry.category === "mcp" ? resolveMcpInstallConfig(entry) : null;
+  if (entry.category === "mcp") {
+    return compactDefinedObject({
+      installable: Boolean(
+        entry.installable ||
+          entry.installCommand ||
+          entry.commandSyntax ||
+          entry.downloadUrl ||
+          mcpInstallConfig,
+      ),
+      hasInstallCommand: Boolean(entry.installCommand || entry.commandSyntax),
+      hasConfigSnippet: Boolean(mcpInstallConfig),
+      mcpInstallTargets: mcpInstallConfig?.targets,
+    });
+  }
+
+  return {
+    installable: Boolean(
+      entry.installable ||
+      entry.installCommand ||
+      entry.commandSyntax ||
+      entry.downloadUrl ||
+      entry.configSnippet,
+    ),
+    hasInstallCommand: Boolean(entry.installCommand || entry.commandSyntax),
+    hasConfigSnippet: Boolean(entry.configSnippet),
+  };
+}
+
+function buildRaycastInstallDetailFields(entry) {
+  const mcpInstallConfig =
+    entry.category === "mcp" ? resolveMcpInstallConfig(entry) : null;
+  if (entry.category === "mcp") {
+    return compactDefinedObject({
+      ...buildCompactInstallFields(entry),
+      installCommand: entry.installCommand || entry.commandSyntax || "",
+      configSnippet: mcpInstallConfig?.configSnippet || "",
+      mcpInstallTargets: mcpInstallConfig?.targets,
+    });
+  }
+
+  return compactDefinedObject({
+    ...buildCompactInstallFields(entry),
+    installCommand: entry.installCommand || entry.commandSyntax || "",
+    configSnippet: entry.configSnippet || "",
+  });
 }
 
 function verificationAgeDays(entry, generatedAt) {
@@ -776,7 +870,11 @@ export function buildRaycastEntries(entries) {
       documentationUrl: entry.documentationUrl || "",
       downloadTrust: entry.downloadTrust,
       verificationStatus: entry.verificationStatus || "",
-      platformCompatibility: buildSkillPlatformCompatibility(entry),
+      ...buildCompactInstallFields(entry),
+      platformCompatibility:
+        entry.category === "skills"
+          ? buildSkillPlatformCompatibility(entry)
+          : buildEntryPlatformNames(entry),
     });
   });
 }
@@ -832,6 +930,8 @@ export function buildRaycastDetail(entry) {
     downloadTrust: entry.downloadTrust ?? null,
     verificationStatus: entry.verificationStatus || "",
     packageVerified: Boolean(entry.packageVerified),
+    trustSignals: buildEntryTrustSignals(entry),
+    ...buildRaycastInstallDetailFields(entry),
   };
 }
 

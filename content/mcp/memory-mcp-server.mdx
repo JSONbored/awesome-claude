@@ -31,9 +31,15 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "memory": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    "mcpServers": {
+      "memory": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-memory"
+        ],
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 3 minutes

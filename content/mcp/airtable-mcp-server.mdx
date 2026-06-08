@@ -45,15 +45,18 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "airtable": {
-      "env": {
-        "AIRTABLE_API_KEY": "${AIRTABLE_API_KEY}"
-      },
-      "args": [
-        "-y",
-        "airtable-mcp-server"
-      ],
-      "command": "npx"
+    "mcpServers": {
+      "airtable": {
+        "env": {
+          "AIRTABLE_API_KEY": "${AIRTABLE_API_KEY}"
+        },
+        "args": [
+          "-y",
+          "airtable-mcp-server"
+        ],
+        "command": "npx",
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 2 minutes

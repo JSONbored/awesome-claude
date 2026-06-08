@@ -12,6 +12,7 @@ export type RegistrySearchFilterState = {
   query: string;
   category: string;
   platform: string;
+  installable: BooleanFilterValue;
   hasSafetyNotes: BooleanFilterValue;
   hasPrivacyNotes: BooleanFilterValue;
   downloadTrust: DownloadTrustFilterValue;
@@ -23,6 +24,7 @@ export type RegistrySearchFilterDimension =
   | "query"
   | "category"
   | "platform"
+  | "installable"
   | "hasSafetyNotes"
   | "hasPrivacyNotes"
   | "downloadTrust"
@@ -30,6 +32,15 @@ export type RegistrySearchFilterDimension =
   | "sourceStatus";
 
 const TOKEN_SPLIT_PATTERN = /[^a-z0-9+#.-]+/i;
+const QUERY_ALIASES: Record<string, string[]> = {
+  cc: ["claude", "claude-code"],
+  claude: ["claude-code"],
+  gh: ["github"],
+  ms: ["microsoft"],
+  msteams: ["teams", "microsoft-teams"],
+  repo: ["repository", "github"],
+  repos: ["repository", "github"],
+};
 
 function tokenizeSearchQuery(query: string) {
   return query
@@ -39,9 +50,14 @@ function tokenizeSearchQuery(query: string) {
     .slice(0, 12);
 }
 
+function expandedTokenCandidates(token: string) {
+  return [token, ...(QUERY_ALIASES[token] ?? [])];
+}
+
 function normalizedSearchText(entry: SearchDocument) {
   return [
     entry.category,
+    entry.slug,
     entry.title,
     entry.description,
     entry.author,
@@ -58,11 +74,41 @@ function normalizedSearchText(entry: SearchDocument) {
     .toLowerCase();
 }
 
+function entryWordSet(entry: SearchDocument) {
+  return new Set(
+    normalizedSearchText(entry)
+      .split(TOKEN_SPLIT_PATTERN)
+      .map((token) => token.trim().toLowerCase())
+      .filter(Boolean),
+  );
+}
+
+function candidateMatchesText(candidate: string, haystack: string, words: ReadonlySet<string>) {
+  if (candidate.length <= 2) {
+    return [...words].some((word) => word === candidate || word.startsWith(candidate));
+  }
+  return haystack.includes(candidate) || [...words].some((word) => word.startsWith(candidate));
+}
+
 export function matchesQuery(entry: SearchDocument, query: string) {
   const normalizedQuery = query.trim().toLowerCase();
   if (!normalizedQuery) return true;
   const haystack = normalizedSearchText(entry);
-  return haystack.includes(normalizedQuery);
+  const tokens = tokenizeSearchQuery(normalizedQuery);
+  if (!tokens.length) return false;
+  const words = entryWordSet(entry);
+  if (
+    normalizedQuery.length > 2
+      ? haystack.includes(normalizedQuery)
+      : candidateMatchesText(normalizedQuery, haystack, words)
+  ) {
+    return true;
+  }
+  return tokens.every((token) =>
+    expandedTokenCandidates(token).some((candidate) =>
+      candidateMatchesText(candidate, haystack, words),
+    ),
+  );
 }
 
 export function matchesPlatform(entry: SearchDocument, platform: string) {
@@ -81,6 +127,10 @@ export function hasSafetyNotes(entry: SearchDocument) {
 
 export function hasPrivacyNotes(entry: SearchDocument) {
   return Boolean(entry.trustSignals?.hasPrivacyNotes || entry.privacyNotes?.length);
+}
+
+export function isInstallable(entry: SearchDocument) {
+  return Boolean(entry.installable || entry.downloadUrl);
 }
 
 export function packageTrustValue(entry: SearchDocument) {
@@ -106,6 +156,9 @@ export function entryMatchesFilters(
     return false;
   }
   if (!skip("platform") && !matchesPlatform(entry, filters.platform)) {
+    return false;
+  }
+  if (!skip("installable") && !matchesBooleanFilter(isInstallable(entry), filters.installable)) {
     return false;
   }
   if (
@@ -169,10 +222,12 @@ export function scoreSearchEntry(
   if (!tokens.length) return { score: 0, reasons: [] };
 
   const title = entry.title.toLowerCase();
+  const slug = entry.slug.toLowerCase();
   const category = entry.category.toLowerCase();
   const tags = new Set((entry.tags ?? []).map((tag) => tag.toLowerCase()));
   const keywords = new Set((entry.keywords ?? []).map((keyword) => keyword.toLowerCase()));
   const haystack = normalizedSearchText(entry);
+  const words = entryWordSet(entry);
   let score = 0;
   const reasons = new Set<string>();
 
@@ -180,33 +235,64 @@ export function scoreSearchEntry(
     score += 90;
     reasons.add("title phrase");
   }
+  if (slug.includes(normalizedQuery)) {
+    score += 65;
+    reasons.add("slug phrase");
+  }
   if (category === normalizedQuery) {
     score += 45;
     reasons.add("category match");
   }
 
   for (const token of tokens) {
-    if (title.includes(token)) {
+    const candidates = expandedTokenCandidates(token);
+    const hasCandidate = (value: string) =>
+      candidates.some((candidate) =>
+        candidateMatchesText(
+          candidate,
+          value,
+          new Set(
+            value
+              .split(TOKEN_SPLIT_PATTERN)
+              .map((word) => word.trim().toLowerCase())
+              .filter(Boolean),
+          ),
+        ),
+      );
+    const hasPrefixCandidate = [...words].some((word) =>
+      candidates.some((candidate) => word.startsWith(candidate)),
+    );
+
+    if (hasCandidate(title)) {
       score += 35;
       reasons.add("title term");
     }
-    if (tags.has(token)) {
+    if (hasCandidate(slug)) {
+      score += 28;
+      reasons.add("slug term");
+    }
+    if (candidates.some((candidate) => tags.has(candidate))) {
       score += 24;
       reasons.add("tag match");
     }
-    if (keywords.has(token)) {
+    if (candidates.some((candidate) => keywords.has(candidate))) {
       score += 18;
       reasons.add("keyword match");
     }
-    if (category.includes(token)) {
+    if (hasCandidate(category)) {
       score += 12;
       reasons.add("category term");
     }
-    if (haystack.includes(token)) {
+    if (candidates.some((candidate) => candidateMatchesText(candidate, haystack, words))) {
       score += 4;
     }
+    if (hasPrefixCandidate) score += 2;
   }
 
+  if (isInstallable(entry)) {
+    score += 4;
+    reasons.add("installable");
+  }
   if (entry.trustSignals?.sourceStatus === "available") {
     score += 8;
     reasons.add("source-backed");

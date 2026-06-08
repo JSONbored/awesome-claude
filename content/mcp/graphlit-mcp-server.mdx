@@ -42,7 +42,23 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add graphlit -- npx -y graphlit-mcp-server
+  {
+    "mcpServers": {
+      "graphlit": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "graphlit-mcp-server"
+        ],
+        "env": {
+          "GRAPHLIT_ORGANIZATION_ID": "your-organization-id",
+          "GRAPHLIT_ENVIRONMENT_ID": "your-environment-id",
+          "GRAPHLIT_JWT_SECRET": "your-jwt-secret"
+        },
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 20 minutes
 difficulty: intermediate
 prerequisites:

@@ -5,6 +5,7 @@ import {
   entryMatchesFilters,
   hasPrivacyNotes,
   hasSafetyNotes,
+  isInstallable,
   packageTrustValue,
   sourceStatusValue,
   type RegistrySearchFilterDimension,
@@ -16,6 +17,7 @@ export type RegistrySearchFacetBuckets = Record<string, number>;
 export type RegistrySearchFacets = {
   categories: RegistrySearchFacetBuckets;
   platforms: RegistrySearchFacetBuckets;
+  installable: RegistrySearchFacetBuckets;
   hasSafetyNotes: RegistrySearchFacetBuckets;
   hasPrivacyNotes: RegistrySearchFacetBuckets;
   downloadTrust: RegistrySearchFacetBuckets;
@@ -80,11 +82,9 @@ export function computeRegistrySearchFacets(
   const categories = tally(entries, filters, "category", (entry) =>
     entry.category ? entry.category : "",
   );
-  const platforms = tally(
-    entries,
-    filters,
-    "platform",
-    (entry) => normalizedPlatforms(entry),
+  const platforms = tally(entries, filters, "platform", (entry) => normalizedPlatforms(entry));
+  const installable = tally(entries, filters, "installable", (entry) =>
+    isInstallable(entry) ? "true" : "false",
   );
   const safety = tally(entries, filters, "hasSafetyNotes", (entry) =>
     hasSafetyNotes(entry) ? "true" : "false",
@@ -95,16 +95,13 @@ export function computeRegistrySearchFacets(
   const downloadTrust = tally(entries, filters, "downloadTrust", (entry) =>
     packageTrustValue(entry),
   );
-  const claimStatus = tally(entries, filters, "claimStatus", (entry) =>
-    claimStatusValue(entry),
-  );
-  const sourceStatus = tally(entries, filters, "sourceStatus", (entry) =>
-    sourceStatusValue(entry),
-  );
+  const claimStatus = tally(entries, filters, "claimStatus", (entry) => claimStatusValue(entry));
+  const sourceStatus = tally(entries, filters, "sourceStatus", (entry) => sourceStatusValue(entry));
 
   return {
     categories: sortBuckets(categories, MAX_CATEGORY_BUCKETS),
     platforms: sortBuckets(platforms, MAX_PLATFORM_BUCKETS),
+    installable: sortBuckets(installable),
     hasSafetyNotes: sortBuckets(safety),
     hasPrivacyNotes: sortBuckets(privacy),
     downloadTrust: sortBuckets(downloadTrust),

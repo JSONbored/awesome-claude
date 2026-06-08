@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "title": "HeyClaude",
-  "description": "Search and copy Claude agents, MCP servers, skills, hooks, rules, commands, guides, and statuslines from HeyClaude.",
+  "description": "Search, copy, and install Claude agents, MCP servers, skills, hooks, rules, commands, guides, and statuslines from HeyClaude.",
   "icon": "icon.png",
   "author": "jsonbored",
   "platforms": [
@@ -19,7 +19,7 @@
     {
       "name": "search",
       "title": "Search HeyClaude",
-      "description": "Browse HeyClaude entries and copy install commands, configs, or full usable assets.",
+      "description": "Browse HeyClaude entries, install MCP servers in Claude Code, Codex, Cursor, or Antigravity, and copy configs or full usable assets.",
       "mode": "view",
       "keywords": [
         "claude",
@@ -44,7 +44,7 @@
     {
       "name": "search-mcp",
       "title": "Search MCP Servers",
-      "description": "Browse HeyClaude MCP servers and copy install or config details.",
+      "description": "Browse HeyClaude MCP servers, install them in major AI coding harnesses, and copy install or config details.",
       "mode": "view",
       "keywords": [
         "mcp",
@@ -204,6 +204,15 @@
       ]
     }
   ],
+  "preferences": [
+    {
+      "name": "feedUrlOverride",
+      "title": "Feed URL Override",
+      "description": "Optional advanced feed URL for preview deployments or local ray develop smoke tests. Must end with /data/raycast-index.json.",
+      "type": "textfield",
+      "required": false
+    }
+  ],
   "scripts": {
     "dev": "ray develop",
     "test": "node --import tsx --test test/feed.test.ts",
@@ -218,6 +227,7 @@
   },
   "devDependencies": {
     "@raycast/eslint-config": "2.1.1",
+    "@types/node": "^22.19.20",
     "tsx": "4.22.3",
     "typescript": "6.0.3"
   },

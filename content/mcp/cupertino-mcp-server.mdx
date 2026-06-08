@@ -38,10 +38,17 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add cupertino --scope user -- $(which cupertino)
-
-  # Codex users should keep --no-reap enabled.
-  codex mcp add cupertino -- $(which cupertino) serve --no-reap
+  {
+    "mcpServers": {
+      "cupertino": {
+        "command": "/opt/homebrew/bin/cupertino",
+        "args": [
+          "serve"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 20 minutes
 difficulty: intermediate
 prerequisites:

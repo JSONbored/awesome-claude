@@ -37,7 +37,19 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add codedb -- npx -y codedeebee mcp
+  {
+    "mcpServers": {
+      "codedb": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "codedeebee",
+          "mcp"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 10 minutes
 difficulty: intermediate
 prerequisites:

@@ -35,7 +35,14 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  npx freee-mcp configure
+  {
+    "mcpServers": {
+      "freee": {
+        "url": "https://mcp.freee.co.jp/mcp",
+        "type": "http"
+      }
+    }
+  }
 estimatedSetupTime: 20 minutes
 difficulty: advanced
 prerequisites:

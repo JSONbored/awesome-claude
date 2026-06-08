@@ -15,4 +15,5 @@ export * from "./submission.js";
 export * from "./submission-risk.js";
 export * from "./submission-spec.js";
 export * from "./llms.js";
+export * from "./mcp-install-config.js";
 export * from "./weekly-brief.js";

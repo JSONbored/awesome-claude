@@ -1,5 +1,16 @@
 # HeyClaude Changelog
 
+## [Search and Claude Code MCP Install] - {PR_MERGE_DATE}
+
+- Add a confirmed `Install in Claude Code` action for MCP entries with
+  machine-readable config metadata.
+- Improve server-backed search with installable/source/platform/trust filters
+  and token-aware matching.
+- Show compact visual signals for installability, source backing, trust, and
+  safety/privacy notes.
+- Use richer detail metadata and sectioned search results for easier scanning.
+- Improve icon fallback coverage for entries without explicit brand icons.
+
 ## [Initial Store Release] - {PR_MERGE_DATE}
 
 - Add the `Search HeyClaude` command.

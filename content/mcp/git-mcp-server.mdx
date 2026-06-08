@@ -37,12 +37,15 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "git": {
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-git"
-      ],
-      "command": "npx"
+    "mcpServers": {
+      "git": {
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-git"
+        ],
+        "command": "npx",
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 3 minutes

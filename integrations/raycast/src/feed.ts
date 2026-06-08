@@ -9,6 +9,7 @@ import {
 } from "./utils";
 
 export const FEED_URL = "https://heyclau.de/data/raycast-index.json";
+export const RAYCAST_FEED_OVERRIDE_ENV = "HEYCLAUDE_RAYCAST_FEED_URL";
 export const REGISTRY_SEARCH_URL = "https://heyclau.de/api/registry/search";
 export const SUBMIT_URL = "https://heyclau.de/submit";
 export const CACHE_KEY = "heyclaude-raycast-index";
@@ -22,8 +23,21 @@ const REGISTRY_MANIFEST_PATH = "/data/registry-manifest.json";
 const REGISTRY_TRENDING_PATH = "/api/registry/trending";
 const REGISTRY_DIFF_PATH = "/api/registry/diff";
 const DEFAULT_DISCOVERY_LIMIT = 25;
+const localFeedHostnames = new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
 
 export type DownloadTrust = "first-party" | "external" | null;
+export type McpInstallTargetId =
+  | "claude-code"
+  | "codex"
+  | "cursor"
+  | "antigravity";
+
+const mcpInstallTargetIds = new Set<McpInstallTargetId>([
+  "claude-code",
+  "codex",
+  "cursor",
+  "antigravity",
+]);
 
 export type RaycastEntry = {
   category: string;
@@ -39,6 +53,10 @@ export type RaycastEntry = {
   brandAssetSource?: string;
   brandVerifiedAt?: string;
   platformCompatibility?: string[];
+  installable: boolean;
+  hasInstallCommand: boolean;
+  hasConfigSnippet: boolean;
+  mcpInstallTargets?: McpInstallTargetId[];
   installCommand: string;
   configSnippet: string;
   copyText: string;
@@ -56,6 +74,36 @@ export type RaycastEntry = {
   documentationUrl: string;
   downloadTrust: DownloadTrust;
   verificationStatus: string;
+  packageVerified?: boolean;
+  safetyNotes?: string[];
+  privacyNotes?: string[];
+  trustSignals?: RaycastTrustSignals;
+  searchScore?: number;
+  searchReasons?: string[];
+};
+
+export type RaycastTrustSignals = {
+  firstPartyEditorial?: boolean;
+  packageVerified?: boolean;
+  sourceStatus?: string;
+  lastVerifiedAt?: string;
+  hasSafetyNotes?: boolean;
+  hasPrivacyNotes?: boolean;
+  platforms?: string[];
+  supportLevels?: string[];
+};
+
+export type RegistrySearchFacetBuckets = Record<string, number>;
+
+export type RegistrySearchFacets = {
+  categories: RegistrySearchFacetBuckets;
+  platforms: RegistrySearchFacetBuckets;
+  installable: RegistrySearchFacetBuckets;
+  hasSafetyNotes: RegistrySearchFacetBuckets;
+  hasPrivacyNotes: RegistrySearchFacetBuckets;
+  downloadTrust: RegistrySearchFacetBuckets;
+  claimStatus: RegistrySearchFacetBuckets;
+  sourceStatus: RegistrySearchFacetBuckets;
 };
 
 export type RaycastDiscoveryReference = {
@@ -118,6 +166,63 @@ function normalizePlatformCompatibility(value: unknown) {
   );
 }
 
+function normalizeMcpInstallTargets(value: unknown): McpInstallTargetId[] {
+  return uniqueStrings(
+    normalizeStringArray(value).filter((item): item is McpInstallTargetId =>
+      mcpInstallTargetIds.has(item as McpInstallTargetId),
+    ),
+  ) as McpInstallTargetId[];
+}
+
+function normalizeTrustSignals(
+  value: unknown,
+): RaycastTrustSignals | undefined {
+  if (!isRecord(value)) return undefined;
+  const trustSignals: RaycastTrustSignals = {
+    firstPartyEditorial: optionalBoolean(value.firstPartyEditorial),
+    packageVerified: optionalBoolean(value.packageVerified),
+    sourceStatus: optionalString(value.sourceStatus) || undefined,
+    lastVerifiedAt: optionalString(value.lastVerifiedAt) || undefined,
+    hasSafetyNotes: optionalBoolean(value.hasSafetyNotes),
+    hasPrivacyNotes: optionalBoolean(value.hasPrivacyNotes),
+    platforms: normalizeStringArray(value.platforms),
+    supportLevels: normalizeStringArray(value.supportLevels),
+  };
+  const compact = Object.fromEntries(
+    Object.entries(trustSignals).filter(([, item]) =>
+      Array.isArray(item) ? item.length > 0 : item !== undefined,
+    ),
+  ) as RaycastTrustSignals;
+  return Object.keys(compact).length > 0 ? compact : undefined;
+}
+
+function normalizeFacetBuckets(value: unknown): RegistrySearchFacetBuckets {
+  if (!isRecord(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value)
+      .filter(
+        ([, count]) => typeof count === "number" && Number.isFinite(count),
+      )
+      .map(([key, count]) => [key, Math.max(0, Math.trunc(count as number))]),
+  );
+}
+
+function normalizeRegistrySearchFacets(
+  value: unknown,
+): RegistrySearchFacets | undefined {
+  if (!isRecord(value)) return undefined;
+  return {
+    categories: normalizeFacetBuckets(value.categories),
+    platforms: normalizeFacetBuckets(value.platforms),
+    installable: normalizeFacetBuckets(value.installable),
+    hasSafetyNotes: normalizeFacetBuckets(value.hasSafetyNotes),
+    hasPrivacyNotes: normalizeFacetBuckets(value.hasPrivacyNotes),
+    downloadTrust: normalizeFacetBuckets(value.downloadTrust),
+    claimStatus: normalizeFacetBuckets(value.claimStatus),
+    sourceStatus: normalizeFacetBuckets(value.sourceStatus),
+  };
+}
+
 export function buildEntrySummary(entry: RaycastEntry) {
   return [
     `${entry.title} — ${categoryLabel(entry.category)}`,
@@ -133,6 +238,16 @@ export type RaycastDetail = {
   copyText?: string;
   detailMarkdown: string;
   llmsUrl?: string;
+  installable?: boolean;
+  hasInstallCommand?: boolean;
+  hasConfigSnippet?: boolean;
+  mcpInstallTargets?: McpInstallTargetId[];
+  installCommand?: string;
+  configSnippet?: string;
+  safetyNotes?: string[];
+  privacyNotes?: string[];
+  sourceUrl?: string;
+  trustSignals?: RaycastTrustSignals;
 };
 
 export type ParsedFeed = {
@@ -151,15 +266,26 @@ export type ParsedRegistrySearch = {
   limit: number;
   offset: number;
   nextOffset: number | null;
+  facets?: RegistrySearchFacets;
   skippedMalformedEntries?: number;
 };
 
 export type RegistrySearchUrlOptions = {
   query: string;
   category?: string;
+  platform?: string;
+  installable?: string;
+  hasSafetyNotes?: string;
+  hasPrivacyNotes?: string;
+  downloadTrust?: string;
+  sourceStatus?: string;
   limit?: number;
   offset?: number;
   searchUrl?: string;
+};
+
+export type RaycastFeedPreferences = {
+  feedUrlOverride?: string;
 };
 
 export type FeedSnapshotMetadata = {
@@ -221,8 +347,10 @@ export function resolveFeedUrl(value?: string | null) {
     throw new Error("Feed override must be a valid URL");
   }
 
-  if (url.protocol !== "https:") {
-    throw new Error("Feed override must use HTTPS");
+  const isLocalHttp =
+    url.protocol === "http:" && localFeedHostnames.has(url.hostname);
+  if (url.protocol !== "https:" && !isLocalHttp) {
+    throw new Error("Feed override must use HTTPS unless it targets localhost");
   }
   if (!url.pathname.endsWith(RAYCAST_FEED_PATH)) {
     throw new Error(`Feed override must end with ${RAYCAST_FEED_PATH}`);
@@ -230,6 +358,15 @@ export function resolveFeedUrl(value?: string | null) {
 
   url.hash = "";
   return url.toString();
+}
+
+export function resolveConfiguredFeedUrl(
+  preferences: RaycastFeedPreferences = {},
+  env: Record<string, string | undefined> = process.env,
+) {
+  return resolveFeedUrl(
+    env[RAYCAST_FEED_OVERRIDE_ENV] || preferences.feedUrlOverride,
+  );
 }
 
 export function scopedCacheKey(baseKey: string, feedUrl = FEED_URL) {
@@ -282,6 +419,22 @@ export function registrySearchUrl(options: RegistrySearchUrlOptions) {
   const url = new URL(options.searchUrl || REGISTRY_SEARCH_URL);
   url.searchParams.set("q", options.query.trim());
   if (options.category) url.searchParams.set("category", options.category);
+  if (options.platform) url.searchParams.set("platform", options.platform);
+  if (options.installable) {
+    url.searchParams.set("installable", options.installable);
+  }
+  if (options.hasSafetyNotes) {
+    url.searchParams.set("hasSafetyNotes", options.hasSafetyNotes);
+  }
+  if (options.hasPrivacyNotes) {
+    url.searchParams.set("hasPrivacyNotes", options.hasPrivacyNotes);
+  }
+  if (options.downloadTrust) {
+    url.searchParams.set("downloadTrust", options.downloadTrust);
+  }
+  if (options.sourceStatus) {
+    url.searchParams.set("sourceStatus", options.sourceStatus);
+  }
   if (options.limit !== undefined) {
     url.searchParams.set("limit", String(options.limit));
   }
@@ -428,6 +581,10 @@ export function normalizeRaycastEntry(value: unknown): RaycastEntry | null {
     platformCompatibility: normalizePlatformCompatibility(
       value.platformCompatibility,
     ),
+    installable: optionalBoolean(value.installable) ?? false,
+    hasInstallCommand: optionalBoolean(value.hasInstallCommand) ?? false,
+    hasConfigSnippet: optionalBoolean(value.hasConfigSnippet) ?? false,
+    mcpInstallTargets: normalizeMcpInstallTargets(value.mcpInstallTargets),
     installCommand: optionalRawString(value.installCommand),
     configSnippet: optionalRawString(value.configSnippet),
     copyText,
@@ -445,6 +602,12 @@ export function normalizeRaycastEntry(value: unknown): RaycastEntry | null {
     documentationUrl: optionalString(value.documentationUrl),
     downloadTrust: normalizeDownloadTrust(value.downloadTrust),
     verificationStatus: optionalString(value.verificationStatus),
+    packageVerified: optionalBoolean(value.packageVerified),
+    safetyNotes: normalizeStringArray(value.safetyNotes),
+    privacyNotes: normalizeStringArray(value.privacyNotes),
+    trustSignals: normalizeTrustSignals(value.trustSignals),
+    searchScore: optionalNumber(value.searchScore),
+    searchReasons: normalizeStringArray(value.searchReasons),
   };
 
   if (!entry.copyText.trim()) {
@@ -517,6 +680,10 @@ export function normalizeRegistrySearchEntry(
     brandAssetSource: optionalString(value.brandAssetSource) || undefined,
     brandVerifiedAt: optionalString(value.brandVerifiedAt) || undefined,
     platformCompatibility: normalizeStringArray(value.platforms),
+    installable: optionalBoolean(value.installable) ?? false,
+    hasInstallCommand: optionalBoolean(value.hasInstallCommand) ?? false,
+    hasConfigSnippet: optionalBoolean(value.hasConfigSnippet) ?? false,
+    mcpInstallTargets: normalizeMcpInstallTargets(value.mcpInstallTargets),
     installCommand: "",
     configSnippet: "",
     copyText: "",
@@ -532,6 +699,14 @@ export function normalizeRegistrySearchEntry(
     documentationUrl: optionalString(value.documentationUrl),
     downloadTrust: normalizeDownloadTrust(value.downloadTrust),
     verificationStatus: optionalString(value.verificationStatus),
+    packageVerified:
+      optionalBoolean(value.packageVerified) ??
+      normalizeTrustSignals(value.trustSignals)?.packageVerified,
+    safetyNotes: normalizeStringArray(value.safetyNotes),
+    privacyNotes: normalizeStringArray(value.privacyNotes),
+    trustSignals: normalizeTrustSignals(value.trustSignals),
+    searchScore: optionalNumber(value.searchScore),
+    searchReasons: normalizeStringArray(value.searchReasons),
   };
 
   entry.copyText = buildSearchResultCopyText(entry);
@@ -583,6 +758,7 @@ export function parseRegistrySearch(value: string): ParsedRegistrySearch {
     limit,
     offset,
     nextOffset,
+    facets: normalizeRegistrySearchFacets(parsed.facets),
     skippedMalformedEntries: skippedMalformedEntries || undefined,
   };
 }
@@ -712,6 +888,9 @@ function discoveryFallbackEntry(
     title,
     description: reference.description,
     tags: [],
+    installable: false,
+    hasInstallCommand: false,
+    hasConfigSnippet: false,
     installCommand: "",
     configSnippet: "",
     copyText,
@@ -833,19 +1012,45 @@ export function isRaycastDetail(value: unknown): value is RaycastDetail {
     Boolean(detail) &&
     typeof detail.detailMarkdown === "string" &&
     (detail.copyText === undefined || typeof detail.copyText === "string") &&
-    (detail.llmsUrl === undefined || typeof detail.llmsUrl === "string")
+    (detail.llmsUrl === undefined || typeof detail.llmsUrl === "string") &&
+    (detail.installable === undefined ||
+      typeof detail.installable === "boolean") &&
+    (detail.hasInstallCommand === undefined ||
+      typeof detail.hasInstallCommand === "boolean") &&
+    (detail.hasConfigSnippet === undefined ||
+      typeof detail.hasConfigSnippet === "boolean") &&
+    (detail.mcpInstallTargets === undefined ||
+      (Array.isArray(detail.mcpInstallTargets) &&
+        detail.mcpInstallTargets.every((item) => typeof item === "string"))) &&
+    (detail.installCommand === undefined ||
+      typeof detail.installCommand === "string") &&
+    (detail.configSnippet === undefined ||
+      typeof detail.configSnippet === "string")
   );
 }
 
 export function parseDetail(value: string): RaycastDetail | null {
   const parsed = JSON.parse(value) as unknown;
-  return isRaycastDetail(parsed) ? parsed : null;
+  if (!isRaycastDetail(parsed)) return null;
+  return {
+    ...parsed,
+    mcpInstallTargets: normalizeMcpInstallTargets(parsed.mcpInstallTargets),
+  };
 }
 
 export function fallbackDetail(entry: RaycastEntry): RaycastDetail {
   return {
     copyText: entry.copyText,
     detailMarkdown: entry.detailMarkdown,
+    installable: entry.installable,
+    hasInstallCommand: entry.hasInstallCommand,
+    hasConfigSnippet: entry.hasConfigSnippet,
+    mcpInstallTargets: entry.mcpInstallTargets,
+    installCommand: entry.installCommand,
+    configSnippet: entry.configSnippet,
+    safetyNotes: entry.safetyNotes,
+    privacyNotes: entry.privacyNotes,
+    trustSignals: entry.trustSignals,
   };
 }
 

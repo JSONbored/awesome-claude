@@ -42,7 +42,22 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add todoist -e TODOIST_API_TOKEN=your-token -- npx @greirson/mcp-todoist
+  {
+    "mcpServers": {
+      "todoist": {
+        "command": "npx",
+        "args": [
+          "@greirson/mcp-todoist"
+        ],
+        "env": {
+          "TODOIST_API_TOKEN": "your-api-token",
+          "DRYRUN": "true",
+          "TODOIST_UNIFIED_TOOLS": "true"
+        },
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 10 minutes
 difficulty: beginner
 prerequisites:
