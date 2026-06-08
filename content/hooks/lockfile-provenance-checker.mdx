@@ -91,13 +91,16 @@ scriptBody: |-
   jq -e 'has("packages")' "$FILE" >/dev/null 2>&1 || exit 0
 
   found=0
+  sanitize_output() {
+    LC_ALL=C tr -d '\000-\010\013-\037\177'
+  }
   report() {
     local lines
-    lines=$(jq -r "$2" "$FILE" 2>/dev/null | sed '/^$/d' | head -10)
+    lines=$(jq -r "$2" "$FILE" 2>/dev/null | sanitize_output | sed '/^$/d' | head -10)
     if [ -n "$lines" ]; then
       echo "$1" >&2
       printf '%s\n' "$lines" | while IFS= read -r l; do
-        [ -n "$l" ] && echo "   - $l" >&2
+        [ -n "$l" ] && printf '   - %s\n' "$l" >&2
       done
       found=1
     fi
@@ -107,10 +110,10 @@ scriptBody: |-
   # provenance signal: git sources, alternate registries, and insecure
   # transports all fail this test.
   report "Dependencies resolved from outside the public npm registry (supply-chain risk):" \
-    '.packages | to_entries[] | select(.value.resolved) | select(.value.resolved | test("^https://registry\\.npmjs\\.org/") | not) | "\(.key): \(.value.resolved)"'
+    'def clean: gsub("[\u0000-\u001F\u007F]"; ""); .packages | to_entries[] | select(.value.resolved) | select(.value.resolved | test("^https://registry\\.npmjs\\.org/") | not) | "\(.key | clean): \(.value.resolved | clean)"'
 
   report "Registry tarballs missing an integrity hash:" \
-    '.packages | to_entries[] | select(.value.resolved) | select(.value.resolved | test("^https://registry\\.npmjs\\.org/")) | select((.value.integrity // "") == "") | .key'
+    'def clean: gsub("[\u0000-\u001F\u007F]"; ""); .packages | to_entries[] | select(.value.resolved) | select(.value.resolved | test("^https://registry\\.npmjs\\.org/")) | select((.value.integrity // "") == "") | (.key | clean)'
 
   if [ "$found" -ne 0 ]; then
     echo "Confirm these sources are expected; run lockfile-lint for the full check set and an allowlist." >&2
