@@ -37,7 +37,18 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add gcloud -- npx -y @google-cloud/gcloud-mcp
+  {
+    "mcpServers": {
+      "gcloud": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@google-cloud/gcloud-mcp"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 20 minutes
 difficulty: advanced
 prerequisites:

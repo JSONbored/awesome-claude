@@ -44,16 +44,19 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "clickup": {
-      "env": {
-        "CLICKUP_API_KEY": "${CLICKUP_API_KEY}",
-        "CLICKUP_TEAM_ID": "${CLICKUP_TEAM_ID}"
-      },
-      "args": [
-        "-y",
-        "@hauptsache.net/clickup-mcp"
-      ],
-      "command": "npx"
+    "mcpServers": {
+      "clickup": {
+        "env": {
+          "CLICKUP_API_KEY": "${CLICKUP_API_KEY}",
+          "CLICKUP_TEAM_ID": "${CLICKUP_TEAM_ID}"
+        },
+        "args": [
+          "-y",
+          "@hauptsache.net/clickup-mcp"
+        ],
+        "command": "npx",
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 2 minutes

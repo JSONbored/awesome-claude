@@ -38,9 +38,23 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  [mcp_servers.snyk-security]
-  command = "npx"
-  args = ["-y", "snyk@1.1305.1", "mcp", "-t", "stdio", "--profile=lite"]
+  {
+    "mcpServers": {
+      "Snyk": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "snyk@1.1305.1",
+          "mcp",
+          "-t",
+          "stdio",
+          "--profile=lite"
+        ],
+        "env": {},
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:

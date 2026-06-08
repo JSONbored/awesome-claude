@@ -41,16 +41,19 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "docker": {
-      "env": {
-        "DOCKER_HOST": "${DOCKER_HOST:-unix:///var/run/docker.sock}",
-        "DOCKER_API_VERSION": "${DOCKER_API_VERSION:-1.43}"
-      },
-      "args": [
-        "-y",
-        "@docker/mcp-server"
-      ],
-      "command": "npx"
+    "mcpServers": {
+      "docker": {
+        "env": {
+          "DOCKER_HOST": "${DOCKER_HOST:-unix:///var/run/docker.sock}",
+          "DOCKER_API_VERSION": "${DOCKER_API_VERSION:-1.43}"
+        },
+        "args": [
+          "-y",
+          "@docker/mcp-server"
+        ],
+        "command": "npx",
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 2 minutes

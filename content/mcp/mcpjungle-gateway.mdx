@@ -38,10 +38,14 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "name": "context7",
-    "transport": "streamable_http",
-    "description": "Context7 MCP Server",
-    "url": "https://mcp.context7.com/mcp"
+    "mcpServers": {
+      "mcpjungle-gateway": {
+        "name": "context7",
+        "description": "Context7 MCP Server",
+        "url": "https://mcp.context7.com/mcp",
+        "type": "http"
+      }
+    }
   }
 estimatedSetupTime: 20 minutes
 difficulty: advanced

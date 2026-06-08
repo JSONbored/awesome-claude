@@ -37,7 +37,19 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  npx -y kordoc setup
+  {
+    "mcpServers": {
+      "kordoc": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "kordoc",
+          "mcp"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 10 minutes
 difficulty: intermediate
 prerequisites:

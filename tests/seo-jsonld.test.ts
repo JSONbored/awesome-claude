@@ -357,6 +357,14 @@ describe("SEO JSON-LD policy", () => {
       value: { minValue: 150000, maxValue: 190000 },
     });
 
+    // Explicit values are not scaled again when paired with a shorthand bound.
+    expect(baseSalaryFor("$150,000 - $190k")).toMatchObject({
+      value: { minValue: 150000, maxValue: 190000 },
+    });
+    expect(baseSalaryFor("$150000-$190k")).toMatchObject({
+      value: { minValue: 150000, maxValue: 190000 },
+    });
+
     // Inverted ranges are rejected rather than emitting minValue > maxValue.
     expect(baseSalaryFor("$190-150k")).toBeUndefined();
     expect(baseSalaryFor("$190k-150k")).toBeUndefined();

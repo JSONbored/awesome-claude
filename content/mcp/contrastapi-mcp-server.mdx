@@ -32,9 +32,11 @@ usageSnippet: |-
   claude mcp list
 configSnippet: |-
   {
-    "contrastapi": {
-      "url": "https://api.contrastcyber.com/mcp/",
-      "transport": "http"
+    "mcpServers": {
+      "contrastapi": {
+        "url": "https://api.contrastcyber.com/mcp/",
+        "type": "http"
+      }
     }
   }
 tags:

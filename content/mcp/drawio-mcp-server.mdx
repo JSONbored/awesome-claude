@@ -40,7 +40,22 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add-json drawio '{"type":"stdio","command":"npx","args":["-y","drawio-mcp-server","--editor"]}'
+  {
+    "mcpServers": {
+      "drawio": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "drawio-mcp-server",
+          "--editor"
+        ],
+        "env": {
+          "NPM_CONFIG_IGNORE_SCRIPTS": "true"
+        },
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 10 minutes
 difficulty: intermediate
 prerequisites:

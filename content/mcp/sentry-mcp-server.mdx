@@ -34,9 +34,11 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "sentry": {
-      "url": "https://mcp.sentry.dev/mcp",
-      "transport": "http"
+    "mcpServers": {
+      "sentry": {
+        "url": "https://mcp.sentry.dev/mcp",
+        "type": "http"
+      }
     }
   }
 estimatedSetupTime: 1 minute

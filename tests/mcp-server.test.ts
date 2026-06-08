@@ -5,6 +5,8 @@ import { describe, expect, it } from "vitest";
 
 import { createRemoteMcpProxyServerFromClient } from "../packages/mcp/src/remote-proxy.js";
 import { createHeyClaudeMcpServer } from "../packages/mcp/src/server.js";
+import * as registryModule from "../packages/mcp/src/registry.js";
+import * as schemaModule from "../packages/mcp/src/schemas.js";
 import {
   callRegistryTool,
   getClientSetup,
@@ -307,6 +309,26 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(packageJson.exports).toHaveProperty("./server");
     expect(packageJson.exports).toHaveProperty("./remote-proxy");
     expect(packageJson.exports).toHaveProperty("./submissions");
+  });
+
+  it("keeps MCP planner exports aligned across runtime and declarations", () => {
+    expect(registryModule.planWorkflowToolbox).toBe(planWorkflowToolbox);
+    expect(registryModule.PlanWorkflowToolboxInputSchema).toBe(
+      schemaModule.PlanWorkflowToolboxInputSchema,
+    );
+
+    const registryTypes = fs.readFileSync(
+      path.join(repoRoot, "packages/mcp/src/registry.d.ts"),
+      "utf8",
+    );
+    const schemaTypes = fs.readFileSync(
+      path.join(repoRoot, "packages/mcp/src/schemas.d.ts"),
+      "utf8",
+    );
+
+    expect(registryTypes).toContain("function planWorkflowToolbox");
+    expect(registryTypes).toContain("PlanWorkflowToolboxInputSchema");
+    expect(schemaTypes).toContain("PlanWorkflowToolboxInputSchema");
   });
 
   it("keeps npm package README branding, links, and release convention current", () => {

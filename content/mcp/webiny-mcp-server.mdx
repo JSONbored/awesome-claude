@@ -37,10 +37,18 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  npx @webiny/mcp configure claude
-
-  # Or configure manually:
-  claude mcp add webiny -- npx @webiny/mcp serve
+  {
+    "mcpServers": {
+      "webiny": {
+        "command": "npx",
+        "args": [
+          "@webiny/mcp",
+          "serve"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 10 minutes
 difficulty: intermediate
 prerequisites:

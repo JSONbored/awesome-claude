@@ -122,6 +122,66 @@ describe("/api/registry/search", () => {
     expect(body.results[0].searchReasons).toContain("source-backed");
   });
 
+  it("matches multi-token and aliased category searches without requiring an exact phrase", async () => {
+    searchIndexMock.entries = [
+      {
+        ...makeEntry("microsoft-teams"),
+        title: "MCP Teams Server",
+        description: "Connect Microsoft Teams through Claude Code.",
+        tags: ["teams", "mcp"],
+        keywords: ["microsoft-teams", "msteams"],
+        installable: true,
+      },
+      {
+        ...makeEntry("claude-hook"),
+        category: "hooks",
+        title: "Auto Formatter Hook",
+        description: "Format files before Claude Code completes a task.",
+        tags: ["hooks", "formatter"],
+        keywords: ["claude-code"],
+      },
+      {
+        ...makeEntry("github-server"),
+        title: "GitHub MCP Server",
+        description: "Search repositories and issues.",
+        tags: ["github"],
+        keywords: ["repository"],
+      },
+    ];
+
+    const { GET } = await import("../apps/web/src/routes/api/registry/search");
+    const teams = await GET(
+      new Request(
+        "https://heyclau.de/api/registry/search?q=ms%20teams&installable=true",
+        { headers: { origin: "https://heyclau.de" } },
+      ),
+    );
+    const hooks = await GET(
+      new Request(
+        "https://heyclau.de/api/registry/search?q=claude%20code%20hooks",
+        { headers: { origin: "https://heyclau.de" } },
+      ),
+    );
+    const github = await GET(
+      new Request("https://heyclau.de/api/registry/search?q=gh", {
+        headers: { origin: "https://heyclau.de" },
+      }),
+    );
+
+    await expect(teams.json()).resolves.toMatchObject({
+      total: 1,
+      results: [expect.objectContaining({ slug: "microsoft-teams" })],
+    });
+    await expect(hooks.json()).resolves.toMatchObject({
+      total: 1,
+      results: [expect.objectContaining({ slug: "claude-hook" })],
+    });
+    await expect(github.json()).resolves.toMatchObject({
+      total: 1,
+      results: [expect.objectContaining({ slug: "github-server" })],
+    });
+  });
+
   it("does not advertise an offset beyond the documented maximum", async () => {
     searchIndexMock.entries = Array.from({ length: 10_001 }, (_, index) =>
       makeEntry(`fixture-${index}`),

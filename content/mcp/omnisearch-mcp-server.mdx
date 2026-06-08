@@ -47,7 +47,26 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  npx mcp-omnisearch
+  {
+    "mcpServers": {
+      "omnisearch": {
+        "command": "npx",
+        "args": [
+          "mcp-omnisearch"
+        ],
+        "env": {
+          "TAVILY_API_KEY": "your-tavily-key",
+          "KAGI_API_KEY": "your-kagi-key",
+          "BRAVE_API_KEY": "your-brave-key",
+          "GITHUB_API_KEY": "your-github-token",
+          "EXA_API_KEY": "your-exa-key",
+          "LINKUP_API_KEY": "your-linkup-key",
+          "FIRECRAWL_API_KEY": "your-firecrawl-key"
+        },
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:

@@ -45,7 +45,25 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  docker run -i --rm -e PROMETHEUS_URL="https://prometheus.example.com" ghcr.io/pab1it0/prometheus-mcp-server:latest
+  {
+    "mcpServers": {
+      "prometheus": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "-e",
+          "PROMETHEUS_URL",
+          "ghcr.io/pab1it0/prometheus-mcp-server:latest"
+        ],
+        "env": {
+          "PROMETHEUS_URL": "https://prometheus.example.com"
+        },
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:

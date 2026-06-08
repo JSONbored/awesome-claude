@@ -343,7 +343,7 @@ describe("Cloudflare submission gate helpers", () => {
     });
   });
 
-  it("treats neutral Superagent scans as non-failing content gate signals", async () => {
+  it("treats neutral Superagent scans as failed validation for manual review", async () => {
     const fetchMock = vi.fn(async () =>
       Response.json({
         check_runs: [
@@ -372,12 +372,12 @@ describe("Cloudflare submission gate helpers", () => {
         requiredChecks: ["validate-content", "Superagent Security Scan"],
       }),
     ).resolves.toMatchObject({
-      state: "passed",
+      state: "failed",
       checks: [
         { name: "validate-content", status: "passed" },
         {
           name: "Superagent Security Scan",
-          status: "passed",
+          status: "failed",
           details: "concluded neutral",
         },
       ],
@@ -502,6 +502,16 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).not.toContain("getRepositoryBlobText({");
     expect(source).not.toContain("getRepositoryTree({");
     expect(source).toContain("function ignoreOutOfScopeReviewTarget");
+    const ignoreOutOfScopeBlock = source.slice(
+      source.indexOf("async function ignoreOutOfScopeReviewTarget"),
+      source.indexOf("function isRetryableMergeError"),
+    );
+    expect(ignoreOutOfScopeBlock).toContain(
+      "const reviewScanKey = reviewScanKeyForTarget(params.target);",
+    );
+    expect(ignoreOutOfScopeBlock).toContain(
+      "lastReviewKey: reviewScanKey || undefined",
+    );
     expect(source).toContain(
       "Skipped because this PR no longer targets the configured content gate base.",
     );
@@ -1894,7 +1904,9 @@ ${urls}
     expect(source).toContain("SubmissionMergePendingError");
     expect(source).toContain('status: "merge_pending"');
     expect(source).toContain('decision: "merge_pending"');
-    expect(source).toContain("message.retry({ delaySeconds: 30 })");
+    expect(source).toContain(
+      "message.retry({ delaySeconds: error.retryDelaySeconds })",
+    );
     expect(source).toContain("AUTO_MERGE_CONFIDENCE_FLOOR");
     expect(source).toContain("enforceAutoMergeConfidenceFloor(");
     expect(source.indexOf("normalizeOneShotDecision(decision)")).toBeLessThan(
@@ -1913,7 +1925,7 @@ ${urls}
       )?.[0] || "";
     const retryBranch =
       source.match(
-        /if \(isRetryableMergeError\(error\)\) \{[\s\S]*?throw new SubmissionMergePendingError\(pendingSummary\);/,
+        /if \(isRetryableMergeError\(error\)\) \{[\s\S]*?throw new SubmissionMergePendingError\([\s\S]*?retryDelaySeconds,[\s\S]*?\);/,
       )?.[0] || "";
 
     expect(classifier).toContain("isTimeoutError(error)");
@@ -1924,9 +1936,18 @@ ${urls}
     expect(classifier).toContain("error.status <= 599");
     expect(classifier).toContain("required approving review");
     expect(classifier).toContain("merge conflict");
+    expect(source).toContain("function retryDelayForMergeError");
+    expect(source).toContain("error.status === 429");
+    expect(source).toContain("githubRetryDelaySeconds(error");
+    expect(source).toContain("GITHUB_RATE_LIMIT_FALLBACK_SECONDS");
+    expect(retryBranch).toContain(
+      "const retryDelaySeconds = retryDelayForMergeError(error)",
+    );
     expect(retryBranch).toContain('status: "merge_pending"');
     expect(retryBranch).toContain('decision: "merge_pending"');
     expect(retryBranch).toContain("merge retry pending");
+    expect(retryBranch).toContain("nextReviewAt: isoAfter(retryDelaySeconds)");
+    expect(retryBranch).toContain("retryDelaySeconds");
     expect(retryBranch).toContain(
       "The gate will retry after transient GitHub merge state settles.",
     );
@@ -2144,8 +2165,12 @@ ${urls}
     expect(source).toContain("isGitHubRateLimitError(error)");
     expect(source).toContain("githubRetryDelaySeconds(error");
     expect(source).toContain("nextReviewForError(error)");
+    expect(source).toContain("function retryDelayForMergeError");
     expect(source).toContain(
       "message.retry({ delaySeconds: retryDelayForError(error) })",
+    );
+    expect(source).toContain(
+      "message.retry({ delaySeconds: error.retryDelaySeconds })",
     );
     expect(source).toContain("scheduled(_controller, env, ctx)");
     expect(source).toContain("ctx.waitUntil(sweepSubmissionQueue(env))");
@@ -2358,6 +2383,30 @@ ${urls}
     expect(verifyIndex).toBeGreaterThan(guardIndex);
     expect(source).toContain('error: "webhook_secret_not_configured"');
     expect(source).toContain("secret: env.GITHUB_WEBHOOK_SECRET,");
+  });
+
+  it("reconstructs all directory URL signal fields for accepted duplicate scans", () => {
+    const source = readWorkerSource();
+    const helperSource =
+      source.match(
+        /const DIRECTORY_ENTRY_URL_SIGNAL_FIELDS[\s\S]*?async function acceptedContentSignals/,
+      )?.[0] || "";
+
+    for (const field of [
+      "documentationUrl",
+      "docsUrl",
+      "downloadUrl",
+      "githubUrl",
+      "packageUrl",
+      "repoUrl",
+      "repositoryUrl",
+      "sourceUrl",
+      "websiteUrl",
+    ]) {
+      expect(helperSource).toContain(`"${field}"`);
+    }
+    expect(helperSource).toContain("DIRECTORY_ENTRY_URL_SIGNAL_FIELDS");
+    expect(helperSource).toContain("entry[field]");
   });
 
   it("detects neutral duplicate submissions from canonical source URLs", () => {
@@ -2751,6 +2800,79 @@ documentationUrl: "https://code.claude.com/docs/en/mcp"
           reasons: expect.arrayContaining([
             expect.stringContaining(
               "same canonical source URL https://code.claude.com/docs/en/mcp in agents",
+            ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
+  it("treats exact multi-entry MCP catalog subpaths as strict duplicates", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/mcp/postgres-mcp-server.mdx",
+      content: `---
+title: Postgres MCP Server
+slug: postgres-mcp-server
+category: mcp
+description: MCP server for PostgreSQL database workflows.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres"
+---
+`,
+      label: "accepted entry content/mcp/postgres-mcp-server.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/postgresql-database-mcp.mdx",
+      content: `---
+title: PostgreSQL Database MCP
+slug: postgresql-database-mcp
+category: mcp
+description: Tooling that connects Claude to Postgres databases.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres?utm_source=heyclaude"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(candidate, [existing]),
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        "same multi-entry catalog subpath URL https://github.com/modelcontextprotocol/servers/tree/main/src/postgres",
+      ]),
+    });
+  });
+
+  it("treats distinct multi-entry MCP catalog subpaths as related context", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/mcp/postgres-mcp-server.mdx",
+      content: `---
+title: Postgres MCP Server
+slug: postgres-mcp-server
+category: mcp
+description: MCP server for PostgreSQL database workflows.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres"
+---
+`,
+      label: "accepted entry content/mcp/postgres-mcp-server.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/sqlite-mcp-server.mdx",
+      content: `---
+title: SQLite MCP Server
+slug: sqlite-mcp-server
+category: mcp
+description: MCP server for SQLite database workflows.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/sqlite"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same multi-entry catalog source URL https://github.com/modelcontextprotocol/servers in mcp",
             ),
           ]),
         }),

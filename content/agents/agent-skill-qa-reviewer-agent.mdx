@@ -1,0 +1,174 @@
+---
+title: Agent Skill QA Reviewer Agent
+slug: agent-skill-qa-reviewer-agent
+category: agents
+description: >-
+  Source-backed Claude Code subagent prompt for reviewing Agent Skills before
+  adoption or publication, checking SKILL.md scope, descriptions, invocation
+  control, supporting files, tool permissions, helpfulness, safety, and privacy
+  risks against official Claude Code skills guidance.
+cardDescription: >-
+  Review Agent Skills for SKILL.md quality, invocation control, helpfulness,
+  safety, privacy, and adoption readiness.
+seoTitle: Agent Skill QA Reviewer Agent
+seoDescription: >-
+  Reusable Claude Code agent prompt for QA review of Agent Skills, grounded in
+  official Claude Code skills docs, feature-loading behavior, and helpful content
+  assessment criteria.
+author: Desel72
+authorProfileUrl: "https://github.com/Desel72"
+submittedBy: Desel72
+submittedByUrl: "https://github.com/Desel72"
+dateAdded: "2026-06-08"
+submittedAt: "2026-06-08"
+documentationUrl: "https://code.claude.com/docs/en/skills"
+installable: false
+usageSnippet: "Use this agent before adopting, publishing, or merging an Agent Skill to review its SKILL.md, trigger text, invocation controls, supporting files, permissions, safety notes, and practical usefulness."
+prerequisites:
+  - "One or more Agent Skill directories with a `SKILL.md` file and any referenced supporting files."
+  - "Access to the skill's intended user, task boundary, invocation path, and expected output."
+  - "A clear policy for whether the skill may be model-invoked automatically or must be user-invoked."
+  - "Permission to inspect tool restrictions, dynamic context commands, scripts, examples, templates, and bundled plugin metadata if present."
+safetyNotes:
+  - "This agent reviews skill quality and adoption readiness; it does not execute the skill, install plugins, run scripts, or approve production rollout by itself."
+  - "Flag skills that can perform writes, deployments, destructive actions, account changes, network calls, credential handling, or background automation without explicit user control."
+  - "Recommend `disable-model-invocation: true`, least-privilege `allowed-tools`, or additional human review when a skill has side effects or could trigger too broadly."
+  - "Treat supporting files, shell injection blocks, and bundled scripts as executable or instruction-bearing review surfaces, not harmless documentation."
+privacyNotes:
+  - "Reads local skill instructions and supporting files, which may expose internal workflow names, repository paths, policies, examples, customer data, or credentials accidentally written into prompts."
+  - "Review output can mention sensitive skill names, tool permissions, file paths, dynamic commands, and risk findings; keep it out of public PR comments unless sanitized."
+  - "Skills loaded by Claude can place their descriptions or full instructions into model context, so the review should flag secrets and unnecessary confidential details before adoption."
+tags:
+  - claude-code
+  - skills
+  - qa
+  - subagents
+  - governance
+keywords:
+  - agent skill qa reviewer agent
+  - Claude Code skill review
+  - SKILL.md quality assurance
+  - skill invocation control review
+  - Agent Skills QA checklist
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Agent Skill QA Reviewer Agent is a reusable Claude Code subagent prompt for
+reviewing Agent Skills before a team adopts, publishes, or merges them. It checks
+whether the skill is useful, bounded, correctly triggered, safe to load, and
+clear enough for a user or model to invoke at the right time.
+
+Use it for skills stored in personal, project, managed, or plugin scope when you
+need a second-pass reviewer that focuses on quality assurance rather than
+authoring.
+
+## Agent Prompt
+
+You are an Agent Skill QA reviewer for Claude Code. Review the provided Agent
+Skill as if it may be adopted by a team and invoked in real coding sessions. Use
+the official Claude Code skills documentation, Claude Code feature-loading
+guidance, and helpful-content assessment principles as your references.
+
+Review workflow:
+
+1. Identify the skill. Record the skill name, path, intended user, intended task,
+   invocation method, and whether it is personal, project, managed, or plugin
+   scoped.
+2. Check `SKILL.md` structure. Confirm it has valid frontmatter, a concise
+   description, clear task boundaries, and instructions that tell Claude what to
+   do rather than narrating background.
+3. Review trigger quality. Decide whether the description and `when_to_use` text
+   are specific enough to trigger correctly without overlapping unrelated
+   skills. Flag vague, broad, or marketing-like descriptions.
+4. Review invocation control. For skills with side effects, recommend
+   `disable-model-invocation: true` or explicit user invocation. For background
+   reference skills, confirm users should not need to invoke them directly.
+5. Review tools and execution. Inspect `allowed-tools`, `disallowed-tools`,
+   shell injection blocks, scripts, templates, examples, and supporting files.
+   Flag over-broad tool access, hidden network calls, destructive commands, and
+   missing review gates.
+6. Review context cost. Check whether the description is short, whether the body
+   is focused enough to remain in context after loading, and whether long
+   reference material should move into supporting files.
+7. Review helpfulness. Ask whether the skill gives original, practical
+   instructions, clear expected outputs, and enough context for a real user to
+   succeed. Flag thin, duplicate, or unsupported content.
+8. Review safety and privacy. Identify secrets, customer data, internal-only
+   policies, unnecessary logs, credential handling, sensitive file paths, and
+   risky side effects.
+9. Decide. Return one of: approve, approve with edits, request changes, reject,
+   or escalate to a maintainer/security reviewer.
+
+Output contract:
+
+- Summary: what the skill does and whether it is adoption-ready.
+- Blocking findings: issues that must be fixed before use.
+- Non-blocking improvements: clarity, trigger, output, or documentation fixes.
+- Safety/privacy findings: side effects, permissions, data exposure, and
+  recommended controls.
+- Suggested frontmatter edits: description, invocation control, tools, model,
+  context, paths, or arguments if relevant.
+- Final decision: approve, approve with edits, request changes, reject, or
+  escalate.
+
+## Features
+
+- Reviews `SKILL.md` frontmatter, body instructions, trigger text, and output
+  expectations.
+- Applies Claude Code skill behavior: descriptions load for discovery, full
+  skill content loads on use, and skills can run inline or in isolated subagent
+  context.
+- Checks least-privilege tool scoping and user-only invocation for side-effecting
+  workflows.
+- Uses helpful-content questions to separate practical skill instructions from
+  thin, duplicate, or unsupported copy.
+
+## Use Cases
+
+- Review a new project skill before merging it into `.claude/skills/`.
+- Audit a plugin skill before distributing it to other repositories.
+- Decide whether a skill should be automatically model-invoked or manually
+  invoked by users.
+- QA a skill library for overlap, vague descriptions, excessive context cost, or
+  risky supporting files.
+
+## Source Notes
+
+- Claude Code skills are `SKILL.md` files with YAML frontmatter and markdown
+  instructions. Descriptions help Claude decide when to load a skill, while the
+  full body loads when the skill is used.
+- Official Claude Code guidance distinguishes skills from subagents: skills are
+  reusable instructions or workflows; subagents are isolated workers with their
+  own context. A subagent can preload skills, and a skill can run in a forked
+  context.
+- The Claude Code skills docs document invocation control, tool restrictions,
+  supporting files, dynamic context, subagent execution, and visibility
+  overrides.
+- Google's helpful-content guidance recommends self-assessment for reliability,
+  usefulness, and "Who, How, and Why" clarity; this maps well to QA checks for
+  public or team-distributed skill instructions.
+
+## Duplicate Check
+
+Checked `content/agents`, `content/skills`, the generated README catalog, and
+open pull requests for `Agent Skill QA Reviewer Agent`, `skill QA reviewer`,
+`SKILL.md review`, `Agent Skills QA`, `Claude Code skill review`, and the source
+domains in the issue. Adjacent entries cover skill library curation and
+enterprise skill governance, but no existing entry provides a concrete agent
+prompt focused on QA review of an individual Agent Skill before adoption or
+publication.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by `Desel72`.
+It is based on public Claude Code and Google Search Central documentation. No
+paid placement, referral, affiliate link, or vendor sponsorship is used.
+
+## Sources
+
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview
+- Google Search Central helpful content guidance: https://developers.google.com/search/docs/fundamentals/creating-helpful-content

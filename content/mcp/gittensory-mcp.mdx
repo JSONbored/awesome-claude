@@ -33,9 +33,16 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "gittensory": {
-      "command": "npx",
-      "args": ["-y", "@jsonbored/gittensory-mcp@latest", "--stdio"]
+    "mcpServers": {
+      "gittensory": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@jsonbored/gittensory-mcp@latest",
+          "--stdio"
+        ],
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 5 minutes

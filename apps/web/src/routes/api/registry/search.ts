@@ -18,6 +18,7 @@ export const GET = createApiHandler("registry.search", async ({ request, query: 
     q: query,
     category,
     platform,
+    installable,
     hasSafetyNotes,
     hasPrivacyNotes,
     downloadTrust,
@@ -31,6 +32,7 @@ export const GET = createApiHandler("registry.search", async ({ request, query: 
     query,
     category,
     platform,
+    installable,
     hasSafetyNotes,
     hasPrivacyNotes,
     downloadTrust,
@@ -58,6 +60,7 @@ export const GET = createApiHandler("registry.search", async ({ request, query: 
       category: category || "all",
       platform: platform || "all",
       filters: {
+        installable,
         hasSafetyNotes,
         hasPrivacyNotes,
         downloadTrust,

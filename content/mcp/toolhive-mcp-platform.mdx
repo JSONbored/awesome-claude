@@ -28,20 +28,24 @@ packageUrl: "https://github.com/stacklok/toolhive/releases"
 websiteUrl: "https://stacklok.com/download/"
 installable: true
 installCommand: "brew tap stacklok/tap && brew install thv"
-usageSnippet: "Install the `thv` CLI, list trusted registry entries, run an approved MCP server, and use `thv client setup` to connect supported local MCP clients."
+usageSnippet: "Install the `thv` CLI, start `thv mcp serve`, then connect MCP clients to the local ToolHive control server at `http://localhost:4483/mcp`."
 copySnippet: |-
-  thv registry list
-  thv registry info toolhive-doc-mcp
-  thv run toolhive-doc-mcp
-  thv client setup
+  thv mcp serve
 configSnippet: |-
-  thv run --proxy-port 8081 toolhive-doc-mcp
+  {
+    "mcpServers": {
+      "toolhive": {
+        "url": "http://localhost:4483/mcp",
+        "type": "http"
+      }
+    }
+  }
 estimatedSetupTime: 20 minutes
 difficulty: advanced
 prerequisites:
   - Docker or Podman available for local containerized MCP server runtime.
   - ToolHive CLI installed through Homebrew, winget, release archive, or source build.
-  - MCP client configuration reviewed before running `thv client setup`.
+  - MCP client configuration reviewed before connecting to `thv mcp serve` or running `thv client setup`.
   - Registry entries, server images, permissions, secrets, and network access reviewed before running MCP servers.
   - Kubernetes cluster, operator permissions, ingress, identity provider, and observability stack planned before cluster deployment.
 safetyNotes:
@@ -50,6 +54,7 @@ safetyNotes:
   - Registry, gateway, and operator features can centralize access to many MCP servers; enforce least privilege, approval workflows, and audit review before broad rollout.
   - OIDC/OAuth, authorization policy, remote MCP authentication, and Kubernetes operator controls should be configured before exposing shared endpoints.
   - Built-in client setup can modify local MCP client configuration; review generated changes before connecting sensitive workspaces.
+  - The `thv mcp serve` control server is experimental and can expose tools that search the registry, run servers, stop servers, remove servers, inspect logs, and manage secrets.
 privacyNotes:
   - ToolHive may handle MCP server configs, registry metadata, container images, permission files, secrets, client config paths, prompts, tool arguments, tool outputs, traces, metrics, audit logs, and identity claims.
   - Local configuration, keyring entries, runtime logs, OpenTelemetry traces, Prometheus metrics, Kubernetes custom resources, and registry contents can reveal private server names, endpoints, credentials, and tool schemas.
@@ -66,6 +71,9 @@ sourceUrls:
   - "https://github.com/stacklok/toolhive/blob/main/docs/remote-mcp-authentication.md"
   - "https://github.com/stacklok/toolhive/blob/main/docs/arch/04-secrets-management.md"
   - "https://github.com/stacklok/toolhive/blob/main/docs/arch/05-runconfig-and-permissions.md"
+  - "https://github.com/stacklok/toolhive/blob/main/docs/cli/thv_mcp_serve.md"
+  - "https://github.com/stacklok/toolhive/blob/main/cmd/thv/app/mcp_serve.go"
+  - "https://github.com/stacklok/toolhive/blob/main/pkg/mcp/server/server.go"
   - "https://github.com/stacklok/toolhive/blob/main/deploy/charts/operator/values.yaml"
   - "https://github.com/stacklok/toolhive/releases"
   - "https://docs.stacklok.com/toolhive"
@@ -118,6 +126,9 @@ deployment patterns.
 - https://github.com/stacklok/toolhive/blob/main/docs/remote-mcp-authentication.md
 - https://github.com/stacklok/toolhive/blob/main/docs/arch/04-secrets-management.md
 - https://github.com/stacklok/toolhive/blob/main/docs/arch/05-runconfig-and-permissions.md
+- https://github.com/stacklok/toolhive/blob/main/docs/cli/thv_mcp_serve.md
+- https://github.com/stacklok/toolhive/blob/main/cmd/thv/app/mcp_serve.go
+- https://github.com/stacklok/toolhive/blob/main/pkg/mcp/server/server.go
 - https://github.com/stacklok/toolhive/blob/main/deploy/charts/operator/values.yaml
 - https://github.com/stacklok/toolhive/releases
 - https://docs.stacklok.com/toolhive
@@ -129,15 +140,17 @@ deployment patterns.
 - https://docs.stacklok.com/toolhive/guides-mcp
 - https://stacklok.com/download/
 
-These sources were reviewed on **2026-06-05**. Prefer the live repository,
+These sources were reviewed on **2026-06-07**. Prefer the live repository,
 README, license, security policy, architecture notes, authorization notes,
 observability notes, remote MCP authentication notes, secrets and permissions
-docs, operator values, release page, CLI docs, UI docs, Kubernetes docs, MCP
-guides, and download page for current installation and operating guidance.
+docs, MCP serve docs and source, operator values, release page, CLI docs, UI
+docs, Kubernetes docs, MCP guides, and download page for current installation
+and operating guidance.
 
 ## Features
 
 - Run MCP servers locally through the `thv` CLI.
+- Expose an experimental local ToolHive control MCP server through `thv mcp serve`.
 - Use Docker or Podman-backed container isolation for MCP servers.
 - Discover approved servers through registries.
 - Set up supported local MCP clients from the CLI.
@@ -170,6 +183,17 @@ thv client setup
 Review the registry entry, server image, permissions, and generated client
 configuration before connecting the server to a sensitive workspace.
 
+To expose ToolHive itself as an MCP control server, run:
+
+```bash
+thv mcp serve
+```
+
+The CLI reference documents this as an experimental MCP server for controlling
+ToolHive. The source sets the default host to `localhost`, the default port to
+`4483`, and the Streamable HTTP endpoint path to `/mcp`, so the default client
+URL is `http://localhost:4483/mcp`.
+
 ## Use Cases
 
 - Run MCP servers locally without giving each server direct host-level access.
@@ -194,7 +218,14 @@ secret stores, permission files, and generated client configs can reveal private
 tooling, endpoints, credentials, prompts, arguments, responses, and identity
 claims.
 
+The ToolHive MCP control server is stronger than a passive status endpoint. It
+can expose tools for running and removing servers and for interacting with the
+local ToolHive secret store, so keep it bound to localhost and only connect
+trusted clients.
+
 ## Duplicate Check
 
 No `stacklok/toolhive` entry, ToolHive MCP Platform entry, or matching source
-URL was found in `content/mcp`.
+URL was found in `content/mcp`. This entry now uses the documented
+`thv mcp serve` local Streamable HTTP endpoint for the installable ToolHive
+control server.

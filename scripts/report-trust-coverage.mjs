@@ -180,6 +180,7 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
 // --- aggregate ---
 const pct = (count, total) =>
   total === 0 ? 0 : Math.round((count / total) * 100);
+const exactPct = (count, total) => (total === 0 ? 0 : (count / total) * 100);
 const countWhere = (list, fn) => list.filter(fn).length;
 
 const presentCategories = [...new Set(entries.map((e) => e.category))].sort();
@@ -305,20 +306,20 @@ if (reportPath) {
 }
 
 const thresholdFailures = [];
-if (
-  minRiskCoverage !== null &&
-  summary.riskBearing.coveragePct < minRiskCoverage
-) {
+const riskCoverageExact = exactPct(riskWithBoth, risk.length);
+const attributedCount = countWhere(entries, (e) => e.trust.attributed);
+const attributionCoverageExact = exactPct(attributedCount, entries.length);
+if (minRiskCoverage !== null && riskCoverageExact < minRiskCoverage) {
   thresholdFailures.push(
-    `Risk-bearing safety/privacy coverage ${summary.riskBearing.coveragePct}% is below required ${minRiskCoverage}%.`,
+    `Risk-bearing safety/privacy coverage ${riskCoverageExact.toFixed(2)}% (${riskWithBoth}/${risk.length}) is below required ${minRiskCoverage}%.`,
   );
 }
 if (
   minAttributionCoverage !== null &&
-  summary.coverage.attributed < minAttributionCoverage
+  attributionCoverageExact < minAttributionCoverage
 ) {
   thresholdFailures.push(
-    `Attribution coverage ${summary.coverage.attributed}% is below required ${minAttributionCoverage}%.`,
+    `Attribution coverage ${attributionCoverageExact.toFixed(2)}% (${attributedCount}/${entries.length}) is below required ${minAttributionCoverage}%.`,
   );
 }
 

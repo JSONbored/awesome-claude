@@ -39,14 +39,16 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "cloudinary": {
-      "env": {
-        "CLOUDINARY_API_KEY": "${CLOUDINARY_API_KEY}",
-        "CLOUDINARY_API_SECRET": "${CLOUDINARY_API_SECRET}",
-        "CLOUDINARY_CLOUD_NAME": "${CLOUDINARY_CLOUD_NAME}"
-      },
-      "url": "https://mcp.cloudinary.com/",
-      "transport": "http"
+    "mcpServers": {
+      "cloudinary": {
+        "env": {
+          "CLOUDINARY_API_KEY": "${CLOUDINARY_API_KEY}",
+          "CLOUDINARY_API_SECRET": "${CLOUDINARY_API_SECRET}",
+          "CLOUDINARY_CLOUD_NAME": "${CLOUDINARY_CLOUD_NAME}"
+        },
+        "url": "https://mcp.cloudinary.com/",
+        "type": "http"
+      }
     }
   }
 estimatedSetupTime: 2 minutes

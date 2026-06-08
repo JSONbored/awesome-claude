@@ -34,9 +34,11 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "plaid": {
-      "url": "https://api.dashboard.plaid.com/mcp/sse",
-      "transport": "sse"
+    "mcpServers": {
+      "plaid": {
+        "url": "https://api.dashboard.plaid.com/mcp/sse",
+        "type": "sse"
+      }
     }
   }
 estimatedSetupTime: 2 minutes

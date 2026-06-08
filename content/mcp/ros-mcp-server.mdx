@@ -37,7 +37,18 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add ros-mcp -- uvx ros-mcp --transport=stdio
+  {
+    "mcpServers": {
+      "ros-mcp": {
+        "command": "uvx",
+        "args": [
+          "ros-mcp",
+          "--transport=stdio"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 30 minutes
 difficulty: advanced
 prerequisites:

@@ -120,6 +120,8 @@ function isToolsRouteError(message: string) {
   const normalized = message.toLowerCase();
   return (
     normalized.includes("tools/app lead form") ||
+    normalized.includes("tools/app listing flow") ||
+    normalized.includes("free resource queue without maintainer approval") ||
     normalized.includes("change the category to tools")
   );
 }

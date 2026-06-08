@@ -37,12 +37,14 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  [mcp_servers.postman-mcp-server]
-  command = "npx"
-  args = ["-y", "@postman/postman-mcp-server@2.8.9", "--minimal"]
-
-  [mcp_servers.postman-mcp-server.env]
-  POSTMAN_API_KEY = "<POSTMAN_API_KEY>"
+  {
+    "mcpServers": {
+      "postman": {
+        "type": "http",
+        "url": "https://mcp.postman.com/minimal"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:

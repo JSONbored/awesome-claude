@@ -37,7 +37,14 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add --transport http datagouv https://mcp.data.gouv.fr/mcp
+  {
+    "mcpServers": {
+      "datagouv": {
+        "url": "https://mcp.data.gouv.fr/mcp",
+        "type": "http"
+      }
+    }
+  }
 estimatedSetupTime: 5 minutes
 difficulty: beginner
 prerequisites:

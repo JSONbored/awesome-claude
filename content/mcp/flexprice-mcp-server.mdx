@@ -40,12 +40,21 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "flexprice": {
-      "command": "npx",
-      "args": ["-y", "@flexprice/mcp-server", "start", "--scope", "read"],
-      "env": {
-        "API_KEY_APIKEYAUTH": "${FLEXPRICE_API_KEY}",
-        "BASE_URL": "https://us.api.flexprice.io/v1"
+    "mcpServers": {
+      "flexprice": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@flexprice/mcp-server",
+          "start",
+          "--scope",
+          "read"
+        ],
+        "env": {
+          "API_KEY_APIKEYAUTH": "${FLEXPRICE_API_KEY}",
+          "BASE_URL": "https://us.api.flexprice.io/v1"
+        },
+        "type": "stdio"
       }
     }
   }

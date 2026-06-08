@@ -51,6 +51,7 @@ const defaultFilters: RegistrySearchFilterState = {
   query: "",
   category: "",
   platform: "",
+  installable: "all",
   hasSafetyNotes: "all",
   hasPrivacyNotes: "all",
   downloadTrust: "all",
@@ -119,6 +120,7 @@ describe("computeRegistrySearchFacets", () => {
 
     expect(facets.categories).toEqual({ mcp: 2, hooks: 1, skills: 1 });
     expect(facets.platforms).toEqual({ "claude-code": 3, cursor: 2 });
+    expect(facets.installable).toEqual({ false: 4 });
     expect(facets.hasSafetyNotes).toEqual({ false: 2, true: 2 });
     expect(facets.hasPrivacyNotes).toEqual({ false: 2, true: 2 });
     expect(facets.downloadTrust).toEqual({
@@ -198,6 +200,27 @@ describe("computeRegistrySearchFacets", () => {
 
     expect(matched).toHaveLength(2);
     expect(facets.hasSafetyNotes.true).toBe(2);
+  });
+
+  it("counts installable entries and preserves the active installable selection", () => {
+    const installable = makeEntry({
+      slug: "installable-mcp",
+      installable: true,
+      category: "mcp",
+    });
+    const entries = [...fixtures, installable];
+    const filters: RegistrySearchFilterState = {
+      ...defaultFilters,
+      installable: "true",
+    };
+
+    expect(filterEntries(entries, filters).map((entry) => entry.slug)).toEqual([
+      "installable-mcp",
+    ]);
+    expect(computeRegistrySearchFacets(entries, filters).installable).toEqual({
+      false: 4,
+      true: 1,
+    });
   });
 
   it("uses compact trust-signal booleans when full note text is omitted", () => {

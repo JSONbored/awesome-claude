@@ -45,15 +45,18 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "github": {
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
-      },
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-github"
-      ],
-      "command": "npx"
+    "mcpServers": {
+      "github": {
+        "env": {
+          "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+        },
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-github"
+        ],
+        "command": "npx",
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 3 minutes

@@ -41,7 +41,22 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add coolify -e COOLIFY_BASE_URL=https://your-coolify-instance.example -e COOLIFY_ACCESS_TOKEN=your-token -- npx @masonator/coolify-mcp@latest
+  {
+    "mcpServers": {
+      "coolify": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@masonator/coolify-mcp"
+        ],
+        "env": {
+          "COOLIFY_BASE_URL": "https://your-coolify-instance.example",
+          "COOLIFY_ACCESS_TOKEN": "your-api-token"
+        },
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: advanced
 prerequisites:

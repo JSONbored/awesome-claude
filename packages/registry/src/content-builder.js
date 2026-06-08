@@ -279,6 +279,16 @@ export function buildContentEntryFromMdx(params) {
     documentationUrl: data.documentationUrl
       ? String(data.documentationUrl)
       : undefined,
+    docsUrl: data.docsUrl ? String(data.docsUrl) : undefined,
+    sourceUrl: data.sourceUrl ? String(data.sourceUrl) : undefined,
+    packageUrl: data.packageUrl ? String(data.packageUrl) : undefined,
+    repositoryUrl: data.repositoryUrl ? String(data.repositoryUrl) : undefined,
+    sourceUrls: Array.isArray(data.sourceUrls)
+      ? data.sourceUrls
+          .map(String)
+          .map((value) => value.trim())
+          .filter(Boolean)
+      : undefined,
     websiteUrl: data.websiteUrl ? String(data.websiteUrl) : undefined,
     ...brandAssets,
     affiliateUrl:

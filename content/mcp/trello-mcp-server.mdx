@@ -42,7 +42,22 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add trello -- npx @delorenj/mcp-server-trello
+  {
+    "mcpServers": {
+      "trello": {
+        "command": "npx",
+        "args": [
+          "@delorenj/mcp-server-trello"
+        ],
+        "env": {
+          "TRELLO_API_KEY": "your-api-key",
+          "TRELLO_TOKEN": "your-token",
+          "TRELLO_ALLOWED_WORKSPACES": "workspace-id-1,workspace-id-2"
+        },
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:
