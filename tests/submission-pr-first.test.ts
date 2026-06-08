@@ -302,7 +302,9 @@ Native macOS MCP server.`);
     expect(reasons).toContain(
       "Install instructions include a destructive or remote-code execution pipeline",
     );
-    expect(reasons).toContain("Direct contributor PRs should not edit README.md");
+    expect(reasons).toContain(
+      "Direct contributor PRs should not edit README.md",
+    );
   });
 
   it("does not classify GitHub artifact attestations as identity-sensitive", () => {
