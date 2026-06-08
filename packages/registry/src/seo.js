@@ -422,9 +422,9 @@ function parseJobCompensation(value) {
     const numericText = hasK ? amount.slice(0, -1) : amount;
     const numeric = Number(String(numericText).replaceAll(",", ""));
     if (!Number.isFinite(numeric)) return null;
-    return Math.round(
-      numeric * (hasK || fallbackSuffix.toLowerCase() === "k" ? 1000 : 1),
-    );
+    const shouldUseFallbackK =
+      !hasK && fallbackSuffix.toLowerCase() === "k" && numeric < 1000;
+    return Math.round(numeric * (hasK || shouldUseFallbackK ? 1000 : 1));
   };
 
   const minHasK = amounts[0].toLowerCase().endsWith("k");
