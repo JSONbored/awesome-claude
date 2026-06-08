@@ -2758,6 +2758,79 @@ documentationUrl: "https://code.claude.com/docs/en/mcp"
     );
   });
 
+  it("treats exact multi-entry MCP catalog subpaths as strict duplicates", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/mcp/postgres-mcp-server.mdx",
+      content: `---
+title: Postgres MCP Server
+slug: postgres-mcp-server
+category: mcp
+description: MCP server for PostgreSQL database workflows.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres"
+---
+`,
+      label: "accepted entry content/mcp/postgres-mcp-server.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/postgresql-database-mcp.mdx",
+      content: `---
+title: PostgreSQL Database MCP
+slug: postgresql-database-mcp
+category: mcp
+description: Tooling that connects Claude to Postgres databases.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres?utm_source=heyclaude"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(candidate, [existing]),
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        "same multi-entry catalog subpath URL https://github.com/modelcontextprotocol/servers/tree/main/src/postgres",
+      ]),
+    });
+  });
+
+  it("treats distinct multi-entry MCP catalog subpaths as related context", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/mcp/postgres-mcp-server.mdx",
+      content: `---
+title: Postgres MCP Server
+slug: postgres-mcp-server
+category: mcp
+description: MCP server for PostgreSQL database workflows.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres"
+---
+`,
+      label: "accepted entry content/mcp/postgres-mcp-server.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/sqlite-mcp-server.mdx",
+      content: `---
+title: SQLite MCP Server
+slug: sqlite-mcp-server
+category: mcp
+description: MCP server for SQLite database workflows.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/sqlite"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same multi-entry catalog source URL https://github.com/modelcontextprotocol/servers in mcp",
+            ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
   it("treats shared multi-entry MCP catalogs as related context", () => {
     const existing = extractContentDuplicateSignals({
       filePath: "content/mcp/azure-mcp-server.mdx",
