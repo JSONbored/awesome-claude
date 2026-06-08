@@ -59,6 +59,8 @@ const RESOURCE_THEFT_CAPABILITY_PATTERN =
   /\b(?:this|the|our)?\s*(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b[\s\S]{0,40}\b(?:can|will|does|advertises?|offers?|enables?|designed to|built to)\b[\s\S]{0,80}\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b|\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(?:with|using|through|by)\b[\s\S]{0,40}\b(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b/i;
 const CREDENTIAL_THEFT_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b/i;
+const EXPLICIT_CREDENTIAL_STEALING_PATTERN =
+  /\b(?:credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\bsteals?\b|\bsteals?\b[\s\S]{0,80}\b(?:credential|password|cookie|session|token|wallet)s?\b|\b(?:credential|password|cookie) stealer|keylogger\b/i;
 const ABUSE_ENABLEMENT_PATTERN =
   /\b(build|create|generate|run|deploy|use|ship)\b[\s\S]{0,80}\b(credential stealer|password stealer|cookie stealer|keylogger|steal credentials|exfiltrat(?:e|ion)|harvest cookies|dump tokens?)\b/i;
 
@@ -117,6 +119,7 @@ function hasDefensiveSecuritySafeHarbor(text) {
   return (
     DEFENSIVE_SECURITY_MITIGATION_PATTERN.test(text) &&
     !RESOURCE_THEFT_CAPABILITY_PATTERN.test(text) &&
+    !EXPLICIT_CREDENTIAL_STEALING_PATTERN.test(text) &&
     !ABUSE_ENABLEMENT_PATTERN.test(text)
   );
 }
