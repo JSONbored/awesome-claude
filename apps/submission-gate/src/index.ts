@@ -151,9 +151,15 @@ class SubmissionLockBusyError extends Error {
 }
 
 class SubmissionMergePendingError extends Error {
-  constructor(message: string) {
+  retryDelaySeconds: number;
+
+  constructor(
+    message: string,
+    retryDelaySeconds: number = MERGE_RETRY_SECONDS,
+  ) {
     super(message);
     this.name = "SubmissionMergePendingError";
+    this.retryDelaySeconds = retryDelaySeconds;
   }
 }
 
@@ -481,6 +487,16 @@ function retryDelayForError(error: unknown) {
     return githubRetryDelaySeconds(error, GITHUB_RATE_LIMIT_FALLBACK_SECONDS);
   }
   return RETRYABLE_ERROR_SECONDS;
+}
+
+function retryDelayForMergeError(error: unknown) {
+  if (
+    isGitHubRateLimitError(error) ||
+    (error instanceof GitHubApiError && error.status === 429)
+  ) {
+    return githubRetryDelaySeconds(error, GITHUB_RATE_LIMIT_FALLBACK_SECONDS);
+  }
+  return MERGE_RETRY_SECONDS;
 }
 
 function nextReviewForError(error: unknown) {
@@ -4182,6 +4198,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           });
         } catch (error) {
           if (isRetryableMergeError(error)) {
+            const retryDelaySeconds = retryDelayForMergeError(error);
             const pendingSummary = [
               decision.summary.trim(),
               "",
@@ -4202,7 +4219,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               status: "merge_pending",
               verdict: "merge",
               verdictSummary: pendingSummary,
-              nextReviewAt: nextReviewForStatus("merge_pending"),
+              nextReviewAt: isoAfter(retryDelaySeconds),
               lastError: error instanceof Error ? error.message : "unknown",
               ...decisionMetadata(acceptedDecision, acceptedReport),
             });
@@ -4213,7 +4230,10 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               decision: "merge_pending",
               summary: pendingSummary,
             });
-            throw new SubmissionMergePendingError(pendingSummary);
+            throw new SubmissionMergePendingError(
+              pendingSummary,
+              retryDelaySeconds,
+            );
           }
           const manualDecision = defaultManualDecision(
             `Private review accepted this PR, but direct merge failed: ${
@@ -4968,7 +4988,7 @@ export default {
           console.debug("submission merge pending, retrying", {
             targetKey: body.targetKey,
           });
-          message.retry({ delaySeconds: 30 });
+          message.retry({ delaySeconds: error.retryDelaySeconds });
         } else {
           await recordRetryableQueueError(env, body, error);
           console.error("submission gate queue failure", error);

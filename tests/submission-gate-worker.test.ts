@@ -1894,7 +1894,9 @@ ${urls}
     expect(source).toContain("SubmissionMergePendingError");
     expect(source).toContain('status: "merge_pending"');
     expect(source).toContain('decision: "merge_pending"');
-    expect(source).toContain("message.retry({ delaySeconds: 30 })");
+    expect(source).toContain(
+      "message.retry({ delaySeconds: error.retryDelaySeconds })",
+    );
     expect(source).toContain("AUTO_MERGE_CONFIDENCE_FLOOR");
     expect(source).toContain("enforceAutoMergeConfidenceFloor(");
     expect(source.indexOf("normalizeOneShotDecision(decision)")).toBeLessThan(
@@ -1913,7 +1915,7 @@ ${urls}
       )?.[0] || "";
     const retryBranch =
       source.match(
-        /if \(isRetryableMergeError\(error\)\) \{[\s\S]*?throw new SubmissionMergePendingError\(pendingSummary\);/,
+        /if \(isRetryableMergeError\(error\)\) \{[\s\S]*?throw new SubmissionMergePendingError\([\s\S]*?retryDelaySeconds,[\s\S]*?\);/,
       )?.[0] || "";
 
     expect(classifier).toContain("isTimeoutError(error)");
@@ -1924,9 +1926,18 @@ ${urls}
     expect(classifier).toContain("error.status <= 599");
     expect(classifier).toContain("required approving review");
     expect(classifier).toContain("merge conflict");
+    expect(source).toContain("function retryDelayForMergeError");
+    expect(source).toContain("error.status === 429");
+    expect(source).toContain("githubRetryDelaySeconds(error");
+    expect(source).toContain("GITHUB_RATE_LIMIT_FALLBACK_SECONDS");
+    expect(retryBranch).toContain(
+      "const retryDelaySeconds = retryDelayForMergeError(error)",
+    );
     expect(retryBranch).toContain('status: "merge_pending"');
     expect(retryBranch).toContain('decision: "merge_pending"');
     expect(retryBranch).toContain("merge retry pending");
+    expect(retryBranch).toContain("nextReviewAt: isoAfter(retryDelaySeconds)");
+    expect(retryBranch).toContain("retryDelaySeconds");
     expect(retryBranch).toContain(
       "The gate will retry after transient GitHub merge state settles.",
     );
@@ -2144,8 +2155,12 @@ ${urls}
     expect(source).toContain("isGitHubRateLimitError(error)");
     expect(source).toContain("githubRetryDelaySeconds(error");
     expect(source).toContain("nextReviewForError(error)");
+    expect(source).toContain("function retryDelayForMergeError");
     expect(source).toContain(
       "message.retry({ delaySeconds: retryDelayForError(error) })",
+    );
+    expect(source).toContain(
+      "message.retry({ delaySeconds: error.retryDelaySeconds })",
     );
     expect(source).toContain("scheduled(_controller, env, ctx)");
     expect(source).toContain("ctx.waitUntil(sweepSubmissionQueue(env))");
