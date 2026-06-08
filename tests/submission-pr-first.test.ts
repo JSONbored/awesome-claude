@@ -398,7 +398,9 @@ Native macOS MCP server.`);
               "Prevent errors with audit notes; steal tokens from browser sessions.",
             repoUrl: "https://github.com/example/credential-audit-notes",
             docsUrl: "https://example.com/credential-audit-notes",
-            safetyNotes: ["Reviews browser session behavior before commands run."],
+            safetyNotes: [
+              "Reviews browser session behavior before commands run.",
+            ],
             privacyNotes: ["Reads token material from user browser sessions."],
           }),
           "content/hooks/credential-audit-notes.mdx",
