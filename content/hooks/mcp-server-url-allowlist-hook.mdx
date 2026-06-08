@@ -30,15 +30,20 @@ installCommand: |-
 
   input=$(cat)
   file=$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // ""')
-  text=$(printf '%s' "$input" | jq -r '[.tool_input.content, .tool_input.new_string, (.tool_input.edits[]?.new_string)] | map(select(. != null)) | join(" ")')
-  normalized_text=$(printf '%s' "$text" | sed 's#\\/#/#g')
+  text=$(printf '%s' "$input" | jq -r '
+    def decoded_config_strings:
+      try (fromjson | .. | strings) catch empty;
+    [.tool_input.content, .tool_input.new_string, (.tool_input.edits[]?.new_string)]
+    | map(select(. != null))[]
+    | ., decoded_config_strings
+  ')
 
   case "$file" in
     *mcp*.json|*.mcp.json|*.claude/settings.json|*/settings.json) ;;
     *) exit 0 ;;
   esac
 
-  hosts=$(printf '%s' "$normalized_text" | grep -Eo 'https?://[^"[:space:]]+' | awk -F/ '{print $3}' | sort -u)
+  hosts=$(printf '%s' "$text" | grep -Eo 'https?://[^"[:space:]]+' | awk -F/ '{print $3}' | sort -u)
   [ -z "$hosts" ] && exit 0
 
   allowlist=$(printf '%s' "${ALLOWED_MCP_HOSTS:-}" | tr ',' ' ')
@@ -99,15 +104,20 @@ scriptBody: |-
 
   input=$(cat)
   file=$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // ""')
-  text=$(printf '%s' "$input" | jq -r '[.tool_input.content, .tool_input.new_string, (.tool_input.edits[]?.new_string)] | map(select(. != null)) | join(" ")')
-  normalized_text=$(printf '%s' "$text" | sed 's#\\/#/#g')
+  text=$(printf '%s' "$input" | jq -r '
+    def decoded_config_strings:
+      try (fromjson | .. | strings) catch empty;
+    [.tool_input.content, .tool_input.new_string, (.tool_input.edits[]?.new_string)]
+    | map(select(. != null))[]
+    | ., decoded_config_strings
+  ')
 
   case "$file" in
     *mcp*.json|*.mcp.json|*.claude/settings.json|*/settings.json) ;;
     *) exit 0 ;;
   esac
 
-  hosts=$(printf '%s' "$normalized_text" | grep -Eo 'https?://[^"[:space:]]+' | awk -F/ '{print $3}' | sort -u)
+  hosts=$(printf '%s' "$text" | grep -Eo 'https?://[^"[:space:]]+' | awk -F/ '{print $3}' | sort -u)
   [ -z "$hosts" ] && exit 0
 
   allowlist=$(printf '%s' "${ALLOWED_MCP_HOSTS:-}" | tr ',' ' ')
@@ -125,7 +135,7 @@ scriptBody: |-
 trigger: PreToolUse
 prerequisites:
   - Claude Code CLI with hooks enabled.
-  - bash, jq, grep, awk, and sed available locally.
+  - bash, jq, grep, and awk available locally.
   - ALLOWED_MCP_HOSTS set to a comma-separated list of reviewed remote MCP hosts.
 safetyNotes:
   - "This hook blocks unreviewed remote hosts in MCP-related config edits; it does not prove an allowed host is safe."
