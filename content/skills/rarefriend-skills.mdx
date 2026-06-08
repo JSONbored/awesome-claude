@@ -1,0 +1,107 @@
+---
+title: Rarefriend Skills
+slug: rarefriend-skills
+category: skills
+description: "Cross-agent personal network manager skills for Rarefriend — six Agent Skills for contacts, notes, LinkedIn, Google Calendar/Contacts, and Microsoft Outlook email and calendar. Requires Rarefriend MCP."
+cardDescription: "Personal network manager skills for Rarefriend — contacts, calendar, LinkedIn, Outlook."
+seoTitle: Rarefriend Skills — Cross-Agent Personal Network Manager
+seoDescription: "Install Rarefriend Agent Skills for contacts, LinkedIn, Google Calendar, Google Contacts, and Microsoft Outlook via npx. Works with Claude Code, Cursor, Codex, OpenClaw, and Gemini CLI."
+author: Rarefriend
+authorProfileUrl: "https://github.com/Whitefield-Labs"
+submittedBy: rarefriendai
+submittedByUrl: "https://github.com/rarefriendai"
+dateAdded: "2026-06-08"
+repoUrl: "https://github.com/Whitefield-Labs/rarefriend-skills"
+documentationUrl: "https://rarefriend.com"
+downloadUrl: "https://github.com/Whitefield-Labs/rarefriend-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add Whitefield-Labs/rarefriend-skills --skill network-and-relationship-manager -y"
+usageSnippet: "npx skills add Whitefield-Labs/rarefriend-skills --skill network-and-relationship-manager -y"
+copySnippet: |-
+  # Trigger
+  "Use Rarefriend skills to search my network, schedule meetings, or find Outlook emails."
+
+  # Install
+  npx skills add Whitefield-Labs/rarefriend-skills --skill network-and-relationship-manager -y
+
+  # MCP (required)
+  npx -y @rarefriend-ai/mcp
+  # OAuth credentials: rarefriend.com → Settings → Integrations → MCP
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-08"
+retrievalSources:
+  - "https://github.com/Whitefield-Labs/rarefriend-skills"
+  - "https://raw.githubusercontent.com/Whitefield-Labs/rarefriend-skills/main/SKILL.md"
+  - "https://raw.githubusercontent.com/Whitefield-Labs/rarefriend-skills/main/README.md"
+  - "https://rarefriend.com"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Cursor
+  - OpenClaw
+  - Gemini CLI
+prerequisites:
+  - Rarefriend account with MCP OAuth credentials from rarefriend.com → Settings → Integrations → MCP
+  - Agent Skills-compatible client (Claude Code, Cursor, Codex, OpenClaw, or Gemini CLI)
+safetyNotes:
+  - Calls Rarefriend MCP via npx -y @rarefriend-ai/mcp. May read/write contacts, calendar, and email metadata via OAuth APIs (Google, Microsoft, LinkedIn). Review tool calls before approving.
+privacyNotes:
+  - Requires OAuth from rarefriend.com. Contact/calendar/email data sent to Rarefriend and Google/Microsoft/LinkedIn when tools run. Data stays in user workspace. Do not paste secrets into skill files.
+tags:
+  - personal-network
+  - contacts
+  - calendar
+  - linkedin
+  - networking
+  - productivity
+  - mcp
+keywords:
+  - rarefriend skills
+  - personal network manager
+  - agent skills contacts
+  - linkedin network skill
+  - google calendar agent skill
+readingTime: 5
+packageVerified: false
+difficultyScore: 55
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Cross-agent skills for [Rarefriend](https://rarefriend.com) personal network management. Each skill lives under `skills/<name>/SKILL.md` in the public repo.
+
+## Skills
+
+| Skill | Purpose |
+| ----- | ------- |
+| `network-and-relationship-manager` | Full personal network manager — contacts, notes, tags, all integrations |
+| `manage-linkedin-network` | LinkedIn connections search and management |
+| `schedule-with-google-calendar` | Google Calendar scheduling and availability |
+| `organize-google-contacts` | Google Contacts sync and management |
+| `schedule-with-outlook` | Microsoft Outlook contacts and calendar |
+| `find-outlook-emails` | Microsoft Outlook email search |
+
+## Install
+
+```bash
+npx skills add Whitefield-Labs/rarefriend-skills --skill network-and-relationship-manager -y
+```
+
+Connect MCP (required):
+
+```bash
+npx -y @rarefriend-ai/mcp
+```
+
+Get OAuth credentials at [rarefriend.com](https://rarefriend.com) → Settings → Integrations → MCP.
+
+## Contact
+
+Public contact: developer@rarefriend.ai
