@@ -272,13 +272,13 @@ describe("submission automation workflows", () => {
     ).toBe(false);
   });
 
-  it("keeps advisory Superagent scanning manual, read-only, and secret-gated", () => {
+  it("keeps advisory Superagent scanning pull-request scoped, read-only, and secret-gated", () => {
     const source = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/superagent-security.yml"),
       "utf8",
     );
 
-    expect(source).not.toContain("pull_request:");
+    expect(source).toContain("pull_request:");
     expect(source).toContain("workflow_dispatch:");
     expect(source).not.toContain("pull_request_target");
     expect(source).toContain("contents: read");
