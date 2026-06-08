@@ -8,6 +8,34 @@ const MKFS_PATTERN = /\bmkfs(?:\.\w+)?\b/i;
 const FORK_BOMB_PATTERN = /:\s*\(\s*\)\s*\{\s*:\s*\|\s*:\s*&\s*\}\s*;\s*:/;
 const INLINE_EVAL_PATTERN = /\beval\s+["'`]?\$\(/i;
 
+// Sudo options that take a separate value token (`-u root`, `--user root`).
+// Lowercased, so case variants collapse onto value-taking forms (e.g. `-U`
+// → `-u`, `-R` → `-r`). The `--flag=value` form is self-contained and is not
+// listed. `-h` is intentionally omitted because `sudo -h` alone prints help.
+const SUDO_VALUE_FLAGS = new Set([
+  "-u",
+  "--user",
+  "-g",
+  "--group",
+  "-r",
+  "--role",
+  "-t",
+  "--type",
+  "-p",
+  "--prompt",
+  "-c",
+  "--close-from",
+  "-d",
+  "--chdir",
+  "--chroot",
+  "--command-timeout",
+  "--other-user",
+  "--host",
+]);
+
+const SHELL_TOKENS = ["bash", "zsh", "sh"];
+const DOWNLOADER_TOKENS = ["curl", "wget"];
+
 function isWordCharacter(char) {
   return /[a-z0-9_]/i.test(char || "");
 }
@@ -32,94 +60,138 @@ function hasCommandToken(line, lowerLine, tokens) {
   );
 }
 
-function hasShellAfterPipe(line, lowerLine, pipeIndex) {
-  let index = pipeIndex + 1;
-  while (/\s/.test(line[index] || "")) index += 1;
+// Split a command line into pipe segments. Command separators (`;`, `&&`, `||`,
+// `&`) end the current pipe chain so unrelated commands never merge into one
+// dangerous chain (e.g. `curl x && cat y | sh` is two commands, not a
+// download-piped-to-shell). Single bounded pass — no backtracking regex.
+function pipeChainSegments(line) {
+  const segments = [];
+  let start = 0;
+  let index = 0;
+  const pushSegment = (end) => segments.push({ start, end });
 
+  while (index < line.length) {
+    const char = line[index];
+    if (char === "|" && line[index + 1] === "|") {
+      pushSegment(index);
+      segments.push({ barrier: true });
+      index += 2;
+      start = index;
+    } else if (char === "|") {
+      pushSegment(index);
+      index += 1;
+      start = index;
+    } else if (char === ";") {
+      pushSegment(index);
+      segments.push({ barrier: true });
+      index += 1;
+      start = index;
+    } else if (char === "&") {
+      pushSegment(index);
+      segments.push({ barrier: true });
+      index += line[index + 1] === "&" ? 2 : 1;
+      start = index;
+    } else {
+      index += 1;
+    }
+  }
+  pushSegment(line.length);
+  return segments;
+}
+
+// First command word of a pipe segment, stepping over an optional `sudo [flags]`
+// privilege prefix (so `sudo -E bash` and `sudo -u root bash` both read as
+// `bash`). Returns "" when the segment does not start with a recognizable
+// command word.
+function segmentLeadCommand(line, lowerLine, start, end) {
+  let index = start;
+  const skipWhitespace = () => {
+    while (index < end && /\s/.test(line[index] || "")) index += 1;
+  };
+  const skipToken = () => {
+    while (index < end && !/\s/.test(line[index] || "")) index += 1;
+  };
+
+  skipWhitespace();
   if (
     lowerLine.startsWith("sudo", index) &&
+    index + 4 <= end &&
     !isWordCharacter(line[index + 4] || "")
   ) {
     index += 4;
-    while (/\s/.test(line[index] || "")) index += 1;
+    for (;;) {
+      skipWhitespace();
+      if (index >= end || line[index] !== "-") break;
+      const flagStart = index;
+      skipToken();
+      // A value-taking sudo flag in `-u root` / `--user root` form also consumes
+      // the following token as its value, so the real command isn't mistaken for
+      // the value (e.g. `bash` in `sudo -u root bash`).
+      if (SUDO_VALUE_FLAGS.has(lowerLine.slice(flagStart, index))) {
+        skipWhitespace();
+        skipToken();
+      }
+    }
   }
 
-  for (const shell of ["bash", "zsh", "sh"]) {
-    if (
-      lowerLine.startsWith(shell, index) &&
-      !isWordCharacter(line[index + shell.length] || "")
-    ) {
-      return true;
+  let wordEnd = index;
+  while (wordEnd < end && isWordCharacter(line[wordEnd] || "")) wordEnd += 1;
+  return lowerLine.slice(index, wordEnd);
+}
+
+// True when a pipe segment carries a base64 `-d`/`--decode` flag token.
+function segmentHasDecodeFlag(line, lowerLine, start, end) {
+  let index = start;
+  while (index < end) {
+    while (index < end && /\s/.test(line[index] || "")) index += 1;
+    if (index < end && line[index] === "-") {
+      let flagEnd = index;
+      while (flagEnd < end && !/\s/.test(line[flagEnd] || "")) flagEnd += 1;
+      const flag = lowerLine.slice(index, flagEnd);
+      if (flag === "-d" || flag === "--decode") return true;
+      index = flagEnd;
+    } else {
+      while (index < end && !/\s/.test(line[index] || "")) index += 1;
     }
   }
   return false;
 }
 
-function hasTokenAt(line, lowerLine, token, index) {
-  return (
-    lowerLine.startsWith(token, index) &&
-    !isWordCharacter(line[index - 1] || "") &&
-    !isWordCharacter(line[index + token.length] || "")
-  );
-}
-
-function hasAnyTokenAt(line, lowerLine, tokens, index) {
-  return tokens.some((token) => hasTokenAt(line, lowerLine, token, index));
-}
-
+// True when a downloader's output reaches a shell later in the same pipe chain,
+// tolerating benign passthrough commands (cat, tee, sed, …) and a `sudo [flags]`
+// prefix between the download and the shell. Catches `curl | sh`,
+// `curl | cat | bash`, and `curl | sudo -E bash`.
 function hasPipeToShellInstall(line, lowerLine) {
-  let sawDownloaderBeforePipe = false;
-  for (let index = 0; index < line.length; index += 1) {
-    if (line[index] === "|") {
-      if (
-        sawDownloaderBeforePipe &&
-        hasShellAfterPipe(line, lowerLine, index)
-      ) {
-        return true;
-      }
-      sawDownloaderBeforePipe = false;
-    } else if (hasAnyTokenAt(line, lowerLine, ["curl", "wget"], index)) {
-      sawDownloaderBeforePipe = true;
+  let sawDownloader = false;
+  for (const segment of pipeChainSegments(line)) {
+    if (segment.barrier) {
+      sawDownloader = false;
+      continue;
     }
+    const lead = segmentLeadCommand(line, lowerLine, segment.start, segment.end);
+    if (sawDownloader && SHELL_TOKENS.includes(lead)) return true;
+    if (DOWNLOADER_TOKENS.includes(lead)) sawDownloader = true;
   }
   return false;
 }
 
-function findBase64DecodeFlagEnd(line, lowerLine, commandEndIndex) {
-  let index = commandEndIndex;
-  let sawWhitespace = false;
-  while (/\s/.test(line[index] || "")) {
-    sawWhitespace = true;
-    index += 1;
-  }
-  if (!sawWhitespace) return -1;
-
-  for (const flag of ["--decode", "-d"]) {
-    if (
-      lowerLine.startsWith(flag, index) &&
-      !isWordCharacter(line[index + flag.length] || "")
-    ) {
-      return index + flag.length;
-    }
-  }
-  return -1;
-}
-
+// True when a base64-decode segment feeds a shell later in the same pipe chain.
 function hasBase64DecodedShell(line, lowerLine) {
-  let sawDecodedBase64BeforePipe = false;
-  for (let index = 0; index < line.length; index += 1) {
-    if (line[index] === "|") {
-      if (
-        sawDecodedBase64BeforePipe &&
-        hasShellAfterPipe(line, lowerLine, index)
-      ) {
-        return true;
-      }
-      sawDecodedBase64BeforePipe = false;
-    } else if (hasTokenAt(line, lowerLine, "base64", index)) {
-      sawDecodedBase64BeforePipe ||=
-        findBase64DecodeFlagEnd(line, lowerLine, index + "base64".length) !==
-        -1;
+  let sawDecodedBase64 = false;
+  for (const segment of pipeChainSegments(line)) {
+    if (segment.barrier) {
+      sawDecodedBase64 = false;
+      continue;
+    }
+    const lead = segmentLeadCommand(line, lowerLine, segment.start, segment.end);
+    if (sawDecodedBase64 && SHELL_TOKENS.includes(lead)) return true;
+    if (lead === "base64") {
+      sawDecodedBase64 = segmentHasDecodeFlag(
+        line,
+        lowerLine,
+        segment.start,
+        segment.end,
+      );
     }
   }
   return false;
