@@ -1796,6 +1796,7 @@ async function ignoreOutOfScopeReviewTarget(params: {
   message: QueueMessage;
   summary: string;
 }) {
+  const reviewScanKey = reviewScanKeyForTarget(params.target);
   await removeLabels({
     token: params.token,
     repo: params.repo,
@@ -1813,6 +1814,7 @@ async function ignoreOutOfScopeReviewTarget(params: {
     installationId: params.target.installationId,
     status: "ignored",
     deliveryId: String(params.message.payload.deliveryId || ""),
+    lastReviewKey: reviewScanKey || undefined,
     lastError: params.summary,
   });
   await insertAudit(params.env.SUBMISSION_GATE_DB, {

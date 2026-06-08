@@ -502,6 +502,16 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).not.toContain("getRepositoryBlobText({");
     expect(source).not.toContain("getRepositoryTree({");
     expect(source).toContain("function ignoreOutOfScopeReviewTarget");
+    const ignoreOutOfScopeBlock = source.slice(
+      source.indexOf("async function ignoreOutOfScopeReviewTarget"),
+      source.indexOf("function isRetryableMergeError"),
+    );
+    expect(ignoreOutOfScopeBlock).toContain(
+      "const reviewScanKey = reviewScanKeyForTarget(params.target);",
+    );
+    expect(ignoreOutOfScopeBlock).toContain(
+      "lastReviewKey: reviewScanKey || undefined",
+    );
     expect(source).toContain(
       "Skipped because this PR no longer targets the configured content gate base.",
     );
