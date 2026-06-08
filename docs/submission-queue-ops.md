@@ -104,6 +104,46 @@ the gate later creates its own formal GitHub check run.
 - `manual` is rare and reserved for Superagent/private-review outages, merge
   failures after retries, or genuinely close high-risk calls.
 
+## Review Fallback Checklist
+
+Maintainer review must not depend on CodeRabbit being present. For content-only
+PRs, especially `content(mcp): ...` submissions where CodeRabbit is intentionally
+skipped by title policy, use the HeyClaude gate marker comment as the primary
+review surface and verify the remaining public signals before merging or
+closing.
+
+When CodeRabbit is skipped, rate-limited, unavailable, or clean-but-incomplete:
+
+- Read the stable `<!-- heyclaude-submission-gate -->` comment first. Trust
+  `gate-comment-v5` only when it names the changed file, category, validation
+  results, source reachability, duplicate review, safety/privacy coverage, and
+  deterministic source evidence or equivalent provenance.
+- Check required CI independently. A CodeRabbit skip or clean review does not
+  override a failed `validate-content`, Superagent, package scan, registry
+  contract test, or required PR gate.
+- Check Gittensory as advisory context for linked-issue/no-issue rationale,
+  duplicate/overlap clusters, review burden, and Gittensor contributor context.
+  Gittensory does not replace the HeyClaude content gate verdict.
+- Confirm linked-issue policy. Contributor-lane content PRs should close or
+  reference a concrete issue when one exists. Direct maintainer-lane additions
+  may be valid with an explicit no-issue rationale in the PR body.
+- Confirm focused diff scope. Accepted content submissions stay to one raw
+  `content/<category>/<slug>.mdx` file; generated artifacts, README, workflows,
+  scripts, package files, downloads, and multiple content entries remain out of
+  contributor PR scope.
+
+Gate comments should be concrete. For closures, the public comment must name the
+blocking validation or metadata gap, say whether a fresh clean PR is appropriate,
+and identify what evidence needs to change. Avoid generic resubmission loops
+that do not tell contributors whether the problem was CI, source truth,
+duplicate risk, generated-artifact scope, unsafe package/install behavior, or
+missing safety/privacy metadata.
+
+For accepted content-only MCP PRs with CodeRabbit skipped, preserve the review
+evidence that mattered in the gate comment or PR body: validation checks, source
+reachability, duplicate check, safety/privacy notes, deterministic source hash
+or equivalent provenance, and generated-artifact scope.
+
 ## Queue Debugging
 
 Maintainers can inspect non-secret queue state through `GET /queue` with the
