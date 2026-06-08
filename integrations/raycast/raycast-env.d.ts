@@ -7,7 +7,10 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 
-type ExtensionPreferences = {}
+type ExtensionPreferences = {
+  /** Feed URL Override - Optional advanced feed URL for preview deployments or local ray develop smoke tests. Must end with /data/raycast-index.json. */
+  "feedUrlOverride"?: string
+}
 
 /** Preferences accessible in all the extension's commands */
 declare type Preferences = ExtensionPreferences

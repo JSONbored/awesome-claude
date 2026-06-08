@@ -44,7 +44,24 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  uvx odoo-mcp --health
+  {
+    "mcpServers": {
+      "odoo": {
+        "command": "uvx",
+        "args": [
+          "odoo-mcp"
+        ],
+        "env": {
+          "ODOO_URL": "https://your-odoo-instance.example",
+          "ODOO_DB": "your-database",
+          "ODOO_USERNAME": "your-user",
+          "ODOO_PASSWORD": "your-password-or-api-key",
+          "ODOO_TRANSPORT": "xmlrpc"
+        },
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 20 minutes
 difficulty: advanced
 prerequisites:

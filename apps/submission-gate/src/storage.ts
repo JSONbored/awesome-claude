@@ -226,6 +226,7 @@ export async function upsertPrState(
     resetAttemptCount?: boolean;
     lastError?: string | null;
     lastCheckSummary?: string | null;
+    clearLastCheckSummary?: boolean;
     terminalAt?: string | null;
     clearVerdict?: boolean;
     clearTerminal?: boolean;
@@ -294,7 +295,10 @@ export async function upsertPrState(
           WHEN excluded.status IN ('queued', 'validation_pending', 'reviewing') THEN NULL
           ELSE submission_prs.last_error
         END,
-        last_check_summary = COALESCE(excluded.last_check_summary, submission_prs.last_check_summary),
+        last_check_summary = CASE
+          WHEN ? THEN NULL
+          ELSE COALESCE(excluded.last_check_summary, submission_prs.last_check_summary)
+        END,
         terminal_at = CASE
           WHEN ? THEN NULL
           WHEN excluded.terminal_at IS NOT NULL THEN excluded.terminal_at
@@ -378,6 +382,7 @@ export async function upsertPrState(
       params.incrementAttempt ? 1 : 0,
       params.resetAttemptCount ? 1 : 0,
       params.incrementAttempt ? 1 : 0,
+      params.clearLastCheckSummary ? 1 : 0,
       params.clearTerminal ? 1 : 0,
       params.preserveRetryState ? 1 : 0,
       params.preserveRetryState ? 1 : 0,
@@ -516,6 +521,40 @@ export async function listRecentPrStates(
        LIMIT ?`,
     )
     .bind(params.limit ?? 25)
+    .all<Record<string, unknown>>();
+}
+
+export async function listTerminalPrStatesForReconciliation(
+  db: D1Database,
+  params: { limit?: number },
+) {
+  return db
+    .prepare(
+      `SELECT repo, number, head_repo AS headRepo, head_ref AS headRef,
+        head_sha AS headSha, base_ref AS baseRef, installation_id AS installationId,
+        status, verdict, verdict_summary AS verdictSummary,
+        last_delivery_id AS lastDeliveryId, last_review_key AS lastReviewKey,
+        next_review_at AS nextReviewAt, attempt_count AS attemptCount,
+        last_error AS lastError, last_check_summary AS lastCheckSummary,
+        terminal_at AS terminalAt, last_notification_key AS lastNotificationKey,
+        comment_id AS commentId, comment_url AS commentUrl,
+        review_id AS reviewId, schema_version AS schemaVersion,
+        formatter_version AS formatterVersion, decision_id AS decisionId,
+        confidence, source_evidence_hash AS sourceEvidenceHash,
+        last_error_code AS lastErrorCode,
+        last_retry_fingerprint AS lastRetryFingerprint,
+        retry_fingerprint_count AS retryFingerprintCount,
+        retry_exhausted_at AS retryExhaustedAt,
+        retry_exhausted_reason AS retryExhaustedReason,
+        created_at AS createdAt, updated_at AS updatedAt
+       FROM submission_prs
+       WHERE status IN ('merged', 'closed', 'manual', 'ignored')
+          OR terminal_at IS NOT NULL
+          OR verdict IN ('merge', 'close', 'manual', 'ignore')
+       ORDER BY updated_at DESC
+       LIMIT ?`,
+    )
+    .bind(params.limit ?? 50)
     .all<Record<string, unknown>>();
 }
 

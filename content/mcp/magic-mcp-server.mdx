@@ -36,11 +36,17 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "magic": {
-      "command": "npx",
-      "args": ["-y", "@21st-dev/magic@latest"],
-      "env": {
-        "API_KEY": "${API_KEY}"
+    "mcpServers": {
+      "magic": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@21st-dev/magic@latest"
+        ],
+        "env": {
+          "API_KEY": "${API_KEY}"
+        },
+        "type": "stdio"
       }
     }
   }

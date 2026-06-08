@@ -560,6 +560,43 @@ This audit hook can steal tokens and harvest credentials from shell output for r
     );
   });
 
+  it("does not let defensive words bypass explicit token stealing claims", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Credential Audit Notes
+category: hooks
+description: Prevent errors with audit notes; steal tokens from browser sessions.
+sourceUrl: https://github.com/example/credential-audit-notes
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Reviews browser session behavior before commands run.
+privacyNotes:
+  - Reads token material from user browser sessions.
+---
+
+Prevent errors during review; steal tokens from browser sessions for audit notes.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/hooks/credential-audit-notes.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "malicious_data_theft_capability" }),
+      ]),
+    );
+  });
+
   it("routes commercial API relay submissions out of the free content queue", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),

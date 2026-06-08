@@ -25,6 +25,7 @@ import {
   SOURCE_HEALTH_REPORT_SCHEMA_VERSION,
   buildReadOnlyEcosystemFeed,
   buildRaycastEnvelope,
+  buildRaycastDetail,
   buildRaycastDetailMarkdown,
   parseAbbreviatedCount,
   renderEntryLlms,
@@ -37,6 +38,7 @@ import {
   isAllowedBrandAssetUrl,
   truncateText,
 } from "@heyclaude/registry";
+import { extractMcpServerConfig } from "@heyclaude/registry/mcp-install-config";
 import {
   buildContentEntryFromMdx,
   parseGitHubRepo,
@@ -197,6 +199,53 @@ describe("registry artifacts", () => {
     });
     expect(directoryEntries.length).toBe(contentEntries.length);
     expect(searchEntries.length).toBe(contentEntries.length);
+  });
+
+  it("keeps duplicate-detection source URL fields in directory entries", () => {
+    const [directoryEntry] = buildDirectoryEntries([
+      {
+        category: "tools",
+        slug: "source-backed-tool",
+        title: "Source Backed Tool",
+        description: "Tool with every accepted source URL alias.",
+        tags: [],
+        keywords: [],
+        documentationUrl: "https://example.com/docs",
+        docsUrl: "https://example.com/docs-alias",
+        downloadUrl: "https://example.com/download.zip",
+        packageUrl: "https://www.npmjs.com/package/source-backed-tool",
+        repoUrl: "https://github.com/example/source-backed-tool",
+        repositoryUrl: "https://gitlab.com/example/source-backed-tool",
+        sourceUrl: "https://example.com/source",
+        sourceUrls: ["https://example.com/extra-source"],
+        websiteUrl: "https://example.com",
+      },
+    ]);
+
+    expect(directoryEntry).toMatchObject({
+      documentationUrl: "https://example.com/docs",
+      docsUrl: "https://example.com/docs-alias",
+      downloadUrl: "https://example.com/download.zip",
+      packageUrl: "https://www.npmjs.com/package/source-backed-tool",
+      repoUrl: "https://github.com/example/source-backed-tool",
+      repositoryUrl: "https://gitlab.com/example/source-backed-tool",
+      sourceUrl: "https://example.com/source",
+      sourceUrls: ["https://example.com/extra-source"],
+      websiteUrl: "https://example.com",
+    });
+    expect(directoryEntry.trustSignals.sourceUrls).toEqual(
+      expect.arrayContaining([
+        "https://example.com/docs",
+        "https://example.com/docs-alias",
+        "https://example.com/download.zip",
+        "https://www.npmjs.com/package/source-backed-tool",
+        "https://github.com/example/source-backed-tool",
+        "https://gitlab.com/example/source-backed-tool",
+        "https://example.com/source",
+        "https://example.com/extra-source",
+        "https://example.com",
+      ]),
+    );
   });
 
   it("keeps public registry payloads within reviewable byte budgets", () => {
@@ -634,6 +683,96 @@ describe("registry artifacts", () => {
       ),
     ).toEqual(jsonLdSnapshotsPayload);
   }, 60_000);
+
+  it("publishes MCP harness targets only for validated config snippets", () => {
+    const baseEntry = {
+      category: "mcp",
+      title: "MCP Harness Fixture",
+      description: "Fixture entry for MCP installer metadata.",
+      cardDescription: "Fixture entry for MCP installer metadata.",
+      author: "Fixture",
+      dateAdded: "2026-06-07",
+      tags: ["mcp"],
+      keywords: [],
+      body: "",
+      sections: [],
+      headings: [],
+      codeBlocks: [],
+    };
+    const stdioEntry = {
+      ...baseEntry,
+      slug: "stdio-fixture",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          fixture: {
+            command: "npx",
+            args: ["-y", "fixture-mcp"],
+          },
+        },
+      }),
+    };
+    const sseEntry = {
+      ...baseEntry,
+      slug: "sse-fixture",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          remote: {
+            type: "sse",
+            url: "https://example.com/sse",
+          },
+        },
+      }),
+    };
+    const manualEntry = {
+      ...baseEntry,
+      slug: "manual-fixture",
+      installCommand: "thv run fixture-mcp",
+      configSnippet: "thv run fixture-mcp",
+    };
+
+    const raycastEntries = buildRaycastEnvelope([
+      stdioEntry,
+      sseEntry,
+      manualEntry,
+    ] as any).entries;
+    const stdioFeedEntry = raycastEntries.find(
+      (entry) => entry.slug === "stdio-fixture",
+    );
+    const sseFeedEntry = raycastEntries.find(
+      (entry) => entry.slug === "sse-fixture",
+    );
+    const manualFeedEntry = raycastEntries.find(
+      (entry) => entry.slug === "manual-fixture",
+    );
+    const stdioDetail = buildRaycastDetail(stdioEntry as any);
+    const manualDetail = buildRaycastDetail(manualEntry as any);
+
+    expect(stdioFeedEntry).toMatchObject({
+      hasConfigSnippet: true,
+      mcpInstallTargets: [
+        "claude-code",
+        "codex",
+        "cursor",
+        "antigravity",
+      ],
+    });
+    expect(extractMcpServerConfig(stdioDetail.configSnippet)?.name).toBe(
+      "fixture",
+    );
+    expect(sseFeedEntry?.mcpInstallTargets).toEqual([
+      "claude-code",
+      "cursor",
+      "antigravity",
+    ]);
+    expect(manualFeedEntry).toMatchObject({
+      installable: true,
+      hasInstallCommand: true,
+      hasConfigSnippet: false,
+    });
+    expect(manualFeedEntry).not.toHaveProperty("mcpInstallTargets");
+    expect(manualDetail.configSnippet).toBe("");
+    expect(String(manualDetail.detailMarkdown)).not.toContain("## Config");
+  });
 
   it("does not derive comparative safety relations from safety notes alone", () => {
     const target = {

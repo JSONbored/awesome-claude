@@ -47,12 +47,12 @@ scriptBody: |-
   limit="${CLAUDE_CONTEXT_LIMIT:-200000}"
   used=$(printf '%s' "$input" | jq -r '.session.totalTokens // .usage.input_tokens // .cost.total_tokens // 0')
 
-  if ! printf '%s' "$limit" | grep -Eq '^[0-9]+$'; then
-    limit=200000
-  fi
-  if ! printf '%s' "$used" | grep -Eq '^[0-9]+$'; then
-    used=0
-  fi
+  case "$limit" in
+    "" | *[!0-9]*) limit=200000 ;;
+  esac
+  case "$used" in
+    "" | *[!0-9]*) used=0 ;;
+  esac
 
   if [ "$limit" -le 0 ]; then
     limit=200000

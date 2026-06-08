@@ -91,6 +91,13 @@ scriptBody: |-
       (.toolInput.edits[]?.new_string) ]
     | map(select(. != null)) | join("\n")
   ')
+  edit_new_content=$(printf '%s' "$input" | jq -r '
+    [ .tool_input.new_string,
+      .toolInput.new_string,
+      (.tool_input.edits[]?.new_string),
+      (.toolInput.edits[]?.new_string) ]
+    | map(select(. != null)) | join("\n")
+  ')
 
   if [ -z "$content" ]; then
     exit 0
@@ -167,6 +174,18 @@ scriptBody: |-
   literal_secret_re="\"[A-Za-z0-9_ -]*${secret_name_re}[A-Za-z0-9_ -]*\"[[:space:]]*:[[:space:]]*\"(Bearer[[:space:]]+)?[^\"\\$<{][^\"]{8,}\""
   default_expansion_secret_re="\"[A-Za-z0-9_ -]*${secret_name_re}[A-Za-z0-9_ -]*\"[[:space:]]*:[[:space:]]*\"(Bearer[[:space:]]+)?\\$\{[A-Za-z_][A-Za-z0-9_]*:-[^}\"]{8,}\}\""
   credential_url_re='https?://[^[:space:]"<>]+[?&](access_token|api_key|token|password|client_secret)='
+  bare_secret_value_re='^"?(Bearer[[:space:]]+)?(sk-[A-Za-z0-9_-]{12,}|[A-Za-z0-9_./+=-]{24,})"?$'
+  broad_root_value_re='^"?(~|/|/Users|/home|/root|[A-Za-z]:\\Users)/?"?$'
+
+  if [ -n "$edit_new_content" ]; then
+    if printf '%s\n' "$edit_new_content" | grep -Eq -- "$bare_secret_value_re"; then
+      add_finding "inline credential value in env or headers"
+    fi
+
+    if printf '%s\n' "$edit_new_content" | grep -Eq -- "$broad_root_value_re"; then
+      add_finding "broad filesystem root exposed to filesystem MCP server"
+    fi
+  fi
 
   if printf '%s\n' "$content" | grep -Eiq -- "$literal_secret_re"; then
     add_finding "inline credential value in env or headers"
@@ -211,7 +230,7 @@ prerequisites:
   - "bash, jq, grep, sort, and a reviewed `.claude/settings.json` or user-level hook configuration."
   - "A team MCP policy for approved servers, credential storage, filesystem scopes, and remote transports."
 safetyNotes:
-  - "Runs before Write, Edit, and MultiEdit tool calls and reads only the pending file path plus proposed new text."
+  - "Runs before Write, Edit, and MultiEdit tool calls and reads only the pending file path plus proposed new text, including replacement fragments for partial edits."
   - "Blocks matching MCP configuration edits with exit code 2 when it finds inline credential values, credential-bearing URLs, or broad filesystem roots for filesystem MCP servers."
   - "Does not start MCP servers, contact remote MCP endpoints, edit files, delete files, or inspect existing config beyond the proposed tool input."
   - "Text and JSON heuristics can miss unusual config shapes or flag reviewed local setups; use `MCP_CONFIG_PRIVACY_ALLOWLIST` only for documented exceptions."

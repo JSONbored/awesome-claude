@@ -42,6 +42,7 @@ copySnippet: |-
     }
   }
 configSnippet: |-
+  Manual-only setup:
   claude mcp add telegram-mcp --env TELEGRAM_API_ID=YOUR_TELEGRAM_API_ID --env TELEGRAM_API_HASH=YOUR_TELEGRAM_API_HASH --env TELEGRAM_SESSION_STRING=YOUR_TELEGRAM_SESSION_STRING --env TELEGRAM_EXPOSED_TOOLS=read-only -- uv --directory PATH_TO_TELEGRAM_MCP_CHECKOUT run main.py
 estimatedSetupTime: 30 minutes
 difficulty: advanced

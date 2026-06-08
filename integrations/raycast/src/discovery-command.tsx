@@ -9,13 +9,13 @@ import {
   LocalStorage,
   PopToRootType,
   Toast,
+  getPreferenceValues,
   showHUD,
   showToast,
 } from "@raycast/api";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   FAVORITES_KEY,
-  FEED_URL,
   absoluteDataUrl,
   attachDiscoveryEntries,
   buildContributeEntryUrl,
@@ -25,6 +25,7 @@ import {
   entryKey,
   filterDiscoveryEntries,
   parseFavoriteKeys,
+  resolveConfiguredFeedUrl,
   serializeFavoriteKeys,
   sortedCategoryOptions,
   type RaycastDiscoveryEntry,
@@ -66,7 +67,11 @@ const categoryIcons: Record<string, Icon> = {
 };
 
 function getConfiguredFeed() {
-  return { feedUrl: FEED_URL };
+  return {
+    feedUrl: resolveConfiguredFeedUrl(
+      getPreferenceValues<{ feedUrlOverride?: string }>(),
+    ),
+  };
 }
 
 function loadCachedFeed(feedUrl: string) {

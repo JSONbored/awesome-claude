@@ -37,7 +37,18 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add wdio-mcp -- npx -y @wdio/mcp@latest
+  {
+    "mcpServers": {
+      "wdio-mcp": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@wdio/mcp@latest"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: advanced
 prerequisites:

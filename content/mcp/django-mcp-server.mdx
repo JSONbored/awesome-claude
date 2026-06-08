@@ -37,7 +37,18 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  python manage.py mcp_inspect
+  {
+    "mcpServers": {
+      "django": {
+        "command": "python",
+        "args": [
+          "manage.py",
+          "stdio_server"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 25 minutes
 difficulty: advanced
 prerequisites:

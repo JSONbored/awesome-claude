@@ -36,7 +36,17 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  hrp mcp-server
+  {
+    "mcpServers": {
+      "httprunner-uixt": {
+        "command": "hrp",
+        "args": [
+          "mcp-server"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 30 minutes
 difficulty: advanced
 prerequisites:

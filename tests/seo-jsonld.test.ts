@@ -161,6 +161,26 @@ describe("SEO JSON-LD policy", () => {
     expect(facts).toContain("Last verified: 2026-04-27");
   });
 
+  it("drops empty/whitespace safety and privacy notes from citation facts", () => {
+    const facts = buildEntryCitationFacts(
+      {
+        category: "skills",
+        slug: "noisy-notes-skill",
+        title: "Noisy Notes Skill",
+        description: "Example skill.",
+        safetyNotes: ["", "  ", "Writes to disk"],
+        privacyNotes: ["Sends telemetry", "   "],
+      } as any,
+      { siteUrl: "https://heyclau.de" },
+    );
+
+    // Blank entries must not leak into the joined note lines.
+    expect(facts).toContain("Safety notes: Writes to disk");
+    expect(facts).toContain("Privacy notes: Sends telemetry");
+    expect(facts).not.toContain("Safety notes:   ");
+    expect(facts).not.toContain("Sends telemetry,");
+  });
+
   it("does not emit SoftwareApplication until visible required fields exist", () => {
     expect(
       buildToolSoftwareApplicationJsonLd(
@@ -268,6 +288,39 @@ describe("SEO JSON-LD policy", () => {
     ).toBeNull();
   });
 
+  it("does not emit JobPosting JSON-LD for non-active jobs", () => {
+    const baseJob = {
+      slug: "status-job",
+      title: "AI Engineer",
+      company: "Example",
+      description:
+        "Build Claude workflow systems for a verified employer listing with production AI integrations, source-backed role details, and developer-facing infrastructure ownership.",
+      descriptionMd:
+        "## Role brief\n\nOwn integrations across Claude workflow systems and developer-facing AI infrastructure for a team shipping production agent and MCP surfaces. The reviewed detail gives candidates enough context about responsibilities, requirements, source verification, and the employer-owned application path before they continue.",
+      postedAt: "2026-04-26",
+      expiresAt: "2026-05-26",
+      applyUrl: "https://example.com/jobs/ai-engineer",
+      sourceUrl: "https://example.com/jobs/ai-engineer",
+      sourceCheckedAt: "2026-04-26",
+    };
+    // An active job with the same payload still emits.
+    expect(
+      buildJobPostingJsonLd(
+        { ...baseJob, status: "active" },
+        { siteUrl: "https://heyclau.de" },
+      ),
+    ).not.toBeNull();
+    // Closed / expired / archived / draft jobs must not be surfaced.
+    for (const status of ["closed", "expired", "archived", "draft"]) {
+      expect(
+        buildJobPostingJsonLd(
+          { ...baseJob, status },
+          { siteUrl: "https://heyclau.de" },
+        ),
+      ).toBeNull();
+    }
+  });
+
   it("shares a k suffix across salary bounds and rejects inverted ranges", () => {
     const baseSalaryFor = (compensation: string) =>
       buildJobPostingJsonLd(
@@ -301,6 +354,14 @@ describe("SEO JSON-LD policy", () => {
 
     // Both endpoints suffixed still works.
     expect(baseSalaryFor("$150k-$190k")).toMatchObject({
+      value: { minValue: 150000, maxValue: 190000 },
+    });
+
+    // Explicit values are not scaled again when paired with a shorthand bound.
+    expect(baseSalaryFor("$150,000 - $190k")).toMatchObject({
+      value: { minValue: 150000, maxValue: 190000 },
+    });
+    expect(baseSalaryFor("$150000-$190k")).toMatchObject({
       value: { minValue: 150000, maxValue: 190000 },
     });
 

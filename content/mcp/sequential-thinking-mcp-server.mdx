@@ -32,9 +32,15 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "sequential-thinking": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    "mcpServers": {
+      "sequential-thinking": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-sequential-thinking"
+        ],
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 2 minutes

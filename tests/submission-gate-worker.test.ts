@@ -343,7 +343,7 @@ describe("Cloudflare submission gate helpers", () => {
     });
   });
 
-  it("treats neutral Superagent scans as non-failing content gate signals", async () => {
+  it("treats neutral Superagent scans as failed validation for manual review", async () => {
     const fetchMock = vi.fn(async () =>
       Response.json({
         check_runs: [
@@ -372,12 +372,12 @@ describe("Cloudflare submission gate helpers", () => {
         requiredChecks: ["validate-content", "Superagent Security Scan"],
       }),
     ).resolves.toMatchObject({
-      state: "passed",
+      state: "failed",
       checks: [
         { name: "validate-content", status: "passed" },
         {
           name: "Superagent Security Scan",
-          status: "passed",
+          status: "failed",
           details: "concluded neutral",
         },
       ],
@@ -502,6 +502,16 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).not.toContain("getRepositoryBlobText({");
     expect(source).not.toContain("getRepositoryTree({");
     expect(source).toContain("function ignoreOutOfScopeReviewTarget");
+    const ignoreOutOfScopeBlock = source.slice(
+      source.indexOf("async function ignoreOutOfScopeReviewTarget"),
+      source.indexOf("function isRetryableMergeError"),
+    );
+    expect(ignoreOutOfScopeBlock).toContain(
+      "const reviewScanKey = reviewScanKeyForTarget(params.target);",
+    );
+    expect(ignoreOutOfScopeBlock).toContain(
+      "lastReviewKey: reviewScanKey || undefined",
+    );
     expect(source).toContain(
       "Skipped because this PR no longer targets the configured content gate base.",
     );
@@ -547,12 +557,15 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"COLLABORATOR"');
     expect(source).toContain("targetFromIssueCommentRecheck");
     expect(source).toContain("shouldResetManualTerminal");
-    expect(source).toContain("shouldResetClosedTerminal");
+    expect(source).toContain("shouldResetTerminalState");
     expect(source).toContain(
-      "resetAttemptCount: shouldResetManualTerminal || shouldResetClosedTerminal",
+      "resetAttemptCount: shouldResetManualTerminal || shouldResetTerminalState",
     );
     expect(source).toContain(
       'forceRecheck === true && String(existing?.status || "") === "manual"',
+    );
+    expect(source).toContain(
+      '["closed", "merged"].includes(String(existing?.status || ""))',
     );
     expect(source).toContain(
       "forceRecheck === true ||\n      isReopenedPullRequestEvent",
@@ -730,7 +743,7 @@ sourceUrls:
     expect(first.hash).toBe(second.hash);
   });
 
-  it("turns deterministic source hard failures into close evidence", async () => {
+  it("routes a single dead authoritative source to manual review", async () => {
     const report = await checkSubmittedSourceEvidence(
       `---
 title: Dead Source Fixture
@@ -745,15 +758,50 @@ documentationUrl: "https://github.com/example/missing"
 
     expect(report.status).toBe("failed");
     expect(decision).toMatchObject({
-      verdict: "close",
+      verdict: "manual",
       reasonCode: "source_hard_failure",
-      close: true,
+      close: false,
       evidence: [
         {
           field: "documentationUrl",
           matchedUrl: "https://github.com/example/missing",
           httpStatus: "404",
         },
+      ],
+    });
+  });
+
+  it("turns all-dead authoritative source evidence into close evidence", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: All Dead Source Fixture
+repoUrl: "https://github.com/example/missing"
+documentationUrl: "https://github.com/example/missing-docs"
+---
+`,
+      vi.fn<typeof fetch>().mockImplementation(async (url) => {
+        const status = String(url).includes("missing-docs") ? 410 : 404;
+        return new Response(null, { status });
+      }),
+    );
+    const decision = sourceEvidenceCloseDecision(report);
+
+    expect(report.status).toBe("failed");
+    expect(decision).toMatchObject({
+      verdict: "close",
+      reasonCode: "source_hard_failure",
+      close: true,
+      evidence: [
+        expect.objectContaining({
+          field: "documentationUrl",
+          matchedUrl: "https://github.com/example/missing-docs",
+          httpStatus: "410",
+        }),
+        expect.objectContaining({
+          field: "repoUrl",
+          matchedUrl: "https://github.com/example/missing",
+          httpStatus: "404",
+        }),
       ],
     });
   });
@@ -1788,7 +1836,7 @@ ${urls}
     expect(source).toContain("shouldResetIgnoredScan");
     expect(source).toContain("shouldResetManualTerminal");
     expect(source).toContain(
-      "resetAttemptCount: shouldResetManualTerminal || shouldResetClosedTerminal",
+      "resetAttemptCount: shouldResetManualTerminal || shouldResetTerminalState",
     );
     expect(source).toContain("clearTerminal:");
     expect(source).toContain("lastReviewKey: reviewScanKey || undefined");
@@ -1856,7 +1904,9 @@ ${urls}
     expect(source).toContain("SubmissionMergePendingError");
     expect(source).toContain('status: "merge_pending"');
     expect(source).toContain('decision: "merge_pending"');
-    expect(source).toContain("message.retry({ delaySeconds: 30 })");
+    expect(source).toContain(
+      "message.retry({ delaySeconds: error.retryDelaySeconds })",
+    );
     expect(source).toContain("AUTO_MERGE_CONFIDENCE_FLOOR");
     expect(source).toContain("enforceAutoMergeConfidenceFloor(");
     expect(source.indexOf("normalizeOneShotDecision(decision)")).toBeLessThan(
@@ -1865,6 +1915,44 @@ ${urls}
     expect(source.indexOf("enforceAutoMergeConfidenceFloor(")).toBeLessThan(
       source.indexOf("const status = decisionStatus(decision.verdict)"),
     );
+  });
+
+  it("keeps transient accepted-merge failures pending for retry", () => {
+    const source = readWorkerSource();
+    const classifier =
+      source.match(
+        /function isRetryableMergeError[\s\S]*?\nfunction importContentPathParts/,
+      )?.[0] || "";
+    const retryBranch =
+      source.match(
+        /if \(isRetryableMergeError\(error\)\) \{[\s\S]*?throw new SubmissionMergePendingError\([\s\S]*?retryDelaySeconds,[\s\S]*?\);/,
+      )?.[0] || "";
+
+    expect(classifier).toContain("isTimeoutError(error)");
+    expect(classifier).toContain("isGitHubRateLimitError(error)");
+    expect(classifier).toContain("error instanceof GitHubApiError");
+    expect(classifier).toContain("error.status === 429");
+    expect(classifier).toContain("error.status >= 500");
+    expect(classifier).toContain("error.status <= 599");
+    expect(classifier).toContain("required approving review");
+    expect(classifier).toContain("merge conflict");
+    expect(source).toContain("function retryDelayForMergeError");
+    expect(source).toContain("error.status === 429");
+    expect(source).toContain("githubRetryDelaySeconds(error");
+    expect(source).toContain("GITHUB_RATE_LIMIT_FALLBACK_SECONDS");
+    expect(retryBranch).toContain(
+      "const retryDelaySeconds = retryDelayForMergeError(error)",
+    );
+    expect(retryBranch).toContain('status: "merge_pending"');
+    expect(retryBranch).toContain('decision: "merge_pending"');
+    expect(retryBranch).toContain("merge retry pending");
+    expect(retryBranch).toContain("nextReviewAt: isoAfter(retryDelaySeconds)");
+    expect(retryBranch).toContain("retryDelaySeconds");
+    expect(retryBranch).toContain(
+      "The gate will retry after transient GitHub merge state settles.",
+    );
+    expect(retryBranch).not.toContain('status: "manual"');
+    expect(retryBranch).not.toContain("submission-manual-review");
   });
 
   it("closes direct content PRs when required validation fails", () => {
@@ -1961,43 +2049,66 @@ ${urls}
     expect(source).toContain('"manual"');
     expect(source).toContain('"ignored"');
     expect(source).toContain(
-      "Skipped because this submission already has a terminal gate decision.",
+      "Skipped trusted recheck because this submission already has a terminal gate decision and GitHub is still open.",
     );
     expect(source).toContain(
-      "Skipped trusted recheck because this submission already has a terminal gate decision.",
+      "Skipped because this submission is in manual review and GitHub is still open.",
+    );
+    expect(source).toContain(
+      "Terminal gate state did not match open GitHub PR; requeued for reconciliation.",
     );
     expect(source).toContain("function isOpenPullRequest");
     expect(source).toContain("function terminalStatusFromPullRequest");
+    expect(source).toContain("function terminalVerdictFromPullRequest");
+    expect(source).toContain("function terminalSummaryFromPullRequest");
+    expect(source).toContain("function terminalLabelsToRemove");
+    expect(source).toContain("async function issueLabelNames");
     expect(source).toContain("async function reconcileTerminalPullRequest");
     expect(source).toContain("function isReopenedPullRequestEvent");
-    expect(source).toContain("shouldResetClosedTerminal");
-    expect(source).toContain('String(state?.status || "") === "closed"');
-    expect(source).toContain("labels: [LABELS.underReview]");
+    expect(source).toContain("shouldResetTerminalState");
+    expect(source).toContain(
+      '["closed", "merged"].includes(String(existing?.status || ""))',
+    );
+    expect(source).toContain(
+      "labels: [LABELS.underReview, ...gateLabelsForCategory(scope?.category)]",
+    );
     expect(source).toContain(
       "Terminal gate state did not match open GitHub PR",
     );
     expect(source).toContain("GitHub terminal state verified.");
     expect(source).toContain(
-      "GitHub PR was already closed; removed transient review label and skipped review continuation.",
+      "GitHub PR is merged; submission gate terminal state was reconciled from live GitHub.",
+    );
+    expect(source).toContain(
+      "GitHub PR is closed; submission gate terminal state was reconciled from live GitHub.",
+    );
+    expect(source).toContain(
+      "removed incompatible gate labels and skipped review continuation.",
     );
     expect(source).toContain('decision: "github_terminal_reconciled"');
     expect(source).toContain("clearVerdict: true");
     expect(source).toContain("clearTerminal: true");
+    expect(source).toContain("clearLastCheckSummary: true");
+    expect(source).toContain("listIssueLabels(params)");
     expect(reconcileBlock).not.toContain("clearVerdict");
     expect(storageSource).toContain(
       "COALESCE(last_error, '') != 'GitHub terminal state verified.'",
     );
     expect(storageSource).toContain("terminal_at IS NOT NULL");
     expect(storageSource).toContain("status = 'closed'");
+    expect(storageSource).toContain("listTerminalPrStatesForReconciliation");
+    expect(storageSource).toContain(
+      "WHERE status IN ('merged', 'closed', 'manual', 'ignored')",
+    );
     expect(storageSource).toContain(
       "excluded.status NOT IN ('merged', 'closed', 'manual', 'ignored')",
     );
     expect(storageSource).toContain("THEN submission_prs.status");
-    expect(enqueueBlock).toContain("shouldResetClosedTerminal");
+    expect(enqueueBlock).toContain("shouldResetTerminalState");
     expect(enqueueBlock).toContain("const shouldQueueReview");
     expect(enqueueBlock).toContain("!hasTerminalGateDecision(existing)");
     expect(enqueueBlock).toContain("shouldResetIgnoredScan");
-    expect(enqueueBlock).toContain("shouldResetClosedTerminal");
+    expect(enqueueBlock).toContain("shouldResetTerminalState");
     expect(enqueueBlock).toContain("if (!shouldQueueReview) return false");
     expect(enqueueBlock).toContain("const shouldPreserveRetryState");
     expect(enqueueBlock).toContain(
@@ -2041,9 +2152,9 @@ ${urls}
     expect(source).toContain("listOpenPullRequests({");
     expect(source).toContain("scheduled-discovery-");
     expect(source).toContain(
-      'const closedTerminalButOpen = String(state?.status || "") === "closed"',
+      '["closed", "merged"].includes(String(state?.status || ""))',
     );
-    expect(source).toContain("!closedTerminalButOpen");
+    expect(source).toContain("terminalStateButOpen");
     expect(source).toContain(
       "await applyUnderReviewToTarget(env, target, reviewScope)",
     );
@@ -2054,8 +2165,12 @@ ${urls}
     expect(source).toContain("isGitHubRateLimitError(error)");
     expect(source).toContain("githubRetryDelaySeconds(error");
     expect(source).toContain("nextReviewForError(error)");
+    expect(source).toContain("function retryDelayForMergeError");
     expect(source).toContain(
       "message.retry({ delaySeconds: retryDelayForError(error) })",
+    );
+    expect(source).toContain(
+      "message.retry({ delaySeconds: error.retryDelaySeconds })",
     );
     expect(source).toContain("scheduled(_controller, env, ctx)");
     expect(source).toContain("ctx.waitUntil(sweepSubmissionQueue(env))");
@@ -2067,9 +2182,15 @@ ${urls}
     const source = readWorkerSource();
 
     expect(source).toContain('url.pathname === "/queue"');
+    expect(source).toContain('url.pathname === "/queue/reconcile"');
     expect(source).toContain("function hasInternalBearer");
     expect(source).toContain("Bearer ${env.INTERNAL_SHARED_SECRET}");
     expect(source).toContain("listRecentPrStates(env.SUBMISSION_GATE_DB");
+    expect(source).toContain("listTerminalPrStatesForReconciliation");
+    expect(source).toContain("async function terminalReconciliationRoute");
+    expect(source).toContain("async function terminalRepairPlanForRow");
+    expect(source).toContain("dryRun: !apply");
+    expect(source).toContain('url.searchParams.get("apply") === "1"');
     expect(source).toContain("lastCheckSummary");
     expect(source).toContain("attemptCount");
     expect(source).toContain("retryReasons");
@@ -2264,6 +2385,30 @@ ${urls}
     expect(source).toContain("secret: env.GITHUB_WEBHOOK_SECRET,");
   });
 
+  it("reconstructs all directory URL signal fields for accepted duplicate scans", () => {
+    const source = readWorkerSource();
+    const helperSource =
+      source.match(
+        /const DIRECTORY_ENTRY_URL_SIGNAL_FIELDS[\s\S]*?async function acceptedContentSignals/,
+      )?.[0] || "";
+
+    for (const field of [
+      "documentationUrl",
+      "docsUrl",
+      "downloadUrl",
+      "githubUrl",
+      "packageUrl",
+      "repoUrl",
+      "repositoryUrl",
+      "sourceUrl",
+      "websiteUrl",
+    ]) {
+      expect(helperSource).toContain(`"${field}"`);
+    }
+    expect(helperSource).toContain("DIRECTORY_ENTRY_URL_SIGNAL_FIELDS");
+    expect(helperSource).toContain("entry[field]");
+  });
+
   it("detects neutral duplicate submissions from canonical source URLs", () => {
     const existing = extractContentDuplicateSignals({
       filePath: "content/tools/ccusage.mdx",
@@ -2350,6 +2495,42 @@ websiteUrl: "https://example-agent-tool.dev/pricing"
         },
       ],
     });
+  });
+
+  it("treats same-category title reuse from different sources as related, not strict duplicate", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/agents/release-readiness-reviewer-agent.mdx",
+      content: `---
+title: Release Readiness Reviewer
+slug: release-readiness-reviewer-agent
+category: agents
+description: Reviews package release notes, versioning, and CI status before publishing.
+repoUrl: "https://github.com/example/release-readiness-reviewer"
+---
+`,
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/agents/release-readiness-reviewer-checklist.mdx",
+      content: `---
+title: Release Readiness Reviewer
+slug: release-readiness-reviewer-checklist
+category: agents
+description: Checks deployment runbooks, rollback criteria, and post-release monitoring.
+repoUrl: "https://github.com/another-example/release-checklist-agent"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining("same normalized title in agents"),
+          ]),
+        }),
+      ]),
+    );
   });
 
   it("distinguishes related vendor resources from strict duplicates", () => {
@@ -2619,6 +2800,79 @@ documentationUrl: "https://code.claude.com/docs/en/mcp"
           reasons: expect.arrayContaining([
             expect.stringContaining(
               "same canonical source URL https://code.claude.com/docs/en/mcp in agents",
+            ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
+  it("treats exact multi-entry MCP catalog subpaths as strict duplicates", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/mcp/postgres-mcp-server.mdx",
+      content: `---
+title: Postgres MCP Server
+slug: postgres-mcp-server
+category: mcp
+description: MCP server for PostgreSQL database workflows.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres"
+---
+`,
+      label: "accepted entry content/mcp/postgres-mcp-server.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/postgresql-database-mcp.mdx",
+      content: `---
+title: PostgreSQL Database MCP
+slug: postgresql-database-mcp
+category: mcp
+description: Tooling that connects Claude to Postgres databases.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres?utm_source=heyclaude"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(candidate, [existing]),
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        "same multi-entry catalog subpath URL https://github.com/modelcontextprotocol/servers/tree/main/src/postgres",
+      ]),
+    });
+  });
+
+  it("treats distinct multi-entry MCP catalog subpaths as related context", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/mcp/postgres-mcp-server.mdx",
+      content: `---
+title: Postgres MCP Server
+slug: postgres-mcp-server
+category: mcp
+description: MCP server for PostgreSQL database workflows.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres"
+---
+`,
+      label: "accepted entry content/mcp/postgres-mcp-server.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/sqlite-mcp-server.mdx",
+      content: `---
+title: SQLite MCP Server
+slug: sqlite-mcp-server
+category: mcp
+description: MCP server for SQLite database workflows.
+repoUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/sqlite"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same multi-entry catalog source URL https://github.com/modelcontextprotocol/servers in mcp",
             ),
           ]),
         }),

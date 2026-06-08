@@ -277,10 +277,14 @@ export function buildJobPostingJsonLd(job, params = {}) {
   ) {
     return null;
   }
-  const exposureReport = validateJobPublicExposure({
-    ...job,
-    status: job.status || "active",
-  });
+  // Only active jobs may be publicly surfaced as JobPosting structured data.
+  // validateJobPublicExposure short-circuits to { ok: true } for any non-active
+  // status (it treats them as "not exposed, no content gate needed"), so the
+  // builder must refuse non-active jobs itself — otherwise closed/expired/
+  // archived/draft roles get a full JobPosting (stale-listing SEO penalty).
+  const status = String(job.status || "active").trim().toLowerCase();
+  if (status !== "active") return null;
+  const exposureReport = validateJobPublicExposure({ ...job, status: "active" });
   if (!exposureReport.ok) return null;
 
   const siteUrl = params.siteUrl || "https://heyclau.de";
@@ -418,9 +422,9 @@ function parseJobCompensation(value) {
     const numericText = hasK ? amount.slice(0, -1) : amount;
     const numeric = Number(String(numericText).replaceAll(",", ""));
     if (!Number.isFinite(numeric)) return null;
-    return Math.round(
-      numeric * (hasK || fallbackSuffix.toLowerCase() === "k" ? 1000 : 1),
-    );
+    const shouldUseFallbackK =
+      !hasK && fallbackSuffix.toLowerCase() === "k" && numeric < 1000;
+    return Math.round(numeric * (hasK || shouldUseFallbackK ? 1000 : 1));
   };
 
   const minHasK = amounts[0].toLowerCase().endsWith("k");

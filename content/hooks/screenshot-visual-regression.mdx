@@ -76,23 +76,53 @@ scriptBody: |-
   INPUT=$(cat)
   FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
 
+  project_root=${CLAUDE_PROJECT_DIR:-$(pwd -P)}
+  project_root=$(cd -P -- "$project_root" 2>/dev/null && pwd -P) || exit 0
+
+  resolve_project_file() {
+    path=$1
+    case "$path" in
+      /*) abs=$path ;;
+      *) abs=$project_root/$path ;;
+    esac
+
+    [ -f "$abs" ] || return 1
+    [ ! -L "$abs" ] || return 1
+
+    parent=$(dirname "$abs")
+    name=$(basename "$abs")
+    parent_real=$(cd -P -- "$parent" 2>/dev/null && pwd -P) || return 1
+    resolved=$parent_real/$name
+
+    [ -f "$resolved" ] || return 1
+    [ ! -L "$resolved" ] || return 1
+    case "$resolved" in
+      "$project_root"/*) printf '%s\n' "$resolved" ;;
+      *) return 1 ;;
+    esac
+  }
+
+  FILE=$(resolve_project_file "$FILE") || exit 0
+
   # Only act on PNG screenshots saved in a visual-test location.
   case "$FILE" in
     *.png) : ;;
     *) exit 0 ;;
   esac
   case "$FILE" in
-    *screenshots/*|*snapshots/*|*__snapshots__/*|*__screenshots__/*|*/visual/*) : ;;
+    */screenshots/*|*/snapshots/*|*/__snapshots__/*|*/__screenshots__/*|*/visual/*) : ;;
     *) exit 0 ;;
   esac
-  [ -f "$FILE" ] || exit 0
 
   dir=$(dirname "$FILE")
   base=$(basename "$FILE")
 
   baseline=""
   for c in "$dir/baseline/$base" "$dir/baselines/$base" "$dir/__baselines__/$base" "${FILE%.png}.baseline.png"; do
-    [ -f "$c" ] && { baseline="$c"; break; }
+    if candidate=$(resolve_project_file "$c"); then
+      baseline=$candidate
+      break
+    fi
   done
 
   if [ -z "$baseline" ]; then
@@ -106,13 +136,32 @@ scriptBody: |-
   fi
 
   diff_out="${FILE%.png}.diff.png"
-  summary=$(odiff "$baseline" "$FILE" "$diff_out" 2>&1)
-  if [ "$?" -ne 0 ]; then
+  case "$diff_out" in
+    "$project_root"/*) : ;;
+    *) exit 0 ;;
+  esac
+  if [ -e "$diff_out" ] || [ -L "$diff_out" ]; then
+    echo "Visual regression: refusing to overwrite existing diff output $diff_out; remove it and rerun." >&2
+    exit 0
+  fi
+
+  tmp_dir=$(mktemp -d "$dir/.visual-regression-diff.XXXXXX") || exit 0
+  cleanup() { rm -rf "$tmp_dir"; }
+  trap cleanup EXIT
+  tmp_diff=$tmp_dir/$base.diff.png
+
+  summary=$(odiff "$baseline" "$FILE" "$tmp_diff" 2>&1)
+  status=$?
+  if [ "$status" -ne 0 ]; then
     echo "Visual regression: $base differs from its baseline." >&2
     printf '%s\n' "$summary" | while IFS= read -r line; do
       [ -n "$line" ] && echo "   $line" >&2
     done
-    echo "   Review $diff_out; update the baseline only if the change is intended." >&2
+    if [ -f "$tmp_diff" ] && [ ! -L "$tmp_diff" ] && ln "$tmp_diff" "$diff_out"; then
+      echo "   Review $diff_out; update the baseline only if the change is intended." >&2
+    else
+      echo "   Diff image was not written because $diff_out already exists or could not be created safely." >&2
+    fi
   fi
 
   exit 0
@@ -124,12 +173,12 @@ prerequisites:
 safetyNotes:
   - "Runs after every Write, Edit, and MultiEdit but only acts on PNG files saved under a screenshots, snapshots, or visual directory, and reads the screenshot and its baseline image from disk."
   - "Install this project-local command only in project settings (`.claude/settings.json`). Do not place `$CLAUDE_PROJECT_DIR/.claude/hooks/screenshot-visual-regression.sh` in user/global settings, because that would allow each opened project to supply the executed script."
-  - "When a baseline exists and odiff is installed, it writes a diff image next to the screenshot (file.diff.png) describing the difference; it never deletes or overwrites the screenshot or the baseline."
+  - "When a baseline exists and odiff is installed, it writes a new diff image next to the screenshot (file.diff.png) through a temporary file and non-clobber link, and refuses to overwrite an existing path or follow symlinks; it never deletes or overwrites the screenshot or the baseline."
   - "Advisory and always exits 0 - it reports a visual difference but never blocks the write or updates the baseline on its own."
   - "Fails open: with no baseline, no odiff, or no jq, it prints a short hint and does nothing else."
 privacyNotes:
   - "Reads only local image files (the new screenshot and its baseline); it makes no network calls."
-  - "Writes one local diff image (file.diff.png) next to the screenshot when a difference is found; it writes no other logs."
+  - "Writes one local diff image (file.diff.png) next to the screenshot when a difference is found and the diff path does not already exist; it writes no other logs."
   - "File paths and odiff's pixel-difference summary are printed to local hook stderr and may reveal project structure."
 tags:
   - "visual-regression"
@@ -148,13 +197,13 @@ keywords:
 
 - Catches unintended UI changes by pixel-diffing a just-saved screenshot against its baseline with [odiff](https://github.com/dmtrKovalenko/odiff), a fast image-comparison tool.
 - Triggers only on PNG screenshots saved under a `screenshots`, `snapshots`, `__snapshots__`, or `visual` directory.
-- Writes a diff image next to the screenshot and reports odiff's pixel-difference summary when the images differ.
+- Writes a new diff image next to the screenshot and reports odiff's pixel-difference summary when the images differ, refusing to overwrite an existing diff path.
 - Advisory only — it always exits `0`, never blocks the write, and never updates the baseline for you.
 - Fails open: with no matching baseline, no odiff, or no jq, it prints a short hint and stops.
 
 ## How it works
 
-On `PostToolUse`, the hook checks whether the saved file is a screenshot PNG in a visual-test location. It looks for a baseline at `baseline/<name>`, `baselines/<name>`, `__baselines__/<name>`, or `<name>.baseline.png`, then runs `odiff <baseline> <new> <diff>`. odiff exits non-zero when the images differ; the hook then reports the difference and points at the generated diff image so the change can be reviewed and the baseline updated only if intended.
+On `PostToolUse`, the hook resolves the saved file under `$CLAUDE_PROJECT_DIR`, rejects symlinked inputs, and checks whether the saved file is a screenshot PNG in a visual-test location. It looks for a non-symlinked baseline at `baseline/<name>`, `baselines/<name>`, `__baselines__/<name>`, or `<name>.baseline.png`, then runs `odiff <baseline> <new> <temporary-diff>`. odiff exits non-zero when the images differ; the hook then publishes the generated image to a new `file.diff.png` path only when that path does not already exist, reports the difference, and points at the diff image so the change can be reviewed and the baseline updated only if intended.
 
 ## Use cases
 

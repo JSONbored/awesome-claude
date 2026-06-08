@@ -173,11 +173,17 @@ function normalizeUrl(value: unknown) {
     }
 
     if (parsed.hostname === "github.com") {
-      const [owner, repo] = parsed.pathname.split("/").filter(Boolean);
+      const [owner, repo, ...pathParts] = parsed.pathname
+        .split("/")
+        .filter(Boolean);
       if (owner && repo) {
-        return `https://github.com/${owner.toLowerCase()}/${repo
+        const repoRoot = `https://github.com/${owner.toLowerCase()}/${repo
           .replace(/\.git$/i, "")
           .toLowerCase()}`;
+        if (MULTI_ENTRY_CATALOG_URLS.has(repoRoot) && pathParts.length) {
+          return `${repoRoot}/${pathParts.join("/").replace(/\/+$/, "")}`;
+        }
+        return repoRoot;
       }
     }
 
@@ -244,8 +250,32 @@ function strictDuplicateUrls(sharedUrls: string[]) {
   return sharedUrls.filter((url) => !MULTI_ENTRY_CATALOG_URLS.has(url));
 }
 
-function sharedCatalogUrls(sharedUrls: string[]) {
-  return sharedUrls.filter((url) => MULTI_ENTRY_CATALOG_URLS.has(url));
+function multiEntryCatalogRoot(url: string) {
+  return [...MULTI_ENTRY_CATALOG_URLS].find(
+    (catalogUrl) => url === catalogUrl || url.startsWith(`${catalogUrl}/`),
+  );
+}
+
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+function multiEntryCatalogSubpathUrls(sharedUrls: string[]) {
+  return sharedUrls.filter((url) => {
+    const catalogUrl = multiEntryCatalogRoot(url);
+    return catalogUrl && url !== catalogUrl;
+  });
+}
+
+function sharedCatalogUrls(leftUrls: string[], rightUrls: string[]) {
+  const leftCatalogUrls = leftUrls.map(multiEntryCatalogRoot).filter(isString);
+  const rightCatalogUrls = rightUrls
+    .map(multiEntryCatalogRoot)
+    .filter(isString);
+  return intersection(
+    [...new Set(leftCatalogUrls)],
+    [...new Set(rightCatalogUrls)],
+  );
 }
 
 function isCollectionBridge(
@@ -346,6 +376,16 @@ export function findStrictContentDuplicateMatch(
 
     const sharedUrls = intersection(candidate.urls, existing.urls);
     const blockingSharedUrls = strictDuplicateUrls(sharedUrls);
+    const catalogSubpathUrls = multiEntryCatalogSubpathUrls(blockingSharedUrls);
+    if (
+      catalogSubpathUrls.length &&
+      candidate.category &&
+      candidate.category === existing.category
+    ) {
+      reasons.push(
+        `same multi-entry catalog subpath URL ${catalogSubpathUrls[0]}`,
+      );
+    }
     if (
       blockingSharedUrls.length &&
       candidate.category &&
@@ -365,26 +405,6 @@ export function findStrictContentDuplicateMatch(
       reasons.push(
         `same collection source set including ${blockingSharedUrls[0]}`,
       );
-    }
-
-    if (
-      candidate.category &&
-      candidate.normalizedTitle &&
-      candidate.category === existing.category &&
-      candidate.normalizedTitle === existing.normalizedTitle
-    ) {
-      reasons.push(`same normalized title in ${candidate.category}`);
-    }
-
-    const sharedDomains = intersection(candidate.domains, existing.domains);
-    if (
-      sharedDomains.length &&
-      candidate.category &&
-      candidate.category === existing.category &&
-      candidate.normalizedTitle &&
-      candidate.normalizedTitle === existing.normalizedTitle
-    ) {
-      reasons.push(`same source domain ${sharedDomains[0]} and title`);
     }
 
     if (reasons.length) return { existing, reasons };
@@ -418,7 +438,7 @@ export function findRelatedContentMatches(
         `same canonical source URL ${sharedUrls[0]} in ${candidate.category}, but not a strict duplicate without the same title, slug, or purpose`,
       );
     }
-    const catalogUrls = sharedCatalogUrls(sharedUrls);
+    const catalogUrls = sharedCatalogUrls(candidate.urls, existing.urls);
     if (
       catalogUrls.length &&
       candidate.category &&
@@ -438,6 +458,17 @@ export function findRelatedContentMatches(
         candidate.category === existing.category
           ? `same non-generic source domain ${relatedDomain} in ${candidate.category}`
           : `same non-generic source domain ${relatedDomain} across ${candidate.category}/${existing.category}`,
+      );
+    }
+
+    if (
+      candidate.category &&
+      candidate.normalizedTitle &&
+      candidate.category === existing.category &&
+      candidate.normalizedTitle === existing.normalizedTitle
+    ) {
+      reasons.push(
+        `same normalized title in ${candidate.category}, but not a strict duplicate without the same slug, path, source, or purpose`,
       );
     }
 

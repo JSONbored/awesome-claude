@@ -4,6 +4,7 @@ import {
   looksLikeToolAppListing,
   missingToolListingReviewFields,
   TOOLS_CATEGORY,
+  toolListingApprovalMessage,
   toolListingRoutingMessage,
 } from "./submission-classification.js";
 import { buildSubmissionFieldModel } from "./submission-spec.js";
@@ -768,6 +769,26 @@ const TOOL_DISCLOSURES = new Set([
   "claimed",
 ]);
 
+const PROTECTED_SUBMISSION_LABELS = new Set(["accepted"]);
+
+function labelName(label) {
+  if (typeof label === "string") return label;
+  if (label && typeof label === "object") return label.name;
+  return "";
+}
+
+function hasProtectedSubmissionLabel(draft = {}) {
+  return Array.isArray(draft.labels)
+    ? draft.labels.some((label) =>
+        PROTECTED_SUBMISSION_LABELS.has(
+          String(labelName(label) || "")
+            .trim()
+            .toLowerCase(),
+        ),
+      )
+    : false;
+}
+
 export function validateSubmission(draft) {
   const fields = parseSubmissionPrBody(draft.body ?? "");
   const categoryFromField = normalizeCategory(fields.category);
@@ -890,6 +911,10 @@ export function validateSubmission(draft) {
   }
 
   if (category === TOOLS_CATEGORY) {
+    if (!hasProtectedSubmissionLabel(draft)) {
+      errors.push(toolListingApprovalMessage());
+    }
+
     const missingToolFields = missingToolListingReviewFields(fields);
     for (const field of missingToolFields) {
       errors.push(`Tools listings require ${field}`);
