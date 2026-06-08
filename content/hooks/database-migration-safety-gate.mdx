@@ -88,10 +88,50 @@ scriptBody: |-
 
   if [ "$TOOL_NAME" = "Edit" ] || [ "$TOOL_NAME" = "MultiEdit" ]; then
     EXISTING_FILE=""
-    if [ -r "$FILE" ]; then
-      EXISTING_FILE="$FILE"
-    elif [ -n "${CLAUDE_PROJECT_DIR:-}" ] && [ -r "$CLAUDE_PROJECT_DIR/$FILE" ]; then
-      EXISTING_FILE="$CLAUDE_PROJECT_DIR/$FILE"
+    MAX_EXISTING_BYTES=1048576
+    READ_BLOCK_REASON=""
+
+    CANDIDATES=("$FILE")
+    if [ -n "${CLAUDE_PROJECT_DIR:-}" ]; then
+      CANDIDATES+=("$CLAUDE_PROJECT_DIR/$FILE")
+    fi
+
+    for CANDIDATE in "${CANDIDATES[@]}"; do
+      [ -n "$CANDIDATE" ] || continue
+      [ -e "$CANDIDATE" ] || [ -L "$CANDIDATE" ] || continue
+
+      if [ -L "$CANDIDATE" ]; then
+        READ_BLOCK_REASON="refuses to read symlink target $CANDIDATE"
+        break
+      fi
+      if [ ! -f "$CANDIDATE" ]; then
+        READ_BLOCK_REASON="refuses to read non-regular file $CANDIDATE"
+        break
+      fi
+      if [ ! -r "$CANDIDATE" ]; then
+        READ_BLOCK_REASON="refuses to read unreadable file $CANDIDATE"
+        break
+      fi
+
+      FILE_BYTES=$(wc -c < "$CANDIDATE" | tr -d '[:space:]')
+      case "$FILE_BYTES" in
+        ''|*[!0-9]*)
+          READ_BLOCK_REASON="cannot determine size for $CANDIDATE"
+          break
+          ;;
+      esac
+      if [ "$FILE_BYTES" -gt "$MAX_EXISTING_BYTES" ]; then
+        READ_BLOCK_REASON="refuses to read $CANDIDATE larger than $MAX_EXISTING_BYTES bytes"
+        break
+      fi
+
+      EXISTING_FILE="$CANDIDATE"
+      break
+    done
+
+    if [ -n "$READ_BLOCK_REASON" ]; then
+      echo "Unable to safely inspect edited migration for ${FILE:-pending write}: $READ_BLOCK_REASON." >&2
+      exit 2
     fi
 
     if [ -n "$EXISTING_FILE" ]; then
@@ -170,12 +210,12 @@ prerequisites:
   - "Claude Code CLI with hooks enabled."
   - "bash and jq on PATH; the hook fails open and stays silent when jq is missing."
 safetyNotes:
-  - "Runs before Write, Edit, and MultiEdit on files under a migrations path or with a .sql extension; for edits, it reads the existing file and applies the requested replacement before scanning the final SQL."
+  - "Runs before Write, Edit, and MultiEdit on files under a migrations path or with a .sql extension; for edits, it reads only regular, non-symlink existing files up to 1 MiB and applies the requested replacement before scanning the final SQL."
   - "Blocks the write with exit code 2 when it detects DROP TABLE/COLUMN, TRUNCATE, a table/column RENAME, or CREATE INDEX without CONCURRENTLY; the hook never connects to or runs SQL against any database."
   - "Provides an explicit escape hatch - add a '-- safety-gate: allow' comment to the migration to acknowledge the risk and let it through."
   - "Uses regex heuristics, so it can miss obfuscated statements or flag an intentional change; review every migration regardless of the result."
 privacyNotes:
-  - "Reads the pending Write content from the tool input and, for Edit or MultiEdit, the targeted local migration file so it can scan the final content; it opens no database connections and makes no network calls."
+  - "Reads the pending Write content from the tool input and, for Edit or MultiEdit, the targeted local migration file only when it is a regular, non-symlink file up to 1 MiB so it can scan the final content; it opens no database connections and makes no network calls."
   - "Prints the file path and the names of the detected risky operation classes to local hook stderr; it writes no logs."
   - "The file path shown in output may reveal local directory structure in your terminal."
 tags:
