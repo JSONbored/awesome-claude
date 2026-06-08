@@ -2360,6 +2360,30 @@ ${urls}
     expect(source).toContain("secret: env.GITHUB_WEBHOOK_SECRET,");
   });
 
+  it("reconstructs all directory URL signal fields for accepted duplicate scans", () => {
+    const source = readWorkerSource();
+    const helperSource =
+      source.match(
+        /const DIRECTORY_ENTRY_URL_SIGNAL_FIELDS[\s\S]*?async function acceptedContentSignals/,
+      )?.[0] || "";
+
+    for (const field of [
+      "documentationUrl",
+      "docsUrl",
+      "downloadUrl",
+      "githubUrl",
+      "packageUrl",
+      "repoUrl",
+      "repositoryUrl",
+      "sourceUrl",
+      "websiteUrl",
+    ]) {
+      expect(helperSource).toContain(`"${field}"`);
+    }
+    expect(helperSource).toContain("DIRECTORY_ENTRY_URL_SIGNAL_FIELDS");
+    expect(helperSource).toContain("entry[field]");
+  });
+
   it("detects neutral duplicate submissions from canonical source URLs", () => {
     const existing = extractContentDuplicateSignals({
       filePath: "content/tools/ccusage.mdx",

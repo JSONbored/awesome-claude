@@ -243,6 +243,11 @@ export type ContentEntry = {
   readingTime?: number;
   difficultyScore?: number;
   documentationUrl?: string;
+  docsUrl?: string;
+  sourceUrl?: string;
+  sourceUrls?: string[];
+  packageUrl?: string;
+  repositoryUrl?: string;
   websiteUrl?: string;
   brandName?: string;
   brandDomain?: string;

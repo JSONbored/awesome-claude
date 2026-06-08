@@ -2606,6 +2606,18 @@ function yamlScalar(value: unknown) {
   return JSON.stringify(String(value || ""));
 }
 
+const DIRECTORY_ENTRY_URL_SIGNAL_FIELDS = [
+  "documentationUrl",
+  "docsUrl",
+  "downloadUrl",
+  "githubUrl",
+  "packageUrl",
+  "repoUrl",
+  "repositoryUrl",
+  "sourceUrl",
+  "websiteUrl",
+] as const;
+
 function contentSignalSourceFromDirectoryEntry(entry: Record<string, unknown>) {
   const lines = [
     "---",
@@ -2614,12 +2626,8 @@ function contentSignalSourceFromDirectoryEntry(entry: Record<string, unknown>) {
     `category: ${yamlScalar(entry.category)}`,
     `slug: ${yamlScalar(entry.slug)}`,
   ];
-  for (const [field, value] of [
-    ["documentationUrl", entry.documentationUrl],
-    ["downloadUrl", entry.downloadUrl],
-    ["repoUrl", entry.repoUrl],
-    ["websiteUrl", entry.websiteUrl],
-  ] as const) {
+  for (const field of DIRECTORY_ENTRY_URL_SIGNAL_FIELDS) {
+    const value = entry[field];
     if (value) lines.push(`${field}: ${yamlScalar(value)}`);
   }
   lines.push("---", "");

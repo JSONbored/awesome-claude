@@ -199,6 +199,53 @@ describe("registry artifacts", () => {
     expect(searchEntries.length).toBe(contentEntries.length);
   });
 
+  it("keeps duplicate-detection source URL fields in directory entries", () => {
+    const [directoryEntry] = buildDirectoryEntries([
+      {
+        category: "tools",
+        slug: "source-backed-tool",
+        title: "Source Backed Tool",
+        description: "Tool with every accepted source URL alias.",
+        tags: [],
+        keywords: [],
+        documentationUrl: "https://example.com/docs",
+        docsUrl: "https://example.com/docs-alias",
+        downloadUrl: "https://example.com/download.zip",
+        packageUrl: "https://www.npmjs.com/package/source-backed-tool",
+        repoUrl: "https://github.com/example/source-backed-tool",
+        repositoryUrl: "https://gitlab.com/example/source-backed-tool",
+        sourceUrl: "https://example.com/source",
+        sourceUrls: ["https://example.com/extra-source"],
+        websiteUrl: "https://example.com",
+      },
+    ]);
+
+    expect(directoryEntry).toMatchObject({
+      documentationUrl: "https://example.com/docs",
+      docsUrl: "https://example.com/docs-alias",
+      downloadUrl: "https://example.com/download.zip",
+      packageUrl: "https://www.npmjs.com/package/source-backed-tool",
+      repoUrl: "https://github.com/example/source-backed-tool",
+      repositoryUrl: "https://gitlab.com/example/source-backed-tool",
+      sourceUrl: "https://example.com/source",
+      sourceUrls: ["https://example.com/extra-source"],
+      websiteUrl: "https://example.com",
+    });
+    expect(directoryEntry.trustSignals.sourceUrls).toEqual(
+      expect.arrayContaining([
+        "https://example.com/docs",
+        "https://example.com/docs-alias",
+        "https://example.com/download.zip",
+        "https://www.npmjs.com/package/source-backed-tool",
+        "https://github.com/example/source-backed-tool",
+        "https://gitlab.com/example/source-backed-tool",
+        "https://example.com/source",
+        "https://example.com/extra-source",
+        "https://example.com",
+      ]),
+    );
+  });
+
   it("keeps public registry payloads within reviewable byte budgets", () => {
     const entryCount = contentEntries.length;
     // These budgets are growth guards, not fixed caps. The public registry

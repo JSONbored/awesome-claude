@@ -259,6 +259,15 @@ export function buildDirectoryEntries(entries) {
       tags: entry.tags ?? [],
       keywords: entry.keywords ?? [],
       documentationUrl: entry.documentationUrl || "",
+      docsUrl: entry.docsUrl || undefined,
+      sourceUrl: entry.sourceUrl || undefined,
+      sourceUrls:
+        Array.isArray(entry.sourceUrls) && entry.sourceUrls.length
+          ? entry.sourceUrls
+          : undefined,
+      packageUrl: entry.packageUrl || undefined,
+      repositoryUrl: entry.repositoryUrl || undefined,
+      websiteUrl: entry.websiteUrl || undefined,
       ...buildEntryProvenanceFields(entry),
       ...buildEntryBrandFields(entry),
       repoUrl: entry.repoUrl || "",
@@ -381,9 +390,15 @@ export function buildSkillPlatformCompatibility(entry) {
 function sourceUrlsForEntry(entry) {
   return [
     entry.documentationUrl,
+    entry.docsUrl,
+    entry.downloadUrl,
     entry.repoUrl,
     entry.githubUrl,
+    entry.packageUrl,
+    entry.repositoryUrl,
+    entry.sourceUrl,
     entry.websiteUrl,
+    ...(Array.isArray(entry.sourceUrls) ? entry.sourceUrls : []),
     ...(Array.isArray(entry.retrievalSources) ? entry.retrievalSources : []),
   ]
     .map((value) => String(value || "").trim())
