@@ -166,11 +166,13 @@ export type FeedSnapshotMetadata = {
   generatedAt: string;
   signature: string;
   detailCacheNamespace: string;
+  verifiedContentSha256?: string;
 };
 
 export type RegistryManifestSnapshot = {
   generatedAt: string;
   signature: string;
+  feedSha256?: string;
 };
 
 export type CategoryOption = {
@@ -755,14 +757,21 @@ export function filterDiscoveryEntries(
 export function buildFeedSnapshotMetadata(
   feed: Pick<ParsedFeed, "generatedAt">,
   manifestSnapshot?: RegistryManifestSnapshot | null,
+  contentSha256?: string,
 ): FeedSnapshotMetadata {
   const generatedAt = manifestSnapshot?.generatedAt || feed.generatedAt || "";
   const signature = manifestSnapshot?.signature || generatedAt;
+  const verifiedContentSha256 =
+    manifestSnapshot?.feedSha256 &&
+    contentSha256 === manifestSnapshot.feedSha256
+      ? contentSha256
+      : undefined;
 
   return {
     generatedAt,
     signature,
     detailCacheNamespace: signature || generatedAt || "unknown",
+    ...(verifiedContentSha256 ? { verifiedContentSha256 } : {}),
   };
 }
 
@@ -779,12 +788,14 @@ export function parseFeedSnapshotMetadata(
     const signature = optionalString(parsed.signature);
     const detailCacheNamespace =
       optionalString(parsed.detailCacheNamespace) || signature || generatedAt;
+    const verifiedContentSha256 = optionalString(parsed.verifiedContentSha256);
     if (!signature && !generatedAt) return null;
 
     return {
       generatedAt,
       signature,
       detailCacheNamespace: detailCacheNamespace || "unknown",
+      ...(verifiedContentSha256 ? { verifiedContentSha256 } : {}),
     };
   } catch {
     return null;
@@ -804,14 +815,15 @@ export function parseRegistryManifestSnapshot(
   const raycastContract = isRecord(contracts["raycast-index.json"])
     ? contracts["raycast-index.json"]
     : null;
-  const signature = raycastContract
+  const feedSha256 = raycastContract
     ? optionalString(raycastContract.sha256)
     : "";
 
-  if (!signature && !generatedAt) return null;
+  if (!feedSha256 && !generatedAt) return null;
   return {
     generatedAt,
-    signature: signature || generatedAt,
+    signature: feedSha256 || generatedAt,
+    ...(feedSha256 ? { feedSha256 } : {}),
   };
 }
 

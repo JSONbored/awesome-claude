@@ -145,10 +145,41 @@ function isSameFeedSnapshot(
   cachedMetadata: FeedSnapshotMetadata | null,
   manifestSnapshot: RegistryManifestSnapshot,
 ) {
+  if (manifestSnapshot.feedSha256) {
+    return Boolean(
+      cachedMetadata?.signature === manifestSnapshot.signature &&
+      cachedMetadata.verifiedContentSha256 === manifestSnapshot.feedSha256,
+    );
+  }
+
   return Boolean(
     cachedMetadata?.signature &&
     cachedMetadata.signature === manifestSnapshot.signature,
   );
+}
+
+async function sha256Hex(value: string) {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(value),
+  );
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, "0"),
+  ).join("");
+}
+
+async function verifyFeedPayloadSignature(
+  text: string,
+  manifestSnapshot: RegistryManifestSnapshot | null,
+) {
+  const expectedSha256 = manifestSnapshot?.feedSha256;
+  if (!expectedSha256) return undefined;
+
+  const actualSha256 = await sha256Hex(text);
+  if (actualSha256 !== expectedSha256) {
+    throw new Error("Feed payload SHA-256 did not match registry manifest");
+  }
+  return actualSha256;
 }
 
 function removeDetailCacheForSnapshot(options: {
@@ -317,12 +348,20 @@ export async function fetchFreshFeed(options: {
 
   try {
     const text = await fetchFeedPayload(fetchFn, feedUrl);
+    const contentSha256 = await verifyFeedPayloadSignature(
+      text,
+      manifestSnapshot,
+    );
     const nextFeed = parseFeed(text);
     if (nextFeed.entries.length === 0) {
       throw new Error("Feed contained no entries");
     }
 
-    const nextMetadata = buildFeedSnapshotMetadata(nextFeed, manifestSnapshot);
+    const nextMetadata = buildFeedSnapshotMetadata(
+      nextFeed,
+      manifestSnapshot,
+      contentSha256,
+    );
     options.cache.set(feedCacheKey(feedUrl), text);
     saveFeedSnapshotMetadata(options.cache, feedUrl, nextMetadata);
     invalidateDetailCacheWhenSnapshotChanges({

