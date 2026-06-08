@@ -121,8 +121,9 @@ scriptBody: |-
   fi
 
   normalized=$(printf '%s' "$content" | tr '\r\n\t' '    ' | tr '[:upper:]' '[:lower:]')
-  gap='[[:space:][:punct:]]{0,40}'
-  short_gap='[[:space:][:punct:]]{0,20}'
+  filler_words='(all|any|the|your|my|our|current|existing|original|following|these|those)'
+  gap="[[:space:][:punct:]]{0,40}(${filler_words}[[:space:][:punct:]]{1,40}){0,4}"
+  short_gap="[[:space:][:punct:]]{0,20}(${filler_words}[[:space:][:punct:]]{1,20}){0,2}"
 
   override_verbs='(ignore|disregard|forget|bypass|override|supersede)'
   instruction_refs='(previous|prior|above|earlier|system|developer|hidden)'
