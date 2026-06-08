@@ -124,11 +124,77 @@ describe("trust coverage report script", () => {
 
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      "Attribution coverage 0% is below required 100%",
+      "Attribution coverage 0.00% (0/1) is below required 100%",
     );
     expect(
       fs.existsSync(path.join(tmpDir, "reports/trust-coverage/mcp.json")),
     ).toBe(false);
+  });
+
+  it("uses exact risk coverage for threshold checks instead of rounded display percentages", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-trust-rounded-risk-"),
+    );
+    for (let index = 0; index < 199; index += 1) {
+      writeMcpEntry(tmpDir, `covered-mcp-${index}`, {
+        safety: true,
+        privacy: true,
+      });
+    }
+    writeMcpEntry(tmpDir, "almost-covered-mcp", { privacy: true });
+
+    const result = runTrustCoverage([
+      "--repo-root",
+      tmpDir,
+      "--category",
+      "mcp",
+      "--check",
+      "--min-risk-coverage",
+      "100",
+    ]);
+
+    expect(result.status).toBe(1);
+    expect(result.stdout).toContain(
+      "with safety + privacy notes: 199 (100%), missing 1",
+    );
+    expect(result.stderr).toContain(
+      "Risk-bearing safety/privacy coverage 99.50% (199/200) is below required 100%",
+    );
+  });
+
+  it("uses exact attribution coverage for threshold checks instead of rounded display percentages", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-trust-rounded-attribution-"),
+    );
+    for (let index = 0; index < 199; index += 1) {
+      writeMcpEntry(tmpDir, `attributed-mcp-${index}`, {
+        safety: true,
+        privacy: true,
+        attributed: true,
+      });
+    }
+    writeMcpEntry(tmpDir, "unattributed-mcp", {
+      safety: true,
+      privacy: true,
+    });
+
+    const result = runTrustCoverage([
+      "--repo-root",
+      tmpDir,
+      "--category",
+      "mcp",
+      "--check",
+      "--min-attribution-coverage",
+      "100",
+    ]);
+
+    expect(result.status).toBe(1);
+    expect(result.stdout).toContain(
+      "Provenance (all 200): source-backed 100%, attributed 100%",
+    );
+    expect(result.stderr).toContain(
+      "Attribution coverage 99.50% (199/200) is below required 100%",
+    );
   });
 
   it("does not write the default report in successful check mode", () => {
