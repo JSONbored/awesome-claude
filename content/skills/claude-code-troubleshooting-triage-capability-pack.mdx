@@ -1,0 +1,209 @@
+---
+title: Claude Code Troubleshooting Triage Capability Pack Skill
+slug: claude-code-troubleshooting-triage-capability-pack
+category: skills
+description: >-
+  Expert Claude Code troubleshooting triage capability pack for classifying
+  installation, login, configuration, MCP, performance, stability, search, and
+  API error symptoms, then routing users to evidence-based next checks without
+  guessing or exposing sensitive logs.
+cardDescription: >-
+  Triage Claude Code installation, login, config, MCP, performance, search, and
+  API error symptoms with safe evidence handling.
+seoTitle: Claude Code Troubleshooting Triage Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code troubleshooting triage using
+  official troubleshooting, skills, and features documentation, with clear
+  symptom routing, safe diagnostics, and privacy-aware support summaries.
+author: Desel72
+authorProfileUrl: "https://github.com/Desel72"
+submittedBy: Desel72
+submittedByUrl: "https://github.com/Desel72"
+dateAdded: "2026-06-08"
+submittedAt: "2026-06-08"
+documentationUrl: "https://code.claude.com/docs/en/troubleshooting"
+repoUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: "Use this capability pack when Claude Code is failing, slow, misconfigured, unable to find files, or returning install/login/API/MCP errors, and you need a structured triage path before changing settings."
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code troubleshooting triage capability pack to this Claude Code issue."
+
+  # Required output
+  1) Symptom classification and affected surface
+  2) Evidence already available and evidence still needed
+  3) Safe diagnostic commands or in-product checks
+  4) Likely route: install/login, configuration/MCP, performance/search, API/model error, IDE integration, or support escalation
+  5) Privacy-safe summary for an issue, support ticket, or maintainer handoff
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-08"
+retrievalSources:
+  - "https://code.claude.com/docs/en/troubleshooting"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "A concrete Claude Code symptom, error text, failing command, or behavior description."
+  - "Claude Code version, operating system, shell or IDE terminal, project path type, and whether the issue happens in a fresh session."
+  - "Permission to inspect redacted logs, settings, MCP configuration, environment variables, and diagnostic output relevant to the symptom."
+safetyNotes:
+  - "This skill triages and recommends diagnostics; it does not automatically edit settings, install tools, clear sessions, delete files, or restart services."
+  - "Run diagnostics from the least invasive path first, such as `/doctor`, `claude doctor`, focused config checks, or read-only log inspection."
+  - "Do not recommend destructive cleanup, credential rotation, global config rewrites, or broad cache deletion unless the evidence supports it and the user confirms impact."
+  - "Keep support escalation concrete: include symptom, environment, redacted error text, attempted checks, and the smallest reproducible case."
+privacyNotes:
+  - "Troubleshooting evidence can expose API keys, OAuth state, internal hostnames, project paths, MCP server URLs, model names, prompts, file names, logs, and heap snapshots."
+  - "Redact secrets, tokens, account identifiers, customer data, proprietary paths, and prompt contents before pasting diagnostics into public issues or support tickets."
+  - "Heap snapshots, logs, traces, and terminal transcripts may retain sensitive local state; store and share them only through approved channels."
+tags:
+  - claude-code
+  - troubleshooting
+  - triage
+  - support
+  - capability-pack
+keywords:
+  - Claude Code troubleshooting triage
+  - Claude Code doctor diagnostics
+  - Claude Code configuration debug
+  - Claude Code performance troubleshooting
+  - Claude Code support handoff
+readingTime: 8
+difficultyScore: 80
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is pinned to Claude Code troubleshooting, skills, and
+features documentation reviewed on **2026-06-08**. Prefer live official docs over
+remembered behavior when routing new error codes, IDE integration failures, MCP
+loading problems, or performance guidance.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/troubleshooting
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Core Workflow
+
+1. Classify the symptom before proposing fixes. Use one primary lane:
+   installation/login, configuration/hooks/MCP, performance/stability/search,
+   API/model error, IDE integration, skill discovery, or unknown/escalate.
+2. Capture environment facts: Claude Code version, OS, shell, terminal or IDE,
+   workspace path, package manager, network/proxy context, and whether a fresh
+   session reproduces the issue.
+3. Collect safe evidence first. Prefer `/doctor` inside Claude Code, `claude
+   doctor` when the CLI cannot start, exact redacted error text, read-only
+   settings inspection, and minimal reproduction steps.
+4. Route to the correct official troubleshooting surface. Do not treat login
+   errors, MCP loading failures, search misses, API 429/5xx errors, and
+   high-memory behavior as the same class of problem.
+5. Recommend the smallest reversible diagnostic. Avoid global rewrites,
+   destructive cleanup, account changes, or dependency installs until a
+   non-invasive check points there.
+6. Separate product behavior from environment behavior. Identify whether the
+   likely cause is local shell/path setup, IDE terminal behavior, project size,
+   WSL filesystem layout, MCP config, API availability, model access, or a
+   Claude Code bug.
+7. Produce a privacy-safe handoff when escalation is needed: symptom, affected
+   surface, environment, redacted error, commands tried, expected versus actual
+   behavior, and attached artifacts to share privately.
+
+## Capability Scope
+
+- Installation, PATH, shell, and login symptom classification.
+- Configuration, hooks, MCP server loading, and skill discovery triage.
+- Performance, memory, context compaction, command hang, search, and WSL
+  filesystem troubleshooting.
+- API/model error routing and support escalation preparation.
+- Privacy-safe issue, support-ticket, or maintainer handoff summaries.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a skill for interactive troubleshooting
+  sessions where `/doctor`, config inspection, and session context are available.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic triage checklist when diagnosing Claude Code setup or
+  repository-specific assistant failures.
+
+## Required Inputs
+
+- Exact symptom or error text.
+- Environment: OS, shell, terminal or IDE, Claude Code version, project path, and
+  network/proxy context when relevant.
+- What changed recently: install/update, config edit, MCP server change, plugin
+  reload, new project, large repo, or model/account switch.
+- Redacted logs, settings snippets, MCP config, command output, or reproduction
+  steps if available.
+
+## Production Rules
+
+- Ask for the symptom lane first; do not shotgun unrelated fixes.
+- Prefer `/doctor` or `claude doctor` as the first diagnostic when applicable.
+- Redact secrets and account identifiers before writing public summaries.
+- Never paste heap snapshots, full terminal transcripts, OAuth URLs, MCP tokens,
+  or proprietary prompts into public comments.
+- Do not recommend broad deletes, global config rewrites, or reinstall loops
+  without evidence and a rollback note.
+- If the issue affects account access, model availability, API overload, or
+  unreproducible product behavior, prepare a support handoff instead of guessing.
+
+## Troubleshooting Matrix
+
+| Symptom | First route | Safer first check |
+| --- | --- | --- |
+| `command not found`, PATH, install failure, permission error | Installation/login docs | `claude doctor`, shell PATH and install source |
+| Login loop, OAuth, `403`, provider credential issue | Installation/login docs | Redacted auth error, org/account context |
+| Settings not applying, hooks not firing, MCP not loading | Configuration debug docs | Read-only settings and MCP config review |
+| `429`, `529`, `5xx`, request validation, model unavailable | Error reference | Exact error, model, account/provider, retry timing |
+| High CPU/memory, hang, compaction thrash | Troubleshooting performance/stability | `/doctor`, context size, project size, `/compact` plan |
+| Search misses files or WSL search is incomplete | Troubleshooting search section | Ripgrep availability, path location, narrower search |
+| VS Code or JetBrains integration issue | IDE integration docs | IDE extension state, terminal type, editor logs |
+
+## Output Contract
+
+1. Symptom lane and confidence.
+2. Environment/evidence inventory, with missing facts.
+3. Safe diagnostic sequence in order.
+4. Likely root cause candidates and what would confirm or disprove each.
+5. Recommended next action, rollback note, or support escalation path.
+6. Privacy-safe handoff summary.
+
+## Duplicate Check
+
+Checked `content/skills`, generated README catalog text, open pull requests, and
+adjacent `content/agents` entries for `Claude Code Troubleshooting Triage
+Capability Pack`, `Claude Code troubleshooting`, `doctor diagnostics`, `debug
+configuration`, `performance troubleshooting`, and support-handoff terms.
+Existing content covers broad debugging agents, incident triage, Playwright trace
+triage, and the `/debug` command, but no skill entry provides this Claude
+Code-specific troubleshooting triage capability pack.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by `Desel72`.
+It is based on public Claude Code and Google Search Central documentation. No
+paid placement, referral link, affiliate link, or vendor sponsorship is used.
