@@ -43,7 +43,24 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add open-websearch --env MODE=stdio --env DEFAULT_SEARCH_ENGINE=duckduckgo -- npx -y open-websearch@latest
+  {
+    "mcpServers": {
+      "open-websearch": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "open-websearch@latest"
+        ],
+        "env": {
+          "MODE": "stdio",
+          "DEFAULT_SEARCH_ENGINE": "duckduckgo",
+          "ALLOWED_SEARCH_ENGINES": "duckduckgo,startpage,bing",
+          "NPM_CONFIG_IGNORE_SCRIPTS": "true"
+        },
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 5 minutes
 difficulty: beginner
 prerequisites:

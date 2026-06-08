@@ -37,7 +37,15 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add fli -- fli-mcp
+  {
+    "mcpServers": {
+      "fli": {
+        "command": "fli-mcp",
+        "args": [],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 10 minutes
 difficulty: intermediate
 prerequisites:

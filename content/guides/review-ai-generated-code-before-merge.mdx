@@ -19,19 +19,23 @@ submittedBy: MkDev11
 submittedByUrl: "https://github.com/MkDev11"
 dateAdded: "2026-06-04"
 usageSnippet: >-
-  Before merging AI-generated code, freeze the PR scope, rebuild from a clean
-  checkout, review security-sensitive paths first, run code scanning and
-  dependency checks, and require tests or reviewer-visible evidence for every
+  Before merging AI-generated code, freeze the PR scope, inspect dependency and
+  package-manager changes before installing, rebuild inside an isolated
+  environment with install scripts disabled unless reviewed, run code scanning
+  and dependency checks, and require tests or reviewer-visible evidence for every
   behavior change.
 prerequisites:
   - Access to the pull request diff and the branch's CI results.
   - Permission to request changes or block merge when evidence is missing.
   - Project-specific test commands for the touched package or service.
   - Secret scanning, code scanning, or equivalent local checks for risky repositories.
+  - A disposable sandbox, container, or isolated development environment for running untrusted PR commands.
 safetyNotes:
   - Treat AI-generated changes as untrusted code until a human reviewer verifies behavior, security impact, and rollback risk.
   - Block merge when the PR changes authentication, authorization, data deletion, payment, networking, serialization, or release automation without focused tests.
   - Do not accept generated explanations as proof; require CI output, reproducible commands, or links to authoritative project docs.
+  - Inspect package manifests, lockfiles, package-manager configuration, and dependency choices before installing from an untrusted branch.
+  - Run install, build, and test commands for untrusted PRs in a disposable sandbox or container, with package-manager lifecycle scripts disabled unless the changed scripts and packages have been reviewed and approved.
 privacyNotes:
   - Do not paste private code, secrets, customer data, logs, or incident details into external AI review tools unless your organization has approved that workflow.
   - Keep review notes in the pull request or internal tracker so security decisions remain auditable.
@@ -80,7 +84,7 @@ feedback carefully and supplement it with human review before merging.
 
 ## Prerequisites & Requirements
 
-- [ ] {"task": "Clean checkout", "description": "You can rebuild the branch from scratch and reproduce the test results"}
+- [ ] {"task": "Isolated checkout", "description": "You can rebuild the branch in a disposable sandbox or container and reproduce the test results"}
 - [ ] {"task": "Project test commands", "description": "You know the focused tests, linters, and type checks for the touched code"}
 - [ ] {"task": "Security scanning", "description": "Code scanning, secret scanning, dependency review, or local equivalents are available for risky diffs"}
 - [ ] {"task": "Reviewer authority", "description": "You can request changes when the PR lacks tests, source links, or a clear rollback path"}
@@ -114,41 +118,49 @@ not by whether the author used an AI tool.
    the PR mixes unrelated refactors, generated rewrites, and feature work,
    request a smaller branch before reviewing.
 
-2. **Rebuild from a clean checkout.** Pull the branch, install dependencies using
-   the repository's documented workflow, and run the focused checks for the
-   touched package. Do not rely only on screenshots, generated summaries, or
-   copied terminal output in the PR body.
+2. **Preflight dependency and tooling changes.** Before running install, build,
+   or test commands from the branch, inspect changes to package manifests,
+   lockfiles, package-manager configuration, install scripts, container images,
+   GitHub Actions, and third-party SDKs. Confirm why each new dependency or
+   lifecycle script is required.
 
-3. **Review security-sensitive paths first.** Start with authentication,
+3. **Rebuild in an isolated environment.** Pull the branch into a disposable
+   sandbox, container, or isolated development environment. Install
+   dependencies using the repository's documented workflow with package-manager
+   lifecycle scripts disabled unless the changed scripts and packages have been
+   reviewed and approved, then run the focused checks for the touched package.
+   Do not rely only on screenshots, generated summaries, or copied terminal
+   output in the PR body.
+
+4. **Review security-sensitive paths first.** Start with authentication,
    authorization, secrets, payments, migrations, data deletion, networking,
    deserialization, sandbox escapes, release automation, and permission changes.
    These paths get review priority because a plausible-looking generated patch
    can still change a trust boundary.
 
-4. **Check secrets and dependency changes.** Run secret scanning or a local
-   equivalent before merge. If the PR changes package manifests, lockfiles,
-   container images, GitHub Actions, or third-party SDKs, inspect the dependency
-   diff and confirm why each new dependency is required.
+5. **Check secrets and dependency changes.** Run secret scanning or a local
+   equivalent before merge. Re-check dependency diffs after installing so
+   generated or refreshed lockfiles still match the reviewed dependency set.
 
-5. **Read the diff in small slices.** Review one behavior path at a time. For
+6. **Read the diff in small slices.** Review one behavior path at a time. For
    each slice, ask: what invariant should stay true, what test proves it, what
    user data is touched, and what happens when the new code fails?
 
-6. **Require focused tests for changed behavior.** Unit tests are usually enough
+7. **Require focused tests for changed behavior.** Unit tests are usually enough
    for pure functions. Integration tests are better for permission checks,
    persistence, API clients, migrations, and concurrency. If a test would be too
    expensive, ask for a documented manual verification command.
 
-7. **Verify AI-written comments and docs.** Generated comments can drift from the
+8. **Verify AI-written comments and docs.** Generated comments can drift from the
    code they describe. Check that public docs, migration notes, and inline
    comments match the implementation and do not promise unsupported behavior.
 
-8. **Review agent-created PRs as production code.** If an AI coding agent opened
+9. **Review agent-created PRs as production code.** If an AI coding agent opened
    the pull request, inspect the final diff thoroughly before merging. Confirm
    that the agent's summary matches the files, that requested review comments
    were actually addressed, and that no unrelated generated changes slipped in.
 
-9. **Merge only after the reviewer-owned checklist passes.** The reviewer should
+10. **Merge only after the reviewer-owned checklist passes.** The reviewer should
    be able to summarize the change, name the highest-risk file, point to the
    verification evidence, and explain the rollback plan.
 
@@ -156,7 +168,8 @@ not by whether the author used an AI tool.
 
 - [ ] {"task": "Scope is narrow", "description": "The PR changes one behavior or one coherent workflow"}
 - [ ] {"task": "Generated files are identified", "description": "The author says which parts came from an AI coding tool"}
-- [ ] {"task": "Clean build succeeds", "description": "The branch installs and checks from a fresh checkout"}
+- [ ] {"task": "Dependency preflight passes", "description": "Manifest, lockfile, package-manager, and install-script changes are reviewed before install"}
+- [ ] {"task": "Isolated build succeeds", "description": "The branch installs and checks from a disposable sandbox or container with lifecycle scripts disabled unless approved"}
 - [ ] {"task": "Tests cover the changed behavior", "description": "Focused tests or a manual verification command are visible to reviewers"}
 - [ ] {"task": "Security-sensitive paths are inspected", "description": "Auth, permissions, data movement, secrets, dependencies, and automation changes are reviewed first"}
 - [ ] {"task": "Scanners are clean or triaged", "description": "Code scanning, secret scanning, and dependency alerts are resolved or explicitly accepted"}

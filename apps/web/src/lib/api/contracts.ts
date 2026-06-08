@@ -287,6 +287,7 @@ export const registrySearchResultSchema = registryBrandAssetSchema
     downloadTrust: z.string().nullable().optional(),
     verificationStatus: z.string(),
     platforms: z.array(z.string()).max(12).optional(),
+    mcpInstallTargets: z.array(z.string()).max(4).optional(),
     supportLevels: z.array(z.string()).max(12).optional(),
     documentationUrl: z.string(),
     repoUrl: z.string(),
@@ -306,6 +307,7 @@ export const registrySearchFacetBucketsSchema = z.record(
 export const registrySearchFacetsSchema = z.object({
   categories: registrySearchFacetBucketsSchema,
   platforms: registrySearchFacetBucketsSchema,
+  installable: registrySearchFacetBucketsSchema,
   hasSafetyNotes: registrySearchFacetBucketsSchema,
   hasPrivacyNotes: registrySearchFacetBucketsSchema,
   downloadTrust: registrySearchFacetBucketsSchema,
@@ -320,6 +322,7 @@ export const registrySearchResponseSchema = z.object({
   platform: z.string(),
   filters: z
     .object({
+      installable: z.string(),
       hasSafetyNotes: z.string(),
       hasPrivacyNotes: z.string(),
       downloadTrust: z.string(),
@@ -367,6 +370,7 @@ export const registrySearchQuerySchema = z.object({
   q: z.string().trim().toLowerCase().max(120).optional().default(""),
   category: categorySchema,
   platform: platformSchema,
+  installable: z.enum(["all", "true", "false"]).optional().default("all"),
   hasSafetyNotes: z.enum(["all", "true", "false"]).optional().default("all"),
   hasPrivacyNotes: z.enum(["all", "true", "false"]).optional().default("all"),
   downloadTrust: z.enum(["all", "first-party", "external", "none"]).optional().default("all"),

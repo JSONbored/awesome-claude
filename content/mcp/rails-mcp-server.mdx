@@ -36,7 +36,14 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  rails-mcp-config
+  {
+    "mcpServers": {
+      "railsMcpServer": {
+        "command": "rails-mcp-server",
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:

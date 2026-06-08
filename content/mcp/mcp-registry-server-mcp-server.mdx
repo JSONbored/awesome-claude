@@ -1,187 +1,173 @@
 ---
-title: MCP Registry Server
+title: MCP Registry MCP Server
 slug: mcp-registry-server-mcp-server
 category: mcp
 description: >-
-  Community-driven MCP registry service that lets clients discover published MCP
-  server metadata and lets publishers submit server.json records through a
-  documented API and publisher CLI.
+  MCP server that lets Claude and other MCP clients search and page through the
+  official MCP Registry from a local stdio server.
 cardDescription: >-
-  Run or integrate with the official MCP Registry service for server discovery,
-  publishing workflows, namespace verification, metadata validation, and
-  registry aggregator use cases.
-seoTitle: MCP Registry Server for Claude
+  Discover available MCP servers from the official registry through an
+  installable npm stdio MCP server.
+seoTitle: MCP Registry MCP Server for Claude
 seoDescription: >-
-  Use the MCP Registry Server with Claude, MCP clients, publishers, and
-  aggregators to discover MCP server metadata, validate server.json records,
-  publish verified listings, and run a local registry development server.
-author: Model Context Protocol
-authorProfileUrl: "https://github.com/modelcontextprotocol"
+  Install the MCP Registry MCP server for Claude, Cursor, Codex, and other MCP
+  clients to list and search registry.modelcontextprotocol.io server records
+  with pagination and custom registry URL support.
+author: Jun Han
+authorProfileUrl: "https://github.com/formulahendry"
 submittedBy: oktofeesh1
 submittedByUrl: "https://github.com/oktofeesh1"
 dateAdded: "2026-06-06"
-brandName: MCP Registry
-brandDomain: modelcontextprotocol.io
-repoUrl: "https://github.com/modelcontextprotocol/registry"
-documentationUrl: "https://registry.modelcontextprotocol.io/docs"
-packageUrl: "https://github.com/modelcontextprotocol/registry/pkgs/container/registry"
+brandName: MCP Registry MCP Server
+brandDomain: github.com
+repoUrl: "https://github.com/formulahendry/mcp-server-mcp-registry"
+documentationUrl: "https://github.com/formulahendry/mcp-server-mcp-registry#readme"
+packageUrl: "https://www.npmjs.com/package/mcp-server-mcp-registry"
 installable: true
-installCommand: "make dev-compose"
-usageSnippet: "Run `make dev-compose` from a cloned registry repository to start the local registry service with PostgreSQL-backed development data."
+installCommand: "npx -y mcp-server-mcp-registry@latest"
+usageSnippet: "Install the npm stdio MCP server with `npx -y mcp-server-mcp-registry@latest`, then call `list_mcp_servers` to browse or search registry records."
 copySnippet: |-
-  make dev-compose
+  {
+    "mcpServers": {
+      "mcp-registry": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-server-mcp-registry@latest"
+        ]
+      }
+    }
+  }
 configSnippet: |-
-  MCP_REGISTRY_DATABASE_URL=postgres://registry:registry@postgres:5432/registry
-  MCP_REGISTRY_SEED_FROM=data/seed.json
-  MCP_REGISTRY_ENABLE_REGISTRY_VALIDATION=true
-estimatedSetupTime: 20 minutes
-difficulty: advanced
+  {
+    "mcpServers": {
+      "mcp-registry": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-server-mcp-registry@latest"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
 prerequisites:
-  - Docker for the local development environment documented by the registry project.
-  - Go 1.24.x, ko, and golangci-lint when building or validating the registry from source.
-  - PostgreSQL available when running the prebuilt registry container outside the bundled development compose setup.
-  - Understanding of MCP server.json metadata, registry namespaces, and the difference between a registry API and an MCP tool server.
-  - GitHub OAuth, GitHub OIDC, DNS verification, or HTTP verification prepared before publishing under an owned namespace.
+  - Node.js 20 or newer.
+  - Network access to the MCP Registry API, or a custom registry URL supplied when calling the tool.
+  - Understanding that registry results are discovery metadata, not security approval for listed servers.
 safetyNotes:
-  - The registry service stores and serves MCP server metadata; inaccurate metadata can mislead clients about server packages, remotes, versions, auth requirements, or publisher identity.
-  - Publishing uses namespace ownership checks. Keep GitHub, DNS, HTTP verification, and OIDC configuration limited to namespaces you control.
-  - Local development seeding can mirror production registry behavior or load local seed data; review seed sources before using them in tests or demonstrations.
-  - Do not treat registry inclusion as a security audit of listed MCP servers. Review each referenced server, package, transport, and permission model independently.
-  - Running the prebuilt container outside the compose setup requires a correctly configured database connection, deployment controls, and registry validation enabled before exposure.
+  - Registry search results can point to arbitrary third-party MCP servers, packages, remotes, and repositories; review each result before installing anything it recommends.
+  - The server shells through `npx`, so pin a package version if you need reproducible installs instead of `@latest`.
+  - A custom `registry_url` can point the server at a private registry; only use trusted registry endpoints.
 privacyNotes:
-  - Published server metadata can include repository URLs, package URLs, remote endpoints, website URLs, organization names, namespaces, versions, and server descriptions.
-  - Publisher authentication and namespace verification can involve GitHub identities, GitHub Actions OIDC claims, DNS records, or HTTP challenge material.
-  - Registry logs, database rows, API requests, publisher CLI output, and validation errors may expose submitted metadata and namespace ownership details.
-  - Aggregators and clients that consume the registry may cache metadata and present it to users or models, so remove secrets and private endpoints before publishing.
+  - Search terms, pagination cursors, custom registry URLs, registry responses, package names, repository URLs, and server metadata may be visible to the MCP client and model provider.
+  - Private registry URLs or internal server metadata can be exposed in prompts, logs, transcripts, and client config if used directly.
 sourceUrls:
-  - "https://github.com/modelcontextprotocol/registry"
-  - "https://github.com/modelcontextprotocol/registry/blob/main/README.md"
-  - "https://github.com/modelcontextprotocol/registry/blob/main/docker-compose.yml"
-  - "https://github.com/modelcontextprotocol/registry/blob/main/.env.example"
-  - "https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/about.mdx"
-  - "https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx"
-  - "https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/registry-aggregators.mdx"
+  - "https://github.com/formulahendry/mcp-server-mcp-registry"
+  - "https://github.com/formulahendry/mcp-server-mcp-registry/blob/main/README.md"
+  - "https://github.com/formulahendry/mcp-server-mcp-registry/blob/main/server.json"
+  - "https://github.com/formulahendry/mcp-server-mcp-registry/blob/main/package.json"
+  - "https://www.npmjs.com/package/mcp-server-mcp-registry"
   - "https://registry.modelcontextprotocol.io/docs"
-  - "https://github.com/modelcontextprotocol/registry/pkgs/container/registry"
 tags:
   - registry
   - discovery
-  - publishing
-  - metadata
-  - aggregator
+  - search
+  - npm
+  - stdio
 keywords:
-  - MCP Registry
-  - MCP Registry Server
-  - modelcontextprotocol registry
-  - MCP server.json
-  - MCP publisher CLI
+  - MCP Registry MCP Server
+  - mcp-server-mcp-registry
+  - registry.modelcontextprotocol.io MCP
+  - MCP server discovery
+  - list_mcp_servers
 robotsIndex: true
 robotsFollow: true
 ---
 
 ## Content
 
-MCP Registry Server is the community-driven registry service for Model Context
-Protocol server metadata. It gives MCP clients, directories, and aggregators a
-standard API for discovering published server records, and gives publishers a
-documented path for submitting validated `server.json` metadata under verified
-namespaces.
+MCP Registry MCP Server is an installable npm MCP server for discovering and
+searching the MCP Registry from an MCP client. It exposes a `list_mcp_servers`
+tool that can browse registry records, page through large result sets, and use a
+custom registry URL when needed.
 
-The project is not a general MCP tool executor. Its job is registry
-infrastructure: store, validate, serve, and publish metadata about MCP servers.
-That makes it useful when building MCP discovery flows, registry aggregators,
-publisher automation, or local registry development environments.
+This entry is intentionally pointed at `formulahendry/mcp-server-mcp-registry`,
+not the official `modelcontextprotocol/registry` service repository. The
+official registry project is a REST registry and publisher service. This package
+is the client-installed MCP server that wraps registry discovery as an MCP tool.
 
 ## Source Review
 
-- https://github.com/modelcontextprotocol/registry
-- https://github.com/modelcontextprotocol/registry/blob/main/README.md
-- https://github.com/modelcontextprotocol/registry/blob/main/docker-compose.yml
-- https://github.com/modelcontextprotocol/registry/blob/main/.env.example
-- https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/about.mdx
-- https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx
-- https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/registry-aggregators.mdx
+- https://github.com/formulahendry/mcp-server-mcp-registry
+- https://github.com/formulahendry/mcp-server-mcp-registry/blob/main/README.md
+- https://github.com/formulahendry/mcp-server-mcp-registry/blob/main/server.json
+- https://github.com/formulahendry/mcp-server-mcp-registry/blob/main/package.json
+- https://www.npmjs.com/package/mcp-server-mcp-registry
 - https://registry.modelcontextprotocol.io/docs
-- https://github.com/modelcontextprotocol/registry/pkgs/container/registry
 
-These sources were reviewed on **2026-06-06**. Prefer the live repository,
-official API docs, publisher quickstart, and aggregator guide for current API
-versions, namespace verification rules, publisher CLI behavior, development
-commands, and container deployment notes.
+These sources were reviewed on **2026-06-07**. Prefer the live README,
+`server.json`, package metadata, and official registry API docs for current
+package version, transport, tool parameters, and default registry endpoint.
 
 ## Features
 
-- Registry API for MCP server metadata discovery.
-- Publisher workflow for submitting MCP `server.json` records.
-- Namespace verification through GitHub OAuth, GitHub OIDC, DNS, or HTTP
-  challenges.
-- Validation for submitted server metadata.
-- Local development environment through `make dev-compose`.
-- PostgreSQL-backed registry service implementation in Go.
-- Prebuilt GitHub Container Registry images for registry deployments.
-- Documentation for registry aggregators and third-party directory builders.
-- Production API docs for testing registry endpoints.
+- Search and list MCP Registry server records from an MCP client.
+- Support cursor-based pagination through registry results.
+- Accept an optional custom registry API URL.
+- Return raw server metadata that can be reviewed or analyzed by the client.
+- Install through npm with stdio transport.
+- Publish an official `server.json` manifest for registry metadata.
 
 ## Installation
 
-Clone the registry repository and run the documented development environment:
+Add the stdio server to an MCP client:
 
-```bash
-make dev-compose
+```json
+{
+  "mcpServers": {
+    "mcp-registry": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-server-mcp-registry@latest"
+      ]
+    }
+  }
+}
 ```
 
-The development compose setup builds the registry image, starts PostgreSQL, and
-seeds the service with registry data for local testing.
-
-When using the prebuilt container image, provide your own PostgreSQL database,
-configure the registry database URL, and keep registry validation enabled before
-exposing the service.
-
-## Publisher Workflow
-
-Build the publisher CLI from the repository:
-
-```bash
-make publisher
-```
-
-Then inspect available publishing commands:
-
-```bash
-./bin/mcp-publisher --help
-```
-
-Use the official quickstart before publishing. Namespace ownership checks are a
-core part of the registry trust model.
+After installation, use the `list_mcp_servers` tool. The default registry URL is
+`https://registry.modelcontextprotocol.io/v0/servers`, and callers can override
+it with the tool's `registry_url` parameter.
 
 ## Use Cases
 
-- Build MCP client discovery flows backed by a standard registry API.
-- Run a local registry service while developing registry integrations.
-- Test server metadata validation before publishing.
-- Publish MCP server records under verified namespaces.
-- Build registry aggregators, mirrors, or directory sync jobs.
-- Review server package, remote, version, repository, and website metadata in a
-  consistent schema.
+- Search for available MCP servers without leaving the MCP client.
+- Page through registry results while comparing candidate servers.
+- Query a private registry by passing a custom registry URL.
+- Build discovery and triage workflows that start from official registry
+  metadata.
+- Inspect package, repository, and transport metadata before installing a
+  separate MCP server.
 
 ## Safety and Privacy
 
-Treat registry records as discovery metadata, not endorsement. Registry entries
-can help users find MCP servers, but each server still needs its own security,
-privacy, package, and source review before installation.
+Treat registry results as leads, not approvals. A listed package still needs its
+own source, package, permission, privacy, and trust review before installation.
+Do not install or run a returned MCP server just because it appears in registry
+metadata.
 
-Keep namespace verification credentials and challenge material under tight
-control. Publishing from GitHub Actions should use the least privilege needed
-for OIDC-based namespace proof, and DNS or HTTP challenges should be scoped to
-domains you control.
-
-Before publishing metadata, remove private endpoints, internal package URLs,
-temporary repository links, secrets, tokens, personal contact details, and
-anything that should not be cached by clients, aggregators, or model contexts.
+Private registry URLs and search results can reveal internal server names,
+package locations, repository URLs, and operational metadata. Keep private
+registry usage out of shared transcripts and logs unless it has been reviewed.
 
 ## Duplicate Check
 
-No dedicated `modelcontextprotocol/registry` entry, MCP Registry Server entry,
-or matching registry source URL was found in `content/mcp`. The registry repo
-appears only as a supporting source URL in the Windows MCP entry, not as its own
-catalog entry.
+The previous content pointed at the official `modelcontextprotocol/registry`
+service, which is registry infrastructure rather than a client-installed MCP
+server. This entry now targets the installable
+`formulahendry/mcp-server-mcp-registry` MCP server package and keeps the
+official registry only as the queried data source.

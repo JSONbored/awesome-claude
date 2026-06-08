@@ -86,6 +86,7 @@
           "downloadTrust": { "type": ["string", "null"] },
           "verificationStatus": { "type": "string" },
           "platforms": { "type": "array", "items": { "type": "string" }, "maxItems": 12 },
+          "mcpInstallTargets": { "type": "array", "items": { "type": "string" }, "maxItems": 4 },
           "supportLevels": { "type": "array", "items": { "type": "string" }, "maxItems": 12 },
           "documentationUrl": { "type": "string" },
           "repoUrl": { "type": "string" },
@@ -737,6 +738,12 @@
           {
             "schema": { "type": "string", "enum": ["all", "true", "false"], "default": "all" },
             "required": false,
+            "name": "installable",
+            "in": "query"
+          },
+          {
+            "schema": { "type": "string", "enum": ["all", "true", "false"], "default": "all" },
+            "required": false,
             "name": "hasSafetyNotes",
             "in": "query"
           },
@@ -804,6 +811,7 @@
                     "filters": {
                       "type": "object",
                       "properties": {
+                        "installable": { "type": "string" },
                         "hasSafetyNotes": { "type": "string" },
                         "hasPrivacyNotes": { "type": "string" },
                         "downloadTrust": { "type": "string" },
@@ -811,6 +819,7 @@
                         "sourceStatus": { "type": "string" }
                       },
                       "required": [
+                        "installable",
                         "hasSafetyNotes",
                         "hasPrivacyNotes",
                         "downloadTrust",
@@ -891,6 +900,11 @@
                             "type": "array",
                             "items": { "type": "string" },
                             "maxItems": 12
+                          },
+                          "mcpInstallTargets": {
+                            "type": "array",
+                            "items": { "type": "string" },
+                            "maxItems": 4
                           },
                           "supportLevels": {
                             "type": "array",
@@ -974,6 +988,10 @@
                           "type": "object",
                           "additionalProperties": { "type": "integer", "minimum": 0 }
                         },
+                        "installable": {
+                          "type": "object",
+                          "additionalProperties": { "type": "integer", "minimum": 0 }
+                        },
                         "hasSafetyNotes": {
                           "type": "object",
                           "additionalProperties": { "type": "integer", "minimum": 0 }
@@ -998,6 +1016,7 @@
                       "required": [
                         "categories",
                         "platforms",
+                        "installable",
                         "hasSafetyNotes",
                         "hasPrivacyNotes",
                         "downloadTrust",

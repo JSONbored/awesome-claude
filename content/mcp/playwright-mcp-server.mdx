@@ -32,9 +32,14 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "playwright": {
-      "command": "npx",
-      "args": ["@playwright/mcp@latest"]
+    "mcpServers": {
+      "playwright": {
+        "command": "npx",
+        "args": [
+          "@playwright/mcp@latest"
+        ],
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 3 minutes

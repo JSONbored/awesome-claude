@@ -41,19 +41,14 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "mcp": {
-      "client_configs": [
-        {
-          "name": "web_search",
-          "connection_type": "http",
-          "connection_string": "env.WEB_SEARCH_MCP_URL",
-          "auth_type": "headers",
-          "tools_to_execute": [
-            "search",
-            "fetch_url"
-          ]
-        }
-      ]
+    "mcpServers": {
+      "bifrost": {
+        "url": "BIFROST_MCP_URL",
+        "headers": {
+          "Authorization": "Bearer ${BIFROST_VIRTUAL_KEY}"
+        },
+        "type": "http"
+      }
     }
   }
 estimatedSetupTime: 25 minutes

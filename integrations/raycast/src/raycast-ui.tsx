@@ -19,6 +19,14 @@ function trustLabel(value: RaycastEntry["downloadTrust"]) {
   return "";
 }
 
+function sourceLabel(entry: RaycastEntry) {
+  if (entry.trustSignals?.sourceStatus === "available" || entry.repoUrl) {
+    return "Source-backed";
+  }
+  if (entry.documentationUrl) return "Documentation-backed";
+  return "";
+}
+
 export function entrySnippetKeyword(entry: RaycastEntry) {
   return `hc-${entry.slug}`.slice(0, 40);
 }
@@ -72,6 +80,28 @@ export function entryDetailMetadata(entry: RaycastEntry, generatedAt = "") {
         />
       ) : null}
       <List.Item.Detail.Metadata.Separator />
+      {entry.installable ||
+      entry.hasInstallCommand ||
+      entry.hasConfigSnippet ? (
+        <List.Item.Detail.Metadata.Label
+          title="Install"
+          text={[
+            entry.hasInstallCommand ? "command" : "",
+            entry.hasConfigSnippet ? "config" : "",
+            entry.installable ? "installable" : "",
+          ]
+            .filter(Boolean)
+            .join(", ")}
+          icon={Icon.Download}
+        />
+      ) : null}
+      {sourceLabel(entry) ? (
+        <List.Item.Detail.Metadata.Label
+          title="Source status"
+          text={sourceLabel(entry)}
+          icon={Icon.Shield}
+        />
+      ) : null}
       {trustLabel(entry.downloadTrust) ? (
         <List.Item.Detail.Metadata.Label
           title="Download trust"
@@ -84,6 +114,13 @@ export function entryDetailMetadata(entry: RaycastEntry, generatedAt = "") {
           title="Verification"
           text={entry.verificationStatus}
           icon={Icon.CheckRosette}
+        />
+      ) : null}
+      {typeof entry.searchScore === "number" ? (
+        <List.Item.Detail.Metadata.Label
+          title="Search score"
+          text={String(entry.searchScore)}
+          icon={Icon.MagnifyingGlass}
         />
       ) : null}
       {entry.copyTextTruncated ? (
@@ -109,6 +146,20 @@ export function entryDetailMetadata(entry: RaycastEntry, generatedAt = "") {
                 key={platform}
                 text={platform}
                 color={Color.Blue}
+              />
+            ))}
+          </List.Item.Detail.Metadata.TagList>
+        </>
+      ) : null}
+      {entry.searchReasons?.length ? (
+        <>
+          <List.Item.Detail.Metadata.Separator />
+          <List.Item.Detail.Metadata.TagList title="Why this matched">
+            {entry.searchReasons.slice(0, 8).map((reason) => (
+              <List.Item.Detail.Metadata.TagList.Item
+                key={reason}
+                text={reason}
+                color={Color.Green}
               />
             ))}
           </List.Item.Detail.Metadata.TagList>

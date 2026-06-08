@@ -37,7 +37,17 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  uvx mac-messages-mcp
+  {
+    "mcpServers": {
+      "messages": {
+        "command": "uvx",
+        "args": [
+          "mac-messages-mcp"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: advanced
 prerequisites:

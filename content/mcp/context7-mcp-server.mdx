@@ -33,9 +33,15 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "context7": {
-      "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp"]
+    "mcpServers": {
+      "context7": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@upstash/context7-mcp"
+        ],
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 2 minutes

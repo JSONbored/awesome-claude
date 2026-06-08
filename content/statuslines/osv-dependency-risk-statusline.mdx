@@ -47,7 +47,19 @@ scriptBody: |-
   report="${OSV_STATUSLINE_JSON:-osv-report.json}"
 
   if [ "${OSV_STATUSLINE_SCAN:-0}" = "1" ] && command -v osv-scanner >/dev/null 2>&1; then
-    osv-scanner --format json . > "$report" 2>/dev/null || true
+    if [ -L "$report" ]; then
+      echo "deps: unsafe report path"
+      exit 0
+    fi
+
+    report_dir=$(dirname "$report")
+    tmp_report=$(mktemp "$report_dir/.osv-report.XXXXXX") || exit 0
+    trap 'rm -f "$tmp_report"' EXIT
+
+    if osv-scanner --format json . > "$tmp_report" 2>/dev/null; then
+      mv -f "$tmp_report" "$report"
+      trap - EXIT
+    fi
   fi
 
   if [ ! -f "$report" ]; then
@@ -79,6 +91,7 @@ prerequisites:
   - Optional OSV-Scanner CLI installed if OSV_STATUSLINE_SCAN is set to 1.
 safetyNotes:
   - Prefer reading a precomputed report; scanning dependencies during every statusline refresh can be slow.
+  - Auto-scan mode refuses symlinked report paths and writes through a temporary file before replacing the report.
   - Vulnerability counts need human triage for reachability, exploitability, and acceptable remediation timing.
   - Do not let a zero count replace lockfile review, provenance checks, or package-manager audit policy.
 privacyNotes:

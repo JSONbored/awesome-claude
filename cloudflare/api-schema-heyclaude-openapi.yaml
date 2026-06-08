@@ -166,6 +166,11 @@ components:
           items:
             type: string
           maxItems: 12
+        mcpInstallTargets:
+          type: array
+          items:
+            type: string
+          maxItems: 4
         supportLevels:
           type: array
           items:
@@ -957,6 +962,16 @@ paths:
               - "false"
             default: all
           required: false
+          name: installable
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - "true"
+              - "false"
+            default: all
+          required: false
           name: hasSafetyNotes
           in: query
         - schema:
@@ -1038,6 +1053,8 @@ paths:
                   filters:
                     type: object
                     properties:
+                      installable:
+                        type: string
                       hasSafetyNotes:
                         type: string
                       hasPrivacyNotes:
@@ -1049,6 +1066,7 @@ paths:
                       sourceStatus:
                         type: string
                     required:
+                      - installable
                       - hasSafetyNotes
                       - hasPrivacyNotes
                       - downloadTrust
@@ -1187,6 +1205,11 @@ paths:
                           items:
                             type: string
                           maxItems: 12
+                        mcpInstallTargets:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 4
                         supportLevels:
                           type: array
                           items:
@@ -1289,6 +1312,11 @@ paths:
                         additionalProperties:
                           type: integer
                           minimum: 0
+                      installable:
+                        type: object
+                        additionalProperties:
+                          type: integer
+                          minimum: 0
                       hasSafetyNotes:
                         type: object
                         additionalProperties:
@@ -1317,6 +1345,7 @@ paths:
                     required:
                       - categories
                       - platforms
+                      - installable
                       - hasSafetyNotes
                       - hasPrivacyNotes
                       - downloadTrust

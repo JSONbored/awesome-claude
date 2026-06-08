@@ -42,11 +42,22 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add minimax \
-    --env MINIMAX_API_KEY=insert-your-api-key-here \
-    --env MINIMAX_API_HOST=https://api.minimax.io \
-    --env MINIMAX_API_RESOURCE_MODE=url \
-    -- uvx minimax-mcp
+  {
+    "mcpServers": {
+      "minimax": {
+        "command": "uvx",
+        "args": [
+          "minimax-mcp"
+        ],
+        "env": {
+          "MINIMAX_API_KEY": "insert-your-api-key-here",
+          "MINIMAX_API_HOST": "https://api.minimax.io",
+          "MINIMAX_API_RESOURCE_MODE": "url"
+        },
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 10 minutes
 difficulty: intermediate
 prerequisites:

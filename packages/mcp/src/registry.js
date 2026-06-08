@@ -29,6 +29,8 @@ import {
   validateSubmissionDraftFromSpec,
 } from "./submissions.js";
 
+export * from "./schemas.js";
+
 const safePathPartPattern = /^[a-z0-9-]+$/;
 const jsonMimeType = "application/json";
 const DISCOVERY_RESOURCE_LIMIT = 25;

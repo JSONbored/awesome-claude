@@ -32,12 +32,12 @@ copySnippet: |-
   kubectl port-forward -n adapter svc/mcpgateway-service 8000:8000
 configSnippet: |-
   {
-    "name": "sample-adapter",
-    "imageName": "mcp-example",
-    "imageVersion": "1.0.0",
-    "requiredRoles": [
-      "mcp.engineer"
-    ]
+    "mcpServers": {
+      "microsoft-mcp-gateway": {
+        "url": "http://localhost:8000/mcp",
+        "type": "http"
+      }
+    }
   }
 estimatedSetupTime: 45 minutes
 difficulty: advanced
@@ -104,7 +104,7 @@ tools when Azure AI Foundry settings are configured.
 - https://github.com/microsoft/mcp-gateway/blob/main/openapi/mcp-gateway.openapi.json
 - https://github.com/microsoft/mcp-gateway/blob/main/dotnet/Microsoft.McpGateway.Service/src/Session/AdapterSessionRoutingHandler.cs
 
-These sources were reviewed on **2026-06-06**. Prefer the live repository,
+These sources were reviewed on **2026-06-07**. Prefer the live repository,
 README, Entra app-role guide, MCP proxy sample, OpenAPI contract, session
 routing source, and license file for current deployment, authorization, adapter
 management, tool registration, and routing behavior.
@@ -151,6 +151,12 @@ required role values:
 }
 ```
 
+The README documents two client-facing Streamable HTTP paths after the gateway
+is running. Direct adapter access uses `/adapters/{name}/mcp`, such as
+`http://localhost:8000/adapters/mcp-example/mcp`. The dynamic tool gateway
+router uses the stable `http://localhost:8000/mcp` endpoint and routes calls to
+registered tool servers.
+
 ## Use Cases
 
 - Put a Kubernetes-native reverse proxy in front of multiple MCP server deployments.
@@ -185,4 +191,5 @@ network policy, image provenance, and log retention before production use.
 
 No `microsoft/mcp-gateway` source entry, Microsoft MCP Gateway entry, or
 matching source URL was found in `content/mcp` or the broader content
-directories.
+directories. This entry uses the documented Streamable HTTP gateway endpoint
+and still requires the gateway deployment plus registered adapters or tools.

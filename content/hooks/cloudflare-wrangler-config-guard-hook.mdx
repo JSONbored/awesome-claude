@@ -92,13 +92,43 @@ scriptBody: |-
     exit 0
   fi
 
+  if [ -L "$file_path" ]; then
+    echo "Wrangler config guard blocked: config path must not be a symlink." >&2
+    exit 1
+  fi
+
   WRANGLER_CONFIG_PATH="$file_path" node <<'NODE'
   const fs = require("node:fs");
+  const pathModule = require("node:path");
   const path = process.env.WRANGLER_CONFIG_PATH;
-  const raw = fs.readFileSync(path, "utf8");
   const name = path.split(/[\\/]/).pop();
+  const maxConfigBytes = 1024 * 1024;
   const errors = [];
   const warnings = [];
+
+  const stats = fs.lstatSync(path);
+  if (stats.isSymbolicLink()) {
+    errors.push("Config path must not be a symlink.");
+  }
+
+  const realPath = fs.realpathSync(path);
+  const projectRoot = fs.realpathSync(process.cwd());
+  const relativePath = pathModule.relative(projectRoot, realPath);
+  if (relativePath.startsWith("..") || pathModule.isAbsolute(relativePath)) {
+    errors.push("Config path must stay within the current project.");
+  }
+
+  if (stats.size > maxConfigBytes) {
+    errors.push("Config file is too large to inspect safely.");
+  }
+
+  if (errors.length) {
+    console.error(`Wrangler config guard: checking ${name}`);
+    for (const error of errors) console.error(`[error] ${error}`);
+    process.exit(1);
+  }
+
+  const raw = fs.readFileSync(path, "utf8");
 
   function displayName(value) {
     return JSON.stringify(String(value)).replace(/[\u007f-\u009f]/g, (char) => {
@@ -353,8 +383,8 @@ scriptBody: |-
     } else {
       checkToml();
     }
-  } catch (error) {
-    errors.push(`Parse failed: ${error.message}`);
+  } catch {
+    errors.push("Parse failed: review the Wrangler config syntax before continuing.");
   }
 
   for (const warning of warnings) console.error(`[warn] ${warning}`);
@@ -374,13 +404,14 @@ prerequisites:
   - "Node.js available locally for static JSON/JSONC/TOML heuristics."
   - "A reviewed `.claude/settings.json` or user settings hook configuration scoped to `Write`, `Edit`, and `MultiEdit`."
 safetyNotes:
-  - "This hook is static and read-only. It reads the edited Wrangler config file and does not run `wrangler deploy`, `wrangler dev`, `wrangler whoami`, `wrangler secret list`, package scripts, build plugins, or network commands."
+  - "This hook is static and read-only. It reads only non-symlinked Wrangler config files inside the current project and does not run `wrangler deploy`, `wrangler dev`, `wrangler whoami`, `wrangler secret list`, package scripts, build plugins, or network commands."
   - "The hook exits non-zero only for parse failures or missing required top-level Worker fields such as `name` and `compatibility_date`; warnings remain advisory so the user can review them."
   - "The TOML checks are heuristic and do not replace Wrangler's own parser or a trusted pre-deploy dry run. Use them as a fast edit-time guard, then run official Wrangler validation in a trusted repository."
   - "Do not expand this hook into a dry-run deploy hook unless the team has reviewed local build-script execution, inherited environment variables, and output-directory cleanup."
   - "Keep matchers scoped to config file edits. Running config checks after every tool call adds noise without improving Cloudflare safety."
 privacyNotes:
-  - "The hook reads `wrangler.toml`, `wrangler.json`, or `wrangler.jsonc`; those files can contain worker names, route patterns, account identifiers, resource IDs, binding names, environment names, analytics settings, and non-secret vars."
+  - "The hook reads `wrangler.toml`, `wrangler.json`, or `wrangler.jsonc` only inside the current project, with symlinks rejected and a 1 MiB size cap."
+  - "Wrangler config files can contain worker names, route patterns, account identifiers, resource IDs, binding names, environment names, analytics settings, and non-secret vars."
   - "Hook output may include file paths, config key names, environment names, and secret-like variable names, so avoid pasting terminal logs into public issue comments without review."
   - "If a Wrangler config currently contains real secrets in `vars`, the hook can reveal the key names and the surrounding configuration context. Move sensitive values to Wrangler secrets before sharing output."
 sourceUrls:

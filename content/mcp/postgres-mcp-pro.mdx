@@ -40,6 +40,7 @@ copySnippet: |-
     }
   }
 configSnippet: |-
+  Manual-only setup:
   claude mcp add postgres-pro \
     --env DATABASE_URI=postgresql://username:password@localhost:5432/dbname \
     -- uvx postgres-mcp --access-mode=restricted

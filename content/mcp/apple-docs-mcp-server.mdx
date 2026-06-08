@@ -37,7 +37,18 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add apple-docs -- npx -y @kimsungwhee/apple-docs-mcp@latest
+  {
+    "mcpServers": {
+      "apple-docs": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@kimsungwhee/apple-docs-mcp@latest"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 5 minutes
 difficulty: beginner
 prerequisites:

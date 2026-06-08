@@ -37,7 +37,20 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  claude mcp add ruflo -- npx -y ruflo@latest mcp start
+  {
+    "mcpServers": {
+      "ruflo": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "ruflo@latest",
+          "mcp",
+          "start"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 20 minutes
 difficulty: advanced
 prerequisites:

@@ -42,7 +42,21 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  npx -y @softeria/ms-365-mcp-server --read-only --preset outlook
+  {
+    "mcpServers": {
+      "ms365-graph": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@softeria/ms-365-mcp-server",
+          "--read-only",
+          "--preset",
+          "outlook"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 25 minutes
 difficulty: advanced
 prerequisites:

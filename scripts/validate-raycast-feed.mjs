@@ -3,6 +3,11 @@ import path from "node:path";
 
 import { RAYCAST_COPY_PREVIEW_LIMIT } from "@heyclaude/registry";
 import { isAllowedBrandAssetUrl } from "@heyclaude/registry/brand-assets";
+import {
+  MCP_INSTALL_TARGET_IDS,
+  extractMcpServerConfig,
+  mcpConfigSupportsTarget,
+} from "@heyclaude/registry/mcp-install-config";
 
 const repoRoot = process.cwd();
 const feedPath = path.join(repoRoot, "apps/web/public/data/raycast-index.json");
@@ -34,6 +39,7 @@ const forbiddenEntryFields = [
   "codeBlocks",
   "scriptBody",
 ];
+const allowedMcpInstallTargets = new Set(MCP_INSTALL_TARGET_IDS);
 
 function fail(message) {
   console.error(message);
@@ -107,6 +113,36 @@ function objectDefinesKey(block, key) {
   return new RegExp(
     `(^|\\n)\\s*(?:${escapedKey}|["']${escapedKey}["'])\\s*:`,
   ).test(block);
+}
+
+function normalizeMcpInstallTargets(value, label) {
+  if (value === undefined) return [];
+  if (!Array.isArray(value)) {
+    fail(`${label}: mcpInstallTargets must be an array`);
+    return [];
+  }
+  const targets = [];
+  const seenTargets = new Set();
+  for (const item of value) {
+    if (typeof item !== "string" || !allowedMcpInstallTargets.has(item)) {
+      fail(`${label}: invalid MCP install target ${String(item)}`);
+      continue;
+    }
+    if (seenTargets.has(item)) {
+      fail(`${label}: duplicate MCP install target ${item}`);
+      continue;
+    }
+    seenTargets.add(item);
+    targets.push(item);
+  }
+  return targets;
+}
+
+function equalStringArrays(left, right) {
+  return (
+    left.length === right.length &&
+    left.every((item, index) => item === right[index])
+  );
 }
 
 if (!fs.existsSync(feedPath)) {
@@ -226,6 +262,14 @@ for (const entry of payload.entries) {
   }
 
   const detail = JSON.parse(fs.readFileSync(detailPath, "utf8"));
+  const entryMcpTargets = normalizeMcpInstallTargets(
+    entry.mcpInstallTargets,
+    `${key} entry`,
+  );
+  const detailMcpTargets = normalizeMcpInstallTargets(
+    detail.mcpInstallTargets,
+    `${key} detail`,
+  );
   assertNoLoneSurrogates(detail, `${key} detail`);
   if (detail.schemaVersion !== 2)
     fail(`${key}: detail schemaVersion must be 2`);
@@ -260,6 +304,51 @@ for (const entry of payload.entries) {
   ]) {
     if (entry[field] && entry[field] !== detail[field]) {
       fail(`${key}: detail ${field} must match feed ${field}`);
+    }
+  }
+
+  if (!equalStringArrays(entryMcpTargets, detailMcpTargets)) {
+    fail(`${key}: detail mcpInstallTargets must match feed entry`);
+  }
+  if (entry.category !== "mcp") {
+    if (entryMcpTargets.length || detailMcpTargets.length) {
+      fail(`${key}: non-MCP entry must not advertise MCP install targets`);
+    }
+    continue;
+  }
+
+  const detailConfigSnippet = String(detail.configSnippet || "").trim();
+  const advertisesMcpInstall =
+    entry.hasConfigSnippet ||
+    detail.hasConfigSnippet ||
+    entryMcpTargets.length ||
+    detailMcpTargets.length;
+  if (!advertisesMcpInstall) {
+    if (detailConfigSnippet) {
+      fail(`${key}: manual MCP entry must not publish Raycast configSnippet`);
+    }
+    continue;
+  }
+
+  if (!entry.hasConfigSnippet || !detail.hasConfigSnippet) {
+    fail(`${key}: MCP install target requires hasConfigSnippet in feed/detail`);
+  }
+  if (!entryMcpTargets.length) {
+    fail(`${key}: MCP install target list must not be empty`);
+  }
+  let extractedMcpConfig = null;
+  try {
+    extractedMcpConfig = extractMcpServerConfig(detailConfigSnippet);
+  } catch {
+    extractedMcpConfig = null;
+  }
+  if (!extractedMcpConfig) {
+    fail(`${key}: advertised MCP install target requires valid detail config`);
+    continue;
+  }
+  for (const target of entryMcpTargets) {
+    if (!mcpConfigSupportsTarget(extractedMcpConfig.config, target)) {
+      fail(`${key}: unsupported MCP install target ${target}`);
     }
   }
 }

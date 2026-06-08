@@ -42,9 +42,9 @@ configSnippet: |-
         "args": ["-y", "@sylphx/pdf-reader-mcp"],
         "env": {
           "MCP_TRANSPORT": "stdio",
-          "MCP_PDF_ALLOWED_DIRS": "",
-          "MCP_PDF_ALLOWED_HOSTS": "",
-          "MCP_PDF_ALLOW_HTTP": "true"
+          "MCP_PDF_ALLOWED_DIRS": "/Users/you/Documents/approved-pdfs",
+          "MCP_PDF_ALLOWED_HOSTS": "trusted.example.com",
+          "MCP_PDF_ALLOW_HTTP": "false"
         }
       }
     }
@@ -146,9 +146,12 @@ Configure the stdio server in your MCP client:
 }
 ```
 
-After restarting the MCP client, ask Claude to read only approved PDF paths or
-URLs and specify whether you need full text, metadata, page counts, images,
-tables, or particular page ranges.
+Replace the example directory and host with locations you trust before use.
+Keep `MCP_PDF_ALLOW_HTTP` set to `false` unless you have a specific, trusted
+plaintext HTTP source and understand the tampering risk. After restarting the
+MCP client, ask Claude to read only approved PDF paths or URLs and specify
+whether you need full text, metadata, page counts, images, tables, or particular
+page ranges.
 
 ## Use Cases
 

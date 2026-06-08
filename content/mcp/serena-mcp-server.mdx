@@ -39,16 +39,19 @@ copySnippet: |-
   }
 configSnippet: |-
   {
-    "serena": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/oraios/serena",
-        "serena",
-        "start-mcp-server",
-        "--context",
-        "ide-assistant"
-      ]
+    "mcpServers": {
+      "serena": {
+        "command": "uvx",
+        "args": [
+          "--from",
+          "git+https://github.com/oraios/serena",
+          "serena",
+          "start-mcp-server",
+          "--context",
+          "ide-assistant"
+        ],
+        "type": "stdio"
+      }
     }
   }
 estimatedSetupTime: 5 minutes

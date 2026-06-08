@@ -37,7 +37,19 @@ copySnippet: |-
     }
   }
 configSnippet: |-
-  npx -y @ankimcp/anki-mcp-server --stdio --read-only
+  {
+    "mcpServers": {
+      "anki": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@ankimcp/anki-mcp-server",
+          "--stdio"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
 estimatedSetupTime: 15 minutes
 difficulty: intermediate
 prerequisites:
