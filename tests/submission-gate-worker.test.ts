@@ -343,7 +343,7 @@ describe("Cloudflare submission gate helpers", () => {
     });
   });
 
-  it("treats neutral Superagent scans as non-failing content gate signals", async () => {
+  it("treats neutral Superagent scans as failed validation for manual review", async () => {
     const fetchMock = vi.fn(async () =>
       Response.json({
         check_runs: [
@@ -372,12 +372,12 @@ describe("Cloudflare submission gate helpers", () => {
         requiredChecks: ["validate-content", "Superagent Security Scan"],
       }),
     ).resolves.toMatchObject({
-      state: "passed",
+      state: "failed",
       checks: [
         { name: "validate-content", status: "passed" },
         {
           name: "Superagent Security Scan",
-          status: "passed",
+          status: "failed",
           details: "concluded neutral",
         },
       ],
