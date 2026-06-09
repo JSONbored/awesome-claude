@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>911+ file-backed entries</strong> stay useful as both an
+        <strong>914+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>911</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>914</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -63,7 +63,7 @@
 <tr>
 <td align="center" width="20%">
           <a href="#ai-agents"><strong>🤖 Agents</strong></a><br>
-          <code>83</code><br>
+          <code>84</code><br>
           <sub>Specialized Claude agents and expert roles.</sub>
         </td>
 <td align="center" width="20%">
@@ -78,7 +78,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#skills"><strong>🧠 Skills</strong></a><br>
-          <code>91</code><br>
+          <code>93</code><br>
           <sub>Source-backed skill packs and reusable capabilities.</sub>
         </td>
 <td align="center" width="20%">
@@ -187,9 +187,10 @@ packages use checksums and package trust metadata after review.
 
 ## Content Catalog
 
-## 🤖 AI Agents (83)
+## 🤖 AI Agents (84)
 
 - **[Agent SDK Production Architect Agent](https://heyclau.de/entry/agents/agent-sdk-production-architect-agent)** - Source-backed agent that reviews and designs production Claude Agent SDK deployments, covering surface choice, tool and permission design, context and cost controls, session persistence, observability, and secure hosting, grounded in the official Agent SDK docs.
+- **[Agent Skill QA Reviewer Agent](https://heyclau.de/entry/agents/agent-skill-qa-reviewer-agent)** - Source-backed Claude Code subagent prompt for reviewing Agent Skills before adoption or publication, checking SKILL.md scope, descriptions, invocation control, supporting files, tool permissions, helpfulness, safety, and privacy risks against official Claude Code skills guidance.
 - **[Agent Skills Enterprise Librarian Agent](https://heyclau.de/entry/agents/agent-skills-enterprise-librarian-agent)** - Source-backed agent that curates an organization's Agent Skills library, reviewing SKILL.md quality, descriptions and triggers, scope and precedence, tool restrictions, and invocation control so skills are discoverable and safe, grounded in the official Claude Code skills docs.
 - **[Agent Skills Framework Engineer - Claude Code Agents](https://heyclau.de/entry/agents/agent-skills-framework-engineer)** - Agent Skills framework specialist for creating procedural knowledge files, domain-specific expertise, and skill-based agent capabilities using Anthropic's new Skills system.
 - **[Agent View Fleet Operator Agent](https://heyclau.de/entry/agents/agent-view-fleet-operator-agent)** - Source-backed agent that operates a fleet of Claude Code background sessions through agent view, triaging which sessions need input, which are working, and which are done, and deciding what to dispatch, answer, or stop, grounded in the official Claude Code agent view docs.
@@ -460,7 +461,7 @@ packages use checksums and package trust metadata after review.
 - **[MCP Language Server](https://heyclau.de/entry/mcp/mcp-language-server)** - Go MCP server that launches an existing stdio language server and exposes semantic code-navigation tools such as definitions, references, hover, diagnostics, symbol rename, and file edits.
 - **[MCP-NixOS](https://heyclau.de/entry/mcp/mcp-nixos)** - MCP server for live NixOS, nixpkgs, Home Manager, nix-darwin, Nixvim, FlakeHub, Noogle, NixOS Wiki, nix.dev, NixHub, binary cache, and local flake input lookups.
 - **[mcp-proxy Transport Bridge](https://heyclau.de/entry/mcp/mcp-proxy-transport-bridge)** - MCP transport bridge that converts between stdio, SSE, and Streamable HTTP so local MCP clients can reach remote servers, or remote clients can reach local stdio servers.
-- **[MCP Registry Server](https://heyclau.de/entry/mcp/mcp-registry-server-mcp-server)** - Community-driven MCP registry service that lets clients discover published MCP server metadata and lets publishers submit server.json records through a documented API and publisher CLI.
+- **[MCP Registry MCP Server](https://heyclau.de/entry/mcp/mcp-registry-server-mcp-server)** - MCP server that lets Claude and other MCP clients search and page through the official MCP Registry from a local stdio server.
 - **[MCP Teams Server](https://heyclau.de/entry/mcp/mcp-teams-server)** - MCP server for Microsoft Teams channel workflows, including reading threads, posting new threads, replying to threads, mentioning members, and listing team members.
 - **[MCP Toolbox for Databases](https://heyclau.de/entry/mcp/mcp-toolbox-for-databases)** - Open source MCP server and tool framework from Google for connecting AI agents, IDEs, and applications to databases through prebuilt or custom database tools.
 - **[MCP Unity Editor Server](https://heyclau.de/entry/mcp/mcp-unity-editor-server)** - Unity Editor MCP bridge from CoderGamester that lets Claude and other MCP clients inspect scenes, manage GameObjects, edit components and materials, run tests, read console logs, and automate Unity project workflows through a Node.js stdio server connected to a Unity WebSocket bridge.
@@ -727,7 +728,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Zapier AI](https://heyclau.de/entry/tools/zapier-ai)** - Automation platform with AI-assisted workflows, app integrations, agents, actions, and business process automation.
 - **[Zed](https://heyclau.de/entry/tools/zed)** - Collaborative code editor with AI assistance, fast native performance, and developer-focused collaboration workflows.
 
-## 🧠 Skills (91)
+## 🧠 Skills (93)
 
 - **[Agent Evals Regression Gate Skill](https://heyclau.de/entry/skills/agent-evals-regression-gate)** - Build repeatable eval suites that catch quality regressions in AI agent behavior before merge or release.
 - **[AI Agent Observability and Incident Response Skill](https://heyclau.de/entry/skills/ai-agent-observability-incident-response)** - Instrument AI agent systems with high-signal telemetry and runbook-driven incident response for reliability and safety.
@@ -797,6 +798,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Prompt Injection Defense Guardrails Skill](https://heyclau.de/entry/skills/prompt-injection-defense-guardrails)** - Build layered defenses against prompt injection, data exfiltration, and unsafe tool execution in AI agent systems.
 - **[Proxmox VE API Capability Pack Skill](https://heyclau.de/entry/skills/proxmox-ve-api-capability-pack)** - Expert Proxmox VE API capability skill for VM/LXC lifecycle orchestration, task polling, auth safety, and cluster-aware operations.
 - **[Proxmox VE API Orchestrator Skill](https://heyclau.de/entry/skills/proxmox-ve-api-orchestrator)** - Orchestrate Proxmox VM and LXC lifecycle operations via API with safe sequencing, capacity checks, and rollback-aware automation.
+- **[Rarefriend Skills](https://heyclau.de/entry/skills/rarefriend-skills)** - Cross-agent personal network manager skills for Rarefriend — six Agent Skills for contacts, notes, LinkedIn, Google Calendar/Contacts, and Microsoft Outlook email and calendar. Requires Rarefriend MCP.
 - **[Raycast Extension Dev Publish Capability Pack Skill](https://heyclau.de/entry/skills/raycast-extension-dev-publish-capability-pack)** - Expert Raycast extension capability skill for command design, extension architecture, testing, and store-ready publication workflows.
 - **[Reg-suit Visual Regression Review Capability Pack Skill](https://heyclau.de/entry/skills/reg-suit-visual-regression-review-capability-pack)** - Expert reg-suit review skill for evaluating rendered UI image baselines, thresholds, snapshot storage, report artifacts, and visual QA release readiness.
 - **[Renovate Dependency Upgrade Review Capability Pack Skill](https://heyclau.de/entry/skills/renovate-dependency-upgrade-review-capability-pack)** - Expert Renovate review skill for evaluating dependency upgrade PRs, package rules, lockfile changes, grouping, automerge, and release readiness.
@@ -808,6 +810,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Svelte SvelteKit Full-Stack Development Skill](https://heyclau.de/entry/skills/svelte-sveltekit-fullstack)** - Build full-stack web apps with Svelte and SvelteKit. Minimal runtime overhead, reactive components, and server-side rendering. The most admired frontend framework of 2025. Svelte compiles components to vanilla JavaScript at build time, resulting in zero runtime overhead and exceptional performance.
 - **[TanStack Query Data Fetching Skill](https://heyclau.de/entry/skills/tanstack-query-data-fetching)** - Build React server-state workflows with TanStack Query v5, including query keys, QueryClient setup, cache defaults, mutations, invalidation, hydration, retries, and privacy-aware data handling.
 - **[tRPC Type-Safe API Builder Skill](https://heyclau.de/entry/skills/trpc-type-safe-api)** - Build end-to-end type-safe APIs with tRPC and TypeScript, eliminating code generation and runtime bloat for full-stack applications. tRPC provides end-to-end type safety without code generation, schema stitching, or serialization layers - delivering a lighter, more intuitive developer experience than REST or GraphQL.
+- **[TweetClaw OpenClaw X Automation Skill](https://heyclau.de/entry/skills/tweetclaw-openclaw-x-automation)** - Safety-reviewed Agent Skill for using TweetClaw, the OpenClaw plugin for X and Twitter search, posting, follower export, media workflows, monitors, webhooks, and giveaway draws through Xquik.
 - **[Unraid API Automation Operator Skill](https://heyclau.de/entry/skills/unraid-api-automation-operator)** - Build practical Unraid API automations for server operations, health checks, and routine maintenance with safe execution controls.
 - **[Unraid API v2 Capability Pack Skill](https://heyclau.de/entry/skills/unraid-api-v2-capability-pack)** - Deep, version-pinned Unraid API capability skill covering auth, schema patterns, safe mutations, and operational automation design.
 - **[Unraid CA Template Authoring Capability Pack Skill](https://heyclau.de/entry/skills/unraid-ca-template-authoring-capability-pack)** - Expert Unraid Community Apps template capability pack for high-quality XML metadata, safer defaults, and CA submission readiness.
