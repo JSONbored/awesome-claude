@@ -1,0 +1,154 @@
+---
+title: ProposalCraft MCP Server
+slug: proposalcraft-mcp-server
+category: mcp
+description: >-
+  MCP server that drafts client proposals in your voice from a brief. Paste a
+  brief, get a ready-to-send proposal in ~30 seconds using your saved examples
+  as style reference. Covers the full workflow: analyze brief, draft, review,
+  follow up, and generate a formal Scope of Work.
+cardDescription: >-
+  Draft winning proposals from a client brief in ~30 seconds. 11 tools covering
+  the full cycle — brief analysis, draft, improve, client follow-up, and Scope
+  of Work generation. Local-only, no API key, free tier included.
+seoTitle: ProposalCraft MCP Server for Claude
+seoDescription: >-
+  Add ProposalCraft to Claude Desktop to draft, review, and refine client
+  proposals from a brief. 11 tools, privacy-first local storage, free tier with
+  5 drafts per month.
+author: jabbawocky
+authorProfileUrl: "https://github.com/jabbawocky"
+submittedBy: jabbawocky
+submittedByUrl: "https://github.com/jabbawocky"
+dateAdded: "2026-06-10"
+brandName: ProposalCraft
+brandDomain: jabbawocky.github.io
+repoUrl: "https://github.com/jabbawocky/proposalcraft"
+documentationUrl: "https://jabbawocky.github.io/proposalcraft/"
+installable: true
+installCommand: "npx -y github:jabbawocky/proposalcraft"
+usageSnippet: "Add ProposalCraft to Claude Desktop config, then ask Claude to draft a proposal from a client brief. Saved winning proposals are used as voice/style reference."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "proposalcraft": {
+        "command": "npx",
+        "args": ["-y", "github:jabbawocky/proposalcraft"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "proposalcraft": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "github:jabbawocky/proposalcraft"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js 18 or later.
+  - Claude Desktop with MCP server support.
+  - No API key required.
+safetyNotes:
+  - ProposalCraft makes no third-party network calls. All tool logic runs locally and proposals stay on the user's machine.
+  - The server reads and writes only to ~/.proposalcraft/ — no other paths are accessed.
+  - Free tier usage is tracked in ~/.proposalcraft/usage.json and resets monthly with no external telemetry.
+privacyNotes:
+  - Proposals and usage data are stored exclusively in ~/.proposalcraft/ and are never sent to any external service.
+  - Brief text and draft content are passed to Claude as prompt input via the normal MCP tool-call flow — they are subject to your Claude Desktop privacy settings, not to any ProposalCraft server.
+  - No account, login, or API key is required.
+sourceUrls:
+  - "https://github.com/jabbawocky/proposalcraft/blob/main/src/index.ts"
+  - "https://github.com/jabbawocky/proposalcraft/blob/main/README.md"
+  - "https://github.com/jabbawocky/proposalcraft/blob/main/LICENSE"
+  - "https://github.com/jabbawocky/proposalcraft/blob/main/package.json"
+  - "https://github.com/jabbawocky/proposalcraft/blob/main/SECURITY.md"
+tags:
+  - proposal
+  - freelance
+  - consulting
+  - business-development
+  - productivity
+  - writing
+  - scope-of-work
+keywords:
+  - ProposalCraft MCP
+  - proposal writing MCP
+  - client proposal MCP
+  - freelance proposal MCP
+  - scope of work MCP
+  - business proposal Claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+ProposalCraft is a local stdio MCP server that turns a client brief into a
+ready-to-send proposal in roughly 30 seconds. It uses your saved winning
+proposals as voice and structure reference — not generic templates — so each
+draft sounds like you.
+
+It covers the full freelance proposal workflow with 11 tools:
+
+- **analyze_brief** — surfaces budget signals, red flags, scope risks, and questions to ask before you quote.
+- **draft_proposal** — generates a proposal from the brief using your library as style reference. Counts against the free-tier limit.
+- **improve_proposal** — reviews a draft and returns specific rewrites for weak sections (pricing clarity, opening hook, why-me, scope definition). Free.
+- **scope_of_work** — converts an accepted proposal into a formal SOW with deliverables table, milestone timeline, payment schedule, revision policy, change-order clause, and signature block. Free.
+- **client_followup** — writes a short, non-pushy follow-up for proposals awaiting a response. Adapts tone to elapsed time. Free.
+- **save_proposal / list_proposals / get_proposal / delete_proposal** — local library management.
+- **load_examples** — bootstraps 12 bundled industry templates so the library is never empty on first install.
+- **usage_status** — reports remaining free drafts.
+
+## Source Review
+
+- https://github.com/jabbawocky/proposalcraft
+- https://github.com/jabbawocky/proposalcraft/blob/main/README.md
+- https://github.com/jabbawocky/proposalcraft/blob/main/src/index.ts
+- https://github.com/jabbawocky/proposalcraft/blob/main/LICENSE
+- https://github.com/jabbawocky/proposalcraft/blob/main/package.json
+- https://github.com/jabbawocky/proposalcraft/blob/main/SECURITY.md
+
+These sources were reviewed on **2026-06-10**.
+
+## Installation
+
+Add to Claude Desktop config:
+
+```json
+{
+  "mcpServers": {
+    "proposalcraft": {
+      "command": "npx",
+      "args": ["-y", "github:jabbawocky/proposalcraft"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop. On first use, run `load_examples` to bootstrap the template library, then ask Claude to draft a proposal from a brief.
+
+## Use Cases
+
+- Draft a project proposal from a client email brief in one step.
+- Analyze a brief for scope risks, budget signals, and missing information before quoting.
+- Review a proposal draft and get specific rewrites before sending.
+- Generate a formal Scope of Work from an accepted proposal.
+- Write a follow-up for a proposal that has not received a response.
+- Build a library of winning proposals to improve future draft quality.
+
+## Safety and Privacy
+
+ProposalCraft is local-only. It makes no network calls and does not connect to any external service. All data is stored in `~/.proposalcraft/` on the user's machine. Brief and proposal text passes through Claude's standard MCP tool-call channel and is subject to normal Claude Desktop privacy settings.
+
+## Duplicate Check
+
+No existing `content/mcp/proposalcraft*.mdx` entry was found in the repository before this submission.
+
