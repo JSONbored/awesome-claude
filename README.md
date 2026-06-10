@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>916+ file-backed entries</strong> stay useful as both an
+        <strong>917+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>916</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>917</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -100,7 +100,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#guides"><strong>📚 Guides</strong></a><br>
-          <code>64</code><br>
+          <code>65</code><br>
           <sub>Long-form guides and practical walkthroughs.</sub>
         </td>
 <td align="center" width="20%">
@@ -997,10 +997,11 @@ Get a free API key on https://app.zyntra.app/
 - **[Webpack Bundle Analyzer - Hooks](https://heyclau.de/entry/hooks/webpack-bundle-analyzer)** - Analyzes webpack bundle size when webpack config or entry files are modified.
 - **[Workflow Completion Report - Hooks](https://heyclau.de/entry/hooks/workflow-completion-report)** - Generates a comprehensive report when Claude Code workflow stops, including files modified, tests run, and git status.
 
-## 📚 Guides (64)
+## 📚 Guides (65)
 
 - **[Adding Plugin Install Hints to Developer CLIs](https://heyclau.de/entry/guides/adding-plugin-install-hints-to-developer-clis)** - A practical walkthrough of emitting the claude-code-hint marker from your CLI so Claude Code prompts users to install your official plugin: the hint format, gating on CLAUDECODE, where to emit it, and the official-marketplace requirement.
 - **[Agent Skills in Claude Agent SDK Applications](https://heyclau.de/entry/guides/agent-skills-in-claude-agent-sdk-applications)** - A practical walkthrough of using Agent Skills in the Claude Agent SDK: how skills are discovered from the filesystem via settingSources, the skills option to enable or filter them, tool access, and troubleshooting discovery.
+- **[Auditing MCP Client Configuration Before Team Rollout](https://heyclau.de/entry/guides/auditing-mcp-client-configuration-before-team-rollout)** - Source-backed checklist for reviewing Claude Code MCP client configuration before a team rollout, covering scopes, transports, commands, secrets, allowlists, denylists, approvals, and rollback.
 - **[Build Claude MCP Servers](https://heyclau.de/entry/guides/build-mcp-server)** - Master MCP server development from scratch. Create custom Claude Desktop integrations with TypeScript/Python in 60 minutes using production-ready patterns.
 - **[Building a Claude Code Plugin Marketplace](https://heyclau.de/entry/guides/building-a-claude-code-plugin-marketplace)** - A practical walkthrough of creating and distributing a Claude Code plugin marketplace: the marketplace.json catalog, hosting on a git repository, adding it with /plugin marketplace add, private repositories, and how users install and update plugins.
 - **[Building In-Process MCP Tools with the Claude Agent SDK](https://heyclau.de/entry/guides/building-in-process-mcp-tools-with-the-claude-agent-sdk)** - A practical walkthrough of defining in-process custom tools for the Claude Agent SDK with createSdkMcpServer and the tool helper, wiring them into query via mcpServers, allowing them, error handling, and returning images or structured data.
