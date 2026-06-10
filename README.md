@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>914+ file-backed entries</strong> stay useful as both an
+        <strong>916+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>914</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>916</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -78,7 +78,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#skills"><strong>🧠 Skills</strong></a><br>
-          <code>93</code><br>
+          <code>94</code><br>
           <sub>Source-backed skill packs and reusable capabilities.</sub>
         </td>
 <td align="center" width="20%">
@@ -100,7 +100,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#guides"><strong>📚 Guides</strong></a><br>
-          <code>63</code><br>
+          <code>64</code><br>
           <sub>Long-form guides and practical walkthroughs.</sub>
         </td>
 <td align="center" width="20%">
@@ -728,7 +728,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Zapier AI](https://heyclau.de/entry/tools/zapier-ai)** - Automation platform with AI-assisted workflows, app integrations, agents, actions, and business process automation.
 - **[Zed](https://heyclau.de/entry/tools/zed)** - Collaborative code editor with AI assistance, fast native performance, and developer-focused collaboration workflows.
 
-## 🧠 Skills (93)
+## 🧠 Skills (94)
 
 - **[Agent Evals Regression Gate Skill](https://heyclau.de/entry/skills/agent-evals-regression-gate)** - Build repeatable eval suites that catch quality regressions in AI agent behavior before merge or release.
 - **[AI Agent Observability and Incident Response Skill](https://heyclau.de/entry/skills/ai-agent-observability-incident-response)** - Instrument AI agent systems with high-signal telemetry and runbook-driven incident response for reliability and safety.
@@ -740,6 +740,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Better Auth Next.js Authentication Skill](https://heyclau.de/entry/skills/better-auth-nextjs-authentication)** - Add Better Auth to a Next.js App Router project with API route handlers, database-backed sessions, client helpers, protected route checks, and production auth safety review.
 - **[Browser Agent Workflow Automation Skill](https://heyclau.de/entry/skills/browser-agent-workflow-automation)** - Build robust browser automation workflows for AI agents with deterministic selectors, retries, and safe action boundaries.
 - **[Bun JavaScript Runtime Development Skill](https://heyclau.de/entry/skills/bun-runtime-modern-javascript)** - Build high-performance JavaScript and TypeScript applications with Bun, the all-in-one runtime that's 3x faster than Node.js. Includes native TypeScript execution, built-in bundler, test runner, and package manager in a single binary.
+- **[Claude Code Terminal Ergonomics Capability Pack Skill](https://heyclau.de/entry/skills/claude-code-terminal-ergonomics-capability-pack)** - Expert Claude Code terminal ergonomics capability pack for auditing multiline input, Option/Meta shortcuts, tmux passthrough, notifications, fullscreen rendering, themes, status lines, Vim mode, and custom keybindings before a user blames Claude for terminal behavior.
 - **[Clerk Next.js Authentication Skill](https://heyclau.de/entry/skills/clerk-nextjs-authentication)** - Add Clerk authentication to a Next.js App Router project with middleware, route protection, session-aware UI, environment hygiene, and production auth safety checks.
 - **[CLI Data Visualization Quickstart Skill](https://heyclau.de/entry/skills/cli-data-viz-quickstart)** - Create publication-ready charts and visualizations from CSV, JSON, and Excel data using Python (matplotlib/seaborn) or Node.js (vega/vega-lite). Generate bar charts, line plots, scatter plots, heatmaps, and statistical visualizations with custom styling.
 - **[Cloudflare Workers AI Edge Functions Skill](https://heyclau.de/entry/skills/cloudflare-workers-ai-edge)** - Deploy AI models and serverless functions to Cloudflare's global edge network with sub-5ms cold starts and 40% edge computing market share. Access 50+ open-source AI models (Llama-2, Whisper, Stable Diffusion) with pay-per-use pricing.
@@ -996,7 +997,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Webpack Bundle Analyzer - Hooks](https://heyclau.de/entry/hooks/webpack-bundle-analyzer)** - Analyzes webpack bundle size when webpack config or entry files are modified.
 - **[Workflow Completion Report - Hooks](https://heyclau.de/entry/hooks/workflow-completion-report)** - Generates a comprehensive report when Claude Code workflow stops, including files modified, tests run, and git status.
 
-## 📚 Guides (63)
+## 📚 Guides (64)
 
 - **[Adding Plugin Install Hints to Developer CLIs](https://heyclau.de/entry/guides/adding-plugin-install-hints-to-developer-clis)** - A practical walkthrough of emitting the claude-code-hint marker from your CLI so Claude Code prompts users to install your official plugin: the hint format, gating on CLAUDECODE, where to emit it, and the official-marketplace requirement.
 - **[Agent Skills in Claude Agent SDK Applications](https://heyclau.de/entry/guides/agent-skills-in-claude-agent-sdk-applications)** - A practical walkthrough of using Agent Skills in the Claude Agent SDK: how skills are discovered from the filesystem via settingSources, the skills option to enable or filter them, tool access, and troubleshooting discovery.
@@ -1046,6 +1047,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Playwright Trace Viewer AI Debugging Guide](https://heyclau.de/entry/guides/playwright-trace-viewer-ai-debugging-guide)** - Source-backed guide for using Playwright traces, screenshots, snapshots, network events, console logs, and action timelines as evidence for AI-assisted frontend debugging.
 - **[Plugins in Claude Agent SDK Deployments](https://heyclau.de/entry/guides/plugins-in-claude-agent-sdk-deployments)** - A practical walkthrough of loading local plugins in the Claude Agent SDK: the plugins option with type local and a path, what plugins bundle (skills, agents, hooks, MCP servers), verifying loads via the init message, and invoking namespaced plugin skills.
 - **[Manage Prompt and Context Hygiene in Long Coding Sessions](https://heyclau.de/entry/guides/prompt-context-hygiene-long-coding-sessions)** - A practical guide for keeping Claude Code sessions focused during long coding work with scoped prompts, checkpoints, durable memory boundaries, source refreshes, and privacy-safe handoffs.
+- **[Publishing An MCP Server To The Official Registry](https://heyclau.de/entry/guides/publishing-an-mcp-server-to-the-official-registry)** - Source-backed workflow for publishing public MCP server metadata to the official MCP Registry with mcp-publisher, server.json, package verification, namespace authentication, and post-publish checks.
 - **[Evaluate AI Coding Tools with Repeatable Benchmarks](https://heyclau.de/entry/guides/repeatable-ai-coding-tool-benchmarks)** - A practical guide for comparing AI coding tools with repeatable benchmarks, fixed task sets, controlled environments, transparent scoring, and privacy-safe artifacts.
 - **[Resuming, Branching, and Naming Claude Code Sessions](https://heyclau.de/entry/guides/resuming-branching-and-naming-claude-code-sessions)** - A practical walkthrough of managing Claude Code sessions: resuming with --continue, --resume, and --from-pr, naming sessions, using the session picker, branching to try a different approach, and where transcripts are stored.
 - **[Review AI-Generated Code Before Merge](https://heyclau.de/entry/guides/review-ai-generated-code-before-merge)** - A source-backed review workflow for pull requests that include AI-generated code. Treat generated diffs as untrusted implementation work, verify behavior in CI, inspect security-sensitive paths first, and merge only after a reviewer-owned checklist passes.
