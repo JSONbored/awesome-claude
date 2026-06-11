@@ -10,6 +10,7 @@ import {
 import { renderCorpusLlms, renderEntryLlms } from "./llms.js";
 import { buildEntryJsonLdSnapshot } from "./seo.js";
 import { buildSubmissionSpecs } from "./submission-spec.js";
+import { SAFE_CONTENT_SLUG_PATTERN } from "./content-schema.js";
 import { resolveMcpInstallConfig } from "./mcp-install-config.js";
 import {
   buildRegistryRelationGraph,
@@ -516,10 +517,10 @@ function buildCompactInstallFields(entry) {
     return compactDefinedObject({
       installable: Boolean(
         entry.installable ||
-          entry.installCommand ||
-          entry.commandSyntax ||
-          entry.downloadUrl ||
-          mcpInstallConfig,
+        entry.installCommand ||
+        entry.commandSyntax ||
+        entry.downloadUrl ||
+        mcpInstallConfig,
       ),
       hasInstallCommand: Boolean(entry.installCommand || entry.commandSyntax),
       hasConfigSnippet: Boolean(mcpInstallConfig),
@@ -1406,6 +1407,10 @@ export function buildRegistryArtifactSet(entries, params = {}) {
   ];
 
   for (const entry of entries) {
+    if (!SAFE_CONTENT_SLUG_PATTERN.test(String(entry.slug || ""))) {
+      throw new Error(`Invalid content slug for artifact path: ${entry.slug}`);
+    }
+
     files.push(
       {
         path: `entries/${entry.category}/${entry.slug}.json`,
