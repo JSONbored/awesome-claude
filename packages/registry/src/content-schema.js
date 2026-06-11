@@ -152,6 +152,21 @@ function isHttpsUrl(value) {
   }
 }
 
+function isHttpUrl(value) {
+  const normalized = String(value || "").trim();
+  if (!normalized) return true;
+  try {
+    const url = new URL(normalized);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+function isSafeSlug(value) {
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(String(value || "").trim());
+}
+
 function isIsoDateOrDateTime(value) {
   const normalized = String(value || "").trim();
   if (!normalized) return true;
@@ -667,6 +682,13 @@ export function validateEntry(category, data, inferred = {}) {
   const enumErrors = [];
   const semanticErrors = [];
 
+  const slug = String(merged.slug || "").trim();
+  if (slug && !isSafeSlug(slug)) {
+    semanticErrors.push(
+      "slug must use lowercase letters, numbers, and hyphens only",
+    );
+  }
+
   for (const field of schema?.required ?? []) {
     if (
       merged[field] === undefined ||
@@ -787,6 +809,30 @@ export function validateEntry(category, data, inferred = {}) {
             .filter((value) => value.trim()).length)
   ) {
     semanticErrors.push("brandColors must be hex colors such as #796eff");
+  }
+
+  for (const field of [
+    "authorProfileUrl",
+    "repoUrl",
+    "documentationUrl",
+    "sourceUrl",
+    "docsUrl",
+    "packageUrl",
+    "repositoryUrl",
+    "websiteUrl",
+  ]) {
+    if (!isHttpUrl(merged[field])) {
+      semanticErrors.push(`${field} must use http or https`);
+    }
+  }
+
+  if (Array.isArray(merged.sourceUrls)) {
+    for (const sourceUrl of merged.sourceUrls) {
+      if (!isHttpUrl(sourceUrl)) {
+        semanticErrors.push("sourceUrls must use http or https");
+        break;
+      }
+    }
   }
 
   for (const field of [
