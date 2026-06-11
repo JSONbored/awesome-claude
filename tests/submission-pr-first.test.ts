@@ -521,6 +521,47 @@ Native macOS MCP server.`);
     );
   });
 
+  it.each([
+    "identity attestation workflows",
+    "personal identity attestations",
+    "passport attestation checks",
+    "government ID attestation review",
+    "biometric attestation prompts",
+  ])(
+    "flags generic identity attestation text as identity-sensitive: %s",
+    (description) => {
+      const report = analyzeDirectContentRisk({
+        pullRequest: {
+          number: 132,
+          title: "content(mcp): add identity attestation mcp",
+          user: { login: "contributor" },
+          head: { repo: { full_name: "contributor/awesome-claude" } },
+          base: { repo: { full_name: "JSONbored/awesome-claude" } },
+        },
+        files: [
+          sourceFile(
+            validMcpMdx({
+              title: "Identity Attestation MCP",
+              slug: "identity-attestation-mcp",
+              description: `MCP server for ${description}.`,
+              safetyNotes: [
+                "Requires explicit user approval before processing identity records.",
+              ],
+              privacyNotes: [
+                "Can process submitted identity evidence in the local MCP session.",
+              ],
+            }),
+            "content/mcp/identity-attestation-mcp.mdx",
+          ),
+        ],
+      });
+
+      expect(report.reviewFlags.map((flag) => flag.id)).toContain(
+        "financial_or_identity_sensitive",
+      );
+    },
+  );
+
   it("formats risk reports without exposing private reviewer internals", () => {
     const report = analyzeDirectContentRisk({
       pullRequest: {

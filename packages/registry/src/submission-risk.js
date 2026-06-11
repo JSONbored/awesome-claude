@@ -49,10 +49,18 @@ const GITHUB_LOGIN_PATTERN =
   /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?(?:\[bot\])?$/;
 const FINANCIAL_OR_IDENTITY_PATTERN =
   /\b(private key|wallet|kyc|usdc|x402|payment|crypto|on-chain)\b/i;
-const IDENTITY_ATTESTATION_PATTERN =
-  /\battestations?\b[\s\S]{0,120}\b(wallet|kyc|payment|crypto|on-chain identity|identity proof|identity verification|proof of personhood|verifiable credential)\b/i;
-const IDENTITY_ATTESTATION_REVERSE_PATTERN =
-  /\b(wallet|kyc|payment|crypto|on-chain identity|identity proof|identity verification|proof of personhood|verifiable credential)\b[\s\S]{0,120}\battestations?\b/i;
+const SENSITIVE_ATTESTATION_FORWARD_TERMS =
+  "wallet|kyc|payment|crypto|on-chain identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
+const SENSITIVE_ATTESTATION_REVERSE_TERMS =
+  "wallet|kyc|payment|crypto|on-chain identity|identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
+const IDENTITY_ATTESTATION_PATTERN = new RegExp(
+  `\\battestations?\\b[\\s\\S]{0,120}\\b(?:${SENSITIVE_ATTESTATION_FORWARD_TERMS})s?\\b`,
+  "i",
+);
+const IDENTITY_ATTESTATION_REVERSE_PATTERN = new RegExp(
+  `\\b(?:${SENSITIVE_ATTESTATION_REVERSE_TERMS})s?\\b[\\s\\S]{0,120}\\battestations?\\b`,
+  "i",
+);
 const DEFENSIVE_SECURITY_MITIGATION_PATTERN =
   /\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b[\s\S]{0,160}\b(?:(?:credential|password|cookie|session|token|wallet|secret|leak)s?|expos(?:e|ing|ure))\b|\b(?:credential|password|cookie|session|token|wallet|secret)s?\b[\s\S]{0,160}\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b/i;
 const RESOURCE_THEFT_CAPABILITY_PATTERN =
