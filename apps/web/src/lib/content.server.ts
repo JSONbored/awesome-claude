@@ -27,6 +27,19 @@ const MAX_ENTRY_DETAIL_CACHE_SIZE = 512;
 let directoryIndexPromise: Promise<DirectoryEntry[]> | null = null;
 const entryDetailPromises = new Map<string, Promise<ContentEntry | null>>();
 
+type EntryDetailPayload = {
+  schemaVersion?: number;
+  entry?: ContentEntry;
+  trustSignals?: ContentEntry["trustSignals"];
+};
+
+export function normalizeEntryDetailPayload(payload: EntryDetailPayload): ContentEntry | null {
+  const entry = payload.entry ?? null;
+  if (!entry) return null;
+  if (!payload.trustSignals || entry.trustSignals) return entry;
+  return { ...entry, trustSignals: payload.trustSignals };
+}
+
 function localDataFilePaths(fileName: string) {
   return [
     path.join(process.cwd(), "public", "data", fileName),
@@ -130,12 +143,9 @@ async function loadEntryDetail(category: string, slug: string) {
   const key = `${category}:${slug}`;
   let promise = entryDetailPromises.get(key);
   if (!promise) {
-    promise = loadJsonDataFile<{
-      schemaVersion?: number;
-      entry?: ContentEntry;
-    }>(`entries/${category}/${slug}.json`)
+    promise = loadJsonDataFile<EntryDetailPayload>(`entries/${category}/${slug}.json`)
       .then((payload) => {
-        const entry = payload.entry ?? null;
+        const entry = normalizeEntryDetailPayload(payload);
         if (!entry) entryDetailPromises.delete(key);
         return entry;
       })
