@@ -1,0 +1,51 @@
+---
+title: Reviewbot Mismatch Test MCP
+slug: reviewbot-mismatch-test
+category: mcp
+description: A test MCP server entry whose repository link intentionally points at an unrelated project so the review gate can be verified.
+cardDescription: Test MCP entry with a deliberately mismatched source repository.
+seoTitle: Reviewbot Mismatch Test MCP
+seoDescription: Test MCP entry used to verify the reviewbot gate declines source-mismatched submissions during review.
+author: jsonbored
+authorProfileUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-11"
+repoUrl: "https://github.com/torvalds/linux"
+websiteUrl: "https://github.com/torvalds/linux"
+documentationUrl: "https://github.com/torvalds/linux/blob/master/README"
+installable: true
+installCommand: "npm i -g reviewbot-mismatch-test"
+usageSnippet: "Start the test MCP server and confirm the repository link does not match the claim."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "reviewbot-mismatch-test": {
+        "command": "reviewbot-mismatch-test"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "reviewbot-mismatch-test": {
+        "command": "reviewbot-mismatch-test"
+      }
+    }
+  }
+tags:
+  - test
+  - mcp
+keywords:
+  - reviewbot test
+  - mismatch test
+---
+
+## Content
+
+This is a test MCP server entry. The repository link intentionally points at the Linux
+kernel, which is not a Model Context Protocol server, so the reviewbot gate should decline it.
+
+## Source Review
+
+- https://github.com/torvalds/linux
+
+The source above does not back the claim that this is an MCP server.
