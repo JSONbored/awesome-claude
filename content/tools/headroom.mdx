@@ -1,0 +1,44 @@
+---
+title: Headroom
+slug: headroom
+category: tools
+description: >-
+  Native macOS menu bar app that shows Claude Code session (5h) and weekly (7d) utilization as a live percentage, color-coded as limits approach, with reset countdowns. Zero configuration, zero network calls — reads the local file Claude Code's own status line writes to ~/.claude/headroom-usage.json.
+cardDescription: >-
+  macOS menu bar app showing Claude Code usage as a live color-coded percentage.
+seoTitle: Headroom — Claude Code usage monitor for macOS menu bar
+seoDescription: >-
+  Headroom shows Claude Code's 5-hour session and 7-day weekly rate limits as a live percentage in your macOS menu bar. Zero network calls, zero config, MIT licensed.
+author: patwalls
+authorProfileUrl: "https://github.com/patwalls"
+dateAdded: "2026-06-11"
+websiteUrl: "https://headroom.walls.sh"
+repoUrl: "https://github.com/patwalls/headroom"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS
+installCommand: "brew install --cask patwalls/tap/headroom"
+tags:
+  - claude-code
+  - menu-bar
+  - usage-monitor
+  - macos
+keywords:
+  - claude code usage
+  - claude usage monitor
+  - menu bar usage
+  - rate limit monitor
+  - macos menu bar
+  - session monitor
+privacyNotes:
+  - Reads only ~/.claude/headroom-usage.json written by Claude Code's statusline hook — zero network calls, no API access, no credential access of any kind.
+safetyNotes:
+  - Open source MIT, signed and notarized by Apple, ~780 lines of AppKit Swift with no third-party dependencies.
+---
+
+## Editorial notes
+
+Headroom is the zero-network Claude Code companion. Instead of polling the Anthropic API, it installs a tiny statusline hook that runs inside Claude Code and writes the official 5h/7d rate-limit numbers to a local JSON file. The menu bar app reads that file every minute. The result is the same data `/usage` shows — session utilization, weekly utilization, context window fill, active model, session cost — visible at a glance in the menu bar without opening a terminal.
+
+The architecture differentiates it from API-polling tools: no credentials needed, no network traffic, no 429 risks. It reads exactly what Claude Code itself tracks and publishes no further.
