@@ -12,7 +12,11 @@ function makeTempContentRoot() {
   );
 }
 
-function writeHookFixture(tmpDir: string, scriptBody: string) {
+function writeHookFixture(
+  tmpDir: string,
+  scriptBody: string,
+  extraFrontmatter = "",
+) {
   const hookDir = path.join(tmpDir, "content", "hooks");
   fs.mkdirSync(hookDir, { recursive: true });
   fs.writeFileSync(
@@ -23,7 +27,7 @@ slug: example-hook
 category: hooks
 description: Example hook used by validation tests.
 cardDescription: Example hook used by validation tests.
-scriptLanguage: bash
+${extraFrontmatter}scriptLanguage: bash
 scriptBody: |-
 ${scriptBody
   .split("\n")
@@ -40,7 +44,11 @@ Example hook body.
 function runContentValidation(tmpDir: string) {
   return execFileSync(
     process.execPath,
-    [path.join(repoRoot, "scripts/validate-content.mjs"), "--category", "hooks"],
+    [
+      path.join(repoRoot, "scripts/validate-content.mjs"),
+      "--category",
+      "hooks",
+    ],
     {
       cwd: tmpDir,
       encoding: "utf8",
@@ -57,7 +65,7 @@ describe("content validation", () => {
       [
         "#!/bin/bash",
         "printf '%s' \"$ACCUMULATED\" | python3 -c '",
-        "print(\"the user's dashboard\")",
+        'print("the user\'s dashboard")',
         "'",
       ].join("\n"),
     );
@@ -74,12 +82,14 @@ describe("content validation", () => {
       [
         "#!/bin/bash",
         "printf '%s' \"$ACCUMULATED\" | python3 -c '",
-        "print(\"the user dashboard\")",
+        'print("the user dashboard")',
         "'",
       ].join("\n"),
     );
 
-    expect(runContentValidation(tmpDir)).toContain("Content validation passed.");
+    expect(runContentValidation(tmpDir)).toContain(
+      "Content validation passed.",
+    );
   });
 
   it("rejects predictable shared /tmp debug logs in hook script bodies", () => {
@@ -111,7 +121,61 @@ describe("content validation", () => {
       ].join("\n"),
     );
 
-    expect(runContentValidation(tmpDir)).toContain("Content validation passed.");
+    expect(runContentValidation(tmpDir)).toContain(
+      "Content validation passed.",
+    );
+  });
+
+  it("rejects unsafe URL schemes in content metadata", () => {
+    const tmpDir = makeTempContentRoot();
+    writeHookFixture(
+      tmpDir,
+      ["#!/bin/bash", 'printf "%s\n" "safe"'].join("\n"),
+      [
+        'documentationUrl: "javascript:alert(1)"',
+        'sourceUrl: "data:text/html,unsafe"',
+        "sourceUrls:",
+        '  - "https://example.com/safe"',
+        '  - "javascript:alert(2)"',
+      ].join("\n") + "\n",
+    );
+
+    expect(() => runContentValidation(tmpDir)).toThrow(
+      /documentationUrl must use https/,
+    );
+    expect(() => runContentValidation(tmpDir)).toThrow(
+      /sourceUrl must use https/,
+    );
+    expect(() => runContentValidation(tmpDir)).toThrow(
+      /sourceUrls must contain only https URLs/,
+    );
+  });
+
+  it("allows first-party download paths while rejecting unsafe download URLs", () => {
+    const tmpDir = makeTempContentRoot();
+    writeHookFixture(
+      tmpDir,
+      ["#!/bin/bash", 'printf "%s\n" "safe"'].join("\n"),
+      'downloadUrl: "javascript:alert(1)"\n',
+    );
+
+    expect(() => runContentValidation(tmpDir)).toThrow(
+      /downloadUrl must use https or a \/downloads\/ path/,
+    );
+
+    const safeTmpDir = makeTempContentRoot();
+    writeHookFixture(
+      safeTmpDir,
+      ["#!/bin/bash", 'printf "%s\n" "safe"'].join("\n"),
+      [
+        'downloadUrl: "/downloads/mcp/example.mcpb"',
+        "packageVerified: true",
+      ].join("\n") + "\n",
+    );
+
+    expect(runContentValidation(safeTmpDir)).toContain(
+      "Content validation passed.",
+    );
   });
 
   it("accepts hook debug logs with unpredictable temporary filenames", () => {
@@ -121,11 +185,13 @@ describe("content validation", () => {
       [
         "#!/bin/bash",
         'DEBUG_LOG="$(mktemp /tmp/claude-hook-debug.XXXXXX)"',
-        'trap \'rm -f "$DEBUG_LOG"\' EXIT',
+        "trap 'rm -f \"$DEBUG_LOG\"' EXIT",
         'printf "%s\\n" "debug event" >> "$DEBUG_LOG"',
       ].join("\n"),
     );
 
-    expect(runContentValidation(tmpDir)).toContain("Content validation passed.");
+    expect(runContentValidation(tmpDir)).toContain(
+      "Content validation passed.",
+    );
   });
 });

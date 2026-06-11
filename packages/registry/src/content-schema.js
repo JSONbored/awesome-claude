@@ -31,6 +31,21 @@ export const VERIFICATION_STATUS_VALUES = categorySpec.verificationStatusValues;
 export const CLAIM_STATUS_VALUES = ["unclaimed", "pending", "verified"];
 const DEFAULT_TESTED_PLATFORMS = categorySpec.defaultTestedPlatforms;
 const NOTE_LIST_FIELDS = new Set(["safetyNotes", "privacyNotes"]);
+const HTTPS_URL_FIELDS = [
+  "authorProfileUrl",
+  "submittedByUrl",
+  "sourceSubmissionUrl",
+  "importPrUrl",
+  "claimedByUrl",
+  "documentationUrl",
+  "docsUrl",
+  "sourceUrl",
+  "packageUrl",
+  "repositoryUrl",
+  "websiteUrl",
+  "affiliateUrl",
+];
+const HTTPS_URL_LIST_FIELDS = ["sourceUrls", "retrievalSources"];
 const MAX_NOTE_ITEMS = 8;
 const MAX_NOTE_LENGTH = 320;
 
@@ -150,6 +165,27 @@ function isHttpsUrl(value) {
   } catch {
     return false;
   }
+}
+
+function isSafeDownloadUrl(value) {
+  const normalized = String(value || "").trim();
+  if (!normalized) return true;
+  if (normalized.startsWith("/downloads/")) {
+    return (
+      !normalized.startsWith("//") &&
+      !normalized.includes("\\") &&
+      !normalized.includes("..")
+    );
+  }
+  return isHttpsUrl(normalized);
+}
+
+function invalidHttpsUrlListItems(value) {
+  if (value === undefined || value === null || value === "") return [];
+  if (!Array.isArray(value)) return ["<non-list value>"];
+  return value
+    .map((item) => String(item || "").trim())
+    .filter((item) => item && !isHttpsUrl(item));
 }
 
 function isIsoDateOrDateTime(value) {
@@ -789,15 +825,25 @@ export function validateEntry(category, data, inferred = {}) {
     semanticErrors.push("brandColors must be hex colors such as #796eff");
   }
 
-  for (const field of [
-    "submittedByUrl",
-    "sourceSubmissionUrl",
-    "importPrUrl",
-    "claimedByUrl",
-  ]) {
+  for (const field of HTTPS_URL_FIELDS) {
     if (!isHttpsUrl(merged[field])) {
       semanticErrors.push(`${field} must use https`);
     }
+  }
+
+  for (const field of HTTPS_URL_LIST_FIELDS) {
+    const invalidItems = invalidHttpsUrlListItems(merged[field]);
+    if (invalidItems.length) {
+      semanticErrors.push(`${field} must contain only https URLs`);
+    }
+  }
+
+  if (merged.downloadUrl && !isSafeDownloadUrl(merged.downloadUrl)) {
+    semanticErrors.push("downloadUrl must use https or a /downloads/ path");
+  }
+
+  if (merged.repoUrl && !isHttpsUrl(merged.repoUrl)) {
+    semanticErrors.push("repoUrl must use https");
   }
 
   for (const field of ["submittedAt", "reviewedAt", "claimedAt"]) {
