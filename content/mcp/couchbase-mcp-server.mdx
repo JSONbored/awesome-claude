@@ -1,0 +1,254 @@
+---
+title: Couchbase MCP Server
+slug: couchbase-mcp-server
+category: mcp
+description: >-
+  An MCP server from the official Couchbase-Ecosystem org that lets LLMs
+  interact directly with Couchbase clusters — running SQL++/N1QL queries,
+  performing document CRUD, discovering schema and data models, and analyzing
+  query performance, with a read-only mode enabled by default.
+cardDescription: >-
+  Official Couchbase MCP server: run SQL++/N1QL, do document CRUD, discover
+  schema, and analyze query performance — read-only by default.
+seoTitle: Couchbase MCP Server — SQL++/N1QL, CRUD & Performance Tools for LLMs
+seoDescription: >-
+  The official Couchbase-Ecosystem MCP server (couchbase-mcp-server) gives LLMs
+  25+ tools to query, inspect, and analyze Couchbase clusters over SQL++/N1QL.
+  Read-only by default, with mTLS auth and stdio/HTTP transports.
+author: Couchbase-Ecosystem
+authorProfileUrl: https://github.com/Couchbase-Ecosystem
+dateAdded: "2026-06-11"
+brandName: Couchbase MCP Server
+brandDomain: github.com/Couchbase-Ecosystem/mcp-server-couchbase
+websiteUrl: https://www.couchbase.com/
+repoUrl: https://github.com/Couchbase-Ecosystem/mcp-server-couchbase
+documentationUrl: https://mcp-server.couchbase.com/
+installable: true
+installCommand: uvx couchbase-mcp-server
+usageSnippet: |
+  # Run directly from PyPI via uv (stdio transport, the default)
+  CB_CONNECTION_STRING="couchbases://your-cluster" \
+  CB_USERNAME="username" \
+  CB_PASSWORD="password" \
+  uvx couchbase-mcp-server
+
+  # Or run as an HTTP server
+  uvx couchbase-mcp-server \
+    --connection-string="couchbases://your-cluster" \
+    --username="username" \
+    --password="password" \
+    --transport=http \
+    --port=8000
+copySnippet: |
+  {
+    "mcpServers": {
+      "couchbase": {
+        "command": "uvx",
+        "args": ["couchbase-mcp-server"],
+        "env": {
+          "CB_CONNECTION_STRING": "couchbases://connection-string",
+          "CB_USERNAME": "username",
+          "CB_PASSWORD": "password"
+        }
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "couchbase": {
+        "command": "uvx",
+        "args": ["couchbase-mcp-server"],
+        "env": {
+          "CB_CONNECTION_STRING": "couchbases://connection-string",
+          "CB_USERNAME": "username",
+          "CB_PASSWORD": "password",
+          "CB_MCP_READ_ONLY_MODE": "true",
+          "CB_MCP_TRANSPORT": "stdio",
+          "CB_MCP_DISABLED_TOOLS": "upsert_document_by_id,delete_document_by_id"
+        }
+      }
+    }
+  }
+prerequisites:
+  - Python 3.10+ (the package supports >=3.10,<3.15)
+  - The `uv`/`uvx` package manager (or Docker as an alternative runtime)
+  - A running Couchbase cluster (self-managed or Couchbase Capella, including the free tier)
+  - Cluster credentials — either username/password or an mTLS client certificate and key
+  - An MCP-compatible client (Claude Desktop, Cursor, VS Code, etc.)
+safetyNotes:
+  - Read-only mode is ON by default (`CB_MCP_READ_ONLY_MODE=true`), which disables all KV write tools (upsert, insert, replace, delete) and blocks SQL++ modification queries.
+  - Setting `CB_MCP_READ_ONLY_MODE=false` exposes write tools that can insert, replace, upsert, and delete documents — and SQL++ statements can run arbitrary mutations within the user's permissions.
+  - SQL++/N1QL is a full query language; a sufficiently privileged connection can read, modify, or drop data, so scope database RBAC roles tightly to what the agent should touch.
+  - Tool gating via `CB_MCP_DISABLED_TOOLS` / `CB_MCP_CONFIRMATION_REQUIRED_TOOLS` is, per the README, an additional layer to guide LLM behavior and reduce attack surface — not the sole security control. Database RBAC is the authoritative boundary.
+  - In HTTP/SSE transport modes the server listens on a network port (default `127.0.0.1:8000`); avoid binding it to a public interface without authentication in front of it.
+privacyNotes:
+  - The server connects to your live Couchbase cluster with the credentials you supply; any document data, schema, and query results it returns are passed to the LLM/MCP client.
+  - Schema-discovery and CRUD tools can surface real records, including any sensitive or PII fields stored in your buckets, scopes, and collections.
+  - Performance-analysis tools read from the query monitoring catalog (e.g. completed/running queries), which can expose query text and parameters processed by the cluster.
+  - Credentials (connection string, username/password, or cert/key paths) are provided via environment variables in your MCP client config — store that config securely and avoid committing it.
+sourceUrls:
+  - https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/README.md
+  - https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/pyproject.toml
+  - https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/src/mcp_server.py
+  - https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/LICENSE
+  - https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/Dockerfile
+  - https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/server.json
+tags:
+  - mcp
+  - couchbase
+  - database
+  - nosql
+  - sql++
+  - n1ql
+  - python
+  - query
+  - read-only
+keywords:
+  - Couchbase MCP server
+  - couchbase-mcp-server
+  - SQL++ MCP
+  - N1QL MCP
+  - Couchbase Capella MCP
+  - document database MCP
+  - NoSQL MCP server
+  - Model Context Protocol Couchbase
+  - LLM database access
+  - Couchbase query performance analysis
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **Couchbase MCP Server** is an official Model Context Protocol server maintained by the
+[Couchbase-Ecosystem](https://github.com/Couchbase-Ecosystem) organization. It lets LLMs and
+agentic clients talk directly to a Couchbase cluster — self-managed or
+[Couchbase Capella](https://www.couchbase.com/products/capella/) — to run **SQL++/N1QL** queries,
+perform **document CRUD**, **discover schema and data models**, and **analyze query performance**.
+
+The project is written in Python (98.6% of the repo), built on `fastmcp` and the official
+`couchbase` SDK, and distributed as the PyPI package
+[`couchbase-mcp-server`](https://pypi.org/project/couchbase-mcp-server/). It exposes 25+ tools and
+ships with **read-only mode enabled by default**, so out of the box an agent can inspect and query a
+cluster but cannot mutate data unless you explicitly opt in. Full documentation lives at
+[mcp-server.couchbase.com](https://mcp-server.couchbase.com/).
+
+## Source Review
+
+The following real repository files were fetched and reviewed for this entry:
+
+- [README.md](https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/README.md) — install instructions, client config blocks, env vars, transports, tool list, read-only security model, and Docker usage.
+- [pyproject.toml](https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/pyproject.toml) — package name `couchbase-mcp-server` (v0.8.1rc2), Python `>=3.10,<3.15`, Apache-2.0 license, entry point `couchbase-mcp-server = "mcp_server:main"`, and dependencies (`fastmcp`, `couchbase`, `click`, `lark-sqlpp`).
+- [src/mcp_server.py](https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/src/mcp_server.py) — server entrypoint referenced by the from-source config and the package script.
+- [LICENSE](https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/LICENSE) — Apache License 2.0.
+- [Dockerfile](https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/Dockerfile) and [server.json](https://github.com/Couchbase-Ecosystem/mcp-server-couchbase/blob/main/server.json) — container build and server manifest.
+
+Repository facts confirmed at review time: Apache-2.0 license, default branch `main`, 32 stars, not archived, actively maintained (recent commits June 2026).
+
+## Features
+
+- **SQL++/N1QL execution** — `run_sql_plus_plus_query` and `explain_sql_plus_plus_query` run and explain queries against the cluster.
+- **Document operations (KV)** — `get_document_by_id`, plus `upsert_document_by_id`, `insert_document_by_id`, `replace_document_by_id`, and `delete_document_by_id` (write tools are disabled in read-only mode).
+- **Schema & data-model discovery** — `get_buckets_in_cluster`, `get_scopes_in_bucket`, `get_collections_in_scope`, `get_scopes_and_collections_in_bucket`, and `get_schema_for_collection`.
+- **Cluster setup & health** — `get_server_configuration_status`, `test_cluster_connection`, and `get_cluster_health_and_services`.
+- **Indexing** — `list_indexes` and `get_index_advisor_recommendations`.
+- **Performance analysis** — tools for the longest-running and most-frequent queries, queries with the largest response sizes or result counts, and queries using the primary index, missing a covering index, or that are not selective.
+- **Read-only by default** — `CB_MCP_READ_ONLY_MODE=true` blocks all mutations until you opt in.
+- **Flexible auth** — username/password or **mTLS** (`CB_CLIENT_CERT_PATH` / `CB_CLIENT_KEY_PATH`), with optional `CB_CA_CERT_PATH`.
+- **Multiple transports** — `stdio` (default), streamable `http`, and `sse` (deprecated), configurable via `CB_MCP_TRANSPORT` / `CB_MCP_HOST` / `CB_MCP_PORT`.
+- **Tool gating** — disable specific tools (`CB_MCP_DISABLED_TOOLS`) or require confirmation for them (`CB_MCP_CONFIRMATION_REQUIRED_TOOLS`).
+- **Docker image** — prebuilt `couchbaseecosystem/mcp-server-couchbase` for containerized runs.
+
+## Installation
+
+Run the published package with `uvx` (no clone required):
+
+```bash
+uvx couchbase-mcp-server
+```
+
+Add it to an MCP client (e.g. Claude Desktop's `claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "couchbase": {
+      "command": "uvx",
+      "args": ["couchbase-mcp-server"],
+      "env": {
+        "CB_CONNECTION_STRING": "couchbases://connection-string",
+        "CB_USERNAME": "username",
+        "CB_PASSWORD": "password"
+      }
+    }
+  }
+}
+```
+
+To run from source instead:
+
+```json
+{
+  "mcpServers": {
+    "couchbase": {
+      "command": "uv",
+      "args": ["--directory", "path/to/mcp-server-couchbase/", "run", "src/mcp_server.py"],
+      "env": {
+        "CB_CONNECTION_STRING": "couchbases://connection-string",
+        "CB_USERNAME": "username",
+        "CB_PASSWORD": "password"
+      }
+    }
+  }
+}
+```
+
+Or via Docker:
+
+```bash
+docker run --rm -i \
+  -e CB_CONNECTION_STRING='<connection-string>' \
+  -e CB_USERNAME='<user>' \
+  -e CB_PASSWORD='<password>' \
+  -e CB_MCP_READ_ONLY_MODE='true' \
+  couchbaseecosystem/mcp-server-couchbase
+```
+
+### Key environment variables
+
+| Variable | Required | Default | Purpose |
+| --- | --- | --- | --- |
+| `CB_CONNECTION_STRING` | Yes | — | Cluster endpoint (e.g. `couchbases://...`) |
+| `CB_USERNAME` / `CB_PASSWORD` | Yes* | — | Basic auth credentials |
+| `CB_CLIENT_CERT_PATH` / `CB_CLIENT_KEY_PATH` | Yes* | — | mTLS certificate and key |
+| `CB_CA_CERT_PATH` | No | None | Server root certificate |
+| `CB_MCP_READ_ONLY_MODE` | No | `true` | Disable all data modifications |
+| `CB_MCP_TRANSPORT` | No | `stdio` | `stdio` / `http` / `sse` |
+| `CB_MCP_HOST` / `CB_MCP_PORT` | No | `127.0.0.1` / `8000` | HTTP/SSE bind address |
+| `CB_MCP_DISABLED_TOOLS` | No | None | Comma-separated tool names to disable |
+| `CB_MCP_CONFIRMATION_REQUIRED_TOOLS` | No | None | Tools that require confirmation |
+
+\* Provide **either** username/password **or** a client certificate/key pair.
+
+## Use Cases
+
+- **Conversational querying** — ask natural-language questions and have the agent translate them into SQL++/N1QL against your buckets, scopes, and collections.
+- **Schema exploration** — let an LLM map out an unfamiliar Couchbase data model before writing application code.
+- **Query optimization** — surface the slowest/most-frequent queries, spot non-covering or non-selective access patterns, and pull index-advisor recommendations.
+- **Safe read-only analytics** — point an agent at production with read-only mode on to inspect and report without any mutation risk.
+- **Document management (opt-in)** — with write mode enabled and scoped RBAC, perform CRUD on individual documents from within an agentic workflow.
+
+## Safety and Privacy
+
+- **Read-only by default.** `CB_MCP_READ_ONLY_MODE=true` disables all KV write tools and blocks SQL++ modification queries; you must explicitly set it to `false` to allow mutations.
+- **RBAC is the real boundary.** Per the README, disabling tools is an additional guardrail to guide LLM behavior and shrink attack surface — not the sole control. Configure least-privilege Couchbase user roles as the authoritative defense.
+- **Write mode is powerful.** With writes enabled, insert/upsert/replace/delete tools and arbitrary SQL++ mutations run with the connected user's permissions.
+- **Network exposure.** In `http`/`sse` modes the server opens a port (default `127.0.0.1:8000`); don't expose it publicly without authentication.
+- **Data flows to the model.** Documents, schema, and query results are returned to the LLM/MCP client, which can include PII or other sensitive fields stored in your cluster; performance tools can also expose query text from the monitoring catalog.
+- **Credential hygiene.** Connection strings and credentials live in your client config's `env` block — keep it out of version control and restrict access to cert/key files.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for "couchbase" across repository URLs and owners returned no results, and there is no prior entry pointing at
+`github.com/Couchbase-Ecosystem/mcp-server-couchbase`. This is therefore a net-new, non-duplicate entry.
