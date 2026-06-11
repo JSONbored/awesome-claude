@@ -57,9 +57,82 @@ installCommand: |-
     fi
   fi
 
-  # Remove unquoted shell comments before matching policy tokens. This keeps a
-  # comment such as `# sha256sum -c` from being treated as verification.
-  command_without_comments=$(printf '%s\n' "$command_text" | sed -E 's/(^|[[:space:]])#.*$/\1/')
+  strip_shell_comments() {
+    local text=$1
+    local out=""
+    local char=""
+    local in_single=0
+    local in_double=0
+    local escaped=0
+    local at_word_start=1
+    local i=0
+
+    while [ "$i" -lt "${#text}" ]; do
+      char=${text:i:1}
+
+      if [ "$escaped" -eq 1 ]; then
+        out+="$char"
+        at_word_start=0
+        escaped=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "\\" ] && [ "$in_single" -eq 0 ]; then
+        out+="$char"
+        at_word_start=0
+        escaped=1
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "'" ] && [ "$in_double" -eq 0 ]; then
+        if [ "$in_single" -eq 1 ]; then
+          in_single=0
+        else
+          in_single=1
+        fi
+        out+="$char"
+        at_word_start=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = '"' ] && [ "$in_single" -eq 0 ]; then
+        if [ "$in_double" -eq 1 ]; then
+          in_double=0
+        else
+          in_double=1
+        fi
+        out+="$char"
+        at_word_start=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "#" ] && [ "$in_single" -eq 0 ] && [ "$in_double" -eq 0 ] && [ "$at_word_start" -eq 1 ]; then
+        break
+      fi
+
+      out+="$char"
+
+      if [ "$in_single" -eq 0 ] && [ "$in_double" -eq 0 ]; then
+        case "$char" in
+          [[:space:]]|";"|"&"|"|"|"("|")") at_word_start=1 ;;
+          *) at_word_start=0 ;;
+        esac
+      fi
+
+      i=$((i + 1))
+    done
+
+    printf '%s\n' "$out"
+  }
+
+  # Remove only real shell comments before matching policy tokens. This keeps a
+  # comment such as `# sha256sum -c` from being treated as verification without
+  # truncating quoted or escaped # characters that are part of the command.
+  command_without_comments=$(strip_shell_comments "$command_text")
 
   downloader_a='curl'
   downloader_b='wget'
@@ -190,9 +263,82 @@ scriptBody: |-
     fi
   fi
 
-  # Remove unquoted shell comments before matching policy tokens. This keeps a
-  # comment such as `# sha256sum -c` from being treated as verification.
-  command_without_comments=$(printf '%s\n' "$command_text" | sed -E 's/(^|[[:space:]])#.*$/\1/')
+  strip_shell_comments() {
+    local text=$1
+    local out=""
+    local char=""
+    local in_single=0
+    local in_double=0
+    local escaped=0
+    local at_word_start=1
+    local i=0
+
+    while [ "$i" -lt "${#text}" ]; do
+      char=${text:i:1}
+
+      if [ "$escaped" -eq 1 ]; then
+        out+="$char"
+        at_word_start=0
+        escaped=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "\\" ] && [ "$in_single" -eq 0 ]; then
+        out+="$char"
+        at_word_start=0
+        escaped=1
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "'" ] && [ "$in_double" -eq 0 ]; then
+        if [ "$in_single" -eq 1 ]; then
+          in_single=0
+        else
+          in_single=1
+        fi
+        out+="$char"
+        at_word_start=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = '"' ] && [ "$in_single" -eq 0 ]; then
+        if [ "$in_double" -eq 1 ]; then
+          in_double=0
+        else
+          in_double=1
+        fi
+        out+="$char"
+        at_word_start=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "#" ] && [ "$in_single" -eq 0 ] && [ "$in_double" -eq 0 ] && [ "$at_word_start" -eq 1 ]; then
+        break
+      fi
+
+      out+="$char"
+
+      if [ "$in_single" -eq 0 ] && [ "$in_double" -eq 0 ]; then
+        case "$char" in
+          [[:space:]]|";"|"&"|"|"|"("|")") at_word_start=1 ;;
+          *) at_word_start=0 ;;
+        esac
+      fi
+
+      i=$((i + 1))
+    done
+
+    printf '%s\n' "$out"
+  }
+
+  # Remove only real shell comments before matching policy tokens. This keeps a
+  # comment such as `# sha256sum -c` from being treated as verification without
+  # truncating quoted or escaped # characters that are part of the command.
+  command_without_comments=$(strip_shell_comments "$command_text")
 
   downloader_a='curl'
   downloader_b='wget'
