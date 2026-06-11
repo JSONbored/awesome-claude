@@ -1,0 +1,290 @@
+---
+title: Publishing An MCP Server To The Official Registry
+slug: publishing-an-mcp-server-to-the-official-registry
+category: guides
+description: >-
+  Source-backed workflow for publishing public MCP server metadata to the
+  official MCP Registry with mcp-publisher, server.json, package verification,
+  namespace authentication, and post-publish checks.
+cardDescription: Publish public MCP server metadata with mcp-publisher and server.json.
+seoTitle: Publishing An MCP Server To The Official Registry
+seoDescription: >-
+  Learn how to publish an MCP server to the official MCP Registry: prepare the
+  public package or remote endpoint, add verification metadata, create
+  server.json, authenticate, publish, and verify the registry API result.
+author: YB0y
+authorProfileUrl: "https://github.com/YB0y"
+submittedBy: YB0y
+submittedByUrl: "https://github.com/YB0y"
+dateAdded: "2026-06-10"
+submittedAt: "2026-06-10"
+documentationUrl: "https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx"
+repoUrl: "https://github.com/modelcontextprotocol/registry"
+usageSnippet: >-
+  Use this guide when a public MCP server is ready for package or remote
+  distribution and you need a repeatable checklist for publishing official
+  registry metadata without overstating security review.
+prerequisites:
+  - "A working MCP server with a public installation path such as npm, PyPI, NuGet, Cargo, OCI, MCPB, or a publicly reachable remote MCP endpoint."
+  - "A chosen registry name namespace, such as io.github.<user-or-org>/<server> for GitHub authentication or a reverse-DNS domain namespace for DNS or HTTP authentication."
+  - "Package or remote-server metadata ready for server.json, including version, repository URL, transport, environment variables, headers, and any secret placeholders."
+  - "Access to the package registry, GitHub account, DNS zone, HTTP well-known path, or GitHub Actions OIDC workflow required for the selected authentication method."
+  - "A review pass for command arguments, environment variables, remote URLs, icons, and installation instructions before publishing metadata for client consumption."
+safetyNotes:
+  - "The official MCP Registry hosts metadata, not a security audit of server code; namespace verification proves control of a GitHub account, domain, package, or artifact marker, not that a server is safe to install."
+  - "Review server.json command arguments, environment variables, headers, remotes, and URL template variables before publishing because clients may turn that metadata into executable install or connection steps."
+  - "Publish the underlying package or public remote endpoint first, then verify that the package-specific ownership marker matches the server.json name to avoid confusing users or aggregators."
+privacyNotes:
+  - "server.json can expose repository URLs, package names, remote endpoints, tenant URL patterns, environment-variable names, header names, icons, and setup instructions to public registry consumers."
+  - "Mark credentials, API keys, tokens, tenant IDs, and sensitive headers as secret inputs where metadata supports it; do not put real secret values in server.json, README files, release artifacts, or registry examples."
+  - "Registry API results may be cached by downstream aggregators, so treat published metadata as public and versioned rather than temporary private configuration."
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/about.mdx"
+  - "https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx"
+  - "https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/package-types.mdx"
+  - "https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/authentication.mdx"
+  - "https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/remote-servers.mdx"
+  - "https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/github-actions.mdx"
+  - "https://github.com/modelcontextprotocol/registry/blob/main/docs/reference/server-json/draft/server.schema.json"
+tags:
+  - mcp
+  - registry
+  - publishing
+  - server-json
+  - mcp-publisher
+  - package-verification
+keywords:
+  - publish mcp server to registry
+  - official mcp registry guide
+  - mcp-publisher server.json
+  - MCP Registry package verification
+  - MCP Registry authentication
+  - MCP remote server publishing
+readingTime: 9
+difficultyScore: 64
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+The official MCP Registry is a public metadata registry for MCP servers. It
+does not host your server code. Publish your package or public remote endpoint
+first, add the package-specific verification marker, create `server.json`, log
+in with a namespace that matches your server name, run `mcp-publisher publish`,
+and verify the result through the registry API. Keep the listing factual:
+registry inclusion proves metadata and namespace ownership, not malware
+scanning or install approval.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Public distribution path", "description": "The server is available through a supported package registry, MCPB release artifact, OCI image, or publicly reachable remote endpoint"}
+- [ ] {"task": "Namespace chosen", "description": "The server name matches the authentication method, such as io.github.username/server for GitHub auth or reverse-DNS domain naming for domain auth"}
+- [ ] {"task": "Ownership marker ready", "description": "The package or artifact contains the verification marker required for its package type"}
+- [ ] {"task": "server.json drafted", "description": "Name, title, description, version, package or remote transport, repository, inputs, and secrets are reviewable"}
+- [ ] {"task": "Sensitive metadata reviewed", "description": "No real tokens, tenant secrets, private endpoints, or internal-only package registries are present"}
+- [ ] {"task": "Post-publish check planned", "description": "The team will query the registry API and inspect the public result after publishing"}
+
+## Core Concepts Explained
+
+### The registry publishes metadata, not artifacts
+
+The MCP Registry points clients and downstream marketplaces to packages,
+release artifacts, OCI images, or remote server URLs. The code still lives in
+the underlying package registry, release, container registry, or hosted service.
+This distinction matters for safety: registry metadata can help clients install
+or connect, but it is not a substitute for reviewing the server implementation.
+
+### Server names are namespace claims
+
+Registry names use a namespace format such as
+`io.github.username/weather-server` or `com.example/acme-analytics`. GitHub
+authentication is tied to `io.github.<user-or-org>/*` names. Domain
+authentication is tied to reverse-DNS names that you prove through DNS or HTTP.
+Choose the namespace before publishing the package because the same name must
+appear in package verification metadata and in `server.json`.
+
+### Package verification is separate from publisher login
+
+Publisher login proves who is publishing. Package verification proves that the
+underlying package or artifact opted into the same registry name. For npm this
+is `mcpName` in `package.json`; for PyPI and NuGet it is an `mcp-name:` marker
+in the package README; for Cargo it must be visible markdown because crates.io
+strips HTML comments; for OCI it is an image annotation; for MCPB it requires a
+release URL with "mcp" in the path and a SHA-256 hash in metadata.
+
+### Public means public
+
+The official registry supports public open-source servers, closed-source
+servers with public installation metadata, and publicly reachable remote
+servers. It does not support private-only servers on internal networks or
+private package registries. If a server is meant only for one organization,
+publish it to a private registry or internal catalog instead.
+
+## Step-by-Step Workflow
+
+1. **Confirm the server belongs in the official registry.** The package or
+   remote endpoint should be publicly installable or publicly reachable. Do not
+   publish internal hostnames, private registries, staging-only URLs, or
+   customer-specific connection details.
+
+2. **Choose the registry name.** Pick a stable `name` value before editing
+   package metadata. Use `io.github.<user-or-org>/<server>` when publishing
+   with GitHub authentication. Use reverse-DNS naming only when you can prove
+   domain ownership through DNS or HTTP authentication.
+
+3. **Publish the underlying package or endpoint first.** The official
+   quickstart publishes the npm package before publishing registry metadata.
+   The same principle applies to other package types: the registry validator
+   needs the referenced artifact or remote endpoint to exist.
+
+4. **Add the package verification marker.** Make the marker match the planned
+   `server.json` name exactly. A mismatch between `mcpName`, `mcp-name:`,
+   image labels, MCPB metadata, and `server.json` is a publish blocker.
+
+5. **Install and check `mcp-publisher`.** Use the official release binary or
+   Homebrew install path from the registry docs, then run:
+
+```bash
+mcp-publisher --help
+```
+
+   The command list should include `init`, `login`, `logout`, and `publish`.
+
+6. **Generate a starter `server.json`.** From the server project directory,
+   run:
+
+```bash
+mcp-publisher init
+```
+
+   Treat the generated file as a template. Review the schema URL, name,
+   description, repository URL, version, packages, remotes, transport,
+   environment variables, headers, and icons before publishing.
+
+7. **Review the install surface.** Package entries can include command
+   arguments, environment variables, and transport metadata. Remote entries can
+   include Streamable HTTP or SSE URLs, variables, and headers. If a value is a
+   credential or tenant-specific secret, make it an input placeholder and mark
+   it as secret rather than embedding a real value.
+
+8. **Authenticate with the matching method.** For a GitHub namespace, run:
+
+```bash
+mcp-publisher login github
+```
+
+   For domain namespaces, use DNS or HTTP authentication and keep private keys
+   out of prompts, issue comments, PR bodies, logs, and screenshots. In GitHub
+   Actions, prefer OIDC where it fits because it avoids storing a long-lived
+   GitHub token for registry publishing.
+
+9. **Publish the metadata.** After package publication, verification metadata,
+   and `server.json` review are complete, run:
+
+```bash
+mcp-publisher publish
+```
+
+10. **Verify the public result.** Query the registry API with the server name
+    or another distinctive search term:
+
+```bash
+curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.username/weather"
+```
+
+    Confirm the returned name, version, package identifiers, remote URLs,
+    transport, repository URL, and setup inputs match what you intended to
+    publish.
+
+## Package and Remote Metadata Checklist
+
+| Surface | What to verify | Common mistake |
+| --- | --- | --- |
+| `name` | Matches namespace auth and package marker exactly | GitHub login does not match `io.github.*` name |
+| `version` | Matches the package or remote release you want users to see | Publishing stale metadata after a package bump |
+| npm | `package.json` includes matching `mcpName` | Package was published before the marker was added |
+| PyPI/NuGet | README includes matching `mcp-name:` marker | Marker is hidden or formatted so the registry cannot read it |
+| Cargo | README includes visible `mcp-name:` text | HTML comment marker is stripped by crates.io rendering |
+| OCI | Image has the matching MCP server-name annotation | Image tag points to an unreviewed or mutable build |
+| MCPB | Metadata includes release URL and SHA-256 hash | Hash omitted or generated from the wrong artifact |
+| Remote | URL is public and uses Streamable HTTP or SSE | Internal tenant URL or private network endpoint |
+| Inputs | Secrets are placeholders with secret metadata | Real API keys or tenant IDs embedded in public JSON |
+
+## Safe `server.json` Review
+
+Before publishing, read `server.json` as if an MCP client will turn it into a
+user-facing install command:
+
+- Keep descriptions factual and avoid claims that the registry itself has
+  audited the server.
+- Prefer explicit package identifiers and versions over vague install
+  instructions.
+- Check every command argument for shell-injection or path-expansion surprises.
+- Mark environment variables and headers that carry credentials as secret
+  inputs.
+- Avoid private URLs, internal package registries, staging endpoints, or
+  customer names.
+- Make URL template variables narrow and documented so users know what value to
+  provide.
+- Use the public repository URL that maintainers and downstream aggregators can
+  inspect.
+
+## Automation With GitHub Actions
+
+Automated publishing is useful after the manual flow works once. A typical
+workflow builds and tests the package, publishes it to the package registry,
+installs `mcp-publisher`, authenticates to the MCP Registry, and runs
+`mcp-publisher publish`.
+
+Use GitHub OIDC when the namespace and workflow support it. If you must use a
+token or DNS private key, store it as a GitHub Actions secret and keep workflow
+logs free of `server.json` values that contain secrets or customer-specific
+configuration. Tag-based release workflows should keep the package version and
+`server.json` version in sync.
+
+## Troubleshooting
+
+- **"Registry validation failed for package"**: check the package-type
+  verification marker. For npm, `mcpName` in `package.json` must match
+  `server.json`. For PyPI, NuGet, and Cargo, inspect the rendered package README
+  that the registry can read.
+- **"You do not have permission to publish this server"**: compare the login
+  method to the server name. GitHub auth requires an `io.github.<user-or-org>/`
+  namespace that the authenticated account can publish.
+- **"Invalid or expired Registry JWT token"**: run `mcp-publisher login` again,
+  then publish from the same project directory.
+- **Package page exists but validation still fails**: wait for package registry
+  propagation, confirm the version in `server.json`, and verify that the marker
+  is present in the published artifact rather than only in local files.
+- **Remote server cannot be published**: confirm the URL is publicly reachable,
+  uses a supported remote transport, and does not require private network access
+  before the client can discover it.
+- **Published metadata is wrong**: publish a corrected version as soon as
+  possible and remember downstream aggregators may cache the old metadata for a
+  period of time.
+
+## Duplicate Check
+
+This guide focuses on the end-to-end workflow for publishing an MCP server to
+the official MCP Registry: package publication, package-type verification,
+`server.json`, namespace authentication, `mcp-publisher`, remote-server
+metadata, post-publish API checks, and safety limits. Existing HeyClaude content
+includes individual MCP server listings, MCP security and authorization guides,
+and a dedicated MCP Registry Server entry. Those entries do not provide this
+source-backed publishing workflow for server authors.
+
+## References
+
+- MCP Registry overview - https://modelcontextprotocol.io/registry/about
+- MCP Registry publishing quickstart - https://modelcontextprotocol.io/registry/quickstart
+- MCP Registry package types - https://modelcontextprotocol.io/registry/package-types
+- MCP Registry authentication - https://modelcontextprotocol.io/registry/authentication
+- MCP Registry remote servers - https://modelcontextprotocol.io/registry/remote-servers
+- MCP Registry GitHub Actions publishing - https://modelcontextprotocol.io/registry/github-actions
+- MCP Registry repository - https://github.com/modelcontextprotocol/registry
+- server.json schema - https://github.com/modelcontextprotocol/registry/blob/main/docs/reference/server-json/draft/server.schema.json
+- MCP Registry API docs - https://registry.modelcontextprotocol.io/docs

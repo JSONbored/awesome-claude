@@ -168,6 +168,11 @@ describe("submission automation workflows", () => {
     expect(source).toContain("Important edge cases or invariants");
     expect(source).toContain("Backward compatibility notes");
     expect(source).toContain("Accessibility notes for UI changes");
+    expect(source).toMatch(/[Ll]inked issue/);
+    expect(source).toContain("no-issue rationale");
+    expect(source).toContain("For registry API endpoint PRs");
+    expect(source).toContain("Origin-check and rate-limit posture");
+    expect(source).toContain("Generator reproducibility");
   });
 
   it("keeps product feature issues scoped with screenshot expectations", () => {
@@ -1236,6 +1241,28 @@ diff --git a/README.md b/README.md
     expect(source).toContain("provenance");
     expect(source).toContain("duplicates");
     expect(source).toContain("generated-artifact");
+    expect(source).toContain("Review Fallback Checklist");
+    expect(source).toContain("CodeRabbit is skipped");
+    expect(source).toContain("gate-comment-v5");
+    expect(source).toContain("Gittensory as advisory context");
+    expect(source).toContain("no-issue rationale");
+    expect(source).toContain("deterministic source hash");
+  });
+
+  it("documents registry endpoint review as a separate contract checklist", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, "docs/api-security-contract.md"),
+      "utf8",
+    );
+
+    expect(source).toContain("Registry Endpoint Change Checklist");
+    expect(source).toContain("apps/web/src/routes/api/**");
+    expect(source).toContain("apps/web/src/lib/api/contracts.ts");
+    expect(source).toContain("origin-check setting");
+    expect(source).toContain("rate-limit scope");
+    expect(source).toContain("tests/api-contracts.test.ts");
+    expect(source).toContain("pnpm validate:openapi");
+    expect(source).toContain("maintainer-lane no-issue rationale");
   });
 
   it("removes stale issue automation from public workflows", () => {
