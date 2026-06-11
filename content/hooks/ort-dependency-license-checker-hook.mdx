@@ -154,6 +154,7 @@ prerequisites:
   - "A repository-level license policy or review process for interpreting ORT analyzer output, evaluator rules, reports, and exceptions."
 safetyNotes:
   - "Runs after Write, Edit, and MultiEdit and inspects only the edited file path to decide whether a dependency manifest or lockfile changed."
+  - "Install this project-relative command only in the trusted project's `.claude/settings.json`; user/global hooks must point to a trusted absolute path outside project directories."
   - "Default mode is advisory, prints the ORT command to run, and always exits 0 without reading dependency contents, creating reports, or contacting registries."
   - "When `ORT_LICENSE_HOOK_RUN=1` is set, it runs `ort analyze` in the project root and writes reports under `.claude/ort-license-checks/` by default."
   - "An opted-in ORT run may invoke package managers, inspect dependency graphs, read project configuration, fetch package metadata, and take several minutes on large repositories."
@@ -218,10 +219,12 @@ The output is intentionally analyzer-focused. ORT's own documentation describes 
 1. Create the hooks directory: `mkdir -p .claude/hooks`
 2. Create the hook file: `touch .claude/hooks/ort-dependency-license-checker.sh`
 3. Paste the script body into that file and make it executable: `chmod +x .claude/hooks/ort-dependency-license-checker.sh`
-4. Add the configuration below to `.claude/settings.json` for a project hook or `~/.claude/settings.json` for a user hook.
+4. Add the configuration below only to this trusted project's `.claude/settings.json`. Do not put this `$CLAUDE_PROJECT_DIR/.claude/hooks/...` command in `~/.claude/settings.json`; a global hook must point to a trusted user-owned absolute path outside project directories.
 5. Install and configure ORT only if you want the hook to run analysis locally.
 
 ## Hook configuration
+
+Use this project-local configuration only in the trusted repository that contains the script.
 
 ```json
 {
