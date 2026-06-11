@@ -30,6 +30,7 @@ import { useRecents } from "@/lib/recents";
 import { CATEGORIES, type Category } from "@/types/registry";
 import { ENTRIES, BRIEF_ISSUES, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { search } from "@/data/search";
+import { stringifyJsonLd } from "@/lib/json-ld";
 
 // Pre-computed counts at module scope so SSR + first paint show real numbers.
 const TRUSTED_COUNT = ENTRIES.filter((e) => e.trust === "trusted").length;
@@ -88,7 +89,7 @@ export const Route = createFileRoute("/")({
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: stringifyJsonLd({
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "HeyClaude",
