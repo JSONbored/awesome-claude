@@ -23,9 +23,9 @@ documentationUrl: "https://code.claude.com/docs/en/mcp"
 repoUrl: "https://github.com/modelcontextprotocol/modelcontextprotocol"
 installable: true
 installCommand: >-
-  mkdir -p .claude/hooks && touch
-  .claude/hooks/mcp-config-privacy-scanner.sh && chmod +x
-  .claude/hooks/mcp-config-privacy-scanner.sh
+  mkdir -p "$HOME/.claude/hooks" && touch
+  "$HOME/.claude/hooks/mcp-config-privacy-scanner.sh" && chmod +x
+  "$HOME/.claude/hooks/mcp-config-privacy-scanner.sh"
 usageSnippet: >-
   MCP config privacy scanner: inline credential value found in MCP config edit.
 copySnippet: |-
@@ -37,7 +37,7 @@ copySnippet: |-
           "hooks": [
             {
               "type": "command",
-              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/mcp-config-privacy-scanner.sh"
+              "command": "$HOME/.claude/hooks/mcp-config-privacy-scanner.sh"
             }
           ]
         }
@@ -53,7 +53,7 @@ configSnippet: |-
           "hooks": [
             {
               "type": "command",
-              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/mcp-config-privacy-scanner.sh"
+              "command": "$HOME/.claude/hooks/mcp-config-privacy-scanner.sh"
             }
           ]
         }
@@ -323,13 +323,16 @@ write and returns the reason to Claude Code.
 
 ## Installation
 
-1. Create the hooks directory: `mkdir -p .claude/hooks`
+1. Create a user-owned hooks directory: `mkdir -p "$HOME/.claude/hooks"`
 2. Create the hook file:
-   `touch .claude/hooks/mcp-config-privacy-scanner.sh`
+   `touch "$HOME/.claude/hooks/mcp-config-privacy-scanner.sh"`
 3. Paste the script body into that file and make it executable:
-   `chmod +x .claude/hooks/mcp-config-privacy-scanner.sh`
-4. Add the configuration below to `.claude/settings.json` for a project hook or
-   `~/.claude/settings.json` for a user hook.
+   `chmod +x "$HOME/.claude/hooks/mcp-config-privacy-scanner.sh"`
+4. Add the configuration below to `~/.claude/settings.json` for a user hook.
+   If you instead store this hook inside a project's `.claude/hooks` directory,
+   keep the matching `$CLAUDE_PROJECT_DIR/.claude/hooks/...` command only in that
+   reviewed project's `.claude/settings.json`; do not copy a project-relative
+   command into user-level settings.
 
 ## Hook Configuration
 
@@ -342,7 +345,7 @@ write and returns the reason to Claude Code.
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/mcp-config-privacy-scanner.sh"
+            "command": "$HOME/.claude/hooks/mcp-config-privacy-scanner.sh"
           }
         ]
       }
@@ -356,7 +359,7 @@ write and returns the reason to Claude Code.
 ```bash
 #!/usr/bin/env bash
 # Paste the scriptBody from this entry into:
-# .claude/hooks/mcp-config-privacy-scanner.sh
+# ~/.claude/hooks/mcp-config-privacy-scanner.sh
 ```
 
 ## Configuration Options
