@@ -508,12 +508,24 @@ export function validateMcpConfigText(input: string): McpConfigValidation {
   const reports = Object.entries(extracted.servers).map(([name, value]) =>
     validateServer(name, value),
   );
+  let rootRedactedSecretCount = 0;
+  const sanitizedRootConfig = Object.fromEntries(
+    isRecord(parsed) && !extracted.wrapped
+      ? Object.entries(parsed)
+          .filter(([key]) => key !== "mcpServers")
+          .map(([key, value]) => {
+            const sanitized = sanitizeConfigValue(key, value);
+            rootRedactedSecretCount += sanitized.redactedCount;
+            return [key, sanitized.value];
+          })
+      : [],
+  );
   const redactedSecretCount = reports.reduce(
     (count, report) => count + report.redactedSecretCount,
-    0,
+    rootRedactedSecretCount,
   );
   const sanitizedConfig = {
-    ...(isRecord(parsed) && !extracted.wrapped ? parsed : {}),
+    ...sanitizedRootConfig,
     mcpServers: Object.fromEntries(
       reports.map((report) => [report.name, report.sanitized]),
     ),

@@ -150,6 +150,37 @@ describe("MCP config validator", () => {
     expect(result.reportText).toContain("${URL}");
   });
 
+  it("redacts root-level secrets outside mcpServers from fixed snippets", () => {
+    const result = validateMcpConfigText(
+      JSON.stringify({
+        globalToken: "root-token-SECRET-333",
+        headers: {
+          Authorization: "Bearer abcdefghijklmnopqrstuvwxyz123456",
+        },
+        metadata: {
+          owner: "docs",
+        },
+        mcpServers: {
+          remote: {
+            url: "https://example.com/mcp",
+          },
+        },
+      }),
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.redactedSecretCount).toBe(2);
+    expect(result.fixedConfigText).not.toContain("root-token-SECRET-333");
+    expect(result.fixedConfigText).not.toContain(
+      "Bearer abcdefghijklmnopqrstuvwxyz123456",
+    );
+    expect(result.fixedConfigText).toContain("${GLOBALTOKEN}");
+    expect(result.fixedConfigText).toContain("${AUTHORIZATION}");
+    expect(JSON.parse(result.fixedConfigText).metadata).toEqual({
+      owner: "docs",
+    });
+  });
+
   it("redacts values after sensitive split CLI flags", () => {
     const result = validateMcpConfigText(
       JSON.stringify({
