@@ -470,13 +470,20 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("sourceEvidencePolicy:");
     expect(source).toContain("privateSourceHardFailureContradicted(");
     expect(source).toContain('"source_evidence_conflict"');
-    expect(source).toContain("sourceEvidenceConflictMergeDecision(");
+    expect(source).toContain("sourceEvidenceConflictExhaustedDecision(");
+    expect(source).not.toContain("sourceEvidenceConflictMergeDecision(");
     expect(source).toContain('"duplicate_evidence_conflict"');
     expect(source).toContain("privateStrictDuplicateContradicted(");
     expect(source).toContain("duplicateEvidenceConflictExhaustedDecision(");
     expect(source).toContain("duplicateEvidenceContractExhaustedDecision(");
     expect(readReviewSource()).toContain("duplicate_evidence_contract_exhausted");
     expect(source).not.toContain("duplicateEvidenceConflictMergeDecision(");
+    expect(source).toContain("privateEvidenceClaimsDeadSourceUrl(");
+    expect(source).toContain("privateEvidenceMatchesReachableSourceUrl(");
+    expect(source).toContain(
+      "Automation will not override the private close into a merge",
+    );
+    expect(source).toContain("labels: [LABELS.manual]");
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
