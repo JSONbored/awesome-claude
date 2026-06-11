@@ -43,11 +43,50 @@ const SENSITIVE_SPLIT_ARG_KEYS = new Set([
   "xapikey",
 ]);
 
-function decodePlaceholderTokens(value: string) {
-  return value
-    .replace(/%24%7B/gi, "${")
-    .replace(/%7B/gi, "{")
-    .replace(/%7D/gi, "}");
+type RedactedUrlPlaceholder =
+  | { kind: "username"; placeholder: string }
+  | { kind: "password"; placeholder: string }
+  | { kind: "query"; key: string; placeholder: string };
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function encodeSearchParamValue(value: string) {
+  return new URLSearchParams([["", value]]).toString().slice(1);
+}
+
+function encodeSearchParamKey(value: string) {
+  return new URLSearchParams([[value, ""]]).toString().slice(0, -1);
+}
+
+function decodeRedactedPlaceholders(
+  value: string,
+  placeholders: RedactedUrlPlaceholder[],
+) {
+  return placeholders.reduce((decoded, redaction) => {
+    if (redaction.kind === "username") {
+      return decoded.replace(
+        "://$%7BURL_USERNAME%7D",
+        `://${redaction.placeholder}`,
+      );
+    }
+    if (redaction.kind === "password") {
+      return decoded.replace(
+        ":$%7BURL_PASSWORD%7D@",
+        `:${redaction.placeholder}@`,
+      );
+    }
+
+    const key = escapeRegExp(encodeSearchParamKey(redaction.key));
+    const placeholder = escapeRegExp(
+      encodeSearchParamValue(redaction.placeholder),
+    );
+    return decoded.replace(
+      new RegExp(`([?&]${key}=)${placeholder}(?=([&#]|$))`),
+      (_match, prefix: string) => `${prefix}${redaction.placeholder}`,
+    );
+  }, value);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -81,12 +120,17 @@ function redactUrlValue(value: string) {
   try {
     const parsed = new URL(value);
     let redacted = false;
+    const redactedPlaceholders: RedactedUrlPlaceholder[] = [];
     if (parsed.username) {
-      parsed.username = "${URL_USERNAME}";
+      const placeholder = "${URL_USERNAME}";
+      parsed.username = placeholder;
+      redactedPlaceholders.push({ kind: "username", placeholder });
       redacted = true;
     }
     if (parsed.password) {
-      parsed.password = "${URL_PASSWORD}";
+      const placeholder = "${URL_PASSWORD}";
+      parsed.password = placeholder;
+      redactedPlaceholders.push({ kind: "password", placeholder });
       redacted = true;
     }
     for (const [key, queryValue] of parsed.searchParams.entries()) {
@@ -94,14 +138,16 @@ function redactUrlValue(value: string) {
         SENSITIVE_ENV_PATTERN.test(key) ||
         SECRET_VALUE_PATTERN.test(queryValue)
       ) {
-        parsed.searchParams.set(
-          key,
-          `\${${key.toUpperCase().replace(/[^A-Z0-9_]/g, "_") || "SECRET"}}`,
-        );
+        const placeholder = `\${${key.toUpperCase().replace(/[^A-Z0-9_]/g, "_") || "SECRET"}}`;
+        parsed.searchParams.set(key, placeholder);
+        redactedPlaceholders.push({ kind: "query", key, placeholder });
         redacted = true;
       }
     }
-    const serialized = decodePlaceholderTokens(parsed.toString());
+    const serialized = decodeRedactedPlaceholders(
+      parsed.toString(),
+      redactedPlaceholders,
+    );
     const fallback = redactEnvValue("url", serialized);
     return {
       value: fallback,
