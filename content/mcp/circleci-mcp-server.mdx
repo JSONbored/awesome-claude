@@ -1,0 +1,198 @@
+---
+title: CircleCI MCP Server
+slug: circleci-mcp-server
+category: mcp
+description: >-
+  Official CircleCI MCP server that lets LLMs query build and test failures,
+  detect flaky tests, check pipeline status, fetch build logs, and validate
+  config in CircleCI through natural language.
+cardDescription: >-
+  CircleCI's official Model Context Protocol server exposing 18 tools to
+  inspect build failures, flaky tests, pipeline status, logs, and config
+  validation from any MCP-compatible client.
+seoTitle: CircleCI MCP Server — Official CircleCI Model Context Protocol Server
+seoDescription: >-
+  Official @circleci/mcp-server-circleci MCP server. Query CircleCI build and
+  test failures, flaky tests, pipeline status, logs, artifacts, and config
+  validation via natural language. stdio and HTTP/SSE transports, Apache-2.0.
+author: CircleCI-Public
+authorProfileUrl: https://github.com/CircleCI-Public
+dateAdded: "2026-06-11"
+brandName: CircleCI
+brandDomain: github.com/CircleCI-Public/mcp-server-circleci
+websiteUrl: https://circleci.com
+repoUrl: https://github.com/CircleCI-Public/mcp-server-circleci
+documentationUrl: https://github.com/CircleCI-Public/mcp-server-circleci#readme
+installable: true
+installCommand: npx -y @circleci/mcp-server-circleci@latest
+usageSnippet: |
+  # Run the server directly (stdio transport) for an MCP client to spawn
+  CIRCLECI_TOKEN=your-circleci-token npx -y @circleci/mcp-server-circleci@latest
+copySnippet: |
+  {
+    "mcpServers": {
+      "circleci-mcp-server": {
+        "command": "npx",
+        "args": ["-y", "@circleci/mcp-server-circleci@latest"],
+        "env": {
+          "CIRCLECI_TOKEN": "your-circleci-token"
+        }
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "circleci-mcp-server": {
+        "command": "npx",
+        "args": ["-y", "@circleci/mcp-server-circleci@latest"],
+        "env": {
+          "CIRCLECI_TOKEN": "your-circleci-token",
+          "CIRCLECI_BASE_URL": "https://circleci.com"
+        }
+      }
+    }
+  }
+prerequisites:
+  - Node.js >= 18.0.0
+  - A CircleCI Personal API token from https://app.circleci.com/settings/user/tokens
+  - An MCP-compatible client (Cursor, VS Code, Claude Desktop, Windsurf, Copilot, or similar)
+  - CircleCI projects you follow / have access to with the supplied token
+safetyNotes:
+  - The server runs locally via npx and is spawned by your MCP client; the published bin entrypoint is dist/index.js.
+  - Several tools take write/execution actions on your CI — run_pipeline, rerun_workflow, and run_rollback_pipeline can trigger pipelines, re-run workflows, and roll back deployed component versions. Review tool calls before approving them.
+  - In remote (HTTP/SSE) mode the server listens on a network port (default 8000); set REQUIRE_REQUEST_TOKEN=true to reject unauthenticated requests and avoid exposing it on untrusted networks.
+  - MAX_MCP_OUTPUT_LENGTH (default 50000) bounds response size; large log/artifact pulls are truncated rather than streamed in full.
+privacyNotes:
+  - CIRCLECI_TOKEN is a personal API token that grants the LLM access to your CircleCI projects, build logs, test results, artifacts, and usage data — treat it as a secret and scope it appropriately.
+  - Build failure logs, test output, and artifacts retrieved by the tools are passed to your LLM/model provider; avoid exposing pipelines containing sensitive secrets or data.
+  - download_usage_api_data and find_underused_resource_classes surface organization-level CircleCI usage and resource metrics.
+  - Telemetry is collected by default; set DISABLE_TELEMETRY=true to opt out.
+sourceUrls:
+  - https://github.com/CircleCI-Public/mcp-server-circleci/blob/main/package.json
+  - https://github.com/CircleCI-Public/mcp-server-circleci/blob/main/src/index.ts
+  - https://github.com/CircleCI-Public/mcp-server-circleci/blob/main/src/circleci-tools.ts
+  - https://github.com/CircleCI-Public/mcp-server-circleci/blob/main/README.md
+  - https://github.com/CircleCI-Public/mcp-server-circleci/blob/main/LICENSE
+tags:
+  - mcp
+  - ci-cd
+  - circleci
+  - devops
+  - testing
+  - observability
+keywords:
+  - CircleCI MCP server
+  - "@circleci/mcp-server-circleci"
+  - CircleCI Model Context Protocol
+  - flaky test detection
+  - build failure logs
+  - pipeline status
+  - CI/CD MCP
+  - config validation
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+CircleCI MCP Server is the official [Model Context Protocol](https://modelcontextprotocol.io/introduction) server published by CircleCI (the `CircleCI-Public` org). It connects MCP-compatible clients — Cursor, VS Code, Claude Desktop, Windsurf, Copilot, and others — to the CircleCI API so you can investigate CI/CD state through natural language instead of clicking through the CircleCI web UI.
+
+The server is distributed as the npm package `@circleci/mcp-server-circleci` (v0.16.1 at time of writing) and exposes 18 tools covering build failure diagnosis, flaky-test detection, pipeline status, log and artifact retrieval, config validation, usage/resource reporting, and pipeline actions such as triggering, re-running, and rolling back. It supports both a local **stdio** transport (the common case, where your client spawns the process) and a remote **HTTP + Server-Sent Events** mode for shared deployments.
+
+Authentication is via a CircleCI Personal API token supplied through the `CIRCLECI_TOKEN` environment variable. The package targets Node.js >= 18, ships a `mcp-server-circleci` bin pointing at `dist/index.js`, and is licensed under Apache-2.0.
+
+## Source Review
+
+- [package.json](https://github.com/CircleCI-Public/mcp-server-circleci/blob/main/package.json) — confirms name `@circleci/mcp-server-circleci`, version 0.16.1, Apache-2.0 license, bin `mcp-server-circleci` → `./dist/index.js`, Node engine `>=18.0.0`, and dependencies `@modelcontextprotocol/sdk` and `express` (used for the remote HTTP/SSE transport).
+- [src/index.ts](https://github.com/CircleCI-Public/mcp-server-circleci/blob/main/src/index.ts) — the main entrypoint registered as the bin script.
+- [src/circleci-tools.ts](https://github.com/CircleCI-Public/mcp-server-circleci/blob/main/src/circleci-tools.ts) — tool registration surface (alongside `src/tools/`, `src/clients/`, and `src/transports/`).
+- [README.md](https://github.com/CircleCI-Public/mcp-server-circleci/blob/main/README.md) — documents the official status, the 18 tools, environment variables (`CIRCLECI_TOKEN`, `CIRCLECI_BASE_URL`, `MAX_MCP_OUTPUT_LENGTH`, `REQUIRE_REQUEST_TOKEN`, `DISABLE_TELEMETRY`), stdio and remote HTTP/SSE transports, and client config blocks for Cursor, VS Code, Claude Desktop, and Windsurf.
+- [LICENSE](https://github.com/CircleCI-Public/mcp-server-circleci/blob/main/LICENSE) — Apache License 2.0.
+
+## Features
+
+The server exposes 18 tools, including:
+
+- **get_build_failure_logs** — retrieve detailed logs for failed builds.
+- **find_flaky_tests** — detect unreliable tests from execution history.
+- **get_latest_pipeline_status** — check the current pipeline/workflow state for a branch.
+- **get_job_test_results** — extract test metadata and execution results.
+- **config_helper** — validate CircleCI YAML config and surface recommendations.
+- **analyze_diff** — check code changes against Cursor rules / project conventions.
+- **list_artifacts** — list downloadable build outputs from jobs.
+- **list_followed_projects** — enumerate CircleCI projects accessible to the token.
+- **download_usage_api_data** — export CircleCI usage metrics as CSV.
+- **find_underused_resource_classes** — identify underutilized compute resources.
+- **list_component_versions** / **run_rollback_pipeline** — view deployed component versions and roll back to a prior version.
+- **run_pipeline** / **rerun_workflow** — trigger a pipeline on a branch or re-run a workflow from start or from the point of failure.
+- Prompt-engineering helpers (**create_prompt_template**, **recommend_prompt_template_tests**, **run_evaluation_tests**) for building and validating AI prompt templates.
+
+Transports: local **stdio** and remote **HTTP + SSE** (the latter via the bundled Express server, gated by `REQUIRE_REQUEST_TOKEN` for per-user tokens).
+
+## Installation
+
+The server runs through `npx`, so most clients simply spawn it on demand. The README shows config blocks for Cursor, VS Code, Claude Desktop, and Windsurf.
+
+Standard MCP client config (Claude Desktop / Cursor / Windsurf):
+
+```json
+{
+  "mcpServers": {
+    "circleci-mcp-server": {
+      "command": "npx",
+      "args": ["-y", "@circleci/mcp-server-circleci@latest"],
+      "env": {
+        "CIRCLECI_TOKEN": "your-circleci-token"
+      }
+    }
+  }
+}
+```
+
+VS Code (`.vscode/mcp.json`) with a prompted, masked token input:
+
+```json
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "circleci-token",
+      "description": "CircleCI API Token",
+      "password": true
+    }
+  ],
+  "servers": {
+    "circleci-mcp-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@circleci/mcp-server-circleci@latest"],
+      "env": {
+        "CIRCLECI_TOKEN": "${input:circleci-token}"
+      }
+    }
+  }
+}
+```
+
+Create a Personal API token at `https://app.circleci.com/settings/user/tokens` and supply it via `CIRCLECI_TOKEN`. Optionally set `CIRCLECI_BASE_URL` (defaults to `https://circleci.com`) for self-hosted/server installations.
+
+## Use Cases
+
+- "Why did my last build fail?" — pull and summarize build failure logs without opening the CircleCI UI.
+- Surface and triage flaky tests across recent runs so they can be quarantined or fixed.
+- Check the latest pipeline/workflow status for a branch from inside your editor.
+- Validate a `.circleci/config.yml` before pushing, and get config recommendations.
+- Inspect job test results and list/download build artifacts.
+- Report on CircleCI usage and underused resource classes for cost/capacity tuning.
+- Trigger, re-run, or roll back pipelines via natural language (with human approval on each action).
+
+## Safety and Privacy
+
+`CIRCLECI_TOKEN` is a personal API token that grants the connected LLM access to your CircleCI projects, logs, test results, artifacts, and usage data — store it as a secret and scope it to what you need. Build logs, test output, and artifacts retrieved by the tools are forwarded to your model provider, so avoid pointing it at pipelines that expose secrets or sensitive data.
+
+Several tools perform write/execution actions: `run_pipeline`, `rerun_workflow`, and `run_rollback_pipeline` can trigger pipelines, re-run workflows, and roll back deployed component versions. Review and approve these tool calls deliberately. In remote HTTP/SSE mode the server binds a network port (default 8000) — set `REQUIRE_REQUEST_TOKEN=true` so it rejects unauthenticated requests, and don't expose it on untrusted networks. Telemetry is on by default; set `DISABLE_TELEMETRY=true` to opt out. Output size is bounded by `MAX_MCP_OUTPUT_LENGTH` (default 50000).
+
+## Duplicate Check
+
+No existing entry in the awesome-claude MCP directory matches this server. A search of the directory index (318 MCP entries) returned zero hits for "circleci," and `CircleCI-Public/mcp-server-circleci` is absent from the set of unique owner/repo keys. This is a net-new, official, actively maintained server (TypeScript, not archived, last pushed 2026-06-10), so it is not a duplicate.
