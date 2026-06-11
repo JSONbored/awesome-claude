@@ -897,7 +897,7 @@ downloadUrl: "https://github.com/example/project/archive/refs/heads/main.zip"
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 
-  it("treats distribution-only untrusted redirects as warnings when canonical evidence passes", async () => {
+  it("blocks distribution redirects to untrusted hosts even when canonical evidence passes", async () => {
     const report = await checkSubmittedSourceEvidence(
       `---
 title: Distribution Redirect Warning Fixture
@@ -916,17 +916,34 @@ downloadUrl: "https://github.com/example/project/archive/refs/heads/main.zip"
         return new Response(null, { status: 200 });
       }),
     );
+    const decision = sourceEvidenceCloseDecision(report);
 
-    expect(report.status).toBe("passed");
-    expect(report.warnings).toHaveLength(1);
-    expect(report.warnings[0]).toMatchObject({
-      field: "downloadUrl",
-      status: "hard_failure",
-      role: "distribution",
-      outcome: "source_host_not_checked",
-      blocking: false,
+    expect(report.status).toBe("failed");
+    expect(report.warnings).toHaveLength(0);
+    expect(report.urls).toContainEqual(
+      expect.objectContaining({
+        field: "downloadUrl",
+        status: "hard_failure",
+        role: "distribution",
+        outcome: "source_host_not_checked",
+        blocking: true,
+        finalUrl: "https://download.example/project.zip",
+      }),
+    );
+    expect(decision).toMatchObject({
+      verdict: "manual",
+      reasonCode: "source_hard_failure",
+      close: false,
+      evidence: [
+        expect.objectContaining({
+          field: "downloadUrl",
+          matchedUrl:
+            "https://github.com/example/project/archive/refs/heads/main.zip",
+          finalUrl: "https://download.example/project.zip",
+          outcome: "source_host_not_checked",
+        }),
+      ],
     });
-    expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 
   it("treats isolated auxiliary source fetch errors as warnings when canonical evidence passes", async () => {
@@ -1053,8 +1070,8 @@ documentationUrl: "https://github.com/example/redirect"
       field: "documentationUrl",
       status: "hard_failure",
       outcome: "source_host_not_checked",
+      finalUrl: "http://127.0.0.1/internal-secret",
     });
-    expect(report.urls[0]?.finalUrl).toBeUndefined();
   });
 
   it("caps deterministic source evidence fetches", async () => {
