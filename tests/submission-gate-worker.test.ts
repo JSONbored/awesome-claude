@@ -2652,7 +2652,7 @@ docsUrl: "https://developers.cloudflare.com/ai-gateway/get-started/"
     );
   });
 
-  it("treats same canonical project across different categories as related context", () => {
+  it("treats same canonical project across different categories as a strict duplicate", () => {
     const existingMcp = extractContentDuplicateSignals({
       filePath: "content/mcp/langchain-mcp-server.mdx",
       content: `---
@@ -2678,7 +2678,13 @@ repoUrl: "https://github.com/langchain-ai/langchain.git"
 
     expect(
       findStrictContentDuplicateMatch(candidateSkill, [existingMcp]),
-    ).toBeNull();
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining(
+          "same canonical source URL https://github.com/langchain-ai/langchain across skills/mcp",
+        ),
+      ]),
+    });
     expect(findRelatedContentMatches(candidateSkill, [existingMcp])).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
