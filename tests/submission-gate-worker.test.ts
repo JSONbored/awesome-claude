@@ -343,7 +343,7 @@ describe("Cloudflare submission gate helpers", () => {
     });
   });
 
-  it("treats neutral Superagent scans as failed validation for manual review", async () => {
+  it("treats neutral Superagent scans as a non-blocking validation pass", async () => {
     const fetchMock = vi.fn(async () =>
       Response.json({
         check_runs: [
@@ -372,12 +372,12 @@ describe("Cloudflare submission gate helpers", () => {
         requiredChecks: ["validate-content", "Superagent Security Scan"],
       }),
     ).resolves.toMatchObject({
-      state: "failed",
+      state: "passed",
       checks: [
         { name: "validate-content", status: "passed" },
         {
           name: "Superagent Security Scan",
-          status: "failed",
+          status: "passed",
           details: "concluded neutral",
         },
       ],
@@ -414,6 +414,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(readConstantsSource()).toContain('"edited"');
     expect(source).toContain('status: "validation_pending"');
     expect(source).toContain('nextReviewForStatus("validation_pending")');
+    expect(source).toContain("VALIDATION_PENDING_STALE_SECONDS");
+    expect(source).toContain("VALIDATION_PENDING_STALE_ATTEMPTS");
+    expect(source).toContain("staleValidationPendingDecision(");
+    expect(source).toContain('"public_validation_not_started"');
     expect(source).toContain("REVIEWING_STALE_SECONDS");
     expect(source).toContain("QUEUED_STALE_SECONDS");
     expect(source).toContain("PRIVATE_REVIEW_TIMEOUT_MS = 45_000");
@@ -853,6 +857,74 @@ packageUrl: "https://hub.docker.com/r/example/project"
       role: "distribution",
       blocking: false,
       httpStatus: 429,
+    });
+    expect(sourceEvidenceCloseDecision(report)).toBeNull();
+  });
+
+  it("follows GitHub archive redirects to codeload for download evidence", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: GitHub Archive Fixture
+repoUrl: "https://github.com/example/project"
+downloadUrl: "https://github.com/example/project/archive/refs/heads/main.zip"
+---
+`,
+      vi.fn<typeof fetch>().mockImplementation(async (url) => {
+        const href = String(url);
+        if (href.includes("/archive/refs/heads/main.zip")) {
+          return new Response(null, {
+            status: 302,
+            headers: {
+              location:
+                "https://codeload.github.com/example/project/zip/refs/heads/main",
+            },
+          });
+        }
+        return new Response(null, { status: 200 });
+      }),
+    );
+
+    expect(report.status).toBe("passed");
+    expect(report.urls).toContainEqual(
+      expect.objectContaining({
+        field: "downloadUrl",
+        status: "passed",
+        role: "distribution",
+        finalUrl:
+          "https://codeload.github.com/example/project/zip/refs/heads/main",
+      }),
+    );
+    expect(sourceEvidenceCloseDecision(report)).toBeNull();
+  });
+
+  it("treats distribution-only untrusted redirects as warnings when canonical evidence passes", async () => {
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Distribution Redirect Warning Fixture
+repoUrl: "https://github.com/example/project"
+downloadUrl: "https://github.com/example/project/archive/refs/heads/main.zip"
+---
+`,
+      vi.fn<typeof fetch>().mockImplementation(async (url) => {
+        const href = String(url);
+        if (href.includes("/archive/refs/heads/main.zip")) {
+          return new Response(null, {
+            status: 302,
+            headers: { location: "https://download.example/project.zip" },
+          });
+        }
+        return new Response(null, { status: 200 });
+      }),
+    );
+
+    expect(report.status).toBe("passed");
+    expect(report.warnings).toHaveLength(1);
+    expect(report.warnings[0]).toMatchObject({
+      field: "downloadUrl",
+      status: "hard_failure",
+      role: "distribution",
+      outcome: "source_host_not_checked",
+      blocking: false,
     });
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
@@ -2095,7 +2167,12 @@ ${urls}
       "COALESCE(last_error, '') != 'GitHub terminal state verified.'",
     );
     expect(storageSource).toContain("terminal_at IS NOT NULL");
-    expect(storageSource).toContain("status = 'closed'");
+    expect(storageSource).toContain(
+      "status IN ('merged', 'closed', 'manual', 'ignored')",
+    );
+    expect(storageSource).toContain(
+      "CASE WHEN terminal_at IS NULL THEN 0 ELSE 1 END ASC",
+    );
     expect(storageSource).toContain("listTerminalPrStatesForReconciliation");
     expect(storageSource).toContain(
       "WHERE status IN ('merged', 'closed', 'manual', 'ignored')",

@@ -1,0 +1,352 @@
+---
+title: Auditing MCP Client Configuration Before Team Rollout
+slug: auditing-mcp-client-configuration-before-team-rollout
+category: guides
+description: >-
+  Source-backed checklist for reviewing Claude Code MCP client configuration
+  before a team rollout, covering scopes, transports, commands, secrets,
+  allowlists, denylists, approvals, and rollback.
+cardDescription: Audit MCP client configuration before sharing it with a team.
+seoTitle: Auditing MCP Client Configuration Before Team Rollout
+seoDescription: >-
+  Review Claude Code MCP client configuration before team rollout: check local,
+  project, user, plugin, and managed settings, then verify commands, URLs,
+  secrets, allowlists, approvals, and rollback.
+author: YB0y
+authorProfileUrl: "https://github.com/YB0y"
+submittedBy: YB0y
+submittedByUrl: "https://github.com/YB0y"
+dateAdded: "2026-06-10"
+submittedAt: "2026-06-10"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+usageSnippet: >-
+  Use this guide before committing `.mcp.json`, deploying managed-mcp.json, or
+  asking a team to connect shared MCP servers in Claude Code.
+prerequisites:
+  - "A draft `.mcp.json`, `~/.claude.json` entry, plugin-provided MCP server, claude.ai connector plan, or managed-mcp.json deployment to review."
+  - "The server documentation, package or repository source, expected transport, command or URL, environment variables, headers, OAuth behavior, and tool list."
+  - "A test machine or disposable Claude Code profile where the configuration can be loaded with non-production data."
+  - "A named owner who can approve the rollout, publish the final configuration, and revoke credentials or block servers if the rollout fails."
+safetyNotes:
+  - "Local stdio MCP servers execute commands with the user's privileges, so review the exact command, arguments, package runner, file paths, and network behavior before sharing a config."
+  - "Remote MCP servers can expose model-controlled tools for production systems; require least-privilege scopes, explicit approval for write tools, and a rollback path before team rollout."
+  - "Do not rely on server names alone for enforcement because names are user-assigned labels; use command or URL allowlist entries when policy must control what actually runs."
+privacyNotes:
+  - "MCP client configuration can reveal server URLs, internal hostnames, command paths, environment-variable names, header names, OAuth client IDs, and tool availability."
+  - "Do not store API keys, bearer tokens, client secrets, tenant IDs, or personal credentials in shared `.mcp.json`, managed-mcp.json, PR bodies, issue comments, logs, or screenshots."
+  - "Tool arguments, tool results, resources, prompts, logs, traces, and OAuth metadata can expose private repositories, tickets, databases, user identities, and workspace data."
+sourceUrls:
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/mcp-quickstart"
+  - "https://code.claude.com/docs/en/managed-mcp"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/server/tools"
+  - "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - mcp
+  - claude-code
+  - configuration
+  - team-rollout
+  - security
+  - governance
+keywords:
+  - audit MCP client configuration
+  - Claude Code MCP team rollout
+  - MCP allowlist review
+  - MCP client security checklist
+  - managed MCP configuration
+readingTime: 9
+difficultyScore: 66
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Treat MCP client configuration as an execution and data-access boundary, not a
+convenience file. Before a team rollout, inventory every configured server,
+confirm where the entry is stored, inspect exact commands or URLs, separate
+secrets from shared files, test with non-production data, and decide whether
+the organization needs `managed-mcp.json`, `allowedMcpServers`, or
+`deniedMcpServers` before users connect the servers.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Configuration draft", "description": "The `.mcp.json`, local/user entry, plugin MCP entry, claude.ai connector plan, or managed-mcp.json file is available for review"}
+- [ ] {"task": "Server evidence", "description": "Docs, source, package name, remote URL, transport, command, env vars, headers, OAuth behavior, and declared tools are known"}
+- [ ] {"task": "Test profile", "description": "A reviewer can load the configuration outside production data and revoke any temporary credentials afterward"}
+- [ ] {"task": "Policy owner", "description": "Someone owns allowlist, denylist, rollout messaging, rollback, and post-rollout monitoring"}
+
+## What You Are Auditing
+
+### Storage scope
+
+Claude Code can load MCP servers from local, project, user, plugin, claude.ai,
+and managed configuration sources. The scope decides who sees the server and
+which entry wins when multiple sources define the same server.
+
+- **Local scope:** stored in `~/.claude.json` for the current project only.
+  Use it for personal experiments and credentials that should not be shared.
+- **Project scope:** stored in `.mcp.json` in the project root. Treat this as
+  team-visible because it is designed to be committed and reviewed.
+- **User scope:** stored in `~/.claude.json` for all of one user's projects.
+  It is private to that user but can still affect every repository they open.
+- **Plugin scope:** bundled by a Claude Code plugin. Review the plugin
+  manifest and plugin-provided `.mcp.json` with the same care as manual config.
+- **claude.ai connector scope:** available when the user's Claude Code
+  authentication method loads Claude.ai connectors.
+- **Managed scope:** deployed as `managed-mcp.json` or enforced with managed
+  `allowedMcpServers` and `deniedMcpServers` settings.
+
+### Capability surface
+
+MCP tools are model-callable functions. A client may discover tools and the
+model may invoke them based on the prompt and context, so the review must cover
+tool names, descriptions, input schemas, side effects, and human-approval
+expectations. For team use, classify every server by the most sensitive action
+it can perform, not by the friendly name in the config.
+
+## Audit Workflow
+
+1. **List every source that can load MCP servers.** Run `claude mcp list`,
+   inspect the draft `.mcp.json`, check user-level entries, note plugin-provided
+   servers, and confirm whether claude.ai connectors or managed configuration
+   apply on the target machines.
+
+2. **Record the effective server identity.** For each server, capture the
+   configured name, transport, command or URL, package name, source repository,
+   documentation URL, expected owner, and whether it is local, project, user,
+   plugin, connector, or managed.
+
+3. **Review transport choice.** Prefer remote HTTP for hosted cloud services
+   that support it. Treat SSE as legacy when an HTTP option exists. Use stdio
+   only when the server needs local filesystem, local process, or private
+   network access, and then review the command as local code execution.
+
+4. **Inspect exact commands and arguments.** For stdio servers, read the full
+   `command`, `args`, package runner flags, absolute paths, shell wrappers,
+   working-directory assumptions, update behavior, and any network or file
+   access implied by the server. Avoid one-liners that hide extra scripts.
+
+5. **Check remote URLs and redirects.** For HTTP, SSE, or WebSocket entries,
+   verify the hostname, scheme, path, tenant variable, and redirect behavior.
+   Do not approve internal-only endpoints or staging URLs for broad rollout
+   unless that is the explicit deployment target.
+
+6. **Separate secrets from shared configuration.** Shared project files and
+   managed files should contain placeholders, environment-variable references,
+   or per-user OAuth flows, not real bearer tokens, API keys, client secrets, or
+   tenant-specific credentials.
+
+7. **Map tools to permissions.** Ask what each tool can read, write, delete,
+   trigger, deploy, message, or export. Require human approval and narrower
+   credentials for tools with side effects.
+
+8. **Decide enforcement before rollout.** If the team may only use approved
+   servers, deploy URL and command allowlists. If the team needs a fixed server
+   set, deploy `managed-mcp.json`. If one server is known-bad, add a denylist
+   entry and communicate the expected user-facing result.
+
+9. **Load in a test profile.** Start Claude Code with non-production
+   credentials, run `/mcp`, check connection status, authenticate remote
+   servers, call low-risk read tools, and confirm write tools still require the
+   expected human review path.
+
+10. **Document rollback.** Record how to remove the entry, revoke OAuth grants,
+    rotate API keys, clear local approval choices, block the server through
+    policy, and tell users what changed.
+
+## Configuration Checklist
+
+| Check | What to inspect | Rollout decision |
+| --- | --- | --- |
+| Scope | local, project, user, plugin, claude.ai, or managed source | Share only project or managed entries that were reviewed for all users |
+| Precedence | duplicate names, duplicate endpoints, plugin overlap | Confirm the intended entry is the one Claude Code loads |
+| Transport | stdio, HTTP, SSE, or WebSocket | Prefer the least-privilege transport that fits the server |
+| Stdio command | executable, args, package runner, paths, startup behavior | Approve only commands that are exact, explainable, and pinned where practical |
+| Remote URL | scheme, host, path, tenant variables, redirects | Approve only expected endpoints and avoid broad wildcard trust |
+| Secrets | env, headers, OAuth, client IDs, client secrets | Use per-user credentials or environment expansion; never commit secrets |
+| Tools | names, descriptions, inputs, side effects, result size | Require approval for write, delete, deploy, send, and export tools |
+| Data exposure | resources, prompts, logs, traces, caches, tool output | Match rollout to data classification and retention expectations |
+| Policy | allowlist, denylist, managed-mcp.json, plugin-only mode | Enforce with URL or command matches when server identity matters |
+| Rollback | remove, revoke, rotate, block, communicate | Do not launch without a tested rollback owner and path |
+
+## Safer Config Patterns
+
+### Project configuration with placeholders
+
+Use project-scoped `.mcp.json` only for values that are safe to share. Keep
+machine-specific paths and credentials behind environment variables.
+
+```json
+{
+  "mcpServers": {
+    "internal-docs": {
+      "type": "http",
+      "url": "${INTERNAL_DOCS_MCP_URL}/mcp",
+      "headers": {
+        "Authorization": "Bearer ${INTERNAL_DOCS_MCP_TOKEN}"
+      },
+      "timeout": 60000
+    }
+  }
+}
+```
+
+Before committing this pattern, confirm every required variable is documented
+privately for the team and that missing variables fail closed rather than
+falling back to a public or production endpoint by accident.
+
+### Stdio configuration with an explicit command
+
+For local servers, make the command easy to inspect. Avoid shell indirection
+unless the wrapper is reviewed and pinned in the repository.
+
+```json
+{
+  "mcpServers": {
+    "repo-index": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["./tools/mcp/repo-index-server.js"],
+      "env": {
+        "REPO_INDEX_ROOT": "${CLAUDE_PROJECT_DIR:-.}"
+      }
+    }
+  }
+}
+```
+
+Review whether the server can read outside the repository, follow symlinks,
+write indexes, open network connections, or log file contents.
+
+### Managed allowlist with URL and command identity
+
+When policy must restrict what can run, prefer URL and command matches over
+server names. A name is only the user's label; the URL or command is closer to
+the actual server identity.
+
+```json
+{
+  "allowManagedMcpServersOnly": true,
+  "allowedMcpServers": [
+    { "serverUrl": "https://mcp.example.com/*" },
+    { "serverCommand": ["node", "./tools/mcp/repo-index-server.js"] }
+  ],
+  "deniedMcpServers": [
+    { "serverUrl": "https://*.staging.example.com/*" }
+  ]
+}
+```
+
+Test the policy on a managed machine with `claude mcp list` and with a blocked
+`claude mcp add` command before announcing the rollout.
+
+## Approval Gates
+
+### Block rollout
+
+Block the rollout when any of these are true:
+
+- The command runs an unreviewed shell script, floating package, or installer.
+- A shared file contains real secrets or user-specific tokens.
+- The server can mutate production systems without scoped credentials or human
+  approval.
+- The provider cannot explain logs, retention, or data handling for sensitive
+  prompts and tool results.
+- Policy depends on `serverName` allowlist entries even though users can choose
+  the name.
+- The team cannot revoke credentials or disable the server quickly.
+
+### Roll out with limits
+
+Use a limited rollout when the server is useful but still has blast-radius risk:
+
+- Start with local or user scope instead of project scope.
+- Use read-only credentials and non-production data.
+- Disable `alwaysLoad` unless the tools must be available on every turn.
+- Restrict the server through an allowlist before broad team use.
+- Ask users to authenticate individually through OAuth rather than sharing one
+  service account.
+
+### Approve team rollout
+
+Approve only when the review can answer:
+
+- Who maintains the server and where the code or service is documented?
+- Which users, repositories, accounts, and data classes can it reach?
+- Which tools can write, delete, send, deploy, or export data?
+- Where are credentials stored and how are they revoked?
+- Which policy prevents unreviewed variants from loading?
+- How will support recognize a blocked server, failed auth flow, or rollback?
+
+## Reviewer Output
+
+Write the review in a format that another maintainer can audit later:
+
+```md
+## MCP configuration audit
+
+- Server name:
+- Source scope:
+- Transport:
+- Command or URL:
+- Source and docs:
+- Tools reviewed:
+- Credentials and storage:
+- Data classes exposed:
+- Side-effect tools:
+- Policy controls:
+- Test result:
+- Rollback path:
+- Decision:
+```
+
+Keep tokens, callback URLs with sensitive state, tenant IDs, private hostnames,
+and logs out of public PRs and issues. Use redacted placeholders when evidence
+needs to be shared.
+
+## Troubleshooting
+
+### A project server is pending approval
+
+Project-scoped `.mcp.json` entries require user approval before Claude Code uses
+them. Ask reviewers to start Claude Code interactively, review the pending
+server, and approve only after checking the command or URL.
+
+### The wrong server loads
+
+Check duplicate names and duplicate endpoints across local, project, user,
+plugin, and claude.ai connector sources. Claude Code uses a precedence order,
+and fields are not merged across scopes, so the loaded entry may not be the one
+you edited.
+
+### A remote server fails authentication
+
+Use `/mcp` to inspect auth state. If a static `Authorization` header is present
+and the server rejects it, remove the header when the intended flow is OAuth.
+For managed or project rollout, prefer per-user auth over shared tokens.
+
+### A managed policy blocks a server silently
+
+Some policy changes make an existing server disappear from `/mcp` or
+`claude mcp list` without a detailed local explanation. Tell users which
+server was blocked, why, and what replacement command or connector to use.
+
+### Tool output is too large
+
+Large tool results consume context and can expose more data than intended.
+Tune result size at the server, use narrower queries, and avoid raising output
+limits globally unless the rollout owner accepts the context and privacy cost.
+
+## References
+
+- Claude Code MCP reference: https://code.claude.com/docs/en/mcp
+- Claude Code MCP quickstart: https://code.claude.com/docs/en/mcp-quickstart
+- Managed MCP configuration: https://code.claude.com/docs/en/managed-mcp
+- MCP tools specification: https://modelcontextprotocol.io/specification/2025-06-18/server/tools
+- MCP security best practices: https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices
+- Google helpful content guidance: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
