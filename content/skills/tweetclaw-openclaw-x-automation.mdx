@@ -1,0 +1,133 @@
+---
+title: TweetClaw OpenClaw X Automation Skill
+slug: tweetclaw-openclaw-x-automation
+category: skills
+description: "Safety-reviewed Agent Skill for using TweetClaw, the OpenClaw plugin for X and Twitter search, posting, follower export, media workflows, monitors, webhooks, and giveaway draws through Xquik."
+cardDescription: "Agent Skill for TweetClaw setup, approval gates, credential boundaries, and X/Twitter automation workflows."
+seoTitle: TweetClaw OpenClaw X Automation Skill
+seoDescription: "Install the TweetClaw Agent Skill for OpenClaw X and Twitter automation, including tweet search, reply search, posting, follower export, media workflows, monitors, webhooks, and giveaway draws."
+author: Xquik-dev
+authorProfileUrl: "https://github.com/Xquik-dev"
+submittedBy: kriptoburak
+submittedByUrl: "https://github.com/kriptoburak"
+dateAdded: "2026-06-09"
+repoUrl: "https://github.com/Xquik-dev/tweetclaw"
+documentationUrl: "https://github.com/Xquik-dev/tweetclaw#readme"
+packageUrl: "https://registry.npmjs.org/%40xquik%2Ftweetclaw/latest"
+downloadUrl: "https://github.com/Xquik-dev/tweetclaw/archive/refs/heads/master.zip"
+installable: true
+installCommand: "npx skills add xquik-dev/tweetclaw"
+usageSnippet: "Use the TweetClaw skill before installing or operating the @xquik/tweetclaw OpenClaw plugin."
+copySnippet: |-
+  # Trigger
+  "Use the TweetClaw skill to set up a safe X/Twitter automation workflow."
+
+  # Skill install
+  npx skills add xquik-dev/tweetclaw
+
+  # OpenClaw plugin install
+  openclaw plugins install npm:@xquik/tweetclaw
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-09"
+retrievalSources:
+  - "https://github.com/Xquik-dev/tweetclaw"
+  - "https://raw.githubusercontent.com/Xquik-dev/tweetclaw/master/skills/tweetclaw/SKILL.md"
+  - "https://registry.npmjs.org/%40xquik%2Ftweetclaw/latest"
+testedPlatforms:
+  - OpenClaw
+  - Claude
+  - Codex
+  - Cursor
+prerequisites:
+  - OpenClaw 2026.6.1 or newer for the current plugin metadata
+  - Xquik account and API key before using account-backed reads, writes, monitors, webhooks, media, or extraction workflows
+  - Agent client with Agent Skills support for `npx skills add`
+  - Explicit user approval before any visible, private, paid, recurring, or account-changing action
+safetyNotes:
+  - TweetClaw can perform public X account actions after OpenClaw tool opt-in and approval; review exact posts, replies, DMs, follows, media, monitors, webhooks, and draws before allowing a call.
+  - Keep `tweetclaw` as an optional OpenClaw tool and start with read-only `explore` until the user confirms the workflow.
+  - Do not use TweetClaw for spam, deceptive engagement, harassment, credential collection, impersonation, or bulk unsolicited outreach.
+privacyNotes:
+  - Xquik API keys and MPP signing keys must stay in OpenClaw plugin config or environment variables, never in prompts, shared logs, PRs, or committed files.
+  - Tweet searches, timelines, DMs, bookmarks, follower exports, media metadata, monitors, webhook details, and account usage can expose private or account-scoped data.
+  - Use the Xquik dashboard and public docs for current billing, account, and data-handling details.
+tags:
+  - tweetclaw
+  - openclaw
+  - x
+  - twitter
+  - tweet-search
+  - social-media
+  - automation
+  - agent-skills
+keywords:
+  - tweetclaw skill
+  - openclaw twitter plugin
+  - x automation agent skill
+  - search tweets
+  - search tweet replies
+  - post tweets
+  - follower export
+  - media workflows
+  - giveaway draws
+readingTime: 5
+difficultyScore: 68
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+TweetClaw is the Agent Skill bundled with the `@xquik/tweetclaw` OpenClaw plugin. It gives agents a safety-first operating guide for X/Twitter workflows through Xquik: tweet search, reply search, user lookup, follower export, media upload and download, direct messages, monitors, webhooks, giveaway draws, and approval-gated posting.
+
+Use the skill when an agent needs to install TweetClaw, decide which credential mode to use, verify OpenClaw runtime registration, or prepare a workflow that may touch public accounts, private account data, recurring monitors, or paid API calls.
+
+## Install
+
+Install the reusable Agent Skill:
+
+```bash
+npx skills add xquik-dev/tweetclaw
+```
+
+Install the OpenClaw plugin runtime from npm:
+
+```bash
+openclaw plugins install npm:@xquik/tweetclaw
+```
+
+Verify the runtime before live work:
+
+```bash
+openclaw plugins inspect tweetclaw --runtime --json
+openclaw skills info tweetclaw
+```
+
+The runtime should show the read-only `explore` catalog tool, optional `tweetclaw` API tool, approval hook, and bundled status/trends command.
+
+## Workflow Scope
+
+- Use `explore` first to inspect available Xquik endpoints without credentials.
+- Configure an Xquik API key for account-backed reads, writes, media, monitors, webhooks, and extraction workflows.
+- Configure MPP signing only for read-only pay-per-use workflows.
+- Add `explore` and `tweetclaw` to OpenClaw tool allow settings only when the user wants agent-driven X/Twitter workflows.
+- Review exact payloads before posts, replies, DMs, follows, profile changes, media uploads, webhooks, monitors, draws, or extraction jobs.
+
+## Safety Checklist
+
+1. Confirm the user owns or is authorized to access the X account.
+2. Keep API keys and signing keys out of chat, logs, screenshots, issues, and commits.
+3. Start with read-only lookup before allowing writes or recurring workflows.
+4. Show final text and media before publishing.
+5. Re-confirm when scope, target account, limits, or recurring behavior changes.
+
+## Retrieval Sources
+
+- https://github.com/Xquik-dev/tweetclaw
+- https://raw.githubusercontent.com/Xquik-dev/tweetclaw/master/skills/tweetclaw/SKILL.md
+- https://registry.npmjs.org/%40xquik%2Ftweetclaw/latest
