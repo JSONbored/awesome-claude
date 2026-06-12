@@ -1,0 +1,212 @@
+---
+title: Pinecone Developer MCP Server
+slug: pinecone-developer-mcp-server
+category: mcp
+description: >-
+  Official Pinecone Developer MCP server that connects Claude and other MCP
+  clients to Pinecone projects and documentation for index management, record
+  upserts, semantic search, cascading multi-index search, reranking, and
+  documentation lookup over integrated-inference indexes.
+cardDescription: >-
+  Connect Claude to Pinecone projects and docs to list and describe indexes,
+  create integrated-inference indexes, upsert and search records, run cascading
+  search, and rerank results.
+seoTitle: Pinecone Developer MCP Server for Claude
+seoDescription: >-
+  Configure the official Pinecone Developer MCP server with Claude Desktop,
+  Cursor, and other MCP clients to manage Pinecone indexes, upsert and search
+  records with integrated inference, run cascading search, rerank results, and
+  search Pinecone documentation.
+author: Pinecone
+authorProfileUrl: "https://github.com/pinecone-io"
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-11"
+submittedAt: "2026-06-11"
+brandName: Pinecone
+brandDomain: pinecone.io
+websiteUrl: "https://www.pinecone.io"
+repoUrl: "https://github.com/pinecone-io/pinecone-mcp"
+documentationUrl: "https://docs.pinecone.io/guides/operations/mcp-server"
+packageUrl: "https://registry.npmjs.org/@pinecone-database/mcp"
+installable: true
+installCommand: "npx -y @pinecone-database/mcp"
+usageSnippet: "Generate a Pinecone API key in the console, then run `npx -y @pinecone-database/mcp` from an MCP client with PINECONE_API_KEY set in the server environment."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "pinecone": {
+        "command": "npx",
+        "args": ["-y", "@pinecone-database/mcp"],
+        "env": {
+          "PINECONE_API_KEY": "{pinecone-api-key}"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "pinecone": {
+        "command": "npx",
+        "args": ["-y", "@pinecone-database/mcp"],
+        "env": {
+          "PINECONE_API_KEY": "{pinecone-api-key}"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 18 or newer with `npx` available.
+  - Pinecone account and API key generated from the Pinecone console at app.pinecone.io.
+  - MCP client that supports stdio server configuration, such as Claude Desktop or Cursor.
+  - Awareness that index management and record tools require integrated-inference indexes.
+safetyNotes:
+  - The server can create indexes and upsert records, so an agent with a write-capable API key can change live Pinecone project state.
+  - Run the npm package `@pinecone-database/mcp` through `npx`, which downloads and executes the published package on each launch; pin to a trusted version if reproducibility matters.
+  - Scope the Pinecone API key to the intended project and use read-only or least-privilege keys when index creation and writes are not needed.
+  - Require human review before `create-index-for-model` and `upsert-records` runs that mutate production indexes.
+privacyNotes:
+  - The `PINECONE_API_KEY` is read from the MCP client environment and grants access to the associated Pinecone project; keep it out of prompts, notes, and committed files.
+  - Index names, configurations, namespaces, statistics, record contents, and search queries can be exposed to the MCP client and model provider.
+  - Records and search text may contain embedded documents, customer data, or proprietary content, so review what is sent into indexes and returned by searches.
+  - Documentation search and tool calls reach Pinecone endpoints such as api.pinecone.io, so network access and request metadata leave the local machine.
+disclosure: >-
+  Apache-2.0 open-source MCP server published by Pinecone as the official
+  Pinecone Developer MCP Server. Pinecone itself is a commercial managed vector
+  database with a free tier; this listing covers the open-source MCP connector.
+sourceUrls:
+  - "https://raw.githubusercontent.com/pinecone-io/pinecone-mcp/main/README.md"
+  - "https://registry.npmjs.org/@pinecone-database/mcp"
+  - "https://docs.pinecone.io/guides/operations/mcp-server"
+tags:
+  - vector-database
+  - rag
+  - semantic-search
+  - embeddings
+  - retrieval
+keywords:
+  - Pinecone MCP
+  - Pinecone Developer MCP Server
+  - "@pinecone-database/mcp"
+  - Pinecone vector database MCP
+  - vector search MCP
+  - RAG MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Pinecone Developer MCP Server is the official Model Context Protocol server from
+Pinecone. It lets Claude and other MCP clients connect to Pinecone projects and
+documentation so an assistant can inspect indexes, manage data, run searches,
+and look up product docs without leaving the conversation.
+
+The server is published to npm as `@pinecone-database/mcp` and runs over stdio.
+It targets Pinecone indexes that use integrated inference, where embedding and
+reranking happen inside Pinecone, so the assistant works with records and text
+rather than raw vectors.
+
+## Source Review
+
+- https://github.com/pinecone-io/pinecone-mcp
+- https://raw.githubusercontent.com/pinecone-io/pinecone-mcp/main/README.md
+- https://registry.npmjs.org/@pinecone-database/mcp
+- https://docs.pinecone.io/guides/operations/mcp-server
+
+These sources were reviewed on **2026-06-11**. Prefer the live repository,
+README, npm package metadata, and official Pinecone documentation for current
+setup steps, supported tools, and any changes to index or inference behavior.
+
+## Features
+
+- Official Pinecone MCP server distributed as the `@pinecone-database/mcp` npm
+  package with a `pinecone-mcp` binary.
+- Stdio transport launched through `npx -y @pinecone-database/mcp`.
+- `search-docs` tool for searching official Pinecone documentation, which works
+  even without an API key.
+- `list-indexes` and `describe-index` tools for enumerating indexes and reading
+  their configuration.
+- `describe-index-stats` tool for record counts, dimensions, and namespace
+  information.
+- `create-index-for-model` tool for creating an index backed by an integrated
+  inference model.
+- `upsert-records` tool for inserting or updating records using integrated
+  inference.
+- `search-records` tool for querying records with filtering and reranking
+  options.
+- `cascading-search` tool for searching across multiple indexes with result
+  deduplication.
+- `rerank-documents` tool for reranking records with a specialized model.
+
+## Installation
+
+Create a Pinecone API key from the console at app.pinecone.io, then configure an
+stdio MCP client to launch the server with the key in its environment:
+
+```json
+{
+  "mcpServers": {
+    "pinecone": {
+      "command": "npx",
+      "args": ["-y", "@pinecone-database/mcp"],
+      "env": {
+        "PINECONE_API_KEY": "{pinecone-api-key}"
+      }
+    }
+  }
+}
+```
+
+Without an API key the documentation search tool still works, but index
+management and record tools require a valid key for the target project. Keep the
+key in MCP client environment configuration rather than in prompts or committed
+files.
+
+## Use Cases
+
+- Ask Claude to list the indexes in a Pinecone project and describe how each one
+  is configured.
+- Check record counts, dimensions, and namespaces with index statistics before
+  running a query.
+- Create an integrated-inference index for a new retrieval workflow.
+- Upsert documents or records and immediately search them with integrated
+  inference.
+- Run a cascading search across several indexes and let Pinecone deduplicate the
+  results.
+- Rerank candidate records to improve the ordering of retrieval results for a
+  RAG pipeline.
+- Look up Pinecone documentation from inside the assistant while building or
+  debugging an integration.
+
+## Limitations
+
+Only Pinecone indexes with integrated inference are supported. Assistants,
+indexes without integrated inference, standalone embeddings, and direct vector
+search are out of scope for this MCP server, so workflows that depend on those
+features need the regular Pinecone SDKs or APIs.
+
+## Safety and Privacy
+
+Treat the configured API key as project access. The server can create indexes
+and upsert records, so use a least-privilege or read-only key when writes are
+not needed and require human review before any tool call that mutates a
+production index. Because the package runs through `npx`, it downloads and
+executes the published version on launch; pin a known version when
+reproducibility matters.
+
+Index names, configurations, statistics, record contents, and search queries
+can flow to the MCP client and model provider, and records may contain customer
+or proprietary data. Keep the `PINECONE_API_KEY` out of prompts and version
+control, and be deliberate about what data is upserted into or returned from
+Pinecone indexes.
+
+## Duplicate Check
+
+No `pinecone-io/pinecone-mcp`, `@pinecone-database/mcp`, Pinecone MCP server, or
+`pinecone.io` MCP entry was found in `content/mcp` or `README.md`. The only
+existing Pinecone reference is an incidental mention in a setup command, not a
+directory entry for this server.
