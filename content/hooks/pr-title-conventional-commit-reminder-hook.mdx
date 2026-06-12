@@ -78,17 +78,25 @@ scriptBody: |-
     printf '%s\n' "$1" | grep -Eq "$CONVENTIONAL_RE"
   }
 
-  finish_mismatch() {
-    label="$1"
-    value="$2"
-    extra="${3:-}"
+  sanitize_for_terminal() {
+    # PR titles, branch names, and commit subjects can come from untrusted
+    # repositories. Strip C0 and DEL control bytes before printing them so
+    # terminal escape sequences (for example OSC 52) are not emitted raw.
+    printf '%s' "$1" | LC_ALL=C tr -d '\000-\037\177'
+  }
 
-    echo "PR title reminder: $label does not look like a Conventional Commits title." >&2
-    echo "  Found: $value" >&2
-    echo "  Expected: type(scope): summary, for example content(hooks): add reminder hook" >&2
-    echo "  Allowed types: ${TYPE_PATTERN}" >&2
+  finish_mismatch() {
+    label=$(sanitize_for_terminal "$1")
+    value=$(sanitize_for_terminal "$2")
+    extra=$(sanitize_for_terminal "${3:-}")
+    type_pattern=$(sanitize_for_terminal "$TYPE_PATTERN")
+
+    printf 'PR title reminder: %s does not look like a Conventional Commits title.\n' "$label" >&2
+    printf '  Found: %s\n' "$value" >&2
+    printf '  Expected: type(scope): summary, for example content(hooks): add reminder hook\n' >&2
+    printf '  Allowed types: %s\n' "$type_pattern" >&2
     if [ -n "$extra" ]; then
-      echo "  $extra" >&2
+      printf '  %s\n' "$extra" >&2
     fi
 
     if [ "${PR_TITLE_REMINDER_STRICT:-0}" = "1" ]; then
@@ -167,7 +175,7 @@ safetyNotes:
   - "Set `PR_TITLE_REMINDER_OFFLINE=1` to skip GitHub CLI lookup and use the latest commit subject only."
 privacyNotes:
   - "The GitHub CLI lookup may send the repository remote, current branch, authentication context, and PR lookup request to GitHub."
-  - "Hook output can print the PR title, PR URL, branch name, latest commit subject, and allowed type pattern to local stderr."
+  - "Hook output can print sanitized PR title, PR URL, branch name, latest commit subject, and allowed type pattern values to local stderr."
   - "No files are uploaded by the script itself, but terminal logs, CI transcripts, screenshots, or support bundles can retain the printed metadata."
   - "Use commit-only offline mode for repositories where branch names, PR titles, or private remote metadata should not be queried through GitHub CLI."
 sourceUrls:
