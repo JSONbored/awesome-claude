@@ -79,6 +79,41 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
   by the token-protected D1 admin flow, which requires enriched reviewed listing
   content before active paid rows can publish.
 
+## Registry Endpoint Change Checklist
+
+Registry API PRs need a separate review path from content-only submission
+fallbacks. A clean CodeRabbit review or a skipped bot review is not enough for a
+new or changed registry endpoint. Review these surfaces together:
+
+- Route handler: add or update the thin handler under
+  `apps/web/src/routes/api/**` and keep request handling delegated through the
+  central API router.
+- Contract: add or update the matching route definition in
+  `apps/web/src/lib/api/contracts.ts`, including method, path, route id, tags,
+  response schema, error responses, origin-check setting, and rate-limit scope.
+- Runtime posture: state whether the endpoint is read-only or write-capable,
+  whether browser origin checks apply, which Cloudflare rate-limit binding is
+  used, and whether auth, webhook signatures, payload limits, or content-type
+  checks are required.
+- Source logic: keep registry aggregation or lookup behavior in the shared
+  content/server layer rather than duplicating registry traversal in the route
+  file.
+- Tests: update `tests/api-contracts.test.ts` and focused route/router tests so
+  route coverage, ids, paths, schemas, examples, and error envelopes stay
+  deterministic.
+- OpenAPI: run `pnpm validate:openapi` or document why it was not run. Generated
+  files such as `apps/web/public/openapi.{json,yaml}`,
+  `apps/web/src/data/openapi.ts`, and
+  `cloudflare/api-schema-heyclaude-openapi.yaml` must come from the generator;
+  do not hand-edit them.
+- Reproducibility: for maintainer/internal generation PRs, confirm generator
+  output is reproducible and generated diffs are limited to the endpoint change.
+  For external contributor PRs, prefer source route/contract/test changes and
+  leave generated artifact commits to maintainer automation.
+- Linked issue: link the issue being solved, or write an explicit
+  maintainer-lane no-issue rationale in the PR body so advisory bots do not
+  keep surfacing missing-link noise.
+
 ## Registry Trust Fields
 
 Registry feeds and entry detail payloads may include `trustSignals` derived from

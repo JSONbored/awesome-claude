@@ -57,9 +57,82 @@ installCommand: |-
     fi
   fi
 
-  # Remove unquoted shell comments before matching policy tokens. This keeps a
-  # comment such as `# sha256sum -c` from being treated as verification.
-  command_without_comments=$(printf '%s\n' "$command_text" | sed -E 's/(^|[[:space:]])#.*$/\1/')
+  strip_shell_comments() {
+    local text=$1
+    local out=""
+    local char=""
+    local in_single=0
+    local in_double=0
+    local escaped=0
+    local at_word_start=1
+    local i=0
+
+    while [ "$i" -lt "${#text}" ]; do
+      char=${text:i:1}
+
+      if [ "$escaped" -eq 1 ]; then
+        out+="$char"
+        at_word_start=0
+        escaped=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "\\" ] && [ "$in_single" -eq 0 ]; then
+        out+="$char"
+        at_word_start=0
+        escaped=1
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "'" ] && [ "$in_double" -eq 0 ]; then
+        if [ "$in_single" -eq 1 ]; then
+          in_single=0
+        else
+          in_single=1
+        fi
+        out+="$char"
+        at_word_start=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = '"' ] && [ "$in_single" -eq 0 ]; then
+        if [ "$in_double" -eq 1 ]; then
+          in_double=0
+        else
+          in_double=1
+        fi
+        out+="$char"
+        at_word_start=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "#" ] && [ "$in_single" -eq 0 ] && [ "$in_double" -eq 0 ] && [ "$at_word_start" -eq 1 ]; then
+        break
+      fi
+
+      out+="$char"
+
+      if [ "$in_single" -eq 0 ] && [ "$in_double" -eq 0 ]; then
+        case "$char" in
+          [[:space:]]|";"|"&"|"|"|"("|")") at_word_start=1 ;;
+          *) at_word_start=0 ;;
+        esac
+      fi
+
+      i=$((i + 1))
+    done
+
+    printf '%s\n' "$out"
+  }
+
+  # Remove only real shell comments before matching policy tokens. This keeps a
+  # comment such as `# sha256sum -c` from being treated as verification without
+  # truncating quoted or escaped # characters that are part of the command.
+  command_without_comments=$(strip_shell_comments "$command_text")
 
   downloader_a='curl'
   downloader_b='wget'
@@ -76,6 +149,41 @@ installCommand: |-
   checksum_re='(sha256sum[[:space:]][^;&|#]*(--check|-c)|shasum[[:space:]][^;&|#]*(-a[[:space:]]+256|--algorithm([=[:space:]]+)256)[^;&|#]*(--check|-c))'
   signature_re='(cosign[[:space:]]+verify-blob|gpg[[:space:]][^;&|#]*--verify|minisign[[:space:]][^;&|#]*-V)'
   verification_command_re="(${verify_re})[[:space:]]*(${checksum_re}|${signature_re})([[:space:]]|$)"
+
+  escape_ere() {
+    printf '%s' "$1" | sed -E 's/[][(){}.^$*+?|\]/\\&/g'
+  }
+
+  has_verification_for_download() {
+    urls=$(printf '%s\n' "$command_without_comments" | grep -Eo -- "$archive_re" || true)
+    [ -n "$urls" ] || return 1
+
+    while IFS= read -r url; do
+      [ -n "$url" ] || continue
+      clean_url=$(printf '%s\n' "$url" | sed -E 's/[?#].*$//')
+      artifact=${clean_url##*/}
+      [ -n "$artifact" ] || continue
+      artifact_re=$(escape_ere "$artifact")
+      after_url=$(printf '%s\n' "$command_without_comments" | awk -v u="$url" '
+        found { print }
+        !found {
+          index_at = index($0, u)
+          if (index_at > 0) {
+            print substr($0, index_at + length(u))
+            found = 1
+          }
+        }
+      ')
+      artifact_verification_re="(${artifact_re}[^;&#]*${verification_command_re}|${verification_command_re}[^;&#]*${artifact_re})"
+      if printf '%s\n' "$after_url" | grep -Eq -- "$artifact_verification_re"; then
+        return 0
+      fi
+    done <<EOF
+  $urls
+  EOF
+
+    return 1
+  }
 
   if ! printf '%s\n' "$command_without_comments" | grep -Eq -- "$downloader_re"; then
     exit 0
@@ -106,7 +214,7 @@ installCommand: |-
     exit 2
   fi
 
-  if printf '%s\n' "$command_without_comments" | grep -Eq -- "$verification_command_re"; then
+  if has_verification_for_download; then
     exit 0
   fi
 
@@ -190,9 +298,82 @@ scriptBody: |-
     fi
   fi
 
-  # Remove unquoted shell comments before matching policy tokens. This keeps a
-  # comment such as `# sha256sum -c` from being treated as verification.
-  command_without_comments=$(printf '%s\n' "$command_text" | sed -E 's/(^|[[:space:]])#.*$/\1/')
+  strip_shell_comments() {
+    local text=$1
+    local out=""
+    local char=""
+    local in_single=0
+    local in_double=0
+    local escaped=0
+    local at_word_start=1
+    local i=0
+
+    while [ "$i" -lt "${#text}" ]; do
+      char=${text:i:1}
+
+      if [ "$escaped" -eq 1 ]; then
+        out+="$char"
+        at_word_start=0
+        escaped=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "\\" ] && [ "$in_single" -eq 0 ]; then
+        out+="$char"
+        at_word_start=0
+        escaped=1
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "'" ] && [ "$in_double" -eq 0 ]; then
+        if [ "$in_single" -eq 1 ]; then
+          in_single=0
+        else
+          in_single=1
+        fi
+        out+="$char"
+        at_word_start=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = '"' ] && [ "$in_single" -eq 0 ]; then
+        if [ "$in_double" -eq 1 ]; then
+          in_double=0
+        else
+          in_double=1
+        fi
+        out+="$char"
+        at_word_start=0
+        i=$((i + 1))
+        continue
+      fi
+
+      if [ "$char" = "#" ] && [ "$in_single" -eq 0 ] && [ "$in_double" -eq 0 ] && [ "$at_word_start" -eq 1 ]; then
+        break
+      fi
+
+      out+="$char"
+
+      if [ "$in_single" -eq 0 ] && [ "$in_double" -eq 0 ]; then
+        case "$char" in
+          [[:space:]]|";"|"&"|"|"|"("|")") at_word_start=1 ;;
+          *) at_word_start=0 ;;
+        esac
+      fi
+
+      i=$((i + 1))
+    done
+
+    printf '%s\n' "$out"
+  }
+
+  # Remove only real shell comments before matching policy tokens. This keeps a
+  # comment such as `# sha256sum -c` from being treated as verification without
+  # truncating quoted or escaped # characters that are part of the command.
+  command_without_comments=$(strip_shell_comments "$command_text")
 
   downloader_a='curl'
   downloader_b='wget'
@@ -209,6 +390,41 @@ scriptBody: |-
   checksum_re='(sha256sum[[:space:]][^;&|#]*(--check|-c)|shasum[[:space:]][^;&|#]*(-a[[:space:]]+256|--algorithm([=[:space:]]+)256)[^;&|#]*(--check|-c))'
   signature_re='(cosign[[:space:]]+verify-blob|gpg[[:space:]][^;&|#]*--verify|minisign[[:space:]][^;&|#]*-V)'
   verification_command_re="(${verify_re})[[:space:]]*(${checksum_re}|${signature_re})([[:space:]]|$)"
+
+  escape_ere() {
+    printf '%s' "$1" | sed -E 's/[][(){}.^$*+?|\]/\\&/g'
+  }
+
+  has_verification_for_download() {
+    urls=$(printf '%s\n' "$command_without_comments" | grep -Eo -- "$archive_re" || true)
+    [ -n "$urls" ] || return 1
+
+    while IFS= read -r url; do
+      [ -n "$url" ] || continue
+      clean_url=$(printf '%s\n' "$url" | sed -E 's/[?#].*$//')
+      artifact=${clean_url##*/}
+      [ -n "$artifact" ] || continue
+      artifact_re=$(escape_ere "$artifact")
+      after_url=$(printf '%s\n' "$command_without_comments" | awk -v u="$url" '
+        found { print }
+        !found {
+          index_at = index($0, u)
+          if (index_at > 0) {
+            print substr($0, index_at + length(u))
+            found = 1
+          }
+        }
+      ')
+      artifact_verification_re="(${artifact_re}[^;&#]*${verification_command_re}|${verification_command_re}[^;&#]*${artifact_re})"
+      if printf '%s\n' "$after_url" | grep -Eq -- "$artifact_verification_re"; then
+        return 0
+      fi
+    done <<EOF
+  $urls
+  EOF
+
+    return 1
+  }
 
   if ! printf '%s\n' "$command_without_comments" | grep -Eq -- "$downloader_re"; then
     exit 0
@@ -239,7 +455,7 @@ scriptBody: |-
     exit 2
   fi
 
-  if printf '%s\n' "$command_without_comments" | grep -Eq -- "$verification_command_re"; then
+  if has_verification_for_download; then
     exit 0
   fi
 
@@ -261,7 +477,7 @@ prerequisites:
   - "A team policy for when package, installer, or archive downloads require checksums, signatures, pinned releases, or manual source review."
 safetyNotes:
   - "Runs before Bash tool calls and reads only the proposed command string from Claude Code hook input."
-  - "Blocks matching curl/wget package or archive downloads with exit code 2 unless the command includes an executable verification step such as `sha256sum -c`, `shasum -a 256 -c`, `cosign verify-blob`, `gpg --verify`, or `minisign -V`; downloader-to-shell installer pipelines are blocked unless allowlisted."
+  - "Blocks matching curl/wget package or archive downloads with exit code 2 unless a later executable verification step references the downloaded artifact name. Downloader-to-shell installer pipelines are blocked unless allowlisted."
   - "Does not download, execute, hash, delete, install, or modify files; it is a pre-execution guard around the proposed command text."
   - "Regex matching can miss unusual shell constructs or flag legitimate internal download workflows; comments and digest-print-only commands are not accepted as verification, and `PACKAGE_DOWNLOAD_GUARD_ALLOWLIST` is available for reviewed patterns."
   - "Set `PACKAGE_DOWNLOAD_GUARD_MODE=advisory` to warn without blocking while a team tunes the policy."
@@ -327,13 +543,14 @@ as `sha256sum -c`, `shasum -a 256 -c`, `cosign verify-blob`,
 Claude Code passes the pending Bash tool call to the hook on stdin. The script
 extracts `.tool_input.command`, checks for `curl` or `wget`, and then looks for
 package/archive URL shapes or installer pipes. If a risky download is found, it
-requires an executable checksum-check or signature-verification command in the
-same proposed command. Without that command, it exits `2`, which tells Claude
-Code to block the Bash call.
+requires a later executable checksum-check or signature-verification command in
+the same proposed command that references the downloaded artifact name. Without
+that command, it exits `2`, which tells Claude Code to block the Bash call.
 
 The guard is intentionally text-based. It strips shell comments before looking
 for verification commands and blocks downloader-to-shell installer pipelines so
-comment-only or digest-print-only snippets do not count as verification. It does
+comment-only, unrelated, out-of-order, or digest-print-only snippets do not
+count as verification. It does
 not claim to verify the checksum itself; its job is to stop the session long
 enough for a human or agent to add the reviewed verification step before using
 the downloaded artifact.
@@ -394,8 +611,10 @@ the downloaded artifact.
   instead of manual archive checks. Tune the allowlist for those workflows.
 - Verification commands can be present but wrong. Review the expected digest,
   signing identity, release source, and pinned version before trusting the
-  artifact. Digest-print-only commands such as `openssl dgst -sha256 file` do
-  not satisfy the guard because they do not compare against a trusted value.
+  artifact. Digest-print-only commands such as `openssl dgst -sha256 file`,
+  unrelated checks, or checks that do not reference the downloaded artifact name
+  do not satisfy the guard because they do not compare that artifact against a
+  trusted value.
 
 ## Duplicate And History Check
 
