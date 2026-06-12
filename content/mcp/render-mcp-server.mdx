@@ -1,0 +1,302 @@
+---
+title: "Render MCP Server"
+slug: render-mcp-server
+category: mcp
+description: >-
+  The official Render MCP server lets LLMs manage Render resources: create and
+  manage web services, static sites, cron jobs, Postgres and Key-Value
+  instances, monitor deploys, query logs and metrics, and run read-only SQL
+  against Render Postgres. Connect via Render's hosted server or a local Go
+  binary using a RENDER_API_KEY.
+cardDescription: >-
+  Official Render MCP server (render-oss) for managing Render web services,
+  static sites, cron jobs, Postgres, and Key-Value stores, plus deploys, logs,
+  metrics, and read-only Postgres queries from an LLM.
+seoTitle: "Render MCP Server — Manage Render Resources from LLMs"
+seoDescription: >-
+  The official Render MCP server by render-oss. Create and manage web services,
+  static sites, cron jobs, Postgres, and Key-Value stores; monitor deploys;
+  query logs and metrics; and run read-only SQL against Render Postgres via MCP.
+author: render-oss
+authorProfileUrl: https://github.com/render-oss
+dateAdded: "2026-06-11"
+brandName: Render
+brandDomain: github.com/render-oss/render-mcp-server
+websiteUrl: https://render.com
+repoUrl: https://github.com/render-oss/render-mcp-server
+documentationUrl: https://render.com/docs/mcp-server
+installable: true
+installCommand: |
+  # Recommended: use Render's hosted MCP server (no local install required).
+  # Optional local binary — download from GitHub Releases, then point your
+  # MCP client at the unzipped executable:
+  #   https://github.com/render-oss/render-mcp-server/releases
+usageSnippet: |
+  # Run the local binary over stdio (default transport):
+  ./render-mcp-server --transport stdio
+  # Or http transport:
+  ./render-mcp-server --transport http
+  # Print version:
+  ./render-mcp-server --version
+copySnippet: |
+  {
+    "mcpServers": {
+      "render": {
+        "url": "https://mcp.render.com/mcp",
+        "headers": {
+          "Authorization": "Bearer <YOUR_API_KEY>"
+        }
+      }
+    }
+  }
+configSnippet: |
+  // Hosted server (recommended) — HTTP clients such as Cursor / Windsurf:
+  {
+    "mcpServers": {
+      "render": {
+        "url": "https://mcp.render.com/mcp",
+        "headers": {
+          "Authorization": "Bearer <YOUR_API_KEY>"
+        }
+      }
+    }
+  }
+
+  // Hosted server for Claude Desktop via mcp-remote; env is scoped to render only:
+  {
+    "mcpServers": {
+      "render": {
+        "command": "npx",
+        "args": [
+          "mcp-remote",
+          "https://mcp.render.com/mcp",
+          "--header",
+          "Authorization: Bearer ${RENDER_API_KEY}"
+        ],
+        "env": {
+          "RENDER_API_KEY": "<YOUR_API_KEY>"
+        }
+      }
+    }
+  }
+
+  // Local binary alternative (stdio transport); env is scoped to render only:
+  {
+    "mcpServers": {
+      "render": {
+        "command": "/path/to/render-mcp-server",
+        "args": ["--transport", "stdio"],
+        "env": {
+          "RENDER_API_KEY": "<YOUR_API_KEY>"
+        }
+      }
+    }
+  }
+prerequisites:
+  - A Render account
+  - A Render API key created from Account Settings (dashboard.render.com/u/settings)
+  - An MCP-compatible client (e.g. Claude Desktop, Cursor)
+  - "For the local binary only: the unzipped release executable, or Go to build from source"
+safetyNotes:
+  - "Write-capable: tools can create and modify real Render infrastructure — create_web_service, create_static_site, create_cron_job, create_postgres, create_key_value, and update_environment_variables provision or change live resources that may incur billing."
+  - "update_environment_variables replaces the complete environment variable set for a service; an incomplete array can drop existing variables."
+  - "Created services run build and start commands you supply; treat generated commands as code execution on Render's platform."
+  - "The server reaches Render's API over the network; the hosted option (https://mcp.render.com/mcp) sends your requests through Render's hosted MCP endpoint."
+  - "Review and confirm tool calls before approving them, since an LLM can issue provisioning or env-var changes on your behalf."
+privacyNotes:
+  - "Authentication uses a RENDER_API_KEY scoped to your Render workspace(s); anyone with the key can manage those resources. Keep it in a server-scoped header or server-scoped env block, not a top-level/global env block shared with other MCP servers."
+  - "query_render_postgres runs SQL against your Render Postgres and returns row data to the LLM — query results may include sensitive application data."
+  - "Logs and metrics tools (list_logs, list_log_label_values, get_metrics) surface application log contents and performance data to the model."
+  - "update_environment_variables and service details can expose configuration values; avoid sending secrets you don't want the model to see."
+  - "When using the hosted server, requests transit Render's hosted MCP infrastructure rather than staying entirely local."
+sourceUrls:
+  - https://github.com/render-oss/render-mcp-server/blob/main/README.md
+  - https://github.com/render-oss/render-mcp-server/blob/main/main.go
+  - https://github.com/render-oss/render-mcp-server/blob/main/cmd/server.go
+  - https://github.com/render-oss/render-mcp-server/blob/main/go.mod
+  - https://github.com/render-oss/render-mcp-server/blob/main/SECURITY.md
+  - https://github.com/render-oss/render-mcp-server/blob/main/LICENSE
+  - https://render.com/docs/mcp-server
+tags:
+  - mcp
+  - render
+  - paas
+  - deployment
+  - postgres
+  - devops
+  - infrastructure
+  - logs
+  - metrics
+  - cron
+keywords:
+  - Render MCP server
+  - render-oss
+  - Model Context Protocol
+  - Render API
+  - deploy management
+  - Render Postgres
+  - read-only SQL
+  - web service
+  - static site
+  - cron job
+  - Key-Value store
+  - RENDER_API_KEY
+  - mcp.render.com
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **Render MCP Server** is the official [Model Context Protocol](https://modelcontextprotocol.io/introduction)
+server from [render-oss](https://github.com/render-oss) that lets LLMs interact
+with your [Render](https://render.com) resources. Through it, an MCP-compatible
+client can create and manage web services, static sites, cron jobs, Postgres
+databases, and Key-Value instances; monitor deploys; query application logs and
+performance metrics; and run read-only SQL against Render-hosted Postgres.
+
+It is written in Go and licensed under Apache-2.0. Render recommends connecting
+to the **hosted server at `https://mcp.render.com/mcp`** so you always run the latest
+version; a local binary (stdio or http transport) is also available for users who
+prefer to run it themselves. Authentication is via a `RENDER_API_KEY` scoped to
+your Render workspace.
+
+## Source Review
+
+The following real source files were reviewed to verify the claims below:
+
+- [README.md](https://github.com/render-oss/render-mcp-server/blob/main/README.md) — overview, use cases, and the full tool catalog with parameters
+- [main.go](https://github.com/render-oss/render-mcp-server/blob/main/main.go) — entrypoint; `--transport`/`-t` flag (default `stdio`, also `http`) and `--version`/`-v`
+- [cmd/server.go](https://github.com/render-oss/render-mcp-server/blob/main/cmd/server.go) — server bootstrap invoked by `cmd.Serve(transport)`
+- [go.mod](https://github.com/render-oss/render-mcp-server/blob/main/go.mod) — module path `github.com/render-oss/render-mcp-server`, Go 1.26
+- [SECURITY.md](https://github.com/render-oss/render-mcp-server/blob/main/SECURITY.md) — vulnerability disclosure via HackerOne; 0.x supported
+- [LICENSE](https://github.com/render-oss/render-mcp-server/blob/main/LICENSE) — Apache-2.0
+- [Official docs: render.com/docs/mcp-server](https://render.com/docs/mcp-server) — hosted vs. local install, config JSON, and `RENDER_API_KEY`
+
+Repository signals at time of review: not archived, Go, Apache-2.0, 139 stars,
+latest release `v0.3.0`, last pushed 2026-06-04.
+
+## Features
+
+Tools exposed by the server (grouped as in the README):
+
+- **Workspaces** — `list_workspaces`, `select_workspace`, `get_selected_workspace`
+- **Services** — `list_services`, `get_service`, `create_web_service`,
+  `create_static_site`, `create_cron_job`, `update_environment_variables`
+  - Runtimes: `node`, `python`, `go`, `rust`, `ruby`, `elixir`, `docker`
+  - Regions: `oregon`, `frankfurt`, `singapore`, `ohio`, `virginia`
+- **Deployments** — `list_deploys`, `get_deploy`
+- **Logs** — `list_logs`, `list_log_label_values` (filter by resource, level,
+  type, instance, host, status code, method, path, text, and time range)
+- **Metrics** — `get_metrics` (CPU, memory, instance count, HTTP request count,
+  HTTP latency, bandwidth, active connections; with aggregation, quantile, and
+  host/path filters)
+- **Postgres** — `query_render_postgres` (read-only SQL),
+  `list_postgres_instances`, `get_postgres`, `create_postgres`
+- **Key-Value** — `list_key_value`, `get_key_value`, `create_key_value`
+
+Transports: **stdio** (default) and **http**, selectable with the
+`--transport` / `-t` flag on the local binary.
+
+## Installation
+
+**1. Create a Render API key** from your Account Settings page
+(`dashboard.render.com/u/settings`).
+
+**2a. Hosted server (recommended).** Point your MCP client at Render's hosted
+endpoint. For HTTP-capable clients such as Cursor (`~/.cursor/mcp.json`),
+pass the API key as a Render server-scoped authorization header:
+
+```json
+{
+  "mcpServers": {
+    "render": {
+      "url": "https://mcp.render.com/mcp",
+      "headers": {
+        "Authorization": "Bearer <YOUR_API_KEY>"
+      }
+    }
+  }
+}
+```
+
+For Claude Desktop (`~/Library/Application Support/Claude/claude_desktop_config.json`),
+Render documents using `mcp-remote`. Keep `RENDER_API_KEY` inside the `render`
+server definition so other local MCP servers do not inherit it:
+
+```json
+{
+  "mcpServers": {
+    "render": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://mcp.render.com/mcp",
+        "--header",
+        "Authorization: Bearer ${RENDER_API_KEY}"
+      ],
+      "env": {
+        "RENDER_API_KEY": "<YOUR_API_KEY>"
+      }
+    }
+  }
+}
+```
+
+**2b. Local binary (alternative).** Download and unzip the executable for your
+architecture from the
+[GitHub Releases](https://github.com/render-oss/render-mcp-server/releases) page
+(an install script and build-from-source via Go are also documented), then
+configure your client to launch it over stdio:
+
+```json
+{
+  "mcpServers": {
+    "render": {
+      "command": "/path/to/render-mcp-server",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "RENDER_API_KEY": "<YOUR_API_KEY>"
+      }
+    }
+  }
+}
+```
+
+Render notes: "We strongly recommend using Render's hosted MCP server instead of
+running it locally," because the hosted version updates automatically. See the
+[official docs](https://render.com/docs/mcp-server) for the latest steps.
+
+## Use Cases
+
+Per the project's own stated use cases:
+
+- Creating and managing web services, static sites, cron jobs, and databases on Render
+- Monitoring application logs and deployment status to help troubleshoot issues
+- Monitoring service performance metrics for debugging, capacity planning, and optimization
+- Querying your Postgres databases directly inside an LLM
+
+## Safety and Privacy
+
+This server performs **real, billable, write operations** against your Render
+account. `create_web_service`, `create_static_site`, `create_cron_job`,
+`create_postgres`, and `create_key_value` provision live infrastructure, and
+`update_environment_variables` replaces the complete env-var set for a service —
+an incomplete array can drop existing variables. Created services run the build
+and start commands you provide, so treat generated commands as code execution on
+Render's platform. Review and confirm tool calls before approving them.
+
+On privacy: the `RENDER_API_KEY` grants management access to your workspace(s).
+`query_render_postgres` returns row data, and the logs/metrics tools surface
+application log contents and performance data to the model — avoid exposing
+secrets you don't want the LLM to see. With the hosted option, requests transit
+Render's hosted MCP endpoint (`https://mcp.render.com/mcp`) rather than staying
+entirely local. Vulnerabilities should be reported via Render's HackerOne program
+(see SECURITY.md), not public GitHub issues.
+
+## Duplicate Check
+
+No existing entry in the awesome-claude MCP directory matches this server. A
+search of the directory index for `render-oss`, `render-mcp`, and `render mcp`
+returned zero hits. The directory does contain official Netlify and Sentry MCP
+entries, but there is no Render MCP entry — this is **not** a duplicate.

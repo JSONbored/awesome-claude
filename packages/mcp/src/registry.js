@@ -97,6 +97,13 @@ export const READ_ONLY_TOOL_NAMES = [
   "review_entry_safety",
 ];
 
+export const LOCAL_DRAFT_TOOL_NAMES = [
+  "validate_submission_draft",
+  "build_submission_urls",
+  "prepare_submission_draft",
+  "review_submission_draft",
+];
+
 export const TOOL_DEFINITIONS = [
   {
     name: "search_registry",
