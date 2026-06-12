@@ -1,0 +1,75 @@
+---
+title: Token Usage Telemetry MCP
+slug: token-usage-telemetry-mcp
+category: data
+description: >-
+  MCP server that exposes per-session token-usage telemetry to Claude, including
+  input and output token counts, cache read and write tallies, per-tool call
+  breakdowns, rolling cost estimates, and exportable usage snapshots for
+  budgeting and observability workflows.
+cardDescription: Surface live token-usage and cost telemetry to Claude from your sessions.
+seoTitle: Token Usage Telemetry MCP for Claude
+seoDescription: >-
+  Configure Token Usage Telemetry MCP with Claude to read per-session token
+  counts, cache hit and miss tallies, per-tool usage breakdowns, and rolling
+  cost estimates for budgeting and observability.
+author: telemetry-labs
+authorProfileUrl: "https://github.com/telemetry-labs"
+submittedBy: telemetry-labs
+submittedByUrl: "https://github.com/telemetry-labs"
+dateAdded: "2026-06-11"
+brandName: Token Usage Telemetry MCP
+brandDomain: github.com/telemetry-labs/token-usage-telemetry-mcp
+websiteUrl: "https://github.com/telemetry-labs/token-usage-telemetry-mcp"
+repoUrl: "https://github.com/telemetry-labs/token-usage-telemetry-mcp"
+documentationUrl: "https://github.com/telemetry-labs/token-usage-telemetry-mcp/blob/main/README.md"
+installable: true
+installCommand: "git clone https://github.com/telemetry-labs/token-usage-telemetry-mcp.git && cd token-usage-telemetry-mcp && pip install -e ."
+usageSnippet: "Start the telemetry server, then ask Claude to report the current session's token usage, cache tallies, and rolling cost estimate."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "TokenUsageTelemetry": {
+        "command": "python",
+        "args": ["<path-to-token-usage-telemetry-mcp/server.py>"]
+      }
+    }
+  }
+tags:
+  - telemetry
+  - observability
+  - cost
+license: MIT
+---
+
+# Token Usage Telemetry MCP
+
+Token Usage Telemetry MCP is a Model Context Protocol server that gives Claude
+read-only access to per-session token-usage telemetry. It is intended for
+developers who want budgeting and observability data surfaced directly inside a
+Claude session rather than scraped from logs after the fact.
+
+## Capabilities
+
+- **Per-session counts** — input, output, cache-read, and cache-write token
+  tallies for the active session.
+- **Per-tool breakdown** — attributes token consumption to individual tool
+  calls so expensive tools are easy to spot.
+- **Rolling cost estimate** — applies a configurable price table to the running
+  token counts and reports an estimated spend.
+- **Exportable snapshots** — emits a JSON snapshot of the current usage so it
+  can be archived or charted elsewhere.
+
+## Installation
+
+```bash
+git clone https://github.com/telemetry-labs/token-usage-telemetry-mcp.git
+cd token-usage-telemetry-mcp
+pip install -e .
+```
+
+## Usage
+
+Add the server to your Claude MCP configuration, restart the session, and ask
+Claude to report the current token usage. All telemetry is read-only; the server
+never mutates session state and never transmits data off-host.

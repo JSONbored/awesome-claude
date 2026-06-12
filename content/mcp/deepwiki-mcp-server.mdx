@@ -1,0 +1,175 @@
+---
+title: DeepWiki MCP Server for Claude
+slug: deepwiki-mcp-server
+category: mcp
+description: >-
+  DeepWiki is Cognition's "documentation you can talk to" for public GitHub
+  repositories. The free, remote MCP server lets Claude browse a repo's wiki
+  structure, read its documentation, and ask natural-language questions that
+  return AI answers grounded in the codebase — without cloning the project.
+cardDescription: >-
+  Cognition's free, no-auth remote MCP server that lets Claude browse, read, and
+  question the generated wiki for any public GitHub repository.
+seoTitle: DeepWiki MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the DeepWiki MCP server by Cognition to browse a public
+  GitHub repository's wiki structure, read its documentation, and ask grounded
+  questions about the codebase — a free, remote, no-authentication service.
+author: Cognition
+authorProfileUrl: "https://cognition.ai/"
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-11"
+websiteUrl: "https://deepwiki.com"
+documentationUrl: "https://docs.devin.ai/work-with-devin/deepwiki-mcp"
+installable: true
+installCommand: "claude mcp add --transport http deepwiki https://mcp.deepwiki.com/mcp"
+usageSnippet: >-
+  Ask Claude: "Using DeepWiki, how does request retry work in this repo?"
+  Claude calls read_wiki_structure to find the right topic, read_wiki_contents
+  to pull the page, or ask_question for a grounded answer about the codebase.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "deepwiki": {
+        "serverUrl": "https://mcp.deepwiki.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "deepwiki": {
+        "url": "https://mcp.deepwiki.com/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - >-
+    An MCP-capable client with remote HTTP (streamable) transport support, such
+    as Claude, Claude Code, Claude Desktop, Cursor, or VS Code.
+  - >-
+    The GitHub repository you want to explore must be public; DeepWiki indexes
+    public repos only. Private repositories require Cognition's separate Devin
+    MCP server.
+safetyNotes:
+  - >-
+    Remote HTTP MCP server with no local footprint — it runs no commands and
+    touches no local files. All three tools are read-only lookups against
+    DeepWiki's hosted wikis and cannot modify anything on your machine or in
+    any repository.
+  - >-
+    ask_question returns AI-generated answers grounded in a repository's
+    indexed documentation; treat them as a helpful summary to verify against
+    the source, not as authoritative ground truth.
+privacyNotes:
+  - >-
+    No authentication, account, or API key is required for public repositories,
+    so no credentials leave the client.
+  - >-
+    The server receives only tool arguments — the target repository name and
+    your question or topic request — to look up the matching hosted wiki; your
+    prompts, files, and other local context stay in the client.
+disclosure: >-
+  DeepWiki is operated by Cognition (the team behind Devin). The MCP server and
+  public-repository wikis are free with no authentication. Private-repository
+  access is a separate paid Devin offering and is out of scope for this entry.
+tags:
+  - mcp
+  - documentation
+  - github
+  - code-search
+  - knowledge
+  - developer-tools
+keywords:
+  - DeepWiki MCP server
+  - Cognition DeepWiki
+  - Devin DeepWiki MCP
+  - GitHub repo documentation MCP
+  - read_wiki_contents
+  - ask_question MCP
+  - mcp.deepwiki.com
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+DeepWiki, from [Cognition](https://cognition.ai/) (the team behind Devin),
+generates an "encyclopedia-style" wiki for public GitHub repositories — an
+up-to-date, navigable explanation of a codebase that you can read and question
+conversationally. The DeepWiki MCP server exposes that same knowledge to Claude
+over a free, remote, no-authentication endpoint.
+
+Instead of cloning an unfamiliar project and grepping through it, Claude can ask
+DeepWiki for a repository's topic structure, read the relevant documentation
+page, or pose a natural-language question and get an answer grounded in that
+repo's indexed content. It is useful for onboarding to a new dependency,
+understanding how a library is wired together, or answering "how does X work in
+this project?" without leaving the conversation.
+
+## Features
+
+Tools exposed by the server:
+
+- **read_wiki_structure** — get the list of documentation topics (the wiki
+  outline) for a given public GitHub repository.
+- **read_wiki_contents** — view the full documentation content for that
+  repository's wiki, or a specific topic within it.
+- **ask_question** — ask any natural-language question about a public GitHub
+  repository and receive an AI answer grounded in that repo's indexed
+  documentation and code.
+
+Characteristics:
+
+- **Free and no-auth** — DeepWiki describes the MCP server as a "free, remote,
+  no-authentication-required service" for public repositories; there are no API
+  keys to manage.
+- **Read-only** — every tool is a lookup. The server provisions nothing, writes
+  nothing, and never executes code on your machine.
+- **Remote transport** — connect over streamable HTTP at
+  `https://mcp.deepwiki.com/mcp`. (An SSE endpoint at `https://mcp.deepwiki.com/sse`
+  exists but is deprecated in favor of HTTP.)
+
+## Setup
+
+1. Add the server to your client. For Claude Code:
+   `claude mcp add --transport http deepwiki https://mcp.deepwiki.com/mcp`
+2. For clients that take a JSON config, point a `deepwiki` server at the hosted
+   endpoint:
+
+   ```json
+   {
+     "mcpServers": {
+       "deepwiki": {
+         "serverUrl": "https://mcp.deepwiki.com/mcp"
+       }
+     }
+   }
+   ```
+
+3. Ask Claude a question about a public repo — for example, "Using DeepWiki,
+   summarize how routing works in `vercel/next.js`" — and let it call
+   `read_wiki_structure`, `read_wiki_contents`, or `ask_question` to answer from
+   the indexed wiki.
+
+See the official setup notes, including per-client configuration and the
+deprecated SSE transport, at
+[docs.devin.ai/work-with-devin/deepwiki-mcp](https://docs.devin.ai/work-with-devin/deepwiki-mcp).
+
+## Use Cases
+
+- Onboarding to an unfamiliar open-source dependency without cloning it.
+- Answering "how does X work in this repo?" with codebase-grounded responses.
+- Browsing a project's documented architecture and module structure on demand.
+- Pulling reference documentation for a public library directly into Claude's
+  context.
+
+## Duplicate Check
+
+No existing entry in the awesome-claude MCP directory matches this server. A
+search of the directory for `deepwiki`, `cognition`, and `mcp.deepwiki.com`
+returned zero hits, so this is **not** a duplicate.
