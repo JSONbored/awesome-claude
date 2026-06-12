@@ -14,12 +14,7 @@ describe("MCP install config helpers", () => {
   it("exports the install-config surface from the registry package root", () => {
     const targets: McpInstallTargetId[] = [...MCP_INSTALL_TARGET_IDS];
 
-    expect(targets).toEqual([
-      "claude-code",
-      "codex",
-      "cursor",
-      "antigravity",
-    ]);
+    expect(targets).toEqual(["claude-code", "codex", "cursor", "antigravity"]);
     expect(
       mcpInstallTargetsForConfig({
         command: "npx",
@@ -64,6 +59,38 @@ describe("MCP install config helpers", () => {
       type: "http",
       url: "https://example.com/mcp",
     });
+  });
+
+  it("keeps cleartext remote HTTP MCP URLs out of machine-install metadata", () => {
+    const targets: McpInstallTargetId[] = [...MCP_INSTALL_TARGET_IDS];
+
+    expect(
+      resolveMcpInstallConfig({
+        category: "mcp",
+        slug: "remote-http",
+        configSnippet: JSON.stringify({
+          mcpServers: {
+            remote: {
+              type: "http",
+              url: "http://mcp.example.com/mcp",
+            },
+          },
+        }),
+      }),
+    ).toBeNull();
+
+    expect(
+      mcpInstallTargetsForConfig({
+        type: "http",
+        url: "http://127.0.0.1:3000/mcp",
+      }),
+    ).toEqual(targets);
+    expect(
+      mcpInstallTargetsForConfig({
+        type: "sse",
+        url: "http://[::1]:3000/sse",
+      }),
+    ).toEqual(["claude-code", "cursor", "antigravity"]);
   });
 
   it("keeps legacy transport snippets out of machine-install metadata", () => {
