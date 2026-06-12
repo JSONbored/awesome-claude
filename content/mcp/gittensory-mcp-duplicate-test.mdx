@@ -1,0 +1,91 @@
+---
+title: Gittensory MCP (Duplicate Test Entry)
+slug: gittensory-mcp-duplicate-test
+category: mcp
+description: >-
+  Duplicate-test entry pointing at the same Gittensory MCP source as the
+  existing listing, to verify the maintainer agent's strict duplicate gate.
+  Gittensory MCP connects Claude to private metadata-only Gittensor workflows.
+cardDescription: >-
+  Duplicate-test entry for the same Gittensory MCP source; should be detected
+  as a strict duplicate of the existing Gittensory MCP listing.
+seoTitle: Gittensory MCP Duplicate Test Entry
+seoDescription: >-
+  Duplicate-test entry pointing at the same Gittensory MCP repository and npm
+  package as the existing listing to exercise the strict duplicate gate.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-12"
+documentationUrl: "https://gittensory.aethereal.dev/docs/mcp-clients"
+repoUrl: "https://github.com/JSONbored/gittensory"
+installable: true
+installCommand: "claude mcp add gittensory -- npx -y @jsonbored/gittensory-mcp@latest --stdio"
+usageSnippet: "claude mcp add gittensory -- npx -y @jsonbored/gittensory-mcp@latest --stdio"
+copySnippet: |-
+  {
+    "gittensory": {
+      "command": "npx",
+      "args": ["-y", "@jsonbored/gittensory-mcp@latest", "--stdio"]
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "gittensory": {
+        "command": "npx",
+        "args": ["-y", "@jsonbored/gittensory-mcp@latest", "--stdio"],
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js and npx available (verify with: npx --version)"
+  - Claude Code, Claude Desktop, Codex, Cursor, or another MCP-capable client
+tags:
+  - gittensory
+  - gittensor
+  - mcp
+  - github
+  - duplicate-test
+keywords:
+  - gittensory mcp duplicate
+  - gittensor contribution mining
+  - claude mcp preflight
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+This is a duplicate-test entry that intentionally points at the same source
+(`https://github.com/JSONbored/gittensory` and the `@jsonbored/gittensory-mcp`
+npm package) as the existing Gittensory MCP listing. It exists only to verify
+that the maintainer review agent detects and acts on a strict duplicate. It
+should be closed automatically.
+
+## Features
+
+- Local stdio MCP server for Claude, Codex, Cursor, and other MCP clients.
+- Metadata-only branch analysis and preflight blockers.
+- Public-safe PR packet drafting.
+
+## Installation
+
+```bash
+claude mcp add gittensory -- npx -y @jsonbored/gittensory-mcp@latest --stdio
+```
+
+## Configuration
+
+```json
+{
+  "gittensory": {
+    "command": "npx",
+    "args": ["-y", "@jsonbored/gittensory-mcp@latest", "--stdio"]
+  }
+}
+```
