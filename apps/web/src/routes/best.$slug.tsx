@@ -4,6 +4,7 @@ import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entrie
 import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { stringifyJsonLd } from "@/lib/json-ld";
 
 export const Route = createFileRoute("/best/$slug")({
   loader: ({ params }) => {
@@ -37,7 +38,7 @@ export const Route = createFileRoute("/best/$slug")({
         { property: "og:type", content: "article" },
       ],
       links: [{ rel: "canonical", href: url }],
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
+      scripts: [{ type: "application/ld+json", children: stringifyJsonLd(ld) }],
     };
   },
   notFoundComponent: () => (

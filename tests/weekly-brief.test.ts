@@ -189,6 +189,43 @@ describe("weekly brief generation", () => {
     expect(brief.period.through).toBe("2026-05-29");
   });
 
+  it("strips terminal controls from rendered markdown fields", () => {
+    const brief = buildWeeklyBrief(
+      [
+        entry("control-chars", {
+          title: "Trusted\u001b7SPOOFED\u001b8\u0007 Title",
+          description:
+            "Description with backspace ABC\b\bZ and reset\u001bc end",
+          dateAdded: "2026-05-29",
+        }),
+      ],
+      {
+        generatedAt: "2026-05-30T00:00:00.000Z",
+        days: 7,
+        changelogEntries: [
+          {
+            category: "mcp\u009b31m",
+            slug: "control-chars",
+            title: "Changed\u001b[31m title",
+            type: "added\u0007",
+            dateAdded: "2026-05-29",
+          },
+        ],
+      },
+    );
+    const markdown = renderWeeklyBriefMarkdown(brief);
+
+    expect(markdown).not.toMatch(
+      /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/,
+    );
+    expect(markdown).toContain("Trusted7SPOOFED8 Title");
+    expect(markdown).toContain(
+      "Description with backspace ABCZ and resetc end",
+    );
+    expect(markdown).toContain("Changed\\[31m title");
+    expect(markdown).toContain("(mcp31m) - added on 2026-05-29");
+  });
+
   it("escapes markdown text and drops unsafe canonical URLs", () => {
     const brief = buildWeeklyBrief(
       [
