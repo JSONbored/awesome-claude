@@ -2,6 +2,7 @@ import type {
   Category,
   Entry,
   EntryRelation,
+  EntryTrustSignals,
   HookTrigger,
   InstallType,
   Platform,
@@ -73,13 +74,7 @@ export type RegistryEntry = Record<string, unknown> & {
     appliesTo?: "listing_source_repo" | "upstream_reference" | "directory_repo" | "none";
     label?: string;
   };
-  trustSignals?: {
-    firstPartyEditorial?: boolean;
-    sourceStatus?: string;
-    lastVerifiedAt?: string;
-    platforms?: string[];
-    supportLevels?: string[];
-  };
+  trustSignals?: EntryTrustSignals;
   relatedEntries?: Array<{
     key?: string;
     category?: string;
@@ -419,6 +414,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
     websiteUrl: entry.websiteUrl,
     trust: inferTrust(entry, source),
     source,
+    trustSignals: entry.trustSignals,
     repoStats: normalizeRepoStats(entry),
     relatedEntries: normalizeRelatedEntries(entry.relatedEntries),
     dateAdded: entry.dateAdded ?? entry.contentUpdatedAt?.slice(0, 10) ?? "2026-01-01",
