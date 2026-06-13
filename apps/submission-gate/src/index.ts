@@ -773,55 +773,54 @@ function sourceEvidenceConflictDecision(
         title: "Source Review",
         status: "warn" as const,
         bullets: [
-          "Private review reported a source hard failure that conflicts with deterministic source evidence.",
+          "Private review reported a source URL reachability failure that conflicts with deterministic source evidence.",
           sourceEvidenceSummary(sourceEvidence),
-          "The gate will retry with the deterministic source artifact before falling back to the clean merge path.",
+          "The gate will retry with the deterministic source artifact before requiring manual review if the conflict persists.",
         ],
       },
     ],
   };
 }
 
-function sourceEvidenceConflictMergeDecision(
+function sourceEvidenceConflictExhaustedDecision(
   decision: GateDecision,
   sourceEvidence: SourceEvidenceReport,
 ): GateDecision {
   return {
     schemaVersion: 2,
-    verdict: "merge",
-    confidence: Math.max(
-      decision.confidence || 0,
-      DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
-    ),
+    verdict: "manual",
+    confidence: decision.confidence,
     sourceEvidenceHash: sourceEvidence.hash,
-    labels: [LABELS.merged],
+    labels: [LABELS.manual],
     summary: [
       "Summary:",
       "- Public validation and deterministic source evidence passed.",
-      "- Private review returned a source_hard_failure that contradicted reachable source evidence.",
-      "- No deterministic blocker remains, so the gate is accepting the source-backed one-file content PR.",
+      "- Private review repeatedly returned a source_hard_failure for URL reachability that conflicts with deterministic source evidence.",
+      "- Automation will not override the private close into a merge; a maintainer must review the source evidence conflict.",
       "",
       "Source Review:",
       `- ${sourceEvidenceSummary(sourceEvidence)}`,
       "",
       "Recommended Action:",
-      "- Merge this PR.",
+      "- Review this source evidence conflict manually before deciding whether to merge or close the PR.",
     ].join("\n"),
     sections: [
       {
         id: "source_review",
         title: "Source Review",
-        status: "pass",
+        status: "warn",
         bullets: [
-          "Deterministic source evidence found submitted source URLs reachable.",
+          "Deterministic source evidence found submitted source URLs reachable, but private review repeatedly reported a source reachability hard failure.",
           sourceEvidenceSummary(sourceEvidence),
         ],
       },
       {
         id: "recommended_action",
         title: "Recommended Action",
-        status: "pass",
-        bullets: ["Merge this PR."],
+        status: "info",
+        bullets: [
+          "Review this source evidence conflict manually before deciding whether to merge or close the PR.",
+        ],
       },
     ],
   };
@@ -877,16 +876,65 @@ function duplicateEvidenceConflictExhaustedDecision(
   });
 }
 
+function sourceEvidenceUrlCandidates(evidence: GateDecisionEvidence) {
+  return [
+    evidence.url,
+    evidence.matchedUrl,
+    evidence.finalUrl,
+    evidence.source,
+  ].filter((value): value is string => Boolean(value));
+}
+
+function privateEvidenceClaimsDeadSourceUrl(evidence: GateDecisionEvidence) {
+  const httpStatus = Number(evidence.httpStatus || evidence.status || 0);
+  if ([404, 410].includes(httpStatus)) return true;
+  const text = [
+    evidence.ruleId,
+    evidence.outcome,
+    evidence.status,
+    evidence.behavior,
+    evidence.policy,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  return (
+    text.includes("source_url_reachability") ||
+    /\b(?:404|410)\b/.test(text) ||
+    /\b(?:dead|broken|unreachable|not found|hard[-_ ]failure)\b/.test(text)
+  );
+}
+
+function privateEvidenceMatchesReachableSourceUrl(
+  evidence: GateDecisionEvidence,
+  sourceEvidence: SourceEvidenceReport,
+) {
+  const candidates = sourceEvidenceUrlCandidates(evidence);
+  if (!candidates.length) return false;
+  return sourceEvidence.urls.some((item) => {
+    if (item.status !== "passed" || item.outcome !== "reachable") return false;
+    return candidates.some(
+      (url) => url === item.url || (item.finalUrl && url === item.finalUrl),
+    );
+  });
+}
+
 function privateSourceHardFailureContradicted(
   decision: GateDecision,
   sourceEvidence: SourceEvidenceReport | null,
 ) {
-  return (
-    decision.verdict === "close" &&
-    decision.reasonCode === "source_hard_failure" &&
-    sourceEvidence?.status === "passed" &&
-    sourceEvidence.urls.length > 0 &&
-    sourceEvidence.urls.every((item) => item.outcome === "reachable")
+  if (
+    decision.verdict !== "close" ||
+    decision.reasonCode !== "source_hard_failure" ||
+    sourceEvidence?.status !== "passed" ||
+    !sourceEvidence.urls.length
+  ) {
+    return false;
+  }
+  return (decision.evidence || []).some(
+    (item) =>
+      privateEvidenceClaimsDeadSourceUrl(item) &&
+      privateEvidenceMatchesReachableSourceUrl(item, sourceEvidence),
   );
 }
 
@@ -4100,7 +4148,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             conflictDecision,
           );
           decision = retryState.exhausted
-            ? sourceEvidenceConflictMergeDecision(
+            ? sourceEvidenceConflictExhaustedDecision(
                 decision,
                 sourceEvidenceForPrivateReview!,
               )

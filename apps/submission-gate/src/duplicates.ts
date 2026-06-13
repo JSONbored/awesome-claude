@@ -389,6 +389,17 @@ export function findStrictContentDuplicateMatch(
     if (
       blockingSharedUrls.length &&
       candidate.category &&
+      existing.category &&
+      candidate.category !== existing.category &&
+      !isCollectionBridge(candidate, existing)
+    ) {
+      reasons.push(
+        `same canonical source URL ${blockingSharedUrls[0]} across ${candidate.category}/${existing.category}`,
+      );
+    }
+    if (
+      blockingSharedUrls.length &&
+      candidate.category &&
       candidate.category === existing.category &&
       candidate.normalizedDescription &&
       candidate.normalizedDescription === existing.normalizedDescription
