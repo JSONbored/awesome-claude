@@ -13,6 +13,8 @@ const NAV = [
   { to: "/browse", label: "Browse" },
   { to: "/trending", label: "Trending" },
   { to: "/best", label: "Best" },
+  { to: "/tags", label: "Tags" },
+  { to: "/for", label: "Platforms" },
   { to: "/ecosystem", label: "Ecosystem" },
   { to: "/jobs", label: "Jobs" },
   { to: "/quality", label: "Quality" },
@@ -144,6 +146,8 @@ export function Footer() {
           links={[
             { to: "/browse", label: "Browse" },
             { to: "/trending", label: "Trending" },
+            { to: "/tags", label: "Tags" },
+            { to: "/for", label: "Platforms" },
             { to: "/best", label: "Best lists" },
             { to: "/quality", label: "Quality" },
             { to: "/changelog", label: "Changelog" },

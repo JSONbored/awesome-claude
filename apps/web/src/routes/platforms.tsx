@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SUPPORTED_PLATFORMS, PLATFORM_MATRIX } from "@/data/platforms";
-import { PLATFORM_LABEL, PLATFORM_SUPPORT_LABEL } from "@/types/registry";
+import { PLATFORM_LABEL, PLATFORM_SUPPORT_LABEL, type Platform } from "@/types/registry";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 
 export const Route = createFileRoute("/platforms")({
   head: () => ({
@@ -17,6 +18,19 @@ export const Route = createFileRoute("/platforms")({
         content:
           "Native skills, generated adapters, and manual-context fallbacks across every supported client.",
       },
+    ],
+    scripts: [
+      breadcrumbScript([
+        { name: "Directory", path: "/browse" },
+        { name: "Platforms", path: "/platforms" },
+      ]),
+      itemListScript(
+        (Object.keys(PLATFORM_LABEL) as Platform[]).map((id) => ({
+          name: PLATFORM_LABEL[id],
+          path: `/for/${id}`,
+        })),
+        { name: "Claude platforms" },
+      ),
     ],
   }),
   component: PlatformsPage,

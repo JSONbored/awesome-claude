@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { INTEGRATIONS } from "@/data/integrations";
 import { IntegrationCard } from "@/components/integration-card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 
 export const Route = createFileRoute("/integrations")({
   head: () => ({
@@ -17,6 +18,16 @@ export const Route = createFileRoute("/integrations")({
         property: "og:description",
         content: "Raycast extension, MCP server, Cursor adapter, REST API, and public feeds.",
       },
+    ],
+    scripts: [
+      breadcrumbScript([
+        { name: "Directory", path: "/browse" },
+        { name: "Integrations", path: "/integrations" },
+      ]),
+      itemListScript(
+        INTEGRATIONS.map((it) => ({ name: it.name, path: `/integrations/${it.slug}` })),
+        { name: "HeyClaude integrations" },
+      ),
     ],
   }),
   component: IntegrationsPage,

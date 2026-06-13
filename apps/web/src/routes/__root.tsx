@@ -23,6 +23,8 @@ import { SkipLink } from "@/components/skip-link";
 import { RouteProgress } from "@/components/route-progress";
 import { WebMcpProvider } from "@/components/webmcp-provider";
 import { siteConfig } from "@/lib/site";
+import { stringifyJsonLd } from "@/lib/json-ld";
+import { buildOrganizationJsonLd, buildWebsiteJsonLd } from "@heyclaude/registry/seo";
 
 function NotFoundComponent() {
   return (
@@ -121,6 +123,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: stringifyJsonLd(
+          buildOrganizationJsonLd({
+            siteUrl: siteConfig.url,
+            name: siteConfig.name,
+            githubUrl: siteConfig.githubUrl,
+            twitterUrl: siteConfig.twitterUrl,
+            discordUrl: siteConfig.discordUrl,
+            logo: `${siteConfig.url}/apple-touch-icon.png`,
+          }),
+        ),
+      },
+      {
+        type: "application/ld+json",
+        children: stringifyJsonLd(
+          buildWebsiteJsonLd({
+            siteUrl: siteConfig.url,
+            name: siteConfig.name,
+            description: siteConfig.description,
+          }),
+        ),
       },
     ],
   }),

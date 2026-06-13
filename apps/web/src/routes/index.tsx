@@ -30,7 +30,6 @@ import { useRecents } from "@/lib/recents";
 import { CATEGORIES, type Category } from "@/types/registry";
 import { ENTRIES, BRIEF_ISSUES, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { search } from "@/data/search";
-import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 
 // Pre-computed counts at module scope so SSR + first paint show real numbers.
@@ -87,22 +86,6 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: absoluteUrl("/") },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/") }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: stringifyJsonLd({
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "HeyClaude",
-          url: "https://heyclau.de/",
-          potentialAction: {
-            "@type": "SearchAction",
-            target: "https://heyclau.de/browse?q={search_term_string}",
-            "query-input": "required name=search_term_string",
-          },
-        }),
-      },
-    ],
   }),
   component: Home,
 });

@@ -25,6 +25,7 @@ export function buildOrganizationJsonLd(params = {}) {
     "@id": `${siteUrl.replace(/\/$/, "")}/#organization`,
     name: params.name || "HeyClaude",
     url: siteUrl,
+    ...(params.logo ? { logo: { "@type": "ImageObject", url: params.logo } } : {}),
     sameAs: uniqueValues([
       params.githubUrl,
       params.twitterUrl,

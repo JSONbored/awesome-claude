@@ -10,6 +10,7 @@ import { ShareMenu } from "@/components/share-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { CATEGORIES, type Entry } from "@/types/registry";
 import { formatCompact } from "@/lib/format";
+import { breadcrumbScript } from "@/lib/seo-jsonld";
 import { cn } from "@/lib/utils";
 
 const defaultSearch = {
@@ -68,6 +69,12 @@ export const Route = createFileRoute("/trending")({
         content:
           "Trending Claude Code MCP servers, agents, skills, hooks, and commands from live community and intent signals.",
       },
+    ],
+    scripts: [
+      breadcrumbScript([
+        { name: "Directory", path: "/browse" },
+        { name: "Trending", path: "/trending" },
+      ]),
     ],
   }),
   component: TrendingPage,

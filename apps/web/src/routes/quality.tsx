@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { absoluteUrl } from "@/lib/seo";
+import { breadcrumbScript } from "@/lib/seo-jsonld";
 import {
   ShieldCheck,
   GitBranch,
@@ -35,6 +36,12 @@ export const Route = createFileRoute("/quality")({
       { property: "og:url", content: absoluteUrl("/quality") },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/quality") }],
+    scripts: [
+      breadcrumbScript([
+        { name: "HeyClaude", path: "/" },
+        { name: "Quality", path: "/quality" },
+      ]),
+    ],
   }),
   component: QualityPage,
 });

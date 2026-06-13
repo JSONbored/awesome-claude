@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import { ENDPOINTS, OPENAPI_TAGS } from "@/data/openapi";
 import { OpenApiEndpointCard, MethodPill } from "@/components/openapi";
 import { cn } from "@/lib/utils";
+import { breadcrumbScript } from "@/lib/seo-jsonld";
 
 export const Route = createFileRoute("/api-docs")({
   head: () => ({
@@ -19,6 +20,12 @@ export const Route = createFileRoute("/api-docs")({
         content:
           "Search, trending, manifest, integrity, diff, submissions, and generated OpenAPI specs.",
       },
+    ],
+    scripts: [
+      breadcrumbScript([
+        { name: "HeyClaude", path: "/" },
+        { name: "API docs", path: "/api-docs" },
+      ]),
     ],
   }),
   component: ApiDocsPage,

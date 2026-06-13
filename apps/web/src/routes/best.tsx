@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { absoluteUrl } from "@/lib/seo";
+import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { BEST_LISTS, ENTRIES } from "@/data/entries";
 import { ResourceCard } from "@/components/resource-card";
 
@@ -21,6 +22,16 @@ export const Route = createFileRoute("/best")({
       { property: "og:url", content: absoluteUrl("/best") },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/best") }],
+    scripts: [
+      breadcrumbScript([
+        { name: "Directory", path: "/browse" },
+        { name: "Best", path: "/best" },
+      ]),
+      itemListScript(
+        BEST_LISTS.map((list) => ({ name: list.title, path: `/best/${list.slug}` })),
+        { name: "Best of HeyClaude" },
+      ),
+    ],
   }),
   component: BestPage,
 });
