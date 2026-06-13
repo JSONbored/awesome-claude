@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { renderOgSvg } from "@/lib/og-image";
+import { renderOgSvg, safeAccent } from "@/lib/og-image";
 
 /**
  * Generic OG image generator (query params) for hub/list pages that aren't a single entry.
@@ -15,13 +15,14 @@ export const Route = createFileRoute("/og/")({
         const description =
           url.searchParams.get("description") ?? url.searchParams.get("subtitle") ?? undefined;
         const eyebrow = url.searchParams.get("eyebrow") ?? "HeyClaude";
-        const accent = url.searchParams.get("accent") ?? undefined;
+        // accent is user-controlled; clamp to a safe hex before it reaches the SVG attribute.
+        const accent = safeAccent(url.searchParams.get("accent"));
 
         const svg = renderOgSvg({
           eyebrow,
           title,
           description: description ?? undefined,
-          accent: accent ?? undefined,
+          accent,
         });
 
         return new Response(svg, {

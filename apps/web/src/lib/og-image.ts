@@ -13,8 +13,23 @@ const PALETTE: Record<string, string> = {
   statuslines: "#9bd6f0",
 };
 
+const DEFAULT_ACCENT = "#c5e84e";
+
 export function categoryAccent(category?: string) {
-  return PALETTE[category ?? ""] ?? "#c5e84e";
+  return PALETTE[category ?? ""] ?? DEFAULT_ACCENT;
+}
+
+/**
+ * Clamp an accent to a strict hex color before it lands in an SVG attribute.
+ * The generic /og route accepts a user-controlled `accent` query param; without
+ * this, a value like `"><script>…` could break out of the `fill="…"` attribute
+ * and inject markup into the SVG response. Anything that isn't a #rgb/#rrggbb/
+ * #rrggbbaa hex falls back to the default.
+ */
+export function safeAccent(value?: string | null) {
+  return value && /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(value)
+    ? value
+    : DEFAULT_ACCENT;
 }
 
 function esc(value: string) {
@@ -43,7 +58,7 @@ export function renderOgSvg(opts: {
   author?: string;
   accent?: string;
 }) {
-  const accent = opts.accent || "#c5e84e";
+  const accent = safeAccent(opts.accent);
   const eyebrow = esc((opts.eyebrow || "HeyClaude").toUpperCase());
   const titleLines = wrap(opts.title, 22, 2);
   const descLines = opts.description ? wrap(opts.description, 60, 2) : [];
