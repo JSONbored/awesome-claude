@@ -474,13 +474,20 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("sourceEvidencePolicy:");
     expect(source).toContain("privateSourceHardFailureContradicted(");
     expect(source).toContain('"source_evidence_conflict"');
-    expect(source).toContain("sourceEvidenceConflictMergeDecision(");
+    expect(source).toContain("sourceEvidenceConflictExhaustedDecision(");
+    expect(source).not.toContain("sourceEvidenceConflictMergeDecision(");
     expect(source).toContain('"duplicate_evidence_conflict"');
     expect(source).toContain("privateStrictDuplicateContradicted(");
     expect(source).toContain("duplicateEvidenceConflictExhaustedDecision(");
     expect(source).toContain("duplicateEvidenceContractExhaustedDecision(");
     expect(readReviewSource()).toContain("duplicate_evidence_contract_exhausted");
     expect(source).not.toContain("duplicateEvidenceConflictMergeDecision(");
+    expect(source).toContain("privateEvidenceClaimsDeadSourceUrl(");
+    expect(source).toContain("privateEvidenceMatchesReachableSourceUrl(");
+    expect(source).toContain(
+      "Automation will not override the private close into a merge",
+    );
+    expect(source).toContain("labels: [LABELS.manual]");
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
@@ -897,7 +904,7 @@ downloadUrl: "https://github.com/example/project/archive/refs/heads/main.zip"
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 
-  it("treats distribution-only untrusted redirects as warnings when canonical evidence passes", async () => {
+  it("blocks distribution redirects to untrusted hosts even when canonical evidence passes", async () => {
     const report = await checkSubmittedSourceEvidence(
       `---
 title: Distribution Redirect Warning Fixture
@@ -916,17 +923,34 @@ downloadUrl: "https://github.com/example/project/archive/refs/heads/main.zip"
         return new Response(null, { status: 200 });
       }),
     );
+    const decision = sourceEvidenceCloseDecision(report);
 
-    expect(report.status).toBe("passed");
-    expect(report.warnings).toHaveLength(1);
-    expect(report.warnings[0]).toMatchObject({
-      field: "downloadUrl",
-      status: "hard_failure",
-      role: "distribution",
-      outcome: "source_host_not_checked",
-      blocking: false,
+    expect(report.status).toBe("failed");
+    expect(report.warnings).toHaveLength(0);
+    expect(report.urls).toContainEqual(
+      expect.objectContaining({
+        field: "downloadUrl",
+        status: "hard_failure",
+        role: "distribution",
+        outcome: "source_host_not_checked",
+        blocking: true,
+        finalUrl: "https://download.example/project.zip",
+      }),
+    );
+    expect(decision).toMatchObject({
+      verdict: "manual",
+      reasonCode: "source_hard_failure",
+      close: false,
+      evidence: [
+        expect.objectContaining({
+          field: "downloadUrl",
+          matchedUrl:
+            "https://github.com/example/project/archive/refs/heads/main.zip",
+          finalUrl: "https://download.example/project.zip",
+          outcome: "source_host_not_checked",
+        }),
+      ],
     });
-    expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 
   it("treats isolated auxiliary source fetch errors as warnings when canonical evidence passes", async () => {
@@ -1053,8 +1077,8 @@ documentationUrl: "https://github.com/example/redirect"
       field: "documentationUrl",
       status: "hard_failure",
       outcome: "source_host_not_checked",
+      finalUrl: "http://127.0.0.1/internal-secret",
     });
-    expect(report.urls[0]?.finalUrl).toBeUndefined();
   });
 
   it("caps deterministic source evidence fetches", async () => {
@@ -2652,7 +2676,7 @@ docsUrl: "https://developers.cloudflare.com/ai-gateway/get-started/"
     );
   });
 
-  it("treats same canonical project across different categories as related context", () => {
+  it("treats same canonical project across different categories as a strict duplicate", () => {
     const existingMcp = extractContentDuplicateSignals({
       filePath: "content/mcp/langchain-mcp-server.mdx",
       content: `---
@@ -2678,7 +2702,13 @@ repoUrl: "https://github.com/langchain-ai/langchain.git"
 
     expect(
       findStrictContentDuplicateMatch(candidateSkill, [existingMcp]),
-    ).toBeNull();
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining(
+          "same canonical source URL https://github.com/langchain-ai/langchain across skills/mcp",
+        ),
+      ]),
+    });
     expect(findRelatedContentMatches(candidateSkill, [existingMcp])).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
