@@ -33,7 +33,7 @@ import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { stringifyJsonLd } from "@/lib/json-ld";
-import { absoluteUrl } from "@/lib/seo";
+import { absoluteUrl, clampDescription } from "@/lib/seo";
 import { categoryLabels, categoryUsageHints } from "@/lib/site";
 import { tagSlug } from "@/lib/tags";
 // (HoverChevrons removed — related uses static grid)
@@ -172,18 +172,25 @@ export const Route = createFileRoute("/entry/$category/$slug")({
       ],
     };
     const ogUrl = absoluteUrl(`/og/${params.category}/${params.slug}`);
+    const ogTitle = `${e.title} — HeyClaude`;
+    const metaDescription = clampDescription(e.seoDescription ?? e.description);
     return {
       meta: [
-        { title: e.seoTitle ? `${e.seoTitle} — HeyClaude` : `${e.title} — HeyClaude` },
-        { name: "description", content: e.seoDescription ?? e.description },
-        { property: "og:title", content: `${e.title} — HeyClaude` },
-        { property: "og:description", content: e.seoDescription ?? e.description },
+        { title: e.seoTitle ? `${e.seoTitle} — HeyClaude` : ogTitle },
+        { name: "description", content: metaDescription },
+        { property: "og:title", content: ogTitle },
+        { property: "og:description", content: metaDescription },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
         { property: "og:image", content: ogUrl },
+        { property: "article:published_time", content: e.dateAdded },
+        { property: "article:modified_time", content: e.reviewedAt ?? e.dateAdded },
+        ...(e.author ? [{ property: "article:author", content: e.author }] : []),
+        { property: "article:section", content: e.category },
+        ...(e.tags ?? []).map((tag) => ({ property: "article:tag", content: tag })),
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: e.title },
-        { name: "twitter:description", content: e.description },
+        { name: "twitter:title", content: ogTitle },
+        { name: "twitter:description", content: metaDescription },
         { name: "twitter:image", content: ogUrl },
       ],
       links: [{ rel: "canonical", href: url }],

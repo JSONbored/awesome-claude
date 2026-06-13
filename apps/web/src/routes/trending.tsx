@@ -11,6 +11,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { CATEGORIES, type Entry } from "@/types/registry";
 import { formatCompact } from "@/lib/format";
 import { breadcrumbScript } from "@/lib/seo-jsonld";
+import { absoluteUrl } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 const defaultSearch = {
@@ -69,7 +70,9 @@ export const Route = createFileRoute("/trending")({
         content:
           "Trending Claude Code MCP servers, agents, skills, hooks, and commands from live community and intent signals.",
       },
+      { property: "og:url", content: absoluteUrl("/trending") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/trending") }],
     scripts: [
       breadcrumbScript([
         { name: "Directory", path: "/browse" },

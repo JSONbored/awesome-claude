@@ -4,6 +4,7 @@ import { CONTRIBUTORS } from "@/data/contributors";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Monogram } from "@/components/monogram";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/contributors")({
   head: () => ({
@@ -12,7 +13,9 @@ export const Route = createFileRoute("/contributors")({
       { name: "description", content: "People whose submissions power the HeyClaude registry." },
       { property: "og:title", content: "Contributors — HeyClaude" },
       { property: "og:description", content: "Provenance is preserved on every entry." },
+      { property: "og:url", content: absoluteUrl("/contributors") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/contributors") }],
     scripts: [
       breadcrumbScript([
         { name: "Directory", path: "/browse" },

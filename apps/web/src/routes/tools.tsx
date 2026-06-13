@@ -3,6 +3,7 @@ import { ArrowUpRight, BadgeCheck } from "lucide-react";
 import { COMMERCIAL_TOOLS } from "@/data/tools";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/tools")({
   head: () => ({
@@ -18,7 +19,9 @@ export const Route = createFileRoute("/tools")({
         content:
           "Editorial picks and disclosed partners. Free, open-source resources live in the directory.",
       },
+      { property: "og:url", content: absoluteUrl("/tools") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/tools") }],
     scripts: [
       breadcrumbScript([
         { name: "Directory", path: "/browse" },

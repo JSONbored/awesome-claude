@@ -3,6 +3,7 @@ import { INTEGRATIONS } from "@/data/integrations";
 import { IntegrationCard } from "@/components/integration-card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/integrations")({
   head: () => ({
@@ -18,7 +19,9 @@ export const Route = createFileRoute("/integrations")({
         property: "og:description",
         content: "Raycast extension, MCP server, Cursor adapter, REST API, and public feeds.",
       },
+      { property: "og:url", content: absoluteUrl("/integrations") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/integrations") }],
     scripts: [
       breadcrumbScript([
         { name: "Directory", path: "/browse" },

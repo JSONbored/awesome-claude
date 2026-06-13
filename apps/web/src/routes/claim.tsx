@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, ShieldCheck, ListChecks } from "lucide-react";
 import { ENTRIES } from "@/data/entries";
 import { cn } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/seo";
 
 type ClaimType = "maintain" | "transfer" | "correct" | "remove";
 
@@ -21,7 +22,9 @@ export const Route = createFileRoute("/claim")({
         name: "description",
         content: "Claim a HeyClaude listing, attach proof of ownership, and track claim status.",
       },
+      { property: "og:url", content: absoluteUrl("/claim") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/claim") }],
   }),
   component: ClaimPage,
 });

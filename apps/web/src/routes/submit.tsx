@@ -21,6 +21,7 @@ import { logClientError } from "@/lib/client-logs";
 import { siteConfig } from "@/lib/site";
 import { CopyButton } from "@/components/copy-button";
 import { cn } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/submit")({
   head: () => ({
@@ -35,7 +36,9 @@ export const Route = createFileRoute("/submit")({
         property: "og:description",
         content: "Free, source-backed, useful. Paid tools route to the commercial intake.",
       },
+      { property: "og:url", content: absoluteUrl("/submit") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/submit") }],
   }),
   component: SubmitPage,
 });

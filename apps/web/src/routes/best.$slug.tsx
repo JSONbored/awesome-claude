@@ -26,11 +26,15 @@ export const Route = createFileRoute("/best/$slug")({
       name: l.title,
       description: l.subtitle,
       numberOfItems: l.picks.length,
-      itemListElement: l.picks.map((p, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        url: absoluteUrl(`/entry/${p.ref}`),
-      })),
+      itemListElement: l.picks.map((p, i) => {
+        const entry = ENTRIES.find((e) => `${e.category}/${e.slug}` === p.ref);
+        return {
+          "@type": "ListItem",
+          position: i + 1,
+          name: entry?.title ?? p.ref,
+          url: absoluteUrl(`/entry/${p.ref}`),
+        };
+      }),
     };
     return {
       meta: [

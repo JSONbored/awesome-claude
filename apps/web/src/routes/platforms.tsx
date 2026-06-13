@@ -3,6 +3,7 @@ import { SUPPORTED_PLATFORMS, PLATFORM_MATRIX } from "@/data/platforms";
 import { PLATFORM_LABEL, PLATFORM_SUPPORT_LABEL, type Platform } from "@/types/registry";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/platforms")({
   head: () => ({
@@ -18,7 +19,9 @@ export const Route = createFileRoute("/platforms")({
         content:
           "Native skills, generated adapters, and manual-context fallbacks across every supported client.",
       },
+      { property: "og:url", content: absoluteUrl("/platforms") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/platforms") }],
     scripts: [
       breadcrumbScript([
         { name: "Directory", path: "/browse" },

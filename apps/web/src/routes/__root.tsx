@@ -23,8 +23,21 @@ import { SkipLink } from "@/components/skip-link";
 import { RouteProgress } from "@/components/route-progress";
 import { WebMcpProvider } from "@/components/webmcp-provider";
 import { siteConfig } from "@/lib/site";
+import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { buildOrganizationJsonLd, buildWebsiteJsonLd } from "@heyclaude/registry/seo";
+
+const twitterHandle = (() => {
+  try {
+    const handle = new URL(siteConfig.twitterUrl).pathname.split("/").filter(Boolean)[0];
+    return handle ? `@${handle.replace(/^@/, "")}` : undefined;
+  } catch {
+    return undefined;
+  }
+})();
+
+// Sitewide default OG/Twitter card. Routes that render a page-specific card override og:image.
+const defaultOgImage = absoluteUrl("/og-image.png");
 
 function NotFoundComponent() {
   return (
@@ -109,7 +122,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Search, compare, and inspect trust on Claude Code MCP servers, skills, hooks, commands, agents, and tools.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: siteConfig.name },
+      { property: "og:locale", content: "en_US" },
+      { property: "og:image", content: defaultOgImage },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: defaultOgImage },
+      ...(twitterHandle
+        ? [
+            { name: "twitter:site", content: twitterHandle },
+            { name: "twitter:creator", content: twitterHandle },
+          ]
+        : []),
     ],
     links: [
       { rel: "stylesheet", href: appCss },
