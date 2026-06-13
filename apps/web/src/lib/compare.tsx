@@ -1,6 +1,5 @@
 import * as React from "react";
 import type { Entry } from "@/types/registry";
-import { ENTRIES } from "@/data/entries";
 
 interface CompareCtx {
   items: Entry[];
@@ -19,7 +18,7 @@ interface CompareCtx {
 
 const Ctx = React.createContext<CompareCtx | null>(null);
 
-function resolve(param: string): Entry[] {
+function resolve(entries: Entry[], param: string): Entry[] {
   if (!param) return [];
   const refs = param
     .split(",")
@@ -31,7 +30,7 @@ function resolve(param: string): Entry[] {
   for (const ref of refs) {
     const [cat, slug] = ref.split("/");
     if (!cat || !slug || seen.has(ref)) continue;
-    const e = ENTRIES.find((x) => x.category === cat && x.slug === slug);
+    const e = entries.find((x) => x.category === cat && x.slug === slug);
     if (e) {
       out.push(e);
       seen.add(ref);
@@ -63,11 +62,19 @@ export function CompareProvider({ children }: { children: React.ReactNode }) {
       },
       has: (slug) => items.some((x) => x.slug === slug),
       hydrate: (param) => {
-        const next = resolve(param);
-        // Only update if changed to avoid render loops
-        const sig = next.map((e) => `${e.category}/${e.slug}`).join(",");
-        const curSig = items.map((e) => `${e.category}/${e.slug}`).join(",");
-        if (sig !== curSig) setItems(next);
+        if (!param) {
+          if (items.length) setItems([]);
+          return;
+        }
+        // Lazy-load the dataset only when a compare selection is hydrated from the URL,
+        // keeping the registry dataset out of the universal client bundle.
+        void import("@/data/entries").then(({ ENTRIES }) => {
+          const next = resolve(ENTRIES, param);
+          // Only update if changed to avoid render loops
+          const sig = next.map((e) => `${e.category}/${e.slug}`).join(",");
+          const curSig = items.map((e) => `${e.category}/${e.slug}`).join(",");
+          if (sig !== curSig) setItems(next);
+        });
       },
       serialize: () => items.map((e) => `${e.category}/${e.slug}`).join(","),
       getShareUrl: () => {
