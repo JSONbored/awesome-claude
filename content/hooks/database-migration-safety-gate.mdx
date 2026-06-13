@@ -69,8 +69,9 @@ scriptBody: |-
   # Claude Code PreToolUse hook. Inspects a pending database migration and blocks
   # irreversible or lock-heavy operations (the strong_migrations safe-migration
   # check classes). Exit code 2 blocks the write and feeds the reason back to
-  # Claude. An explicit "-- safety-gate: allow" comment acknowledges the risk and
-  # lets the migration through. Fails open when jq is missing.
+  # Claude. An explicit "-- safety-gate: allow" comment in the pending write or
+  # edit content acknowledges the risk and lets the migration through. Fails open
+  # when jq is missing.
 
   command -v jq >/dev/null 2>&1 || exit 0
 
@@ -85,6 +86,12 @@ scriptBody: |-
 
   TOOL_NAME=$(printf '%s' "$INPUT" | jq -r '.tool_name // ""')
   CONTENT=$(printf '%s' "$INPUT" | jq -r '.tool_input.content // ""')
+  ACK_CONTENT=$(printf '%s' "$INPUT" | jq -r '
+    [ .tool_input.content,
+      .tool_input.new_string,
+      (.tool_input.edits[]?.new_string) ]
+    | map(select(. != null)) | join("\n")
+  ')
 
   if [ "$TOOL_NAME" = "Edit" ] || [ "$TOOL_NAME" = "MultiEdit" ]; then
     EXISTING_FILE=""
@@ -173,8 +180,9 @@ scriptBody: |-
 
   [ -z "$CONTENT" ] && exit 0
 
-  # Escape hatch: an explicit acknowledgement lets an intentional change proceed.
-  if printf '%s' "$CONTENT" | grep -qiE 'safety-gate:[[:space:]]*allow|safety_assured|strong_migrations[[:space:]]*:[[:space:]]*disable'; then
+  # Escape hatch: require the acknowledgement in the pending write/edit text so
+  # stale allow comments already in the file cannot suppress newly added risks.
+  if printf '%s' "$ACK_CONTENT" | grep -qiE 'safety-gate:[[:space:]]*allow|safety_assured|strong_migrations[[:space:]]*:[[:space:]]*disable'; then
     exit 0
   fi
 
@@ -212,7 +220,7 @@ prerequisites:
 safetyNotes:
   - "Runs before Write, Edit, and MultiEdit on files under a migrations path or with a .sql extension; for edits, it reads only regular, non-symlink existing files up to 1 MiB and applies the requested replacement before scanning the final SQL."
   - "Blocks the write with exit code 2 when it detects DROP TABLE/COLUMN, TRUNCATE, a table/column RENAME, or CREATE INDEX without CONCURRENTLY; the hook never connects to or runs SQL against any database."
-  - "Provides an explicit escape hatch - add a '-- safety-gate: allow' comment to the migration to acknowledge the risk and let it through."
+  - "Provides an explicit escape hatch - include a '-- safety-gate: allow' comment in the pending Write, Edit, or MultiEdit content to acknowledge the risk and let it through; stale allow comments already present in an edited file do not bypass new risky edits."
   - "Uses regex heuristics, so it can miss obfuscated statements or flag an intentional change; review every migration regardless of the result."
 privacyNotes:
   - "Reads the pending Write content from the tool input and, for Edit or MultiEdit, the targeted local migration file only when it is a regular, non-symlink file up to 1 MiB so it can scan the final content; it opens no database connections and makes no network calls."
