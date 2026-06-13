@@ -17,6 +17,7 @@ import { HARNESSES } from "@/types/registry";
 import { CopyButton } from "@/components/copy-button";
 import { CountUp } from "@/components/count-up";
 import { cn } from "@/lib/utils";
+import { stringifyJsonLd } from "@/lib/json-ld";
 
 const CLIENTS = [
   { id: "claude-code", label: "Claude Code" },
@@ -213,7 +214,7 @@ export const Route = createFileRoute("/ecosystem")({
         { property: "og:url", content: "/ecosystem" },
       ],
       links: [{ rel: "canonical", href: "/ecosystem" }],
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
+      scripts: [{ type: "application/ld+json", children: stringifyJsonLd(ld) }],
     };
   },
   component: EcosystemPage,
