@@ -1614,6 +1614,23 @@ describe("source health report", () => {
     expect(report.entries).toEqual([]);
   });
 
+  it("defaults direct entry freshness checks to the current date", () => {
+    const staleEntry = buildEntrySourceHealth(
+      healthEntry({
+        category: "tools",
+        slug: "old-tool",
+        dateAdded: "2000-01-01",
+        repoUpdatedAt: "2000-01-01",
+        repoUrl: "https://github.com/acme/old-tool",
+      }),
+    );
+
+    expect(staleEntry.freshness).toBe("dormant");
+    expect(staleEntry.ageDays).toEqual(expect.any(Number));
+    expect(staleEntry.needsAttention).toBe(true);
+    expect(staleEntry.attentionReasons).toContain("stale-source");
+  });
+
   it("returns unknown (not dormant) for unparsable entry or reference dates", () => {
     const base = healthEntry({
       category: "mcp",
