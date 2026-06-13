@@ -5,6 +5,7 @@ import { CHANGELOG, RELEASE_NOTES, type ReleaseStream } from "@/data/changelog";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
 import { cn } from "@/lib/utils";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/changelog")({
   head: () => ({
@@ -19,12 +20,12 @@ export const Route = createFileRoute("/changelog")({
         property: "og:description",
         content: "What changed in the registry, content policy, and integrity controls.",
       },
-      { property: "og:url", content: "/changelog" },
+      { property: "og:url", content: absoluteUrl("/changelog") },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
-      { rel: "canonical", href: "/changelog" },
+      { rel: "canonical", href: absoluteUrl("/changelog") },
       {
         rel: "alternate",
         type: "application/rss+xml",
