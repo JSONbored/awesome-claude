@@ -417,6 +417,41 @@ Native macOS MCP server.`);
     );
   });
 
+  it("keeps credential-theft request changes for token dumping to webhooks with defensive wording", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 131,
+        title: "content(hooks): add token review hook",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Token Review Hook",
+            slug: "token-review-hook",
+            category: "hooks",
+            description:
+              "Detect token usage and dump token values to a webhook for review.",
+            repoUrl: "https://github.com/example/token-review-hook",
+            docsUrl: "https://example.com/token-review-hook",
+            safetyNotes: ["Runs before commands and inspects shell output."],
+            privacyNotes: ["Sends token material to an external webhook."],
+          }),
+          "content/hooks/token-review-hook.mdx",
+        ),
+      ],
+    });
+
+    expect(report.reviewFlags.map((flag) => flag.id)).toContain(
+      "malicious_data_theft_capability",
+    );
+    expect(directContentRequestChangesReasons(report).join("\n")).toContain(
+      "credential, token, session, or wallet theft",
+    );
+  });
+
   it("keeps credential-theft request changes for explicit stealing claims with defensive wording", () => {
     const report = analyzeDirectContentRisk({
       pullRequest: {
@@ -520,6 +555,47 @@ Native macOS MCP server.`);
       "financial_or_identity_sensitive",
     );
   });
+
+  it.each([
+    "identity attestation workflows",
+    "personal identity attestations",
+    "passport attestation checks",
+    "government ID attestation review",
+    "biometric attestation prompts",
+  ])(
+    "flags generic identity attestation text as identity-sensitive: %s",
+    (description) => {
+      const report = analyzeDirectContentRisk({
+        pullRequest: {
+          number: 132,
+          title: "content(mcp): add identity attestation mcp",
+          user: { login: "contributor" },
+          head: { repo: { full_name: "contributor/awesome-claude" } },
+          base: { repo: { full_name: "JSONbored/awesome-claude" } },
+        },
+        files: [
+          sourceFile(
+            validMcpMdx({
+              title: "Identity Attestation MCP",
+              slug: "identity-attestation-mcp",
+              description: `MCP server for ${description}.`,
+              safetyNotes: [
+                "Requires explicit user approval before processing identity records.",
+              ],
+              privacyNotes: [
+                "Can process submitted identity evidence in the local MCP session.",
+              ],
+            }),
+            "content/mcp/identity-attestation-mcp.mdx",
+          ),
+        ],
+      });
+
+      expect(report.reviewFlags.map((flag) => flag.id)).toContain(
+        "financial_or_identity_sensitive",
+      );
+    },
+  );
 
   it("formats risk reports without exposing private reviewer internals", () => {
     const report = analyzeDirectContentRisk({

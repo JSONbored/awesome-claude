@@ -1738,6 +1738,42 @@ describe("Raycast feed helpers", () => {
     );
   });
 
+  it("accepts generated JSON feeds with trailing newlines", async () => {
+    const cache = new MemoryCache();
+    const devFeed = "https://preview.example.com/data/raycast-index.json";
+    const feedPayload = JSON.stringify({
+      generatedAt: "2026-04-28T00:00:00.000Z",
+      entries: [sampleEntry],
+    });
+
+    const feed = await fetchFreshFeed({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async (input) => {
+        if (String(input).endsWith("/data/registry-manifest.json")) {
+          return response({
+            generatedAt: "2026-04-28T00:00:00.000Z",
+            artifactContracts: {
+              "raycast-index.json": {
+                path: "/data/raycast-index.json",
+                type: "json",
+                sha256: sha256Hex(feedPayload),
+              },
+            },
+          });
+        }
+        return response(`${feedPayload}\n`);
+      },
+    });
+
+    assert.equal(feed.refreshStatus, "updated");
+    assert.equal(feed.signature, sha256Hex(feedPayload));
+    assert.equal(
+      JSON.parse(cache.get(feedMetadataCacheKey(devFeed)) || "{}").signature,
+      sha256Hex(feedPayload),
+    );
+  });
+
   it("rejects feed payloads whose SHA-256 does not match the manifest", async () => {
     const cache = new MemoryCache();
     const devFeed = "https://preview.example.com/data/raycast-index.json";

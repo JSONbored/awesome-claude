@@ -68,25 +68,42 @@ function pipeChainSegments(line) {
   const segments = [];
   let start = 0;
   let index = 0;
+  let quote = "";
+  let escaped = false;
   const pushSegment = (end) => segments.push({ start, end });
 
   while (index < line.length) {
     const char = line[index];
-    if (char === "|" && line[index + 1] === "|") {
+    if (escaped) {
+      escaped = false;
+      index += 1;
+      continue;
+    }
+    if (char === "\\" && quote !== "'") {
+      escaped = true;
+      index += 1;
+      continue;
+    }
+    if ((char === "'" || char === '"') && (!quote || quote === char)) {
+      quote = quote ? "" : char;
+      index += 1;
+      continue;
+    }
+    if (!quote && char === "|" && line[index + 1] === "|") {
       pushSegment(index);
       segments.push({ barrier: true });
       index += 2;
       start = index;
-    } else if (char === "|") {
+    } else if (!quote && char === "|") {
       pushSegment(index);
       index += 1;
       start = index;
-    } else if (char === ";") {
+    } else if (!quote && char === ";") {
       pushSegment(index);
       segments.push({ barrier: true });
       index += 1;
       start = index;
-    } else if (char === "&") {
+    } else if (!quote && char === "&") {
       pushSegment(index);
       segments.push({ barrier: true });
       index += line[index + 1] === "&" ? 2 : 1;
@@ -99,44 +116,104 @@ function pipeChainSegments(line) {
   return segments;
 }
 
-// First command word of a pipe segment, stepping over an optional `sudo [flags]`
-// privilege prefix (so `sudo -E bash` and `sudo -u root bash` both read as
-// `bash`). Returns "" when the segment does not start with a recognizable
-// command word.
+const ENV_VALUE_FLAGS = new Set(["-u", "--unset", "-c", "--chdir"]);
+
+function shellTokenEnd(line, start, end) {
+  let index = start;
+  let quote = "";
+  let escaped = false;
+  while (index < end) {
+    const char = line[index];
+    if (escaped) {
+      escaped = false;
+    } else if (char === "\\" && quote !== "'") {
+      escaped = true;
+    } else if ((char === "'" || char === '"') && (!quote || quote === char)) {
+      quote = quote ? "" : char;
+    } else if (!quote && /\s/.test(char || "")) {
+      break;
+    }
+    index += 1;
+  }
+  return index;
+}
+
+function shellToken(line, lowerLine, start, end) {
+  let index = start;
+  while (index < end && /\s/.test(line[index] || "")) index += 1;
+  if (index >= end) return null;
+  const tokenEnd = shellTokenEnd(line, index, end);
+  return {
+    end: tokenEnd,
+    lower: lowerLine.slice(index, tokenEnd),
+    start: index,
+  };
+}
+
+function isEnvironmentAssignment(token) {
+  return /^[a-z_][a-z0-9_]*=/i.test(token);
+}
+
+// First command word of a pipe segment, stepping over POSIX environment
+// assignments and optional `sudo`/`env` prefixes (so `HTTPS_PROXY=x curl`,
+// `sudo -E bash`, and `env VAR=x curl` read as the command they execute).
+// Returns "" when the segment does not start with a recognizable command word.
 function segmentLeadCommand(line, lowerLine, start, end) {
   let index = start;
-  const skipWhitespace = () => {
-    while (index < end && /\s/.test(line[index] || "")) index += 1;
-  };
-  const skipToken = () => {
-    while (index < end && !/\s/.test(line[index] || "")) index += 1;
+  const skipAssignments = () => {
+    for (;;) {
+      const token = shellToken(line, lowerLine, index, end);
+      if (!token || !isEnvironmentAssignment(token.lower)) break;
+      index = token.end;
+    }
   };
 
-  skipWhitespace();
-  if (
-    lowerLine.startsWith("sudo", index) &&
-    index + 4 <= end &&
-    !isWordCharacter(line[index + 4] || "")
-  ) {
-    index += 4;
+  skipAssignments();
+  const first = shellToken(line, lowerLine, index, end);
+  if (first?.lower === "sudo") {
+    index = first.end;
     for (;;) {
-      skipWhitespace();
-      if (index >= end || line[index] !== "-") break;
-      const flagStart = index;
-      skipToken();
+      const flag = shellToken(line, lowerLine, index, end);
+      if (!flag || !flag.lower.startsWith("-")) break;
+      index = flag.end;
       // A value-taking sudo flag in `-u root` / `--user root` form also consumes
       // the following token as its value, so the real command isn't mistaken for
       // the value (e.g. `bash` in `sudo -u root bash`).
-      if (SUDO_VALUE_FLAGS.has(lowerLine.slice(flagStart, index))) {
-        skipWhitespace();
-        skipToken();
+      if (SUDO_VALUE_FLAGS.has(flag.lower)) {
+        const value = shellToken(line, lowerLine, index, end);
+        if (value) index = value.end;
+      }
+    }
+    skipAssignments();
+  }
+
+  const maybeEnv = shellToken(line, lowerLine, index, end);
+  if (maybeEnv?.lower === "env") {
+    index = maybeEnv.end;
+    for (;;) {
+      const token = shellToken(line, lowerLine, index, end);
+      if (!token) break;
+      if (isEnvironmentAssignment(token.lower)) {
+        index = token.end;
+      } else if (token.lower.startsWith("-")) {
+        index = token.end;
+        if (ENV_VALUE_FLAGS.has(token.lower)) {
+          const value = shellToken(line, lowerLine, index, end);
+          if (value) index = value.end;
+        }
+      } else {
+        break;
       }
     }
   }
 
-  let wordEnd = index;
-  while (wordEnd < end && isWordCharacter(line[wordEnd] || "")) wordEnd += 1;
-  return lowerLine.slice(index, wordEnd);
+  const command = shellToken(line, lowerLine, index, end);
+  if (!command) return "";
+  let wordEnd = command.start;
+  while (wordEnd < command.end && isWordCharacter(line[wordEnd] || "")) {
+    wordEnd += 1;
+  }
+  return lowerLine.slice(command.start, wordEnd);
 }
 
 // True when a pipe segment carries a base64 `-d`/`--decode` flag token.
