@@ -257,7 +257,11 @@ function Dossier() {
       <Breadcrumbs
         items={[
           { label: "Directory", to: "/browse" },
-          { label: entry.category, to: "/browse", search: { category: entry.category } },
+          {
+            label: categoryLabels[entry.category] ?? entry.category,
+            to: "/$category",
+            params: { category: entry.category },
+          },
           { label: entry.title },
         ]}
       />
@@ -596,11 +600,11 @@ function Dossier() {
               </div>
               <div className="mt-3 text-right">
                 <Link
-                  to="/browse"
-                  search={{ category: entry.category }}
+                  to="/$category"
+                  params={{ category: entry.category }}
                   className="story-link text-xs font-medium text-ink"
                 >
-                  More in {entry.category} →
+                  More in {categoryLabels[entry.category] ?? entry.category} →
                 </Link>
               </div>
             </DossierSection>

@@ -4,6 +4,7 @@ import { absoluteUrl } from "@/lib/seo";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { BEST_LISTS, ENTRIES } from "@/data/entries";
 import { ResourceCard } from "@/components/resource-card";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export const Route = createFileRoute("/best")({
   head: () => ({
@@ -47,7 +48,8 @@ function BestPage() {
 
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
-      <div className="eyebrow">Best lists · editorial</div>
+      <Breadcrumbs home items={[{ label: "Best lists" }]} />
+      <div className="mt-4 eyebrow">Best lists · editorial</div>
       <h1 className="mt-2 h-display-1 text-ink text-balance">Curated for real workflows</h1>
       <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
         Tightly scoped picks for specific jobs. Every list explains why each entry made the cut and
