@@ -75,7 +75,7 @@ describe("content validation", () => {
 
     expect(result.semanticErrors).toEqual(
       expect.arrayContaining([
-        "slug must use lowercase letters, numbers, and hyphens only",
+        "slug must contain only lowercase letters, numbers, and single hyphens",
         "documentationUrl must use http or https",
         "sourceUrls must use http or https",
       ]),

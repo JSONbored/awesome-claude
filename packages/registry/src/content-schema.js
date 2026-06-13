@@ -164,10 +164,6 @@ function isHttpUrl(value) {
   }
 }
 
-function isSafeSlug(value) {
-  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(String(value || "").trim());
-}
-
 function isIsoDateOrDateTime(value) {
   const normalized = String(value || "").trim();
   if (!normalized) return true;
@@ -687,13 +683,6 @@ export function validateEntry(category, data, inferred = {}) {
   if (slug && !SAFE_CONTENT_SLUG_PATTERN.test(slug)) {
     semanticErrors.push(
       "slug must contain only lowercase letters, numbers, and single hyphens",
-    );
-  }
-
-  const slug = String(merged.slug || "").trim();
-  if (slug && !isSafeSlug(slug)) {
-    semanticErrors.push(
-      "slug must use lowercase letters, numbers, and hyphens only",
     );
   }
 
