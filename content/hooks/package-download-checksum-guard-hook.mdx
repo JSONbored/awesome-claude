@@ -111,7 +111,11 @@ installCommand: |-
       fi
 
       if [ "$char" = "#" ] && [ "$in_single" -eq 0 ] && [ "$in_double" -eq 0 ] && [ "$at_word_start" -eq 1 ]; then
-        break
+        while [ "$i" -lt "${#text}" ] && [ "$char" != $'\n' ]; do
+          i=$((i + 1))
+          char=${text:i:1}
+        done
+        continue
       fi
 
       out+="$char"
@@ -352,7 +356,11 @@ scriptBody: |-
       fi
 
       if [ "$char" = "#" ] && [ "$in_single" -eq 0 ] && [ "$in_double" -eq 0 ] && [ "$at_word_start" -eq 1 ]; then
-        break
+        while [ "$i" -lt "${#text}" ] && [ "$char" != $'\n' ]; do
+          i=$((i + 1))
+          char=${text:i:1}
+        done
+        continue
       fi
 
       out+="$char"
