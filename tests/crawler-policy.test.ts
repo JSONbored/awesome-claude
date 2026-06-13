@@ -6,6 +6,25 @@ import { getRobotsPolicy } from "@/lib/robots-policy";
 import { repoRoot } from "./helpers/registry-fixtures";
 
 describe("crawler and AI citation policy", () => {
+  it("applies shared security headers to every SSR response", () => {
+    const serverSource = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/server.ts"),
+      "utf8",
+    );
+
+    expect(serverSource).toContain(
+      'import { applySecurityHeaders } from "./lib/security-headers"',
+    );
+    expect(serverSource).toContain(
+      "function withSecurityHeaders(response: Response): Response",
+    );
+    expect(serverSource).toContain(
+      "applySecurityHeaders(new Headers(response.headers))",
+    );
+    expect(serverSource).toContain(
+      "return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));",
+    );
+  });
   it("keeps legitimate search and AI citation crawlers explicitly allowed", () => {
     const policy = getRobotsPolicy();
     const rules = Array.isArray(policy.rules) ? policy.rules : [policy.rules];

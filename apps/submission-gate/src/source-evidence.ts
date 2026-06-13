@@ -267,6 +267,7 @@ async function fetchSourceUrl(
         status: "hard_failure",
         outcome: validation.outcome,
         error: validation.error,
+        finalUrl: currentUrl !== item.url ? currentUrl : undefined,
       });
     }
 
@@ -398,16 +399,9 @@ function hasVerifiableCanonicalSource(urls: SourceEvidenceItem[]) {
 }
 
 function isDowngradableInconclusiveSource(item: SourceEvidenceItem) {
-  if (
+  return (
     item.status === "retryable" &&
     !PRIMARY_CANONICAL_SOURCE_FIELDS.has(item.field)
-  ) {
-    return true;
-  }
-  return (
-    item.status === "hard_failure" &&
-    item.role === "distribution" &&
-    item.outcome === "source_host_not_checked"
   );
 }
 

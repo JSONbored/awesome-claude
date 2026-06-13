@@ -62,6 +62,8 @@ const RESOURCE_THEFT_CAPABILITY_PATTERN =
   /\b(?:this|the|our)?\s*(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b[\s\S]{0,40}\b(?:can|will|does|advertises?|offers?|enables?|designed to|built to)\b[\s\S]{0,80}\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b|\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(?:with|using|through|by)\b[\s\S]{0,40}\b(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b/i;
 const CREDENTIAL_THEFT_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b/i;
+const CREDENTIAL_THEFT_DESTINATION_PATTERN =
+  /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,120}\b(?:to|into|via|through|over|using|at)\b[\s\S]{0,40}\b(webhooks?|remote servers?|external endpoints?|third[- ]part(?:y|ies)|apis?|https?:\/\/)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,120}\b(?:to|into|via|through|over|using|at)\b[\s\S]{0,40}\b(webhooks?|remote servers?|external endpoints?|third[- ]part(?:y|ies)|apis?|https?:\/\/)\b/i;
 const EXPLICIT_CREDENTIAL_STEALING_PATTERN =
   /\b(?:credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\bsteals?\b|\bsteals?\b[\s\S]{0,80}\b(?:credential|password|cookie|session|token|wallet)s?\b|\b(?:credential|password|cookie) stealer|keylogger\b/i;
 const ABUSE_ENABLEMENT_PATTERN =
@@ -107,6 +109,7 @@ function hasDefensiveSecuritySafeHarbor(text) {
   return (
     DEFENSIVE_SECURITY_MITIGATION_PATTERN.test(text) &&
     !RESOURCE_THEFT_CAPABILITY_PATTERN.test(text) &&
+    !CREDENTIAL_THEFT_DESTINATION_PATTERN.test(text) &&
     !EXPLICIT_CREDENTIAL_STEALING_PATTERN.test(text) &&
     !ABUSE_ENABLEMENT_PATTERN.test(text)
   );
@@ -364,6 +367,8 @@ function githubSourceRef(value) {
     if (url.hostname.toLowerCase() === "raw.githubusercontent.com") {
       if (parts.length < 4) return null;
       return {
+        owner: parts[0].toLowerCase(),
+        repo: parts[1].replace(/\.git$/i, "").toLowerCase(),
         ref: parts[2],
         path: parts.slice(3).join("/"),
       };
@@ -374,6 +379,8 @@ function githubSourceRef(value) {
       (parts[2] === "blob" || parts[2] === "raw")
     ) {
       return {
+        owner: parts[0].toLowerCase(),
+        repo: parts[1].replace(/\.git$/i, "").toLowerCase(),
         ref: parts[3],
         path: parts.slice(4).join("/"),
       };
@@ -388,13 +395,106 @@ function isScriptPath(value) {
   return /\.(?:sh|bash|zsh|ps1)$/i.test(normalizeText(value));
 }
 
-function isImmutableGithubScriptSourceUrl(value) {
-  const source = githubSourceRef(value);
-  return Boolean(
-    source &&
-    FULL_COMMIT_SHA_PATTERN.test(source.ref) &&
-    isScriptPath(source.path),
+function githubRepoRef(value) {
+  const raw = normalizeText(value);
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    if (
+      url.protocol !== "https:" ||
+      url.hostname.toLowerCase() !== "github.com"
+    ) {
+      return null;
+    }
+    const parts = url.pathname.split("/").filter(Boolean);
+    if (parts.length < 2) return null;
+    return {
+      owner: parts[0].toLowerCase(),
+      repo: parts[1].replace(/\.git$/i, "").toLowerCase(),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function githubRepoKey(source) {
+  if (!source?.owner || !source?.repo) return "";
+  return `${source.owner}/${source.repo}`;
+}
+
+function collectGitCloneRepos(value) {
+  const text = normalizeText(value);
+  const repos = [];
+  const clonePattern =
+    /\bgit\s+clone\b[^\n;&|]*?(https:\/\/github\.com\/[^\s`'"<>]+|git@github\.com:[^\s`'"<>]+)/gi;
+  for (const match of text.matchAll(clonePattern)) {
+    const rawRepo = match[1].replace(
+      /^git@github\.com:/i,
+      "https://github.com/",
+    );
+    const repo = githubRepoRef(rawRepo);
+    if (repo) repos.push(repo);
+  }
+  return repos;
+}
+
+function normalizeScriptPath(value) {
+  return normalizeText(value)
+    .replace(/^['"`]+|['"`]+$/g, "")
+    .replace(/^(?:\.\.?\/)+/, "")
+    .replace(/\/{2,}/g, "/")
+    .toLowerCase();
+}
+
+function collectLocalScriptInstallRefs(value) {
+  const text = normalizeText(value);
+  const scriptPattern =
+    /(?:^|[\s`;&|])(?:(?:bash|sh|zsh|pwsh|powershell)\s+)?((?:\.{1,2}\/|[\w.-]+\/)?[\w./-]*(?:install|setup|start|bootstrap|init)[\w.-]*\.(?:sh|bash|zsh|ps1))\b/gim;
+  return [...text.matchAll(scriptPattern)]
+    .map((match) => ({
+      path: normalizeScriptPath(match[1]),
+      index: match.index ?? 0,
+    }))
+    .filter((script) => script.path);
+}
+
+function checkoutCommitIndex(value, commit) {
+  const escapedCommit = commit.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = normalizeText(value).match(
+    new RegExp(
+      `\\bgit\\s+(?:checkout|switch\\s+--detach)\\s+(?:[^\\n;&|]*\\s)?${escapedCommit}\\b`,
+      "i",
+    ),
   );
+  return match?.index ?? -1;
+}
+
+function hasBoundImmutableGithubScriptEvidence(sourceUrls, installText) {
+  const clonedRepoKeys = new Set(
+    collectGitCloneRepos(installText).map(githubRepoKey),
+  );
+  if (!clonedRepoKeys.size) return false;
+  const executedScripts = collectLocalScriptInstallRefs(installText);
+  if (!executedScripts.length) return false;
+
+  return sourceUrls.some((value) => {
+    const source = githubSourceRef(value);
+    if (
+      !source ||
+      !FULL_COMMIT_SHA_PATTERN.test(source.ref) ||
+      !isScriptPath(source.path) ||
+      !clonedRepoKeys.has(githubRepoKey(source))
+    ) {
+      return false;
+    }
+
+    const checkoutIndex = checkoutCommitIndex(installText, source.ref);
+    if (checkoutIndex < 0) return false;
+    const scriptPath = normalizeScriptPath(source.path);
+    return executedScripts.some(
+      (script) => script.path === scriptPath && checkoutIndex < script.index,
+    );
+  });
 }
 
 function isMutableGithubSourceUrl(value) {
@@ -735,7 +835,7 @@ function addContentRiskSignals(report, fields, content) {
 
   if (
     referencesClonedLocalScriptInstall(installText) &&
-    !submittedSourceUrls.some(isImmutableGithubScriptSourceUrl)
+    !hasBoundImmutableGithubScriptEvidence(submittedSourceUrls, installText)
   ) {
     const mutableSources = submittedSourceUrls.filter(isMutableGithubSourceUrl);
     addFlag(

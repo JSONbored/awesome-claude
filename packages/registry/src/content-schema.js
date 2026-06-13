@@ -33,6 +33,7 @@ const DEFAULT_TESTED_PLATFORMS = categorySpec.defaultTestedPlatforms;
 const NOTE_LIST_FIELDS = new Set(["safetyNotes", "privacyNotes"]);
 const MAX_NOTE_ITEMS = 8;
 const MAX_NOTE_LENGTH = 320;
+export const SAFE_CONTENT_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export function headingId(text) {
   let cleaned = "";
@@ -147,6 +148,17 @@ function isHttpsUrl(value) {
   try {
     const url = new URL(normalized);
     return url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function isHttpUrl(value) {
+  const normalized = String(value || "").trim();
+  if (!normalized) return true;
+  try {
+    const url = new URL(normalized);
+    return url.protocol === "https:" || url.protocol === "http:";
   } catch {
     return false;
   }
@@ -666,6 +678,13 @@ export function validateEntry(category, data, inferred = {}) {
 
   const enumErrors = [];
   const semanticErrors = [];
+  const slug = String(merged.slug || "").trim();
+
+  if (slug && !SAFE_CONTENT_SLUG_PATTERN.test(slug)) {
+    semanticErrors.push(
+      "slug must contain only lowercase letters, numbers, and single hyphens",
+    );
+  }
 
   for (const field of schema?.required ?? []) {
     if (
@@ -787,6 +806,30 @@ export function validateEntry(category, data, inferred = {}) {
             .filter((value) => value.trim()).length)
   ) {
     semanticErrors.push("brandColors must be hex colors such as #796eff");
+  }
+
+  for (const field of [
+    "authorProfileUrl",
+    "repoUrl",
+    "documentationUrl",
+    "sourceUrl",
+    "docsUrl",
+    "packageUrl",
+    "repositoryUrl",
+    "websiteUrl",
+  ]) {
+    if (!isHttpUrl(merged[field])) {
+      semanticErrors.push(`${field} must use http or https`);
+    }
+  }
+
+  if (Array.isArray(merged.sourceUrls)) {
+    for (const sourceUrl of merged.sourceUrls) {
+      if (!isHttpUrl(sourceUrl)) {
+        semanticErrors.push("sourceUrls must use http or https");
+        break;
+      }
+    }
   }
 
   for (const field of [
