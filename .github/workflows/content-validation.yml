@@ -910,7 +910,7 @@ jobs:
 
   validate-pr-preview:
     name: validate-pr-preview
-    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && (needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.mcp == 'true') }}
+    if: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'workflow_dispatch' && github.ref_name == 'automation/readme-refresh')) && (needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.mcp == 'true') }}
     needs: classify-pr
     runs-on: ubuntu-latest
     concurrency:

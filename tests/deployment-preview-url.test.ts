@@ -65,6 +65,10 @@ describe("PR preview artifact validation flow", () => {
     expect(workflow).toContain(
       "github.event.pull_request.head.repo.full_name == github.repository",
     );
+    expect(workflow).toContain("github.event_name == 'workflow_dispatch'");
+    expect(workflow).toContain(
+      "github.ref_name == 'automation/readme-refresh'",
+    );
     const previewBlock =
       workflow.match(
         /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
