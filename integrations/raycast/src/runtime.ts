@@ -168,6 +168,10 @@ async function sha256Hex(value: string) {
   ).join("");
 }
 
+function normalizeJsonArtifactPayload(text: string) {
+  return JSON.stringify(JSON.parse(text));
+}
+
 async function verifyFeedPayloadSignature(
   text: string,
   manifestSnapshot: RegistryManifestSnapshot | null,
@@ -175,7 +179,7 @@ async function verifyFeedPayloadSignature(
   const expectedSha256 = manifestSnapshot?.feedSha256;
   if (!expectedSha256) return undefined;
 
-  const actualSha256 = await sha256Hex(text);
+  const actualSha256 = await sha256Hex(normalizeJsonArtifactPayload(text));
   if (actualSha256 !== expectedSha256) {
     throw new Error("Feed payload SHA-256 did not match registry manifest");
   }

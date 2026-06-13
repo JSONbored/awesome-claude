@@ -14,14 +14,18 @@ function makeTempContentRoot() {
   );
 }
 
-function writeHookFixture(tmpDir: string, scriptBody: string) {
+function writeHookFixture(
+  tmpDir: string,
+  scriptBody: string,
+  slug = "example-hook",
+) {
   const hookDir = path.join(tmpDir, "content", "hooks");
   fs.mkdirSync(hookDir, { recursive: true });
   fs.writeFileSync(
     path.join(hookDir, "example-hook.mdx"),
     `---
 title: Example Hook
-slug: example-hook
+slug: ${slug}
 category: hooks
 description: Example hook used by validation tests.
 cardDescription: Example hook used by validation tests.
@@ -113,6 +117,19 @@ describe("content validation", () => {
 
     expect(() => runContentValidation(tmpDir)).toThrow(
       /scriptBody failed bash syntax check/,
+    );
+  });
+
+  it("rejects content slugs that can escape artifact paths", () => {
+    const tmpDir = makeTempContentRoot();
+    writeHookFixture(
+      tmpDir,
+      ["#!/bin/bash", 'printf "%s\n" "safe hook"'].join("\n"),
+      "../../../../outside-artifact",
+    );
+
+    expect(() => runContentValidation(tmpDir)).toThrow(
+      /slug must contain only lowercase letters, numbers, and single hyphens/,
     );
   });
 
