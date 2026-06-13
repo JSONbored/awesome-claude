@@ -29,12 +29,34 @@ function scalarRecordIsValid(value) {
 }
 
 function normalizeType(value) {
-  const normalized = String(value || "").trim().toLowerCase();
+  const normalized = String(value || "")
+    .trim()
+    .toLowerCase();
   if (normalized === "streamable-http") return "http";
   if (normalized === "http" || normalized === "sse" || normalized === "stdio") {
     return normalized;
   }
   return "";
+}
+
+function isLoopbackHostname(hostname) {
+  const host = String(hostname || "")
+    .trim()
+    .toLowerCase()
+    .replace(/^\[|\]$/g, "");
+  if (host === "localhost" || host === "::1") return true;
+  const ipv4 = host.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+  return Boolean(ipv4 && Number(ipv4[1]) === 127);
+}
+
+function isSafeRemoteMcpUrl(value) {
+  try {
+    const url = new URL(String(value).trim());
+    if (url.protocol === "https:") return true;
+    return url.protocol === "http:" && isLoopbackHostname(url.hostname);
+  } catch {
+    return false;
+  }
 }
 
 function normalizeArgs(value) {
@@ -68,7 +90,8 @@ export function normalizeMcpServerConfig(value) {
   }
 
   const type = normalizeType(config.type);
-  const hasCommand = typeof config.command === "string" && config.command.trim();
+  const hasCommand =
+    typeof config.command === "string" && config.command.trim();
   const hasUrl = typeof config.url === "string" && config.url.trim();
 
   if (!type && hasCommand) config.type = "stdio";
@@ -78,8 +101,8 @@ export function normalizeMcpServerConfig(value) {
   const normalizedType = normalizeType(config.type);
   if (!SERVER_CONFIG_TYPES.has(normalizedType)) return null;
   if (normalizedType === "stdio" && !hasCommand) return null;
-  if ((normalizedType === "http" || normalizedType === "sse") && !hasUrl) {
-    return null;
+  if (normalizedType === "http" || normalizedType === "sse") {
+    if (!hasUrl || !isSafeRemoteMcpUrl(config.url)) return null;
   }
 
   const args = normalizeArgs(config.args);

@@ -60,6 +60,7 @@ safetyNotes:
   - Installing Spectral adds npm packages to the selected project environment; pin the reviewed version and avoid global installs for review work.
   - Spectral can lint local files, globs, and remote contract URLs; review source locations before running checks in shared CI.
   - Ruleset changes can silently weaken future API gates; review disabled rules, severity changes, and overrides as release-impacting changes.
+  - JavaScript rulesets and custom functions such as `.spectral.js` execute Node.js code; do not run attacker-supplied rulesets from untrusted PRs unless they have been inspected and executed in a sandboxed environment.
   - The source ZIP is external and version-pinned for reference; package trust should remain a maintainer decision.
 privacyNotes:
   - OpenAPI files can reveal internal route names, hostnames, example payloads, business object names, and planned endpoints.
@@ -110,12 +111,13 @@ This is not an API design rule pack, documentation generator, MCP server listing
 1. Confirm the Spectral package version, source tag, npm metadata, Node runtime requirement, ruleset location, and OpenAPI contract file set.
 2. Identify the OpenAPI version, document boundaries, referenced files, generated files, source-of-truth owner, and contract consumers.
 3. Inventory Spectral configuration: `.spectral.yaml`, explicit `--ruleset` usage, extended rulesets, formats, overrides, parser options, and custom rule documentation.
-4. Run or review lint output with the expected formatter and fail severity. Preserve rule IDs, JSON paths, line ranges, source file names, and severity values.
-5. Classify findings as syntax/parser failures, built-in OAS rule failures, custom rule failures, style drift, compatibility risk, generated-output noise, or false positives.
-6. Review contract diffs for endpoint addition, endpoint removal, method changes, request and response shape changes, enum changes, required-field changes, examples, tags, operation IDs, and reference moves.
-7. Review ruleset changes separately from contract changes. Treat disabled rules, lower severities, broad overrides, or format changes as release-impacting until explained.
-8. Build a validation plan: Spectral lint, generated client/type check when applicable, documentation render check when applicable, and consumer compatibility review for breaking changes.
-9. Produce a release recommendation with blockers, non-blocking fixes, accepted exceptions, owner follow-up, and a merge, hold, or request-changes decision.
+4. Before running Spectral against an untrusted change, inspect any JavaScript rulesets or custom functions and use an isolated sandbox if execution is required.
+5. Run or review lint output with the expected formatter and fail severity. Preserve rule IDs, JSON paths, line ranges, source file names, and severity values.
+6. Classify findings as syntax/parser failures, built-in OAS rule failures, custom rule failures, style drift, compatibility risk, generated-output noise, or false positives.
+7. Review contract diffs for endpoint addition, endpoint removal, method changes, request and response shape changes, enum changes, required-field changes, examples, tags, operation IDs, and reference moves.
+8. Review ruleset changes separately from contract changes. Treat disabled rules, lower severities, broad overrides, or format changes as release-impacting until explained.
+9. Build a validation plan: Spectral lint, generated client/type check when applicable, documentation render check when applicable, and consumer compatibility review for breaking changes.
+10. Produce a release recommendation with blockers, non-blocking fixes, accepted exceptions, owner follow-up, and a merge, hold, or request-changes decision.
 
 ## Capability Scope
 
@@ -164,14 +166,14 @@ This is not an API design rule pack, documentation generator, MCP server listing
 2. Contract inventory: OpenAPI version, file set, generated or authored status, references, and consumer impact area.
 3. Ruleset review: extends, formats, overrides, parser options, custom rules, fail severity, and formatter outputs.
 4. Findings: parser errors, OAS rule failures, custom rule failures, compatibility risks, and accepted exceptions.
-5. Validation plan: exact lint command, CI gate, generated client/type check when relevant, and owner review.
+5. Validation plan: exact lint command, JavaScript ruleset/custom-function inspection or sandboxing status, CI gate, generated client/type check when relevant, and owner review.
 6. Recommendation: merge, hold, request changes, or split ruleset changes from contract changes.
 
 ## Troubleshooting
 
 **Issue:** Spectral reports no ruleset found
 
-**Fix:** Confirm `.spectral.yaml`, `.spectral.yml`, `.spectral.json`, or `.spectral.js` exists near the contract, or pass the intended file with `--ruleset`.
+**Fix:** Confirm `.spectral.yaml`, `.spectral.yml`, `.spectral.json`, or `.spectral.js` exists near the contract, or pass the intended file with `--ruleset`; inspect or sandbox `.spectral.js` and other JavaScript rulesets before running them from untrusted changes.
 
 **Issue:** A contract diff looks harmless but generated clients break
 
