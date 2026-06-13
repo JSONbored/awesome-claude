@@ -3,7 +3,7 @@ import "./lib/error-capture";
 import { runWithCloudflareRuntime } from "./lib/cloudflare-env.server";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
-import { applySecurityHeaders } from "./lib/security-headers";
+import { applyEdgeCacheHeaders, applySecurityHeaders } from "./lib/security-headers";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -24,6 +24,7 @@ async function getServerEntry(): Promise<ServerEntry> {
 // {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
 function withSecurityHeaders(response: Response, request: Request): Response {
   const headers = applySecurityHeaders(new Headers(response.headers), request);
+  applyEdgeCacheHeaders(headers, response.status, request.method);
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,

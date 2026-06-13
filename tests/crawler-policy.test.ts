@@ -14,7 +14,7 @@ describe("crawler and AI citation policy", () => {
     );
 
     expect(serverSource).toContain(
-      'import { applySecurityHeaders } from "./lib/security-headers"',
+      'import { applyEdgeCacheHeaders, applySecurityHeaders } from "./lib/security-headers"',
     );
     expect(serverSource).toContain(
       "function withSecurityHeaders(response: Response, request: Request): Response",

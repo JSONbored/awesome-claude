@@ -97,6 +97,21 @@ export function applySecurityHeaders(headers: Headers, request?: Request) {
   return headers;
 }
 
+// SSR HTML that no route opted out of is safe to cache at the edge so repeat hits
+// skip re-rendering. Personalized/dynamic routes already set their own `Cache-Control`
+// (typically `no-store`), which is preserved; a `Set-Cookie` (session/personalization)
+// also disables caching as a backstop. CDN-only (`s-maxage`) — no browser `max-age`, so
+// a deploy invalidates immediately for users.
+const HTML_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=86400";
+
+export function applyEdgeCacheHeaders(headers: Headers, status: number, method: string) {
+  if (method !== "GET" || status !== 200) return headers;
+  if (headers.has("cache-control") || headers.has("set-cookie")) return headers;
+  if (!(headers.get("content-type") ?? "").includes("text/html")) return headers;
+  headers.set("cache-control", HTML_CACHE_CONTROL);
+  return headers;
+}
+
 export function getSecurityHeaders() {
   return Object.entries(SECURITY_HEADERS).map(([key, value]) => ({
     key,
