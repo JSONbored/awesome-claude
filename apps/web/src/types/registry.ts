@@ -44,6 +44,24 @@ export type SkillType = "general" | "capability-pack";
 export type VerificationStatus = "draft" | "validated" | "production";
 export type PlatformSupport = "native-skill" | "adapter" | "manual-context" | "unsupported";
 
+export interface EntryTrustSignals {
+  firstPartyEditorial?: boolean;
+  packageVerified?: boolean;
+  packageTrust?: string | null;
+  packageChecksum?: string;
+  checksumPresent?: boolean;
+  sourceUrlCount?: number;
+  sourceUrls?: string[];
+  sourceStatus?: string;
+  lastVerifiedAt?: string;
+  adapterGenerated?: boolean;
+  platforms?: string[];
+  supportLevels?: string[];
+  hasProvenance?: boolean;
+  hasSafetyNotes?: boolean;
+  hasPrivacyNotes?: boolean;
+}
+
 export interface Provenance {
   submittedBy?: string;
   submittedByUrl?: string;
@@ -156,6 +174,7 @@ export interface Entry extends Provenance, BrandInfo, SkillFields {
   repoUrl?: string;
   trust: TrustLevel;
   source: SourceStatus;
+  trustSignals?: EntryTrustSignals;
   repoStats?: RepoStats;
   relatedEntries?: EntryRelation[];
   /** @deprecated Repo stars are source metadata, not listing popularity. */

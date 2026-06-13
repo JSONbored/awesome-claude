@@ -602,10 +602,7 @@ describe("Raycast feed helpers", () => {
       resolveFeedUrl(""),
       "https://heyclau.de/data/raycast-index.json",
     );
-    assert.equal(
-      localFeed,
-      "http://127.0.0.1:4173/data/raycast-index.json",
-    );
+    assert.equal(localFeed, "http://127.0.0.1:4173/data/raycast-index.json");
     assert.equal(
       resolveConfiguredFeedUrl(
         { feedUrlOverride: devFeed },
@@ -828,6 +825,33 @@ describe("Raycast feed helpers", () => {
         }),
       /not available/,
     );
+    const remoteHttpConfig = {
+      type: "http",
+      url: "http://mcp.example.com/mcp",
+    };
+    assert.equal(
+      mcpConfigSupportsTarget(remoteHttpConfig, "claude-code"),
+      false,
+    );
+    assert.deepEqual(mcpInstallTargetsForConfig(remoteHttpConfig), []);
+    assert.deepEqual(
+      mcpInstallTargetsForConfig({
+        type: "http",
+        url: "http://127.0.0.1:3000/mcp",
+      }),
+      ["claude-code", "codex", "cursor", "antigravity"],
+    );
+    assert.throws(
+      () =>
+        buildMcpInstallPlan("claude-code", sampleEntry, {
+          detailMarkdown: "# Remote HTTP",
+          configSnippet: JSON.stringify({
+            mcpServers: { remote: remoteHttpConfig },
+          }),
+        }),
+      /not available/,
+    );
+
     const sseConfig = { type: "sse", url: "https://example.com/sse" };
     assert.equal(mcpConfigSupportsTarget(sseConfig, "codex"), false);
     assert.deepEqual(mcpInstallTargetsForConfig(sseConfig), [
