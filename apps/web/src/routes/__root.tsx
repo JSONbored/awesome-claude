@@ -21,6 +21,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ShortcutsProvider } from "@/components/shortcuts-dialog";
 import { SkipLink } from "@/components/skip-link";
 import { RouteProgress } from "@/components/route-progress";
+import { WebMcpProvider } from "@/components/webmcp-provider";
 import { siteConfig } from "@/lib/site";
 
 function NotFoundComponent() {
@@ -170,6 +171,7 @@ function RootComponent() {
                 <ComparisonTray />
                 <CompareDrawer />
                 <BackToTop />
+                <WebMcpProvider />
                 <Toaster
                   position="bottom-right"
                   mobileOffset={{ bottom: "16px" }}
