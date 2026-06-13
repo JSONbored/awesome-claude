@@ -25,13 +25,13 @@ repoUrl: "https://github.com/0x4m4/hexstrike-ai"
 documentationUrl: "https://github.com/0x4m4/hexstrike-ai"
 websiteUrl: "https://www.hexstrike.com/"
 installable: true
-installCommand: "git clone https://github.com/0x4m4/hexstrike-ai.git && cd hexstrike-ai && python3 -m venv hexstrike-env && pip3 install -r requirements.txt"
-usageSnippet: "Start `python3 hexstrike_server.py`, then configure your MCP client to run `hexstrike_mcp.py` with the server argument documented in the repository."
+installCommand: "git clone https://github.com/0x4m4/hexstrike-ai.git && cd hexstrike-ai && python3 -m venv hexstrike-env && hexstrike-env/bin/pip install -r requirements.txt"
+usageSnippet: "Start `hexstrike-env/bin/python hexstrike_server.py`, then configure your MCP client to run `hexstrike_mcp.py` with the server argument documented in the repository."
 copySnippet: |-
   {
     "mcpServers": {
       "hexstrike-ai": {
-        "command": "python3",
+        "command": "/ABSOLUTE_PATH_TO/hexstrike-ai/hexstrike-env/bin/python",
         "args": [
           "/ABSOLUTE_PATH_TO/hexstrike-ai/hexstrike_mcp.py",
           "--server",
@@ -44,7 +44,7 @@ configSnippet: |-
   {
     "mcpServers": {
       "hexstrike-ai": {
-        "command": "python3",
+        "command": "/ABSOLUTE_PATH_TO/hexstrike-ai/hexstrike-env/bin/python",
         "args": [
           "/ABSOLUTE_PATH_TO/hexstrike-ai/hexstrike_mcp.py",
           "--server",
@@ -133,24 +133,25 @@ Clone the repository and install the Python dependencies:
 git clone https://github.com/0x4m4/hexstrike-ai.git
 cd hexstrike-ai
 python3 -m venv hexstrike-env
-pip3 install -r requirements.txt
+hexstrike-env/bin/pip install -r requirements.txt
 ```
 
 Install only the security tools needed for your authorized workflow, then start
 the server:
 
 ```sh
-python3 hexstrike_server.py
+hexstrike-env/bin/python hexstrike_server.py
 ```
 
-Configure your MCP client to run the repository's `hexstrike_mcp.py` bridge and
-provide the server argument documented in the README.
+Configure your MCP client to run the repository's `hexstrike_mcp.py` bridge with
+the virtual environment's Python interpreter and provide the server argument
+documented in the README.
 
 ```json
 {
   "mcpServers": {
     "hexstrike-ai": {
-      "command": "python3",
+      "command": "/ABSOLUTE_PATH_TO/hexstrike-ai/hexstrike-env/bin/python",
       "args": [
         "/ABSOLUTE_PATH_TO/hexstrike-ai/hexstrike_mcp.py",
         "--server",

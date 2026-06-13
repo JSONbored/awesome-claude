@@ -97,7 +97,11 @@ Workflow prompts are available for common client flows:
 
 ## Local Stdio
 
-The published package defaults to the live HeyClaude MCP endpoint:
+The published package defaults to the live HeyClaude MCP endpoint. In this
+remote-bridge mode, draft-content helpers that accept private submission fields
+(`validate_submission_draft`, `build_submission_urls`, `prepare_submission_draft`,
+and `review_submission_draft`) are intentionally not exposed or forwarded; use
+local artifact mode for those helpers before entering private draft content.
 
 ```json
 {
@@ -179,6 +183,9 @@ checks the HTTP guards used by the remote route.
   60 requests/minute/IP in production.
 - Submission tools prepare review drafts only; the MCP server does not perform
   GitHub writes or publish submitted content.
+- The npm stdio remote bridge does not forward local draft-helper calls that
+  carry submission fields; run local artifact mode before entering private draft
+  content.
 - Source-backed, content-only PRs may be merged automatically after content
   validation, Superagent, and private maintainer-agent review pass. Platform,
   workflow, package, and generated-artifact changes are never auto-merged by

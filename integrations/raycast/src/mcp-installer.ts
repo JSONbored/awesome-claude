@@ -334,6 +334,26 @@ function getServerUrl(config: McpServerConfig) {
   return "";
 }
 
+function isLoopbackHostname(hostname: string) {
+  const host = hostname
+    .trim()
+    .toLowerCase()
+    .replace(/^\[|\]$/g, "");
+  if (host === "localhost" || host === "::1") return true;
+  const ipv4 = host.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+  return Boolean(ipv4 && Number(ipv4[1]) === 127);
+}
+
+function isSafeRemoteMcpUrl(value: string) {
+  try {
+    const url = new URL(value.trim());
+    if (url.protocol === "https:") return true;
+    return url.protocol === "http:" && isLoopbackHostname(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
 function normalizeServerArgs(config: McpServerConfig, targetLabel: string) {
   if (config.args === undefined) return [];
   if (!Array.isArray(config.args)) {
@@ -399,6 +419,10 @@ export function mcpConfigSupportsTarget(
 ) {
   const type = normalizedConfigType(config);
   if (!MCP_INSTALL_TARGET_BY_ID[target]) return false;
+  if (type === "http" || type === "sse") {
+    const url = getServerUrl(config);
+    if (!url || !isSafeRemoteMcpUrl(url)) return false;
+  }
   if (target === "codex") {
     if (type === "sse") return false;
     if (type === "http" && hasStaticOrEnvHttpHeaders(config)) {

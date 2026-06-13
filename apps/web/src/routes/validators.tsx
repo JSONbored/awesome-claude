@@ -10,6 +10,7 @@ import {
 } from "@/data/validators";
 import { CategoryPill, SourceBadge, TrustBadge } from "@/components/badges";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
+import { stringifyJsonLd } from "@/lib/json-ld";
 
 export const Route = createFileRoute("/validators")({
   head: () => ({
@@ -33,7 +34,7 @@ export const Route = createFileRoute("/validators")({
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: stringifyJsonLd({
           "@context": "https://schema.org",
           "@type": "Dataset",
           name: "HeyClaude maintainer review coverage",
