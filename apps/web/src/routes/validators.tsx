@@ -11,6 +11,9 @@ import {
 import { CategoryPill, SourceBadge, TrustBadge } from "@/components/badges";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { absoluteUrl } from "@/lib/seo";
+import { siteConfig } from "@/lib/site";
+import atlasRegistry from "@/generated/atlas-registry.json";
 
 export const Route = createFileRoute("/validators")({
   head: () => ({
@@ -27,10 +30,10 @@ export const Route = createFileRoute("/validators")({
         content:
           "Coverage dashboards and local validation tools for source, safety, privacy, and install metadata.",
       },
-      { property: "og:url", content: "/validators" },
+      { property: "og:url", content: absoluteUrl("/validators") },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "/validators" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/validators") }],
     scripts: [
       {
         type: "application/ld+json",
@@ -40,7 +43,27 @@ export const Route = createFileRoute("/validators")({
           name: "HeyClaude maintainer review coverage",
           description:
             "Registry coverage metrics for source-backed entries, review status, safety notes, and privacy notes.",
-          url: "/validators",
+          url: absoluteUrl("/validators"),
+          isAccessibleForFree: true,
+          license: "https://opensource.org/licenses/MIT",
+          creator: {
+            "@type": "Organization",
+            name: siteConfig.name,
+            url: siteConfig.url,
+          },
+          ...(atlasRegistry.generatedAt
+            ? {
+                datePublished: String(atlasRegistry.generatedAt).slice(0, 10),
+                dateModified: String(atlasRegistry.generatedAt).slice(0, 10),
+              }
+            : {}),
+          keywords: [
+            "Claude",
+            "registry",
+            "review coverage",
+            "safety metadata",
+            "privacy metadata",
+          ],
         }),
       },
     ],

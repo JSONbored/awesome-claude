@@ -1,5 +1,11 @@
 import * as React from "react";
-import { createFileRoute, Link, stripSearchParams, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  stripSearchParams,
+  useNavigate,
+} from "@tanstack/react-router";
 import { z } from "zod";
 import { useMemo } from "react";
 import { toast } from "sonner";
@@ -31,6 +37,7 @@ import { SavedSearchManager } from "@/components/saved-search-manager";
 import { FilterSummaryBar, type ActiveFilter } from "@/components/filter-summary-bar";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { cn } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/seo";
 
 function SavedSearchChipRow({
   currentLabel,
@@ -134,6 +141,18 @@ export const Route = createFileRoute("/browse")({
   search: {
     middlewares: [stripSearchParams(defaultSearch)],
   },
+  beforeLoad: ({ search }) => {
+    // Stale/external links with unknown category values (e.g. ?category=plugins) render an
+    // empty result set that Google flags as a soft 404. Redirect them to clean /browse.
+    if (search.category && !CATEGORIES.some((c) => c.id === search.category)) {
+      throw redirect({
+        to: "/browse",
+        search: { ...search, category: "" },
+        statusCode: 301,
+        replace: true,
+      });
+    }
+  },
   head: () => ({
     meta: [
       { title: "Browse — HeyClaude directory" },
@@ -146,10 +165,10 @@ export const Route = createFileRoute("/browse")({
         property: "og:description",
         content: "Search and filter every resource in the HeyClaude registry.",
       },
-      { property: "og:url", content: "/browse" },
+      { property: "og:url", content: absoluteUrl("/browse") },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "/browse" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/browse") }],
   }),
   component: Browse,
 });

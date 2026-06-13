@@ -82,7 +82,8 @@ describe("Atlas production data wiring", () => {
     expect(appShell).not.toContain(retiredFeedPath);
     expect(feedsRoute).toContain('slug === "trending"');
     expect(sitemapRoute).toContain('"/feeds/trending.xml"');
-    expect(sitemapRoute).toContain('"/data/feeds/index.json"');
+    // /data/** is robots-disallowed, so it is intentionally excluded from the sitemap.
+    expect(sitemapRoute).not.toContain('"/data/feeds/index.json"');
   });
 
   it("keeps first-party MCP integration metadata aligned with the package", () => {

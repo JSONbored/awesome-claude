@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Rss } from "lucide-react";
+import { absoluteUrl } from "@/lib/seo";
 import { CATEGORIES } from "@/types/registry";
 import { CopyButton } from "@/components/copy-button";
 import { SubscribeForm } from "@/components/subscribe-form";
@@ -19,9 +20,10 @@ export const Route = createFileRoute("/feeds")({
         property: "og:description",
         content: "RSS, Atom, and email subscriptions for the HeyClaude registry.",
       },
+      { property: "og:url", content: absoluteUrl("/feeds") },
     ],
     links: [
-      { rel: "canonical", href: "/feeds" },
+      { rel: "canonical", href: absoluteUrl("/feeds") },
       { rel: "alternate", type: "application/rss+xml", href: "/feed.xml", title: "HeyClaude" },
       { rel: "alternate", type: "application/atom+xml", href: "/atom.xml", title: "HeyClaude" },
     ],
