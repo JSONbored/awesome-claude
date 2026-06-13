@@ -14,7 +14,11 @@ import {
 
 import { normalizeEndpointUrl, normalizeTimeoutMs } from "./endpoint-url.js";
 import { packageVersion } from "./package-metadata.js";
-import { MCP_PUBLIC_POLICY, READ_ONLY_TOOL_NAMES } from "./registry.js";
+import {
+  LOCAL_DRAFT_TOOL_NAMES,
+  MCP_PUBLIC_POLICY,
+  READ_ONLY_TOOL_NAMES,
+} from "./registry.js";
 
 function toError(error) {
   if (error instanceof Error) return error;
@@ -53,12 +57,12 @@ function createTimeoutFetch(timeoutMs) {
   };
 }
 
-function invalidToolResult(name) {
+function toolErrorResult(code, message) {
   const structuredContent = {
     ok: false,
     error: {
-      code: "invalid_request",
-      message: `Unknown or unsupported HeyClaude MCP tool: ${name}`,
+      code,
+      message,
     },
     policy: MCP_PUBLIC_POLICY,
   };
@@ -72,6 +76,20 @@ function invalidToolResult(name) {
       },
     ],
   };
+}
+
+function invalidToolResult(name) {
+  return toolErrorResult(
+    "invalid_request",
+    `Unknown or unsupported HeyClaude MCP tool: ${name}`,
+  );
+}
+
+function localDraftToolResult(name) {
+  return toolErrorResult(
+    "local_only_tool",
+    `${name} handles submission draft content and is only available in local artifact mode. Run heyclaude-mcp with --local --data-dir, or set HEYCLAUDE_DATA_DIR, before sending private draft fields.`,
+  );
 }
 
 function errorToolResult(error) {
@@ -96,6 +114,7 @@ function errorToolResult(error) {
 }
 
 function readOnlyToolDefinition(tool) {
+  if (LOCAL_DRAFT_TOOL_NAMES.includes(tool?.name)) return null;
   if (!READ_ONLY_TOOL_NAMES.includes(tool?.name)) return null;
   return {
     ...tool,
@@ -188,6 +207,9 @@ export async function createRemoteMcpProxyServerFromClient(
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const name = request.params.name;
+    if (LOCAL_DRAFT_TOOL_NAMES.includes(name)) {
+      return localDraftToolResult(name);
+    }
     if (!supportedToolNames.has(name)) {
       return invalidToolResult(name);
     }

@@ -32,6 +32,7 @@ import { TrustDrilldown } from "@/components/trust-drilldown";
 import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
+import { stringifyJsonLd } from "@/lib/json-ld";
 // (HoverChevrons removed — related uses static grid)
 import { ShareMenu } from "@/components/share-menu";
 import { DossierTOC, type TocItem } from "@/components/dossier-toc";
@@ -131,8 +132,8 @@ export const Route = createFileRoute("/entry/$category/$slug")({
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
-        { type: "application/ld+json", children: JSON.stringify(ld) },
-        { type: "application/ld+json", children: JSON.stringify(breadcrumbs) },
+        { type: "application/ld+json", children: stringifyJsonLd(ld) },
+        { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
       ],
     };
   },

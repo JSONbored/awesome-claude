@@ -10,6 +10,7 @@ export type RegistryArtifactLoaders = {
 };
 
 export const READ_ONLY_TOOL_NAMES: string[];
+export const LOCAL_DRAFT_TOOL_NAMES: string[];
 export const TOOL_DEFINITIONS: Array<{
   name: string;
   description: string;

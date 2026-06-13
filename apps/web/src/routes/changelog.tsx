@@ -4,6 +4,7 @@ import { Rss, Plus, RefreshCw, Minus, Shield, FileText, Package } from "lucide-r
 import { CHANGELOG, RELEASE_NOTES, type ReleaseStream } from "@/data/changelog";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
 import { cn } from "@/lib/utils";
+import { stringifyJsonLd } from "@/lib/json-ld";
 
 export const Route = createFileRoute("/changelog")({
   head: () => ({
@@ -40,7 +41,7 @@ export const Route = createFileRoute("/changelog")({
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: stringifyJsonLd({
           "@context": "https://schema.org",
           "@type": "ItemList",
           name: "HeyClaude registry changelog",
