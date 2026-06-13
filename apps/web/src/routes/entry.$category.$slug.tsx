@@ -34,6 +34,8 @@ import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
+import { categoryLabels, categoryUsageHints } from "@/lib/site";
+import { tagSlug } from "@/lib/tags";
 // (HoverChevrons removed — related uses static grid)
 import { ShareMenu } from "@/components/share-menu";
 import { DossierTOC, type TocItem } from "@/components/dossier-toc";
@@ -109,6 +111,23 @@ function entrySchema(e: Entry, url: string): Record<string, unknown> {
   return { ...base, "@type": "CreativeWork" };
 }
 
+// Guides are how-to content: emit a HowTo whose steps come from the guide's H2/H3 headings,
+// so step-by-step guides become eligible for HowTo rich results.
+function guideHowTo(e: Entry, url: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: e.title,
+    description: e.description,
+    step: (e.headings ?? []).map((heading, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: heading.text,
+      url: `${url}#${heading.id}`,
+    })),
+  };
+}
+
 export const Route = createFileRoute("/entry/$category/$slug")({
   loader: async ({ params }): Promise<{ entry: import("@/types/registry").Entry }> => {
     const fullEntry = await loadFullEntry({
@@ -169,6 +188,9 @@ export const Route = createFileRoute("/entry/$category/$slug")({
         { type: "application/ld+json", children: stringifyJsonLd(ld) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
         { type: "application/ld+json", children: stringifyJsonLd(entrySchema(e, url)) },
+        ...(e.category === "guides" && (e.headings?.length ?? 0) >= 2
+          ? [{ type: "application/ld+json", children: stringifyJsonLd(guideHowTo(e, url)) }]
+          : []),
       ],
     };
   },
@@ -485,11 +507,30 @@ function Dossier() {
                 {entry.body}
               </pre>
             ) : (
-              <p>
-                {entry.title} is curated in the HeyClaude registry. Review the source repository
-                before installing. Trust and source signals are derived from metadata review, not
-                from runtime scanning.
-              </p>
+              <div className="space-y-3">
+                <p>
+                  <strong>{entry.title}</strong> is a{" "}
+                  {categoryLabels[entry.category] ?? entry.category} resource for Claude
+                  {entry.author ? ` by ${entry.author}` : ""}, curated and metadata-reviewed in the
+                  HeyClaude registry.{" "}
+                  {categoryUsageHints[entry.category] ??
+                    "Open the source to review it before installing."}
+                </p>
+                {entry.platforms.length > 0 && (
+                  <p>
+                    Compatible with{" "}
+                    <span className="text-ink">{entry.platforms.join(", ")}</span>.
+                  </p>
+                )}
+                {entry.tags.length > 0 && (
+                  <p>Covers {entry.tags.slice(0, 8).join(", ")}.</p>
+                )}
+                <p className="text-ink-muted">
+                  Trust and source signals come from metadata review, not runtime scanning — always
+                  read the source before installing anything that touches your filesystem, network,
+                  or credentials.
+                </p>
+              </div>
             )}
             {entry.headings && entry.headings.length > 0 && (
               <div className="mt-5 rounded-lg border border-border bg-surface-2 p-3">
@@ -507,12 +548,14 @@ function Dossier() {
             )}
             <div className="mt-4 flex flex-wrap gap-1.5">
               {entry.tags.map((t) => (
-                <span
+                <Link
                   key={t}
-                  className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted"
+                  to="/tags/$tag"
+                  params={{ tag: tagSlug(t) }}
+                  className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted hover:border-border-strong hover:text-ink"
                 >
                   #{t}
-                </span>
+                </Link>
               ))}
             </div>
           </DossierSection>

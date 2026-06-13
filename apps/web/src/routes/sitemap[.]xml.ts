@@ -6,7 +6,8 @@ import atlasRegistry from "@/generated/atlas-registry.json";
 import { getJobs } from "@/lib/jobs";
 import { siteConfig } from "@/lib/site";
 import { applySecurityHeaders } from "@/lib/security-headers";
-import { CATEGORIES } from "@/types/registry";
+import { CATEGORIES, PLATFORM_LABEL } from "@/types/registry";
+import { getIndexableTagGroups } from "@/lib/tags";
 
 function escapeXml(value: string) {
   return value
@@ -35,6 +36,8 @@ async function renderSitemap() {
   const staticPaths = [
     "",
     "/browse",
+    "/tags",
+    "/for",
     "/best",
     "/about",
     "/tools",
@@ -89,6 +92,8 @@ async function renderSitemap() {
     ...CATEGORIES.map((category) =>
       urlItem(`/${category.id}`, "0.8", "weekly", categoryLastmod.get(category.id)),
     ),
+    ...getIndexableTagGroups().map((group) => urlItem(`/tags/${group.slug}`, "0.5")),
+    ...Object.keys(PLATFORM_LABEL).map((platform) => urlItem(`/for/${platform}`, "0.6")),
     ...bestPaths.map((pathname) => urlItem(pathname, "0.75")),
     ...ENTRIES.map((entry) =>
       urlItem(
