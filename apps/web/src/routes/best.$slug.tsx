@@ -5,6 +5,7 @@ import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/best/$slug")({
   loader: ({ params }) => {
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/best/$slug")({
   head: ({ params, loaderData }) => {
     if (!loaderData) return { meta: [] };
     const l = loaderData.list;
-    const url = `/best/${params.slug}`;
+    const url = absoluteUrl(`/best/${params.slug}`);
     const ld = {
       "@context": "https://schema.org",
       "@type": "ItemList",
@@ -25,7 +26,7 @@ export const Route = createFileRoute("/best/$slug")({
       itemListElement: l.picks.map((p, i) => ({
         "@type": "ListItem",
         position: i + 1,
-        url: `/entry/${p.ref}`,
+        url: absoluteUrl(`/entry/${p.ref}`),
       })),
     };
     return {

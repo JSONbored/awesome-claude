@@ -31,6 +31,7 @@ import { CATEGORIES, type Category } from "@/types/registry";
 import { ENTRIES, BRIEF_ISSUES, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { search } from "@/data/search";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { absoluteUrl } from "@/lib/seo";
 
 // Pre-computed counts at module scope so SSR + first paint show real numbers.
 const TRUSTED_COUNT = ENTRIES.filter((e) => e.trust === "trusted").length;
@@ -83,9 +84,9 @@ export const Route = createFileRoute("/")({
         content:
           "Source-backed registry of MCP servers, agents, skills, hooks, commands, and rules. Reviewed before installing.",
       },
-      { property: "og:url", content: "/" },
+      { property: "og:url", content: absoluteUrl("/") },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/") }],
     scripts: [
       {
         type: "application/ld+json",
@@ -262,8 +263,8 @@ function Home() {
             return (
               <Link
                 key={c.id}
-                to="/browse"
-                search={{ category: c.id }}
+                to="/$category"
+                params={{ category: c.id }}
                 className="group hover-lift relative flex flex-col gap-1 bg-surface p-4 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60"
               >
                 <div className="flex items-center justify-between">

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { absoluteUrl } from "@/lib/seo";
 import { BEST_LISTS, ENTRIES } from "@/data/entries";
 import { ResourceCard } from "@/components/resource-card";
 
@@ -17,9 +18,9 @@ export const Route = createFileRoute("/best")({
         property: "og:description",
         content: "Curated picks for Claude Code, MCP, agents, skills, and more.",
       },
-      { property: "og:url", content: "/best" },
+      { property: "og:url", content: absoluteUrl("/best") },
     ],
-    links: [{ rel: "canonical", href: "/best" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/best") }],
   }),
   component: BestPage,
 });
