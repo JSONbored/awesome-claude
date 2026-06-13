@@ -1,0 +1,136 @@
+---
+title: Curio MCP Server for Claude
+slug: curio-mcp-server
+category: mcp
+description: >-
+  Curio is a design-style library for AI: hundreds of real design styles —
+  movements, brands, and cultural traditions — packaged as token-complete,
+  machine-readable specs. The remote MCP server lets Claude search the
+  library, preview styles, and fetch full design specs (colors, typography,
+  spacing, components) to apply to slides, websites, and products.
+cardDescription: >-
+  Design-style library for AI — search hundreds of real styles and fetch
+  machine-readable design specs Claude applies to sites, decks, and products.
+seoTitle: Curio MCP Server for Claude
+seoDescription: >-
+  Use the Curio MCP server with Claude to search a library of real design
+  styles and fetch token-complete design specs (colors, typography, spacing,
+  components) to apply to websites, slides, and products.
+author: Curio
+authorProfileUrl: "https://designbycurio.com/"
+submittedBy: voltwake
+submittedByUrl: "https://github.com/voltwake"
+dateAdded: "2026-06-11"
+websiteUrl: "https://designbycurio.com/"
+documentationUrl: "https://designbycurio.com/docs"
+installable: true
+installCommand: "claude mcp add --transport http curio https://mcp.designbycurio.com/mcp"
+usageSnippet: >-
+  Ask Claude: "Make my landing page look Bauhaus." Claude calls search_styles
+  to find matching styles, then get_style_spec to pull the full
+  machine-readable spec and applies it to your site, deck, or product.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "curio": {
+        "transport": "http",
+        "url": "https://mcp.designbycurio.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "curio": {
+        "url": "https://mcp.designbycurio.com/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - >-
+    A Curio account. Sign-in happens via OAuth (email OTP, Google, or GitHub)
+    in the browser the first time the client connects; free accounts work.
+  - >-
+    An MCP-capable client with remote HTTP transport support, such as Claude,
+    Claude Code, Claude Desktop, Cursor, VS Code, ChatGPT (Developer Mode),
+    or Codex.
+safetyNotes:
+  - >-
+    Remote HTTP MCP server — it runs no local commands and touches no local
+    files. All tools are read-only lookups against the Curio style catalog;
+    the server cannot modify anything on the user's machine.
+  - >-
+    get_style_spec consumes one quota credit on the signed-in account, the
+    same metering as a website download. search_styles, list_styles,
+    get_style, and get_quota never charge.
+privacyNotes:
+  - >-
+    Sign-in is OAuth only (PKCE); the client holds scoped tokens, never
+    passwords.
+  - >-
+    The server receives only tool arguments (search queries, style ids) and
+    the account id for quota accounting — no prompts, files, or other local
+    context leave the client.
+  - >-
+    Access can be revoked anytime from the account's Connected apps page,
+    which invalidates the authorization's tokens immediately.
+disclosure: >-
+  Curio is a commercial freemium product by designbycurio.com. The MCP server
+  works with free accounts (starter quota and free-tier styles); paid plans
+  unlock the full catalog and a rolling weekly quota.
+tags:
+  - design
+  - design-systems
+  - branding
+  - theming
+  - styles
+  - mcp
+keywords:
+  - Curio MCP Server
+  - design style library MCP
+  - design tokens MCP
+  - Curio design styles
+  - mcp.designbycurio.com
+  - AI design styles
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Curio is a design-style library built for AI agents. Each entry packages a
+real design style — a movement like Bauhaus or Memphis, a brand idiom, or a
+cultural tradition — into a token-complete, machine-readable spec covering
+colors, typography, spacing, shapes, shadows, motion, and component guidance.
+
+The MCP server connects Claude directly to that library. Instead of
+describing a look in prose and hoping the model improvises, Claude retrieves
+an exact spec and applies it: consistent palettes, correct type stacks, and
+coherent component styling across a whole site, deck, or product.
+
+## Features
+
+- search_styles and list_styles to find styles by name, mood, era, region,
+  or use case across hundreds of entries.
+- get_style for metadata with a live preview image and landing-page URL
+  before committing a quota credit.
+- get_style_spec for the full machine-readable design spec Claude can apply
+  to code, slides, or documents.
+- get_quota to check the remaining balance at any time without charging.
+- OAuth sign-in (email OTP, Google, GitHub) — no API keys to manage; free
+  tier included.
+
+## Setup
+
+1. Add the server to your client, e.g. for Claude Code:
+   `claude mcp add --transport http curio https://mcp.designbycurio.com/mcp`
+2. On first use, the client opens a browser window to sign in to Curio via
+   OAuth and approve the connection.
+3. Ask Claude for a style ("find me something Art Deco for a landing page")
+   and let it fetch and apply the spec.
+
+See the per-client guides (Claude Desktop, Cursor, VS Code, ChatGPT, Codex)
+at [designbycurio.com/docs](https://designbycurio.com/docs).

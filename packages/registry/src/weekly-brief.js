@@ -82,8 +82,12 @@ function normalizeDays(value) {
   return Number.isFinite(numeric) ? Math.max(1, Math.min(31, numeric)) : 7;
 }
 
+const TERMINAL_CONTROL_PATTERN =
+  /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g;
+
 function markdownText(value) {
   return text(value)
+    .replace(TERMINAL_CONTROL_PATTERN, "")
     .replace(/\s+/g, " ")
     .replace(/[\\[\]()`<>]/g, "\\$&");
 }
