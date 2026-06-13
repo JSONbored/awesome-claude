@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>917+ file-backed entries</strong> stay useful as both an
+        <strong>922+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>917</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>922</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -68,7 +68,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>318</code><br>
+          <code>323</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -274,7 +274,7 @@ packages use checksums and package trust metadata after review.
 - **[Vercel AI SDK Repository Contributor Agent for Claude](https://heyclau.de/entry/agents/vercel-ai-sdk-repository-contributor-agent)** - Source-backed Claude agent prompt for contributing to the official Vercel AI SDK monorepo using its AGENTS.md guidance, pnpm workspace commands, package build and test boundaries, provider architecture, Zod compatibility rules, JSON parsing safety, ADR review, and documentation sources.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - Web-based asynchronous agent coordinator leveraging Claude Code for Web's browser interface for managing long-running autonomous coding tasks with async workflows.
 
-## 🔌 MCP Servers (318)
+## 🔌 MCP Servers (323)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs voice-generation workflows.
 - **[ACI MCP Servers](https://heyclau.de/entry/mcp/aci-mcp-servers)** - Open-source MCP servers for accessing ACI.dev managed functions through app-specific tools or a unified search-and-execute interface.
@@ -323,6 +323,7 @@ packages use checksums and package trust metadata after review.
 - **[Chrome DevTools MCP Server for Claude](https://heyclau.de/entry/mcp/chrome-devtools-mcp-server)** - Official Chrome DevTools MCP server that lets Claude inspect and debug a live Chrome browser, capturing performance traces, network activity, console messages, and DOM state through the Chrome DevTools Protocol.
 - **[Chrome MCP Server](https://heyclau.de/entry/mcp/chrome-mcp-server)** - Chrome extension-based MCP server that exposes an existing Chrome browser profile to AI assistants for tab management, page content, screenshots, interaction, history, bookmarks, and network inspection.
 - **[ChunkHound MCP Server](https://heyclau.de/entry/mcp/chunkhound-mcp-server)** - Local-first codebase intelligence MCP server that indexes repositories with tree-sitter, stores searchable chunks in DuckDB, and gives Claude semantic search, regex search, daemon status, and deep code research tools.
+- **[CircleCI MCP Server](https://heyclau.de/entry/mcp/circleci-mcp-server)** - Official CircleCI MCP server that lets LLMs query build and test failures, detect flaky tests, check pipeline status, fetch build logs, and validate config in CircleCI through natural language.
 - **[CLI MCP Server](https://heyclau.de/entry/mcp/cli-mcp-server)** - Secure command-line execution MCP server that lets Claude run allowlisted commands inside a configured directory with command and flag whitelists, path validation, shell-operator blocking, command-length limits, execution timeouts, and a tool for showing the active security rules.
 - **[CLI for Microsoft 365 MCP Server](https://heyclau.de/entry/mcp/cli-microsoft365-mcp-server)** - MCP server for CLI for Microsoft 365 that lets Claude use natural language to search command docs and run Microsoft 365 management commands for Entra ID, SharePoint, Teams, Outlook, OneDrive, Planner, Power Platform, and more.
 - **[ClickHouse MCP Server for Claude](https://heyclau.de/entry/mcp/clickhouse-mcp-server)** - Connect Claude to ClickHouse for read-only SQL exploration, schema discovery, and safe analytics workflows.
@@ -340,7 +341,9 @@ packages use checksums and package trust metadata after review.
 - **[Context+ MCP Server](https://heyclau.de/entry/mcp/contextplus-mcp-server)** - MCP server for semantic codebase intelligence, combining AST structure, embeddings, clustering, feature hubs, restore points, and memory graph tools.
 - **[ContrastAPI Security Tools](https://heyclau.de/entry/mcp/contrastapi-mcp-server)** - 49 remote MCP security tools for CVE/KEV/CWE/EPSS lookup, composite CVSS+EPSS+KEV+PoC risk scoring, CVSS v3.x vector parsing, domain/IP/IOC enrichment, dependency and web intelligence checks, MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Anonymous tier available; Pro tier uses an API key.
 - **[Coolify MCP Server](https://heyclau.de/entry/mcp/coolify-mcp-server)** - MCP server for Coolify infrastructure management, diagnostics, deployments, logs, projects, environments, applications, databases, services, env vars, storage, scheduled tasks, private keys, cloud tokens, teams, and docs search.
+- **[Couchbase MCP Server](https://heyclau.de/entry/mcp/couchbase-mcp-server)** - An MCP server from the official Couchbase-Ecosystem org that lets LLMs interact directly with Couchbase clusters — running SQL++/N1QL queries, performing document CRUD, discovering schema and data models, and analyzing query performance, with a read-only mode enabled by default.
 - **[Cupertino MCP Server](https://heyclau.de/entry/mcp/cupertino-mcp-server)** - Local Apple documentation CLI and MCP server that gives Claude searchable offline access to Apple Developer Documentation, Swift Evolution proposals, Human Interface Guidelines, sample code, Swift.org pages, the Swift Book, and Swift package metadata.
+- **[Curio MCP Server for Claude](https://heyclau.de/entry/mcp/curio-mcp-server)** - Curio is a design-style library for AI: hundreds of real design styles — movements, brands, and cultural traditions — packaged as token-complete, machine-readable specs. The remote MCP server lets Claude search the library, preview styles, and fetch full design specs (colors, typography, spacing, components) to apply to slides, websites, and products.
 - **[CVE MCP Server](https://heyclau.de/entry/mcp/cve-mcp-server)** - Security intelligence MCP server that lets Claude look up CVEs, EPSS scores, CISA KEV status, OSV package vulnerabilities, exploit indicators, MITRE mappings, IP reputation, passive DNS, Shodan host data, malware intelligence, URL safety, and risk reports across optional third-party APIs.
 - **[Cyanheads Obsidian MCP Server](https://heyclau.de/entry/mcp/cyanheads-obsidian-mcp-server)** - Apache-licensed TypeScript MCP server for Obsidian vaults with stdio and Streamable HTTP transports, Local REST API access, note search, section-aware edits, tag/frontmatter management, path policies, and read-only controls.
 - **[Cypress Cloud MCP Server](https://heyclau.de/entry/mcp/cypress-cloud-mcp-server)** - Official remote MCP server for connecting Claude and other AI coding tools to Cypress Cloud runs, failures, flake data, accessibility reports, and UI Coverage results.
@@ -514,6 +517,7 @@ packages use checksums and package trust metadata after review.
 - **[Pentest AI MCP Server](https://heyclau.de/entry/mcp/pentest-ai-mcp-server)** - Offensive-security MCP server from pentest-ai that lets Claude list and run wrapped security tools, plan and install missing tools, launch authorized engagements, run web, recon, API, cloud, AD, credential, vulnerability, mobile, wireless, and LLM-red-team assessments, and retrieve findings, attack chains, reports, and process status.
 - **[Perplexity MCP Server for Claude](https://heyclau.de/entry/mcp/perplexity-mcp-server)** - Official Perplexity MCP server that connects Claude to the Perplexity Sonar API for real-time, web-grounded answers with citations, so responses can draw on current information beyond the model's training data.
 - **[pg-aiguide MCP Server](https://heyclau.de/entry/mcp/pg-aiguide-mcp-server)** - PostgreSQL documentation and best-practice MCP server from Timescale that gives Claude semantic and keyword search across PostgreSQL, TimescaleDB, and PostGIS docs.
+- **[Pinecone Developer MCP Server](https://heyclau.de/entry/mcp/pinecone-developer-mcp-server)** - Official Pinecone Developer MCP server that connects Claude and other MCP clients to Pinecone projects and documentation for index management, record upserts, semantic search, cascading multi-index search, reranking, and documentation lookup over integrated-inference indexes.
 - **[Plaid MCP Server for Claude](https://heyclau.de/entry/mcp/plaid-mcp-server)** - Analyze, troubleshoot, and optimize Plaid integrations for banking data and financial account linking
 - **[Plane MCP Server](https://heyclau.de/entry/mcp/plane-mcp-server)** - Official Plane MCP server for connecting Claude to Plane projects, work items, cycles, modules, initiatives, comments, links, work logs, pages, and workspace metadata.
 - **[PlanetScale MCP Server for Claude](https://heyclau.de/entry/mcp/planetscale-mcp-server)** - Connect Claude to PlanetScale's official hosted MCP server for organizations, databases, branches, schemas, Insights, documentation search, and scoped SQL query workflows.
@@ -531,6 +535,7 @@ packages use checksums and package trust metadata after review.
 - **[Reddit MCP Buddy for Claude](https://heyclau.de/entry/mcp/reddit-mcp-buddy)** - Browse Reddit, search posts, and analyze user activity directly from Claude - no API keys required
 - **[Redis MCP Server for Claude](https://heyclau.de/entry/mcp/redis-mcp-server)** - Official Redis MCP server providing natural language interface for Redis data management and operations
 - **[Ref Tools MCP Server](https://heyclau.de/entry/mcp/ref-tools-mcp-server)** - MCP server for token-efficient documentation search and URL reading across public docs plus Ref-indexed private repositories, PDFs, and documentation sources.
+- **[Render MCP Server](https://heyclau.de/entry/mcp/render-mcp-server)** - The official Render MCP server lets LLMs manage Render resources: create and manage web services, static sites, cron jobs, Postgres and Key-Value instances, monitor deploys, query logs and metrics, and run read-only SQL against Render Postgres. Connect via Render's hosted server or a local Go binary using a RENDER_API_KEY.
 - **[Replicate MCP Server](https://heyclau.de/entry/mcp/replicate-mcp-server)** - Official Replicate MCP server for using Replicate model search, API tooling, and optional code-mode workflows from Claude Desktop, VS Code, Cursor, and compatible MCP clients.
 - **[Resend MCP Server for Claude](https://heyclau.de/entry/mcp/resend-mcp-server)** - Official Resend MCP server for giving Claude and other MCP clients controlled access to email sending, received email, contacts, broadcasts, domains, segments, topics, API keys, and webhooks through stdio or Streamable HTTP.
 - **[Roam Code](https://heyclau.de/entry/mcp/roam-code)** - Local codebase intelligence CLI and MCP server that gives Claude a SQLite code graph, change-safety gates, code health checks, impact analysis, review tools, and audit evidence for agent-assisted coding.
