@@ -4,6 +4,8 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
+import { validateEntry } from "@heyclaude/registry";
+
 import { repoRoot } from "./helpers/registry-fixtures";
 
 function makeTempContentRoot() {
@@ -58,6 +60,49 @@ function runContentValidation(tmpDir: string) {
 }
 
 describe("content validation", () => {
+  it("rejects extension-like slugs and unsafe contributor URL schemes", () => {
+    const result = validateEntry("agents", {
+      title: "Unsafe Agent",
+      slug: "unsafe.svg",
+      category: "agents",
+      description: "Fixture for content validation security checks.",
+      author: "tester",
+      dateAdded: "2026-06-11",
+      documentationUrl: "javascript:alert(1)",
+      repoUrl: "https://github.com/example/unsafe-agent",
+      sourceUrls: ["https://example.com/source", "data:text/html,owned"],
+    });
+
+    expect(result.semanticErrors).toEqual(
+      expect.arrayContaining([
+        "slug must contain only lowercase letters, numbers, and single hyphens",
+        "documentationUrl must use http or https",
+        "sourceUrls must use http or https",
+      ]),
+    );
+  });
+
+  it("allows normal content slugs and http or https contributor URLs", () => {
+    const result = validateEntry("agents", {
+      title: "Safe Agent",
+      slug: "safe-agent",
+      category: "agents",
+      description: "Fixture for content validation security checks.",
+      author: "tester",
+      dateAdded: "2026-06-11",
+      documentationUrl: "http://example.com/docs",
+      repoUrl: "https://github.com/example/safe-agent",
+      sourceUrls: ["https://example.com/source"],
+    });
+
+    expect(result.semanticErrors).not.toEqual(
+      expect.arrayContaining([
+        "slug must use lowercase letters, numbers, and hyphens only",
+        "documentationUrl must use http or https",
+        "sourceUrls must use http or https",
+      ]),
+    );
+  });
   it("rejects hook scriptBody values that are not valid bash", () => {
     const tmpDir = makeTempContentRoot();
     writeHookFixture(

@@ -153,6 +153,17 @@ function isHttpsUrl(value) {
   }
 }
 
+function isHttpUrl(value) {
+  const normalized = String(value || "").trim();
+  if (!normalized) return true;
+  try {
+    const url = new URL(normalized);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
 function isIsoDateOrDateTime(value) {
   const normalized = String(value || "").trim();
   if (!normalized) return true;
@@ -795,6 +806,30 @@ export function validateEntry(category, data, inferred = {}) {
             .filter((value) => value.trim()).length)
   ) {
     semanticErrors.push("brandColors must be hex colors such as #796eff");
+  }
+
+  for (const field of [
+    "authorProfileUrl",
+    "repoUrl",
+    "documentationUrl",
+    "sourceUrl",
+    "docsUrl",
+    "packageUrl",
+    "repositoryUrl",
+    "websiteUrl",
+  ]) {
+    if (!isHttpUrl(merged[field])) {
+      semanticErrors.push(`${field} must use http or https`);
+    }
+  }
+
+  if (Array.isArray(merged.sourceUrls)) {
+    for (const sourceUrl of merged.sourceUrls) {
+      if (!isHttpUrl(sourceUrl)) {
+        semanticErrors.push("sourceUrls must use http or https");
+        break;
+      }
+    }
   }
 
   for (const field of [
