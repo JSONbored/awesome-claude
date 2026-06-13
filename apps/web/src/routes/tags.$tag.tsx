@@ -52,6 +52,9 @@ export const Route = createFileRoute("/tags/$tag")({
         { property: "og:image", content: ogImage },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImage },
+        // Single-entry tag pages are thin and excluded from the sitemap; keep them usable for
+        // in-page tag links but out of the index to match the sitemap policy.
+        ...(group.entries.length < 2 ? [{ name: "robots", content: "noindex, follow" }] : []),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
