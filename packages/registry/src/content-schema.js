@@ -33,6 +33,7 @@ const DEFAULT_TESTED_PLATFORMS = categorySpec.defaultTestedPlatforms;
 const NOTE_LIST_FIELDS = new Set(["safetyNotes", "privacyNotes"]);
 const MAX_NOTE_ITEMS = 8;
 const MAX_NOTE_LENGTH = 320;
+export const SAFE_CONTENT_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export function headingId(text) {
   let cleaned = "";
@@ -666,6 +667,13 @@ export function validateEntry(category, data, inferred = {}) {
 
   const enumErrors = [];
   const semanticErrors = [];
+  const slug = String(merged.slug || "").trim();
+
+  if (slug && !SAFE_CONTENT_SLUG_PATTERN.test(slug)) {
+    semanticErrors.push(
+      "slug must contain only lowercase letters, numbers, and single hyphens",
+    );
+  }
 
   for (const field of schema?.required ?? []) {
     if (
