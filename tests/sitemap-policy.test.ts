@@ -49,11 +49,15 @@ describe("sitemap policy", () => {
     expect(source).toContain('"/feed.xml"');
     expect(source).toContain('"/atom.xml"');
     expect(source).toContain('"/feeds/trending.xml"');
-    expect(source).toContain('"/data/feeds/index.json"');
+    // /data/** is robots-disallowed, so it must not be advertised in the sitemap.
+    expect(source).not.toContain('"/data/feeds/index.json"');
     expect(source).toContain('"/validators"');
     expect(source).not.toContain('"/validators/mcp-config"');
     expect(source).not.toContain('"/validators/skill-package"');
     expect(source).not.toContain("lastModified: new Date()");
     expect(source).toContain("ENTRIES.map");
+    // Category hub landing pages with per-category + per-entry lastmod.
+    expect(source).toContain("categoryLastmod");
+    expect(source).toContain("entry.reviewedAt ?? entry.dateAdded");
   });
 });
