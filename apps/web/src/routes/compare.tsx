@@ -4,18 +4,12 @@ import { absoluteUrl } from "@/lib/seo";
 import { z } from "zod";
 import { X, ArrowRight, ExternalLink, Plus, Search as SearchIcon } from "lucide-react";
 import { ENTRIES } from "@/data/entries";
-import {
-  CategoryPill,
-  PlatformChip,
-  InstallRiskBadge,
-  NotesPresenceChips,
-} from "@/components/badges";
-import { TrustDrilldown } from "@/components/trust-drilldown";
+import { COMPARISONS } from "@/data/comparisons";
+import { CategoryPill } from "@/components/badges";
 import { CopyButton } from "@/components/copy-button";
-import { SourceCitations } from "@/components/source-citations";
+import { COMPARISON_ROWS as ROWS } from "@/components/comparison-table";
 import { useCompare } from "@/lib/compare";
 import { search } from "@/data/search";
-import { formatCompact } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
 
@@ -64,124 +58,6 @@ function resolveIds(ids: string): Entry[] {
   }
   return out;
 }
-
-interface RowDef {
-  label: string;
-  render: (e: Entry) => React.ReactNode;
-}
-
-const ROWS: RowDef[] = [
-  { label: "Trust", render: (e) => <TrustDrilldown entry={e} /> },
-  { label: "Install risk", render: (e) => <InstallRiskBadge entry={e} /> },
-  { label: "Notes", render: (e) => <NotesPresenceChips entry={e} /> },
-  { label: "Category", render: (e) => <CategoryPill>{e.category}</CategoryPill> },
-  {
-    label: "Source",
-    render: (e) => <span className="text-sm capitalize text-ink">{e.source}</span>,
-  },
-  { label: "Author", render: (e) => <span className="text-sm text-ink">{e.author}</span> },
-  {
-    label: "Added",
-    render: (e) => <span className="font-mono text-xs text-ink-muted">{e.dateAdded}</span>,
-  },
-  {
-    label: "Platforms",
-    render: (e) => (
-      <div className="flex flex-wrap gap-1">
-        {e.platforms.map((p) => (
-          <PlatformChip key={p} id={p} />
-        ))}
-      </div>
-    ),
-  },
-  {
-    label: "Source repo",
-    render: (e) => (
-      <span className="font-mono text-sm tabular-nums text-ink">
-        {e.repoStats?.stars !== undefined ? `${formatCompact(e.repoStats.stars)} repo stars` : "—"}
-      </span>
-    ),
-  },
-  {
-    label: "Safety notes",
-    render: (e) =>
-      e.safetyNotes ? (
-        <span className="text-xs text-ink">
-          <span className="mr-1 text-trust-trusted">✓</span>
-          <span className="line-clamp-3">{e.safetyNotes}</span>
-        </span>
-      ) : (
-        <span className="text-xs text-ink-subtle">— missing</span>
-      ),
-  },
-  {
-    label: "Privacy notes",
-    render: (e) =>
-      e.privacyNotes ? (
-        <span className="text-xs text-ink">
-          <span className="mr-1 text-trust-trusted">✓</span>
-          <span className="line-clamp-3">{e.privacyNotes}</span>
-        </span>
-      ) : (
-        <span className="text-xs text-ink-subtle">— missing</span>
-      ),
-  },
-  {
-    label: "Prerequisites",
-    render: (e) =>
-      e.prerequisites && e.prerequisites.length > 0 ? (
-        <ul className="list-disc space-y-0.5 pl-4 text-xs text-ink-muted">
-          {e.prerequisites.slice(0, 4).map((p) => (
-            <li key={p}>{p}</li>
-          ))}
-        </ul>
-      ) : (
-        <span className="text-xs text-ink-subtle">— none listed</span>
-      ),
-  },
-  {
-    label: "Install",
-    render: (e) =>
-      e.installCommand ? (
-        <div className="space-y-1.5">
-          <pre className="max-h-24 overflow-auto rounded-md bg-background p-2 font-mono text-[11px] text-ink">
-            <code>{e.installCommand}</code>
-          </pre>
-          <CopyButton value={e.installCommand} label="Copy install" />
-        </div>
-      ) : (
-        <span className="text-xs text-ink-subtle">—</span>
-      ),
-  },
-  {
-    label: "Config",
-    render: (e) =>
-      e.configSnippet ? (
-        <div className="space-y-1.5">
-          <pre className="max-h-24 overflow-auto rounded-md bg-background p-2 font-mono text-[11px] text-ink">
-            <code>{e.configSnippet}</code>
-          </pre>
-          <CopyButton value={e.configSnippet} label="Copy config" />
-        </div>
-      ) : (
-        <span className="text-xs text-ink-subtle">—</span>
-      ),
-  },
-  {
-    label: "Citations",
-    render: (e) => (
-      <div className="text-xs">
-        <SourceCitations entry={e} />
-      </div>
-    ),
-  },
-  {
-    label: "Claim",
-    render: (e) => (
-      <span className="text-xs text-ink-muted">{e.claimed ? "Claimed" : "Unclaimed"}</span>
-    ),
-  },
-];
 
 function ComparePage() {
   const sp = Route.useSearch();
@@ -244,6 +120,21 @@ function ComparePage() {
             >
               Browse the directory
             </Link>
+          </div>
+          <div className="mt-6">
+            <div className="eyebrow mb-2">Popular comparisons</div>
+            <div className="flex flex-wrap justify-center gap-2">
+              {COMPARISONS.map((c) => (
+                <Link
+                  key={c.slug}
+                  to="/compare/$slug"
+                  params={{ slug: c.slug }}
+                  className="inline-flex items-center rounded-full border border-border bg-background px-3 py-1.5 text-xs text-ink-muted hover:text-ink"
+                >
+                  {c.heading}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>
