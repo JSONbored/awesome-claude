@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createFileRoute, Link, stripSearchParams } from "@tanstack/react-router";
+import { absoluteUrl } from "@/lib/seo";
 import { z } from "zod";
 import { X, ArrowRight, ExternalLink, Plus, Search as SearchIcon } from "lucide-react";
 import { ENTRIES } from "@/data/entries";
@@ -39,7 +40,7 @@ export const Route = createFileRoute("/compare")({
         content: "Side-by-side comparison of Claude workflow resources.",
       },
     ],
-    links: [{ rel: "canonical", href: "/compare" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/compare") }],
   }),
   component: ComparePage,
 });

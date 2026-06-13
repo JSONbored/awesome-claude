@@ -84,14 +84,25 @@ function sanitizeRenderedHtml(html: string) {
       img: ["https"],
     },
     transformTags: {
-      a: (_tagName, attribs) => ({
-        tagName: "a",
-        attribs: {
-          ...attribs,
-          rel: "nofollow noopener noreferrer",
-          target: "_blank",
-        },
-      }),
+      a: (_tagName, attribs) => {
+        // Drop relative / scheme-less anchors. GFM autolinking turns bare paths in entry
+        // content (e.g. ".claude/hooks/foo.sh", "/utils/trpc") into site-relative links that
+        // Google then crawls as 404s. Real external URLs (http/https/mailto) stay linked.
+        const href = String(attribs.href ?? "");
+        if (!/^(https?:|mailto:)/i.test(href)) {
+          // Unwrap to a non-anchor (span is not in allowedTags, so sanitize-html drops the tag
+          // but keeps the text) — avoids leaving an orphaned, destination-less <a> in the DOM.
+          return { tagName: "span", attribs: {} };
+        }
+        return {
+          tagName: "a",
+          attribs: {
+            ...attribs,
+            rel: "nofollow noopener noreferrer",
+            target: "_blank",
+          },
+        };
+      },
     },
   });
 }

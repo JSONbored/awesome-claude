@@ -33,6 +33,9 @@ import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { absoluteUrl } from "@/lib/seo";
+import { categoryLabels, categoryUsageHints } from "@/lib/site";
+import { tagSlug } from "@/lib/tags";
 // (HoverChevrons removed — related uses static grid)
 import { ShareMenu } from "@/components/share-menu";
 import { DossierTOC, type TocItem } from "@/components/dossier-toc";
@@ -76,6 +79,58 @@ const loadFullEntry = createServerFn({ method: "GET" })
     return buildEntry({ ...entry, bodyHtml, sections });
   });
 
+// Category-aware schema, aligned with the registry's canonical buildEntryJsonLd type policy:
+// guides -> TechArticle, code-like (commands/hooks/mcp/statuslines) -> SoftwareSourceCode,
+// everything else -> CreativeWork. (The dedicated software-app schema is reserved for tool
+// listings with complete offer/app fields, so generic entries never masquerade as apps and
+// repo stars are never surfaced as a rating.)
+const CODE_LIKE_CATEGORIES = new Set(["commands", "hooks", "mcp", "statuslines"]);
+function entrySchema(e: Entry, url: string): Record<string, unknown> {
+  const base = {
+    "@context": "https://schema.org",
+    name: e.title,
+    description: e.description,
+    url,
+    datePublished: e.dateAdded,
+    dateModified: e.reviewedAt ?? e.dateAdded,
+    author: { "@type": "Person", name: e.author },
+    ...(e.sourceUrl ? { sameAs: e.sourceUrl, isBasedOn: e.sourceUrl } : {}),
+  };
+  if (e.category === "guides") {
+    return { ...base, "@type": "TechArticle", headline: e.title };
+  }
+  if (CODE_LIKE_CATEGORIES.has(e.category)) {
+    return {
+      ...base,
+      "@type": "SoftwareSourceCode",
+      ...(e.sourceUrl ? { codeRepository: e.sourceUrl } : {}),
+      programmingLanguage: e.scriptLanguage ?? "Markdown",
+      runtimePlatform: "Claude Code",
+    };
+  }
+  return { ...base, "@type": "CreativeWork" };
+}
+
+// Guides are how-to content: emit a HowTo whose steps come from the guide's H2/H3 headings,
+// so step-by-step guides become eligible for HowTo rich results.
+function guideHeadingSteps(e: Entry) {
+  return (e.headings ?? []).filter((heading) => heading.depth === 2 || heading.depth === 3);
+}
+function guideHowTo(e: Entry, url: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: e.title,
+    description: e.description,
+    step: guideHeadingSteps(e).map((heading, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: heading.text,
+      url: `${url}#${heading.id}`,
+    })),
+  };
+}
+
 export const Route = createFileRoute("/entry/$category/$slug")({
   loader: async ({ params }): Promise<{ entry: import("@/types/registry").Entry }> => {
     const fullEntry = await loadFullEntry({
@@ -88,7 +143,8 @@ export const Route = createFileRoute("/entry/$category/$slug")({
   head: ({ params, loaderData }) => {
     if (!loaderData) return { meta: [] };
     const e = loaderData.entry;
-    const url = `/entry/${params.category}/${params.slug}`;
+    const path = `/entry/${params.category}/${params.slug}`;
+    const url = absoluteUrl(path);
     const ld = {
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -105,17 +161,17 @@ export const Route = createFileRoute("/entry/$category/$slug")({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Directory", item: "/browse" },
+        { "@type": "ListItem", position: 1, name: "Directory", item: absoluteUrl("/browse") },
         {
           "@type": "ListItem",
           position: 2,
           name: e.category,
-          item: `/browse?category=${e.category}`,
+          item: absoluteUrl(`/${e.category}`),
         },
         { "@type": "ListItem", position: 3, name: e.title, item: url },
       ],
     };
-    const ogUrl = `/og/${params.category}/${params.slug}`;
+    const ogUrl = absoluteUrl(`/og/${params.category}/${params.slug}`);
     return {
       meta: [
         { title: e.seoTitle ? `${e.seoTitle} — HeyClaude` : `${e.title} — HeyClaude` },
@@ -134,6 +190,10 @@ export const Route = createFileRoute("/entry/$category/$slug")({
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(ld) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
+        { type: "application/ld+json", children: stringifyJsonLd(entrySchema(e, url)) },
+        ...(e.category === "guides" && guideHeadingSteps(e).length >= 2
+          ? [{ type: "application/ld+json", children: stringifyJsonLd(guideHowTo(e, url)) }]
+          : []),
       ],
     };
   },
@@ -450,11 +510,30 @@ function Dossier() {
                 {entry.body}
               </pre>
             ) : (
-              <p>
-                {entry.title} is curated in the HeyClaude registry. Review the source repository
-                before installing. Trust and source signals are derived from metadata review, not
-                from runtime scanning.
-              </p>
+              <div className="space-y-3">
+                <p>
+                  <strong>{entry.title}</strong> is a{" "}
+                  {categoryLabels[entry.category] ?? entry.category} resource for Claude
+                  {entry.author ? ` by ${entry.author}` : ""}, curated and metadata-reviewed in the
+                  HeyClaude registry.{" "}
+                  {categoryUsageHints[entry.category] ??
+                    "Open the source to review it before installing."}
+                </p>
+                {entry.platforms.length > 0 && (
+                  <p>
+                    Compatible with{" "}
+                    <span className="text-ink">{entry.platforms.join(", ")}</span>.
+                  </p>
+                )}
+                {entry.tags.length > 0 && (
+                  <p>Covers {entry.tags.slice(0, 8).join(", ")}.</p>
+                )}
+                <p className="text-ink-muted">
+                  Trust and source signals come from metadata review, not runtime scanning — always
+                  read the source before installing anything that touches your filesystem, network,
+                  or credentials.
+                </p>
+              </div>
             )}
             {entry.headings && entry.headings.length > 0 && (
               <div className="mt-5 rounded-lg border border-border bg-surface-2 p-3">
@@ -471,14 +550,29 @@ function Dossier() {
               </div>
             )}
             <div className="mt-4 flex flex-wrap gap-1.5">
-              {entry.tags.map((t) => (
-                <span
-                  key={t}
-                  className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted"
-                >
-                  #{t}
-                </span>
-              ))}
+              {entry.tags.map((t) => {
+                const slug = tagSlug(t);
+                const base =
+                  "inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted";
+                // Tags that slugify to empty (all-symbol) have no hub — render a static chip.
+                if (!slug) {
+                  return (
+                    <span key={t} className={base}>
+                      #{t}
+                    </span>
+                  );
+                }
+                return (
+                  <Link
+                    key={t}
+                    to="/tags/$tag"
+                    params={{ tag: slug }}
+                    className={`${base} hover:border-border-strong hover:text-ink`}
+                  >
+                    #{t}
+                  </Link>
+                );
+              })}
             </div>
           </DossierSection>
 
