@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 import { getTagGroup } from "@/lib/tags";
 
 export const Route = createFileRoute("/tags/$tag")({
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/tags/$tag")({
     const url = absoluteUrl(`/tags/${params.tag}`);
     const title = `Claude ${group.name} resources — HeyClaude`;
     const description = `${group.entries.length} Claude Code resources tagged "${group.name}" — MCP servers, agents, skills, hooks, commands, rules, and more, curated in HeyClaude.`;
+    const ogImage = ogImageUrl({ title: `Tagged "${group.name}"`, eyebrow: "Tag", description });
     const itemList = {
       "@context": "https://schema.org",
       "@type": "ItemList",
@@ -47,7 +49,9 @@ export const Route = createFileRoute("/tags/$tag")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
+        { property: "og:image", content: ogImage },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: ogImage },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [

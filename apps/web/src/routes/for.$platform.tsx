@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 
 const PLATFORM_IDS = new Set(Object.keys(PLATFORM_LABEL));
 
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/for/$platform")({
     const url = absoluteUrl(`/for/${params.platform}`);
     const title = `Claude resources for ${label} — HeyClaude`;
     const description = `${entries.length} source-backed Claude resources that work with ${label}: MCP servers, agents, skills, hooks, commands, and rules, curated in HeyClaude.`;
+    const ogImage = ogImageUrl({ title: `Claude for ${label}`, eyebrow: "Platform", description });
     const itemList = {
       "@context": "https://schema.org",
       "@type": "ItemList",
@@ -70,7 +72,9 @@ export const Route = createFileRoute("/for/$platform")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
+        { property: "og:image", content: ogImage },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: ogImage },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
