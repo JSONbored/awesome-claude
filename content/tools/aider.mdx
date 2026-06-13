@@ -15,6 +15,8 @@ pricingModel: open-source
 disclosure: editorial
 applicationCategory: DeveloperApplication
 operatingSystem: macOS, Windows, Linux
+privacyNotes:
+  - Aider sends your prompts and the contents of selected repository files to your configured model provider (Anthropic for Claude); a provider API key is required.
 tags:
   - terminal-agent
   - open-source
@@ -25,7 +27,11 @@ keywords:
 
 ## Editorial notes
 
-Aider is a practical option for developers who want tight Git-centered AI editing without adopting a new editor.
+Aider is an open-source command-line coding assistant that edits files directly in your Git repository through a chat loop. You point it at a repo, describe a change, and it proposes edits, applies them, and commits each change with a descriptive message — so every AI edit lands as a reviewable diff in your Git history.
+
+It is model-agnostic and works well with Claude models: provide an Anthropic API key (or route through a proxy) and Aider uses Claude for the editing loop. Because it lives in the terminal rather than an editor, it fits existing workflows — tmux, CI shells, or remote machines — and it builds a repo map so it can make coherent edits across multiple files.
+
+Reach for Aider when you want tight, Git-native AI editing without adopting a new IDE, and when you value every change landing as an inspectable commit. If you would rather have inline, editor-integrated suggestions, an editor-based tool like Cursor may fit better.
 
 ## Disclosure
 

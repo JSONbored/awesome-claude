@@ -55,8 +55,36 @@ keywords:
 
 ## Overview
 
-MCP server that generates production-ready visual assets by routing requests across 30+ image generation models. Handles app icons, favicons, OG images, logos, and wordmarks. Validates output for WCAG contrast and palette consistency. Zero API key required for first run via Pollinations and Stable Horde free tiers.
+Prompt-to-asset is an MCP server that turns text prompts into production-ready visual assets — app icons, favicons, OG images, logos, and wordmarks — by routing each request across 30+ image generation models and selecting suitable output. It validates results for WCAG contrast and palette consistency, so generated assets are usable rather than just decorative. No API key is required for the first run: it falls back to the Pollinations and Stable Horde free tiers.
 
-## Usage
+## Setup
 
+Add it to Claude Code with one command:
+
+```bash
 claude mcp add prompt-to-asset -- npx -y prompt-to-asset
+```
+
+Or register it directly in your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "prompt-to-asset": {
+      "command": "npx",
+      "args": ["-y", "prompt-to-asset"]
+    }
+  }
+}
+```
+
+## What it generates
+
+- App icons and favicons in standard sizes
+- Open Graph and social share images
+- Logos and wordmarks
+- Palette- and contrast-checked variants (WCAG)
+
+## Safety & privacy
+
+Review generated assets, licensing, and usage rights before publishing, and avoid sending confidential brand or source material. Prompts, reference images, brand specifications, and generated assets may be sent to external model providers.
