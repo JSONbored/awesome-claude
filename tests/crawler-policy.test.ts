@@ -2,7 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { getRobotsPolicy } from "@/lib/robots-policy";
+import { getRobotsPolicy, renderRobotsTxt } from "@/lib/robots-policy";
+import { applySecurityHeaders } from "@/lib/security-headers";
 import { repoRoot } from "./helpers/registry-fixtures";
 
 describe("crawler and AI citation policy", () => {
@@ -16,13 +17,13 @@ describe("crawler and AI citation policy", () => {
       'import { applySecurityHeaders } from "./lib/security-headers"',
     );
     expect(serverSource).toContain(
-      "function withSecurityHeaders(response: Response): Response",
+      "function withSecurityHeaders(response: Response, request: Request): Response",
     );
     expect(serverSource).toContain(
-      "applySecurityHeaders(new Headers(response.headers))",
+      "applySecurityHeaders(new Headers(response.headers), request)",
     );
     expect(serverSource).toContain(
-      "return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));",
+      "return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response), request);",
     );
   });
   it("keeps legitimate search and AI citation crawlers explicitly allowed", () => {
@@ -48,6 +49,27 @@ describe("crawler and AI citation policy", () => {
       ]),
     );
     expect(policy.sitemap).toBe("https://heyclau.de/sitemap.xml");
+
+    const robotsTxt = renderRobotsTxt();
+    expect(robotsTxt).toContain("Disallow: /api/");
+    expect(robotsTxt).toContain("Disallow: /data/");
+    expect(robotsTxt).toContain("Disallow: /downloads/");
+    expect(robotsTxt).toContain("Content-Signal:");
+  });
+
+  it("noindexes non-production hosts and advertises agent discovery on HTML responses", () => {
+    const devHeaders = applySecurityHeaders(
+      new Headers({ "content-type": "text/html; charset=utf-8" }),
+      new Request("https://dev.heyclau.de/"),
+    );
+    expect(devHeaders.get("x-robots-tag")).toContain("noindex");
+
+    const prodHeaders = applySecurityHeaders(
+      new Headers({ "content-type": "text/html; charset=utf-8" }),
+      new Request("https://heyclau.de/"),
+    );
+    expect(prodHeaders.get("x-robots-tag")).toBeNull();
+    expect(prodHeaders.get("link")).toContain('rel="api-catalog"');
   });
 
   it("keeps llms.txt and corpus exports as cacheable security-headered discovery surfaces", () => {
