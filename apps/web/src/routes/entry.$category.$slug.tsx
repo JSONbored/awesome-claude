@@ -113,13 +113,16 @@ function entrySchema(e: Entry, url: string): Record<string, unknown> {
 
 // Guides are how-to content: emit a HowTo whose steps come from the guide's H2/H3 headings,
 // so step-by-step guides become eligible for HowTo rich results.
+function guideHeadingSteps(e: Entry) {
+  return (e.headings ?? []).filter((heading) => heading.depth === 2 || heading.depth === 3);
+}
 function guideHowTo(e: Entry, url: string) {
   return {
     "@context": "https://schema.org",
     "@type": "HowTo",
     name: e.title,
     description: e.description,
-    step: (e.headings ?? []).map((heading, index) => ({
+    step: guideHeadingSteps(e).map((heading, index) => ({
       "@type": "HowToStep",
       position: index + 1,
       name: heading.text,
@@ -188,7 +191,7 @@ export const Route = createFileRoute("/entry/$category/$slug")({
         { type: "application/ld+json", children: stringifyJsonLd(ld) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
         { type: "application/ld+json", children: stringifyJsonLd(entrySchema(e, url)) },
-        ...(e.category === "guides" && (e.headings?.length ?? 0) >= 2
+        ...(e.category === "guides" && guideHeadingSteps(e).length >= 2
           ? [{ type: "application/ld+json", children: stringifyJsonLd(guideHowTo(e, url)) }]
           : []),
       ],
@@ -547,16 +550,29 @@ function Dossier() {
               </div>
             )}
             <div className="mt-4 flex flex-wrap gap-1.5">
-              {entry.tags.map((t) => (
-                <Link
-                  key={t}
-                  to="/tags/$tag"
-                  params={{ tag: tagSlug(t) }}
-                  className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted hover:border-border-strong hover:text-ink"
-                >
-                  #{t}
-                </Link>
-              ))}
+              {entry.tags.map((t) => {
+                const slug = tagSlug(t);
+                const base =
+                  "inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted";
+                // Tags that slugify to empty (all-symbol) have no hub — render a static chip.
+                if (!slug) {
+                  return (
+                    <span key={t} className={base}>
+                      #{t}
+                    </span>
+                  );
+                }
+                return (
+                  <Link
+                    key={t}
+                    to="/tags/$tag"
+                    params={{ tag: slug }}
+                    className={`${base} hover:border-border-strong hover:text-ink`}
+                  >
+                    #{t}
+                  </Link>
+                );
+              })}
             </div>
           </DossierSection>
 

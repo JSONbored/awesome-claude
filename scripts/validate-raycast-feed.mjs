@@ -281,7 +281,7 @@ for (const entry of payload.entries) {
   }
   if (detail.copyText === undefined) {
     const llmsUrl = String(detail.llmsUrl || "");
-    const validLlmsUrl = /^\/api\/registry\/entries\/[^/]+\/[^/]+\/llms(?:\/.*)?$/.test(llmsUrl);
+    const validLlmsUrl = /^\/api\/registry\/entries\/[^/]+\/[^/]+\/llms\/?$/.test(llmsUrl);
     if (!validLlmsUrl) {
       fail(`${key}: detail without copyText must expose llmsUrl`);
     }

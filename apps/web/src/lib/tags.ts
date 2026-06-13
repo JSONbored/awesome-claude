@@ -15,17 +15,28 @@ let cache: TagGroup[] | null = null;
 
 export function getAllTagGroups(): TagGroup[] {
   if (cache) return cache;
-  const map = new Map<string, TagGroup>();
+  const map = new Map<string, { entries: Entry[]; names: Map<string, number> }>();
   for (const entry of ENTRIES) {
     for (const tag of entry.tags ?? []) {
       const slug = tagSlug(tag);
       if (!slug) continue;
-      const group = map.get(slug);
-      if (group) group.entries.push(entry);
-      else map.set(slug, { slug, name: tag, entries: [entry] });
+      let group = map.get(slug);
+      if (!group) {
+        group = { entries: [], names: new Map() };
+        map.set(slug, group);
+      }
+      group.entries.push(entry);
+      group.names.set(tag, (group.names.get(tag) ?? 0) + 1);
     }
   }
-  cache = [...map.values()].sort((a, b) => b.entries.length - a.entries.length);
+  cache = [...map.entries()]
+    .map(([slug, group]) => ({
+      slug,
+      // Canonical display name: most frequent raw casing (ties broken alphabetically).
+      name: [...group.names.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0][0],
+      entries: group.entries,
+    }))
+    .sort((a, b) => b.entries.length - a.entries.length);
   return cache;
 }
 
