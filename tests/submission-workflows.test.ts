@@ -380,9 +380,7 @@ describe("submission automation workflows", () => {
     expect(source).toContain("validate-pr-preview:");
     expect(source).toContain("github.event_name == 'pull_request'");
     expect(source).toContain("github.event_name == 'workflow_dispatch'");
-    expect(source).toContain(
-      "github.ref_name == 'automation/readme-refresh'",
-    );
+    expect(source).toContain("github.ref_name == 'automation/readme-refresh'");
     expect(source).toContain(
       "github.event.pull_request.head.repo.full_name == github.repository",
     );
