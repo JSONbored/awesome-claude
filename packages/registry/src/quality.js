@@ -322,7 +322,7 @@ function percentOf(count, total) {
   return total > 0 ? Math.round((count / total) * 100) : 0;
 }
 
-function deriveSourceFreshness(entry, referenceDate) {
+function deriveSourceFreshness(entry, referenceDate = new Date()) {
   const raw = clean(entry.repoUpdatedAt || entry.dateAdded);
   if (!raw) {
     return { freshness: "unknown", ageDays: null, lastActivityAt: "" };
