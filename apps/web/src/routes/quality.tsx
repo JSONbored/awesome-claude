@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { absoluteUrl } from "@/lib/seo";
 import {
   ShieldCheck,
   GitBranch,
@@ -31,9 +32,9 @@ export const Route = createFileRoute("/quality")({
         property: "og:description",
         content: "Coverage, improvement queue, and signed artifact contracts.",
       },
-      { property: "og:url", content: "/quality" },
+      { property: "og:url", content: absoluteUrl("/quality") },
     ],
-    links: [{ rel: "canonical", href: "/quality" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/quality") }],
   }),
   component: QualityPage,
 });

@@ -33,6 +33,7 @@ import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { absoluteUrl } from "@/lib/seo";
 // (HoverChevrons removed — related uses static grid)
 import { ShareMenu } from "@/components/share-menu";
 import { DossierTOC, type TocItem } from "@/components/dossier-toc";
@@ -76,6 +77,38 @@ const loadFullEntry = createServerFn({ method: "GET" })
     return buildEntry({ ...entry, bodyHtml, sections });
   });
 
+// Category-aware schema, aligned with the registry's canonical buildEntryJsonLd type policy:
+// guides -> TechArticle, code-like (commands/hooks/mcp/statuslines) -> SoftwareSourceCode,
+// everything else -> CreativeWork. (The dedicated software-app schema is reserved for tool
+// listings with complete offer/app fields, so generic entries never masquerade as apps and
+// repo stars are never surfaced as a rating.)
+const CODE_LIKE_CATEGORIES = new Set(["commands", "hooks", "mcp", "statuslines"]);
+function entrySchema(e: Entry, url: string): Record<string, unknown> {
+  const base = {
+    "@context": "https://schema.org",
+    name: e.title,
+    description: e.description,
+    url,
+    datePublished: e.dateAdded,
+    dateModified: e.reviewedAt ?? e.dateAdded,
+    author: { "@type": "Person", name: e.author },
+    ...(e.sourceUrl ? { sameAs: e.sourceUrl, isBasedOn: e.sourceUrl } : {}),
+  };
+  if (e.category === "guides") {
+    return { ...base, "@type": "TechArticle", headline: e.title };
+  }
+  if (CODE_LIKE_CATEGORIES.has(e.category)) {
+    return {
+      ...base,
+      "@type": "SoftwareSourceCode",
+      ...(e.sourceUrl ? { codeRepository: e.sourceUrl } : {}),
+      programmingLanguage: e.scriptLanguage ?? "Markdown",
+      runtimePlatform: "Claude Code",
+    };
+  }
+  return { ...base, "@type": "CreativeWork" };
+}
+
 export const Route = createFileRoute("/entry/$category/$slug")({
   loader: async ({ params }): Promise<{ entry: import("@/types/registry").Entry }> => {
     const fullEntry = await loadFullEntry({
@@ -88,7 +121,8 @@ export const Route = createFileRoute("/entry/$category/$slug")({
   head: ({ params, loaderData }) => {
     if (!loaderData) return { meta: [] };
     const e = loaderData.entry;
-    const url = `/entry/${params.category}/${params.slug}`;
+    const path = `/entry/${params.category}/${params.slug}`;
+    const url = absoluteUrl(path);
     const ld = {
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -105,17 +139,17 @@ export const Route = createFileRoute("/entry/$category/$slug")({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Directory", item: "/browse" },
+        { "@type": "ListItem", position: 1, name: "Directory", item: absoluteUrl("/browse") },
         {
           "@type": "ListItem",
           position: 2,
           name: e.category,
-          item: `/browse?category=${e.category}`,
+          item: absoluteUrl(`/${e.category}`),
         },
         { "@type": "ListItem", position: 3, name: e.title, item: url },
       ],
     };
-    const ogUrl = `/og/${params.category}/${params.slug}`;
+    const ogUrl = absoluteUrl(`/og/${params.category}/${params.slug}`);
     return {
       meta: [
         { title: e.seoTitle ? `${e.seoTitle} — HeyClaude` : `${e.title} — HeyClaude` },
@@ -134,6 +168,7 @@ export const Route = createFileRoute("/entry/$category/$slug")({
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(ld) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
+        { type: "application/ld+json", children: stringifyJsonLd(entrySchema(e, url)) },
       ],
     };
   },

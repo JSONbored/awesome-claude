@@ -1,11 +1,20 @@
 import { siteConfig } from "@/lib/site";
 
+// Machine endpoints and generated artifacts should not be crawled: they waste crawl budget
+// and surface as "crawled - not indexed" / 404 noise in Search Console.
+const DISALLOW_PATHS = ["/api/", "/data/", "/downloads/", "/_next/"];
+
+// AI content-usage preferences (contentsignals.org / draft-romm-aipref-contentsignals).
+// Fully open: appear in search + AI answers and allow training.
+const CONTENT_SIGNAL = "ai-train=yes, search=yes, ai-input=yes";
+
 export function getRobotsPolicy() {
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
+        disallow: DISALLOW_PATHS,
       },
       {
         userAgent: [
@@ -17,8 +26,10 @@ export function getRobotsPolicy() {
           "Google-Extended",
         ],
         allow: "/",
+        disallow: DISALLOW_PATHS,
       },
     ],
+    contentSignal: CONTENT_SIGNAL,
     sitemap: `${siteConfig.url}/sitemap.xml`,
     host: new URL(siteConfig.url).host,
   };
@@ -33,6 +44,13 @@ export function renderRobotsTxt() {
       lines.push(`User-agent: ${userAgent}`);
     }
     lines.push(`Allow: ${rule.allow}`);
+    for (const path of rule.disallow ?? []) {
+      lines.push(`Disallow: ${path}`);
+    }
+    // Content-Signal applies to all crawlers — emit it once, under the catch-all group.
+    if (policy.contentSignal && rule.userAgent === "*") {
+      lines.push(`Content-Signal: ${policy.contentSignal}`);
+    }
     lines.push("");
   }
   lines.push(`Sitemap: ${policy.sitemap}`);
