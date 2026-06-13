@@ -34,6 +34,23 @@ export function buildLlmsTxt(origin: string): string {
     }
     lines.push("");
   }
+
+  // Optional section (llmstxt.org): supplementary machine-readable surfaces agents can pull.
+  lines.push("## Optional");
+  lines.push("");
+  lines.push(
+    `- [Full corpus](${origin}/llms-full.txt): every entry with descriptions, metadata, and install/config snippets`,
+  );
+  lines.push(`- [OpenAPI spec](${origin}/openapi.json): machine-readable REST API`);
+  lines.push(`- [API feed](${origin}/api/registry/feed): endpoint map and distribution feeds`);
+  lines.push(
+    `- [Directory index](${origin}/data/directory-index.json): flat per-entry JSON with tags and keywords`,
+  );
+  lines.push(
+    `- [MCP server card](${origin}/.well-known/mcp/server-card.json): MCP tools and resources`,
+  );
+  lines.push(`- [Agent skills index](${origin}/.well-known/agent-skills/index.json)`);
+  lines.push("");
   return lines.join("\n");
 }
 
