@@ -83,12 +83,14 @@ const CROSS_CATEGORY_STRICT_URL_FIELDS = new Set([
   "repoUrl",
   "repositoryUrl",
   "sourceUrl",
+  "websiteUrl",
   "download_url",
   "github_url",
   "package_url",
   "repo_url",
   "repository_url",
   "source_url",
+  "website_url",
 ]);
 const DOMAIN_ONLY_EXCLUSIONS = new Set([
   "github.com",
