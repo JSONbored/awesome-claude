@@ -113,6 +113,13 @@ describe("generated churn policy", () => {
     );
   });
 
+  it("derives content freshness from source files instead of generated artifacts", () => {
+    const source = read("scripts/build-content-index.mjs");
+    expect(source).toContain("loadGitContentUpdatedAt");
+    expect(source).not.toContain("loadExistingContentUpdatedAt");
+    expect(source).not.toContain("existingContentUpdatedAt");
+  });
+
   it("keeps README refresh as a single README-only accumulator PR", () => {
     const source = read(".github/workflows/readme-refresh-pr.yml");
     expect(source).toContain("BRANCH_NAME: automation/readme-refresh");

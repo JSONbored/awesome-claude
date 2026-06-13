@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import prettier from "prettier";
 
@@ -357,33 +358,37 @@ function writeTextFile(filePath, value) {
   );
 }
 
-function loadExistingContentUpdatedAt() {
+function loadGitContentUpdatedAt() {
   const values = new Map();
-  if (!fs.existsSync(entryDataDir)) return values;
 
-  for (const category of fs.readdirSync(entryDataDir)) {
-    const categoryDir = path.join(entryDataDir, category);
-    if (!fs.statSync(categoryDir).isDirectory()) continue;
+  try {
+    const output = execFileSync(
+      "git",
+      ["log", "--format=@@heyclaude:%cI", "--name-only", "--", "content"],
+      { cwd: repoRoot, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+    );
+    let commitUpdatedAt = null;
 
-    for (const fileName of fs.readdirSync(categoryDir)) {
-      if (!fileName.endsWith(".json")) continue;
-
-      try {
-        const payload = JSON.parse(
-          fs.readFileSync(path.join(categoryDir, fileName), "utf8"),
-        );
-        const entry = payload?.entry;
-        if (!entry?.category || !entry?.slug || !entry?.contentUpdatedAt) {
-          continue;
-        }
-        values.set(
-          `${entry.category}:${entry.slug}`,
-          String(entry.contentUpdatedAt),
-        );
-      } catch {
-        // Regeneration should not fail just because a stale artifact is invalid.
+    for (const line of output.split("\n")) {
+      if (line.startsWith("@@heyclaude:")) {
+        commitUpdatedAt = line.slice("@@heyclaude:".length).trim() || null;
+        continue;
       }
+
+      const relativePath = line.trim();
+      if (
+        !commitUpdatedAt ||
+        !relativePath.startsWith("content/") ||
+        !relativePath.endsWith(".mdx") ||
+        values.has(relativePath)
+      ) {
+        continue;
+      }
+
+      values.set(relativePath, commitUpdatedAt);
     }
+  } catch {
+    // Keep registry generation usable outside a Git checkout.
   }
 
   return values;
@@ -490,7 +495,7 @@ async function main() {
   const repoStats = new Map();
   const reposToFetch = new Map();
   const directoryRepo = parseGitHubRepo(DEFAULT_DIRECTORY_REPO_URL);
-  const existingContentUpdatedAt = loadExistingContentUpdatedAt();
+  const gitContentUpdatedAt = loadGitContentUpdatedAt();
   const existingEntryRepoStats = ENABLE_GITHUB_REPO_STATS
     ? loadExistingEntryRepoStats()
     : new Map();
@@ -525,11 +530,10 @@ async function main() {
             : null;
         },
       });
-      const existingUpdatedAt = existingContentUpdatedAt.get(
-        `${entry.category}:${entry.slug}`,
-      );
       entry.contentUpdatedAt =
-        entry.contentUpdatedAt || existingUpdatedAt || entry.dateAdded;
+        entry.contentUpdatedAt ||
+        gitContentUpdatedAt.get(path.relative(repoRoot, filePath)) ||
+        entry.dateAdded;
       const githubRepo = parseGitHubRepo(entry.repoUrl);
 
       if (githubRepo) {
