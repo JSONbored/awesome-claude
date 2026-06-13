@@ -46,7 +46,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         const doc = typeof document !== "undefined" ? document : null;
         const reduced =
           typeof window !== "undefined" &&
-          window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+          window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
         const startVT =
           doc &&
           (doc as Document & { startViewTransition?: (cb: () => void) => unknown })
