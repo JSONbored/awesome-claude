@@ -13,12 +13,22 @@ For direct content PRs:
 - [ ] `submittedBy` and `submittedByUrl` match the PR author.
 - [ ] I did not modify `README.md`, generated registry outputs, downloads, workflows, packages, scripts, or multiple content entries.
 - [ ] I did not request HeyClaude-hosted `/downloads/...` package hosting for community-submitted ZIP/MCPB artifacts.
+- [ ] This PR links the issue it resolves, or the no-issue rationale is written in **Notes**.
 
 For platform/code/docs PRs:
 
 - [ ] This is not a direct content submission.
 - [ ] Changed routes/components/endpoints/tools are listed below.
 - [ ] Screenshots or `No visual impact` are included when relevant.
+- [ ] This PR links the issue it resolves, or the no-issue maintainer-lane rationale is written in **Notes**.
+
+For registry API endpoint PRs:
+
+- [ ] Route handler and central API contract changed together.
+- [ ] Origin-check and rate-limit posture is stated below.
+- [ ] OpenAPI/source generator impact is stated below; generated artifacts are not hand-edited unless maintainer/internal generation work is explicit.
+- [ ] API contract tests were added or updated.
+- [ ] Generator reproducibility was checked or the reason it was not checked is listed.
 
 ## Schema and Quality Checks
 
@@ -51,4 +61,5 @@ For platform/code/docs PRs:
 
 ## Notes
 
+- Linked issue or no-issue rationale:
 - Any caveats, follow-ups, or reviewer context.

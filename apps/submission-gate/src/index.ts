@@ -177,6 +177,8 @@ const TERMINAL_GATE_VERDICTS = new Set(["close", "manual", "ignore"]);
 const TERMINAL_PR_STATUSES = new Set(["merged", "closed", "manual", "ignored"]);
 const GITHUB_TERMINAL_VERIFICATION_ERROR = "GitHub terminal state verified.";
 const VALIDATION_REQUEUE_SECONDS = 90;
+const VALIDATION_PENDING_STALE_SECONDS = 30 * 60;
+const VALIDATION_PENDING_STALE_ATTEMPTS = 20;
 const QUEUED_STALE_SECONDS = 60;
 const REVIEWING_STALE_SECONDS = 180;
 const MERGE_RETRY_SECONDS = 30;
@@ -336,6 +338,8 @@ type PrQueueState = Record<string, unknown> & {
   status?: string;
   verdict?: string;
   lastReviewKey?: string;
+  attemptCount?: number;
+  createdAt?: string;
   updatedAt?: string;
 };
 
@@ -400,6 +404,7 @@ function decisionStatus(verdict: GateVerdict) {
 
 function gateCheckStatus(status: string) {
   const normalized = status.toLowerCase();
+  if (normalized === "missing") return "pending" as const;
   if (
     ["passed", "pending", "failed", "neutral", "skipped", "unknown"].includes(
       normalized,
@@ -2180,6 +2185,65 @@ function validationGateDecision(validation: {
   };
 }
 
+function staleValidationPendingAgeSeconds(existing?: PrQueueState | null) {
+  const createdAt = Date.parse(
+    String(existing?.createdAt || existing?.updatedAt || ""),
+  );
+  if (!Number.isFinite(createdAt)) return 0;
+  return Math.max(0, Math.floor((Date.now() - createdAt) / 1000));
+}
+
+function staleValidationPendingDecision(
+  existing: PrQueueState | null | undefined,
+  validation: {
+    summary: string;
+    checks: Array<{ name: string; status: string; details?: string }>;
+  },
+): GateDecision | null {
+  const missingChecks = validation.checks.filter(
+    (check) => check.status === "missing",
+  );
+  if (!missingChecks.length) return null;
+  const attempts = Number(existing?.attemptCount || 0);
+  const ageSeconds = staleValidationPendingAgeSeconds(existing);
+  if (
+    attempts < VALIDATION_PENDING_STALE_ATTEMPTS &&
+    ageSeconds < VALIDATION_PENDING_STALE_SECONDS
+  ) {
+    return null;
+  }
+  const ageMinutes = ageSeconds
+    ? `${Math.max(1, Math.round(ageSeconds / 60))} minutes`
+    : "an extended period";
+  return {
+    verdict: "manual",
+    reasonCode: "validation_failure",
+    confidence: 1,
+    summary: [
+      "Summary:",
+      `- Required public validation has not started after ${attempts} gate attempts over ${ageMinutes}.`,
+      `- ${validation.summary}`,
+      "",
+      "Validation Review:",
+      "- The submission gate cannot auto-merge until every required public check reports on the current head SHA.",
+      "- Missing check runs usually mean GitHub is waiting for maintainer approval on a first-time contributor workflow, or a required workflow did not create its check run.",
+      "",
+      "Recommended Action:",
+      "- Approve or rerun the missing required workflow checks, then comment `/recheck` or wait for the next check event.",
+    ].join("\n"),
+    labels: [LABELS.manual],
+    close: false,
+    checks: checksForDecision(validation),
+    errors: [
+      {
+        code: "public_validation_not_started",
+        retryable: false,
+        message: validation.summary,
+      },
+    ],
+  };
+}
+
 function validationSummaryForNotification(
   validation:
     | {
@@ -3774,54 +3838,62 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         });
         validationForNotification = validation;
         if (!decision && validation.state === "pending") {
-          await upsertPrState(env.SUBMISSION_GATE_DB, {
-            repo: target.repoFullName,
-            number: target.number,
-            headRepo: target.headRepo,
-            headRef: target.headRef,
-            headSha: target.headSha,
-            baseRef: target.baseRef || contentGateBaseRef(env),
-            installationId: target.installationId,
-            status: "validation_pending",
-            deliveryId: String(message.payload.deliveryId || ""),
-            nextReviewAt: nextReviewForStatus("validation_pending"),
-            lastCheckSummary: validation.summary,
-          });
-          const pendingComment = await upsertMarkerComment({
-            token,
-            repo,
-            issueNumber: target.number,
-            marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-            body: markerComment(
-              undefined,
-              env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-            ),
-            apiVersion: env.GITHUB_API_VERSION,
-          });
-          await upsertPrState(env.SUBMISSION_GATE_DB, {
-            repo: target.repoFullName,
-            number: target.number,
-            headRepo: target.headRepo,
-            headRef: target.headRef,
-            headSha: target.headSha,
-            baseRef: target.baseRef || contentGateBaseRef(env),
-            installationId: target.installationId,
-            status: "validation_pending",
-            deliveryId: String(message.payload.deliveryId || ""),
-            nextReviewAt: nextReviewForStatus("validation_pending"),
-            lastCheckSummary: validation.summary,
-            commentId: pendingComment.id,
-            commentUrl: pendingComment.url,
-            formatterVersion: GATE_COMMENT_FORMATTER_VERSION,
-          });
-          await insertAudit(env.SUBMISSION_GATE_DB, {
-            id: crypto.randomUUID(),
-            targetKey: message.targetKey,
-            eventType: message.kind,
-            decision: "validation_pending",
-            summary: validation.summary,
-          });
-          return;
+          const staleDecision = staleValidationPendingDecision(
+            existing,
+            validation,
+          );
+          if (staleDecision) {
+            decision = staleDecision;
+          } else {
+            await upsertPrState(env.SUBMISSION_GATE_DB, {
+              repo: target.repoFullName,
+              number: target.number,
+              headRepo: target.headRepo,
+              headRef: target.headRef,
+              headSha: target.headSha,
+              baseRef: target.baseRef || contentGateBaseRef(env),
+              installationId: target.installationId,
+              status: "validation_pending",
+              deliveryId: String(message.payload.deliveryId || ""),
+              nextReviewAt: nextReviewForStatus("validation_pending"),
+              lastCheckSummary: validation.summary,
+            });
+            const pendingComment = await upsertMarkerComment({
+              token,
+              repo,
+              issueNumber: target.number,
+              marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+              body: markerComment(
+                undefined,
+                env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+              ),
+              apiVersion: env.GITHUB_API_VERSION,
+            });
+            await upsertPrState(env.SUBMISSION_GATE_DB, {
+              repo: target.repoFullName,
+              number: target.number,
+              headRepo: target.headRepo,
+              headRef: target.headRef,
+              headSha: target.headSha,
+              baseRef: target.baseRef || contentGateBaseRef(env),
+              installationId: target.installationId,
+              status: "validation_pending",
+              deliveryId: String(message.payload.deliveryId || ""),
+              nextReviewAt: nextReviewForStatus("validation_pending"),
+              lastCheckSummary: validation.summary,
+              commentId: pendingComment.id,
+              commentUrl: pendingComment.url,
+              formatterVersion: GATE_COMMENT_FORMATTER_VERSION,
+            });
+            await insertAudit(env.SUBMISSION_GATE_DB, {
+              id: crypto.randomUUID(),
+              targetKey: message.targetKey,
+              eventType: message.kind,
+              decision: "validation_pending",
+              summary: validation.summary,
+            });
+            return;
+          }
         }
         if (!decision && validation.state === "failed") {
           decision = validationGateDecision(validation);

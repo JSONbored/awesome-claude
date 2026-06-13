@@ -42,19 +42,23 @@ scriptBody: |-
   #!/usr/bin/env bash
   set -u
 
+  sanitize_status_value() {
+    printf '%s' "$1" | LC_ALL=C tr -cd '\040-\176'
+  }
+
   main() {
   if ! command -v kubectl >/dev/null 2>&1; then
     echo "deploy: kubectl missing"
     exit 0
   fi
 
-  context=$(kubectl config current-context 2>/dev/null || true)
+  context=$(sanitize_status_value "$(kubectl config current-context 2>/dev/null || true)")
   if [ -z "$context" ]; then
     echo "deploy: no context"
     exit 0
   fi
 
-  namespace=$(kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null || true)
+  namespace=$(sanitize_status_value "$(kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null || true)")
   if [ -z "$namespace" ]; then
     namespace="default"
   fi
@@ -81,6 +85,7 @@ prerequisites:
   - Team naming conventions that distinguish production, staging, and development contexts.
 safetyNotes:
   - The script is read-only and does not contact workloads, apply manifests, or change namespaces.
+  - The displayed context and namespace are limited to printable ASCII before terminal output.
   - Risk labels are based on names; confirm the actual cluster and namespace before deployment commands.
   - Avoid running write-capable automation solely because the statusline says an environment looks like development.
 privacyNotes:
