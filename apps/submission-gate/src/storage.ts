@@ -476,10 +476,13 @@ export async function listDuePrStates(
        )
        OR (
          terminal_at IS NOT NULL
-         AND status = 'closed'
+         AND status IN ('merged', 'closed', 'manual', 'ignored')
          AND COALESCE(last_error, '') != 'GitHub terminal state verified.'
        )
-       ORDER BY COALESCE(next_review_at, updated_at) ASC, updated_at ASC
+       ORDER BY
+        CASE WHEN terminal_at IS NULL THEN 0 ELSE 1 END ASC,
+        COALESCE(next_review_at, updated_at) ASC,
+        updated_at ASC
        LIMIT ?`,
     )
     .bind(

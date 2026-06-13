@@ -70,6 +70,7 @@ const TRUSTED_SOURCE_HOSTS = new Set([
   "github.com",
   "gitlab.com",
   "jsr.io",
+  "codeload.github.com",
   "marketplace.visualstudio.com",
   "npmjs.com",
   "pkg.go.dev",
@@ -397,9 +398,16 @@ function hasVerifiableCanonicalSource(urls: SourceEvidenceItem[]) {
 }
 
 function isDowngradableInconclusiveSource(item: SourceEvidenceItem) {
-  return (
+  if (
     item.status === "retryable" &&
     !PRIMARY_CANONICAL_SOURCE_FIELDS.has(item.field)
+  ) {
+    return true;
+  }
+  return (
+    item.status === "hard_failure" &&
+    item.role === "distribution" &&
+    item.outcome === "source_host_not_checked"
   );
 }
 

@@ -1,0 +1,254 @@
+---
+title: Claude Code Terminal Ergonomics Capability Pack Skill
+slug: claude-code-terminal-ergonomics-capability-pack
+category: skills
+description: >-
+  Expert Claude Code terminal ergonomics capability pack for auditing multiline
+  input, Option/Meta shortcuts, tmux passthrough, notifications, fullscreen
+  rendering, themes, status lines, Vim mode, and custom keybindings before a
+  user blames Claude for terminal behavior.
+cardDescription: >-
+  Audit Claude Code terminal input, tmux, notifications, rendering, themes,
+  Vim mode, and keybindings with source-backed checks.
+seoTitle: Claude Code Terminal Ergonomics Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code terminal ergonomics, covering
+  Shift+Enter, Option-as-Meta, tmux passthrough, notifications, fullscreen
+  rendering, themes, status lines, Vim mode, and keybinding triage.
+author: YB0y
+authorProfileUrl: "https://github.com/YB0y"
+submittedBy: YB0y
+submittedByUrl: "https://github.com/YB0y"
+dateAdded: "2026-06-10"
+submittedAt: "2026-06-10"
+sourceSubmissionNumber: 1549
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1549"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/terminal-config"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when Claude Code feels awkward in a terminal: newline shortcuts
+  submit early, Option-key shortcuts fail, tmux swallows signals, notifications
+  are missing, rendering flickers, or Vim/keybinding behavior is inconsistent.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code terminal ergonomics capability pack to this terminal setup."
+
+  # Required output
+  1) Terminal environment inventory and symptom lane
+  2) Source-backed checks for multiline input, Option/Meta, tmux, notifications, rendering, theme/status line, Vim mode, and keybindings
+  3) Minimal reversible configuration changes
+  4) Verification steps and rollback notes
+  5) Privacy-safe summary of any local paths, settings, or hooks reviewed
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-10"
+retrievalSources:
+  - "https://code.claude.com/docs/en/terminal-config"
+  - "https://code.claude.com/docs/en/interactive-mode"
+  - "https://code.claude.com/docs/en/keybindings"
+  - "https://code.claude.com/docs/en/fullscreen"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/statusline"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code installed and runnable in the terminal, editor terminal, SSH session, or tmux/screen environment being reviewed."
+  - "The user's operating system, terminal emulator, shell, Claude Code version, and whether Claude Code is running locally, remotely, or inside tmux."
+  - "Permission to inspect redacted terminal settings, `~/.claude/settings.json`, `~/.claude/keybindings.json`, `~/.tmux.conf`, and notification hook snippets when relevant."
+  - "A concrete ergonomics symptom, such as Shift+Enter submitting, missing alerts, scrollback jumping, unreadable colors, Vim mode confusion, or shortcut conflicts."
+safetyNotes:
+  - "This skill recommends terminal and Claude Code configuration changes; it must not edit dotfiles, keybindings, hooks, themes, or tmux settings without showing the proposed diff first."
+  - "`/terminal-setup` writes terminal or editor keybindings and may adjust integrated-terminal settings; run it in the host terminal and record what changed before relying on it."
+  - "tmux passthrough allows escape sequences to reach the outer terminal; enable it deliberately, especially on shared, remote, or security-sensitive hosts."
+  - "Notification hooks can execute local commands when Claude needs attention; keep them simple, review command paths, and avoid hooks that send prompts or logs to third-party services."
+  - "Fullscreen rendering, theme files, status lines, and keybinding changes should be treated as reversible local UI preferences, not fixes for model quality or project bugs."
+privacyNotes:
+  - "Terminal settings, tmux files, keybinding files, status line commands, and hook snippets can expose usernames, hostnames, project paths, shell aliases, secrets in environment commands, and internal repository names."
+  - "Notification commands and status line scripts may reveal task names, working directories, git branches, model names, costs, or local operational context."
+  - "Remote terminal and SSH notification behavior can surface session activity on a local desktop; confirm the user is comfortable with that visibility."
+  - "Public PR or issue notes should summarize symptoms and redacted settings, not paste complete dotfiles, shell history, terminal transcripts, or private hook scripts."
+tags:
+  - claude-code
+  - terminal
+  - tmux
+  - keybindings
+  - capability-pack
+keywords:
+  - Claude Code terminal ergonomics
+  - Claude Code Shift Enter setup
+  - Claude Code tmux configuration
+  - Claude Code terminal notifications
+  - Claude Code keybindings audit
+  - Claude Code Vim mode setup
+readingTime: 9
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code terminal configuration,
+interactive mode, keybindings, fullscreen rendering, settings, status line,
+skills, and extension-overview documentation verified on **2026-06-10**. Prefer
+live official docs over remembered shortcuts or terminal-specific behavior when
+reviewing new Claude Code releases.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/terminal-config
+- https://code.claude.com/docs/en/interactive-mode
+- https://code.claude.com/docs/en/keybindings
+- https://code.claude.com/docs/en/fullscreen
+- https://code.claude.com/docs/en/settings
+- https://code.claude.com/docs/en/statusline
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Scope Note
+
+This is not another terminal setup guide. Use it as a reusable review workflow
+when a user reports that Claude Code is hard to operate in their terminal and you
+need to classify the problem, choose the smallest reversible fix, and document
+verification. For step-by-step prose setup, the existing guide at
+`content/guides/terminal-tmux-and-vim-setup-for-claude-code.mdx` remains the
+adjacent reference.
+
+## Core Workflow
+
+1. Inventory the environment: operating system, terminal emulator, shell, editor
+   integrated terminal if any, SSH or local session, tmux/screen layer, Claude
+   Code version, and whether `/terminal-setup` has already run.
+2. Classify the primary symptom before changing settings: multiline input,
+   Option/Meta shortcuts, notifications, tmux passthrough, rendering/scrollback,
+   theme/readability, status line, Vim mode, or custom keybindings.
+3. Check universal multiline fallbacks first. Confirm whether `Ctrl+J` or
+   backslash followed by Enter inserts a newline before recommending terminal
+   changes for Shift+Enter.
+4. For Shift+Enter problems, verify the terminal support lane and whether
+   `/terminal-setup` belongs in the host terminal rather than inside tmux or
+   screen.
+5. For macOS Option-key shortcuts, verify whether the terminal sends Option as
+   Meta or Esc+. Treat editor-integrated terminals separately from native
+   terminals.
+6. For tmux, review `allow-passthrough`, `extended-keys`, and terminal-feature
+   configuration, then verify newlines, progress updates, and notifications from
+   inside a fresh tmux pane.
+7. For missing alerts, distinguish terminal bell, desktop notifications,
+   operating-system notification permission, tmux passthrough, and Notification
+   hooks. Keep hooks minimal and auditable.
+8. For display flicker, scrollback jumps, mouse behavior, or long-session
+   rendering issues, evaluate fullscreen rendering before changing unrelated
+   shell, font, or theme settings.
+9. For color/readability issues, separate Claude Code themes, custom theme JSON,
+   terminal color schemes, and status line output. Do not treat a theme mismatch
+   as a model or prompt problem.
+10. For Vim mode or shortcut conflicts, inspect Claude Code interactive mode and
+    keybinding configuration before editing terminal emulator shortcuts.
+11. Recommend one reversible change at a time, include rollback instructions, and
+    define a concrete verification prompt or keypress sequence.
+
+## Capability Scope
+
+- Multiline input and submit/newline separation.
+- Shift+Enter, Option/Alt/Meta, and custom keybinding triage.
+- tmux passthrough and extended-key review.
+- Terminal bell, desktop notification, and Notification-hook routing.
+- Fullscreen rendering, scrollback, mouse, and display-stability checks.
+- Theme, custom status line, Vim mode, and readability review.
+- Privacy-safe summaries of local terminal configuration.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when reviewing a user's live
+  terminal setup, terminal configuration files, or Claude Code UI behavior.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic checklist for diagnosing Claude Code terminal ergonomics in a
+  repository, support ticket, or onboarding runbook.
+
+## Required Inputs
+
+- Symptom, exact key sequence, and expected versus actual behavior.
+- Terminal emulator, shell, operating system, editor-integrated terminal status,
+  SSH/local context, and tmux/screen status.
+- Claude Code version and whether the issue reproduces in a clean terminal tab.
+- Redacted relevant snippets from terminal settings, `settings.json`,
+  `keybindings.json`, `~/.tmux.conf`, notification hooks, or status line scripts.
+
+## Production Rules
+
+- Do not conflate terminal transport bugs with Claude model quality or project
+  behavior.
+- Prefer built-in, documented shortcuts before asking the user to customize
+  terminal bindings.
+- Run `/terminal-setup` only when it matches the terminal lane and the user
+  accepts that it writes local configuration.
+- Never edit tmux, keybinding, theme, status line, or hook files without showing
+  the proposed change and rollback path.
+- Keep notification hooks local and narrow unless the user explicitly approves a
+  third-party notification route.
+- Redact paths, hostnames, usernames, tokens, hook commands, and branch names
+  before posting public summaries.
+
+## Review Matrix
+
+| Symptom | First route | Safer first check |
+| --- | --- | --- |
+| Enter submits when user wanted a newline | Multiline input | Try `Ctrl+J` and backslash plus Enter before config edits |
+| Shift+Enter does not insert a newline | Terminal setup | Check terminal support lane and whether `/terminal-setup` already ran |
+| Option+Enter or Option+P does nothing on macOS | Option/Meta | Verify Option-as-Meta or Esc+ in the active terminal profile |
+| Shift+Enter and notifications fail inside tmux | tmux | Review passthrough and extended-key lines in `~/.tmux.conf` |
+| No alert when Claude needs attention | Notifications | Distinguish desktop notification, terminal bell, OS permission, and hooks |
+| Text flickers or scrollback jumps | Rendering | Try fullscreen rendering and check integrated-terminal GPU settings |
+| Colors or footer are hard to read | Theme/status line | Separate Claude Code theme, terminal theme, and status line script output |
+| Vim motions or custom shortcuts conflict | Interactive mode/keybindings | Inspect Claude Code keybindings before changing terminal global shortcuts |
+
+## Output Contract
+
+1. Environment inventory and primary symptom lane.
+2. Evidence reviewed, including redaction notes.
+3. Minimal change recommendation with exact file, setting, or in-product command.
+4. Verification checklist for the relevant keypresses, notification, rendering,
+   or tmux behavior.
+5. Rollback instructions.
+6. Privacy-safe summary suitable for an issue, onboarding doc, or support
+   handoff.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for `Claude Code Terminal Ergonomics Capability Pack`, terminal
+ergonomics, Shift+Enter, tmux, fullscreen rendering, keybindings, Vim mode, and
+terminal notifications. An adjacent guide exists for terminal, tmux, and Vim
+setup, but no `skills` entry provides a reusable Claude Code terminal ergonomics
+audit workflow. This entry is intentionally a capability pack with an output
+contract and review matrix, not a duplicate prose guide.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by `YB0y`.
+It is based on public Claude Code documentation, the public Anthropic
+`claude-code` repository, and Google Search Central helpful-content guidance. No
+paid placement, referral link, affiliate link, or vendor sponsorship is used.
