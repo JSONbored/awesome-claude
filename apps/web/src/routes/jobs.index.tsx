@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { absoluteUrl } from "@/lib/seo";
 import { createServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, Search, Sparkles, X } from "lucide-react";
@@ -32,9 +33,9 @@ export const Route = createFileRoute("/jobs/")({
         property: "og:description",
         content: "Source-verified jobs for Claude Code, MCP, and agent workflows.",
       },
-      { property: "og:url", content: "/jobs" },
+      { property: "og:url", content: absoluteUrl("/jobs") },
     ],
-    links: [{ rel: "canonical", href: "/jobs" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/jobs") }],
   }),
   errorComponent: ({ error, reset }: ErrorComponentProps) => (
     <div className="mx-auto max-w-xl px-4 py-16 text-center">
