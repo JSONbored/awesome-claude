@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { siteConfig } from "@/lib/site";
+import { getIntegration } from "@/data/integrations";
 import { applySecurityHeaders } from "@/lib/security-headers";
 
 // MCP Server Card (SEP-1649) for agent discovery of the hosted HeyClaude MCP server.
-// Keep MCP_VERSION in sync with packages/mcp/package.json on each MCP release.
-const MCP_VERSION = "0.3.0";
+// Version is sourced from the mcp-server integration metadata, which is kept in sync with
+// packages/mcp/package.json (enforced by tests/atlas-production-data.test.ts).
 const MCP_TOOLS = [
   "search_registry",
   "search_duplicate_entries",
@@ -31,8 +32,9 @@ const MCP_TOOLS = [
 
 function serverCard() {
   const base = siteConfig.url;
+  const version = getIntegration("mcp-server")?.version ?? "0.3.0";
   return {
-    serverInfo: { name: "@heyclaude/mcp", title: "HeyClaude", version: MCP_VERSION },
+    serverInfo: { name: "@heyclaude/mcp", title: "HeyClaude", version },
     description:
       "Search and inspect the HeyClaude directory of Claude Code MCP servers, agents, skills, hooks, commands, rules, collections, and tools.",
     transport: { type: "streamable-http", endpoint: `${base}/api/mcp` },
