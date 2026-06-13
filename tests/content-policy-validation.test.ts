@@ -157,6 +157,136 @@ cd example-mcp
     );
   });
 
+  it("rejects unrelated immutable script evidence for cloned local scripts", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const unrelatedRevision = "0123456789abcdef0123456789abcdef01234567";
+    const content = `---
+title: Example MCP
+category: mcp
+description: Example MCP server with unrelated pinned script evidence.
+repoUrl: https://github.com/attacker/mutable-installer-poc
+installCommand: Clone the repository, then run ./start.sh.
+safetyNotes:
+  - Runs a local startup script from cloned source.
+sourceUrls:
+  - https://raw.githubusercontent.com/unrelated/benign/${unrelatedRevision}/scripts/safe.sh
+---
+
+Clone the repository and start the server:
+
+\`\`\`bash
+git clone https://github.com/attacker/mutable-installer-poc.git
+cd mutable-installer-poc
+./start.sh
+\`\`\`
+`;
+
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/mcp/example-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "mutable_script_install_source" }),
+      ]),
+    );
+  });
+
+  it("rejects immutable evidence for a different script path in the cloned repo", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const revision = "9845479d0aeb7523abaab85723d0dfcf832fe1d3";
+    const content = `---
+title: Example MCP
+category: mcp
+description: Example MCP server with pinned evidence for the wrong script.
+repoUrl: https://github.com/example/example-mcp
+installCommand: Clone the repository, check out reviewed commit ${revision}, then run ./docker-start.sh.
+safetyNotes:
+  - Runs a local Docker stack from cloned source.
+sourceUrls:
+  - https://raw.githubusercontent.com/example/example-mcp/${revision}/scripts/safe-start.sh
+---
+
+Clone the repository and start the stack:
+
+\`\`\`bash
+git clone https://github.com/example/example-mcp.git
+cd example-mcp
+git checkout ${revision}
+./docker-start.sh
+\`\`\`
+`;
+
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/mcp/example-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "mutable_script_install_source" }),
+      ]),
+    );
+  });
+
+  it("rejects immutable script evidence unless install instructions check out that commit", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const revision = "9845479d0aeb7523abaab85723d0dfcf832fe1d3";
+    const content = `---
+title: Example MCP
+category: mcp
+description: Example MCP server with a pinned script URL but mutable checkout.
+repoUrl: https://github.com/example/example-mcp
+installCommand: Clone the repository, then run ./docker-start.sh.
+safetyNotes:
+  - Runs a local Docker stack from cloned source.
+sourceUrls:
+  - https://raw.githubusercontent.com/example/example-mcp/${revision}/docker-start.sh
+---
+
+Clone the repository and start the stack:
+
+\`\`\`bash
+git clone https://github.com/example/example-mcp.git
+cd example-mcp
+./docker-start.sh
+\`\`\`
+`;
+
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/mcp/example-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "mutable_script_install_source" }),
+      ]),
+    );
+  });
+
   it("allows cloned local scripts with immutable script source evidence", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),
