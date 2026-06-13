@@ -2676,6 +2676,46 @@ docsUrl: "https://developers.cloudflare.com/ai-gateway/get-started/"
     );
   });
 
+  it("treats shared official docs across categories as related, not strict duplicate", () => {
+    const existingGuide = extractContentDuplicateSignals({
+      filePath: "content/guides/claude-code-security-review.mdx",
+      content: `---
+title: Claude Code Security Review
+slug: claude-code-security-review
+category: guides
+description: Guide for reviewing Claude Code security posture.
+docsUrl: "https://docs.anthropic.com/en/docs/claude-code/security"
+---
+`,
+    });
+    const candidateHook = extractContentDuplicateSignals({
+      filePath: "content/hooks/security-event-logger.mdx",
+      content: `---
+title: Security Event Logger Hook
+slug: security-event-logger
+category: hooks
+description: Hook that logs sensitive Claude Code security events.
+docsUrl: "https://docs.anthropic.com/en/docs/claude-code/security#events"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(candidateHook, [existingGuide]),
+    ).toBeNull();
+    expect(findRelatedContentMatches(candidateHook, [existingGuide])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same canonical source URL https://docs.anthropic.com/en/docs/claude-code/security across hooks/guides",
+            ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
   it("treats same canonical project across different categories as a strict duplicate", () => {
     const existingMcp = extractContentDuplicateSignals({
       filePath: "content/mcp/langchain-mcp-server.mdx",
