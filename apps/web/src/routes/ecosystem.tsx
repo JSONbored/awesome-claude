@@ -18,6 +18,7 @@ import { CopyButton } from "@/components/copy-button";
 import { CountUp } from "@/components/count-up";
 import { cn } from "@/lib/utils";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { absoluteUrl } from "@/lib/seo";
 
 const CLIENTS = [
   { id: "claude-code", label: "Claude Code" },
@@ -195,7 +196,7 @@ export const Route = createFileRoute("/ecosystem")({
         "@type": "ListItem",
         position: i + 1,
         name: it.name,
-        url: `/integrations/${it.slug}`,
+        url: absoluteUrl(`/integrations/${it.slug}`),
       })),
     };
     return {
@@ -211,9 +212,9 @@ export const Route = createFileRoute("/ecosystem")({
           property: "og:description",
           content: "Where the HeyClaude registry runs, how to plug it in, and who's powering it.",
         },
-        { property: "og:url", content: "/ecosystem" },
+        { property: "og:url", content: absoluteUrl("/ecosystem") },
       ],
-      links: [{ rel: "canonical", href: "/ecosystem" }],
+      links: [{ rel: "canonical", href: absoluteUrl("/ecosystem") }],
       scripts: [{ type: "application/ld+json", children: stringifyJsonLd(ld) }],
     };
   },

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { absoluteUrl } from "@/lib/seo";
 import { Bell, Mail, Rss, Trash2, Pencil, Check, X, MailX, Compass } from "lucide-react";
 import { useRecents } from "@/lib/recents";
 import { SavedSearchManager } from "@/components/saved-search-manager";
@@ -32,7 +33,7 @@ export const Route = createFileRoute("/subscriptions")({
         content: "Followed categories, email segments, and saved-search alerts.",
       },
     ],
-    links: [{ rel: "canonical", href: "/subscriptions" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/subscriptions") }],
   }),
   component: SubscriptionsPage,
 });
