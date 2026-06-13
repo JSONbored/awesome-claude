@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
+import { absoluteUrl } from "@/lib/seo";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { JobTier } from "@/types/registry";
@@ -12,7 +13,10 @@ export const Route = createFileRoute("/jobs/post")({
         name: "description",
         content: "Reach developers shipping Claude Code, MCP, and agent workflows.",
       },
+      { property: "og:url", content: absoluteUrl("/jobs/post") },
     ],
+    // ?tier=* variants are duplicates of the same page — consolidate onto the clean URL.
+    links: [{ rel: "canonical", href: absoluteUrl("/jobs/post") }],
   }),
   component: PostJobPage,
 });

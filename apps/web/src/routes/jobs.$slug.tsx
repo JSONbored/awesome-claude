@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { absoluteUrl } from "@/lib/seo";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { NewsletterInline } from "@/components/newsletter-inline";
@@ -39,7 +40,7 @@ export const Route = createFileRoute("/jobs/$slug")({
   },
   head: ({ params, loaderData }) => {
     const job = loaderData?.job;
-    const url = `/jobs/${params.slug}`;
+    const url = absoluteUrl(`/jobs/${params.slug}`);
     return {
       meta: [
         {

@@ -1221,7 +1221,7 @@ describe("Raycast feed helpers", () => {
     };
     const lazyDetail = {
       detailMarkdown: "# Detail",
-      llmsUrl: "/data/llms/mcp/context7.txt",
+      llmsUrl: "/api/registry/entries/mcp/context7/llms",
     };
     assert.equal(isRaycastDetail(detail), true);
     assert.equal(isRaycastDetail(lazyDetail), true);
@@ -2187,21 +2187,21 @@ describe("Raycast feed helpers", () => {
       feedUrl: devFeed,
       fetchFn: async (input) => {
         requestedUrls.push(String(input));
-        if (String(input).endsWith("/data/llms/mcp/context7.txt")) {
+        if (String(input).endsWith("/api/registry/entries/mcp/context7/llms")) {
           return response("remote full text", {
             headers: { "content-type": "text/plain" },
           });
         }
         return response({
           detailMarkdown: "# Remote",
-          llmsUrl: "/data/llms/mcp/context7.txt",
+          llmsUrl: "/api/registry/entries/mcp/context7/llms",
         });
       },
     });
     assert.deepEqual(detail, {
       copyText: "remote full text",
       detailMarkdown: "# Remote",
-      llmsUrl: "/data/llms/mcp/context7.txt",
+      llmsUrl: "/api/registry/entries/mcp/context7/llms",
     });
     assert.equal(
       requestedUrls[0],
@@ -2209,7 +2209,7 @@ describe("Raycast feed helpers", () => {
     );
     assert.equal(
       requestedUrls[1],
-      "https://preview.example.com/data/llms/mcp/context7.txt",
+      "https://preview.example.com/api/registry/entries/mcp/context7/llms",
     );
     assert.match(
       cache.get(detailCacheKey(sampleEntry, devFeed)) || "",
@@ -2262,14 +2262,14 @@ describe("Raycast feed helpers", () => {
       cache,
       feedUrl: devFeed,
       fetchFn: async (input) => {
-        if (String(input).endsWith("/data/llms/mcp/context7.txt")) {
+        if (String(input).endsWith("/api/registry/entries/mcp/context7/llms")) {
           return response("current detail", {
             headers: { "content-type": "text/plain" },
           });
         }
         return response({
           detailMarkdown: "# Current",
-          llmsUrl: "/data/llms/mcp/context7.txt",
+          llmsUrl: "/api/registry/entries/mcp/context7/llms",
         });
       },
     });

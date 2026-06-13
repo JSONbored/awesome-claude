@@ -6,7 +6,8 @@ import atlasRegistry from "@/generated/atlas-registry.json";
 import { getJobs } from "@/lib/jobs";
 import { siteConfig } from "@/lib/site";
 import { applySecurityHeaders } from "@/lib/security-headers";
-import { CATEGORIES } from "@/types/registry";
+import { CATEGORIES, PLATFORM_LABEL } from "@/types/registry";
+import { getIndexableTagGroups } from "@/lib/tags";
 
 function escapeXml(value: string) {
   return value
@@ -17,8 +18,8 @@ function escapeXml(value: string) {
     .replaceAll("'", "&apos;");
 }
 
-function urlItem(pathname: string, priority: string, changefreq = "weekly") {
-  const lastmod = String(atlasRegistry.generatedAt || "").slice(0, 10);
+function urlItem(pathname: string, priority: string, changefreq = "weekly", lastmodInput?: string) {
+  const lastmod = String(lastmodInput || atlasRegistry.generatedAt || "").slice(0, 10);
   return [
     "  <url>",
     `    <loc>${escapeXml(`${siteConfig.url}${pathname}`)}</loc>`,
@@ -35,6 +36,8 @@ async function renderSitemap() {
   const staticPaths = [
     "",
     "/browse",
+    "/tags",
+    "/for",
     "/best",
     "/about",
     "/tools",
@@ -63,7 +66,6 @@ async function renderSitemap() {
     "/feed.xml",
     "/atom.xml",
     "/feeds/trending.xml",
-    "/data/feeds/index.json",
   ];
   const feedPaths = [
     ...CATEGORIES.map((category) => `/feeds/${category.id}.xml`),
@@ -72,7 +74,14 @@ async function renderSitemap() {
     "/feeds/changelog-security.xml",
   ];
   const bestPaths = BEST_LISTS.map((list) => `/best/${list.slug}`);
-  const entryPaths = ENTRIES.map((entry) => `/entry/${entry.category}/${entry.slug}`);
+  // Latest content date per category, so hub lastmod reflects real updates, not every rebuild.
+  const categoryLastmod = new Map<string, string>();
+  for (const entry of ENTRIES) {
+    const date = String(entry.reviewedAt ?? entry.dateAdded ?? "").slice(0, 10);
+    if (!date) continue;
+    const current = categoryLastmod.get(entry.category);
+    if (!current || date > current) categoryLastmod.set(entry.category, date);
+  }
   const contributorPaths = CONTRIBUTORS.map((contributor) => `/contributors/${contributor.slug}`);
   const integrationPaths = INTEGRATIONS.map((integration) => `/integrations/${integration.slug}`);
   const jobPaths = (await getJobs()).map((job) => `/jobs/${job.slug}`);
@@ -80,8 +89,20 @@ async function renderSitemap() {
   const rows = [
     ...staticPaths.map((pathname) => urlItem(pathname, pathname === "" ? "1" : "0.7")),
     ...feedPaths.map((pathname) => urlItem(pathname, "0.4")),
+    ...CATEGORIES.map((category) =>
+      urlItem(`/${category.id}`, "0.8", "weekly", categoryLastmod.get(category.id)),
+    ),
+    ...getIndexableTagGroups().map((group) => urlItem(`/tags/${group.slug}`, "0.5")),
+    ...Object.keys(PLATFORM_LABEL).map((platform) => urlItem(`/for/${platform}`, "0.6")),
     ...bestPaths.map((pathname) => urlItem(pathname, "0.75")),
-    ...entryPaths.map((pathname) => urlItem(pathname, "0.8", "monthly")),
+    ...ENTRIES.map((entry) =>
+      urlItem(
+        `/entry/${entry.category}/${entry.slug}`,
+        "0.8",
+        "monthly",
+        entry.reviewedAt ?? entry.dateAdded,
+      ),
+    ),
     ...contributorPaths.map((pathname) => urlItem(pathname, "0.5", "monthly")),
     ...integrationPaths.map((pathname) => urlItem(pathname, "0.6", "monthly")),
     ...jobPaths.map((pathname) => urlItem(pathname, "0.6", "daily")),
