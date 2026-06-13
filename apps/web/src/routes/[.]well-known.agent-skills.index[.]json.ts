@@ -11,7 +11,8 @@ function skillsIndex() {
     name: e.title,
     type: "skill",
     description: e.description,
-    url: absoluteUrl(`/entry/${e.category}/${e.slug}`),
+    // url must point at the artifact whose bytes match sha256 (not the HTML entry page).
+    url: absoluteUrl(String(e.downloadUrl)),
     sha256: e.downloadSha256,
   }));
   return {

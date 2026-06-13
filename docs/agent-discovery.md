@@ -33,7 +33,7 @@ that point agents at the discovery entrypoints, then sign the zone with DNSSEC.
 
 Suggested records:
 
-```
+```dns
 ; MCP endpoint (Streamable HTTP)
 _a2a._agents.heyclau.de.   3600 IN SVCB 1 api.heyclau.de. (
                                   alpn="h2"

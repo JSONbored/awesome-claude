@@ -20,6 +20,7 @@ export const Route = createFileRoute("/feeds")({
         property: "og:description",
         content: "RSS, Atom, and email subscriptions for the HeyClaude registry.",
       },
+      { property: "og:url", content: absoluteUrl("/feeds") },
     ],
     links: [
       { rel: "canonical", href: absoluteUrl("/feeds") },

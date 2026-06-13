@@ -51,8 +51,12 @@ export const Route = createFileRoute("/validators")({
             name: siteConfig.name,
             url: siteConfig.url,
           },
-          datePublished: String(atlasRegistry.generatedAt || "").slice(0, 10),
-          dateModified: String(atlasRegistry.generatedAt || "").slice(0, 10),
+          ...(atlasRegistry.generatedAt
+            ? {
+                datePublished: String(atlasRegistry.generatedAt).slice(0, 10),
+                dateModified: String(atlasRegistry.generatedAt).slice(0, 10),
+              }
+            : {}),
           keywords: [
             "Claude",
             "registry",
