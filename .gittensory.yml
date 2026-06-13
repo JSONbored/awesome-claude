@@ -1,0 +1,65 @@
+# Gittensory repo focus manifest — machine-readable contributor policy for HeyClaude (awesome-claude).
+# Modeled on the upstream JSONbored/gittensory manifest, customized for this content directory.
+# Private maintainerNotes stay in authenticated API surfaces only.
+
+source: repo_file
+
+# Where useful contributions actually live in this repo.
+wantedPaths:
+  - content/                     # source content entries (the primary contribution surface)
+  - packages/registry/src/       # registry schema, validation, submission/risk policy
+  - packages/mcp/                # MCP package behavior
+  - apps/web/src/                # website / API behavior
+  - scripts/                     # generators and validators
+  - tests/
+  - .github/workflows/
+  - apps/web/wrangler.jsonc
+
+# Maintainer-owned generated output and build artifacts — do not hand-edit in contributions.
+blockedPaths:
+  - apps/web/public/data/**      # generated registry artifacts
+  - apps/web/src/generated/**    # generated source
+  - apps/web/dist/**             # build output
+  - "**/routeTree.gen.ts"        # generated route tree
+  - README.md                    # generated from scripts/generate-readme.mjs
+  - "**/lovable/**"
+
+preferredLabels:
+  - content
+  - bug
+  - enhancement
+  - documentation
+
+# Public content submissions are PR-first; a linked issue is welcome but never required.
+linkedIssuePolicy: optional
+issueDiscoveryPolicy: discouraged
+
+testExpectations:
+  - pnpm validate:content:strict
+  - pnpm type-check
+  - pnpm test
+  - pnpm build
+
+# Authoritative gate config, config-as-code (layered OVER dashboard settings:
+# .gittensory.yml > DB settings > safe defaults). Only confirmed Gittensor contributors are ever
+# hard-blocked; these fields only choose what the gate does, not who it applies to.
+gate:
+  # enabled: false           # turning the gate ON is a dashboard setting
+  linkedIssue: advisory      # block | advisory | off — issue linking is NOT a blocking gate here
+  duplicates: block          # block | advisory | off — block obvious duplicate submissions
+  readiness:
+    mode: advisory           # block | advisory | off — readiness-score floor, advisory only
+    minScore: 60
+
+publicNotes:
+  - Content is PR-first — submit one source-backed entry per PR under content/<category>/.
+  - Prefer free, source-backed, practical resources. Paid tools, commercial listings, jobs, and
+    sponsorships go through the website lead flows, not direct content PRs.
+  - Do not hand-edit generated artifacts (apps/web/public/data, apps/web/src/generated, README.md);
+    maintainers regenerate them.
+  - Keep platform/code changes separate from individual content imports.
+
+maintainerNotes:
+  - Maintainer notes are private triage context and must not appear on public GitHub comments.
+  - Final gate decisions live in the private submission gate; automation never auto-merges.
+  - Thin promo, paid-listing attempts, and affiliate-style submissions are routed away, not merged.

@@ -15,6 +15,8 @@ pricingModel: open-source
 disclosure: editorial
 applicationCategory: DeveloperApplication
 operatingSystem: macOS, Windows, Linux, Web
+privacyNotes:
+  - LangGraph sends prompts and graph state to your configured model provider (including Claude); persisted state and checkpoints can contain message and tool-call data.
 tags:
   - agent-framework
   - orchestration
@@ -25,7 +27,11 @@ keywords:
 
 ## Editorial notes
 
-LangGraph is a strong fit for teams building non-trivial agent workflows that need state, branching, and controllable execution.
+LangGraph is an open-source orchestration framework from the LangChain team for building stateful, multi-step agent workflows as graphs. Instead of a single prompt-response call, you model an agent as nodes (steps and tools) and edges (control flow), with shared state threaded through the graph — which makes branching, loops, retries, and human-in-the-loop checkpoints explicit and controllable.
+
+It is model-agnostic and works with Claude models as the reasoning layer, so you can build durable, inspectable agent systems on top of Claude. The graph model supports persistence and checkpointing, which helps with long-running or resumable workflows.
+
+Reach for LangGraph when a linear prompt chain is not enough and you need state, branching, and controllable execution for non-trivial agents. For simple one-shot tasks it is more structure than you need.
 
 ## Disclosure
 
