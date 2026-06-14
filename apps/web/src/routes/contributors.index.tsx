@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Github } from "lucide-react";
 import { CONTRIBUTORS } from "@/data/contributors";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { Monogram } from "@/components/monogram";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
@@ -52,16 +53,19 @@ function ContributorsPage() {
   const total = sorted.reduce((s, c) => s + c.acceptedCount, 0);
 
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
-      <Breadcrumbs home items={[{ label: "Contributors" }]} />
-      <div className="mt-4 eyebrow">People</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">Contributors</h1>
-      <p className="mt-2 max-w-2xl text-ink-muted">
-        Derived from accepted submissions. Provenance is preserved on every entry.{" "}
-        <span className="text-ink-subtle">
-          {sorted.length} contributors · {total} accepted entries.
-        </span>
-      </p>
+    <PageContainer>
+      <PageHeader
+        eyebrow="People"
+        title="Contributors"
+        description={
+          <>
+            Derived from accepted submissions. Provenance is preserved on every entry.{" "}
+            <span className="text-ink-subtle">
+              {sorted.length} contributors · {total} accepted entries.
+            </span>
+          </>
+        }
+      />
 
       {top && (
         <div className="mt-8 surface-raised rounded-xl border border-accent/30 bg-gradient-to-br from-surface to-accent/[0.06] p-6">
@@ -137,6 +141,6 @@ function ContributorsPage() {
           Submit a resource
         </Link>
       </div>
-    </div>
+    </PageContainer>
   );
 }

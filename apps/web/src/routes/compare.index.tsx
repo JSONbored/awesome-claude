@@ -143,7 +143,7 @@ function ComparePage() {
   }
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
+    <div className="mx-auto max-w-page px-4 py-6 sm:px-6">
       <Breadcrumbs home items={[{ label: "Compare" }]} />
       <div className="mt-4 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-4">
         <div>
