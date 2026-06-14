@@ -22,6 +22,7 @@ import { ShortcutsProvider } from "@/components/shortcuts-dialog";
 import { SkipLink } from "@/components/skip-link";
 import { RouteProgress } from "@/components/route-progress";
 import { WebMcpProvider } from "@/components/webmcp-provider";
+import { WebVitals } from "@/components/web-vitals";
 import { siteConfig } from "@/lib/site";
 import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
@@ -236,6 +237,7 @@ function RootComponent() {
                 <CompareDrawer />
                 <BackToTop />
                 <WebMcpProvider />
+                <WebVitals />
                 <Toaster
                   position="bottom-right"
                   mobileOffset={{ bottom: "16px" }}
