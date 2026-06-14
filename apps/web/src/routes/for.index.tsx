@@ -1,11 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PLATFORM_LABEL, type Platform } from "@/types/registry";
-import { search } from "@/data/search";
+import { ENTRIES } from "@/data/entries";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 
 const PLATFORMS = Object.keys(PLATFORM_LABEL) as Platform[];
+
+// Per-platform entry counts via a single pass over the static registry, computed
+// once at module load — was one full search() (filter+sort) per platform on
+// every SSR render of /for.
+const PLATFORM_COUNTS = new Map<string, number>(PLATFORMS.map((p) => [p, 0]));
+for (const entry of ENTRIES) {
+  for (const platform of entry.platforms ?? []) {
+    if (PLATFORM_COUNTS.has(platform)) {
+      PLATFORM_COUNTS.set(platform, (PLATFORM_COUNTS.get(platform) ?? 0) + 1);
+    }
+  }
+}
 
 export const Route = createFileRoute("/for/")({
   head: () => {
@@ -42,9 +54,7 @@ export const Route = createFileRoute("/for/")({
 });
 
 function PlatformsIndex() {
-  const counts = new Map<string, number>(
-    PLATFORMS.map((p) => [p, search({ platforms: [p] }).length]),
-  );
+  const counts = PLATFORM_COUNTS;
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
       <Breadcrumbs items={[{ label: "Directory", to: "/browse" }, { label: "Platforms" }]} home />

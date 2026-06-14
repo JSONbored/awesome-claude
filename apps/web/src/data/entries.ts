@@ -18,6 +18,17 @@ export const REGISTRY_GENERATED_AT = generatedAt;
 
 export const ENTRIES: Entry[] = registryEntries.map(buildEntry);
 
+// O(1) lookup by `category/slug`. Hot SSR paths (entry loader, /og route, the
+// /$category/$slug redirect, related()/relatedGroups(), trending) previously did
+// O(n) ENTRIES.find per lookup — and trending does ~50 lookups per request.
+const ENTRY_BY_REF: Map<string, Entry> = new Map(
+  ENTRIES.map((entry) => [`${entry.category}/${entry.slug}`, entry]),
+);
+
+export function entryByRef(category: string, slug: string): Entry | undefined {
+  return ENTRY_BY_REF.get(`${category}/${slug}`);
+}
+
 export const BRIEF_ISSUES = registryChangelog.slice(0, 6).map((item, index) => ({
   slug: `registry-brief-${String(index + 1).padStart(3, "0")}`,
   number: registryChangelog.length - index,

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { CATEGORIES, PLATFORM_LABEL, type Platform, type Category } from "@/types/registry";
@@ -13,9 +14,11 @@ import { ogImageUrl } from "@/lib/og-image";
 const PLATFORM_IDS = new Set(Object.keys(PLATFORM_LABEL));
 const CATEGORY_IDS = new Set(CATEGORIES.map((c) => c.id));
 
-function intersection(platform: string, category: string) {
-  return search({ platforms: [platform as Platform], categories: [category as Category] });
-}
+// Cached per render pass so loader + head() + the component don't each re-run the
+// full search() scan (matches the React.cache pattern on the sibling hub routes).
+const intersection = cache((platform: string, category: string) =>
+  search({ platforms: [platform as Platform], categories: [category as Category] }),
+);
 
 export const Route = createFileRoute("/for/$platform/$category")({
   loader: ({ params }) => {
