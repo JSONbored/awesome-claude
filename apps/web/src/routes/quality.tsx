@@ -16,7 +16,8 @@ import { ENTRIES, QUALITY_STATS } from "@/data/entries";
 import { ARTIFACT_CONTRACTS, CHANGELOG } from "@/data/changelog";
 import { FeedHealthPanel } from "@/components/feed-health-panel";
 import { CountUp } from "@/components/count-up";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { cn } from "@/lib/utils";
 
@@ -126,16 +127,12 @@ function QualityPage() {
   const trustQueue = TRUST_QUEUE;
 
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
-      <Breadcrumbs home items={[{ label: "Quality" }]} />
-      <div className="mt-4 eyebrow">Registry quality</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">Our quality pledge</h1>
-      <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
-        Every entry is reviewed for source-backed identity and metadata completeness before it
-        lands. We surface the trust signals you'd look for yourself — not malware verdicts. Always
-        read the source before installing anything that touches your filesystem, network, or
-        credentials.
-      </p>
+    <PageContainer>
+      <PageHeader
+        eyebrow="Registry quality"
+        title="Our quality pledge"
+        description="Every entry is reviewed for source-backed identity and metadata completeness before it lands. We surface the trust signals you'd look for yourself — not malware verdicts. Always read the source before installing anything that touches your filesystem, network, or credentials."
+      />
       <p className="mt-2 text-xs text-ink-subtle">
         Last rebuilt{" "}
         {new Date(ARTIFACT_CONTRACTS[0].builtAt).toISOString().slice(0, 16).replace("T", " ")} UTC
@@ -350,7 +347,7 @@ function QualityPage() {
           source="quality"
         />
       </div>
-    </div>
+    </PageContainer>
   );
 }
 

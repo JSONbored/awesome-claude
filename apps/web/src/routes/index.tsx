@@ -247,7 +247,7 @@ function Home() {
       </section>
 
       {/* Trust strip — moved up under hero */}
-      <section className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
+      <section className="mx-auto max-w-page px-4 py-8 sm:px-6">
         <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-5">
           <TrustStat
             icon={ShieldCheck}
@@ -294,7 +294,7 @@ function Home() {
       <HowItWorks />
 
       {/* Category shortcuts — Claude-native primary */}
-      <section className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
+      <section className="mx-auto max-w-page px-4 py-6 sm:px-6">
         <RailHeader
           eyebrow="Categories"
           title="Browse by surface"
@@ -329,7 +329,7 @@ function Home() {
       </section>
 
       {recentEntries.length > 0 && (
-        <section className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
+        <section className="mx-auto max-w-page px-4 py-6 sm:px-6">
           <div className="mb-3 flex items-baseline justify-between gap-3">
             <div className="eyebrow">Recently viewed</div>
             <Link to="/browse" className="text-xs text-ink-muted hover:text-ink">
@@ -345,7 +345,7 @@ function Home() {
       )}
 
       {/* Popular */}
-      <section className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
+      <section className="mx-auto max-w-page px-4 py-6 sm:px-6">
         <RailHeader
           eyebrow="Popular starting points"
           title="What developers inspect first"
@@ -373,7 +373,7 @@ function Home() {
       </section>
 
       {/* Compare-ready rail (was: source-backed dup) */}
-      <section className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
+      <section className="mx-auto max-w-page px-4 py-12 sm:px-6">
         <div className="overflow-hidden rounded-xl border border-border bg-surface">
           <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-4">
             <div className="flex items-start gap-2">
@@ -411,7 +411,7 @@ function Home() {
       <AgentNativeStrip />
 
       {/* Two-up: new + pulse */}
-      <section className="mx-auto grid max-w-[1400px] gap-8 px-4 py-6 sm:px-6 lg:grid-cols-3">
+      <section className="mx-auto grid max-w-page gap-8 px-4 py-6 sm:px-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <RailHeader
             eyebrow="New this week"
@@ -451,7 +451,7 @@ function Home() {
       </section>
 
       {/* CTA */}
-      <section className="mx-auto max-w-[1400px] px-4 py-16 sm:px-6">
+      <section className="mx-auto max-w-page px-4 py-16 sm:px-6">
         <div className="relative overflow-hidden rounded-xl border border-border bg-ink p-8 text-background">
           <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-accent/60" />
           <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">

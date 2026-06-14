@@ -1,0 +1,166 @@
+---
+title: "Managed MCP Allowlists for Enterprise Claude Code"
+slug: managed-mcp-allowlists-for-enterprise-claude-code
+category: guides
+description: >-
+  Deploy enterprise managed MCP allowlists and denylists in Claude Code: allowedMcpServers, deniedMcpServers, managed-mcp.json, enforcement on reconnect, and rollout testing.
+cardDescription: Deploy enterprise managed MCP allowlists and denylists for Claude Code.
+seoTitle: "Managed MCP Allowlists for Enterprise Claude Code"
+seoDescription: >-
+  Deploy enterprise managed MCP allowlists and denylists in Claude Code: allowedMcpServers, deniedMcpServers, managed-mcp.json, enforcement on reconnect, and rollout testing.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1391
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1391"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to publish managed MCP allowlists that enforce which servers teams can connect in Claude Code.
+prerequisites:
+  - "Enterprise or team tier with managed settings distribution."
+  - "An inventory of approved MCP servers with URLs, OAuth scopes, and owners."
+  - "A test cohort machine to validate allowlist predicates before org-wide push."
+  - "Documented rollback to remove bad managed-mcp.json entries without blocking all policy."
+safetyNotes:
+  - "Denylist gaps let users attach unreviewed remote MCP servers—default to allowlist-first in regulated environments."
+  - "Invalid allowlist entries previously discarded entire policy; validate JSON in staging and monitor `claude doctor` warnings."
+  - "Subagent MCP servers must respect the same managed policy as parent sessions."
+privacyNotes:
+  - "Allowlists control which third-party operators receive prompts and tool arguments—record data processors per approved server."
+  - "Managed MCP URLs may appear in support logs; avoid embedding internal hostnames you do not want broadly visible."
+  - "OAuth tokens for allowed servers remain on user machines until revoked during offboarding."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/managed-mcp"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - mcp
+  - enterprise
+  - allowlist
+  - managed-settings
+keywords:
+  - "managed MCP allowlist"
+  - "allowedMcpServers Claude Code"
+  - "deniedMcpServers policy"
+  - "enterprise MCP rollout"
+  - "managed-mcp.json"
+readingTime: 8
+difficultyScore: 66
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Enterprise teams publish `allowedMcpServers` and `deniedMcpServers` via managed settings and `managed-mcp.json` so only reviewed MCP integrations load on reconnect. Test predicates, pin server URLs, and verify enforcement in IDE and subagent sessions before wide rollout.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Allow vs deny predicates
+
+Policies match server names, URLs, and `${VAR}` references; one invalid entry should drop only that rule in recent builds.
+
+### Enforcement timing
+
+Fixes ensure policies apply on reconnect, IDE-typed configs, first session after install, and subagent frontmatter servers.
+
+### managed-mcp.json bundle
+
+Enterprise can ship `allowAllClaudeAiMcps` alongside `managed-mcp.json` to load claude.ai cloud connectors under policy.
+
+### Strict MCP config
+
+`--strict-mcp-config` interacts with managed policy; document which inline agent MCP definitions remain allowed.
+
+## Step-by-Step Implementation Guide
+
+1. **Inventory servers.** List every MCP integration with URL, transport, OAuth scopes, and data classification.
+
+2. **Draft allowlist.** Encode approved servers in `allowedMcpServers` with exact URL patterns and environment placeholders.
+
+3. **Add denylists.** Block high-risk categories—arbitrary shell proxies, unauthenticated remotes, or personal cloud drives.
+
+4. **Publish managed-mcp.json.** Host the file via server-managed settings with versioned updates and change logs.
+
+5. **Pilot enforcement.** Connect allowed and disallowed servers on a test laptop; confirm blocked servers surface visible warnings.
+
+6. **Validate IDE paths.** Repeat tests in VS Code and JetBrains where MCP configs load from typed settings.
+
+7. **Train champions.** Document how to request new servers through security review using the remote MCP checklist.
+
+8. **Schedule re-audit.** Re-run inventory quarterly and after major MCP server upgrades.
+
+## Allowlist Rollout Checklist
+
+- [ ] {"task": "Inventory complete", "description": "Every server has owner, URL, and classification"}
+- [ ] {"task": "JSON validated", "description": "managed-mcp.json passes schema and doctor checks"}
+- [ ] {"task": "Pilot enforced", "description": "Blocked servers fail with visible warnings"}
+- [ ] {"task": "IDE verified", "description": "Extension and JetBrains sessions respect policy"}
+- [ ] {"task": "Rollback tested", "description": "Bad entry removal restores remaining rules"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Policy not enforced on reconnect
+
+Upgrade to a build with reconnect and IDE enforcement fixes; restart Claude Code after managed settings sync.
+
+### Subagent bypass
+
+Ensure subagent frontmatter MCP servers are not ignoring managed policy—update CLI if needed.
+
+### Entire policy dropped
+
+Run `claude doctor` for invalid `allowedMcpServers` entries; fix or remove single bad predicates.
+
+### Variable predicates fail
+
+Confirm `${VAR}` references resolve in managed settings on user machines.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` documents enterprise `allowedMcpServers` / `deniedMcpServers` managed MCP policies.
+- `CHANGELOG.md` fixed managed MCP policies not enforced on reconnect, IDE configs, and first session after install.
+- `CHANGELOG.md` added `allowAllClaudeAiMcps` managed setting alongside `managed-mcp.json`.
+- `CHANGELOG.md` fixed subagent MCP servers ignoring enterprise managed MCP config.
+- `plugins/README.md` shows optional `.mcp.json` per plugin—include plugin servers in allowlist review.
+
+## Duplicate Check
+
+This guide covers enterprise allowlist deployment. It complements remote-mcp-server-security-review-checklist.mdx for per-server review and auditing-mcp-client-configuration-before-team-rollout.mdx for client-side audits.
+
+## References
+
+- Managed MCP - https://code.claude.com/docs/en/managed-mcp
+- Remote MCP security review - remote-mcp-server-security-review-checklist
+- Audit MCP client config - auditing-mcp-client-configuration-before-team-rollout

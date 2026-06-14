@@ -1,0 +1,156 @@
+---
+title: Enterprise Network Proxy and mTLS Setup for Claude Code
+slug: enterprise-network-proxy-and-mtls-setup-for-claude-code
+category: guides
+description: >-
+  Set up enterprise network proxy and mTLS for Claude Code: HTTP_PROXY variables,
+  custom CA bundles, client certificates, and validating connectivity.
+cardDescription: Configure corporate proxies and mutual TLS for Claude Code in locked-down networks.
+seoTitle: Enterprise Network Proxy and mTLS Setup for Claude Code
+seoDescription: >-
+  Set up enterprise network proxy and mTLS for Claude Code: HTTP_PROXY variables,
+  custom CA bundles, client certificates, and validating connectivity.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1443
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1443"
+documentationUrl: "https://code.claude.com/docs/en/network-config"
+usageSnippet: >-
+  Use this guide when Claude Code must run behind corporate HTTP proxies or with
+  mutual TLS client certificates.
+prerequisites:
+  - Corporate proxy hostname, port, authentication method, and PAC file if applicable.
+  - Custom CA certificates or mTLS client cert/key issued by enterprise PKI.
+  - Permission to set environment variables or managed settings on developer machines and CI runners.
+  - A network team contact for firewall allowlists to Claude Code endpoints.
+safetyNotes:
+  - Store client certificates and proxy credentials in OS keystores or secret managers—not committed repository files.
+  - Validate you connect to legitimate endpoints after TLS interception; corporate MITM proxies require trusting the correct CA only.
+  - Test mTLS rotation procedures before certificates expire to avoid company-wide Claude Code outages.
+privacyNotes:
+  - Corporate proxies may inspect TLS traffic; align Claude Code usage with employer monitoring disclosures.
+  - Do not embed private keys in shared dotfiles or plugin archives.
+  - CI logs may print proxy URLs; redact credentials from build output.
+sourceUrls:
+  - "https://code.claude.com/docs/en/network-config"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - enterprise
+  - proxy
+  - mtls
+  - network
+keywords:
+  - Claude Code proxy setup
+  - enterprise mTLS Claude Code
+  - HTTP_PROXY Claude Code
+  - corporate network Claude Code
+  - network config enterprise
+readingTime: 8
+difficultyScore: 60
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Enterprise Claude Code deployments often require HTTP proxies and sometimes
+mutual TLS. Configure network settings per official documentation, trust
+corporate CAs safely, install client certificates with rotation plans, and
+validate connectivity from both laptops and CI before rolling out widely.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Proxy details collected", "description": "Host, port, auth method, and PAC file are documented"}
+- [ ] {"task": "CA trust installed", "description": "Corporate root and intermediate CAs are trusted on pilot machines"}
+- [ ] {"task": "Env vars planned", "description": "HTTP_PROXY, HTTPS_PROXY, and NO_PROXY values are drafted"}
+- [ ] {"task": "mTLS certs ready", "description": "Client cert and key paths are available if required by PKI policy"}
+- [ ] {"task": "CI parity planned", "description": "Runners will mirror laptop proxy and cert configuration"}
+
+## Core Concepts Explained
+
+### Proxies redirect outbound traffic
+
+`HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` tell Claude Code how to reach
+API endpoints through corporate gateways.
+
+### Custom CAs enable TLS inspection
+
+When proxies decrypt TLS, Claude Code must trust the enterprise CA bundle or
+connections fail with certificate errors.
+
+### mTLS adds client identity
+
+Some environments require client certificates in addition to server verification,
+common in zero-trust networks.
+
+### CI and laptops diverge
+
+Validate both environments; CI often lacks interactive proxy login flows.
+
+## Step-by-Step Implementation Guide
+
+1. **Collect network requirements.** Document proxy host, ports, auth, PAC, and
+   required Claude Code domains for allowlisting.
+
+2. **Install CA trust.** Add corporate root/intermediate CAs per OS guidance.
+
+3. **Set proxy environment variables.** Apply `HTTP_PROXY`, `HTTPS_PROXY`, and
+   `NO_PROXY` in shell profiles or managed deployment scripts.
+
+4. **Configure mTLS if required.** Install client cert/key paths referenced in
+   network-config documentation.
+
+5. **Test from a pilot machine.** Run Claude Code login and a minimal prompt.
+
+6. **Test from CI.** Mirror proxy and cert setup on a representative runner.
+
+7. **Document rotation.** Record cert expiry dates and renewal owners.
+
+8. **Publish internal runbook.** Include troubleshooting for certificate errors and
+   proxy authentication failures.
+
+## Environment Variable Reference
+
+| Variable | Typical use |
+| -------- | ----------- |
+| HTTP_PROXY | Outbound HTTP through corporate gateway |
+| HTTPS_PROXY | Outbound HTTPS through corporate gateway |
+| NO_PROXY | Internal hosts that bypass the proxy |
+
+## Troubleshooting
+
+### Certificate verify failed
+
+Confirm CA bundle path and that proxy MITM cert is trusted.
+
+### Proxy authentication loops
+
+Check PAC file exclusions and whether `NO_PROXY` must include internal hosts.
+
+### Works locally but fails in CI
+
+CI may need non-interactive proxy credentials or different `NO_PROXY` values.
+
+### mTLS handshake fails after rotation
+
+Deploy new client cert to all managed machines before revoking the old one.
+
+## Duplicate Check
+
+This guide complements fix-environment-variables.mdx and enterprise ZDR planning
+with network-layer proxy and mTLS setup specific to Claude Code endpoints.
+
+## References
+
+- Claude Code network config - https://code.claude.com/docs/en/network-config
+- Zero data retention - https://code.claude.com/docs/en/zero-data-retention
+- Fix environment variables - fix-environment-variables

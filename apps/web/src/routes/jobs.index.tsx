@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { PageContainer } from "@/components/page-container";
 import { absoluteUrl } from "@/lib/seo";
 import { createServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
@@ -177,7 +178,7 @@ function JobsPage() {
     q || tier !== "all" || remote !== "all" || type !== "all" || freshOnly || featuredOnly;
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
+    <PageContainer>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0">
           <div className="eyebrow">Hiring</div>
@@ -374,7 +375,7 @@ function JobsPage() {
           </div>
         </aside>
       </div>
-    </div>
+    </PageContainer>
   );
 }
 

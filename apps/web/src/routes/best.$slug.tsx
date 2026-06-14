@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { PageContainer } from "@/components/page-container";
 import { CalendarDays, User } from "lucide-react";
 import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entries";
 import type { Entry } from "@/types/registry";
@@ -87,7 +88,7 @@ function BestDetail() {
     .filter((p): p is Resolved => p !== null);
 
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
+    <PageContainer className="py-12">
       <Breadcrumbs home items={[{ label: "Best lists", to: "/best" }, { label: list.title }]} />
 
       <div className="mt-6 eyebrow">
@@ -153,6 +154,6 @@ function BestDetail() {
       <div className="mt-12">
         <NewsletterInline variant="card" source={`best:${list.slug}`} />
       </div>
-    </div>
+    </PageContainer>
   );
 }

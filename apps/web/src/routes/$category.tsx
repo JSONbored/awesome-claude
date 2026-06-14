@@ -11,7 +11,8 @@ import {
   categoryQuickstarts,
 } from "@/lib/site";
 import { ResourceCard } from "@/components/resource-card";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { hubHighlights, hubStats } from "@/lib/hub-highlights";
@@ -162,16 +163,16 @@ function CategoryHub() {
   const stats = hubStats(entries);
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
-      <Breadcrumbs items={[{ label: "Directory", to: "/browse" }, { label }]} home />
+    <PageContainer>
+      <PageHeader
+        breadcrumbs={[{ label: "Directory", to: "/browse" }]}
+        eyebrow={`${entries.length} entries`}
+        title={`Claude ${label}`}
+        description={categorySeoDescriptions[id] ?? categoryDescriptions[id]}
+      />
 
-      <header className="mt-6 max-w-3xl">
-        <div className="eyebrow">{entries.length} entries</div>
-        <h1 className="mt-2 h-display-1 text-ink text-balance">Claude {label}</h1>
-        <p className="mt-4 text-pretty text-base text-ink-muted sm:text-lg">
-          {categorySeoDescriptions[id] ?? categoryDescriptions[id]}
-        </p>
-        <div className="mt-6 flex flex-wrap items-center gap-2 text-sm">
+      <div className="mt-6 max-w-3xl">
+        <div className="flex flex-wrap items-center gap-2 text-sm">
           <Link
             to="/browse"
             search={{ category: id }}
@@ -193,7 +194,7 @@ function CategoryHub() {
             </ul>
           </div>
         )}
-      </header>
+      </div>
 
       <HubHighlights
         highlights={highlights}
@@ -241,6 +242,6 @@ function CategoryHub() {
         source={`category:${id}`}
         className="mt-14"
       />
-    </div>
+    </PageContainer>
   );
 }

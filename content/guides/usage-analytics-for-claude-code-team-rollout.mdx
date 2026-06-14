@@ -1,0 +1,158 @@
+---
+title: Usage Analytics for Claude Code Team Rollout
+slug: usage-analytics-for-claude-code-team-rollout
+category: guides
+description: >-
+  Guide to Claude Code usage analytics for team rollouts: dashboard metrics,
+  adoption KPIs, monitoring usage docs, and privacy-aware reporting.
+cardDescription: Use Claude Code analytics to measure adoption during team rollouts.
+seoTitle: Usage Analytics for Claude Code Team Rollout
+seoDescription: >-
+  Guide to Claude Code usage analytics for team rollouts: dashboard metrics,
+  adoption KPIs, monitoring usage docs, and privacy-aware reporting.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1444
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1444"
+documentationUrl: "https://code.claude.com/docs/en/analytics"
+usageSnippet: >-
+  Use this guide to define adoption KPIs and read Claude Code analytics during an
+  internal team rollout.
+prerequisites:
+  - Admin or analytics viewer access to Claude Code team analytics per official docs.
+  - Rollout timeline with baseline week before broad enablement.
+  - Agreement with legal/HR on which metrics may be shared with managers.
+  - Champion network to contextualize quantitative dips or spikes.
+safetyNotes:
+  - Do not use analytics to surveil individual keystrokes or punish experimental usage during learning phases.
+  - Align analytics review with workplace monitoring policy and union agreements where applicable.
+  - Treat sudden usage drops as potential configuration or access issues—not purely performance judgments.
+privacyNotes:
+  - Analytics may aggregate per-user activity; restrict dashboard access to roles with legitimate need.
+  - Avoid exporting analytics with employee names into public slides.
+  - Document retention period for analytics exports stored internally.
+sourceUrls:
+  - "https://code.claude.com/docs/en/analytics"
+  - "https://code.claude.com/docs/en/monitoring-usage"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - analytics
+  - rollout
+  - teams
+  - governance
+keywords:
+  - Claude Code analytics
+  - team rollout metrics
+  - monitoring Claude Code usage
+  - adoption dashboard Claude Code
+  - usage analytics enterprise
+readingTime: 8
+difficultyScore: 48
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Usage analytics turn rollout guesswork into measurable adoption. Define KPIs
+before launch—active users, sessions, feature use—read analytics and
+monitoring-usage docs together, review weekly with champions, and share
+aggregate trends rather than individual scoreboards.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "KPIs defined", "description": "Active users, sessions, and plugin adoption metrics are chosen"}
+- [ ] {"task": "Baseline captured", "description": "One pre-rollout week is recorded for comparison"}
+- [ ] {"task": "Dashboard access granted", "description": "Analytics viewers are limited to approved roles"}
+- [ ] {"task": "Champion review cadence", "description": "Weekly analytics review includes champion feedback"}
+- [ ] {"task": "Privacy policy aligned", "description": "Legal/HR approved aggregate reporting format"}
+
+## Core Concepts Explained
+
+### Adoption metrics differ from productivity claims
+
+Analytics show usage intensity, not code quality. Use them to detect enablement
+gaps, not to rank engineers.
+
+### Baselines matter
+
+Compare week-over-week after rollout starts; pre-rollout noise is not a useful
+target.
+
+### Feature metrics guide enablement
+
+Low MCP or plugin usage may mean policy friction, not disinterest.
+
+### Privacy-aware reporting keeps trust
+
+Share team aggregates in leadership reviews; reserve individual detail for
+coaching with consent and policy cover.
+
+## Step-by-Step Implementation Guide
+
+1. **Define KPIs.** Pick active users, sessions per week, plugin adoption, and
+   support ticket rate.
+
+2. **Capture pre-rollout baseline.** Export or record one week before go-live.
+
+3. **Open analytics dashboard.** Follow analytics documentation for your plan tier.
+
+4. **Cross-check monitoring-usage guidance.** Correlate dashboard metrics with
+   documented monitoring patterns.
+
+5. **Review weekly with champions.** Identify teams stuck at zero usage.
+
+6. **Run enablement interventions.** Office hours, plugin fixes, permission unblocks.
+
+7. **Report aggregates to leadership.** Show trend lines, not individual rankings.
+
+8. **Adjust rollout plan.** Double down on successful patterns; pause expansions if
+   support load exceeds capacity.
+
+## Sample Rollout KPIs
+
+| KPI | Why it matters |
+| --- | -------------- |
+| Weekly active users | Detect teams not onboarded |
+| Sessions per active user | Spot shallow vs sustained adoption |
+| Plugin install rate | Measure standard bundle success |
+| Support tickets tagged claude-code | Correlate friction with metrics |
+
+## Troubleshooting
+
+### Dashboard shows zero activity despite known users
+
+Verify users authenticate under the enterprise tenant and date filters include
+pilot cohort.
+
+### Metrics spike after MCP rollout
+
+Expect tool-heavy weeks; separate one-time setup from steady state before reacting.
+
+### Managers request individual rankings
+
+Redirect to aggregate KPIs per privacy policy.
+
+### Analytics disagrees with internal logs
+
+Document timezone filters and latency; reconcile with monitoring-usage docs.
+
+## Duplicate Check
+
+This guide complements team-cost-governance-for-claude-code-usage.mdx, which
+focuses on spend policy. This entry focuses on adoption analytics during rollout.
+
+## References
+
+- Claude Code analytics - https://code.claude.com/docs/en/analytics
+- Monitoring usage - https://code.claude.com/docs/en/monitoring-usage
+- Champion kit - https://code.claude.com/docs/en/champion-kit

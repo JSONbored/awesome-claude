@@ -1,0 +1,166 @@
+---
+title: "Chrome Integration for Web App Debugging With Claude Code"
+slug: chrome-integration-for-web-app-debugging-with-claude-code
+category: guides
+description: >-
+  Connect Claude in Chrome for web app debugging: extension setup, browser selection, batched tool loading, and safe staging workflows with Claude Code.
+cardDescription: Debug web apps with Claude in Chrome and Claude Code together.
+seoTitle: "Chrome Integration for Web App Debugging With Claude Code"
+seoDescription: >-
+  Connect Claude in Chrome for web app debugging: extension setup, browser selection, batched tool loading, and safe staging workflows with Claude Code.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1386
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1386"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to wire Claude in Chrome into Claude Code for interactive web app debugging on staging sites.
+prerequisites:
+  - "Claude Code installed with the Claude in Chrome extension on a supported browser."
+  - "A staging web app URL and reproducible login for test accounts."
+  - "Network access from the browser profile that will share tabs with Claude Code."
+  - "Team policy allowing browser automation tools if operating under managed MCP settings."
+safetyNotes:
+  - "Browser tools can read page content, cookies, and local storage; use staging accounts only."
+  - "Disable Claude in Chrome on browsers signed into personal email or banking sites."
+  - "Write-capable browser actions should require explicit human approval in team permission policy."
+privacyNotes:
+  - "Page DOM, network responses, and console output may be included in model context during debugging."
+  - "Shared browser profiles can leak session tokens across tenants—use per-project browser profiles."
+  - "Customer PII visible in the DOM will be transmitted to the model provider unless redacted."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/chrome"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - chrome
+  - browser
+  - debugging
+  - web
+keywords:
+  - "Claude in Chrome debugging"
+  - "web app debugging Claude Code"
+  - "browser integration Claude"
+  - "Chrome extension Claude Code"
+  - "/chrome browser select"
+readingTime: 8
+difficultyScore: 48
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude in Chrome connects a live browser tab to Claude Code so the agent can inspect DOM state, console output, and network behavior while you debug. Use `/chrome` to pick a browser, keep staging credentials isolated, and prefer short reproduce→fix loops.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Shared tab, shared context
+
+The extension bridges the active browser tab into the Claude Code tool surface so web state participates in the same session as local repo tools.
+
+### Browser selection when multiple connect
+
+When several browsers connect, `/chrome` → "Select browser…" or in-chat prompts let you pin the profile used for a given debug run.
+
+### Batched browser tools
+
+Recent builds load browser tools in a single batched call instead of one round trip per tool, reducing latency during tight debug loops.
+
+### Flags persist in background sessions
+
+`--chrome` is preserved across background retire→wake, so long-running debug sessions should reconnect the same browser profile after idle.
+
+## Step-by-Step Implementation Guide
+
+1. **Install the extension.** Add Claude in Chrome to a dedicated browser profile used only for development and staging.
+
+2. **Launch Claude Code with Chrome.** Start Claude Code with `--chrome` or enable the integration from an existing session via `/chrome`.
+
+3. **Open the staging app.** Navigate to the bug reproduction URL and log in with scoped test credentials.
+
+4. **Select the browser.** If multiple browsers are connected, run `/chrome` → "Select browser…" to pin the correct profile.
+
+5. **Describe the defect.** Ask Claude to capture console errors, network failures, and DOM state around the failing interaction.
+
+6. **Patch locally.** Use repo tools in the same session to apply fixes, then hot-reload or restart the dev server.
+
+7. **Verify in browser.** Re-run the user flow in the connected tab and confirm the fix with before/after evidence.
+
+8. **Disconnect when finished.** Close staging tabs and disable the extension profile to avoid accidental production navigation.
+
+## Web Debug Session Checklist
+
+- [ ] {"task": "Extension installed", "description": "Dedicated dev browser profile connected"}
+- [ ] {"task": "Staging URL loaded", "description": "Reproduction path reachable with test login"}
+- [ ] {"task": "Browser selected", "description": "/chrome points at the intended profile"}
+- [ ] {"task": "Evidence captured", "description": "Console and network errors documented"}
+- [ ] {"task": "Profile isolated", "description": "No personal accounts in the connected browser"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### No browser tools available
+
+Confirm the extension is running, restart Claude Code with `--chrome`, and check that background agents have a shared tab when applicable.
+
+### Wrong browser profile used
+
+Explicitly select the browser via `/chrome` when multiple Chrome or Chromium installs connect.
+
+### Background agent crash loop
+
+Recent fixes address crash loops when the extension connects without a shared tab—open the target tab before spawning background work.
+
+### Stale page state
+
+Hard-refresh the staging tab after local code changes so DOM snapshots match the latest bundle.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` improved Claude in Chrome tool loading with a single batched call instead of one per tool.
+- `CHANGELOG.md` added `/chrome` → "Select browser…" when multiple browsers are connected.
+- `CHANGELOG.md` notes background sessions preserve `--chrome` across retire→wake.
+- `CHANGELOG.md` fixed background agents crash-looping when the extension connected without a shared tab.
+- The root README lists terminal, IDE, and GitHub as Claude Code surfaces; browser tooling extends that to live web apps.
+
+## Duplicate Check
+
+This guide targets browser-based web debugging via Claude in Chrome. It complements computer-use-from-the-claude-code-cli-for-gui-qa.mdx for native desktop apps and playwright-trace-viewer-ai-debugging-guide.mdx for trace-based analysis.
+
+## References
+
+- Claude in Chrome - https://code.claude.com/docs/en/chrome
+- Computer use GUI QA - computer-use-from-the-claude-code-cli-for-gui-qa
+- Playwright trace debugging - playwright-trace-viewer-ai-debugging-guide

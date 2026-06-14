@@ -4,7 +4,8 @@ import { absoluteUrl } from "@/lib/seo";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { BEST_LISTS, ENTRIES } from "@/data/entries";
 import { ResourceCard } from "@/components/resource-card";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 
 export const Route = createFileRoute("/best/")({
   head: () => ({
@@ -47,14 +48,12 @@ function BestPage() {
     .filter((e): e is NonNullable<typeof e> => e !== undefined);
 
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
-      <Breadcrumbs home items={[{ label: "Best lists" }]} />
-      <div className="mt-4 eyebrow">Best lists · editorial</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">Curated for real workflows</h1>
-      <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
-        Tightly scoped picks for specific jobs. Every list explains why each entry made the cut and
-        what you'd reach for instead.
-      </p>
+    <PageContainer className="py-12">
+      <PageHeader
+        eyebrow="Best lists · editorial"
+        title="Curated for real workflows"
+        description="Tightly scoped picks for specific jobs. Every list explains why each entry made the cut and what you'd reach for instead."
+      />
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {BEST_LISTS.map((b) => {
@@ -109,6 +108,6 @@ function BestPage() {
           <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
         ))}
       </div>
-    </div>
+    </PageContainer>
   );
 }

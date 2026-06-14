@@ -1,0 +1,165 @@
+---
+title: Delegating Engineering Work From Slack to Claude Code
+slug: delegating-engineering-work-from-slack-to-claude-code
+category: guides
+description: >-
+  Guide to delegating engineering work from Slack to Claude Code: channel setup,
+  task contracts, permissions, status updates, and safe escalation paths.
+cardDescription: Delegate scoped engineering tasks from Slack to Claude Code with clear handoffs.
+seoTitle: Delegating Engineering Work From Slack to Claude Code
+seoDescription: >-
+  Guide to delegating engineering work from Slack to Claude Code: channel setup,
+  task contracts, permissions, status updates, and safe escalation paths.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1440
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1440"
+documentationUrl: "https://code.claude.com/docs/en/slack"
+usageSnippet: >-
+  Use this guide to delegate bounded engineering tasks from Slack to Claude Code
+  with explicit repos, success criteria, and approval paths.
+prerequisites:
+  - Claude Code Slack integration configured per official documentation for your workspace.
+  - Named channels or threads for delegated work with linked repository and branch context.
+  - Team policy for which tasks may be delegated (docs, tests, small fixes) versus forbidden (prod deploys, secret rotation).
+  - Engineers available to approve tool actions that exceed auto-approved permissions.
+safetyNotes:
+  - Slack threads may contain customer excerpts; redact before delegating to Claude Code sessions with repository access.
+  - Require human approval for write tools, deployments, and PR merges initiated from Slack delegations.
+  - Do not post credentials, OAuth codes, or internal URLs with embedded tokens into Slack delegations.
+privacyNotes:
+  - Slack message history and Claude Code session output may replicate across systems; align retention policies.
+  - Delegated tasks can expose file paths and issue details in Slack replies visible to channel members.
+  - Use private channels or DMs for sensitive repositories unless channel membership matches repository access.
+sourceUrls:
+  - "https://code.claude.com/docs/en/slack"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - slack
+  - delegation
+  - integrations
+  - teams
+keywords:
+  - Slack Claude Code integration
+  - delegate engineering Slack
+  - Claude Code Slack workflow
+  - Slack to Claude Code handoff
+  - Slack bot engineering tasks
+readingTime: 8
+difficultyScore: 54
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Slack delegation works when tasks are bounded: name the repo, branch, success
+criteria, and approval path. Use the Claude Code Slack integration for handoffs,
+keep production-risk actions behind human approval, and post status updates back
+to the thread instead of silent background work.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Slack integration live", "description": "Workspace setup matches official Slack documentation"}
+- [ ] {"task": "Delegation template published", "description": "Repo, branch, paths, tests, and reviewer are required fields"}
+- [ ] {"task": "Allowed task classes defined", "description": "Team policy lists permitted and forbidden delegations"}
+- [ ] {"task": "Approval coverage scheduled", "description": "Reviewers are available during delegated channel hours"}
+- [ ] {"task": "Status loop required", "description": "Completion summaries with PR links return to the Slack thread"}
+
+## Core Concepts Explained
+
+### Slack is the intake, not the source of truth
+
+Threads initiate work; repositories, issues, and CI remain authoritative. Link
+them explicitly in every delegation.
+
+### Delegation needs contracts
+
+A good delegation includes objective, allowed paths, tests to run, deadline, and
+who approves merges.
+
+### Permissions must match channel trust
+
+Channels with broad membership should delegate read-only analysis; write access
+belongs in restricted channels with reviewers online.
+
+### Status loops prevent duplicate work
+
+Configure replies or summaries back to Slack so teammates see progress and
+blockers.
+
+## Step-by-Step Workflow
+
+1. **Configure Slack integration.** Complete workspace setup per Claude Code
+   Slack documentation.
+
+2. **Define allowed task classes.** Publish examples: triage logs, draft tests,
+   summarize PRs—not production changes without review.
+
+3. **Create delegation template.** Include repo link, branch, paths, tests, and
+   reviewer handle.
+
+4. **Post delegation in scoped channel.** Use threads per task to keep context
+   isolated.
+
+5. **Monitor Claude Code session.** Watch for permission prompts requiring human
+   approval in Slack or terminal.
+
+6. **Require PR before merge.** Even when Claude opens a PR, human review stays
+   mandatory unless policy says otherwise.
+
+7. **Post completion summary.** Link PR, tests run, and known gaps back to Slack.
+
+8. **Retrospect weekly.** Collect misfires—wrong repo, over-broad edits—and tighten
+   templates.
+
+## Delegation Template Fields
+
+| Field | Purpose |
+| ----- | ------- |
+| Repository URL | Removes ambiguity about target codebase |
+| Branch | Prevents work on stale default branch |
+| Allowed paths | Bounds diff scope |
+| Tests to run | Defines done criteria |
+| Reviewer | Names merge approval owner |
+
+## Troubleshooting
+
+### Claude worked on the wrong repository
+
+Add explicit repo URLs to the delegation template and ban ambiguous "fix the bug"
+requests without links.
+
+### Permission prompts stalled the task
+
+Assign on-call reviewers for delegated channels during business hours.
+
+### Slack thread lacks final status
+
+Make "post summary with PR link" part of the delegation checklist for humans and
+Claude.
+
+### Sensitive data appeared in channel replies
+
+Move delegations to private channels and redact customer content at intake.
+
+## Duplicate Check
+
+This guide complements channels-and-webhooks-into-running-claude-code-sessions.mdx
+by focusing on Slack-native engineering delegation rather than generic webhook
+bridging.
+
+## References
+
+- Claude Code Slack - https://code.claude.com/docs/en/slack
+- Channels and webhooks - channels-and-webhooks-into-running-claude-code-sessions
+- Permission modes for teams - permission-modes-for-claude-code-teams
