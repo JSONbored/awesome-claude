@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>922+ file-backed entries</strong> stay useful as both an
+        <strong>948+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>922</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>948</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -68,7 +68,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>323</code><br>
+          <code>330</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -78,12 +78,12 @@
         </td>
 <td align="center" width="20%">
           <a href="#skills"><strong>🧠 Skills</strong></a><br>
-          <code>94</code><br>
+          <code>108</code><br>
           <sub>Source-backed skill packs and reusable capabilities.</sub>
         </td>
 <td align="center" width="20%">
           <a href="#rules"><strong>📏 Rules</strong></a><br>
-          <code>45</code><br>
+          <code>50</code><br>
           <sub>Prompt guardrails, project rules, and operating constraints.</sub>
         </td>
 </tr>
@@ -274,7 +274,7 @@ packages use checksums and package trust metadata after review.
 - **[Vercel AI SDK Repository Contributor Agent for Claude](https://heyclau.de/entry/agents/vercel-ai-sdk-repository-contributor-agent)** - Source-backed Claude agent prompt for contributing to the official Vercel AI SDK monorepo using its AGENTS.md guidance, pnpm workspace commands, package build and test boundaries, provider architecture, Zod compatibility rules, JSON parsing safety, ADR review, and documentation sources.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - Web-based asynchronous agent coordinator leveraging Claude Code for Web's browser interface for managing long-running autonomous coding tasks with async workflows.
 
-## 🔌 MCP Servers (323)
+## 🔌 MCP Servers (330)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs voice-generation workflows.
 - **[ACI MCP Servers](https://heyclau.de/entry/mcp/aci-mcp-servers)** - Open-source MCP servers for accessing ACI.dev managed functions through app-specific tools or a unified search-and-execute interface.
@@ -284,6 +284,7 @@ packages use checksums and package trust metadata after review.
 - **[Agentgateway MCP Gateway](https://heyclau.de/entry/mcp/agentgateway-mcp-gateway)** - Apache-2.0 agentic proxy that can expose stdio, HTTP, SSE, and Streamable HTTP MCP servers through a managed gateway with federation, OAuth/JWT authentication, RBAC/CEL policy, CORS, TLS, observability, and Kubernetes Gateway API support.
 - **[AgentQL MCP Server](https://heyclau.de/entry/mcp/agentql-mcp-server)** - AgentQL MCP server for extracting structured JSON from public webpages using a URL and natural-language extraction prompt.
 - **[Agentset MCP Server](https://heyclau.de/entry/mcp/agentset-mcp-server)** - Official Agentset MCP server that lets Claude retrieve cited knowledge-base results from an Agentset namespace through the `knowledge-base-retrieve` tool, with optional tenant scoping and custom tool descriptions.
+- **[Auxen MCP Server for Claude](https://heyclau.de/entry/mcp/ai-auxen-auxen-mcp-server)** - Official Auxen.ai remote MCP server for listing GPU models and instances, checking account balance, and provisioning or destroying inference instances from Claude via OAuth 2.1 or API keys.
 - **[AI Game Developer Unity MCP Server](https://heyclau.de/entry/mcp/ai-game-developer-unity-mcp-server)** - Unity MCP server, plugin, CLI, and skill generator for controlling Unity Editor and runtime projects from MCP clients through built-in game-dev tools.
 - **[Airtable MCP Server for Claude](https://heyclau.de/entry/mcp/airtable-mcp-server)** - Read and write records, manage bases and tables in Airtable directly from Claude
 - **[Algolia MCP Server for Claude](https://heyclau.de/entry/mcp/algolia-mcp-server)** - Connect Claude to Algolia-managed MCP servers for curated public search and recommendation access or internal, user-scoped search and analytics workflows.
@@ -298,6 +299,7 @@ packages use checksums and package trust metadata after review.
 - **[arXiv MCP Server](https://heyclau.de/entry/mcp/arxiv-mcp-server)** - MCP server for searching, downloading, reading, and analyzing arXiv papers through Claude and other MCP clients.
 - **[Asana MCP Server for Claude](https://heyclau.de/entry/mcp/asana-mcp-server)** - Interact with Asana workspaces to manage projects and tasks
 - **[Auth0 MCP Server for Claude](https://heyclau.de/entry/mcp/auth0-mcp-server)** - Connect Claude to Auth0's official local MCP server for tenant administration, application setup, Actions, logs, forms, and scoped Management API workflows.
+- **[AutoRFP.ai MCP Server for Claude](https://heyclau.de/entry/mcp/autorfp-ai-mcp-server)** - Official AutoRFP.ai remote MCP server for read-only access to RFP projects, requirements, approved content library search, and organisation tags from Claude and other MCP clients via OAuth.
 - **[AWS FinOps MCP Server](https://heyclau.de/entry/mcp/aws-finops-mcp-server)** - Read-only AWS FinOps MCP server that lets Claude query Cost Explorer cost and usage data, compare AWS CLI profiles, filter by tags or dimensions, check AWS Budgets, and audit for stopped EC2 instances, unattached EBS volumes, and unassociated Elastic IP addresses across selected regions.
 - **[MCP Proxy for AWS](https://heyclau.de/entry/mcp/aws-mcp-proxy-for-aws)** - AWS-maintained proxy and Python library that lets MCP clients and agent frameworks connect to IAM-secured MCP servers on AWS by signing requests with AWS SigV4 credentials.
 - **[AWS Services MCP Server - MCP Servers](https://heyclau.de/entry/mcp/aws-services-mcp-server)** - Comprehensive AWS cloud services integration for infrastructure management, deployment, and monitoring
@@ -309,7 +311,11 @@ packages use checksums and package trust metadata after review.
 - **[Bifrost MCP Gateway](https://heyclau.de/entry/mcp/bifrost-mcp-gateway)** - Open-source AI gateway that can connect to downstream MCP servers and expose their aggregated tools through a single HTTP or SSE MCP endpoint for Claude Desktop, Cursor, and other MCP clients.
 - **[BigQuery MCP Server for Claude](https://heyclau.de/entry/mcp/bigquery-mcp-server)** - Google Cloud remote MCP server for querying BigQuery datasets, inspecting metadata, listing resources, and running governed warehouse analytics through an HTTP endpoint.
 - **[BioMCP](https://heyclau.de/entry/mcp/biomcp)** - Biomedical MCP server and CLI for searching genes, variants, articles, clinical trials, drugs, diseases, pathways, proteins, adverse events, pharmacogenomics, GWAS, phenotypes, and local study datasets.
+- **[BittleBits GEO Assistant MCP Server for Claude](https://heyclau.de/entry/mcp/bittlebits-geo-assistant-mcp-server)** - BittleBits hosted MCP server for Generative Engine Optimization with get_score and get_rewrite tools to measure and improve AI search visibility via OAuth.
 - **[Blender MCP Server](https://heyclau.de/entry/mcp/blender-mcp-server)** - MCP server and Blender add-on that let Claude inspect scenes, create and modify 3D objects, run Blender Python, capture viewport screenshots, and use asset or 3D-generation integrations from inside Blender.
+- **[BoolsAI Scan MCP Server for Claude](https://heyclau.de/entry/mcp/boolsai-scan-mcp-server)** - BoolsAI hosted MCP server with no authentication required for tech stack scanning via boolsai_scan and boolsai_scan_paths tools on boolsai.ai/mcp.
+- **[BorealHost MCP Server for Claude](https://heyclau.de/entry/mcp/borealhost-mcp-server)** - BorealHost MCP server with 47 hosting tools available via remote HTTP at borealhost.ai/mcp or local stdio through pip install borealhost-mcp, with optional BOREALHOST_API_KEY.
+- **[Bowmark MCP Server for Claude](https://heyclau.de/entry/mcp/bowmark-mcp-server)** - Bowmark hosted MCP server serving pre-computed website navigation recipes for reliable browser automation from Claude, with optional Bearer API key auth.
 - **[Box MCP Server for Claude](https://heyclau.de/entry/mcp/box-mcp-server)** - Access enterprise content, analyze unstructured data, and automate workflows
 - **[Brave Search MCP Server](https://heyclau.de/entry/mcp/brave-search-mcp-server)** - Official Brave Search MCP server for giving Claude web, local, place, image, video, news, LLM context, and summarizer search tools backed by the Brave Search API.
 - **[Bright Data Web MCP Server](https://heyclau.de/entry/mcp/bright-data-web-mcp-server)** - MCP server that connects Claude to Bright Data web search, scraping, browser automation, public web datasets, and package metadata tools.
@@ -422,6 +428,7 @@ packages use checksums and package trust metadata after review.
 - **[IBM MCP Context Forge](https://heyclau.de/entry/mcp/ibm-mcp-context-forge)** - Open-source MCP gateway, registry, and proxy from IBM that federates MCP servers, A2A agents, REST APIs, and gRPC services behind centralized discovery, governance, authentication, observability, and admin controls.
 - **[IDA Pro MCP Server](https://heyclau.de/entry/mcp/ida-pro-mcp-server)** - MCP server and Claude Code plugin for connecting IDA Pro or headless idalib to AI assistants for reverse engineering, decompilation, xref lookup, renaming, commenting, and binary analysis workflows.
 - **[iMCP MCP Server](https://heyclau.de/entry/mcp/imcp-mcp-server)** - macOS app and bundled stdio MCP server that lets Claude access selected local services such as Calendar, Contacts, Messages, Location, Maps, Reminders, camera, microphone, screenshots, Shortcuts, utilities, and Weather.
+- **[Inferventis MCP Server for Claude](https://heyclau.de/entry/mcp/inferventis-mcp-server)** - Inferventis hosted MCP server with 20 financial tools for FX rates, stocks, crypto, news, and URL reading over streamable HTTP, with many free tools and optional premium API keys.
 - **[Intercom MCP Server for Claude](https://heyclau.de/entry/mcp/intercom-mcp-server)** - Access customer conversations, tickets, and user data in real-time
 - **[Invideo MCP Server for Claude](https://heyclau.de/entry/mcp/invideo-mcp-server)** - Build video creation capabilities into your applications
 - **[iOS Simulator MCP Server](https://heyclau.de/entry/mcp/ios-simulator-mcp-server)** - MCP server for controlling iOS simulators from AI agents, including simulator discovery, UI taps, typing, swipes, accessibility inspection, screenshots, video recording, app install, and app launch.
@@ -733,9 +740,12 @@ Get a free API key on https://app.zyntra.app/
 - **[Zapier AI](https://heyclau.de/entry/tools/zapier-ai)** - Automation platform with AI-assisted workflows, app integrations, agents, actions, and business process automation.
 - **[Zed](https://heyclau.de/entry/tools/zed)** - Collaborative code editor with AI assistance, fast native performance, and developer-focused collaboration workflows.
 
-## 🧠 Skills (94)
+## 🧠 Skills (108)
 
 - **[Agent Evals Regression Gate Skill](https://heyclau.de/entry/skills/agent-evals-regression-gate)** - Build repeatable eval suites that catch quality regressions in AI agent behavior before merge or release.
+- **[Agent Skills Cross-Platform Adapter Capability Pack Skill](https://heyclau.de/entry/skills/agent-skills-cross-platform-adapter-capability-pack)** - Expert agent skills cross-platform adapter capability pack for porting Claude Code SKILL.md workflows to Codex, Cursor, Windsurf, and Generic AGENTS runbooks while preserving scope, safety notes, and source-backed contracts.
+- **[Agent Skills Enterprise Provisioning Capability Pack Skill](https://heyclau.de/entry/skills/agent-skills-enterprise-provisioning-capability-pack)** - Expert agent skills enterprise provisioning capability pack for rolling out Claude Code skills across Claude for Enterprise with scope controls, admin policy alignment, user-only versus model-invoked skills, and audit-ready docs.
+- **[Agent Skills Retrieval Source Verification Capability Pack Skill](https://heyclau.de/entry/skills/agent-skills-retrieval-source-verification-capability-pack)** - Expert agent skills retrieval source verification capability pack for validating canonical URLs, documentation reachability, repo provenance, and duplicate source claims before publishing or submitting Claude Code skills.
 - **[AI Agent Observability and Incident Response Skill](https://heyclau.de/entry/skills/ai-agent-observability-incident-response)** - Instrument AI agent systems with high-signal telemetry and runbook-driven incident response for reliability and safety.
 - **[AI Business Idea Validation Capability Pack Skill](https://heyclau.de/entry/skills/ai-business-idea-validation-capability-pack)** - Expert business-validation capability pack for testing AI product ideas, market demand, pricing readiness, and launch feasibility.
 - **[AI Search Ranking Content Cluster Strategy Skill](https://heyclau.de/entry/skills/ai-search-ranking-content-cluster-strategy)** - Build SEO-forward content clusters that align with search intent, topical authority, and conversion pathways for AI tooling niches.
@@ -745,7 +755,13 @@ Get a free API key on https://app.zyntra.app/
 - **[Better Auth Next.js Authentication Skill](https://heyclau.de/entry/skills/better-auth-nextjs-authentication)** - Add Better Auth to a Next.js App Router project with API route handlers, database-backed sessions, client helpers, protected route checks, and production auth safety review.
 - **[Browser Agent Workflow Automation Skill](https://heyclau.de/entry/skills/browser-agent-workflow-automation)** - Build robust browser automation workflows for AI agents with deterministic selectors, retries, and safe action boundaries.
 - **[Bun JavaScript Runtime Development Skill](https://heyclau.de/entry/skills/bun-runtime-modern-javascript)** - Build high-performance JavaScript and TypeScript applications with Bun, the all-in-one runtime that's 3x faster than Node.js. Includes native TypeScript execution, built-in bundler, test runner, and package manager in a single binary.
+- **[Claude Code Analytics Adoption Capability Pack Skill](https://heyclau.de/entry/skills/claude-code-analytics-adoption-capability-pack)** - Expert Claude Code analytics adoption capability pack for enabling team and enterprise dashboards, GitHub contribution metrics, adoption tracking, ROI reporting, and OpenTelemetry complements with source-backed rollout steps.
+- **[Claude Code Checkpoint Recovery Capability Pack Skill](https://heyclau.de/entry/skills/claude-code-checkpoint-recovery-capability-pack)** - Expert Claude Code checkpoint recovery capability pack for auditing automatic edit tracking, choosing restore versus summarize actions in /rewind, and recovering from bad turns without losing git history.
+- **[Claude Code Context Window Audit Capability Pack Skill](https://heyclau.de/entry/skills/claude-code-context-window-audit-capability-pack)** - Expert Claude Code context window audit capability pack for measuring what loads at session start, what each read and extension adds, when compaction drops path-scoped rules, and how to delegate or compact before quality drops.
+- **[Claude Code Deep Links Runbook Capability Pack Skill](https://heyclau.de/entry/skills/claude-code-deep-links-runbook-capability-pack)** - Expert Claude Code deep links runbook capability pack for building safe claude-cli:// URLs, embedding them in incident runbooks, and validating cwd, repo, and prompt parameters before users press Enter.
+- **[Claude Code Enterprise Network Config Capability Pack Skill](https://heyclau.de/entry/skills/claude-code-enterprise-network-config-capability-pack)** - Expert Claude Code enterprise network configuration capability pack for auditing proxy settings, custom CA trust, mTLS client certificates, URL allowlists, and provider-specific routing in restricted corporate networks.
 - **[Claude Code Terminal Ergonomics Capability Pack Skill](https://heyclau.de/entry/skills/claude-code-terminal-ergonomics-capability-pack)** - Expert Claude Code terminal ergonomics capability pack for auditing multiline input, Option/Meta shortcuts, tmux passthrough, notifications, fullscreen rendering, themes, status lines, Vim mode, and custom keybindings before a user blames Claude for terminal behavior.
+- **[Claude Code Zero Data Retention Review Capability Pack Skill](https://heyclau.de/entry/skills/claude-code-zero-data-retention-review-capability-pack)** - Expert Claude Code zero data retention review capability pack for auditing ZDR scope on Claude for Enterprise, disabled features, model availability, analytics limits, and third-party integration gaps before rollout.
 - **[Clerk Next.js Authentication Skill](https://heyclau.de/entry/skills/clerk-nextjs-authentication)** - Add Clerk authentication to a Next.js App Router project with middleware, route protection, session-aware UI, environment hygiene, and production auth safety checks.
 - **[CLI Data Visualization Quickstart Skill](https://heyclau.de/entry/skills/cli-data-viz-quickstart)** - Create publication-ready charts and visualizations from CSV, JSON, and Excel data using Python (matplotlib/seaborn) or Node.js (vega/vega-lite). Generate bar charts, line plots, scatter plots, heatmaps, and statistical visualizations with custom styling.
 - **[Cloudflare Workers AI Edge Functions Skill](https://heyclau.de/entry/skills/cloudflare-workers-ai-edge)** - Deploy AI models and serverless functions to Cloudflare's global edge network with sub-5ms cold starts and 40% edge computing market share. Access 50+ open-source AI models (Llama-2, Whisper, Stable Diffusion) with pay-per-use pricing.
@@ -779,6 +795,8 @@ Get a free API key on https://app.zyntra.app/
 - **[LLMs.txt Search Artifact Validation Capability Pack Skill](https://heyclau.de/entry/skills/llms-search-artifact-validation-capability-pack)** - Expert validation skill for reviewing /llms.txt, search discovery artifacts, canonical signals, structured data, and LLM-ready documentation links.
 - **[Log Parsing + Incident Timeline Skill](https://heyclau.de/entry/skills/log-parsing-incident-timeline)** - Parse web, application, and system logs into structured incidents and timelines with anomaly detection.
 - **[Markdown Knowledge Base Composer Skill](https://heyclau.de/entry/skills/markdown-knowledge-base-composer)** - Aggregate Markdown folders into cohesive knowledge bases with automated table of contents generation, cross-link validation and rewriting, heading normalization, and multi-format export (HTML, PDF, DOCX, EPUB).
+- **[MCP Client Config Audit Capability Pack Skill](https://heyclau.de/entry/skills/mcp-client-config-audit-capability-pack)** - Expert MCP client config audit capability pack for reviewing Claude Code MCP server entries, scope placement, tool approval settings, env var secrets, and startup context load before enabling servers in production repositories.
+- **[MCP Remote Server Trust Review Capability Pack Skill](https://heyclau.de/entry/skills/mcp-remote-server-trust-review-capability-pack)** - Expert MCP remote server trust review capability pack for auditing OAuth flows, transport security, tool permissions, data exfiltration risk, and vendor scope before connecting Claude Code to third-party MCP servers.
 - **[MCP Server Authoring Security Capability Pack Skill](https://heyclau.de/entry/skills/mcp-server-authoring-security-capability-pack)** - Expert MCP capability skill for secure server authoring, tool schema discipline, auth boundaries, and adversarial prompt hardening.
 - **[MCP Server Security Hardening Skill](https://heyclau.de/entry/skills/mcp-server-security-hardening)** - Secure MCP servers with strict tool boundaries, auth controls, dependency hygiene, and abuse-resistant runtime policies.
 - **[MCP Tool Contract Testing Skill](https://heyclau.de/entry/skills/mcp-tool-contract-testing)** - Validate MCP server tools with contract-style tests to catch schema drift, unsafe behavior, and integration regressions early.
@@ -801,6 +819,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Playwright Trace Failure Triage Capability Pack Skill](https://heyclau.de/entry/skills/playwright-trace-failure-triage-capability-pack)** - Expert skill for reviewing Playwright trace artifacts, screenshots, action timelines, network events, retries, and CI evidence to classify flaky browser test failures without guessing from logs alone.
 - **[PostgreSQL Query Optimization Skill](https://heyclau.de/entry/skills/postgresql-query-optimization)** - Analyze and optimize PostgreSQL queries for OLTP and OLAP workloads with AI-assisted performance tuning, indexing strategies, and execution plan analysis.
 - **[PostHog Next.js Product Analytics Skill](https://heyclau.de/entry/skills/posthog-nextjs-product-analytics)** - Add PostHog to a Next.js app with client and server event capture, user identification, feature flags, session replay privacy controls, reverse-proxy planning, and production analytics validation.
+- **[Prompt Caching Cost Audit Capability Pack Skill](https://heyclau.de/entry/skills/prompt-caching-cost-audit-capability-pack)** - Expert prompt caching cost audit capability pack for measuring Claude Code cache hit rates, identifying cache invalidation triggers, and reducing token spend from CLAUDE.md edits, model switches, and startup load changes.
 - **[Prompt Injection Defense Guardrails Skill](https://heyclau.de/entry/skills/prompt-injection-defense-guardrails)** - Build layered defenses against prompt injection, data exfiltration, and unsafe tool execution in AI agent systems.
 - **[Proxmox VE API Capability Pack Skill](https://heyclau.de/entry/skills/proxmox-ve-api-capability-pack)** - Expert Proxmox VE API capability skill for VM/LXC lifecycle orchestration, task polling, auth safety, and cluster-aware operations.
 - **[Proxmox VE API Orchestrator Skill](https://heyclau.de/entry/skills/proxmox-ve-api-orchestrator)** - Orchestrate Proxmox VM and LXC lifecycle operations via API with safe sequencing, capacity checks, and rollback-aware automation.
@@ -812,6 +831,8 @@ Get a free API key on https://app.zyntra.app/
 - **[SaaS Pricing Experimentation Engine Skill](https://heyclau.de/entry/skills/saas-pricing-experimentation-engine)** - Run low-risk SaaS pricing experiments with clear hypotheses, segment-aware metrics, and decision-safe rollout controls.
 - **[SLSA Provenance Review Capability Pack Skill](https://heyclau.de/entry/skills/slsa-provenance-review-capability-pack)** - Expert SLSA provenance review skill for checking source, build, artifact, and trust evidence before accepting content or package submissions.
 - **[Spectral OpenAPI Contract Audit Capability Pack Skill](https://heyclau.de/entry/skills/spectral-openapi-contract-audit-capability-pack)** - Expert Spectral review skill for auditing OpenAPI contracts, OAS rulesets, lint results, schema drift, CI gates, and API release readiness.
+- **[Subagent Foreground Background Delegation Capability Pack Skill](https://heyclau.de/entry/skills/subagent-foreground-background-delegation-capability-pack)** - Expert subagent foreground background delegation capability pack for choosing when to run Claude Code subagents interactively versus in the background, coordinating parallel work, and returning summarized results safely.
+- **[Subagent MCP Scoping Review Capability Pack Skill](https://heyclau.de/entry/skills/subagent-mcp-scoping-review-capability-pack)** - Expert subagent MCP scoping review capability pack for auditing which MCP servers and tools subagents inherit, restricting high-risk tools in delegated tasks, and preventing unintended production changes from background agents.
 - **[Supabase Realtime Database Builder Skill](https://heyclau.de/entry/skills/supabase-realtime-database)** - Build full-stack applications with Supabase Postgres, real-time subscriptions, Edge Functions, and pgvector AI integration for 4M+ developers.
 - **[Svelte SvelteKit Full-Stack Development Skill](https://heyclau.de/entry/skills/svelte-sveltekit-fullstack)** - Build full-stack web apps with Svelte and SvelteKit. Minimal runtime overhead, reactive components, and server-side rendering. The most admired frontend framework of 2025. Svelte compiles components to vanilla JavaScript at build time, resulting in zero runtime overhead and exceptional performance.
 - **[TanStack Query Data Fetching Skill](https://heyclau.de/entry/skills/tanstack-query-data-fetching)** - Build React server-state workflows with TanStack Query v5, including query keys, QueryClient setup, cache defaults, mutations, invalidation, hydration, retries, and privacy-aware data handling.
@@ -830,11 +851,12 @@ Get a free API key on https://app.zyntra.app/
 - **[Zero-Budget SaaS Launch Capability Pack Skill](https://heyclau.de/entry/skills/zero-budget-saas-launch-capability-pack)** - Expert zero-budget launch capability pack for building and shipping SaaS using free-tier infrastructure and constrained execution plans.
 - **[Zod Schema Validation Skill](https://heyclau.de/entry/skills/zod-schema-validator)** - Build type-safe runtime validation with Zod for APIs, forms, and data pipelines with TypeScript 5.5+ integration and automatic type inference.
 
-## 📏 Rules (45)
+## 📏 Rules (50)
 
 - **[AI Assistant Secret Handling Rules](https://heyclau.de/entry/rules/ai-assistant-secret-handling-rules)** - Source-backed rules for AI coding assistants that must avoid exposing, copying, logging, committing, or normalizing secrets while editing code, configs, tests, prompts, documentation, and CI workflows.
 - **[AI-Generated Frontend Accessibility Review Rules](https://heyclau.de/entry/rules/ai-generated-frontend-accessibility-review-rules)** - Source-backed rules for reviewing AI-generated frontend UI changes for accessibility before merge, with semantic HTML, keyboard paths, focus management, labels, automated scan limits, manual checks, and privacy-safe evidence.
 - **[AI Prompt Engineering Expert for Claude](https://heyclau.de/entry/rules/ai-prompt-engineering-expert)** - Expert in AI prompt engineering for Claude Code and Claude Desktop, focusing on coding tasks, test-driven development patterns, iterative refinement, and context management for optimal AI assistance
+- **[Angular Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/angular-expert)** - Transform Claude into an Angular specialist with deep knowledge of standalone components, Angular Signals, dependency injection, RxJS patterns, and the Angular Style Guide.
 - **[API Design Expert for Claude - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/api-design-expert)** - Transform Claude into a comprehensive API design specialist focused on RESTful APIs, GraphQL, OpenAPI, and modern API architecture patterns
 - **[API First Dev Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/api-first-development-architect)** - API-first development expert with OpenAPI/Swagger schema design, tRPC type-safe procedures, REST best practices, GraphQL federation, and contract-driven development for scalable backend architectures.
 - **[AWS Cloud Architect - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/aws-cloud-architect)** - Expert AWS architect with deep knowledge of cloud services, best practices, and Well-Architected Framework
@@ -846,17 +868,20 @@ Get a free API key on https://app.zyntra.app/
 - **[Contributor Commit And Changelog Rules](https://heyclau.de/entry/rules/contributor-commit-changelog-rules)** - Source-backed rules for contributor pull requests that need clear commit messages, release-note-ready changelog entries, issue links, breaking-change markers, and privacy-safe history.
 - **[Dependency Update Review Rules](https://heyclau.de/entry/rules/dependency-update-review-rules)** - Source-backed rules for reviewing dependency update pull requests with supply-chain context, lockfile discipline, advisory checks, compatibility evidence, and privacy-safe metadata handling.
 - **[Documentation Freshness Rules](https://heyclau.de/entry/rules/documentation-freshness-rules)** - Source-backed rules for public AI workflow registries that need to keep directory entries, source links, version claims, examples, install guidance, compatibility notes, and last-reviewed metadata fresh enough to trust.
+- **[.NET and C# Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/dotnet-csharp-expert)** - Transform Claude into a .NET and C# specialist with deep knowledge of ASP.NET Core, Entity Framework Core, minimal APIs, async/await patterns, and testing with xUnit and Testcontainers.
 - **[Generated Artifact Churn Rules for Registry Repositories](https://heyclau.de/entry/rules/generated-artifact-churn-rules)** - Source-backed rules for registry repositories that must keep contributor PRs focused on source files while generated indexes, feeds, downloads, search data, README output, and previews are rebuilt by trusted automation.
 - **[Go Golang Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/go-golang-expert)** - Transform Claude into a Go language expert with deep knowledge of concurrency, performance optimization, and idiomatic Go
 - **[Go Golang Language Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/golang-expert)** - Transform Claude into a Go ecosystem expert specializing in tooling, library development, CLI applications, and Go build system mastery
 - **[GraphQL Federation Specialist for Claude](https://heyclau.de/entry/rules/graphql-federation-specialist)** - Expert in GraphQL Federation architecture for microservices, specializing in Apollo Federation, schema composition, and distributed graph patterns
 - **[High-Risk Code Review Escalation Rules](https://heyclau.de/entry/rules/high-risk-code-review-escalation-rules)** - Source-backed rules for deciding when an AI-assisted code review must escalate high-risk changes to security, infrastructure, data, release, or domain owners before merge.
+- **[Java Spring Boot Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/java-spring-boot-expert)** - Transform Claude into a Java and Spring Boot specialist with deep knowledge of layered architecture, Spring Data JPA, Spring Security, configuration best practices, and testing with TestBed and Testcontainers.
 - **[Kubernetes DevSecOps Engineer for Claude](https://heyclau.de/entry/rules/kubernetes-devsecops-engineer)** - Expert in Kubernetes DevSecOps with GitOps workflows, pod security standards, RBAC, secret management, and automated security scanning for production clusters
 - **[MCP Local Tool Access Rules](https://heyclau.de/entry/rules/mcp-local-tool-access-rules)** - Source-backed rules for safely connecting MCP servers that expose local tools, resources, prompts, roots, transports, credentials, files, and logs to AI clients during active development sessions.
 - **[MCP Remote Authorization Boundary Rules](https://heyclau.de/entry/rules/mcp-remote-authorization-boundary-rules)** - Source-backed rules for reviewing remote MCP server authorization boundaries: protected resource metadata, OAuth resource indicators, token audience checks, least-privilege scopes, and cross-server token isolation.
 - **[Mobile App Dev - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/mobile-app-developer)** - Expert in iOS, Android, and cross-platform mobile development with React Native, Flutter, and native frameworks
 - **[Mobile App Dev Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/mobile-app-development-expert)** - Expert in iOS, Android, and cross-platform mobile development with React Native, Flutter, and native frameworks
 - **[Monorepo Workspace Manager - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/monorepo-workspace-manager)** - Monorepo workspace management expert with Turborepo, pnpm workspaces, Nx integration, package coordination, and cross-package dependency optimization for scalable multi-package repositories.
+- **[NestJS Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/nestjs-expert)** - Transform Claude into a NestJS specialist with deep knowledge of the module system, dependency injection, decorators, providers, guards, interceptors, and microservice patterns.
 - **[Next.js 15 Performance Architect for Claude](https://heyclau.de/entry/rules/nextjs-15-performance-architect)** - Expert in Next.js 15 performance optimization with Turbopack, partial prerendering, advanced caching strategies, and Core Web Vitals excellence
 - **[Privacy Metadata Rules](https://heyclau.de/entry/rules/privacy-metadata-rules)** - Source-backed rules for AI workflow directories that need consistent privacy metadata before accepting entries that touch prompts, files, local tools, hosted services, telemetry, generated artifacts, or personal data.
 - **[Production Codebase Auditor - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/production-codebase-auditor)** - Expert in comprehensive production codebase analysis with Zod validation enforcement, security vulnerability detection, and code consolidation strategies
@@ -875,6 +900,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Test-Driven Development Enforcer - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/test-driven-development-enforcer)** - Test-driven development expert enforcing red-green-refactor cycles, Vitest/Jest configuration, test coverage requirements, mocking strategies, and test-first coding discipline for robust software development.
 - **[TypeScript 5.x Strict Mode Expert for Claude](https://heyclau.de/entry/rules/typescript-5x-strict-mode-expert)** - TypeScript 5.x strict mode expert with template literal types, strict null checks, type guards, and ESLint integration for enterprise-grade type safety
 - **[TypeScript API Client Compatibility Review Rules](https://heyclau.de/entry/rules/typescript-api-client-compatibility-review-rules)** - Source-backed rules for reviewing TypeScript API client compatibility before merge, with exported type-surface diffs, inferred router inputs and outputs, runtime validator alignment, downstream compile checks, and privacy-safe evidence.
+- **[Vue 3 Composition API Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/vue3-composition-api-expert)** - Transform Claude into a Vue 3 specialist with deep knowledge of the Composition API, script setup syntax, Pinia state management, and Vue Router best practices.
 - **[WCAG 2.2 Accessibility Auditor for Claude](https://heyclau.de/entry/rules/wcag-accessibility-auditor)** - Expert in WCAG 2.2 Level AA accessibility compliance, automated testing tools, ARIA patterns, and inclusive design for web applications
 - **[Windsurf AI-Native IDE Patterns for Claude](https://heyclau.de/entry/rules/windsurf-ai-native-ide-patterns)** - Windsurf AI-native IDE specialist with Cascade AI, multi-file context awareness, and Flow collaboration patterns for Claude integration
 
