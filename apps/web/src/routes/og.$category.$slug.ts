@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getEntry } from "@/data/search";
-import { renderOgSvg, categoryAccent } from "@/lib/og-image";
+import { categoryAccent } from "@/lib/og-image";
+import { renderOgPng } from "@/lib/og-render.server";
 
 /**
- * Lightweight OG image — deterministic SVG keyed by category + slug.
- * Rendered to PNG by social cards via Cloudflare's image resizing; usable
- * as an inline preview otherwise.
+ * Per-entry OG image — deterministic PNG card keyed by category + slug, rendered
+ * with Satori (workers-og) so social scrapers that don't rasterize SVG og:images
+ * still get a real raster image.
  */
 export const Route = createFileRoute("/og/$category/$slug")({
   server: {
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/og/$category/$slug")({
         const author = entry?.author ?? "HeyClaude";
         const category = entry?.category ?? params.category;
 
-        const svg = renderOgSvg({
+        const image = renderOgPng({
           eyebrow: `${category} · HeyClaude`,
           title,
           description,
@@ -26,13 +27,10 @@ export const Route = createFileRoute("/og/$category/$slug")({
           accent: categoryAccent(category),
         });
 
-        return new Response(svg, {
-          status: 200,
-          headers: {
-            "Content-Type": "image/svg+xml; charset=utf-8",
-            "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
-          },
-        });
+        // ImageResponse already sets Content-Type: image/png; add our cache policy.
+        const headers = new Headers(image.headers);
+        headers.set("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=86400");
+        return new Response(image.body, { status: 200, headers });
       },
     },
   },
