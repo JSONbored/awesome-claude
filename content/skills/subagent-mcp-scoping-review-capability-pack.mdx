@@ -1,0 +1,219 @@
+---
+title: Subagent MCP Scoping Review Capability Pack Skill
+slug: subagent-mcp-scoping-review-capability-pack
+category: skills
+description: >-
+  Expert subagent MCP scoping review capability pack for auditing which MCP
+  servers and tools subagents inherit, restricting high-risk tools in delegated
+  tasks, and preventing unintended production changes from background agents.
+cardDescription: >-
+  Review subagent MCP scope, inherited tools, and delegation risk with
+  source-backed checklists for Claude Code.
+seoTitle: Subagent MCP Scoping Review Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for subagent MCP scoping review, inherited MCP
+  tool boundaries, delegation risk assessment, and Claude Code subagent safety
+  controls.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1537
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1537"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when delegating work to Claude Code subagents and you need to
+  review which MCP servers and tools they can access before running background
+  or foreground delegated tasks.
+copySnippet: |-
+  # Trigger
+  "Apply the subagent MCP scoping review capability pack for this delegation."
+
+  # Required output
+  1) Parent session MCP inventory versus subagent inheritance summary
+  2) High-risk tool exposure assessment for the delegated task
+  3) Recommended MCP scope reduction or approval gates
+  4) Foreground versus background delegation safety notes
+  5) Privacy-safe review summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "An planned subagent delegation with a defined task boundary and expected outputs."
+  - "Inventory of MCP servers configured in the parent Claude Code session or repository."
+  - "Knowledge of whether the subagent will run foreground or background and who approves tool use."
+  - "Redacted task description sufficient to classify read versus write MCP tool needs."
+safetyNotes:
+  - "Subagents operate in isolated context windows but may inherit MCP access from the parent configuration unless explicitly restricted."
+  - "Background subagents can invoke write or execute MCP tools without the same interactive oversight as foreground work."
+  - "Delegating production-impacting tasks to subagents does not reduce accountability for resulting changes."
+  - "Removing MCP servers from the parent session before delegation is safer than assuming subagents ignore high-risk tools."
+  - "This skill recommends scope reductions; it must not spawn subagents with broader MCP access than the reviewed plan allows."
+privacyNotes:
+  - "Subagent MCP reviews may expose internal service names, database tools, and deployment integrations configured in the parent session."
+  - "Delegated task descriptions and subagent transcripts can contain customer data returned by MCP read tools."
+  - "Public summaries should describe scope categories and mitigations, not live MCP manifests or tool arguments."
+tags:
+  - subagent
+  - mcp
+  - scoping
+  - delegation
+  - capability-pack
+keywords:
+  - subagent MCP scoping review
+  - Claude Code subagent MCP inheritance
+  - subagent delegation MCP safety
+  - background subagent MCP risk
+  - MCP tool scope subagent
+  - Claude Code delegation review
+readingTime: 9
+difficultyScore: 82
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code sub-agents, MCP, skills, and
+features overview documentation verified on **2026-06-14**. Subagent behavior and
+MCP inheritance rules can change; prefer live official docs over cached
+assumptions about tool access.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/sub-agents
+- https://code.claude.com/docs/en/mcp
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code sub-agents and MCP documentation and the
+public Anthropic `claude-code` repository on **2026-06-14**:
+
+- Claude Code subagents run in isolated context windows for delegated research,
+  exploration, or parallel task slices.
+- MCP tool names and schemas load into parent session context at startup; subagent
+  delegations inherit the broader tool surface available to the session unless
+  restricted by configuration or task design.
+- Claude Code supports MCP tool approval requirements that should be applied
+  before delegating write or execute-class tools to background subagents.
+- Subagents help isolate large reads from the main window but do not automatically
+  isolate MCP side effects on external systems.
+- Official sub-agent documentation describes foreground and background usage
+  patterns that affect how much interactive oversight is practical during tool use.
+
+## Scope Note
+
+This is not a replacement for remote MCP server trust review. Use it as a reusable
+workflow for reviewing MCP scope before subagent delegation in Claude Code.
+
+## Core Workflow
+
+1. Define the delegation boundary: task goal, expected outputs, and forbidden actions.
+2. Inventory parent session MCP servers and classify tools as read, write, execute, or admin.
+3. Map required tools to the delegated task; flag any write/execute tools not strictly needed.
+4. Choose delegation mode: foreground for high-risk tools, background only for read-only research.
+5. Apply MCP scoping mitigations: disable unused servers, enable approval gates, or split task so subagent needs fewer tools.
+6. Review subagent prompt for accidental exfiltration requests such as paste full database dumps into parent chat.
+7. Run a pilot delegation with read-only tools and verify subagent transcript size and sensitive fields.
+8. Document rollback steps if a subagent invokes an unintended MCP write tool.
+9. Produce a privacy-safe scoping summary for the team or incident record.
+
+## Capability Scope
+
+- Parent versus subagent MCP inheritance review.
+- High-risk tool exposure assessment for delegated tasks.
+- Foreground versus background delegation recommendations.
+- MCP scope reduction and approval gate planning.
+- Pilot and rollback procedures.
+- Privacy-safe scoping reporting.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill before spawning subagents for
+  research, code exploration, or parallel implementation tasks with MCP enabled.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic delegation MCP checklist in platform runbooks.
+
+## Required Inputs
+
+- Delegated task description and expected deliverables.
+- Parent session MCP server list and tool classifications.
+- Foreground or background delegation choice and approval policy.
+- Known production systems reachable through MCP tools.
+
+## Production Rules
+
+- Do not background-delegate tasks that require write or execute MCP tools without approval gates.
+- Remove unused MCP servers from the parent session before wide parallel subagent use.
+- Prefer read-only subagent research with summarized outputs over raw tool dumps in parent chat.
+- Treat subagent MCP side effects as production changes requiring the same review as parent tools.
+- Redact customer data from subagent transcripts before sharing externally.
+- Pair this review with remote MCP trust review for third-party servers.
+- Re-scope after MCP config changes mid-session.
+
+## Review Matrix
+
+| Delegation pattern | MCP exposure | Recommended mode |
+| --- | --- | --- |
+| Read-only research | Low | Background OK with summary return |
+| Ticket comment write | High | Foreground with approval |
+| Database query read | Medium | Background with redacted summary |
+| Deploy or execute tool | Critical | Do not delegate; parent only |
+| Many parallel subagents | Amplified | Remove unused MCP servers first |
+
+## Output Contract
+
+1. Parent MCP inventory and subagent inheritance summary.
+2. High-risk tool exposure assessment.
+3. Recommended scope reductions and approval gates.
+4. Foreground versus background delegation decision.
+5. Pilot and rollback procedure.
+6. Privacy-safe review summary.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for subagent MCP scoping, delegation MCP safety, and inherited tool
+review workflows. MCP and subagent docs cover features separately, but no
+`skills` entry provides a reusable subagent MCP scoping review capability pack
+with delegation matrix and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.
