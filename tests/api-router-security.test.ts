@@ -708,3 +708,81 @@ describe("in-memory fallback rate limiter", () => {
     expect(__rateLimitTestHooks.size()).toBeLessThanOrEqual(cap);
   });
 });
+
+describe("umami collector proxy security", () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    vi.unstubAllGlobals();
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    process.env.UMAMI_UPSTREAM_URL = "https://umami.example";
+    const { __rateLimitTestHooks } = await import("@/lib/api-security");
+    __rateLimitTestHooks.reset();
+  });
+
+  function analyticsRequest(body: string, headers: Record<string, string> = {}) {
+    return new Request("https://heyclau.de/u/api/send", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        origin: "https://heyclau.de",
+        "cf-connecting-ip": "198.51.100.80",
+        "user-agent": "Vitest/1.0",
+        ...headers,
+      },
+      body,
+    });
+  }
+
+  it("rejects cross-origin analytics posts before proxying", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    const response = await POST(
+      analyticsRequest('{"payload":{}}', { origin: "https://attacker.example" }),
+    );
+
+    expect(response.status).toBe(403);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects non-JSON analytics posts before proxying", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    const response = await POST(
+      analyticsRequest("plain", { "content-type": "text/plain;charset=UTF-8" }),
+    );
+
+    expect(response.status).toBe(415);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects oversized analytics posts before reading and proxying", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    const response = await POST(
+      analyticsRequest("{}", { "content-length": String(17 * 1024) }),
+    );
+
+    expect(response.status).toBe(413);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rate-limits repeated analytics posts per client", async () => {
+    const fetchMock = vi.fn(async () => new Response("ok", { status: 202 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    let response = new Response(null, { status: 500 });
+    for (let i = 0; i < 61; i += 1) {
+      response = await POST(analyticsRequest('{"payload":{}}'));
+    }
+
+    expect(response.status).toBe(429);
+    expect(fetchMock).toHaveBeenCalledTimes(60);
+  });
+});
