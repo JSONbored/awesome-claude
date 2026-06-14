@@ -10,9 +10,10 @@ function urlOrigin(value: string) {
 }
 
 const scriptSrc = [
+  // umami is served first-party via the /u.js proxy, so no third-party
+  // analytics script-src is needed (see routes/u[.]js.ts).
   "script-src 'self' 'unsafe-inline'",
   process.env.NODE_ENV === "production" ? "" : "'unsafe-eval'",
-  "https://tasty.aethereal.dev",
   "https://challenges.cloudflare.com",
 ]
   .filter(Boolean)
@@ -24,7 +25,6 @@ const connectSrc = Array.from(
       "connect-src 'self'",
       "https://api.github.com",
       "https://img.shields.io",
-      "https://tasty.aethereal.dev",
       "https://challenges.cloudflare.com",
       "https://submission-gate.heyclau.de",
       urlOrigin(siteConfig.submissionGateUrl),
