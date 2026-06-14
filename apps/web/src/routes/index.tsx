@@ -31,6 +31,7 @@ import { CATEGORIES, type Category } from "@/types/registry";
 import { ENTRIES, BRIEF_ISSUES, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { search } from "@/data/search";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 
 // Pre-computed counts at module scope so SSR + first paint show real numbers.
 const TRUSTED_COUNT = ENTRIES.filter((e) => e.trust === "trusted").length;
@@ -84,6 +85,14 @@ export const Route = createFileRoute("/")({
           "Source-backed registry of MCP servers, agents, skills, hooks, commands, and rules. Reviewed before installing.",
       },
       { property: "og:url", content: absoluteUrl("/") },
+      {
+        property: "og:image",
+        content: ogImageUrl({ title: "The directory for Claude workflows", eyebrow: "HeyClaude" }),
+      },
+      {
+        name: "twitter:image",
+        content: ogImageUrl({ title: "The directory for Claude workflows", eyebrow: "HeyClaude" }),
+      },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/") }],
   }),
