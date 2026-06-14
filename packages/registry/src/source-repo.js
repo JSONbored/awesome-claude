@@ -39,15 +39,15 @@ const RESERVED_OWNERS = new Set([
 // Strip a single leading "www." so the www alias resolves to the bare host,
 // while other subdomains (gist., api., raw.) stay distinct and get rejected.
 function normalizeHost(host) {
-  return String(host).toLowerCase().replace(/^www\./, "");
+  return String(host)
+    .toLowerCase()
+    .replace(/^www\./, "");
 }
 
 // Pull "owner" and "repo" from the first two non-empty path segments, dropping a
 // trailing ".git". Deep paths (tree/blob/issues) keep their owner/repo prefix.
 function ownerRepoFromPath(pathname) {
-  const parts = String(pathname)
-    .split("/")
-    .filter(Boolean);
+  const parts = String(pathname).split("/").filter(Boolean);
   if (parts.length < 2) return null;
   return { owner: parts[0], repo: parts[1].replace(/\.git$/i, "") };
 }
@@ -57,8 +57,10 @@ function ownerRepoFromPath(pathname) {
 function fromScpLike(value) {
   const match = /^[^/@\s]+@([^:/\s]+):(.+)$/.exec(value);
   if (!match) return null;
-  const rest = match[2].replace(/\/+$/, "");
-  const segments = rest.split("/").filter(Boolean);
+  // No trailing-slash regex: split("/").filter(Boolean) already drops empty
+  // segments from trailing slashes, so we avoid the polynomial /\/+$/ scan
+  // (CodeQL js/polynomial-redos) entirely.
+  const segments = match[2].split("/").filter(Boolean);
   if (segments.length < 2) return null;
   return {
     host: normalizeHost(match[1]),
