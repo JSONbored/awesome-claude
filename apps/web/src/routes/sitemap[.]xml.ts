@@ -8,6 +8,7 @@ import { siteConfig } from "@/lib/site";
 import { applySecurityHeaders } from "@/lib/security-headers";
 import { CATEGORIES, PLATFORM_LABEL } from "@/types/registry";
 import { getIndexableTagGroups } from "@/lib/tags";
+import { isSitemapIndexableEntry } from "@/lib/sitemap-policy";
 import { COMPARISONS } from "@/data/comparisons";
 
 function escapeXml(value: string) {
@@ -117,7 +118,10 @@ async function renderSitemap() {
     ...intersectionPaths.map((pathname) => urlItem(pathname, "0.55")),
     ...COMPARISONS.map((comparison) => urlItem(`/compare/${comparison.slug}`, "0.6")),
     ...bestPaths.map((pathname) => urlItem(pathname, "0.75")),
-    ...ENTRIES.map((entry) =>
+    // Advertise only indexable entry pages. `tools` entries are commercial,
+    // thin-by-design listings (see isSitemapIndexableEntry / AGENTS.md): still
+    // crawlable via internal links, just not advertised in the sitemap.
+    ...ENTRIES.filter(isSitemapIndexableEntry).map((entry) =>
       urlItem(
         `/entry/${entry.category}/${entry.slug}`,
         "0.8",
