@@ -1,0 +1,166 @@
+---
+title: "Computer Use From the Claude Code CLI for GUI QA"
+slug: computer-use-from-the-claude-code-cli-for-gui-qa
+category: guides
+description: >-
+  Use Claude Code computer-use tools from the CLI to drive desktop GUI QA: display selection, screenshot loops, safe test environments, and troubleshooting multi-monitor setups.
+cardDescription: Drive desktop GUI QA from Claude Code with computer-use tools.
+seoTitle: "Computer Use From the Claude Code CLI for GUI QA"
+seoDescription: >-
+  Use Claude Code computer-use tools from the CLI to drive desktop GUI QA: display selection, screenshot loops, safe test environments, and troubleshooting multi-monitor setups.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1385
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1385"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to run GUI QA from Claude Code with computer-use tools in an isolated desktop session.
+prerequisites:
+  - "Claude Code on a desktop OS that supports computer-use tooling."
+  - "A dedicated QA user account or VM—not your primary admin desktop."
+  - "Target application builds and test credentials scoped to staging."
+  - "Screen recording policy approval if sessions capture UI with customer data."
+safetyNotes:
+  - "Computer-use tools can click, type, and navigate real applications; run them only on disposable QA environments."
+  - "Close password managers, email clients, and banking apps before enabling computer use on a shared display."
+  - "Treat screenshot loops as sensitive; they may capture notifications, tokens, or PII from unrelated windows."
+privacyNotes:
+  - "Screenshots and UI automation logs may be sent to the model provider as part of the conversation."
+  - "Multi-monitor setups can leak content from secondary displays into captures—minimize visible windows."
+  - "Do not point computer use at production admin consoles with live customer records."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/computer-use"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - computer-use
+  - gui
+  - qa
+  - automation
+keywords:
+  - "Claude Code computer use"
+  - "GUI QA automation"
+  - "desktop testing Claude"
+  - "computer use CLI"
+  - "screenshot QA loop"
+readingTime: 8
+difficultyScore: 62
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Computer-use tools let Claude Code observe and interact with a desktop GUI for QA workflows. Run them from an isolated account, select the correct display on multi-monitor setups, and keep loops short with explicit pass/fail criteria.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### CLI-first GUI automation
+
+Unlike browser-only integrations, computer-use targets the OS desktop—windows, menus, and native controls—so QA can cover apps without a web UI.
+
+### Display selection matters
+
+Multi-monitor environments need explicit display targeting; `switch_display` failures often mean the session cannot see the monitor where the app runs.
+
+### Human-in-the-loop by default
+
+Permission prompts still apply to destructive UI actions; QA playbooks should name which clicks are pre-approved versus require operator confirmation.
+
+### Evidence via screenshots
+
+Each loop should capture before/after screenshots with stable window titles so regressions are auditable without re-running full suites.
+
+## Step-by-Step Implementation Guide
+
+1. **Prepare an isolated desktop.** Create a QA user or VM with only the application under test and staging credentials installed.
+
+2. **Launch Claude Code.** Open a terminal in the project repo or a QA scripts directory with computer-use documentation handy.
+
+3. **Enable computer use.** Follow the computer-use setup docs for your OS, granting accessibility permissions to the Claude Code process where required.
+
+4. **Define the QA script.** Write a natural-language test plan with explicit steps, expected UI states, and screenshot checkpoints.
+
+5. **Select the display.** On multi-monitor setups, instruct Claude to switch to the display hosting the application before interacting.
+
+6. **Run the loop.** Execute the scenario, capturing screenshots at each milestone; stop on first failed assertion.
+
+7. **Log defects.** Export failing screenshots and reproduction steps into your issue tracker with build version metadata.
+
+8. **Reset environment.** Close the app, clear temp files, and sign out shared QA accounts between runs.
+
+## GUI QA Loop Checklist
+
+- [ ] {"task": "Isolated desktop", "description": "QA account or VM without personal apps"}
+- [ ] {"task": "Permissions granted", "description": "OS accessibility allows Claude Code control"}
+- [ ] {"task": "Display targeted", "description": "Correct monitor selected on multi-display setups"}
+- [ ] {"task": "Checkpoints defined", "description": "Screenshot steps match test plan"}
+- [ ] {"task": "Environment reset", "description": "Apps closed and credentials scoped after run"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### switch_display not available
+
+Confirm computer-use is enabled for the session and reduce to a single display for initial debugging; multi-monitor fixes landed in recent releases.
+
+### Clicks miss the target
+
+Check display scaling and window focus; full-screen overlays and OS notifications can shift coordinates.
+
+### Permission prompts block flow
+
+Pre-approve safe UI paths in team permission policy or run with an operator watching the first pass.
+
+### Screenshots show wrong monitor
+
+Explicitly name the display index and close unrelated windows on secondary monitors.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- The root README positions Claude Code as an agentic terminal tool that can execute routine tasks beyond plain text editing.
+- `CHANGELOG.md` fixed `switch_display` returning "not available in this session" on multi-monitor setups.
+- `plugins/README.md` documents the `security-guidance` plugin PreToolUse hook monitoring dangerous patterns during automated edits.
+- `CHANGELOG.md` documents permission and sandbox controls that still gate tool side effects during automation.
+- The README data-usage section notes conversation and tool data handling policies relevant to screenshot-heavy QA.
+
+## Duplicate Check
+
+This guide covers OS-level computer-use for native GUI QA. It complements chrome-integration-for-web-app-debugging-with-claude-code.mdx, which focuses on browser-based debugging rather than full desktop automation.
+
+## References
+
+- Claude Code computer use - https://code.claude.com/docs/en/computer-use
+- Chrome web debugging - chrome-integration-for-web-app-debugging-with-claude-code
+- Permission modes for teams - permission-modes-for-claude-code-teams
