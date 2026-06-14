@@ -20,7 +20,7 @@ import {
   BadgeCheck,
   Globe2,
 } from "lucide-react";
-import { getEntry, related } from "@/data/search";
+import { getEntry, related, relatedGroups } from "@/data/search";
 import { BEST_LISTS } from "@/data/entries";
 import { COMPARISONS } from "@/data/comparisons";
 import { CONTRIBUTORS } from "@/data/contributors";
@@ -210,10 +210,23 @@ export const Route = createFileRoute("/entry/$category/$slug")({
   component: Dossier,
 });
 
+const RELATION_LABELS: Record<string, string> = {
+  alternative: "Alternatives",
+  "works-with": "Works with",
+  complementary: "Complementary",
+  extends: "Extends",
+  prerequisite: "Prerequisites",
+  "same-project": "Same project",
+  "same-ecosystem": "Same ecosystem",
+  "collection-member": "In the same collection",
+  related: "Related",
+};
+
 function Dossier() {
   const data = Route.useLoaderData() as { entry: Entry };
   const entry = data.entry;
   const rel = related(entry);
+  const relGroups = relatedGroups(entry);
   const entryRef = `${entry.category}/${entry.slug}`;
   const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
   const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
@@ -611,13 +624,28 @@ function Dossier() {
             <SourceCitations entry={entry} />
           </DossierSection>
 
-          {rel.length > 0 && (
+          {(relGroups.length > 0 || rel.length > 0) && (
             <DossierSection id="related" title="Related resources">
-              <div className="grid gap-3 sm:grid-cols-2">
-                {rel.slice(0, 4).map((e) => (
-                  <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
-                ))}
-              </div>
+              {relGroups.length > 0 ? (
+                <div className="flex flex-col gap-6">
+                  {relGroups.map((g) => (
+                    <div key={g.relation}>
+                      <div className="eyebrow mb-2">{RELATION_LABELS[g.relation] ?? "Related"}</div>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {g.entries.map((e) => (
+                          <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {rel.slice(0, 4).map((e) => (
+                    <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+                  ))}
+                </div>
+              )}
               <div className="mt-3 text-right">
                 <Link
                   to="/$category"
