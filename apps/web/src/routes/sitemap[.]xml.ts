@@ -6,7 +6,7 @@ import atlasRegistry from "@/generated/atlas-registry.json";
 import { getJobs } from "@/lib/jobs";
 import { siteConfig } from "@/lib/site";
 import { applySecurityHeaders } from "@/lib/security-headers";
-import { CATEGORIES, PLATFORM_LABEL } from "@/types/registry";
+import { CATEGORIES, PLATFORM_LABEL, type Platform } from "@/types/registry";
 import { getIndexableTagGroups } from "@/lib/tags";
 import { COMPARISONS } from "@/data/comparisons";
 
@@ -86,6 +86,18 @@ async function renderSitemap() {
   const contributorPaths = CONTRIBUTORS.map((contributor) => `/contributors/${contributor.slug}`);
   const integrationPaths = INTEGRATIONS.map((integration) => `/integrations/${integration.slug}`);
   const jobPaths = (await getJobs()).map((job) => `/jobs/${job.slug}`);
+  // category × platform intersection hubs — only those with >=2 entries (the route noindexes
+  // thinner ones), so the sitemap never advertises a thin page.
+  const intersectionPaths: string[] = [];
+  for (const platform of Object.keys(PLATFORM_LABEL)) {
+    for (const category of CATEGORIES) {
+      const count = ENTRIES.filter(
+        (entry) =>
+          entry.category === category.id && (entry.platforms ?? []).includes(platform as Platform),
+      ).length;
+      if (count >= 2) intersectionPaths.push(`/for/${platform}/${category.id}`);
+    }
+  }
 
   const rows = [
     ...staticPaths.map((pathname) => urlItem(pathname, pathname === "" ? "1" : "0.7")),
@@ -95,6 +107,7 @@ async function renderSitemap() {
     ),
     ...getIndexableTagGroups().map((group) => urlItem(`/tags/${group.slug}`, "0.5")),
     ...Object.keys(PLATFORM_LABEL).map((platform) => urlItem(`/for/${platform}`, "0.6")),
+    ...intersectionPaths.map((pathname) => urlItem(pathname, "0.55")),
     ...COMPARISONS.map((comparison) => urlItem(`/compare/${comparison.slug}`, "0.6")),
     ...bestPaths.map((pathname) => urlItem(pathname, "0.75")),
     ...ENTRIES.map((entry) =>
