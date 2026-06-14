@@ -1,0 +1,188 @@
+---
+title: Bunzee MCP Server for Claude
+slug: bunzee-mcp-server
+category: mcp
+description: >-
+  Bunzee hosted MCP server that turns app ideas into information architecture,
+  wireframes, PRDs, style guides, and developer specs from Claude via OAuth.
+cardDescription: >-
+  Connect Claude to Bunzee to generate IA, wireframes, PRDs, style guides, and
+  dev specs from app ideas through bunzee.ai/mcp-server.
+seoTitle: Bunzee MCP Server for Claude
+seoDescription: >-
+  Use the Bunzee MCP server with Claude to transform product ideas into IA,
+  wireframes, PRDs, style guides, and developer specifications.
+author: Bunzee
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1483
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1483"
+repoUrl: "https://bunzee.ai"
+documentationUrl: "https://bunzee.ai"
+websiteUrl: "https://bunzee.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http bunzee https://bunzee.ai/mcp-server
+usageSnippet: >-
+  Add https://bunzee.ai/mcp-server as a custom connector and sign in with
+  Bunzee to generate IA, wireframes, PRDs, style guides, and dev specs.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "bunzee": {
+        "url": "https://bunzee.ai/mcp-server",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "bunzee": {
+        "url": "https://bunzee.ai/mcp-server",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Bunzee account with access to product design and spec generation features."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or Claude Code with HTTP MCP transport."
+  - "A clear app idea, target users, and constraints to feed into IA and PRD tools."
+  - "Design review stakeholders for wireframes and style guides before engineering handoff."
+safetyNotes:
+  - "Generated PRDs and specs may include unvalidated technical assumptions; engineering must review before build."
+  - "Wireframe and style outputs are drafts; do not treat them as final brand or accessibility compliance."
+  - "OAuth sessions grant access to Bunzee projects until revoked."
+  - "Avoid uploading confidential unreleased product roadmaps into shared Bunzee workspaces without NDAs."
+privacyNotes:
+  - "App ideas, user personas, and feature descriptions are processed and stored in Bunzee under its terms."
+  - "Generated artifacts may echo sensitive business strategy if prompts include proprietary details."
+  - "Do not paste full PRDs containing customer PII or unreleased pricing into public chat logs."
+tags:
+  - product-design
+  - wireframes
+  - prd
+  - remote-mcp
+  - oauth
+keywords:
+  - bunzee mcp
+  - app idea to prd
+  - wireframe generator claude
+  - product spec mcp
+  - bunzee.ai connector
+readingTime: 4
+difficultyScore: 30
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Bunzee provides a hosted Model Context Protocol server that accelerates product design from idea to engineering-ready artifacts. After sign-in, Claude can generate information architecture, wireframes, product requirement documents, style guides, and developer specifications through a single remote endpoint.
+
+Documentation and account setup are at [bunzee.ai](https://bunzee.ai). The MCP URL is `https://bunzee.ai/mcp-server`.
+
+## Features
+
+- Turn app ideas into structured information architecture.
+- Generate wireframes for core user flows.
+- Produce PRDs with scope, requirements, and acceptance criteria.
+- Create style guides aligned to described brand direction.
+- Export developer specs for engineering handoff.
+- Hosted remote HTTP MCP at `bunzee.ai/mcp-server`.
+
+## Use Cases
+
+- Kick off a mobile app concept with IA and low-fi wireframes in one session.
+- Draft a PRD for a internal admin tool before sprint planning.
+- Produce a style guide for a rebranded marketing site.
+- Generate dev specs from an approved wireframe set.
+- Iterate on feature scope with stakeholders using Bunzee artifacts in chat.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://bunzee.ai/mcp-server`.
+3. Sign in with your Bunzee account.
+4. Enable the connector and describe your app idea in chat.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http bunzee https://bunzee.ai/mcp-server
+claude mcp list
+```
+
+Complete Bunzee authentication through your client's connector OAuth flow.
+
+### Other MCP clients
+
+Point a remote HTTP connector at `https://bunzee.ai/mcp-server` and authenticate with Bunzee.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "bunzee": {
+      "url": "https://bunzee.ai/mcp-server",
+      "type": "http"
+    }
+  }
+}
+```
+
+Authentication is handled through the Bunzee connector sign-in flow.
+
+## Examples
+
+### IA from an idea
+
+```text
+Turn my idea for a habit-tracking app for remote workers into Bunzee information architecture with primary screens listed.
+```
+
+### Wireframes and PRD
+
+```text
+Generate wireframes and a PRD for a B2B invoice approval workflow with three user roles.
+```
+
+### Style guide and dev spec
+
+```text
+Create a minimal style guide and developer spec for a dark-mode analytics dashboard using Bunzee.
+```
+
+## Security
+
+- Treat generated specs as drafts requiring engineering and legal review.
+- Restrict Bunzee workspace access for confidential product initiatives.
+- Revoke connector access when contractors leave the project.
+
+## Troubleshooting
+
+### Sign-in failures
+
+Clear connector cookies and re-authenticate; confirm your Bunzee subscription includes MCP features.
+
+### Generic or shallow outputs
+
+Provide target users, constraints, platforms, and success metrics in the initial prompt.
+
+### Missing wireframe detail
+
+Ask for specific flows (onboarding, settings, error states) rather than a single high-level page list.
+
+### Connector not visible
+
+Verify Claude plan supports custom Connectors and org admin approval in Team environments.
