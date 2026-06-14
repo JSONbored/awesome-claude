@@ -1,7 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { ResourceCard } from "@/components/resource-card";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
@@ -117,34 +118,32 @@ function TagHub() {
   const stats = hubStats(entries);
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
-      <Breadcrumbs
-        items={[
+    <PageContainer>
+      <PageHeader
+        breadcrumbs={[
           { label: "Directory", to: "/browse" },
           { label: "Tags", to: "/tags" },
-          { label: group.name },
         ]}
-        home
+        eyebrow={`${entries.length} entries`}
+        title={<>Claude resources tagged “{group.name}”</>}
+        description={
+          <>
+            {entries.length} curated Claude Code {entries.length === 1 ? "resource" : "resources"}{" "}
+            tagged <span className="text-ink">{group.name}</span> in the HeyClaude directory
+            {spread.length > 0 ? (
+              <> — mostly {joinList(spread.map((s) => s.toLowerCase()))}</>
+            ) : null}
+            .
+            {posture.trusted > 0 ? (
+              <>
+                {" "}
+                {posture.trusted} of them {posture.trusted === 1 ? "sits" : "sit"} in the trusted
+                tier.
+              </>
+            ) : null}
+          </>
+        }
       />
-      <header className="mt-6 max-w-3xl">
-        <div className="eyebrow">{entries.length} entries</div>
-        <h1 className="mt-2 h-display-1 text-ink text-balance">
-          Claude resources tagged “{group.name}”
-        </h1>
-        <p className="mt-4 text-pretty text-base text-ink-muted sm:text-lg">
-          {entries.length} curated Claude Code {entries.length === 1 ? "resource" : "resources"}{" "}
-          tagged <span className="text-ink">{group.name}</span> in the HeyClaude directory
-          {spread.length > 0 ? <> — mostly {joinList(spread.map((s) => s.toLowerCase()))}</> : null}
-          .
-          {posture.trusted > 0 ? (
-            <>
-              {" "}
-              {posture.trusted} of them {posture.trusted === 1 ? "sits" : "sit"} in the trusted
-              tier.
-            </>
-          ) : null}
-        </p>
-      </header>
 
       {related.length > 0 && (
         <div className="mt-6 flex flex-wrap items-center gap-2">
@@ -183,6 +182,6 @@ function TagHub() {
         source={`tag:${group.slug}`}
         className="mt-14"
       />
-    </div>
+    </PageContainer>
   );
 }

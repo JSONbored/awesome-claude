@@ -1,0 +1,166 @@
+---
+title: "MCP With the Claude Agent SDK"
+slug: mcp-with-the-claude-agent-sdk
+category: guides
+description: >-
+  Connect MCP servers to Claude Agent SDK applications: stdio, HTTP, SSE configs, OAuth, managed policy parity, and tool-search interaction.
+cardDescription: Connect MCP servers to Claude Agent SDK apps with stdio, HTTP, and SSE.
+seoTitle: "MCP With the Claude Agent SDK"
+seoDescription: >-
+  Connect MCP servers to Claude Agent SDK applications: stdio, HTTP, SSE configs, OAuth, managed policy parity, and tool-search interaction.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1398
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1398"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to register stdio, HTTP, and SSE MCP servers in Agent SDK query options with OAuth and allowlists.
+prerequisites:
+  - "Claude Agent SDK service with configurable `mcpServers` and `allowedTools`."
+  - "MCP server packages or remote URLs reviewed for tool scope and data handling."
+  - "OAuth client ids for remote servers or local stdio launch commands documented."
+  - "Enterprise managed MCP policy if deploying inside regulated orgs."
+safetyNotes:
+  - "Remote MCP introduces network trust boundaries—review servers before production attach."
+  - "Stdio servers inherit environment variables including session ids—avoid leaking secrets into subprocess env."
+  - "HTTP 403 on connect should surface as needs-auth, not silent failure—verify UX for operators."
+privacyNotes:
+  - "MCP tool arguments and results flow to both the model provider and MCP server operator."
+  - "OAuth refresh tokens persist locally; plan revocation on employee offboarding."
+  - "Plugin `.mcp.json` servers reload after `/clear`—confirm which integrations return automatically."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/agent-sdk/mcp"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-agent-sdk
+  - mcp
+  - oauth
+  - stdio
+  - integration
+keywords:
+  - "Claude Agent SDK MCP"
+  - "connect MCP servers SDK"
+  - "stdio HTTP SSE MCP"
+  - "MCP OAuth Agent SDK"
+  - "mcpServers query options"
+readingTime: 8
+difficultyScore: 60
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Agent SDK apps connect MCP servers through the same `mcpServers` configuration as Claude Code—stdio for local tools, HTTP/SSE for remote services. Pair connections with `allowedTools`, respect managed MCP policy, and use tool search when catalogs grow large.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Transport selection
+
+Stdio suits colocated binaries; HTTP/SSE suit shared remote services with OAuth and load balancing.
+
+### Session env injection
+
+Stdio MCP subprocesses receive `CLAUDE_CODE_SESSION_ID`, `CLAUDECODE=1`, and `CLAUDE_PROJECT_DIR` for hook parity.
+
+### OAuth and proxies
+
+MCP OAuth flows should respect HTTP(S)_PROXY, mTLS, and NO_PROXY for discovery, DCR, and refresh.
+
+### Tool search deferral
+
+Large MCP catalogs defer descriptions until MCPSearch unless `alwaysLoad: true` on a server.
+
+## Step-by-Step Implementation Guide
+
+1. **Inventory servers.** List each MCP integration with transport, owner, and required OAuth scopes.
+
+2. **Add config.** Declare servers in SDK `mcpServers`, `.mcp.json`, or `--mcp-config` files per environment.
+
+3. **Authenticate remotes.** Complete OAuth consent for HTTP/SSE servers; verify 403 paths show needs-auth prompts.
+
+4. **Allow tools.** Map discovered tools to `allowedTools` using `mcp__name__tool` conventions.
+
+5. **Tune timeouts.** Set `MCP_TOOL_TIMEOUT` when remote tool calls exceed default fetch limits.
+
+6. **Test reconnect.** Restart SDK host and confirm servers return after `/clear` without silent drops.
+
+7. **Apply enterprise policy.** Validate `allowedMcpServers` predicates if managed settings apply to SDK hosts.
+
+8. **Monitor discovery.** Log tool list drift after server upgrades and block unknown write tools.
+
+## SDK MCP Connection Checklist
+
+- [ ] {"task": "Transports documented", "description": "Each server labeled stdio HTTP or SSE"}
+- [ ] {"task": "OAuth complete", "description": "Remote servers authenticated in staging"}
+- [ ] {"task": "Tools allowed", "description": "allowedTools matches approved inventory"}
+- [ ] {"task": "Timeouts set", "description": "Long calls use MCP_TOOL_TIMEOUT"}
+- [ ] {"task": "Policy enforced", "description": "Managed MCP rules verified on SDK host"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Servers vanish after clear
+
+Upgrade to builds that restore `.mcp.json`, plugin, and connector servers after `/clear` in SDK hosts.
+
+### 60s tool cap
+
+Raise `MCP_TOOL_TIMEOUT`—per-request fetch timeout now respects the configured value.
+
+### OAuth refresh lost
+
+Concurrent refresh fixes reduce daily re-auth for multiple remote servers.
+
+### SSE reconnect loop
+
+Stateful servers without GET SSE streams should not reconnect-loop on tools/list—update CLI/SDK.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `plugins/README.md` optional `.mcp.json` per plugin documents external MCP configuration patterns.
+- `CHANGELOG.md` passes `CLAUDE_CODE_SESSION_ID` and `CLAUDECODE=1` to stdio MCP subprocesses.
+- `CHANGELOG.md` fixed `MCP_TOOL_TIMEOUT` not raising per-request fetch timeout for HTTP/SSE servers.
+- `CHANGELOG.md` fixed MCP HTTP/SSE 403 responses showing as failed instead of needs-auth.
+- `CHANGELOG.md` fixed MCP servers disappearing after `/clear` in Agent SDK hosts.
+
+## Duplicate Check
+
+This guide covers MCP connectivity for Agent SDK hosts. See fix-mcp-connection-errors.mdx for client troubleshooting and building-in-process-mcp-tools-with-the-claude-agent-sdk.mdx for in-process alternatives.
+
+## References
+
+- Agent SDK MCP - https://code.claude.com/docs/en/agent-sdk/mcp
+- Fix MCP connection errors - fix-mcp-connection-errors
+- Choosing MCP transport - choosing-mcp-transport-stdio-http-sse-and-websocket

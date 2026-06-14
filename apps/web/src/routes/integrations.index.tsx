@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { INTEGRATIONS } from "@/data/integrations";
 import { IntegrationCard } from "@/components/integration-card";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
@@ -50,20 +51,21 @@ export const Route = createFileRoute("/integrations/")({
 
 function IntegrationsPage() {
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
-      <Breadcrumbs home items={[{ label: "Integrations" }]} />
-      <div className="mt-4 eyebrow">Integrations</div>
-      <h1 className="mt-2 max-w-3xl h-display-1 text-ink text-balance">
-        HeyClaude, where you already work
-      </h1>
-      <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
-        The registry ships as an extension, a server, an API, and a set of public feeds — so Claude,
-        Cursor, Windsurf, Codex, and Raycast can all read from the same source of truth.{" "}
-        <Link to="/ecosystem" className="text-ink underline">
-          See the ecosystem map
-        </Link>
-        .
-      </p>
+    <PageContainer>
+      <PageHeader
+        eyebrow="Integrations"
+        title="HeyClaude, where you already work"
+        description={
+          <>
+            The registry ships as an extension, a server, an API, and a set of public feeds — so
+            Claude, Cursor, Windsurf, Codex, and Raycast can all read from the same source of truth.{" "}
+            <Link to="/ecosystem" className="text-ink underline">
+              See the ecosystem map
+            </Link>
+            .
+          </>
+        }
+      />
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {INTEGRATIONS.map((i) => (
           <IntegrationCard key={i.slug} integration={i} />
@@ -87,6 +89,6 @@ function IntegrationsPage() {
           Open the API docs
         </Link>
       </div>
-    </div>
+    </PageContainer>
   );
 }

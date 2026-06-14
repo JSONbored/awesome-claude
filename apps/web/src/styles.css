@@ -22,6 +22,10 @@
   --radius-xl: 14px;
   --radius-2xl: 20px;
 
+  /* Canonical page column — matches the app shell. Use via `max-w-page` so every
+   * route lines up with the header/footer instead of hand-picked widths. */
+  --container-page: 1400px;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);

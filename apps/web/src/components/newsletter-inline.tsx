@@ -59,7 +59,7 @@ export function NewsletterInline({
   if (variant === "footer-strip") {
     return (
       <div className={cn("border-t border-border bg-surface", className)}>
-        <div className="mx-auto flex max-w-[1400px] flex-col items-start gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto flex max-w-page flex-col items-start gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="flex items-center gap-2 text-sm text-ink-muted">
             <Mail className="h-4 w-4 text-ink" aria-hidden />
             <span>

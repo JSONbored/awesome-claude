@@ -1,0 +1,170 @@
+---
+title: Constraining Claude Code Plugin Dependency Versions
+slug: constraining-claude-code-plugin-dependency-versions
+category: guides
+description: >-
+  Guide to pinning Claude Code plugin dependency versions, semver constraints,
+  upgrade testing, and preventing surprise behavior changes during team rollouts.
+cardDescription: Pin and constrain Claude Code plugin dependencies for reproducible team installs.
+seoTitle: Constraining Claude Code Plugin Dependency Versions
+seoDescription: >-
+  Guide to pinning Claude Code plugin dependency versions, semver constraints,
+  upgrade testing, and preventing surprise behavior changes during team rollouts.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1424
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1424"
+documentationUrl: "https://code.claude.com/docs/en/plugin-dependencies"
+usageSnippet: >-
+  Use this guide when a Claude Code plugin depends on other plugins or packages
+  and you need reproducible versions across developer machines and CI.
+prerequisites:
+  - A Claude Code plugin with one or more declared dependencies on other plugins or external packages.
+  - Access to the plugin manifest or dependency file documented in Claude Code plugin dependencies.
+  - A test environment where you can install the plugin graph at pinned and unpinned versions.
+  - Team agreement on who approves dependency upgrades and how breaking changes are communicated.
+safetyNotes:
+  - Unpinned dependencies can silently change hooks, MCP servers, or skills bundled with a dependent plugin after a marketplace update.
+  - "Treat dependency upgrades like application dependency upgrades: review changelogs, test tool permissions, and verify MCP surfaces did not expand."
+  - Do not auto-upgrade production plugin bundles during an active incident response or release freeze without explicit approval.
+privacyNotes:
+  - Dependency metadata can reveal internal plugin names, private marketplace URLs, or staging registry hosts when committed to shared repositories.
+  - Keep internal marketplace credentials and download tokens out of dependency files; reference them through environment variables or managed settings.
+  - When sharing plugin dependency lock files externally, redact internal plugin identifiers that expose unreleased product codenames.
+sourceUrls:
+  - "https://code.claude.com/docs/en/plugin-dependencies"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - plugins
+  - dependencies
+  - versioning
+  - teams
+keywords:
+  - Claude Code plugin dependencies
+  - pin plugin versions
+  - plugin semver constraints
+  - reproducible Claude Code plugins
+  - plugin dependency rollout
+readingTime: 8
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Plugin dependency constraints keep team installs reproducible. Pin or bound
+versions in the plugin dependency manifest, test the full dependency graph before
+rollout, and document who approves upgrades when upstream plugins change hooks,
+skills, or MCP behavior.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Dependency graph mapped", "description": "Every direct and transitive plugin dependency is listed"}
+- [ ] {"task": "Constraint style chosen", "description": "Exact pins or bounded semver ranges are documented"}
+- [ ] {"task": "Clean install profile", "description": "You can reinstall the plugin graph from scratch for testing"}
+- [ ] {"task": "Upgrade owner named", "description": "Someone approves dependency bumps and communicates breaking changes"}
+- [ ] {"task": "Regression tasks defined", "description": "Representative hooks, skills, and MCP workflows are listed for testing"}
+
+## Core Concepts Explained
+
+### Dependencies compose behavior
+
+A plugin may depend on other plugins for shared skills, MCP servers, or hooks.
+When a dependency updates, your plugin can inherit new tools or changed defaults
+without a version bump of its own.
+
+### Version constraints express policy
+
+Exact pins maximize reproducibility. Semver ranges trade stability for easier
+patch uptake. Document which constraint style your team uses and when ranges are
+allowed.
+
+### The graph must be tested together
+
+Validate the root plugin plus all resolved dependencies in one session. A green
+install of the root plugin does not guarantee compatible behavior from transitive
+dependencies.
+
+### Upgrades are change management
+
+Dependency bumps belong in changelogs, release notes, and team communication
+when they alter permissions, MCP tools, or default output styles.
+
+## Step-by-Step Implementation Guide
+
+1. **Inventory dependencies.** List every plugin and external package your
+   plugin requires, including transitive dependencies if documented.
+
+2. **Choose constraint style.** Prefer exact pins for regulated teams; use
+   bounded semver ranges only when you have automated upgrade testing.
+
+3. **Edit the dependency manifest.** Follow Claude Code plugin dependency syntax
+   for version fields, source URLs, and optional minimum versions.
+
+4. **Install in a clean profile.** Remove prior plugin versions, install from the
+   manifest, and confirm resolved versions match expectations.
+
+5. **Run representative workflows.** Exercise hooks, skills, MCP tools, and
+   commands that depend on the graph—not just plugin installation success.
+
+6. **Record resolved versions.** Commit lock-style notes or changelog entries
+   showing the tested combination for support and rollback.
+
+7. **Define upgrade cadence.** Schedule monthly or release-train reviews of
+   dependency updates instead of accepting silent marketplace drift.
+
+8. **Communicate breaking changes.** When a dependency major version changes
+   tool behavior, publish team guidance before users auto-update.
+
+## Version Policy Examples
+
+| Team posture | Recommended constraint |
+| ------------ | ---------------------- |
+| Regulated production | Exact version pins |
+| Fast-moving internal tools | Patch-level semver range |
+| Shared marketplace bundle | Pin + quarterly review |
+
+## Troubleshooting
+
+### Installed dependency version differs from manifest
+
+Clear cached plugin installs, verify marketplace source URL, and reinstall from
+the pinned manifest in a fresh Claude Code profile.
+
+### Plugin fails after upstream update
+
+Roll back to the last known-good pinned versions and open a dependency upgrade
+ticket with captured tool inventories from both versions.
+
+### Semver range pulled an unexpected major
+
+Tighten the constraint to exclude the major version until you complete a full
+regression pass on hooks, MCP, and skills.
+
+### CI and laptops resolve different versions
+
+Standardize on the same marketplace endpoint and commit explicit version pins
+rather than open-ended ranges.
+
+## Duplicate Check
+
+This guide complements building-a-claude-code-plugin-marketplace.mdx and
+plugins-in-claude-agent-sdk-deployments.mdx by focusing on dependency version
+constraints inside Claude Code plugin manifests, not marketplace authoring or SDK
+hosting.
+
+## References
+
+- Claude Code plugin dependencies - https://code.claude.com/docs/en/plugin-dependencies
+- Claude Code plugins - https://code.claude.com/docs/en/plugins
+- Discover plugins - https://code.claude.com/docs/en/discover-plugins

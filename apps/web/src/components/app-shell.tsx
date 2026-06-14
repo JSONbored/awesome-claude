@@ -52,7 +52,7 @@ export function TopBar() {
       )}
     >
       <ScrollProgress />
-      <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-14 max-w-page items-center gap-4 px-4 sm:px-6">
         <button
           type="button"
           onClick={() => setMobileNavOpen(true)}
@@ -171,7 +171,7 @@ export function Footer() {
         source="footer"
         className="border-0 border-b border-border bg-background"
       />
-      <div className="mx-auto grid max-w-[1400px] gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 md:grid-cols-12">
+      <div className="mx-auto grid max-w-page gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 md:grid-cols-12">
         <div className="sm:col-span-2 md:col-span-3">
           <div className="flex items-center gap-2">
             <span className="flex h-7 w-7 items-center justify-center rounded-md bg-ink text-background">
@@ -232,7 +232,7 @@ export function Footer() {
         />
       </div>
       <div className="border-t border-border">
-        <div className="mx-auto max-w-[1400px] px-4 py-4 sm:px-6">
+        <div className="mx-auto max-w-page px-4 py-4 sm:px-6">
           <div className="eyebrow mb-2">Categories</div>
           <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-ink-muted">
             {CATEGORIES.map((c) => (
@@ -249,7 +249,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-[1400px] flex-col items-start gap-3 px-4 py-5 text-xs text-ink-subtle sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto flex max-w-page flex-col items-start gap-3 px-4 py-5 text-xs text-ink-subtle sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span>© {new Date().getFullYear()} HeyClaude · heyclau.de</span>
           <nav className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <Link to="/legal" className="hover:text-ink">

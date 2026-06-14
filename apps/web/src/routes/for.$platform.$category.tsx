@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { PageContainer } from "@/components/page-container";
 import { ArrowRight } from "lucide-react";
 import { CATEGORIES, PLATFORM_LABEL, type Platform, type Category } from "@/types/registry";
 import { search } from "@/data/search";
@@ -130,7 +131,7 @@ function IntersectionPage() {
   }, undefined);
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
+    <PageContainer>
       <Breadcrumbs
         items={[
           { label: "Directory", to: "/browse" },
@@ -191,6 +192,6 @@ function IntersectionPage() {
         source={`for:${platform}:${category}`}
         className="mt-14"
       />
-    </div>
+    </PageContainer>
   );
 }

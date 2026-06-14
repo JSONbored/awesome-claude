@@ -1,0 +1,166 @@
+---
+title: Compaction and Memory Hygiene for Long Claude Sessions
+slug: compaction-and-memory-hygiene-for-long-claude-sessions
+category: guides
+description: >-
+  Guide to /compact, /memory, and CLAUDE.md hygiene for long Claude Code
+  sessions: when to compact, what to store in memory, and avoiding stale context.
+cardDescription: Use /compact, /memory, and CLAUDE.md hygiene to keep long Claude Code sessions accurate.
+seoTitle: Compaction and Memory Hygiene for Long Claude Sessions
+seoDescription: >-
+  Guide to /compact, /memory, and CLAUDE.md hygiene for long Claude Code
+  sessions: when to compact, what to store in memory, and avoiding stale context.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1431
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1431"
+documentationUrl: "https://code.claude.com/docs/en/context-window"
+usageSnippet: >-
+  Use this guide when long Claude Code sessions become slow, stale, or expensive
+  and you need compaction and memory boundaries.
+prerequisites:
+  - An active long-running Claude Code session or multi-day task spanning several sessions.
+  - A project with CLAUDE.md or memory files defining durable conventions.
+  - Agreement on what may be written to user or project memory versus kept ephemeral.
+  - Permission to run `/compact` and inspect resulting summaries before continuing work.
+safetyNotes:
+  - Compaction summarizes conversation history; verify summaries before relying on them for security-sensitive or release-critical decisions.
+  - Do not store secrets, credentials, or customer identifiers in `/memory` or CLAUDE.md.
+  - After compaction, re-validate repository state, test results, and open PR status before continuing destructive edits.
+privacyNotes:
+  - Memory files persist across sessions and may be committed if stored in project scope.
+  - Compaction summaries can retain file paths, issue titles, and internal URLs—review before sharing session exports.
+  - Clear memory when offboarding contractors or rotating shared machines.
+sourceUrls:
+  - "https://code.claude.com/docs/en/context-window"
+  - "https://code.claude.com/docs/en/memory"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - compact
+  - memory
+  - context
+  - sessions
+keywords:
+  - Claude Code compact
+  - memory hygiene Claude Code
+  - long session context
+  - CLAUDE.md hygiene
+  - Claude Code /memory
+readingTime: 8
+difficultyScore: 50
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Long sessions accumulate noise. Use `/compact` to summarize older turns, keep
+CLAUDE.md for stable repo facts, use `/memory` only for durable preferences, and
+start fresh sessions when the task changes materially. Treat compacted summaries
+as provisional until you re-check live sources.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Checkpoint taken", "description": "Branch, PRs, tests, and current goal are recorded before compacting"}
+- [ ] {"task": "Durable facts separated", "description": "Stable conventions are in CLAUDE.md or approved memory, not chat"}
+- [ ] {"task": "Compact boundary chosen", "description": "Compaction happens at subtask completion, not mid-debug"}
+- [ ] {"task": "Summary review planned", "description": "Someone reads the compact summary for accuracy"}
+- [ ] {"task": "Handoff path defined", "description": "Human summary exists independent of model compaction text"}
+
+## Core Concepts Explained
+
+### Compaction trades detail for space
+
+`/compact` replaces older turns with a summary so newer work retains room in
+the context window. Summaries help continuity but can drop nuance.
+
+### Memory is for durable, boring facts
+
+Memory suits stable preferences and conventions—not transient debug state, branch
+names, or one-off hypotheses.
+
+### CLAUDE.md anchors repository truth
+
+Put build commands, test expectations, and architecture notes in CLAUDE.md so
+they survive compaction and session restarts.
+
+### New tasks deserve new sessions
+
+When the objective shifts—from feature work to incident response, for example—
+start a new session instead of compacting unrelated history together.
+
+## Step-by-Step Implementation Guide
+
+1. **Checkpoint live state.** Note branch, open PRs, failing tests, and current
+   goal before compacting.
+
+2. **Move durable facts.** Promote stable conventions from chat into CLAUDE.md or
+   approved memory entries.
+
+3. **Run `/compact` at natural boundaries.** Compact after completing a subtask,
+   not mid-debug of a subtle failure.
+
+4. **Read the summary critically.** Confirm decisions, file paths, and blockers
+   survived accurately.
+
+5. **Refresh evidence.** Re-read changed files, re-run tests, and re-fetch docs
+   after compaction.
+
+6. **Prune memory quarterly.** Delete obsolete memory entries that contradict
+   current repository policy.
+
+7. **Start fresh when pivoting.** Use a new session for unrelated work instead of
+   chaining compacted unrelated threads.
+
+8. **Document handoffs.** Write a short human summary for teammates independent of
+   model-generated compaction text.
+
+## When to Compact vs Start Fresh
+
+| Situation | Recommended action |
+| --------- | ------------------ |
+| Same feature, long thread | `/compact` at subtask boundary |
+| New unrelated objective | New session |
+| Post-incident debugging | New session with timeline paste |
+| Before security-sensitive merge | Re-verify live state after compact |
+
+## Troubleshooting
+
+### Claude forgot constraints after compact
+
+Re-inject critical constraints in the next prompt or move them to CLAUDE.md before
+future compactions.
+
+### Memory contains outdated commands
+
+Audit memory after toolchain upgrades; delete entries referencing removed scripts.
+
+### CLAUDE.md grew too large
+
+Split monorepo guidance using hierarchy patterns; keep root CLAUDE.md focused.
+
+### Compaction mid-incident caused confusion
+
+For incidents, prefer a fresh session with an explicit timeline paste rather than
+compact heated debugging history.
+
+## Duplicate Check
+
+This guide complements prompt-context-hygiene-long-coding-sessions.mdx by
+focusing on `/compact`, `/memory`, and CLAUDE.md boundaries rather than general
+prompt discipline.
+
+## References
+
+- Claude Code context window - https://code.claude.com/docs/en/context-window
+- Claude Code memory - https://code.claude.com/docs/en/memory
+- CLAUDE.md hierarchy - claude-md-hierarchy-for-monorepos-and-nested-packages

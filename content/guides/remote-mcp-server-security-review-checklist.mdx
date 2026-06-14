@@ -1,0 +1,195 @@
+---
+title: Remote MCP Server Security Review Checklist
+slug: remote-mcp-server-security-review-checklist
+category: guides
+description: >-
+  Checklist for reviewing remote MCP servers before team rollout: OAuth scopes,
+  transport security, tool surface, registry provenance, and rollback.
+cardDescription: Review remote MCP servers for OAuth, transport, and tool scope before team rollout.
+seoTitle: Remote MCP Server Security Review Checklist
+seoDescription: >-
+  Checklist for reviewing remote MCP servers before team rollout: OAuth scopes,
+  transport security, tool surface, registry provenance, and rollback.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1421
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1421"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this checklist before approving a remote MCP server for Claude Code team
+  rollout, focusing on OAuth, transport, tool scope, and registry provenance.
+prerequisites:
+  - The remote MCP server URL, registry listing or package source, documentation, and declared tool list.
+  - The OAuth client configuration, redirect URIs, requested scopes, token storage behavior, and identity provider policy.
+  - A test Claude Code profile where the remote server can be connected with non-production credentials.
+  - A named approver who can block the server, revoke tokens, and publish managed MCP policy if the review fails.
+safetyNotes:
+  - Remote MCP servers expose model-callable tools over the network; treat write tools, shell proxies, and broad API scopes as production-risk actions until explicitly approved.
+  - Verify transport uses HTTPS with valid certificates and that OAuth tokens are scoped to the minimum tenant, project, or account needed for the workflow.
+  - Do not approve registry entries or remote URLs that cannot be tied to an identifiable maintainer, version history, and update channel.
+privacyNotes:
+  - Remote MCP traffic can include prompts, tool arguments, tool outputs, OAuth metadata, tenant IDs, and resource identifiers visible to the server operator.
+  - Review whether the remote server logs, caches, or forwards tool inputs to third-party observability or analytics systems.
+  - Revoke OAuth grants and delete local MCP configuration when uninstalling a remote server that accessed private repositories, tickets, or customer data.
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://modelcontextprotocol.io/registry/about"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - mcp
+  - claude-code
+  - security
+  - remote
+  - oauth
+  - team-rollout
+keywords:
+  - remote MCP server security
+  - MCP OAuth review checklist
+  - Claude Code remote MCP rollout
+  - MCP registry security review
+  - MCP transport security
+readingTime: 8
+difficultyScore: 64
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Remote MCP servers differ from local stdio servers because credentials, tool
+calls, and data cross a network boundary to a third-party operator. Before team
+rollout, review registry provenance, transport security, OAuth scopes, tool
+side effects, logging, and rollback—not just whether the integration works in a
+demo.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Server evidence collected", "description": "Remote URL, registry entry, maintainer, and tool list are documented"}
+- [ ] {"task": "OAuth mapped", "description": "Scopes, redirect URIs, token storage, and refresh behavior are understood"}
+- [ ] {"task": "Test profile ready", "description": "A disposable Claude Code profile can connect with non-production credentials"}
+- [ ] {"task": "Approver named", "description": "Someone can block rollout, revoke tokens, and update managed MCP policy"}
+- [ ] {"task": "Rollback steps written", "description": "Config removal, grant revocation, and cache deletion are documented"}
+
+## Core Concepts Explained
+
+### Remote servers add a network trust boundary
+
+Local stdio MCP servers run commands on the user's machine. Remote MCP servers
+expose tools over HTTP or SSE to an endpoint you do not fully control. Prompts,
+tool arguments, OAuth tokens, and results may traverse vendor infrastructure.
+
+### OAuth scope is the authorization contract
+
+Review requested scopes, consent screens, token lifetime, refresh behavior, and
+whether the server can act on behalf of users after initial approval. Prefer
+scoped service accounts over personal admin tokens.
+
+### Registry listing is not automatic approval
+
+The MCP registry helps discovery, but presence there does not replace your
+review. Confirm the listing matches the configured URL, note the publisher, and
+record the approved version.
+
+### Tool scope beats marketing category
+
+A server labeled docs or search may still include tools that write tickets, merge
+pull requests, or mutate cloud resources. Inventory every tool and map real side
+effects before rollout.
+
+## Step-by-Step Implementation Guide
+
+1. **Collect server evidence.** Record the remote URL, registry entry,
+   maintainer, documentation, release channel, and example OAuth scopes.
+
+2. **Review transport security.** Confirm HTTPS, certificate validity, allowed
+   headers, and whether the endpoint is internet-facing or private to your org.
+
+3. **Map OAuth and credentials.** Document scopes, token storage, refresh
+   behavior, and whether users authenticate individually or through a shared
+   service account.
+
+4. **Inventory tools and resources.** For each tool, note read vs write behavior,
+   network destinations, and whether human approval is required for side effects.
+
+5. **Test with safe data.** Connect the server in a disposable profile using
+   test tenants, sample repositories, or sandbox accounts.
+
+6. **Decide rollout controls.** Determine whether the org needs managed MCP
+   policy, allowlists, denylists, or explicit admin approval before users connect.
+
+7. **Publish approval record.** Keep server name, URL, approved version, owner,
+   review date, granted scopes, and rollback steps in team documentation.
+
+8. **Schedule re-review.** Repeat the checklist after major server updates, OAuth
+   scope changes, or registry ownership transfers.
+
+## Remote Rollout Review Checklist
+
+- [ ] {"task": "Transport verified", "description": "HTTPS, certificates, and endpoint exposure match policy"}
+- [ ] {"task": "OAuth least-privilege", "description": "Granted scopes are minimum needed for approved workflows"}
+- [ ] {"task": "Write tools gated", "description": "Side-effect tools require explicit human approval expectations"}
+- [ ] {"task": "Logging acceptable", "description": "Retention of prompts, args, and outputs meets privacy policy"}
+- [ ] {"task": "Version pinned", "description": "Approved server version is recorded and enforced for rollout"}
+
+## Troubleshooting
+
+### OAuth consent fails for some users
+
+Check redirect URI configuration, workspace admin consent requirements, and
+whether the identity provider blocks requested scopes for non-admin users.
+
+### Tool list differs from documentation
+
+Pin the approved server version, capture the live tool inventory from a test
+session, and block rollout until the mismatch is explained.
+
+### Tokens appear over-scoped after upgrade
+
+Revoke existing grants, repeat OAuth with reduced scopes, and update managed MCP
+policy before reconnecting production workspaces.
+
+### Users connect a different URL than approved
+
+Use managed MCP configuration or explicit team documentation that names the exact
+approved endpoint; server names alone are not enforcement boundaries.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- The standard plugin structure documented in `plugins/README.md` includes an
+  optional `.mcp.json` file for external MCP tool configuration shipped with
+  plugins.
+- The repository ships a `security-guidance` plugin with a PreToolUse hook that
+  monitors command injection, XSS, eval usage, and related security patterns.
+- Recent `CHANGELOG.md` entries document enterprise managed MCP policies
+  (`allowedMcpServers` / `deniedMcpServers`) enforced on reconnect and IDE-typed
+  configs.
+- `CHANGELOG.md` records that `claude mcp list` and `claude mcp get` redact
+  credential headers and URL secrets from terminal output.
+- The root README directs users to report integration issues via the `/bug`
+  command or GitHub issues at `anthropics/claude-code`.
+
+## Duplicate Check
+
+This guide complements threat-model-mcp-servers-before-installation.mdx and
+auditing-mcp-client-configuration-before-team-rollout.mdx. Those entries cover
+pre-install threat modeling and client configuration review. This guide focuses
+specifically on remote MCP servers: OAuth, transport, registry provenance, and
+team rollout approval for network-hosted tool surfaces.
+
+## References
+
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- MCP Registry about - https://modelcontextprotocol.io/registry/about
+- Threat model MCP servers - threat-model-mcp-servers-before-installation
+- Audit MCP client configuration - auditing-mcp-client-configuration-before-team-rollout
