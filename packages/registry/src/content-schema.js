@@ -523,10 +523,10 @@ export function inferStructuredFields(data, body, category) {
   const copySnippet =
     category === "guides" || category === "collections"
       ? ""
-      : category === "agents" || category === "rules"
-        ? String(body || "").trim()
-        : data.copySnippet
-          ? String(data.copySnippet)
+      : data.copySnippet
+        ? String(data.copySnippet)
+        : category === "agents" || category === "rules"
+          ? String(body || "").trim()
           : firstCodeBlock?.code?.trim() || usageSnippet || "";
 
   const scriptLanguage = data.scriptLanguage
