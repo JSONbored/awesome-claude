@@ -1,0 +1,166 @@
+---
+title: "Claude Code on Google Vertex AI Setup"
+slug: claude-code-on-google-vertex-ai-setup
+category: guides
+description: >-
+  Configure Claude Code on Google Vertex AI: ADC credentials, Workload Identity Federation, idle timeouts, tool search opt-in, and proxy gateway quirks.
+cardDescription: Configure Claude Code on Google Vertex AI with ADC and federation.
+seoTitle: "Claude Code on Google Vertex AI Setup"
+seoDescription: >-
+  Configure Claude Code on Google Vertex AI: ADC credentials, Workload Identity Federation, idle timeouts, tool search opt-in, and proxy gateway quirks.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1394
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1394"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to run Claude Code against Vertex AI with Application Default Credentials and correct regional endpoints.
+prerequisites:
+  - "GCP project with Vertex AI API enabled and Anthropic model access."
+  - "Application Default Credentials or Workload Identity Federation for developers and CI."
+  - "Regional endpoint choice aligned with data residency requirements."
+  - "Outbound HTTPS allowed to Vertex endpoints through corporate proxy if applicable."
+safetyNotes:
+  - "Service account keys on laptops should be avoided—prefer federation or short-lived ADC from `gcloud auth application-default login`."
+  - "Tool search defaults off on Vertex to avoid unsupported beta headers—enable only when documented."
+  - "Idle timeouts abort stalled streams after five minutes unless `API_FORCE_IDLE_TIMEOUT=0`."
+privacyNotes:
+  - "Prompts remain in your GCP project boundary; review Vertex logging and CMEK policies."
+  - "Count token endpoints behind proxies may return 400—validate gateway compatibility before wide rollout."
+  - "Customer data residency requirements must match chosen Vertex region."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/google-vertex-ai"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - vertex-ai
+  - gcp
+  - enterprise
+  - providers
+keywords:
+  - "Claude Code Vertex AI"
+  - "Vertex AI setup Claude"
+  - "GCP Claude Code"
+  - "Workload Identity Federation Vertex"
+  - "ENABLE_TOOL_SEARCH Vertex"
+readingTime: 8
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Vertex AI deployments use GCP Application Default Credentials and regional endpoints instead of Anthropic API keys. Configure ADC or Workload Identity Federation, respect default idle timeouts, and opt into tool search with `ENABLE_TOOL_SEARCH` when your project supports it.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### ADC-first auth
+
+Claude Code expects Google Application Default Credentials or federated workload identities—not embedded API keys.
+
+### Idle timeout default
+
+Vertex/Foundry restores a five-minute idle timeout on stalled streams; set `API_FORCE_IDLE_TIMEOUT=0` to opt out.
+
+### Tool search default off
+
+Tool search disables by default on Vertex to avoid unsupported beta header errors unless `ENABLE_TOOL_SEARCH` is set.
+
+### mTLS federation
+
+Vertex supports X.509 certificate-based Workload Identity Federation for mTLS ADC setups.
+
+## Step-by-Step Implementation Guide
+
+1. **Enable APIs.** Turn on Vertex AI and required Anthropic model access in your GCP project.
+
+2. **Configure ADC.** Run `gcloud auth application-default login` for dev or bind GKE/K8s service accounts for CI.
+
+3. **Set region env.** Export project and region variables per Vertex docs; verify `/status` provider name.
+
+4. **Test smoke prompt.** Run a short coding task to confirm streaming and structured outputs work.
+
+5. **Tune idle timeout.** Adjust `API_FORCE_IDLE_TIMEOUT` if long tool calls exceed five minutes regularly.
+
+6. **Enable tool search optionally.** Set `ENABLE_TOOL_SEARCH` when MCP tool deferral is required and headers are supported.
+
+7. **Validate proxy.** Test `count_tokens` and streaming through corporate gateways.
+
+8. **Document quotas.** Link teams to Vertex quota dashboards and escalation paths.
+
+## Vertex Setup Checklist
+
+- [ ] {"task": "ADC working", "description": "Application Default Credentials resolve on dev and CI"}
+- [ ] {"task": "Region set", "description": "Project and region env match residency policy"}
+- [ ] {"task": "Smoke test ok", "description": "Streaming prompt completes without 400 errors"}
+- [ ] {"task": "Timeout policy", "description": "Idle timeout tuned for long tool calls"}
+- [ ] {"task": "Tool search decision", "description": "ENABLE_TOOL_SEARCH set only if supported"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### output_config not permitted
+
+Some Vertex/Bedrock paths reject extra structured-output fields on title generation—upgrade CLI for compatibility fixes.
+
+### count_tokens 400 behind proxy
+
+Validate gateway allows Vertex token counting endpoints or disable features that call them.
+
+### Tool search beta header error
+
+Leave tool search off or set `ENABLE_TOOL_SEARCH` only on supported builds.
+
+### Hang on stalled stream
+
+Default idle timeout should abort after five minutes—check `API_FORCE_IDLE_TIMEOUT`.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` restored default five-minute idle timeout on Vertex/Foundry with `API_FORCE_IDLE_TIMEOUT=0` opt-out.
+- `CHANGELOG.md` notes tool search disabled by default on Vertex AI unless `ENABLE_TOOL_SEARCH` is set.
+- `CHANGELOG.md` documents Vertex AI X.509 Workload Identity Federation support.
+- `CHANGELOG.md` fixed Vertex `count_tokens` 400 errors for proxy gateway users.
+- The root README points to setup docs; Vertex users should follow third-party provider onboarding instead of Anthropic API keys.
+
+## Duplicate Check
+
+This guide covers Google Vertex AI setup. It complements claude-code-on-amazon-bedrock-setup.mdx for AWS and claude-code-on-microsoft-foundry-setup.mdx for Azure Foundry.
+
+## References
+
+- Google Vertex AI - https://code.claude.com/docs/en/google-vertex-ai
+- Amazon Bedrock setup - claude-code-on-amazon-bedrock-setup
+- Microsoft Foundry setup - claude-code-on-microsoft-foundry-setup
