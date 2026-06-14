@@ -52,6 +52,11 @@ const SERVER_ONLY_STUBS: Record<string, string> = {
       throw new Error("Submission risk analysis cannot run in the browser.");
     };
   `,
+  "\0heyclaude-og-render-client-stub": `
+    export const renderOgPng = () => {
+      throw new Error("OG PNG rendering (workers-og + WASM) cannot run in the browser.");
+    };
+  `,
   "\0heyclaude-submission-client-stub": `
     const fail = () => { throw new Error("Submission intake helpers cannot run in the browser."); };
     export const buildSubmissionPrDraft = fail;
@@ -77,6 +82,9 @@ function serverOnlyClientStubs(): Plugin {
       }
       if (source.endsWith("download-assets.server")) {
         return "\0heyclaude-download-assets-client-stub";
+      }
+      if (source.endsWith("og-render.server")) {
+        return "\0heyclaude-og-render-client-stub";
       }
       if (source === "@heyclaude/mcp/server") return "\0heyclaude-mcp-server-client-stub";
       if (source === "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js") {

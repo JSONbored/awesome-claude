@@ -32,11 +32,13 @@ export function safeAccent(value?: string | null) {
     : DEFAULT_ACCENT;
 }
 
-function esc(value: string) {
+/** Escape XML/HTML metacharacters. Exported for the server-only PNG renderer. */
+export function esc(value: string) {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-function wrap(value: string, perLine: number, maxLines: number) {
+/** Greedy word-wrap into at most `maxLines` lines of ~`perLine` chars. Exported for the PNG renderer. */
+export function wrap(value: string, perLine: number, maxLines: number) {
   const words = value.split(/\s+/);
   const lines: string[] = [];
   let cur = "";
@@ -100,6 +102,10 @@ export function renderOgSvg(opts: {
   </g>
 </svg>`;
 }
+
+/** OG card dimensions, exported so routes can advertise them in og:image:width/height. */
+export const OG_WIDTH = 1200;
+export const OG_HEIGHT = 630;
 
 /** Absolute og:image URL pointing at the crawlable /og generator (NOT /api/og, which is disallowed). */
 export function ogImageUrl(opts: {

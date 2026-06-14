@@ -186,6 +186,9 @@ export const Route = createFileRoute("/entry/$category/$slug")({
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
         { property: "og:image", content: ogUrl },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { property: "article:published_time", content: e.dateAdded },
         { property: "article:modified_time", content: e.reviewedAt ?? e.dateAdded },
         ...(e.author ? [{ property: "article:author", content: e.author }] : []),
@@ -567,13 +570,10 @@ function Dossier() {
                 </p>
                 {entry.platforms.length > 0 && (
                   <p>
-                    Compatible with{" "}
-                    <span className="text-ink">{entry.platforms.join(", ")}</span>.
+                    Compatible with <span className="text-ink">{entry.platforms.join(", ")}</span>.
                   </p>
                 )}
-                {entry.tags.length > 0 && (
-                  <p>Covers {entry.tags.slice(0, 8).join(", ")}.</p>
-                )}
+                {entry.tags.length > 0 && <p>Covers {entry.tags.slice(0, 8).join(", ")}.</p>}
                 <p className="text-ink-muted">
                   Trust and source signals come from metadata review, not runtime scanning — always
                   read the source before installing anything that touches your filesystem, network,
