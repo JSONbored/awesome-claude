@@ -104,10 +104,16 @@ source the node suite actually exercises (the `registry`/`mcp` packages, web
 and routes are out of scope because they are not run under the node environment.
 
 The thresholds are a **ratchet**: they are pinned just below current coverage so
-the gate locks in today's level and CI fails on regressions. When you add tests
-that raise coverage, raise the matching thresholds in `vitest.config.ts` to the
-new floor. Never lower them to make a change pass — add the missing tests
+`pnpm test:coverage` locks in today's level and fails on regressions. When you add
+tests that raise coverage, raise the matching thresholds in `vitest.config.ts` to
+the new floor. Never lower them to make a change pass — add the missing tests
 instead.
+
+Run `pnpm test:coverage` locally before pushing. It is a **local / pre-merge**
+gate, not part of the required CI lane: the required `validate-web` job runs the
+plain `pnpm test` suite, because v8 coverage instrumentation slows the suite
+enough to risk hitting Vitest's per-test timeout on CI hardware. Promoting it to
+a non-required CI job is a follow-up once that timeout is tuned.
 
 ## PR Hygiene
 
