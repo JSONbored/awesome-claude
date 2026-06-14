@@ -7,6 +7,8 @@ import { categoryLabels } from "@/lib/site";
 import { ResourceCard } from "@/components/resource-card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
+import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
@@ -116,6 +118,17 @@ function IntersectionPage() {
   const cLabel = categoryLabels[category] ?? category;
   const entries = intersection(platform, category);
 
+  // Data-derived framing unique to this platform×category slice.
+  const posture = trustPosture(entries);
+  const highlights = hubHighlights(entries);
+  const stats = hubStats(entries);
+  const newest = entries.reduce<(typeof entries)[number] | undefined>((acc, e) => {
+    const t = Date.parse(e.dateAdded || "");
+    if (Number.isNaN(t)) return acc;
+    const accT = acc ? Date.parse(acc.dateAdded || "") : -Infinity;
+    return t > accT ? e : acc;
+  }, undefined);
+
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
       <Breadcrumbs
@@ -133,8 +146,10 @@ function IntersectionPage() {
           Claude {cLabel} for {pLabel}
         </h1>
         <p className="mt-4 text-pretty text-base text-ink-muted sm:text-lg">
-          Source-backed Claude {cLabel} that work with <span className="text-ink">{pLabel}</span> —
-          curated and metadata-reviewed in HeyClaude.
+          {entries.length} Claude {cLabel} that work with <span className="text-ink">{pLabel}</span>
+          , curated and metadata-reviewed in HeyClaude.
+          {posture.trusted > 0 ? <> {posture.pct}% sit in the trusted tier.</> : null}
+          {newest ? <> Most recent addition: {newest.title}.</> : null}
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-2 text-sm">
           <Link
@@ -153,11 +168,21 @@ function IntersectionPage() {
         </div>
       </header>
 
-      <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <HubHighlights
+        highlights={highlights}
+        caption={`Standout ${cLabel} for ${pLabel}, picked from this slice's own metadata — trust tier, provenance, documentation, and recency.`}
+      />
+
+      <h2 className="mt-12 h-display-2 text-ink">
+        All {cLabel} for {pLabel}
+      </h2>
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {entries.map((e) => (
           <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
         ))}
       </div>
+
+      <HubSignalStats stats={stats} total={entries.length} />
 
       <NewsletterInline
         variant="quiet"

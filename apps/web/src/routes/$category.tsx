@@ -13,6 +13,8 @@ import {
 import { ResourceCard } from "@/components/resource-card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
+import { hubHighlights, hubStats } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl, categoryAccent } from "@/lib/og-image";
@@ -155,6 +157,10 @@ function CategoryHub() {
   const quickstart = categoryQuickstarts[id] ?? [];
   const faqs = faqFor(id, label);
 
+  // Data-derived signals computed across the full category set.
+  const highlights = hubHighlights(entries);
+  const stats = hubStats(entries);
+
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
       <Breadcrumbs items={[{ label: "Directory", to: "/browse" }, { label }]} home />
@@ -189,7 +195,12 @@ function CategoryHub() {
         )}
       </header>
 
-      <section className="mt-10">
+      <HubHighlights
+        highlights={highlights}
+        caption={`Standout Claude ${label}, picked from their own metadata — trust tier, provenance, documentation, and recency.`}
+      />
+
+      <section className="mt-12">
         <h2 className="h-display-2 text-ink">Top {label}</h2>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {top.map((e) => (
@@ -208,6 +219,8 @@ function CategoryHub() {
           </div>
         )}
       </section>
+
+      <HubSignalStats stats={stats} total={entries.length} />
 
       <section className="mt-14">
         <h2 className="h-display-2 text-ink">Frequently asked</h2>
