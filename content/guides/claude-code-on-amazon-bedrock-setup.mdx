@@ -1,0 +1,166 @@
+---
+title: "Claude Code on Amazon Bedrock Setup"
+slug: claude-code-on-amazon-bedrock-setup
+category: guides
+description: >-
+  Configure Claude Code on Amazon Bedrock: AWS region resolution, GovCloud inference profiles, credential export caching, service tiers, and CI empty-string pitfalls.
+cardDescription: Configure Claude Code to run on Amazon Bedrock with correct AWS auth.
+seoTitle: "Claude Code on Amazon Bedrock Setup"
+seoDescription: >-
+  Configure Claude Code on Amazon Bedrock: AWS region resolution, GovCloud inference profiles, credential export caching, service tiers, and CI empty-string pitfalls.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1393
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1393"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to point Claude Code at Amazon Bedrock with correct region, credentials, and model selection.
+prerequisites:
+  - "AWS account with Bedrock model access for required Anthropic model IDs."
+  - "IAM role or credential chain reachable from developer laptops and CI runners."
+  - "AWS region decision documented, including GovCloud if applicable."
+  - "Network path to Bedrock endpoints through corporate proxy if required."
+safetyNotes:
+  - "Bedrock credentials in shared CI must use OIDC or short-lived role assumption—not long-lived access keys in repos."
+  - "Auto mode on Bedrock requires explicit `CLAUDE_CODE_ENABLE_AUTO_MODE=1` opt-in on third-party providers."
+  - "Model picker may list models your account cannot serve—verify access before pinning defaults."
+privacyNotes:
+  - "Prompts and tool outputs flow through your AWS account boundary; align with AWS logging and CloudTrail retention."
+  - "Cross-account `awsCredentialExport` paths may expose role ARNs in `/status` output during debugging."
+  - "Do not embed customer payloads in prompts when Bedrock logging to third-party observability is enabled."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/amazon-bedrock"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - bedrock
+  - aws
+  - enterprise
+  - providers
+keywords:
+  - "Claude Code Amazon Bedrock"
+  - "Bedrock setup Claude Code"
+  - "AWS Bedrock Claude"
+  - "Bedrock inference profile"
+  - "CLAUDE_CODE_ENABLE_AUTO_MODE"
+readingTime: 8
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude Code on Bedrock uses your AWS credential chain and region configuration instead of Anthropic API keys. Set region via env or `~/.aws/config`, pick inference profiles carefully in GovCloud, and enable auto mode only with `CLAUDE_CODE_ENABLE_AUTO_MODE=1`.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Region precedence
+
+Bedrock reads region from `AWS_REGION` or `~/.aws` config when unset; `/status` shows the resolved source.
+
+### GovCloud prefixes
+
+GovCloud regions must use `us-gov` inference profile prefixes—not `global`—or model calls return 400 errors.
+
+### Credential export caching
+
+Credentials from `awsCredentialExport` cache until AWS `Expiration` instead of a fixed one-hour window.
+
+### Service tiers
+
+`ANTHROPIC_BEDROCK_SERVICE_TIER` maps to the `X-Amzn-Bedrock-Service-Tier` header for default, flex, or priority.
+
+## Step-by-Step Implementation Guide
+
+1. **Enable models.** Request access to required Anthropic models in the Bedrock console for each region.
+
+2. **Configure credentials.** Use IAM Identity Center, instance roles, or `awsCredentialExport` per your security model.
+
+3. **Set region.** Export `AWS_REGION` or configure `~/.aws/config`; confirm with `/status`.
+
+4. **Select models.** Pick region-appropriate inference profiles; avoid unavailable Opus 1M entries if account lacks access.
+
+5. **Enable auto mode optionally.** Set `CLAUDE_CODE_ENABLE_AUTO_MODE=1` for Opus 4.7/4.8 auto mode on Bedrock.
+
+6. **Tune service tier.** Set `ANTHROPIC_BEDROCK_SERVICE_TIER` when latency or cost policies require flex or priority.
+
+7. **Validate CI.** Remove empty-string Bedrock env vars in GitHub Actions or GitLab templates.
+
+8. **Document support path.** Point engineers to AWS CloudWatch and Bedrock quotas when throttling occurs.
+
+## Bedrock Setup Checklist
+
+- [ ] {"task": "Models enabled", "description": "Required IDs accessible in chosen region"}
+- [ ] {"task": "Region resolved", "description": "/status shows expected AWS region source"}
+- [ ] {"task": "Profiles correct", "description": "GovCloud uses us-gov prefixes"}
+- [ ] {"task": "CI vars clean", "description": "No empty bearer token env entries"}
+- [ ] {"task": "Smoke test passed", "description": "Simple prompt succeeds via Bedrock"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### 400 on derived model IDs
+
+Check GovCloud prefix mapping and inference profile ARNs.
+
+### Wrong model in picker
+
+Bedrock picker fixes prevent selecting models the account cannot serve.
+
+### CI SigV4 failures
+
+Unset blank `AWS_BEARER_TOKEN_BEDROCK` variables created by CI templates.
+
+### Auto mode unavailable message
+
+Set `CLAUDE_CODE_ENABLE_AUTO_MODE=1` rather than assuming first-party defaults.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` documents Bedrock reading AWS region from `~/.aws` when `AWS_REGION` is unset.
+- `CHANGELOG.md` fixed GovCloud `us-gov-*` regions using wrong `global` inference profile prefixes.
+- `CHANGELOG.md` improved Bedrock credential caching until AWS `Expiration`.
+- `CHANGELOG.md` added `ANTHROPIC_BEDROCK_SERVICE_TIER` for Bedrock service tier headers.
+- `CHANGELOG.md` enables auto mode on Bedrock with `CLAUDE_CODE_ENABLE_AUTO_MODE=1` for Opus 4.7/4.8.
+
+## Duplicate Check
+
+This guide covers Amazon Bedrock provider setup. It complements enterprise-network-proxy-and-mtls-setup-for-claude-code.mdx for proxy/mTLS and claude-code-on-google-vertex-ai-setup.mdx for GCP deployments.
+
+## References
+
+- Amazon Bedrock - https://code.claude.com/docs/en/amazon-bedrock
+- Enterprise network proxy - enterprise-network-proxy-and-mtls-setup-for-claude-code
+- Google Vertex AI setup - claude-code-on-google-vertex-ai-setup
