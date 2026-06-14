@@ -79,7 +79,7 @@ export const INTEGRATIONS: Integration[] = [
       label: "Source",
       href: "https://github.com/jsonbored/awesome-claude/tree/main/packages/mcp",
     },
-    version: "0.3.0",
+    version: "0.3.1",
     updatedAt: REGISTRY_UPDATED_DATE,
     install: [
       {
