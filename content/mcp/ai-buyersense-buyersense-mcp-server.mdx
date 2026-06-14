@@ -1,0 +1,193 @@
+---
+title: BuyerSense MCP Server for Claude
+slug: ai-buyersense-buyersense-mcp-server
+category: mcp
+description: >-
+  BuyerSense hosted MCP server exposing buyer intent and signal APIs so Claude
+  can query account-level buying signals via mcp.buyersense.ai/mcp.
+cardDescription: >-
+  Connect Claude to BuyerSense for buyer intent and signal APIs through
+  mcp.buyersense.ai/mcp.
+seoTitle: BuyerSense MCP Server for Claude
+seoDescription: >-
+  Use the BuyerSense MCP server with Claude to query buyer signals and intent
+  data for sales and marketing workflows via mcp.buyersense.ai/mcp.
+author: BuyerSense
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1485
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1485"
+repoUrl: "https://buyersense.ai"
+documentationUrl: "https://buyersense.ai"
+websiteUrl: "https://buyersense.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http buyersense https://mcp.buyersense.ai/mcp
+usageSnippet: >-
+  Add https://mcp.buyersense.ai/mcp as a remote connector and authenticate
+  with BuyerSense to query buyer signal APIs from Claude.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "buyersense": {
+        "url": "https://mcp.buyersense.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "buyersense": {
+        "url": "https://mcp.buyersense.ai/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer YOUR_BUYERSENSE_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "BuyerSense account with API access to buyer signal and intent endpoints."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or Claude Code with HTTP MCP transport."
+  - "Sales or marketing governance approval for using third-party intent data in outreach."
+  - "CRM or outreach tooling ready if you act on signals retrieved through MCP."
+safetyNotes:
+  - "Buyer signals are probabilistic intent data, not guarantees of purchase readiness."
+  - "Automated outreach based on signals may violate CAN-SPAM, GDPR, or customer opt-out preferences."
+  - "API keys grant access to paid signal datasets; protect keys like production credentials."
+  - "Do not use intent data to infer sensitive personal attributes without legal review."
+privacyNotes:
+  - "Company domains and account identifiers you query are sent to BuyerSense and its data partners."
+  - "Signal results may indirectly relate to identifiable individuals at target accounts; handle under B2B privacy policies."
+  - "Avoid exporting full signal feeds with account names into public documents or shared chat logs."
+tags:
+  - buyer-intent
+  - sales
+  - signals
+  - remote-mcp
+  - api-key
+keywords:
+  - buyersense mcp
+  - buyer signals api
+  - intent data claude
+  - buyersense.ai connector
+  - b2b sales mcp
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+BuyerSense provides a hosted Model Context Protocol server that exposes buyer intent and signal APIs to Claude and other MCP clients. Sales and marketing teams can query account-level buying signals inside chat instead of switching to a separate intelligence portal.
+
+Documentation is at [buyersense.ai](https://buyersense.ai). The MCP endpoint is `https://mcp.buyersense.ai/mcp`.
+
+## Features
+
+- Query buyer intent and signal APIs through MCP tools.
+- Account- and domain-level signal lookup for outbound prioritisation.
+- Hosted remote HTTP transport at `mcp.buyersense.ai/mcp`.
+- Bearer or account authentication depending on BuyerSense tier.
+- Integrates with Claude Connectors and Claude Code HTTP transport.
+
+## Use Cases
+
+- Rank target accounts by recent surges in category intent before a campaign.
+- Pull signal summaries ahead of executive outreach to enterprise prospects.
+- Compare intent trends across regions for quarterly pipeline reviews.
+- Enrich account research briefs with third-party buying signals.
+- Validate whether a prospect’s intent topic matches your product category.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://mcp.buyersense.ai/mcp`.
+3. Authenticate with your BuyerSense API key or OAuth flow.
+4. Enable the connector and query signals in conversation.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http buyersense https://mcp.buyersense.ai/mcp
+claude mcp list
+```
+
+Configure Bearer auth in your MCP config when required.
+
+### Other MCP clients
+
+Point a remote HTTP connector at `https://mcp.buyersense.ai/mcp` with BuyerSense credentials.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "buyersense": {
+      "url": "https://mcp.buyersense.ai/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer YOUR_BUYERSENSE_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Replace `YOUR_BUYERSENSE_API_KEY` with a key from your BuyerSense dashboard.
+
+## Examples
+
+### Account intent check
+
+```text
+What buyer intent signals does BuyerSense show for acme-corp.com in the last 30 days?
+```
+
+### Prioritise outreach
+
+```text
+List my top 10 target accounts by BuyerSense intent score for cloud security topics.
+```
+
+### Campaign alignment
+
+```text
+Summarise BuyerSense signals for healthcare accounts in EMEA and suggest messaging angles.
+```
+
+## Security
+
+- Combine intent data with CRM facts before automated outreach.
+- Honour opt-out and do-not-contact lists regardless of signal strength.
+- Rotate API keys if shared connectors are deprovisioned.
+
+## Troubleshooting
+
+### 401 Unauthorized
+
+Verify Bearer token formatting and that the key is active in BuyerSense.
+
+### No signals for a domain
+
+The account may be too small for coverage or use a different corporate domain; try parent company domains.
+
+### Stale intent spikes
+
+Confirm signal date ranges in tool parameters; intent feeds update on vendor-specific schedules.
+
+### Compliance blocks
+
+Some regions or industries restrict intent data usage; consult legal before exporting results to CRM automation.
