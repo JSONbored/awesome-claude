@@ -1,0 +1,166 @@
+---
+title: "Server-Managed Claude Code Settings Rollout"
+slug: server-managed-claude-code-settings-rollout
+category: guides
+description: >-
+  Roll out server-managed Claude Code settings for enterprise teams: remote policy fetch, partial invalid payload handling, OAuth scope requirements, and version gates.
+cardDescription: Roll out server-managed Claude Code settings across enterprise teams.
+seoTitle: "Server-Managed Claude Code Settings Rollout"
+seoDescription: >-
+  Roll out server-managed Claude Code settings for enterprise teams: remote policy fetch, partial invalid payload handling, OAuth scope requirements, and version gates.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1392
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1392"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to publish and validate server-managed Claude Code settings before enterprise-wide enforcement.
+prerequisites:
+  - "Enterprise admin access to the managed settings endpoint."
+  - "Documented policies for permissions, MCP, login restrictions, and version pins."
+  - "Staging tenants to validate partial invalid payloads without blocking all policy."
+  - "Communication plan for settings changes that affect daily workflows."
+safetyNotes:
+  - "Managed permission rules can block writes or bash patterns org-wide—pilot before enforcing destructive denylists."
+  - "Version minimum/maximum gates refuse startup—ensure approved builds are published before raising minimums."
+  - "Invalid settings entries should not silently disable entire policy; monitor admin dashboards after edits."
+privacyNotes:
+  - "Server-managed settings may log fetch metadata and org identifiers on admin audit trails."
+  - "Policies like `forceLoginOrgUUID` affect which identity provider receives login events."
+  - "Remote settings payloads should avoid embedding secrets; reference secret names instead."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/server-managed-settings"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - enterprise
+  - managed-settings
+  - rollout
+  - policy
+keywords:
+  - "server-managed settings Claude Code"
+  - "enterprise settings rollout"
+  - "managed settings policy"
+  - "remote settings Claude"
+  - "requiredMinimumVersion"
+readingTime: 8
+difficultyScore: 64
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Server-managed settings let enterprises push permissions, MCP policy, login restrictions, and version gates to every Claude Code client. Stage changes on a pilot org, validate OAuth scopes, and confirm partial invalid entries do not drop remaining policies.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Remote fetch on startup
+
+Clients pull managed settings during startup; slow or 401 responses previously blocked policy until retry fixes landed.
+
+### Partial invalid payloads
+
+Recent behavior applies valid policies while surfacing validation errors for bad entries instead of dropping the whole file.
+
+### OAuth scope requirements
+
+Server-managed policy may not apply if stored OAuth credentials lack `user:inference` scope—force refresh after scope changes.
+
+### Version gates
+
+`requiredMinimumVersion` and `requiredMaximumVersion` refuse startup outside the approved range with upgrade guidance.
+
+## Step-by-Step Implementation Guide
+
+1. **Catalog policies.** List permissions, MCP, login, footer links, and version rules you need centrally.
+
+2. **Author staging payload.** Build JSON with comments removed and validate against internal schema checks.
+
+3. **Publish to staging org.** Point a pilot tenant at the staging endpoint and restart Claude Code clients.
+
+4. **Verify fetch and retry.** Simulate 401 token expiry and confirm single forced refresh retries successfully.
+
+5. **Test invalid entry handling.** Introduce a deliberate bad key and confirm remaining policies still enforce with visible errors.
+
+6. **Validate login restrictions.** Ensure `forceLoginOrgUUID` does not block Bedrock, Vertex, or Foundry when third-party providers are allowed.
+
+7. **Roll to production.** Schedule maintenance window comms and monitor support channels for permission surprises.
+
+8. **Audit quarterly.** Review version pins and remove deprecated keys after CLI upgrades.
+
+## Settings Rollout Checklist
+
+- [ ] {"task": "Staging validated", "description": "Pilot org receives intended policies"}
+- [ ] {"task": "OAuth scopes current", "description": "Users hold user:inference where required"}
+- [ ] {"task": "Invalid entry tested", "description": "Remaining policies still apply with errors shown"}
+- [ ] {"task": "Version gate checked", "description": "Approved builds satisfy min/max constraints"}
+- [ ] {"task": "Comms sent", "description": "Teams notified before enforcement changes"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Policy missing for some users
+
+Check OAuth scopes on stored credentials; re-login may be required after enterprise scope updates.
+
+### Startup blocked by version gate
+
+Publish an approved Claude Code build or relax `requiredMinimumVersion` temporarily.
+
+### Entire policy ignored
+
+Upgrade clients so invalid entries drop individually with `claude doctor` guidance.
+
+### Third-party login blocked
+
+Verify `forceLoginMethod` policies do not unintentionally block Bedrock or Vertex sessions.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` added `requiredMinimumVersion` and `requiredMaximumVersion` managed settings with startup refusal outside range.
+- `CHANGELOG.md` fixed server-managed settings not applying when OAuth credentials lacked `user:inference` scope.
+- `CHANGELOG.md` notes remote-managed settings with invalid entries now apply remaining valid policies.
+- `CHANGELOG.md` fixed managed settings fetch during startup on fresh config directories.
+- The root README references data usage and commercial terms relevant to enterprise-managed deployments.
+
+## Duplicate Check
+
+This guide covers server-managed settings rollout. It complements managed-mcp-allowlists-for-enterprise-claude-code.mdx for MCP-specific policy and permission-modes-for-claude-code-teams.mdx for permission design.
+
+## References
+
+- Server-managed settings - https://code.claude.com/docs/en/server-managed-settings
+- Managed MCP allowlists - managed-mcp-allowlists-for-enterprise-claude-code
+- Permission modes for teams - permission-modes-for-claude-code-teams
