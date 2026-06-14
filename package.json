@@ -48,6 +48,7 @@
     "submission-gate:dry-run": "pnpm --filter @heyclaude/submission-gate run deploy:dry-run:prod",
     "submission-gate:dry-run:prod": "pnpm --filter @heyclaude/submission-gate run deploy:dry-run:prod",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:seo-jsonld": "vitest run tests/seo-jsonld.test.ts",
     "test:commercial-intake": "vitest run tests/commercial-intake.test.ts",
     "test:registry-artifacts": "pnpm --filter web run prebuild && vitest run tests/registry-artifacts.test.ts",
@@ -70,6 +71,7 @@
   "devDependencies": {
     "@commitlint/cli": "21.0.1",
     "@commitlint/config-conventional": "21.0.1",
+    "@vitest/coverage-v8": "4.1.7",
     "husky": "9.1.7",
     "prettier": "3.8.3",
     "react": "19.2.6",

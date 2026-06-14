@@ -658,9 +658,9 @@ jobs:
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm validate:openapi
 
-      - name: Run Vitest suite
+      - name: Run Vitest suite with coverage
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
-        run: pnpm test
+        run: pnpm test:coverage
 
       - name: Install Trunk CLI
         if: ${{ needs.classify-pr.outputs.web == 'true' && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}

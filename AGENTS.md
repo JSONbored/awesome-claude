@@ -95,6 +95,20 @@ pnpm build
 git diff --check
 ```
 
+### Test coverage gate
+
+`pnpm test:coverage` runs the full Vitest suite with v8 coverage and enforces
+global thresholds defined in `vitest.config.ts`. Coverage is scoped to the
+source the node suite actually exercises (the `registry`/`mcp` packages, web
+`lib`/`data`/`types`, the submission gate, and build scripts); React components
+and routes are out of scope because they are not run under the node environment.
+
+The thresholds are a **ratchet**: they are pinned just below current coverage so
+the gate locks in today's level and CI fails on regressions. When you add tests
+that raise coverage, raise the matching thresholds in `vitest.config.ts` to the
+new floor. Never lower them to make a change pass — add the missing tests
+instead.
+
 ## PR Hygiene
 
 - Use Conventional Commit-style PR titles, for example `feat(submissions): add contributor preflight`.
