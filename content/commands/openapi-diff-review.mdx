@@ -1,0 +1,148 @@
+---
+title: /openapi-diff-review - OpenAPI Diff Review Command for Claude Code
+slug: openapi-diff-review
+category: commands
+description: >-
+  Slash command that reviews an OpenAPI spec diff for breaking API changes:
+  removed operations, renamed fields, type narrowing, auth requirement changes,
+  status code shifts, and consumer impact — without running Pact replay tests.
+cardDescription: >-
+  Review OpenAPI spec diffs for breaking API changes and consumer impact.
+seoTitle: /openapi-diff-review - OpenAPI Diff Review Command for Claude Code
+seoDescription: >-
+  Claude Code slash command for OpenAPI diff breaking-change review across
+  operations, schemas, auth, and response codes.
+author: kiannidev
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 754
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/754"
+documentationUrl: "https://github.com/anthropics/claude-code"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://spec.openapis.org/oas/latest.html"
+  - "https://github.com/Tufin/oasdiff"
+  - "https://github.com/stoplightio/spectral"
+installable: true
+installCommand: "/openapi-diff-review [base-spec] [head-spec]"
+commandSyntax: "/openapi-diff-review [base-spec] [head-spec]"
+usageSnippet: "/openapi-diff-review openapi/v1.yaml openapi/v2.yaml"
+copySnippet: "/openapi-diff-review [base-spec] [head-spec]"
+prerequisites:
+  - "Two OpenAPI 3.x YAML or JSON spec files (base and head) readable in the workspace."
+  - "Optional diff tool such as `oasdiff` or `openapi-diff` installed for machine-readable change lists."
+  - "Knowledge of API consumers or SDK clients affected by the service."
+safetyNotes:
+  - "Read-only spec comparison; does not deploy gateways, publish specs, or mutate provider code."
+  - "Breaking-change labels are heuristic; confirm with consumer owners before major version bumps."
+  - "Do not execute example requests from untrusted spec descriptions without review."
+privacyNotes:
+  - "OpenAPI specs may document internal admin routes, tenant identifiers, or private webhook URLs."
+  - "Diff output enters model context; redact internal hostnames before sharing externally."
+tags:
+  - openapi
+  - api
+  - breaking-changes
+  - contract
+  - diff
+keywords:
+  - openapi diff review command
+  - breaking api change review
+  - claude code openapi diff
+  - api spec diff analysis
+---
+
+The `/openapi-diff-review` command is a **custom slash command workflow** you install as a Markdown prompt under `.claude/commands/` (or ship via a project plugin `commands/` directory). It is **not** a built-in Claude Code command. It analyzes **schema and operation deltas** between two OpenAPI documents. It complements `/api-contract-check` (Pact consumer replay against a live provider) by reviewing the **spec itself** for breaking changes before code or clients ship.
+
+## Install this command
+
+Save the following as `.claude/commands/openapi-diff-review.md` in your repository (or add it to a plugin `commands/` directory), then invoke `/openapi-diff-review` in Claude Code:
+
+```markdown
+---
+description: Review OpenAPI spec diffs for breaking API changes and consumer impact
+---
+
+Review base/head OpenAPI spec deltas for breaking changes. Arguments: $ARGUMENTS
+
+When invoked, follow these steps:
+
+1. **Load both specs.** Parse YAML/JSON OpenAPI 3.x files from `$ARGUMENTS` or default paths (`openapi.yaml`, `api/openapi.json`). Normalize refs and validate basic structure before diffing.
+2. **Generate a machine diff.** When available, run `oasdiff diff` or Spectral/OpenAPI diff tooling to list endpoint, schema, parameter, and response changes.
+3. **Classify breaking changes.** Flag removed paths or methods, renamed required fields, enum value removals, type changes, stricter `required` arrays, new auth requirements, and success status code changes.
+4. **Classify safe changes.** Note additive optional fields, new endpoints, expanded enums, and new error responses as non-breaking when backward compatible.
+5. **Map consumer impact.** For each breaking item, name likely client breakages: SDK serializers, mobile apps, webhook parsers, and gateway routes.
+6. **Check versioning posture.** Recommend semver bump (major/minor/patch), changelog entry, and deprecation headers when operations are removed or narrowed.
+7. **Produce release verdict.** End with `major bump required`, `minor safe`, or `docs-only` and list blockers.
+```
+
+## Usage
+
+```
+/openapi-diff-review [base-spec] [head-spec]
+```
+
+- With two paths: compare base (old) and head (new) spec files.
+- With one path: compare that file to its `git` base revision.
+- Without arguments: detect default spec paths (`openapi.yaml`, `api/openapi.json`).
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Load both specs.** Parse YAML/JSON OpenAPI 3.x files. Normalize refs and validate basic structure before diffing.
+2. **Generate a machine diff.** When available, run `oasdiff diff` or equivalent to list endpoint, schema, parameter, and response changes.
+3. **Classify breaking changes.** Flag removed paths or methods, renamed required fields, enum value removals, type changes, stricter `required` arrays, new auth requirements, and success status code changes.
+4. **Classify safe changes.** Note additive optional fields, new endpoints, expanded enums, and new error responses as non-breaking when backward compatible.
+5. **Map consumer impact.** For each breaking item, name likely client breakages: SDK serializers, mobile apps, webhook parsers, and gateway routes.
+6. **Check versioning posture.** Recommend semver bump (major/minor/patch), changelog entry, and deprecation headers when operations are removed or narrowed.
+7. **Produce release verdict.** End with `major bump required`, `minor safe`, or `docs-only` and list blockers.
+
+## Output format
+
+- **Specs:** base and head file paths and versions.
+- **Breaking changes:** operation or schema, change type, consumer impact.
+- **Non-breaking additions:** summarized additive deltas.
+- **Deprecation actions:** recommended timeline and communication.
+- **Verdict:** major / minor / patch / blocked.
+- **Confidence:** high / medium / low.
+
+## Requirements
+
+- Two OpenAPI spec files or git history for a single spec.
+- Optional CLI diff tool (`oasdiff`, `openapi-diff`) for structured output.
+- Readable spec paths in the workspace.
+
+## Safety notes
+
+Read-only comparison of spec files. Does not publish specs, deploy gateways, or modify services. Breaking-change classification is advisory until consumer owners confirm impact.
+
+## Privacy notes
+
+API specs may expose internal routes and environment hostnames. Redact private endpoints and tenant-specific examples from shared diff reports.
+
+## Source Verification Notes
+
+Verified against Claude Code slash-command documentation and OpenAPI tooling references on **2026-06-14**:
+
+- [Claude Code slash commands](https://code.claude.com/docs/en/slash-commands) document custom commands in `.claude/commands/`, the `$ARGUMENTS` placeholder, and team sharing by committing command files to git.
+- [OpenAPI Specification 3.x](https://spec.openapis.org/oas/latest.html) defines operations, components, and compatibility expectations for diffs.
+- [oasdiff](https://github.com/Tufin/oasdiff) and [Spectral](https://github.com/stoplightio/spectral) document breaking-change categories and lint rules aligned with this review.
+- `claude-code` README and plugins docs describe packaging API review commands for platform teams.
+- CHANGELOG entries continue to expand code-aware diff and review workflows in Claude Code.
+
+## Duplicate Check
+
+Searched `content/commands/` on **2026-06-14** for overlapping slug, `commandSyntax`, and workflow scope. `/api-contract-check` runs Pact consumer-driven verification against a live HTTP provider, not OpenAPI file diffs. No existing command reviews base/head OpenAPI specs for semver and breaking-change classification.
+
+## References
+
+- Claude Code repository: https://github.com/anthropics/claude-code
+- Claude Code slash commands: https://code.claude.com/docs/en/slash-commands
+- OpenAPI Specification: https://spec.openapis.org/oas/latest.html
+- oasdiff tool: https://github.com/Tufin/oasdiff
+- Spectral OpenAPI linter: https://github.com/stoplightio/spectral
