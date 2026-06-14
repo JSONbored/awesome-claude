@@ -17,6 +17,9 @@ export function getAllTagGroups(): TagGroup[] {
   if (cache) return cache;
   const map = new Map<string, { entries: Entry[]; names: Map<string, number> }>();
   for (const entry of ENTRIES) {
+    // An entry can carry multiple raw tags that normalize to the same slug
+    // (e.g. "AI" and "ai"); count it once per slug so group sizes stay accurate.
+    const seenSlugs = new Set<string>();
     for (const tag of entry.tags ?? []) {
       const slug = tagSlug(tag);
       if (!slug) continue;
@@ -25,7 +28,10 @@ export function getAllTagGroups(): TagGroup[] {
         group = { entries: [], names: new Map() };
         map.set(slug, group);
       }
-      group.entries.push(entry);
+      if (!seenSlugs.has(slug)) {
+        group.entries.push(entry);
+        seenSlugs.add(slug);
+      }
       group.names.set(tag, (group.names.get(tag) ?? 0) + 1);
     }
   }
