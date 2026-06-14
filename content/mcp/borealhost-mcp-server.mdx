@@ -1,0 +1,212 @@
+---
+title: BorealHost MCP Server for Claude
+slug: borealhost-mcp-server
+category: mcp
+description: >-
+  BorealHost MCP server with 47 hosting tools available via remote HTTP at
+  borealhost.ai/mcp or local stdio through pip install borealhost-mcp, with
+  optional BOREALHOST_API_KEY.
+cardDescription: >-
+  Connect Claude to BorealHost for 47 hosting management tools via remote HTTP
+  or local stdio with an optional API key.
+seoTitle: BorealHost MCP Server for Claude
+seoDescription: >-
+  Use BorealHost MCP with Claude to manage hosting through 47 tools on
+  borealhost.ai/mcp or pip install borealhost-mcp for local stdio transport.
+author: BorealHost
+authorProfileUrl: "https://github.com/alainsvrd"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1481
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1481"
+repoUrl: "https://github.com/alainsvrd/borealhost-mcp"
+documentationUrl: "https://github.com/alainsvrd/borealhost-mcp"
+websiteUrl: "https://borealhost.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http borealhost https://borealhost.ai/mcp/
+usageSnippet: >-
+  Use https://borealhost.ai/mcp/ for remote HTTP, or pip install borealhost-mcp
+  and run local stdio with BOREALHOST_API_KEY when account tools are needed.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "borealhost": {
+        "url": "https://borealhost.ai/mcp/",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "borealhost": {
+        "command": "borealhost-mcp",
+        "args": [],
+        "env": {
+          "BOREALHOST_API_KEY": "${BOREALHOST_API_KEY}"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10+ and pip for local stdio install via pip install borealhost-mcp."
+  - "Optional BorealHost account and BOREALHOST_API_KEY for account-specific hosting tools."
+  - "Claude Code or Claude Desktop with MCP support for stdio, or Connectors for remote HTTP."
+  - "Understanding that some hosting tools may create, modify, or delete infrastructure resources."
+safetyNotes:
+  - "Hosting management tools can provision, reconfigure, or destroy servers and DNS records."
+  - "BOREALHOST_API_KEY grants account-level access; store it as an environment variable, not in chat."
+  - "Review each destructive tool call before approval in automated agent workflows."
+  - "Remote HTTP mode may expose different tool subsets than local stdio; verify capabilities in docs."
+privacyNotes:
+  - "Server hostnames, IP addresses, and account metadata returned by tools may be sensitive infrastructure data."
+  - "API keys and OAuth-like session tokens must not be committed to repositories or shared connectors."
+  - "Support logs should reference resource IDs, not full customer site contents or credentials."
+tags:
+  - hosting
+  - infrastructure
+  - dns
+  - remote-mcp
+  - stdio
+keywords:
+  - borealhost mcp
+  - hosting management claude
+  - borealhost-mcp pip
+  - server provisioning mcp
+  - borealhost api key
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+BorealHost provides a Model Context Protocol server with 47 tools for hosting and infrastructure management. You can connect via the hosted remote endpoint at `https://borealhost.ai/mcp/` or run locally with `pip install borealhost-mcp` over stdio. A `BOREALHOST_API_KEY` is optional but required for account-specific operations.
+
+Source code is in [alainsvrd/borealhost-mcp](https://github.com/alainsvrd/borealhost-mcp).
+
+## Features
+
+- 47 hosting tools covering servers, domains, DNS, and deployment tasks.
+- Remote HTTP MCP at `https://borealhost.ai/mcp/`.
+- Local stdio server via `pip install borealhost-mcp`.
+- Optional `BOREALHOST_API_KEY` for authenticated account actions.
+- Works with Claude Connectors, Claude Code, and other MCP clients.
+
+## Use Cases
+
+- List active servers and open support tickets from chat.
+- Create DNS records for a staging subdomain before a release.
+- Check SSL certificate status across managed domains.
+- Spin up or tear down dev instances during QA cycles.
+- Audit hosting spend and resource utilisation through natural language.
+
+## Installation
+
+### Remote HTTP (Claude Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://borealhost.ai/mcp/`.
+3. Add API key headers if your tools require authentication.
+4. Enable the connector in conversation.
+
+### Claude Code (remote)
+
+```bash
+claude mcp add --transport http borealhost https://borealhost.ai/mcp/
+claude mcp list
+```
+
+### Local stdio
+
+```bash
+pip install borealhost-mcp
+export BOREALHOST_API_KEY=your_key_here
+claude mcp add borealhost --env BOREALHOST_API_KEY=$BOREALHOST_API_KEY -- borealhost-mcp
+```
+
+## Configuration
+
+Remote HTTP:
+
+```json
+{
+  "mcpServers": {
+    "borealhost": {
+      "url": "https://borealhost.ai/mcp/",
+      "type": "http"
+    }
+  }
+}
+```
+
+Local stdio:
+
+```json
+{
+  "mcpServers": {
+    "borealhost": {
+      "command": "borealhost-mcp",
+      "args": [],
+      "env": {
+        "BOREALHOST_API_KEY": "${BOREALHOST_API_KEY}"
+      },
+      "type": "stdio"
+    }
+  }
+}
+```
+
+## Examples
+
+### List servers
+
+```text
+List all active BorealHost servers on my account and their regions.
+```
+
+### DNS update
+
+```text
+Add a CNAME record pointing staging.example.com to my BorealHost load balancer.
+```
+
+### Certificate check
+
+```text
+Check SSL certificate expiry for all domains in my BorealHost account.
+```
+
+## Security
+
+- Treat hosting tools as production-capable; confirm destructive actions explicitly.
+- Rotate `BOREALHOST_API_KEY` if exposed and use least-privilege keys where supported.
+- Avoid pasting server credentials returned by tools into public channels.
+
+## Troubleshooting
+
+### API key ignored (local)
+
+Export `BOREALHOST_API_KEY` before starting Claude Code or set it in the MCP config env block.
+
+### Remote vs local tool mismatch
+
+Some tools may only be available in one transport mode; consult the GitHub README for the current matrix.
+
+### pip command not found
+
+Install Python 3.10+ and ensure `borealhost-mcp` is on PATH after pip install.
+
+### DNS propagation delays
+
+Record creation succeeds before global propagation; wait and re-query rather than duplicating records.
