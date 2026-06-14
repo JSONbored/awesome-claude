@@ -118,6 +118,22 @@ routes.
 - https://github.com/anthropics/claude-code
 - https://developers.google.com/search/docs/fundamentals/creating-helpful-content
 
+## Source Verification Notes
+
+Verified against official Claude Code enterprise network configuration
+documentation on **2026-06-13**:
+
+- Claude Code respects standard **`HTTPS_PROXY`**, **`HTTP_PROXY`**, and **`NO_PROXY`**
+  environment variables; SOCKS proxies are not supported.
+- Default **`CLAUDE_CODE_CERT_STORE=bundled,system`** trusts Mozilla bundled CAs plus
+  the OS store; use **`NODE_EXTRA_CA_CERTS`** for private inspection roots.
+- Enterprise mTLS uses **`CLAUDE_CODE_CLIENT_CERT`**, **`CLAUDE_CODE_CLIENT_KEY`**, and
+  optional **`CLAUDE_CODE_CLIENT_KEY_PASSPHRASE`**.
+- Required outbound hosts include **`api.anthropic.com`**, **`claude.ai`**,
+  **`platform.claude.com`**, and **`downloads.claude.ai`** for direct Anthropic routes.
+- Bedrock, Vertex, and Foundry deployments route model traffic to the provider instead
+  of `api.anthropic.com`.
+
 ## Scope Note
 
 This is not a generic corporate VPN guide. Use it when Claude Code specifically
