@@ -82,7 +82,11 @@ export function NewsletterInline({
               )}
             </button>
           </form>
-          {error && <p className="text-xs text-trust-blocked">{error}</p>}
+          {error && (
+            <p role="alert" className="text-xs text-trust-blocked">
+              {error}
+            </p>
+          )}
         </div>
       </div>
     );
@@ -178,7 +182,11 @@ export function NewsletterInline({
           </button>
         </form>
       </div>
-      {error && <p className="mt-2 text-xs text-trust-blocked">{error}</p>}
+      {error && (
+        <p role="alert" className="mt-2 text-xs text-trust-blocked">
+          {error}
+        </p>
+      )}
     </section>
   );
 }
