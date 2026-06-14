@@ -119,6 +119,21 @@ beta; prefer live official docs when confirming plan availability.
 - https://github.com/anthropics/claude-code
 - https://developers.google.com/search/docs/fundamentals/creating-helpful-content
 
+## Source Verification Notes
+
+Verified against official Claude Code analytics documentation on **2026-06-13**:
+
+- Team and Enterprise analytics live at **`claude.ai/analytics/claude-code`**; Console
+  API customers use **`platform.claude.com/claude-code`**.
+- Contribution metrics require the **Claude GitHub app**, admin enablement of GitHub
+  analytics, and are **unavailable for ZDR organizations**.
+- Metrics are conservative underestimates; PRs are tagged when at least one
+  high-confidence assisted line exists within a **21-day-before to 2-day-after** merge
+  attribution window.
+- Merged PRs containing assisted lines receive the **`claude-code-assisted`** GitHub
+  label for programmatic lookup.
+- Console dashboard spend figures are **estimates**; billing pages show actual costs.
+
 ## Scope Note
 
 This is not a generic product-analytics framework. Use it when engineering
