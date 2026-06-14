@@ -1,0 +1,253 @@
+---
+title: Claude Code Enterprise Network Config Capability Pack Skill
+slug: claude-code-enterprise-network-config-capability-pack
+category: skills
+description: >-
+  Expert Claude Code enterprise network configuration capability pack for
+  auditing proxy settings, custom CA trust, mTLS client certificates, URL
+  allowlists, and provider-specific routing in restricted corporate networks.
+cardDescription: >-
+  Configure Claude Code for enterprise proxies, custom CAs, mTLS, and network
+  allowlists with source-backed verification steps.
+seoTitle: Claude Code Enterprise Network Config Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code enterprise network config,
+  proxy variables, certificate stores, mTLS, and required URL allowlists.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1545
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1545"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when Claude Code fails behind a corporate proxy, TLS inspection
+  breaks authentication, or security teams need a verified network allowlist and
+  certificate plan before rollout.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code enterprise network config capability pack to this environment."
+
+  # Required output
+  1) Network topology and failure lane inventory
+  2) Proxy, CA store, and mTLS configuration review
+  3) Required URL allowlist with provider-specific notes
+  4) Verification commands and rollback plan
+  5) Privacy-safe summary of redacted settings reviewed
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-13"
+retrievalSources:
+  - "https://code.claude.com/docs/en/network-config"
+  - "https://code.claude.com/docs/en/env-vars"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/troubleshoot-install"
+  - "https://code.claude.com/docs/en/third-party-integrations"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code installed in an enterprise network with proxy, TLS inspection, or outbound firewall controls."
+  - "Permission to review redacted proxy URLs, certificate files, settings.json env blocks, and firewall allowlist drafts."
+  - "Knowledge of whether the deployment uses direct Anthropic API access, Amazon Bedrock, Google Vertex AI, or Microsoft Foundry."
+  - "A concrete failure symptom such as login errors, plugin download failures, MCP connection timeouts, or certificate trust errors."
+safetyNotes:
+  - "This skill recommends network configuration changes; it must not edit proxy credentials, certificate files, or settings without showing proposed diffs first."
+  - "Avoid hardcoding proxy passwords in scripts or committed settings; use secure credential storage or managed env injection."
+  - "Claude Code does not support SOCKS proxies; do not recommend SOCKS-only egress paths."
+  - "Changing CLAUDE_CODE_CERT_STORE from the default can break trust for TLS-inspection proxies if the OS store is removed unintentionally."
+  - "mTLS client keys and passphrases are sensitive; store them outside repositories and restrict filesystem permissions."
+  - "Disabling telemetry requires explicit env configuration before finalizing allowlists; do not assume zero outbound telemetry by default."
+privacyNotes:
+  - "Proxy URLs, client certificate paths, NO_PROXY lists, and settings.json env blocks can expose internal hostnames, service names, and network topology."
+  - "Enterprise TLS inspection means traffic content may be visible to the proxy operator even when Anthropic ZDR or retention policies apply upstream."
+  - "Troubleshooting logs, `/doctor` output, and install traces may include usernames, internal domains, and certificate issuer details."
+  - "Public rollout docs should summarize required domains and config categories, not paste complete proxy credentials or private CA bundles."
+tags:
+  - claude-code
+  - enterprise
+  - network-config
+  - proxy
+  - mtls
+  - capability-pack
+keywords:
+  - Claude Code enterprise network config
+  - Claude Code HTTPS_PROXY setup
+  - Claude Code custom CA certificate
+  - Claude Code mTLS configuration
+  - Claude Code network allowlist
+  - Claude Code TLS inspection proxy
+readingTime: 9
+difficultyScore: 80
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code enterprise network configuration,
+environment variables, settings, troubleshooting, third-party integrations, and
+skills documentation verified on **2026-06-13**. Prefer live official docs and
+current firewall guidance when validating new Claude Code releases or provider
+routes.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/network-config
+- https://code.claude.com/docs/en/env-vars
+- https://code.claude.com/docs/en/settings
+- https://code.claude.com/docs/en/troubleshoot-install
+- https://code.claude.com/docs/en/third-party-integrations
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code enterprise network configuration
+documentation on **2026-06-13**:
+
+- Claude Code respects standard **`HTTPS_PROXY`**, **`HTTP_PROXY`**, and **`NO_PROXY`**
+  environment variables; SOCKS proxies are not supported.
+- Default **`CLAUDE_CODE_CERT_STORE=bundled,system`** trusts Mozilla bundled CAs plus
+  the OS store; use **`NODE_EXTRA_CA_CERTS`** for private inspection roots.
+- Enterprise mTLS uses **`CLAUDE_CODE_CLIENT_CERT`**, **`CLAUDE_CODE_CLIENT_KEY`**, and
+  optional **`CLAUDE_CODE_CLIENT_KEY_PASSPHRASE`**.
+- Required outbound hosts include **`api.anthropic.com`**, **`claude.ai`**,
+  **`platform.claude.com`**, and **`downloads.claude.ai`** for direct Anthropic routes.
+- Bedrock, Vertex, and Foundry deployments route model traffic to the provider instead
+  of `api.anthropic.com`.
+
+## Scope Note
+
+This is not a generic corporate VPN guide. Use it when Claude Code specifically
+needs proxy routing, custom CA trust, mTLS client auth, or outbound allowlist
+planning in enterprise environments.
+
+## Core Workflow
+
+1. Inventory the deployment lane: direct Anthropic API, Bedrock, Vertex, Foundry,
+   self-hosted GHES, containerized agents, or developer laptops behind TLS
+   inspection.
+2. Capture the failure symptom: auth failure, update/download failure, MCP remote
+   timeout, WebFetch blocked, plugin marketplace fetch failure, or certificate
+   validation error.
+3. Review proxy configuration:
+   - Prefer `HTTPS_PROXY` over `HTTP_PROXY`.
+   - Validate `NO_PROXY` for localhost, internal services, and split-tunnel hosts.
+   - Confirm SOCKS proxies are not in the path.
+4. Review certificate trust:
+   - Default `CLAUDE_CODE_CERT_STORE=bundled,system` trusts Mozilla bundled CAs
+     plus the OS store.
+   - Use `NODE_EXTRA_CA_CERTS` when a private inspection CA is not in the OS
+     store.
+5. Review mTLS settings when required:
+   - `CLAUDE_CODE_CLIENT_CERT`
+   - `CLAUDE_CODE_CLIENT_KEY`
+   - `CLAUDE_CODE_CLIENT_KEY_PASSPHRASE` for encrypted keys
+6. Build the outbound allowlist from official requirements:
+   - `api.anthropic.com`, `claude.ai`, `platform.claude.com`
+   - `downloads.claude.ai`, `bridge.claudeusercontent.com`
+   - `raw.githubusercontent.com` for release notes and marketplace counts
+   - Provider-specific endpoints when not using direct Anthropic API
+7. Adjust for deployment mode:
+   - npm or self-managed binary installs may not need download domains.
+   - WebFetch domain safety checks still hit `api.anthropic.com` unless
+     `skipWebFetchPreflight: true` is set in settings.
+   - GHES and GitHub Enterprise Cloud IP allowlisting may require Anthropic API
+     IP ranges for web and code review features.
+8. Verify with minimal tests: login, plugin download if applicable, MCP remote
+   server connection, and `/doctor` or install troubleshooting commands.
+9. Document rollback paths for cert-store, proxy, and mTLS changes.
+
+## Capability Scope
+
+- Proxy and NO_PROXY configuration review.
+- Certificate store and custom CA planning.
+- mTLS client certificate setup review.
+- Required URL and IP allowlist drafting.
+- Provider-route specific network notes.
+- Privacy-safe enterprise rollout documentation.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when diagnosing enterprise
+  network failures or preparing security review packets.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a checklist for Claude Code network readiness reviews.
+
+## Required Inputs
+
+- Failure symptom and affected surface (login, update, MCP, WebFetch, plugins).
+- Redacted proxy settings, cert paths, and current env or settings.json blocks.
+- Deployment provider route and whether GHES or GHEC is involved.
+- Existing firewall, proxy, and TLS inspection architecture summary.
+
+## Production Rules
+
+- Prefer OS trust store plus bundled CAs unless a documented reason requires
+  narrowing `CLAUDE_CODE_CERT_STORE`.
+- Never commit proxy credentials, client keys, or private CA bundles to git.
+- Document provider-specific endpoints instead of assuming `api.anthropic.com`
+  alone when using Bedrock, Vertex, or Foundry.
+- Review telemetry disablement requirements before calling the allowlist final.
+- Treat TLS inspection as an additional data-handling surface in privacy review.
+- Apply one reversible network change at a time during troubleshooting.
+- Redact internal hostnames and credential paths in public documentation.
+
+## Review Matrix
+
+| Symptom | First route | Safer first check |
+| --- | --- | --- |
+| Certificate verify failed behind proxy | Custom CA | Confirm inspection root is in OS store or NODE_EXTRA_CA_CERTS |
+| Auth works locally but not in CI | Proxy/NO_PROXY | Verify HTTPS_PROXY and bypass list for internal auth endpoints |
+| Plugin or updater download fails | Allowlist | Confirm downloads.claude.ai and related domains |
+| MCP remote server unreachable | Proxy/firewall | Check NO_PROXY and outbound rules for MCP host |
+| Bedrock route still calls api.anthropic.com | WebFetch preflight | Review skipWebFetchPreflight setting deliberately |
+| GHES clone/review blocked | IP allowlist | Review Anthropic API IP ranges for managed infrastructure |
+
+## Output Contract
+
+1. Network topology and failure lane summary.
+2. Proxy, CA, and mTLS configuration findings with redaction notes.
+3. Required allowlist domains and provider-specific additions.
+4. Minimal verification checklist and rollback plan.
+5. Privacy and TLS-inspection implications for security review.
+6. Privacy-safe summary suitable for rollout documentation.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for Claude Code enterprise network config, proxy setup, mTLS, and
+allowlist workflows. Official docs cover network configuration, but no `skills`
+entry provides a reusable enterprise network audit capability pack with review
+matrix and provider-route notes.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.
