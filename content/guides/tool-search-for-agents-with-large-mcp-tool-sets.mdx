@@ -1,0 +1,166 @@
+---
+title: "Tool Search for Agents With Large MCP Tool Sets"
+slug: tool-search-for-agents-with-large-mcp-tool-sets
+category: guides
+description: >-
+  Configure MCP tool search for large catalogs: MCPSearch deferral, auto thresholds, alwaysLoad, ENABLE_TOOL_SEARCH on Vertex, and disallowedTools tuning.
+cardDescription: Configure MCP tool search when agents expose large tool catalogs.
+seoTitle: "Tool Search for Agents With Large MCP Tool Sets"
+seoDescription: >-
+  Configure MCP tool search for large catalogs: MCPSearch deferral, auto thresholds, alwaysLoad, ENABLE_TOOL_SEARCH on Vertex, and disallowedTools tuning.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1413
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1413"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to enable tool search when MCP tool descriptions threaten context limits in Agent SDK or Claude Code sessions.
+prerequisites:
+  - "An MCP catalog large enough to exceed ~10% of context in tool descriptions."
+  - "Inventory of critical tools that must always load without deferral."
+  - "Provider support for tool search or explicit opt-in env vars on Vertex/gateway setups."
+  - "Staging sessions to compare discovery latency before and after enabling search."
+safetyNotes:
+  - "Deferred tools are discovered dynamically—ensure MCPSearch cannot surface unapproved write tools in production."
+  - "Disabling tool search on unsupported providers prevents beta header 400 errors but increases context usage."
+  - "alwaysLoad bypasses deferral; use only for small sets of safety-critical read tools."
+privacyNotes:
+  - "MCPSearch queries may send tool names and server metadata in additional model turns."
+  - "Large deferred catalogs still reveal server names in discovery prompts—avoid internal codenames."
+  - "Gateway endpoints may disable tool_reference blocks—verify behavior with your proxy vendor."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/agent-sdk/tool-search"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-agent-sdk
+  - tool-search
+  - mcp
+  - context
+  - agents
+keywords:
+  - "MCP tool search"
+  - "MCPSearch deferral"
+  - "alwaysLoad MCP config"
+  - "ENABLE_TOOL_SEARCH"
+  - "large MCP tool set"
+readingTime: 8
+difficultyScore: 62
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+When MCP tool descriptions exceed roughly ten percent of the context window, tool search defers them and exposes discovery via MCPSearch. Tune auto thresholds, mark critical servers with `alwaysLoad`, and disable MCPSearch in `disallowedTools` if you need legacy upfront loading.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Auto mode default
+
+Tool search auto mode is enabled by default when descriptions exceed 10% of context unless MCPSearch is disallowed.
+
+### auto:N threshold syntax
+
+`auto:N` configures the percentage threshold (0-100) for when deferral kicks in.
+
+### alwaysLoad escape hatch
+
+`alwaysLoad: true` on a server skips deferral so all its tools stay immediately available.
+
+### Provider-specific opt-in
+
+Vertex disables tool search by default; gateways may need `ENABLE_TOOL_SEARCH` when supported.
+
+## Step-by-Step Implementation Guide
+
+1. **Measure context share.** Count tool description tokens versus window size in a representative session.
+
+2. **Enable auto or manual search.** Leave auto mode on or set `ENABLE_TOOL_SEARCH` where provider docs require it.
+
+3. **Mark critical servers.** Add `alwaysLoad: true` for small servers whose tools must never defer.
+
+4. **Tune threshold.** Adjust `auto:N` if deferral triggers too early or too late for your catalog.
+
+5. **Test discovery.** Prompt for rarely used tools and confirm MCPSearch finds them without upfront load.
+
+6. **Gate write tools.** Combine search with `allowedTools` so discovered write tools still need explicit approval.
+
+7. **Monitor latency.** Track extra turns introduced by discovery and optimize server grouping if needed.
+
+8. **Document operator toggles.** Publish how to disable search via `disallowedTools` for debugging sessions.
+
+## Tool Search Tuning Checklist
+
+- [ ] {"task": "Context measured", "description": "Tool descriptions quantified vs window"}
+- [ ] {"task": "Critical tools pinned", "description": "alwaysLoad set on must-have servers"}
+- [ ] {"task": "Discovery verified", "description": "Rare tools found via MCPSearch"}
+- [ ] {"task": "Write tools gated", "description": "allowedTools still restricts side effects"}
+- [ ] {"task": "Provider flags set", "description": "ENABLE_TOOL_SEARCH configured if needed"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Tools not discovered at launch
+
+Upgrade builds fixing tool search when launch prompts bypass discovery.
+
+### 400 beta header on Vertex
+
+Leave tool search off or set `ENABLE_TOOL_SEARCH` only on supported versions.
+
+### Gateway disables tool_reference
+
+Tool search auto-detects many proxies; set `ENABLE_TOOL_SEARCH` explicitly when needed.
+
+### Critical tool deferred
+
+Set `alwaysLoad: true` on that server's MCP config entry.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` enabled MCP tool search auto mode by default past 10% context with MCPSearch discovery.
+- `CHANGELOG.md` added `auto:N` syntax for configuring tool search auto-enable threshold percentage.
+- `CHANGELOG.md` added `alwaysLoad` on MCP server config to skip tool-search deferral.
+- `CHANGELOG.md` notes tool search disabled by default on Vertex unless `ENABLE_TOOL_SEARCH` is set.
+- `CHANGELOG.md` fixed tool search activation with `ANTHROPIC_BASE_URL` gateways when `ENABLE_TOOL_SEARCH` is set.
+
+## Duplicate Check
+
+This guide tunes tool search for large MCP catalogs. See mcp-with-the-claude-agent-sdk.mdx for connection setup and compaction-and-memory-hygiene-for-long-claude-sessions.mdx for broader context management.
+
+## References
+
+- Agent SDK tool search - https://code.claude.com/docs/en/agent-sdk/tool-search
+- MCP with Agent SDK - mcp-with-the-claude-agent-sdk
+- Compaction and memory hygiene - compaction-and-memory-hygiene-for-long-claude-sessions
