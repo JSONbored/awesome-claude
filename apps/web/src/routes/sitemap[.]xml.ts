@@ -86,6 +86,25 @@ async function renderSitemap() {
   const contributorPaths = CONTRIBUTORS.map((contributor) => `/contributors/${contributor.slug}`);
   const integrationPaths = INTEGRATIONS.map((integration) => `/integrations/${integration.slug}`);
   const jobPaths = (await getJobs()).map((job) => `/jobs/${job.slug}`);
+  // category × platform intersection hubs — only those with >=2 entries (the route noindexes
+  // thinner ones), so the sitemap never advertises a thin page.
+  // One pass over ENTRIES building a `${category}/${platform}` -> count map (was platforms ×
+  // categories × ENTRIES.filter ≈ 83K iterations per request).
+  const intersectionCounts = new Map<string, number>();
+  for (const entry of ENTRIES) {
+    for (const platform of entry.platforms ?? []) {
+      const key = `${entry.category}/${platform}`;
+      intersectionCounts.set(key, (intersectionCounts.get(key) ?? 0) + 1);
+    }
+  }
+  const intersectionPaths: string[] = [];
+  for (const platform of Object.keys(PLATFORM_LABEL)) {
+    for (const category of CATEGORIES) {
+      if ((intersectionCounts.get(`${category.id}/${platform}`) ?? 0) >= 2) {
+        intersectionPaths.push(`/for/${platform}/${category.id}`);
+      }
+    }
+  }
 
   const rows = [
     ...staticPaths.map((pathname) => urlItem(pathname, pathname === "" ? "1" : "0.7")),
@@ -95,6 +114,7 @@ async function renderSitemap() {
     ),
     ...getIndexableTagGroups().map((group) => urlItem(`/tags/${group.slug}`, "0.5")),
     ...Object.keys(PLATFORM_LABEL).map((platform) => urlItem(`/for/${platform}`, "0.6")),
+    ...intersectionPaths.map((pathname) => urlItem(pathname, "0.55")),
     ...COMPARISONS.map((comparison) => urlItem(`/compare/${comparison.slug}`, "0.6")),
     ...bestPaths.map((pathname) => urlItem(pathname, "0.75")),
     ...ENTRIES.map((entry) =>

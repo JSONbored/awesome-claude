@@ -139,11 +139,11 @@ function PlatformPage() {
               {categoryLabels[section.category.id] ?? section.category.label}
             </h2>
             <Link
-              to="/$category"
-              params={{ category: section.category.id }}
+              to="/for/$platform/$category"
+              params={{ platform, category: section.category.id }}
               className="story-link text-sm font-medium text-ink"
             >
-              All {categoryLabels[section.category.id] ?? section.category.label} →
+              All {categoryLabels[section.category.id] ?? section.category.label} for {label} →
             </Link>
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
