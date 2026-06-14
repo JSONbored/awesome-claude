@@ -33,6 +33,7 @@ async function resolveBrandIconUrl(domain: string, clientId: string) {
 
   const searchResponse = await fetch(searchUrl, {
     headers: { accept: "application/json" },
+    signal: AbortSignal.timeout(6000),
   });
   if (!searchResponse.ok) return "";
 

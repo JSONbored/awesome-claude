@@ -5,7 +5,8 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
-import { getTagGroup } from "@/lib/tags";
+import { ogImageUrl } from "@/lib/og-image";
+import { getTagGroup, relatedTags } from "@/lib/tags";
 
 export const Route = createFileRoute("/tags/$tag")({
   loader: ({ params }) => {
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/tags/$tag")({
     const url = absoluteUrl(`/tags/${params.tag}`);
     const title = `Claude ${group.name} resources — HeyClaude`;
     const description = `${group.entries.length} Claude Code resources tagged "${group.name}" — MCP servers, agents, skills, hooks, commands, rules, and more, curated in HeyClaude.`;
+    const ogImage = ogImageUrl({ title: `Tagged "${group.name}"`, eyebrow: "Tag", description });
     const itemList = {
       "@context": "https://schema.org",
       "@type": "ItemList",
@@ -47,7 +49,12 @@ export const Route = createFileRoute("/tags/$tag")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
+        { property: "og:image", content: ogImage },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: ogImage },
+        // Single-entry tag pages are thin and excluded from the sitemap; keep them usable for
+        // in-page tag links but out of the index to match the sitemap policy.
+        ...(group.entries.length < 2 ? [{ name: "robots", content: "noindex, follow" }] : []),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
@@ -76,6 +83,7 @@ function TagHub() {
   const group = getTagGroup(tag);
   if (!group) return null;
   const entries = group.entries;
+  const related = relatedTags(group.slug);
 
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
@@ -91,6 +99,22 @@ function TagHub() {
           the HeyClaude directory — across MCP servers, agents, skills, hooks, commands, and more.
         </p>
       </header>
+
+      {related.length > 0 && (
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <span className="eyebrow mr-1">Related topics</span>
+          {related.map((g) => (
+            <Link
+              key={g.slug}
+              to="/tags/$tag"
+              params={{ tag: g.slug }}
+              className="rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted transition-colors hover:border-ink/20 hover:text-ink"
+            >
+              {g.name}
+            </Link>
+          ))}
+        </div>
+      )}
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {entries.map((e) => (

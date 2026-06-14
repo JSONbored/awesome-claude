@@ -3,6 +3,7 @@ import { Calendar } from "lucide-react";
 import { BRIEF_ISSUES, WEEKLY_BRIEF } from "@/data/entries";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/brief")({
   head: () => ({
@@ -17,7 +18,9 @@ export const Route = createFileRoute("/brief")({
         property: "og:description",
         content: "Reviewed picks, what shipped, and what to watch. No hype.",
       },
+      { property: "og:url", content: absoluteUrl("/brief") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/brief") }],
   }),
   component: BriefPage,
 });

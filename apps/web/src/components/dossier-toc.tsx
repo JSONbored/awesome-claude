@@ -26,6 +26,7 @@ export function DossierTOC({ items, className }: { items: TocItem[]; className?:
             <li key={item.id}>
               <a
                 href={`#${item.id}`}
+                aria-current={isActive ? "true" : undefined}
                 className={cn(
                   "group flex items-center gap-2 rounded-md px-2 py-1 text-xs transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
                   isActive

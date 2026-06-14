@@ -25,6 +25,9 @@ export function buildOrganizationJsonLd(params = {}) {
     "@id": `${siteUrl.replace(/\/$/, "")}/#organization`,
     name: params.name || "HeyClaude",
     url: siteUrl,
+    ...(params.logo
+      ? { logo: { "@type": "ImageObject", url: absoluteSiteUrl(siteUrl, params.logo) } }
+      : {}),
     sameAs: uniqueValues([
       params.githubUrl,
       params.twitterUrl,
@@ -436,6 +439,18 @@ function parseJobCompensation(value) {
   // Reject inverted ranges so JSON-LD never advertises minValue > maxValue.
   if (!minValue || !maxValue || minValue > maxValue) return undefined;
 
+  // Infer the pay period so an hourly/day/week rate isn't advertised as an
+  // annual salary. Defaults to YEAR when the text gives no period hint.
+  const unitText = /per\s*hour|hourly|\/\s*h(ou)?r\b/i.test(text)
+    ? "HOUR"
+    : /per\s*day|daily|\/\s*day\b/i.test(text)
+      ? "DAY"
+      : /per\s*week|weekly|\/\s*wk\b/i.test(text)
+        ? "WEEK"
+        : /per\s*month|monthly|\/\s*mo\b/i.test(text)
+          ? "MONTH"
+          : "YEAR";
+
   return {
     "@type": "MonetaryAmount",
     currency,
@@ -443,7 +458,7 @@ function parseJobCompensation(value) {
       "@type": "QuantitativeValue",
       minValue,
       maxValue,
-      unitText: "YEAR",
+      unitText,
     },
   };
 }

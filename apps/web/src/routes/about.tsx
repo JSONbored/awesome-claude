@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ShieldCheck, GitBranch, Users, Sparkles } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { breadcrumbScript } from "@/lib/seo-jsonld";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -17,6 +19,14 @@ export const Route = createFileRoute("/about")({
         property: "og:description",
         content: "The decision layer for Claude Code and AI agent workflows.",
       },
+      { property: "og:url", content: absoluteUrl("/about") },
+    ],
+    links: [{ rel: "canonical", href: absoluteUrl("/about") }],
+    scripts: [
+      breadcrumbScript([
+        { name: "HeyClaude", path: "/" },
+        { name: "About", path: "/about" },
+      ]),
     ],
   }),
   component: AboutPage,

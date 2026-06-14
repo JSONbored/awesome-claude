@@ -2,6 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, BadgeCheck } from "lucide-react";
 import { COMMERCIAL_TOOLS } from "@/data/tools";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
+import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 
 export const Route = createFileRoute("/tools")({
   head: () => ({
@@ -17,6 +20,29 @@ export const Route = createFileRoute("/tools")({
         content:
           "Editorial picks and disclosed partners. Free, open-source resources live in the directory.",
       },
+      { property: "og:url", content: absoluteUrl("/tools") },
+      {
+        property: "og:image",
+        content: ogImageUrl({ title: "Tools that pair well with Claude", eyebrow: "Tools" }),
+      },
+      {
+        name: "twitter:image",
+        content: ogImageUrl({ title: "Tools that pair well with Claude", eyebrow: "Tools" }),
+      },
+    ],
+    links: [{ rel: "canonical", href: absoluteUrl("/tools") }],
+    scripts: [
+      breadcrumbScript([
+        { name: "Directory", path: "/browse" },
+        { name: "Tools", path: "/tools" },
+      ]),
+      itemListScript(
+        COMMERCIAL_TOOLS.slice(0, 30).map((t) => ({
+          name: t.name,
+          path: `/entry/tools/${t.slug}`,
+        })),
+        { name: "Claude tools" },
+      ),
     ],
   }),
   component: ToolsPage,

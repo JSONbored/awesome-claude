@@ -1,13 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { Check } from "lucide-react";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/advertise")({
   head: () => ({
     meta: [
       { title: "Advertise on HeyClaude" },
       { name: "description", content: "Sponsorship and paid listings on HeyClaude." },
+      { property: "og:url", content: absoluteUrl("/advertise") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/advertise") }],
   }),
   component: AdvertisePage,
 });

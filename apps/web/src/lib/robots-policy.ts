@@ -2,7 +2,9 @@ import { siteConfig } from "@/lib/site";
 
 // Machine endpoints and generated artifacts should not be crawled: they waste crawl budget
 // and surface as "crawled - not indexed" / 404 noise in Search Console.
-const DISALLOW_PATHS = ["/api/", "/data/", "/downloads/", "/_next/"];
+// /_next/ was a Next.js artifact; this app is TanStack Start on Workers and never serves it.
+// Hashed build assets live under /assets/* and stay crawlable (Google needs JS/CSS to render).
+const DISALLOW_PATHS = ["/api/", "/data/", "/downloads/"];
 
 // AI content-usage preferences (contentsignals.org / draft-romm-aipref-contentsignals).
 // Fully open: appear in search + AI answers and allow training.

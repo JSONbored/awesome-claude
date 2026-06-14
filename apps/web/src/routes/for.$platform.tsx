@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { CATEGORIES, PLATFORM_LABEL, type Platform } from "@/types/registry";
@@ -8,12 +9,12 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 
 const PLATFORM_IDS = new Set(Object.keys(PLATFORM_LABEL));
 
-function platformEntries(platform: string) {
-  return search({ platforms: [platform as Platform] });
-}
+// Cached per render pass so head() and the component don't each re-run the search.
+const platformEntries = cache((platform: string) => search({ platforms: [platform as Platform] }));
 
 export const Route = createFileRoute("/for/$platform")({
   loader: ({ params }) => {
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/for/$platform")({
     const url = absoluteUrl(`/for/${params.platform}`);
     const title = `Claude resources for ${label} — HeyClaude`;
     const description = `${entries.length} source-backed Claude resources that work with ${label}: MCP servers, agents, skills, hooks, commands, and rules, curated in HeyClaude.`;
+    const ogImage = ogImageUrl({ title: `Claude for ${label}`, eyebrow: "Platform", description });
     const itemList = {
       "@context": "https://schema.org",
       "@type": "ItemList",
@@ -70,7 +72,9 @@ export const Route = createFileRoute("/for/$platform")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
+        { property: "og:image", content: ogImage },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: ogImage },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
@@ -135,11 +139,11 @@ function PlatformPage() {
               {categoryLabels[section.category.id] ?? section.category.label}
             </h2>
             <Link
-              to="/$category"
-              params={{ category: section.category.id }}
+              to="/for/$platform/$category"
+              params={{ platform, category: section.category.id }}
               className="story-link text-sm font-medium text-ink"
             >
-              All {categoryLabels[section.category.id] ?? section.category.label} →
+              All {categoryLabels[section.category.id] ?? section.category.label} for {label} →
             </Link>
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

@@ -2762,6 +2762,52 @@ repoUrl: "https://github.com/langchain-ai/langchain.git"
     );
   });
 
+  it("treats same canonical website across different categories as a strict duplicate", () => {
+    const existingTool = extractContentDuplicateSignals({
+      filePath: "content/tools/acme-claude.mdx",
+      content: `---
+title: Acme Claude
+slug: acme-claude
+category: tools
+description: Tooling for Acme Claude workflows.
+websiteUrl: "https://acme-claude.example/product"
+---
+`,
+    });
+    const candidateMcp = extractContentDuplicateSignals({
+      filePath: "content/mcp/acme-claude-server.mdx",
+      content: `---
+title: Acme Claude MCP Server
+slug: acme-claude-server
+category: mcp
+description: MCP server for Acme Claude workflows.
+websiteUrl: "https://acme-claude.example/product?utm_source=submission"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(candidateMcp, [existingTool]),
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining(
+          "same canonical source URL https://acme-claude.example/product across mcp/tools",
+        ),
+      ]),
+    });
+    expect(findRelatedContentMatches(candidateMcp, [existingTool])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same canonical source URL https://acme-claude.example/product across mcp/tools",
+            ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
   it("treats collection member overlap as related context, not a strict duplicate", () => {
     const existingTool = extractContentDuplicateSignals({
       filePath: "content/tools/storybook-a11y.mdx",

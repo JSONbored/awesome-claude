@@ -72,6 +72,7 @@ import {
   encryptText,
   randomToken,
   signInternalPayload,
+  timingSafeEqual,
   verifyGitHubWebhookSignature,
 } from "./security";
 import {
@@ -1017,7 +1018,8 @@ async function readJsonBodyWithLimit(request: Request) {
   }
 
   const reader = request.body?.getReader();
-  if (!reader) return JSON.parse("");
+  // No body stream → treat as an empty payload; the caller rejects non-objects.
+  if (!reader) return null;
 
   const chunks: Uint8Array[] = [];
   let total = 0;
@@ -4660,9 +4662,11 @@ async function discoverOpenContentPullRequests(
 
 function hasInternalBearer(request: Request, env: Env) {
   const authorization = request.headers.get("authorization") || "";
+  // Constant-time compare to match the timing-safe standard used elsewhere in
+  // this worker (security.ts), instead of a short-circuiting === on the secret.
   return (
     Boolean(env.INTERNAL_SHARED_SECRET) &&
-    authorization === `Bearer ${env.INTERNAL_SHARED_SECRET}`
+    timingSafeEqual(authorization, `Bearer ${env.INTERNAL_SHARED_SECRET}`)
   );
 }
 

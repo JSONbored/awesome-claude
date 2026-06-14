@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/tools/submit")({
   head: () => ({
@@ -11,7 +12,9 @@ export const Route = createFileRoute("/tools/submit")({
         content:
           "Route commercial Claude tools, sponsorships, listing claims, and paid review interest through HeyClaude lead capture.",
       },
+      { property: "og:url", content: absoluteUrl("/tools/submit") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/tools/submit") }],
   }),
   component: SubmitTool,
 });

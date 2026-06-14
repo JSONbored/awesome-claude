@@ -6,7 +6,14 @@
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 
 /data/*
+  Cache-Control: public, max-age=300, s-maxage=3600, stale-while-revalidate=86400
   Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' https://umami.heyclau.de https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://api.github.com https://img.shields.io https://umami.heyclau.de https://challenges.cloudflare.com https://submission-gate.heyclau.de; frame-src https://challenges.cloudflare.com; form-action 'self' https://github.com; manifest-src 'self'
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts.css
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

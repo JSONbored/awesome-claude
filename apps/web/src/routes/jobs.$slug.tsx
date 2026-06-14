@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { absoluteUrl } from "@/lib/seo";
+import { breadcrumbScript } from "@/lib/seo-jsonld";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { NewsletterInline } from "@/components/newsletter-inline";
@@ -16,9 +17,18 @@ const loadJobDetailData = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const { buildPublicJobsIndex, getJobBySlug, getJobs, toPublicJobListing } =
       await import("@/lib/jobs");
+    const { buildJobPostingJsonLd } = await import("@heyclaude/registry/seo");
+    const { stringifyJsonLd } = await import("@/lib/json-ld");
     const [job, jobs] = await Promise.all([getJobBySlug(data.slug), getJobs()]);
+    // Built from the raw job (has expiresAt/status); the builder returns null for missing
+    // fields or non-active roles, so stale listings never get JobPosting markup. Stringified
+    // here so the server fn returns a plain serializable string.
+    const jobPostingLd = job
+      ? buildJobPostingJsonLd(job as unknown as Record<string, unknown>)
+      : null;
     return {
       job: job ? toPublicJobListing(job) : null,
+      jobPostingLd: jobPostingLd ? stringifyJsonLd(jobPostingLd) : null,
       related: buildPublicJobsIndex(jobs.filter((item) => item.slug !== data.slug)).entries.slice(
         0,
         4,
@@ -29,43 +39,47 @@ const loadJobDetailData = createServerFn({ method: "GET" })
 export const Route = createFileRoute("/jobs/$slug")({
   loader: async ({ params }) => {
     const data = await loadJobDetailData({ data: { slug: params.slug } });
+    // Unknown/filled/removed slugs return a real 404 (was a soft-404 at HTTP 200, wasting
+    // crawl budget and emitting a self-canonical for a dead URL).
+    if (!data.job) throw notFound();
     return {
       slug: params.slug,
-      job: data.job ? normalizeJobListing(data.job) : null,
+      job: normalizeJobListing(data.job),
       related: data.related
         .map(normalizeJobListing)
         .filter((item) => item.slug)
         .slice(0, 4),
+      jobPostingLd: data.jobPostingLd,
     };
   },
   head: ({ params, loaderData }) => {
     const job = loaderData?.job;
+    if (!job) {
+      // Not-found path: no canonical for a dead URL.
+      return { meta: [{ title: "Role not found — HeyClaude jobs" }] };
+    }
     const url = absoluteUrl(`/jobs/${params.slug}`);
+    const title = `${job.title} at ${job.company}`;
+    const description = job.description || "Source-verified role from the HeyClaude jobs board.";
     return {
       meta: [
-        {
-          title: job
-            ? `${job.title} at ${job.company} — HeyClaude jobs`
-            : "Claude workflow role — HeyClaude",
-        },
-        {
-          name: "description",
-          content:
-            job?.description ||
-            "Source-verified roles building Claude Code, MCP servers, and agent workflows.",
-        },
-        {
-          property: "og:title",
-          content: job ? `${job.title} at ${job.company}` : "Claude workflow role — HeyClaude",
-        },
-        {
-          property: "og:description",
-          content: job?.description || "Source-verified role from the HeyClaude jobs board.",
-        },
+        { title: `${title} — HeyClaude jobs` },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
       ],
       links: [{ rel: "canonical", href: url }],
+      scripts: [
+        breadcrumbScript([
+          { name: "Jobs", path: "/jobs" },
+          { name: title, path: `/jobs/${params.slug}` },
+        ]),
+        ...(loaderData?.jobPostingLd
+          ? [{ type: "application/ld+json", children: loaderData.jobPostingLd }]
+          : []),
+      ],
     };
   },
   errorComponent: ({ error, reset }: ErrorComponentProps) => (

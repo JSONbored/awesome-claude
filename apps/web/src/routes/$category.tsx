@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { CATEGORIES, type Category } from "@/types/registry";
@@ -14,13 +15,13 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl, categoryAccent } from "@/lib/og-image";
 
 const categoryIds = new Set(CATEGORIES.map((c) => c.id));
 
 // Reuse the canonical registry ranking (recommendedScore) so hub order matches /browse.
-function topEntriesFor(id: string) {
-  return search({ categories: [id as Category] });
-}
+// Cached per render pass so head() and the component don't each re-run the search.
+const topEntriesFor = cache((id: string) => search({ categories: [id as Category] }));
 
 function faqFor(id: string, label: string) {
   return [
@@ -60,6 +61,12 @@ export const Route = createFileRoute("/$category")({
       categorySeoDescriptions[id] ??
       categoryDescriptions[id] ??
       `Browse ${entries.length} source-backed Claude ${label} in the HeyClaude directory.`;
+    const ogImage = ogImageUrl({
+      title: `Claude ${label}`,
+      eyebrow: label,
+      description,
+      accent: categoryAccent(id),
+    });
 
     const itemList = {
       "@context": "https://schema.org",
@@ -99,10 +106,20 @@ export const Route = createFileRoute("/$category")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
+        { property: "og:image", content: ogImage },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: ogImage },
       ],
-      links: [{ rel: "canonical", href: url }],
+      links: [
+        { rel: "canonical", href: url },
+        {
+          rel: "alternate",
+          type: "application/rss+xml",
+          href: absoluteUrl(`/feeds/${id}.xml`),
+          title: `Claude ${label} — HeyClaude`,
+        },
+      ],
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(itemList) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },

@@ -3,6 +3,9 @@ import { Github } from "lucide-react";
 import { CONTRIBUTORS } from "@/data/contributors";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Monogram } from "@/components/monogram";
+import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
+import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 
 export const Route = createFileRoute("/contributors")({
   head: () => ({
@@ -11,6 +14,29 @@ export const Route = createFileRoute("/contributors")({
       { name: "description", content: "People whose submissions power the HeyClaude registry." },
       { property: "og:title", content: "Contributors — HeyClaude" },
       { property: "og:description", content: "Provenance is preserved on every entry." },
+      { property: "og:url", content: absoluteUrl("/contributors") },
+      {
+        property: "og:image",
+        content: ogImageUrl({ title: "Contributors", eyebrow: "HeyClaude" }),
+      },
+      {
+        name: "twitter:image",
+        content: ogImageUrl({ title: "Contributors", eyebrow: "HeyClaude" }),
+      },
+    ],
+    links: [{ rel: "canonical", href: absoluteUrl("/contributors") }],
+    scripts: [
+      breadcrumbScript([
+        { name: "Directory", path: "/browse" },
+        { name: "Contributors", path: "/contributors" },
+      ]),
+      itemListScript(
+        CONTRIBUTORS.map((c) => ({
+          name: c.name ?? c.slug,
+          path: `/contributors/${c.slug}`,
+        })),
+        { name: "HeyClaude contributors" },
+      ),
     ],
   }),
   component: ContributorsPage,

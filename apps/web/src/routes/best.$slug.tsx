@@ -1,11 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, CalendarDays, User } from "lucide-react";
+import { CalendarDays, User } from "lucide-react";
 import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entries";
 import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
+import { breadcrumbScript } from "@/lib/seo-jsonld";
 
 export const Route = createFileRoute("/best/$slug")({
   loader: ({ params }) => {
@@ -17,17 +20,22 @@ export const Route = createFileRoute("/best/$slug")({
     if (!loaderData) return { meta: [] };
     const l = loaderData.list;
     const url = absoluteUrl(`/best/${params.slug}`);
+    const ogImage = ogImageUrl({ title: l.title, eyebrow: "Best", description: l.seoDescription });
     const ld = {
       "@context": "https://schema.org",
       "@type": "ItemList",
       name: l.title,
       description: l.subtitle,
       numberOfItems: l.picks.length,
-      itemListElement: l.picks.map((p, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        url: absoluteUrl(`/entry/${p.ref}`),
-      })),
+      itemListElement: l.picks.map((p, i) => {
+        const entry = ENTRIES.find((e) => `${e.category}/${e.slug}` === p.ref);
+        return {
+          "@type": "ListItem",
+          position: i + 1,
+          name: entry?.title ?? p.ref,
+          url: absoluteUrl(`/entry/${p.ref}`),
+        };
+      }),
     };
     return {
       meta: [
@@ -36,10 +44,20 @@ export const Route = createFileRoute("/best/$slug")({
         { property: "og:title", content: l.title },
         { property: "og:description", content: l.seoDescription },
         { property: "og:url", content: url },
+        { property: "og:image", content: ogImage },
         { property: "og:type", content: "article" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: ogImage },
       ],
       links: [{ rel: "canonical", href: url }],
-      scripts: [{ type: "application/ld+json", children: stringifyJsonLd(ld) }],
+      scripts: [
+        { type: "application/ld+json", children: stringifyJsonLd(ld) },
+        breadcrumbScript([
+          { name: "Directory", path: "/browse" },
+          { name: "Best", path: "/best" },
+          { name: l.title, path: `/best/${params.slug}` },
+        ]),
+      ],
     };
   },
   notFoundComponent: () => (
@@ -67,12 +85,7 @@ function BestDetail() {
 
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
-      <Link
-        to="/best"
-        className="inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
-      >
-        <ArrowLeft className="h-4 w-4" /> All best lists
-      </Link>
+      <Breadcrumbs home items={[{ label: "Best lists", to: "/best" }, { label: list.title }]} />
 
       <div className="mt-6 eyebrow">
         {list.eyebrow} · {list.category} · {resolved.length} picks
