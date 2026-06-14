@@ -1,0 +1,166 @@
+---
+title: "Claude Code VS Code Extension Setup for Teams"
+slug: claude-code-vs-code-extension-setup-for-teams
+category: guides
+description: >-
+  Roll out the Claude Code VS Code extension to engineering teams: install paths, integrated terminal setup, GPU rendering fixes, usage attribution, and managed settings alignment.
+cardDescription: Roll out the Claude Code VS Code extension across engineering teams.
+seoTitle: "Claude Code VS Code Extension Setup for Teams"
+seoDescription: >-
+  Roll out the Claude Code VS Code extension to engineering teams: install paths, integrated terminal setup, GPU rendering fixes, usage attribution, and managed settings alignment.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1387
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1387"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to standardize Claude Code VS Code extension install, terminal setup, and team policy for IDE-based workflows.
+prerequisites:
+  - "VS Code, Cursor, or Windsurf with the Claude Code extension approved by IT."
+  - "Team managed settings or `.claude/settings.json` documenting required plugins and permissions."
+  - "A pilot repo with CLAUDE.md and project skills for first-week exercises."
+  - "Windows/macOS/Linux install docs for each supported developer platform."
+safetyNotes:
+  - "IDE sessions inherit workspace secrets from `.env` and launch configs—scope extension rollout to trusted repositories first."
+  - "Do not store personal Anthropic tokens in shared workspace settings committed to git."
+  - "Windows shutdown bugs historically left orphaned MCP servers; verify clean exit in your pilot before wide deployment."
+privacyNotes:
+  - "Integrated terminal sessions may include repository paths, branch names, and tool outputs in usage attribution dialogs."
+  - "Voice dictation features can capture ambient audio—disable on shared machines or in open offices."
+  - "Usage breakdowns in `/usage` expose skill, plugin, and MCP names; sanitize internal codenames before demos."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/vs-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - vs-code
+  - ide
+  - teams
+  - extension
+keywords:
+  - "Claude Code VS Code extension"
+  - "team IDE rollout"
+  - "VS Code terminal setup"
+  - "Claude Code extension teams"
+  - "integrated terminal Claude"
+readingTime: 8
+difficultyScore: 44
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Team VS Code rollout succeeds when install, integrated terminal rendering, and managed settings are standardized before individuals customize keybindings. Run `/terminal-setup`, pilot on one repo, and publish extension version pins alongside CLI version pins.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Extension wraps the CLI
+
+The VS Code extension launches the same Claude Code engine as the terminal, adding in-editor transcripts, permission dialogs, and session tabs.
+
+### Terminal rendering matters
+
+`/terminal-setup` disables GPU acceleration in VS Code-family integrated terminals to prevent garbled glyphs—a common first-week friction point.
+
+### Usage attribution in IDE
+
+The Account & usage dialog exposes cache misses, subagents, and per-skill/plugin/MCP breakdowns for the last 24h or 7d.
+
+### Clean shutdown on Windows
+
+Recent fixes address Claude Code processes not exiting when VS Code closes on Windows, which otherwise orphans MCP subprocesses.
+
+## Step-by-Step Implementation Guide
+
+1. **Approve the extension.** Publish the marketplace extension ID and minimum version in team platform docs; mirror to Cursor/Windsurf if applicable.
+
+2. **Pin CLI and extension pairs.** Document tested combinations of Claude Code CLI build and extension release in your internal runbook.
+
+3. **Run terminal setup.** Have pilots execute `/terminal-setup` or disable terminal GPU acceleration per team policy.
+
+4. **Configure managed settings.** Sync managed MCP policy, permission modes, and required plugins before inviting the full team.
+
+5. **Open the pilot repository.** Verify CLAUDE.md, skills, and hooks load from the workspace root in the integrated session.
+
+6. **Exercise permissions.** Run a harmless edit and a gated bash command to confirm IDE permission dialogs match terminal behavior.
+
+7. **Review usage attribution.** Open `/usage` in the extension and confirm skill and MCP breakdowns help champions coach adoption.
+
+8. **Publish support playbook.** Document Esc vs stop, `/clear` behavior, and when to fall back to standalone terminal sessions.
+
+## Team IDE Rollout Checklist
+
+- [ ] {"task": "Extension approved", "description": "Marketplace ID and min version documented"}
+- [ ] {"task": "Terminal setup done", "description": "GPU acceleration policy applied"}
+- [ ] {"task": "Managed settings synced", "description": "MCP and permissions match org policy"}
+- [ ] {"task": "Pilot repo verified", "description": "CLAUDE.md and skills load in IDE session"}
+- [ ] {"task": "Shutdown tested", "description": "Closing IDE does not orphan MCP servers"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Garbled terminal glyphs
+
+Run `/terminal-setup` or set terminal GPU acceleration off in VS Code settings.
+
+### PowerShell shows raw JSON
+
+Update to a recent extension build; PowerShell tool calls should render as command dialogs.
+
+### MCP servers disappear after /clear
+
+Recent fixes restore MCP configs from `.mcp.json`, plugins, and connectors after `/clear` in the extension.
+
+### Sessions missing after integrated terminal launch
+
+Fixes address transcripts not saving when shells inherit Claude Code environment variables—restart from a clean shell.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` adds VS Code usage attribution in `/usage` with per-skill, plugin, and MCP breakdowns.
+- `CHANGELOG.md` documents `/terminal-setup` disabling GPU acceleration in VS Code-family terminals.
+- `CHANGELOG.md` fixed VS Code processes not shutting down cleanly on Windows, orphaning MCP servers.
+- `CHANGELOG.md` fixed MCP servers disappearing after `/clear` in the VS Code extension.
+- The root README recommends curl, Homebrew, and WinGet install paths that pair with the extension-hosted CLI.
+
+## Duplicate Check
+
+This guide standardizes VS Code extension team rollout. It complements choose-claude-extension-surface.mdx for picking IDE vs terminal vs CI surfaces, and terminal-tmux-and-vim-setup-for-claude-code.mdx for terminal-first workflows.
+
+## References
+
+- Claude Code VS Code - https://code.claude.com/docs/en/vs-code
+- Choose extension surface - choose-claude-extension-surface
+- Permission modes for teams - permission-modes-for-claude-code-teams
