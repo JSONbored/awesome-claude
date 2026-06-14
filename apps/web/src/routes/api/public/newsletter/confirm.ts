@@ -3,6 +3,8 @@ import { createApiFileRoute } from "@/lib/api/file-route";
 import { getEnvString } from "@/lib/cloudflare-env.server";
 import { verifyConfirmToken } from "@/lib/newsletter-token.server";
 import { addNewsletterContact } from "@/routes/api/newsletter/subscribe";
+import { buildWelcomeEmail } from "@/lib/newsletter-emails";
+import { sendResendEmail } from "@/lib/newsletter-send.server";
 import { siteConfig } from "@/lib/site";
 
 // Minimal, on-brand confirmation landing page (light theme, matches the site).
@@ -71,6 +73,23 @@ export const Route = createApiFileRoute("/api/public/newsletter/confirm")({
             heading: "Something went wrong",
             body: "We couldn't confirm your subscription just now. Please try again shortly.",
           });
+        }
+
+        // Send the welcome email on first-time confirm (best-effort; never block
+        // or fail the confirmation on a welcome-send hiccup). Skip duplicates.
+        if (result === "ok") {
+          const from = getEnvString("RESEND_FROM");
+          if (from) {
+            const welcome = buildWelcomeEmail({ siteUrl: siteConfig.url });
+            await sendResendEmail({
+              apiKey: resendApiKey,
+              from,
+              to: payload.email,
+              subject: welcome.subject,
+              html: welcome.html,
+              text: welcome.text,
+            }).catch(() => false);
+          }
         }
 
         return resultPage({

@@ -21,7 +21,8 @@
     "mode": "smart",
   },
   "triggers": {
-    "crons": ["17 */6 * * *"],
+    // 6-hourly: source-repo signals. Sundays 16:00 UTC: weekly newsletter digest.
+    "crons": ["17 */6 * * *", "0 16 * * 0"],
   },
   "assets": {
     "directory": "dist/client",
