@@ -1,0 +1,252 @@
+---
+title: Claude Code Analytics Adoption Capability Pack Skill
+slug: claude-code-analytics-adoption-capability-pack
+category: skills
+description: >-
+  Expert Claude Code analytics adoption capability pack for enabling team and
+  enterprise dashboards, GitHub contribution metrics, adoption tracking, ROI
+  reporting, and OpenTelemetry complements with source-backed rollout steps.
+cardDescription: >-
+  Roll out Claude Code analytics with dashboard setup, GitHub app enablement,
+  adoption metrics, and ROI reporting checklists.
+seoTitle: Claude Code Analytics Adoption Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code analytics adoption, dashboard
+  setup, GitHub contribution metrics, adoption tracking, and OpenTelemetry
+  complements.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1546
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1546"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when rolling out Claude Code analytics to a team or enterprise
+  org and you need a verified setup path for dashboards, GitHub metrics, adoption
+  tracking, and responsible ROI reporting.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code analytics adoption capability pack for this organization."
+
+  # Required output
+  1) Plan fit and dashboard target selection
+  2) Enablement checklist for analytics and GitHub contribution metrics
+  3) Adoption, ROI, and leaderboard interpretation guidance
+  4) ZDR and API-customer limitation notes
+  5) Privacy-safe rollout summary for admins and champions
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-13"
+retrievalSources:
+  - "https://code.claude.com/docs/en/analytics"
+  - "https://code.claude.com/docs/en/champion-kit"
+  - "https://code.claude.com/docs/en/communications-kit"
+  - "https://code.claude.com/docs/en/admin-setup"
+  - "https://code.claude.com/docs/en/monitoring-usage"
+  - "https://code.claude.com/docs/en/zero-data-retention"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Claude for Teams, Claude for Enterprise, or Claude Console API access depending on the target dashboard."
+  - "Admin or Owner role for Team and Enterprise analytics setup, or UsageView permission for Console analytics."
+  - "GitHub admin access if enabling contribution metrics through the Claude GitHub app."
+  - "Clear rollout goals such as adoption tracking, ROI reporting, champion identification, or spend visibility."
+safetyNotes:
+  - "This skill recommends analytics enablement steps; it must not toggle admin settings or install GitHub apps without explicit owner approval."
+  - "Contribution metrics are conservative underestimates and should not be treated as exact productivity scores for individuals."
+  - "Leaderboards and CSV exports can create unintended performance pressure; align rollout with HR and management policy first."
+  - "Zero Data Retention organizations cannot use GitHub contribution metrics; usage metrics only."
+  - "Console spend figures are estimates; use billing pages for actual costs."
+privacyNotes:
+  - "Analytics dashboards expose account emails, usage patterns, leaderboard rankings, and per-user spend or line counts depending on plan."
+  - "GitHub contribution metrics analyze merged PR diffs and Claude Code session activity within attribution windows; confirm code and identity visibility with security review."
+  - "CSV exports include all users, not just the top ten shown in the dashboard UI."
+  - "OpenTelemetry exports can replicate usage events into customer observability systems and need retention and access-control review."
+tags:
+  - claude-code
+  - analytics
+  - adoption
+  - enterprise
+  - github
+  - capability-pack
+keywords:
+  - Claude Code analytics adoption
+  - Claude Code analytics dashboard
+  - Claude Code GitHub contribution metrics
+  - Claude Code adoption tracking
+  - Claude Code ROI reporting
+  - Claude Code OpenTelemetry analytics
+readingTime: 9
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code analytics, champion kit,
+communications kit, admin setup, monitoring, zero data retention, and skills
+documentation verified on **2026-06-13**. Contribution metrics remain in public
+beta; prefer live official docs when confirming plan availability.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/analytics
+- https://code.claude.com/docs/en/champion-kit
+- https://code.claude.com/docs/en/communications-kit
+- https://code.claude.com/docs/en/admin-setup
+- https://code.claude.com/docs/en/monitoring-usage
+- https://code.claude.com/docs/en/zero-data-retention
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code analytics documentation on **2026-06-13**:
+
+- Team and Enterprise analytics live at **`claude.ai/analytics/claude-code`**; Console
+  API customers use **`platform.claude.com/claude-code`**.
+- Contribution metrics require the **Claude GitHub app**, admin enablement of GitHub
+  analytics, and are **unavailable for ZDR organizations**.
+- Metrics are conservative underestimates; PRs are tagged when at least one
+  high-confidence assisted line exists within a **21-day-before to 2-day-after** merge
+  attribution window.
+- Merged PRs containing assisted lines receive the **`claude-code-assisted`** GitHub
+  label for programmatic lookup.
+- Console dashboard spend figures are **estimates**; billing pages show actual costs.
+
+## Scope Note
+
+This is not a generic product-analytics framework. Use it when engineering
+leaders need a source-backed rollout plan for Claude Code analytics dashboards,
+GitHub contribution metrics, and complementary OpenTelemetry exports.
+
+## Core Workflow
+
+1. Select the dashboard lane:
+   - Claude for Teams or Enterprise at `claude.ai/analytics/claude-code`
+   - Claude Console API customers at `platform.claude.com/claude-code`
+2. Confirm prerequisites:
+   - Team and Enterprise require Admin or Owner access.
+   - Console requires UsageView permission.
+   - Contribution metrics require Claude for Teams or Enterprise and do not
+     apply to Console API-only customers.
+3. Enable base analytics:
+   - Owners navigate to admin settings and enable Claude Code analytics.
+4. If contribution metrics are needed and ZDR is not enabled:
+   - Install the Claude GitHub app on the target GitHub organization.
+   - Enable GitHub analytics in admin settings.
+   - Complete GitHub authentication and select included organizations.
+5. Set expectations for data latency: contribution data typically appears
+   within 24 hours with daily updates.
+6. Review summary metrics and chart lanes:
+   - Adoption: daily active users and sessions
+   - Contribution: PRs and lines with Claude Code assistance
+   - Accept rate and accepted lines from editing tools
+   - Leaderboard and CSV export for champions or broader reporting
+7. Interpret attribution conservatively:
+   - PRs tagged when at least one high-confidence assisted line exists
+   - 21-day-before to 2-day-after merge attribution window
+   - Excluded lockfiles, generated artifacts, and heavily rewritten code
+8. Plan complementary telemetry:
+   - OpenTelemetry export for per-user token counts and cost estimates on Team
+     and Enterprise
+   - Console team insights for per-member spend and line counts
+9. Pair analytics rollout with champion and communications kits for adoption,
+   not just measurement.
+
+## Capability Scope
+
+- Dashboard selection for Team, Enterprise, and Console API customers.
+- Analytics and GitHub contribution metric enablement checklist.
+- Adoption, ROI, and leaderboard interpretation guidance.
+- ZDR and API-customer limitation awareness.
+- OpenTelemetry complement planning.
+- Privacy-safe admin and champion rollout notes.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when planning analytics rollout,
+  admin setup, or internal ROI reporting for Claude Code.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a checklist for Claude Code analytics adoption planning in platform teams.
+
+## Required Inputs
+
+- Plan type, admin roles available, and whether ZDR is enabled.
+- GitHub organization scope and admin access for contribution metrics.
+- Rollout goals: adoption, ROI, spend visibility, champion program, or export.
+- Whether Console API usage outside the claude.ai org must be measured separately.
+
+## Production Rules
+
+- Do not use leaderboard rankings as performance review inputs without policy
+  alignment.
+- Treat contribution metrics as conservative underestimates, not exact credit.
+- Do not promise GitHub contribution metrics for ZDR orgs or Console-only API
+  customers.
+- Use billing pages for actual spend; dashboard spend is estimated on Console.
+- Restrict CSV exports and OpenTelemetry sinks to approved audiences.
+- Combine analytics with champion-kit and communications-kit messaging for
+  adoption, not surveillance framing.
+- Redact user emails and internal repo names in public rollout examples.
+
+## Review Matrix
+
+| Goal | Route | Limitation |
+| --- | --- | --- |
+| Track daily adoption | Adoption chart | Team/Enterprise dashboard |
+| Measure assisted PR volume | Contribution metrics | Requires GitHub app; unavailable under ZDR |
+| Identify champions | Leaderboard or CSV export | Handle sensitively with HR policy |
+| Per-user token cost detail | OpenTelemetry export | Complements dashboard on Team/Enterprise |
+| API spend by member | Console team insights | Contribution metrics not available |
+| Programmatic PR lookup | GitHub label search | Use `claude-code-assisted` label |
+
+## Output Contract
+
+1. Dashboard lane and role requirement summary.
+2. Enablement checklist with GitHub and admin steps.
+3. Metric interpretation notes and known limitations.
+4. Complementary OpenTelemetry or billing follow-ups.
+5. Champion and communications rollout recommendations.
+6. Privacy-safe summary suitable for admin review or internal launch docs.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for Claude Code analytics adoption, dashboard setup, and GitHub
+contribution metric workflows. Official docs and champion materials exist, but
+no `skills` entry provides a reusable analytics adoption capability pack with
+enablement checklist and limitation matrix.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.
