@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>948+ file-backed entries</strong> stay useful as both an
+        <strong>951+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>948</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>951</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -100,7 +100,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#guides"><strong>📚 Guides</strong></a><br>
-          <code>65</code><br>
+          <code>68</code><br>
           <sub>Long-form guides and practical walkthroughs.</sub>
         </td>
 <td align="center" width="20%">
@@ -1028,7 +1028,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Webpack Bundle Analyzer - Hooks](https://heyclau.de/entry/hooks/webpack-bundle-analyzer)** - Analyzes webpack bundle size when webpack config or entry files are modified.
 - **[Workflow Completion Report - Hooks](https://heyclau.de/entry/hooks/workflow-completion-report)** - Generates a comprehensive report when Claude Code workflow stops, including files modified, tests run, and git status.
 
-## 📚 Guides (65)
+## 📚 Guides (68)
 
 - **[Adding Plugin Install Hints to Developer CLIs](https://heyclau.de/entry/guides/adding-plugin-install-hints-to-developer-clis)** - A practical walkthrough of emitting the claude-code-hint marker from your CLI so Claude Code prompts users to install your official plugin: the hint format, gating on CLAUDECODE, where to emit it, and the official-marketplace requirement.
 - **[Agent Skills in Claude Agent SDK Applications](https://heyclau.de/entry/guides/agent-skills-in-claude-agent-sdk-applications)** - A practical walkthrough of using Agent Skills in the Claude Agent SDK: how skills are discovered from the filesystem via settingSources, the skills option to enable or filter them, tool access, and troubleshooting discovery.
@@ -1037,6 +1037,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Building a Claude Code Plugin Marketplace](https://heyclau.de/entry/guides/building-a-claude-code-plugin-marketplace)** - A practical walkthrough of creating and distributing a Claude Code plugin marketplace: the marketplace.json catalog, hosting on a git repository, adding it with /plugin marketplace add, private repositories, and how users install and update plugins.
 - **[Building In-Process MCP Tools with the Claude Agent SDK](https://heyclau.de/entry/guides/building-in-process-mcp-tools-with-the-claude-agent-sdk)** - A practical walkthrough of defining in-process custom tools for the Claude Agent SDK with createSdkMcpServer and the tool helper, wiring them into query via mcpServers, allowing them, error handling, and returning images or structured data.
 - **[Claude Process Automation](https://heyclau.de/entry/guides/business-process-automation)** - Deploy Claude AI agents for enterprise business process automation. Master implementation strategies, integration patterns, and best practices for optimization.
+- **[Champion Kit Rollout for Internal Claude Code Adoption](https://heyclau.de/entry/guides/champion-kit-rollout-for-internal-claude-code-adoption)** - Guide to rolling out the Claude Code champion kit: selecting champions, program phases, feedback loops, executive sponsorship, and measuring internal adoption.
 - **[Channels and Webhooks into Running Claude Code Sessions](https://heyclau.de/entry/guides/channels-and-webhooks-into-running-claude-code-sessions)** - A practical walkthrough of Claude Code channels: how an MCP-server channel pushes messages, alerts, and webhooks into a running session, how to install and enable Telegram, Discord, or iMessage, sender allowlists, and enterprise controls.
 - **[ChatGPT to Claude Migration](https://heyclau.de/entry/guides/chatgpt-migration-guide)** - Switch from ChatGPT to Claude in 30 minutes. Complete migration tutorial covering API transitions, prompt engineering, and workflow optimization strategies.
 - **[Checkpointing Claude Code Changes Before Risky Refactors](https://heyclau.de/entry/guides/checkpointing-claude-code-changes-before-risky-refactors)** - A practical walkthrough of Claude Code checkpointing: how automatic checkpoints capture code before each edit, how to rewind and summarize with /rewind, the difference between restore and summarize, and the limitations you must know before a risky refactor.
@@ -1078,6 +1079,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Permission Modes for Claude Code Teams](https://heyclau.de/entry/guides/permission-modes-for-claude-code-teams)** - A practical walkthrough of Claude Code permission modes for teams: what each mode allows, how to switch and default them, protected paths, and how administrators enforce or lock modes with managed settings.
 - **[Playwright Trace Viewer AI Debugging Guide](https://heyclau.de/entry/guides/playwright-trace-viewer-ai-debugging-guide)** - Source-backed guide for using Playwright traces, screenshots, snapshots, network events, console logs, and action timelines as evidence for AI-assisted frontend debugging.
 - **[Plugins in Claude Agent SDK Deployments](https://heyclau.de/entry/guides/plugins-in-claude-agent-sdk-deployments)** - A practical walkthrough of loading local plugins in the Claude Agent SDK: the plugins option with type local and a path, what plugins bundle (skills, agents, hooks, MCP servers), verifying loads via the init message, and invoking namespaced plugin skills.
+- **[Prompt Caching Troubleshooting in Claude Code](https://heyclau.de/entry/guides/prompt-caching-troubleshooting-in-claude-code)** - Troubleshoot Claude Code prompt caching: cache invalidation triggers, prefix stability, cost spikes, and verifying cache hits during long sessions.
 - **[Manage Prompt and Context Hygiene in Long Coding Sessions](https://heyclau.de/entry/guides/prompt-context-hygiene-long-coding-sessions)** - A practical guide for keeping Claude Code sessions focused during long coding work with scoped prompts, checkpoints, durable memory boundaries, source refreshes, and privacy-safe handoffs.
 - **[Publishing An MCP Server To The Official Registry](https://heyclau.de/entry/guides/publishing-an-mcp-server-to-the-official-registry)** - Source-backed workflow for publishing public MCP server metadata to the official MCP Registry with mcp-publisher, server.json, package verification, namespace authentication, and post-publish checks.
 - **[Evaluate AI Coding Tools with Repeatable Benchmarks](https://heyclau.de/entry/guides/repeatable-ai-coding-tool-benchmarks)** - A practical guide for comparing AI coding tools with repeatable benchmarks, fixed task sets, controlled environments, transparent scoring, and privacy-safe artifacts.
@@ -1087,6 +1089,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Secure Deployment for Claude Agent SDK Applications](https://heyclau.de/entry/guides/secure-deployment-for-claude-agent-sdk-applications)** - A practical walkthrough of securely deploying Claude Agent SDK applications: the prompt-injection threat model, isolation options (sandbox runtime, containers, gVisor, VMs), least privilege, the proxy credential pattern, and filesystem controls.
 - **[Slash Commands in Claude Agent SDK Sessions](https://heyclau.de/entry/guides/slash-commands-in-claude-agent-sdk-sessions)** - A practical walkthrough of using slash commands in the Claude Agent SDK: discovering available commands from the init message, sending commands in the prompt, built-in commands like compact and clear, and defining custom commands on the filesystem.
 - **[Write High-Quality Source-Backed Content PRs](https://heyclau.de/entry/guides/source-backed-content-prs)** - A practical guide for preparing source-backed HeyClaude content pull requests that stay focused, cite verifiable sources, avoid generated artifacts, and pass content validation.
+- **[Sparse Context Setup for Large Codebases](https://heyclau.de/entry/guides/sparse-context-setup-for-large-codebases)** - Set up sparse context for large codebases in Claude Code: scoped directories, CLAUDE.md hierarchy, subagents, and avoiding whole-repo loading.
 - **[Streaming Output from Claude Agent SDK Agents](https://heyclau.de/entry/guides/streaming-output-from-claude-agent-sdk-agents)** - A practical walkthrough of real-time streaming in the Claude Agent SDK: enabling partial messages, reading StreamEvent text and tool-call deltas, the message flow, and building a streaming UI.
 - **[Structured Output from Claude Agent SDK Workflows](https://heyclau.de/entry/guides/structured-output-from-claude-agent-sdk-workflows)** - A practical walkthrough of structured outputs in the Claude Agent SDK: defining a JSON Schema via the outputFormat option, reading validated structured_output, type-safe schemas with Zod or Pydantic, and handling validation failures.
 - **[Use Subagents for Code Review and Triage](https://heyclau.de/entry/guides/subagents-code-review-triage)** - A practical guide to using Claude Code subagents as focused review and triage specialists for pull requests, issues, risks, tests, documentation, and follow-up planning.
