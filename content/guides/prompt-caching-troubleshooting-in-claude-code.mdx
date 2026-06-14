@@ -1,0 +1,167 @@
+---
+title: Prompt Caching Troubleshooting in Claude Code
+slug: prompt-caching-troubleshooting-in-claude-code
+category: guides
+description: >-
+  Troubleshoot Claude Code prompt caching: cache invalidation triggers, prefix
+  stability, cost spikes, and verifying cache hits during long sessions.
+cardDescription: Diagnose prompt caching misses, invalidation, and cost spikes in Claude Code sessions.
+seoTitle: Prompt Caching Troubleshooting in Claude Code
+seoDescription: >-
+  Troubleshoot Claude Code prompt caching: cache invalidation triggers, prefix
+  stability, cost spikes, and verifying cache hits during long sessions.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1430
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1430"
+documentationUrl: "https://code.claude.com/docs/en/prompt-caching"
+usageSnippet: >-
+  Use this guide when Claude Code costs spike or cache hits disappear after
+  settings, CLAUDE.md, or tool output changes.
+prerequisites:
+  - Access to Claude Code usage or cost views showing input tokens and cache read/write metrics if available.
+  - Understanding of which instructions are stable (CLAUDE.md, settings) versus changing every turn (tool output, user messages).
+  - A reproducible session where costs increased after a specific configuration change.
+  - Permission to run controlled test prompts before and after a suspected invalidation trigger.
+safetyNotes:
+  - Do not disable security-relevant settings permanently just to improve cache hit rate; measure tradeoffs explicitly.
+  - Caching does not reduce the need to redact secrets; cached prefixes still reside in provider infrastructure under your account policy.
+  - When testing cache behavior, use synthetic prompts rather than production customer data.
+privacyNotes:
+  - Cached prompt prefixes may include repository instructions, file excerpts, and tool definitions from your session.
+  - Shared machines should not rely on caching assumptions to protect secrets—redact before prompting regardless of cache state.
+  - Enterprise accounts should align cache troubleshooting with zero-data-retention and logging policies.
+sourceUrls:
+  - "https://code.claude.com/docs/en/prompt-caching"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - prompt-caching
+  - costs
+  - troubleshooting
+  - performance
+keywords:
+  - Claude Code prompt caching
+  - cache invalidation Claude Code
+  - prompt cache cost spike
+  - Claude Code cache miss
+  - cache troubleshooting
+readingTime: 8
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Prompt caching reduces cost when stable prefix content repeats across turns.
+Spikes usually mean something changed early in the prompt—CLAUDE.md, settings,
+tool definitions, or system instructions—or the session restarted with a
+different prefix. Stabilize durable instructions, avoid unnecessary churn, and
+verify metrics after changes.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Baseline captured", "description": "Cache metrics exist for a task before suspected changes"}
+- [ ] {"task": "Prefix contributors listed", "description": "CLAUDE.md, settings, MCP tools, and styles are inventoried"}
+- [ ] {"task": "Controlled repro ready", "description": "You can rerun the same prompt sequence after one change at a time"}
+- [ ] {"task": "Cost view access", "description": "Input, cache read, and cache write tokens are visible if available"}
+- [ ] {"task": "Team comms plan", "description": "Rollout owners know settings changes may warm caches slowly"}
+
+## Core Concepts Explained
+
+### Cache hits require prefix stability
+
+Providers cache identical prompt prefixes. Edits to early context—even small
+ones—can invalidate the cached block and bill full input tokens again.
+
+### Tool and MCP changes move the prefix
+
+Adding MCP servers, changing tool allowlists, or updating hooks that inject context
+can shift the cached region unexpectedly.
+
+### Long sessions still invalidate
+
+Compaction, `/clear`, model switches, and some settings updates restart or reshape
+the prefix boundary.
+
+### Metrics tell the story
+
+Compare cache read, cache write, and uncached input tokens before and after a
+change instead of guessing from total cost alone.
+
+## Step-by-Step Implementation Guide
+
+1. **Capture a baseline.** Note cache metrics and total input tokens for a
+   representative task before changes.
+
+2. **List prefix contributors.** Inventory CLAUDE.md, settings, output styles,
+   MCP tool definitions, and system instructions loaded at session start.
+
+3. **Change one variable.** Alter a single suspected invalidation source and
+   re-run the same task.
+
+4. **Compare metrics.** Record whether cache writes increased and cache reads
+   disappeared after the change.
+
+5. **Stabilize durable content.** Move volatile notes out of CLAUDE.md; keep stable
+   conventions there.
+
+6. **Defer volatile injections.** Avoid hooks that prepend new content every turn
+   unless necessary for safety.
+
+7. **Restart intentionally.** After legitimate config changes, expect a cache
+   warm-up period and budget accordingly.
+
+8. **Document team policy.** Tell engineers which settings changes trigger cost
+   spikes during rollouts.
+
+## Common Invalidation Triggers
+
+| Change | Typical cache effect |
+| ------ | -------------------- |
+| CLAUDE.md edit at repo root | Full prefix rewrite |
+| New MCP server connected | Tool schema added to prefix |
+| Output style switch + /clear | System prompt block changes |
+| Hook injecting per-turn header | Prefix unstable every turn |
+
+## Troubleshooting
+
+### Costs doubled after a CLAUDE.md edit
+
+Any early prompt change invalidates cache; revert or accept warm-up cost until a
+new stable prefix forms.
+
+### Cache hits never appear
+
+Confirm your account and model support prompt caching, and that sessions reuse
+stable prefix content across turns.
+
+### Spikes only on MCP-heavy projects
+
+Tool schema size affects prefix length; audit unused MCP servers and reduce tool
+surface where possible.
+
+### Metrics look noisy session to session
+
+Compare the same scripted prompt sequence with `/clear` between controlled runs
+rather than unrelated tasks.
+
+## Duplicate Check
+
+This guide complements cost-tracking and team-cost-governance guides by focusing
+on prompt caching diagnostics, not general budgeting policy.
+
+## References
+
+- Claude Code prompt caching - https://code.claude.com/docs/en/prompt-caching
+- Claude Code costs - https://code.claude.com/docs/en/costs
+- Claude Code context window - https://code.claude.com/docs/en/context-window
