@@ -110,7 +110,9 @@ async function renderSitemap() {
   const rows = [
     ...staticPaths.map((pathname) => urlItem(pathname, pathname === "" ? "1" : "0.7")),
     ...feedPaths.map((pathname) => urlItem(pathname, "0.4")),
-    ...CATEGORIES.map((category) =>
+    // `tools` has no /$category hub — its URL is the static commercial /tools page,
+    // already emitted in staticPaths above. Exclude it here to avoid a duplicate.
+    ...CATEGORIES.filter((category) => category.id !== "tools").map((category) =>
       urlItem(`/${category.id}`, "0.8", "weekly", categoryLastmod.get(category.id)),
     ),
     ...getIndexableTagGroups().map((group) => urlItem(`/tags/${group.slug}`, "0.5")),
