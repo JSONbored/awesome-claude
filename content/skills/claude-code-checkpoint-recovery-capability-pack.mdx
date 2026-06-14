@@ -1,0 +1,222 @@
+---
+title: Claude Code Checkpoint Recovery Capability Pack Skill
+slug: claude-code-checkpoint-recovery-capability-pack
+category: skills
+description: >-
+  Expert Claude Code checkpoint recovery capability pack for auditing automatic
+  edit tracking, choosing restore versus summarize actions in /rewind, and
+  recovering from bad turns without losing git history.
+cardDescription: >-
+  Recover Claude Code sessions with /rewind restore, summarize, and fork
+  strategies backed by official checkpointing docs.
+seoTitle: Claude Code Checkpoint Recovery Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code checkpoint recovery, /rewind
+  restore and summarize options, session forking, and bash-change limitations.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1542
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1542"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/checkpointing"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when Claude Code edits went off track, a session needs selective
+  undo, or you must free context with summarize without abandoning git history.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code checkpoint recovery capability pack to this session."
+
+  # Required output
+  1) Checkpoint inventory and failure lane (code, conversation, or both)
+  2) Source-backed /rewind action recommendation: restore, summarize, or fork
+  3) Bash-change and external-edit limitations called out explicitly
+  4) Verification steps and git complement notes
+  5) Privacy-safe summary of prompts and file paths reviewed
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-13"
+retrievalSources:
+  - "https://code.claude.com/docs/en/checkpointing"
+  - "https://code.claude.com/docs/en/sessions"
+  - "https://code.claude.com/docs/en/interactive-mode"
+  - "https://code.claude.com/docs/en/commands"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "An active or resumable Claude Code session where checkpoint recovery is needed."
+  - "Permission to run `/rewind` or use double-Esc when the prompt input is empty."
+  - "Awareness of whether problematic changes came from Claude file tools, bash commands, or manual edits outside the session."
+  - "Git or other version control available when permanent history or collaboration rollback is required."
+safetyNotes:
+  - "This skill recommends checkpoint actions; it must not run `/rewind` restore or summarize without explicit user approval."
+  - "Restore code and conversation reverts both files and chat history to a prior prompt; confirm the target checkpoint before acting."
+  - "Restore code alone keeps conversation but reverts file edits; restore conversation alone keeps current files but rewinds chat."
+  - "Summarize compresses conversation segments without changing files on disk; it is not a substitute for git revert when bash commands modified files."
+  - "Checkpointing does not track files changed by bash commands such as `rm`, `mv`, or `cp`; use git or manual recovery for those paths."
+privacyNotes:
+  - "The /rewind menu lists every user prompt in the session, which may expose internal task names, credentials pasted in prompts, or customer context."
+  - "Restored prompts reappear in the input field and may contain sensitive instructions that should be redacted before sharing screens."
+  - "Session transcripts persist with checkpoints for up to 30 days by default; treat resumed sessions as containing prior sensitive content."
+  - "Public support notes should describe the recovery lane and checkpoint choice, not full prompt text or complete file diffs."
+tags:
+  - claude-code
+  - checkpointing
+  - rewind
+  - session-recovery
+  - capability-pack
+keywords:
+  - Claude Code checkpoint recovery
+  - Claude Code /rewind restore
+  - Claude Code summarize from here
+  - Claude Code session fork
+  - Claude Code undo edits
+  - Claude Code bash checkpoint limits
+readingTime: 8
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code checkpointing, sessions,
+interactive mode, commands, skills, and features-overview documentation
+verified on **2026-06-13**. Prefer live official docs over remembered keyboard
+shortcuts when reviewing new Claude Code releases.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/checkpointing
+- https://code.claude.com/docs/en/sessions
+- https://code.claude.com/docs/en/interactive-mode
+- https://code.claude.com/docs/en/commands
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Scope Note
+
+This is not a git tutorial. Use it as a reusable recovery workflow when Claude
+Code session-level undo is faster than branch surgery but you still need to
+understand bash-tracking limits and when git remains the source of truth.
+
+## Core Workflow
+
+1. Classify the failure lane: bad file edits, bad conversation direction, both,
+   or context pressure without wanting file changes.
+2. Confirm how the unwanted change was introduced: Claude file editing tools,
+   bash command side effects, manual external edits, or another concurrent
+   session touching the same files.
+3. Open `/rewind` or press double-Esc with an empty prompt input. If the input
+   contains text, double-Esc clears it instead of opening the menu.
+4. Select the target user prompt checkpoint. Each user prompt creates a new
+   checkpoint for tracked file edits.
+5. Choose the action that matches the lane:
+   - Restore code and conversation when both should return to the checkpoint.
+   - Restore conversation when files are correct but chat direction is wrong.
+   - Restore code when conversation should continue but edits should revert.
+   - Summarize from here to compress from the selected message forward.
+   - Summarize up to here to compress earlier setup while keeping recent detail.
+6. If branching is needed instead of in-place recovery, use
+   `claude --continue --fork-session` to preserve the original session intact.
+7. Verify file state, restored prompt text, and whether bash-affected files need
+   separate git or manual repair.
+8. Document what was restored, what remains outside checkpoint scope, and any
+   follow-up git commits required.
+
+## Capability Scope
+
+- Automatic checkpoint tracking for Claude file editing tools.
+- `/rewind` restore and summarize action selection.
+- Session forking versus in-place recovery decisions.
+- Bash command and external edit limitation awareness.
+- Checkpoint persistence across resumed sessions.
+- Privacy-safe recovery handoff notes.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when triaging a session that
+  needs selective undo, targeted summarization, or forked retry.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic checklist for Claude Code session recovery in support runbooks.
+
+## Required Inputs
+
+- Symptom description and approximate prompt where the session went off track.
+- Whether bash commands, manual edits, or concurrent sessions may have changed
+  files outside checkpoint tracking.
+- Current git status if permanent rollback or collaboration sync is needed.
+- Whether the goal is code revert, conversation rewind, context compression, or
+  a forked retry.
+
+## Production Rules
+
+- Treat checkpoints as session-level local undo, not permanent version history.
+- Continue using git for commits, branches, review, and collaboration rollback.
+- Never assume bash-driven file changes are reversible through `/rewind`.
+- Confirm the selected checkpoint before restore actions; they are destructive
+  to later session state in that branch of the conversation.
+- Prefer summarize when the goal is context space without disk changes.
+- Prefer fork when you want to preserve the original session for comparison.
+- Redact sensitive prompt text before sharing recovery steps publicly.
+
+## Review Matrix
+
+| Situation | First route | Safer first check |
+| --- | --- | --- |
+| Claude edited the wrong files | Restore code | Confirm edits came from file tools, not bash |
+| Conversation drifted but code is fine | Restore conversation | Pick checkpoint before the bad direction |
+| Both code and chat need reset | Restore code and conversation | Verify checkpoint predates the mistake |
+| Long debug thread needs compression | Summarize from here or up to here | Confirm files on disk should stay unchanged |
+| Want to retry without losing original | Fork session | Use `--continue --fork-session` |
+| `rm` or `mv` broke files | Git or manual repair | Checkpoints do not track bash file ops |
+
+## Output Contract
+
+1. Failure lane and checkpoint target recommendation.
+2. Evidence reviewed, including bash versus file-tool change source.
+3. Exact `/rewind` or fork action with expected outcome.
+4. Verification checklist for files, conversation, and git state.
+5. Limitations explicitly stated for untracked change types.
+6. Privacy-safe summary suitable for an issue or support handoff.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for `Claude Code Checkpoint Recovery`, `/rewind`, checkpointing,
+and session fork workflows. Official docs describe checkpointing, but no
+`skills` entry provides a reusable Claude Code checkpoint recovery workflow
+with action matrix and bash-limitation contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.
