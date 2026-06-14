@@ -1,0 +1,167 @@
+---
+title: "OAuth Patterns for MCP Server Authentication"
+slug: oauth-patterns-for-mcp-server-authentication
+category: guides
+description: >-
+  Implement OAuth for MCP servers: discovery, dynamic client registration, token refresh, proxy and mTLS support, protected resource metadata, and least-privilege scopes.
+cardDescription: Implement OAuth patterns for MCP server authentication and token lifecycle.
+seoTitle: "OAuth Patterns for MCP Server Authentication"
+seoDescription: >-
+  Implement OAuth for MCP servers: discovery, dynamic client registration, token refresh, proxy and mTLS support, protected resource metadata, and least-privilege scopes.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1415
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1415"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to design OAuth flows for remote MCP servers with least-privilege scopes and enterprise proxy compatibility.
+prerequisites:
+  - "Remote MCP server exposing OAuth discovery and token endpoints per MCP auth guidance."
+  - "Identity provider admin access for client registration and redirect URI approval."
+  - "Corporate HTTP proxy and mTLS requirements documented for outbound auth traffic."
+  - "Security review template for scopes, token storage, and revocation."
+safetyNotes:
+  - "OAuth tokens equate to user delegated power—default to minimum scopes and short lifetimes."
+  - "Concurrent refresh races can log users out or lose refresh tokens—serialize refresh per server where needed."
+  - "Dynamic client registration must be restricted in enterprise environments to prevent rogue clients."
+privacyNotes:
+  - "Token refresh and discovery traffic may log client ids and tenant hints at proxies—scrub logs accordingly."
+  - "Refresh tokens on shared laptops require OS keychain protection and offboarding revocation."
+  - "Third-party MCP operators can act on behalf of users until tokens expire—document processor agreements."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://modelcontextprotocol.io/specification"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - mcp
+  - oauth
+  - authentication
+  - security
+  - remote
+keywords:
+  - "MCP OAuth authentication"
+  - "MCP token refresh"
+  - "dynamic client registration MCP"
+  - "MCP protected resource metadata"
+  - "remote MCP OAuth scopes"
+readingTime: 8
+difficultyScore: 66
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Remote MCP servers should use OAuth with explicit discovery, DCR, least-privilege scopes, and refresh handling that survives proxies and mTLS. Treat tokens as production credentials—redact them in `claude mcp list`, plan revocation, and verify protected resource metadata before team rollout.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Discovery and DCR
+
+Clients fetch authorization server metadata and may register dynamically—lock this down in enterprise environments.
+
+### Refresh concurrency
+
+Multiple MCP servers refreshing at once previously lost refresh tokens; serialize or upgrade clients.
+
+### Proxy-aware auth
+
+HTTP(S)_PROXY, NO_PROXY, and mTLS must apply to discovery, DCR, exchange, and refresh—not just tool calls.
+
+### Credential redaction
+
+`claude mcp list` and `claude mcp get` redact credential headers and URL secrets from terminal output.
+
+## Step-by-Step Implementation Guide
+
+1. **Publish metadata.** Expose OAuth discovery and protected resource metadata from the MCP server or gateway.
+
+2. **Register client.** Create OAuth client with exact redirect URIs Claude Code uses; restrict DCR in prod.
+
+3. **Define scopes.** Map each MCP tool to minimum scopes; reject broad admin or offline_access unless required.
+
+4. **Test consent.** Walk through user consent in a disposable profile with staging IdP users.
+
+5. **Verify proxy path.** Run discovery and refresh through corporate proxies with mTLS if mandated.
+
+6. **Store tokens safely.** Rely on OS credential stores; fix corrupt `.credentials.json` scopes that hang startup.
+
+7. **Plan revocation.** Document how to revoke grants and delete local MCP config during offboarding.
+
+8. **Roll out with allowlists.** Pair OAuth servers with enterprise `allowedMcpServers` policy after security review.
+
+## MCP OAuth Rollout Checklist
+
+- [ ] {"task": "Metadata published", "description": "Discovery and protected resource docs live"}
+- [ ] {"task": "Scopes minimized", "description": "Each tool mapped to least privilege"}
+- [ ] {"task": "Proxy tested", "description": "Auth flows succeed through corporate egress"}
+- [ ] {"task": "Refresh stable", "description": "Concurrent servers refresh without token loss"}
+- [ ] {"task": "Revocation documented", "description": "Offboarding steps include grant revocation"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Daily re-auth required
+
+Upgrade clients with concurrent OAuth refresh fixes for multiple remote servers.
+
+### Startup hang on login
+
+Fix corrupt `.credentials.json` where `scopes` is not an array.
+
+### 403 on connect
+
+Surface needs-auth UX and verify redirect URIs match registered client.
+
+### Gateway receives user OAuth token
+
+Ensure custom API gateways receive gateway tokens, not user Anthropic OAuth credentials.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` records `claude mcp list` and `claude mcp get` redacting credential headers and URL secrets.
+- `CHANGELOG.md` fixed MCP OAuth refresh tokens lost during concurrent refreshes across servers.
+- `CHANGELOG.md` fixed HTTP(S)_PROXY / NO_PROXY / mTLS not respected for full MCP OAuth flows.
+- `CHANGELOG.md` fixed corrupt `.credentials.json` non-array `scopes` hanging CLI startup.
+- `plugins/README.md` `security-guidance` plugin warns on dangerous patterns during integration development.
+
+## Duplicate Check
+
+This guide designs MCP OAuth patterns. See mcp-oauth-token-audience-checklist.mdx for audience checks, mcp-protected-resource-metadata-verification-guide.mdx for metadata verification, and remote-mcp-server-security-review-checklist.mdx for rollout approval.
+
+## References
+
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- MCP specification - https://modelcontextprotocol.io/specification
+- MCP OAuth audience checklist - mcp-oauth-token-audience-checklist
