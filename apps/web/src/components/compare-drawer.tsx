@@ -262,7 +262,7 @@ export function CompareDrawer() {
                     {items.map((e) => (
                       <th
                         scope="col"
-                        key={e.slug}
+                        key={`${e.category}/${e.slug}`}
                         className="min-w-[260px] max-w-[320px] border-b border-r border-border bg-surface p-3 text-left align-top last:border-r-0"
                       >
                         <div className="flex items-start justify-between gap-2">
@@ -304,7 +304,7 @@ export function CompareDrawer() {
                       </th>
                       {items.map((e) => (
                         <td
-                          key={e.slug}
+                          key={`${e.category}/${e.slug}`}
                           className="min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top last:border-r-0"
                         >
                           {row.render(e)}

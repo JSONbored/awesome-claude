@@ -6,6 +6,7 @@ import { X, ArrowRight, ExternalLink, Plus, Search as SearchIcon } from "lucide-
 import { ENTRIES } from "@/data/entries";
 import { COMPARISONS } from "@/data/comparisons";
 import { CategoryPill } from "@/components/badges";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CopyButton } from "@/components/copy-button";
 import { COMPARISON_ROWS as ROWS } from "@/components/comparison-table";
 import { useCompare } from "@/lib/compare";
@@ -143,7 +144,8 @@ function ComparePage() {
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
-      <div className="flex flex-wrap items-end justify-between gap-3 border-b border-border pb-4">
+      <Breadcrumbs home items={[{ label: "Compare" }]} />
+      <div className="mt-4 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-4">
         <div>
           <div className="eyebrow">Compare</div>
           <h1 className="mt-1 h-display-2 text-ink text-balance">

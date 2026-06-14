@@ -5,6 +5,9 @@ import { IntegrationMarkTile } from "@/components/integration-marks";
 import { IntegrationCard } from "@/components/integration-card";
 import { LiveVersionBadge } from "@/components/live-version-badge";
 import { CopyButton } from "@/components/copy-button";
+import { absoluteUrl } from "@/lib/seo";
+import { stringifyJsonLd } from "@/lib/json-ld";
+import { ogImageUrl } from "@/lib/og-image";
 
 export const Route = createFileRoute("/integrations/$slug")({
   loader: ({ params }) => {
@@ -12,16 +15,54 @@ export const Route = createFileRoute("/integrations/$slug")({
     if (!integration) throw notFound();
     return { integration };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `${loaderData.integration.name} — HeyClaude integration` },
-          { name: "description", content: loaderData.integration.tagline },
-          { property: "og:title", content: `${loaderData.integration.name} — HeyClaude` },
-          { property: "og:description", content: loaderData.integration.tagline },
-        ]
-      : [],
-  }),
+  head: ({ params, loaderData }) => {
+    const it = loaderData?.integration;
+    if (!it) return { meta: [{ title: "Integration — HeyClaude" }] };
+    const url = absoluteUrl(`/integrations/${params.slug}`);
+    const description = it.tagline;
+    const ogImage = ogImageUrl({ title: it.name, eyebrow: "Integration", description });
+    const app = {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: it.name,
+      description,
+      url,
+      applicationCategory: "DeveloperApplication",
+      ...(it.version ? { softwareVersion: it.version } : {}),
+      publisher: { "@type": "Organization", name: "HeyClaude", url: absoluteUrl("/") },
+    };
+    const breadcrumbs = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Integrations",
+          item: absoluteUrl("/integrations"),
+        },
+        { "@type": "ListItem", position: 2, name: it.name, item: url },
+      ],
+    };
+    return {
+      meta: [
+        { title: `${it.name} — HeyClaude integration` },
+        { name: "description", content: description },
+        { property: "og:title", content: `${it.name} — HeyClaude` },
+        { property: "og:description", content: description },
+        { property: "og:url", content: url },
+        { property: "og:image", content: ogImage },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: ogImage },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        { type: "application/ld+json", children: stringifyJsonLd(app) },
+        { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
+      ],
+    };
+  },
   component: IntegrationDetail,
 });
 

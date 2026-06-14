@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import {
   TRUST_LABEL,
@@ -84,14 +85,29 @@ export function SourceBadge({ status, className }: { status: SourceStatus; class
   );
 }
 
-export function PlatformChip({ id }: { id: Platform }) {
+export function PlatformChip({ id, asLink = false }: { id: Platform; asLink?: boolean }) {
   const mark = platformMark(id);
-  return (
-    <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-border px-2 py-0.5 font-mono text-[10px] leading-none text-ink-muted">
+  const base =
+    "inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-border px-2 py-0.5 font-mono text-[10px] leading-none text-ink-muted";
+  const content = (
+    <>
       {mark && <IntegrationMark name={mark} size={10} className="opacity-80" />}
       {PLATFORM_LABEL[id]}
-    </span>
+    </>
   );
+  // asLink is opt-in: never used inside card <Link>s (would nest anchors); only on detail pages.
+  if (asLink) {
+    return (
+      <Link
+        to="/for/$platform"
+        params={{ platform: id }}
+        className={cn(base, "transition-colors hover:border-ink/20 hover:text-ink")}
+      >
+        {content}
+      </Link>
+    );
+  }
+  return <span className={base}>{content}</span>;
 }
 
 export function CategoryPill({
