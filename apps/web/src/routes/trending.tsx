@@ -76,6 +76,9 @@ export const Route = createFileRoute("/trending")({
         property: "og:image",
         content: ogImageUrl({ title: "Trending Claude workflows", eyebrow: "Trending" }),
       },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       {
         name: "twitter:image",
         content: ogImageUrl({ title: "Trending Claude workflows", eyebrow: "Trending" }),

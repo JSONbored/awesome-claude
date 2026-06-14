@@ -48,6 +48,7 @@
     "submission-gate:dry-run": "pnpm --filter @heyclaude/submission-gate run deploy:dry-run:prod",
     "submission-gate:dry-run:prod": "pnpm --filter @heyclaude/submission-gate run deploy:dry-run:prod",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:seo-jsonld": "vitest run tests/seo-jsonld.test.ts",
     "test:commercial-intake": "vitest run tests/commercial-intake.test.ts",
     "test:registry-artifacts": "pnpm --filter web run prebuild && vitest run tests/registry-artifacts.test.ts",
@@ -58,6 +59,7 @@
     "generate:readme": "node scripts/generate-readme.mjs",
     "validate:readme": "node scripts/generate-readme.mjs --check",
     "audit:content": "node scripts/audit-content.mjs",
+    "report:thin-content": "node scripts/report-thin-content.mjs",
     "report:trust-coverage": "node scripts/report-trust-coverage.mjs",
     "validate:mcp-trust": "node scripts/report-trust-coverage.mjs --category mcp --check --min-risk-coverage 100 --min-attribution-coverage 100",
     "sync:votes:d1": "node scripts/sync-votes-to-d1.mjs --mode=both",
@@ -70,6 +72,7 @@
   "devDependencies": {
     "@commitlint/cli": "21.0.1",
     "@commitlint/config-conventional": "21.0.1",
+    "@vitest/coverage-v8": "4.1.7",
     "husky": "9.1.7",
     "prettier": "3.8.3",
     "react": "19.2.6",

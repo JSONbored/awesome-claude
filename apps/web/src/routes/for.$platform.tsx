@@ -7,6 +7,8 @@ import { categoryLabels } from "@/lib/site";
 import { ResourceCard } from "@/components/resource-card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
+import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
@@ -73,6 +75,9 @@ export const Route = createFileRoute("/for/$platform")({
         { property: "og:description", content: description },
         { property: "og:url", content: url },
         { property: "og:image", content: ogImage },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImage },
       ],
@@ -108,18 +113,31 @@ function PlatformPage() {
     entries: all.filter((e) => e.category === c.id).slice(0, 6),
   })).filter((s) => s.entries.length > 0);
 
+  // Data-derived framing unique to this platform's catalog.
+  const posture = trustPosture(all);
+  const highlights = hubHighlights(all);
+  const stats = hubStats(all);
+  const categoryCount = new Set(all.map((e) => e.category)).size;
+
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
       <Breadcrumbs
-        items={[{ label: "Directory", to: "/browse" }, { label: "Platforms", to: "/for" }, { label }]}
+        items={[
+          { label: "Directory", to: "/browse" },
+          { label: "Platforms", to: "/for" },
+          { label },
+        ]}
         home
       />
       <header className="mt-6 max-w-3xl">
         <div className="eyebrow">{all.length} compatible resources</div>
         <h1 className="mt-2 h-display-1 text-ink text-balance">Claude resources for {label}</h1>
         <p className="mt-4 text-pretty text-base text-ink-muted sm:text-lg">
-          Source-backed MCP servers, agents, skills, hooks, commands, and rules that work with{" "}
-          <span className="text-ink">{label}</span> — curated and metadata-reviewed in HeyClaude.
+          {all.length} source-backed Claude resources that work with{" "}
+          <span className="text-ink">{label}</span>, spanning {categoryCount}{" "}
+          {categoryCount === 1 ? "category" : "categories"} — curated and metadata-reviewed in
+          HeyClaude.
+          {posture.trusted > 0 ? <> {posture.pct}% sit in the trusted tier.</> : null}
         </p>
         <div className="mt-6">
           <Link
@@ -131,6 +149,13 @@ function PlatformPage() {
           </Link>
         </div>
       </header>
+
+      <HubHighlights
+        highlights={highlights}
+        caption={`Standout ${label}-compatible resources, picked from their own metadata — trust tier, provenance, documentation, and recency.`}
+      />
+
+      <HubSignalStats stats={stats} total={all.length} />
 
       {sections.map((section) => (
         <section key={section.category.id} className="mt-12">

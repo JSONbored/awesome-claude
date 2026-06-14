@@ -11,12 +11,12 @@ type RegistryChangelogEntry = {
   type?: string;
 };
 
-const registryEntries = (atlasRegistry.entries ?? []) as RegistryEntry[];
+export const REGISTRY_ENTRIES = (atlasRegistry.entries ?? []) as RegistryEntry[];
 const registryChangelog = (atlasRegistry.changelog ?? []) as RegistryChangelogEntry[];
 const generatedAt = atlasRegistry.generatedAt;
 export const REGISTRY_GENERATED_AT = generatedAt;
 
-export const ENTRIES: Entry[] = registryEntries.map(buildEntry);
+export const ENTRIES: Entry[] = REGISTRY_ENTRIES.map(buildEntry);
 
 // O(1) lookup by `category/slug`. Hot SSR paths (entry loader, /og route, the
 // /$category/$slug redirect, related()/relatedGroups(), trending) previously did

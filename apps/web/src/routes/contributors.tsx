@@ -19,6 +19,9 @@ export const Route = createFileRoute("/contributors")({
         property: "og:image",
         content: ogImageUrl({ title: "Contributors", eyebrow: "HeyClaude" }),
       },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       {
         name: "twitter:image",
         content: ogImageUrl({ title: "Contributors", eyebrow: "HeyClaude" }),

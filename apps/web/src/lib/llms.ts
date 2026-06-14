@@ -7,7 +7,7 @@
  *
  * Both are deterministic for a given registry snapshot so ETags are stable.
  */
-import { ENTRIES } from "@/data/entries";
+import { ENTRIES, REGISTRY_ENTRIES } from "@/data/entries";
 import { CATEGORIES } from "@/types/registry";
 import { etagFor } from "@/lib/feeds";
 import { applySecurityHeaders } from "@/lib/security-headers";
@@ -56,6 +56,9 @@ export function buildLlmsTxt(origin: string): string {
 }
 
 export function buildLlmsFullTxt(origin: string): string {
+  const rawEntriesByKey = new Map(
+    REGISTRY_ENTRIES.map((entry) => [`${entry.category}/${entry.slug}`, entry] as const),
+  );
   const out: string[] = [];
   out.push("# HeyClaude registry — full export");
   out.push("");
@@ -80,9 +83,12 @@ export function buildLlmsFullTxt(origin: string): string {
       out.push("");
       out.push(e.description);
       out.push("");
-      const facts = buildEntryCitationFacts(e as Parameters<typeof buildEntryCitationFacts>[0], {
-        siteUrl: origin,
-      });
+      const citationEntry = rawEntriesByKey.get(`${e.category}/${e.slug}`);
+      const facts = citationEntry
+        ? buildEntryCitationFacts(citationEntry as Parameters<typeof buildEntryCitationFacts>[0], {
+            siteUrl: origin,
+          })
+        : "";
       if (facts) {
         out.push("Citation facts:");
         out.push(facts);

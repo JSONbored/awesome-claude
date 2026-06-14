@@ -25,6 +25,9 @@ export const Route = createFileRoute("/platforms")({
         property: "og:image",
         content: ogImageUrl({ title: "Platform compatibility", eyebrow: "Platforms" }),
       },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       {
         name: "twitter:image",
         content: ogImageUrl({ title: "Platform compatibility", eyebrow: "Platforms" }),

@@ -25,6 +25,9 @@ export const Route = createFileRoute("/tools")({
         property: "og:image",
         content: ogImageUrl({ title: "Tools that pair well with Claude", eyebrow: "Tools" }),
       },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       {
         name: "twitter:image",
         content: ogImageUrl({ title: "Tools that pair well with Claude", eyebrow: "Tools" }),
