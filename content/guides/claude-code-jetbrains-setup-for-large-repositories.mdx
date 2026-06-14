@@ -1,0 +1,166 @@
+---
+title: "Claude Code JetBrains Setup for Large Repositories"
+slug: claude-code-jetbrains-setup-for-large-repositories
+category: guides
+description: >-
+  Configure Claude Code in JetBrains IDEs for large repositories: terminal rendering fixes, synchronized output, sparse context, and plugin workflows for IntelliJ-based teams.
+cardDescription: Configure Claude Code in JetBrains for large monorepos and IDE teams.
+seoTitle: "Claude Code JetBrains Setup for Large Repositories"
+seoDescription: >-
+  Configure Claude Code in JetBrains IDEs for large repositories: terminal rendering fixes, synchronized output, sparse context, and plugin workflows for IntelliJ-based teams.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1388
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1388"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to run Claude Code inside JetBrains terminals on large repos with stable rendering and scoped context.
+prerequisites:
+  - "JetBrains IDE 2025.2+ or 2026.1+ with the Claude Code plugin approved."
+  - "A large repository with documented sparse-context or monorepo CLAUDE.md hierarchy."
+  - "Sufficient heap for indexing; pilot on a representative module before org-wide rollout."
+  - "Team policy for MCP servers and permissions synced to IDE sessions."
+safetyNotes:
+  - "Large-repo sessions amplify token usage—use sparse context and compaction hygiene to avoid runaway costs."
+  - "JetBrains terminals on 2026.1+ use synchronized output; avoid custom ANSI themes that fight IDE rendering."
+  - "Do not mount entire monorepo secrets into agent sessions; scope working directories per module."
+privacyNotes:
+  - "IDE-integrated sessions expose package names, module paths, and dependency graphs in prompts."
+  - "Usage and session data follow the same data-usage policies as terminal Claude Code."
+  - "Shared JetBrains licenses on VDI pools can leak session resumes—use per-developer config directories."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/jetbrains"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - jetbrains
+  - intellij
+  - monorepo
+  - ide
+keywords:
+  - "Claude Code JetBrains"
+  - "IntelliJ Claude Code plugin"
+  - "large repository Claude"
+  - "JetBrains terminal Claude"
+  - "monorepo IDE setup"
+readingTime: 8
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+JetBrains teams on large repos should pair the Claude Code plugin with synchronized terminal output fixes, module-scoped working directories, and sparse-context CLAUDE.md files. Pilot on one module, then publish heap and indexing guidance alongside MCP policy.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### IDE terminal is the integration surface
+
+The JetBrains plugin hosts Claude Code in the embedded terminal, sharing the same engine, hooks, and MCP stack as standalone CLI sessions.
+
+### Rendering fixes for 2026.1+
+
+Recent releases enable synchronized output to stop flickering and spurious arrow-key events in JetBrains terminals on 2026.1+.
+
+### Sparse context for monorepos
+
+Large repositories need hierarchical CLAUDE.md files and directory-scoped prompts so Claude loads only the module under active development.
+
+### Scroll and resize stability
+
+Scroll-wheel and missed resize fixes reduce corrupted frames when splitting editor panes during long agent sessions.
+
+## Step-by-Step Implementation Guide
+
+1. **Install the plugin.** Add the Claude Code JetBrains plugin from the marketplace and restart the IDE.
+
+2. **Open the target module.** Use Open Module or a scoped git worktree so Claude's working directory matches the package you are editing.
+
+3. **Author module CLAUDE.md.** Place concise build, test, and review instructions in the module root; link to parent monorepo policies.
+
+4. **Launch Claude Code.** Open the embedded terminal tool window and run `claude` from the module directory.
+
+5. **Configure MCP minimally.** Enable only MCP servers required for the module to keep tool-search overhead low on huge graphs.
+
+6. **Tune JVM and indexing.** Increase IDE heap if indexing stalls; exclude generated trees from AI context via `.cursorignore`-style patterns where supported.
+
+7. **Pilot a refactor task.** Run a bounded rename or test-addition exercise to validate permissions, hooks, and transcript stability.
+
+8. **Document module conventions.** Publish which modules are AI-ready and which still need CLAUDE.md cleanup before team rollout.
+
+## Large Repo IDE Checklist
+
+- [ ] {"task": "Module scoped", "description": "Working directory targets one package"}
+- [ ] {"task": "CLAUDE.md present", "description": "Build and test commands documented locally"}
+- [ ] {"task": "Terminal stable", "description": "No flicker or scroll anomalies during session"}
+- [ ] {"task": "MCP minimized", "description": "Only required servers enabled"}
+- [ ] {"task": "Pilot task passed", "description": "Bounded refactor completed successfully"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Terminal flicker on 2026.1
+
+Upgrade Claude Code to a build with synchronized output enabled for JetBrains 2026.1+ terminals.
+
+### Scroll wheel sends arrow keys
+
+Recent fixes address wrong-direction scroll events on JetBrains 2025.2—update both IDE and Claude Code.
+
+### Context overflow on monorepo
+
+Shrink prompts with sparse-context setup and compaction hygiene; avoid `@` entire repo roots.
+
+### MCP missing after IDE clear
+
+Restart Claude Code after `/clear`; recent builds restore plugin and `.mcp.json` servers in JetBrains sessions.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` fixed flickering in JetBrains IDE terminals on 2026.1+ by enabling synchronized output.
+- `CHANGELOG.md` fixed scroll-wheel handling in JetBrains 2025.2 terminals producing spurious arrow keys.
+- `CHANGELOG.md` fixed MCP servers disappearing after `/clear` in the JetBrains plugin.
+- `CHANGELOG.md` removed the JetBrains plugin install suggestion from startup—teams should document install explicitly.
+- `plugins/README.md` shows plugins bundle commands, agents, hooks, and MCP for consistent team tooling inside IDEs.
+
+## Duplicate Check
+
+This guide focuses on JetBrains IDE setup for large repositories. It complements claude-md-hierarchy-for-monorepos-and-nested-packages.mdx for CLAUDE.md structure and sparse-context-setup-for-large-codebases.mdx for token control.
+
+## References
+
+- Claude Code JetBrains - https://code.claude.com/docs/en/jetbrains
+- CLAUDE.md hierarchy - claude-md-hierarchy-for-monorepos-and-nested-packages
+- Sparse context setup - sparse-context-setup-for-large-codebases
