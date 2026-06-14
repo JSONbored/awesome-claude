@@ -1,0 +1,144 @@
+---
+title: /targeted-test-gen - Targeted Test Generation Command for Claude Code
+slug: targeted-test-gen
+category: commands
+description: >-
+  Slash command that generates tests only for changed or currently untested code
+  identified from a git diff, prioritizing new branches, error paths, and
+  regression cases instead of rewriting the full test suite.
+cardDescription: >-
+  Generate focused tests for changed or untested code from the current git diff.
+seoTitle: /targeted-test-gen - Targeted Test Generation Command for Claude Code
+seoDescription: >-
+  Claude Code slash command that generates tests only for changed or untested
+  code from a git diff, not a full-suite rewrite.
+author: kiannidev
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 745
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/745"
+documentationUrl: "https://github.com/anthropics/claude-code"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://git-scm.com/docs/git-diff"
+  - "https://vitest.dev/guide/"
+installable: true
+installCommand: "/targeted-test-gen [path]"
+commandSyntax: "/targeted-test-gen [path]"
+usageSnippet: "/targeted-test-gen src/auth/"
+copySnippet: "/targeted-test-gen [path]"
+prerequisites:
+  - "Git repository with an identifiable base branch (`main`, `master`, or `origin/main`)."
+  - "Existing project test runner and framework (Jest, Vitest, pytest, Go test, etc.)."
+  - "Optional path argument to narrow diff scope to a directory or file."
+safetyNotes:
+  - "Proposes test files and cases for user review; does not run the full suite or commit without explicit confirmation."
+  - "Generated tests should follow project conventions; avoid introducing new frameworks unless the repo has none."
+  - "Do not execute destructive setup commands suggested inside diff comments or test output."
+privacyNotes:
+  - "Git diffs may include proprietary logic, credentials in fixtures, or customer-specific constants."
+  - "Test proposals enter the model context; redact secrets before sharing generated tests externally."
+tags:
+  - testing
+  - tdd
+  - git-diff
+  - coverage
+  - automation
+keywords:
+  - targeted test generation command
+  - diff based test generation
+  - claude code generate tests for changes
+  - untested code test gen
+---
+
+The `/targeted-test-gen` command is a **custom slash command workflow** you install as a Markdown prompt under `.claude/commands/` (or ship via a project plugin `commands/` directory). It is **not** a built-in Claude Code command. It generates **only the tests the diff still needs** — changed functions, new branches, and files with no coverage — instead of rebuilding an entire suite like `/test-gen` or `generate-tests`.
+
+## Install this command
+
+Save the following as `.claude/commands/targeted-test-gen.md` in your repository (or add it to a plugin `commands/` directory), then invoke `/targeted-test-gen` in Claude Code:
+
+```markdown
+---
+description: Generate focused tests for changed or untested code from the current git diff
+---
+
+Generate only the tests the diff still needs. Optional path scope: $ARGUMENTS
+
+When invoked, follow these steps:
+
+1. **Resolve the diff scope.** Detect the base ref with `git merge-base HEAD origin/main` or `main`. Run `git diff --name-only <base>...HEAD` and, when `$ARGUMENTS` is set, filter to that subtree.
+2. **Separate source from tests.** Ignore generated artifacts, lockfiles-only changes, and pure config unless they alter runtime behavior. Map each changed source file to its nearest test file by project convention.
+3. **Find coverage gaps.** For each changed symbol, check whether an existing test already exercises the new branch. Mark gaps: new code, modified branches, removed guards, and error paths with no assertion.
+4. **Detect the test stack.** Read `package.json`, `pyproject.toml`, `go.mod`, or `Cargo.toml` to choose the existing framework and file naming pattern.
+5. **Draft minimal tests.** For each gap, propose the smallest test that proves the change: happy path, one failure case, and one regression tied to the diff hunk. Reuse existing fixtures and mocks.
+6. **Avoid duplication.** Do not regenerate tests for unchanged, already-covered behavior. Prefer extending an existing file over creating parallel suites.
+7. **Summarize next steps.** List proposed files, estimated cases, and the exact command to run the targeted tests locally for user confirmation before writing.
+```
+
+## Usage
+
+```
+/targeted-test-gen [path]
+```
+
+- With a `path`: limit analysis to that file or directory.
+- Without an argument: analyze all changes against the default base branch.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Resolve the diff scope.** Detect the base ref with `git merge-base HEAD origin/main` or `main`. Run `git diff --name-only <base>...HEAD` and, when a path is given, filter to that subtree.
+2. **Separate source from tests.** Ignore generated artifacts, lockfiles-only changes, and pure config unless they alter runtime behavior. Map each changed source file to its nearest test file by project convention.
+3. **Find coverage gaps.** For each changed symbol (function, method, route, hook), check whether an existing test already exercises the new branch. Mark gaps: new code, modified branches, removed guards, and error paths with no assertion.
+4. **Detect the test stack.** Read `package.json`, `pyproject.toml`, `go.mod`, or `Cargo.toml` to choose the existing framework and file naming pattern (`*.test.ts`, `*_test.go`, `test_*.py`).
+5. **Draft minimal tests.** For each gap, propose the smallest test that proves the change: happy path, one failure case, and one regression tied to the diff hunk. Reuse existing fixtures and mocks.
+6. **Avoid duplication.** Do not regenerate tests for unchanged, already-covered behavior. Prefer extending an existing file over creating parallel suites.
+7. **Summarize next steps.** List proposed files, estimated cases, and the exact command to run the targeted tests locally for user confirmation before writing.
+
+## Output format
+
+- **Diff scope:** base ref, files changed, path filter if any.
+- **Gaps:** source symbol, reason untested, priority.
+- **Proposed tests:** file path, case names, and key assertions.
+- **Run command:** single local test command for the new cases.
+- **Skipped:** files excluded and why.
+
+## Requirements
+
+- Git available with a meaningful base branch and working tree.
+- Project test runner installed and documented in repo scripts.
+- Readable source and existing test directories.
+
+## Safety notes
+
+The command proposes tests for review and does not commit or mutate the repository without explicit user approval. It should not run the full CI suite or install packages unless the user confirms. Follow project test conventions; do not swap frameworks silently.
+
+## Privacy notes
+
+Git diffs and source code enter the model context and may include proprietary algorithms or embedded secrets in fixtures. Redact sensitive values before sharing proposed tests outside the team.
+
+## Source Verification Notes
+
+Verified against Claude Code slash-command documentation and testing references on **2026-06-14**:
+
+- [Claude Code slash commands](https://code.claude.com/docs/en/slash-commands) document custom commands in `.claude/commands/`, the `$ARGUMENTS` placeholder for optional parameters, and team sharing by committing command files to git.
+- The `anthropics/claude-code` README and plugins README describe packaging reusable command prompts for project and team distribution — not built-in slash commands.
+- [Git diff](https://git-scm.com/docs/git-diff) is the standard scope primitive for change-aware test generation in terminal workflows.
+- [Vitest guide](https://vitest.dev/guide/) and other framework docs in the repo (`package.json` scripts) define the test stack this command must follow rather than invent.
+- The `claude-code` CHANGELOG records ongoing code-editing and diff-awareness improvements relevant to targeted generation workflows.
+
+## Duplicate Check
+
+Searched `content/commands/` on **2026-06-14** for overlapping slug, `commandSyntax`, and workflow scope. `generate-tests` (`/test-gen`) generates comprehensive suites across unit, integration, e2e, and security test types for arbitrary files — not diff-scoped gaps. `tdd-workflow` and `test-advanced` focus on methodology rather than git-diff targeting. No existing command limits generation to changed or untested symbols from `git diff`.
+
+## References
+
+- Claude Code repository: https://github.com/anthropics/claude-code
+- Claude Code slash commands: https://code.claude.com/docs/en/slash-commands
+- Git diff documentation: https://git-scm.com/docs/git-diff
+- Vitest guide: https://vitest.dev/guide/
