@@ -402,6 +402,7 @@ function Browse() {
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
+      <h1 className="sr-only">Browse the directory</h1>
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
         {/* Filter sidebar */}
         <aside className="hidden lg:block">

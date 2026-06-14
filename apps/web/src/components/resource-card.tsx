@@ -28,7 +28,7 @@ function SourceRepoStars({ entry, compact = false }: { entry: Entry; compact?: b
       className="inline-flex items-center gap-1 font-mono text-[11px] text-ink-subtle"
       title="Source repository stars"
     >
-      <Star className="h-3 w-3" /> {fmtNum(entry.repoStats.stars)}
+      <Star className="h-3 w-3" aria-hidden /> {fmtNum(entry.repoStats.stars)}
       {!compact && <span className="hidden sm:inline"> repo</span>}
     </span>
   );
@@ -242,7 +242,7 @@ export function ResourceCard({
           {entry.repoStats?.stars !== undefined ? (
             <>
               <div className="flex items-center gap-1 font-mono">
-                <Star className="h-3 w-3" /> {fmtNum(entry.repoStats.stars)}
+                <Star className="h-3 w-3" aria-hidden /> {fmtNum(entry.repoStats.stars)}
               </div>
               <div className="font-mono text-ink-subtle">repo stars</div>
             </>

@@ -2,7 +2,13 @@ import * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { X, ExternalLink, ArrowRight, Shield, Lock } from "lucide-react";
 import { toast } from "sonner";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { useCompare } from "@/lib/compare";
 import { CategoryPill, PlatformChip, NotesPresenceChips } from "@/components/badges";
 import { HarnessBadgeRow } from "@/components/harness-badge";
@@ -193,6 +199,9 @@ export function CompareDrawer() {
             <SheetTitle className="font-display text-base font-semibold text-ink">
               Comparing {items.length} {items.length === 1 ? "resource" : "resources"}
             </SheetTitle>
+            <SheetDescription className="sr-only">
+              Side-by-side comparison of the selected resources.
+            </SheetDescription>
             <div className="flex flex-wrap items-center gap-2">
               {items.length > 0 && (
                 <div className="hidden items-center gap-1.5 sm:flex">

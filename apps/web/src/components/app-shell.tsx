@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Moon, Sun, Send, Github, Rss } from "lucide-react";
+import { Moon, Sun, Send, Github, Rss, Menu } from "lucide-react";
 import { CommandBar, useGlobalCommandKey } from "./command-bar";
 import { AlertsDropdown } from "./alerts-dropdown";
 import { useShortcuts } from "./shortcuts-dialog";
@@ -8,6 +8,13 @@ import { ScrollProgress } from "./scroll-progress";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { NewsletterInline } from "./newsletter-inline";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { CATEGORIES } from "@/types/registry";
 
 const NAV = [
@@ -26,6 +33,7 @@ export function TopBar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isHome = pathname === "/";
   const [elevated, setElevated] = React.useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
   React.useEffect(() => {
     const onScroll = () => setElevated(window.scrollY > 8);
     onScroll();
@@ -45,6 +53,15 @@ export function TopBar() {
     >
       <ScrollProgress />
       <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-4 px-4 sm:px-6">
+        <button
+          type="button"
+          onClick={() => setMobileNavOpen(true)}
+          aria-label="Open menu"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-ink-muted hover:text-ink md:hidden"
+        >
+          <Menu className="h-4 w-4" />
+        </button>
+
         <Link to="/" className="flex items-center gap-2">
           <span className="flex h-7 w-7 items-center justify-center rounded-md bg-ink text-background">
             <span className="font-display text-sm font-bold">hc</span>
@@ -61,6 +78,7 @@ export function TopBar() {
               <Link
                 key={item.to}
                 to={item.to}
+                aria-current={active ? "page" : undefined}
                 className={cn(
                   "relative rounded-md px-2.5 py-1.5 text-sm transition-colors duration-200 ease-out",
                   active ? "text-ink" : "text-ink-muted hover:bg-surface-2 hover:text-ink",
@@ -111,6 +129,38 @@ export function TopBar() {
           </Link>
         </div>
       </div>
+
+      <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+        <SheetContent side="left" className="w-72">
+          <SheetHeader>
+            <SheetTitle className="font-display text-base font-semibold text-ink">
+              Menu
+            </SheetTitle>
+            <SheetDescription className="sr-only">
+              Primary site navigation links.
+            </SheetDescription>
+          </SheetHeader>
+          <nav className="mt-6 flex flex-col gap-1">
+            {NAV.map((item) => {
+              const active = pathname.startsWith(item.to);
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setMobileNavOpen(false)}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "rounded-md px-3 py-2 text-sm transition-colors duration-200 ease-out",
+                    active ? "bg-surface-2 text-ink" : "text-ink-muted hover:bg-surface-2 hover:text-ink",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </SheetContent>
+      </Sheet>
     </header>
   );
 }
