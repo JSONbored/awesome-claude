@@ -1,0 +1,194 @@
+---
+title: BlueNexus Universal MCP Server for Claude
+slug: bluenexus-universal-mcp-mcp-server
+category: mcp
+description: >-
+  BlueNexus hosted MCP server with Bearer auth providing access to 200+ data
+  sources for research, enrichment, and analytics from Claude and other clients.
+cardDescription: >-
+  Connect Claude to BlueNexus Universal MCP for 200+ data sources via Bearer
+  token on api.bluenexus.ai.
+seoTitle: BlueNexus Universal MCP Server for Claude
+seoDescription: >-
+  Use the BlueNexus Universal MCP server with Claude to query 200+ integrated
+  data sources for research and enrichment via Bearer Authorization.
+author: BlueNexus
+authorProfileUrl: "https://github.com/bluenexus-ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1479
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1479"
+repoUrl: "https://github.com/bluenexus-ai/gemini-cli-extension"
+documentationUrl: "https://api.bluenexus.ai/mcp"
+websiteUrl: "https://bluenexus.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http bluenexus https://api.bluenexus.ai/mcp
+usageSnippet: >-
+  Add https://api.bluenexus.ai/mcp as a remote connector and set Authorization
+  Bearer with your BlueNexus API key.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "bluenexus": {
+        "url": "https://api.bluenexus.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "bluenexus": {
+        "url": "https://api.bluenexus.ai/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer YOUR_BLUENEXUS_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "BlueNexus account with an API key and access to the data sources you plan to query."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or Claude Code with HTTP MCP transport."
+  - "Review of BlueNexus pricing and rate limits for high-volume enrichment workflows."
+  - "Data governance approval when querying sources that may return PII or licensed content."
+safetyNotes:
+  - "Bearer tokens grant access to all enabled BlueNexus data sources for your account."
+  - "Some integrations perform live lookups against third-party APIs that may incur usage fees."
+  - "Tool output may include personal or business contact data; handle under your privacy policy."
+  - "Rotate API keys immediately if they appear in chat logs or committed config files."
+privacyNotes:
+  - "Search queries and entity identifiers are sent to BlueNexus and underlying data vendors."
+  - "Enrichment results may contain emails, phone numbers, or firmographic data regulated by GDPR/CCPA."
+  - "Do not paste raw enrichment dumps with PII into public support tickets or shared documents."
+tags:
+  - data-enrichment
+  - research
+  - integrations
+  - remote-mcp
+  - api-key
+keywords:
+  - bluenexus mcp
+  - universal data mcp
+  - bluenexus claude connector
+  - data sources mcp
+  - bearer auth mcp
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+BlueNexus Universal MCP is a hosted Model Context Protocol server that aggregates more than 200 data sources behind a single Bearer-authenticated endpoint. Claude and other MCP clients can run enrichment, research, and lookup tools without wiring each integration separately.
+
+Documentation is served from `https://api.bluenexus.ai/mcp`. Related client tooling lives in [bluenexus-ai/gemini-cli-extension](https://github.com/bluenexus-ai/gemini-cli-extension).
+
+## Features
+
+- Unified access to 200+ data sources through one MCP endpoint.
+- Bearer token authentication via `Authorization` header.
+- Hosted remote HTTP transport at `api.bluenexus.ai/mcp`.
+- Tools for company, people, and market research workflows.
+- Compatible with Claude Connectors and Claude Code HTTP transport.
+
+## Use Cases
+
+- Enrich a lead list with firmographic and contact signals before outreach.
+- Research a company’s tech stack and funding history in one conversation.
+- Cross-reference news and social signals during due diligence.
+- Validate vendor domains and corporate hierarchies for procurement.
+- Build research briefs that combine multiple BlueNexus sources.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://api.bluenexus.ai/mcp`.
+3. Configure Bearer authentication with your BlueNexus API key.
+4. Enable the connector and select tools as needed.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http bluenexus https://api.bluenexus.ai/mcp
+claude mcp list
+```
+
+Add the Bearer header in your MCP config file.
+
+### Other MCP clients
+
+Point a remote HTTP connector at `https://api.bluenexus.ai/mcp` with Bearer auth.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "bluenexus": {
+      "url": "https://api.bluenexus.ai/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer YOUR_BLUENEXUS_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Replace `YOUR_BLUENEXUS_API_KEY` with a key from your BlueNexus dashboard.
+
+## Examples
+
+### Company enrichment
+
+```text
+Enrich acme-corp.com with BlueNexus and summarise industry, size, and headquarters.
+```
+
+### People lookup
+
+```text
+Find public professional details for Jane Doe at Example Inc using BlueNexus sources.
+```
+
+### Multi-source brief
+
+```text
+Build a one-page research brief on Stripe using BlueNexus news, firmographic, and web signals.
+```
+
+## Security
+
+- Treat Bearer tokens as full-account credentials; scope keys per environment where possible.
+- Verify licensing terms for each data source before redistributing results.
+- Minimise PII retention when enrichment output is stored locally.
+
+## Troubleshooting
+
+### 401 Unauthorized
+
+Confirm the Bearer prefix and key value; regenerate the key if it was rotated in BlueNexus.
+
+### Source unavailable
+
+Some integrations require separate enablement or paid tiers in BlueNexus; check dashboard permissions.
+
+### Rate limiting
+
+Batch enrichment requests and add delays; upgrade plan if you hit quota errors consistently.
+
+### Empty enrichment
+
+Verify domain spelling and that the entity exists in BlueNexus’s indexed sources.
