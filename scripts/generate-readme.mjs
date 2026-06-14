@@ -257,7 +257,7 @@ packages use checksums and package trust metadata after review.
 
 1. Direct content PRs should add or update exactly one \`content/<category>/<slug>.mdx\` file.
 2. For direct content PRs, run \`pnpm validate:content:strict\` and do not commit generated output.
-3. For platform, package, API, MCP, Raycast, or maintainer artifact work, run \`pnpm --filter web run prebuild\`, \`pnpm validate:packages\`, \`pnpm scan:packages\`, \`pnpm validate:clean\`, \`pnpm audit:content\`, \`pnpm validate:emails\`, \`pnpm validate:raycast-feed\`, \`pnpm test:mcp\`, \`pnpm test:registry-artifacts\`, \`pnpm test:seo-jsonld\`, \`pnpm test:commercial-intake\`, \`MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint\`, and \`pnpm build\` as relevant.
+3. For platform, package, API, MCP, Raycast, or maintainer artifact work, run \`pnpm --filter web run prebuild\`, \`pnpm validate:packages\`, \`pnpm scan:packages\`, \`pnpm validate:clean\`, \`pnpm audit:content\`, \`pnpm validate:raycast-feed\`, \`pnpm test:mcp\`, \`pnpm test:registry-artifacts\`, \`pnpm test:seo-jsonld\`, \`pnpm test:commercial-intake\`, \`MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint\`, and \`pnpm build\` as relevant.
 4. Generated registry, route, package-download, and README artifacts are build or maintainer automation outputs, not normal content PR diffs.
 
 </details>

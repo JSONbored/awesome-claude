@@ -32,10 +32,7 @@
     "validate:d1-jobs": "node scripts/validate-d1-jobs.mjs",
     "validate:tasks": "node scripts/validate-tasks.mjs",
     "indexnow:submit": "node scripts/submit-indexnow.mjs",
-    "email:render": "tsx scripts/render-email-templates.ts",
-    "validate:emails": "tsx scripts/render-email-templates.ts --check",
     "brief:weekly": "node scripts/generate-weekly-brief.mjs",
-    "resend:sync-templates": "tsx scripts/sync-resend-templates.ts",
     "mcp:start": "pnpm --filter @heyclaude/mcp start",
     "mcp:start:local": "pnpm --filter @heyclaude/mcp start:local",
     "validate:mcp-endpoint": "pnpm --filter @heyclaude/mcp validate:endpoint",
@@ -77,7 +74,6 @@
     "prettier": "3.8.3",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "react-email": "6.5.0",
     "safety-agent-cli": "0.1.6",
     "tsx": "4.22.3",
     "vitest": "4.1.7"
