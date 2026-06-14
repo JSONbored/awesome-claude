@@ -15,6 +15,13 @@ const PALETTE: Record<string, string> = {
 
 const DEFAULT_ACCENT = "#c5e84e";
 
+export const OG_TEXT_LIMITS = {
+  eyebrow: 40,
+  title: 140,
+  description: 240,
+  author: 80,
+} as const;
+
 export function categoryAccent(category?: string) {
   return PALETTE[category ?? ""] ?? DEFAULT_ACCENT;
 }
@@ -37,19 +44,44 @@ export function esc(value: string) {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+/**
+ * Bound user-visible OG text before expensive SVG/PNG rendering. This keeps public
+ * query-string driven cards from feeding URL-sized strings into Satori/resvg.
+ */
+export function clampOgText(value: string, maxChars: number) {
+  return value.replace(/\s+/g, " ").trim().slice(0, maxChars);
+}
+
 /** Greedy word-wrap into at most `maxLines` lines of ~`perLine` chars. Exported for the PNG renderer. */
 export function wrap(value: string, perLine: number, maxLines: number) {
-  const words = value.split(/\s+/);
+  const words = value.replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
   const lines: string[] = [];
   let cur = "";
+
   for (const word of words) {
-    if ((cur + " " + word).trim().length > perLine) {
-      if (cur) lines.push(cur);
-      cur = word;
-    } else cur = (cur ? cur + " " : "") + word;
+    let remaining = word;
+    while (remaining) {
+      const candidate = (cur ? cur + " " : "") + remaining;
+      if (candidate.length <= perLine) {
+        cur = candidate;
+        break;
+      }
+
+      if (cur) {
+        lines.push(cur);
+        cur = "";
+        if (lines.length >= maxLines) return lines;
+        continue;
+      }
+
+      lines.push(remaining.slice(0, perLine));
+      remaining = remaining.slice(perLine);
+      if (lines.length >= maxLines) return lines;
+    }
   }
-  if (cur) lines.push(cur);
-  return lines.slice(0, maxLines);
+
+  if (cur && lines.length < maxLines) lines.push(cur);
+  return lines;
 }
 
 /** Deterministic 1200×630 OG card SVG. Shared by /og/$category/$slug and the generic /og route. */
@@ -61,9 +93,13 @@ export function renderOgSvg(opts: {
   accent?: string;
 }) {
   const accent = safeAccent(opts.accent);
-  const eyebrow = esc((opts.eyebrow || "HeyClaude").toUpperCase());
-  const titleLines = wrap(opts.title, 22, 2);
-  const descLines = opts.description ? wrap(opts.description, 60, 2) : [];
+  const eyebrow = esc(
+    clampOgText(opts.eyebrow || "HeyClaude", OG_TEXT_LIMITS.eyebrow).toUpperCase(),
+  );
+  const titleLines = wrap(clampOgText(opts.title, OG_TEXT_LIMITS.title), 22, 2);
+  const descLines = opts.description
+    ? wrap(clampOgText(opts.description, OG_TEXT_LIMITS.description), 60, 2)
+    : [];
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">

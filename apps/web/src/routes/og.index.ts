@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { safeAccent } from "@/lib/og-image";
+import { OG_TEXT_LIMITS, clampOgText, safeAccent } from "@/lib/og-image";
 import { renderOgPng } from "@/lib/og-render.server";
 
 /**
@@ -13,10 +13,19 @@ export const Route = createFileRoute("/og/")({
     handlers: {
       GET: async ({ request }) => {
         const url = new URL(request.url);
-        const title = url.searchParams.get("title") ?? "HeyClaude";
-        const description =
+        const title = clampOgText(
+          url.searchParams.get("title") ?? "HeyClaude",
+          OG_TEXT_LIMITS.title,
+        );
+        const rawDescription =
           url.searchParams.get("description") ?? url.searchParams.get("subtitle") ?? undefined;
-        const eyebrow = url.searchParams.get("eyebrow") ?? "HeyClaude";
+        const description = rawDescription
+          ? clampOgText(rawDescription, OG_TEXT_LIMITS.description)
+          : undefined;
+        const eyebrow = clampOgText(
+          url.searchParams.get("eyebrow") ?? "HeyClaude",
+          OG_TEXT_LIMITS.eyebrow,
+        );
         // accent is user-controlled; clamp to a safe hex before it reaches the card markup.
         const accent = safeAccent(url.searchParams.get("accent"));
 

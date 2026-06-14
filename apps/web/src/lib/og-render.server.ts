@@ -1,7 +1,7 @@
 import { ImageResponse } from "workers-og";
 
 import { getOgFonts } from "@/lib/og-fonts";
-import { OG_HEIGHT, OG_WIDTH, safeAccent, wrap } from "@/lib/og-image";
+import { OG_HEIGHT, OG_TEXT_LIMITS, OG_WIDTH, clampOgText, safeAccent, wrap } from "@/lib/og-image";
 
 /**
  * Sanitize a text value for the Satori HTML template.
@@ -39,9 +39,13 @@ export function renderOgPng(opts: {
   accent?: string;
 }): ImageResponse {
   const accent = safeAccent(opts.accent);
-  const eyebrow = escForSatori((opts.eyebrow || "HeyClaude").toUpperCase());
-  const titleLines = wrap(opts.title, 22, 2);
-  const descLines = opts.description ? wrap(opts.description, 60, 2) : [];
+  const eyebrow = escForSatori(
+    clampOgText(opts.eyebrow || "HeyClaude", OG_TEXT_LIMITS.eyebrow).toUpperCase(),
+  );
+  const titleLines = wrap(clampOgText(opts.title, OG_TEXT_LIMITS.title), 22, 2);
+  const descLines = opts.description
+    ? wrap(clampOgText(opts.description, OG_TEXT_LIMITS.description), 60, 2)
+    : [];
 
   const titleHtml = titleLines
     .map(
@@ -67,7 +71,7 @@ export function renderOgPng(opts: {
   // HTMLRewriter, which does not decode entities, so "&nbsp;" would render verbatim.
   const authorHtml = opts.author
     ? `<div style="display:flex;margin-top:32px;font-family:'Space Grotesk';font-weight:500;font-size:22px;color:#6b6a64;">by <span style="font-weight:700;color:#171614;">${escForSatori(
-        opts.author,
+        clampOgText(opts.author, OG_TEXT_LIMITS.author),
       )}</span></div>`
     : "";
 
