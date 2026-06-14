@@ -29,6 +29,7 @@ export function daysSince(iso: string, now = Date.now()): number {
 
 export function relativePosted(iso: string, now = Date.now()): string {
   const d = daysSince(iso, now);
+  if (!Number.isFinite(d)) return "—";
   if (d <= 0) return "today";
   if (d === 1) return "1d ago";
   if (d < 7) return `${d}d ago`;

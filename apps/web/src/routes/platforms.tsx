@@ -4,6 +4,7 @@ import { PLATFORM_LABEL, PLATFORM_SUPPORT_LABEL, type Platform } from "@/types/r
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 
 export const Route = createFileRoute("/platforms")({
   head: () => ({
@@ -20,6 +21,14 @@ export const Route = createFileRoute("/platforms")({
           "Native skills, generated adapters, and manual-context fallbacks across every supported client.",
       },
       { property: "og:url", content: absoluteUrl("/platforms") },
+      {
+        property: "og:image",
+        content: ogImageUrl({ title: "Platform compatibility", eyebrow: "Platforms" }),
+      },
+      {
+        name: "twitter:image",
+        content: ogImageUrl({ title: "Platform compatibility", eyebrow: "Platforms" }),
+      },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/platforms") }],
     scripts: [

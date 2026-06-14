@@ -17,7 +17,6 @@ import {
   Shield,
   Lock,
 } from "lucide-react";
-import { search } from "@/data/search";
 import { CategoryPill, Kbd, TrustBadge } from "./badges";
 import { useTheme } from "@/lib/theme";
 import { useShortcuts } from "./shortcuts-dialog";
@@ -64,6 +63,22 @@ export function CommandBar({
   const { toggle: toggleTheme } = useTheme();
   const shortcuts = useShortcuts();
 
+  // Lazy-load the in-memory search index (and the registry dataset it pulls in) only when the
+  // bar is opened or typed into, so the ~1 MB dataset stays out of the universal client bundle.
+  const [searchFn, setSearchFn] = React.useState<
+    (typeof import("@/data/search"))["search"] | null
+  >(null);
+  React.useEffect(() => {
+    if ((!open && !q) || searchFn) return;
+    let cancelled = false;
+    void import("@/data/search").then((m) => {
+      if (!cancelled) setSearchFn(() => m.search);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [open, q, searchFn]);
+
   React.useEffect(() => {
     const id = setInterval(() => setPlaceholderIdx((i) => (i + 1) % EXAMPLES.length), 2800);
     return () => clearInterval(id);
@@ -71,12 +86,12 @@ export function CommandBar({
 
   const results = React.useMemo(
     () =>
-      q.trim()
-        ? search({ q, sort: "popular" })
+      q.trim() && searchFn
+        ? searchFn({ q, sort: "popular" })
             .slice(0, 6)
             .filter((r) => !quickCat || r.category === quickCat)
         : [],
-    [q, quickCat],
+    [q, quickCat, searchFn],
   );
 
   const actions = React.useMemo<ActionItem[]>(() => {
