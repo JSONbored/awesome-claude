@@ -1,0 +1,247 @@
+---
+title: Claude Code Zero Data Retention Review Capability Pack Skill
+slug: claude-code-zero-data-retention-review-capability-pack
+category: skills
+description: >-
+  Expert Claude Code zero data retention review capability pack for auditing
+  ZDR scope on Claude for Enterprise, disabled features, model availability,
+  analytics limits, and third-party integration gaps before rollout.
+cardDescription: >-
+  Review Claude Code Zero Data Retention scope, disabled features, and
+  compliance boundaries with source-backed checklists.
+seoTitle: Claude Code Zero Data Retention Review Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code Zero Data Retention review,
+  enterprise scope, disabled cloud features, model restrictions, and analytics
+  limits.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1544
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1544"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when an enterprise team needs to confirm Claude Code Zero Data
+  Retention coverage, understand disabled features, and document what remains
+  outside ZDR before enabling users.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code zero data retention review capability pack for this organization."
+
+  # Required output
+  1) ZDR eligibility and enablement status summary
+  2) In-scope versus out-of-scope data flows matrix
+  3) Disabled feature and model availability assessment
+  4) Analytics, admin, and third-party integration implications
+  5) Privacy-safe rollout notes for security and legal review
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-13"
+retrievalSources:
+  - "https://code.claude.com/docs/en/zero-data-retention"
+  - "https://code.claude.com/docs/en/data-usage"
+  - "https://code.claude.com/docs/en/legal-and-compliance"
+  - "https://code.claude.com/docs/en/analytics"
+  - "https://code.claude.com/docs/en/admin-setup"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Claude for Enterprise account context and confirmation that Zero Data Retention is being evaluated or enabled."
+  - "Access to Anthropic account team or sales contact for ZDR enablement, because ZDR cannot be toggled from standard admin settings."
+  - "Inventory of Claude Code surfaces in use: terminal CLI, Desktop cloud sessions, web sessions, analytics, MCP servers, and third-party model routes."
+  - "Security, legal, or compliance stakeholders available to review scope boundaries and residual retention cases."
+safetyNotes:
+  - "This skill summarizes official ZDR scope; it must not claim ZDR covers chat on claude.ai, Cowork, third-party MCP servers, or Bedrock, Vertex, or Foundry routes."
+  - "ZDR is enabled per organization; new organizations require separate enablement by the Anthropic account team."
+  - "Disabled features such as Claude Code on the Web, Desktop cloud sessions, and `/feedback` are blocked at the backend regardless of client UI."
+  - "Claude Fable 5 is unavailable under ZDR; the `best` alias resolves to Opus for ZDR organizations instead."
+  - "Policy-violation sessions may still be retained for up to two years even when ZDR is enabled."
+privacyNotes:
+  - "ZDR review discussions often involve account emails, organization names, contract terms, and security architecture details that should stay in internal channels."
+  - "Claude Code Analytics under ZDR does not store prompts or model responses but still collects productivity metadata such as account emails and usage statistics."
+  - "Administrative data such as seat assignments and audit logs follow standard retention policies and remain in scope for compliance review."
+  - "Third-party MCP servers, local logs, hooks, and customer-managed observability stacks are outside Anthropic ZDR and need separate review."
+tags:
+  - claude-code
+  - zero-data-retention
+  - enterprise
+  - compliance
+  - capability-pack
+keywords:
+  - Claude Code zero data retention
+  - Claude Code ZDR review
+  - Claude Code enterprise data handling
+  - Claude Code disabled features ZDR
+  - Claude Code analytics ZDR limits
+  - Claude for Enterprise ZDR scope
+readingTime: 9
+difficultyScore: 82
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: true
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code zero data retention, data
+usage, legal and compliance, analytics, admin setup, and skills documentation
+verified on **2026-06-13**. ZDR eligibility and feature availability can change
+with enterprise agreements; prefer live official docs and account-team
+confirmation over cached policy assumptions.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/zero-data-retention
+- https://code.claude.com/docs/en/data-usage
+- https://code.claude.com/docs/en/legal-and-compliance
+- https://code.claude.com/docs/en/analytics
+- https://code.claude.com/docs/en/admin-setup
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code zero data retention documentation on
+**2026-06-13**:
+
+- ZDR is available to qualified **Claude for Enterprise** accounts and requires
+  separate enablement by Anthropic; it is not toggled from standard admin settings.
+- ZDR covers Claude Code inference on Claude for Enterprise; prompts and model
+  responses are not stored after the response returns except where law or misuse
+  review requires retention.
+- **Claude Code on the Web**, Desktop cloud sessions, and **`/feedback`** are
+  disabled under ZDR because they require storing prompts or completions.
+- **GitHub contribution metrics** are not available for ZDR organizations; usage
+  metrics remain on the analytics dashboard.
+- **Claude Fable 5** is unavailable under ZDR; the `best` alias resolves to Opus
+  for ZDR organizations.
+
+## Scope Note
+
+This is not legal advice. Use it as a reusable review workflow for security,
+platform, and engineering teams preparing Claude Code rollout under Zero Data
+Retention on Claude for Enterprise.
+
+## Core Workflow
+
+1. Confirm ZDR status: qualified Claude for Enterprise account, separate
+   enablement by Anthropic, and per-organization scope rather than account-wide
+   inheritance for new orgs.
+2. Map deployment surfaces: terminal Claude Code on Claude for Enterprise,
+   Desktop cloud sessions, Claude Code on the Web, analytics, MCP integrations,
+   and any Bedrock, Vertex, or Foundry routes that follow provider retention.
+3. Document in-scope inference: prompts and model responses during Claude Code
+   sessions on Claude for Enterprise are processed in real time and not stored
+   by Anthropic after the response returns, except where law or misuse review
+   requires retention.
+4. Document out-of-scope flows explicitly:
+   - Chat on claude.ai and Cowork sessions.
+   - Third-party MCP servers and external integrations.
+   - Administrative seat and account metadata under standard policies.
+   - Claude Code Analytics productivity metadata without prompt storage.
+5. Review disabled features under ZDR: Claude Code on the Web, Desktop cloud
+   sessions, and `/feedback` submission, plus any future features requiring
+   prompt or completion storage.
+6. Review model availability: Fable 5 unavailable; confirm `/model` picker and
+   `best` alias behavior for ZDR organizations.
+7. Review analytics impact: contribution metrics with GitHub integration are not
+   available for ZDR organizations; usage metrics remain.
+8. Capture residual retention cases: policy-violation sessions retained up to two
+   years under standard ZDR policy.
+9. Produce rollout guidance: approved surfaces, blocked workflows, user comms,
+   and third-party data-handling follow-ups.
+
+## Capability Scope
+
+- ZDR eligibility and enablement workflow review.
+- In-scope versus out-of-scope data flow matrix.
+- Disabled feature and model restriction assessment.
+- Analytics and contribution-metrics limitation review.
+- Third-party MCP and provider-route boundary checks.
+- Privacy-safe enterprise rollout notes.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when preparing enterprise
+  security reviews, admin setup docs, or ZDR rollout checklists.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic compliance checklist for Claude Code ZDR evaluations.
+
+## Required Inputs
+
+- Organization plan, ZDR enablement status, and Anthropic account contact.
+- List of Claude Code surfaces and integrations currently in use or planned.
+- Required analytics, audit, admin, and collaboration features for the rollout.
+- Known third-party MCP servers, observability tools, and alternate model routes.
+
+## Production Rules
+
+- Do not equate ZDR with zero logging everywhere; local hooks, MCP servers, and
+  customer-managed telemetry remain customer-controlled surfaces.
+- Do not promise contribution metrics or GitHub analytics for ZDR orgs.
+- Block or redesign workflows that depend on cloud session storage or `/feedback`.
+- Confirm each new organization receives separate ZDR enablement.
+- Document provider-specific retention when using Bedrock, Vertex, or Foundry.
+- Keep legal and security review separate from this operational checklist.
+- Redact account identifiers and contract details in public summaries.
+
+## Review Matrix
+
+| Topic | Under ZDR | Action |
+| --- | --- | --- |
+| Terminal Claude Code inference on Enterprise | Prompts/responses not stored after response | Approved primary surface |
+| Claude Code on the Web | Disabled | Remove from rollout plans |
+| Desktop cloud sessions | Disabled | Use local terminal sessions |
+| `/feedback` | Disabled | Use internal issue reporting instead |
+| Claude Code Analytics usage metrics | Available without prompt storage | Enable with metadata review |
+| GitHub contribution metrics | Not available | Plan alternate ROI signals |
+| Fable 5 model | Unavailable | Confirm Opus or other allowed models |
+| Third-party MCP servers | Out of scope | Review each vendor separately |
+
+## Output Contract
+
+1. ZDR enablement and organization scope summary.
+2. In-scope versus out-of-scope data flow matrix.
+3. Disabled features and model restrictions list.
+4. Analytics and admin capability impact notes.
+5. Third-party and residual-retention follow-ups.
+6. Privacy-safe summary suitable for security review or rollout comms.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for Claude Code zero data retention, ZDR review, and enterprise
+data-handling workflows. Official docs describe ZDR directly, but no `skills`
+entry provides a reusable ZDR review capability pack with rollout matrix and
+third-party boundary contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.
