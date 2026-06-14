@@ -1,0 +1,146 @@
+---
+title: /mcp-smoke-test - MCP Smoke Test Command for Claude Code
+slug: mcp-smoke-test
+category: commands
+description: >-
+  Slash command that smoke-tests a configured MCP server: verifies transport
+  connectivity, handshake success, tool and resource listing, and one safe
+  read-only tool invocation without running full OAuth setup or marketplace
+  installation.
+cardDescription: >-
+  Smoke-test MCP server connectivity, tool list, and one safe read-only call.
+seoTitle: /mcp-smoke-test - MCP Smoke Test Command for Claude Code
+seoDescription: >-
+  Claude Code slash command to smoke-test MCP server connectivity, tool
+  discovery, and a safe read-only invocation.
+author: kiannidev
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 749
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/749"
+documentationUrl: "https://github.com/anthropics/claude-code"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"
+installable: true
+installCommand: "/mcp-smoke-test [server-name]"
+commandSyntax: "/mcp-smoke-test [server-name]"
+usageSnippet: "/mcp-smoke-test github"
+copySnippet: "/mcp-smoke-test [server-name]"
+prerequisites:
+  - "MCP server already declared in project `.mcp.json`, user config, or Claude Code settings."
+  - "Required env vars, OAuth consent, or local process dependencies documented for that server."
+  - "Network access to remote MCP endpoints or local stdio process launch permissions."
+safetyNotes:
+  - "Prefer read-only tool calls for smoke verification; do not run write, delete, or deploy tools without explicit user approval."
+  - "Smoke testing may trigger rate limits or audit logs on remote vendors; use staging credentials when available."
+  - "A passing smoke test is not a security audit; pair with `/mcp-auth-audit` for remote OAuth review."
+privacyNotes:
+  - "Tool list schemas and sample responses may expose internal API surface area or account identifiers."
+  - "Redact bearer tokens, connection strings, and tenant IDs from smoke-test output shared publicly."
+tags:
+  - mcp
+  - smoke-test
+  - connectivity
+  - tools
+  - integration
+keywords:
+  - mcp smoke test command
+  - mcp server connectivity check
+  - claude code mcp tool list test
+  - mcp handshake verification
+---
+
+The `/mcp-smoke-test` command is a **custom slash command workflow** you install as a Markdown prompt under `.claude/commands/` (or ship via a project plugin `commands/` directory). It is **not** a built-in Claude Code command. It answers one question: **is this MCP server reachable and usable right now?** It complements `/mcp-setup` (installation and OAuth configuration) and `/mcp-auth-audit` (authorization hardening) with a fast connectivity and tool-discovery check.
+
+## Install this command
+
+Save the following as `.claude/commands/mcp-smoke-test.md` in your repository (or add it to a plugin `commands/` directory), then invoke `/mcp-smoke-test` in Claude Code:
+
+```markdown
+---
+description: Smoke-test MCP server connectivity, tool catalog, and one safe read-only probe
+---
+
+Verify a configured MCP server is reachable and usable. Optional server name: $ARGUMENTS
+
+When invoked, follow these steps:
+
+1. **Locate the server config.** Read the named entry from project `.mcp.json`, user MCP settings, or Claude Code MCP configuration. Record transport type: stdio, SSE, or streamable HTTP.
+2. **Validate prerequisites.** Confirm required env vars exist (names only, not values), OAuth has been consented if needed, and local launch commands or Docker images are available.
+3. **List configured servers.** When no server name is given, run `claude mcp list` and prompt the user to pick one.
+4. **Attempt connection.** Start or connect to the server using the configured transport. Capture handshake errors, TLS failures, timeout, or process exit codes verbatim.
+5. **List capabilities.** Request the published tool, resource, and prompt catalogs. Note missing schemas, duplicate tool names, or empty catalogs on servers expected to expose tools.
+6. **Run one safe probe.** Invoke a read-only tool such as list, describe, ping, or metadata fetch. Skip write, delete, execute, billing, or production mutation tools unless the user explicitly approves.
+7. **Report verdict.** Return pass/fail per step with remediation: fix config path, renew OAuth, open firewall, or correct launch command.
+```
+
+## Usage
+
+```
+/mcp-smoke-test [server-name]
+```
+
+- With a `server-name`: test that configured server entry.
+- Without an argument: list configured servers and prompt for selection.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Locate the server config.** Read the named entry from project `.mcp.json`, user MCP settings, or Claude Code MCP configuration. Record transport type: stdio, SSE, or streamable HTTP.
+2. **Validate prerequisites.** Confirm required env vars exist (names only, not values), OAuth has been consented if needed, and local launch commands or Docker images are available.
+3. **Attempt connection.** Start or connect to the server using the configured transport. Capture handshake errors, TLS failures, timeout, or process exit codes verbatim.
+4. **List capabilities.** Request the published tool, resource, and prompt catalogs. Note missing schemas, duplicate tool names, or empty catalogs on servers expected to expose tools.
+5. **Run one safe probe.** Invoke a read-only tool such as list, describe, ping, or metadata fetch. Skip write, delete, execute, billing, or production mutation tools unless the user explicitly approves.
+6. **Measure latency.** Record connect time, list time, and probe time. Flag slow startups that may bloat session context.
+7. **Report verdict.** Return pass/fail per step with remediation: fix config path, renew OAuth, open firewall, or correct launch command.
+
+## Output format
+
+- **Server:** name, transport, scope (project/user).
+- **Handshake:** pass/fail with error excerpt.
+- **Catalog:** tool count, resource count, notable gaps.
+- **Probe:** tool invoked, pass/fail, latency.
+- **Verdict:** healthy / degraded / blocked.
+- **Next step:** smallest fix or link to `/mcp-setup` if unconfigured.
+
+## Requirements
+
+- MCP server entry present in Claude Code configuration.
+- Credentials or OAuth consent already completed for remote servers.
+- Permission to launch local stdio processes or reach remote endpoints.
+
+## Safety notes
+
+Use read-only tools for probing. Do not invoke destructive MCP tools during smoke testing without explicit approval. A successful smoke test does not replace authorization or trust review for third-party servers.
+
+## Privacy notes
+
+Tool schemas and probe responses may reveal internal URLs, account metadata, or data samples. Redact tokens and identifiers before sharing smoke-test output.
+
+## Source Verification Notes
+
+Verified against Claude Code MCP documentation and CLI references on **2026-06-14**:
+
+- [Claude Code slash commands](https://code.claude.com/docs/en/slash-commands) document custom commands in `.claude/commands/`, the `$ARGUMENTS` placeholder, and team sharing by committing command files to git.
+- [Claude Code MCP docs](https://code.claude.com/docs/en/mcp) describe project and user server configuration with tool discovery at session start.
+- The `claude-code` [CHANGELOG](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) documents `claude mcp list` and `claude mcp get` for inspecting configured servers and redacting sensitive config in listings.
+- Plugins README in `anthropics/claude-code` covers packaging MCP-related commands for team workflows.
+- MCP specification lifecycle docs define handshake, capability listing, and tool invocation phases under test.
+
+## Duplicate Check
+
+Searched `content/commands/` on **2026-06-14** for overlapping slug, `commandSyntax`, and workflow scope. `/mcp-setup` guides full server installation, OAuth, marketplace selection, and team onboarding — not post-config health checks. `/mcp-auth-audit` reviews OAuth metadata and token audience binding. No existing command performs a quick connectivity, catalog, and read-only probe workflow.
+
+## References
+
+- Claude Code repository: https://github.com/anthropics/claude-code
+- Claude Code slash commands: https://code.claude.com/docs/en/slash-commands
+- Claude Code MCP documentation: https://code.claude.com/docs/en/mcp
+- Claude Code CHANGELOG (`claude mcp list`): https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md
