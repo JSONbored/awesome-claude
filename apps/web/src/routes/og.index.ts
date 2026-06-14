@@ -29,7 +29,7 @@ export const Route = createFileRoute("/og/")({
         // accent is user-controlled; clamp to a safe hex before it reaches the card markup.
         const accent = safeAccent(url.searchParams.get("accent"));
 
-        const image = renderOgPng({
+        const image = await renderOgPng({
           eyebrow,
           title,
           description: description ?? undefined,

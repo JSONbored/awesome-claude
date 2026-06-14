@@ -19,7 +19,7 @@ export const Route = createFileRoute("/og/$category/$slug")({
         const author = entry?.author ?? "HeyClaude";
         const category = entry?.category ?? params.category;
 
-        const image = renderOgPng({
+        const image = await renderOgPng({
           eyebrow: `${category} · HeyClaude`,
           title,
           description,

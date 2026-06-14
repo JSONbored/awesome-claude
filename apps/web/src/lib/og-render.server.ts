@@ -1,4 +1,4 @@
-import { ImageResponse } from "workers-og";
+import type { ImageResponse } from "workers-og";
 
 import { getOgFonts } from "@/lib/og-fonts";
 import { OG_HEIGHT, OG_TEXT_LIMITS, OG_WIDTH, clampOgText, safeAccent, wrap } from "@/lib/og-image";
@@ -27,17 +27,25 @@ function escForSatori(value: string) {
  * yoga `.wasm` modules, which must not be pulled into the browser bundle. The Vite
  * `serverOnlyClientStubs` plugin stubs `*.server` imports for the client build.
  *
+ * workers-og is imported lazily (dynamic `import()` below) rather than at module top
+ * level: TanStack's dev SSR eagerly evaluates the whole route tree, so a static import
+ * here would pull workers-og's `.wasm` into Node's ESM loader for EVERY page and 500 the
+ * entire site under `vite dev` (Node can't resolve the bundled `.wasm`). Deferring it
+ * keeps `pnpm dev` working for all routes; only an actual request to `/og*` loads it
+ * (still server-only — the Cloudflare/Workers runtime resolves the WASM in prod).
+ *
  * workers-og initializes the WASM lazily on first render, so no manual WASM handling is
  * required here. Satori needs real font bytes (it cannot resolve CSS font-family names),
  * which getOgFonts() supplies from a bundled, base64-embedded Space Grotesk subset.
  */
-export function renderOgPng(opts: {
+export async function renderOgPng(opts: {
   eyebrow?: string;
   title: string;
   description?: string;
   author?: string;
   accent?: string;
-}): ImageResponse {
+}): Promise<ImageResponse> {
+  const { ImageResponse } = await import("workers-og");
   const accent = safeAccent(opts.accent);
   const eyebrow = escForSatori(
     clampOgText(opts.eyebrow || "HeyClaude", OG_TEXT_LIMITS.eyebrow).toUpperCase(),
