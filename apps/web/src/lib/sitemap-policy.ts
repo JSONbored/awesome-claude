@@ -6,7 +6,19 @@ export function safeSitemapDate(value?: string | null) {
   return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
-export function isSitemapIndexableEntry(entry: DirectoryEntry) {
+/**
+ * Whether an entry's detail page should be advertised in the sitemap.
+ *
+ * `tools` entries are commercial listings (routed to the website lead flows per
+ * AGENTS.md) and are thin-by-design, so we keep them crawlable via internal links
+ * but do not advertise them in the sitemap. Anything explicitly `robotsIndex:false`
+ * is excluded too. Accepts any entry-shaped object so both the server
+ * `DirectoryEntry` and the client registry `Entry` satisfy it.
+ */
+export function isSitemapIndexableEntry(entry: {
+  category: string;
+  robotsIndex?: boolean;
+}) {
   return entry.category !== "tools" && entry.robotsIndex !== false;
 }
 

@@ -4,6 +4,7 @@ import { COMMERCIAL_TOOLS } from "@/data/tools";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 
 export const Route = createFileRoute("/tools")({
   head: () => ({
@@ -20,6 +21,14 @@ export const Route = createFileRoute("/tools")({
           "Editorial picks and disclosed partners. Free, open-source resources live in the directory.",
       },
       { property: "og:url", content: absoluteUrl("/tools") },
+      {
+        property: "og:image",
+        content: ogImageUrl({ title: "Tools that pair well with Claude", eyebrow: "Tools" }),
+      },
+      {
+        name: "twitter:image",
+        content: ogImageUrl({ title: "Tools that pair well with Claude", eyebrow: "Tools" }),
+      },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/tools") }],
     scripts: [

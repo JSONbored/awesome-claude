@@ -4,6 +4,7 @@ import { IntegrationCard } from "@/components/integration-card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 
 export const Route = createFileRoute("/integrations")({
   head: () => ({
@@ -20,6 +21,14 @@ export const Route = createFileRoute("/integrations")({
         content: "Raycast extension, MCP server, Cursor adapter, REST API, and public feeds.",
       },
       { property: "og:url", content: absoluteUrl("/integrations") },
+      {
+        property: "og:image",
+        content: ogImageUrl({ title: "HeyClaude integrations", eyebrow: "Integrations" }),
+      },
+      {
+        name: "twitter:image",
+        content: ogImageUrl({ title: "HeyClaude integrations", eyebrow: "Integrations" }),
+      },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/integrations") }],
     scripts: [

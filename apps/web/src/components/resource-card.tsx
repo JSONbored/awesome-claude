@@ -15,7 +15,7 @@ import { CopyButton } from "./copy-button";
 import { EntryFacets } from "./entry-facets";
 import { PeekButton, setHotPeek, clearHotPeek, type PeekHandle } from "./peek-button";
 import { PeekHint } from "./peek-hint";
-import { useCompare } from "@/lib/compare";
+import { useCompareActions, useIsCompared } from "@/lib/compare";
 import { cn } from "@/lib/utils";
 
 import { formatCompact, timeAgo } from "@/lib/format";
@@ -28,13 +28,13 @@ function SourceRepoStars({ entry, compact = false }: { entry: Entry; compact?: b
       className="inline-flex items-center gap-1 font-mono text-[11px] text-ink-subtle"
       title="Source repository stars"
     >
-      <Star className="h-3 w-3" /> {fmtNum(entry.repoStats.stars)}
+      <Star className="h-3 w-3" aria-hidden /> {fmtNum(entry.repoStats.stars)}
       {!compact && <span className="hidden sm:inline"> repo</span>}
     </span>
   );
 }
 
-export function ResourceCard({
+function ResourceCardInner({
   entry,
   variant = "row",
   rank,
@@ -43,8 +43,8 @@ export function ResourceCard({
   variant?: "row" | "grid" | "compact";
   rank?: number;
 }) {
-  const compare = useCompare();
-  const inCompare = compare.has(entry.slug);
+  const { toggle, setOpen } = useCompareActions();
+  const inCompare = useIsCompared(entry.slug);
   const peekRef = React.useRef<PeekHandle>(null);
   const handle = React.useMemo(() => ({ open: () => peekRef.current?.open() }), []);
   const [hovered, setHovered] = React.useState(false);
@@ -71,13 +71,13 @@ export function ResourceCard({
 
   const onCompareToggle = () => {
     const wasIn = inCompare;
-    compare.toggle(entry);
+    toggle(entry);
     if (wasIn) {
       toast(`Removed “${entry.title}” from compare`);
     } else {
       toast.success("Added to compare", {
         description: entry.title,
-        action: { label: "View", onClick: () => compare.setOpen(true) },
+        action: { label: "View", onClick: () => setOpen(true) },
       });
     }
   };
@@ -242,7 +242,7 @@ export function ResourceCard({
           {entry.repoStats?.stars !== undefined ? (
             <>
               <div className="flex items-center gap-1 font-mono">
-                <Star className="h-3 w-3" /> {fmtNum(entry.repoStats.stars)}
+                <Star className="h-3 w-3" aria-hidden /> {fmtNum(entry.repoStats.stars)}
               </div>
               <div className="font-mono text-ink-subtle">repo stars</div>
             </>
@@ -296,3 +296,11 @@ export function ResourceCard({
     </div>
   );
 }
+
+/**
+ * Memoized so that selecting/deselecting one card in the compare set does not
+ * re-render every other visible card. Cards subscribe to their own compare
+ * membership via `useIsCompared`, and `entry`/`variant`/`rank` props are stable
+ * references from the registry, so the shallow prop compare is effective.
+ */
+export const ResourceCard = React.memo(ResourceCardInner);
