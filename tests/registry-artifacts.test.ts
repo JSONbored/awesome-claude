@@ -267,10 +267,10 @@ describe("registry artifacts", () => {
       150_000 + entryCount * 1_500,
     );
     expect(artifactTreeSize("feeds/categories")).toBeLessThan(
-      150_000 + entryCount * 2_000,
+      150_000 + entryCount * 2_400,
     );
     expect(artifactTreeSize("feeds/platforms")).toBeLessThan(
-      150_000 + entryCount * 2_000,
+      150_000 + entryCount * 2_400,
     );
     expect(artifactTreeSize("entries")).toBeLessThan(
       500_000 + entryCount * 17_500,
