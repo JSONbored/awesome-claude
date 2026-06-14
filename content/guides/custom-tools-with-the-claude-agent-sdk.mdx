@@ -1,0 +1,166 @@
+---
+title: "Custom Tools With the Claude Agent SDK"
+slug: custom-tools-with-the-claude-agent-sdk
+category: guides
+description: >-
+  Design custom tools for the Claude Agent SDK beyond in-process MCP: SDK tool types, schema design, permissions, structured outputs, and when to prefer external MCP servers.
+cardDescription: Design custom Claude Agent SDK tools beyond in-process MCP patterns.
+seoTitle: "Custom Tools With the Claude Agent SDK"
+seoDescription: >-
+  Design custom tools for the Claude Agent SDK beyond in-process MCP: SDK tool types, schema design, permissions, structured outputs, and when to prefer external MCP servers.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1397
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1397"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to choose between SDK custom tools, in-process MCP, and external servers when extending agent capabilities.
+prerequisites:
+  - "Claude Agent SDK installed and a running `query` loop in TypeScript or Python."
+  - "Zod (TS) or JSON Schema (Python) literacy for tool input contracts."
+  - "A written list of side effects each custom tool may perform."
+  - "Decision record template for build vs buy on external MCP integrations."
+safetyNotes:
+  - "Tool descriptions are not enforcement—validate destructive inputs inside handlers."
+  - "Wildcard `mcp__server__*` allowlists expand blast radius; prefer per-tool grants in production."
+  - "Returning thrown exceptions fails the whole query; use isError responses for recoverable faults."
+privacyNotes:
+  - "Tool schemas and results enter model context every turn—avoid secrets in descriptions or payloads."
+  - "Large tool sets increase context usage; defer rarely used tools via tool search."
+  - "Structured outputs may log to host telemetry—redact customer fields at the handler boundary."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/agent-sdk/custom-tools"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-agent-sdk
+  - custom-tools
+  - mcp
+  - developer-tools
+  - agents
+keywords:
+  - "Claude Agent SDK custom tools"
+  - "SDK tool schema design"
+  - "allowedTools mcp__"
+  - "custom tools vs MCP server"
+  - "structured tool output SDK"
+readingTime: 8
+difficultyScore: 56
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Custom Agent SDK tools extend agents through typed handlers and explicit `allowedTools` entries. Choose in-process MCP for colocated logic, external MCP for shared services, and always return structured errors instead of throwing when the agent should recover.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Fully qualified tool names
+
+SDK tools surface as `mcp__{server}__{tool}`; allowlists must use those names or controlled wildcards.
+
+### In-process vs external
+
+In-process MCP runs inside your app; external MCP adds a process or network boundary when multiple hosts need the same tools.
+
+### Annotations are hints
+
+`readOnlyHint` and similar metadata guide Claude but do not block writes—enforce in code.
+
+### Context cost per tool
+
+Each definition ships on every turn unless tool search defers descriptions beyond the auto threshold.
+
+## Step-by-Step Implementation Guide
+
+1. **Model the capability.** Write inputs, outputs, side effects, and idempotency expectations before coding.
+
+2. **Pick integration style.** Use in-process MCP for single-host apps; external MCP when operators or other services must share the tool.
+
+3. **Define schemas.** Keep required fields minimal; document enums and max lengths in descriptions Claude reads.
+
+4. **Implement handlers.** Validate args, call downstream APIs, and return text plus optional structuredContent.
+
+5. **Register server.** Pass `mcpServers` to `query` with a stable server name used in allowlists.
+
+6. **Allow explicitly.** List `mcp__server__tool` entries; avoid wildcards in production until audits complete.
+
+7. **Test failure paths.** Simulate downstream 500s and return `isError` without killing the session.
+
+8. **Review with verifiers.** Run agent-sdk-verifier agents from the agent-sdk-dev plugin before launch.
+
+## Custom Tool Design Checklist
+
+- [ ] {"task": "Side effects documented", "description": "Each tool has read/write classification"}
+- [ ] {"task": "Schema minimal", "description": "Required fields limited to true needs"}
+- [ ] {"task": "Allowlist explicit", "description": "Production allows named tools only"}
+- [ ] {"task": "Errors structured", "description": "Handlers return isError on failure"}
+- [ ] {"task": "Verifier passed", "description": "agent-sdk-verifier review completed"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Tool never called
+
+Check `allowedTools`, description clarity, and whether tool search deferred the server.
+
+### Query crashes on failure
+
+Return isError instead of throwing from handlers.
+
+### Structured output missing in Python
+
+Some structuredContent paths require standalone MCP servers rather than in-process decorators.
+
+### Context bloat
+
+Enable tool search or split rarely used tools to another server with alwaysLoad false.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `plugins/README.md` documents `agent-sdk-dev` verifier agents for validating SDK applications.
+- `CHANGELOG.md` added `alwaysLoad` on MCP configs to skip tool-search deferral for critical servers.
+- `CHANGELOG.md` documents MCP tool search auto mode when descriptions exceed 10% of context.
+- `CHANGELOG.md` fixed MCP tools not discovered when tool search is enabled with launch prompts.
+- The SDK rename in `CHANGELOG.md` consolidates custom tool docs under Claude Agent SDK branding.
+
+## Duplicate Check
+
+This guide covers custom tool design choices across SDK integration styles. building-in-process-mcp-tools-with-the-claude-agent-sdk.mdx is the hands-on in-process tutorial; this guide helps decide architecture and production allowlists.
+
+## References
+
+- Agent SDK custom tools - https://code.claude.com/docs/en/agent-sdk/custom-tools
+- In-process MCP tutorial - building-in-process-mcp-tools-with-the-claude-agent-sdk
+- Agent SDK MCP - mcp-with-the-claude-agent-sdk
