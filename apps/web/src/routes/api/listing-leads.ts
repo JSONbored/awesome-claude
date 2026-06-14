@@ -9,7 +9,7 @@ import { getSiteDb } from "@/lib/db";
 import { getEnvString } from "@/lib/cloudflare-env.server";
 import { buildListingLeadAckEmail } from "@/lib/newsletter-emails";
 import { sendResendEmail } from "@/lib/newsletter-send.server";
-import { sendDiscordMessage } from "@/lib/notify.server";
+import { escapeDiscordMarkdown, sendDiscordMessage } from "@/lib/notify.server";
 import { siteConfig } from "@/lib/site";
 
 const DEFAULT_FROM = "HeyClaude <newsletter@heyclau.de>";
@@ -109,10 +109,13 @@ export const POST = createApiHandler(
 
       if (discordWebhookUrl) {
         const tier = data.tierInterest ? ` (${data.tierInterest})` : "";
+        const listingTitle = escapeDiscordMarkdown(data.listingTitle);
+        const companyName = escapeDiscordMarkdown(data.companyName);
+        const contactEmail = escapeDiscordMarkdown(data.contactEmail);
         notifications.push(
           sendDiscordMessage(
             discordWebhookUrl,
-            `New ${data.kind} lead${tier}: **${data.listingTitle}** — ${data.companyName} <${data.contactEmail}>`,
+            `New ${data.kind} lead${tier}: **${listingTitle}** — ${companyName} <${contactEmail}>`,
           ),
         );
       }
