@@ -1045,6 +1045,19 @@ export const apiRouteDefinitions = {
       binding: "API_STRICT_RATE_LIMIT",
     },
   }),
+  "newsletter.confirm": route({
+    id: "newsletter.confirm",
+    method: "POST",
+    path: "/api/public/newsletter/confirm",
+    summary: "Confirm a newsletter subscription",
+    tags: ["Newsletter"],
+    rateLimit: {
+      scope: "newsletter-confirm",
+      limit: 15,
+      windowMs: 60_000,
+      binding: "API_STRICT_RATE_LIMIT",
+    },
+  }),
   "newsletter.webhook": route({
     id: "newsletter.webhook",
     method: "POST",

@@ -1,4 +1,6 @@
 import { createApiFileRoute } from "@/lib/api/file-route";
+import { enforceApiRateLimit, getApiRequestId } from "@/lib/api/router";
+import { getApiRouteDefinition } from "@/lib/api/contracts";
 
 import { getEnvString } from "@/lib/cloudflare-env.server";
 import { verifyConfirmToken } from "@/lib/newsletter-token.server";
@@ -8,7 +10,7 @@ import { sendResendEmail } from "@/lib/newsletter-send.server";
 import { siteConfig } from "@/lib/site";
 
 // Minimal, on-brand confirmation landing page (light theme, matches the site).
-function resultPage(opts: { ok: boolean; heading: string; body: string }): Response {
+function resultPage(opts: { ok: boolean; heading: string; body: string; token?: string }): Response {
   const accent = opts.ok ? "#2f8f5b" : "#b4541f";
   const html = `<!doctype html>
 <html lang="en">
@@ -24,7 +26,7 @@ function resultPage(opts: { ok: boolean; heading: string; body: string }): Respo
       <div style="margin-top:20px;font-size:40px;color:${accent};">${opts.ok ? "✓" : "—"}</div>
       <h1 style="margin:12px 0 0;font-size:26px;font-weight:700;">${opts.heading}</h1>
       <p style="margin:14px 0 0;color:#4d4c47;">${opts.body}</p>
-      <a href="${siteConfig.url}/browse" style="display:inline-block;margin-top:28px;background:#171614;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:10px;">Browse the directory</a>
+      ${opts.token ? `<form method="post" style="margin:28px 0 0;"><input type="hidden" name="token" value="${escapeHtml(opts.token)}" /><button type="submit" style="border:0;background:#171614;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:10px;cursor:pointer;">Confirm subscription</button></form>` : `<a href="${siteConfig.url}/browse" style="display:inline-block;margin-top:28px;background:#171614;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:10px;">Browse the directory</a>`}
     </main>
   </body>
 </html>`;
@@ -34,11 +36,63 @@ function resultPage(opts: { ok: boolean; heading: string; body: string }): Respo
   });
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+const consumedConfirmTokens = new Map<string, number>();
+const MAX_CONSUMED_CONFIRM_TOKENS = 10_000;
+
+function pruneConsumedConfirmTokens(now: number) {
+  for (const [token, expiresAt] of consumedConfirmTokens) {
+    if (expiresAt <= now) consumedConfirmTokens.delete(token);
+  }
+  while (consumedConfirmTokens.size > MAX_CONSUMED_CONFIRM_TOKENS) {
+    const oldest = consumedConfirmTokens.keys().next().value;
+    if (!oldest) break;
+    consumedConfirmTokens.delete(oldest);
+  }
+}
+
+async function readConfirmToken(request: Request) {
+  const contentType = request.headers.get("content-type") ?? "";
+  if (contentType.includes("application/json")) {
+    const body = (await request.json().catch(() => null)) as { token?: unknown } | null;
+    return typeof body?.token === "string" ? body.token : "";
+  }
+  const form = await request.formData().catch(() => null);
+  const token = form?.get("token");
+  return typeof token === "string" ? token : "";
+}
+
 export const Route = createApiFileRoute("/api/public/newsletter/confirm")({
   server: {
     handlers: {
       GET: async ({ request }) => {
         const token = new URL(request.url).searchParams.get("token") ?? "";
+        return resultPage({
+          ok: true,
+          heading: "Confirm your subscription",
+          body: "One more step: press the button below to confirm you want the weekly brief.",
+          token,
+        });
+      },
+      POST: async ({ request }) => {
+        const requestId = getApiRequestId(request);
+        const route = getApiRouteDefinition("newsletter.confirm");
+        if (await enforceApiRateLimit(route, request)) {
+          return resultPage({
+            ok: false,
+            heading: "Too many attempts",
+            body: `Please wait a minute before trying again. Request ID: ${requestId}`,
+          });
+        }
+
+        const token = await readConfirmToken(request);
         const confirmSecret = getEnvString("NEWSLETTER_CONFIRM_SECRET");
         const resendApiKey = getEnvString("RESEND_API_KEY");
         const resendSegmentId = getEnvString("RESEND_SEGMENT_ID");
@@ -51,12 +105,23 @@ export const Route = createApiFileRoute("/api/public/newsletter/confirm")({
           });
         }
 
-        const payload = await verifyConfirmToken(confirmSecret, token, Date.now());
+        const now = Date.now();
+        pruneConsumedConfirmTokens(now);
+
+        const payload = await verifyConfirmToken(confirmSecret, token, now);
         if (!payload) {
           return resultPage({
             ok: false,
             heading: "Link expired",
             body: "This confirmation link is invalid or has expired. Please subscribe again.",
+          });
+        }
+
+        if (consumedConfirmTokens.has(token)) {
+          return resultPage({
+            ok: true,
+            heading: "Already confirmed",
+            body: "This confirmation link has already been used. You're all set.",
           });
         }
 
@@ -74,6 +139,8 @@ export const Route = createApiFileRoute("/api/public/newsletter/confirm")({
             body: "We couldn't confirm your subscription just now. Please try again shortly.",
           });
         }
+
+        consumedConfirmTokens.set(token, payload.exp);
 
         // Send the welcome email on first-time confirm (best-effort; never block
         // or fail the confirmation on a welcome-send hiccup). Skip duplicates.
