@@ -1,0 +1,222 @@
+---
+title: Subagent Transcript Cleanup Capability Pack Skill
+slug: subagent-transcript-cleanup-capability-pack
+category: skills
+description: >-
+  Expert subagent transcript cleanup capability pack for redacting sensitive
+  fields, compressing verbose subagent outputs, and producing parent-safe
+  handoff summaries after Claude Code background or foreground delegations.
+cardDescription: >-
+  Clean and redact Claude Code subagent transcripts for safe parent handoff with
+  source-backed summarization checklists.
+seoTitle: Subagent Transcript Cleanup Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for subagent transcript cleanup, redaction,
+  summary handoff, and privacy-safe Claude Code delegation reporting.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1539
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1539"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill after Claude Code subagent delegations when transcripts contain
+  verbose tool output, sensitive paths, or customer data and you need a redacted
+  summary safe for parent session continuation or public issue comments.
+copySnippet: |-
+  # Trigger
+  "Apply the subagent transcript cleanup capability pack to this handoff."
+
+  # Required output
+  1) Transcript sensitivity classification
+  2) Redaction and compression plan
+  3) Parent-safe summary with evidence pointers
+  4) Discarded content audit note
+  5) Privacy-safe handoff record
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Subagent transcript, tool outputs, or handoff draft requiring cleanup."
+  - "Knowledge of whether the summary will stay in a private session or appear in a public issue or PR."
+  - "Parent task context so critical findings are preserved while sensitive details are removed."
+  - "Redaction standards for the organization such as credential patterns and customer identifier formats."
+safetyNotes:
+  - "Cleanup must not delete findings needed for correct parent-session decisions unless the parent can re-derive them safely."
+  - "Automated redaction can miss encoded secrets, JWT fragments, or credentials split across multiple tool outputs."
+  - "Compressing transcripts too aggressively can hide uncertainty markers that prevent false-confidence merges or deploys."
+  - "This skill prepares summaries; it must not publish cleaned output to public channels without human review when classification is high sensitivity."
+privacyNotes:
+  - "Subagent transcripts commonly contain repository paths, branch names, internal service URLs, ticket bodies, and database rows."
+  - "MCP tool outputs may include account emails, API keys, session tokens, and customer PII even when the parent task seemed read-only."
+  - "Cleaned summaries for public issues should use category labels and file paths only when necessary and safe."
+tags:
+  - subagent
+  - transcript
+  - cleanup
+  - redaction
+  - capability-pack
+keywords:
+  - subagent transcript cleanup
+  - Claude Code subagent redaction
+  - subagent handoff summary
+  - subagent privacy cleanup
+  - background subagent transcript
+  - delegation summary redaction
+readingTime: 8
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code sub-agents, skills, and features
+overview documentation verified on **2026-06-14**. Transcript storage and handoff
+behavior can change; prefer live official docs and current session exports when
+cleaning subagent output.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/sub-agents
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code sub-agents documentation and the public
+Anthropic `claude-code` repository on **2026-06-14**:
+
+- Claude Code subagents operate in isolated context windows and return results to
+  the parent session through delegation handoff.
+- Background subagents may accumulate verbose tool output before summarization,
+  increasing the risk of sensitive data reaching the parent chat.
+- Subagents help isolate large reads from the main window but do not automatically
+  redact secrets or customer data from tool results.
+- Parent sessions should validate subagent summaries against primary sources
+  rather than treating cleaned transcripts as authoritative records.
+- Official sub-agent documentation emphasizes delegation for context management,
+  making disciplined handoff cleanup part of safe production use.
+
+## Scope Note
+
+This is not a data-loss prevention product. Use it as a reusable workflow for
+redacting and summarizing subagent transcripts before parent continuation or
+public reporting.
+
+## Core Workflow
+
+1. Classify sensitivity: private engineering session, internal ticket, or public
+   issue/PR comment target audience.
+2. Inventory transcript sections: task prompt, tool calls, file reads, MCP outputs,
+   errors, and final subagent conclusion.
+3. Mark redaction targets: credentials, tokens, customer names, internal URLs,
+   unreleased product details, and full database dumps.
+4. Preserve decision-critical facts: reproduction steps, root cause, file paths
+   needed for fixes, and explicit unknowns.
+5. Compress verbose sections into bullet findings with evidence pointers such as
+   file path and line range instead of pasted content.
+6. Separate **Findings**, **Evidence pointers**, **Actions taken**, and **Open questions**
+   in the parent-safe summary.
+7. Record discarded content categories in an audit note without republishing raw text.
+8. Have a second reviewer spot-check high-sensitivity summaries before public posting.
+9. Deliver the cleaned handoff to the parent session with recommended next steps.
+
+## Capability Scope
+
+- Transcript sensitivity classification.
+- Redaction and compression planning.
+- Parent-safe summary construction with evidence pointers.
+- Discarded content audit notes.
+- Public versus private handoff guidance.
+- Privacy-safe delegation reporting.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill after background or foreground
+  subagent tasks before continuing parent work or posting external summaries.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic transcript cleanup checklist in support runbooks.
+
+## Required Inputs
+
+- Subagent transcript or handoff draft requiring cleanup.
+- Intended audience for the cleaned summary.
+- Organization redaction standards and credential patterns.
+- Parent task goal so critical findings are preserved.
+
+## Production Rules
+
+- Never paste live secrets into cleaned summaries even when redacting other fields.
+- Prefer evidence pointers over large code or log excerpts in public handoffs.
+- Keep uncertainty explicit when subagent evidence was incomplete or conflicting.
+- Do not delete rollback-relevant errors from private engineering summaries.
+- Require human review before posting high-sensitivity cleaned output publicly.
+- Re-fetch primary sources when subagent summaries will drive merges or deploys.
+- Store raw transcripts in private channels only when retention is required.
+
+## Review Matrix
+
+| Content type | Private session | Public issue | Action |
+| --- | --- | --- | --- |
+| Root cause finding | Keep | Keep summarized | Compress wording |
+| Full MCP JSON dump | Keep partial | Remove | Pointer only |
+| Customer PII | Redact | Remove | Category label only |
+| Internal URL | Keep if needed | Generalize | Use service alias |
+| Token or key | Remove | Remove | Rotate if exposed |
+| File path | Keep | Keep if public repo | Redact private monorepo paths |
+
+## Output Contract
+
+1. Sensitivity classification and audience.
+2. Redaction and compression plan.
+3. Parent-safe summary with evidence pointers.
+4. Discarded content audit note.
+5. Recommended parent-session next steps.
+6. Privacy-safe handoff record.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for subagent transcript cleanup, redaction, and handoff summary
+workflows. Subagent docs cover delegation, but no `skills` entry provides a
+reusable transcript cleanup capability pack with redaction matrix and output
+contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.
