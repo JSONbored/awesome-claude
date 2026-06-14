@@ -1,0 +1,166 @@
+---
+title: "Claude Code GitLab CI/CD Workflow"
+slug: claude-code-gitlab-cicd-workflow
+category: guides
+description: >-
+  Run Claude Code in GitLab CI/CD for merge request review: MR URL resume, provider credentials, protected variables, and headless automation guardrails.
+cardDescription: Run Claude Code in GitLab CI/CD for merge request review automation.
+seoTitle: "Claude Code GitLab CI/CD Workflow"
+seoDescription: >-
+  Run Claude Code in GitLab CI/CD for merge request review: MR URL resume, provider credentials, protected variables, and headless automation guardrails.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1390
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1390"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to add a GitLab CI job that runs headless Claude Code against merge requests with protected credentials.
+prerequisites:
+  - "GitLab project with CI/CD enabled and merge request pipelines."
+  - "Protected CI variables for Anthropic or third-party provider credentials."
+  - "A review prompt or CLAUDE.md committed to the default branch."
+  - "Runner image with curl/bash and outbound HTTPS to model endpoints."
+safetyNotes:
+  - "Protected variables still flow to fork MR pipelines if misconfigured—restrict secrets to protected branches."
+  - "Headless jobs with shell tools can modify the workspace; mount read-only checkouts when possible."
+  - "Do not store long-lived personal tokens in group-level variables shared across unrelated projects."
+privacyNotes:
+  - "Merge request diffs and discussion threads are included in model prompts during CI review."
+  - "GitLab job logs may retain prompts unless log scrubbing is enabled."
+  - "Self-managed GitLab runners in regulated industries need data residency review before sending diffs to cloud models."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/gitlab-ci-cd"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - gitlab
+  - ci-cd
+  - merge-request
+  - automation
+keywords:
+  - "Claude Code GitLab CI"
+  - "GitLab merge request review"
+  - "Claude Code CI/CD"
+  - "headless GitLab Claude"
+  - "MR automation Claude"
+readingTime: 8
+difficultyScore: 60
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+GitLab CI can run headless Claude Code on merge requests using protected variables and pinned CLI installs. Local developers can paste MR URLs into `/resume` search—mirror that context fetch in CI for consistent review prompts.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### MR-aware resume locally
+
+`CHANGELOG.md` documents pasting GitLab merge-request URLs into `/resume` search to find the session that created a PR.
+
+### --from-pr for GitLab
+
+The `--from-pr` flag accepts GitLab merge-request URLs alongside GitHub and Bitbucket for session bootstrap.
+
+### Protected variables
+
+Map provider credentials to protected, masked variables available only on protected branches.
+
+### Headless parity
+
+Use the same `claude -p` patterns as GitHub Actions but adapt to GitLab `rules:` and `only:` MR triggers.
+
+## Step-by-Step Implementation Guide
+
+1. **Author review instructions.** Add CLAUDE.md describing GitLab-specific labels, CODEOWNERS paths, and required CI jobs.
+
+2. **Create .gitlab-ci.yml job.** Define an `mr-review` stage triggered on merge_request events for trusted branches.
+
+3. **Install Claude Code.** Download the install script in `before_script` and pin `CLAUDE_CODE_VERSION` if your org mirrors releases.
+
+4. **Configure variables.** Store API or cloud keys as protected masked variables; omit unused Bedrock vars to avoid empty-string bugs.
+
+5. **Fetch MR metadata.** Use GitLab API or `glab` to pull title, description, and diff into the review prompt.
+
+6. **Run headless review.** Execute `claude -p` with read-only tool allowlists and explicit output format for MR comments.
+
+7. **Post note.** Publish results via GitLab API as an MR note or pipeline report artifact.
+
+8. **Tune rules.** Skip drafts, WIP labels, or oversized diffs with `rules:` expressions.
+
+## GitLab MR Review Checklist
+
+- [ ] {"task": "Variables protected", "description": "Secrets masked and limited to protected branches"}
+- [ ] {"task": "MR trigger only", "description": "Job runs on merge_request pipelines as intended"}
+- [ ] {"task": "CLI installed", "description": "Pinned Claude Code available on runner image"}
+- [ ] {"task": "Diff bounded", "description": "Large or binary changes skipped with clear message"}
+- [ ] {"task": "Note posted", "description": "Review output visible on the merge request"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Job skipped on MR
+
+Check `rules:`/`only:` filters and whether the source branch is protected.
+
+### Auth failures in CI
+
+Verify provider env vars and that `CI=true` Bedrock/Vertex paths do not require Anthropic API keys.
+
+### Empty Bedrock env
+
+Remove blank bearer token variables GitLab inherits from templates.
+
+### Resume mismatch locally
+
+Ensure MR URL format matches supported GitLab merge-request patterns when linking local sessions.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` notes `/resume` search accepts GitLab merge-request URLs to find PR-creating sessions.
+- `CHANGELOG.md` documents `--from-pr` accepting GitLab merge-request URLs.
+- `CHANGELOG.md` fixed `claude -p` provider auth behavior when `CI=true` without Anthropic API keys.
+- The root README lists GitHub tagging; GitLab MR flows rely on the same headless CLI documented for CI.
+- `plugins/README.md` `code-review` plugin demonstrates multi-agent review patterns adaptable to GitLab prompts.
+
+## Duplicate Check
+
+This guide targets GitLab CI/CD merge request automation. It complements claude-code-github-actions-review-workflow.mdx for GitHub and headless-claude-code-automation-from-scripts-and-ci.mdx for provider-agnostic scripting.
+
+## References
+
+- Claude Code GitLab CI/CD - https://code.claude.com/docs/en/gitlab-ci-cd
+- GitHub Actions review - claude-code-github-actions-review-workflow
+- Headless automation - headless-claude-code-automation-from-scripts-and-ci
