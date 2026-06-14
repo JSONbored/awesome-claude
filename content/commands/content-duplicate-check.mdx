@@ -1,0 +1,145 @@
+---
+title: /content-duplicate-check - Content Duplicate Check Command for Claude Code
+slug: content-duplicate-check
+category: commands
+description: >-
+  Slash command that checks awesome-claude (HeyClaude) content for likely
+  duplicates before submission by comparing slug, title, command syntax, tags,
+  and description overlap against the existing registry catalog.
+cardDescription: >-
+  Check HeyClaude content for duplicate slugs and overlapping entries before submit.
+seoTitle: /content-duplicate-check - Content Duplicate Check Command for Claude Code
+seoDescription: >-
+  Claude Code slash command to detect duplicate or overlapping HeyClaude content
+  entries before submission.
+author: kiannidev
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 750
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/750"
+documentationUrl: "https://github.com/anthropics/claude-code"
+repoUrl: "https://github.com/JSONbored/awesome-claude"
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://github.com/JSONbored/awesome-claude"
+  - "https://heyclau.de/browse"
+installable: true
+installCommand: "/content-duplicate-check [slug]"
+commandSyntax: "/content-duplicate-check [slug]"
+usageSnippet: "/content-duplicate-check pr-security-review"
+copySnippet: "/content-duplicate-check [slug]"
+prerequisites:
+  - "Local awesome-claude / HeyClaude repository clone or registry index access."
+  - "Proposed content slug, category, title, and command syntax for comparison."
+  - "Read access to `content/` directories and generated catalog indexes if present."
+safetyNotes:
+  - "Read-only catalog search; does not create issues, pull requests, or modify registry files."
+  - "Duplicate suggestions are heuristic; maintainers make the final editorial decision."
+  - "Do not treat a partial overlap as blocking without reviewing differentiation in the body."
+privacyNotes:
+  - "Search uses public catalog metadata; unreleased draft titles in the prompt may enter model context."
+  - "Avoid pasting proprietary submission notes into shared sessions when checking duplicates."
+tags:
+  - heyclaude
+  - awesome-claude
+  - duplicate-check
+  - submission
+  - editorial
+keywords:
+  - content duplicate check command
+  - heyclaude duplicate submission check
+  - awesome claude slug duplicate
+  - registry duplicate detection
+---
+
+The `/content-duplicate-check` command is a **custom slash command workflow** you install as a Markdown prompt under `.claude/commands/` (or ship via a project plugin `commands/` directory). It is **not** a built-in Claude Code command. It helps contributors avoid submitting **overlapping HeyClaude entries** in the awesome-claude registry. Run it before opening a submission issue or pull request to see whether the slug, syntax, or workflow already exists.
+
+## Install this command
+
+Save the following as `.claude/commands/content-duplicate-check.md` in your awesome-claude clone (or add it to a plugin `commands/` directory), then invoke `/content-duplicate-check` in Claude Code:
+
+```markdown
+---
+description: Check HeyClaude content for duplicate slugs and overlapping entries before submission
+---
+
+Check a proposed HeyClaude entry for catalog duplicates. Optional slug: $ARGUMENTS
+
+When invoked, follow these steps:
+
+1. **Load the candidate.** Read the proposed slug, category, title, `commandSyntax`, tags, and description from the current MDX file, `$ARGUMENTS`, or user-provided draft.
+2. **Scan the catalog.** Search `content/<category>/` for exact slug matches and near matches (hyphen variants, pluralization, common prefixes like `mcp-`, `api-`, `git-`).
+3. **Compare syntax overlap.** For commands, hooks, and skills, match `commandSyntax`, `copySnippet`, and `installCommand` against existing entries in the same category.
+4. **Check cross-category collisions.** Look for the same workflow under a different category (for example a guide duplicating a command prompt).
+5. **Review semantic overlap.** Compare descriptions and primary keywords; flag entries solving the same user problem with different names.
+6. **Inspect open work.** Grep generated indexes, `content/data/`, and recent filenames for in-flight slugs not yet published.
+7. **Recommend action.** Return `clear`, `differentiate`, or `duplicate` with links to conflicting entries and concrete differentiation edits.
+```
+
+## Usage
+
+```
+/content-duplicate-check [slug]
+```
+
+- With a `slug`: check that proposed slug and related metadata.
+- Without an argument: infer slug from the open MDX frontmatter or filename under `content/`.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Load the candidate.** Read the proposed slug, category, title, `commandSyntax`, tags, and description from the current MDX file or user-provided draft.
+2. **Scan the catalog.** Search `content/<category>/` for exact slug matches and near matches (hyphen variants, pluralization, common prefixes like `mcp-`, `api-`, `git-`).
+3. **Compare syntax overlap.** For commands, hooks, and skills, match `commandSyntax`, `copySnippet`, and `installCommand` against existing entries in the same category.
+4. **Check cross-category collisions.** Look for the same workflow under a different category (for example a guide duplicating a command prompt).
+5. **Review semantic overlap.** Compare descriptions and primary keywords; flag entries solving the same user problem with different names.
+6. **Inspect open work.** Grep generated indexes, `content/data/`, and recent filenames for in-flight slugs not yet published.
+7. **Recommend action.** Return `clear`, `differentiate`, or `duplicate` with links to conflicting entries and concrete differentiation edits.
+
+## Output format
+
+- **Candidate:** slug, category, title.
+- **Exact matches:** slug collisions with file paths.
+- **Near matches:** similar slugs or syntax with similarity reason.
+- **Cross-category:** related entries in other folders.
+- **Recommendation:** clear / differentiate / duplicate.
+- **Suggested edits:** title, scope, or section changes to avoid overlap.
+
+## Requirements
+
+- awesome-claude repository clone or registry metadata export.
+- Proposed content metadata available in frontmatter or user message.
+- `rg` or equivalent search across `content/` directories.
+
+## Safety notes
+
+Read-only search across catalog files. Does not submit issues, modify content, or publish entries. Heuristic matches require human editorial judgment before rejecting a submission.
+
+## Privacy notes
+
+Duplicate checking uses public catalog metadata. Draft titles and unreleased descriptions in the prompt enter model context; avoid sharing confidential submission plans in public sessions.
+
+## Source Verification Notes
+
+Verified against Claude Code slash-command documentation and the awesome-claude registry on **2026-06-14**:
+
+- [Claude Code slash commands](https://code.claude.com/docs/en/slash-commands) document custom commands in `.claude/commands/`, the `$ARGUMENTS` placeholder, and team sharing by committing command files to git.
+- The [awesome-claude repository](https://github.com/JSONbored/awesome-claude) organizes content under `content/<category>/` with slug-based filenames and validation scripts.
+- [HeyClaude browse](https://heyclau.de/browse) exposes published slug and title metadata for comparison.
+- Registry validation scripts in awesome-claude enforce slug shape and required frontmatter fields.
+- Plugins README in `anthropics/claude-code` documents distributing reusable editorial command prompts to teams.
+
+## Duplicate Check
+
+Meta-entry: searched `content/commands/` on **2026-06-14** for overlapping slug, `commandSyntax`, and workflow scope. This command is the registry duplicate checker itself. It does not overlap with code-review or docs commands. No other `content/commands` entry performs HeyClaude catalog duplicate detection before submission.
+
+## References
+
+- Claude Code repository: https://github.com/anthropics/claude-code
+- Claude Code slash commands: https://code.claude.com/docs/en/slash-commands
+- awesome-claude repository: https://github.com/JSONbored/awesome-claude
+- HeyClaude browse: https://heyclau.de/browse
