@@ -12,7 +12,7 @@ function urlOrigin(value: string) {
 const scriptSrc = [
   "script-src 'self' 'unsafe-inline'",
   process.env.NODE_ENV === "production" ? "" : "'unsafe-eval'",
-  "https://tasty.aethereal.dev",
+  "https://umami.heyclau.de",
   "https://challenges.cloudflare.com",
 ]
   .filter(Boolean)
@@ -24,7 +24,7 @@ const connectSrc = Array.from(
       "connect-src 'self'",
       "https://api.github.com",
       "https://img.shields.io",
-      "https://tasty.aethereal.dev",
+      "https://umami.heyclau.de",
       "https://challenges.cloudflare.com",
       "https://submission-gate.heyclau.de",
       urlOrigin(siteConfig.submissionGateUrl),
