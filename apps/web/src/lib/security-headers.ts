@@ -39,11 +39,10 @@ const SECURITY_HEADERS = {
     "object-src 'none'",
     "frame-ancestors 'none'",
     scriptSrc,
-    // Allow the Google Fonts stylesheet + font files the app already links in __root.tsx
-    // (previously CSP-blocked, so the intended typography silently fell back to system fonts).
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    // Fonts are self-hosted (public/fonts.css + /fonts/*.woff2), so no third-party origins needed.
+    "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
-    "font-src 'self' data: https://fonts.gstatic.com",
+    "font-src 'self' data:",
     connectSrc,
     "frame-src https://challenges.cloudflare.com",
     "form-action 'self' https://github.com",
