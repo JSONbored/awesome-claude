@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, BadgeCheck } from "lucide-react";
 import { COMMERCIAL_TOOLS } from "@/data/tools";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
@@ -53,9 +53,8 @@ export const Route = createFileRoute("/tools")({
 
 function ToolsPage() {
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
-      <Breadcrumbs home items={[{ label: "Tools" }]} />
-      <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
+    <PageContainer>
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow">Commercial tools</div>
           <h1 className="mt-2 h-display-1 text-ink text-balance">
@@ -113,7 +112,7 @@ function ToolsPage() {
           </Link>
         ))}
       </div>
-    </div>
+    </PageContainer>
   );
 }
 
