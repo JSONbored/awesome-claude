@@ -1,0 +1,192 @@
+---
+title: Inferventis MCP Server for Claude
+slug: inferventis-mcp-server
+category: mcp
+description: >-
+  Inferventis hosted MCP server with 20 financial tools for FX rates, stocks,
+  crypto, news, and URL reading over streamable HTTP, with many free tools and
+  optional premium API keys.
+cardDescription: >-
+  Connect Claude to Inferventis for FX, stocks, crypto, financial news, and URL
+  reading through a streamable HTTP MCP server with free and premium tools.
+seoTitle: Inferventis MCP Server for Claude
+seoDescription: >-
+  Use the Inferventis MCP server with Claude for real-time FX, equities, crypto,
+  financial news, and web page reading via streamable HTTP with optional API keys.
+author: Inferventis
+authorProfileUrl: "https://github.com/inferventis-ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1476
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1476"
+repoUrl: "https://github.com/inferventis-ai/inferventis-tools"
+documentationUrl: "https://github.com/inferventis-ai/inferventis-tools"
+installable: true
+installCommand: >-
+  claude mcp add --transport http inferventis https://mcp-server-295985738387.europe-west1.run.app/mcp
+usageSnippet: >-
+  Add https://mcp-server-295985738387.europe-west1.run.app/mcp as a remote HTTP
+  connector; many tools work without auth, while premium data sources may need
+  API keys configured in Inferventis.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "inferventis": {
+        "url": "https://mcp-server-295985738387.europe-west1.run.app/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "inferventis": {
+        "url": "https://mcp-server-295985738387.europe-west1.run.app/mcp",
+        "type": "http",
+        "headers": {
+          "X-API-Key": "YOUR_INFERVENTIS_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Pro, Team, or Enterprise with Connectors support, or Claude Code with HTTP MCP transport."
+  - "Internet access to reach the Inferventis Cloud Run endpoint in europe-west1."
+  - "Optional Inferventis API key for premium market data tools that require authentication."
+  - "Awareness that financial data is informational and not investment advice."
+safetyNotes:
+  - "Makes outbound network requests to Inferventis and third-party financial data providers."
+  - "URL reader tools fetch arbitrary web pages; treat returned content as untrusted."
+  - "Premium tools may incur API usage charges when keys are configured."
+  - "Do not rely on MCP output for automated trading without independent verification."
+privacyNotes:
+  - "Ticker symbols, URLs, and search queries you send are processed by Inferventis and upstream data vendors."
+  - "Premium API keys are credentials; store them in MCP headers or env vars, not in chat or source control."
+  - "Fetched page content may include tracking parameters from the original URL."
+tags:
+  - finance
+  - stocks
+  - crypto
+  - fx
+  - remote-mcp
+keywords:
+  - inferventis mcp
+  - financial data mcp
+  - stock price claude
+  - crypto fx mcp
+  - streamable http mcp
+readingTime: 4
+difficultyScore: 25
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Inferventis provides a hosted Model Context Protocol server with 20 financial tools covering foreign exchange, equities, cryptocurrency, news, and URL reading. The server uses streamable HTTP transport and runs on Google Cloud Run. Many tools are free and require no authentication; premium data sources accept optional API keys.
+
+Source tooling is published in the [inferventis-ai/inferventis-tools](https://github.com/inferventis-ai/inferventis-tools) repository.
+
+## Features
+
+- FX rate lookups across major currency pairs.
+- Stock quotes and market data tools.
+- Cryptocurrency price and market tools.
+- Financial news aggregation.
+- URL reader for extracting page content from financial articles.
+- Streamable HTTP transport for low-latency tool streaming.
+- Free tier tools with no auth; premium tools gated by API key.
+
+## Use Cases
+
+- Compare EUR/USD and GBP/USD rates before a treasury report.
+- Pull latest price and volume for a watchlist of tickers.
+- Summarise breaking crypto market news during a morning briefing.
+- Read and summarise an earnings call transcript URL.
+- Cross-check headline news against live price moves in chat.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://mcp-server-295985738387.europe-west1.run.app/mcp`.
+3. Enable the connector; add an API key header only if you use premium tools.
+4. Start a conversation and invoke financial tools as needed.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http inferventis https://mcp-server-295985738387.europe-west1.run.app/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add a remote HTTP connector with streamable HTTP support pointing at the Inferventis endpoint.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "inferventis": {
+      "url": "https://mcp-server-295985738387.europe-west1.run.app/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+Add an `X-API-Key` header when premium tools require authentication.
+
+## Examples
+
+### FX rate check
+
+```text
+What is the current EUR/USD exchange rate using Inferventis?
+```
+
+### Stock snapshot
+
+```text
+Get the latest quote and daily change for AAPL and MSFT.
+```
+
+### Read a financial article
+
+```text
+Read this URL and summarise the key market takeaways: https://example.com/markets
+```
+
+## Security
+
+- Financial tool output is for informational purposes; verify figures before trading or reporting.
+- URL reader tools can fetch arbitrary HTTPS pages; avoid submitting internal or authenticated URLs.
+- Store premium API keys as secrets; rotate them if exposed in chat or logs.
+
+## Troubleshooting
+
+### Connector timeout
+
+The Cloud Run endpoint may cold-start; retry after a few seconds or warm the service with a simple FX query.
+
+### Premium tool auth errors
+
+Confirm your Inferventis API key is set in the connector headers and has access to the requested data tier.
+
+### Stale or missing quotes
+
+Markets may be closed or symbols may be misspelled; verify ticker format and exchange hours.
+
+### URL reader failures
+
+Some sites block automated fetching; try a direct article URL without paywall redirects.
