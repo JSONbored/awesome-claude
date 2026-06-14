@@ -1,0 +1,166 @@
+---
+title: "Claude Code GitHub Actions Review Workflow"
+slug: claude-code-github-actions-review-workflow
+category: guides
+description: >-
+  Automate pull request review with Claude Code in GitHub Actions: workflow secrets, Bedrock empty-string pitfalls, permission boundaries, and comment posting patterns.
+cardDescription: Automate PR review with Claude Code in GitHub Actions workflows.
+seoTitle: "Claude Code GitHub Actions Review Workflow"
+seoDescription: >-
+  Automate pull request review with Claude Code in GitHub Actions: workflow secrets, Bedrock empty-string pitfalls, permission boundaries, and comment posting patterns.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1389
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1389"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to add a GitHub Actions job that runs Claude Code for automated PR review with least-privilege tokens.
+prerequisites:
+  - "A GitHub repository with Actions enabled and branch protection on main."
+  - "Anthropic API access or approved third-party provider credentials for CI."
+  - "A machine user or GitHub App token scoped to pull_request read and issues write."
+  - "A review rubric committed as CLAUDE.md or a workflow-specific prompt file."
+safetyNotes:
+  - "CI tokens with write access can merge or comment on behalf of automation—scope tokens to the minimum repo permissions."
+  - "Never commit API keys; use GitHub encrypted secrets and OIDC where possible."
+  - "Review workflows should not execute untrusted fork code with secrets unless using guarded `pull_request_target` patterns."
+privacyNotes:
+  - "PR diffs, issue bodies, and check logs are sent to the model provider during review jobs."
+  - "Fork PR workflows may expose upstream secrets if misconfigured—keep secrets on `pull_request` from trusted branches only."
+  - "Retention policies for CI logs may store model prompts; align with corporate data handling rules."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/github-actions"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - github-actions
+  - ci
+  - code-review
+  - automation
+keywords:
+  - "Claude Code GitHub Actions"
+  - "automated PR review"
+  - "GitHub Actions Claude"
+  - "CI code review workflow"
+  - "headless Claude Code CI"
+readingTime: 8
+difficultyScore: 60
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+GitHub Actions can run headless Claude Code against pull requests for automated review. Store credentials in secrets, pin CLI versions, keep tokens least-privilege, and treat fork PRs as untrusted unless you adopt explicit guardrails.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Headless CLI in CI
+
+Use `claude -p` with non-interactive flags so Actions runners can post review summaries without a TTY.
+
+### Provider env in CI=true
+
+Bedrock, Vertex, and Foundry sessions must not require `ANTHROPIC_API_KEY` when `CI=true`; configure provider-specific credentials instead.
+
+### Empty-string secret pitfalls
+
+GitHub Actions may set unset inputs to empty strings, breaking Bedrock SigV4 when `AWS_BEARER_TOKEN_BEDROCK` is blank—omit vars entirely when unused.
+
+### Comment vs check outcomes
+
+Separate model failures from posting failures so reviewers still see partial feedback when GitHub API rate limits hit.
+
+## Step-by-Step Implementation Guide
+
+1. **Add review rubric.** Commit CLAUDE.md or `.github/claude-review.md` describing severity levels, test expectations, and out-of-scope files.
+
+2. **Create workflow file.** Add `.github/workflows/claude-review.yml` triggered on `pull_request` for internal branches.
+
+3. **Install Claude Code.** Use the curl installer or cached binary action; pin the version in workflow env.
+
+4. **Inject secrets.** Map `ANTHROPIC_API_KEY` or cloud provider credentials via GitHub encrypted secrets—never echo them in logs.
+
+5. **Fetch PR context.** Check out the merge ref and pass diff stats or file list into the `claude -p` prompt.
+
+6. **Run review.** Execute headless Claude with allowed tools limited to read-only bash and repo search.
+
+7. **Post results.** Create a PR review comment or check run with summary, findings, and links to docs.
+
+8. **Monitor cost.** Track token usage per repo and disable auto-review on draft PRs if needed.
+
+## CI Review Checklist
+
+- [ ] {"task": "Secrets mapped", "description": "API or cloud credentials stored as encrypted secrets"}
+- [ ] {"task": "CLI pinned", "description": "Workflow uses a tested Claude Code version"}
+- [ ] {"task": "Token scoped", "description": "GitHub token limited to required permissions"}
+- [ ] {"task": "Fork policy set", "description": "Untrusted forks do not receive secrets"}
+- [ ] {"task": "Output posted", "description": "Review comment or check run visible on PR"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### ANTHROPIC_API_KEY required in CI
+
+Configure Bedrock, Vertex, or Foundry credentials; `claude -p` should not demand a first-party key when `CI=true` on third-party providers.
+
+### Bedrock SigV4 failures
+
+Remove empty-string `AWS_BEARER_TOKEN_BEDROCK` env entries GitHub sets for unset inputs.
+
+### No comment posted
+
+Verify `GITHUB_TOKEN` or app token has `pull-requests: write` and the job surfaces stderr on API errors.
+
+### Runaway minutes
+
+Limit diff size, skip binary files, and cap max turns in the headless prompt.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` fixed `claude -p` requiring `ANTHROPIC_API_KEY` on Bedrock/Vertex/Foundry when `CI=true`.
+- `CHANGELOG.md` fixed Bedrock SigV4 failing when `AWS_BEARER_TOKEN_BEDROCK` is set to empty strings as GitHub Actions does for unset inputs.
+- The root README notes tagging @claude on GitHub as a supported surface alongside terminal and IDE workflows.
+- `plugins/README.md` ships a `code-review` plugin with `/code-review` and parallel review agents as a local reference implementation.
+- `CHANGELOG.md` documents headless and scripting flows used by CI automation alongside permission controls.
+
+## Duplicate Check
+
+This guide covers GitHub Actions PR review. It complements headless-claude-code-automation-from-scripts-and-ci.mdx for general scripting and review-ai-generated-code-before-merge.mdx for human merge gates.
+
+## References
+
+- Claude Code GitHub Actions - https://code.claude.com/docs/en/github-actions
+- Headless automation - headless-claude-code-automation-from-scripts-and-ci
+- Review AI code before merge - review-ai-generated-code-before-merge
