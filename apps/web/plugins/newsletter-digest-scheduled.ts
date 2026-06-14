@@ -7,8 +7,10 @@ import { buildDigestEmail } from "@/lib/newsletter-emails";
 import { recordUmamiEvent, sendResendBroadcast } from "@/lib/newsletter-send.server";
 import { siteConfig } from "@/lib/site";
 
-// Sundays 16:00 UTC. Must also be present in wrangler.jsonc triggers.crons.
-const WEEKLY_CRON = "0 16 * * 0";
+// Sundays 16:00 UTC. Must match the string in wrangler.jsonc triggers.crons
+// exactly (Cloudflare passes it through as controller.cron). NB: Cloudflare's
+// day-of-week is 1=Sunday..7=Saturday, so Sunday is SUN, not 0.
+const WEEKLY_CRON = "0 16 * * SUN";
 
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
