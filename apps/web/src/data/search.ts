@@ -1,4 +1,4 @@
-import { ENTRIES } from "./entries";
+import { ENTRIES, entryByRef } from "./entries";
 import type {
   Category,
   Entry,
@@ -69,16 +69,12 @@ function recommendedScore(entry: Entry) {
 }
 
 export function getEntry(category: string, slug: string): Entry | undefined {
-  return ENTRIES.find((e) => e.category === category && e.slug === slug);
+  return entryByRef(category, slug);
 }
 
 export function related(entry: Entry, limit = 4): Entry[] {
   const graphEntries = (entry.relatedEntries ?? [])
-    .map((relation) =>
-      ENTRIES.find(
-        (candidate) => candidate.category === relation.category && candidate.slug === relation.slug,
-      ),
-    )
+    .map((relation) => entryByRef(relation.category, relation.slug))
     .filter((candidate): candidate is Entry => Boolean(candidate))
     .filter((candidate) => candidate.category !== entry.category || candidate.slug !== entry.slug)
     .slice(0, limit);
@@ -121,7 +117,7 @@ export function relatedGroups(
   const byRelation = new Map<EntryRelationType, Entry[]>();
   for (const rel of entry.relatedEntries ?? []) {
     if (rel.relation === "duplicate") continue;
-    const candidate = ENTRIES.find((e) => e.category === rel.category && e.slug === rel.slug);
+    const candidate = entryByRef(rel.category, rel.slug);
     if (!candidate) continue;
     if (candidate.category === entry.category && candidate.slug === entry.slug) continue;
     const list = byRelation.get(rel.relation) ?? [];

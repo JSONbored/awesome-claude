@@ -1,22 +1,30 @@
 import { Link } from "@tanstack/react-router";
-import { HARNESSES, type Harness } from "@/types/registry";
+import { HARNESSES } from "@/types/registry";
 import { ENTRIES } from "@/data/entries";
 import { platformMark, IntegrationMark } from "@/components/integration-marks";
 import { cn } from "@/lib/utils";
 
-function coverageFor(h: Harness) {
-  // An entry "covers" a harness when it lists the harness in `harness[]`
-  // OR in its `platforms[]`. This matches how Browse filters.
-  const matches = ENTRIES.filter((e) => e.harness?.includes(h) || e.platforms.includes(h)).length;
-  const pct = ENTRIES.length ? Math.round((matches / ENTRIES.length) * 100) : 0;
-  return { count: matches, pct };
-}
+// An entry "covers" a harness when it lists the harness in `harness[]` OR in its
+// `platforms[]` (matches how Browse filters). Precomputed once at module load —
+// registry data is static, so this no longer runs a full ENTRIES.filter per
+// harness on every SSR render of /ecosystem.
+const HARNESS_COVERAGE: Record<string, { count: number; pct: number }> = Object.fromEntries(
+  HARNESSES.map((h) => {
+    const matches = ENTRIES.filter(
+      (e) => e.harness?.includes(h.id) || e.platforms.includes(h.id),
+    ).length;
+    return [
+      h.id,
+      { count: matches, pct: ENTRIES.length ? Math.round((matches / ENTRIES.length) * 100) : 0 },
+    ];
+  }),
+);
 
 export function HarnessCoverage() {
   return (
     <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {HARNESSES.map((h) => {
-        const { count, pct } = coverageFor(h.id);
+        const { count, pct } = HARNESS_COVERAGE[h.id];
         const mark = platformMark(h.id);
         return (
           <Link
