@@ -9,7 +9,8 @@ import { buildNewsletterConfirmEmail } from "@/lib/newsletter-emails";
 import { siteConfig } from "@/lib/site";
 
 const CONFIRM_TTL_MS = 48 * 60 * 60 * 1000;
-const DEFAULT_FROM = "HeyClaude <newsletter@heyclau.de>";
+// mail.heyclau.de is the verified Resend sending domain; the apex domain is not.
+const DEFAULT_FROM = "HeyClaude <newsletter@mail.heyclau.de>";
 
 function envSegmentId(followId: string): string | undefined {
   const key = `RESEND_SEGMENT_${followId.toUpperCase().replace(/[^A-Z0-9]/g, "_")}`;

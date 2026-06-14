@@ -33,7 +33,7 @@ function resultPage(opts: {
       <div style="margin-top:20px;font-size:40px;color:${accent};">${opts.ok ? "✓" : "—"}</div>
       <h1 style="margin:12px 0 0;font-size:26px;font-weight:700;">${opts.heading}</h1>
       <p style="margin:14px 0 0;color:#4d4c47;">${opts.body}</p>
-      ${opts.token ? `<form method="post" style="margin:28px 0 0;"><input type="hidden" name="token" value="${escapeHtml(opts.token)}" /><button type="submit" style="border:0;background:#171614;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:10px;cursor:pointer;">Confirm subscription</button></form>` : `<a href="${siteConfig.url}/browse" style="display:inline-block;margin-top:28px;background:#171614;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:10px;">Browse the directory</a>`}
+      ${opts.token ? `<form method="post" action="/api/public/newsletter/confirm" style="margin:28px 0 0;"><input type="hidden" name="token" value="${escapeHtml(opts.token)}" /><button type="submit" style="border:0;background:#171614;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:10px;cursor:pointer;">Confirm subscription</button></form>` : `<a href="${siteConfig.url}/browse" style="display:inline-block;margin-top:28px;background:#171614;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:10px;">Browse the directory</a>`}
     </main>
   </body>
 </html>`;

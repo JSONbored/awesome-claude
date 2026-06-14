@@ -92,10 +92,33 @@ describe("CodeQL regression coverage", () => {
     expect(confirmRoute).not.toContain("request.formData()");
     expect(confirmRoute).toContain("readRequestTextWithinLimit");
     expect(confirmRoute).toContain("BodyTooLargeError");
+    expect(confirmRoute).toContain('action="/api/public/newsletter/confirm"');
 
     expect(newsletterClient).toContain('fetch("/api/newsletter/subscribe"');
     expect(newsletterClient).not.toContain(
       'fetch("/api/public/newsletter/subscribe"',
     );
+  });
+  it("keeps newsletter confirmation defaults provider-safe", () => {
+    const repoRoot = new URL("..", import.meta.url);
+    const subscribeRoute = fs.readFileSync(
+      new URL("apps/web/src/routes/api/newsletter/subscribe.ts", repoRoot),
+      "utf8",
+    );
+    const confirmRoute = fs.readFileSync(
+      new URL("apps/web/src/routes/api/public/newsletter/confirm.ts", repoRoot),
+      "utf8",
+    );
+
+    expect(subscribeRoute).toContain(
+      'const DEFAULT_FROM = "HeyClaude <newsletter@mail.heyclau.de>"',
+    );
+    expect(subscribeRoute).not.toContain(
+      'const DEFAULT_FROM = "HeyClaude <newsletter@heyclau.de>"',
+    );
+    expect(confirmRoute).toContain(
+      'method="post" action="/api/public/newsletter/confirm"',
+    );
+    expect(confirmRoute).not.toContain('<form method="post" style=');
   });
 });
