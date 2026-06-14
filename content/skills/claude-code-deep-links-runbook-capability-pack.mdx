@@ -114,6 +114,21 @@ official docs when validating handler behavior on new releases.
 - https://github.com/anthropics/claude-code
 - https://developers.google.com/search/docs/fundamentals/creating-helpful-content
 
+## Source Verification Notes
+
+Verified against official Claude Code deep links documentation on **2026-06-13**:
+
+- Deep links require Claude Code **v2.1.91 or later** and use the `claude-cli://open`
+  path with optional `q`, `cwd`, and `repo` query parameters.
+- Links pre-fill the prompt box but **never auto-send**; users must review the
+  external-link warning and press Enter.
+- The `q` parameter accepts URL-encoded text up to **5,000 characters**; use `%0A`
+  for line breaks in multi-line runbook prompts.
+- When both `cwd` and `repo` are supplied, **`cwd` takes precedence** even if the
+  path does not exist.
+- GitHub-rendered Markdown strips custom schemes such as `claude-cli://`; provide
+  copyable code blocks in public runbooks when click-through links are unavailable.
+
 ## Scope Note
 
 This is not a generic URL-shortener guide. Use it when teams need repeatable,
