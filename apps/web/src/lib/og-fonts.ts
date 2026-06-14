@@ -1,4 +1,7 @@
-import { spaceGrotesk500Base64, spaceGrotesk700Base64 } from "@/assets/fonts/space-grotesk.generated";
+import {
+  spaceGrotesk500Base64,
+  spaceGrotesk700Base64,
+} from "@/assets/fonts/space-grotesk.generated";
 
 /**
  * Decode a base64 string into an ArrayBuffer. Uses `atob` (available in workerd and
