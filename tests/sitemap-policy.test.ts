@@ -55,7 +55,9 @@ describe("sitemap policy", () => {
     expect(source).not.toContain('"/validators/mcp-config"');
     expect(source).not.toContain('"/validators/skill-package"');
     expect(source).not.toContain("lastModified: new Date()");
-    expect(source).toContain("ENTRIES.map");
+    // Entry pages are filtered through the sitemap-indexable policy (drops
+    // commercial `tools` listings + any robotsIndex:false entries).
+    expect(source).toContain("ENTRIES.filter(isSitemapIndexableEntry)");
     // Category hub landing pages with per-category + per-entry lastmod.
     expect(source).toContain("categoryLastmod");
     expect(source).toContain("entry.reviewedAt ?? entry.dateAdded");

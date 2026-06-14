@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { search } from "@/data/search";
 import { absoluteUrl } from "@/lib/seo";
 
 // WebMCP (navigator.modelContext) — exposes directory search to in-browser AI agents.
@@ -42,6 +41,8 @@ export function WebMcpProvider() {
             async execute(args) {
               const query = String(args.query ?? "");
               const category = typeof args.category === "string" ? args.category : "";
+              // Lazy-load the dataset only when an agent actually calls the tool.
+              const { search } = await import("@/data/search");
               const results = search({ q: query })
                 .filter((e) => !category || e.category === category)
                 .slice(0, 10)

@@ -39,6 +39,7 @@ const SECURITY_HEADERS = {
     "object-src 'none'",
     "frame-ancestors 'none'",
     scriptSrc,
+    // Fonts are self-hosted (public/fonts.css + /fonts/*.woff2), so no third-party origins needed.
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",

@@ -141,11 +141,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "alternate", type: "application/rss+xml", href: "/feed.xml", title: "HeyClaude" },
       { rel: "alternate", type: "application/atom+xml", href: "/atom.xml", title: "HeyClaude" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      // Self-hosted fonts (public/fonts.css mirrors Google's exact woff2 + unicode-ranges),
+      // so no third-party request. Preload the most-used latin display + body faces.
+      { rel: "stylesheet", href: "/fonts.css" },
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
+        rel: "preload",
+        href: "/fonts/space-grotesk-700-latin.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        href: "/fonts/dm-sans-400-latin.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
       },
     ],
     scripts: [

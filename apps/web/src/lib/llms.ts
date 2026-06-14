@@ -11,6 +11,7 @@ import { ENTRIES } from "@/data/entries";
 import { CATEGORIES } from "@/types/registry";
 import { etagFor } from "@/lib/feeds";
 import { applySecurityHeaders } from "@/lib/security-headers";
+import { buildEntryCitationFacts } from "@heyclaude/registry";
 
 export function buildLlmsTxt(origin: string): string {
   const lines: string[] = [];
@@ -79,6 +80,14 @@ export function buildLlmsFullTxt(origin: string): string {
       out.push("");
       out.push(e.description);
       out.push("");
+      const facts = buildEntryCitationFacts(e as Parameters<typeof buildEntryCitationFacts>[0], {
+        siteUrl: origin,
+      });
+      if (facts) {
+        out.push("Citation facts:");
+        out.push(facts);
+        out.push("");
+      }
       if (e.safetyNotes) {
         out.push(`Safety: ${e.safetyNotes}`);
         out.push("");

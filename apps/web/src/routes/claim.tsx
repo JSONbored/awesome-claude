@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, ShieldCheck, ListChecks } from "lucide-react";
 import { ENTRIES } from "@/data/entries";
 import { cn } from "@/lib/utils";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { absoluteUrl } from "@/lib/seo";
 
 type ClaimType = "maintain" | "transfer" | "correct" | "remove";
@@ -85,6 +86,9 @@ function ClaimPage() {
   const [proof, setProof] = React.useState<Record<string, string>>({});
   const [submitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [activeIndex, setActiveIndex] = React.useState(-1);
+
+  const listboxId = React.useId();
 
   const matches = React.useMemo(() => {
     if (!query || picked) return [];
@@ -96,6 +100,55 @@ function ClaimPage() {
         e.author.toLowerCase().includes(q),
     ).slice(0, 6);
   }, [query, picked]);
+
+  // Reset the active option whenever the result set changes so the highlight
+  // never points at a stale index.
+  React.useEffect(() => {
+    setActiveIndex(-1);
+  }, [query, picked]);
+
+  const optionId = (index: number) => `${listboxId}-option-${index}`;
+
+  const choose = (entry: (typeof ENTRIES)[number]) => {
+    setPicked(entry);
+    setActiveIndex(-1);
+  };
+
+  const onSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (matches.length === 0) {
+      if (e.key === "Escape" && query) {
+        e.preventDefault();
+        setQuery("");
+      }
+      return;
+    }
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setActiveIndex((i) => (i + 1) % matches.length);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActiveIndex((i) => (i <= 0 ? matches.length - 1 : i - 1));
+        break;
+      case "Enter":
+        if (activeIndex >= 0 && activeIndex < matches.length) {
+          e.preventDefault();
+          choose(matches[activeIndex]);
+        }
+        break;
+      case "Escape":
+        e.preventDefault();
+        if (activeIndex >= 0) {
+          setActiveIndex(-1);
+        } else {
+          setQuery("");
+        }
+        break;
+      default:
+        break;
+    }
+  };
 
   const filled = PROOF_FIELDS.filter((f) => (proof[f.id] ?? "").trim().length > 0);
   const contactEmail = (proof.email ?? "").trim();
@@ -209,17 +262,39 @@ function ClaimPage() {
                   <input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
+                    onKeyDown={onSearchKeyDown}
                     placeholder="Search by title, slug, or author"
+                    role="combobox"
+                    aria-expanded={matches.length > 0}
+                    aria-controls={listboxId}
+                    aria-autocomplete="list"
+                    aria-activedescendant={
+                      activeIndex >= 0 ? optionId(activeIndex) : undefined
+                    }
                     className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none"
                   />
                   {matches.length > 0 && (
-                    <ul className="absolute left-0 right-0 top-full z-10 mt-1 max-h-64 overflow-auto rounded-md border border-border bg-surface shadow-sm">
-                      {matches.map((m) => (
-                        <li key={`${m.category}/${m.slug}`}>
+                    <ul
+                      id={listboxId}
+                      role="listbox"
+                      aria-label="Listing search results"
+                      className="absolute left-0 right-0 top-full z-10 mt-1 max-h-64 overflow-auto rounded-md border border-border bg-surface shadow-sm"
+                    >
+                      {matches.map((m, i) => (
+                        <li
+                          key={`${m.category}/${m.slug}`}
+                          id={optionId(i)}
+                          role="option"
+                          aria-selected={activeIndex === i}
+                        >
                           <button
                             type="button"
-                            onClick={() => setPicked(m)}
-                            className="block w-full px-3 py-2 text-left hover:bg-surface-2"
+                            onClick={() => choose(m)}
+                            onMouseEnter={() => setActiveIndex(i)}
+                            className={cn(
+                              "block w-full px-3 py-2 text-left hover:bg-surface-2",
+                              activeIndex === i && "bg-surface-2",
+                            )}
                           >
                             <div className="text-sm text-ink">{m.title}</div>
                             <div className="font-mono text-[11px] text-ink-subtle">
@@ -286,8 +361,13 @@ function ClaimPage() {
             <span className="text-xs text-ink-subtle">
               {filled.length} of {PROOF_FIELDS.length} proof fields filled
             </span>
-            {error && <span className="text-xs text-trust-blocked">{error}</span>}
           </div>
+
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
         </div>
 
         <aside className="space-y-4">
