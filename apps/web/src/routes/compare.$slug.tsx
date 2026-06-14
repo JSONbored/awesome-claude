@@ -66,6 +66,9 @@ export const Route = createFileRoute("/compare/$slug")({
         { property: "og:description", content: comparison.seoDescription },
         { property: "og:url", content: url },
         { property: "og:image", content: ogImage },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImage },
@@ -97,7 +100,11 @@ function ComparisonPage() {
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6">
       <Breadcrumbs
-        items={[{ label: "Directory", to: "/browse" }, { label: "Compare", to: "/compare" }, { label: comparison.heading }]}
+        items={[
+          { label: "Directory", to: "/browse" },
+          { label: "Compare", to: "/compare" },
+          { label: comparison.heading },
+        ]}
         home
       />
       <header className="mt-6 max-w-3xl">

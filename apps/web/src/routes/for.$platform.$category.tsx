@@ -77,6 +77,9 @@ export const Route = createFileRoute("/for/$platform/$category")({
         { property: "og:description", content: description },
         { property: "og:url", content: url },
         { property: "og:image", content: ogImage },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImage },
         // Single-entry intersections render (linked from the platform hub) but stay out of the
@@ -144,11 +147,7 @@ function IntersectionPage() {
           <span aria-hidden className="text-ink-subtle">
             ·
           </span>
-          <Link
-            to="/$category"
-            params={{ category }}
-            className="story-link font-medium text-ink"
-          >
+          <Link to="/$category" params={{ category }} className="story-link font-medium text-ink">
             All Claude {cLabel} →
           </Link>
         </div>

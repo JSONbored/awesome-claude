@@ -73,6 +73,9 @@ export const Route = createFileRoute("/for/$platform")({
         { property: "og:description", content: description },
         { property: "og:url", content: url },
         { property: "og:image", content: ogImage },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImage },
       ],
@@ -111,7 +114,11 @@ function PlatformPage() {
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
       <Breadcrumbs
-        items={[{ label: "Directory", to: "/browse" }, { label: "Platforms", to: "/for" }, { label }]}
+        items={[
+          { label: "Directory", to: "/browse" },
+          { label: "Platforms", to: "/for" },
+          { label },
+        ]}
         home
       />
       <header className="mt-6 max-w-3xl">

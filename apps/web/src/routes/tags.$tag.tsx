@@ -50,6 +50,9 @@ export const Route = createFileRoute("/tags/$tag")({
         { property: "og:description", content: description },
         { property: "og:url", content: url },
         { property: "og:image", content: ogImage },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImage },
         // Single-entry tag pages are thin and excluded from the sitemap; keep them usable for
@@ -88,15 +91,22 @@ function TagHub() {
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
       <Breadcrumbs
-        items={[{ label: "Directory", to: "/browse" }, { label: "Tags", to: "/tags" }, { label: group.name }]}
+        items={[
+          { label: "Directory", to: "/browse" },
+          { label: "Tags", to: "/tags" },
+          { label: group.name },
+        ]}
         home
       />
       <header className="mt-6 max-w-3xl">
         <div className="eyebrow">{entries.length} entries</div>
-        <h1 className="mt-2 h-display-1 text-ink text-balance">Claude resources tagged “{group.name}”</h1>
+        <h1 className="mt-2 h-display-1 text-ink text-balance">
+          Claude resources tagged “{group.name}”
+        </h1>
         <p className="mt-4 text-pretty text-base text-ink-muted sm:text-lg">
-          Every source-backed Claude Code resource tagged <span className="text-ink">{group.name}</span> in
-          the HeyClaude directory — across MCP servers, agents, skills, hooks, commands, and more.
+          Every source-backed Claude Code resource tagged{" "}
+          <span className="text-ink">{group.name}</span> in the HeyClaude directory — across MCP
+          servers, agents, skills, hooks, commands, and more.
         </p>
       </header>
 

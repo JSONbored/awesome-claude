@@ -108,6 +108,9 @@ export const Route = createFileRoute("/")({
         property: "og:image",
         content: ogImageUrl({ title: "The directory for Claude workflows", eyebrow: "HeyClaude" }),
       },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       {
         name: "twitter:image",
         content: ogImageUrl({ title: "The directory for Claude workflows", eyebrow: "HeyClaude" }),
