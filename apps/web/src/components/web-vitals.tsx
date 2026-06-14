@@ -15,7 +15,7 @@ interface ReportedMetric {
 
 /**
  * Field Core Web Vitals (RUM). Reports INP/LCP/CLS/TTFB/FCP for real sessions to
- * the existing umami instance (umami.heyclau.de is already allowed by CSP, so no
+ * the existing umami instance (tasty.aethereal.dev is already allowed by CSP, so no
  * policy change). Renders nothing; the web-vitals library is dynamically imported
  * inside the effect so it never enters the SSR path or the universal client chunk.
  */

@@ -47,7 +47,7 @@ export const siteConfig = {
   jobsEmail: "jobs@heyclau.de",
   twitterUrl: publicEnv("NEXT_PUBLIC_TWITTER_URL") || "https://x.com/jsonbored",
   discordUrl: publicEnv("NEXT_PUBLIC_DISCORD_URL") || "https://discord.com/invite/Ax3Py4YDrq",
-  umamiScriptUrl: publicEnv("VITE_UMAMI_SCRIPT_URL") || "https://umami.heyclau.de/script.js",
+  umamiScriptUrl: publicEnv("VITE_UMAMI_SCRIPT_URL") || "https://tasty.aethereal.dev/script.js",
   umamiWebsiteId: publicEnv("VITE_UMAMI_WEBSITE_ID") || "b734c138-2949-4527-9160-7fe5d0e81121",
   // Empty string intentionally disables the private gate and shows manual PR instructions.
   submissionGateUrl: publicHttpUrl(
