@@ -11,12 +11,12 @@ type RegistryChangelogEntry = {
   type?: string;
 };
 
-const registryEntries = (atlasRegistry.entries ?? []) as RegistryEntry[];
+export const REGISTRY_ENTRIES = (atlasRegistry.entries ?? []) as RegistryEntry[];
 const registryChangelog = (atlasRegistry.changelog ?? []) as RegistryChangelogEntry[];
 const generatedAt = atlasRegistry.generatedAt;
 export const REGISTRY_GENERATED_AT = generatedAt;
 
-export const ENTRIES: Entry[] = registryEntries.map(buildEntry);
+export const ENTRIES: Entry[] = REGISTRY_ENTRIES.map(buildEntry);
 
 export const BRIEF_ISSUES = registryChangelog.slice(0, 6).map((item, index) => ({
   slug: `registry-brief-${String(index + 1).padStart(3, "0")}`,
