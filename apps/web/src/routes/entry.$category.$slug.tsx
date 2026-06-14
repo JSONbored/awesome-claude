@@ -859,7 +859,7 @@ function SchemaDetails({ entry }: { entry: Entry }) {
             <PillList label="Retrieval sources" values={entry.retrievalSources} />
             <PillList label="Tested platforms" values={entry.testedPlatforms} />
             {entry.platformCompatibility?.length ? (
-              <div className="mt-3 overflow-hidden rounded-lg border border-border">
+              <div className="mt-3 overflow-x-auto rounded-lg border border-border">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-surface-2 text-ink-subtle">
                     <tr>

@@ -164,7 +164,7 @@ function QualityPage() {
       </div>
 
       <h2 className="mt-12 h-display-2 text-ink text-balance">Coverage by category</h2>
-      <div className="mt-4 overflow-hidden rounded-xl border border-border bg-surface">
+      <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-surface">
         {CATEGORIES.map((c) => {
           const cov = CATEGORY_COVERAGE.get(c.id)!;
           return (
@@ -216,7 +216,7 @@ function QualityPage() {
         </code>
         .
       </p>
-      <div className="mt-4 overflow-hidden rounded-xl border border-border bg-surface">
+      <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-surface">
         <div className="grid grid-cols-[1fr_120px_180px_180px] gap-4 border-b border-border bg-surface-2 px-5 py-2 text-[11px] uppercase tracking-wider text-ink-subtle">
           <span>Path</span>
           <span className="text-right">Size</span>
