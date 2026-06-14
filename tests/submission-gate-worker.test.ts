@@ -53,10 +53,20 @@ import {
 import { repoRoot } from "./helpers/registry-fixtures";
 
 function readWorkerSource() {
-  return fs.readFileSync(
-    path.join(repoRoot, "apps/submission-gate/src/index.ts"),
-    "utf8",
-  );
+  // The orchestrator was split: pure decision/retry helpers now live in
+  // decisions.ts and are re-imported into index.ts. Concatenate both files so
+  // source-pinned assertions keep matching regardless of which file a symbol
+  // (function, constant, or call site) now lives in.
+  return [
+    fs.readFileSync(
+      path.join(repoRoot, "apps/submission-gate/src/index.ts"),
+      "utf8",
+    ),
+    fs.readFileSync(
+      path.join(repoRoot, "apps/submission-gate/src/decisions.ts"),
+      "utf8",
+    ),
+  ].join("\n");
 }
 
 function readReviewSource() {
@@ -480,7 +490,9 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("privateStrictDuplicateContradicted(");
     expect(source).toContain("duplicateEvidenceConflictExhaustedDecision(");
     expect(source).toContain("duplicateEvidenceContractExhaustedDecision(");
-    expect(readReviewSource()).toContain("duplicate_evidence_contract_exhausted");
+    expect(readReviewSource()).toContain(
+      "duplicate_evidence_contract_exhausted",
+    );
     expect(source).not.toContain("duplicateEvidenceConflictMergeDecision(");
     expect(source).toContain("privateEvidenceClaimsDeadSourceUrl(");
     expect(source).toContain("privateEvidenceMatchesReachableSourceUrl(");
@@ -846,14 +858,12 @@ documentationUrl: "https://example.com/docs"
 packageUrl: "https://hub.docker.com/r/example/project"
 ---
 `,
-      vi
-        .fn<typeof fetch>()
-        .mockImplementation(async (url) => {
-          const hostname = new URL(String(url)).hostname;
-          return new Response(null, {
-            status: hostname === "hub.docker.com" ? 429 : 200,
-          });
-        }),
+      vi.fn<typeof fetch>().mockImplementation(async (url) => {
+        const hostname = new URL(String(url)).hostname;
+        return new Response(null, {
+          status: hostname === "hub.docker.com" ? 429 : 200,
+        });
+      }),
     );
 
     expect(report.status).toBe("passed");
