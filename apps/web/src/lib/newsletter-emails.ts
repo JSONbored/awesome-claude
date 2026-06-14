@@ -1,10 +1,39 @@
-// On-brand (light) newsletter emails, built as inline strings (not React Email)
-// so they render in the Worker without a runtime React dependency. No tracking
-// pixels. Confirm + welcome are transactional; the digest is a Resend broadcast.
+// On-brand newsletter emails, built as inline strings (not React Email) so they
+// render in the Worker without a runtime React dependency. Light theme matching
+// the heyclau.de design system; no tracking pixels.
+//
+// Single source of truth for the email design tokens lives in THEME below — the
+// hex values are the light-mode `styles.css` oklch tokens converted to sRGB
+// (email clients don't support oklch). Confirm + welcome are transactional;
+// the digest is a Resend broadcast.
 
 import type { DigestItem } from "@/lib/newsletter-digest";
 
-const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
+// Light-mode design tokens (oklch -> hex). Keep in sync with apps/web/src/styles.css.
+const THEME = {
+  canvas: "#f8f6ed", // --background (warm paper)
+  card: "#fcfaf4", // --surface
+  hairline: "#ece9e0", // inner dividers (between --surface-2 and --border)
+  border: "#dad7cf", // --border
+  ink: "#13110d", // --ink
+  muted: "#58554e", // --ink-muted
+  subtle: "#6d6a63", // --ink-subtle
+  accent: "#e1f32a", // --accent (citron)
+  onInk: "#f8f6ed", // text on the ink button
+} as const;
+
+const DISPLAY =
+  "'Space Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif";
+const BODY = "'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif";
+
+// Progressive web fonts for clients that honor them (Apple Mail, iOS Mail);
+// everything else falls back to the system stacks above.
+const FONT_FACE = [
+  "@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:600;font-display:swap;src:url(https://heyclau.de/fonts/space-grotesk-600-latin.woff2) format('woff2');}",
+  "@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:700;font-display:swap;src:url(https://heyclau.de/fonts/space-grotesk-700-latin.woff2) format('woff2');}",
+  "@font-face{font-family:'DM Sans';font-style:normal;font-weight:400;font-display:swap;src:url(https://heyclau.de/fonts/dm-sans-400-latin.woff2) format('woff2');}",
+  "@font-face{font-family:'DM Sans';font-style:normal;font-weight:500;font-display:swap;src:url(https://heyclau.de/fonts/dm-sans-500-latin.woff2) format('woff2');}",
+].join("");
 
 function escapeHtml(value: string): string {
   return value
@@ -12,62 +41,6 @@ function escapeHtml(value: string): string {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
-}
-
-export function buildNewsletterConfirmEmail(opts: { confirmUrl: string; siteUrl: string }): {
-  subject: string;
-  html: string;
-  text: string;
-} {
-  const confirmUrl = escapeHtml(opts.confirmUrl);
-  const siteHost = escapeHtml(opts.siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, ""));
-  const subject = "Confirm your HeyClaude subscription";
-
-  const html = `<!doctype html>
-<html lang="en">
-  <body style="margin:0;padding:0;background:#f7f5ef;">
-    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Tap the button to confirm your subscription to the HeyClaude weekly brief.</div>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f5ef;padding:40px 16px;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#ffffff;border:1px solid #e7e3d8;border-radius:14px;">
-            <tr>
-              <td style="padding:32px 32px 8px;">
-                <div style="font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:#6b6a64;">HeyClaude</div>
-                <h1 style="margin:14px 0 0;font:700 24px/1.25 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#171614;">Confirm your subscription</h1>
-                <p style="margin:14px 0 0;font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#4d4c47;">One calm read on Claude workflows. Confirm your email and you're in &mdash; you can unsubscribe any time.</p>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:24px 32px 8px;">
-                <a href="${confirmUrl}" style="display:inline-block;background:#171614;color:#ffffff;text-decoration:none;font:600 15px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;padding:14px 22px;border-radius:10px;">Confirm subscription</a>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:8px 32px 32px;">
-                <p style="margin:0;font:400 12px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#8a8980;">If the button doesn't work, paste this link into your browser:<br><a href="${confirmUrl}" style="color:#6b6a64;word-break:break-all;">${confirmUrl}</a></p>
-                <p style="margin:16px 0 0;font:400 12px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#8a8980;">Didn't request this? Ignore this email &mdash; nothing was added. &middot; ${siteHost}</p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>`;
-
-  const text = [
-    "Confirm your HeyClaude subscription",
-    "",
-    "One calm read on Claude workflows. Confirm your email and you're in — unsubscribe any time.",
-    "",
-    `Confirm: ${opts.confirmUrl}`,
-    "",
-    "Didn't request this? Ignore this email — nothing was added.",
-    siteHost,
-  ].join("\n");
-
-  return { subject, html, text };
 }
 
 function trimUrl(siteUrl: string): string {
@@ -78,14 +51,22 @@ function siteHostOf(siteUrl: string): string {
   return siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
 }
 
+/** Shared light-theme document shell: forces light, embeds the brand fonts, centers the card. */
 function emailShell(opts: { preheader: string; inner: string }): string {
   return `<!doctype html>
 <html lang="en">
-  <body style="margin:0;padding:0;background:#f7f5ef;">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="supported-color-schemes" content="light" />
+    <style>${FONT_FACE}</style>
+  </head>
+  <body style="margin:0;padding:0;background:${THEME.canvas};">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(opts.preheader)}</div>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f5ef;padding:40px 16px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${THEME.canvas};padding:40px 16px;">
       <tr><td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border:1px solid #e7e3d8;border-radius:14px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:${THEME.card};border:1px solid ${THEME.border};border-radius:14px;">
           ${opts.inner}
         </table>
       </td></tr>
@@ -94,15 +75,23 @@ function emailShell(opts: { preheader: string; inner: string }): string {
 </html>`;
 }
 
-// Standing growth/revenue CTAs (submissions, paid jobs, sponsorship) shown in
-// the welcome + digest footers. Deliberately subtle — one quiet line.
+function eyebrow(text: string): string {
+  return `<div style="font-family:${DISPLAY};font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:${THEME.muted};font-weight:500;">${text}</div>`;
+}
+
+function primaryButton(href: string, label: string): string {
+  return `<a href="${href}" style="display:inline-block;background:${THEME.ink};color:${THEME.onInk};text-decoration:none;font-family:${DISPLAY};font-weight:600;font-size:15px;padding:13px 22px;border-radius:10px;">${label}</a>`;
+}
+
+// Standing growth/revenue CTAs (submissions, paid jobs, sponsorship) for the
+// welcome + digest footers — deliberately one quiet line.
 function standingCtasHtml(siteUrl: string): string {
   const base = trimUrl(siteUrl);
   const link = (href: string, label: string) =>
-    `<a href="${base}${href}" style="color:#4d4c47;text-decoration:underline;">${label}</a>`;
-  return `<tr><td style="padding:18px 32px 6px;border-top:1px solid #efece3;">
-            <p style="margin:0;font:400 13px/1.7 ${FONT};color:#6b6a64;">${link("/submit", "Built something? Submit it")} &middot; ${link("/jobs/post", "Hiring? Post a role")} &middot; ${link("/advertise", "List or sponsor your tool")}</p>
-            <p style="margin:8px 0 0;font:400 12px/1.6 ${FONT};color:#8a8980;">Enjoying this? Forward it to a teammate.</p>
+    `<a href="${base}${href}" style="color:${THEME.muted};text-decoration:underline;">${label}</a>`;
+  return `<tr><td style="padding:18px 30px 6px;border-top:1px solid ${THEME.hairline};">
+            <div style="font-family:${BODY};font-size:13px;line-height:1.7;color:${THEME.subtle};">${link("/submit", "Built something? Submit it")} &middot; ${link("/jobs/post", "Hiring? Post a role")} &middot; ${link("/advertise", "Sponsor")}</div>
+            <div style="font-family:${BODY};font-size:12px;line-height:1.6;color:${THEME.subtle};margin-top:8px;">Enjoying this? Forward it to a teammate.</div>
           </td></tr>`;
 }
 
@@ -112,9 +101,44 @@ function standingCtasText(siteUrl: string): string {
     "—",
     `Built something? Submit it: ${base}/submit`,
     `Hiring? Post a role: ${base}/jobs/post`,
-    `List or sponsor your tool: ${base}/advertise`,
+    `Sponsor: ${base}/advertise`,
     "Enjoying this? Forward it to a teammate.",
   ].join("\n");
+}
+
+/** Double opt-in confirmation email (transactional). Minimal by design to maximize confirm rate. */
+export function buildNewsletterConfirmEmail(opts: { confirmUrl: string; siteUrl: string }): {
+  subject: string;
+  html: string;
+  text: string;
+} {
+  const confirmUrl = escapeHtml(opts.confirmUrl);
+  const host = escapeHtml(siteHostOf(opts.siteUrl));
+  const subject = "Confirm your HeyClaude subscription";
+
+  const inner = `<tr><td style="padding:32px 30px 8px;">
+            ${eyebrow("HeyClaude")}
+            <h1 style="margin:14px 0 0;font-family:${DISPLAY};font-weight:600;font-size:25px;letter-spacing:-0.02em;line-height:1.1;color:${THEME.ink};">Confirm your subscription</h1>
+            <p style="margin:14px 0 0;font-family:${BODY};font-size:15px;line-height:1.6;color:${THEME.muted};">One calm read on Claude workflows, every Sunday. Confirm your email and you're in &mdash; unsubscribe any time.</p>
+          </td></tr>
+          <tr><td style="padding:24px 30px 8px;">${primaryButton(confirmUrl, "Confirm subscription")}</td></tr>
+          <tr><td style="padding:8px 30px 32px;">
+            <p style="margin:0;font-family:${BODY};font-size:12px;line-height:1.6;color:${THEME.subtle};">If the button doesn't work, paste this link into your browser:<br><a href="${confirmUrl}" style="color:${THEME.subtle};word-break:break-all;">${confirmUrl}</a></p>
+            <p style="margin:16px 0 0;font-family:${BODY};font-size:12px;line-height:1.6;color:${THEME.subtle};">Didn't request this? Ignore this email &mdash; nothing was added. &middot; ${host}</p>
+          </td></tr>`;
+
+  const text = [
+    "Confirm your HeyClaude subscription",
+    "",
+    "One calm read on Claude workflows, every Sunday. Confirm your email and you're in — unsubscribe any time.",
+    "",
+    `Confirm: ${opts.confirmUrl}`,
+    "",
+    "Didn't request this? Ignore this email — nothing was added.",
+    host,
+  ].join("\n");
+
+  return { subject, html: emailShell({ preheader: "Confirm your subscription to the HeyClaude weekly brief.", inner }), text };
 }
 
 /** Welcome email sent (transactional) right after a subscriber confirms. */
@@ -126,22 +150,21 @@ export function buildWelcomeEmail(opts: { siteUrl: string }): {
   const base = trimUrl(opts.siteUrl);
   const host = escapeHtml(siteHostOf(opts.siteUrl));
   const subject = "You're in — welcome to HeyClaude";
-  const inner = `<tr><td style="padding:32px 32px 8px;">
-            <div style="font:600 13px/1.4 ${FONT};letter-spacing:1.5px;text-transform:uppercase;color:#6b6a64;">HeyClaude</div>
-            <h1 style="margin:14px 0 0;font:700 24px/1.25 ${FONT};color:#171614;">You're in.</h1>
-            <p style="margin:14px 0 0;font:400 15px/1.6 ${FONT};color:#4d4c47;">Thanks for confirming. Every Sunday you'll get one calm read: the best new Claude Code agents, MCP servers, skills, and workflows reviewed that week. No hype, no tracking pixels.</p>
+
+  const inner = `<tr><td style="padding:32px 30px 8px;">
+            ${eyebrow("HeyClaude")}
+            <h1 style="margin:14px 0 0;font-family:${DISPLAY};font-weight:600;font-size:26px;letter-spacing:-0.02em;line-height:1.1;color:${THEME.ink};">You're <span style="background:${THEME.accent};padding:0 6px;border-radius:2px;">in</span>.</h1>
+            <p style="margin:14px 0 0;font-family:${BODY};font-size:15px;line-height:1.6;color:${THEME.muted};">Thanks for confirming. Every Sunday you'll get one calm read: the best new Claude Code agents, MCP servers, skills, and workflows reviewed that week. No hype, no tracking pixels.</p>
           </td></tr>
-          <tr><td style="padding:18px 32px 4px;">
-            <a href="${base}/best" style="display:inline-block;background:#171614;color:#ffffff;text-decoration:none;font:600 15px/1 ${FONT};padding:13px 20px;border-radius:10px;">Start with the best of HeyClaude</a>
-          </td></tr>
-          <tr><td style="padding:12px 32px 4px;">
-            <p style="margin:0;font:400 14px/1.7 ${FONT};color:#4d4c47;">While you wait for Sunday:<br>&bull; <a href="${base}/state-of-claude-tooling" style="color:#171614;">The state of Claude tooling</a><br>&bull; <a href="${base}/browse" style="color:#171614;">Browse the full directory</a></p>
+          <tr><td style="padding:20px 30px 4px;">${primaryButton(`${base}/best`, "Start with the best of HeyClaude")}</td></tr>
+          <tr><td style="padding:12px 30px 4px;">
+            <p style="margin:0;font-family:${BODY};font-size:14px;line-height:1.7;color:${THEME.muted};">While you wait for Sunday:<br>&bull; <a href="${base}/state-of-claude-tooling" style="color:${THEME.ink};">The state of Claude tooling</a><br>&bull; <a href="${base}/browse" style="color:${THEME.ink};">Browse the full directory</a></p>
           </td></tr>
           ${standingCtasHtml(opts.siteUrl)}
-          <tr><td style="padding:2px 32px 28px;">
-            <p style="margin:8px 0 0;font:400 12px/1.6 ${FONT};color:#8a8980;">Manage your subscription at <a href="${base}/subscriptions" style="color:#6b6a64;">${host}/subscriptions</a>.</p>
+          <tr><td style="padding:2px 30px 28px;">
+            <p style="margin:8px 0 0;font-family:${BODY};font-size:12px;line-height:1.6;color:${THEME.subtle};">Manage your subscription at <a href="${base}/subscriptions" style="color:${THEME.subtle};">${host}/subscriptions</a>.</p>
           </td></tr>`;
-  const html = emailShell({ preheader: "Welcome — your weekly Claude brief lands Sundays.", inner });
+
   const text = [
     "You're in — welcome to HeyClaude",
     "",
@@ -155,7 +178,8 @@ export function buildWelcomeEmail(opts: { siteUrl: string }): {
     "",
     `Manage your subscription: ${base}/subscriptions`,
   ].join("\n");
-  return { subject, html, text };
+
+  return { subject, html: emailShell({ preheader: "Welcome — your weekly Claude brief lands Sundays.", inner }), text };
 }
 
 /** Weekly "new & notable" digest, sent as a Resend broadcast. */
@@ -171,33 +195,31 @@ export function buildDigestEmail(opts: {
     .map((item) => {
       const url = `${base}/entry/${encodeURIComponent(item.category)}/${encodeURIComponent(item.slug)}`;
       const summary = item.summary
-        ? `<p style="margin:4px 0 0;font:400 14px/1.6 ${FONT};color:#4d4c47;">${escapeHtml(item.summary)}</p>`
+        ? `<div style="margin:3px 0 0;font-family:${BODY};font-size:14px;line-height:1.55;color:${THEME.muted};">${escapeHtml(item.summary)}</div>`
         : "";
-      return `<tr><td style="padding:14px 32px;border-top:1px solid #efece3;">
-            <div style="font:600 11px/1.4 ${FONT};letter-spacing:1px;text-transform:uppercase;color:#8a8980;">${escapeHtml(item.category)}</div>
-            <a href="${url}" style="display:block;margin:4px 0 0;font:700 17px/1.35 ${FONT};color:#171614;text-decoration:none;">${escapeHtml(item.title)}</a>
-            ${summary}
+      return `<tr><td style="padding:14px 30px 0;">
+            <div style="border-top:1px solid ${THEME.hairline};padding-top:14px;">
+              <div style="font-family:${DISPLAY};font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:${THEME.subtle};">${escapeHtml(item.category)}</div>
+              <a href="${url}" style="display:block;margin:3px 0 0;font-family:${DISPLAY};font-weight:600;font-size:16px;line-height:1.3;color:${THEME.ink};text-decoration:none;">${escapeHtml(item.title)}</a>
+              ${summary}
+            </div>
           </td></tr>`;
     })
     .join("");
 
-  const inner = `<tr><td style="padding:32px 32px 4px;">
-            <div style="font:600 13px/1.4 ${FONT};letter-spacing:1.5px;text-transform:uppercase;color:#6b6a64;">HeyClaude &middot; ${escapeHtml(opts.dateLabel)}</div>
-            <h1 style="margin:12px 0 0;font:700 23px/1.25 ${FONT};color:#171614;">New &amp; notable this week</h1>
-            <p style="margin:10px 0 0;font:400 14px/1.6 ${FONT};color:#4d4c47;">Reviewed Claude tools that landed in the directory this week.</p>
+  const inner = `<tr><td style="padding:30px 30px 0;">
+            ${eyebrow(`HeyClaude &middot; ${escapeHtml(opts.dateLabel)}`)}
+            <h1 style="margin:12px 0 0;font-family:${DISPLAY};font-weight:600;font-size:24px;letter-spacing:-0.02em;line-height:1.1;color:${THEME.ink};">New &amp; <span style="background:${THEME.accent};padding:0 5px;border-radius:2px;">notable</span> this week</h1>
+            <p style="margin:10px 0 0;font-family:${BODY};font-size:14px;line-height:1.6;color:${THEME.muted};">Reviewed Claude tools that landed in the directory this week.</p>
           </td></tr>
           ${itemsHtml}
-          <tr><td style="padding:20px 32px 4px;border-top:1px solid #efece3;">
-            <a href="${base}/browse" style="display:inline-block;background:#171614;color:#ffffff;text-decoration:none;font:600 15px/1 ${FONT};padding:13px 20px;border-radius:10px;">Browse all on HeyClaude</a>
+          <tr><td style="padding:20px 30px 4px;">
+            <div style="border-top:1px solid ${THEME.hairline};padding-top:18px;">${primaryButton(`${base}/browse`, "Browse all on HeyClaude")}</div>
           </td></tr>
           ${standingCtasHtml(opts.siteUrl)}
-          <tr><td style="padding:2px 32px 28px;">
-            <p style="margin:8px 0 0;font:400 12px/1.6 ${FONT};color:#8a8980;"><a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#8a8980;">Unsubscribe</a></p>
+          <tr><td style="padding:2px 30px 28px;">
+            <p style="margin:8px 0 0;font-family:${BODY};font-size:12px;line-height:1.6;color:${THEME.subtle};"><a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:${THEME.subtle};">Unsubscribe</a></p>
           </td></tr>`;
-  const html = emailShell({
-    preheader: `${opts.items.length} new Claude tools worth a look.`,
-    inner,
-  });
 
   const text = [
     `New on HeyClaude — ${opts.dateLabel}`,
@@ -214,5 +236,9 @@ export function buildDigestEmail(opts: {
     "Unsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}",
   ].join("\n");
 
-  return { subject, html, text };
+  return {
+    subject,
+    html: emailShell({ preheader: `${opts.items.length} new Claude tools worth a look.`, inner }),
+    text,
+  };
 }
