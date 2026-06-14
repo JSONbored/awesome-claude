@@ -57,8 +57,10 @@ function ownerRepoFromPath(pathname) {
 function fromScpLike(value) {
   const match = /^[^/@\s]+@([^:/\s]+):(.+)$/.exec(value);
   if (!match) return null;
-  const rest = match[2].replace(/\/+$/, "");
-  const segments = rest.split("/").filter(Boolean);
+  // No trailing-slash regex: split("/").filter(Boolean) already drops empty
+  // segments from trailing slashes, so we avoid the polynomial /\/+$/ scan
+  // (CodeQL js/polynomial-redos) entirely.
+  const segments = match[2].split("/").filter(Boolean);
   if (segments.length < 2) return null;
   return {
     host: normalizeHost(match[1]),
