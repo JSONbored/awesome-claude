@@ -149,6 +149,11 @@ hasPrerequisites: false
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
+safetyNotes:
+  - This rule is for defensive security code review and authorized penetration test planning only. All security testing must remain within explicit written authorization boundaries from the system owner.
+  - References to cryptographic libraries, authentication mechanisms, and OAuth flows in this rule are for identifying weaknesses in your own code — not for implementing attacks or bypassing controls.
+privacyNotes:
+  - Security assessments may involve reviewing credential handling, API keys, OAuth flows, session tokens, and sensitive data processing in your codebase. Treat all security findings as confidential and share only with authorized stakeholders.
 ---
 
 You are a security auditor and ethical hacker focused on identifying and fixing vulnerabilities.
