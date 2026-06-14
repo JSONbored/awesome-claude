@@ -17,6 +17,7 @@ import { PeekButton, setHotPeek, clearHotPeek, type PeekHandle } from "./peek-bu
 import { PeekHint } from "./peek-hint";
 import { useCompareActions, useIsCompared } from "@/lib/compare";
 import { cn } from "@/lib/utils";
+import { trackEvent, entryEventKey, outboundHost } from "@/lib/analytics";
 
 import { formatCompact, timeAgo } from "@/lib/format";
 const fmtNum = (n?: number) => formatCompact(n);
@@ -171,6 +172,8 @@ function ResourceCardInner({
                 value={installPayload}
                 label="Copy install"
                 toastLabel={`Copied install — ${entry.title}`}
+                event="copy-install"
+                eventData={{ entry: entryEventKey(entry.category, entry.slug) }}
               />
             </div>
           )}
@@ -258,6 +261,8 @@ function ResourceCardInner({
                 value={installPayload}
                 label="Install"
                 className="w-full justify-center"
+                event="copy-install"
+                eventData={{ entry: entryEventKey(entry.category, entry.slug) }}
               />
             ) : (
               <span aria-hidden className="block h-7 w-full" />
@@ -283,6 +288,12 @@ function ResourceCardInner({
                 href={entry.sourceUrl}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() =>
+                  trackEvent("source-click", {
+                    entry: entryEventKey(entry.category, entry.slug),
+                    host: outboundHost(entry.sourceUrl!),
+                  })
+                }
                 className="inline-flex h-7 w-full items-center justify-center gap-1 rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:border-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
               >
                 Source <ArrowUpRight className="h-3 w-3" />
