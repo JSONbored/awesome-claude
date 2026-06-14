@@ -3,19 +3,19 @@ title: Mobile App Dev Expert - CLAUDE.md Rules for Claude Code
 slug: mobile-app-development-expert
 category: rules
 description: >-
-  Senior mobile architecture reviewer for iOS and Android covering
+  Senior mobile architecture reviewer for iOS, Android, and cross-platform:
   platform-specific tradeoffs, lifecycle risks, release quality gates, and
-  store-readiness across React Native and Flutter
+  store-readiness across Swift, Kotlin, React Native, and Flutter
 cardDescription: >-
-  Senior mobile architecture reviewer for iOS and Android covering
+  Senior mobile architecture reviewer for iOS, Android, and cross-platform:
   platform-specific tradeoffs, lifecycle risks, release quality gates, and
-  store-readiness across React Native and Flutter
+  store-readiness across Swift, Kotlin, React Native, and Flutter
 seoTitle: Mobile App Dev Expert - CLAUDE.md Rules for Claude Code
 seoDescription: >-
-  Senior mobile architecture reviewer for iOS and Android covering
+  Senior mobile architecture reviewer for iOS, Android, and cross-platform:
   platform-specific tradeoffs, lifecycle risks, release quality gates, and
-  store-readiness across React Native and Flutter. Discover tools for AI
-  development.
+  store-readiness across Swift, Kotlin, React Native, and Flutter. Discover
+  tools for AI development.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
@@ -36,19 +36,20 @@ copySnippet: >-
 
   ```swift
 
+  // iOS 17+ — @Observable macro (Swift 5.9+)
+
   import SwiftUI
 
-  import Combine
+  import Observation
 
 
-  @MainActor
+  @Observable
 
-  class UserViewModel: ObservableObject {
-      @Published var users: [User] = []
-      @Published var isLoading = false
-      @Published var error: Error?
+  class UserViewModel {
+      var users: [User] = []
+      var isLoading = false
+      var error: Error?
       
-      private var cancellables = Set<AnyCancellable>()
       private let service: UserService
       
       init(service: UserService = .shared) {
@@ -69,7 +70,8 @@ copySnippet: >-
 
 
   struct UserListView: View {
-      @StateObject private var viewModel = UserViewModel()
+      // @State replaces @StateObject when the model uses @Observable
+      @State private var viewModel = UserViewModel()
       @Environment(\.colorScheme) var colorScheme
       
       var body: some View {
@@ -272,15 +274,15 @@ copySnippet: >-
 
   ### React Native Performance
 
-  - **Hermes Engine**: Enable for better performance
+  - **Hermes Engine**: Default JS engine since RN 0.70; Hermes V1 in RN 0.84 adds AoT compilation
 
-  - **Reanimated 3**: Smooth 60fps animations
+  - **Reanimated 4**: CSS-compatible declarative animations with Core Animation backend on iOS
 
-  - **FlashList**: Optimized list rendering
+  - **FlashList v2**: Optimized list rendering rebuilt for New Architecture
 
-  - **MMKV**: Fast key-value storage
+  - **MMKV**: Fast synchronous key-value storage (~30x faster than AsyncStorage)
 
-  - **Fast Image**: Optimized image loading
+  - **expo-image / react-native-fast-image**: Image loading (expo-image for Expo; react-native-fast-image for bare RN)
 
 
   ## Flutter Development
@@ -470,16 +472,16 @@ You are a mobile development expert with comprehensive knowledge of native and c
 ### SwiftUI Modern Patterns
 
 ```swift
+// iOS 17+ — @Observable macro (Swift 5.9+)
 import SwiftUI
-import Combine
+import Observation
 
-@MainActor
-class UserViewModel: ObservableObject {
-    @Published var users: [User] = []
-    @Published var isLoading = false
-    @Published var error: Error?
+@Observable
+class UserViewModel {
+    var users: [User] = []
+    var isLoading = false
+    var error: Error?
 
-    private var cancellables = Set<AnyCancellable>()
     private let service: UserService
 
     init(service: UserService = .shared) {
@@ -499,7 +501,8 @@ class UserViewModel: ObservableObject {
 }
 
 struct UserListView: View {
-    @StateObject private var viewModel = UserViewModel()
+    // @State replaces @StateObject when the model uses @Observable
+    @State private var viewModel = UserViewModel()
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
@@ -679,11 +682,11 @@ const styles = StyleSheet.create({
 
 ### React Native Performance
 
-- **Hermes Engine**: Enable for better performance
-- **Reanimated 3**: Smooth 60fps animations
-- **FlashList**: Optimized list rendering
-- **MMKV**: Fast key-value storage
-- **Fast Image**: Optimized image loading
+- **Hermes Engine**: Default JS engine since RN 0.70; Hermes V1 in RN 0.84 adds AoT compilation
+- **Reanimated 4**: CSS-compatible declarative animations with Core Animation backend on iOS
+- **FlashList v2**: Optimized list rendering rebuilt for New Architecture
+- **MMKV**: Fast synchronous key-value storage (~30x faster than AsyncStorage)
+- **expo-image / react-native-fast-image**: Image loading (expo-image for Expo; react-native-fast-image for bare RN)
 
 ## Flutter Development
 
