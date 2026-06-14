@@ -1,0 +1,173 @@
+---
+title: Organizing Personal, Project, and Plugin Skills Directories
+slug: organizing-personal-project-and-plugin-skills-directories
+category: guides
+description: >-
+  Learn Claude Code skill directory layout for user, project, and plugin scopes,
+  naming conventions, discovery order, and avoiding duplicate skills.
+cardDescription: Structure Claude Code skills across user, project, and plugin paths with clear naming and scope.
+seoTitle: Organizing Personal, Project, and Plugin Skills Directories
+seoDescription: >-
+  Learn Claude Code skill directory layout for user, project, and plugin scopes,
+  naming conventions, discovery order, and avoiding duplicate or conflicting skills.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1422
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1422"
+documentationUrl: "https://code.claude.com/docs/en/skills"
+usageSnippet: >-
+  Use this guide to decide whether a skill belongs in user, project, or plugin
+  scope and to organize directories so teams discover the right instructions.
+prerequisites:
+  - Claude Code installed with permission to create skills in user, project, or plugin directories.
+  - Agreement on which workflows are personal experiments versus team-shared conventions.
+  - A repository or plugin bundle where project-scoped skills will be committed and reviewed.
+  - A naming convention document or team prefix so similarly named skills do not collide.
+safetyNotes:
+  - Project and plugin skills are often committed to git; do not store secrets, customer identifiers, or unreleased product details in skill text.
+  - User-scoped skills apply across repositories on the same machine; verify they do not override team policy or inject unsafe tool guidance globally.
+  - Plugin skills ship to every user who installs the plugin; review them with the same rigor as shared hooks or MCP configuration.
+privacyNotes:
+  - Skills can embed repository paths, internal service names, runbook links, and workflow policy that reveal org structure when shared.
+  - User-scoped skills remain on the developer machine but may be copied into support tickets or screenshots; avoid private customer data in reusable text.
+  - When moving a skill from user scope to project scope, redact personal notes and one-off debugging context before commit.
+sourceUrls:
+  - "https://code.claude.com/docs/en/skills"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - skills
+  - plugins
+  - organization
+  - teams
+keywords:
+  - Claude Code skills directories
+  - user vs project skills
+  - plugin skills layout
+  - organize agent skills
+  - Claude Code skill scope
+readingTime: 8
+difficultyScore: 48
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude Code skills load from different scopes: personal user directories, project
+directories checked into git, and plugin bundles installed by teams. Put stable
+team workflows in project or plugin skills, keep personal experiments in user
+scope, and use consistent naming so discovery order does not surprise
+collaborators.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Scope decision made", "description": "You know whether the skill is personal, project, or plugin scoped"}
+- [ ] {"task": "Naming convention set", "description": "Kebab-case names avoid collisions across scopes"}
+- [ ] {"task": "Review path defined", "description": "Project and plugin skills will go through pull request review"}
+- [ ] {"task": "One job per skill", "description": "Large playbooks are split into focused skills"}
+- [ ] {"task": "Discovery tested", "description": "You can verify the skill loads in a fresh session"}
+
+## Core Concepts Explained
+
+### User skills are personal defaults
+
+User-scoped skills follow you across projects on the same machine. They are
+appropriate for personal formatting preferences, private experiments, or
+workflows that should not be committed to a shared repository.
+
+### Project skills are team contracts
+
+Project skills live in the repository and should encode conventions the whole
+team expects: review checklists, release steps, repository-specific validation
+commands, and domain vocabulary for that codebase.
+
+### Plugin skills bundle product behavior
+
+Plugin skills ship with a plugin marketplace entry or zip archive. They are
+ideal when a skill belongs with related commands, hooks, MCP servers, and output
+styles in one installable package.
+
+### Discovery order matters
+
+When multiple skills could apply, scope and installation order affect which
+instructions Claude Code sees. Avoid duplicate skill names across scopes unless
+you intend one to override another deliberately.
+
+## Step-by-Step Implementation Guide
+
+1. **Classify the skill.** Decide whether it is personal, repository-specific,
+   or part of a reusable plugin bundle.
+
+2. **Pick the directory scope.** Use user scope for private experiments, project
+   `.claude/skills/` for team conventions, and plugin `skills/` for packaged
+   distribution.
+
+3. **Choose a stable slug-like name.** Prefer descriptive kebab-case names such
+   as `release-checklist` or `api-review-rubric` over generic names like `helper`.
+
+4. **Keep one job per skill.** Split large playbooks into focused skills so
+   context stays small and triggers remain predictable.
+
+5. **Document ownership.** Add a short description in frontmatter and note the
+   team channel or repo path responsible for updates.
+
+6. **Commit project skills with review.** Treat skill changes like code changes:
+   pull request, reviewer, and changelog note when behavior shifts.
+
+7. **Version plugin skills with the plugin.** When skills ship in plugins, bump
+   plugin version when instructions change materially.
+
+8. **Audit for duplicates quarterly.** Search user, project, and installed plugin
+   directories for overlapping names or conflicting instructions.
+
+## Scope Decision Table
+
+| Need | Best scope |
+| ---- | ---------- |
+| Personal tone or private experiment | User |
+| Repository build and review norms | Project |
+| Shippable bundle with hooks and MCP | Plugin |
+| Org-wide mandatory workflow | Plugin + managed settings |
+
+## Troubleshooting
+
+### Claude uses the wrong skill
+
+Check scope precedence, skill name collisions, and whether an installed plugin
+skill overrides a project skill with the same trigger language.
+
+### Teammates do not see a new skill
+
+Confirm the skill is in project scope and committed to the shared branch, or
+packaged in a plugin they installed—not only in your user directory.
+
+### Skill changes did not apply
+
+Restart the session or run `/clear` after moving files; skill discovery happens
+at session boundaries for many configuration changes.
+
+### Plugin and project skills conflict
+
+Rename one skill, narrow its description, or move shared behavior into a single
+plugin bundle the team standardizes on.
+
+## Duplicate Check
+
+This guide is distinct from agent-skills-in-claude-agent-sdk-applications.mdx,
+which covers SDK embedding. It focuses on Claude Code directory layout for user,
+project, and plugin skill scopes.
+
+## References
+
+- Claude Code skills - https://code.claude.com/docs/en/skills
+- Claude Code plugins - https://code.claude.com/docs/en/plugins
+- Claude Code settings - https://code.claude.com/docs/en/settings
