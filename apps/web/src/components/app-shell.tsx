@@ -258,7 +258,7 @@ export function Footer() {
             <span aria-hidden className="text-ink-subtle/60">
               ·
             </span>
-            <Link to="/legal" className="hover:text-ink">
+            <Link to="/legal" hash="privacy" className="hover:text-ink">
               Privacy
             </Link>
             <span aria-hidden className="text-ink-subtle/60">
