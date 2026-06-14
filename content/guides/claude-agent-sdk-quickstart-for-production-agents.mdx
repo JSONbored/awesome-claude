@@ -1,0 +1,166 @@
+---
+title: "Claude Agent SDK Quickstart for Production Agents"
+slug: claude-agent-sdk-quickstart-for-production-agents
+category: guides
+description: >-
+  Production-oriented quickstart for the Claude Agent SDK: project bootstrap with agent-sdk-dev plugin, query loops, permissions, observability hooks, and deployment guardrails.
+cardDescription: Production quickstart for the Claude Agent SDK with bootstrap and guardrails.
+seoTitle: "Claude Agent SDK Quickstart for Production Agents"
+seoDescription: >-
+  Production-oriented quickstart for the Claude Agent SDK: project bootstrap with agent-sdk-dev plugin, query loops, permissions, observability hooks, and deployment guardrails.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1396
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1396"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to scaffold a production-ready Claude Agent SDK service with permissions, error handling, and observability from day one.
+prerequisites:
+  - "Node.js 18+ or Python 3.10+ for TypeScript or Python Agent SDK packages."
+  - "Anthropic API credentials or approved provider configuration for CI and prod."
+  - "A bounded first use case with explicit tool allowlists—not an open-ended chatbot."
+  - "Staging environment for soak testing before customer traffic."
+safetyNotes:
+  - "Production agents execute real tools; start with read-only allowlists and expand after review."
+  - "Do not mount host credentials into SDK processes—use a proxy pattern for secrets."
+  - "Unhandled tool exceptions can hang or crash query loops; return structured errors from handlers."
+privacyNotes:
+  - "Agent transcripts and tool I/O are sent to the model provider unless using a private deployment."
+  - "Log pipelines may retain prompts—scrub PII before shipping logs to third-party observability."
+  - "Multi-tenant hosts must isolate session storage per tenant."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/agent-sdk/quickstart"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-agent-sdk
+  - quickstart
+  - production
+  - agents
+  - developer-tools
+keywords:
+  - "Claude Agent SDK quickstart"
+  - "production agent SDK"
+  - "agent-sdk-dev plugin"
+  - "Claude Agent SDK query"
+  - "SDK production bootstrap"
+readingTime: 8
+difficultyScore: 50
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Start production Agent SDK work with the `/new-sdk-app` bootstrap, a narrow tool allowlist, structured error returns, and staging soak tests. Treat permissions, session storage, and observability as day-one requirements—not post-launch additions.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### SDK rename and package
+
+The Claude Code SDK is now the Claude Agent SDK (`@anthropic-ai/claude-agent-sdk` / `claude-agent-sdk`).
+
+### agent-sdk-dev bootstrap
+
+`plugins/README.md` ships `agent-sdk-dev` with `/new-sdk-app` and verifier agents for Python and TypeScript.
+
+### query loop contract
+
+Production services wrap `query` with timeouts, cancellation, and explicit `allowedTools` rather than permissive defaults.
+
+### Streaming and background tasks
+
+Recent fixes address streaming mode notification delivery and end-of-stream exceptions—pin SDK versions in prod.
+
+## Step-by-Step Implementation Guide
+
+1. **Install SDK package.** Add `@anthropic-ai/claude-agent-sdk` or `claude-agent-sdk` to your service template.
+
+2. **Bootstrap project.** Use `/new-sdk-app` from the agent-sdk-dev plugin or mirror its structure in your repo generator.
+
+3. **Define first agent.** Pick one workflow—ticket triage, doc sync, or CI summarizer—with a written success metric.
+
+4. **Set allowedTools.** Enumerate `mcp__*` and built-in tools explicitly; deny write tools until reviewed.
+
+5. **Add error handling.** Catch query failures, malformed parallel tool names, and provider 429s with retries and user-visible errors.
+
+6. **Wire observability.** Emit trace ids, turn counts, and tool latency metrics to your existing APM stack.
+
+7. **Stage and soak.** Run representative workloads for 24h with cost caps before production cutover.
+
+8. **Publish runbooks.** Document kill switches, model pins, and on-call steps for agent failures.
+
+## Production Bootstrap Checklist
+
+- [ ] {"task": "SDK installed", "description": "Pinned package version in lockfile"}
+- [ ] {"task": "Tools allowlisted", "description": "allowedTools matches first use case"}
+- [ ] {"task": "Errors handled", "description": "Failed tools return isError without crashing loop"}
+- [ ] {"task": "Metrics wired", "description": "Traces include session and tenant ids"}
+- [ ] {"task": "Staging soak done", "description": "24h test without runaway cost"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Hang on malformed tool name
+
+Upgrade SDK/CLI builds with parallel tool batch validation fixes.
+
+### Missing background notifications
+
+Streaming mode notification fixes require recent Agent SDK versions.
+
+### MCP servers dropped at startup
+
+Ensure Python `type:sdk` MCP servers in `--mcp-config` are not dropped during startup.
+
+### Runaway token usage
+
+Tighten allowedTools and add per-session turn limits in the host.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `plugins/README.md` lists `agent-sdk-dev` with `/new-sdk-app` and `agent-sdk-verifier-py` / `agent-sdk-verifier-ts` agents.
+- `CHANGELOG.md` notes the Claude Code SDK rename to Claude Agent SDK.
+- `CHANGELOG.md` fixed Agent SDK hang on malformed parallel tool names.
+- `CHANGELOG.md` fixed streaming background task notification delivery.
+- The root README links official documentation for setup and issue reporting via `/bug`.
+
+## Duplicate Check
+
+This guide is a production-oriented SDK quickstart. It complements claude-agent-development-framework.mdx for broader framework patterns and secure-deployment-for-claude-agent-sdk-applications.mdx for hardening details.
+
+## References
+
+- Agent SDK quickstart - https://code.claude.com/docs/en/agent-sdk/quickstart
+- Secure SDK deployment - secure-deployment-for-claude-agent-sdk-applications
+- Agent development framework - claude-agent-development-framework
