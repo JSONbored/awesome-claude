@@ -173,6 +173,17 @@ export const Route = createFileRoute("/browse")({
   component: Browse,
 });
 
+const TRUST_LEVELS: TrustLevel[] = ["trusted", "review", "limited", "blocked"];
+const SOURCE_STATUSES: SourceStatus[] = ["first-party", "source-backed", "external"];
+const PLATFORM_IDS: Platform[] = [
+  "claude-code",
+  "claude-desktop",
+  "cursor",
+  "vscode",
+  "cli",
+  "raycast",
+];
+
 function Browse() {
   const sp = Route.useSearch();
   const navigate = Route.useNavigate();
@@ -312,18 +323,31 @@ function Browse() {
     setShown(PAGE);
   }, [sp.q, sp.category, sp.trust, sp.source, sp.platform, sp.sort]);
 
-  // Per-axis result counts: count if this filter were the only one in its axis.
-  const axisCount = (axis: "category" | "trust" | "source" | "platform", value: string) => {
-    const merged = { ...sp, [axis]: value } as typeof sp;
-    return search({
-      q: merged.q,
-      categories: merged.category ? [merged.category as Category] : undefined,
-      trust: merged.trust ? [merged.trust as TrustLevel] : undefined,
-      source: merged.source ? [merged.source as SourceStatus] : undefined,
-      platforms: merged.platform ? [merged.platform as Platform] : undefined,
-      sort: merged.sort,
-    }).length;
-  };
+  // Per-axis facet counts: how many results if this value were the only filter
+  // in its axis. Memoized on the search params so the ~23 search() passes run
+  // once per filter change instead of on every render (compare toggle, hover…).
+  const facetCounts = useMemo(() => {
+    const countFor = (axis: "category" | "trust" | "source" | "platform", value: string) => {
+      const merged = { ...sp, [axis]: value } as typeof sp;
+      return search({
+        q: merged.q,
+        categories: merged.category ? [merged.category as Category] : undefined,
+        trust: merged.trust ? [merged.trust as TrustLevel] : undefined,
+        source: merged.source ? [merged.source as SourceStatus] : undefined,
+        platforms: merged.platform ? [merged.platform as Platform] : undefined,
+        sort: merged.sort,
+      }).length;
+    };
+    return {
+      category: Object.fromEntries(CATEGORIES.map((c) => [c.id, countFor("category", c.id)])),
+      trust: Object.fromEntries(TRUST_LEVELS.map((t) => [t, countFor("trust", t)])),
+      source: Object.fromEntries(SOURCE_STATUSES.map((s) => [s, countFor("source", s)])),
+      platform: Object.fromEntries(PLATFORM_IDS.map((p) => [p, countFor("platform", p)])),
+    } as Record<string, Record<string, number>>;
+  }, [sp]);
+
+  const axisCount = (axis: "category" | "trust" | "source" | "platform", value: string) =>
+    facetCounts[axis]?.[value] ?? 0;
 
   // Focus search on "/" key.
   const searchRef = React.useRef<HTMLInputElement>(null);
@@ -432,7 +456,7 @@ function Browse() {
 
             <FilterSection title="Trust">
               <FilterChipGroup label="Filter by trust level">
-                {(["trusted", "review", "limited", "blocked"] as TrustLevel[]).map((t) => (
+                {TRUST_LEVELS.map((t) => (
                   <FilterChip
                     key={t}
                     active={sp.trust === t}
@@ -447,7 +471,7 @@ function Browse() {
 
             <FilterSection title="Source">
               <FilterChipGroup label="Filter by source status">
-                {(["first-party", "source-backed", "external"] as SourceStatus[]).map((s) => (
+                {SOURCE_STATUSES.map((s) => (
                   <FilterChip
                     key={s}
                     active={sp.source === s}
@@ -462,16 +486,7 @@ function Browse() {
 
             <FilterSection title="Platform">
               <FilterChipGroup label="Filter by platform">
-                {(
-                  [
-                    "claude-code",
-                    "claude-desktop",
-                    "cursor",
-                    "vscode",
-                    "cli",
-                    "raycast",
-                  ] as Platform[]
-                ).map((p) => (
+                {PLATFORM_IDS.map((p) => (
                   <FilterChip
                     key={p}
                     active={sp.platform === p}
