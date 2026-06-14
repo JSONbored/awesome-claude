@@ -1,0 +1,230 @@
+name: UI Preview Deploy
+
+# Deploy half of the fork-safe per-PR preview pipeline (mirrors gittensory). Triggered when "UI Preview
+# Build" completes. Because it runs on `workflow_run`, GitHub always executes the workflow definition
+# from the DEFAULT BRANCH (never the fork's), so it is trusted and may use secrets. It downloads the
+# built `dist` artifact (it never checks out or runs PR/fork source — it only uploads the already-built
+# bundle), deploys a transient preview version, and records the GitHub Deployment + status that Reviewbot
+# reads to render the "after" screenshot.
+#
+# Security boundary — TWO layers:
+#   1. Build-time: the BUILD ran fork code with NO secrets; this DEPLOY has secrets but runs NO fork code
+#      (wrangler only uploads the bundle — fork code executes solely inside the isolated preview when the
+#      URL is later visited).
+#   2. Run-time: the trusted preview config below binds the DEV database (heyclaude-dev-site-state), never
+#      production (heyclaude-votes). So fork-authored code running at the preview URL can never read/write
+#      production data. The config is written HERE (trusted), never taken from the PR, so a fork cannot
+#      change the bindings/routes.
+#
+# Required repo secrets:
+#   CLOUDFLARE_API_TOKEN   — token with "Workers Scripts:Edit" on the account
+#   CLOUDFLARE_ACCOUNT_ID  — the Cloudflare account id that owns heyclaude-prod
+
+on:
+  workflow_run:
+    workflows: ["UI Preview Build"]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read # download the build artifact from the triggering run
+  deployments: write # record the preview Deployment Reviewbot reads
+  pull-requests: read # resolve the (often fork) PR for this build by matching head SHA
+
+concurrency:
+  group: ui-preview-deploy-${{ github.event.workflow_run.head_sha }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy UI preview version
+    environment:
+      name: preview
+      url: ${{ steps.upload.outputs.preview_url }}
+    if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check Cloudflare secrets
+        id: cfg
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set — skipping preview deploy (Reviewbot shows before-only)."
+          fi
+
+      - name: Setup Node
+        if: steps.cfg.outputs.ready == 'true'
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22
+
+      - name: Install trusted Wrangler
+        if: steps.cfg.outputs.ready == 'true'
+        run: npm install --global wrangler@4.100.0
+
+      # Cross-run download: the artifact lives on the triggering build run, not this one.
+      - name: Download built UI artifact
+        if: steps.cfg.outputs.ready == 'true'
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+        with:
+          name: ui-preview-dist
+          path: preview-dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      # The artifact was produced by the UNTRUSTED build (fork code). Validate before handing to wrangler:
+      # reject symlinks (path-traversal / exfil vector), require the expected SSR build structure, and
+      # allowlist file extensions so a malicious build can't smuggle scripts/binaries into the deploy.
+      - name: Validate downloaded artifact
+        if: steps.cfg.outputs.ready == 'true'
+        run: |
+          set -euo pipefail
+          cd preview-dist
+          symlinks="$(find . -type l)"
+          if [ -n "$symlinks" ]; then
+            echo "::error::Artifact contains symlinks — refusing to deploy:"; printf '%s\n' "$symlinks"; exit 1
+          fi
+          test -f server/index.mjs || { echo "::error::artifact missing server/index.mjs"; exit 1; }
+          test -d client || { echo "::error::artifact missing client/ assets dir"; exit 1; }
+          unexpected="$(find . -regextype posix-extended -type f \
+            -not -iregex '.*\.(mjs|js|cjs|map|json|css|html?|txt|svg|png|jpe?g|gif|webp|avif|ico|bmp|woff2?|ttf|otf|eot|wasm|xml|webmanifest|md|csv|zip|wgsl|glb|gltf)$' \
+            -not -name '_headers' -not -name '_redirects' -not -name '_routes.json' -not -name '.assetsignore')"
+          if [ -n "$unexpected" ]; then
+            echo "::error::Artifact contains unexpected file types — refusing to deploy:"; printf '%s\n' "$unexpected"; exit 1
+          fi
+          echo "Artifact validated: no symlinks, expected SSR structure, allowlisted file types only."
+
+      # The Wrangler config is written HERE (trusted) — never taken from the PR — so a fork cannot control
+      # bindings or routes. It points at the downloaded built bundle. It deliberately OMITS the production
+      # custom-domain route (versions upload creates a 0%-traffic preview at a workers.dev URL and applies
+      # no routes) AND binds the DEV database, never prod — so fork-authored preview code can never reach
+      # production data. Do not add a `routes` block or the prod database here.
+      - name: Write trusted preview Wrangler config (dev-bound)
+        if: steps.cfg.outputs.ready == 'true'
+        run: |
+          cat > preview-dist/server/wrangler.preview.json <<'JSON'
+          {
+            "compatibility_date": "2026-05-29",
+            "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+            "name": "heyclaude-prod",
+            "workers_dev": true,
+            "preview_urls": true,
+            "placement": { "mode": "smart" },
+            "observability": { "enabled": true },
+            "main": "index.mjs",
+            "assets": { "binding": "ASSETS", "directory": "../client" },
+            "no_bundle": true,
+            "rules": [{ "type": "ESModule", "globs": ["**/*.mjs", "**/*.js"] }],
+            "vars": {
+              "NEXT_PUBLIC_DISCORD_URL": "https://discord.com/invite/Ax3Py4YDrq",
+              "NEXT_PUBLIC_TWITTER_URL": "https://x.com/jsonbored",
+              "NEXT_PUBLIC_POLAR_FREE_JOB_URL": "/jobs/post?tier=free",
+              "NEXT_PUBLIC_POLAR_SPONSORED_JOB_URL": "/jobs/post?tier=sponsored",
+              "NEXT_PUBLIC_POLAR_FEATURED_JOB_URL": "/jobs/post?tier=featured",
+              "NEXT_PUBLIC_POLAR_JOB_BOARD_URL": "/jobs/post?tier=standard",
+              "NEXT_PUBLIC_POLAR_FEATURED_JOB_90_URL": "/jobs/post?tier=featured",
+              "NEXT_PUBLIC_POLAR_SPONSORED_JOB_90_URL": "/jobs/post?tier=sponsored",
+              "VITE_SUBMISSION_GATE_URL": "https://submission-gate.heyclau.de"
+            },
+            "ratelimits": [
+              { "name": "API_REGISTRY_RATE_LIMIT", "namespace_id": "1002001", "simple": { "limit": 600, "period": 60 } },
+              { "name": "API_DYNAMIC_RATE_LIMIT", "namespace_id": "1002002", "simple": { "limit": 180, "period": 60 } },
+              { "name": "API_STRICT_RATE_LIMIT", "namespace_id": "1002003", "simple": { "limit": 60, "period": 60 } },
+              { "name": "API_MCP_RATE_LIMIT", "namespace_id": "1002004", "simple": { "limit": 60, "period": 60 } }
+            ],
+            "d1_databases": [
+              { "binding": "SITE_DB", "database_name": "heyclaude-dev-site-state", "database_id": "e2e92b77-b5b6-419f-90fe-25a8537d6c12" }
+            ]
+          }
+          JSON
+
+      - name: Upload preview version
+        id: upload
+        if: steps.cfg.outputs.ready == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -o pipefail
+          out=$(wrangler versions upload --config preview-dist/server/wrangler.preview.json 2>&1 | tee /dev/stderr)
+          # Take a workers.dev URL that belongs to the heyclaude-prod worker, so any other URL in the logs
+          # (or a changed output format) can't be recorded as the preview by mistake. Tolerant of the
+          # version-alias prefix (`<alias>-heyclaude-prod.<sub>.workers.dev`).
+          url=$(printf '%s\n' "$out" | grep -oiE 'https://[a-z0-9.-]+\.workers\.dev' | grep -i 'heyclaude-prod' | head -n1)
+          if [ -z "$url" ]; then
+            echo "::error::Could not parse an expected heyclaude-prod preview URL from wrangler output"; exit 1
+          fi
+          echo "preview_url=$url" >> "$GITHUB_OUTPUT"
+          echo "Preview: $url"
+
+      - name: Record deployment for Reviewbot
+        if: steps.cfg.outputs.ready == 'true' && steps.upload.outputs.preview_url != ''
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const url = ${{ toJSON(steps.upload.outputs.preview_url) }};
+            const sha = context.payload.workflow_run.head_sha; // GitHub-set; never fork-supplied
+            const slug = `${context.repo.owner}/${context.repo.repo}`;
+            // Resolve the PR for this build. Both signals below are EMPTY for fork PRs: workflow_run
+            // .pull_requests is empty for cross-repo runs, and the commit->PR association API doesn't index
+            // a fork-head commit from the base repo. So we ALSO match the open PR whose head is this exact
+            // build SHA — head.sha is GitHub-set (refs/pull/N/head), safe to trust even for forks.
+            let prNumber = context.payload.workflow_run.pull_requests?.[0]?.number;
+            if (!prNumber) {
+              const assoc = await github.rest.repos.listPullRequestsAssociatedWithCommit({ owner: context.repo.owner, repo: context.repo.repo, commit_sha: sha });
+              prNumber = assoc.data.find((p) => p.state === "open" && p.base.repo.full_name === slug)?.number;
+            }
+            if (!prNumber) {
+              const openPrs = await github.paginate(github.rest.pulls.list, { owner: context.repo.owner, repo: context.repo.repo, state: "open", per_page: 100 });
+              prNumber = openPrs.find((p) => p.head.sha === sha)?.number;
+            }
+            if (!prNumber) { core.setFailed(`Could not resolve an open PR for ${sha} — skipping deployment record.`); return; }
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner, repo: context.repo.repo, ref: sha,
+              environment: `preview/pr-${prNumber}`, auto_merge: false, required_contexts: [],
+              transient_environment: true, description: "heyclau.de UI preview",
+              payload: JSON.stringify({ pr: prNumber, head_sha: sha }),
+            });
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner, repo: context.repo.repo, deployment_id: deployment.data.id,
+              state: "success", environment: `preview/pr-${prNumber}`, environment_url: url, description: "Preview ready",
+            });
+            core.notice(`Preview deployment recorded for PR #${prNumber}: ${url}`);
+
+      - name: Record FAILED deployment for Reviewbot
+        # An earlier step failed (artifact rejected, wrangler errored, etc.) — record a `failure` status so
+        # Reviewbot flips the "after" cell from an eternal spinner to a terminal "preview deploy failed"
+        # card. Gated on CF creds so a credential-less skip records nothing.
+        if: failure() && steps.cfg.outputs.ready == 'true'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const sha = context.payload.workflow_run.head_sha;
+            const slug = `${context.repo.owner}/${context.repo.repo}`;
+            let prNumber = context.payload.workflow_run.pull_requests?.[0]?.number;
+            if (!prNumber) {
+              const assoc = await github.rest.repos.listPullRequestsAssociatedWithCommit({ owner: context.repo.owner, repo: context.repo.repo, commit_sha: sha });
+              prNumber = assoc.data.find((p) => p.state === "open" && p.base.repo.full_name === slug)?.number;
+            }
+            if (!prNumber) {
+              const openPrs = await github.paginate(github.rest.pulls.list, { owner: context.repo.owner, repo: context.repo.repo, state: "open", per_page: 100 });
+              prNumber = openPrs.find((p) => p.head.sha === sha)?.number;
+            }
+            if (!prNumber) { core.warning(`Preview deploy failed but could not resolve a PR for ${sha}.`); return; }
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner, repo: context.repo.repo, ref: sha,
+              environment: `preview/pr-${prNumber}`, auto_merge: false, required_contexts: [],
+              transient_environment: true, description: "heyclau.de UI preview (failed)",
+              payload: JSON.stringify({ pr: prNumber, head_sha: sha }),
+            });
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner, repo: context.repo.repo, deployment_id: deployment.data.id,
+              state: "failure", environment: `preview/pr-${prNumber}`, description: "Preview deploy failed",
+            });
+            core.notice(`Recorded FAILED preview deployment for PR #${prNumber}.`);

@@ -1,0 +1,63 @@
+name: UI Preview Build
+
+# Build half of the fork-safe per-PR preview pipeline (mirrors gittensory). Runs for EVERY PR —
+# including forks — and deliberately WITHOUT secrets (fork PRs get a read-only token): it only produces
+# the built `dist` artifact. The trusted `ui-preview-deploy.yml` (triggered on workflow_run) then deploys
+# that artifact WITH secrets and records the GitHub Deployment that Reviewbot reads for the "after"
+# screenshot.
+#
+# Why split: a preview requires building the PR's UI, and building runs the PR's (possibly fork-authored)
+# code. Doing that here with no secret access — and deploying the resulting bundle in a separate trusted
+# step that never executes fork code — is the standard way to give fork PRs previews without exposing
+# Cloudflare credentials to untrusted code.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "apps/web/**"
+      - "packages/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-preview-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build UI preview artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+
+      - name: Setup Node
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build UI
+        run: pnpm --filter web build
+
+      # The trusted deploy workflow downloads this by name + run-id. It contains only the built bundle
+      # (server/ + client/) — no secrets, no source needed downstream.
+      - name: Upload built UI artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ui-preview-dist
+          path: apps/web/dist
+          if-no-files-found: error
+          retention-days: 1
