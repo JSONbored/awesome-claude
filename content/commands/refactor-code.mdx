@@ -50,6 +50,11 @@ hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
 commandSyntax: "/refactor [options] <file_or_selection>"
+safetyNotes:
+  - Reads and modifies source code files in your working directory. Use the --dry-run instruction to preview proposed changes before applying, and the --backup instruction to create a backup first.
+  - Run your test suite before and after refactoring to catch regressions. This command targets the specified file, function, or selection and does not perform repository-wide changes unless explicitly instructed.
+privacyNotes:
+  - Operates on local source code files in your project. File contents are processed by Claude within your session. The code examples in this entry (such as user.email) are illustrative — no sample data is sent to external services.
 ---
 
 The `/refactor` command provides intelligent code refactoring capabilities with multiple strategies and safety checks.
