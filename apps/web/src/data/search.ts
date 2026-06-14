@@ -1,5 +1,12 @@
 import { ENTRIES } from "./entries";
-import type { Category, Entry, Platform, SourceStatus, TrustLevel } from "@/types/registry";
+import type {
+  Category,
+  Entry,
+  EntryRelationType,
+  Platform,
+  SourceStatus,
+  TrustLevel,
+} from "@/types/registry";
 
 export interface SearchFilters {
   q?: string;
@@ -89,4 +96,45 @@ export function related(entry: Entry, limit = 4): Entry[] {
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map((x) => x.e);
+}
+
+// Order for surfacing relation groups (most decision-relevant first). "duplicate" is excluded.
+const RELATION_ORDER: EntryRelationType[] = [
+  "alternative",
+  "works-with",
+  "complementary",
+  "extends",
+  "prerequisite",
+  "same-project",
+  "same-ecosystem",
+  "collection-member",
+  "related",
+];
+
+// Group an entry's graph relations by their typed relation, so the entry page can render labeled
+// "Works with" / "Alternatives" / "Prerequisites" sections. Returns [] when there's no graph
+// relation data (the caller falls back to the flat related() grid).
+export function relatedGroups(
+  entry: Entry,
+  perGroup = 6,
+): { relation: EntryRelationType; entries: Entry[] }[] {
+  const byRelation = new Map<EntryRelationType, Entry[]>();
+  for (const rel of entry.relatedEntries ?? []) {
+    if (rel.relation === "duplicate") continue;
+    const candidate = ENTRIES.find((e) => e.category === rel.category && e.slug === rel.slug);
+    if (!candidate) continue;
+    if (candidate.category === entry.category && candidate.slug === entry.slug) continue;
+    const list = byRelation.get(rel.relation) ?? [];
+    if (!byRelation.has(rel.relation)) byRelation.set(rel.relation, list);
+    if (
+      list.length < perGroup &&
+      !list.some((e) => e.category === candidate.category && e.slug === candidate.slug)
+    ) {
+      list.push(candidate);
+    }
+  }
+  return RELATION_ORDER.map((relation) => ({
+    relation,
+    entries: byRelation.get(relation) ?? [],
+  })).filter((g) => g.entries.length > 0);
 }

@@ -21,7 +21,7 @@ export function ComparisonTray() {
         <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
           {items.map((e) => (
             <span
-              key={e.slug}
+              key={`${e.category}/${e.slug}`}
               className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 text-xs"
             >
               <ReadinessDot entry={e} />

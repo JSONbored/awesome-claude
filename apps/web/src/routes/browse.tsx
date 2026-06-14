@@ -813,19 +813,19 @@ function Browse() {
               {sp.view === "grid" ? (
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {results.slice(0, shown).map((e) => (
-                    <ResourceCard key={e.slug} entry={e} variant="grid" />
+                    <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
                   ))}
                 </div>
               ) : sp.view === "compact" ? (
                 <div className="mt-2 overflow-hidden rounded-lg border border-border bg-surface">
                   {results.slice(0, shown).map((e, i) => (
-                    <ResourceCard key={e.slug} entry={e} variant="compact" rank={i + 1} />
+                    <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="compact" rank={i + 1} />
                   ))}
                 </div>
               ) : (
                 <div className="mt-2 overflow-hidden rounded-lg border border-border bg-surface">
                   {results.slice(0, shown).map((e) => (
-                    <ResourceCard key={e.slug} entry={e} />
+                    <ResourceCard key={`${e.category}/${e.slug}`} entry={e} />
                   ))}
                 </div>
               )}
