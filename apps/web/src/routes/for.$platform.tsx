@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { CATEGORIES, PLATFORM_LABEL, type Platform } from "@/types/registry";
@@ -12,9 +13,8 @@ import { ogImageUrl } from "@/lib/og-image";
 
 const PLATFORM_IDS = new Set(Object.keys(PLATFORM_LABEL));
 
-function platformEntries(platform: string) {
-  return search({ platforms: [platform as Platform] });
-}
+// Cached per render pass so head() and the component don't each re-run the search.
+const platformEntries = cache((platform: string) => search({ platforms: [platform as Platform] }));
 
 export const Route = createFileRoute("/for/$platform")({
   loader: ({ params }) => {
@@ -139,11 +139,11 @@ function PlatformPage() {
               {categoryLabels[section.category.id] ?? section.category.label}
             </h2>
             <Link
-              to="/$category"
-              params={{ category: section.category.id }}
+              to="/for/$platform/$category"
+              params={{ platform, category: section.category.id }}
               className="story-link text-sm font-medium text-ink"
             >
-              All {categoryLabels[section.category.id] ?? section.category.label} →
+              All {categoryLabels[section.category.id] ?? section.category.label} for {label} →
             </Link>
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

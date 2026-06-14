@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { TOOL_DEFINITIONS } from "@heyclaude/mcp/registry";
+import { TOOL_DEFINITIONS, RESOURCE_TEMPLATES } from "@heyclaude/mcp/registry";
 import { siteConfig } from "@/lib/site";
 import { getIntegration } from "@/data/integrations";
 import { applySecurityHeaders } from "@/lib/security-headers";
@@ -16,8 +16,14 @@ function serverCard() {
     description:
       "Search and inspect the HeyClaude directory of Claude Code MCP servers, agents, skills, hooks, commands, rules, collections, and tools.",
     transport: { type: "streamable-http", endpoint: `${base}/api/mcp` },
-    capabilities: { tools: {} },
+    capabilities: { tools: {}, resources: {} },
     tools: TOOL_DEFINITIONS.map((tool) => ({ name: tool.name, description: tool.description })),
+    resourceTemplates: RESOURCE_TEMPLATES.map((resource) => ({
+      uriTemplate: resource.uriTemplate,
+      name: resource.name,
+      description: resource.description,
+      mimeType: resource.mimeType,
+    })),
     documentation: `${base}/api-docs`,
     homepage: base,
   };

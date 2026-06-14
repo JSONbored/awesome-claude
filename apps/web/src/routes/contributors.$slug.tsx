@@ -4,6 +4,9 @@ import { getContributor, CONTRIBUTORS } from "@/data/contributors";
 import { ENTRIES } from "@/data/entries";
 import { ResourceCard } from "@/components/resource-card";
 import { Monogram } from "@/components/monogram";
+import { absoluteUrl } from "@/lib/seo";
+import { stringifyJsonLd } from "@/lib/json-ld";
+import { ogImageUrl } from "@/lib/og-image";
 
 export const Route = createFileRoute("/contributors/$slug")({
   loader: ({ params }) => {
@@ -11,21 +14,63 @@ export const Route = createFileRoute("/contributors/$slug")({
     if (!contributor) throw notFound();
     return { contributor };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `${loaderData.contributor.name} — HeyClaude contributor` },
-          {
-            name: "description",
-            content:
-              loaderData.contributor.bio ??
-              `Resources contributed by ${loaderData.contributor.name}.`,
-          },
-          { property: "og:title", content: `${loaderData.contributor.name} — HeyClaude` },
-          { property: "og:description", content: loaderData.contributor.bio ?? "" },
-        ]
-      : [],
-  }),
+  head: ({ params, loaderData }) => {
+    const c = loaderData?.contributor;
+    if (!c) return { meta: [{ title: "Contributor — HeyClaude" }] };
+    const url = absoluteUrl(`/contributors/${params.slug}`);
+    const name = c.name ?? c.handle ?? params.slug;
+    const description =
+      c.bio ?? `Resources contributed to the HeyClaude registry by ${name} (@${c.handle}).`;
+    const ogImage = ogImageUrl({ title: name, eyebrow: "Contributor", description });
+    const person = {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": `${url}#person`,
+      name,
+      url,
+      ...(c.handle ? { alternateName: `@${c.handle}` } : {}),
+      ...(c.bio ? { description: c.bio } : {}),
+      ...(c.github ? { sameAs: [c.github] } : {}),
+    };
+    const profilePage = {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      url,
+      mainEntity: { "@id": `${url}#person` },
+    };
+    const breadcrumbs = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Contributors",
+          item: absoluteUrl("/contributors"),
+        },
+        { "@type": "ListItem", position: 2, name, item: url },
+      ],
+    };
+    return {
+      meta: [
+        { title: `${name} — HeyClaude contributor` },
+        { name: "description", content: description },
+        { property: "og:title", content: `${name} — HeyClaude` },
+        { property: "og:description", content: description },
+        { property: "og:url", content: url },
+        { property: "og:image", content: ogImage },
+        { property: "og:type", content: "profile" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: ogImage },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        { type: "application/ld+json", children: stringifyJsonLd(person) },
+        { type: "application/ld+json", children: stringifyJsonLd(profilePage) },
+        { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
+      ],
+    };
+  },
   component: ContributorPage,
 });
 

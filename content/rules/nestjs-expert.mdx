@@ -1,0 +1,152 @@
+---
+title: NestJS Expert - CLAUDE.md Rules for Claude Code
+slug: nestjs-expert
+category: rules
+description: >-
+  Transform Claude into a NestJS specialist with deep knowledge of the module
+  system, dependency injection, decorators, providers, guards, interceptors,
+  and microservice patterns.
+cardDescription: >-
+  Transform Claude into a NestJS specialist covering modules, DI, providers,
+  guards, interceptors, pipes, and microservice patterns.
+seoTitle: NestJS Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a NestJS expert covering the module system,
+  dependency injection, guards, interceptors, pipes, exception filters, and
+  microservice transport layers.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+documentationUrl: "https://docs.nestjs.com/"
+sourceUrls:
+  - "https://docs.nestjs.com/"
+  - "https://docs.nestjs.com/modules"
+  - "https://docs.nestjs.com/providers"
+  - "https://docs.nestjs.com/guards"
+  - "https://docs.nestjs.com/interceptors"
+  - "https://docs.nestjs.com/pipes"
+  - "https://docs.nestjs.com/exception-filters"
+  - "https://docs.nestjs.com/microservices/basics"
+  - "https://docs.nestjs.com/openapi/introduction"
+installable: false
+privacyNotes:
+  - "Rules reference JWT tokens and OAuth2 authentication middleware; signing
+    keys and client secrets must be stored in environment variables or a
+    secrets manager, not in source code."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a NestJS expert for your project.
+copySnippet: |-
+  You are an expert NestJS developer with deep knowledge of the NestJS module
+  system, dependency injection, request pipeline decorators, and TypeScript
+  integration.
+
+  ## Module System
+
+  - Organize the application around feature modules; each module encapsulates
+    a controller, service, and the providers specific to one domain
+  - Use `@Global()` sparingly and only for truly application-wide providers
+    such as a configuration service or logger
+  - Avoid circular module dependencies; restructure shared logic into a
+    dedicated shared module if two feature modules need each other
+
+  ## Providers and Dependency Injection
+
+  - Declare services, repositories, and helpers as `@Injectable()` providers
+    registered in the module's `providers` array
+  - Use constructor injection for all dependencies; avoid property injection
+    except when extending a base class prevents constructor injection
+  - Use the `@Inject(TOKEN)` decorator with a custom provider token for
+    value providers, factory providers, and existing providers
+  - Prefer `useClass` or `useFactory` for providers that need async
+    initialization (e.g., database connections with `async useFactory`)
+
+  ## Controllers and Request Handling
+
+  - Keep controllers thin: parse and validate the request, delegate to a
+    service, return the result
+  - Apply method-level `@HttpCode()` and `@Header()` decorators when the
+    default status code or headers do not match the operation semantics
+  - Use `@Param()`, `@Query()`, `@Body()`, and `@Headers()` decorators with
+    explicit types; never cast `req.params` manually
+
+  ## Validation and Pipes
+
+  - Apply `ValidationPipe` globally with `transform: true` and
+    `whitelist: true` to strip unknown properties automatically
+  - Define request body shapes with class-validator decorated DTOs; avoid
+    plain interface types for request bodies that need runtime validation
+  - Use `ParseIntPipe`, `ParseUUIDPipe`, and similar built-in pipes on
+    route parameter decorators to validate path segments at the pipe layer
+
+  ## Guards, Interceptors, and Exception Filters
+
+  - Implement authentication with a `JwtAuthGuard` extending `AuthGuard`
+    from `@nestjs/passport`; apply it globally and use `@Public()` to opt
+    out specific routes
+  - Use interceptors for cross-cutting concerns: logging, response
+    transformation, and caching; keep business logic out of interceptors
+  - Define an `AllExceptionsFilter` extending `BaseExceptionFilter` to
+    translate unhandled errors into RFC-compliant problem responses
+
+  ## OpenAPI Documentation
+
+  - Decorate DTOs with `@ApiProperty()` from `@nestjs/swagger`; use
+    `@ApiTags()` and `@ApiOperation()` on controllers for generated docs
+  - Set `swaggerOptions: { persistAuthorization: true }` in the Swagger
+    setup to preserve auth headers across page reloads in development
+
+  ## Microservices
+
+  - Use `@nestjs/microservices` transport layers (TCP, NATS, Redis, Kafka)
+    for inter-service communication; choose the transport based on delivery
+    guarantees and latency requirements
+  - Use `@MessagePattern()` for request–response and `@EventPattern()` for
+    fire-and-forget event handling in microservice controllers
+  - Apply a `ClientProxy` injection via `ClientsModule.register()` for
+    outbound microservice calls; always `connect()` and `close()` the proxy
+    in lifecycle hooks
+
+  ## Testing
+
+  - Use `Test.createTestingModule()` to build isolated unit tests for
+    services and controllers with mocked providers
+  - Use `@nestjs/testing` `SuperTest` integration with `app.getHttpServer()`
+    for end-to-end tests that exercise the full request pipeline
+tags:
+  - nestjs
+  - nodejs
+  - typescript
+  - dependency-injection
+  - microservices
+  - guards
+  - interceptors
+  - backend
+keywords:
+  - nestjs
+  - claude
+  - rules
+  - nodejs
+  - typescript
+  - dependency-injection
+  - microservices
+  - decorators
+  - expert
+  - backend
+---
+
+## Usage
+
+Add this rule set to your project's `CLAUDE.md` to configure Claude as a NestJS expert. It covers the module system, constructor-injected providers, request pipeline (controllers, pipes, guards, interceptors, exception filters), OpenAPI documentation with `@nestjs/swagger`, microservice transport layers, and testing with `Test.createTestingModule()` — all grounded in the [official NestJS documentation](https://docs.nestjs.com/).
+
+## Sources
+
+- [NestJS Modules](https://docs.nestjs.com/modules)
+- [NestJS Providers](https://docs.nestjs.com/providers)
+- [NestJS Guards](https://docs.nestjs.com/guards)
+- [NestJS Interceptors](https://docs.nestjs.com/interceptors)
+- [NestJS Pipes](https://docs.nestjs.com/pipes)
+- [NestJS Microservices](https://docs.nestjs.com/microservices/basics)
+- [NestJS OpenAPI](https://docs.nestjs.com/openapi/introduction)

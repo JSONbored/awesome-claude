@@ -26,6 +26,8 @@ export const GET = createApiHandler("registry.feed", async ({ request }) => {
       integrity: "/api/registry/integrity?artifact={artifact}&hash={sha256}",
       entry: "/api/registry/entries/{category}/{slug}",
       entryLlms: "/api/registry/entries/{category}/{slug}/llms",
+      directoryIndex: "/data/directory-index.json",
+      searchIndex: "/data/search-index.json",
       jobs: "/api/jobs?limit=100",
       ecosystemFeed: "/data/ecosystem-feed.json",
       mcpRegistryFeed: "/data/mcp-registry-feed.json",

@@ -30,9 +30,11 @@ async function fetchMeta(pkg: string): Promise<NpmMeta> {
   const [latestRes, dlRes] = await Promise.allSettled([
     fetch(`https://registry.npmjs.org/${encodeURIComponent(pkg)}/latest`, {
       headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(5000),
     }),
     fetch(`https://api.npmjs.org/downloads/point/last-week/${encodeURIComponent(pkg)}`, {
       headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(5000),
     }),
   ]);
 
@@ -52,6 +54,7 @@ async function fetchMeta(pkg: string): Promise<NpmMeta> {
   try {
     const packumentRes = await fetch(`https://registry.npmjs.org/${encodeURIComponent(pkg)}`, {
       headers: { accept: "application/vnd.npm.install-v1+json" },
+      signal: AbortSignal.timeout(5000),
     });
     if (packumentRes.ok) {
       const p = (await packumentRes.json()) as { time?: Record<string, string> };
@@ -104,7 +107,8 @@ export const Route = createApiFileRoute("/api/public/npm/$")({
             },
           });
         } catch (err) {
-          return new Response(JSON.stringify({ error: (err as Error).message }), {
+          console.error("npm proxy error", err);
+          return new Response(JSON.stringify({ error: "Upstream metadata unavailable" }), {
             status: 502,
             headers: { "Content-Type": "application/json" },
           });

@@ -1,8 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, CalendarDays, User } from "lucide-react";
+import { CalendarDays, User } from "lucide-react";
 import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entries";
 import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
@@ -84,12 +85,7 @@ function BestDetail() {
 
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
-      <Link
-        to="/best"
-        className="inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
-      >
-        <ArrowLeft className="h-4 w-4" /> All best lists
-      </Link>
+      <Breadcrumbs home items={[{ label: "Best lists", to: "/best" }, { label: list.title }]} />
 
       <div className="mt-6 eyebrow">
         {list.eyebrow} · {list.category} · {resolved.length} picks
