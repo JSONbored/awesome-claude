@@ -182,6 +182,63 @@ export function buildWelcomeEmail(opts: { siteUrl: string }): {
   return { subject, html: emailShell({ preheader: "Welcome — your weekly Claude brief lands Sundays.", inner }), text };
 }
 
+/**
+ * Acknowledgment email (transactional) sent to someone who submits a commercial
+ * listing / job / sponsorship inquiry, confirming we received it and what happens
+ * next. Low volume, expected by the recipient — not marketing.
+ */
+export function buildListingLeadAckEmail(opts: {
+  siteUrl: string;
+  contactName: string;
+  listingTitle: string;
+  kind: string;
+}): { subject: string; html: string; text: string } {
+  const base = trimUrl(opts.siteUrl);
+  const host = escapeHtml(siteHostOf(opts.siteUrl));
+  const name = escapeHtml(opts.contactName.trim().split(/\s+/)[0] || "there");
+  const title = escapeHtml(opts.listingTitle.trim() || "your submission");
+  const kindLabel =
+    opts.kind === "job"
+      ? "job listing"
+      : opts.kind === "claim"
+        ? "listing claim"
+        : opts.kind === "tool"
+          ? "tool listing"
+          : "listing";
+  const ctaHref = opts.kind === "job" ? `${base}/jobs/post` : `${base}/advertise`;
+  const ctaLabel = opts.kind === "job" ? "See job listing options" : "See listing options";
+  const subject = "We got your HeyClaude inquiry";
+
+  const inner = `<tr><td style="padding:32px 30px 8px;">
+            ${eyebrow("HeyClaude")}
+            <h1 style="margin:14px 0 0;font-family:${DISPLAY};font-weight:600;font-size:26px;letter-spacing:-0.02em;line-height:1.1;color:${THEME.ink};">Thanks, ${name} &mdash; we've <span style="background:${THEME.accent};padding:0 6px;border-radius:2px;">got it</span>.</h1>
+            <p style="margin:14px 0 0;font-family:${BODY};font-size:15px;line-height:1.6;color:${THEME.muted};">We received your ${kindLabel} inquiry for <strong style="color:${THEME.ink};">${title}</strong>. A maintainer reviews every submission by hand &mdash; usually within a couple of days &mdash; and we'll reply straight to this email with next steps.</p>
+          </td></tr>
+          <tr><td style="padding:20px 30px 4px;">${primaryButton(ctaHref, ctaLabel)}</td></tr>
+          <tr><td style="padding:12px 30px 28px;">
+            <p style="margin:0;font-family:${BODY};font-size:13px;line-height:1.7;color:${THEME.subtle};">In the meantime, browse the directory at <a href="${base}/browse" style="color:${THEME.ink};">${host}/browse</a>.</p>
+            <p style="margin:14px 0 0;font-family:${BODY};font-size:12px;line-height:1.6;color:${THEME.subtle};">Didn't submit this? You can ignore this email. &middot; ${host}</p>
+          </td></tr>`;
+
+  const text = [
+    "Thanks — we got your HeyClaude inquiry",
+    "",
+    `We received your ${kindLabel} inquiry for ${opts.listingTitle.trim() || "your submission"}. A maintainer reviews every submission by hand — usually within a couple of days — and we'll reply straight to this email with next steps.`,
+    "",
+    `${ctaLabel}: ${ctaHref}`,
+    `Browse the directory: ${base}/browse`,
+    "",
+    "Didn't submit this? You can ignore this email.",
+    host,
+  ].join("\n");
+
+  return {
+    subject,
+    html: emailShell({ preheader: "We received your inquiry — a maintainer will be in touch.", inner }),
+    text,
+  };
+}
+
 /** Weekly "new & notable" digest, sent as a Resend broadcast. */
 export function buildDigestEmail(opts: {
   siteUrl: string;
