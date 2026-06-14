@@ -26,7 +26,7 @@
     "deploy": "pnpm run deploy:prod",
     "deploy:dev": "vite build && wrangler deploy --config wrangler.jsonc --env dev",
     "deploy:prod": "vite build && wrangler deploy --config wrangler.jsonc --env \"\"",
-    "versions:upload": "vite build && wrangler versions upload --config wrangler.jsonc --env \"\""
+    "versions:upload": "vite build && wrangler versions upload --config wrangler.jsonc --env dev"
   },
   "dependencies": {
     "@heyclaude/mcp": "workspace:*",
