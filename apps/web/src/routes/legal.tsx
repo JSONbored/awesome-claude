@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/legal")({
   head: () => ({
@@ -14,7 +15,9 @@ export const Route = createFileRoute("/legal")({
         property: "og:description",
         content: "Plain-English terms, privacy, content policy, and trademarks.",
       },
+      { property: "og:url", content: absoluteUrl("/legal") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/legal") }],
   }),
   component: LegalPage,
 });
