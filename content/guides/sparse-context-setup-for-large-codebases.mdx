@@ -1,0 +1,165 @@
+---
+title: Sparse Context Setup for Large Codebases
+slug: sparse-context-setup-for-large-codebases
+category: guides
+description: >-
+  Set up sparse context for large codebases in Claude Code: scoped directories,
+  CLAUDE.md hierarchy, subagents, and avoiding whole-repo loading.
+cardDescription: Configure sparse context strategies for Claude Code in large monorepos.
+seoTitle: Sparse Context Setup for Large Codebases
+seoDescription: >-
+  Set up sparse context for large codebases in Claude Code: scoped directories,
+  CLAUDE.md hierarchy, subagents, and avoiding whole-repo loading.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1433
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1433"
+documentationUrl: "https://code.claude.com/docs/en/large-codebases"
+usageSnippet: >-
+  Use this guide to configure Claude Code for large monorepos without loading
+  entire repositories into every session.
+prerequisites:
+  - A monorepo or large codebase where whole-repo context is impractical.
+  - Documented package boundaries, ownership maps, or architecture overviews.
+  - Permission to configure multi-directory or scoped working sets in Claude Code.
+  - Representative tasks spanning one package—not the entire tree.
+safetyNotes:
+  - Sparse context reduces accidental edits outside the intended package but does not replace code review—verify diff scope before merge.
+  - Do not disable permission prompts to speed up large-repo exploration.
+  - When using subagents for exploration, constrain file access to approved directories.
+privacyNotes:
+  - Large-repo CLAUDE.md files may reference internal service names across business units; scope instructions to teams that should see them.
+  - Sparse setups often use multiple CLAUDE.md files; ensure nested files do not leak restricted submodule details to broader teams.
+  - Exploration subagents may still read sensitive paths if permissions are too broad—align with least-privilege directory scope.
+sourceUrls:
+  - "https://code.claude.com/docs/en/large-codebases"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - monorepo
+  - context
+  - large-codebases
+  - performance
+keywords:
+  - sparse context Claude Code
+  - large codebase Claude Code
+  - monorepo context strategy
+  - Claude Code scoped directories
+  - large repository setup
+readingTime: 8
+difficultyScore: 56
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Large codebases need sparse context: scoped working directories, hierarchical
+CLAUDE.md files, focused subagents, and tasks that name packages explicitly.
+Avoid pasting whole trees or asking for repo-wide refactors without staging
+exploration in bounded steps.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Package map exists", "description": "Services, libraries, and owners are documented"}
+- [ ] {"task": "CLAUDE.md hierarchy started", "description": "Root and package-level instruction files are planned"}
+- [ ] {"task": "Working scope configured", "description": "Sessions open from target package or named directories"}
+- [ ] {"task": "Task contracts defined", "description": "Allowed paths and validation commands are stated up front"}
+- [ ] {"task": "CI scope checks", "description": "CODEOWNERS or path filters align with sparse boundaries"}
+
+## Core Concepts Explained
+
+### Whole-repo context does not scale
+
+Monorepos exceed practical context limits quickly. Sparse setup prioritizes the
+package or service relevant to the task.
+
+### CLAUDE.md hierarchy carries local truth
+
+Root files hold global conventions; package-level files hold local build commands,
+owners, and dependency rules.
+
+### Subagents explore; main session implements
+
+Use exploration subagents to map unfamiliar areas, then return with a bounded
+file list for implementation.
+
+### Multi-directory sessions need explicit scope
+
+When work crosses packages, name each directory and success criteria instead of
+assuming Claude inferred full-repo awareness.
+
+## Step-by-Step Implementation Guide
+
+1. **Map package boundaries.** Identify services, libraries, and ownership from
+   existing architecture docs.
+
+2. **Author hierarchical CLAUDE.md files.** Keep root policy short; put package
+   specifics near code.
+
+3. **Configure working scope.** Open Claude Code from the target package or use
+   multi-directory setup with explicit paths.
+
+4. **Define task contracts.** State allowed directories, forbidden areas, and
+   validation commands in the first prompt.
+
+5. **Explore with subagents.** Ask for read-only reconnaissance before editing
+   unfamiliar modules.
+
+6. **Implement in bounded batches.** Limit file touch count per turn; verify diffs
+   stay inside scope.
+
+7. **Refresh cross-package interfaces.** When changes cross boundaries, read shared
+   API docs or proto files explicitly.
+
+8. **Review diff scope in CI.** Add path filters or CODEOWNERS checks matching
+   sparse context boundaries.
+
+## Sparse Context Patterns
+
+| Pattern | When to use |
+| ------- | ----------- |
+| Single-package cwd | Daily feature work in one service |
+| Multi-directory named paths | Cross-package API changes |
+| Subagent reconnaissance | Unfamiliar module discovery |
+| Package CLAUDE.md | Local build and owner rules |
+
+## Troubleshooting
+
+### Claude edited files outside the package
+
+Tighten prompt scope, reduce permission breadth, and add CLAUDE.md warnings for
+forbidden directories.
+
+### Subagent exploration returned stale paths
+
+Re-run exploration after merges; do not reuse old file lists from prior sessions.
+
+### CLAUDE.md conflicts between root and package
+
+Resolve contradictions—package files should override for local commands, root for
+global policy.
+
+### Sessions feel slow despite sparse setup
+
+Reduce active MCP servers and hook injections that enlarge every turn's prefix.
+
+## Duplicate Check
+
+This guide complements claude-md-hierarchy-for-monorepos-and-nested-packages.mdx
+and multi-directory-setup.mdx with a unified sparse-context workflow for very
+large repositories.
+
+## References
+
+- Claude Code large codebases - https://code.claude.com/docs/en/large-codebases
+- Multi-directory setup - multi-directory-setup
+- CLAUDE.md hierarchy - claude-md-hierarchy-for-monorepos-and-nested-packages
