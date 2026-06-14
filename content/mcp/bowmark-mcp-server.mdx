@@ -1,0 +1,192 @@
+---
+title: Bowmark MCP Server for Claude
+slug: bowmark-mcp-server
+category: mcp
+description: >-
+  Bowmark hosted MCP server serving pre-computed website navigation recipes
+  for reliable browser automation from Claude, with optional Bearer API key auth.
+cardDescription: >-
+  Connect Claude to Bowmark for pre-computed website navigation recipes and
+  reliable automation paths via api.bowmark.ai/mcp.
+seoTitle: Bowmark MCP Server for Claude
+seoDescription: >-
+  Use the Bowmark MCP server with Claude to fetch pre-computed navigation recipes
+  for popular websites, with optional Bearer API key on api.bowmark.ai/mcp.
+author: Bowmark
+authorProfileUrl: "https://github.com/bowmark-ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1482
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1482"
+repoUrl: "https://github.com/bowmark-ai/skill"
+documentationUrl: "https://github.com/bowmark-ai/skill"
+websiteUrl: "https://bowmark.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http bowmark https://api.bowmark.ai/mcp
+usageSnippet: >-
+  Add https://api.bowmark.ai/mcp as a remote connector; optional Bearer token
+  unlocks higher rate limits and premium navigation recipes.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "bowmark": {
+        "url": "https://api.bowmark.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "bowmark": {
+        "url": "https://api.bowmark.ai/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer YOUR_BOWMARK_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Pro, Team, or Enterprise with Connectors support, or Claude Code with HTTP MCP transport."
+  - "Optional Bowmark API key for authenticated tiers and extended recipe catalog access."
+  - "Browser or automation client that can consume Bowmark navigation recipes if executing flows end-to-end."
+  - "Compliance review before automating logins or transactions on third-party sites."
+safetyNotes:
+  - "Navigation recipes may include steps that submit forms or trigger purchases if misused in automation."
+  - "Site layouts change; recipes can become stale and cause failed or unintended UI actions."
+  - "Bearer API keys should be stored in connector headers, not embedded in prompts or repositories."
+  - "Automating authenticated sessions may violate target site terms; obtain permission first."
+privacyNotes:
+  - "Site names and flow intents you request may be logged by Bowmark for recipe matching."
+  - "Recipes can describe login or checkout paths; do not share full recipe dumps containing session hints publicly."
+  - "Optional API keys tie usage to your Bowmark account and billing profile."
+tags:
+  - browser-automation
+  - navigation
+  - recipes
+  - remote-mcp
+  - api-key
+keywords:
+  - bowmark mcp
+  - website navigation recipes
+  - bowmark.ai claude
+  - browser automation mcp
+  - precomputed flows
+readingTime: 4
+difficultyScore: 25
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Bowmark provides a hosted Model Context Protocol server that serves pre-computed navigation recipes for popular websites. Instead of rediscovering click paths on every run, Claude can fetch reliable step sequences for common tasks. An optional Bearer API key unlocks premium recipes and higher limits.
+
+Skill documentation lives in [bowmark-ai/skill](https://github.com/bowmark-ai/skill). The MCP endpoint is `https://api.bowmark.ai/mcp`.
+
+## Features
+
+- Pre-computed navigation recipes for common website workflows.
+- Hosted remote HTTP transport at `api.bowmark.ai/mcp`.
+- Optional Bearer token authentication for paid tiers.
+- Reduces brittle selector hunting in browser automation agents.
+- Integrates with Claude Connectors and Claude Code.
+
+## Use Cases
+
+- Fetch a vetted checkout flow recipe before building a shopping agent.
+- Retrieve admin navigation paths for recurring SaaS reporting tasks.
+- Compare Bowmark recipes when a site redesign breaks old automation scripts.
+- Prototype demos that depend on reliable multi-step UI navigation.
+- Cache-friendly flows for CI smoke tests against staging environments.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://api.bowmark.ai/mcp`.
+3. Optionally add `Authorization: Bearer YOUR_BOWMARK_API_KEY`.
+4. Enable the connector and request recipes in chat.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http bowmark https://api.bowmark.ai/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add a remote HTTP connector at `https://api.bowmark.ai/mcp`.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "bowmark": {
+      "url": "https://api.bowmark.ai/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer YOUR_BOWMARK_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Omit `headers` to use anonymous access where supported.
+
+## Examples
+
+### Get a recipe
+
+```text
+Fetch the Bowmark navigation recipe for exporting reports from Notion settings.
+```
+
+### Compare flows
+
+```text
+List available Bowmark recipes for GitHub pull request creation and summarise the steps.
+```
+
+### Staging checkout
+
+```text
+Retrieve a Bowmark recipe for adding an item to cart on our staging storefront.
+```
+
+## Security
+
+- Human-review recipes before unattended automation, especially around payments and deletes.
+- Do not automate credential entry without secure secret handling.
+- Rotate API keys if shared connectors are decommissioned.
+
+## Troubleshooting
+
+### Recipe not found
+
+The site or flow may not be catalogued yet; try alternate site names or submit coverage requests to Bowmark.
+
+### Stale steps
+
+Websites change often; refresh recipes after major UI updates and add validation checkpoints.
+
+### 401 with API key
+
+Verify Bearer formatting and that the key is active in your Bowmark dashboard.
+
+### Rate limits
+
+Add an API key or reduce parallel recipe fetches during bulk automation setup.
