@@ -30,8 +30,12 @@ export function NewsletterInline({
 }: Props) {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  const [pending, setPending] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
+  // Double opt-in: a confirmation email was sent; the user must click to finish.
+  const successMessage = pending ? "Check your inbox to confirm." : "You're subscribed.";
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -42,6 +46,11 @@ export function NewsletterInline({
     setBusy(false);
     if (result.ok) {
       setDone(true);
+      setPending(result.pending);
+      // First-party site analytics (umami) — not an email tracking pixel.
+      (
+        window as unknown as { umami?: { track?: (e: string, d?: Record<string, unknown>) => void } }
+      ).umami?.track?.("newsletter-subscribe", { source });
       return;
     }
     setError(result.error);
@@ -82,10 +91,14 @@ export function NewsletterInline({
               )}
             </button>
           </form>
-          {error && (
-            <p role="alert" className="text-xs text-trust-blocked">
-              {error}
-            </p>
+          {done ? (
+            <p className="text-xs text-ink-muted">{successMessage}</p>
+          ) : (
+            error && (
+              <p role="alert" className="text-xs text-trust-blocked">
+                {error}
+              </p>
+            )
           )}
         </div>
       </div>
@@ -135,7 +148,9 @@ export function NewsletterInline({
           </button>
         </form>
         <p className="mt-3 text-[11px] text-ink-subtle">
-          {error || "Unsubscribe any time. No tracking pixels. No partner blasts."}
+          {done
+            ? successMessage
+            : error || "Unsubscribe any time. No tracking pixels. No partner blasts."}
         </p>
       </section>
     );
@@ -182,10 +197,14 @@ export function NewsletterInline({
           </button>
         </form>
       </div>
-      {error && (
-        <p role="alert" className="mt-2 text-xs text-trust-blocked">
-          {error}
-        </p>
+      {done ? (
+        <p className="mt-2 text-xs text-ink-muted">{successMessage}</p>
+      ) : (
+        error && (
+          <p role="alert" className="mt-2 text-xs text-trust-blocked">
+            {error}
+          </p>
+        )
       )}
     </section>
   );
