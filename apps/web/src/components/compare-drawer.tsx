@@ -2,7 +2,13 @@ import * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { X, ExternalLink, ArrowRight, Shield, Lock } from "lucide-react";
 import { toast } from "sonner";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { useCompare } from "@/lib/compare";
 import { CategoryPill, PlatformChip, NotesPresenceChips } from "@/components/badges";
 import { HarnessBadgeRow } from "@/components/harness-badge";
@@ -193,6 +199,9 @@ export function CompareDrawer() {
             <SheetTitle className="font-display text-base font-semibold text-ink">
               Comparing {items.length} {items.length === 1 ? "resource" : "resources"}
             </SheetTitle>
+            <SheetDescription className="sr-only">
+              Side-by-side comparison of the selected resources.
+            </SheetDescription>
             <div className="flex flex-wrap items-center gap-2">
               {items.length > 0 && (
                 <div className="hidden items-center gap-1.5 sm:flex">
@@ -262,7 +271,7 @@ export function CompareDrawer() {
                     {items.map((e) => (
                       <th
                         scope="col"
-                        key={e.slug}
+                        key={`${e.category}/${e.slug}`}
                         className="min-w-[260px] max-w-[320px] border-b border-r border-border bg-surface p-3 text-left align-top last:border-r-0"
                       >
                         <div className="flex items-start justify-between gap-2">
@@ -304,7 +313,7 @@ export function CompareDrawer() {
                       </th>
                       {items.map((e) => (
                         <td
-                          key={e.slug}
+                          key={`${e.category}/${e.slug}`}
                           className="min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top last:border-r-0"
                         >
                           {row.render(e)}

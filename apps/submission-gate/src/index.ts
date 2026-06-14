@@ -1017,7 +1017,8 @@ async function readJsonBodyWithLimit(request: Request) {
   }
 
   const reader = request.body?.getReader();
-  if (!reader) return JSON.parse("");
+  // No body stream → treat as an empty payload; the caller rejects non-objects.
+  if (!reader) return null;
 
   const chunks: Uint8Array[] = [];
   let total = 0;
