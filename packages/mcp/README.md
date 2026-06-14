@@ -11,7 +11,7 @@
   <a href="https://github.com/JSONbored/awesome-claude">GitHub</a> •
   <a href="https://www.npmjs.com/package/@heyclaude/mcp">npm</a> •
   <a href="https://heyclau.de/api/mcp">MCP endpoint</a> •
-  <a href="https://github.com/JSONbored/awesome-claude/releases/tag/mcp-v0.3.0">v0.3.0 release</a>
+  <a href="https://github.com/JSONbored/awesome-claude/releases/tag/mcp-v0.3.1">v0.3.1 release</a>
 </p>
 
 Read-only Model Context Protocol server for the HeyClaude registry.
