@@ -1,0 +1,196 @@
+---
+title: AutoRFP.ai MCP Server for Claude
+slug: autorfp-ai-mcp-server
+category: mcp
+description: >-
+  Official AutoRFP.ai remote MCP server for read-only access to RFP projects,
+  requirements, approved content library search, and organisation tags from
+  Claude and other MCP clients via OAuth.
+cardDescription: >-
+  Connect Claude to AutoRFP.ai projects, requirements, content library search,
+  and tags through a read-only remote MCP server.
+seoTitle: AutoRFP.ai MCP Server for Claude
+seoDescription: >-
+  Use the AutoRFP.ai MCP server with Claude to list RFP projects, read
+  requirements, search approved content, and query tags without leaving chat.
+author: AutoRFP.ai
+authorProfileUrl: "https://github.com/AutoRFP"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1474
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1474"
+repoUrl: "https://github.com/AutoRFP/mcp"
+documentationUrl: "https://github.com/AutoRFP/mcp"
+websiteUrl: "https://autorfp.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http autorfp https://api.autorfp.ai/mcp
+usageSnippet: >-
+  Add a custom connector in Claude with the AutoRFP.ai MCP URL for your data
+  residency region, then OAuth-authorise with tags:read, projects:read, and
+  content:read scopes.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "autorfp": {
+        "url": "https://api.autorfp.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "autorfp": {
+        "url": "https://api.us.autorfp.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "AutoRFP.ai account with access to the projects and content library you want to query."
+  - "Claude Pro, Team, or Enterprise plan with Connectors support, or another MCP client with custom remote connectors."
+  - "Claude organisation admin for the one-time org connector setup in Claude Team/Enterprise environments."
+  - "Knowledge of your AutoRFP.ai data residency region (APAC, EU, or US) to select the correct MCP endpoint."
+safetyNotes:
+  - "The connection is read-only; it cannot create, edit, or delete AutoRFP.ai records."
+  - "Each user inherits their own AutoRFP.ai permissions, so MCP results reflect that user's normal app access."
+  - "OAuth tokens grant persistent read access until revoked in AutoRFP.ai or the MCP client."
+  - "Do not share OAuth-approved connector sessions across users or paste access tokens into public issues."
+privacyNotes:
+  - "MCP tool results can expose RFP project names, requirement text, approved answer content, and organisation tag vocabulary."
+  - "Search queries sent to the content library are processed by AutoRFP.ai under its own data-handling terms."
+  - "Public support notes should describe connector scope, not full requirement or library excerpts."
+tags:
+  - rfp
+  - procurement
+  - content-library
+  - remote-mcp
+  - oauth
+keywords:
+  - autorfp mcp
+  - autorfp.ai claude connector
+  - rfp project search mcp
+  - content library mcp
+  - claude rfp assistant
+  - remote mcp oauth
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AutoRFP.ai provides a hosted Model Context Protocol server that lets Claude and other MCP clients query your RFP workspace read-only. After OAuth authorisation, assistants can list projects, inspect requirements, search the approved content library, and browse organisation tags without switching out of chat.
+
+The public manifest lives in the [AutoRFP/mcp](https://github.com/AutoRFP/mcp) repository. The server itself is hosted by AutoRFP.ai at region-specific HTTPS endpoints.
+
+## Features
+
+- Read-only access to AutoRFP.ai tags, projects, requirements, and content library.
+- Semantic and keyword search across approved library content.
+- Project filtering by status, due date, and tags.
+- Regional MCP endpoints for APAC, EU, and US data residency.
+- OAuth scopes limited to `tags:read`, `projects:read`, and `content:read`.
+- Per-user permission inheritance from the AutoRFP.ai account.
+
+## Use Cases
+
+- List open RFP projects and unanswered requirement counts.
+- Search approved responses for compliance, security, or implementation topics.
+- Summarise requirement status inside a project before a review meeting.
+- Find reusable content that has been applied across multiple projects.
+- Ask natural-language questions about upcoming due dates and tagged project sets.
+
+## Installation
+
+### Claude (Connectors)
+
+1. A Claude organisation admin adds a custom connector once under **Settings → Connectors**.
+2. Enter the MCP URL for your region:
+   - APAC: `https://api.autorfp.ai/mcp`
+   - EU: `https://api.eu.autorfp.ai/mcp`
+   - US: `https://api.us.autorfp.ai/mcp`
+3. Each user opens **Settings → Connectors**, selects AutoRFP.ai, and completes OAuth sign-in.
+4. Approve the three read scopes and enable the connector in the next conversation.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http autorfp https://api.autorfp.ai/mcp
+claude mcp list
+```
+
+Replace the host with your EU or US endpoint when required.
+
+### Other MCP clients
+
+Add a custom remote connector pointing at the regional MCP URL and complete the same OAuth flow supported by your client.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "autorfp": {
+      "url": "https://api.autorfp.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+Use `https://api.eu.autorfp.ai/mcp` or `https://api.us.autorfp.ai/mcp` when your AutoRFP.ai tenant is in those regions.
+
+## Examples
+
+### List in-progress projects
+
+```text
+List my open RFP projects in AutoRFP.ai and show unanswered requirement counts.
+```
+
+### Search the content library
+
+```text
+Search our approved content library for GDPR compliance responses and summarise the top matches.
+```
+
+### Filter by tags and due date
+
+```text
+Which in-progress projects tagged Healthcare are due in the next two weeks?
+```
+
+## Security
+
+- The connector is read-only; it cannot mutate projects, requirements, or library content.
+- OAuth tokens should be treated as credentials; revoke them when offboarding a user or connector.
+- Results may contain customer or bid content; avoid pasting raw library text into public channels.
+- Confirm the correct regional endpoint so data residency expectations match your tenant.
+
+## Troubleshooting
+
+### Connector missing in Claude
+
+Confirm your plan includes Connectors and that an org admin completed the one-time custom connector setup.
+
+### OAuth or 401 errors
+
+Re-authorise the connector and confirm the three read scopes were approved. Check that the user still has AutoRFP.ai access to the requested projects.
+
+### Empty project or library results
+
+Verify the signed-in user can see the same records in the AutoRFP.ai web app. Narrow filters such as tags or status if the query is too restrictive.
+
+### Wrong region endpoint
+
+Match the MCP URL to the region you use to log in to AutoRFP.ai. Using the APAC host against an EU tenant can cause auth or empty-result failures.
