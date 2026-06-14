@@ -1,6 +1,6 @@
 // On-brand newsletter emails, built as inline strings (not React Email) so they
 // render in the Worker without a runtime React dependency. Light theme matching
-// the heyclau.de design system; no tracking pixels.
+// the heyclau.de design system; no tracking pixels or remote assets.
 //
 // Single source of truth for the email design tokens lives in THEME below — the
 // hex values are the light-mode `styles.css` oklch tokens converted to sRGB
@@ -26,15 +26,6 @@ const DISPLAY =
   "'Space Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif";
 const BODY = "'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif";
 
-// Progressive web fonts for clients that honor them (Apple Mail, iOS Mail);
-// everything else falls back to the system stacks above.
-const FONT_FACE = [
-  "@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:600;font-display:swap;src:url(https://heyclau.de/fonts/space-grotesk-600-latin.woff2) format('woff2');}",
-  "@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:700;font-display:swap;src:url(https://heyclau.de/fonts/space-grotesk-700-latin.woff2) format('woff2');}",
-  "@font-face{font-family:'DM Sans';font-style:normal;font-weight:400;font-display:swap;src:url(https://heyclau.de/fonts/dm-sans-400-latin.woff2) format('woff2');}",
-  "@font-face{font-family:'DM Sans';font-style:normal;font-weight:500;font-display:swap;src:url(https://heyclau.de/fonts/dm-sans-500-latin.woff2) format('woff2');}",
-].join("");
-
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -51,7 +42,7 @@ function siteHostOf(siteUrl: string): string {
   return siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
 }
 
-/** Shared light-theme document shell: forces light, embeds the brand fonts, centers the card. */
+/** Shared light-theme document shell: forces light and centers the card without remote assets. */
 function emailShell(opts: { preheader: string; inner: string }): string {
   return `<!doctype html>
 <html lang="en">
@@ -60,7 +51,6 @@ function emailShell(opts: { preheader: string; inner: string }): string {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
     <meta name="supported-color-schemes" content="light" />
-    <style>${FONT_FACE}</style>
   </head>
   <body style="margin:0;padding:0;background:${THEME.canvas};">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(opts.preheader)}</div>

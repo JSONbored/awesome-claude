@@ -16,12 +16,14 @@ describe("newsletter email templates", () => {
       buildDigestEmail({ siteUrl: SITE, items: [{ title: "X", category: "mcp", slug: "x", summary: "" }], dateLabel: "Jun 15, 2026" }),
     ];
 
-    it("forces light mode and embeds the brand fonts", () => {
+    it("forces light mode and uses the brand font stack without remote font loads", () => {
       for (const email of emails) {
         expect(email.html).toContain('name="color-scheme" content="light"');
         expect(email.html).toContain("Space Grotesk");
         expect(email.html).toContain("DM Sans");
-        expect(email.html).toContain("heyclau.de/fonts/space-grotesk-600-latin.woff2");
+        expect(email.html).not.toContain("@font-face");
+        expect(email.html).not.toContain("/fonts/");
+        expect(email.html).not.toContain(".woff2");
       }
     });
 
