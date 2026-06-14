@@ -1,6 +1,7 @@
 import { createApiFileRoute } from "@/lib/api/file-route";
 import { enforceApiRateLimit, getApiRequestId } from "@/lib/api/router";
 import { getApiRouteDefinition } from "@/lib/api/contracts";
+import { BodyTooLargeError, readRequestTextWithinLimit } from "@/lib/api-security";
 
 import { getEnvString } from "@/lib/cloudflare-env.server";
 import { verifyConfirmToken } from "@/lib/newsletter-token.server";
@@ -10,7 +11,13 @@ import { sendResendEmail } from "@/lib/newsletter-send.server";
 import { siteConfig } from "@/lib/site";
 
 // Minimal, on-brand confirmation landing page (light theme, matches the site).
-function resultPage(opts: { ok: boolean; heading: string; body: string; token?: string }): Response {
+function resultPage(opts: {
+  ok: boolean;
+  heading: string;
+  body: string;
+  token?: string;
+  status?: number;
+}): Response {
   const accent = opts.ok ? "#2f8f5b" : "#b4541f";
   const html = `<!doctype html>
 <html lang="en">
@@ -31,7 +38,7 @@ function resultPage(opts: { ok: boolean; heading: string; body: string; token?: 
   </body>
 </html>`;
   return new Response(html, {
-    status: opts.ok ? 200 : 400,
+    status: opts.status ?? (opts.ok ? 200 : 400),
     headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" },
   });
 }
@@ -46,6 +53,7 @@ function escapeHtml(value: string): string {
 
 const consumedConfirmTokens = new Map<string, number>();
 const MAX_CONSUMED_CONFIRM_TOKENS = 10_000;
+const CONFIRM_BODY_LIMIT_BYTES = 8 * 1024;
 
 function pruneConsumedConfirmTokens(now: number) {
   for (const [token, expiresAt] of consumedConfirmTokens) {
@@ -59,14 +67,14 @@ function pruneConsumedConfirmTokens(now: number) {
 }
 
 async function readConfirmToken(request: Request) {
+  const rawBody = await readRequestTextWithinLimit(request, CONFIRM_BODY_LIMIT_BYTES);
   const contentType = request.headers.get("content-type") ?? "";
   if (contentType.includes("application/json")) {
-    const body = (await request.json().catch(() => null)) as { token?: unknown } | null;
+    const body = JSON.parse(rawBody) as { token?: unknown } | null;
     return typeof body?.token === "string" ? body.token : "";
   }
-  const form = await request.formData().catch(() => null);
-  const token = form?.get("token");
-  return typeof token === "string" ? token : "";
+  const token = new URLSearchParams(rawBody).get("token");
+  return token ?? "";
 }
 
 export const Route = createApiFileRoute("/api/public/newsletter/confirm")({
@@ -92,7 +100,28 @@ export const Route = createApiFileRoute("/api/public/newsletter/confirm")({
           });
         }
 
-        const token = await readConfirmToken(request);
+        let token = "";
+        try {
+          token = await readConfirmToken(request);
+        } catch (error) {
+          if (error instanceof BodyTooLargeError) {
+            return resultPage({
+              ok: false,
+              status: 413,
+              heading: "Request too large",
+              body: "Please use the confirmation button from your email.",
+            });
+          }
+          if (error instanceof SyntaxError) {
+            return resultPage({
+              ok: false,
+              heading: "Invalid request",
+              body: "Please use the confirmation button from your email.",
+            });
+          }
+          throw error;
+        }
+
         const confirmSecret = getEnvString("NEWSLETTER_CONFIRM_SECRET");
         const resendApiKey = getEnvString("RESEND_API_KEY");
         const resendSegmentId = getEnvString("RESEND_SEGMENT_ID");

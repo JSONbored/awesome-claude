@@ -470,6 +470,10 @@ export const newsletterSubscribeBodySchema = z.object({
   source: z.string().trim().max(64).optional().default("site"),
 });
 
+export const newsletterConfirmBodySchema = z.object({
+  token: z.string().trim().min(1).max(4096),
+});
+
 export const newsletterWebhookBodySchema = z
   .object({
     type: z.string().optional(),
@@ -1051,6 +1055,8 @@ export const apiRouteDefinitions = {
     path: "/api/public/newsletter/confirm",
     summary: "Confirm a newsletter subscription",
     tags: ["Newsletter"],
+    bodySchema: newsletterConfirmBodySchema,
+    bodyLimitBytes: 8 * 1024,
     rateLimit: {
       scope: "newsletter-confirm",
       limit: 15,

@@ -4614,6 +4614,18 @@ paths:
       tags:
         - Newsletter
       summary: Confirm a newsletter subscription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  minLength: 1
+                  maxLength: 4096
+              required:
+                - token
       responses:
         "200":
           description: Request accepted.

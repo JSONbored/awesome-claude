@@ -73,6 +73,9 @@ describe("CodeQL regression coverage", () => {
     const unsubscribeRoute = read(
       "apps/web/src/routes/api/public/newsletter/unsubscribe.ts",
     );
+    const confirmRoute = read(
+      "apps/web/src/routes/api/public/newsletter/confirm.ts",
+    );
     const newsletterClient = read("apps/web/src/lib/api/newsletter.ts");
 
     expect(subscribeRoute).not.toContain("Access-Control-Allow-Origin");
@@ -84,6 +87,11 @@ describe("CodeQL regression coverage", () => {
     expect(unsubscribeRoute).toContain("readRequestTextWithinLimit");
     expect(unsubscribeRoute).toContain("isAllowedOrigin");
     expect(unsubscribeRoute).toContain("isRateLimited");
+
+    expect(confirmRoute).not.toContain("request.json()");
+    expect(confirmRoute).not.toContain("request.formData()");
+    expect(confirmRoute).toContain("readRequestTextWithinLimit");
+    expect(confirmRoute).toContain("BodyTooLargeError");
 
     expect(newsletterClient).toContain('fetch("/api/newsletter/subscribe"');
     expect(newsletterClient).not.toContain(
