@@ -1,0 +1,223 @@
+---
+title: Agent Skills ZIP Packaging QA Capability Pack Skill
+slug: agent-skills-zip-packaging-qa-capability-pack
+category: skills
+description: >-
+  Expert agent skills ZIP packaging QA capability pack for validating skill
+  archives, SKILL.md frontmatter, file layout, allowed-tools declarations, and
+  distribution readiness before sharing Claude Code skill packages.
+cardDescription: >-
+  QA Claude Code agent skill ZIP packages for layout, frontmatter, and
+  distribution readiness with source-backed checklists.
+seoTitle: Agent Skills ZIP Packaging QA Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for agent skills ZIP packaging QA, SKILL.md
+  archive validation, frontmatter checks, file layout review, and Claude Code
+  skill distribution readiness.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1536
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1536"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when packaging or reviewing a Claude Code skill ZIP archive and
+  you need to validate SKILL.md frontmatter, directory layout, supporting files,
+  and distribution readiness before release.
+copySnippet: |-
+  # Trigger
+  "Apply the agent skills ZIP packaging QA capability pack for this archive."
+
+  # Required output
+  1) Archive layout and required file inventory
+  2) SKILL.md frontmatter validation results
+  3) Supporting asset and script risk review
+  4) Distribution and install readiness assessment
+  5) Privacy-safe QA summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "The skill ZIP archive or directory tree under review."
+  - "Expected skill slug, scope, and distribution channel (plugin, internal share, or repo commit)."
+  - "Access to Claude Code skills documentation for frontmatter and layout requirements."
+  - "Reviewer context for whether bundled scripts or binaries are expected in the package."
+safetyNotes:
+  - "Skill ZIP packages must not include live secrets, API keys, OAuth tokens, or customer data in bundled files."
+  - "Bundled shell scripts, binaries, or install hooks can execute on user machines and require explicit review."
+  - "Oversized skill bodies increase session startup token cost when model invocation is enabled."
+  - "Duplicate or conflicting frontmatter keys can cause silent skill load failures or wrong descriptions."
+  - "This skill performs QA review; it must not publish or install archives that fail validation checks."
+privacyNotes:
+  - "QA logs may expose internal script paths, environment examples, and team naming conventions from bundled assets."
+  - "Sample data files bundled for demos may contain synthetic but realistic customer records requiring redaction."
+  - "Public QA summaries should list pass/fail categories, not full archive contents or secret placeholders."
+tags:
+  - agent-skills
+  - zip-packaging
+  - qa
+  - skill-distribution
+  - capability-pack
+keywords:
+  - agent skills ZIP packaging QA
+  - Claude Code skill archive validation
+  - SKILL.md frontmatter QA
+  - skill package layout review
+  - Claude Code skill distribution
+  - skill packaging checklist
+readingTime: 8
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code skills and features overview
+documentation verified on **2026-06-14**. Skill packaging conventions and plugin
+distribution paths can change; prefer live official docs over cached archive
+layouts.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code skills documentation and the public
+Anthropic `claude-code` repository on **2026-06-14**:
+
+- Claude Code skills are defined by a `SKILL.md` file with YAML frontmatter and
+  a markdown body describing the workflow.
+- Skills can include supporting files in the same directory; packaging must
+  preserve relative paths expected at install time.
+- Frontmatter fields such as description, allowed-tools, and disable-model-invocation
+  control load behavior and side-effect boundaries.
+- Skill descriptions load at session start when model invocation is enabled,
+  making packaging size and description quality part of QA scope.
+- Distribution through plugins or shared archives should preserve verifiable
+  source metadata and retrieval references.
+
+## Scope Note
+
+This is not a malware scanner. Use it as a reusable QA workflow for skill ZIP
+archives before internal distribution, plugin publication, or HeyClaude-adjacent
+skill sharing.
+
+## Core Workflow
+
+1. Extract and inventory the archive: root folder name, `SKILL.md` location,
+   supporting scripts, templates, and unexpected binaries.
+2. Validate frontmatter: required description, valid YAML, no duplicate keys,
+   reasonable description length, and explicit tool restrictions when needed.
+3. Review body structure: Knowledge Freshness, workflow steps, safety notes,
+   privacy notes, and output contract present for capability-pack style skills.
+4. Scan bundled assets: flag executables, install scripts, network calls, and
+   sample data files that need redaction or removal.
+5. Check naming consistency: folder slug, frontmatter name, and invocation
+   trigger phrases align without collisions against known skills.
+6. Measure size impact: estimate description and body contribution to startup
+   context when model invocation is enabled.
+7. Verify retrieval sources listed in the skill match files actually included
+   and remain reachable public URLs.
+8. Run a dry install into a test `.claude/skills/` or project skills path and
+   confirm Claude Code discovers the skill.
+9. Produce pass/fail QA summary with required fixes before distribution.
+
+## Capability Scope
+
+- Archive layout and required file inventory.
+- SKILL.md frontmatter validation.
+- Supporting asset and script risk review.
+- Distribution and install readiness assessment.
+- Size and startup-load impact notes.
+- Privacy-safe QA reporting.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when packaging internal skills,
+  reviewing contributor archives, or preparing plugin bundles.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic skill archive QA checklist in platform runbooks.
+
+## Required Inputs
+
+- Skill ZIP archive or extracted directory tree.
+- Intended distribution channel and target Claude Code version range.
+- Expected slug, scope, and model-invocation policy for the skill.
+- Any bundled scripts or templates requiring security review.
+
+## Production Rules
+
+- Reject archives containing secrets, live tokens, or customer sample data.
+- Require explicit review for any bundled executable or install script.
+- Keep descriptions concise to reduce startup context load.
+- Preserve relative paths required for supporting file references.
+- Include verification date in skill body for capability-pack entries.
+- Do not distribute QA-failed archives even for internal beta testing.
+- Redact internal paths and examples in public QA summaries.
+
+## Review Matrix
+
+| Check | Pass | Fail | Fix |
+| --- | --- | --- | --- |
+| SKILL.md present | Root or expected path | Missing | Add required file |
+| Frontmatter YAML | Valid | Parse error | Repair YAML |
+| Secrets scan | Clean | Token found | Remove and rotate |
+| Bundled binary | Documented | Unexpected exe | Remove or justify |
+| Description size | Reasonable | Very long | Trim description |
+| Dry install | Discovered | Not loaded | Fix path or name |
+
+## Output Contract
+
+1. Archive layout and file inventory.
+2. Frontmatter validation results.
+3. Supporting asset and script risk review.
+4. Distribution readiness assessment.
+5. Required fixes before release.
+6. Privacy-safe QA summary for reviewers or release notes.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for agent skills ZIP packaging QA and skill archive validation
+workflows. Official docs describe skill files, but no `skills` entry provides
+a reusable ZIP packaging QA capability pack with review matrix and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.
