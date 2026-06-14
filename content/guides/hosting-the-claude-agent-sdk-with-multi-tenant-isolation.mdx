@@ -1,0 +1,166 @@
+---
+title: "Hosting the Claude Agent SDK With Multi-Tenant Isolation"
+slug: hosting-the-claude-agent-sdk-with-multi-tenant-isolation
+category: guides
+description: >-
+  Host multi-tenant Claude Agent SDK services: per-tenant sessions, storage boundaries, credential proxies, rate limits, and operational isolation distinct from single-tenant secure deployment.
+cardDescription: Host multi-tenant Claude Agent SDK services with per-tenant isolation.
+seoTitle: "Hosting the Claude Agent SDK With Multi-Tenant Isolation"
+seoDescription: >-
+  Host multi-tenant Claude Agent SDK services: per-tenant sessions, storage boundaries, credential proxies, rate limits, and operational isolation distinct from single-tenant secure deployment.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1399
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1399"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to architect a multi-tenant Agent SDK host with per-tenant sessions, secrets, and noisy-neighbor controls.
+prerequisites:
+  - "A product requirement for multiple customers on one Agent SDK deployment."
+  - "Identity provider issuing tenant ids trusted by your API layer."
+  - "Separate storage buckets or key prefixes per tenant for session transcripts."
+  - "Load tests estimating concurrent agents per tenant and per region."
+safetyNotes:
+  - "Prompt injection in one tenant must not read another tenant's mounted files or credentials."
+  - "Shared worker pools need per-tenant CPU and turn limits to prevent noisy-neighbor cost spikes."
+  - "Never share OAuth tokens or MCP connections across tenants—even for the same remote server."
+privacyNotes:
+  - "Session stores must encrypt data at rest and tag records with tenant ids for deletion requests."
+  - "Cross-tenant logging is a compliance failure—include tenant id in every structured log line."
+  - "Model provider retention policies still apply; document subprocessor status per tenant contract."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/agent-sdk/hosting"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-agent-sdk
+  - hosting
+  - multi-tenant
+  - isolation
+  - saas
+keywords:
+  - "Claude Agent SDK multi-tenant"
+  - "hosting Agent SDK"
+  - "tenant isolation agents"
+  - "SDK session storage"
+  - "SaaS agent hosting"
+readingTime: 8
+difficultyScore: 68
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Multi-tenant Agent SDK hosting assigns every session a tenant id, isolated storage, dedicated credential proxies, and rate limits. This goes beyond single-app secure deployment—you are building a small agent platform, not hardening one internal service.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Tenant-scoped sessions
+
+Resume tokens, filesystem mounts, and MCP configs must never cross tenant boundaries.
+
+### Credential proxy per tenant
+
+Each tenant gets its own downstream credentials injected outside the agent sandbox.
+
+### External session storage
+
+Centralize transcript storage with tenant-prefixed keys rather than local disk on shared workers.
+
+### Noisy-neighbor controls
+
+Per-tenant concurrency, token budgets, and queueing prevent one customer from exhausting workers.
+
+## Step-by-Step Implementation Guide
+
+1. **Define tenant identity.** Issue tenant ids from your IdP and reject requests missing trusted tenant claims.
+
+2. **Partition storage.** Use per-tenant prefixes or databases for session history and uploaded artifacts.
+
+3. **Isolate filesystem mounts.** Mount only tenant-specific working directories inside sandboxes or containers.
+
+4. **Proxy credentials.** Route outbound API calls through tenant-specific credential injectors.
+
+5. **Scope MCP connections.** Instantiate MCP server connections per session; do not reuse OAuth tokens across tenants.
+
+6. **Apply rate limits.** Enforce per-tenant turns, tokens, and wall-clock timeouts at the API gateway.
+
+7. **Load test neighbors.** Simulate one tenant at max concurrency while others run steady traffic.
+
+8. **Document deletion.** Implement tenant offboarding that wipes storage, tokens, and queued jobs.
+
+## Multi-Tenant Host Checklist
+
+- [ ] {"task": "Tenant id enforced", "description": "API rejects missing or forged tenant claims"}
+- [ ] {"task": "Storage partitioned", "description": "Sessions and artifacts isolated per tenant"}
+- [ ] {"task": "Credentials proxied", "description": "No cross-tenant secret reuse"}
+- [ ] {"task": "Limits configured", "description": "Rate and concurrency caps per tenant"}
+- [ ] {"task": "Offboarding tested", "description": "Tenant deletion removes all agent data"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Cross-tenant data leak
+
+Audit mount paths and session store keys; add integration tests that two tenants cannot read each other's files.
+
+### Cost spike from one customer
+
+Tighten per-tenant token budgets and enable queueing when limits hit.
+
+### Shared MCP token bleed
+
+Disconnect MCP OAuth per session end; never cache refresh tokens globally.
+
+### Resume opens wrong history
+
+Include tenant id in resume token validation before loading transcripts.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` documents external session storage patterns used by SDK hosts.
+- `plugins/README.md` `agent-sdk-dev` plugin targets SDK application validation before production.
+- `CHANGELOG.md` fixed desktop and third-party sessions inheriting host managed-settings API keys incorrectly.
+- `CHANGELOG.md` notes stdio MCP servers receive session and project dir env vars—scope per-tenant subprocesses.
+- The root README data-usage section informs tenant-facing privacy disclosures for hosted agents.
+
+## Duplicate Check
+
+This guide focuses on multi-tenant SaaS hosting patterns. secure-deployment-for-claude-agent-sdk-applications.mdx covers single-deployment hardening; external-session-storage-for-claude-agent-sdk-hosts.mdx dives deeper into storage backends.
+
+## References
+
+- Agent SDK hosting - https://code.claude.com/docs/en/agent-sdk/hosting
+- Secure SDK deployment - secure-deployment-for-claude-agent-sdk-applications
+- External session storage - external-session-storage-for-claude-agent-sdk-hosts
