@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { CATEGORIES, type Category } from "@/types/registry";
@@ -19,9 +20,8 @@ import { ogImageUrl, categoryAccent } from "@/lib/og-image";
 const categoryIds = new Set(CATEGORIES.map((c) => c.id));
 
 // Reuse the canonical registry ranking (recommendedScore) so hub order matches /browse.
-function topEntriesFor(id: string) {
-  return search({ categories: [id as Category] });
-}
+// Cached per render pass so head() and the component don't each re-run the search.
+const topEntriesFor = cache((id: string) => search({ categories: [id as Category] }));
 
 function faqFor(id: string, label: string) {
   return [

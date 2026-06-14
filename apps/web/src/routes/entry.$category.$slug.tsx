@@ -20,7 +20,10 @@ import {
   BadgeCheck,
   Globe2,
 } from "lucide-react";
-import { getEntry, related } from "@/data/search";
+import { getEntry, related, relatedGroups } from "@/data/search";
+import { BEST_LISTS } from "@/data/entries";
+import { COMPARISONS } from "@/data/comparisons";
+import { CONTRIBUTORS } from "@/data/contributors";
 import {
   CategoryPill,
   PlatformChip,
@@ -207,10 +210,31 @@ export const Route = createFileRoute("/entry/$category/$slug")({
   component: Dossier,
 });
 
+const RELATION_LABELS: Record<string, string> = {
+  alternative: "Alternatives",
+  "works-with": "Works with",
+  complementary: "Complementary",
+  extends: "Extends",
+  prerequisite: "Prerequisites",
+  "same-project": "Same project",
+  "same-ecosystem": "Same ecosystem",
+  "collection-member": "In the same collection",
+  related: "Related",
+};
+
 function Dossier() {
   const data = Route.useLoaderData() as { entry: Entry };
   const entry = data.entry;
-  const rel = related(entry);
+  // Memoized: related() scans all entries (tag-overlap fallback); recomputing on every harness/tab
+  // toggle was wasted work. entry is stable per page.
+  const rel = useMemo(() => related(entry), [entry]);
+  const relGroups = useMemo(() => relatedGroups(entry), [entry]);
+  const entryRef = `${entry.category}/${entry.slug}`;
+  const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
+  const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
+  const authorContributor = CONTRIBUTORS.find(
+    (c) => c.handle === entry.author || c.handle === entry.submittedBy || c.name === entry.author,
+  );
   const recents = useRecents();
   useEffect(() => {
     recents.pushEntry({ category: entry.category, slug: entry.slug, title: entry.title });
@@ -303,7 +327,18 @@ function Dossier() {
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-ink-muted">
             <span>
-              by <span className="text-ink">{entry.author}</span>
+              by{" "}
+              {authorContributor ? (
+                <Link
+                  to="/contributors/$slug"
+                  params={{ slug: authorContributor.slug }}
+                  className="text-ink hover:underline"
+                >
+                  {entry.author}
+                </Link>
+              ) : (
+                <span className="text-ink">{entry.author}</span>
+              )}
             </span>
             <span>·</span>
             <span>added {entry.dateAdded}</span>
@@ -319,7 +354,7 @@ function Dossier() {
             <span>·</span>
             <div className="flex flex-wrap gap-1">
               {entry.platforms.map((p) => (
-                <PlatformChip key={p} id={p} />
+                <PlatformChip key={p} id={p} asLink />
               ))}
             </div>
           </div>
@@ -591,13 +626,28 @@ function Dossier() {
             <SourceCitations entry={entry} />
           </DossierSection>
 
-          {rel.length > 0 && (
+          {(relGroups.length > 0 || rel.length > 0) && (
             <DossierSection id="related" title="Related resources">
-              <div className="grid gap-3 sm:grid-cols-2">
-                {rel.slice(0, 4).map((e) => (
-                  <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
-                ))}
-              </div>
+              {relGroups.length > 0 ? (
+                <div className="flex flex-col gap-6">
+                  {relGroups.map((g) => (
+                    <div key={g.relation}>
+                      <div className="eyebrow mb-2">{RELATION_LABELS[g.relation] ?? "Related"}</div>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {g.entries.map((e) => (
+                          <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {rel.slice(0, 4).map((e) => (
+                    <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+                  ))}
+                </div>
+              )}
               <div className="mt-3 text-right">
                 <Link
                   to="/$category"
@@ -607,6 +657,35 @@ function Dossier() {
                   More in {categoryLabels[entry.category] ?? entry.category} →
                 </Link>
               </div>
+            </DossierSection>
+          )}
+
+          {(featuredIn.length > 0 || comparedIn.length > 0) && (
+            <DossierSection id="featured-in" title="Featured in">
+              <ul className="flex flex-col gap-2 text-sm">
+                {featuredIn.map((l) => (
+                  <li key={`best-${l.slug}`}>
+                    <Link
+                      to="/best/$slug"
+                      params={{ slug: l.slug }}
+                      className="story-link text-ink"
+                    >
+                      Best list: {l.title}
+                    </Link>
+                  </li>
+                ))}
+                {comparedIn.map((c) => (
+                  <li key={`cmp-${c.slug}`}>
+                    <Link
+                      to="/compare/$slug"
+                      params={{ slug: c.slug }}
+                      className="story-link text-ink"
+                    >
+                      Comparison: {c.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </DossierSection>
           )}
 

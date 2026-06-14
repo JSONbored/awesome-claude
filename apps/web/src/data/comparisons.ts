@@ -67,6 +67,75 @@ export const COMPARISONS: Comparison[] = [
     intro: "Observability and eval platforms for LLM apps, compared on trust, source, and setup.",
     refs: ["tools/langfuse", "tools/langsmith", "tools/helicone", "tools/braintrust"],
   },
+  {
+    slug: "search-mcp-servers",
+    title: "Brave Search vs Exa vs Perplexity MCP servers for Claude",
+    heading: "Web search MCP servers compared",
+    seoDescription:
+      "Compare the Brave Search, Exa, and Perplexity MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Web-search MCP servers that give Claude live retrieval, compared on trust, setup, and safety signals.",
+    refs: ["mcp/brave-search-mcp-server", "mcp/exa-mcp-server", "mcp/perplexity-mcp-server"],
+  },
+  {
+    slug: "vector-database-mcp-servers",
+    title: "Pinecone vs Chroma vs Qdrant MCP servers for Claude",
+    heading: "Vector database MCP servers compared",
+    seoDescription:
+      "Compare the Pinecone, Chroma, and Qdrant MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Vector-store MCP servers for retrieval-augmented Claude workflows, compared on trust, setup, and platforms.",
+    refs: ["mcp/pinecone-developer-mcp-server", "mcp/chroma-mcp-server", "mcp/qdrant-mcp-server"],
+  },
+  {
+    slug: "browser-automation-mcp-servers",
+    title: "Playwright vs Browserbase MCP servers for Claude",
+    heading: "Browser automation MCP servers compared",
+    seoDescription:
+      "Compare the Playwright and Browserbase MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Browser-automation MCP servers that let Claude drive a real browser, compared on trust, setup, and safety.",
+    refs: ["mcp/playwright-mcp-server", "mcp/browserbase-mcp-server"],
+  },
+  {
+    slug: "project-management-mcp-servers",
+    title: "Linear vs Jira vs Notion vs Asana MCP servers for Claude",
+    heading: "Project management MCP servers compared",
+    seoDescription:
+      "Compare the Linear, Jira, Notion, and Asana MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Project- and issue-tracking MCP servers for Claude Code, compared on trust, platforms, and setup.",
+    refs: [
+      "mcp/linear-mcp-server",
+      "mcp/jira-mcp-server",
+      "mcp/notion-mcp-server",
+      "mcp/asana-mcp-server",
+    ],
+  },
+  {
+    slug: "observability-mcp-servers",
+    title: "Datadog vs Grafana vs Sentry MCP servers for Claude",
+    heading: "Observability MCP servers compared",
+    seoDescription:
+      "Compare the Datadog, Grafana, and Sentry MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Monitoring and observability MCP servers that bring metrics and errors into Claude, compared on trust and setup.",
+    refs: ["mcp/datadog-mcp-server", "mcp/grafana-mcp-server", "mcp/sentry-mcp-server"],
+  },
+  {
+    slug: "memory-mcp-servers",
+    title: "Memory vs Basic Memory vs Codebase Memory MCP servers for Claude",
+    heading: "Memory MCP servers compared",
+    seoDescription:
+      "Compare the Memory, Basic Memory, and Codebase Memory MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Persistent-memory MCP servers that give Claude recall across sessions, compared on trust, setup, and safety.",
+    refs: [
+      "mcp/memory-mcp-server",
+      "mcp/basic-memory-mcp-server",
+      "mcp/codebase-memory-mcp-server",
+    ],
+  },
 ];
 
 export function getComparison(slug: string) {

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
@@ -20,6 +20,7 @@ import {
 import { logClientError } from "@/lib/client-logs";
 import { siteConfig } from "@/lib/site";
 import { CopyButton } from "@/components/copy-button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -505,9 +506,9 @@ function SubmitPage() {
             </div>
 
             {submitError && (
-              <div className="rounded-md border border-trust-blocked/40 bg-trust-blocked/10 px-3 py-2 text-sm text-ink">
-                {submitError}
-              </div>
+              <Alert variant="destructive">
+                <AlertDescription>{submitError}</AlertDescription>
+              </Alert>
             )}
           </div>
         )}
@@ -566,12 +567,14 @@ function ServerPreflightBlock({
   }
   if (error) {
     return (
-      <div className="rounded-md border border-trust-blocked/40 bg-trust-blocked/10 px-3 py-2 text-sm text-ink">
-        {error}{" "}
-        <button type="button" onClick={onRun} className="font-medium underline">
-          Retry
-        </button>
-      </div>
+      <Alert variant="destructive">
+        <AlertDescription>
+          {error}{" "}
+          <button type="button" onClick={onRun} className="font-medium underline">
+            Retry
+          </button>
+        </AlertDescription>
+      </Alert>
     );
   }
   if (!result) {
@@ -732,10 +735,14 @@ function TextArea({
   onChange: (v: string) => void;
   examples?: string[];
 }) {
+  const id = useId();
   return (
     <div>
-      <div className="eyebrow mb-1.5">{label}</div>
+      <label htmlFor={id} className="eyebrow mb-1.5 block">
+        {label}
+      </label>
       <textarea
+        id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         rows={4}

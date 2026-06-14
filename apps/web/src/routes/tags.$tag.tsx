@@ -6,7 +6,7 @@ import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
-import { getTagGroup } from "@/lib/tags";
+import { getTagGroup, relatedTags } from "@/lib/tags";
 
 export const Route = createFileRoute("/tags/$tag")({
   loader: ({ params }) => {
@@ -83,6 +83,7 @@ function TagHub() {
   const group = getTagGroup(tag);
   if (!group) return null;
   const entries = group.entries;
+  const related = relatedTags(group.slug);
 
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
@@ -98,6 +99,22 @@ function TagHub() {
           the HeyClaude directory — across MCP servers, agents, skills, hooks, commands, and more.
         </p>
       </header>
+
+      {related.length > 0 && (
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <span className="eyebrow mr-1">Related topics</span>
+          {related.map((g) => (
+            <Link
+              key={g.slug}
+              to="/tags/$tag"
+              params={{ tag: g.slug }}
+              className="rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted transition-colors hover:border-ink/20 hover:text-ink"
+            >
+              {g.name}
+            </Link>
+          ))}
+        </div>
+      )}
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {entries.map((e) => (

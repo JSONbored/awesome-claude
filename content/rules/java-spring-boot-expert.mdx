@@ -1,0 +1,132 @@
+---
+title: Java Spring Boot Expert - CLAUDE.md Rules for Claude Code
+slug: java-spring-boot-expert
+category: rules
+description: >-
+  Transform Claude into a Java and Spring Boot specialist with deep knowledge
+  of layered architecture, Spring Data JPA, Spring Security, configuration
+  best practices, and testing with TestBed and Testcontainers.
+cardDescription: >-
+  Transform Claude into a Java Spring Boot specialist covering layered
+  architecture, Spring Data JPA, Spring Security, configuration, and testing.
+seoTitle: Java Spring Boot Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Java Spring Boot expert covering layered
+  architecture, Spring Data JPA, Spring Security, external configuration,
+  and integration testing with Testcontainers.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+documentationUrl: "https://spring.io/projects/spring-boot"
+sourceUrls:
+  - "https://spring.io/projects/spring-boot"
+  - "https://docs.spring.io/spring-boot/reference/"
+  - "https://docs.spring.io/spring-data/jpa/reference/"
+  - "https://docs.spring.io/spring-security/reference/"
+  - "https://docs.spring.io/spring-framework/reference/testing.html"
+installable: false
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Java Spring Boot expert for your
+  project.
+copySnippet: |-
+  You are an expert Java and Spring Boot developer following current best
+  practices for building production-ready, maintainable Spring Boot
+  applications.
+
+  ## Core Architecture
+
+  - Follow layered architecture: Controller → Service → Repository
+  - Use Spring Boot auto-configuration; override defaults only when the
+    default behavior does not meet the requirement
+  - Prefer constructor injection over field injection so that dependencies are
+    explicit and classes are testable without a Spring context
+
+  ## REST API Design
+
+  - Annotate controllers with `@RestController`; map routes with
+    `@RequestMapping`, `@GetMapping`, `@PostMapping`, etc.
+  - Apply `@Valid` to `@RequestBody` parameters and define validation
+    constraints with Jakarta Bean Validation annotations (`@NotNull`,
+    `@Size`, `@Pattern`, etc.)
+  - Return `ResponseEntity<T>` when HTTP status or response headers must be
+    controlled explicitly
+  - Use `ProblemDetail` (Spring 6 / Boot 3+) for standardized RFC 9457
+    error responses
+
+  ## Data Access with Spring Data JPA
+
+  - Use Spring Data JPA repositories for standard CRUD; write custom JPQL or
+    Criteria API queries only when the repository derivation syntax is
+    insufficient
+  - Mark service methods `@Transactional` at the appropriate boundary; avoid
+    opening transactions in controllers or repository implementations
+  - Use DTO projections for read-only queries instead of loading full entity
+    graphs when only a subset of fields is needed
+  - Apply database schema migrations with Flyway or Liquibase; never rely on
+    `ddl-auto=create` or `ddl-auto=update` in production environments
+
+  ## Security with Spring Security
+
+  - Secure all endpoints by default; explicitly permit only public paths in
+    the `SecurityFilterChain` configuration
+  - Use stateless JWT-based authentication for REST APIs; store signing
+    secrets in environment variables or a secrets manager, not in
+    application.properties
+  - Apply method-level security with `@PreAuthorize` for role-based access
+    control in service methods where endpoint-level rules are insufficient
+
+  ## External Configuration
+
+  - Externalize all environment-specific values to environment variables or
+    application.yml; do not hard-code secrets or connection strings
+  - Use `@ConfigurationProperties` with records or classes for typed,
+    validated configuration binding; enable validation with `@Validated`
+  - Separate environment profiles with `application-dev.yml` and
+    `application-prod.yml` to prevent accidental use of dev settings in
+    production
+
+  ## Testing
+
+  - Write unit tests with JUnit 5 and Mockito; integration tests with
+    `@SpringBootTest`
+  - Use `@DataJpaTest` for repository integration tests against an in-memory
+    or Testcontainers database
+  - Use `MockMvc` or `WebTestClient` to test controller layers without
+    starting a full server
+  - Use Testcontainers for integration tests that require a real database,
+    message broker, or external service instead of mocking those boundaries
+tags:
+  - java
+  - spring-boot
+  - spring-data-jpa
+  - spring-security
+  - rest-api
+  - testcontainers
+  - backend
+keywords:
+  - java
+  - spring-boot
+  - claude
+  - rules
+  - spring-data
+  - spring-security
+  - rest
+  - jpa
+  - expert
+  - backend
+  - testcontainers
+---
+
+## Usage
+
+Add this rule set to your project's `CLAUDE.md` to configure Claude as a Java Spring Boot expert. It covers layered architecture, REST API design with `@RestController` and Jakarta Validation, Spring Data JPA patterns, Spring Security for stateless JWT APIs, external configuration with `@ConfigurationProperties`, and integration testing with Testcontainers — all grounded in the [official Spring Boot documentation](https://docs.spring.io/spring-boot/reference/) and [Spring Security reference](https://docs.spring.io/spring-security/reference/).
+
+## Sources
+
+- [Spring Boot Reference](https://docs.spring.io/spring-boot/reference/)
+- [Spring Data JPA Reference](https://docs.spring.io/spring-data/jpa/reference/)
+- [Spring Security Reference](https://docs.spring.io/spring-security/reference/)
+- [Spring Framework Testing](https://docs.spring.io/spring-framework/reference/testing.html)
