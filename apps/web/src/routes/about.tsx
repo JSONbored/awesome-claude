@@ -1,3 +1,4 @@
+// reviewbot visual-preview smoke test — no-op comment to trigger a Cloudflare non-prod preview build.
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ShieldCheck, GitBranch, Users, Sparkles } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
