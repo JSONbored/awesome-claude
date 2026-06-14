@@ -190,14 +190,14 @@ invalidation and cost drivers rather than general context pressure management.
 
 ## Review Matrix
 
-| Trigger | Cache impact | Safer mitigation |
-| --- | --- | --- |
-| Model switch mid-session | High | Hold alias stable for task slice |
-| Large CLAUDE.md edit | High | Batch edits; restart session cleanly |
-| New MCP server | Medium–High | Add only when needed; remove unused |
-| Skill description bloat | Medium | Trim descriptions; user-only flag |
-| Frequent unrelated tasks | Medium | Use `/clear` between task types |
-| Hook output injection | Medium | Reduce verbose hook returns |
+| Trigger                  | Cache impact | Safer mitigation                     |
+| ------------------------ | ------------ | ------------------------------------ |
+| Model switch mid-session | High         | Hold alias stable for task slice     |
+| Large CLAUDE.md edit     | High         | Batch edits; restart session cleanly |
+| New MCP server           | Medium–High  | Add only when needed; remove unused  |
+| Skill description bloat  | Medium       | Trim descriptions; user-only flag    |
+| Frequent unrelated tasks | Medium       | Use `/clear` between task types      |
+| Hook output injection    | Medium       | Reduce verbose hook returns          |
 
 ## Output Contract
 
