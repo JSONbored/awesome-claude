@@ -8,6 +8,7 @@ import { ScrollProgress } from "./scroll-progress";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { NewsletterInline } from "./newsletter-inline";
+import { CATEGORIES } from "@/types/registry";
 
 const NAV = [
   { to: "/browse", label: "Browse" },
@@ -149,6 +150,7 @@ export function Footer() {
             { to: "/tags", label: "Tags" },
             { to: "/for", label: "Platforms" },
             { to: "/best", label: "Best lists" },
+            { to: "/compare", label: "Compare" },
             { to: "/quality", label: "Quality" },
             { to: "/changelog", label: "Changelog" },
             { to: "/brief", label: "Weekly Brief" },
@@ -179,6 +181,23 @@ export function Footer() {
           ]}
           span={3}
         />
+      </div>
+      <div className="border-t border-border">
+        <div className="mx-auto max-w-[1400px] px-4 py-4 sm:px-6">
+          <div className="eyebrow mb-2">Categories</div>
+          <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-ink-muted">
+            {CATEGORIES.map((c) => (
+              <Link
+                key={c.id}
+                to="/$category"
+                params={{ category: c.id }}
+                className="hover:text-ink"
+              >
+                {c.label}
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-[1400px] flex-col items-start gap-3 px-4 py-5 text-xs text-ink-subtle sm:flex-row sm:items-center sm:justify-between sm:px-6">

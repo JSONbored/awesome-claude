@@ -48,3 +48,23 @@ export function getTagGroup(slug: string): TagGroup | undefined {
 export function getIndexableTagGroups(): TagGroup[] {
   return getAllTagGroups().filter((group) => group.entries.length >= 2);
 }
+
+// Tags that most co-occur with this one across its entries — for "related topics" interlinking.
+// Only returns indexable (>=2 entry) groups so we never link to thin/noindex tag pages.
+export function relatedTags(slug: string, limit = 8): TagGroup[] {
+  const group = getTagGroup(slug);
+  if (!group) return [];
+  const counts = new Map<string, number>();
+  for (const entry of group.entries) {
+    for (const tag of entry.tags ?? []) {
+      const s = tagSlug(tag);
+      if (s === group.slug) continue;
+      counts.set(s, (counts.get(s) ?? 0) + 1);
+    }
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([s]) => getTagGroup(s))
+    .filter((g): g is TagGroup => Boolean(g) && (g as TagGroup).entries.length >= 2)
+    .slice(0, limit);
+}

@@ -111,7 +111,15 @@ export const Route = createFileRoute("/$category")({
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImage },
       ],
-      links: [{ rel: "canonical", href: url }],
+      links: [
+        { rel: "canonical", href: url },
+        {
+          rel: "alternate",
+          type: "application/rss+xml",
+          href: absoluteUrl(`/feeds/${id}.xml`),
+          title: `Claude ${label} — HeyClaude`,
+        },
+      ],
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(itemList) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
