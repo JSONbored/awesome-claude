@@ -6,7 +6,7 @@ import atlasRegistry from "@/generated/atlas-registry.json";
 import { getJobs } from "@/lib/jobs";
 import { siteConfig } from "@/lib/site";
 import { applySecurityHeaders } from "@/lib/security-headers";
-import { CATEGORIES, PLATFORM_LABEL, type Platform } from "@/types/registry";
+import { CATEGORIES, PLATFORM_LABEL } from "@/types/registry";
 import { getIndexableTagGroups } from "@/lib/tags";
 import { COMPARISONS } from "@/data/comparisons";
 
@@ -88,14 +88,21 @@ async function renderSitemap() {
   const jobPaths = (await getJobs()).map((job) => `/jobs/${job.slug}`);
   // category × platform intersection hubs — only those with >=2 entries (the route noindexes
   // thinner ones), so the sitemap never advertises a thin page.
+  // One pass over ENTRIES building a `${category}/${platform}` -> count map (was platforms ×
+  // categories × ENTRIES.filter ≈ 83K iterations per request).
+  const intersectionCounts = new Map<string, number>();
+  for (const entry of ENTRIES) {
+    for (const platform of entry.platforms ?? []) {
+      const key = `${entry.category}/${platform}`;
+      intersectionCounts.set(key, (intersectionCounts.get(key) ?? 0) + 1);
+    }
+  }
   const intersectionPaths: string[] = [];
   for (const platform of Object.keys(PLATFORM_LABEL)) {
     for (const category of CATEGORIES) {
-      const count = ENTRIES.filter(
-        (entry) =>
-          entry.category === category.id && (entry.platforms ?? []).includes(platform as Platform),
-      ).length;
-      if (count >= 2) intersectionPaths.push(`/for/${platform}/${category.id}`);
+      if ((intersectionCounts.get(`${category.id}/${platform}`) ?? 0) >= 2) {
+        intersectionPaths.push(`/for/${platform}/${category.id}`);
+      }
     }
   }
 

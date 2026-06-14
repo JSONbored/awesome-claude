@@ -225,8 +225,10 @@ const RELATION_LABELS: Record<string, string> = {
 function Dossier() {
   const data = Route.useLoaderData() as { entry: Entry };
   const entry = data.entry;
-  const rel = related(entry);
-  const relGroups = relatedGroups(entry);
+  // Memoized: related() scans all entries (tag-overlap fallback); recomputing on every harness/tab
+  // toggle was wasted work. entry is stable per page.
+  const rel = useMemo(() => related(entry), [entry]);
+  const relGroups = useMemo(() => relatedGroups(entry), [entry]);
   const entryRef = `${entry.category}/${entry.slug}`;
   const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
   const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
