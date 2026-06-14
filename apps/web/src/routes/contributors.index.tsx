@@ -7,7 +7,7 @@ import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 
-export const Route = createFileRoute("/contributors")({
+export const Route = createFileRoute("/contributors/")({
   head: () => ({
     meta: [
       { title: "Contributors — HeyClaude" },

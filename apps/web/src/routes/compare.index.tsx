@@ -20,7 +20,7 @@ const searchSchema = z.object({
   ids: z.string().catch(defaultSearch.ids).default(defaultSearch.ids),
 });
 
-export const Route = createFileRoute("/compare")({
+export const Route = createFileRoute("/compare/")({
   validateSearch: searchSchema,
   search: {
     middlewares: [stripSearchParams(defaultSearch)],

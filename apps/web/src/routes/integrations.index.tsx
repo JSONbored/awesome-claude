@@ -6,7 +6,7 @@ import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 
-export const Route = createFileRoute("/integrations")({
+export const Route = createFileRoute("/integrations/")({
   head: () => ({
     meta: [
       { title: "Integrations — HeyClaude" },

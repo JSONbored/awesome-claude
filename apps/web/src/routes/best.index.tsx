@@ -6,7 +6,7 @@ import { BEST_LISTS, ENTRIES } from "@/data/entries";
 import { ResourceCard } from "@/components/resource-card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 
-export const Route = createFileRoute("/best")({
+export const Route = createFileRoute("/best/")({
   head: () => ({
     meta: [
       { title: "Best of HeyClaude — curated Claude workflow lists" },
@@ -56,7 +56,7 @@ function BestPage() {
         what you'd reach for instead.
       </p>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
+      <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {BEST_LISTS.map((b) => {
           const previewTitles = b.picks
             .slice(0, 3)
@@ -70,7 +70,7 @@ function BestPage() {
               key={b.slug}
               to="/best/$slug"
               params={{ slug: b.slug }}
-              className="group flex flex-col gap-3 rounded-xl border border-border bg-surface p-6 transition-colors duration-200 ease-out hover:bg-surface-2"
+              className="group flex min-w-0 flex-col gap-3 rounded-xl border border-border bg-surface p-6 transition-colors duration-200 ease-out hover:bg-surface-2"
             >
               <div className="eyebrow">
                 {b.picks.length} picks · {b.category}
