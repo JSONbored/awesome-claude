@@ -133,12 +133,8 @@ export function TopBar() {
       <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
         <SheetContent side="left" className="w-72">
           <SheetHeader>
-            <SheetTitle className="font-display text-base font-semibold text-ink">
-              Menu
-            </SheetTitle>
-            <SheetDescription className="sr-only">
-              Primary site navigation links.
-            </SheetDescription>
+            <SheetTitle className="font-display text-base font-semibold text-ink">Menu</SheetTitle>
+            <SheetDescription className="sr-only">Primary site navigation links.</SheetDescription>
           </SheetHeader>
           <nav className="mt-6 flex flex-col gap-1">
             {NAV.map((item) => {
@@ -151,7 +147,9 @@ export function TopBar() {
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "rounded-md px-3 py-2 text-sm transition-colors duration-200 ease-out",
-                    active ? "bg-surface-2 text-ink" : "text-ink-muted hover:bg-surface-2 hover:text-ink",
+                    active
+                      ? "bg-surface-2 text-ink"
+                      : "text-ink-muted hover:bg-surface-2 hover:text-ink",
                   )}
                 >
                   {item.label}
@@ -202,6 +200,7 @@ export function Footer() {
             { to: "/best", label: "Best lists" },
             { to: "/compare", label: "Compare" },
             { to: "/quality", label: "Quality" },
+            { to: "/state-of-claude-tooling", label: "State of tooling" },
             { to: "/changelog", label: "Changelog" },
             { to: "/brief", label: "Weekly Brief" },
           ]}

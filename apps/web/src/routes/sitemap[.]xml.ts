@@ -56,6 +56,7 @@ async function renderSitemap() {
     "/ecosystem",
     "/platforms",
     "/quality",
+    "/state-of-claude-tooling",
     "/trending",
     "/compare",
     "/changelog",
