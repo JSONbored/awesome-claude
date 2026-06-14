@@ -103,6 +103,58 @@ export function renderOgSvg(opts: {
 </svg>`;
 }
 
+/**
+ * Shield-style "Listed on HeyClaude" badge SVG, sized like shields.io badges so it
+ * drops cleanly into a README. Two segments: a dark left label and an accent-tinted
+ * right value (the entry's category). All caller-supplied text is escaped via esc()
+ * before it lands in the markup, so an entry-derived value can't break out of the SVG.
+ */
+export function renderBadgeSvg(opts: { label?: string; value: string; accent?: string }) {
+  const label = (opts.label ?? "Listed on HeyClaude").trim() || "Listed on HeyClaude";
+  const value = opts.value.trim() || "registry";
+  const accent = safeAccent(opts.accent);
+
+  // Approximate Verdana 11px advance width (≈6.4px/char) + horizontal padding per segment.
+  const charWidth = 6.4;
+  const pad = 12;
+  const height = 20;
+  const labelWidth = Math.ceil(label.length * charWidth) + pad * 2;
+  const valueWidth = Math.ceil(value.length * charWidth) + pad * 2;
+  const total = labelWidth + valueWidth;
+  // ×10 because text is rendered at scale(0.1) for crisp sub-pixel positioning (shields.io trick).
+  const labelMid = (labelWidth / 2) * 10;
+  const valueMid = (labelWidth + valueWidth / 2) * 10;
+  const labelTextLen = (labelWidth - pad * 2) * 10;
+  const valueTextLen = (valueWidth - pad * 2) * 10;
+  const safeLabel = esc(label);
+  const safeValue = esc(value);
+
+  // Escaped text only ever lands in element content (never an attribute), so esc()'s
+  // <, >, & coverage is sufficient — a raw quote can't break out of an attribute.
+  // The <title> element supplies the accessible name for role="img".
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${total}" height="${height}" viewBox="0 0 ${total} ${height}" role="img">
+  <title>${safeLabel}: ${safeValue}</title>
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#fff" stop-opacity=".7"/>
+    <stop offset=".1" stop-color="#aaa" stop-opacity=".1"/>
+    <stop offset=".9" stop-color="#000" stop-opacity=".3"/>
+    <stop offset="1" stop-color="#000" stop-opacity=".5"/>
+  </linearGradient>
+  <clipPath id="r"><rect width="${total}" height="${height}" rx="3"/></clipPath>
+  <g clip-path="url(#r)">
+    <rect width="${labelWidth}" height="${height}" fill="#171614"/>
+    <rect x="${labelWidth}" width="${valueWidth}" height="${height}" fill="${accent}"/>
+    <rect width="${total}" height="${height}" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="110" transform="scale(.1)">
+    <text x="${labelMid}" y="150" fill="#000" fill-opacity=".25" textLength="${labelTextLen}">${safeLabel}</text>
+    <text x="${labelMid}" y="140" textLength="${labelTextLen}">${safeLabel}</text>
+    <text x="${valueMid}" y="150" fill="#000" fill-opacity=".25" textLength="${valueTextLen}">${safeValue}</text>
+    <text x="${valueMid}" y="140" fill="#171614" textLength="${valueTextLen}">${safeValue}</text>
+  </g>
+</svg>`;
+}
+
 /** OG card dimensions, exported so routes can advertise them in og:image:width/height. */
 export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;

@@ -270,6 +270,7 @@ function Dossier() {
     if (hasSchema) items.push({ id: "schema", label: "Schema details" });
     items.push({ id: "about", label: "About this resource" });
     items.push({ id: "citations", label: "Source citations" });
+    items.push({ id: "badge", label: "Add a badge" });
     if (rel.length > 0) items.push({ id: "related", label: "Related" });
     items.push({ id: "signals", label: "Signals" });
     return items;
@@ -626,6 +627,8 @@ function Dossier() {
             <SourceCitations entry={entry} />
           </DossierSection>
 
+          <BadgeSection category={entry.category} slug={entry.slug} title={entry.title} />
+
           {(relGroups.length > 0 || rel.length > 0) && (
             <DossierSection id="related" title="Related resources">
               {relGroups.length > 0 ? (
@@ -714,6 +717,45 @@ function Dossier() {
         </aside>
       </div>
     </div>
+  );
+}
+
+function BadgeSection({
+  category,
+  slug,
+  title,
+}: {
+  category: string;
+  slug: string;
+  title: string;
+}) {
+  const badgeUrl = absoluteUrl(`/badge/${category}/${slug}.svg`);
+  const entryUrl = absoluteUrl(`/entry/${category}/${slug}`);
+  const markdown = `[![Listed on HeyClaude](${badgeUrl})](${entryUrl})`;
+  return (
+    <DossierSection id="badge" icon={BadgeCheck} title="Add this badge to your README">
+      <p className="text-ink-muted">
+        Show that <span className="text-ink">{title}</span> is listed on HeyClaude. Paste this
+        Markdown into your README — it renders the badge and links back to this page.
+      </p>
+      <div className="mt-3 flex items-center gap-3">
+        <a href={entryUrl} target="_blank" rel="noreferrer">
+          <img src={badgeUrl} alt="Listed on HeyClaude" height={20} className="h-5 w-auto" />
+        </a>
+      </div>
+      <div className="mt-3 flex items-start gap-2">
+        <pre className="min-w-0 flex-1 overflow-auto rounded-md bg-surface-2 p-3 font-mono text-[12px] leading-relaxed text-ink">
+          <code>{markdown}</code>
+        </pre>
+        <CopyButton
+          value={markdown}
+          label="Copy"
+          iconOnly
+          size="md"
+          toastLabel="Badge Markdown copied"
+        />
+      </div>
+    </DossierSection>
   );
 }
 
