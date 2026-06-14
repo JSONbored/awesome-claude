@@ -15,6 +15,7 @@
     "predeploy": "pnpm run generate:artifacts",
     "predeploy:dev": "pnpm run generate:artifacts",
     "predeploy:prod": "pnpm run generate:artifacts",
+    "preversions:upload": "pnpm run generate:artifacts",
     "dev": "vite dev",
     "build": "vite build",
     "type-check": "tsc --noEmit",
@@ -24,7 +25,8 @@
     "preview": "vite build && wrangler dev --config wrangler.jsonc",
     "deploy": "pnpm run deploy:prod",
     "deploy:dev": "vite build && wrangler deploy --config wrangler.jsonc --env dev",
-    "deploy:prod": "vite build && wrangler deploy --config wrangler.jsonc --env \"\""
+    "deploy:prod": "vite build && wrangler deploy --config wrangler.jsonc --env \"\"",
+    "versions:upload": "vite build && wrangler versions upload --config wrangler.jsonc --env \"\""
   },
   "dependencies": {
     "@heyclaude/mcp": "workspace:*",
