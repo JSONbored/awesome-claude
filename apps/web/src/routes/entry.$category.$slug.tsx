@@ -45,6 +45,7 @@ import { DossierTOC, type TocItem } from "@/components/dossier-toc";
 import { EntryFacets } from "@/components/entry-facets";
 import { HarnessBadge } from "@/components/harness-badge";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { CategoryHubLink } from "@/components/category-hub-link";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { SourceCitations } from "@/components/source-citations";
 import { ProvenanceBlock } from "@/components/provenance-block";
@@ -266,11 +267,17 @@ function Dossier() {
       <Breadcrumbs
         items={[
           { label: "Directory", to: "/browse" },
-          {
-            label: categoryLabels[entry.category] ?? entry.category,
-            to: "/$category",
-            params: { category: entry.category },
-          },
+          entry.category === "tools"
+            ? {
+                label: categoryLabels[entry.category] ?? entry.category,
+                to: "/browse",
+                search: { category: entry.category },
+              }
+            : {
+                label: categoryLabels[entry.category] ?? entry.category,
+                to: "/$category",
+                params: { category: entry.category },
+              },
           { label: entry.title },
         ]}
       />
@@ -619,13 +626,12 @@ function Dossier() {
                 ))}
               </div>
               <div className="mt-3 text-right">
-                <Link
-                  to="/$category"
-                  params={{ category: entry.category }}
+                <CategoryHubLink
+                  category={entry.category}
                   className="story-link text-xs font-medium text-ink"
                 >
                   More in {categoryLabels[entry.category] ?? entry.category} →
-                </Link>
+                </CategoryHubLink>
               </div>
             </DossierSection>
           )}

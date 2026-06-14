@@ -31,6 +31,7 @@ import { CATEGORIES, type Category } from "@/types/registry";
 import { ENTRIES, BRIEF_ISSUES, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { search } from "@/data/search";
 import { absoluteUrl } from "@/lib/seo";
+import { CategoryHubLink } from "@/components/category-hub-link";
 
 // Pre-computed counts at module scope so SSR + first paint show real numbers.
 const TRUSTED_COUNT = ENTRIES.filter((e) => e.trust === "trusted").length;
@@ -244,10 +245,9 @@ function Home() {
             const count = ENTRIES.filter((e) => e.category === c.id).length;
             const Icon = CATEGORY_ICONS[c.id] ?? Sparkles;
             return (
-              <Link
+              <CategoryHubLink
                 key={c.id}
-                to="/$category"
-                params={{ category: c.id }}
+                category={c.id}
                 className="group hover-lift relative flex flex-col gap-1 bg-surface p-4 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60"
               >
                 <div className="flex items-center justify-between">
@@ -260,7 +260,7 @@ function Home() {
                   aria-hidden
                   className="absolute inset-y-0 left-0 w-px origin-bottom scale-y-0 bg-accent transition-transform duration-200 group-hover:scale-y-100"
                 />
-              </Link>
+              </CategoryHubLink>
             );
           })}
         </div>

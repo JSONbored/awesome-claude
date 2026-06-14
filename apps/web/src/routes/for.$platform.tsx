@@ -4,6 +4,7 @@ import { CATEGORIES, PLATFORM_LABEL, type Platform } from "@/types/registry";
 import { search } from "@/data/search";
 import { categoryLabels } from "@/lib/site";
 import { ResourceCard } from "@/components/resource-card";
+import { CategoryHubLink } from "@/components/category-hub-link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
@@ -111,7 +112,11 @@ function PlatformPage() {
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
       <Breadcrumbs
-        items={[{ label: "Directory", to: "/browse" }, { label: "Platforms", to: "/for" }, { label }]}
+        items={[
+          { label: "Directory", to: "/browse" },
+          { label: "Platforms", to: "/for" },
+          { label },
+        ]}
         home
       />
       <header className="mt-6 max-w-3xl">
@@ -138,13 +143,12 @@ function PlatformPage() {
             <h2 className="h-display-2 text-ink">
               {categoryLabels[section.category.id] ?? section.category.label}
             </h2>
-            <Link
-              to="/$category"
-              params={{ category: section.category.id }}
+            <CategoryHubLink
+              category={section.category.id}
               className="story-link text-sm font-medium text-ink"
             >
               All {categoryLabels[section.category.id] ?? section.category.label} →
-            </Link>
+            </CategoryHubLink>
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {section.entries.map((e) => (

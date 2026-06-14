@@ -9,6 +9,7 @@ import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { NewsletterInline } from "./newsletter-inline";
 import { CATEGORIES } from "@/types/registry";
+import { CategoryHubLink } from "@/components/category-hub-link";
 
 const NAV = [
   { to: "/browse", label: "Browse" },
@@ -187,14 +188,9 @@ export function Footer() {
           <div className="eyebrow mb-2">Categories</div>
           <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-ink-muted">
             {CATEGORIES.map((c) => (
-              <Link
-                key={c.id}
-                to="/$category"
-                params={{ category: c.id }}
-                className="hover:text-ink"
-              >
+              <CategoryHubLink key={c.id} category={c.id} className="hover:text-ink">
                 {c.label}
-              </Link>
+              </CategoryHubLink>
             ))}
           </div>
         </div>
