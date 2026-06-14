@@ -1,0 +1,166 @@
+---
+title: "Remote Control for Mobile Claude Code Handoff"
+slug: remote-control-for-mobile-claude-code-handoff
+category: guides
+description: >-
+  Hand off a local Claude Code terminal session to the Claude web or mobile app with Remote Control, including session naming, reconnect behavior, and team rollout guardrails.
+cardDescription: Hand off Claude Code terminal sessions to web or mobile with Remote Control.
+seoTitle: "Remote Control for Mobile Claude Code Handoff"
+seoDescription: >-
+  Hand off a local Claude Code terminal session to the Claude web or mobile app with Remote Control, including session naming, reconnect behavior, and team rollout guardrails.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1384
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1384"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to start Remote Control from Claude Code and continue the same session on web or mobile without losing context.
+prerequisites:
+  - "A Claude.ai account with Remote Control enabled for your org tier."
+  - "Claude Code installed locally with network access to claude.ai services."
+  - "A named local session you want to hand off—not an API-key-only headless profile."
+  - "Team policy allowing Remote Control if you operate under managed settings."
+safetyNotes:
+  - "Remote Control exposes an active coding session to another device; lock screens and sign out shared machines before handing off."
+  - "Do not enable Remote Control on machines with production secrets in environment variables or uncommitted credentials."
+  - "Disconnect Remote Control before switching Claude accounts; sessions should not stay linked across identities."
+privacyNotes:
+  - "Remote Control traffic includes conversation history, tool outputs, and file paths visible to the linked web or mobile client."
+  - "Session names and footer links may appear on claude.ai; avoid embedding customer names or internal codenames."
+  - "Org admins can restrict Remote Control alongside API-key sessions—verify policy before rolling out to contractors."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/remote-control"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - remote-control
+  - mobile
+  - handoff
+  - teams
+keywords:
+  - "Claude Code Remote Control"
+  - "mobile handoff Claude Code"
+  - "remote control session"
+  - "claude.ai session link"
+  - "terminal to mobile"
+readingTime: 8
+difficultyScore: 42
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Remote Control links a local Claude Code session to the Claude web or mobile app so you can continue the same conversation away from your desk. Start it with `--remote-control` or `/remote-control`, watch the footer pill, and disconnect when the handoff ends.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### One session, two surfaces
+
+Remote Control does not fork a new conversation. The terminal session remains authoritative; web or mobile clients attach as remote viewers/controllers for the same transcript and tool loop.
+
+### Footer pill is the live indicator
+
+Recent builds show Remote Control as a persistent footer pill ("/rc active") with a link to the session instead of a one-time startup banner, making handoff state obvious during long tasks.
+
+### API-key sessions are excluded
+
+When `ANTHROPIC_API_KEY`, `apiKeyHelper`, or `ANTHROPIC_AUTH_TOKEN` is set, Remote Control and claude.ai MCP connectors are disabled even if a Claude.ai login exists.
+
+### Flags survive background wake
+
+Background sessions preserve `--remote-control` and related launch flags across retire→wake cycles, so handoff state should survive short idle periods.
+
+## Step-by-Step Implementation Guide
+
+1. **Confirm eligibility.** Verify you are on a Claude.ai login session without API-key overrides and that org policy permits Remote Control.
+
+2. **Start or resume locally.** Launch Claude Code in the project directory. Use `--resume` if continuing an existing session you plan to hand off.
+
+3. **Enable Remote Control.** Run `/remote-control` or start with `--remote-control`. Optionally set `--remote-control-session-name-prefix` for team naming conventions.
+
+4. **Open the linked session.** Follow the footer pill link or open the session on claude.ai or the Claude mobile app while the terminal stays connected.
+
+5. **Hand off work.** Continue prompting from mobile for reviews or approvals while the terminal handles local tools, git, and MCP servers.
+
+6. **Monitor reconnect behavior.** If OAuth refreshes during resume, watch for reconnect loops; retry `/remote-control` after token refresh completes.
+
+7. **Disconnect cleanly.** Use `/remote-control` autocomplete "Disconnect Remote Control" or close the remote client before signing out locally.
+
+8. **Document team convention.** Publish when engineers should use handoff versus starting a fresh claude.ai session to avoid duplicate workstreams.
+
+## Handoff Checklist
+
+- [ ] {"task": "Eligibility confirmed", "description": "Claude.ai login without API-key override"}
+- [ ] {"task": "Session named", "description": "Prefix or rename applied for team visibility"}
+- [ ] {"task": "Footer pill visible", "description": "/rc active appears with session link"}
+- [ ] {"task": "Mobile verified", "description": "Prompts round-trip between devices"}
+- [ ] {"task": "Disconnect tested", "description": "Remote client and terminal both release cleanly"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Remote Control unavailable
+
+Unset `ANTHROPIC_API_KEY` and related overrides, confirm Claude.ai login, and verify org tier allows Remote Control.
+
+### Stuck on reconnecting
+
+OAuth refresh during `--resume` can stall reconnect; wait for login to finish, disconnect, and re-enable Remote Control.
+
+### Model changed after mobile connect
+
+Recent fixes address silent model switches from web/mobile connect; pin model with `/model` if your workflow requires a specific tier.
+
+### Session not listed after rename
+
+Renames from claude.ai may lag locally for `claude --resume`; refresh session list or restart with the same session id.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- The root README documents Claude Code across terminal, IDE, and GitHub surfaces and points issue reporting to `/bug` or GitHub issues.
+- `CHANGELOG.md` records Remote Control as a persistent footer pill with "/rc active" and autocomplete to disconnect when already active.
+- `CHANGELOG.md` fixes Remote Control reconnect stalls when OAuth token refresh coincides with `--resume`.
+- `CHANGELOG.md` states Remote Control is disabled when `ANTHROPIC_API_KEY`, `apiKeyHelper`, or `ANTHROPIC_AUTH_TOKEN` is set.
+- `CHANGELOG.md` notes background sessions preserve `--remote-control` across retire→wake cycles.
+
+## Duplicate Check
+
+This guide focuses on mobile and web handoff via Remote Control. It complements resuming-branching-and-naming-claude-code-sessions.mdx, which covers local session naming and resume mechanics without remote surfaces.
+
+## References
+
+- Claude Code Remote Control - https://code.claude.com/docs/en/remote-control
+- Resume and branch sessions - resuming-branching-and-naming-claude-code-sessions
+- Claude Code setup - https://code.claude.com/docs/en/setup
