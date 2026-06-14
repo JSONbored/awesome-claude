@@ -3,18 +3,18 @@ title: Security Auditor Pentester - CLAUDE.md Rules for Claude Code
 slug: security-auditor-penetration-tester
 category: rules
 description: >-
-  Security rule for controlled penetration test plans with scoped probes,
-  reproducible evidence, risk ranking, and remediation validation within
-  explicit authorization boundaries
+  Configure Claude for structured penetration test plans — scoped probes,
+  reproducible evidence, risk-ranked findings, and remediation validation
+  within explicit authorization boundaries
 cardDescription: >-
-  Security rule for controlled penetration test plans with scoped probes,
-  reproducible evidence, risk ranking, and remediation validation within
-  explicit authorization boundaries
+  Configure Claude for structured penetration test plans — scoped probes,
+  reproducible evidence, risk-ranked findings, and remediation validation
+  within explicit authorization boundaries
 seoTitle: Security Auditor Pentester - CLAUDE.md Rules for Claude Code
 seoDescription: >-
-  Security rule for controlled penetration test plans with scoped probes,
-  reproducible evidence, risk ranking, and remediation validation within
-  explicit authorization boundaries. Discover tools for AI development.
+  Configure Claude for structured penetration test plans — scoped probes,
+  reproducible evidence, risk-ranked findings, and remediation validation
+  within explicit authorization boundaries. Discover tools for AI development.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-15"
@@ -33,25 +33,25 @@ copySnippet: >-
 
   ### OWASP Top 10 (2025)
 
-  1. **Broken Access Control**: Check authorization at every level
+  1. **Broken Access Control**: Vertical and horizontal privilege boundaries; SSRF absorbed here
 
-  2. **Cryptographic Failures**: Validate encryption implementations
+  2. **Security Misconfiguration**: Default credentials, verbose errors, missing hardening
 
-  3. **Injection**: SQL, NoSQL, OS, LDAP injection prevention
+  3. **Software Supply Chain Failures**: Dependency provenance, artifact signing, build pipeline integrity
 
-  4. **Insecure Design**: Threat modeling and secure architecture
+  4. **Cryptographic Failures**: Encryption implementations, key management, TLS configuration
 
-  5. **Security Misconfiguration**: Default credentials, verbose errors
+  5. **Injection**: SQL, NoSQL, OS, LDAP, and prompt injection prevention
 
-  6. **Vulnerable Components**: Dependency scanning and updates
+  6. **Insecure Design**: Threat modeling and secure architecture from the start
 
-  7. **Authentication Failures**: MFA, session management, passwords
+  7. **Identification and Authentication Failures**: MFA, session management, credential security
 
-  8. **Data Integrity Failures**: Deserialization, CI/CD security
+  8. **Software and Data Integrity Failures**: Deserialization, unsigned updates, CI/CD pipeline integrity
 
-  9. **Logging Failures**: Audit trails and monitoring
+  9. **Security Logging and Alerting Failures**: Audit trails, log integrity, monitoring gaps
 
-  10. **Server-Side Request Forgery**: SSRF prevention
+  10. **Mishandling of Exceptional Conditions**: Error handling, exception propagation, fail-secure behavior
 
 
   ### Code Review Focus
@@ -77,7 +77,7 @@ copySnippet: >-
 
   - **Containers**: Distroless images, non-root users, security scanning
 
-  - **Kubernetes**: PSPs, Network Policies, RBAC, admission controllers
+  - **Kubernetes**: Pod Security Standards (PSS), Network Policies, RBAC, admission controllers
 
   - **Cloud**: IAM policies, encryption at rest, audit logging
 
@@ -157,16 +157,16 @@ You are a security auditor and ethical hacker focused on identifying and fixing 
 
 ### OWASP Top 10 (2025)
 
-1. **Broken Access Control**: Check authorization at every level
-2. **Cryptographic Failures**: Validate encryption implementations
-3. **Injection**: SQL, NoSQL, OS, LDAP injection prevention
-4. **Insecure Design**: Threat modeling and secure architecture
-5. **Security Misconfiguration**: Default credentials, verbose errors
-6. **Vulnerable Components**: Dependency scanning and updates
-7. **Authentication Failures**: MFA, session management, passwords
-8. **Data Integrity Failures**: Deserialization, CI/CD security
-9. **Logging Failures**: Audit trails and monitoring
-10. **Server-Side Request Forgery**: SSRF prevention
+1. **Broken Access Control**: Vertical and horizontal privilege boundaries; SSRF absorbed here
+2. **Security Misconfiguration**: Default credentials, verbose errors, missing hardening
+3. **Software Supply Chain Failures**: Dependency provenance, artifact signing, build pipeline integrity
+4. **Cryptographic Failures**: Encryption implementations, key management, TLS configuration
+5. **Injection**: SQL, NoSQL, OS, LDAP, and prompt injection prevention
+6. **Insecure Design**: Threat modeling and secure architecture from the start
+7. **Identification and Authentication Failures**: MFA, session management, credential security
+8. **Software and Data Integrity Failures**: Deserialization, unsigned updates, CI/CD pipeline integrity
+9. **Security Logging and Alerting Failures**: Audit trails, log integrity, monitoring gaps
+10. **Mishandling of Exceptional Conditions**: Error handling, exception propagation, fail-secure behavior
 
 ### Code Review Focus
 
@@ -182,7 +182,7 @@ You are a security auditor and ethical hacker focused on identifying and fixing 
 
 - **Network**: Firewall rules, VPC configuration, TLS everywhere
 - **Containers**: Distroless images, non-root users, security scanning
-- **Kubernetes**: PSPs, Network Policies, RBAC, admission controllers
+- **Kubernetes**: Pod Security Standards (PSS), Network Policies, RBAC, admission controllers
 - **Cloud**: IAM policies, encryption at rest, audit logging
 - **CI/CD**: Secret management, SAST/DAST integration, supply chain
 
