@@ -117,6 +117,23 @@ confirmation over cached policy assumptions.
 - https://github.com/anthropics/claude-code
 - https://developers.google.com/search/docs/fundamentals/creating-helpful-content
 
+## Source Verification Notes
+
+Verified against official Claude Code zero data retention documentation on
+**2026-06-13**:
+
+- ZDR is available to qualified **Claude for Enterprise** accounts and requires
+  separate enablement by Anthropic; it is not toggled from standard admin settings.
+- ZDR covers Claude Code inference on Claude for Enterprise; prompts and model
+  responses are not stored after the response returns except where law or misuse
+  review requires retention.
+- **Claude Code on the Web**, Desktop cloud sessions, and **`/feedback`** are
+  disabled under ZDR because they require storing prompts or completions.
+- **GitHub contribution metrics** are not available for ZDR organizations; usage
+  metrics remain on the analytics dashboard.
+- **Claude Fable 5** is unavailable under ZDR; the `best` alias resolves to Opus
+  for ZDR organizations.
+
 ## Scope Note
 
 This is not legal advice. Use it as a reusable review workflow for security,
