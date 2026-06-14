@@ -1,0 +1,166 @@
+---
+title: "Claude Code on Microsoft Foundry Setup"
+slug: claude-code-on-microsoft-foundry-setup
+category: guides
+description: >-
+  Configure Claude Code on Microsoft Foundry: Azure auth, idle timeouts, auto mode opt-in, PowerShell tool defaults, and third-party provider messaging.
+cardDescription: Configure Claude Code on Microsoft Foundry with Azure credentials.
+seoTitle: "Claude Code on Microsoft Foundry Setup"
+seoDescription: >-
+  Configure Claude Code on Microsoft Foundry: Azure auth, idle timeouts, auto mode opt-in, PowerShell tool defaults, and third-party provider messaging.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1395
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1395"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to connect Claude Code to Microsoft Foundry with Azure authentication and correct model selection.
+prerequisites:
+  - "Azure Foundry or Azure AI project with Anthropic model deployment access."
+  - "Azure AD app, managed identity, or key-based auth approved by security."
+  - "Regional endpoint and deployment names documented for the team."
+  - "Windows developers identified if PowerShell tool defaults apply."
+safetyNotes:
+  - "Foundry credentials in CI should use federated workload identity—not checked-in client secrets."
+  - "Auto mode requires `CLAUDE_CODE_ENABLE_AUTO_MODE=1` on third-party providers."
+  - "PowerShell tool is enabled by default on Windows for Foundry users unless `CLAUDE_CODE_USE_POWERSHELL_TOOL=0`."
+privacyNotes:
+  - "Prompts stay within Azure boundary subject to your logging and diagnostic settings."
+  - "Welcome banner shows provider name instead of API Usage Billing on third-party providers."
+  - "Telemetry tips pointing at first-party surfaces are suppressed on Foundry deployments."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/microsoft-foundry"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - foundry
+  - azure
+  - enterprise
+  - providers
+keywords:
+  - "Claude Code Microsoft Foundry"
+  - "Azure Foundry Claude Code"
+  - "Foundry setup Claude"
+  - "CLAUDE_CODE_ENABLE_AUTO_MODE Foundry"
+  - "PowerShell tool Foundry"
+readingTime: 8
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Microsoft Foundry connects Claude Code to Azure-hosted Anthropic models with Azure AD authentication. Configure deployments and regions, opt into auto mode explicitly, and review PowerShell tool defaults on Windows engineering laptops.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Third-party provider session
+
+Foundry sessions use provider-specific auth and show the provider name in `/status` instead of first-party billing labels.
+
+### Shared timeout behavior
+
+Foundry shares Vertex idle timeout defaults and `API_FORCE_IDLE_TIMEOUT` opt-out semantics.
+
+### Auto mode opt-in
+
+Set `CLAUDE_CODE_ENABLE_AUTO_MODE=1` for Opus auto mode on Foundry as with other third-party providers.
+
+### Windows PowerShell tool
+
+PowerShell tool defaults on for Bedrock, Vertex, and Foundry on Windows unless explicitly disabled.
+
+## Step-by-Step Implementation Guide
+
+1. **Provision deployment.** Create Foundry deployment with required Anthropic model and capacity.
+
+2. **Configure Azure auth.** Set up managed identity or service principal per Azure AI guidance.
+
+3. **Export env vars.** Map endpoint, deployment, and tenant variables documented for Claude Code Foundry.
+
+4. **Verify /status.** Confirm provider shows Microsoft Foundry and models list expected deployments.
+
+5. **Enable auto mode optionally.** Export `CLAUDE_CODE_ENABLE_AUTO_MODE=1` if teams want auto mode on Opus 4.7/4.8.
+
+6. **Tune PowerShell on Windows.** Set `CLAUDE_CODE_USE_POWERSHELL_TOOL=0` if bash-only workflows are required.
+
+7. **Test streaming tools.** Streaming tool execution is always enabled on Foundry—including when telemetry is off.
+
+8. **Publish runbook.** Document Azure quota escalation and Foundry-specific support contacts.
+
+## Foundry Setup Checklist
+
+- [ ] {"task": "Deployment live", "description": "Model deployment accepts test prompts"}
+- [ ] {"task": "Auth configured", "description": "Managed identity or SP works on dev machines"}
+- [ ] {"task": "Status correct", "description": "/status shows Foundry provider"}
+- [ ] {"task": "Auto mode decision", "description": "CLAUDE_CODE_ENABLE_AUTO_MODE set if wanted"}
+- [ ] {"task": "Windows tools reviewed", "description": "PowerShell default acknowledged on Windows"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### Login policy blocks Foundry
+
+Ensure `forceLoginOrgUUID` managed settings do not block third-party provider sessions.
+
+### Auto mode message confusing
+
+Follow `CLAUDE_CODE_ENABLE_AUTO_MODE` opt-in docs rather than first-party assumptions.
+
+### Unexpected PowerShell prompts
+
+Disable with `CLAUDE_CODE_USE_POWERSHELL_TOOL=0` on Windows if undesired.
+
+### Stream hangs
+
+Check `API_FORCE_IDLE_TIMEOUT` for long-running tool calls.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` enables auto mode on Foundry with `CLAUDE_CODE_ENABLE_AUTO_MODE=1` for Opus 4.7/4.8.
+- `CHANGELOG.md` restored five-minute idle timeout on Foundry/Vertex unless `API_FORCE_IDLE_TIMEOUT=0`.
+- `CHANGELOG.md` enables PowerShell tool by default on Windows for Foundry, Vertex, and Bedrock.
+- `CHANGELOG.md` shows provider name instead of API Usage Billing on third-party providers.
+- `CHANGELOG.md` fixed `forceLoginOrgUUID` blocking Bedrock, Vertex, and Foundry alongside org pin.
+
+## Duplicate Check
+
+This guide covers Microsoft Foundry provider setup. It complements claude-code-on-google-vertex-ai-setup.mdx and claude-code-on-amazon-bedrock-setup.mdx for multi-cloud standards.
+
+## References
+
+- Microsoft Foundry - https://code.claude.com/docs/en/microsoft-foundry
+- Google Vertex AI setup - claude-code-on-google-vertex-ai-setup
+- Amazon Bedrock setup - claude-code-on-amazon-bedrock-setup
