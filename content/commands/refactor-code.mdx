@@ -3,27 +3,26 @@ title: /refactor-code - Specialized Refactor Commands for Claude
 slug: refactor-code
 category: commands
 description: >-
-  Targeted refactor command for specific code selections, functions, or
-  components — stays within narrow ownership boundaries for focused,
-  pull-request-sized changes without repository-wide modernization
+  Targeted Claude Code custom command for scoped, pull-request-sized refactors
+  on a specific file, function, or selection — stays within a narrow ownership
+  boundary rather than sweeping the whole repository
 cardDescription: >-
-  Targeted refactor command for specific code selections, functions, or
-  components — stays within narrow ownership boundaries for focused,
-  pull-request-sized changes without repository-wide modernization
+  Targeted Claude Code custom command for scoped, pull-request-sized refactors
+  on a specific file, function, or selection — stays within a narrow ownership
+  boundary rather than sweeping the whole repository
 seoTitle: /refactor-code - Specialized Refactor Commands for Claude
 seoDescription: >-
-  Targeted refactor command for specific code selections, functions, or
-  components — stays within narrow ownership boundaries for focused,
-  pull-request-sized changes without repository-wide modernization. Discover
-  tools for AI development.
+  Targeted Claude Code custom command for scoped, pull-request-sized refactors
+  on a specific file, function, or selection — stays within a narrow ownership
+  boundary rather than sweeping the whole repository. Discover tools for AI
+  development.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
-documentationUrl: "https://docs.claude.ai/commands/refactor"
-installable: true
-installCommand: "/refactor [options] <file_or_selection>"
-usageSnippet: "/refactor [options] <file_or_selection>"
-copySnippet: "/refactor [options] <file_or_selection>"
+documentationUrl: "https://docs.anthropic.com/en/docs/claude-code/slash-commands"
+installable: false
+usageSnippet: "/refactor-code src/utils.js"
+copySnippet: "/refactor-code src/utils.js"
 tags:
   - refactoring
   - code-quality
@@ -49,18 +48,18 @@ hasPrerequisites: false
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
-commandSyntax: "/refactor [options] <file_or_selection>"
+commandSyntax: "/refactor-code <file_or_selection>"
 ---
 
-The `/refactor` command provides intelligent code refactoring capabilities with multiple strategies and safety checks.
+The `/refactor-code` command provides intelligent code refactoring capabilities with multiple strategies and safety checks.
 
 ## Usage
 
 ```
-/refactor [options] <file_or_selection>
+/refactor-code <file_or_selection>
 ```
 
-## Options
+## Argument Tokens
 
 ### Refactoring Types
 
@@ -86,6 +85,12 @@ The `/refactor` command provides intelligent code refactoring capabilities with 
 - `--python` - Apply Python-specific refactoring
 - `--java` - Apply Java-specific refactoring
 - `--csharp` - Apply C#-specific refactoring
+
+> **Note:** These are not parsed CLI flags. Claude Code passes the entire string after `/refactor-code` as `$ARGUMENTS` to the command prompt. Claude interprets tokens like `--dry-run` and `--extract-function` as natural language instructions from the text.
+
+## Installation
+
+Copy this file to your project's `.claude/commands/refactor-code.md` for project-scoped use, or to `~/.claude/commands/refactor-code.md` to make it available across all your projects. After saving, the `/refactor-code` command appears in Claude Code automatically.
 
 ## Examples
 
@@ -237,23 +242,3 @@ refactor needs to stay inside a narrow ownership boundary.
 - GitHub Actions workflow
 - GitLab CI pipeline
 - Jenkins job integration
-
-## Configuration
-
-Create a `.refactor.json` file in your project root:
-
-```json
-{
-  "rules": {
-    "maxFunctionLength": 20,
-    "maxParameterCount": 4,
-    "enforceConstantExtraction": true,
-    "modernizeFeatures": true
-  },
-  "exclude": ["node_modules/**", "dist/**", "*.test.js"],
-  "backup": {
-    "enabled": true,
-    "directory": ".refactor-backups"
-  }
-}
-```
