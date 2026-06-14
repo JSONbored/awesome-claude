@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { getIndexableTagGroups } from "@/lib/tags";
@@ -41,15 +42,13 @@ export const Route = createFileRoute("/tags/")({
 function TagsIndex() {
   const groups = getIndexableTagGroups();
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
-      <Breadcrumbs items={[{ label: "Directory", to: "/browse" }, { label: "Tags" }]} home />
-      <header className="mt-6 max-w-3xl">
-        <div className="eyebrow">{groups.length} topics</div>
-        <h1 className="mt-2 h-display-1 text-ink text-balance">Browse by tag</h1>
-        <p className="mt-4 text-pretty text-base text-ink-muted sm:text-lg">
-          Jump to a topic to see every Claude Code resource tagged with it across the directory.
-        </p>
-      </header>
+    <PageContainer>
+      <PageHeader
+        breadcrumbs={[{ label: "Directory", to: "/browse" }]}
+        eyebrow={`${groups.length} topics`}
+        title="Browse by tag"
+        description="Jump to a topic to see every Claude Code resource tagged with it across the directory."
+      />
       <div className="mt-8 flex flex-wrap gap-2">
         {groups.map((group) => (
           <Link
@@ -63,6 +62,6 @@ function TagsIndex() {
           </Link>
         ))}
       </div>
-    </div>
+    </PageContainer>
   );
 }
