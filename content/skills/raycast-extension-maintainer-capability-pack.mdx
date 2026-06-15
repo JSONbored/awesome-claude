@@ -1,0 +1,217 @@
+---
+title: Raycast Extension Maintainer Capability Pack Skill
+slug: raycast-extension-maintainer-capability-pack
+category: skills
+description: >-
+  Expert Raycast extension maintainer capability pack for reviewing Raycast
+  command structure, manifest metadata, API usage, store submission checks, and
+  privacy-safe release notes aligned to official Raycast developer docs.
+cardDescription: >-
+  Maintain Raycast extensions with source-backed checks for commands, manifest
+  metadata, API usage, and store submission readiness.
+seoTitle: Raycast Extension Maintainer Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Raycast extension maintainers: command design,
+  manifest review, API boundaries, testing, and store submission aligned to
+  official Raycast documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 721
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/721"
+repoUrl: "https://github.com/raycast/extensions"
+documentationUrl: "https://developers.raycast.com/"
+installable: false
+usageSnippet: >-
+  Use this skill when maintaining a Raycast extension, preparing a store update,
+  or reviewing command metadata, API usage, and privacy disclosures.
+copySnippet: |-
+  # Trigger
+  "Apply the Raycast extension maintainer capability pack for this extension."
+
+  # Required output
+  1) Extension inventory (commands, views, dependencies)
+  2) Manifest and metadata review findings
+  3) API permission and network boundary assessment
+  4) Store submission or update checklist
+  5) Privacy-safe release notes for users
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-15"
+retrievalSources:
+  - "https://developers.raycast.com/"
+  - "https://developers.raycast.com/basics/create-your-first-extension"
+  - "https://developers.raycast.com/api-reference/user-interface/list"
+  - "https://developers.raycast.com/information/manifest"
+  - "https://github.com/raycast/extensions"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Local Raycast development environment with the extension repository checked out."
+  - "Access to extension source, package.json, manifest, and command entry points."
+  - "Raycast CLI or store submission credentials for the maintainer account when publishing."
+  - "Ability to run extension tests or manual command checks before release."
+safetyNotes:
+  - "This skill reviews extension behavior; it must not publish store updates or run untrusted extension code without maintainer approval."
+  - "Extensions can invoke network APIs and local filesystem operations; verify least-privilege scopes before release."
+  - "Do not embed long-lived API tokens in source; prefer Raycast preferences and secure storage patterns."
+  - "Third-party dependencies in extensions inherit supply-chain risk; review updates before shipping."
+privacyNotes:
+  - "Raycast extensions may read clipboard, local files, or user preferences depending on API usage."
+  - "Network calls can transmit query text, auth tokens, and user identifiers to third-party services."
+  - "Store release notes should not include internal API keys, employee data, or customer examples."
+  - "Telemetry or analytics SDKs require explicit disclosure in extension README and store metadata."
+tags:
+  - raycast
+  - extensions
+  - developer-tools
+  - store-submission
+  - capability-pack
+keywords:
+  - Raycast extension maintainer capability pack
+  - Raycast store submission checklist
+  - Raycast command metadata review
+  - Raycast API permission review
+  - Raycast extension release workflow
+readingTime: 9
+difficultyScore: 80
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+downloadUrl: "https://github.com/raycast/extensions/archive/refs/heads/main.zip"
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in official Raycast developer documentation and
+the public `raycast/extensions` repository verified on **2026-06-15**. Raycast
+APIs and store policies evolve; prefer live docs over cached assumptions.
+
+## Retrieval Sources
+
+- https://developers.raycast.com/
+- https://developers.raycast.com/basics/create-your-first-extension
+- https://developers.raycast.com/api-reference/user-interface/list
+- https://developers.raycast.com/information/manifest
+- https://github.com/raycast/extensions
+
+## Source Verification Notes
+
+Verified against public Raycast developer docs and the extensions monorepo on
+**2026-06-15**:
+
+- Raycast extensions declare commands, icons, and metadata through package and
+  manifest files consumed by the Raycast store pipeline.
+- API reference docs describe UI components, preferences, and environment
+  constraints relevant to maintainer review.
+- The public extensions repository provides reference implementations for command
+  structure, dependencies, and store submission patterns.
+
+## Scope Note
+
+This pack supports maintainers shipping or updating Raycast extensions. It does
+not replace Raycast store review or Apple platform policies for macOS distribution.
+
+## Core Workflow
+
+1. Inventory commands, views, dependencies, and external integrations.
+2. Review manifest metadata, icons, titles, and keyword accuracy.
+3. Check API usage for network calls, filesystem access, and preference storage.
+4. Run manual or automated tests for critical command paths and error states.
+5. Validate store submission requirements and changelog clarity.
+6. Produce privacy-safe release notes and upgrade guidance for users.
+7. Capture follow-up tasks for API deprecations or dependency updates.
+
+## Capability Scope
+
+- Extension structure and command inventory review.
+- Manifest and metadata validation.
+- API permission and network boundary checks.
+- Store submission readiness checklist.
+- Privacy-safe user-facing release notes.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when maintaining Raycast
+  extensions or reviewing extension PRs.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, Generic AGENTS**: apply the checklist to any Raycast
+  extension repository using official developer docs.
+
+## Required Inputs
+
+- Extension repository with manifest and command source files.
+- Target Raycast version and breaking API changes since last release.
+- List of external services, OAuth clients, and preference keys in use.
+- Store listing text and prior release notes for diff review.
+
+## Production Rules
+
+- Prefer Raycast preference APIs over hard-coded secrets.
+- Document required permissions and network endpoints in README.
+- Keep command titles and subtitles accurate to actual behavior.
+- Test empty, error, and offline states—not only happy paths.
+- Align store screenshots and descriptions with current UI.
+- Bump dependencies deliberately; note supply-chain review in release notes.
+
+## Review Matrix
+
+| Topic | Signal | Action |
+| --- | --- | --- |
+| Metadata | Title/icon mismatch | Fix manifest before submit |
+| Network | Undocumented API host | Add README disclosure |
+| Secrets | Token in source | Move to preferences/Keychain |
+| UX | Missing empty state | Add List.EmptyView handling |
+| Dependencies | Major version bump | Run regression pass |
+| Store | Changelog gap | Add user-visible changes |
+
+## Output Contract
+
+1. Extension inventory summary.
+2. Manifest and metadata findings with severity.
+3. API/network boundary assessment.
+4. Store submission checklist status.
+5. Privacy-safe release notes draft.
+
+## Troubleshooting
+
+**Issue:** Extension fails locally but passes CI
+**Fix:** Reproduce in Raycast dev mode with clean preferences and latest Raycast build.
+
+**Issue:** Store rejects metadata
+**Fix:** Compare against manifest schema docs and similar merged extensions in the monorepo.
+
+**Issue:** OAuth redirect fails for new users
+**Fix:** Verify client IDs, redirect URLs, and Raycast environment callback handling.
+
+**Issue:** Command list performance degrades
+**Fix:** Paginate data fetches and defer heavy work until item selection.
+
+## Duplicate Check
+
+Checked `content/skills/`, `content/tools/`, open PRs, and the live catalog for
+Raycast extension maintainer workflows. HeyClaude lists Raycast integrations, but
+no `skills` entry provides a reusable Raycast extension maintainer capability
+pack with review matrix and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Raycast developer documentation and the
+public `raycast/extensions` repository. No paid placement, referral link,
+affiliate link, or vendor sponsorship is used.
