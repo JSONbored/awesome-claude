@@ -1,0 +1,193 @@
+---
+title: Sandboxed Bash Setup For Autonomous Coding Agents
+slug: sandboxed-bash-setup-for-autonomous-coding-agents
+category: guides
+description: >-
+  Enable Claude Code bash sandboxing for autonomous agents: filesystem and network
+  boundaries, auto-allow rules, dependency checks, and fail-closed settings.
+cardDescription: Configure Claude Code bash sandboxing for safer autonomous shell use.
+seoTitle: Sandboxed Bash Setup For Autonomous Coding Agents
+seoDescription: >-
+  Enable Claude Code bash sandboxing, configure network and filesystem rules,
+  verify dependencies, and use autoAllowBashIfSandboxed safely with agents.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1380
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1380"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Turn on bash sandboxing in settings, verify `/sandbox` dependency status,
+  constrain network and write paths, and pair `autoAllowBashIfSandboxed` with
+  explicit deny rules for autonomous sessions.
+prerequisites:
+  - Claude Code on macOS, Linux, or WSL with sandbox dependencies available or installable.
+  - Permission to edit project or managed settings.json sandbox blocks.
+  - Representative build and test commands your agents run in CI.
+  - A rollback plan if sandbox misconfiguration blocks legitimate workflows.
+safetyNotes:
+  - Sandboxing reduces blast radius but does not eliminate malicious code—review diffs and keep branch protection enabled.
+  - Missing sandbox dependencies previously caused silent disable; use fail-closed settings and verify `/sandbox` status after upgrades.
+  - autoAllowBashIfSandboxed auto-approves some commands—pair with deny rules for destructive patterns.
+privacyNotes:
+  - Sandboxed commands still read repository files within allowed paths; do not store secrets in sandbox-writable directories.
+  - Network-allowed domains determine where agent output or tokens might be sent—document allowed egress.
+  - Sandbox logs and permission prompts may capture command text including paths and environment variable names.
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/sandboxing"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/permissions"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - sandbox
+  - bash
+  - agents
+  - security
+  - automation
+keywords:
+  - Claude Code bash sandbox
+  - sandboxed bash autonomous agents
+  - autoAllowBashIfSandboxed
+  - Claude Code sandbox settings
+  - sandbox failIfUnavailable
+readingTime: 8
+difficultyScore: 60
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Autonomous Claude Code sessions run many shell commands. Enable bash sandboxing to
+limit filesystem writes and network egress, verify dependencies with `/sandbox`,
+use `sandbox.failIfUnavailable` when you prefer errors over silent disable, and
+only enable `autoAllowBashIfSandboxed` alongside explicit deny rules for
+destructive commands.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Platform supported", "description": "macOS, Linux, or WSL with sandbox prerequisites documented for your OS"}
+- [ ] {"task": "Command inventory", "description": "Build, test, and package commands agents need are listed"}
+- [ ] {"task": "Settings access", "description": "Project or managed settings can define sandbox blocks"}
+- [ ] {"task": "Pilot session", "description": "A disposable repo can test blocked and allowed commands"}
+- [ ] {"task": "Deny rules drafted", "description": "Destructive shell patterns have permissions.deny coverage"}
+
+## Core Concepts Explained
+
+### Sandbox constrains Bash side effects
+
+Sandbox settings limit which paths Bash may write and which network destinations
+commands may reach. This matters most when auto mode or background agents run
+shell without per-command human approval.
+
+### Dependencies must be present
+
+Claude Code exposes `/sandbox` to show dependency status. Missing bubblewrap,
+socat, or platform-specific tools can prevent sandbox startup—treat warnings as
+blocking in regulated environments.
+
+### autoAllowBashIfSandboxed trades friction for speed
+
+When enabled, some sandboxed commands skip repeated approval prompts. That
+accelerates agents but requires deny rules so excluded or edge-case commands
+cannot bypass ask permissions.
+
+### Worktrees change write scope
+
+Release notes document sandbox write allowlists in git worktrees covering shared
+`.git` paths—test agents both in the main checkout and linked worktrees.
+
+## Step-by-Step Implementation Guide
+
+1. **Audit agent shell usage.** List commands your autonomous workflows run:
+   package installs, test runners, linters, and deploy scripts.
+
+2. **Enable sandbox in settings.** Set `sandbox.enabled` in project settings and
+   open `/sandbox` to confirm dependencies install cleanly on each OS you support.
+
+3. **Configure filesystem rules.** Allow writes only to the workspace and temp
+   directories agents need; deny system paths and credential stores.
+
+4. **Configure network rules.** Use `sandbox.network.allowedDomains` for required
+   registries and APIs; add `deniedDomains` for sensitive destinations even when
+   wildcards are broad.
+
+5. **Set fail-closed behavior.** Use `sandbox.failIfUnavailable` in managed
+   settings when silent unsandboxed fallback is unacceptable.
+
+6. **Enable auto-allow cautiously.** Turn on `autoAllowBashIfSandboxed` only
+   after deny rules cover `rm`, credential reads, and outbound bulk uploads.
+
+7. **Test in worktrees.** If agents use `EnterWorktree` or `--worktree`, verify
+   write allowlists and network rules in linked checkouts.
+
+8. **Document operator playbook.** Tell on-call engineers how to read `/sandbox`
+   output and temporarily widen rules through reviewed settings changes.
+
+## Verification Checklist
+
+- [ ] {"task": "/sandbox green", "description": "Dependencies show installed on pilot machines"}
+- [ ] {"task": "Blocked command test", "description": "A disallowed write or network call fails visibly"}
+- [ ] {"task": "Allowed pipeline test", "description": "Standard build and test commands succeed sandboxed"}
+- [ ] {"task": "Fail-closed verified", "description": "Missing deps error instead of silent disable when configured"}
+- [ ] {"task": "Deny rules active", "description": "Destructive patterns still blocked with auto-allow enabled"}
+
+## Troubleshooting
+
+### Sandbox silently disabled
+
+Upgrade to a build with the startup warning fix and enable
+`sandbox.failIfUnavailable` so sessions error when deps are missing.
+
+### Go or Terraform TLS failures behind proxy
+
+On macOS, evaluate `sandbox.enableWeakerNetworkIsolation` only after security
+review when MITM proxies break certificate verification.
+
+### Commands with `$VAR` expansions blocked
+
+Release notes fixed auto-allow behavior for shell expansions—upgrade Claude Code
+before blaming sandbox rules.
+
+### Linux paths need bubblewrap overrides
+
+Use managed `sandbox.bwrapPath` and `sandbox.socatPath` when standard packages
+install to non-default locations.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README and
+`CHANGELOG.md` on **2026-06-13**:
+
+- `CHANGELOG.md` documents `/sandbox` UI for dependency status and settings tabs
+  for permissions alongside sandbox configuration.
+- `CHANGELOG.md` adds `sandbox.failIfUnavailable` to error when sandbox is
+  enabled but cannot start instead of running unsandboxed silently.
+- `CHANGELOG.md` records fixes for `autoAllowBashIfSandboxed` with shell
+  expansions and security fixes when excluded commands bypassed ask rules.
+- `CHANGELOG.md` documents `sandbox.network.deniedDomains`, managed
+  `sandbox.bwrapPath` / `sandbox.socatPath`, and worktree write allowlist fixes.
+- The root README directs integration feedback to GitHub issues at
+  `anthropics/claude-code`.
+
+## Duplicate Check
+
+This guide complements sandbox-environments-for-claude-code-risk-boundaries.mdx
+and secure deployment guides. Those entries cover broader risk boundaries and
+host deployment. This guide focuses on bash sandbox settings for autonomous
+agent shell usage.
+
+## References
+
+- Claude Code sandboxing - https://code.claude.com/docs/en/sandboxing
+- Claude Code settings - https://code.claude.com/docs/en/settings
+- Claude Code permissions - https://code.claude.com/docs/en/permissions
+- Sandbox environments guide - sandbox-environments-for-claude-code-risk-boundaries
