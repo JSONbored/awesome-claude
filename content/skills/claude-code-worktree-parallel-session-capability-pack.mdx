@@ -1,0 +1,221 @@
+---
+title: Claude Code worktree parallel session Capability Pack Skill
+slug: claude-code-worktree-parallel-session-capability-pack
+category: skills
+description: >-
+  Expert Claude Code worktree parallel session capability pack for planning isolated git worktrees, base-branch choice, gitignored file copying, subagent isolation, and safe cleanup across concurrent sessions.
+cardDescription: >-
+  Coordinate parallel Claude Code sessions with git worktrees, isolation, and safe cleanup.
+seoTitle: Claude Code worktree parallel session Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code worktree parallel sessions, base-branch selection, worktreeinclude secrets hygiene, subagent isolation, and cleanup planning.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1516
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1516"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when running multiple Claude Code sessions in parallel and you need worktree isolation without branch collisions or lost uncommitted work.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code worktree parallel session capability pack to this repository."
+  
+  # Required output
+  1) Session and worktree plan with base-branch choices
+  2) Minimal secrets-aware .worktreeinclude recommendation
+  3) Subagent isolation and collision-avoidance plan
+  4) Cleanup procedure that preserves uncommitted work
+  5) Privacy-safe coordination summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/worktrees"
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/sessions"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "A git repository where parallel Claude Code sessions are planned."
+  - "Workspace trust established by running Claude Code once in the directory."
+  - "Inventory of gitignored files such as .env that each worktree may need."
+  - "Agreement on which tasks require separate branches versus shared context."
+safetyNotes:
+  - "Removing a worktree with uncommitted changes discards them; commit or stash before cleanup."
+  - "Copying gitignored secrets via .worktreeinclude spreads credentials to more directories."
+  - "Worktrees share repository history and remotes; pushes from any worktree publish commits normally."
+  - "CHANGELOG 2.1.176 fixed Linux sandbox startup when `.claude/settings.json` is a symlink with an absolute target and corrected /cd and worktree moves reporting stale git branches."
+  - "This skill plans coordination; it must not delete branches or worktrees without explicit approval."
+privacyNotes:
+  - "Worktree plans may list environment files and internal service URLs copied into isolated directories."
+  - "Parallel sessions can expose customer branch names or ticket identifiers in worktree paths."
+  - "Public coordination notes should describe isolation strategy, not full .worktreeinclude contents."
+  - "Background sessions may isolate edits in worktrees; review diffs before integration."
+tags:
+  - claude-code
+  - worktrees
+  - parallel-sessions
+  - git
+  - capability-pack
+keywords:
+  - "Claude Code worktree parallel session"
+  - "Claude Code git worktrees"
+  - "parallel Claude Code sessions"
+  - "worktreeinclude secrets"
+  - "subagent worktree isolation"
+  - "Claude Code worktree cleanup"
+readingTime: 9
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code worktrees, sub-agents, sessions, features-overview, and skills documentation
+verified on **2026-06-14**. Product behavior and integration defaults can change with
+releases; prefer live official docs and changelog notes over cached assumptions.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/worktrees
+- https://code.claude.com/docs/en/sub-agents
+- https://code.claude.com/docs/en/sessions
+- https://code.claude.com/docs/en/features-overview
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code documentation, README, CHANGELOG, and plugins
+README on **2026-06-14**:
+
+- Claude Code creates worktrees under the repository on new branches, defaulting to the remote default branch unless configured for local HEAD.
+- A `.worktreeinclude` file copies only gitignored pattern matches into new worktrees for local env files and secrets-aware setup.
+- Subagents that edit files in parallel can be isolated with worktrees so their changes do not collide.
+- Clean worktrees are removed automatically; worktrees with uncommitted changes prompt before removal.
+- README describes Claude Code as an agentic coding tool in your terminal that understands your codebase and handles git workflows alongside routine development tasks.
+
+## Scope Note
+
+This is not a git tutorial. Use it as a reusable coordination workflow when parallel Claude Code sessions need isolated working directories.
+
+## Core Workflow
+
+1. List parallel tasks and decide which require separate worktrees versus shared checkout.
+2. Choose base branch per worktree: remote default for fresh work or local HEAD for in-progress context.
+3. Design a minimal `.worktreeinclude` for required gitignored files without duplicating unnecessary secrets.
+4. Plan subagent worktree isolation when multiple agents edit files concurrently.
+5. Ensure the worktrees directory is gitignored to avoid untracked noise.
+6. Define cleanup rules: commit or stash before removal; confirm auto-removal behavior for clean trees.
+7. Verify session cwd and branch reporting after /cd or worktree moves.
+8. Coordinate review capacity so parallel sessions do not outpace human integration.
+9. Produce privacy-safe coordination summary for the team.
+
+## Capability Scope
+
+- Parallel session and worktree planning.
+- Base-branch and freshness selection.
+- Secrets-aware .worktreeinclude design.
+- Subagent isolation coordination.
+- Cleanup and data-loss prevention.
+- Privacy-safe parallel session reporting.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when preparing worktree parallel session
+  workflows, rollout checklists, or team enablement docs.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as a
+  deterministic checklist for worktree parallel session evaluations on Claude Code projects.
+
+## Required Inputs
+
+- Target repository or organization context and Claude Code version or channel.
+- Current configuration files, integration endpoints, and policy constraints.
+- Stakeholders for security, platform, or compliance review when applicable.
+- Known dependencies, secrets handling rules, and rollback expectations.
+
+## Production Rules
+
+- Never remove worktrees with uncommitted work without explicit confirmation.
+- Keep .worktreeinclude minimal; do not copy entire secret stores by glob.
+- Gitignore the worktrees directory in every coordinated repository.
+- Verify branch and cwd after worktree moves before dispatching new tasks.
+- Cap parallel sessions to what reviewers can integrate safely.
+- Prefer separate worktrees for conflicting file edits, not just separate chats.
+- Redact secret filenames and customer identifiers in public summaries.
+
+## Review Matrix
+
+| Topic | Signal | Action |
+| --- | --- | --- |
+| Feature + bugfix parallel | Two worktrees | Separate branches from default |
+| Subagent file edits | Worktree per agent | Prevent collision on same paths |
+| Needs local .env | .worktreeinclude | Copy only required gitignored files |
+| Experiment branch | HEAD base | When local WIP must carry over |
+| Session cleanup | Commit first | Avoid auto-remove data loss |
+| /cd after move | Verify branch | Confirm cwd matches worktree |
+
+## Output Contract
+
+1. Session and worktree plan.
+2. .worktreeinclude recommendation.
+3. Subagent isolation notes.
+4. Cleanup and rollback procedure.
+5. Verification checklist.
+6. Privacy-safe coordination summary.
+
+## Troubleshooting
+
+**Issue:** Session shows wrong git branch after move
+**Fix:** Re-check cwd after /cd or worktree switch; recent builds fixed stale branch reporting.
+
+**Issue:** Worktree missing .env or local secrets
+**Fix:** Add minimal patterns to `.worktreeinclude`; only gitignored matches copy over.
+
+**Issue:** Parallel edits collided
+**Fix:** Assign separate worktrees per session or subagent before overlapping file work.
+
+**Issue:** Cleanup lost uncommitted changes
+**Fix:** Commit or stash before removal; dirty worktrees prompt but should not be force-deleted.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open pull
+requests for Claude Code worktree parallel session, git worktree coordination, and subagent worktree isolation workflows. Official docs describe the feature directly, but
+no `skills` entry provides a reusable capability pack with review matrix and output
+contract for this workflow.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by `kiannidev`.
+It is based on public Claude Code documentation, the public Anthropic `claude-code`
+repository, and Google Search Central helpful-content guidance. No paid placement,
+referral link, affiliate link, or vendor sponsorship is used.
+
