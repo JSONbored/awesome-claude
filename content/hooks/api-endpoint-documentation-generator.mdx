@@ -3,21 +3,25 @@ title: API Doc Generator
 slug: api-endpoint-documentation-generator
 category: hooks
 description: >-
-  Automatically generates or updates API documentation when endpoint files are
-  modified, supporting OpenAPI 3.1.0, Swagger 2.0, and AsyncAPI 2.0
-  specifications.
+  PostToolUse hook that extracts JSDoc and pydoc comments from modified API
+  endpoint files and generates OpenAPI 3.1.0-compatible YAML documentation
+  on every save.
 cardDescription: >-
-  Automatically generates or updates API documentation when endpoint files are
-  modified, supporting OpenAPI 3.1.0, Swagger 2.0, and AsyncAP...
-seoTitle: API Doc Generator
+  Hook that reads JSDoc/pydoc comments on file save and writes OpenAPI YAML
+  documentation — no manual doc runs needed.
+seoTitle: API Endpoint Documentation Generator Hook
 seoDescription: >-
-  Automatically generates or updates API documentation when endpoint files are
-  modified, supporting OpenAPI 3.1.0, Swagger 2.0, and AsyncAPI 2.0
-  specifications...
+  Claude Code hook that auto-generates OpenAPI YAML from JSDoc and pydoc
+  comments when you save an endpoint file. Keeps API docs in sync with code
+  without a separate doc step.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
-documentationUrl: "https://swagger.io/docs/"
+documentationUrl: "https://github.com/Surnet/swagger-jsdoc"
+retrievalSources:
+  - "https://github.com/Surnet/swagger-jsdoc"
+  - "https://swagger.io/specification/"
+  - "https://jsdoc.app/"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch
@@ -54,6 +58,10 @@ configSnippet: |-
 scriptLanguage: bash
 scriptBody: "#!/usr/bin/env bash\n\n# Read the tool input from stdin\nINPUT=$(cat)\nTOOL_NAME=$(echo \"$INPUT\" | jq -r '.tool_name')\nFILE_PATH=$(echo \"$INPUT\" | jq -r '.tool_input.file_path // .tool_input.path // \"\"')\n\nif [ -z \"$FILE_PATH\" ]; then\n  exit 0\nfi\n\n# Check if it's an API-related file\nif [[ \"$FILE_PATH\" == *routes/* ]] || [[ \"$FILE_PATH\" == *controllers/* ]] || [[ \"$FILE_PATH\" == *api/* ]]; then\n  echo \"\U0001F4DA Generating API documentation for $FILE_PATH...\"\n  \n  # Get file extension\n  EXT=\"${FILE_PATH##*.}\"\n  \n  case \"$EXT\" in\n    js|jsx|ts|tsx)\n      # JavaScript/TypeScript API files\n      if command -v swagger-jsdoc &> /dev/null && [ -f \"swaggerDef.js\" ]; then\n        echo \"Generating Swagger documentation...\"\n        npx swagger-jsdoc -d swaggerDef.js -o ./docs/api.json \"$FILE_PATH\" 2>/dev/null\n        echo \"✅ Swagger documentation updated\" >&2\n      elif command -v npx &> /dev/null; then\n        echo \"Generating JSDoc documentation...\"\n        npx jsdoc \"$FILE_PATH\" -d ./docs/api/ 2>/dev/null\n        echo \"✅ JSDoc documentation updated\" >&2\n      fi\n      ;;\n    py)\n      # Python API files\n      if command -v pydoc &> /dev/null; then\n        echo \"Generating Python API documentation...\"\n        python -m pydoc -w \"$FILE_PATH\" 2>/dev/null\n        echo \"✅ Python documentation updated\" >&2\n      fi\n      ;;\n  esac\nelse\n  echo \"File not in API directory, skipping documentation generation\" >&2\nfi\n\nexit 0"
 trigger: PostToolUse
+safetyNotes:
+  - Runs automatically after write or edit tool calls on route, controller, and API files.
+  - Invokes npx swagger-jsdoc or npx jsdoc to generate docs; executes python -m pydoc for Python files.
+  - Writes generated documentation files to ./docs/api/ in the project directory.
 tags:
   - api
   - documentation
@@ -83,23 +91,18 @@ robotsFollow: true
 
 ## Features
 
-- Automatic OpenAPI 3.1.0 and Swagger 2.0 documentation generation from JSDoc annotations using swagger-jsdoc v6+
-- Real-time documentation updates when API files change with automatic endpoint discovery and parameter extraction
-- Support for JavaScript, TypeScript, Python (FastAPI), and Node.js API routes with language-specific documentation tools
-- Multi-format output generation including JSON (OpenAPI spec), YAML, and Markdown documentation formats
-- Response type documentation extraction with automatic schema inference from TypeScript types and Python models
-- Integration with Swagger UI and ReDoc for interactive API documentation with live endpoint testing capabilities
-- FastAPI automatic OpenAPI 3.1.0 generation with built-in /docs and /redoc endpoints for Python APIs
-- Validation and error reporting with failOnErrors option to catch documentation inconsistencies during development
+- Fires on every write or edit to files under routes/, controllers/, or api/ directories
+- Runs swagger-jsdoc to generate an OpenAPI JSON spec from JSDoc @openapi annotations in JavaScript/TypeScript files
+- Falls back to npx jsdoc for HTML documentation when no swaggerDef.js is present
+- Runs python -m pydoc for Python endpoint files to generate module documentation
+- Writes generated docs to ./docs/api/ in the project root
 
 ## Use Cases
 
-- Automatic API documentation in development workflows ensuring docs stay synchronized with code changes
-- Keep OpenAPI 3.1.0 specs synchronized with code changes using real-time generation on file modifications
-- Generate comprehensive documentation for REST API endpoints with parameter, response, and error documentation
-- Maintain up-to-date API reference docs for frontend teams and external API consumers with automated updates
-- Integration with Swagger UI and ReDoc for interactive documentation portals with live API testing
-- CI/CD pipeline integration for validating OpenAPI specifications and generating documentation artifacts automatically
+- Keep OpenAPI specs in sync with route code without a separate doc build step
+- Generate JSDoc HTML documentation for JavaScript/TypeScript API directories on every save
+- Auto-run pydoc on Python API modules during development
+- Ensure API documentation is always current when working with Claude Code
 
 ## Installation
 
