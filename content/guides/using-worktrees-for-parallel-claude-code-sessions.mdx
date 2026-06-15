@@ -1,0 +1,174 @@
+---
+title: Using Worktrees For Parallel Claude Code Sessions
+slug: using-worktrees-for-parallel-claude-code-sessions
+category: guides
+description: >-
+  Use git worktrees with Claude Code to run parallel sessions safely: EnterWorktree,
+  background isolation, cleanup of .claude/worktrees/, and branch ownership rules
+  that prevent conflicting edits.
+cardDescription: Run parallel Claude Code sessions with git worktrees and isolation guards.
+seoTitle: Using Worktrees For Parallel Claude Code Sessions
+seoDescription: >-
+  Use Claude Code worktrees for parallel sessions with EnterWorktree, background
+  isolation, cleanup rules, and official worktree documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 1373
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1373"
+documentationUrl: "https://code.claude.com/docs/en/worktrees"
+usageSnippet: >-
+  Create a worktree per parallel task, launch Claude Code from each checkout, use
+  EnterWorktree or background isolation for agents, and prune .claude/worktrees/
+  when jobs finish.
+prerequisites:
+  - Git worktree familiarity and permission to create linked checkouts on developer machines.
+  - Claude Code with worktree and background isolation features on your build.
+  - Disk space for multiple checkouts and session transcripts.
+  - Team rules for branch naming, merge authority, and worktree cleanup.
+safetyNotes:
+  - Worktrees isolate working copies but share one git object database—understand fetch and prune impact.
+  - Setting worktree.bgIsolation to none allows background agents to edit the shared checkout—use only with approval.
+  - Sandbox write allowlists differ in worktrees—retest autonomous agents in linked checkouts.
+privacyNotes:
+  - Each worktree may contain proprietary diffs and local env files—treat every checkout as sensitive.
+  - Session transcripts under .claude may reference paths across worktrees—follow retention policy.
+  - Shared machines need filesystem permissions so worktrees are not readable by other users.
+sourceUrls:
+  - "https://code.claude.com/docs/en/worktrees"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - worktrees
+  - parallel-sessions
+  - git
+  - background-agents
+  - isolation
+keywords:
+  - Claude Code worktrees parallel sessions
+  - EnterWorktree Claude Code
+  - worktree background isolation
+  - .claude/worktrees cleanup
+  - parallel Claude Code git worktree
+readingTime: 8
+difficultyScore: 54
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Git worktrees give each Claude Code session its own checkout so parallel agents
+do not stomp the same files. Create one worktree per task, launch Claude Code
+inside each path, use EnterWorktree or background isolation defaults, and prune
+`.claude/worktrees/` when jobs complete.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Worktree policy", "description": "Team agrees when worktrees are required versus branch switching"}
+- [ ] {"task": "Disk budget", "description": "Developers have space for multiple linked checkouts"}
+- [ ] {"task": "Isolation settings reviewed", "description": "worktree.bgIsolation defaults are documented"}
+- [ ] {"task": "Cleanup owner", "description": "Someone prunes stale worktrees weekly"}
+- [ ] {"task": "Sandbox retest", "description": "Autonomous agents were validated inside worktrees if used"}
+
+## Core Concepts Explained
+
+### Worktrees isolate working directories
+
+Official worktree docs describe linked checkouts that share git history but keep
+working files separate—ideal for parallel Claude Code sessions on different tasks.
+
+### EnterWorktree moves agents into isolation
+
+Background and subagent flows can call EnterWorktree so edits land in an isolated
+checkout instead of the shared working tree.
+
+### Background isolation can be relaxed deliberately
+
+Release notes document `worktree.bgIsolation: "none"` for cases where background
+sessions must edit the primary checkout—treat that as a conscious exception.
+
+### Cleanup prevents disk drift
+
+Background retention sweeps and manual pruning of `.claude/worktrees/` keep orphan
+checkouts from accumulating after parallel runs.
+
+## Step-by-Step Implementation Guide
+
+1. **Pick tasks that truly need parallelism.** Use worktrees when two agents must
+   edit different branches simultaneously.
+
+2. **Create linked checkouts.** Add a worktree per branch with clear directory names
+   tied to ticket IDs.
+
+3. **Launch Claude Code per worktree.** Open CLI or Desktop sessions from each
+   checkout path—not from the repo root alone.
+
+4. **Enable isolation defaults.** Keep background isolation on unless policy documents
+   an approved `worktree.bgIsolation: "none"` exception.
+
+5. **Use EnterWorktree in workflows.** For background agents and subagents, confirm
+   isolation before approving write tools.
+
+6. **Retest sandbox rules.** Validate autonomous bash policies inside worktrees when
+   sandbox write allowlists differ from the main checkout.
+
+7. **Prune on completion.** Remove finished worktrees and clean `.claude/worktrees/`
+   during daily or weekly hygiene.
+
+## Parallel Session Checklist
+
+- [ ] {"task": "One worktree per task", "description": "No two active agents share one checkout unintentionally"}
+- [ ] {"task": "Branch ownership clear", "description": "Each worktree maps to one merge owner"}
+- [ ] {"task": "Isolation verified", "description": "EnterWorktree or bgIsolation policy matches the task risk"}
+- [ ] {"task": "Sandbox validated", "description": "Autonomous tools were tested in the linked checkout if used"}
+- [ ] {"task": "Cleanup scheduled", "description": "Stale worktrees are removed after jobs finish"}
+
+## Troubleshooting
+
+### Agent edited files in the wrong checkout
+
+Confirm session cwd and re-dispatch from the intended worktree path.
+
+### Orphan directories under .claude/worktrees/
+
+Prune after background jobs finish; release notes cover retention sweeps tied to
+background session lifecycle.
+
+### Sandbox writes fail only in worktrees
+
+Review sandbox write allowlists and symlinked settings paths documented in release
+notes for worktree-specific fixes.
+
+### Shared checkout races despite worktrees
+
+Check for sessions still running in the primary tree or bgIsolation set to none.
+
+## Source Verification Notes
+
+Verified against official Claude Code documentation on **2026-06-15**:
+
+- `code.claude.com/docs/en/worktrees` documents Claude Code worktree workflows
+  including parallel session patterns and EnterWorktree behavior.
+- Public `CHANGELOG.md` entries describe worktree isolation guards for background
+  subagents, `.claude/worktrees/` cleanup, `worktree.bgIsolation: "none"`, and
+  sandbox write allowlist fixes for linked checkouts.
+
+## Duplicate Check
+
+Checked `content/guides` and open pull requests for Claude Code worktrees, parallel
+sessions, and EnterWorktree workflows. Sandbox and dynamic workflow guides mention
+worktrees tangentially. This guide is the dedicated parallel-session worktree workflow.
+
+## References
+
+- Worktrees docs - https://code.claude.com/docs/en/worktrees
+- Agent view guide - agent-view-for-managing-multiple-claude-code-sessions
+- Desktop parallel sessions - claude-code-desktop-parallel-sessions-workflow
