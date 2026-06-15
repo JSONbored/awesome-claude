@@ -16,6 +16,7 @@ import {
   buildFeedSnapshotMetadata,
   buildContributeEntryUrl,
   buildEntrySummary,
+  buildInstallNotesSummary,
   buildSuggestChangeUrl,
   buildSubmitPrUrl,
   categoryLabel,
@@ -1211,6 +1212,28 @@ describe("Raycast feed helpers", () => {
       "[Context7](https://heyclau.de/mcp/context7)",
     );
     assert.match(buildEntrySummary(sampleEntry), /Fetch up-to-date docs/);
+  });
+
+  it("summarizes safety and privacy notes for install confirmation", () => {
+    assert.equal(buildInstallNotesSummary(undefined, undefined), "");
+    assert.equal(buildInstallNotesSummary([], ["   "]), "");
+
+    const summary = buildInstallNotesSummary(
+      ["Runs a server process", "Writes to your MCP config"],
+      ["Reads local credentials"],
+    );
+    assert.match(summary, /⚠️ Safety:/);
+    assert.match(summary, /• Runs a server process/);
+    assert.match(summary, /🔒 Privacy:/);
+    assert.match(summary, /• Reads local credentials/);
+
+    const capped = buildInstallNotesSummary(
+      ["one", "two", "three", "four", "five"],
+      undefined,
+    );
+    assert.match(capped, /• …and 2 more/);
+    assert.equal(/• one|• two|• three/.test(capped), true);
+    assert.equal(capped.includes("• four"), false);
   });
 
   it("validates and parses full detail payloads", () => {

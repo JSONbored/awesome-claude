@@ -234,6 +234,28 @@ export function buildEntrySummary(entry: RaycastEntry) {
     .join("\n");
 }
 
+/**
+ * Formats disclosed safety/privacy notes for an install confirmation dialog so
+ * the user sees risk disclosures (config writes, process execution, network or
+ * credential access) before an MCP server is installed. Shows up to three notes
+ * per category; returns "" when there is nothing to disclose.
+ */
+export function buildInstallNotesSummary(
+  safetyNotes?: string[],
+  privacyNotes?: string[],
+): string {
+  const section = (label: string, notes?: string[]) => {
+    const items = (notes ?? []).map((note) => note.trim()).filter(Boolean);
+    if (items.length === 0) return "";
+    const lines = items.slice(0, 3).map((note) => `• ${note}`);
+    if (items.length > 3) {
+      lines.push(`• …and ${items.length - 3} more`);
+    }
+    return `\n\n${label}:\n${lines.join("\n")}`;
+  };
+  return `${section("⚠️ Safety", safetyNotes)}${section("🔒 Privacy", privacyNotes)}`;
+}
+
 export type RaycastDetail = {
   copyText?: string;
   detailMarkdown: string;
