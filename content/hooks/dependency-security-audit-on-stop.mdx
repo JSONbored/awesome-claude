@@ -3,29 +3,35 @@ title: Dependency Security Audit
 slug: dependency-security-audit-on-stop
 category: hooks
 description: >-
-  Performs a comprehensive security audit of all dependencies when Claude Code
-  session ends using npm audit (npm 10.x+), yarn audit (Yarn 4.x+), pip-audit
-  2.7.x+, safety, bundler-audit, and OWASP dep-scan.
+  A Stop hook that runs npm audit, pip-audit, safety, or bundler-audit
+  automatically at the end of every Claude Code session, detecting CVEs and
+  outdated packages across Node.js, Python, and Ruby projects.
 cardDescription: >-
-  Performs a comprehensive security audit of all dependencies when Claude Code
-  session ends using npm audit (npm 10.x+), yarn audit (Yarn 4...
-seoTitle: Dependency Security Audit
+  Stop hook that runs npm audit, pip-audit, safety, or bundler-audit at
+  session end and saves a timestamped CVE report.
+seoTitle: "Claude Code Stop Hook: Dependency Vulnerability Scanner"
 seoDescription: >-
-  Performs a comprehensive security audit of all dependencies when Claude Code
-  session ends using npm audit (npm 10.x+), yarn audit (Yarn 4.x+), pip-audit
-  2.7....
+  Run npm audit, pip-audit, safety, or bundler-audit when your Claude Code
+  session ends. Detects CVEs, flags outdated packages, and writes a
+  timestamped report.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
+retrievalSources:
+  - "https://docs.npmjs.com/cli/v10/commands/npm-audit"
+  - "https://pypi.org/project/pip-audit/"
+  - "https://github.com/rubysec/bundler-audit"
+  - "https://pypi.org/project/safety/"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch
   .claude/hooks/dependency-security-audit-on-stop.sh && chmod +x
   .claude/hooks/dependency-security-audit-on-stop.sh
 usageSnippet: >-
-  mkdir -p .claude/hooks && touch
-  .claude/hooks/dependency-security-audit-on-stop.sh && chmod +x
-  .claude/hooks/dependency-security-audit-on-stop.sh
+  Add the Stop hook to .claude/settings.json; at session end the script
+  detects your lockfile (package-lock.json, requirements.txt, Gemfile.lock),
+  runs the matching audit tool, and writes a timestamped report to the
+  project root.
 copySnippet: |-
   {
     "hooks": {
