@@ -3,17 +3,17 @@ title: Database Migration Runner - Hooks
 slug: database-migration-runner
 category: hooks
 description: >-
-  Automated database migration management with rollback capabilities,
-  validation, and multi-environment support using Knex 3.x, Sequelize 6.x/7.x,
-  TypeORM 0.3.x, Django 5.x, and Rails 7.x.
+  A PostToolUse hook that detects writes to migration and SQL files, then
+  checks pending Knex migration status and warns about destructive SQL
+  operations (DROP, DELETE, TRUNCATE) before they are applied.
 cardDescription: >-
-  Automated database migration management with rollback capabilities,
-  validation, and multi-environment support using Knex 3.x, Sequelize 6...
-seoTitle: Database Migration Runner - Hooks
+  Fires after write/edit on migration or SQL files — checks Knex pending
+  status and flags destructive SQL statements like DROP or TRUNCATE.
+seoTitle: "Claude Code Hook: Knex Migration Status on File Write"
 seoDescription: >-
-  Automated database migration management with rollback capabilities,
-  validation, and multi-environment support using Knex 3.x, Sequelize 6.x/7.x,
-  TypeORM 0.3....
+  PostToolUse hook for migration and SQL file edits: reports Knex pending
+  migration status and warns before destructive DROP or TRUNCATE statements
+  are applied.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
@@ -23,8 +23,9 @@ installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/database-migration-runner.sh &&
   chmod +x .claude/hooks/database-migration-runner.sh
 usageSnippet: >-
-  mkdir -p .claude/hooks && touch .claude/hooks/database-migration-runner.sh &&
-  chmod +x .claude/hooks/database-migration-runner.sh
+  Wire the hook to PostToolUse write/edit matchers; it reads the tool input
+  file path, matches migration, schema, and SQL filenames, and runs
+  npx knex migrate:status to surface any pending migrations.
 copySnippet: |-
   {
     "hooks": {
