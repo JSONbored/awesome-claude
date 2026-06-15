@@ -195,21 +195,25 @@ function metadataAccessories(entry: RaycastEntry, isFavorite: boolean) {
   if (isFavorite) {
     accessories.push({
       icon: { source: Icon.Star, tintColor: Color.Yellow },
+      tooltip: "Favorite",
     });
   }
   if (entry.downloadTrust === "first-party") {
     accessories.push({
       icon: { source: Icon.CheckCircle, tintColor: Color.Green },
+      tooltip: "First-party package",
     });
   }
   if (entry.installable || entry.hasConfigSnippet || entry.hasInstallCommand) {
     accessories.push({
       icon: { source: Icon.Download, tintColor: Color.Blue },
+      tooltip: "Installable — has an install command or config snippet",
     });
   }
   if (entry.trustSignals?.sourceStatus === "available" || entry.repoUrl) {
     accessories.push({
       icon: { source: Icon.Shield, tintColor: Color.Green },
+      tooltip: "Source-backed",
     });
   }
   if (
@@ -220,6 +224,7 @@ function metadataAccessories(entry: RaycastEntry, isFavorite: boolean) {
   ) {
     accessories.push({
       icon: { source: Icon.ExclamationMark, tintColor: Color.Orange },
+      tooltip: "Has safety / privacy notes — review before installing",
     });
   }
 
@@ -725,6 +730,58 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
       }
     }
 
+    async function copyLlmsUrl(entry: RaycastEntry) {
+      try {
+        const detail = await loadEntryDetail({
+          entry,
+          cache,
+          feedUrl: configuredFeed.feedUrl,
+        });
+        const llmsUrl = (detail.llmsUrl || "").trim();
+        if (!llmsUrl) {
+          throw new Error("No LLM context URL is available for this entry.");
+        }
+        await Clipboard.copy(absoluteDataUrl(llmsUrl, configuredFeed.feedUrl));
+        await visitItem(entry);
+        await showHUD(`Copied ${entry.title} LLM context URL`, {
+          popToRootType: PopToRootType.Immediate,
+        });
+      } catch (error) {
+        await showToast({
+          style: Toast.Style.Failure,
+          title: "Could not copy LLM context URL",
+          message: error instanceof Error ? error.message : "Unknown error",
+        });
+      }
+    }
+
+    async function copyTargetConfig(
+      entry: RaycastEntry,
+      targetId: McpInstallTargetId,
+    ) {
+      const target = MCP_INSTALL_TARGETS.find(({ id }) => id === targetId);
+      if (!target) return;
+      try {
+        const detail = await loadEntryDetail({
+          entry,
+          cache,
+          feedUrl: configuredFeed.feedUrl,
+        });
+        const plan = buildMcpInstallPlan(targetId, entry, detail);
+        await Clipboard.copy(plan.configJson);
+        await visitItem(entry);
+        await showHUD(`Copied ${target.label} config for ${entry.title}`, {
+          popToRootType: PopToRootType.Immediate,
+        });
+      } catch (error) {
+        await showToast({
+          style: Toast.Style.Failure,
+          title: `Could not copy ${target.label} config`,
+          message: error instanceof Error ? error.message : "Unknown error",
+        });
+      }
+    }
+
     async function installMcp(
       entry: RaycastEntry,
       targetId: McpInstallTargetId,
@@ -963,6 +1020,22 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
                             onAction={() => void copyConfigSnippet(entry)}
                           />
                         ) : null}
+                        {canInstallMcp ? (
+                          <ActionPanel.Submenu
+                            title="Copy MCP Config for…"
+                            icon={Icon.Code}
+                          >
+                            {installTargets.map((target) => (
+                              <Action
+                                key={target.id}
+                                title={target.label}
+                                onAction={() =>
+                                  void copyTargetConfig(entry, target.id)
+                                }
+                              />
+                            ))}
+                          </ActionPanel.Submenu>
+                        ) : null}
                         <Action.OpenInBrowser
                           title="Open on HeyClaude"
                           url={webUrl}
@@ -999,6 +1072,11 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
                           title="Copy Summary"
                           content={buildEntrySummary(entry)}
                           onCopy={() => void visitItem(entry)}
+                        />
+                        <Action
+                          title="Copy LLM Context URL"
+                          icon={Icon.Snippets}
+                          onAction={() => void copyLlmsUrl(entry)}
                         />
                         {entry.brandDomain ? (
                           <Action.CopyToClipboard
