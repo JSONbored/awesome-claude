@@ -2,10 +2,10 @@
 title: Supabase Realtime Database Builder Skill
 slug: supabase-realtime-database
 category: skills
-description: "Build full-stack applications with Supabase Postgres, real-time subscriptions, Edge Functions, and pgvector AI integration for 4M+ developers."
-cardDescription: "Build full-stack applications with Supabase Postgres, real-time subscriptions, Edge Functions, and pgvector AI integration for 4M+ develo..."
-seoTitle: Supabase Realtime Database Builder Skill
-seoDescription: "Build full-stack applications with Supabase Postgres, real-time subscriptions, Edge Functions, and pgvector AI integration for 4M+ developers. Create complet..."
+description: "Build full-stack apps on Supabase via @supabase/supabase-js: a hosted Postgres database with row-level security, realtime subscriptions over websockets, Auth, storage, Edge Functions for serverless logic, and pgvector for embeddings."
+cardDescription: "Build on Supabase: Postgres with RLS, realtime subscriptions, Auth, Edge Functions, and pgvector embeddings via @supabase/supabase-js."
+seoTitle: "Supabase Skill: Realtime Postgres, Auth & Edge Functions"
+seoDescription: "Build full-stack apps on Supabase: Postgres with row-level security, realtime subscriptions, Auth, Edge Functions, and pgvector embeddings via supabase-js."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
@@ -52,6 +52,12 @@ prerequisites:
   - Supabase CLI for local development
   - Supabase project with Realtime enabled in project settings (Dashboard > Project Settings > API > Realtime)
   - Network access to Supabase API endpoints and WebSocket connections for real-time subscriptions
+safetyNotes:
+  - "This skill installs @supabase/supabase-js, connects to a live Supabase project, and performs database writes, Auth, and storage operations; review generated mutations and configure row-level security before running against real data."
+  - "Realtime subscriptions and Edge Functions are long-lived/server-side workers; account for their lifecycle, connection limits, and cost."
+privacyNotes:
+  - "Requires a Supabase project URL and API keys; keep the service-role key server-only and never ship it to the client — expose only the anon key via NEXT_PUBLIC_."
+  - "The app reads and writes user data and embeddings in your Supabase Postgres database; use row-level security so each user can only access their own rows."
 tags:
   - supabase
   - postgres
