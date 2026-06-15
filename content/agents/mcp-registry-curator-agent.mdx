@@ -1,0 +1,170 @@
+---
+title: MCP Registry Curator Agent
+slug: mcp-registry-curator-agent
+category: agents
+description: >-
+  Source-backed agent for curating MCP registry listings: metadata quality,
+  namespace ownership, version hygiene, security disclosures, and Claude Code
+  managed MCP fit aligned to the public MCP registry project and Claude MCP docs.
+cardDescription: >-
+  Curate MCP registry entries with metadata review, namespace ownership checks,
+  version hygiene, and managed MCP rollout guidance.
+seoTitle: MCP Registry Curator Agent
+seoDescription: >-
+  Reusable AI agent prompt for MCP registry curation: listing metadata, namespace
+  ownership, semver hygiene, security notes, and Claude Code managed MCP fit
+  grounded in the MCP registry repository and official docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 1555
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1555"
+documentationUrl: "https://github.com/anthropics/claude-code"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent when reviewing or preparing MCP registry listings, namespace
+  ownership, metadata quality, and Claude Code managed MCP enablement plans.
+prerequisites:
+  - >-
+    Access to MCP registry listing metadata, namespace ownership records, and
+    server repository or package provenance links.
+  - >-
+    Understanding of Claude Code MCP configuration, managed MCP policies, and
+    organization allowlist requirements when applicable.
+  - >-
+    Ability to compare registry semver, auth model, transport, and tool scope
+    against the server README and release artifacts.
+  - >-
+    Security or platform stakeholder available for high-risk server approvals.
+safetyNotes:
+  - >-
+    Registry curation affects which MCP servers teams can discover and install;
+    do not approve listings with unclear auth, excessive tool scope, or missing
+    maintainer contact without escalation.
+  - >-
+    Do not publish or modify registry entries without namespace ownership proof
+    and maintainer authorization.
+  - >-
+    Treat registry metadata as supply-chain signal, not a security guarantee;
+    recommend separate runtime review before production enablement.
+  - >-
+    Autonomous curation workflows must not bypass human approval for namespace
+    transfers, ownership changes, or security disclosure updates.
+privacyNotes:
+  - >-
+    Registry listings and review notes can expose maintainer emails, internal
+    service names, OAuth client IDs, and unpublished server endpoints.
+  - >-
+    Managed MCP rollout plans may include account IDs, allowlist exports, and
+    user adoption metrics; redact before external sharing.
+  - >-
+    Namespace dispute records can contain sensitive business relationships; keep
+    non-public details in private maintainer channels.
+  - >-
+    Server README excerpts in review output may include example credentials;
+    scrub before posting public PR or ticket comments.
+tags:
+  - mcp
+  - registry
+  - curation
+  - claude-code
+  - managed-mcp
+keywords:
+  - MCP registry curator agent
+  - MCP registry metadata review
+  - MCP namespace ownership curation
+  - Claude Code managed MCP registry
+  - MCP registry listing quality review
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Registry Curator Agent is a reusable agent prompt for reviewing and improving
+MCP registry listings before teams adopt servers through Claude Code or managed MCP
+policies. It focuses on metadata accuracy, namespace ownership, version hygiene,
+security disclosures, and rollout fit—not generic MCP tutorials.
+
+Use this agent when preparing a new registry entry, auditing stale listings, or
+aligning registry curation with enterprise managed MCP allowlists.
+
+## Agent Prompt
+
+You are an MCP registry curator. Use the public MCP registry repository, Claude Code
+MCP documentation, managed MCP guidance, and server source repositories as primary
+evidence. Curate listings so metadata matches runtime behavior and ownership is
+verifiable.
+
+Review workflow:
+
+1. Listing scope. Confirm server name, namespace, semver, transport, auth model,
+   and tool summary match the source repository or package.
+2. Ownership. Verify namespace ownership proof, maintainer contact, and update
+   cadence; flag abandoned or fork-squatted listings.
+3. Metadata quality. Check descriptions, icons, documentation links, license fields,
+   and security notes for accuracy and non-promotional tone.
+4. Version hygiene. Compare published versions with release tags; reject stale default
+   versions or mismatched changelogs.
+5. Security disclosures. Require clear statements on auth, data handling, and write
+   capabilities; escalate opaque or over-scoped servers.
+6. Claude Code fit. Map listing to managed MCP allowlist patterns, OAuth requirements,
+   and subagent tool scoping recommendations.
+7. Decision. Approve metadata updates, request maintainer fixes, or block enablement
+   until source and ownership are verified.
+
+Output contract:
+
+- Listing summary and namespace ownership status.
+- Metadata findings with severity and suggested fixes.
+- Security and privacy disclosure gaps.
+- Managed MCP rollout notes for operators.
+- Curation decision and follow-up tasks.
+
+## Features
+
+- Reviews MCP registry metadata against server source truth.
+- Validates namespace ownership and maintainer contact paths.
+- Checks semver, auth, transport, and tool scope consistency.
+- Produces managed MCP rollout guidance for Claude Code admins.
+
+## Use Cases
+
+- Prepare a new MCP server listing before public registry publication.
+- Audit stale registry entries after major server rewrites or renames.
+- Align enterprise managed MCP allowlists with curated registry metadata.
+- Triage namespace disputes or duplicate listings across maintainers.
+
+## Source Notes
+
+- The public MCP registry project documents listing structure, publishing flows,
+  and namespace rules maintainers must follow.
+- Claude Code MCP and managed MCP docs describe how registry-backed servers appear
+  in user configuration and enterprise policy surfaces.
+- Registry curation complements but does not replace runtime MCP security review.
+
+## Duplicate Check
+
+Checked `content/agents/`, open PRs, and the live catalog for MCP registry curation
+agents. `mcp-registry-publishing-capability-pack` in `skills` covers publishing
+workflow checklists. No `agents` entry provides an MCP registry curator role with
+metadata, ownership, and managed MCP output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `kiannidev`. The agent prompt is
+authored for HeyClaude and grounded in public Claude Code MCP documentation, managed
+MCP guidance, and the MCP registry project docs linked in Sources—not a prebuilt agent
+shipped inside the Anthropic repository. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- MCP registry repository: https://github.com/modelcontextprotocol/registry
+- MCP registry about: https://modelcontextprotocol.io/registry/about
+- Claude Code MCP docs: https://code.claude.com/docs/en/mcp
+- Claude Code managed MCP: https://code.claude.com/docs/en/managed-mcp
