@@ -1,0 +1,220 @@
+---
+title: GitHub Actions Security Review Capability Pack Skill
+slug: github-actions-security-review-capability-pack
+category: skills
+description: >-
+  Expert GitHub Actions security review capability pack for auditing workflow
+  permissions, untrusted fork boundaries, action pinning, OIDC usage, and secret
+  exposure with source-backed review matrices aligned to GitHub security docs.
+cardDescription: >-
+  Review GitHub Actions workflows for permission scope, fork trust boundaries,
+  action pinning, and secret exposure with source-backed checklists.
+seoTitle: GitHub Actions Security Review Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for GitHub Actions security review: GITHUB_TOKEN
+  scopes, fork PR risks, action pinning, OIDC, and secret handling aligned to
+  official GitHub security documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 715
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/715"
+repoUrl: "https://github.com/actions/security-best-practices"
+documentationUrl: "https://docs.github.com/en/actions/reference/security/secure-use"
+installable: false
+usageSnippet: >-
+  Use this skill when reviewing GitHub Actions workflow changes, especially from
+  forks, for permissions, secrets, action pinning, and OIDC configuration.
+copySnippet: |-
+  # Trigger
+  "Apply the GitHub Actions security review capability pack for these workflow changes."
+
+  # Required output
+  1) Workflow inventory and trigger summary
+  2) Permission and GITHUB_TOKEN scope findings
+  3) Fork/untrusted PR risk assessment
+  4) Action pinning and supply-chain recommendations
+  5) Secret handling and OIDC review notes
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-15"
+retrievalSources:
+  - "https://docs.github.com/en/actions/reference/security/secure-use"
+  - "https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication"
+  - "https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions"
+  - "https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect"
+  - "https://github.com/actions/security-best-practices"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Access to workflow YAML files, reusable workflow references, and recent PR diffs."
+  - "Repository branch protection, environment protection rules, and required reviewers."
+  - "Ability to inspect whether changes originate from trusted branches or fork pull requests."
+  - "Organization policy for action allowlists, OIDC claims, and secret namespaces."
+safetyNotes:
+  - "This skill reviews workflow security; it must not approve workflow runs with elevated secrets from untrusted forks."
+  - "Do not rerun failed fork workflows with write permissions until maintainers validate the diff."
+  - "Treat third-party actions as supply-chain dependencies; pin versions and verify publisher identity."
+  - "Workflow scripts can exfiltrate secrets via pull_request_target patterns; escalate ambiguous cases."
+privacyNotes:
+  - "Workflow logs and artifacts may contain secrets, tokens, internal URLs, and customer test data."
+  - "Security review notes can expose vulnerability details; keep embargo findings in private channels."
+  - "OIDC subject claims may reveal cloud account identifiers; redact before external sharing."
+  - "Fork author metadata is public; do not combine with private trust signals in public comments."
+tags:
+  - github-actions
+  - security
+  - cicd
+  - supply-chain
+  - capability-pack
+keywords:
+  - GitHub Actions security review capability pack
+  - workflow permission scope audit
+  - fork pull request workflow security
+  - action pinning supply chain review
+  - GITHUB_TOKEN least privilege checklist
+readingTime: 10
+difficultyScore: 88
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+downloadUrl: "https://github.com/actions/security-best-practices/archive/refs/heads/main.zip"
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in GitHub Actions secure use documentation,
+OIDC hardening guides, and the public `actions/security-best-practices`
+repository verified on **2026-06-15**. GitHub Actions platform defaults evolve;
+prefer live docs over cached assumptions.
+
+## Retrieval Sources
+
+- https://docs.github.com/en/actions/reference/security/secure-use
+- https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication
+- https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions
+- https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect
+- https://github.com/actions/security-best-practices
+
+## Source Verification Notes
+
+Verified against public GitHub Actions security documentation on **2026-06-15**:
+
+- GitHub documents secure workflow design, `GITHUB_TOKEN` permission defaults, and
+  fork pull request trust boundaries.
+- Secret usage guidance covers masking, environment protection, and least exposure
+  patterns for reusable workflows.
+- OIDC hardening docs describe federated credentials as alternatives to long-lived
+  cloud secrets in workflows.
+
+## Scope Note
+
+This pack focuses on security review of workflow YAML and CI permissions. It is
+distinct from general CI/CD architecture skills by emphasizing untrusted fork
+boundaries, action pinning, and secret/OIDC hardening.
+
+## Core Workflow
+
+1. Inventory workflows, triggers, reusable workflow imports, and changed jobs.
+2. Review top-level and job-level `permissions` against least-privilege defaults.
+3. Classify change origin: default branch, trusted contributor, or fork PR.
+4. Inspect third-party actions for pinning, publisher trust, and supply-chain risk.
+5. Review secret references, environment gates, and OIDC claim configuration.
+6. Flag dangerous patterns (`pull_request_target`, write tokens on fork PRs).
+7. Deliver findings with severity, owners, and remediation steps.
+
+## Capability Scope
+
+- Workflow trigger and permission auditing.
+- Fork/untrusted PR risk classification.
+- Action pinning and supply-chain review.
+- Secret exposure and masking checks.
+- OIDC federated credential review.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when reviewing workflow PRs or
+  hardening repository CI security.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, Generic AGENTS**: apply the checklist to any GitHub
+  repository using Actions for CI/CD.
+
+## Required Inputs
+
+- Workflow YAML diffs and referenced reusable workflows or composite actions.
+- Branch protection and environment approval rules.
+- Organization action allowlist or policy constraints when applicable.
+- Recent security advisories or incident context affecting CI trust boundaries.
+
+## Production Rules
+
+- Default `permissions` to read-only unless a job proves write need.
+- Pin actions to full commit SHAs for high-risk repositories when policy requires.
+- Never run fork PR workflows with secrets until maintainers validate intent.
+- Prefer OIDC over long-lived cloud keys for deployment jobs.
+- Mask secrets in logs; reject workflows that echo secret-adjacent env vars.
+- Document exceptions with owners and expiration dates.
+
+## Review Matrix
+
+| Topic | Signal | Action |
+| --- | --- | --- |
+| Permissions | contents: write on all jobs | Reduce to job-level least privilege |
+| Fork PR | pull_request from fork with secrets | Block or require maintainer workflow |
+| Actions | Floating @v3 tag | Pin SHA or trusted version tag |
+| Secrets | Secret in env for fork job | Remove or gate behind environment |
+| OIDC | Broad subject claim | Narrow claim to repo/environment |
+| Pattern | pull_request_target misuse | Escalate for maintainer-only redesign |
+
+## Output Contract
+
+1. Workflow inventory and trigger summary.
+2. Permission findings with recommended YAML changes.
+3. Fork/untrusted PR risk rating and required gates.
+4. Action pinning and supply-chain recommendations.
+5. Secret/OIDC review notes with severity and owners.
+
+## Troubleshooting
+
+**Issue:** Maintainer insists on write token for fork CI
+**Fix:** Split into trusted workflow_dispatch or internal mirror pattern per GitHub guidance.
+
+**Issue:** OIDC login fails after claim change
+**Fix:** Compare cloud trust policy with GitHub's documented subject format examples.
+
+**Issue:** Reusable workflow hides permissions
+**Fix:** Trace imported workflow permissions and aggregate effective scopes.
+
+**Issue:** Action publisher renamed or transferred
+**Fix:** Verify publisher identity and pin SHA; consider allowlist update.
+
+## Duplicate Check
+
+Checked `content/skills/`, open PRs, and the live catalog for GitHub Actions
+security review workflows. `github-actions-secure-cicd-capability-pack` covers
+general secure CI/CD architecture, and `open-source-pr-security-review-agent`
+covers broader OSS PR security in `agents`. No `skills` entry provides this
+workflow-focused GitHub Actions security review capability pack with review
+matrix and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public GitHub Actions security documentation and the
+public `actions/security-best-practices` repository. No paid placement, referral
+link, affiliate link, or vendor sponsorship is used.
