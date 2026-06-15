@@ -1,259 +1,108 @@
 ---
-title: /refactor-code - Specialized Refactor Commands for Claude
+title: /refactor-code - Scoped Refactor Command for Claude Code
 slug: refactor-code
 category: commands
 description: >-
-  Targeted refactor command for specific code selections, functions, or
-  components — stays within narrow ownership boundaries for focused,
-  pull-request-sized changes without repository-wide modernization
+  Custom slash command for behavior-preserving, scoped refactors of one file,
+  function, or selection — stays inside a narrow ownership boundary for a
+  reviewable, PR-sized change instead of a repo-wide pass
 cardDescription: >-
-  Targeted refactor command for specific code selections, functions, or
-  components — stays within narrow ownership boundaries for focused,
-  pull-request-sized changes without repository-wide modernization
-seoTitle: /refactor-code - Specialized Refactor Commands for Claude
+  Custom slash command for behavior-preserving, scoped refactors of one file,
+  function, or selection — stays inside a narrow ownership boundary for a
+  reviewable, PR-sized change instead of a repo-wide pass
+seoTitle: /refactor-code - Scoped Refactor Command for Claude Code
 seoDescription: >-
-  Targeted refactor command for specific code selections, functions, or
-  components — stays within narrow ownership boundaries for focused,
-  pull-request-sized changes without repository-wide modernization. Discover
-  tools for AI development.
+  Custom slash command for behavior-preserving, scoped refactors of one file,
+  function, or selection — a reviewable, PR-sized change. Discover tools for AI
+  development.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
-documentationUrl: "https://docs.claude.ai/commands/refactor"
+documentationUrl: "https://code.claude.com/docs/en/slash-commands"
 installable: true
-installCommand: "/refactor [options] <file_or_selection>"
-usageSnippet: "/refactor [options] <file_or_selection>"
-copySnippet: "/refactor [options] <file_or_selection>"
+installCommand: "/refactor-code <file, function, or selection>"
+usageSnippet: "/refactor-code <file, function, or selection>"
+copySnippet: "/refactor-code <file, function, or selection>"
 tags:
   - refactoring
   - code-quality
+  - scoped-change
   - cleanup
-  - optimization
-  - patterns
+  - claude-code
 keywords:
   - claude
+  - claude-code
   - cleanup
-  - code
   - code-quality
   - commands
-  - development
-  - optimization
-  - patterns
   - refactor
   - refactoring
+  - scoped
+  - slash-command
   - tools
-readingTime: 4
-difficultyScore: 100
+readingTime: 3
+difficultyScore: 30
 hasTroubleshooting: true
 hasPrerequisites: false
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
-commandSyntax: "/refactor [options] <file_or_selection>"
+commandSyntax: "/refactor-code <file, function, or selection>"
+safetyNotes:
+  - This command edits source files in your working directory. Review the
+    proposed diff before accepting, and keep your work committed or backed up so
+    changes are easy to revert.
+  - It is scoped on purpose — it should not perform repository-wide rewrites.
+    Run your tests after applying to confirm behavior is unchanged.
+privacyNotes:
+  - The command reads the local source you point it at so Claude can refactor it
+    within your session. It does not send your code to any third-party service
+    beyond the model you are already using.
 ---
 
-The `/refactor` command provides intelligent code refactoring capabilities with multiple strategies and safety checks.
+`/refactor-code` is a **custom slash command you add to your own project** — not a Claude Code built-in. Claude Code's [slash-commands documentation](https://code.claude.com/docs/en/slash-commands) describes the mechanism: project commands live as Markdown files under `.claude/commands/`, the filename becomes the command name, and text typed after the command is passed to the prompt via the `$ARGUMENTS` placeholder. This entry is one such command recipe, focused on **scoped, behavior-preserving refactors**.
 
-## Usage
+You give it a single target — a file, a function, or a pasted selection — and it improves that code's structure without changing what it does, staying inside a narrow ownership boundary for a small, reviewable, PR-sized change. It is the focused counterpart to a broad repo-wide refactor pass.
+
+## How to create it
+
+Save the prompt below as `.claude/commands/refactor-code.md` in your project (the `.claude/commands/` directory is where Claude Code reads project slash commands, per the docs). Everything you type after the command name arrives as `$ARGUMENTS`. Example invocations once installed:
 
 ```
-/refactor [options] <file_or_selection>
+/refactor-code src/auth/session.ts
+/refactor-code the parseConfig function
 ```
 
-## Options
+Prompt to save at `.claude/commands/refactor-code.md`:
 
-### Refactoring Types
+```markdown
+Refactor the target the user named: $ARGUMENTS
 
-- `--extract-function` - Extract repeated code into functions
-- `--extract-variable` - Extract complex expressions into variables
-- `--extract-constant` - Move magic numbers/strings to constants
-- `--inline` - Inline simple functions/variables
-- `--rename` - Rename variables/functions for clarity
-- `--simplify` - Simplify complex conditional logic
-- `--modernize` - Update to modern language features
-- `--performance` - Apply performance optimizations
-
-### Safety Options
-
-- `--dry-run` - Show proposed changes without applying
-- `--interactive` - Prompt for each change
-- `--backup` - Create backup before refactoring
-- `--test-first` - Run tests before and after changes
-
-### Language-Specific Options
-
-- `--javascript` - Apply JS/TS specific refactoring
-- `--python` - Apply Python-specific refactoring
-- `--java` - Apply Java-specific refactoring
-- `--csharp` - Apply C#-specific refactoring
-
-## Examples
-
-### Extract Function
-
-```javascript
-// Before
-function processUsers(users) {
-  for (let user of users) {
-    if (user.email && user.email.includes("@")) {
-      user.isValid = true;
-      user.domain = user.email.split("@")[1];
-    } else {
-      user.isValid = false;
-      user.domain = null;
-    }
-  }
-}
-
-// After refactoring with --extract-function
-function validateEmail(email) {
-  return email && email.includes("@");
-}
-
-function extractDomain(email) {
-  return email.split("@")[1];
-}
-
-function processUsers(users) {
-  for (let user of users) {
-    if (validateEmail(user.email)) {
-      user.isValid = true;
-      user.domain = extractDomain(user.email);
-    } else {
-      user.isValid = false;
-      user.domain = null;
-    }
-  }
-}
+Rules:
+- Preserve behavior exactly. Do not change public APIs or observable output.
+- Stay inside the named file/function/selection. Do not touch unrelated code.
+- Show the proposed change as a diff and explain each step before applying.
+- Prefer small, named extractions over large rewrites.
+- After editing, suggest how to verify (tests to run, edge cases to check).
 ```
 
-### Extract Constants
+## What it focuses on
 
-```python
-# Before
-def calculate_discount(price, customer_type):
-    if customer_type == "premium":
-        return price * 0.2
-    elif customer_type == "regular":
-        return price * 0.1
-    else:
-        return 0
+- **Behavior preservation**: the refactor must not alter functionality; if a change would, it is flagged as out of scope rather than applied silently.
+- **Scope discipline**: edits stay within the named target; unrelated files and incidental cleanups are left alone.
+- **Reviewability**: changes are presented as a diff with reasoning, sized to fit a single pull request.
+- **Common moves**: extracting functions, naming intermediate values, replacing magic literals with constants, simplifying conditionals, and removing duplication — applied locally, not repo-wide.
 
-# After refactoring with --extract-constant
-PREMIUM_DISCOUNT_RATE = 0.2
-REGULAR_DISCOUNT_RATE = 0.1
-PREMIUM_CUSTOMER_TYPE = "premium"
-REGULAR_CUSTOMER_TYPE = "regular"
+## When to use it (vs. a broad pass)
 
-def calculate_discount(price, customer_type):
-    if customer_type == PREMIUM_CUSTOMER_TYPE:
-        return price * PREMIUM_DISCOUNT_RATE
-    elif customer_type == REGULAR_CUSTOMER_TYPE:
-        return price * REGULAR_DISCOUNT_RATE
-    else:
-        return 0
-```
+Use `/refactor-code` when the work is centered on a concrete selection and you want a tight, low-risk edit: cleaning up one function before extending it, taming a single complex file, or preparing a focused diff for review. Reach for a broader refactor command when you genuinely intend a cross-cutting modernization across many files.
 
-### Modernize Code
+## Verifying the change
 
-```javascript
-// Before (ES5 style)
-function getUserNames(users) {
-  var names = [];
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].active) {
-      names.push(users[i].name);
-    }
-  }
-  return names;
-}
+Because the goal is behavior preservation, verify rather than assume:
 
-// After refactoring with --modernize
-function getUserNames(users) {
-  return users.filter((user) => user.active).map((user) => user.name);
-}
-```
+- Run the relevant unit tests before and after the change.
+- Diff the public surface (exports, signatures) to confirm nothing moved.
+- Check the edge cases the original code handled — empty inputs, error paths, and boundary values.
 
-## Refactoring Patterns
-
-### Design Patterns
-
-- **Strategy Pattern** - Replace conditional logic with strategy objects
-- **Factory Pattern** - Extract object creation logic
-- **Observer Pattern** - Implement event-driven architecture
-- **Decorator Pattern** - Add functionality without inheritance
-
-### Code Smells Detection
-
-- **Long Method** - Break down large functions
-- **Large Class** - Split into focused classes
-- **Duplicate Code** - Extract common functionality
-- **Long Parameter List** - Use parameter objects
-- **Feature Envy** - Move methods to appropriate classes
-
-### Performance Optimizations
-
-- **Lazy Loading** - Load resources only when needed
-- **Memoization** - Cache expensive computations
-- **Batch Operations** - Combine multiple operations
-- **Async Optimization** - Convert synchronous to asynchronous
-
-## Safety Measures
-
-### Pre-refactoring Checks
-
-- Syntax validation
-- Type checking (TypeScript, etc.)
-- Lint rule compliance
-- Test coverage analysis
-
-### Post-refactoring Validation
-
-- Automated test execution
-- Code quality metrics comparison
-- Performance benchmarking
-- Security vulnerability scanning
-
-## Integration
-
-### IDE Integration
-
-- VS Code extension support
-- IntelliJ plugin compatibility
-- Vim/Neovim integration
-- Emacs package support
-
-## Specialized Use Case
-
-Use `/refactor-code` when the work is centered on a concrete code selection,
-function, file, or component and the maintainer wants a targeted edit plan
-instead of a broader repository-wide modernization pass. This variant is best
-for small reviewable changes, focused code smells, and pull requests where the
-refactor needs to stay inside a narrow ownership boundary.
-
-### CI/CD Integration
-
-- Pre-commit hooks
-- GitHub Actions workflow
-- GitLab CI pipeline
-- Jenkins job integration
-
-## Configuration
-
-Create a `.refactor.json` file in your project root:
-
-```json
-{
-  "rules": {
-    "maxFunctionLength": 20,
-    "maxParameterCount": 4,
-    "enforceConstantExtraction": true,
-    "modernizeFeatures": true
-  },
-  "exclude": ["node_modules/**", "dist/**", "*.test.js"],
-  "backup": {
-    "enabled": true,
-    "directory": ".refactor-backups"
-  }
-}
-```
+If a desired improvement would change behavior or reach beyond the named target, treat it as a separate, explicitly-scoped task rather than folding it into this one.

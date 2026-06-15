@@ -2,14 +2,14 @@
 title: Playwright E2E Testing Automation Skill
 slug: playwright-e2e-testing
 category: skills
-description: "Automate end-to-end testing with Playwright - the modern browser automation framework that supports Chromium, Firefox, and WebKit with a single API."
-cardDescription: "Automate end-to-end testing with Playwright - the modern browser automation framework that supports Chromium, Firefox, and WebKit with a..."
+description: "Write and maintain reliable end-to-end tests with Playwright — Microsoft's browser automation library that auto-waits for actionable elements and runs the same suite against Chromium, Firefox, and WebKit."
+cardDescription: "Playwright auto-waits for elements before acting, isolates every test context, and targets Chromium, Firefox, and WebKit from a single cross-platform API..."
 seoTitle: Playwright E2E Testing Automation Skill
-seoDescription: "Automate end-to-end testing with Playwright - the modern browser automation framework that supports Chromium, Firefox, and WebKit with a single API. Generate..."
+seoDescription: "Playwright enables TypeScript-first E2E browser automation with getByRole and getByLabel selectors that survive DOM refactors, network interception for mocking slow APIs, parallel execution with CI sharding, and a built-in trace viewer that captures screenshots and DOM snapshots for diagnosing flaky failures. Discover tools for AI development."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
-documentationUrl: "https://playwright.dev/"
+documentationUrl: "https://playwright.dev/docs/intro"
 downloadUrl: /downloads/skills/playwright-e2e-testing.zip
 installable: true
 installCommand: npx playwright install --with-deps
@@ -20,7 +20,7 @@ copySnippet: |-
   test.describe('Dashboard Tests', () => {
     test.beforeEach(async ({ page }) => {
       // Login before each test
-      await page.goto('http://localhost:3000/login');
+      await page.goto('https://localhost:3000/login');
       await page.getByLabel('Email').fill('user@example.com');
       await page.getByLabel('Password').fill('password123');
       await page.getByRole('button', { name: 'Sign In' }).click();
@@ -46,17 +46,20 @@ retrievalSources:
 testedPlatforms:
   - Claude
   - Codex
-  - OpenClaw
   - Cursor
   - Windsurf
   - Gemini
 prerequisites:
   - Node.js 18+
-  - Playwright 1.40+
-  - "@playwright/test package"
-  - "Browser binaries (Chromium, Firefox, WebKit)"
-  - "Browser binaries installed via Playwright (npx playwright install) for target browsers (Chromium, Firefox, WebKit)"
-  - "Test application or website accessible for testing (local development server, staging environment, or production URL)"
+  - Playwright 1.40+ with the @playwright/test package
+  - Browser binaries installed via `npx playwright install` (Chromium, Firefox, WebKit)
+  - A web application accessible for testing (local dev server, staging, or production URL)
+safetyNotes:
+  - "`npx playwright install --with-deps` downloads browser binaries (~500 MB for Chromium, Firefox, and WebKit) from Playwright's CDN and on Linux installs system-level packages. Review your network and environment policies before running in restricted infrastructure."
+  - Generated tests have full browser-level access to any URL they target. Review test scripts before running them against authenticated sessions or production environments — Playwright can submit forms, click buttons, and make network requests as a real user.
+privacyNotes:
+  - Playwright runs entirely on your local machine. Traces, screenshots, and HTML test reports are written to local disk only and are not uploaded to Microsoft or any external service.
+  - Trace files and failure screenshots may capture sensitive content from the application under test (form data, rendered PII, session tokens visible in URLs). Store and rotate these files appropriately.
 tags:
   - testing
   - playwright
@@ -82,22 +85,11 @@ robotsIndex: true
 robotsFollow: true
 ---
 
+Playwright is Microsoft's open-source end-to-end testing framework for modern web applications. Its [introductory documentation](https://playwright.dev/docs/intro) covers the core design principles: auto-waiting for elements to be in an actionable state before interacting with them, full isolation between test contexts, and a unified API that runs the same tests against Chromium, Firefox, and WebKit. This skill brings those capabilities into Claude — you describe a user flow or a bug scenario in plain language, and Claude generates the corresponding `@playwright/test` spec, configures fixtures, sets up parallel workers, and interprets trace output when tests fail.
+
 ## What This Skill Enables
 
-Claude can write, execute, and maintain end-to-end tests using Playwright, the modern browser automation framework that has overtaken Cypress in npm downloads as of 2025. This skill enables cross-browser testing (Chrome, Firefox, Safari/WebKit), AI-powered test generation with GitHub Copilot integration, and official MCP (Model Context Protocol) support for structured DOM interactions.
-
-## Compatibility
-
-### Native
-
-- **Claude Code / Claude**: native skill usage via `SKILL.md`.
-- **Codex/OpenAI workflows**: compatible with Agent Skills-style `SKILL.md` content as reusable workflow instructions.
-
-### Manual Adaptation
-
-- **Gemini CLI**: native skill usage via `.gemini/skills/<skill-name>/SKILL.md` or `.agents/skills/<skill-name>/SKILL.md` where supported.
-- **Cursor**: use the generated `.cursor/rules/*.mdc` adapter for project rules.
-- **OpenClaw and similar agents**: use the same skill content as a reusable prompt/workflow file when native skill import is unavailable.
+Claude can write, execute, and maintain end-to-end tests using Playwright. This covers cross-browser coverage (Chrome, Firefox, Safari/WebKit) from a single test suite, accessibility-first selectors (`getByRole`, `getByLabel`, `getByText`) that survive UI refactors, network request interception for mocking slow or flaky dependencies, and trace recording that captures a full timeline of clicks, network calls, and DOM snapshots for post-mortem debugging.
 
 ## Prerequisites
 
@@ -247,27 +239,7 @@ Fail tests if any metric exceeds Web Vitals thresholds."
 ## Learn More
 
 - [Playwright Official Documentation](https://playwright.dev/)
-- [Playwright MCP Integration Guide](https://github.com/microsoft/playwright/blob/main/docs/src/mcp.md)
-- [Playwright vs Cypress 2025 Comparison](https://playwright.dev/docs/why-playwright)
-- [AI-Powered Testing with Playwright](https://playwright.dev/docs/codegen)
+- [Playwright MCP Server](https://github.com/microsoft/playwright-mcp)
+- [Playwright Accessibility Testing](https://playwright.dev/docs/accessibility-testing)
+- [AI-Powered Test Generation with Codegen](https://playwright.dev/docs/codegen)
 - [Playwright Test Best Practices](https://playwright.dev/docs/best-practices)
-
-## Features
-
-- Cross-browser testing: Chrome, Firefox, Safari (WebKit) with single API
-- AI-powered test generation with GitHub Copilot and codegen
-- MCP support for accessibility-driven interactions (getByRole, getByLabel, getByText)
-- Native parallel execution and test sharding for CI/CD
-- Visual regression testing with screenshot comparison and pixel diff
-- API testing and contract validation with request context
-- Network request interception and mocking for offline testing
-- Trace viewer with screenshots, snapshots, and sources for debugging
-
-## Use Cases
-
-- End-to-end testing for web applications with cross-browser coverage
-- Visual regression testing with screenshot comparison and pixel diff
-- API testing and contract validation with request context
-- Mobile web testing with device emulation (iPhone, Pixel, etc.)
-- Performance testing with Web Vitals metrics (FCP, LCP, TTI, TBT)
-- Accessibility testing with screen reader automation and ARIA validation

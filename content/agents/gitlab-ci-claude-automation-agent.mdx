@@ -1,0 +1,169 @@
+---
+title: GitLab CI Claude Automation Agent
+slug: gitlab-ci-claude-automation-agent
+category: agents
+description: >-
+  Source-backed agent that operates Claude Code inside GitLab CI pipelines —
+  triaging pipeline failures, generating MR descriptions, running automated
+  code review on diffs, and reporting findings back to merge requests via the
+  GitLab API, using headless Claude Code with scoped tool permissions.
+cardDescription: >-
+  Automate Claude Code tasks inside GitLab CI: triage pipeline failures, draft
+  MR descriptions, and post code review findings via the GitLab API.
+seoTitle: GitLab CI Claude Automation Agent
+seoDescription: >-
+  Reusable agent prompt for running Claude Code automation inside GitLab CI
+  pipelines — pipeline failure triage, MR description generation, automated code
+  review, and findings posted back to merge requests via the GitLab API.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+documentationUrl: "https://code.claude.com/docs/en/features-overview"
+installable: false
+usageSnippet: >-
+  Use this agent inside a GitLab CI job to triage a pipeline failure, generate
+  a merge request description, or post an automated code review comment via the
+  GitLab API.
+prerequisites:
+  - "Claude Code installed in the CI runner image (`npm install -g @anthropic-ai/claude-code` or pre-baked image)."
+  - "ANTHROPIC_API_KEY set as a masked CI/CD variable in the GitLab project or group settings."
+  - "GITLAB_TOKEN (project access token with `api` scope) set as a masked CI/CD variable for MR comment writes."
+  - "GitLab CI job configured with `when: on_failure` or `when: always` as appropriate for the task."
+  - "Claude Code skip-permissions flag (`--dangerously-skip-permissions`) is acceptable only in isolated CI runner environments — never in shared, privileged runners."
+safetyNotes:
+  - "Claude Code runs headless in CI with real tool access; restrict allowed tools to the minimum needed (e.g., read-only bash, no write outside the workspace)."
+  - "Do not store ANTHROPIC_API_KEY or GITLAB_TOKEN in plaintext in `.gitlab-ci.yml`; always use masked CI/CD variables."
+  - "Using `--dangerously-skip-permissions` bypasses the permission system; limit this to ephemeral, non-privileged runner containers with no host mounts."
+  - "MR comment writes use the GitLab API; confirm the project access token scope is scoped to the intended project and not group-wide unless required."
+  - "Pipeline jobs triggered by external contributors run in a restricted context; ensure the Claude Code job does not expose secrets to fork pipelines."
+privacyNotes:
+  - "Pipeline logs are visible to project members; avoid printing the API key or token in job output."
+  - "Claude Code sends the prompt and tool outputs to Anthropic's API; avoid including secrets, PII, or confidential business logic in the prompt."
+  - "MR diff content sent to the model should be treated as potentially sensitive; confirm your Anthropic data handling policy covers CI-driven submissions."
+  - "GitLab audit logs record API token usage; review access token permissions periodically and rotate on expiry."
+tags:
+  - gitlab
+  - ci
+  - automation
+  - claude-code
+  - pipeline
+keywords:
+  - gitlab ci claude automation agent
+  - claude code gitlab ci pipeline
+  - gitlab merge request claude review
+  - claude code headless ci automation
+  - gitlab ci pipeline failure triage claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+GitLab CI Claude Automation Agent is a reusable agent prompt for running Claude
+Code automation tasks inside GitLab CI pipelines. It covers the three most common
+automation patterns: pipeline failure triage, merge request description generation,
+and automated code review with findings posted back to the MR via the GitLab API.
+
+Use it to reduce manual triage work on failing pipelines, give engineers a first-
+pass MR description they can edit, and surface code review findings before human
+review begins — all without leaving the GitLab CI workflow.
+
+## Agent Prompt
+
+You are a GitLab CI automation agent running inside a CI job with access to the
+GitLab API and the repository checkout. Your task is one of the following, as
+specified by the CI job variables:
+
+**TASK=triage_failure**: Analyse the pipeline failure and explain what went wrong.
+
+1. Read the failed job log from `$CI_JOB_LOG_PATH` or from the GitLab Jobs API
+   (`GET /projects/:id/jobs/:job_id/trace`) using `$GITLAB_TOKEN`.
+2. Identify the root cause: test assertion, compilation error, lint failure,
+   environment issue, or dependency problem.
+3. Suggest the most likely fix with file names and line numbers where possible.
+4. Post a concise failure summary as an MR note using the GitLab Notes API
+   (`POST /projects/:id/merge_requests/:mr_iid/notes`) if `$CI_MERGE_REQUEST_IID`
+   is set.
+
+**TASK=generate_mr_description**: Draft a merge request description from the diff.
+
+1. Fetch the MR diff using `GET /projects/:id/merge_requests/:mr_iid/changes`.
+2. Summarise what changed, why, and what the reviewer should focus on.
+3. Include a test plan checklist based on changed file types.
+4. Update the MR description using `PUT /projects/:id/merge_requests/:mr_iid`
+   only if the existing description is empty or contains a placeholder.
+
+**TASK=code_review**: Post an automated code review on the MR diff.
+
+1. Fetch the diff using `GET /projects/:id/merge_requests/:mr_iid/changes`.
+2. Review for: logic errors, missing error handling, security concerns (hardcoded
+   credentials, SQL injection patterns, unsafe deserialization), and style issues
+   that lint rules would not catch.
+3. Post inline review comments using the GitLab Discussions API
+   (`POST /projects/:id/merge_requests/:mr_iid/discussions`) for line-level
+   findings.
+4. Post a summary note with overall risk level (low/medium/high) and a list of
+   findings ordered by severity.
+
+Common constraints:
+
+- Read repository files using Claude Code's built-in file tools; do not `cat`
+  sensitive paths outside the workspace.
+- All GitLab API calls must include `PRIVATE-TOKEN: $GITLAB_TOKEN` header.
+- Keep note text under 65,536 characters (GitLab note body limit).
+- If `$CI_MERGE_REQUEST_IID` is not set, skip API write steps and print the
+  output to stdout for the job log instead.
+
+## Features
+
+- Triages pipeline failures and posts a root-cause summary to the MR.
+- Drafts MR descriptions from diffs, skipping non-empty descriptions.
+- Posts inline code review comments and a severity-ranked summary via the GitLab
+  Discussions API.
+- Guards against writing to MRs when not in a merge request pipeline context.
+
+## Use Cases
+
+- Automatically triage flaky or broken CI pipelines and surface the root cause
+  in the MR before engineers start investigating.
+- Generate a first-pass MR description for engineers who open draft MRs without
+  filling in the template.
+- Run a lightweight automated code review on every MR before human reviewers
+  start, flagging obvious issues early.
+- Reduce review queue wait times by providing a pre-triage summary on large diffs.
+
+## Source Notes
+
+- Claude Code supports headless operation via the `--print` flag and
+  `--dangerously-skip-permissions` for CI/non-interactive environments, as
+  documented in the Claude Code features overview.
+- GitLab CI exposes `$CI_PROJECT_ID`, `$CI_MERGE_REQUEST_IID`, and
+  `$CI_JOB_ID` as built-in variables usable without additional configuration.
+- The GitLab Notes API and Discussions API accept `PRIVATE-TOKEN` auth and are
+  the standard mechanism for programmatic MR comments.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for GitLab CI and pipeline automation
+agents. `ai-devops-automation-engineer-agent.mdx` covers general DevOps automation
+at the engineer-role level. `github-community-issue-triage-agent.mdx` covers
+GitHub issue triage. This entry is distinct: it is scoped specifically to GitLab
+CI pipeline jobs, the GitLab API, and the three concrete automation tasks that
+make sense in that context (failure triage, MR description, code review).
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `jaso0n0818`, based on
+public Claude Code and GitLab CI documentation. No paid placement, referral, or
+affiliate relationship.
+
+## Sources
+
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- GitLab CI/CD predefined variables: https://docs.gitlab.com/ci/variables/predefined_variables/
+- GitLab Notes API: https://docs.gitlab.com/api/notes/
+- GitLab Merge Requests API: https://docs.gitlab.com/api/merge_requests/
