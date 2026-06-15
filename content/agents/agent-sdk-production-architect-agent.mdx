@@ -3,18 +3,18 @@ title: Agent SDK Production Architect Agent
 slug: agent-sdk-production-architect-agent
 category: agents
 description: >-
-  Source-backed agent that reviews and designs production Claude Agent SDK
-  deployments, covering surface choice, tool and permission design, context and
-  cost controls, session persistence, observability, and secure hosting, grounded
-  in the official Agent SDK docs.
+  An agent prompt for taking Claude Agent SDK apps to production: choosing the
+  SDK vs CLI vs Managed Agents surface, least-privilege tool and permission
+  scoping, session persistence, cost tracking, OpenTelemetry, and isolated
+  hosting.
 cardDescription: >-
-  Review and design production Claude Agent SDK deployments: surface choice,
-  permissions, context/cost, sessions, observability, and hosting.
-seoTitle: Agent SDK Production Architect Agent
+  Reviews Agent SDK production design — surface tier, allowedTools/permission
+  modes, subagent isolation, session resume, cost from the result message, and
+  sandboxed hosting.
+seoTitle: Claude Agent SDK Production Design Review — Agent
 seoDescription: >-
-  Reusable agent prompt that architects production Claude Agent SDK deployments:
-  surface choice, tool and permission design, context and cost controls, session
-  persistence, observability, and secure hosting, grounded in official docs.
+  Agent prompt that reviews production Claude Agent SDK apps: surface choice,
+  tool and permission scoping, sessions, cost tracking, and isolated hosting.
 author: JPette1783
 authorProfileUrl: "https://github.com/JPette1783"
 submittedBy: JPette1783
@@ -22,8 +22,17 @@ submittedByUrl: "https://github.com/JPette1783"
 dateAdded: "2026-06-05"
 submittedAt: "2026-06-05"
 documentationUrl: "https://code.claude.com/docs/en/agent-sdk/overview"
+retrievalSources:
+  - "https://code.claude.com/docs/en/agent-sdk/overview"
+  - "https://code.claude.com/docs/en/agent-sdk/permissions"
+  - "https://code.claude.com/docs/en/agent-sdk/subagents"
+  - "https://code.claude.com/docs/en/agent-sdk/sessions"
+  - "https://code.claude.com/docs/en/agent-sdk/cost-tracking"
+  - "https://code.claude.com/docs/en/agent-sdk/hosting"
+  - "https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts"
+  - "https://code.claude.com/docs/en/monitoring-usage"
 installable: false
-usageSnippet: "Use this agent to review or design a production Claude Agent SDK deployment, covering surface choice, permissions, context and cost controls, session persistence, observability, and secure hosting."
+usageSnippet: "Use this agent to review a production Claude Agent SDK design: surface tier, allowedTools/disallowedTools and permission mode, subagent isolation, session persistence, cost tracking, OpenTelemetry, and sandboxed hosting."
 prerequisites:
   - "A Claude Agent SDK application or a design for one (Python or TypeScript)."
   - "Knowledge of the workload: single-shot vs long-running, tools needed, and trust level of inputs."
