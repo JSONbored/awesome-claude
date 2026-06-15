@@ -3,20 +3,25 @@ title: Code Complexity Alert Monitor - Hooks
 slug: code-complexity-alert-monitor
 category: hooks
 description: >-
-  Alerts when code complexity exceeds thresholds in real-time using cyclomatic
-  complexity analysis, line count monitoring, function count analysis, and
-  nesting level detection.
+  A Claude Code hook that flags files exceeding complexity thresholds after you
+  edit them — estimating cyclomatic complexity, line and function counts, and
+  nesting depth (via ESLint's complexity rule and Radon).
 cardDescription: >-
-  Alerts when code complexity exceeds thresholds in real-time using cyclomatic
-  complexity analysis, line count monitoring, function count a...
-seoTitle: Code Complexity Alert Monitor - Hooks
+  Warns when an edited file crosses complexity limits — cyclomatic complexity,
+  size, and nesting — using ESLint's complexity rule and Radon.
+seoTitle: Code Complexity Alert Hook for Claude Code
 seoDescription: >-
-  Alerts when code complexity exceeds thresholds in real-time using cyclomatic
-  complexity analysis, line count monitoring, function count analysis, and
-  nesting...
+  Claude Code hook that flags edited files over complexity thresholds —
+  cyclomatic complexity, line/function counts, nesting — via ESLint's complexity
+  rule and Radon.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://eslint.org/docs/latest/rules/complexity"
+  - "https://radon.readthedocs.io/en/latest/"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/code-complexity-alert-monitor.sh
