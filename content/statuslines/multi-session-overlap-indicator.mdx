@@ -2,22 +2,20 @@
 title: Multi Session Overlap Indicator - Statuslines
 slug: multi-session-overlap-indicator
 category: statuslines
-description: >-
-  Claude Code multi-session overlap detector showing concurrent active sessions
-  with visual indicators, session count, and workspace collision warnings for
-  budget management.
-cardDescription: >-
-  Claude Code multi-session overlap detector showing concurrent active sessions
-  with visual indicators, session count, and workspace collis...
-seoTitle: Multi Session Overlap Indicator - Statuslines
-seoDescription: >-
-  Claude Code multi-session overlap detector showing concurrent active sessions
-  with visual indicators, session count, and workspace collision warnings for
-  bud...
+description: "A Claude Code statusline command (bash) that detects concurrent Claude Code sessions. Each refresh it reads the statusline JSON from stdin with jq, writes a timestamp and workspace path to a per-session file under ~/.claude-code-sessions, prunes files older than 10 minutes, counts active session files, and flags a workspace collision when more than one active session shares the current directory. Output is color-coded (green solo, yellow 2-3, red 4+) with dot indicators and an optional collision warning."
+cardDescription: "Bash statusline that counts active Claude Code sessions from stdin JSON and warns when two share the same workspace directory."
+seoTitle: "Concurrent Claude Code Session Counter Statusline (Bash)"
+seoDescription: "Claude Code statusline that tracks concurrent sessions via timestamped files, prunes stale ones, and flags same-directory collisions."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
 documentationUrl: "https://code.claude.com/docs/en/statusline"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+  - "https://jqlang.github.io/jq/manual/"
+  - "https://man7.org/linux/man-pages/man1/bash.1.html"
+  - "https://man7.org/linux/man-pages/man1/date.1.html"
+  - "https://man7.org/linux/man-pages/man1/find.1.html"
 installable: true
 usageSnippet: "●● MULTI: 2 active [●●] | ⚠ WORKSPACE COLLISION"
 copySnippet: |-
@@ -172,6 +170,14 @@ prerequisites:
   - >-
     Write access to home directory (~/.claude-code-sessions) for persistent
     session tracking files
+safetyNotes:
+  - "Runs as a shell command on every statusline refresh (configured refreshInterval 2000ms), executing jq, find, grep, date and arithmetic each time."
+  - "Creates the directory ~/.claude-code-sessions and writes a per-session file there on every refresh."
+  - "Automatically deletes session files older than 10 minutes (configurable via SESSION_STALE_THRESHOLD in one variant) using rm."
+  - "The installation-example variant installs jq via brew or apt-get/yum with sudo and rewrites .claude/settings.json; review before running."
+privacyNotes:
+  - "Stores the current session_id and absolute workspace path in plaintext files under ~/.claude-code-sessions, readable by other local processes."
+  - "The enhanced variant additionally writes the session_id into the file contents and displays the first 8 characters of each session id in the statusline output."
 tags:
   - multi-session
   - parallel-sessions
@@ -209,17 +215,17 @@ robotsFollow: true
 - Automatic stale session cleanup (sessions inactive >10 minutes)
 - Color-coded alerts (green solo, yellow 2-3 sessions, red 4+ sessions)
 - Visual session list showing all active sessions as dots
-- Budget awareness through overlap warnings (multiple 5-hour windows)
-- Persistent session tracking via ~/.claude-code-sessions directory
+- Overlap awareness when several sessions run at once
+- Persistent session tracking via files in ~/.claude-code-sessions
 
 ## Use Cases
 
-- Managing multiple overlapping 5-hour billing windows
-- Preventing accidental parallel sessions that double costs
-- Detecting workspace collisions when working in same directory
-- Budget management for accounts with usage limits
-- Team coordination when multiple developers share workspace
-- Identifying forgotten background sessions still running
+- Noticing when several Claude Code sessions are running at once
+- Catching accidental parallel sessions you meant to close
+- Detecting workspace collisions when two sessions share a directory
+- Staying aware of overall session count while multitasking
+- Coordinating when multiple sessions operate in the same workspace
+- Identifying forgotten background sessions still active
 
 ## Requirements
 
