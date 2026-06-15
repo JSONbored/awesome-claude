@@ -1,0 +1,179 @@
+---
+title: Claude Code Desktop Parallel Sessions Workflow
+slug: claude-code-desktop-parallel-sessions-workflow
+category: guides
+description: >-
+  Run parallel Claude Code Desktop sessions safely: separate windows or tabs per
+  workstream, branch ownership rules, notification hygiene, and handoffs between
+  foreground and background jobs.
+cardDescription: Coordinate parallel Claude Code Desktop sessions with clear ownership rules.
+seoTitle: Claude Code Desktop Parallel Sessions Workflow
+seoDescription: >-
+  Run parallel Claude Code Desktop sessions with branch ownership, background job
+  handoffs, and desktop quickstart setup for multi-workstream development.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 1372
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1372"
+documentationUrl: "https://code.claude.com/docs/en/desktop"
+usageSnippet: >-
+  Open one Claude Code Desktop session per workstream, assign branch or worktree
+  ownership, use agent view to triage blocked background jobs, and avoid parallel
+  edits on the same checkout without isolation.
+prerequisites:
+  - Claude Code Desktop installed per the desktop quickstart for your platform.
+  - Multiple concurrent tasks that benefit from parallel sessions rather than one long thread.
+  - Team agreement on branch ownership, review, and merge authority.
+  - Optional agent view access for monitoring background sessions.
+safetyNotes:
+  - Parallel desktop sessions on the same branch can race—use worktrees or separate branches.
+  - Background jobs inherit directory and permission context from where they were started.
+  - Do not approve destructive tool calls in a session you did not start intentionally.
+privacyNotes:
+  - Desktop session titles and diffs may expose proprietary code during screen sharing.
+  - Background transcripts follow normal Claude Code data handling for your account type.
+  - Notification previews may leak ticket or branch names—configure OS privacy settings accordingly.
+sourceUrls:
+  - "https://code.claude.com/docs/en/desktop"
+  - "https://code.claude.com/docs/en/desktop-quickstart"
+  - "https://code.claude.com/docs/en/agent-view"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - desktop
+  - parallel-sessions
+  - workflow
+  - background-agents
+  - multitasking
+keywords:
+  - Claude Code Desktop parallel sessions
+  - multiple Claude Code windows
+  - desktop background jobs workflow
+  - parallel coding sessions Claude
+  - Claude Code desktop quickstart
+readingTime: 8
+difficultyScore: 46
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude Code Desktop supports multiple concurrent sessions when each workstream
+has clear ownership. Open separate desktop sessions per branch or worktree, triage
+blocked background jobs through agent view, and never let two sessions edit the
+same checkout without isolation.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Desktop installed", "description": "Claude Code Desktop is set up via the official quickstart"}
+- [ ] {"task": "Workstream map", "description": "Each parallel task maps to a branch, worktree, or ticket"}
+- [ ] {"task": "Merge owner", "description": "One person owns merge authority per branch"}
+- [ ] {"task": "Monitoring habit", "description": "Blocked sessions are reviewed during the work day"}
+- [ ] {"task": "Cleanup policy", "description": "Finished sessions and worktrees are pruned regularly"}
+
+## Core Concepts Explained
+
+### One session per ownership domain
+
+Desktop parallelism works when sessions do not compete for the same git working
+tree. Pair desktop sessions with branches or worktrees instead of duplicate tabs
+on one checkout.
+
+### Background jobs need explicit cwd
+
+Background sessions start relative to the directory context where they were
+launched—confirm repository path before dispatching long jobs.
+
+### Agent view complements desktop tabs
+
+Use `claude agents` to see blocked or running sessions across desktop and CLI
+instead of guessing which window needs attention.
+
+### Desktop docs define supported surfaces
+
+Official desktop documentation covers installation, updates, and session basics
+teams should standardize before scaling parallel usage.
+
+## Step-by-Step Implementation Guide
+
+1. **Install and update Desktop.** Follow the desktop quickstart for your OS and
+   pin a minimum version in team docs.
+
+2. **Define parallelism rules.** Document when to open a new session versus
+   continuing an existing thread.
+
+3. **Assign branch ownership.** Map each active session to one branch or worktree
+   with a named owner.
+
+4. **Launch background jobs deliberately.** Start long-running tasks from the
+   correct repository directory and label sessions with ticket IDs.
+
+5. **Monitor with agent view.** Triage blocked sessions before opening new desktop
+   windows for unrelated work.
+
+6. **Hand off with `/resume`.** Shift work between teammates using resume flows
+   documented in release notes for background sessions.
+
+7. **Clean up.** Close finished desktop sessions and remove orphan worktrees when
+   retention policy allows.
+
+## Daily Operations Checklist
+
+- [ ] {"task": "Blocked queue reviewed", "description": "No permission prompts left unanswered"}
+- [ ] {"task": "Ownership visible", "description": "Each open session maps to one branch owner"}
+- [ ] {"task": "Windows labeled", "description": "Session titles or tickets identify workstreams"}
+- [ ] {"task": "Worktrees pruned", "description": "Stale isolated checkouts are removed"}
+
+## Troubleshooting
+
+### Two sessions edited the same files
+
+Split workstreams with worktrees or branches and reset the conflicting checkout.
+
+### Background job attached to wrong repo
+
+Re-open agent view from the intended repository path before resuming.
+
+### Desktop session feels stale after git pull
+
+Restart the session or open a fresh desktop window after large branch updates.
+
+### Notifications hide blocked state
+
+Open agent view periodically instead of relying on OS notification previews alone.
+
+## Source Verification Notes
+
+Verified against official Claude Code documentation on **2026-06-15**:
+
+- `code.claude.com/docs/en/desktop` describes Claude Code Desktop capabilities
+  for local and connected repository work.
+- `code.claude.com/docs/en/desktop-quickstart` documents installation and first
+  session setup across supported platforms.
+- `code.claude.com/docs/en/agent-view` documents monitoring running, blocked, and
+  completed sessions that complement multiple desktop windows.
+- Public `CHANGELOG.md` entries cover background session resume, agent view dispatch
+  directory behavior, and worktree isolation relevant to parallel desktop usage.
+
+## Duplicate Check
+
+Checked `content/guides` and open pull requests for desktop parallelism, multiple
+Claude Code windows, and background session coordination. This guide focuses on
+Desktop-specific parallel session workflow. `agent-view-for-managing-multiple-claude-code-sessions.mdx`
+covers the monitoring control plane; `using-worktrees-for-parallel-claude-code-sessions.mdx`
+covers git worktree isolation.
+
+## References
+
+- Desktop docs - https://code.claude.com/docs/en/desktop
+- Desktop quickstart - https://code.claude.com/docs/en/desktop-quickstart
+- Agent view guide - agent-view-for-managing-multiple-claude-code-sessions
