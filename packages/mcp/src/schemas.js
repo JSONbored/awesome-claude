@@ -148,6 +148,12 @@ export const EntryDetailInputSchema = z
   .object({
     category: pathPart,
     slug: pathPart,
+    bodyMode: z
+      .enum(["none", "excerpt", "full"])
+      .describe(
+        "How much entry content to return. 'excerpt' (default) trims the body markdown to a short lead and omits large copyable fields (scriptBody, fullCopyableContent, copySnippet), reporting what was dropped via bodyChars/bodyTruncated/omittedFields; 'none' also drops the body; 'full' returns everything. Use get_copyable_asset for omitted install/script content, and request 'full' only when you truly need the complete inline content — it can be tens of kilobytes.",
+      )
+      .optional(),
   })
   .strict();
 

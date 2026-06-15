@@ -39,6 +39,10 @@ strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
 - `get_related_entries` - find related entries based on category, tags,
   platforms, keywords, and source metadata.
 - `get_entry_detail` - fetch an entry detail payload by category and slug.
+  Defaults to a token-efficient body excerpt (reporting `bodyChars`,
+  `bodyTruncated`, and any `omittedFields`); pass `bodyMode: "full"` for the
+  complete content or `"none"` to drop the body. Omitted copyable fields are
+  available via `get_copyable_asset`.
 - `get_copyable_asset` - fetch the category-aware copy/install asset for an
   entry, such as full prompt text, config snippets, commands, scripts, or
   collection items.

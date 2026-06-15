@@ -674,6 +674,123 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
   });
 
+  it("returns a token-efficient body excerpt by default and honors bodyMode", async () => {
+    const full = await callRegistryTool(
+      "get_entry_detail",
+      { category: skill.category, slug: skill.slug, bodyMode: "full" },
+      { dataDir },
+    );
+    expect(full).toMatchObject({
+      ok: true,
+      bodyMode: "full",
+      bodyTruncated: false,
+      bodyChars: expect.any(Number),
+      omittedFields: [],
+    });
+    expect(full.entry.body.length).toBe(full.bodyChars);
+
+    const excerpt = await callRegistryTool(
+      "get_entry_detail",
+      { category: skill.category, slug: skill.slug },
+      { dataDir },
+    );
+    expect(excerpt.bodyMode).toBe("excerpt");
+    expect(excerpt.bodyChars).toBe(full.bodyChars);
+    expect(Array.isArray(excerpt.omittedFields)).toBe(true);
+    if (full.bodyChars > 1200) {
+      expect(excerpt.bodyTruncated).toBe(true);
+      expect(excerpt.entry.body.length).toBeLessThan(full.bodyChars);
+      expect(excerpt.entry.body.endsWith("…")).toBe(true);
+    } else {
+      expect(excerpt.bodyTruncated).toBe(false);
+      expect(excerpt.entry.body).toBe(full.entry.body);
+    }
+
+    const omitted = await callRegistryTool(
+      "get_entry_detail",
+      { category: skill.category, slug: skill.slug, bodyMode: "none" },
+      { dataDir },
+    );
+    expect(omitted.bodyMode).toBe("none");
+    expect(omitted.entry).not.toHaveProperty("body");
+    // Non-body fields survive the projection.
+    expect(omitted.entry.slug).toBe(skill.slug);
+    expect(omitted.trust).toEqual(full.trust);
+  });
+
+  it("omits large copyable asset fields in lean modes and points to get_copyable_asset", async () => {
+    const directory = JSON.parse(
+      fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
+    ) as { entries: Array<{ category: string; slug: string }> };
+
+    // Find an entry whose scriptBody/fullCopyableContent exceeds the excerpt
+    // threshold so we exercise the asset-omission path deterministically.
+    let heavy: { category: string; slug: string } | null = null;
+    for (const candidate of directory.entries) {
+      const file = path.join(
+        dataDir,
+        "entries",
+        candidate.category,
+        `${candidate.slug}.json`,
+      );
+      if (!fs.existsSync(file)) continue;
+      const entry = JSON.parse(fs.readFileSync(file, "utf8")).entry as Record<
+        string,
+        unknown
+      >;
+      const big = ["scriptBody", "fullCopyableContent", "copySnippet"].some(
+        (field) =>
+          typeof entry[field] === "string" &&
+          (entry[field] as string).length > 1200,
+      );
+      if (big) {
+        heavy = { category: candidate.category, slug: candidate.slug };
+        break;
+      }
+    }
+    if (!heavy) return; // No heavy-asset entry in this dataset; nothing to assert.
+
+    const full = await callRegistryTool(
+      "get_entry_detail",
+      { ...heavy, bodyMode: "full" },
+      { dataDir },
+    );
+    expect(full.omittedFields).toEqual([]);
+
+    const lean = await callRegistryTool("get_entry_detail", heavy, { dataDir });
+    expect(lean.omittedFields.length).toBeGreaterThan(0);
+    const omittedNames = lean.omittedFields.map(
+      (item: { field: string }) => item.field,
+    );
+    for (const field of omittedNames) {
+      expect(lean.entry).not.toHaveProperty(field);
+    }
+    expect(lean.assetHint).toContain("get_copyable_asset");
+    // The full content is still retrievable via the dedicated asset tool.
+    const asset = await callRegistryTool("get_copyable_asset", heavy, {
+      dataDir,
+    });
+    expect(asset.ok).toBe(true);
+  });
+
+  it("rejects an unknown bodyMode for get_entry_detail", async () => {
+    await expect(
+      callRegistryTool(
+        "get_entry_detail",
+        { category: skill.category, slug: skill.slug, bodyMode: "summary" },
+        { dataDir },
+      ),
+    ).resolves.toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_request",
+        details: expect.arrayContaining([
+          expect.objectContaining({ path: "bodyMode" }),
+        ]),
+      },
+    });
+  });
+
   it("plans a ranked read-only workflow toolbox", async () => {
     const result = await callRegistryTool(
       "plan_workflow_toolbox",
@@ -922,7 +1039,9 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("rejects blank planner goals when called directly", async () => {
     const readJsonArtifact = async () => {
-      throw new Error("Expected direct planner validation before artifact read.");
+      throw new Error(
+        "Expected direct planner validation before artifact read.",
+      );
     };
 
     await expect(
@@ -938,7 +1057,9 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("rejects 1-character planner goals when called directly", async () => {
     const readJsonArtifact = async () => {
-      throw new Error("Expected direct planner validation before artifact read.");
+      throw new Error(
+        "Expected direct planner validation before artifact read.",
+      );
     };
 
     await expect(

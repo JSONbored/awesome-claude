@@ -158,7 +158,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "get_entry_detail",
     description:
-      "Fetch a read-only HeyClaude registry entry detail payload by category and slug.",
+      "Fetch a read-only HeyClaude registry entry detail payload by category and slug. By default (bodyMode='excerpt') the body markdown is trimmed to a short lead and large copyable fields are omitted to conserve context, with bodyChars/bodyTruncated/omittedFields describing what was dropped; pass bodyMode='full' for the complete content or 'none' to drop the body entirely. Use get_copyable_asset to retrieve omitted install/script content.",
     inputSchema: jsonSchemaForTool("get_entry_detail"),
   },
   {
@@ -1344,6 +1344,111 @@ export async function getRelatedEntries(args = {}, options = {}) {
   };
 }
 
+const ENTRY_BODY_EXCERPT_CHARS = 1200;
+
+// Large copyable-content fields that largely duplicate the body or the install
+// asset. In non-full modes they are omitted (and surfaced via omittedFields)
+// because the caller should pull them from get_copyable_asset when needed,
+// rather than paying for tens of kilobytes on every detail lookup.
+const ENTRY_ASSET_FIELDS = ["scriptBody", "fullCopyableContent", "copySnippet"];
+
+function excerptText(text, limit) {
+  if (text.length <= limit) {
+    return text;
+  }
+  const slice = text.slice(0, limit);
+  // Back off to the last paragraph/sentence/word boundary so the excerpt does
+  // not end mid-word; fall back to the hard cut if no decent boundary exists.
+  const boundary = Math.max(
+    slice.lastIndexOf("\n\n"),
+    slice.lastIndexOf("\n"),
+    slice.lastIndexOf(". "),
+    slice.lastIndexOf(" "),
+  );
+  const cut = boundary > limit * 0.6 ? slice.slice(0, boundary) : slice;
+  return `${cut.trimEnd()}…`;
+}
+
+// Projects an entry's heavy content to the requested verbosity so the default
+// get_entry_detail response stays token-efficient. Returns the (possibly
+// trimmed) entry plus body metadata describing exactly what was returned.
+function projectEntryBody(entry, requestedMode) {
+  const mode =
+    requestedMode === "none" || requestedMode === "full"
+      ? requestedMode
+      : "excerpt";
+  const body = typeof entry.body === "string" ? entry.body : "";
+  const bodyChars = body.length;
+
+  if (mode === "full") {
+    return {
+      entry,
+      bodyMeta: {
+        bodyMode: "full",
+        bodyChars,
+        bodyTruncated: false,
+        omittedFields: [],
+      },
+    };
+  }
+
+  // Lean modes: drop large copyable asset fields, keep small useful ones.
+  const projected = { ...entry };
+  const omittedFields = [];
+  for (const field of ENTRY_ASSET_FIELDS) {
+    const value = projected[field];
+    const size = typeof value === "string" ? value.length : 0;
+    if (size > ENTRY_BODY_EXCERPT_CHARS) {
+      delete projected[field];
+      omittedFields.push({ field, chars: size });
+    }
+  }
+
+  if (mode === "none") {
+    delete projected.body;
+    return {
+      entry: projected,
+      bodyMeta: withAssetHint({
+        bodyMode: "none",
+        bodyChars,
+        bodyTruncated: bodyChars > 0,
+        omittedFields,
+      }),
+    };
+  }
+
+  if (bodyChars > ENTRY_BODY_EXCERPT_CHARS) {
+    projected.body = excerptText(body, ENTRY_BODY_EXCERPT_CHARS);
+    return {
+      entry: projected,
+      bodyMeta: withAssetHint({
+        bodyMode: "excerpt",
+        bodyChars,
+        bodyTruncated: true,
+        omittedFields,
+      }),
+    };
+  }
+
+  return {
+    entry: projected,
+    bodyMeta: withAssetHint({
+      bodyMode: "excerpt",
+      bodyChars,
+      bodyTruncated: false,
+      omittedFields,
+    }),
+  };
+}
+
+function withAssetHint(bodyMeta) {
+  if (bodyMeta.omittedFields.length > 0) {
+    bodyMeta.assetHint =
+      "Large copyable fields were omitted to save context; call get_copyable_asset for the full script or snippet.";
+  }
+  return bodyMeta;
+}
+
 export async function getEntryDetail(args = {}, options = {}) {
   const category = normalizeText(args.category);
   const slug = normalizeText(args.slug);
@@ -1356,15 +1461,22 @@ export async function getEntryDetail(args = {}, options = {}) {
     return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
   }
 
+  const normalizedEntry = {
+    ...entry,
+    safetyNotes: notes(entry.safetyNotes),
+    privacyNotes: notes(entry.privacyNotes),
+  };
+  const { entry: projectedEntry, bodyMeta } = projectEntryBody(
+    normalizedEntry,
+    args.bodyMode,
+  );
+
   return {
     ok: true,
     key: `${entry.category}:${entry.slug}`,
     canonicalUrl: entryCanonicalUrl(entry),
-    entry: {
-      ...entry,
-      safetyNotes: notes(entry.safetyNotes),
-      privacyNotes: notes(entry.privacyNotes),
-    },
+    ...bodyMeta,
+    entry: projectedEntry,
     trust: entryTrustSummary(entry),
   };
 }
@@ -2123,7 +2235,12 @@ export async function readRegistryResource(args = {}, options = {}) {
     };
   } else if (parsed.hostname === "entry" && parts.length === 2) {
     const [category, slug] = parts.map(normalizeText);
-    const detail = await getEntryDetail({ category, slug }, options);
+    // Resource reads return the full document; only the tool defaults to a
+    // token-efficient excerpt.
+    const detail = await getEntryDetail(
+      { category, slug, bodyMode: "full" },
+      options,
+    );
     payload = detail;
   } else if (
     parsed.hostname === "registry" &&
