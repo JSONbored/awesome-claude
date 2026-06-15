@@ -2,24 +2,21 @@
 title: Docker Container Auto Rebuild - Hooks
 slug: docker-container-auto-rebuild
 category: hooks
-description: >-
-  Automatically rebuilds Docker containers when Dockerfile or docker-compose.yml
-  files are modified. This PostToolUse hook triggers automatic Docker image
-  rebuilding when Docker-related files (Dockerfile, docker-compose.yml,
-  .dockerignore) are modified, providing real-time container synchronization
-  during development.
-cardDescription: >-
-  Automatically rebuilds Docker containers when Dockerfile or docker-compose.yml
-  files are modified.
-seoTitle: Docker Container Auto Rebuild - Hooks
-seoDescription: >-
-  Automatically rebuilds Docker containers when Dockerfile or docker-compose.yml
-  files are modified. This PostToolUse hook triggers automatic Docker image
-  rebu...
+description: "A PostToolUse hook that watches for edits to Docker-related files (Dockerfile, docker-compose, .dockerfile, .dockerignore). When one changes it checks that the Docker CLI and daemon are available, then runs docker build for a Dockerfile or docker compose build for a compose file, reporting image ID/size or service status."
+cardDescription: "PostToolUse hook that runs docker build or docker compose build whenever a Dockerfile, compose file, or .dockerignore is edited."
+seoTitle: "Auto-Rebuild Docker Images on File Edits with a Claude Hook"
+seoDescription: "Claude Code PostToolUse hook that detects Dockerfile, compose, and .dockerignore edits, verifies the Docker daemon, then triggers docker build or compose build."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
-documentationUrl: "https://docs.docker.com/compose/"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://docs.docker.com/reference/cli/docker/image/build/"
+  - "https://docs.docker.com/compose/"
+  - "https://docs.docker.com/build/concepts/context/"
+  - "https://docs.docker.com/reference/dockerfile/"
+  - "https://jqlang.org/"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/docker-container-auto-rebuild.sh
@@ -90,14 +87,14 @@ robotsFollow: true
 
 ## Features
 
-- Automatic Docker image rebuilding on Dockerfile changes with BuildKit support (Docker Engine 24.0+), layer caching optimization, and explicit Dockerfile path specification using -f flag
-- Docker Compose v2 service rebuilding for compose file updates with dependency resolution, service status reporting, and support for both docker-compose and docker compose commands
+- Automatic Docker image rebuilding on Dockerfile changes, deriving the image tag from the current directory name and using the Dockerfile's directory as the build context
+- Docker Compose service rebuilding for compose file updates with service status reporting and support for both the docker-compose and docker compose commands
 - Intelligent file detection for Docker-related configurations (Dockerfile, docker-compose.yml, .dockerignore, .dockerfile) with pattern matching and file extension detection
-- Support for multiple Docker file patterns and variations with explicit Dockerfile path specification, multi-stage build detection, and build context optimization
-- Build status reporting and error handling with detailed build output, image ID and size information, and service status display for Docker Compose
+- Support for multiple Docker file name patterns and variations via shell glob matching on the edited file path
+- Build status reporting and error handling with image ID and size information for Dockerfile builds and service status display for Docker Compose
 - Development environment synchronization with automatic container updates ensuring running containers reflect latest code changes
-- BuildKit integration for faster builds with cache mount support, parallel layer building, and improved cache efficiency (DOCKER_BUILDKIT=1)
-- .dockerignore optimization for reduced build context size with automatic .dockerignore detection and build context validation
+- Graceful skipping when the Docker CLI is missing or the Docker daemon is not running, so edits without Docker available do not fail
+- .dockerignore detection that prints the first lines of the edited file as a reminder of which paths are excluded from the build context
 
 ## Use Cases
 
@@ -127,7 +124,7 @@ robotsFollow: true
 - Claude Code CLI installed
 - Project directory initialized
 - Bash shell available
-- Docker Engine 24.0+ installed and running
+- Docker Engine installed and running
 - Docker Compose v2 (docker compose) or docker-compose command available
 - Docker daemon accessible (user in docker group on Linux)
 
