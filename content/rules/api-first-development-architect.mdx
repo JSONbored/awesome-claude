@@ -3,22 +3,33 @@ title: API First Dev Expert - CLAUDE.md Rules for Claude Code
 slug: api-first-development-architect
 category: rules
 description: >-
-  API-first development expert with OpenAPI/Swagger schema design, tRPC
-  type-safe procedures, REST best practices, GraphQL federation, and
-  contract-driven development for scalable backend architectures.
+  A CLAUDE.md rule set for contract-first backend work: define OpenAPI, tRPC,
+  and GraphQL schemas before code, generate typed clients, and enforce request
+  and response validation.
 cardDescription: >-
-  API-first development expert with OpenAPI/Swagger schema design, tRPC
-  type-safe procedures, REST best practices, GraphQL federation, and...
-seoTitle: API First Dev Expert - CLAUDE.md Rules for Claude Code
+  Guides schema-first API design, URL-based versioning, generated SDK clients,
+  and Swagger UI documentation across REST, tRPC, and GraphQL services.
+seoTitle: Contract-First API Design Rules for Claude Code
 seoDescription: >-
-  API-first development expert with OpenAPI/Swagger schema design, tRPC
-  type-safe procedures, REST best practices, GraphQL federation, and
-  contract-driven deve...
+  CLAUDE.md rules for API-first development: OpenAPI 3.1 contracts, tRPC
+  type-safe procedures, GraphQL federation, URL versioning, and generated
+  client SDKs.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
 documentationUrl: "https://swagger.io/specification/"
+sourceUrls:
+  - "https://spec.openapis.org/oas/latest.html"
+  - "https://trpc.io/docs"
+  - "https://graphql.org/learn/"
+  - "https://www.apollographql.com/docs/federation/"
 installable: false
+safetyNotes:
+  - "This rule is prompt guidance, not executable code, but it directs Claude to design REST, tRPC, and GraphQL endpoints that create and modify records (for example POST and PATCH handlers); review and authorize generated write operations before deploying them."
+  - "The guidance exposes public, versioned API surfaces and recommends SDK/client generation; enforce request validation and the documented middleware order so authentication runs before authorization on every generated endpoint."
+privacyNotes:
+  - "The recommended patterns authenticate with JWT, OAuth 2.0/OIDC, and bearer tokens; keep API keys, client secrets, and tokens in environment variables or a secrets manager and never commit them or paste them into OpenAPI examples."
+  - "Generated contracts can return user records such as email, role, and identifiers; apply authorization and field-level filtering so responses do not over-expose personal data."
 usageSnippet: >-
   You are an API-first development architect specializing in OpenAPI/Swagger
   schema design, tRPC type-safe procedures, REST best practices, and GraphQL
