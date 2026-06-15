@@ -1,0 +1,198 @@
+---
+title: Security Guidance Plugin Before Merge
+slug: security-guidance-plugin-before-merge
+category: guides
+description: >-
+  Install and tune the official security-guidance Claude Code plugin before
+  merge: PreToolUse pattern checks, team rollout, false-positive handling, and
+  pairing with human review.
+cardDescription: Enable the security-guidance plugin for PreToolUse checks before merge.
+seoTitle: Security Guidance Plugin Before Merge
+seoDescription: >-
+  Install the official security-guidance Claude Code plugin, configure PreToolUse
+  security pattern checks, and roll it out to teams before high-risk merges.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1378
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1378"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Install the security-guidance plugin from the Claude Code repository, verify
+  PreToolUse warnings fire on risky edits, tune false positives, and require
+  human review before merging AI-assisted security-sensitive changes.
+prerequisites:
+  - Claude Code with plugin support and permission to add project or managed plugins.
+  - A repository where AI-assisted edits touch application code, scripts, or templates before merge.
+  - A security or platform reviewer who can approve plugin rollout and exception policy.
+  - CI or review policy that still requires human approval for security-sensitive diffs.
+safetyNotes:
+  - The security-guidance plugin warns about patterns; it does not replace SAST, dependency scanning, or human security review.
+  - PreToolUse hooks can block or defer tool calls—document who may override warnings and when.
+  - Do not treat hook silence as proof of safety; unlisted patterns and logic bugs still require normal review.
+privacyNotes:
+  - PreToolUse hook inputs may include file paths, proposed edits, and tool metadata visible in local logs.
+  - Security warnings may quote code snippets from the working tree; avoid running the plugin on machines with unredacted secrets in files.
+  - Managed plugin rollout should not require uploading proprietary source outside your normal Claude Code data handling policy.
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://github.com/anthropics/claude-code/tree/main/plugins/security-guidance"
+  - "https://code.claude.com/docs/en/security-guidance"
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - plugins
+  - security
+  - hooks
+  - pre-merge
+  - code-review
+keywords:
+  - security guidance plugin Claude Code
+  - PreToolUse security hook
+  - Claude Code merge security review
+  - security-guidance plugin install
+  - AI assisted merge safety
+readingTime: 8
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+The official `security-guidance` plugin ships with Claude Code and adds a
+PreToolUse hook that warns when edits match risky patterns such as command
+injection, XSS, `eval`, dangerous HTML, pickle deserialization, and
+`os.system` calls. Install it before merge-heavy AI workflows, verify warnings
+in a test branch, tune false positives with your security team, and keep human
+review for anything that touches auth, crypto, or user input.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Plugin path approved", "description": "Team policy allows installing plugins from the Claude Code repository or an internal mirror"}
+- [ ] {"task": "Test repo ready", "description": "A non-production branch can trigger intentional risky-pattern edits"}
+- [ ] {"task": "Review owner named", "description": "Security or platform engineering owns exceptions and rollout timing"}
+- [ ] {"task": "Merge policy documented", "description": "AI-assisted PRs still require normal CI and human approval"}
+- [ ] {"task": "Hook logs understood", "description": "Teams know where PreToolUse output appears and who may override it"}
+
+## Core Concepts Explained
+
+### PreToolUse runs before side effects
+
+PreToolUse hooks evaluate a tool call before Claude writes or executes. The
+security-guidance plugin uses that moment to surface pattern matches while the
+human can still reject or revise the edit.
+
+### Pattern warnings are not exhaustive
+
+The plugin monitors a fixed set of dangerous patterns documented in the
+repository. Novel vulnerabilities, business-logic flaws, and misconfigurations
+still need tests, SAST, and reviewer attention.
+
+### Plugins complement merge gates
+
+Use the plugin during authoring sessions; keep branch protection, required
+reviewers, and CI security jobs as the authoritative merge gate.
+
+### Team rollout needs exception policy
+
+Some frameworks trigger benign matches. Document how engineers escalate false
+positives instead of disabling the plugin locally without review.
+
+## Step-by-Step Implementation Guide
+
+1. **Locate the plugin.** Find `plugins/security-guidance/` in the
+   `anthropics/claude-code` repository and read its README for monitored
+   patterns and hook behavior.
+
+2. **Install for a pilot repo.** Add the plugin through Claude Code plugin
+   settings or your team's standard plugin bundle. Prefer project-scoped install
+   first.
+
+3. **Verify hook firing.** In a throwaway branch, introduce a clearly unsafe
+   pattern the README lists (for example unsanitized shell concatenation) and
+   confirm PreToolUse warns before the edit lands.
+
+4. **Pair with review checklist.** Add a merge checklist item: security-guidance
+   warnings must be resolved or explicitly accepted by a named reviewer.
+
+5. **Tune false positives.** Collect noisy matches from the pilot, document
+   safe idioms, and update team CLAUDE.md guidance so Claude avoids reintroducing
+   flagged patterns unnecessarily.
+
+6. **Expand to managed rollout.** After pilot success, pin the plugin version in
+   managed settings so all pre-merge AI sessions inherit the same hook.
+
+7. **Re-verify after upgrades.** When Claude Code updates, re-run the pilot
+   tests—hook inputs and pattern lists can change across releases.
+
+## Pre-Merge Checklist
+
+- [ ] {"task": "Plugin enabled", "description": "security-guidance is active in the session editing the PR branch"}
+- [ ] {"task": "Warnings triaged", "description": "Every PreToolUse security warning is fixed or reviewer-approved"}
+- [ ] {"task": "CI green", "description": "Normal security CI jobs passed independent of hook warnings"}
+- [ ] {"task": "Human review complete", "description": "A qualified reviewer approved the diff"}
+- [ ] {"task": "No silent bypass", "description": "Engineers did not disable hooks to unblock merge"}
+
+## Troubleshooting
+
+### Hook never fires
+
+Confirm the plugin is enabled (`/plugin list`), the session uses an edit tool
+covered by PreToolUse, and managed settings are not running `--safe-mode`, which
+disables plugins and hooks.
+
+### Too many false positives
+
+Capture examples, adjust team coding guidance, and escalate to security for
+exception rules—avoid permanently disabling the plugin without a tracked decision.
+
+### Warnings disappear after EnterWorktree
+
+Hooks receive updated working-directory context after worktree switches; re-run
+the edit in the active worktree and confirm plugin scope includes that path.
+
+### Team members see different behavior
+
+Align plugin versions and managed settings; local-only installs drift from the
+pinned bundle veterans use.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-13**:
+
+- `plugins/README.md` lists `security-guidance` with a PreToolUse hook that
+  monitors nine security patterns including command injection, XSS, eval usage,
+  dangerous HTML, pickle deserialization, and `os.system` calls.
+- The plugin lives at `plugins/security-guidance/` inside the Claude Code
+  repository and is documented alongside other official plugins.
+- `CHANGELOG.md` documents PreToolUse hook behavior including
+  `permissionDecision`, `updatedInput`, and interaction with `permissions.deny`
+  rules—relevant when security warnings block or defer edits.
+- The root README directs users to report integration issues via the `/bug`
+  command or GitHub issues at `anthropics/claude-code`.
+- Official docs at `code.claude.com/docs/en/security-guidance` describe
+  user-facing setup; this guide anchors implementation to the shipped plugin
+  source in the GitHub repository.
+
+## Duplicate Check
+
+This guide complements safe-claude-code-hooks.mdx and
+threat-model-mcp-servers-before-installation.mdx. Those entries cover general
+hook safety and MCP threat modeling. This guide focuses specifically on the
+official security-guidance plugin as a pre-merge guardrail for AI-assisted edits.
+
+## References
+
+- security-guidance plugin source - https://github.com/anthropics/claude-code/tree/main/plugins/security-guidance
+- Claude Code security guidance docs - https://code.claude.com/docs/en/security-guidance
+- Claude Code hooks - https://code.claude.com/docs/en/hooks
+- Safe Claude Code hooks - safe-claude-code-hooks
