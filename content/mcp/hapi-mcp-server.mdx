@@ -1,0 +1,210 @@
+---
+title: HAPI MCP Server for Claude
+slug: hapi-mcp-server
+category: mcp
+description: >-
+  HAPI MCP CLI turns OpenAPI and Swagger specifications into MCP servers without
+  rewriting backend logic, exposing existing REST APIs as agent-ready tools over
+  stdio or hosted HTTP.
+cardDescription: >-
+  Connect Claude to HAPI MCP to convert OpenAPI specs into MCP tools with the HAPI
+  CLI, runMCP hosting, and deterministic OrcA orchestration.
+seoTitle: HAPI MCP Server for Claude
+seoDescription: >-
+  Use HAPI MCP with Claude to lift OpenAPI specs into MCP tools via the HAPI CLI,
+  preserving auth, validation, and business rules from your existing APIs.
+author: La Rebelion Labs
+authorProfileUrl: "https://github.com/la-rebelion"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1490
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1490"
+repoUrl: "https://github.com/la-rebelion/hapimcp"
+documentationUrl: "https://docs.mcp.com.ai"
+websiteUrl: "https://hapi.mcp.com.ai"
+installable: true
+installCommand: >-
+  hapi serve path/to/your/swagger.json --headless
+usageSnippet: >-
+  Install the HAPI CLI from la-rebelion/hapimcp releases, then run
+  hapi serve your OpenAPI spec with --headless to expose MCP tools over stdio.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "hapi": {
+        "command": "hapi",
+        "args": ["serve", "path/to/your/swagger.json", "--headless"],
+        "type": "stdio"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "hapi": {
+        "command": "hapi",
+        "args": ["serve", "path/to/your/swagger.json", "--headless"],
+        "env": {
+          "HAPI_LOG_LEVEL": "info"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "HAPI CLI installed from https://github.com/la-rebelion/hapimcp/releases or https://get.mcp.com.ai/hapi.sh."
+  - "A valid OpenAPI 3.x or Swagger specification for the API you want to expose."
+  - "Claude Code, Claude Desktop, or another MCP client with stdio transport support."
+  - "Backend API credentials configured through your OpenAPI security schemes or MCP env vars when tools call live endpoints."
+safetyNotes:
+  - "HAPI exposes every operation defined in the OpenAPI spec; narrow specs to least-privilege tool surfaces."
+  - "Headless mode forwards real API calls with inherited auth, rate limits, and side effects."
+  - "Do not point production admin APIs at agents without reviewing destructive operations in the spec."
+  - "Large OpenAPI files can create token-heavy tool catalogs; prefer focused specs per domain."
+privacyNotes:
+  - "API requests and responses flow through the HAPI process and your upstream backend."
+  - "Store API keys in MCP env vars or OpenAPI security configuration, not in chat or committed specs with live secrets."
+  - "Audit logs from your backend remain the source of truth for regulated environments."
+tags:
+  - openapi
+  - api-bridge
+  - developer-tools
+  - stdio
+  - brownfield
+keywords:
+  - hapi mcp
+  - openapi to mcp
+  - la rebelion hapimcp
+  - headless api mcp
+  - swagger mcp server
+readingTime: 4
+difficultyScore: 45
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+HAPI MCP is a Headless API approach to Model Context Protocol adoption. Instead of rewriting services for agents, the HAPI CLI lifts an OpenAPI catalog into MCP tools automatically, keeping API design in OAS/Arazzo and runtime behavior in your existing backend.
+
+The project is published at [la-rebelion/hapimcp](https://github.com/la-rebelion/hapimcp) with documentation at [docs.mcp.com.ai](https://docs.mcp.com.ai). Related components include [HAPI Server](https://hapi.mcp.com.ai), [runMCP](https://run.mcp.com.ai), [QBot](https://qbot.mcp.com.ai), [chatMCP](https://chat.mcp.com.ai), and [OrcA](https://orca.mcp.com.ai).
+
+## Features
+
+- OpenAPI-to-MCP conversion with no parallel business-logic rewrite.
+- Headless mode that exposes MCP tools without a REST facade.
+- Inherited auth, RBAC, rate limits, and auditability from the source API.
+- Vendor-neutral support for Claude, ChatGPT, QBot, and chatMCP clients.
+- Optional hosted deployment through runMCP and Cloudflare Workers.
+- Deterministic multi-tool orchestration through OrcA.
+
+## Use Cases
+
+- Expose an internal CRM API to Claude without building a custom MCP adapter.
+- Prototype agent access to a partner OpenAPI spec in minutes.
+- Split large APIs into focused MCP servers to avoid tool-definition token bloat.
+- Test MCP tool behavior locally with the HAPI CLI before remote deployment.
+- Bridge brownfield REST services into greenfield agent workflows.
+
+## Installation
+
+### Install HAPI CLI
+
+```bash
+curl -fsSL https://get.mcp.com.ai/hapi.sh | bash
+```
+
+Or download the latest release from [github.com/la-rebelion/hapimcp/releases](https://github.com/la-rebelion/hapimcp/releases).
+
+### Serve an OpenAPI spec
+
+```bash
+hapi serve path/to/your/swagger.json --headless
+```
+
+### Claude Desktop
+
+Add the stdio server to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "hapi": {
+      "command": "hapi",
+      "args": ["serve", "path/to/your/swagger.json", "--headless"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop after saving the config.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "hapi": {
+      "command": "hapi",
+      "args": ["serve", "path/to/your/swagger.json", "--headless"],
+      "env": {
+        "HAPI_LOG_LEVEL": "info"
+      },
+      "type": "stdio"
+    }
+  }
+}
+```
+
+Pass backend credentials through OpenAPI security schemes or environment variables expected by your API.
+
+## Examples
+
+### Local petstore demo
+
+```bash
+hapi serve petstore --headless --port 3030
+```
+
+### Expose a private API
+
+```text
+After connecting HAPI MCP for our inventory OpenAPI spec, list products with low stock and create a replenishment ticket.
+```
+
+### Focused tool surface
+
+```text
+Generate a trimmed OpenAPI spec with only read-only GET operations before exposing it to an internal assistant.
+```
+
+## Security
+
+- Treat the OpenAPI spec as your authorization boundary; remove destructive endpoints you do not want agents to call.
+- Use separate specs per environment so production credentials never appear in development MCP configs.
+- Rotate API keys if they were pasted into chat while debugging tool calls.
+
+## Troubleshooting
+
+### HAPI command not found
+
+Confirm the CLI install path is on your `PATH` or use the absolute binary from the release archive.
+
+### Tool calls return 401 or 403
+
+Verify the OpenAPI security scheme and MCP env vars match what the backend expects.
+
+### Too many tools loaded
+
+Split the spec or use HAPI's focused-server guidance to reduce context size.
+
+### Backend URL mismatch
+
+In headless mode, set `--url` to the live API base when it differs from the spec's default servers block.
