@@ -2,10 +2,10 @@
 title: JSON Schema Validate + Transform Skill
 slug: json-schema-validation-transformation
 category: skills
-description: "Validate JSON data against JSON Schema specifications (draft-07, 2019-09, 2020-12) and perform safe, lossless schema migrations and transformations using Ajv (fastest JSON Schema validator) and Zod (TypeScript-first validation)."
-cardDescription: "Validate JSON data against JSON Schema specifications (draft-07, 2019-09, 2020-12) and perform safe, lossless schema migrations and trans..."
-seoTitle: JSON Schema Validate + Transform Skill
-seoDescription: "Validate JSON data against JSON Schema specifications (draft-07, 2019-09, 2020-12) and perform safe, lossless schema migrations and transformations using Ajv..."
+description: "Compile JSON Schema (draft-07, 2019-09, 2020-12) into fast validators with Ajv, report every failure by its instancePath, and use Ajv options to coerce types, apply defaults, and remove unknown properties so incoming JSON is both validated and normalized."
+cardDescription: "Compile fast Ajv validators for JSON Schema draft-07/2019-09/2020-12: instancePath errors, type coercion, defaults, and strict mode."
+seoTitle: "Ajv JSON Schema Validation: Errors, Coercion & Defaults"
+seoDescription: "Validate and normalize JSON with Ajv-compiled schemas (draft-07, 2019-09, 2020-12): instancePath errors, type coercion, defaults, custom formats, and $ref."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-15"
@@ -31,6 +31,8 @@ verificationStatus: draft
 verifiedAt: "2025-10-15"
 retrievalSources:
   - "https://ajv.js.org/"
+  - "https://json-schema.org/"
+  - "https://github.com/bcherny/json-schema-to-typescript"
 testedPlatforms:
   - Claude
   - Codex
@@ -45,6 +47,11 @@ prerequisites:
   - "json-schema-to-typescript (optional, for type generation)"
   - "File system read/write access for JSON schema files, data files, and generated TypeScript type definitions"
   - "JSON Schema specification knowledge or reference documentation for creating valid schemas (draft-07, 2019-09, or 2020-12)"
+safetyNotes:
+  - "This skill installs npm packages (ajv, zod, json-schema-to-typescript) and reads and writes local files — JSON schemas, data, migration output, and generated TypeScript definitions."
+  - "Ajv type coercion and default-filling mutate the input data, and migration scripts overwrite documents; keep backups and re-validate each step, as the skill's troubleshooting notes recommend."
+privacyNotes:
+  - "Validation, normalization, and migration process your JSON data and schema files locally; nothing leaves the machine beyond the npm package downloads from the registry."
 tags:
   - json
   - schema
@@ -75,7 +82,7 @@ robotsFollow: true
 
 ## What This Skill Enables
 
-Claude can validate JSON data against schemas, transform data between formats, migrate between schema versions, and generate TypeScript types from JSON schemas using tools like Ajv, Zod, and json-schema-to-typescript.
+Claude can validate JSON against JSON Schema with Ajv — compiling schemas, reporting failures by `instancePath`, and using Ajv options to coerce types, apply defaults, and remove unknown properties so data is validated and normalized in one pass. For work beyond validation, it uses companion tools: `json-schema-to-typescript` to generate TypeScript types from a schema, and scripted migrations that re-validate every document against the target schema.
 
 ## Compatibility
 
