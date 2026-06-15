@@ -2,21 +2,18 @@
 title: API Development Kit
 slug: api-development-starter-kit
 category: collections
-description: >-
-  Complete toolkit for building and documenting RESTful APIs with automated
-  testing and documentation generation. Perfect for backend developers starting
-  new API projects.
-cardDescription: >-
-  Complete toolkit for building and documenting RESTful APIs with automated
-  testing and documentation generation.
-seoTitle: API Development Kit
-seoDescription: >-
-  Complete toolkit for building and documenting RESTful APIs with automated
-  testing and documentation generation. Perfect for backend developers starting
-  new A...
+description: "A starter kit for designing, documenting, and testing REST APIs with Claude: bundles an API-builder agent with the docs, generate-tests, and debug commands."
+cardDescription: "Bundles an API-builder agent with docs, generate-tests, and debug commands for scaffolding and testing REST APIs in Claude Code."
+seoTitle: "REST API Starter Kit: Agent, Docs, Tests, and Debug"
+seoDescription: "REST API starter kit for Claude: an API-builder agent plus docs, test-generation, and debug commands to design, document, and test endpoints."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-02"
+documentationUrl: "https://swagger.io/specification/"
+retrievalSources:
+  - "https://swagger.io/specification/"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://code.claude.com/docs/en/sub-agents"
 installable: false
 usageSnippet: Start with `api-builder-agent` → `docs` → `generate-tests`
 items:
@@ -85,18 +82,16 @@ Complete toolkit for building and documenting RESTful APIs with automated testin
 
 ## TL;DR
 
-A comprehensive collection of Claude AI tools, prompts, and workflows designed for API development. This starter kit provides ready-to-use resources for building, testing, and deploying REST APIs, GraphQL endpoints, and microservices with Claude Code assistance.
+A collection of four HeyClaude resources for REST API development with Claude Code: the api-builder-agent plus the docs, generate-tests, and debug commands. Install them in the recommended order to scaffold an API, generate documentation, create tests, and debug requests.
 
-- 25+ curated API development prompts and workflows
-- RESTful API and GraphQL templates optimized for Claude
-- Authentication, validation, and error handling patterns
-- Testing strategies and deployment automation guides
-
-Accelerate your API development workflow with this curated collection of Claude-optimized resources. Whether building REST APIs, GraphQL services, or microservices, this starter kit provides proven patterns and prompts to help you ship faster with higher quality.
+- An API-builder agent to scaffold REST endpoints
+- A docs command for generating API documentation
+- A generate-tests command for creating test suites
+- A debug command for tracing API requests
 
 ## Collection Overview
 
-**Collection Type:** Development Resources\n**Focus Area:** API Development & Microservices\n**Skill Level:** Intermediate to Advanced\n**Time Saving:** 40-60% reduction in API development time\n**Resource Count:** 25+ prompts, templates, and workflows
+**Collection Type:** Development Resources\n**Focus Area:** REST API Development\n**Skill Level:** Beginner\n**Resource Count:** 4 items (1 agent, 3 commands)
 
 ## What's Included
 
@@ -104,10 +99,10 @@ Accelerate your API development workflow with this curated collection of Claude-
 
 Essential resources for rapid API development
 
-- **API Architecture Templates** (Templates): REST, GraphQL, and gRPC service templates with best practices built in. Includes request/response patterns and error handling.
-- **Authentication & Authorization** (Security): JWT, OAuth 2.0, and API key authentication patterns. Secure-by-default implementations with Claude assistance.
-- **Testing Workflows** (Testing): Unit tests, integration tests, and API contract testing strategies. Claude-generated test suites and mocking patterns.
-- **OpenAPI & Documentation** (Documentation): Automated API documentation generation, OpenAPI schemas, and interactive API explorers with Claude Code.
+- **api-builder-agent** (Agent): Scaffolds REST API endpoints and structure with Claude Code.
+- **docs** (Command): Generates API documentation for your project.
+- **generate-tests** (Command): Creates test suites for your API code.
+- **debug** (Command): Helps trace and debug API requests.
 
 ## Quick Start
 
