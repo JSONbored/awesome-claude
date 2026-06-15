@@ -1,0 +1,221 @@
+---
+title: Claude Code sandboxed Bash policy Capability Pack Skill
+slug: claude-code-sandboxed-bash-policy-capability-pack
+category: skills
+description: >-
+  Expert Claude Code sandboxed Bash policy capability pack for reviewing filesystem allow/deny paths, network allowlists, excluded commands, unsandboxed escape hatches, and managed lockdown before autonomous runs.
+cardDescription: >-
+  Review Claude Code sandboxed Bash policy with filesystem, network, and escape-hatch checklists.
+seoTitle: Claude Code sandboxed Bash policy Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code sandboxed Bash policy review, filesystem boundaries, network allowlists, excluded commands, and managed lockdown.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1515
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1515"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when enabling or hardening Claude Code's sandboxed Bash tool for autonomous sessions, CI, or enterprise managed deployments.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code sandboxed Bash policy capability pack to this project."
+  
+  # Required output
+  1) Sandbox boundary summary: filesystem, network, and command exclusions
+  2) Privilege-escalation and credential-read exposure findings
+  3) Managed lockdown and denyRead recommendations
+  4) Unsandboxed escape hatch and excludedCommands review
+  5) Privacy-safe rollout notes for security review
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/sandboxing"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/security"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code with Bash sandbox enabled on macOS, Linux, or WSL2."
+  - "Access to sandbox settings across user, project, and managed scopes."
+  - "Inventory of paths, domains, and commands the workflow legitimately needs."
+  - "Security or platform stakeholders available to review boundary changes."
+safetyNotes:
+  - "This skill reviews sandbox configuration; it must not disable or weaken the sandbox without explicit approval."
+  - "Broad allowWrite paths to PATH directories or shell config enable privilege escalation."
+  - "The network proxy does not inspect TLS; broad allowedDomains can enable exfiltration."
+  - "excludedCommands and unsandboxed retries can undo isolation; treat them as high-risk exceptions."
+  - "Built-in file tools and computer use operate outside the Bash sandbox boundary."
+privacyNotes:
+  - "Sandbox reviews may expose repository paths, internal hostnames, and credential directory layouts."
+  - "denyRead recommendations should cover ~/.aws, ~/.ssh, and similar without pasting secret contents."
+  - "Managed sandbox policies can reveal org security posture in support tickets; redact before public sharing."
+  - "Network allowlists may name internal services; keep review artifacts in internal channels."
+tags:
+  - claude-code
+  - sandboxing
+  - bash
+  - security
+  - capability-pack
+keywords:
+  - "Claude Code sandboxed Bash policy"
+  - "Claude Code sandbox review"
+  - "Bash sandbox allowlist"
+  - "Claude Code filesystem network isolation"
+  - "Claude Code managed sandbox"
+  - "sandbox excludedCommands review"
+readingTime: 9
+difficultyScore: 84
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: true
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code sandboxing, settings, security, features-overview, and skills documentation
+verified on **2026-06-14**. Product behavior and integration defaults can change with
+releases; prefer live official docs and changelog notes over cached assumptions.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/sandboxing
+- https://code.claude.com/docs/en/settings
+- https://code.claude.com/docs/en/security
+- https://code.claude.com/docs/en/features-overview
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code documentation, README, CHANGELOG, and plugins
+README on **2026-06-14**:
+
+- Claude Code's Bash sandbox restricts filesystem writes to the working directory by default and controls network access through a proxy with an empty default allowlist.
+- CHANGELOG 2.1.176 fixed Linux sandbox startup when `.claude/settings.json` is a symlink with an absolute target and corrected /cd and worktree moves reporting stale git branches.
+- The default read policy still allows credential directories unless denyRead entries block paths such as ~/.aws and ~/.ssh.
+- Plugins README documents official Claude Code plugins bundling skills, hooks, and MCP servers for repeatable team workflows.
+- README describes Claude Code as an agentic coding tool in your terminal that understands your codebase and handles git workflows alongside routine development tasks.
+
+## Scope Note
+
+This is not a penetration test. Use it as a reusable review workflow when enabling or hardening Claude Code's sandboxed Bash tool for teams and autonomous runs.
+
+## Core Workflow
+
+1. Confirm sandbox availability on the target OS and whether managed settings enforce sandbox use.
+2. Review filesystem allowWrite and denyRead paths for privilege-escalation and credential exposure.
+3. Review allowedDomains and note TLS is not inspected by the proxy; narrow domains to required hosts.
+4. Audit excludedCommands and unsandboxed retry settings that weaken isolation.
+5. Check subagent and background-session inheritance of parent sandbox configuration.
+6. Compare project, user, and managed policy layers for conflicts or overrides.
+7. Document escape hatches requiring human approval before unattended runs.
+8. Produce managed lockdown recommendations for enterprise rollout.
+9. Capture privacy-safe summary for security and platform review.
+
+## Capability Scope
+
+- Filesystem allow/deny path review.
+- Network allowlist and exfiltration risk assessment.
+- Excluded command and unsandboxed escape hatch audit.
+- Managed sandbox lockdown recommendations.
+- Subagent and background session inheritance checks.
+- Privacy-safe enterprise rollout notes.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when preparing sandboxed Bash policy
+  workflows, rollout checklists, or team enablement docs.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as a
+  deterministic checklist for sandboxed Bash policy evaluations on Claude Code projects.
+
+## Required Inputs
+
+- Target repository or organization context and Claude Code version or channel.
+- Current configuration files, integration endpoints, and policy constraints.
+- Stakeholders for security, platform, or compliance review when applicable.
+- Known dependencies, secrets handling rules, and rollback expectations.
+
+## Production Rules
+
+- Do not broaden allowWrite to PATH directories, shell config, or system paths.
+- Do not approve broad allowedDomains when TLS content is uninspected.
+- Require denyRead for credential directories on autonomous or CI runs.
+- Treat excludedCommands as explicit security exceptions with owners.
+- Confirm managed policy fails closed when sandbox dependencies are missing.
+- Keep built-in file tools and computer use in a separate risk review.
+- Redact internal hostnames and paths in public summaries.
+
+## Review Matrix
+
+| Topic | Signal | Action |
+| --- | --- | --- |
+| Default write scope | Working directory only | Confirm no broad system writes |
+| Credential reads | Allowed unless denied | Add denyRead for secrets dirs |
+| Network egress | Empty default allowlist | Add only required domains |
+| excludedCommands | Can bypass sandbox | Minimize and document each |
+| Managed enforcement | Org policy layer | Verify fail-closed behavior |
+| Subagents | Inherit parent sandbox | Review parallel session risk |
+
+## Output Contract
+
+1. Sandbox boundary summary.
+2. Findings with severity and required changes.
+3. Managed lockdown recommendations.
+4. Escape hatch and exclusion inventory.
+5. Verification steps for staging rollout.
+6. Privacy-safe summary for security review.
+
+## Troubleshooting
+
+**Issue:** Sandbox fails to start on Linux
+**Fix:** Check whether `.claude/settings.json` is a symlink; recent builds fixed absolute-target startup failures.
+
+**Issue:** Commands still reach the network
+**Fix:** Verify the command is not excluded from sandboxing or retried unsandboxed after denial.
+
+**Issue:** Credential files readable during runs
+**Fix:** Add denyRead entries; default read policy does not block ~/.aws or ~/.ssh automatically.
+
+**Issue:** Subagent behaves differently from parent
+**Fix:** Confirm subagents inherit parent sandbox config rather than a separate policy file.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open pull
+requests for Claude Code sandboxed Bash policy, sandbox boundary review, and filesystem network isolation workflows. Official docs describe the feature directly, but
+no `skills` entry provides a reusable capability pack with review matrix and output
+contract for this workflow.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by `kiannidev`.
+It is based on public Claude Code documentation, the public Anthropic `claude-code`
+repository, and Google Search Central helpful-content guidance. No paid placement,
+referral link, affiliate link, or vendor sponsorship is used.
+
