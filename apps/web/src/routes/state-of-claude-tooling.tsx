@@ -15,7 +15,8 @@ import { ENTRIES, QUALITY_STATS, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl, OG_WIDTH, OG_HEIGHT } from "@/lib/og-image";
 import { stringifyJsonLd } from "@/lib/json-ld";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { CountUp } from "@/components/count-up";
 import { NewsletterInline } from "@/components/newsletter-inline";
 
@@ -150,15 +151,12 @@ function StateOfClaudeToolingPage() {
   });
 
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
-      <Breadcrumbs home items={[{ label: TITLE }]} />
-      <div className="mt-4 eyebrow">Data report</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">State of Claude Tooling</h1>
-      <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
-        A snapshot of the Claude and AI agent tooling ecosystem, derived directly from the HeyClaude
-        registry. Every number below is computed from the live, source-backed catalog — no
-        estimates, no projections.
-      </p>
+    <PageContainer>
+      <PageHeader
+        eyebrow="Data report"
+        title="State of Claude Tooling"
+        description="A snapshot of the Claude and AI agent tooling ecosystem, derived directly from the HeyClaude registry. Every number below is computed from the live, source-backed catalog — no estimates, no projections."
+      />
       <p className="mt-2 text-xs text-ink-subtle">Data as of {asOfLabel} (UTC).</p>
 
       <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-4">
@@ -288,7 +286,7 @@ function StateOfClaudeToolingPage() {
           source="state-of-claude-tooling"
         />
       </div>
-    </div>
+    </PageContainer>
   );
 
   function DistTable({ rows, linkCategory = false }: { rows: DistRow[]; linkCategory?: boolean }) {

@@ -1,0 +1,185 @@
+---
+title: ButlerBrain MCP Server for Claude
+slug: ai-butlerbrain-mcp-mcp-server
+category: mcp
+description: >-
+  ButlerBrain hosted MCP server providing persistent memory for AI assistants
+  so Claude can store and recall context across sessions via api.butlerbrain.ai.
+cardDescription: >-
+  Connect Claude to ButlerBrain for persistent cross-session memory through
+  api.butlerbrain.ai/mcp.
+seoTitle: ButlerBrain MCP Server for Claude
+seoDescription: >-
+  Use the ButlerBrain MCP server with Claude to save and recall persistent memory
+  across conversations via api.butlerbrain.ai/mcp.
+author: ButlerBrain
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1484
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1484"
+repoUrl: "https://butlerbrain.ai"
+documentationUrl: "https://butlerbrain.ai"
+websiteUrl: "https://butlerbrain.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http butlerbrain https://api.butlerbrain.ai/mcp
+usageSnippet: >-
+  Add https://api.butlerbrain.ai/mcp as a remote connector and sign in to
+  ButlerBrain to enable persistent memory tools across Claude sessions.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "butlerbrain": {
+        "url": "https://api.butlerbrain.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "butlerbrain": {
+        "url": "https://api.butlerbrain.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "ButlerBrain account with memory storage enabled for your workspace."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or Claude Code with HTTP MCP transport."
+  - "Data retention policy review before storing customer PII or regulated data in persistent memory."
+  - "Understanding of what should and should not be remembered across sessions."
+safetyNotes:
+  - "Persistent memory can retain incorrect or outdated facts until explicitly updated or deleted."
+  - "Memory write tools may store sensitive information if prompts include secrets or credentials."
+  - "Shared ButlerBrain workspaces can expose memories to other authorised users in the same account."
+  - "Review memory contents periodically to prevent unbounded accumulation of stale context."
+privacyNotes:
+  - "Memories you save are stored on ButlerBrain infrastructure under its privacy and retention terms."
+  - "Do not store passwords, API keys, health records, or other regulated data in assistant memory."
+  - "Exported memory dumps may contain personal preferences; treat them as confidential user data."
+tags:
+  - memory
+  - persistence
+  - context
+  - remote-mcp
+  - oauth
+keywords:
+  - butlerbrain mcp
+  - persistent memory claude
+  - ai assistant memory
+  - butlerbrain.ai connector
+  - cross session context
+readingTime: 4
+difficultyScore: 30
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+ButlerBrain provides a hosted Model Context Protocol server that adds persistent memory to AI assistants. Claude can store facts, preferences, and project context in ButlerBrain and recall them in later sessions, reducing repetitive re-briefing.
+
+Learn more at [butlerbrain.ai](https://butlerbrain.ai). The MCP endpoint is `https://api.butlerbrain.ai/mcp`.
+
+## Features
+
+- Save and retrieve persistent memories across Claude sessions.
+- Organise context by projects, tags, or namespaces where supported.
+- Hosted remote HTTP transport at `api.butlerbrain.ai/mcp`.
+- OAuth or account sign-in through ButlerBrain connectors.
+- Designed for long-running assistant workflows and personal knowledge bases.
+
+## Use Cases
+
+- Remember coding conventions and repo preferences for a team project.
+- Store user role and stack choices for a multi-week build engagement.
+- Recall meeting decisions and action items between weekly check-ins.
+- Maintain a rolling glossary of domain terms for a client engagement.
+- Persist bug triage context across interrupted debugging sessions.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://api.butlerbrain.ai/mcp`.
+3. Sign in with your ButlerBrain account.
+4. Enable the connector and instruct Claude when to read or write memory.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http butlerbrain https://api.butlerbrain.ai/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add a remote HTTP connector at `https://api.butlerbrain.ai/mcp` and authenticate with ButlerBrain.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "butlerbrain": {
+      "url": "https://api.butlerbrain.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+Authentication is handled through ButlerBrain sign-in in the connector UI.
+
+## Examples
+
+### Save project context
+
+```text
+Remember in ButlerBrain that this repo uses pnpm, Vitest, and Conventional Commits for all future sessions on Project Atlas.
+```
+
+### Recall preferences
+
+```text
+What do you remember in ButlerBrain about my preferred TypeScript style for this client?
+```
+
+### Update stale memory
+
+```text
+Update ButlerBrain: we migrated from Jest to Vitest last week; forget the old Jest setup notes.
+```
+
+## Security
+
+- Never store credentials, tokens, or regulated personal data in persistent memory.
+- Audit shared workspace memories before inviting new collaborators.
+- Delete obsolete memories to reduce leakage if accounts are compromised.
+
+## Troubleshooting
+
+### Memory not recalled
+
+Confirm the connector is enabled in the current conversation and you are signed into the same ButlerBrain workspace.
+
+### Conflicting memories
+
+Issue explicit update or delete instructions; ButlerBrain may retain older entries until overwritten.
+
+### OAuth errors
+
+Re-authorise the connector and verify your ButlerBrain subscription includes MCP memory features.
+
+### Over-broad retention
+
+Periodically prune memories and avoid storing entire documents when summaries suffice.

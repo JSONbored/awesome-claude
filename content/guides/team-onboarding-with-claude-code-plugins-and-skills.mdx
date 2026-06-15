@@ -1,0 +1,183 @@
+---
+title: Team Onboarding With Claude Code Plugins and Skills
+slug: team-onboarding-with-claude-code-plugins-and-skills
+category: guides
+description: >-
+  Practical team onboarding for Claude Code: standard plugins, shared skills,
+  champion support, first-week exercises, and governance aligned with the champion kit.
+cardDescription: Onboard engineering teams to Claude Code using shared plugins and skills.
+seoTitle: Team Onboarding With Claude Code Plugins and Skills
+seoDescription: >-
+  Practical team onboarding for Claude Code: standard plugins, shared skills,
+  champion support, first-week exercises, and governance aligned with the champion kit.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1427
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1427"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to onboard a team to Claude Code with a standard plugin bundle,
+  shared skills, and champion-led first-week exercises.
+prerequisites:
+  - An approved Claude Code plugin bundle with team skills, hooks, and optional MCP servers.
+  - Named champions trained on the champion kit materials and escalation paths.
+  - Managed or project settings documenting required plugins, permissions, and security policy.
+  - First-week exercises tied to real repository tasks—not generic demos.
+safetyNotes:
+  - Standardize on reviewed plugins before encouraging ad-hoc marketplace installs that expand MCP tool surfaces unpredictably.
+  - Onboarding exercises should use non-production credentials and scoped repositories until users complete permission and security training.
+  - Champions should not bypass managed settings or share personal OAuth tokens to unblock new hires.
+privacyNotes:
+  - Onboarding materials and shared skills may reference internal systems; host them in access-controlled repositories.
+  - Avoid recording onboarding sessions that capture customer data, production logs, or unreleased feature details.
+  - Tell new hires which skills and plugins send data to external MCP servers before they connect personal accounts.
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/champion-kit"
+  - "https://code.claude.com/docs/en/plugins"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - onboarding
+  - plugins
+  - skills
+  - teams
+keywords:
+  - Claude Code team onboarding
+  - plugin onboarding bundle
+  - shared skills rollout
+  - champion kit onboarding
+  - Claude Code adoption
+readingTime: 8
+difficultyScore: 46
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Team onboarding works best with a standard plugin bundle, shared project
+skills, and champion office hours—not a generic product tour. Align the rollout
+with the champion kit, install approved plugins on day one, and assign real
+repository exercises for the first week.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Standard bundle published", "description": "Required plugins, install order, and version pins are documented"}
+- [ ] {"task": "Champions trained", "description": "Advocates know champion kit materials and escalation paths"}
+- [ ] {"task": "Repository skills ready", "description": "Build, test, and review skills are committed to the main repo"}
+- [ ] {"task": "Pilot cohort defined", "description": "Five to ten engineers will validate onboarding before wide rollout"}
+- [ ] {"task": "Exercise backlog prepared", "description": "Real small tasks are labeled for first-week practice"}
+
+## Core Concepts Explained
+
+### Plugins encode team defaults
+
+A curated plugin bundle gives new hires the same skills, hooks, commands, and MCP
+integrations veterans use, reducing workflow variance in AI-assisted work.
+
+### Skills teach repository culture
+
+Project skills capture review norms, testing commands, and domain vocabulary so
+new contributors do not rediscover conventions through trial and error.
+
+### Champions reduce support load
+
+Champion kit materials identify advocates who answer workflow questions, collect
+feedback, and escalate policy exceptions through proper channels.
+
+### Onboarding is staged
+
+Day-one setup, week-one exercises, and month-one governance checkpoints keep
+adoption measured rather than chaotic.
+
+## Step-by-Step Implementation Guide
+
+1. **Publish the standard bundle.** Document required plugins, install order,
+   and version pins in team settings or an internal runbook.
+
+2. **Prepare repository skills.** Commit onboarding skills covering build, test,
+   review, and release workflows for the main codebase.
+
+3. **Train champions.** Walk champions through champion kit resources, support
+   boundaries, and security escalation paths.
+
+4. **Run a pilot cohort.** Onboard five to ten engineers, collect friction logs,
+   and refine plugin and skill content before wide rollout.
+
+5. **Day-one checklist.** Install Claude Code, add the plugin bundle, clone the
+   repo, and verify skills appear in a test session.
+
+6. **Week-one exercises.** Assign small real tasks: fix a documented bug, add a
+   test, or write a review summary using shared skills.
+
+7. **Office hours.** Hold champion-led sessions for permission questions, MCP
+   approvals, and workflow tuning.
+
+8. **Measure and iterate.** Track install completion, exercise success, and
+   support tickets; update skills when the same question repeats.
+
+## Day-One Checklist
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is on the developer machine"}
+- [ ] {"task": "Plugin bundle installed", "description": "Standard plugins match pinned versions in team docs"}
+- [ ] {"task": "Repository cloned", "description": "Project skills are visible from the checked-out branch"}
+- [ ] {"task": "Test session run", "description": "A harmless prompt confirms skills and hooks load"}
+
+## Troubleshooting
+
+### New hires see different plugins than veterans
+
+Confirm they installed from the pinned bundle URL and that managed settings are
+synced on their machine.
+
+### Skills from the repo do not load
+
+Verify repository clone path, branch, and that `.claude/skills` is present on
+the checked-out branch.
+
+### Champions overwhelmed with MCP requests
+
+Pre-approve a minimal MCP set in managed policy and defer non-essential servers
+until after week one.
+
+### Onboarding exercises feel artificial
+
+Replace demo tasks with backlog items labeled `good-first-claude-task` in your
+issue tracker.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `plugins/README.md` describes plugins as extensions with slash commands,
+  agents, hooks, and MCP servers shared across projects and teams.
+- The repository ships onboarding-relevant plugins such as `commit-commands`,
+  `feature-dev`, and `code-review` with documented commands and agents.
+- The root README documents recommended install paths (curl, Homebrew, WinGet)
+  and starting sessions by running `claude` in a project directory.
+- `CHANGELOG.md` documents `--safe-mode` / `CLAUDE_CODE_SAFE_MODE` to disable
+  CLAUDE.md, plugins, skills, hooks, and MCP servers for troubleshooting.
+- `CHANGELOG.md` adds `/plugin list` with `--enabled` and `--disabled` filters
+  for auditing what new hires receive.
+
+## Duplicate Check
+
+This guide complements champion-kit-rollout-for-internal-claude-code-adoption.mdx
+by focusing on day-to-day engineer onboarding with plugins and skills. The
+champion kit guide covers program structure; this guide covers the new hire
+workflow.
+
+## References
+
+- Claude Code champion kit - https://code.claude.com/docs/en/champion-kit
+- Claude Code plugins - https://code.claude.com/docs/en/plugins
+- Claude Code skills - https://code.claude.com/docs/en/skills

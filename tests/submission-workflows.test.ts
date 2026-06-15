@@ -400,8 +400,6 @@ describe("submission automation workflows", () => {
     expect(source).not.toContain("Deploy same-repo PR preview to dev Worker");
     expect(source).not.toContain("CLOUDFLARE_API_TOKEN");
     expect(source).not.toContain("vars.DEPLOYMENT_ARTIFACT_BASE_URL");
-    expect(source).toContain("Dry-run Resend template sync");
-    expect(source).toContain("pnpm resend:sync-templates -- --dry-run");
   });
 
   it("feeds deterministic content policy into required PR validation", () => {

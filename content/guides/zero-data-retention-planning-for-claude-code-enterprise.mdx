@@ -1,0 +1,160 @@
+---
+title: Zero Data Retention Planning for Claude Code Enterprise
+slug: zero-data-retention-planning-for-claude-code-enterprise
+category: guides
+description: >-
+  Enterprise guide to zero data retention planning for Claude Code: contractual
+  ZDR scope, logging boundaries, MCP data paths, and verification checkpoints.
+cardDescription: Plan zero data retention requirements for Claude Code enterprise deployments.
+seoTitle: Zero Data Retention Planning for Claude Code Enterprise
+seoDescription: >-
+  Enterprise guide to zero data retention planning for Claude Code: contractual
+  ZDR scope, logging boundaries, MCP data paths, and verification checkpoints.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1442
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1442"
+documentationUrl: "https://code.claude.com/docs/en/zero-data-retention"
+usageSnippet: >-
+  Use this guide when legal or security requires zero data retention planning
+  before an enterprise Claude Code rollout.
+prerequisites:
+  - Enterprise agreement terms or security questionnaire requiring zero data retention alignment.
+  - Inventory of Claude Code data paths: prompts, tool I/O, logs, analytics, MCP servers, and Slack integrations.
+  - Legal, security, and platform engineering stakeholders for sign-off.
+  - Test tenant or pilot group to validate retention behavior before broad rollout.
+safetyNotes:
+  - ZDR policy does not eliminate local repository risk—developers can still commit secrets; pair ZDR with secret scanning and MCP review.
+  - Third-party MCP servers may retain data outside Claude Code ZDR guarantees; block or review them explicitly.
+  - Do not assume analytics dashboards are ZDR-compatible without verifying their data collection scope.
+privacyNotes:
+  - Document which subsystems may temporarily process prompts for abuse prevention versus training exclusions under ZDR.
+  - Map cross-border data flows if developers connect from multiple regions.
+  - Maintain records of ZDR verification dates and responsible owners for audits.
+sourceUrls:
+  - "https://code.claude.com/docs/en/zero-data-retention"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - enterprise
+  - zdr
+  - privacy
+  - compliance
+keywords:
+  - Claude Code zero data retention
+  - enterprise ZDR planning
+  - Claude Code compliance
+  - data retention Claude Code
+  - enterprise privacy rollout
+readingTime: 8
+difficultyScore: 62
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Zero data retention planning maps contractual promises to real Claude Code data
+paths: model requests, logging, analytics, MCP tools, and integrations. Inventory
+flows, verify enterprise settings, block non-compliant MCP servers, and document
+verification steps before declaring rollout complete.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "ZDR docs reviewed", "description": "Official zero-data-retention documentation is read and summarized"}
+- [ ] {"task": "Data path inventory", "description": "Prompts, tools, logs, analytics, Slack, and MCP flows are listed"}
+- [ ] {"task": "Stakeholders identified", "description": "Legal, security, and platform engineering sign-off owners are named"}
+- [ ] {"task": "Pilot tenant ready", "description": "Verification runs on non-production users first"}
+- [ ] {"task": "Evidence folder created", "description": "Config exports and test logs will be stored for audits"}
+
+## Core Concepts Explained
+
+### ZDR is a program, not a checkbox
+
+Contracts define retention exclusions; engineering must map those promises to
+each integration that touches prompts or tool output.
+
+### Local and remote retention differ
+
+Claude Code ZDR addresses provider-side retention; MCP vendors, Slack, and internal
+log aggregators need separate review.
+
+### MCP expands the boundary
+
+Every approved MCP server is a potential retention point outside core ZDR docs.
+
+### Verification needs evidence
+
+Keep screenshots, config exports, and test results showing ZDR settings active for
+the deployment profile.
+
+## Step-by-Step Implementation Guide
+
+1. **Read official ZDR documentation.** Capture supported configurations and
+   explicit exclusions.
+
+2. **Inventory data paths.** List prompts, tool I/O, session exports, analytics,
+   Slack, and MCP flows.
+
+3. **Classify components.** Mark in-scope ZDR, out-of-scope third party, or
+   blocked pending review.
+
+4. **Configure enterprise settings.** Apply managed settings aligned with ZDR
+   requirements.
+
+5. **Block risky MCP defaults.** Publish allowlists for MCP servers compatible
+   with retention policy.
+
+6. **Run pilot verification.** Execute scripted tasks and confirm no prohibited
+   retention surfaces appear in logs or vendor dashboards.
+
+7. **Train champions.** Teach intake redaction and MCP request procedures under
+   ZDR.
+
+8. **Schedule re-verification.** Re-run inventory when enabling Slack, analytics, or
+   new MCP integrations.
+
+## ZDR Verification Checklist
+
+- [ ] {"task": "Core ZDR settings enabled", "description": "Enterprise deployment profile matches documentation"}
+- [ ] {"task": "MCP allowlist published", "description": "Only reviewed servers are approved for production"}
+- [ ] {"task": "Analytics scope verified", "description": "Dashboards do not retain prohibited prompt content"}
+- [ ] {"task": "Audit evidence stored", "description": "Dated exports and pilot logs are archived"}
+
+## Troubleshooting
+
+### Security questionnaire asks about MCP retention
+
+Provide separate MCP vendor assessments; core ZDR docs may not cover them.
+
+### Analytics appears to store prompts
+
+Verify whether analytics is disabled or anonymized per enterprise policy.
+
+### Developers use personal MCP servers
+
+Enforce managed MCP policy and block unapproved servers in enterprise builds.
+
+### Audit requests evidence
+
+Maintain dated config exports and pilot test logs prepared during initial rollout.
+
+## Duplicate Check
+
+This guide is distinct from healthcare-hipaa-guide.mdx and
+financial-services-guide.mdx, which cover regulated industry workflows. This
+entry focuses on zero data retention planning mechanics for enterprise Claude Code.
+
+## References
+
+- Claude Code zero data retention - https://code.claude.com/docs/en/zero-data-retention
+- Enterprise network config - https://code.claude.com/docs/en/network-config
+- Usage analytics - https://code.claude.com/docs/en/analytics

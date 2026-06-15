@@ -1,0 +1,167 @@
+---
+title: Packaging Claude Code Plugins as Zip Archives
+slug: packaging-claude-code-plugins-as-zip-archives
+category: guides
+description: >-
+  Step-by-step guide to packaging Claude Code plugins as zip archives: directory
+  layout, manifest files, validation, and internal distribution.
+cardDescription: Package Claude Code plugins as zip archives for offline or internal distribution.
+seoTitle: Packaging Claude Code Plugins as Zip Archives
+seoDescription: >-
+  Step-by-step guide to packaging Claude Code plugins as zip archives: directory
+  layout, manifest files, validation, and internal distribution outside public marketplaces.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1426
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1426"
+documentationUrl: "https://code.claude.com/docs/en/plugins"
+usageSnippet: >-
+  Use this guide to build a Claude Code plugin zip archive with the correct
+  directory layout for internal sharing or marketplace submission.
+prerequisites:
+  - A working plugin source tree with manifest, skills, hooks, commands, or MCP entries as needed.
+  - Claude Code installed locally to test-install the zip before wider distribution.
+  - Agreement on internal hosting location, checksum publication, and who may publish new plugin zips.
+  - Optional access to discover-plugins documentation if submitting to a shared marketplace.
+safetyNotes:
+  - Zip archives execute hooks and MCP configuration on install; scan for secrets, hard-coded tokens, and unexpected network endpoints before publishing.
+  - Sign or checksum zips when distributing internally so teams can detect tampered archives.
+  - Do not bundle personal credentials, `.env` files, or developer machine paths into shared plugin archives.
+privacyNotes:
+  - Plugin zips may contain internal hostnames, repository URLs, and runbook excerpts that should not leave the corporate network.
+  - Remove sample data, customer names, and debug logs from the source tree before creating the archive.
+  - Document whether the zip phone-home telemetry or MCP tools send data externally when users install it.
+sourceUrls:
+  - "https://code.claude.com/docs/en/plugins"
+  - "https://code.claude.com/docs/en/discover-plugins"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - plugins
+  - packaging
+  - distribution
+  - zip
+keywords:
+  - Claude Code plugin zip
+  - package Claude Code plugin
+  - plugin archive distribution
+  - internal plugin marketplace
+  - Claude Code plugin layout
+readingTime: 8
+difficultyScore: 50
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Package Claude Code plugins as zip archives when you need offline, air-gapped, or
+internal distribution. Use the documented plugin directory layout, validate the
+manifest, test-install locally, publish checksums, and share install instructions
+through discover-plugins or your internal registry.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Source tree complete", "description": "Manifest, skills, hooks, and optional MCP entries are ready"}
+- [ ] {"task": "Secrets removed", "description": "No tokens, `.env` files, or personal paths remain in the tree"}
+- [ ] {"task": "Layout verified", "description": "Archive root matches Claude Code plugin expectations"}
+- [ ] {"task": "Test install planned", "description": "A clean Claude Code profile will install the zip before rollout"}
+- [ ] {"task": "Provenance recorded", "description": "Git commit, version, and builder are documented"}
+
+## Core Concepts Explained
+
+### Archives must match plugin layout
+
+Claude Code expects specific top-level folders for skills, hooks, commands, MCP
+configuration, and manifest metadata. A zip with the wrong root folder fails
+silently or partially installs.
+
+### Manifest metadata drives discovery
+
+Name, version, description, and dependency fields in the manifest determine how
+marketplaces and plugin discovery present your bundle.
+
+### Test-install beats assumptions
+
+Building a zip is not complete until Claude Code loads hooks, registers MCP
+servers, and discovers skills from the archive on a clean profile.
+
+### Distribution needs provenance
+
+Internal teams should know who built the zip, which git commit it came from, and
+how to verify integrity before installation.
+
+## Step-by-Step Implementation Guide
+
+1. **Finalize plugin source.** Complete manifest, skills, hooks, commands, and
+   dependency declarations in the source tree.
+
+2. **Remove non-shippable files.** Delete secrets, local overrides, build
+   artifacts, and personal test configuration.
+
+3. **Verify directory layout.** Confirm the archive root matches Claude Code
+   plugin expectations documented in the plugins guide.
+
+4. **Build the zip.** Archive from the plugin root so paths inside the zip are
+   relative and do not include parent directories.
+
+5. **Record provenance.** Tag the git commit, version number, and builder in a
+   changelog or release note.
+
+6. **Test-install locally.** Install from the zip in Claude Code and exercise
+   each bundled capability.
+
+7. **Publish checksum and instructions.** Share SHA-256, install command, and
+   support contact with the archive location.
+
+8. **Submit or register optionally.** Use discover-plugins guidance if the archive
+   should appear in a shared marketplace catalog.
+
+## Pre-Ship Checklist
+
+- [ ] {"task": "Manifest valid", "description": "Name, version, and description fields pass discovery requirements"}
+- [ ] {"task": "Skills discoverable", "description": "Skills appear under the expected directory in the zip root"}
+- [ ] {"task": "Hooks smoke-tested", "description": "At least one hook fires correctly after install"}
+- [ ] {"task": "Checksum published", "description": "SHA-256 and install steps are shared with recipients"}
+
+## Troubleshooting
+
+### Plugin installs but skills are missing
+
+Check zip root paths; nested folders often mean skills landed outside the
+expected `skills/` directory.
+
+### Hooks fire twice or not at all
+
+Ensure you did not duplicate hook config in both the manifest and a nested path,
+and confirm only one version of the plugin is installed.
+
+### MCP servers fail after zip install
+
+Verify environment variable placeholders, relative paths, and that secrets are
+documented for admins rather than embedded in the archive.
+
+### Marketplace rejects the archive
+
+Compare manifest required fields and version format against discover-plugins
+documentation and rebuild with corrected metadata.
+
+## Duplicate Check
+
+This guide complements building-a-claude-code-plugin-marketplace.mdx, which
+covers marketplace authoring. This entry focuses on zip packaging mechanics and
+validation for a single plugin archive.
+
+## References
+
+- Claude Code plugins - https://code.claude.com/docs/en/plugins
+- Discover plugins - https://code.claude.com/docs/en/discover-plugins
+- Plugin dependencies - https://code.claude.com/docs/en/plugin-dependencies

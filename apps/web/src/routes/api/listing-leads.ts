@@ -6,6 +6,13 @@ import { listingLeadBodySchema } from "@/lib/api/contracts";
 import { apiError, apiJson, createApiHandler, type InferApiBody } from "@/lib/api/router";
 import { logApiError, logApiInfo, logApiWarn, redactEmail } from "@/lib/api-logs";
 import { getSiteDb } from "@/lib/db";
+import { getEnvString } from "@/lib/cloudflare-env.server";
+import { buildListingLeadAckEmail } from "@/lib/newsletter-emails";
+import { sendResendEmail } from "@/lib/newsletter-send.server";
+import { sendDiscordMessage } from "@/lib/notify.server";
+import { siteConfig } from "@/lib/site";
+
+const DEFAULT_FROM = "HeyClaude <newsletter@heyclau.de>";
 
 export const POST = createApiHandler(
   "listingLeads.create",
@@ -73,6 +80,45 @@ export const POST = createApiHandler(
         tier: data.tierInterest,
         email: redactEmail(data.contactEmail),
       });
+
+      // Best-effort notifications: the lead is already stored, so neither the
+      // acknowledgment email nor the maintainer ping can fail the request. Run
+      // them concurrently to keep the form response snappy.
+      const resendApiKey = getEnvString("RESEND_API_KEY");
+      const discordWebhookUrl = getEnvString("DISCORD_WEBHOOK_URL");
+      const notifications: Promise<unknown>[] = [];
+
+      if (resendApiKey) {
+        const ack = buildListingLeadAckEmail({
+          siteUrl: siteConfig.url,
+          contactName: data.contactName,
+          listingTitle: data.listingTitle,
+          kind: data.kind,
+        });
+        notifications.push(
+          sendResendEmail({
+            apiKey: resendApiKey,
+            from: getEnvString("RESEND_FROM") || DEFAULT_FROM,
+            to: data.contactEmail,
+            subject: ack.subject,
+            html: ack.html,
+            text: ack.text,
+          }),
+        );
+      }
+
+      if (discordWebhookUrl) {
+        const tier = data.tierInterest ? ` (${data.tierInterest})` : "";
+        notifications.push(
+          sendDiscordMessage(
+            discordWebhookUrl,
+            `New ${data.kind} lead${tier}: **${data.listingTitle}** — ${data.companyName} <${data.contactEmail}>`,
+          ),
+        );
+      }
+
+      if (notifications.length) await Promise.allSettled(notifications);
+
       return apiJson({ ok: true }, { headers: { "cache-control": "no-store" } });
     } catch {
       logApiError(request, "listing_leads.insert_failed", {

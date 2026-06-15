@@ -9,6 +9,7 @@ reports
 test-results
 .build-content-index.lock/
 TASKS.md
+.claude/
 .internal/
 .dev.vars
 .dev.vars.*

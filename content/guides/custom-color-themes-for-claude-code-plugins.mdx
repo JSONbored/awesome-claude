@@ -1,0 +1,164 @@
+---
+title: Custom Color Themes for Claude Code Plugins
+slug: custom-color-themes-for-claude-code-plugins
+category: guides
+description: >-
+  Guide to custom color themes in Claude Code plugins: theme file format, plugin
+  packaging, accessibility checks, and distributing branded terminal palettes.
+cardDescription: Ship custom terminal color themes through Claude Code plugins for branded team experiences.
+seoTitle: Custom Color Themes for Claude Code Plugins
+seoDescription: >-
+  Guide to custom color themes in Claude Code plugins: theme file format, plugin
+  packaging, accessibility checks, and distributing branded terminal palettes.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1429
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1429"
+documentationUrl: "https://code.claude.com/docs/en/whats-new/2026-w17"
+usageSnippet: >-
+  Use this guide to bundle custom Claude Code color themes in a plugin for
+  consistent branded terminal experiences across a team.
+prerequisites:
+  - A Claude Code plugin project with permission to add theme assets and manifest entries.
+  - Reference palette values meeting contrast requirements for code, diff, and status text in the terminal.
+  - Test terminals on macOS, Linux, or WSL targets your team actually uses.
+  - Optional brand guidelines specifying primary, accent, and semantic colors for success, warning, and error states.
+safetyNotes:
+  - Themes affect readability, not security, but low-contrast palettes can hide diff markers and permission prompts—test with real Claude Code output.
+  - Do not embed license keys, API tokens, or tracking pixels in theme files; themes should be static color definitions only.
+  - Verify theme changes do not break statusline or hook output that relies on specific ANSI color assumptions.
+privacyNotes:
+  - Theme names and descriptions may reveal internal codenames or client project brands when distributed in shared plugins.
+  - Internal brand assets bundled in plugins inherit the same access controls as the plugin archive itself.
+  - Themes do not transmit user content externally; document that in security reviews to avoid false privacy escalation.
+sourceUrls:
+  - "https://code.claude.com/docs/en/whats-new/2026-w17"
+  - "https://code.claude.com/docs/en/plugins"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - plugins
+  - themes
+  - terminal
+  - branding
+keywords:
+  - Claude Code color themes
+  - plugin terminal theme
+  - custom Claude Code branding
+  - Claude Code theme plugin
+  - terminal palette plugin
+readingTime: 8
+difficultyScore: 42
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude Code plugins can ship custom color themes so teams get consistent branded
+terminal experiences. Define palette tokens, package them in the plugin layout
+documented in recent release notes, test contrast with real diffs and tool
+output, and distribute through your standard plugin bundle.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Semantic tokens defined", "description": "Background, foreground, accent, diff, warning, and error colors are mapped"}
+- [ ] {"task": "Theme files created", "description": "Palette files follow the format from 2026-w17 release notes"}
+- [ ] {"task": "Manifest updated", "description": "Theme assets are registered in the plugin manifest"}
+- [ ] {"task": "Cross-platform test plan", "description": "macOS, Linux, or WSL terminals are in scope for pilot"}
+- [ ] {"task": "Activation documented", "description": "Users know how to select the theme after install"}
+
+## Core Concepts Explained
+
+### Themes are plugin-delivered assets
+
+Color themes ship as part of a plugin bundle rather than ad-hoc terminal
+configuration, which makes onboarding repeatable for new hires.
+
+### Contrast matters for AI-assisted diffs
+
+Claude Code surfaces patches, permission prompts, and tool results in the
+terminal. A brand-beautiful palette that fails contrast checks slows review and
+increases mis-click risk.
+
+### Terminal variance is real
+
+Test on the terminals your team standardizes—iTerm2, VS Code integrated terminal,
+Windows Terminal, or SSH sessions—not only the author's laptop.
+
+### Version themes with plugins
+
+Theme tweaks belong in plugin semver notes so support can identify which palette
+a user runs.
+
+## Step-by-Step Implementation Guide
+
+1. **Define semantic tokens.** Map background, foreground, accent, diff added/
+   removed, warning, and error colors to named tokens.
+
+2. **Create theme files.** Follow the theme format introduced in Claude Code
+   plugin releases documented in the 2026-w17 notes.
+
+3. **Register in plugin manifest.** Declare theme assets so discovery and install
+   load them with the rest of the plugin.
+
+4. **Package with the plugin zip.** Include themes in the standard plugin archive
+   layout alongside skills and hooks if applicable.
+
+5. **Test readability.** Run diff-heavy tasks, permission prompts, and statusline
+   output against the new palette.
+
+6. **Pilot with champions.** Ask three to five engineers on different OS targets
+   to use the theme for a week.
+
+7. **Document activation.** Tell users how to select the theme through Claude Code
+   settings or plugin defaults.
+
+8. **Iterate on feedback.** Adjust contrast before wide rollout; keep a changelog
+   entry per palette revision.
+
+## Accessibility Checklist
+
+- [ ] {"task": "Diff readable", "description": "Added and removed lines are distinguishable in git diff output"}
+- [ ] {"task": "Prompts visible", "description": "Permission and confirmation text meets contrast needs"}
+- [ ] {"task": "Statusline compatible", "description": "Statusline scripts remain legible on the new palette"}
+
+## Troubleshooting
+
+### Theme does not appear after plugin install
+
+Verify manifest registration, plugin version, and that users restarted Claude Code
+after installing the updated bundle.
+
+### Colors look wrong in SSH sessions
+
+Check terminal truecolor support and whether `TERM` settings strip palette entries.
+
+### Diff highlights are unreadable
+
+Increase contrast on added/removed lines and re-test with `git diff` output inside
+Claude Code sessions.
+
+### Statusline colors clash with theme
+
+Coordinate statusline scripts to use theme-aware tokens or neutral colors.
+
+## Duplicate Check
+
+This guide is distinct from terminal-tmux-and-vim-setup-for-claude-code.mdx,
+which covers shell ergonomics. It focuses on plugin-packaged color themes and
+brand-consistent palettes.
+
+## References
+
+- Claude Code 2026-w17 release notes - https://code.claude.com/docs/en/whats-new/2026-w17
+- Claude Code plugins - https://code.claude.com/docs/en/plugins
+- Claude Code settings - https://code.claude.com/docs/en/settings

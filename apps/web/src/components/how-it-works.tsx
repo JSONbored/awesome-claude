@@ -23,7 +23,7 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
+    <section className="mx-auto max-w-page px-4 py-12 sm:px-6">
       <div className="flex items-end justify-between gap-4">
         <div>
           <div className="eyebrow">How it works</div>

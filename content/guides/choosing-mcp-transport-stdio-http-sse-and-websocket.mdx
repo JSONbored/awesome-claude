@@ -1,0 +1,167 @@
+---
+title: "Choosing MCP Transport: Stdio, HTTP, SSE, and WebSocket"
+slug: choosing-mcp-transport-stdio-http-sse-and-websocket
+category: guides
+description: >-
+  Choose MCP transports for Claude Code and Agent SDK apps: stdio subprocesses, HTTP, SSE streams, WebSocket tradeoffs, timeouts, and enterprise network constraints.
+cardDescription: Choose MCP stdio, HTTP, SSE, or WebSocket for your deployment.
+seoTitle: "Choosing MCP Transport: Stdio, HTTP, SSE, and WebSocket"
+seoDescription: >-
+  Choose MCP transports for Claude Code and Agent SDK apps: stdio subprocesses, HTTP, SSE streams, WebSocket tradeoffs, timeouts, and enterprise network constraints.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1414
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1414"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Use this guide to pick MCP stdio, HTTP, SSE, or WebSocket transports based on deployment topology and security requirements.
+prerequisites:
+  - "Inventory of MCP integrations with latency, auth, and hosting requirements."
+  - "Network diagram showing corporate proxies, mTLS, and allowed egress hosts."
+  - "Understanding of whether tools run on the user laptop, shared CI, or central SaaS."
+  - "MCP specification familiarity for transport capabilities and limitations."
+safetyNotes:
+  - "Remote HTTP/SSE transports cross network boundaries—apply the remote MCP security checklist before rollout."
+  - "Stdio servers execute local binaries; verify install provenance and pin package versions."
+  - "Long-running SSE streams need idle timeout and reconnect policies to avoid hung sessions."
+privacyNotes:
+  - "HTTP/SSE remotes see tool args and results on the wire—require TLS and log retention review."
+  - "Stdio env injection includes session and project paths—sanitize before passing to third-party binaries."
+  - "WebSocket gateways may terminate TLS at a load balancer—confirm end-to-end encryption policies."
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://modelcontextprotocol.io/specification"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - mcp
+  - transport
+  - stdio
+  - sse
+  - claude-code
+keywords:
+  - "MCP transport stdio HTTP SSE"
+  - "choose MCP WebSocket"
+  - "remote MCP HTTP"
+  - "SSE MCP reconnect"
+  - "MCP specification transport"
+readingTime: 8
+difficultyScore: 64
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Pick stdio for local, single-user tools; HTTP or SSE for shared remote services; WebSocket when your platform already standardizes on bidirectional socket infra. Match transport to auth model, proxy support, and whether the server is stateful.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Claude Code installed", "description": "Latest approved build is available on the target machine"}
+- [ ] {"task": "Credentials ready", "description": "Login, API key, or provider credentials match the workflow"}
+- [ ] {"task": "Test environment prepared", "description": "A disposable project or sandbox can validate the setup"}
+- [ ] {"task": "Team policy reviewed", "description": "Managed settings and MCP policy align with org requirements"}
+- [ ] {"task": "Rollback documented", "description": "Steps to disable or revert the integration are written down"}
+
+## Core Concepts Explained
+
+### Stdio for colocated tools
+
+Claude Code spawns subprocesses with session env vars—best for IDE-local tools and pinned CLIs.
+
+### HTTP for stateless remotes
+
+HTTP MCP suits request/response tool calls through corporate proxies with familiar TLS and OAuth patterns.
+
+### SSE for streaming servers
+
+SSE supports streaming tool listings and events; stateful servers may need GET SSE streams to avoid reconnect loops.
+
+### WebSocket for bidirectional hubs
+
+WebSocket fits centralized brokers already managing persistent client connections—verify MCP spec support for your server SDK.
+
+## Step-by-Step Implementation Guide
+
+1. **Classify each integration.** Tag tools as local-only, shared remote, or hybrid needing both.
+
+2. **Map network path.** Document proxy, mTLS, and NO_PROXY rules for each remote host.
+
+3. **Choose stdio candidates.** Select integrations that must read local files or GPUs on the developer machine.
+
+4. **Choose HTTP/SSE candidates.** Select shared services with OAuth and horizontal scale requirements.
+
+5. **Evaluate WebSocket.** Use when your platform already exposes MCP over WebSocket with auth at the edge.
+
+6. **Set timeouts.** Configure `MCP_TOOL_TIMEOUT` for HTTP/SSE when calls exceed default minute caps.
+
+7. **Pilot reconnect.** Test laptop sleep, VPN flap, and server deploys for SSE stateful sessions.
+
+8. **Publish standards.** Document allowed transports per data classification in enterprise MCP policy.
+
+## Transport Selection Checklist
+
+- [ ] {"task": "Topology mapped", "description": "Each integration labeled local or remote"}
+- [ ] {"task": "Proxy compatibility", "description": "HTTP/SSE paths tested through corporate egress"}
+- [ ] {"task": "Auth model chosen", "description": "OAuth or mTLS aligned with transport"}
+- [ ] {"task": "Timeouts configured", "description": "MCP_TOOL_TIMEOUT set for long remotes"}
+- [ ] {"task": "Policy documented", "description": "Enterprise allowlist records transport per server"}
+
+## Operational Guardrails
+
+- Pin Claude Code or Agent SDK versions in team docs and CI images before rolling out
+  integration-specific flags such as `--remote-control`, `--chrome`, or provider env vars.
+- Run a five-minute smoke test on a disposable profile after managed settings or MCP
+  policy changes—do not wait for user reports to discover blocked servers.
+- Capture `/status` output and relevant env sources when escalating provider or transport
+  issues; recent builds expose more provider and region diagnostics.
+- Revisit allowlists and OAuth scopes after major `CHANGELOG.md` MCP or auth fixes;
+  enforcement timing changes often require client upgrades, not just policy edits.
+- Document rollback: which env vars to unset, which MCP entries to remove, and who can
+  publish emergency managed-settings overrides.
+
+## Troubleshooting
+
+### SSE reconnect loop
+
+Ensure stateful servers implement optional GET SSE streams; upgrade clients with reconnect fixes.
+
+### 403 shows as failed not needs-auth
+
+Recent builds surface auth-required states for HTTP/SSE connects.
+
+### Stdio memory growth
+
+Non-protocol stdout from stdio servers can cause unbounded memory—fix or quarantine bad servers.
+
+### 60 second remote cap
+
+Raise `MCP_TOOL_TIMEOUT` when per-request fetch ignored the configured value in older builds.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README,
+`plugins/README.md`, and `CHANGELOG.md` on **2026-06-14**:
+
+- `CHANGELOG.md` passes session and project environment variables to stdio MCP subprocesses.
+- `CHANGELOG.md` fixed `MCP_TOOL_TIMEOUT` not raising fetch timeout for remote HTTP/SSE MCP servers.
+- `CHANGELOG.md` fixed stateful MCP servers reconnect-looping without optional GET SSE streams.
+- `CHANGELOG.md` fixed unbounded memory growth when stdio servers write non-protocol stdout.
+- `plugins/README.md` optional `.mcp.json` demonstrates packaging external MCP configs with plugins.
+
+## Duplicate Check
+
+This guide compares MCP transports. See remote-mcp-server-security-review-checklist.mdx for remote approval, fix-mcp-connection-errors.mdx for client fixes, and oauth-patterns-for-mcp-server-authentication.mdx for auth design.
+
+## References
+
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- MCP specification - https://modelcontextprotocol.io/specification
+- Remote MCP security review - remote-mcp-server-security-review-checklist

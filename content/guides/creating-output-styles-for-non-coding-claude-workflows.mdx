@@ -1,0 +1,173 @@
+---
+title: Creating Output Styles for Non-Coding Claude Workflows
+slug: creating-output-styles-for-non-coding-claude-workflows
+category: guides
+description: >-
+  Create Claude Code output styles for product management, support, and writing
+  workflows. Omit keep-coding-instructions when coding behavior is not needed.
+cardDescription: Build Claude Code output styles for PM, support, and writing workflows without coding defaults.
+seoTitle: Creating Output Styles for Non-Coding Claude Workflows
+seoDescription: >-
+  Create Claude Code output styles for product management, support, and writing
+  workflows. Omit keep-coding-instructions when coding behavior is not needed.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1428
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1428"
+documentationUrl: "https://code.claude.com/docs/en/output-styles"
+usageSnippet: >-
+  Use this guide to create output styles for PM, support, or writing workflows
+  where Claude should not default to software engineering behavior.
+prerequisites:
+  - Claude Code with access to output style configuration through `/config` or settings files.
+  - A defined non-coding workflow such as PRD drafting, support triage, release notes, or executive summaries.
+  - Agreement on whether the style applies at user, project, or managed scope.
+  - A test session where you can run `/clear` after changing the selected output style.
+safetyNotes:
+  - Non-coding styles without `keep-coding-instructions` should not be used for sessions that still require file edits, test runs, or repository changes unless you deliberately accept reduced coding discipline.
+  - Do not embed confidential customer details, unreleased roadmap items, or internal incident data directly into shared output style files.
+  - Support and PM styles should remind users to verify facts against ticket systems and docs rather than treating model prose as authoritative record.
+privacyNotes:
+  - Output styles committed to project settings reveal communication norms, customer segment names, and internal template structure.
+  - Support-oriented styles may encourage pasting ticket contents; document redaction expectations in the style or companion team policy.
+  - Managed-scope styles propagate org-wide; review with legal or comms before publishing customer-facing tone rules.
+sourceUrls:
+  - "https://code.claude.com/docs/en/output-styles"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://github.com/anthropics/claude-code"
+tags:
+  - claude-code
+  - output-styles
+  - workflows
+  - writing
+  - product
+keywords:
+  - Claude Code output styles non-coding
+  - PM output style Claude Code
+  - support workflow output style
+  - writing output style Claude
+  - keep-coding-instructions false
+readingTime: 8
+difficultyScore: 44
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Output styles can shape PM, support, and writing workflows when you deliberately
+omit or disable coding-agent defaults. Define response structure, audience, and
+verification steps in the style file, choose the right settings scope, and
+restart sessions after changes—without mixing durable repo policy into the style
+text.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Workflow named", "description": "You know whether the style serves PM, support, writing, or another non-coding role"}
+- [ ] {"task": "Sections defined", "description": "Required headings or bullet patterns are listed"}
+- [ ] {"task": "Coding default decision", "description": "keep-coding-instructions is set to false for non-coding workflows"}
+- [ ] {"task": "Scope chosen", "description": "User, project, or managed scope matches audience"}
+- [ ] {"task": "Session restart planned", "description": "You will run /clear after selecting the new style"}
+
+## Core Concepts Explained
+
+### Non-coding workflows need different defaults
+
+Product managers, support engineers, and technical writers often want structured
+prose, decision logs, or customer-safe language—not implicit assumptions that
+Claude will edit files, run tests, or propose patches.
+
+### `keep-coding-instructions` is usually off here
+
+When the workflow is analysis, writing, or triage, set `keep-coding-instructions:
+false` so the style does not compete with communication-focused instructions.
+
+### Styles are not document templates alone
+
+Pair output styles with slash commands or skills when a workflow needs repeatable
+steps, source links, or tool usage. Styles handle voice and shape; skills handle
+procedure.
+
+### Scope controls visibility
+
+Use project scope for team writing standards, user scope for personal briefing
+preferences, and managed scope for org-wide support tone policy.
+
+## Step-by-Step Workflow
+
+1. **Name the workflow.** Examples: incident comms draft, PRD outline, support
+   reply triage, weekly status summary.
+
+2. **List required sections.** Define headings, tables, or bullet patterns the
+   answer should always include.
+
+3. **Set audience and tone.** Specify executive, customer, internal engineering,
+   or legal review audience explicitly.
+
+4. **Create the style file.** Use frontmatter with `keep-coding-instructions:
+   false` and concise behavioral rules.
+
+5. **Add verification hooks.** Instruct Claude to cite sources, flag unknowns, or
+   separate facts from recommendations.
+
+6. **Select scope and apply.** Choose user, project, or managed scope through
+   settings and select the style in `/config`.
+
+7. **Restart the session.** Run `/clear` or start fresh so the system prompt
+   picks up the new style.
+
+8. **Run three representative tasks.** Draft, revise, and summarize outputs; confirm
+   the style avoids unsolicited code edits.
+
+## Example Style Frontmatter
+
+```md
+---
+name: Support triage brief
+description: Structured internal support summaries with customer-safe language
+keep-coding-instructions: false
+---
+
+Lead with impact, reproduction steps, and known workarounds. Flag unverified
+claims. Do not propose code changes unless explicitly asked.
+```
+
+## Troubleshooting
+
+### Claude still proposes code changes
+
+Confirm `keep-coding-instructions: false` and that repository `CLAUDE.md` is
+not instructing coding behavior for this project.
+
+### Style feels too rigid for varied tasks
+
+Split into multiple focused styles rather than one mega-style covering every
+non-coding workflow.
+
+### Team members see different formatting
+
+Check scope: local vs project vs managed settings override each other.
+
+### Style conflicts with a plugin forced style
+
+Document precedence with admins or disable conflicting plugin styles for
+non-coding roles.
+
+## Duplicate Check
+
+This guide complements claude-code-output-styles-keep-coding-instructions.mdx,
+which focuses on preserving coding behavior. This entry covers PM, support, and
+writing workflows where coding defaults should be omitted.
+
+## References
+
+- Claude Code output styles - https://code.claude.com/docs/en/output-styles
+- Claude Code settings - https://code.claude.com/docs/en/settings
+- Claude Code skills - https://code.claude.com/docs/en/skills

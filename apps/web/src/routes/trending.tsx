@@ -3,6 +3,7 @@ import { createFileRoute, Link, stripSearchParams } from "@tanstack/react-router
 import { z } from "zod";
 import { ArrowRight, Clock, Flame, Info, Rss, Star, TrendingUp } from "lucide-react";
 import { BRIEF_ISSUES } from "@/data/entries";
+import { PageContainer } from "@/components/page-container";
 import { getEntry, search } from "@/data/search";
 import { CategoryPill, SourceBadge, TrustBadge } from "@/components/badges";
 import { TrendingPodium } from "@/components/trending-podium";
@@ -229,7 +230,7 @@ function TrendingPage() {
   const shareUrl = `/trending${sp.category ? `?category=${sp.category}` : ""}`;
 
   return (
-    <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6">
+    <PageContainer className="py-12">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
@@ -414,6 +415,6 @@ function TrendingPage() {
           </Link>
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }
