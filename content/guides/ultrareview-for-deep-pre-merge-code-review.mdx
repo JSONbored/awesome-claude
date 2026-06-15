@@ -1,0 +1,180 @@
+---
+title: Ultrareview For Deep Pre-Merge Code Review
+slug: ultrareview-for-deep-pre-merge-code-review
+category: guides
+description: >-
+  Run Claude Code /ultrareview and claude ultrareview for deep pre-merge review:
+  CI integration, JSON output, scope targets, and human sign-off.
+cardDescription: Use /ultrareview and claude ultrareview for deep pre-merge review.
+seoTitle: Ultrareview For Deep Pre-Merge Code Review
+seoDescription: >-
+  Run Claude Code ultrareview for deep pre-merge code review with /ultrareview,
+  claude ultrareview CI usage, JSON output, and human sign-off workflows.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1377
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1377"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Run /ultrareview on a pull request branch before merge, or invoke claude
+  ultrareview in CI with --json, then require a human maintainer to triage
+  findings before blocking merge.
+prerequisites:
+  - Claude Code installed locally or in CI with access to the pull request diff.
+  - Branch protection that still requires human reviewers independent of ultrareview output.
+  - A triage policy for ultrareview severity, false positives, and waiver documentation.
+  - Network and token access appropriate for your provider (Anthropic, Bedrock, etc.).
+safetyNotes:
+  - Ultrareview output is advisory until a human validates findings—do not auto-fail merges on unreviewed JSON alone.
+  - CI runs may expose diffs to model providers—use policies aligned with your data classification.
+  - Deep review can be slow and token-heavy—scope targets to changed packages when possible.
+privacyNotes:
+  - Review prompts include full diffs and may include secrets if contributors did not scrub them—run secret scanning first.
+  - --json stdout may land in CI logs—configure log retention and access controls accordingly.
+  - Customer-specific code paths in diffs remain subject to normal confidentiality rules.
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/ultrareview"
+  - "https://code.claude.com/docs/en/code-review"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - ultrareview
+  - code-review
+  - pre-merge
+  - ci
+  - quality
+keywords:
+  - Claude Code ultrareview
+  - claude ultrareview CI
+  - deep pre-merge code review
+  - ultrareview JSON output
+  - /ultrareview command
+readingTime: 8
+difficultyScore: 54
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Ultrareview is Claude Code's deep pre-merge review flow, available interactively
+via `/ultrareview` and in automation via `claude ultrareview [target]` with
+optional `--json` output. Use it to surface evidence-backed findings before
+merge, then require a human maintainer to triage results before they become
+merge policy.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Diff available", "description": "The PR branch or target ref is checked out with a readable diff"}
+- [ ] {"task": "Triage policy exists", "description": "Severity levels and waiver rules are documented"}
+- [ ] {"task": "Human review required", "description": "Branch protection still mandates human approvers"}
+- [ ] {"task": "CI secrets scoped", "description": "Automation tokens are least-privilege and log-safe"}
+- [ ] {"task": "Provider approved", "description": "Sending diffs to the model provider complies with policy"}
+
+## Core Concepts Explained
+
+### Interactive vs CI invocation
+
+Developers run `/ultrareview` inside a session for exploratory deep review.
+Pipelines invoke `claude ultrareview [target]` non-interactively, printing
+findings to stdout with `--json` for parsers.
+
+### Exit codes signal completion vs failure
+
+Release notes document exit code 0 on completion and 1 on failure—wire CI to
+treat failures as workflow errors, not automatic merge vetoes, unless policy
+explicitly says otherwise.
+
+### Deep review complements normal PR review
+
+Ultrareview specializes in exhaustive analysis; it does not replace CODEOWNERS,
+required reviewers, or security CI jobs.
+
+### Evidence-first triage reduces noise
+
+Require file and line references in findings your team acts on, matching
+subagent review guidance for evidence-backed output.
+
+## Step-by-Step Implementation Guide
+
+1. **Define when to run ultrareview.** Example triggers: large refactors, security-
+   sensitive modules, or PRs touching auth and crypto.
+
+2. **Run locally before push.** Use `/ultrareview` on the feature branch while
+   the author can still fix issues cheaply.
+
+3. **Add optional CI job.** Call `claude ultrareview [target] --json`, upload the
+   JSON artifact, and post a summary comment—not a silent merge block.
+
+4. **Triage findings.** A maintainer maps each item to fix now, fix later, or
+   waive with documented rationale.
+
+5. **Feed back into CLAUDE.md.** Recurring false positives become coding
+   guidelines or custom review checklists.
+
+6. **Measure value.** Track time-to-merge, repeated findings, and waiver rate to
+   tune when ultrareview is worth the cost.
+
+## Pre-Merge Checklist
+
+- [ ] {"task": "Ultrareview executed", "description": "Interactive or CI run completed for the PR revision under review"}
+- [ ] {"task": "Findings triaged", "description": "A human classified each item with evidence checked"}
+- [ ] {"task": "Blocking items fixed", "description": "Must-fix findings are resolved or explicitly waived"}
+- [ ] {"task": "Normal review done", "description": "Required human reviewers approved the PR"}
+- [ ] {"task": "CI artifacts retained", "description": "JSON output stored per retention policy if used"}
+
+## Troubleshooting
+
+### CI job exits 1
+
+Inspect stderr and rerun locally with `/ultrareview`—failures may reflect auth,
+context limits, or target resolution—not necessarily merge-blocking defects.
+
+### JSON too large for logs
+
+Upload artifacts instead of printing full JSON to stdout in public CI logs.
+
+### Findings lack evidence
+
+Reject or downgrade items without paths or diffs; tune prompts or CLAUDE.md to
+require citations.
+
+### Provider policy blocks CI usage
+
+Use self-hosted runners with approved credentials and data handling agreements.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README and
+`CHANGELOG.md` on **2026-06-13**:
+
+- `CHANGELOG.md` adds `claude ultrareview [target]` to run `/ultrareview`
+  non-interactively from CI or scripts with `--json` for raw output.
+- `CHANGELOG.md` documents exit code 0 on completion and exit code 1 on failure
+  for the ultrareview subcommand.
+- `CHANGELOG.md` references `/ultrareview` fixes and integration with plan and
+  remote session flows in recent releases.
+- Official docs at `code.claude.com/docs/en/ultrareview` describe the interactive
+  deep review workflow for users.
+- The root README points integration feedback to GitHub issues at
+  `anthropics/claude-code`.
+
+## Duplicate Check
+
+This guide complements subagents-code-review-triage.mdx and the official
+code-review plugin documentation. Those cover subagent triage and plugin-based
+PR review. This guide focuses on the ultrareview command and CI subcommand.
+
+## References
+
+- Ultrareview docs - https://code.claude.com/docs/en/ultrareview
+- Claude Code code review - https://code.claude.com/docs/en/code-review
+- Subagents code review triage - subagents-code-review-triage
