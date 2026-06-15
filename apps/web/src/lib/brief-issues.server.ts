@@ -18,11 +18,13 @@ export type BriefIssue = Omit<BriefIssueRow, "payload"> & {
   payload: Record<string, unknown>;
 };
 
-// Every D1 access fails open: a missing SITE_DB binding (dev/preview) or a
-// not-yet-applied migration must never break the brief pages or the cron.
+// Fail open only for a not-yet-applied migration (the absent-binding case is
+// already short-circuited by the getSiteDb() null guards before any query
+// runs). Real D1 faults — constraint violations, syntax errors, timeouts — must
+// still surface, so this matcher is deliberately narrow to "table not present".
 function isMissingInfra(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error ?? "");
-  return /no such table|SITE_DB|D1_ERROR|not a function/i.test(message);
+  return /no such table: brief_issues|no such table/i.test(message);
 }
 
 function parseRow(row: BriefIssueRow | null): BriefIssue | null {

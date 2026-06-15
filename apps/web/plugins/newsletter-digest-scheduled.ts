@@ -73,11 +73,12 @@ export default definePlugin((nitroApp) => {
               payload: brief,
               generatedAt,
             });
-            console.log("[brief-generate] draft persisted", {
-              wrote,
-              periodThrough,
-              newEntries: brief.summary?.newEntryCount,
-            });
+            console.log(
+              wrote
+                ? "[brief-generate] draft persisted"
+                : "[brief-generate] draft skipped (already exists or D1 unavailable)",
+              { periodThrough, newEntries: brief.summary?.newEntryCount },
+            );
           } catch (error) {
             console.error("[brief-generate] generation failed", error);
           }

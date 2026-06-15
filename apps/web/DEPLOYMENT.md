@@ -63,6 +63,7 @@ Current migrations include:
 - `0007_jobs_admin_indexes.sql` for reviewed job admin queues, expiry checks, and paid placement windows
 - `0008_jobs_compensation_metadata.sql` for dedicated salary, equity, bonus, and benefits/perks job metadata
 - `0009_source_repo_signals.sql` for cached source repository stars, forks, upstream update timestamps, and refresh errors
+- `0010_brief_issues.sql` for persisted Weekly Brief issues (draft/approved/sent status, JSON payload, scheduled send time)
 
 The jobs board renders active reviewed D1 rows only. Curated, employer-submitted,
 claimed, featured, and sponsored jobs all go through the same private D1-backed
