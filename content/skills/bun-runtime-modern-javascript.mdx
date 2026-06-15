@@ -2,18 +2,18 @@
 title: Bun JavaScript Runtime Development Skill
 slug: bun-runtime-modern-javascript
 category: skills
-description: "Build high-performance JavaScript and TypeScript applications with Bun, the all-in-one runtime that's 3x faster than Node.js. Includes native TypeScript execution, built-in bundler, test runner, and package manager in a single binary."
-cardDescription: "Build high-performance JavaScript and TypeScript applications with Bun, the all-in-one runtime that's 3x faster than Node.js."
-seoTitle: Bun JavaScript Runtime Development Skill
-seoDescription: "Build high-performance JavaScript and TypeScript applications with Bun, the all-in-one runtime that's 3x faster than Node.js. Includes native TypeScript exec..."
+description: "Build JavaScript and TypeScript apps with Bun, the all-in-one runtime: run TypeScript directly, and use the built-in bundler, test runner, and package manager from a single binary with Node.js compatibility."
+cardDescription: "Use Bun as runtime, bundler, test runner, and package manager in one binary — run TypeScript directly with Node.js compatibility."
+seoTitle: Bun All-in-One JavaScript Runtime Skill
+seoDescription: "Build with Bun: a single binary that runs TypeScript directly and bundles, tests, and installs packages, with drop-in Node.js compatibility."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-23"
 documentationUrl: "https://bun.sh/docs"
 downloadUrl: /downloads/skills/bun-runtime-modern-javascript.zip
 installable: true
-installCommand: "curl -L https://heyclau.de/downloads/skills/bun-runtime-modern-javascript.zip -o bun-runtime-modern-javascript.zip && unzip -o bun-runtime-modern-javascript.zip -d ./bun-runtime-modern-javascript"
-usageSnippet: "Claude can build and deploy JavaScript/TypeScript applications using Bun, the all-in-one JavaScript runtime that's 3x faster than Node.js for package installs and startup time. Bun includes a native bundler, test runner, package manager, and TypeScript transpiler in a single binary. From APIs to CLIs to build tools, Bun provides drop-in Node.js compatibility with modern performance."
+installCommand: npm install -g bun
+usageSnippet: "Claude can build and run JavaScript/TypeScript apps with Bun: run .ts files directly, bundle with `bun build`, test with `bun test`, install with `bun install`, and serve HTTP with `Bun.serve` — using Bun's Node.js compatibility for existing packages."
 copySnippet: |-
   const server = Bun.serve({
     port: 3000,
@@ -40,7 +40,7 @@ copySnippet: |-
     },
   });
 
-  console.log(`Listening on http://localhost:${server.port}`);
+  console.log(`Listening on port ${server.port}`);
 skillType: general
 skillLevel: advanced
 verificationStatus: draft
@@ -55,12 +55,15 @@ testedPlatforms:
   - Windsurf
   - Gemini
 prerequisites:
-  - Bun 1.0+
-  - macOS/Linux/WSL
-  - curl or wget for installation
+  - Bun 1.0+ (install with `npm install -g bun`)
+  - macOS, Linux, or WSL
   - Basic JavaScript/TypeScript knowledge
-  - "Bun runtime installed (curl -fsSL https://bun.sh/install | bash or npm install -g bun)"
   - Node.js-compatible project structure with package.json for dependency management and module resolution
+safetyNotes:
+  - "Installing Bun globally (`npm install -g bun`) adds a runtime to your system; install from the official npm package or bun.sh and keep it updated."
+  - "Bun runs JavaScript/TypeScript with full system access like Node.js; review code before executing it, especially untrusted scripts."
+privacyNotes:
+  - "Bun apps you build can read local files, environment variables, and make network calls like any Node.js app; keep secrets in environment variables and review what your code sends externally."
 tags:
   - bun
   - runtime
@@ -90,7 +93,7 @@ robotsFollow: true
 
 ## What This Skill Enables
 
-Claude can build and deploy JavaScript/TypeScript applications using Bun, the all-in-one JavaScript runtime that's 3x faster than Node.js for package installs and startup time. Bun includes a native bundler, test runner, package manager, and TypeScript transpiler in a single binary. From APIs to CLIs to build tools, Bun provides drop-in Node.js compatibility with modern performance.
+Claude can build and deploy JavaScript/TypeScript applications using Bun, the all-in-one JavaScript runtime with fast package installs and startup. Bun includes a native bundler, test runner, package manager, and TypeScript transpiler in a single binary. From APIs to CLIs to build tools, Bun provides drop-in Node.js compatibility with modern performance.
 
 ## Compatibility
 
@@ -259,7 +262,7 @@ Claude will:
 
 ## Features
 
-- 3x faster package installs with global cache
+- Fast package installs with a global cache
 - Native TypeScript support without transpilation
 - Built-in bundler, test runner, and package manager
 - Drop-in Node.js compatibility for most packages
