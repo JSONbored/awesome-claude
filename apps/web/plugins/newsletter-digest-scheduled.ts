@@ -1,7 +1,9 @@
 import { definePlugin } from "nitro";
 
+import { buildWeeklyBrief } from "@heyclaude/registry/weekly-brief";
 import { getEnvString, runWithCloudflareRuntime } from "@/lib/cloudflare-env.server";
 import { getDirectoryEntries } from "@/lib/content.server";
+import { upsertBriefDraft } from "@/lib/brief-issues.server";
 import { selectDigestEntries, type DigestCandidate } from "@/lib/newsletter-digest";
 import { buildDigestEmail } from "@/lib/newsletter-emails";
 import { recordUmamiEvent, sendResendBroadcast } from "@/lib/newsletter-send.server";
@@ -12,9 +14,23 @@ import { siteConfig } from "@/lib/site";
 // day-of-week is 1=Sunday..7=Saturday, so Sunday is SUN, not 0.
 const WEEKLY_CRON = "0 16 * * SUN";
 
+// Fridays 14:00 UTC. Generates the next Weekly Brief draft and persists it to
+// D1 for maintainer review over the weekend (Stage 1 of the brief pipeline).
+const GENERATE_CRON = "0 14 * * FRI";
+
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 type CloudflareScheduledPayload = {
@@ -38,6 +54,37 @@ export default definePlugin((nitroApp) => {
   nitroApp.hooks?.hook(
     "cloudflare:scheduled",
     async ({ controller, env, context }: CloudflareScheduledPayload) => {
+      // Friday: generate + persist the next brief draft for maintainer review.
+      if (controller?.cron === GENERATE_CRON) {
+        const generateRequest = new Request("https://heyclau.de/__scheduled/brief-generate");
+        await runWithCloudflareRuntime(generateRequest, env, context, async () => {
+          try {
+            const generatedAt = new Date().toISOString();
+            const entries = await getDirectoryEntries();
+            const brief = buildWeeklyBrief(entries as Parameters<typeof buildWeeklyBrief>[0], {
+              generatedAt,
+              days: 7,
+              siteUrl: siteConfig.url,
+            });
+            const periodThrough = brief.period?.through ?? generatedAt.slice(0, 10);
+            const wrote = await upsertBriefDraft({
+              slug: `weekly-brief-${periodThrough}`,
+              periodThrough,
+              payload: brief,
+              generatedAt,
+            });
+            console.log("[brief-generate] draft persisted", {
+              wrote,
+              periodThrough,
+              newEntries: brief.summary?.newEntryCount,
+            });
+          } catch (error) {
+            console.error("[brief-generate] generation failed", error);
+          }
+        });
+        return;
+      }
+
       if (controller?.cron !== WEEKLY_CRON) return;
 
       const request = new Request("https://heyclau.de/__scheduled/newsletter-digest");
