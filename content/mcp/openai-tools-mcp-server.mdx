@@ -1,0 +1,223 @@
+---
+title: OpenAI Tools MCP Server for Claude
+slug: openai-tools-mcp-server
+category: mcp
+description: >-
+  Focused HAPI MCP server that wraps OpenAI image generation and audio endpoints
+  from a slim OpenAPI spec, available remotely or via local HAPI CLI stdio.
+cardDescription: >-
+  Connect Claude to OpenAI Tools MCP for DALL·E image generation and audio
+  transcription or TTS through HAPI's OpenAPI-to-MCP pipeline.
+seoTitle: OpenAI Tools MCP Server for Claude
+seoDescription: >-
+  Use the OpenAI Tools MCP server with Claude for focused OpenAI image and audio
+  tools via https://openai-tools.run.mcp.com.ai/mcp or local HAPI CLI stdio.
+author: La Rebelion Labs
+authorProfileUrl: "https://github.com/la-rebelion"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1492
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1492"
+repoUrl: "https://github.com/la-rebelion/hapimcp"
+documentationUrl: "https://docs.mcp.com.ai/examples/mcp-servers-from-oas/openai-mcp"
+websiteUrl: "https://platform.openai.com/docs/api-reference"
+installable: true
+installCommand: >-
+  claude mcp add --transport http openai-tools https://openai-tools.run.mcp.com.ai/mcp
+usageSnippet: >-
+  Use the hosted endpoint https://openai-tools.run.mcp.com.ai/mcp for remote HTTP,
+  or run hapi serve openai-tools --headless with your OPENAI_API_KEY for local stdio.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "openai-tools": {
+        "url": "https://openai-tools.run.mcp.com.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "openai-tools": {
+        "command": "hapi",
+        "args": [
+          "serve",
+          "openai-tools",
+          "--headless",
+          "--port",
+          "3030",
+          "--url",
+          "https://api.openai.com/v1"
+        ],
+        "env": {
+          "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "OpenAI API key with access to the image and audio endpoints you plan to call."
+  - "HAPI CLI installed when running the local stdio variant from la-rebelion/hapimcp."
+  - "Claude with remote HTTP connectors or stdio MCP support."
+  - "Awareness that image and audio generation incur OpenAI usage charges."
+safetyNotes:
+  - "Image and audio tool calls bill your OpenAI account per request."
+  - "Do not expose a broad OpenAI API surface; this server intentionally uses a slim spec to avoid tool token bloat."
+  - "Review generated media prompts for sensitive or policy-violating content before submission."
+  - "Store OPENAI_API_KEY in MCP env vars or headers, never in chat or source control."
+privacyNotes:
+  - "Prompts, audio files, and generated media are sent to OpenAI under its API terms."
+  - "Local stdio mode runs the HAPI process on your machine with outbound calls to api.openai.com."
+  - "Avoid uploading confidential audio unless your OpenAI data-use settings allow it."
+tags:
+  - openai
+  - images
+  - audio
+  - hapi
+  - remote-mcp
+keywords:
+  - openai tools mcp
+  - dalle mcp claude
+  - openai audio transcription mcp
+  - hapi openai-tools
+  - la rebelion hapimcp
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+OpenAI Tools MCP is a focused Model Context Protocol server built with the HAPI CLI. It exposes a slimmed-down OpenAPI specification for OpenAI image generation and audio endpoints instead of the full OpenAI API catalog, reducing MCP tool-definition token bloat.
+
+The implementation lives in the [la-rebelion/hapimcp](https://github.com/la-rebelion/hapimcp) ecosystem. A hosted remote endpoint is available at `https://openai-tools.run.mcp.com.ai/mcp`, and local stdio mode is documented at [docs.mcp.com.ai/examples/mcp-servers-from-oas/openai-mcp](https://docs.mcp.com.ai/examples/mcp-servers-from-oas/openai-mcp).
+
+## Features
+
+- Image generation tools from a trimmed OpenAI Tools OpenAPI spec.
+- Audio transcription and text-to-speech endpoints as MCP tools.
+- Remote streamable HTTP endpoint with no local install required.
+- Local stdio mode via `hapi serve openai-tools --headless`.
+- Auth, validation, and rate limits inherited from the OpenAI API contract.
+
+## Use Cases
+
+- Generate marketing illustrations from chat without custom integration code.
+- Transcribe short voice notes during a brainstorming session.
+- Produce TTS audio drafts for product demos.
+- Prototype creative workflows in Claude before wiring a full application.
+- Test HAPI's OpenAPI-to-MCP pipeline with a well-known public API.
+
+## Installation
+
+### Remote HTTP (fastest)
+
+```bash
+claude mcp add --transport http openai-tools https://openai-tools.run.mcp.com.ai/mcp
+```
+
+Configure your OpenAI API key according to the hosted server's auth instructions.
+
+### Local stdio with HAPI CLI
+
+```bash
+curl -fsSL https://get.mcp.com.ai/hapi.sh | bash
+curl -o ~/.hapi/specs/openai-tools.yaml https://docs.mcp.com.ai/servers-apis/openapi/openai-tools.yaml
+hapi serve openai-tools --headless --port 3030 --url https://api.openai.com/v1
+```
+
+Set `OPENAI_API_KEY` in the MCP client environment.
+
+## Configuration
+
+Remote HTTP:
+
+```json
+{
+  "mcpServers": {
+    "openai-tools": {
+      "url": "https://openai-tools.run.mcp.com.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+Local stdio:
+
+```json
+{
+  "mcpServers": {
+    "openai-tools": {
+      "command": "hapi",
+      "args": [
+        "serve",
+        "openai-tools",
+        "--headless",
+        "--port",
+        "3030",
+        "--url",
+        "https://api.openai.com/v1"
+      ],
+      "env": {
+        "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY"
+      },
+      "type": "stdio"
+    }
+  }
+}
+```
+
+## Examples
+
+### Generate an image
+
+```text
+Create a flat illustration of a secure API gateway using the OpenAI Tools image tool.
+```
+
+### Transcribe audio
+
+```text
+Transcribe this short WAV meeting clip and summarize the action items.
+```
+
+### Local inspection
+
+```bash
+hapi serve openai-tools --headless --port 3030 --url https://api.openai.com/v1 | bunx @modelcontextprotocol/inspector
+```
+
+## Security
+
+- This server is not a full OpenAI API bridge; keep specs focused to limit agent capabilities.
+- Rotate OpenAI keys if they appear in logs, chat, or committed MCP configs.
+- Review generated media for policy and copyright issues before publishing.
+
+## Troubleshooting
+
+### 401 from OpenAI
+
+Confirm `OPENAI_API_KEY` is set in the MCP client env and has billing enabled.
+
+### Hosted endpoint auth errors
+
+Follow the remote server's current API-key header requirements in HAPI docs.
+
+### Missing tools in Claude
+
+Restart the MCP client after changing from remote HTTP to local stdio mode.
+
+### Context window pressure
+
+If you self-host, avoid loading the full OpenAI OpenAPI document; use the provided `openai-tools.yaml` only.
