@@ -123,3 +123,88 @@ export async function listPublishedBriefs(limit = 24): Promise<BriefIssue[]> {
     throw error;
   }
 }
+
+/** The most recent draft awaiting review (for the maintainer preview email). */
+export async function getLatestDraft(): Promise<BriefIssue | null> {
+  const db = getSiteDb();
+  if (!db) return null;
+  try {
+    const row = await db
+      .prepare(
+        `SELECT * FROM brief_issues
+         WHERE status = 'draft' ORDER BY period_through DESC LIMIT 1`,
+      )
+      .bind()
+      .first<BriefIssueRow>();
+    return parseRow(row);
+  } catch (error) {
+    if (isMissingInfra(error)) return null;
+    throw error;
+  }
+}
+
+/**
+ * Approve a draft and schedule its send. Only a `draft` can be approved (so a
+ * replayed approval link can't reschedule an already-sent issue). Returns true
+ * when a row transitioned to `approved`.
+ */
+export async function approveBrief(number: number, scheduledSendAt: string): Promise<boolean> {
+  const db = getSiteDb();
+  if (!db || !Number.isInteger(number)) return false;
+  try {
+    const result = await db
+      .prepare(
+        `UPDATE brief_issues
+         SET status = 'approved', scheduled_send_at = ?, approved_at = ?,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE number = ? AND status = 'draft'`,
+      )
+      .bind(scheduledSendAt, new Date().toISOString(), number)
+      .run();
+    return Boolean(result?.meta?.changes);
+  } catch (error) {
+    if (isMissingInfra(error)) return false;
+    throw error;
+  }
+}
+
+/** Approved issues whose scheduled send time has arrived (for the send cron). */
+export async function getDueApprovedBriefs(nowIso: string): Promise<BriefIssue[]> {
+  const db = getSiteDb();
+  if (!db) return [];
+  try {
+    const { results } = await db
+      .prepare(
+        `SELECT * FROM brief_issues
+         WHERE status = 'approved' AND scheduled_send_at IS NOT NULL
+           AND scheduled_send_at <= ?
+         ORDER BY period_through ASC LIMIT 5`,
+      )
+      .bind(nowIso)
+      .all<BriefIssueRow>();
+    return (results ?? []).map(parseRow).filter((issue): issue is BriefIssue => issue !== null);
+  } catch (error) {
+    if (isMissingInfra(error)) return [];
+    throw error;
+  }
+}
+
+/** Mark an approved issue as sent. Guarded so a re-run cannot double-send. */
+export async function markBriefSent(number: number): Promise<boolean> {
+  const db = getSiteDb();
+  if (!db || !Number.isInteger(number)) return false;
+  try {
+    const result = await db
+      .prepare(
+        `UPDATE brief_issues
+         SET status = 'sent', sent_at = ?, updated_at = CURRENT_TIMESTAMP
+         WHERE number = ? AND status = 'approved'`,
+      )
+      .bind(new Date().toISOString(), number)
+      .run();
+    return Boolean(result?.meta?.changes);
+  } catch (error) {
+    if (isMissingInfra(error)) return false;
+    throw error;
+  }
+}
