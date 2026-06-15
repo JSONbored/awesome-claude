@@ -3,31 +3,35 @@ title: Database Query Performance Logger - Hooks
 slug: database-query-performance-logger
 category: hooks
 description: >-
-  Monitors and logs database query performance metrics with slow query
-  detection, N+1 analysis, and optimization suggestions using PostgreSQL
-  pg_stat_statements, Prisma query logging, Sequelize query logging, TypeORM
-  query logging, and Bullet N+1 detection patterns.
+  A PostToolUse hook that reminds you to enable native query logging for
+  PostgreSQL, Prisma, Sequelize, and TypeORM, and flags possible N+1 patterns
+  when you edit SQL or data-access files.
 cardDescription: >-
-  Monitors and logs database query performance metrics with slow query
-  detection, N+1 analysis, and optimization suggestions using PostgreS...
-seoTitle: Database Query Performance Logger - Hooks
+  On each edit to SQL or ORM files, points to PostgreSQL, Prisma, Sequelize,
+  and TypeORM query-logging settings and flags queries inside loops as possible
+  N+1.
+seoTitle: Database Query Logging & N+1 Reminder Hook for Claude
 seoDescription: >-
-  Monitors and logs database query performance metrics with slow query
-  detection, N+1 analysis, and optimization suggestions using PostgreSQL
-  pg_stat_statement...
+  PostToolUse hook for Claude Code that surfaces PostgreSQL, Prisma, Sequelize,
+  and TypeORM query-logging options and flags possible N+1 patterns on edit.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-19"
-documentationUrl: "https://www.postgresql.org/docs/current/runtime-config-logging.html"
-installable: true
-installCommand: >-
-  mkdir -p .claude/hooks && touch
-  .claude/hooks/database-query-performance-logger.sh && chmod +x
-  .claude/hooks/database-query-performance-logger.sh
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://code.claude.com/docs/en/hooks-guide"
+  - "https://www.postgresql.org/docs/current/runtime-config-logging.html"
+  - "https://www.prisma.io/docs/orm/prisma-client/observability-and-logging/logging"
+  - "https://sequelize.org/docs/v6/getting-started/"
+  - "https://github.com/typeorm/typeorm/blob/master/docs/docs/logging.md"
+  - "https://github.com/flyerhzm/bullet"
+installable: false
 usageSnippet: >-
-  mkdir -p .claude/hooks && touch
-  .claude/hooks/database-query-performance-logger.sh && chmod +x
-  .claude/hooks/database-query-performance-logger.sh
+  Save the provided script as
+  .claude/hooks/database-query-performance-logger.sh, then register it in
+  .claude/settings.json as a PostToolUse command so it surfaces query-logging
+  settings and N+1 warnings after each bash, write, or edit.
 copySnippet: |-
   {
     "hooks": {
@@ -92,25 +96,21 @@ robotsIndex: true
 robotsFollow: true
 ---
 
-## Features
+## What it does
 
-- Automatic slow query detection and alerting with configurable thresholds (default: 1000ms) and real-time performance monitoring
-- N+1 query pattern identification detecting loops with database queries and suggesting eager loading (includes(), with(), join())
-- Query execution time tracking and statistics with detailed performance metrics and historical analysis
-- Database connection pool monitoring tracking active connections, pool utilization, and connection leaks
-- Query plan analysis and optimization hints using EXPLAIN/ANALYZE for PostgreSQL and query optimization suggestions
-- Support for PostgreSQL 17+ (pg_stat_statements), MySQL 8.0+, SQLite query logs, Prisma 5.x, Sequelize 6.x/7.x, and TypeORM 0.3.x
-- SELECT \* pattern detection warning about unnecessary data transfer and suggesting explicit column selection
-- Missing LIMIT clause detection preventing unbounded result sets and suggesting pagination strategies
+This is a PostToolUse hook (a bash script) that runs after `bash`, `write`, or `edit`. It does **not** connect to a database, time queries, or run EXPLAIN — it inspects the file you just touched with `grep` and prints text reminders. Specifically:
+
+- **N+1 heuristic**: for files that look like queries, models, repositories, DAOs, or `.sql`, it greps for loops (`for`/`while`/`forEach`) combined with `SELECT`/`query`/`find` and prints a "possible N+1" reminder to use a JOIN or eager loading
+- **SQL anti-pattern hints (grep-based)**: flags `SELECT *`, flags `SELECT` without a `LIMIT`/`TOP`, and notes when `WHERE` clauses are present so you remember to index those columns
+- **Enable-logging reminders**: if it finds `postgresql.conf`, `my.cnf`, or a `package.json` referencing Prisma/Sequelize/TypeORM, it prints how to turn on that stack's native query logging (PostgreSQL `log_min_duration_statement`, MySQL `slow_query_log`, or the ORM's logging option)
+- **Best-practices checklist**: prints a short static list (indexing, eager loading, EXPLAIN/ANALYZE, connection pooling) as guidance — these are reminders, not measurements
+- **Local log**: appends the analyzed file path, and any `psql`/`mysql`/`sqlite` command it sees, to `.claude/logs/query-performance.log`
 
 ## Use Cases
 
-- Real-time database performance monitoring during development identifying slow queries and performance bottlenecks
-- Slow query identification and optimization detecting queries exceeding performance thresholds and providing optimization hints
-- N+1 query pattern detection and prevention identifying inefficient query patterns and suggesting eager loading solutions
-- Database migration performance validation ensuring migrations execute efficiently and do not cause performance regressions
-- ORM query optimization and debugging analyzing ORM-generated queries and identifying optimization opportunities
-- Development workflow optimization providing immediate feedback on query performance issues as code is written
+- Catching easy-to-miss query anti-patterns (N+1 loops, `SELECT *`, missing `LIMIT`) as you write data-access code
+- Reminding you to enable native query logging for your database or ORM during development
+- Keeping a local record of which query files you edited and which database commands you ran
 
 ## Installation
 
@@ -129,11 +129,9 @@ robotsFollow: true
 ## Requirements
 
 - Claude Code CLI installed
-- Project directory initialized
 - Bash shell available
-- jq command-line JSON processor
-- Database: PostgreSQL 17+ (pg_stat_statements), MySQL 8.0+, SQLite, or ORM: Prisma 5.x, Sequelize 6.x/7.x, TypeORM 0.3.x
-- Database query logging enabled (pg_stat_statements extension for PostgreSQL, slow query log for MySQL, ORM query logging configured) and database connection access for query plan analysis (EXPLAIN/ANALYZE permissions)
+- `jq` command-line JSON processor (the script parses the hook's JSON stdin with `jq`)
+- A project using PostgreSQL, MySQL, SQLite, Prisma, Sequelize, or TypeORM (the script detects these by file presence — no specific version, extension, or database connection is required, since it never queries the database itself)
 
 ## Hook Configuration
 
