@@ -121,7 +121,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "plan_workflow_toolbox",
     description:
-      "Plan a read-only Claude or Codex workflow toolbox from ranked HeyClaude registry entries with trust, install, and follow-up guidance.",
+      "Plan a read-only Claude or Codex workflow toolbox from ranked HeyClaude registry entries. Each entry includes an inline install block (install command, config snippet, download URL) and the recommended stack is summarized as a copy-pasteable installPlan, alongside trust and follow-up guidance.",
     inputSchema: jsonSchemaForTool("plan_workflow_toolbox"),
     outputSchema: jsonSchemaForToolOutput("plan_workflow_toolbox"),
     annotations: {
@@ -1035,6 +1035,44 @@ function toolboxNextActions(entry) {
   ];
 }
 
+const TOOLBOX_CONFIG_SNIPPET_INLINE_LIMIT = 600;
+
+// Distills the ready-to-run install surface for a toolbox entry from its full
+// payload so the planner returns copy-pasteable commands instead of pointing at
+// more tool calls. Large config snippets are summarized rather than inlined to
+// preserve the lean response contract (callers use get_copyable_asset for them).
+function toolboxInstall(entry) {
+  if (!entry) return null;
+  const installCommand = String(
+    entry.installCommand || entry.commandSyntax || "",
+  ).trim();
+  const configSnippet = String(entry.configSnippet || "").trim();
+  const downloadUrl = String(entry.downloadUrl || "").trim();
+  const usageSnippet = String(entry.usageSnippet || "").trim();
+
+  const install = {
+    installable: Boolean(entry.installable),
+    primaryAssetType: categoryPrimaryAsset(entry)?.type || "",
+  };
+  if (installCommand) install.installCommand = installCommand;
+  if (downloadUrl) install.downloadUrl = downloadUrl;
+  if (usageSnippet) install.usageSnippet = usageSnippet;
+  if (configSnippet) {
+    if (configSnippet.length <= TOOLBOX_CONFIG_SNIPPET_INLINE_LIMIT) {
+      install.configSnippet = configSnippet;
+    } else {
+      install.configSnippetChars = configSnippet.length;
+      install.configHint =
+        "Config snippet is large; call get_copyable_asset for the full snippet.";
+    }
+  }
+  if (!installCommand && !downloadUrl && !configSnippet && !usageSnippet) {
+    install.note =
+      "No install command published; use the source or canonical URL.";
+  }
+  return install;
+}
+
 function toolboxCategoryMix(entries) {
   const counts = new Map();
   for (const entry of entries) {
@@ -1094,14 +1132,37 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
     );
   }
   const ranked = rankSearchEntries(matched, query);
-  const selected = selectDiverseRankedEntries(ranked, limit).map((item) => ({
-    ...toEntrySummary(item.entry),
-    searchScore: item.score,
-    searchReasons: item.reasons,
-    toolboxReasons: toolboxFitReasons(item.entry, item),
-    caveats: toolboxCaveats(item.entry),
-    nextActions: toolboxNextActions(item.entry),
-  }));
+  // Read the full payload for each selected entry so the planner can inline
+  // ready-to-run install commands; fall back to the search-index summary if a
+  // detail read fails so one bad entry never breaks the whole plan.
+  const selected = await Promise.all(
+    selectDiverseRankedEntries(ranked, limit).map(async (item) => {
+      const full = await readEntry(
+        item.entry.category,
+        item.entry.slug,
+        options,
+      ).catch(() => null);
+      return {
+        ...toEntrySummary(item.entry),
+        searchScore: item.score,
+        searchReasons: item.reasons,
+        toolboxReasons: toolboxFitReasons(item.entry, item),
+        caveats: toolboxCaveats(item.entry),
+        install: toolboxInstall(full || item.entry),
+        nextActions: toolboxNextActions(item.entry),
+      };
+    }),
+  );
+
+  // Consolidated, ordered install commands for the recommended stack.
+  const installPlan = selected
+    .filter((entry) => entry.install?.installCommand)
+    .map((entry) => ({
+      key: entry.key,
+      title: entry.title,
+      category: entry.category,
+      installCommand: entry.install.installCommand,
+    }));
 
   return {
     ok: true,
@@ -1110,6 +1171,7 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
     platform: platform || "",
     count: selected.length,
     entries: selected,
+    installPlan,
     categoryMix: toolboxCategoryMix(selected),
     trustSummary: toolboxTrustSummary(selected),
     recommendedNextTools: [
@@ -1120,6 +1182,7 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
     ],
     plannerNotes: [
       "This planner is metadata review only; it is not install approval or malware scanning, and it does not execute or install entries.",
+      "Each entry carries an inline install block and the recommended stack is summarized in installPlan; still review trust before running anything.",
       "Recommendations are bounded and category-diverse where matching entries allow it.",
       "Prefer source-backed entries with safety/privacy notes for risk-bearing MCP, hooks, skills, commands, and statuslines.",
       "Use get_entry_detail, explain_entry_trust, compare_entries, and get_copyable_asset before relying on any entry.",

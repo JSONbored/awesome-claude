@@ -840,8 +840,21 @@ describe("HeyClaude read-only MCP helpers", () => {
   });
 
   it("returns trust-aware planner metadata with bounded category diversity", async () => {
+    const entryDetails: Record<string, { entry: Record<string, unknown> }> = {
+      "entries/mcp/workflow-audit-mcp.json": {
+        entry: {
+          category: "mcp",
+          slug: "workflow-audit-mcp",
+          installable: true,
+          installCommand: "npx -y workflow-audit-mcp",
+          configSnippet: '{"mcpServers":{"audit":{}}}',
+        },
+      },
+    };
     const readJsonArtifact = async (relativePath: string) => {
-      expect(relativePath).toBe("search-index.json");
+      if (relativePath !== "search-index.json") {
+        return entryDetails[relativePath] ?? null;
+      }
       return {
         entries: [
           {
@@ -949,11 +962,36 @@ describe("HeyClaude read-only MCP helpers", () => {
         expect.stringContaining("get_copyable_asset"),
       ]),
     );
+
+    // Inline install surface is pulled from the full entry payload...
+    const auditEntry = result.entries.find(
+      (entry: any) => entry.slug === "workflow-audit-mcp",
+    );
+    expect(auditEntry.install).toMatchObject({
+      installable: true,
+      installCommand: "npx -y workflow-audit-mcp",
+      configSnippet: '{"mcpServers":{"audit":{}}}',
+    });
+    // ...and surfaced in the consolidated install plan.
+    expect(result.installPlan).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          key: "mcp:workflow-audit-mcp",
+          installCommand: "npx -y workflow-audit-mcp",
+        }),
+      ]),
+    );
+    // Entries without a published install command fall back gracefully.
+    const sourceEntry = result.entries.find(
+      (entry: any) => entry.slug === "workflow-source-mcp",
+    );
+    expect(sourceEntry.install).toMatchObject({ installable: false });
+    expect(sourceEntry.install.installCommand).toBeUndefined();
   });
 
   it("does not fill planner results with unrelated trust-only matches", async () => {
     const readJsonArtifact = async (relativePath: string) => {
-      expect(relativePath).toBe("search-index.json");
+      if (relativePath !== "search-index.json") return null;
       return {
         entries: [
           {
@@ -994,7 +1032,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("matches a lowercase planner goal against mixed-case entry text", async () => {
     const readJsonArtifact = async (relativePath: string) => {
-      expect(relativePath).toBe("search-index.json");
+      if (relativePath !== "search-index.json") return null;
       return {
         entries: [
           {
