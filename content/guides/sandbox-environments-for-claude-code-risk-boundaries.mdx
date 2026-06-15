@@ -1,0 +1,190 @@
+---
+title: Sandbox Environments For Claude Code Risk Boundaries
+slug: sandbox-environments-for-claude-code-risk-boundaries
+category: guides
+description: >-
+  Define sandbox environment boundaries for Claude Code: managed settings, network
+  egress, filesystem scope, worktree isolation, and when to fail closed.
+cardDescription: Map Claude Code sandbox environments to team risk boundaries.
+seoTitle: Sandbox Environments For Claude Code Risk Boundaries
+seoDescription: >-
+  Design Claude Code sandbox environments with managed settings, network and
+  filesystem boundaries, worktree isolation, and fail-closed rollout for teams.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1381
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1381"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Map team risk tiers to Claude Code sandbox settings—network allowlists, write
+  paths, managed domain restrictions, and worktree isolation—for desktop, CLI,
+  and background agent surfaces.
+prerequisites:
+  - A team risk model separating read-only exploration from write-capable automation.
+  - Managed settings distribution for Claude Code across developer machines.
+  - Documented data classification for repositories and external APIs agents may call.
+  - Platform coverage plan for macOS, Linux, and WSL sandbox dependencies.
+safetyNotes:
+  - Sandbox environments reduce accidental exfiltration and destructive writes but do not replace code review, secret scanning, or MCP tool governance.
+  - Managed allowManagedDomainsOnly and read-path restrictions require complete sandbox blocks—partial managed files can be ignored if sandbox keys are missing.
+  - Background sessions and auto mode can still trigger network permission prompts—align sandbox policy with auto mode hard-deny rules.
+privacyNotes:
+  - Network allowlists define which third parties may receive tool output or package download metadata.
+  - Filesystem allowlists still expose repository contents to local processes—classify repos before widening read paths.
+  - Worktree isolation guards prevent shared-checkout edits but transcripts may still contain sensitive diffs—follow normal log retention policy.
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/sandbox-environments"
+  - "https://code.claude.com/docs/en/sandboxing"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - sandbox
+  - risk-management
+  - managed-settings
+  - worktree
+  - enterprise
+keywords:
+  - Claude Code sandbox environments
+  - sandbox risk boundaries
+  - managed sandbox settings Claude Code
+  - worktree isolation Claude Code
+  - Claude Code network allowlist
+readingTime: 8
+difficultyScore: 62
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Treat Claude Code sandbox configuration as an environment boundary layer: map team
+risk tiers to managed sandbox settings, constrain network egress and filesystem
+writes, use worktree isolation for parallel agents, and fail closed when sandbox
+dependencies are missing on regulated machines.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Risk tiers defined", "description": "Read-only, standard dev, and elevated automation tiers are documented"}
+- [ ] {"task": "Managed settings pipeline", "description": "Org can ship sandbox blocks to all Claude Code clients"}
+- [ ] {"task": "Dependency matrix", "description": "macOS, Linux, and WSL sandbox prerequisites are tracked"}
+- [ ] {"task": "API inventory", "description": "Required egress domains for package managers and APIs are listed"}
+- [ ] {"task": "Isolation policy", "description": "Rules for worktree vs shared-checkout background sessions are decided"}
+
+## Core Concepts Explained
+
+### Environments encode risk tiers
+
+A sandbox environment is not just on/off—it combines enabled flag, network
+allow/deny lists, filesystem write scope, excluded commands, and fail-closed
+behavior into a profile matching a risk tier.
+
+### Managed settings enforce boundaries
+
+Enterprise teams ship sandbox blocks through managed settings so individual
+developers cannot silently widen egress or disable sandboxing without detection.
+
+### Worktrees isolate parallel agents
+
+Background sessions and subagents can use worktree isolation to avoid editing
+the shared checkout. Settings like `worktree.bgIsolation` trade isolation for
+practicality on non-git workflows.
+
+### Sandbox interacts with permissions and auto mode
+
+Network permission prompts may still appear in auto mode or desktop surfaces.
+Align sandbox boundaries with `autoMode.hard_deny` and static deny rules.
+
+## Step-by-Step Implementation Guide
+
+1. **Define risk tiers.** Example: Tier A read-only docs, Tier B standard feature
+   work, Tier C elevated automation with broader network needs.
+
+2. **Draft environment profiles.** For each tier, specify `sandbox.enabled`,
+   network allow/deny lists, filesystem write paths, and
+   `sandbox.failIfUnavailable`.
+
+3. **Map managed restrictions.** Where policy requires managed domain or
+   read-path restrictions, ensure every managed-settings source includes a
+   complete `sandbox` block so overrides cannot be ignored.
+
+4. **Configure worktree isolation.** Document when background agents must call
+   `EnterWorktree`, when `worktree.bgIsolation: "none"` is approved, and cleanup
+   expectations for `.claude/worktrees/`.
+
+5. **Pilot on one tier.** Roll Tier B to a single team, collect blocked-command
+   reports, and adjust allowlists before org-wide managed rollout.
+
+6. **Integrate with MCP policy.** Sandbox boundaries do not limit MCP tools—pair
+   this rollout with managed MCP allowlists for full environment control.
+
+7. **Monitor release notes.** Sandbox behavior changes frequently—revalidate
+   profiles after Claude Code upgrades.
+
+## Risk Boundary Matrix (example)
+
+| Tier | Sandbox | Network | Writes | Worktree |
+|------|---------|---------|--------|----------|
+| A explore | enabled | deny default | workspace only | optional |
+| B dev | enabled | package APIs | workspace + tmp | recommended |
+| C automation | enabled + fail closed | reviewed allowlist | workspace + artifacts | required |
+
+## Troubleshooting
+
+### Managed domain restrictions ignored
+
+Ensure the active managed-settings merge includes a `sandbox` section; release
+notes document cases where missing sandbox blocks skipped restrictions.
+
+### Background agents edit shared checkout
+
+Verify worktree isolation guards, `EnterWorktree` availability, and whether
+`worktree.bgIsolation: "none"` was intentionally set.
+
+### Sandbox differs between desktop and CLI
+
+Test both surfaces—release notes mention sandbox permission prompts in desktop,
+IDE extensions, and SDK hosts.
+
+### Orphan worktrees after retention sweeps
+
+Document cleanup for `.claude/worktrees/` after background job retention policies
+remove stale sessions.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README and
+`CHANGELOG.md` on **2026-06-13**:
+
+- `CHANGELOG.md` documents sandbox network permission prompts in auto mode for
+  desktop, IDE extensions, and SDK integrations.
+- `CHANGELOG.md` adds `worktree.bgIsolation: "none"` for background sessions
+  that must edit the working copy directly when worktrees are impractical.
+- `CHANGELOG.md` records security fixes for `allowManagedDomainsOnly` and
+  `allowManagedReadPathsOnly` being ignored when managed settings lacked sandbox
+  blocks.
+- `CHANGELOG.md` covers worktree isolation guards for background subagents,
+  cleanup of `.claude/worktrees/`, and `EnterWorktree` availability in sessions.
+- Official docs at `code.claude.com/docs/en/sandbox-environments` describe
+  user-facing environment concepts aligned with these settings.
+
+## Duplicate Check
+
+This guide complements sandboxed-bash-setup-for-autonomous-coding-agents.mdx,
+which focuses on bash auto-allow and dependency verification. This guide maps
+org-wide sandbox environment profiles to risk tiers and managed rollout.
+
+## References
+
+- Sandbox environments docs - https://code.claude.com/docs/en/sandbox-environments
+- Claude Code sandboxing - https://code.claude.com/docs/en/sandboxing
+- Sandboxed bash setup - sandboxed-bash-setup-for-autonomous-coding-agents
+- Managed MCP allowlists - managed-mcp-allowlists-for-enterprise-claude-code
