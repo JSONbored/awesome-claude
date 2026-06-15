@@ -3,21 +3,27 @@ title: Slash Command Generator for Claude Code
 slug: slash-command-gen
 category: commands
 description: >-
-  Create custom slash commands for Claude Code with templates, arguments,
-  frontmatter metadata, and team-shared workflows stored in .claude/commands
-  directory
+  Claude Code slash command that generates a new .claude/commands/*.md file
+  from a template, with optional arguments, frontmatter, and team-sharing
+  support.
 cardDescription: >-
-  Create custom slash commands for Claude Code with templates, arguments,
-  frontmatter metadata, and team-shared workflows stored in .claude...
-seoTitle: Slash Command Generator for Claude Code
+  Generate .claude/commands/*.md slash command files from templates — run
+  once, add arguments and metadata, share across the team.
+seoTitle: Slash Command File Generator for Claude Code
 seoDescription: >-
-  Create custom slash commands for Claude Code with templates, arguments,
-  frontmatter metadata, and team-shared workflows stored in .claude/commands
-  directory
+  Claude Code command that scaffolds a new slash command file in
+  .claude/commands. Supports $ARGUMENTS placeholders, frontmatter metadata,
+  and team-shareable workflow templates.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
 documentationUrl: "https://docs.claude.com/en/docs/claude-code/slash-commands"
+retrievalSources:
+  - "https://docs.claude.com/en/docs/claude-code/slash-commands"
+safetyNotes:
+  - Creates .md files in .claude/commands/ in the current project directory; review generated content before committing.
+privacyNotes:
+  - Creates .md files in your local .claude/commands/ directory; no content is sent externally.
 installable: true
 installCommand: "/slash-command-gen [command-name] [options]"
 usageSnippet: "/slash-command-gen [command-name] [options]"
