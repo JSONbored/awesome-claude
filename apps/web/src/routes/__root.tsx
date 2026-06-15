@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -196,16 +197,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: React.ReactNode }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const shouldLoadAnalytics = pathname !== "/brief/approve";
+
   return (
     <html lang="en">
       <head>
         <HeadContent />
-        <script
-          id="umami-analytics"
-          defer
-          src={siteConfig.umamiScriptUrl}
-          data-website-id={siteConfig.umamiWebsiteId}
-        />
+        {shouldLoadAnalytics && (
+          <script
+            id="umami-analytics"
+            defer
+            src={siteConfig.umamiScriptUrl}
+            data-website-id={siteConfig.umamiWebsiteId}
+          />
+        )}
       </head>
       <body>
         {children}

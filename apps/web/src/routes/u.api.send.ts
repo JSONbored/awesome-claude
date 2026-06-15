@@ -19,11 +19,61 @@ const RATE_LIMIT = {
   windowMs: 60_000,
 } as const;
 
+const SENSITIVE_SEARCH_PARAMS_BY_PATH: Record<string, readonly string[]> = {
+  "/brief/approve": ["token"],
+};
+
+function scrubSensitiveUrlSearch(rawUrl: unknown): unknown {
+  if (typeof rawUrl !== "string") return rawUrl;
+
+  let url: URL;
+  try {
+    url = new URL(rawUrl, "https://heyclau.de");
+  } catch {
+    return rawUrl;
+  }
+
+  const sensitiveParams = SENSITIVE_SEARCH_PARAMS_BY_PATH[url.pathname];
+  if (!sensitiveParams) return rawUrl;
+
+  let changed = false;
+  for (const param of sensitiveParams) {
+    if (url.searchParams.has(param)) {
+      url.searchParams.set(param, "[redacted]");
+      changed = true;
+    }
+  }
+  if (!changed) return rawUrl;
+
+  return rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
+    ? url.toString()
+    : `${url.pathname}${url.search}${url.hash}`;
+}
+
+function scrubSensitiveAnalyticsBody(body: string): string {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(body);
+  } catch {
+    return body;
+  }
+
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return body;
+  const event = parsed as { payload?: { url?: unknown } };
+  if (!event.payload || typeof event.payload !== "object" || Array.isArray(event.payload)) {
+    return body;
+  }
+
+  const scrubbedUrl = scrubSensitiveUrlSearch(event.payload.url);
+  if (scrubbedUrl === event.payload.url) return body;
+
+  event.payload.url = scrubbedUrl;
+  return JSON.stringify(event);
+}
+
 function getRequestId(request: Request) {
   return (
-    request.headers.get("cf-ray") ||
-    request.headers.get("x-request-id") ||
-    crypto.randomUUID()
+    request.headers.get("cf-ray") || request.headers.get("x-request-id") || crypto.randomUUID()
   );
 }
 
@@ -68,8 +118,7 @@ export async function POST(request: Request): Promise<Response> {
   const headers = new Headers({
     "content-type": "application/json",
     // umami drops requests without a User-Agent.
-    "user-agent":
-      request.headers.get("user-agent") || "Mozilla/5.0 (compatible; HeyClaude)",
+    "user-agent": request.headers.get("user-agent") || "Mozilla/5.0 (compatible; HeyClaude)",
   });
   const clientIp =
     request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for");
@@ -80,7 +129,7 @@ export async function POST(request: Request): Promise<Response> {
     response = await fetch(`${upstream}/api/send`, {
       method: "POST",
       headers,
-      body,
+      body: scrubSensitiveAnalyticsBody(body),
       signal: AbortSignal.timeout(8000),
     });
   } catch {
@@ -94,8 +143,7 @@ export async function POST(request: Request): Promise<Response> {
   return new Response(text, {
     status: response.status,
     headers: {
-      "content-type":
-        response.headers.get("content-type") || "text/plain; charset=utf-8",
+      "content-type": response.headers.get("content-type") || "text/plain; charset=utf-8",
       "cache-control": "no-store",
     },
   });

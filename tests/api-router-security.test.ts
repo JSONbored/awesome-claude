@@ -719,7 +719,10 @@ describe("umami collector proxy security", () => {
     __rateLimitTestHooks.reset();
   });
 
-  function analyticsRequest(body: string, headers: Record<string, string> = {}) {
+  function analyticsRequest(
+    body: string,
+    headers: Record<string, string> = {},
+  ) {
     return new Request("https://heyclau.de/u/api/send", {
       method: "POST",
       headers: {
@@ -739,7 +742,9 @@ describe("umami collector proxy security", () => {
     const { POST } = await import("../apps/web/src/routes/u.api.send");
 
     const response = await POST(
-      analyticsRequest('{"payload":{}}', { origin: "https://attacker.example" }),
+      analyticsRequest('{"payload":{}}', {
+        origin: "https://attacker.example",
+      }),
     );
 
     expect(response.status).toBe(403);
@@ -770,6 +775,31 @@ describe("umami collector proxy security", () => {
 
     expect(response.status).toBe(413);
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("redacts brief approval tokens before proxying analytics", async () => {
+    const fetchMock = vi.fn(async () => new Response("ok", { status: 202 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    const response = await POST(
+      analyticsRequest(
+        JSON.stringify({
+          type: "event",
+          payload: {
+            website: "site-id",
+            url: "/brief/approve?token=signed-secret&source=email",
+          },
+        }),
+      ),
+    );
+
+    expect(response.status).toBe(202);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const init = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(String(init.body)).toContain("token=%5Bredacted%5D");
+    expect(String(init.body)).toContain("source=email");
+    expect(String(init.body)).not.toContain("signed-secret");
   });
 
   it("rate-limits repeated analytics posts per client", async () => {
