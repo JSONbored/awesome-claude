@@ -240,12 +240,23 @@ export function buildEntrySummary(entry: RaycastEntry) {
  * credential access) before an MCP server is installed. Shows up to three notes
  * per category; returns "" when there is nothing to disclose.
  */
+/**
+ * Coerces a notes value into a clean list of non-empty trimmed strings,
+ * tolerating malformed payloads (non-array values or non-string items) that can
+ * reach the UI since detail payloads are not strictly validated.
+ */
+export function normalizeNotes(notes?: string[]): string[] {
+  return (Array.isArray(notes) ? notes : [])
+    .map((note) => String(note).trim())
+    .filter(Boolean);
+}
+
 export function buildInstallNotesSummary(
   safetyNotes?: string[],
   privacyNotes?: string[],
 ): string {
   const section = (label: string, notes?: string[]) => {
-    const items = (notes ?? []).map((note) => note.trim()).filter(Boolean);
+    const items = normalizeNotes(notes);
     if (items.length === 0) return "";
     const lines = items.slice(0, 3).map((note) => `• ${note}`);
     if (items.length > 3) {

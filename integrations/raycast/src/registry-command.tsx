@@ -22,6 +22,7 @@ import {
   absoluteDataUrl,
   buildEntrySummary,
   buildInstallNotesSummary,
+  normalizeNotes,
   buildContributeEntryUrl,
   buildSuggestChangeUrl,
   categoryLabel,
@@ -749,12 +750,13 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
           : "";
         // Surface the entry's disclosed safety/privacy notes before the user
         // commits to writing config or running a server process. Prefer the
-        // richer detail payload, falling back to the compact list entry.
+        // richer detail payload, but only when it has meaningful (non-blank)
+        // notes — otherwise fall back to the compact list entry.
+        const pickNotes = (primary?: string[], fallback?: string[]) =>
+          normalizeNotes(primary).length ? primary : fallback;
         const notesSummary = buildInstallNotesSummary(
-          detail.safetyNotes?.length ? detail.safetyNotes : entry.safetyNotes,
-          detail.privacyNotes?.length
-            ? detail.privacyNotes
-            : entry.privacyNotes,
+          pickNotes(detail.safetyNotes, entry.safetyNotes),
+          pickNotes(detail.privacyNotes, entry.privacyNotes),
         );
         const installSummary =
           plan.installKind === "cli"

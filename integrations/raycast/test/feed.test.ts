@@ -17,6 +17,7 @@ import {
   buildContributeEntryUrl,
   buildEntrySummary,
   buildInstallNotesSummary,
+  normalizeNotes,
   buildSuggestChangeUrl,
   buildSubmitPrUrl,
   categoryLabel,
@@ -1234,6 +1235,28 @@ describe("Raycast feed helpers", () => {
     assert.match(capped, /• …and 2 more/);
     assert.equal(/• one|• two|• three/.test(capped), true);
     assert.equal(capped.includes("• four"), false);
+
+    // Tolerates malformed payloads without throwing (non-array / non-string).
+    assert.equal(
+      buildInstallNotesSummary(
+        "not-an-array" as unknown as string[],
+        [42, "  "] as unknown as string[],
+      ),
+      "\n\n🔒 Privacy:\n• 42",
+    );
+  });
+
+  it("normalizes notes and drops blank/malformed values", () => {
+    assert.deepEqual(normalizeNotes(undefined), []);
+    assert.deepEqual(normalizeNotes("nope" as unknown as string[]), []);
+    assert.deepEqual(normalizeNotes(["  ", "", " keep "]), ["keep"]);
+    // A whitespace-only "detail" list must not suppress a real entry fallback.
+    const detailNotes = ["   "];
+    const entryNotes = ["Real disclosure"];
+    const chosen = normalizeNotes(detailNotes).length
+      ? detailNotes
+      : entryNotes;
+    assert.deepEqual(chosen, entryNotes);
   });
 
   it("validates and parses full detail payloads", () => {
