@@ -1,0 +1,171 @@
+---
+title: MCP Integration Architect Agent
+slug: mcp-integration-architect-agent
+category: agents
+description: >-
+  Source-backed agent for MCP integration architecture decisions: choosing local
+  vs remote servers, tool scope, auth models, transport fit, and privacy-safe
+  rollout plans aligned to MCP specification and Claude Code MCP docs.
+cardDescription: >-
+  Architect MCP integrations with tool/server fit analysis, auth and transport
+  choices, scope boundaries, and privacy-safe rollout plans.
+seoTitle: MCP Integration Architect Agent
+seoDescription: >-
+  Reusable AI agent prompt for MCP integration architecture: server selection,
+  tool scope, OAuth vs local auth, streamable HTTP migration, and Claude Code fit
+  decisions grounded in MCP spec and official docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 681
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/681"
+documentationUrl: "https://modelcontextprotocol.io/specification/2025-06-18/basic/architecture"
+repoUrl: "https://github.com/modelcontextprotocol/specification"
+installable: false
+usageSnippet: >-
+  Use this agent when deciding which MCP server or tool surface fits a workflow,
+  comparing local vs remote integrations, or planning Claude Code MCP rollout.
+prerequisites:
+  - >-
+    Target workflow requirements, data sources, latency expectations, and user
+    permission model for Claude Code, Claude Desktop, or Agent SDK hosts.
+  - >-
+    Candidate MCP servers with documented tools, auth method, transport, and
+    maintainer provenance links.
+  - >-
+    Organization policy for third-party integrations, OAuth clients, network
+    egress, and managed MCP allowlists when applicable.
+  - >-
+    Ability to test integrations in a staging project before production rollout.
+safetyNotes:
+  - >-
+    MCP tools can execute code, call external APIs, and modify user data depending
+    on server implementation; treat tool lists as untrusted until reviewed.
+  - >-
+    Do not recommend broad tool allowlists or unsandboxed write tools for
+    autonomous runs without explicit human approval gates.
+  - >-
+    Remote MCP servers introduce supply-chain and exfiltration risk; prefer
+    least-privilege scopes and managed deployment patterns when available.
+  - >-
+    Architecture recommendations are not approvals; maintainers must still verify
+    server source and runtime behavior before enabling production use.
+privacyNotes:
+  - >-
+    MCP integrations can transmit prompts, tool arguments, file paths, and query
+    results to third-party vendors outside the host application's retention policy.
+  - >-
+    OAuth flows may expose account identifiers and refresh tokens in local config
+    files; document storage locations and rotation expectations.
+  - >-
+    Architecture diagrams and fit analyses may include internal service names,
+    database schemas, and customer metadata; redact before external sharing.
+  - >-
+    Keep security review findings for high-risk servers in private channels until
+    mitigations are verified.
+tags:
+  - mcp
+  - architecture
+  - claude-code
+  - integration
+  - agent-sdk
+keywords:
+  - MCP integration architect agent
+  - MCP server tool fit decisions
+  - Claude Code MCP architecture review
+  - local vs remote MCP server selection
+  - MCP OAuth transport architecture
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Integration Architect Agent is a reusable agent prompt for choosing and
+designing MCP integrations when multiple servers, transports, or auth models could
+fit the same workflow. It compares tool scope, latency, operational burden, and
+privacy boundaries before recommending a Claude Code, Claude Desktop, or Agent SDK
+configuration.
+
+Use this agent when teams debate which MCP server to adopt, whether to self-host
+or use a vendor remote server, or how to scope tools for subagents and managed
+deployments.
+
+## Agent Prompt
+
+You are an MCP integration architect. Use the MCP specification architecture
+pages, MCP security best practices, Claude Code MCP documentation, and Agent SDK
+MCP guides as primary evidence. Compare candidate servers against workflow
+requirements before recommending a configuration.
+
+Review workflow:
+
+1. Requirements. Capture data sources, write actions, latency, offline needs, and
+   approval gates for the workflow.
+2. Candidates. Inventory MCP servers with transport (stdio, streamable HTTP),
+   auth (local, OAuth, API key), tool list, and maintainer provenance.
+3. Fit matrix. Score each candidate on scope match, operational cost, security
+   posture, and host compatibility (Claude Code, Desktop, SDK).
+4. Scope design. Recommend allowed tools, subagent scoping, and hooks or policies
+   that cap blast radius.
+5. Auth and network. Choose OAuth vs local credentials; document egress domains
+   and token storage locations.
+6. Rollout. Propose staging validation, managed allowlist steps, and rollback if
+   tools misbehave or leak data.
+7. Decision. Recommend primary server, fallback option, or build-vs-buy with
+   explicit tradeoffs.
+
+Output contract:
+
+- Requirements summary and constraints.
+- Candidate comparison table with fit scores.
+- Recommended architecture with tool allowlist and auth model.
+- Security and privacy notes for operators.
+- Staging validation plan and rollback triggers.
+
+## Features
+
+- Compares local vs remote MCP servers for the same workflow.
+- Maps tool scope to subagent and managed MCP policies.
+- Reviews OAuth, streamable HTTP, and stdio transport tradeoffs.
+- Produces privacy-safe rollout plans for operators.
+
+## Use Cases
+
+- Choose between overlapping vendor MCP servers for a product workflow.
+- Design least-privilege tool allowlists for autonomous Claude Code runs.
+- Plan migration from stdio MCP to streamable HTTP with OAuth.
+- Evaluate self-hosted vs managed MCP for enterprise deployments.
+
+## Source Notes
+
+- MCP architecture documentation describes host, client, and server roles with
+  transport and capability negotiation patterns.
+- Claude Code MCP docs cover configuration surfaces, managed MCP, and security
+  cross-links relevant to rollout decisions.
+- MCP security best practices emphasize user consent, least privilege, and clear
+  data handling for third-party servers.
+
+## Duplicate Check
+
+Checked `content/agents/`, open PRs, and the live catalog for MCP architecture
+agents. `claude-mcp-skills-integration-agent` focuses on Claude Skills wrapper
+configuration, and `mcp-authorization-boundary-review-agent` focuses on auth
+boundary review. No `agents` entry provides MCP integration architect fit
+decisions with candidate comparison and rollout output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `kiannidev`, based on public
+MCP specification documentation and Claude Code MCP docs. No paid placement,
+referral, or affiliate relationship.
+
+## Sources
+
+- MCP architecture: https://modelcontextprotocol.io/specification/2025-06-18/basic/architecture
+- MCP security best practices: https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices
+- Claude Code MCP docs: https://code.claude.com/docs/en/mcp
+- Agent SDK MCP docs: https://code.claude.com/docs/en/agent-sdk/mcp
