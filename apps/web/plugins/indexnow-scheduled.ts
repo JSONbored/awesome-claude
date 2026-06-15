@@ -24,6 +24,15 @@ type CloudflareScheduledPayload = {
   context: unknown;
 };
 
+/** Hostname of a URL, or null if it can't be parsed. */
+function urlHost(value: string): string | null {
+  try {
+    return new URL(value).host;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Daily IndexNow submission of recently changed entry URLs. Runs automatically
  * on the production host only (dev/preview never submit). Set INDEXNOW_DISABLED=1
@@ -62,9 +71,14 @@ export default definePlugin((nitroApp) => {
             const stamp = Date.parse(stampSource);
             if (!Number.isFinite(stamp) || stamp < cutoff || stamp > now) continue;
 
+            // IndexNow rejects a batch if any URL's host differs from the
+            // submitted `host`, so only trust canonicalUrl when it's HTTPS AND
+            // same-host; otherwise build a safe same-host URL.
+            const canonical = entry.canonicalUrl ?? "";
+            const canonicalHost = canonical.startsWith("https://") ? urlHost(canonical) : null;
             const url =
-              entry.canonicalUrl && entry.canonicalUrl.startsWith("https://")
-                ? entry.canonicalUrl
+              canonicalHost === host
+                ? canonical
                 : `${siteUrl}/entry/${entry.category}/${entry.slug}`;
             if (seen.has(url)) continue;
             seen.add(url);
