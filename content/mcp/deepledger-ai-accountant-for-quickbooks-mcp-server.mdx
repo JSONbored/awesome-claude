@@ -1,0 +1,186 @@
+---
+title: DeepLedger AI Accountant for QuickBooks MCP Server for Claude
+slug: deepledger-ai-accountant-for-quickbooks-mcp-server
+category: mcp
+description: >-
+  DeepLedger hosted MCP server that connects Claude and ChatGPT to QuickBooks
+  Online for bookkeeping, reconciliation, month-end close, and audit prep through
+  streamable HTTP.
+cardDescription: >-
+  Connect Claude to DeepLedger to automate QuickBooks Online bookkeeping, month-end
+  close, and reconciliation via mcp.deepledger.ai/mcp.
+seoTitle: DeepLedger AI Accountant for QuickBooks MCP Server for Claude
+seoDescription: >-
+  Use the DeepLedger MCP server with Claude to record bills, reconcile accounts,
+  run month-end close, and manage QuickBooks Online data at mcp.deepledger.ai/mcp.
+author: DeepLedger
+authorProfileUrl: "https://github.com/deepledger"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1501
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1501"
+documentationUrl: "https://deepledger.ai"
+websiteUrl: "https://deepledger.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http deepledger https://mcp.deepledger.ai/mcp
+usageSnippet: >-
+  Paste https://mcp.deepledger.ai/mcp into Claude Connectors or ChatGPT Apps, then
+  complete QuickBooks Online authorization during connector setup.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "deepledger": {
+        "url": "https://mcp.deepledger.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "deepledger": {
+        "url": "https://mcp.deepledger.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "DeepLedger account and authorized QuickBooks Online company connection."
+  - "Claude Connectors, ChatGPT Apps, or another MCP client with remote HTTP support."
+  - "Accounting review workflow; AI-booked entries should be inspected before filing."
+  - "Appropriate QBO user permissions for the bookkeeping actions you expect the agent to perform."
+safetyNotes:
+  - "Bookkeeping tools can create bills, invoices, payments, and journal entries in QuickBooks Online."
+  - "Month-end close and cleanup flows may modify many transactions; approve batches carefully."
+  - "OAuth access persists until revoked in QuickBooks or DeepLedger."
+  - "Do not rely solely on AI output for tax filings or audited financial statements."
+privacyNotes:
+  - "Financial transactions, vendor names, and customer records are processed by DeepLedger and Intuit APIs."
+  - "OAuth tokens and company IDs are sensitive; keep connector configuration off public repositories."
+  - "Uploaded receipts or statements may contain bank and tax identifiers; handle under firm policy."
+tags:
+  - accounting
+  - quickbooks
+  - bookkeeping
+  - finance
+  - remote-mcp
+keywords:
+  - deepledger mcp
+  - quickbooks claude connector
+  - ai accountant mcp
+  - mcp.deepledger.ai
+  - qbo automation
+readingTime: 4
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+DeepLedger turns MCP-compatible assistants into AI accounting operators for QuickBooks Online. Through a single hosted endpoint, agents can record bills and expenses, reconcile accounts, assist with month-end close, clean up books, and prepare audit-ready workflows while humans review the results.
+
+The MCP URL published at [deepledger.ai](https://deepledger.ai) is `https://mcp.deepledger.ai/mcp`, registered as `ai.deepledger/mcp` in the official MCP Registry.
+
+## Features
+
+- Full bookkeeping through chat, voice, or file uploads.
+- Bill, expense, invoice, receipt, payment, and journal entry workflows.
+- Month-end close and QBO cleanup assistance.
+- Audit preparation and command-center style financial operations.
+- QuickBooks Online OAuth connector setup without local plugins.
+
+## Use Cases
+
+- Record a stack of uploaded receipts as categorized expenses for review.
+- Reconcile last month's bank feed exceptions before close.
+- Draft month-end adjusting entries with supporting explanations.
+- Clean up stale accounts and misclassified transactions in QBO.
+- Prepare an audit request packet from current books.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Open **Settings → Connectors**.
+2. Add `https://mcp.deepledger.ai/mcp`.
+3. Complete QuickBooks Online authorization when prompted.
+
+### ChatGPT Apps
+
+Paste the DeepLedger MCP URL into ChatGPT Apps configuration per DeepLedger's setup guide.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http deepledger https://mcp.deepledger.ai/mcp
+```
+
+Follow the step-by-step setup guide linked from [deepledger.ai](https://deepledger.ai).
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "deepledger": {
+      "url": "https://mcp.deepledger.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+Authentication is handled through DeepLedger and QuickBooks OAuth, not static API keys in the JSON snippet.
+
+## Examples
+
+### Record expenses
+
+```text
+Upload these three receipts and draft expense entries in QuickBooks for my review.
+```
+
+### Reconcile accounts
+
+```text
+List unreconciled transactions in the operating account for March and propose matches.
+```
+
+### Month-end close
+
+```text
+Prepare month-end close checklist items still open for April and summarize blockers.
+```
+
+## Security
+
+- Require human review before posting material journal entries or tax-sensitive changes.
+- Connect only the QBO companies and roles necessary for the assistant's scope.
+- Revoke OAuth access if a shared machine or contractor offboarding occurs.
+
+## Troubleshooting
+
+### Connector auth failures
+
+Re-run QuickBooks authorization from DeepLedger and confirm the QBO user still has API access.
+
+### Transactions not appearing
+
+Check whether entries were saved as drafts awaiting human approval rather than posted.
+
+### Permission denied on specific accounts
+
+The connected QBO role may lack access to banking, payroll, or restricted classes.
+
+### Wrong company connected
+
+Switch the authorized QuickBooks company in DeepLedger before running bookkeeping tools.
