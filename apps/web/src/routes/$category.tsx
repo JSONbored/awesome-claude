@@ -15,6 +15,7 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
+import { CategoryRankingTable } from "@/components/category-ranking-table";
 import { hubHighlights, hubStats } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
@@ -161,6 +162,10 @@ function CategoryHub() {
   // Data-derived signals computed across the full category set.
   const highlights = hubHighlights(entries);
   const stats = hubStats(entries);
+  // Extractable, citeable lead facts computed from the reviewed metadata.
+  const sourcedPct = stats.find((s) => s.key === "sourced")?.pct;
+  const safetyPct = stats.find((s) => s.key === "safety")?.pct;
+  const installableCount = entries.filter((e) => Boolean(e.installCommand)).length;
 
   return (
     <PageContainer>
@@ -196,6 +201,16 @@ function CategoryHub() {
         )}
       </div>
 
+      {sourcedPct !== undefined && (
+        <p className="mt-6 max-w-3xl text-pretty text-sm text-ink-muted">
+          Of {entries.length} Claude {label.toLowerCase()} in the directory,{" "}
+          <strong className="font-medium text-ink">{sourcedPct}% are source-backed</strong>
+          {safetyPct !== undefined ? <>, {safetyPct}% disclose safety notes</> : null}, and{" "}
+          <strong className="font-medium text-ink">{installableCount}</strong> ship a one-line
+          install command.
+        </p>
+      )}
+
       <HubHighlights
         highlights={highlights}
         caption={`Standout Claude ${label}, picked from their own metadata — trust tier, provenance, documentation, and recency.`}
@@ -220,6 +235,8 @@ function CategoryHub() {
           </div>
         )}
       </section>
+
+      <CategoryRankingTable entries={entries.slice(0, 12)} label={label} />
 
       <HubSignalStats stats={stats} total={entries.length} />
 
