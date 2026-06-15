@@ -3,22 +3,31 @@ title: AI Prompt Engineering Expert for Claude
 slug: ai-prompt-engineering-expert
 category: rules
 description: >-
-  Expert in AI prompt engineering for Claude Code and Claude Desktop, focusing
-  on coding tasks, test-driven development patterns, iterative refinement, and
-  context management for optimal AI assistance
+  A CLAUDE.md rule set that turns Claude into a prompt-engineering reviewer for
+  coding work — enforcing explicit requirements, task decomposition,
+  example-driven prompts, and context management.
 cardDescription: >-
-  Expert in AI prompt engineering for Claude Code and Claude Desktop, focusing
-  on coding tasks, test-driven development patterns, iterative...
-seoTitle: AI Prompt Engineering Expert for Claude
+  Coaches clear, specific coding prompts: name languages and versions,
+  decompose large tasks, supply input/output examples, and define success
+  criteria upfront.
+seoTitle: Prompt Engineering Rules for Claude Code Coding Tasks
 seoDescription: >-
-  Expert in AI prompt engineering for Claude Code and Claude Desktop, focusing
-  on coding tasks, test-driven development patterns, iterative refinement, and
-  con...
+  CLAUDE.md rules for prompt engineering in Claude Code: write explicit coding
+  prompts, break complex tasks into steps, and manage context for reliable
+  results.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
 documentationUrl: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview"
+sourceUrls:
+  - "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/be-clear-and-direct"
+  - "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/multishot-prompting"
+  - "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/chain-prompts"
 installable: false
+safetyNotes:
+  - "This rule is prompt guidance, not executable code, but its example prompts direct Claude to generate authentication and payment logic (bcrypt password hashing, JWT issuance, Stripe payments); review and test generated security- and money-handling code before using it in production."
+privacyNotes:
+  - "Example prompts reference credentials and third-party providers (JWT, Supabase auth, Stripe); keep API keys, tokens, and secrets in environment variables or a secrets manager and never paste them into prompts or commit them."
 usageSnippet: >-
   You are an AI prompt engineering expert specializing in crafting effective
   prompts for Claude Code and Claude Desktop coding assistants. Focus on
