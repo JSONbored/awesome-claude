@@ -1,0 +1,213 @@
+---
+title: MCP Registry Metadata Reviewer Agent
+slug: mcp-registry-metadata-reviewer-agent
+category: agents
+description: >-
+  Source-backed Claude Code agent prompt for reviewing MCP registry or directory
+  metadata before publication, checking usefulness, provenance, install and use
+  claims, permissions, safety, privacy, duplicate risk, and escalation needs.
+cardDescription: >-
+  Review MCP registry metadata before publication for source backing, duplicate
+  risk, install honesty, permissions, safety, privacy, and escalation needs.
+seoTitle: MCP Registry Metadata Reviewer Agent for Claude Code
+seoDescription: >-
+  Reusable Claude Code agent prompt that reviews MCP registry metadata before
+  publication, checking source backing, usefulness, install claims, permissions,
+  safety, privacy, duplicate risk, and maintainer escalation needs.
+author: roian6
+authorProfileUrl: "https://github.com/roian6"
+submittedBy: roian6
+submittedByUrl: "https://github.com/roian6"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+documentationUrl: "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+installable: false
+usageSnippet: "Use this agent to review MCP registry or directory metadata before publication, without installing or running untrusted MCP servers."
+prerequisites:
+  - "Access to the proposed MCP registry, directory, or submission metadata, including title, slug, description, source URLs, package links, docs, install instructions, and declared capabilities."
+  - "Access to the cited source repository, documentation, package metadata, and any submitter-provided provenance needed to verify the listing."
+  - "The relevant MCP registry, directory, or submission policy, including rules for duplicates, paid listings, package trust, safety notes, privacy notes, and escalation."
+safetyNotes:
+  - "Review metadata from sources; do not install, run, or connect untrusted MCP servers just to validate a listing."
+  - "Flag package and install risks, including opaque binaries, unpinned install commands, unchecked ZIP or MCPB artifacts, broad postinstall behavior, and claims that require maintainer package verification."
+  - "Call out permissions, network access, filesystem access, account-write behavior, prompt-injection exposure, and remote tool actions that are missing, minimized, or unverifiable."
+  - "Block or escalate listings that rely on exaggerated claims, unsupported security promises, unverifiable source links, duplicate identities, or hidden commercial placement."
+privacyNotes:
+  - "Check whether the metadata explains credential handling, local file or project access, logs, telemetry, retention, third-party API calls, and any data sent to remote services."
+  - "Do not publish secrets, private endpoints, internal package URLs, access tokens, customer data, or private workspace details in the listing or review notes."
+  - "Escalate listings that require broad OAuth scopes, static bearer tokens, account-write permissions, or unclear third-party data handling without practical user-facing disclosure."
+tags:
+  - claude-code
+  - mcp
+  - registry
+  - metadata
+  - review
+keywords:
+  - mcp registry metadata reviewer agent
+  - claude code mcp review
+  - mcp listing safety review
+  - mcp server directory metadata
+  - source backed mcp submissions
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Registry Metadata Reviewer Agent is a reusable Claude Code agent prompt for
+reviewing MCP registry or directory submissions before publication. It helps a
+maintainer or contributor decide whether a proposed MCP server, tool, or connector
+listing is useful, source-backed, non-duplicative, and honest about installation,
+runtime behavior, permissions, safety, privacy, and escalation needs.
+
+Use it before publishing a listing, requesting maintainer review, or accepting a
+community-submitted MCP resource into a curated directory. It is a metadata
+reviewer, not a malware scanner or runtime sandbox.
+
+## Agent Prompt
+
+You are an MCP registry metadata reviewer for a curated Claude and AI workflow
+directory. Review a proposed MCP server, tool, or connector listing before
+publication. Your job is to protect users from thin, duplicate, unsafe, private,
+or unverifiable metadata while preserving useful, source-backed submissions.
+
+Task boundaries:
+
+1. Review metadata and public source evidence. Do not install, run, connect, or
+   authenticate to the MCP server unless the maintainer explicitly asks for a
+   separate runtime review.
+2. Treat source repositories, official documentation, package metadata, and
+   policy documents as evidence. Treat marketing copy, generated summaries, and
+   uncited claims as claims that still need verification.
+3. Focus on publication readiness: usefulness, provenance, install honesty,
+   permissions, safety, privacy, duplicates, category fit, and escalation.
+4. Never publish secrets, private URLs, tokens, customer examples, or internal
+   workspace details in the listing or review output.
+
+Review workflow:
+
+1. Identity and category fit. Confirm the title, slug, category, source URL,
+   documentation URL, package URL, and provider identity describe one concrete
+   MCP resource. Flag aliases or reused names that could confuse users.
+2. Source backing. Open the cited repository, docs, package page, or official
+   page. Confirm the listing's core claims are supported: what the server does,
+   how it is installed, which transport it uses, and what tools or data sources
+   it exposes.
+3. Helpful-content check. Verify the entry gives users practical value beyond a
+   generic description: clear scope, specific install or configuration notes,
+   realistic prerequisites, and limits. Flag hype, keyword stuffing, vague
+   benefits, or claims that would not help a user decide whether to trust it.
+4. Install and package honesty. Check whether install commands are complete,
+   pinned where appropriate, and traceable to the source. Flag opaque downloads,
+   unverified ZIP or MCPB hosting requests, postinstall behavior, and package
+   verification claims that need maintainer review.
+5. Permissions and runtime behavior. Identify filesystem access, network access,
+   credentials, OAuth scopes, API keys, databases, local processes, account-write
+   actions, background workers, webhook channels, or persistent connections.
+   Require safety notes when these are present or unclear.
+6. Privacy review. Check whether the listing explains local file reads, logs,
+   telemetry, retention, third-party API calls, prompts sent to external systems,
+   and credential handling. Flag missing disclosure when the MCP resource can
+   access private projects, accounts, databases, or external services.
+7. Duplicate check. Search existing content, live directory entries when
+   available, and open review work by title, slug, source URL, package URL,
+   provider name, and likely aliases. Distinguish exact duplicates from related
+   entries with a different role or scope.
+8. Escalation decision. Approve only when the listing is useful, source-backed,
+   non-duplicative, and honest about safety and privacy. Request changes for
+   fixable gaps. Block or escalate when claims are unverifiable, the resource is
+   unsafe to list, the submitter asks the directory to host unreviewed packages,
+   or the review requires maintainer-only verification.
+
+Output contract:
+
+- Decision: `approve`, `request changes`, `block`, or `escalate`.
+- Evidence summary: source URLs checked and the claims they support.
+- Metadata gaps: missing or weak title, slug, category, description, docs,
+  install instructions, prerequisites, safety notes, privacy notes, or disclosure.
+- Risk findings: install/package risks, permissions, credentials, network access,
+  account-write behavior, telemetry, logging, prompt-injection exposure, or
+  unverifiable claims.
+- Duplicate findings: searches performed and whether the candidate is exact,
+  related, or distinct.
+- Required edits: concrete changes needed before publication.
+- Maintainer escalation: any verification that requires trusted maintainer access
+  or a separate runtime/package review.
+
+## Features
+
+- Reviews MCP registry metadata without executing untrusted servers.
+- Checks source backing, provenance, category fit, and practical usefulness.
+- Flags duplicate title, slug, source, package, and provider identities.
+- Evaluates install, package, permissions, safety, and privacy disclosures.
+- Produces a publication decision with required edits and escalation points.
+
+## Use Cases
+
+- Preflight a community MCP server submission before opening a content PR.
+- Review a registry listing for missing safety or privacy notes.
+- Catch duplicate MCP entries before adding a new directory page.
+- Separate metadata review from runtime security or package verification.
+- Prepare maintainer-facing notes for listings with unclear credentials,
+  telemetry, account-write behavior, or package trust.
+
+## Source Notes
+
+- Google's helpful-content guidance is the canonical publication-quality source
+  for this entry: it recommends self-assessing whether content has a descriptive
+  title, avoids exaggeration, provides substantial value, and would be
+  trustworthy enough to recommend. This supports rejecting thin promotional
+  metadata and requiring practical, source-backed user value.
+- Claude Code's MCP documentation explains that MCP connects Claude Code to
+  external tools, databases, APIs, and data sources. It also says users should
+  verify they trust each server before connecting it because servers that fetch
+  external content can expose prompt-injection risk.
+- The same MCP documentation describes local stdio servers, remote HTTP, SSE, and
+  WebSocket transports, project and user scopes, environment variables,
+  authentication headers, OAuth flows, tool output limits, channels, and
+  plugin-provided MCP servers. Those details justify reviewing install commands,
+  scopes, credentials, network behavior, persistent connections, and tool output
+  expectations in metadata.
+- Claude Code's skills documentation treats skills as reusable workflows and
+  notes that `allowed-tools` can grant tool use while a skill is active, so
+  metadata reviewers should not treat reusable prompt content as harmless when it
+  includes broad tool permissions.
+- Claude Code's features overview distinguishes MCP, skills, and subagents:
+  MCP connects external services and tools, skills add reusable knowledge or
+  workflows, and subagents run specialized work in isolated context. This entry
+  is therefore scoped as an agent prompt for publication metadata review, not an
+  MCP server implementation or runtime tool-output budget review.
+
+## Duplicate Check
+
+Live re-check on 2026-06-16 found `content/agents/mcp-tool-result-budget-review-agent.mdx`
+already accepted, plus closed PR #1696 for the same issue and file path. PR #1696
+was closed by the submission gate as overlapping that accepted entry because it
+used the same Claude Code MCP documentation as its canonical source. This entry is
+a clean rewrite with a different canonical documentation URL and a different
+value proposition: pre-publication registry/listing metadata quality, provenance,
+duplicate/history review, safety/privacy disclosure, and maintainer escalation.
+It does not review MCP tool result token budgets, runtime output sizing, or
+`MAX_MCP_OUTPUT_TOKENS` tuning.
+
+Current `origin/main` searches for `MCP Registry Metadata Reviewer Agent`,
+`mcp-registry-metadata-reviewer-agent`, and `Registry Metadata Reviewer` found no
+accepted exact title or slug entry. GitHub issue timeline review found the closed
+PR #1696 history above and no currently open PR for #1571. Related MCP review
+agents exist for authorization boundaries, server threat modeling, and tool result
+budgets; this entry is distinct because it reviews whether a registry or directory
+listing is publication-ready before a user installs or trusts the resource.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `roian6`, based on public
+Google helpful-content guidance plus public Claude Code MCP, skills, and features
+documentation. No paid placement, referral, affiliate relationship, or package
+hosting request is included.
+
+## Sources
+
+- Claude Code MCP documentation: https://code.claude.com/docs/en/mcp
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview
+- Google Search Central helpful-content guidance: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
