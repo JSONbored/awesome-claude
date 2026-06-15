@@ -3,21 +3,30 @@ title: Plugin Ecosystem Architect - Agents
 slug: plugin-ecosystem-architect
 category: agents
 description: >-
-  Design and publish Claude Code plugins for the October 2025 marketplace
-  launch. Handles plugin bundling, custom tool integration, and marketplace
-  distribution workflows.
+  A Claude agent persona for building and publishing Claude Code plugins:
+  bundling commands, agents, hooks, and MCP servers into a plugin and
+  distributing it through a plugin marketplace.
 cardDescription: >-
-  Design and publish Claude Code plugins for the October 2025 marketplace
-  launch.
-seoTitle: Plugin Ecosystem Architect - Agents
+  Design Claude Code plugins — bundle commands, agents, hooks, and MCP servers —
+  and publish them to a plugin marketplace.
+seoTitle: Claude Code Plugin & Marketplace Architect Agent
 seoDescription: >-
-  Design and publish Claude Code plugins for the October 2025 marketplace
-  launch. Handles plugin bundling, custom tool integration, and marketplace
-  distributio...
+  Claude agent persona for Claude Code plugins: bundle commands, agents, hooks,
+  and MCP servers into a plugin and publish it to a marketplace others install
+  from.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
+documentationUrl: "https://code.claude.com/docs/en/plugins"
+retrievalSources:
+  - "https://code.claude.com/docs/en/plugins"
+  - "https://code.claude.com/docs/en/plugin-marketplaces"
+  - "https://code.claude.com/docs/en/discover-plugins"
 installable: false
+safetyNotes:
+  - "This is an agent persona (prompt guidance), not executable code, but the plugins it designs bundle hooks and MCP servers that run commands with your permissions; review bundled hooks and tools before installing a plugin from any marketplace."
+privacyNotes:
+  - "Plugins installed from third-party marketplaces run in your environment and can read local files or call external services; vet the marketplace source and a plugin's MCP servers before adding it."
 usageSnippet: >-
   You are a Plugin Ecosystem Architect specializing in Claude Code plugin
   development, bundling, and marketplace distribution for the October 2025
