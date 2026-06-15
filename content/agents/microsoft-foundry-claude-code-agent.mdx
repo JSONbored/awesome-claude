@@ -1,0 +1,196 @@
+---
+title: Microsoft Foundry Claude Code Agent
+slug: microsoft-foundry-claude-code-agent
+category: agents
+description: >-
+  Claude Code subagent that guides teams through configuring, operating, and
+  troubleshooting Claude Code deployments backed by Azure AI Foundry, covering
+  hub and project setup, model deployment, credential configuration, network
+  controls, cost governance, and compliance alignment.
+cardDescription: >-
+  Configure and operate Claude Code on Azure AI Foundry: hub setup, Claude
+  model deployment, managed identity, private endpoints, cost governance, and
+  compliance.
+seoTitle: Microsoft Foundry Claude Code Agent
+seoDescription: >-
+  Claude Code subagent for Azure AI Foundry deployments: configure hub and
+  project, deploy Claude models, set up managed identity credentials, private
+  endpoints, cost tags, and compliance controls for Claude Code teams using
+  Azure AI Foundry as their model provider.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-15"
+documentationUrl: "https://learn.microsoft.com/en-us/azure/ai-foundry/what-is-azure-ai-foundry"
+installable: false
+usageSnippet: >-
+  Use this agent when onboarding a team to Claude Code with Azure AI Foundry as
+  the model provider, or when diagnosing hub configuration, credential,
+  deployment, cost, or compliance issues in an existing Azure AI Foundry-backed
+  Claude Code deployment.
+prerequisites:
+  - "An Azure subscription with Azure AI Foundry hub and project created in a supported region."
+  - "Claude model deployed from the Azure AI Foundry model catalog (Anthropic Claude models are available via the Azure Marketplace); note the deployment endpoint URL and API key."
+  - "Azure credentials available in the Claude Code environment: an API key from the Azure AI Foundry project deployment, or a managed identity with Cognitive Services User role."
+  - "Claude Code installed and the deployment endpoint configured; the Azure AI Foundry deployment endpoint and API key are used as `ANTHROPIC_BASE_URL` and `ANTHROPIC_API_KEY` substitutes per the Claude Code third-party provider guidance."
+  - "Understanding of the target compliance posture: data residency requirements, virtual network integration requirements, Azure Monitor logging expectations, and cost-tag strategy."
+safetyNotes:
+  - "This agent advises on configuration and does not modify Azure RBAC roles, virtual network rules, or deployment settings itself; a human must review and apply infrastructure changes."
+  - "Azure AI Foundry model deployments expose an HTTPS endpoint and API key; rotate API keys using the Azure AI Foundry portal or Azure CLI and avoid storing them in source control."
+  - "Virtual network integration and private endpoints prevent public internet access to the deployment endpoint; confirm DNS resolution and routing before enabling team access."
+  - "Model deployments are quota-bound per Azure subscription and region; confirm provisioned-throughput or pay-per-token quota is sufficient for the planned Claude Code usage before enabling team access."
+  - "Managed identities are the recommended authentication method for production workloads; API keys are long-lived credentials and should be restricted to development environments."
+privacyNotes:
+  - "Prompts and completions sent through Azure AI Foundry are governed by the Microsoft Online Services Terms, the Data Processing Addendum, and the Azure AI terms; review these for your jurisdiction and data classification."
+  - "Azure AI Foundry model deployments do not use prompts or completions to train Microsoft or Anthropic models by default; confirm the data processing terms for your specific deployment tier."
+  - "Claude Code sends workspace context (file contents, git history excerpts, tool outputs) as part of prompts to the configured model provider; scope file permissions and .claude/settings.json patterns to limit what context reaches Azure AI Foundry."
+  - "Azure Monitor diagnostic logs capture API call metadata including endpoint name, model deployment, and caller identity; treat these logs as sensitive and restrict log reader access accordingly."
+  - "Cost-allocation tags applied to the Azure AI Foundry hub resource can expose project names, team identifiers, or workload types in Azure Cost Management; treat tag values as non-confidential or restrict Cost Management access accordingly."
+tags:
+  - azure
+  - microsoft
+  - ai-foundry
+  - claude-code
+  - platform
+  - enterprise
+keywords:
+  - azure ai foundry claude code
+  - microsoft azure claude
+  - claude code azure
+  - azure ai foundry model provider
+  - claude code enterprise azure
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Microsoft Foundry Claude Code Agent is a configuration and operations agent for
+teams running Claude Code with Azure AI Foundry as the model provider. It covers
+the end-to-end setup path — from creating an Azure AI Foundry hub and project,
+deploying a Claude model from the Azure Marketplace catalog, configuring the
+deployment endpoint and credentials in the Claude Code environment, and selecting
+the right Claude model deployment, through to private endpoint configuration,
+cost-allocation tagging, Azure Monitor compliance verification, and regional
+failover planning.
+
+Use it when onboarding a new team to Claude Code on Azure AI Foundry, diagnosing
+credential or deployment-endpoint failures, reviewing the cost and compliance
+posture of an existing deployment, or planning a multi-region Azure AI Foundry
+setup.
+
+## Agent Prompt
+
+You are a platform agent for Claude Code deployments backed by Azure AI Foundry.
+Help the user configure, operate, and troubleshoot Azure AI Foundry as the model
+provider for Claude Code, using Microsoft Azure and Anthropic documentation as
+your reference.
+
+Work through the following checklist, skipping sections the user has already
+completed, and flag each item as done, blocked, or needs-review:
+
+1. **Hub and project.** Confirm an Azure AI Foundry hub and project exist in the
+   target Azure subscription and region. Note the resource group, hub name,
+   project name, and Azure region.
+
+2. **Model deployment.** Help the user deploy a Claude model from the Azure AI
+   Foundry model catalog (Anthropic Claude models are available via the Azure
+   Marketplace). Identify the deployment name, the inference endpoint URL (e.g.
+   `https://<hub>.openai.azure.com/`), and the API version required.
+
+3. **Credentials.** Help the user choose the right credential path: an API key
+   from the Azure AI Foundry deployment (for development), or a managed identity
+   with `Cognitive Services User` role assigned to the hub resource (for
+   production). Confirm the endpoint URL and credential are available in the
+   Claude Code runtime environment.
+
+4. **Claude Code wiring.** Explain how to set the deployment endpoint as
+   `ANTHROPIC_BASE_URL` and the API key as `ANTHROPIC_API_KEY` in the Claude
+   Code environment, consistent with the Claude Code third-party provider
+   documentation. Confirm the setup with a `claude --version` and a minimal test
+   prompt to verify the provider routing is active.
+
+5. **Network controls.** If the workload requires network isolation, recommend
+   enabling private endpoints for the Azure AI Foundry hub and disabling public
+   network access. Confirm DNS resolution from the Claude Code operator's network
+   to the private endpoint IP and that the operator's subnet is in the hub's
+   allowed virtual network list.
+
+6. **Cost governance.** Recommend applying Azure resource tags (`Project`, `Team`,
+   `Environment`) to the Azure AI Foundry hub and enabling Azure Monitor metrics
+   for model inference token consumption. Estimate token costs for the planned
+   Claude Code usage pattern using Azure AI Foundry pay-per-token pricing.
+
+7. **Compliance.** Confirm Azure Monitor diagnostic settings for the Azure AI
+   Foundry hub are configured to capture inference request logs. Review whether
+   the workload's data classification requires a Microsoft Business Associate
+   Agreement (for healthcare workloads) or additional data-residency controls
+   via Azure Policy.
+
+8. **Failover.** If the team needs multi-region continuity, discuss deploying the
+   same Claude model in a secondary Azure region and switching the
+   `ANTHROPIC_BASE_URL` environment variable to route Claude Code traffic to the
+   standby deployment during an outage.
+
+Output: a deployment readiness checklist (done / blocked / needs-review per
+item), the recommended Azure RBAC role assignment command for managed identity,
+and any open compliance questions for the security or legal team.
+
+## Features
+
+- Walks through Azure AI Foundry hub and project setup, model deployment from
+  the catalog, and Claude Code environment variable configuration.
+- Recommends least-privilege managed identity role assignments scoped to the hub
+  resource.
+- Covers private endpoint configuration for network-isolated deployments.
+- Produces a cost-allocation tagging strategy and Azure Monitor compliance
+  checklist.
+- Advises on multi-region Azure AI Foundry deployments for continuity.
+
+## Use Cases
+
+- Onboard a development team to Claude Code using Azure AI Foundry instead of
+  the Anthropic API (common in Azure-native enterprises with existing AI Foundry
+  access).
+- Diagnose endpoint authentication or model-deployment errors in an existing
+  Azure AI Foundry-backed Claude Code deployment.
+- Review the cost and compliance posture of an Azure AI Foundry deployment before
+  expanding Claude Code access to additional teams.
+- Plan a multi-region Azure AI Foundry setup with cross-region endpoint routing.
+
+## Source Notes
+
+- Azure AI Foundry is Microsoft's unified platform for developing and deploying
+  AI applications; it provides access to Anthropic Claude models via the Azure
+  Marketplace model catalog.
+- Claude Code can be configured to use Azure AI Foundry as a model provider by
+  setting the deployment endpoint URL and API key as environment variables,
+  consistent with the Claude Code third-party provider documentation.
+- Azure AI Foundry hub deployments support private endpoints, managed identity
+  authentication, Azure Monitor logging, and Azure Policy compliance controls.
+
+## Duplicate Check
+
+Checked `content/agents/`, `content/tools/`, all other content categories, and
+open PRs for: `Azure AI Foundry`, `Microsoft Foundry`, `azure-foundry`,
+`foundry-claude`, `Azure Claude Code`, `ANTHROPIC_BASE_URL azure`,
+`azure-openai-claude`. No existing Microsoft Foundry Claude Code agent entry or
+open duplicate PR was found. This entry is distinct from the Bedrock Claude Code
+Platform Agent (`bedrock-claude-code-platform-agent.mdx`) and from the Vertex AI
+Claude Code Platform Agent (`vertex-ai-claude-code-platform-agent.mdx`).
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `jaso0n0818`, grounded in
+public Microsoft Azure AI Foundry and Claude Code documentation. No paid
+placement, referral, or affiliate relationship.
+
+## Sources
+
+- Azure AI Foundry overview: https://learn.microsoft.com/en-us/azure/ai-foundry/what-is-azure-ai-foundry
+- Azure AI Foundry model catalog: https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/model-catalog-overview
+- Azure AI Foundry managed identity authentication: https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/secure-data-playground
+- Azure AI Foundry private endpoints: https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/configure-private-link
+- Azure Monitor for Azure AI Foundry: https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/monitor-applications
+- Anthropic Claude models overview: https://docs.anthropic.com/en/docs/about-claude/models/overview
