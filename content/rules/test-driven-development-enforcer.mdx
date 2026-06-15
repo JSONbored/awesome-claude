@@ -3,17 +3,18 @@ title: Test-Driven Development Enforcer - CLAUDE.md Rules for Claude Code
 slug: test-driven-development-enforcer
 category: rules
 description: >-
-  Test-driven development expert enforcing red-green-refactor cycles,
-  Vitest/Jest configuration, test coverage requirements, mocking strategies, and
-  test-first coding discipline for robust software development.
+  A CLAUDE.md rule that holds Claude to strict test-driven development: write a
+  failing Vitest test first, add the minimum code to make it pass, then refactor.
+  It covers vitest.config setup, expect assertions, vi mocks and fake timers, the
+  arrange-act-assert pattern, and running suites in watch mode or once in CI.
 cardDescription: >-
-  Test-driven development expert enforcing red-green-refactor cycles,
-  Vitest/Jest configuration, test coverage requirements, mocking strate...
-seoTitle: Test-Driven Development Enforcer - CLAUDE.md Rules for Claude Code
+  Hold Claude to red-green-refactor TDD with Vitest: failing test first, minimal
+  code to pass, then refactor — with vi mocks and AAA tests.
+seoTitle: "TDD Enforcer Rule: Red-Green-Refactor With Vitest"
 seoDescription: >-
-  Test-driven development expert enforcing red-green-refactor cycles,
-  Vitest/Jest configuration, test coverage requirements, mocking strategies, and
-  test-first...
+  Make Claude practice TDD with Vitest: write failing tests first, then code.
+  Covers red-green-refactor, vi mocks, fake timers, and arrange-act-assert
+  structure.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
@@ -1541,6 +1542,11 @@ scriptBody: >-
   Always write tests before implementation, follow red-green-refactor cycle
   strictly, maintain minimum 80% coverage with focus on quality, mock external
   dependencies to isolate units, and use AAA pattern for clear test structure.
+safetyNotes:
+  - "Guidance only — this rule adds no executable code, but its examples install dependencies (npm ci), run the Vitest CLI, and execute generated test suites locally and in CI; review and run them yourself rather than auto-executing."
+  - "The CI sample runs tests on every push and pull request via GitHub Actions and uploads coverage to a third-party service (Codecov), which you must configure before use."
+privacyNotes:
+  - "The async examples mock the global fetch against endpoints like /api/users and write coverage reports (lcov, html) to a local coverage/ directory; the CI sample additionally uploads lcov coverage to Codecov."
 tags:
   - tdd
   - testing
