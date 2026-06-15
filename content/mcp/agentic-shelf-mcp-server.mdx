@@ -1,0 +1,204 @@
+---
+title: Agentic Shelf MCP Server for Claude
+slug: agentic-shelf-mcp-server
+category: mcp
+description: >-
+  Hosted Agentic Shelf MCP server exposing live e-commerce catalog, inventory, and pricing data from Shopify, Amazon, WooCommerce, and other platforms over streamable HTTP.
+cardDescription: >-
+  Connect Claude to Agentic Shelf so AI agents query live product catalog, stock, and pricing instead of stale web scrapes.
+seoTitle: Agentic Shelf MCP Server for Claude
+seoDescription: >-
+  Use the Agentic Shelf MCP server with Claude to read real-time e-commerce catalog, inventory, and pricing via https://api.agenticshelf.ai/mcp.
+author: Agentic Shelf
+authorProfileUrl: "https://github.com/vboykoCTO"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1462
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1462"
+repoUrl: "https://github.com/vboykoCTO/agentic-shelf"
+documentationUrl: "https://www.agenticshelf.ai"
+websiteUrl: "https://www.agenticshelf.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http agentic-shelf https://api.agenticshelf.ai/mcp
+usageSnippet: >-
+  Add https://api.agenticshelf.ai/mcp as a remote HTTP connector after connecting your storefront in the Agentic Shelf dashboard.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "agentic-shelf": {
+        "url": "https://api.agenticshelf.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agentic-shelf": {
+        "url": "https://api.agenticshelf.ai/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer YOUR_SHELF_TOKEN"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "Agentic Shelf account with a connected storefront (Shopify, Amazon, WooCommerce, BigCommerce, or headless)."
+  - "Claude or another MCP client with streamable HTTP connector support."
+  - "Store API credentials configured in Agentic Shelf for your commerce platform."
+  - "Awareness that the product is in beta early access with evolving limits."
+safetyNotes:
+  - "Catalog tools expose SKUs, prices, and inventory levels that may be competitively sensitive."
+  - "Write capabilities depend on Agentic Shelf plan and connected platform scopes—verify before automation."
+  - "Do not expose connector tokens that grant catalog access to untrusted chat sessions."
+  - "AI shopping agents should confirm stock and price at transaction time, not rely on cached MCP snapshots alone."
+privacyNotes:
+  - "Product titles, descriptions, pricing, and inventory counts are processed by Agentic Shelf."
+  - "Customer PII from commerce platforms should not be queried unless your integration explicitly exposes it."
+  - "Bearer tokens should be stored as connector secrets, not committed to git."
+tags:
+  - ecommerce
+  - catalog
+  - inventory
+  - remote-mcp
+  - shopping
+keywords:
+  - agentic shelf mcp
+  - ecommerce catalog mcp
+  - shopify mcp claude
+  - live inventory mcp
+  - agenticshelf.ai
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+Agentic Shelf turns an e-commerce catalog into a live Model Context Protocol endpoint that AI shopping agents can query in real time. Instead of scraping stale product pages, agents read current SKU metadata, stock levels, and pricing from connected Shopify, Amazon, WooCommerce, BigCommerce, or headless storefronts.
+
+The hosted connector is listed as `ai.agenticshelf/mcp` at `https://api.agenticshelf.ai/mcp`. Source references are in [vboykoCTO/agentic-shelf](https://github.com/vboykoCTO/agentic-shelf).
+
+## Features
+
+- Live product catalog, stock, and pricing over streamable HTTP.
+- Support for Shopify, Amazon, WooCommerce, BigCommerce, and headless setups.
+- Designed for AI shopping assistants and agent commerce workflows.
+- Optional citation audits measuring AI assistant product surfacing.
+- Free early access during beta.
+
+## Use Cases
+
+- Answer shopper questions about in-stock variants and current price.
+- Compare catalog coverage before and after adding MCP product context.
+- Let a support agent look up SKU availability during chat sessions.
+- Feed an AI merchandising workflow with live inventory snapshots.
+- Validate that AI assistants cite your store with fresh catalog data.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Connect your storefront in the Agentic Shelf dashboard.
+2. Add `https://api.agenticshelf.ai/mcp` as a custom MCP connector.
+3. Authenticate with your Agentic Shelf token if prompted.
+4. Query product or inventory tools from a new assistant conversation.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http agentic-shelf https://api.agenticshelf.ai/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "agentic-shelf": {
+      "url": "https://api.agenticshelf.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+For authenticated setups:
+
+```json
+{
+  "mcpServers": {
+    "agentic-shelf": {
+      "url": "https://api.agenticshelf.ai/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer YOUR_SHELF_TOKEN"
+      }
+    }
+  }
+}
+```
+
+Add an Authorization header when your workspace requires an Agentic Shelf API token.
+
+## Examples
+
+### Stock check
+
+```text
+Is the blue medium variant of SKU-1042 in stock and what is the current price?
+```
+
+### Catalog browse
+
+```text
+List top-selling products updated in the last 24 hours.
+```
+
+### Variant lookup
+
+```text
+What sizes are available for the winter jacket product line?
+```
+
+## Security
+
+- Treat live pricing and inventory as business-critical; confirm before automated repricing.
+- Use separate beta credentials when testing against production catalogs.
+- Review commerce platform API scopes granted to Agentic Shelf.
+
+## Troubleshooting
+
+### Empty catalog
+
+Verify the storefront connection succeeded in the Agentic Shelf dashboard.
+
+### Stale inventory
+
+Commerce APIs may cache; retry or force sync from the platform admin.
+
+### 401 unauthorized
+
+Refresh the Bearer token in connector headers.
+
+### Wrong platform data
+
+Confirm the connector is linked to the intended store ID.
+
+## Duplicate Check
+
+No existing Agentic Shelf or `agenticshelf.ai` entry was found in `content/mcp/`. This differs from generic web search MCP servers because it serves authenticated live commerce catalog data.
