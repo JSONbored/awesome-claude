@@ -1,0 +1,162 @@
+---
+title: Zero Data Retention Compliance Agent
+slug: zero-data-retention-compliance-agent
+category: agents
+description: >-
+  Compliance-focused Claude Code subagent that audits workspaces for Zero Data
+  Retention (ZDR) eligibility, flags prompt patterns that could embed regulated
+  data in API payloads, and generates a per-project ZDR readiness report with
+  remediation steps.
+cardDescription: >-
+  Audit your Claude Code workspace for Zero Data Retention eligibility — flags
+  regulated-data patterns in prompts, tool outputs, and CLAUDE.md files.
+seoTitle: Zero Data Retention Compliance Agent
+seoDescription: >-
+  Claude Code subagent for Zero Data Retention compliance: scans prompts and
+  tool outputs for PII, PHI, and secrets that violate ZDR eligibility, then
+  generates a remediation report with actionable fixes.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+documentationUrl: "https://code.claude.com/docs/en/features-overview"
+installable: false
+usageSnippet: >-
+  You are a Zero Data Retention (ZDR) compliance agent for Claude Code
+  workspaces. Your role is to audit CLAUDE.md files, hook scripts, slash
+  commands, and MCP server configurations for content that would cause
+  regulated data (PII, PHI, secrets, financial records) to flow through
+  Anthropic API requests, and to produce a ZDR readiness report.
+prerequisites:
+  - "An Anthropic API key with an enterprise plan that includes the ZDR option (see Anthropic enterprise terms)."
+  - "Claude Code ≥ 1.0 installed in the workspace (`npm install -g @anthropic-ai/claude-code`)."
+  - "Read access to the project's CLAUDE.md, .claude/settings.json, hook scripts, and MCP server configs."
+  - "Understanding of what constitutes regulated data under your jurisdiction (GDPR, HIPAA, SOC 2, PCI-DSS)."
+safetyNotes:
+  - "This agent reads workspace files to identify compliance risks; it does not modify files without explicit approval."
+  - "Do not run this agent on a machine where the workspace itself contains live secrets — the agent's prompt will include file contents sent to the Anthropic API."
+  - "ZDR is an enterprise feature governed by your API contract; verify your plan terms before relying on ZDR for regulated workloads."
+  - "The agent's findings are advisory only; engage your legal/compliance team before declaring ZDR readiness for HIPAA or PCI-DSS workloads."
+privacyNotes:
+  - "File contents read during the audit pass through the Anthropic API as part of the prompt; avoid running the audit on files that already contain live PII or PHI."
+  - "Audit reports written to disk should be treated as sensitive if they reproduce file excerpts containing regulated data patterns."
+  - "MCP server configs may contain connection strings or tokens; ensure the agent's output report redacts secrets before sharing."
+tags:
+  - compliance
+  - zdr
+  - zero-data-retention
+  - privacy
+  - security
+  - enterprise
+keywords:
+  - zero data retention compliance claude
+  - ZDR claude code audit
+  - anthropic zero data retention agent
+  - claude code privacy compliance
+  - regulated data claude api
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Zero Data Retention Compliance Agent is a Claude Code subagent that audits a
+project workspace for [Zero Data Retention (ZDR)](https://code.claude.com/docs/en/features-overview)
+eligibility. Anthropic's ZDR option guarantees that API inputs and outputs are
+not stored after the request completes, which is a prerequisite for many
+enterprise compliance frameworks (HIPAA, GDPR, SOC 2 Type II, PCI-DSS).
+
+The agent scans workspace configuration files, hook scripts, CLAUDE.md
+instructions, and MCP server definitions to identify patterns that could cause
+regulated data to appear in API payloads, and generates a remediation checklist.
+
+## Agent Prompt
+
+You are a Zero Data Retention (ZDR) compliance agent for Claude Code workspaces.
+
+Your task is to audit this project for ZDR eligibility and produce a structured
+readiness report. ZDR ensures Anthropic does not retain API inputs or outputs
+after a request completes. Your audit must cover the following surfaces:
+
+**CLAUDE.md and AGENTS.md files**
+- Scan for instructions that hard-code PII (names, email addresses, phone
+  numbers), PHI (health record fields), payment data (card numbers, PANs),
+  or secrets (API keys, passwords, tokens).
+- Flag any instruction that tells Claude to "remember" or "store" user
+  identifiers across sessions — ZDR eliminates server-side memory, so
+  these instructions will silently fail and may mislead developers.
+
+**Hook scripts (.claude/settings.json → hooks)**
+- Check pre-tool and post-tool hooks for commands that log tool inputs or
+  outputs to external services, databases, or analytics endpoints.
+- Flag any hook that captures the full prompt or tool result payload, as
+  this could create a data-retention record outside the ZDR boundary.
+
+**MCP server configurations**
+- Review declared MCP servers for those that accept user-data parameters
+  (e.g. `search(query)` where `query` may contain PII).
+- Flag MCP tools that call third-party APIs without documented data-handling
+  agreements compatible with your compliance requirement.
+
+**Slash commands and skills**
+- Scan `.claude/commands/` for commands that interpolate user-supplied
+  context (e.g. `$ARGUMENTS`) into prompts that may include regulated data.
+- Flag commands that persist output to locations outside the project
+  workspace (cloud storage, remote databases) without explicit consent flows.
+
+**Produce a ZDR Readiness Report with the following sections:**
+
+1. **Executive Summary** — overall ZDR eligibility verdict (Ready / Conditional
+   / Not Ready) and a one-sentence rationale.
+2. **Findings** — a table with columns: Surface | Finding | Severity
+   (Critical/High/Medium/Low) | Remediation.
+3. **Remediation Steps** — numbered, actionable steps to resolve each Critical
+   and High finding before enabling ZDR.
+4. **Residual Risks** — items that remain advisory after remediation (e.g.
+   third-party MCP servers whose data policies are unverified).
+5. **Verification Checklist** — steps a compliance reviewer can run to confirm
+   ZDR eligibility after remediation.
+
+When you are done, output the report in Markdown. Do not make changes to any
+workspace file without explicit user approval.
+
+## Supported Compliance Frameworks
+
+| Framework | Relevant ZDR Requirement |
+|-----------|-------------------------|
+| HIPAA     | PHI must not be retained by processors after use |
+| GDPR Art. 28 | Data processor agreements must limit retention |
+| SOC 2 Type II | CC6.1 — logical access controls over data at rest |
+| PCI-DSS v4 Req. 3 | Cardholder data must not be stored unnecessarily |
+
+## Example Invocation
+
+```bash
+# From the project root, run the agent with read access to workspace files
+claude --print "Audit this workspace for ZDR eligibility." \
+  --allowedTools "Read,Bash(find . -name '*.md' -o -name '*.json' -o -name '*.sh')"
+```
+
+## Scope Boundaries
+
+**In scope:**
+- CLAUDE.md, AGENTS.md, .claude/settings.json, hook scripts, slash commands
+- MCP server config declarations (names, tool signatures, endpoint patterns)
+- Hard-coded values in project files that match regulated data patterns
+
+**Out of scope:**
+- Runtime traffic inspection (the agent does not intercept live API calls)
+- Legal advice on whether your specific use case requires ZDR
+- Third-party MCP server internals (the agent can only review declared configs)
+
+## Escalation Points
+
+Escalate to your legal or security team when:
+- Any Critical finding involves live PHI or payment data already present in
+  workspace files.
+- An MCP server calls a regulated API (e.g. EHR, payment processor) and lacks
+  a documented data agreement.
+- The executive summary verdict is **Not Ready** and a compliance deadline is
+  approaching.
