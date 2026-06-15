@@ -1,0 +1,175 @@
+---
+title: ByteRay AI MCP Server for Claude
+slug: byteray-ai-mcp-server
+category: mcp
+description: >-
+  ByteRay AI hosted MCP server for AI-augmented binary vulnerability analysis,
+  exposing 40+ tools for loading binaries, tracing data flow, inspecting code,
+  and hunting zero-days over OAuth streamable HTTP.
+cardDescription: >-
+  Connect Claude to ByteRay AI to analyze binaries, trace taint, inspect assembly,
+  and review attack surfaces through https://mcp.byteray.ai/mcp.
+seoTitle: ByteRay AI MCP Server for Claude
+seoDescription: >-
+  Use the ByteRay AI MCP server with Claude for binary analysis, vulnerability
+  research, and zero-day hunting via OAuth at mcp.byteray.ai/mcp.
+author: ByteRay AI
+authorProfileUrl: "https://byteray.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 1486
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1486"
+documentationUrl: "https://byteray.ai"
+websiteUrl: "https://byteray.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http byteray https://mcp.byteray.ai/mcp
+usageSnippet: >-
+  Add https://mcp.byteray.ai/mcp as a remote HTTP connector, complete OAuth on
+  first use, then invoke binary analysis tools from Claude or another MCP client.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "byteray": {
+        "url": "https://mcp.byteray.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "byteray": {
+        "url": "https://mcp.byteray.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: advanced
+prerequisites:
+  - "ByteRay AI account access; the hosted server uses OAuth and may require an invite from hi@byteray.ai."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or another MCP client with remote HTTP transport."
+  - "Legal authorization to analyze the target binaries in your jurisdiction and under your organization's policy."
+  - "Understanding that binary uploads and analysis outputs may contain sensitive code or vulnerability details."
+safetyNotes:
+  - "Binary analysis tools can reveal exploit primitives; restrict outputs to authorized security reviewers."
+  - "Do not upload production firmware, customer binaries, or malware samples without explicit containment plans."
+  - "OAuth tokens grant access to hosted analysis; revoke access when offboarding researchers."
+  - "Treat discovered vulnerabilities under responsible disclosure rules before public discussion."
+privacyNotes:
+  - "Uploaded binaries and analysis artifacts are processed on ByteRay infrastructure under its own terms."
+  - "Hosted MCP traffic may include file hashes, function names, and decompiled snippets from your samples."
+  - "Do not paste OAuth tokens, session cookies, or invite codes into public chat logs or issue trackers."
+tags:
+  - binary-analysis
+  - security-research
+  - reverse-engineering
+  - vulnerability-research
+  - remote-mcp
+keywords:
+  - byteray ai mcp
+  - binary analysis claude
+  - zero-day hunting mcp
+  - mcp.byteray.ai
+  - ai.byteray byteray-mcp
+readingTime: 4
+difficultyScore: 55
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+ByteRay AI provides a hosted Model Context Protocol server registered as `ai.byteray/byteray-mcp` for AI-augmented binary vulnerability analysis. Security researchers can load binaries, navigate functions, inspect assembly or pseudocode, trace data flow, and map attack surfaces through natural language instead of manual RE tooling alone.
+
+The official registry entry lists streamable HTTP at `https://mcp.byteray.ai/mcp` with OAuth and SSO support. Access may require contacting `hi@byteray.ai` for an invite depending on your account tier.
+
+## Features
+
+- Load and navigate binaries with MCP tools for open, goto, and inspect operations.
+- Examine assembly, pseudocode, and control-flow graphs for targeted functions.
+- Trace taint and SSA-style data flow to follow untrusted input through code paths.
+- Review attack surface, sanitization, and vulnerability-oriented analysis helpers.
+- Utility tooling for hashes, strings, and supporting RE workflows.
+
+## Use Cases
+
+- Triage a suspicious firmware image before deeper manual reversing.
+- Trace user-controlled input through a native library during a product security review.
+- Compare two builds of a binary to spot newly introduced risky code paths.
+- Generate structured notes for a bug bounty or internal red-team engagement.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter `https://mcp.byteray.ai/mcp`.
+3. Complete OAuth when prompted on first tool use.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http byteray https://mcp.byteray.ai/mcp
+```
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "byteray": {
+      "url": "https://mcp.byteray.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+## Examples
+
+### Function inspection
+
+```text
+Load the attached ELF binary and show the pseudocode for the function that parses HTTP headers.
+```
+
+### Taint tracing
+
+```text
+Trace untrusted network input through the request handler and list any missing bounds checks.
+```
+
+## Security
+
+- Analyze only binaries you are authorized to test.
+- Keep exploit details inside your organization's disclosure workflow.
+- Prefer isolated analysis VMs when working with untrusted samples.
+
+## Troubleshooting
+
+### 401 unauthorized
+
+Complete OAuth sign-in or request access from ByteRay at hi@byteray.ai.
+
+### Connector unavailable
+
+Confirm your MCP client supports remote streamable HTTP transport and OAuth redirects.
+
+### Empty analysis results
+
+Verify the binary format is supported and the upload finished before invoking navigation tools.
+
+## Duplicate Check
+
+Checked `content/mcp`, generated catalog text, and open pull requests for ByteRay, binary analysis MCP servers, and `ai.byteray/byteray-mcp`. No existing entry documents this hosted ByteRay MCP connector.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by `kiannidev`. It is based on the official MCP registry listing for `ai.byteray/byteray-mcp`, the ByteRay website, and Google Search Central helpful-content guidance. No paid placement, referral link, affiliate link, or vendor sponsorship is used.
