@@ -3,21 +3,26 @@ title: Database Migration Runner - Hooks
 slug: database-migration-runner
 category: hooks
 description: >-
-  Automated database migration management with rollback capabilities,
-  validation, and multi-environment support using Knex 3.x, Sequelize 6.x/7.x,
-  TypeORM 0.3.x, Django 5.x, and Rails 7.x.
+  PostToolUse hook that detects writes to migration, schema, and SQL files and
+  runs framework-appropriate status checks for Knex, Sequelize, TypeORM,
+  Django, and Rails projects, plus destructive-SQL warnings for raw SQL files.
 cardDescription: >-
-  Automated database migration management with rollback capabilities,
-  validation, and multi-environment support using Knex 3.x, Sequelize 6...
-seoTitle: Database Migration Runner - Hooks
+  PostToolUse hook for migration files — runs Knex status, suggests
+  Sequelize/TypeORM commands, checks Django/Rails, warns on DROP/TRUNCATE.
+seoTitle: Database Migration Status Hook — Knex, Django, Rails, TypeORM
 seoDescription: >-
-  Automated database migration management with rollback capabilities,
-  validation, and multi-environment support using Knex 3.x, Sequelize 6.x/7.x,
-  TypeORM 0.3....
+  Claude Code hook that fires on migration/schema/SQL file writes. Runs Knex
+  migrate:status, guides Sequelize and TypeORM checks, queries Django and Rails
+  migration state, and warns on destructive SQL.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
 documentationUrl: "https://knexjs.org/guide/migrations.html"
+retrievalSources:
+  - "https://knexjs.org/guide/migrations.html"
+  - "https://sequelize.org/docs/v6/other-topics/migrations/"
+  - "https://docs.djangoproject.com/en/5.0/topics/migrations/"
+  - "https://guides.rubyonrails.org/active_record_migrations.html"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/database-migration-runner.sh &&
@@ -87,21 +92,19 @@ robotsFollow: true
 
 ## Features
 
-- Automated database migration detection and execution with intelligent framework detection (Knex 3.x, Sequelize 6.x/7.x, TypeORM 0.3.x, Django 5.x, Rails 7.x)
-- Support for multiple database systems (PostgreSQL, MySQL, SQLite, SQL Server) across all major migration frameworks with automatic database type detection
-- Safe rollback capabilities with validation and transaction support ensuring migrations can be safely reverted when needed
-- Migration file integrity checking with checksums and validation preventing corrupted or incomplete migrations from executing
-- Environment-specific migration configurations for development, staging, and production with separate migration paths
-- CI/CD pipeline integration with automated migration execution and status reporting for deployment workflows
-- Destructive operation detection warning about DROP/DELETE/TRUNCATE statements with recommendations for safe migration practices
-- Migration best practices reminders including backup recommendations, testing guidelines, and reversible migration patterns
+- **Framework detection**: Identifies Knex, Sequelize, and TypeORM projects via `package.json`; Django via `manage.py`; and Rails via `Gemfile`, then runs the appropriate status command.
+- **Knex migration status**: Runs `npx knex migrate:status` and flags any pending migrations with a prompt to apply them via `knex migrate:latest`.
+- **Sequelize and TypeORM guidance**: Prints the relevant CLI command (`npx sequelize-cli db:migrate:status` or `npx typeorm migration:show`) without executing it automatically.
+- **Django and Rails status**: Runs `python manage.py showmigrations --plan | tail -5` or `bundle exec rails db:migrate:status | tail -5` to show recent migration state.
+- **Destructive SQL detection**: Scans `.sql` files for `DROP`, `DELETE`, and `TRUNCATE` and emits a warning recommending a database backup.
+- **Best-practice reminders**: Prints backup, staging-first, reversibility, and transaction-use notes to stderr on every migration file write.
 
 ## Use Cases
 
-- Automated database schema evolution in development workflows detecting and validating migrations as they are created
-- CI/CD pipeline integration for deployment migrations automatically running migrations during deployment processes
-- Multi-environment database synchronization ensuring consistent schema across development, staging, and production environments
-- Migration validation and rollback safety checking migration files for potential issues before execution
+- Reviewing pending Knex migrations immediately after writing a new migration file without switching terminal context.
+- Getting the correct CLI command for Sequelize or TypeORM status checks during active development.
+- Catching dangerous `DROP`/`DELETE`/`TRUNCATE` statements in raw SQL migrations before they reach a database.
+- Quick Django and Rails migration state summary without leaving the Claude Code session.
 - Database versioning and change tracking maintaining a complete history of database schema changes
 - Development workflow optimization providing immediate feedback on migration files and framework-specific guidance
 
