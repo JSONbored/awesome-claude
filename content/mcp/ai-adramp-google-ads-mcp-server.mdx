@@ -1,0 +1,198 @@
+---
+title: AdRamp Google Ads MCP Server for Claude
+slug: ai-adramp-google-ads-mcp-server
+category: mcp
+description: >-
+  Free hosted AdRamp MCP server for read-only Google Ads performance analysis—campaigns, keywords, search terms, and account metrics—via OAuth over streamable HTTP.
+cardDescription: >-
+  Connect Claude to AdRamp for read-only Google Ads insights—ROAS, keyword waste, and spend trends—through a free hosted MCP connector.
+seoTitle: AdRamp Google Ads MCP Server for Claude
+seoDescription: >-
+  Use the AdRamp Google Ads MCP server with Claude to query campaign performance, keyword insights, and budget trends via OAuth on https://mcp.adramp.ai.
+author: AdRamp
+authorProfileUrl: "https://adramp.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1458
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1458"
+repoUrl: "https://github.com/stylemi-co/adramp"
+documentationUrl: "https://adramp.ai/mcp"
+websiteUrl: "https://adramp.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http adramp https://mcp.adramp.ai
+usageSnippet: >-
+  Add https://mcp.adramp.ai as a custom connector; on first use complete Google OAuth for read-only Google Ads access.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "adramp": {
+        "url": "https://mcp.adramp.ai",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "adramp": {
+        "url": "https://mcp.adramp.ai/sse",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Google Ads account with reporting access for the customer IDs you want to analyse."
+  - "Claude Pro or another MCP client with custom remote connectors and OAuth support."
+  - "Understanding that the public MCP server is read-only and cannot modify campaigns."
+  - "Awareness of Google Ads reporting latency (typically 4–6 hours for many metrics)."
+safetyNotes:
+  - "The hosted MCP server is read-only and cannot pause campaigns or change budgets."
+  - "OAuth grants read access until revoked from your Google account security settings."
+  - "Performance data returned in chat may include spend and conversion figures—handle as confidential."
+  - "Do not treat MCP summaries as sole input for automated bidding without independent verification."
+privacyNotes:
+  - "Campaign names, keywords, search terms, and metrics are fetched live from Google Ads via AdRamp."
+  - "AdRamp states it does not store Google Ads data on its servers during MCP queries."
+  - "Revoke OAuth access in Google Account settings when offboarding a connector."
+tags:
+  - google-ads
+  - advertising
+  - analytics
+  - remote-mcp
+  - oauth
+keywords:
+  - adramp mcp
+  - google ads claude
+  - google ads mcp server
+  - mcp.adramp.ai
+  - performance marketing mcp
+readingTime: 4
+difficultyScore: 25
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+AdRamp publishes a free, public Model Context Protocol server that connects AI assistants to Google Ads reporting data. After a one-time Google OAuth authorisation, Claude and other MCP clients can ask plain-English questions about ROAS, keyword performance, search terms, and daily spend without switching dashboards.
+
+Documentation and setup steps are at [adramp.ai/mcp](https://adramp.ai/mcp). The registry lists the server as `ai.adramp/google-ads` at `https://mcp.adramp.ai`.
+
+## Features
+
+- Read-only Google Ads account, campaign, ad group, and keyword insights.
+- Search term analysis for wasteful spend discovery.
+- Side-by-side period comparisons and daily spend breakdowns.
+- OAuth authentication with no API keys or usage caps on the public server.
+- Streamable HTTP transport compatible with Claude, Cursor, and VS Code.
+
+## Use Cases
+
+- Ask for ROAS across all campaigns for the current month.
+- Compare last 7 days versus the previous 7 days for top campaigns.
+- Find search terms that spend but do not convert.
+- Identify campaigns overspending relative to conversion rate.
+- Summarise daily spend for the past 30 days before a budget meeting.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Open **Settings → Connectors → Add custom connector** in Claude.
+2. Name the connector AdRamp and paste `https://mcp.adramp.ai`.
+3. Click **Connect** and complete Google OAuth for read-only Ads access.
+4. Start a new chat and ask performance questions in plain English.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http adramp https://mcp.adramp.ai
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "adramp": {
+      "url": "https://mcp.adramp.ai",
+      "type": "http"
+    }
+  }
+}
+```
+
+For authenticated setups:
+
+```json
+{
+  "mcpServers": {
+    "adramp": {
+      "url": "https://mcp.adramp.ai/sse",
+      "type": "http"
+    }
+  }
+}
+```
+
+Some clients accept the legacy SSE alias at `https://mcp.adramp.ai/sse`; prefer the root streamable HTTP URL when supported.
+
+## Examples
+
+### ROAS check
+
+```text
+What's my ROAS across all campaigns this month?
+```
+
+### Keyword waste
+
+```text
+Find search terms that are spending but not converting.
+```
+
+### Spend trend
+
+```text
+Show me daily spend breakdown for the past 30 days.
+```
+
+## Security
+
+- Read-only OAuth cannot mutate campaigns, but still exposes sensitive performance data.
+- Revoke AdRamp OAuth access when removing the connector.
+- Use separate Google accounts or MCC views when testing to avoid leaking client data.
+
+## Troubleshooting
+
+### OAuth loop fails
+
+Ensure pop-ups are allowed and you grant read access to the intended Google Ads account.
+
+### No data returned
+
+Verify the account has recent spend and remember reporting latency of several hours.
+
+### Cursor SSE errors
+
+Try the `/sse` URL alias if your client does not yet support streamable HTTP at the root path.
+
+### Stale metrics
+
+Google Ads API reporting may lag; confirm date ranges and account time zone.
+
+## Duplicate Check
+
+No existing AdRamp or `mcp.adramp.ai` entry was found in `content/mcp/`. This entry differs from Google's official Google Ads MCP packages because AdRamp is a free hosted read-only connector with OAuth rather than a self-hosted API key integration.
