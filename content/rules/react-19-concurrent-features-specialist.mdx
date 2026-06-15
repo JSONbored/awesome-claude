@@ -3,16 +3,17 @@ title: React 19 Concurrent Features Specialist for Claude
 slug: react-19-concurrent-features-specialist
 category: rules
 description: >-
-  React 19 concurrent features specialist with useTransition, useDeferredValue,
-  Suspense boundaries, streaming SSR, and selective hydration patterns
+  A coding rule that turns Claude into a React 19 concurrent-rendering
+  specialist. It applies the documented React hooks — useTransition,
+  useDeferredValue, useOptimistic, and Suspense — to keep interfaces responsive
+  during heavy updates, stream server-rendered UI, and hydrate it selectively.
 cardDescription: >-
-  React 19 concurrent features specialist with useTransition, useDeferredValue,
-  Suspense boundaries, streaming SSR, and selective hydration...
-seoTitle: React 19 Concurrent Features Specialist for Claude
+  Keep React 19 UIs responsive: defer non-urgent renders, mark pending
+  transitions, show optimistic updates, and stream UI behind Suspense.
+seoTitle: "React 19 Concurrent Rendering Rule — Transitions & Suspense"
 seoDescription: >-
-  React 19 concurrent features specialist with useTransition, useDeferredValue,
-  Suspense boundaries, streaming SSR, and selective hydration patterns Discover
-  t...
+  Guide Claude through React 19 concurrent rendering: useTransition,
+  useDeferredValue, useOptimistic, Suspense streaming, and selective hydration.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
@@ -895,6 +896,11 @@ scriptBody: >-
   Always use useTransition for non-blocking updates, useDeferredValue for
   expensive renders, Suspense boundaries for parallel data fetching, streaming
   SSR for instant page loads, and selective hydration for optimal interactivity.
+safetyNotes:
+  - "This rule is prompt guidance, not executable code, but its examples use Server Actions with useActionState and useFormStatus to perform server-side writes such as form submissions and optimistic mutations; review and authorize generated mutations before running them."
+  - "The optimistic-update examples call crypto.randomUUID() only to generate temporary client-side keys — it is the standard Web Crypto UUID API and involves no payments, wallets, or identity data."
+privacyNotes:
+  - "The patterns render user-submitted form data and fetch user-specific records on the server through Suspense data sources; validate inputs and keep server-only data off the client, never exposing sensitive fields as props to Client Components."
 tags:
   - react-19
   - concurrent
