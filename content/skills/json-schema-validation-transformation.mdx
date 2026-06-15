@@ -2,10 +2,10 @@
 title: JSON Schema Validate + Transform Skill
 slug: json-schema-validation-transformation
 category: skills
-description: "Validate JSON data against JSON Schema specifications (draft-07, 2019-09, 2020-12) and perform safe, lossless schema migrations and transformations using Ajv (fastest JSON Schema validator) and Zod (TypeScript-first validation)."
-cardDescription: "Validate JSON data against JSON Schema specifications (draft-07, 2019-09, 2020-12) and perform safe, lossless schema migrations and trans..."
-seoTitle: JSON Schema Validate + Transform Skill
-seoDescription: "Validate JSON data against JSON Schema specifications (draft-07, 2019-09, 2020-12) and perform safe, lossless schema migrations and transformations using Ajv..."
+description: "Validate JSON against Ajv-compiled schemas (draft-07, 2019-09, 2020-12) with errors reported by JSON path, then coerce types, apply defaults, migrate documents across schema versions, and generate TypeScript types from the same definitions."
+cardDescription: "Compile Ajv validators for JSON Schema draft-07/2019-09/2020-12, report errors by path, coerce, migrate, and emit TypeScript types."
+seoTitle: "Ajv JSON Schema: Validate, Migrate & Generate TS Types"
+seoDescription: "Validate JSON with Ajv-compiled schemas (draft-07, 2019-09, 2020-12), get path-keyed errors, coerce and default values, then emit TypeScript types."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-15"
@@ -45,6 +45,11 @@ prerequisites:
   - "json-schema-to-typescript (optional, for type generation)"
   - "File system read/write access for JSON schema files, data files, and generated TypeScript type definitions"
   - "JSON Schema specification knowledge or reference documentation for creating valid schemas (draft-07, 2019-09, or 2020-12)"
+safetyNotes:
+  - "This skill installs npm packages (ajv, zod, json-schema-to-typescript) and reads and writes local files — JSON schemas, data, migration output, and generated TypeScript definitions."
+  - "Type coercion and default-filling mutate the input data, and migration scripts overwrite documents; keep backups and validate each step, as the skill's troubleshooting notes recommend."
+privacyNotes:
+  - "Validation, transformation, and migration process your JSON data and schema files locally; nothing leaves the machine beyond the npm package downloads from the registry."
 tags:
   - json
   - schema
