@@ -36,16 +36,20 @@ jobs:
 
       - name: Collect changed entry URLs (live only)
         id: urls
+        env:
+          # Passed via env (not inlined into the shell) to avoid script injection.
+          BEFORE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          base="${{ github.event.before }}"
+          base="$BEFORE_SHA"
           if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
             base="HEAD~1"
           fi
 
           # Added or modified content entries (deletes are skipped — we don't
           # ping URLs that no longer exist).
-          changed="$(git diff --name-only --diff-filter=AM "$base" "${{ github.sha }}" -- 'content/**/*.mdx' || true)"
+          changed="$(git diff --name-only --diff-filter=AM "$base" "$HEAD_SHA" -- 'content/**/*.mdx' || true)"
 
           : > indexnow-urls.txt
           while IFS= read -r file; do
