@@ -108,9 +108,17 @@ async function renderSitemap() {
     }
   }
 
+  // Published Weekly Brief archive issues (fail-open: empty in dev/preview or
+  // before the first brief is approved).
+  const { listPublishedBriefs } = await import("@/lib/brief-issues.server");
+  const briefPaths = (await listPublishedBriefs(100)).map((issue) =>
+    urlItem(`/brief/${issue.number}`, "0.5", "monthly", issue.period_through),
+  );
+
   const rows = [
     ...staticPaths.map((pathname) => urlItem(pathname, pathname === "" ? "1" : "0.7")),
     ...feedPaths.map((pathname) => urlItem(pathname, "0.4")),
+    ...briefPaths,
     // `tools` has no /$category hub — its URL is the static commercial /tools page,
     // already emitted in staticPaths above. Exclude it here to avoid a duplicate.
     ...CATEGORIES.filter((category) => category.id !== "tools").map((category) =>

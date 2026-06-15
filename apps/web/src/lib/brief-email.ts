@@ -1,12 +1,25 @@
 // Renders a persisted Weekly Brief (buildWeeklyBrief payload) into newsletter
 // HTML/text. Used both for the maintainer review-preview (with an approve
-// button) and the audience send (no button).
+// button) and the audience send (no button). Table-based, inline-styled for
+// email-client robustness.
 
 type BriefItem = {
   title?: string;
   url?: string;
   description?: string;
+  category?: string;
+  dateAdded?: string;
   reasons?: string[];
+  sourceUrls?: string[];
+  safetyNotesCount?: number;
+  privacyNotesCount?: number;
+  packageVerified?: boolean;
+};
+
+type BriefSection = {
+  key: "newEntries" | "sourceBacked" | "saferInstalls";
+  label: string;
+  intro: string;
 };
 
 type BriefPayload = {
@@ -16,14 +29,37 @@ type BriefPayload = {
     newEntryCount?: number;
     sourceBackedCount?: number;
     saferInstallCount?: number;
-    notableChangeCount?: number;
   };
-  sections?: {
-    newEntries?: BriefItem[];
-    sourceBacked?: BriefItem[];
-    saferInstalls?: BriefItem[];
-    notableChanges?: BriefItem[];
-  };
+  sections?: Record<string, BriefItem[] | undefined>;
+};
+
+const SECTIONS: BriefSection[] = [
+  { key: "newEntries", label: "New this week", intro: "Fresh additions to the registry." },
+  {
+    key: "sourceBacked",
+    label: "Source-backed picks",
+    intro: "Backed by primary documentation or upstream source.",
+  },
+  {
+    key: "saferInstalls",
+    label: "Safer installs",
+    intro: "Source-backed, with a clear and reviewable install path.",
+  },
+];
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+const CATEGORY_LABELS: Record<string, string> = {
+  mcp: "MCP server",
+  agents: "Agent",
+  skills: "Skill",
+  commands: "Command",
+  hooks: "Hook",
+  rules: "Rule",
+  statuslines: "Statusline",
+  guides: "Guide",
+  tools: "Tool",
+  collections: "Collection",
 };
 
 function escapeHtml(value: string): string {
@@ -39,30 +75,89 @@ function absolute(url: string, siteUrl: string): string {
   return url.startsWith("http") ? url : `${siteUrl}${url.startsWith("/") ? "" : "/"}${url}`;
 }
 
-function sectionHtml(label: string, items: BriefItem[] | undefined, siteUrl: string): string {
+function categoryLabel(category?: string): string {
+  if (!category) return "";
+  return CATEGORY_LABELS[category] ?? category.charAt(0).toUpperCase() + category.slice(1);
+}
+
+function shortDate(iso?: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso ?? ""));
+  if (!match) return "";
+  const month = MONTHS[Number(match[2]) - 1];
+  return month ? `${month} ${Number(match[3])}` : "";
+}
+
+function truncate(text: string, limit = 160): string {
+  const trimmed = text.trim();
+  if (trimmed.length <= limit) return trimmed;
+  return `${trimmed.slice(0, limit).replace(/\s+\S*$/, "")}…`;
+}
+
+function itemBadges(item: BriefItem): string[] {
+  const badges: string[] = [];
+  if ((item.sourceUrls?.length ?? 0) > 0) badges.push("source-backed");
+  if (item.packageVerified) badges.push("verified package");
+  if ((item.safetyNotesCount ?? 0) > 0) badges.push("safety notes");
+  const date = shortDate(item.dateAdded);
+  if (date) badges.push(`added ${date}`);
+  return badges;
+}
+
+function cardHtml(item: BriefItem, siteUrl: string): string {
+  const href = escapeHtml(absolute(String(item.url ?? ""), siteUrl));
+  const title = escapeHtml(String(item.title ?? ""));
+  const cat = escapeHtml(categoryLabel(item.category));
+  const desc = item.description ? escapeHtml(truncate(String(item.description))) : "";
+  const badges = itemBadges(item);
+
+  const catRow = cat
+    ? `<div style="font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:#a39e93;font-weight:700;">${cat}</div>`
+    : "";
+  const descRow = desc
+    ? `<p style="margin:6px 0 0;font-size:13px;line-height:1.5;color:#57534e;">${desc}</p>`
+    : "";
+  const metaRow = badges.length
+    ? `<div style="margin-top:9px;font-size:11px;color:#a39e93;">${escapeHtml(badges.join("  ·  "))}</div>`
+    : "";
+
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 10px;border:1px solid #e7e3d8;border-radius:10px;background:#ffffff;">
+    <tr><td style="padding:14px 16px;">
+      ${catRow}
+      <a href="${href}" style="display:inline-block;margin:3px 0 0;font-size:15px;font-weight:600;color:#171614;text-decoration:none;line-height:1.3;">${title}</a>
+      ${descRow}
+      ${metaRow}
+    </td></tr>
+  </table>`;
+}
+
+function sectionHtml(
+  section: BriefSection,
+  items: BriefItem[] | undefined,
+  siteUrl: string,
+): string {
+  const rows = (items ?? []).filter((item) => item?.title);
+  if (rows.length === 0) return "";
+  const cards = rows.map((item) => cardHtml(item, siteUrl)).join("");
+  return `<div style="margin:28px 0 12px;">
+      <div style="font-size:16px;font-weight:700;color:#171614;">${escapeHtml(section.label)}</div>
+      <div style="font-size:12px;color:#a39e93;margin-top:2px;">${escapeHtml(section.intro)}</div>
+    </div>${cards}`;
+}
+
+function sectionText(
+  section: BriefSection,
+  items: BriefItem[] | undefined,
+  siteUrl: string,
+): string {
   const rows = (items ?? []).filter((item) => item?.title);
   if (rows.length === 0) return "";
   const list = rows
     .map((item) => {
-      const href = escapeHtml(absolute(String(item.url ?? ""), siteUrl));
-      const title = escapeHtml(String(item.title ?? ""));
-      const reason = item.reasons?.[0] ?? item.description ?? "";
-      const sub = reason
-        ? `<div style="color:#6b675f;font-size:13px;margin-top:2px;">${escapeHtml(String(reason))}</div>`
-        : "";
-      return `<li style="margin:0 0 12px;"><a href="${href}" style="color:#171614;font-weight:600;text-decoration:none;">${title}</a>${sub}</li>`;
+      const desc = item.description ? `\n    ${truncate(String(item.description), 120)}` : "";
+      return `• ${item.title} [${categoryLabel(item.category)}]${desc}\n    ${absolute(String(item.url ?? ""), siteUrl)}`;
     })
-    .join("");
-  return `<h3 style="font-size:15px;color:#171614;margin:24px 0 10px;">${escapeHtml(label)}</h3><ul style="list-style:none;padding:0;margin:0;">${list}</ul>`;
-}
-
-function sectionText(label: string, items: BriefItem[] | undefined, siteUrl: string): string {
-  const rows = (items ?? []).filter((item) => item?.title);
-  if (rows.length === 0) return "";
-  const list = rows
-    .map((item) => `- ${item.title} — ${absolute(String(item.url ?? ""), siteUrl)}`)
     .join("\n");
-  return `\n${label}\n${list}\n`;
+  return `\n${section.label.toUpperCase()}\n${section.intro}\n${list}\n`;
 }
 
 export function buildBriefEmail(options: {
@@ -73,40 +168,48 @@ export function buildBriefEmail(options: {
 }): { subject: string; html: string; text: string } {
   const { brief, siteUrl, dateLabel, approveUrl } = options;
   const sections = brief.sections ?? {};
-  const title = brief.title ?? `Weekly Claude workflow brief — ${dateLabel}`;
+  const summary = brief.summary ?? {};
+  const dateLabelNice = shortDate(dateLabel) || dateLabel;
+  const title = `What shipped this week on HeyClaude`;
   const subject = approveUrl
-    ? `[Review] Weekly Brief draft — ${dateLabel}`
-    : `Weekly Brief — ${dateLabel}`;
+    ? `[Review] Weekly Brief — ${dateLabelNice}`
+    : `HeyClaude Weekly Brief — ${dateLabelNice}`;
+
+  const summaryLine = `${summary.newEntryCount ?? 0} new this week · ${summary.sourceBackedCount ?? 0} source-backed · ${summary.saferInstallCount ?? 0} safer installs`;
 
   const approveBlock = approveUrl
-    ? `<div style="background:#f0ede4;border:1px solid #e3dfd3;border-radius:10px;padding:16px;margin:0 0 24px;">
-        <div style="font-size:13px;color:#6b675f;margin-bottom:10px;">Draft for review — nothing is sent to the audience until you approve.</div>
-        <a href="${escapeHtml(approveUrl)}" style="display:inline-block;background:#171614;color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:10px 18px;border-radius:8px;">Approve &amp; schedule send →</a>
-      </div>`
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 26px;background:#f0ede4;border:1px solid #e3dfd3;border-radius:12px;">
+        <tr><td style="padding:18px;">
+          <div style="font-size:13px;color:#6b675f;margin-bottom:12px;">Draft for review — nothing is sent to the audience until you approve.</div>
+          <a href="${escapeHtml(approveUrl)}" style="display:inline-block;background:#171614;color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;padding:11px 20px;border-radius:8px;">Approve &amp; schedule send →</a>
+        </td></tr>
+      </table>`
     : "";
 
-  const body =
-    sectionHtml("New in the registry", sections.newEntries, siteUrl) +
-    sectionHtml("Source-backed picks", sections.sourceBacked, siteUrl) +
-    sectionHtml("Safer installs", sections.saferInstalls, siteUrl) +
-    sectionHtml("Notable changes", sections.notableChanges, siteUrl);
+  const body = SECTIONS.map((section) => sectionHtml(section, sections[section.key], siteUrl)).join(
+    "",
+  );
 
-  const html = `<!doctype html><html><body style="margin:0;background:#f7f5ef;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#171614;">
-    <div style="max-width:600px;margin:0 auto;padding:28px 22px;">
-      <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#6b675f;">HeyClaude Weekly Brief · ${escapeHtml(dateLabel)}</div>
-      <h1 style="font-size:22px;margin:6px 0 18px;">${escapeHtml(title)}</h1>
-      ${approveBlock}
-      ${body || '<p style="color:#6b675f;">No notable activity this week.</p>'}
-      <p style="margin-top:28px;font-size:12px;color:#9b968c;">Reviewed picks from <a href="${escapeHtml(siteUrl)}" style="color:#6b675f;">heyclau.de</a>. No hype, no listicle filler.</p>
-    </div></body></html>`;
+  const html = `<!doctype html><html><body style="margin:0;background:#f7f5ef;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#171614;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f5ef;"><tr><td align="center" style="padding:24px 14px;">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+        <tr><td>
+          <div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#a39e93;font-weight:600;">HeyClaude Weekly Brief · ${escapeHtml(dateLabelNice)}</div>
+          <h1 style="font-size:24px;line-height:1.25;margin:8px 0 6px;color:#171614;">${escapeHtml(title)}</h1>
+          <div style="font-size:13px;color:#8a857b;margin-bottom:22px;">${escapeHtml(summaryLine)}</div>
+          ${approveBlock}
+          ${body || '<p style="color:#6b675f;">No notable activity this week.</p>'}
+          <p style="margin-top:30px;padding-top:18px;border-top:1px solid #e7e3d8;font-size:12px;color:#a39e93;">Reviewed picks from <a href="${escapeHtml(siteUrl)}" style="color:#6b675f;">heyclau.de</a> — every entry is metadata-reviewed for source &amp; safety. No hype, no listicle filler.</p>
+        </td></tr>
+      </table>
+    </td></tr></table>
+  </body></html>`;
 
   const text =
-    `HeyClaude Weekly Brief — ${dateLabel}\n${title}\n` +
+    `HeyClaude Weekly Brief — ${dateLabelNice}\n${title}\n${summaryLine}\n` +
     (approveUrl ? `\nApprove & schedule: ${approveUrl}\n` : "") +
-    sectionText("New in the registry", sections.newEntries, siteUrl) +
-    sectionText("Source-backed picks", sections.sourceBacked, siteUrl) +
-    sectionText("Safer installs", sections.saferInstalls, siteUrl) +
-    sectionText("Notable changes", sections.notableChanges, siteUrl);
+    SECTIONS.map((section) => sectionText(section, sections[section.key], siteUrl)).join("") +
+    `\n— Reviewed picks from ${siteUrl}\n`;
 
   return { subject, html, text };
 }
