@@ -3,21 +3,28 @@ title: Agent Skills Installer for Claude Code
 slug: skills-installer
 category: commands
 description: >-
-  Install and manage Claude Code Agent Skills - specialized knowledge packages
-  that extend Claude's capabilities with domain expertise and progressive
-  disclosure
+  Slash command to install, list, and remove Claude Code Agent Skills —
+  domain-specific knowledge packages stored in .claude/skills/ that extend
+  Claude with framework or task expertise.
 cardDescription: >-
-  Install and manage Claude Code Agent Skills - specialized knowledge packages
-  that extend Claude's capabilities with domain expertise and...
-seoTitle: Agent Skills Installer for Claude Code
+  Slash command for Claude Code skills: install a skill package into
+  .claude/skills/, list installed skills, or remove one — domain-aware
+  Claude in one command.
+seoTitle: Claude Code Skills Installer — Install Domain Skill Packages
 seoDescription: >-
-  Install and manage Claude Code Agent Skills - specialized knowledge packages
-  that extend Claude's capabilities with domain expertise and progressive
-  disclosure
+  Install and manage domain skill packages for Claude Code. Adds specialized
+  expertise (framework knowledge, task patterns) to your agent via
+  .claude/skills/ files — run once and Claude picks it up.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
 documentationUrl: "https://docs.claude.com/en/docs/claude-code/skills"
+retrievalSources:
+  - "https://docs.claude.com/en/docs/claude-code/skills"
+safetyNotes:
+  - Installs skill packages as .md files in .claude/skills/; review installed skill content before use in production workflows.
+privacyNotes:
+  - Writes skill files to .claude/skills/ in the local project directory; no data is transmitted externally by the installer itself.
 installable: true
 installCommand: "/skills-installer [action] [skill-name]"
 usageSnippet: "/skills-installer [action] [skill-name]"
