@@ -1,0 +1,197 @@
+---
+title: Tandem Docs MCP Server for Claude
+slug: ac-tandem-docs-mcp-mcp-server
+category: mcp
+description: >-
+  Public streamable HTTP MCP server for Tandem documentation—install guides,
+  SDK references, workflow docs, headless deployment, and docs-grounded setup
+  help for the Tandem governed runtime.
+cardDescription: >-
+  Connect Claude to Tandem Docs MCP for live search, page fetch, learning
+  guides, and how-to answers over the published Tandem docs index.
+seoTitle: Tandem Docs MCP Server for Claude
+seoDescription: >-
+  Use the ac.tandem/docs-mcp remote MCP server with Claude to search Tandem
+  docs, fetch SDK pages, recommend next reads, and answer install questions via
+  https://tandem.ac/mcp.
+author: Frumu AI
+authorProfileUrl: "https://github.com/frumu-ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1453
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1453"
+repoUrl: "https://github.com/frumu-ai/tandem"
+documentationUrl: "https://tandem.ac/docs-mcp"
+websiteUrl: "https://tandem.ac"
+installable: true
+installCommand: >-
+  claude mcp add --transport http tandem-docs https://tandem.ac/mcp
+usageSnippet: >-
+  Add https://tandem.ac/mcp as a remote HTTP connector; no auth is required for
+  the public docs server. Ask Claude to search Tandem docs before installing the
+  engine or wiring SDKs.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "tandem-docs": {
+        "url": "https://tandem.ac/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "tandem-docs": {
+        "url": "https://tandem.ac/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Pro, Team, or Enterprise with Connectors support, or Claude Code with HTTP MCP transport."
+  - "Internet access to reach the public Tandem endpoint at tandem.ac."
+  - "No account or API key required for the public docs MCP server."
+  - "Optional local Tandem engine install if you plan to act on docs guidance beyond read-only setup help."
+safetyNotes:
+  - "Makes outbound HTTPS requests to tandem.ac and published Tandem documentation sources."
+  - "Cache-management tools such as invalidate_docs_cache and warmup_docs_cache can affect server-side docs cache state."
+  - "Docs answers are informational; verify runtime behavior against your installed Tandem version before production changes."
+  - "Do not treat documentation guidance as a substitute for your own security review of governed agent workflows."
+privacyNotes:
+  - "Search queries, doc paths, and how-to tasks you send are processed by the Tandem docs MCP service."
+  - "The public docs server does not require credentials; avoid pasting secrets into doc search prompts."
+  - "Fetched documentation may reference tenant, approval, or connector patterns that do not apply to your deployment mode."
+tags:
+  - documentation
+  - agent-runtime
+  - governance
+  - remote-mcp
+  - setup
+keywords:
+  - tandem docs mcp
+  - ac.tandem docs-mcp
+  - tandem.ac mcp
+  - tandem install claude
+  - governed runtime docs
+readingTime: 4
+difficultyScore: 20
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Tandem Docs MCP (`ac.tandem/docs-mcp`) is a public remote Model Context Protocol server that exposes published Tandem documentation to MCP clients. It helps agents and operators find install guides, SDK references, workflow docs, and headless deployment guidance for the Tandem governed runtime without guessing URLs.
+
+Source and runtime context live in [frumu-ai/tandem](https://github.com/frumu-ai/tandem). Connection docs and manifest metadata are at [tandem.ac/docs-mcp](https://tandem.ac/docs-mcp).
+
+## Features
+
+- Search the published Tandem docs index with audience and version hints.
+- Fetch and normalize individual docs pages by path or URL.
+- Recommend starting paths for desktop users, server admins, and developers.
+- Suggest next docs to read after a current page, optionally biased toward a goal.
+- Answer how-to questions by synthesizing relevant published docs.
+- Return structured learning guides for install-engine, Python SDK, TypeScript SDK, workflows, and headless deploy.
+- Inspect, refresh, warm, invalidate, and compare docs cache state for freshness checks.
+
+Validated tools on the live endpoint include `search_docs`, `get_doc`, `get_start_path`, `recommend_next_docs`, `answer_how_to`, `get_tandem_guide`, `warmup_docs_cache`, `get_docs_cache_status`, `refresh_docs_index`, `refresh_doc_page`, `invalidate_docs_cache`, `compare_docs_index_refresh`, and `compare_doc_page_refresh`.
+
+## Use Cases
+
+- Ask Claude how to install the Tandem engine locally or headlessly before editing config.
+- Pull the Python or TypeScript SDK docs path when wiring automations.
+- Get a guided next-read list after finishing the Tandem quickstart.
+- Verify docs freshness with cache status tools before trusting agent answers.
+- Help an external agent configure Tandem MCP connectors using published authority-layer guidance.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Open **Settings → Connectors** and add a custom remote MCP server.
+2. Enter the MCP URL: `https://tandem.ac/mcp`.
+3. Enable the connector; no API key is required for the public docs server.
+4. Run a small docs search to confirm connectivity.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http tandem-docs https://tandem.ac/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add a remote streamable HTTP connector pointing at the Tandem docs endpoint. Discovery manifest: `https://tandem.ac/.well-known/mcp/server.json`.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "tandem-docs": {
+      "url": "https://tandem.ac/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+The public docs MCP server requires no authentication headers.
+
+## Examples
+
+### Install guidance
+
+```text
+Use Tandem Docs MCP to find the best starting docs path for a developer installing the headless engine.
+```
+
+### SDK lookup
+
+```text
+Search Tandem docs for Python SDK workflow examples and fetch the most relevant page.
+```
+
+### Freshness check
+
+```text
+Check the Tandem docs cache status, then refresh the install-engine guide if needed.
+```
+
+## Security
+
+- Docs MCP is read-oriented, but cache-management tools can change server-side cache state.
+- Treat returned documentation as guidance, not an authorization decision for production agent actions.
+- Avoid submitting internal URLs, credentials, or customer data in doc search queries.
+
+## Troubleshooting
+
+### Connector timeout
+
+Retry after a few seconds; the remote service may be cold-starting or refreshing its docs index.
+
+### Stale answers
+
+Use `get_docs_cache_status`, `refresh_docs_index`, or `refresh_doc_page` before relying on older cached content.
+
+### Version mismatch
+
+Pass an `engine_version` hint or a specific `docs_ref` when your installed Tandem version differs from stable docs.
+
+### Unknown doc path
+
+Start with `search_docs` or `get_start_path` instead of guessing paths manually.
+
+## Duplicate Check
+
+No existing Tandem Docs MCP or `ac.tandem/docs-mcp` entry was found in `content/mcp/`. This differs from generic documentation MCP servers because it targets Tandem's governed runtime docs—authority projection, approvals, memory, MCP connectors, and audit evidence—not general web search.
