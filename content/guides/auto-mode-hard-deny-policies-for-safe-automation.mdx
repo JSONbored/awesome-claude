@@ -1,0 +1,191 @@
+---
+title: Auto Mode Hard-Deny Policies For Safe Automation
+slug: auto-mode-hard-deny-policies-for-safe-automation
+category: guides
+description: >-
+  Configure Claude Code auto mode hard-deny rules that block high-risk actions
+  unconditionally, complement soft-deny prompts and team permission policy.
+cardDescription: Set autoMode.hard_deny rules to block risky actions in auto mode.
+seoTitle: Auto Mode Hard-Deny Policies For Safe Automation
+seoDescription: >-
+  Configure Claude Code settings.autoMode.hard_deny rules, understand classifier
+  behavior, and roll out safe auto mode automation without silent bypasses.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1379
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1379"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Add settings.autoMode.hard_deny rules for destructive shell, credential, and
+  exfiltration patterns, test them in a pilot repo, and document how hard denies
+  differ from soft denies and permission prompts.
+prerequisites:
+  - Claude Code with auto mode available on your provider and organization policy.
+  - Permission to edit project or managed settings.json for the target repositories.
+  - A list of actions that must never run without explicit human approval.
+  - Pilot engineers who can trigger both allowed and blocked auto mode actions safely.
+safetyNotes:
+  - Hard-deny rules block regardless of user intent or allow exceptions—misconfiguration can halt legitimate workflows.
+  - Auto mode classifiers can still fail open with evaluation errors; hard deny is not a substitute for branch protection and CI gates.
+  - Do not rely on auto mode alone for secrets handling; deny credential reads and outbound bulk transfers explicitly.
+privacyNotes:
+  - Auto mode classifiers evaluate tool names, arguments, and session context that may include file paths and repository metadata.
+  - Denial messages and debug logs can retain snippets of blocked commands; restrict log access on shared machines.
+  - Managed settings sync may expose rule text to all enrolled clients—avoid embedding internal codenames you do not want widely visible.
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/auto-mode-config"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/permissions"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - auto-mode
+  - permissions
+  - security
+  - automation
+  - governance
+keywords:
+  - Claude Code auto mode hard deny
+  - settings autoMode hard_deny
+  - auto mode safety classifier
+  - Claude Code automation policy
+  - auto mode permissions
+readingTime: 8
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Auto mode lets Claude act with less friction, but some actions should never
+run unattended. Use `settings.autoMode.hard_deny` for classifier rules that
+block unconditionally—regardless of stated user intent or softer allow paths.
+Pair hard denies with documented soft denies, normal permission rules, and human
+review for production changes.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Auto mode enabled", "description": "Organization policy and provider support allow auto mode on pilot repos"}
+- [ ] {"task": "Risk inventory done", "description": "Destructive shell, secret access, and bulk exfiltration patterns are listed"}
+- [ ] {"task": "Settings path chosen", "description": "Project or managed settings.json is the source of truth"}
+- [ ] {"task": "Pilot owners assigned", "description": "Engineers can test blocks without touching production secrets"}
+- [ ] {"task": "Escalation documented", "description": "Teams know how to request temporary exceptions through security review"}
+
+## Core Concepts Explained
+
+### Hard deny vs soft deny
+
+`autoMode.soft_deny` surfaces friction or prompts where context matters.
+`autoMode.hard_deny` blocks matching actions even when the user or skill argues
+they should proceed—use it for non-negotiable risks.
+
+### Classifier complements permissions
+
+Enterprise `permissions.deny` and managed MCP policies still matter. Auto mode
+rules add a safety layer for autonomous sessions, especially when bypass-style
+modes are unavailable.
+
+### Defaults can be extended
+
+You can include `"$defaults"` in `autoMode.allow`, `autoMode.soft_deny`, or
+`autoMode.environment` to append custom rules without replacing Anthropic's
+built-in lists.
+
+### Evaluation failures need a playbook
+
+When the classifier cannot evaluate an action, sessions may stall. Document
+retry, `/compact`, or `--debug` steps from official release notes rather than
+disabling auto mode globally.
+
+## Step-by-Step Implementation Guide
+
+1. **Inventory non-negotiable blocks.** List commands and tools that must never
+   run in auto mode: credential harvesting, `rm -rf /`, force pushes, arbitrary
+   outbound uploads, and production database mutations.
+
+2. **Draft hard_deny rules.** Add entries under `settings.autoMode.hard_deny` in
+   project settings for the pilot repository. Start narrow—one pattern per real
+   incident or tabletop scenario.
+
+3. **Preserve defaults where needed.** If you customize allow or soft_deny lists,
+   include `"$defaults"` so you extend rather than accidentally remove built-in
+   protections.
+
+4. **Run positive and negative tests.** Confirm safe refactors still proceed while
+   tabletop risky prompts are blocked with clear denial messaging.
+
+5. **Align with permissions.deny.** Ensure hard denies and static deny rules do
+   not contradict each other; prefer managed settings for org-wide rollout.
+
+6. **Publish escalation policy.** Define how engineers request reviewed exceptions
+   and who approves changes to managed hard_deny lists.
+
+7. **Monitor after upgrades.** Re-test after Claude Code updates—classifier
+   latency, provider support, and default lists change over time.
+
+## Rollout Checklist
+
+- [ ] {"task": "Pilot rules merged", "description": "hard_deny JSON is reviewed and committed to settings"}
+- [ ] {"task": "Tests recorded", "description": "Blocked and allowed scenarios are documented with transcripts"}
+- [ ] {"task": "Docs updated", "description": "Team runbook explains hard vs soft deny and escalation"}
+- [ ] {"task": "Managed sync planned", "description": "Org-wide rollout uses managed settings, not ad-hoc copies"}
+- [ ] {"task": "CI unchanged", "description": "Branch protection and security CI remain authoritative"}
+
+## Troubleshooting
+
+### Legitimate work blocked repeatedly
+
+Move borderline patterns from hard_deny to soft_deny or explicit permission asks
+after security review—hard deny should stay rare.
+
+### "Could not evaluate this action" errors
+
+Follow release-note guidance: retry, compact context, or rerun with debug logging
+before weakening rules.
+
+### Bedrock or Vertex missing auto mode
+
+Some providers require `CLAUDE_CODE_ENABLE_AUTO_MODE=1`; hard_deny rules only
+apply once auto mode is actually available.
+
+### Rules differ across teammates
+
+Confirm everyone syncs the same managed settings file; local-only edits drift.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README and
+`CHANGELOG.md` on **2026-06-13**:
+
+- `CHANGELOG.md` documents `settings.autoMode.hard_deny` for auto mode classifier
+  rules that block unconditionally regardless of user intent or allow exceptions.
+- `CHANGELOG.md` notes auto mode support on Bedrock, Vertex, and Foundry with
+  `CLAUDE_CODE_ENABLE_AUTO_MODE=1` opt-in for eligible Opus models.
+- `CHANGELOG.md` documents including `"$defaults"` in `autoMode.allow`,
+  `autoMode.soft_deny`, or `autoMode.environment` to extend built-in lists.
+- `CHANGELOG.md` records classifier improvements for data exfiltration detection
+  and fixes for false blocks when evaluation runs out of output tokens.
+- The root README points to GitHub issues at `anthropics/claude-code` for
+  integration feedback on settings behavior.
+
+## Duplicate Check
+
+This guide complements permission-design guides and managed MCP allowlist entries.
+Those cover static permission modes and MCP governance. This guide focuses on
+auto mode classifier hard-deny configuration for unattended automation.
+
+## References
+
+- Auto mode configuration - https://code.claude.com/docs/en/auto-mode-config
+- Claude Code settings - https://code.claude.com/docs/en/settings
+- Claude Code permissions - https://code.claude.com/docs/en/permissions
+- Managed MCP allowlists - managed-mcp-allowlists-for-enterprise-claude-code
