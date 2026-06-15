@@ -2,10 +2,10 @@
 title: V0 Rapid UI Prototyping Workflow Skill
 slug: v0-rapid-prototyping
 category: skills
-description: "Build production-ready React components and full pages in minutes using V0.dev AI with shadcn/ui, TailwindCSS v4, and Next.js 15 integration. V0.dev is Vercel's breakthrough AI UI generator that has transformed frontend development in 2025."
-cardDescription: "Build production-ready React components and full pages in minutes using V0.dev AI with shadcn/ui, TailwindCSS v4, and Next.js 15 integrat..."
-seoTitle: V0 Rapid UI Prototyping Workflow Skill
-seoDescription: "Build production-ready React components and full pages in minutes using V0.dev AI with shadcn/ui, TailwindCSS v4, and Next.js 15 integration. V0.dev is Verce..."
+description: "Generate React UI with v0 (Vercel): produce shadcn/ui and Tailwind CSS components and full Next.js pages from prompts, then refine and add them to your app with the shadcn CLI."
+cardDescription: "Turn prompts and screenshots into React components, iterate in v0, then pull the result into your codebase."
+seoTitle: v0 React UI Generation Workflow Skill
+seoDescription: "v0 skill: prompt-driven shadcn/ui components, page layouts, TypeScript output, and Next.js App Router compatibility, added via the shadcn CLI."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
@@ -14,6 +14,11 @@ downloadUrl: /downloads/skills/v0-rapid-prototyping.zip
 installable: true
 installCommand: npx shadcn-ui@latest init
 usageSnippet: npx shadcn-ui@latest init
+safetyNotes:
+  - "`npx shadcn-ui@latest init` writes config and component files into your project; run it in a repo under version control and review the changes."
+  - "Generated UI code is a starting point, not production-verified; review accessibility, validation, and security before shipping."
+privacyNotes:
+  - "v0 is a hosted Vercel service; the prompts and any context you send to generate UI are processed by Vercel under their terms."
 copySnippet: |-
   'use client';
 
@@ -128,7 +133,7 @@ robotsFollow: true
 
 ## What This Skill Enables
 
-Claude can generate production-ready React components and complete page layouts using V0.dev patterns - Vercel's breakthrough AI UI generator that has transformed frontend development in 2025. This skill enables instant component creation with shadcn/ui integration, TailwindCSS v4 styling, full TypeScript support, and seamless Next.js 15 App Router compatibility.
+Claude can generate React components and complete page layouts using v0 (Vercel) patterns. This skill covers prompt-driven component creation with shadcn/ui integration, Tailwind CSS styling, TypeScript, and Next.js App Router compatibility, then adding the generated components to your project with the shadcn CLI.
 
 ## Compatibility
 
