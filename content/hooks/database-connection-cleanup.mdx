@@ -3,20 +3,26 @@ title: Database Connection Cleanup - Hooks
 slug: database-connection-cleanup
 category: hooks
 description: >-
-  Closes all database connections and cleans up resources when Claude Code
-  session ends using PostgreSQL pg_terminate_backend, MySQL KILL, MongoDB
-  connection management, and Redis CLIENT KILL commands.
+  A Stop hook that terminates lingering database connections when a Claude Code
+  session ends — via PostgreSQL pg_terminate_backend, MySQL KILL, Redis CLIENT
+  KILL, and MongoDB connection cleanup.
 cardDescription: >-
-  Closes all database connections and cleans up resources when Claude Code
-  session ends using PostgreSQL pg_terminate_backend, MySQL KILL,...
-seoTitle: Database Connection Cleanup - Hooks
+  Frees leftover DB connections at session end using pg_terminate_backend,
+  MySQL KILL, Redis CLIENT KILL, and MongoDB cleanup.
+seoTitle: Database Connection Cleanup Stop Hook for Claude Code
 seoDescription: >-
-  Closes all database connections and cleans up resources when Claude Code
-  session ends using PostgreSQL pg_terminate_backend, MySQL KILL, MongoDB
-  connection m...
+  Stop hook for Claude Code that closes leftover database connections at session
+  end via pg_terminate_backend, MySQL KILL, Redis CLIENT KILL, and MongoDB.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://www.postgresql.org/docs/current/functions-admin.html"
+  - "https://mariadb.com/kb/en/kill/"
+  - "https://redis.io/docs/latest/commands/client-kill/"
+  - "https://www.mongodb.com/docs/manual/administration/connection-pool-overview/"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/database-connection-cleanup.sh
@@ -43,6 +49,10 @@ configSnippet: |-
 scriptLanguage: bash
 scriptBody: "#!/usr/bin/env bash\n\necho \"\U0001F5C4️ Starting database connection cleanup...\" >&2\n\n# PostgreSQL cleanup\nif pgrep postgres >/dev/null 2>&1; then\n  echo \"\U0001F418 PostgreSQL: Checking connections...\" >&2\n  \n  # Check if psql is available and we can connect\n  if command -v psql &> /dev/null; then\n    # Count active connections\n    ACTIVE_CONNECTIONS=$(psql -t -c \"SELECT count(*) FROM pg_stat_activity WHERE state = 'active' AND pid <> pg_backend_pid();\" 2>/dev/null | xargs || echo \"0\")\n    IDLE_CONNECTIONS=$(psql -t -c \"SELECT count(*) FROM pg_stat_activity WHERE state = 'idle' AND pid <> pg_backend_pid();\" 2>/dev/null | xargs || echo \"0\")\n    \n    echo \"\U0001F4CA PostgreSQL: $ACTIVE_CONNECTIONS active, $IDLE_CONNECTIONS idle connections\" >&2\n    \n    # Terminate long-running idle connections (older than 5 minutes)\n    if [ \"$IDLE_CONNECTIONS\" -gt 0 ]; then\n      TERMINATED=$(psql -t -c \"SELECT count(*) FROM (SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle' AND state_change < now() - interval '5 minutes' AND pid <> pg_backend_pid()) t;\" 2>/dev/null | xargs || echo \"0\")\n      if [ \"$TERMINATED\" -gt 0 ]; then\n        echo \"✅ PostgreSQL: Terminated $TERMINATED idle connections\" >&2\n      fi\n    fi\n  else\n    echo \"⚠️ PostgreSQL running but psql not available\" >&2\n  fi\nfi\n\n# MySQL cleanup\nif pgrep mysql >/dev/null 2>&1 || pgrep mysqld >/dev/null 2>&1; then\n  echo \"\U0001F42C MySQL: Checking connections...\" >&2\n  \n  if command -v mysql &> /dev/null; then\n    PROCESSLIST=$(mysql -e \"SHOW PROCESSLIST;\" 2>/dev/null | grep -c \"Sleep\" || echo \"0\")\n    TOTAL_CONNECTIONS=$(mysql -e \"SHOW PROCESSLIST;\" 2>/dev/null | wc -l || echo \"0\")\n    echo \"\U0001F4CA MySQL: $TOTAL_CONNECTIONS total connections, $PROCESSLIST sleeping\" >&2\n    \n    # Kill long-running sleeping connections (optional, requires PROCESS privilege)\n    # mysql -e \"KILL CONNECTION_ID;\" 2>/dev/null || true\n  else\n    echo \"⚠️ MySQL running but mysql client not available\" >&2\n  fi\nfi\n\n# MongoDB cleanup\nif pgrep mongod >/dev/null 2>&1; then\n  echo \"\U0001F343 MongoDB: Checking connections...\" >&2\n  \n  if command -v mongosh &> /dev/null; then\n    CONNECTIONS=$(mongosh --quiet --eval \"db.currentOp().inprog.length\" 2>/dev/null || echo \"0\")\n    echo \"\U0001F4CA MongoDB: $CONNECTIONS active operations\" >&2\n  elif command -v mongo &> /dev/null; then\n    CONNECTIONS=$(mongo --quiet --eval \"db.currentOp().inprog.length\" 2>/dev/null || echo \"0\")\n    echo \"\U0001F4CA MongoDB: $CONNECTIONS active operations\" >&2\n  else\n    echo \"⚠️ MongoDB running but mongo client not available\" >&2\n  fi\nfi\n\n# Redis cleanup\nif pgrep redis-server >/dev/null 2>&1; then\n  echo \"\U0001F4EE Redis: Checking connections...\" >&2\n  \n  if command -v redis-cli &> /dev/null; then\n    CLIENT_COUNT=$(redis-cli CLIENT LIST 2>/dev/null | wc -l || echo \"0\")\n    echo \"\U0001F4CA Redis: $CLIENT_COUNT connected clients\" >&2\n    \n    # Optionally close idle clients\n    # redis-cli CLIENT KILL TYPE normal SKIPME yes 2>/dev/null || true\n  else\n    echo \"⚠️ Redis running but redis-cli not available\" >&2\n  fi\nfi\n\n# Check for database connection strings in environment\nif [ -f \".env\" ]; then\n  DB_VARS=$(grep -E \"(DATABASE_URL|MONGODB_URI|REDIS_URL|POSTGRES|MYSQL)\" .env 2>/dev/null | wc -l || echo \"0\")\n  if [ \"$DB_VARS\" -gt 0 ]; then\n    echo \"\U0001F4CB Found $DB_VARS database configuration variables in .env\" >&2\n  fi\nfi\n\necho \"✅ Database connection cleanup completed\" >&2\nexit 0"
 trigger: Stop
+safetyNotes:
+  - "Runs at session end and forcibly terminates database backends/clients (pg_terminate_backend, KILL, CLIENT KILL); pointed at a shared or production database it can drop other users' connections — scope it to local/dev databases and confirm the target before enabling."
+privacyNotes:
+  - "Uses locally configured database credentials and connection details to issue termination commands; keep those credentials in environment variables, not in the hook."
 tags:
   - database
   - cleanup
