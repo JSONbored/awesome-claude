@@ -21,12 +21,11 @@
     "mode": "smart",
   },
   "triggers": {
-    // 6-hourly: source-repo signals + send any approved Weekly Brief that is due.
+    // 6-hourly: source-repo signals + catch up on approved Weekly Brief sends.
     // Daily 05:00 UTC: IndexNow changed-URL push.
     // Fridays 14:00 UTC: generate the next Weekly Brief draft for review.
-    // (The Weekly Brief is the single weekly send — approved issues go out
-    //  Sunday 16:00 UTC via the 6-hourly check; no separate Sunday cron.)
-    "crons": ["17 */6 * * *", "0 5 * * *", "0 14 * * FRI"],
+    // Sundays 16:00 UTC: send the approved Weekly Brief at its scheduled slot.
+    "crons": ["17 */6 * * *", "0 5 * * *", "0 14 * * FRI", "0 16 * * SUN"],
   },
   "assets": {
     "directory": "dist/client",

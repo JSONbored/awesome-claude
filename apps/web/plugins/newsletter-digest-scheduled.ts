@@ -22,9 +22,10 @@ import { siteConfig } from "@/lib/site";
 // maintainer a preview with an approve link.
 const GENERATE_CRON = "0 14 * * FRI";
 
-// 6-hourly (the existing source-signals trigger). We piggyback to send any
-// approved brief whose scheduled send time has arrived — no new cron needed.
-const SEND_CRON = "17 */6 * * *";
+// 6-hourly (the existing source-signals trigger) plus the exact Sunday
+// 16:00 UTC Weekly Brief slot. Both paths send approved briefs whose scheduled
+// send time has arrived.
+const SEND_CRONS = new Set(["17 */6 * * *", "0 16 * * SUN"]);
 
 const APPROVE_TOKEN_TTL_MS = 14 * 24 * 60 * 60 * 1000; // 14 days
 
@@ -36,10 +37,10 @@ type CloudflareScheduledPayload = {
 
 /**
  * The Weekly Brief pipeline — the single weekly newsletter send. Friday:
- * generate a draft + email the maintainer an approve link. 6-hourly: send any
- * approved-and-due brief to the Resend audience (scheduled for Sunday 16:00 UTC
- * on approval). The cron hook fires for every trigger, so each branch gates on
- * its cron string. Inert until configured + a brief is approved — nothing
+ * generate a draft + email the maintainer an approve link. 6-hourly and Sunday
+ * 16:00 UTC: send any approved-and-due brief to the Resend audience
+ * (scheduled for Sunday 16:00 UTC on approval). The cron hook fires for every
+ * trigger, so each branch gates on its cron string. Inert until configured + a brief is approved — nothing
  * reaches the audience automatically. (Replaced the old auto-send Sunday digest.)
  */
 export default definePlugin((nitroApp) => {
@@ -102,8 +103,9 @@ export default definePlugin((nitroApp) => {
         return;
       }
 
-      // 6-hourly: send any approved brief whose scheduled time has arrived.
-      if (controller?.cron === SEND_CRON) {
+      // 6-hourly and Sunday 16:00 UTC: send approved briefs whose scheduled
+      // time has arrived.
+      if (controller?.cron && SEND_CRONS.has(controller.cron)) {
         const sendRequest = new Request("https://heyclau.de/__scheduled/brief-send");
         await runWithCloudflareRuntime(sendRequest, env, context, async () => {
           try {
