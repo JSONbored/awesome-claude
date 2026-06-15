@@ -89,6 +89,12 @@ keywords:
 readingTime: 6
 packageVerified: true
 difficultyScore: 100
+safetyNotes:
+  - Install Zod with `npm install zod` (or your package manager's equivalent) before use. The library has zero runtime dependencies and does not execute network requests on its own.
+  - Async refinements (`.refine(async fn)`) may call external services if your own callback does — review any async refinement for unintended network or database access.
+privacyNotes:
+  - Zod validates data in-process only and does not transmit your schemas, inputs, or error output to any external service.
+  - Schemas that validate emails, passwords, or personal data remain entirely local; no input leaves your runtime environment through Zod itself.
 hasTroubleshooting: true
 hasPrerequisites: false
 hasBreakingChanges: false
