@@ -1,0 +1,205 @@
+---
+title: Adeu MCP Server for Claude
+slug: ai-adeu-adeu-mcp-server
+category: mcp
+description: >-
+  Adeu MCP server and SDKs translate DOCX files to token-efficient Markdown with CriticMarkup, apply safe Track Changes edits, and optionally integrate with live Microsoft Word on Windows.
+cardDescription: >-
+  Connect Claude to Adeu for non-destructive DOCX redlining—read documents, validate edits, and apply native Word Track Changes via stdio MCP.
+seoTitle: Adeu MCP Server for Claude
+seoDescription: >-
+  Use the Adeu MCP server with Claude to read DOCX as Markdown, batch-apply tracked changes, sanitize metadata, and preserve Word formatting through stdio transport.
+author: Adeu
+authorProfileUrl: "https://github.com/dealfluence"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1457
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1457"
+repoUrl: "https://github.com/dealfluence/adeu"
+documentationUrl: "https://github.com/dealfluence/adeu"
+websiteUrl: "https://adeu.ai"
+installable: true
+installCommand: >-
+  claude mcp add adeu -- npx -y @adeu/mcp-server
+usageSnippet: >-
+  Run `npx -y @adeu/mcp-server` over stdio, or `uvx --from adeu adeu-server` on Windows for live Microsoft Word integration.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "adeu": {
+        "command": "npx",
+        "args": ["-y", "@adeu/mcp-server"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "adeu": {
+        "command": "uvx",
+        "args": ["--from", "adeu", "adeu-server"],
+        "env": {
+          "ADEU_CLOUD_API_KEY": "YOUR_OPTIONAL_CLOUD_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js 18+ for the `@adeu/mcp-server` npm package, or Python with uv for the `adeu-server` backend."
+  - "Local access to `.docx` files you intend to read or redline; live Word editing requires Windows with Microsoft Word installed."
+  - "Claude Desktop, Claude Code, Cursor, or another MCP client with stdio transport support."
+  - "Optional Adeu Cloud account only if you enable email fetch or advanced validation workflows."
+safetyNotes:
+  - "`process_document_batch` can modify DOCX content and apply Track Changes when edits pass validation."
+  - "`finalize_document` can strip metadata and lock documents; review output before external distribution."
+  - "Live Word integration edits the active document in memory; save backups before batch operations."
+  - "Adeu Cloud email workflows fetch external attachments; treat counterparty documents as untrusted input."
+privacyNotes:
+  - "Local Adeu tools process documents on your machine and do not phone home with file contents by default."
+  - "Document text sent to your LLM provider is subject to that provider's data handling policies."
+  - "Optional Adeu Cloud routes large validation or email workflows through Adeu servers under separate terms."
+tags:
+  - docx
+  - legal
+  - documents
+  - redlining
+  - stdio
+keywords:
+  - adeu mcp
+  - docx track changes claude
+  - word redline mcp
+  - criticmarkup mcp
+  - dealfluence adeu
+readingTime: 4
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+Adeu is a docx ↔ LLM translator: an MCP server and SDK that exposes Microsoft Word documents as token-efficient Markdown with CriticMarkup while preserving underlying OpenXML formatting. Agents read documents safely, validate ambiguous edits, and apply native Track Changes instead of destructive rewrites.
+
+Source code and installation instructions live in the [dealfluence/adeu](https://github.com/dealfluence/adeu) repository.
+
+## Features
+
+- `read_docx` with optional MCP Apps UI for interactive Markdown preview.
+- `process_document_batch` for modify, accept, reject, and comment operations by change ID.
+- `finalize_document` to scrub metadata and prepare documents for distribution.
+- Strict validation that blocks ambiguous text matches before touching files.
+- Node.js (`@adeu/mcp-server`) and Python (`adeu-server`) stdio backends.
+- Optional live Microsoft Word copilot mode on Windows via the Python server.
+
+## Use Cases
+
+- Redline a vendor MSA governing-law clause with tracked changes and reviewer comments.
+- Extract clean Markdown from a DOCX contract for RAG indexing.
+- Accept or reject existing Track Changes in bulk after legal review.
+- Sanitize author metadata before sending a redlined agreement externally.
+- Edit the active Word document during a live review session on Windows.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Choose the Node.js server (`npx -y @adeu/mcp-server`) or Python server (`uvx --from adeu adeu-server`) for live Word.
+2. Add the stdio command to Claude Desktop, Claude Code, or Cursor MCP settings.
+3. Place target `.docx` files in a path readable by the MCP server process.
+4. Invoke `read_docx` before proposing edits, then commit with `process_document_batch`.
+
+### Claude Code
+
+```bash
+claude mcp add adeu -- npx -y @adeu/mcp-server
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "adeu": {
+      "command": "npx",
+      "args": ["-y", "@adeu/mcp-server"]
+    }
+  }
+}
+```
+
+For authenticated setups:
+
+```json
+{
+  "mcpServers": {
+    "adeu": {
+      "command": "uvx",
+      "args": ["--from", "adeu", "adeu-server"],
+      "env": {
+        "ADEU_CLOUD_API_KEY": "YOUR_OPTIONAL_CLOUD_KEY"
+      }
+    }
+  }
+}
+```
+
+Switch to the Python `uvx` backend when you need live Microsoft Word integration on Windows.
+
+## Examples
+
+### Read contract
+
+```text
+Read contract.docx with Adeu and summarise the indemnification section.
+```
+
+### Apply redlines
+
+```text
+Change 'State of New York' to 'State of Delaware' with a Track Changes comment explaining the governing-law update.
+```
+
+### Finalize for send
+
+```text
+Finalize the redlined agreement: scrub internal metadata and lock the document read-only.
+```
+
+## Security
+
+- Review every batch edit before applying; validation blocks ambiguous matches but not all semantic errors.
+- Keep confidential agreements on local Adeu unless Adeu Cloud is explicitly approved by legal.
+- Do not enable email-fetch workflows on mailboxes containing privileged communications without review.
+
+## Troubleshooting
+
+### Ambiguous match rejected
+
+Narrow the `target_text` snippet or provide more surrounding context in the modify operation.
+
+### Live Word unavailable
+
+Install the Python `adeu-server` backend on Windows with Microsoft Word running.
+
+### MCP Apps UI blank
+
+Update to the latest `@adeu/mcp-server` release and restart the MCP client.
+
+### Cloud validation timeout
+
+Large multi-document jobs may require Adeu Cloud; verify your optional cloud API key.
+
+## Duplicate Check
+
+No existing Adeu or `dealfluence/adeu` entry was found in `content/mcp/`. This entry is separate from generic filesystem or PDF MCP servers because it specialises in DOCX Track Changes safety.
