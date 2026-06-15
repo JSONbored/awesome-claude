@@ -1,34 +1,35 @@
 ---
-title: Test-Driven Development Enforcer - CLAUDE.md Rules for Claude Code
+title: Vitest Test-Driven Development Rule for Claude Code
 slug: test-driven-development-enforcer
 category: rules
 description: >-
-  Test-driven development expert enforcing red-green-refactor cycles,
-  Vitest/Jest configuration, test coverage requirements, mocking strategies, and
-  test-first coding discipline for robust software development.
+  A CLAUDE.md rule that drives test-first development with Vitest: write a
+  failing Vitest test, add the minimum code to pass, then refactor. It covers
+  vitest.config setup, expect assertions, vi mocks and fake timers, coverage
+  thresholds, and running specs in watch mode or once with vitest run.
 cardDescription: >-
-  Test-driven development expert enforcing red-green-refactor cycles,
-  Vitest/Jest configuration, test coverage requirements, mocking strate...
-seoTitle: Test-Driven Development Enforcer - CLAUDE.md Rules for Claude Code
+  Test-first development with Vitest: failing test first, minimal code to pass,
+  then refactor — vi mocks, fake timers, and coverage gates.
+seoTitle: "Vitest TDD Rule: Test-First Discipline for Claude"
 seoDescription: >-
-  Test-driven development expert enforcing red-green-refactor cycles,
-  Vitest/Jest configuration, test coverage requirements, mocking strategies, and
-  test-first...
+  Drive test-first development with Vitest: write failing tests first, then
+  code. Covers vitest.config, expect, vi mocks, fake timers, and coverage
+  thresholds.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
 documentationUrl: "https://vitest.dev/guide/"
 installable: false
 usageSnippet: >-
-  You are a test-driven development (TDD) expert enforcing red-green-refactor
-  cycles, comprehensive test coverage, and test-first discipline. Follow these
-  principles for robust, maintainable software through rigorous testing
-  practices.
+  You are a Vitest test-driven development expert: for each change, write a
+  failing Vitest test first, add the minimum code to make it pass, then
+  refactor. Enforce test-first discipline and meaningful coverage using Vitest's
+  runner, assertions, mocks, and coverage tooling.
 copySnippet: >-
-  You are a test-driven development (TDD) expert enforcing red-green-refactor
-  cycles, comprehensive test coverage, and test-first discipline. Follow these
-  principles for robust, maintainable software through rigorous testing
-  practices.
+  You are a Vitest test-driven development expert: for each change, write a
+  failing Vitest test first, add the minimum code to make it pass, then
+  refactor. Enforce test-first discipline and meaningful coverage using Vitest's
+  runner, assertions, mocks, and coverage tooling.
 
 
   ## Core TDD Principles
@@ -784,10 +785,10 @@ copySnippet: >-
   dependencies to isolate units, and use AAA pattern for clear test structure.
 scriptLanguage: text
 scriptBody: >-
-  You are a test-driven development (TDD) expert enforcing red-green-refactor
-  cycles, comprehensive test coverage, and test-first discipline. Follow these
-  principles for robust, maintainable software through rigorous testing
-  practices.
+  You are a Vitest test-driven development expert: for each change, write a
+  failing Vitest test first, add the minimum code to make it pass, then
+  refactor. Enforce test-first discipline and meaningful coverage using Vitest's
+  runner, assertions, mocks, and coverage tooling.
 
 
   ## Core TDD Principles
@@ -1541,6 +1542,11 @@ scriptBody: >-
   Always write tests before implementation, follow red-green-refactor cycle
   strictly, maintain minimum 80% coverage with focus on quality, mock external
   dependencies to isolate units, and use AAA pattern for clear test structure.
+safetyNotes:
+  - "Guidance only — this rule adds no executable code, but its examples install dependencies (npm ci), run the Vitest CLI, and execute generated test suites locally and in CI; review and run them yourself rather than auto-executing."
+  - "The CI sample runs tests on every push and pull request via GitHub Actions and uploads coverage to a third-party service (Codecov), which you must configure before use."
+privacyNotes:
+  - "The async examples mock the global fetch against endpoints like /api/users and write coverage reports (lcov, html) to a local coverage/ directory; the CI sample additionally uploads lcov coverage to Codecov."
 tags:
   - tdd
   - testing
@@ -1571,7 +1577,7 @@ robotsIndex: true
 robotsFollow: true
 ---
 
-You are a test-driven development (TDD) expert enforcing red-green-refactor cycles, comprehensive test coverage, and test-first discipline. Follow these principles for robust, maintainable software through rigorous testing practices.
+You are a Vitest test-driven development expert: for each change, write a failing Vitest test first, add the minimum code to make it pass, then refactor. Enforce test-first discipline and meaningful coverage using Vitest's runner, assertions, mocks, and coverage tooling.
 
 ## Core TDD Principles
 
