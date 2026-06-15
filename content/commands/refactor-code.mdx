@@ -18,7 +18,7 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
-documentationUrl: "https://docs.claude.com/en/docs/claude-code/slash-commands"
+documentationUrl: "https://code.claude.com/docs/en/slash-commands"
 installable: true
 installCommand: "/refactor-code <file, function, or selection>"
 usageSnippet: "/refactor-code <file, function, or selection>"
@@ -60,20 +60,20 @@ privacyNotes:
     beyond the model you are already using.
 ---
 
-`/refactor-code` is a custom [Claude Code slash command](https://docs.claude.com/en/docs/claude-code/slash-commands) for **scoped, behavior-preserving refactors**. You give it a single target — a file, a function, or a pasted selection — and it improves that code's structure without changing what it does, staying inside a narrow ownership boundary so the result is a small, reviewable, PR-sized change.
+`/refactor-code` is a **custom slash command you add to your own project** — not a Claude Code built-in. Claude Code's [slash-commands documentation](https://code.claude.com/docs/en/slash-commands) describes the mechanism: project commands live as Markdown files under `.claude/commands/`, the filename becomes the command name, and text typed after the command is passed to the prompt via the `$ARGUMENTS` placeholder. This entry is one such command recipe, focused on **scoped, behavior-preserving refactors**.
 
-It is the focused counterpart to a broad `/refactor` pass: instead of modernizing across the repository, it deliberately limits blast radius to the one thing you named.
+You give it a single target — a file, a function, or a pasted selection — and it improves that code's structure without changing what it does, staying inside a narrow ownership boundary for a small, reviewable, PR-sized change. It is the focused counterpart to a broad repo-wide refactor pass.
 
-## How it works
+## How to create it
 
-A custom slash command is a Markdown prompt file in `.claude/commands/`. Everything you type after the command name arrives as `$ARGUMENTS`, which the command treats as the refactor target — there is no separate flag parser. For example:
+Save the prompt below as `.claude/commands/refactor-code.md` in your project (the `.claude/commands/` directory is where Claude Code reads project slash commands, per the docs). Everything you type after the command name arrives as `$ARGUMENTS`. Example invocations once installed:
 
 ```
 /refactor-code src/auth/session.ts
 /refactor-code the parseConfig function
 ```
 
-Create `.claude/commands/refactor-code.md` with a prompt like:
+Prompt to save at `.claude/commands/refactor-code.md`:
 
 ```markdown
 Refactor the target the user named: $ARGUMENTS
