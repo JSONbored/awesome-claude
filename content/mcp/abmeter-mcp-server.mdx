@@ -1,0 +1,234 @@
+---
+title: ABMeter MCP Server for Claude
+slug: abmeter-mcp-server
+category: mcp
+description: >-
+  Hosted streamable HTTP MCP server for ABMeter feature flags and A/B testing,
+  letting MCP clients design experiments, analyze results, and manage experiment
+  lifecycles through conversation.
+cardDescription: >-
+  Connect Claude to ABMeter MCP to design experiments, manage feature flags,
+  and analyze test results with OAuth or API token authentication.
+seoTitle: ABMeter MCP Server for Claude
+seoDescription: >-
+  Use the ai.abmeter/abmeter MCP server with Claude to manage feature flags,
+  launch A/B tests, and analyze experiments via https://mcp.abmeter.ai with OAuth
+  or Bearer token auth.
+author: ABMeter
+authorProfileUrl: "https://github.com/abmeter"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1455
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1455"
+repoUrl: "https://abmeter.ai"
+documentationUrl: "https://abmeter.ai/lab/connect-mcp"
+websiteUrl: "https://abmeter.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http abmeter https://mcp.abmeter.ai
+usageSnippet: >-
+  Add https://mcp.abmeter.ai as a remote HTTP connector and authenticate with
+  OAuth in Claude, or supply an ABMeter API token for mcp-remote-based clients.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "abmeter": {
+        "url": "https://mcp.abmeter.ai",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "abmeter": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-remote",
+          "https://mcp.abmeter.ai",
+          "--header",
+          "Authorization: Bearer ${ABMETER_API_TOKEN}",
+          "--header",
+          "X-Mcp-Client-Name: your-mcp-client-name"
+        ],
+        "env": {
+          "ABMETER_API_TOKEN": "api-xxx...xxx"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "ABMeter account with permission to manage experiments and feature flags."
+  - "Claude or another MCP client with streamable HTTP support, or Node.js with npx for the documented mcp-remote setup."
+  - "OAuth-capable client for the browser auth flow, or an ABMeter API token from Lab → API Keys."
+  - "Approval rules for who may let an assistant launch, stop, or modify production experiments."
+safetyNotes:
+  - "MCP tools can design, launch, stop, and manage feature flags and experiments in your ABMeter account."
+  - "Critical operations may require human-in-the-loop browser confirmation when the client is linked to ABMeter."
+  - "Treat experiment launch actions as production-impacting; verify targeting and sample sizes before approval."
+  - "Use separate ABMeter workspaces or projects for staging versus production experimentation."
+privacyNotes:
+  - "Experiment names, metrics, flag definitions, and analysis prompts are processed by ABMeter."
+  - "API tokens and OAuth credentials grant account access; store them in MCP env vars or connector secrets, not in chat or source control."
+  - "Linked MCP clients appear in ABMeter's connected-client management UI and can be revoked there."
+tags:
+  - experimentation
+  - feature-flags
+  - ab-testing
+  - remote-mcp
+  - product-analytics
+keywords:
+  - abmeter mcp
+  - ai.abmeter abmeter
+  - feature flags claude
+  - ab testing mcp
+  - mcp.abmeter.ai
+readingTime: 4
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+ABMeter MCP (`ai.abmeter/abmeter`) is a hosted Model Context Protocol server for ABMeter, a feature-flagging and A/B testing platform with AI-first experimentation workflows. The registry lists a streamable HTTP endpoint at `https://mcp.abmeter.ai`, with connection docs at [abmeter.ai/lab/connect-mcp](https://abmeter.ai/lab/connect-mcp) and product docs at [abmeter.ai/docs](https://abmeter.ai/docs).
+
+Source is referenced at [abmeter/abmeter](https://github.com/abmeter/abmeter) in the MCP registry.
+
+## Features
+
+- Design and launch experiments through natural-language MCP workflows.
+- Analyze running experiments and surface insights from ABMeter data.
+- Manage feature flags and experiment lifecycles from chat.
+- OAuth browser authentication with automatic token refresh in supported clients.
+- API token authentication via `mcp-remote` for clients that prefer Bearer tokens.
+- Human-in-the-loop confirmations for critical launch and stop operations when the client is browser-linked.
+
+ABMeter documents example workflows such as `/abmeter:design_and_launch_experiment` for Claude Code after the connector is authenticated.
+
+## Use Cases
+
+- Draft a new checkout A/B test and review targeting before launch.
+- Ask Claude to summarize exposure and effect sizes for a running experiment.
+- Pause or archive stale feature flags after an experiment concludes.
+- Explore experiment ideas conversationally before creating formal ABMeter configs.
+- Link an MCP client for managed OAuth access instead of sharing long-lived tokens broadly.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Open **Settings → Connectors** and add a remote MCP server.
+2. Enter the MCP URL: `https://mcp.abmeter.ai`.
+3. Complete the ABMeter OAuth browser flow when prompted.
+4. Try a small experiment summary request to verify access.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http abmeter https://mcp.abmeter.ai
+claude mcp list
+```
+
+For API token auth instead of OAuth, create a token at [abmeter.ai/lab/api_keys](https://abmeter.ai/lab/api_keys) and use the `mcp-remote` configuration below.
+
+### Other MCP clients
+
+Use the direct HTTP URL for OAuth-capable clients, or the documented `mcp-remote` wrapper when supplying a Bearer token and optional `X-Mcp-Client-Name` header.
+
+## Configuration
+
+OAuth-friendly remote connector:
+
+```json
+{
+  "mcpServers": {
+    "abmeter": {
+      "url": "https://mcp.abmeter.ai",
+      "type": "http"
+    }
+  }
+}
+```
+
+API token setup from ABMeter's connect page:
+
+```json
+{
+  "mcpServers": {
+    "abmeter": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.abmeter.ai",
+        "--header",
+        "Authorization: Bearer ${ABMETER_API_TOKEN}",
+        "--header",
+        "X-Mcp-Client-Name: your-mcp-client-name"
+      ],
+      "env": {
+        "ABMETER_API_TOKEN": "api-xxx...xxx"
+      }
+    }
+  }
+}
+```
+
+Replace `api-xxx...xxx` with your ABMeter API token.
+
+## Examples
+
+### Design an experiment
+
+```text
+Help me design and launch an A/B test for the new pricing page hero using ABMeter MCP.
+```
+
+### Analyze results
+
+```text
+Summarize the current exposure and primary metric lift for experiment checkout-v2.
+```
+
+### Manage flags
+
+```text
+List active feature flags related to onboarding and recommend which experiments to archive.
+```
+
+## Security
+
+- Experiment launch and flag changes can affect production user experiences.
+- Prefer OAuth or least-privilege API tokens scoped to the needed ABMeter project.
+- Use ABMeter's connected-client management page to revoke unused MCP integrations.
+
+## Troubleshooting
+
+### Missing authentication token
+
+Complete OAuth in the client or set `ABMETER_API_TOKEN` for the `mcp-remote` configuration.
+
+### Mcp-Session-Id required
+
+Use a streamable HTTP client that preserves MCP session headers across initialize and tool calls.
+
+### OAuth redirect errors
+
+Retry from a supported browser session and confirm the MCP client is allowed in ABMeter.
+
+### Critical action blocked
+
+Link the MCP client to ABMeter for human-in-the-loop confirmations on launch, stop, and other protected operations.
+
+## Duplicate Check
+
+No existing ABMeter or `ai.abmeter/abmeter` entry was found in `content/mcp/`. This differs from the PostHog MCP server because ABMeter focuses on AI-first experimentation workflows, feature-flag lifecycle management, and ABMeter-native human-in-the-loop confirmations rather than general product analytics across a PostHog project.
