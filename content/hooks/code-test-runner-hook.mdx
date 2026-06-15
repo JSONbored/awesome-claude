@@ -3,20 +3,26 @@ title: Code Test Runner Hook - Hooks
 slug: code-test-runner-hook
 category: hooks
 description: >-
-  Automatically run relevant tests when code changes are detected using
-  intelligent test selection, parallel execution, and multi-framework support.
+  A PostToolUse hook that runs the matching test runner for a changed file's
+  language — Jest or Vitest for JS/TS, pytest for Python, go test, or
+  Maven/Gradle for Java — scoped to the edited file.
 cardDescription: >-
-  Automatically run relevant tests when code changes are detected using
-  intelligent test selection, parallel execution, and multi-framework...
-seoTitle: Code Test Runner Hook - Hooks
+  After an edit, runs the right test runner for that file — Jest/Vitest,
+  pytest, go test, or Maven/Gradle — against the related tests.
+seoTitle: Auto Test Runner Hook for Claude Code
 seoDescription: >-
-  Automatically run relevant tests when code changes are detected using
-  intelligent test selection, parallel execution, and multi-framework support.
-  This hook ...
+  PostToolUse hook for Claude Code that runs the matching test runner on edited
+  files: Jest or Vitest, pytest, go test, or Maven/Gradle.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
-documentationUrl: "https://jestjs.io/docs/getting-started"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://jestjs.io/docs/getting-started"
+  - "https://vitest.dev/guide/"
+  - "https://docs.pytest.org/en/stable/"
+  - "https://pkg.go.dev/testing"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/code-test-runner-hook.sh &&
@@ -53,6 +59,11 @@ configSnippet: |-
 scriptLanguage: bash
 scriptBody: "#!/usr/bin/env bash\n\n# Read the tool input from stdin\nINPUT=$(cat)\nTOOL_NAME=$(echo \"$INPUT\" | jq -r '.tool_name')\nFILE_PATH=$(echo \"$INPUT\" | jq -r '.tool_input.file_path // .tool_input.path // \"\"')\n\nif [ -z \"$FILE_PATH\" ]; then\n  exit 0\nfi\n\necho \"\U0001F9EA Running tests for $FILE_PATH...\"\n\n# Get file extension and directory\nEXT=\"${FILE_PATH##*.}\"\nDIR=$(dirname \"$FILE_PATH\")\n\n# Find and run relevant tests based on file type\ncase \"$EXT\" in\n  js|jsx|ts|tsx)\n    # JavaScript/TypeScript files\n    if [ -f \"package.json\" ]; then\n      if command -v npm &> /dev/null && npm list jest &> /dev/null; then\n        echo \"Running Jest tests...\"\n        npm test -- --testPathPattern=\"$FILE_PATH\" --passWithNoTests 2>/dev/null\n      elif command -v npm &> /dev/null && npm list vitest &> /dev/null; then\n        echo \"Running Vitest tests...\"\n        npx vitest run \"$FILE_PATH\" 2>/dev/null\n      fi\n    fi\n    ;;\n  py)\n    # Python files\n    if command -v pytest &> /dev/null; then\n      echo \"Running pytest...\"\n      pytest \"${FILE_PATH%.*}_test.py\" \"${DIR}/test_*.py\" 2>/dev/null || echo \"No Python tests found\"\n    elif command -v python &> /dev/null; then\n      echo \"Running Python unittest...\"\n      python -m unittest discover -s \"$DIR\" -p \"*test*.py\" 2>/dev/null || echo \"No Python tests found\"\n    fi\n    ;;\n  go)\n    # Go files\n    if command -v go &> /dev/null; then\n      echo \"Running Go tests...\"\n      go test \"${DIR}/...\" 2>/dev/null || echo \"No Go tests found\"\n    fi\n    ;;\n  java)\n    # Java files\n    if command -v mvn &> /dev/null && [ -f \"pom.xml\" ]; then\n      echo \"Running Maven tests...\"\n      mvn test 2>/dev/null\n    elif command -v gradle &> /dev/null && [ -f \"build.gradle\" ]; then\n      echo \"Running Gradle tests...\"\n      gradle test 2>/dev/null\n    fi\n    ;;\nesac\n\necho \"✅ Test execution completed for $FILE_PATH\" >&2\nexit 0"
 trigger: PostToolUse
+safetyNotes:
+  - "Runs your project's test command automatically after each edit; tests execute arbitrary project code, so enable this only in a trusted repo and expect it to run frequently."
+  - "The script invokes whichever runner it detects (npm test, npx vitest, pytest, go test, mvn/gradle); make sure the right one is installed so it does not run an unexpected command."
+privacyNotes:
+  - "Runs locally and prints test output to the hook; that output can include file paths, test names, and any data your tests log."
 tags:
   - testing
   - automation
