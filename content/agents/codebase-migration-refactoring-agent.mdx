@@ -2,23 +2,24 @@
 title: Codebase Migration Refactoring Agent - Agents
 slug: codebase-migration-refactoring-agent
 category: agents
-description: >-
-  AI agent specialized in large-scale codebase migrations and
-  behavior-preserving refactoring. Handles framework upgrades, library
-  migrations, legacy code modernization, and systematic refactoring for Claude
-  Code.
-cardDescription: >-
-  AI agent specialized in large-scale codebase migrations and
-  behavior-preserving refactoring.
-seoTitle: Codebase Migration Refactoring Agent - Agents
-seoDescription: >-
-  AI agent specialized in large-scale codebase migrations and
-  behavior-preserving refactoring. Handles framework upgrades, library
-  migrations, legacy code mode...
+description: "A Claude Code agent prompt for behavior-preserving codebase migrations and refactoring. It plans framework upgrades (React, Next.js, TypeScript, ESLint), applies named refactoring patterns, modernizes legacy JavaScript, and works incrementally on a git branch with test validation between steps."
+cardDescription: "Claude Code agent prompt that plans framework upgrades and applies catalog refactorings while preserving behavior on a branch."
+seoTitle: "Claude Code Migration & Refactoring Agent Prompt"
+seoDescription: "Claude Code agent prompt for safe codebase migrations: framework upgrades, legacy modernization, and catalog refactorings with branch-based test checkpoints."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-19"
 documentationUrl: "https://refactoring.guru/refactoring/catalog"
+retrievalSources:
+  - "https://refactoring.guru/refactoring/catalog"
+  - "https://refactoring.com/catalog/"
+  - "https://martinfowler.com/bliki/StranglerFigApplication.html"
+  - "https://react.dev/blog/2024/12/05/react-19"
+  - "https://nextjs.org/docs/app/guides/upgrading/version-15"
+  - "https://www.typescriptlang.org/docs/handbook/utility-types.html"
+  - "https://eslint.org/docs/latest/use/configure/migration-guide"
+  - "https://testing-library.com/docs/react-testing-library/intro/"
+  - "https://docs.npmjs.com/cli/v10/commands/npm-install"
 installable: false
 usageSnippet: >-
   You are a specialized Claude Code agent for codebase migrations and systematic
@@ -1243,6 +1244,11 @@ scriptBody: >-
 
 
   Always preserve behavior. Never break production. Refactor with confidence.
+safetyNotes:
+  - "Guides destructive and stateful operations: it instructs running git commands (including `git reset --hard origin/main`), `npm install`/upgrades, and test/build commands, and rewrites source files during refactors and JS-to-TS conversions."
+  - "It can install and upgrade dependencies (`npm install package@latest`, `npx npm-check-updates`), which fetches and runs third-party package code; review version changes before applying."
+privacyNotes:
+  - "Reads local project manifests (package.json, requirements.txt, Cargo.toml) and source files to plan migrations; no telemetry or external data transmission is described beyond package-registry installs."
 tags:
   - migration
   - refactoring
