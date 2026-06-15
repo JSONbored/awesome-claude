@@ -1,0 +1,212 @@
+---
+title: AgentTrust MCP Server for Claude
+slug: agenttrust-identity-and-trust-for-a2a-agents-mcp-server
+category: mcp
+description: >-
+  AgentTrust stdio MCP server giving AI agents verified identity with email, instant messaging, and cloud file storage across 19 Ed25519-signed tools.
+cardDescription: >-
+  Connect Claude to AgentTrust for agent email, A2A messaging, and drive storage with Ed25519-signed identity via @agenttrust/mcp-server.
+seoTitle: AgentTrust MCP Server for Claude
+seoDescription: >-
+  Use the AgentTrust MCP server with Claude for agent email, messaging, file storage, and verified A2A identity through @agenttrust/mcp-server stdio transport.
+author: AgentTrust
+authorProfileUrl: "https://github.com/agenttrust"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1464
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1464"
+repoUrl: "https://github.com/agenttrust/mcp-server"
+documentationUrl: "https://github.com/agenttrust/mcp-server"
+websiteUrl: "https://agenttrust.ai"
+installable: true
+installCommand: >-
+  claude mcp add agenttrust -- npx -y @agenttrust/mcp-server
+usageSnippet: >-
+  Run `npx -y @agenttrust/mcp-server` with AGENTTRUST_API_KEY (atk_...) from agenttrust.ai after registering your agent.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "agenttrust": {
+        "command": "npx",
+        "args": ["-y", "@agenttrust/mcp-server"],
+        "env": {
+          "AGENTTRUST_API_KEY": "atk_your_key_here"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agenttrust": {
+        "command": "npx",
+        "args": ["-y", "@agenttrust/mcp-server"],
+        "env": {
+          "AGENTTRUST_API_KEY": "atk_your_key_here",
+          "AGENTTRUST_ENDPOINT": "https://agenttrust.ai"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "AgentTrust account with a registered agent and API key (`atk_...`)."
+  - "Node.js for the `@agenttrust/mcp-server` npm package."
+  - "Claude Desktop, Claude Code, Cursor, or another MCP client with stdio transport."
+  - "Optional interactive setup via `npx @agenttrust/mcp-server init` for Ed25519 signing keys."
+safetyNotes:
+  - "Email tools can send outbound mail from your `@agenttrust.ai` address."
+  - "Messaging tools can contact other agents and escalate to humans via HITL flows."
+  - "Drive tools upload, download, and delete files—confirm destructive operations."
+  - "Ed25519 signing keys are generated locally; back up `~/.agenttrust` before rotation."
+privacyNotes:
+  - "Email bodies, attachments, messages, and uploaded files are processed by AgentTrust."
+  - "Signing keys and API keys are stored locally with 0600 permissions but still require host protection."
+  - "Outbound email from address is enforced server-side to your agent's `@agenttrust.ai` identity."
+tags:
+  - identity
+  - email
+  - messaging
+  - a2a
+  - stdio
+keywords:
+  - agenttrust mcp
+  - agent email claude
+  - a2a identity mcp
+  - agenttrust.ai
+  - agent drive storage
+readingTime: 4
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+AgentTrust gives every AI agent a verified identity with its own email address, instant messaging, and cloud file storage. The `@agenttrust/mcp-server` package exposes 19 tools across email, messaging, and drive domains over stdio, with Ed25519-signed agent-to-agent messages.
+
+Documentation and source are in [agenttrust/mcp-server](https://github.com/agenttrust/mcp-server).
+
+## Features
+
+- Seven email tools: inbox, read, send, reply, forward, draft, attachments.
+- Seven messaging tools: send, inbox, context, reply, comment, escalate, discover.
+- Five drive tools: upload, list, download, delete, usage.
+- Ed25519 message signing with locally generated keys.
+- Interactive `init` CLI for first-time configuration.
+
+## Use Cases
+
+- Send a quote request email to a supplier from your agent address.
+- Message another agent discovered via `agenttrust_discover`.
+- Upload a PDF report and share the file ID over A2A messaging.
+- Escalate a purchase approval to a human when limits are exceeded.
+- Read and reply to inbound procurement threads.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Sign up at agenttrust.ai and generate an `atk_` API key.
+2. Add the stdio server with `AGENTTRUST_API_KEY` in MCP env settings.
+3. Optionally run `npx @agenttrust/mcp-server init` for signing keys.
+4. Send a test email or message to verify the agent identity.
+
+### Claude Code
+
+```bash
+claude mcp add agenttrust -- npx -y @agenttrust/mcp-server
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "agenttrust": {
+      "command": "npx",
+      "args": ["-y", "@agenttrust/mcp-server"],
+      "env": {
+        "AGENTTRUST_API_KEY": "atk_your_key_here"
+      }
+    }
+  }
+}
+```
+
+For authenticated setups:
+
+```json
+{
+  "mcpServers": {
+    "agenttrust": {
+      "command": "npx",
+      "args": ["-y", "@agenttrust/mcp-server"],
+      "env": {
+        "AGENTTRUST_API_KEY": "atk_your_key_here",
+        "AGENTTRUST_ENDPOINT": "https://agenttrust.ai"
+      }
+    }
+  }
+}
+```
+
+Config is persisted at `~/.agenttrust/config.json`; protect that directory on shared machines.
+
+## Examples
+
+### Send email
+
+```text
+Use agenttrust_email_send to email user@example.com about a 500-unit quote request.
+```
+
+### Agent message
+
+```text
+Discover procurement-agent and send a message requesting pricing by Friday.
+```
+
+### Escalate
+
+```text
+Escalate task tk_abc123 because the purchase exceeds my authorization limit.
+```
+
+## Security
+
+- Treat AgentTrust API keys like combined email and messaging credentials.
+- Review outbound email drafts before send in regulated workflows.
+- Rotate keys with `agenttrust-mcp --regen-keys` if a host is compromised.
+
+## Troubleshooting
+
+### Missing API key
+
+Set AGENTTRUST_API_KEY or run `npx @agenttrust/mcp-server init`.
+
+### Send address rejected
+
+Agents can only send from their own `@agenttrust.ai` address.
+
+### Signature errors
+
+Regenerate Ed25519 keys with `--regen-keys` and update peer trust if needed.
+
+### Attachment download fails
+
+Signed URLs expire; request a fresh attachment URL.
+
+## Duplicate Check
+
+No existing AgentTrust entry was found in `content/mcp/`. This differs from AgentDM because AgentTrust bundles verified email, drive, and signed A2A messaging rather than general grid channels.
