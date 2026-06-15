@@ -1,0 +1,204 @@
+---
+title: AdAdvisor MCP Server for Claude
+slug: adadvisor-mcp-server
+category: mcp
+description: >-
+  Hosted AdAdvisor MCP server with curated Meta Ads workflows for browsing creatives, launching campaigns, building audiences, and optimizing performance from Claude via streamable HTTP.
+cardDescription: >-
+  Connect Claude to AdAdvisor for Meta Ads workflows—creative libraries, campaign launch, audience building, and optimization—through a hosted MCP connector.
+seoTitle: AdAdvisor MCP Server for Claude
+seoDescription: >-
+  Use the AdAdvisor MCP server with Claude for Meta Ads account workflows, performance insights, creative management, and media-buying automation via streamable HTTP.
+author: AdAdvisor
+authorProfileUrl: "https://www.adadvisor.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1456
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1456"
+repoUrl: "https://www.adadvisor.ai"
+documentationUrl: "https://www.adadvisor.ai/docs/user-guide/getting-started-with-mcp"
+websiteUrl: "https://www.adadvisor.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http adadvisor https://api.adadvisor.ai/mcp
+usageSnippet: >-
+  Add https://api.adadvisor.ai/mcp as a custom connector and authenticate with a Bearer token (adv_sk_...) from AdAdvisor API keys.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "adadvisor": {
+        "url": "https://api.adadvisor.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "adadvisor": {
+        "url": "https://api.adadvisor.ai/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer adv_sk_YOUR_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "AdAdvisor account with Meta Ads connected and an API key (adv_sk_...) for MCP authentication."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or another MCP client with streamable HTTP connectors."
+  - "Meta Ads account permissions sufficient for the campaigns and assets you plan to query or modify."
+  - "Review of AdAdvisor pricing and plan limits before enabling write workflows in production accounts."
+safetyNotes:
+  - "Workflow tools can create or modify Meta Ads campaigns, ad sets, creatives, and audiences when your token has write scope."
+  - "Bearer tokens grant persistent account access until revoked in AdAdvisor or Meta Business settings."
+  - "Treat returned spend, conversion, and audience data as business-sensitive before sharing in chat exports."
+  - "Verify AI-proposed budget or targeting changes before approving tool calls on live ad accounts."
+privacyNotes:
+  - "Account IDs, campaign names, creative assets, and performance metrics are sent to AdAdvisor and Meta APIs."
+  - "Store adv_sk_ API keys in connector headers or secrets managers, not in chat logs or source control."
+  - "AdAdvisor may retain usage telemetry under its platform terms; review privacy policy before connecting production accounts."
+tags:
+  - meta-ads
+  - advertising
+  - marketing
+  - remote-mcp
+keywords:
+  - adadvisor mcp
+  - meta ads claude
+  - facebook ads mcp
+  - media buying mcp
+  - adadvisor connector
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+AdAdvisor provides a hosted Model Context Protocol server aimed at media buyers running Meta Ads. Instead of exposing raw Graph API primitives, it offers curated workflows for browsing creative libraries, launching campaigns, uploading creatives, building retargeting audiences, and optimizing performance directly from Claude and other MCP clients.
+
+Setup and API key guidance are published at [adadvisor.ai](https://www.adadvisor.ai/mcp) and the connector is hosted at `https://api.adadvisor.ai/mcp`.
+
+## Features
+
+- Curated Meta Ads workflows for common media-buying tasks.
+- Query accounts, campaigns, ad sets, ads, metrics, and settings.
+- Browse and preview creative libraries inside chat.
+- Launch conversion campaigns and upload new creatives.
+- Build retargeting audiences and run performance optimization prompts.
+- Streamable HTTP transport with Bearer token authentication.
+
+## Use Cases
+
+- Review active campaign ROAS and pause underperforming ad sets from chat.
+- Browse video and image creatives before launching a seasonal sale.
+- Create a retargeting audience for site visitors who did not purchase.
+- Summarise weekly spend and conversion trends across ad accounts.
+- Draft a new prospecting campaign structure before manual review.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Create an AdAdvisor API key (`adv_sk_...`) under account settings.
+2. In Claude, open **Settings → Connectors → Add custom connector**.
+3. Set the URL to `https://api.adadvisor.ai/mcp` and add an `Authorization: Bearer adv_sk_...` header.
+4. Connect the account and invoke Meta Ads workflow tools in a new conversation.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http adadvisor https://api.adadvisor.ai/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "adadvisor": {
+      "url": "https://api.adadvisor.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+For authenticated setups:
+
+```json
+{
+  "mcpServers": {
+    "adadvisor": {
+      "url": "https://api.adadvisor.ai/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer adv_sk_YOUR_KEY"
+      }
+    }
+  }
+}
+```
+
+Add the `Authorization` header with your AdAdvisor API key for authenticated workflow tools.
+
+## Examples
+
+### Creative library browse
+
+```text
+Show me the videos and images in my Meta ad account creative library.
+```
+
+### Campaign performance
+
+```text
+How are my active conversion campaigns performing this week? Optimize what needs attention.
+```
+
+### Retargeting audience
+
+```text
+Build a retargeting audience for people who visited my site in the last 30 days but did not purchase.
+```
+
+## Security
+
+- AdAdvisor workflow tools can change live ad spend and targeting; confirm destructive actions.
+- Use least-privilege Meta Business roles for the connected ad account.
+- Rotate adv_sk_ keys if they appear in chat, screenshots, or shared configs.
+
+## Troubleshooting
+
+### 401 or auth errors
+
+Verify the Bearer token uses the `adv_sk_` prefix and matches an active AdAdvisor API key.
+
+### Empty account data
+
+Confirm the Meta ad account is linked in AdAdvisor and the key has access to that business.
+
+### Connector timeout
+
+Retry after a few seconds; hosted endpoints may cold-start during peak traffic.
+
+### Write action blocked
+
+Check Meta account permissions and AdAdvisor plan limits for campaign creation tools.
+
+## Duplicate Check
+
+No existing `adadvisor` slug or `adadvisor.ai` source URL was found in `content/mcp/`. This entry is distinct from generic marketing automation MCP servers because it targets AdAdvisor's curated Meta Ads workflows rather than raw Graph API wrappers.
