@@ -337,12 +337,17 @@ function validateReadmeCatalog(readmeContent) {
       );
     }
 
+    // Prettier escapes markdown-significant punctuation in prose (e.g. `*.md`
+    // becomes `\*.md`), so compare descriptions against an un-escaped view of
+    // the rendered README — otherwise any description containing `*`, `_`, `[`,
+    // etc. falsely reads as "missing".
+    const unescapedReadme = readmeContent.replace(/\\([^0-9A-Za-z\s])/g, "$1");
     for (const entry of entries) {
       const url = `https://heyclau.de/entry/${category}/${entry.slug}`;
       if (!readmeContent.includes(url)) {
         errors.push(`README catalog is missing ${category}/${entry.slug}.`);
       }
-      if (entry.description && !readmeContent.includes(entry.description)) {
+      if (entry.description && !unescapedReadme.includes(entry.description)) {
         errors.push(
           `README catalog is missing the frontmatter description for ${category}/${entry.slug}.`,
         );
