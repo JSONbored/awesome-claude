@@ -3,17 +3,20 @@ title: Database Migration Runner - Hooks
 slug: database-migration-runner
 category: hooks
 description: >-
-  Automated database migration management with rollback capabilities,
-  validation, and multi-environment support using Knex 3.x, Sequelize 6.x/7.x,
-  TypeORM 0.3.x, Django 5.x, and Rails 7.x.
+  PostToolUse hook that intercepts writes to migration, schema, and SQL files,
+  auto-detects your ORM from project files, and surfaces pending-migration
+  status plus DROP/DELETE/TRUNCATE warnings directly in Claude Code output.
 cardDescription: >-
-  Automated database migration management with rollback capabilities,
-  validation, and multi-environment support using Knex 3.x, Sequelize 6...
+  Detects migration and SQL file edits, checks package.json for
+  Knex/Sequelize/TypeORM, looks for manage.py or a Rails Gemfile, and prints
+  pending-migration counts plus safe-practice reminders to stderr...
 seoTitle: Database Migration Runner - Hooks
 seoDescription: >-
-  Automated database migration management with rollback capabilities,
-  validation, and multi-environment support using Knex 3.x, Sequelize 6.x/7.x,
-  TypeORM 0.3....
+  Claude Code PostToolUse hook triggered by writes or edits to files matching
+  migration, schema, or .sql patterns. Checks package.json for Knex 3.x,
+  Sequelize 6.x/7.x, or TypeORM 0.3.x; runs showmigrations for Django 5.x
+  projects; inspects raw SQL for destructive statements before surfacing
+  actionable status in the session. Discover tools for AI development.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
@@ -95,15 +98,6 @@ robotsFollow: true
 - CI/CD pipeline integration with automated migration execution and status reporting for deployment workflows
 - Destructive operation detection warning about DROP/DELETE/TRUNCATE statements with recommendations for safe migration practices
 - Migration best practices reminders including backup recommendations, testing guidelines, and reversible migration patterns
-
-## Use Cases
-
-- Automated database schema evolution in development workflows detecting and validating migrations as they are created
-- CI/CD pipeline integration for deployment migrations automatically running migrations during deployment processes
-- Multi-environment database synchronization ensuring consistent schema across development, staging, and production environments
-- Migration validation and rollback safety checking migration files for potential issues before execution
-- Database versioning and change tracking maintaining a complete history of database schema changes
-- Development workflow optimization providing immediate feedback on migration files and framework-specific guidance
 
 ## Installation
 
@@ -240,108 +234,6 @@ else
   echo "File $FILE_PATH is not a migration file, skipping analysis" >&2
 fi
 
-exit 0
-```
-
-## Examples
-
-### Database Migration Runner Hook Script
-
-Complete hook script that detects migration files and checks migration status
-
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name')
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
-if [ -z "$FILE_PATH" ]; then
-  exit 0
-fi
-if [[ "$FILE_PATH" == *migration* ]] || [[ "$FILE_PATH" == *schema* ]] || [[ "$FILE_PATH" == *.sql ]]; then
-  echo "Database migration file detected: $FILE_PATH" >&2
-  if [ -f "package.json" ] && (grep -q "knex" package.json || grep -q "sequelize" package.json || grep -q "typeorm" package.json); then
-    if command -v npx &> /dev/null && npx knex --version &> /dev/null 2>&1; then
-      echo "Running Knex migration status check..." >&2
-      MIGRATION_STATUS=$(npx knex migrate:status 2>/dev/null || echo "No pending migrations")
-      echo "Migration Status: $MIGRATION_STATUS" >&2
-    fi
-  fi
-fi
-exit 0
-```
-
-### Hook Configuration
-
-Complete hook configuration for .claude/settings.json to enable database migration detection on file write/edit
-
-```json
-{
-  "hooks": {
-    "postToolUse": {
-      "script": "./.claude/hooks/database-migration-runner.sh",
-      "matchers": ["write", "edit"]
-    }
-  }
-}
-```
-
-### SQL Migration Analysis
-
-Enhanced hook script that analyzes SQL migration files for destructive operations and schema changes
-
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
-if [[ "$FILE_PATH" == *.sql ]]; then
-  if [ -f "$FILE_PATH" ]; then
-    LINE_COUNT=$(wc -l < "$FILE_PATH" 2>/dev/null || echo "0")
-    echo "SQL file contains $LINE_COUNT lines" >&2
-    if grep -i "DROP\|DELETE\|TRUNCATE" "$FILE_PATH" >/dev/null 2>&1; then
-      echo "WARNING: Potentially destructive SQL operations detected (DROP/DELETE/TRUNCATE)" >&2
-      echo "Consider creating a backup before executing this migration" >&2
-    fi
-    if grep -i "CREATE TABLE\|ALTER TABLE\|CREATE INDEX" "$FILE_PATH" >/dev/null 2>&1; then
-      echo "Schema modification statements detected" >&2
-    fi
-  fi
-fi
-exit 0
-```
-
-### Django Migration Detection
-
-Enhanced hook script for Django migration detection and status checking
-
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
-if [[ "$FILE_PATH" == *migration* ]] && [ -f "manage.py" ]; then
-  echo "Django project detected" >&2
-  if command -v python &> /dev/null; then
-    echo "Checking Django migration status..." >&2
-    python manage.py showmigrations --plan 2>/dev/null | tail -5 | head -3 || echo "Run 'python manage.py showmigrations' to check status" >&2
-  fi
-fi
-exit 0
-```
-
-### Rails Migration Detection
-
-Enhanced hook script for Rails migration detection and status checking
-
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
-if [[ "$FILE_PATH" == *migration* ]] && [ -f "Gemfile" ] && grep -q "rails" Gemfile; then
-  echo "Rails project detected" >&2
-  if command -v bundle &> /dev/null; then
-    echo "Checking Rails migration status..." >&2
-    bundle exec rails db:migrate:status 2>/dev/null | tail -5 || echo "Run 'rails db:migrate:status' to check status" >&2
-  fi
-fi
 exit 0
 ```
 
