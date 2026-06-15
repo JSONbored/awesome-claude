@@ -2,10 +2,10 @@
 title: Image OCR + Table Extraction Skill
 slug: image-ocr-table-extraction
 category: skills
-description: "Extract text and tabular data from images, scanned documents, and PDFs using Tesseract OCR engine with OpenCV preprocessing. Supports multi-language OCR (100+ languages), table structure detection, confidence scoring, orientation correction, and exports to CSV, JSON, and structured formats."
-cardDescription: "Extract text and tabular data from images, scanned documents, and PDFs using Tesseract OCR engine with OpenCV preprocessing."
-seoTitle: Image OCR + Table Extraction Skill
-seoDescription: "Extract text and tabular data from images, scanned documents, and PDFs using Tesseract OCR engine with OpenCV preprocessing. Supports multi-language OCR (100..."
+description: "Pull text out of images, scans, and PDFs with the Tesseract OCR engine and OpenCV preprocessing. Run OCR in 100+ languages, read per-word confidence and page orientation (OSD), binarize and deskew for accuracy, and reconstruct tables into CSV or JSON."
+cardDescription: "OCR images, scans, and PDFs with Tesseract + OpenCV: 100+ languages, confidence scores, OSD orientation, and table-to-CSV/JSON."
+seoTitle: "Tesseract OCR Skill: Text & Table Extraction from Images"
+seoDescription: "Extract text and tables from images, scans, and PDFs with Tesseract OCR + OpenCV: 100+ languages, confidence scores, orientation detection, and CSV/JSON output."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-15"
@@ -32,6 +32,8 @@ verificationStatus: draft
 verifiedAt: "2025-10-15"
 retrievalSources:
   - "https://tesseract-ocr.github.io/"
+  - "https://docs.opencv.org/"
+  - "https://pypi.org/project/pytesseract/"
 testedPlatforms:
   - Claude
   - Codex
@@ -46,6 +48,10 @@ prerequisites:
   - Tesseract OCR binary with language data
   - Image file access permissions - read access to input image files and write access for OCR output files
   - "System libraries: Tesseract OCR binary installed system-wide (not just Python package) with language data packs for target languages"
+safetyNotes:
+  - "This skill installs the Tesseract binary, pytesseract, OpenCV, and Pillow (or the maintainer-built package via the curl download), runs OCR scripts, and writes extracted text/CSV/JSON to disk, overwriting existing output files."
+privacyNotes:
+  - "Image and document contents are processed locally through Tesseract and OpenCV; scans can contain personal or sensitive data, so handle the extracted output accordingly. Nothing leaves the machine beyond the initial package downloads."
 tags:
   - ocr
   - image
