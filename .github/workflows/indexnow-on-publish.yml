@@ -1,0 +1,78 @@
+name: IndexNow on publish
+
+# Fire an IndexNow submission the moment content lands on main, for near-instant
+# Bing/Yandex/Seznam/Naver pickup. Complements the daily Worker cron
+# (apps/web/plugins/indexnow-scheduled.ts), which is the catch-all safety net —
+# IndexNow dedupes, so overlap is harmless. No secrets: the IndexNow key is
+# public (served from the site root + committed), so this runs on the runner and
+# POSTs straight to api.indexnow.org.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "content/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow-on-publish
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Collect changed entry URLs (live only)
+        id: urls
+        run: |
+          set -euo pipefail
+          base="${{ github.event.before }}"
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            base="HEAD~1"
+          fi
+
+          # Added or modified content entries (deletes are skipped — we don't
+          # ping URLs that no longer exist).
+          changed="$(git diff --name-only --diff-filter=AM "$base" "${{ github.sha }}" -- 'content/**/*.mdx' || true)"
+
+          : > indexnow-urls.txt
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            rel="${file#content/}"          # <category>/<slug>.mdx
+            category="${rel%%/*}"
+            slug="${rel#*/}"; slug="${slug%.mdx}"
+            # Skip anything that isn't a flat <category>/<slug> entry (e.g. archive/).
+            case "$slug" in */*) continue;; esac
+            url="https://heyclau.de/entry/${category}/${slug}"
+            # Only submit URLs that are actually live (filters non-entry paths and
+            # entries whose deploy hasn't propagated yet — the daily cron re-catches those).
+            code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$url" || echo 000)"
+            if [ "$code" = "200" ]; then
+              echo "$url" >> indexnow-urls.txt
+              echo "live   $url"
+            else
+              echo "skip   $url (HTTP $code)"
+            fi
+          done <<< "$changed"
+
+          count="$(grep -c . indexnow-urls.txt || true)"
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "Submitting $count live entry URL(s)."
+
+      - name: Submit to IndexNow
+        if: steps.urls.outputs.count != '0'
+        env:
+          INDEXNOW_SUBMIT: "1"
+        run: node scripts/submit-indexnow.mjs --urls-file indexnow-urls.txt
