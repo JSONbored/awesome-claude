@@ -1,0 +1,203 @@
+---
+title: AdWeave Meta Ads MCP Server for Claude
+slug: adweave-meta-ads-mcp-server
+category: mcp
+description: >-
+  Hosted AdWeave Meta Ads MCP server with 47 tools for campaigns, creatives, audiences, and insights over streamable HTTP with AdWeave API key authentication.
+cardDescription: >-
+  Connect Claude to AdWeave for Meta Ads campaign, creative, audience, and insights tooling through a hosted MCP connector with 47 tools.
+seoTitle: AdWeave Meta Ads MCP Server for Claude
+seoDescription: >-
+  Use the AdWeave Meta Ads MCP server with Claude to manage campaigns, creatives, audiences, and insights via https://mcp.adweave.ai/meta-ads-mcp.
+author: AdWeave
+authorProfileUrl: "https://adweave.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1459
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1459"
+repoUrl: "https://mcp.adweave.ai/meta-ads-mcp"
+documentationUrl: "https://mcp.adweave.ai/meta-ads-mcp"
+websiteUrl: "https://adweave.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http adweave https://mcp.adweave.ai/meta-ads-mcp
+usageSnippet: >-
+  Add https://mcp.adweave.ai/meta-ads-mcp with an Authorization Bearer token using your AdWeave API key (aw_ prefix).
+copySnippet: |-
+  {
+    "mcpServers": {
+      "adweave": {
+        "url": "https://mcp.adweave.ai/meta-ads-mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "adweave": {
+        "url": "https://mcp.adweave.ai/meta-ads-mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer aw_YOUR_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "AdWeave account with Meta Ads connected and an API key (`aw_...`)."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or another MCP client with HTTP connectors."
+  - "Meta Business permissions appropriate for the campaigns and assets you will manage."
+  - "Review of which of the 47 tools your workflow needs to avoid over-broad automation."
+safetyNotes:
+  - "Campaign, creative, and audience tools can modify live Meta ad accounts."
+  - "API keys grant persistent access until rotated in AdWeave."
+  - "Large insight queries may return spend and audience data suitable only for trusted chats."
+  - "Confirm budget and targeting changes suggested by the model before approving write tools."
+privacyNotes:
+  - "Ad account structure, creative assets, and performance metrics are processed by AdWeave."
+  - "Store `aw_` API keys in connector headers or secret stores, not in chat or git."
+  - "Meta user and custom audience data may be subject to platform advertising policies."
+tags:
+  - meta-ads
+  - advertising
+  - marketing
+  - remote-mcp
+keywords:
+  - adweave mcp
+  - meta ads mcp server
+  - facebook ads claude
+  - adweave meta ads
+  - mcp.adweave.ai
+readingTime: 4
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+AdWeave provides a hosted Model Context Protocol server purpose-built for Meta Ads management. The connector exposes 47 tools covering campaigns, creatives, audiences, and insights so Claude and other MCP clients can operate ad accounts without hand-rolling Graph API calls.
+
+The server is listed in the MCP registry as `ai.adweave/meta-ads-mcp` and hosted at `https://mcp.adweave.ai/meta-ads-mcp`.
+
+## Features
+
+- 47 Meta Ads tools across campaigns, ad sets, ads, creatives, and insights.
+- Streamable HTTP transport for modern MCP clients.
+- Bearer token authentication with AdWeave API keys.
+- Audience and creative management workflows.
+- Performance and delivery insight queries.
+
+## Use Cases
+
+- Audit active campaigns and pause underperforming ad sets from chat.
+- Create lookalike or retargeting audiences for a product launch.
+- Review creative fatigue across image and video assets.
+- Pull delivery and spend insights before a weekly performance review.
+- Draft campaign structure changes for human approval.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Generate an AdWeave API key with the `aw_` prefix from your dashboard.
+2. Add a custom connector pointing to `https://mcp.adweave.ai/meta-ads-mcp`.
+3. Set the `Authorization: Bearer aw_...` header on the connector.
+4. Connect and invoke Meta Ads tools from a new conversation.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http adweave https://mcp.adweave.ai/meta-ads-mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "adweave": {
+      "url": "https://mcp.adweave.ai/meta-ads-mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+For authenticated setups:
+
+```json
+{
+  "mcpServers": {
+    "adweave": {
+      "url": "https://mcp.adweave.ai/meta-ads-mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer aw_YOUR_KEY"
+      }
+    }
+  }
+}
+```
+
+The endpoint requires authentication; unauthenticated requests return an authorization error.
+
+## Examples
+
+### Campaign audit
+
+```text
+List my active Meta campaigns and flag any with CPA above target.
+```
+
+### Creative review
+
+```text
+Show top-spending image and video ads from the last 14 days.
+```
+
+### Audience build
+
+```text
+Create a retargeting audience for cart abandoners in the last 7 days.
+```
+
+## Security
+
+- Treat write-capable Meta Ads tools like production admin access.
+- Rotate AdWeave keys after team member offboarding.
+- Scope Meta Business roles to the minimum ad accounts required.
+
+## Troubleshooting
+
+### Authorization required
+
+Add a valid `Authorization: Bearer aw_...` header to the connector.
+
+### 403 on specific tools
+
+Verify the API key and Meta Business role include the target ad account.
+
+### Empty insights
+
+Confirm the date range, attribution window, and that the ad set has delivery in the period.
+
+### Connector not listed
+
+Restart the MCP client after saving connector JSON changes.
+
+## Duplicate Check
+
+No existing AdWeave or `mcp.adweave.ai` entry was found in `content/mcp/`. This entry is separate from AdAdvisor and generic Meta connectors because it targets AdWeave's 47-tool Meta Ads surface.
