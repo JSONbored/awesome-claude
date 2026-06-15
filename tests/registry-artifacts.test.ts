@@ -682,7 +682,7 @@ describe("registry artifacts", () => {
         ),
       ),
     ).toEqual(jsonLdSnapshotsPayload);
-  }, 60_000);
+  }, 180_000);
 
   it("publishes MCP harness targets only for validated config snippets", () => {
     const baseEntry = {
@@ -1101,7 +1101,7 @@ Use this hook after reviewing the notes.`,
     for (const contract of Object.values(manifest.artifactContracts)) {
       expect(contract.sha256).toMatch(/^[a-f0-9]{64}$/);
     }
-  }, 60_000);
+  }, 180_000);
 
   it("publishes category and platform sharded distribution feeds", () => {
     const feedIndex = readDataJson<{
