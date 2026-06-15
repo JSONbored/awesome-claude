@@ -1,0 +1,69 @@
+---
+title: Archon
+slug: archon
+category: tools
+description: Open-source agentic coding framework that uses Claude and Pydantic AI to autonomously build, iterate on, and run AI agents through a web UI and MCP integration.
+cardDescription: Build and iterate on AI agents autonomously using Claude, Pydantic AI, and a web UI with MCP support.
+seoTitle: Archon agentic AI agent builder
+seoDescription: Archon is an open-source agentic framework by Cole Medin that uses Claude and Pydantic AI to autonomously build, test, and iterate on AI agents through a web UI with MCP tool integration.
+author: coleam00
+authorProfileUrl: "https://github.com/coleam00"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-15"
+websiteUrl: "https://github.com/coleam00/Archon"
+repoUrl: "https://github.com/coleam00/Archon"
+documentationUrl: "https://github.com/coleam00/Archon/blob/main/README.md"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - agents
+  - python
+  - pydantic-ai
+  - mcp
+  - open-source
+keywords:
+  - archon agent builder
+  - pydantic ai agent framework
+  - autonomous agent coding
+  - claude agent builder
+  - mcp agent framework
+prerequisites:
+  - Python 3.11 or later and Docker (for the containerised web UI deployment).
+  - An Anthropic API key (Claude) or compatible model provider API key configured in the environment.
+  - Supabase or compatible PostgreSQL instance for agent memory and vector storage (required for persistent agent state).
+  - Basic familiarity with Pydantic AI agents and MCP server configuration before connecting external tool servers.
+safetyNotes:
+  - Archon operates as an autonomous coding agent that writes, executes, and iterates on code; review generated agent code before deploying it to production environments.
+  - MCP tool servers connected to Archon can grant the agent access to filesystems, APIs, databases, and external services; scope tool permissions to the minimum required.
+  - The web UI exposes an agent chat interface; use network-level controls and authentication before exposing it beyond localhost.
+  - Generated agents inherit the permission posture of the host environment; do not run Archon with elevated credentials unless explicitly required.
+privacyNotes:
+  - Archon sends prompts, tool schemas, agent instructions, and code context to the configured model provider (Anthropic by default); review the provider's data handling policy for your workload.
+  - Agent memory stored in Supabase or PostgreSQL can persist user inputs, conversation history, and code artifacts; configure retention policies and access controls accordingly.
+  - MCP tool calls may send workspace contents or intermediate outputs to connected third-party services depending on the tools enabled.
+---
+
+## Editorial notes
+
+Archon is an open-source project that turns Claude into a coding agent for building other AI agents. Instead of writing Pydantic AI agent code by hand, you describe the agent you want through a web UI, and Archon autonomously generates, tests, and refines the implementation.
+
+It is distinct from Pydantic AI (the underlying framework it generates code for) and from general-purpose coding assistants like Aider: Archon is specifically focused on the meta-task of agent construction — designing agent architectures, writing Pydantic AI boilerplate, wiring in MCP tool servers, and iterating until the agent behaves correctly.
+
+Reach for Archon when you want to bootstrap a Pydantic AI agent quickly, prototype multi-agent architectures, or explore MCP tool composition without writing the scaffolding yourself. If you need a general-purpose terminal coding assistant for arbitrary repositories, Aider or Claude Code is a better fit.
+
+## Source notes
+
+- The repository at `coleam00/Archon` documents Archon as an agentic framework for building AI agents using Pydantic AI and Claude, with a web UI and MCP integration.
+- The README describes Docker-based deployment, Supabase for vector memory, a streaming chat interface, and iterative agent refinement through an agentic loop.
+- The project supports Claude models via the Anthropic API and is designed to work with Pydantic AI's tool calling and structured output primitives.
+
+## Duplicate check
+
+Checked `content/tools/`, `content/agents/`, `content/mcp/`, all other content categories, and open PRs for: `Archon`, `archon`, `coleam00`, `coleam00/Archon`, `agent builder`, `pydantic ai agent builder`, `autonomous agent coding`. The only related entry is `pydantic-ai.mdx`, which covers the underlying framework; no dedicated Archon entry exists. This entry is distinct: it covers the `coleam00/Archon` meta-agent tool, not the Pydantic AI framework itself.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
