@@ -1,0 +1,204 @@
+---
+title: Agentic News MCP Server for Claude
+slug: agentic-news-mcp-server
+category: mcp
+description: >-
+  Agentic News MCP server delivers personalised real-time news intelligence with 21 tools for briefings, semantic search, monitoring agents, and collections via hosted HTTP or stdio npm package.
+cardDescription: >-
+  Connect Claude to Agentic News for personalised briefings, semantic search, topic agents, and story collections through MCP.
+seoTitle: Agentic News MCP Server for Claude
+seoDescription: >-
+  Use the Agentic News MCP server with Claude for AI-scored briefings, semantic news search, and monitoring agents via api.agentic-news.ai or @agentic/mcp-server.
+author: Agentic News
+authorProfileUrl: "https://github.com/u00dxk2"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1461
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1461"
+repoUrl: "https://github.com/u00dxk2/agentic-news"
+documentationUrl: "https://agentic-news.ai/mcp"
+websiteUrl: "https://agentic-news.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http agentic-news https://api.agentic-news.ai/mcp
+usageSnippet: >-
+  Add https://api.agentic-news.ai/mcp as a remote connector, or run `npx -y @agentic/mcp-server` with AGENTIC_API_KEY for stdio clients.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "agentic-news": {
+        "url": "https://api.agentic-news.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agentic": {
+        "command": "npx",
+        "args": ["-y", "@agentic/mcp-server"],
+        "env": {
+          "AGENTIC_API_KEY": "ak_your_key_here"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Agentic News account with an API key (`ak_...`) from Settings → API Keys."
+  - "Claude Desktop, Cursor, VS Code, or another MCP client with HTTP or stdio support."
+  - "Defined topics or agents you want monitored to avoid noisy briefings."
+  - "Awareness that the service is read-only and does not post on your behalf."
+safetyNotes:
+  - "News tools are read-only; they do not publish or act on external accounts."
+  - "Briefings may include sensitive industry or company mentions—handle outputs carefully."
+  - "Feedback tools train your monitoring agents; review thumbs-up/down before bulk automation."
+  - "Do not treat news summaries as verified facts without checking primary sources."
+privacyNotes:
+  - "Search queries, agent topics, and feedback signals are sent to Agentic News."
+  - "Story content may include third-party journalism subject to original publisher terms."
+  - "API keys grant access to your personalised agents and collections until revoked."
+tags:
+  - news
+  - research
+  - briefings
+  - remote-mcp
+  - agents
+keywords:
+  - agentic news mcp
+  - news briefing claude
+  - semantic news search
+  - agentic-news.ai
+  - real-time news mcp
+readingTime: 4
+difficultyScore: 30
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+Agentic News provides a personal news analyst for AI assistants through Model Context Protocol. Instead of dumping raw RSS feeds, it clusters 10,000+ sources, deduplicates stories, scores relevance with LLMs, and delivers Smart Brevity briefings tailored to your monitoring agents.
+
+Documentation is at [agentic-news.ai/mcp](https://agentic-news.ai/mcp). The MCP registry lists the hosted endpoint at `https://api.agentic-news.ai/mcp` and references the [u00dxk2/agentic-news](https://github.com/u00dxk2/agentic-news) repository.
+
+## Features
+
+- 21 tools across briefings, agents, search, feedback, and collections.
+- Semantic search across 10,000+ sources with deduplication.
+- Custom monitoring agents that learn from feedback.
+- Stateful since-last-check delivery to avoid duplicate stories.
+- Hosted streamable HTTP endpoint plus `@agentic/mcp-server` stdio package.
+
+## Use Cases
+
+- Ask for an overnight AI infrastructure briefing from your watch agents.
+- Create a new agent to track LLM model releases and benchmark news.
+- Search for recent MCP security vulnerabilities across global sources.
+- Save important stories to a research collection for later synthesis.
+- Train an agent with thumbs-up/down on relevance after each briefing.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Sign up at agentic-news.ai and copy your API key from Settings.
+2. Add `https://api.agentic-news.ai/mcp` as a remote connector, or configure the stdio npm package.
+3. Create at least one monitoring agent for your domain.
+4. Ask your assistant for today's briefing to verify connectivity.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http agentic-news https://api.agentic-news.ai/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "agentic-news": {
+      "url": "https://api.agentic-news.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+For authenticated setups:
+
+```json
+{
+  "mcpServers": {
+    "agentic": {
+      "command": "npx",
+      "args": ["-y", "@agentic/mcp-server"],
+      "env": {
+        "AGENTIC_API_KEY": "ak_your_key_here"
+      }
+    }
+  }
+}
+```
+
+For stdio clients, set `AGENTIC_API_KEY` in the environment block of `@agentic/mcp-server`.
+
+## Examples
+
+### Morning briefing
+
+```text
+What's in my briefing today from Agentic News?
+```
+
+### Create watcher
+
+```text
+Create an agent to track LLM model releases and benchmark announcements.
+```
+
+### Semantic search
+
+```text
+Search for MCP security vulnerabilities reported in the last 7 days.
+```
+
+## Security
+
+- Verify critical claims against primary sources before acting on briefings.
+- Limit API key sharing to trusted automation environments.
+- Review agent topics periodically to avoid unintentionally broad monitoring.
+
+## Troubleshooting
+
+### 401 unauthorized
+
+Verify the API key uses the `ak_` prefix and is active in account settings.
+
+### Empty briefing
+
+Create a monitoring agent first; initial scans may take a couple of minutes.
+
+### Duplicate stories
+
+Use since-last-check tools; clear feedback if an agent is over-matching.
+
+### Stdio package fails
+
+Ensure Node.js is installed and `AGENTIC_API_KEY` is exported in MCP env config.
+
+## Duplicate Check
+
+No existing Agentic News or `agentic-news.ai` entry was found in `content/mcp/`. This differs from generic RSS or Hacker News MCP servers because it provides personalised agents and AI-scored briefings.
