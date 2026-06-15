@@ -3,17 +3,17 @@ title: API Doc Generator
 slug: api-endpoint-documentation-generator
 category: hooks
 description: >-
-  Automatically generates or updates API documentation when endpoint files are
-  modified, supporting OpenAPI 3.1.0, Swagger 2.0, and AsyncAPI 2.0
-  specifications.
+  A PostToolUse hook that watches for writes to API endpoint, route, and
+  controller files, then generates or refreshes OpenAPI 3.1.0, Swagger 2.0,
+  and AsyncAPI 2.0 documentation without a manual build step.
 cardDescription: >-
-  Automatically generates or updates API documentation when endpoint files are
-  modified, supporting OpenAPI 3.1.0, Swagger 2.0, and AsyncAP...
-seoTitle: API Doc Generator
+  PostToolUse hook that watches API route and controller files, then
+  regenerates OpenAPI 3.1.0 or Swagger 2.0 docs automatically on write.
+seoTitle: "Claude Code Hook: Auto-Regenerate OpenAPI Docs on Endpoint Edit"
 seoDescription: >-
-  Automatically generates or updates API documentation when endpoint files are
-  modified, supporting OpenAPI 3.1.0, Swagger 2.0, and AsyncAPI 2.0
-  specifications...
+  Trigger on route or controller file writes and regenerate OpenAPI 3.1.0,
+  Swagger 2.0, or AsyncAPI 2.0 documentation automatically on every Claude
+  Code edit.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
@@ -24,9 +24,9 @@ installCommand: >-
   .claude/hooks/api-endpoint-documentation-generator.sh && chmod +x
   .claude/hooks/api-endpoint-documentation-generator.sh
 usageSnippet: >-
-  mkdir -p .claude/hooks && touch
-  .claude/hooks/api-endpoint-documentation-generator.sh && chmod +x
-  .claude/hooks/api-endpoint-documentation-generator.sh
+  Wire to PostToolUse write/edit matchers for routes and controllers;
+  the hook reads the modified file path, detects OpenAPI or Swagger
+  annotations, and writes updated documentation to your spec file.
 copySnippet: |-
   {
     "hooks": {
@@ -54,6 +54,13 @@ configSnippet: |-
 scriptLanguage: bash
 scriptBody: "#!/usr/bin/env bash\n\n# Read the tool input from stdin\nINPUT=$(cat)\nTOOL_NAME=$(echo \"$INPUT\" | jq -r '.tool_name')\nFILE_PATH=$(echo \"$INPUT\" | jq -r '.tool_input.file_path // .tool_input.path // \"\"')\n\nif [ -z \"$FILE_PATH\" ]; then\n  exit 0\nfi\n\n# Check if it's an API-related file\nif [[ \"$FILE_PATH\" == *routes/* ]] || [[ \"$FILE_PATH\" == *controllers/* ]] || [[ \"$FILE_PATH\" == *api/* ]]; then\n  echo \"\U0001F4DA Generating API documentation for $FILE_PATH...\"\n  \n  # Get file extension\n  EXT=\"${FILE_PATH##*.}\"\n  \n  case \"$EXT\" in\n    js|jsx|ts|tsx)\n      # JavaScript/TypeScript API files\n      if command -v swagger-jsdoc &> /dev/null && [ -f \"swaggerDef.js\" ]; then\n        echo \"Generating Swagger documentation...\"\n        npx swagger-jsdoc -d swaggerDef.js -o ./docs/api.json \"$FILE_PATH\" 2>/dev/null\n        echo \"✅ Swagger documentation updated\" >&2\n      elif command -v npx &> /dev/null; then\n        echo \"Generating JSDoc documentation...\"\n        npx jsdoc \"$FILE_PATH\" -d ./docs/api/ 2>/dev/null\n        echo \"✅ JSDoc documentation updated\" >&2\n      fi\n      ;;\n    py)\n      # Python API files\n      if command -v pydoc &> /dev/null; then\n        echo \"Generating Python API documentation...\"\n        python -m pydoc -w \"$FILE_PATH\" 2>/dev/null\n        echo \"✅ Python documentation updated\" >&2\n      fi\n      ;;\n  esac\nelse\n  echo \"File not in API directory, skipping documentation generation\" >&2\nfi\n\nexit 0"
 trigger: PostToolUse
+safetyNotes:
+  - "Runs automatically after every write or edit tool call matching routes/, controllers/, or api/ file paths."
+  - "Writes updated documentation files to ./docs/api/ or ./docs/api.json; confirm the output path is correct before enabling."
+  - "Invokes local swagger-jsdoc, jsdoc, or pydoc executables when available; verify these tools are trusted before the hook is active."
+privacyNotes:
+  - "Reads API source files (routes, controllers) to extract documentation; those files may contain endpoint logic, parameter names, or internal path structures."
+  - "Generated documentation files may expose API structure, endpoint names, and parameter schemas; treat them with the same access controls as your source code."
 tags:
   - api
   - documentation
