@@ -3,21 +3,28 @@ title: Cache Efficiency Monitor - Statuslines
 slug: cache-efficiency-monitor
 category: statuslines
 description: >-
-  Claude Code prompt caching efficiency monitor tracking cache hits, write
-  efficiency, and cost savings with visual hit rate indicators and optimization
-  recommendations.
+  A Claude Code statusline that reads prompt-cache token metrics from session
+  JSON and renders a color-coded hit-rate bar with an estimated token-savings
+  readout.
 cardDescription: >-
-  Claude Code prompt caching efficiency monitor tracking cache hits, write
-  efficiency, and cost savings with visual hit rate indicators and...
-seoTitle: Cache Efficiency Monitor - Statuslines
+  Shows cache hit rate as a 20-char bar, flags low-reuse sessions, and
+  estimates tokens saved from cache reads — refreshed every two seconds.
+seoTitle: Prompt Cache Hit-Rate Statusline for Claude Code
 seoDescription: >-
-  Claude Code prompt caching efficiency monitor tracking cache hits, write
-  efficiency, and cost savings with visual hit rate indicators and optimization
-  recomm...
+  Claude Code statusline that tracks prompt-cache hit rate, write efficiency,
+  and estimated token savings from session cost metrics, with color-coded
+  status.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
 documentationUrl: "https://code.claude.com/docs/en/statusline"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+  - "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+safetyNotes:
+  - "Runs a bash script on every status-line refresh (about every 2 seconds) that pipes session JSON through jq and bc; it is read-only and makes no network calls or file writes, but status-line commands execute with your shell's permissions, so review the script before adding it to settings.json."
+privacyNotes:
+  - "Reads Claude Code session cost and token metrics from the status-line JSON on stdin and prints them to your terminal; no data leaves the machine, but the displayed figures may be visible to anyone viewing your screen or a terminal recording."
 installable: true
 usageSnippet: "✓ Cache: ████████████░░░░░░░░ 60% | \U0001F4B0 ~4,500 tok saved"
 copySnippet: |-
