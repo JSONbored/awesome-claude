@@ -3,20 +3,23 @@ title: Cloud Backup On Session Stop - Hooks
 slug: cloud-backup-on-session-stop
 category: hooks
 description: >-
-  Automatically backs up changed files to cloud storage when Claude Code session
-  ends using AWS S3, Google Cloud Storage, or rclone for universal cloud
-  provider support.
+  A Stop hook that syncs your changed files to cloud storage when a Claude Code
+  session ends, using rclone to push to S3, Google Cloud Storage, or any of its
+  70+ supported backends.
 cardDescription: >-
-  Automatically backs up changed files to cloud storage when Claude Code session
-  ends using AWS S3, Google Cloud Storage, or rclone for uni...
-seoTitle: Cloud Backup On Session Stop - Hooks
+  On session end, syncs modified files to S3, Google Cloud Storage, or any
+  rclone remote so a session's work is never lost.
+seoTitle: Cloud Backup Stop Hook for Claude Code
 seoDescription: >-
-  Automatically backs up changed files to cloud storage when Claude Code session
-  ends using AWS S3, Google Cloud Storage, or rclone for universal cloud
-  provide...
+  Stop hook for Claude Code that backs up changed files when a session ends,
+  using rclone to sync to S3, Google Cloud Storage, or any supported remote.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://rclone.org/docs/"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/cloud-backup-on-session-stop.sh
