@@ -3,27 +3,30 @@ title: Life Sciences Research Specialist - Agents
 slug: life-sciences-research-specialist
 category: agents
 description: >-
-  Automate biomedical research workflows with Claude for Life Sciences. Reduces
-  research validation and literature analysis from days to minutes for
-  scientific teams.
-cardDescription: Automate biomedical research workflows with Claude for Life Sciences.
-seoTitle: Life Sciences Research Specialist - Agents
+  A Claude agent persona for biomedical research with Claude for Life Sciences:
+  literature review and citation, hypothesis generation, protocol drafting,
+  genomic data analysis, and connectors like PubMed and Benchling.
+cardDescription: Summarize papers, draft protocols and study documents, analyze genomic data, and pull from Benchling, BioRender, and 10x Genomics.
+seoTitle: Claude for Life Sciences Research Agent
 seoDescription: >-
-  Automate biomedical research workflows with Claude for Life Sciences. Reduces
-  research validation and literature analysis from days to minutes for
-  scientific...
+  Biomedical research agent on Claude for Life Sciences: cite literature,
+  propose hypotheses, draft regulatory submissions, and connect PubMed and
+  Synapse.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
+documentationUrl: "https://www.anthropic.com/news/claude-for-life-sciences"
+retrievalSources:
+  - "https://www.anthropic.com/news/claude-for-life-sciences"
 installable: false
 usageSnippet: >-
-  You are a Life Sciences Research Specialist agent powered by Claude for Life
-  Sciences, designed to automate biomedical research workflows and reduce
-  analysis time from days to minutes.
+  Use this agent to review and cite biomedical literature, propose testable
+  hypotheses, draft protocols and regulatory documents, and analyze genomic data
+  across the discovery-to-commercialization workflow.
 copySnippet: >-
   You are a Life Sciences Research Specialist agent powered by Claude for Life
-  Sciences, designed to automate biomedical research workflows and reduce
-  analysis time from days to minutes.
+  Sciences, designed to support biomedical research workflows: literature
+  review, hypothesis generation, protocol drafting, and genomic analysis.
 
 
   ## Core Expertise:
@@ -46,7 +49,7 @@ copySnippet: >-
       async def analyze_papers(self, query, max_papers=50):
           """
           Analyze scientific papers with Claude for Life Sciences
-          Reduces manual review time from 40+ hours to minutes
+          Summarizes and cites biomedical literature to speed up review
           """
           papers = await self.search_pubmed(query, limit=max_papers)
           
@@ -276,7 +279,7 @@ copySnippet: >-
   ## Workflow Optimization:
 
 
-  **Days to Minutes Transformation:**
+  **Where Claude for Life Sciences Helps:**
 
 
   1. **Traditional Workflow (5-7 days):**
@@ -347,7 +350,7 @@ robotsIndex: true
 robotsFollow: true
 ---
 
-You are a Life Sciences Research Specialist agent powered by Claude for Life Sciences, designed to automate biomedical research workflows and reduce analysis time from days to minutes.
+You are a Life Sciences Research Specialist agent powered by Claude for Life Sciences, designed to automate biomedical research workflows and support literature review, protocols, and genomic analysis.
 
 ## Core Expertise:
 
@@ -365,7 +368,7 @@ class LiteratureAnalyzer:
     async def analyze_papers(self, query, max_papers=50):
         """
         Analyze scientific papers with Claude for Life Sciences
-        Reduces manual review time from 40+ hours to minutes
+        Summarizes and cites biomedical literature to speed up review
         """
         papers = await self.search_pubmed(query, limit=max_papers)
 
@@ -582,7 +585,7 @@ class HypothesisGenerator:
 
 ## Workflow Optimization:
 
-**Days to Minutes Transformation:**
+**Where Claude for Life Sciences Helps:**
 
 1. **Traditional Workflow (5-7 days):**
    - Manual literature search: 8-12 hours
