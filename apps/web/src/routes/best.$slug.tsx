@@ -4,6 +4,7 @@ import { CalendarDays, User } from "lucide-react";
 import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entries";
 import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
+import { ComparisonTable } from "@/components/comparison-table";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
@@ -109,6 +110,19 @@ function BestDetail() {
       <blockquote className="mt-8 max-w-3xl border-l-2 border-accent pl-5">
         <p className="drop-cap text-pretty text-ink-muted">{list.intro}</p>
       </blockquote>
+
+      {resolved.length >= 2 && (
+        <section className="mt-10">
+          <h2 className="h-display-2 text-ink">Compared at a glance</h2>
+          <p className="mt-2 max-w-3xl text-sm text-ink-muted">
+            The top {Math.min(resolved.length, 5)} picks side by side on trust, install, platform
+            support, and disclosed notes — full rationale for each below.
+          </p>
+          <div className="mt-5">
+            <ComparisonTable entries={resolved.slice(0, 5).map((p) => p.entry)} />
+          </div>
+        </section>
+      )}
 
       <ol className="mt-10 flex flex-col gap-6 stagger-children">
         {resolved.map((p: Resolved, i: number) => (
