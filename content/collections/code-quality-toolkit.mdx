@@ -2,21 +2,18 @@
 title: Code Quality & Review
 slug: code-quality-toolkit
 category: collections
-description: >-
-  Comprehensive suite of tools for maintaining high code quality through
-  automated reviews, testing, and best practice enforcement. Essential for teams
-  focused on code excellence.
-cardDescription: >-
-  Comprehensive suite of tools for maintaining high code quality through
-  automated reviews, testing, and best practice enforcement.
-seoTitle: Code Quality & Review
-seoDescription: >-
-  Comprehensive suite of tools for maintaining high code quality through
-  automated reviews, testing, and best practice enforcement. Essential for teams
-  focused...
+description: "A collection that bundles three Claude Code resources for code review: a code-reviewer sub-agent plus the generate-tests and explain commands."
+cardDescription: "Sets up automated review — a scoped reviewer agent, test scaffolding, and on-demand explanations of unfamiliar code."
+seoTitle: "Code Review Sub-Agent and Test Commands Collection"
+seoDescription: "Claude Code bundle that critiques diffs, covers them with generated tests, and clarifies tricky logic — wiring a reviewer agent to two slash commands."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-02"
+documentationUrl: "https://code.claude.com/docs/en/sub-agents"
+retrievalSources:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://code.claude.com/docs/en/common-workflows"
 installable: false
 usageSnippet: Start with `code-reviewer-agent` → `generate-tests` → `explain`
 items:
@@ -82,36 +79,33 @@ Comprehensive suite of tools for maintaining high code quality through automated
 
 ## TL;DR
 
-A comprehensive code quality suite featuring linters, formatters, automated review tools, and CI/CD integrations. Ensure consistent code standards and catch issues before they reach production.
+This collection bundles three Claude Code resources for a code review workflow: the `code-reviewer-agent` sub-agent and the `generate-tests` and `explain` slash commands.
 
-- ESLint, Prettier, and language-specific linters configured for Claude
-- Automated code review agents and quality gates
-- Pre-commit hooks and CI/CD integration patterns
-- Code coverage and static analysis tools
+- `code-reviewer-agent` reviews code and flags issues
+- `generate-tests` creates tests for your code
+- `explain` walks through how existing code works
 
-Maintain high code quality standards with this collection of automated review tools, linting configurations, and Claude-powered code analysis workflows that catch bugs early and enforce best practices.
+Install the items in the recommended order to review code, add test coverage, and understand unfamiliar code from inside Claude Code.
 
 ## Collection Overview
 
-**Collection Type:** Code Quality & DevOps
-**Focus Area:** Automated Code Review
-**Skill Level:** All Levels
-**Time Saving:** 30-50% reduction in manual code review time
+**Collection Type:** Code Quality & Review
+**Focus Area:** Code review, test generation, and code explanation
+**Skill Level:** Intermediate
 
 ## What's Included
 
 ## Collection Contents
 
-Tools for maintaining code excellence
+The three resources bundled in this collection:
 
-- **Code Linters** (Linting): ESLint, Biome, and language-specific linters with opinionated configs for consistent code style.
-- **Automated Review** (Review): Claude-powered code review agents that analyze PRs for bugs, security issues, and best practices.
-- **Quality Gates** (Testing): Test coverage requirements, mutation testing, and quality metrics that block merges until met.
-- **Pipeline Integration** (CI/CD): GitHub Actions, GitLab CI, and Jenkins configs for automated quality checks on every commit.
+- **code-reviewer-agent** (Agent): a Claude Code sub-agent that reviews code and surfaces bugs, risks, and best-practice issues.
+- **generate-tests** (Command): a slash command that generates tests for selected code.
+- **explain** (Command): a slash command that explains how existing code works.
 
 ## Quick Start
 
-Start with the linters and formatters, then add automated review agents and CI/CD integrations. Each tool is independently useful but works best when combined.
+Install `code-reviewer-agent` first, then `generate-tests`, then `explain`. Each item is independently useful but they work well together for a review-and-test workflow.
 
 ## Prerequisites
 
