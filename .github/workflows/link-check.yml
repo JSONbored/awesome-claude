@@ -1,10 +1,9 @@
 name: link-check
 # A REQUIRED status check that guarantees no DEAD source link merges. It always runs (so the required
 # check always reports a status — a path-filtered workflow would deadlock a required check on PRs that
-# don't touch content), but it only does real work when CHANGED content files actually contain source
-# URLs — "only when necessary". It checks ONLY the URLs in the changed content files (diff-scoped), never
-# the whole repo. Fails the PR on a hard-dead link (404/410/DNS); transient/blocked responses
-# (403/429/5xx/timeout) are warnings, not failures, so a flaky host can't false-block a PR.
+# don't touch content), but only does real work when CHANGED content files actually contain source URLs,
+# and checks ONLY the URLs in the diff (never the whole repo). Fails on a hard-dead link (404/410);
+# transient/blocked responses (403/429/5xx/timeout) are warnings, not failures.
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -28,12 +27,16 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -uo pipefail
-          files=$(git diff --name-only --diff-filter=AM "$BASE_SHA" "$HEAD_SHA" -- 'content/**/*.mdx' || true)
-          if [ -z "$files" ]; then echo "No content files changed — nothing to check."; exit 0; fi
-          echo "Changed content files:"; echo "$files" | sed 's/^/  /'
-          # Source-URL frontmatter fields + array-item URLs (retrievalSources / sourceUrls) in the CHANGED files only.
-          urls=$( { grep -hoE '(documentationUrl|docsUrl|repoUrl|repositoryUrl|sourceUrl|websiteUrl|githubUrl|packageUrl):[[:space:]]*"?https?://[^"[:space:]]+' $files 2>/dev/null | grep -oE 'https?://[^"[:space:]]+'
-                    grep -hoE '^[[:space:]]*-[[:space:]]*"?https?://[^"[:space:]]+' $files 2>/dev/null | grep -oE 'https?://[^"[:space:]]+'
+          # Read changed files NUL-delimited into an array so attacker-controlled fork-PR filenames
+          # (spaces, globs, metacharacters, leading dashes) are handled SAFELY: passed to grep quoted
+          # (no word-splitting / globbing) and after `--` (a filename can never be read as a grep option).
+          mapfile -d '' -t files < <(git diff -z --name-only --diff-filter=AM "$BASE_SHA" "$HEAD_SHA" -- 'content/**/*.mdx')
+          # drop any empty trailing element
+          tmp=(); for f in "${files[@]}"; do [ -n "$f" ] && tmp+=("$f"); done; files=("${tmp[@]}")
+          if [ "${#files[@]}" -eq 0 ]; then echo "No content files changed — nothing to check."; exit 0; fi
+          printf 'Changed content files:\n'; printf '  %s\n' "${files[@]}"
+          urls=$( { grep -hoE '(documentationUrl|docsUrl|repoUrl|repositoryUrl|sourceUrl|websiteUrl|githubUrl|packageUrl):[[:space:]]*"?https?://[^"[:space:]]+' -- "${files[@]}" 2>/dev/null | grep -oE 'https?://[^"[:space:]]+'
+                    grep -hoE '^[[:space:]]*-[[:space:]]*"?https?://[^"[:space:]]+' -- "${files[@]}" 2>/dev/null | grep -oE 'https?://[^"[:space:]]+'
                   } | sort -u )
           if [ -z "$urls" ]; then echo "No source URLs in the changed content files."; exit 0; fi
           n=$(echo "$urls" | wc -l | tr -d ' ')
@@ -46,8 +49,8 @@ jobs:
               code=$(curl -sS -A "awesome-claude-link-check" -o /dev/null -L --max-time 20 -w '%{http_code}' "$u" 2>/dev/null || echo 000)
               case "$code" in
                 2*) ok=1; break ;;
-                404|410) ok=0; break ;;                 # hard dead — no retry
-                *) sleep 4 ;;                            # 3xx-stuck / 403 / 429 / 5xx / 000 → retry
+                404|410) ok=0; break ;;
+                *) sleep 4 ;;
               esac
             done
             if [ "$ok" = 1 ]; then echo "  ok   $code  $u"
