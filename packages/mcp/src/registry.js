@@ -71,6 +71,7 @@ const platformAliases = new Map([
 export const READ_ONLY_TOOL_NAMES = [
   "search_registry",
   "plan_workflow_toolbox",
+  "recommend_for_task",
   "server_info",
   "list_category_entries",
   "get_recent_updates",
@@ -124,6 +125,19 @@ export const TOOL_DEFINITIONS = [
       "Plan a read-only Claude or Codex workflow toolbox from ranked HeyClaude registry entries. Each entry includes an inline install block (install command, config snippet, download URL) and the recommended stack is summarized as a copy-pasteable installPlan, alongside trust and follow-up guidance.",
     inputSchema: jsonSchemaForTool("plan_workflow_toolbox"),
     outputSchema: jsonSchemaForToolOutput("plan_workflow_toolbox"),
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+  },
+  {
+    name: "recommend_for_task",
+    description:
+      "Answer 'what should I use to do X' in one call. Given a plain-language task (and optional platform/category), returns the best-match HeyClaude entries ranked by fit — each with why it fits, trust summary, disclosed safety/privacy notes, and an inline install block — plus a topPick and a consolidated installPlan. Unlike plan_workflow_toolbox it does not force category diversity; it returns the genuinely best matches. Collapses the search → compare → detail → asset loop into a single answer-shaped response.",
+    inputSchema: jsonSchemaForTool("recommend_for_task"),
+    outputSchema: jsonSchemaForToolOutput("recommend_for_task"),
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -1186,6 +1200,76 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
       "Recommendations are bounded and category-diverse where matching entries allow it.",
       "Prefer source-backed entries with safety/privacy notes for risk-bearing MCP, hooks, skills, commands, and statuslines.",
       "Use get_entry_detail, explain_entry_trust, compare_entries, and get_copyable_asset before relying on any entry.",
+    ],
+  };
+}
+
+export async function recommendForTask(args = {}, options = {}) {
+  const task = String(args.task || "").trim();
+  if (task.length < 2) {
+    return invalid("Task description must be at least 2 characters.");
+  }
+  const query = normalizeText(task);
+  const category = normalizeText(args.category);
+  const platform = normalizePlatform(args.platform);
+  const limit = Math.min(5, normalizeLimit(args.limit, 3));
+  const searchIndex = unwrapEntries(
+    await readJsonArtifact("search-index.json", options),
+  );
+  const scoped = searchIndex
+    .filter((entry) => !category || entry.category === category)
+    .filter((entry) => entryMatchesPlatform(entry, platform));
+  let matched = scoped.filter((entry) => entryMatchesQuery(entry, query));
+  const queryTokens = searchTokens(query);
+  if (!matched.length && queryTokens.length) {
+    matched = scoped.filter((entry) =>
+      queryTokens.some((token) => entrySearchText(entry).includes(token)),
+    );
+  }
+  // Best-match ranking, top-N — unlike the toolbox planner this does NOT force
+  // category diversity; it returns the genuinely closest entries for the task.
+  const ranked = rankSearchEntries(matched, query).slice(0, limit);
+  const recommendations = await Promise.all(
+    ranked.map(async (item) => {
+      const full = await readEntry(
+        item.entry.category,
+        item.entry.slug,
+        options,
+      ).catch(() => null);
+      return {
+        ...toEntrySummary(item.entry),
+        searchScore: item.score,
+        searchReasons: item.reasons,
+        why: toolboxFitReasons(item.entry, item),
+        caveats: toolboxCaveats(item.entry),
+        install: toolboxInstall(full || item.entry),
+      };
+    }),
+  );
+
+  const installPlan = recommendations
+    .filter((entry) => entry.install?.installCommand)
+    .map((entry) => ({
+      key: entry.key,
+      title: entry.title,
+      category: entry.category,
+      installCommand: entry.install.installCommand,
+    }));
+
+  return {
+    ok: true,
+    task,
+    category: category || "",
+    platform: platform || "",
+    count: recommendations.length,
+    topPick: recommendations[0]?.key || "",
+    recommendations,
+    installPlan,
+    trustSummary: toolboxTrustSummary(recommendations),
+    notes: [
+      "Best-match recommendations for the task; unlike plan_workflow_toolbox they are not forced to span categories.",
+      "This is metadata review only — it does not execute, install, or scan entries. Review trust before running anything.",
+      "Use compare_entries to weigh the top picks and explain_entry_trust before relying on any entry.",
     ],
   };
 }
@@ -2699,6 +2783,9 @@ export async function callRegistryTool(name, args = {}, options = {}) {
       break;
     case "plan_workflow_toolbox":
       result = await planWorkflowToolbox(parsedArgs, options);
+      break;
+    case "recommend_for_task":
+      result = await recommendForTask(parsedArgs, options);
       break;
     case "server_info":
       result = await getServerInfo(parsedArgs, options);

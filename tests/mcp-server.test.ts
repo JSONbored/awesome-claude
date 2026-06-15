@@ -86,6 +86,7 @@ function validToolArguments(name: string) {
   const argsByTool: Record<string, unknown> = {
     search_registry: { query: "mcp", limit: 1 },
     plan_workflow_toolbox: { goal: "code review automation", limit: 2 },
+    recommend_for_task: { task: "code review automation", limit: 2 },
     server_info: {},
     list_category_entries: { category: "mcp", limit: 1 },
     get_recent_updates: { limit: 1 },
@@ -788,6 +789,51 @@ describe("HeyClaude read-only MCP helpers", () => {
           expect.objectContaining({ path: "bodyMode" }),
         ]),
       },
+    });
+  });
+
+  it("recommends best-match entries for a task with inline install", async () => {
+    const result = await callRegistryTool(
+      "recommend_for_task",
+      { task: "review pull requests", limit: 3 },
+      { dataDir },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      task: "review pull requests",
+      count: expect.any(Number),
+      topPick: expect.any(String),
+      recommendations: expect.any(Array),
+      installPlan: expect.any(Array),
+      trustSummary: expect.any(Object),
+      notes: expect.any(Array),
+    });
+    expect(result.recommendations.length).toBeGreaterThan(0);
+    expect(result.recommendations.length).toBeLessThanOrEqual(3);
+    expect(result.topPick).toBe(result.recommendations[0].key);
+
+    const pick = result.recommendations[0];
+    expect(pick).toMatchObject({
+      key: expect.any(String),
+      category: expect.any(String),
+      slug: expect.any(String),
+      why: expect.any(Array),
+      install: expect.objectContaining({ installable: expect.any(Boolean) }),
+    });
+    // installPlan only lists entries that actually publish a command.
+    for (const planned of result.installPlan) {
+      expect(typeof planned.installCommand).toBe("string");
+      expect(planned.installCommand.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("rejects an empty recommend_for_task task", async () => {
+    await expect(
+      callRegistryTool("recommend_for_task", { task: " " }, { dataDir }),
+    ).resolves.toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
     });
   });
 

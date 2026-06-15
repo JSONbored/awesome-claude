@@ -115,6 +115,32 @@ export const PlanWorkflowToolboxInputSchema = z
   })
   .strict();
 
+export const RecommendForTaskInputSchema = z
+  .object({
+    task: z
+      .string()
+      .trim()
+      .min(2)
+      .max(240)
+      .describe(
+        "Plain-language description of what you want to accomplish, e.g. 'review pull requests in Claude Code' or 'connect to a Postgres database'.",
+      ),
+    category: pathPart
+      .optional()
+      .describe("Restrict recommendations to a single category."),
+    platform: platform
+      .optional()
+      .describe("Restrict to entries compatible with this platform."),
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(5)
+      .optional()
+      .describe("Maximum recommendations to return (default 3)."),
+  })
+  .strict();
+
 export const ServerInfoInputSchema = z.object({}).strict();
 
 export const ListCategoryEntriesInputSchema = z
@@ -300,6 +326,7 @@ export const ReviewEntrySafetyInputSchema = z
 export const TOOL_INPUT_SCHEMAS = {
   search_registry: SearchRegistryInputSchema,
   plan_workflow_toolbox: PlanWorkflowToolboxInputSchema,
+  recommend_for_task: RecommendForTaskInputSchema,
   server_info: ServerInfoInputSchema,
   list_category_entries: ListCategoryEntriesInputSchema,
   get_recent_updates: RecentUpdatesInputSchema,
