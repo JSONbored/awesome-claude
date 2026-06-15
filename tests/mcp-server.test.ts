@@ -1406,6 +1406,54 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
   });
 
+  it("filters get_copyable_asset to a single requested assetType", async () => {
+    const full = await callRegistryTool(
+      "get_copyable_asset",
+      { category: skill.category, slug: skill.slug },
+      { dataDir },
+    );
+    expect(full.requestedAssetType).toBe("");
+    expect(full.assets.length).toBeGreaterThan(0);
+
+    const wantType = full.assets[0].type;
+    const filtered = await callRegistryTool(
+      "get_copyable_asset",
+      { category: skill.category, slug: skill.slug, assetType: wantType },
+      { dataDir },
+    );
+    expect(filtered.ok).toBe(true);
+    expect(filtered.requestedAssetType).toBe(wantType);
+    expect(filtered.assets.every((a: any) => a.type === wantType)).toBe(true);
+    expect(filtered.assets.length).toBeLessThanOrEqual(full.assets.length);
+    expect(filtered.primaryAsset?.type).toBe(wantType);
+
+    // Requesting an assetType the entry lacks returns an empty list, not an error.
+    const absent = await callRegistryTool(
+      "get_copyable_asset",
+      { category: skill.category, slug: skill.slug, assetType: "items" },
+      { dataDir },
+    );
+    expect(absent.ok).toBe(true);
+    expect(absent.assets.every((a: any) => a.type === "items")).toBe(true);
+
+    // Unknown assetType is rejected by the schema.
+    await expect(
+      callRegistryTool(
+        "get_copyable_asset",
+        { category: skill.category, slug: skill.slug, assetType: "nope" },
+        { dataDir },
+      ),
+    ).resolves.toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_request",
+        details: expect.arrayContaining([
+          expect.objectContaining({ path: "assetType" }),
+        ]),
+      },
+    });
+  });
+
   it("returns category-aware copyable assets and comparison metadata", async () => {
     const asset = await callRegistryTool(
       "get_copyable_asset",

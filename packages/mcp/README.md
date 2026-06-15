@@ -49,7 +49,8 @@ strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
   available via `get_copyable_asset`.
 - `get_copyable_asset` - fetch the category-aware copy/install asset for an
   entry, such as full prompt text, config snippets, commands, scripts, or
-  collection items.
+  collection items. Pass `assetType` (e.g. `install_command`) to return only
+  that asset and skip the large `full_content`/`script` payloads.
 - `compare_entries` - compare 2-5 entries by fit, category, platform support,
   install complexity, and source metadata.
 - `get_registry_stats` - fetch aggregate counts, freshness metadata, and real

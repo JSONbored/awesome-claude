@@ -188,6 +188,20 @@ export const CopyableAssetInputSchema = z
     category: pathPart,
     slug: pathPart,
     platform: platform.optional(),
+    assetType: z
+      .enum([
+        "full_content",
+        "install_command",
+        "config_snippet",
+        "script",
+        "command_syntax",
+        "usage",
+        "items",
+      ])
+      .optional()
+      .describe(
+        "Return only this asset type instead of every asset. Use it to avoid paying for the full_content or script payload (up to tens of KB) when you only need, e.g., the install_command or config_snippet.",
+      ),
   })
   .strict();
 

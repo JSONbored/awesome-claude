@@ -178,7 +178,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "get_copyable_asset",
     description:
-      "Fetch the category-aware copy/install asset for a HeyClaude entry without writing local files.",
+      "Fetch the category-aware copy/install asset for a HeyClaude entry without writing local files. Pass assetType (e.g. 'install_command', 'config_snippet') to return only that asset and avoid the full_content/script payloads when you do not need them.",
     inputSchema: jsonSchemaForTool("get_copyable_asset"),
   },
   {
@@ -1641,8 +1641,8 @@ export async function getCopyableAsset(args = {}, options = {}) {
     return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
   }
 
-  const primary = categoryPrimaryAsset(entry);
-  const assets = [
+  const requestedType = normalizeText(args.assetType);
+  const allAssets = [
     contentAsset(
       "full_content",
       "Full usable entry content",
@@ -1670,6 +1670,15 @@ export async function getCopyableAsset(args = {}, options = {}) {
     contentAsset("usage", "Usage snippet", entry.usageSnippet, "markdown"),
     contentAsset("items", "Collection items", entry.items, "json"),
   ].filter(Boolean);
+  // When a specific assetType is requested, return only that asset so the
+  // caller does not pay for the (potentially tens-of-KB) full_content/script
+  // payloads it did not ask for.
+  const assets = requestedType
+    ? allAssets.filter((asset) => asset.type === requestedType)
+    : allAssets;
+  const primary = requestedType
+    ? assets[0] || null
+    : categoryPrimaryAsset(entry);
   const compatibility = buildSkillPlatformCompatibility(entry);
 
   return {
@@ -1680,6 +1689,7 @@ export async function getCopyableAsset(args = {}, options = {}) {
     title: entry.title,
     canonicalUrl: entryCanonicalUrl(entry),
     platform: platform || "",
+    requestedAssetType: requestedType || "",
     primaryAsset: primary,
     assets,
     installCommand: entry.installCommand || "",
