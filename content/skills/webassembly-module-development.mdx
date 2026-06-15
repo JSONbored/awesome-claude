@@ -2,18 +2,27 @@
 title: WebAssembly WASM Module Development Skill
 slug: webassembly-module-development
 category: skills
-description: "Build high-performance WebAssembly modules with WASI 0.3, multi-language support, and production-ready deployments for web, serverless, and AI workloads. WebAssembly (WASM) runs at near-native speeds across web browsers, serverless platforms, and edge computing environments."
-cardDescription: "Build high-performance WebAssembly modules with WASI 0.3, multi-language support, and production-ready deployments for web, serverless, a..."
-seoTitle: WebAssembly WASM Module Development Skill
-seoDescription: "Build high-performance WebAssembly modules with WASI 0.3, multi-language support, and production-ready deployments for web, serverless, and AI workloads. Web..."
+description: "Compile Rust, C++, or Go to WebAssembly and run it in the browser, Node.js, and serverless runtimes: wasm-bindgen JS interop, WASI for system access, the Component Model, and SIMD."
+cardDescription: "Write and compile WASM modules, generate JS bindings, and shrink binary size for browser and edge targets."
+seoTitle: WebAssembly Module Development Skill for Claude
+seoDescription: "WebAssembly skill: build Rust/C++/Go modules for image processing, ONNX inference, and serverless, wired to JS with wasm-bindgen and using WASI and SIMD."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
-documentationUrl: "https://webassembly.org/"
+documentationUrl: "https://developer.mozilla.org/en-US/docs/WebAssembly"
+retrievalSources:
+  - "https://developer.mozilla.org/en-US/docs/WebAssembly"
+  - "https://wasi.dev/"
+  - "https://component-model.bytecodealliance.org/"
 downloadUrl: /downloads/skills/webassembly-module-development.zip
 installable: true
-installCommand: "curl -L https://heyclau.de/downloads/skills/webassembly-module-development.zip -o webassembly-module-development.zip && unzip -o webassembly-module-development.zip -d ./webassembly-module-development"
-usageSnippet: "Build high-performance WebAssembly modules with WASI 0.3, multi-language support, and production-ready deployments for web, serverless, and AI workloads. WebAssembly (WASM) runs at near-native speeds across web browsers, serverless platforms, and edge computing environments. With WASI 0.3 bringing native async support and WebAssembly 2.0 complete as of March 2025, WASM has transitioned from experimental to production-ready for AI workloads, cloud-native applications, and high-performance web apps. Features include Rust/C++/Go compilation to WASM, wasm-bindgen for JavaScript integration, WASI for system calls, Component Model for interoperability, binary size optimization, SIMD support for performance, and multi-runtime compatibility (browser, Node.js, serverless)."
+installCommand: cargo install wasm-pack
+usageSnippet: "Set up a wasm-pack or WASI project, compile your code to a .wasm module, generate bindings, and test it across browser and Node.js runtimes."
+safetyNotes:
+  - "The install step downloads and unzips a package, and building modules runs compiler toolchains (wasm-pack, Emscripten, or the WASI SDK); run them in a trusted project directory and review generated build files."
+  - "WASI grants modules system access (files, env, sockets); grant only the capabilities a module needs and review WASI imports before running untrusted modules."
+privacyNotes:
+  - "Compiling and running modules is local, but a module that fetches remote models or data (for example ONNX inference) sends and receives data over the network; review what it downloads and where results go."
 copySnippet: |-
   use wasm_bindgen::prelude::*;
 
@@ -60,8 +69,6 @@ skillType: general
 skillLevel: advanced
 verificationStatus: draft
 verifiedAt: "2025-10-16"
-retrievalSources:
-  - "https://webassembly.org/"
 testedPlatforms:
   - Claude
   - Codex
@@ -103,7 +110,7 @@ robotsIndex: true
 robotsFollow: true
 ---
 
-Build high-performance WebAssembly modules with WASI 0.3, multi-language support, and production-ready deployments for web, serverless, and AI workloads. WebAssembly (WASM) runs at near-native speeds across web browsers, serverless platforms, and edge computing environments. With WASI 0.3 bringing native async support and WebAssembly 2.0 complete as of March 2025, WASM has transitioned from experimental to production-ready for AI workloads, cloud-native applications, and high-performance web apps. Features include Rust/C++/Go compilation to WASM, wasm-bindgen for JavaScript integration, WASI for system calls, Component Model for interoperability, binary size optimization, SIMD support for performance, and multi-runtime compatibility (browser, Node.js, serverless).
+Build high-performance WebAssembly modules with WASI 0.3, multi-language support, and production-ready deployments for web, serverless, and AI workloads. WebAssembly (WASM) runs at near-native speeds across web browsers, serverless platforms, and edge computing environments. WASI Preview 3 adds async support and the Component Model improves interoperability, making WASM a strong fit for AI workloads, cloud-native services, and high-performance web apps. Features include Rust/C++/Go compilation to WASM, wasm-bindgen for JavaScript integration, WASI for system calls, Component Model for interoperability, binary size optimization, SIMD support for performance, and multi-runtime compatibility (browser, Node.js, serverless).
 
 ## Content
 
@@ -111,7 +118,7 @@ Build high-performance WebAssembly modules with WASI 0.3, multi-language support
 
 ## What This Skill Enables
 
-Claude can build production-ready WebAssembly modules that run at near-native speeds across web browsers, serverless platforms, and edge computing environments. With WASI 0.3 bringing native async support and WebAssembly 2.0 complete as of March 2025, WASM has transitioned from experimental to production-ready for AI workloads, cloud-native applications, and high-performance web apps.
+Claude can build production-ready WebAssembly modules that run at near-native speeds across web browsers, serverless platforms, and edge computing environments. WASI Preview 3 adds async support and the Component Model improves interoperability, making WASM a strong fit for AI workloads, cloud-native services, and high-performance web apps.
 
 ## Compatibility
 
@@ -215,7 +222,7 @@ Claude will:
 
 5. **JavaScript Interop**: Use wasm-bindgen for seamless JavaScript integration. Request TypeScript definitions generation for better DX.
 
-6. **SIMD When Available**: For compute-intensive tasks, ask Claude to use WebAssembly SIMD instructions for 4-8x performance improvements.
+6. **SIMD When Available**: For compute-intensive tasks, ask Claude to use WebAssembly SIMD instructions for compute-intensive tasks.
 
 ## Common Workflows
 
@@ -306,7 +313,7 @@ Claude will:
 - Component Model for interoperability and modular WebAssembly applications
 - wasm-bindgen for seamless JavaScript integration with TypeScript definitions generation
 - Binary size optimization with wasm-opt, LTO, and code size reduction techniques
-- SIMD support for 4-8x performance improvements in compute-intensive tasks
+- SIMD support for compute-intensive tasks in compute-intensive tasks
 - Multi-runtime compatibility: browser, Node.js, Wasmtime, Wasmer, WasmEdge, and serverless platforms
 
 ## Use Cases
