@@ -1,11 +1,12 @@
-// The recommended weekly send slot: Tuesday 15:00 UTC (mid-morning US /
-// afternoon EU — the strongest engagement window for developer newsletters).
-const SEND_DOW = 2; // 0=Sun..6=Sat; Tuesday
-const SEND_HOUR_UTC = 15;
+// The weekly send slot: Sunday 16:00 UTC — the cadence subscribers signed up
+// for ("Weekly · Sundays"). Generation runs Friday, leaving the weekend for
+// review before the Sunday send.
+const SEND_DOW = 0; // 0=Sun..6=Sat; Sunday
+const SEND_HOUR_UTC = 16;
 
 /**
- * The next Tuesday 15:00 UTC strictly at or after `from` (today if it's Tuesday
- * before 15:00, otherwise the following Tuesday). Returned as an ISO string for
+ * The next Sunday 16:00 UTC strictly at or after `from` (today if it's Sunday
+ * before 16:00, otherwise the following Sunday). Returned as an ISO string for
  * the scheduled_send_at column.
  */
 export function nextSendSlot(from: Date): string {
