@@ -1,0 +1,218 @@
+---
+title: Pull Request Triage Capability Pack Skill
+slug: pull-request-triage-capability-pack
+category: skills
+description: >-
+  Expert pull request triage capability pack for maintainers prioritizing open
+  PRs with label hygiene, risk classification, contributor trust signals, and
+  privacy-safe public responses aligned to GitHub docs.
+cardDescription: >-
+  Triage open pull requests with source-backed priority rules, label hygiene,
+  risk classification, and maintainer response templates.
+seoTitle: Pull Request Triage Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for maintainer pull request triage: queue
+  ordering, label policy, risk signals, stale PR handling, and privacy-safe
+  public feedback aligned to GitHub documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 718
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/718"
+repoUrl: "https://github.com/github/docs"
+documentationUrl: "https://docs.github.com/en/issues/tracking-your-work-with-issues/adding-labels-to-issues-and-pull-requests"
+installable: false
+usageSnippet: >-
+  Use this skill when triaging an open pull request queue, applying labels,
+  prioritizing reviews, or drafting maintainer responses for community PRs.
+copySnippet: |-
+  # Trigger
+  "Apply the pull request triage capability pack for this repository queue."
+
+  # Required output
+  1) Triage queue snapshot with priority ordering
+  2) Per-PR risk and scope classification
+  3) Label and assignee recommendations
+  4) Public response templates with next actions
+  5) Stale or blocked PR follow-up list
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-15"
+retrievalSources:
+  - "https://docs.github.com/en/issues/tracking-your-work-with-issues/adding-labels-to-issues-and-pull-requests"
+  - "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews"
+  - "https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication"
+  - "https://opensource.guide/best-practices/"
+  - "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Maintainer or triager access to the repository pull request queue and labels."
+  - "Project CONTRIBUTING guidelines, CODEOWNERS, and branch protection rules."
+  - "Ability to inspect CI status, diff size, and author trust context without exposing private signals publicly."
+  - "Defined triage SLA or weekly maintainer capacity for realistic commitments."
+safetyNotes:
+  - "This skill plans triage actions; it must not merge, close, or approve PRs without explicit maintainer authority."
+  - "Treat fork PRs and workflow changes as higher risk; escalate before running untrusted CI."
+  - "Do not post internal trust scores, private moderation notes, or security embargo details in public comments."
+  - "Automated triage suggestions can mis-rank urgent security fixes; require human override for SEV-class changes."
+privacyNotes:
+  - "Triage notes can expose contributor identities, employer metadata, and private maintainer discussions."
+  - "Redact internal escalation reasons before posting public PR comments."
+  - "Copying CI logs into triage summaries may include secrets; sanitize before sharing."
+  - "Keep harassment or abuse reports in private maintainer channels, not public threads."
+tags:
+  - pull-requests
+  - triage
+  - maintainers
+  - open-source
+  - capability-pack
+keywords:
+  - pull request triage capability pack
+  - maintainer PR queue triage
+  - open source PR prioritization workflow
+  - GitHub label triage checklist
+  - community PR response templates
+readingTime: 9
+difficultyScore: 79
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+downloadUrl: "https://github.com/github/docs/archive/refs/heads/main.zip"
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in GitHub pull request, label, and review
+documentation plus Open Source Guides best practices verified on **2026-06-15**.
+GitHub UI labels and community norms vary by project; align outputs to each
+repository's CONTRIBUTING policy.
+
+## Retrieval Sources
+
+- https://docs.github.com/en/issues/tracking-your-work-with-issues/adding-labels-to-issues-and-pull-requests
+- https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews
+- https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication
+- https://opensource.guide/best-practices/
+- https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors
+
+## Source Verification Notes
+
+Verified against public GitHub docs and Open Source Guides on **2026-06-15**:
+
+- GitHub documents label usage, review states, and maintainer workflows for pull
+  request collaboration.
+- Open Source Guides emphasize predictable response expectations, scope control,
+  and respectful contributor communication.
+- GitHub Actions security guidance highlights elevated risk for workflow changes
+  from fork pull requests during triage.
+
+## Scope Note
+
+This pack supports maintainer queue triage and public response drafting. It
+complements security-review agents by focusing on prioritization, labels, and
+communication—not deep code audit.
+
+## Core Workflow
+
+1. Snapshot the open PR queue with age, CI status, diff size, and labels.
+2. Classify each PR by scope, risk, and contributor follow-up burden.
+3. Apply or recommend labels consistent with repository taxonomy.
+4. Assign reviewers using CODEOWNERS and domain expertise.
+5. Draft privacy-safe public comments with concrete next actions.
+6. Identify stale, duplicate, or out-of-scope PRs for closure or redirect.
+7. Produce a weekly triage summary for maintainers with blocked items.
+
+## Capability Scope
+
+- Queue ordering and priority heuristics.
+- Label hygiene and scope classification.
+- Fork and workflow-change risk escalation.
+- Public maintainer response templates.
+- Stale PR and duplicate detection patterns.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when operating a maintainer
+  PR queue or drafting triage comments.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, Generic AGENTS**: apply the checklist to any GitHub
+  repository with documented CONTRIBUTING guidelines.
+
+## Required Inputs
+
+- Open PR list with metadata (author, labels, checks, changed files).
+- Repository triage labels, CODEOWNERS, and contribution scope docs.
+- Maintainer capacity and SLA expectations for realistic commitments.
+- Known release freeze or security embargo windows affecting merge order.
+
+## Production Rules
+
+- Prefer actionable public comments over silent label-only triage.
+- Escalate workflow, auth, and dependency changes before normal feature PRs.
+- Close out-of-scope PRs with redirect links when possible—not silent ignores.
+- Never disclose private moderation or trust signals in public threads.
+- Keep triage batches small enough to avoid contradictory maintainer messages.
+- Document duplicate PR relationships with links, not dismissive tone.
+
+## Review Matrix
+
+| Topic | Signal | Action |
+| --- | --- | --- |
+| Scope | Unrelated directories | Request split or close with guide |
+| Risk | Workflow or secret touch | Security review before CI rerun |
+| CI | Required checks failing | Block merge; list fix steps |
+| Size | Very large diff | Ask for incremental PRs |
+| Duplicate | Same slug or feature | Link primary PR and close |
+| Stale | No author response 30+ days | Ping once, then close policy |
+
+## Output Contract
+
+1. Priority-ordered triage queue snapshot.
+2. Per-PR classification with recommended labels and assignees.
+3. Public comment drafts with next actions.
+4. Escalation list for high-risk PRs.
+5. Maintainer weekly summary with blocked follow-ups.
+
+## Troubleshooting
+
+**Issue:** Label set is inconsistent across maintainers
+**Fix:** Propose a minimal label taxonomy update in CONTRIBUTING or triage doc.
+
+**Issue:** Contributors interpret triage as rejection
+**Fix:** Use welcoming tone, link docs, and offer concrete fix paths.
+
+**Issue:** Security PR buried under feature queue
+**Fix:** Override ordering; apply security label and immediate reviewer assignment.
+
+**Issue:** Duplicate content PRs from multiple authors
+**Fix:** Identify first valid submission, link duplicates, and explain merge policy.
+
+## Duplicate Check
+
+Checked `content/skills/`, `content/agents/`, open PRs, and the live catalog.
+`github-community-issue-triage-agent` covers issue queues in `agents`, and
+`dependency-update-triage-agent` focuses on dependency PRs. No `skills` entry
+provides a reusable maintainer pull request triage capability pack with review
+matrix and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public GitHub documentation and Open Source Guides.
+No paid placement, referral link, affiliate link, or vendor sponsorship is used.
