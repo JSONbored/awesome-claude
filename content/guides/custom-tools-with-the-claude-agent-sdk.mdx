@@ -3,11 +3,14 @@ title: "Custom Tools With the Claude Agent SDK"
 slug: custom-tools-with-the-claude-agent-sdk
 category: guides
 description: >-
-  Design custom tools for the Claude Agent SDK beyond in-process MCP: SDK tool types, schema design, permissions, structured outputs, and when to prefer external MCP servers.
-cardDescription: Design custom Claude Agent SDK tools beyond in-process MCP patterns.
-seoTitle: "Custom Tools With the Claude Agent SDK"
+  How to design custom tools for the Claude Agent SDK: in-process tool
+  definitions with typed input schemas, permission scoping, structured isError
+  results, and when to reach for an external MCP server instead.
+cardDescription: Choose between in-process SDK tools and external MCP servers, with typed schemas and structured error handling.
+seoTitle: Custom Tools for the Claude Agent SDK — Guide
 seoDescription: >-
-  Design custom tools for the Claude Agent SDK beyond in-process MCP: SDK tool types, schema design, permissions, structured outputs, and when to prefer external MCP servers.
+  Guide to Claude Agent SDK custom tools: in-process tool definitions, typed
+  schemas, permission scoping, isError results, and when to use external MCP.
 author: kiannidev
 authorProfileUrl: "https://github.com/kiannidev"
 submittedBy: kiannidev
@@ -16,7 +19,7 @@ dateAdded: "2026-06-14"
 submittedAt: "2026-06-14"
 sourceSubmissionNumber: 1397
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1397"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/custom-tools"
 usageSnippet: >-
   Use this guide to choose between SDK custom tools, in-process MCP, and external servers when extending agent capabilities.
 prerequisites:
@@ -33,9 +36,9 @@ privacyNotes:
   - "Large tool sets increase context usage; defer rarely used tools via tool search."
   - "Structured outputs may log to host telemetry—redact customer fields at the handler boundary."
 sourceUrls:
-  - "https://github.com/anthropics/claude-code"
   - "https://code.claude.com/docs/en/agent-sdk/custom-tools"
-  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://code.claude.com/docs/en/agent-sdk/mcp"
+  - "https://code.claude.com/docs/en/agent-sdk/permissions"
 tags:
   - claude-agent-sdk
   - custom-tools
