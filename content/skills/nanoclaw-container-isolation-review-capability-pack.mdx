@@ -1,0 +1,218 @@
+---
+title: NanoClaw Container Isolation Review Capability Pack Skill
+slug: nanoclaw-container-isolation-review-capability-pack
+category: skills
+description: >-
+  Expert NanoClaw container isolation review capability pack for auditing per-agent
+  containers, mount scopes, credential routing, channel boundaries, and scheduled
+  task blast radius with source-backed review matrices.
+cardDescription: >-
+  Review NanoClaw container isolation with mount scope, credential routing, channel
+  boundaries, and scheduled task blast-radius checklists.
+seoTitle: NanoClaw Container Isolation Review Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for NanoClaw container isolation review: mount
+  scopes, vault routing, messaging boundaries, and scheduled task safety aligned
+  to NanoClaw documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 1551
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1551"
+repoUrl: "https://github.com/nanocoai/nanoclaw"
+documentationUrl: "https://github.com/nanocoai/nanoclaw"
+downloadUrl: "https://github.com/nanocoai/nanoclaw/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when reviewing a NanoClaw deployment's container isolation before
+  enabling agent groups, channels, mounts, or scheduled tasks.
+copySnippet: |-
+  # Trigger
+  "Apply the NanoClaw container isolation review capability pack for this deployment."
+
+  # Required output
+  1) Agent group and container inventory summary
+  2) Mount and filesystem boundary findings
+  3) Credential vault and channel scope assessment
+  4) Scheduled task blast-radius review
+  5) Privacy-safe rollout or block recommendation
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-15"
+retrievalSources:
+  - "https://docs.nanoclaw.dev"
+  - "https://github.com/nanocoai/nanoclaw"
+  - "https://code.claude.com/docs/en/sandboxing"
+  - "https://code.claude.com/docs/en/security"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "NanoClaw deployment with agent-group configuration, container mounts, and channel setup available for review."
+  - "Access to NanoClaw documentation and the server repository for mount and vault defaults."
+  - "Ability to test container boundaries in a staging environment before production enablement."
+  - "Security stakeholder for approvals when mounts or credentials exceed least privilege."
+safetyNotes:
+  - "This skill reviews isolation posture; it must not broaden mounts, disable containers, or expose vault secrets without explicit approval."
+  - "Broad host mounts or shared credential vaults can break per-agent isolation; treat as blockers until scoped down."
+  - "Scheduled NanoClaw tasks compound blast radius; require staging proof before unattended production runs."
+  - "Container isolation is not a substitute for MCP tool scope review when agents call external integrations."
+privacyNotes:
+  - "NanoClaw configs may expose channel IDs, user handles, mount paths, and vault key names in review output."
+  - "Agent transcripts and SQLite routing logs can contain message content and credentials; redact before external sharing."
+  - "Mount listings may reveal internal directory structures; keep detailed paths in private maintainer notes."
+  - "Third-party channel integrations remain subject to vendor retention policies separate from NanoClaw."
+tags:
+  - nanoclaw
+  - containers
+  - isolation
+  - security
+  - capability-pack
+keywords:
+  - NanoClaw container isolation review capability pack
+  - NanoClaw mount scope audit
+  - NanoClaw agent group isolation checklist
+  - NanoClaw scheduled task blast radius
+  - NanoClaw security review workflow
+readingTime: 9
+difficultyScore: 84
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in NanoClaw documentation, the public NanoClaw
+repository, and Claude Code sandboxing cross-links verified on **2026-06-15**.
+Container defaults and mount behavior can change with releases; prefer live docs
+over cached assumptions.
+
+## Retrieval Sources
+
+- https://docs.nanoclaw.dev
+- https://github.com/nanocoai/nanoclaw
+- https://code.claude.com/docs/en/sandboxing
+- https://code.claude.com/docs/en/security
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against public NanoClaw documentation and repository on **2026-06-15**:
+
+- NanoClaw documents per-session agent containers with OS-level isolation and
+  explicit mount configuration for filesystem boundaries.
+- Agent groups, channels, and scheduled tasks route through SQLite-backed message
+  flows that must be scoped to intended recipients.
+- Claude Code sandboxing docs provide complementary patterns for Bash isolation
+  when NanoClaw agents invoke terminal workflows.
+
+## Scope Note
+
+This pack provides a reusable isolation review workflow for NanoClaw operators.
+It complements the NanoClaw tool listing and the `nanoclaw-container-isolation-review-agent`
+in `agents` by packaging checklist steps, review matrix, and output contract as
+a Skill capability pack.
+
+## Core Workflow
+
+1. Inventory agent groups, containers, channels, mounts, and scheduled tasks.
+2. Review mount allowlists for host paths, credential directories, and executables on PATH.
+3. Validate vault and credential routing so agents receive only required secrets.
+4. Check channel and messaging scope for cross-group leakage or overly broad listeners.
+5. Assess scheduled tasks for unattended blast radius and rollback paths.
+6. Run staged tests for mount denial, vault access, and channel isolation failures.
+7. Produce findings, review matrix actions, and privacy-safe recommendation.
+
+## Capability Scope
+
+- Container and mount boundary review.
+- Vault and credential routing checks.
+- Channel and messaging scope validation.
+- Scheduled task blast-radius assessment.
+- Privacy-safe operator summary.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when vetting NanoClaw deployments
+  before enabling production agent groups.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, Generic AGENTS**: apply the checklist to any NanoClaw
+  deployment using public documentation and repository defaults.
+
+## Required Inputs
+
+- NanoClaw agent-group configuration and mount definitions.
+- Channel setup, scheduled task definitions, and vault routing rules.
+- Staging environment for isolation reproduction tests.
+- Security policy for acceptable mount and credential scope.
+
+## Production Rules
+
+- Default to smallest mount set that satisfies required workflows.
+- Deny host credential directories unless explicitly documented and approved.
+- Require human approval before enabling scheduled tasks with write mounts.
+- Treat isolation test failures as blockers, not warnings.
+- Document rollback steps before changing production mount policies.
+- Keep detailed mount paths in internal notes; summarize risk in public output.
+
+## Review Matrix
+
+| Topic | Signal | Action |
+| --- | --- | --- |
+| Mounts | Host home or PATH dirs writable | Narrow mounts or block enablement |
+| Vault | Shared vault across groups | Split credentials per agent group |
+| Channels | Cross-group listeners | Scope channels to intended agents |
+| Schedules | Unattended write mounts | Require staging proof and approval |
+| Tests | Mount denial not reproduced | Fix config before production |
+| Docs | README disagrees with config | Align docs and redeploy |
+
+## Output Contract
+
+1. Deployment inventory summary.
+2. Mount and filesystem findings with severity.
+3. Vault and channel scope assessment.
+4. Scheduled task blast-radius notes.
+5. Privacy-safe enable/block recommendation.
+
+## Troubleshooting
+
+**Issue:** Agent fails after mount hardening
+**Fix:** Add minimal read-only mounts required for the workflow; retest in staging.
+
+**Issue:** Vault secret visible to multiple groups
+**Fix:** Split vault entries and update routing rules per agent group.
+
+**Issue:** Scheduled task runs outside intended channel
+**Fix:** Tighten channel filters and verify SQLite routing constraints.
+
+**Issue:** Docs describe isolation features not enabled in config
+**Fix:** Treat as configuration drift; update deployment before approval.
+
+## Duplicate Check
+
+Checked `content/skills/`, `content/agents/`, open PRs, and the live catalog.
+`nanoclaw-container-isolation-review-agent` in `agents` provides a review prompt,
+and `nanoclaw` exists in `tools`. No `skills` entry provides this NanoClaw container
+isolation review capability pack with review matrix and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by `kiannidev`.
+It is based on public NanoClaw documentation and the public NanoClaw repository.
+No paid placement, referral link, affiliate link, or vendor sponsorship is used.
