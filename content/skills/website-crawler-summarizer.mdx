@@ -2,10 +2,10 @@
 title: Website Crawler + Summarizer Skill
 slug: website-crawler-summarizer
 category: skills
-description: "Crawl domains respectfully, extract readable content, dedupe, and generate structured summaries. Perfect for research, competitive analysis, and content aggregation."
-cardDescription: "Crawl domains respectfully, extract readable content, dedupe, and generate structured summaries."
-seoTitle: Website Crawler + Summarizer Skill
-seoDescription: "Crawl domains respectfully, extract readable content, dedupe, and generate structured summaries. Perfect for research, competitive analysis, and content aggr..."
+description: "A Claude skill that fetches web pages, strips boilerplate with Mozilla Readability, respects robots.txt, removes duplicate content, and turns the result into structured summaries."
+cardDescription: "Fetches and renders pages, extracts main article text with Readability, honors robots.txt, dedupes, and outputs structured summaries."
+seoTitle: Web Crawler & Content Summarizer Skill for Claude
+seoDescription: "Claude skill that crawls websites, extracts readable article text with Mozilla Readability, respects robots.txt, and generates structured page summaries."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-15"
@@ -31,6 +31,13 @@ verificationStatus: draft
 verifiedAt: "2025-10-15"
 retrievalSources:
   - "https://github.com/mozilla/readability"
+  - "https://playwright.dev/docs/intro"
+  - "https://www.robotstxt.org/robotstxt.html"
+safetyNotes:
+  - "Executes network requests to crawl third-party websites and installs scraping libraries (Playwright, BeautifulSoup) on first use; respect robots.txt, rate limits, and each site's terms of service, and review target URLs before running."
+  - "Crawled pages are written to local files (Markdown, JSON, CSV); review output paths so the skill does not overwrite existing files."
+privacyNotes:
+  - "Fetches and stores content from external websites locally and may use site cookies or auth tokens to reach gated pages; do not crawl private or authenticated data without authorization, and keep any credentials out of saved output."
 testedPlatforms:
   - Claude
   - Codex
