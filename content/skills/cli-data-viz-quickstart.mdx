@@ -2,10 +2,10 @@
 title: CLI Data Visualization Quickstart Skill
 slug: cli-data-viz-quickstart
 category: skills
-description: "Create publication-ready charts and visualizations from CSV, JSON, and Excel data using Python (matplotlib/seaborn) or Node.js (vega/vega-lite). Generate bar charts, line plots, scatter plots, heatmaps, and statistical visualizations with custom styling."
-cardDescription: "Create publication-ready charts and visualizations from CSV, JSON, and Excel data using Python (matplotlib/seaborn) or Node.js (vega/vega..."
-seoTitle: CLI Data Visualization Quickstart Skill
-seoDescription: "Create publication-ready charts and visualizations from CSV, JSON, and Excel data using Python (matplotlib/seaborn) or Node.js (vega/vega-lite). Generate bar..."
+description: "Turn CSV, JSON, or Excel data into publication-ready charts with Python: load it with pandas and render bar, line, scatter, and statistical plots in matplotlib (with seaborn styling), then export high-DPI PNG or SVG."
+cardDescription: "Render bar, line, scatter, and statistical charts from CSV/JSON/Excel with pandas + matplotlib, exported as high-DPI PNG or SVG."
+seoTitle: "Data Visualization Skill: matplotlib Charts from CSV/JSON"
+seoDescription: "Plot CSV, JSON, or Excel data with Python: pandas plus matplotlib for bar, line, scatter, and statistical charts, exported as high-DPI PNG or SVG."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-15"
@@ -27,6 +27,8 @@ verificationStatus: draft
 verifiedAt: "2025-10-15"
 retrievalSources:
   - "https://matplotlib.org/"
+  - "https://pandas.pydata.org/docs/"
+  - "https://seaborn.pydata.org/"
 testedPlatforms:
   - Claude
   - Codex
@@ -41,6 +43,10 @@ prerequisites:
   - Code Interpreter enabled (for Python path)
   - Node.js 18+ or Python 3.8+ runtime environment for executing visualization scripts
   - Terminal with ANSI color support and Unicode character rendering for proper chart display
+safetyNotes:
+  - "This skill installs Python plotting libraries (matplotlib, seaborn, pandas) or the maintainer-built package, runs visualization scripts, and writes image files (PNG/SVG) to disk, overwriting any existing file at the output path."
+privacyNotes:
+  - "Your data files (CSV/JSON/Excel) are read and rendered locally; nothing leaves the machine beyond the initial package downloads, but generated charts can embed values from the source data."
 tags:
   - visualization
   - charts

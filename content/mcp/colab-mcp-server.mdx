@@ -3,17 +3,18 @@ title: Colab MCP Server
 slug: colab-mcp-server
 category: mcp
 description: >-
-  Google Colab MCP server that bridges a local MCP client to a Colab browser
-  session through a localhost websocket proxy, letting Claude work with tools
-  exposed by the connected Colab runtime.
+  Connect Claude to a Google Colab runtime. Colab MCP starts a local FastMCP
+  server and websocket proxy, waits for an authorized Colab-origin browser
+  connection, then exposes the session's notebook and runtime tools to your MCP
+  client over stdio.
 cardDescription: >-
-  Bridge Claude from a local MCP client to a Google Colab browser session and
-  connected runtime through Colab MCP.
-seoTitle: Colab MCP Server for Claude
+  Run a local FastMCP websocket proxy that links Claude to an authorized Google
+  Colab browser session and its runtime tools.
+seoTitle: "Colab MCP Server: Bridge Claude to a Google Colab Runtime"
 seoDescription: >-
-  Configure Colab MCP Server with Claude and other local MCP clients to connect
-  a Google Colab browser session through a localhost websocket proxy and work
-  with the connected Colab runtime.
+  Colab MCP runs a local FastMCP websocket proxy that connects Claude to an
+  authorized Google Colab browser session, exposing its notebook and runtime
+  tools.
 author: Google Colab
 authorProfileUrl: "https://github.com/googlecolab"
 submittedBy: oktofeesh1

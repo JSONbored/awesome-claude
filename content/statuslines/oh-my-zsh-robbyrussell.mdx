@@ -3,20 +3,24 @@ title: Oh My Zsh Robbyrussell - Statuslines
 slug: oh-my-zsh-robbyrussell
 category: statuslines
 description: >-
-  Oh-My-Zsh robbyrussell theme replica with iconic arrow prompt, Git status
-  indicators, and directory path for seamless Claude Code shell integration.
+  A Claude Code statusline that recreates the Oh My Zsh robbyrussell theme: the
+  cyan ➜ arrow, the working-directory basename, and git:(branch) with a red ✗
+  when the tree is dirty, plus the active model name. A bash script parses the
+  status JSON with jq.
 cardDescription: >-
-  Oh-My-Zsh robbyrussell theme replica with iconic arrow prompt, Git status
-  indicators, and directory path for seamless Claude Code shell i...
-seoTitle: Oh My Zsh Robbyrussell - Statuslines
+  Recreate the Oh My Zsh robbyrussell prompt in Claude Code: cyan ➜ arrow,
+  directory basename, git:(branch), and a ✗ dirty marker.
+seoTitle: "Oh My Zsh robbyrussell Statusline for Claude Code"
 seoDescription: >-
-  Oh-My-Zsh robbyrussell theme replica with iconic arrow prompt, Git status
-  indicators, and directory path for seamless Claude Code shell integration.
-  Discover...
+  A Claude Code statusline replicating the Oh My Zsh robbyrussell prompt: the ➜
+  arrow, directory basename, git:(branch) branch, and a ✗ dirty indicator.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-23"
 documentationUrl: "https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#robbyrussell"
+retrievalSources:
+  - "https://github.com/ohmyzsh/ohmyzsh/blob/master/themes/robbyrussell.zsh-theme"
+  - "https://docs.claude.com/en/docs/claude-code/statusline"
 installable: true
 usageSnippet: "➜  my-project git:(main) ✗ [claude-sonnet-4.5]"
 copySnippet: |-
@@ -125,6 +129,8 @@ prerequisites:
   - >-
     Terminal with ANSI color code support (256-color mode recommended for
     authentic robbyrussell colors)
+privacyNotes:
+  - "The script reads the workspace path, git branch, and dirty state from the Claude Code status JSON and your local repository to render the prompt; it only prints to your terminal and sends nothing over the network."
 tags:
   - oh-my-zsh
   - robbyrussell
