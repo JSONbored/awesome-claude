@@ -3,19 +3,28 @@ title: Multi Provider Token Counter - Statuslines
 slug: multi-provider-token-counter
 category: statuslines
 description: >-
-  Multi-provider AI token counter displaying real-time context usage for Claude
-  (1M), GPT-4.1 (1M), Gemini 2.x (1M), and Grok 3 (1M) with 2025 verified limits
+  Claude Code statusline that reads the active model identifier from session
+  input and displays real-time token usage as a percentage of the context
+  window, with green/yellow/red color-coded warnings.
 cardDescription: >-
-  Multi-provider AI token counter displaying real-time context usage for Claude
-  (1M), GPT-4.1 (1M), Gemini 2.x (1M), and Grok 3 (1M) with 2...
-seoTitle: Multi Provider Token Counter - Statuslines
+  Statusline showing live Claude token usage as a percentage of the model
+  context window — color-coded green under 50%, yellow under 80%, and red at or
+  above 80%.
+seoTitle: Claude Token Usage Statusline with Color-Coded Context Warnings
 seoDescription: >-
-  Multi-provider AI token counter displaying real-time context usage for Claude
-  (1M), GPT-4.1 (1M), Gemini 2.x (1M), and Grok 3 (1M) with 2025 verified limits
+  Claude Code statusline script that displays real-time token usage percentage
+  for the active Claude model, with color-coded thresholds and provider-specific
+  context limit detection.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
-documentationUrl: "https://docs.anthropic.com/claude/docs/models-overview"
+documentationUrl: "https://docs.claude.com/en/docs/claude-code/statusline"
+retrievalSources:
+  - "https://docs.claude.com/en/docs/claude-code/statusline"
+safetyNotes:
+  - Reads session JSON from stdin and writes formatted text to stdout only; does not modify files or make network calls.
+privacyNotes:
+  - Processes token counts and model identifiers from the local Claude Code session input; no data is sent externally.
 installable: true
 usageSnippet: "\U0001F52E Claude │ 456,789/1,000,000 (45.7%)"
 copySnippet: |-
@@ -82,23 +91,19 @@ robotsFollow: true
 
 ## Features
 
-- Automatic provider detection (Claude, GPT-4, Gemini, Grok)
-- 2025 verified context limits (1M for latest models)
-- Real-time usage percentage calculation
-- Color-coded warnings (green <50%, yellow <80%, red ≥80%)
-- Formatted token counts with thousand separators
-- Provider-specific icons for visual identification
-- Supports legacy models with correct limits
-- Context window utilization trend tracking
+- Reads the active model name from Claude Code session input and determines the appropriate context window limit
+- Displays real-time token usage as a formatted count and percentage of the context limit
+- Color-coded output: green under 50%, yellow under 80%, red at or above 80%
+- Formats token counts with thousand separators for readability
+- Preconfigured limits for Claude model families; limit constants are easy to update as models change
+- Uses `awk` for floating-point percentage calculation with an integer fallback when `bc` is unavailable
 
 ## Use Cases
 
-- Monitoring context usage across multiple AI providers
-- Tracking token consumption to avoid context limit errors
-- Comparing model efficiency across providers
-- Real-time awareness of remaining context budget
-- Multi-model workflow optimization
-- Cost optimization by selecting models with appropriate context limits
+- Watching context usage in real time during long Claude Code sessions to avoid hitting the limit mid-task
+- Getting an early warning (yellow) before context runs out so you can summarize or prune the session
+- Tracking how much context a complex task consumes across multiple tool calls
+- Quickly seeing remaining context budget without leaving the editor
 
 ## Requirements
 
