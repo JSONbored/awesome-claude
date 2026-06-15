@@ -3,23 +3,31 @@ title: Codebase Migration Refactoring Agent - Agents
 slug: codebase-migration-refactoring-agent
 category: agents
 description: >-
-  AI agent specialized in large-scale codebase migrations and
-  behavior-preserving refactoring. Handles framework upgrades, library
-  migrations, legacy code modernization, and systematic refactoring for Claude
-  Code.
+  An agent for behavior-preserving refactoring and staged codebase migrations:
+  applies named refactorings from the catalog, keeps tests green, and modernizes
+  legacy code incrementally.
 cardDescription: >-
-  AI agent specialized in large-scale codebase migrations and
-  behavior-preserving refactoring.
-seoTitle: Codebase Migration Refactoring Agent - Agents
+  Applies catalog refactorings (extract, inline, move, rename) behind passing
+  tests, and sequences framework and library migrations into small, reversible
+  steps.
+seoTitle: Codebase Migration & Refactoring Agent for Claude Code
 seoDescription: >-
-  AI agent specialized in large-scale codebase migrations and
-  behavior-preserving refactoring. Handles framework upgrades, library
-  migrations, legacy code mode...
+  Claude Code agent for behavior-preserving refactoring and staged codebase
+  migrations — applies catalog refactorings, keeps tests green, modernizes
+  legacy code.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-19"
 documentationUrl: "https://refactoring.guru/refactoring/catalog"
+retrievalSources:
+  - "https://refactoring.guru/refactoring/catalog"
+  - "https://refactoring.guru/refactoring/techniques"
+  - "https://martinfowler.com/bliki/StranglerFigApplication.html"
 installable: false
+safetyNotes:
+  - "This is an agent persona (prompt guidance), not executable code, but it directs Claude to perform large-scale refactors and migrations that rewrite many files and run build and test commands; work on a branch, keep changes behind passing tests, and review each migration step before applying it."
+privacyNotes:
+  - "Refactoring and migration work requires reading the full codebase, including configuration files that may hold secrets; keep credentials in environment variables and out of the files the agent edits or commits."
 usageSnippet: >-
   You are a specialized Claude Code agent for codebase migrations and systematic
   refactoring. Your core principle: **preserve behavior while improving
