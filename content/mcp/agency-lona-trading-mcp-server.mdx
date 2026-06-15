@@ -1,0 +1,198 @@
+---
+title: Lona Trading MCP Server for Claude
+slug: agency-lona-trading-mcp-server
+category: mcp
+description: >-
+  OAuth-enabled streamable HTTP MCP server for LONA AI-powered trading strategy
+  development, including natural-language strategy creation, backtesting, market
+  data, and portfolio analysis.
+cardDescription: >-
+  Connect Claude to Lona Trading MCP to describe, backtest, and analyze
+  algorithmic trading strategies through the remote endpoint at mcp.lona.agency.
+seoTitle: Lona Trading MCP Server for Claude
+seoDescription: >-
+  Use the agency.lona/trading MCP server with Claude for AI trading strategy
+  development, backtesting, market data, and portfolio analysis via OAuth at
+  https://mcp.lona.agency/mcp.
+author: Mindsight Ventures
+authorProfileUrl: "https://github.com/mindsightventures"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1454
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1454"
+repoUrl: "https://github.com/mindsightventures/lona"
+documentationUrl: "https://lona.agency"
+websiteUrl: "https://lona.agency"
+installable: true
+installCommand: >-
+  claude mcp add --transport http lona-trading https://mcp.lona.agency/mcp
+usageSnippet: >-
+  Add https://mcp.lona.agency/mcp as a remote HTTP connector and complete the
+  OAuth sign-in flow in a compatible MCP client before invoking trading tools.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "lona-trading": {
+        "url": "https://mcp.lona.agency/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "lona-trading": {
+        "url": "https://mcp.lona.agency/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "LONA account and OAuth-capable MCP client with streamable HTTP support."
+  - "Claude Pro, Team, Enterprise, Claude Code, or another client that can complete the LONA OAuth flow."
+  - "Internet access to https://mcp.lona.agency/mcp and lona.agency."
+  - "Understanding that LONA provides strategy development and historical testing tooling, not brokerage or execution services."
+safetyNotes:
+  - "Trading strategy tools can generate, modify, and backtest strategies that may later be exported to external platforms."
+  - "Backtest results are hypothetical and may not reflect live market conditions, slippage, fees, or liquidity."
+  - "Do not treat MCP output as financial advice or automated trade instructions."
+  - "Review OAuth scopes and connected-client permissions in your LONA account before approving agent actions."
+  - "Use sandbox or paper-trading workflows before connecting proven strategies to live execution systems."
+privacyNotes:
+  - "Strategy descriptions, symbols, backtest parameters, and portfolio prompts are sent to LONA services."
+  - "OAuth tokens grant account access until revoked; manage connected MCP clients from your LONA account settings."
+  - "Avoid sharing brokerage credentials, account balances, or non-public portfolio data through chat prompts."
+tags:
+  - finance
+  - trading
+  - backtesting
+  - remote-mcp
+  - oauth
+keywords:
+  - lona trading mcp
+  - agency.lona trading
+  - lona.agency mcp
+  - algorithmic trading claude
+  - backtesting mcp
+readingTime: 4
+difficultyScore: 45
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Lona Trading MCP (`agency.lona/trading`) is a hosted Model Context Protocol server for LONA, an AI-powered trading co-pilot for describing, generating, backtesting, and analyzing algorithmic trading strategies in natural language. The official registry entry points to the `packages/lona-mcp-server` source in [mindsightventures/lona](https://github.com/mindsightventures/lona) and exposes a streamable HTTP endpoint at `https://mcp.lona.agency/mcp`.
+
+Product and onboarding information are published at [lona.agency](https://lona.agency).
+
+## Features
+
+- Natural-language trading strategy creation and refinement.
+- Historical backtesting across supported markets and symbols.
+- Market data access for strategy development workflows.
+- Portfolio analysis and strategy evaluation tooling.
+- OAuth-enabled streamable HTTP transport for compatible MCP clients.
+- Registry-listed remote endpoint for vendor-neutral MCP discovery.
+
+The MCP registry describes the server as "AI-powered trading strategy development: backtesting, market data, and portfolio analysis." Unauthenticated requests to the endpoint return an authorization error, so clients must complete OAuth before tool calls succeed.
+
+## Use Cases
+
+- Describe a trend-following strategy in plain English and backtest it before exporting code.
+- Compare backtest performance across symbols to stress-test a hypothesis.
+- Ask Claude to refine strategy parameters after reviewing drawdown and win-rate metrics.
+- Explore LONA marketplace strategies and adapt them with guided prompts.
+- Prototype algorithmic ideas without writing boilerplate strategy code manually.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://mcp.lona.agency/mcp`.
+3. Complete the LONA OAuth browser sign-in when prompted.
+4. Invoke a simple strategy or backtest request to verify the connection.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http lona-trading https://mcp.lona.agency/mcp
+claude mcp list
+```
+
+Complete OAuth when the client prompts for LONA account authorization.
+
+### Other MCP clients
+
+Import the server from the MCP registry as `agency.lona/trading`, or add the remote URL directly in clients that support OAuth-backed streamable HTTP connectors.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "lona-trading": {
+      "url": "https://mcp.lona.agency/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+Authentication is handled through the client's OAuth flow rather than a static API key in config.
+
+## Examples
+
+### Create and backtest
+
+```text
+Using Lona Trading MCP, create a moving-average crossover strategy for ES and backtest it over the last year.
+```
+
+### Analyze results
+
+```text
+Summarize the backtest drawdown, win rate, and worst losing streak for my latest LONA strategy.
+```
+
+### Refine parameters
+
+```text
+Suggest parameter changes to reduce drawdown while keeping total return above 10%.
+```
+
+## Security
+
+- LONA states that it provides tooling for strategy development and historical testing, not financial advice, execution services, or brokerage.
+- Treat backtests as research signals; validate assumptions independently before live trading.
+- Revoke OAuth access for unused MCP clients from your LONA account.
+
+## Troubleshooting
+
+### Unauthorized or invalid credentials
+
+Complete the OAuth sign-in flow again and confirm the MCP client is registered in your LONA account.
+
+### OAuth callback failures
+
+Use a client with supported OAuth redirect handling and retry from a standard desktop browser session.
+
+### Empty tool responses after connect
+
+Verify your LONA subscription or account limits allow backtests and strategy generation for the requested market.
+
+### Strategy export issues
+
+Confirm the target trading platform integration is enabled in LONA before asking the agent to export generated code.
+
+## Duplicate Check
+
+No existing LONA or `agency.lona/trading` entry was found in `content/mcp/`. This differs from the TradingView MCP server because LONA is a hosted OAuth trading co-pilot focused on natural-language strategy generation and LONA-managed backtests rather than a self-hosted Python market-data screener.
