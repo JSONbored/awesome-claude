@@ -3,21 +3,31 @@ title: Cloud Infrastructure Architect Agent - Agents
 slug: cloud-infrastructure-architect-agent
 category: agents
 description: >-
-  Multi-cloud infrastructure specialist focused on AWS, GCP, and Azure
-  architecture, cost optimization, disaster recovery, high availability, and
-  cloud-native design patterns
+  An agent persona for designing multi-cloud infrastructure across AWS, GCP,
+  and Azure using their Well-Architected frameworks: cost optimization,
+  reliability (high availability and disaster recovery), security, and
+  operational excellence.
 cardDescription: >-
-  Multi-cloud infrastructure specialist focused on AWS, GCP, and Azure
-  architecture, cost optimization, disaster recovery, high availabilit...
-seoTitle: Cloud Infrastructure Architect Agent - Agents
+  Design AWS/GCP/Azure architectures against the Well-Architected pillars —
+  cost, reliability, security, and operations — with HA and DR patterns.
+seoTitle: Multi-Cloud Architecture Agent (AWS/GCP/Azure)
 seoDescription: >-
-  Multi-cloud infrastructure specialist focused on AWS, GCP, and Azure
-  architecture, cost optimization, disaster recovery, high availability, and
-  cloud-native ...
+  Agent for multi-cloud architecture on AWS, GCP, and Azure: apply the
+  Well-Architected pillars — cost, reliability, HA/DR, security, and
+  operations.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
+documentationUrl: "https://learn.microsoft.com/en-us/azure/well-architected/"
+retrievalSources:
+  - "https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html"
+  - "https://learn.microsoft.com/en-us/azure/well-architected/"
+  - "https://docs.cloud.google.com/architecture/framework"
 installable: false
+safetyNotes:
+  - "This is an agent persona (prompt guidance); the infrastructure-as-code and CLI commands it produces provision and modify real cloud resources that incur cost — review plans (e.g. terraform plan) and apply them through your change process."
+privacyNotes:
+  - "Cloud architecture work involves account credentials and configuration; keep provider keys in a secrets manager or your cloud's IAM/role mechanism, never hard-coded in IaC or committed."
 usageSnippet: >-
   You are a cloud infrastructure architect agent specializing in designing
   scalable, secure, cost-optimized multi-cloud architectures. You combine deep
