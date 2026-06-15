@@ -1,0 +1,143 @@
+---
+title: /docs-refresh - Docs Refresh Command for Claude Code
+slug: docs-refresh
+category: commands
+description: >-
+  Slash command that refreshes stale documentation from recent code changes:
+  it compares docs to implementation, flags drift in API references, CLI flags,
+  env vars, and setup steps, then proposes minimal edits instead of rewriting
+  docs from scratch.
+cardDescription: >-
+  Refresh stale docs from code changes with minimal drift fixes, not full rewrites.
+seoTitle: /docs-refresh - Docs Refresh Command for Claude Code
+seoDescription: >-
+  Claude Code slash command that updates stale documentation from code changes,
+  fixing drift in APIs, flags, and setup steps.
+author: kiannidev
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 747
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/747"
+documentationUrl: "https://github.com/anthropics/claude-code"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://code.claude.com/docs/en/common-workflows"
+installable: true
+installCommand: "/docs-refresh [path]"
+commandSyntax: "/docs-refresh [path]"
+usageSnippet: "/docs-refresh docs/api/"
+copySnippet: "/docs-refresh [path]"
+prerequisites:
+  - "Documentation tree (Markdown, MDX, or docs site source) colocated with or linked to the codebase."
+  - "Recent code changes identifiable via git diff or user-specified path."
+  - "Permission to read implementation files referenced by the docs."
+safetyNotes:
+  - "Proposes documentation edits for review; does not publish or commit without explicit user confirmation."
+  - "Prefer minimal drift fixes over large rewrites that change tone or structure unnecessarily."
+  - "Do not invent behavior not present in code; mark uncertain sections rather than guessing."
+privacyNotes:
+  - "Docs and source may describe internal architecture, unreleased features, or customer-specific deployments."
+  - "Refresh output enters the model context; redact proprietary details before sharing externally."
+tags:
+  - documentation
+  - drift
+  - api-docs
+  - maintenance
+  - markdown
+keywords:
+  - docs refresh command
+  - stale documentation update
+  - claude code documentation drift
+  - refresh docs from code changes
+---
+
+The `/docs-refresh` command is a **custom slash command workflow** you install as a Markdown prompt under `.claude/commands/` (or ship via a project plugin `commands/` directory). It is **not** a built-in Claude Code command. It fixes **documentation drift** after code changes. Unlike `/docs`, which generates comprehensive new documentation suites, this command audits existing pages against the current implementation and proposes the smallest edits needed to restore accuracy.
+
+## Install this command
+
+Save the following as `.claude/commands/docs-refresh.md` in your repository (or add it to a plugin `commands/` directory), then invoke `/docs-refresh` in Claude Code:
+
+```markdown
+---
+description: Refresh stale documentation from recent code changes with minimal drift fixes
+---
+
+Fix documentation drift after code changes. Optional docs path: $ARGUMENTS
+
+When invoked, follow these steps:
+
+1. **Select doc scope.** If `$ARGUMENTS` is set, load that doc tree. Otherwise map `git diff --name-only` source changes to related docs (`README.md`, `docs/`, `content/`, OpenAPI specs, inline examples).
+2. **Build a truth source.** Read the implementation for each documented feature: exported functions, CLI commands, REST routes, config keys, env vars, defaults, and error codes.
+3. **Detect drift categories.** Flag outdated endpoint paths, renamed flags, removed env vars, wrong install commands, stale version pins, broken links, and examples that no longer compile or run.
+4. **Score impact.** Prioritize user-facing breakage: getting-started steps, auth setup, breaking API changes, and safety warnings over cosmetic wording.
+5. **Propose minimal patches.** For each stale section, show the current doc excerpt, the corrected text, and the code citation that justifies the change. Avoid rewriting unrelated paragraphs.
+6. **Check cross-links.** Verify internal links, anchor headings, and referenced file paths still exist after the refresh.
+7. **Summarize release notes.** List what readers must know if the drift implies a breaking change.
+```
+
+## Usage
+
+```
+/docs-refresh [path]
+```
+
+- With a `path`: refresh docs under that file or directory.
+- Without an argument: refresh docs tied to files changed on the current branch.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Select doc scope.** If a path is given, load that doc tree. Otherwise map `git diff --name-only` source changes to related docs (`README.md`, `docs/`, `content/`, OpenAPI specs, inline examples).
+2. **Build a truth source.** Read the implementation for each documented feature: exported functions, CLI commands, REST routes, config keys, env vars, defaults, and error codes.
+3. **Detect drift categories.** Flag outdated endpoint paths, renamed flags, removed env vars, wrong install commands, stale version pins, broken links, and examples that no longer compile or run.
+4. **Score impact.** Prioritize user-facing breakage: getting-started steps, auth setup, breaking API changes, and safety warnings over cosmetic wording.
+5. **Propose minimal patches.** For each stale section, show the current doc excerpt, the corrected text, and the code citation that justifies the change. Avoid rewriting unrelated paragraphs.
+6. **Check cross-links.** Verify internal links, anchor headings, and referenced file paths still exist after the refresh.
+7. **Summarize release notes.** List what readers must know if the drift implies a breaking change.
+
+## Output format
+
+- **Scope:** docs reviewed and linked code paths.
+- **Drift findings:** page, section, category, severity.
+- **Proposed edits:** before/after snippets with justification.
+- **Broken links:** URL or path and suggested fix.
+- **Verdict:** ready to publish / needs engineering confirmation.
+
+## Requirements
+
+- Documentation files readable in the workspace.
+- Git or explicit user context for recent code changes.
+- Access to implementation files referenced by the docs.
+
+## Safety notes
+
+The command proposes documentation edits for review and does not commit or publish without explicit approval. It must not invent undocumented behavior; flag unknowns for engineering confirmation instead of guessing.
+
+## Privacy notes
+
+Documentation and implementation context may describe unreleased products or internal systems. Redact proprietary details from shared refresh reports.
+
+## Source Verification Notes
+
+Verified against Claude Code slash-command and workflow documentation on **2026-06-14**:
+
+- [Claude Code slash commands](https://code.claude.com/docs/en/slash-commands) document custom commands in `.claude/commands/`, the `$ARGUMENTS` placeholder, and team sharing by committing command files to git.
+- [Common workflows](https://code.claude.com/docs/en/common-workflows) cover repository-aware editing suitable for documentation maintenance after code changes.
+- The `anthropics/claude-code` README and plugins README describe distributing reusable command prompts to teams — not built-in documentation commands.
+- The `claude-code` CHANGELOG tracks documentation and developer-experience updates relevant to refresh workflows.
+- Minimal, reviewable doc edits align with Claude Code guidance to avoid large unsolicited rewrites.
+
+## Duplicate Check
+
+Searched `content/commands/` on **2026-06-14** for overlapping slug, `commandSyntax`, and workflow scope. `/docs` generates full documentation suites (API specs, tutorials, interactive guides) from scratch. `mintlify-docs` targets Mintlify site scaffolding. No existing command compares live code to existing docs and proposes minimal drift fixes after a change.
+
+## References
+
+- Claude Code repository: https://github.com/anthropics/claude-code
+- Claude Code slash commands: https://code.claude.com/docs/en/slash-commands
+- Claude Code common workflows: https://code.claude.com/docs/en/common-workflows
