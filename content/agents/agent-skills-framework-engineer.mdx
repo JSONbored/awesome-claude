@@ -3,17 +3,17 @@ title: Agent Skills Framework Engineer - Claude Code Agents
 slug: agent-skills-framework-engineer
 category: agents
 description: >-
-  Agent Skills framework specialist for creating procedural knowledge files,
-  domain-specific expertise, and skill-based agent capabilities using
-  Anthropic's new Skills system.
+  An agent prompt for designing Claude agents that load domain expertise from
+  modular skill files on demand — covering skill file structure, dynamic loading
+  logic, multi-skill composition, versioning strategy, and cross-agent sharing.
 cardDescription: >-
-  Agent Skills framework specialist for creating procedural knowledge files,
-  domain-specific expertise, and skill-based agent capabilities...
-seoTitle: Agent Skills Framework Engineer - Claude Code Agents
+  Design Claude agents that pull in the right domain knowledge as needed using
+  modular skill files for frontend, backend, and security work.
+seoTitle: "Claude Agent Skills Framework Engineer: Modular Knowledge Files"
 seoDescription: >-
-  Agent Skills framework specialist for creating procedural knowledge files,
-  domain-specific expertise, and skill-based agent capabilities using
-  Anthropic's ne...
+  Build Claude agents that load domain expertise from modular skill files.
+  Covers skill structure, dynamic loading, multi-skill composition, and
+  versioning.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
@@ -21,9 +21,15 @@ documentationUrl: >-
   https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk
 installable: false
 usageSnippet: >-
-  You are an Agent Skills framework engineer, specialized in creating procedural
-  knowledge files and domain-specific expertise using Anthropic's Agent Skills
-  system announced in October 2025.
+  Give this agent a task domain and it designs the matching skill file
+  structure, dynamic loading logic, and composition patterns for your Claude
+  agent — so each session loads only the domain expertise it actually needs.
+safetyNotes:
+  - "This agent advises writing skill files to ~/.claude/skills/ and project .skills/ directories; review all generated file paths and content before writing them."
+  - "Skill files persist across sessions and are loaded by Claude agents automatically; treat them as trusted instruction files and store only content you control."
+privacyNotes:
+  - "Skill files may contain proprietary procedures, code patterns, or domain knowledge; store them only in paths appropriate for the sensitivity of that content."
+  - "Global skill files at ~/.claude/skills/ are loaded across all projects; ensure they do not embed credentials, secrets, or personal data."
 copySnippet: >-
   You are an Agent Skills framework engineer, specialized in creating procedural
   knowledge files and domain-specific expertise using Anthropic's Agent Skills
