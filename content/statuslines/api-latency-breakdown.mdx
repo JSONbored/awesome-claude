@@ -2,22 +2,18 @@
 title: API Latency Breakdown - Statuslines
 slug: api-latency-breakdown
 category: statuslines
-description: >-
-  API latency breakdown monitor showing network time vs processing time split,
-  p95 latency tracking, and performance bottleneck detection for Claude Code
-  sessions.
-cardDescription: >-
-  API latency breakdown monitor showing network time vs processing time split,
-  p95 latency tracking, and performance bottleneck detection f...
-seoTitle: API Latency Breakdown - Statuslines
-seoDescription: >-
-  API latency breakdown monitor showing network time vs processing time split,
-  p95 latency tracking, and performance bottleneck detection for Claude Code
-  sessi...
+description: "A Claude Code statusline that reads the session JSON on stdin and splits total_duration_ms into API processing time versus network/waiting time (total minus API). It prints both values in seconds with their percentage share, a green/yellow/red FAST/SLOW/BOTTLENECK status keyed to network time thresholds (<1s, 1-5s, >5s), and a 20-character 256-color ratio bar (blue for API, orange for network). Written in bash using jq for field extraction and bc for floating-point formatting, with integer-math fallback."
+cardDescription: "Bash statusline that splits Claude Code session time into API vs network, with FAST/SLOW/BOTTLENECK status and a color ratio bar."
+seoTitle: "Claude Code Statusline: API vs Network Latency Split"
+seoDescription: "API latency breakdown for Claude Code statuslines: splits total session time into API processing vs network wait, with a color-coded ratio bar."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
 documentationUrl: "https://code.claude.com/docs/en/statusline"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+  - "https://jqlang.github.io/jq/manual/"
+  - "https://man7.org/linux/man-pages/man1/bc.1p.html"
 installable: true
 usageSnippet: "✓ FAST | API: 2.34s (85%) | Network: 0.41s (15%) | █████████████████░░░"
 copySnippet: |-
@@ -153,6 +149,11 @@ prerequisites:
   - >-
     Write access to /tmp directory (optional, for P95 latency tracking if using
     enhanced version)
+safetyNotes:
+  - "Configured as a command-type statusline, so the script runs automatically on every status update."
+  - "The Examples \"Installation\" script writes .claude/statuslines/api-latency-breakdown.sh and edits .claude/settings.json, and runs brew/apt-get/yum to install bc."
+privacyNotes:
+  - "The Examples \"Enhanced P95\" variant appends every measured network time to /tmp/claude_latency_history.txt, leaving session timing data on disk until manually cleared."
 tags:
   - api-latency
   - performance
@@ -186,7 +187,7 @@ robotsFollow: true
 - API latency breakdown showing processing time vs network/waiting time
 - Percentage split visualization with color-coded bar chart
 - Performance bottleneck detection (network time thresholds)
-- Real-time latency tracking with sub-second precision
+- Per-message timing read from the statusline JSON, formatted to two decimals via bc
 - Color-coded performance status (green <1s, yellow 1-5s, red >5s network time)
 - Visual ratio bar (blue = API processing, orange = network overhead)
 - Helps identify network issues vs API performance problems
@@ -195,11 +196,9 @@ robotsFollow: true
 ## Use Cases
 
 - Performance debugging for slow Claude Code responses
-- Identifying network bottlenecks vs API processing delays
-- Optimizing API call efficiency in distributed teams
-- Troubleshooting VPN/proxy latency issues
-- Monitoring API performance degradation over time
-- Production environment SLA monitoring
+- Identifying network/waiting time vs API processing delays
+- Troubleshooting VPN/proxy latency that inflates network time
+- Spotting when network overhead, not API time, dominates a response
 
 ## Requirements
 
