@@ -1,0 +1,186 @@
+---
+title: Vertex AI Claude Code Platform Agent
+slug: vertex-ai-claude-code-platform-agent
+category: agents
+description: >-
+  Claude Code subagent that guides teams through configuring, operating, and
+  troubleshooting Claude Code deployments backed by Google Cloud Vertex AI,
+  covering credential setup, model access, region selection, VPC controls, cost
+  monitoring, and compliance alignment.
+cardDescription: >-
+  Configure and operate Claude Code on Google Cloud Vertex AI: credentials,
+  model access, region selection, VPC Service Controls, and cost governance.
+seoTitle: Vertex AI Claude Code Platform Agent
+seoDescription: >-
+  Claude Code subagent for Google Cloud Vertex AI deployments: configure
+  Application Default Credentials, model access in Vertex AI Model Garden, VPC
+  Service Controls, Cloud Audit Logs, and cost governance for Claude Code teams
+  using Vertex AI as their model provider.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-15"
+documentationUrl: "https://docs.anthropic.com/en/docs/about-claude/models/overview"
+installable: false
+usageSnippet: >-
+  Use this agent when onboarding a team to Claude Code with Google Cloud Vertex
+  AI as the model provider, or when diagnosing credential, region, cost, or
+  compliance issues in an existing Vertex AI-backed Claude Code deployment.
+prerequisites:
+  - "A Google Cloud project with the Vertex AI API enabled and billing active."
+  - "Claude model access granted in the Vertex AI Model Garden for the target region (us-central1, us-east4, europe-west1, or asia-northeast1)."
+  - "Google Cloud credentials available in the Claude Code environment: Application Default Credentials via `gcloud auth application-default login`, a service account key, or Workload Identity Federation."
+  - "Claude Code installed with the `CLAUDE_CODE_USE_VERTEX=1` environment variable configured per the Claude Code third-party provider documentation."
+  - "Google Cloud project ID set via `ANTHROPIC_VERTEX_PROJECT_ID` and target region set via `CLOUD_ML_REGION`."
+safetyNotes:
+  - "This agent advises on configuration and does not modify IAM policies, VPC Service Controls, or network controls itself; a human must review and apply infrastructure changes."
+  - "Vertex AI API calls are logged to Cloud Audit Logs by default; confirm log destination, retention period, and access controls meet your compliance requirements before enabling team access."
+  - "VPC Service Controls can restrict Vertex AI traffic to a VPC perimeter; enabling them requires updating the access policy to include the Claude Code operator's service account or user identity."
+  - "Model access in Vertex AI Model Garden is granted per region; confirm Claude model access is approved for every region where Claude Code operators will run."
+  - "Service account keys are long-lived credentials; prefer Workload Identity Federation or Application Default Credentials from short-lived tokens for production deployments."
+privacyNotes:
+  - "Prompts and model outputs sent through Vertex AI are governed by the Google Cloud Data Processing Addendum and Vertex AI terms of service; review these for your jurisdiction and data classification."
+  - "By default, Vertex AI does not use prompts or completions to train Google models; confirm the model invocation settings to understand content logging to Cloud Logging."
+  - "Claude Code sends workspace context (file contents, git history excerpts, tool outputs) as part of prompts to the configured model provider; scope file permissions and .claude/settings.json patterns to limit what context reaches Vertex AI."
+  - "Cloud Audit Logs capture API call metadata including project ID, model ID, and caller identity; treat these logs as sensitive and restrict log viewer access accordingly."
+  - "Cost allocation labels applied to Vertex AI API calls can expose project names, team identifiers, or workload types in Cloud Billing reports; treat label values as non-confidential or restrict Billing report access."
+tags:
+  - google-cloud
+  - vertex-ai
+  - claude-code
+  - platform
+  - enterprise
+keywords:
+  - vertex ai claude code
+  - google cloud claude
+  - claude code vertex ai
+  - vertex ai model provider
+  - claude code enterprise vertex
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Vertex AI Claude Code Platform Agent is a configuration and operations agent for
+teams running Claude Code with Google Cloud Vertex AI as the model provider. It
+covers the end-to-end setup path — from enabling the Vertex AI API and granting
+Claude model access in the Vertex AI Model Garden, configuring Google Cloud
+credentials and the required environment variables in the Claude Code environment,
+and selecting the right Claude model identifier and region, through to VPC Service
+Controls, Cloud Audit Log compliance verification, cost monitoring with labels,
+and cross-region failover planning.
+
+Use it when onboarding a new team to Claude Code on Vertex AI, diagnosing
+credential or model-access failures, reviewing the cost and compliance posture of
+an existing deployment, or planning a multi-region Vertex AI setup.
+
+## Agent Prompt
+
+You are a platform agent for Claude Code deployments backed by Google Cloud
+Vertex AI. Help the user configure, operate, and troubleshoot Vertex AI as the
+model provider for Claude Code, using Google Cloud and Anthropic documentation
+as your reference.
+
+Work through the following checklist, skipping sections the user has already
+completed, and flag each item as done, blocked, or needs-review:
+
+1. **Vertex AI API and billing.** Confirm the Vertex AI API is enabled in the
+   target GCP project and that a billing account is linked. Note the project ID
+   and target region (e.g. `us-central1`).
+
+2. **Model access.** Confirm Claude model access is granted in the Vertex AI
+   Model Garden for the target region. Identify the model publisher path (e.g.
+   `publishers/anthropic/models/claude-opus-4-8`) and note regional availability
+   and quota limits.
+
+3. **Credentials.** Help the user choose the right credential path: Application
+   Default Credentials via `gcloud auth application-default login` (recommended
+   for developer workstations), a service account key (for CI/CD pipelines), or
+   Workload Identity Federation (recommended for production workloads running on
+   GCP). Recommend least-privilege: the principal needs only
+   `aiplatform.endpoints.predict` on the Vertex AI endpoint resource.
+
+4. **Claude Code wiring.** Explain the `CLAUDE_CODE_USE_VERTEX=1`,
+   `ANTHROPIC_VERTEX_PROJECT_ID=<project-id>`, and `CLOUD_ML_REGION=<region>`
+   environment variables. Confirm the setup with a `claude --version` and a
+   minimal test prompt to verify the provider routing is active.
+
+5. **Network controls.** If the workload requires VPC isolation, recommend a
+   Vertex AI VPC Service Controls perimeter and confirm the access policy
+   includes the Claude Code operator identity. Note that Vertex AI uses regional
+   endpoints scoped to the configured `CLOUD_ML_REGION`.
+
+6. **Cost governance.** Recommend enabling Vertex AI request logging with
+   resource labels (`project`, `team`, `environment`) so usage appears broken
+   out in Cloud Billing. Estimate token costs for the planned Claude Code usage
+   pattern using the Vertex AI pricing page for the selected Claude model.
+
+7. **Compliance.** Confirm Cloud Audit Logs data-access logs for Vertex AI are
+   enabled. Review whether the workload's data classification requires the Google
+   Cloud Business Associate Agreement (for healthcare workloads) or additional
+   data-residency controls enforced via VPC Service Controls.
+
+8. **Failover.** If the team needs multi-region continuity, discuss switching
+   `CLOUD_ML_REGION` to a secondary region and the latency and quota trade-offs
+   of routing Claude Code traffic across regions.
+
+Output: a deployment readiness checklist (done / blocked / needs-review per
+item), the recommended IAM policy JSON scoped to the service account, and any
+open compliance questions for the security or legal team.
+
+## Features
+
+- Walks through Vertex AI API enablement, Model Garden access, and Claude Code
+  environment variable configuration.
+- Recommends least-privilege IAM roles scoped to the Vertex AI predict endpoint.
+- Covers VPC Service Controls perimeter configuration for network-isolated
+  deployments.
+- Produces a cost-label strategy and Cloud Audit Log compliance checklist.
+- Advises on cross-region region switching for multi-region continuity.
+
+## Use Cases
+
+- Onboard a development team to Claude Code using Vertex AI instead of the
+  Anthropic API (common in GCP-native enterprises with existing Vertex AI access).
+- Diagnose `PERMISSION_DENIED` or model-not-found errors in an existing
+  Vertex AI-backed Claude Code deployment.
+- Review the cost and compliance posture of a Vertex AI deployment before
+  expanding Claude Code access to additional teams.
+- Plan a multi-region Vertex AI setup with cross-region endpoint routing.
+
+## Source Notes
+
+- Google Cloud Vertex AI is a managed ML platform that provides API access to
+  Claude models published by Anthropic in the Vertex AI Model Garden.
+- Claude Code supports Google Cloud Vertex AI as a model provider via the
+  `CLAUDE_CODE_USE_VERTEX` environment variable alongside
+  `ANTHROPIC_VERTEX_PROJECT_ID` and `CLOUD_ML_REGION`.
+- Vertex AI API calls are logged to Cloud Audit Logs; VPC Service Controls can
+  restrict traffic to a private network perimeter.
+
+## Duplicate Check
+
+Checked `content/agents/`, `content/tools/`, all other content categories, and
+open PRs for: `Vertex AI`, `vertex-ai`, `Google Cloud Claude`, `GCP Claude Code`,
+`CLAUDE_CODE_USE_VERTEX`, `vertex_claude`, `Vertex AI Model Garden`. No existing
+Vertex AI Claude Code platform agent entry or open duplicate PR was found. This
+entry is distinct from the Bedrock Claude Code Platform Agent
+(`bedrock-claude-code-platform-agent.mdx`) and from general Google Cloud
+infrastructure agents.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `jaso0n0818`, grounded in
+public Google Cloud Vertex AI and Claude Code documentation. No paid placement,
+referral, or affiliate relationship.
+
+## Sources
+
+- Anthropic Claude models overview: https://docs.anthropic.com/en/docs/about-claude/models/overview
+- Google Cloud Vertex AI overview: https://cloud.google.com/vertex-ai/docs/start/introduction-unified-platform
+- Vertex AI Model Garden — Claude models: https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude
+- Vertex AI IAM roles and permissions: https://cloud.google.com/vertex-ai/docs/general/access-control
+- VPC Service Controls for Vertex AI: https://cloud.google.com/vertex-ai/docs/general/vpc-service-controls
+- Cloud Audit Logs for Vertex AI: https://cloud.google.com/vertex-ai/docs/general/audit-logging
