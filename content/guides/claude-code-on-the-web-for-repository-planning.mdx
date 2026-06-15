@@ -1,0 +1,179 @@
+---
+title: Claude Code On The Web For Repository Planning
+slug: claude-code-on-the-web-for-repository-planning
+category: guides
+description: >-
+  Use Claude Code on the web to plan repository changes remotely: connect a repo,
+  run plan-mode sessions in the browser, capture session URLs, and hand plans to
+  local Claude Code for implementation.
+cardDescription: Plan repository work with Claude Code on the web before local implementation.
+seoTitle: Claude Code On The Web For Repository Planning
+seoDescription: >-
+  Use Claude Code on the web for repository planning with remote sessions, plan
+  mode, session URLs, and a structured handoff to local Claude Code execution.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 1371
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1371"
+documentationUrl: "https://code.claude.com/docs/en/claude-code-on-the-web"
+usageSnippet: >-
+  Open Claude Code on the web, connect the target repository, start a plan-mode
+  session, record the remote URL in team notes, get human approval, then execute
+  the approved plan in a local Claude Code session.
+prerequisites:
+  - Claude Code on the web access for your organization and repository permissions.
+  - A GitHub repository the team is allowed to plan against in a remote session.
+  - Plan mode familiarity and a human approver before implementation begins.
+  - Agreement on data-handling rules for proprietary code in cloud sessions.
+safetyNotes:
+  - Remote planning processes repository context on cloud infrastructure—confirm compliance for restricted codebases.
+  - Planning sessions are not implementations; scope local execution sessions separately with tests and review.
+  - Store session URLs in access-controlled notes, not public tickets with secrets.
+privacyNotes:
+  - Remote planning may include architecture details, customer requirements, and unreleased feature names.
+  - Session transcripts may persist in cloud history—follow vendor retention policies.
+  - Do not paste credentials, tokens, or customer PII into planning prompts.
+sourceUrls:
+  - "https://code.claude.com/docs/en/claude-code-on-the-web"
+  - "https://code.claude.com/docs/en/web-quickstart"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - web
+  - planning
+  - remote-sessions
+  - repository
+  - workflow
+keywords:
+  - Claude Code on the web planning
+  - remote repository planning Claude
+  - web plan mode Claude Code
+  - cloud planning session URL
+  - handoff to local Claude Code
+readingTime: 8
+difficultyScore: 48
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude Code on the web lets you plan repository work in a browser session before
+touching a local checkout. Connect the repo, use plan mode to outline changes,
+save the remote session URL for teammates, get human approval, then implement the
+approved plan locally with explicit tests and rollback steps.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Web access enabled", "description": "Org auth allows Claude Code on the web for this repository"}
+- [ ] {"task": "Repo connected", "description": "The target GitHub repository is authorized for remote sessions"}
+- [ ] {"task": "Plan template ready", "description": "Plans include scope, tests, risks, and rollback"}
+- [ ] {"task": "Approver assigned", "description": "A human approves the plan before coding starts"}
+- [ ] {"task": "Handoff owner", "description": "Someone runs the local implementation session"}
+
+## Core Concepts Explained
+
+### Planning is separate from implementation
+
+Official web docs describe remote sessions for exploration and planning. Treat
+approved plans as inputs to a fresh local session rather than continuing the
+same thread for production edits.
+
+### Session URLs enable team handoffs
+
+Remote session links let reviewers inspect planning context without repeating
+discovery work in a local terminal.
+
+### Web quickstart covers environment setup
+
+The web quickstart documents authentication, repository connection, and first
+session creation—follow it before team rollout.
+
+### Compliance gates come first
+
+If a repository cannot leave your network boundary, document local-only planning
+instead of web sessions.
+
+## Step-by-Step Implementation Guide
+
+1. **Confirm eligibility.** Verify org policy and repository classification allow
+   Claude Code on the web.
+
+2. **Connect the repository.** Follow the web quickstart to authorize GitHub access
+   for the planning repo.
+
+3. **Start plan mode remotely.** Outline goals, affected paths, tests, and risks
+   without making unapproved edits.
+
+4. **Record the session URL.** Store the link in your ticket or runbook with
+   access controls.
+
+5. **Human review.** An approver validates scope, security impact, and test plan.
+
+6. **Hand off locally.** Open a scoped local Claude Code session with the approved
+   plan attached.
+
+7. **Validate and merge.** Run tests locally, request code review, and merge only
+   after the plan's success criteria pass.
+
+## Planning Handoff Checklist
+
+- [ ] {"task": "Plan approved", "description": "Human approver signed off on scope and risks"}
+- [ ] {"task": "Session URL saved", "description": "Remote link stored in access-controlled notes"}
+- [ ] {"task": "Tests listed", "description": "Validation commands are explicit in the plan"}
+- [ ] {"task": "Local session scoped", "description": "Implementation session names allowed paths and tools"}
+- [ ] {"task": "Rollback documented", "description": "Revert strategy is included for risky changes"}
+
+## Troubleshooting
+
+### Web planning unavailable
+
+Org auth or repository policy may block remote access—use local plan mode and
+document the restriction.
+
+### Repository not listed
+
+Re-authorize GitHub integration and confirm the repo is visible to your Claude
+account per web quickstart steps.
+
+### Plan missing remote URL
+
+Upgrade Claude Code and retry; release notes fixed missing remote session URLs
+after ultraplan and web refinement flows.
+
+### Handoff confusion
+
+Split planning and implementation into separate sessions with explicit owners.
+
+## Source Verification Notes
+
+Verified against official Claude Code documentation on **2026-06-15**:
+
+- `code.claude.com/docs/en/claude-code-on-the-web` describes browser-based Claude
+  Code sessions for repository work including planning workflows.
+- `code.claude.com/docs/en/web-quickstart` documents authentication, repository
+  connection, and first remote session setup.
+- Public `CHANGELOG.md` notes for ultraplan and remote sessions describe session
+  URL capture and default cloud environment behavior relevant to web planning handoffs.
+
+## Duplicate Check
+
+Checked `content/guides`, generated catalog text, and open pull requests for
+Claude Code on the web, web repository planning, and remote plan mode workflows.
+`ultraplan-for-cloud-first-implementation-planning.mdx` covers `/ultraplan`
+refinement specifically. This guide covers general repository planning on the web
+before local implementation.
+
+## References
+
+- Claude Code on the web - https://code.claude.com/docs/en/claude-code-on-the-web
+- Web quickstart - https://code.claude.com/docs/en/web-quickstart
+- Ultraplan guide - ultraplan-for-cloud-first-implementation-planning
