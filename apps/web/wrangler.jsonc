@@ -22,9 +22,10 @@
   },
   "triggers": {
     // 6-hourly: source-repo signals. Daily 05:00 UTC: IndexNow changed-URL push.
+    // Fridays 14:00 UTC: generate the next Weekly Brief draft for review.
     // Sundays 16:00 UTC: weekly newsletter digest.
     // NB: Cloudflare day-of-week is 1=Sunday..7=Saturday, so Sunday is SUN (not 0).
-    "crons": ["17 */6 * * *", "0 5 * * *", "0 16 * * SUN"],
+    "crons": ["17 */6 * * *", "0 5 * * *", "0 14 * * FRI", "0 16 * * SUN"],
   },
   "assets": {
     "directory": "dist/client",

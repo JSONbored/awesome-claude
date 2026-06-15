@@ -35,6 +35,7 @@ import { TrustDrilldown } from "@/components/trust-drilldown";
 import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
+import { ComparisonTable } from "@/components/comparison-table";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
 import { categoryLabels, categoryUsageHints } from "@/lib/site";
@@ -232,6 +233,13 @@ function Dossier() {
   // toggle was wasted work. entry is stable per page.
   const rel = useMemo(() => related(entry), [entry]);
   const relGroups = useMemo(() => relatedGroups(entry), [entry]);
+  // Up to 3 closest alternatives for a side-by-side comparison table — prefer
+  // the typed "alternative" relation, fall back to the flat related set.
+  const alternatives = useMemo(() => {
+    const altGroup = relGroups.find((g) => g.relation === "alternative");
+    const pool = altGroup && altGroup.entries.length > 0 ? altGroup.entries : rel;
+    return pool.slice(0, 3);
+  }, [relGroups, rel]);
   const entryRef = `${entry.category}/${entry.slug}`;
   const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
   const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
@@ -271,10 +279,19 @@ function Dossier() {
     items.push({ id: "about", label: "About this resource" });
     items.push({ id: "citations", label: "Source citations" });
     items.push({ id: "badge", label: "Add a badge" });
+    if (alternatives.length > 0) items.push({ id: "compare", label: "How it compares" });
     if (rel.length > 0) items.push({ id: "related", label: "Related" });
     items.push({ id: "signals", label: "Signals" });
     return items;
-  }, [risk, entry.safetyNotes, entry.privacyNotes, entry.prerequisites, hasSchema, rel.length]);
+  }, [
+    risk,
+    entry.safetyNotes,
+    entry.privacyNotes,
+    entry.prerequisites,
+    hasSchema,
+    alternatives.length,
+    rel.length,
+  ]);
 
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
 
@@ -628,6 +645,20 @@ function Dossier() {
           </DossierSection>
 
           <BadgeSection category={entry.category} slug={entry.slug} title={entry.title} />
+
+          {alternatives.length > 0 && (
+            <DossierSection id="compare" title="How it compares">
+              <p className="mb-4 text-sm text-ink-muted">
+                {entry.title} side by side with{" "}
+                {alternatives.length === 1
+                  ? "its closest alternative"
+                  : `${alternatives.length} alternatives`}{" "}
+                on trust, install, platform support, and disclosed safety notes — all from reviewed
+                registry metadata.
+              </p>
+              <ComparisonTable entries={[entry, ...alternatives]} />
+            </DossierSection>
+          )}
 
           {(relGroups.length > 0 || rel.length > 0) && (
             <DossierSection id="related" title="Related resources">
