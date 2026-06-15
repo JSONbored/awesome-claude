@@ -1,0 +1,146 @@
+---
+title: /frontend-visual-qa - Frontend Visual QA Command for Claude Code
+slug: frontend-visual-qa
+category: commands
+description: >-
+  Slash command that runs a visual QA checklist against a frontend URL or local
+  path: layout regressions, responsive breakpoints, focus order, contrast risks,
+  loading and empty states, and screenshot-noted defects for changed UI.
+cardDescription: >-
+  Visual QA checklist for frontend URLs or paths covering layout, responsive, and a11y risks.
+seoTitle: /frontend-visual-qa - Frontend Visual QA Command for Claude Code
+seoDescription: >-
+  Claude Code slash command for frontend visual QA covering layout, responsive
+  breakpoints, accessibility risks, and UI state checks.
+author: kiannidev
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 751
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/751"
+documentationUrl: "https://github.com/anthropics/claude-code"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://code.claude.com/docs/en/chrome"
+  - "https://code.claude.com/docs/en/computer-use"
+  - "https://www.w3.org/WAI/test-evaluate/"
+installable: true
+installCommand: "/frontend-visual-qa [url-or-path]"
+commandSyntax: "/frontend-visual-qa [url-or-path]"
+usageSnippet: "/frontend-visual-qa http://localhost:3000/settings"
+copySnippet: "/frontend-visual-qa [url-or-path]"
+prerequisites:
+  - "Runnable frontend dev server or deployed preview URL for the page under test."
+  - "List of changed routes or components from the PR or user context."
+  - "Browser or MCP browser tooling available for navigation and screenshots."
+safetyNotes:
+  - "Use staging or local preview URLs; do not run destructive actions on production admin pages."
+  - "Visual QA is advisory; confirm critical a11y issues with automated axe/Lighthouse tooling when available."
+  - "Do not submit forms that create billing, deletion, or production data changes during QA."
+privacyNotes:
+  - "Screenshots and DOM snapshots may capture user data, auth tokens in URLs, or internal feature flags."
+  - "Redact PII from shared visual QA reports; avoid production pages with live customer sessions."
+tags:
+  - frontend
+  - visual-qa
+  - accessibility
+  - ui
+  - testing
+keywords:
+  - frontend visual qa command
+  - ui regression checklist
+  - claude code visual qa
+  - responsive layout qa command
+---
+
+The `/frontend-visual-qa` command is a **custom slash command workflow** you install as a Markdown prompt under `.claude/commands/` (or ship via a project plugin `commands/` directory). It is **not** a built-in Claude Code command. It turns a URL or local route into a **structured visual QA report** for frontend changes — layout, responsive behavior, states, and obvious accessibility risks — without replacing full end-to-end test suites.
+
+## Install this command
+
+Save the following as `.claude/commands/frontend-visual-qa.md` in your repository (or add it to a plugin `commands/` directory), then invoke `/frontend-visual-qa` in Claude Code:
+
+```markdown
+---
+description: Run a visual QA checklist for a frontend URL or route covering layout, responsive, and a11y risks
+---
+
+Produce a structured visual QA report. Target URL or route: $ARGUMENTS
+
+When invoked, follow these steps:
+
+1. **Resolve the target.** Accept `http://localhost:*`, preview deployment URLs, or a route path when a dev server base URL is known. Refuse production admin URLs unless the user explicitly approves.
+2. **Load baseline context.** Identify changed components from `git diff` (CSS, layout, routes, design tokens) to focus QA on affected UI.
+3. **Capture default viewport.** Open the page with Claude in Chrome or browser MCP tools, wait for network idle or skeleton completion, and take a screenshot at desktop width (1280px unless the project standard differs).
+4. **Check responsive breakpoints.** Repeat at tablet (~768px) and mobile (~390px) widths. Note overflow, clipped text, overlapping controls, and horizontal scroll.
+5. **Exercise UI states.** Verify loading, empty, error, success, disabled, and authenticated vs anonymous states when reachable without destructive actions.
+6. **Review accessibility signals.** Check focus order tab sequence, visible focus rings, label association for inputs, heading hierarchy, and contrast risks on primary buttons and text.
+7. **File defects.** For each issue, record severity, viewport, repro steps, screenshot reference, and the likely component or CSS source file.
+```
+
+## Usage
+
+```
+/frontend-visual-qa [url-or-path]
+```
+
+- With a `url-or-path`: QA that page (absolute URL or app route on the running dev server).
+- Without an argument: infer the primary changed route from the git diff or user context.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Resolve the target.** Accept `http://localhost:*`, preview deployment URLs, or a route path when a dev server base URL is known. Refuse production admin URLs unless the user explicitly approves.
+2. **Load baseline context.** Identify changed components from `git diff` (CSS, layout, routes, design tokens) to focus QA on affected UI.
+3. **Capture default viewport.** Open the page, wait for network idle or skeleton completion, and take a screenshot at desktop width (1280px unless the project standard differs).
+4. **Check responsive breakpoints.** Repeat at tablet (~768px) and mobile (~390px) widths. Note overflow, clipped text, overlapping controls, and horizontal scroll.
+5. **Exercise UI states.** Verify loading, empty, error, success, disabled, and authenticated vs anonymous states when reachable without destructive actions.
+6. **Review accessibility signals.** Check focus order tab sequence, visible focus rings, label association for inputs, heading hierarchy, and contrast risks on primary buttons and text.
+7. **File defects.** For each issue, record severity, viewport, repro steps, screenshot reference, and the likely component or CSS source file.
+
+## Output format
+
+- **Target:** URL, viewports tested, states covered.
+- **Findings:** severity, description, viewport, repro, screenshot note.
+- **Passed checks:** layout, responsive, and a11y items with no issues.
+- **Blocked checks:** states that could not be tested and why.
+- **Verdict:** ship / fix before merge / needs design review.
+
+## Requirements
+
+- Reachable frontend preview (local dev server or deployment URL).
+- Browser automation or MCP browser tools for navigation and screenshots.
+- Optional: changed-file context from git for focused QA.
+
+## Safety notes
+
+Prefer local or staging environments. Do not submit destructive forms or billing actions during QA. Treat visual inspection as advisory; confirm critical accessibility defects with dedicated tooling when possible.
+
+## Privacy notes
+
+Screenshots and DOM content may include tokens, emails, or customer records. Redact sensitive UI before sharing reports outside the team.
+
+## Source Verification Notes
+
+Verified against Claude Code browser integrations and accessibility guidance on **2026-06-14**:
+
+- [Claude Code slash commands](https://code.claude.com/docs/en/slash-commands) document custom commands in `.claude/commands/`, the `$ARGUMENTS` placeholder, and team sharing by committing command files to git.
+- [Claude in Chrome](https://code.claude.com/docs/en/chrome) and [computer use](https://code.claude.com/docs/en/computer-use) document browser and desktop GUI inspection workflows suitable for visual QA.
+- [W3C WAI test and evaluate guidance](https://www.w3.org/WAI/test-evaluate/) defines manual accessibility checks aligned with this checklist.
+- The `claude-code` CHANGELOG references Chrome and browser tooling enhancements for frontend teams.
+- Plugins README supports distributing repeatable QA command prompts to frontend squads.
+
+## Duplicate Check
+
+Searched `content/commands/` on **2026-06-14** for overlapping slug, `commandSyntax`, and workflow scope. No existing command provides a frontend visual QA checklist across viewports and UI states. `debug` and `explain` target general troubleshooting, not structured layout and responsive review. Complements `reg-suit` skill packs without duplicating visual regression automation setup.
+
+## References
+
+- Claude Code repository: https://github.com/anthropics/claude-code
+- Claude Code slash commands: https://code.claude.com/docs/en/slash-commands
+- Claude in Chrome: https://code.claude.com/docs/en/chrome
+- Claude Code computer use: https://code.claude.com/docs/en/computer-use
+- W3C test and evaluate guidance: https://www.w3.org/WAI/test-evaluate/
