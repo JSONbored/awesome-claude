@@ -1,0 +1,204 @@
+---
+title: SpotDB MCP Server for Claude
+slug: ai-aliengiraffe-spotdb-mcp-server
+category: mcp
+description: >-
+  SpotDB ephemeral data sandbox MCP server for uploading CSVs, querying with guardrails, and exploring datasets locally without touching production databases.
+cardDescription: >-
+  Connect Claude to SpotDB for a local ephemeral SQL sandbox with guardrails—upload CSVs, snapshot data, and query safely via MCP.
+seoTitle: SpotDB MCP Server for Claude
+seoDescription: >-
+  Use SpotDB MCP with Claude to explore CSV datasets in an ephemeral sandbox with guardrails via mcp-remote on localhost:8081/stream.
+author: AlienGiraffe
+authorProfileUrl: "https://github.com/aliengiraffe"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1465
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1465"
+repoUrl: "https://github.com/aliengiraffe/spotdb"
+documentationUrl: "https://github.com/aliengiraffe/spotdb/blob/main/DOCS.md"
+websiteUrl: "https://github.com/aliengiraffe/spotdb"
+installable: true
+installCommand: >-
+  claude mcp add spotdb -- npx -y mcp-remote http://localhost:8081/stream
+usageSnippet: >-
+  Start SpotDB locally, upload CSV data, then connect Claude Code with `mcp-remote http://localhost:8081/stream`.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "spotdb": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "http://localhost:8081/stream"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "spotdb": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "http://localhost:8081/stream"],
+        "env": {
+          "X-API-Key": "YOUR_OPTIONAL_SPOTDB_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "SpotDB installed locally (`brew install spotdb` or Docker) with the MCP stream on port 8081."
+  - "Node.js for the `mcp-remote` shim used by Claude Code."
+  - "CSV or tabular datasets uploaded via REST or the Explorer UI at localhost:8080."
+  - "Review of SpotDB guardrails before querying sensitive extracts."
+safetyNotes:
+  - "Sandbox queries still run against uploaded data that may contain PII—sanitize inputs."
+  - "Guardrails block unsafe operations but should not replace data governance review."
+  - "Ephemeral databases reset when the server restarts unless snapshotted."
+  - "Do not upload production database dumps without redaction and approval."
+privacyNotes:
+  - "Data stays on your machine unless you explicitly upload to a remote SpotDB host."
+  - "Query text and results enter the MCP client and LLM context."
+  - "Optional X-API-Key authentication protects the local MCP stream on shared hosts."
+tags:
+  - database
+  - sandbox
+  - analytics
+  - local
+  - stdio
+keywords:
+  - spotdb mcp
+  - ephemeral data sandbox
+  - csv query claude
+  - aliengiraffe spotdb
+  - safe sql mcp
+readingTime: 4
+difficultyScore: 45
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+SpotDB provides a lightweight ephemeral data sandbox for LLM and agentic workflows. Upload CSV files, snapshot states, and query through MCP or REST APIs with guardrails that keep exploration away from production databases.
+
+Full documentation is in [aliengiraffe/spotdb DOCS.md](https://github.com/aliengiraffe/spotdb/blob/main/DOCS.md). Claude Code connects via `mcp-remote` to `http://localhost:8081/stream`.
+
+## Features
+
+- Ephemeral SQL sandbox for uploaded CSV and tabular data.
+- Snapshot and restore point-in-time dataset states.
+- MCP stream API on localhost:8081 plus REST on 8080.
+- Explorer UI for manual upload and query.
+- Guardrails and optional API key authentication.
+
+## Use Cases
+
+- Upload a sales CSV and ask Claude to summarise top regions.
+- Compare two snapshots of a dataset after ETL changes.
+- Let an agent explore a sanitized customer extract without prod access.
+- Prototype SQL questions before moving logic to a warehouse.
+- Share exploratory results from the local Explorer UI.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Install and start SpotDB (`spotdb` or Docker).
+2. Upload CSV data via curl or the Explorer at http://localhost:8080/explorer.
+3. Add the MCP config using `mcp-remote http://localhost:8081/stream`.
+4. Run exploratory queries through Claude Code or another MCP client.
+
+### Claude Code
+
+```bash
+claude mcp add spotdb -- npx -y mcp-remote http://localhost:8081/stream
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "spotdb": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "http://localhost:8081/stream"]
+    }
+  }
+}
+```
+
+For authenticated setups:
+
+```json
+{
+  "mcpServers": {
+    "spotdb": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "http://localhost:8081/stream"],
+      "env": {
+        "X-API-Key": "YOUR_OPTIONAL_SPOTDB_KEY"
+      }
+    }
+  }
+}
+```
+
+Set optional `X-API-Key` when running SpotDB with authentication enabled.
+
+## Examples
+
+### Summarise CSV
+
+```text
+Query mytable and summarise revenue by region.
+```
+
+### Sample rows
+
+```text
+Select 10 rows from mytable and describe the schema.
+```
+
+### Snapshot compare
+
+```text
+Compare the current dataset snapshot to yesterday's snapshot for row-count drift.
+```
+
+## Security
+
+- Never upload unredacted production PII without approval.
+- Run SpotDB on localhost or trusted networks; protect port 8081 on shared machines.
+- Treat query output as sensitive if source CSVs contained regulated data.
+
+## Troubleshooting
+
+### Connection refused
+
+Ensure SpotDB is running and listening on port 8081.
+
+### Table not found
+
+Upload CSV with a table_name via POST /api/v1/upload first.
+
+### Guardrail violation
+
+Rewrite the query to stay within allowed operations per DOCS.md.
+
+### mcp-remote errors
+
+Update Node.js and retry `npx -y mcp-remote http://localhost:8081/stream`.
+
+## Duplicate Check
+
+No existing SpotDB or `aliengiraffe/spotdb` entry was found in `content/mcp/`. This differs from Postgres or SQLite MCP servers because SpotDB is an ephemeral guarded sandbox for uploaded files.
