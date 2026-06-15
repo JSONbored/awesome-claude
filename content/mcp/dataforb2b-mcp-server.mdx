@@ -1,0 +1,188 @@
+---
+title: DataForB2B MCP Server for Claude
+slug: dataforb2b-mcp-server
+category: mcp
+description: >-
+  DataForB2B remote MCP server exposing people and company search, enrichment,
+  and agentic discovery over 800M+ profiles and 75M+ companies via streamable HTTP.
+cardDescription: >-
+  Connect Claude to DataForB2B for B2B people and company search, enrichment,
+  and agentic discovery through mcp.dataforb2b.ai/mcp.
+seoTitle: DataForB2B MCP Server for Claude
+seoDescription: >-
+  Use the DataForB2B MCP server with Claude to search 800M+ profiles, query 75M+
+  companies, enrich contacts, and run agentic discovery with a Bearer API key.
+author: DataForB2B
+authorProfileUrl: "https://github.com/dataforb2b"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1499
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1499"
+documentationUrl: "https://dataforb2b.ai/products/sales-mcp-server"
+websiteUrl: "https://dataforb2b.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http dataforb2b https://mcp.dataforb2b.ai/mcp
+usageSnippet: >-
+  Add https://mcp.dataforb2b.ai/mcp as a remote HTTP connector and authenticate
+  with a DataForB2B Bearer API key in headers or environment configuration.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "dataforb2b": {
+        "url": "https://mcp.dataforb2b.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "dataforb2b": {
+        "url": "https://mcp.dataforb2b.ai/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer YOUR_DATAFORB2B_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "DataForB2B API key with an active credit plan from https://dataforb2b.ai."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or another MCP client with remote HTTP transport."
+  - "Compliance review for GDPR and CCPA obligations when exporting people or company data."
+  - "Understanding that each successful search or enrichment consumes credits."
+safetyNotes:
+  - "People search and enrichment tools can return emails, titles, and employer metadata; handle as regulated personal data."
+  - "Agentic search may issue broader queries than manual filters; review results before automated outreach."
+  - "Bearer tokens grant billable API access; store them in MCP headers or env vars, not in chat."
+  - "Do not use exported contact data for unsolicited outreach that violates local privacy laws."
+privacyNotes:
+  - "Search filters, domains, and profile identifiers are processed by DataForB2B and its data vendors."
+  - "API keys are credentials; rotate them if exposed in logs, issues, or shared connector configs."
+  - "Data is sourced from publicly available and verified sources per DataForB2B compliance statements."
+tags:
+  - b2b-data
+  - sales
+  - recruiting
+  - enrichment
+  - remote-mcp
+keywords:
+  - dataforb2b mcp
+  - b2b people search claude
+  - company enrichment mcp
+  - mcp.dataforb2b.ai
+  - agentic search b2b
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+DataForB2B provides a native Model Context Protocol server for B2B data operations. Agents can search people and companies, enrich profiles and domains, and run agentic discovery against a dataset of 800M+ profiles and 75M+ companies without writing custom REST glue code.
+
+The hosted endpoint is `https://mcp.dataforb2b.ai/mcp`, registered as `ai.dataforb2b/dataforb2b`. The same dataset is also available through REST and webhooks documented at [dataforb2b.ai](https://dataforb2b.ai).
+
+## Features
+
+- `search_people` with 60+ filter columns and typed operators.
+- `search_companies` with 50+ company filters including funding and size.
+- `enrich_profile` to resolve URLs or emails into structured person records.
+- `enrich_company` to resolve domains or names into company records.
+- `agentic_search` for natural-language queries with ranked verified results.
+- Streamable HTTP transport for Claude, Cursor, Cline, and Continue.
+
+## Use Cases
+
+- Build a VP Sales prospect list for US companies with 501–1000 employees.
+- Enrich a LinkedIn profile URL before drafting outreach copy.
+- Resolve decision-makers at a target account domain.
+- Feed ranked leads into an AI SDR workflow from chat.
+- Validate ICP coverage before launching a recruiting search.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter `https://mcp.dataforb2b.ai/mcp`.
+3. Configure a Bearer token with your DataForB2B API key.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http dataforb2b https://mcp.dataforb2b.ai/mcp
+```
+
+Add the API key per your client's remote-auth mechanism.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "dataforb2b": {
+      "url": "https://mcp.dataforb2b.ai/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer YOUR_DATAFORB2B_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Tool responses include `credits_used` and `isError` fields for auditing.
+
+## Examples
+
+### People search
+
+```text
+Find VP Sales leaders at US companies with 501-1000 employees who are not open to work.
+```
+
+### Company enrichment
+
+```text
+Enrich stripe.com and return funding stage, employee count, and industry.
+```
+
+### Agentic discovery
+
+```text
+Use agentic search to find fintech companies hiring senior compliance officers in Europe.
+```
+
+## Security
+
+- Export only the minimum fields required for your workflow.
+- Confirm opt-out and outreach policies before emailing enriched contacts.
+- Rotate API keys if they were shared in connector screenshots or chat logs.
+
+## Troubleshooting
+
+### 401 unauthorized
+
+Verify the Bearer token matches an active DataForB2B API key.
+
+### Empty result sets
+
+Relax filters, check country coverage, and confirm spelling of titles or company names.
+
+### Credit exhaustion
+
+Review plan limits at DataForB2B; failed lookups typically do not consume credits.
+
+### Schema validation errors
+
+Use JSON-schema typed filters from tool definitions; the model must supply valid operators and column names.
