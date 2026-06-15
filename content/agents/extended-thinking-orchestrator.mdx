@@ -2,19 +2,17 @@
 title: Extended Thinking Orchestrator - Agents
 slug: extended-thinking-orchestrator
 category: agents
-description: >-
-  Orchestrate Extended Thinking modes with adaptive budget allocation. Manages
-  'think', 'think hard', and 'ultrathink' levels for complexity-driven deep
-  reasoning workflows.
-cardDescription: Orchestrate Extended Thinking modes with adaptive budget allocation.
-seoTitle: Extended Thinking Orchestrator - Agents
-seoDescription: >-
-  Orchestrate Extended Thinking modes with adaptive budget allocation. Manages
-  'think', 'think hard', and 'ultrathink' levels for complexity-driven deep
-  reason...
+description: "An agent that routes each task to the right Claude extended-thinking level — think, think hard, or ultrathink — escalating reasoning depth as problem complexity rises."
+cardDescription: "Picks the Claude thinking level (think / think hard / ultrathink) per task, escalating budget for harder problems."
+seoTitle: "Claude Extended Thinking think/ultrathink Orchestrator Agent"
+seoDescription: "Agent that matches each task to a Claude extended-thinking level — think, think hard, or ultrathink — escalating reasoning depth as complexity rises."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
+documentationUrl: "https://code.claude.com/docs/en/best-practices"
+retrievalSources:
+  - "https://code.claude.com/docs/en/best-practices"
+  - "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"
 installable: false
 usageSnippet: >-
   You are an Extended Thinking Orchestrator specializing in adaptive budget
@@ -40,9 +38,8 @@ copySnippet: >-
 
   interface ThinkingMode {
     level: 'think' | 'think-hard' | 'ultrathink';
-    budgetRange: [number, number]; // [min, max] thinking tokens
+    budgetRange: [number, number]; // illustrative [min, max] thinking-token guidance you tune
     typicalDuration: string;
-    costMultiplier: number; // vs standard inference
     idealUseCases: string[];
   }
 
@@ -52,7 +49,6 @@ copySnippet: >-
       level: 'think',
       budgetRange: [1000, 5000],
       typicalDuration: '5-15 seconds',
-      costMultiplier: 1.5,
       idealUseCases: [
         'Simple algorithmic problems',
         'Straightforward code reviews',
@@ -64,7 +60,6 @@ copySnippet: >-
       level: 'think-hard',
       budgetRange: [5000, 20000],
       typicalDuration: '15-60 seconds',
-      costMultiplier: 2.5,
       idealUseCases: [
         'Complex refactoring decisions',
         'Multi-step mathematical proofs',
@@ -76,7 +71,6 @@ copySnippet: >-
       level: 'ultrathink',
       budgetRange: [20000, 100000],
       typicalDuration: '1-5 minutes',
-      costMultiplier: 5.0,
       idealUseCases: [
         'Novel algorithm design',
         'System architecture from scratch',
@@ -467,7 +461,7 @@ copySnippet: >-
 
   1. **Mode Selection**: Start with 'think', escalate only if needed
 
-  2. **Budget Allocation**: Allocate 1.5x expected based on complexity
+  2. **Budget Allocation**: Allocate additional thinking budget based on complexity
 
   3. **Progressive Reasoning**: Use multi-stage for unknown complexity
 
@@ -520,6 +514,8 @@ copySnippet: >-
 
   I specialize in orchestrating Extended Thinking workflows that balance
   reasoning depth with cost efficiency for complex problem-solving.
+privacyNotes:
+  - "Extended thinking sends prompts to the configured model provider like any Claude API call; thinking tokens are billed as output tokens, and the budget/duration figures in the examples are illustrative defaults, not provider-published values."
 tags:
   - extended-thinking
   - deep-reasoning
@@ -560,9 +556,8 @@ You are an Extended Thinking Orchestrator specializing in adaptive budget alloca
 // Extended Thinking mode definitions
 interface ThinkingMode {
   level: "think" | "think-hard" | "ultrathink";
-  budgetRange: [number, number]; // [min, max] thinking tokens
+  budgetRange: [number, number]; // illustrative [min, max] thinking-token guidance you tune
   typicalDuration: string;
-  costMultiplier: number; // vs standard inference
   idealUseCases: string[];
 }
 
@@ -571,7 +566,6 @@ const THINKING_MODES: Record<string, ThinkingMode> = {
     level: "think",
     budgetRange: [1000, 5000],
     typicalDuration: "5-15 seconds",
-    costMultiplier: 1.5,
     idealUseCases: [
       "Simple algorithmic problems",
       "Straightforward code reviews",
@@ -583,7 +577,6 @@ const THINKING_MODES: Record<string, ThinkingMode> = {
     level: "think-hard",
     budgetRange: [5000, 20000],
     typicalDuration: "15-60 seconds",
-    costMultiplier: 2.5,
     idealUseCases: [
       "Complex refactoring decisions",
       "Multi-step mathematical proofs",
@@ -595,7 +588,6 @@ const THINKING_MODES: Record<string, ThinkingMode> = {
     level: "ultrathink",
     budgetRange: [20000, 100000],
     typicalDuration: "1-5 minutes",
-    costMultiplier: 5.0,
     idealUseCases: [
       "Novel algorithm design",
       "System architecture from scratch",
@@ -1005,7 +997,7 @@ class ThinkingPerformanceTracker {
 ## Extended Thinking Best Practices:
 
 1. **Mode Selection**: Start with 'think', escalate only if needed
-2. **Budget Allocation**: Allocate 1.5x expected based on complexity
+2. **Budget Allocation**: Allocate additional thinking budget based on complexity
 3. **Progressive Reasoning**: Use multi-stage for unknown complexity
 4. **Cost Control**: Set maxCost budgets to prevent runaway thinking
 5. **Recovery Planning**: Have timeout recovery strategies ready
