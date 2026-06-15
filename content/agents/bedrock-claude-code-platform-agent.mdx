@@ -1,0 +1,171 @@
+---
+title: Bedrock Claude Code Platform Agent
+slug: bedrock-claude-code-platform-agent
+category: agents
+description: >-
+  Claude Code subagent that guides teams through configuring, operating, and
+  troubleshooting Claude Code deployments backed by Amazon Bedrock, covering
+  credential setup, model routing, network controls, cost governance, and
+  compliance alignment.
+cardDescription: >-
+  Configure and operate Claude Code on Amazon Bedrock: credentials, model
+  routing, network controls, cost governance, and compliance.
+seoTitle: Bedrock Claude Code Platform Agent
+seoDescription: >-
+  Claude Code subagent for Amazon Bedrock deployments: configure credentials,
+  model routing, VPC endpoints, cost governance, and compliance for Claude Code
+  teams using Bedrock as their model provider.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+documentationUrl: "https://docs.aws.amazon.com/bedrock/latest/userguide/getting-started.html"
+installable: false
+usageSnippet: >-
+  Use this agent when onboarding a team to Claude Code with Amazon Bedrock as
+  the model provider, or when diagnosing credential, routing, cost, or
+  compliance issues in an existing Bedrock-backed Claude Code deployment.
+prerequisites:
+  - "An AWS account with Amazon Bedrock access and Claude model access granted in the target region (us-east-1, us-west-2, eu-west-1, or ap-northeast-1)."
+  - "AWS IAM credentials (access key + secret, or an IAM role with an attached Bedrock invoke policy) available in the Claude Code environment."
+  - "Claude Code installed and the ANTHROPIC_API_KEY or CLAUDE_CODE_USE_BEDROCK environment variable configured per the Claude Code network-access documentation."
+  - "Understanding of the target compliance posture: data residency requirements, VPC endpoint requirements, CloudTrail logging expectations, and cost-allocation tag strategy."
+safetyNotes:
+  - "This agent advises on configuration and does not modify AWS IAM policies, Bedrock resource policies, or network controls itself; a human must review and apply infrastructure changes."
+  - "Bedrock invocations log to CloudTrail by default; confirm logging destination, retention, and access controls meet your compliance requirements before enabling team access."
+  - "VPC endpoints for Bedrock prevent traffic from leaving the AWS network; recommend enabling them for workloads with strict data-residency or network-isolation requirements."
+  - "Model access must be explicitly granted per region in the Bedrock console; confirm access is approved for the specific Claude model version before routing production Claude Code traffic."
+privacyNotes:
+  - "Prompts and model outputs sent through Amazon Bedrock are governed by the AWS data processing addendum and Bedrock service terms; review these for your jurisdiction and data classification."
+  - "By default, Amazon Bedrock does not use prompts or completions to train models; confirm the model invocation logging settings to control whether content is stored in CloudWatch Logs or S3."
+  - "Claude Code sends workspace context (file contents, git history excerpts, tool outputs) as part of prompts to the configured model provider; scope file permissions and .claude/settings.json patterns to limit what context reaches Bedrock."
+  - "Cost-allocation tags applied to Bedrock invocations can expose project names, team identifiers, or workload types in AWS Cost Explorer; treat tag values as non-confidential or restrict Cost Explorer access accordingly."
+tags:
+  - aws
+  - bedrock
+  - claude-code
+  - platform
+  - enterprise
+keywords:
+  - bedrock claude code
+  - amazon bedrock claude
+  - claude code aws bedrock
+  - bedrock model provider
+  - claude code enterprise bedrock
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Bedrock Claude Code Platform Agent is a configuration and operations agent for
+teams running Claude Code with Amazon Bedrock as the model provider. It covers
+the end-to-end setup path — from granting Claude model access in the Bedrock
+console, configuring AWS credentials in the Claude Code environment, and
+selecting the right Claude model ARN, through to VPC endpoint configuration,
+cost-allocation tagging, CloudTrail compliance verification, and region failover.
+
+Use it when onboarding a new team to Claude Code on Bedrock, diagnosing
+credential or routing failures, reviewing the cost and compliance posture of an
+existing deployment, or planning a multi-region Bedrock setup.
+
+## Agent Prompt
+
+You are a platform agent for Claude Code deployments backed by Amazon Bedrock.
+Help the user configure, operate, and troubleshoot Bedrock as the model provider
+for Claude Code, using AWS and Bedrock documentation as your reference.
+
+Work through the following checklist, skipping sections the user has already
+completed, and flag each item as done, blocked, or needs-review:
+
+1. **Model access.** Confirm Claude model access is granted in the Bedrock
+   console for the target region. Identify the model ID (e.g.
+   `anthropic.claude-opus-4-8-20251101-v1:0`) and note regional availability.
+
+2. **Credentials.** Help the user choose the right credential path: environment
+   variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`), an
+   IAM role with an instance profile, or AWS SSO. Recommend least-privilege:
+   the principal needs only `bedrock:InvokeModel` and
+   `bedrock:InvokeModelWithResponseStream` on the target model ARNs.
+
+3. **Claude Code wiring.** Explain the `CLAUDE_CODE_USE_BEDROCK=1` environment
+   variable and the corresponding `ANTHROPIC_MODEL` override if the team needs a
+   specific Claude model version. Confirm the setup with a `claude --version`
+   and a minimal test prompt.
+
+4. **Network controls.** If the workload requires VPC isolation, recommend a
+   Bedrock VPC interface endpoint and confirm the security group and DNS
+   resolution setup. Note that Bedrock endpoints are region-scoped.
+
+5. **Cost governance.** Recommend enabling Bedrock model invocation logging with
+   cost-allocation tags (`Project`, `Team`, `Environment`) so usage appears
+   broken out in Cost Explorer. Estimate token costs for the planned Claude Code
+   usage pattern.
+
+6. **Compliance.** Confirm CloudTrail data events for Bedrock are enabled.
+   Review whether the workload's data classification requires the AWS Business
+   Associate Addendum (for healthcare workloads) or additional data-residency
+   controls.
+
+7. **Failover.** If the team needs multi-region continuity, discuss cross-region
+   inference profiles and the latency/cost trade-offs of routing to a secondary
+   region.
+
+Output: a deployment readiness checklist (done / blocked / needs-review per
+item), the recommended IAM policy JSON, and any open compliance questions for
+the security or legal team.
+
+## Features
+
+- Walks through Bedrock model access, IAM credential setup, and Claude Code
+  environment variable configuration.
+- Recommends least-privilege IAM policies scoped to the model ARNs in use.
+- Covers VPC endpoint configuration for network-isolated deployments.
+- Produces a cost-allocation tagging and CloudTrail compliance checklist.
+- Advises on cross-region inference profiles for multi-region continuity.
+
+## Use Cases
+
+- Onboard a development team to Claude Code using Bedrock instead of the
+  Anthropic API (common in AWS-native enterprises with existing Bedrock access).
+- Diagnose `AccessDeniedException` or model-not-found errors in an existing
+  Bedrock-backed Claude Code deployment.
+- Review the cost and compliance posture of a Bedrock deployment before
+  expanding Claude Code access to additional teams.
+- Plan a multi-region Bedrock setup with cross-region inference profiles.
+
+## Source Notes
+
+- Amazon Bedrock is an AWS managed service for invoking foundation models
+  including Claude; it requires explicit per-region model access grants.
+- Claude Code supports Amazon Bedrock as a model provider via the
+  `CLAUDE_CODE_USE_BEDROCK` environment variable, documented in the Claude Code
+  network-access and third-party provider guidance.
+- Bedrock invocations are governed by the AWS shared responsibility model;
+  CloudTrail data events, VPC endpoints, and IAM policies are the primary
+  operator controls.
+
+## Duplicate Check
+
+Checked `content/agents/`, `content/tools/`, all other content categories, and
+open PRs for: `Bedrock`, `bedrock`, `Amazon Bedrock`, `AWS Bedrock`,
+`bedrock-claude`, `claude code bedrock`, `CLAUDE_CODE_USE_BEDROCK`. No existing
+Bedrock Claude Code platform agent entry or open duplicate PR was found. This
+entry is distinct from general AWS infrastructure agents and from the Vertex AI
+and Microsoft Foundry Claude Code platform agents tracked in sibling issues.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `jaso0n0818`, grounded in
+public Amazon Bedrock and Claude Code documentation. No paid placement,
+referral, or affiliate relationship.
+
+## Sources
+
+- Amazon Bedrock getting started: https://docs.aws.amazon.com/bedrock/latest/userguide/getting-started.html
+- Amazon Bedrock Claude models: https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html
+- Amazon Bedrock VPC endpoints: https://docs.aws.amazon.com/bedrock/latest/userguide/vpc-interface-endpoints.html
+- Amazon Bedrock model invocation logging: https://docs.aws.amazon.com/bedrock/latest/userguide/model-invocation-logging.html
+- AWS CloudTrail for Bedrock: https://docs.aws.amazon.com/bedrock/latest/userguide/logging-using-cloudtrail.html
