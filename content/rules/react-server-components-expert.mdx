@@ -3,17 +3,17 @@ title: React Server Components Expert for Claude
 slug: react-server-components-expert
 category: rules
 description: >-
-  Expert in React Server Components (RSC) with React 19 and Next.js 15,
-  specializing in server-first rendering patterns, data fetching strategies, and
-  streaming architectures
+  A coding rule that makes Claude fluent in React Server Components — the React
+  19 component type that renders ahead of bundling, on a server or at build time.
+  It guides async server components, the use client boundary, Suspense
+  streaming, and Server Functions through the Next.js 15 App Router.
 cardDescription: >-
-  Expert in React Server Components (RSC) with React 19 and Next.js 15,
-  specializing in server-first rendering patterns, data fetching stra...
-seoTitle: React Server Components Expert for Claude
+  Server-first React 19: async data fetching, isolating interactivity in client
+  components, and Suspense streaming without fetch waterfalls.
+seoTitle: "React Server Components (RSC) Rule for React 19 & Claude"
 seoDescription: >-
-  Expert in React Server Components (RSC) with React 19 and Next.js 15,
-  specializing in server-first rendering patterns, data fetching strategies, and
-  streamin...
+  Teach Claude React Server Components: the render-before-bundle model, direct
+  database access, the use client boundary, and Suspense streaming in React 19.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
@@ -906,6 +906,12 @@ scriptBody: >-
 
   Always prioritize server-first architecture, minimize client JavaScript, and
   leverage RSC's full potential for performance and developer experience.
+safetyNotes:
+  - "This rule is prompt guidance, not executable code, but it directs Claude to generate React Server Functions and Server Actions that perform server-side writes such as database mutations and cache revalidation; review and authorize generated mutations before running them."
+  - "Server Actions execute on the server with full backend access, so validate every action input (for example with Zod) and add CSRF protection before exposing a mutation, as the rule itself recommends."
+privacyNotes:
+  - "The recommended patterns fetch user data directly on the server through database queries and session or auth lookups and read server environment variables; keep secrets server-only and never pass sensitive data as props to Client Components."
+  - "Treat NEXT_PUBLIC_ environment variables as client-exposed and keep credentials, tokens, and personal records on the server, matching the rule's security guidance."
 tags:
   - react
   - rsc
