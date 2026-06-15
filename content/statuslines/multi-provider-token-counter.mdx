@@ -3,19 +3,23 @@ title: Multi Provider Token Counter - Statuslines
 slug: multi-provider-token-counter
 category: statuslines
 description: >-
-  Multi-provider AI token counter displaying real-time context usage for Claude
-  (1M), GPT-4.1 (1M), Gemini 2.x (1M), and Grok 3 (1M) with 2025 verified limits
+  Statusline that shows real-time Claude context window usage — tokens used vs
+  the model limit — with percentage and a visual fill bar, updated on every
+  Claude Code response.
 cardDescription: >-
-  Multi-provider AI token counter displaying real-time context usage for Claude
-  (1M), GPT-4.1 (1M), Gemini 2.x (1M), and Grok 3 (1M) with 2...
-seoTitle: Multi Provider Token Counter - Statuslines
+  Statusline showing Claude context fill: tokens used / model limit with
+  percentage — tells you when you are approaching context limits.
+seoTitle: Claude Code Context Window Usage Statusline
 seoDescription: >-
-  Multi-provider AI token counter displaying real-time context usage for Claude
-  (1M), GPT-4.1 (1M), Gemini 2.x (1M), and Grok 3 (1M) with 2025 verified limits
+  Claude Code statusline that displays live token usage against the active
+  model's context window. Shows count, percentage, and a visual indicator so
+  you know when to start a new session.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
-documentationUrl: "https://docs.anthropic.com/claude/docs/models-overview"
+documentationUrl: "https://platform.claude.com/docs/en/about-claude/models/overview"
+retrievalSources:
+  - "https://platform.claude.com/docs/en/about-claude/models/overview"
 installable: true
 usageSnippet: "\U0001F52E Claude │ 456,789/1,000,000 (45.7%)"
 copySnippet: |-
@@ -51,6 +55,11 @@ prerequisites:
   - >-
     Terminal with ANSI color code support (256-color mode recommended for
     color-coded warnings)
+safetyNotes:
+  - Runs as a background statusline command on every Claude Code refresh.
+  - Reads model and token data from Claude Code session JSON (stdin) only; does not make network requests.
+privacyNotes:
+  - Reads session token count from Claude Code's local session context; no data is sent externally.
 tags:
   - tokens
   - multi-provider
