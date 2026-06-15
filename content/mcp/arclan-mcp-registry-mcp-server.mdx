@@ -1,0 +1,184 @@
+---
+title: Arclan MCP Registry MCP Server for Claude
+slug: arclan-mcp-registry-mcp-server
+category: mcp
+description: >-
+  Arclan hosted MCP registry server for discovering validated MCP tools with reliability scores, live handshake checks, and trust filtering across npm, PyPI, and GitHub sources.
+cardDescription: >-
+  Connect Claude to the Arclan MCP Registry to query validated MCP servers filtered by uptime, latency, auth type, and capability.
+seoTitle: Arclan MCP Registry MCP Server for Claude
+seoDescription: >-
+  Use the Arclan MCP Registry server with Claude to discover validated MCP tools with reliability metrics via https://arclan.ai/mcp.
+author: Arclan
+authorProfileUrl: "https://arclan.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1470
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1470"
+repoUrl: "https://arclan.ai"
+documentationUrl: "https://arclan.ai"
+websiteUrl: "https://arclan.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http arclan https://arclan.ai/mcp
+usageSnippet: >-
+  Add https://arclan.ai/mcp as a remote connector to search the Arclan validated agent tool registry.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "arclan": {
+        "url": "https://arclan.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "arclan": {
+        "url": "https://arclan.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "MCP client with streamable HTTP connector support."
+  - "Understanding that Arclan catalogues tools—it does not proxy arbitrary MCP traffic."
+  - "Review of Arclan trust states (Live & Open, Auth Gated, Degraded, etc.) before connecting agents to third-party servers."
+safetyNotes:
+  - "Registry results link to third-party MCP servers with varying trust and auth requirements."
+  - "Live & Open entries are reachable without auth but still execute external tool code when connected."
+  - "Arclan scans descriptions for prompt injection patterns; false negatives are possible."
+  - "Always verify endpoint URLs independently before adding them to production agents."
+privacyNotes:
+  - "Search queries and filter parameters may be logged by Arclan."
+  - "Connecting to discovered servers sends traffic to those third-party operators under their terms."
+  - "Arclan does not mediate tool calls after discovery."
+tags:
+  - registry
+  - discovery
+  - reliability
+  - remote-mcp
+  - tools
+keywords:
+  - arclan mcp
+  - mcp registry claude
+  - validated mcp tools
+  - arclan.ai registry
+  - agent tool discovery
+readingTime: 4
+difficultyScore: 25
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+Arclan maintains a validated agent tool registry that continuously indexes MCP servers, OpenAPI tools, and AI plugins from GitHub, npm, PyPI, Smithery, and well-known endpoints. Each candidate undergoes live handshake validation, latency measurement, and description scanning before receiving reliability scores.
+
+The registry MCP endpoint is `https://arclan.ai/mcp`, listed as `ai.arclan/registry` in the official MCP registry.
+
+## Features
+
+- Discover MCP servers with uptime, latency, and handshake success metrics.
+- Filter by auth type, capability, and trust state.
+- Live handshake validation with 10-second timeout.
+- Description scanning for prompt injection and exfiltration patterns.
+- Catalogues stdio, OpenAPI, and remote HTTP MCP entries.
+
+## Use Cases
+
+- Find a read-only finance MCP server with high 7-day uptime.
+- Compare auth-gated versus live-open servers for a CRM integration.
+- Avoid degraded or zombie registry entries before agent rollout.
+- Discover OpenAPI tools alongside MCP servers for hybrid agents.
+- Audit which MCP tools match a capability keyword.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add `https://arclan.ai/mcp` as a custom MCP connector.
+2. Query the registry with capability, auth, or reliability filters.
+3. Review trust state and endpoint URL before adding discovered servers.
+4. Connect to chosen third-party MCP servers separately in your client.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http arclan https://arclan.ai/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "arclan": {
+      "url": "https://arclan.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+Arclan is a discovery layer; add target server URLs as separate connectors after validation.
+
+## Examples
+
+### Find finance tools
+
+```text
+Search the Arclan registry for live MCP servers related to stock or FX data with high uptime.
+```
+
+### Auth filter
+
+```text
+List auth-gated MCP servers for Google Ads read-only access.
+```
+
+### Avoid degraded
+
+```text
+Show registry entries marked degraded or unreachable for Notion integrations.
+```
+
+## Security
+
+- Treat registry metadata as advisory; perform your own security review before production use.
+- Prefer Auth Gated or verified publishers for sensitive data integrations.
+- Do not assume prompt-injection scanning catches all malicious tool descriptions.
+
+## Troubleshooting
+
+### Cannot GET /mcp in browser
+
+Use an MCP client; the endpoint speaks MCP over HTTP POST, not browser GET.
+
+### Empty search results
+
+Broaden capability filters or include auth-gated entries.
+
+### Stale uptime scores
+
+Retry later; Arclan continuously re-validates candidates.
+
+### Third-party connect fails
+
+Configure the discovered server's auth separately; Arclan only indexes it.
+
+## Duplicate Check
+
+No existing Arclan registry entry was found in `content/mcp/`. This differs from the official MCP registry listing because Arclan adds continuous handshake validation and reliability scoring.
