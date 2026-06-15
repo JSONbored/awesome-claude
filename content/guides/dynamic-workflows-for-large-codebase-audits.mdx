@@ -1,0 +1,186 @@
+---
+title: Dynamic Workflows For Large Codebase Audits
+slug: dynamic-workflows-for-large-codebase-audits
+category: guides
+description: >-
+  Run Claude Code dynamic workflows for large codebase audits: scoping prompts,
+  monitoring /workflows runs, keyword triggers, and safety guardrails.
+cardDescription: Use dynamic workflows to orchestrate large codebase audit runs.
+seoTitle: Dynamic Workflows For Large Codebase Audits
+seoDescription: >-
+  Plan and run Claude Code dynamic workflows for large codebase audits with
+  scoped prompts, /workflows monitoring, and team safety guardrails.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1375
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1375"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Scope an audit prompt by package and risk area, launch a dynamic workflow,
+  track progress with /workflows, and reconcile background agent output before
+  publishing findings.
+prerequisites:
+  - Claude Code with dynamic workflows available on your account and organization policy.
+  - A large repository with documented package boundaries and owners for audit findings.
+  - Permission to run background agents and read the directories under review.
+  - A human owner who publishes audit results and tracks remediation tickets.
+safetyNotes:
+  - Dynamic workflows can spawn many background agents—scope paths and tools before starting repo-wide audits.
+  - Disable accidental keyword triggers via /config when the word workflow appears in normal prompts.
+  - Treat workflow output as draft findings until a human validates evidence and severity.
+privacyNotes:
+  - Audit workflows may read proprietary code across multiple packages in parallel sessions.
+  - Background transcripts can retain stack traces, customer references, and credentials if prompts include them—redact inputs.
+  - Published audit summaries should follow your data classification policy for internal vs external sharing.
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/workflows"
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - workflows
+  - audit
+  - large-codebases
+  - background-agents
+  - orchestration
+keywords:
+  - Claude Code dynamic workflows audit
+  - large codebase audit Claude Code
+  - /workflows monitoring
+  - background agent orchestration
+  - Claude Code codebase audit
+readingTime: 8
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Dynamic workflows let Claude orchestrate many background agents for large tasks
+such as codebase audits. Scope the audit by package and risk theme, launch the
+workflow explicitly, monitor runs with `/workflows`, and require human review
+before treating agent output as official findings.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Audit charter written", "description": "Scope, owners, and severity rubric are defined"}
+- [ ] {"task": "Path boundaries set", "description": "Packages and forbidden directories are listed"}
+- [ ] {"task": "Workflow access confirmed", "description": "Account policy allows dynamic workflows and background agents"}
+- [ ] {"task": "Output template ready", "description": "Findings format includes evidence, owner, and remediation link"}
+- [ ] {"task": "Keyword policy decided", "description": "Teams know whether workflow keyword triggers stay enabled"}
+
+## Core Concepts Explained
+
+### Workflows orchestrate background agents
+
+Release notes describe dynamic workflows as a way to orchestrate tens to hundreds
+of agents for larger tasks. Audits fit when work parallelizes by package or
+concern rather than one serial session.
+
+### Explicit scoping beats repo-wide prompts
+
+Large codebases need sparse context: name directories, risk themes (security,
+deps, tests), and evidence requirements up front—similar to sparse-context
+guides but oriented to audit deliverables.
+
+### /workflows is the control plane
+
+Use `/workflows` to view runs, blocked steps, and completion status instead of
+assuming silent background success.
+
+### Keyword triggers need governance
+
+Configuration can disable the workflow keyword trigger when normal prompts
+mention the word workflow accidentally.
+
+## Step-by-Step Implementation Guide
+
+1. **Write the audit charter.** Define scope, out-of-scope paths, severity
+   levels, and who publishes official results.
+
+2. **Prepare directory map.** List packages, owners, and validation commands
+   agents should run per area.
+
+3. **Craft the workflow prompt.** Ask for evidence-backed findings per package:
+   file paths, symbols, and suggested remediation—not generic warnings.
+
+4. **Launch and monitor.** Start the dynamic workflow, open `/workflows`, and
+   note blocked or stalled agent sessions early.
+
+5. **Reconcile outputs.** Merge duplicate findings, drop low-confidence items,
+   and assign owners in your issue tracker.
+
+6. **Publish and track.** Share the human-reviewed audit summary and link
+   remediation tickets with deadlines.
+
+7. **Retrospect.** Record which scopes worked, adjust keyword trigger settings,
+   and update CLAUDE.md audit instructions for the next run.
+
+## Audit Output Contract
+
+Each finding should include:
+
+- Package or directory scope
+- Evidence (path, symbol, or command output reference)
+- Severity and confidence
+- Recommended owner and next action
+
+## Troubleshooting
+
+### Workflow never starts
+
+Confirm account access to dynamic workflows and that prompts intentionally
+request workflow orchestration—not accidental keyword collisions.
+
+### Agents stall on permissions
+
+Pre-approve read tools for scoped paths or run a pilot on one package before
+full-repo orchestration.
+
+### Duplicate or conflicting findings
+
+Normalize outputs in a single reconciliation session before publishing; background
+agents do not automatically deduplicate each other.
+
+### Accidental workflow triggers
+
+Use the workflow keyword trigger setting in /config for teams whose prompts
+often mention the word workflow in unrelated contexts.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README and
+`CHANGELOG.md` on **2026-06-13**:
+
+- `CHANGELOG.md` introduces dynamic workflows with `/workflows` to view runs and
+  describes orchestration across many background agents.
+- `CHANGELOG.md` adds a workflow keyword trigger setting in /config to prevent
+  accidental activation when prompts mention workflow in normal text.
+- `CHANGELOG.md` documents worktree isolation fixes for background subagents
+  relevant when audit agents edit in parallel.
+- `CHANGELOG.md` records auto mode classifier improvements for data exfiltration
+  detection during large automated runs.
+- Official docs at `code.claude.com/docs/en/workflows` describe user-facing
+  workflow concepts aligned with these release notes.
+
+## Duplicate Check
+
+This guide complements sparse-context-setup-for-large-codebases.mdx and
+subagents-code-review-triage.mdx. Those entries cover context strategy and
+review subagents. This guide focuses on dynamic workflow orchestration for
+audit-scale parallel analysis.
+
+## References
+
+- Claude Code workflows - https://code.claude.com/docs/en/workflows
+- Sparse context for large codebases - sparse-context-setup-for-large-codebases
+- Subagents code review triage - subagents-code-review-triage
