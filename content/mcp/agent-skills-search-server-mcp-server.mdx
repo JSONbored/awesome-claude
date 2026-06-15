@@ -1,0 +1,187 @@
+---
+title: Agent Skills Search Server MCP Server for Claude
+slug: agent-skills-search-server-mcp-server
+category: mcp
+description: >-
+  HAPI-powered MCP server that searches and discovers Agent Skills from the
+  skills.sh registry, backed by the agentskills open specification.
+cardDescription: >-
+  Connect Claude to the Agent Skills Search Server to discover installable skills
+  from skills.sh through a hosted streamable HTTP MCP endpoint.
+seoTitle: Agent Skills Search Server MCP Server for Claude
+seoDescription: >-
+  Use the Agent Skills Search Server MCP with Claude to search skills.sh, browse
+  Agent Skills metadata, and find reusable skill folders for MCP hosts.
+author: Agent Skills
+authorProfileUrl: "https://github.com/agentskills"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1494
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1494"
+repoUrl: "https://github.com/agentskills/agentskills"
+documentationUrl: "https://agentskills.io/specification"
+websiteUrl: "https://agentskills.io"
+installable: true
+installCommand: >-
+  claude mcp add --transport http skills-search https://skills-sh.run.mcp.com.ai/mcp
+usageSnippet: >-
+  Add https://skills-sh.run.mcp.com.ai/mcp as a remote HTTP connector, then use
+  searchSkills to query the skills.sh registry for Agent Skills folders.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "skills-search": {
+        "url": "https://skills-sh.run.mcp.com.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "skills-search": {
+        "url": "https://skills-sh.run.mcp.com.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Pro, Team, or Enterprise with Connectors support, or another MCP client with remote HTTP transport."
+  - "Internet access to reach skills-sh.run.mcp.com.ai and the skills.sh API."
+  - "Understanding that discovered skills are third-party instruction bundles you should review before installing."
+  - "Optional HAPI CLI if you plan to self-host the search server locally."
+safetyNotes:
+  - "Skills returned from search may include scripts or references; inspect SKILL.md before executing bundled code."
+  - "Public search endpoints may be rate limited; avoid aggressive automated scraping loops."
+  - "Do not install skills from untrusted publishers into production agent environments without review."
+  - "Self-hosted deployments require securing your own HAPI process and outbound network access."
+privacyNotes:
+  - "Search queries are sent to the skills.sh registry backend through the hosted MCP service."
+  - "Skill metadata may include repository names, install counts, and publisher identifiers."
+  - "No authentication is required for public search, but queries still leave your MCP host environment."
+tags:
+  - agent-skills
+  - search
+  - skills-sh
+  - discovery
+  - remote-mcp
+keywords:
+  - agent skills search mcp
+  - skills.sh claude connector
+  - agentskills discovery
+  - hapi skills-search
+  - skill registry mcp
+readingTime: 4
+difficultyScore: 20
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The Agent Skills Search Server is a hosted Model Context Protocol bridge to the [skills.sh](https://skills.sh) registry. It lets MCP clients discover Agent Skills—portable folders anchored by `SKILL.md` metadata—using the open [Agent Skills specification](https://agentskills.io/specification) maintained in [agentskills/agentskills](https://github.com/agentskills/agentskills).
+
+The server is registered as `ai.com.mcp/skills-search` with endpoint `https://skills-sh.run.mcp.com.ai/mcp` and is powered by the HAPI MCP stack documented at [docs.mcp.com.ai](https://docs.mcp.com.ai).
+
+## Features
+
+- Search the skills.sh registry with fuzzy matching.
+- Return skill metadata including sources, install counts, and identifiers.
+- Streamable HTTP remote endpoint with no local install required.
+- Backed by the public Agent Skills open format from Anthropic and the ecosystem.
+- Optional self-hosting through HAPI CLI or Docker using the skills-search OpenAPI spec.
+
+## Use Cases
+
+- Find a deployment or testing skill before starting a new project.
+- Compare popular skills for a framework or cloud provider.
+- Discover reference implementations to model a custom SKILL.md folder.
+- Browse the ecosystem before installing skills into Claude Code or Cursor.
+- Evaluate whether an existing skill already covers a workflow you planned to build.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter `https://skills-sh.run.mcp.com.ai/mcp`.
+3. Enable the connector and search for skills from chat.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http skills-search https://skills-sh.run.mcp.com.ai/mcp
+claude mcp list
+```
+
+### Self-hosting (optional)
+
+```bash
+hapi serve skills-search --port 3030 --headless --url https://skills.sh
+```
+
+See HAPI deployment docs for Docker and Cloudflare options.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "skills-search": {
+      "url": "https://skills-sh.run.mcp.com.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+## Examples
+
+### Find MCP-related skills
+
+```text
+Search skills.sh for MCP server deployment skills with a limit of 20 results.
+```
+
+### Compare Python skills
+
+```text
+Show Agent Skills related to FastAPI testing and summarize the top three matches.
+```
+
+### Inspect before install
+
+```text
+Find a Kubernetes troubleshooting skill and summarize what SKILL.md covers before I install it.
+```
+
+## Security
+
+- Review third-party skill instructions and bundled scripts before activation.
+- Prefer skills from known publishers and pinned repository versions.
+- Self-hosted operators should restrict outbound network access if needed by policy.
+
+## Troubleshooting
+
+### Empty search results
+
+Broaden the query or reduce filters; the registry may not index every GitHub skill repository.
+
+### Rate limiting
+
+Wait and retry; public search endpoints may throttle bursty traffic.
+
+### Hosted endpoint unavailable
+
+Fall back to local HAPI hosting with the skills-search OpenAPI spec from HAPI docs.
+
+### Skill install mismatch
+
+Search results identify skills; installation still happens through your host's skill tooling, not automatically through this MCP server.
