@@ -1,0 +1,175 @@
+---
+title: Claude Code Routines Automation Capability Pack Skill
+slug: claude-code-routines-automation-capability-pack
+category: skills
+description: >-
+  Expert routines automation capability pack applying documented schedule, API, and GitHub triggers, connector scoping, and autonomous cloud run review from official routines documentation.
+cardDescription: >-
+  Plan Claude Code routines with trigger, connector, and review checklists.
+seoTitle: Claude Code Routines Automation Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack applying documented steps from official documentation—not an official Anthropic product.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1520
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1520"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/routines"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when planning or reviewing workflows using official documentation steps.
+copySnippet: |-
+  # Trigger
+  "Apply the claude code routines automation capability pack capability pack."
+
+  # Required output
+  1) Scope and configuration checklist
+  2) Risk and policy findings
+  3) Review matrix actions
+  4) Verification and rollback plan
+  5) Privacy-safe summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/routines"
+  - "https://code.claude.com/docs/en/common-workflows"
+  - "https://code.claude.com/docs/en/desktop-scheduled-tasks"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code version and plan eligibility per official documentation."
+  - "Team policy for autonomous or shared automation workflows."
+  - "Staging environment for safe validation."
+  - "Human owner for production rollout approval."
+safetyNotes:
+  - "Autonomous runs can execute tools without mid-run user input—scope paths and connectors first."
+  - "Do not enable destructive automation without explicit approval gates."
+  - "Review outputs as draft until a human validates evidence."
+privacyNotes:
+  - "Run output may contain proprietary code and credentials."
+  - "Summaries for external channels require redaction."
+tags:
+  - capability-pack
+  - claude-code
+  - routines
+  - automation
+readingTime: 9
+difficultyScore: 74
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in official documentation verified on **2026-06-16**. Behavior can change with releases; prefer live docs.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/routines
+- https://code.claude.com/docs/en/common-workflows
+- https://code.claude.com/docs/en/desktop-scheduled-tasks
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- Official routines docs describe schedule, API, and GitHub triggers for recurring cloud maintenance.
+- Routines run as autonomous cloud sessions without mid-run approval prompts.
+- Each routine scopes repositories, environments, and MCP connectors.
+- API triggers use per-routine bearer tokens shown once at creation.
+- Teams should review every run before merging routine-opened branches.
+
+## Scope Note
+
+Community reusable workflow skill applying documented steps—not an official Anthropic product. Distinct from the routines maintenance guide; this pack adds review matrices for capability-pack rollout.
+
+## Core Workflow
+
+1. Define self-contained routine prompt with inputs and success criteria.
+2. Choose trigger types (schedule, API, GitHub) per documented limits.
+3. Trim default MCP connectors to least privilege.
+4. Pilot on staging repo; inspect first cloud run manually.
+5. Require human merge approval before treating output as official.
+
+## Capability Scope
+
+- Configuration and eligibility checklist.
+- Risk and policy review.
+- Staging verification steps.
+- Rollback planning.
+- Privacy-safe stakeholder summary.
+
+## Compatibility
+
+### Native
+
+- **Claude Code**: use as an Agent Skill during rollout planning.
+
+### Manual Adaptation
+
+- **Generic AGENTS**: apply checklist against public documentation.
+
+## Required Inputs
+
+- Target repository or organization context.
+- Current settings and policy constraints.
+- Stakeholders for security review when applicable.
+
+## Production Rules
+
+- Require human approval before production-impacting automation.
+- Redact secrets from skill outputs and public tickets.
+- Prefer official documentation over forum assumptions.
+- Document rollback before enabling scheduled or autonomous runs.
+
+## Review Matrix
+
+| Signal | Action |
+| --- | --- |
+| Missing repro | Block autonomous run |
+| Broad tool scope | Narrow allowlists |
+| Draft findings | Label unverified until human review |
+| Policy drift | Align to managed settings |
+
+## Output Contract
+
+1. Scope and configuration summary.
+2. Findings with severity.
+3. Review matrix actions.
+4. Verification and rollback plan.
+5. Privacy-safe summary.
+
+## Troubleshooting
+
+**Issue:** Feature unavailable on your plan
+**Fix:** Confirm `/status` and official doc eligibility requirements.
+
+**Issue:** Run stalls on permissions
+**Fix:** Pre-approve read tools in staging; narrow path scope.
+
+## Duplicate Check
+
+Complements `routines-for-recurring-claude-code-maintenance` guide; no duplicate skills capability pack with output contract.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` from public documentation. No paid placement or affiliate links.
