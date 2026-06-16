@@ -475,6 +475,13 @@ export function inferHookTrigger(text = "") {
   return triggers.find((trigger) => text.includes(trigger)) || "";
 }
 
+const FIRST_CODE_BLOCK_INSTALL_CATEGORIES = new Set([
+  "mcp",
+  "skills",
+  "hooks",
+  "statuslines",
+]);
+
 export function inferStructuredFields(data, body, category) {
   const codeBlocks = extractCodeBlocks(body);
   const firstCodeBlock = codeBlocks[0];
@@ -498,7 +505,9 @@ export function inferStructuredFields(data, body, category) {
         ? commandFromTitle
         : downloadInstallCommand
           ? downloadInstallCommand
-          : firstCodeBlock && firstCodeBlock.code.split("\n").length === 1
+          : FIRST_CODE_BLOCK_INSTALL_CATEGORIES.has(category) &&
+              firstCodeBlock &&
+              firstCodeBlock.code.split("\n").length === 1
             ? firstCodeBlock.code.trim()
             : "";
 
