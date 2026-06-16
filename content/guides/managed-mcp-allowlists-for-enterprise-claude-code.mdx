@@ -16,7 +16,7 @@ dateAdded: "2026-06-14"
 submittedAt: "2026-06-14"
 sourceSubmissionNumber: 1391
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1391"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/managed-mcp"
 usageSnippet: >-
   Use this guide to publish managed MCP allowlists that enforce which servers teams can connect in Claude Code.
 prerequisites:
@@ -86,6 +86,41 @@ Enterprise can ship `allowAllClaudeAiMcps` alongside `managed-mcp.json` to load 
 ### Strict MCP config
 
 `--strict-mcp-config` interacts with managed policy; document which inline agent MCP definitions remain allowed.
+
+## Allowlist Key Reference
+
+Managed allowlist and denylist entries are objects with a single matching key. Per the managed MCP documentation, each key identifies servers differently:
+
+| Key | Matches | Use for |
+| --- | --- | --- |
+| `serverUrl` | A remote server URL, exact or with `*` wildcards | HTTP and SSE servers |
+| `serverCommand` | The exact command and arguments that start a stdio server | Stdio servers |
+| `serverName` | The user-assigned label. Exact match only; wildcards are not expanded | Either type, but not a security control on its own |
+
+A `serverName`-only allowlist is not a security control—a user can label any server `github`. Add `serverCommand` or `serverUrl` entries to enforce which servers actually run.
+
+## Grounded Managed Settings Example
+
+Deploy a hard allowlist plus denylist through a managed settings source. Set `allowManagedMcpServersOnly: true` so user, project, and local allowlists are ignored; denylists always merge from every source:
+
+```json
+{
+  "allowManagedMcpServersOnly": true,
+  "allowedMcpServers": [
+    { "serverUrl": "https://api.githubcopilot.com/*" },
+    { "serverUrl": "https://mcp.sentry.dev/*" },
+    { "serverCommand": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "."] },
+    { "serverUrl": "https://*.internal.example.com/*" }
+  ],
+  "deniedMcpServers": [
+    { "serverName": "dangerous-server" },
+    { "serverCommand": ["npx", "-y", "unapproved-package"] },
+    { "serverUrl": "https://*.untrusted.example.com/*" }
+  ]
+}
+```
+
+Evaluation order is fixed: lists merge, the denylist is checked first (nothing overrides a denylist match), then the allowlist. To deploy a fixed server set instead of filtering user config, use `managed-mcp.json`; add `"allowAllClaudeAiMcps": true` to keep claude.ai connectors loading alongside it.
 
 ## Step-by-Step Implementation Guide
 
