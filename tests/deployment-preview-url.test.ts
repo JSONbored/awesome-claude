@@ -27,27 +27,27 @@ describe("PR preview artifact validation flow", () => {
           source: "status",
         },
         {
-          url: "https://heyclaude-dev.zeronode.workers.dev",
+          url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
           source: "deploy",
         },
       ]),
     ).toEqual({
-      url: "https://heyclaude-dev.zeronode.workers.dev",
+      url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
       source: "deploy",
     });
   });
 
-  it("ignores sibling-project deployment URLs on the shared Cloudflare account", () => {
+  it("ignores sibling-project and retired dev-worker URLs", () => {
     // The account hosts other projects; their deployment statuses must never be
     // selected as a HeyClaude preview (regression: gittensory.aethereal.dev).
-    expect(
-      selectPreviewUrl([
-        {
-          url: "https://gittensory.aethereal.dev",
-          source: "github-deployment:gittensory",
-        },
-      ]),
-    ).toBeNull();
+    // The retired dev worker hosts must also be rejected now that it is gone.
+    for (const url of [
+      "https://gittensory.aethereal.dev",
+      "https://heyclaude-dev.zeronode.workers.dev",
+      "https://dev.heyclau.de",
+    ]) {
+      expect(selectPreviewUrl([{ url, source: "github-deployment:x" }])).toBeNull();
+    }
     expect(
       selectPreviewUrl([
         {
@@ -77,12 +77,12 @@ describe("PR preview artifact validation flow", () => {
           source: "github-status:CodeRabbit",
         },
         {
-          url: "https://heyclaude-dev.zeronode.workers.dev",
+          url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
           source: "github-deployment:preview",
         },
       ]),
     ).toEqual({
-      url: "https://heyclaude-dev.zeronode.workers.dev",
+      url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
       source: "github-deployment:preview",
     });
   });
