@@ -1,0 +1,180 @@
+---
+title: Agent View For Managing Multiple Claude Code Sessions
+slug: agent-view-for-managing-multiple-claude-code-sessions
+category: guides
+description: >-
+  Use Claude Code agent view (claude agents) to monitor running, blocked, and
+  completed sessions across parallel workstreams with clear handoff rules.
+cardDescription: Manage parallel Claude Code sessions with claude agents agent view.
+seoTitle: Agent View For Managing Multiple Claude Code Sessions
+seoDescription: >-
+  Use Claude Code agent view via claude agents to list running, blocked, and
+  completed sessions and coordinate parallel coding workstreams safely.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1374
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1374"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Run claude agents to open agent view, triage blocked sessions first, attach to
+  background jobs from the directory you want edits to apply, and clean up stale
+  transcripts when sessions finish.
+prerequisites:
+  - Claude Code with agent view (Research Preview) available on your build.
+  - Multiple concurrent sessions such as foreground work plus background agents or workflows.
+  - Agreement on which session owns merge authority for a given branch or worktree.
+  - Disk space and retention policy for session transcripts on developer machines.
+safetyNotes:
+  - Parallel sessions can race on the same branch—pair agent view with worktree isolation or explicit branch ownership.
+  - Attaching to background sessions inherits permission context—verify directory and git state before approving blocked actions.
+  - Deleting sessions from agent view removes transcript files; confirm backups if audits require history.
+privacyNotes:
+  - Agent view lists session titles and states that may expose internal project names or ticket identifiers.
+  - Attached sessions may display proprietary diffs and tool output—use screen sharing carefully.
+  - Background session transcripts follow normal Claude Code data handling for your account type.
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/agent-view"
+  - "https://code.claude.com/docs/en/background-agents"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - agent-view
+  - parallel-sessions
+  - background-agents
+  - workflow
+  - coordination
+keywords:
+  - Claude Code agent view
+  - claude agents command
+  - manage multiple Claude sessions
+  - background session monitoring
+  - parallel Claude Code workflows
+readingTime: 8
+difficultyScore: 50
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Agent view (`claude agents`) lists every Claude Code session—running, blocked on
+you, or done—in one place. Use it to triage blocked background jobs, confirm
+which directory a session will edit, and clean up finished transcripts instead
+of losing track of parallel workstreams.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Agent view available", "description": "Claude Code build includes the Research Preview agent view feature"}
+- [ ] {"task": "Parallel policy defined", "description": "Teams know branch/worktree ownership rules across sessions"}
+- [ ] {"task": "Background jobs labeled", "description": "Sessions use recognizable titles or tickets"}
+- [ ] {"task": "Handoff owner assigned", "description": "Someone responds to blocked sessions during work hours"}
+- [ ] {"task": "Cleanup process", "description": "Finished sessions are archived or deleted per policy"}
+
+## Core Concepts Explained
+
+### One list for all session types
+
+Release notes introduce agent view as a unified list of interactive, background,
+and workflow-related sessions rather than hunting terminal tabs.
+
+### Blocked sessions need human attention
+
+Sessions waiting on permissions or questions appear in the list—prioritize them
+before starting new parallel work to avoid idle agent time.
+
+### Directory context matters on attach
+
+Dispatching from agent view starts or attaches relative to the directory where
+you opened the view—confirm cwd before approving edits.
+
+### Background sessions integrate with resume
+
+Release notes add `/resume` support for background sessions marked `bg`, linking
+agent view with long-running jobs.
+
+## Step-by-Step Implementation Guide
+
+1. **Open agent view.** Run `claude agents` from the repository root you care
+   about for upcoming edits.
+
+2. **Triage blocked first.** Resolve permission prompts and questions for stalled
+   sessions before launching new ones.
+
+3. **Label workstreams.** Use ticket IDs or branch names in session titles so the
+   list stays scannable with many rows.
+
+4. **Attach deliberately.** When joining a background session, verify worktree
+   isolation and branch ownership to avoid conflicting edits.
+
+5. **Use resume for handoffs.** `/resume` background sessions from agent view when
+   shifting work between teammates or machines.
+
+6. **Clean up finished jobs.** Delete or archive completed sessions and remove
+   orphan worktrees linked to background jobs when retention policy allows.
+
+7. **Review weekly.** During team sync, walk the agent list for forgotten blocked
+   sessions and stale background runs.
+
+## Daily Operations Checklist
+
+- [ ] {"task": "Blocked queue empty", "description": "No sessions waiting on permissions overnight without owners"}
+- [ ] {"task": "Ownership clear", "description": "Each active session maps to one branch or worktree owner"}
+- [ ] {"task": "Background jobs tracked", "description": "Long runs appear in team board or ticket comments"}
+- [ ] {"task": "Transcripts managed", "description": "Finished sessions cleaned per retention policy"}
+
+## Troubleshooting
+
+### Esc or attach hangs under CPU load
+
+Release notes document UI responsiveness fixes on Windows under heavy load—retry
+after compacting other sessions or upgrading.
+
+### Duplicate rows on Windows with CJK output
+
+Upgrade Claude Code; release notes fixed stale or doubled agent view rows for
+wide-character background output.
+
+### Session deleted but disk usage high
+
+Deleting from agent view removes transcript files—also prune `.claude/worktrees/`
+when background jobs created isolated checkouts.
+
+### Wrong directory after attach
+
+Re-open `claude agents` from the intended repository path before dispatching.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README and
+`CHANGELOG.md` on **2026-06-13**:
+
+- `CHANGELOG.md` adds agent view (Research Preview) via `claude agents` with
+  documentation at code.claude.com/docs/en/agent-view.
+- `CHANGELOG.md` documents `/resume` support for background sessions marked `bg`
+  in the resume picker.
+- `CHANGELOG.md` fixes deleting sessions from agent view to remove transcript
+  files and directory dispatch from the path where the view was opened.
+- `CHANGELOG.md` records UI fixes for agent view on Windows including Esc handling
+  and duplicate list rows with CJK characters.
+- The root README directs feedback to GitHub issues at `anthropics/claude-code`.
+
+## Duplicate Check
+
+This guide complements claude-code-desktop-parallel-sessions-workflow.mdx and
+using-worktrees-for-parallel-claude-code-sessions.mdx. Those cover desktop
+parallelism and git worktrees. This guide focuses on the agent view control
+plane for monitoring many sessions.
+
+## References
+
+- Agent view docs - https://code.claude.com/docs/en/agent-view
+- Background agents - https://code.claude.com/docs/en/background-agents
+- Worktrees parallel sessions - using-worktrees-for-parallel-claude-code-sessions
