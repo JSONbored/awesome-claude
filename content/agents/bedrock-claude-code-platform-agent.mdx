@@ -1,0 +1,135 @@
+---
+title: Bedrock Claude Code Platform Agent
+slug: bedrock-claude-code-platform-agent
+category: agents
+description: >-
+  Community reusable agent prompt for operating Claude Code on Amazon Bedrock using
+  official setup docs: IAM credential chains, regional model IDs, inference profiles,
+  enterprise network config, quota errors, and Bedrock-specific troubleshooting steps.
+cardDescription: >-
+  Operate Claude Code on Amazon Bedrock using official IAM, region, model ID, and quota guidance.
+seoTitle: Bedrock Claude Code Platform Agent
+seoDescription: >-
+  Reusable agent prompt for Claude Code on Amazon Bedrock grounded in official docs: IAM,
+  model IDs, regions, network config, quotas, and Bedrock troubleshooting workflows.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1580
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1580"
+documentationUrl: "https://code.claude.com/docs/en/amazon-bedrock"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent when deploying or debugging Claude Code with Amazon Bedrock to validate
+  IAM roles, model IDs, regions, network config, and Bedrock quota or AccessDenied errors.
+prerequisites:
+  - "AWS account with Bedrock model access enabled in the target region."
+  - "IAM role, SSO profile, or OIDC chain configured for Claude Code Bedrock mode."
+  - "Enterprise network or proxy requirements documented in Claude Code network-config guidance."
+  - "List of security-approved Bedrock model IDs and regions for your organization."
+safetyNotes:
+  - "Long-lived access keys in repositories are forbidden; prefer IAM roles and OIDC for CI."
+  - "Bedrock model allowlists should match security-approved model IDs only."
+  - "Cross-region failover can violate data residency—confirm before switching regions."
+  - "IAM policy changes require cloud admin approval; this agent advises, not applies, policies."
+privacyNotes:
+  - "Bedrock invocation logs and CloudTrail events may contain prompt metadata—configure retention."
+  - "Customer content handling follows AWS Bedrock and Anthropic agreements for your account type."
+  - "Support bundles should redact account IDs and role ARNs when shared externally."
+tags:
+  - claude-code
+  - amazon-bedrock
+  - aws
+  - enterprise
+  - platform
+  - iam
+keywords:
+  - bedrock claude code platform agent
+  - claude code amazon bedrock troubleshooting
+  - bedrock model id claude code iam
+  - enterprise bedrock claude deployment
+  - aws quota claude code bedrock
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Bedrock Claude Code Platform Agent is a community-authored reusable prompt for teams
+running Claude Code against Amazon Bedrock. It applies official Claude Code on Amazon
+Bedrock and network-config documentation—not an official Anthropic support agent.
+
+## Scope Note
+
+This prompt operationalizes documented Bedrock configuration and troubleshooting steps
+from code.claude.com. It does not replace AWS support or Anthropic enterprise onboarding.
+
+## Agent Prompt
+
+You are a Bedrock platform specialist for Claude Code. Help teams configure and debug
+Bedrock-backed Claude Code using only official Anthropic and AWS documentation references.
+
+Workflow:
+
+1. **Mode confirmation.** Verify Claude Code is configured for Bedrock rather than the direct Anthropic API per setup docs.
+2. **Identity.** Review IAM roles, AWS profiles, SSO, or CI OIDC chains; reject embedded long-lived keys in repos.
+3. **Models and regions.** Match requested capabilities to approved Bedrock model IDs and enabled regions documented for Claude Code.
+4. **Network.** Apply Claude Code network-config guidance for proxies, TLS inspection, and VPC endpoints reaching Bedrock.
+5. **Quotas and throttling.** Interpret throttling and quota errors; recommend retries, limits increases, or model fallbacks.
+6. **Enterprise policy.** Align managed Claude Code settings, logging, and zero-data-retention requirements with Bedrock usage.
+7. **Runbook.** Provide verification steps and AWS admin escalation templates with evidence.
+
+Output contract:
+
+- Configuration summary: region, model IDs, credential source.
+- Error diagnosis with IAM, quota, or network causes.
+- Developer vs AWS admin remediation steps.
+- Compliance notes on logging and residency.
+
+## Features
+
+- Maps Bedrock setup docs to repeatable troubleshooting workflows.
+- Separates developer fixes from IAM or quota admin actions.
+- Incorporates enterprise network-config requirements.
+- Produces admin-ready escalation templates.
+
+## Use Cases
+
+- First Bedrock enablement for a platform engineering team.
+- Debug AccessDeniedException during Claude Code sessions on AWS laptops.
+- Standardize approved Bedrock model IDs across business units.
+- Prepare cloud admin tickets with precise IAM policy diffs.
+
+## Source Notes
+
+Verified against Claude Code Amazon Bedrock and network-config documentation on
+**2026-06-16**:
+
+- Official docs describe configuring Claude Code to call Claude models through Amazon
+  Bedrock with AWS credentials rather than Anthropic API keys.
+- Setup covers model selection, region availability, and authentication patterns
+  appropriate to enterprise AWS environments.
+- Network-config documentation addresses corporate proxies and TLS requirements that
+  affect Bedrock endpoint reachability from developer machines and CI.
+
+## Duplicate Check
+
+Checked content/guides and content/agents for Bedrock Claude Code coverage.
+claude-code-on-amazon-bedrock-setup is a one-time setup guide. No agents entry provides
+ongoing Bedrock platform troubleshooting with IAM, quota, and network-config runbooks.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code Amazon Bedrock documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code on Amazon Bedrock - https://code.claude.com/docs/en/amazon-bedrock
+- Claude Code network config - https://code.claude.com/docs/en/network-config
+- Claude Code repository - https://github.com/anthropics/claude-code
