@@ -1,0 +1,226 @@
+---
+title: Pull Request Triage Capability Pack Skill
+slug: pull-request-triage-capability-pack
+category: skills
+description: >-
+  Expert maintainer pull request triage capability pack for classifying open PRs,
+  applying labels, routing reviewers, checking merge readiness, and producing
+  privacy-safe queue summaries using GitHub pull request documentation workflows.
+cardDescription: >-
+  Triage maintainer PR queues with source-backed labels, reviewer routing, merge
+  readiness checks, and privacy-safe queue summaries.
+seoTitle: Pull Request Triage Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for open-source maintainer pull request triage:
+  queue classification, label routing, review assignment, merge blockers, and
+  privacy-safe maintainer handoff aligned to GitHub pull request docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 718
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/718"
+repoUrl: "https://github.com/github/docs"
+documentationUrl: "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews"
+downloadUrl: "https://github.com/github/docs/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when a maintainer needs to triage an open pull request queue:
+  classify PRs, propose labels and reviewers, identify merge blockers, and draft
+  privacy-safe routing notes before posting public comments.
+copySnippet: |-
+  # Trigger
+  "Apply the pull request triage capability pack for this maintainer queue."
+
+  # Required output
+  1) PR classification and priority tier
+  2) Label and reviewer routing recommendations
+  3) Merge readiness and blocker checklist
+  4) Maintainer action plan with human-approval gates
+  5) Privacy-safe queue summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-15"
+retrievalSources:
+  - "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews"
+  - "https://docs.github.com/en/issues/tracking-your-work-with-issues/filtering-and-searching-issues-and-pull-requests"
+  - "https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels"
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://opensource.guide/best-practices/"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Open pull request queue or filtered PR list with repository contribution and review policies."
+  - "Current label taxonomy, CODEOWNERS rules, required checks, and maintainer ownership map."
+  - "Permission scope stated up front: read-only recommendations versus approved label or assignment edits."
+  - "Access to linked issues, CI status, release milestones, and security disclosure policy when routing."
+safetyNotes:
+  - "Treat label changes, reviewer requests, milestone moves, and merge approvals as governance actions requiring maintainer approval."
+  - "Do not merge or close pull requests from triage output alone unless explicit automation policy exists."
+  - "Escalate suspected security, license, or conduct issues to private maintainer channels instead of public PR threads."
+  - "Rate-limit bulk triage actions to avoid notification storms for contributors and reviewers."
+privacyNotes:
+  - "Pull request diffs and comments can contain proprietary code, customer examples, tokens, and internal URLs."
+  - "Queue summaries for shared channels should use PR numbers, labels, and blocker types—not pasted diffs or secrets."
+  - "Contributor identities and employer hints in PR descriptions may be sensitive; avoid unnecessary quoting in public notes."
+  - "Exported triage reports should follow repository data-retention and contributor privacy policies."
+tags:
+  - pull-requests
+  - triage
+  - maintainers
+  - open-source
+  - capability-pack
+keywords:
+  - pull request triage capability pack
+  - maintainer PR queue triage
+  - GitHub pull request label routing
+  - open source PR review triage
+  - merge readiness checklist maintainers
+readingTime: 9
+difficultyScore: 74
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in GitHub pull request, label, and filter
+documentation plus Claude Code sub-agents guidance verified on **2026-06-15**.
+GitHub UI labels and required checks evolve; prefer live docs over cached queue
+assumptions.
+
+## Retrieval Sources
+
+- https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews
+- https://docs.github.com/en/issues/tracking-your-work-with-issues/filtering-and-searching-issues-and-pull-requests
+- https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels
+- https://code.claude.com/docs/en/sub-agents
+- https://opensource.guide/best-practices/
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against public GitHub pull request and label documentation on
+**2026-06-15**:
+
+- GitHub documents pull request reviews as comment, approve, or request-changes
+  actions with required reviewer rules and review states such as approved,
+  changes requested, and pending.
+- Filter documentation supports queue views by author, label, review state,
+  milestone, and draft status for maintainer backlog management.
+- Label documentation describes creating, editing, and applying labels that
+  route work to the right maintainers and automation.
+- Claude Code sub-agents documentation describes isolated review workers that
+  return summaries instead of flooding the parent session with full diffs.
+- Open Source Guides best practices emphasize clear contribution expectations
+  and responsive maintainer communication for community PRs.
+
+## Scope Note
+
+This is a community reusable maintainer workflow skill—not an official GitHub or
+Anthropic product. It applies documented GitHub pull request triage steps for
+queue classification, routing, and merge readiness review. Code-level security
+review automation is covered separately by code-review capability packs.
+
+## Core Workflow
+
+1. Snapshot the queue: open PR count, age bands, draft versus ready-for-review splits.
+2. Filter by review state, labels, author, milestone, and failing checks per GitHub filter docs.
+3. Classify each PR: bugfix, feature, docs, dependency, chore, breaking, or needs-info.
+4. Check merge blockers: failing CI, unresolved review threads, missing CLA, or draft status.
+5. Propose label updates and CODEOWNERS-aligned reviewer requests with human approval.
+6. Identify PRs ready to merge versus those needing contributor follow-up or maintainer escalation.
+7. Optionally delegate read-only diff summarization to Claude Code subagents for large PRs.
+8. Produce a privacy-safe maintainer queue summary with next actions and owners.
+
+## Capability Scope
+
+- Queue classification and priority tiers for maintainers.
+- Label and reviewer routing recommendations from documented GitHub workflows.
+- Merge readiness and blocker checklists tied to review states and checks.
+- Human-approval gates before mutating labels, assignments, or merge decisions.
+- Privacy-safe queue summaries for maintainer standups and handoffs.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill during maintainer office hours or
+  weekly PR queue reviews.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Generic AGENTS**: apply the triage checklist in team runbooks
+  when reviewing GitHub pull request backlogs.
+
+## Required Inputs
+
+- Repository PR list or saved filter URL.
+- Label taxonomy, CODEOWNERS, branch protection, and required check names.
+- Maintainer ownership map and escalation paths for security or conduct issues.
+- Optional: CI failure summaries and linked issue context per PR.
+
+## Production Rules
+
+- Default to read-only triage recommendations; require maintainer approval before edits.
+- Never merge from triage output without explicit human authorization.
+- Require evidence links (check name, review thread, file path) for merge blockers.
+- Batch label or reviewer changes to reduce contributor notification noise.
+- Escalate security-sensitive PRs to private disclosure workflows.
+- Close triage with explicit next owner per PR tier.
+
+## Review Matrix
+
+| PR signal | Triage action | Why |
+| --- | --- | --- |
+| Approved + green checks | Ready for maintainer merge review | Documented review approval path |
+| Changes requested | Route back to author | Review state blocks merge |
+| Large diff, low risk | Subagent summary only | Isolated context per sub-agents docs |
+| Failing required check | Label blocked-by-ci | Merge readiness gate |
+| Missing reproduction | Request info label | Open source best practice |
+| Suspected secret in diff | Stop public triage | Privacy and security escalation |
+
+## Output Contract
+
+1. PR classification and priority tier.
+2. Label and reviewer routing recommendations.
+3. Merge readiness and blocker checklist.
+4. Maintainer action plan with approval gates.
+5. Privacy-safe queue summary.
+
+## Troubleshooting
+
+**Issue:** Filter returns stale draft PRs
+**Fix:** Apply draft and review-state filters documented in GitHub issue and PR search docs.
+
+**Issue:** CODEOWNERS requests wrong team
+**Fix:** Verify path rules and default branch; propose manual reviewer instead of auto-request.
+
+**Issue:** Subagent summary misses blocker
+**Fix:** Parent session validates summary against failing checks and unresolved review threads.
+
+## Duplicate Check
+
+Checked `content/skills/`, `content/guides/`, `content/agents/`, open PRs, and
+the live catalog for maintainer PR triage workflows. `subagents-code-review-triage`
+is a guide focused on subagent review roles. `coderabbit-lite-pr-review-capability-pack`
+targets code-review automation findings. No `skills` entry provides this reusable
+maintainer PR queue triage capability pack with review matrix and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by `kiannidev`.
+It is based on public GitHub documentation, Claude Code sub-agents documentation,
+Open Source Guides, and Google Search Central helpful-content guidance. No paid
+placement, referral link, affiliate link, or vendor sponsorship is used.
