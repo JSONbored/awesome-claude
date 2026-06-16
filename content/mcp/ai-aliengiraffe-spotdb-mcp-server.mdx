@@ -1,0 +1,150 @@
+---
+title: SpotDB MCP Server for Claude
+slug: ai-aliengiraffe-spotdb-mcp-server
+category: mcp
+description: >-
+  SpotDB local MCP server that exposes an ephemeral DuckDB sandbox for AI agents
+  to upload CSV data, run guarded SQL queries, and explore datasets without touching
+  production databases.
+cardDescription: >-
+  Connect Claude to SpotDB for ephemeral CSV uploads, guarded SQL queries, and
+  safe data exploration through localhost MCP on port 8081.
+seoTitle: SpotDB MCP Server for Claude
+seoDescription: >-
+  Use the ai.aliengiraffe/spotdb MCP server with Claude to analyze CSV data in an
+  ephemeral DuckDB sandbox via localhost SSE or streamable HTTP on port 8081.
+author: Alien Giraffe
+authorProfileUrl: "https://github.com/aliengiraffe"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1465
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1465"
+repoUrl: "https://github.com/aliengiraffe/spotdb"
+documentationUrl: "https://github.com/aliengiraffe/spotdb/blob/main/DOCS.md"
+websiteUrl: "https://github.com/aliengiraffe/spotdb"
+installable: true
+installCommand: >-
+  Install spotdb from DOCS.md, start the server, then add the documented mcp-remote bridge from the MCP setup section.
+usageSnippet: >-
+  Start spotdb locally, upload CSV files through the web explorer on port 8080, then add the mcp-remote bridge from DOCS.md for the SSE or streamable endpoint on port 8081.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "spotdb-sse": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "SPOTDB_MCP_SSE_URL_FROM_DOCS", "--allow-http"],
+        "env": { "npm_config_yes": "true" }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "spotdb-sse": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "SPOTDB_MCP_SSE_URL_FROM_DOCS", "--allow-http"],
+        "env": { "npm_config_yes": "true" }
+      },
+      "spotdb-streamable": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "SPOTDB_MCP_STREAM_URL_FROM_DOCS", "--allow-http"],
+        "env": { "npm_config_yes": "true" }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "SpotDB installed and running locally per the official DOCS.md setup guide."
+  - "Node.js with npx available for the mcp-remote bridge documented in SpotDB MCP setup."
+  - "CSV files uploaded through the SpotDB web explorer on port 8080 before querying via MCP."
+  - "Understanding that SpotDB stores data in-memory only and destroys it when the server stops."
+safetyNotes:
+  - "SpotDB is an ephemeral sandbox, but uploaded CSVs may contain sensitive business or personal data during the session."
+  - "SQL queries run through MCP are read-only by design, yet results can expose confidential rows if uploaded carelessly."
+  - "Localhost MCP bridges use --allow-http; run only on trusted machines and stop spotdb when finished."
+  - "Rate limiting and CSV injection validation are configurable; review SpotDB security settings before team rollout."
+privacyNotes:
+  - "Uploaded CSV data resides in local memory only and is destroyed when spotdb stops per official documentation."
+  - "Do not upload production exports containing credentials, tokens, or regulated personal data without policy review."
+  - "Query results returned to Claude follow your Claude client data handling settings."
+tags:
+  - duckdb
+  - sql
+  - data-analysis
+  - local-mcp
+  - ephemeral
+keywords:
+  - spotdb mcp
+  - aliengiraffe spotdb claude
+  - ephemeral duckdb mcp
+  - csv sql sandbox mcp
+  - localhost mcp-remote
+readingTime: 5
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+SpotDB provides a local Model Context Protocol server backed by an ephemeral DuckDB
+sandbox. AI assistants can list tables, inspect schemas, and run guarded SQL queries
+against CSV data uploaded through the SpotDB web interface, without connecting to
+production databases.
+
+Official setup and MCP configuration are documented in the SpotDB repository
+[DOCS.md](https://github.com/aliengiraffe/spotdb/blob/main/DOCS.md). The MCP server
+listens on port 8081 with SSE and streamable HTTP endpoints when spotdb is running.
+
+## Features
+
+- MCP integration for Claude Desktop and other MCP clients via mcp-remote.
+- Ephemeral in-memory DuckDB storage destroyed when the server stops.
+- CSV upload and automatic table creation through the web explorer.
+- Guarded read-only SQL access with validation and optional rate limiting.
+- SSE and streamable HTTP transports on localhost port 8081.
+
+## Use Cases
+
+- Explore ad hoc CSV exports with Claude without loading data into a warehouse.
+- Prototype SQL analysis prompts on sample datasets in an isolated sandbox.
+- Validate AI-generated queries against uploaded test files before production use.
+- Teach data exploration workflows where ephemeral storage is required by policy.
+
+## Installation
+
+1. Install and start spotdb per [DOCS.md](https://github.com/aliengiraffe/spotdb/blob/main/DOCS.md).
+2. Upload CSV files through the SpotDB web explorer on port 8080.
+3. Copy the exact mcp-remote MCP server block from the Claude Desktop section of DOCS.md for port 8081 SSE or streamable transport.
+4. Restart your MCP host and ask Claude to query uploaded tables.
+
+## Source Notes
+
+Verified against SpotDB DOCS.md on **2026-06-16**:
+
+- Documentation describes MCP SSE and streamable HTTP endpoints on localhost port 8081.
+- Setup instructions show mcp-remote bridges for Claude Desktop with `--allow-http`.
+- CSV uploads occur through the web explorer because MCP does not accept direct file uploads.
+- Data is ephemeral and destroyed when spotdb stops.
+
+## Duplicate Check
+
+Checked content/mcp for SpotDB or aliengiraffe DuckDB sandbox coverage.
+No existing MCP entry covers ai.aliengiraffe/spotdb as a local ephemeral SQL sandbox.
+
+## Editorial Disclosure
+
+Submitted as an independent community MCP entry by kiannidev, based on the public
+aliengiraffe/spotdb repository and DOCS.md. No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- SpotDB DOCS.md - https://github.com/aliengiraffe/spotdb/blob/main/DOCS.md
+- SpotDB repository - https://github.com/aliengiraffe/spotdb
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
