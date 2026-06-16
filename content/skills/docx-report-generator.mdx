@@ -12,6 +12,10 @@ dateAdded: "2025-10-15"
 documentationUrl: "https://docxtpl.readthedocs.io/"
 downloadUrl: /downloads/skills/docx-report-generator.zip
 installable: true
+safetyNotes:
+  - "Setup downloads and unzips a package and installs Python libraries (python-docx/docxtpl); generating reports writes .docx files to disk, overwriting any file at the output path. Review before running."
+privacyNotes:
+  - "Report data you supply (templates and merged values) is rendered locally into Word documents; generated files can contain that data, so review them before sharing."
 installCommand: "curl -L https://heyclau.de/downloads/skills/docx-report-generator.zip -o docx-report-generator.zip && unzip -o docx-report-generator.zip -d ./docx-report-generator"
 usageSnippet: "Claude can create, edit, and format Microsoft Word documents (.docx) programmatically. Generate professional reports, proposals, documentation, and formatted documents with tables, charts, headers, and custom styling."
 copySnippet: |-
@@ -47,16 +51,11 @@ tags:
   - templating
   - python
 keywords:
-  - claude
-  - development
-  - docx
-  - generator
-  - python
-  - report
-  - reports
-  - skills
-  - templating
-  - tools
+  - docx report generator
+  - word document automation
+  - python docx
+  - generate word reports
+  - docxtpl templating
 readingTime: 5
 packageVerified: true
 difficultyScore: 100
