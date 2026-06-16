@@ -16,7 +16,7 @@ dateAdded: "2026-06-14"
 submittedAt: "2026-06-14"
 sourceSubmissionNumber: 1393
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1393"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/amazon-bedrock"
 usageSnippet: >-
   Use this guide to point Claude Code at Amazon Bedrock with correct region, credentials, and model selection.
 prerequisites:
@@ -86,6 +86,38 @@ Credentials from `awsCredentialExport` cache until AWS `Expiration` instead of a
 ### Service tiers
 
 `ANTHROPIC_BEDROCK_SERVICE_TIER` maps to the `X-Amzn-Bedrock-Service-Tier` header for default, flex, or priority.
+
+## Environment Variable Setup
+
+Enable Bedrock and (optionally) pin model versions through environment variables. The block below is the canonical manual setup from the Bedrock docs:
+
+```bash
+# Enable Bedrock integration
+export CLAUDE_CODE_USE_BEDROCK=1
+export AWS_REGION=us-east-1  # optional if your AWS profile already sets a region
+
+# Pin specific Bedrock model IDs when deploying to multiple users
+export ANTHROPIC_DEFAULT_OPUS_MODEL='us.anthropic.claude-opus-4-8'
+export ANTHROPIC_DEFAULT_SONNET_MODEL='us.anthropic.claude-sonnet-4-6'
+export ANTHROPIC_DEFAULT_HAIKU_MODEL='us.anthropic.claude-haiku-4-5-20251001-v1:0'
+
+# Optional: select cost vs. latency trade-off
+export ANTHROPIC_BEDROCK_SERVICE_TIER=priority
+```
+
+In AWS GovCloud regions, use the `us-gov.` prefix on model IDs instead of `us.`. Run `/status` to confirm the resolved region.
+
+## AWS Credential Options
+
+Claude Code uses the default AWS SDK credential chain. Pick the authentication method that matches your security model:
+
+| Option | Mechanism | Command / variable |
+| --- | --- | --- |
+| A | AWS CLI configuration | `aws configure` |
+| B | Access key env vars | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN` |
+| C | SSO profile | `aws sso login --profile=<name>`, then `AWS_PROFILE` |
+| D | AWS Management Console credentials | `aws login` |
+| E | Bedrock API key | `AWS_BEARER_TOKEN_BEDROCK` |
 
 ## Step-by-Step Implementation Guide
 
