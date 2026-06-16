@@ -2,7 +2,7 @@
 title: API Latency Breakdown - Statuslines
 slug: api-latency-breakdown
 category: statuslines
-description: "A Claude Code statusline that reads the session JSON on stdin and splits total_duration_ms into API processing time versus network/waiting time (total minus API). It prints both values in seconds with their percentage share, a green/yellow/red FAST/SLOW/BOTTLENECK status keyed to network time thresholds (<1s, 1-5s, >5s), and a 20-character 256-color ratio bar (blue for API, orange for network). Written in bash using jq for field extraction and bc for floating-point formatting, with integer-math fallback."
+description: "A Claude Code statusline that reads the session JSON on stdin and splits total_duration_ms into API processing time versus network/waiting time (total minus API)."
 cardDescription: "Bash statusline that splits Claude Code session time into API vs network, with FAST/SLOW/BOTTLENECK status and a color ratio bar."
 seoTitle: "Claude Code Statusline: API vs Network Latency Split"
 seoDescription: "API latency breakdown for Claude Code statuslines: splits total session time into API processing vs network wait, with a color-coded ratio bar."
