@@ -20,6 +20,11 @@ submittedAt: "2026-06-16"
 sourceSubmissionNumber: 1382
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1382"
 documentationUrl: "https://code.claude.com/docs/en/routines"
+retrievalSources:
+  - "https://code.claude.com/docs/en/routines"
+  - "https://code.claude.com/docs/en/common-workflows"
+  - "https://code.claude.com/docs/en/desktop-scheduled-tasks"
+  - "https://code.claude.com/docs/en/scheduled-tasks"
 usageSnippet: >-
   Define a self-contained routine prompt at claude.ai/code/routines or with
   /schedule, attach schedule/API/GitHub triggers, scope repos and connectors to
@@ -86,6 +91,12 @@ Official docs describe schedule triggers (recurring or one-off), API triggers
 (HTTP POST with bearer token), and GitHub triggers (PR opened, release published,
 etc.). One routine can combine multiple trigger types.
 
+| Trigger type | Fires when | Where it is configured | Notes from docs |
+| :--- | :--- | :--- | :--- |
+| Schedule | A recurring cadence (hourly, daily, weekdays, weekly) or a one-off future timestamp | Web form or CLI `/schedule`; custom cron via `/schedule update` | Minimum interval is one hour; expressions that run more frequently are rejected. Times are entered in your local zone and converted automatically; runs may start a few minutes late due to a consistent per-routine stagger. |
+| API | You POST to the routine's `/fire` endpoint with its bearer token | Added to a saved routine on the web; CLI cannot create or revoke tokens | Each routine has its own scoped token, shown once; rotate or revoke from the same modal. Optional `text` field passes freeform run context. |
+| GitHub | A matching repository event (pull request or release) occurs | Web UI only; requires the Claude GitHub App installed on the repo | Each matching event starts its own session; no session reuse across events. Subject to per-routine and per-account hourly caps during research preview. |
+
 ### Cloud sessions run without approval prompts
 
 Routines execute as autonomous Claude Code cloud sessions. Shell commands,
@@ -124,6 +135,39 @@ GitHub triggers are configured on the web after the routine is saved.
 
 7. **Review each run.** Inspect the cloud session, validate diffs, and merge or
    close routine-opened PRs through normal review.
+
+## Triggering A Routine Via API
+
+For deploy verification or alert triage, add an API trigger on the web, generate
+the routine's bearer token (shown once), then POST to the per-routine `/fire`
+endpoint. The optional `text` field passes freeform run context alongside the
+saved prompt. The example below is the documented shape:
+
+```bash
+curl -X POST https://api.anthropic.com/v1/claude_code/routines/trig_01ABCDEFGHJKLMNOPQRSTUVW/fire \
+  -H "Authorization: Bearer sk-ant-oat01-xxxxx" \
+  -H "anthropic-beta: experimental-cc-routine-2026-04-01" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Sentry alert SEN-4521 fired in prod. Stack trace attached."}'
+```
+
+A successful request returns the new session ID and URL:
+
+```json
+{
+  "type": "routine_fire",
+  "claude_code_session_id": "session_01HJKLMNOPQRSTUVWXYZ",
+  "claude_code_session_url": "https://claude.ai/code/session_01HJKLMNOPQRSTUVWXYZ"
+}
+```
+
+The `/fire` endpoint ships under the `experimental-cc-routine-2026-04-01` beta
+header while routines are in research preview, so request/response shapes, rate
+limits, and token semantics may change. Per the docs, breaking changes ship
+behind new dated beta header versions, and the two most recent previous header
+versions keep working so callers have time to migrate. The endpoint is available
+to claude.ai users only and is not part of the Claude Platform API surface.
 
 ## Maintenance Routine Checklist
 
