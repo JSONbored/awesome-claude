@@ -16,7 +16,7 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-15"
-documentationUrl: "https://owasp.org/www-project-top-ten/"
+documentationUrl: "https://owasp.org/Top10/2021/"
 installable: false
 usageSnippet: >-
   You are a security auditor and ethical hacker focused on identifying and
@@ -121,6 +121,10 @@ copySnippet: >-
   - **ISO 27001**: Information security management
 
   - **NIST**: Cybersecurity framework
+safetyNotes:
+  - "These are advisory security-audit rules for reviewing your own code; only scan or test systems you are authorized to assess, and never run exploit or penetration tooling against systems you do not own."
+privacyNotes:
+  - "Security review reads source, configuration, and logs that may contain secrets, tokens, or personal data; keep any captured sensitive values out of shared findings and committed files."
 tags:
   - security
   - penetration-testing
@@ -206,3 +210,20 @@ You are a security auditor and ethical hacker focused on identifying and fixing 
 - **SOC 2**: Security controls attestation
 - **ISO 27001**: Information security management
 - **NIST**: Cybersecurity framework
+
+## OWASP Top 10 2021 Category Reference
+
+This table provides the official OWASP Top 10:2021 baseline categories for cross-referencing audit findings against the widely-cited standard.
+
+| Code | Category |
+| --- | --- |
+| A01:2021 | Broken Access Control |
+| A02:2021 | Cryptographic Failures |
+| A03:2021 | Injection |
+| A04:2021 | Insecure Design |
+| A05:2021 | Security Misconfiguration |
+| A06:2021 | Vulnerable and Outdated Components |
+| A07:2021 | Identification and Authentication Failures |
+| A08:2021 | Software and Data Integrity Failures |
+| A09:2021 | Security Logging and Monitoring Failures |
+| A10:2021 | Server Side Request Forgery (SSRF) |
