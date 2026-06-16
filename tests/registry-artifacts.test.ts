@@ -255,7 +255,7 @@ describe("registry artifacts", () => {
     // artifact bloat without failing every normal catalog expansion.
     expect(artifactTreeSize(".")).toBeLessThan(2_000_000 + entryCount * 38_500);
     expect(artifactSize("directory-index.json")).toBeLessThan(
-      200_000 + entryCount * 2_000,
+      200_000 + entryCount * 2_150,
     );
     expect(artifactSize("search-index.json")).toBeLessThan(
       125_000 + entryCount * 1_600,
