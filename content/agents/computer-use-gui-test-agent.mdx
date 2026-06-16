@@ -1,0 +1,134 @@
+---
+title: Computer Use GUI Test Agent
+slug: computer-use-gui-test-agent
+category: agents
+description: >-
+  Community reusable agent prompt for end-to-end GUI validation with Claude Code computer
+  use using official documentation: enable the computer-use MCP server, per-app session
+  approval, screenshot checkpoints, and documented example workflows for native apps.
+cardDescription: Validate GUI flows with Claude Code computer use using official enablement and safety docs.
+seoTitle: Computer Use GUI Test Agent
+seoDescription: >-
+  Reusable agent prompt for Claude Code computer use GUI validation grounded in official
+  docs: computer-use MCP enablement, per-app approval, screenshots, and example workflows.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1567
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1567"
+documentationUrl: "https://code.claude.com/docs/en/computer-use"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent after enabling the computer-use MCP server to run documented GUI validation
+  patterns such as build-and-launch checks, onboarding screenshots, and layout reproduction.
+prerequisites:
+  - Interactive Claude Code session on macOS with computer use enabled per official docs.
+  - computer-use MCP server enabled through the /mcp menu for the project.
+  - macOS Accessibility and Screen Recording permissions granted when prompted.
+  - Target app or simulator approved for the current session when Claude requests control.
+safetyNotes:
+  - Computer use controls real desktop apps with per-app session approval—not sandboxed Bash.
+  - Review sentinel warnings before approving Terminal, Finder, or System Settings access.
+  - Press Esc or Ctrl+C to stop computer use and release the session lock immediately.
+  - Only one Claude Code session can hold the computer-use lock at a time.
+privacyNotes:
+  - Screenshots are downscaled before model upload but may still capture sensitive UI content.
+  - Your terminal window is excluded from screenshots per official documentation.
+  - Redact customer or proprietary UI details before sharing screenshot evidence externally.
+tags:
+  - claude-code
+  - computer-use
+  - gui-testing
+  - qa
+  - automation
+keywords:
+  - computer use gui test agent
+  - claude code end to end ui testing
+  - computer use screenshot validation
+  - computer use mcp enablement
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Computer Use GUI Test Agent is a community-authored reusable prompt for GUI validation
+with Claude Code computer use. It applies official computer use documentation—not an
+official Anthropic QA product.
+
+## Scope Note
+
+This prompt operationalizes documented computer use enablement, approval, and example
+workflows from code.claude.com. Release sign-off remains with your team.
+
+## Agent Prompt
+
+You are a computer use GUI validation specialist for Claude Code. Follow official
+computer use documentation before attempting GUI work.
+
+Workflow:
+
+1. **Confirm eligibility.** Verify interactive macOS session, supported plan, and computer-use server enabled via /mcp.
+2. **Grant permissions.** Ensure Accessibility and Screen Recording permissions are granted when macOS prompts.
+3. **Choose a documented pattern.** Pick an official example workflow: validate a native build, reproduce a layout bug, or drive a simulator flow.
+4. **Request app approval.** Wait for per-session app approval prompts before controlling target applications.
+5. **Execute with screenshots.** Capture screenshot checkpoints at each UI state described in the task, as shown in official examples.
+6. **Stop safely.** Use Esc or Ctrl+C if on-screen content looks suspicious or the task completes.
+7. **Summarize findings.** Report pass/fail against the requested flow with screenshot references—not a formal test harness.
+
+Output contract:
+
+- Eligibility and enablement checklist results.
+- Apps approved during the session.
+- Screenshot-indexed observations aligned to the requested workflow.
+- Blockers requiring human action (permissions, lock held by another session).
+
+## Features
+
+- Mirrors official computer use enablement and macOS permission steps.
+- Applies documented example workflows instead of inventing unsupported QA process.
+- Respects per-app session approval and sentinel warnings from the docs.
+- Produces screenshot-backed observations using documented downscaling behavior.
+
+## Use Cases
+
+- Build, launch, and click through a native app target after code changes.
+- Reproduce a layout bug by resizing windows and screenshotting clipped states.
+- Drive an iOS Simulator onboarding flow without writing XCTest first.
+- Smoke-test GUI-only tools that lack CLI or MCP integrations.
+
+## Source Notes
+
+Verified against Claude Code computer use documentation on **2026-06-16**:
+
+- Official docs describe enabling the built-in computer-use MCP server from /mcp and
+  granting macOS Accessibility plus Screen Recording permissions on first use.
+- Documentation lists end-to-end UI testing as a primary use case, including opening apps,
+  clicking through flows, and screenshotting each step without a separate test harness.
+- Example workflows cover validating native builds, reproducing layout bugs, and driving
+  simulator flows with explicit screenshot checkpoints.
+- Safety guidance documents per-app session approval, sentinel warnings for high-privilege
+  apps, Esc to abort, and a single-session lock while computer use is active.
+
+## Duplicate Check
+
+Checked content/agents and content/guides for computer use QA coverage.
+computer-use-from-the-claude-code-cli-for-gui-qa is a guides entry for setup.
+No agents entry applies official computer use example workflows to a reusable GUI
+validation prompt with documented enablement and approval steps.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code computer use documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code computer use - https://code.claude.com/docs/en/computer-use
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- Claude Code repository - https://github.com/anthropics/claude-code
