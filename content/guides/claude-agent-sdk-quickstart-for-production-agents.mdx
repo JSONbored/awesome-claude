@@ -91,6 +91,41 @@ Recent fixes address streaming mode notification delivery and end-of-stream exce
 
 1. **Install SDK package.** Add `@anthropic-ai/claude-agent-sdk` or `claude-agent-sdk` to your service template.
 
+## Minimal Query Loop (Python)
+
+The Agent SDK runs the same agent loop and built-in tools as Claude Code, programmable from a `query` call. This minimal example lists files in the working directory using an explicit, narrow tool allowlist:
+
+```python
+import asyncio
+from claude_agent_sdk import query, ClaudeAgentOptions
+
+
+async def main():
+    async for message in query(
+        prompt="What files are in this directory?",
+        options=ClaudeAgentOptions(allowed_tools=["Bash", "Glob"]),
+    ):
+        if hasattr(message, "result"):
+            print(message.result)
+
+
+asyncio.run(main())
+```
+
+## Python vs TypeScript Agent SDK
+
+The two SDKs expose the same `query` agent loop with idiomatic naming per language. Pick by your service runtime:
+
+| Aspect | Python | TypeScript |
+| --- | --- | --- |
+| Install | `pip install claude-agent-sdk` | `npm install @anthropic-ai/claude-agent-sdk` |
+| Import | `from claude_agent_sdk import query, ClaudeAgentOptions` | `import { query } from "@anthropic-ai/claude-agent-sdk"` |
+| Runtime requirement | Python 3.10 or later | Bundles a native Claude Code binary as an optional dependency |
+| Options object | `ClaudeAgentOptions(...)` | inline `options: { ... }` |
+| Allowlist field | `allowed_tools` | `allowedTools` |
+| Permission field | `permission_mode` | `permissionMode` |
+| Settings sources field | `setting_sources` | `settingSources` |
+
 2. **Bootstrap project.** Use `/new-sdk-app` from the agent-sdk-dev plugin or mirror its structure in your repo generator.
 
 3. **Define first agent.** Pick one workflow—ticket triage, doc sync, or CI summarizer—with a written success metric.
