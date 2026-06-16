@@ -124,6 +124,31 @@ keywords:
 
 Add this rule set to your project's `CLAUDE.md` to configure Claude as a Java Spring Boot expert. It covers layered architecture, REST API design with `@RestController` and Jakarta Validation, Spring Data JPA patterns, Spring Security for stateless JWT APIs, external configuration with `@ConfigurationProperties`, and integration testing with Testcontainers — all grounded in the [official Spring Boot documentation](https://docs.spring.io/spring-boot/reference/) and [Spring Security reference](https://docs.spring.io/spring-security/reference/).
 
+## Spring Boot 4.1.0 System Requirements
+
+When this rule set targets a current Spring Boot project, these are the baseline versions the official documentation requires.
+
+| Component | Required version |
+| --- | --- |
+| Java | 17 (compatible up to and including Java 26) |
+| Spring Framework | 7.0.8 or above |
+| Maven | 3.6.3 or later |
+| Gradle | 8.x (8.14 or later) and 9.x |
+| Tomcat 11.0.x | Servlet 6.1 |
+| Jetty 12.1.x | Servlet 6.1 |
+| GraalVM Community | 25 |
+
+Install the CLI with SDKMAN! (or Homebrew) and verify the version reported matches the expected GA release:
+
+```sh
+sdk install springboot
+spring --version
+# Spring CLI v4.1.0
+
+brew tap spring-io/tap
+brew install spring-boot
+```
+
 ## Sources
 
 - [Spring Boot Reference](https://docs.spring.io/spring-boot/reference/)
