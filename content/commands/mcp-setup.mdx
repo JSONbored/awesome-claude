@@ -1,43 +1,35 @@
 ---
-title: MCP Server Setup for Claude Code
+title: Configure MCP Servers in Claude Code
 slug: mcp-setup
 category: commands
-description: >-
-  Configure and connect MCP servers to Claude Code with OAuth authentication,
-  tool access, and remote server support for seamless external integrations
-cardDescription: >-
-  Configure and connect MCP servers to Claude Code with OAuth authentication,
-  tool access, and remote server support for seamless external...
-seoTitle: MCP Server Setup for Claude Code
-seoDescription: >-
-  Configure and connect MCP servers to Claude Code with OAuth authentication,
-  tool access, and remote server support for seamless external integrations
-  Discove...
+description: Add Model Context Protocol servers to Claude Code with the claude mcp add CLI and the /mcp slash command, covering transports, scopes, and OAuth for remote servers.
+cardDescription: How to connect MCP servers in Claude Code using claude mcp add, .mcp.json project scope, and the /mcp command for OAuth authentication.
+seoTitle: 'Set Up MCP Servers in Claude Code: claude mcp add & /mcp'
+seoDescription: 'Connect MCP servers to Claude Code with the claude mcp add CLI and the /mcp slash command: pick a transport, set a scope, and authenticate via OAuth.'
 author: JSONbored
-authorProfileUrl: "https://github.com/JSONbored"
-dateAdded: "2025-10-25"
-documentationUrl: "https://code.claude.com/docs/en/mcp"
-installable: true
-installCommand: "/mcp-setup [server-type] [options]"
-usageSnippet: "/mcp-setup [server-type] [options]"
-copySnippet: "/mcp-setup [server-type] [options]"
+authorProfileUrl: https://github.com/JSONbored
+dateAdded: '2025-10-25'
+documentationUrl: https://code.claude.com/docs/en/mcp
+installable: false
+usageSnippet: claude mcp add --transport http <name> <url>
+copySnippet: claude mcp add --transport http <name> <url>
 tags:
-  - mcp
-  - integration
-  - oauth
-  - remote-server
-  - tools
-  - setup
+- mcp
+- integration
+- oauth
+- remote-server
+- tools
+- setup
 keywords:
-  - claude
-  - commands
-  - development
-  - integration
-  - mcp
-  - oauth
-  - remote-server
-  - setup
-  - tools
+- claude
+- commands
+- development
+- integration
+- mcp
+- oauth
+- remote-server
+- setup
+- tools
 readingTime: 8
 difficultyScore: 100
 hasTroubleshooting: true
@@ -45,557 +37,179 @@ hasPrerequisites: false
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
-commandSyntax: "/mcp-setup [server-type] [options]"
+commandSyntax: claude mcp add --transport http <name> <url>
+retrievalSources:
+- https://code.claude.com/docs/en/mcp
+- https://docs.claude.com/en/docs/claude-code/mcp
+- https://docs.claude.com/en/docs/claude-code/slash-commands
+- https://modelcontextprotocol.io/introduction
+safetyNotes:
+- MCP servers can execute commands and call external APIs on your behalf. stdio servers run a local subprocess (the command after `--`); only add servers from sources you trust.
+- Project-scoped servers from `.mcp.json` require explicit in-session approval before Claude Code will use them; review what each server does before approving.
+- Remote servers may request OAuth scopes during the `/mcp` login flow — grant only the access you intend. Use the `/mcp` menu's Clear authentication to revoke access.
+privacyNotes:
+- Local- and user-scoped server configs are written to `~/.claude.json`; project-scoped configs go to `.mcp.json` in the repo. Do not hardcode tokens in `.mcp.json` — reference them via `${VAR}` environment-variable expansion so secrets stay out of version control.
+- OAuth credentials for remote servers are stored by Claude Code after the `/mcp` login flow; connected MCP servers can read and act on the systems they integrate with (issue trackers, databases, monitoring), so they may receive project data you ask Claude to work with.
 ---
 
-The `/mcp-setup` command guides you through configuring Model Context Protocol (MCP) servers in Claude Code, enabling seamless integration with external tools, databases, and APIs through Anthropic's open-source standard.
+Claude Code connects to external tools, databases, and APIs through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction), an open standard for AI-tool integrations. You configure servers two ways: the `claude mcp` CLI family (run in your terminal) for adding and managing servers, and the in-session `/mcp` slash command for viewing connected servers and completing OAuth authentication.
 
-## Features
+> Note: `/mcp` is a built-in slash command (it lists servers, shows tool counts, and runs the OAuth login flow). The `claude mcp ...` commands are run in your terminal, not inside a Claude Code prompt.
 
-- **Remote MCP Server Support**: Connect to cloud-hosted MCP servers with native OAuth authentication
-- **Local Server Configuration**: Set up containerized MCP servers using Docker MCP Toolkit
-- **Project-Scoped Setup**: Configure `.mcp.json` for team-wide server access
-- **User-Global Setup**: Install personal MCP servers available across all projects
-- **OAuth Management**: One-click authentication with secure credential storage
-- **Tool Discovery**: Automatically detect and enable available tools from connected servers
-- **Resource Access**: Grant Claude Code access to databases, file systems, and APIs
-- **Health Monitoring**: Verify server connectivity and troubleshoot connection issues
+## Add a server with `claude mcp add`
 
-## Usage
+The `claude mcp add` command supports three transports via `--transport`: `http`, `sse`, and `stdio`.
+
+**Remote HTTP server:**
 
 ```bash
-/mcp-setup [server-type] [options]
+claude mcp add --transport http <name> <url>
+
+# Example
+claude mcp add --transport http notion https://mcp.notion.com/mcp
 ```
 
-### Server Types
-
-- `--remote` - Configure remote MCP server with OAuth (default)
-- `--local` - Set up local/Docker MCP server
-- `--list` - List all available MCP servers from marketplace
-- `--status` - Check status of configured servers
-
-### Configuration Scope
-
-- `--project` - Add to `.mcp.json` (team-shared, checked into git)
-- `--user` - Add to `~/.config/claude/mcp.json` (personal)
-
-### Popular Servers
-
-- `--github` - GitHub REST API integration
-- `--linear` - Linear issue tracking
-- `--sentry` - Error monitoring integration
-- `--postgres` - PostgreSQL database access
-- `--mongodb` - MongoDB database integration
-- `--slack` - Slack messaging integration
-- `--google-drive` - Google Drive file access
-- `--aws` - AWS service integration
-
-## Examples
-
-### Remote GitHub MCP Server with OAuth
-
-**Command:**
+**Remote HTTP server with a custom header (for static-token auth):**
 
 ```bash
-/mcp-setup --remote --github --project
+claude mcp add --transport http secure-api https://api.example.com/mcp \
+  --header "Authorization: Bearer your-token"
 ```
 
-**What happens:**
+**Remote SSE server:**
 
-1. Claude detects project needs GitHub integration
-2. Generates `.mcp.json` configuration:
+```bash
+claude mcp add --transport sse asana https://mcp.asana.com/sse
+```
+
+**Local stdio server.** For stdio servers, everything after `--` is the command Claude runs to launch the server:
+
+```bash
+claude mcp add [options] <name> -- <command> [args...]
+
+# Example with an environment variable
+claude mcp add --env AIRTABLE_API_KEY=YOUR_KEY --transport stdio airtable \
+  -- npx -y airtable-mcp-server
+```
+
+The `--` (double dash) separates Claude's own options (`--transport`, `--env`, `--scope`) from the command and args passed to the server untouched. `--env` accepts multiple `KEY=value` pairs; place at least one other option between `--env` and the server name so the CLI does not read the name as another env pair.
+
+## Add a server from JSON
+
+`claude mcp add-json` takes a full server definition, which is useful for copying a config straight from a server's docs:
+
+```bash
+claude mcp add-json weather-api \
+  '{"type":"http","url":"https://api.weather.com/mcp","headers":{"Authorization":"Bearer token"}}'
+
+claude mcp add-json local-weather \
+  '{"type":"stdio","command":"/path/to/weather-cli","args":["--api-key","abc123"],"env":{"CACHE_DIR":"/tmp"}}'
+```
+
+## Choose a scope with `--scope`
+
+The `--scope` flag controls where the configuration is stored and who can see it. Valid values are `local`, `project`, and `user`:
+
+| Scope | Loads in | Shared with team | Stored in |
+| --- | --- | --- | --- |
+| `local` (default) | Current project only | No | `~/.claude.json` |
+| `project` | Current project only | Yes, via version control | `.mcp.json` in project root |
+| `user` | All your projects | No | `~/.claude.json` |
+
+```bash
+# Local (default) — private to you in this project
+claude mcp add --transport http stripe https://mcp.stripe.com
+
+# Project — shared with the team via .mcp.json
+claude mcp add --transport http paypal --scope project https://mcp.paypal.com/mcp
+
+# User — available across all your projects
+claude mcp add --transport http hubspot --scope user https://mcp.hubspot.com/anthropic
+```
+
+When the same server name is defined at multiple scopes, precedence is local, then project, then user (the highest-precedence entry wins; fields are not merged).
+
+## The `.mcp.json` project file
+
+Adding a server with `--scope project` creates or updates `.mcp.json` at the project root. Commit it so teammates inherit the same servers. The format is:
 
 ```json
 {
   "mcpServers": {
-    "github": {
-      "type": "remote",
-      "url": "https://mcp.github.com",
-      "auth": {
-        "type": "oauth",
-        "provider": "github"
-      },
-      "tools": [
-        "create_pull_request",
-        "get_repository",
-        "list_issues",
-        "create_issue",
-        "update_issue",
-        "merge_pull_request"
-      ],
-      "resources": [
-        "repository://repos",
-        "issue://issues",
-        "pull_request://pulls"
-      ]
-    }
-  }
-}
-```
-
-3. Prompts OAuth flow:
-   - Opens browser for GitHub authentication
-   - Requests necessary scopes (repo, issues, pull_requests)
-   - Stores OAuth token securely in system keychain
-
-4. Verifies connection:
-   - Tests API connectivity
-   - Lists available repositories
-   - Confirms tool access
-
-**Usage in Claude Code:**
-
-```bash
-# Claude can now use GitHub tools automatically
-User: "Create a PR for my authentication refactor"
-Claude: *uses create_pull_request tool from GitHub MCP server*
-
-User: "What issues are assigned to me?"
-Claude: *uses list_issues tool to fetch assigned issues*
-```
-
-### Local Postgres MCP Server with Docker
-
-**Command:**
-
-```bash
-/mcp-setup --local --postgres --project
-```
-
-**Generated Configuration:**
-
-```json
-{
-  "mcpServers": {
-    "postgres": {
-      "type": "stdio",
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "--network=host", "mcp/postgres"],
-      "env": {
-        "POSTGRES_CONNECTION_STRING": "postgresql://localhost:5432/mydb"
-      },
-      "tools": ["execute_query", "list_tables", "describe_table", "get_schema"]
-    }
-  }
-}
-```
-
-**Environment Setup:**
-
-```bash
-# Claude creates .env.local for secrets
-POSTGRES_CONNECTION_STRING=postgresql://user:password@localhost:5432/mydb
-```
-
-**Usage:**
-
-```bash
-User: "What tables are in the database?"
-Claude: *uses list_tables tool*
-
-User: "Show me all users created in the last week"
-Claude: *uses execute_query tool with date filtering*
-```
-
-### Multiple MCP Servers for Full-Stack Project
-
-**Command:**
-
-```bash
-/mcp-setup --project --github --linear --sentry --postgres
-```
-
-**Generated `.mcp.json`:**
-
-```json
-{
-  "mcpServers": {
-    "github": {
-      "type": "remote",
-      "url": "https://mcp.github.com",
-      "auth": { "type": "oauth", "provider": "github" }
+    "paypal": {
+      "type": "http",
+      "url": "https://mcp.paypal.com/mcp"
     },
-    "linear": {
-      "type": "remote",
-      "url": "https://mcp.linear.app",
-      "auth": { "type": "oauth", "provider": "linear" }
-    },
-    "sentry": {
-      "type": "remote",
-      "url": "https://mcp.sentry.io",
-      "auth": {
-        "type": "bearer",
-        "token": "${SENTRY_AUTH_TOKEN}"
-      }
-    },
-    "postgres": {
-      "type": "stdio",
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "mcp/postgres"],
-      "env": {
-        "POSTGRES_CONNECTION_STRING": "${POSTGRES_CONNECTION_STRING}"
-      }
+    "shared-stdio-server": {
+      "command": "/path/to/server",
+      "args": [],
+      "env": {}
     }
   }
 }
 ```
 
-**Workflow Integration:**
+For security, Claude Code prompts for approval before using project-scoped servers from `.mcp.json`. Pending servers show up as `⏸ Pending approval` in `claude mcp list`; review and approve them by running `claude` interactively. To reset approvals, run `claude mcp reset-project-choices`.
 
-```bash
-User: "Check Sentry for errors related to authentication, create Linear tickets for each unique error, and analyze the auth database table"
+### Environment variable expansion
 
-Claude:
-1. *Uses Sentry MCP to fetch recent auth errors*
-2. *Groups by error type and stack trace*
-3. *Uses Linear MCP to create tickets with error details*
-4. *Uses Postgres MCP to query auth table for affected users*
-5. Presents comprehensive report with tickets created
-```
-
-### User-Global MCP Servers (Personal Setup)
-
-**Command:**
-
-```bash
-/mcp-setup --user --slack --google-drive
-```
-
-**Configuration Location:**
-
-```
-~/.config/claude/mcp.json
-```
-
-**Benefit:**
-
-- Available across ALL projects
-- Personal authentication (not shared with team)
-- Useful for productivity tools
-
-## MCP Server Marketplace
-
-### Development Tools
-
-- **GitHub** - Repository management, PRs, issues, CI/CD
-- **GitLab** - GitLab API integration
-- **Bitbucket** - Bitbucket Cloud/Server integration
-
-### Issue Tracking
-
-- **Linear** - Issue tracking and project management
-- **Jira** - Atlassian Jira integration
-- **Asana** - Task management
-
-### Monitoring & Observability
-
-- **Sentry** - Error tracking and monitoring
-- **Datadog** - Infrastructure monitoring
-- **New Relic** - Application performance monitoring
-
-### Databases
-
-- **PostgreSQL** - PostgreSQL database access
-- **MongoDB** - MongoDB document database
-- **MySQL** - MySQL/MariaDB integration
-- **Redis** - Redis cache and data structure store
-- **Supabase** - Supabase backend platform
-
-### Cloud Platforms
-
-- **AWS** - Amazon Web Services integration
-- **Google Cloud** - GCP service integration
-- **Azure** - Microsoft Azure integration
-- **Vercel** - Vercel deployment platform
-- **Cloudflare** - Cloudflare edge platform
-
-### Communication
-
-- **Slack** - Slack messaging and notifications
-- **Discord** - Discord server integration
-- **Notion** - Notion workspace access
-
-### AI & ML
-
-- **Pinecone** - Vector database for embeddings
-- **Weaviate** - Vector search engine
-- **Chroma** - Embedding database
-
-## Authentication Methods
-
-### OAuth 2.0 (Recommended for Remote Servers)
-
-```json
-{
-  "auth": {
-    "type": "oauth",
-    "provider": "github",
-    "scopes": ["repo", "issues"]
-  }
-}
-```
-
-**Benefits:**
-
-- No API keys to manage
-- Automatic token refresh
-- Secure credential storage
-- One-click authentication
-
-### Bearer Token
-
-```json
-{
-  "auth": {
-    "type": "bearer",
-    "token": "${API_TOKEN}"
-  }
-}
-```
-
-**Use When:**
-
-- Service doesn't support OAuth
-- Using API keys or personal access tokens
-- Environment variables preferred
-
-### No Authentication (Local/Docker)
-
-```json
-{
-  "type": "stdio",
-  "command": "docker",
-  "args": ["run", "-i", "--rm", "mcp/server"]
-}
-```
-
-**Use When:**
-
-- Local development servers
-- Containerized services
-- Internal network resources
-
-## Docker MCP Toolkit
-
-### Installing MCP Toolkit
-
-```bash
-# Claude runs this automatically
-docker pull mcp/toolkit
-```
-
-### Available Containerized Servers (200+)
-
-- Pre-built, security-audited containers
-- One-command installation
-- Isolated environments
-- Automatic updates
-
-### Example: Setup Multiple Servers via Docker
-
-```bash
-/mcp-setup --local --postgres --redis --mongodb
-```
-
-**Generated docker-compose.yml:**
-
-```yaml
-version: "3.8"
-services:
-  mcp-postgres:
-    image: mcp/postgres
-    environment:
-      - POSTGRES_CONNECTION_STRING=${POSTGRES_CONNECTION_STRING}
-    network_mode: host
-
-  mcp-redis:
-    image: mcp/redis
-    environment:
-      - REDIS_URL=${REDIS_URL}
-    network_mode: host
-
-  mcp-mongodb:
-    image: mcp/mongodb
-    environment:
-      - MONGODB_URI=${MONGODB_URI}
-    network_mode: host
-```
-
-## Health Monitoring & Troubleshooting
-
-### Check Server Status
-
-```bash
-/mcp-setup --status
-```
-
-**Output:**
-
-```
-✓ github (remote) - Connected, 6 tools available
-✓ linear (remote) - Connected, 8 tools available
-✗ postgres (local) - Connection failed: Docker container not running
-⚠ sentry (remote) - Connected, rate limit: 80% used
-```
-
-### Test Server Connection
-
-```bash
-/mcp-setup --test github
-```
-
-**Verification Steps:**
-
-1. Ping server endpoint
-2. Verify authentication
-3. List available tools
-4. Test tool invocation
-5. Check resource access
-
-## Security Best Practices
-
-### Project vs User Configuration
-
-**Project (`.mcp.json` - checked into git):**
+`.mcp.json` supports `${VAR}` and `${VAR:-default}` expansion in `command`, `args`, `env`, `url`, and `headers`. This lets a committed config reference machine-specific paths and secrets without hardcoding them:
 
 ```json
 {
   "mcpServers": {
-    "github": {
-      "type": "remote",
-      "url": "https://mcp.github.com",
-      "auth": {
-        "type": "oauth",
-        "provider": "github"
+    "api-server": {
+      "type": "http",
+      "url": "${API_BASE_URL:-https://api.example.com}/mcp",
+      "headers": {
+        "Authorization": "Bearer ${API_KEY}"
       }
     }
   }
 }
 ```
 
-- ✅ Server configuration (URLs, tool lists)
-- ✅ Authentication _method_ (oauth, bearer)
-- ❌ NO secrets or tokens
+If a referenced variable is unset and has no default, Claude Code fails to parse the config. Keep secrets out of version control by referencing environment variables rather than pasting tokens into `.mcp.json`.
 
-**User (`~/.config/claude/mcp.json` - personal):**
-
-- ✅ OAuth tokens (stored in system keychain)
-- ✅ Personal API keys
-- ✅ User-specific servers
-
-### Environment Variables for Secrets
+## Manage servers
 
 ```bash
-# .env.local (NOT checked into git)
-SENTRY_AUTH_TOKEN=abc123...
-POSTGRES_CONNECTION_STRING=postgresql://...
-AWS_ACCESS_KEY_ID=AKIA...
-AWS_SECRET_ACCESS_KEY=...
+# List configured servers
+claude mcp list
+
+# Show details for one server
+claude mcp get github
+
+# Remove a server
+claude mcp remove github
 ```
 
-**Reference in `.mcp.json`:**
+## Authenticate remote servers with `/mcp`
 
-```json
-{
-  "auth": {
-    "type": "bearer",
-    "token": "${SENTRY_AUTH_TOKEN}"
-  }
-}
-```
-
-## Advanced Configuration
-
-### Tool Permissions (Restrict Access)
-
-```json
-{
-  "mcpServers": {
-    "github": {
-      "tools": ["get_repository", "list_issues"],
-      "excludeTools": ["delete_repository", "force_push"]
-    }
-  }
-}
-```
-
-### Resource Filtering
-
-```json
-{
-  "mcpServers": {
-    "postgres": {
-      "resources": ["table://users", "table://posts"],
-      "excludeResources": ["table://internal_*"]
-    }
-  }
-}
-```
-
-### Rate Limiting
-
-```json
-{
-  "mcpServers": {
-    "github": {
-      "rateLimit": {
-        "requests": 100,
-        "period": "hour"
-      }
-    }
-  }
-}
-```
-
-## Migration from Manual Setup
-
-### Before (Manual Configuration)
-
-```json
-// Scattered across multiple config files
-// Manual OAuth flow
-// No centralized management
-```
-
-### After (`/mcp-setup`)
+Run `/mcp` inside a Claude Code session to see connected servers, the tool count next to each one, and to authenticate. Claude Code flags a remote server as needing authentication when it responds with `401 Unauthorized` or `403 Forbidden`; you then complete the OAuth 2.0 browser login from the `/mcp` menu.
 
 ```bash
-/mcp-setup --project --github --linear --sentry
-# One command, automatic OAuth, team-ready config
+# 1. Add the server
+claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
 ```
 
-## Team Collaboration
-
-### Shared Project Setup
-
-1. Lead developer runs `/mcp-setup --project --github --linear`
-2. Commits `.mcp.json` to git
-3. Team members clone repo
-4. Each member authenticates with OAuth (personal credentials)
-5. Everyone has same tool access
-
-### Onboarding New Developers
-
-```bash
-# New team member clones repo
-git clone repo.git
-cd repo
-
-# Claude Code detects .mcp.json
-Claude: "I found 3 MCP servers configured. Would you like to authenticate?"
-User: "yes"
-Claude: *opens OAuth flows for GitHub, Linear, Sentry*
-
-# Done - fully integrated in 30 seconds
+```text
+# 2. In a Claude Code session, open the MCP panel and follow the OAuth flow
+/mcp
 ```
 
-## Best Practices
+```text
+# 3. Use the server
+What are the most common errors in the last 24 hours?
+```
 
-1. **Use Project Scope for Team Tools**: GitHub, Linear, CI/CD
-2. **Use User Scope for Personal Tools**: Slack, Google Drive, Notion
-3. **Prefer OAuth Over API Keys**: Better security, auto-refresh
-4. **Docker for Local Services**: Isolated, reproducible environments
-5. **Monitor Rate Limits**: Check `--status` regularly
-6. **Test After Setup**: Use `--test` to verify connectivity
-7. **Document Custom Servers**: Add comments in `.mcp.json`
-8. **Version Control Config**: Commit `.mcp.json`, ignore `.env.local`
+Use the `/mcp` menu's "Clear authentication" option to revoke stored OAuth access. You can verify OAuth credentials are configured for a server with `claude mcp get <name>`.
+
+## When to use which
+
+- Use `claude mcp add --transport http|sse <url>` for remote/hosted servers (these support OAuth).
+- Use `claude mcp add --transport stdio <name> -- <command>` for local servers you launch as a subprocess.
+- Use `--scope project` and commit `.mcp.json` when the whole team should get the same servers; use the default `local` scope (or `--scope user`) for personal setups.
+- Use `/mcp` to authenticate remote servers and to check that a server is connected and exposing tools.
+
+For a step-by-step first-server walkthrough, see the official MCP documentation linked from this page.
