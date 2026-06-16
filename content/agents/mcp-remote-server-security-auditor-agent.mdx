@@ -1,0 +1,134 @@
+---
+title: MCP Remote Server Security Auditor Agent
+slug: mcp-remote-server-security-auditor-agent
+category: agents
+description: >-
+  Community reusable agent prompt for reviewing new MCP server adoption in Claude Code
+  using official security documentation: trusted providers, permissions configuration,
+  trust verification, and settings checked into source control.
+cardDescription: Review MCP server adoption in Claude Code using official security documentation.
+seoTitle: MCP Remote Server Security Auditor Agent
+seoDescription: >-
+  Reusable agent prompt for Claude Code MCP server security review grounded in official
+  security documentation: trusted providers, permissions, trust verification, settings.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1569
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1569"
+documentationUrl: "https://code.claude.com/docs/en/security"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent before adding a new MCP server to Claude Code settings to apply documented
+  MCP security guidance on trusted providers, permissions, and trust verification.
+prerequisites:
+  - Draft MCP server entry for Claude Code settings or managed configuration.
+  - Provider identity and whether the server is first-party, directory-listed, or third-party.
+  - Team policy for MCP permissions and version-controlled settings files.
+  - Inventory of tools exposed by the server if available from the provider.
+safetyNotes:
+  - Anthropic reviews directory connectors but does not security-audit third-party MCP servers per official docs.
+  - This prompt applies documented Claude Code guidance; it is not a penetration test.
+  - Prefer writing or vetting your own MCP servers when handling sensitive repositories.
+  - Trust verification applies to new MCP servers—do not bypass in non-interactive modes without policy review.
+privacyNotes:
+  - MCP settings checked into source control may expose internal server names and endpoints.
+  - Audit summaries should not paste secrets from server configuration files.
+  - Third-party MCP tools may send repository context externally—note data residency in reviews.
+tags:
+  - mcp
+  - security
+  - claude-code
+  - permissions
+  - audit
+keywords:
+  - mcp server security review claude code
+  - claude code mcp trust verification
+  - mcp permissions configuration audit
+  - third party mcp server approval
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Remote Server Security Auditor Agent is a community-authored reusable prompt for
+reviewing MCP server adoption in Claude Code. It applies official Claude Code security
+documentation—not a certified MCP security audit service.
+
+## Scope Note
+
+This prompt operationalizes the MCP security section of code.claude.com security docs.
+OAuth integration reviews are covered by mcp-oauth-integration-reviewer-agent; authorization
+spec boundary analysis by mcp-authorization-boundary-review-agent.
+
+## Agent Prompt
+
+You are an MCP server security reviewer for Claude Code deployments. Evaluate proposed MCP
+servers using official Claude Code security documentation.
+
+Workflow:
+
+1. **Server inventory.** Record server name, provider, transport, and whether it is first-party or third-party.
+2. **Trusted provider check.** Apply documented guidance to prefer own servers or providers the team trusts.
+3. **Settings placement.** Confirm allowed MCP servers are configured in version-controlled Claude Code settings as documented.
+4. **Permissions plan.** Map required Claude Code MCP permissions and deny rules before enablement.
+5. **Trust verification.** Note that new MCP servers require trust verification in interactive sessions per official docs.
+6. **Directory vs custom.** Distinguish Anthropic Directory listings from unaudited third-party servers per documentation.
+7. **Decision.** Approve with permissions constraints, defer pending vendor review, or block with required fixes.
+
+Output contract:
+
+- Server summary with provider trust classification.
+- Permissions and settings checklist mapped to official MCP security guidance.
+- Trust verification and rollout notes for the team.
+- Approve / defer / block recommendation.
+
+## Features
+
+- Applies Claude Code MCP security documentation to adoption reviews.
+- Emphasizes trusted providers, permissions, and trust verification over generic MCP overviews.
+- Supports version-controlled settings review workflows.
+- Separates directory-listed connectors from custom third-party servers per official docs.
+
+## Use Cases
+
+- Review a proposed third-party MCP server before merging settings into a repo.
+- Prepare enterprise rollout checklists for MCP allowlists and permissions.
+- Onboard a new connector with documented trust verification expectations.
+- Audit existing MCP settings files against official security guidance.
+
+## Source Notes
+
+Verified against Claude Code security documentation on **2026-06-16**:
+
+- Official MCP security guidance states allowed MCP servers are configured in Claude Code
+  settings checked into source code and encourages using own servers or trusted providers.
+- Documentation notes teams can configure Claude Code permissions for MCP servers and that
+  Anthropic reviews directory connectors but does not security-audit MCP servers.
+- Security docs describe trust verification for first-time codebase runs and new MCP servers
+  in interactive sessions, with related prompt-injection safeguards across the permission system.
+
+## Duplicate Check
+
+Checked content/agents for MCP security review coverage.
+mcp-oauth-integration-reviewer-agent focuses on remote OAuth integration approval.
+mcp-authorization-boundary-review-agent focuses on MCP authorization specification boundaries.
+No agents entry applies Claude Code security documentation MCP guidance to pre-adoption
+server review with permissions and trust verification checklists.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code security documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code security - https://code.claude.com/docs/en/security
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- Claude Code permissions - https://code.claude.com/docs/en/permissions
