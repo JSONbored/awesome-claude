@@ -1,44 +1,36 @@
 ---
-title: Generate Tests for Claude
+title: Generate Tests Custom Command
 slug: generate-tests
 category: commands
-description: >-
-  Automatically generate comprehensive test suites including unit tests,
-  integration tests, and edge cases with multiple testing framework support
-cardDescription: >-
-  Automatically generate comprehensive test suites including unit tests,
-  integration tests, and edge cases with multiple testing framework...
-seoTitle: Generate Tests for Claude
-seoDescription: >-
-  Automatically generate comprehensive test suites including unit tests,
-  integration tests, and edge cases with multiple testing framework support
-  Discover too...
+description: A user-created custom slash command for Claude Code that turns a file or function into a test suite. You create .claude/commands/generate-tests.md and invoke it with /generate-tests; it is a prompt recipe, not a built-in command, and uses no CLI flags.
+cardDescription: Custom .claude/commands/generate-tests.md recipe that asks Claude Code to write unit and edge-case tests for the file you pass in. Not built-in; steered by prompt text, not flags.
+seoTitle: Build a /generate-tests Custom Slash Command in Claude Code
+seoDescription: "Create a custom /generate-tests slash command in Claude Code: a .claude/commands file that prompts Claude to write unit and edge-case tests for a target."
 author: JSONbored
-authorProfileUrl: "https://github.com/JSONbored"
-dateAdded: "2025-09-16"
-documentationUrl: "https://code.claude.com/docs/en/slash-commands"
-installable: true
-installCommand: "/test-gen [options] <file_or_function>"
-usageSnippet: "/test-gen [options] <file_or_function>"
-copySnippet: "/test-gen [options] <file_or_function>"
+authorProfileUrl: https://github.com/JSONbored
+dateAdded: '2025-09-16'
+documentationUrl: https://code.claude.com/docs/en/slash-commands
+installable: false
+usageSnippet: 'Create .claude/commands/generate-tests.md, then run: /generate-tests src/utils/discount.js'
+copySnippet: 'mkdir -p .claude/commands && printf -- ''---\ndescription: Generate a test suite for the given file or function\nargument-hint: [file-or-function]\n---\nWrite a thorough test suite for $ARGUMENTS. Match the project''\''''s existing test framework and conventions, cover the happy path, edge cases, and error handling, and run the tests.\n'' > .claude/commands/generate-tests.md'
 tags:
-  - testing
-  - automation
-  - unit-tests
-  - integration-tests
-  - tdd
+- testing
+- automation
+- unit-tests
+- integration-tests
+- tdd
 keywords:
-  - automation
-  - claude
-  - commands
-  - development
-  - generate
-  - integration-tests
-  - tdd
-  - testing
-  - tests
-  - tools
-  - unit-tests
+- automation
+- claude
+- commands
+- development
+- generate
+- integration-tests
+- tdd
+- testing
+- tests
+- tools
+- unit-tests
 readingTime: 5
 difficultyScore: 100
 hasTroubleshooting: true
@@ -46,352 +38,150 @@ hasPrerequisites: false
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
-commandSyntax: "/test-gen [options] <file_or_function>"
+commandSyntax: 'Create .claude/commands/generate-tests.md, then run: /generate-tests src/utils/discount.js'
+retrievalSources:
+- https://code.claude.com/docs/en/slash-commands
+- https://code.claude.com/docs/en/common-workflows
+- https://jestjs.io/docs/getting-started
+- https://docs.pytest.org/en/stable/
+safetyNotes:
+- The recipe asks Claude to run the test suite, which executes project code and test commands locally; review the source and tests before running, especially in an unfamiliar repository.
+- If you add an allowed-tools field (e.g. Bash(npm test:*)), Claude can run those tool calls without a per-use permission prompt while the command is active. Scope it narrowly.
+- Project-level .claude/commands files are shared via git and run for anyone who trusts the workspace; treat a checked-in command as executable content and review it before trusting the repo.
+privacyNotes:
+- Dynamic-injection lines (!`...`) and @file references send the output of shell commands and the contents of referenced files into the model context; avoid pointing them at files containing secrets, credentials, or other sensitive data.
 ---
 
-The `/test-gen` command automatically generates comprehensive test suites for your code with intelligent test case discovery and framework integration.
+There is **no built-in `/generate-tests` (or `/test-gen`) command** in Claude Code, and custom slash commands do **not** accept CLI-style flags such as `--unit`, `--jest`, or `--threshold=90`. This page describes how to build `generate-tests` yourself as a **custom slash command** — a small Markdown prompt recipe you save in your project — following the official [Claude Code slash commands / skills documentation](https://code.claude.com/docs/en/slash-commands).
 
-## Usage
+A custom command is just a Markdown file. The command name comes from the filename: a file at `.claude/commands/generate-tests.md` creates `/generate-tests`. (Custom commands have been merged into skills; a skill at `.claude/skills/generate-tests/SKILL.md` produces the same `/generate-tests` and is the newer, recommended form, but existing `.claude/commands/*.md` files keep working identically.)
+
+## Where the file lives
+
+| Scope | Location | Available in |
+| --- | --- | --- |
+| Project (shared via git) | `.claude/commands/generate-tests.md` | This repository |
+| Personal (all your projects) | `~/.claude/commands/generate-tests.md` | Every project on your machine |
+
+The command name is the filename without the `.md` extension. Subdirectories namespace the command (for example `.claude/commands/test/unit.md` is invoked as `/test:unit`).
+
+## Create the command
+
+```sh
+mkdir -p .claude/commands
+```
+
+Save this to `.claude/commands/generate-tests.md`:
+
+```markdown
+---
+description: Generate a test suite for the given file or function
+argument-hint: [file-or-function]
+---
+
+Write a thorough automated test suite for $ARGUMENTS.
+
+- Detect and match the project's existing test framework and conventions
+  (look for jest.config.*, vitest.config.*, pytest.ini, pyproject.toml,
+  go.mod, etc.). Do not introduce a new framework unless none exists.
+- Cover the happy path, edge cases (empty/zero/boundary values), and
+  error handling.
+- Place tests next to existing tests, following the current naming pattern.
+- After writing, run the test command and fix any failures.
+```
+
+The `$ARGUMENTS` placeholder is replaced with whatever you type after the command name. The `description` and `argument-hint` frontmatter fields drive the autocomplete UI. These are the real frontmatter fields documented for custom commands/skills — there are no test-type or framework flags.
+
+## Invoke it
 
 ```
-/test-gen [options] <file_or_function>
+/generate-tests src/utils/discount.js
 ```
 
-## Options
+```
+/generate-tests "the calculateDiscount function in pricing.ts"
+```
 
-### Test Types
+Because the behavior is plain prompt text, you steer test type and framework by **what you write in the recipe or in your arguments**, not via flags. For example, you can keep one recipe and ask for a specific style at call time:
 
-- `--unit` - Generate unit tests (default)
-- `--integration` - Generate integration tests
-- `--e2e` - Generate end-to-end tests
-- `--performance` - Generate performance tests
-- `--security` - Generate security tests
-- `--accessibility` - Generate accessibility tests
+```
+/generate-tests src/api/users.py — focus on integration tests with pytest fixtures
+```
 
-### Framework Selection
+Or maintain several focused recipes (`.claude/commands/test/unit.md`, `.claude/commands/test/integration.md`, `.claude/commands/test/edge-cases.md`) and call `/test:unit`, `/test:integration`, etc.
 
-- `--jest` - Use Jest testing framework (JavaScript/TypeScript)
-- `--vitest` - Use Vitest testing framework
-- `--pytest` - Use pytest (Python)
-- `--junit` - Use JUnit (Java)
-- `--nunit` - Use NUnit (C#)
-- `--rspec` - Use RSpec (Ruby)
-- `--go-test` - Use Go testing package
+## Optional: pre-run context with dynamic injection
 
-### Coverage Options
+Custom commands support a documented preprocessing syntax. A line beginning with `` !`<command>` `` runs the shell command and inlines its output into the prompt *before* Claude reads it, and `@path/to/file` includes a file's contents. This lets the recipe hand Claude the source under test automatically:
 
-- `--coverage` - Include code coverage configuration
-- `--threshold=90` - Set coverage threshold percentage
-- `--coverage-report` - Generate coverage reports
+```markdown
+---
+description: Generate a test suite for the given file
+argument-hint: [file]
+allowed-tools: Bash(npm test:*), Bash(pytest:*)
+---
 
-### Test Strategy
+Existing test layout:
+!`ls -R tests __tests__ 2>/dev/null | head -40`
 
-- `--tdd` - Test-driven development approach
-- `--bdd` - Behavior-driven development with scenarios
-- `--property-based` - Generate property-based tests
-- `--mutation` - Include mutation testing setup
+Source to test:
+@$ARGUMENTS
 
-## Examples
+Write a thorough test suite for the file above, matching existing conventions,
+then run the tests.
+```
 
-### JavaScript/TypeScript Unit Tests
+`allowed-tools` grants the listed tools without a per-call permission prompt while the command is active; it does not restrict Claude's other tools. Shell-injection lines (`` !`...` ``) can be disabled org-wide with `"disableSkillShellExecution": true` in settings.
+
+## Example: what a generated suite looks like
+
+Given a JavaScript function:
 
 ```javascript
-// Source function
 function calculateDiscount(price, discountPercentage, customerType) {
   if (price <= 0) throw new Error("Price must be positive");
   if (discountPercentage < 0 || discountPercentage > 100) {
     throw new Error("Discount must be between 0 and 100");
   }
-
   const baseDiscount = price * (discountPercentage / 100);
   const multiplier = customerType === "premium" ? 1.2 : 1;
-
   return Math.min(baseDiscount * multiplier, price * 0.5);
 }
+```
 
-// Generated Jest tests
+`/generate-tests src/pricing.js` might produce a [Jest](https://jestjs.io/docs/getting-started) suite:
+
+```javascript
 describe("calculateDiscount", () => {
-  describe("valid inputs", () => {
-    test("should calculate basic discount correctly", () => {
-      const result = calculateDiscount(100, 10, "regular");
-      expect(result).toBe(10);
-    });
-
-    test("should apply premium multiplier", () => {
-      const result = calculateDiscount(100, 10, "premium");
-      expect(result).toBe(12);
-    });
-
-    test("should cap discount at 50% of price", () => {
-      const result = calculateDiscount(100, 60, "premium");
-      expect(result).toBe(50);
-    });
+  test("calculates a basic discount", () => {
+    expect(calculateDiscount(100, 10, "regular")).toBe(10);
   });
-
-  describe("edge cases", () => {
-    test("should handle zero discount", () => {
-      const result = calculateDiscount(100, 0, "regular");
-      expect(result).toBe(0);
-    });
-
-    test("should handle maximum discount", () => {
-      const result = calculateDiscount(100, 100, "regular");
-      expect(result).toBe(50);
-    });
+  test("applies the premium multiplier", () => {
+    expect(calculateDiscount(100, 10, "premium")).toBe(12);
   });
-
-  describe("error cases", () => {
-    test("should throw error for negative price", () => {
-      expect(() => calculateDiscount(-10, 10, "regular")).toThrow(
-        "Price must be positive",
-      );
-    });
-
-    test("should throw error for invalid discount percentage", () => {
-      expect(() => calculateDiscount(100, -5, "regular")).toThrow(
-        "Discount must be between 0 and 100",
-      );
-
-      expect(() => calculateDiscount(100, 105, "regular")).toThrow(
-        "Discount must be between 0 and 100",
-      );
-    });
+  test("caps the discount at 50% of price", () => {
+    expect(calculateDiscount(100, 60, "premium")).toBe(50);
   });
-});
-```
-
-### Python Unit Tests
-
-```python
-# Source class
-class UserValidator:
-    def __init__(self, min_age=18):
-        self.min_age = min_age
-
-    def validate_user(self, user_data):
-        errors = []
-
-        if not user_data.get('email') or '@' not in user_data['email']:
-            errors.append('Invalid email format')
-
-        if user_data.get('age', 0) < self.min_age:
-            errors.append(f'Age must be at least {self.min_age}')
-
-        return len(errors) == 0, errors
-
-# Generated pytest tests
-import pytest
-from user_validator import UserValidator
-
-class TestUserValidator:
-    @pytest.fixture
-    def validator(self):
-        return UserValidator()
-
-    @pytest.fixture
-    def custom_validator(self):
-        return UserValidator(min_age=21)
-
-    def test_valid_user(self, validator):
-        user_data = {'email': 'test@example.com', 'age': 25}
-        is_valid, errors = validator.validate_user(user_data)
-
-        assert is_valid is True
-        assert errors == []
-
-    def test_invalid_email(self, validator):
-        user_data = {'email': 'invalid-email', 'age': 25}
-        is_valid, errors = validator.validate_user(user_data)
-
-        assert is_valid is False
-        assert 'Invalid email format' in errors
-
-    def test_missing_email(self, validator):
-        user_data = {'age': 25}
-        is_valid, errors = validator.validate_user(user_data)
-
-        assert is_valid is False
-        assert 'Invalid email format' in errors
-
-    def test_underage_user(self, validator):
-        user_data = {'email': 'test@example.com', 'age': 16}
-        is_valid, errors = validator.validate_user(user_data)
-
-        assert is_valid is False
-        assert 'Age must be at least 18' in errors
-
-    def test_custom_min_age(self, custom_validator):
-        user_data = {'email': 'test@example.com', 'age': 19}
-        is_valid, errors = custom_validator.validate_user(user_data)
-
-        assert is_valid is False
-        assert 'Age must be at least 21' in errors
-
-    @pytest.mark.parametrize('email,expected_valid', [
-        ('user@domain.com', True),
-        ('user.name@domain.co.uk', True),
-        ('invalid-email', False),
-        ('', False),
-        ('user@', False),
-        ('@domain.com', False),
-    ])
-    def test_email_validation_parametrized(self, validator, email, expected_valid):
-        user_data = {'email': email, 'age': 25}
-        is_valid, _ = validator.validate_user(user_data)
-
-        assert (is_valid and 'Invalid email format' not in _) == expected_valid
-```
-
-### Integration Test Example
-
-```javascript
-// Generated API integration test
-describe("User API Integration", () => {
-  let app, server;
-
-  beforeAll(async () => {
-    app = require("../app");
-    server = app.listen(0);
+  test("throws on non-positive price", () => {
+    expect(() => calculateDiscount(-10, 10, "regular")).toThrow(
+      "Price must be positive",
+    );
   });
-
-  afterAll(async () => {
-    await server.close();
-  });
-
-  beforeEach(async () => {
-    await cleanupDatabase();
-    await seedTestData();
-  });
-
-  describe("POST /api/users", () => {
-    test("should create user successfully", async () => {
-      const userData = {
-        name: "John Doe",
-        email: "john@example.com",
-        age: 30,
-      };
-
-      const response = await request(app)
-        .post("/api/users")
-        .send(userData)
-        .expect(201);
-
-      expect(response.body).toMatchObject({
-        id: expect.any(Number),
-        name: userData.name,
-        email: userData.email,
-        age: userData.age,
-        createdAt: expect.any(String),
-      });
-    });
-
-    test("should validate user data", async () => {
-      const invalidUserData = {
-        name: "",
-        email: "invalid-email",
-        age: -5,
-      };
-
-      const response = await request(app)
-        .post("/api/users")
-        .send(invalidUserData)
-        .expect(400);
-
-      expect(response.body.errors).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ field: "name" }),
-          expect.objectContaining({ field: "email" }),
-          expect.objectContaining({ field: "age" }),
-        ]),
-      );
-    });
-  });
-});
-```
-
-## Test Configuration
-
-### Jest Configuration
-
-```javascript
-// Generated jest.config.js
-module.exports = {
-  testEnvironment: "node",
-  collectCoverage: true,
-  coverageDirectory: "coverage",
-  coverageReporters: ["text", "lcov", "html"],
-  coverageThreshold: {
-    global: {
-      branches: 90,
-      functions: 90,
-      lines: 90,
-      statements: 90,
-    },
-  },
-  testMatch: ["**/__tests__/**/*.test.js", "**/?(*.)+(spec|test).js"],
-  setupFilesAfterEnv: ["<rootDir>/src/test/setup.js"],
-};
-```
-
-### Pytest Configuration
-
-```ini
-# Generated pytest.ini
-[tool:pytest]
-addopts =
-    --verbose
-    --cov=src
-    --cov-report=html
-    --cov-report=term
-    --cov-fail-under=90
-    --strict-markers
-testpaths = tests
-markers =
-    unit: Unit tests
-    integration: Integration tests
-    slow: Slow tests
-    security: Security tests
-```
-
-## Advanced Features
-
-### Property-Based Testing
-
-```javascript
-// Generated property-based test
-const fc = require("fast-check");
-
-describe("calculateDiscount property tests", () => {
-  test("discount should never exceed 50% of price", () => {
-    fc.assert(
-      fc.property(
-        fc.float({ min: 0.01, max: 10000 }), // price
-        fc.float({ min: 0, max: 100 }), // discount percentage
-        fc.constantFrom("regular", "premium"), // customer type
-        (price, discount, customerType) => {
-          const result = calculateDiscount(price, discount, customerType);
-          expect(result).toBeLessThanOrEqual(price * 0.5);
-        },
-      ),
+  test("throws on out-of-range discount", () => {
+    expect(() => calculateDiscount(100, 105, "regular")).toThrow(
+      "Discount must be between 0 and 100",
     );
   });
 });
 ```
 
-### Mock Generation
+For Python projects the same recipe yields [pytest](https://docs.pytest.org/en/stable/) tests using fixtures and `@pytest.mark.parametrize`. The framework is chosen by matching your project, not by a flag.
 
-```javascript
-// Generated mocks
-const mockUserService = {
-  getUserById: jest.fn(),
-  createUser: jest.fn(),
-  updateUser: jest.fn(),
-  deleteUser: jest.fn(),
-};
+## When to use it
 
-const mockDatabase = {
-  query: jest.fn(),
-  transaction: jest.fn(),
-  close: jest.fn(),
-};
-```
+Reach for a `generate-tests` recipe when you repeatedly ask Claude to scaffold tests and want a consistent, project-aware prompt one keystroke away. For one-off test generation you can just ask in chat — the custom command pays off when the instructions (framework detection, naming conventions, coverage expectations, run-and-fix loop) are stable enough to codify.
+
+## Notes
+
+- This is a user-authored recipe, not an official command. There is no guaranteed coverage threshold, no `--mutation`/`--property-based` switch, and no built-in report generation; you get whatever you ask the prompt to produce.
+- Generated tests are a starting point. Review them and run the suite yourself before relying on them.
