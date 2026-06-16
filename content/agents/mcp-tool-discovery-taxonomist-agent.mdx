@@ -1,0 +1,130 @@
+---
+title: MCP Tool Discovery Taxonomist Agent
+slug: mcp-tool-discovery-taxonomist-agent
+category: agents
+description: >-
+  Community reusable agent prompt for classifying MCP tools into discovery taxonomies using
+  official MCP client best practices documentation: capability grouping, naming conventions,
+  duplicate detection, and marketplace-friendly metadata labels.
+cardDescription: Classify MCP tools for discovery using official MCP client best practices documentation.
+seoTitle: MCP Tool Discovery Taxonomist Agent
+seoDescription: >-
+  Reusable agent prompt for MCP tool discovery taxonomy grounded in official client best
+  practices documentation: grouping, naming, duplicates, marketplace metadata labels.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1570
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1570"
+documentationUrl: "https://modelcontextprotocol.io/docs/develop/clients/client-best-practices"
+repoUrl: "https://github.com/modelcontextprotocol/modelcontextprotocol"
+installable: false
+usageSnippet: >-
+  Use this agent to classify MCP tool catalogs into discovery taxonomies, detect duplicate
+  capabilities, and propose marketplace-friendly labels per client best practices documentation.
+prerequisites:
+  - Exported tool list with names, descriptions, and input schemas from target MCP servers.
+  - Existing taxonomy or marketplace categories used by your organization.
+  - Policy on destructive versus read-only tool labeling.
+  - Sample user tasks showing how operators search for connectors.
+safetyNotes:
+  - Taxonomy labels must not overstate tool safety—mark destructive tools explicitly.
+  - Duplicate detection is heuristic; human review required before merging listings.
+  - Renaming tools in production servers breaks client configs—coordinate version bumps.
+  - Classification does not replace security review of tool implementations.
+privacyNotes:
+  - Tool descriptions may embed example data with secrets—sanitize before sharing taxonomies.
+  - Marketplace exports should avoid attaching full JSON schemas with internal field names publicly.
+  - User task examples for classification should use synthetic scenarios only.
+tags:
+  - mcp
+  - tools
+  - taxonomy
+  - discovery
+  - marketplace
+keywords:
+  - mcp tool discovery taxonomist
+  - mcp client best practices taxonomy
+  - mcp tool catalog classification
+  - marketplace mcp tool labels
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Tool Discovery Taxonomist Agent is a community-authored reusable prompt for organizing
+MCP tool catalogs into discoverable taxonomies. It applies official MCP client best practices
+documentation—not an official MCP marketplace taxonomy service.
+
+## Scope Note
+
+This prompt operationalizes documented client-side tool discovery and naming guidance from
+modelcontextprotocol.io. Registry metadata validation is covered by mcp-registry-metadata-reviewer-agent.
+
+## Agent Prompt
+
+You are an MCP tool discovery taxonomist. Classify tool catalogs for operators and marketplaces
+using official MCP client best practices documentation.
+
+Workflow:
+
+1. **Tool inventory.** Import tool names, descriptions, and schemas from each MCP server.
+2. **Capability clustering.** Group tools by user intent: read, write, admin, observability, etc.
+3. **Naming review.** Flag ambiguous or overlapping tool names per client best practices guidance.
+4. **Duplicate detection.** Identify tools across servers with similar inputs and effects.
+5. **Risk labels.** Tag destructive, data-export, or privileged tools for marketplace filters.
+6. **Taxonomy proposal.** Map clusters to marketplace categories with suggested synonyms.
+7. **Handoff.** Deliver taxonomy tables and rename recommendations with migration notes.
+
+Output contract:
+
+- Taxonomy tree with tool assignments.
+- Duplicate and overlap report.
+- Risk label matrix.
+- Recommended metadata labels for marketplace ingestion.
+
+## Features
+
+- Applies MCP client best practices to tool discovery design.
+- Detects overlapping capabilities across multi-server catalogs.
+- Adds risk labels for marketplace filtering.
+- Produces migration notes when renaming is recommended.
+
+## Use Cases
+
+- Organize internal MCP marketplace categories before enterprise rollout.
+- Consolidate duplicate GitHub and Jira tools across multiple servers.
+- Improve connector search in Claude Code host UIs.
+- Prepare registry or aggregator metadata with consistent labels.
+
+## Source Notes
+
+Verified against MCP client best practices documentation on **2026-06-16**:
+
+- Official client best practices documentation describes how MCP clients should present tools to
+  users including clarity of names, descriptions, and capability boundaries.
+- Documentation emphasizes predictable tool discovery patterns so operators understand which
+  tool to invoke for a given task without reading full schemas.
+- Client guidance complements server-side tool design docs for end-to-end discoverability.
+
+## Duplicate Check
+
+Checked content/agents for MCP tool taxonomy coverage.
+mcp-registry-metadata-reviewer-agent validates server.json before registry publish.
+No agents entry applies MCP client best practices documentation to cross-server tool taxonomy
+and duplicate capability classification for marketplace discovery.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public MCP client
+best practices documentation. No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- MCP client best practices - https://modelcontextprotocol.io/docs/develop/clients/client-best-practices
+- MCP tools concept - https://modelcontextprotocol.io/docs/concepts/tools
+- MCP Registry about - https://modelcontextprotocol.io/registry/about
