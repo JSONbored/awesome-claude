@@ -1,0 +1,205 @@
+---
+title: Subagent Transcript Cleanup Capability Pack Skill
+slug: subagent-transcript-cleanup-capability-pack
+category: skills
+description: >-
+  Expert capability pack for reviewing Claude Code subagent transcript files,
+  documented retention settings, compaction events, and summary handoff so
+  verbose delegated work stays out of the main conversation.
+cardDescription: >-
+  Review subagent jsonl transcripts, retention settings, and summary handoffs with source-backed checklists.
+seoTitle: Subagent Transcript Cleanup Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code subagent transcript review,
+  cleanupPeriodDays retention, compaction logs, and resume decisions from official sub-agents docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1539
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1539"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/sub-agents"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use after subagent delegation when you need to review jsonl transcripts,
+  retention policy, and what summary returns to the main session.
+copySnippet: |-
+  # Trigger
+  "Apply the subagent transcript cleanup capability pack for this delegation."
+
+  # Required output
+  1) Delegation goal and expected summary for the main session
+  2) Transcript file location and agent ID inventory
+  3) Compaction and retention review notes
+  4) Resume versus fresh-instance recommendation
+  5) Privacy-safe handoff summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "A completed or in-progress subagent delegation with a defined task boundary."
+  - "Access to the local Claude Code project directory for transcript paths."
+  - "Knowledge of whether the subagent should resume or start fresh."
+safetyNotes:
+  - "Subagent transcripts may contain tool output with repository paths, credentials, or customer data."
+  - "Resuming a subagent retains full prior tool history—confirm scope before continuing destructive work."
+  - "This skill reviews transcripts; it does not delete files unless you explicitly apply documented retention settings."
+privacyNotes:
+  - "Transcript jsonl files under ~/.claude/projects/ may include PII from read tools and MCP outputs."
+  - "External summaries should describe categories of exposure, not paste raw transcript lines."
+  - "Agent IDs in transcripts can correlate sessions—redact before sharing outside the team."
+tags:
+  - subagent
+  - transcript
+  - context
+  - delegation
+  - capability-pack
+keywords:
+  - subagent transcript cleanup capability pack
+  - Claude Code subagent jsonl review
+  - subagent retention cleanupPeriodDays
+  - subagent compaction transcript review
+readingTime: 9
+difficultyScore: 74
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in Claude Code sub-agents and settings documentation verified on
+**2026-06-16**. Transcript paths, retention defaults, and resume behavior can
+change between releases—confirm live docs before production policy decisions.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/sub-agents
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://code.claude.com/docs/en/settings
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official sub-agents documentation on **2026-06-16**:
+
+- Subagents run in **isolated context windows**; verbose output can stay in the
+  subagent while only a **summary returns** to the main conversation.
+- Subagent transcripts are stored as **`agent-{agentId}.jsonl`** under
+  **`~/.claude/projects/{project}/{sessionId}/subagents/`**.
+- **Main conversation compaction** does not affect subagent transcript files.
+- Transcripts are cleaned up based on the **`cleanupPeriodDays`** setting
+  (default **30 days**).
+- Subagent **auto-compaction** logs **`compact_boundary`** events in transcript
+  files with **`preTokens`** metadata.
+- **Resumed subagents** retain full conversation history; built-in Explore and
+  Plan agents are one-shot and return no agent ID to resume.
+
+## Scope Note
+
+Community review skill—not a built-in Claude Code slash command. Applies
+documented transcript locations, retention settings, and handoff patterns from
+official sub-agents docs.
+
+## Core Workflow
+
+1. Before delegation, state what summary the main session needs (not raw logs).
+2. Run the subagent and record the **agent ID** when resumption may be required.
+3. Locate transcript files under the documented **`subagents/`** path for the session.
+4. Scan jsonl for **`compact_boundary`** events and high-volume tool output.
+5. Confirm **`cleanupPeriodDays`** in project settings matches team retention policy.
+6. Decide **resume** (continue prior agent ID) versus a **fresh subagent instance**.
+7. Return only the agreed summary to the main conversation; keep verbose jsonl local.
+8. Produce a privacy-safe handoff note for reviewers.
+
+## Capability Scope
+
+- Transcript path discovery using documented directory layout.
+- Retention review against **`cleanupPeriodDays`**.
+- Compaction event review in jsonl transcripts.
+- Resume versus fresh-instance decision support.
+- Summary handoff checklists for delegated work.
+
+## Compatibility
+
+### Native
+
+- **Claude Code**: use when subagent delegation produces large tool output.
+
+### Manual Adaptation
+
+- **Generic AGENTS**: apply retention and summary-handoff checklist for any delegated worker pattern.
+
+## Required Inputs
+
+- Subagent name and task boundary.
+- Session project path or session ID when locating transcripts.
+- Whether the task is read-only exploration or write-capable work.
+- Team retention policy for local Claude Code artifacts.
+
+## Production Rules
+
+- Do not paste live secrets from jsonl transcripts into tickets or chat.
+- Prefer summary handoff over copying full tool output into the main session.
+- Confirm destructive tools were not invoked before resuming a subagent.
+- When sharing externally, describe transcript categories—not raw file contents.
+- Link only to official documentation in retrieval sources.
+
+## Review Matrix
+
+| Check | Pass criteria | Doc basis |
+| --- | --- | --- |
+| Summary defined | Main session receives agreed summary only | Isolated context handoff |
+| Transcript located | Path matches documented subagents layout | Transcript file path |
+| Retention aligned | cleanupPeriodDays matches policy | Automatic cleanup setting |
+| Compaction reviewed | compact_boundary noted if present | Auto-compaction logging |
+| Resume justified | Agent ID exists and scope is safe | Resume subagents section |
+
+## Output Contract
+
+1. Delegation goal and expected main-session summary.
+2. Transcript path and agent ID inventory.
+3. Compaction and retention findings.
+4. Resume versus fresh-instance recommendation.
+5. Privacy-safe handoff summary.
+
+## Troubleshooting
+
+**Issue:** Cannot find transcript file
+**Fix:** Confirm session ID and look under the documented **`subagents/`** directory for **`agent-{agentId}.jsonl`**.
+
+**Issue:** Main session still flooded with verbose output
+**Fix:** Redelegate with explicit instruction to return summary only; keep exploration in the subagent context.
+
+## Duplicate Check
+
+Distinct from `subagent-mcp-scoping-review-capability-pack` (MCP inheritance),
+`subagent-foreground-background-delegation-capability-pack` (delegation modes),
+and `pull-request-triage-capability-pack` (maintainer PR workflows). This pack
+covers **transcript files, retention, compaction, and summary handoff**.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` based on public Claude Code documentation. No
+paid placement or affiliate links.
