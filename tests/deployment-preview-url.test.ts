@@ -81,7 +81,9 @@ describe("PR preview artifact validation flow", () => {
     // the real per-PR prod preview-version deployment statuses, and the resolver
     // degrades gracefully (--allow-missing) instead of falling back to dev.
     expect(workflow).not.toContain("ALLOW_SHARED_DEV_WORKER_PREVIEW");
-    expect(workflow).not.toContain("https://heyclaude-dev.zeronode.workers.dev");
+    expect(workflow).not.toContain(
+      "https://heyclaude-dev.zeronode.workers.dev",
+    );
     expect(workflow).toContain("--wait-seconds 600");
     expect(workflow).not.toContain("REQUIRE_PR_PREVIEW");
     expect(workflow).toContain("--allow-missing");
