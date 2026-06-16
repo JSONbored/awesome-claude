@@ -18,6 +18,8 @@ installable: true
 installCommand: "/review [options] <file_or_directory>"
 usageSnippet: "/review [options] <file_or_directory>"
 copySnippet: "/review [options] <file_or_directory>"
+safetyNotes:
+  - "The /review command reads and analyzes the targeted files and runs review tooling within Claude Code; review its scope before running it on large or untrusted directories."
 privacyNotes:
   - "Running /review sends the targeted source files and diffs to Claude as review context; avoid pointing it at secrets or restricted code you don't want transmitted to the model provider."
 tags:
