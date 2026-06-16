@@ -1,0 +1,184 @@
+---
+title: Statuslines For AI Coding Workflow Visibility
+slug: statuslines-for-ai-coding-workflow-visibility
+category: guides
+description: >-
+  Configure Claude Code statuslines for workflow visibility: model identity,
+  context usage, git branch, session mode, and custom metrics so maintainers see
+  agent state at a glance without leaving the terminal.
+cardDescription: Surface model, context, and git state with Claude Code statuslines.
+seoTitle: Statuslines For AI Coding Workflow Visibility
+seoDescription: >-
+  Set up Claude Code statuslines to show model, context window usage, git branch,
+  session mode, and custom workflow signals for AI coding visibility.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1184
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1184"
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+usageSnippet: >-
+  Add a `statusLine` command in `.claude/settings.json`, read stdin JSON for
+  model and context fields, print branch and session mode, keep scripts fast and
+  side-effect free, and version team statuslines in git for consistent visibility.
+prerequisites:
+  - Claude Code CLI with statusline support enabled for your environment.
+  - Shell or script runtime for a `type: command` statusline (bash, Python, etc.).
+  - Optional git repository for branch and dirty-state indicators.
+  - Team agreement on which workflow signals belong in the shared statusline.
+safetyNotes:
+  - Statusline commands run frequently; keep them read-only and avoid network calls or secrets in refresh loops.
+  - Malformed statusline output can clutter the UI—validate JSON stdin parsing and truncate long strings.
+  - Do not embed API keys or tokens in statusline scripts checked into shared repositories.
+privacyNotes:
+  - Statuslines may display repository names, branch names, model identifiers, and context percentages visible during screen share.
+  - Custom metrics that read issue trackers or CI status can leak internal project codenames—scrub before demos.
+  - Shared statusline scripts in git expose which signals your team monitors during AI coding sessions.
+sourceUrls:
+  - "https://code.claude.com/docs/en/statusline"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - statusline
+  - workflow-visibility
+  - terminal
+  - context-window
+  - git
+keywords:
+  - Claude Code statusline workflow
+  - AI coding session visibility
+  - statusline context usage
+  - claude code git branch statusline
+  - terminal agent state display
+readingTime: 8
+difficultyScore: 46
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Statuslines show Claude Code session state in the terminal footer. Configure a
+command statusline in `.claude/settings.json`, parse stdin JSON for model and
+context fields, add git branch and custom workflow signals, keep scripts fast and
+read-only, and commit team templates to git for consistent visibility.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Settings path", "description": "`.claude/settings.json` exists or will be created in the project"}
+- [ ] {"task": "Script location", "description": "Statusline script lives under `.claude/statuslines/` with execute permission"}
+- [ ] {"task": "Refresh interval", "description": "`refreshInterval` balances responsiveness and CPU use (often 500–2000 ms)"}
+- [ ] {"task": "Signal list", "description": "Team agrees which fields appear (model, context %, branch, mode)"}
+- [ ] {"task": "Privacy review", "description": "Demo-safe output excludes internal codenames if needed"}
+
+## Core Concepts Explained
+
+### Command statuslines receive session JSON on stdin
+
+Official docs describe `statusLine.type: command` scripts that read JSON from
+stdin with fields such as model name and context window usage. Parse only what
+you display; ignore unknown keys for forward compatibility.
+
+### Visibility reduces context surprises
+
+Maintainers running long sessions benefit from seeing context consumption and
+model identity without opening separate panels. Early context warnings prevent
+mid-task compaction surprises during large refactors.
+
+### Git branch signals prevent wrong-target edits
+
+Branch name and dirty-state indicators help parallel session workflows—especially
+when multiple Claude Code windows share one machine but different checkouts.
+
+### Keep refresh loops lightweight
+
+Statuslines re-run on an interval. Avoid network I/O, heavy git operations, or
+subprocess chains that stall the terminal UI.
+
+## Step-by-Step Implementation Guide
+
+1. **Choose workflow signals.** Start with model, context percentage, git branch,
+   and session mode; add custom flags only when they change maintainer behavior.
+
+2. **Create the script.** Place `.claude/statuslines/workflow-visibility.sh` (or
+   Python) that reads stdin JSON and prints a single-line footer.
+
+3. **Parse stdin safely.** Use `jq` or a short Python snippet; default gracefully
+   when fields are missing so upgrades do not break the footer.
+
+4. **Add git context.** Optionally append `git branch --show-current` and a dirty
+   marker; cache or throttle if refresh interval is aggressive.
+
+5. **Configure settings.** Set `statusLine.type`, `command`, and `refreshInterval`
+   in `.claude/settings.json` using `$CLAUDE_PROJECT_DIR` for portable paths.
+
+6. **Test locally.** Start Claude Code, verify footer updates on model switches
+   and as context grows; adjust truncation for narrow terminals.
+
+7. **Share with the team.** Commit script and settings snippet; document optional
+   overrides for personal statuslines in user settings.
+
+## Workflow Visibility Checklist
+
+- [ ] {"task": "Fast script", "description": "Footer renders in under ~100 ms typical"}
+- [ ] {"task": "Read-only", "description": "No writes, network, or secret reads in the loop"}
+- [ ] {"task": "Truncation", "description": "Long branch or model names ellipsize on small terminals"}
+- [ ] {"task": "Portable paths", "description": "`$CLAUDE_PROJECT_DIR` used instead of hard-coded roots"}
+- [ ] {"task": "Fallback", "description": "Missing git or fields degrade silently"}
+
+## Troubleshooting
+
+### Blank statusline
+
+Verify script is executable, `command` path resolves, and stderr is empty—Claude
+Code may hide failing scripts.
+
+### Stale context percentage
+
+Lower `refreshInterval` slightly; confirm the script reads fresh stdin each invocation
+instead of caching prior JSON.
+
+### Git branch missing
+
+Ensure Claude Code runs inside the repository root or export `GIT_DIR` explicitly
+in the script for worktree setups.
+
+### Footer flicker or lag
+
+Reduce git subprocess work, increase refresh interval, or move expensive metrics
+to on-demand slash commands instead of the statusline.
+
+## Source Verification Notes
+
+Verified against official Claude Code statusline documentation on **2026-06-16**:
+
+- Statuslines configure through `.claude/settings.json` with `type: command` and a
+  shell command path, often under `.claude/statuslines/`.
+- Command scripts receive JSON on stdin describing session state including model
+  and context window usage fields documented on code.claude.com.
+- `refreshInterval` controls how often the command re-runs; scripts should stay
+  side-effect free because of high invocation frequency.
+- User and project settings can both define statuslines; project templates suit
+  team workflow visibility standards.
+
+## Duplicate Check
+
+Checked `content/guides`, `content/statuslines`, generated catalog text, and open
+pull requests for Claude Code statusline workflow and visibility guides. The
+`statuslines` category lists concrete theme and indicator configs; no `guides`
+entry teaches workflow visibility design with stdin JSON parsing, refresh tuning,
+and team rollout patterns.
+
+## References
+
+- Statusline docs - https://code.claude.com/docs/en/statusline
+- Settings docs - https://code.claude.com/docs/en/settings
+- Claude Code repository - https://github.com/anthropics/claude-code
