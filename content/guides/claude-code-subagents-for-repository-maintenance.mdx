@@ -1,0 +1,186 @@
+---
+title: Claude Code Subagents For Repository Maintenance
+slug: claude-code-subagents-for-repository-maintenance
+category: guides
+description: >-
+  Delegate repository maintenance to Claude Code subagents: docs drift scans,
+  dependency report triage, README sync checks, and stale issue grooming with
+  scoped tools, read-first policies, and human merge gates.
+cardDescription: Use focused subagents for recurring repository maintenance tasks.
+seoTitle: Claude Code Subagents For Repository Maintenance
+seoDescription: >-
+  Configure Claude Code subagents for repository maintenance—docs drift, dependency
+  triage, README sync, and stale issue grooming—with scoped tools and human review.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1183
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1183"
+documentationUrl: "https://code.claude.com/docs/en/sub-agents"
+usageSnippet: >-
+  Define narrow maintenance subagents in `.claude/agents/`, give each read-only
+  tools by default, run docs-drift and dependency scans in parallel, then let the
+  main session consolidate findings before any commit or label change.
+prerequisites:
+  - Claude Code with subagents available for your account and project.
+  - Recurring maintenance work that benefits from separate specialist context.
+  - Documented human owners for merges, label changes, and dependency upgrades.
+  - Optional MCP or GitHub integrations scoped to maintenance repositories only.
+safetyNotes:
+  - Maintenance subagents can propose file edits and shell commands—start read-only and add write tools only after review policy exists.
+  - Parallel subagents multiply tool calls; cap concurrent maintenance runs on large monorepos to control cost and noise.
+  - Dependency upgrade suggestions require human verification against semver, license, and security advisories before merge.
+privacyNotes:
+  - Maintenance scans read internal docs, issue titles, dependency manifests, and CI configuration that may describe unreleased features.
+  - Subagent transcripts may retain file paths and package names from private forks; avoid pasting customer data into maintenance prompts.
+  - External MCP connectors can expose additional metadata—document what each maintenance subagent may read.
+sourceUrls:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - subagents
+  - repository-maintenance
+  - docs-drift
+  - dependencies
+  - automation
+keywords:
+  - Claude Code subagents maintenance
+  - repository maintenance subagents
+  - docs drift claude code
+  - dependency triage subagent
+  - claude code stale issues
+readingTime: 8
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Use subagents when maintenance work splits into distinct lenses—documentation
+drift, dependency reports, README consistency, stale issues—without one prompt
+doing everything. Keep tools read-first, run specialists in parallel, consolidate
+in the main session, and require human approval before commits or label changes.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Maintenance lanes defined", "description": "Docs, dependencies, README, and issue hygiene are separate roles"}
+- [ ] {"task": "Subagent files ready", "description": "Each role has `.claude/agents/<name>.md` with narrow instructions"}
+- [ ] {"task": "Tool scope minimal", "description": "Read-only by default; writes require explicit policy"}
+- [ ] {"task": "Output contract", "description": "Findings include paths, links, severity, and suggested human action"}
+- [ ] {"task": "Review owner", "description": "A maintainer approves merges, bumps, and public issue comments"}
+
+## Core Concepts Explained
+
+### Subagents isolate maintenance attention
+
+Repository maintenance spans unrelated tasks. A docs-drift subagent should not
+also own dependency semver decisions. Separate agents keep context focused and
+reduce contradictory recommendations.
+
+### Read-first maintenance reduces risk
+
+Official subagent guidance applies to maintenance: start with analysis agents that
+list gaps, outdated sections, and candidate upgrades. Apply fixes in a second
+pass after a human picks priorities.
+
+### The main session merges maintenance reports
+
+After parallel subagents finish, the main Claude session deduplicates findings,
+ranks by impact, and produces one maintainer checklist instead of four overlapping
+reports.
+
+### Maintenance is not autonomous merge
+
+Subagents accelerate triage; they do not replace CODEOWNERS, security review, or
+release policy. Treat proposed diffs as drafts until a human merges.
+
+## Step-by-Step Implementation Guide
+
+1. **Inventory recurring maintenance.** Weekly docs drift, monthly dependency
+   reports, README link checks, stale issue grooming, license header audits.
+
+2. **Create one subagent per lane.** Example agents: `docs-drift-scanner`,
+   `dependency-report-triage`, `readme-sync-checker`, `stale-issue-groomer`.
+
+3. **Write strict prompts.** State inputs, ignored paths, evidence requirements,
+   output schema, and explicit stop conditions (no auto-merge).
+
+4. **Scope tools per agent.** Docs agents need read and search; dependency agents
+   may need registry MCP read-only; avoid giving every agent Bash write.
+
+5. **Run parallel analysis.** Invoke multiple maintenance subagents on the same
+   milestone or release branch, then consolidate in the main session.
+
+6. **Human prioritization.** Maintainer selects which fixes become PRs, which
+   issues get labels, and which dependency bumps proceed.
+
+7. **Track in team rituals.** Attach consolidated maintenance output to sprint
+   planning or release checklists so subagent work feeds real decisions.
+
+## Maintenance Subagent Checklist
+
+- [ ] {"task": "Narrow roles", "description": "Each subagent has one maintenance lens"}
+- [ ] {"task": "Evidence paths", "description": "Findings cite files, lines, or issue URLs"}
+- [ ] {"task": "No silent writes", "description": "Commits and label changes stay human-approved"}
+- [ ] {"task": "Cost aware", "description": "Large repos use batched or scoped scans"}
+- [ ] {"task": "Freshness dated", "description": "Reports note scan date and branch or tag"}
+
+## Troubleshooting
+
+### Subagent ignores repository boundaries
+
+Tighten prompts with explicit include/exclude globs and verify the session cwd
+points at the intended repository root.
+
+### Duplicate or conflicting recommendations
+
+Use the main session reconciliation step; merge overlapping docs and dependency
+findings before opening PRs.
+
+### Runaway tool usage on monorepos
+
+Split scans by directory, reduce parallel agents, or schedule maintenance subagents
+off peak hours.
+
+### Subagent not available
+
+Confirm Claude Code version supports subagents, agent files live under
+`.claude/agents/`, and project settings allow agent invocation.
+
+## Source Verification Notes
+
+Verified against official Claude Code sub-agents documentation on **2026-06-16**:
+
+- Subagents are defined as markdown agent files under `.claude/agents/` with
+  dedicated system prompts and optional tool restrictions.
+- The main Claude session orchestrates subagents; outputs return to the parent
+  session for consolidation.
+- Tool access follows project settings and per-agent configuration documented on
+  code.claude.com—not implicit full autonomy.
+- Subagents suit parallel specialist work; maintenance workflows still require
+  human approval for destructive or public actions.
+
+## Duplicate Check
+
+Checked `content/guides`, generated catalog text, and open pull requests for
+Claude Code subagents, repository maintenance, and docs drift workflows.
+`subagents-code-review-triage` covers PR review and issue triage lenses, not
+recurring repository maintenance such as dependency reports and README sync.
+No existing guide targets maintenance-oriented subagent design with read-first
+policies and consolidated maintainer checklists.
+
+## References
+
+- Sub-agents docs - https://code.claude.com/docs/en/sub-agents
+- Settings docs - https://code.claude.com/docs/en/settings
+- Claude Code repository - https://github.com/anthropics/claude-code
