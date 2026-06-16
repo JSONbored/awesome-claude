@@ -3,15 +3,15 @@ title: MCP Registry Metadata Reviewer Agent
 slug: mcp-registry-metadata-reviewer-agent
 category: agents
 description: >-
-  Source-backed agent that reviews MCP registry listings for metadata accuracy:
-  canonical URLs, version alignment, transport claims, auth requirements, duplicate
-  slugs, and documentation reachability before publishing or approving connectors.
+  Community reusable agent prompt for reviewing MCP Registry server.json metadata
+  against official registry rules: reverse-DNS namespaces, package location fields,
+  execution instructions, URL reachability, and duplicate slug detection before publish.
 cardDescription: >-
-  Review MCP registry metadata for accurate URLs, transport, auth, and duplicate listings.
+  Review MCP Registry server.json metadata against official namespace, package, and URL rules.
 seoTitle: MCP Registry Metadata Reviewer Agent
 seoDescription: >-
-  Reusable agent prompt to review MCP registry metadata: canonical URLs, transport and
-  auth claims, version alignment, duplicates, and documentation reachability.
+  Reusable agent prompt to review MCP Registry server.json metadata: reverse-DNS namespaces,
+  package pointers, execution instructions, reachability, and duplicate listings.
 author: kiannidev
 authorProfileUrl: "https://github.com/kiannidev"
 submittedBy: kiannidev
@@ -21,23 +21,24 @@ submittedAt: "2026-06-16"
 sourceSubmissionNumber: 1571
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1571"
 documentationUrl: "https://modelcontextprotocol.io/registry/about"
+repoUrl: "https://github.com/modelcontextprotocol/registry"
 installable: false
 usageSnippet: >-
-  Use this agent before publishing or approving an MCP registry entry to verify metadata,
-  reachable docs, transport/auth claims, and duplicate registry IDs or slugs.
+  Use this agent before publishing MCP Registry server.json metadata to verify reverse-DNS
+  namespace ownership, package location fields, execution instructions, and reachable docs.
 prerequisites:
-  - "Draft or live MCP registry JSON/metadata for the server under review."
-  - "Reachability checks for documentation, repository, and package URLs listed in metadata."
-  - "Published tool manifest or README describing transport and authentication."
-  - "Search results across registry and HeyClaude content for duplicate names or URLs."
+  - "Draft server.json metadata in the MCP Registry format for the server under review."
+  - "Reachability checks for npm, PyPI, Docker, GitHub, or remote URLs referenced in metadata."
+  - "Evidence of namespace ownership via GitHub, DNS, or HTTP challenges when publishing."
+  - "Search results across registry listings and HeyClaude content for duplicate names or URLs."
 safetyNotes:
-  - "Metadata review does not substitute for runtime security testing of MCP tools."
-  - "Parked or redirected documentation domains should fail review even if registry JSON is syntactically valid."
+  - "Registry metadata review does not replace package-registry vulnerability scanning."
+  - "Private-only servers are out of registry scope; flag metadata that points at private registries."
+  - "Parked or redirected documentation domains should fail review even if JSON is syntactically valid."
   - "Affiliate or referral landing pages must not be listed as canonical documentation URLs."
-  - "Version fields should match reachable release tags or package versions when claimed."
 privacyNotes:
   - "Registry drafts may include private repo URLs or staging endpoints—redact in public review notes."
-  - "OAuth client examples can contain placeholder secrets; ensure reports do not echo live tokens."
+  - "Execution instruction examples may show environment variable names tied to internal services."
   - "Vendor metadata may list customer names in example configs; scrub before external sharing."
 tags:
   - mcp
@@ -48,88 +49,109 @@ tags:
   - claude-code
 keywords:
   - mcp registry metadata reviewer
-  - model context protocol registry audit
-  - mcp listing documentation verification
-  - registry duplicate slug review
+  - server.json registry audit
+  - reverse dns namespace mcp registry
   - mcp publisher metadata QA
+  - registry duplicate slug review
 robotsIndex: true
 robotsFollow: true
 ---
 
 ## Content
 
-MCP Registry Metadata Reviewer Agent is a reusable agent prompt for validating MCP
-registry listings before publication or team approval. It checks canonical URLs,
-transport and authentication claims, version alignment, duplicate detection, and
-documentation reachability against primary sources.
+MCP Registry Metadata Reviewer Agent is a community-authored reusable prompt for
+validating MCP Registry listings before publication. It applies the official registry
+about documentation: server.json fields, reverse-DNS namespace authentication,
+public installation requirements, and metadata validation rules—not an official
+Anthropic or MCP Registry productized agent.
 
-Use it when publishing a new registry server, reviewing third-party listings, or
-auditing connector catalogs for stale metadata.
+Use it when publishing a new registry server, reviewing community metadata pull
+requests, or auditing connector catalogs mirrored from registry API exports.
+
+## Scope Note
+
+This is not an official MCP Registry reviewer service. It is a reusable agent prompt
+that maps each review step to documented registry metadata requirements on
+modelcontextprotocol.io.
 
 ## Agent Prompt
 
-You are an MCP registry metadata reviewer. Determine whether a registry entry is
-accurate, verifiable, and non-duplicative before users connect it in Claude Code.
-Use MCP registry about pages and Claude Code MCP docs as references.
+You are an MCP Registry metadata reviewer. Determine whether server.json metadata is
+accurate, publicly verifiable, and non-duplicative before downstream clients consume it.
+Use the MCP Registry about documentation as the primary evidence source.
 
 Review workflow:
 
-1. **Identity.** Confirm registry name, slug, publisher, and semantic version fields.
-2. **Canonical URLs.** Verify documentation, repository, homepage, and download URLs
-   return HTTP 200 and match the described product.
-3. **Transport claims.** Ensure listed transports (stdio, SSE, streamable HTTP) match README or package manifests.
-4. **Auth claims.** Validate documented OAuth, API key, or mTLS requirements against setup guides.
-5. **Tool summary.** Check that described tool categories align with published schemas.
-6. **Duplicates.** Search registry and content catalogs for same repo, domain, or purpose.
-7. **Decision.** Approve metadata, request fixes, or reject with explicit required changes.
+1. **Namespace identity.** Confirm the server name uses reverse-DNS format such as
+   io.github.user/server and that namespace ownership is verifiable via GitHub, DNS,
+   or HTTP challenges as documented.
+2. **server.json completeness.** Verify required discovery fields: unique name, package
+   or remote location, execution instructions (args, env vars), and capability summary.
+3. **Package pointers.** Ensure npm, PyPI, Docker, or remote URL references resolve to
+   publicly available artifacts matching the described version.
+4. **Public accessibility.** Reject private-only installation paths; the registry does
+   not support private servers or private package registries per official scope rules.
+5. **Field validation.** Check character limits and regex validation constraints on
+   free-form fields to prevent spam or malformed metadata.
+6. **Security scope.** Note that registry delegates code scanning to package registries
+   and aggregators; metadata review does not certify tool safety.
+7. **Duplicates.** Search registry exports and content catalogs for conflicting names,
+   repos, or domains.
+8. **Decision.** Approve metadata, request fixes, or reject with explicit required changes.
 
 Output contract:
 
-- Metadata field checklist with pass/fail per URL and claim.
+- server.json field checklist with pass/fail per documented requirement.
+- Namespace authentication evidence summary.
 - Duplicate findings with conflicting registry IDs or slugs.
 - Required fixes ranked by severity.
 - Approve / revise / reject recommendation for publishers or maintainers.
 
 ## Features
 
-- Validates registry JSON against reachable primary documentation.
-- Flags transport and authentication mismatches early.
-- Detects duplicate listings before users connect the wrong server.
-- Produces maintainer-ready review summaries.
+- Applies documented server.json and namespace rules from the MCP Registry about page.
+- Validates public package or remote location pointers before publish.
+- Flags private-server scope violations described in registry documentation.
+- Produces maintainer-ready review summaries for publishers and aggregators.
 
 ## Use Cases
 
-- Publisher QA before submitting ai.vendor/server to the MCP registry.
-- Maintainer review of community-submitted registry pull requests.
-- Periodic audit of internal connector catalogs mirrored from registry metadata.
-- Pre-flight check before adding registry URLs to enterprise allowlists.
+- Publisher QA before submitting io.github.user/server to the MCP Registry preview API.
+- Maintainer review of community-submitted registry metadata changes.
+- Periodic audit of internal connector catalogs synced from registry REST exports.
+- Pre-flight check before marketplace teams ingest new registry rows.
 
 ## Source Notes
 
-Verified against MCP registry about documentation and Claude Code MCP docs on
-**2026-06-16**:
+Verified against MCP Registry about documentation on **2026-06-16**:
 
-- The MCP registry publishes server metadata consumed by clients and marketplaces.
-- Registry about documentation describes publishing requirements and verification expectations.
-- Claude Code consumes MCP server configs separately from registry display metadata.
-- Accurate auth and transport fields reduce misconfigured remote connectors.
+- The MCP Registry hosts standardized server.json metadata pointing to npm, PyPI,
+  Docker, or remote URLs rather than hosting packages itself.
+- Server names use reverse-DNS namespace authentication tied to verified GitHub accounts
+  or domains so only legitimate owners publish under a namespace.
+- The registry supports publicly accessible installation methods or remote servers;
+  private-only servers and private package registries are explicitly out of scope.
+- Free-form metadata fields enforce character limits and regex validation as spam
+  prevention; maintainers can manually remove malicious listings.
+- Security scanning of server code is delegated to underlying package registries and
+  downstream aggregators; the registry focuses on namespace auth and metadata hosting.
 
 ## Duplicate Check
 
 Checked content/agents, content/mcp, and open PRs for registry metadata review agents.
-mcp-remote-server-security-auditor-agent focuses on connector security, not publishing
-metadata QA. No existing agents entry provides registry metadata verification with
-duplicate slug detection and publisher fix lists.
+mcp-server-threat-modeling-agent covers pre-connect security risk, not server.json
+publisher QA. agent-skills-retrieval-source-verification-capability-pack covers HeyClaude
+submissions, not MCP Registry namespace rules. No existing agents entry applies documented
+server.json and reverse-DNS namespace requirements with a publisher review output contract.
 
 ## Editorial Disclosure
 
-Submitted as an independent source-backed community agent entry by kiannidev, based
-on public MCP registry and Claude Code documentation. No paid placement, referral,
-or affiliate relationship.
+Submitted as an independent community agent entry by kiannidev, based on public MCP
+Registry about documentation and the public modelcontextprotocol/registry repository.
+No paid placement, referral, or affiliate relationship.
 
 ## Sources
 
 - MCP Registry about - https://modelcontextprotocol.io/registry/about
+- MCP Registry repository - https://github.com/modelcontextprotocol/registry
 - Claude Code MCP - https://code.claude.com/docs/en/mcp
-- Claude Code features overview - https://code.claude.com/docs/en/features-overview
-- Claude Code skills - https://code.claude.com/docs/en/skills
