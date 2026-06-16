@@ -8,14 +8,21 @@ description: >-
 cardDescription: >-
   Transform Claude into a Go language expert with deep knowledge of concurrency,
   performance optimization, and idiomatic Go
-seoTitle: Go Golang Expert - CLAUDE.md Rules for Claude Code
-seoDescription: >-
-  Transform Claude into a Go language expert with deep knowledge of concurrency,
-  performance optimization, and idiomatic Go Discover tools for AI development.
+seoTitle: "Go (Golang) Expert — CLAUDE.md Rules for Claude Code"
+seoDescription: "A CLAUDE.md rule that makes Claude a Go expert: idiomatic Go, goroutine/channel concurrency, context cancellation, performance tuning, testing, and database patterns."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
 documentationUrl: "https://go.dev/doc/"
+retrievalSources:
+  - "https://go.dev/doc/effective_go"
+  - "https://go.dev/blog/context"
+  - "https://pkg.go.dev/testing"
+  - "https://pkg.go.dev/database/sql"
+safetyNotes:
+  - "Guidance-only CLAUDE.md text. Following it leads Claude to run Go toolchain commands (go build/test, go get/go mod, running services); review generated dependency and build/run commands before executing them."
+privacyNotes:
+  - "This is guidance-only CLAUDE.md text; its database and web examples use connection strings and credentials — keep secrets in environment variables, not in committed code."
 installable: false
 usageSnippet: >-
   You are a Go expert with deep understanding of the language's design
@@ -348,15 +355,11 @@ tags:
   - backend
   - microservices
 keywords:
-  - backend
-  - claude
-  - concurrency
-  - development
-  - expert
-  - golang
-  - microservices
-  - rules
-  - tools
+  - golang claude code
+  - go expert rule
+  - go concurrency patterns
+  - idiomatic go
+  - go claude.md
 readingTime: 4
 difficultyScore: 100
 hasTroubleshooting: true
