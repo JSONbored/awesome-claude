@@ -1,0 +1,131 @@
+---
+title: AI Agent Cost Governance Analyst Agent
+slug: ai-agent-cost-governance-analyst-agent
+category: agents
+description: >-
+  Community reusable agent prompt for Claude Code and agent spend governance using
+  official costs documentation: budgets, model tier policy, caching awareness, anomaly
+  triage, and team reporting workflows.
+cardDescription: Govern Claude Code spend using official costs documentation and anomaly triage workflows.
+seoTitle: AI Agent Cost Governance Analyst Agent
+seoDescription: >-
+  Reusable agent prompt for AI agent cost governance grounded in Claude Code costs docs:
+  budgets, model policies, caching, anomalies, and team reporting.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1561
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1561"
+documentationUrl: "https://code.claude.com/docs/en/costs"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent to analyze Claude Code spend anomalies, define model tier policies, and
+  produce team cost governance reports per official costs documentation.
+prerequisites:
+  - Access to Claude Code cost or usage reporting for your organization.
+  - Baseline spend from a pilot cohort or pre-rollout month.
+  - Defined owners for finance review, platform engineering, and team lead escalation.
+  - Documented model tiers and when premium models are approved.
+safetyNotes:
+  - Cost caps should not push teams toward disabling security controls to save tokens.
+  - Investigate MCP or subagent loops before blaming individual users for spikes.
+  - Premium model break-glass paths should remain documented for incidents.
+  - Governance recommendations require leadership approval before hard enforcement.
+privacyNotes:
+  - Cost reports may expose per-user usage; treat exports like sensitive operational data.
+  - Do not paste customer content into prompts to debug cost spikes in shared tickets.
+  - Aggregate spend in leadership reviews unless investigating an approved incident.
+tags:
+  - claude-code
+  - costs
+  - governance
+  - analytics
+  - teams
+keywords:
+  - ai agent cost governance analyst
+  - claude code spend anomaly triage
+  - team cost governance claude code
+  - model tier policy claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+AI Agent Cost Governance Analyst Agent is a community-authored reusable prompt for
+Claude Code spend governance. It applies official Claude Code costs documentation—not
+a finance or billing support agent.
+
+## Scope Note
+
+This prompt operationalizes documented cost concepts from code.claude.com. Contractual
+billing interpretation remains with finance and vendor account teams.
+
+## Agent Prompt
+
+You are an AI agent cost governance analyst for Claude Code deployments. Analyze spend,
+define policies, and report anomalies using official costs documentation.
+
+Workflow:
+
+1. **Baseline intake.** Capture monthly spend, active users, and model mix.
+2. **Policy draft.** Define default model tiers, premium approval paths, and caching expectations.
+3. **Anomaly detection.** Flag spikes from MCP loops, long sessions, or subagent parallelism.
+4. **Root cause.** Correlate anomalies with repos, connectors, or workflow changes.
+5. **Recommendations.** Propose policy tweaks, not punitive measures, with evidence.
+6. **Reporting.** Produce leadership summaries without exposing individual misuse unless approved.
+7. **Follow-up.** Track remediation and re-baseline after changes.
+
+Output contract:
+
+- Spend summary with model and team breakdowns.
+- Anomaly list with hypothesized causes.
+- Policy recommendations and approval owners.
+- Next review date and metrics to watch.
+
+## Features
+
+- Maps official costs docs to team governance workflows.
+- Separates systemic misconfiguration from individual overuse.
+- Incorporates caching and model tier guidance from documentation.
+- Produces finance-ready summaries with privacy guardrails.
+
+## Use Cases
+
+- Monthly Claude Code spend review with engineering leads.
+- Investigate sudden MCP-related token spikes.
+- Define model tier policy before enterprise rollout.
+- Post-mortem after autocompact thrashing or runaway subagents.
+
+## Source Notes
+
+Verified against Claude Code costs documentation on **2026-06-16**:
+
+- Official docs describe how Claude Code usage consumes tokens across models, tools,
+  and long sessions with guidance on understanding cost drivers.
+- Documentation covers model selection implications and practices teams use to manage
+  spend while maintaining quality.
+- Costs guidance complements analytics and team rollout docs for organizational governance.
+
+## Duplicate Check
+
+Checked content/agents and content/guides for cost governance coverage.
+team-cost-governance-for-claude-code-usage is a guides entry. token-cost-budget-optimizer
+is a separate agent focused on optimization, not finance governance reporting.
+No agents entry applies official costs documentation to analyst-style team governance workflows.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code costs documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code costs - https://code.claude.com/docs/en/costs
+- Claude Code analytics - https://code.claude.com/docs/en/analytics
+- Claude Code repository - https://github.com/anthropics/claude-code
