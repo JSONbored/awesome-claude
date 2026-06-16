@@ -1,0 +1,134 @@
+---
+title: Context Compaction Recovery Agent
+slug: context-compaction-recovery-agent
+category: agents
+description: >-
+  Community reusable agent prompt for recovering Claude Code sessions after auto-compaction
+  or context thrashing using official context-window docs: rebuild goals from git, validate
+  tasks, and block destructive edits after memory loss.
+cardDescription: >-
+  Recover Claude Code sessions after compaction using official context-window documentation.
+seoTitle: Context Compaction Recovery Agent
+seoDescription: >-
+  Reusable agent prompt to recover Claude Code sessions after auto-compaction grounded in
+  official context-window docs: git state rebuild, task validation, and safety gates.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1575
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1575"
+documentationUrl: "https://code.claude.com/docs/en/context-window"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent after compaction or thrashing warnings to reconstruct session goals from git
+  state, re-validate open tasks, and block risky edits until context is realigned per official docs.
+prerequisites:
+  - "Git status, recent commits, and branch name for the active Claude Code session."
+  - "Any CLAUDE.md, todo lists, or issue links referenced before compaction."
+  - "Awareness of whether auto-compaction removed tool outputs or plan details."
+  - "Human owner who can confirm recovered goals before merge or deploy actions."
+safetyNotes:
+  - "Post-compaction agents may hallucinate prior plans—require git-backed evidence."
+  - "Do not run destructive git or deploy commands until recovery checklist passes."
+  - "Compaction thrashing indicates oversized inputs; fix root cause before continuing."
+  - "Recovery prompts should not re-paste secrets removed during hygiene passes."
+privacyNotes:
+  - "Reconstructed summaries may repeat proprietary code snippets from diffs."
+  - "Issue titles and customer names in recovered todos should stay in private trackers."
+  - "Session exports used for recovery should not be posted publicly verbatim."
+tags:
+  - claude-code
+  - compaction
+  - context-window
+  - recovery
+  - session-management
+keywords:
+  - context compaction recovery agent
+  - claude code autocompact thrashing
+  - rebuild session after compaction
+  - context window recovery workflow
+  - post compaction safety checklist
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Context Compaction Recovery Agent is a community-authored reusable prompt for stabilizing
+Claude Code work after auto-compaction events. It applies official context-window
+documentation—not an official Anthropic support agent.
+
+## Scope Note
+
+This prompt operationalizes documented auto-compaction and context limit behavior from
+code.claude.com. It supplements but does not replace team runbooks for long sessions.
+
+## Agent Prompt
+
+You are a context compaction recovery specialist for Claude Code. Assume conversational
+memory may be incomplete. Re-anchor work using git, docs, and explicit human confirmation
+aligned with official context-window guidance.
+
+Workflow:
+
+1. **Detect compaction impact.** Note autocompact messages, thrashing errors, or missing plan details described in troubleshooting guidance.
+2. **Ground in git.** Read status, diff, recent commits, and branch ownership.
+3. **Recover goals.** Extract intended outcomes from CLAUDE.md, issues, PR descriptions, or todos.
+4. **Validate tasks.** Mark completed vs unknown steps; ask humans to confirm ambiguous items.
+5. **Shrink context.** Recommend clearing oversized tool outputs and splitting work across sessions or worktrees per context hygiene practices.
+6. **Safety gate.** Block merge, deploy, or mass refactor until recovery checklist is green.
+7. **Resume plan.** Produce a concise forward plan with explicit next commands.
+
+Output contract:
+
+- Recovered goal statement with evidence links (files, commits, issues).
+- Task checklist with confirmed vs uncertain items.
+- Root-cause notes for thrashing (large files, MCP dumps, etc.).
+- Safe continuation plan.
+
+## Features
+
+- Git-backed recovery instead of trusting truncated chat memory.
+- Thrashing-aware guidance aligned with official context window documentation.
+- Explicit safety gates before destructive post-compaction actions.
+- Compatible with worktree and parallel session ownership rules.
+
+## Use Cases
+
+- Recover after autocompact thrashing errors mid-refactor.
+- Resume a long feature branch session after overnight compaction.
+- Hand off a compacted session to another developer with verified state.
+- Document compaction incidents for team cost and context hygiene reviews.
+
+## Source Notes
+
+Verified against Claude Code context-window documentation on **2026-06-16**:
+
+- Official docs describe context window limits, automatic compaction behavior, and how
+  long sessions manage conversation history.
+- Documentation and troubleshooting guides explain thrashing stop conditions when compaction
+  immediately refills the window from oversized tool output.
+- Memory and context hygiene practices documented alongside context-window limits inform
+  recovery steps that reduce repeated compaction loops.
+
+## Duplicate Check
+
+Checked content/agents and content/guides for compaction recovery workflows.
+context-window-optimizer-agent focuses on proactive optimization; compaction-and-memory-hygiene-for-long-claude-sessions
+is a guides entry. No agents entry provides post-compaction git-backed recovery with safety gating.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code context-window documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code context window - https://code.claude.com/docs/en/context-window
+- Claude Code memory - https://code.claude.com/docs/en/memory
+- Claude Code repository - https://github.com/anthropics/claude-code
