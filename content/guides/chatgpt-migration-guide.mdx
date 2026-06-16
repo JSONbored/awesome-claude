@@ -1,40 +1,56 @@
 ---
-title: ChatGPT to Claude Migration
+title: Coming to Claude Code from ChatGPT
 slug: chatgpt-migration-guide
 category: guides
 description: >-
-  Switch from ChatGPT to Claude in 30 minutes. Complete migration tutorial
-  covering API transitions, prompt engineering, and workflow optimization
-  strategies.
-cardDescription: Switch from ChatGPT to Claude in 30 minutes.
-seoTitle: ChatGPT to Claude Migration
+  A practical onboarding guide for developers moving to Claude Code as a coding
+  tool. Install it, run your first session, and map everyday coding tasks to
+  Claude Code commands and prompt recipes.
+cardDescription: Get productive with Claude Code if you're coming from ChatGPT.
+seoTitle: Coming to Claude Code from ChatGPT
 seoDescription: >-
-  Switch from ChatGPT to Claude in 30 minutes. Complete migration tutorial
-  covering API transitions, prompt engineering, and workflow optimization
-  strategies.
+  Move to Claude Code as your coding tool. Install it, run your first session,
+  and map common coding tasks to documented Claude Code commands and prompts.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/quickstart"
+retrievalSources:
+  - "https://code.claude.com/docs/en/quickstart"
+  - "https://code.claude.com/docs/en/common-workflows"
+  - "https://code.claude.com/docs/en/overview"
 installable: false
 usageSnippet: >-
-  This tutorial teaches you to migrate from ChatGPT to Claude in 30 minutes.
-  You'll learn API parameter mapping, XML prompt engineering, and cost
-  optimization strategies. Perfect for developers who want to leverage Claude's
-  superior performance and large context window.
+  A hands-on onboarding guide for developers adopting Claude Code as an agentic
+  coding tool. Covers installation, your first session, and a reference table
+  mapping common coding tasks to Claude Code commands and prompt recipes.
+safetyNotes:
+  - >-
+    Claude Code edits files and runs commands in your project. It asks for
+    permission before modifying files, but review proposed changes before
+    approving.
+  - >-
+    Be cautious with "Accept all" mode and non-interactive (`-p`) runs in
+    scripts or CI, which skip the per-change approval prompt.
+privacyNotes:
+  - >-
+    Claude Code reads your project files to build context and stores
+    conversation history locally so sessions can be resumed.
+  - "Authentication credentials are stored on your system after login."
 tags:
   - tutorial
-  - intermediate
-  - migration
-  - api
+  - beginner
+  - onboarding
+  - cli
 keywords:
-  - chatgpt to claude
-  - claude migration
-  - ai assistant migration
-  - prompt migration
-readingTime: 3
-difficultyScore: 64
+  - chatgpt to claude code
+  - claude code for beginners
+  - claude code onboarding
+  - claude code commands
+readingTime: 6
+difficultyScore: 40
 hasTroubleshooting: true
-hasPrerequisites: false
+hasPrerequisites: true
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
@@ -42,99 +58,154 @@ robotsFollow: true
 
 ## TL;DR
 
-This tutorial teaches you to migrate from ChatGPT to Claude in 30 minutes. You'll learn API parameter mapping, XML prompt engineering, and cost optimization strategies. Perfect for developers who want to leverage Claude's superior performance and large context window.
+If you've been using a chat assistant in a browser tab and copy-pasting code back and forth, Claude Code is a different shape of tool: it runs in your terminal (or IDE, desktop app, and browser), reads your whole codebase, edits files, and runs commands for you. This guide gets you from zero to a working first session and gives you a lookup table for everyday tasks.
 
-**Key Points:**
+**Key points:**
 
-- API migration with complete parameter mapping - 15 minutes setup
-- XML prompt engineering for improved quality - structured approach
-- Hybrid workflow strategy for enhanced productivity
-- 30 minutes total with 5 hands-on exercises
+- Claude Code is an agentic coding tool that works directly in your project, not a copy-paste chat window.
+- Install it, run `claude`, log in, and let it read your codebase, no manual context-pasting required.
+- It always asks permission before editing files, and saves conversations locally so you can resume them.
+- The mental shift from chat: describe the outcome in plain language and let Claude find files, make edits, and run tests.
 
-Master the migration from ChatGPT to Claude in this comprehensive tutorial. By completion, you'll have working API migration code and optimized prompts. This guide includes 5 practical examples, 10 code samples, and 3 real-world applications.
-
-> **Tutorial Requirements**
+> **Before you begin**
 >
-> **Prerequisites:** Basic API knowledge, OpenAI experience  
-> **Time Required:** 30 minutes active work  
-> **Tools Needed:** Anthropic API key, Python/JavaScript  
-> **Outcome:** Working migration system with optimized prompts
+> **Prerequisites:** A terminal, a code project to work in, and a Claude subscription (Pro, Max, Team, or Enterprise), a Claude Console account, or access through a supported cloud provider.
+> **Time required:** About 15 minutes for first session.
+> **Outcome:** Claude Code installed, authenticated, and making its first reviewed code change.
 
-## What You'll Learn
+## What changes when you move from a chat tab
 
-<!-- Section type: feature_grid -->
+A browser chat assistant works on text you paste in and gives text back. Claude Code, per its [overview docs](https://code.claude.com/docs/en/overview), is an agentic coding tool that "reads your codebase, edits files, runs commands, and integrates with your development tools." Three practical differences matter on day one:
 
-## Step-by-Step Tutorial
+- **No manual context-pasting.** Claude Code reads your project files as needed. You don't have to paste files or describe your folder layout, just ask your question in the project directory.
+- **It acts, with your approval.** Instead of returning a snippet for you to apply, Claude Code finds the right file, shows the proposed change, and asks before writing it.
+- **Sessions persist.** Conversations are saved locally, so a task can span multiple sittings. You resume instead of re-explaining.
 
-1. **Step 1: Setup and Authentication**
+It also runs in more places than a terminal: the same engine backs the [VS Code and JetBrains](https://code.claude.com/docs/en/overview) extensions, a desktop app, and the web at claude.ai/code. Your `CLAUDE.md`, settings, and MCP servers carry across all of them.
 
-2. **Step 2: Build Migration Adapter**
+## Step 1: Install and start your first session
 
-3. **Step 3: Transform Prompts to XML**
+Pick an install method that does not pipe a remote script into your shell. The Quickstart documents Homebrew (macOS) and WinGet (Windows), plus Linux package managers:
 
-4. **Step 4: Optimize Performance and Costs**
+```bash
+# macOS (Homebrew). 'claude-code' tracks the stable channel.
+brew install --cask claude-code
 
-## Key Concepts Explained
+# Windows (WinGet, run in PowerShell)
+winget install Anthropic.ClaudeCode
 
-Understanding these concepts ensures you can adapt this tutorial to your specific needs and troubleshoot issues effectively.
+# Linux: install via apt, dnf, or apk
+# See https://code.claude.com/docs/en/setup#install-with-linux-package-managers
+```
 
-<!-- Section type: accordion -->
+Then start a session inside any project and log in when prompted:
 
-## Practical Examples
+```bash
+cd /path/to/your/project
+claude
+```
 
-<!-- Section type: tabs -->
+On first run you'll be prompted to log in (the browser flow for a subscription or Console account). After that your credentials are stored and you won't log in again. Inside the session, type `/help` to list commands or `/login` to switch accounts.
 
-## Troubleshooting Guide
+> **Note on updates:** Homebrew and WinGet installs do not auto-update. Run `brew upgrade claude-code` or `winget upgrade Anthropic.ClaudeCode` periodically for the latest features and security fixes.
 
-> **Common Issues and Solutions**
+## Step 2: Let Claude read the codebase, then make a change
+
+The fastest way to feel the difference from a chat tab is to ask Claude to explain your project, then have it make a real edit. These prompts are straight from the Quickstart and Common Workflows recipes:
+
+```text
+# Understand the project (Claude reads files itself)
+give me an overview of this codebase
+what technologies does this project use?
+explain the main architecture patterns used here
+
+# Make a reviewed change
+add a hello world function to the main file
+
+# Use Git conversationally
+what files have I changed?
+commit my changes with a descriptive message
+create a new branch called feature/quickstart
+```
+
+When you ask for a change, Claude Code finds the file, shows the proposed edit, and asks for approval before writing. Press `Shift+Tab` to cycle permission modes, including a plan mode that proposes changes without touching disk until you approve.
+
+If you want to seed persistent project instructions, ask Claude about setting up a `CLAUDE.md` file (a markdown file in your project root that Claude reads at the start of every session) to record coding standards and architecture decisions.
+
+## Common tasks mapped to Claude Code
+
+If your instinct from a chat tool is to paste code and ask "how do I do X," here is the Claude Code equivalent. All prompt patterns below are documented in the [Common Workflows](https://code.claude.com/docs/en/common-workflows) and [Quickstart](https://code.claude.com/docs/en/quickstart) guides.
+
+| What you want to do | Claude Code workflow |
+| --- | --- |
+| Understand an unfamiliar codebase | `cd` into the project, run `claude`, ask `give me an overview of this codebase` |
+| Find where a feature lives | `find the files that handle user authentication` |
+| Fix a bug from an error | `I'm seeing an error when I run npm test`, then ask for and apply a fix |
+| Refactor legacy code | `refactor utils.js to use modern JavaScript features while maintaining the same behavior` |
+| Add tests | `add tests for the notification service`, then `run the new tests and fix any failures` |
+| Review your own changes | `review my changes and suggest improvements` |
+| Create a pull request | `create a pr for my changes` |
+| Update docs | `add JSDoc comments to the undocumented functions in auth.js` |
+| Include a specific file in context | `Explain the logic in @src/utils/auth.js` (use `@` to reference files/dirs) |
+| Work from a screenshot or mockup | Drag/drop or paste an image, then `Generate CSS to match this design mockup` |
+| Run a one-off query without a session | `claude -p "explain this function"` |
+| Continue your last conversation | `claude --continue` (or `/resume` inside a session) |
+| Pick from past conversations | `claude --resume` (shell) |
+| Review changes before any edits | `claude --permission-mode plan`, or press `Shift+Tab` mid-session |
+| Pipe shell output into Claude | `git log --oneline -20 \| claude -p "summarize these recent commits"` |
+
+### Essential commands cheat sheet
+
+```text
+# Shell commands (run from your terminal)
+claude               # Start interactive mode
+claude "task"        # Run a one-time task
+claude -p "query"    # Run one-off query, then exit
+claude -c            # Continue most recent conversation here
+claude -r            # Resume a previous conversation
+
+# Session commands (run inside Claude Code)
+/clear               # Clear conversation history
+/help                # Show available commands
+/exit                # Exit Claude Code (or Ctrl+D)
+```
+
+## Prompting habits that transfer (and ones to drop)
+
+The general "be specific" habit from chat tools carries over, the Quickstart's pro tips reinforce it: "fix the login bug where users see a blank screen after entering wrong credentials" beats "fix the bug." A few Claude-Code-specific habits:
+
+- **Let Claude explore before editing.** Ask `analyze the database schema` first; you don't need to hand it the file.
+- **Break big tasks into numbered steps** in a single message; Claude works through them in order.
+- **Use `@` references** instead of pasting file contents, it pulls in the file (and nearby `CLAUDE.md` context) directly.
+- **Drop the "here's my code" preamble.** In the project directory, Claude already has access; describe the goal instead.
+- **Type `/`** to see all available commands and skills, and use Tab for completion and `↑` for history.
+
+## Troubleshooting
+
+> **Common first-run issues**
 >
-> **Issue 1: ANTHROPIC_API_KEY not found error**  
-> **Solution:** Set environment variable correctly - This fixes authentication failures and prevents API errors.
+> **Login or authentication problems:** Make sure you have a Claude subscription, Console account, or supported cloud-provider access. Re-run `/login` inside a session to re-authenticate; credentials are stored after a successful login.
 >
-> **Issue 2: Token count mismatch**
-> **Solution:** Account for tokenizer differences between models.
+> **`claude: command not found` after install:** Open a new terminal so your PATH refreshes, then run `claude` again. If you installed via Homebrew or WinGet, confirm the install completed without errors.
 >
-> **Issue 3: Rate limit errors (50 RPM limit)**  
-> **Solution:** Implement exponential backoff - Works with Tier 1 limits and maintains reliability.
-
-## Advanced Techniques
-
-> **Professional Tips**
+> **"No conversation found to continue":** `claude --continue` only resumes a session that exists in the current directory. Use `claude --resume` to pick from a list, or start a fresh session with `claude`.
 >
-> **Performance Optimization:** Prompt caching significantly reduces token costs while maintaining response quality.
+> **Claude won't edit a file:** By design it asks before modifying files. Approve the proposed change, or switch out of plan mode with `Shift+Tab` if you're in a review-only mode.
 >
-> **Security Best Practice:** Always use environment variables for API keys to prevent credential exposure.
->
-> **Scalability Pattern:** For enterprise deployments, use workspace separation which handles 100,000+ requests while preserving isolation.
+> **On an outdated version:** Homebrew and WinGet installs don't auto-update. Run `brew upgrade claude-code` or `winget upgrade Anthropic.ClaudeCode`.
 
-## Validation and Testing
+## Working safely from day one
 
-<!-- Section type: feature_grid -->
+- **Review before approving.** Claude Code asks permission before modifying files. Read the diff it shows before saying yes, especially for wide-reaching refactors.
+- **Be deliberate with automation.** "Accept all" mode and non-interactive `claude -p` runs in scripts or CI skip the per-change prompt, useful, but reserve them for steps you trust.
+- **Know what it reads and stores.** Claude Code reads project files to build context and saves conversation history locally so you can resume sessions. Treat a project directory you point it at as in-scope.
 
-## Next Steps and Learning Path
+## Next steps
 
-## Quick Reference
+Once your first session works, go deeper with the official guides:
 
-**Note:** The original guide contains a `<UnifiedContentBlock variant="quick-reference">` component which is not in the standard component mapping. This has been converted to a feature_grid for compatibility.
+- [Best practices](https://code.claude.com/docs/en/common-workflows) and [common workflows](https://code.claude.com/docs/en/common-workflows) for everyday patterns.
+- The [overview](https://code.claude.com/docs/en/overview) for using Claude Code across VS Code, JetBrains, desktop, and web with shared settings.
+- Ask Claude itself: it has access to its own docs, so try `what are the limitations of Claude Code?` or `how do I use MCP with Claude Code?`
 
-<!-- Section type: feature_grid -->
-
-## Related Learning Resources
-
-<!-- Section type: related_content -->
-
----
-
-> **Tutorial Complete!**
->
-> **Congratulations!** You've mastered ChatGPT to Claude migration and can now leverage both platforms strategically.
->
-> **What you achieved:**
->
-> - ✅ Built working API migration adapter
-> - ✅ Transformed prompts using XML structure
-> - ✅ Implemented cost optimization with caching
->
-> **Ready for more?** Explore our [tutorials collection](/guides/tutorials) or join our [community](/community) to share your implementation and get help with advanced use cases.
-
-_Last updated: September 2025 | Found this helpful? Share it with your team and explore more [Claude tutorials](/guides/tutorials)._
+Explore more in the [guides collection](/guides).
