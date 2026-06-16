@@ -103,6 +103,36 @@ instead of guessing which window needs attention.
 Official desktop documentation covers installation, updates, and session basics
 teams should standardize before scaling parallel usage.
 
+## CLI vs Desktop for Parallel Work
+
+These rows compare how each surface handles the mechanics that matter when you
+run several sessions at once, drawn from the desktop docs feature comparison.
+
+| Capability | CLI | Desktop |
+| --- | --- | --- |
+| Session isolation | `--worktree` flag | Automatic worktrees |
+| Multiple sessions | Separate terminals | Sidebar tabs |
+| Recurring tasks | Cron jobs, CI pipelines | Scheduled tasks |
+| Dispatch integration | Not available | Dispatch sessions in the sidebar |
+| Scripting and automation | `--print`, Agent SDK | Not available |
+
+By default each Desktop session gets its own isolated Git worktree under
+`<project-root>/.claude/worktrees/`, so edits in one session do not touch another
+until you commit. Use `Ctrl+Tab` / `Ctrl+Shift+Tab` to cycle sessions, and hold
+`Cmd` (macOS) or `Ctrl` (Windows) while clicking a sidebar session to view two
+side by side.
+
+## Recovering a Cloud Session Branch Locally
+
+When you hand a session off to the cloud (or resume a Dispatch session), the
+branch it created may not exist on your machine yet. Copy the branch name from
+the session toolbar, then fetch and check it out:
+
+```bash
+git fetch origin <branch-name>
+git checkout <branch-name>
+```
+
 ## Step-by-Step Implementation Guide
 
 1. **Install and update Desktop.** Follow the desktop quickstart for your OS and
