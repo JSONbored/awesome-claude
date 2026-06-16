@@ -2,23 +2,20 @@
 title: Five Hour Window Tracker - Statuslines
 slug: five-hour-window-tracker
 category: statuslines
-description: >-
-  Claude Code 5-hour rolling session window tracker with visual progress bar,
-  time remaining countdown, and expiry warnings for usage management.
-cardDescription: >-
-  Claude Code 5-hour rolling session window tracker with visual progress bar,
-  time remaining countdown, and expiry warnings for usage manag...
-seoTitle: Five Hour Window Tracker - Statuslines
-seoDescription: >-
-  Claude Code 5-hour rolling session window tracker with visual progress bar,
-  time remaining countdown, and expiry warnings for usage management. Discover
-  tool...
+description: "A Claude Code statusline script (bash) that reads cost.total_duration_ms from the statusline JSON on stdin via jq, converts it to elapsed minutes, and renders a 20-character progress bar, a percent-used figure, and a countdown against a 300-minute (5-hour) ceiling, with green/yellow/red ANSI color coding at the 50% and 80% thresholds."
+cardDescription: "Bash statusline that turns Claude Code's session total_duration_ms into a colored 20-char bar and countdown toward a 300-minute mark."
+seoTitle: "Claude Code Session Duration Statusline Bar (bash + jq)"
+seoDescription: "Bash statusline reads Claude Code's total_duration_ms via jq, drawing a 20-char progress bar, percent used, and countdown with color thresholds at 50% and 80%."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
 documentationUrl: "https://code.claude.com/docs/en/statusline"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+  - "https://jqlang.org/manual/"
+  - "https://manpages.ubuntu.com/manpages/jammy/man1/bash.1.html"
 installable: true
-usageSnippet: "✓ 5H Window: ████████████░░░░░░░░ 60% | 2h 0m left"
+usageSnippet: "echo '{\"cost\":{\"total_duration_ms\":10800000}}' | ./five-hour-window-tracker.sh  # ✓ 5H Window: ████████████░░░░░░░░ 60% | 2h 0m left"
 copySnippet: |-
   {
     "statusLine": {
@@ -145,6 +142,13 @@ prerequisites:
     Terminal with Unicode block character support (for █ and ░ progress bar
     characters, or use ASCII alternatives)
   - System clock accuracy (for accurate time remaining calculations)
+safetyNotes:
+  - "The installation example runs package-manager commands with elevated privileges (brew install jq, sudo apt-get/yum install jq) and writes an executable script plus statusLine config into .claude/. Review it before running."
+  - "The installation example overwrites the statusLine key in .claude/settings.json (via a jq rewrite and mv), which replaces any existing statusline configuration."
+  - "The statusline command executes on every refresh (refreshInterval 1000ms) and shells out to jq and seq each time."
+privacyNotes:
+  - "The enhanced example writes per-session timestamp files keyed by session_id into ~/.claude-code-windows on local disk; these persist until manually deleted."
+  - "The script parses the statusline JSON Claude Code passes on stdin (session_id, cost.total_duration_ms); it stays local and makes no network calls."
 tags:
   - 5-hour-window
   - session-tracking
@@ -176,22 +180,22 @@ robotsFollow: true
 
 ## Features
 
-- Claude Code specific 5-hour rolling window tracking (300 minutes)
+- Tracks the current session's elapsed wall-clock duration from cost.total_duration_ms against a 300-minute (5-hour) ceiling
 - Visual progress bar showing window consumption (20-char bar, each █ = 5%)
 - Time remaining countdown in hours/minutes format
 - Color-coded status alerts (green <50%, yellow 50-80%, red >80%)
 - Expiry warning when window approaches limit
 - Percentage used calculation for quick assessment
 - Handles overflow gracefully (sessions beyond 5 hours)
-- Lightweight bash implementation with no external dependencies
+- Lightweight bash implementation (requires jq for JSON parsing)
 
 ## Use Cases
 
-- Managing Claude Code's unique 5-hour billing window
+- Watching how long the current Claude Code session has run
 - Preventing unexpected session expiry during critical work
 - Planning work sessions around 5-hour limit
-- Tracking multiple overlapping 5-hour windows
-- Budget management for usage-limited accounts
+- Visualizing session duration as a progress bar in the statusline
+- Reminding yourself to break up long sessions
 - Session planning for long coding marathons
 
 ## Requirements
@@ -485,7 +489,7 @@ Check cost.total_duration_ms field in JSON: echo '$input' | jq .cost.total_durat
 
 ### Percentage exceeds 100% showing incorrect progress
 
-Script caps percentage at 100% with overflow protection. Claude sessions can continue beyond 5 hours in practice. If you see 100% + EXPIRED, session has exceeded window. This is expected behavior, not a bug. Start new session to reset window. Verify percentage calculation: percentage_used=$(( (duration_minutes \* 100) / WINDOW_LIMIT )). Check overflow protection: if [ $percentage_used -gt 100 ]; then percentage_used=100; fi.
+Script caps percentage at 100% with overflow protection. Sessions can run longer than 300 minutes. If you see 100% + EXPIRED, the session has exceeded the configured ceiling (this is a display ceiling, not Claude's actual usage limit). This is expected behavior, not a bug. Start new session to reset window. Verify percentage calculation: percentage_used=$(( (duration_minutes \* 100) / WINDOW_LIMIT )). Check overflow protection: if [ $percentage_used -gt 100 ]; then percentage_used=100; fi.
 
 ### Warning colors not displaying at correct thresholds
 
@@ -493,7 +497,7 @@ Verify color thresholds: <50% green, 50-80% yellow, >80% red. Check percentage_u
 
 ### Multiple overlapping sessions not reflected in tracker
 
-Statusline tracks CURRENT session only (based on session_id in JSON). Claude supports multiple overlapping 5-hour windows simultaneously. To track multiple sessions, run separate statusline instances or modify script to read from multiple session files. Verify session_id exists: echo '$input' | jq .session_id. Check if session history tracking is enabled in enhanced version.
+Statusline tracks CURRENT session only (based on session_id in JSON). This script reads only the current session's total_duration_ms; it does not aggregate concurrent sessions. To track other sessions, run separate statusline instances or modify the script to read from multiple session files. Verify session_id exists: echo '$input' | jq .session_id. Check if session history tracking is enabled in enhanced version.
 
 ### Time display showing incorrect hours/minutes format
 
