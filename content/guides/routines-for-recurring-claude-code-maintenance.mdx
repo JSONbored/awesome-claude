@@ -1,0 +1,180 @@
+---
+title: Routines For Recurring Claude Code Maintenance
+slug: routines-for-recurring-claude-code-maintenance
+category: guides
+description: >-
+  Use Claude Code routines for recurring maintenance: schedule triggers, API and
+  GitHub events, scoped connectors, and review of autonomous cloud runs for
+  backlog grooming, docs drift, and deploy verification.
+cardDescription: Automate recurring Claude Code maintenance with scheduled and event-driven routines.
+seoTitle: Routines For Recurring Claude Code Maintenance
+seoDescription: >-
+  Set up Claude Code routines for scheduled, API, and GitHub-triggered maintenance
+  with scoped repos, environments, connectors, and run review on claude.ai/code/routines.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1382
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1382"
+documentationUrl: "https://code.claude.com/docs/en/routines"
+usageSnippet: >-
+  Define a self-contained routine prompt at claude.ai/code/routines or with
+  /schedule, attach schedule/API/GitHub triggers, scope repos and connectors to
+  least privilege, then review each cloud run before merging claude/ branches.
+prerequisites:
+  - Claude Pro, Max, Team, or Enterprise with Claude Code on the web and routines enabled.
+  - GitHub repositories authorized for cloud sessions and routine branch pushes.
+  - Connectors (MCP) only for services the routine truly needs; remove unused defaults.
+  - A human reviewer for autonomous runs before merging routine-opened pull requests.
+safetyNotes:
+  - Routines run as full autonomous cloud sessions with no approval prompts—scope repos, network, and connectors narrowly.
+  - Actions through GitHub or connectors appear as your linked identity; treat routine output like your own commits and messages.
+  - Enable unrestricted branch pushes only on repositories where pushing to existing branches is explicitly approved.
+privacyNotes:
+  - Routine prompts and run transcripts may include proprietary code, issue titles, and connector payloads.
+  - API trigger tokens are secrets; store bearer tokens in a secret manager, not in public CI logs.
+  - Slack, Linear, or other connector actions may expose internal project metadata to linked workspaces.
+sourceUrls:
+  - "https://code.claude.com/docs/en/routines"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - routines
+  - automation
+  - scheduled-tasks
+  - github-triggers
+  - maintenance
+keywords:
+  - Claude Code routines maintenance
+  - scheduled Claude Code automation
+  - claude.ai code routines
+  - /schedule recurring tasks
+  - GitHub trigger routine Claude
+readingTime: 8
+difficultyScore: 50
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude Code routines package a prompt, repositories, environment, and triggers so
+maintenance runs on Anthropic-managed cloud infrastructure on a schedule, via
+API, or on GitHub events. Define self-contained prompts, remove unneeded
+connectors, review every run, and merge only after human approval.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Plan enabled", "description": "Org allows routines and Claude Code on the web"}
+- [ ] {"task": "Prompt self-contained", "description": "Routine prompt states inputs, steps, and success criteria without live chat context"}
+- [ ] {"task": "Repos scoped", "description": "Only repositories the routine must touch are selected"}
+- [ ] {"task": "Connectors trimmed", "description": "Default MCP connectors removed when not required"}
+- [ ] {"task": "Review owner", "description": "Someone checks run output before merging routine PRs"}
+
+## Core Concepts Explained
+
+### Triggers define when maintenance runs
+
+Official docs describe schedule triggers (recurring or one-off), API triggers
+(HTTP POST with bearer token), and GitHub triggers (PR opened, release published,
+etc.). One routine can combine multiple trigger types.
+
+### Cloud sessions run without approval prompts
+
+Routines execute as autonomous Claude Code cloud sessions. Shell commands,
+repository skills, and connector tools run without mid-run permission prompts—
+design prompts and scopes assuming full autonomy.
+
+### Branch naming and pushes
+
+Claude creates `claude/`-prefixed branches by default. Unrestricted branch
+pushes are opt-in per repository when maintenance must update existing branches.
+
+### CLI `/schedule` for recurring cadence
+
+The `/schedule` command creates scheduled routines conversationally; API and
+GitHub triggers are configured on the web after the routine is saved.
+
+## Step-by-Step Implementation Guide
+
+1. **Pick a maintenance task.** Choose repeatable work such as backlog grooming,
+   docs drift scans, or weekly dependency reports.
+
+2. **Write an explicit prompt.** State repositories, connectors, success output,
+   and stop conditions so the routine needs no follow-up questions.
+
+3. **Select repositories and environment.** Use the default Trusted network
+   environment or a custom environment with required secrets and setup scripts.
+
+4. **Attach triggers.** Add a nightly schedule for grooming, a GitHub trigger for
+   PR review, or an API trigger for post-deploy verification.
+
+5. **Trim connectors and permissions.** Remove MCP connectors the routine does
+   not need; avoid unrestricted branch pushes unless required.
+
+6. **Run once manually.** Use **Run now** on the routine detail page before
+   enabling aggressive schedules.
+
+7. **Review each run.** Inspect the cloud session, validate diffs, and merge or
+   close routine-opened PRs through normal review.
+
+## Maintenance Routine Checklist
+
+- [ ] {"task": "Prompt tested", "description": "Manual run completed with expected output"}
+- [ ] {"task": "Least privilege", "description": "Repos, network, and connectors minimized"}
+- [ ] {"task": "Token rotation", "description": "API bearer tokens stored and rotated securely"}
+- [ ] {"task": "Run budget", "description": "Schedule cadence fits daily run allowance"}
+- [ ] {"task": "Audit trail", "description": "Run summaries linked in team tickets or Slack"}
+
+## Troubleshooting
+
+### Routine never fires
+
+Confirm org admin has not disabled routines, triggers are saved, and GitHub
+event filters match the repositories you expect.
+
+### Connector action failed mid-run
+
+Remove unused connectors, verify environment secrets, and narrow network access
+to required domains.
+
+### Unexpected branch or push scope
+
+Disable unrestricted branch pushes and restrict repositories to maintenance
+repos only.
+
+### `/schedule` missing API or GitHub triggers
+
+Add API and GitHub triggers on claude.ai/code/routines after creation; CLI
+`/schedule` handles scheduled routines only.
+
+## Source Verification Notes
+
+Verified against official Claude Code routines documentation on **2026-06-16**:
+
+- Docs describe routines as saved prompts with repositories, environments, and
+  schedule, API, and GitHub triggers running on Anthropic-managed cloud infrastructure.
+- Routines run autonomously without permission prompts; connectors and branch-push
+  settings determine reach.
+- Creation surfaces include claude.ai/code/routines, Desktop remote routines, and
+  CLI `/schedule` for scheduled cadence.
+- Team and Enterprise admins can disable routines organization-wide via admin settings.
+
+## Duplicate Check
+
+Checked `content/guides`, generated catalog text, and open pull requests for
+Claude Code routines, scheduled maintenance, and autonomous cloud workflows. No
+existing guide focuses on recurring maintenance routines with trigger scoping and
+run review.
+
+## References
+
+- Routines docs - https://code.claude.com/docs/en/routines
+- Claude Code repository - https://github.com/anthropics/claude-code
