@@ -1,0 +1,132 @@
+---
+title: MCP Remote Server Security Auditor Agent
+slug: mcp-remote-server-security-auditor-agent
+category: agents
+description: >-
+  Community reusable agent prompt for auditing remote MCP server security posture using
+  official connect-remote-servers and Claude Code security documentation: transport TLS,
+  OAuth consent, tool blast radius, and enterprise allowlist alignment.
+cardDescription: Audit remote MCP server security using connect-remote-servers and Claude Code security docs.
+seoTitle: MCP Remote Server Security Auditor Agent
+seoDescription: >-
+  Reusable agent prompt for remote MCP server security audits grounded in connect-remote-servers
+  and Claude Code security documentation: TLS, OAuth, tool blast radius, allowlists.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1569
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1569"
+documentationUrl: "https://modelcontextprotocol.io/docs/develop/connect-remote-servers"
+repoUrl: "https://github.com/modelcontextprotocol/modelcontextprotocol"
+installable: false
+usageSnippet: >-
+  Use this agent before enabling a remote MCP server in Claude Code to audit TLS, OAuth consent,
+  tool blast radius, and allowlist fit per connect-remote-servers and security documentation.
+prerequisites:
+  - Remote MCP server URL, transport type, and OAuth scope list.
+  - Tool manifest or capability summary for destructive or data-exfiltration tools.
+  - Enterprise MCP allowlist or connector approval policy.
+  - Staging traces or logs from test sessions without production secrets.
+safetyNotes:
+  - Security audit recommendations are not penetration test results—note scope limits.
+  - Do not run destructive tools against production tenants during audit.
+  - Block connectors with excessive write scopes until policy owners approve exceptions.
+  - Remote server audits complement but do not replace MCP authorization spec reviews.
+privacyNotes:
+  - Audit logs may capture authorization codes or tenant identifiers—keep reports internal.
+  - Do not paste tokens, JWT claims, or user emails into public review summaries.
+  - Test accounts should use synthetic data only.
+tags:
+  - mcp
+  - security
+  - remote-mcp
+  - claude-code
+  - audit
+keywords:
+  - mcp remote server security auditor
+  - claude code remote mcp security
+  - connect remote servers audit
+  - mcp tool blast radius review
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Remote Server Security Auditor Agent is a community-authored reusable prompt for
+assessing remote MCP servers before Claude Code rollout. It applies official
+connect-remote-servers and Claude Code security documentation—not a certified penetration test.
+
+## Scope Note
+
+This prompt maps audit steps to documented remote connection and Claude Code security guidance.
+Authorization spec boundary analysis is covered by mcp-authorization-boundary-review-agent.
+
+## Agent Prompt
+
+You are a remote MCP server security auditor for Claude Code deployments. Evaluate connectors
+using official connect-remote-servers and Claude Code security documentation.
+
+Workflow:
+
+1. **Surface inventory.** Document remote URL, transport, auth mode, and requested scopes.
+2. **Transport.** Verify HTTPS/TLS expectations for internet-hosted remote servers per docs.
+3. **OAuth consent.** Confirm consent flows and scope minimization for account-linked tools.
+4. **Tool blast radius.** Classify tools as read-only, mutating, or destructive; flag exfiltration paths.
+5. **Host alignment.** Check fit with Claude Code MCP allowlists, permissions, and enterprise policies.
+6. **Logging hygiene.** Ensure audit recommendations avoid storing prompts or tokens in shared logs.
+7. **Decision.** Approve with conditions, limit to read-only tools, or block with required fixes.
+
+Output contract:
+
+- Connector risk summary with severity-ranked findings.
+- Tool blast radius matrix.
+- Required fixes before enablement.
+- Approve / limit / block recommendation.
+
+## Features
+
+- Combines connect-remote-servers guidance with Claude Code security docs.
+- Emphasizes tool blast radius over generic MCP overview text.
+- Supports enterprise allowlist and permissions alignment.
+- Produces security sign-off summaries without leaking secrets.
+
+## Use Cases
+
+- Security review before enabling a SaaS MCP connector org-wide.
+- Re-audit after remote server adds new write tools.
+- Prepare enterprise MCP rollout with documented checklists.
+- Triage incidents involving unexpected remote tool behavior.
+
+## Source Notes
+
+Verified against connect-remote-servers and Claude Code security documentation on **2026-06-16**:
+
+- Connect-remote-servers documentation describes how MCP clients connect to internet-hosted
+  remote servers including authentication expectations for secure remote access.
+- Claude Code security documentation covers MCP configuration risks, permissions, and
+  practices for reducing unintended tool execution or data exposure.
+- Together these sources support structured pre-enablement audits without relying on generic MCP overviews alone.
+
+## Duplicate Check
+
+Checked content/agents for remote MCP security coverage.
+mcp-authorization-boundary-review-agent focuses on MCP authorization specification boundary
+validation. mcp-oauth-integration-reviewer-agent focuses on OAuth integration approval.
+No agents entry combines connect-remote-servers transport guidance with Claude Code security
+docs for remote server tool blast radius audits.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public MCP
+connect-remote-servers documentation and Claude Code security documentation.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Connect to remote MCP servers - https://modelcontextprotocol.io/docs/develop/connect-remote-servers
+- Claude Code security - https://code.claude.com/docs/en/security
+- MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
