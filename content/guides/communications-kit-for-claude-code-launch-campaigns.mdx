@@ -123,6 +123,41 @@ contradiction.
 | Launch day | Email + wiki | Setup steps, support links, FAQ |
 | T+7 days | Slack reminder | Office hours, champion contacts |
 
+## Pre-Written FAQ Responses
+
+The communications kit publishes one-line replies for the questions you will be asked most. Paste these into your internal FAQ so permissions, data-handling, and tooling questions have consistent answers before launch day.
+
+| Question | Response |
+| -------- | -------- |
+| "Does it work in VS Code?" | Yes. There is a VS Code extension and a JetBrains plugin with the same features, embedded in your editor. |
+| "Do I have to configure anything first?" | No. Install, then run `claude` in any repo. Run `/init` once and you're set. |
+| "Where does my code go?" | The CLI runs in your terminal and sends context to Anthropic's API for inference, with no third-party servers. Under your Enterprise plan, your code and prompts are not used to train models. |
+| "Can it see my whole repo?" | It reads what you give it access to. File reads inside your working directory don't prompt; permission prompts gate edits, shell commands, and anything outside that directory. |
+| "How is this different from Copilot?" | Copilot autocompletes lines. Claude Code is an agent that reads files, runs commands, and makes multi-file edits. |
+| "What should I try first?" | A bug you've been putting off because it's tedious. "The test in [file] is flaky, figure out why." |
+
+## Launch-Day Slack Announcement
+
+Treat this kit copy as a draft: rewrite it in your org's voice and replace every `[bracketed placeholder]` before sending. This is the Slack/Teams variant of the org-wide go-live message—what Claude Code is, the two-minute install, one concrete task, and the data-handling answer.
+
+```text
+🚀 Claude Code is live for [team]
+
+AI coding agent, runs in your terminal, reads your repo, does real work:
+bugs, refactors, tests, PRs. Asks before it touches anything.
+
+Install, then: cd your-repo, then claude
+
+First thing to try: run /init, then "the test in [file] is flaky,
+figure out why and fix it."
+
+Runs in your terminal, talks only to Anthropic's API. Under our
+Enterprise plan your code and prompts are not used to train models.
+Data usage: https://code.claude.com/docs/en/data-usage
+
+Questions: this thread. [Owner] is on point.
+```
+
 ## Troubleshooting
 
 ### Helpdesk flooded after launch
