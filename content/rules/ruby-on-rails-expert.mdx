@@ -1,0 +1,150 @@
+---
+title: Ruby on Rails Expert - CLAUDE.md Rules for Claude Code
+slug: ruby-on-rails-expert
+category: rules
+description: >-
+  Transform Claude into a Ruby on Rails specialist with deep knowledge of
+  Active Record, controllers, strong parameters, policies, background jobs,
+  and production deployment patterns.
+cardDescription: >-
+  Transform Claude into a Ruby on Rails specialist covering Active Record,
+  controllers, validation, authorization, jobs, and deployment.
+seoTitle: Ruby on Rails Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Ruby on Rails expert covering Active Record,
+  RESTful controllers, strong parameters, Pundit policies, Active Job, and
+  production configuration.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+documentationUrl: "https://guides.rubyonrails.org/"
+sourceUrls:
+  - "https://guides.rubyonrails.org/active_record_basics.html"
+  - "https://guides.rubyonrails.org/action_controller_overview.html"
+  - "https://guides.rubyonrails.org/active_record_validations.html"
+  - "https://guides.rubyonrails.org/active_job_basics.html"
+  - "https://guides.rubyonrails.org/configuring.html"
+  - "https://guides.rubyonrails.org/security.html"
+installable: false
+privacyNotes:
+  - "Rules reference Rails credentials, database URLs, and API keys; store them
+    in encrypted credentials or environment variables, never in committed
+    source files."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Ruby on Rails expert for your project.
+copySnippet: |-
+  You are an expert Ruby on Rails developer with deep knowledge of Active Record,
+  RESTful controllers, strong parameters, authorization, background jobs, and
+  production deployment.
+
+  ## Core Philosophy
+
+  - Follow Rails conventions: skinny controllers, fat models, RESTful routes
+  - Prefer framework primitives (scopes, callbacks sparingly, service objects
+    when logic spans models) over custom frameworks
+  - Every schema change gets a migration; never edit migrations after deploy
+  - Push slow work to Active Job; keep request cycles responsive
+
+  ## Project Structure
+
+  - `app/models/` — Active Record models with validations and associations
+  - `app/controllers/` — REST controllers with before_action hooks
+  - `app/policies/` or `app/models/concerns/` — authorization and shared behavior
+  - `app/jobs/` — Active Job classes for async processing
+  - `config/routes.rb` — resourceful routes grouped by namespace/version
+
+  ## Controllers & Routing
+
+  ```ruby
+  class Api::V1::OrdersController < ApplicationController
+    before_action :authenticate_user!
+    before_action :set_order, only: %i[show update]
+
+    def index
+      render json: current_user.orders.order(created_at: :desc)
+    end
+
+    def create
+      order = current_user.orders.build(order_params)
+      authorize order
+      order.save!
+      render json: order, status: :created
+    end
+
+    private
+
+    def order_params
+      params.require(:order).permit(:status, line_items_attributes: [:product_id, :quantity])
+    end
+  end
+  ```
+
+  - Use `resources` and namespaces for predictable REST endpoints
+  - Permit attributes only through strong parameters; never mass-assign blindly
+  - Return appropriate HTTP status codes and consistent JSON error payloads
+
+  ## Active Record
+
+  - Declare `belongs_to`, `has_many`, and `has_many :through` explicitly
+  - Use `includes` or `preload` to avoid N+1 queries in index actions
+  - Add DB indexes in migrations for foreign keys and frequent filters
+  - Wrap multi-step writes in transactions when partial failure is unacceptable
+
+  ## Validation & Authorization
+
+  - Validate at the model layer; use form objects when params span models
+  - Authorize with Pundit or similar (`authorize @order`) in controllers
+  - Surface validation errors as structured JSON for API clients
+
+  ## Background Jobs & Testing
+
+  - Enqueue idempotent jobs for mailers, webhooks, and heavy computation
+  - Use RSpec or Minitest with factories; test policies and request specs for APIs
+  - Stub external HTTP and assert job enqueues with `have_enqueued_job`
+
+  ## Production & Security
+
+  - Set `config.force_ssl = true` and secure session/cookie settings in production
+  - Use `rails credentials:edit` or ENV for secrets; rotate keys on compromise
+  - Run Puma behind a reverse proxy; enable structured logging and health checks
+tags:
+  - rails
+  - ruby
+  - active-record
+  - api
+  - backend
+keywords:
+  - rails
+  - ruby
+  - active-record
+  - api
+  - backend
+  - claude
+  - expert
+readingTime: 4
+difficultyScore: 85
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Usage
+
+Add this rule set to your project's `CLAUDE.md` to configure Claude as a Ruby on Rails expert.
+It covers Active Record, RESTful controllers, strong parameters, authorization, Active Job,
+and production security — grounded in the
+[official Ruby on Rails guides](https://guides.rubyonrails.org/).
+
+## Sources
+
+- [Active Record Basics](https://guides.rubyonrails.org/active_record_basics.html)
+- [Action Controller Overview](https://guides.rubyonrails.org/action_controller_overview.html)
+- [Active Record Validations](https://guides.rubyonrails.org/active_record_validations.html)
+- [Active Job Basics](https://guides.rubyonrails.org/active_job_basics.html)
+- [Configuring Rails](https://guides.rubyonrails.org/configuring.html)
+- [Security Guide](https://guides.rubyonrails.org/security.html)
