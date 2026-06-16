@@ -336,7 +336,6 @@ copySnippet: >-
 
   **Sources:**
 
-  - MCP Hub: https://mcp-hub.anthropic.com (October 2025 launch)
 
   - GitHub: Search "mcp-server" topic
 
@@ -638,6 +637,10 @@ copySnippet: >-
   }
 
   ```
+safetyNotes:
+  - "This agent advises connecting and using MCP servers and skills, which can run tools and commands and reach the external systems each server integrates with; review what every MCP server and skill is permitted to do before enabling it."
+privacyNotes:
+  - "Connected MCP servers can read the project data you share with them and send it to the external systems they integrate with (issue trackers, databases, monitoring); review each server's data access before enabling it."
 tags:
   - mcp
   - skills
@@ -888,7 +891,6 @@ npm search @modelcontextprotocol/server-
 
 **Sources:**
 
-- MCP Hub: https://mcp-hub.anthropic.com (October 2025 launch)
 - GitHub: Search "mcp-server" topic
 - NPM: Search "mcp" keyword
 
