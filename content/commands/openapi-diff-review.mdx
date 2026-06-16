@@ -1,0 +1,92 @@
+---
+title: /openapi-diff-review - OpenAPI Diff Review Slash Command
+slug: openapi-diff-review
+category: commands
+description: >-
+  Slash command that reviews differences between two OpenAPI Specification files,
+  classifies breaking versus compatible API changes, and summarizes release impact
+  using OpenAPI 3.x schema rules.
+cardDescription: >-
+  Compare two OpenAPI specs, flag breaking changes, and draft a reviewer summary.
+seoTitle: /openapi-diff-review - OpenAPI Diff Review Slash Command
+seoDescription: >-
+  Claude Code slash command for OpenAPI diff review: classify breaking API changes
+  and summarize contract impact from OpenAPI Specification rules.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 754
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/754"
+documentationUrl: "https://spec.openapis.org/oas/latest.html"
+repoUrl: "https://github.com/OAI/OpenAPI-Specification"
+sourceUrls:
+  - "https://spec.openapis.org/oas/latest.html"
+  - "https://swagger.io/docs/specification/v3_0/about/"
+installable: true
+installCommand: "/openapi-diff-review <base-spec> <head-spec>"
+commandSyntax: "/openapi-diff-review <base-spec> <head-spec>"
+usageSnippet: "/openapi-diff-review openapi/v1.yaml openapi/v2.yaml"
+copySnippet: "/openapi-diff-review <base-spec> <head-spec>"
+prerequisites:
+  - "Two OpenAPI 3.x YAML or JSON files checked into the repository."
+  - "Agreement on which spec is the release baseline versus candidate head revision."
+safetyNotes:
+  - "Read-only spec comparison; does not deploy APIs or mutate service configuration."
+  - "Validate file paths locally and reject paths containing shell metacharacters before diffing."
+privacyNotes:
+  - "OpenAPI files may describe internal hostnames or auth schemes—redact before sharing externally."
+tags:
+  - openapi
+  - api-design
+  - diff
+  - review
+  - slash-command
+keywords:
+  - openapi diff review slash command
+  - breaking change review openapi
+  - claude code api contract review
+---
+
+The `/openapi-diff-review` command turns [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+change review into a structured Claude Code checklist for API maintainers.
+
+## Usage
+
+```
+/openapi-diff-review <base-spec> <head-spec>
+```
+
+Compare the baseline spec (`base-spec`) against the candidate revision (`head-spec`).
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Validate paths.** Confirm both arguments are repository-relative paths to existing `.yaml`, `.yml`, or `.json` files and reject shell metacharacters.
+2. **Parse both specs.** Read `openapi` version, `info.version`, `paths`, `components`, and security schemes from each file without executing external installers.
+3. **Diff paths and operations.** Identify added, removed, or renamed paths and HTTP methods between base and head.
+4. **Classify request changes.** Flag required-parameter additions, type changes, enum removals, and request body schema narrowing as breaking when clients must change.
+5. **Classify response changes.** Flag removed success responses, narrowed response schemas, and removed headers as breaking; document additive optional fields as compatible.
+6. **Review components.** Compare shared schemas, parameters, and security scheme changes referenced by multiple operations.
+7. **Summarize release impact.** Produce a reviewer table with breaking vs compatible items and a recommended SemVer bump for the API product version.
+
+## Output format
+
+- **Spec versions:** OpenAPI version and `info.version` for base and head
+- **Breaking changes:** bullet list with path, operation, and reason
+- **Compatible changes:** additive endpoints, optional fields, new enum values
+- **Recommended bump:** major, minor, or patch with one-line justification
+- **Follow-ups:** tests, client regeneration, or docs updates needed
+
+## Requirements
+
+- OpenAPI 3.x files available locally in the repository.
+- Reviewer familiar with the service's published compatibility policy.
+
+## Duplicate Check
+
+No existing OpenAPI diff slash command on main. Complements API design rules and
+Spectral audit skills by focusing on explicit two-spec diff review during PR triage.
