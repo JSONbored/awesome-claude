@@ -1,0 +1,203 @@
+---
+title: Claude Agent SDK OpenTelemetry Observability Capability Pack Skill
+slug: claude-agent-sdk-opentelemetry-observability-capability-pack
+category: skills
+description: >-
+  Expert capability pack for enabling Agent SDK OpenTelemetry export via
+  documented CLAUDE_CODE_ENABLE_TELEMETRY variables, OTLP exporters, span
+  naming, and privacy controls when running query() with ClaudeAgentOptions.
+cardDescription: >-
+  Configure Agent SDK OpenTelemetry export with documented env vars, OTLP settings, and privacy review.
+seoTitle: Claude Agent SDK OpenTelemetry Observability Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Agent SDK OpenTelemetry observability using
+  CLAUDE_CODE_ENABLE_TELEMETRY, OTLP exporters, and documented span names from agent-sdk observability docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1510
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1510"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/observability"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use before production Agent SDK deployments to configure OTLP telemetry export,
+  trace beta flags, and sensitive-data opt-in review.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Agent SDK OpenTelemetry observability capability pack for this agent."
+
+  # Required output
+  1) Telemetry signal plan (metrics, logs, traces)
+  2) Documented environment variable checklist
+  3) OTLP endpoint and service naming review
+  4) Sensitive export opt-in review
+  5) Privacy-safe observability summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/agent-sdk/observability"
+  - "https://code.claude.com/docs/en/agent-sdk/overview"
+  - "https://code.claude.com/docs/en/monitoring-usage"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Agent SDK application using query() with ClaudeAgentOptions or options.env."
+  - "OTLP-compatible collector or observability backend reachable from the host."
+  - "Security review for prompt and tool content export opt-ins."
+safetyNotes:
+  - "Opt-in OTEL_LOG_* variables can export prompts, tool arguments, and API bodies—enable only with approved pipelines."
+  - "Do not use the console exporter through the SDK; it conflicts with the SDK message channel per official docs."
+  - "Bearer tokens in OTEL_EXPORTER_OTLP_HEADERS are secrets—store in environment or secret managers."
+privacyNotes:
+  - "Default telemetry is structural; opt-in variables add user prompts and tool payloads to exports."
+  - "End-user identity should use OTEL_RESOURCE_ATTRIBUTES with percent-encoded values per docs."
+  - "SIEM forwarding of tool_decision events may expose per-user audit trails—scope retention policies."
+tags:
+  - agent-sdk
+  - opentelemetry
+  - observability
+  - otlp
+  - capability-pack
+keywords:
+  - Claude Agent SDK OpenTelemetry observability capability pack
+  - CLAUDE_CODE_ENABLE_TELEMETRY Agent SDK
+  - Agent SDK OTLP export checklist
+readingTime: 9
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in Agent SDK observability and monitoring documentation verified on
+**2026-06-16**. Tracing is in **beta**—span names and attributes may change;
+confirm live docs before production dashboards depend on them.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/agent-sdk/observability
+- https://code.claude.com/docs/en/agent-sdk/overview
+- https://code.claude.com/docs/en/monitoring-usage
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Agent SDK observability documentation on **2026-06-16**:
+
+- The Agent SDK runs the Claude Code CLI as a child process; the **CLI exports
+  OpenTelemetry** when configured via environment variables.
+- Enable export with **`CLAUDE_CODE_ENABLE_TELEMETRY=1`** plus at least one
+  **`OTEL_*_EXPORTER`** variable.
+- **Traces (beta)** require **`CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1`** and
+  **`OTEL_TRACES_EXPORTER=otlp`**.
+- Documented span names include **`claude_code.interaction`**, **`claude_code.llm_request`**, and **`claude_code.tool`**.
+- Configure via process environment or **`ClaudeAgentOptions.env`** / **`options.env`**; TypeScript **`env` replaces** inherited environment unless **`...process.env`** is spread.
+- **`console` exporter must not be used** with the SDK per official warning.
+- Sensitive content requires explicit **`OTEL_LOG_USER_PROMPTS`**, **`OTEL_LOG_TOOL_DETAILS`**, or related opt-ins.
+
+## Scope Note
+
+Community review skill for **Agent SDK OTLP configuration**—not an official
+Anthropic capability pack product. Applies documented environment variables only.
+
+## Core Workflow
+
+1. Choose signals: metrics, log events, traces (beta) per task needs.
+2. Set **`CLAUDE_CODE_ENABLE_TELEMETRY=1`** and per-signal **`OTEL_*_EXPORTER=otlp`**.
+3. Configure **`OTEL_EXPORTER_OTLP_PROTOCOL`**, endpoint, and headers for your collector.
+4. For traces, add **`CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1`**.
+5. Pass variables via deployment environment or **`options.env`** (spread **`process.env`** in TypeScript).
+6. Set **`OTEL_SERVICE_NAME`** and **`OTEL_RESOURCE_ATTRIBUTES`** for multi-agent filtering.
+7. Review sensitive-data opt-ins; leave prompt and tool content logging disabled unless approved.
+8. Shorten export intervals for short-lived processes if spans may drop on exit.
+9. Publish privacy-safe observability summary for operators.
+
+## Capability Scope
+
+- Agent SDK telemetry enablement checklist.
+- OTLP exporter and resource attribute review.
+- Trace span naming awareness for dashboards.
+- End-user attribution via resource attributes.
+- Sensitive export opt-in review matrix.
+
+## Compatibility
+
+### Native
+
+- **Claude Code Agent SDK**: Python and TypeScript **`query()`** deployments.
+
+### Manual Adaptation
+
+- **Generic AGENTS**: apply OTLP checklist when wrapping Claude Code CLI subprocesses.
+
+## Required Inputs
+
+- Target collector endpoint and authentication method.
+- Agent service name and deployment environment labels.
+- Whether traces, metrics, or log events are required.
+- Data classification for prompts and tool payloads.
+
+## Production Rules
+
+- Never commit OTLP bearer tokens to repositories.
+- Keep sensitive **`OTEL_LOG_*`** variables unset unless pipeline is approved.
+- Avoid **`console`** exporter values in SDK runs.
+- Percent-encode values in **`OTEL_RESOURCE_ATTRIBUTES`** when they contain reserved characters.
+- Link trace context via active application spans or explicit **`TRACEPARENT`** when needed.
+
+## Review Matrix
+
+| Check | Pass criteria | Doc basis |
+| --- | --- | --- |
+| Telemetry enabled | CLAUDE_CODE_ENABLE_TELEMETRY=1 | Enable telemetry export |
+| Traces beta flag | ENHANCED_TELEMETRY_BETA for traces | Traces table |
+| OTLP configured | Protocol, endpoint, headers set | Enable telemetry export |
+| Service tagged | OTEL_SERVICE_NAME set | Tag telemetry |
+| Sensitive opt-in | OTEL_LOG_* reviewed and justified | Control sensitive data |
+
+## Output Contract
+
+1. Signal plan (metrics, logs, traces).
+2. Environment variable checklist.
+3. OTLP and service naming review.
+4. Sensitive export decision log.
+5. Privacy-safe observability summary.
+
+## Troubleshooting
+
+**Issue:** No spans in backend
+**Fix:** Confirm traces beta flag, OTLP endpoint reachability, and shorter export intervals for short processes per docs.
+
+**Issue:** TypeScript agent missing PATH or API key
+**Fix:** Spread **`...process.env`** when passing **`options.env`** because TypeScript replaces inherited environment.
+
+## Duplicate Check
+
+Distinct from `opentelemetry-trace-analysis-agent` (generic trace reading),
+`claude-code-analytics-adoption-capability-pack` (dashboard adoption metrics),
+and `incident-timeline-reconstruction-capability-pack` (incident timelines).
+This pack covers **Agent SDK OTLP export configuration** via documented env vars.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` based on public Agent SDK observability docs. No
+paid placement or affiliate links.
