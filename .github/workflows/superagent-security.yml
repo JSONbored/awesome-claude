@@ -2,6 +2,14 @@ name: Superagent Repo Scan
 
 on:
   pull_request:
+    # Content-only PRs add curated .mdx/markdown text, not executable code, so a
+    # full-repo Superagent scan adds no signal. Skip them (mirrors
+    # pipelock-security.yml); code/config PRs are still scanned.
+    paths-ignore:
+      - "content/**"
+      - "README.md"
+      - "docs/**"
+      - "**/*.md"
   workflow_dispatch:
 
 permissions:

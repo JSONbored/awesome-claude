@@ -1,0 +1,74 @@
+name: coverage
+
+# Non-required coverage signal for Codecov. Runs only when CODE changes (never
+# on content-only PRs/pushes — content does not affect the node-suite coverage),
+# so the heavy v8-instrumented run stays off the content-submission hot path and
+# off the required `validate-web` gate. Uploads lcov to Codecov, which posts the
+# project/patch statuses (informational; see codecov.yml).
+on:
+  pull_request:
+    paths-ignore:
+      - "content/**"
+      - "README.md"
+      - "docs/**"
+      - "**/*.md"
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "content/**"
+      - "README.md"
+      - "docs/**"
+      - "**/*.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: coverage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  coverage:
+    name: coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.16.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare test reports dir
+        run: rm -rf reports/junit && mkdir -p reports/junit
+
+      - name: Build registry artifacts
+        run: pnpm --filter web run prebuild
+
+      - name: Apply local D1 migrations
+        run: pnpm --filter web db:migrate:local
+
+      - name: Run Vitest suite with coverage
+        run: pnpm test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false

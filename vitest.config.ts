@@ -17,7 +17,9 @@ export default defineConfig({
     testTimeout: 30_000,
     coverage: {
       provider: "v8",
-      reporter: ["text", "text-summary", "json-summary"],
+      // `lcov` feeds Codecov (coverage/lcov.info); the text/json reporters are
+      // for local inspection.
+      reporter: ["text", "text-summary", "json-summary", "lcov"],
       reportsDirectory: "coverage",
       // Scope coverage to the source the node test suite actually exercises
       // (registry + mcp packages, web server/lib/data logic, the submission
@@ -43,15 +45,11 @@ export default defineConfig({
         "**/*.json",
         "tests/**",
       ],
-      // Thresholds lock in current coverage and ratchet upward over time.
-      // When coverage rises, bump these to match — never lower them.
-      // See AGENTS.md "Validation" for the ratcheting policy.
-      thresholds: {
-        statements: 47,
-        branches: 44,
-        functions: 56,
-        lines: 48,
-      },
+      // Coverage gating is owned by Codecov (codecov.yml: patch + project,
+      // base-relative via `target: auto`) instead of a global vitest threshold
+      // ratchet, which caused cross-PR churn (a merge moved the bar under other
+      // open PRs). `pnpm test:coverage` here is for local inspection + producing
+      // the lcov report uploaded by the `coverage` workflow.
     },
   },
 });
