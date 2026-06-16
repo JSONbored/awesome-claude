@@ -106,6 +106,22 @@ Add this rule set to your project's `CLAUDE.md` to configure Claude as a Postgre
 It covers schema design, indexing, EXPLAIN-driven tuning, and transaction safety — grounded in
 the [PostgreSQL documentation](https://www.postgresql.org/docs/current/).
 
+## Transaction Isolation Levels
+
+When you choose an isolation level, you trade concurrency for guarantees against
+specific read anomalies. PostgreSQL implements three distinct levels (Read
+Uncommitted behaves identically to Read Committed). This table reproduces the
+standard SQL anomaly matrix as documented for PostgreSQL.
+
+| Isolation Level  | Dirty Read             | Nonrepeatable Read | Phantom Read           | Serialization Anomaly |
+| ---------------- | ---------------------- | ------------------ | ---------------------- | --------------------- |
+| Read uncommitted | Allowed, but not in PG | Possible           | Possible               | Possible              |
+| Read committed   | Not possible           | Possible           | Possible               | Possible              |
+| Repeatable read  | Not possible           | Not possible       | Allowed, but not in PG | Possible              |
+| Serializable     | Not possible           | Not possible       | Not possible           | Not possible          |
+
+Source: [Transaction Isolation](https://www.postgresql.org/docs/current/transaction-iso.html) (Table 13.1).
+
 ## Sources
 
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/current/)
