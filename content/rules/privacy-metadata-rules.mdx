@@ -18,13 +18,17 @@ author: MkDev11
 submittedBy: MkDev11
 submittedByUrl: "https://github.com/MkDev11"
 dateAdded: "2026-06-04"
-documentationUrl: "https://w3c.github.io/dpv/2.3/dpv/"
-sourceUrls:
+documentationUrl: "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"
+retrievalSources:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/User_Privacy_Protection_Cheat_Sheet.html"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Vocabulary_Cheat_Sheet.html"
   - "https://w3c.github.io/dpv/2.3/dpv/"
-  - "https://www.w3.org/TR/vocab-dcat-3/"
-  - "https://www.w3.org/TR/vocab-duv/"
-  - "https://www.w3.org/TR/prov-o/"
-  - "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/"
+sourceUrls:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/User_Privacy_Protection_Cheat_Sheet.html"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Vocabulary_Cheat_Sheet.html"
+  - "https://w3c.github.io/dpv/2.3/dpv/"
 installable: false
 usageSnippet: >-
   Apply these rules before accepting an AI workflow directory entry that reads
@@ -148,6 +152,28 @@ where.
 Avoid vague notes such as "privacy safe," "no risk," "secure by default," or
 "does not store data" unless the source evidence says exactly what is not stored.
 
+## Grounded Reference Table
+
+The review rules above map directly onto established application-security
+guidance. The OWASP Logging Cheat Sheet is the primary anchor: it enumerates the
+data categories that must not be captured in logs or artifacts, requires bounded
+retention, and demands due-diligence checks before data leaves for a third
+party. Use the table below to trace each metadata field back to a published
+practice.
+
+| Metadata field in this rule set | Grounded practice | Source |
+| --- | --- | --- |
+| Data touched (secrets, tokens, PII) | Source code, session IDs, access tokens, passwords, database connection strings, encryption keys, payment/bank data, and sensitive PII (e.g. health, government identifiers) "should usually not be recorded directly" and must be removed, masked, sanitized, hashed, or encrypted | OWASP Logging Cheat Sheet, "What not to log" |
+| Data movement / sharing | "Perform due diligence checks (regulatory and security) before sending event data to third parties" | OWASP Logging Cheat Sheet, deployment & operation |
+| Retention known | "Log data, temporary debug logs, and backups/copies/extractions, must not be destroyed before the duration of the required data retention period, and must not be kept beyond this time"; legal, regulatory, and contractual obligations affect the period | OWASP Logging Cheat Sheet, retention |
+| Execution surface / transparency | Disclose data practices honestly and tell users when data is collected, processed, or handed to external parties | OWASP User Privacy Protection Cheat Sheet, "Honesty & Transparency" |
+| Consistent labels / structured fields | Use a defined logging vocabulary so event and field names stay predictable and do not leak sensitive values in labels | OWASP Logging Vocabulary Cheat Sheet |
+| Data categories & provenance vocabulary | Standardized terms for personal-data categories, processing purposes, and provenance | W3C Data Privacy Vocabulary (DPV) |
+
+This table does not restate the reviewer prompt in `copySnippet`; it documents
+the external evidence behind the field definitions so a maintainer can verify
+each rule against current guidance.
+
 ## Directory Entry Checklist
 
 - [ ] {"task": "Data touched", "description": "The entry names prompts, files, logs, browser state, secrets, telemetry, generated artifacts, or personal data it may touch"}
@@ -196,8 +222,7 @@ to merge.
 
 ## References
 
-- W3C Data Privacy Vocabulary: https://w3c.github.io/dpv/2.3/dpv/
-- W3C Data Catalog Vocabulary: https://www.w3.org/TR/vocab-dcat-3/
-- W3C Dataset Usage Vocabulary: https://www.w3.org/TR/vocab-duv/
-- W3C PROV-O provenance ontology: https://www.w3.org/TR/prov-o/
-- Dublin Core DCMI Metadata Terms: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+- OWASP Logging Cheat Sheet (what not to log, retention, third-party due diligence): https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html
+- OWASP User Privacy Protection Cheat Sheet (transparency, user control): https://cheatsheetseries.owasp.org/cheatsheets/User_Privacy_Protection_Cheat_Sheet.html
+- OWASP Logging Vocabulary Cheat Sheet (consistent, sensitive-value-safe field names): https://cheatsheetseries.owasp.org/cheatsheets/Logging_Vocabulary_Cheat_Sheet.html
+- W3C Data Privacy Vocabulary (personal-data categories, processing purposes, provenance): https://w3c.github.io/dpv/2.3/dpv/
