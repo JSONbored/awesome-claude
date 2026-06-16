@@ -16,7 +16,7 @@ dateAdded: "2026-06-14"
 submittedAt: "2026-06-14"
 sourceSubmissionNumber: 1384
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1384"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/remote-control"
 usageSnippet: >-
   Use this guide to start Remote Control from Claude Code and continue the same session on web or mobile without losing context.
 prerequisites:
@@ -96,6 +96,38 @@ Background sessions preserve `--remote-control` and related launch flags across 
 3. **Enable Remote Control.** Run `/remote-control` or start with `--remote-control`. Optionally set `--remote-control-session-name-prefix` for team naming conventions.
 
 4. **Open the linked session.** Follow the footer pill link or open the session on claude.ai or the Claude mobile app while the terminal stays connected.
+
+## Remote Control CLI Invocation Modes
+
+The CLI offers three invocation modes for starting Remote Control. Server mode runs a process that waits for remote connections; interactive mode gives you a local terminal session you can also drive remotely.
+
+```bash
+# Server mode: stays running, displays a session URL, press spacebar for a QR code
+claude remote-control
+
+# Interactive session with Remote Control enabled (--rc is the alias)
+claude --remote-control
+
+# Interactive session with a custom title
+claude --remote-control "My Project"
+```
+
+From an existing session, run `/remote-control` (or `/rc`) to continue it remotely:
+
+```text
+/remote-control My Project
+```
+
+## Server Mode Flags
+
+| Flag | Description |
+| --- | --- |
+| `--name "My Project"` | Set a custom session title visible in the session list at claude.ai/code. |
+| `--remote-control-session-name-prefix <prefix>` | Prefix for auto-generated session names. Defaults to your machine's hostname, producing names like `myhost-graceful-unicorn`. Set `CLAUDE_REMOTE_CONTROL_SESSION_NAME_PREFIX` for the same effect. |
+| `--spawn <mode>` | How the server creates sessions: `same-dir` (default), `worktree`, or `session` (single-session mode). |
+| `--capacity <N>` | Maximum number of concurrent sessions. Default is 32. Cannot be used with `--spawn=session`. |
+| `--verbose` | Show detailed connection and session logs. |
+| `--sandbox` / `--no-sandbox` | Enable or disable sandboxing for filesystem and network isolation. Off by default. |
 
 5. **Hand off work.** Continue prompting from mobile for reviews or approvals while the terminal handles local tools, git, and MCP servers.
 
