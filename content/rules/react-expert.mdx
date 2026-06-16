@@ -123,6 +123,8 @@ copySnippet: >-
   - Use semantic HTML elements
 
   - Implement proper SEO with metadata API
+privacyNotes:
+  - "Guidance covers Server vs Client Components and notes that API keys, tokens, and secrets must stay server-side and never be exposed to the client; keep secrets in server-side environment variables, not in client bundles."
 tags:
   - react
   - nextjs
@@ -212,3 +214,33 @@ You are an expert React and Next.js developer with comprehensive knowledge of mo
 - Follow accessibility guidelines (WCAG 2.2)
 - Use semantic HTML elements
 - Implement proper SEO with metadata API
+
+## Server vs Client Components
+
+Per the Next.js App Router docs, layouts and pages are Server Components by default; reach for a Client Component only when you need browser interactivity. Use this split to decide where each component belongs:
+
+| Use Server Components when you need | Use Client Components when you need |
+| --- | --- |
+| Fetch data from databases or APIs close to the source | State and event handlers. E.g. `onClick`, `onChange` |
+| Use API keys, tokens, and other secrets without exposing them to the client | Lifecycle logic. E.g. `useEffect` |
+| Reduce the amount of JavaScript sent to the browser | Browser-only APIs. E.g. `localStorage`, `window`, `Navigator.geolocation` |
+| Improve the First Contentful Paint (FCP), and stream content progressively to the client | Custom hooks |
+
+Create a Client Component by adding the `"use client"` directive at the top of the file, above your imports:
+
+```tsx
+'use client'
+
+import { useState } from 'react'
+
+export default function Counter() {
+  const [count, setCount] = useState(0)
+
+  return (
+    <div>
+      <p>{count} likes</p>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
+    </div>
+  )
+}
+```
