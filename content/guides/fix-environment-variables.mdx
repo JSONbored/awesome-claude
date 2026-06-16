@@ -3,163 +3,141 @@ title: Fix Claude Code Environment Variable Configuration Errors
 slug: fix-environment-variables
 category: guides
 description: >-
-  Debug Claude Code authentication failures, OAuth errors, and API key
-  configuration issues with platform-specific solutions and automated management
-  tools.
+  Set Claude Code environment variables correctly and debug auth, model, and
+  config issues using only documented variables and the /doctor diagnostics.
 cardDescription: >-
-  Debug Claude Code authentication failures, OAuth errors, and API key
-  configuration issues with platform-specific solutions and automated...
+  Set Claude Code environment variables correctly and debug auth, model, and
+  config issues using documented variables and /doctor diagnostics.
 seoTitle: Fix Claude Code Environment Variable Configuration Errors
 seoDescription: >-
-  Debug Claude Code authentication failures, OAuth errors, and API key
-  configuration issues with platform-specific solutions and automated management
-  tools.
+  Set Claude Code environment variables correctly and debug authentication,
+  model, and configuration issues using documented variables and /doctor.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/env-vars"
 installable: false
 usageSnippet: >-
-  Claude Code configuration errors commonly affect authentication, OAuth
-  handling, and permission settings. This guide provides platform-specific fixes
-  for Windows WSL, macOS, and Linux. Security best practices protect API keys
-  with layered approaches. Automated management with direnv simplifies
-  environment setup.
+  Claude Code reads environment variables at startup from your shell and from
+  the env block in settings.json. This guide shows how to set the common
+  variables, gives a reference table of documented variables, and walks through
+  diagnosing config problems with /doctor, /status, and a clean configuration.
+safetyNotes:
+  - "ANTHROPIC_API_KEY overrides any active subscription and apiKeyHelper runs a shell script whose output becomes auth headers; treat both as credential-bearing configuration."
+privacyNotes:
+  - "API keys set via environment variables or settings.json are credentials; avoid committing settings files that contain them and prefer apiKeyHelper for rotating secrets."
 tags:
   - environment-variables
   - configuration
-  - api-keys
   - authentication
   - debugging
-  - security
 keywords:
-  - claude environment variables
+  - claude code environment variables
   - fix env vars
-  - mcp environment setup
+  - settings.json env
   - api key configuration
-readingTime: 4
-difficultyScore: 100
-hasTroubleshooting: false
+readingTime: 5
+difficultyScore: 40
+hasTroubleshooting: true
 hasPrerequisites: false
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
 ---
 
-## TL;DR
+## Overview
 
-Claude Code configuration errors commonly affect authentication, OAuth handling, and permission settings. This guide provides platform-specific fixes for Windows WSL, macOS, and Linux. Security best practices protect API keys with layered approaches. Automated management with direnv simplifies environment setup.
+Claude Code is configured through a layer of environment variables on top of its settings files. Variables can come from your shell, from the `env` block in a `settings.json` file, or from CLI flags, and they generally take precedence over the matching settings field. Claude Code reads variables at startup, so changes take effect on the next launch.
 
-> **Critical Configuration Alert**
->
-> Configuration issues represent a significant portion of Claude Code support requests. OAuth callback failures and API key exposure risks remain top concerns. This guide addresses the most common configuration problems through proper setup patterns.
+When something is misconfigured, the symptoms are usually one of: the wrong account or API key is in use, the wrong model is selected, a proxy/gateway endpoint isn't being honored, or a value you set in one file is being silently overridden by another scope. This guide covers how to set the documented variables correctly and how to diagnose which layer is winning.
 
-## Problem Overview
+## Setting environment variables
 
-> **Claude Code Configuration Error Indicators**
->
-> **Primary Symptoms:** OAuth account information missing, API key not found errors, permission denied on file operations, MCP server connection failures
->
-> **Common Triggers:** SSH environment limitations, corporate network restrictions, cross-platform path conflicts, expired OAuth tokens
->
-> **Affected Versions:** Claude Code 3.0+, all platforms (Windows/macOS/Linux)
->
-> **Impact Level:** Complete workflow disruption - no code generation possible
-
-## Quick Diagnosis
-
-<!-- Section type: accordion -->
-
-## Common Error Messages
-
-<!-- Section type: comparison_table -->
-
-## Step-by-Step Solutions
-
-1. **Platform-Specific Setup**
-
-2. **Authentication Configuration**
-
-3. **Permission Configuration**
-
-4. **Debug and Verify**
-
-<!-- Section type: comparison_table -->
-
-## Common Root Causes
-
-<!-- Section type: feature_grid -->
-
-## Prevention Strategies
-
-> **Prevent Future Configuration Issues**
->
-> **Automated Environment Management:** Use direnv for directory-based configuration loading
->
-> **Container-Based Development:** Docker ensures consistent environments - Prevents platform-specific issues entirely
->
-> **Regular Validation Checks:** Run claude doctor weekly - Early detection of configuration drift
-
-## Alternative Solutions
-
-<!-- Section type: accordion -->
-
-## Diagnostic Commands
+You can set variables in your shell before launching Claude Code:
 
 ```bash
-
+# macOS, Linux, WSL
+export ANTHROPIC_API_KEY="sk-ant-..."
+export ANTHROPIC_MODEL="claude-sonnet-4-5"
+export API_TIMEOUT_MS="1200000"
+claude
 ```
 
-## Security Best Practices
+```powershell
+# Windows PowerShell
+$env:ANTHROPIC_API_KEY = "sk-ant-..."
+$env:API_TIMEOUT_MS = "1200000"
+claude
+```
 
-- [ ] {"task": "Never commit .env files containing API keys", "required": true, "description": "Use .gitignore patterns: .env*, secrets/\*\*, *.key to prevent exposure"}
-- [ ] {"task": "Implement regular API key rotation policies", "required": true, "description": "Use vault integration or cloud secret managers for automatic rotation"}
-- [ ] {"task": "Enable file access deny rules for sensitive paths", "required": true, "description": "Block ~/.ssh, ~/.aws, ~/.env with explicit deny permissions"}
-- [ ] {"task": "Use separate API keys for each environment", "required": false, "description": "Development, staging, production require isolated credentials"}
-- [ ] {"task": "Configure OAuth token expiration policies", "required": false, "description": "Set CLAUDE_CODE_API_KEY_HELPER_TTL_MS for automatic refresh"}
-- [ ] {"task": "Audit permission scopes monthly", "required": false, "description": "Review file access patterns and command restrictions regularly"}
+To apply the same variables to every session and to the subprocesses Claude Code spawns, set them under the `env` key in `settings.json` (for example `~/.claude/settings.json` for user scope, or `.claude/settings.json` in a project):
 
-## Tool Configuration Examples
+```json
+{
+  "env": {
+    "API_TIMEOUT_MS": "1200000",
+    "BASH_DEFAULT_TIMEOUT_MS": "300000",
+    "DISABLE_TELEMETRY": "1"
+  }
+}
+```
 
-<!-- Section type: code_group -->
+For dynamically generated credentials (temporary or rotating keys), use the `apiKeyHelper` setting instead of a static key. It points at a script run in `/bin/sh`; its output is sent as the `X-Api-Key` and `Authorization: Bearer` headers, and the refresh interval is controlled by `CLAUDE_CODE_API_KEY_HELPER_TTL_MS`:
 
-## Team Setup Guide
+```json
+{
+  "apiKeyHelper": "/path/to/generate_temp_api_key.sh"
+}
+```
 
-> **Team and Enterprise Configuration**
->
-> **Team Plans:** Enhanced usage limits per seat
->
-> **Enterprise Plans:** Maximum usage with priority support
->
-> **Shared Configuration:** CLAUDE.md files define team standards
->
-> **Role Management:** Settings → Members for seat allocation
+> One important gotcha: variables in `settings.json` `env` do **not** propagate to MCP child processes. Set per-server `env` inside `.mcp.json` instead.
 
-1. **Create Team Configuration Template**
+## Common environment variables
 
-2. **Configure direnv for Auto-Loading**
+These are documented variables from the Claude Code environment variables reference. They are a subset focused on auth, model selection, endpoints, and the most common runtime knobs.
 
-## Common Pitfalls
+| Variable | What it does |
+| :-- | :-- |
+| `ANTHROPIC_API_KEY` | API key sent as the `X-Api-Key` header. When set, it overrides a Claude Pro/Max/Team/Enterprise subscription; in interactive mode you approve it once. |
+| `ANTHROPIC_AUTH_TOKEN` | Custom value for the `Authorization` header (prefixed with `Bearer `). |
+| `ANTHROPIC_BASE_URL` | Override the API endpoint to route through a proxy or gateway. |
+| `ANTHROPIC_MODEL` | Override the default model for the session. |
+| `ANTHROPIC_DEFAULT_HAIKU_MODEL` | Haiku-class model used for background tasks. |
+| `ANTHROPIC_DEFAULT_SONNET_MODEL` | Sonnet-class model to use. |
+| `ANTHROPIC_DEFAULT_OPUS_MODEL` | Opus-class model to use. |
+| `CLAUDE_CODE_USE_BEDROCK` | Route requests through Amazon Bedrock. |
+| `CLAUDE_CODE_USE_VERTEX` | Route requests through Google Vertex AI. |
+| `CLAUDE_CODE_API_KEY_HELPER_TTL_MS` | Refresh interval (ms) for credentials generated by `apiKeyHelper`. |
+| `API_TIMEOUT_MS` | Timeout for API requests (default 600000 / 10 min). Raise it on slow networks or proxies. |
+| `BASH_DEFAULT_TIMEOUT_MS` | Default timeout for long-running Bash commands (default 120000 / 2 min). |
+| `BASH_MAX_TIMEOUT_MS` | Maximum timeout the model can set for Bash commands (default 600000 / 10 min). |
+| `MAX_THINKING_TOKENS` | Token budget for extended thinking; set to `0` to disable on models that support it. |
+| `CLAUDE_CODE_EFFORT_LEVEL` | Effort level for the session (`low`, `medium`, `high`, `xhigh`, `max`, `auto`); takes precedence over `/effort` and the `effortLevel` setting. |
+| `USE_BUILTIN_RIPGREP` | Set to `0` to use a system-installed `ripgrep` instead of the bundled binary. |
+| `DISABLE_TELEMETRY` | Set to `1` to disable telemetry. |
+| `DISABLE_AUTOUPDATER` | Set to `1` to disable automatic updates. |
+| `CLAUDE_CONFIG_DIR` | Override the configuration directory (defaults to `~/.claude`); useful for isolating a clean config. |
 
-> **Critical Anti-Patterns to Avoid**
->
-> - Hardcoding API keys in source code - exposed in version control
-> - Using same API key across all environments - security breach risk
-> - Mixing Windows and WSL paths - causes significant performance degradation
-> - Ignoring OAuth token expiration - leads to unexpected failures
-> - Skipping permission configuration - enables unintended file access
+For the complete list (Bedrock/Vertex/Foundry endpoints, TLS/mTLS certs, UI/terminal flags, and feature toggles), see the environment variables reference linked at the end.
 
-## FAQ
+## Troubleshooting
 
-## Related Issues and Solutions
+Start inside Claude Code with `/doctor`, which validates your configuration files and surfaces invalid keys, schema errors, and installation health. When it reports issues, press `f` to hand the diagnostic report to Claude and walk through fixes. If `claude` won't start at all, run `claude doctor` from your shell instead.
 
-<!-- Section type: related_content -->
+**A value you set seems ignored.** Settings merge across managed, user, project, and local scopes. Managed settings always win; otherwise the closer scope overrides the broader one in the order local, then project, then user. Environment variables and CLI flags act as a further override layer on top of settings. Run `/status` to see which settings sources are active (including whether managed settings are in effect). A frequent cause is the same key being set in `settings.local.json`, which overrides `settings.json`.
 
-> **Issue Resolved?**
->
-> **Problem solved?** Great! Consider implementing direnv for automatic environment management to prevent recurrence.
->
-> **Still having issues?** Join our [community](/community) for additional support or contact Anthropic support for enterprise assistance.
->
-> **Found a new solution?** Share it with the community to help others facing the same issue.
+**Variables added globally are ignored.** `permissions`, `hooks`, and `env` belong in `~/.claude/settings.json`. If you put them in `~/.claude.json` (which only holds app state and UI toggles) they won't apply.
 
-_Last updated: September 2025 | Solutions verified against Claude Code 3.0+ | Found this helpful? Bookmark for future reference and explore more [troubleshooting guides](/guides/troubleshooting)._
+**MCP server starts without expected variables.** Variables in `settings.json` `env` don't propagate to MCP child processes. Move them to a per-server `env` block in `.mcp.json`. To see server stderr, run `claude --debug mcp`.
+
+**Isolate the problem with a clean configuration.** Launch `claude --safe-mode` to disable all customizations (CLAUDE.md, skills, plugins, hooks, MCP servers, custom commands) while keeping auth, model selection, and permissions working. If the problem disappears, one of those surfaces is the cause. To bypass everything under `~/.claude` as well, point `CLAUDE_CONFIG_DIR` at an empty directory and launch from a folder with no project config:
+
+```bash
+cd /tmp && CLAUDE_CONFIG_DIR=/tmp/claude-clean claude
+```
+
+On Linux and Windows you'll be prompted to log in again in the clean session because credentials live under the config directory; on macOS they're in the Keychain and carry over. If the problem persists even here, the cause is outside your user and project configuration — check for environment variables affecting Claude Code and managed settings via `/status`.
+
+**Search isn't finding files.** If the bundled `ripgrep` can't run on your system, install your platform's `ripgrep` package and set `USE_BUILTIN_RIPGREP=0`.
+
+For broader installation, login, and connectivity problems, see the troubleshooting and debug-your-configuration pages linked below.
