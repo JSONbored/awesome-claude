@@ -123,6 +123,39 @@ a user runs.
    settings or plugin defaults.
 
 8. **Iterate on feedback.** Adjust contrast before wide rollout; keep a changelog
+
+## Theme File Format
+
+A custom theme is a JSON file in `~/.claude/themes/`. The filename (without
+`.json`) is the theme's slug, and selecting it stores `custom:<slug>` as your
+theme preference. The file has three optional fields:
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `name` | string | Display label shown in `/theme`. Defaults to the filename slug. |
+| `base` | string | Built-in preset to start from: `dark`, `light`, `dark-daltonized`, `light-daltonized`, `dark-ansi`, or `light-ansi`. Defaults to `dark`. |
+| `overrides` | object | Map of color token names to values. Tokens not listed fall through to the base preset. |
+
+Color values accept `#rrggbb`, `#rgb`, `rgb(r,g,b)`, `ansi256(n)`, or
+`ansi:<name>` (one of the 16 standard ANSI names). Unknown tokens and invalid
+values are ignored, so a typo cannot break rendering. The example below keeps the
+dark preset and recolors the brand accent, error text, and success text:
+
+```json
+{
+  "name": "Dracula",
+  "base": "dark",
+  "overrides": {
+    "claude": "#bd93f9",
+    "error": "#ff5555",
+    "success": "#50fa7b"
+  }
+}
+```
+
+Claude Code watches `~/.claude/themes/` and reloads on file change, so edits
+apply to a running session without a restart. Plugins can ship themes too, which
+then appear in the `/theme` picker alongside your own.
    entry per palette revision.
 
 ## Accessibility Checklist
