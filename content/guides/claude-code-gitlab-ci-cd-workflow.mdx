@@ -1,0 +1,129 @@
+---
+title: Claude Code GitLab CI/CD Workflow
+slug: claude-code-gitlab-ci-cd-workflow
+category: guides
+description: >-
+  Set up Claude Code in GitLab CI/CD with masked ANTHROPIC_API_KEY variables,
+  npm-based CLI install, claude -p jobs, and Bedrock or Vertex OIDC alternatives
+  from official GitLab integration docs.
+cardDescription: >-
+  Run Claude Code in GitLab CI with masked secrets, scoped jobs, and provider options.
+seoTitle: Claude Code GitLab CI/CD Workflow
+seoDescription: >-
+  Guide to Claude Code GitLab CI/CD: masked variables, npm CLI install, claude -p
+  automation, GitLab MCP tools, and Bedrock or Vertex authentication from official docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1390
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1390"
+documentationUrl: "https://code.claude.com/docs/en/gitlab-ci-cd"
+usageSnippet: >-
+  Add masked ANTHROPIC_API_KEY, install Claude Code with npm in a CI job, run
+  claude -p with scoped --allowedTools, and review MR output before merge.
+prerequisites:
+  - "GitLab project with CI/CD variables permission and a protected default branch policy."
+  - "Anthropic API key or approved Bedrock or Vertex provider configuration."
+  - "Human review before merging Claude-opened merge requests."
+safetyNotes:
+  - "CI jobs run claude with --permission-mode acceptEdits in official examples—scope repositories and tools narrowly."
+  - "Never commit API keys; store ANTHROPIC_API_KEY as a masked CI/CD variable."
+  - "GitLab MCP write tools can open MRs and post comments as the job identity."
+privacyNotes:
+  - "Issue titles, MR diffs, and AI_FLOW variables enter model context during jobs."
+  - "CI logs may retain prompts—align retention with corporate policy."
+sourceUrls:
+  - "https://code.claude.com/docs/en/gitlab-ci-cd"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - gitlab
+  - cicd
+  - ci
+keywords:
+  - Claude Code GitLab CI/CD
+  - GitLab claude -p workflow
+  - ANTHROPIC_API_KEY GitLab variable
+readingTime: 9
+difficultyScore: 55
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Official GitLab CI/CD documentation describes running Claude Code in isolated
+GitLab jobs with masked **`ANTHROPIC_API_KEY`**, repository cloning, and
+**`claude -p`** automation. This guide follows those steps using an
+**npm-based CLI install** instead of remote install scripts.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Masked secret", "description": "ANTHROPIC_API_KEY stored under Settings → CI/CD → Variables"}
+- [ ] {"task": "Job scope", "description": "rules limit when the Claude job runs (web, merge_request_event, or mention triggers)"}
+- [ ] {"task": "Review gate", "description": "Maintainers review Claude MRs like any contributor"}
+- [ ] {"task": "CLAUDE.md", "description": "Repository standards file guides automated changes"}
+
+## Step-by-Step Setup
+
+1. Add **`ANTHROPIC_API_KEY`** as a masked (and protected if needed) CI/CD variable.
+2. Add a **`claude`** stage job using a Node image; install Git and the CLI with **`npm install -g @anthropic-ai/claude-code`**.
+3. Set **`GIT_STRATEGY: fetch`** so the job clones the target repository.
+4. Run **`claude -p`** with an explicit prompt and **`--allowedTools`** scoped to read and write needs (official examples include **`mcp__gitlab`** when GitLab MCP is enabled).
+5. Optionally enable **`/bin/gitlab-mcp-server`** when your runner image provides it.
+6. For **Amazon Bedrock** or **Google Vertex AI**, follow the OIDC or Workload Identity Federation sections in the official doc instead of **`ANTHROPIC_API_KEY`**.
+
+## Example job shape (npm install)
+
+```yaml
+stages:
+  - ai
+
+claude:
+  stage: ai
+  image: node:24-alpine
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+  variables:
+    GIT_STRATEGY: fetch
+  before_script:
+    - apk add --no-cache git
+    - npm install -g @anthropic-ai/claude-code
+  script:
+    - >
+      claude -p "${AI_FLOW_INPUT:-'Review this MR and implement requested changes'}"
+      --permission-mode acceptEdits
+      --allowedTools "Bash Read Edit Write"
+```
+
+Adjust **`--allowedTools`** to least privilege. Official docs also document Bedrock and Vertex job templates with cloud OIDC.
+
+## Source Verification Notes
+
+Verified against **Claude Code GitLab CI/CD** documentation on **2026-06-16**:
+
+- Integration is maintained by GitLab and runs Claude Code in isolated CI jobs.
+- Quick setup requires **`ANTHROPIC_API_KEY`** as a masked CI/CD variable.
+- Jobs can react to web triggers, merge request events, or mention-driven flows with **`AI_FLOW_*`** variables.
+- Official examples use **`claude -p`**, **`--permission-mode acceptEdits`**, and scoped **`--allowedTools`**.
+- Enterprise setups document **Bedrock OIDC** and **Vertex Workload Identity Federation** alternatives.
+
+## Duplicate Check
+
+Distinct from **`claude-code-github-actions-review-workflow`** (GitHub Actions) and
+**`claude-code-gitlab-ci-agent-capability-pack`** (skills review matrix). This
+guide covers **GitLab CI job setup** from the official GitLab integration doc.
+
+## Troubleshooting
+
+**Issue:** Job cannot comment or open MRs
+**Fix:** Confirm GitLab token permissions and include **`mcp__gitlab`** in **`--allowedTools`** when using GitLab MCP per official troubleshooting.
+
+**Issue:** Authentication errors
+**Fix:** Validate **`ANTHROPIC_API_KEY`** or cloud OIDC/WIF variables per provider section in the official doc.
