@@ -102,6 +102,40 @@ When multiple skills could apply, scope and installation order affect which
 instructions Claude Code sees. Avoid duplicate skill names across scopes unless
 you intend one to override another deliberately.
 
+## Skill Directory Locations by Scope
+
+Per the Claude Code skills documentation, each scope has a fixed path and reach. Discovery follows a precedence chain when names collide.
+
+| Scope | Path | Applies to | Precedence on name collision |
+| --- | --- | --- | --- |
+| Personal (user) | `~/.claude/skills/<skill-name>/SKILL.md` | All your projects | Overrides project |
+| Project | `.claude/skills/<skill-name>/SKILL.md` | This project only | Overridden by personal |
+| Plugin | `<plugin>/skills/<skill-name>/SKILL.md` | Where plugin is enabled | Namespaced `plugin-name:skill-name`, cannot conflict |
+| Enterprise | Managed settings | All users in your organization | Overrides personal |
+
+Each skill is a directory with `SKILL.md` as the required entrypoint, plus optional supporting files:
+
+```text
+my-skill/
+├── SKILL.md           # Main instructions (required)
+├── template.md        # Template for Claude to fill in
+├── examples/
+│   └── sample.md      # Example output showing expected format
+└── scripts/
+    └── validate.sh    # Script Claude can execute
+```
+
+A minimal project skill at `.claude/skills/api-conventions/SKILL.md` needs only YAML frontmatter and markdown instructions:
+
+```markdown
+---
+name: api-conventions
+description: API design patterns for this codebase
+---
+
+Use REST conventions and document each endpoint.
+```
+
 ## Step-by-Step Implementation Guide
 
 1. **Classify the skill.** Decide whether it is personal, repository-specific,
