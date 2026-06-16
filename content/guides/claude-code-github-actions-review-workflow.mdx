@@ -1,0 +1,180 @@
+---
+title: Claude Code GitHub Actions Review Workflow
+slug: claude-code-github-actions-review-workflow
+category: guides
+description: >-
+  Set up Claude Code GitHub Actions for pull request review: install the Claude
+  GitHub app, store ANTHROPIC_API_KEY in secrets, use anthropics/claude-code-action@v1
+  with prompt-based automation, and follow documented security practices.
+cardDescription: >-
+  Automate PR review with Claude Code GitHub Actions using official setup steps.
+seoTitle: Claude Code GitHub Actions Review Workflow
+seoDescription: >-
+  Guide to Claude Code GitHub Actions for PR review: GitHub app install, workflow
+  secrets, claude-code-action@v1 prompts, @claude mentions, and security practices
+  from official documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1389
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1389"
+documentationUrl: "https://code.claude.com/docs/en/github-actions"
+usageSnippet: >-
+  Run /install-github-app or follow manual setup, add ANTHROPIC_API_KEY as a GitHub
+  secret, copy the example workflow using anthropics/claude-code-action@v1, then
+  trigger review with @claude comments or a pull_request prompt job.
+prerequisites:
+  - "Repository admin access to install the Claude GitHub app and add secrets."
+  - "Anthropic API access or approved provider setup documented for your org."
+  - "A CLAUDE.md or review rubric describing project standards."
+  - "Branch protection requiring human review before merging automation output."
+safetyNotes:
+  - "The Claude GitHub app requests Contents, Issues, and Pull requests read and write permissions—scope installation to intended repositories."
+  - "Never commit API keys; use GitHub encrypted secrets such as ANTHROPIC_API_KEY."
+  - "Review Claude suggestions before merging; automation should not bypass CODEOWNERS."
+  - "Workflows consume GitHub Actions minutes and Claude API tokens—set timeouts and max-turn limits."
+privacyNotes:
+  - "PR diffs and issue comments are sent to the model provider during workflow runs."
+  - "Logs may retain prompts—align retention with corporate data handling rules."
+  - "Use repository secrets rather than echoing credentials in workflow YAML."
+sourceUrls:
+  - "https://code.claude.com/docs/en/github-actions"
+  - "https://github.com/apps/claude"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - github-actions
+  - code-review
+  - ci
+  - automation
+keywords:
+  - Claude Code GitHub Actions review
+  - claude-code-action v1 PR review
+  - ANTHROPIC_API_KEY workflow secret
+  - install-github-app Claude Code
+readingTime: 9
+difficultyScore: 54
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Official Claude Code GitHub Actions documentation describes installing the Claude
+GitHub app, storing `ANTHROPIC_API_KEY` in repository secrets, and running
+`anthropics/claude-code-action@v1` workflows triggered by `@claude` mentions or
+automation `prompt` inputs. Use `CLAUDE.md` for review standards and keep human
+merge approval.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Admin access", "description": "Can install GitHub app and add Actions secrets"}
+- [ ] {"task": "API credential", "description": "ANTHROPIC_API_KEY or documented cloud provider setup"}
+- [ ] {"task": "Review rubric", "description": "CLAUDE.md or prompt text defines review criteria"}
+- [ ] {"task": "Human gate", "description": "Maintainers review automation output before merge"}
+
+## Core Concepts Explained
+
+### Interactive vs automation mode
+
+The v1 action auto-detects mode: `@claude` mentions in issue or PR comments run
+interactively, while workflows that pass a `prompt` input run immediately (for
+example on `pull_request` opened/synchronize events).
+
+### GitHub app permissions
+
+Manual setup documentation lists required app permissions: Contents, Issues, and
+Pull requests (read and write) so Claude can respond, edit files, and open PRs.
+
+### v1 configuration surface
+
+GA workflows use `prompt` for instructions and `claude_args` for CLI flags such as
+`--max-turns`, `--model`, and `--append-system-prompt` (replacing beta `direct_prompt`,
+`mode`, and scattered inputs).
+
+## Step-by-Step Implementation Guide
+
+1. **Quick setup.** In Claude Code terminal run `/install-github-app` to guide app
+   install and secret creation (direct Claude API users per docs).
+
+2. **Manual fallback.** Install https://github.com/apps/claude, add
+   `ANTHROPIC_API_KEY` repository secret, and copy `examples/claude.yml` from the
+   Claude Code Action repository into `.github/workflows/`.
+
+3. **Add review workflow.** Example automation from official docs:
+
+```yaml
+name: Code Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: "Review this pull request for correctness and security issues"
+          claude_args: "--max-turns 10"
+```
+
+4. **Optional plugin skill review.** Docs show installing a plugin with
+   `plugin_marketplaces` and `plugins`, then passing a namespaced `/plugin:skill`
+   prompt on pull_request events.
+
+5. **Configure CLAUDE.md.** Document code style, review criteria, and patterns
+   Claude should follow during reviews.
+
+6. **Set cost guards.** Use `claude_args` `--max-turns`, workflow timeouts, and
+   concurrency controls documented in the CI costs section.
+
+7. **Require human merge.** Treat workflow comments as suggestions until a maintainer
+   approves and merges.
+
+## Troubleshooting
+
+### Action still on @beta inputs
+
+Upgrade to `@v1`, replace `direct_prompt` with `prompt`, and move CLI flags into
+`claude_args` per the breaking changes table in official docs.
+
+### @claude does not respond
+
+Confirm the GitHub app is installed on the repository and `ANTHROPIC_API_KEY` secret
+exists; verify workflow listens to `issue_comment` or `pull_request_review_comment`.
+
+### Bedrock or Vertex setup
+
+Follow the separate "Using with Amazon Bedrock & Google Vertex AI" section for OIDC,
+service accounts, and optional custom GitHub App configuration—do not reuse direct
+API secret steps alone.
+
+## Source Verification Notes
+
+Verified against https://code.claude.com/docs/en/github-actions on **2026-06-16**:
+
+- Quick setup uses `/install-github-app`; manual setup uses the Claude GitHub app and
+  `ANTHROPIC_API_KEY` secret.
+- GA workflows use `anthropics/claude-code-action@v1` with `prompt` and `claude_args`.
+- App permissions include Contents, Issues, and Pull requests read/write.
+- Docs describe `@claude` comment triggers and automation prompts on events like
+  `pull_request` and `schedule`.
+- Security section requires GitHub Secrets and reviewing suggestions before merge.
+
+## Duplicate Check
+
+Complements `github-actions-security-review-capability-pack` (workflow security
+review skill) and `review-ai-generated-code-before-merge` (human review practices).
+No existing guide walks through official Claude Code GitHub Actions setup for PR
+review automation end to end.
+
+## References
+
+- Claude Code GitHub Actions - https://code.claude.com/docs/en/github-actions
