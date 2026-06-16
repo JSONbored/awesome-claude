@@ -329,7 +329,7 @@ if ! command -v jq &> /dev/null; then
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sudo apt-get install -y jq || sudo yum install -y jq
     else
-        echo "Please install jq manually: https://stedolan.github.io/jq/"
+        echo "Please install jq manually: https://jqlang.github.io/jq/"
     fi
 fi
 
