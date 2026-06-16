@@ -142,6 +142,26 @@ It covers Active Record, RESTful controllers, strong parameters, authorization, 
 and production security — grounded in the
 [official Ruby on Rails guides](https://guides.rubyonrails.org/).
 
+## Active Record Validation Helpers
+
+Common model-layer validation helpers from the
+[Active Record Validations](https://guides.rubyonrails.org/active_record_validations.html)
+guide, with what each one checks:
+
+| Helper | What it validates |
+| --- | --- |
+| `presence` | Validates that the specified attributes are not empty. |
+| `absence` | Validates that the specified attributes are absent. |
+| `uniqueness` | Validates that the attribute's value is unique right before the object gets saved. |
+| `length` | Validates the length of the attributes' values. |
+| `numericality` | Validates that your attributes have only numeric values. |
+| `format` | Validates the attributes' values by testing whether they match a given regular expression. |
+| `inclusion` | Ensures that the value is present in the set. |
+| `exclusion` | Ensures that the value is not present in the set. |
+| `confirmation` | Use when you have two text fields that should receive exactly the same content. |
+| `acceptance` | Validates that a checkbox on the user interface was checked when a form was submitted. |
+| `comparison` | Validates a comparison between any two comparable values. |
+
 ## Sources
 
 - [Active Record Basics](https://guides.rubyonrails.org/active_record_basics.html)
