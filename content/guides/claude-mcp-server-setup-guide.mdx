@@ -1,144 +1,273 @@
 ---
-title: Claude MCP Server Setup 2025
+title: Claude Code MCP Server Setup Guide
 slug: claude-mcp-server-setup-guide
 category: guides
 description: >-
-  Master MCP server installation and configuration for Claude Desktop. Complete
-  step-by-step setup guide with optimization tips and best practices for 2025.
-cardDescription: Master MCP server installation and configuration for Claude Desktop.
-seoTitle: Claude MCP Server Setup 2025
+  Connect existing MCP servers to Claude Code with claude mcp add: stdio, HTTP,
+  and SSE transports, local/project/user scopes, .mcp.json, and /mcp OAuth.
+cardDescription: Add a hosted, package, or local MCP server and choose where its config lives.
+seoTitle: Claude Code MCP Server Setup Guide
 seoDescription: >-
-  Master MCP server installation and configuration for Claude Desktop. Complete
-  step-by-step setup guide with optimization tips and best practices for 2025.
+  How to register MCP servers in Claude Code, pick a config scope, share them
+  with your team via committed files, and authenticate remote endpoints.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
 installable: false
 usageSnippet: >-
-  MCP (Model Context Protocol) servers enable Claude Desktop to interact with
-  external tools and systems. This guide provides a complete walkthrough for
-  setting up MCP servers, from installation to advanced configuration, with
-  practical examples and troubleshooting tips.
+  A practical walkthrough: register a server by its transport, decide between
+  personal and team-shared configuration, keep credentials in environment
+  variables, and finish remote authentication.
+prerequisites:
+  - "Claude Code installed and signed in, with the `claude` CLI on your PATH."
+  - "The connection details for the server you are connecting: its transport (stdio command, HTTP/SSE URL), any required header or environment variable, and its trust/source information."
+safetyNotes:
+  - "Local stdio servers run their command with your user privileges, and remote servers expose model-controlled tools, so connect only servers you trust and review the command, URL, and headers first."
+privacyNotes:
+  - "Server URLs, command paths, header names, and tool results can expose internal hosts and private data; keep API keys and tokens out of shared `.mcp.json` and use environment-variable expansion or `/mcp` OAuth instead."
 tags:
   - mcp-servers
+  - claude-code
   - configuration
-  - tutorial
   - setup
   - integration
 keywords:
-  - claude mcp setup
+  - claude mcp add
+  - claude code mcp setup
   - mcp server setup
-  - claude desktop mcp
+  - mcp transport stdio http sse
   - model context protocol setup
-readingTime: 3
+readingTime: 7
 difficultyScore: 55
 hasTroubleshooting: true
-hasPrerequisites: false
+hasPrerequisites: true
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
 ---
 
-## TL;DR
+## Overview
 
-MCP (Model Context Protocol) servers enable Claude Desktop to interact with external tools and systems. This guide provides a complete walkthrough for setting up MCP servers, from installation to advanced configuration, with practical examples and troubleshooting tips.
+Claude Code connects to external tools and data sources through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction), an open standard for AI-tool integrations. Once a server is connected, Claude can read from and act on that system directly instead of working from text you paste into the session.
 
-**Key Points:**
+This guide is about *connecting servers that already exist* — a vendor's hosted endpoint, a published package, or your own local script — not about writing one. The single tool you use is the `claude mcp add` command, plus the in-session `/mcp` command for authentication. You connect a server once, choose where its configuration lives, and it loads automatically in the sessions you scoped it to.
 
-- Install Claude Desktop and Node.js as prerequisites
-- Configure MCP servers in claude_desktop_config.json
-- Test connections and verify server functionality
-- Optimize performance with best practices
+Connect a server when you find yourself copying data into chat from another tool such as an issue tracker, a database, or a monitoring dashboard. Browse reviewed remote connectors in the [Anthropic Directory](https://claude.ai/directory); any remote server listed there can be added with the same command.
 
-## Prerequisites and System Requirements
+> **Trust before you connect.** Local stdio servers run their command with your user privileges, and remote servers can fetch external content that exposes you to prompt-injection risk. Verify a server's source and review its command, URL, and headers before adding it.
 
-Before setting up MCP servers, ensure your system meets these requirements:
+## Connect a server with `claude mcp add`
 
-> **System Requirements**
->
-> - **Operating System**: macOS 12+, Windows 10+, or Ubuntu 20.04+
-> - **Claude Desktop**: Version 0.7.0 or higher
-> - **Node.js**: Version 18.0+ (LTS recommended)
-> - **RAM**: Minimum 8GB (16GB recommended)
-> - **Storage**: 2GB free space for MCP servers
+Every server is added with one CLI command from your terminal. The transport you pick — stdio, HTTP, or SSE — depends on how the server runs.
 
-## Step-by-Step Installation Guide
+### Remote HTTP server (recommended for cloud services)
 
-1. **Install Node.js and npm**
+HTTP is the recommended transport for remote servers and the most widely supported for cloud-based services.
 
-2. **Locate Claude Desktop Configuration**
+```bash
+# Basic syntax
+claude mcp add --transport http <name> <url>
 
-3. **Install Your First MCP Server**
+# Real example: connect to Notion
+claude mcp add --transport http notion https://mcp.notion.com/mcp
 
-4. **Configure the MCP Server**
+# With a Bearer token header
+claude mcp add --transport http secure-api https://api.example.com/mcp \
+  --header "Authorization: Bearer your-token"
+```
 
-5. **Restart Claude Desktop**
+In `.mcp.json` or `claude mcp add-json`, the `type` field accepts `streamable-http` as an alias for `http`, so configs copied from server docs work without modification.
 
-## Popular MCP Servers and Their Use Cases
+### Remote SSE server (deprecated)
 
-<!-- Section type: feature_grid -->
+The SSE (Server-Sent Events) transport is deprecated — prefer HTTP where the server supports it. SSE is still available for servers that only expose an SSE endpoint.
 
-## Advanced Configuration Options
+```bash
+# Basic syntax
+claude mcp add --transport sse <name> <url>
 
-<!-- Section type: accordion -->
+# Real example: connect to Asana
+claude mcp add --transport sse asana https://mcp.asana.com/sse
 
-<!-- Section type: code_group -->
+# With an authentication header
+claude mcp add --transport sse private-api https://api.company.com/sse \
+  --header "X-API-Key: your-key-here"
+```
 
-## Troubleshooting Common Issues
+### Local stdio server
 
-> **Common Configuration Errors**
->
-> If your MCP server isn't working, check these common issues:
+Stdio servers run as local processes on your machine and are ideal for tools that need direct system access or custom scripts. The command that launches the server goes after a `--` separator.
 
-> **Troubleshooting Checklist**
->
-> - **Invalid JSON syntax**: Validate your claude_desktop_config.json with a JSON validator
-> - **Incorrect file paths**: Always use absolute paths, not relative paths
-> - **Missing dependencies**: Run `npm list -g` to verify all packages are installed
-> - **Permission issues**: Ensure servers have read/write access to specified directories
-> - **Port conflicts**: Check if another process is using the same port
-> - **Outdated versions**: Update Claude Desktop and MCP servers regularly
+```bash
+# Basic syntax
+claude mcp add [options] <name> -- <command> [args...]
 
-## Performance Optimization Tips
+# Real example: an Airtable server launched with npx, with an env var
+claude mcp add --env AIRTABLE_API_KEY=YOUR_KEY --transport stdio airtable \
+  -- npx -y airtable-mcp-server
 
-> **Pro Tip**
->
-> Optimizing your MCP servers can significantly improve Claude Desktop's responsiveness and reduce resource usage.
+# A read-only PostgreSQL server
+claude mcp add --transport stdio db -- npx -y @bytebase/dbhub \
+  --dsn "postgresql://readonly:pass@prod.db.com:5432/analytics"
+```
 
-**MCP Server Best Practices:**
+The `--` (double dash) is required for stdio servers. It separates Claude's own flags (`--transport`, `--env`, `--scope`) from the command that runs the server; everything after `--` is passed to the server untouched. Without it, Claude Code would try to parse the server's own flags (like a trailing `--port 8080`) as its own options. `--env` accepts multiple `KEY=value` pairs, but place at least one other flag between `--env` and the server name so the CLI doesn't read the name as another pair.
 
-- **Connection Pooling**: Reuse database connections to reduce overhead
-- **Rate Limiting**: Implement rate limits to prevent API throttling
-- **Response Caching**: Cache frequently accessed data for faster responses
-- **Debug Logging**: Enable verbose logging only when troubleshooting
-- **Batch Operations**: Group multiple operations to reduce round trips
-- **Resource Monitoring**: Track CPU and memory usage of MCP servers
+### Adding from a JSON config
 
-## Security Considerations
+If you already have a JSON snippet for a server (for example from its README), add it directly:
 
-<!-- Section type: expert_quote -->
+```bash
+# Basic syntax
+claude mcp add-json <name> '<json>'
 
-### Security Checklist
+# An HTTP server with a header
+claude mcp add-json weather-api '{"type":"http","url":"https://api.weather.com/mcp","headers":{"Authorization":"Bearer token"}}'
 
-**Essential Security Measures:**
+# A stdio server
+claude mcp add-json local-weather '{"type":"stdio","command":"/path/to/weather-cli","args":["--api-key","abc123"],"env":{"CACHE_DIR":"/tmp"}}'
+```
 
-- **API Key Storage**: Use environment variables, never hardcode
-- **File System Access**: Restrict to specific directories only
-- **Permission Model**: Apply read-only permissions where possible
-- **Package Updates**: Keep all MCP servers up-to-date
-- **Log Monitoring**: Review logs regularly for anomalies
-- **Authentication**: Implement OAuth or API key validation
+Already configured servers in Claude Desktop? Import them with `claude mcp add-from-claude-desktop` (macOS and WSL only), which reads Claude Desktop's config and lets you pick which servers to bring over.
 
-## Frequently Asked Questions
+## Transport comparison
 
-## Next Steps and Resources
+| Transport | Where the server runs | Add command | Auth | Status |
+| --- | --- | --- | --- | --- |
+| **stdio** | Local process on your machine | `claude mcp add ... -- <command>` | `--env` vars / args | Supported |
+| **HTTP** | Remote endpoint (cloud service) | `claude mcp add --transport http` | OAuth via `/mcp`, or `--header` | Recommended for remote |
+| **SSE** | Remote endpoint (streaming) | `claude mcp add --transport sse` | OAuth via `/mcp`, or `--header` | Deprecated — use HTTP |
 
-<!-- Section type: related_content -->
+If an HTTP or SSE server drops mid-session, Claude Code reconnects automatically with exponential backoff (up to five attempts) and shows the server as pending in `/mcp`. Stdio servers are local processes and are not reconnected automatically.
 
-## Conclusion
+## Choose a scope: where the config lives
 
-Setting up MCP servers for Claude Desktop opens up powerful integration possibilities. Start with basic servers like filesystem access, then gradually add more complex integrations as you become comfortable with the configuration process. Remember to prioritize security and regularly update your servers for optimal performance.
+The `--scope` flag controls which projects the server loads in and whether the configuration is shared with your team. There are three scopes:
 
-> **Ready to Get Started?**
->
-> You now have all the knowledge needed to set up and configure MCP servers for Claude Desktop. Start with a simple filesystem server and expand from there!
+| Scope | Loads in | Shared with team | Stored in |
+| --- | --- | --- | --- |
+| `local` (default) | Current project only | No | `~/.claude.json` |
+| `project` | Current project only | Yes, via version control | `.mcp.json` in project root |
+| `user` | All your projects | No | `~/.claude.json` |
+
+```bash
+# Local (default): private to you in this project
+claude mcp add --transport http stripe https://mcp.stripe.com
+
+# Project: shared with the team via a committed .mcp.json
+claude mcp add --transport http paypal --scope project https://mcp.paypal.com/mcp
+
+# User: available to you across every project
+claude mcp add --transport http hubspot --scope user https://mcp.hubspot.com/anthropic
+```
+
+Use **local** for personal or experimental servers and anything with credentials you don't want in version control. Use **project** to share a server with everyone on a repo — the command creates or updates a `.mcp.json` at the project root that you commit:
+
+```json
+{
+  "mcpServers": {
+    "shared-server": {
+      "command": "/path/to/server",
+      "args": [],
+      "env": {}
+    }
+  }
+}
+```
+
+For security, Claude Code prompts each user for approval before using project-scoped servers from `.mcp.json`. Pending servers show as `⏸ Pending approval` in `claude mcp list`; run `claude` interactively to review and approve them. Reset those choices with `claude mcp reset-project-choices`.
+
+Use **user** scope for personal utility servers you want everywhere. When the same server name is defined in more than one place, precedence is local → project → user (the highest-precedence entry wins; fields are not merged).
+
+### Keep secrets out of committed config
+
+Project-scoped `.mcp.json` supports environment-variable expansion in `command`, `args`, `env`, `url`, and `headers`, so teammates can share a config without sharing keys:
+
+```json
+{
+  "mcpServers": {
+    "api-server": {
+      "type": "http",
+      "url": "${API_BASE_URL:-https://api.example.com}/mcp",
+      "headers": {
+        "Authorization": "Bearer ${API_KEY}"
+      }
+    }
+  }
+}
+```
+
+`${VAR}` expands to the variable's value and `${VAR:-default}` falls back to a default. If a required variable has no value and no default, Claude Code fails to parse the config.
+
+## Authenticate remote servers with `/mcp` OAuth
+
+Many cloud servers require OAuth 2.0. Add the server first, then complete the browser flow from inside Claude Code with the `/mcp` command:
+
+```bash
+# 1. Add the server (no token needed up front)
+claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
+```
+
+```text
+# 2. Inside a Claude Code session, run:
+/mcp
+```
+
+Then follow the browser login. Claude Code flags a server as needing authentication when it returns `401 Unauthorized` or `403 Forbidden`, so it surfaces in the `/mcp` menu automatically. Tokens are stored securely and refreshed automatically; revoke access with "Clear authentication" in the `/mcp` menu. OAuth works with HTTP (and SSE) servers, not stdio.
+
+If you configured a static `Authorization` header and the server rejects it, Claude Code reports the connection as failed rather than falling back to OAuth — fix or remove the header to use the OAuth flow. If the browser doesn't open, copy the URL it prints and open it manually; if the redirect fails after you authenticate, paste the full callback URL from your browser back into the prompt Claude Code shows.
+
+Some servers require a fixed redirect URI. Use `--callback-port` to pin the OAuth callback port to one you pre-registered (`localhost:PORT/callback`):
+
+```bash
+claude mcp add --transport http \
+  --callback-port 8080 \
+  my-server https://mcp.example.com/mcp
+```
+
+For servers that don't support Dynamic Client Registration, register an OAuth app in the server's developer portal, then pass `--client-id` (and `--client-secret`, which prompts with masked input):
+
+```bash
+claude mcp add --transport http \
+  --client-id your-client-id --client-secret --callback-port 8080 \
+  my-server https://mcp.example.com/mcp
+```
+
+The client secret is stored in your system keychain (macOS) or a credentials file, never in your config.
+
+## Manage and verify your servers
+
+```bash
+# List all configured servers
+claude mcp list
+
+# Show details for one server (transport, scope, OAuth status)
+claude mcp get github
+
+# Remove a server
+claude mcp remove github
+```
+
+Inside a session, run `/mcp` to check live status: it shows the tool count next to each connected server and flags servers that advertise tools but expose none. Servers you added in Claude.ai connectors also appear here when you're signed in with a Claude.ai account.
+
+## Use what a connected server offers
+
+Once a server is connected, three kinds of capabilities become available in your session:
+
+- **Tools** — Claude calls them automatically as your prompts require. With Tool Search (on by default) only the tools Claude needs load into context, so adding more servers has minimal context cost.
+- **Resources** — reference them with `@` mentions, for example `Can you analyze @github:issue://123 and suggest a fix?`. Type `@` to browse available resources alongside files.
+- **Prompts** — appear as slash commands in the form `/mcp__servername__promptname`, with arguments passed space-separated: `/mcp__github__pr_review 456`.
+
+## Troubleshooting
+
+- **Server not listed after adding.** Run `claude mcp list`; a project-scoped server shows `⏸ Pending approval` until you approve it in an interactive `claude` session.
+- **Remote server won't connect (401/403).** It needs OAuth — run `/mcp` and complete the browser login. If you set a static `Authorization` header that's rejected, remove it so OAuth can take over.
+- **Stdio server fails to start.** Verify the command after `--` runs on its own in a terminal, that any runner (`npx`, `uvx`) is installed, and that required `--env` variables are set. Remember the `--` separator before the command.
+- **Server's own flags rejected.** Put every server flag after `--`; anything before it is parsed as a Claude Code option.
+- **Config won't parse.** A `${VAR}` referenced in `.mcp.json` with no value and no `:-default` fails the parse — set the variable or add a default.
+- **Wrong definition is used.** Local scope overrides project, which overrides user. Use `claude mcp get <name>` to confirm which entry is active.
+
+## Next steps
+
+Start with one server you already use — a hosted connector over HTTP, or a local stdio tool — at the default local scope, authenticate with `/mcp` if prompted, and confirm it with `claude mcp list`. When the team needs the same tools, promote it to a committed `.mcp.json` with `--scope project` and keep secrets in environment variables. For the full reference, see the [Claude Code MCP documentation](https://code.claude.com/docs/en/mcp).
