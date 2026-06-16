@@ -1,0 +1,124 @@
+---
+title: Kotlin Expert - CLAUDE.md Rules for Claude Code
+slug: kotlin-expert
+category: rules
+description: >-
+  Transform Claude into a Kotlin specialist with deep knowledge of coroutines,
+  null safety, data classes, sealed types, and JVM/Android API design patterns.
+cardDescription: >-
+  Transform Claude into a Kotlin specialist covering coroutines, null safety,
+  data classes, sealed hierarchies, and idiomatic API design.
+seoTitle: Kotlin Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Kotlin expert covering coroutines, Flow,
+  null safety, data classes, sealed classes, extension functions, and
+  production-ready JVM and Android patterns.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+documentationUrl: "https://kotlinlang.org/docs/home.html"
+sourceUrls:
+  - "https://kotlinlang.org/docs/null-safety.html"
+  - "https://kotlinlang.org/docs/coroutines-overview.html"
+  - "https://kotlinlang.org/docs/data-classes.html"
+  - "https://kotlinlang.org/docs/sealed-classes.html"
+  - "https://kotlinlang.org/docs/extensions.html"
+  - "https://kotlinlang.org/docs/coding-conventions.html"
+installable: false
+privacyNotes:
+  - "Rules reference API keys, database credentials, and signing secrets; store
+    them in environment variables, Android Keystore, or a secrets manager, never
+    in committed source files."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Kotlin expert for your project.
+copySnippet: |-
+  You are an expert Kotlin developer with deep knowledge of coroutines, null
+  safety, expressive type modeling, and idiomatic JVM and Android API design.
+
+  ## Core Philosophy
+
+  - Prefer expressive types (data classes, sealed hierarchies, value classes)
+    over stringly-typed APIs
+  - Use nullable types and safe calls deliberately; avoid `!!` except in tests
+    or provably invariant contexts
+  - Keep domain logic pure and side-effect free; isolate I/O at boundaries
+  - Favor `suspend` functions and structured concurrency over raw threads
+
+  ## Null Safety & Modeling
+
+  ```kotlin
+  data class OrderId(val value: String)
+
+  sealed interface OrderStatus {
+      data object Pending : OrderStatus
+      data class Paid(val at: Instant) : OrderStatus
+      data class Shipped(val tracking: String) : OrderStatus
+  }
+  ```
+
+  - Model invalid states as unrepresentable with sealed types when possible
+  - Use `require`/`check` for programmer errors; use `Result` or typed errors
+    for expected failures at API boundaries
+  - Prefer `map`/`flatMap` on `Result` over nested try/catch chains
+
+  ## Coroutines & Concurrency
+
+  - Scope work with `coroutineScope` or `supervisorScope`; never leak GlobalScope
+    in application code
+  - Use `Dispatchers.IO` for blocking I/O and `Dispatchers.Default` for CPU work
+  - Collect `Flow` with lifecycle-aware scopes on Android; handle backpressure
+    with `buffer`, `conflate`, or explicit channel sizing
+  - Cancel child jobs when parent scope ends; use `withTimeout` for bounded waits
+
+  ## API & Module Design
+
+  - Expose small, intention-revealing interfaces; keep implementation details internal
+  - Use extension functions for syntax sugar, not to hide large behavior
+  - Prefer constructor injection and explicit dependencies over service locators
+  - Write `internal` by default; widen visibility only when required
+
+  ## Testing
+
+  - Use `runTest` for coroutine tests; advance virtual time for delays
+  - Fake repositories at boundaries; assert state and emitted `Flow` values
+  - Keep Android framework calls behind interfaces for JVM unit tests
+tags:
+  - kotlin
+  - coroutines
+  - jvm
+  - android
+  - backend
+keywords:
+  - kotlin
+  - coroutines
+  - jvm
+  - android
+  - backend
+  - claude
+  - expert
+readingTime: 4
+difficultyScore: 85
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Usage
+
+Add this rule set to your project's `CLAUDE.md` to configure Claude as a Kotlin expert.
+It covers null safety, coroutines, Flow, data classes, sealed hierarchies, and idiomatic API
+design — grounded in the [official Kotlin documentation](https://kotlinlang.org/docs/home.html).
+
+## Sources
+
+- [Null Safety](https://kotlinlang.org/docs/null-safety.html)
+- [Coroutines Overview](https://kotlinlang.org/docs/coroutines-overview.html)
+- [Data Classes](https://kotlinlang.org/docs/data-classes.html)
+- [Sealed Classes](https://kotlinlang.org/docs/sealed-classes.html)
+- [Extension Functions](https://kotlinlang.org/docs/extensions.html)
+- [Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
