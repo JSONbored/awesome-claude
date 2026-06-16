@@ -1,0 +1,169 @@
+---
+title: Claude Code Dynamic Workflows Capability Pack Skill
+slug: claude-code-dynamic-workflows-capability-pack
+category: skills
+description: >-
+  Expert dynamic workflows capability pack applying documented /workflows monitoring, scoped orchestration prompts, and keyword trigger governance from official workflows documentation.
+cardDescription: >-
+  Plan dynamic workflows with /workflows monitoring and scoped orchestration checklists.
+seoTitle: Claude Code Dynamic Workflows Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack applying documented Claude Code steps from official documentation—not an official Anthropic product.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1517
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1517"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/workflows"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when planning or reviewing claude code dynamic workflows capability pack workflows using official Claude Code documentation.
+copySnippet: |-
+  # Trigger
+  "Apply the claude code dynamic workflows capability pack capability pack."
+
+  # Required output
+  1) Scope and configuration checklist
+  2) Risk and policy findings
+  3) Review matrix actions
+  4) Verification and rollback plan
+  5) Privacy-safe summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/workflows"
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code version and plan eligibility per official documentation."
+  - "Team policy for autonomous or scheduled workflows."
+  - "Staging environment for safe validation."
+  - "Human owner for production rollout approval."
+safetyNotes:
+  - "Autonomous workflows can run shell commands without mid-run user input—scope paths and tools first."
+  - "Do not enable destructive automation without explicit approval gates."
+  - "Review outputs as draft until a human validates evidence."
+privacyNotes:
+  - "Workflow and session output may contain proprietary code and credentials."
+  - "Summaries for external channels require redaction."
+tags:
+  - claude-code
+  - capability-pack
+readingTime: 9
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in official Claude Code documentation verified on **2026-06-16**. Behavior can change with releases; prefer live docs.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/workflows
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- Official workflows documentation describes dynamic workflows that orchestrate many background agents for large tasks.
+- `/workflows` provides a control plane to view runs, blocked steps, and completion status.
+- Configuration can disable accidental keyword triggers when prompts mention workflow in normal text.
+- Workflow runtime constraints include concurrent agent limits and no mid-run user input except permission prompts.
+
+## Scope Note
+
+Community reusable workflow skill applying documented steps—not an official Anthropic product. Distinct from audit-focused dynamic workflow guides; this pack provides reusable review matrices for workflow rollout.
+
+## Core Workflow
+
+1. Write scoped orchestration prompt with directories and deliverables.
+2. Launch workflow explicitly; avoid accidental keyword triggers if disabled in /config.
+3. Monitor with `/workflows` for blocked or stalled agents.
+4. Reconcile parallel outputs before publishing findings.
+5. Require human review before treating agent output as official.
+
+## Capability Scope
+
+- Configuration and eligibility checklist.
+- Risk and policy review.
+- Staging verification steps.
+- Rollback planning.
+- Privacy-safe stakeholder summary.
+
+## Compatibility
+
+### Native
+
+- **Claude Code**: use as an Agent Skill during rollout planning.
+
+### Manual Adaptation
+
+- **Generic AGENTS**: apply checklist against public documentation.
+
+## Required Inputs
+
+- Target repository or organization context.
+- Current settings and policy constraints.
+- Stakeholders for security review when applicable.
+
+## Production Rules
+
+- Require human approval before production-impacting automation.
+- Redact secrets from skill outputs and public tickets.
+- Prefer official documentation over forum assumptions.
+- Document rollback before enabling scheduled or autonomous runs.
+
+## Review Matrix
+
+| Signal | Action |
+| --- | --- |
+| Missing repro | Block autonomous run |
+| Broad tool scope | Narrow allowlists |
+| Draft findings | Label unverified until human review |
+| Policy drift | Align to managed settings |
+
+## Output Contract
+
+1. Scope and configuration summary.
+2. Findings with severity.
+3. Review matrix actions.
+4. Verification and rollback plan.
+5. Privacy-safe summary.
+
+## Troubleshooting
+
+**Issue:** Feature unavailable on your plan
+**Fix:** Confirm `/status` and official doc eligibility requirements.
+
+**Issue:** Run stalls on permissions
+**Fix:** Pre-approve read tools in staging; narrow path scope.
+
+## Duplicate Check
+
+Complements `dynamic-workflows-for-large-codebase-audits` guide; no duplicate skills capability pack with output contract.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` from public Claude Code documentation. No paid placement or affiliate links.

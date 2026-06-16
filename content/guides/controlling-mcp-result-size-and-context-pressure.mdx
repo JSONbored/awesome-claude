@@ -1,0 +1,174 @@
+---
+title: Controlling MCP Result Size And Context Pressure
+slug: controlling-mcp-result-size-and-context-pressure
+category: guides
+description: >-
+  Reduce Claude Code context pressure from MCP tools using MAX_MCP_OUTPUT_TOKENS,
+  anthropic/maxResultSizeChars annotations, tool search deferral, alwaysLoad
+  discipline, and pagination patterns from official MCP documentation.
+cardDescription: >-
+  Control MCP tool output size with env limits, annotations, and tool search to
+  protect Claude Code context.
+seoTitle: Controlling MCP Result Size And Context Pressure
+seoDescription: >-
+  Guide to controlling MCP result size in Claude Code: MAX_MCP_OUTPUT_TOKENS,
+  maxResultSizeChars, tool search, alwaysLoad, warnings at 10k tokens, and
+  pagination strategies from official MCP docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1416
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1416"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+usageSnippet: >-
+  When MCP tools flood context, set MAX_MCP_OUTPUT_TOKENS, prefer servers with
+  maxResultSizeChars, enable tool search defaults, and avoid alwaysLoad on large
+  tool catalogs unless every turn needs them.
+prerequisites:
+  - "One or more MCP servers returning large JSON, logs, or file dumps."
+  - "Ability to set environment variables for Claude Code sessions."
+  - "Optional access to MCP server source to add pagination or size annotations."
+  - "Understanding of your project's context budget for long sessions."
+safetyNotes:
+  - "Raising output limits increases context cost and may hide the need to paginate server responses."
+  - "alwaysLoad: true on large servers loads every tool schema at session start—use sparingly."
+  - "Truncated MCP output can omit fields needed for security review; verify critical data separately."
+privacyNotes:
+  - "Large MCP payloads may contain secrets; shrinking output does not redact—sanitize at the server."
+  - "Tool search defers schemas but invoked tools still return full results into context."
+  - "Shared CI logs pasted through MCP can expose internal URLs in truncated previews."
+sourceUrls:
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - mcp
+  - context-window
+  - tool-search
+  - performance
+keywords:
+  - MAX_MCP_OUTPUT_TOKENS Claude Code
+  - MCP result size context pressure
+  - anthropic maxResultSizeChars MCP
+  - Claude Code tool search MCP
+  - MCP output token limit
+readingTime: 8
+difficultyScore: 55
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude Code warns when MCP tool output exceeds 10,000 tokens. Control pressure with
+`MAX_MCP_OUTPUT_TOKENS`, server-side `anthropic/maxResultSizeChars`, tool search
+deferral, and careful `alwaysLoad` settings.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Large-output tools identified", "description": "Servers returning logs, queries, or file dumps are listed"}
+- [ ] {"task": "Env access", "description": "You can export variables before launching Claude Code"}
+- [ ] {"task": "Server ownership", "description": "Know whether you can patch MCP server pagination"}
+- [ ] {"task": "Context budget", "description": "Team agrees on acceptable MCP share of the window"}
+
+## Core Concepts Explained
+
+### Default warning at 10k tokens
+
+MCP documentation states Claude Code displays a warning when MCP tool output
+exceeds 10,000 tokens, signaling context pressure.
+
+### MAX_MCP_OUTPUT_TOKENS
+
+Set the environment variable to raise or lower the cap—for example
+`MAX_MCP_OUTPUT_TOKENS=50000`. Applies to tools without their own declared limit.
+
+### maxResultSizeChars annotation
+
+Tools that set `anthropic/maxResultSizeChars` use that value for text content
+independently of the env var. Prefer server-side annotations over globally
+raising limits.
+
+### Tool search deferral
+
+Tool search loads MCP tool definitions on demand, keeping session-start context
+lower when many servers are configured. `ENABLE_TOOL_SEARCH=auto` uses a 10%
+context threshold mode.
+
+### alwaysLoad tradeoff
+
+Setting `alwaysLoad: true` forces a server's tools into context every turn—only
+for small always-needed toolsets.
+
+## Step-by-Step Implementation Guide
+
+1. **Reproduce the warning.** Note which MCP tool triggers the 10k token alert.
+
+2. **Try server pagination first.** Ask the server author to page large responses.
+
+3. **Add maxResultSizeChars** if you maintain the server.
+
+4. **Tune MAX_MCP_OUTPUT_TOKENS** temporarily while paginating—document the value
+   in team runbooks.
+
+5. **Review alwaysLoad flags.** Disable on catalog servers with dozens of tools.
+
+6. **Confirm tool search is on.** Default deferral helps multi-server setups.
+
+7. **Monitor `/context`.** Verify MCP share drops after changes.
+
+## Configuration Examples
+
+```bash
+export MAX_MCP_OUTPUT_TOKENS=25000
+claude
+```
+
+```json
+{
+  "mcpServers": {
+    "analytics": {
+      "type": "stdio",
+      "command": "analytics-mcp",
+      "alwaysLoad": false
+    }
+  }
+}
+```
+
+## Troubleshooting
+
+### Warning persists after raising env var
+
+Check whether the tool declares `anthropic/maxResultSizeChars` or returns images
+subject to token limits separately.
+
+### Claude cannot complete task with truncated output
+
+Paginate server responses or split tools instead of only raising limits.
+
+### Context still tight with few tools
+
+Inspect alwaysLoad servers and upfront built-in tools; use tool search auto mode.
+
+## Source Verification Notes
+
+Verified against Claude Code MCP documentation on **2026-06-16**: 10k token
+warning, `MAX_MCP_OUTPUT_TOKENS`, `anthropic/maxResultSizeChars`, tool search
+defaults, `ENABLE_TOOL_SEARCH=auto`, and `alwaysLoad` behavior.
+
+## Duplicate Check
+
+Complements `sparse-context-setup-for-large-codebases` (general context strategy)
+and MCP threat-model guides. No `guides` entry documents MCP output token limits
+and tool search deferral together.
+
+## References
+
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
