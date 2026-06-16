@@ -1,44 +1,64 @@
 ---
-title: Claude AI Healthcare HIPAA-Compliant Documentation Guide 2025
+title: "Using Claude Code in Healthcare and PHI-Sensitive Environments"
 slug: healthcare-hipaa-guide
 category: guides
 description: >-
-  Deploy HIPAA-compliant Claude AI for 10-35x faster healthcare documentation.
-  Enterprise configuration guide with approved providers and compliance
-  requirements.
-cardDescription: Deploy HIPAA-compliant Claude AI for 10-35x faster healthcare documentation.
-seoTitle: Claude AI Healthcare HIPAA-Compliant Documentation Guide 2025
+  The Claude Code data-handling controls that matter for teams working near PHI:
+  no-training commercial policy, retention windows, Zero Data Retention,
+  encryption, local transcript handling, telemetry opt-outs, and security model.
+cardDescription: The documented Claude Code data-handling controls that matter for PHI-sensitive teams.
+seoTitle: "Claude Code in Healthcare and PHI-Sensitive Environments"
 seoDescription: >-
-  Deploy HIPAA-compliant Claude AI for 10-35x faster healthcare documentation.
-  Enterprise configuration guide with approved providers and compliance
-  requirements.
+  How Claude Code handles data: commercial no-training policy, retention windows,
+  Zero Data Retention, encryption, local transcripts, telemetry opt-outs, and
+  the security model—mapped to what Anthropic actually documents.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/data-usage"
 installable: false
 usageSnippet: >-
-  Claude AI transforms healthcare documentation through HIPAA-compliant
-  automation achieving 10-35x faster task completion. Healthcare organizations
-  report 60-70% documentation time reduction and 450-790% ROI within 18 months.
-  Implementation requires enterprise API agreements, zero data retention
-  configurations, or deployment through certified platforms. This comprehensive
-  guide covers compliance requirements, integration methods, and proven
-  implementation strategies for healthcare organizations.
+  Use this guide to understand the data-handling controls Claude Code and
+  Anthropic actually document—commercial no-training policy, retention windows,
+  Zero Data Retention, encryption, local transcript cleanup, telemetry opt-outs,
+  and the permission/sandbox security model—before adopting Claude Code in a
+  PHI-sensitive environment. Pair every control with your own compliance review.
+prerequisites:
+  - "Confirm your account type (Free/Pro/Max vs. Team/Enterprise/API), since data-training and retention behavior differ by type."
+  - "Engage your compliance/legal team and review HHS HIPAA guidance before processing any PHI; this guide does not establish HIPAA compliance."
+  - "Identify your model provider (Anthropic API, Bedrock, Vertex AI, or Foundry), since encryption-at-rest and default telemetry differ by provider."
+safetyNotes:
+  - "Claude Code stores session transcripts locally in plaintext under `~/.claude/projects/` for 30 days by default; tune retention with `cleanupPeriodDays`."
+  - "Telemetry, error reporting, and `/feedback` send data off-machine on the Anthropic API by default; disable with `DISABLE_TELEMETRY`, `DISABLE_ERROR_REPORTING`, `DISABLE_FEEDBACK_COMMAND`, or `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`."
+  - "Zero Data Retention is not part of the standard Enterprise plan—it requires separate Anthropic enablement and disables features such as Claude Code on the web and `/feedback`."
+privacyNotes:
+  - "PHI-sensitive: transcripts saved locally in plaintext may contain prompt and file content; control them via `cleanupPeriodDays` and disk-level protections."
+  - "Under commercial terms (Team/Enterprise/API) Anthropic does not train models on Claude Code prompts unless you opt in to the Development Partner Program; consumer plans may be used for training when the setting is on."
+  - "`/feedback` transcripts are retained for up to 5 years; standard commercial retention is 30 days; consumer retention is 30 days or 5 years depending on the training setting."
+sourceUrls:
+  - "https://code.claude.com/docs/en/data-usage"
+  - "https://code.claude.com/docs/en/zero-data-retention"
+  - "https://code.claude.com/docs/en/security"
+retrievalSources:
+  - "https://code.claude.com/docs/en/data-usage"
+  - "https://code.claude.com/docs/en/zero-data-retention"
+  - "https://code.claude.com/docs/en/security"
 tags:
   - healthcare
   - enterprise
   - compliance
-  - documentation
-  - hipaa
+  - security
+  - privacy
 keywords:
-  - claude healthcare
-  - hipaa ai workflows
-  - healthcare automation
-  - compliant claude usage
-readingTime: 5
-difficultyScore: 73
+  - claude code healthcare
+  - claude code data retention
+  - zero data retention claude code
+  - claude code phi
+  - claude code security controls
+readingTime: 6
+difficultyScore: 60
 hasTroubleshooting: false
-hasPrerequisites: false
+hasPrerequisites: true
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
@@ -46,141 +66,151 @@ robotsFollow: true
 
 ## TL;DR
 
-Claude AI transforms healthcare documentation through HIPAA-compliant automation achieving 10-35x faster task completion. Healthcare organizations report 60-70% documentation time reduction and 450-790% ROI within 18 months. Implementation requires enterprise API agreements, zero data retention configurations, or deployment through certified platforms. This comprehensive guide covers compliance requirements, integration methods, and proven implementation strategies for healthcare organizations.
+If your team works near protected health information (PHI), the questions that matter for adopting Claude Code are concrete and answerable from Anthropic's own documentation: Does Anthropic train on your prompts? How long is data kept? What does Zero Data Retention actually turn off? How is data encrypted? Where do transcripts live on disk, and how do you control them? What telemetry leaves the machine, and how do you stop it?
 
-**Key Points:**
+This guide answers those questions from the published Claude Code data-usage, Zero Data Retention, and security docs. It does **not** establish HIPAA compliance and does not claim Claude Code is "HIPAA certified."
 
-- 10-35x faster documentation with 60-70% time reduction
-- 450-790% ROI within 18 months of deployment
-- HIPAA compliance requires enterprise API or certified platforms
-- Zero data retention agreements mandatory for PHI processing
-
-> **Critical HIPAA Compliance Notice**
+> **This is not legal or compliance advice.**
 >
-> **Standard Claude products are NOT HIPAA compliant.** Claude.ai Free, Pro, Max, and Claude for Work cannot process PHI legally. Healthcare organizations must use enterprise API services with Business Associate Agreements or deploy through certified platforms like Hathr.AI, Keragon, or BastionGPT.
+> Whether any tool can lawfully process PHI depends on your contracts (including any Business Associate Agreement), your configuration, and your obligations under HIPAA. Consult official [HHS HIPAA guidance](https://www.hhs.gov/hipaa/index.html) and your own compliance and legal team before processing PHI with Claude Code or any AI tool. Nothing below is a representation that Claude Code is HIPAA compliant.
 
-## Business Case and ROI
+**Key points (all grounded in Claude Code docs):**
 
-Claude AI delivers transformative value for healthcare organizations facing documentation burdens. Physicians spend 16 hours weekly on documentation tasks. Administrative staff dedicate 40% of time to paperwork. These inefficiencies cost healthcare systems $200-360 billion annually. Organizations implementing Claude report 10-35x faster task completion rates. Documentation time reduces by 60-70% across departments. ROI ranges from 450% to 790% within 18 months.
+- Under commercial terms (Team, Enterprise, API), Anthropic does not train generative models on Claude Code code or prompts unless you opt in.
+- Standard commercial retention is 30 days; Zero Data Retention (ZDR) is available only to qualified Claude for Enterprise accounts and must be enabled by Anthropic.
+- Data is encrypted in transit via TLS 1.2+; encryption at rest depends on your model provider.
+- Claude Code stores transcripts locally in plaintext for 30 days by default, controllable with `cleanupPeriodDays`.
 
-**Note:** The original guide contains a `<MetricsDisplay>` component which is not in the standard component mapping. This has been converted to a feature_grid for compatibility.
+## Why "HIPAA mapping" is the wrong frame here
 
-<!-- Section type: feature_grid -->
+HIPAA safeguards are legal obligations on *covered entities and business associates*—they are satisfied by contracts, policies, risk analyses, and your overall environment, not by a single developer tool. A documentation tool cannot "be HIPAA compliant" on its own. What a tool *can* do is give you verifiable, documented data-handling controls that your compliance program can build on.
 
-**Note:** The original guide contains a `<UnifiedContentBlock variant="case-study">` component which is not in the standard component mapping. This has been converted to a callout for compatibility.
+So this guide does the verifiable part: it catalogs the data controls Claude Code actually documents and points to where each is described. Treat HIPAA only as the general reason these controls matter ("teams handling PHI must minimize data exposure and retention")—and take the legal mapping to HHS guidance and your compliance team.
 
-> **HealthEdge Case Study**
->
-> **Company:** HealthEdge (Healthcare Technology)
->
-> **Challenge:** Manual documentation processes consuming 40% of development time
->
-> **Solution:** Deployed Claude Enterprise across 5 development teams with 53 contributors
->
-> **Results:**
->
-> - 680+ hours saved in 21 days
-> - $48,000 direct value identified within hours
-> - Product requirements reduced from 1 week to 1 hour (98% reduction)
-> - Database complexity reduced by 90% while maintaining functionality
->
-> **Testimonial:** "Claude transformed our documentation workflow completely. What took weeks now takes hours." - Development Team Lead, HealthEdge Engineering
+## Claude Code data controls reference
 
-<!-- Section type: expert_quote -->
+Every row below traces to the official Claude Code documentation. Use it as the starting checklist for a PHI-sensitive review.
 
-## Key Features and Capabilities
+| Control | What it does | Where it's documented |
+| --- | --- | --- |
+| Commercial no-training policy | Under Team, Enterprise, API, and Gov terms, Anthropic does not train generative models on code or prompts sent to Claude Code, unless the customer opts in (e.g., Development Partner Program). | [Data usage → Data training policy](https://code.claude.com/docs/en/data-usage) |
+| Consumer training choice | On Free/Pro/Max, data may be used to train future models when the setting is on; changeable anytime in privacy settings. | [Data usage → Data training policy](https://code.claude.com/docs/en/data-usage) |
+| Standard retention (commercial) | Team, Enterprise, and API: 30-day retention period. | [Data usage → Data retention](https://code.claude.com/docs/en/data-usage) |
+| Consumer retention | 30 days if training is off; 5 years if the training setting is on. | [Data usage → Data retention](https://code.claude.com/docs/en/data-usage) |
+| `/feedback` retention | Transcripts shared via `/feedback` are retained for 5 years; transcripts shared via the session-quality follow-up are retained up to 6 months. | [Data usage → Feedback / Data retention](https://code.claude.com/docs/en/data-usage) |
+| Zero Data Retention (ZDR) | Prompts and responses processed in real time and not stored after the response returns (except where required by law or to address misuse). Available only to qualified Claude for Enterprise accounts; enabled per-organization by Anthropic. | [Zero data retention](https://code.claude.com/docs/en/zero-data-retention) |
+| Encryption in transit | All prompts and outputs encrypted in transit via TLS 1.2+. | [Data usage → Local data flow](https://code.claude.com/docs/en/data-usage) |
+| Encryption at rest | Provider-dependent: Anthropic API uses AES-256 disk encryption; Bedrock AES-256 (AWS-managed, CMK via KMS); Vertex AI Google-managed keys (CMEK available); Foundry routes to Anthropic AES-256. | [Data usage → Local data flow table](https://code.claude.com/docs/en/data-usage) |
+| Local transcript storage | Session transcripts stored locally in plaintext under `~/.claude/projects/` for 30 days by default to enable resumption. | [Data usage → Data retention (local caching)](https://code.claude.com/docs/en/data-usage) |
+| `cleanupPeriodDays` | Adjusts how long local transcripts are kept before cleanup. | [Data usage → Data retention](https://code.claude.com/docs/en/data-usage) |
+| Telemetry opt-out | Operational metrics (latency, reliability, usage—no code or file paths) sent by default on the Anthropic API; disable with `DISABLE_TELEMETRY`. | [Data usage → Telemetry services](https://code.claude.com/docs/en/data-usage) |
+| Error-reporting opt-out | Sentry error logging on by default on the Anthropic API; disable with `DISABLE_ERROR_REPORTING`. | [Data usage → Telemetry services](https://code.claude.com/docs/en/data-usage) |
+| Feedback opt-out | Disable the `/feedback` command with `DISABLE_FEEDBACK_COMMAND=1`; disable session-quality surveys with `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1`. | [Data usage → Feedback / surveys](https://code.claude.com/docs/en/data-usage) |
+| Nonessential-traffic kill switch | `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` opts out of all non-essential traffic at once (does not affect the WebFetch safety check). | [Data usage → Default behaviors](https://code.claude.com/docs/en/data-usage) |
+| Provider defaults | On Bedrock, Vertex, Foundry, and Claude Platform on AWS, error reporting, telemetry, and bug reporting are off by default. | [Data usage → Default behaviors by API provider](https://code.claude.com/docs/en/data-usage) |
+| Permission-based architecture | Read-only by default; modifying actions require explicit approval; read-only commands like `ls`, `cat`, `git status` run without a prompt. | [Security → Permission-based architecture](https://code.claude.com/docs/en/security) |
+| Write-access restriction | Claude Code can only write within the startup folder and subfolders; parent-directory writes need explicit permission. | [Security → Built-in protections](https://code.claude.com/docs/en/security) |
+| Sandboxing | `/sandbox` provides filesystem and network isolation for Bash commands. | [Security → Built-in protections](https://code.claude.com/docs/en/security) |
+| Secure credential storage | API keys/tokens stored in the macOS Keychain when available; protected by file permissions on Windows and Linux. | [Security → Privacy safeguards](https://code.claude.com/docs/en/security) |
+| Network-command approval | Web-fetching commands such as `curl`/`wget` are not auto-approved; can be blocked via `permissions.deny`. | [Security → Protect against prompt injection](https://code.claude.com/docs/en/security) |
+| Trust verification | First-time codebases and new MCP servers require trust verification. | [Security → Additional safeguards](https://code.claude.com/docs/en/security) |
+| Managed settings / OTel auditing | Organizations enforce standards via managed settings; activity can be monitored through OpenTelemetry metrics. | [Security → Team security](https://code.claude.com/docs/en/security) |
 
-<!-- Section type: feature_grid -->
+## Data training policy: what commercial terms guarantee
 
-## Implementation Requirements
+Per the [data-usage docs](https://code.claude.com/docs/en/data-usage), commercial users—Team, Enterprise, API, third-party platforms, and Claude Gov—are covered by a policy where **Anthropic does not train generative models using code or prompts sent to Claude Code under commercial terms**, unless the customer explicitly opts in (for example, via the Development Partner Program, which an org admin must enable and which is first-party API only).
 
-### HIPAA Compliance Prerequisites
+Consumer plans (Free, Pro, Max) are different: data may be used to improve future models when the setting is on, including when Claude Code is used from those accounts. For PHI-sensitive work, that distinction is decisive—account type drives both training and retention behavior.
 
-Healthcare organizations must establish enterprise agreements before processing PHI. Standard Claude products explicitly prohibit healthcare data processing. Enterprise API access requires case-by-case approval from Anthropic. Zero data retention agreements eliminate storage of prompts and responses. Business Associate Agreements take 24-72 hours for approval. Files uploaded via Files API remain excluded from retention protection.
+## Retention windows
 
-**Note:** The original guide contains a `<UnifiedContentBox contentType="infobox">` component which is not in the standard component mapping. This has been converted to a callout for compatibility.
+From the same docs:
 
-> **Compliance Pathways**
->
-> Three approved methods for HIPAA-compliant deployment:
->
-> - Direct BAA with Anthropic for enterprise API (limited features)
-> - Cloud provider deployment via AWS Bedrock or Google Vertex AI
-> - Certified healthcare platforms: Hathr.AI, Keragon, BastionGPT
+- **Commercial (Team, Enterprise, API):** standard 30-day retention.
+- **Consumer:** 30 days if training is off; 5 years if the training setting is on.
+- **`/feedback` transcripts:** retained for 5 years.
+- **Session-quality follow-up transcripts (only if you select "Yes"):** retained up to 6 months.
+- **Local caching:** transcripts kept locally in plaintext under `~/.claude/projects/` for 30 days by default, adjustable with `cleanupPeriodDays`.
 
-### Security Architecture Requirements
+## Zero Data Retention (ZDR)
 
-Data protection requires AES-256 encryption for all stored information. Network communications must use TLS 1.2 or 1.3 protocols. Audit logging systems maintain records for 6 years minimum. Role-based access controls enforce multi-factor authentication across systems. Zero Trust Architecture treats all requests as untrusted initially. Session management employs short-lived tokens with automatic expiry mechanisms.
+The [Zero Data Retention docs](https://code.claude.com/docs/en/zero-data-retention) describe ZDR precisely:
 
-<!-- Section type: code_group -->
+- **What it is:** prompts and model responses are processed in real time and **not stored** by Anthropic after the response returns, except where required by law or to combat misuse.
+- **Who qualifies:** available only to **qualified accounts on Claude for Enterprise**. It is *not* part of the standard Enterprise plan and *cannot* be enabled from admin settings—Anthropic enables it per-organization after confirming eligibility (contact sales/your account team). It does not auto-apply to newly created organizations.
+- **What it disables:** features that require storing prompts or completions are turned off at the backend, including **Claude Code on the web**, **Cloud sessions** from the Desktop app, and **`/feedback`** submission.
+- **What it does not cover:** chat on claude.ai, Cowork, analytics metadata (account emails, usage stats), user/seat management data, and third-party integrations/MCP servers—these follow standard retention.
+- **Model caveat:** some models that require retention are unavailable under ZDR (e.g., Claude Fable 5); the `best` alias resolves to Opus for ZDR organizations.
+- **Policy-violation exception:** flagged sessions may have inputs/outputs retained up to 2 years.
 
-## Step-by-Step Implementation
+For Bedrock, Vertex AI, or Foundry deployments, ZDR on Claude for Enterprise does not apply—those platforms' own retention policies govern.
 
-1. **Phase 1: Assessment and Planning**
+## Encryption
 
-2. **Phase 2: Compliance Preparation**
+Per the data-usage docs, **all prompts and outputs are encrypted in transit via TLS 1.2+**, and Claude Code is compatible with most popular VPNs and LLM proxies. **Encryption at rest depends on the model provider:**
 
-3. **Phase 3: Technical Infrastructure**
+- **Anthropic API:** infrastructure-level disk encryption (AES-256); enable ZDR for no server-side persistence.
+- **Amazon Bedrock:** AES-256 with AWS-managed keys; customer-managed keys via AWS KMS.
+- **Google Cloud Vertex AI:** Google-managed keys; CMEK available.
+- **Microsoft Foundry:** routes to Anthropic infrastructure with AES-256 disk encryption.
 
-4. **Phase 4: Pilot Program**
+## Local transcripts and on-disk data
 
-5. **Phase 5: Training and Change Management**
+This is often the most overlooked exposure point for PHI-sensitive teams. The docs state Claude Code clients **store session transcripts locally in plaintext** under `~/.claude/projects/` for 30 days by default to support session resumption. Control retention with the `cleanupPeriodDays` setting, and apply your own disk-level protections (full-disk encryption, access controls) to those paths. If prompts or pasted content could contain PHI, the local cache must be part of your data-handling plan.
 
-6. **Phase 6: Enterprise Rollout**
+## Telemetry, error reporting, and feedback
 
-## Integration Options
+On the Anthropic API, several non-essential flows are **on by default** and send data off-machine:
 
-### EHR System Integration
+- **Telemetry** (operational metrics only—no code or file paths): `DISABLE_TELEMETRY` to opt out.
+- **Sentry error reporting:** `DISABLE_ERROR_REPORTING` to opt out.
+- **`/feedback`** (sends conversation history, including code, to Anthropic): `DISABLE_FEEDBACK_COMMAND=1` to opt out.
+- **Session-quality surveys:** `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1` to opt out.
 
-Epic integration leverages Epic on FHIR API supporting 184 billion transactions. OAuth 2.0 authentication enables proper token management between systems. DAX Copilot provides ambient AI directly within Epic's interface. Implementation typically requires 2-8 weeks for API connections. Organizations report immediate note turnaround with proper configuration. Success depends on FHIR resource mapping between proprietary formats.
+A single switch, `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, opts out of all non-essential traffic at once (it does not affect the WebFetch domain safety check, which has its own `skipWebFetchPreflight` opt-out). On Bedrock, Vertex, Foundry, and Claude Platform on AWS, error reporting, telemetry, and bug reporting are **off by default**. All of these variables can be committed to `settings.json` to enforce them across a team.
 
-<!-- Section type: comparison_table -->
+## Network, proxy, and credentials
 
-### Healthcare Platform Options
+- Claude Code works with most popular VPNs and LLM proxies (data-usage docs).
+- API keys and tokens are stored in the **macOS Keychain** when available, and protected by file permissions on Windows and Linux ([Security → credential management](https://code.claude.com/docs/en/security)).
+- Web-fetching commands (`curl`, `wget`) are not auto-approved and can be blocked entirely via `permissions.deny`.
+- For Claude Code on the web, outbound traffic routes through a security proxy with audit logging, GitHub credentials never enter the sandbox, and each session runs in an isolated, auto-terminated VM with branch-restricted pushes.
 
-Hathr.AI provides AWS GovCloud FedRAMP High infrastructure immediately. The platform serves Department of Health & Human Services currently. BAA signing completes within 24 hours of request. Keragon enables no-code integration with 300+ healthcare tools. BastionGPT offers multi-model capabilities with global compliance certifications. Each platform includes pre-built healthcare-specific workflows and templates.
+## Access controls and the security model
 
-## Success Metrics
+From the [security docs](https://code.claude.com/docs/en/security):
 
-**Note:** The original guide contains a `<MetricsDisplay>` component which is not in the standard component mapping. This has been converted to a feature_grid for compatibility.
+- **Permission-based architecture:** read-only by default; modifying actions require explicit approval.
+- **Write-access restriction:** writes confined to the startup folder and subfolders.
+- **Sandboxing:** `/sandbox` adds filesystem and network isolation for Bash commands.
+- **Prompt-injection safeguards:** context-aware analysis, input sanitization, isolated web-fetch context, command-injection detection, fail-closed matching, and trust verification for new codebases and MCP servers.
+- **Org enforcement:** managed settings enforce standards across a team; OpenTelemetry metrics enable activity monitoring and auditing; `ConfigChange` hooks can audit or block settings changes mid-session.
+- **Compliance artifacts:** SOC 2 Type 2 and ISO 27001 are available via the Anthropic Trust Center (linked from the security docs).
 
-<!-- Section type: feature_grid -->
+## A practical pre-adoption checklist for PHI-sensitive teams
 
-## Common Challenges and Solutions
+1. **Confirm account type.** Use commercial terms (Team/Enterprise/API) so the no-training policy applies; avoid consumer plans for any work that could touch PHI.
+2. **Decide on ZDR.** If your risk posture requires no server-side persistence, pursue ZDR on Claude for Enterprise through your account team, and accept the disabled features (web, cloud sessions, `/feedback`).
+3. **Pin telemetry opt-outs in `settings.json`.** Set `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` (or the granular variables) so no non-essential data leaves the machine.
+4. **Manage local transcripts.** Set an appropriate `cleanupPeriodDays`, and ensure `~/.claude/projects/` sits on encrypted, access-controlled storage.
+5. **Lock down the security model.** Use managed settings, sandboxing, and `permissions.deny` for network commands; monitor via OpenTelemetry.
+6. **Do the legal work separately.** Map controls above to your HIPAA obligations with your compliance/legal team and current HHS guidance—this guide does not do that for you.
 
-<!-- Section type: accordion -->
+## Frequently asked questions
 
-## Industry-Specific Considerations
+**Is Claude Code "HIPAA compliant" or "HIPAA certified"?**
+The Claude Code docs do not make that claim, and neither does this guide. Compliance depends on your contracts, configuration, and obligations—consult your compliance/legal team and HHS guidance.
 
-> **Tailoring for Your Healthcare Setting**
->
-> **Academic Medical Centers:** Focus on research data protection and resident training integration. Prioritize IRB compliance alongside HIPAA.
->
-> **Community Hospitals:** Emphasize cost-effectiveness and rapid deployment. Start with high-volume documentation areas.
->
-> **Specialty Practices:** Target specialty-specific workflows like radiology reporting. Customize for unique documentation needs.
+**Does Anthropic train on my prompts?**
+Under commercial terms (Team, Enterprise, API), no—unless you opt in (e.g., Development Partner Program). On consumer plans, data may be used to train future models when the setting is on.
 
-## Tool Comparison
+**What is kept, and for how long?**
+Commercial standard retention is 30 days; consumer is 30 days or 5 years depending on the training setting; `/feedback` transcripts 5 years; local transcripts 30 days by default (`cleanupPeriodDays`).
 
-<!-- Section type: comparison_table -->
+**How do I stop data from leaving my machine?**
+Set `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` (or the granular `DISABLE_TELEMETRY`, `DISABLE_ERROR_REPORTING`, `DISABLE_FEEDBACK_COMMAND`, `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY` variables). Note prompts/outputs still flow to your model provider over TLS to get responses.
 
-## Frequently Asked Questions
+**What does Zero Data Retention turn off?**
+At minimum: Claude Code on the web, Desktop cloud sessions, and `/feedback`. It also limits model availability and excludes analytics metadata, claude.ai chat, and third-party integrations.
 
-## Quick Reference
-
-**Note:** The original guide contains a `<UnifiedContentBlock variant="quick-reference">` component which is not in the standard component mapping. This has been converted to a feature_grid for compatibility.
-
-<!-- Section type: feature_grid -->
-
-> **Ready to Transform Healthcare Documentation?**
->
-> **Start Your HIPAA-Compliant Implementation**
->
-> 1. **Assess:** Review our compliance checklist for readiness
-> 2. **Connect:** Schedule consultation with certified platform partners
-> 3. **Pilot:** Launch 21-day pilot with measurable objectives
-> 4. **Scale:** Deploy organization-wide within 90 days
-
-<!-- Section type: related_content -->
-
-_Last updated: September 2025_
+_Last reviewed: June 2026. All claims sourced from the official Claude Code data-usage, Zero Data Retention, and security documentation._
