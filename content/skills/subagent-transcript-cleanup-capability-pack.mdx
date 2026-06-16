@@ -1,0 +1,197 @@
+---
+title: Subagent Transcript Cleanup Capability Pack Skill
+slug: subagent-transcript-cleanup-capability-pack
+category: skills
+description: >-
+  Community capability pack for cleaning subagent transcripts before parent-session handoff
+  using official Claude Code sub-agents documentation: isolated context boundaries, summary
+  handoff contracts, retention limits, and privacy-safe closeout checklists.
+cardDescription: Clean subagent transcripts for parent handoff using official sub-agents documentation.
+seoTitle: Subagent Transcript Cleanup Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for subagent transcript cleanup grounded in Claude Code
+  sub-agents documentation: isolated context, summaries, retention, privacy-safe handoff.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1539
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1539"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/sub-agents"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill after subagent work completes to redact sensitive transcript content, produce
+  parent-session summaries, and verify handoff contracts per sub-agents documentation.
+copySnippet: |-
+  # Trigger
+  "Apply the subagent transcript cleanup capability pack."
+
+  # Required output
+  1) Transcript redaction and retention checklist
+  2) Parent-session summary contract
+  3) Sensitive data findings from subagent output
+  4) Handoff approval gate before merging results upstream
+  5) Privacy-safe closeout note
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - Completed or paused subagent session with transcript or tool output to review.
+  - Parent-session handoff requirements including required fields and approval owners.
+  - Policy on whether raw subagent logs may be stored or must be summarized only.
+  - List of sensitive patterns to redact such as tokens, customer data, and internal URLs.
+safetyNotes:
+  - Do not merge unreviewed subagent output into parent sessions when destructive actions were attempted.
+  - Redaction is not encryption—assume summarized content may still leak context if poorly written.
+  - Background subagents may produce long transcripts—apply retention limits before archiving.
+  - This skill guides cleanup; it does not replace human review for regulated data handling.
+privacyNotes:
+  - Subagent transcripts may contain secrets from tool output, file reads, and MCP responses.
+  - Parent summaries should use findings and citations, not paste full tool logs.
+  - Shared tickets must not attach raw subagent transcripts with proprietary code or credentials.
+tags:
+  - subagent
+  - transcript
+  - cleanup
+  - capability-pack
+  - privacy
+  - handoff
+keywords:
+  - subagent transcript cleanup
+  - claude code subagent handoff
+  - subagent redaction capability pack
+  - parent session summary contract
+readingTime: 8
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code sub-agents, skills, and features
+overview documentation verified on **2026-06-16**. Subagent isolation and handoff
+patterns can change; prefer live official docs over cached workflow assumptions.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/sub-agents
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code sub-agents documentation on **2026-06-16**:
+
+- Claude Code subagents run in isolated context windows separate from the parent session.
+- Subagents specialize tasks so large reads and exploration stay out of the parent window.
+- Official documentation positions subagents as a context-management tool requiring deliberate
+  coordination when returning results to the parent session.
+- Skills documentation describes packaging reusable workflow checklists like this capability pack.
+
+## Scope Note
+
+This is not a general log-retention product. Use it as a reusable workflow for cleaning
+subagent output before parent-session handoff. Foreground versus background delegation mode
+selection is covered by subagent-foreground-background-delegation-capability-pack.
+
+## Core Workflow
+
+1. Inventory subagent tool calls, file reads, MCP responses, and draft edits produced.
+2. Identify content that must not leave the subagent context verbatim.
+3. Remove API keys, JWTs, cookies, and connection strings from handoff text.
+4. Replace customer identifiers with stable internal aliases when summaries need references.
+5. Strip large file dumps—retain paths and line ranges instead of full content.
+6. Produce a parent-session summary with goal, outcome, blockers, and next steps.
+7. Attach evidence as citations (paths, command names, doc links)—not raw tool JSON.
+8. Apply team retention policy to subagent logs—delete or archive per policy.
+9. Emit a privacy-safe closeout note suitable for shared project trackers.
+
+## Capability Scope
+
+- Transcript redaction and retention checklists.
+- Parent-session summary contracts after subagent completion.
+- Sensitive data findings from subagent output.
+- Handoff approval gates before merging results upstream.
+- Privacy-safe closeout reporting.
+
+## Production Rules
+
+- Never attach raw subagent transcripts to public tickets or shared channels.
+- Require redacted parent summaries with citations instead of full tool JSON dumps.
+- Rotate credentials discovered during transcript cleanup before closing the incident.
+- Delete or archive subagent logs per team retention policy after handoff completes.
+- Block parent-session merges when destructive subagent actions lack explicit approval.
+- Prefer path and line references over pasted file contents in summary contracts.
+- Record cleanup scope and redaction level in support or incident notes.
+
+## Review Matrix
+
+| Subagent output | Cleanup action | Why |
+| --- | --- | --- |
+| Tool JSON with secrets | Redact and rotate | Prevent credential leakage |
+| Large file read dumps | Replace with path refs | Reduce parent context bloat |
+| Destructive command attempts | Block handoff | Requires human approval |
+| Read-only research findings | Summarize with citations | Safe parent merge |
+| Ambiguous subagent claims | Label as unverified | Parent must validate |
+
+## Output Contract
+
+1. Transcript redaction and retention checklist.
+2. Parent-session summary contract.
+3. Sensitive data findings from subagent output.
+4. Handoff approval gate before merging results upstream.
+5. Privacy-safe closeout note.
+
+## Features
+
+- Maps sub-agents documentation to transcript cleanup workflows.
+- Separates redaction from summarization with explicit handoff contracts.
+- Complements foreground/background delegation skill without duplicating mode selection.
+- Produces audit-friendly closeout notes without raw transcript attachments.
+
+## Use Cases
+
+- Close background research subagents before merging findings into a parent coding session.
+- Sanitize MCP-heavy subagent runs before posting summaries to Slack or Linear.
+- Enterprise workflows requiring redaction before subagent output enters shared tickets.
+- Post-incident cleanup when subagents read sensitive configuration files.
+
+## Duplicate Check
+
+Checked content/skills for transcript cleanup coverage.
+subagent-foreground-background-delegation-capability-pack covers delegation mode selection.
+No skills entry applies sub-agents documentation to transcript redaction and parent handoff
+summary contracts after subagent completion.
+
+## Editorial Disclosure
+
+Submitted as an independent community skills entry by kiannidev, based on public Claude Code
+sub-agents documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code sub-agents - https://code.claude.com/docs/en/sub-agents
+- Claude Code skills - https://code.claude.com/docs/en/skills
+- Claude Code repository - https://github.com/anthropics/claude-code
