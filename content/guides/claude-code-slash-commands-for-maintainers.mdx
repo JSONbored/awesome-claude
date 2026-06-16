@@ -1,0 +1,183 @@
+---
+title: Claude Code Slash Commands For Maintainers
+slug: claude-code-slash-commands-for-maintainers
+category: guides
+description: >-
+  Design Claude Code slash commands for repository maintainers: project and user
+  command files, scoped prompts, argument placeholders, and review workflows for
+  changelog prep, triage, and release hygiene without repeating long prompts.
+cardDescription: Build maintainer slash commands for repeatable Claude Code workflows.
+seoTitle: Claude Code Slash Commands For Maintainers
+seoDescription: >-
+  Create Claude Code slash commands for maintainers with project commands,
+  argument placeholders, scoped prompts, and review-safe workflows for triage,
+  changelog, and release hygiene.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1182
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1182"
+documentationUrl: "https://code.claude.com/docs/en/commands"
+usageSnippet: >-
+  Add `.claude/commands/<name>.md` project commands for maintainer workflows,
+  use `$ARGUMENTS` for issue or PR context, keep destructive steps human-gated,
+  and version commands in git so the team shares one playbook.
+prerequisites:
+  - Claude Code CLI or Desktop with slash commands enabled for your account.
+  - A repository where maintainers repeat the same review, triage, or release prompts.
+  - Agreement on which commands may suggest writes versus read-only analysis.
+  - Optional `.claude/settings.json` permissions reviewed before auto-approved tools run.
+safetyNotes:
+  - Slash commands expand into full prompts; treat bundled instructions like privileged runbooks, not casual snippets.
+  - Commands that invoke Bash, Git write, or MCP tools inherit session permissions—scope project commands to least privilege.
+  - Do not embed secrets, tokens, or customer identifiers in command files committed to shared repositories.
+privacyNotes:
+  - Maintainer commands often reference issue titles, PR diffs, release notes, and internal roadmap language.
+  - `$ARGUMENTS` may carry ticket IDs that map to private trackers; avoid logging expanded prompts in public CI.
+  - Shared project commands in git expose workflow intent to anyone with repository read access.
+sourceUrls:
+  - "https://code.claude.com/docs/en/commands"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - slash-commands
+  - maintainers
+  - workflow
+  - project-commands
+  - release-hygiene
+keywords:
+  - Claude Code slash commands maintainers
+  - project commands claude code
+  - custom slash command workflow
+  - claude code triage command
+  - maintainer prompt automation
+readingTime: 8
+difficultyScore: 48
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Slash commands turn repeatable maintainer prompts into one typed invocation.
+Store team commands under `.claude/commands/`, use `$ARGUMENTS` for issue or PR
+context, keep destructive steps human-gated, and review permissions before
+commands suggest writes or shell actions.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Workflow mapped", "description": "You know which maintainer tasks repeat weekly (triage, changelog, release notes)"}
+- [ ] {"task": "Scope chosen", "description": "Project commands for the repo team; user commands only for personal shortcuts"}
+- [ ] {"task": "Output contract", "description": "Each command states evidence requirements and stop conditions"}
+- [ ] {"task": "Permissions reviewed", "description": "Settings allow only the tools each command needs"}
+- [ ] {"task": "Version control", "description": "Project commands live in git with normal PR review"}
+
+## Core Concepts Explained
+
+### Project versus user commands
+
+Official docs place project commands in `.claude/commands/` so every
+contributor gets the same maintainer playbook. User commands live in the home
+directory for personal shortcuts and are not shared through the repository.
+
+### `$ARGUMENTS` carries context
+
+Pass issue numbers, PR URLs, milestone names, or file paths after the command
+name. The placeholder expands inside the command markdown so one template
+covers many tickets without copy-pasting prompts.
+
+### Commands are prompts, not sandbox escapes
+
+A slash command does not bypass Claude Code permissions. If the expanded prompt
+asks Claude to run Bash or push commits, normal approval and settings rules still
+apply unless your team has explicitly configured otherwise.
+
+### Maintainer commands favor read-first patterns
+
+Start with analysis commands (`/triage-issue`, `/summarize-release-diff`) before
+write-capable commands (`/draft-changelog`). Humans merge or post after review.
+
+## Step-by-Step Implementation Guide
+
+1. **List repeatable maintainer tasks.** Examples: weekly issue triage, release
+   note drafting, dependency bump review, stale PR sweep, docs drift scan.
+
+2. **Create one command file per task.** Add `.claude/commands/triage-issue.md`
+   with a clear title, steps, evidence rules, and what to ignore.
+
+3. **Add `$ARGUMENTS` where needed.** Accept `#1234`, a PR URL, or a semver tag
+   so maintainers invoke `/triage-issue 1234` instead of pasting context.
+
+4. **Define output format.** Require structured sections: summary, severity,
+   recommended labels, blockers, and next human action.
+
+5. **Commit and review in git.** Treat command changes like code: PR review,
+   changelog entry, and team onboarding note.
+
+6. **Test in a dry run.** Invoke each command on a known issue or PR and verify
+   the expanded behavior matches maintainer policy before broad rollout.
+
+7. **Document invocation in CONTRIBUTING.** Link command names so new
+   maintainers discover the playbook without searching `.claude/commands/`.
+
+## Maintainer Command Checklist
+
+- [ ] {"task": "Narrow scope", "description": "One command does one job; split triage from release drafting"}
+- [ ] {"task": "Evidence required", "description": "Outputs cite files, links, or diffs—not speculation"}
+- [ ] {"task": "Human gate", "description": "Destructive or public actions stay reviewer-approved"}
+- [ ] {"task": "No secrets", "description": "Command files contain instructions only, never tokens"}
+- [ ] {"task": "Duplicate check", "description": "New commands differ from existing team prompts and SDK slash docs"}
+
+## Troubleshooting
+
+### Command not found
+
+Confirm the file lives under `.claude/commands/` with a `.md` extension, you
+are in the project root, and the filename matches the invoked command slug.
+
+### `$ARGUMENTS` empty
+
+Ensure text follows the command name in the same message. Document expected
+argument shape in the command file header.
+
+### Command suggests unsafe writes
+
+Tighten instructions to read-only analysis, adjust `.claude/settings.json`
+permissions, or split write steps into a separate human-triggered command.
+
+### Team members see different commands
+
+User-level commands are personal; move shared maintainer workflows into project
+commands and merge through git.
+
+## Source Verification Notes
+
+Verified against official Claude Code commands documentation on **2026-06-16**:
+
+- Project commands are markdown files in `.claude/commands/`; user commands use
+  the home-directory commands path documented on code.claude.com.
+- Slash commands expand into prompts; `$ARGUMENTS` injects trailing user text.
+- Command discovery is per project root; filenames map to `/command-name` invocations.
+- Permissions and tool access follow normal Claude Code settings—not command metadata alone.
+
+## Duplicate Check
+
+Checked `content/guides`, generated catalog text, and open pull requests for
+Claude Code slash commands, custom commands, and maintainer workflow automation.
+`slash-commands-in-claude-agent-sdk-sessions` covers SDK session commands, not
+CLI/Desktop project commands for repository maintainers. No existing guide focuses
+on maintainer-oriented project command design with git-shared playbooks.
+
+## References
+
+- Commands docs - https://code.claude.com/docs/en/commands
+- Settings docs - https://code.claude.com/docs/en/settings
+- Claude Code repository - https://github.com/anthropics/claude-code
