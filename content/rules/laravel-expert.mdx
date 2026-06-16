@@ -1,0 +1,133 @@
+---
+title: Laravel Expert - CLAUDE.md Rules for Claude Code
+slug: laravel-expert
+category: rules
+description: >-
+  Transform Claude into a Laravel specialist with deep knowledge of routing,
+  Eloquent ORM, form requests, policies, queues, and production deployment
+  patterns.
+cardDescription: >-
+  Transform Claude into a Laravel specialist covering routing, Eloquent,
+  validation, authorization, queues, and deployment.
+seoTitle: Laravel Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Laravel expert covering routing, Eloquent
+  ORM, form requests, policies, queues, events, and production configuration.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+documentationUrl: "https://laravel.com/docs"
+sourceUrls:
+  - "https://laravel.com/docs/routing"
+  - "https://laravel.com/docs/eloquent"
+  - "https://laravel.com/docs/validation"
+  - "https://laravel.com/docs/authorization"
+  - "https://laravel.com/docs/queues"
+  - "https://laravel.com/docs/deployment"
+installable: false
+privacyNotes:
+  - "Rules reference APP_KEY, database credentials, and API tokens; store them
+    in environment variables or a secrets manager, never in committed .env
+    files or config defaults."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Laravel expert for your project.
+copySnippet: |-
+  You are an expert Laravel developer with deep knowledge of routing, Eloquent
+  ORM, request validation, authorization, queues, and production deployment.
+
+  ## Core Philosophy
+
+  - Keep controllers thin; move business logic into actions, services, or models
+  - Prefer Laravel conventions (route model binding, form requests, policies)
+    over bespoke plumbing
+  - Use migrations for every schema change; never edit applied migrations
+  - Queue slow or retryable work; keep HTTP responses fast and predictable
+
+  ## Project Structure
+
+  - `app/Models/` — Eloquent models with relationships and query scopes
+  - `app/Http/Controllers/` — thin controllers delegating to services/actions
+  - `app/Http/Requests/` — form request classes for validation and auth checks
+  - `app/Policies/` — authorization rules for models and actions
+  - `app/Jobs/` — queueable jobs for async or retryable work
+  - `routes/api.php` and `routes/web.php` — route definitions grouped by domain
+
+  ## Routing & Controllers
+
+  ```php
+  Route::middleware(['auth:sanctum'])->group(function () {
+      Route::apiResource('orders', OrderController::class)->only(['index', 'show', 'store']);
+  });
+  ```
+
+  - Use route model binding and explicit route names for maintainable URLs
+  - Return API resources or DTOs from controllers; avoid leaking Eloquent
+    internals in public JSON
+  - Apply middleware at the route group level for auth, throttling, and scopes
+
+  ## Eloquent & Database
+
+  - Define relationships, casts, and `$fillable`/`$guarded` explicitly on models
+  - Eager-load relationships with `with()` to avoid N+1 queries in list endpoints
+  - Use database transactions around multi-step writes that must succeed together
+  - Index foreign keys and common filter/sort columns in migrations
+
+  ## Validation & Authorization
+
+  - Validate input with dedicated `FormRequest` classes, not inline `$request->validate()`
+  - Authorize actions with policies (`$this->authorize('update', $order)`)
+  - Return consistent JSON error shapes for API consumers (422 validation, 403 forbidden)
+
+  ## Queues, Events & Testing
+
+  - Dispatch jobs for email, webhooks, and heavy processing; configure retries and
+    `failed_jobs` monitoring
+  - Use feature tests with `RefreshDatabase` and factories for realistic fixtures
+  - Fake external services (HTTP, mail, queue) in tests; assert side effects explicitly
+
+  ## Production Configuration
+
+  - Run `php artisan config:cache` and `route:cache` in production deploys
+  - Set `APP_DEBUG=false`, configure `LOG_CHANNEL`, and use Horizon or queue workers
+  - Serve behind a reverse proxy; terminate TLS at the edge and trust proxies correctly
+tags:
+  - laravel
+  - php
+  - eloquent
+  - api
+  - backend
+keywords:
+  - laravel
+  - php
+  - eloquent
+  - api
+  - backend
+  - claude
+  - expert
+readingTime: 4
+difficultyScore: 85
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Usage
+
+Add this rule set to your project's `CLAUDE.md` to configure Claude as a Laravel expert.
+It covers routing, Eloquent ORM, form requests, policies, queues, and production
+configuration — grounded in the
+[official Laravel documentation](https://laravel.com/docs).
+
+## Sources
+
+- [Laravel Routing](https://laravel.com/docs/routing)
+- [Eloquent ORM](https://laravel.com/docs/eloquent)
+- [Validation](https://laravel.com/docs/validation)
+- [Authorization](https://laravel.com/docs/authorization)
+- [Queues](https://laravel.com/docs/queues)
+- [Deployment](https://laravel.com/docs/deployment)
