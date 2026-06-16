@@ -1,0 +1,135 @@
+---
+title: MCP Registry Metadata Reviewer Agent
+slug: mcp-registry-metadata-reviewer-agent
+category: agents
+description: >-
+  Source-backed agent that reviews MCP registry listings for metadata accuracy:
+  canonical URLs, version alignment, transport claims, auth requirements, duplicate
+  slugs, and documentation reachability before publishing or approving connectors.
+cardDescription: >-
+  Review MCP registry metadata for accurate URLs, transport, auth, and duplicate listings.
+seoTitle: MCP Registry Metadata Reviewer Agent
+seoDescription: >-
+  Reusable agent prompt to review MCP registry metadata: canonical URLs, transport and
+  auth claims, version alignment, duplicates, and documentation reachability.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1571
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1571"
+documentationUrl: "https://modelcontextprotocol.io/registry/about"
+installable: false
+usageSnippet: >-
+  Use this agent before publishing or approving an MCP registry entry to verify metadata,
+  reachable docs, transport/auth claims, and duplicate registry IDs or slugs.
+prerequisites:
+  - "Draft or live MCP registry JSON/metadata for the server under review."
+  - "Reachability checks for documentation, repository, and package URLs listed in metadata."
+  - "Published tool manifest or README describing transport and authentication."
+  - "Search results across registry and HeyClaude content for duplicate names or URLs."
+safetyNotes:
+  - "Metadata review does not substitute for runtime security testing of MCP tools."
+  - "Parked or redirected documentation domains should fail review even if registry JSON is syntactically valid."
+  - "Affiliate or referral landing pages must not be listed as canonical documentation URLs."
+  - "Version fields should match reachable release tags or package versions when claimed."
+privacyNotes:
+  - "Registry drafts may include private repo URLs or staging endpoints—redact in public review notes."
+  - "OAuth client examples can contain placeholder secrets; ensure reports do not echo live tokens."
+  - "Vendor metadata may list customer names in example configs; scrub before external sharing."
+tags:
+  - mcp
+  - registry
+  - metadata
+  - review
+  - provenance
+  - claude-code
+keywords:
+  - mcp registry metadata reviewer
+  - model context protocol registry audit
+  - mcp listing documentation verification
+  - registry duplicate slug review
+  - mcp publisher metadata QA
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Registry Metadata Reviewer Agent is a reusable agent prompt for validating MCP
+registry listings before publication or team approval. It checks canonical URLs,
+transport and authentication claims, version alignment, duplicate detection, and
+documentation reachability against primary sources.
+
+Use it when publishing a new registry server, reviewing third-party listings, or
+auditing connector catalogs for stale metadata.
+
+## Agent Prompt
+
+You are an MCP registry metadata reviewer. Determine whether a registry entry is
+accurate, verifiable, and non-duplicative before users connect it in Claude Code.
+Use MCP registry about pages and Claude Code MCP docs as references.
+
+Review workflow:
+
+1. **Identity.** Confirm registry name, slug, publisher, and semantic version fields.
+2. **Canonical URLs.** Verify documentation, repository, homepage, and download URLs
+   return HTTP 200 and match the described product.
+3. **Transport claims.** Ensure listed transports (stdio, SSE, streamable HTTP) match README or package manifests.
+4. **Auth claims.** Validate documented OAuth, API key, or mTLS requirements against setup guides.
+5. **Tool summary.** Check that described tool categories align with published schemas.
+6. **Duplicates.** Search registry and content catalogs for same repo, domain, or purpose.
+7. **Decision.** Approve metadata, request fixes, or reject with explicit required changes.
+
+Output contract:
+
+- Metadata field checklist with pass/fail per URL and claim.
+- Duplicate findings with conflicting registry IDs or slugs.
+- Required fixes ranked by severity.
+- Approve / revise / reject recommendation for publishers or maintainers.
+
+## Features
+
+- Validates registry JSON against reachable primary documentation.
+- Flags transport and authentication mismatches early.
+- Detects duplicate listings before users connect the wrong server.
+- Produces maintainer-ready review summaries.
+
+## Use Cases
+
+- Publisher QA before submitting ai.vendor/server to the MCP registry.
+- Maintainer review of community-submitted registry pull requests.
+- Periodic audit of internal connector catalogs mirrored from registry metadata.
+- Pre-flight check before adding registry URLs to enterprise allowlists.
+
+## Source Notes
+
+Verified against MCP registry about documentation and Claude Code MCP docs on
+**2026-06-16**:
+
+- The MCP registry publishes server metadata consumed by clients and marketplaces.
+- Registry about documentation describes publishing requirements and verification expectations.
+- Claude Code consumes MCP server configs separately from registry display metadata.
+- Accurate auth and transport fields reduce misconfigured remote connectors.
+
+## Duplicate Check
+
+Checked content/agents, content/mcp, and open PRs for registry metadata review agents.
+mcp-remote-server-security-auditor-agent focuses on connector security, not publishing
+metadata QA. No existing agents entry provides registry metadata verification with
+duplicate slug detection and publisher fix lists.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed community agent entry by kiannidev, based
+on public MCP registry and Claude Code documentation. No paid placement, referral,
+or affiliate relationship.
+
+## Sources
+
+- MCP Registry about - https://modelcontextprotocol.io/registry/about
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- Claude Code features overview - https://code.claude.com/docs/en/features-overview
+- Claude Code skills - https://code.claude.com/docs/en/skills
