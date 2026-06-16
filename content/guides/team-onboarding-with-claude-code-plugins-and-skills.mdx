@@ -18,7 +18,7 @@ dateAdded: "2026-06-14"
 submittedAt: "2026-06-14"
 sourceSubmissionNumber: 1427
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1427"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/skills"
 usageSnippet: >-
   Use this guide to onboard a team to Claude Code with a standard plugin bundle,
   shared skills, and champion-led first-week exercises.
@@ -87,6 +87,32 @@ integrations veterans use, reducing workflow variance in AI-assisted work.
 
 Project skills capture review norms, testing commands, and domain vocabulary so
 new contributors do not rediscover conventions through trial and error.
+
+## Where Shared Skills Live
+
+Storage location determines who can use a skill. Standardize on the scope each onboarding skill belongs to before rollout:
+
+| Location | Path | Applies to |
+| --- | --- | --- |
+| Enterprise | See managed settings | All users in your organization |
+| Personal | `~/.claude/skills/<skill-name>/SKILL.md` | All your projects |
+| Project | `.claude/skills/<skill-name>/SKILL.md` | This project only |
+| Plugin | `<plugin>/skills/<skill-name>/SKILL.md` | Where plugin is enabled |
+
+When skills share the same name across levels, enterprise overrides personal, and personal overrides project.
+
+## Standard Plugin Bundle Layout
+
+A team plugin can ship skills, agents, hooks, and MCP servers from one directory. Add a `skills/` directory at the plugin root with skill folders containing `SKILL.md` files:
+
+```text
+my-plugin/
+├── .claude-plugin/
+│   └── plugin.json
+└── skills/
+    └── code-review/
+        └── SKILL.md
+```
 
 ### Champions reduce support load
 
