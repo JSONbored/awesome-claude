@@ -20,6 +20,9 @@ submittedAt: "2026-06-16"
 sourceSubmissionNumber: 1183
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1183"
 documentationUrl: "https://code.claude.com/docs/en/sub-agents"
+retrievalSources:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/common-workflows"
 usageSnippet: >-
   Define narrow maintenance subagents in `.claude/agents/`, give each read-only
   tools by default, run docs-drift and dependency scans in parallel, then let the
@@ -126,6 +129,75 @@ release policy. Treat proposed diffs as drafts until a human merges.
 
 7. **Track in team rituals.** Attach consolidated maintenance output to sprint
    planning or release checklists so subagent work feeds real decisions.
+
+## Example: A Read-First Docs-Drift Subagent
+
+Subagents are Markdown files with YAML frontmatter, stored under
+`.claude/agents/` for the project (checked into version control) or
+`~/.claude/agents/` for personal reuse. Only `name` and `description` are
+required; the body becomes the subagent's system prompt. The example below
+restricts tools to read and search (`Read, Grep, Glob`) so the docs-drift lane
+cannot edit files, and pins `model: haiku` for cheap, high-volume scanning:
+
+```markdown
+---
+name: docs-drift-scanner
+description: Scans docs and source for drift between documented behavior and current code. Use proactively before releases. Reports gaps only, never edits.
+tools: Read, Grep, Glob
+model: haiku
+---
+
+You scan documentation against the current codebase for drift.
+
+When invoked:
+1. Identify docs under docs/ and README files
+2. Compare documented commands, flags, and APIs against source
+3. Report only gaps; do not edit any file
+
+For each finding, output:
+- File path and line reference for the doc claim
+- The source evidence that contradicts it
+- Severity (critical / warning / suggestion)
+- Suggested human action
+
+Never open pull requests or change labels. Return a consolidated list.
+```
+
+Because `tools` is set to an allowlist, this subagent inherits none of the
+write tools available to the main conversation. Omitting `tools` instead would
+inherit every tool, so keep maintenance scanners explicit. Invoke it
+automatically (Claude matches the `description`) or explicitly:
+
+```text
+Use the docs-drift-scanner subagent to check the docs against main before release
+```
+
+## Reference: Subagent Frontmatter Fields For Maintenance
+
+These are the fields most relevant to scoping maintenance subagents, drawn from
+the official sub-agents documentation. Only `name` and `description` are
+required.
+
+| Field | Required | Maintenance use |
+| :--- | :--- | :--- |
+| `name` | Yes | Lowercase-and-hyphen identifier, e.g. `dependency-report-triage`; how the subagent is invoked |
+| `description` | Yes | When Claude should delegate; add "use proactively" for recurring scans |
+| `tools` | No | Allowlist (e.g. `Read, Grep, Glob`); inherits all tools if omitted—keep scanners read-only |
+| `disallowedTools` | No | Denylist (e.g. `Write, Edit`) to inherit everything except writes |
+| `model` | No | `haiku`, `sonnet`, `opus`, `fable`, a full model ID, or `inherit`; defaults to `inherit` |
+| `permissionMode` | No | `default`, `plan` (read-only), `acceptEdits`, and others; use `plan` for analysis-only lanes |
+| `memory` | No | `project`, `user`, or `local` to accumulate recurring-issue notes across runs |
+
+## When To Use A Subagent Vs The Main Session
+
+| Situation | Choose |
+| :--- | :--- |
+| Verbose scan output (drift lists, dependency reports) you won't reference again | Subagent—keeps it out of main context |
+| Enforcing read-only tool restrictions per maintenance lane | Subagent—`tools`/`disallowedTools` scope it |
+| Self-contained work that returns a summary | Subagent |
+| Consolidating findings and ranking by impact | Main session—shares context across lanes |
+| Iterative back-and-forth or a quick targeted change | Main session—lower latency |
+| Reusable maintenance prompt without isolated context | Consider a Skill instead |
 
 ## Maintenance Subagent Checklist
 
