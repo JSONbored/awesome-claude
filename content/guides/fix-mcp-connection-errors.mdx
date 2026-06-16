@@ -15,11 +15,19 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+retrievalSources:
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/troubleshooting"
 installable: false
 usageSnippet: >-
   Quick fix for MCP server error -32000: Use cmd wrapper on Windows for npx
   commands. This issue commonly affects Windows users when Claude Desktop cannot
   execute commands directly. Complete resolution typically takes 5-10 minutes.
+safetyNotes:
+  - "Troubleshooting steps run MCP servers as local subprocesses or connect to remote servers, which can execute tools and reach external systems; review what each server is allowed to do before connecting it."
+privacyNotes:
+  - "MCP authentication uses OAuth tokens and API keys, and connected servers can receive project data; keep secrets in .mcp.json env or --env (not committed), and review each server's data access."
 tags:
   - troubleshooting
   - mcp-servers
@@ -32,96 +40,138 @@ keywords:
   - model context protocol errors
 readingTime: 2
 difficultyScore: 12
-hasTroubleshooting: false
+hasTroubleshooting: true
 hasPrerequisites: false
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
 ---
 
-## TL;DR
+## Overview
 
-Quick fix for MCP server error -32000: Use cmd wrapper on Windows for npx commands. This issue commonly affects Windows users when Claude Desktop cannot execute commands directly. Complete resolution typically takes 5-10 minutes.
+An MCP server that won't connect shows up the same way most of the time: you run `/mcp` inside Claude Code and the server is listed as **failed**, **pending**, or **connected with zero tools**. The underlying cause is almost always one of a handful of things: a relative path that resolves against the wrong directory, missing or wrong authentication, environment variables that never reach the server process, or a project-scoped server that was never approved.
 
-**Key Points:**
-
-- Wrap Windows commands with 'cmd /c' - immediate resolution
-- JSON-RPC transport failure - stdout pollution corrupts messages
-- Install ripgrep and Node.js v18+ - essential dependencies
-- Use absolute paths in config - prevents version conflicts
-
-Experiencing MCP server disconnection error -32000 with Claude Desktop? This comprehensive guide provides proven solutions based on community reports and official Anthropic support resources. The issue typically manifests as garbled text messages, immediate disconnections, or server disconnect notifications.
+This guide walks through diagnosing and fixing those failures using the built-in commands Claude Code ships with: `/mcp`, `claude mcp list`, `claude mcp get`, and `claude --debug mcp`.
 
 > **Problem Summary**
 >
-> **Error:** Server disconnected. error -32000
-> **Symptoms:** Garbled messages, immediate disconnection, server fails to start
-> **Impact:** All MCP server functionality disabled
-> **Urgency:** High - blocks all local tool integrations
-> **Estimated Fix Time:** 5-10 minutes for basic cases
+> **Symptoms:** Server shows as failed or pending in `/mcp`, connects but lists zero tools, or returns 401/403 auth errors
+> **First command to run:** `/mcp` inside Claude Code, then `claude --debug mcp` from your shell
+> **Estimated fix time:** 5-10 minutes for most cases
 
-## Quick Fix (5-Minute Solution)
+## First: see what actually loaded
 
-1. **Verify Current Status**
+Before changing any config, find out what state the server is in. Run these in order.
 
-2. **Apply Primary Fix**
+```bash
+# Inside a Claude Code session: status of every server, tool counts, approval state
+/mcp
 
-3. **Confirm Resolution**
+# From your shell: list all configured servers
+claude mcp list
 
-## Detailed Diagnostics
+# From your shell: full details for one server (transport, URL, command/args, OAuth state)
+claude mcp get my-server
+```
 
-<!-- Section type: accordion -->
+What the `/mcp` panel tells you:
 
-## Solution Methods
+- A **failed** server started and exited, or never connected. Usually a bad command/path, a missing dependency, or an auth rejection.
+- A **pending** server is mid-connection. For HTTP/SSE servers, Claude Code retries the initial connection with exponential backoff (up to three attempts on transient errors like 5xx, connection refused, or timeout) before marking it failed. Auth and not-found errors are **not** retried.
+- A **`Pending approval`** server is a project-scoped server from `.mcp.json` waiting for your one-time approval.
+- A **connected** server with **zero tools** started fine but isn't returning a tool list.
 
-<!-- Section type: tabs -->
+For the real error text, run Claude Code with MCP debug logging, which surfaces the server's stderr:
 
-## Root Cause Analysis
+```bash
+claude --debug mcp
+```
 
-<!-- Section type: feature_grid -->
+## Troubleshooting table
 
-## Prevention Strategies
+| Symptom | Likely cause | Fix |
+| --- | --- | --- |
+| Server **fails to start** only from certain directories | `command`/`args` uses a **relative** path, which resolves against your launch directory, not `.mcp.json` | Use **absolute paths** for local scripts. `PATH` executables like `npx`/`uvx` work as-is. |
+| Project server **doesn't appear** at all | The one-time approval prompt was dismissed | Run `/mcp` to approve, or `claude mcp reset-project-choices` to reset choices. |
+| Server **starts without its API key / env vars** | Variables were put in `settings.json` `env`, which does **not** propagate to MCP child processes | Set per-server `env` inside `.mcp.json`, or pass `--env KEY=value` to `claude mcp add`. |
+| Servers in `.mcp.json` **never load** | File is inside `.claude/` or uses Claude Desktop's format | Project MCP config lives at the **repository root** as `.mcp.json`. |
+| Remote server flagged as **needing authentication** | Server responded with `401`/`403` | Run `/mcp` and complete the OAuth 2.0 browser login flow. |
+| Remote server **connection failed** even with a token | You set `headers.Authorization` and the server rejected it | Verify the token, or remove the header to fall back to OAuth. |
+| `Incompatible auth server: does not support dynamic client registration` | Server needs pre-configured OAuth credentials | Add the server with `--client-id` and `--client-secret`. |
+| Connected but **zero tools** | Server started but isn't returning a tool list | Select **Reconnect** from `/mcp`; if still zero, run `claude --debug mcp`. |
+| Server times out before it finishes starting | Startup is slower than the default timeout | Increase it: `MCP_TIMEOUT=10000 claude`. |
 
-> **Prevent Future Occurrences**
->
-> **Use absolute paths always:** Full paths in configurations prevent ambiguity
->
-> **Redirect server logs to stderr:** console.error() instead of console.log() prevents stream pollution
->
-> **Pin Node.js version:** Use nvm with specific version (v20-22 recommended) for version consistency
+## Fix 1: Use absolute paths for local (stdio) servers
 
-## Alternative Solutions
+The single most common stdio failure is a relative path in `command` or `args`. It works from the project root and breaks everywhere else. Use an absolute path, or rely on a `PATH` executable like `npx`:
 
-<!-- Section type: accordion -->
+```bash
+# Good: PATH executable, no path issues
+claude mcp add --transport stdio airtable \
+  --env AIRTABLE_API_KEY=YOUR_KEY \
+  -- npx -y airtable-mcp-server
+```
 
-## When to Escalate
+Note the `--` before the command: it separates Claude's own flags (`--transport`, `--env`, `--scope`) from the command that runs the server. Everything after `--` is passed to the server untouched.
 
-<!-- Section type: feature_grid -->
+## Fix 2: Put environment variables where the server can see them
 
-## Success Verification
+Secrets in `settings.json` `env` do **not** reach MCP child processes. Pass them at add time with `--env`, or set per-server `env` directly in `.mcp.json`. Claude Code expands `${VAR}` and `${VAR:-default}` in `command`, `args`, `env`, `url`, and `headers`:
 
-1. **Functional Testing**
+```json
+{
+  "mcpServers": {
+    "api-server": {
+      "type": "http",
+      "url": "${API_BASE_URL:-https://api.example.com}/mcp",
+      "headers": {
+        "Authorization": "Bearer ${API_KEY}"
+      }
+    }
+  }
+}
+```
 
-2. **Edge Case Testing**
+## Fix 3: Authenticate remote servers over OAuth
 
-3. **Performance Validation**
+Claude Code marks a remote server as needing authentication when it responds with `401` or `403`, then flags it in `/mcp` so you can finish the OAuth 2.0 flow:
 
-4. **Long-term Stability**
+```bash
+# Add a remote HTTP server that requires auth, then run /mcp to log in
+claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
+```
 
-## Frequently Asked Questions
+- Tokens are stored securely and refreshed automatically. Use **Clear authentication** in the `/mcp` menu to re-auth from scratch.
+- If the browser doesn't open, copy the printed URL and open it manually.
+- For servers without Dynamic Client Registration (`Incompatible auth server...`), register an OAuth app and pass `--client-id` / `--client-secret`.
 
-## Related Issues and Solutions
+## Fix 4: Connected but zero tools
 
-<!-- Section type: related_content -->
+A server that shows connected with no tools started successfully but isn't returning its tool list. Select **Reconnect** from the `/mcp` panel. If the count stays at zero, read the server's stderr:
 
----
+```bash
+claude --debug mcp
+```
 
-> **Issue Resolved?**
->
-> **Problem solved?** Great! Consider implementing absolute paths and stderr logging to prevent recurrence.
->
-> **Still having issues?** Join our [community](/community) for additional support or file a GitHub issue at github.com/modelcontextprotocol/issues.
->
-> **Found a new solution?** Share it with the community to help others facing the same issue.
+## When to isolate the problem
 
-_Last updated: September 2025 | Solutions verified against MCP Protocol v2025-06-18 | Found this helpful? Bookmark for future reference and explore more [troubleshooting guides](/guides/troubleshooting)._
+If a server still won't behave, launch a session with all customizations disabled to confirm whether the server (or something else in your config) is the cause:
+
+```bash
+# Disables CLAUDE.md, skills, plugins, hooks, MCP servers, and custom commands/agents
+claude --safe-mode
+```
+
+If the problem disappears in safe mode, one of those surfaces is responsible. You can also run `/doctor` for an automated check of your installation, settings, and MCP configuration.
+
+## Prevention
+
+- **Use absolute paths** for local script servers, or stick to `PATH` executables like `npx` and `uvx`.
+- **Keep secrets out of `settings.json`** for MCP. Use `--env` or per-server `env` in `.mcp.json`.
+- **Commit `.mcp.json` at the repo root** for project-scoped servers; remember they require a one-time `/mcp` approval.
+- **Verify after adding** with `claude mcp get <name>` to confirm transport, URL/command, and OAuth credentials.
+
+## Related resources
+
+- [MCP in Claude Code](https://code.claude.com/docs/en/mcp)
+- [Troubleshooting](https://code.claude.com/docs/en/troubleshooting)
