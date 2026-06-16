@@ -69,6 +69,7 @@ copySnippet: |-
 
     def create
       order = current_user.orders.build(order_params)
+      order.status = "pending"
       authorize order
       order.save!
       render json: order, status: :created
@@ -77,13 +78,14 @@ copySnippet: |-
     private
 
     def order_params
-      params.require(:order).permit(:status, line_items_attributes: [:product_id, :quantity])
+      params.require(:order).permit(line_items_attributes: [:product_id, :quantity])
     end
   end
   ```
 
   - Use `resources` and namespaces for predictable REST endpoints
   - Permit attributes only through strong parameters; never mass-assign blindly
+  - Keep workflow state fields like order status server-controlled; use policy-checked transitions instead of accepting them from request params
   - Return appropriate HTTP status codes and consistent JSON error payloads
 
   ## Active Record
