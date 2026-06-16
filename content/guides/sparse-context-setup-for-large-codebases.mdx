@@ -97,6 +97,28 @@ file list for implementation.
 When work crosses packages, name each directory and success criteria instead of
 assuming Claude inferred full-repo awareness.
 
+## Where You Start Claude Determines Scope
+
+| Start from | File access | CLAUDE.md loaded at launch | Use when |
+| --- | --- | --- | --- |
+| Repository root | Every file | Root only; subdirectory files load on demand when Claude reads there | Tasks span multiple packages or subsystems |
+| A subdirectory | That subtree only, until you grant more | That directory's plus every ancestor's | Work is scoped to one package or subsystem |
+
+Block reads of checked-in generated and vendored code with `Read` deny rules in `permissions.deny` (committed to `.claude/settings.json` to apply for everyone):
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Read(./**/dist/**)",
+      "Read(./**/build/**)",
+      "Read(./**/*.generated.*)",
+      "Read(./vendor/**)"
+    ]
+  }
+}
+```
+
 ## Step-by-Step Implementation Guide
 
 1. **Map package boundaries.** Identify services, libraries, and ownership from
