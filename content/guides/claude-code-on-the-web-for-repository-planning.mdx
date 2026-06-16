@@ -94,6 +94,28 @@ discovery work in a local terminal.
 
 ### Web quickstart covers environment setup
 
+## Cloud Session Permission Modes
+
+Cloud sessions on the web expose a subset of Claude Code's permission modes. Choose the mode from the dropdown next to the input box before submitting a task. For planning work, select **Plan** so Claude proposes an approach and waits for approval before editing files.
+
+| Permission mode | Available in web sessions? | Behavior |
+| :-------------- | :------------------------- | :------- |
+| Plan            | Yes                        | Claude proposes an approach and waits for your go-ahead before editing files |
+| Accept edits    | Yes (default)              | Claude makes changes and pushes a branch without stopping for approval |
+| Auto            | Yes                        | Listed among the cloud session modes |
+| Ask             | No                         | Not offered in cloud sessions |
+| Bypass permissions | No                      | Not offered in cloud sessions |
+
+## Pre-fill a Planning Session URL
+
+You can pre-fill the prompt, repositories, and environment for a new session by adding query parameters to the `claude.ai/code` URL. This is useful for handoffs—for example, a button in your issue tracker that opens a planning session with the issue text already loaded. URL-encode each value:
+
+```text
+https://claude.ai/code?prompt=Plan%20the%20auth%20refactor&repositories=acme/webapp
+```
+
+Supported parameters include `prompt` (alias `q`), `prompt_url` (fetch prompt text from a cross-origin URL), `repositories` (alias `repo`, a comma-separated list of `owner/repo` slugs), and `environment` (name or ID of the environment to preselect).
+
 The web quickstart documents authentication, repository connection, and first
 session creation—follow it before team rollout.
 
