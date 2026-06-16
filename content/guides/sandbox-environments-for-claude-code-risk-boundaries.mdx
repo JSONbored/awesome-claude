@@ -18,7 +18,7 @@ dateAdded: "2026-06-13"
 submittedAt: "2026-06-13"
 sourceSubmissionNumber: 1381
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1381"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/sandboxing"
 usageSnippet: >-
   Map team risk tiers to Claude Code sandbox settings—network allowlists, write
   paths, managed domain restrictions, and worktree isolation—for desktop, CLI,
@@ -102,6 +102,31 @@ practicality on non-git workflows.
 
 Network permission prompts may still appear in auto mode or desktop surfaces.
 Align sandbox boundaries with `autoMode.hard_deny` and static deny rules.
+
+## Default Sandbox Boundaries
+
+The built-in sandboxed Bash tool ships with these filesystem and network defaults:
+
+| Boundary | Default behavior |
+| --- | --- |
+| Filesystem write | Read and write access to the current working directory and its subdirectories, plus the session temp directory that `$TMPDIR` points to |
+| Filesystem read | Read access to the entire computer, except certain denied directories — this default still allows reading credential files such as `~/.aws/credentials` and `~/.ssh/` |
+| Network domains | No domains are pre-allowed; the first time a command needs a new domain, Claude Code prompts for approval |
+| Settings files | The sandbox automatically denies write access to Claude Code's `settings.json` files at every scope and to the managed settings directory |
+
+Because the default read policy still exposes credentials, block them in your project's `.claude/settings.json`. This example blocks reading the entire home directory while still allowing reads from the current project:
+
+```json
+{
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "denyRead": ["~/"],
+      "allowRead": ["."]
+    }
+  }
+}
+```
 
 ## Step-by-Step Implementation Guide
 
