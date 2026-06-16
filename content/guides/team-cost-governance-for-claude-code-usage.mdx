@@ -125,6 +125,31 @@ Platform sets guardrails; team leads enforce task-scoping habits.
 | MCP surface | Pre-approved servers only in production repos |
 | Log pastes | Paste stack traces, not full production logs |
 
+## Built-in Cost Controls (Reference)
+
+Claude Code's official costs documentation lists these commands and settings for tracking and capping spend:
+
+```text
+/usage              # Session token usage + plan-limit breakdown (press d/w for 24h vs 7 days)
+/usage-credits      # Set a monthly spend limit on usage credits (Pro/Max; needs billing access)
+/context            # See what's consuming context space
+/model              # Switch model mid-session (Sonnet costs less than Opus)
+/clear              # Start fresh between unrelated tasks to drop stale context
+MAX_THINKING_TOKENS=8000                 # Lower extended-thinking budget on fixed-budget models
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1   # Agent teams are disabled by default
+```
+
+The costs documentation also recommends per-user Token Per Minute (TPM) and Request Per Minute (RPM) rate limits scaled to organization size:
+
+| Team size | TPM per user | RPM per user |
+| --- | --- | --- |
+| 1-5 users | 200k-300k | 5-7 |
+| 5-20 users | 100k-150k | 2.5-3.5 |
+| 20-50 users | 50k-75k | 1.25-1.75 |
+| 50-100 users | 25k-35k | 0.62-0.87 |
+| 100-500 users | 15k-20k | 0.37-0.47 |
+| 500+ users | 10k-15k | 0.25-0.35 |
+
 ## Troubleshooting
 
 ### One project dominates spend
