@@ -1,0 +1,203 @@
+---
+title: Claude Code Routines Automation Capability Pack Skill
+slug: claude-code-routines-automation-capability-pack
+category: skills
+description: >-
+  Expert capability pack for authoring and reviewing Claude Code cloud routines
+  via documented /schedule CLI commands, self-contained prompts, connector
+  scoping, and post-run verification on claude.ai/code/routines.
+cardDescription: >-
+  Author and review Claude Code routines with /schedule CLI checklists and run verification steps.
+seoTitle: Claude Code Routines Automation Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code routines automation using /schedule,
+  /schedule list, /schedule update, and /schedule run from official routines documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1520
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1520"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/routines"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use before saving a cloud routine to validate self-contained prompts, connector
+  scope, and documented /schedule management commands.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code routines automation capability pack for this routine."
+
+  # Required output
+  1) Self-contained routine prompt review
+  2) Repository and connector scope checklist
+  3) /schedule CLI management plan
+  4) Post-run verification steps on claude.ai/code/routines
+  5) Privacy-safe routine summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/routines"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Claude Pro, Max, Team, or Enterprise with Claude Code on the web and routines enabled."
+  - "claude.ai subscription login in CLI (not Console API key-only auth)."
+  - "GitHub repositories authorized for cloud routine sessions."
+  - "Human reviewer for autonomous routine runs before merging branches."
+safetyNotes:
+  - "Routines run as full autonomous cloud sessions with no approval prompts during a run."
+  - "Included MCP connectors grant write tools without interactive approval—remove unused connectors."
+  - "Unrestricted branch pushes allow modifying non-claude/ branches—enable only when explicitly approved."
+privacyNotes:
+  - "Routine prompts and run transcripts may include proprietary code and connector payloads."
+  - "API trigger bearer tokens are secrets shown once on the web—store in a secret manager."
+  - "Actions through GitHub or connectors appear as your linked identity."
+tags:
+  - claude-code
+  - routines
+  - automation
+  - schedule
+  - capability-pack
+keywords:
+  - Claude Code routines automation capability pack
+  - /schedule routine authoring checklist
+  - claude.ai code routines review
+readingTime: 8
+difficultyScore: 68
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in Claude Code routines documentation verified on **2026-06-16**.
+Routines are in **research preview**—API surfaces, limits, and CLI behavior may
+change; confirm live docs before production automation.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/routines
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official routines documentation on **2026-06-16**:
+
+- Routines are saved configurations (prompt, repositories, environment, triggers)
+  that run on **Anthropic-managed cloud infrastructure**.
+- **`/schedule`** in the CLI creates **scheduled routines** conversationally;
+  **`/schedule list`**, **`/schedule update`**, and **`/schedule run`** manage them.
+- **`/schedule`** requires a **claude.ai subscription login**—Console API keys and
+  cloud provider auth hide the command per troubleshooting docs.
+- Routines run **without approval prompts**; scope repositories, network, and connectors narrowly.
+- A **green run status** means no infrastructure error—not guaranteed task success;
+  reviewers must open the run transcript on **claude.ai/code/routines**.
+- **API and GitHub triggers** are configured on the web; CLI **`/schedule`** creates
+  schedule triggers only.
+
+## Scope Note
+
+Community capability pack for **CLI schedule authoring and run review**—not an
+official Anthropic product. Web-only trigger setup remains on claude.ai/code/routines.
+
+## Core Workflow
+
+1. Confirm **`/schedule`** is available (claude.ai login, CLI version, org policy).
+2. Draft a **self-contained prompt** stating inputs, steps, and success criteria.
+3. Select only repositories the routine must touch; default to **claude/** branch pushes.
+4. Remove unused **MCP connectors** from the routine form defaults.
+5. Create the routine with **`/schedule`** or the web form; record the routine name.
+6. Manage cadence with **`/schedule list`** and **`/schedule update`** when needed.
+7. Trigger validation with **`/schedule run`** or **Run now** on the web.
+8. Open the run session and verify task outcome—not only the green status indicator.
+9. Publish a privacy-safe summary for stakeholders.
+
+## Capability Scope
+
+- Self-contained routine prompt review.
+- Repository and connector least-privilege scoping.
+- Documented **`/schedule`** CLI management commands.
+- Post-run verification on claude.ai/code/routines.
+- Troubleshooting **`/schedule` Unknown command** cases from official docs.
+
+## Compatibility
+
+### Native
+
+- **Claude Code**: use when authoring cloud routines from the CLI.
+
+### Manual Adaptation
+
+- **Generic AGENTS**: apply prompt and scope checklist when designing scheduled cloud agents.
+
+## Required Inputs
+
+- Maintenance or automation task description.
+- Target GitHub repositories and branch push policy.
+- Connector list required for the task.
+- Review owner before merging routine-opened pull requests.
+
+## Production Rules
+
+- Never store API trigger bearer tokens in repository files or public CI logs.
+- Trim connectors to the minimum tools required for the task.
+- Treat routine output as actions under your linked GitHub and connector identities.
+- Pause schedules with the web toggle before changing prompts in production repos.
+- Reference official docs for API **`/fire`** details—configure tokens on the web only.
+
+## Review Matrix
+
+| Check | Pass criteria | Doc basis |
+| --- | --- | --- |
+| Prompt self-contained | No live chat context required | Create a routine |
+| CLI auth valid | /schedule available with claude.ai login | Troubleshooting section |
+| Connectors trimmed | Unused MCP connectors removed | Connectors section |
+| Branch policy | claude/ prefix unless unrestricted pushes approved | Branch permissions |
+| Run verified | Transcript reviewed after green status | View and interact with runs |
+
+## Output Contract
+
+1. Prompt review with success criteria.
+2. Repository and connector scope notes.
+3. `/schedule` management command plan.
+4. Post-run verification checklist.
+5. Privacy-safe routine summary.
+
+## Troubleshooting
+
+**Issue:** `/schedule` returns Unknown command
+**Fix:** Confirm claude.ai subscription login, CLI version at least v2.1.81, and org routines policy per official troubleshooting.
+
+**Issue:** Green run status but task failed
+**Fix:** Open the run transcript on claude.ai/code/routines—docs state green means no infrastructure error only.
+
+## Duplicate Check
+
+Distinct from `routines-for-recurring-claude-code-maintenance` (step-by-step guide
+covering web triggers) and `claude-code-desktop-scheduled-maintenance-capability-pack`
+(local Desktop scheduled tasks). This pack focuses on **CLI /schedule authoring,
+management commands, and run verification matrices**.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` based on public Claude Code documentation. No
+paid placement or affiliate links.
