@@ -226,6 +226,35 @@ The earlier PR for this slot was closed after public content validation failed.
 This submission uses the current rules schema, includes practical safety and
 privacy notes, and adds exactly one source rules file.
 
+## Conventional Commits Reference
+
+Conventional Commits 1.0.0 defines a small set of types. `fix` and `feat` map directly to Semantic Versioning, and any commit marked breaking maps to a major release regardless of its type.
+
+| Type | Meaning | SemVer correlation |
+| --- | --- | --- |
+| `fix` | A commit of the type `fix` patches a bug in your codebase | `PATCH` |
+| `feat` | A commit of the type `feat` introduces a new feature to the codebase | `MINOR` |
+| `BREAKING CHANGE` | A commit with a `BREAKING CHANGE:` footer, or a `!` after the type/scope, introduces a breaking API change | `MAJOR` |
+
+Beyond `fix` and `feat`, the spec notes that `@commitlint/config-conventional` (based on the Angular convention) recommends `build:`, `chore:`, `ci:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`, and others.
+
+Verbatim spec examples reviewers can pattern-match against:
+
+```text
+feat: allow provided config object to extend other configs
+BREAKING CHANGE: extends key in config file is now used for extending other config files
+
+feat!: send an email to the customer when a product is shipped
+
+feat(api)!: send an email to the customer when a product is shipped
+
+docs: correct spelling of CHANGELOG
+
+feat(lang): add Polish language
+
+fix: prevent racing of requests
+```
+
 ## Sources
 
 - Conventional Commits 1.0.0 - https://www.conventionalcommits.org/en/v1.0.0/
