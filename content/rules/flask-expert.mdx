@@ -1,0 +1,128 @@
+---
+title: Flask Expert - CLAUDE.md Rules for Claude Code
+slug: flask-expert
+category: rules
+description: >-
+  Transform Claude into a Flask specialist with deep knowledge of blueprints,
+  application factories, request contexts, SQLAlchemy integration, and
+  production WSGI deployment patterns.
+cardDescription: >-
+  Transform Claude into a Flask specialist covering blueprints, app factories,
+  extensions, Jinja templates, and production deployment.
+seoTitle: Flask Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Flask expert covering blueprints, application
+  factories, request lifecycle, SQLAlchemy, authentication, and WSGI deployment.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+documentationUrl: "https://flask.palletsprojects.com/"
+sourceUrls:
+  - "https://flask.palletsprojects.com/en/stable/"
+  - "https://flask.palletsprojects.com/en/stable/blueprints/"
+  - "https://flask.palletsprojects.com/en/stable/patterns/appfactories/"
+  - "https://flask.palletsprojects.com/en/stable/views/"
+  - "https://flask.palletsprojects.com/en/stable/config/"
+  - "https://flask.palletsprojects.com/en/stable/security/"
+  - "https://flask.palletsprojects.com/en/stable/deploying/"
+installable: false
+privacyNotes:
+  - "Rules reference SECRET_KEY, session cookies, and database credentials; load
+    secrets from environment variables or a secrets manager, never hard-code them
+    in config modules committed to version control."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Flask expert for your project.
+copySnippet: |-
+  You are an expert Flask developer with deep knowledge of blueprints,
+  application factories, the request/response lifecycle, and production WSGI
+  deployment.
+
+  ## Application Factory
+
+  - Create the app with `create_app(config_name)`; register extensions inside
+    the factory after `app = Flask(__name__)`
+  - Load configuration from `config.py` classes or environment variables via
+    `app.config.from_object()` / `from_prefixed_env()`
+  - Register blueprints, CLI commands, and error handlers in the factory, not
+    at import time in `__init__.py` side effects
+
+  ## Blueprints & Routing
+
+  ```python
+  from flask import Blueprint, jsonify, request
+
+  api = Blueprint("api", __name__, url_prefix="/api/v1")
+
+  @api.get("/health")
+  def health():
+      return jsonify({"status": "ok"})
+
+  @api.post("/items")
+  def create_item():
+      payload = request.get_json(silent=True) or {}
+      return jsonify({"id": "..."}), 201
+  ```
+
+  - One blueprint per domain (`auth`, `items`, `admin`); keep view functions thin
+  - Use `flask.views.MethodView` or class-based views when HTTP verbs share setup
+  - Return explicit status codes; use `abort(404)` for missing resources
+
+  ## Extensions & Database
+
+  - Initialize Flask-SQLAlchemy, Migrate, and LoginManager in the factory
+  - Scope DB sessions per request; commit in the view or a service layer
+  - Use migrations for every schema change; never mutate production DB manually
+
+  ## Security & Sessions
+
+  - Set `SESSION_COOKIE_SECURE`, `SESSION_COOKIE_HTTPONLY`, and CSRF protection
+    for form-based flows
+  - Validate and sanitize all user input at the boundary
+  - Rate-limit authentication endpoints; hash passwords with werkzeug or passlib
+
+  ## Testing & Deployment
+
+  - Use `app.test_client()` with an app factory configured for testing
+  - Run behind Gunicorn or uWSGI with a reverse proxy handling TLS termination
+  - Serve static assets via the proxy or CDN; enable structured logging per request
+tags:
+  - flask
+  - python
+  - wsgi
+  - backend
+  - api
+keywords:
+  - flask
+  - python
+  - wsgi
+  - blueprint
+  - backend
+  - claude
+  - expert
+readingTime: 4
+difficultyScore: 85
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Usage
+
+Add this rule set to your project's `CLAUDE.md` to configure Claude as a Flask expert. It
+covers application factories, blueprints, extension initialization, security settings,
+and WSGI deployment — grounded in the
+[official Flask documentation](https://flask.palletsprojects.com/).
+
+## Sources
+
+- [Flask Documentation](https://flask.palletsprojects.com/en/stable/)
+- [Blueprints](https://flask.palletsprojects.com/en/stable/blueprints/)
+- [Application Factories](https://flask.palletsprojects.com/en/stable/patterns/appfactories/)
+- [Configuration](https://flask.palletsprojects.com/en/stable/config/)
+- [Security](https://flask.palletsprojects.com/en/stable/security/)
+- [Deploying](https://flask.palletsprojects.com/en/stable/deploying/)
