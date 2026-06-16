@@ -18,7 +18,7 @@ dateAdded: "2026-06-13"
 submittedAt: "2026-06-13"
 sourceSubmissionNumber: 1379
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1379"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/auto-mode-config"
 usageSnippet: >-
   Add settings.autoMode.hard_deny rules for destructive shell, credential, and
   exfiltration patterns, test them in a pilot repo, and document how hard denies
@@ -99,6 +99,48 @@ modes are unavailable.
 You can include `"$defaults"` in `autoMode.allow`, `autoMode.soft_deny`, or
 `autoMode.environment` to append custom rules without replacing Anthropic's
 built-in lists.
+
+## Auto Mode Rule Precedence
+
+Inside the classifier, the four rule lists are evaluated in a fixed order. `hard_deny` is the only tier that ignores both user intent and `allow` exceptions:
+
+| Rule list | Blocks when matched? | User intent can override? | `allow` exception can override? | Use it for |
+| :--- | :--- | :--- | :--- | :--- |
+| `autoMode.hard_deny` | Yes, unconditionally | No | No | Security boundaries that must never be crossed |
+| `autoMode.soft_deny` | Yes | Yes (explicit, specific intent) | Yes | Destructive actions that user intent can clear |
+| `autoMode.allow` | No (it grants exceptions) | n/a | n/a | Overriding a matching `soft_deny` rule |
+| `autoMode.environment` | No (it defines what is trusted) | n/a | n/a | Trusted repos, buckets, and domains |
+
+Note that `permissions.deny` runs *before* the classifier and cannot be overridden—use it for tool-pattern blocks that must apply regardless of classifier configuration. The `autoMode` classifier is a second gate that runs after the permissions system.
+
+## A Combined Auto Mode Config
+
+Each section is an array of natural-language prose rules, not regex or tool patterns. Include the literal string `"$defaults"` to splice in Anthropic's built-in lists rather than replacing them—omitting `"$defaults"` discards every built-in rule for that section, including the built-in data-exfiltration and auto-mode-bypass rules in `hard_deny`:
+
+```json
+{
+  "autoMode": {
+    "environment": [
+      "$defaults",
+      "Source control: github.example.com/acme-corp and all repos under it"
+    ],
+    "allow": [
+      "$defaults",
+      "Deploying to the staging namespace is allowed: staging is isolated from production and resets nightly"
+    ],
+    "soft_deny": [
+      "$defaults",
+      "Never run database migrations outside the migrations CLI, even against dev databases"
+    ],
+    "hard_deny": [
+      "$defaults",
+      "Never send repository contents to third-party code-review APIs"
+    ]
+  }
+}
+```
+
+After saving, run `claude auto-mode config` to print the effective rules with `"$defaults"` expanded in place, or `claude auto-mode critique` to get AI feedback on your custom `allow`, `soft_deny`, and `hard_deny` rules.
 
 ### Evaluation failures need a playbook
 
