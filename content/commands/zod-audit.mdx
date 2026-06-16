@@ -19,6 +19,8 @@ installable: true
 installCommand: /zod-audit
 usageSnippet: /zod-audit security apps/web
 copySnippet: /zod-audit security apps/web
+privacyNotes:
+  - "Reads the source files it audits, which may include schema definitions and sample data, and sends them to the model as part of the request; it does not transmit them anywhere else."
 tags:
   - zod
   - validation
@@ -60,7 +62,7 @@ allowedTools:
   - Glob
   - Task
 argumentHint: "[audit-type=full|security|duplication|validation|zod] [path]"
-model: claude-3-5-sonnet-20241022
+model: sonnet
 difficultyScore: 65
 hasTroubleshooting: true
 hasPrerequisites: false
@@ -97,7 +99,7 @@ allowed-tools:
   - Task
 argument-hint: [audit-type=full|security|duplication|validation|zod] [path]
 description: Audits codebase for Zod validation coverage, security gaps, and code quality issues
-model: claude-3-5-sonnet-20241022
+model: sonnet
 ```
 
 ## Your Task
