@@ -1,0 +1,107 @@
+---
+title: Archon
+slug: archon
+category: tools
+description: >-
+  Open-source knowledge and task management platform for AI coding assistants with MCP
+  integration, document ingestion, project tracking, and a web UI for managing agent
+  context alongside Claude Code and other MCP clients.
+cardDescription: Open-source knowledge and task MCP platform for AI coding assistants with web UI.
+seoTitle: Archon — Knowledge and Task MCP Platform for AI Assistants
+seoDescription: >-
+  Archon is an open-source knowledge and task management platform with MCP integration,
+  document ingestion, project tracking, and a web UI for AI coding assistant workflows.
+author: coleam00
+dateAdded: "2026-06-16"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1593
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1593"
+websiteUrl: "https://archon.diy"
+repoUrl: "https://github.com/coleam00/Archon"
+documentationUrl: "https://github.com/coleam00/Archon"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+prerequisites:
+  - Docker or local Python environment for running Archon services.
+  - MCP-compatible client such as Claude Code or Claude Desktop configured for local MCP servers.
+  - Storage for ingested documents and embedding provider credentials if using semantic search.
+  - Network access to target documentation sites when crawling external knowledge sources.
+safetyNotes:
+  - Ingested documents may contain secrets—scan uploads before indexing into shared knowledge bases.
+  - MCP tools can read and mutate project tasks—scope client permissions to trusted operators only.
+  - Crawling external sites can pull licensed or private content—verify rights before ingestion.
+  - Self-hosted deployments require patching and backup like any internal developer platform.
+privacyNotes:
+  - Document embeddings and task data reside in your Archon deployment storage—not Anthropic infrastructure.
+  - MCP clients send queries and retrieved context to model providers according to client privacy settings.
+  - Shared team knowledge bases may expose internal URLs and credentials if ingestion is not sanitized.
+  - Review Archon repository security guidance before exposing the web UI or MCP endpoint publicly.
+tags:
+  - knowledge-base
+  - task-management
+  - mcp
+  - open-source
+  - claude-code
+  - documentation
+keywords:
+  - archon mcp
+  - ai knowledge management
+  - claude code knowledge base
+  - archon task management
+  - document ingestion mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Archon is an open-source platform for managing knowledge and tasks alongside AI coding
+assistants. It exposes MCP tools so clients like Claude Code can query ingested documents,
+track project work, and maintain structured context outside a single chat session.
+
+The project ships a web UI for browsing knowledge, configuring sources, and monitoring
+tasks while MCP integration connects assistant workflows to that shared state.
+
+## Features
+
+- MCP server integration for AI coding clients.
+- Document ingestion and knowledge retrieval for agent context.
+- Project and task tracking aligned with assistant workflows.
+- Self-hosted deployment with Docker-oriented setup documented in the repository.
+- Web UI for operators managing knowledge bases and tasks.
+
+## Use Cases
+
+- Centralize repo docs and runbooks for Claude Code sessions across a team.
+- Track agent-assisted implementation tasks with structured project state.
+- Feed curated documentation into MCP clients without pasting large files each session.
+- Prototype internal knowledge platforms before building custom RAG infrastructure.
+
+## Source Notes
+
+Verified against the public Archon repository and website on **2026-06-16**:
+
+- The coleam00/Archon repository describes an open-source knowledge and task management
+  platform with MCP integration for AI assistants.
+- Project documentation covers deployment, MCP configuration, and knowledge ingestion workflows.
+- The archon.diy website provides project overview and links to repository resources.
+
+## Duplicate Check
+
+Checked content/tools for Archon or duplicate knowledge-MCP platforms.
+No existing tools entry covers coleam00/Archon as a knowledge and task MCP platform.
+
+## Editorial Disclosure
+
+Submitted as an independent community tools entry by kiannidev, based on the public
+coleam00/Archon repository and archon.diy website. No paid placement, referral, or
+affiliate relationship.
+
+## Sources
+
+- Archon repository - https://github.com/coleam00/Archon
+- Archon website - https://archon.diy
