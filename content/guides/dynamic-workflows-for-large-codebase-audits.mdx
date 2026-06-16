@@ -18,7 +18,7 @@ dateAdded: "2026-06-13"
 submittedAt: "2026-06-13"
 sourceSubmissionNumber: 1375
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1375"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/workflows"
 usageSnippet: >-
   Scope an audit prompt by package and risk area, launch a dynamic workflow,
   track progress with /workflows, and reconcile background agent output before
@@ -124,6 +124,31 @@ mention the word workflow accidentally.
 
 7. **Retrospect.** Record which scopes worked, adjust keyword trigger settings,
    and update CLAUDE.md audit instructions for the next run.
+
+## Launching an Audit Workflow
+
+Include the `ultracode` keyword to run a single audit task as a dynamic workflow instead of working through it turn by turn:
+
+```text
+ultracode: audit every API endpoint under src/routes/ for missing auth checks
+```
+
+Then monitor the run from the control plane:
+
+```text
+/workflows
+```
+
+### Runtime Behavior and Limits
+
+The workflow runtime applies the following constraints, which bound the cost and blast radius of a repo-wide audit:
+
+| Constraint | Why |
+| --- | --- |
+| No mid-run user input | Only agent permission prompts can pause a run. For sign-off between stages, run each stage as its own workflow |
+| No direct filesystem or shell access from the workflow itself | Agents read, write, and run commands. The script coordinates the agents |
+| Up to 16 concurrent agents, fewer on machines with limited CPU cores | Bounds local resource use |
+| 1,000 agents total per run | Prevents runaway loops |
 
 ## Audit Output Contract
 
