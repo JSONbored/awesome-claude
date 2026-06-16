@@ -18,7 +18,7 @@ dateAdded: "2026-06-13"
 submittedAt: "2026-06-13"
 sourceSubmissionNumber: 1380
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1380"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/sandboxing"
 usageSnippet: >-
   Turn on bash sandboxing in settings, verify `/sandbox` dependency status,
   constrain network and write paths, and pair `autoAllowBashIfSandboxed` with
@@ -99,6 +99,30 @@ blocking in regulated environments.
 When enabled, some sandboxed commands skip repeated approval prompts. That
 accelerates agents but requires deny rules so excluded or edge-case commands
 cannot bypass ask permissions.
+
+## Auto-Allow Mode: What Still Prompts
+
+Even with `autoAllowBashIfSandboxed` (auto-allow mode), the sandbox does not blanket-approve everything. These guardrails still fire for autonomous bash sessions:
+
+| Guardrail | Behavior in auto-allow mode |
+| --- | --- |
+| Explicit deny rules | Always respected |
+| `rm` or `rmdir` targeting `/`, your home directory, or other critical system paths | Still trigger a permission prompt |
+| Content-scoped ask rules like `Bash(git push *)` | Still force a prompt even for sandboxed commands |
+| A bare `Bash` ask rule, or the equivalent `Bash(*)` form | Skipped for sandboxed commands; still applies to commands that fall back to the regular permission flow |
+
+When a subprocess tool an agent runs (`kubectl`, `terraform`, or `npm`) needs to write outside the working directory, grant the specific path with `sandbox.filesystem.allowWrite` rather than excluding the tool from the sandbox entirely:
+
+```json
+{
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "allowWrite": ["~/.kube", "/tmp/build"]
+    }
+  }
+}
+```
 
 ### Worktrees change write scope
 
