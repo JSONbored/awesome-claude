@@ -99,6 +99,8 @@ copySnippet: >-
   For any proposed page, confirm: the boundary is justified, caching is
   intentional (not accidental), the runtime fits the work, and secrets never
   cross to the client. Surface violations before approving.
+safetyNotes:
+  - "These are advisory CLAUDE.md rules for Next.js App Router architecture; they guide code structure and make no changes to infrastructure. Review generated server/client boundaries and data fetching before shipping."
 tags:
   - nextjs
   - app-router
@@ -160,3 +162,37 @@ You are a Next.js App Router production-architecture specialist. Your job is the
 ## Review Stance
 
 For any proposed page, confirm: the boundary is justified, caching is intentional (not accidental), the runtime fits the work, and secrets never cross to the client. Surface violations before approving.
+
+## Choosing the Boundary: Server vs Client Components
+
+Use this decision table — drawn from the Next.js capability split — to place each component on the correct side of the `"use client"` boundary instead of defaulting whole subtrees to the client.
+
+| Use a Client Component when you need | Use a Server Component when you need |
+| --- | --- |
+| State and event handlers. E.g. `onClick`, `onChange`. | Fetch data from databases or APIs close to the source. |
+| Lifecycle logic. E.g. `useEffect`. | Use API keys, tokens, and other secrets without exposing them to the client. |
+| Browser-only APIs. E.g. `localStorage`, `window`, `Navigator.geolocation`. | Reduce the amount of JavaScript sent to the browser. |
+| Custom hooks. | Improve the First Contentful Paint (FCP), and stream content progressively to the client. |
+
+The canonical pattern: a Server Component fetches data and passes it as props to a Client Component that handles interactivity. Keep `"use client"` at the leaf so the page stays server-rendered.
+
+```tsx
+// app/[id]/page.tsx — Server Component (default), fetches data
+import LikeButton from '@/app/ui/like-button'
+import { getPost } from '@/lib/data'
+
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const post = await getPost(id)
+  return <LikeButton likes={post.likes} />
+}
+```
+
+```tsx
+// app/ui/like-button.tsx — Client Component only for interactivity
+'use client'
+
+export default function LikeButton({ likes }: { likes: number }) {
+  // ...
+}
+```
