@@ -1,0 +1,122 @@
+---
+title: Environment Variable Leak Warning Hook
+slug: environment-variable-leak-warning-hook
+category: hooks
+description: >-
+  PreToolUse hook that warns or blocks when generated source files contain secret-like
+  tokens (API keys, bearer tokens, GitHub PATs) outside dedicated env files.
+cardDescription: >-
+  Block secret-like tokens in source edits before they are written to git.
+seoTitle: Environment Variable Leak Warning Hook for Claude Code
+seoDescription: >-
+  Claude Code PreToolUse hook scanning Write and Edit operations for common secret
+  token patterns before files are saved.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 764
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/764"
+documentationUrl: "https://code.claude.com/docs/en/security"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && install -m 755 environment-variable-leak-warning.sh .claude/hooks/
+usageSnippet: >-
+  Scans Write/Edit content for secret-like patterns; exits 2 to block the write.
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/environment-variable-leak-warning.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/environment-variable-leak-warning.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+  if ! command -v jq >/dev/null 2>&1; then exit 0; fi
+  input=$(cat)
+  tool_name=$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+  file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // .toolInput.file_path // .tool_input.path // .toolInput.path // empty')
+  content=$(printf '%s' "$input" | jq -r '[.tool_input.content,.toolInput.content,.tool_input.new_string,.toolInput.new_string] | map(select(. != null and . != "")) | .[0] // empty')
+  case "$file_path" in
+    *.md|*.mdx|*.ts|*.tsx|*.js|*.jsx|*.py|*.go|*.yaml|*.yml|*.json) ;;
+    *) exit 0 ;;
+  esac
+  [[ "$file_path" == *".env"* ]] && exit 0
+  patterns=(
+    'AKIA[0-9A-Z]{16}'
+    'sk-[A-Za-z0-9]{20,}'
+    'Bearer[[:space:]]+[A-Za-z0-9._-]{20,}'
+    'ghp_[A-Za-z0-9]{20,}'
+  )
+  for pat in "${patterns[@]}"; do
+    if printf '%s' "$content" | grep -Eiq "$pat"; then
+      echo "Environment variable leak warning: possible secret-like token in $file_path" >&2
+      exit 2
+    fi
+  done
+  exit 0
+trigger: PreToolUse
+safetyNotes:
+  - "Heuristic patterns miss encoded secrets—pair with pre-commit secret scanning."
+  - "Skips .env paths so teams can manage env templates separately."
+privacyNotes:
+  - "Content is scanned locally in the hook process only."
+tags:
+  - hooks
+  - secrets
+  - privacy
+  - security
+keywords:
+  - environment variable leak warning hook
+  - secret scanner claude code hook
+readingTime: 2
+difficultyScore: 42
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+PreToolUse hook for Write, Edit, and MultiEdit that blocks edits when content
+matches common live-secret patterns in source files.
+
+## Troubleshooting
+
+**Blocked placeholder in docs:** Use obvious placeholders like `YOUR_API_KEY` without live prefixes.
