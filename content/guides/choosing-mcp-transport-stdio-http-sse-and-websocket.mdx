@@ -88,6 +88,26 @@ SSE supports streaming tool listings and events; stateful servers may need GET S
 
 WebSocket fits centralized brokers already managing persistent client connections—verify MCP spec support for your server SDK.
 
+## Transport comparison at a glance
+
+| Transport | Best for | Connection | Typical auth | Watch out for |
+| --- | --- | --- | --- | --- |
+| stdio | Local, single-user tools colocated with the client | Local subprocess | Inherited env (no network auth) | Non-protocol stdout can grow memory; pin package versions |
+| HTTP | Stateless request/response remotes behind proxies | Client → server over TLS | OAuth / bearer | Raise `MCP_TOOL_TIMEOUT` for slow calls past the default cap |
+| SSE | Streaming tool listings and server events | Server → client stream | OAuth / bearer | Needs idle timeout and reconnect; use GET SSE for stateful servers |
+| WebSocket | Centralized brokers with persistent connections | Bidirectional socket | Auth at the gateway/edge | Confirm your server SDK's MCP spec support before standardizing |
+
+Register each transport with `claude mcp add --transport`, then complete any OAuth from inside the session with `/mcp`:
+
+```bash
+# stdio: launch a local server as a subprocess
+claude mcp add --transport stdio my-tool -- my-tool-binary
+
+# HTTP / SSE: connect to a remote server (authenticate later via /mcp)
+claude mcp add --transport http my-remote https://mcp.example.com
+claude mcp add --transport sse  my-stream https://mcp.example.com/sse
+```
+
 ## Step-by-Step Implementation Guide
 
 1. **Classify each integration.** Tag tools as local-only, shared remote, or hybrid needing both.
