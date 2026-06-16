@@ -133,6 +133,36 @@ start a new session instead of compacting unrelated history together.
 | Post-incident debugging | New session with timeline paste |
 | Before security-sensitive merge | Re-verify live state after compact |
 
+## Commands and What Each One Does
+
+`/clear` resets the context window entirely; `/compact` replaces the conversation
+with a structured summary; `/rewind` (or `Esc` twice) opens the rewind menu where
+you can restore prior state or summarize part of the conversation. For finer
+control, give `/compact` instructions so the summary keeps what you choose:
+
+```bash
+# Reset context between unrelated tasks (frees the window entirely)
+/clear
+
+# Summarize older turns, keeping key code and decisions
+/compact
+
+# Compact with a focus so the summary keeps what matters
+/compact focus on the auth bug fix
+
+# Open the rewind menu to restore state or summarize part of the conversation
+/rewind
+```
+
+| Action | What it does | When to use |
+| ------ | ------------ | ----------- |
+| `/clear` | Resets the context window entirely | Switching to unrelated work |
+| `/compact` | Replaces the conversation with a structured summary (requests, key concepts, files/code, errors and fixes, pending tasks) | Long thread on the same task nearing the limit |
+| `/compact <instructions>` | Same, but the summary keeps what you specify instead of what the automatic pass guesses | Before a long new subtask, to preserve specific context |
+| `Esc + Esc` / `/rewind` → Summarize from here | Condenses messages from a checkpoint forward, keeping earlier context intact | Pruning a recent dead-end while keeping setup |
+| `Esc + Esc` / `/rewind` → Summarize up to here | Condenses earlier messages, keeping recent ones in full | Freeing space while protecting current work |
+| Auto-compact | Same as `/compact`; runs automatically as you approach the limit | Happens on its own; a full window won't end the session |
+
 ## Troubleshooting
 
 ### Claude forgot constraints after compact
