@@ -126,6 +126,34 @@ Validate both environments; CI often lacks interactive proxy login flows.
 | HTTPS_PROXY | Outbound HTTPS through corporate gateway |
 | NO_PROXY | Internal hosts that bypass the proxy |
 
+## Custom CA and mTLS Environment Variables
+
+Beyond proxy variables, Claude Code reads dedicated environment variables for custom CA trust and client-certificate (mTLS) authentication. All of these can also be set in the `env` block of `settings.json`.
+
+```bash
+# Trust a custom enterprise CA directly
+export NODE_EXTRA_CA_CERTS=/path/to/ca-cert.pem
+
+# Control which certificate stores Claude Code trusts
+# Recognized values: bundled, system (default: bundled,system)
+export CLAUDE_CODE_CERT_STORE=bundled,system
+
+# mTLS client certificate authentication
+export CLAUDE_CODE_CLIENT_CERT=/path/to/client-cert.pem
+export CLAUDE_CODE_CLIENT_KEY=/path/to/client-key.pem
+export CLAUDE_CODE_CLIENT_KEY_PASSPHRASE="your-passphrase"
+```
+
+## CA Trust and mTLS Variable Comparison
+
+| Variable | Purpose | settings.json support |
+| --- | --- | --- |
+| `NODE_EXTRA_CA_CERTS` | Trust a custom CA certificate directly | Yes (via `env` block) |
+| `CLAUDE_CODE_CERT_STORE` | Select cert sources: `bundled`, `system`, or both (default `bundled,system`) | No dedicated schema key; set via `env` block |
+| `CLAUDE_CODE_CLIENT_CERT` | Client certificate for mTLS authentication | Yes (via `env` block) |
+| `CLAUDE_CODE_CLIENT_KEY` | Client private key for mTLS | Yes (via `env` block) |
+| `CLAUDE_CODE_CLIENT_KEY_PASSPHRASE` | Passphrase for an encrypted private key | Yes (via `env` block) |
+
 ## Troubleshooting
 
 ### Certificate verify failed
