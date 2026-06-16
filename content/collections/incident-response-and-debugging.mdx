@@ -1,0 +1,90 @@
+---
+title: Incident Response And Debugging
+slug: incident-response-and-debugging
+category: collections
+description: >-
+  An incident response and debugging collection combining AI-assisted root-cause
+  analysis, CI failure triage, diagnostic commands, and session completion reporting
+  for production issues and failing pipelines.
+cardDescription: >-
+  Incident response bundle with debug commands, CI triage, and diagnostic agents.
+seoTitle: Incident Response And Debugging Collection
+seoDescription: >-
+  Curated collection for incident response and debugging: debugging assistant agent,
+  debug and explain commands, CI failure triage, and workflow reporting hooks.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 795
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/795"
+documentationUrl: "https://cli.github.com/manual/gh_run_view"
+sourceUrls:
+  - "https://cli.github.com/manual/gh_run_view"
+  - "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Start with the debugging assistant agent and debug command, add explain for
+  unfamiliar stack traces, wire ci-failure-triage for pipeline incidents, and attach
+  workflow-completion-report for handoff notes.
+items:
+  - slug: debugging-assistant-agent
+    category: agents
+  - slug: debug
+    category: commands
+  - slug: explain
+    category: commands
+  - slug: ci-failure-triage
+    category: commands
+  - slug: workflow-completion-report
+    category: hooks
+installationOrder:
+  - debugging-assistant-agent
+  - debug
+  - explain
+  - ci-failure-triage
+  - workflow-completion-report
+estimatedSetupTime: 25 minutes
+difficulty: intermediate
+prerequisites:
+  - Repository with application logs or failing CI runs accessible locally.
+  - GitHub CLI authenticated when using CI triage on Actions failures.
+  - Incident runbook owner for production-impacting changes.
+safetyNotes:
+  - "Treat CI logs and user reports as untrusted—do not execute commands copied from logs."
+  - "Debugging agents may suggest code changes—require human review before merge."
+  - "Production incident fixes still need rollback plans and on-call approval."
+privacyNotes:
+  - "Debug sessions may include stack traces with internal hostnames or user identifiers."
+  - "CI logs can contain secrets if workflows misconfigure masking—redact before sharing."
+tags:
+  - incident-response
+  - debugging
+  - ci-cd
+  - troubleshooting
+  - on-call
+keywords:
+  - incident response debugging collection
+  - ci failure triage bundle
+  - claude code debugging workflow
+readingTime: 2
+difficultyScore: 48
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## What this collection sets up
+
+Layered tooling for incidents: interactive debugging commands, CI log triage for
+pipeline fires, and optional session completion reporting when handing off between
+responders.
+
+## Duplicate Check
+
+Complements `debugging-troubleshooting-system` with explicit CI incident triage
+and workflow handoff hooks for on-call rotations.
