@@ -726,7 +726,7 @@ jobs:
 
       - name: Validate dev MCP endpoint
         if: ${{ needs.classify-pr.outputs.mcp == 'true' && github.event_name != 'pull_request' }}
-        run: pnpm validate:mcp-endpoint -- --url https://heyclaude-dev.zeronode.workers.dev/api/mcp
+        run: pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp
 
       - name: Dry-run MCP package tarball
         if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
@@ -735,7 +735,7 @@ jobs:
       - name: Validate packed MCP package
         if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         env:
-          MCP_PACKAGE_REMOTE_SMOKE_URL: ${{ github.event_name != 'pull_request' && 'https://heyclaude-dev.zeronode.workers.dev/api/mcp' || '' }}
+          MCP_PACKAGE_REMOTE_SMOKE_URL: ${{ github.event_name != 'pull_request' && 'https://heyclau.de/api/mcp' || '' }}
         run: pnpm validate:mcp-package
 
   validate-raycast:
@@ -931,11 +931,9 @@ jobs:
       - name: Resolve PR preview URL
         id: preview-url
         env:
-          ALLOW_SHARED_DEV_WORKER_PREVIEW: "1"
-          CLOUDFLARE_DEV_WORKER_URL: https://heyclaude-dev.zeronode.workers.dev
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          node scripts/resolve-pr-preview-url.mjs --wait-seconds 600 --poll-seconds 15
+          node scripts/resolve-pr-preview-url.mjs --wait-seconds 600 --poll-seconds 15 --allow-missing
 
       - name: Validate deployed artifact contract
         if: ${{ steps.preview-url.outputs.base-url != '' }}

@@ -39,12 +39,12 @@ jobs:
         run: pnpm test:mcp
 
       - name: Validate dev MCP endpoint
-        run: pnpm validate:mcp-endpoint -- --url https://heyclaude-dev.zeronode.workers.dev/api/mcp
+        run: pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp
 
       - name: Dry-run MCP package tarball
         run: pnpm --filter @heyclaude/mcp pack --dry-run --json
 
       - name: Validate packed MCP package
         env:
-          MCP_PACKAGE_REMOTE_SMOKE_URL: https://heyclaude-dev.zeronode.workers.dev/api/mcp
+          MCP_PACKAGE_REMOTE_SMOKE_URL: https://heyclau.de/api/mcp
         run: pnpm validate:mcp-package

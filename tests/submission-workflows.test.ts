@@ -394,7 +394,10 @@ describe("submission automation workflows", () => {
     expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).toContain("Resolve PR preview URL");
     expect(source).toContain("--wait-seconds 600");
-    expect(source).not.toContain("--allow-missing");
+    // Preview resolution degrades gracefully: with the shared dev Worker retired,
+    // it validates a real prod preview-version URL when resolvable and skips
+    // cleanly otherwise (downstream steps are gated on a non-empty base-url).
+    expect(source).toContain("--allow-missing");
     expect(source).toContain("pnpm validate:deployment-artifacts");
     expect(source).toContain("pnpm validate:mcp-endpoint");
     expect(source).not.toContain("Deploy same-repo PR preview to dev Worker");

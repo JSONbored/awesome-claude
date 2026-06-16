@@ -77,11 +77,14 @@ describe("PR preview artifact validation flow", () => {
       "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
     );
     expect(previewBlock).not.toContain("github.event.pull_request.number");
-    expect(workflow).toContain("ALLOW_SHARED_DEV_WORKER_PREVIEW");
-    expect(workflow).toContain("https://heyclaude-dev.zeronode.workers.dev");
+    // The shared heyclaude-dev worker has been retired; PR previews resolve from
+    // the real per-PR prod preview-version deployment statuses, and the resolver
+    // degrades gracefully (--allow-missing) instead of falling back to dev.
+    expect(workflow).not.toContain("ALLOW_SHARED_DEV_WORKER_PREVIEW");
+    expect(workflow).not.toContain("https://heyclaude-dev.zeronode.workers.dev");
     expect(workflow).toContain("--wait-seconds 600");
     expect(workflow).not.toContain("REQUIRE_PR_PREVIEW");
-    expect(workflow).not.toContain("--allow-missing");
+    expect(workflow).toContain("--allow-missing");
     expect(workflow).toContain("pnpm validate:deployment-artifacts");
     expect(workflow).toContain(
       "Deployed preview did not satisfy the artifact contract before timeout.",
