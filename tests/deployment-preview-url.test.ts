@@ -46,7 +46,9 @@ describe("PR preview artifact validation flow", () => {
       "https://heyclaude-dev.zeronode.workers.dev",
       "https://dev.heyclau.de",
     ]) {
-      expect(selectPreviewUrl([{ url, source: "github-deployment:x" }])).toBeNull();
+      expect(
+        selectPreviewUrl([{ url, source: "github-deployment:x" }]),
+      ).toBeNull();
     }
     expect(
       selectPreviewUrl([

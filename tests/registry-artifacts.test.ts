@@ -749,12 +749,7 @@ describe("registry artifacts", () => {
 
     expect(stdioFeedEntry).toMatchObject({
       hasConfigSnippet: true,
-      mcpInstallTargets: [
-        "claude-code",
-        "codex",
-        "cursor",
-        "antigravity",
-      ],
+      mcpInstallTargets: ["claude-code", "codex", "cursor", "antigravity"],
     });
     expect(extractMcpServerConfig(stdioDetail.configSnippet)?.name).toBe(
       "fixture",
