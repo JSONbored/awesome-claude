@@ -109,6 +109,19 @@ Add this rule set to your project's `CLAUDE.md` to configure Claude as a Redis e
 It covers key design, data structures, caching, streams, pipelining, and operational
 security — grounded in the [official Redis documentation](https://redis.io/docs/latest/).
 
+## Core Data Types Reference
+
+Descriptions below are quoted from the official [Redis data types](https://redis.io/docs/latest/develop/data-types/) overview.
+
+| Data type | Description (Redis docs) |
+| --- | --- |
+| String | "Redis strings are the most basic Redis data type, representing a sequence of bytes." |
+| List | "Redis lists are lists of strings sorted by insertion order." |
+| Set | "Redis sets are unordered collections of unique strings that act like the sets from your favorite programming language." |
+| Hash | "Redis hashes are record types modeled as collections of field-value pairs." |
+| Sorted Set | "Redis sorted sets are collections of unique strings that maintain order by each string's associated score." |
+| Stream | "A Redis stream is a data structure that acts like an append-only log. Streams help record events in the order they occur and then syndicate them for processing." |
+
 ## Sources
 
 - [Keyspace](https://redis.io/docs/latest/develop/use/keyspace/)
