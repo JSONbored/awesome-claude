@@ -16,7 +16,7 @@ dateAdded: "2026-06-14"
 submittedAt: "2026-06-14"
 sourceSubmissionNumber: 1385
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1385"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool"
 usageSnippet: >-
   Use this guide to run GUI QA from Claude Code with computer-use tools in an isolated desktop session.
 prerequisites:
@@ -86,6 +86,42 @@ Permission prompts still apply to destructive UI actions; QA playbooks should na
 ### Evidence via screenshots
 
 Each loop should capture before/after screenshots with stable window titles so regressions are auditable without re-running full suites.
+
+## Computer Use Tool Versions Compared
+
+Pick the tool `type` and beta header that match your model. Both are schema-less computer use tools; the newer version adds a `zoom` action for inspecting small UI text during QA.
+
+| Aspect | `computer_20250124` | `computer_20251124` |
+| --- | --- | --- |
+| Beta header | `computer-use-2025-01-24` | `computer-use-2025-11-24` |
+| Models | Claude Sonnet 4.5, Claude Haiku 4.5, Claude Opus 4.1 | Claude Opus 4.8, Opus 4.7, Opus 4.6, Sonnet 4.6, Opus 4.5 |
+| Basic actions | `screenshot`, `left_click`, `type`, `key`, `mouse_move` | Same as `computer_20250124` |
+| Enhanced actions | `scroll`, `left_click_drag`, `right_click`, `middle_click`, `double_click`, `triple_click`, `left_mouse_down`, `left_mouse_up`, `hold_key`, `wait` | All `computer_20250124` actions plus `zoom` |
+| `zoom` action | Not available | Available with `enable_zoom: true` (takes `region` `[x1, y1, x2, y2]`) |
+
+## Defining the Computer Use Tool
+
+The computer use tool is schema-less—you declare the display geometry, and the action schema is built into the model. A beta header is required because the request includes the computer use tool:
+
+```python
+response = client.beta.messages.create(
+    model="claude-opus-4-8",  # or another compatible model
+    max_tokens=1024,
+    tools=[
+        {
+            "type": "computer_20251124",
+            "name": "computer",
+            "display_width_px": 1024,
+            "display_height_px": 768,
+            "display_number": 1,
+        },
+    ],
+    messages=[{"role": "user", "content": "Save a picture of a cat to my desktop."}],
+    betas=["computer-use-2025-11-24"],
+)
+```
+
+For multi-monitor QA, `display_number` selects the X11 display the tool drives. Tool parameters: `type` and `name` ("computer") are required, along with `display_width_px` and `display_height_px`; `display_number` and `enable_zoom` are optional.
 
 ## Step-by-Step Implementation Guide
 
