@@ -15,6 +15,7 @@ jobs:
   classify-pr:
     name: classify-pr
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     outputs:
       direct_submission: ${{ steps.classify.outputs.direct_submission }}
       source_content_only: ${{ steps.classify.outputs.source_content_only }}
@@ -95,6 +96,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.ci == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-ci-${{ github.ref }}
       cancel-in-progress: true
@@ -160,6 +162,7 @@ jobs:
     name: validate-worktree
     needs: classify-pr
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-worktree-${{ github.ref }}
       cancel-in-progress: true
@@ -188,6 +191,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.content_categories_json != '[]' && needs.classify-pr.outputs.direct_submission != 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -225,6 +229,7 @@ jobs:
     needs: classify-pr
     if: ${{ github.event_name == 'pull_request' && needs.classify-pr.outputs.direct_submission != 'true' && (needs.classify-pr.outputs.content == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.packages == 'true') }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-content-policy-${{ github.ref }}
       cancel-in-progress: true
@@ -290,6 +295,7 @@ jobs:
     needs: classify-pr
     if: ${{ github.event_name == 'pull_request' && needs.classify-pr.outputs.direct_submission == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-submission-source-${{ github.ref }}
       cancel-in-progress: true
@@ -376,6 +382,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.content_config == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-content-config-${{ github.ref }}
       cancel-in-progress: true
@@ -417,6 +424,7 @@ jobs:
       - validate-content-config
     if: ${{ always() && needs.classify-pr.outputs.content == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-content-${{ github.ref }}
       cancel-in-progress: true
@@ -454,6 +462,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.registry == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-registry-${{ github.ref }}
       cancel-in-progress: true
@@ -601,6 +610,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.web == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       TRUNK_API_TOKEN: ${{ secrets.TRUNK_API_TOKEN || secrets.TRUNK_TOKEN }}
       TRUNK_ORG_URL_SLUG: ${{ secrets.TRUNK_ORG_URL_SLUG || secrets.TRUNK_ORG_SLUG }}
@@ -686,6 +696,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-mcp-${{ github.ref }}
       cancel-in-progress: true
@@ -743,6 +754,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       TRUNK_API_TOKEN: ${{ secrets.TRUNK_API_TOKEN || secrets.TRUNK_TOKEN }}
       TRUNK_ORG_URL_SLUG: ${{ secrets.TRUNK_ORG_URL_SLUG || secrets.TRUNK_ORG_SLUG }}
@@ -828,6 +840,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.packages == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-packages-${{ github.ref }}
       cancel-in-progress: true
@@ -869,6 +882,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.submission_gate == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
     concurrency:
@@ -905,9 +919,13 @@ jobs:
     if: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'workflow_dispatch' && github.ref_name == 'automation/readme-refresh')) && (needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.mcp == 'true') }}
     needs: classify-pr
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     concurrency:
-      group: deployment-artifacts-pr-preview-${{ github.repository }}
-      cancel-in-progress: false
+      # Per-ref (not repo-wide) so PRs don't cancel each other's preview job —
+      # under heavy content traffic the old repo-wide slot starved this job and
+      # surfaced as gate failures. cancel-in-progress matches the other lanes.
+      group: deployment-artifacts-pr-preview-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout
@@ -981,6 +999,7 @@ jobs:
       - validate-pr-preview
     if: ${{ always() }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-required-gate-${{ github.ref }}
       cancel-in-progress: true

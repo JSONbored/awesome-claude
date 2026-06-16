@@ -229,7 +229,7 @@ describe("submission automation workflows", () => {
         /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
       )?.[0] || "";
     expect(previewBlock).toContain(
-      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
+      "group: deployment-artifacts-pr-preview-${{ github.ref }}\n",
     );
     expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).not.toContain("CLOUDFLARE_API_TOKEN");
@@ -389,7 +389,7 @@ describe("submission automation workflows", () => {
         /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
       )?.[0] || "";
     expect(previewBlock).toContain(
-      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
+      "group: deployment-artifacts-pr-preview-${{ github.ref }}\n",
     );
     expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).toContain("Resolve PR preview URL");

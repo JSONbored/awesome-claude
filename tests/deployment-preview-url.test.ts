@@ -104,7 +104,7 @@ describe("PR preview artifact validation flow", () => {
         /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
       )?.[0] || "";
     expect(previewBlock).toContain(
-      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
+      "group: deployment-artifacts-pr-preview-${{ github.ref }}\n",
     );
     expect(previewBlock).not.toContain("github.event.pull_request.number");
     // The shared heyclaude-dev worker has been retired; PR previews resolve from
