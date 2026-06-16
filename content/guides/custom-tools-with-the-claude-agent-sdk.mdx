@@ -92,6 +92,61 @@ Each definition ships on every turn unless tool search defers descriptions beyon
 
 ## Step-by-Step Implementation Guide
 
+## Worked Example: In-Process Weather Tool
+
+A custom tool is four parts—name, description, Zod input schema, and an async handler—passed to `tool()`, then wrapped with `createSdkMcpServer` and handed to `query` via `mcpServers`. The server name becomes the `{server_name}` segment of the fully qualified `mcp__{server_name}__{tool_name}` you list in `allowedTools`.
+
+```typescript
+import { tool, createSdkMcpServer, query } from "@anthropic-ai/claude-agent-sdk";
+import { z } from "zod";
+
+const getTemperature = tool(
+  "get_temperature",
+  "Get the current temperature at a location",
+  {
+    latitude: z.number().describe("Latitude coordinate"),
+    longitude: z.number().describe("Longitude coordinate")
+  },
+  async (args) => {
+    const response = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${args.latitude}&longitude=${args.longitude}&current=temperature_2m&temperature_unit=fahrenheit`
+    );
+    const data: any = await response.json();
+    return {
+      content: [{ type: "text", text: `Temperature: ${data.current.temperature_2m}°F` }]
+    };
+  }
+);
+
+const weatherServer = createSdkMcpServer({
+  name: "weather",
+  version: "1.0.0",
+  tools: [getTemperature]
+});
+
+for await (const message of query({
+  prompt: "What's the temperature in San Francisco?",
+  options: {
+    mcpServers: { weather: weatherServer },
+    allowedTools: ["mcp__weather__get_temperature"]
+  }
+})) {
+  if (message.type === "result" && message.subtype === "success") {
+    console.log(message.result);
+  }
+}
+```
+
+## Tool Result Fields
+
+A handler returns an object with these fields. Returning `isError: true` (TS) / `"is_error": True` (Python) keeps the agent loop alive on a recoverable failure; an uncaught throw stops the loop and fails the `query` call.
+
+| Field | Required | Purpose |
+| :--- | :--- | :--- |
+| `content` | Yes | Array of result blocks, each with `type` of `"text"`, `"image"`, `"audio"`, `"resource"`, or `"resource_link"`. |
+| `structuredContent` | No | JSON object holding the result as machine-readable data, returned alongside `content`. |
+| `isError` | No | Set to `true` to signal a tool failure so Claude can react to it. |
+
 1. **Model the capability.** Write inputs, outputs, side effects, and idempotency expectations before coding.
 
 2. **Pick integration style.** Use in-process MCP for single-host apps; external MCP when operators or other services must share the tool.
