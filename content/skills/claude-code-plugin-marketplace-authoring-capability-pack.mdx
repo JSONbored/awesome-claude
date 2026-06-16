@@ -1,0 +1,175 @@
+---
+title: Claude Code Plugin Marketplace Authoring Capability Pack Skill
+slug: claude-code-plugin-marketplace-authoring-capability-pack
+category: skills
+description: >-
+  Expert plugin marketplace authoring capability pack applying documented marketplace.json catalogs, /plugin marketplace add flows, private repo distribution, and supply-chain review from official plugin marketplace documentation.
+cardDescription: >-
+  Author Claude Code plugin marketplaces with catalog, install, and supply-chain checklists.
+seoTitle: Claude Code Plugin Marketplace Authoring Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack applying documented steps from official documentation—not an official Anthropic product.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1512
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1512"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/plugin-marketplaces"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when planning or reviewing workflows using official documentation steps.
+copySnippet: |-
+  # Trigger
+  "Apply the claude code plugin marketplace authoring capability pack capability pack."
+
+  # Required output
+  1) Scope and configuration checklist
+  2) Risk and policy findings
+  3) Review matrix actions
+  4) Verification and rollback plan
+  5) Privacy-safe summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/plugin-marketplaces"
+  - "https://code.claude.com/docs/en/plugins"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code version and plan eligibility per official documentation."
+  - "Team policy for autonomous or shared automation workflows."
+  - "Staging environment for safe validation."
+  - "Human owner for production rollout approval."
+safetyNotes:
+  - "Autonomous runs can execute tools without mid-run user input—scope paths and connectors first."
+  - "Do not enable destructive automation without explicit approval gates."
+  - "Review outputs as draft until a human validates evidence."
+privacyNotes:
+  - "Run output may contain proprietary code and credentials."
+  - "Summaries for external channels require redaction."
+tags:
+  - capability-pack
+  - claude-code
+  - plugins
+  - marketplace
+readingTime: 9
+difficultyScore: 74
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in official documentation verified on **2026-06-16**. Behavior can change with releases; prefer live docs.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/plugin-marketplaces
+- https://code.claude.com/docs/en/plugins
+- https://code.claude.com/docs/en/settings
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- Official plugin marketplace docs describe marketplace.json catalogs hosted on git repositories.
+- Users add marketplaces with `/plugin marketplace add` and install with `/plugin install`.
+- Private repositories can host internal-only marketplaces per documentation.
+- Plugins may bundle hooks, MCP servers, and binaries that run with user privileges.
+- Marketplace updates refresh via `/plugin marketplace update`.
+
+## Scope Note
+
+Community reusable workflow skill applying documented steps—not an official Anthropic product. Applies documented marketplace authoring steps—not a separate Anthropic marketplace product.
+
+## Core Workflow
+
+1. Inventory plugins and document bundled hooks, MCP, and binaries.
+2. Author marketplace.json with version pins and source locations.
+3. Host catalog in git; test add/install/update on staging machine.
+4. Review each plugin for supply-chain risk before publishing.
+5. Document rollback to remove marketplace from team configs.
+
+## Capability Scope
+
+- Configuration and eligibility checklist.
+- Risk and policy review.
+- Staging verification steps.
+- Rollback planning.
+- Privacy-safe stakeholder summary.
+
+## Compatibility
+
+### Native
+
+- **Claude Code**: use as an Agent Skill during rollout planning.
+
+### Manual Adaptation
+
+- **Generic AGENTS**: apply checklist against public documentation.
+
+## Required Inputs
+
+- Target repository or organization context.
+- Current settings and policy constraints.
+- Stakeholders for security review when applicable.
+
+## Production Rules
+
+- Require human approval before production-impacting automation.
+- Redact secrets from skill outputs and public tickets.
+- Prefer official documentation over forum assumptions.
+- Document rollback before enabling scheduled or autonomous runs.
+
+## Review Matrix
+
+| Signal | Action |
+| --- | --- |
+| Missing repro | Block autonomous run |
+| Broad tool scope | Narrow allowlists |
+| Draft findings | Label unverified until human review |
+| Policy drift | Align to managed settings |
+
+## Output Contract
+
+1. Scope and configuration summary.
+2. Findings with severity.
+3. Review matrix actions.
+4. Verification and rollback plan.
+5. Privacy-safe summary.
+
+## Troubleshooting
+
+**Issue:** Feature unavailable on your plan
+**Fix:** Confirm `/status` and official doc eligibility requirements.
+
+**Issue:** Run stalls on permissions
+**Fix:** Pre-approve read tools in staging; narrow path scope.
+
+## Duplicate Check
+
+Complements `building-a-claude-code-plugin-marketplace` guide; no skills capability pack with review matrix yet.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` from public documentation. No paid placement or affiliate links.
