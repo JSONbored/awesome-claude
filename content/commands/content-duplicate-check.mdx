@@ -1,0 +1,79 @@
+---
+title: /content-duplicate-check - HeyClaude Duplicate Search Runbook
+slug: content-duplicate-check
+category: commands
+description: >-
+  Community slash command runbook to search HeyClaude content duplicates by title, slug,
+  source URL, and domain using documented validation commands before opening a one-file PR.
+cardDescription: >-
+  Run duplicate searches with validate:content:strict and content directory scans before PRs.
+seoTitle: /content-duplicate-check - HeyClaude Duplicate Search Runbook
+seoDescription: >-
+  Claude Code slash command runbook for HeyClaude duplicate checks using CONTRIBUTING guidance,
+  content validation scripts, and PR search steps before one-file submissions.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 750
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/750"
+documentationUrl: "https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md"
+repoUrl: "https://github.com/JSONbored/awesome-claude"
+sourceUrls:
+  - "https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/examples/content/SUBMISSION_EXAMPLES.md"
+installable: true
+installCommand: "/content-duplicate-check <proposed-slug>"
+commandSyntax: "/content-duplicate-check <proposed-slug>"
+usageSnippet: "/content-duplicate-check my-new-skill-slug"
+copySnippet: "/content-duplicate-check <proposed-slug>"
+prerequisites:
+  - "Local awesome-claude clone with pnpm dependencies installed."
+  - "Target category, slug, and canonical source URLs drafted."
+safetyNotes:
+  - "This runbook searches metadata only; it does not execute submitted hooks or MCP servers."
+privacyNotes:
+  - "Duplicate search notes may include draft titles—redact employer-specific codenames externally."
+tags:
+  - heyclaude
+  - duplicate-check
+  - slash-command
+  - content
+keywords:
+  - content duplicate check slash command
+  - HeyClaude duplicate search runbook
+---
+
+## Scope
+
+Community custom command for **pre-PR duplicate search**. It is not a built-in Claude Code
+feature. It operationalizes CONTRIBUTING duplicate guidance and **`pnpm validate:content:strict`**.
+
+## Usage
+
+```
+/content-duplicate-check <proposed-slug>
+```
+
+## What it does
+
+1. Search **`content/`** for the slug, title fragments, and **`documentationUrl`** domain.
+2. Run **`pnpm validate:content:strict`** on the draft file path.
+3. Search open and closed PRs with **`gh pr list --search "<slug> OR <source-domain>" --state all`**.
+4. Compare against **`examples/content/SUBMISSION_EXAMPLES.md`** rejected duplicate patterns.
+5. Document findings in the PR **Duplicate Check** section before submit.
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- CONTRIBUTING.md requires duplicate checks across title, slug, repo URL, docs URL, and domains.
+- SUBMISSION_EXAMPLES.md documents rejected duplicate and strict-overlap cases.
+- **`scripts/validate-content.mjs`** is the local validation entrypoint referenced in CONTRIBUTING.
+
+## Duplicate Check
+
+Distinct from **`content-only-submission-pr-gate-rules`** (rules policy for assistants).
+This command is an **operator runbook** with search commands, not a replacement rules file.
