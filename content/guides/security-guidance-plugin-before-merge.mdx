@@ -4,13 +4,13 @@ slug: security-guidance-plugin-before-merge
 category: guides
 description: >-
   Install and use the official Claude Code security-guidance plugin before merge:
-  PreToolUse pattern warnings, git-diff review on stop, and team rollout for
-  command injection, XSS, eval, and dangerous file edits.
+  per-edit pattern warnings, end-of-turn and commit git-diff review, and team
+  rollout for command injection, XSS, eval, and dangerous file edits.
 cardDescription: Enable the security-guidance plugin to catch risky edits before merge.
 seoTitle: Security Guidance Plugin Before Merge
 seoDescription: >-
-  Configure the Claude Code security-guidance plugin with PreToolUse hooks and
-  stop-time git-diff review to catch injection, XSS, and unsafe edits before merge.
+  Configure the Claude Code security-guidance plugin with per-edit, end-of-turn, and
+  commit reviews to catch injection, XSS, and unsafe edits before merge.
 author: kiannidev
 authorProfileUrl: "https://github.com/kiannidev"
 submittedBy: kiannidev
@@ -21,14 +21,13 @@ sourceSubmissionNumber: 1378
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1378"
 documentationUrl: "https://code.claude.com/docs/en/security-guidance"
 usageSnippet: >-
-  Add the security-guidance plugin from the official Claude Code plugins catalog,
-  keep PreToolUse hooks enabled for Edit and Write tools, review warnings during
-  the PR, and treat stop-time git-diff review as a merge gate—not a substitute
-  for human security review.
+  Run /plugin install security-guidance@claude-plugins-official then /reload-plugins,
+  keep the per-edit, end-of-turn, and commit reviews enabled, triage findings during
+  the PR, and treat them as a merge gate—not a substitute for human security review.
 prerequisites:
-  - Claude Code with plugin and hooks support for your account and project.
-  - A repository using normal git PR review before merging agent-generated changes.
-  - Python available for plugin hook scripts when using the official security-guidance bundle.
+  - Claude Code CLI version 2.1.144 or later with plugin and hooks support.
+  - A git repository for the working directory—end-of-turn and commit reviews diff against git state.
+  - Python 3.8 or later on PATH; first run creates a venv under ~/.claude/security/ and installs the Claude Agent SDK.
   - Team agreement that hook warnings require human acknowledgment before merge.
 safetyNotes:
   - Hook pattern matching can miss novel attack classes; combine with code review and CI scanners.
@@ -41,9 +40,13 @@ privacyNotes:
   - Shared plugin settings in git expose which security patterns your team monitors.
 sourceUrls:
   - "https://code.claude.com/docs/en/security-guidance"
-  - "https://code.claude.com/docs/en/plugins"
-  - "https://github.com/anthropics/claude-code/tree/main/plugins/security-guidance"
-  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://code.claude.com/docs/en/code-review"
+  - "https://code.claude.com/docs/en/security"
+  - "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance"
+retrievalSources:
+  - "https://code.claude.com/docs/en/security-guidance"
+  - "https://code.claude.com/docs/en/code-review"
+  - "https://code.claude.com/docs/en/security"
 tags:
   - claude-code
   - plugins
@@ -53,7 +56,7 @@ tags:
   - code-review
 keywords:
   - security guidance plugin claude code
-  - PreToolUse security hook
+  - PostToolUse security hook
   - claude code merge security review
   - command injection hook claude
   - security-guidance plugin before merge
@@ -68,38 +71,53 @@ robotsFollow: true
 
 ## TL;DR
 
-The official security-guidance plugin adds PreToolUse and stop-time hooks that
-warn when Claude edits files matching risky patterns—command injection, XSS,
-eval, dangerous HTML, pickle usage, and similar signals. Enable it before merge
-review, treat warnings as blockers until a human resolves them, and pair hooks
-with normal PR checks—not as the only security control.
+The official security-guidance plugin makes Claude review its own code changes for
+common vulnerabilities and fix them in the same session, across three layers: a fast
+per-edit pattern match, an end-of-turn diff review, and a deeper agentic review on
+each commit or push Claude makes. It catches injection, unsafe deserialization, and
+unsafe DOM APIs before code reaches a PR. Enable it before merge review, treat
+findings as blockers until a human resolves them, and pair it with normal PR checks
+and `/security-review`—not as the only security control.
 
 ## Prerequisites & Requirements
 
-- [ ] {"task": "Plugin installed", "description": "security-guidance is available in project or user plugin settings"}
-- [ ] {"task": "Hooks enabled", "description": "PreToolUse matchers cover Edit, Write, MultiEdit, and NotebookEdit tools"}
-- [ ] {"task": "Review owner", "description": "A maintainer triages hook warnings before merging PRs"}
-- [ ] {"task": "Python runtime", "description": "Hook scripts can invoke Python via the plugin bootstrap shell helpers"}
+- [ ] {"task": "Plugin installed", "description": "security-guidance@claude-plugins-official is enabled in user or project settings"}
+- [ ] {"task": "Hooks enabled", "description": "PostToolUse matchers cover Edit, Write, and NotebookEdit; Stop and Bash commit/push hooks registered"}
+- [ ] {"task": "Review owner", "description": "A maintainer triages in-session findings before merging PRs"}
+- [ ] {"task": "Python runtime", "description": "Python 3.8+ on PATH so the SessionStart bootstrap can build the venv"}
 - [ ] {"task": "CI complement", "description": "SAST, dependency, and secret scanning still run in CI"}
 
 ## Core Concepts Explained
 
-### Pattern warnings on edit tools
+### Three review layers at different depths
 
-The security-guidance plugin ships PreToolUse and PostToolUse hooks tied to file
-edit tools. When Claude proposes changes, hook scripts scan content for known
-dangerous patterns and surface reminders before the edit lands in the working tree.
+The plugin reviews Claude's work at three points, each at a different depth:
 
-### Git-diff review on session stop
+- **On each file edit** — a fast deterministic pattern match for risky calls, with
+  no model call and no usage cost.
+- **At the end of each turn** — a background model review that diffs everything the
+  turn changed and re-prompts Claude with any findings.
+- **On each commit or push Claude makes** — a deeper agentic review that reads
+  surrounding code (callers, sanitizers, related files) to keep false positives low.
 
-Official plugin metadata describes git-diff-based LLM review when a session stops.
-This gives maintainers a second pass over accumulated agent changes before opening
-or merging a pull request.
+The per-edit check works anywhere; the end-of-turn and commit reviews require a git
+repository and skip silently outside one.
+
+### What each layer catches
+
+| Layer | Depth | Example findings |
+| --- | --- | --- |
+| Per-edit pattern match | Deterministic string match, no model call | `eval(`, `new Function`, `os.system`, `child_process.exec`, `pickle`, `dangerouslySetInnerHTML`, `.innerHTML =`, `document.write`, edits under `.github/workflows/` |
+| End-of-turn diff review | Background model review of the turn's git diff (up to 30 files, max 3 reruns) | Authorization bypass, insecure direct object references, injection, server-side request forgery, weak cryptography |
+| Commit/push review | Agentic review reading surrounding code (capped at 20 per rolling hour) | The above, verified against callers and sanitizers before reporting |
 
 ### Guidance is not automatic enforcement
 
-Unless your team adds hard-deny hook policies, security-guidance primarily warns.
-Maintainers should treat unresolved warnings like failing checks during merge review.
+None of the three layers block writes or commits. Findings reach the writing Claude
+as instructions, and the review model can miss issues—treat the plugin as one layer
+of defense in depth. For hard enforcement, pair it with a hook that blocks the edit
+or a CI check. Maintainers should treat unresolved findings like failing checks
+during merge review.
 
 ### Complements other security guides
 
@@ -108,11 +126,36 @@ agents use external tools. Hooks focus on local edit patterns, not remote MCP tr
 
 ## Step-by-Step Implementation Guide
 
-1. **Install the plugin.** Add security-guidance from the official Claude Code
-   plugins directory or your approved marketplace using the plugin manager.
+1. **Install the plugin.** In a Claude Code session, install from the official
+   Anthropic marketplace, then activate it without restarting:
 
-2. **Verify hook registration.** Confirm hooks.json registers SessionStart bootstrap,
-   UserPromptSubmit reminders, PostToolUse scans on edit tools, and stop-time review.
+   ```text
+   /plugin install security-guidance@claude-plugins-official
+   /reload-plugins
+   ```
+
+   If the marketplace is not found, add it first, then retry the install:
+
+   ```text
+   /plugin marketplace add anthropics/claude-plugins-official
+   ```
+
+   To enable the plugin for everyone who clones the repo—or for Claude Code on the
+   web, where user-scoped plugins do not carry over—declare it in checked-in settings:
+
+   ```json
+   {
+     "enabledPlugins": {
+       "security-guidance@claude-plugins-official": true
+     }
+   }
+   ```
+
+2. **Verify hook registration.** The plugin is built entirely on hooks. Confirm it
+   registers SessionStart (bootstrap the Python venv), UserPromptSubmit (capture the
+   working-tree baseline), PostToolUse on Edit/Write/NotebookEdit (per-edit pattern
+   match), Stop (end-of-turn diff review), and PostToolUse on Bash filtered to
+   `git commit` and `git push` (commit/push review).
 
 3. **Run a risky edit drill.** Intentionally propose a blocked-pattern snippet in a
    scratch branch and confirm the hook surfaces a warning your team recognizes.
@@ -123,11 +166,22 @@ agents use external tools. Hooks focus on local edit patterns, not remote MCP tr
 5. **Use during PR prep.** Run Claude Code sessions with the plugin enabled while
    addressing review comments so new edits inherit the same guardrails.
 
-6. **Review stop output.** Before git push, read stop-time git-diff review summaries
-   and reconcile them with your diff against main.
+6. **Review findings before merge.** Read the end-of-turn and commit review findings
+   in your session and reconcile them with your diff against main. Note that commit
+   reviews fire only on commits and pushes Claude makes through its Bash tool—commits
+   you run in your own shell are not reviewed.
 
-7. **Tune with hookify if needed.** For repo-specific banned APIs, add complementary
-   hookify rules rather than disabling security-guidance defaults.
+7. **Tune with custom rules if needed.** For repo-specific banned APIs, add a
+   `.claude/security-patterns.yaml` (regex/substring rules for the per-edit check) or
+   a `.claude/claude-security-guidance.md` (threat-model guidance for the model-backed
+   reviews). Both are additive—they cannot disable the built-in checks. For example:
+
+   ```yaml
+   patterns:
+     - rule_name: internal_api_key
+       substrings: ["sk_live_", "AKIA"]
+       reminder: "Hardcoded API key prefix. Load credentials from the secret manager."
+   ```
 
 ## Pre-Merge Security Checklist
 
@@ -139,44 +193,57 @@ agents use external tools. Hooks focus on local edit patterns, not remote MCP tr
 
 ## Troubleshooting
 
-### Hooks never fire
+### Reviews never appear
 
-Confirm the plugin is enabled for the project, Python is on PATH for hook scripts,
-and edit tools match PostToolUse matchers in hooks.json.
+The plugin writes diagnostics to `~/.claude/security/log.txt`—check there first.
+Common silent skips: the directory is not a git repository (end-of-turn and commit
+reviews require git state), the session has no Anthropic authentication (only the
+per-edit pattern check runs), or a `security-patterns.yaml` is present but PyYAML is
+not importable (use `security-patterns.json` instead).
 
 ### Too many false positives
 
-Document accepted patterns in team rules, narrow custom hookify additions, and keep
-security-guidance defaults rather than disabling hooks globally.
+Document accepted patterns in `.claude/claude-security-guidance.md` and narrow custom
+`security-patterns.yaml` rules rather than disabling layers. To turn off a single
+layer, set the matching environment variable (`ENABLE_PATTERN_RULES=0`,
+`ENABLE_STOP_REVIEW=0`, or `ENABLE_COMMIT_REVIEW=0`).
 
-### Stop review missing
+### Commit review missing
 
-Ensure sessions end cleanly so stop hooks run; long-running background tasks may
-delay diff review until the session actually stops.
+The commit/push review fires only on `git commit` and `git push` Claude runs through
+its Bash tool. Commits you run from your own shell, including the `!` shell escape,
+are not reviewed. Commit and push reviews are also capped at 20 per rolling hour.
 
 ### Plugin install fails
 
-Update Claude Code to a hooks-capable release and verify marketplace trust settings
-allow the official security-guidance source.
+Update Claude Code to version 2.1.144 or later. If the marketplace is not found, run
+`/plugin marketplace add anthropics/claude-plugins-official` first, then retry the
+install. The first run also needs `pip` and network access to build the venv under
+`~/.claude/security/`; if that fails, the commit review falls back to a single-shot
+review.
 
 ## Source Verification Notes
 
-Verified against official Claude Code security guidance documentation and the public
-anthropics/claude-code plugins directory on **2026-06-16**:
+Verified against official Claude Code documentation (security-guidance, code-review,
+and security pages) on **2026-06-16**:
 
-- code.claude.com documents the security-guidance plugin as a PreToolUse-oriented
-  security reminder system for Claude Code projects.
-- plugins/README.md lists security-guidance with hooks monitoring command injection,
-  XSS, eval usage, dangerous HTML, pickle deserialization, and os.system calls.
-- Plugin hooks.json registers SessionStart bootstrap, UserPromptSubmit scans,
-  PostToolUse matchers on Edit and Write family tools, and stop-time git-diff review.
-- Official plugin structure places metadata under .claude-plugin/plugin.json with
-  optional commands, agents, skills, hooks, and MCP configuration.
+- code.claude.com/docs/en/security-guidance documents the plugin as a three-layer,
+  in-session reviewer that makes Claude review and fix its own code changes; install
+  via `/plugin install security-guidance@claude-plugins-official` then `/reload-plugins`.
+- The per-edit pattern check is a deterministic string match (no model call) covering
+  `eval(`, `new Function`, `os.system`, `child_process.exec`, `pickle`,
+  `dangerouslySetInnerHTML`, `.innerHTML =`, `document.write`, and `.github/workflows/` edits.
+- The plugin registers SessionStart, UserPromptSubmit, PostToolUse on Edit/Write/
+  NotebookEdit, Stop, and PostToolUse on Bash filtered to `git commit`/`git push`.
+- Model-backed reviews use Claude Opus 4.7 by default; custom rules live in
+  `.claude/security-patterns.yaml` and `.claude/claude-security-guidance.md`.
+- The plugin layers with `/security-review` (on-demand) and Code Review (PR-time,
+  Team/Enterprise); the local `/code-review` command reviews a diff in the terminal.
 
 ## Duplicate Check
 
 Checked content/guides, generated catalog text, and open pull requests for
-security-guidance plugin, PreToolUse merge review, and Claude Code security hooks.
+security-guidance plugin, in-session merge review, and Claude Code security hooks.
 remote-mcp-server-security-review-checklist.mdx mentions the plugin in passing but
 does not teach pre-merge rollout. claude-code-security-guidance-remediator-agent
 covers agent prompts, not plugin installation before merge. No existing guide
@@ -184,6 +251,7 @@ focuses on enabling security-guidance as a merge gate workflow.
 
 ## References
 
-- Security guidance docs - https://code.claude.com/docs/en/security-guidance
-- Plugins docs - https://code.claude.com/docs/en/plugins
-- security-guidance plugin - https://github.com/anthropics/claude-code/tree/main/plugins/security-guidance
+- Security guidance plugin docs - https://code.claude.com/docs/en/security-guidance
+- Code Review docs - https://code.claude.com/docs/en/code-review
+- Claude Code security docs - https://code.claude.com/docs/en/security
+- security-guidance plugin source - https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance
