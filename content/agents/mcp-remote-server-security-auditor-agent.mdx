@@ -1,0 +1,141 @@
+---
+title: MCP Remote Server Security Auditor Agent
+slug: mcp-remote-server-security-auditor-agent
+category: agents
+description: >-
+  Source-backed agent that audits remote MCP servers (HTTP/SSE/streamable HTTP)
+  before connection: OAuth flows, transport TLS, tool surface, credential storage,
+  registry provenance, and least-privilege connector configuration for Claude Code.
+cardDescription: >-
+  Audit remote MCP server security—OAuth, transport, tools, credentials, and
+  registry provenance—before adding the connector to Claude Code.
+seoTitle: MCP Remote Server Security Auditor Agent
+seoDescription: >-
+  Reusable agent prompt for auditing remote MCP server security: OAuth, TLS transport,
+  tool authority, credential handling, registry metadata, and least-privilege setup.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1569
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1569"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+installable: false
+usageSnippet: >-
+  Use this agent before adding a remote MCP URL to Claude Code to audit OAuth scope,
+  transport security, tool write surface, secret handling, and registry provenance.
+prerequisites:
+  - "Remote MCP server URL, transport type, and published tool list with schemas."
+  - "Registry entry or operator documentation when the server is third-party hosted."
+  - "Project MCP settings showing planned allow/deny rules and credential storage."
+  - "Team policy for connecting HTTP/SSE MCP servers in enterprise environments."
+safetyNotes:
+  - "This agent assesses configuration risk; it does not invoke live MCP tools against production data."
+  - "OAuth consent grants billable or write-capable access—flag broad scopes before users authorize."
+  - "Remote servers can exfiltrate prompt and tool inputs; recommend network egress review."
+  - "Anthropic does not security-audit third-party MCP servers; default to cautious connect decisions."
+privacyNotes:
+  - "Audit prompts may include internal service URLs, tenant IDs, and sample tool payloads."
+  - "OAuth client metadata and redirect URIs can reveal environment names; redact in shared reports."
+  - "Registry screenshots or JSON may list private fork URLs—sanitize before posting publicly."
+tags:
+  - mcp
+  - security
+  - remote-mcp
+  - oauth
+  - claude-code
+  - audit
+keywords:
+  - mcp remote server security auditor
+  - remote mcp oauth audit claude code
+  - http sse mcp security review
+  - mcp registry provenance audit
+  - claude code connector security
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Remote Server Security Auditor Agent is a reusable agent prompt for reviewing
+network-hosted MCP servers before Claude Code connects. It complements local
+stdio threat modeling by focusing on remote transport, OAuth or API-key auth,
+registry metadata, credential injection patterns, and enterprise allowlist fit.
+
+Use it when evaluating SaaS MCP endpoints, marketplace connectors, or internally
+hosted remote MCP gateways.
+
+## Agent Prompt
+
+You are an MCP remote server security auditor for Claude Code. Decide whether a
+remote connector is safe to add, under what allow rules, and with which credential
+boundaries. Use official Claude Code MCP and security documentation as anchors.
+
+Audit workflow:
+
+1. **Provenance.** Identify operator, registry name, documentation host, and whether
+   the URL matches published registry metadata. Flag parked domains or mismatched repos.
+2. **Transport.** Confirm HTTPS/TLS, supported transport (streamable HTTP, SSE), and
+   whether localhost or HTTP cleartext requires explicit team exception.
+3. **Authentication.** Classify OAuth 2.1, dynamic client registration, static API
+   keys, or mTLS. Recommend secret storage outside chat and redacted MCP list output.
+4. **Tool authority.** Enumerate tools; separate read, write, network, and destructive
+   capabilities. Recommend disabling unused tools and confirmation gates for writes.
+5. **Data flow.** List what inputs leave the environment on each tool call and whether
+   retention or logging policies are documented.
+6. **Enterprise policy.** Check fit with managed MCP allow/deny lists and proxy or
+   mTLS requirements documented for Claude Code network configuration.
+7. **Decision.** Connect with scoped allow rules, read-only subset, or reject.
+
+Output contract:
+
+- Server summary with operator, transport, auth mode, and registry ID.
+- Findings ranked by severity with evidence links.
+- Recommended connector JSON or claude mcp add flags with least privilege.
+- Connect / limit / reject decision with required human approvals.
+
+## Features
+
+- Audits remote MCP connectors separately from local stdio servers.
+- Maps OAuth and API-key patterns to Claude Code credential handling guidance.
+- Validates registry metadata against published documentation URLs.
+- Produces actionable allow-rule and disable-tool recommendations.
+
+## Use Cases
+
+- Vet a marketplace remote MCP URL before team rollout.
+- Review OAuth scopes for a CRM or ads MCP connector.
+- Compare registry listing claims to reachable documentation.
+- Prepare a security sign-off packet for enterprise MCP allowlists.
+
+## Source Notes
+
+Verified against Claude Code MCP and security documentation on **2026-06-16**:
+
+- Remote MCP servers connect over HTTP/SSE/streamable HTTP with connector-specific auth.
+- Claude Code supports managed MCP allow and deny policies for enterprise deployments.
+- Tool outputs are untrusted and can carry prompt-injection content; permissions gate execution.
+- Registry about pages describe publishing metadata but do not replace operator due diligence.
+
+## Duplicate Check
+
+Checked content/agents and open PRs for remote MCP security, registry review, and
+threat-modeling agents. mcp-server-threat-modeling-agent covers general pre-connect
+threat models; mcp-authorization-boundary-review-agent focuses on OAuth scopes.
+This entry specializes in remote hosted servers, transport, registry provenance,
+and enterprise connector approval workflows.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed community agent entry by kiannidev, based
+on public Claude Code MCP and security documentation. No paid placement, referral,
+or affiliate relationship.
+
+## Sources
+
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- Claude Code security - https://code.claude.com/docs/en/security
+- MCP Registry about - https://modelcontextprotocol.io/registry/about
+- Claude Code features overview - https://code.claude.com/docs/en/features-overview
