@@ -141,6 +141,39 @@ keywords:
 
 Add this rule set to your project's `CLAUDE.md` to configure Claude as a NestJS expert. It covers the module system, constructor-injected providers, request pipeline (controllers, pipes, guards, interceptors, exception filters), OpenAPI documentation with `@nestjs/swagger`, microservice transport layers, and testing with `Test.createTestingModule()` — all grounded in the [official NestJS documentation](https://docs.nestjs.com/).
 
+## Example: module, controller, and constructor DI
+
+```typescript
+// users.module.ts — feature module wiring a controller to its provider
+@Module({
+  controllers: [UsersController],
+  providers: [UsersService],
+})
+export class UsersModule {}
+
+// users.controller.ts — thin controller, constructor injection, pipe-validated param
+@Controller('users')
+export class UsersController {
+  constructor(private readonly users: UsersService) {}
+
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.users.findOne(id);
+  }
+}
+```
+
+## Request pipeline at a glance
+
+Guards, pipes, interceptors, and exception filters each own one stage of the request lifecycle. Knowing which to reach for keeps logic in the right layer:
+
+| Building block | Responsibility | Where it runs | Interface |
+| --- | --- | --- | --- |
+| Guard | Decide whether a request may proceed (authorization) | After middleware, before interceptors and pipes | `CanActivate` |
+| Interceptor | Cross-cutting logic that wraps the handler (logging, transforms, caching) | Around the handler, before and after | `NestInterceptor` |
+| Pipe | Validate and transform inputs | Just before the route handler runs | `PipeTransform` |
+| Exception filter | Catch thrown errors and format the response | When an exception is thrown | `ExceptionFilter` |
+
 ## Sources
 
 - [NestJS Modules](https://docs.nestjs.com/modules)
