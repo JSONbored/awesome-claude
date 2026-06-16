@@ -202,6 +202,28 @@ Generated artifacts are reviewable only when their provenance is clear.
 - **A generated file contains private data:** stop normal review, remove the
   value at the source, rebuild, and check secondary artifacts before publishing.
 
+## Marking Generated Artifacts in .gitattributes
+
+Tell Git how to treat generated paths so reviewers see less churn. The `binary` macro is defined as `[attr]binary -diff -merge -text`, so it unsets `diff`, `merge`, and `text` in one attribute.
+
+```gitattributes
+# Suppress diffs for a generated path (still tracked, just no textual diff)
+*.ps -diff
+
+# Treat a generated bundle as binary (unsets diff, merge, and text)
+*.ps binary
+
+# Built-in binary macro definition (for reference)
+[attr]binary -diff -merge -text
+```
+
+| Attribute on a path | State | Effect per gitattributes docs |
+| --- | --- | --- |
+| `diff` | Unset (`-diff`) | "will generate `Binary` `files` `differ` (or a binary patch, if binary patches are enabled)" |
+| `diff` | Unspecified | "gets its contents inspected, and if it looks like text ... it is treated as text. Otherwise it would generate `Binary` `files` `differ`" |
+| `merge` | Unset (`-merge`) | "Take the version from the current branch as the tentative merge result, and declare that the merge has conflicts" |
+| `binary` (macro) | Set | "Setting the \"binary\" attribute also unsets the \"text\" and \"diff\" attributes as above" |
+
 ## Duplicate Check
 
 Checked existing rules, guides, collections, hooks, skills, commands, registry
