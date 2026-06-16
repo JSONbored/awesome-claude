@@ -16,7 +16,7 @@ dateAdded: "2026-06-14"
 submittedAt: "2026-06-14"
 sourceSubmissionNumber: 1395
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1395"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/microsoft-foundry"
 usageSnippet: >-
   Use this guide to connect Claude Code to Microsoft Foundry with Azure authentication and correct model selection.
 prerequisites:
@@ -104,6 +104,36 @@ PowerShell tool defaults on for Bedrock, Vertex, and Foundry on Windows unless e
 7. **Test streaming tools.** Streaming tool execution is always enabled on Foundry—including when telemetry is off.
 
 8. **Publish runbook.** Document Azure quota escalation and Foundry-specific support contacts.
+
+## Foundry Environment Variables
+
+```bash
+# Enable Microsoft Foundry integration
+export CLAUDE_CODE_USE_FOUNDRY=1
+
+# API key authentication (Option A)
+export ANTHROPIC_FOUNDRY_API_KEY=your-azure-api-key
+
+# Azure resource name (replace {resource} with your resource name)
+export ANTHROPIC_FOUNDRY_RESOURCE={resource}
+# Or provide the full base URL:
+# export ANTHROPIC_FOUNDRY_BASE_URL=https://{resource}.services.ai.azure.com/anthropic
+
+# Pin model versions to your deployment names
+export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'
+export ANTHROPIC_DEFAULT_SONNET_MODEL='claude-sonnet-4-6'
+export ANTHROPIC_DEFAULT_HAIKU_MODEL='claude-haiku-4-5'
+
+# Optional: request a 1-hour prompt cache TTL
+export ENABLE_PROMPT_CACHING_1H=1
+```
+
+## Foundry Authentication Methods
+
+| Method | Environment variable / command | Notes |
+| --- | --- | --- |
+| API key authentication | `export ANTHROPIC_FOUNDRY_API_KEY=your-azure-api-key` | Copy **API Key** from the **Endpoints and keys** section of your resource |
+| Microsoft Entra ID authentication | `az login` | Used automatically when `ANTHROPIC_FOUNDRY_API_KEY` is not set, via the Azure SDK default credential chain |
 
 ## Foundry Setup Checklist
 
