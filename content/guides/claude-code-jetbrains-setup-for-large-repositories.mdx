@@ -16,7 +16,7 @@ dateAdded: "2026-06-14"
 submittedAt: "2026-06-14"
 sourceSubmissionNumber: 1388
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1388"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/jetbrains"
 usageSnippet: >-
   Use this guide to run Claude Code inside JetBrains terminals on large repos with stable rendering and scoped context.
 prerequisites:
@@ -104,6 +104,29 @@ Scroll-wheel and missed resize fixes reduce corrupted frames when splitting edit
 7. **Pilot a refactor task.** Run a bounded rename or test-addition exercise to validate permissions, hooks, and transcript stability.
 
 8. **Document module conventions.** Publish which modules are AI-ready and which still need CLAUDE.md cleanup before team rollout.
+
+## JetBrains Integration Reference
+
+Once `claude` runs in the integrated terminal, the plugin activates editor integration. These shortcuts are built in:
+
+| Action | macOS | Windows / Linux | What it does |
+| --- | --- | --- | --- |
+| Quick launch Claude Code | `Cmd+Esc` | `Ctrl+Esc` | Open Claude Code directly from the editor |
+| Insert file reference | `Cmd+Option+K` | `Alt+Ctrl+K` | Insert a reference such as `@src/auth.ts#L1-99` |
+
+Connect an external terminal session to the IDE, and route diffs into the IDE viewer instead of the terminal:
+
+```text
+# From an external terminal, connect Claude Code to the running JetBrains IDE
+claude
+/ide
+
+# Inside Claude Code, send diffs to the IDE diff viewer (or "terminal" to keep them inline)
+/config
+# Set the diff tool to: auto
+```
+
+If `claude` is not on your IDE's PATH, set the full path under **Settings → Tools → Claude Code [Beta]** in the **Claude command** field (for example `claude`, `/usr/local/bin/claude`, or `npx @anthropic-ai/claude-code`). On WSL, set the command to `wsl -d Ubuntu -- bash -lic "claude"` (replace `Ubuntu` with your distribution name). If the ESC key does not interrupt Claude Code, go to **Settings → Tools → Terminal** and either uncheck "Move focus to the editor with Escape" or remove the "Switch focus to Editor" terminal keybinding.
 
 ## Large Repo IDE Checklist
 
