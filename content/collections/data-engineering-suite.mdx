@@ -2,25 +2,20 @@
 title: Data Engineering Suite
 slug: data-engineering-suite
 category: collections
-description: >-
-  Comprehensive toolkit for data engineers working with databases, ETL
-  pipelines, and data infrastructure. Includes database design, optimization,
-  and cloud services integration.
-cardDescription: >-
-  Comprehensive toolkit for data engineers working with databases, ETL
-  pipelines, and data infrastructure.
-seoTitle: Data Engineering Suite
-seoDescription: >-
-  Comprehensive toolkit for data engineers working with databases, ETL
-  pipelines, and data infrastructure. Includes database design, optimization,
-  and cloud se...
+description: "A starter kit for database and data-engineering work with Claude: bundles a database-specialist agent and database-expert rules with AWS and Airtable MCP servers and optimize/debug commands."
+cardDescription: "Wires Claude into your data stack — schema and query expertise plus live access to AWS services and Airtable bases."
+seoTitle: "Data Engineering Collection: Database Agent, AWS & Airtable MCP"
+seoDescription: "Claude bundle for data engineering: design schemas, tune slow queries, and reach AWS and Airtable over MCP, backed by conventions and debugging helpers."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-02"
+documentationUrl: "https://www.postgresql.org/docs/current/"
+retrievalSources:
+  - "https://www.postgresql.org/docs/current/"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/sub-agents"
 installable: false
-usageSnippet: >-
-  Start with `database-specialist-agent` → `database-expert` →
-  `aws-services-mcp-server`
+usageSnippet: "Install database-specialist-agent and database-expert rules first, then add aws-services-mcp-server and airtable-mcp-server, finishing with the optimize and debug commands."
 items:
   - slug: database-specialist-agent
     category: agents
@@ -47,6 +42,12 @@ prerequisites:
   - Basic SQL knowledge
   - AWS account (for AWS services integration)
   - Understanding of database concepts
+safetyNotes:
+  - "The aws-services-mcp-server and airtable-mcp-server connect Claude to live AWS and Airtable accounts and can read and write data there; scope credentials to least privilege."
+  - "Setup installs MCP servers and may require AWS SDK packages and environment variables (AWS_PROFILE, AWS_REGION); review each component before granting access."
+privacyNotes:
+  - "Configuring these MCP servers requires storing AWS credentials/profiles and an Airtable API key locally; treat these config files as secrets."
+  - "Connecting Claude to AWS and Airtable exposes data from those accounts to the model during use."
 tags:
   - data
   - database
@@ -93,36 +94,34 @@ Comprehensive toolkit for data engineers working with databases, ETL pipelines, 
 
 ## TL;DR
 
-A comprehensive data engineering toolkit for ETL pipelines, data warehousing, analytics, and machine learning workflows. Build robust data infrastructure with Claude-powered automation.
+A collection of six Claude resources for working with databases and cloud data sources. It pairs a database-focused agent and rules with MCP servers for AWS and Airtable, plus commands for optimizing and debugging.
 
-- ETL/ELT pipeline templates for common data sources
-- Data warehouse schemas (Snowflake, BigQuery, Redshift)
-- Apache Airflow, dbt, and orchestration patterns
-- Data quality, testing, and monitoring workflows
-
-Build scalable data infrastructure with this collection of ETL patterns, warehouse schemas, orchestration workflows, and Claude-optimized data transformation scripts.
+- `database-specialist-agent` and `database-expert` rules for schema design and query tuning
+- `aws-services-mcp-server` for connecting Claude to AWS services
+- `airtable-mcp-server` for reading and writing Airtable data
+- `optimize` and `debug` commands for iterating on queries and pipelines
 
 ## Collection Overview
 
 **Collection Type:** Data Infrastructure
-**Focus Area:** ETL & Data Warehousing
+**Focus Area:** Databases & Cloud Data Sources
 **Skill Level:** Intermediate to Advanced
-**Time Saving:** 60-80% reduction in pipeline development time
 
 ## What's Included
 
 ## Collection Contents
 
-Complete data engineering infrastructure
+Six resources for database and cloud data work
 
-- **Pipeline Templates** (ETL): Airflow DAGs, dbt projects, and data transformation scripts for common ingestion patterns.
-- **Data Modeling** (Warehouse): Star schemas, snowflake patterns, and dimensional modeling for analytics warehouses.
-- **Data Testing** (Quality): Great Expectations configs, dbt tests, and data quality monitoring with Claude analysis.
-- **BI Integration** (Analytics): Tableau, Looker, and Metabase integrations with semantic layers and metrics definitions.
+- **database-specialist-agent** (agent): An agent focused on database design and query work.
+- **database-expert** (rules): Rules that guide Claude toward database best practices.
+- **aws-services-mcp-server** (MCP): Connects Claude to AWS services.
+- **airtable-mcp-server** (MCP): Connects Claude to Airtable data.
+- **optimize** and **debug** (commands): Commands for optimizing and debugging queries and pipelines.
 
 ## Quick Start
 
-Start with ETL templates for your data sources, then build warehouse schemas and add orchestration. Each component is modular and can be adapted to your stack.
+Install the database agent and rules first, then add the AWS and Airtable MCP servers, and finish with the optimize and debug commands. Each component is independent and can be used on its own.
 
 ## Prerequisites
 
