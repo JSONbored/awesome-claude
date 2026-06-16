@@ -114,6 +114,43 @@ in a spreadsheet.
 8. **Stabilize and graduate.** Move champions to office hours model; embed wins in
    onboarding.
 
+## Champion Techniques Quick Reference
+
+The champion kit's quick-reference sheet maps each high-leverage technique to a
+concrete action and the official doc that backs it. Pin this in your
+`#claude-code` channel so the same answer travels every time the question recurs.
+
+| Technique | How to apply it | Reference |
+| --------- | --------------- | --------- |
+| Provide the right context | Use `@file` or `@directory/` references, or paste the error/log output directly | [Common workflows](https://code.claude.com/docs/en/common-workflows) |
+| Review the plan before the edit | Press `Shift+Tab` to enter plan mode; Claude describes intended changes for approval before executing | [Permissions](https://code.claude.com/docs/en/permissions) |
+| Teach it your repository | Run `/init` to generate a `CLAUDE.md`, then add conventions, test commands, and directories to avoid | [Memory](https://code.claude.com/docs/en/memory) |
+| Reuse a workflow | Save a `SKILL.md` in `.claude/skills/<name>/` to create a `/name` skill the whole team can use | [Skills](https://code.claude.com/docs/en/skills) |
+| Stay informed during long tasks | Configure a Stop hook for a desktop notification when a long-running task completes | [Hooks](https://code.claude.com/docs/en/hooks-guide) |
+| Recover from an incorrect result | Paste the failing test or stack trace back to Claude instead of rephrasing the request | [Common workflows](https://code.claude.com/docs/en/common-workflows) |
+
+## Champion Posting Examples
+
+Champions persuade with their own codebase, not external docs. The kit recommends
+short posts—a screenshot plus a line or two—using the techniques above. Adapt
+these example posts and answer-with-a-prompt patterns rather than copying them:
+
+```text
+# A "today I learned" post for the #claude-code channel
+Learned today that @-mentioning a directory works. I pointed it at
+@src/components/ and asked which components were missing tests, and it
+surfaced two I had forgotten about.
+
+# Answer a colleague with the prompt you actually used
+Colleague: How did you get it to find that race condition?
+Champion: I asked, "The test in @tests/scheduler.test.ts is flaky, figure
+out why," and it traced two unjoined promises in the scheduler. Try the
+same phrasing on your test.
+
+# Generate a paste-able setup guide from your real usage, then pin it
+/team-onboarding
+```
+
 ## Program Phase Overview
 
 | Phase | Focus |
