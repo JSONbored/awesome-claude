@@ -75,6 +75,32 @@ Loaded as you work:
 - **File reads** and tool results, which accumulate.
 - **Conversation history**, until compaction.
 
+## Startup Token Costs and What Survives Compaction
+
+The interactive explorer attaches an illustrative token cost to each thing that loads before your first prompt. These numbers are labeled "illustrative" on the page, but they show the relative weight of each startup load:
+
+```text
+System prompt              4,200 tokens
+Project CLAUDE.md          1,800 tokens
+Auto memory (MEMORY.md)      680 tokens
+Skill descriptions           450 tokens
+~/.claude/CLAUDE.md          320 tokens
+Environment info             280 tokens
+MCP tools (deferred)         120 tokens
+```
+
+When a long session compacts, what happens to each instruction depends on how it loaded:
+
+| Mechanism | After compaction |
+| --- | --- |
+| System prompt and output style | Unchanged; not part of message history |
+| Project-root CLAUDE.md and unscoped rules | Re-injected from disk |
+| Auto memory | Re-injected from disk |
+| Rules with `paths:` frontmatter | Lost until a matching file is read again |
+| Nested CLAUDE.md in subdirectories | Lost until a file in that subdirectory is read again |
+| Invoked skill bodies | Re-injected, capped at 5,000 tokens per skill and 25,000 tokens total; oldest dropped first |
+| Hooks | Not applicable; hooks run as code, not context |
+
 ## Use the explorer and /context
 
 1. Open the interactive explorer in the context window docs to see how a session
