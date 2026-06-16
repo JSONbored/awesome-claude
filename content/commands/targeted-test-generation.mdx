@@ -1,0 +1,92 @@
+---
+title: /targeted-test-generation - Targeted Test Generation Slash Command
+slug: targeted-test-generation
+category: commands
+description: >-
+  Slash command that generates focused unit or integration tests for a specific
+  changed file or function using Anthropic test-and-evaluate guidance and the
+  repository's existing test framework conventions.
+cardDescription: >-
+  Generate minimal targeted tests for a changed module using repo test conventions.
+seoTitle: /targeted-test-generation - Targeted Test Generation Slash Command
+seoDescription: >-
+  Claude Code slash command to generate targeted tests for changed code using
+  Anthropic develop-tests guidance and existing project test patterns.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 745
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/745"
+documentationUrl: "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+  - "https://code.claude.com/docs/en/slash-commands"
+installable: true
+installCommand: "/targeted-test-generation <file-or-symbol>"
+commandSyntax: "/targeted-test-generation <file-or-symbol>"
+usageSnippet: "/targeted-test-generation src/utils/parseConfig.ts"
+copySnippet: "/targeted-test-generation <file-or-symbol>"
+prerequisites:
+  - "Identified code change with clear expected behavior and edge cases."
+  - "Existing test runner configured in the repository (for example vitest, jest, or pytest)."
+safetyNotes:
+  - "Proposed tests are drafts—run the test suite locally and review assertions before committing."
+  - "Avoid network calls, production credentials, or destructive setup in generated tests."
+privacyNotes:
+  - "Test fixtures should use synthetic data; do not copy production logs or customer records into new tests."
+tags:
+  - testing
+  - tdd
+  - quality
+  - slash-command
+  - evals
+keywords:
+  - targeted test generation slash command
+  - claude code unit test workflow
+  - develop tests anthropic command
+---
+
+The `/targeted-test-generation` command applies [Anthropic develop-tests guidance](https://platform.claude.com/docs/en/test-and-evaluate/develop-tests)
+to add minimal coverage around a specific change.
+
+## Usage
+
+```
+/targeted-test-generation <file-or-symbol>
+```
+
+Target a changed source file or exported symbol that needs new or updated tests.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Inspect the change.** Read the diff for the target file and list public behavior that changed.
+2. **Find conventions.** Locate adjacent tests in the repository and match framework, naming, and assertion style.
+3. **Define cases.** Draft happy path, boundary, and failure cases tied to the change—not exhaustive unrelated coverage.
+4. **Write minimal tests.** Propose new test blocks or files that compile with the project's runner and import paths.
+5. **Avoid flakiness.** Prefer deterministic inputs, fake timers only when necessary, and no live network dependencies.
+6. **Run locally.** Execute the narrowest test command (for example `pnpm test path/to/file.test.ts`) and report failures.
+7. **Summarize gaps.** Note untested edge cases that need human judgment or integration coverage.
+
+## Output format
+
+- **Target:** file or symbol under test
+- **Cases:** table of scenario, expected result, test name
+- **Proposed tests:** code blocks ready to paste
+- **Run command:** exact local test invocation
+- **Remaining gaps:** manual follow-ups
+
+## Requirements
+
+- Project test runner installed and documented in repository scripts.
+- Operator review before committing generated tests.
+
+## Duplicate Check
+
+No existing targeted test generation slash command on main. Complements `/prompt-eval-runbook`
+by focusing on code-level automated tests rather than prompt evaluation fixtures.
