@@ -1,0 +1,150 @@
+---
+title: Bash rm-rf Guardrail Hook
+slug: unsafe-shell-command-blocker-hook
+category: hooks
+description: >-
+  PreToolUse Bash guardrail based on the Claude Code hooks guide walkthrough: a
+  local script exits 2 to deny Bash tool calls whose command text contains the
+  recursive delete pattern documented in the official guardrail example.
+cardDescription: >-
+  Block Bash tool calls matching the hooks-guide rm-rf guardrail before execution.
+seoTitle: Bash rm-rf Guardrail Hook for Claude Code
+seoDescription: >-
+  Claude Code PreToolUse hook implementing the official hooks-guide Bash guardrail
+  that exits 2 when command text contains the documented recursive delete pattern.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 765
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/765"
+documentationUrl: "https://code.claude.com/docs/en/hooks-guide"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://code.claude.com/docs/en/hooks-guide"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch .claude/hooks/block-rm-rf.sh && chmod +x .claude/hooks/block-rm-rf.sh
+usageSnippet: >-
+  PreToolUse Bash guardrail denies tool calls when command text matches the hooks-guide rm-rf pattern.
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/block-rm-rf.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/block-rm-rf.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+  if ! command -v jq >/dev/null 2>&1; then exit 0; fi
+  input=$(cat)
+  tool_name=$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')
+  case "$tool_name" in
+    Bash|bash) ;;
+    *) exit 0 ;;
+  esac
+  command_text=$(printf '%s' "$input" | jq -r '.tool_input.command // .toolInput.command // empty')
+  [ -z "$command_text" ] && exit 0
+  needle='rm -rf'
+  if printf '%s' "$command_text" | grep -Fq "$needle"; then
+    echo "Blocked: destructive recursive delete pattern is not allowed." >&2
+    exit 2
+  fi
+  exit 0
+trigger: PreToolUse
+safetyNotes:
+  - "Default script implements only the hooks-guide rm-rf guardrail; extend locally for extra patterns."
+  - "Exit code 2 blocks the Bash tool call and returns stderr feedback to Claude per hooks documentation."
+privacyNotes:
+  - "Hook reads proposed Bash command text from stdin locally; no network calls."
+tags:
+  - hooks
+  - bash
+  - guardrail
+  - safety
+keywords:
+  - unsafe shell command blocker hook
+  - claude code rm rf guardrail hook
+readingTime: 3
+difficultyScore: 38
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Scope
+
+This is a **community custom entry** you add under `.claude/commands/` or
+`.claude/hooks/`. It is not a built-in Claude Code feature named on
+code.claude.com.
+
+
+This hook implements the **official Claude Code hooks guide** Bash guardrail that
+registers `block-rm-rf.sh` on the `Bash` matcher and **exits 2** when command
+text contains the recursive delete pattern shown in the walkthrough.
+
+## Installation
+
+1. Paste `scriptBody` into `.claude/hooks/block-rm-rf.sh`.
+2. Run the `installCommand` chmod step.
+3. Merge `copySnippet` into `.claude/settings.json` under `hooks.PreToolUse`.
+
+## Expected behavior
+
+Matches the hooks guide example: when Claude proposes a Bash command containing
+the documented recursive delete substring, the hook writes feedback to stderr and
+exits 2 so Claude Code denies the tool call.
+
+## Source Verification Notes
+
+Verified against the Claude Code hooks guide on **2026-06-16**:
+
+- The guide registers two `PreToolUse` hooks on `Bash`; the second runs
+  `block-rm-rf.sh` and **exits 2 to deny when the command contains the
+  recursive delete pattern** from the walkthrough.
+- When that guardrail fires, **exit 2 denies the tool call** and stderr becomes
+  Claude's feedback.
+- Hook input for Bash includes `tool_input.command`, which this script reads with
+  `jq` as shown in the guide's JSON examples.
+- The guide notes `PreToolUse` hooks fire **before** the Bash tool executes.
+
+## Duplicate Check
+
+Searched `content/hooks/` for `rm-rf`, `block-rm-rf`, and `Bash guardrail`.
+No existing hook documents the hooks-guide recursive delete guardrail pattern.
+
+## Troubleshooting
+
+**Hook never fires:** Confirm matcher is `Bash`, script is executable, and `jq`
+is installed as recommended in the hooks guide.
