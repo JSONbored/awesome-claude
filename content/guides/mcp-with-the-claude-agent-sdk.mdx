@@ -16,7 +16,7 @@ dateAdded: "2026-06-14"
 submittedAt: "2026-06-14"
 sourceSubmissionNumber: 1398
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1398"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/mcp"
 usageSnippet: >-
   Use this guide to register stdio, HTTP, and SSE MCP servers in Agent SDK query options with OAuth and allowlists.
 prerequisites:
@@ -74,6 +74,51 @@ Agent SDK apps connect MCP servers through the same `mcpServers` configuration a
 ### Transport selection
 
 Stdio suits colocated binaries; HTTP/SSE suit shared remote services with OAuth and load balancing.
+
+## SDK MCP Transport Configuration
+
+The Agent SDK accepts MCP servers in the `mcpServers` option of `query()`. Stdio servers use a launch `command` with `args` and `env`; remote servers use a `type` plus `url` and optional `headers`. Match each transport to the right config shape:
+
+| Transport | `type` value | Required fields | Auth field | Use when |
+| --- | --- | --- | --- | --- |
+| stdio | (none — implied by `command`) | `command`, `args` | `env` (e.g. `GITHUB_TOKEN`) | Docs give you a command to run locally |
+| HTTP | `"http"` (alias `"streamable-http"` in JSON only) | `url` | `headers` (e.g. `Authorization`) | Docs give you a URL for a remote server |
+| SSE | `"sse"` | `url` | `headers` (e.g. `Authorization`) | Remote server exposing an SSE endpoint |
+
+A single `query()` call can mix all three transports, then gate each with `allowedTools` using the `mcp__<server-name>__<tool-name>` naming convention (wildcards like `mcp__github__*` allow a whole server):
+
+```typescript
+import { query } from "@anthropic-ai/claude-agent-sdk";
+
+for await (const message of query({
+  prompt: "List files in my project",
+  options: {
+    mcpServers: {
+      filesystem: {
+        command: "npx",
+        args: ["-y", "@modelcontextprotocol/server-filesystem", "/Users/me/projects"]
+      },
+      github: {
+        command: "npx",
+        args: ["-y", "@modelcontextprotocol/server-github"],
+        env: { GITHUB_TOKEN: process.env.GITHUB_TOKEN }
+      },
+      "remote-api": {
+        type: "sse",
+        url: "https://api.example.com/mcp/sse",
+        headers: { Authorization: `Bearer ${process.env.API_TOKEN}` }
+      }
+    },
+    allowedTools: ["mcp__filesystem__*", "mcp__github__list_issues", "mcp__remote-api__*"]
+  }
+})) {
+  if (message.type === "result" && message.subtype === "success") {
+    console.log(message.result);
+  }
+}
+```
+
+Note: the MCP SDK uses a default connection timeout of 60 seconds; servers that start slower will fail to connect.
 
 ### Session env injection
 
