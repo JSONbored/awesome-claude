@@ -100,6 +100,31 @@ sessions must edit the primary checkout—treat that as a conscious exception.
 Background retention sweeps and manual pruning of `.claude/worktrees/` keep orphan
 checkouts from accumulating after parallel runs.
 
+## Worktree Commands
+
+```bash
+# Create an isolated worktree and start Claude in it (also -w)
+claude --worktree feature-auth
+# Start a second isolated session in another terminal
+claude --worktree bugfix-123
+# Omit the name and Claude generates one such as bright-running-fox
+claude --worktree
+# Branch from a pull request: fetches pull/<number>/head from origin
+claude --worktree "#1234"
+# Manual control with Git directly
+git worktree add ../project-feature-a -b feature-a
+git worktree list
+git worktree remove ../project-feature-a
+```
+
+## Worktree Cleanup by Exit State
+
+| Exit state | Cleanup behavior |
+| --- | --- |
+| No uncommitted changes, no untracked files, and no new commits | The worktree and its branch are removed automatically |
+| Uncommitted changes, untracked files, or new commits exist | Claude prompts you to keep or remove the worktree |
+| Non-interactive runs (`--worktree` with `-p`) | Not cleaned up automatically; remove them with `git worktree remove` |
+
 ## Step-by-Step Implementation Guide
 
 1. **Pick tasks that truly need parallelism.** Use worktrees when two agents must
