@@ -37,6 +37,34 @@ describe("PR preview artifact validation flow", () => {
     });
   });
 
+  it("ignores sibling-project deployment URLs on the shared Cloudflare account", () => {
+    // The account hosts other projects; their deployment statuses must never be
+    // selected as a HeyClaude preview (regression: gittensory.aethereal.dev).
+    expect(
+      selectPreviewUrl([
+        {
+          url: "https://gittensory.aethereal.dev",
+          source: "github-deployment:gittensory",
+        },
+      ]),
+    ).toBeNull();
+    expect(
+      selectPreviewUrl([
+        {
+          url: "https://gittensory.aethereal.dev",
+          source: "github-deployment:gittensory",
+        },
+        {
+          url: "https://heyclau.de",
+          source: "github-deployment:Production",
+        },
+      ]),
+    ).toEqual({
+      url: "https://heyclau.de",
+      source: "github-deployment:Production",
+    });
+  });
+
   it("ignores scanner and review app URLs when resolving deploy previews", () => {
     expect(
       selectPreviewUrl([

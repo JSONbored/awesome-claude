@@ -15,6 +15,20 @@ const blockedPreviewHosts = new Set([
 const nonDeploymentSourcePattern =
   /(?:coderabbit|superagent|contributor trust|pipelock|codeql|trunk|security scan|repo scan)/i;
 
+// A preview URL for this project must be a HeyClaude host. This Cloudflare
+// account hosts several unrelated projects, so GitHub deployment/status lookups
+// can surface a sibling project's URL (e.g. gittensory.aethereal.dev) — running
+// the artifact contract against that is wrong. Restrict to heyclau.de and
+// heyclaude-* Workers preview aliases.
+function isHeyClaudePreviewHost(hostname) {
+  const host = String(hostname || "").toLowerCase();
+  return (
+    host === "heyclau.de" ||
+    host.endsWith(".heyclau.de") ||
+    host.includes("heyclaude")
+  );
+}
+
 export function normalizeBaseUrl(value) {
   const trimmed = String(value || "").trim();
   if (!trimmed) return "";
@@ -41,6 +55,7 @@ export function selectPreviewUrl(candidates) {
     try {
       const parsed = new URL(url);
       if (blockedPreviewHosts.has(parsed.hostname.toLowerCase())) continue;
+      if (!isHeyClaudePreviewHost(parsed.hostname)) continue;
     } catch {
       continue;
     }
