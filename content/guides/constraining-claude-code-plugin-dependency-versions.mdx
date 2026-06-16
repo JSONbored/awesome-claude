@@ -109,6 +109,42 @@ when they alter permissions, MCP tools, or default output styles.
    bounded semver ranges only when you have automated upgrade testing.
 
 3. **Edit the dependency manifest.** Follow Claude Code plugin dependency syntax
+
+## Dependency Manifest Syntax
+
+Declare dependencies in the `dependencies` array of your plugin's
+`.claude-plugin/plugin.json`. Each entry is either a bare plugin name (which
+tracks whatever version that plugin's marketplace provides) or an object with a
+version constraint:
+
+```json
+{
+  "name": "deploy-kit",
+  "version": "3.1.0",
+  "dependencies": [
+    "audit-logger",
+    { "name": "secrets-vault", "version": "~2.1.0" }
+  ]
+}
+```
+
+The object form accepts three fields: `name` (the dependency plugin name,
+required, resolved within the same marketplace), `version` (a semver range), and
+`marketplace` (a different marketplace to resolve `name` in, blocked unless
+allowlisted). The `version` field accepts any expression supported by Node's
+`semver` package, fetching the highest tagged version that satisfies it:
+
+| Constraint | Example | Resolves to |
+| ---------- | ------- | ----------- |
+| Exact pin | `=2.1.0` | Only `2.1.0`; auto-update skips newer versions |
+| Tilde (patch range) | `~2.1.0` | Highest matching `2.1.x` |
+| Caret (minor range) | `^2.0` | Highest matching `2.x` |
+| Comparator | `>=1.4` | Highest tag at or above `1.4` |
+| Bare name (none) | `"audit-logger"` | Whatever version the marketplace provides |
+
+Pre-release versions such as `2.0.0-beta.1` are excluded unless the range opts in
+with a pre-release suffix like `^2.0.0-0`. Version constraints require Claude Code
+v2.1.110 or later.
    for version fields, source URLs, and optional minimum versions.
 
 4. **Install in a clean profile.** Remove prior plugin versions, install from the
