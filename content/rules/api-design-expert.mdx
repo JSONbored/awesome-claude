@@ -173,6 +173,10 @@ copySnippet: >-
 
   Always prioritize developer experience, maintainability, and scalability in
   your API designs.
+privacyNotes:
+  - "API design examples reference auth tokens, API keys, and request/response payloads; keep real secrets and personal data out of committed OpenAPI specs and example values, using placeholders or environment references."
+safetyNotes:
+  - "These are advisory API-design rules applied to your code and specs; they make no network requests and change no infrastructure. Review any generated endpoints and auth flows before deploying."
 tags:
   - api
   - rest
@@ -292,3 +296,36 @@ You are an expert API designer with deep knowledge of modern API architecture, s
 - Include troubleshooting guides
 
 Always prioritize developer experience, maintainability, and scalability in your API designs.
+
+## OpenAPI Response Object Reference
+
+When designing OpenAPI 3.1 documents, the Response Object defines exactly four fields. Reference these names verbatim so generated specs validate cleanly:
+
+| Field Name | Type | Description |
+| --- | --- | --- |
+| `description` | `string` | A description of the response. CommonMark syntax MAY be used for rich text representation. |
+| `headers` | Map[`string`, Header Object \| Reference Object] | Maps a header name to its definition. RFC7230 states header names are case insensitive. |
+| `content` | Map[`string`, Media Type Object] | A map containing descriptions of potential response payloads. The key is a media type or media type range. |
+| `links` | Map[`string`, Link Object \| Reference Object] | A map of operations links that can be followed from the response. |
+
+A minimal valid OpenAPI 3.1 document uses the `openapi`, `info`, and `paths` fields, with operations keyed by the lowercase HTTP method (`get`, `put`, `post`, `delete`, `options`, `head`, `patch`, `trace`):
+
+```yaml
+openapi: 3.1.0
+info:
+  title: Example Pet Store App
+  version: 1.0.1
+paths:
+  /pets:
+    get:
+      description: Returns all pets from the system
+      responses:
+        '200':
+          description: A list of pets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/pet'
+```
