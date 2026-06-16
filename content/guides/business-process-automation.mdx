@@ -45,21 +45,11 @@ hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
 safetyNotes:
-  - >-
-    Automated runs can execute Bash and edit/write files. Scope `--allowedTools`
-    and `--permission-mode` tightly; `dontAsk` denies anything outside your allow
-    rules.
-  - >-
-    Routines run with no approval prompts, so limit repositories, connectors, and
-    network access to what each task actually needs.
+  - "Automated runs can execute Bash and edit/write files. Scope `--allowedTools` and `--permission-mode` tightly; `dontAsk` denies anything outside your allow rules."
+  - "Routines run with no approval prompts, so limit repositories, connectors, and network access to what each task actually needs."
 privacyNotes:
-  - >-
-    Headless and CI runs read your codebase and any piped stdin; GitHub Actions
-    and routines need an `ANTHROPIC_API_KEY` or provider credentials stored as
-    secrets, never hardcoded in workflow files.
-  - >-
-    Routine actions appear under your linked GitHub and connector identities, so
-    commits, PRs, and connector writes are attributed to you.
+  - "Headless and CI runs read your codebase and any piped stdin; GitHub Actions and routines need an `ANTHROPIC_API_KEY` or provider credentials stored as secrets, never hardcoded in workflow files."
+  - "Routine actions appear under your linked GitHub and connector identities, so commits, PRs, and connector writes are attributed to you."
 ---
 
 ## TL;DR
