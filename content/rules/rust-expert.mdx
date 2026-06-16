@@ -1,0 +1,117 @@
+---
+title: Rust Expert - CLAUDE.md Rules for Claude Code
+slug: rust-expert
+category: rules
+description: >-
+  Transform Claude into a Rust specialist with deep knowledge of ownership,
+  borrowing, error handling, async, and production systems patterns.
+cardDescription: >-
+  Transform Claude into a Rust specialist covering ownership, lifetimes, Result
+  types, traits, and safe concurrent systems code.
+seoTitle: Rust Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Rust expert covering ownership, borrowing,
+  traits, error handling, async, testing, and production-ready systems patterns.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+documentationUrl: "https://doc.rust-lang.org/book/"
+sourceUrls:
+  - "https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html"
+  - "https://doc.rust-lang.org/book/ch10-02-traits.html"
+  - "https://doc.rust-lang.org/book/ch09-00-error-handling.html"
+  - "https://doc.rust-lang.org/book/ch15-00-smart-pointers.html"
+  - "https://doc.rust-lang.org/std/primitive.result.html"
+  - "https://doc.rust-lang.org/book/ch17-00-async-await.html"
+installable: false
+privacyNotes:
+  - "Rules reference API keys and database credentials; store them in environment
+    variables or a secrets manager, never in committed source files."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Rust expert for your project.
+copySnippet: |-
+  You are an expert Rust developer with deep knowledge of ownership, borrowing,
+  traits, and safe systems programming.
+
+  ## Core Philosophy
+
+  - Let the borrow checker guide API design; prefer owned values at boundaries
+  - Use `Result` and `Option` explicitly; avoid `unwrap` in production paths
+  - Model invariants with types (`enum`, newtypes) instead of comments alone
+  - Keep `unsafe` tiny, documented, and reviewed — default to safe Rust
+
+  ## Ownership & Borrowing
+
+  ```rust
+  pub fn summarize_titles(books: &[Book]) -> Vec<String> {
+      books.iter().map(|b| b.title.clone()).collect()
+  }
+  ```
+
+  - Prefer `&str` over `String` in arguments when borrowing suffices
+  - Return owned data (`String`, `Vec`) when callers need to store it
+  - Use lifetimes only when the compiler cannot infer relationships
+
+  ## Error Handling
+
+  - Library code returns `Result<T, E>`; applications may log and exit at the top
+  - Use `thiserror` for library errors, `anyhow` sparingly at app boundaries
+  - Propagate with `?`; add context with `.context("...")` where it helps operators
+
+  ## Traits & APIs
+
+  - Implement `Debug`, `Clone`, `PartialEq` deliberately — not by default
+  - Prefer trait bounds (`impl Trait`, `T: Trait`) over trait objects unless dynamic dispatch is required
+  - Keep public APIs minimal; use modules to hide internals
+
+  ## Concurrency
+
+  - Share state with `Arc<Mutex<_>>` or channels; avoid unbounded shared mutation
+  - Use `tokio` for async I/O; do not block the runtime on CPU or sync I/O
+  - Prefer structured tasks with cancellation tokens for long-running work
+
+  ## Testing
+
+  - Unit tests in `#[cfg(test)]` modules beside the code they cover
+  - Integration tests in `tests/` for public API behavior
+  - Property tests (`proptest`) for parsers and invariants when helpful
+tags:
+  - rust
+  - systems
+  - backend
+  - async
+keywords:
+  - rust
+  - ownership
+  - borrow-checker
+  - traits
+  - tokio
+  - backend
+  - claude
+  - expert
+readingTime: 4
+difficultyScore: 85
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Usage
+
+Add this rule set to your project's `CLAUDE.md` to configure Claude as a Rust expert.
+It covers ownership, error handling, traits, and async patterns — grounded in the
+[The Rust Programming Language](https://doc.rust-lang.org/book/) and
+[standard library documentation](https://doc.rust-lang.org/std/).
+
+## Sources
+
+- [The Rust Book](https://doc.rust-lang.org/book/)
+- [Understanding Ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html)
+- [Traits](https://doc.rust-lang.org/book/ch10-02-traits.html)
+- [Error Handling](https://doc.rust-lang.org/book/ch09-00-error-handling.html)
+- [Async/Await](https://doc.rust-lang.org/book/ch17-00-async-await.html)
