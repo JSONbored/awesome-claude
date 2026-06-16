@@ -110,6 +110,49 @@ how to verify integrity before installation.
 3. **Verify directory layout.** Confirm the archive root matches Claude Code
    plugin expectations documented in the plugins guide.
 
+## Verified Plugin Layout and Manifest
+
+Build the zip from a plugin root that matches the documented structure. Per the Claude Code plugins guide, only `plugin.json` belongs inside `.claude-plugin/`; every other directory sits at the plugin root:
+
+```text
+my-plugin/
+├── .claude-plugin/
+│   └── plugin.json
+└── skills/
+    └── code-review/
+        └── SKILL.md
+```
+
+The manifest at `.claude-plugin/plugin.json` defines the plugin's identity:
+
+```json
+{
+  "name": "my-first-plugin",
+  "description": "A greeting plugin to learn the basics",
+  "version": "1.0.0",
+  "author": {
+    "name": "Your Name"
+  }
+}
+```
+
+To test a packaged archive without installing it, the `--plugin-dir` flag also accepts a `.zip` archive of the plugin directory (requires Claude Code v2.1.128 or later):
+
+```bash
+claude --plugin-dir ./my-plugin.zip
+```
+
+## Plugin Directory Reference
+
+| Directory | Location | Purpose |
+| --- | --- | --- |
+| `.claude-plugin/` | Plugin root | Contains `plugin.json` manifest |
+| `skills/` | Plugin root | Skills as `<name>/SKILL.md` directories |
+| `commands/` | Plugin root | Skills as flat Markdown files. Use `skills/` for new plugins |
+| `agents/` | Plugin root | Custom agent definitions |
+| `hooks/` | Plugin root | Event handlers in `hooks.json` |
+| `.mcp.json` | Plugin root | MCP server configurations |
+
 4. **Build the zip.** Archive from the plugin root so paths inside the zip are
    relative and do not include parent directories.
 
