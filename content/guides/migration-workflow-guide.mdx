@@ -1,41 +1,52 @@
 ---
-title: Complete Claude Migration Playbook from ChatGPT & Copilot
+title: Large Code Migration Workflow with Claude Code
 slug: migration-workflow-guide
 category: guides
 description: >-
-  Complete migration workflow from ChatGPT, Gemini, and Copilot to Claude 4.
-  Enterprise frameworks, real production metrics, and proven migration
-  strategies.
-cardDescription: "Complete migration workflow from ChatGPT, Gemini, and Copilot to Claude 4."
-seoTitle: Complete Claude Migration Playbook from ChatGPT & Copilot
+  A repeatable explore-plan-implement-verify workflow for large code migrations
+  and refactors with Claude Code, using plan mode, /rewind checkpoints,
+  subagents, and claude -p fan-out for batch file changes.
+cardDescription: "Explore-plan-implement-verify workflow for large migrations and refactors with Claude Code."
+seoTitle: Large Code Migration Workflow with Claude Code
 seoDescription: >-
-  Complete migration workflow from ChatGPT, Gemini, and Copilot to Claude 4.
-  Enterprise frameworks, real production metrics, and proven migration
-  strategies.
+  Run large code migrations and refactors with Claude Code using plan mode,
+  /rewind checkpoints, verification subagents, and claude -p fan-out for batch
+  changes across many files.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+lastReviewed: "2026-06-16"
 installable: false
 usageSnippet: >-
-  Complete enterprise migration workflow from ChatGPT, Gemini, and Copilot to
-  Claude 4. This proven process delivers 72.5% coding success rates (vs GPT-4's
-  54.6%) while enabling organizations like TELUS to achieve $90M+ in benefits.
-  Includes 6-phase implementation, API wrapper patterns, and team migration
-  frameworks tested across 57,000+ employees.
+  A repeatable workflow for large code migrations and refactors with Claude Code:
+  explore in plan mode, write a plan, implement against a verification check,
+  rewind with checkpoints when an approach fails, and fan out across many files
+  with claude -p for batch migrations.
 tags:
   - workflow
   - migration
-  - enterprise
+  - refactoring
   - automation
 keywords:
-  - claude migration workflow
-  - chatgpt to claude
-  - enterprise ai migration
-  - ai platform migration
-readingTime: 3
-difficultyScore: 15
+  - claude code migration workflow
+  - large refactor claude code
+  - claude code plan mode
+  - claude -p fan out migration
+  - claude code rewind checkpoint
+documentationUrl: "https://code.claude.com/docs/en/best-practices"
+retrievalSources:
+  - "https://code.claude.com/docs/en/best-practices"
+  - "https://code.claude.com/docs/en/common-workflows"
+  - "https://code.claude.com/docs/en/checkpointing"
+safetyNotes:
+  - "The claude -p fan-out loop runs Claude non-interactively across many files. Scope it with --allowedTools (for example \"Edit,Bash(git commit *)\") so unattended runs cannot perform actions you did not intend, and test on 2-3 files before running at scale."
+  - "Checkpoints only track Claude's direct file edits, not changes made by bash commands (rm, mv, cp) or other processes, so commit to git before a large migration."
+privacyNotes:
+  - "Claude Code sends the files it reads and command output to the model as context. Avoid piping secrets or credentials into prompts, and exclude sensitive paths from migration runs."
+readingTime: 6
+difficultyScore: 35
 hasTroubleshooting: true
-hasPrerequisites: false
+hasPrerequisites: true
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
@@ -43,101 +54,211 @@ robotsFollow: true
 
 ## TL;DR
 
-Complete enterprise migration workflow from ChatGPT, Gemini, and Copilot to Claude 4. This proven process delivers 72.5% coding success rates (vs GPT-4's 54.6%) while enabling organizations like TELUS to achieve $90M+ in benefits. Includes 6-phase implementation, API wrapper patterns, and team migration frameworks tested across 57,000+ employees.
+Large migrations fail when an agent jumps straight to editing and fills its
+context with the wrong files. The reliable pattern in Claude Code is to separate
+research from execution: explore in plan mode, commit to a written plan, then
+implement against a check Claude can run itself. Use `/rewind` checkpoints to back
+out of dead ends, delegate exploration and review to subagents to keep the main
+context clean, and fan out with `claude -p` when the same change has to land across
+hundreds of files.
 
-**Key Points:**
+**Key points:**
 
-- 33% performance advantage - Claude's 72.5% SWE-bench success vs competitors' 54.6%
-- Proven ROI - TELUS $90M benefits, NBIM $100M annual savings, Bridgewater 35x speedup
-- Enterprise-ready security - ISO 42001:2023, SOC 2 Type II, HIPAA configurable
-- 90-day pilot to 360-day optimization with phased rollout framework
+- Use the four-phase loop: explore, plan, implement, verify.
+- Give Claude a verification check (tests, build, linter) so it can iterate on its own.
+- Checkpoints (`/rewind`, `Esc Esc`) let you try risky changes and revert; they are local undo, not a replacement for git.
+- For batch migrations, generate a file list and loop `claude -p` over it with scoped `--allowedTools`.
 
-Transform your AI infrastructure with this comprehensive migration workflow validated by enterprises managing $1.8 trillion in assets and processing 100 billion tokens monthly. Based on real implementations at TELUS (57,000 employees), Bridgewater Associates, and the Norwegian Sovereign Wealth Fund, this playbook delivers measurable ROI within 3-6 months while maintaining enterprise security standards.
+## Overview
 
-> **Migration Overview**
+A migration or large refactor is the case where Claude Code's main constraint
+matters most: the context window holds the entire conversation, every file read,
+and every command output, and model performance degrades as it fills. A naive
+"migrate the whole codebase" prompt reads hundreds of files into one context and
+produces worse edits as it goes.
+
+The workflow below keeps each phase scoped. Exploration and review happen in
+subagents or plan mode so they don't pollute the implementation context.
+Implementation runs against a check that returns pass or fail, so Claude closes
+its own loop instead of waiting for you to spot every mistake. And checkpoints
+make ambitious, wide-scale changes safe to attempt because any step is reversible.
+
+> **Workflow at a glance**
 >
-> **Process Type:** Enterprise AI Platform Migration
-> **Complexity:** Advanced (Multi-system Integration)
-> **Implementation Time:** 90-day pilot, 360-day full deployment
-> **Team Size:** 5-15 pilot users scaling to enterprise-wide
-> **ROI Timeline:** 3-6 months to positive returns
-> **Success Rate:** 95% when following phased approach
+> **Best for:** framework upgrades, API/pattern migrations, large refactors, codemods
+> **Core loop:** explore -> plan -> implement -> verify
+> **Key tools:** plan mode, `/rewind`, subagents, `claude -p` fan-out
+> **Safety net:** session checkpoints plus git commits
 
-## Migration Architecture
+## The migration workflow
 
-Understanding the complete migration structure ensures successful transition across your organization. This workflow consists of 4 main architectural components with 6 implementation phases and comprehensive validation frameworks.
+The recommended workflow has four phases. Run them in order; for a small,
+one-sentence-diff change you can skip planning and ask Claude to do it directly.
 
-<!-- Section type: feature_grid -->
+```bash
+# 1. EXPLORE — read and understand, no edits yet (plan mode)
+claude --permission-mode plan
+# In session:
+#   read /src/auth and explain how sessions and login work today.
+#   look at how environment variables for secrets are managed.
+# Or delegate the reading so only findings return to your context:
+#   use a subagent to investigate how token refresh works and
+#   whether we already have OAuth utilities to reuse.
 
-## Complete Migration Process
+# 2. PLAN — produce a reviewable plan before anything touches disk
+# In plan mode:
+#   I want to migrate this module to the new API. What files change?
+#   What is the order of operations? Create a detailed plan.
+# Press Ctrl+G to open the plan in your editor and refine it.
 
-1. **Phase 1: Assessment and Planning**
+# 3. IMPLEMENT — leave plan mode, code against a check it can run
+# In default mode:
+#   implement the migration from your plan. run the test suite
+#   after each file and fix failures. address root causes.
 
-2. **Phase 2: Technical Foundation**
+# 4. VERIFY — fresh-context review of the diff, then commit
+#   /code-review              # bundled skill: reviews the diff in a subagent
+#   commit with a descriptive message and open a PR
 
-3. **Phase 3: Pilot Implementation**
+# If an approach goes wrong at any point, back out and retry:
+#   /rewind                   # or press Esc Esc on an empty prompt
+```
 
-4. **Phase 4: Department Expansion**
+### Why each phase exists
 
-5. **Phase 5: Enterprise Deployment**
+- **Explore** keeps Claude from solving the wrong problem. Plan mode reads files
+  and answers questions but makes no edits until you approve.
+- **Plan** gives you a diff you can review before code is written. Press `Ctrl+G`
+  to open the plan in your text editor and edit it directly.
+- **Implement** is where a verification check pays off: Claude does the work, runs
+  the check, reads the result, and iterates until it passes. Without a check,
+  "looks done" is the only signal and you become the verification loop.
+- **Verify** with a fresh context. A reviewer subagent sees only the diff and your
+  criteria, not the reasoning that produced the change, so it grades the result on
+  its own terms.
 
-6. **Phase 6: Optimization and Scale**
+## Phase reference
 
-## Integration and Automation
+| Phase | What you do | Command or action |
+| --- | --- | --- |
+| Explore | Read code, ask questions, no edits | `claude --permission-mode plan`, or `Shift+Tab` to toggle plan mode mid-session |
+| Explore (delegated) | Offload file reads so only findings return | `use a subagent to investigate X` |
+| Plan | Produce and refine a written plan | Ask for a plan in plan mode; `Ctrl+G` to edit it |
+| Implement | Code against a runnable check | Leave plan mode; ask Claude to implement and run tests/build |
+| Verify | Fresh-context review of the diff | `/code-review`, or a verification subagent |
+| Recover | Undo a bad step | `/rewind` or `Esc Esc` |
+| Commit | Persist the change | `commit ... and open a PR` (uses `gh pr create`) |
+| Resume | Continue across sittings | `claude --continue` or `claude --resume` |
 
-<!-- Section type: tabs -->
+## Checkpoints: try risky changes safely
 
-## Performance Metrics and ROI
+Claude Code automatically snapshots files before each edit, and every prompt you
+send creates a checkpoint. This lets you attempt a wide-scale change and revert if
+it doesn't work, instead of planning every move defensively.
 
-<!-- Section type: comparison_table -->
+Run `/rewind`, or press `Esc` twice when the prompt input is empty, to open the
+rewind menu. From there you can:
 
-## Implementation Roadmap
+- **Restore code and conversation** — revert both to a prior checkpoint
+- **Restore conversation** — rewind the chat but keep current code
+- **Restore code** — revert file changes but keep the conversation
+- **Summarize from here / up to here** — compress part of the conversation to free context
 
-<!-- Section type: feature_grid -->
+Checkpoints persist across sessions and are cleaned up with the session after 30
+days (configurable). Two limits matter for migrations:
 
-## Success Stories and Case Studies
+- **Bash changes are not tracked.** Files modified by `rm`, `mv`, or `cp` cannot be
+  undone through rewind. Only direct edits from Claude's file-editing tools are tracked.
+- **It is not version control.** Treat checkpoints as local undo and git as
+  permanent history. Commit before a large migration so you have a real fallback.
 
-<!-- Section type: expert_quote -->
+## Fan out across many files
 
-<!-- Section type: tabs -->
+When the same change has to land across hundreds or thousands of files, distribute
+the work across parallel non-interactive invocations instead of one long session.
 
-## Troubleshooting and Optimization
+```bash
+# 1. Have Claude list the files that need migrating
+#    e.g. ask it to write files.txt containing every file to change
 
-<!-- Section type: accordion -->
+# 2. Loop claude -p over the list with scoped tools
+for file in $(cat files.txt); do
+  claude -p "Migrate $file from React to Vue. Return OK or FAIL." \
+    --allowedTools "Edit,Bash(git commit *)"
+done
 
-## Continuous Improvement
+# 3. Test on 2-3 files, refine the prompt, then run the full set
+```
 
-> **Migration Best Practices**
->
-> **Regular Review:** Monthly performance assessments focusing on success rates, cost optimization, and user satisfaction metrics
->
-> **Performance Monitoring:** Real-time tracking of latency (p99), accuracy rates, and business KPIs through integrated dashboards
->
-> **User Feedback:** Weekly champion meetings incorporating frontline insights into optimization cycles
->
-> **Technology Updates:** Quarterly reviews of new Claude capabilities ensuring maximum value from platform investment
+`--allowedTools` restricts what each unattended invocation can do, which is the key
+safety control when no human is approving steps. For batch runs that need to keep
+moving without prompts but with a safety classifier, use auto mode:
 
-## Frequently Asked Questions
+```bash
+claude --permission-mode auto -p "fix all lint errors"
+```
 
-## Related Resources and Next Steps
+For non-interactive runs, auto mode aborts if the classifier repeatedly blocks
+actions, since there is no user to fall back to.
 
-<!-- Section type: related_content -->
+## Set up before a large migration
+
+- **Write a CLAUDE.md.** Run `/init` to generate a starter file, then add the build
+  command, test runner, and any code-style rules that differ from defaults. Claude
+  reads it at the start of every conversation. Keep it short — a bloated CLAUDE.md
+  causes Claude to ignore your actual instructions.
+- **Define the verification check.** Have a test suite, build, or linter ready so
+  Claude can self-correct. Spell out the check in the prompt: "run the tests after
+  implementing and fix failures."
+- **Reference existing patterns.** Point Claude at a file that already follows the
+  target pattern (for example, "follow the pattern in HotDogWidget.php") rather than
+  describing it abstractly.
+- **Commit first.** Get a clean git state so `/rewind` plus git together cover both
+  session-level and permanent recovery.
+
+## Manage context during the migration
+
+Long migrations fill the context window with file contents and failed attempts,
+which degrades quality. Manage it actively:
+
+- `/clear` between unrelated tasks to reset context entirely.
+- If you've corrected Claude more than twice on the same issue, `/clear` and restart
+  with a sharper prompt that incorporates what you learned. A clean session with a
+  better prompt almost always beats a long polluted one.
+- Use subagents for exploration and review so those file reads never enter the main
+  context.
+- When approaching limits, Claude auto-compacts; for control use `/compact <instructions>`,
+  for example `/compact Focus on the API changes`.
+
+## Troubleshooting
+
+**Claude edits the wrong files or solves the wrong problem.** You skipped
+exploration. Start in plan mode (`claude --permission-mode plan` or `Shift+Tab`),
+have it read the relevant code and produce a plan, and approve it before any edits.
+
+**A change broke something and you want to back out.** Run `/rewind` (or `Esc Esc`
+on an empty prompt) and restore code, conversation, or both to a prior checkpoint.
+If the breakage came from a bash command (`rm`/`mv`/`cp`), rewind won't help —
+recover from git instead.
+
+**Quality degrades partway through a long session.** The context window is filling.
+`/clear` between tasks, delegate reads to subagents, or `/compact` with focus
+instructions. After two failed corrections on the same issue, clear and restart.
+
+**Claude reports success but edge cases are broken.** Don't trust unverified output.
+Add a verification check it must run, and add an adversarial review step with
+`/code-review` or a verification subagent that sees only the diff.
+
+**The fan-out loop does something unintended.** Tighten `--allowedTools` to the
+minimum set (for example `"Edit,Bash(git commit *)"`) and test on a few files
+before running at scale.
+
+## Related resources and next steps
+
+- [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) — explore/plan/code, verification, context management, fan-out
+- [Common workflows](https://code.claude.com/docs/en/common-workflows) — recipes for refactoring, testing, PRs, subagents, and `claude -p`
+- [Checkpointing](https://code.claude.com/docs/en/checkpointing) — how `/rewind` and summarize work, and their limits
 
 ---
 
-> **Ready to Migrate?**
->
-> **Start Your Claude Migration Journey**
->
-> 1. **Assess:** Calculate your performance-adjusted ROI using our cost comparison framework
-> 2. **Plan:** Follow our [90-day pilot approach](#complete-migration-process) for risk-free validation
-> 3. **Pilot:** Begin with 5-15 power users on high-value use cases
-> 4. **Scale:** Expand based on measurable wins and proven ROI
->
-> **Migration Resources:**
->
-> - [Anthropic Documentation](https://docs.anthropic.com) - Official migration guides
-> - [Amazon Bedrock](https://aws.amazon.com/bedrock/) - Enterprise deployment platform
-> - [Community Support](https://github.com/anthropics/anthropic-sdk-python) - SDK and examples
-
-_Last updated: September 2025 | Based on verified enterprise implementations through Q3 2025 | Comprehensive migration workflow for transitioning from ChatGPT, Gemini, and Copilot to Claude 4 | Part of the [HeyClaude](https://heyclau.de) workflow collection._
+_Last reviewed: 2026-06-16. Grounded in the official Claude Code documentation for common workflows, best practices, and checkpointing. Part of the [HeyClaude](https://heyclau.de) guides collection._
