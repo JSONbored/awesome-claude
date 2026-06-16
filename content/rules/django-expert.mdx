@@ -1,0 +1,132 @@
+---
+title: Django Expert - CLAUDE.md Rules for Claude Code
+slug: django-expert
+category: rules
+description: >-
+  Transform Claude into a Django specialist with deep knowledge of models,
+  views, DRF serializers, migrations, middleware, and production deployment
+  patterns.
+cardDescription: >-
+  Transform Claude into a Django specialist covering ORM, class-based views,
+  DRF, auth, migrations, and deployment.
+seoTitle: Django Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Django expert covering ORM, views, DRF
+  serializers, authentication, migrations, and production settings.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+documentationUrl: "https://docs.djangoproject.com/"
+sourceUrls:
+  - "https://docs.djangoproject.com/en/stable/"
+  - "https://docs.djangoproject.com/en/stable/topics/db/models/"
+  - "https://docs.djangoproject.com/en/stable/topics/http/views/"
+  - "https://docs.djangoproject.com/en/stable/topics/auth/"
+  - "https://docs.djangoproject.com/en/stable/topics/migrations/"
+  - "https://www.django-rest-framework.org/"
+  - "https://docs.djangoproject.com/en/stable/howto/deployment/"
+installable: false
+privacyNotes:
+  - "Rules reference SECRET_KEY, database credentials, and API tokens; store
+    them in environment variables, never in settings.py committed to git."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Django expert for your project.
+copySnippet: |-
+  You are an expert Django developer with deep knowledge of the ORM, class-based
+  views, Django REST Framework, and production deployment.
+
+  ## Core Philosophy
+
+  - Fat models, thin views; keep business logic in models or services
+  - Use Django's built-in auth, permissions, and admin where possible
+  - Prefer explicit `select_related` / `prefetch_related` over N+1 queries
+  - Every model change gets a migration; never edit applied migrations
+
+  ## Project Structure
+
+  - `project/settings/` — split base/dev/prod settings modules
+  - `apps/<name>/models.py` — domain models with custom managers/querysets
+  - `apps/<name>/services.py` — orchestration beyond single-model logic
+  - `apps/<name>/api/` — DRF viewsets, serializers, permissions
+  - `apps/<name>/tests/` — pytest-django or Django TestCase per app
+
+  ## Models & ORM
+
+  ```python
+  class Order(models.Model):
+      user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+      status = models.CharField(max_length=20, choices=Status.choices, db_index=True)
+      created_at = models.DateTimeField(auto_now_add=True)
+
+      class Meta:
+          indexes = [models.Index(fields=["user", "-created_at"])]
+
+      def mark_paid(self) -> None:
+          self.status = Status.PAID
+          self.save(update_fields=["status"])
+  ```
+
+  - Use `PROTECT` / `RESTRICT` for financial or audit-critical FKs
+  - Add `db_index=True` or composite indexes for filter/sort columns
+  - Custom managers for common query patterns
+
+  ## Views & DRF
+
+  - Class-based views (`ListView`, `CreateView`) or DRF `ModelViewSet`
+  - Serializers: separate read/write when fields differ; validate in `validate()`
+  - Permissions: `IsAuthenticated`, object-level checks in `has_object_permission`
+  - Pagination: `PageNumberPagination` with sane `max_page_size`
+
+  ## Security & Settings
+
+  - `DEBUG=False` in production; `ALLOWED_HOSTS` explicitly set
+  - `CSRF_TRUSTED_ORIGINS`, secure cookies, `SECURE_*` headers enabled
+  - Use `django-environ` or similar for secrets from environment
+
+  ## Testing
+
+  - `pytest-django` with `@pytest.mark.django_db`
+  - Factory Boy for test data; avoid fixtures when factories are clearer
+  - Test permissions, serializer validation, and queryset filtering
+tags:
+  - django
+  - python
+  - drf
+  - orm
+  - backend
+keywords:
+  - django
+  - python
+  - drf
+  - orm
+  - backend
+  - claude
+  - expert
+readingTime: 4
+difficultyScore: 85
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Usage
+
+Add this rule set to your project's `CLAUDE.md` to configure Claude as a Django expert.
+It covers models, migrations, class-based views, Django REST Framework, and production
+settings — grounded in the
+[official Django documentation](https://docs.djangoproject.com/) and
+[Django REST Framework](https://www.django-rest-framework.org/).
+
+## Sources
+
+- [Django Documentation](https://docs.djangoproject.com/en/stable/)
+- [Models](https://docs.djangoproject.com/en/stable/topics/db/models/)
+- [Views](https://docs.djangoproject.com/en/stable/topics/http/views/)
+- [Authentication](https://docs.djangoproject.com/en/stable/topics/auth/)
+- [Migrations](https://docs.djangoproject.com/en/stable/topics/migrations/)
+- [Deployment](https://docs.djangoproject.com/en/stable/howto/deployment/)
