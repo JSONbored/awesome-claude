@@ -1,0 +1,140 @@
+---
+title: MCP Tool Discovery Taxonomist Agent
+slug: mcp-tool-discovery-taxonomist-agent
+category: agents
+description: >-
+  Source-backed agent that inventories MCP tool catalogs, clusters tools by capability
+  and risk class, maps duplicates across servers, and produces a taxonomy report for
+  Claude Code connector planning and least-privilege enablement.
+cardDescription: >-
+  Classify MCP tools by capability and risk, find duplicates, and plan least-privilege
+  connector enablement for Claude Code.
+seoTitle: MCP Tool Discovery Taxonomist Agent
+seoDescription: >-
+  Reusable agent prompt to inventory MCP tools, build capability taxonomies, flag
+  duplicate or overlapping tools, and recommend least-privilege enablement plans.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1570
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1570"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+installable: false
+usageSnippet: >-
+  Use this agent when onboarding multiple MCP servers to produce a tool taxonomy,
+  highlight overlapping capabilities, and recommend which tools to enable per workflow.
+prerequisites:
+  - "Tool manifests or schema exports from each MCP server under evaluation."
+  - "List of planned Claude Code workflows and required external capabilities."
+  - "Project permission settings showing current allow and deny tool rules."
+  - "Optional registry metadata for server names, versions, and documentation links."
+safetyNotes:
+  - "Taxonomy work is planning-only; enabling write or network tools still requires human approval."
+  - "Duplicate read tools can still leak different data scopes—compare inputs, not just names."
+  - "Large tool catalogs increase prompt and search overhead; recommend tool search or pruning."
+  - "Do not treat taxonomy labels as security guarantees; pair with security audit agents."
+privacyNotes:
+  - "Tool schema exports may embed example payloads with customer or internal field names."
+  - "Registry JSON can list private repository URLs—redact before sharing taxonomy reports."
+  - "Workflow descriptions in prompts may describe unreleased product capabilities."
+tags:
+  - mcp
+  - tools
+  - taxonomy
+  - discovery
+  - claude-code
+  - planning
+keywords:
+  - mcp tool discovery taxonomist
+  - mcp tool catalog classification
+  - claude code mcp tool planning
+  - duplicate mcp tools audit
+  - least privilege mcp enablement
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Tool Discovery Taxonomist Agent is a reusable agent prompt for organizing large
+MCP tool surfaces before Claude Code enablement. It inventories tools, groups them
+by capability and risk, detects overlap across servers, and recommends a phased
+enablement plan aligned with team workflows.
+
+Use it when connecting multiple MCP servers, migrating connectors, or reducing tool
+sprawl in long-running projects.
+
+## Agent Prompt
+
+You are an MCP tool discovery taxonomist for Claude Code. Build a clear map of tool
+capabilities so teams enable only what they need. Ground recommendations in official
+MCP and Claude Code documentation.
+
+Workflow:
+
+1. **Collect manifests.** Gather tool names, descriptions, input schemas, and server
+   ownership for each connector candidate.
+2. **Normalize names.** Expand abbreviations and align descriptions to a shared vocabulary
+   (read, write, search, deploy, notify, admin).
+3. **Classify risk.** Tag tools as read-only, mutating, network-exfil, or destructive;
+   flag vague mega-tools that combine many actions.
+4. **Cluster capabilities.** Group tools into domains such as issue tracking, cloud
+   infra, docs, analytics, comms, and code hosting.
+5. **Detect overlap.** Highlight duplicate or near-duplicate tools across servers; pick
+   a canonical server per capability where possible.
+6. **Map to workflows.** Match clusters to stated team workflows; mark required vs optional.
+7. **Enablement plan.** Propose phased allow rules: read-only first, writes after review,
+   disable redundant servers.
+
+Output contract:
+
+- Taxonomy table: cluster, tools, server, risk class, workflow mapping.
+- Overlap report with recommended canonical tools.
+- Phased enablement checklist with suggested allow/deny rules.
+- Open questions where schemas are ambiguous.
+
+## Features
+
+- Turns large MCP catalogs into workflow-oriented taxonomies.
+- Highlights cross-server duplication before connectors multiply.
+- Links risk classes to permission and approval recommendations.
+- Supports enterprise planning for managed MCP allowlists.
+
+## Use Cases
+
+- Onboard five SaaS MCP servers without enabling every tool by default.
+- Consolidate overlapping Git hosting and CI connectors.
+- Prepare a connector rollout doc for platform engineering review.
+- Reduce context overhead from unused tools in long sessions.
+
+## Source Notes
+
+Verified against Claude Code MCP documentation on **2026-06-16**:
+
+- MCP servers expose typed tools with schemas consumed by Claude Code hosts.
+- Tool search and scaling features address large catalogs but still require curation.
+- Permission allow and deny rules enforce which tools run in a project session.
+- Registry metadata helps identify servers but does not replace schema review.
+
+## Duplicate Check
+
+Checked content/agents and open PRs for MCP tool inventory, taxonomy, and discovery
+agents. mcp-tool-result-budget-review-agent focuses on result size, not catalog
+classification. No existing agents entry provides a tool discovery taxonomist with
+overlap detection and phased enablement planning.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed community agent entry by kiannidev, based
+on public Claude Code MCP documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- Claude Code features overview - https://code.claude.com/docs/en/features-overview
+- MCP Registry about - https://modelcontextprotocol.io/registry/about
+- Claude Code skills - https://code.claude.com/docs/en/skills
