@@ -3,24 +3,32 @@ title: Fix Claude Code Performance
 slug: fix-memory-leak-performance
 category: guides
 description: >-
-  Fix Claude Code memory leaks consuming 120GB RAM and performance issues.
-  Resolve crashes, session freezes, and slow performance with proven fix
-  methods.
-cardDescription: Fix Claude Code memory leaks consuming 120GB RAM and performance issues.
+  Fix Claude Code high CPU and memory usage, hangs, slow responses, and
+  auto-compact thrashing using /context, /compact, /clear, /doctor, and
+  documented context-management techniques.
+cardDescription: Fix Claude Code high CPU/memory, hangs, and context bloat with documented commands.
 seoTitle: Fix Claude Code Performance
 seoDescription: >-
-  Fix Claude Code memory leaks consuming 120GB RAM and performance issues.
-  Resolve crashes, session freezes, and slow performance with proven fix
-  methods.
+  Fix Claude Code high CPU and memory usage, hangs, slow responses, and
+  auto-compact thrashing using /context, /compact, /clear, /doctor, and
+  documented context-management techniques.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/troubleshooting"
+retrievalSources:
+  - "https://code.claude.com/docs/en/troubleshooting"
+  - "https://code.claude.com/docs/en/context-window"
+  - "https://code.claude.com/docs/en/costs"
 installable: false
 usageSnippet: >-
-  **Quick Fix:** Claude Code processes can consume 120GB RAM within 60 minutes.
-  Clear context with `/clear` every 40 messages. Configure memory limits to
-  4096MB. Monitor RAM usage actively. Keep CLAUDE.md files under 5KB for optimal
-  performance.
+  **Quick fix:** Run `/context` to see what is consuming the window, `/compact`
+  to summarize older history, `/clear` between unrelated tasks, and `/doctor`
+  (or `claude doctor` from your shell) for an automated health check.
+safetyNotes:
+  - "/heapdump writes a JavaScript heap snapshot (which can contain session content) to your Desktop or home directory; review the file before attaching it to a public issue."
+privacyNotes:
+  - "/usage cost figures and /context breakdowns are computed locally from this machine's session history and do not include usage from other devices or claude.ai."
 tags:
   - claude-code
   - performance
@@ -33,9 +41,9 @@ keywords:
   - memory leak fix
   - mcp performance
   - ai workflow performance
-readingTime: 4
-difficultyScore: 67
-hasTroubleshooting: false
+readingTime: 5
+difficultyScore: 55
+hasTroubleshooting: true
 hasPrerequisites: false
 hasBreakingChanges: false
 robotsIndex: true
@@ -44,102 +52,104 @@ robotsFollow: true
 
 ## TL;DR
 
-**Quick Fix:** Claude Code processes can consume 120GB RAM within 60 minutes. Clear context with `/clear` every 40 messages. Configure memory limits to 4096MB. Monitor RAM usage actively. Keep CLAUDE.md files under 5KB for optimal performance.
+When Claude Code feels slow, hangs, or consumes a lot of CPU or memory, the cause is almost always context size or a misbehaving customization, not a fixed "memory leak." The documented fixes are:
 
-> **Critical Performance Issue**
->
-> Claude Code experiences severe memory leaks causing system crashes. RAM usage grows from 300MB to 120GB within one hour. This affects macOS, Linux, and WSL2 environments. Immediate action prevents complete system failure.
+- Run `/context` to see what is filling the context window.
+- Run `/compact` to summarize older history, `/clear` to start fresh between tasks.
+- Restart Claude Code between major tasks, and add large build directories to `.gitignore`.
+- Use `claude --safe-mode` to test whether a plugin, MCP server, or hook is the source.
+- Run `/doctor` inside Claude Code, or `claude doctor` from your shell if it will not start.
 
-## Identifying the Problem
+## Overview
 
-Claude Code memory issues manifest through predictable patterns. Your system shows clear warning signs before critical failure. RAM consumption starts at 300MB during initialization. Memory usage doubles every 10 minutes of active coding. The process eventually consumes all available system memory. Your machine becomes unresponsive requiring forced restart.
+Claude Code is designed to work with most development environments but can consume significant resources when processing large codebases. Performance and stability issues group into a few documented categories: high CPU or memory usage, auto-compaction thrashing, hangs and freezes, and search problems. The single biggest lever for most of them is how much is loaded into the context window, because token cost and processing both scale with context size.
 
-Performance degradation follows three distinct phases. Initial phase shows minor lag in command responses. Intermediate phase brings noticeable delays exceeding 5 seconds. Critical phase freezes all Claude operations completely. Each phase requires different intervention strategies.
+This guide covers the supported commands and steps from Claude Code's own troubleshooting, cost, and context-window documentation. It avoids unverifiable claims about exact RAM figures or "memory limit" settings, because Claude Code does not document a user-facing memory cap; instead it gives you tools to measure usage (`/context`, `/usage`, `/heapdump`) and to reduce it.
 
-<!-- Section type: accordion -->
+## Diagnose first
 
-## Step-by-Step Solutions
-
-1. **Stop All Claude Processes**
-
-2. **Configure Memory Limits**
-
-3. **Restart Claude With Limits**
-
-4. **Monitor Resource Usage**
-
-## Context Window Optimization
-
-Claude 4 provides a massive 1 million token context. This equals 750,000 words or 75,000 lines of code. Strategic management prevents performance degradation significantly. Poor context usage causes 60% of performance issues. Optimized workflows achieve 80% token reduction consistently.
-
-<!-- Section type: tabs -->
-
-## Performance Configuration
-
-```json
-
-```
-
-Configuration changes require Claude restart for activation. Adjust values based on your hardware capabilities. Monitor impact using built-in diagnostic tools. These settings prevent 85% of performance issues. Regular tuning maintains optimal operation continuously.
-
-## Hardware Requirements
-
-Optimal Claude Code performance demands specific hardware minimums. Systems need 16GB RAM for basic operations. Large projects require 32GB for smooth performance. Modern multi-core processors handle operations efficiently. SSD storage improves file operation speed significantly.
-
-<!-- Section type: feature_grid -->
-
-## Advanced Troubleshooting
-
-Complex issues require systematic diagnostic approaches. Performance problems often combine multiple root causes. Advanced techniques identify hidden bottlenecks effectively. Proper diagnosis reduces resolution time by 70%. These methods work across all platforms consistently.
-
-<!-- Section type: accordion -->
-
-## Common Root Causes
-
-<!-- Section type: feature_grid -->
-
-## Prevention Strategies
-
-> **Prevent Future Occurrences**
->
-> **Proactive Context Management:** Run /compact every 40 messages systematically - Reduces memory usage by 60%
->
-> **Session Hygiene:** Clear context between unrelated tasks immediately - Prevents 70% of overflow issues
->
-> **Resource Monitoring:** Track RAM usage with htop continuously - Early detection prevents system crashes
-
-## Alternative Solutions
-
-<!-- Section type: accordion -->
-
-## Prevention Best Practices
-
-Successful Claude Code usage requires systematic approaches. Implement daily maintenance routines preventing degradation. Monitor resource consumption throughout development sessions. Create project-specific optimization strategies proactively. These practices maintain 2-10x productivity gains.
-
-Session management follows lifecycle patterns. Start with minimal essential context loading. Add specific files only when needed. Compact context before reaching 80% capacity. Save summaries before clearing for continuity.
-
-## Monitoring Tools
-
-Real-time monitoring prevents catastrophic failures effectively. Claude-Code-Usage-Monitor tracks token consumption continuously. OpenTelemetry integration provides enterprise-grade observability. Custom scripts automate memory limit enforcement. These tools reduce incidents by 85%.
+Before changing anything, find out where the resources are going.
 
 ```bash
+# Inside an interactive Claude Code session:
 
+/context     # Live breakdown of the context window by category, with suggestions
+/usage       # Token usage for the current session (press d/w for 24h vs 7d)
+/memory      # Which CLAUDE.md and auto-memory files loaded at startup
+/mcp         # Configured MCP servers; disable ones you are not using
+/doctor      # Automated check of install, settings, MCP servers, and context
+
+# From your shell (use this if `claude` will not start at all):
+claude doctor
+claude --version    # Confirm which build you are on before reporting an issue
 ```
 
-## Frequently Asked Questions
+`/context` is the most useful starting point: it shows the live breakdown by category (system prompt, CLAUDE.md, MCP tools, files read, conversation history) so you can see what to trim. If `claude` will not launch, run `claude doctor` from the shell instead of `/doctor`.
 
-## Related Issues and Solutions
+## Symptom to fix reference
 
-<!-- Section type: related_content -->
+| Symptom | What to do |
+| :--- | :--- |
+| High CPU or memory usage | `/compact` regularly; restart between major tasks; add large build dirs to `.gitignore`; try `claude --safe-mode` |
+| Memory stays high after the above | Run `/heapdump` to write a heap snapshot and memory breakdown to `~/Desktop`, then attach both files when reporting on GitHub |
+| `Autocompact is thrashing...` error | Read oversized files in smaller chunks; `/compact keep only the plan and the diff`; move big reads to a subagent; `/clear` if history is no longer needed |
+| Command hangs or freezes | Press Ctrl+C to cancel; if still stuck, close the terminal and reopen, then `claude --resume` |
+| Slow responses / large token use | Use `/context` to find the bloat; `/clear` between tasks; switch to Sonnet with `/model`; lower thinking effort with `/effort` |
+| Settings/hooks/MCP misbehaving and slowing things | `claude --safe-mode` disables all customizations; if usage drops, find the culprit per Debug your configuration |
+| Garbled text in an editor's integrated terminal | Run `/terminal-setup` to turn off GPU acceleration |
+| Search not finding files | Install your platform's `ripgrep`, then set `USE_BUILTIN_RIPGREP=0` |
+
+## High CPU or memory usage
+
+Work through these documented steps in order:
+
+1. Use `/compact` regularly to reduce context size.
+2. Close and restart Claude Code between major tasks.
+3. Add large build directories to your `.gitignore` file so they are not scanned.
+4. Restart with `claude --safe-mode` to check whether a plugin, MCP server, or hook is the source. Safe mode disables all customizations for the session; if usage drops, the cause is one of your customizations.
+
+If memory usage stays high after these steps, run `/heapdump`. It writes a JavaScript heap snapshot and a memory breakdown to `~/Desktop` (or your home directory on Linux without a Desktop folder). The breakdown shows resident set size, JS heap, array buffers, and unaccounted native memory, which tells you whether growth is in JavaScript objects or native code. You can open the `.heapsnapshot` file in Chrome DevTools under Memory then Load to inspect retainers, and attach both files when reporting a memory issue on GitHub.
+
+## Auto-compaction thrashing
+
+Claude Code compacts automatically as you approach the context limit, so a full window does not end your session. If you instead see `Autocompact is thrashing: the context refilled to the limit...`, compaction succeeded but a file or tool output immediately refilled the window several times in a row, so Claude Code stops retrying to avoid wasting API calls on a loop. To recover:
+
+1. Ask Claude to read the oversized file in smaller chunks (a line range or a single function) instead of the whole file.
+2. Run `/compact` with a focus that drops the large output, for example `/compact keep only the plan and the diff`.
+3. Move the large-file work to a subagent so it runs in a separate context window.
+4. Run `/clear` if the earlier conversation is no longer needed.
+
+## Hangs and freezes
+
+If Claude Code seems unresponsive, press Ctrl+C to attempt to cancel the current operation. If it stays unresponsive, close the terminal and restart. Restarting does not lose your conversation: run `claude --resume` in the same directory to pick the session back up.
+
+## Keep the context window small
+
+Token costs and processing both scale with context size, so the most effective long-term fix is keeping context lean. Documented strategies:
+
+- **Clear between tasks.** Use `/clear` to start fresh when switching to unrelated work; stale context wastes tokens on every subsequent message. Use `/rename` before clearing so you can find the session later, then `/resume` to return to it.
+- **Compact with focus.** `/compact Focus on code samples and API usage` tells Claude what to preserve during summarization. You can also add compact instructions to your CLAUDE.md.
+- **Trim CLAUDE.md.** It loads at session start and stays in context even for unrelated work. Aim to keep it under about 200 lines and move specialized, on-demand instructions into skills, which load only when invoked.
+- **Reduce MCP overhead.** MCP tool definitions are deferred by default, but you can run `/mcp` to disable servers you are not using. Prefer CLI tools like `gh`, `aws`, and `gcloud` when available, since they add no per-tool listing to context.
+- **Choose the right model.** Sonnet handles most coding tasks and costs less than Opus; use `/model` to switch mid-session. Lower thinking effort with `/effort` (or in `/model`) for simpler tasks.
+- **Delegate verbose operations.** Send research, test runs, and log processing to subagents so the bulky output stays in their context window and only a summary returns.
+- **Offload to hooks and skills.** A hook can grep a 10,000-line log for `ERROR` and return only matching lines; a skill can supply architecture context so Claude does not have to read many files to orient itself.
+
+If you genuinely need a larger window rather than a smaller conversation, the documentation notes that certain newer models support a 1 million token context window; see Extended context for availability and how to select a `[1m]` model variant. Compaction works the same way at the larger limit.
+
+## Search and terminal problems
+
+Two stability issues are commonly mistaken for performance bugs:
+
+- **Search missing files.** If the Search tool, `@file` mentions, custom agents, or custom skills are not finding files, the bundled `ripgrep` may not run on your system. Install your platform's `ripgrep` package (for example `brew install ripgrep`), then set `USE_BUILTIN_RIPGREP=0` in your environment. On WSL, cross-filesystem reads can also return fewer matches; use more specific searches or move the project to the Linux filesystem.
+- **Garbled or corrupted text** in the VS Code, Cursor, or Devin Desktop integrated terminal usually means the terminal's GPU renderer is the cause. Run `/terminal-setup` to turn off GPU acceleration, then reload the window.
+
+## Get more help
+
+Run `/doctor` for a one-pass check of installation health, settings validity, MCP configuration, and context usage. Use `/feedback` to report problems to Anthropic, and check the Claude Code GitHub repository for known issues. Claude Code updates regularly and behavior can change, so run `claude --version` before filing a report.
 
 ---
 
-> **Issue Resolved?**
+> **Still stuck?**
 >
-> **Problem solved?** Great! Implement daily /compact routines to prevent recurrence.
->
-> **Still having issues?** Join our [community](/community) for additional support or check Anthropic's status page.
->
-> **Found a new solution?** Share it with the community to help others facing the same issue.
-
-_Last updated: September 2025 | Solutions verified against Claude 4 documentation | Found this helpful? Bookmark for future reference and explore more [troubleshooting guides](/guides/troubleshooting)._
+> If `/safe-mode` shows the slowdown comes from a customization, work through Debug your configuration to isolate the plugin, MCP server, or hook. For a deep memory investigation, attach your `/heapdump` output to a GitHub issue.
