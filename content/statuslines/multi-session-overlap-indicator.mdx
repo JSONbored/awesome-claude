@@ -2,7 +2,7 @@
 title: Multi Session Overlap Indicator - Statuslines
 slug: multi-session-overlap-indicator
 category: statuslines
-description: "A Claude Code statusline command (bash) that detects concurrent Claude Code sessions. Each refresh it reads the statusline JSON from stdin with jq, writes a timestamp and workspace path to a per-session file under ~/.claude-code-sessions, prunes files older than 10 minutes, counts active session files, and flags a workspace collision when more than one active session shares the current directory. Output is color-coded (green solo, yellow 2-3, red 4+) with dot indicators and an optional collision warning."
+description: "A Claude Code statusline command (bash) that detects concurrent Claude Code sessions."
 cardDescription: "Bash statusline that counts active Claude Code sessions from stdin JSON and warns when two share the same workspace directory."
 seoTitle: "Concurrent Claude Code Session Counter Statusline (Bash)"
 seoDescription: "Claude Code statusline that tracks concurrent sessions via timestamped files, prunes stale ones, and flags same-directory collisions."
