@@ -1,186 +1,175 @@
 ---
-title: Claude AI Healthcare HIPAA-Compliant Documentation Guide 2025
+title: Using Claude Code Responsibly in HIPAA-Regulated Healthcare
 slug: healthcare-hipaa-guide
 category: guides
 description: >-
-  Deploy HIPAA-compliant Claude AI for 10-35x faster healthcare documentation.
-  Enterprise configuration guide with approved providers and compliance
-  requirements.
-cardDescription: Deploy HIPAA-compliant Claude AI for 10-35x faster healthcare documentation.
-seoTitle: Claude AI Healthcare HIPAA-Compliant Documentation Guide 2025
+  How to think about Claude and Claude Code in HIPAA-regulated healthcare
+  settings: HIPAA safeguard areas, Claude's data-handling and Zero Data
+  Retention options, and where compliance responsibility sits. Not legal advice.
+cardDescription: Responsible use of Claude Code in HIPAA-regulated healthcare, grounded in Claude data docs and HHS.
+seoTitle: Claude Code in HIPAA Healthcare — Responsible Use Guide
 seoDescription: >-
-  Deploy HIPAA-compliant Claude AI for 10-35x faster healthcare documentation.
-  Enterprise configuration guide with approved providers and compliance
-  requirements.
+  A grounded guide to using Claude and Claude Code in HIPAA-regulated
+  environments: safeguard mapping, data retention and ZDR, and customer
+  responsibilities. Educational, not legal advice.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+lastUpdated: "2026-06-16"
 installable: false
+documentationUrl: "https://code.claude.com/docs/en/data-usage"
+retrievalSources:
+  - "https://code.claude.com/docs/en/data-usage"
+  - "https://code.claude.com/docs/en/zero-data-retention"
+  - "https://www.hhs.gov/hipaa/for-professionals/index.html"
+  - "https://www.hhs.gov/hipaa/for-professionals/privacy/laws-regulations/index.html"
+  - "https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/index.html"
 usageSnippet: >-
-  Claude AI transforms healthcare documentation through HIPAA-compliant
-  automation achieving 10-35x faster task completion. Healthcare organizations
-  report 60-70% documentation time reduction and 450-790% ROI within 18 months.
-  Implementation requires enterprise API agreements, zero data retention
-  configurations, or deployment through certified platforms. This comprehensive
-  guide covers compliance requirements, integration methods, and proven
-  implementation strategies for healthcare organizations.
+  HIPAA does not "certify" software. Protected health information (PHI) can only
+  be handled by a tool when there is a Business Associate Agreement in place and
+  the configuration meets the Privacy and Security Rules. This guide maps HIPAA
+  safeguard areas to how a Claude Code workflow can be configured responsibly —
+  including data retention controls and Zero Data Retention — and where the
+  compliance burden stays with the customer. It is educational, not legal advice.
 tags:
   - healthcare
   - enterprise
   - compliance
-  - documentation
   - hipaa
+  - privacy
 keywords:
-  - claude healthcare
-  - hipaa ai workflows
-  - healthcare automation
-  - compliant claude usage
-readingTime: 5
-difficultyScore: 73
+  - claude healthcare hipaa
+  - claude code data retention
+  - zero data retention healthcare
+  - phi ai workflows
+  - hipaa business associate agreement
+readingTime: 7
+difficultyScore: 70
 hasTroubleshooting: false
-hasPrerequisites: false
+hasPrerequisites: true
 hasBreakingChanges: false
+prerequisites:
+  - A clear understanding of whether your organization is a HIPAA covered entity or business associate
+  - Sign-off from your privacy/security/compliance function before any PHI is involved
+  - An appropriate Anthropic commercial agreement (and a BAA) before PHI is processed
 robotsIndex: true
 robotsFollow: true
+safetyNotes:
+  - >-
+    Educational guidance only — not legal advice and not a compliance
+    attestation. HIPAA does not certify software, and Anthropic does not describe
+    Claude or Claude Code as "HIPAA certified."
+  - >-
+    Do not place protected health information (PHI) into any AI tool until your
+    compliance function confirms an appropriate agreement (including a Business
+    Associate Agreement) and a reviewed configuration are in place.
+privacyNotes:
+  - >-
+    This guide concerns sensitive regulated data. Never paste real PHI into a
+    workflow that has not been reviewed and approved by your privacy/security
+    team.
+  - >-
+    By default, commercial Claude Code data has a 30-day retention period, and
+    Claude Code stores session transcripts locally in plaintext under
+    ~/.claude/projects/ for 30 days (tunable via cleanupPeriodDays).
+  - >-
+    Zero Data Retention is available only to qualified Claude for Enterprise
+    accounts and must be enabled by Anthropic; it does not cover third-party
+    integrations or MCP servers.
 ---
 
 ## TL;DR
 
-Claude AI transforms healthcare documentation through HIPAA-compliant automation achieving 10-35x faster task completion. Healthcare organizations report 60-70% documentation time reduction and 450-790% ROI within 18 months. Implementation requires enterprise API agreements, zero data retention configurations, or deployment through certified platforms. This comprehensive guide covers compliance requirements, integration methods, and proven implementation strategies for healthcare organizations.
+HIPAA does not "certify" AI tools, and this guide makes no claim that Claude or Claude Code is "HIPAA compliant" or "HIPAA certified" on its own. Compliance is a property of *how a covered entity or business associate configures and operates* a tool, backed by the right contracts.
 
-**Key Points:**
+This guide maps the HIPAA safeguard areas to what a responsible Claude Code workflow looks like, explains Claude's documented data-handling and Zero Data Retention (ZDR) options, and is explicit about where the responsibility stays with you.
 
-- 10-35x faster documentation with 60-70% time reduction
-- 450-790% ROI within 18 months of deployment
-- HIPAA compliance requires enterprise API or certified platforms
-- Zero data retention agreements mandatory for PHI processing
+**Key points:**
 
-> **Critical HIPAA Compliance Notice**
+- HIPAA certifies no software. Don't trust any tool that claims otherwise.
+- Processing PHI requires the appropriate commercial agreement and a Business Associate Agreement (BAA); arrange this through your Anthropic account team before any PHI is involved.
+- By default, Anthropic does not train models on commercial (Team, Enterprise, API) Claude Code prompts or code. Commercial data has a 30-day retention period.
+- Zero Data Retention is available to *qualified* Claude for Enterprise accounts and must be enabled by Anthropic — it is not in the standard Enterprise plan and cannot be self-enabled.
+- Claude Code stores session transcripts locally in plaintext (`~/.claude/projects/`) for 30 days by default — that local copy is part of your safeguard surface.
+
+> **Not legal advice**
 >
-> **Standard Claude products are NOT HIPAA compliant.** Claude.ai Free, Pro, Max, and Claude for Work cannot process PHI legally. Healthcare organizations must use enterprise API services with Business Associate Agreements or deploy through certified platforms like Hathr.AI, Keragon, or BastionGPT.
+> This is an educational engineering guide, not legal, compliance, or regulatory advice. It does not establish a HIPAA-compliant deployment and is not a substitute for your own counsel, privacy officer, and security review. Confirm every contractual and technical control with your own organization and with Anthropic before processing protected health information.
 
-## Business Case and ROI
+## What HIPAA Actually Requires
 
-Claude AI delivers transformative value for healthcare organizations facing documentation burdens. Physicians spend 16 hours weekly on documentation tasks. Administrative staff dedicate 40% of time to paperwork. These inefficiencies cost healthcare systems $200-360 billion annually. Organizations implementing Claude report 10-35x faster task completion rates. Documentation time reduces by 60-70% across departments. ROI ranges from 450% to 790% within 18 months.
+The U.S. Department of Health and Human Services (HHS) enforces HIPAA through several rules. The two most relevant when introducing a new tool are:
 
-**Note:** The original guide contains a `<MetricsDisplay>` component which is not in the standard component mapping. This has been converted to a feature_grid for compatibility.
+- **The Privacy Rule** — governs the use and disclosure of *protected health information (PHI)*, applies the *minimum necessary* standard, and defines permitted uses (treatment, payment, healthcare operations, and specific national-priority purposes). See the [HHS Privacy Rule summary](https://www.hhs.gov/hipaa/for-professionals/privacy/laws-regulations/index.html).
+- **The Security Rule** — applies to *electronic* PHI (e-PHI) and requires covered entities and business associates to ensure the confidentiality, integrity, and availability of all e-PHI, protect against reasonably anticipated threats, and conduct a risk analysis. See the [HHS Security Rule summary](https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/index.html).
 
-<!-- Section type: feature_grid -->
+Two roles matter:
 
-**Note:** The original guide contains a `<UnifiedContentBlock variant="case-study">` component which is not in the standard component mapping. This has been converted to a callout for compatibility.
+- A **covered entity** is a health plan, healthcare clearinghouse, or healthcare provider that transmits health information electronically.
+- A **business associate** is a person or organization that performs functions involving PHI on behalf of a covered entity. A software/AI vendor that handles PHI on your behalf is acting as a business associate, which is why a **Business Associate Agreement (BAA)** is required before any PHI flows to it.
 
-> **HealthEdge Case Study**
->
-> **Company:** HealthEdge (Healthcare Technology)
->
-> **Challenge:** Manual documentation processes consuming 40% of development time
->
-> **Solution:** Deployed Claude Enterprise across 5 development teams with 53 contributors
->
-> **Results:**
->
-> - 680+ hours saved in 21 days
-> - $48,000 direct value identified within hours
-> - Product requirements reduced from 1 week to 1 hour (98% reduction)
-> - Database complexity reduced by 90% while maintaining functionality
->
-> **Testimonial:** "Claude transformed our documentation workflow completely. What took weeks now takes hours." - Development Team Lead, HealthEdge Engineering
+The Security Rule organizes its requirements into three safeguard categories: **administrative**, **physical**, and **technical**. The table below uses those categories as the frame for evaluating a Claude Code workflow.
 
-<!-- Section type: expert_quote -->
+## HIPAA Safeguard Mapping for a Claude Code Workflow
 
-## Key Features and Capabilities
+This table is a planning aid, not an attestation. "How Claude Code can support it" describes documented product behavior and configuration; the right-hand column is where *you* remain accountable.
 
-<!-- Section type: feature_grid -->
+| HIPAA safeguard area | What HIPAA broadly requires | How a Claude Code workflow can support it | Customer responsibility |
+| --- | --- | --- | --- |
+| **Authorization to handle PHI (Privacy Rule + business-associate status)** | A BAA must be in place before a vendor handles PHI; uses limited to permitted purposes | Arrange the appropriate commercial agreement and BAA through your Anthropic account team before processing PHI | Sign the BAA; scope permitted uses; do not route PHI through any tool lacking one |
+| **Administrative — risk analysis & policies** | Conduct a risk analysis; adopt policies and workforce training | Document where prompts, outputs, and local transcripts live so they can enter your risk analysis | Perform and maintain the risk analysis; train staff on what may/may not be pasted into Claude Code |
+| **Administrative — data training & secondary use** | Limit secondary use of PHI | For commercial plans (Team, Enterprise, API), Anthropic does not train generative models on Claude Code code/prompts unless you opt in (e.g., the Development Partner Program) | Do not opt into data-sharing programs for PHI workloads; verify plan tier |
+| **Technical — transmission security (encryption in transit)** | Protect e-PHI in transit | Claude Code sends prompts and outputs over the network encrypted in transit via TLS 1.2+ | Maintain endpoint/network security; use approved VPN/proxy configurations |
+| **Technical — encryption at rest** | Protect stored e-PHI | Anthropic API uses infrastructure-level AES-256 disk encryption; Bedrock/Vertex/Foundry use their platform's encryption (CMEK/KMS options on cloud providers) | Choose a deployment path; configure customer-managed keys if your policy requires them |
+| **Technical — retention / data minimization** | Retain only as needed; minimize exposure | Commercial Claude Code data has a 30-day retention period by default; Zero Data Retention is available to qualified Claude for Enterprise accounts (no server-side persistence of prompts/responses) | Decide whether ZDR is required; request and confirm it; understand ZDR's documented exclusions |
+| **Technical — access control & audit** | Unique user IDs, access controls, audit logs | Claude for Enterprise (incl. ZDR-eligible orgs) offers per-user cost controls, an analytics dashboard, server-managed settings, and audit logs | Configure SSO/access, least privilege, and log review per your policy |
+| **Physical / local endpoint controls** | Protect devices and media holding e-PHI | Claude Code stores session transcripts locally in plaintext under `~/.claude/projects/` for 30 days by default (tunable via `cleanupPeriodDays`) | Encrypt disks; control device access; manage/clear local transcripts as part of media controls |
+| **Telemetry / outbound traffic minimization** | Limit unnecessary disclosure | Telemetry excludes code/file paths and can be disabled (`DISABLE_TELEMETRY`); error reporting (`DISABLE_ERROR_REPORTING`) and `/feedback` (`DISABLE_FEEDBACK_COMMAND`) can be disabled; set `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` to opt out of non-essential traffic at once | Decide and enforce these settings via `settings.json`; document the configuration |
 
-## Implementation Requirements
+## Data Handling and Zero Data Retention
 
-### HIPAA Compliance Prerequisites
+Claude Code's documented data behavior is the foundation for any HIPAA conversation. Sources: [Claude Code data usage](https://code.claude.com/docs/en/data-usage) and [Zero Data Retention](https://code.claude.com/docs/en/zero-data-retention).
 
-Healthcare organizations must establish enterprise agreements before processing PHI. Standard Claude products explicitly prohibit healthcare data processing. Enterprise API access requires case-by-case approval from Anthropic. Zero data retention agreements eliminate storage of prompts and responses. Business Associate Agreements take 24-72 hours for approval. Files uploaded via Files API remain excluded from retention protection.
+**Training.** For commercial users (Team and Enterprise plans, API, third-party platforms, Claude Gov), Anthropic does not train generative models using code or prompts sent to Claude Code under commercial terms — unless the customer explicitly opts in (for example, via the Development Partner Program). Consumer plans (Free, Pro, Max) follow different, opt-in-driven rules and are not the right path for PHI.
 
-**Note:** The original guide contains a `<UnifiedContentBox contentType="infobox">` component which is not in the standard component mapping. This has been converted to a callout for compatibility.
+**Retention defaults.** Commercial users have a 30-day retention period by default. Separately, Claude Code clients store session transcripts *locally* in plaintext under `~/.claude/projects/` for 30 days to support session resumption; adjust this with `cleanupPeriodDays`. Treat that local cache as part of your safeguard surface.
 
-> **Compliance Pathways**
->
-> Three approved methods for HIPAA-compliant deployment:
->
-> - Direct BAA with Anthropic for enterprise API (limited features)
-> - Cloud provider deployment via AWS Bedrock or Google Vertex AI
-> - Certified healthcare platforms: Hathr.AI, Keragon, BastionGPT
+**Zero Data Retention (ZDR).** When ZDR is enabled, prompts and model responses generated during Claude Code sessions are processed in real time and not stored by Anthropic after the response is returned, except where needed to comply with law or address misuse. Important constraints from the docs:
 
-### Security Architecture Requirements
+- ZDR is available only to *qualified* accounts on Claude for Enterprise. It is **not** included in the standard Enterprise plan and **cannot** be self-enabled from admin settings — your Anthropic account team enables it per organization after confirming eligibility.
+- ZDR is enabled per organization and does not automatically extend to newly created organizations under the same account.
+- ZDR covers model inference on Claude for Enterprise. It does **not** cover chat on claude.ai, Cowork, third-party integrations/MCP servers, or administrative data (e.g., account emails, seat assignments).
+- Some features are disabled under ZDR because they require storing prompts/completions: Claude Code on the Web, Desktop cloud sessions, and `/feedback`.
+- Even with ZDR, Anthropic may retain data where required by law or for Usage Policy violations (up to 2 years if a session is flagged).
+- ZDR on Claude for Enterprise applies to Anthropic's direct platform. For Bedrock, Vertex AI, or Foundry deployments, the relevant data-retention policies are those of the cloud provider.
 
-Data protection requires AES-256 encryption for all stored information. Network communications must use TLS 1.2 or 1.3 protocols. Audit logging systems maintain records for 6 years minimum. Role-based access controls enforce multi-factor authentication across systems. Zero Trust Architecture treats all requests as untrusted initially. Session management employs short-lived tokens with automatic expiry mechanisms.
+**Third-party integrations matter.** ZDR does not cover data processed by third-party tools or MCP servers. If a Claude Code workflow pipes PHI into an external integration, that integration needs its own review and, where applicable, its own BAA.
 
-<!-- Section type: code_group -->
+## A Responsible Rollout Sequence
 
-## Step-by-Step Implementation
+1. **Decide whether PHI is even involved.** The lowest-risk path is to keep PHI out of the workflow entirely (e.g., de-identified data, synthetic fixtures, or non-PHI engineering tasks). Many useful Claude Code workflows in a healthcare org never touch PHI.
+2. **Engage compliance first.** Bring your privacy officer / security team in before any pilot. They own the risk analysis and the determination of acceptable use.
+3. **Get the contracts right.** If PHI will be processed, work with your Anthropic account team on the appropriate commercial agreement and a BAA. Do not process PHI before these are in place.
+4. **Choose the deployment and retention posture.** Decide between Anthropic's direct platform (with ZDR if eligible) and a cloud provider (Bedrock/Vertex/Foundry) governed by that provider's controls. Request ZDR if your policy requires no server-side persistence.
+5. **Harden the client and endpoint.** Configure `settings.json` to disable telemetry, error reporting, and `/feedback` as your policy requires; manage the local transcript cache (`cleanupPeriodDays`); enforce disk encryption and device controls.
+6. **Configure governance.** Use Claude for Enterprise access controls, audit logs, server-managed settings, and analytics for oversight.
+7. **Document everything.** Record the configuration, the contracts, and the data flows so they map cleanly onto your HIPAA risk analysis.
 
-1. **Phase 1: Assessment and Planning**
+## What This Guide Deliberately Does Not Claim
 
-2. **Phase 2: Compliance Preparation**
+- It does not claim Claude or Claude Code is "HIPAA certified" — HIPAA certifies no software.
+- It does not provide ROI figures, adoption statistics, or vendor benchmarks. None are sourced here, so none are asserted.
+- It does not endorse or evaluate any specific third-party "HIPAA platform." Evaluate any such vendor independently, including its own BAA and data handling.
+- It is not a substitute for your own legal and compliance review.
 
-3. **Phase 3: Technical Infrastructure**
+## Sources
 
-4. **Phase 4: Pilot Program**
+- Claude Code — Data usage: https://code.claude.com/docs/en/data-usage
+- Claude Code — Zero Data Retention: https://code.claude.com/docs/en/zero-data-retention
+- HHS — HIPAA for Professionals: https://www.hhs.gov/hipaa/for-professionals/index.html
+- HHS — Privacy Rule: https://www.hhs.gov/hipaa/for-professionals/privacy/laws-regulations/index.html
+- HHS — Security Rule: https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/index.html
 
-5. **Phase 5: Training and Change Management**
-
-6. **Phase 6: Enterprise Rollout**
-
-## Integration Options
-
-### EHR System Integration
-
-Epic integration leverages Epic on FHIR API supporting 184 billion transactions. OAuth 2.0 authentication enables proper token management between systems. DAX Copilot provides ambient AI directly within Epic's interface. Implementation typically requires 2-8 weeks for API connections. Organizations report immediate note turnaround with proper configuration. Success depends on FHIR resource mapping between proprietary formats.
-
-<!-- Section type: comparison_table -->
-
-### Healthcare Platform Options
-
-Hathr.AI provides AWS GovCloud FedRAMP High infrastructure immediately. The platform serves Department of Health & Human Services currently. BAA signing completes within 24 hours of request. Keragon enables no-code integration with 300+ healthcare tools. BastionGPT offers multi-model capabilities with global compliance certifications. Each platform includes pre-built healthcare-specific workflows and templates.
-
-## Success Metrics
-
-**Note:** The original guide contains a `<MetricsDisplay>` component which is not in the standard component mapping. This has been converted to a feature_grid for compatibility.
-
-<!-- Section type: feature_grid -->
-
-## Common Challenges and Solutions
-
-<!-- Section type: accordion -->
-
-## Industry-Specific Considerations
-
-> **Tailoring for Your Healthcare Setting**
->
-> **Academic Medical Centers:** Focus on research data protection and resident training integration. Prioritize IRB compliance alongside HIPAA.
->
-> **Community Hospitals:** Emphasize cost-effectiveness and rapid deployment. Start with high-volume documentation areas.
->
-> **Specialty Practices:** Target specialty-specific workflows like radiology reporting. Customize for unique documentation needs.
-
-## Tool Comparison
-
-<!-- Section type: comparison_table -->
-
-## Frequently Asked Questions
-
-## Quick Reference
-
-**Note:** The original guide contains a `<UnifiedContentBlock variant="quick-reference">` component which is not in the standard component mapping. This has been converted to a feature_grid for compatibility.
-
-<!-- Section type: feature_grid -->
-
-> **Ready to Transform Healthcare Documentation?**
->
-> **Start Your HIPAA-Compliant Implementation**
->
-> 1. **Assess:** Review our compliance checklist for readiness
-> 2. **Connect:** Schedule consultation with certified platform partners
-> 3. **Pilot:** Launch 21-day pilot with measurable objectives
-> 4. **Scale:** Deploy organization-wide within 90 days
-
-<!-- Section type: related_content -->
-
-_Last updated: September 2025_
+_This guide is educational and not legal advice. Last reviewed: June 2026._
+</content>
+</invoke>
