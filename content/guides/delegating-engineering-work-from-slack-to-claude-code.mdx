@@ -132,6 +132,26 @@ blockers.
 | Tests to run | Defines done criteria |
 | Reviewer | Names merge approval owner |
 
+## Inviting Claude and Delegating in Slack
+
+Claude is not added to channels automatically. Invite it, then `@Claude` a bounded request in a channel or thread (Claude Code in Slack does not work in DMs):
+
+```text
+/invite @Claude
+@Claude investigate the timeout in the checkout service and open a PR with a fix
+```
+
+When Claude detects coding intent it creates a Claude Code session on the web, posts progress updates to the thread, and finishes by @mentioning you with a summary plus **View Session** and **Create PR** buttons. If it picks the wrong repository, use **Change Repo**; in Code + Chat mode you can use **Retry as Code** when a message is routed to Chat by mistake.
+
+## Routing Mode: Code Only vs. Code + Chat
+
+The **Routing Mode** setting (in the Claude App Home) controls how @mentions are handled:
+
+| Routing Mode | Behavior | Best for |
+| --- | --- | --- |
+| Code only | Routes all @mentions to Claude Code sessions | Teams using @Claude in Slack exclusively for development |
+| Code + Chat | Routes intelligently between Claude Code (coding) and Claude Chat (writing, analysis, general questions); supports "Retry as Code" | Teams who want a single @Claude entry point for all work |
+
 ## Troubleshooting
 
 ### Claude worked on the wrong repository
