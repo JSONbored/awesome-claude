@@ -4,8 +4,8 @@ slug: audio-transcription-summarization
 category: skills
 description: "Transcribe audio files (MP3, WAV, M4A, etc.) using OpenAI Whisper AI and ffmpeg to produce structured, timestamped transcripts with automatic summarization and action item extraction. Supports multilingual transcription, speaker diarization, and meeting minutes generation."
 cardDescription: "Transcribe audio files (MP3, WAV, M4A, etc.) using OpenAI Whisper AI and ffmpeg to produce structured, timestamped transcripts with autom..."
-seoTitle: Audio Transcription + Summarization Skill
-seoDescription: "Transcribe audio files (MP3, WAV, M4A, etc.) using OpenAI Whisper AI and ffmpeg to produce structured, timestamped transcripts with automatic summarization a..."
+seoTitle: "Transcribe Audio with Claude — Whisper Transcription Skill"
+seoDescription: "Yes, Claude can transcribe audio — pair it with OpenAI Whisper and ffmpeg to turn MP3/WAV/M4A files into timestamped transcripts, summaries, and action items."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-15"
@@ -41,22 +41,22 @@ prerequisites:
   - Sufficient disk space for model downloads (Whisper models range from 39MB small to 1.5GB large model)
   - Audio file access permissions - read access to input audio files and write access for transcription output files
   - "System resources: Minimum 4GB RAM for small model, 8GB+ recommended for medium/large models, GPU optional but recommended for faster processing"
+safetyNotes:
+  - "Installs and runs local executables: pip install openai-whisper (or whisper.cpp) plus ffmpeg, and downloads Whisper model files (39MB-1.5GB) on first use. Review the install and transcription commands and run them in a trusted environment."
+privacyNotes:
+  - "Audio files and the generated transcripts may contain personal or confidential speech. Transcription runs locally (no cloud upload) but transcripts, summaries, and downloaded models are written to local disk; control where these outputs are stored and shared."
 tags:
   - audio
   - transcription
   - whisper
   - ffmpeg
 keywords:
-  - and
-  - audio
-  - claude
-  - development
-  - ffmpeg
-  - skills
-  - summarization
-  - tools
-  - transcription
-  - whisper
+  - claude audio transcription
+  - transcribe audio with claude
+  - whisper transcription skill
+  - audio to text
+  - meeting transcription
+  - speaker diarization
 readingTime: 3
 packageVerified: true
 difficultyScore: 71
