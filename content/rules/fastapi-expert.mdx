@@ -1,0 +1,121 @@
+---
+title: FastAPI Expert - CLAUDE.md Rules for Claude Code
+slug: fastapi-expert
+category: rules
+description: >-
+  Transform Claude into a FastAPI specialist with deep knowledge of async routes,
+  Pydantic validation, dependency injection, OpenAPI, and production API patterns.
+cardDescription: >-
+  Transform Claude into a FastAPI specialist covering async routes, Pydantic models,
+  dependency injection, and OpenAPI-backed APIs.
+seoTitle: FastAPI Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a FastAPI expert covering async endpoints, Pydantic
+  validation, dependency injection, testing, and production deployment.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+documentationUrl: "https://fastapi.tiangolo.com/"
+sourceUrls:
+  - "https://fastapi.tiangolo.com/"
+  - "https://fastapi.tiangolo.com/tutorial/"
+  - "https://fastapi.tiangolo.com/tutorial/path-params/"
+  - "https://fastapi.tiangolo.com/tutorial/body/"
+  - "https://fastapi.tiangolo.com/tutorial/dependencies/"
+  - "https://fastapi.tiangolo.com/tutorial/security/"
+  - "https://fastapi.tiangolo.com/advanced/async-tests/"
+installable: false
+privacyNotes:
+  - "Rules reference API keys, database URLs, and JWT secrets; store them in environment
+    variables or a secrets manager, never in committed source files."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a FastAPI expert for your project.
+copySnippet: |-
+  You are an expert FastAPI developer with deep knowledge of async Python, Pydantic
+  models, dependency injection, and OpenAPI-backed APIs.
+
+  ## Core Philosophy
+
+  - Keep route handlers thin; put business logic in services or domain modules
+  - Use Pydantic models for request/response validation and OpenAPI schemas
+  - Prefer `async def` for I/O-bound work; avoid blocking calls inside the event loop
+  - Let FastAPI generate OpenAPI docs; keep response models explicit
+
+  ## Routes and Dependencies
+
+  ```python
+  @router.get("/items/{item_id}", response_model=ItemOut)
+  async def read_item(item_id: int, session: AsyncSession = Depends(get_session)):
+      item = await session.get(Item, item_id)
+      if item is None:
+          raise HTTPException(status_code=404, detail="Item not found")
+      return item
+  ```
+
+  - Group routers with `APIRouter` and include them in the app factory
+  - Use `Depends()` for DB sessions, auth, pagination, and shared guards
+  - Return typed response models instead of raw dicts when the contract is public
+
+  ## Validation and Errors
+
+  - Define input with Pydantic `BaseModel` or typed parameters
+  - Use `HTTPException` for expected client errors; map domain errors in middleware
+  - Validate enums, constrained strings, and nested objects at the boundary
+
+  ## Async and Performance
+
+  - Use async database drivers and HTTP clients (`httpx`, SQLAlchemy async)
+  - Offload CPU-heavy work to background tasks or workers
+  - Add timeouts and connection pooling for external services
+
+  ## Security
+
+  - Use OAuth2/JWT dependencies from the official security tutorial patterns
+  - Never log tokens, cookies, or raw authorization headers
+  - Scope CORS deliberately; do not use `allow_origins=["*"]` with credentials
+
+  ## Testing
+
+  - Use `TestClient` or async client fixtures against the app factory
+  - Override dependencies in tests for fake DB/auth implementations
+  - Cover happy path, validation failures, and auth boundaries
+tags:
+  - fastapi
+  - python
+  - api
+  - async
+  - backend
+keywords:
+  - fastapi
+  - pydantic
+  - openapi
+  - async
+  - python
+  - api
+  - claude
+  - expert
+readingTime: 4
+difficultyScore: 80
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Usage
+
+Add this rule set to your project's `CLAUDE.md` to configure Claude as a FastAPI expert.
+It covers async routes, Pydantic validation, dependency injection, and OpenAPI patterns —
+grounded in the [FastAPI documentation](https://fastapi.tiangolo.com/).
+
+## Sources
+
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [Tutorial](https://fastapi.tiangolo.com/tutorial/)
+- [Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/)
+- [Security](https://fastapi.tiangolo.com/tutorial/security/)
+- [Async Tests](https://fastapi.tiangolo.com/advanced/async-tests/)
