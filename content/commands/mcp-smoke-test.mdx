@@ -1,0 +1,76 @@
+---
+title: /mcp-smoke-test - MCP Smoke Test Slash Command
+slug: mcp-smoke-test
+category: commands
+description: >-
+  Slash command that smoke-tests configured MCP servers in Claude Code: verify
+  .mcp.json entries, run /mcp list expectations, and exercise one read-only tool
+  per server with timeout and rollback notes.
+cardDescription: >-
+  Smoke-test MCP servers after install with list checks and read-only tool probes.
+seoTitle: /mcp-smoke-test - MCP Smoke Test Slash Command
+seoDescription: >-
+  Claude Code slash command to smoke-test MCP server configuration using official
+  MCP setup and /mcp workflows.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 749
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/749"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "/mcp-smoke-test [server-name]"
+commandSyntax: "/mcp-smoke-test [server-name]"
+usageSnippet: "/mcp-smoke-test my-server"
+copySnippet: "/mcp-smoke-test [server-name]"
+prerequisites:
+  - "MCP servers already added via claude mcp add or project .mcp.json."
+  - "Non-production credentials for OAuth or remote servers during testing."
+safetyNotes:
+  - "Use read-only tools during smoke tests; avoid write or network-heavy tools on production."
+  - "Remove failing servers from .mcp.json before sharing smoke-test logs externally."
+privacyNotes:
+  - "Tool outputs may include repository paths—redact before posting in public issues."
+tags:
+  - mcp
+  - slash-command
+  - smoke-test
+  - setup
+keywords:
+  - MCP smoke test slash command
+  - claude code mcp validation command
+---
+
+The `/mcp-smoke-test` command applies official Claude Code MCP workflows to validate
+a newly installed or updated MCP server before team rollout.
+
+## Usage
+
+```
+/mcp-smoke-test [server-name]
+```
+
+## What it does
+
+1. Confirm the server appears in the user's MCP configuration (project or user scope).
+2. Ask the operator to open `/mcp` and verify authentication status for remote servers.
+3. Select one documented read-only tool and invoke it with minimal arguments.
+4. Record startup latency, errors, and OAuth prompts encountered.
+5. If the optional `server-name` argument is provided, limit checks to that entry only.
+6. Produce a pass/fail summary with rollback steps (remove server, clear auth, revert .mcp.json).
+
+## Output format
+
+- Server name and transport
+- Configuration check result
+- Authentication status
+- Sample tool call result
+- Pass/fail verdict and rollback notes
+
+## Requirements
+
+- Claude Code with MCP enabled per official documentation.
+- Permission to edit .mcp.json when rollback requires removal.
