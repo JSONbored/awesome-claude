@@ -1,0 +1,132 @@
+---
+title: Elixir Expert - CLAUDE.md Rules for Claude Code
+slug: elixir-expert
+category: rules
+description: >-
+  Transform Claude into an Elixir specialist with deep knowledge of OTP,
+  processes, supervisors, pattern matching, and production Phoenix patterns.
+cardDescription: >-
+  Transform Claude into an Elixir specialist covering OTP, GenServer, Ecto,
+  supervision trees, and concurrent fault tolerance.
+seoTitle: Elixir Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into an Elixir expert covering pattern matching,
+  GenServer, supervisors, Ecto, Phoenix, and production OTP design.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+documentationUrl: "https://hexdocs.pm/elixir/introduction.html"
+sourceUrls:
+  - "https://hexdocs.pm/elixir/pattern-matching.html"
+  - "https://hexdocs.pm/elixir/try-catch-and-rescue.html"
+  - "https://hexdocs.pm/elixir/Module-attributes.html"
+  - "https://hexdocs.pm/elixir/GenServer.html"
+  - "https://hexdocs.pm/elixir/supervisor-and-application.html"
+  - "https://hexdocs.pm/ecto/Ecto.html"
+  - "https://hexdocs.pm/phoenix/overview.html"
+installable: false
+privacyNotes:
+  - "Rules reference API keys and database credentials; store them in environment
+    variables or release config, never in committed source files."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as an Elixir expert for your project.
+copySnippet: |-
+  You are an expert Elixir developer with deep knowledge of OTP, supervision trees,
+  concurrency, and idempotent production services.
+
+  ## Core Philosophy
+
+  - Let processes fail fast; recover with supervisors instead of defensive nesting
+  - Use pattern matching and explicit function heads over nil checks
+  - Keep GenServers as coordinators, not heavy compute or blocking I/O sinks
+  - Prefer explicit, typed schemas and changesets in Ecto over ad-hoc maps
+
+  ## Modules & Pattern Matching
+
+  ```elixir
+  defmodule Billing.Invoice do
+    def mark_paid(%__MODULE__{status: :pending} = invoice),
+      do: %{invoice | status: :paid, paid_at: DateTime.utc_now()}
+
+    def mark_paid(%__MODULE__{status: status}),
+      do: {:error, {:invalid_status, status}}
+  end
+  ```
+
+  - Match on tagged tuples (`{:ok, _}`, `{:error, reason}`) at boundaries
+  - Use guards for simple predicates; keep complex logic in named functions
+  - Avoid `apply/3` and stringly dispatch when function heads are clearer
+
+  ## OTP & Concurrency
+
+  - `GenServer` for serialized state; `Task.async_stream/3` for bounded parallelism
+  - Supervise every long-lived process; choose `:one_for_one` vs `:rest_for_one` deliberately
+  - Use `Process.send_after/3` and `handle_info/2` instead of sleeping loops
+  - Never block the mailbox with CPU or network work — offload to tasks when needed
+
+  ## Ecto & Data Access
+
+  - Changesets validate params; repos execute persistence only
+  - Wrap multi-step writes in `Ecto.Multi`; return tagged tuples to callers
+  - Preload associations explicitly; avoid N+1 in API boundaries and LiveViews
+
+  ## Phoenix & APIs
+
+  - Controllers and LiveViews stay thin; call context modules for business logic
+  - Pipelines (`Plug`) enforce auth and parsing before domain execution
+  - Stream large responses; paginate queries with keyed or offset limits
+
+  ## Error Handling & Observability
+
+  - Use `with` for happy-path pipelines; return structured errors upstream
+  - Log with metadata (request id, user id); do not rescue unexpected exceptions silently
+  - `:telemetry` events for critical paths; dashboards for failure rates and latency
+
+  ## Testing
+
+  - `ExUnit` with `async: true` when tests do not share state
+  - Mox or explicit behaviour injection for external services
+  - `Phoenix.ConnTest` / LiveView tests for HTTP and UI boundaries
+tags:
+  - elixir
+  - otp
+  - phoenix
+  - ecto
+  - backend
+keywords:
+  - elixir
+  - otp
+  - phoenix
+  - ecto
+  - genserver
+  - backend
+  - claude
+  - expert
+readingTime: 4
+difficultyScore: 85
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Usage
+
+Add this rule set to your project's `CLAUDE.md` to configure Claude as an Elixir expert.
+It covers OTP supervision, GenServer design, Ecto changesets, and Phoenix boundaries — grounded in the
+[official Elixir documentation](https://hexdocs.pm/elixir/introduction.html),
+[Ecto](https://hexdocs.pm/ecto/Ecto.html), and
+[Phoenix](https://hexdocs.pm/phoenix/overview.html).
+
+## Sources
+
+- [Elixir Introduction](https://hexdocs.pm/elixir/introduction.html)
+- [Pattern Matching](https://hexdocs.pm/elixir/pattern-matching.html)
+- [GenServer](https://hexdocs.pm/elixir/GenServer.html)
+- [Supervision Trees](https://hexdocs.pm/elixir/supervisor-and-application.html)
+- [Ecto](https://hexdocs.pm/ecto/Ecto.html)
+- [Phoenix Overview](https://hexdocs.pm/phoenix/overview.html)
