@@ -42,6 +42,8 @@ sourceUrls:
   - "https://code.claude.com/docs/en/settings"
   - "https://github.com/anthropics/claude-code"
   - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
 tags:
   - claude-code
   - statusline
@@ -125,6 +127,78 @@ subprocess chains that stall the terminal UI.
 
 7. **Share with the team.** Commit script and settings snippet; document optional
    overrides for personal statuslines in user settings.
+
+### Settings configuration
+
+Add a `statusLine` field to user settings (`~/.claude/settings.json`) or project
+settings (`.claude/settings.json`). Set `type` to `"command"` and point `command`
+at a script path or inline shell command. The optional `padding` field adds
+horizontal spacing (defaults to `0`); `refreshInterval` re-runs the command every N
+seconds in addition to event-driven updates (minimum `1`):
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 2
+  }
+}
+```
+
+### Example statusline script
+
+This script reads the session JSON from stdin, extracts the model display name,
+working directory, and pre-calculated context percentage, then prints a single
+footer line. The `// 0` fallback in `jq` handles fields that are `null` before the
+first API response:
+
+```bash
+#!/bin/bash
+# Claude Code sends session JSON to this script on stdin
+input=$(cat)
+
+MODEL=$(echo "$input" | jq -r '.model.display_name')
+DIR=$(echo "$input" | jq -r '.workspace.current_dir')
+# "// 0" provides a fallback when used_percentage is null early in the session
+PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
+
+# ${DIR##*/} extracts just the folder name
+echo "[$MODEL] 📁 ${DIR##*/} | ${PCT}% context"
+```
+
+Make it executable with `chmod +x ~/.claude/statusline.sh`. Test it without
+launching Claude Code by piping mock input:
+
+```bash
+echo '{"model":{"display_name":"Opus"},"workspace":{"current_dir":"/home/user/project"},"context_window":{"used_percentage":25},"session_id":"test-session-abc"}' | ./statusline.sh
+```
+
+## Session JSON Fields Reference
+
+Claude Code pipes a JSON object to your command on stdin each time the status line
+updates. The most useful fields for workflow visibility:
+
+| Field | Description |
+| --- | --- |
+| `model.id`, `model.display_name` | Current model identifier and display name |
+| `workspace.current_dir`, `cwd` | Current working directory (both hold the same value; `workspace.current_dir` preferred) |
+| `workspace.project_dir` | Directory where Claude Code was launched |
+| `workspace.repo.host`, `.owner`, `.name` | Repository identity parsed from the `origin` remote; absent outside a git repo |
+| `context_window.used_percentage` | Pre-calculated percentage of context window used (may be `null` early in the session) |
+| `context_window.context_window_size` | Maximum context window size in tokens (200000 default, 1000000 for extended-context models) |
+| `cost.total_cost_usd` | Estimated session cost in USD, computed client-side; may differ from your actual bill |
+| `cost.total_duration_ms`, `cost.total_api_duration_ms` | Total wall-clock time and time spent waiting on API responses, in milliseconds |
+| `cost.total_lines_added`, `cost.total_lines_removed` | Lines of code changed in the session |
+| `exceeds_200k_tokens` | Whether combined tokens from the most recent response exceed 200k (fixed threshold) |
+| `output_style.name` | Name of the current output style |
+| `session_id` | Unique session identifier (stable per session; useful as a cache key) |
+| `version` | Claude Code version |
+
+The script does not consume API tokens—the status line runs locally. Some fields
+(`session_name`, `workspace.repo`, `rate_limits`, `vim`, `agent`, `pr`, `worktree`)
+are absent unless the relevant feature is active, so guard access and default
+missing values in your script.
 
 ## Workflow Visibility Checklist
 
