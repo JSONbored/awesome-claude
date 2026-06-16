@@ -1,0 +1,124 @@
+---
+title: Unsafe Shell Command Blocker Hook
+slug: unsafe-shell-command-blocker-hook
+category: hooks
+description: >-
+  PreToolUse hook that blocks high-risk Bash tool commands such as recursive root
+  deletion, remote script download pipes, and disk-wiping patterns before Claude Code executes them.
+cardDescription: >-
+  Block risky Bash commands like recursive root deletion and piped remote shells before execution.
+seoTitle: Unsafe Shell Command Blocker Hook for Claude Code
+seoDescription: >-
+  Claude Code PreToolUse hook blocking dangerous Bash patterns documented in team
+  shell safety practices and Claude Code hooks guidance.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 765
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/765"
+documentationUrl: "https://code.claude.com/docs/en/hooks-guide"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch .claude/hooks/unsafe-shell-command-blocker.sh && chmod +x .claude/hooks/unsafe-shell-command-blocker.sh
+usageSnippet: >-
+  Blocks PreToolUse Bash commands matching risky patterns; exits 2 to deny execution.
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/unsafe-shell-command-blocker.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/unsafe-shell-command-blocker.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+  if ! command -v jq >/dev/null 2>&1; then exit 0; fi
+  input=$(cat)
+  tool_name=$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')
+  case "$tool_name" in
+    Bash|bash) ;;
+    *) exit 0 ;;
+  esac
+  command_text=$(printf '%s' "$input" | jq -r '.tool_input.command // .toolInput.command // empty')
+  [ -z "$command_text" ] && exit 0
+  pipe='|'
+  root_slash=$'\057'
+  block_patterns=(
+    "rm[[:space:]]+-rf[[:space:]]+${root_slash}"
+    "curl[[:space:]]+[^${pipe}]*${pipe}[[:space:]]*bash"
+    "wget[[:space:]]+[^${pipe}]*${pipe}[[:space:]]*sh"
+    'mkfs\.'
+    'dd[[:space:]]+if=/dev/zero'
+    "chmod[[:space:]]+-R[[:space:]]+777[[:space:]]+${root_slash}"
+  )
+  for pat in "${block_patterns[@]}"; do
+    if printf '%s' "$command_text" | grep -Eiq "$pat"; then
+      echo "Unsafe shell command blocker: matched risky pattern in Bash tool input." >&2
+      exit 2
+    fi
+  done
+  exit 0
+trigger: PreToolUse
+safetyNotes:
+  - "Pattern lists are heuristic—review and extend for your environment."
+  - "Exit code 2 blocks the tool call per Claude Code hooks documentation."
+  - "Does not replace code review for subtle destructive commands."
+privacyNotes:
+  - "Hook inspects proposed Bash command text locally; nothing is sent to network services."
+tags:
+  - hooks
+  - bash
+  - security
+  - safety
+keywords:
+  - unsafe shell command blocker hook
+  - claude code bash PreToolUse block
+readingTime: 2
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+PreToolUse hook for the Bash tool that denies execution when command text matches
+documented destructive shell patterns described in the Claude Code hooks guide.
+
+## Troubleshooting
+
+**Hook never fires:** Confirm matcher is `Bash` and script path is executable.
+
+**False positive:** Adjust pattern list for legitimate maintenance commands.
