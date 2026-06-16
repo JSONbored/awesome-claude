@@ -1,0 +1,101 @@
+---
+title: /mcp-smoke-test - MCP Server Verification Runbook
+slug: mcp-smoke-test
+category: commands
+description: >-
+  Community slash command runbook for post-install MCP verification using only
+  documented Claude Code MCP commands: claude mcp list, claude mcp get, and the
+  /mcp panel for authentication status before exercising a read-only tool.
+cardDescription: >-
+  Verify a new MCP server with claude mcp list, claude mcp get, and /mcp auth checks.
+seoTitle: /mcp-smoke-test - MCP Server Verification Runbook
+seoDescription: >-
+  Claude Code slash command runbook to verify MCP server setup using documented
+  claude mcp and /mcp workflows from the official MCP documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 749
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/749"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "/mcp-smoke-test [server-name]"
+commandSyntax: "/mcp-smoke-test [server-name]"
+usageSnippet: "/mcp-smoke-test notion"
+copySnippet: "/mcp-smoke-test [server-name]"
+prerequisites:
+  - "Server already added with claude mcp add or present in project .mcp.json."
+  - "Non-production credentials when testing OAuth or remote MCP servers."
+safetyNotes:
+  - "Prefer read-only tools during verification; avoid destructive MCP tools on production data."
+  - "Remove failing servers from MCP config before sharing logs externally."
+privacyNotes:
+  - "MCP tool outputs may include repository paths; redact before posting publicly."
+tags:
+  - mcp
+  - slash-command
+  - verification
+  - setup
+keywords:
+  - MCP smoke test slash command
+  - claude mcp list verification workflow
+---
+
+## Scope
+
+This is a **community custom entry** you add under `.claude/commands/` or
+`.claude/hooks/`. It is not a built-in Claude Code feature named on
+code.claude.com.
+
+
+The `/mcp-smoke-test` runbook walks through **documented MCP management commands**
+after you add a server. It does not assume a built-in `/mcp-smoke-test` page on
+code.claude.com.
+
+## Usage
+
+```
+/mcp-smoke-test [server-name]
+```
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **List configured servers.** Run `claude mcp list` and confirm the target server appears with the expected scope (project, user, or local).
+2. **Inspect one server.** Run `claude mcp get <server-name>` to review transport, command or URL, and pending approval status documented in the MCP guide.
+3. **Check live status in Claude Code.** Ask the operator to open `/mcp` and confirm authentication status, tool count, and any servers flagged as needing auth.
+4. **Handle pending approval.** If the guide shows `Pending approval` for a project `.mcp.json` server, complete the interactive approval flow before testing tools.
+5. **Exercise one read-only tool.** With explicit user approval, invoke a documented read-only MCP tool with minimal arguments and record errors or OAuth prompts.
+6. **Summarize rollback.** If verification fails, document removal steps using `claude mcp remove <server-name>` and reverting `.mcp.json` edits.
+
+## Output format
+
+- Server name, transport, and scope
+- `claude mcp get` configuration summary
+- `/mcp` authentication and tool availability notes
+- Sample read-only tool result
+- Pass/fail verdict and rollback steps
+
+## Source Verification Notes
+
+Verified against Claude Code MCP documentation on **2026-06-16**:
+
+- **`claude mcp list`** lists configured MCP servers and shows pending approval
+  states for project-scoped `.mcp.json` entries.
+- **`claude mcp get <name>`** prints configuration details for a single server.
+- The **`/mcp` panel** shows authentication status, tool counts, and servers
+  that advertise tools but expose none.
+- Remote servers may require **OAuth** completed through the `/mcp` menu.
+- **`claude mcp remove <name>`** removes a configured server when rollback is needed.
+
+## Duplicate Check
+
+No command in `content/commands/` documents this MCP post-install verification
+runbook using `claude mcp list`, `claude mcp get`, and `/mcp` together.
