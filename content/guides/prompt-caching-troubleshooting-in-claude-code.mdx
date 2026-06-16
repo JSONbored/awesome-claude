@@ -98,6 +98,36 @@ the prefix boundary.
 Compare cache read, cache write, and uncached input tokens before and after a
 change instead of guessing from total cost alone.
 
+## Reading Cache Metrics on Each Turn
+
+The API reports two token counts on every response; a statusline script can read them from the `current_usage` object to watch caching live.
+
+| Field | Meaning |
+| --- | --- |
+| `cache_creation_input_tokens` | Tokens written to the cache on this turn, billed at the cache write rate |
+| `cache_read_input_tokens` | Tokens served from cache on this turn, billed at roughly 10% of the standard input rate |
+
+A high read-to-creation ratio means caching is working well. If creation stays high turn after turn, something is changing in your prefix.
+
+## Environment Variables for Cache Debugging
+
+When isolating a caching problem, force or disable caching with these environment variables (set each to `1`):
+
+```bash
+# Force the five-minute TTL regardless of authentication
+FORCE_PROMPT_CACHING_5M=1
+
+# Opt into the one-hour TTL on an API key or third-party provider
+ENABLE_PROMPT_CACHING_1H=1
+
+# Disable caching, all models or per-model
+DISABLE_PROMPT_CACHING=1
+DISABLE_PROMPT_CACHING_HAIKU=1
+DISABLE_PROMPT_CACHING_SONNET=1
+DISABLE_PROMPT_CACHING_OPUS=1
+DISABLE_PROMPT_CACHING_FABLE=1
+```
+
 ## Step-by-Step Implementation Guide
 
 1. **Capture a baseline.** Note cache metrics and total input tokens for a
