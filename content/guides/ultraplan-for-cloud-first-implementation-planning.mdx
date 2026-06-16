@@ -1,0 +1,185 @@
+---
+title: Ultraplan For Cloud-First Implementation Planning
+slug: ultraplan-for-cloud-first-implementation-planning
+category: guides
+description: >-
+  Use Claude Code /ultraplan for cloud-first implementation planning: remote
+  sessions, environment setup, refining plans, and handoff to local execution.
+cardDescription: Plan implementations with /ultraplan and cloud-first remote sessions.
+seoTitle: Ultraplan For Cloud-First Implementation Planning
+seoDescription: >-
+  Use Claude Code /ultraplan for cloud-first implementation planning with remote
+  sessions, default cloud environments, and handoff to local Claude Code work.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1376
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1376"
+documentationUrl: "https://github.com/anthropics/claude-code"
+usageSnippet: >-
+  Start plan mode, refine with /ultraplan when cloud access is available, capture
+  the remote session URL in team notes, and hand the approved plan to a local
+  Claude Code session for implementation.
+prerequisites:
+  - Claude Code with plan mode and ultraplan access per your organization auth setup.
+  - A repository where planning can reference real paths, tests, and constraints.
+  - Agreement on when cloud planning is allowed versus local-only planning for sensitive repos.
+  - A human approver who signs off before implementation begins.
+safetyNotes:
+  - Cloud planning sessions may process repository context on remote infrastructure—confirm compliance before using on restricted codebases.
+  - Ultraplan refines plans; it does not replace architecture review or security sign-off for production changes.
+  - Capture session URLs in access-controlled notes—not public tickets with secrets.
+privacyNotes:
+  - Remote planning may include proprietary architecture details, customer requirements, and unreleased feature names.
+  - Plan transcripts can persist in cloud session history—follow vendor retention and export policies.
+  - Do not paste credentials, tokens, or customer PII into planning prompts.
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://code.claude.com/docs/en/ultraplan"
+  - "https://code.claude.com/docs/en/claude-code-on-the-web"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - ultraplan
+  - planning
+  - cloud
+  - remote-sessions
+  - implementation
+keywords:
+  - Claude Code ultraplan
+  - cloud-first implementation planning
+  - /ultraplan remote session
+  - Refine with Ultraplan
+  - Claude Code plan mode
+readingTime: 8
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Ultraplan extends Claude Code plan mode with cloud-first refinement when your org
+can reach Claude Code on the web. Use `/ultraplan` to deepen implementation
+plans in a remote session, record the session URL for teammates, and hand the
+approved plan to a local session for execution—after human sign-off.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Plan mode baseline", "description": "The team already uses plan mode for non-trivial changes"}
+- [ ] {"task": "Cloud access verified", "description": "Org auth allows Claude Code on the web features used by ultraplan"}
+- [ ] {"task": "Repo context ready", "description": "CLAUDE.md and package boundaries inform the plan"}
+- [ ] {"task": "Approver named", "description": "A human approves the plan before implementation"}
+- [ ] {"task": "Handoff template", "description": "Plans include steps, tests, and rollback for local execution"}
+
+## Core Concepts Explained
+
+### Plan mode vs ultraplan
+
+Plan mode keeps Claude in read-oriented planning. Ultraplan adds cloud-side
+refinement when remote sessions are available—useful for complex cross-package
+work that benefits from longer planning context.
+
+### Default cloud environments reduce setup friction
+
+Release notes state ultraplan and related remote features auto-create default
+cloud environments instead of requiring manual web setup first.
+
+### Visibility varies by org
+
+Plan mode may hide Refine with Ultraplan when the org or auth setup cannot reach
+Claude Code on the web—teams should document when to use local planning only.
+
+### Plans are not implementations
+
+Approved plans still need scoped implementation sessions, tests, and review
+before merge.
+
+## Step-by-Step Implementation Guide
+
+1. **Start in plan mode locally.** Outline goals, constraints, affected packages,
+   and validation commands in a normal Claude Code session.
+
+2. **Evaluate ultraplan eligibility.** Confirm org policy allows cloud planning
+   for this repository and data classification.
+
+3. **Run /ultraplan.** Refine the plan in the remote session; save the session
+   URL in your team runbook or ticket.
+
+4. **Human review.** An approver checks scope, risks, test strategy, and rollback
+   before authorizing implementation.
+
+5. **Hand off locally.** Open a fresh implementation session with the approved
+   plan attached; avoid mixing planning and coding in one ambiguous thread.
+
+6. **Track uncommitted changes.** Release notes fixed ultraplan failures when
+   working trees had no real changes—commit or stash intentionally before remote
+   session creation when required.
+
+7. **Retrospect.** Note whether ultraplan saved time versus local plan mode for
+   similar future tasks.
+
+## Planning Handoff Checklist
+
+- [ ] {"task": "Plan approved", "description": "Human approver signed off on scope and risks"}
+- [ ] {"task": "Session URL recorded", "description": "Remote session link stored in access-controlled notes"}
+- [ ] {"task": "Tests defined", "description": "Validation commands and success criteria are explicit"}
+- [ ] {"task": "Local session scoped", "description": "Implementation session names allowed paths and tools"}
+- [ ] {"task": "Rollback documented", "description": "Revert strategy is included for risky changes"}
+
+## Troubleshooting
+
+### Refine with Ultraplan missing
+
+Org or auth may block Claude Code on the web—use local plan mode and document
+the restriction.
+
+### Could not capture uncommitted changes
+
+Ensure meaningful working tree state or follow release-note guidance for empty
+trees before starting remote sessions.
+
+### Remote URL not in transcript
+
+Upgrade Claude Code—release notes fixed missing remote session URLs after
+ultraplan refinement.
+
+### Plan too large for handoff
+
+Split into phased plans per package with separate approval and implementation
+sessions.
+
+## Source Verification Notes
+
+Verified against the public `anthropics/claude-code` repository README and
+`CHANGELOG.md` on **2026-06-13**:
+
+- `CHANGELOG.md` states `/ultraplan` and remote-session features auto-create
+  default cloud environments instead of requiring manual web setup first.
+- `CHANGELOG.md` documents plan mode hiding Refine with Ultraplan when org or
+  auth setup cannot reach Claude Code on the web.
+- `CHANGELOG.md` fixes `/ultraplan` remote session creation when working trees
+  had no real uncommitted changes.
+- `CHANGELOG.md` fixes Refine with Ultraplan not showing remote session URLs in
+  transcripts.
+- Official docs at `code.claude.com/docs/en/ultraplan` describe user-facing
+  ultraplan workflow details.
+
+## Duplicate Check
+
+This guide complements claude-code-on-the-web-for-repository-planning.mdx and
+sparse-context guides. The web planning guide covers repository planning on
+the web generally; this guide focuses on the /ultraplan refinement workflow
+inside plan mode.
+
+## References
+
+- Ultraplan docs - https://code.claude.com/docs/en/ultraplan
+- Claude Code on the web - https://code.claude.com/docs/en/claude-code-on-the-web
+- Web repository planning guide - claude-code-on-the-web-for-repository-planning
