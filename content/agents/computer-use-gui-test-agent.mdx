@@ -1,0 +1,132 @@
+---
+title: Computer Use GUI Test Agent
+slug: computer-use-gui-test-agent
+category: agents
+description: >-
+  Community reusable agent prompt for GUI testing with Claude Code computer use using
+  official docs: scoped test plans, screenshot evidence, approval gates, and safe
+  desktop automation for web and native app QA workflows.
+cardDescription: Run GUI tests with Claude Code computer use using official safety and scoping guidance.
+seoTitle: Computer Use GUI Test Agent
+seoDescription: >-
+  Reusable agent prompt for Claude Code computer use GUI testing grounded in official
+  docs: test plans, screenshot evidence, approval gates, and scoped automation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1567
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1567"
+documentationUrl: "https://code.claude.com/docs/en/computer-use"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent to plan and execute scoped GUI test passes with Claude Code computer use,
+  capturing screenshot evidence and keeping destructive actions human-approved.
+prerequisites:
+  - Claude Code with computer use enabled per official documentation for your environment.
+  - A defined test application, staging URL, or desktop build under authorized QA scope.
+  - Human reviewer for login flows, payments, or production-adjacent actions.
+  - Screen recording or screenshot retention policy aligned with your compliance program.
+safetyNotes:
+  - Computer use can click, type, and navigate real UIs—restrict to staging and test accounts.
+  - Never store credentials in prompts; use test vaults and rotate after sessions.
+  - Destructive actions (delete, purchase, send message) require explicit human approval gates.
+  - Sandbox or VM isolation is recommended when testing untrusted applications.
+privacyNotes:
+  - Screenshots may capture PII, internal URLs, and proprietary UI layouts.
+  - Session recordings follow your Claude plan data handling; restrict sharing externally.
+  - Redact customer data from bug reports before posting to public trackers.
+tags:
+  - claude-code
+  - computer-use
+  - gui-testing
+  - qa
+  - automation
+keywords:
+  - computer use gui test agent
+  - claude code desktop gui qa
+  - computer use screenshot testing
+  - staged gui automation claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Computer Use GUI Test Agent is a community-authored reusable prompt for structured
+GUI testing with Claude Code computer use. It applies official computer use
+documentation—not an official Anthropic QA product.
+
+## Scope Note
+
+This prompt operationalizes documented computer use capabilities and safety expectations
+from code.claude.com. Human QA sign-off remains required for release decisions.
+
+## Agent Prompt
+
+You are a computer use GUI test specialist for Claude Code. Plan and execute scoped
+GUI validations using official computer use documentation.
+
+Workflow:
+
+1. **Scope test charter.** Define app surface, environments, accounts, and out-of-scope flows.
+2. **Preconditions.** Confirm staging URLs, feature flags, and seed data before automation.
+3. **Test steps.** Write reproducible steps with expected UI states and screenshot checkpoints.
+4. **Execute with gates.** Pause for human approval before login, payments, or destructive clicks.
+5. **Evidence.** Capture screenshots and name files for each failed assertion.
+6. **Defect reports.** File bugs with steps, expected vs actual, and environment metadata.
+7. **Cleanup.** Close apps, log out test accounts, and document residual state.
+
+Output contract:
+
+- Test charter and pass/fail matrix.
+- Screenshot-indexed findings with severity.
+- Blocked flows requiring human action.
+- Recommended fixes or retest plan.
+
+## Features
+
+- Applies computer use docs to structured GUI QA workflows.
+- Enforces human approval gates for high-risk UI actions.
+- Produces screenshot-backed defect evidence.
+- Keeps testing scoped to authorized staging environments.
+
+## Use Cases
+
+- Smoke test a staging web app after deploy.
+- Validate desktop settings flows before release.
+- Reproduce visual regressions with screenshot trails.
+- Hand off GUI findings to engineering with evidence packs.
+
+## Source Notes
+
+Verified against Claude Code computer use documentation on **2026-06-16**:
+
+- Official docs describe enabling Claude Code to interact with desktop environments for
+  GUI-oriented tasks such as testing and automation.
+- Documentation emphasizes permission, scope, and human oversight when computer use
+  controls real applications and browsers.
+- Computer use sessions inherit Claude Code tool approval and data handling policies
+  documented alongside other Claude Code extension surfaces.
+
+## Duplicate Check
+
+Checked content/agents and content/guides for computer use QA coverage.
+computer-use-from-the-claude-code-cli-for-gui-qa is a guides entry for setup.
+No agents entry provides a reusable computer use GUI test prompt with approval gates
+and screenshot evidence contracts grounded in official computer use docs.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code computer use documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code computer use - https://code.claude.com/docs/en/computer-use
+- Claude Code security - https://code.claude.com/docs/en/security
+- Claude Code repository - https://github.com/anthropics/claude-code
