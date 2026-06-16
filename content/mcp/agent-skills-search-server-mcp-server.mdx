@@ -1,0 +1,90 @@
+---
+title: Agent Skills Search Server MCP Server
+slug: agent-skills-search-server-mcp-server
+category: mcp
+description: >-
+  Remote MCP server ai.com.mcp/skills-search for discovering Agent Skills from the skills.sh
+  registry via https://skills-sh.run.mcp.com.ai/mcp.
+cardDescription: >-
+  Search Agent Skills from skills.sh through the skills-search MCP HTTP endpoint.
+seoTitle: Agent Skills Search Server MCP Server
+seoDescription: >-
+  Connect to Agent Skills Search MCP at skills-sh.run.mcp.com.ai to discover skills from the
+  skills.sh registry; registry entry ai.com.mcp/skills-search.
+author: Agent Skills
+authorProfileUrl: "https://github.com/agentskills"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1494
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1494"
+repoUrl: "https://github.com/agentskills/agentskills"
+documentationUrl: "https://raw.githubusercontent.com/agentskills/agentskills/main/README.md"
+websiteUrl: "https://agentskills.io"
+installable: true
+installCommand: "claude mcp add --transport http skills-search https://skills-sh.run.mcp.com.ai/mcp"
+usageSnippet: >-
+  Add https://skills-sh.run.mcp.com.ai/mcp as an HTTP MCP connector to search skills.sh
+  entries from Claude Code or other MCP clients.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "skills-search": {
+        "url": "https://skills-sh.run.mcp.com.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "MCP client with streamable HTTP transport support."
+  - "Review of skills before installing third-party SKILL.md packages into production repos."
+safetyNotes:
+  - "Search results may link to third-party skills—review source and permissions before activation."
+  - "Installing skills can enable bundled scripts with local execution risk."
+privacyNotes:
+  - "Search queries and skill metadata enter MCP client context and remote service logs."
+  - "Installed skills may read repository files per their SKILL.md instructions."
+tags:
+  - agent-skills
+  - skills-sh
+  - search
+  - mcp
+keywords:
+  - Agent Skills Search MCP
+  - skills.sh MCP search server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Agent Skills Search Server** is registered as **`ai.com.mcp/skills-search`**. It
+provides a remote **streamable HTTP** endpoint at **`https://skills-sh.run.mcp.com.ai/mcp`**
+for discovering skills from the **skills.sh** registry. The Agent Skills open format is
+documented at **agentskills.io** and **github.com/agentskills/agentskills**.
+
+## Installation
+
+```bash
+claude mcp add --transport http skills-search https://skills-sh.run.mcp.com.ai/mcp
+```
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- MCP Registry search returns **`ai.com.mcp/skills-search`** with remote URL **https://skills-sh.run.mcp.com.ai/mcp**.
+- Registry repository URL **https://github.com/agentskills/agentskills** README documents the Agent Skills format.
+- agentskills.io documents specification and client compatibility.
+
+## Duplicate Check
+
+Distinct from **`agent-skills-retrieval-source-verification-capability-pack`** (authoring review)
+and generic Skills docs entries.
+
+## Editorial Disclosure
+
+Community listing by **kiannidev** from MCP Registry and Agent Skills public documentation.
