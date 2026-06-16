@@ -2,13 +2,7 @@
 title: Lockfile Provenance Checker - Claude Code Hook
 slug: lockfile-provenance-checker
 category: hooks
-description: >-
-  PostToolUse hook that inspects an edited npm package-lock.json for
-  supply-chain provenance risk rather than known CVEs — dependencies resolved
-  from outside the public npm registry (git, alternate-registry, or insecure
-  transports) and registry tarballs missing an integrity hash. It mirrors the
-  lockfile-lint provenance checks so a tampered or unexpected dependency source
-  is caught at edit time. Advisory only; it never installs or runs anything.
+description: "PostToolUse hook that inspects an edited npm package-lock.json for supply-chain provenance risk rather than known CVEs — dependencies resolved from outside the public npm registry (git, alternate-registry, or insecure transports) and registry tarballs missing an integrity hash."
 cardDescription: >-
   Flag npm lockfile entries resolved outside the public registry or missing an
   integrity hash.
