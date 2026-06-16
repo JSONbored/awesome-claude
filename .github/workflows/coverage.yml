@@ -57,7 +57,29 @@ jobs:
       - name: Prepare test reports dir
         run: rm -rf reports/junit && mkdir -p reports/junit
 
+      # EXPERIMENT: cache the generated prebuild artifacts. Key hashes every
+      # input to `prebuild` (content, the build script, registry builder source,
+      # routes, prettier via the lockfile). A hit restores the artifacts and the
+      # build step below is skipped. Because content/** changes on nearly every
+      # merge, this only hits across runs that share an identical content
+      # snapshot — in practice, re-pushes of the same code PR (the iterate loop).
+      # Note: prebuild also derives entry `updatedAt` from `git log -- content`;
+      # a hit requires byte-identical content, so within a non-rebased PR the git
+      # history (and thus updatedAt) is identical too. The display timestamp can
+      # only go stale in the rare case of byte-identical content with a different
+      # commit touch-history, which is acceptable for a non-required lane.
+      - name: Restore prebuild artifacts
+        id: prebuild-cache
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            apps/web/public/data
+            apps/web/src/generated
+            apps/web/src/routeTree.gen.ts
+          key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
+
       - name: Build registry artifacts
+        if: steps.prebuild-cache.outputs.cache-hit != 'true'
         run: pnpm --filter web run prebuild
 
       - name: Apply local D1 migrations
