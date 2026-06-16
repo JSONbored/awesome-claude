@@ -16,7 +16,7 @@ dateAdded: "2026-06-14"
 submittedAt: "2026-06-14"
 sourceSubmissionNumber: 1386
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1386"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/chrome"
 usageSnippet: >-
   Use this guide to wire Claude in Chrome into Claude Code for interactive web app debugging on staging sites.
 prerequisites:
@@ -84,6 +84,32 @@ When several browsers connect, `/chrome` → "Select browser…" or in-chat prom
 Recent builds load browser tools in a single batched call instead of one round trip per tool, reducing latency during tight debug loops.
 
 ### Flags persist in background sessions
+
+## Setup Commands and Version Requirements
+
+The Chrome integration runs as a beta feature. Launch Claude Code with the `--chrome` flag, or enable it from inside an existing session with `/chrome`:
+
+```bash
+# Launch Claude Code with the Chrome integration enabled
+claude --chrome
+
+# Or enable it mid-session, check connection status,
+# reconnect, or pick which connected browser to use:
+/chrome
+
+# Confirm your Claude Code version meets the minimum
+claude --version
+```
+
+To avoid passing `--chrome` every session, run `/chrome` and select "Enabled by default". Run `/mcp` and select `claude-in-chrome` to list the available browser tools. Minimum versions and supported browsers (beta):
+
+| Requirement | Minimum / supported |
+| --- | --- |
+| Claude Code | 2.0.73 or higher |
+| Claude in Chrome extension | 1.0.36 or higher |
+| Supported browsers | Google Chrome, Microsoft Edge |
+| Unsupported | Brave, Arc, other Chromium browsers, WSL |
+| Plan | Direct Anthropic plan (Pro, Max, Team, or Enterprise) |
 
 `--chrome` is preserved across background retire→wake, so long-running debug sessions should reconnect the same browser profile after idle.
 
