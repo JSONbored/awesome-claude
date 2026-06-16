@@ -13,12 +13,21 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/setup"
+retrievalSources:
+  - "https://code.claude.com/docs/en/setup"
+  - "https://code.claude.com/docs/en/troubleshoot-install"
+  - "https://code.claude.com/docs/en/troubleshooting"
 installable: false
 usageSnippet: >-
   This tutorial teaches you to configure Claude Code on Windows Subsystem for
   Linux in 30 minutes. You'll learn WSL2 installation, Node.js environment
   setup, and PATH conflict resolution. Perfect for Windows developers who want
   optimal Claude Code performance without switching operating systems.
+safetyNotes:
+  - "Setup runs install commands and shell configuration changes (npm global install, editing ~/.bashrc, wsl --set-version); review each command and run it in a trusted environment."
+privacyNotes:
+  - "Authentication uses a browser login flow that stores credentials locally; keep account tokens and login codes out of shared shell history or committed files, and review the BROWSER path you set."
 tags:
   - tutorial
   - intermediate
@@ -38,122 +47,136 @@ robotsIndex: true
 robotsFollow: true
 ---
 
-## TL;DR
+## Overview
 
-This tutorial teaches you to configure Claude Code on Windows Subsystem for Linux in 30 minutes. You'll learn WSL2 installation, Node.js environment setup, and PATH conflict resolution. Perfect for Windows developers who want optimal Claude Code performance without switching operating systems.
+Windows developers have two supported ways to run Claude Code: natively on Windows, or inside the Windows Subsystem for Linux (WSL). This guide focuses on the WSL path, which is the right choice when your projects live in a Linux toolchain or when you want sandboxed command execution, a feature WSL 2 supports and native Windows does not.
 
-**Key Points:**
+The most important decision happens before you type a single command: **which installer you use**. Anthropic recommends the native installer (a standalone binary that auto-updates in the background) over an npm global install. Inside WSL the npm route is also where most setup pain comes from, because WSL imports the Windows `PATH` by default and can silently pick up the Windows copies of `node` and `npm` instead of the Linux ones. The native installer sidesteps that entire class of problems.
 
-- WSL2 setup with Ubuntu 22.04 LTS - reduces errors by 80%
-- Node.js configuration through NVM - eliminates permission issues
-- PATH management strategies - improves performance by 3-5x
-- 30 minutes total with 8 hands-on configuration steps
-
-Master Claude Code installation on Windows through proper WSL2 configuration. By completion, you'll have a fully functional Claude Code environment with optimized performance. This guide includes 5 practical examples, 12 code samples, and 4 real-world troubleshooting scenarios.
-
-> **Prerequisites Check**
+> **Requirements**
 >
-> Windows 10 Build 18362.1049+ or Windows 11, 8GB RAM minimum, virtualization enabled in BIOS, administrator access for installation. Verify requirements before starting.
+> Claude Code supports Windows 10 1809+ or Windows Server 2019+, with 4 GB+ RAM and an x64 or ARM64 processor. WSL 2 must be enabled for sandboxing; WSL 1 works but does not support sandboxing and has a known native-binary regression (covered in Troubleshooting). You also need a Pro, Max, Team, Enterprise, or Console account to authenticate.
 
-## What You'll Achieve
+## Choose: native installer vs npm
 
-<!-- Section type: feature_grid -->
+Both methods install the *same* native binary. The difference is how it gets onto your system, how it updates, and how much can go wrong in WSL.
 
-## Step 1: Install and Configure WSL2
+| Aspect | Native installer (recommended) | npm global install |
+| --- | --- | --- |
+| Install command | Native installer (see [setup docs](https://code.claude.com/docs/en/setup)) | `npm install -g @anthropic-ai/claude-code` |
+| Prerequisites | None | Node.js 18 or later |
+| Auto-updates | Yes, in the background | No, re-run with `@latest` |
+| WSL PATH/OS-detection pitfalls | Avoided entirely | Common (WSL may use Windows `node`/`npm`) |
+| Install location | `~/.local/bin/claude` | npm global prefix |
+| `sudo` needed | No | No, and never use `sudo npm install -g` |
 
-1. **Enable Virtualization in BIOS**
+Unless you have a specific reason to manage Claude Code through npm, use the native installer inside your WSL distribution.
 
-2. **Install WSL2 with Ubuntu**
+## Step 1: Set up WSL 2
 
-3. **Configure WSL2 Settings**
+If you do not already have WSL, install it and a Linux distribution from an elevated PowerShell, then make sure you are on WSL 2 for sandboxing support. Run these in **Windows PowerShell**, not inside WSL:
 
-4. **Create Memory Configuration**
+```powershell
+# Install WSL with the default Ubuntu distribution
+wsl --install
 
-> **Common Installation Error**
+# List installed distributions and their WSL version
+wsl --list --verbose
+
+# Upgrade an existing distribution to WSL 2 (replace <DistroName>)
+wsl --set-version <DistroName> 2
+```
+
+After installation, open your WSL distribution from the Start menu (or run `wsl` from PowerShell) so the remaining steps run *inside* the Linux shell.
+
+## Step 2: Install Claude Code in WSL
+
+Inside your WSL terminal, install Claude Code. The npm install is shown below; Anthropic also publishes a native installer documented in the [setup guide](https://code.claude.com/docs/en/setup). Install and launch `claude` from within WSL, not from PowerShell or CMD.
+
+```bash
+# Install Claude Code with npm (Node.js 18+)
+npm install -g @anthropic-ai/claude-code
+
+# Confirm it installed and is on your PATH
+claude --version
+
+# Run a full health check of your install and configuration
+claude doctor
+```
+
+If `claude --version` reports `command not found`, the install directory (`~/.local/bin`) is not on your `PATH`. Add it and reload your shell:
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+claude --version
+```
+
+## Step 3: Start and authenticate
+
+Open a terminal in the project you want to work in and start Claude Code:
+
+```bash
+cd ~/your-project
+claude
+```
+
+On first run, Claude Code launches a browser login flow. In WSL the browser often opens on the Windows side and its redirect cannot reach Claude Code's local callback server, so after signing in the browser shows a login code instead of redirecting automatically. Paste that code into the terminal to finish logging in.
+
+If the browser does not open at all from WSL, point Claude Code at your Windows browser:
+
+```bash
+export BROWSER="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
+claude
+```
+
+## File system performance
+
+This is the single biggest performance lever on WSL. Disk reads across the Windows/Linux file-system boundary are slow, and Claude Code's search can return **fewer results than expected** when your project lives on the Windows file system. Keep your projects on the Linux file system (under `/home/`), not under `/mnt/c/`.
+
+Two practical mitigations if you must work on the Windows file system:
+
+- Submit more specific searches that limit the files scanned (for example, "Search for JWT validation logic in the auth-service package" rather than searching the whole tree).
+- Move the project onto the Linux file system, or consider running Claude Code natively on Windows for better file-system performance.
+
+## Troubleshooting
+
+The table below maps the WSL-specific symptoms documented by Anthropic to their fixes.
+
+| Symptom | Cause | Fix |
+| --- | --- | --- |
+| `cannot execute binary file: Exec format error` when running `claude` | You are on WSL 1, which can't load the native binary's program headers | Convert to WSL 2: `wsl --set-version <DistroName> 2`. If you must stay on WSL 1, invoke `claude` through the dynamic linker (below). |
+| npm reports a platform/OS mismatch during `npm install -g` | WSL picked up the Windows `npm` | Run `npm config set os linux`, then `npm install -g @anthropic-ai/claude-code --force`. Do not use `sudo`. |
+| `exec: node: not found` when running `claude` (npm install) | WSL is using the Windows Node.js | Check with `which node` / `which npm`; `/mnt/c/...` paths are Windows binaries. Install Node via your Linux package manager or `nvm`. |
+| Browser login never completes in WSL 2 | Redirect can't reach the local callback server | Paste the displayed login code into the terminal, or set `BROWSER` to your Windows browser path. |
+| Slow or incomplete search results | Cross-file-system disk penalty | Move the project to `/home/`, or scope searches more narrowly. |
+
+**WSL 1 dynamic-linker workaround.** If you cannot move to WSL 2, add this function to `~/.bashrc` (adjust the path if your home directory differs), then `source ~/.bashrc`:
+
+```bash
+claude() {
+  /lib64/ld-linux-x86-64.so.2 "$(readlink -f "$HOME/.local/bin/claude")" "$@"
+}
+```
+
+> **Don't break Windows interop**
 >
-> **Error: WslRegisterDistribution failed with error: 0x80370114**  
-> **Solution:** Enable Virtual Machine Platform feature. Run `dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart` in PowerShell as Administrator.
+> Avoid disabling Windows `PATH` importing via `appendWindowsPath = false`; it stops you from calling Windows executables from WSL. Likewise, don't uninstall Node.js from Windows if you still use it for Windows development. The fixes above prefer the Linux toolchain without removing the Windows one.
 
-## Step 2: Configure Node.js Environment
+For anything not covered here, run `/doctor` inside a session (or `claude doctor` from your shell if Claude Code won't start) for an automated check of your installation, settings, and MCP configuration.
 
-1. **Install NVM in Ubuntu**
+## Quick reference
 
-2. **Install Node.js 20 LTS**
+| Command | What it does |
+| --- | --- |
+| `wsl --install` | Install WSL and the default Ubuntu distribution |
+| `wsl --set-version <DistroName> 2` | Upgrade a distribution to WSL 2 |
+| `claude --version` | Verify the install |
+| `claude doctor` / `/doctor` | Diagnose install, settings, and MCP health |
+| `claude` | Start Claude Code in the current directory |
 
-3. **Configure NPM Global Directory**
+## Related resources
 
-4. **Install Build Tools**
-
-## Step 3: Install Claude Code
-
-1. **Install Claude Code Package**
-
-2. **Run Diagnostic Check**
-
-3. **Configure Authentication**
-
-## Step 4: Configure IDE Integration
-
-<!-- Section type: tabs -->
-
-## Step 5: Optimize Performance
-
-1. **Configure Windows Defender Exclusions**
-
-2. **Optimize File System Usage**
-
-3. **Configure Git for Dual Systems**
-
-## Troubleshooting Common Issues
-
-<!-- Section type: accordion -->
-
-## Verification Checklist
-
-> **Installation Verification Steps**
->
-> Run these commands to confirm successful setup. All should complete without errors.
-
-<!-- Section type: code_group -->
-
-## Best Practices Summary
-
-<!-- Section type: quick_reference -->
-
-## Advanced Techniques
-
-> **Professional Tips**
->
-> **Performance Optimization:** Use Linux filesystem exclusively for 20x speed improvement. Projects in ~/dev run faster than /mnt/c/.
->
-> **Security Best Practice:** Always configure npm to use user directories. Never use sudo with npm installations.
->
-> **Scalability Pattern:** For teams, create shared .wslconfig templates. Standardize configurations across developer machines.
-
-## Next Steps
-
-<!-- Section type: tabs -->
-
-## Frequently Asked Questions
-
-## Quick Reference
-
-<!-- Section type: quick_reference -->
-
-## Related Learning Resources
-
-<!-- Section type: related_content -->
-
-> **Tutorial Complete!**
->
-> **Congratulations!** You've mastered Claude Code WSL setup and can now develop efficiently on Windows.
->
-> **What you achieved:**
->
-> - ✅ WSL2 with Ubuntu 22.04 fully configured
-> - ✅ Node.js environment with proper permissions
-> - ✅ Claude Code running at optimal performance
->
-> **Ready for more?** Explore our [tutorials collection](/guides/tutorials) or join our [community](/community) to share your setup and get help with advanced configurations.
-
-_Last updated: September 2025 | Found this helpful? Share it with your team and explore more [Claude tutorials](/guides/tutorials)._
+- [Claude Code setup and system requirements](https://code.claude.com/docs/en/setup)
+- [Troubleshoot installation and login](https://code.claude.com/docs/en/troubleshoot-install)
+- [Troubleshooting (performance, search, and WSL)](https://code.claude.com/docs/en/troubleshooting)
