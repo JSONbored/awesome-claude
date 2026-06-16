@@ -1,0 +1,95 @@
+---
+title: /frontend-visual-qa - Frontend Visual QA Slash Command
+slug: frontend-visual-qa
+category: commands
+description: >-
+  Slash command for frontend visual QA with Claude Code Chrome integration: open
+  local or staging pages, capture layout checks, read console errors, and record
+  a short verification checklist before merge.
+cardDescription: >-
+  Run a visual QA pass in Chrome with console checks and a merge-ready checklist.
+seoTitle: /frontend-visual-qa - Frontend Visual QA Slash Command
+seoDescription: >-
+  Claude Code slash command for frontend visual QA using Chrome browser integration
+  to verify UI changes, console errors, and user flows.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 751
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/751"
+documentationUrl: "https://code.claude.com/docs/en/chrome"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://code.claude.com/docs/en/chrome"
+  - "https://code.claude.com/docs/en/slash-commands"
+installable: true
+installCommand: "/frontend-visual-qa <url-or-route>"
+commandSyntax: "/frontend-visual-qa <url-or-route>"
+usageSnippet: "/frontend-visual-qa localhost:3000/settings"
+copySnippet: "/frontend-visual-qa <url-or-route>"
+prerequisites:
+  - "Claude Code 2.0.73+ with Chrome integration enabled via claude --chrome or /chrome."
+  - "Claude in Chrome extension 1.0.36+ on Google Chrome or Microsoft Edge."
+  - "Local dev server or staging URL for the page under review."
+safetyNotes:
+  - "Browser automation runs in a visible window with your logged-in session—avoid production admin actions during QA."
+  - "Pause and handle login pages or CAPTCHAs manually when Chrome integration requests it."
+  - "Do not submit forms that mutate production customer data without explicit operator approval."
+privacyNotes:
+  - "Screenshots and console logs may include PII from staging fixtures—redact before external sharing."
+tags:
+  - frontend
+  - visual-qa
+  - chrome
+  - testing
+  - slash-command
+keywords:
+  - frontend visual qa slash command
+  - claude code chrome testing workflow
+  - ui regression checklist command
+---
+
+The `/frontend-visual-qa` command applies documented [Claude Code Chrome integration](https://code.claude.com/docs/en/chrome)
+workflows to verify UI changes before merge.
+
+## Usage
+
+```
+/frontend-visual-qa <url-or-route>
+```
+
+Provide a local dev host and path (`localhost:3000/dashboard`) or an app route the
+operator will open in the connected browser over HTTPS when available.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Confirm Chrome connection.** Run `/chrome` and verify the extension is connected before navigation.
+2. **Open the target page.** Navigate to the supplied URL or route in a new tab when multiple tabs are already open.
+3. **Check console on load.** Read console messages for errors and warnings introduced by the change under review.
+4. **Verify layout basics.** Confirm primary heading, navigation, and the changed component render without obvious overlap or missing assets at desktop width.
+5. **Exercise the changed flow.** Perform the minimal click/type path described in the PR (form submit, modal open, filter toggle) and note failures.
+6. **Capture evidence.** Save one screenshot or recorded GIF only when the operator requests shareable review artifacts.
+7. **Produce a QA checklist.** Return pass/fail items, console findings, and blockers for merge.
+
+## Output format
+
+- **Environment:** browser, URL, branch or PR reference
+- **Console findings:** errors/warnings with reproduction steps
+- **Visual checks:** pass/fail bullets for changed UI
+- **Flow checks:** pass/fail for primary user path
+- **Recommendation:** ship, fix before merge, or needs manual design review
+
+## Requirements
+
+- Chrome integration prerequisites from official documentation.
+- Staging or local environment reachable from the operator machine.
+
+## Duplicate Check
+
+No existing frontend visual QA slash command on main. Complements design-verification
+examples in the Chrome docs without duplicating generic `/debug` or test commands.
