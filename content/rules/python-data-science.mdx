@@ -181,3 +181,35 @@ You are a Python data science expert with deep knowledge of modern data analysis
 - Unit tests for data transformations
 - Reproducible random seeds
 - Memory-efficient operations
+
+## Pandas Core Data Structures and IO
+
+Constructing the two primary pandas objects, from the Intro to data structures guide:
+
+```python
+import pandas as pd
+
+# Series: pd.Series(data, index=index) — data can be a dict, an ndarray, or a scalar
+d = {"b": 1, "a": 0, "c": 2}
+pd.Series(d)
+
+# DataFrame from a dict of Series; missing labels become NaN
+d = {
+    "one": pd.Series([1.0, 2.0, 3.0], index=["a", "b", "c"]),
+    "two": pd.Series([1.0, 2.0, 3.0, 4.0], index=["a", "b", "c", "d"]),
+}
+df = pd.DataFrame(d)
+```
+
+Paired reader/writer functions from the IO tools reference:
+
+| Data description | Reader | Writer |
+| --- | --- | --- |
+| CSV | `read_csv` | `to_csv` |
+| JSON | `read_json` | `to_json` |
+| HTML | `read_html` | `to_html` |
+| MS Excel | `read_excel` | `to_excel` |
+| Parquet | `read_parquet` | `to_parquet` |
+| Feather | `read_feather` | `to_feather` |
+| ORC | `read_orc` | `to_orc` |
+| SQL | `read_sql` | `to_sql` |
