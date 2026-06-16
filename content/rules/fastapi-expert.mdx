@@ -112,6 +112,20 @@ Add this rule set to your project's `CLAUDE.md` to configure Claude as a FastAPI
 It covers async routes, Pydantic validation, dependency injection, and OpenAPI patterns —
 grounded in the [FastAPI documentation](https://fastapi.tiangolo.com/).
 
+## Parameter source reference
+
+FastAPI declares each request parameter source with a dedicated function imported
+from `fastapi`. They are "sister" classes that share the same `Param` base and the
+same `Annotated[...]` declaration pattern.
+
+| Function | Import | Parameter source |
+| --- | --- | --- |
+| `Path` | `from fastapi import Path` | Path parameters (declared with `{name}` in the route path) |
+| `Query` | `from fastapi import Query` | Query parameters |
+| `Body` | `from fastapi import Body` | Request body |
+| `Header` | `from fastapi import Header` | HTTP headers |
+| `Cookie` | `from fastapi import Cookie` | Cookie parameters |
+
 ## Sources
 
 - [FastAPI](https://fastapi.tiangolo.com/)
