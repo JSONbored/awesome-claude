@@ -18,7 +18,7 @@ dateAdded: "2026-06-14"
 submittedAt: "2026-06-14"
 sourceSubmissionNumber: 1421
 sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1421"
-documentationUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
 usageSnippet: >-
   Use this checklist before approving a remote MCP server for Claude Code team
   rollout, focusing on OAuth, transport, tool scope, and registry provenance.
@@ -91,6 +91,34 @@ tool arguments, OAuth tokens, and results may traverse vendor infrastructure.
 Review requested scopes, consent screens, token lifetime, refresh behavior, and
 whether the server can act on behalf of users after initial approval. Prefer
 scoped service accounts over personal admin tokens.
+
+## Pin OAuth Scopes and Read Authorization Errors
+
+Claude Code lets you pin the OAuth scopes a remote HTTP server may request, instead of accepting whatever the upstream authorization server advertises. Set `oauth.scopes` in the server's `.mcp.json` entry to a single space-separated string:
+
+```json
+{
+  "mcpServers": {
+    "slack": {
+      "type": "http",
+      "url": "https://mcp.slack.com/mcp",
+      "oauth": {
+        "scopes": "channels:read chat:write search:read"
+      }
+    }
+  }
+}
+```
+
+`oauth.scopes` takes precedence over both `authServerMetadataUrl` and the scopes the server discovers at `/.well-known`. Leave it unset to let the MCP server determine the requested scope set.
+
+When validating a remote server's authorization behavior, map the HTTP status codes it returns. The MCP authorization specification defines these:
+
+| Status Code | Description | Usage |
+| --- | --- | --- |
+| 401 | Unauthorized | Authorization required or token invalid |
+| 403 | Forbidden | Invalid scopes or insufficient permissions |
+| 400 | Bad Request | Malformed authorization request |
 
 ### Registry listing is not automatic approval
 
