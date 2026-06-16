@@ -77,24 +77,44 @@ function pullRequestDiffRange() {
   throw new Error("BASE_SHA must be a full Git commit SHA for PR validation");
 }
 
+// Map git's `--name-status` codes to the status vocabulary the content-policy
+// scanner consumes (added / modified / removed). Deletions (D) MUST surface as
+// `removed` so delete-only PRs are exempted from content scanning downstream
+// instead of tripping missing_pr_file_content. (#content-deletion)
+const STATUS_BY_CODE = { A: "added", C: "added", D: "removed" };
+
 function changedFiles() {
   if (forceFullFromEvent) return [];
   if (eventName !== "pull_request" && !workflowDispatchDiff) return [];
   const output = execFileSync(
     "git",
-    ["diff", "--name-only", ...pullRequestDiffRange()],
+    ["diff", "--name-status", ...pullRequestDiffRange()],
     {
       encoding: "utf8",
     },
   );
   return output
     .split(/\r?\n/)
-    .map((line) => line.trim())
+    .map((line) => {
+      const parts = line.split("\t").map((part) => part.trim());
+      // Rename/copy lines are `R100\told\tnew` — take the destination path, as
+      // `--name-only` did; a normal line is `CODE\tpath`.
+      const code = parts[0] || "";
+      const filename = parts[parts.length - 1] || "";
+      if (parts.length < 2 || !code || !filename) return null;
+      return {
+        filename,
+        status: STATUS_BY_CODE[code[0].toUpperCase()] || "modified",
+      };
+    })
     .filter(Boolean)
-    .sort();
+    .sort((a, b) => a.filename.localeCompare(b.filename));
 }
 
-const files = changedFiles();
+const fileEntries = changedFiles();
+// Bare filename list — every lane flag below classifies on path only; status
+// rides along solely in the emitted `changed_files_json` for the policy scanner.
+const files = fileEntries.map((entry) => entry.filename);
 const workflowDispatchReadmeOnly =
   workflowDispatchDiff && files.length === 1 && files[0] === "README.md";
 const all =
@@ -253,7 +273,7 @@ const lines = [
   `content_categories=${contentCategories.join(",")}`,
   `content_categories_json=${JSON.stringify(contentCategories)}`,
   `changed_count=${files.length}`,
-  `changed_files_json=${JSON.stringify(files)}`,
+  `changed_files_json=${JSON.stringify(fileEntries)}`,
 ];
 
 if (outputPath) {

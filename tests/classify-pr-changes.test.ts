@@ -225,7 +225,29 @@ describe("PR change classifier", () => {
       raycast: "false",
     });
     expect(JSON.parse(outputs.changed_files_json)).toEqual([
-      "packages/registry/src/package-spec.js",
+      { filename: "packages/registry/src/package-spec.js", status: "added" },
+    ]);
+  });
+
+  it("threads a delete-only content PR as a removed entry (#content-deletion)", () => {
+    const { cwd } = createFixtureRepo();
+
+    const contentDir = path.join(cwd, "content", "agents");
+    fs.mkdirSync(contentDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(contentDir, "example.mdx"),
+      "---\ntitle: Example\n---\n",
+    );
+    git(cwd, ["add", "content/agents/example.mdx"]);
+    git(cwd, ["commit", "-m", "add content entry"]);
+    const baseSha = git(cwd, ["rev-parse", "HEAD"]);
+
+    git(cwd, ["rm", "content/agents/example.mdx"]);
+    git(cwd, ["commit", "-m", "remove content entry"]);
+
+    const outputs = runClassifier(cwd, baseSha);
+    expect(JSON.parse(outputs.changed_files_json)).toEqual([
+      { filename: "content/agents/example.mdx", status: "removed" },
     ]);
   });
 

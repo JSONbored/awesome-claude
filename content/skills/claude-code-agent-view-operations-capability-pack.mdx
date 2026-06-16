@@ -1,0 +1,169 @@
+---
+title: Claude Code Agent View Operations Capability Pack Skill
+slug: claude-code-agent-view-operations-capability-pack
+category: skills
+description: >-
+  Expert agent view operations capability pack applying documented claude agents dispatch, peek/reply, attach/detach, and shell fleet commands from official agent view documentation.
+cardDescription: >-
+  Operate Claude Code agent view fleets with dispatch, peek, and attach checklists.
+seoTitle: Claude Code Agent View Operations Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack applying documented Claude Code steps from official documentation—not an official Anthropic product.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1518
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1518"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/agent-view"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when planning or reviewing claude code agent view operations capability pack workflows using official Claude Code documentation.
+copySnippet: |-
+  # Trigger
+  "Apply the claude code agent view operations capability pack capability pack."
+
+  # Required output
+  1) Scope and configuration checklist
+  2) Risk and policy findings
+  3) Review matrix actions
+  4) Verification and rollback plan
+  5) Privacy-safe summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/agent-view"
+  - "https://code.claude.com/docs/en/worktrees"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code version and plan eligibility per official documentation."
+  - "Team policy for autonomous or scheduled workflows."
+  - "Staging environment for safe validation."
+  - "Human owner for production rollout approval."
+safetyNotes:
+  - "Autonomous workflows can run shell commands without mid-run user input—scope paths and tools first."
+  - "Do not enable destructive automation without explicit approval gates."
+  - "Review outputs as draft until a human validates evidence."
+privacyNotes:
+  - "Workflow and session output may contain proprietary code and credentials."
+  - "Summaries for external channels require redaction."
+tags:
+  - claude-code
+  - capability-pack
+readingTime: 9
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in official Claude Code documentation verified on **2026-06-16**. Behavior can change with releases; prefer live docs.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/agent-view
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- Agent view opens with `claude agents` and lists background sessions with state icons.
+- Each dispatch prompt starts a new session; peek and attach handle follow-ups.
+- Shell commands include `claude agents --json`, `claude attach`, `claude stop`, and `claude respawn`.
+- Sessions can be filtered with `--cwd` to one project tree.
+
+## Scope Note
+
+Community reusable workflow skill applying documented steps—not an official Anthropic product. Distinct from the agent view guide (tutorial) and fleet operator agent (prompt).
+
+## Core Workflow
+
+1. Open `claude agents` scoped with `--cwd` when needed.
+2. Dispatch independent tasks as separate rows.
+3. Triage blocked rows via peek before attach.
+4. Use shell JSON output for standups when TUI is unavailable.
+5. Stop or respawn sessions per documented commands.
+
+## Capability Scope
+
+- Configuration and eligibility checklist.
+- Risk and policy review.
+- Staging verification steps.
+- Rollback planning.
+- Privacy-safe stakeholder summary.
+
+## Compatibility
+
+### Native
+
+- **Claude Code**: use as an Agent Skill during rollout planning.
+
+### Manual Adaptation
+
+- **Generic AGENTS**: apply checklist against public documentation.
+
+## Required Inputs
+
+- Target repository or organization context.
+- Current settings and policy constraints.
+- Stakeholders for security review when applicable.
+
+## Production Rules
+
+- Require human approval before production-impacting automation.
+- Redact secrets from skill outputs and public tickets.
+- Prefer official documentation over forum assumptions.
+- Document rollback before enabling scheduled or autonomous runs.
+
+## Review Matrix
+
+| Signal | Action |
+| --- | --- |
+| Missing repro | Block autonomous run |
+| Broad tool scope | Narrow allowlists |
+| Draft findings | Label unverified until human review |
+| Policy drift | Align to managed settings |
+
+## Output Contract
+
+1. Scope and configuration summary.
+2. Findings with severity.
+3. Review matrix actions.
+4. Verification and rollback plan.
+5. Privacy-safe summary.
+
+## Troubleshooting
+
+**Issue:** Feature unavailable on your plan
+**Fix:** Confirm `/status` and official doc eligibility requirements.
+
+**Issue:** Run stalls on permissions
+**Fix:** Pre-approve read tools in staging; narrow path scope.
+
+## Duplicate Check
+
+Complements `agent-view-for-managing-multiple-claude-code-sessions` guide and fleet operator agent.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` from public Claude Code documentation. No paid placement or affiliate links.

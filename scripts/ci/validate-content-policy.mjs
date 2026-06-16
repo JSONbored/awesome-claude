@@ -235,7 +235,21 @@ function resolveFiles({ repoRoot, args }) {
   return source
     .map((file) => {
       const filename = normalizeText(file.filename);
-      const status = normalizeText(file.status) || "modified";
+      let status = normalizeText(file.status) || "modified";
+      // Defense-in-depth for delete-only PRs: a file reported as added/modified
+      // that is absent from the working tree (and carries no inline content) is
+      // effectively a deletion — e.g. its status was lost upstream (a bare-string
+      // --files-json defaults to "modified"). Reclassify as `removed` so it is
+      // exempted from content scanning instead of tripping missing_pr_file_content.
+      // Real PR CI checks the file out, so genuine adds/edits are unaffected. (#content-deletion)
+      if (
+        status !== "removed" &&
+        typeof file.content !== "string" &&
+        filename &&
+        !fs.existsSync(path.join(repoRoot, filename))
+      ) {
+        status = "removed";
+      }
       return {
         filename,
         status,

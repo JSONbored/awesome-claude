@@ -1,0 +1,100 @@
+---
+title: OAuth Patterns For MCP Server Authentication
+slug: oauth-patterns-for-mcp-server-authentication
+category: guides
+description: >-
+  Implement OAuth patterns for MCP servers in Claude Code: Dynamic Client Registration,
+  pre-configured client IDs, oauth.scopes pins, authServerMetadataUrl overrides, and
+  keychain token storage from official MCP documentation.
+cardDescription: >-
+  Configure MCP OAuth with scopes, callbacks, and secure token storage patterns.
+seoTitle: OAuth Patterns For MCP Server Authentication
+seoDescription: >-
+  Guide to OAuth patterns for MCP server authentication in Claude Code: /mcp flows,
+  oauth.scopes, callback ports, pre-configured credentials, and token storage.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1415
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1415"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+usageSnippet: >-
+  Choose OAuth pattern per server: dynamic registration, pre-configured client with
+  --callback-port, oauth.scopes pins in .mcp.json, then authenticate via /mcp.
+prerequisites:
+  - "Remote HTTP MCP server requiring OAuth per server documentation."
+  - "Developer portal access to register OAuth apps when DCR is unsupported."
+  - "Team policy for scope pins and credential storage."
+safetyNotes:
+  - "Pin oauth.scopes to least privilege; widen only when tools return insufficient_scope."
+  - "Client secrets belong in keychain/credentials storage—not committed .mcp.json."
+  - "Static Authorization headers bypass OAuth discovery—verify tokens separately."
+privacyNotes:
+  - "OAuth tokens in keychain still grant server access—revoke via /mcp Clear authentication."
+  - "Redirect URIs must match registered localhost callback ports exactly."
+sourceUrls:
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - mcp
+  - oauth
+  - authentication
+  - claude-code
+  - security
+keywords:
+  - MCP OAuth patterns Claude Code
+  - oauth.scopes MCP server
+  - MCP callback port Claude Code
+readingTime: 9
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude Code supports OAuth for remote MCP servers via `/mcp`, with optional scope
+pins, fixed callback ports, and pre-configured client credentials when dynamic
+registration is unavailable.
+
+## OAuth Pattern Selection
+
+| Pattern | When to use |
+| --- | --- |
+| Dynamic registration | Server supports DCR |
+| `--client-id` + `--client-secret` | Portal-registered app |
+| `oauth.scopes` in JSON | Limit advertised scopes |
+| `authServerMetadataUrl` | Discovery chain fails |
+| `--callback-port` | Server requires fixed redirect URI |
+
+## Step-by-Step Guide
+
+1. Add HTTP server to `.mcp.json` or CLI.
+2. Choose registration path from server docs.
+3. Pin scopes in JSON when security team requires subset.
+4. Run `/mcp` to complete browser auth.
+5. Verify with `claude mcp get <server>`.
+6. Document revocation steps (Clear authentication).
+
+## Troubleshooting
+
+**Issue:** incompatible auth server / no DCR
+**Fix:** Register app manually; use `--client-id` and `--client-secret`.
+
+**Issue:** insufficient_scope on tool call
+**Fix:** Widen `oauth.scopes`; re-authenticate via `/mcp`.
+
+## Duplicate Check
+
+Complements `mcp-server-auth-least-privilege` (server builder focus).
+
+## References
+
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
