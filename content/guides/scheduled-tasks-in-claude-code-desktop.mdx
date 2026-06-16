@@ -1,0 +1,140 @@
+---
+title: Scheduled Tasks In Claude Code Desktop
+slug: scheduled-tasks-in-claude-code-desktop
+category: guides
+description: >-
+  Use Claude Code Desktop scheduled tasks to run recurring local maintenance: create tasks in Desktop, scope repositories and environments, review autonomous runs, and disable tasks when behavior drifts.
+cardDescription: >-
+  Schedule recurring Claude Code maintenance from Desktop with scoped tasks and run review.
+seoTitle: Scheduled Tasks In Claude Code Desktop
+seoDescription: >-
+  Guide to Claude Code Desktop scheduled tasks: create recurring local tasks, scope repos and environments, review runs, and rollback when automation drifts.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1383
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1383"
+documentationUrl: "https://code.claude.com/docs/en/desktop-scheduled-tasks"
+usageSnippet: >-
+  Open Claude Code Desktop scheduled tasks, define a self-contained prompt, pick cadence and repo scope, trim connectors, review the first run manually, then enable production schedules only after sign-off.
+prerequisites:
+  - "Claude Code Desktop installed with scheduled tasks enabled per plan."
+  - "Repositories and branches the task may touch are identified."
+  - "Human reviewer assigned before merging task-opened changes."
+  - "Rollback plan to disable or delete the task documented."
+safetyNotes:
+  - "Scheduled tasks run as autonomous sessions without mid-run approval prompts—scope paths and tools narrowly."
+  - "Tasks inherit Desktop network and connector settings—remove unused MCP connectors."
+  - "Do not schedule destructive maintenance on production branches without explicit policy."
+privacyNotes:
+  - "Task prompts and run output may include proprietary code and connector payloads."
+  - "Scheduled run logs on shared machines need access controls."
+  - "Disable tasks before offboarding machines that stored local session state."
+sourceUrls:
+  - "https://code.claude.com/docs/en/desktop-scheduled-tasks"
+  - "https://code.claude.com/docs/en/desktop"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - desktop
+  - scheduled-tasks
+  - automation
+  - maintenance
+keywords:
+  - Claude Code Desktop scheduled tasks
+  - Desktop recurring Claude Code maintenance
+  - local scheduled Claude Code tasks
+readingTime: 8
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Schedule recurring Claude Code maintenance from Desktop with scoped tasks and run review.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Check", "description": "Claude Code Desktop installed with scheduled tasks enabled per plan."}
+- [ ] {"task": "Check", "description": "Repositories and branches the task may touch are identified."}
+- [ ] {"task": "Check", "description": "Human reviewer assigned before merging task-opened changes."}
+- [ ] {"task": "Check", "description": "Rollback plan to disable or delete the task documented."}
+
+## Core Concepts Explained
+
+Official docs position Desktop scheduled tasks as recurring Claude Code runs
+configured from the Desktop app rather than cloud-only routines at claude.ai.
+
+### Local cadence vs cloud routines
+
+Desktop scheduled tasks target maintainers who want recurring work tied to Desktop
+environments; cloud routines use separate triggers documented on code.claude.com.
+
+### Autonomous execution
+
+Scheduled runs proceed without mid-run user prompts except permission boundaries
+already configured—treat schedules like unattended automation.
+
+## Step-by-Step Implementation Guide
+
+1. **Define the maintenance goal.** Examples: dependency audit, stale branch
+cleanup, doc link check, or test smoke suite—state success criteria in the prompt.
+
+2. **Open Desktop scheduled tasks.** Create a new task with name, prompt, and
+cadence per Desktop UI (daily, weekly, or custom intervals documented on
+code.claude.com).
+
+3. **Scope repositories and environment.** Limit repos, branches, and network
+connectors to minimum necessary blast radius.
+
+4. **Pilot one manual run.** Inspect diff, logs, and connector actions before
+enabling the recurring schedule.
+
+5. **Assign a human reviewer.** No merge from task output without CODEOWNERS review.
+
+6. **Document rollback.** Record steps to disable or delete the task and revert
+branches if a run misbehaves.
+
+7. **Revisit quarterly.** Remove tasks whose prompts no longer match repository layout.
+
+## Troubleshooting
+
+### Task ran but changed unexpected files
+
+Disable the schedule, revert the branch, and narrow repo path scope in the task
+configuration before re-enabling.
+
+### Connectors accessed production services
+
+Remove unused MCP connectors from the Desktop environment attached to the task.
+
+### Cadence too aggressive for quota
+
+Increase interval per Desktop limits and consolidate multiple small tasks into one
+prompt with a checklist.
+
+## Source Verification Notes
+
+Verified against official documentation on **2026-06-16**:
+
+- Desktop scheduled tasks documentation describes creating recurring tasks from Claude Code Desktop.
+- Tasks combine prompts, repositories, environments, and schedule cadence.
+- Runs execute as autonomous Desktop or cloud sessions depending on configuration.
+- Teams should review first runs manually before trusting recurring output.
+- Tasks can be disabled or edited from Desktop settings when behavior drifts.
+
+## Duplicate Check
+
+Complements `claude-code-desktop-scheduled-maintenance-capability-pack` skill (review matrices) and `routines-for-recurring-claude-code-maintenance` (cloud routines). This guide focuses on Desktop scheduled task UI workflow.
+
+## References
+
+- Primary documentation - https://code.claude.com/docs/en/desktop-scheduled-tasks

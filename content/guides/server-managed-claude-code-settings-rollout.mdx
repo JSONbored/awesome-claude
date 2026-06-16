@@ -1,0 +1,171 @@
+---
+title: Server-Managed Claude Code Settings Rollout
+slug: server-managed-claude-code-settings-rollout
+category: guides
+description: >-
+  Roll out Claude Code server-managed settings for Teams and Enterprise: configure
+  JSON in Claude.ai Admin Settings, understand delivery and caching, verify with
+  /permissions, and use forceRemoteSettingsRefresh when fail-closed startup is required.
+cardDescription: >-
+  Roll out server-managed Claude Code settings from Claude.ai admin console.
+seoTitle: Server-Managed Claude Code Settings Rollout
+seoDescription: >-
+  Guide to Claude Code server-managed settings rollout: admin console JSON, delivery
+  precedence, caching, security approval dialogs, and forceRemoteSettingsRefresh from
+  official documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1392
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1392"
+documentationUrl: "https://code.claude.com/docs/en/server-managed-settings"
+usageSnippet: >-
+  In Claude.ai Admin Settings > Claude Code > Managed settings, publish JSON policy,
+  have users restart Claude Code or wait for hourly polling, verify with /permissions,
+  and enable forceRemoteSettingsRefresh when startup must block until policy loads.
+prerequisites:
+  - "Claude for Teams or Claude for Enterprise plan."
+  - "Claude Code 2.1.38+ (Teams) or 2.1.30+ (Enterprise)."
+  - "Network access to api.anthropic.com for managed settings delivery."
+  - "Primary Owner or Owner role in Claude.ai admin console."
+safetyNotes:
+  - "Server-managed settings are client-side controls—users with admin access on unmanaged devices can tamper with caches; use endpoint-managed settings with MDM for stronger guarantees."
+  - "Hooks and shell commands in managed JSON trigger security approval dialogs on first apply."
+  - "Third-party model providers bypass server-managed settings per official platform availability table."
+privacyNotes:
+  - "Managed hooks may log file edits—document audit script behavior to users."
+  - "Audit log export requires compliance API access through your Anthropic account team."
+  - "Cached settings live at ~/.claude/remote-settings.json on client machines."
+sourceUrls:
+  - "https://code.claude.com/docs/en/server-managed-settings"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - server-managed-settings
+  - enterprise
+  - governance
+  - teams
+keywords:
+  - Claude Code server-managed settings rollout
+  - managed settings Claude.ai admin
+  - forceRemoteSettingsRefresh Claude Code
+  - server managed settings delivery
+readingTime: 9
+difficultyScore: 56
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Server-managed settings let Teams and Enterprise admins publish Claude Code
+configuration JSON from Claude.ai. Clients fetch policy at startup and poll hourly.
+Settings occupy the highest precedence tier. Use `/permissions` to verify delivery
+and `forceRemoteSettingsRefresh` when startup must block until fresh policy loads.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Plan eligibility", "description": "Teams or Enterprise with supported Claude Code versions"}
+- [ ] {"task": "Admin role", "description": "Primary Owner or Owner can edit Managed settings"}
+- [ ] {"task": "Network path", "description": "Clients reach api.anthropic.com"}
+- [ ] {"task": "Pilot users", "description": "Small group validates policy before org-wide rollout"}
+
+## Core Concepts Explained
+
+### Server-managed vs endpoint-managed
+
+Official docs compare server-managed delivery (Anthropic servers at authentication)
+with endpoint-managed plist/registry files for MDM-enrolled devices. MDM provides
+stronger OS-level enforcement.
+
+### Delivery precedence
+
+Server-managed settings are checked before endpoint-managed sources. The first
+managed source delivering a non-empty configuration wins; sources do not merge.
+
+### Caching behavior
+
+First launch without cache fetches asynchronously with a brief window before
+restrictions apply. Cached settings apply immediately on later launches while
+background refresh runs.
+
+## Step-by-Step Implementation Guide
+
+1. **Open admin console.** Claude.ai → Admin Settings → Claude Code → Managed settings.
+
+2. **Draft JSON policy.** Example permission deny list from official docs:
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Bash(curl *)",
+      "Read(./.env)",
+      "Read(./secrets/**)"
+    ],
+    "disableBypassPermissionsMode": "disable"
+  },
+  "allowManagedPermissionRulesOnly": true
+}
+```
+
+3. **Save and communicate restart.** Users receive updates on next startup or
+   hourly polling; ask pilot users to restart and approve security dialogs for hooks
+   or custom env vars when present.
+
+4. **Verify delivery.** Have users run `/permissions` to view effective managed rules;
+   use `/status` to see which managed source is active.
+
+5. **Optional fail-closed startup.** Add `"forceRemoteSettingsRefresh": true` when
+   the CLI must block until a fresh fetch succeeds (requires reliable
+   api.anthropic.com access).
+
+6. **Document limitations.** Settings apply uniformly to all org users; per-group
+   configs are not supported yet; `managed-mcp.json` files are not distributed—use
+   `allowedMcpServers` / `deniedMcpServers` keys instead.
+
+7. **Plan audit access.** Request compliance API or audit log export through your
+   Anthropic account team for change tracking.
+
+## Troubleshooting
+
+### User still has old permissions
+
+Wait for hourly poll or restart Claude Code; check `/status` for active managed source.
+
+### Startup exits with forceRemoteSettingsRefresh
+
+Confirm api.anthropic.com reachable; users can run `claude auth login` exempt from check per v2.1.139 docs.
+
+### Settings bypassed unexpectedly
+
+Third-party providers (Bedrock, Vertex, Foundry, custom ANTHROPIC_BASE_URL) bypass
+server-managed settings per platform availability section.
+
+## Source Verification Notes
+
+Verified against https://code.claude.com/docs/en/server-managed-settings on **2026-06-16**:
+
+- Requires Teams/Enterprise and Claude Code 2.1.38+ (Teams) or 2.1.30+ (Enterprise).
+- Admin console path: Admin Settings > Claude Code > Managed settings.
+- Fetch at startup with hourly polling; cached at `~/.claude/remote-settings.json`.
+- Hooks, shell commands, and non-allowlisted env vars trigger security approval dialogs.
+- `forceRemoteSettingsRefresh` blocks startup until fresh fetch when enabled.
+- Invalid entries are stripped with tolerant parsing on v2.1.169+.
+
+## Duplicate Check
+
+Complements enterprise settings and permissions guides. No existing guide walks
+through server-managed settings admin console rollout and delivery verification
+using official server-managed-settings documentation.
+
+## References
+
+- Configure server-managed settings - https://code.claude.com/docs/en/server-managed-settings
