@@ -1,0 +1,97 @@
+---
+title: Ultraplan For Cloud-First Implementation Planning
+slug: ultraplan-for-cloud-first-implementation-planning
+category: guides
+description: >-
+  Plan complex changes with Claude Code ultraplan: launch /ultraplan from the CLI,
+  review cloud drafts on claude.ai, comment inline, and choose web or terminal execution.
+cardDescription: >-
+  Use /ultraplan to draft plans in Claude Code on the web and execute locally or remotely.
+seoTitle: Ultraplan For Cloud-First Implementation Planning
+seoDescription: >-
+  Guide to Claude Code ultraplan: /ultraplan command, cloud plan review, inline comments,
+  and approve-to-web or teleport-back workflows from official documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1376
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1376"
+documentationUrl: "https://code.claude.com/docs/en/ultraplan"
+usageSnippet: >-
+  Run /ultraplan with a self-contained prompt, monitor status in the CLI, review the
+  plan in the browser, then approve execution on the web or teleport back to terminal.
+prerequisites:
+  - "Claude Code v2.1.91+ with claude.ai subscription login (not API-key-only auth)."
+  - "GitHub repository connected for Claude Code on the web."
+  - "Maintainer review before merging cloud-generated pull requests."
+safetyNotes:
+  - "Cloud execution runs autonomously—treat approved plans like production-impacting work."
+  - "Remote Control disconnects when ultraplan starts; only one claude.ai/code session control path is active."
+privacyNotes:
+  - "Cloud planning sessions may include repository paths and design notes in claude.ai history."
+  - "Plan comments and reactions are stored in the web session until archived."
+sourceUrls:
+  - "https://code.claude.com/docs/en/ultraplan"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - ultraplan
+  - planning
+  - cloud
+keywords:
+  - Claude Code ultraplan workflow
+  - /ultraplan cloud planning guide
+readingTime: 8
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+**Ultraplan** sends a planning task from your local CLI to **Claude Code on the web**
+in plan mode. Review the draft in a browser with inline comments, then execute on
+the web or teleport the approved plan back to your terminal.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Version", "description": "Claude Code v2.1.91 or later"}
+- [ ] {"task": "Login", "description": "claude.ai subscription login; Bedrock, Vertex, and Foundry are not supported"}
+- [ ] {"task": "GitHub repo", "description": "Connected repository for cloud sessions"}
+- [ ] {"task": "Review owner", "description": "Human approves cloud-opened PRs"}
+
+## Step-by-Step Workflow
+
+1. Launch with **`/ultraplan <prompt>`**, include the keyword **`ultraplan`** in a prompt, or choose **refine with Ultraplan on Claude Code on the web** after a local plan.
+2. Confirm the launch dialog (skipped when promoting a local plan).
+3. Watch CLI status: **`◇ ultraplan`**, **`◇ ultraplan needs your input`**, or **`◆ ultraplan ready`**.
+4. Open the session link when ready; leave inline comments or emoji reactions on sections.
+5. Choose **Approve Claude's plan and start coding in your browser** or **Approve plan and teleport back to terminal**.
+6. If teleported back, pick **Implement here**, **Start new session**, or **Cancel** (save plan to file).
+
+## Source Verification Notes
+
+Verified against official ultraplan documentation on **2026-06-16**:
+
+- **`/ultraplan`** launches cloud plan mode; the keyword **`ultraplan`** also triggers it.
+- Requires **Claude Code on the web** and a **GitHub repository**; unavailable on Bedrock, Vertex, or Foundry.
+- Status indicators document researching, input needed, and plan ready states.
+- **`/tasks`** opens detail view with session link and **Stop ultraplan** action.
+- Browser review supports inline comments, emoji reactions, and an outline sidebar.
+- Teleport-back options: **Implement here**, **Start new session**, or **Cancel** with saved plan file path.
+
+## Duplicate Check
+
+Complements **`claude-code-on-the-web-for-repository-planning`** (general web planning).
+This guide focuses on the **`/ultraplan` command workflow** and teleport-back execution choices.
+
+## Troubleshooting
+
+**Issue:** Ultraplan unavailable
+**Fix:** Confirm claude.ai login, GitHub connection, and CLI version at least v2.1.91 per official docs.
