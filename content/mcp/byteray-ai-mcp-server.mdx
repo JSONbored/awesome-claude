@@ -1,0 +1,97 @@
+---
+title: ByteRay AI MCP Server
+slug: byteray-ai-mcp-server
+category: mcp
+description: >-
+  ByteRay MCP provides AI-augmented binary vulnerability analysis with taint tracing and zero-day hunting tools.
+cardDescription: >-
+  ByteRay MCP provides AI-augmented binary vulnerability analysis with taint tracing and zero-day hunting tools.
+seoTitle: ByteRay AI MCP Server for Claude
+seoDescription: >-
+  Configure ByteRay AI MCP Server (ai.byteray/byteray-mcp) with streamable HTTP transport and documented auth boundaries.
+author: ByteRay
+authorProfileUrl: "https://byteray.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+sourceSubmissionNumber: 1486
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1486"
+documentationUrl: "https://byteray.ai"
+websiteUrl: "https://byteray.ai"
+retrievalSources:
+  - "https://byteray.ai"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+installable: true
+installCommand: "claude mcp add --transport http byteray YOUR_BYTERAY_MCP_REMOTE"
+usageSnippet: >-
+  Add the documented remote MCP endpoint after reviewing registry auth requirements and tool scope.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "byteray": {
+        "url": "https://YOUR_BYTERAY_MCP_REMOTE",
+        "type": "http"
+
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "byteray": {
+        "url": "https://YOUR_BYTERAY_MCP_REMOTE",
+        "type": "http"
+
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "MCP client with streamable HTTP transport support."
+  - "Vendor account or API credentials when registry metadata marks Authorization headers as required."
+  - "Security review of tool write scope before production use."
+safetyNotes:
+  - "Remote MCP tools may trigger live API writes—confirm least-privilege credentials."
+  - "Treat Authorization headers and API keys as secrets; never commit them to repositories."
+privacyNotes:
+  - "Queries, tool payloads, and responses enter MCP client context and vendor infrastructure logs."
+  - "Review data residency and retention policies before connecting production accounts."
+tags:
+  - mcp
+  - registry
+keywords:
+  - ByteRay AI MCP Server
+  - ai.byteray/byteray-mcp MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+**ByteRay AI MCP Server** is listed in the MCP Registry as **`ai.byteray/byteray-mcp`**.
+ByteRay MCP provides AI-augmented binary vulnerability analysis with taint tracing and zero-day hunting tools.
+
+## Installation
+
+```bash
+claude mcp add --transport http byteray YOUR_BYTERAY_MCP_REMOTE
+```
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- MCP Registry search returns **`ai.byteray/byteray-mcp`** with documented remote transport metadata.
+- Primary documentation URL **https://byteray.ai** is publicly reachable.
+- Claude Code MCP docs describe HTTP connector setup patterns used in this entry.
+
+## Duplicate Check
+
+No existing `content/mcp/` entry documents registry package `ai.byteray/byteray-mcp`.
+
+## Editorial Disclosure
+
+Community listing by **kiannidev** from MCP Registry metadata and reachable vendor documentation.
