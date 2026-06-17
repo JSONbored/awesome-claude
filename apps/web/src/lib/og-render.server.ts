@@ -135,7 +135,7 @@ export async function renderOgPng(opts: {
   const html = `<div style="display:flex;width:1200px;height:630px;background-color:${OG_BG};background-image:url('${GRID_BG_DATA_URI}');background-size:1200px 630px;background-repeat:no-repeat;">
   <div style="display:flex;width:14px;height:630px;background:${accent};"></div>
   <div style="display:flex;flex-direction:column;flex:1;padding:80px 80px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;justify-content:${badge ? "space-between" : "flex-start"};">
       <div style="display:flex;font-family:'Space Grotesk';font-weight:500;font-size:20px;letter-spacing:2px;color:${OG_INK_SUBTLE};">${eyebrow}</div>
       ${badgeHtml}
     </div>
