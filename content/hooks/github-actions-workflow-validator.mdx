@@ -55,20 +55,15 @@ tags:
   - workflows
   - validation
   - yaml
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - actions
-  - ci-cd
-  - claude
-  - development
-  - github
-  - github-actions
-  - hooks
-  - tools
-  - validation
-  - validator
-  - workflow
-  - workflows
-  - yaml
+  - github actions workflow validator hook
+  - claude code github actions workflow validator hook
+  - github actions workflow validator claude hook
+  - claude github actions workflow validator automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true
