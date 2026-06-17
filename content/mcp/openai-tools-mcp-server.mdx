@@ -1,0 +1,116 @@
+---
+title: OpenAI Tools MCP Server
+slug: openai-tools-mcp-server
+category: mcp
+description: >-
+  Registry MCP server ai.com.mcp/openai-tools that wraps OpenAI image and audio generation
+  endpoints through HAPI CLI with streamable HTTP transport.
+cardDescription: >-
+  Connect Claude to OpenAI image and audio generation tools via the OpenAI Tools MCP server.
+seoTitle: OpenAI Tools MCP Server for Claude
+seoDescription: >-
+  Configure OpenAI Tools MCP from la-rebelion/hapimcp and MCP Registry ai.com.mcp/openai-tools
+  with Bearer OpenAI API keys and streamable HTTP transport.
+author: OpenAI Tools MCP
+authorProfileUrl: "https://github.com/la-rebelion"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+sourceSubmissionNumber: 1492
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1492"
+repoUrl: "https://github.com/la-rebelion/hapimcp"
+documentationUrl: "https://platform.openai.com/docs/api-reference"
+websiteUrl: "https://platform.openai.com/docs/api-reference"
+retrievalSources:
+  - "https://platform.openai.com/docs/api-reference"
+  - "https://raw.githubusercontent.com/la-rebelion/hapimcp/main/README.md"
+  - "https://github.com/la-rebelion/hapimcp"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+installable: true
+installCommand: 'claude mcp add --transport http openai-tools https://openai-tools.run.mcp.com.ai/mcp --header "Authorization: Bearer YOUR_OPENAI_API_KEY"'
+usageSnippet: >-
+  Add the registry remote with a Bearer OpenAI API key header; review which image and audio
+  tools are enabled before production use.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "openai-tools": {
+        "url": "https://openai-tools.run.mcp.com.ai/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer sk-..."
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "openai-tools": {
+        "url": "https://openai-tools.run.mcp.com.ai/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer sk-..."
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "OpenAI API key with billing enabled for the image/audio endpoints exposed as tools."
+  - "MCP client with streamable HTTP transport support."
+  - "Review of per-call cost and content policy before enabling in shared workspaces."
+safetyNotes:
+  - "Image and audio generation tools spend paid API quota and may produce sensitive media."
+  - "Bearer tokens are secrets—store in environment variables or secret managers only."
+  - "Hosted registry remotes process requests on vendor infrastructure; review data residency."
+privacyNotes:
+  - "Prompts, generated media metadata, and API responses enter MCP client context and provider logs."
+  - "Do not embed customer PII in generation prompts unless approved for OpenAI processing."
+tags:
+  - openai
+  - image-generation
+  - audio
+  - mcp
+  - hapi
+keywords:
+  - OpenAI Tools MCP server
+  - OpenAI image audio MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+**OpenAI Tools MCP Server** is registered as **`ai.com.mcp/openai-tools`**. Registry metadata
+describes a focused server for **OpenAI image and audio generation** endpoints wrapped via
+**HAPI CLI** with **streamable HTTP** transport and a required **Authorization** Bearer header
+for OpenAI API keys.
+
+## Installation
+
+```bash
+claude mcp add --transport http openai-tools https://openai-tools.run.mcp.com.ai/mcp \
+  --header "Authorization: Bearer YOUR_OPENAI_API_KEY"
+```
+
+Self-host with **la-rebelion/hapimcp** when you need private infrastructure instead of the registry remote.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- MCP Registry lists **`ai.com.mcp/openai-tools`** with remote **https://openai-tools.run.mcp.com.ai/mcp**.
+- Registry repository URL points to **la-rebelion/hapimcp** README for HAPI CLI packaging.
+- **platform.openai.com/docs/api-reference** documents OpenAI REST endpoints referenced by the tools.
+
+## Duplicate Check
+
+Distinct from generic **HAPI MCP** OpenAPI tooling and unrelated OpenAI SDK-only guides.
+
+## Editorial Disclosure
+
+Community listing by **kiannidev** from MCP Registry metadata and public OpenAI API docs.
