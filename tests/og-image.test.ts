@@ -18,19 +18,19 @@ describe("og image accent sanitization", () => {
   });
 
   it("falls back to the default accent for missing or non-hex values", () => {
-    expect(safeAccent(undefined)).toBe("#c5e84e");
-    expect(safeAccent(null)).toBe("#c5e84e");
-    expect(safeAccent("red")).toBe("#c5e84e");
-    expect(safeAccent("#ggg")).toBe("#c5e84e");
+    expect(safeAccent(undefined)).toBe("#e1f32a");
+    expect(safeAccent(null)).toBe("#e1f32a");
+    expect(safeAccent("red")).toBe("#e1f32a");
+    expect(safeAccent("#ggg")).toBe("#e1f32a");
   });
 
   it("rejects attribute-breakout payloads so the SVG cannot be injected", () => {
     const payload = '"><script>alert(1)</script>';
-    expect(safeAccent(payload)).toBe("#c5e84e");
+    expect(safeAccent(payload)).toBe("#e1f32a");
 
     const svg = renderOgSvg({ title: "Hello", accent: payload });
     expect(svg).not.toContain("<script>");
-    expect(svg).toContain('fill="#c5e84e"');
+    expect(svg).toContain('fill="#e1f32a"');
   });
 });
 
