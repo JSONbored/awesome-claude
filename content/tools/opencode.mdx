@@ -10,9 +10,17 @@ author: SST
 dateAdded: "2026-04-27"
 websiteUrl: "https://opencode.ai"
 documentationUrl: "https://opencode.ai"
+retrievalSources:
+  - "https://opencode.ai/docs/"
+  - "https://aider.chat/"
+  - "https://code.claude.com/docs/en/overview"
 repoUrl: "https://github.com/sst/opencode"
 pricingModel: open-source
 disclosure: editorial
+safetyNotes:
+  - "OpenCode is an agent that reads, edits, and can run code in your local repository; review proposed changes and run it in version-controlled projects."
+privacyNotes:
+  - "OpenCode sends your code, prompts, and file context to the configured LLM provider to plan and apply edits; choose providers deliberately and keep secrets out of shared context."
 applicationCategory: DeveloperApplication
 operatingSystem: macOS, Windows, Linux
 tags:
@@ -22,6 +30,25 @@ keywords:
   - terminal coding agent
   - ai development cli
 ---
+
+## Key capabilities
+
+- **Terminal-first agent** — a TUI coding agent that reads, edits, and runs code from the command line.
+- **Model-flexible** — provider-agnostic, so you can point it at different LLM backends.
+- **Codebase-aware edits** — applies multi-file changes within your local repository.
+- **Open source** — self-hostable and inspectable (`sst/opencode`).
+
+## How OpenCode compares
+
+OpenCode is one of several terminal/agentic coding tools in this directory:
+
+| Tool | Form factor | Open source | Notable for |
+| --- | --- | --- | --- |
+| **OpenCode** | Terminal AI coding agent (TUI) | Yes | Provider-agnostic, model-flexible |
+| **Aider** | Terminal AI pair programmer | Yes | Git-aware commits per change |
+| **Claude Code** | Terminal-based agentic coding tool | No | MCP, hooks, and subagents |
+
+Choose OpenCode for an open-source, model-flexible terminal agent; Aider for git-centric pair programming, or Claude Code for a deeper agent platform with MCP, hooks, and subagents.
 
 ## Editorial notes
 

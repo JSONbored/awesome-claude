@@ -10,8 +10,15 @@ author: LangChain
 dateAdded: "2026-04-27"
 websiteUrl: "https://www.langchain.com/langsmith/observability"
 documentationUrl: "https://docs.langchain.com/langsmith/home"
+retrievalSources:
+  - "https://docs.langchain.com/langsmith/home"
+  - "https://arize.com/docs/phoenix"
+  - "https://docs.helicone.ai/"
+  - "https://www.braintrust.dev/docs"
 pricingModel: freemium
 disclosure: editorial
+privacyNotes:
+  - "LangSmith receives traces of your LLM and agent runs — prompts, outputs, tool calls, and metadata — sent to LangSmith's cloud (or your self-hosted instance); review what trace data leaves your environment and keep secrets out of logged inputs."
 applicationCategory: DeveloperApplication
 operatingSystem: Web
 tags:
@@ -28,6 +35,26 @@ keywords:
 ## Editorial notes
 
 LangSmith is useful for teams that need traceability, regression testing, and evaluation around LLM and agent systems.
+
+## Key capabilities
+
+- **Tracing** — captures detailed traces of LLM and agent runs (inputs, outputs, tool calls, latency, token usage).
+- **Evaluation** — run dataset-based and LLM-as-a-judge evaluations, plus regression testing across prompt/model versions.
+- **Prompt management** — version, compare, and test prompts in a playground.
+- **Framework integration** — native LangChain/LangGraph support, plus an SDK and OpenTelemetry for other stacks.
+
+## How LangSmith compares
+
+LangSmith competes with several LLM observability/evaluation tools in this directory:
+
+| Tool | Type | Self-hostable | Notable for |
+| --- | --- | --- | --- |
+| **LangSmith** | Observability + evaluation platform | Enterprise tier | Deep LangChain / LangGraph integration |
+| **Arize Phoenix** | Open-source observability + evals | Yes | OpenTelemetry-based tracing that runs locally |
+| **Helicone** | Observability via a request-logging proxy | Yes | One-line integration that captures requests |
+| **Braintrust** | Evals + experimentation | SaaS | Eval-first experimentation workflow |
+
+Pick LangSmith if you are building on LangChain/LangGraph and want tightly integrated tracing and evals; consider Phoenix for an open-source, self-hostable alternative or Helicone for proxy-based request logging.
 
 ## Disclosure
 

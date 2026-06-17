@@ -28,8 +28,13 @@ skillType: general
 skillLevel: advanced
 verificationStatus: draft
 verifiedAt: "2026-04-10"
+safetyNotes:
+  - "This skill produces automated release recommendations (merge, patch, or rollback) from eval scores; treat them as decision support and require human review before gating production releases or running suggested commands."
 retrievalSources:
   - "https://openai.com/index/new-tools-and-features-in-the-responses-api/"
+  - "https://www.promptfoo.dev/docs/intro/"
+  - "https://docs.ragas.io/"
+  - "https://docs.confident-ai.com/"
 testedPlatforms:
   - Claude
   - Codex
@@ -93,6 +98,18 @@ This skill helps you turn subjective "looks good" checks into measurable, repeat
 - Deterministic scoring rubric and weighted pass/fail thresholds
 - Regression report with severity and root-cause candidates
 - Release recommendation for merge, patch, or rollback
+
+## Eval frameworks you can wire into this gate
+
+This skill defines the regression-gate workflow; you can back the scoring with an existing eval framework:
+
+| Framework | Focus | Notable for |
+| --- | --- | --- |
+| **Promptfoo** | Test-style LLM evals + red-teaming | YAML test cases, CI-friendly, assertion library |
+| **Ragas** | RAG-specific evaluation | Retrieval/answer metrics (faithfulness, relevance) |
+| **DeepEval** | Pytest-style LLM evals | Familiar unit-test ergonomics and metric library |
+
+Use Promptfoo for broad CI assertions, Ragas when the system is retrieval-augmented, or DeepEval if you want pytest-native ergonomics — then feed their results into this gate's pass/fail thresholds.
 
 ## How to Use This Skill
 

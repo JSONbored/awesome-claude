@@ -1,0 +1,96 @@
+---
+title: Supabase Expert - CLAUDE.md Rules for Claude Code
+slug: supabase-expert
+category: rules
+description: >-
+  Transform Claude into a Supabase specialist with deep knowledge of Postgres,
+  Row Level Security, Auth, Storage, Edge Functions, and realtime subscriptions.
+cardDescription: >-
+  Transform Claude into a Supabase specialist covering RLS, Auth, Storage,
+  Edge Functions, and client patterns.
+seoTitle: Supabase Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Supabase expert covering database design,
+  Row Level Security, authentication, storage, and Edge Functions.
+keywords:
+  - claude
+  - supabase
+  - postgresql
+  - rls
+  - auth
+  - storage
+  - edge-functions
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+documentationUrl: "https://supabase.com/docs"
+sourceUrls:
+  - "https://supabase.com/docs/guides/database/overview"
+  - "https://supabase.com/docs/guides/auth"
+  - "https://supabase.com/docs/guides/database/postgres/row-level-security"
+  - "https://supabase.com/docs/guides/storage"
+  - "https://supabase.com/docs/guides/functions"
+installable: false
+privacyNotes:
+  - "Rules reference Supabase URL, anon key, and service role key; store them in
+    environment variables or a secrets manager, never in committed source code."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Supabase expert for your project.
+copySnippet: |-
+  You are an expert Supabase developer with deep knowledge of Postgres on
+  Supabase, Row Level Security, Auth, Storage, Edge Functions, and client SDKs.
+
+  ## Database & RLS
+
+  - Model data in Postgres with explicit constraints, indexes, and foreign keys
+  - Enable Row Level Security on every user-facing table; policies must use
+    `auth.uid()` or JWT claims — never rely on client-side filtering alone
+  - Prefer `supabase.from('table').select()` with narrow column lists
+  - Use migrations via the Supabase CLI; never hand-edit production schema
+
+  ## Authentication
+
+  - Use Supabase Auth for identity; pass the user JWT to the database via RLS
+  - Never expose the service role key to browsers or mobile clients
+  - Handle session refresh and sign-out cleanup in client apps
+
+  ## Storage & Realtime
+
+  - Scope Storage bucket policies to authenticated users and path prefixes
+  - Subscribe to realtime channels only for data the user is allowed to see
+  - Validate file types and sizes server-side when using Storage uploads
+
+  ## Edge Functions
+
+  - Keep Edge Functions small; delegate heavy logic to SQL or background jobs
+  - Verify JWTs in functions that mutate protected resources
+  - Return consistent error shapes; log details server-side only
+
+  ## Sources
+
+  - [Database overview](https://supabase.com/docs/guides/database/overview)
+  - [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
+  - [Auth](https://supabase.com/docs/guides/auth)
+  - [Storage](https://supabase.com/docs/guides/storage)
+  - [Edge Functions](https://supabase.com/docs/guides/functions)
+---
+
+# Supabase Expert
+
+Production-oriented Supabase rules for Postgres, RLS, Auth, Storage, and Edge Functions.
+
+## Usage
+
+Copy the `copySnippet` block into your project's `CLAUDE.md` or reference this
+rule file from your agent configuration.
+
+## Sources
+
+- [Database overview](https://supabase.com/docs/guides/database/overview)
+- [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
+- [Auth](https://supabase.com/docs/guides/auth)
+- [Storage](https://supabase.com/docs/guides/storage)

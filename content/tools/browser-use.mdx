@@ -10,6 +10,11 @@ author: Browser Use
 dateAdded: "2026-04-27"
 websiteUrl: "https://browser-use.com"
 documentationUrl: "https://docs.browser-use.com"
+retrievalSources:
+  - "https://docs.browser-use.com"
+  - "https://playwright.dev/docs/intro"
+  - "https://docs.stagehand.dev/"
+  - "https://docs.browserbase.com/"
 repoUrl: "https://github.com/browser-use/browser-use"
 pricingModel: open-source
 disclosure: editorial
@@ -28,6 +33,26 @@ keywords:
   - ai browser automation
   - web automation agents
 ---
+
+## Key capabilities
+
+- **Task-from-prompt automation** — give the agent a natural-language goal and it plans and executes the browser steps (navigate, click, type, extract).
+- **DOM + vision understanding** — reads page structure and screenshots to decide the next action rather than relying on hard-coded selectors.
+- **Model-agnostic** — works with different LLM providers as the planning backend.
+- **Python library** — drops into agent workflows and pipelines as a dependency.
+
+## How Browser Use compares
+
+Browser Use is one of several browser-automation options in this directory; they differ mainly in how much the LLM drives:
+
+| Tool | Type | Open source | Approach |
+| --- | --- | --- | --- |
+| **Browser Use** | AI agent browser automation | Yes | An LLM plans and executes actions on a real browser from a natural-language task |
+| **Playwright** | Browser automation framework | Yes | Deterministic, scripted selectors — not AI-native |
+| **Stagehand** | AI browser automation framework | Yes | Natural-language actions layered on Playwright |
+| **Browserbase** | Hosted headless-browser infrastructure | No | Managed cloud browsers you drive via SDK/API |
+
+Choose Browser Use for LLM-driven, prompt-to-action automation; reach for Playwright when you need deterministic scripted flows, Stagehand for a Playwright-native middle ground, or Browserbase when you need managed cloud browsers at scale.
 
 ## Editorial notes
 

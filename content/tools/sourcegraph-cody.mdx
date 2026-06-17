@@ -10,8 +10,15 @@ author: Sourcegraph
 dateAdded: "2026-04-27"
 websiteUrl: "https://sourcegraph.com/docs/cody"
 documentationUrl: "https://sourcegraph.com/docs/cody"
+retrievalSources:
+  - "https://sourcegraph.com/docs/cody"
+  - "https://docs.github.com/en/copilot"
+  - "https://cursor.com/docs"
+  - "https://code.claude.com/docs/en/overview"
 pricingModel: freemium
 disclosure: editorial
+privacyNotes:
+  - "Cody sends code, file context, and prompts to the configured model provider, and uses Sourcegraph code search/context that may include private repositories; review provider and repo-access settings before connecting sensitive codebases."
 applicationCategory: DeveloperApplication
 operatingSystem: Web, macOS, Windows, Linux
 tags:
@@ -21,6 +28,26 @@ keywords:
   - codebase ai
   - sourcegraph cody
 ---
+
+## Key capabilities
+
+- **Codebase-aware chat** — answers questions using Sourcegraph code search across your repositories for context.
+- **Inline completions and edits** — autocomplete and AI edits inside your editor.
+- **Editor integrations** — VS Code, JetBrains, and other editors via extensions.
+- **Model choice** — supports multiple LLM backends.
+
+## How Cody compares
+
+Cody is one of several AI coding assistants in this directory; its differentiator is repository-scale context via Sourcegraph search:
+
+| Tool | Form factor | Open source | Notable for |
+| --- | --- | --- | --- |
+| **Sourcegraph Cody** | Assistant inside existing editors | No | Codebase-aware context via Sourcegraph search |
+| **GitHub Copilot** | Assistant inside existing editors | No | Broad editor support and ecosystem |
+| **Cursor** | AI-native editor (VS Code fork) | No | Agent mode and multi-file edits |
+| **Claude Code** | Terminal-based agentic coding tool | No | CLI/agent workflow with MCP, hooks, subagents |
+
+Choose Cody when repository-wide code context matters most; Copilot for broad editor support, Cursor for a full AI-native editor, or Claude Code for a terminal/agent workflow.
 
 ## Editorial notes
 

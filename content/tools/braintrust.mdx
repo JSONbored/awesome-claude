@@ -10,8 +10,14 @@ author: Braintrust
 dateAdded: "2026-04-27"
 websiteUrl: "https://www.braintrust.dev"
 documentationUrl: "https://www.braintrust.dev/docs"
+retrievalSources:
+  - "https://www.braintrust.dev/docs"
+  - "https://arize.com/docs/phoenix"
+  - "https://docs.langchain.com/langsmith/home"
 pricingModel: freemium
 disclosure: editorial
+privacyNotes:
+  - "Braintrust receives the prompts, model outputs, eval datasets, and logs you send for experimentation and scoring; review what test and production data leaves your environment before uploading sensitive content."
 applicationCategory: DeveloperApplication
 operatingSystem: Web
 tags:
@@ -21,6 +27,25 @@ keywords:
   - ai evaluation platform
   - prompt experiments
 ---
+
+## Key capabilities
+
+- **Evaluations** — define and run evals (LLM-as-a-judge and code-based scorers) over datasets.
+- **Experimentation** — compare prompts, models, and configs side by side with scored results.
+- **Logging** — capture production traces and turn real examples into eval datasets.
+- **Playground** — iterate on prompts interactively against your datasets.
+
+## How Braintrust compares
+
+Braintrust focuses on evaluation/experimentation; it overlaps with observability tools in this directory:
+
+| Tool | Emphasis | Self-hostable | Notable for |
+| --- | --- | --- | --- |
+| **Braintrust** | Evals + experimentation | SaaS | Eval-first workflow with scoring and datasets |
+| **Arize Phoenix** | Observability + evals | Yes | Open-source, OpenTelemetry-based tracing |
+| **LangSmith** | Observability + evals | Enterprise tier | Deep LangChain / LangGraph integration |
+
+Choose Braintrust when systematic evaluation and experimentation are the core need; Phoenix for open-source tracing you run locally, or LangSmith if you are building on LangChain.
 
 ## Editorial notes
 

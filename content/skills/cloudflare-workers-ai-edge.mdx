@@ -55,6 +55,8 @@ verificationStatus: draft
 verifiedAt: "2025-10-16"
 retrievalSources:
   - "https://developers.cloudflare.com/workers-ai/"
+  - "https://sdk.vercel.ai/docs"
+  - "https://replicate.com/docs"
 testedPlatforms:
   - Claude
   - Codex
@@ -186,6 +188,18 @@ Claude will:
 4. Add rate limiting per IP address
 5. Configure CDN cache for common translations
 6. Include usage metrics and error logging
+
+## Edge / serverless AI inference compared
+
+Workers AI is one of several ways to run model inference without managing GPUs:
+
+| Platform | Model hosting | Runs at the edge | Notable for |
+| --- | --- | --- | --- |
+| **Cloudflare Workers AI** | Built-in model catalog on Cloudflare's network | Yes | Run inference inside Workers, close to users |
+| **Vercel AI SDK** | Bring-your-own provider via a unified SDK | Partial (serverless functions) | One API across many model providers |
+| **Replicate** | Hosted API for a large open-model catalog | No | Run almost any open model via API |
+
+Choose Workers AI for low-latency inference co-located with your edge app; the Vercel AI SDK for provider-agnostic app code, or Replicate for breadth of open models behind an API.
 
 ## Tips for Best Results
 
