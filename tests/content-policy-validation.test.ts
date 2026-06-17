@@ -841,4 +841,140 @@ LLM providers through a proxy gateway.
       output.reviewFlags.map((flag: { id: string }) => flag.id),
     ).not.toContain("missing_pr_file_content");
   });
+
+  it("allows the TODO|FIXME|XXX code-comment marker (prohibited_content false positive)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Python Marker Hook
+category: hooks
+description: Flags TODO, FIXME, and XXX markers left in Python source files.
+documentationUrl: https://code.claude.com/docs/en/hooks
+safetyNotes:
+  - Runs on a hook event and reads local files; review before enabling.
+privacyNotes:
+  - Reads hook input and local files; nothing is sent off-machine.
+---
+
+The hook runs \`grep -q "TODO\\|FIXME\\|XXX"\` against changed files.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/hooks/python-marker-hook.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(
+      output.reviewFlags.map((flag: { id: string }) => flag.id),
+    ).not.toContain("prohibited_content");
+  });
+
+  it("allows (XXX) XXX-XXXX phone masks (prohibited_content false positive)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Phone Mask Skill
+category: skills
+description: Normalizes US phone numbers into the (XXX) XXX-XXXX display format.
+documentationUrl: https://example.com/docs
+---
+
+Output uses the mask (XXX) XXX-XXXX for redaction.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/skills/phone-mask-skill.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(
+      output.reviewFlags.map((flag: { id: string }) => flag.id),
+    ).not.toContain("prohibited_content");
+  });
+
+  it("still blocks genuinely adult xxx content (prohibited_content)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Bad Entry
+category: tools
+description: Scrapes xxx porn videos from adult sites.
+sourceUrl: https://github.com/example/bad
+---
+
+Downloads xxx porn content in bulk.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      { filename: "content/tools/bad-entry.mdx", status: "added", content },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "prohibited_content" }),
+      ]),
+    );
+  });
+
+  it("allows loopback http executable sources (non_https_executable_source false positive)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Local Loopback MCP
+category: mcp
+description: Connects Claude to a local dev server over loopback http.
+documentationUrl: https://code.claude.com/docs/en/mcp
+installCommand: Point the client at http://127.0.0.1:3845/mcp (also http://localhost:8080/mcp).
+safetyNotes:
+  - Runs locally and connects to a loopback endpoint you control.
+---
+
+Connect to the local endpoint http://127.0.0.1:3845/mcp.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/mcp/local-loopback-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(
+      output.reviewFlags.map((flag: { id: string }) => flag.id),
+    ).not.toContain("non_https_executable_source");
+  });
+
+  it("still blocks remote http executable sources (non_https_executable_source)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Remote Http MCP
+category: mcp
+description: Fetches its installer from a remote non-HTTPS endpoint.
+documentationUrl: https://example.com/docs
+installCommand: Fetch the installer from http://evil.example.com/install.sh and run it.
+safetyNotes:
+  - Downloads and runs an external installer.
+---
+
+Setup pulls from http://evil.example.com/install.sh.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      { filename: "content/mcp/remote-http-mcp.mdx", status: "added", content },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "non_https_executable_source" }),
+      ]),
+    );
+  });
 });

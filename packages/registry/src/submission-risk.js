@@ -65,6 +65,19 @@ const DEFENSIVE_SECURITY_MITIGATION_PATTERN =
   /\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b[\s\S]{0,160}\b(?:(?:credential|password|cookie|session|token|wallet|secret|leak)s?|expos(?:e|ing|ure))\b|\b(?:credential|password|cookie|session|token|wallet|secret)s?\b[\s\S]{0,160}\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b/i;
 const RESOURCE_THEFT_CAPABILITY_PATTERN =
   /\b(?:this|the|our)?\s*(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b[\s\S]{0,40}\b(?:can|will|does|advertises?|offers?|enables?|designed to|built to)\b[\s\S]{0,80}\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b|\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(?:with|using|through|by)\b[\s\S]{0,40}\b(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b/i;
+// Adult "xxx" only in an explicit adult context, so legitimate developer idioms
+// `TODO|FIXME|XXX` (code markers) and `(XXX) XXX-XXXX` (phone masks) are not
+// flagged. Mirrors scripts/ci/validate-content-policy.mjs.
+const ADULT_XXX_PATTERN =
+  /\bxxx[\s._-]*(?:porn|porno|sex|sexual|adult|nude|nudes|nsfw|hardcore|rated|video|videos|movie|movies|content|hub|tube|cam|cams|chat)\b|\b(?:porn|porno|sex|sexual|adult|nude|nudes|nsfw|hardcore)[\s._-]*xxx\b|\bxxx\.(?:com|net|org|xxx|tube|hub)\b|\.xxx\b/i;
+// Loopback HTTP endpoints (127.0.0.1 / localhost / [::1], any port/path) are not
+// an insecure-transport risk — many local MCP servers and hooks legitimately run
+// on http loopback. Mirrors scripts/ci/validate-content-policy.mjs.
+const LOOPBACK_HTTP_PATTERN =
+  /^http:\/\/(?:127\.0\.0\.1|localhost|\[::1\]|0\.0\.0\.0)(?::\d+)?(?![\w.-])/i;
+function isLoopbackHttpUrl(value) {
+  return typeof value === "string" && LOOPBACK_HTTP_PATTERN.test(value.trim());
+}
 const CREDENTIAL_THEFT_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b/i;
 const CREDENTIAL_THEFT_DESTINATION_PATTERN =
@@ -848,7 +861,11 @@ function addContentRiskSignals(report, fields, text) {
     );
   }
 
-  if (executableSourceUrls.some((url) => url.startsWith("http://"))) {
+  if (
+    executableSourceUrls.some(
+      (url) => url.startsWith("http://") && !isLoopbackHttpUrl(url),
+    )
+  ) {
     addFlag(
       report,
       "critical",
@@ -927,7 +944,8 @@ function addContentRiskSignals(report, fields, text) {
 
   if (
     /\b(csam|child sexual abuse|child exploitation)\b/i.test(text) ||
-    /\b(porn|pornographic|explicit sexual|xxx|onlyfans)\b/i.test(text) ||
+    /\b(porn|pornographic|explicit sexual|onlyfans)\b/i.test(text) ||
+    ADULT_XXX_PATTERN.test(text) ||
     /\bterrorist recruitment|violent extremist recruitment\b/i.test(text)
   ) {
     addFlag(
