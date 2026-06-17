@@ -10,9 +10,16 @@ author: Helicone
 dateAdded: "2026-04-27"
 websiteUrl: "https://www.helicone.ai"
 documentationUrl: "https://docs.helicone.ai"
+retrievalSources:
+  - "https://docs.helicone.ai"
+  - "https://arize.com/docs/phoenix"
+  - "https://docs.langchain.com/langsmith/home"
+  - "https://www.braintrust.dev/docs"
 repoUrl: "https://github.com/Helicone/helicone"
 pricingModel: open-source
 disclosure: editorial
+privacyNotes:
+  - "When used as a proxy, Helicone sits in the request path and logs your LLM prompts, responses, and metadata (Helicone cloud or your self-hosted instance); review what request data is captured, keep secrets out of logged payloads, or use the self-hosted/async logging options."
 applicationCategory: DeveloperApplication
 operatingSystem: Web, Self-hosted
 tags:
@@ -29,6 +36,26 @@ keywords:
 ## Editorial notes
 
 Helicone is useful when cost visibility, request logging, and feedback capture are central to LLM operations.
+
+## Key capabilities
+
+- **Request logging** — captures LLM requests and responses with latency, token, and cost metadata.
+- **Cost tracking** — aggregates spend by model, user, and feature.
+- **Caching** — optional response caching to cut repeat-request cost and latency.
+- **Integration options** — a one-line proxy endpoint or an async logging SDK, with self-hosting available.
+
+## How Helicone compares
+
+Helicone overlaps with other LLM observability tools in this directory, differing mainly in integration style:
+
+| Tool | Type | Self-hostable | Notable for |
+| --- | --- | --- | --- |
+| **Helicone** | Observability via a request-logging proxy | Yes | One-line integration plus cost tracking and caching |
+| **Arize Phoenix** | Open-source observability + evals | Yes | OpenTelemetry-based tracing that runs locally |
+| **LangSmith** | Proprietary observability + evals | Enterprise tier | Deep LangChain / LangGraph integration |
+| **Braintrust** | Proprietary evals + experimentation | SaaS | Eval-first experimentation workflow |
+
+Choose Helicone when fast, low-friction request logging and cost visibility matter most; Phoenix for OpenTelemetry-native tracing you run locally, or LangSmith if you are deep in the LangChain ecosystem.
 
 ## Disclosure
 
