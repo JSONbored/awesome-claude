@@ -54,20 +54,6 @@ export const Route = createFileRoute("/for/$platform")({
         { "@type": "ListItem", position: 3, name: label, item: url },
       ],
     };
-    const faq = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: `What Claude resources work with ${label}?`,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `HeyClaude lists ${entries.length} ${label}-compatible resources across MCP servers, agents, skills, hooks, commands, rules, and more — each metadata-reviewed for source and safety signals.`,
-          },
-        },
-      ],
-    };
     return {
       meta: [
         { title },
@@ -86,7 +72,6 @@ export const Route = createFileRoute("/for/$platform")({
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(itemList) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
-        { type: "application/ld+json", children: stringifyJsonLd(faq) },
       ],
     };
   },

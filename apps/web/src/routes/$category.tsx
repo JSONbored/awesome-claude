@@ -93,15 +93,6 @@ export const Route = createFileRoute("/$category")({
         { "@type": "ListItem", position: 2, name: label, item: url },
       ],
     };
-    const faq = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: faqFor(id, label).map((item) => ({
-        "@type": "Question",
-        name: item.q,
-        acceptedAnswer: { "@type": "Answer", text: item.a },
-      })),
-    };
 
     return {
       meta: [
@@ -130,7 +121,6 @@ export const Route = createFileRoute("/$category")({
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(itemList) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
-        { type: "application/ld+json", children: stringifyJsonLd(faq) },
       ],
     };
   },

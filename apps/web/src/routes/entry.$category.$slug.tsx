@@ -116,26 +116,6 @@ function entrySchema(e: Entry, url: string): Record<string, unknown> {
   return { ...base, "@type": "CreativeWork" };
 }
 
-// Guides are how-to content: emit a HowTo whose steps come from the guide's H2/H3 headings,
-// so step-by-step guides become eligible for HowTo rich results.
-function guideHeadingSteps(e: Entry) {
-  return (e.headings ?? []).filter((heading) => heading.depth === 2 || heading.depth === 3);
-}
-function guideHowTo(e: Entry, url: string) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: e.title,
-    description: e.description,
-    step: guideHeadingSteps(e).map((heading, index) => ({
-      "@type": "HowToStep",
-      position: index + 1,
-      name: heading.text,
-      url: `${url}#${heading.id}`,
-    })),
-  };
-}
-
 export const Route = createFileRoute("/entry/$category/$slug")({
   loader: async ({ params }): Promise<{ entry: import("@/types/registry").Entry }> => {
     // Consolidated/removed entries 301 to their surviving canonical page so the
@@ -217,9 +197,6 @@ export const Route = createFileRoute("/entry/$category/$slug")({
         { type: "application/ld+json", children: stringifyJsonLd(ld) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
         { type: "application/ld+json", children: stringifyJsonLd(entrySchema(e, url)) },
-        ...(e.category === "guides" && guideHeadingSteps(e).length >= 2
-          ? [{ type: "application/ld+json", children: stringifyJsonLd(guideHowTo(e, url)) }]
-          : []),
       ],
     };
   },
