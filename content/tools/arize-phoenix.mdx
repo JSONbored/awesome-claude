@@ -10,6 +10,12 @@ author: Arize AI
 dateAdded: "2026-04-27"
 websiteUrl: "https://arize.com/phoenix/"
 documentationUrl: "https://arize.com/docs/phoenix"
+retrievalSources:
+  - "https://arize.com/docs/phoenix"
+  - "https://opentelemetry.io/"
+  - "https://docs.smith.langchain.com/"
+  - "https://docs.helicone.ai/"
+  - "https://www.braintrust.dev/docs"
 repoUrl: "https://github.com/Arize-ai/phoenix"
 pricingModel: open-source
 disclosure: editorial
@@ -25,6 +31,26 @@ keywords:
   - llm evaluation
   - phoenix documentation
 ---
+
+## Key capabilities
+
+- **Tracing** — captures LLM/agent spans (prompts, tool calls, retrievals) using OpenTelemetry, so traces are portable across instrumented frameworks.
+- **Evaluation** — run LLM-as-a-judge and heuristic evals over traces and datasets to score relevance, hallucination, and task success.
+- **Datasets & experiments** — curate examples from production traces and compare prompt/model versions side by side.
+- **Self-hosted or local** — run Phoenix locally or in your own infrastructure, keeping trace data in your environment.
+
+## How Phoenix compares
+
+Phoenix sits in the LLM observability/evaluation space alongside several tools also in this directory. Key differences:
+
+| Tool | Type | Self-hostable | Notable for |
+| --- | --- | --- | --- |
+| **Arize Phoenix** | Open-source observability + evals | Yes | OpenTelemetry-based tracing that runs locally |
+| **LangSmith** | Proprietary observability + evals | Enterprise tier | Deep LangChain / LangGraph integration |
+| **Helicone** | Observability via a request-logging proxy | Yes | One-line integration that captures requests |
+| **Braintrust** | Proprietary evals + experimentation | SaaS | Eval-first experimentation workflow |
+
+Choose Phoenix when you want open-source, OpenTelemetry-native tracing and evaluation you can run locally; pair it with Helicone if you also need request-level logging.
 
 ## Editorial notes
 
