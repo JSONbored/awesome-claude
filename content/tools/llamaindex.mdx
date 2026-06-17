@@ -12,6 +12,10 @@ submittedByUrl: "https://github.com/oktofeesh1"
 dateAdded: "2026-06-03"
 websiteUrl: "https://www.llamaindex.ai/"
 documentationUrl: "https://developers.llamaindex.ai/python/framework/"
+retrievalSources:
+  - "https://developers.llamaindex.ai/python/framework/"
+  - "https://python.langchain.com/docs/introduction/"
+  - "https://docs.haystack.deepset.ai/docs"
 repoUrl: "https://github.com/run-llama/llama_index"
 pricingModel: open-source
 disclosure: editorial
@@ -54,6 +58,18 @@ privacyNotes:
 LlamaIndex is useful when Claude-adjacent teams are building data-aware agents, retrieval pipelines, document workflows, or RAG applications. It provides the framework layer for ingesting private data, parsing and structuring documents, building indexes, querying over retrieval context, wiring tools and agents, evaluating results, and integrating with model, embedding, vector-store, and MCP ecosystems.
 
 This is distinct from existing evaluation and observability entries. Ragas and TruLens focus on evaluating RAG or agent behavior. Langfuse, Phoenix, and MLflow focus on traces and operational evidence. LlamaIndex is the open-source framework used to build the actual data and retrieval layer: loaders, documents and nodes, indexes, retrievers, query engines, tools, workflows, agents, structured extraction, storage, and evaluation hooks.
+
+## How LlamaIndex compares
+
+LlamaIndex overlaps with other open-source LLM application frameworks; the practical differences are in emphasis:
+
+| Framework | Primary focus | Open source | Notable for |
+| --- | --- | --- | --- |
+| **LlamaIndex** | Data framework for RAG and agents over private data | Yes (MIT) | Ingestion, indexing, retrieval, and query engines |
+| **LangChain** | General-purpose LLM application framework | Yes | Broad integrations, chains, and LangGraph agents |
+| **Haystack** | Production NLP/RAG pipelines | Yes | Composable search and retrieval pipeline components |
+
+Reach for LlamaIndex when retrieval and indexing over your own documents is the core problem; LangChain when you want a broad orchestration toolkit; Haystack when you want opinionated, production-grade search/RAG pipelines.
 
 ## Source notes
 
