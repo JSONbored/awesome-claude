@@ -9,10 +9,17 @@ seoDescription: Garak is an open-source LLM vulnerability scanner for probing mo
 author: NVIDIA
 dateAdded: "2026-04-27"
 websiteUrl: "https://github.com/NVIDIA/garak"
-documentationUrl: "https://github.com/NVIDIA/garak"
+documentationUrl: "https://docs.garak.ai/"
+retrievalSources:
+  - "https://docs.garak.ai/"
+  - "https://github.com/NVIDIA/garak"
+  - "https://github.com/Azure/PyRIT"
+  - "https://www.promptfoo.dev/docs/intro/"
 repoUrl: "https://github.com/NVIDIA/garak"
 pricingModel: open-source
 disclosure: editorial
+privacyNotes:
+  - "Garak sends adversarial prompts to the models you point it at and records prompts and responses in scan reports; only test models you are authorized to probe and review report output before sharing."
 applicationCategory: SecurityApplication
 operatingSystem: macOS, Windows, Linux
 tags:
@@ -22,6 +29,25 @@ keywords:
   - llm vulnerability scanner
   - ai security testing
 ---
+
+## Key capabilities
+
+- **Attack probes** — a large library of probes for prompt injection, jailbreaks, toxicity, data leakage, and misinformation.
+- **Model-agnostic** — tests models across providers and local runtimes.
+- **Automated scanning** — runs probe suites and reports which attacks succeeded.
+- **Extensible** — add custom probes and detectors for your own threat model.
+
+## How Garak compares
+
+Garak is one of several LLM security / red-teaming tools; they differ by emphasis:
+
+| Tool | Type | Open source | Notable for |
+| --- | --- | --- | --- |
+| **Garak** | LLM vulnerability scanner | Yes | Broad library of attack probes, scan-and-report workflow |
+| **PyRIT** | AI red-teaming framework | Yes | Orchestrated adversarial testing (Microsoft) |
+| **Promptfoo** | LLM testing + red-teaming | Yes | Eval-style tests and red-team plugins, CI-friendly |
+
+Use Garak for automated probe-based vulnerability scanning; PyRIT for orchestrated red-team campaigns, or Promptfoo when you want red-teaming alongside CI-style evals.
 
 ## Editorial notes
 
