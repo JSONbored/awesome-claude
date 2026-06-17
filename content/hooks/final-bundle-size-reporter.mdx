@@ -11,6 +11,10 @@ seoDescription: >-
   tool...
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
+documentationUrl: "https://webpack.js.org/guides/code-splitting/"
+retrievalSources:
+  - "https://webpack.js.org/guides/code-splitting/"
+  - "https://code.claude.com/docs/en/hooks"
 dateAdded: "2025-09-19"
 installable: true
 installCommand: >-
@@ -44,20 +48,15 @@ tags:
   - stop-hook
   - optimization
   - reporting
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - bundle
-  - bundle-size
-  - claude
-  - development
-  - final
-  - hooks
-  - optimization
-  - performance
-  - reporter
-  - reporting
-  - size
-  - stop-hook
-  - tools
+  - final bundle size reporter hook
+  - claude code final bundle size reporter hook
+  - final bundle size reporter claude hook
+  - claude final bundle size reporter automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true
