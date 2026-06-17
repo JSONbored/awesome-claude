@@ -38,6 +38,7 @@ verificationStatus: draft
 verifiedAt: "2025-10-16"
 retrievalSources:
   - "https://supabase.com/docs"
+  - "https://firebase.google.com/docs"
 testedPlatforms:
   - Claude
   - Codex
@@ -180,6 +181,19 @@ Claude will:
 5. Create scheduled job
 6. Include error handling and logging
 7. Deploy with supabase functions deploy
+
+## Supabase vs Firebase
+
+Supabase is often compared with Firebase as a backend-as-a-service; the core difference is Postgres vs a proprietary document store:
+
+| Dimension | Supabase | Firebase |
+| --- | --- | --- |
+| **Database** | Postgres (relational, SQL) | Firestore/RTDB (NoSQL document) |
+| **Realtime** | Postgres changes, broadcast, presence | Realtime Database / Firestore listeners |
+| **Open source** | Yes (self-hostable) | No |
+| **Auth & storage** | Built-in (Postgres-backed) | Built-in (Google-backed) |
+
+Choose Supabase when you want relational/SQL data, row-level security, and the option to self-host; Firebase when you prefer a fully managed Google ecosystem with a document model.
 
 ## Tips for Best Results
 
