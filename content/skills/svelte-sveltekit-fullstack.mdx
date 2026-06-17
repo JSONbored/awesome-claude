@@ -9,9 +9,13 @@ seoDescription: "Build full-stack web apps with Svelte and SvelteKit. Minimal ru
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-23"
-documentationUrl: "https://kit.svelte.dev/"
+documentationUrl: "https://svelte.dev/docs/kit/introduction"
 downloadUrl: /downloads/skills/svelte-sveltekit-fullstack.zip
 installable: true
+safetyNotes:
+  - "Scaffolds and runs a SvelteKit app (npm create svelte, npm install, dev/build servers that listen on a port and install dependencies); review generated server endpoints and dependencies before exposing them."
+privacyNotes:
+  - "Full-stack SvelteKit apps handle server-side env vars, sessions, and user data; keep secrets in $env/static/private (never $env/static/public), and review what server routes read, store, or log."
 installCommand: npm create svelte@latest my-app
 usageSnippet: npm create svelte@latest my-app
 copySnippet: |-
@@ -36,7 +40,8 @@ skillLevel: advanced
 verificationStatus: draft
 verifiedAt: "2025-10-23"
 retrievalSources:
-  - "https://kit.svelte.dev/"
+  - "https://svelte.dev/docs/kit/introduction"
+  - "https://svelte.dev/docs/svelte/overview"
 testedPlatforms:
   - Claude
   - Codex
@@ -58,19 +63,11 @@ tags:
   - full-stack
   - reactive
 keywords:
-  - claude
-  - developer
-  - development
-  - frontend
-  - full
-  - full-stack
-  - reactive
-  - skills
-  - stack
-  - svelte
-  - svelte/sveltekit
-  - sveltekit
-  - tools
+  - sveltekit fullstack
+  - svelte claude code
+  - sveltekit app
+  - svelte 5 runes
+  - sveltekit server routes
 readingTime: 6
 packageVerified: true
 difficultyScore: 100

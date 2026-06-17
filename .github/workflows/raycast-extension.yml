@@ -9,6 +9,7 @@ permissions:
 jobs:
   validate-raycast:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       TRUNK_API_TOKEN: ${{ secrets.TRUNK_API_TOKEN || secrets.TRUNK_TOKEN }}
       TRUNK_ORG_URL_SLUG: ${{ secrets.TRUNK_ORG_URL_SLUG || secrets.TRUNK_ORG_SLUG }}

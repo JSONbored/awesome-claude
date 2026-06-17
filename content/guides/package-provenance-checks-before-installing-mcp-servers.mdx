@@ -1,0 +1,142 @@
+---
+title: Package Provenance Checks Before Installing MCP Servers
+slug: package-provenance-checks-before-installing-mcp-servers
+category: guides
+description: >-
+  Verify MCP server package provenance before Claude Code installation: registry publisher match, repository ownership, release artifact checksums, maintainer history, and rollback when supply-chain signals fail review.
+cardDescription: >-
+  Verify MCP package provenance and publisher trust before adding servers to Claude Code.
+seoTitle: Package Provenance Checks Before Installing MCP Servers
+seoDescription: >-
+  Guide to MCP package provenance checks before Claude Code install: registry publisher verification, repo ownership, checksums, maintainer review, and rollback steps.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1186
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1186"
+documentationUrl: "https://code.claude.com/docs/en/mcp-quickstart"
+usageSnippet: >-
+  Before claude mcp add, compare registry metadata to upstream repo, verify publisher identity, record checksum or commit SHA, test in an isolated profile, then commit pinned .mcp.json only after provenance review passes.
+prerequisites:
+  - "Target MCP server registry entry or repository URL identified."
+  - "Access to npm, PyPI, or git release artifacts for checksum verification."
+  - "Isolated Claude Code test profile with non-production credentials."
+  - "Team policy defining acceptable third-party publishers."
+safetyNotes:
+  - "Unverified packages execute with user privileges in stdio mode—provenance review is not optional for production repos."
+  - "Registry listings describe intent but do not replace maintainer security audit."
+  - "Typosquat package names can mimic popular servers—verify exact publisher coordinates."
+privacyNotes:
+  - "Provenance notes may reference private registry URLs—keep internal hostnames out of public tickets."
+  - "Checksum logs should not include OAuth tokens or .env contents."
+  - "Vendor privacy policies apply when servers phone home—review before enterprise rollout."
+sourceUrls:
+  - "https://code.claude.com/docs/en/mcp-quickstart"
+  - "https://modelcontextprotocol.io/registry/about"
+  - "https://code.claude.com/docs/en/security"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - mcp
+  - supply-chain
+  - provenance
+  - security
+  - claude-code
+keywords:
+  - MCP package provenance checks
+  - verify MCP server publisher Claude Code
+  - MCP supply chain review before install
+readingTime: 8
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Verify MCP package provenance and publisher trust before adding servers to Claude Code.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Check", "description": "Target MCP server registry entry or repository URL identified."}
+- [ ] {"task": "Check", "description": "Access to npm, PyPI, or git release artifacts for checksum verification."}
+- [ ] {"task": "Check", "description": "Isolated Claude Code test profile with non-production credentials."}
+- [ ] {"task": "Check", "description": "Team policy defining acceptable third-party publishers."}
+
+## Core Concepts Explained
+
+### Registry entry vs upstream repo
+
+Registry metadata links to intended packages; provenance review confirms the
+linked repository, npm scope, or binary publisher matches expectations.
+
+### Checksum and commit pins
+
+Record npm package integrity, git tag SHA, or release artifact hash before
+adding the server to shared `.mcp.json`.
+
+### Trust is operator responsibility
+
+Official security documentation places verification on the operator installing
+third-party MCP servers.
+
+## Step-by-Step Implementation Guide
+
+1. **Collect discovery artifacts.** Save registry URL, README install command,
+and declared tools/resources list.
+
+2. **Verify publisher identity.** Match npm scope, GitHub org, or vendor domain to
+your allowlist policy.
+
+3. **Fetch release artifact.** Download the pinned version locally; record SHA256
+or git commit.
+
+4. **Compare install command.** Ensure `claude mcp add` args reference the verified
+artifact, not a floating `@latest` alias.
+
+5. **Run threat-model checklist.** Cross-check with `threat-model-mcp-servers-before-installation`.
+
+6. **Test in isolated profile.** Start server under MCP_TIMEOUT; exercise one read-only tool.
+
+7. **Commit pin and provenance note.** Document publisher, version, checksum, and
+reviewer in team docs or PR.
+
+8. **Plan rollback.** Revert `.mcp.json`, clear OAuth, and delete local server state.
+
+## Troubleshooting
+
+### Registry publisher differs from npm scope
+
+Stop install; open issue with upstream or pick an alternate server.
+
+### Checksum mismatch on re-download
+
+Treat as supply-chain alert; do not install until maintainer explains drift.
+
+### Teammate skipped provenance step
+
+Block merge until provenance fields exist in `.mcp.json` PR template.
+
+## Source Verification Notes
+
+Verified against official documentation on **2026-06-16**:
+
+- MCP quickstart docs describe adding servers via CLI and .mcp.json project sharing.
+- MCP registry catalogs servers with publisher metadata for discovery.
+- Claude Code security docs state Anthropic does not security-audit third-party MCP servers.
+- Teams should verify publisher, repository, and release artifact before install.
+- Rollback removes .mmp.json entries and revokes OAuth via /mcp when applicable.
+
+## Duplicate Check
+
+Complements `pinning-mcp-server-packages-before-installation` (version pins) and `threat-model-mcp-servers-before-installation` (trust boundaries). This guide focuses on publisher and artifact provenance before first install.
+
+## References
+
+- Primary documentation - https://code.claude.com/docs/en/mcp-quickstart

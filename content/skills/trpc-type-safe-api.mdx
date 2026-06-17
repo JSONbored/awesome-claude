@@ -12,6 +12,10 @@ dateAdded: "2025-10-16"
 documentationUrl: "https://trpc.io/docs/"
 downloadUrl: /downloads/skills/trpc-type-safe-api.zip
 installable: true
+safetyNotes:
+  - "Installs server/client packages (@trpc/server, @trpc/client, zod) and runs an API server; review procedures, auth middleware, and exposed routers before deploying."
+privacyNotes:
+  - "tRPC procedures read and persist user-supplied input and use auth context/tokens; validate inputs with zod, keep secrets in environment variables, and review what each procedure stores or logs."
 installCommand: npm install @trpc/server @trpc/client @trpc/react-query zod
 usageSnippet: npm install @trpc/server @trpc/client @trpc/react-query zod
 copySnippet: |-
@@ -100,18 +104,11 @@ tags:
   - type-safety
   - t3-stack
 keywords:
-  - api
-  - builder
-  - claude
-  - development
-  - safe
-  - skills
-  - t3-stack
-  - tools
-  - trpc
-  - type
-  - type-safety
-  - typescript
+  - trpc type-safe api
+  - trpc claude code
+  - end-to-end typesafe api
+  - trpc react query
+  - t3 stack trpc
 readingTime: 6
 packageVerified: true
 difficultyScore: 100

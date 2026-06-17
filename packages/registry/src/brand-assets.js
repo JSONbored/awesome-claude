@@ -247,8 +247,7 @@ export function isAllowedBrandAssetUrl(value) {
     return (
       host === "cdn.brandfetch.io" ||
       host === "asset.brandfetch.io" ||
-      host === "heyclau.de" ||
-      host === "heyclaude-dev.zeronode.workers.dev"
+      host === "heyclau.de"
     );
   } catch {
     return false;

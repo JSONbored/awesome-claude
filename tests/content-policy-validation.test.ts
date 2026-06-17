@@ -10,7 +10,9 @@ function runContentPolicy(
   tmpDir: string,
   content: string,
   sourceType = "same_repo_direct",
-  files = [
+  files: Array<
+    string | { filename: string; status?: string; content?: string }
+  > = [
     {
       filename: "content/tools/example-tool.mdx",
       status: "added",
@@ -800,5 +802,43 @@ LLM providers through a proxy gateway.
         expect.stringContaining("commercial_listing_route"),
       ]),
     );
+  });
+
+  it("exempts a delete-only content PR (removed status, no missing content flag) (#content-deletion)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const result = runContentPolicy(tmpDir, "", "same_repo_direct", [
+      { filename: "content/tools/removed-tool.mdx", status: "removed" },
+    ]);
+
+    expect(result.status).toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.ok).toBe(true);
+    expect(
+      output.reviewFlags.map((flag: { id: string }) => flag.id),
+    ).not.toContain("missing_pr_file_content");
+  });
+
+  it("infers removal for an entry whose file is absent from the tree (lost-status defense) (#content-deletion)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    // status reported as "modified" (the bare-string --files-json default) but the
+    // file does not exist on disk — i.e. a deletion whose status was lost upstream.
+    // The defense-in-depth reclassifies it as removed instead of flagging it.
+    const result = runContentPolicy(tmpDir, "", "same_repo_direct", [
+      {
+        filename: "content/tools/__absent-deleted-entry__.mdx",
+        status: "modified",
+      },
+    ]);
+
+    expect(result.status).toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.ok).toBe(true);
+    expect(
+      output.reviewFlags.map((flag: { id: string }) => flag.id),
+    ).not.toContain("missing_pr_file_content");
   });
 });

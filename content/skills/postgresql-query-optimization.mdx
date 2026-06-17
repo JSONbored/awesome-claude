@@ -12,6 +12,10 @@ dateAdded: "2025-10-16"
 documentationUrl: "https://www.postgresql.org/docs/current/performance-tips.html"
 downloadUrl: /downloads/skills/postgresql-query-optimization.zip
 installable: true
+safetyNotes:
+  - "Setup downloads/unzips a package, and the skill connects to your database to run EXPLAIN ANALYZE and create indexes; index builds and config changes can lock tables and affect production — test against a replica or staging first."
+privacyNotes:
+  - "Query analysis can surface table/column names and sample row values from your database; keep connection strings and credentials in environment variables and review what plans/output you share."
 installCommand: "curl -L https://heyclau.de/downloads/skills/postgresql-query-optimization.zip -o postgresql-query-optimization.zip && unzip -o postgresql-query-optimization.zip -d ./postgresql-query-optimization"
 usageSnippet: "Analyze and optimize PostgreSQL queries for OLTP and OLAP workloads with AI-assisted performance tuning, indexing strategies, and execution plan analysis. Interpret EXPLAIN ANALYZE plans, identify bottlenecks (sequential scans, nested loops, hash joins), design optimal indexes (B-tree, GIN, BRIN, composite, partial), rewrite queries for better performance, and tune database configuration parameters. Includes pg_stat_statements integration for slow query identification, parallel query execution optimization, JIT compilation tuning, advanced partitioning strategies, and vacuum/autovacuum configuration for high-write workloads."
 copySnippet: |-
@@ -57,16 +61,11 @@ tags:
   - performance
   - sql
 keywords:
-  - claude
-  - database
-  - development
-  - optimization
-  - performance
-  - postgresql
-  - query
-  - skills
-  - sql
-  - tools
+  - postgresql query optimization
+  - explain analyze postgres
+  - postgres indexing
+  - sql performance tuning
+  - postgresql claude code
 readingTime: 6
 packageVerified: true
 difficultyScore: 100

@@ -1,0 +1,163 @@
+---
+title: Pinning MCP Server Packages Before Installation
+slug: pinning-mcp-server-packages-before-installation
+category: guides
+description: >-
+  Pin MCP server package versions before adding them to Claude Code: registry
+  verification, lockfile discipline, npx package pins, supply-chain review, and
+  rollback steps aligned to MCP quickstart and registry documentation.
+cardDescription: >-
+  Pin MCP server package versions and verify registry entries before Claude Code
+  installation.
+seoTitle: Pinning MCP Server Packages Before Installation
+seoDescription: >-
+  Guide to pinning MCP server packages before Claude Code install: registry checks,
+  version pins in claude mcp add, npx -y package@version, supply-chain review,
+  and rollback from official MCP docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1417
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1417"
+documentationUrl: "https://code.claude.com/docs/en/mcp-quickstart"
+usageSnippet: >-
+  Before claude mcp add, record the registry entry, pin npm or uv package versions,
+  store the pin in .mcp.json or team docs, and test in an isolated profile first.
+prerequisites:
+  - "Target MCP server name, registry listing, or repository URL identified."
+  - "Package manager access (npm, uv, pip, etc.) matching the server install method."
+  - "Ability to run Claude Code in a test project before production rollout."
+  - "Team policy for third-party package updates and rollback."
+safetyNotes:
+  - "Unpinned npx -y installs can pull new semver-compatible releases without review."
+  - "Registry listings describe intent but do not replace maintainer security review."
+  - "Do not pipe curl-to-shell install scripts without reading the pinned release artifact."
+privacyNotes:
+  - "Pinned versions should be documented in git; avoid embedding API keys in the same commit."
+  - "Test profiles prevent accidental production credential use during pin validation."
+  - "Registry metadata may link to vendor privacy policies—review before enterprise rollout."
+sourceUrls:
+  - "https://code.claude.com/docs/en/mcp-quickstart"
+  - "https://modelcontextprotocol.io/registry/about"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - mcp
+  - supply-chain
+  - security
+  - installation
+keywords:
+  - pin MCP server package version
+  - Claude Code MCP install pin
+  - MCP registry verification
+  - npx package version MCP
+  - MCP supply chain Claude Code
+readingTime: 8
+difficultyScore: 54
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Treat MCP servers like production dependencies: verify registry entries, pin package
+versions in install commands, document pins in `.mcp.json`, test in isolation, and
+plan rollback before enabling in shared projects.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Server identified", "description": "Registry entry or repo URL recorded"}
+- [ ] {"task": "Install method known", "description": "stdio command, HTTP URL, or plugin path documented"}
+- [ ] {"task": "Test project ready", "description": "Non-production Claude Code profile available"}
+- [ ] {"task": "Rollback owner", "description": "Maintainer can revert .mcp.json pin"}
+
+## Core Concepts Explained
+
+### Registry vs local install
+
+The MCP registry catalogs servers and install hints; Claude Code quickstart docs
+show adding servers via CLI and `.mcp.json`. Pinning happens at the package or
+commit level you pass to those commands.
+
+### Floating installs drift
+
+Commands like `npx -y server-name` resolve latest matching semver on each cold
+start unless you append `@1.2.3` or use a lockfile workflow.
+
+### Project-scoped .mcp.json
+
+Project servers sync through version control—pins should be explicit so every
+teammate runs the same server build.
+
+## Step-by-Step Implementation Guide
+
+1. **Find the canonical package.** Use registry metadata or upstream README for
+   npm, uv, or binary coordinates.
+
+2. **Choose a pin strategy:**
+   - npm: `package@1.2.3` in `npx` args
+   - uv/pip: exact version in tool config
+   - git: commit SHA in install docs
+
+3. **Add with Claude Code CLI** using pinned args after `--`:
+
+```bash
+claude mcp add --transport stdio myserver -- \
+  npx -y my-mcp-server@1.2.3
+```
+
+4. **Copy resulting `.mcp.json` entry** into the repo with the pin visible in
+   `command`/`args`.
+
+5. **Test in isolated profile** with non-production credentials.
+
+6. **Document upgrade process** in CONTRIBUTING: who bumps pins and how CI validates.
+
+7. **Rollback plan:** revert `.mcp.json` pin and restart Claude Code sessions.
+
+## Review Checklist Before Merge
+
+| Check | Pass criteria |
+| --- | --- |
+| Registry match | Package name matches listing publisher |
+| Version pin | No bare `@latest` in shared config |
+| Changelog | Notable security fixes reviewed |
+| Scope | OAuth/env vars documented separately |
+| Test | Server starts under MCP_TIMEOUT budget |
+
+## Troubleshooting
+
+### Server fails after pin bump
+
+Diff changelog; restore previous pin in `.mcp.json` and re-auth OAuth if needed.
+
+### npx still resolves unexpectedly
+
+Confirm args after `--` include `@version`; clear npx cache if testing locally.
+
+### Teammate runs different build
+
+Ensure `.mcp.json` is committed and local-only overrides aren't masking pins.
+
+## Source Verification Notes
+
+Verified against Claude Code MCP quickstart and MCP registry about documentation
+on **2026-06-16**: CLI add patterns, project `.mcp.json` sharing, and registry
+role as discovery—not a substitute for maintainer review.
+
+## Duplicate Check
+
+Complements `threat-model-mcp-servers-before-installation` (trust review) and
+`claude-mcp-server-setup-guide` (first-time setup). No guide focuses on version
+pinning discipline before shared installation.
+
+## References
+
+- Claude Code MCP quickstart - https://code.claude.com/docs/en/mcp-quickstart
+- MCP registry about - https://modelcontextprotocol.io/registry/about

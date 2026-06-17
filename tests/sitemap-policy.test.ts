@@ -23,6 +23,31 @@ describe("sitemap policy", () => {
     ).toBe(false);
   });
 
+  it("advertises tools entries unless they opt out via robotsIndex:false", () => {
+    expect(
+      isSitemapIndexableEntry({
+        category: "tools",
+        slug: "indexable-tool",
+        title: "Indexable Tool",
+        description: "A tool listing.",
+        tags: [],
+        keywords: [],
+      } as any),
+    ).toBe(true);
+
+    expect(
+      isSitemapIndexableEntry({
+        category: "tools",
+        slug: "hidden-tool",
+        title: "Hidden Tool",
+        description: "A hidden tool listing.",
+        robotsIndex: false,
+        tags: [],
+        keywords: [],
+      } as any),
+    ).toBe(false);
+  });
+
   it("prefers content modified metadata for sitemap lastmod", () => {
     const lastModified = sitemapEntryLastModified({
       category: "skills",
@@ -55,8 +80,8 @@ describe("sitemap policy", () => {
     expect(source).not.toContain('"/validators/mcp-config"');
     expect(source).not.toContain('"/validators/skill-package"');
     expect(source).not.toContain("lastModified: new Date()");
-    // Entry pages are filtered through the sitemap-indexable policy (drops
-    // commercial `tools` listings + any robotsIndex:false entries).
+    // Entry pages are filtered through the sitemap-indexable policy (advertises
+    // every category, including `tools`, except robotsIndex:false entries).
     expect(source).toContain("ENTRIES.filter(isSitemapIndexableEntry)");
     // Category hub landing pages with per-category + per-entry lastmod.
     expect(source).toContain("categoryLastmod");
