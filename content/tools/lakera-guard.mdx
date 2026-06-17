@@ -10,8 +10,14 @@ author: Lakera
 dateAdded: "2026-04-27"
 websiteUrl: "https://www.lakera.ai/ai-agent-security"
 documentationUrl: "https://docs.lakera.ai"
+retrievalSources:
+  - "https://docs.lakera.ai"
+  - "https://github.com/NVIDIA/NeMo-Guardrails"
+  - "https://docs.garak.ai/"
 pricingModel: paid
 disclosure: editorial
+privacyNotes:
+  - "Lakera Guard inspects prompts and model outputs (sent to its API or self-hosted deployment) to detect injection, unsafe content, and data leakage; review what application traffic is sent for scanning and its data handling before routing production traffic."
 applicationCategory: SecurityApplication
 operatingSystem: Web
 tags:
@@ -21,6 +27,18 @@ keywords:
   - prompt injection protection
   - ai guardrails
 ---
+
+## How Lakera Guard compares
+
+Lakera Guard is a runtime guardrail; related LLM-security tools in this directory work at different stages:
+
+| Tool | Stage | Open source | Notable for |
+| --- | --- | --- | --- |
+| **Lakera Guard** | Runtime input/output filtering | No | Real-time prompt-injection and content detection via API |
+| **NeMo Guardrails** | Runtime programmable rails | Yes | Define allowed flows/topics in a rails config |
+| **Garak** | Pre-deployment scanning | Yes | Probe models for vulnerabilities before shipping |
+
+Use Lakera Guard for managed runtime protection, NeMo Guardrails for self-hosted programmable rails, or Garak to scan for weaknesses before deployment.
 
 ## Editorial notes
 
