@@ -60,45 +60,34 @@ function escForSatori(value: string) {
 /**
  * Convert a #rgb / #rrggbb / #rrggbbaa hex (already validated by safeAccent) to an
  * `rgba()` string so the category swash can be drawn semi-transparent — matching the
- * homepage hero's `bg-accent/70` marker highlight.
+ * homepage hero's `bg-accent/70` marker highlight. Exported for unit testing.
  */
-function withAlpha(hex: string, alpha: number) {
+export function withAlpha(hex: string, alpha: number) {
   const h = hex.replace("#", "");
   const full = h.length === 3 ? [...h].map((c) => c + c).join("") : h.slice(0, 6);
   const n = Number.parseInt(full, 16);
   return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
 }
 
-/**
- * Render the OG card as a PNG. Same 1200×630 design as renderOgSvg, but built as an
- * HTML string for Satori (via workers-og's ImageResponse) so social scrapers that do
- * NOT rasterize SVG og:images (Twitter/X, Facebook, LinkedIn, Slack, Discord) get a
- * real raster image.
- *
- * This module is server-only on purpose: workers-og statically imports its own resvg +
- * yoga `.wasm` modules, which must not be pulled into the browser bundle. The Vite
- * `serverOnlyClientStubs` plugin stubs `*.server` imports for the client build.
- *
- * workers-og is imported lazily (dynamic `import()` below) rather than at module top
- * level: TanStack's dev SSR eagerly evaluates the whole route tree, so a static import
- * here would pull workers-og's `.wasm` into Node's ESM loader for EVERY page and 500 the
- * entire site under `vite dev` (Node can't resolve the bundled `.wasm`). Deferring it
- * keeps `pnpm dev` working for all routes; only an actual request to `/og*` loads it
- * (still server-only — the Cloudflare/Workers runtime resolves the WASM in prod).
- *
- * workers-og initializes the WASM lazily on first render, so no manual WASM handling is
- * required here. Satori needs real font bytes (it cannot resolve CSS font-family names),
- * which getOgFonts() supplies from a bundled, base64-embedded Space Grotesk subset.
- */
-export async function renderOgPng(opts: {
+export type OgCardOptions = {
   /** Category/section label shown as the highlighted eyebrow (e.g. "MCP", "Agents"). */
   eyebrow?: string;
   title: string;
   description?: string;
   author?: string;
   accent?: string;
-}): Promise<ImageResponse> {
-  const { ImageResponse } = await import("workers-og");
+};
+
+/**
+ * Build the Satori HTML string for the 1200×630 OG card. Pure (no WASM / font / async
+ * deps) so it can be unit-tested directly; renderOgPng wraps it in an ImageResponse.
+ *
+ * Layout: category eyebrow with a color-coded marker-swash highlight, a 2-line title, a
+ * 3-line clean-truncated description, an optional author, and a GitHub footer. All
+ * caller text is run through escForSatori; the accent is run through safeAccent — so an
+ * entry- or query-derived value can never inject markup or break a style attribute.
+ */
+export function buildOgCardHtml(opts: OgCardOptions): string {
   const accent = safeAccent(opts.accent);
   const label = escForSatori(
     clampOgText(opts.eyebrow || "HeyClaude", OG_TEXT_LIMITS.eyebrow).toUpperCase(),
@@ -139,7 +128,7 @@ export async function renderOgPng(opts: {
   const swash = withAlpha(accent, 0.85);
   const labelHtml = `<div style="display:flex;align-self:flex-start;padding:0 6px 3px 6px;font-family:'Space Grotesk';font-weight:700;font-size:26px;letter-spacing:3px;color:${OG_INK};background:linear-gradient(to top, ${swash} 0px, ${swash} 14px, transparent 14px, transparent 100%);">${label}</div>`;
 
-  const html = `<div style="display:flex;width:1200px;height:630px;background-color:${OG_BG};background-image:url('${GRID_BG_DATA_URI}');background-size:1200px 630px;background-repeat:no-repeat;">
+  return `<div style="display:flex;width:1200px;height:630px;background-color:${OG_BG};background-image:url('${GRID_BG_DATA_URI}');background-size:1200px 630px;background-repeat:no-repeat;">
   <div style="display:flex;width:14px;height:630px;background:${accent};"></div>
   <div style="display:flex;flex-direction:column;flex:1;padding:80px 80px;">
     ${labelHtml}
@@ -155,8 +144,32 @@ export async function renderOgPng(opts: {
     </div>
   </div>
 </div>`;
+}
 
-  return new ImageResponse(html, {
+/**
+ * Render the OG card as a PNG. Same 1200×630 design as renderOgSvg, but built as an
+ * HTML string for Satori (via workers-og's ImageResponse) so social scrapers that do
+ * NOT rasterize SVG og:images (Twitter/X, Facebook, LinkedIn, Slack, Discord) get a
+ * real raster image.
+ *
+ * This module is server-only on purpose: workers-og statically imports its own resvg +
+ * yoga `.wasm` modules, which must not be pulled into the browser bundle. The Vite
+ * `serverOnlyClientStubs` plugin stubs `*.server` imports for the client build.
+ *
+ * workers-og is imported lazily (dynamic `import()` below) rather than at module top
+ * level: TanStack's dev SSR eagerly evaluates the whole route tree, so a static import
+ * here would pull workers-og's `.wasm` into Node's ESM loader for EVERY page and 500 the
+ * entire site under `vite dev` (Node can't resolve the bundled `.wasm`). Deferring it
+ * keeps `pnpm dev` working for all routes; only an actual request to `/og*` loads it
+ * (still server-only — the Cloudflare/Workers runtime resolves the WASM in prod).
+ *
+ * workers-og initializes the WASM lazily on first render, so no manual WASM handling is
+ * required here. Satori needs real font bytes (it cannot resolve CSS font-family names),
+ * which getOgFonts() supplies from a bundled, base64-embedded Space Grotesk subset.
+ */
+export async function renderOgPng(opts: OgCardOptions): Promise<ImageResponse> {
+  const { ImageResponse } = await import("workers-og");
+  return new ImageResponse(buildOgCardHtml(opts), {
     width: OG_WIDTH,
     height: OG_HEIGHT,
     format: "png",
