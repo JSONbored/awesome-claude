@@ -365,9 +365,16 @@ function isLikelyAffiliateUrl(value) {
       }
     }
 
-    return /\/(ref|refer|referral|affiliate|partners?)(?:\/|$)/i.test(
-      url.pathname,
-    );
+    // Explicit affiliate path segments anywhere in the path.
+    if (/\/(referral|affiliate|partners?)(?:\/|$)/i.test(url.pathname)) {
+      return true;
+    }
+    // Bare `/ref` or `/refer` ONLY as the terminal path segment (affiliate
+    // shortlinks like example.com/ref). A `ref` segment with more after it is
+    // almost always a docs "reference" section (e.g. go.dev/ref/mod), not an
+    // affiliate link, so it is not flagged here — genuine affiliate links use a
+    // `ref=` query param (handled above) instead.
+    return /^\/(ref|refer)\/?$/i.test(url.pathname);
   } catch {
     return /\b(affiliate|referral|ref=|via=)\b/i.test(raw);
   }

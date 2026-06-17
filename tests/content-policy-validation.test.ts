@@ -977,4 +977,64 @@ Setup pulls from http://evil.example.com/install.sh.
       ]),
     );
   });
+
+  it("allows /ref/ reference paths in source URLs (affiliate false positive)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Go Module Tidy Hook
+category: hooks
+description: Runs go mod tidy to prune and sync Go module dependencies on save.
+documentationUrl: https://go.dev/ref/mod
+retrievalSources:
+  - https://go.dev/ref/mod
+safetyNotes:
+  - Runs on a hook event and executes go tooling; review before enabling.
+privacyNotes:
+  - Reads local Go module files; nothing is sent off-machine.
+---
+
+The hook runs \`go mod tidy\` and reports changes.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/hooks/go-module-tidy.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(
+      output.reviewFlags.map((flag: { id: string }) => flag.id),
+    ).not.toContain("affiliate_referral_url");
+  });
+
+  it("still blocks genuine affiliate URLs (path and query param)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Affiliate Entry
+category: tools
+description: Tool with an affiliate referral link.
+sourceUrl: https://shop.example.com/product?ref=abc123
+---
+
+Body.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/tools/affiliate-entry.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "affiliate_referral_url" }),
+      ]),
+    );
+  });
 });
