@@ -27,7 +27,8 @@ export const COMPARISONS: Comparison[] = [
     heading: "Database MCP servers compared",
     seoDescription:
       "Compare PostgreSQL, Redis, MongoDB, and Supabase MCP servers for Claude Code — trust, install, safety, and config side by side.",
-    intro: "The most-used database MCP servers for Claude Code, compared on trust, install, and safety signals.",
+    intro:
+      "The most-used database MCP servers for Claude Code, compared on trust, install, and safety signals.",
     refs: [
       "mcp/postgresql-mcp-server",
       "mcp/redis-mcp-server",
@@ -55,7 +56,8 @@ export const COMPARISONS: Comparison[] = [
     heading: "AI coding agents compared",
     seoDescription:
       "Compare Cursor, Aider, Cline, and Continue — AI coding tools that work with Claude — side by side.",
-    intro: "The leading AI coding tools that pair with Claude, compared on platforms, source, and setup.",
+    intro:
+      "The leading AI coding tools that pair with Claude, compared on platforms, source, and setup.",
     refs: ["tools/cursor", "tools/aider", "tools/cline", "tools/continue"],
   },
   {
@@ -135,6 +137,187 @@ export const COMPARISONS: Comparison[] = [
       "mcp/basic-memory-mcp-server",
       "mcp/codebase-memory-mcp-server",
     ],
+  },
+  {
+    slug: "ai-app-builders",
+    title: "Bolt vs Lovable vs v0 vs Replit Agent",
+    heading: "AI app builders compared",
+    seoDescription:
+      "Compare Bolt.new, Lovable, Vercel v0, and Replit Agent — AI app and UI builders that generate full-stack apps from prompts — side by side.",
+    intro:
+      "Prompt-to-app builders that scaffold and deploy full-stack projects, compared on approach, source, and setup.",
+    refs: ["tools/bolt-new", "tools/lovable", "tools/vercel-v0", "tools/replit-agent"],
+  },
+  {
+    slug: "autonomous-coding-agents",
+    title: "Devin vs OpenHands vs OpenSWE vs Goose",
+    heading: "Autonomous coding agents compared",
+    seoDescription:
+      "Compare Devin, OpenHands, OpenSWE, and Goose — autonomous software-engineering agents — side by side on approach, source, and setup.",
+    intro:
+      "End-to-end autonomous coding agents that plan and execute multi-step engineering tasks, compared.",
+    refs: ["tools/devin", "tools/openhands", "tools/open-swe", "tools/goose"],
+  },
+  {
+    slug: "data-orchestration-tools",
+    title: "Airflow vs Dagster vs Prefect vs dbt",
+    heading: "Data orchestration tools compared",
+    seoDescription:
+      "Compare Apache Airflow, Dagster, Prefect, and dbt Core — data pipeline orchestration and transformation tools — side by side.",
+    intro:
+      "Orchestration and transformation tools for data pipelines, compared on model, source, and setup.",
+    refs: ["tools/apache-airflow", "tools/dagster", "tools/prefect", "tools/dbt-core"],
+  },
+  {
+    slug: "llm-serving-tools",
+    title: "vLLM vs Ollama vs llama.cpp vs BentoML",
+    heading: "LLM serving & inference tools compared",
+    seoDescription:
+      "Compare vLLM, Ollama, llama.cpp, and BentoML — tools for running and serving LLMs locally and in production — side by side.",
+    intro: "Inference and serving runtimes for open models, compared on focus, source, and setup.",
+    refs: ["tools/vllm", "tools/ollama", "tools/llama-cpp", "tools/bentoml"],
+  },
+  {
+    slug: "python-agent-frameworks",
+    title: "Pydantic AI vs Agno vs DSPy vs Mastra",
+    heading: "Agent frameworks compared",
+    seoDescription:
+      "Compare Pydantic AI, Agno, DSPy, and Mastra — frameworks for building typed, programmatic LLM agents — side by side.",
+    intro:
+      "Code-first frameworks for building LLM agents, compared on approach, source, and setup.",
+    refs: ["tools/pydantic-ai", "tools/agno", "tools/dspy", "tools/mastra"],
+  },
+  {
+    slug: "web-scraping-tools",
+    title: "Firecrawl vs Apify vs Exa vs Hyperbrowser",
+    heading: "Web scraping & crawling tools compared",
+    seoDescription:
+      "Compare Firecrawl, Apify, Exa, and Hyperbrowser — web scraping, crawling, and retrieval tools for AI — side by side.",
+    intro:
+      "Tools for turning the web into LLM-ready data, compared on approach, source, and setup.",
+    refs: ["tools/firecrawl", "tools/apify", "tools/exa", "tools/hyperbrowser"],
+  },
+  {
+    slug: "ml-app-ui-frameworks",
+    title: "Streamlit vs Gradio vs Chainlit vs Marimo",
+    heading: "ML & AI app UI frameworks compared",
+    seoDescription:
+      "Compare Streamlit, Gradio, Chainlit, and Marimo — Python frameworks for building ML and LLM app UIs — side by side.",
+    intro: "Python UI frameworks for data and LLM apps, compared on focus, source, and setup.",
+    refs: ["tools/streamlit", "tools/gradio", "tools/chainlit", "tools/marimo"],
+  },
+  {
+    slug: "code-security-scanners",
+    title: "Semgrep vs Gitleaks vs Grype vs Kubescape",
+    heading: "Code & supply-chain security scanners compared",
+    seoDescription:
+      "Compare Semgrep, Gitleaks, Grype, and Kubescape — code, secret, dependency, and Kubernetes security scanners — side by side.",
+    intro:
+      "Static analysis and supply-chain security scanners, compared on focus, source, and setup.",
+    refs: ["tools/semgrep", "tools/gitleaks", "tools/grype", "tools/kubescape"],
+  },
+  {
+    slug: "vector-databases",
+    title: "Chroma vs Weaviate vs LanceDB vs Milvus",
+    heading: "Vector databases compared",
+    seoDescription:
+      "Compare Chroma, Weaviate, LanceDB, and Milvus — vector databases for embeddings and retrieval-augmented generation — side by side.",
+    intro: "Vector databases for embeddings and RAG, compared on approach, source, and setup.",
+    refs: ["tools/chroma", "tools/weaviate", "tools/lancedb", "tools/milvus"],
+  },
+  {
+    slug: "rag-evaluation-tools",
+    title: "Ragas vs TruLens vs Giskard vs DeepEval",
+    heading: "RAG & LLM evaluation tools compared",
+    seoDescription:
+      "Compare Ragas, TruLens, Giskard, and DeepEval — evaluation tools for RAG pipelines and LLM apps — side by side.",
+    intro:
+      "Evaluation libraries focused on RAG and LLM quality, compared on approach, source, and setup.",
+    refs: ["tools/ragas", "tools/trulens", "tools/giskard", "tools/deepeval"],
+  },
+  {
+    slug: "ml-experiment-tracking",
+    title: "MLflow vs Weave vs DVC",
+    heading: "ML experiment tracking tools compared",
+    seoDescription:
+      "Compare MLflow, Weave, and DVC — experiment tracking and ML lifecycle tools — side by side on approach, source, and setup.",
+    intro: "Experiment tracking and ML lifecycle tools, compared on focus, source, and setup.",
+    refs: ["tools/mlflow", "tools/weave", "tools/dvc"],
+  },
+  {
+    slug: "design-mcp-servers",
+    title: "Figma vs Canva vs Zeplin MCP servers for Claude",
+    heading: "Design MCP servers compared",
+    seoDescription:
+      "Compare the Figma, Canva, and Zeplin MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Design-tool MCP servers that connect Claude to your design workflow, compared on trust, setup, and safety.",
+    refs: ["mcp/figma-mcp-server", "mcp/canva-mcp-server", "mcp/zeplin-mcp-server"],
+  },
+  {
+    slug: "messaging-mcp-servers",
+    title: "Slack vs Discord vs Telegram vs WhatsApp MCP servers for Claude",
+    heading: "Messaging MCP servers compared",
+    seoDescription:
+      "Compare the Slack, Discord, Telegram, and WhatsApp MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Messaging-platform MCP servers that let Claude read and post messages, compared on trust, setup, and safety.",
+    refs: [
+      "mcp/slack-mcp-server",
+      "mcp/discord-mcp-server",
+      "mcp/telegram-mcp-server",
+      "mcp/whatsapp-mcp-server",
+    ],
+  },
+  {
+    slug: "cloud-provider-mcp-servers",
+    title: "AWS vs Azure vs Google Cloud MCP servers for Claude",
+    heading: "Cloud provider MCP servers compared",
+    seoDescription:
+      "Compare the AWS, Azure, and Google Cloud MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Cloud-provider MCP servers that let Claude manage cloud resources, compared on trust, platforms, and setup.",
+    refs: ["mcp/aws-services-mcp-server", "mcp/azure-mcp-server", "mcp/gcloud-mcp-server"],
+  },
+  {
+    slug: "knowledge-base-mcp-servers",
+    title: "Notion vs Obsidian vs AFFiNE MCP servers for Claude",
+    heading: "Knowledge base MCP servers compared",
+    seoDescription:
+      "Compare the Notion, Obsidian, and AFFiNE MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Note and knowledge-base MCP servers that give Claude access to your docs, compared on trust, setup, and safety.",
+    refs: ["mcp/notion-mcp-server", "mcp/obsidian-mcp-server", "mcp/affine-mcp-server"],
+  },
+  {
+    slug: "finance-data-mcp-servers",
+    title: "Plaid vs Alpaca vs Financial Datasets MCP servers for Claude",
+    heading: "Finance data MCP servers compared",
+    seoDescription:
+      "Compare the Plaid, Alpaca, and Financial Datasets MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Financial-data MCP servers that bring banking and market data into Claude, compared on trust, setup, and safety.",
+    refs: ["mcp/plaid-mcp-server", "mcp/alpaca-mcp-server", "mcp/financial-datasets-mcp-server"],
+  },
+  {
+    slug: "docs-mcp-servers",
+    title: "Context7 vs Ref Tools vs GitMCP docs servers for Claude",
+    heading: "Documentation MCP servers compared",
+    seoDescription:
+      "Compare the Context7, Ref Tools, and GitMCP documentation MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Documentation-retrieval MCP servers that feed Claude up-to-date library docs, compared on trust, setup, and coverage.",
+    refs: ["mcp/context7-mcp-server", "mcp/ref-tools-mcp-server", "mcp/gitmcp-docs-server"],
+  },
+  {
+    slug: "data-warehouse-mcp-servers",
+    title: "Snowflake vs BigQuery vs ClickHouse MCP servers for Claude",
+    heading: "Data warehouse MCP servers compared",
+    seoDescription:
+      "Compare the Snowflake, BigQuery, and ClickHouse MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Analytics/warehouse MCP servers that let Claude query large datasets, compared on trust, setup, and safety.",
+    refs: ["mcp/snowflake-mcp-server", "mcp/bigquery-mcp-server", "mcp/clickhouse-mcp-server"],
   },
 ];
 
