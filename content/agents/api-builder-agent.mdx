@@ -8,13 +8,21 @@ description: >-
 cardDescription: >-
   Specialized agent for designing, building, and optimizing RESTful APIs and
   GraphQL services with modern best practices
-seoTitle: API Builder Agent for Claude
-seoDescription: >-
-  Specialized agent for designing, building, and optimizing RESTful APIs and
-  GraphQL services with modern best practices Discover tools for AI development.
+seoTitle: "API Builder Agent for Claude — REST & GraphQL"
+seoDescription: "A Claude agent for designing and building APIs: RESTful and GraphQL services, OpenAPI/Swagger docs, and framework patterns for Express, FastAPI, and Apollo Server."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
+documentationUrl: "https://swagger.io/specification/"
+retrievalSources:
+  - "https://swagger.io/specification/"
+  - "https://graphql.org/learn/"
+  - "https://fastapi.tiangolo.com/"
+  - "https://expressjs.com/en/guide/routing.html"
+safetyNotes:
+  - "Generated APIs install server packages and run services that listen on network ports; review dependencies, authentication, and exposed endpoints before deploying or binding to public interfaces."
+privacyNotes:
+  - "Generated APIs read and persist user-supplied data and use auth tokens/keys; review what each endpoint stores, logs, or exposes and keep credentials in environment variables."
 installable: false
 usageSnippet: "Create this file as `.claude/agents/api-builder-agent.md`:"
 copySnippet: >-
@@ -888,18 +896,11 @@ tags:
   - microservices
   - architecture
 keywords:
-  - agent
-  - agents
-  - api
-  - architecture
-  - backend
-  - builder
-  - claude
-  - development
-  - graphql
-  - microservices
-  - rest
-  - tools
+  - api builder agent
+  - rest api agent
+  - graphql agent claude
+  - openapi agent
+  - claude api development
 readingTime: 10
 difficultyScore: 100
 hasTroubleshooting: true

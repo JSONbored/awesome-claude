@@ -8,15 +8,19 @@ description: >-
 cardDescription: >-
   Clean, performance-optimized statusline with Powerline glyphs showing model,
   directory, and token count
-seoTitle: Minimal Powerline - Statuslines
-seoDescription: >-
-  Clean, performance-optimized statusline with Powerline glyphs showing model,
-  directory, and token count Discover tools for AI development.
+seoTitle: "Minimal Powerline Statusline for Claude Code"
+seoDescription: "A clean, performance-optimized Claude Code statusline using Powerline glyphs to show the model, current directory, and token count in your terminal."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-01"
 repoUrl: "https://github.com/powerline/powerline"
-documentationUrl: "https://github.com/powerline/powerline"
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+safetyNotes:
+  - "Runs as a Claude Code statusline command on every refresh and depends on the local bash environment, jq, and a Powerline-patched font; a failure only affects status rendering, not your session."
+privacyNotes:
+  - "Reads the Claude Code statusline JSON from stdin (model, workspace path, token count) and renders it in the local terminal; it does not send data off-machine."
 installable: true
 usageSnippet: " claude-sonnet-4.5  ~/projects/my-app   1,234 "
 copySnippet: |-
@@ -110,15 +114,11 @@ tags:
   - bash
   - lightweight
 keywords:
-  - bash
-  - claude
-  - development
-  - lightweight
-  - minimal
-  - performance
-  - powerline
-  - statuslines
-  - tools
+  - powerline statusline
+  - claude code statusline
+  - minimal statusline
+  - claude statusline bash
+  - powerline glyphs
 readingTime: 1
 difficultyScore: 2
 hasTroubleshooting: true

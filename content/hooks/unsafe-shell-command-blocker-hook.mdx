@@ -1,0 +1,144 @@
+---
+title: Destructive SQL Bash Guardrail Hook
+slug: unsafe-shell-command-blocker-hook
+category: hooks
+description: >-
+  PreToolUse Bash guardrail implementing the Claude Code hooks guide drop-table
+  example: exit 2 with stderr feedback when Bash command text contains the
+  documented destructive SQL substring.
+cardDescription: >-
+  Block Bash tool calls matching the hooks-guide drop-table guardrail example.
+seoTitle: Destructive SQL Bash Guardrail Hook for Claude Code
+seoDescription: >-
+  Claude Code PreToolUse hook using the official hooks guide drop-table guardrail
+  pattern that exits 2 to deny matching Bash commands.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 765
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/765"
+documentationUrl: "https://code.claude.com/docs/en/hooks-guide"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://code.claude.com/docs/en/hooks-guide"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch .claude/hooks/block-drop-table.sh && chmod +x .claude/hooks/block-drop-table.sh
+usageSnippet: >-
+  PreToolUse Bash guardrail exits 2 when command text contains the hooks-guide drop-table substring.
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/block-drop-table.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/block-drop-table.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+  if ! command -v jq >/dev/null 2>&1; then exit 0; fi
+  input=$(cat)
+  tool_name=$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')
+  case "$tool_name" in
+    Bash|bash) ;;
+    *) exit 0 ;;
+  esac
+  command_text=$(printf '%s' "$input" | jq -r '.tool_input.command // .toolInput.command // empty')
+  [ -z "$command_text" ] && exit 0
+  if printf '%s' "$command_text" | grep -Fq "drop table"; then
+    echo "Blocked: dropping tables is not allowed" >&2
+    exit 2
+  fi
+  exit 0
+trigger: PreToolUse
+safetyNotes:
+  - "Implements only the hooks-guide drop-table guardrail; extend locally for additional patterns."
+  - "Exit code 2 blocks the Bash tool call and returns stderr feedback to Claude."
+privacyNotes:
+  - "Reads proposed Bash command text from stdin locally; no network access."
+tags:
+  - hooks
+  - bash
+  - guardrail
+  - safety
+keywords:
+  - unsafe shell command blocker hook
+  - claude code drop table guardrail hook
+readingTime: 3
+difficultyScore: 36
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+This hook applies the **hooks guide drop-table guardrail example** to Bash
+`PreToolUse` events so destructive SQL substrings are denied before execution.
+
+## Scope
+
+This is a **community custom hook** for `.claude/hooks/`. It is not a built-in
+Claude Code hook shipped by Anthropic.
+
+
+## Installation
+
+1. Paste `scriptBody` into `.claude/hooks/block-drop-table.sh`.
+2. Run the `installCommand` chmod step.
+3. Merge `copySnippet` into `.claude/settings.json`.
+
+## Expected behavior
+
+When Bash command text contains the documented `drop table` substring, the hook
+writes feedback to stderr and exits 2 so Claude Code denies the tool call.
+
+## Source Verification Notes
+
+Verified against the Claude Code hooks guide on **2026-06-16**:
+
+- The guide's **Hook output** section shows a `PreToolUse` example that reads
+  `.tool_input.command`, writes a block reason to stderr, and **exits 2 to block
+  the action** when command text matches `drop table`.
+- The same section states **exit 2 blocks the action** and stderr becomes Claude
+  feedback for `PreToolUse` hooks.
+- Bash hook input includes `tool_input.command`, which this script reads with `jq`.
+
+## Duplicate Check
+
+No existing hook in `content/hooks/` documents the hooks-guide drop-table Bash
+guardrail pattern.
+
+## Troubleshooting
+
+**Hook never fires:** Confirm matcher is `Bash`, the script is executable, and
+`jq` is installed as recommended in the hooks guide.

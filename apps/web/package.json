@@ -13,10 +13,8 @@
     "pretype-check": "pnpm run generate:artifacts",
     "prepreview": "pnpm run generate:artifacts",
     "predeploy": "pnpm run generate:artifacts",
-    "predeploy:dev": "pnpm run generate:artifacts",
     "predeploy:prod": "pnpm run generate:artifacts",
     "preversions:upload": "pnpm run generate:artifacts",
-    "preversions:upload:dev": "pnpm run generate:artifacts",
     "dev": "vite dev",
     "build": "vite build",
     "type-check": "tsc --noEmit",
@@ -25,10 +23,8 @@
     "db:migrate:remote": "wrangler d1 migrations apply SITE_DB --remote",
     "preview": "vite build && wrangler dev --config wrangler.jsonc",
     "deploy": "pnpm run deploy:prod",
-    "deploy:dev": "vite build && wrangler deploy --config wrangler.jsonc --env dev",
     "deploy:prod": "vite build && wrangler deploy --config wrangler.jsonc --env \"\"",
-    "versions:upload": "vite build && wrangler versions upload --config wrangler.jsonc --env \"\"",
-    "versions:upload:dev": "vite build && wrangler versions upload --config wrangler.jsonc --env dev"
+    "versions:upload": "vite build && wrangler versions upload --config wrangler.jsonc --env \"\""
   },
   "dependencies": {
     "@heyclaude/mcp": "workspace:*",

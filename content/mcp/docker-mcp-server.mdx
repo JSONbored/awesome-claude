@@ -12,46 +12,42 @@ description: >-
 cardDescription: >-
   Manage Docker containers, images, and services directly through Claude with
   comprehensive Docker API integration
-seoTitle: Docker MCP Server for Claude
-seoDescription: >-
-  Manage Docker containers, images, and services directly through Claude with
-  comprehensive Docker API integration Discover tools for AI development.
+seoTitle: "Docker MCP Server for Claude — MCP Toolkit & Gateway"
+seoDescription: "Connect Claude to Docker's MCP Catalog & Toolkit via the Docker MCP Gateway: discover, run, and manage containerized MCP servers and tools from your AI agent."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
-documentationUrl: "https://docs.docker.com/reference/api/engine/"
+documentationUrl: "https://docs.docker.com/ai/mcp-catalog-and-toolkit/"
+retrievalSources:
+  - "https://docs.docker.com/ai/mcp-catalog-and-toolkit/"
+  - "https://docs.docker.com/ai/mcp-catalog-and-toolkit/toolkit/"
 downloadUrl: /downloads/mcp/docker-mcp-server.mcpb
 packageVerified: true
 installable: true
-installCommand: claude mcp add docker -- npx -y @docker/mcp-server && claude mcp list
-usageSnippet: claude mcp add docker -- npx -y @docker/mcp-server && claude mcp list
+installCommand: docker mcp client connect claude-code && claude mcp list
+usageSnippet: docker mcp client connect claude-code && claude mcp list
 copySnippet: |-
   {
-    "docker": {
-      "env": {
-        "DOCKER_HOST": "${DOCKER_HOST:-unix:///var/run/docker.sock}",
-        "DOCKER_API_VERSION": "${DOCKER_API_VERSION:-1.43}"
-      },
+    "MCP_DOCKER": {
+      "command": "docker",
       "args": [
-        "-y",
-        "@docker/mcp-server"
+        "mcp",
+        "gateway",
+        "run"
       ],
-      "command": "npx"
+      "type": "stdio"
     }
   }
 configSnippet: |-
   {
     "mcpServers": {
-      "docker": {
-        "env": {
-          "DOCKER_HOST": "${DOCKER_HOST:-unix:///var/run/docker.sock}",
-          "DOCKER_API_VERSION": "${DOCKER_API_VERSION:-1.43}"
-        },
+      "MCP_DOCKER": {
+        "command": "docker",
         "args": [
-          "-y",
-          "@docker/mcp-server"
+          "mcp",
+          "gateway",
+          "run"
         ],
-        "command": "npx",
         "type": "stdio"
       }
     }
@@ -68,17 +64,19 @@ prerequisites:
   - >-
     User permissions to access Docker daemon socket (user in docker group on
     Linux: sudo usermod -aG docker $USER)
-  - Node.js and npm/npx available for running the @docker/mcp-server package
   - >-
-    Internet connection for pulling images from Docker registries (Docker Hub,
-    private registries)
+    Docker MCP Toolkit enabled in Docker Desktop (Settings > Beta features > MCP
+    Toolkit), which provides the `docker mcp` CLI plugin and the MCP Gateway
+  - >-
+    Internet connection for pulling MCP server images from the Docker MCP
+    Catalog (Docker Hub mcp/ namespace)
   - Claude Desktop 0.7.0+ or Claude Code with MCP support
   - >-
     Understanding of Docker concepts (containers, images, volumes, networks,
     Docker Compose)
   - >-
-    Docker API version awareness (default 1.43, configurable via
-    DOCKER_API_VERSION environment variable)
+    Understanding of the Docker MCP Gateway model (a single gateway runs catalog
+    MCP servers as containers)
   - >-
     Registry authentication (for private registries - run docker login to
     authenticate)
@@ -92,17 +90,11 @@ tags:
   - orchestration
   - deployment
 keywords:
-  - claude
-  - containers
-  - deployment
-  - development
-  - devops
-  - docker
-  - mcp
-  - mcp servers
-  - orchestration
-  - server
-  - tools
+  - docker mcp gateway
+  - docker mcp toolkit
+  - docker mcp claude
+  - mcp catalog
+  - claude docker integration
 readingTime: 1
 difficultyScore: 5
 hasTroubleshooting: true
@@ -114,7 +106,7 @@ robotsFollow: true
 
 ## Content
 
-Enable your AI assistants to seamlessly interact with Docker environments through comprehensive container lifecycle management, image operations, and Docker Compose orchestration. Automate deployment workflows, monitor container performance, and manage Docker registries directly through natural language commands.
+Connect Claude to Docker through the **Docker MCP Catalog & Toolkit**. Rather than a standalone npm package, Docker ships an `docker mcp` CLI plugin (in Docker Desktop) and an **MCP Gateway** that runs catalog MCP servers as containers and exposes them to MCP clients. Connecting the gateway gives Claude container lifecycle management, image operations, and Docker Compose orchestration, plus any other servers you enable from the catalog — all through natural language commands.
 
 ## Features
 
@@ -140,28 +132,28 @@ Enable your AI assistants to seamlessly interact with Docker environments throug
 
 ### Claude Code
 
-1. claude mcp add docker -- npx -y @docker/mcp-server
-2. Verify installation: claude mcp list
-3. Test connection: claude mcp status docker
+1. Enable the MCP Toolkit in Docker Desktop (Settings > Beta features > MCP Toolkit)
+2. Connect the client: `docker mcp client connect claude-code` (or add it manually: `claude mcp add MCP_DOCKER -- docker mcp gateway run`)
+3. Verify installation: `claude mcp list`
+4. Test connection: `claude mcp status MCP_DOCKER`
 
 ### Claude Desktop
 
-1. Ensure Docker is installed and running on your system
-2. Open Claude Desktop configuration file
-3. Add the Docker MCP server configuration
-4. Restart Claude Desktop
-5. Verify Docker socket access permissions
+1. Ensure Docker Desktop is installed and running, with the MCP Toolkit enabled
+2. Connect the client: `docker mcp client connect claude-desktop` (this writes the `MCP_DOCKER` gateway entry into the Claude Desktop config)
+3. Restart Claude Desktop
+4. Confirm the Docker tools appear in Claude Desktop
 
 ## Requirements
 
 - Docker installed and running (Docker Desktop for Mac/Windows, Docker Engine for Linux)
 - Docker daemon accessible (via Unix socket /var/run/docker.sock or TCP connection)
 - User permissions to access Docker daemon socket (user in docker group on Linux: sudo usermod -aG docker $USER)
-- Node.js and npm/npx available for running the @docker/mcp-server package
-- Internet connection for pulling images from Docker registries (Docker Hub, private registries)
+- Docker MCP Toolkit enabled in Docker Desktop (provides the `docker mcp` CLI plugin and the MCP Gateway)
+- Internet connection for pulling MCP server images from the Docker MCP Catalog (Docker Hub mcp/ namespace)
 - Claude Desktop 0.7.0+ or Claude Code with MCP support
 - Understanding of Docker concepts (containers, images, volumes, networks, Docker Compose)
-- Docker API version awareness (default 1.43, configurable via DOCKER_API_VERSION environment variable)
+- Understanding of the Docker MCP Gateway model (one gateway runs catalog MCP servers as containers)
 - Registry authentication (for private registries - run docker login to authenticate)
 - Understanding of Docker socket security (Unix socket permissions, TLS for remote connections)
 
@@ -169,13 +161,12 @@ Enable your AI assistants to seamlessly interact with Docker environments throug
 
 ```json
 {
-  "docker": {
-    "env": {
-      "DOCKER_HOST": "${DOCKER_HOST:-unix:///var/run/docker.sock}",
-      "DOCKER_API_VERSION": "${DOCKER_API_VERSION:-1.43}"
-    },
-    "args": ["-y", "@docker/mcp-server"],
-    "command": "npx"
+  "mcpServers": {
+    "MCP_DOCKER": {
+      "command": "docker",
+      "args": ["mcp", "gateway", "run"],
+      "type": "stdio"
+    }
   }
 }
 ```
@@ -264,9 +255,9 @@ Start Docker daemon: sudo systemctl start docker (Linux) or launch Docker Deskto
 
 Run sudo chmod 666 /var/run/docker.sock (temporary fix) or add user to docker group (permanent). Verify socket file exists: ls -l /var/run/docker.sock.
 
-### Docker API version mismatch error
+### `docker mcp` command not found
 
-Set DOCKER_API_VERSION environment variable to match your Docker version. Run docker version to check API version. Update MCP server config with correct API version (e.g., 1.43).
+The `docker mcp` CLI plugin ships with the MCP Toolkit. Update Docker Desktop and enable the MCP Toolkit (Settings > Beta features > MCP Toolkit), then re-run `docker mcp gateway run`. Verify with `docker mcp version`.
 
 ### Container operations fail with authentication errors
 

@@ -1,0 +1,108 @@
+---
+title: /frontend-visual-qa - Chrome Design Verification Runbook
+slug: frontend-visual-qa
+category: commands
+description: >-
+  Community slash command runbook for frontend visual QA using documented Claude
+  Code Chrome integration workflows: enable /chrome, open a local page, read
+  console messages, and follow the design verification checklist from the
+  Chrome integration guide.
+cardDescription: >-
+  Run the Chrome guide design verification and console debug workflows on a local page.
+seoTitle: /frontend-visual-qa - Chrome Design Verification Runbook
+seoDescription: >-
+  Claude Code slash command runbook applying documented Chrome integration design
+  verification and console debugging workflows for frontend QA.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 751
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/751"
+documentationUrl: "https://code.claude.com/docs/en/chrome"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://code.claude.com/docs/en/chrome"
+installable: true
+installCommand: "/frontend-visual-qa <route-or-host>"
+commandSyntax: "/frontend-visual-qa <route-or-host>"
+usageSnippet: "/frontend-visual-qa localhost:3000/settings"
+copySnippet: "/frontend-visual-qa <route-or-host>"
+prerequisites:
+  - "Claude Code 2.0.73+ and Claude in Chrome extension 1.0.36+ on Chrome or Edge."
+  - "Local dev server reachable from the operator browser session."
+safetyNotes:
+  - "Chrome integration runs in a visible browser with your logged-in session; avoid production admin flows."
+  - "Handle login pages and CAPTCHAs manually when the integration pauses."
+privacyNotes:
+  - "Console logs and screenshots may include staging data; redact before external sharing."
+tags:
+  - frontend
+  - chrome
+  - visual-qa
+  - testing
+  - slash-command
+keywords:
+  - frontend visual qa slash command
+  - claude code chrome design verification
+---
+
+## Scope
+
+This is a **community custom entry** you add under `.claude/commands/` or
+`.claude/hooks/`. It is not a built-in Claude Code feature named on
+code.claude.com.
+
+
+The `/frontend-visual-qa` runbook applies **documented Chrome integration
+workflows** from the Claude Code Chrome guide. It is a custom `.claude/commands/`
+checklist, not a built-in command page.
+
+## Usage
+
+```
+/frontend-visual-qa <route-or-host>
+```
+
+Provide a host/path such as `localhost:3000/dashboard` that the operator opens
+after enabling Chrome integration.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Enable Chrome integration.** Run `/chrome` (or start Claude Code with the documented `--chrome` flag) and confirm the extension is connected.
+2. **Open the local app.** Follow the guide's **Test a local web application** workflow: navigate to the dev server, interact with the changed UI, and observe whether expected behavior appears.
+3. **Read console on load.** Apply the **Debug with console logs** workflow: read console messages for errors when the page loads and filter to newly introduced failures.
+4. **Run design verification.** Use the guide's **Design verification** capability: compare the rendered UI against the intended change and note layout or asset regressions at desktop width.
+5. **Record evidence only when asked.** Capture a screenshot or GIF only if the operator requests shareable review artifacts.
+6. **Return a merge checklist.** Summarize pass/fail items, console findings, and blockers.
+
+## Output format
+
+- Chrome connection status and target route
+- Console errors/warnings with reproduction notes
+- Design verification pass/fail bullets
+- Primary user-flow pass/fail
+- Ship / fix / needs design review recommendation
+
+## Source Verification Notes
+
+Verified against Claude Code Chrome documentation on **2026-06-16**:
+
+- Chrome integration supports **design verification** — building a UI and opening
+  it in the browser to verify it matches the intended design.
+- The guide documents **testing a local web application** by navigating to a dev
+  server and interacting with forms or UI changes.
+- The **Debug with console logs** workflow reads browser console output to
+  diagnose page-load problems.
+- Operators enable the integration with **`/chrome`** or the documented
+  **`claude --chrome`** flag and can check connection status from `/chrome`.
+- Browser tasks run in a **visible Chrome window**; login pages and CAPTCHAs
+  require manual operator action.
+
+## Duplicate Check
+
+No existing command in `content/commands/` documents this Chrome guide QA checklist.

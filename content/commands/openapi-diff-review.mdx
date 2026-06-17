@@ -1,0 +1,106 @@
+---
+title: /openapi-diff-review - Spectral OpenAPI Diff Review Runbook
+slug: openapi-diff-review
+category: commands
+description: >-
+  Community slash command runbook for OpenAPI contract review: lint base and head
+  spec files with the documented Spectral CLI, compare rule failures, and classify
+  release impact before merging API changes.
+cardDescription: >-
+  Compare Spectral lint results between base and head OpenAPI spec files.
+seoTitle: /openapi-diff-review - Spectral OpenAPI Diff Review Runbook
+seoDescription: >-
+  Claude Code slash command runbook to review OpenAPI changes by comparing Spectral
+  CLI lint output between base and head specification files.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 754
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/754"
+documentationUrl: "https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/guides/2-cli.md"
+repoUrl: "https://github.com/stoplightio/spectral"
+sourceUrls:
+  - "https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/guides/2-cli.md"
+  - "https://spec.openapis.org/oas/latest.html"
+installable: true
+installCommand: "/openapi-diff-review <base-spec> <head-spec>"
+commandSyntax: "/openapi-diff-review <base-spec> <head-spec>"
+usageSnippet: "/openapi-diff-review openapi/v1.yaml openapi/v2.yaml"
+copySnippet: "/openapi-diff-review <base-spec> <head-spec>"
+prerequisites:
+  - "@stoplight/spectral-cli installed locally or via project devDependencies."
+  - "OpenAPI 3.x YAML or JSON spec files checked into the repository."
+safetyNotes:
+  - "Read-only lint comparison; does not deploy APIs or mutate service configuration."
+  - "Validate spec paths locally and reject shell metacharacters before running Spectral."
+privacyNotes:
+  - "OpenAPI files may describe internal hostnames or auth schemes; redact before external sharing."
+tags:
+  - openapi
+  - spectral
+  - api-design
+  - review
+  - slash-command
+keywords:
+  - openapi diff review slash command
+  - spectral lint openapi comparison
+---
+
+The `/openapi-diff-review` runbook compares **Spectral CLI lint output** between a
+base and head OpenAPI spec using documented `spectral lint` usage. It complements
+`/api-contract-check`, which focuses on Pact consumer verification rather than
+static OpenAPI lint diffs.
+
+## Scope
+
+This is a **community custom slash command** for `.claude/commands/`. It is not a
+built-in Claude Code command page on code.claude.com.
+
+
+## Usage
+
+```
+/openapi-diff-review <base-spec> <head-spec>
+```
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Validate paths.** Confirm both arguments are repository-relative `.yaml`, `.yml`, or `.json` files without shell metacharacters.
+2. **Lint the base spec.** Run `spectral lint <base-spec> --ruleset <ruleset>` (or rely on `.spectral.yaml` in the working directory when no ruleset flag is passed).
+3. **Lint the head spec.** Run the same Spectral command against `<head-spec>`.
+4. **Compare failures.** Diff rule codes and paths that appear only in the head run or increased in severity per Spectral severity levels (`error`, `warn`, `info`, `hint`).
+5. **Map to contract impact.** Flag removed operations, narrowed schemas, or new required fields surfaced by OpenAPI rules as potential breaking changes for reviewers.
+6. **Recommend release bump.** Suggest major, minor, or patch based on breaking versus additive Spectral findings.
+7. **List follow-ups.** Note ruleset updates, client regeneration, or docs edits required before release.
+
+## Output format
+
+- Ruleset used and Spectral version
+- Base vs head failure tables grouped by severity
+- New or worsened rule violations on head
+- Breaking vs compatible summary
+- Recommended SemVer bump and follow-ups
+
+## Source Verification Notes
+
+Verified against Spectral CLI documentation on **2026-06-16**:
+
+- **`spectral lint <document>`** lints OpenAPI documents with the built-in or
+  configured ruleset.
+- **`--ruleset <path>`** selects a custom ruleset when `.spectral.yaml` is not in
+  the working directory.
+- Spectral reports severities **`error`, `warn`, `info`, and `hint`**, and
+  **`--fail-severity`** controls which levels trigger a non-zero exit code.
+- The CLI supports linting **multiple files** by passing multiple arguments in one
+  invocation.
+
+## Duplicate Check
+
+`/api-contract-check` covers Pact provider verification. The Spectral capability
+pack skill documents audit workflows but not this operator-facing **base vs head
+Spectral lint diff** runbook for OpenAPI PR review.

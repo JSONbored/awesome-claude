@@ -1,0 +1,156 @@
+---
+title: Hardcoded Secret Pre-Write Guard Hook
+slug: environment-variable-leak-warning-hook
+category: hooks
+description: >-
+  PreToolUse Write and Edit guardrail combining the hooks guide protected-file
+  pattern with a local scan for common hardcoded credential shapes called out by
+  GitHub secret scanning guidance before content is written.
+cardDescription: >-
+  Block Write and Edit operations that embed common hardcoded credential shapes.
+seoTitle: Hardcoded Secret Pre-Write Guard Hook for Claude Code
+seoDescription: >-
+  Claude Code PreToolUse hook using hooks-guide exit 2 blocking plus GitHub secret
+  scanning guidance on hardcoded credentials in repository files.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 764
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/764"
+documentationUrl: "https://code.claude.com/docs/en/hooks-guide"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://code.claude.com/docs/en/hooks-guide"
+  - "https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch .claude/hooks/hardcoded-secret-guard.sh && chmod +x .claude/hooks/hardcoded-secret-guard.sh
+usageSnippet: >-
+  PreToolUse guard exits 2 when generated source edits match common hardcoded credential shapes.
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/hardcoded-secret-guard.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/hardcoded-secret-guard.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+  if ! command -v jq >/dev/null 2>&1; then exit 0; fi
+  input=$(cat)
+  tool_name=$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+  file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // .toolInput.file_path // .tool_input.path // .toolInput.path // empty')
+  content=$(printf '%s' "$input" | jq -r '[.tool_input.content,.toolInput.content,.tool_input.new_string,.toolInput.new_string] | map(select(. != null and . != "")) | .[0] // empty')
+  case "$file_path" in
+    *.md|*.mdx|*.ts|*.tsx|*.js|*.jsx|*.py|*.go|*.yaml|*.yml|*.json|*.env*) ;;
+    *) exit 0 ;;
+  esac
+  case "$file_path" in
+    *.env|*.env.*|*/.env|*/.env/*) exit 0 ;;
+  esac
+  if printf '%s' "$content" | grep -Eiq 'AKIA[0-9A-Z]{{16}}|ghp_[A-Za-z0-9]{{20,}}|github_pat_[A-Za-z0-9_]{{40,}}'; then
+    echo "Blocked: proposed edit matches common hardcoded credential shapes." >&2
+    exit 2
+  fi
+  exit 0
+trigger: PreToolUse
+safetyNotes:
+  - "Heuristic regex guard only; pair with GitHub secret scanning or pre-commit secret scanners in CI."
+  - "Skips dedicated env template paths so teams can manage placeholders separately."
+privacyNotes:
+  - "Scans pending tool input locally in the hook process; nothing is uploaded."
+tags:
+  - hooks
+  - secrets
+  - privacy
+  - security
+keywords:
+  - environment variable leak warning hook
+  - hardcoded secret guard claude code hook
+readingTime: 3
+difficultyScore: 42
+hasTroubleshooting: true
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Scope
+
+This is a **community custom entry** you add under `.claude/commands/` or
+`.claude/hooks/`. It is not a built-in Claude Code feature named on
+code.claude.com.
+
+
+This hook applies two documented foundations:
+
+1. **Hooks guide mechanics** — a `PreToolUse` hook on `Write|Edit|MultiEdit` that
+   **exits 2** to block an edit and return stderr feedback to Claude.
+2. **GitHub secret scanning guidance** — secret scanning exists to detect
+   **hardcoded credentials** such as tokens committed into repository files.
+
+## Installation
+
+1. Paste `scriptBody` into `.claude/hooks/hardcoded-secret-guard.sh`.
+2. Run the `installCommand` chmod step.
+3. Merge `copySnippet` into project Claude Code settings.
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- The hooks guide **Block edits to protected files** walkthrough blocks `Write`
+  and `Edit` with **exit 2** when a path matches protected patterns.
+- The same guide states **exit 2 blocks the action** and stderr becomes Claude
+  feedback for `PreToolUse` hooks.
+- GitHub secret scanning documentation states it scans repositories for
+  **hardcoded credentials like API keys and passwords** to prevent fraudulent use.
+- Claude Code security documentation recommends **reviewing proposed code and
+  commands for safety before approval**.
+
+## Duplicate Check
+
+Existing `mcp-config-privacy-scanner-hook` focuses on MCP config files. Existing
+prompt-injection scanners focus on instruction-override phrases. No hook in
+`content/hooks/` combines Write/Edit exit-2 blocking with hardcoded credential
+shape guards aligned to secret scanning guidance.
+
+## Troubleshooting
+
+**False positive on docs:** Use obvious placeholders without live token prefixes.
+**Hook never fires:** Confirm matcher includes `Write|Edit|MultiEdit` and `jq` is installed.

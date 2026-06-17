@@ -6,7 +6,6 @@ info:
     registry publishing is not exposed through the API.
 servers:
   - url: https://heyclau.de
-  - url: https://dev.heyclau.de
 security:
   - OriginCheck: []
 components:

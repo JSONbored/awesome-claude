@@ -61,19 +61,17 @@ tags:
   - performance-aggregator
   - quality-metrics
   - optimization-recommendations
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+safetyNotes:
+  - "Runs as a Claude Code statusline command on every refresh and depends on the local shell environment; a failure only affects status rendering, not your session."
+privacyNotes:
+  - "Reads the Claude Code statusline JSON from stdin (model, workspace path, token usage) and renders it in the local terminal; it does not send data off-machine."
 keywords:
-  - claude
-  - development
-  - health
-  - health-score
-  - optimization-recommendations
-  - performance-aggregator
-  - quality-metrics
-  - score
-  - session
-  - session-grade
-  - statuslines
-  - tools
+  - claude session health score
+  - session quality statusline
+  - session grade statusline
+  - claude code statusline
 readingTime: 4
 difficultyScore: 27
 hasTroubleshooting: true
