@@ -18,6 +18,9 @@ author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-23"
 documentationUrl: "https://code.claude.com/docs/en/statusline"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+  - "https://code.claude.com/docs/en/costs"
 installable: true
 usageSnippet: "✓ Block: [████████████████░░░░] 3h 42m 15s (74%)"
 copySnippet: |-
@@ -172,19 +175,15 @@ tags:
   - 5-hour-limit
   - warnings
   - productivity
+safetyNotes:
+  - "Runs as a Claude Code statusline command on every refresh and depends on the local shell environment; a failure only affects status rendering, not your session."
+privacyNotes:
+  - "Reads the Claude Code statusline JSON from stdin (model, workspace path, token usage) and renders it in the local terminal; it does not send data off-machine."
 keywords:
-  - 5-hour-limit
-  - block
-  - claude
-  - countdown
-  - development
-  - productivity
-  - session-block
-  - statuslines
-  - timer
-  - tools
-  - tracker
-  - warnings
+  - claude 5 hour block timer
+  - session block countdown statusline
+  - claude usage block tracker
+  - claude code statusline
 readingTime: 2
 difficultyScore: 5
 hasTroubleshooting: true
