@@ -14,6 +14,10 @@ author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
 documentationUrl: "https://www.prisma.io/docs"
+retrievalSources:
+  - "https://www.prisma.io/docs"
+  - "https://www.prisma.io/docs/orm/prisma-migrate"
+  - "https://code.claude.com/docs/en/hooks"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/prisma-schema-sync.sh && chmod
@@ -91,6 +95,19 @@ robotsFollow: true
 - Generate TypeScript types for database models automatically generating TypeScript types from Prisma schema, providing type-safe database access, and enabling IntelliSense support for database queries
 - Format Prisma schema files consistently automatically formatting schema files for consistency, maintaining code style standards, and improving schema readability
 - Development workflow integration seamlessly integrating Prisma schema synchronization into development workflows without manual client generation or migration creation
+
+## Prisma Schema Commands Compared
+
+This hook runs on `schema.prisma` changes. Which Prisma command it should trigger depends on your stage — here's how the core commands differ:
+
+| Command | What it does | Creates migration history? | Typical stage |
+| --- | --- | --- | --- |
+| **`prisma generate`** | Regenerates the Prisma Client and TypeScript types from the schema | No | After **any** schema change |
+| **`prisma migrate dev`** | Creates and applies a new migration from schema changes | Yes (versioned SQL files) | Development |
+| **`prisma migrate deploy`** | Applies pending committed migrations without generating new ones | Applies existing | CI/CD and production |
+| **`prisma db push`** | Pushes the schema straight to the database, no migration files | No | Early prototyping only |
+
+Rule of thumb: always `generate` so types stay correct; use `migrate dev` while iterating, `migrate deploy` in pipelines, and reserve `db push` for throwaway prototypes where migration history doesn't matter.
 
 ## Installation
 
