@@ -1,0 +1,101 @@
+---
+title: Ignav Flights
+slug: ignav-flights
+category: mcp
+description: MCP server providing live flight prices and booking links.
+cardDescription: Hosted MCP server for live flight prices and airport lookup.
+seoTitle: Ignav Flights MCP Server for Claude
+seoDescription: Integrate Ignav Flights MCP server with Claude for live flight prices and booking links.
+author: Gus Gordon
+authorProfileUrl: "https://github.com/gusgordon"
+submittedBy: gusgordon
+submittedByUrl: "https://github.com/gusgordon"
+dateAdded: "2026-06-17"
+brandName: Ignav Flights
+brandDomain: ignav.com
+websiteUrl: "https://ignav.com/docs/mcp"
+repoUrl: "https://github.com/gusgordon/ignav-skill"
+documentationUrl: "https://ignav.com/docs/mcp"
+installable: true
+installCommand: "claude mcp add --transport http ignav https://ignav.com/mcp"
+usageSnippet: "claude mcp add --transport http ignav https://ignav.com/mcp"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ignav": {
+        "url": "https://ignav.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "ignav": {
+        "url": "https://ignav.com/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 1 minute
+difficulty: beginner
+prerequisites:
+  - Claude Code or another MCP client that supports remote HTTP servers.
+safetyNotes:
+  - User-entered trip details are sent to Ignav to retrieve live flight prices and booking links.
+privacyNotes:
+  - Trip data provided by users is shared with Ignav solely to retrieve flight search results.
+retrievalSources:
+  - "https://ignav.com/docs/mcp"
+  - "https://github.com/gusgordon/ignav-skill"
+sourceUrls:
+  - "https://ignav.com/docs/mcp"
+  - "https://github.com/gusgordon/ignav-skill"
+tags:
+  - travel
+  - flights
+  - booking
+  - mcp
+  - remote
+keywords:
+  - Ignav Flights
+  - flight MCP server
+  - Claude flight search
+  - travel MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Ignav Flights is a hosted remote MCP server providing AI agents and travel apps with live flight prices, itinerary details, booking links, and airport lookup.
+
+Ignav Flights enables agents to access live flight data quickly, providing accurate pricing, booking URLs, and airport details for streamlined trip planning.
+
+## Features
+
+- Live flight prices
+- Detailed itineraries
+- Direct booking links
+- Airport search and lookup
+- Tools: `search_airports`, `search_flights`
+
+## Installation
+
+Add Ignav Flights as a remote MCP server using the Claude CLI:
+
+    claude mcp add --transport http ignav https://ignav.com/mcp
+
+## Configuration
+
+Example Claude configuration snippet:
+
+    {
+      "mcpServers": {
+        "ignav": {
+          "url": "https://ignav.com/mcp"
+        }
+      }
+    }
+
+## Verification
+
+Test installation by performing a basic airport or flight search through your Claude agent and confirming results include live prices and working booking links.
