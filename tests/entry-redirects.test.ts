@@ -4,7 +4,9 @@ import { ENTRY_REDIRECTS, getEntryRedirectTarget } from "@/lib/entry-redirects";
 
 describe("entry consolidation redirects", () => {
   it("resolves a removed entry to its surviving canonical target", () => {
-    expect(getEntryRedirectTarget("skills", "mintlify-documentation-automation")).toEqual({
+    expect(
+      getEntryRedirectTarget("skills", "mintlify-documentation-automation"),
+    ).toEqual({
       category: "commands",
       slug: "mintlify-docs",
     });
