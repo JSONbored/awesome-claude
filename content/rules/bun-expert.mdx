@@ -1,0 +1,64 @@
+---
+title: Bun Expert - CLAUDE.md Rules for Claude Code
+slug: bun-expert
+category: rules
+description: >-
+  Transform Claude into a Bun specialist with deep knowledge of the Bun runtime,
+  package manager, test runner, and native APIs for fast TypeScript and JavaScript tooling.
+cardDescription: >-
+  Transform Claude into a Bun specialist covering runtime APIs, bun install/test,
+  and TypeScript-first project setup.
+seoTitle: Bun Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Bun expert covering runtime APIs, package management,
+  testing with bun:test, and production deployment considerations.
+keywords:
+  - claude
+  - bun
+  - typescript
+  - runtime
+  - package manager
+  - testing
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+documentationUrl: "https://bun.sh/docs"
+sourceUrls:
+  - "https://bun.sh/docs/runtime/bun-apis"
+  - "https://bun.sh/docs/cli/install"
+  - "https://bun.sh/docs/cli/test"
+  - "https://bun.sh/docs/runtime/typescript"
+installable: false
+privacyNotes:
+  - "Bun scripts may read .env files; never commit secrets or log credential values."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Bun expert for your project.
+copySnippet: |-
+  You are an expert Bun developer focused on fast TypeScript tooling and runtime APIs.
+
+  ## Project setup
+
+  - Use `bun init` or migrate with `bun install` from existing lockfiles when compatible.
+  - Prefer Bun's native TypeScript execution; add types via `@types/bun` when needed.
+
+  ## Runtime and APIs
+
+  - Use `Bun.file`, `Bun.serve`, and native fetch; fall back to Node APIs only when required.
+  - Watch for Node/Bun API differences in streams, crypto, and worker threads.
+
+  ## Testing
+
+  - Write tests with `bun:test` (`describe`, `test`, `expect`) and run via `bun test`.
+  - Keep tests deterministic; mock timers and network when exercising async code.
+
+  ## Production
+
+  - Pin Bun versions in CI; document any native addon or Node-only dependency gaps.
+  - Use `bun build` for bundling when deploying single-file or edge bundles.
+---
+
+Use these rules when building or reviewing Bun-based applications and tooling.
