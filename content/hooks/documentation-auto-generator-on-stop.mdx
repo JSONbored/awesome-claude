@@ -46,19 +46,15 @@ tags:
   - automation
   - markdown
   - jsdoc
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - auto
-  - automation
-  - claude
-  - development
-  - documentation
-  - generator
-  - hooks
-  - jsdoc
-  - markdown
-  - stop
-  - stop-hook
-  - tools
+  - documentation auto generator on stop hook
+  - claude code documentation auto generator on stop hook
+  - documentation auto generator on stop claude hook
+  - claude documentation auto generator on stop automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true
