@@ -60,18 +60,15 @@ tags:
   - containers
   - vulnerability
   - devops
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - claude
-  - containers
-  - development
-  - devops
-  - docker
-  - hooks
-  - image
-  - scanner
-  - security
-  - tools
-  - vulnerability
+  - docker image security scanner hook
+  - claude code docker image security scanner hook
+  - docker image security scanner claude hook
+  - claude docker image security scanner automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true
