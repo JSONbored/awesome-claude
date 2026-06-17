@@ -98,9 +98,6 @@ Analyze dependency security and supply chain risks with Socket's comprehensive v
 - SBOM export capabilities (Software Bill of Materials generation)
 - License policy management (compliance and license risk assessment)
 - Multi-package manager support (npm, PyPI, Go, Maven, Packagist)
-- Advanced Socket.io real-time communication with room management, event broadcasting, and connection monitoring
-- Batch operations support for efficient bulk message operations, room management, and event handling with automatic error handling
-- Real-time connection monitoring capabilities with connection pooling support for tracking Socket.io performance and triggering automated workflows
 
 ## Use Cases
 
@@ -112,7 +109,6 @@ Analyze dependency security and supply chain risks with Socket's comprehensive v
 - Track security scores across projects (organization-wide security metrics)
 - Detect malicious packages and typosquatting (supply chain attack prevention)
 - Manage license compliance and policies (open source license governance)
-- Build automated real-time communication workflows that sync external systems with Socket.io for live messaging and event broadcasting
 
 ## Socket vs Other Dependency Scanners
 
@@ -203,18 +199,6 @@ Common usage pattern for this MCP server
 Ask Claude: "Generate a security report"
 ```
 
-### Emit Event to Room
-
-Broadcast a message to all clients in a Socket.io room
-
-```typescript
-// Emit event to Socket.io room
-io.to("room-id").emit("message", {
-  text: "Hello, room!",
-  timestamp: Date.now(),
-});
-```
-
 ## Security
 
 - OAuth authentication required for MCP server access (secure token-based auth)
@@ -222,11 +206,6 @@ io.to("room-id").emit("message", {
 - Regular security scans recommended (continuous dependency monitoring)
 - Monitor critical security alerts (vulnerability notifications)
 - Review and apply suggested fixes (automated remediation guidance)
-- Socket.io connection URLs and authentication tokens must be securely stored and never exposed in client-side code or public repositories - use environment variables and secure credential management
-- Socket.io authentication should be used for all connections to prevent unauthorized access - implement proper token validation and connection authorization
-- Socket.io room names and event data may expose application structure and user information - ensure Socket.io resource identifiers are kept private and not shared in public configurations
-- Rate limiting and connection management are critical for Socket.io MCP servers - implement proper connection pooling, message throttling, and resource monitoring to prevent service disruption
-- Socket.io event payloads and room data may contain sensitive information - ensure event data is properly secured and access-controlled according to data privacy requirements
 
 ## Troubleshooting
 
@@ -245,19 +224,3 @@ Socket supports npm (package.json, package-lock.json), PyPI (requirements.txt), 
 ### SBOM export or security report generation errors
 
 Verify account has access to SBOM export features (may require paid plan). Check report snapshot hash authentication (SHA2) is correct. Ensure sufficient permissions for license policy management in organization settings. Review API response for specific error details. Verify organization membership and access level. Check if report ID exists and hasn't expired. Ensure file paths in report creation are valid and accessible. For license policy errors, verify organization has license policy management enabled.
-
-### Socket.io MCP server connection errors with authentication
-
-Verify authentication token is valid. Check Socket.io server authentication middleware. Ensure token format is correct. For JWT authentication, verify token signature and expiration. Check CORS configuration allows connections.
-
-### Socket.io connection failures or disconnections
-
-Check network connectivity to Socket.io server. Verify server is running and accessible. Check firewall rules allow WebSocket connections. Verify Socket.io version compatibility between client and server. Check connection timeout settings.
-
-### Socket.io event delivery failures or message loss
-
-Check room membership and event authorization. Verify event names match between client and server. Check message acknowledgment if using acknowledgments. Monitor connection state and implement reconnection logic. Verify event payload size limits.
-
-### Socket.io MCP server connection timeouts or network errors
-
-Check network connectivity and firewall settings. Verify Socket.io server endpoints are accessible. Increase connection timeout values. Implement connection pooling and retry mechanisms with exponential backoff.
