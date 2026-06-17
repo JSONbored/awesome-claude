@@ -12,6 +12,7 @@ import {
   type TrustLevel,
 } from "@/types/registry";
 import { ENTRIES, QUALITY_STATS, REGISTRY_GENERATED_AT } from "@/data/entries";
+import { installMethodDistribution, notesCoverage } from "@/lib/ecosystem-stats";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl, OG_WIDTH, OG_HEIGHT } from "@/lib/og-image";
 import { stringifyJsonLd } from "@/lib/json-ld";
@@ -70,6 +71,23 @@ const PLATFORM_DIST: DistRow[] = HARNESSES.map((h) => {
   .filter((row) => row.count > 0)
   .sort((a, b) => b.count - a.count);
 
+// Install-method distribution — derived from each entry's installCommand, over
+// the package-installable subset (file/config drop-ins have no install command).
+const INSTALL_METHODS = installMethodDistribution(ENTRIES);
+const INSTALL_METHOD_DIST: DistRow[] = INSTALL_METHODS.rows.map((row) => ({
+  label: row.label,
+  count: row.count,
+  pct: pctOf(row.count, INSTALL_METHODS.total),
+}));
+
+// Safety & privacy notes coverage — HeyClaude's differentiating metadata, quantified.
+const NOTES = notesCoverage(ENTRIES);
+const NOTES_DIST: DistRow[] = [
+  { label: "Safety notes", count: NOTES.safety, pct: pctOf(NOTES.safety, TOTAL) },
+  { label: "Privacy notes", count: NOTES.privacy, pct: pctOf(NOTES.privacy, TOTAL) },
+  { label: "Both", count: NOTES.both, pct: pctOf(NOTES.both, TOTAL) },
+];
+
 // Recent additions — newest-dated entries by dateAdded.
 const RECENT_ADDITIONS = [...ENTRIES]
   .sort((a, b) => String(b.dateAdded).localeCompare(String(a.dateAdded)))
@@ -105,6 +123,8 @@ export const Route = createFileRoute("/state-of-claude-tooling")({
         "Trust-level distribution",
         "Source provenance distribution",
         "Platform coverage",
+        "Install-method distribution",
+        "Safety and privacy notes coverage",
       ],
     };
     const breadcrumbs = {
@@ -217,6 +237,20 @@ function StateOfClaudeToolingPage() {
         help="How many resources declare compatibility with each harness. Entries can support more than one, so percentages do not sum to 100%."
       >
         <DistTable rows={PLATFORM_DIST} />
+      </Section>
+
+      <Section
+        title="Install methods"
+        help={`How the ${INSTALL_METHODS.total} package-installable resources are delivered, by install command. File and config drop-ins (agents, rules, skills, and the like) install by copying into your project rather than a package manager, so they are excluded here.`}
+      >
+        <DistTable rows={INSTALL_METHOD_DIST} />
+      </Section>
+
+      <Section
+        title="Safety & privacy coverage"
+        help="Share of the catalog carrying reviewer-checked safety and privacy notes — the execution/permissions and data-handling metadata that sets HeyClaude apart. Percentages are of the full catalog; entries can carry both."
+      >
+        <DistTable rows={NOTES_DIST} />
       </Section>
 
       <section className="mt-12">
