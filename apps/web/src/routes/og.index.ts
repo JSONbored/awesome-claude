@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { OG_TEXT_LIMITS, clampOgText, safeAccent } from "@/lib/og-image";
 import { renderOgPng } from "@/lib/og-render.server";
+import { siteConfig } from "@/lib/site";
 
 /**
  * Generic OG image generator (query params) for hub/list pages that aren't a single entry.
@@ -17,11 +18,12 @@ export const Route = createFileRoute("/og/")({
           url.searchParams.get("title") ?? "HeyClaude",
           OG_TEXT_LIMITS.title,
         );
+        // Default the description to the site tagline so a bare /og card (e.g. the homepage og:image)
+        // says what HeyClaude IS, not just its name. A caller that passes its own description/subtitle
+        // (hub/list pages) overrides it.
         const rawDescription =
-          url.searchParams.get("description") ?? url.searchParams.get("subtitle") ?? undefined;
-        const description = rawDescription
-          ? clampOgText(rawDescription, OG_TEXT_LIMITS.description)
-          : undefined;
+          url.searchParams.get("description") ?? url.searchParams.get("subtitle") ?? siteConfig.description;
+        const description = clampOgText(rawDescription, OG_TEXT_LIMITS.description);
         const eyebrow = clampOgText(
           url.searchParams.get("eyebrow") ?? "HeyClaude",
           OG_TEXT_LIMITS.eyebrow,
@@ -32,7 +34,7 @@ export const Route = createFileRoute("/og/")({
         const image = await renderOgPng({
           eyebrow,
           title,
-          description: description ?? undefined,
+          description: description || undefined,
           accent,
         });
 
