@@ -365,6 +365,208 @@ export const COMPARISONS: Comparison[] = [
       "AI-native editors and assistants for day-to-day coding, compared on form factor, source, and setup.",
     refs: ["tools/cursor", "tools/zed", "tools/windsurf", "tools/continue"],
   },
+  {
+    slug: "llm-app-libraries",
+    title: "Vercel AI SDK vs LiteLLM vs Instructor vs Guardrails AI",
+    heading: "LLM application libraries compared",
+    seoDescription:
+      "Compare the Vercel AI SDK, LiteLLM, Instructor, and Guardrails AI — libraries for building LLM apps with routing, structured output, and validation — side by side.",
+    intro:
+      "Libraries that handle model routing, structured output, and validation in LLM apps, compared on focus, source, and setup.",
+    refs: ["tools/vercel-ai-sdk", "tools/litellm", "tools/instructor", "tools/guardrails-ai"],
+  },
+  {
+    slug: "mcp-development-tools",
+    title: "MCP Inspector vs Smithery vs Speakeasy",
+    heading: "MCP development tools compared",
+    seoDescription:
+      "Compare MCP Inspector, Smithery, and Speakeasy — tools for building, testing, and distributing Model Context Protocol servers — side by side.",
+    intro: "Tooling for developing and shipping MCP servers, compared on focus, source, and setup.",
+    refs: ["tools/mcp-inspector", "tools/smithery", "tools/speakeasy"],
+  },
+  {
+    slug: "testing-mcp-servers",
+    title: "Cypress vs BrowserStack vs Postman vs WebdriverIO MCP servers for Claude",
+    heading: "Testing & QA MCP servers compared",
+    seoDescription:
+      "Compare the Cypress, BrowserStack, Postman, and WebdriverIO MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Testing and QA MCP servers that let Claude run and inspect test suites, compared on trust, setup, and safety.",
+    refs: [
+      "mcp/cypress-cloud-mcp-server",
+      "mcp/browserstack-mcp-server",
+      "mcp/postman-mcp-server",
+      "mcp/webdriverio-mcp-server",
+    ],
+  },
+  {
+    slug: "productivity-mcp-servers",
+    title: "Todoist vs Trello vs Time MCP servers for Claude",
+    heading: "Productivity MCP servers compared",
+    seoDescription:
+      "Compare the Todoist, Trello, and Time MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Task, board, and time MCP servers that bring everyday productivity into Claude, compared on trust and setup.",
+    refs: ["mcp/todoist-mcp-server", "mcp/trello-mcp-server", "mcp/time-mcp-server"],
+  },
+  {
+    slug: "game-3d-dev-mcp-servers",
+    title: "Blender vs Unity vs Godot vs Unreal Engine MCP servers for Claude",
+    heading: "3D & game dev MCP servers compared",
+    seoDescription:
+      "Compare the Blender, Unity, Godot, and Unreal Engine MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "3D and game-engine MCP servers that let Claude drive creative and game tooling, compared on trust, setup, and safety.",
+    refs: [
+      "mcp/blender-mcp-server",
+      "mcp/unity-mcp-server",
+      "mcp/godot-mcp-server",
+      "mcp/unreal-engine-mcp-server",
+    ],
+  },
+  {
+    slug: "reverse-engineering-mcp-servers",
+    title: "Ghidra vs IDA Pro vs JADX vs WinDbg MCP servers for Claude",
+    heading: "Reverse engineering MCP servers compared",
+    seoDescription:
+      "Compare the Ghidra, IDA Pro, JADX, and WinDbg MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Reverse-engineering and debugging MCP servers that connect Claude to RE tooling, compared on trust, setup, and safety.",
+    refs: [
+      "mcp/ghidramcp-server",
+      "mcp/ida-pro-mcp-server",
+      "mcp/jadx-ai-mcp-server",
+      "mcp/windbg-mcp-server",
+    ],
+  },
+  {
+    slug: "security-testing-mcp-servers",
+    title: "Burp Suite vs Pentest AI vs Nuclei vs EnScan MCP servers for Claude",
+    heading: "Security testing MCP servers compared",
+    seoDescription:
+      "Compare the Burp Suite, Pentest AI, Nuclei, and EnScan MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Offensive-security and pentest MCP servers for authorized testing, compared on trust, setup, and safety.",
+    refs: [
+      "mcp/burp-suite-mcp-server",
+      "mcp/pentest-ai-mcp-server",
+      "mcp/nuclear-mcp-server",
+      "mcp/enscan-go-mcp-server",
+    ],
+  },
+  {
+    slug: "code-search-mcp-servers",
+    title: "Serena vs Code Index vs CodeGraphContext vs ChunkHound MCP servers for Claude",
+    heading: "Code search & indexing MCP servers compared",
+    seoDescription:
+      "Compare the Serena, Code Index, CodeGraphContext, and ChunkHound MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Code-indexing and semantic-search MCP servers that give Claude codebase context, compared on trust, setup, and approach.",
+    refs: [
+      "mcp/serena-mcp-server",
+      "mcp/code-index-mcp-server",
+      "mcp/codegraphcontext-mcp-server",
+      "mcp/chunkhound-mcp-server",
+    ],
+  },
+  {
+    slug: "hosting-deploy-mcp-servers",
+    title: "Render vs Heroku vs Coolify MCP servers for Claude",
+    heading: "Hosting & deployment MCP servers compared",
+    seoDescription:
+      "Compare the Render, Heroku, and Coolify MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Hosting and deployment MCP servers that let Claude ship apps, compared on trust, platforms, and setup.",
+    refs: ["mcp/render-mcp-server", "mcp/heroku-mcp-server", "mcp/coolify-mcp-server"],
+  },
+  {
+    slug: "mobile-dev-mcp-servers",
+    title: "iOS Simulator vs Mobile MCP vs Expo vs Xcode MCP servers for Claude",
+    heading: "Mobile dev MCP servers compared",
+    seoDescription:
+      "Compare the iOS Simulator, Mobile, Expo, and Xcode MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Mobile-development MCP servers for building and testing apps with Claude, compared on trust, platforms, and setup.",
+    refs: [
+      "mcp/ios-simulator-mcp-server",
+      "mcp/mobile-mcp-server",
+      "mcp/expo-mcp-server",
+      "mcp/xcodebuildmcp-server",
+    ],
+  },
+  {
+    slug: "research-mcp-servers",
+    title: "arXiv vs Paper Search vs GPT Researcher vs Deep Research MCP servers for Claude",
+    heading: "Research MCP servers compared",
+    seoDescription:
+      "Compare the arXiv, Paper Search, GPT Researcher, and Deep Research MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Academic and deep-research MCP servers that bring papers and synthesis into Claude, compared on trust and setup.",
+    refs: [
+      "mcp/arxiv-mcp-server",
+      "mcp/paper-search-mcp-server",
+      "mcp/gpt-researcher-mcp-server",
+      "mcp/deep-research-mcp-server",
+    ],
+  },
+  {
+    slug: "auth-identity-mcp-servers",
+    title: "Auth0 vs Okta vs Stytch MCP servers for Claude",
+    heading: "Auth & identity MCP servers compared",
+    seoDescription:
+      "Compare the Auth0, Okta, and Stytch MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Identity and authentication MCP servers that let Claude manage auth, compared on trust, setup, and safety.",
+    refs: ["mcp/auth0-mcp-server", "mcp/okta-mcp-server", "mcp/stytch-mcp-server"],
+  },
+  {
+    slug: "product-analytics-mcp-servers",
+    title: "Amplitude vs PostHog vs Google Analytics MCP servers for Claude",
+    heading: "Product analytics MCP servers compared",
+    seoDescription:
+      "Compare the Amplitude, PostHog, and Google Analytics MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Product-analytics MCP servers that bring usage data into Claude, compared on trust, setup, and safety.",
+    refs: ["mcp/amplitude-mcp-server", "mcp/posthog-mcp-server", "mcp/google-analytics-mcp-server"],
+  },
+  {
+    slug: "diagramming-mcp-servers",
+    title: "draw.io vs Excalidraw vs AntV Chart MCP servers for Claude",
+    heading: "Diagramming MCP servers compared",
+    seoDescription:
+      "Compare the draw.io, Excalidraw, and AntV Chart MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Diagramming and charting MCP servers that let Claude generate visuals, compared on trust, setup, and output.",
+    refs: [
+      "mcp/drawio-mcp-server",
+      "mcp/excalidraw-canvas-mcp-server",
+      "mcp/antv-mcp-server-chart",
+    ],
+  },
+  {
+    slug: "office-document-mcp-servers",
+    title: "Word vs PowerPoint vs Excel MCP servers for Claude",
+    heading: "Office document MCP servers compared",
+    seoDescription:
+      "Compare the Word, PowerPoint, and Excel MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "Office-document MCP servers that let Claude create and edit documents, compared on trust, setup, and output.",
+    refs: [
+      "mcp/office-word-mcp-server",
+      "mcp/office-powerpoint-mcp-server",
+      "mcp/excel-mcp-server",
+    ],
+  },
+  {
+    slug: "ci-cd-mcp-servers",
+    title: "CircleCI vs Azure DevOps vs Argo CD MCP servers for Claude",
+    heading: "CI/CD MCP servers compared",
+    seoDescription:
+      "Compare the CircleCI, Azure DevOps, and Argo CD MCP servers for Claude Code — trust, install, safety, and config side by side.",
+    intro:
+      "CI/CD and delivery MCP servers that let Claude manage pipelines and deployments, compared on trust, setup, and safety.",
+    refs: ["mcp/circleci-mcp-server", "mcp/azure-devops-mcp-server", "mcp/argocd-mcp-server"],
+  },
 ];
 
 export function getComparison(slug: string) {
