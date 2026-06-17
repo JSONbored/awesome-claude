@@ -60,18 +60,15 @@ tags:
   - vulnerability
   - cve
   - automation
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - automation
-  - claude
-  - cve
-  - dependencies
-  - dependency
-  - development
-  - hooks
-  - scanner
-  - security
-  - tools
-  - vulnerability
+  - dependency security scanner hook
+  - claude code dependency security scanner hook
+  - dependency security scanner claude hook
+  - claude dependency security scanner automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true

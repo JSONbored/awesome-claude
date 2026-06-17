@@ -15,6 +15,9 @@ seoDescription: >-
   comprehensive ...
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
 dateAdded: "2025-09-19"
 installable: true
 installCommand: >-
@@ -54,18 +57,15 @@ tags:
   - stop-hook
   - performance
   - statistics
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - analytics
-  - claude
-  - collector
-  - development
-  - hooks
-  - metrics
-  - performance
-  - session
-  - statistics
-  - stop-hook
-  - tools
+  - session metrics collector hook
+  - claude code session metrics collector hook
+  - session metrics collector claude hook
+  - claude session metrics collector automation
 readingTime: 4
 difficultyScore: 0
 hasTroubleshooting: true

@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import {
@@ -21,6 +21,7 @@ import {
   Globe2,
 } from "lucide-react";
 import { getEntry, related, relatedGroups } from "@/data/search";
+import { getEntryRedirectTarget } from "@/lib/entry-redirects";
 import { BEST_LISTS } from "@/data/entries";
 import { COMPARISONS } from "@/data/comparisons";
 import { CONTRIBUTORS } from "@/data/contributors";
@@ -137,6 +138,17 @@ function guideHowTo(e: Entry, url: string) {
 
 export const Route = createFileRoute("/entry/$category/$slug")({
   loader: async ({ params }): Promise<{ entry: import("@/types/registry").Entry }> => {
+    // Consolidated/removed entries 301 to their surviving canonical page so the
+    // old URL keeps its SEO signal instead of 404ing.
+    const consolidated = getEntryRedirectTarget(params.category, params.slug);
+    if (consolidated) {
+      throw redirect({
+        to: "/entry/$category/$slug",
+        params: consolidated,
+        replace: true,
+        statusCode: 301,
+      });
+    }
     const fullEntry = await loadFullEntry({
       data: { category: params.category, slug: params.slug },
     }).catch(() => null);

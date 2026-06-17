@@ -16,7 +16,9 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
-documentationUrl: "https://12factor.net/config"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch
@@ -59,18 +61,15 @@ tags:
   - validation
   - deployment
   - security
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - claude
-  - configuration
-  - deployment
-  - development
-  - environment
-  - hooks
-  - security
-  - tools
-  - validation
-  - validator
-  - variable
+  - environment variable validator hook
+  - claude code environment variable validator hook
+  - environment variable validator claude hook
+  - claude environment variable validator automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true

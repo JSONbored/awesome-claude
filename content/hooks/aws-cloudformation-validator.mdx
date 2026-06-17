@@ -16,7 +16,11 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
-documentationUrl: "https://aws.amazon.com/cloudformation/"
+documentationUrl: "https://github.com/aws-cloudformation/cfn-lint"
+retrievalSources:
+  - "https://github.com/aws-cloudformation/cfn-lint"
+  - "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html"
+  - "https://code.claude.com/docs/en/hooks"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/aws-cloudformation-validator.sh
@@ -106,17 +110,15 @@ tags:
   - infrastructure
   - validation
   - cloud
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - aws
-  - claude
-  - cloud
-  - cloudformation
-  - development
-  - hooks
-  - infrastructure
-  - tools
-  - validation
-  - validator
+  - aws cloudformation validator hook
+  - claude code aws cloudformation validator hook
+  - aws cloudformation validator claude hook
+  - claude aws cloudformation validator automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true

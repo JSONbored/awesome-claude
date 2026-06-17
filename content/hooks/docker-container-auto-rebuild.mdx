@@ -9,14 +9,10 @@ seoDescription: "Claude Code PostToolUse hook that detects Dockerfile, compose, 
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
-documentationUrl: "https://code.claude.com/docs/en/hooks"
+documentationUrl: "https://docs.docker.com/reference/cli/docker/compose/"
 retrievalSources:
+  - "https://docs.docker.com/reference/cli/docker/compose/"
   - "https://code.claude.com/docs/en/hooks"
-  - "https://docs.docker.com/reference/cli/docker/image/build/"
-  - "https://docs.docker.com/compose/"
-  - "https://docs.docker.com/build/concepts/context/"
-  - "https://docs.docker.com/reference/dockerfile/"
-  - "https://jqlang.org/"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/docker-container-auto-rebuild.sh
@@ -65,17 +61,10 @@ tags:
   - devops
   - automation
 keywords:
-  - auto
-  - automation
-  - claude
-  - container
-  - containers
-  - development
-  - devops
-  - docker
-  - hooks
-  - rebuild
-  - tools
+  - docker container auto rebuild hook
+  - claude code docker container auto rebuild hook
+  - docker container auto rebuild claude hook
+  - claude docker container auto rebuild automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true

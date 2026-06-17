@@ -18,7 +18,10 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
-documentationUrl: "https://www.w3.org/WAI/WCAG22/quickref/?versions=2.1"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/accessibility-checker.sh &&
@@ -59,17 +62,15 @@ tags:
   - wcag
   - testing
   - compliance
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - a11y
-  - accessibility
-  - checker
-  - claude
-  - compliance
-  - development
-  - hooks
-  - testing
-  - tools
-  - wcag
+  - accessibility checker hook
+  - claude code accessibility checker hook
+  - accessibility checker claude hook
+  - claude accessibility checker automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true

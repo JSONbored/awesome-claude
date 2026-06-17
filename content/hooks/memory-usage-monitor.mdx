@@ -11,6 +11,9 @@ seoDescription: >-
   real-time memory us...
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
 dateAdded: "2025-09-19"
 installable: true
 installCommand: >-
@@ -46,18 +49,15 @@ tags:
   - monitoring
   - notification
   - resources
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - claude
-  - development
-  - hooks
-  - memory
-  - monitor
-  - monitoring
-  - notification
-  - performance
-  - resources
-  - tools
-  - usage
+  - memory usage monitor hook
+  - claude code memory usage monitor hook
+  - memory usage monitor claude hook
+  - claude memory usage monitor automation
 readingTime: 2
 difficultyScore: 0
 hasTroubleshooting: true

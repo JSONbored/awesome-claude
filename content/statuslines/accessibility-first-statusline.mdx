@@ -17,7 +17,10 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-23"
-documentationUrl: "https://www.w3.org/WAI/WCAG22/quickref/?versions=2.1"
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+  - "https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA"
 installable: true
 usageSnippet: "▪ Model: claude-sonnet-4.5 | Directory: ~/projects/my-app | Tokens: 12450"
 copySnippet: |-
@@ -157,19 +160,15 @@ tags:
   - high-contrast
   - inclusive
   - a11y
+safetyNotes:
+  - "Runs as a Claude Code statusline command on every refresh and depends on the local shell environment; a failure only affects status rendering, not your session."
+privacyNotes:
+  - "Reads the Claude Code statusline JSON from stdin (model, workspace path, token usage) and renders it in the local terminal; it does not send data off-machine."
 keywords:
-  - a11y
-  - accessibility
-  - claude
-  - development
-  - first
-  - high-contrast
-  - inclusive
-  - screen-reader
-  - statusline
-  - statuslines
-  - tools
-  - wcag
+  - accessible claude statusline
+  - screen reader statusline
+  - high contrast statusline
+  - claude code statusline
 readingTime: 2
 difficultyScore: 10
 hasTroubleshooting: true
