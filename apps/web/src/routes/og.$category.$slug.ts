@@ -20,7 +20,8 @@ export const Route = createFileRoute("/og/$category/$slug")({
         const category = entry?.category ?? params.category;
 
         const image = await renderOgPng({
-          eyebrow: `${category} · HeyClaude`,
+          // The category is the highlighted eyebrow; its accent color-codes the swash + rail.
+          eyebrow: category,
           title,
           description,
           author,
