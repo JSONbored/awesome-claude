@@ -1,0 +1,98 @@
+---
+title: Agentic News MCP Server
+slug: agentic-news-mcp-server
+category: mcp
+description: >-
+  Agentic News MCP delivers news discovery and agentic news workflows over streamable HTTP.
+cardDescription: >-
+  Agentic News MCP delivers news discovery and agentic news workflows over streamable HTTP.
+seoTitle: Agentic News MCP Server for Claude
+seoDescription: >-
+  Configure Agentic News MCP Server (ai.agentic-news/mcp) with streamable HTTP transport and documented auth boundaries.
+author: Agentic News
+authorProfileUrl: "https://agentic-news.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+sourceSubmissionNumber: 1461
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1461"
+documentationUrl: "https://agentic-news.ai/mcp"
+websiteUrl: "https://agentic-news.ai"
+retrievalSources:
+  - "https://agentic-news.ai/mcp"
+  - "https://agentic-news.ai"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+installable: true
+installCommand: "claude mcp add --transport http agentic-news YOUR_AGENTIC_NEWS_MCP_REMOTE"
+usageSnippet: >-
+  Add the documented remote MCP endpoint after reviewing registry auth requirements and tool scope.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "agentic": {
+        "url": "https://YOUR_AGENTIC_NEWS_MCP_REMOTE",
+        "type": "http"
+
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agentic": {
+        "url": "https://YOUR_AGENTIC_NEWS_MCP_REMOTE",
+        "type": "http"
+
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "MCP client with streamable HTTP transport support."
+  - "Vendor account or API credentials when registry metadata marks Authorization headers as required."
+  - "Security review of tool write scope before production use."
+safetyNotes:
+  - "Remote MCP tools may trigger live API writes—confirm least-privilege credentials."
+  - "Treat Authorization headers and API keys as secrets; never commit them to repositories."
+privacyNotes:
+  - "Queries, tool payloads, and responses enter MCP client context and vendor infrastructure logs."
+  - "Review data residency and retention policies before connecting production accounts."
+tags:
+  - mcp
+  - registry
+keywords:
+  - Agentic News MCP Server
+  - ai.agentic-news/mcp MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+**Agentic News MCP Server** is listed in the MCP Registry as **`ai.agentic-news/mcp`**.
+Agentic News MCP delivers news discovery and agentic news workflows over streamable HTTP.
+
+## Installation
+
+```bash
+claude mcp add --transport http agentic-news YOUR_AGENTIC_NEWS_MCP_REMOTE
+```
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- MCP Registry search returns **`ai.agentic-news/mcp`** with documented remote transport metadata.
+- Primary documentation URL **https://agentic-news.ai/mcp** is publicly reachable.
+- Claude Code MCP docs describe HTTP connector setup patterns used in this entry.
+
+## Duplicate Check
+
+No existing `content/mcp/` entry documents registry package `ai.agentic-news/mcp`.
+
+## Editorial Disclosure
+
+Community listing by **kiannidev** from MCP Registry metadata and reachable vendor documentation.

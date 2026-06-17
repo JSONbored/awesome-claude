@@ -91,6 +91,18 @@ log aggregators need separate review.
 
 Every approved MCP server is a potential retention point outside core ZDR docs.
 
+## Features Disabled Under ZDR
+
+When ZDR is enabled for a Claude Code organization on Claude for Enterprise, certain features that require storing prompts or completions are automatically disabled at the backend level. Plan around these so rollout expectations match what the platform actually allows.
+
+| Feature | Reason |
+| --- | --- |
+| Claude Code on the Web | Requires server-side storage of conversation history. |
+| Cloud sessions from the Desktop app | Requires persistent session data that includes prompts and completions. |
+| Feedback submission (`/feedback`) | Submitting feedback sends conversation data to Anthropic. |
+
+These features are blocked in the backend regardless of client-side display. Claude Fable 5 is also not available for ZDR organizations because that model class requires data retention; the `best` alias resolves to Opus instead of Fable 5 for those organizations.
+
 ### Verification needs evidence
 
 Keep screenshots, config exports, and test results showing ZDR settings active for
