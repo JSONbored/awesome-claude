@@ -101,15 +101,16 @@ export function renderOgSvg(opts: {
     ? wrap(clampOgText(opts.description, OG_TEXT_LIMITS.description), 60, 2)
     : [];
 
+  // 32px graph-paper grid matching the site's `.grid-bg` utility (1px lines in
+  // `--border` over warm-paper `--background`). Kept in sync with renderOgPng.
+  const gridSegments: string[] = [];
+  for (let x = 32; x < OG_WIDTH; x += 32) gridSegments.push(`M${x} 0V${OG_HEIGHT}`);
+  for (let y = 32; y < OG_HEIGHT; y += 32) gridSegments.push(`M0 ${y}H${OG_WIDTH}`);
+
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f7f5ef"/>
-      <stop offset="1" stop-color="#ece8df"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="#f7f5ef"/>
+  <path d="${gridSegments.join("")}" stroke="#d8d3c7" stroke-width="1" stroke-opacity="0.55" fill="none"/>
   <rect x="0" y="0" width="14" height="630" fill="${accent}"/>
   <g transform="translate(80,90)">
     <text x="0" y="0" font-family="ui-monospace, Menlo, monospace" font-size="20" fill="#6b6a64" letter-spacing="2">

@@ -4,6 +4,23 @@ import { getOgFonts } from "@/lib/og-fonts";
 import { OG_HEIGHT, OG_TEXT_LIMITS, OG_WIDTH, clampOgText, safeAccent, wrap } from "@/lib/og-image";
 
 /**
+ * Warm-paper + 32px graph-paper grid that matches the site's `.grid-bg` utility
+ * (1px lines in `--border` at ~60% over the warm-paper `--background`). Baked as a
+ * full-bleed SVG data URI because Satori draws a background image but can't tile via
+ * `background-size`, so the whole grid is drawn once at 1200×630. URL-encoded (not
+ * base64) to avoid a Buffer/btoa dependency in the Workers runtime.
+ */
+const GRID_BG_DATA_URI = (() => {
+  const segments: string[] = [];
+  for (let x = 32; x < OG_WIDTH; x += 32) segments.push(`M${x} 0V${OG_HEIGHT}`);
+  for (let y = 32; y < OG_HEIGHT; y += 32) segments.push(`M0 ${y}H${OG_WIDTH}`);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${OG_WIDTH}" height="${OG_HEIGHT}"><path d="${segments.join(
+    "",
+  )}" stroke="#d8d3c7" stroke-width="1" stroke-opacity="0.55" fill="none"/></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+})();
+
+/**
  * Sanitize a text value for the Satori HTML template.
  *
  * workers-og parses markup with Cloudflare's HTMLRewriter, which treats `<…>` as tags
@@ -83,7 +100,7 @@ export async function renderOgPng(opts: {
       )}</span></div>`
     : "";
 
-  const html = `<div style="display:flex;width:1200px;height:630px;background:linear-gradient(135deg,#f7f5ef,#ece8df);">
+  const html = `<div style="display:flex;width:1200px;height:630px;background-color:#f7f5ef;background-image:url('${GRID_BG_DATA_URI}');background-size:1200px 630px;background-repeat:no-repeat;">
   <div style="display:flex;width:14px;height:630px;background:${accent};"></div>
   <div style="display:flex;flex-direction:column;flex:1;padding:90px 80px;">
     <div style="display:flex;font-family:'Space Grotesk';font-weight:500;font-size:20px;letter-spacing:2px;color:#6b6a64;">${eyebrow}</div>
