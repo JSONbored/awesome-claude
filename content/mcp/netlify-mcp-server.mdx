@@ -14,6 +14,10 @@ author: Netlify
 authorProfileUrl: "https://www.netlify.com/"
 dateAdded: "2025-09-18"
 documentationUrl: "https://docs.netlify.com/build/build-with-ai/netlify-mcp-server/"
+retrievalSources:
+  - "https://docs.netlify.com/build/build-with-ai/netlify-mcp-server/"
+  - "https://vercel.com/docs/mcp/vercel-mcp"
+  - "https://developers.cloudflare.com/agents/model-context-protocol/"
 downloadUrl: /downloads/mcp/netlify-mcp-server.mcpb
 packageVerified: true
 installable: true
@@ -110,6 +114,18 @@ Streamline your web deployment and site management by connecting Claude to Netli
 - Monitor and manage build performance and deployment status
 - Automate deployment workflows with build hooks and API integration
 - Build automated deployment workflows that sync external systems with Netlify for real-time site management and build automation
+
+## Deployment-platform MCP servers compared
+
+Several hosting platforms ship MCP servers that let Claude manage deployments. They differ by platform and primitives:
+
+| MCP server | Platform | Manage via Claude | Transport |
+| --- | --- | --- | --- |
+| **Netlify MCP** | Netlify | Sites, deploys, environment variables, domains, build hooks | Hosted HTTP |
+| **Vercel MCP** | Vercel | Projects, deployments, and deployment logs | Hosted HTTP |
+| **Cloudflare MCP** | Cloudflare | Workers, Pages, and other platform resources | Hosted HTTP / local |
+
+Use the Netlify MCP server when your sites and functions run on Netlify; the equivalent Vercel or Cloudflare servers cover those platforms' own primitives.
 
 ## Installation
 
