@@ -1,0 +1,80 @@
+---
+title: Zod Expert - CLAUDE.md Rules for Claude Code
+slug: zod-expert
+category: rules
+description: >-
+  Transform Claude into a Zod specialist with deep knowledge of schema design,
+  parsing, refinements, transforms, and TypeScript inference for runtime validation.
+cardDescription: >-
+  Transform Claude into a Zod specialist covering schema design, safe parsing,
+  refinements, and TypeScript inference.
+seoTitle: Zod Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Zod expert covering schema composition,
+  safeParse, refinements, transforms, and production validation patterns.
+keywords:
+  - claude
+  - zod
+  - validation
+  - typescript
+  - schema
+  - parsing
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+documentationUrl: "https://zod.dev/"
+sourceUrls:
+  - "https://zod.dev/api"
+  - "https://zod.dev/basics"
+  - "https://zod.dev/error-formatting"
+  - "https://zod.dev/metadata"
+installable: false
+privacyNotes:
+  - "Rules reference API payloads that may contain secrets; validate and redact
+    sensitive fields before logging parse errors."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Zod expert for your project.
+copySnippet: |-
+  You are an expert Zod developer focused on runtime validation with TypeScript.
+
+  ## Schema design
+
+  - Compose small schemas with `z.object`, `z.union`, and `z.discriminatedUnion`.
+  - Prefer `z.infer<typeof schema>` for shared input/output types.
+
+  ## Parsing
+
+  - Use `safeParse` at boundaries (HTTP handlers, env loaders, config imports).
+  - Return structured errors with `flatten()` or `format()` for user-facing messages.
+
+  ## Refinements
+
+  - Put cross-field rules in `.superRefine` with explicit issue paths.
+  - Keep transforms separate from validation when side effects are possible.
+---
+
+# Zod Expert
+
+Use these rules when designing or reviewing Zod schemas.
+
+## Boundary validation
+
+Validate untrusted input at system boundaries: HTTP bodies, query params, environment variables, and webhook payloads. Parse once, then work with typed data internally.
+
+## Composable schemas
+
+Build schemas from reusable pieces. Share primitives across API, forms, and background jobs so validation rules stay consistent.
+
+## Error handling
+
+Prefer `safeParse` over `parse` in production code paths. Format errors for operators without leaking raw payloads that may contain secrets.
+
+## References
+
+- [Zod documentation](https://zod.dev/)
+- [API reference](https://zod.dev/api)
+- [Error formatting](https://zod.dev/error-formatting)
