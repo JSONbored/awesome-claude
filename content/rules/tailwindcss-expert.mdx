@@ -1,0 +1,102 @@
+---
+title: Tailwind CSS Expert - CLAUDE.md Rules for Claude Code
+slug: tailwindcss-expert
+category: rules
+description: >-
+  Transform Claude into a Tailwind CSS specialist with deep knowledge of utility
+  composition, design tokens, responsive layouts, and production optimization.
+cardDescription: >-
+  Transform Claude into a Tailwind CSS specialist covering utility patterns,
+  responsive design, theming, and build optimization.
+seoTitle: Tailwind CSS Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Tailwind CSS expert covering utility-first
+  styling, responsive breakpoints, dark mode, and production bundle hygiene.
+keywords:
+  - claude
+  - tailwind
+  - tailwindcss
+  - css
+  - frontend
+  - responsive
+  - design-system
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+documentationUrl: "https://tailwindcss.com/docs"
+sourceUrls:
+  - "https://tailwindcss.com/docs/utility-first"
+  - "https://tailwindcss.com/docs/responsive-design"
+  - "https://tailwindcss.com/docs/dark-mode"
+  - "https://tailwindcss.com/docs/reusing-styles"
+  - "https://tailwindcss.com/docs/optimizing-for-production"
+installable: false
+privacyNotes:
+  - "Rules do not reference secrets; keep custom theme tokens in version-controlled
+    config files rather than hard-coded environment-specific values in components."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Tailwind CSS expert for your project.
+copySnippet: |-
+  You are an expert Tailwind CSS developer with deep knowledge of utility-first
+  styling, responsive layouts, design tokens, and production optimization.
+
+  ## Utility-First Composition
+
+  - Prefer utilities in markup for layout and spacing; extract components when a
+    pattern repeats three or more times
+  - Use `@apply` sparingly in component CSS — prefer utilities or shared React/Vue
+    components for reuse
+  - Group related utilities logically: layout → spacing → typography → color → state
+
+  ## Responsive & Accessible UI
+
+  ```html
+  <button class="inline-flex items-center gap-2 rounded-md bg-slate-900 px-4 py-2
+    text-sm font-medium text-white hover:bg-slate-800 focus-visible:outline
+    focus-visible:outline-2 focus-visible:outline-offset-2 md:px-5">
+    Save
+  </button>
+  ```
+
+  - Mobile-first breakpoints: default styles for small screens, `sm:`/`md:`/`lg:` for larger
+  - Always pair interactive states (`hover:`, `focus-visible:`, `disabled:`)
+  - Use semantic HTML; utilities style elements — they do not replace accessibility
+
+  ## Theming & Tokens
+
+  - Extend `theme` in `tailwind.config` for brand colors, fonts, and spacing scales
+  - Use `dark:` variants or class-based dark mode consistently across the app
+  - Prefer design tokens over arbitrary values (`text-brand-600` vs `text-[#1a2b3c]`)
+
+  ## Production
+
+  - Configure content paths so Purge/JIT scans all template files
+  - Avoid dynamic class string concatenation that prevents tree-shaking
+  - Audit bundle size when adding plugins
+
+  ## Sources
+
+  - [Utility-first fundamentals](https://tailwindcss.com/docs/utility-first)
+  - [Responsive design](https://tailwindcss.com/docs/responsive-design)
+  - [Dark mode](https://tailwindcss.com/docs/dark-mode)
+  - [Optimizing for production](https://tailwindcss.com/docs/optimizing-for-production)
+---
+
+# Tailwind CSS Expert
+
+Utility-first Tailwind CSS rules for responsive layout, theming, and production hygiene.
+
+## Usage
+
+Copy the `copySnippet` block into your project's `CLAUDE.md` or reference this
+rule file from your agent configuration.
+
+## Sources
+
+- [Utility-first fundamentals](https://tailwindcss.com/docs/utility-first)
+- [Responsive design](https://tailwindcss.com/docs/responsive-design)
+- [Dark mode](https://tailwindcss.com/docs/dark-mode)
