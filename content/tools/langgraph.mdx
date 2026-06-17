@@ -10,6 +10,10 @@ author: LangChain
 dateAdded: "2026-04-27"
 websiteUrl: "https://www.langchain.com/langgraph"
 documentationUrl: "https://langchain-ai.github.io/langgraph/"
+retrievalSources:
+  - "https://langchain-ai.github.io/langgraph/"
+  - "https://docs.crewai.com/"
+  - "https://microsoft.github.io/autogen/stable/"
 repoUrl: "https://github.com/langchain-ai/langgraph"
 pricingModel: open-source
 disclosure: editorial
@@ -27,6 +31,18 @@ keywords:
   - stateful llm workflows
   - multi-agent workflows
 ---
+
+## How LangGraph compares
+
+LangGraph is one of several multi-agent / orchestration frameworks in this directory; they differ by control model:
+
+| Framework | Model | Open source | Notable for |
+| --- | --- | --- | --- |
+| **LangGraph** | Graph of nodes/edges with explicit state | Yes | Fine-grained, controllable stateful workflows |
+| **CrewAI** | Role-based agent "crews" | Yes | Quick multi-agent setups by roles and tasks |
+| **AutoGen** | Conversational multi-agent | Yes | Agents that collaborate via message passing |
+
+Choose LangGraph when you need explicit control over state and branching; CrewAI for fast role-based teams, or AutoGen for conversation-driven agent collaboration.
 
 ## Editorial notes
 
