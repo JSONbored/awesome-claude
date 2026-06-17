@@ -1,5 +1,19 @@
 import { absoluteUrl } from "@/lib/seo";
 
+/**
+ * OG card palette — the exact light-mode design tokens from styles.css, converted
+ * from their OKLCH source values to hex so the cards match the live site:
+ *   --background #f8f6ed · --ink #13110d · --ink-muted #58554e · --ink-subtle #6d6a63
+ *   --border #dad7cf · --accent #e1f32a (citron) · --accent-soft #effaac
+ */
+export const OG_BG = "#f8f6ed";
+export const OG_INK = "#13110d";
+export const OG_INK_MUTED = "#58554e";
+export const OG_INK_SUBTLE = "#6d6a63";
+export const OG_BORDER = "#dad7cf";
+export const OG_ACCENT_SOFT = "#effaac";
+export const OG_ACCENT_INK = "#13110d";
+
 // Per-category accent colors (shared by the entry OG route and generic OG route).
 const PALETTE: Record<string, string> = {
   mcp: "#7cd17c",
@@ -13,7 +27,8 @@ const PALETTE: Record<string, string> = {
   statuslines: "#9bd6f0",
 };
 
-const DEFAULT_ACCENT = "#c5e84e";
+// Brand citron (`--accent`) used when no per-category accent applies.
+const DEFAULT_ACCENT = "#e1f32a";
 
 export const OG_TEXT_LIMITS = {
   eyebrow: 40,
@@ -84,6 +99,26 @@ export function wrap(value: string, perLine: number, maxLines: number) {
   return lines;
 }
 
+/**
+ * Wrap a description into at most `maxLines`. If the text doesn't fully fit, end the
+ * last line with an ellipsis at a WORD boundary — trimming a dangling trailing comma
+ * or connector ("and", "or", "for", …) — so the card never cuts off mid-phrase like
+ * "…, file operations, and". Returns the full text unmodified when it fits.
+ */
+export function descriptionLines(value: string, perLine: number, maxLines: number) {
+  const clamped = clampOgText(value, OG_TEXT_LIMITS.description);
+  const lines = wrap(clamped, perLine, maxLines);
+  const shown = lines.join(" ");
+  if (shown.length < clamped.length && lines.length) {
+    const last = lines[lines.length - 1];
+    const trimmed = last
+      .replace(/[\s,;:]+(?:and|or|the|a|an|of|for|to|with|in|on|&)?$/i, "")
+      .trimEnd();
+    lines[lines.length - 1] = `${trimmed || last.trimEnd()}…`;
+  }
+  return lines;
+}
+
 /** Deterministic 1200×630 OG card SVG. Shared by /og/$category/$slug and the generic /og route. */
 export function renderOgSvg(opts: {
   eyebrow?: string;
@@ -97,44 +132,43 @@ export function renderOgSvg(opts: {
     clampOgText(opts.eyebrow || "HeyClaude", OG_TEXT_LIMITS.eyebrow).toUpperCase(),
   );
   const titleLines = wrap(clampOgText(opts.title, OG_TEXT_LIMITS.title), 22, 2);
-  const descLines = opts.description
-    ? wrap(clampOgText(opts.description, OG_TEXT_LIMITS.description), 60, 2)
-    : [];
+  const descLines = opts.description ? descriptionLines(opts.description, 58, 3) : [];
+
+  // 32px graph-paper grid matching the site's `.grid-bg` utility (1px lines in
+  // `--border` over warm-paper `--background`). Kept in sync with renderOgPng.
+  const gridSegments: string[] = [];
+  for (let x = 32; x < OG_WIDTH; x += 32) gridSegments.push(`M${x} 0V${OG_HEIGHT}`);
+  for (let y = 32; y < OG_HEIGHT; y += 32) gridSegments.push(`M0 ${y}H${OG_WIDTH}`);
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f7f5ef"/>
-      <stop offset="1" stop-color="#ece8df"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="${OG_BG}"/>
+  <path d="${gridSegments.join("")}" stroke="${OG_BORDER}" stroke-width="1" stroke-opacity="0.6" fill="none"/>
   <rect x="0" y="0" width="14" height="630" fill="${accent}"/>
   <g transform="translate(80,90)">
-    <text x="0" y="0" font-family="ui-monospace, Menlo, monospace" font-size="20" fill="#6b6a64" letter-spacing="2">
+    <text x="0" y="0" font-family="ui-monospace, Menlo, monospace" font-size="20" fill="${OG_INK_SUBTLE}" letter-spacing="2">
       ${eyebrow}
     </text>
     ${titleLines
       .map(
         (l, i) =>
-          `<text x="0" y="${110 + i * 88}" font-family="Space Grotesk, system-ui, sans-serif" font-weight="700" font-size="78" fill="#171614">${esc(l)}</text>`,
+          `<text x="0" y="${110 + i * 88}" font-family="Space Grotesk, system-ui, sans-serif" font-weight="700" font-size="78" fill="${OG_INK}">${esc(l)}</text>`,
       )
       .join("")}
     ${descLines
       .map(
         (l, i) =>
-          `<text x="0" y="${340 + i * 38}" font-family="DM Sans, system-ui, sans-serif" font-size="28" fill="#4d4c47">${esc(l)}</text>`,
+          `<text x="0" y="${340 + i * 38}" font-family="DM Sans, system-ui, sans-serif" font-size="28" fill="${OG_INK_MUTED}">${esc(l)}</text>`,
       )
       .join("")}
     ${
       opts.author
-        ? `<text x="0" y="460" font-family="DM Sans, system-ui, sans-serif" font-size="22" fill="#6b6a64">by <tspan font-weight="600" fill="#171614">${esc(opts.author)}</tspan></text>`
+        ? `<text x="0" y="460" font-family="DM Sans, system-ui, sans-serif" font-size="22" fill="${OG_INK_SUBTLE}">by <tspan font-weight="600" fill="${OG_INK}">${esc(opts.author)}</tspan></text>`
         : ""
     }
   </g>
   <g transform="translate(80,540)">
-    <text font-family="ui-monospace, Menlo, monospace" font-size="20" fill="#6b6a64">heyclau.de</text>
+    <text font-family="ui-monospace, Menlo, monospace" font-size="20" fill="${OG_INK_SUBTLE}">heyclau.de</text>
   </g>
 </svg>`;
 }
