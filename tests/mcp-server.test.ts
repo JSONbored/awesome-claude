@@ -2055,6 +2055,27 @@ describe("HeyClaude read-only MCP helpers", () => {
   });
 
   describe("trust-review helper edge cases", () => {
+    // Find an entry that GENUINELY has no safety/privacy notes by reading entry
+    // detail files (directory-index strips notes). Assuming a specific entry is
+    // note-less is brittle — content enrichment adds notes over time.
+    function findEntryWithoutNotes(category: string) {
+      const dir = path.join(dataDir, "entries", category);
+      for (const file of fs.readdirSync(dir).sort()) {
+        const detail = JSON.parse(
+          fs.readFileSync(path.join(dir, file), "utf8"),
+        ) as {
+          entry?: { slug: string; safetyNotes?: string; privacyNotes?: string };
+        };
+        const entry = detail.entry;
+        if (entry && !entry.safetyNotes && !entry.privacyNotes) {
+          return { category, slug: entry.slug };
+        }
+      }
+      throw new Error(
+        `No ${category} entry without safety/privacy notes found`,
+      );
+    }
+
     it("explains trust for entry with safety and privacy notes", async () => {
       const trust = await callRegistryTool(
         "explain_entry_trust",
@@ -2079,14 +2100,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     it("explains trust for entry without safety or privacy notes", async () => {
-      const directory = JSON.parse(
-        fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
-      ) as {
-        entries: Array<{ category: string; slug: string }>;
-      };
-      const entryWithoutNotes = directory.entries.find(
-        (e) => e.category === "hooks" && e.slug !== "documentation-generator",
-      );
+      const entryWithoutNotes = findEntryWithoutNotes("hooks");
       expect(entryWithoutNotes).toBeTruthy();
 
       const trust = await callRegistryTool(
@@ -2229,17 +2243,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     it("reviews safety for entry without safety notes highlights manual inspection", async () => {
-      const directory = JSON.parse(
-        fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
-      ) as {
-        entries: Array<{ category: string; slug: string }>;
-      };
-      const entryWithoutNotes = directory.entries.find(
-        (e) =>
-          e.category === "hooks" &&
-          e.slug !== "documentation-generator" &&
-          e.slug !== "retro-daily",
-      );
+      const entryWithoutNotes = findEntryWithoutNotes("hooks");
       expect(entryWithoutNotes).toBeTruthy();
 
       const review = await callRegistryTool(
