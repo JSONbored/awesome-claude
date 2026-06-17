@@ -27,6 +27,8 @@ verificationStatus: draft
 verifiedAt: "2025-10-15"
 retrievalSources:
   - "https://github.com/openai/whisper"
+  - "https://developers.deepgram.com/docs"
+  - "https://www.assemblyai.com/docs"
 testedPlatforms:
   - Claude
   - Codex
@@ -144,6 +146,18 @@ Claude will:
 2. Segment by speaker
 3. Label each segment
 4. Present as a conversation transcript
+
+## Transcription engines compared
+
+This skill defaults to OpenAI Whisper, but you can pair it with hosted APIs when you need streaming or built-in audio intelligence:
+
+| Engine | Type | Runs locally | Notable for |
+| --- | --- | --- | --- |
+| **Whisper (OpenAI)** | Open-source model | Yes | Free, self-hosted, strong multilingual accuracy |
+| **Deepgram** | Hosted API | No | Low-latency streaming and speaker diarization |
+| **AssemblyAI** | Hosted API | No | Built-in summaries, topic detection, and audio intelligence |
+
+Use Whisper for local, no-cost, privacy-preserving transcription; reach for Deepgram for real-time streaming or AssemblyAI when you want higher-level audio analysis out of the box.
 
 ## Tips for Best Results
 
