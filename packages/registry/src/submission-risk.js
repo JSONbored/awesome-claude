@@ -70,9 +70,14 @@ const RESOURCE_THEFT_CAPABILITY_PATTERN =
 // flagged. Mirrors scripts/ci/validate-content-policy.mjs.
 const ADULT_XXX_PATTERN =
   /\bxxx[\s._-]*(?:porn|porno|sex|sexual|adult|nude|nudes|nsfw|hardcore|rated|video|videos|movie|movies|content|hub|tube|cam|cams|chat)\b|\b(?:porn|porno|sex|sexual|adult|nude|nudes|nsfw|hardcore)[\s._-]*xxx\b|\bxxx\.(?:com|net|org|xxx|tube|hub)\b|\.xxx\b/i;
-// Loopback HTTP endpoints (127.0.0.1 / localhost / [::1], any port/path) are not
-// an insecure-transport risk — many local MCP servers and hooks legitimately run
-// on http loopback. Mirrors scripts/ci/validate-content-policy.mjs.
+// Loopback HTTP endpoints (127.0.0.1 / localhost / [::1] / 0.0.0.0, any
+// port/path) are not an insecure-transport risk — many local MCP servers and
+// hooks legitimately run on http loopback. No SSRF surface: this risk scorer
+// only string-classifies install-text URLs and never fetches them; the exemption
+// only suppresses the `non_https_executable_source` flag. Mirrors
+// scripts/ci/validate-content-policy.mjs (intentionally duplicated — the CI
+// script and the CF-worker risk scorer are separate runtimes with no shared
+// import, like the other *_PATTERN constants in both files).
 const LOOPBACK_HTTP_PATTERN =
   /^http:\/\/(?:127\.0\.0\.1|localhost|\[::1\]|0\.0\.0\.0)(?::\d+)?(?![\w.-])/i;
 function isLoopbackHttpUrl(value) {

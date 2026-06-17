@@ -74,9 +74,17 @@ const ABUSE_ENABLEMENT_PATTERN =
 // prohibited-content list in favor of this multi-token pattern.
 const ADULT_XXX_PATTERN =
   /\bxxx[\s._-]*(?:porn|porno|sex|sexual|adult|nude|nudes|nsfw|hardcore|rated|video|videos|movie|movies|content|hub|tube|cam|cams|chat)\b|\b(?:porn|porno|sex|sexual|adult|nude|nudes|nsfw|hardcore)[\s._-]*xxx\b|\bxxx\.(?:com|net|org|xxx|tube|hub)\b|\.xxx\b/i;
-// Loopback HTTP endpoints (127.0.0.1 / localhost / [::1], any port/path) are not
-// an insecure-transport risk — many local MCP servers and hooks legitimately run
-// on http loopback (e.g. Figma Dev Mode http://127.0.0.1:3845/mcp).
+// Loopback HTTP endpoints (127.0.0.1 / localhost / [::1] / 0.0.0.0, any
+// port/path) are not an insecure-transport risk — many local MCP servers and
+// hooks legitimately run on http loopback (e.g. Figma Dev Mode
+// http://127.0.0.1:3845/mcp).
+//
+// No SSRF surface: this scanner only string-classifies URLs found in install
+// text; it never fetches them. The exemption applies solely to the
+// `non_https_executable_source` check over `executableSourceUrls` (install/usage
+// snippets), which are not retrieved here or by the grounding fetcher (that
+// fetches documentationUrl/retrievalSources only). So marking a loopback install
+// URL as "not insecure transport" cannot trigger any request.
 const LOOPBACK_HTTP_PATTERN =
   /^http:\/\/(?:127\.0\.0\.1|localhost|\[::1\]|0\.0\.0\.0)(?::\d+)?(?![\w.-])/i;
 function isLoopbackHttpUrl(value) {
