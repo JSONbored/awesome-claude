@@ -19,23 +19,13 @@ export const Route = createFileRoute("/og/$category/$slug")({
         const author = entry?.author ?? "HeyClaude";
         const category = entry?.category ?? params.category;
 
-        // Surface only positive trust signals as a pill; everything else stays unbadged.
-        const badge =
-          entry?.source === "first-party"
-            ? "First-party"
-            : entry?.source === "source-backed"
-              ? "Source-backed"
-              : entry?.trust === "trusted"
-                ? "Trusted"
-                : undefined;
-
         const image = await renderOgPng({
-          eyebrow: `${category} · HeyClaude`,
+          // The category is the highlighted eyebrow; its accent color-codes the swash + rail.
+          eyebrow: category,
           title,
           description,
           author,
           accent: categoryAccent(category),
-          badge,
         });
 
         // ImageResponse already sets Content-Type: image/png; add our cache policy.

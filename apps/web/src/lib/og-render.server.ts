@@ -2,8 +2,6 @@ import type { ImageResponse } from "workers-og";
 
 import { getOgFonts } from "@/lib/og-fonts";
 import {
-  OG_ACCENT_INK,
-  OG_ACCENT_SOFT,
   OG_BG,
   OG_BORDER,
   OG_HEIGHT,
@@ -13,6 +11,7 @@ import {
   OG_TEXT_LIMITS,
   OG_WIDTH,
   clampOgText,
+  descriptionLines,
   safeAccent,
   wrap,
 } from "@/lib/og-image";
@@ -59,6 +58,18 @@ function escForSatori(value: string) {
 }
 
 /**
+ * Convert a #rgb / #rrggbb / #rrggbbaa hex (already validated by safeAccent) to an
+ * `rgba()` string so the category swash can be drawn semi-transparent — matching the
+ * homepage hero's `bg-accent/70` marker highlight.
+ */
+function withAlpha(hex: string, alpha: number) {
+  const h = hex.replace("#", "");
+  const full = h.length === 3 ? [...h].map((c) => c + c).join("") : h.slice(0, 6);
+  const n = Number.parseInt(full, 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+}
+
+/**
  * Render the OG card as a PNG. Same 1200×630 design as renderOgSvg, but built as an
  * HTML string for Satori (via workers-og's ImageResponse) so social scrapers that do
  * NOT rasterize SVG og:images (Twitter/X, Facebook, LinkedIn, Slack, Discord) get a
@@ -80,23 +91,20 @@ function escForSatori(value: string) {
  * which getOgFonts() supplies from a bundled, base64-embedded Space Grotesk subset.
  */
 export async function renderOgPng(opts: {
+  /** Category/section label shown as the highlighted eyebrow (e.g. "MCP", "Agents"). */
   eyebrow?: string;
   title: string;
   description?: string;
   author?: string;
   accent?: string;
-  /** Positive trust signal shown as a pill (e.g. "First-party", "Source-backed"). */
-  badge?: string;
 }): Promise<ImageResponse> {
   const { ImageResponse } = await import("workers-og");
   const accent = safeAccent(opts.accent);
-  const eyebrow = escForSatori(
+  const label = escForSatori(
     clampOgText(opts.eyebrow || "HeyClaude", OG_TEXT_LIMITS.eyebrow).toUpperCase(),
   );
   const titleLines = wrap(clampOgText(opts.title, OG_TEXT_LIMITS.title), 22, 2);
-  const descLines = opts.description
-    ? wrap(clampOgText(opts.description, OG_TEXT_LIMITS.description), 60, 2)
-    : [];
+  const descLines = opts.description ? descriptionLines(opts.description, 58, 3) : [];
 
   const titleHtml = titleLines
     .map(
@@ -118,28 +126,24 @@ export async function renderOgPng(opts: {
         .join("")}</div>`
     : "";
 
-  // Use a plain space, not the "&nbsp;" HTML entity: workers-og parses the markup with
-  // HTMLRewriter, which does not decode entities, so "&nbsp;" would render verbatim.
   const authorHtml = opts.author
-    ? `<div style="display:flex;margin-top:32px;font-family:'Space Grotesk';font-weight:500;font-size:22px;color:${OG_INK_SUBTLE};">by <span style="font-weight:700;color:${OG_INK};">${escForSatori(
+    ? `<div style="display:flex;margin-top:28px;font-family:'Space Grotesk';font-weight:500;font-size:22px;color:${OG_INK_SUBTLE};">by<span style="margin-left:8px;font-weight:700;color:${OG_INK};">${escForSatori(
         clampOgText(opts.author, OG_TEXT_LIMITS.author),
       )}</span></div>`
     : "";
 
-  // Trust pill (positive signals only) — citron-soft chip aligned with the eyebrow.
-  const badge = opts.badge ? escForSatori(clampOgText(opts.badge, 24)) : "";
-  const badgeHtml = badge
-    ? `<div style="display:flex;align-items:center;height:40px;padding:0 18px;border-radius:999px;background:${OG_ACCENT_SOFT};font-family:'Space Grotesk';font-weight:700;font-size:18px;letter-spacing:1px;color:${OG_ACCENT_INK};">${badge}</div>`
-    : "";
+  // Category eyebrow with the homepage hero's marker-swash highlight, color-coded by the
+  // category accent. The swash is a hard-stop linear-gradient background filling the lower
+  // 14px behind the text — a single flex node (Satori requires display:flex on any div
+  // with >1 child, so the highlight is drawn as a background rather than a nested element).
+  const swash = withAlpha(accent, 0.85);
+  const labelHtml = `<div style="display:flex;align-self:flex-start;padding:0 6px 3px 6px;font-family:'Space Grotesk';font-weight:700;font-size:26px;letter-spacing:3px;color:${OG_INK};background:linear-gradient(to top, ${swash} 0px, ${swash} 14px, transparent 14px, transparent 100%);">${label}</div>`;
 
   const html = `<div style="display:flex;width:1200px;height:630px;background-color:${OG_BG};background-image:url('${GRID_BG_DATA_URI}');background-size:1200px 630px;background-repeat:no-repeat;">
   <div style="display:flex;width:14px;height:630px;background:${accent};"></div>
   <div style="display:flex;flex-direction:column;flex:1;padding:80px 80px;">
-    <div style="display:flex;align-items:center;justify-content:${badge ? "space-between" : "flex-start"};">
-      <div style="display:flex;font-family:'Space Grotesk';font-weight:500;font-size:20px;letter-spacing:2px;color:${OG_INK_SUBTLE};">${eyebrow}</div>
-      ${badgeHtml}
-    </div>
-    <div style="display:flex;flex-direction:column;margin-top:44px;">${titleHtml}</div>
+    ${labelHtml}
+    <div style="display:flex;flex-direction:column;margin-top:40px;">${titleHtml}</div>
     ${descHtml}
     ${authorHtml}
     <div style="display:flex;flex:1;"></div>

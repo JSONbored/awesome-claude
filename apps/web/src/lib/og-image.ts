@@ -99,6 +99,26 @@ export function wrap(value: string, perLine: number, maxLines: number) {
   return lines;
 }
 
+/**
+ * Wrap a description into at most `maxLines`. If the text doesn't fully fit, end the
+ * last line with an ellipsis at a WORD boundary — trimming a dangling trailing comma
+ * or connector ("and", "or", "for", …) — so the card never cuts off mid-phrase like
+ * "…, file operations, and". Returns the full text unmodified when it fits.
+ */
+export function descriptionLines(value: string, perLine: number, maxLines: number) {
+  const clamped = clampOgText(value, OG_TEXT_LIMITS.description);
+  const lines = wrap(clamped, perLine, maxLines);
+  const shown = lines.join(" ");
+  if (shown.length < clamped.length && lines.length) {
+    const last = lines[lines.length - 1];
+    const trimmed = last
+      .replace(/[\s,;:]+(?:and|or|the|a|an|of|for|to|with|in|on|&)?$/i, "")
+      .trimEnd();
+    lines[lines.length - 1] = `${trimmed || last.trimEnd()}…`;
+  }
+  return lines;
+}
+
 /** Deterministic 1200×630 OG card SVG. Shared by /og/$category/$slug and the generic /og route. */
 export function renderOgSvg(opts: {
   eyebrow?: string;
@@ -112,9 +132,7 @@ export function renderOgSvg(opts: {
     clampOgText(opts.eyebrow || "HeyClaude", OG_TEXT_LIMITS.eyebrow).toUpperCase(),
   );
   const titleLines = wrap(clampOgText(opts.title, OG_TEXT_LIMITS.title), 22, 2);
-  const descLines = opts.description
-    ? wrap(clampOgText(opts.description, OG_TEXT_LIMITS.description), 60, 2)
-    : [];
+  const descLines = opts.description ? descriptionLines(opts.description, 58, 3) : [];
 
   // 32px graph-paper grid matching the site's `.grid-bg` utility (1px lines in
   // `--border` over warm-paper `--background`). Kept in sync with renderOgPng.
