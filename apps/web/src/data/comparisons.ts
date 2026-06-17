@@ -62,12 +62,18 @@ export const COMPARISONS: Comparison[] = [
   },
   {
     slug: "llm-observability-tools",
-    title: "Langfuse vs LangSmith vs Helicone vs Braintrust",
+    title: "Phoenix vs Langfuse vs LangSmith vs Helicone vs Braintrust",
     heading: "LLM observability tools compared",
     seoDescription:
-      "Compare Langfuse, LangSmith, Helicone, and Braintrust — LLM observability and eval tools — side by side.",
+      "Compare Arize Phoenix, Langfuse, LangSmith, Helicone, and Braintrust — LLM observability and eval tools — side by side.",
     intro: "Observability and eval platforms for LLM apps, compared on trust, source, and setup.",
-    refs: ["tools/langfuse", "tools/langsmith", "tools/helicone", "tools/braintrust"],
+    refs: [
+      "tools/arize-phoenix",
+      "tools/langfuse",
+      "tools/langsmith",
+      "tools/helicone",
+      "tools/braintrust",
+    ],
   },
   {
     slug: "search-mcp-servers",
@@ -318,6 +324,46 @@ export const COMPARISONS: Comparison[] = [
     intro:
       "Analytics/warehouse MCP servers that let Claude query large datasets, compared on trust, setup, and safety.",
     refs: ["mcp/snowflake-mcp-server", "mcp/bigquery-mcp-server", "mcp/clickhouse-mcp-server"],
+  },
+  {
+    slug: "rag-agent-frameworks",
+    title: "LlamaIndex vs LangGraph vs CrewAI vs AutoGen",
+    heading: "RAG & agent frameworks compared",
+    seoDescription:
+      "Compare LlamaIndex, LangGraph, CrewAI, and AutoGen — RAG and multi-agent orchestration frameworks for LLM apps — side by side.",
+    intro:
+      "The leading open-source frameworks for building RAG pipelines and multi-agent systems, compared on focus, source, and setup.",
+    refs: ["tools/llamaindex", "tools/langgraph", "tools/crewai", "tools/microsoft-autogen"],
+  },
+  {
+    slug: "llm-security-redteaming-tools",
+    title: "Garak vs Lakera Guard vs PyRIT vs Promptfoo",
+    heading: "LLM security & red-teaming tools compared",
+    seoDescription:
+      "Compare Garak, Lakera Guard, PyRIT, and Promptfoo — LLM security scanning, runtime guardrails, and red-teaming — side by side.",
+    intro:
+      "Tools for probing and protecting LLM applications — vulnerability scanning, runtime guardrails, and adversarial red-teaming — compared.",
+    refs: ["tools/garak", "tools/lakera-guard", "tools/pyrit", "tools/promptfoo"],
+  },
+  {
+    slug: "llm-eval-tools",
+    title: "Braintrust vs Promptfoo vs DeepEval vs Phoenix",
+    heading: "LLM evaluation tools compared",
+    seoDescription:
+      "Compare Braintrust, Promptfoo, DeepEval, and Arize Phoenix — LLM evaluation and experimentation tools — side by side.",
+    intro:
+      "Evaluation and experimentation platforms for LLM apps, compared on approach, source, and setup.",
+    refs: ["tools/braintrust", "tools/promptfoo", "tools/deepeval", "tools/arize-phoenix"],
+  },
+  {
+    slug: "ai-code-editors",
+    title: "Cursor vs Zed vs Windsurf vs Continue",
+    heading: "AI code editors compared",
+    seoDescription:
+      "Compare Cursor, Zed, Windsurf, and Continue — AI-powered code editors and assistants — side by side on trust, install, and platform support.",
+    intro:
+      "AI-native editors and assistants for day-to-day coding, compared on form factor, source, and setup.",
+    refs: ["tools/cursor", "tools/zed", "tools/windsurf", "tools/continue"],
   },
 ];
 
