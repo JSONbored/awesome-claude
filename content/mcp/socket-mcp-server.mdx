@@ -15,6 +15,11 @@ authorProfileUrl: "https://github.com/SocketDev"
 dateAdded: "2025-09-18"
 repoUrl: "https://github.com/SocketDev/socket-mcp"
 documentationUrl: "https://github.com/SocketDev/socket-mcp"
+retrievalSources:
+  - "https://github.com/SocketDev/socket-mcp"
+  - "https://docs.socket.dev/"
+  - "https://docs.npmjs.com/cli/v10/commands/npm-audit"
+  - "https://docs.snyk.io/"
 downloadUrl: /downloads/mcp/socket-mcp-server.mcpb
 packageVerified: true
 installable: true
@@ -108,6 +113,18 @@ Analyze dependency security and supply chain risks with Socket's comprehensive v
 - Detect malicious packages and typosquatting (supply chain attack prevention)
 - Manage license compliance and policies (open source license governance)
 - Build automated real-time communication workflows that sync external systems with Socket.io for live messaging and event broadcasting
+
+## Socket vs Other Dependency Scanners
+
+Socket takes a different approach from advisory-database scanners — it analyzes what a package actually *does* (install scripts, network/filesystem access, obfuscation), so it can flag supply-chain attacks before they become published CVEs:
+
+| Tool | Detection approach | Catches zero-day supply-chain attacks? | Where it runs |
+| --- | --- | --- | --- |
+| **Socket** (this MCP) | Behavioral analysis of package capabilities + supply-chain risk signals | Yes — flags malware/suspicious behavior pre-CVE | In Claude via MCP, plus CI/GitHub app |
+| **npm audit** | Matches installed versions against the npm advisory database | No — known CVEs only | Local CLI |
+| **Snyk** | Vulnerability DB + license and IaC scanning | Partially — DB-driven, plus some heuristics | CLI, CI, and SaaS |
+
+Use Socket for pre-install/supply-chain risk review of new or updated packages; pair it with `npm audit` or Snyk for breadth of known-CVE coverage.
 
 ## Installation
 
