@@ -84,4 +84,12 @@
       "migrations_dir": "migrations",
     },
   ],
+  // AI-citation signal tap: crawler hits + AI-referral landings (see lib/ai-signals.server.ts).
+  // Query via the Analytics Engine SQL API; free tier covers our volume (3-month retention).
+  "analytics_engine_datasets": [
+    {
+      "binding": "AI_SIGNALS",
+      "dataset": "ai_signals",
+    },
+  ],
 }
