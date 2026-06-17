@@ -11,6 +11,7 @@ permissions:
 jobs:
   revalidate-job-sources:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       ADMIN_API_TOKEN: ${{ secrets.JOBS_ADMIN_API_TOKEN || secrets.ADMIN_API_TOKEN || secrets.LEADS_ADMIN_TOKEN }}
       DEFAULT_BASE_URL: ${{ vars.JOBS_SOURCE_CHECK_BASE_URL || 'https://heyclau.de' }}

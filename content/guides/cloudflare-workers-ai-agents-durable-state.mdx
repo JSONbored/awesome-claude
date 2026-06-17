@@ -17,6 +17,13 @@ author: MkDev11
 authorProfileUrl: "https://github.com/MkDev11"
 submittedBy: MkDev11
 submittedByUrl: "https://github.com/MkDev11"
+documentationUrl: "https://developers.cloudflare.com/agents/"
+retrievalSources:
+  - "https://developers.cloudflare.com/agents/"
+  - "https://developers.cloudflare.com/agents/api-reference/store-and-sync-state/"
+  - "https://developers.cloudflare.com/workers-ai/"
+  - "https://developers.cloudflare.com/workers-ai/get-started/workers-wrangler/"
+  - "https://developers.cloudflare.com/durable-objects/"
 dateAdded: "2026-06-04"
 usageSnippet: >-
   Put model calls behind Workers AI, keep long-lived agent memory and workflow
@@ -153,6 +160,104 @@ hidden service URLs scattered through code.
    Keep versioned state readers, a migration plan for schema changes, and a
    reset path for broken or abandoned agent instances.
 
+## Reference Implementation
+
+The Agents SDK (`agents` package) gives you an `Agent` class with built-in
+durable state. Each agent instance has typed state via `initialState`,
+`this.state`, and `this.setState`, plus a private embedded SQLite database via
+`this.sql`. State is automatically persisted, so it survives across requests and
+agent restarts without a separate store. The example below keeps a compact
+session record in state and calls Workers AI for inference.
+
+```typescript
+import { Agent, routeAgentRequest } from "agents";
+
+interface Env {
+  AI: Ai;
+}
+
+interface SessionState {
+  status: "idle" | "working" | "done";
+  summary: string;
+  turns: number;
+  lastModel: string;
+}
+
+export class AssistantAgent extends Agent<Env, SessionState> {
+  // Persisted automatically and available on every request as this.state.
+  initialState: SessionState = {
+    status: "idle",
+    summary: "",
+    turns: 0,
+    lastModel: "",
+  };
+
+  async onRequest(request: Request): Promise<Response> {
+    const { prompt } = (await request.json()) as { prompt: string };
+
+    // Build the model input from durable state, not a growing transcript.
+    const model = "@cf/meta/llama-3.1-8b-instruct";
+    const response = await this.env.AI.run(model, {
+      prompt: `Context summary: ${this.state.summary}\nUser: ${prompt}`,
+    });
+
+    // Write the next durable state transition.
+    this.setState({
+      ...this.state,
+      status: "working",
+      turns: this.state.turns + 1,
+      lastModel: model,
+    });
+
+    return Response.json({ response, turns: this.state.turns });
+  }
+}
+
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    // Routes to the right agent instance by name, creating it on first use.
+    return (
+      (await routeAgentRequest(request, env)) ||
+      new Response("Not found", { status: 404 })
+    );
+  },
+} satisfies ExportedHandler<Env>;
+```
+
+Bind Workers AI in your Wrangler config so `this.env.AI` resolves at runtime:
+
+```toml
+[ai]
+binding = "AI"
+```
+
+For relational reads and writes that should not live in the state object, each
+agent instance exposes a private SQLite database through `this.sql`:
+
+```typescript
+const [user] = this.sql<User>`SELECT * FROM users WHERE id = ${userId}`;
+this.sql`INSERT INTO messages (id, text) VALUES (${id}, ${text})`;
+```
+
+## Where State Should Live
+
+The platform gives you several places to keep agent state. Pick the narrowest
+one that fits the access pattern.
+
+| Layer | API surface | Scope / consistency | Best for |
+| --- | --- | --- | --- |
+| Agent state | `this.state` / `this.setState` (Agents SDK) | Per-agent instance, auto-persisted, synced to clients | Compact session memory, workflow status, counters |
+| Agent SQL | `this.sql` (embedded SQLite per instance) | Per-agent instance, strongly consistent | Relational per-agent records, structured history |
+| Durable Object storage | `ctx.storage` Storage API (incl. `sql.exec`) | Per-object, strongly consistent | Custom state machines outside the Agents SDK |
+| D1 | `env.DB` binding | Shared across Workers, serverless SQL | Cross-agent / global relational data |
+| KV | `env.KV` binding | Eventually consistent, global reads | Config, feature flags, cacheable lookups |
+| R2 | `env.BUCKET` binding | Object storage | Large files, artifacts, exports |
+
+The Agents SDK builds on Durable Objects, so `this.state` and `this.sql` are
+durable per agent identity. Reach for raw Durable Object `ctx.storage` only when
+you need a custom object outside the SDK; use D1, KV, or R2 for data that must be
+shared beyond a single agent instance.
+
 ## Architecture Checklist
 
 - [ ] {"task": "Agent identity is stable", "description": "Every request routes to the intended user, conversation, job, or workspace instance"}
@@ -202,9 +307,9 @@ state boundary of a Workers AI agent and validating the resulting architecture.
 ## References
 
 - Cloudflare Agents documentation - https://developers.cloudflare.com/agents/
-- Cloudflare Agents API - https://developers.cloudflare.com/agents/runtime/agents-api/
+- Agents: store and sync state - https://developers.cloudflare.com/agents/api-reference/store-and-sync-state/
 - Cloudflare Workers AI - https://developers.cloudflare.com/workers-ai/
+- Workers AI with Wrangler - https://developers.cloudflare.com/workers-ai/get-started/workers-wrangler/
 - Cloudflare Durable Objects - https://developers.cloudflare.com/durable-objects/
-- Durable Object state API - https://developers.cloudflare.com/durable-objects/api/state/
 - Workers bindings - https://developers.cloudflare.com/workers/runtime-apis/bindings/
 - Workers Logs - https://developers.cloudflare.com/workers/observability/logs/workers-logs/

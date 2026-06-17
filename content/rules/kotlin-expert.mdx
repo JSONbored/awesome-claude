@@ -114,6 +114,19 @@ Add this rule set to your project's `CLAUDE.md` to configure Claude as a Kotlin 
 It covers null safety, coroutines, Flow, data classes, sealed hierarchies, and idiomatic API
 design — grounded in the [official Kotlin documentation](https://kotlinlang.org/docs/home.html).
 
+## Null-Safety Operator Reference
+
+The rules above lean on Kotlin's null-safety operators. The table below summarizes each
+operator and its behavior when the receiver is `null`, per the official
+[Null safety](https://kotlinlang.org/docs/null-safety.html) guide.
+
+| Operator | Name (per docs) | Behavior when receiver is `null` |
+| --- | --- | --- |
+| `?.` | Safe call operator | Returns `null` instead of throwing an NPE |
+| `?:` | Elvis operator | Returns the expression to the right of `?:` |
+| `!!` | Not-null assertion operator | Forces non-null and throws a `NullPointerException` |
+| `as?` | Safe cast | Returns `null` if the value is not of the specified type |
+
 ## Sources
 
 - [Null Safety](https://kotlinlang.org/docs/null-safety.html)

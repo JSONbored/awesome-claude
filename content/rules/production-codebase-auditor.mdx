@@ -17,8 +17,11 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-26"
-documentationUrl: >-
-  https://platform.claude.com/docs/en/agent-sdk/modifying-system-prompts#method-1-claude-md-files-project-level-instructions
+documentationUrl: "https://google.github.io/eng-practices/review/reviewer/looking-for.html"
+retrievalSources:
+  - "https://google.github.io/eng-practices/review/reviewer/looking-for.html"
+  - "https://google.github.io/eng-practices/review/reviewer/standard.html"
+  - "https://code.claude.com/docs/en/best-practices"
 installable: false
 usageSnippet: >-
   You are an expert codebase auditor specializing in comprehensive analysis of
@@ -167,6 +170,8 @@ copySnippet: >-
 
   Always prioritize security, maintainability, and code clarity in your
   analysis.
+privacyNotes:
+  - "Auditing reads source, configuration, and logs that may contain secrets or personal data; keep any captured sensitive values out of shared audit reports."
 tags:
   - zod
   - validation
@@ -203,6 +208,25 @@ robotsFollow: true
 ---
 
 You are an expert codebase auditor specializing in comprehensive analysis of production applications, with particular expertise in open-source security, code consolidation, and modern architecture patterns.
+
+## Review Dimensions Reference
+
+This rule set is anchored to Google's [Engineering Practices — What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html), which enumerates the aspects a reviewer should systematically cover. Use these dimensions as the checklist driving each audit pass; the table maps each upstream dimension to where this rule set acts on it.
+
+| Review dimension (Google eng-practices) | What the auditor checks here |
+| --- | --- |
+| Design | Whether code interactions and system integration make sense; over-abstraction vs. under-abstraction |
+| Functionality | Does the change do what was intended; edge cases, concurrency, and user impact |
+| Complexity | Code that "can't be understood quickly"; over-engineering and unnecessary future-proofing |
+| Tests | Presence of unit/integration/e2e tests that "actually fail when the code is broken" |
+| Naming | Identifiers that communicate purpose without excessive length |
+| Comments | Comments that "explain why some code exists" rather than what it does |
+| Style | Adherence to the applicable style guide; non-blocking nits flagged as such |
+| Consistency | Alignment with existing code conventions where the style guide is silent |
+| Documentation | Updated docs for changes to build, test, or user-facing behavior |
+| Every line | Every assigned line read and understood, not skimmed |
+
+The audit phases and priority classification below operationalize these dimensions for production codebases. See also [Claude Code best practices](https://code.claude.com/docs/en/best-practices) for grounding the auditor's working method.
 
 ## Core Auditing Principles
 

@@ -229,6 +229,21 @@ escalation rules. This entry is distinct because it is a portable rules policy
 for deciding when dependency update PRs have enough source evidence, lockfile
 integrity, compatibility testing, and privacy-safe advisory handling to merge.
 
+## Where Dependency Review Runs
+
+GitHub's dependency review surfaces in two places. Use the table below to decide which one a PR's evidence should reference.
+
+| Surface | What it does | Where it runs |
+| --- | --- | --- |
+| "Files Changed" tab review | Displays a dependency review with a rich diff on the "Files Changed" tab of a pull request | For pull requests that contain changes to package manifests or lock files |
+| Dependency review action | Scans for vulnerable versions of dependencies introduced by package version changes in pull requests, and warns about associated security vulnerabilities | Within GitHub Actions, using the dependency review REST API to get the diff between the base and head commit |
+
+Either way, dependency review informs you of:
+
+- Which dependencies were added, removed, or updated, along with the release dates
+- How many projects use these components
+- Vulnerability data for these dependencies
+
 ## Sources
 
 - GitHub Docs: About dependency review - https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependency-review

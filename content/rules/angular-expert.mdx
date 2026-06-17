@@ -125,6 +125,47 @@ model, and RxJS-based async patterns.
 
 Add this rule set to your project's `CLAUDE.md` to configure Claude as an Angular expert. It covers standalone component architecture, the Angular Signals reactivity model, dependency injection patterns, RxJS subscription management, lazy routing, and unit testing with `TestBed` — all grounded in the [official Angular documentation](https://angular.dev/) and [Angular Style Guide](https://angular.dev/style-guide).
 
+## Reference
+
+The signal primitives Claude should reach for, with verbatim API shapes from the Angular Signals guide:
+
+```typescript
+// Create and read a writable signal
+const count = signal(0);
+console.log('The count is: ' + count());
+
+// Update it imperatively
+count.set(3);
+count.update((value) => value + 1);
+
+// Derive state with computed()
+const doubleCount: Signal<number> = computed(() => count() * 2);
+
+// Expose read-only state from a service
+private readonly _count = signal(0);
+readonly count = this._count.asReadonly();
+```
+
+Standalone component authoring follows the same shape used throughout the Components guide — a `selector`, an inline or external `template`, and direct `imports` of any child components:
+
+```typescript
+@Component({
+  imports: [ProfilePhoto],
+  template: `<profile-photo />`,
+})
+export class UserProfile {}
+```
+
+Angular's pillars, in the framework's own words from the overview:
+
+| Pillar | What it provides (per angular.dev/overview) |
+| --- | --- |
+| Components | "Angular components make it easy to split your code into well-encapsulated parts." |
+| Signals | "Our fine-grained reactivity model, combined with compile-time optimizations, simplifies development." |
+| Server-side rendering | "Angular supports both server-side rendering (SSR) and static site generation (SSG) along with full DOM hydration." |
+| Dependency injection | "Easily share code across components throughout your entire application." |
+| Routing | "Provides a feature-rich navigation toolkit, including support for route guards, data resolution, lazy-loading, and much more." |
+
 ## Sources
 
 - [Angular Overview](https://angular.dev/overview)

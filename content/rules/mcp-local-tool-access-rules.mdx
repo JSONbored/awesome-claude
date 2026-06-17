@@ -212,6 +212,37 @@ what to inventory, what to approve, how to bound roots and transports, when to
 disable access, and how to keep tool outputs and logs privacy-safe during an
 AI-client session.
 
+## Spec Responsibility Split
+
+The `tools/call` specification assigns distinct security duties to each side of an MCP connection. Use this split to assign review ownership when bounding local tool access.
+
+| Responsibility (from the MCP tools spec) | Servers MUST | Clients SHOULD |
+| --- | --- | --- |
+| Validate all tool inputs | yes | - |
+| Implement proper access controls | yes | - |
+| Rate limit tool invocations | yes | - |
+| Sanitize tool outputs | yes | - |
+| Prompt for user confirmation on sensitive operations | - | yes |
+| Show tool inputs to the user before calling the server | - | yes |
+| Validate tool results before passing to LLM | - | yes |
+| Implement timeouts for tool calls | - | yes |
+| Log tool usage for audit purposes | - | yes |
+
+The spec defines two error mechanisms: a protocol error is a standard JSON-RPC error, while a tool execution error is returned inside a normal result with `isError: true` (its content still reaches the model context):
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 4,
+  "result": {
+    "content": [
+      { "type": "text", "text": "Failed to fetch weather data: API rate limit exceeded" }
+    ],
+    "isError": true
+  }
+}
+```
+
 ## Sources
 
 - Model Context Protocol specification - https://modelcontextprotocol.io/specification/2025-06-18

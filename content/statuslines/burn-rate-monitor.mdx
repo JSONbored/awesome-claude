@@ -57,19 +57,17 @@ tags:
   - budget
   - monitoring
   - real-time
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+safetyNotes:
+  - "Runs as a Claude Code statusline command on every refresh and depends on the local shell environment; a failure only affects status rendering, not your session."
+privacyNotes:
+  - "Reads the Claude Code statusline JSON from stdin (model, workspace path, token usage) and renders it in the local terminal; it does not send data off-machine."
 keywords:
-  - budget
-  - burn
-  - burn-rate
-  - claude
-  - cost-tracking
-  - development
-  - monitor
-  - monitoring
-  - rate
-  - real-time
-  - statuslines
-  - tools
+  - claude cost burn rate statusline
+  - token burn rate monitor
+  - real-time spend statusline
+  - claude code statusline
 readingTime: 2
 difficultyScore: 5
 hasTroubleshooting: true

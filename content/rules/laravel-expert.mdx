@@ -123,6 +123,25 @@ It covers routing, Eloquent ORM, form requests, policies, queues, and production
 configuration — grounded in the
 [official Laravel documentation](https://laravel.com/docs).
 
+## Eloquent Relationship Methods
+
+Reference for the Eloquent relationship types and the method that defines each, from
+the [Eloquent Relationships](https://laravel.com/docs/eloquent-relationships) docs.
+
+| Relationship | Method | Type |
+| --- | --- | --- |
+| One To One | `hasOne` | Basic |
+| One To Many | `hasMany` | Basic |
+| Inverse of one-to-one / one-to-many | `belongsTo` | Basic |
+| Many To Many | `belongsToMany` | Basic |
+| Has One Through | `hasOneThrough` | Through |
+| Has Many Through | `hasManyThrough` | Through |
+| One To One (Polymorphic) | `morphOne` | Polymorphic |
+| One To Many (Polymorphic) | `morphMany` | Polymorphic |
+| Inverse of polymorphic one-to-one / one-to-many | `morphTo` | Polymorphic |
+| Many To Many (Polymorphic) | `morphToMany` | Polymorphic |
+| Inverse of polymorphic many-to-many | `morphedByMany` | Polymorphic |
+
 ## Sources
 
 - [Laravel Routing](https://laravel.com/docs/routing)

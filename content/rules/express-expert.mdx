@@ -119,6 +119,19 @@ centralized error handling, and deployment hardening.
 Copy the `copySnippet` block into your project's `CLAUDE.md` or reference this
 rule file from your agent configuration.
 
+## Middleware Types Reference
+
+Express documents five categories of middleware. The table summarizes how each
+is bound and what distinguishes it, per the Express "Using middleware" guide.
+
+| Middleware type | How it is bound | Distinguishing detail |
+| --- | --- | --- |
+| Application-level | Bound to an instance of the app object using `app.use()` and `app.METHOD()` | Runs on the app instance |
+| Router-level | Bound to an instance of `express.Router()` | Works the same way as application-level middleware |
+| Error-handling | Defined with four arguments: `(err, req, res, next)` | Uses four arguments instead of three |
+| Built-in | `express.static`, `express.json`, `express.urlencoded` | Ships with Express; no separate install |
+| Third-party | Installed Node.js modules, loaded at the application or router level | Adds functionality via npm packages |
+
 ## Sources
 
 - [Express routing guide](https://expressjs.com/en/guide/routing.html)

@@ -126,6 +126,42 @@ keywords:
 
 Add this rule set to your project's `CLAUDE.md` file to configure Claude as a Vue 3 Composition API expert. It covers component authoring with `<script setup>`, composable patterns, Pinia store design, Vue Router conventions, and template performance best practices — all grounded in the [official Vue 3 documentation](https://vuejs.org/guide/introduction) and [Pinia documentation](https://pinia.vuejs.org/introduction.html).
 
+## Reference
+
+A minimal `<script setup>` component using `ref()` and the `onMounted` lifecycle hook, from the Vue Composition API FAQ:
+
+```vue
+<script setup>
+import { ref, onMounted } from 'vue'
+
+// reactive state
+const count = ref(0)
+
+// functions that mutate state and trigger updates
+function increment() {
+  count.value++
+}
+
+// lifecycle hooks
+onMounted(() => {
+  console.log(`The initial count is ${count.value}.`)
+})
+</script>
+
+<template>
+  <button @click="increment">Count is: {{ count }}</button>
+</template>
+```
+
+`ref()` and `reactive()` differ in the value types they accept and how they behave when reassigned or destructured. Vue recommends `ref()` as the primary API for declaring reactive state:
+
+| Aspect | `ref()` | `reactive()` |
+| --- | --- | --- |
+| Value types | Any value type | Only object types (objects, arrays, and collection types such as `Map` and `Set`); cannot hold primitives such as `string`, `number`, `boolean` |
+| Access in JavaScript | `.value` is needed | Property access directly on the proxy |
+| Reassigning the whole value | Reassign `.value` | Cannot "replace" a reactive object — the reactivity connection is lost |
+| Destructuring | — | Destructuring a primitive property loses the reactivity connection |
+
 ## Sources
 
 - [Vue 3 Introduction](https://vuejs.org/guide/introduction)

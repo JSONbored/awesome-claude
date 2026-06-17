@@ -1,0 +1,97 @@
+---
+title: Ultrareview For Deep Pre-Merge Code Review
+slug: ultrareview-for-deep-pre-merge-code-review
+category: guides
+description: >-
+  Run Claude Code ultrareview with /code-review ultra for multi-agent cloud review,
+  verified findings, PR mode, and optional claude ultrareview CI subcommand.
+cardDescription: >-
+  Deep pre-merge review with /code-review ultra and cloud sandbox verification.
+seoTitle: Ultrareview For Deep Pre-Merge Code Review
+seoDescription: >-
+  Guide to Claude Code ultrareview: /code-review ultra, PR mode, pricing, /tasks tracking,
+  and claude ultrareview subcommand from official documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1377
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1377"
+documentationUrl: "https://code.claude.com/docs/en/ultrareview"
+usageSnippet: >-
+  Run /code-review ultra locally or with a PR number, confirm billing dialog, track via
+  /tasks, and fix verified findings before merge.
+prerequisites:
+  - "Claude Code v2.1.86+ with claude.ai login (not API-key-only)."
+  - "Usage credits enabled for paid reviews after free runs are consumed."
+  - "Human merge approval after reviewing cloud findings."
+safetyNotes:
+  - "Ultrareview uploads repository state or clones PRs in a remote sandbox—scope secrets and tokens."
+  - "Stopping a review archives the session without returning partial findings."
+privacyNotes:
+  - "Cloud review sandboxes process branch diffs and may include proprietary code."
+  - "Findings appear in session notifications—control log retention accordingly."
+sourceUrls:
+  - "https://code.claude.com/docs/en/ultrareview"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - ultrareview
+  - code-review
+  - pre-merge
+keywords:
+  - Claude Code ultrareview guide
+  - /code-review ultra workflow
+readingTime: 8
+difficultyScore: 54
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+**Ultrareview** runs a **multi-agent cloud review** via **`/code-review ultra`**. Findings
+are independently verified in a remote sandbox. Use **`/review`** for fast local feedback;
+use ultrareview before merging substantial changes.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Login", "description": "Authenticate with claude.ai; run /login if using API key only"}
+- [ ] {"task": "Credits", "description": "Enable usage credits for paid runs after free allotment"}
+- [ ] {"task": "Scope", "description": "Choose branch diff or PR number mode intentionally"}
+
+## Step-by-Step Workflow
+
+1. Run **`/code-review ultra`** for current branch diff (includes uncommitted changes) or **`/code-review ultra 1234`** for a GitHub PR.
+2. Confirm the dialog showing scope, remaining free runs, and estimated cost.
+3. Track progress with **`/tasks`**; stop early only when willing to lose partial results.
+4. Read verified findings in the session notification; ask Claude to fix issues locally.
+5. For CI, use **`claude ultrareview`** or **`claude ultrareview 1234`** with optional **`--json`** and **`--timeout`**.
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- Invoked as **`/code-review ultra`**; **`/ultrareview`** remains an alias.
+- Requires **claude.ai authentication**; unavailable on Bedrock, Vertex, Foundry, or ZDR orgs.
+- **Pro/Max** include **three one-time free runs**; afterward reviews bill as **usage credits** (typical **$5–$20**).
+- **Green infrastructure status** does not guarantee the review task succeeded—read findings.
+- **`claude ultrareview`** subcommand blocks until completion; progress URLs go to stderr.
+
+## Duplicate Check
+
+Distinct from the local **`/review`** command entry and **`open-source-pr-security-review-agent`**.
+This guide covers **cloud ultrareview** only.
+
+## Troubleshooting
+
+**Issue:** Launch blocked for billing
+**Fix:** Enable usage credits via billing settings or **`/usage-credits`** per official docs.
+
+**Issue:** Repository too large to bundle
+**Fix:** Use PR mode after opening a draft PR, as documented.

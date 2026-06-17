@@ -12,6 +12,10 @@ dateAdded: "2025-10-16"
 documentationUrl: "https://docs.github.com/en/actions"
 downloadUrl: /downloads/skills/github-actions-ai-cicd.zip
 installable: true
+safetyNotes:
+  - "Setup downloads and unzips a package, and generated workflows run build/test/deploy commands in CI with repository permissions; review workflow YAML and least-privilege the GITHUB_TOKEN before merging."
+privacyNotes:
+  - "CI workflows read repository code and use secrets (API keys, deploy credentials, model keys); store them in GitHub Actions secrets, never in workflow files or logs, and review what third-party actions can access."
 installCommand: "curl -L https://heyclau.de/downloads/skills/github-actions-ai-cicd.zip -o github-actions-ai-cicd.zip && unzip -o github-actions-ai-cicd.zip -d ./github-actions-ai-cicd"
 usageSnippet: "Claude can design, generate, and optimize GitHub Actions workflows for comprehensive CI/CD pipelines. This skill enables automated testing, intelligent deployment strategies, security scanning, performance monitoring, and infrastructure provisioning - all triggered by GitHub events with AI-optimized configurations."
 copySnippet: |-
@@ -212,18 +216,11 @@ tags:
   - devops
   - ai
 keywords:
-  - actions
-  - automation
-  - ci-cd
-  - ci/cd
-  - claude
-  - development
-  - devops
-  - github
-  - github-actions
-  - powered
-  - skills
-  - tools
+  - github actions ci/cd
+  - github actions claude
+  - ai ci/cd pipeline
+  - github actions workflow
+  - automated ci/cd
 readingTime: 5
 packageVerified: true
 difficultyScore: 100

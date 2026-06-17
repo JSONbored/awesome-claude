@@ -1,0 +1,162 @@
+---
+title: GitHub Actions Security Review Capability Pack Skill
+slug: github-actions-security-review-capability-pack
+category: skills
+description: >-
+  Expert GitHub Actions security review capability pack applying documented workflow
+  hardening, GITHUB_TOKEN least privilege, secrets handling, and fork PR safety
+  checks from official GitHub Actions security documentation.
+cardDescription: >-
+  Review GitHub Actions workflows with token scope, secrets, and fork safety checklists.
+seoTitle: GitHub Actions Security Review Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for GitHub Actions security review using official
+  hardening documentation—not an official GitHub product.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 715
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/715"
+repoUrl: "https://github.com/github/docs"
+documentationUrl: "https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions"
+downloadUrl: "https://github.com/github/docs/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when reviewing GitHub Actions workflow YAML for security hardening
+  gaps before merge to default branch.
+copySnippet: |-
+  # Trigger
+  "Apply the GitHub Actions security review capability pack to these workflows."
+
+  # Required output
+  1) Workflow threat summary
+  2) permissions and GITHUB_TOKEN findings
+  3) Secrets and fork PR risks
+  4) Hardening recommendations with doc citations
+  5) Privacy-safe review summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions"
+  - "https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions"
+  - "https://docs.github.com/en/actions/security-guides/automatic-token-authentication"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Workflow YAML files or PR diff containing GitHub Actions changes."
+  - "Repository branch protection and environments policy context."
+  - "Security reviewer before applying hardening to default branch."
+safetyNotes:
+  - "Workflow changes can exfiltrate secrets on fork PRs—review pull_request_target and untrusted checkout patterns."
+  - "Over-broad permissions blocks increase blast radius—default to least privilege per hardening docs."
+  - "Third-party actions are supply-chain dependencies—pin to commit SHA when policy requires."
+privacyNotes:
+  - "Review summaries may reference secret names but must not echo secret values."
+  - "Redact internal runner labels and self-hosted paths in external tickets."
+tags:
+  - github-actions
+  - security
+  - ci-cd
+  - capability-pack
+readingTime: 9
+difficultyScore: 72
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in official GitHub Actions security documentation verified on **2026-06-16**.
+
+## Retrieval Sources
+
+- https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+- https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions
+- https://docs.github.com/en/actions/security-guides/automatic-token-authentication
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- GitHub hardening guide recommends explicit workflow permissions and minimal GITHUB_TOKEN scope.
+- Secrets documentation describes storing credentials in GitHub Secrets—not workflow YAML.
+- Automatic token authentication docs explain default GITHUB_TOKEN permissions and elevation risks.
+- Fork PR workflows require extra scrutiny for untrusted code execution patterns.
+- Pinning third-party actions to full commit SHAs reduces supply-chain drift.
+
+## Scope Note
+
+Community review workflow applying documented GitHub Actions security steps—not
+an official GitHub product. Differs from `github-actions-secure-cicd-capability-pack`
+(JSONbored installable pack) by focusing on pre-merge YAML review matrices tied
+to docs.github.com hardening guides.
+
+## Core Workflow
+
+1. Collect workflow files and triggered events (push, pull_request, schedule).
+2. Audit top-level and job-level `permissions` against least privilege.
+3. Flag secrets in logs, unsafe `pull_request_target`, or unpinned third-party actions.
+4. Verify fork PR guards and environment protection rules where used.
+5. Produce hardening recommendations citing official docs; require human merge approval.
+
+## Capability Scope
+
+- Workflow threat summarization.
+- GITHUB_TOKEN and permissions review.
+- Secrets handling and fork PR risk checks.
+- Third-party action pinning recommendations.
+- Privacy-safe review report for maintainers.
+
+## Production Rules
+
+- Never paste secret values into skill output or public comments.
+- Block merge on over-privileged `permissions: write-all` without justification.
+- Require SHA-pinned actions when org policy mandates supply-chain controls.
+- Escalate suspected secret exfiltration paths to security owners immediately.
+
+## Review Matrix
+
+| Signal | Action |
+| --- | --- |
+| Missing permissions block | Add least-privilege defaults |
+| pull_request_target + checkout PR head | Flag high fork risk |
+| Secret echoed in run logs | Block merge; rotate secret |
+| Floating @v tag on action | Recommend full SHA pin |
+
+## Output Contract
+
+1. Workflow threat summary.
+2. Permissions and token findings.
+3. Secrets and fork PR risks.
+4. Hardening recommendations with doc citations.
+5. Privacy-safe review summary.
+
+## Troubleshooting
+
+**Issue:** Workflow fails after permission tightening
+**Fix:** Grant minimal additional scopes per job; avoid global write-all.
+
+**Issue:** Cannot pin action SHA
+**Fix:** Record exception with owner approval and monitor action releases.
+
+## Duplicate Check
+
+Related to `github-actions-secure-cicd-capability-pack` and `pull-request-triage-capability-pack`
+but distinct slug, output contract, and hardening-doc focus for security review invocation.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` from public GitHub documentation.

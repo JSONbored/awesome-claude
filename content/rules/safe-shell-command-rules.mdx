@@ -218,6 +218,33 @@ distinct because it gives portable do/don't behavior for AI coding agents
 deciding whether a proposed shell command is safe to run in an interactive
 coding session.
 
+## Quoting Example and ShellCheck Codes
+
+ShellCheck SC2086 ("Double quote to prevent globbing and word splitting") flags unquoted variables because the shell will "Split...by IFS (spaces, tabs and line feeds)" then "Expand each of them as if it was a glob." Quote the expansion so values with spaces or glob characters survive intact.
+
+```bash
+# Flagged by SC2086
+echo $1
+for i in $*; do :; done
+for i in $@; do :; done
+
+# Fixed
+echo "$1"
+for i in "$@"; do :; done
+```
+
+Common ShellCheck codes an agent should respect before running a command:
+
+| Code | Issue |
+| --- | --- |
+| SC2086 | Double quote to prevent globbing and word splitting. |
+| SC2046 | Quote this to prevent word splitting. |
+| SC2068 | Double quote array expansions to avoid re-splitting elements. |
+| SC2115 | Use `"${var:?}"` to ensure this never expands to `/*`. |
+| SC2164 | Use `cd ... \|\| exit` in case `cd` fails. |
+
+SC2115 is the destructive case worth memorizing: `rm -rf "$STEAMROOT/"*` expands to `rm -rf "/"*` if `STEAMROOT` is empty, so use `rm -rf "${STEAMROOT:?}/"*` to fail instead of deleting the filesystem.
+
 ## References
 
 - ShellCheck wiki: https://github.com/koalaman/shellcheck/wiki

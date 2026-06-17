@@ -1,0 +1,237 @@
+---
+title: Claude Agent SDK Custom Tool Authoring Capability Pack Skill
+slug: claude-agent-sdk-custom-tool-authoring-capability-pack
+category: skills
+description: >-
+  Expert Claude Agent SDK custom tool authoring capability pack for designing typed
+  in-process tools with createSdkMcpServer, allowedTools scoping, isError handling,
+  and privacy-safe rollout checklists aligned to official custom-tools documentation.
+cardDescription: >-
+  Author Claude Agent SDK custom tools with source-backed schemas, allowlists,
+  error handling, and production review matrices.
+seoTitle: Claude Agent SDK Custom Tool Authoring Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Agent SDK custom tool authoring: tool()
+  schemas, createSdkMcpServer registration, allowedTools, isError responses, and
+  structured output contracts from official custom-tools documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1507
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1507"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/custom-tools"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when designing or reviewing Claude Agent SDK custom tools before
+  registering them with createSdkMcpServer and passing them to query via mcpServers.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Agent SDK custom tool authoring capability pack for this tool set."
+
+  # Required output
+  1) Tool inventory with side-effect classification
+  2) Schema and allowedTools review findings
+  3) Error-handling and permission plan
+  4) Staging verification checklist
+  5) Privacy-safe rollout summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/agent-sdk/custom-tools"
+  - "https://code.claude.com/docs/en/agent-sdk/overview"
+  - "https://code.claude.com/docs/en/agent-sdk/permissions"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Claude Agent SDK installed for TypeScript or Python with a working query loop."
+  - "Zod (TypeScript) or dict/JSON Schema (Python) for tool input contracts."
+  - "Written list of side effects each custom tool may perform and who approves them."
+  - "Staging environment to validate allowedTools, permissions, and error paths."
+safetyNotes:
+  - "Tool descriptions and annotations are hints, not enforcement—validate destructive inputs in handlers."
+  - "Wildcard mcp__server__* allowlists expand blast radius; prefer per-tool grants in production."
+  - "Throwing from a handler stops the query; return isError for recoverable failures per custom-tools docs."
+  - "In-process tools run inside your application whenever Claude calls them; gate writes explicitly."
+privacyNotes:
+  - "Tool schemas, inputs, and results enter model context each turn—never embed secrets in descriptions."
+  - "Large tool sets increase context usage; defer rarely used tools via tool search when scaling."
+  - "Structured outputs and logs may reach host telemetry—redact customer identifiers at handler boundaries."
+  - "External APIs invoked by handlers may log request metadata governed by vendor retention policies."
+tags:
+  - agent-sdk
+  - custom-tools
+  - mcp
+  - developer-tools
+  - capability-pack
+keywords:
+  - Claude Agent SDK custom tool authoring capability pack
+  - createSdkMcpServer tool design checklist
+  - Agent SDK allowedTools mcp__ review
+  - Claude Agent SDK isError tool handling
+  - in-process MCP tool authoring workflow
+readingTime: 9
+difficultyScore: 80
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Agent SDK custom-tools, overview,
+permissions, and skills documentation verified on **2026-06-16**. SDK tool APIs
+and permission defaults change with releases; prefer live official docs over cached
+assumptions.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/agent-sdk/custom-tools
+- https://code.claude.com/docs/en/agent-sdk/overview
+- https://code.claude.com/docs/en/agent-sdk/permissions
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Agent SDK custom-tools documentation on
+**2026-06-16**:
+
+- Custom tools are defined with name, description, input schema, and async handler
+  using `tool()` in TypeScript or `@tool` in Python.
+- Handlers return a required `content` array plus optional `structuredContent` and
+  `isError` fields; `isError: true` keeps the agent loop alive instead of throwing.
+- Tools are bundled with `createSdkMcpServer` / `create_sdk_mcp_server` as an
+  in-process MCP server passed to `query` via `mcpServers`.
+- Fully qualified tool names use `mcp__{server_name}__{tool_name}` and must appear
+  in `allowedTools` to run without permission prompts when intended.
+- Annotations such as `readOnlyHint` guide parallel calls but do not block writes;
+  enforcement belongs in handler code.
+- Tool search documentation supports loading large tool sets on demand to reduce
+  per-turn context cost.
+
+## Scope Note
+
+This is a community reusable workflow skill—not an official Anthropic product.
+It applies documented Agent SDK custom tool authoring steps for schema design,
+registration, allowlisting, and error handling. Step-by-step tutorials live in
+`content/guides/`; this pack provides review matrices and output contracts for
+teams authoring production tool sets.
+
+## Core Workflow
+
+1. Inventory proposed tools, side effects, and external dependencies.
+2. Draft name, description, and typed input schema per custom-tools documentation.
+3. Implement handlers returning `content`; use `isError` for recoverable failures.
+4. Wrap tools in `createSdkMcpServer` with a stable server name segment.
+5. Map fully qualified `mcp__server__tool` names for `allowedTools` review.
+6. Classify read-only versus write tools; align annotations with actual behavior.
+7. Plan tool search or deferred loading when tool count threatens context limits.
+8. Run staging queries validating permissions, errors, and structured outputs.
+9. Produce privacy-safe rollout summary for platform or security reviewers.
+
+## Capability Scope
+
+- Custom tool schema and side-effect classification.
+- In-process MCP server registration review.
+- allowedTools and permission scoping checklists.
+- isError and structuredContent handling plans.
+- Tool search scaling notes for large catalogs.
+- Privacy-safe rollout summaries.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when authoring or reviewing Agent
+  SDK custom tool sets before production deployment.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, Generic AGENTS**: apply the checklist when evaluating
+  in-process tool designs against public Agent SDK documentation.
+
+## Required Inputs
+
+- Proposed tool names, descriptions, and handler responsibilities.
+- Target SDK language (TypeScript or Python) and package versions.
+- Permission policy for allowedTools, hooks, and human approval gates.
+- Staging project or sandbox credentials for safe validation.
+
+## Production Rules
+
+- Validate destructive inputs inside handlers; never rely on descriptions alone.
+- Prefer explicit per-tool allowlists over broad wildcards in production.
+- Return `isError` instead of throwing for expected failure modes.
+- Keep secrets out of schemas, descriptions, and sample tool results.
+- Cap parallel write tools; use `readOnlyHint` only for genuinely read-only handlers.
+- Document rollback: remove server from mcpServers and shrink allowedTools.
+- Require human approval before enabling write tools in autonomous workflows.
+
+## Review Matrix
+
+| Topic | Signal | Action |
+| --- | --- | --- |
+| Write tool | Mutates data or deploys | Foreground approval + narrow allowlist |
+| Read-only research | No side effects | readOnlyHint + parallel OK |
+| External API | Network egress | Document data sent and timeouts |
+| Large tool set | Context bloat | Enable tool search deferral |
+| Handler throws | Query crash | Switch to isError responses |
+| Wildcard allowlist | mcp__svc__* | Replace with named tools |
+
+## Output Contract
+
+1. Tool inventory with side-effect classification.
+2. Schema and allowedTools review findings.
+3. Error-handling and permission plan.
+4. Staging verification checklist.
+5. Privacy-safe rollout summary.
+
+## Troubleshooting
+
+**Issue:** Tool never invoked despite registration
+**Fix:** Confirm `mcpServers` key matches server name and `allowedTools` lists `mcp__server__tool`.
+
+**Issue:** Permission prompts on every call
+**Fix:** Add intended tools to `allowedTools` or document deliberate prompt workflow.
+
+**Issue:** Query terminates on handler failure
+**Fix:** Return `{ isError: true, content: [...] }` instead of throwing exceptions.
+
+**Issue:** Context grows with many tools
+**Fix:** Apply tool search patterns from custom-tools docs to defer unused schemas.
+
+## Duplicate Check
+
+Checked `content/skills/`, `content/guides/`, open PRs, and the live catalog for
+Agent SDK custom tool workflows. Guides such as `custom-tools-with-the-claude-agent-sdk`
+teach implementation steps. `claude-agent-sdk-mcp-integration-capability-pack` covers
+MCP integration rollout, not per-tool authoring review. No `skills` entry provides
+this reusable custom tool authoring capability pack with review matrix and output
+contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by `kiannidev`.
+It is based on public Claude Agent SDK documentation, the public Anthropic
+`claude-code` repository, and Google Search Central helpful-content guidance. No
+paid placement, referral link, affiliate link, or vendor sponsorship is used.

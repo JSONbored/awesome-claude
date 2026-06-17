@@ -27,13 +27,43 @@ describe("PR preview artifact validation flow", () => {
           source: "status",
         },
         {
-          url: "https://heyclaude-dev.zeronode.workers.dev",
+          url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
           source: "deploy",
         },
       ]),
     ).toEqual({
-      url: "https://heyclaude-dev.zeronode.workers.dev",
+      url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
       source: "deploy",
+    });
+  });
+
+  it("ignores sibling-project and retired dev-worker URLs", () => {
+    // The account hosts other projects; their deployment statuses must never be
+    // selected as a HeyClaude preview (regression: gittensory.aethereal.dev).
+    // The retired dev worker hosts must also be rejected now that it is gone.
+    for (const url of [
+      "https://gittensory.aethereal.dev",
+      "https://heyclaude-dev.zeronode.workers.dev",
+      "https://dev.heyclau.de",
+    ]) {
+      expect(
+        selectPreviewUrl([{ url, source: "github-deployment:x" }]),
+      ).toBeNull();
+    }
+    expect(
+      selectPreviewUrl([
+        {
+          url: "https://gittensory.aethereal.dev",
+          source: "github-deployment:gittensory",
+        },
+        {
+          url: "https://heyclau.de",
+          source: "github-deployment:Production",
+        },
+      ]),
+    ).toEqual({
+      url: "https://heyclau.de",
+      source: "github-deployment:Production",
     });
   });
 
@@ -49,12 +79,12 @@ describe("PR preview artifact validation flow", () => {
           source: "github-status:CodeRabbit",
         },
         {
-          url: "https://heyclaude-dev.zeronode.workers.dev",
+          url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
           source: "github-deployment:preview",
         },
       ]),
     ).toEqual({
-      url: "https://heyclaude-dev.zeronode.workers.dev",
+      url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
       source: "github-deployment:preview",
     });
   });
@@ -74,14 +104,19 @@ describe("PR preview artifact validation flow", () => {
         /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
       )?.[0] || "";
     expect(previewBlock).toContain(
-      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
+      "group: deployment-artifacts-pr-preview-${{ github.ref }}\n",
     );
     expect(previewBlock).not.toContain("github.event.pull_request.number");
-    expect(workflow).toContain("ALLOW_SHARED_DEV_WORKER_PREVIEW");
-    expect(workflow).toContain("https://heyclaude-dev.zeronode.workers.dev");
+    // The shared heyclaude-dev worker has been retired; PR previews resolve from
+    // the real per-PR prod preview-version deployment statuses, and the resolver
+    // degrades gracefully (--allow-missing) instead of falling back to dev.
+    expect(workflow).not.toContain("ALLOW_SHARED_DEV_WORKER_PREVIEW");
+    expect(workflow).not.toContain(
+      "https://heyclaude-dev.zeronode.workers.dev",
+    );
     expect(workflow).toContain("--wait-seconds 600");
     expect(workflow).not.toContain("REQUIRE_PR_PREVIEW");
-    expect(workflow).not.toContain("--allow-missing");
+    expect(workflow).toContain("--allow-missing");
     expect(workflow).toContain("pnpm validate:deployment-artifacts");
     expect(workflow).toContain(
       "Deployed preview did not satisfy the artifact contract before timeout.",

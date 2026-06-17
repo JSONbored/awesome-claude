@@ -1,0 +1,157 @@
+---
+title: Claude Code VS Code Extension Setup For Teams
+slug: claude-code-vs-code-extension-setup-for-teams
+category: guides
+description: >-
+  Roll out the Claude Code VS Code extension to engineering teams: install requirements,
+  sign-in flow, permission modes, shared MCP and hooks access, and managed defaults
+  using official VS Code extension documentation.
+cardDescription: >-
+  Deploy Claude Code VS Code extension to teams with permission and sign-in checklists.
+seoTitle: Claude Code VS Code Extension Setup For Teams
+seoDescription: >-
+  Team setup guide for Claude Code VS Code extension: VS Code 1.98+, install paths,
+  sign-in, permission modes, @-mentions, and Customize menu settings from official docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1387
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1387"
+documentationUrl: "https://code.claude.com/docs/en/vs-code"
+usageSnippet: >-
+  Require VS Code 1.98+, install the Claude Code extension, complete browser sign-in,
+  set claudeCode.initialPermissionMode for team policy, and document MCP/hooks access
+  through the Customize command menu.
+prerequisites:
+  - "VS Code 1.98.0 or higher on supported platforms."
+  - "Paid Claude subscription or Claude Console account for extension sign-in."
+  - "Team policy for permission modes (normal, Plan, auto-accept)."
+  - "Optional standalone CLI install if engineers need claude in integrated terminal."
+safetyNotes:
+  - "Auto-accept mode edits without per-change prompts—inappropriate for interns or untrusted repos without additional gates."
+  - "Plan mode opens plans as markdown documents; teams should review before execution proceeds."
+  - "Extension bundles its own CLI for the panel; terminal CLI requires separate install per docs."
+privacyNotes:
+  - "Session history and @-mentioned files may contain proprietary code—document retention expectations."
+  - "Remote tab resumes claude.ai cloud sessions when signed in with Claude.ai Subscription."
+  - "Launch VS Code from terminal with inherited env if using ANTHROPIC_API_KEY instead of browser sign-in."
+sourceUrls:
+  - "https://code.claude.com/docs/en/vs-code"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - vs-code
+  - teams
+  - extension
+  - onboarding
+keywords:
+  - Claude Code VS Code extension teams
+  - VS Code Claude Code setup
+  - claudeCode.initialPermissionMode
+  - Claude Code extension install
+readingTime: 8
+difficultyScore: 48
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Official VS Code extension documentation recommends VS Code 1.98+, installing the
+Claude Code extension from the marketplace, completing browser sign-in, and choosing
+permission modes (normal, Plan, auto-accept) via the prompt box or
+`claudeCode.initialPermissionMode` setting. Teams should standardize sign-in method,
+default permission mode, and MCP/hooks access through the Customize menu.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "VS Code version", "description": "VS Code 1.98.0 or higher installed"}
+- [ ] {"task": "Accounts provisioned", "description": "Team Claude subscription or Console access documented"}
+- [ ] {"task": "Policy chosen", "description": "Default permission mode approved by security"}
+- [ ] {"task": "CLI optional", "description": "Standalone CLI documented if terminal use is required"}
+
+## Core Concepts Explained
+
+### Extension vs standalone CLI
+
+Docs state the extension bundles a CLI for the chat panel, while integrated terminal
+`claude` commands require the separate CLI install.
+
+### Permission modes for teams
+
+Normal mode asks before each action. Plan mode describes work and waits for approval
+before edits. Auto-accept applies changes without prompts—set defaults under
+`claudeCode.initialPermissionMode` in VS Code settings.
+
+### Customize menu centralizes team config
+
+The `/` command menu Customize section exposes MCP servers, hooks, memory, permissions,
+and plugins—useful for documenting what teams may enable.
+
+## Step-by-Step Implementation Guide
+
+1. **Install extension.** Use marketplace search "Claude Code" or the documented
+   install link; restart VS Code if the Spark icon does not appear.
+
+2. **Open Claude panel.** Click the Spark icon in the editor toolbar, Activity Bar,
+   Command Palette, or status bar per official docs.
+
+3. **Complete sign-in.** Browser authorization on first open; reload window if sign-in
+   stalls. Launch `code .` from a terminal when relying on shell `ANTHROPIC_API_KEY`.
+
+4. **Set team default mode.** Configure `claudeCode.initialPermissionMode` in VS Code
+   settings to normal or Plan for shared repositories; restrict auto-accept to trusted
+   maintainers.
+
+5. **Document @-mention usage.** Teams can reference files and folders with `@` paths;
+   `Alt+K` / `Option+K` inserts line-range mentions from selections.
+
+6. **Standardize onboarding.** Use the built-in Learn Claude Code checklist or run
+   "Claude Code: Open Walkthrough" from the Command Palette for new hires.
+
+7. **Third-party providers.** Engineers on Bedrock or Vertex follow the documented
+   "Use third-party providers" section instead of default Claude subscription sign-in.
+
+8. **Publish team runbook.** Record supported VS Code versions, sign-in method, default
+   permission mode, and when to use Plan vs normal mode.
+
+## Troubleshooting
+
+### Sign-in loop after install
+
+Run Developer: Reload Window; confirm paid subscription or Console account eligibility.
+
+### ANTHROPIC_API_KEY ignored
+
+Start VS Code from a terminal so environment variables inherit, or use browser sign-in.
+
+### Extension missing in forked editor
+
+Search Extensions or Open VSX; fallback is standalone CLI in integrated terminal per docs.
+
+## Source Verification Notes
+
+Verified against https://code.claude.com/docs/en/vs-code on **2026-06-16**:
+
+- Requires VS Code 1.98.0+ and Claude subscription or Console sign-in.
+- Spark icon opens panel; permission modes include normal, Plan, and auto-accept.
+- Setting `claudeCode.initialPermissionMode` controls default mode.
+- Customize menu links to MCP, hooks, memory, permissions, and plugins configuration.
+- Extension bundles CLI for panel; separate CLI needed for integrated terminal commands.
+
+## Duplicate Check
+
+Complements `choose-claude-extension-surface` and JetBrains setup guides. No guide
+focuses on team rollout checklist for the VS Code extension using official install and
+permission mode documentation.
+
+## References
+
+- Use Claude Code in VS Code - https://code.claude.com/docs/en/vs-code

@@ -122,6 +122,26 @@ It covers value types, protocols, async/await, error handling, and SwiftUI archi
 grounded in [The Swift Programming Language](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/)
 and [SwiftUI documentation](https://developer.apple.com/documentation/swiftui/).
 
+## Struct vs Class Reference
+
+Choosing between value and reference semantics is the most consequential type
+decision in Swift. The following capabilities are defined in
+[Classes and Structures](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/classesandstructures/):
+
+| Capability | Struct (value type) | Class (reference type) |
+| --- | --- | --- |
+| Copied when assigned or passed to a function | Yes | No |
+| Define properties, methods, subscripts, initializers | Yes | Yes |
+| Conform to protocols; be extended | Yes | Yes |
+| Inheritance | No | Yes |
+| Type casting at runtime | No | Yes |
+| Deinitializers | No | Yes |
+| Reference counting | No | Yes |
+| Automatically generated memberwise initializer | Yes | No |
+
+Default to `struct` for models; reach for `class` only when you need inheritance,
+deinitializers, type casting, or shared reference semantics.
+
 ## Sources
 
 - [The Basics](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/thebasics/)

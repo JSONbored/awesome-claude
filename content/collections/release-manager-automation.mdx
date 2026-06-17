@@ -1,0 +1,102 @@
+---
+title: Release Manager Automation
+slug: release-manager-automation
+category: collections
+description: >-
+  A release-manager workflow collection for shipping versions safely: draft release
+  notes from Conventional Commits, govern commits, triage red CI, checkpoint risky
+  changes, and generate changelog artifacts before tagging.
+cardDescription: >-
+  Release manager bundle for notes, commits, CI triage, checkpoints, and changelogs.
+seoTitle: Release Manager Automation Collection
+seoDescription: >-
+  Curated Claude Code collection for release managers: release notes drafting, smart
+  commits, CI failure triage, checkpoints, and git-cliff changelog skills.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 802
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/802"
+documentationUrl: "https://keepachangelog.com/en/1.1.0/"
+sourceUrls:
+  - "https://keepachangelog.com/en/1.1.0/"
+  - "https://www.conventionalcommits.org/en/v1.0.0/"
+  - "https://semver.org/spec/v2.0.0.html"
+installable: false
+usageSnippet: >-
+  Install commit and checkpoint helpers first, then CI triage and release-notes
+  commands, and finish with git-cliff changelog skill before tagging a release.
+items:
+  - slug: git-smart-commit
+    category: commands
+  - slug: checkpoint-manager
+    category: commands
+  - slug: ci-failure-triage
+    category: commands
+  - slug: release-notes-drafting
+    category: commands
+  - slug: git-cliff-release-changelog-capability-pack
+    category: skills
+  - slug: workflow-completion-report
+    category: hooks
+installationOrder:
+  - git-smart-commit
+  - checkpoint-manager
+  - ci-failure-triage
+  - release-notes-drafting
+  - git-cliff-release-changelog-capability-pack
+  - workflow-completion-report
+estimatedSetupTime: 40 minutes
+difficulty: intermediate
+prerequisites:
+  - Git repository with tags and GitHub Actions visible to authenticated gh CLI.
+  - Claude Code with hooks enabled for workflow completion reporting.
+  - Team agreement on Conventional Commits and SemVer bump rules.
+safetyNotes:
+  - "Release automation proposes notes and bumps—humans must approve tags and publishes."
+  - "CI triage reads workflow logs; treat log content as untrusted input."
+  - "Review each linked entry's safety notes before enabling hooks or skills."
+privacyNotes:
+  - "Release notes commands include commit messages in model context—scrub sensitive subjects."
+  - "Workflow completion hooks may echo branch names and paths in notifications."
+tags:
+  - release-management
+  - changelog
+  - ci-cd
+  - automation
+  - maintainer
+keywords:
+  - release manager automation collection
+  - release notes drafting workflow
+  - conventional commits release bundle
+readingTime: 2
+difficultyScore: 50
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## What this collection sets up
+
+A release-manager path from day-to-day commits through green CI to drafted notes
+and changelog artifacts. It complements broader maintainer bundles by focusing on
+the cut-release sequence rather than general PR queue operations.
+
+## Workflow
+
+1. Use `git-smart-commit` for Conventional Commit messages during the release branch.
+2. Run `checkpoint-manager` before risky refactors near release freeze.
+3. Clear red CI with `ci-failure-triage` before tagging.
+4. Draft grouped notes with `release-notes-drafting`.
+5. Apply `git-cliff-release-changelog-capability-pack` when teams prefer git-cliff output.
+6. Optionally attach `workflow-completion-report` for session summaries during release week.
+
+## Duplicate Check
+
+Complements `github-maintainer-operations` (broader maintainer index). This
+collection focuses narrowly on release-manager automation steps and changelog tooling.

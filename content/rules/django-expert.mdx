@@ -91,6 +91,8 @@ copySnippet: |-
   - `pytest-django` with `@pytest.mark.django_db`
   - Factory Boy for test data; avoid fixtures when factories are clearer
   - Test permissions, serializer validation, and queryset filtering
+safetyNotes:
+  - "These are advisory Django coding rules applied to your project; review migrations, ORM queries, and on_delete cascade choices before running them against a real database."
 tags:
   - django
   - python
@@ -121,6 +123,23 @@ It covers models, migrations, class-based views, Django REST Framework, and prod
 settings — grounded in the
 [official Django documentation](https://docs.djangoproject.com/) and
 [Django REST Framework](https://www.django-rest-framework.org/).
+
+## ForeignKey `on_delete` options
+
+The rule's example uses `on_delete=models.PROTECT`. Django requires `on_delete`
+on every `ForeignKey`; this reference lists each option and its behavior when
+the referenced object is deleted, per the official
+[model field reference](https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey.on_delete).
+
+| Option         | Behavior on referenced-object delete                                                                 | Requirement                  |
+| -------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `CASCADE`      | Cascade deletes; also deletes the object containing the `ForeignKey`.                                 | —                            |
+| `PROTECT`      | Prevent deletion by raising `ProtectedError`, a subclass of `django.db.IntegrityError`.              | —                            |
+| `RESTRICT`     | Prevent deletion by raising `RestrictedError`, a subclass of `django.db.IntegrityError`.             | —                            |
+| `SET_NULL`     | Set the `ForeignKey` null.                                                                            | Only possible if `null=True` |
+| `SET_DEFAULT`  | Set the `ForeignKey` to its default value.                                                            | A default must be set        |
+| `SET()`        | Set the `ForeignKey` to the value passed to `SET()`, or the result of calling it if a callable.       | —                            |
+| `DO_NOTHING`   | Take no action; raises `IntegrityError` unless a DB-level `ON DELETE` constraint is added manually.   | —                            |
 
 ## Sources
 

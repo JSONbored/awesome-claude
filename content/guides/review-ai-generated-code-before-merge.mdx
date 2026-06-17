@@ -17,6 +17,7 @@ author: MkDev11
 authorProfileUrl: "https://github.com/MkDev11"
 submittedBy: MkDev11
 submittedByUrl: "https://github.com/MkDev11"
+documentationUrl: "https://code.claude.com/docs/en/best-practices"
 dateAdded: "2026-06-04"
 usageSnippet: >-
   Before merging AI-generated code, freeze the PR scope, inspect dependency and
@@ -40,6 +41,8 @@ privacyNotes:
   - Do not paste private code, secrets, customer data, logs, or incident details into external AI review tools unless your organization has approved that workflow.
   - Keep review notes in the pull request or internal tracker so security decisions remain auditable.
 sourceUrls:
+  - "https://code.claude.com/docs/en/best-practices"
+  - "https://code.claude.com/docs/en/sub-agents"
   - "https://docs.github.com/en/copilot/responsible-use/code-review"
   - "https://docs.github.com/en/copilot/how-tos/copilot-on-github/use-copilot-agents/review-copilot-output"
   - "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request"
@@ -47,6 +50,9 @@ sourceUrls:
   - "https://docs.github.com/en/code-security/concepts/secret-security/about-secret-scanning"
   - "https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependency-review"
   - "https://csrc.nist.gov/pubs/sp/800/218/final"
+retrievalSources:
+  - "https://code.claude.com/docs/en/best-practices"
+  - "https://code.claude.com/docs/en/sub-agents"
 tags:
   - code-review
   - ai-generated-code
@@ -164,6 +170,94 @@ not by whether the author used an AI tool.
    be able to summarize the change, name the highest-risk file, point to the
    verification evidence, and explain the rollback plan.
 
+## Reviewing With Claude Code
+
+When the diff was produced by Claude Code, you can use the same tool to add an
+independent review step. The key idea from the Claude Code best-practices guide
+is that a fresh context reviews better than the one that wrote the change: a
+reviewer running in a separate [subagent](https://code.claude.com/docs/en/sub-agents)
+context "sees only the diff and the criteria you give it, not the reasoning that
+produced the change, so it evaluates the result on its own terms." The session
+that implemented the work receives the gaps directly and can fix and re-review
+without you copying findings between windows.
+
+Claude Code ships a bundled `/code-review` skill that "reviews the current diff
+for bugs in a fresh subagent and returns findings to the session." Run it before
+treating a change as done:
+
+```text
+/code-review
+```
+
+To check a diff against your own plan or requirements instead of generic bug
+hunting, write the review prompt yourself and tell Claude to delegate it. Name
+the work to check, what to check it against, and what counts as a finding:
+
+```text
+Use a subagent to review the rate limiter diff against PLAN.md. Check that
+every requirement is implemented, the listed edge cases have tests, and
+nothing outside the task's scope changed. Report gaps, not style preferences.
+```
+
+For a reusable reviewer, define a subagent in `.claude/agents/`. Subagents are
+Markdown files with YAML frontmatter where only `name` and `description` are
+required; the body becomes the subagent's system prompt, and `tools` restricts
+what it can do (omit it to inherit all tools). The following restricts the
+reviewer to read-only tools so it cannot edit files while reviewing:
+
+```markdown
+---
+name: code-reviewer
+description: Reviews code for quality and best practices
+tools: Read, Glob, Grep
+model: sonnet
+---
+
+You are a senior reviewer. Review the current diff for:
+- Correctness against the stated requirements
+- Security-sensitive paths: auth, secrets, data deletion, networking
+- Missing tests for changed behavior
+
+Report only gaps that affect correctness or the stated requirements.
+Provide specific line references. Do not edit files.
+```
+
+Then invoke it explicitly, for example: `Use a subagent to review this code for
+security issues.` Because subagents run in their own context window with their
+own allowed tools, the review does not clutter the implementing conversation.
+
+You can also run review and verification non-interactively, which is how Claude
+Code integrates into CI pipelines and pre-commit hooks. The `claude -p` flag
+runs a single prompt without a session, and `--output-format json` returns
+structured output a script can parse:
+
+```bash
+# Run a focused review on the current diff in CI
+claude -p "Review the staged diff for security and missing tests. Report gaps only." \
+  --output-format json
+```
+
+The best-practices guide is explicit that a reviewer asked to find gaps will
+usually report some even when the work is sound. Tell the reviewer to flag only
+gaps that affect correctness or the stated requirements, and treat the rest as
+optional, to avoid over-engineering, defensive code, and tests for cases that
+cannot happen.
+
+### Review Dimensions Reference
+
+Use these dimensions when prompting a Claude Code review subagent or running
+`/code-review`. They map the source guidance onto a concrete checklist.
+
+| Dimension | What to check | How Claude Code helps |
+| --- | --- | --- |
+| Independent context | Reviewer did not write the change | Run the review in a fresh subagent or a separate session so the model is not biased toward code it just wrote |
+| Correctness vs. plan | Every requirement implemented; nothing out of scope changed | Prompt a subagent to review the diff against `PLAN.md` and report gaps |
+| Security-sensitive paths | Auth, secrets, data deletion, networking, deserialization | Use a read-only `code-reviewer` subagent (`tools: Read, Glob, Grep`) focused on these paths |
+| Verification evidence | Tests, build exit code, or a script that produces a pass/fail | "Have Claude show evidence rather than asserting success": run the check and read the result |
+| Test coverage for changes | Focused tests for the changed behavior exist | Ask the reviewer to flag changed behavior that lacks a test |
+| Finding discipline | Findings are real gaps, not style nits | Tell the reviewer to report only gaps affecting correctness or requirements |
+| Automated gate | Review runs without a human present | `claude -p "..." --output-format json` in CI or a pre-commit hook |
+
 ## Reviewer Checklist
 
 - [ ] {"task": "Scope is narrow", "description": "The PR changes one behavior or one coherent workflow"}
@@ -203,6 +297,8 @@ provide a source-backed guide for the human merge decision on generated code.
 
 ## References
 
+- Claude Code Docs: Best practices (adversarial review, verification, `/code-review`) - https://code.claude.com/docs/en/best-practices
+- Claude Code Docs: Create custom subagents - https://code.claude.com/docs/en/sub-agents
 - GitHub Docs: Reviewing proposed changes in a pull request - https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request
 - GitHub Docs: Responsible use of GitHub Copilot code review - https://docs.github.com/en/copilot/responsible-use/code-review
 - GitHub Docs: Review output from Copilot - https://docs.github.com/en/copilot/how-tos/copilot-on-github/use-copilot-agents/review-copilot-output

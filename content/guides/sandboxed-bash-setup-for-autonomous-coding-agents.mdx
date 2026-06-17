@@ -111,14 +111,14 @@ Even with `autoAllowBashIfSandboxed` (auto-allow mode), the sandbox does not bla
 | Content-scoped ask rules like `Bash(git push *)` | Still force a prompt even for sandboxed commands |
 | A bare `Bash` ask rule, or the equivalent `Bash(*)` form | Skipped for sandboxed commands; still applies to commands that fall back to the regular permission flow |
 
-When a subprocess tool an agent runs (`kubectl`, `terraform`, or `npm`) needs to write outside the working directory, grant the specific path with `sandbox.filesystem.allowWrite` rather than excluding the tool from the sandbox entirely:
+When a subprocess tool an agent runs (`kubectl`, `terraform`, or `npm`) needs to write outside the working directory, grant only disposable project-local or temporary paths with `sandbox.filesystem.allowWrite` rather than excluding the tool from the sandbox entirely. Do not make home credential directories such as `~/.kube`, `~/.aws`, or `~/.ssh` writable for autonomous sandboxed commands.
 
 ```json
 {
   "sandbox": {
     "enabled": true,
     "filesystem": {
-      "allowWrite": ["~/.kube", "/tmp/build"]
+      "allowWrite": ["./.agent-tmp", "/tmp/build"]
     }
   }
 }

@@ -129,9 +129,8 @@ async function renderSitemap() {
     ...intersectionPaths.map((pathname) => urlItem(pathname, "0.55")),
     ...COMPARISONS.map((comparison) => urlItem(`/compare/${comparison.slug}`, "0.6")),
     ...bestPaths.map((pathname) => urlItem(pathname, "0.75")),
-    // Advertise only indexable entry pages. `tools` entries are commercial,
-    // thin-by-design listings (see isSitemapIndexableEntry / AGENTS.md): still
-    // crawlable via internal links, just not advertised in the sitemap.
+    // Advertise every indexable entry page (all categories, including `tools`).
+    // Entries opt out per-entry with `robotsIndex:false` (see isSitemapIndexableEntry).
     ...ENTRIES.filter(isSitemapIndexableEntry).map((entry) =>
       urlItem(
         `/entry/${entry.category}/${entry.slug}`,

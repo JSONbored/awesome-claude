@@ -1,0 +1,171 @@
+---
+title: Hosting The Claude Agent SDK With Multi-Tenant Isolation
+slug: hosting-the-claude-agent-sdk-with-multi-tenant-isolation
+category: guides
+description: >-
+  Isolate Claude Agent SDK tenants in shared containers using documented options:
+  per-tenant cwd, settingSources disabled, CLAUDE_CONFIG_DIR, CLAUDE_CODE_DISABLE_AUTO_MEMORY,
+  and per-tenant egress rules from official hosting documentation.
+cardDescription: >-
+  Isolate Agent SDK tenants with cwd, config dir, and settingSources options.
+seoTitle: Hosting The Claude Agent SDK With Multi-Tenant Isolation
+seoDescription: >-
+  Guide to multi-tenant Claude Agent SDK hosting: per-tenant working directories,
+  settingSources, CLAUDE_CONFIG_DIR, disable auto memory, and egress isolation from
+  official Agent SDK hosting documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1399
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1399"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/hosting"
+usageSnippet: >-
+  For each tenant call query() with a dedicated cwd, settingSources disabled,
+  CLAUDE_CONFIG_DIR pointed at a tenant-only directory, CLAUDE_CODE_DISABLE_AUTO_MEMORY=1,
+  and per-tenant egress rules at your outbound proxy.
+prerequisites:
+  - "Agent SDK application hosting multiple tenants in one container or host."
+  - "Per-tenant filesystem paths no other tenant can read."
+  - "Outbound proxy supporting per-tenant credentials or domain allowlists."
+  - "Understanding that default SDK behavior loads shared CLAUDE.md and settings from disk."
+safetyNotes:
+  - "Default SDK behavior can leak one tenant's CLAUDE.md or settings into another session without isolation options."
+  - "Auto memory at ~/.claude/projects/.../memory/ loads regardless of settingSources unless CLAUDE_CODE_DISABLE_AUTO_MEMORY=1."
+  - "Each agent session maps to one subprocess—size RAM for concurrent tenants per hosting docs."
+privacyNotes:
+  - "Session transcripts default to local disk under ~/.claude/projects/ unless mirrored with SessionStore."
+  - "Per-tenant cwd should exclude other tenants' artifact directories."
+  - "Proxy logs may capture tool URLs—apply retention policies per tenant policy."
+sourceUrls:
+  - "https://code.claude.com/docs/en/agent-sdk/hosting"
+  - "https://code.claude.com/docs/en/agent-sdk/secure-deployment"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-agent-sdk
+  - hosting
+  - multi-tenant
+  - isolation
+  - deployment
+keywords:
+  - Claude Agent SDK multi-tenant isolation
+  - settingSources tenant isolation
+  - CLAUDE_CONFIG_DIR per tenant
+  - Agent SDK shared container tenants
+readingTime: 8
+difficultyScore: 62
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Official Agent SDK hosting documentation describes multi-tenant isolation when
+one container serves multiple tenants: disable filesystem settings with
+`settingSources: []`, set `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`, point
+`CLAUDE_CONFIG_DIR` at a tenant-only directory, pass a dedicated `cwd` on every
+`query()` call, and apply per-tenant egress rules at your proxy.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Tenant paths", "description": "Separate cwd and configDir per tenant with filesystem permissions"}
+- [ ] {"task": "Proxy policy", "description": "Per-tenant outbound credentials or allowlists documented"}
+- [ ] {"task": "Capacity plan", "description": "RAM sized for one subprocess per concurrent session"}
+- [ ] {"task": "Storage strategy", "description": "SessionStore configured if tenants resume across restarts"}
+
+## Core Concepts Explained
+
+### Why defaults are unsafe for multi-tenant hosts
+
+Hosting docs state that default SDK behavior reads settings and CLAUDE.md memory
+files from the filesystem. Shared containers without isolation can leak one
+tenant's context into another tenant's session.
+
+### Four SDK-level isolation options
+
+Documentation lists: `settingSources: []` (or `setting_sources=[]` in Python),
+`CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`, per-tenant `CLAUDE_CONFIG_DIR`, and explicit
+`cwd` on every `query()` call.
+
+### Network isolation is separate
+
+Per-tenant egress rules (distinct outbound IPs, credentials, or domain allowlists)
+are applied at your proxy, not inside the SDK call alone.
+
+## Step-by-Step Implementation Guide
+
+1. **Provision per-tenant directories.** Create `tenantDir` and `configDir` paths
+   with permissions so tenants cannot read each other's files.
+
+2. **Apply SDK options on every query.** TypeScript example from official docs:
+
+```typescript
+for await (const message of query({
+  prompt,
+  options: {
+    cwd: tenantDir,
+    settingSources: [],
+    env: {
+      ...process.env,
+      CLAUDE_CONFIG_DIR: configDir,
+      CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1",
+    },
+  },
+})) {
+  // handle messages
+}
+```
+
+3. **Configure outbound proxy.** Route each tenant through distinct credentials or
+   domain allowlists per hosting documentation.
+
+4. **Mirror transcripts if sessions resume.** Use a `SessionStore` adapter when
+   tenants expect hybrid or long-running patterns across container restarts.
+
+5. **Size concurrency.** Hosting docs recommend measuring peak RSS per session;
+   default starting point is 1 GiB RAM per agent subprocess.
+
+6. **Validate isolation.** Run two tenants concurrently and confirm neither reads
+   the other's cwd artifacts or config files.
+
+## Troubleshooting
+
+### Tenant still sees another project's CLAUDE.md
+
+Confirm `settingSources: []` and dedicated `cwd`; verify auto memory disabled with
+`CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`.
+
+### Sessions lost after restart
+
+Configure `SessionStore`; local transcripts under `~/.claude/projects/` do not
+survive container restarts by default.
+
+### Rate limits on wide subagent fanouts
+
+Hosting docs advise breaking work into smaller batches rather than one large parallel dispatch.
+
+## Source Verification Notes
+
+Verified against https://code.claude.com/docs/en/agent-sdk/hosting on **2026-06-16**:
+
+- Multi-tenant isolation section documents `settingSources`, `CLAUDE_CODE_DISABLE_AUTO_MEMORY`,
+  `CLAUDE_CONFIG_DIR`, per-tenant `cwd`, and per-tenant egress at the proxy.
+- Each session maps to one CLI subprocess with local transcript state by default.
+- Hybrid and long-running patterns require `SessionStore` for transcript durability.
+- Secure Deployment doc covers additional network and credential hardening.
+
+## Duplicate Check
+
+Complements `secure-deployment-for-claude-agent-sdk-applications` (network and
+credential hardening) and `external-session-storage-for-claude-agent-sdk-hosts`
+(SessionStore). This guide focuses on the documented multi-tenant isolation options
+inside shared Agent SDK hosts.
+
+## References
+
+- Hosting the Agent SDK - https://code.claude.com/docs/en/agent-sdk/hosting

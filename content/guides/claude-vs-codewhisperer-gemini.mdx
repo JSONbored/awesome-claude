@@ -1,25 +1,34 @@
 ---
-title: Claude vs Amazon Q Developer vs Gemini Code AWS Guide 2025
+title: Claude Code vs Amazon Q Developer vs Gemini Code Assist
 slug: claude-vs-codewhisperer-gemini
 category: guides
 description: >-
-  Compare Claude vs Amazon Q Developer vs Gemini Code for AWS cloud development.
-  Real benchmarks, pricing analysis, and production use cases for selection.
-cardDescription: Compare Claude vs Amazon Q Developer vs Gemini Code for AWS cloud development.
-seoTitle: Claude vs Amazon Q Developer vs Gemini Code AWS Guide 2025
+  Capability comparison of Claude Code, Amazon Q Developer (formerly
+  CodeWhisperer), and Google Gemini Code Assist: form factor, agentic vs
+  completion, IDE support, cloud ties, and free tiers.
+cardDescription: >-
+  Compare Claude Code, Amazon Q Developer (formerly CodeWhisperer), and Google
+  Gemini Code Assist on form factor, agentic features, and ecosystem fit.
+seoTitle: Claude Code vs Amazon Q Developer vs Gemini Code Assist
 seoDescription: >-
-  Compare Claude vs Amazon Q Developer vs Gemini Code for AWS cloud development.
-  Real benchmarks, pricing analysis, and production use cases for selection.
+  Capability comparison of Claude Code, Amazon Q Developer (formerly
+  CodeWhisperer), and Google Gemini Code Assist: form factor, agentic vs
+  completion, IDE support, cloud ecosystem ties, and free tiers.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/overview"
+retrievalSources:
+  - "https://code.claude.com/docs/en/overview"
+  - "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html"
+  - "https://docs.cloud.google.com/gemini/docs/codeassist"
 installable: false
 usageSnippet: >-
-  Comprehensive comparison of Claude Code, Amazon Q Developer (formerly
-  CodeWhisperer), and Google Gemini Code Assist for cloud development. We
-  analyzed platform integration, AWS features, pricing, and real performance
-  metrics to help you choose the best AI coding assistant for your cloud
-  infrastructure needs.
+  Capability comparison of Claude Code, Amazon Q Developer (formerly
+  CodeWhisperer), and Google Gemini Code Assist. Grounded in each vendor's
+  official docs to help you pick the right AI coding assistant for your stack.
+privacyNotes:
+  - "This guide compares third-party AI coding tools; each tool sends your code and prompts to its own provider under that vendor's terms, so review each tool's data-handling and retention policy before using it on sensitive code."
 tags:
   - comparison
   - cloud-development
@@ -41,102 +50,58 @@ robotsFollow: true
 
 ## TL;DR
 
-Comprehensive comparison of Claude Code, Amazon Q Developer (formerly CodeWhisperer), and Google Gemini Code Assist for cloud development. We analyzed platform integration, AWS features, pricing, and real performance metrics to help you choose the best AI coding assistant for your cloud infrastructure needs.
+Claude Code, Amazon Q Developer (formerly CodeWhisperer), and Google Gemini Code Assist are three AI coding assistants with different center-of-gravity. This guide compares them qualitatively on form factor, where they run, agentic vs completion behavior, IDE integration, cloud-ecosystem tie-in, and free access. Every claim is grounded in each vendor's own documentation.
 
 **Key Points:**
 
-- Amazon Q Developer - Deep AWS integration with 250+ services - $19/month
-- Google Gemini Code - 180,000 free completions monthly - $19/month Standard
-- Claude Code - Superior multi-cloud support and code quality - $40-200/month
-- Q Developer wins for AWS-only teams based on native integration and pricing
+- **Claude Code** is an agentic coding tool that runs in the terminal, IDEs, a desktop app, and the browser, and is provider-neutral rather than tied to one cloud.
+- **Amazon Q Developer** is an AWS-centric assistant in IDEs, AWS consoles/websites, and chat apps, with a free tier (AWS Builder ID) and a Pro subscription.
+- **Gemini Code Assist** is Google Cloud's assistant across IDEs and Google Cloud surfaces (console, BigQuery, Firebase), with Standard and Enterprise editions.
+- Choose by ecosystem and workflow: deep AWS ops favor Q Developer, Google Cloud favors Gemini Code Assist, and cloud-agnostic agentic work favors Claude Code.
 
-Choosing the right AI assistant for cloud development impacts productivity and costs. This comparison examines Claude Code, Amazon Q Developer, and Google Gemini Code Assist based on real-world implementations, benchmarks, and enterprise deployments. Each platform shows distinct strengths across AWS services, multi-cloud support, and pricing models.
+This comparison is qualitative. It deliberately avoids unsourced benchmarks and pricing figures that drift; pricing is described by tier only, with vendor pricing pages linked. Confirm current prices and limits on the official pages before deciding.
 
-> **Comparison Overview**
->
-> **Tools Compared:** Claude Code, Amazon Q Developer, Google Gemini Code Assist  
-> **Use Case Focus:** AWS and cloud infrastructure development  
-> **Comparison Date:** September 2025  
-> **Data Sources:** Enterprise case studies, SWE-bench, METR studies, vendor documentation  
-> **Testing Methodology:** Analysis of real deployments and benchmarks
+## Capability Comparison
 
-## Quick Comparison Table
+| Capability | Claude Code | Amazon Q Developer (formerly CodeWhisperer) | Google Gemini Code Assist |
+| --- | --- | --- | --- |
+| Form factor | Agentic coding tool that reads your codebase, edits files, and runs commands | Generative-AI conversational assistant for building, extending, and operating AWS apps | AI development assistant for building, deploying, and operating apps on Google Cloud |
+| Where it runs | Terminal CLI, VS Code, JetBrains, desktop app, and browser (claude.ai/code) | IDE extensions, AWS Management Console / AWS websites / Console Mobile App, and chat apps (Slack, Microsoft Teams) | IDE extensions, Google Cloud console, and Google Cloud surfaces (BigQuery Studio, Firebase, Apigee) |
+| Agentic vs completion | Agentic: plans, edits across multiple files, runs commands, opens PRs; can run agent teams | Both: inline code completions plus chat, code generation, security scans, and code upgrades/transformations | Both: inline code completion and generation, chat, plus agentic multi-step tasks using tools and MCP |
+| IDE integration | VS Code, Cursor, and JetBrains (IntelliJ, PyCharm, WebStorm) via official extensions/plugin | VS Code, JetBrains IDEs, Visual Studio (AWS Toolkit), and Eclipse (Preview) | VS Code, JetBrains (IntelliJ, PyCharm), Android Studio, Cloud Shell Editor, and Cloud Workstations |
+| Cloud-ecosystem tie-in | Provider-neutral; extensible to external systems via MCP (e.g., Google Drive, Jira, Slack) | Deep AWS focus: built on Amazon Bedrock, augmented with AWS content; chat about your AWS resources and architecture | Deep Google Cloud focus: integrates with BigQuery, Firebase, Cloud Run, Apigee, and Application Integration |
+| Free access | Most surfaces require a Claude subscription or Anthropic Console account; Terminal CLI and VS Code also support third-party providers | Free tier via AWS Builder ID (no AWS account required) plus the Amazon Q Developer Pro subscription | Standard and Enterprise editions; a separate consumer "for individuals" product exists |
 
-<!-- Section type: comparison_table -->
+## Per-Tool Summary
 
-## Detailed Platform Analysis
+### Claude Code
 
-<!-- Section type: tabs -->
+Claude Code is an agentic coding tool: it reads your codebase, edits files, runs commands, and integrates with your development tools. It is available in the terminal, in VS Code (and Cursor) and JetBrains IDEs, in a desktop app, and in the browser, with the same engine and your `CLAUDE.md`, settings, and MCP servers working across all surfaces. It works directly with git (commits, branches, pull requests), can run multiple agents in parallel, and connects to external systems through the Model Context Protocol. It is not tied to a single cloud provider, which makes it a fit for multi-cloud and provider-agnostic work. Most surfaces require a Claude subscription or Anthropic Console account; the Terminal CLI and VS Code can also use third-party model providers.
 
-## Performance Benchmarks
+### Amazon Q Developer (formerly CodeWhisperer)
 
-> **Benchmark Methodology**
->
-> **Testing Period:** Analysis of recent deployments and benchmarks
->
-> **Test Environment:** AWS Lambda, EC2, GCP Cloud Functions, Azure Functions  
-> **Evaluation Criteria:** Code quality, response time, acceptance rate, security vulnerabilities  
-> **Data Source:** SWE-bench, METR studies, GitClear analysis, enterprise case studies
+AWS renamed CodeWhisperer to Amazon Q Developer. It is a generative-AI conversational assistant built on Amazon Bedrock and augmented with AWS content, designed to help you understand, build, extend, and operate AWS applications. In an IDE it provides inline code completions, chat about code, net-new code generation, security vulnerability scanning, and code upgrades such as language updates, debugging, and optimizations. Beyond IDEs (VS Code, JetBrains, Visual Studio, Eclipse Preview), it runs inside the AWS Management Console, AWS documentation and websites, the Console Mobile App, and chat apps like Slack and Microsoft Teams. It offers a free tier you can use with an AWS Builder ID (no AWS account required) and a paid Amazon Q Developer Pro subscription.
 
-<!-- Section type: comparison_table -->
+### Google Gemini Code Assist
 
-## Use Case Analysis
+Gemini Code Assist is Google Cloud's AI development assistant for building, deploying, and operating applications. It provides code completion and generation across popular languages, chat that uses your open-file context for tasks like writing tests and debugging, and agentic capabilities that complete multi-step tasks using system tools and MCP servers. It runs in VS Code, JetBrains IDEs, Android Studio, the Cloud Shell Editor, and Cloud Workstations, and integrates with Google Cloud surfaces including BigQuery Studio, Firebase, Cloud Run, Apigee, and Application Integration. It is offered in Standard and Enterprise editions (Enterprise adds code customization from private repositories and broader Google Cloud integration); a separate consumer "Gemini Code Assist for individuals" product also exists.
 
-<!-- Section type: accordion -->
+## Which to Choose
 
-## Real User Experiences
-
-<!-- Section type: expert_quote -->
-
-> **User Feedback Summary**
->
-> **Survey Source:** Enterprise deployment analysis
-> **Sample Size:** Large-scale developer survey
-> **Top Satisfaction Factors:** Q Developer AWS integration, Gemini free tier, Claude code quality  
-> **Common Concerns:** Claude pricing, Gemini performance delays, Q Developer multi-cloud limitations
-
-## Decision Framework
-
-<!-- Section type: feature_grid -->
-
-## Cost Analysis
-
-<!-- Section type: comparison_table -->
-
-## Migration Considerations
-
-> **Switching Costs and Considerations**
->
-> **Data Export:** Q Developer and Claude support code export; Gemini requires manual extraction  
-> **Training Impact:** Teams need 1-2 weeks adapting to new platforms based on surveys  
-> **Integration Changes:** AWS tools require minimal changes for Q Developer adoption  
-> **Downtime Estimate:** Zero downtime for gradual adoption; 2-3 days for full switch
-
-## Final Recommendation
-
-## TL;DR
-
-Based on comprehensive analysis comparing Claude Code, Amazon Q Developer, and Google Gemini Code Assist, our recommendation for AWS-focused teams is Amazon Q Developer. This choice provides native AWS integration, built-in security scanning, and reasonable pricing while addressing cloud development requirements effectively.
-
-**Key Points:**
-
-- AWS-only teams: Q Developer delivers unmatched native integration at $19/month
-- Multi-cloud enterprises: Claude justifies premium with superior quality and flexibility
-- Budget-conscious teams: Gemini's 180,000 free completions provide exceptional value
-- Hybrid approach: Many organizations combine tools for optimal results
+- **Operating and building on AWS:** Amazon Q Developer is the natural fit. It is built on Amazon Bedrock, augmented with AWS content, can chat about your AWS resources and architecture, and reaches into AWS consoles and the Console Mobile App. The Builder ID free tier makes it easy to evaluate.
+- **Working in Google Cloud:** Gemini Code Assist ties directly into BigQuery, Firebase, Cloud Run, Apigee, and the Google Cloud console, with agentic multi-step tasks and MCP support.
+- **Cloud-agnostic or multi-cloud agentic work:** Claude Code is provider-neutral and agentic across the terminal, IDEs, desktop, and browser. It is a strong fit when you want one tool that edits across files, runs commands, opens PRs, and extends to external systems via MCP without being anchored to a single cloud.
+- **Many teams use more than one.** These tools are not mutually exclusive: a team can use a cloud-native assistant for ops on its primary cloud and an agentic tool for cross-cutting code changes.
 
 ## Frequently Asked Questions
 
+**Is CodeWhisperer the same as Amazon Q Developer?** Yes. AWS renamed CodeWhisperer to Amazon Q Developer; the inline-completion capabilities are now part of Amazon Q Developer.
+
+**Which tools offer free access?** Amazon Q Developer has a free tier via an AWS Builder ID (no AWS account required). Gemini Code Assist offers paid Standard/Enterprise editions plus a separate consumer "for individuals" product. Most Claude Code surfaces require a Claude subscription or Anthropic Console account.
+
+**Which is the most agentic?** Claude Code is built around agentic workflows (planning, multi-file edits, running commands, agent teams). Gemini Code Assist adds agentic multi-step tasks alongside completion. Amazon Q Developer combines inline completion with chat, generation, security scans, and code transformations.
+
 ## Related Resources
 
-<!-- Section type: related_content -->
 
-> **Make Your Decision**
->
-> **Ready to choose?** Use this comparison data to evaluate which tool best fits your cloud development needs.
->
-> **Need more specific guidance?** Join our [community](/community) to discuss your requirements with users of all three platforms.
->
-> **Want hands-on experience?** Q Developer and Gemini offer free tiers for testing. Claude requires subscription but delivers immediate value.
-
-_Last updated: September 2025 | Comparison based on enterprise deployments and official benchmarks | Found this helpful? Share with your team and explore more [AI tool comparisons](/guides/comparisons)._
+_Comparison grounded in official vendor documentation: [Claude Code](https://code.claude.com/docs/en/overview), [Amazon Q Developer](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html), and [Gemini Code Assist](https://docs.cloud.google.com/gemini/docs/codeassist). Confirm current pricing and limits on each vendor's pricing page. Found this helpful? Explore more [AI tool comparisons](/guides/comparisons)._

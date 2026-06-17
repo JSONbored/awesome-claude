@@ -135,6 +135,33 @@ keywords:
 
 Add this rule set to your project's `CLAUDE.md` to configure Claude as a .NET and C# expert. It covers modern C# language features, ASP.NET Core Minimal APIs, Entity Framework Core query patterns, async/await best practices, typed configuration with `IOptions`, and integration testing with `WebApplicationFactory` and Testcontainers — all grounded in the [official Microsoft .NET documentation](https://learn.microsoft.com/en-us/dotnet/) and [ASP.NET Core documentation](https://learn.microsoft.com/en-us/aspnet/core/).
 
+## .NET 9 / C# 13 Reference
+
+C# 13 ships with the .NET 9 SDK. Selected features and what each enables, per the official Microsoft docs:
+
+| C# 13 feature | What it does |
+| --- | --- |
+| `params` collections | The `params` modifier isn't limited to array types; you can now use `params` with `System.Span<T>`, `System.ReadOnlySpan<T>`, and types that implement `IEnumerable<T>` and have an `Add` method |
+| New `lock` type and semantics | The `lock` statement recognizes the new `System.Threading.Lock` type and uses its `Lock.EnterScope()` API rather than `System.Threading.Monitor` |
+| New escape sequence `\e` | Character literal escape for the `ESCAPE` character, Unicode `U+001B` (previously `\u001b` or `\x1b`) |
+| `ref struct` interfaces | A `ref struct` can implement interfaces, but cannot be converted to an interface type because that boxing conversion could violate ref safety |
+| `allows ref struct` | Generic declarations can add the anti-constraint `where T : allows ref struct`, allowing a `ref struct` as a type argument |
+| Overload resolution priority | The compiler recognizes `OverloadResolutionPriorityAttribute` so library authors can prefer one overload over another |
+
+With `params` collections, method declarations can declare spans as `params` parameters:
+
+```csharp
+public void Concat<T>(params ReadOnlySpan<T> items)
+{
+    for (int i = 0; i < items.Length; i++)
+    {
+        Console.Write(items[i]);
+        Console.Write(" ");
+    }
+    Console.WriteLine();
+}
+```
+
 ## Sources
 
 - [ASP.NET Core documentation](https://learn.microsoft.com/en-us/aspnet/core/)

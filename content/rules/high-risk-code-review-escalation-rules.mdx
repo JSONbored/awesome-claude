@@ -219,6 +219,21 @@ The previously closed PR for this slot was closed for branch shape because it
 included generated/output churn and no canonical source MDX file for the
 submitted item. This submission adds exactly one source rules file.
 
+## What a Reviewer Looks For
+
+Beyond the escalation triggers above, ground routine review depth in the Google Engineering Practices code review guidance. It enumerates what a reviewer examines in every change, in rough priority order.
+
+| Review aspect | What the reviewer checks (per Google eng-practices) |
+| --- | --- |
+| Design | "The most important thing to cover in a review is the overall design of the CL." |
+| Functionality | "Does this CL do what the developer intended? Is what the developer intended good for the users of this code?" |
+| Complexity | "Is the CL more complex than it should be? Check this at every level of the CL." |
+| Tests | "Ask for unit, integration, or end-to-end tests as appropriate for the change." |
+| Naming | "A good name is long enough to fully communicate what the item is or does." |
+| Comments | "Did the developer write clear comments in understandable English?" |
+| Documentation | "If a CL changes how users build, test, interact with, or release code, check to see that it also updates associated documentation." |
+| Every line | "In the general case, look at every line of code that you have been assigned to review." |
+
 ## References
 
 - Google Engineering Practices code review guidance: https://google.github.io/eng-practices/review/reviewer/looking-for.html

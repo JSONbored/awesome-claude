@@ -1,0 +1,141 @@
+---
+title: Secure Claude Code Hooks For Team Repositories
+slug: secure-claude-code-hooks-for-team-repositories
+category: guides
+description: >-
+  Secure Claude Code hooks in shared repositories: version-control hook configs, code review for PreToolUse and PostToolUse scripts, least-privilege matchers, secret scanning, and rollback when hook behavior changes.
+cardDescription: >-
+  Secure team Claude Code hooks with review, least-privilege matchers, and rollback.
+seoTitle: Secure Claude Code Hooks For Team Repositories
+seoDescription: >-
+  Guide to securing Claude Code hooks for team repos: review hook scripts, version-control settings, matcher scope, secrets hygiene, and rollback from official hooks documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1181
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1181"
+documentationUrl: "https://code.claude.com/docs/en/hooks-guide"
+usageSnippet: >-
+  Store hooks in committed settings or plugin hooks directories, require CODEOWNERS review for hook changes, restrict matchers to necessary tools, run hooks in CI sandbox when possible, and document disable steps.
+prerequisites:
+  - "Ability to edit project or managed settings.json hook blocks."
+  - "CODEOWNERS or security review path for hook script changes."
+  - "Inventory of tools hooks may block, modify, or log."
+  - "Staging repo to test hook behavior before org-wide rollout."
+safetyNotes:
+  - "Hooks run shell commands on developer machines with user privileges—treat hook scripts like production code."
+  - "PreToolUse hooks can block or rewrite tool calls; misconfiguration can halt all agent work."
+  - "Never commit secrets into hook env blocks—use secret managers or local-only overrides."
+privacyNotes:
+  - "Hook logs may capture file paths, command text, and tool arguments from sessions."
+  - "Shared hook configs should avoid customer identifiers in example matchers."
+  - "Disable verbose hook logging before exporting transcripts externally."
+sourceUrls:
+  - "https://code.claude.com/docs/en/hooks-guide"
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - hooks
+  - security
+  - teams
+  - governance
+keywords:
+  - secure Claude Code hooks team repos
+  - Claude Code hooks code review
+  - PreToolUse PostToolUse hook security
+readingTime: 8
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Secure team Claude Code hooks with review, least-privilege matchers, and rollback.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Check", "description": "Ability to edit project or managed settings.json hook blocks."}
+- [ ] {"task": "Check", "description": "CODEOWNERS or security review path for hook script changes."}
+- [ ] {"task": "Check", "description": "Inventory of tools hooks may block, modify, or log."}
+- [ ] {"task": "Check", "description": "Staging repo to test hook behavior before org-wide rollout."}
+
+## Core Concepts Explained
+
+### Hooks execute locally
+
+Official hooks documentation describes shell commands Claude Code runs around tool
+use. Scripts inherit the developer environment.
+
+### Matchers limit blast radius
+
+Narrow matchers to specific tools (for example Bash, Write) instead of wildcard
+blocks that surprise contributors.
+
+### Version control enables review
+
+Committing hook definitions lets teams require security review before rollout.
+
+## Step-by-Step Implementation Guide
+
+1. **Inventory hook events.** List PreToolUse, PostToolUse, SessionStart, or
+other events your team needs.
+
+2. **Draft minimal matchers.** Scope each hook to required tools only.
+
+3. **Implement scripts in-repo.** Keep hook scripts beside settings with executable
+permissions documented in README.
+
+4. **Run security review.** Scan for curl-to-bash, credential reads, or outbound
+webhooks without approval.
+
+5. **Test on staging repo.** Verify hooks block expected cases without breaking
+normal agent workflows.
+
+6. **Require CODEOWNERS approval.** Treat hook diffs like CI workflow changes.
+
+7. **Document disable path.** Explain how on-call disables hooks via settings or
+managed policy during incidents.
+
+8. **Monitor hook failures.** Log hook stderr to a team sink with retention policy.
+
+## Troubleshooting
+
+### Hooks block all Bash after upgrade
+
+Review matcher patterns; confirm hook script exit codes match documented success semantics.
+
+### Secret leaked into committed hook env
+
+Rotate secret, remove from git history per team policy, move to local-only env.
+
+### Hook works locally but not for teammate
+
+Confirm relative paths and OS-specific dependencies; document required packages.
+
+## Source Verification Notes
+
+Verified against official documentation on **2026-06-16**:
+
+- Hooks guide documents PreToolUse, PostToolUse, and other hook events with matcher patterns.
+- Project hooks live in version-controlled settings consumed by all teammates.
+- Hooks execute local shell commands—supply-chain review applies to hook scripts.
+- Matchers should scope events to specific tools to reduce accidental global blocks.
+- Teams can disable hooks via settings rollback or temporary managed overrides.
+
+## Duplicate Check
+
+Complements `security-guidance-plugin-before-merge` and team settings guides. No existing guide walks through securing version-controlled Claude Code hooks for shared repositories.
+
+## References
+
+- Primary documentation - https://code.claude.com/docs/en/hooks-guide

@@ -1,0 +1,155 @@
+---
+title: Agent Skills ZIP Packaging QA Capability Pack Skill
+slug: agent-skills-zip-packaging-qa-capability-pack
+category: skills
+description: >-
+  Expert Agent Skills ZIP packaging QA capability pack applying documented skills directory layout, SKILL.md frontmatter checks, archive validation, and install smoke tests from official skills and plugin packaging documentation.
+cardDescription: >-
+  QA Agent Skills ZIP packages with layout, frontmatter, and install checklists.
+seoTitle: Agent Skills ZIP Packaging QA Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Agent Skills ZIP packaging QA: layout validation, frontmatter checks, archive smoke tests—not an official Anthropic product.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1536
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1536"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/skills"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill before publishing or submitting Agent Skills ZIP archives to validate layout, metadata, and install behavior.
+copySnippet: |-
+  # Trigger
+  "Apply the agent skills ZIP packaging QA capability pack."
+
+  # Required output
+  1) Archive layout and manifest findings
+  2) Frontmatter and metadata gaps
+  3) Install smoke test results
+  4) Security and secret scan summary
+  5) Release readiness verdict
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/plugins"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Skill source tree or ZIP archive ready for QA."
+  - "Claude Code profile to test local skill discovery."
+  - "Checklist owner before publishing to marketplace or HeyClaude."
+safetyNotes:
+  - "ZIP archives can bundle scripts and hooks—scan for outbound network calls before distribution."
+  - "Do not publish archives containing secrets, tokens, or personal machine paths."
+  - "Treat installable skill zips as supply-chain artifacts requiring checksum publication."
+privacyNotes:
+  - "Example prompts in skills may contain internal codenames—redact before public release."
+  - "QA logs may capture file paths from developer machines—sanitize shared reports."
+tags:
+  - skills
+  - packaging
+  - zip
+  - qa
+  - capability-pack
+readingTime: 8
+difficultyScore: 68
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in official Claude Code skills and plugin packaging documentation verified on **2026-06-16**.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/plugins
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- Skills documentation describes skill directories, SKILL.md metadata, and discovery paths in Claude Code.
+- Plugin docs cover packaging layouts for distributing skills, hooks, and commands in archives.
+- Teams validate archives with test installs before sharing internally or submitting to directories.
+- Frontmatter fields should match HeyClaude category expectations when submitting to awesome-claude.
+- Checksums or signed releases reduce tampering risk for shared ZIP distributions.
+
+## Scope Note
+
+Community QA workflow applying documented packaging steps—not an official Anthropic QA product. Complements `packaging-claude-code-plugins-as-zip-archives` guide with skill-specific review matrices.
+
+## Core Workflow
+
+1. Verify archive root contains expected skill folder and SKILL.md or .mdx layout per docs.
+2. Validate frontmatter: name, description, allowed-tools hints, and retrieval sources when applicable.
+3. Scan for secrets, absolute paths, and unexpected binaries.
+4. Test install or symlink into Claude Code skills path; invoke skill once in staging.
+5. Record checksum, version, and reviewer sign-off before release.
+
+## Capability Scope
+
+- Layout and manifest validation.
+- Metadata completeness review.
+- Secret and path hygiene scan.
+- Install smoke test checklist.
+- Release readiness verdict with rollback notes.
+
+## Production Rules
+
+- Block release when secrets or unpinned remote install scripts are detected.
+- Require human sign-off before publishing installable zips to shared marketplaces.
+- Document checksum and source commit in release notes.
+- Redact internal paths from QA reports shared externally.
+
+## Review Matrix
+
+| Finding | Action |
+| --- | --- |
+| Missing SKILL.md | Block release |
+| Secret in tree | Rotate and remove before repack |
+| Install fails | Fix layout before distribution |
+| Metadata drift | Align to skills doc before submit |
+
+## Output Contract
+
+1. Layout findings.
+2. Metadata gaps.
+3. Smoke test results.
+4. Security scan summary.
+5. Release readiness verdict.
+
+## Troubleshooting
+
+**Issue:** Skill not discovered after install
+**Fix:** Confirm path matches documented skills directory and reload Claude Code session.
+
+**Issue:** ZIP too large for email distribution
+**Fix:** Host on git release with checksum instead of ad-hoc file shares.
+
+## Duplicate Check
+
+Complements `packaging-claude-code-plugins-as-zip-archives` (plugin zips) and HeyClaude validation scripts. No skills capability pack focuses on ZIP QA matrices for Agent Skills.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` from public documentation.

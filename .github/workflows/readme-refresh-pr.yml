@@ -21,6 +21,7 @@ jobs:
   refresh-readme:
     if: ${{ github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'docs(readme):') }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     concurrency:
       # Serialize all runs because each writes the shared automation/readme-refresh branch.
       group: refresh-readme-automation-readme-refresh

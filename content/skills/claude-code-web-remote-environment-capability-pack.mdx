@@ -1,0 +1,169 @@
+---
+title: Claude Code Web Remote Environment Capability Pack Skill
+slug: claude-code-web-remote-environment-capability-pack
+category: skills
+description: >-
+  Expert Claude Code web remote environment capability pack applying documented cloud session isolation, network controls, and credential proxy patterns from official Claude Code on the web documentation.
+cardDescription: >-
+  Review Claude Code on the web environments with network and credential checklists.
+seoTitle: Claude Code Web Remote Environment Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack applying documented Claude Code steps from official documentation—not an official Anthropic product.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1521
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1521"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/claude-code-on-the-web"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when planning or reviewing claude code web remote environment capability pack workflows using official Claude Code documentation.
+copySnippet: |-
+  # Trigger
+  "Apply the claude code web remote environment capability pack capability pack."
+
+  # Required output
+  1) Scope and configuration checklist
+  2) Risk and policy findings
+  3) Review matrix actions
+  4) Verification and rollback plan
+  5) Privacy-safe summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/claude-code-on-the-web"
+  - "https://code.claude.com/docs/en/security"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code version and plan eligibility per official documentation."
+  - "Team policy for autonomous or scheduled workflows."
+  - "Staging environment for safe validation."
+  - "Human owner for production rollout approval."
+safetyNotes:
+  - "Autonomous workflows can run shell commands without mid-run user input—scope paths and tools first."
+  - "Do not enable destructive automation without explicit approval gates."
+  - "Review outputs as draft until a human validates evidence."
+privacyNotes:
+  - "Workflow and session output may contain proprietary code and credentials."
+  - "Summaries for external channels require redaction."
+tags:
+  - claude-code
+  - capability-pack
+readingTime: 9
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in official Claude Code documentation verified on **2026-06-16**. Behavior can change with releases; prefer live docs.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/claude-code-on-the-web
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- Claude Code on the web runs in isolated Anthropic-managed VMs with network access controls.
+- Security documentation describes scoped credentials inside sandboxes and branch restrictions for git push.
+- Cloud environments are automatically cleaned up after session completion.
+- Operations are logged for compliance per official security docs.
+
+## Scope Note
+
+Community reusable workflow skill applying documented steps—not an official Anthropic product. Applies web/cloud execution docs—not generic remote desktop control.
+
+## Core Workflow
+
+1. Confirm task fits cloud VM constraints (network, secrets, repo access).
+2. Configure allowed domains or disable network per policy.
+3. Use scoped credentials—never paste long-lived secrets into prompts.
+4. Validate git push stays on working branch per docs.
+5. Export privacy-safe run summary for auditors.
+
+## Capability Scope
+
+- Configuration and eligibility checklist.
+- Risk and policy review.
+- Staging verification steps.
+- Rollback planning.
+- Privacy-safe stakeholder summary.
+
+## Compatibility
+
+### Native
+
+- **Claude Code**: use as an Agent Skill during rollout planning.
+
+### Manual Adaptation
+
+- **Generic AGENTS**: apply checklist against public documentation.
+
+## Required Inputs
+
+- Target repository or organization context.
+- Current settings and policy constraints.
+- Stakeholders for security review when applicable.
+
+## Production Rules
+
+- Require human approval before production-impacting automation.
+- Redact secrets from skill outputs and public tickets.
+- Prefer official documentation over forum assumptions.
+- Document rollback before enabling scheduled or autonomous runs.
+
+## Review Matrix
+
+| Signal | Action |
+| --- | --- |
+| Missing repro | Block autonomous run |
+| Broad tool scope | Narrow allowlists |
+| Draft findings | Label unverified until human review |
+| Policy drift | Align to managed settings |
+
+## Output Contract
+
+1. Scope and configuration summary.
+2. Findings with severity.
+3. Review matrix actions.
+4. Verification and rollback plan.
+5. Privacy-safe summary.
+
+## Troubleshooting
+
+**Issue:** Feature unavailable on your plan
+**Fix:** Confirm `/status` and official doc eligibility requirements.
+
+**Issue:** Run stalls on permissions
+**Fix:** Pre-approve read tools in staging; narrow path scope.
+
+## Duplicate Check
+
+Complements cloud security sections in security guide; no dedicated skills capability pack for web environment review.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` from public Claude Code documentation. No paid placement or affiliate links.

@@ -12,6 +12,10 @@ dateAdded: "2025-10-15"
 documentationUrl: "https://pandas.pydata.org/"
 downloadUrl: /downloads/skills/csv-excel-data-wrangler.zip
 installable: true
+privacyNotes:
+  - "The skill reads your CSV/Excel/JSON files locally with pandas; processing stays on-machine, but generated outputs and logs can contain values from your source data — review before sharing."
+safetyNotes:
+  - "Installs Python packages (pip install pandas openpyxl) and runs scripts that read and write data files, overwriting outputs at the target path; review transformations before running on important data."
 installCommand: pip install pandas openpyxl
 usageSnippet: pip install pandas openpyxl
 copySnippet: |-
@@ -56,18 +60,11 @@ tags:
   - pandas
   - python
 keywords:
-  - claude
-  - csv
-  - data
-  - data-cleaning
-  - development
-  - excel
-  - pandas
-  - python
-  - skills
-  - tools
-  - wrangler
-  - xlsx
+  - csv excel data wrangling
+  - pandas data cleaning
+  - excel automation python
+  - data wrangling claude code
+  - xlsx to csv
 readingTime: 4
 packageVerified: true
 difficultyScore: 94
@@ -165,7 +162,7 @@ Claude will:
 ```
 "Clean this customer export:
 1. Remove duplicate emails (keep most recent)
-2. Standardize phone numbers to (XXX) XXX-XXXX format
+2. Standardize phone numbers to (NNN) NNN-NNNN format
 3. Fill missing company names with 'Unknown'
 4. Split full_name into first_name and last_name
 5. Export as customers_clean.xlsx"

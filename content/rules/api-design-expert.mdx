@@ -16,7 +16,12 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
-documentationUrl: "https://swagger.io/specification/"
+documentationUrl: "https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design"
+retrievalSources:
+  - "https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design#define-restful-web-api-resource-uris"
+  - "https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design#define-restful-web-api-methods"
+  - "https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design#implement-versioning"
+  - "https://swagger.io/specification/"
 installable: false
 usageSnippet: >-
   You are an expert API designer with deep knowledge of modern API architecture,
@@ -173,6 +178,10 @@ copySnippet: >-
 
   Always prioritize developer experience, maintainability, and scalability in
   your API designs.
+safetyNotes:
+  - "These are advisory API-design rules applied to your code and specs; they make no network requests and change no infrastructure. Review any generated endpoints and auth flows before deploying."
+privacyNotes:
+  - "API examples reference auth tokens, API keys, and request/response payloads; keep real secrets and personal data out of committed specs and example values."
 tags:
   - api
   - rest
@@ -292,3 +301,53 @@ You are an expert API designer with deep knowledge of modern API architecture, s
 - Include troubleshooting guides
 
 Always prioritize developer experience, maintainability, and scalability in your API designs.
+
+## Reference: HTTP method semantics on resources
+
+The table below summarizes how the standard HTTP methods behave against a collection versus an individual item, following the resource conventions in the Microsoft Azure Web API Design guide (see "Define RESTful web API methods"). Apply these consistently so behavior is predictable across endpoints.
+
+| Method | Collection (`/customers`) | Item (`/customers/1`) | Idempotent | Typical success codes |
+| --- | --- | --- | --- | --- |
+| GET | Retrieve all customers | Retrieve customer 1 | Yes | 200, 204, 404 |
+| POST | Create a new customer (server assigns URI) | Error (don't POST to a specific item URI) | No | 201 (with `Location`), 200, 400 |
+| PUT | Bulk update of customers | Replace/update customer 1 | Yes | 200, 201, 204, 409 |
+| PATCH | Bulk partial update | Partial update of customer 1 | No | 200, 400, 409, 415 |
+| DELETE | Remove all customers | Remove customer 1 | Yes | 204, 404 |
+
+Key rules from the guide: clients must not invent their own URI on POST (the server assigns it and returns it in the `Location` header), PUT must be idempotent while POST and PATCH are not, and PATCH bodies use a media type such as `application/merge-patch+json` or `application/json-patch+json`.
+
+## Reference: choosing a versioning strategy
+
+The guide describes four versioning approaches, each with caching and HATEOAS trade-offs. Pick one and apply it uniformly:
+
+| Strategy | Example | Cache-friendly | Notes |
+| --- | --- | --- | --- |
+| URI | `/v2/customers/3` | Yes | Simple to route, but every HATEOAS link must carry the version. |
+| Query string | `/customers/3?version=2` | Yes | Same URI semantics; some old proxies skip caching query-string responses. |
+| Header | `Custom-Header: api-version=2` | No | Keeps URIs clean; needs request logic and complicates shared caches. |
+| Media type | `Accept: application/vnd.contoso.v2+json` | No | Well suited to HATEOAS; falls back to 406 on unknown types. |
+
+## Example: paginated, filtered collection request
+
+Implement pagination with `limit`/`offset` (with sensible defaults such as `limit=25&offset=0`) and expose filtering through query-string parameters, as recommended in the guide's "Implement data pagination and filtering" section. Cap `limit` to help prevent denial-of-service abuse.
+
+```http
+GET https://api.contoso.com/orders?status=shipped&minCost=100&limit=25&offset=50
+Accept: application/json
+```
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "items": [ { "orderId": 51, "orderValue": 99.9, "productId": 1, "quantity": 1 } ],
+  "limit": 25,
+  "offset": 50,
+  "links": [
+    { "rel": "next", "href": "https://api.contoso.com/orders?status=shipped&minCost=100&limit=25&offset=75", "action": "GET" }
+  ]
+}
+```
+
+The `links` array follows the HATEOAS principle from the guide: each response carries hypermedia links so clients can navigate related resources and pages without prior knowledge of the URI scheme.

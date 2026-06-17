@@ -17,6 +17,10 @@ author: dpdanpittman
 authorProfileUrl: "https://github.com/dpdanpittman"
 submittedBy: dpdanpittman
 submittedByUrl: "https://github.com/dpdanpittman"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+retrievalSources:
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://docs.ollama.com/cli"
 dateAdded: "2026-06-02"
 usageSnippet: >-
   Build a self-hosted AI dev stack — local models (Ollama), a fleet of MCP
@@ -87,7 +91,20 @@ Local-first is not the same as fully air-gapped. In this architecture a frontier
 
 ## Step-by-Step Implementation Guide
 
-1. **Install a local model runtime.** Install [Ollama](https://github.com/ollama/ollama) and `ollama pull` a small instruct model. Use it for cheap delegation (summarizing logs, first-pass drafts) and as your offline fallback.
+1. **Install a local model runtime.** Install [Ollama](https://github.com/ollama/ollama), pull a small instruct model, and confirm the local API is up. Ollama serves on `localhost:11434` by default; use the model for cheap delegation (summarizing logs, first-pass drafts) and as your offline fallback.
+
+   ```bash
+   # Pull a model and run it interactively
+   ollama pull <model>
+   ollama run <model>
+
+   # Inspect local state
+   ollama list   # installed models
+   ollama ps     # currently loaded models
+
+   # Run the API server explicitly (it also starts on demand)
+   ollama serve  # listens on localhost:11434
+   ```
 
 2. **Pick your MCP servers.** Start from the official [Model Context Protocol servers](https://github.com/modelcontextprotocol/servers) — `filesystem`, `git`, `memory`, `fetch`, and friends. These run as local stdio processes.
 
@@ -95,7 +112,26 @@ Local-first is not the same as fully air-gapped. In this architecture a frontier
 
 4. **Add persistent local memory.** Run the `memory` MCP server with its store pointed at local disk. This is the knowledge graph your agent reads and writes across sessions — and it never leaves your machine.
 
-5. **Wire the orchestrator.** Point Claude Code at each server's endpoint with `claude mcp add --transport http <name> <MCP_ENDPOINT_URL>`, where `<MCP_ENDPOINT_URL>` is your gateway's address for that server (an HTTP endpoint on a private network, or HTTPS if you front it with TLS). The config must use `"type": "http"` — bare `"url"` entries are silently ignored.
+5. **Wire the orchestrator.** Point Claude Code at each server's endpoint with `claude mcp add --transport http`. The HTTP transport is the recommended way to connect remote/networked MCP servers. Add `--scope` to control where the config is stored (`local` is the default; `project` writes a shareable `.mcp.json`; `user` makes it available across all your projects), and pass auth as an HTTP header when your gateway requires it.
+
+   ```bash
+   # Add a self-hosted HTTP MCP server (default = local scope)
+   claude mcp add --transport stdio memory -- npx -y @modelcontextprotocol/server-memory
+
+   # Make it available across all your projects
+   claude mcp add --transport stdio memory --scope user -- npx -y @modelcontextprotocol/server-memory
+
+   # Front your gateway with auth and pass a bearer token
+   claude mcp add --transport http secure-fs https://mcp.box.ts.net/mcp \
+     --header "Authorization: Bearer your-token"
+
+   # Verify, inspect, and manage
+   claude mcp list
+   claude mcp get memory
+   claude mcp remove memory
+   ```
+
+   You can also add a server from JSON with `claude mcp add-json`. HTTP entries use `"type": "http"` (the spec name `streamable-http` is accepted as an alias) with a `url` field and an optional `headers` object; `.mcp.json` supports `${VAR}` / `${VAR:-default}` expansion in `url` and `headers`, so secrets stay out of version control. For servers that need OAuth, run `/mcp` inside Claude Code to complete the browser login.
 
 6. **(Optional) Reach it from anywhere.** Put the host on a private network ([Tailscale](https://tailscale.com)) so your laptop, desktop, and any other machine connect to the same stack without exposing it to the internet.
 
@@ -110,15 +146,37 @@ Local-first is not the same as fully air-gapped. In this architecture a frontier
 - **You own the ops.** Self-hosting means you patch, secure, and monitor the stack; exposing MCP over HTTP demands network discipline (private network or auth).
 - **Hardware matters.** Useful local models need real RAM/VRAM; large models need a GPU.
 
+## Command Reference
+
+The commands that wire the stack together, grounded in the official Ollama CLI and Claude Code MCP docs.
+
+| Command | Layer | What it does |
+| --- | --- | --- |
+| `ollama pull <model>` | Model runtime | Download a model to the local store |
+| `ollama run <model>` | Model runtime | Run a model interactively (loads it if needed) |
+| `ollama list` / `ollama ps` | Model runtime | List installed models / list currently loaded models |
+| `ollama serve` | Model runtime | Start the API server on `localhost:11434` |
+| `claude mcp add --transport http <name> <url>` | Orchestrator | Connect Claude Code to a networked MCP server over HTTP |
+| `claude mcp add --transport http <name> <url> --header "Authorization: Bearer ..."` | Orchestrator | Add an HTTP server with an auth header |
+| `claude mcp add ... --scope user` | Orchestrator | Store the server config for all projects (`local` is default; `project` writes `.mcp.json`) |
+| `claude mcp add-json <name> '<json>'` | Orchestrator | Add a server from JSON (`"type": "http"`, with `url` + optional `headers`) |
+| `claude mcp list` / `claude mcp get <name>` / `claude mcp remove <name>` | Orchestrator | List / inspect / remove configured servers |
+| `/mcp` (inside Claude Code) | Orchestrator | Check server status and complete OAuth login for remote servers |
+
+MCP scopes are stored as follows: `local` and `user` live in `~/.claude.json`; `project` lives in a checked-in `.mcp.json` at the project root. Adjust the MCP server startup timeout with the `MCP_TIMEOUT` environment variable (for example, `MCP_TIMEOUT=10000 claude` for a 10-second timeout).
+
 ## Troubleshooting
 
-- **MCP client won't connect** → use `claude mcp add --transport http`; bare `"url"` entries don't work.
-- **A server reports OK then dies** → it likely needs credentials/permissions that fail after startup; check the server logs.
+- **MCP client won't connect** → use `claude mcp add --transport http`; HTTP entries must carry `"type": "http"` (or its alias `streamable-http`) with a `url`.
+- **A server reports OK then dies** → it likely needs credentials/permissions that fail after startup; check the server logs. If a remote server returns `401`/`403`, Claude Code flags it in `/mcp` for an OAuth login. If you set a static `Authorization` header that the server rejects, the connection is reported as failed rather than falling back to OAuth — verify the token or remove the header.
+- **Server drops mid-session** → HTTP/SSE servers reconnect automatically with exponential backoff (up to five attempts); after that, retry from `/mcp`. Stdio (local process) servers are not reconnected automatically.
 - **Local model too slow or weak** → use a smaller quantized model, or keep local inference for delegation and route hard tasks to the frontier orchestrator.
 
 ## References
 
+- Ollama CLI reference — https://docs.ollama.com/cli
 - Ollama — https://ollama.com · https://github.com/ollama/ollama
+- Claude Code — Connect to tools via MCP — https://code.claude.com/docs/en/mcp
 - Model Context Protocol — https://modelcontextprotocol.io
 - MCP servers — https://github.com/modelcontextprotocol/servers
 - supergateway — https://github.com/supercorp-ai/supergateway

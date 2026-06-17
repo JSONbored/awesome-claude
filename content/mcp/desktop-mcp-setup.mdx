@@ -1,52 +1,66 @@
 ---
 title: Claude Desktop MCP Setup
 slug: desktop-mcp-setup
+documentationUrl: "https://modelcontextprotocol.io/quickstart/user"
+retrievalSources:
+  - "https://modelcontextprotocol.io/quickstart/user"
+  - "https://code.claude.com/docs/en/mcp"
 safetyNotes:
-  - Only add trusted MCP servers and restrict configured filesystem paths or app permissions to the minimum needed for the workflow.
+  - Local MCP servers run as processes on your machine with your user account's privileges, so they can perform any file or system operation you can. Only add servers you trust, and restrict filesystem server paths to the minimum directories the workflow needs.
+  - Each Claude Desktop tool call (file write, delete, move) requires your explicit approval before it executes; review every request before approving.
 privacyNotes:
-  - Configured servers may expose local files, prompts, app data, or account metadata depending on the tools and paths enabled.
+  - Configured servers receive the prompts, file contents, and directory data needed to run their tools, and may store credentials (API keys, tokens) passed through the env block.
+  - The claude_desktop_config.json file holds server commands, file paths, and environment-variable names; keep it private and do not commit it to public repositories.
 category: mcp
 description: >-
-  Master Claude Desktop MCP server setup in 20 minutes. Complete config JSON
-  tutorial with filesystem integration, troubleshooting, and proven solutions.
-cardDescription: Master Claude Desktop MCP server setup in 20 minutes.
+  Configure MCP servers in the Claude Desktop app by editing
+  claude_desktop_config.json. Grounded walkthrough covering config file
+  locations, the mcpServers JSON structure, the filesystem server, and how to
+  verify and troubleshoot the connection.
+cardDescription: Set up local MCP servers in Claude Desktop via claude_desktop_config.json.
 seoTitle: Claude Desktop MCP Setup
 seoDescription: >-
-  Master Claude Desktop MCP server setup in 20 minutes. Complete config JSON
-  tutorial with filesystem integration, troubleshooting, and proven solutions.
+  Configure MCP servers in the Claude Desktop app via claude_desktop_config.json.
+  Config file locations per OS, the mcpServers JSON structure, the filesystem
+  server, plus verification and troubleshooting.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
-dateAdded: "2025-10-27"
 brandName: Anthropic
 brandDomain: anthropic.com
 brandAssetSource: brandfetch
 installable: true
-installCommand: >-
-  claude mcp add --transport http server-name https://api.example.com/mcp &&
-  claude mcp list
-usageSnippet: >-
-  claude mcp add --transport http server-name https://api.example.com/mcp &&
-  claude mcp list
+packageVerified: true
+downloadUrl: /downloads/mcp/desktop-mcp-setup.mcpb
+dateAdded: "2025-10-27"
 copySnippet: |-
   {
     "mcpServers": {
       "filesystem": {
         "command": "npx",
-        "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/username/Documents"]
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-filesystem",
+          "/Users/username/Desktop",
+          "/Users/username/Downloads"
+        ]
       }
     }
   }
 configSnippet: |-
-  Manual-only setup:
+  Edit via Settings > Developer > Edit Config, then restart Claude Desktop:
   {
     "mcpServers": {
       "filesystem": {
         "command": "npx",
-        "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/username/Documents"]
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-filesystem",
+          "/Users/username/Desktop"
+        ]
       }
     }
   }
-estimatedSetupTime: 3 minutes
+estimatedSetupTime: 10 minutes
 difficulty: beginner
 prerequisites:
   - "Claude Desktop installed and running (macOS, Windows, or Linux)"
@@ -75,202 +89,68 @@ prerequisites:
     syntax
 tags:
   - tutorial
-  - intermediate
+  - beginner
   - configuration
   - mcp-servers
 keywords:
-  - "2025"
-  - claude
-  - complete
+  - claude desktop
+  - claude_desktop_config.json
   - configuration
-  - configure
-  - desktop
-  - development
-  - how
-  - intermediate
+  - filesystem server
   - mcp
   - mcp servers
-  - mcp-servers
-  - servers
+  - model context protocol
+  - npx
   - setup
-  - tools
-  - tutorial
-readingTime: 4
-difficultyScore: 100
+  - stdio
+readingTime: 6
+difficultyScore: 20
 hasTroubleshooting: true
-hasPrerequisites: false
+hasPrerequisites: true
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
-downloadUrl: /downloads/mcp/desktop-mcp-setup.mcpb
-packageVerified: true
 ---
 
-## Content
+## Overview
 
-## TL;DR
+Claude Desktop can connect to local MCP (Model Context Protocol) servers, which are programs that run on your computer and expose tools Claude can call with your approval — reading files, querying a database, searching the web, and more. You enable these servers by editing a single JSON file, `claude_desktop_config.json`, that tells Claude Desktop which servers to launch and how to run them.
 
-This tutorial teaches you to configure MCP servers in Claude Desktop using JSON configuration files in 20 minutes. You'll learn config file location and structure, server setup syntax, and multi-server deployment. Build a complete development environment with filesystem, GitHub, and database integrations. Perfect for developers who want to extend Claude Desktop with local tool access.
+This guide walks through the official setup flow using the Filesystem Server as the worked example: where the config file lives, the exact `mcpServers` JSON structure, how to start and verify a server, and how to read the logs when something fails. The same pattern applies to any stdio MCP server.
 
-**Key Points:**
+A few facts worth knowing up front:
 
-- Config file location and JSON structure - create working MCP configurations
-- Filesystem server setup - enable local file access in Claude
-- Environment variables and API keys - secure credential management
-- 20 minutes total with 5 hands-on configuration exercises
+- Claude Desktop is available for macOS and Windows.
+- Many servers (including the Filesystem Server) need Node.js installed, because they are launched with `npx`.
+- Every tool action a server takes requires your explicit approval before it runs, so you stay in control of file and system access.
 
-Master MCP server configuration in Claude Desktop with this comprehensive tutorial. By completion, you'll have multiple working MCP servers and understand JSON configuration patterns. This guide includes 5 practical examples, 10 code samples, and 3 real-world configurations.
+## Prerequisites
 
-> **Tutorial Requirements**
->
-> **Prerequisites:** Basic JSON knowledge, Claude Desktop installed  
-> **Time Required:** 20 minutes active work  
-> **Tools Needed:** Text editor, npm/Node.js installed  
-> **Outcome:** Working MCP server configuration with filesystem access
+- **Claude Desktop installed** (macOS or Windows). To confirm you are on the latest build, open the Claude menu and choose "Check for Updates...".
+- **Node.js installed**, required for the Filesystem Server and most stdio servers. Verify with:
 
-## What You'll Learn
+```bash
+node --version
+```
 
-<!-- Section type: feature_grid -->
+If it is missing, install the LTS release from nodejs.org. If `npx` fails on Windows, confirm npm is installed globally (`%APPDATA%\npm` should exist).
 
-## Step-by-Step Tutorial
+## Config file location
 
-1. **Step 1: Locate Configuration Directory**
+The configuration is the same file regardless of how many servers you add. Its path differs by operating system:
 
-2. **Step 2: Create Basic Configuration**
+| Operating system | `claude_desktop_config.json` location |
+| --- | --- |
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
 
-3. **Step 3: Add Environment Variables**
+You do not need to find this file by hand. The fastest way to open it is from inside the app, described in the next section, which creates the file if it does not yet exist.
 
-4. **Step 4: Deploy Multiple Servers**
+## Step-by-step setup
 
-5. **Step 5: Validate and Test Configuration**
-
-## Key Concepts Explained
-
-Understanding these concepts ensures you can adapt this tutorial to your specific needs and troubleshoot issues effectively.
-
-<!-- Section type: accordion -->
-
-## Practical Examples
-
-<!-- Section type: tabs -->
-
-## Troubleshooting Guide
-
-> **Common Issues and Solutions**
->
-> **Issue 1: Cannot connect to MCP server**  
-> **Solution:** Validate JSON syntax with python -m json.tool. This fixes invalid JSON causing connection failures.
->
-> **Issue 2: Server disconnected unexpectedly**  
-> **Solution:** Check Claude Desktop logs at ~/Library/Logs/Claude/. Missing dependencies cause 80% of disconnections.
->
-> **Issue 3: Windows path errors**  
-> **Solution:** Use double backslashes or forward slashes. Escape sequences break Windows path parsing.
-
-## Advanced Techniques
-
-> **Professional Tips**
->
-> **Performance Optimization:** Global npm installation reduces startup time by 3 seconds while maintaining functionality.
->
-> **Security Best Practice:** Always use platform keychains for credentials. This approach prevents token exposure in configs.
->
-> **Scalability Pattern:** For multiple projects, use separate configs. Switch configurations based on active project context.
-
-## Validation and Testing
-
-<!-- Section type: feature_grid -->
-
-## Next Steps and Learning Path
-
-## Quick Reference
-
-**Tutorial Cheat Sheet - Essential commands and concepts:**
-
-- **Primary Command**: `npx -y @modelcontextprotocol/server-filesystem /path` - Core command that enables filesystem access and produces directory listing
-- **Configuration Pattern**: `{"mcpServers": {"name": {"command": "npx", "args": []}}}` - Standard configuration for MCP servers with required fields
-- **Validation Check**: `python -m json.tool claude_desktop_config.json` - Verifies JSON syntax and confirms proper formatting
-- **Troubleshooting**: `tail -f ~/Library/Logs/Claude/mcp*.log` - Monitors MCP server logs - target: zero errors
-- **Performance Metric**: Server startup under 5 seconds - Measures initialization speed - target: <5s benchmark
-- **Best Practice**: Use environment variables for all credentials - Professional standard for secure credential management
-
-## Related Learning Resources
-
-<!-- Section type: related_content -->
-
----
-
-> **Tutorial Complete!**
->
-> **Congratulations!** You've mastered MCP server configuration and can now extend Claude Desktop with local tools.
->
-> **What you achieved:**
->
-> - ✅ Created working MCP server configurations
-> - ✅ Implemented secure credential management
-> - ✅ Deployed multiple servers successfully
->
-> **Ready for more?** Explore our [tutorials collection](/guides/tutorials) or join our [community](/community) to share your implementation and get help with advanced use cases.
-
-_Last updated: September 2025 | Found this helpful? Share it with your team and explore more [Claude tutorials](/guides/tutorials)._
-
-## Features
-
-- Configuration file management - locate and create claude_desktop_config.json files on macOS, Windows, and Linux
-- MCP server setup - configure filesystem, GitHub, and database servers with proper JSON syntax
-- Multi-server deployment - combine multiple MCP servers for complex development workflows
-- Environment variable management - secure API key and credential handling using platform keychains
-- JSON validation and troubleshooting - validate configuration syntax and diagnose connection issues
-- Platform-specific configuration - adapt setup instructions for macOS, Windows, and Linux environments
-- Security best practices - implement secure credential management and prevent token exposure
-- Cross-platform configuration management with platform-specific path handling, environment variable resolution, and configuration validation for reliable MCP server deployment
-
-## Use Cases
-
-- Setting up local development environment - configure filesystem access for code editing and project management
-- Integrating GitHub workflows - connect Claude Desktop to GitHub for repository management and issue tracking
-- Database integration setup - enable database access for query execution and data analysis
-- Multi-service configuration - combine filesystem, API, and database servers for comprehensive tool access
-- Team collaboration setup - configure shared MCP servers for consistent development workflows
-- Security-conscious setup - implement secure credential management for production environments
-- Troubleshooting existing configurations - diagnose and fix common MCP server connection issues
-
-## Installation
-
-### Claude Code
-
-1. Open terminal in your project directory
-2. Run: claude mcp add --transport http server-name https://api.example.com/mcp
-3. Or create .mcp.json file in project root
-4. Add mcpServers configuration following JSON format
-5. Restart Claude Code to apply changes
-6. Verify servers with: claude mcp list
-
-### Claude Desktop
-
-1. Locate Claude Desktop configuration directory
-2. macOS: ~/Library/Application Support/Claude/
-3. Windows: %APPDATA%\Claude\
-4. Linux: ~/.config/claude/
-5. Create or edit claude_desktop_config.json file
-6. Add mcpServers configuration object
-7. Save file and restart Claude Desktop
-8. Verify MCP servers appear in Claude Desktop interface
-
-## Requirements
-
-- Claude Desktop installed and running (macOS, Windows, or Linux)
-- Basic JSON knowledge - understand JSON syntax, objects, arrays, and key-value pairs
-- Text editor with JSON syntax highlighting (VS Code, Sublime Text, or similar)
-- Node.js 18+ installed for running npx commands and MCP server packages
-- npm or compatible package manager for installing MCP server packages
-- Command-line access (Terminal on macOS/Linux, PowerShell or Command Prompt on Windows)
-- File system permissions to create and edit configuration files in application support directories
-- Network access for downloading MCP server packages via npx (if using remote servers)
-- API keys or tokens for services you want to integrate (GitHub, databases, etc.)
-- Understanding of your operating system file paths and environment variable syntax
-
-## Configuration
+1. **Open Claude Desktop settings.** Click the **Claude menu** in your system menu bar (not the gear inside the Claude window) and choose **Settings...**. This opens the desktop configuration window, which is separate from your Claude account settings.
+2. **Open the config file.** In the Settings window, select the **Developer** tab in the left sidebar, then click **Edit Config**. This creates `claude_desktop_config.json` if it does not exist and opens it for editing.
+3. **Add a server.** Replace the file contents with the `mcpServers` structure below (macOS example), substituting your real username and the directories you want to expose:
 
 ```json
 {
@@ -280,18 +160,15 @@ _Last updated: September 2025 | Found this helpful? Share it with your team and 
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/Users/username/Documents"
+        "/Users/username/Desktop",
+        "/Users/username/Downloads"
       ]
     }
   }
 }
 ```
 
-## Examples
-
-### Basic Filesystem Server Configuration
-
-Simple filesystem server setup for document access in Claude Desktop
+   On Windows, use escaped backslashes in the paths:
 
 ```json
 {
@@ -301,138 +178,87 @@ Simple filesystem server setup for document access in Claude Desktop
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/Users/username/Documents"
+        "C:\\Users\\username\\Desktop",
+        "C:\\Users\\username\\Downloads"
       ]
     }
   }
 }
 ```
 
-### GitHub Server with Secure Token
+4. **Restart Claude Desktop.** Completely quit the app and reopen it. Claude Desktop reads the config and starts the configured servers on launch.
+5. **Verify the connection.** After restart, an MCP server indicator appears in the bottom-right corner of the conversation input box. Click it to see the tools the server exposes. If the indicator does not appear, see Troubleshooting below.
 
-GitHub integration with environment variable for secure token management
+## Understanding the configuration
+
+Each entry under `mcpServers` is keyed by a friendly name and describes how to launch a local (stdio) server:
+
+- `"filesystem"` — the display name for the server inside Claude Desktop.
+- `"command": "npx"` — the program used to launch the server. `npx` runs the Node package without a separate global install.
+- `"-y"` — auto-confirms installation of the server package.
+- `"@modelcontextprotocol/server-filesystem"` — the package name of the server.
+- The remaining array entries — arguments passed to the server. For the Filesystem Server, these are the directories it is allowed to access.
+
+To pass secrets such as API keys, add an `env` object to the server entry. The Windows `${APPDATA}` workaround from the official troubleshooting guide is a real example of the `env` shape:
 
 ```json
 {
   "mcpServers": {
-    "github": {
+    "brave-search": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PAT}"
+        "APPDATA": "C:\\Users\\user\\AppData\\Roaming\\",
+        "BRAVE_API_KEY": "your-key-here"
       }
     }
   }
 }
 ```
 
-### Complete Development Environment
+Use a directory you are comfortable letting Claude read and modify: the server runs with your user account's permissions, so it can do anything you can do manually with those files.
 
-Combined filesystem, memory, and GitHub servers for full development workflow
+## Using the server
 
-```json
-{
-  "mcpServers": {
-    "filesystem": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./projects"]
-    },
-    "memory": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"]
-    },
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"]
-    }
-  }
-}
-```
+Once the Filesystem Server is connected, you can ask Claude things like "What files are in my Downloads folder?" or "Save this text to a file on my Desktop." Before any file operation runs, Claude requests your approval, so review each request and deny anything you are not comfortable with.
 
-### PostgreSQL Database Server
+## Transports: local vs. remote
 
-PostgreSQL database server with connection string from environment variable
+The config above uses the **stdio** transport — a local process Claude talks to over standard input/output. Claude Code (the CLI, a separate product) also supports remote transports, which is useful context when choosing how a server connects:
 
-```json
-{
-  "mcpServers": {
-    "database": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres"],
-      "env": {
-        "DATABASE_URL": "${POSTGRES_CONNECTION}"
-      }
-    }
-  }
-}
-```
+| Transport | Where it runs | Notes |
+| --- | --- | --- |
+| stdio | Local process on your machine | Ideal for tools needing direct system access or custom scripts; used by `claude_desktop_config.json` servers. Local processes are not auto-reconnected. |
+| HTTP (`streamable-http`) | Remote service | Recommended for cloud servers; supports OAuth. In Claude Code: `claude mcp add --transport http <name> <url>`. |
+| SSE | Remote service | Server-Sent Events; deprecated in favor of HTTP where available. |
 
-### Validate Configuration Syntax
-
-Command to validate JSON syntax and catch configuration errors before restarting Claude Desktop
-
-```bash
-python -m json.tool claude_desktop_config.json
-```
-
-### Monitor MCP Server Logs
-
-Real-time log monitoring to diagnose MCP server connection issues on macOS
-
-```bash
-tail -f ~/Library/Logs/Claude/mcp*.log
-```
-
-### Claude Code HTTP Server Setup
-
-Add remote HTTP MCP server to Claude Code using CLI command
-
-```bash
-claude mcp add --transport http server-name https://api.example.com/mcp
-```
-
-## Security
-
-- Never hardcode API keys or tokens directly in configuration files - always use environment variables or platform keychains to prevent credential exposure
-- Validate JSON syntax before deploying configurations - invalid JSON can cause connection failures and expose configuration structure
-- Restrict filesystem server paths to specific directories - avoid granting access to entire home directory or sensitive system locations
-- Use platform keychains (macOS Keychain, Windows Credential Manager) for storing sensitive credentials instead of plaintext environment variables
-- Review server commands before execution - malicious servers could execute arbitrary commands with your user privileges
-- Monitor MCP server logs regularly for unauthorized access attempts or unexpected behavior patterns
-- Implement separate configurations for development and production environments - never share production credentials in development configs
-- MCP server configuration files may expose server commands, file paths, and environment variable names - ensure configuration files are kept private and not committed to public repositories
-- MCP server commands execute with user privileges and could potentially access sensitive system resources - review server commands before deployment and restrict filesystem server paths to specific directories
+For Claude Desktop, stdio via `claude_desktop_config.json` is the documented local-setup path covered by this guide.
 
 ## Troubleshooting
 
-### Cannot connect to MCP server
+**Server / tools icon not showing up.** Restart Claude Desktop completely. Check `claude_desktop_config.json` for valid JSON. Make sure every path in the config is absolute, not relative. Then read the logs (below). You can also run the server manually to surface errors:
 
-Validate JSON syntax with `python -m json.tool claude_desktop_config.json`. Invalid JSON causes connection failures. Check for missing commas, unclosed brackets, or syntax errors.
+```bash
+npx -y @modelcontextprotocol/server-filesystem /Users/username/Desktop /Users/username/Downloads
+```
 
-### Server disconnected unexpectedly
+**Read the logs.** MCP logging is written to:
 
-Check Claude Desktop logs at `~/Library/Logs/Claude/` (macOS) or `%APPDATA%\Claude\logs\` (Windows). Missing dependencies cause 80% of disconnections. Install required packages: `npm install -g @modelcontextprotocol/server-package`.
+- macOS: `~/Library/Logs/Claude`
+- Windows: `%APPDATA%\Claude\logs`
 
-### Windows path errors in configuration
+`mcp.log` holds general connection logging; `mcp-server-SERVERNAME.log` holds a specific server's stderr. To follow recent logs on macOS/Linux:
 
-Use double backslashes (`\\`) or forward slashes (`/`) in Windows paths. Escape sequences break Windows path parsing. Example: Use `C:/Users/username/Documents` instead of `C:\Users\username\Documents`.
+```bash
+tail -n 20 -f ~/Library/Logs/Claude/mcp*.log
+```
 
-### Environment variables not resolving
+**Tool calls failing silently.** Check Claude's logs for errors, verify the server runs without errors on its own, and restart Claude Desktop.
 
-Verify environment variables are set in your shell session. Use `${VAR_NAME}` syntax in JSON config. For Windows, use `%VAR_NAME%` format. Test with `echo $VAR_NAME` (Unix) or `echo %VAR_NAME%` (Windows).
+**Windows `${APPDATA}` ENOENT error.** If a server's log shows an error referencing `${APPDATA}` in a path, add the expanded `%APPDATA%` value to that server's `env` block (see the `brave-search` example above), then relaunch Claude Desktop. Confirm npm is installed globally if `npx` keeps failing.
 
-### MCP servers not appearing in Claude Desktop
+## Next steps
 
-Restart Claude Desktop after configuration changes. Verify config file location matches your platform. Check file permissions allow Claude Desktop to read the config. Use Settings > Developer > Edit Config to verify file is being read.
-
-### MCP server configuration not loading after restart
-
-Validate JSON syntax with python -m json.tool. Check config file location matches platform requirements. Verify file permissions allow Claude Desktop to read the config. Use Settings > Developer > Edit Config to verify file is being read.
-
-### MCP server commands failing with permission errors
-
-Verify command paths are correct and executable. Check file system permissions for server directories. Ensure npx/node are in PATH. For custom servers, verify installation and dependencies are available.
-
-### Environment variables not resolving in MCP server configuration
-
-Verify environment variables are set in your shell session. Use ${VAR_NAME} syntax in JSON config. For Windows, use %VAR_NAME% format. Test with echo $VAR_NAME (Unix) or echo %VAR_NAME% (Windows).
+- Browse official and community servers at the [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) repository.
+- Read the official Claude Desktop MCP quickstart at [modelcontextprotocol.io/quickstart/user](https://modelcontextprotocol.io/quickstart/user).
+- For connecting MCP servers from the Claude Code CLI, see [code.claude.com/docs/en/mcp](https://code.claude.com/docs/en/mcp).

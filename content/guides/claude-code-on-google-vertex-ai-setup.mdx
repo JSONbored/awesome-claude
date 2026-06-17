@@ -1,0 +1,89 @@
+---
+title: Claude Code On Google Vertex AI Setup
+slug: claude-code-on-google-vertex-ai-setup
+category: guides
+description: >-
+  Set up Claude Code on Google Vertex AI using official documentation: provider
+  configuration, authentication, project routing, and troubleshooting third-party
+  provider limitations for features like fast mode and computer use.
+cardDescription: >-
+  Configure Claude Code with Google Vertex AI per official setup documentation.
+seoTitle: Claude Code On Google Vertex AI Setup
+seoDescription: >-
+  Guide to Claude Code on Google Vertex AI: provider setup, authentication, project
+  configuration, and feature limitations from official Vertex AI docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1394
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1394"
+documentationUrl: "https://code.claude.com/docs/en/google-vertex-ai"
+usageSnippet: >-
+  Follow Vertex AI setup docs to configure Claude Code authentication and project
+  routing, then verify which Claude Code features remain available on third-party providers.
+prerequisites:
+  - "Google Cloud project with Vertex AI API enabled."
+  - "Organization policy allowing Claude Code via Vertex provider path."
+  - "Service account or user credentials per official setup steps."
+safetyNotes:
+  - "Third-party providers may disable features such as fast mode or computer use—verify docs."
+  - "Store GCP credentials in approved secret stores—not committed settings files."
+privacyNotes:
+  - "Vertex routing sends prompts through Google Cloud per your GCP data policies."
+  - "Managed settings may restrict provider switches—document enterprise overrides."
+sourceUrls:
+  - "https://code.claude.com/docs/en/google-vertex-ai"
+  - "https://code.claude.com/docs/en/third-party-integrations"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - vertex-ai
+  - google-cloud
+  - setup
+  - enterprise
+keywords:
+  - Claude Code Google Vertex AI setup
+  - Vertex AI Claude Code configuration
+  - Claude Code third party provider Vertex
+readingTime: 8
+difficultyScore: 54
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude Code on Vertex AI uses Google Cloud authentication and routing documented on
+code.claude.com. Some Anthropic-only features may be unavailable on third-party
+providers—confirm before rolling out team workflows.
+
+## Step-by-Step Setup
+
+1. Enable Vertex AI APIs in your GCP project.
+2. Follow official Claude Code Vertex documentation for credential configuration.
+3. Set provider environment variables or settings per doc examples.
+4. Run `claude --version` and `/status` to confirm provider path.
+5. Test a simple coding task before enabling MCP or plugins broadly.
+6. Document feature gaps (fast mode, computer use) for your team.
+
+## Troubleshooting
+
+**Issue:** Auth errors from gcloud
+**Fix:** Refresh application default credentials; confirm project ID and region.
+
+**Issue:** Feature unavailable on Vertex
+**Fix:** Check third-party integration docs; switch tasks to claude.ai provider if required.
+
+## Duplicate Check
+
+Complements `claude-code-on-amazon-bedrock-setup` and Microsoft Foundry setup guides.
+
+## References
+
+- Claude Code on Vertex AI - https://code.claude.com/docs/en/google-vertex-ai

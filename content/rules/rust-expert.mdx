@@ -108,6 +108,21 @@ It covers ownership, error handling, traits, and async patterns — grounded in 
 [The Rust Programming Language](https://doc.rust-lang.org/book/) and
 [standard library documentation](https://doc.rust-lang.org/std/).
 
+## Smart Pointer Reference
+
+When the rule set asks Claude to model shared state and interior mutability, use the
+right smart pointer. The following table summarizes the recap from
+[The Rust Book, Chapter 15.5](https://doc.rust-lang.org/book/ch15-05-interior-mutability.html):
+
+| Smart pointer | Owners | Borrows allowed | Borrow checking |
+| --- | --- | --- | --- |
+| `Box<T>` | Single owner | Immutable or mutable | Compile time |
+| `Rc<T>` | Multiple owners | Immutable only | Compile time |
+| `RefCell<T>` | Single owner | Immutable or mutable | Runtime |
+
+Because `RefCell<T>` allows mutable borrows checked at runtime, you can mutate the value
+inside it even when the `RefCell<T>` itself is immutable.
+
 ## Sources
 
 - [The Rust Book](https://doc.rust-lang.org/book/)

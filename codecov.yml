@@ -1,0 +1,44 @@
+# Codecov configuration — https://docs.codecov.com/docs/codecovyml-reference
+#
+# Coverage is uploaded by .github/workflows/coverage.yml (lcov from Vitest v8,
+# scoped in vitest.config.ts to registry/mcp packages, web lib/data/types, the
+# submission gate, and build scripts).
+#
+# Rollout posture: both statuses are INFORMATIONAL (report-only, never block a
+# merge) so we can watch the signal first. To make new code enforceable later,
+# set `informational: false` on `patch` (and add it to branch protection). We
+# deliberately avoid a fixed global target — `target: auto` compares each PR
+# against its own base commit, so merging one PR never moves the bar under other
+# open PRs (the churn we hit with vitest's global threshold ratchet).
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+        informational: true
+        if_ci_failed: ignore
+        only_pulls: false
+    patch:
+      default:
+        target: 70%
+        threshold: 5%
+        informational: true
+        if_ci_failed: ignore
+        only_pulls: true
+
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: true
+
+# vitest.config.ts already scopes instrumentation via coverage.include/exclude;
+# these are belt-and-suspenders so non-source files never enter the math.
+ignore:
+  - "tests"
+  - "**/*.test.ts"
+  - "**/*.config.ts"
+  - "apps/web/src/generated"
+  - "apps/web/public/data"
+  - "integrations"
