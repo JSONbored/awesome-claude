@@ -12,6 +12,10 @@ dateAdded: "2025-10-15"
 documentationUrl: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview"
 downloadUrl: /downloads/skills/rest-api-client-harness.zip
 installable: true
+safetyNotes:
+  - "Setup downloads/unzips a package, and the harness makes live HTTP requests (including POST/PUT/DELETE) to the APIs you point it at; review endpoints and methods before running against production services."
+privacyNotes:
+  - "API requests carry credentials (API keys, OAuth/JWT tokens) and request/response bodies; keep secrets in environment variables, and review what data is sent to and logged from third-party APIs."
 installCommand: "curl -L https://heyclau.de/downloads/skills/rest-api-client-harness.zip -o rest-api-client-harness.zip && unzip -o rest-api-client-harness.zip -d ./rest-api-client-harness"
 usageSnippet: "Claude can interact with REST APIs: make requests, handle authentication (API keys, OAuth, JWT), paginate through results, handle rate limits with retries, and process responses. Build API integration scripts, test endpoints, and extract data from web services."
 copySnippet: |-
@@ -60,17 +64,11 @@ tags:
   - curl
   - node
 keywords:
-  - api
-  - claude
-  - client
-  - curl
-  - development
-  - harness
-  - http
-  - node
-  - rest
-  - skills
-  - tools
+  - rest api client
+  - api testing harness
+  - http requests claude code
+  - api authentication oauth jwt
+  - api integration script
 readingTime: 6
 packageVerified: true
 difficultyScore: 100
