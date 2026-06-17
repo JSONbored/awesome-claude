@@ -99,6 +99,40 @@ function findPredictableSharedTmpDebugPaths(scriptBody) {
   return [...paths];
 }
 
+// Duplicate top-level frontmatter keys crash the site build: gray-matter / js-yaml (build-content-index.mjs)
+// throws "duplicated mapping key" and the whole content-index build — and every deploy — fails. The lenient
+// parseSafeFrontmatter keeps the last value, so a duplicate-key file otherwise passes review AND this
+// validator, then breaks production (the backend-development-suite incident, via a templated enrichment edit).
+// Catch it here so the PR fails before merge. Scoped to top-level keys (indent 0) — the build-breaking case;
+// a repeated indent-0 key is unambiguously a dupe (no false positives). The block-scalar / sequence skipping
+// keeps indented nested/list lines from being mistaken for a top-level key. (#frontmatter-dupe-key)
+function duplicateTopLevelFrontmatterKeys(source) {
+  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(String(source || ""));
+  if (!match) return [];
+  const lines = match[1].split(/\r?\n/);
+  const seen = new Set();
+  const dupes = new Set();
+  let i = 0;
+  while (i < lines.length) {
+    const head = /^([A-Za-z][A-Za-z0-9_]*):(.*)$/.exec(lines[i]);
+    if (!head) {
+      i += 1;
+      continue;
+    }
+    const key = head[1];
+    if (seen.has(key)) dupes.add(key);
+    else seen.add(key);
+    const inline = head[2].trim();
+    i += 1;
+    if (/^[|>][+-]?\d*$/.test(inline)) {
+      while (i < lines.length && (lines[i].trim() === "" || /^\s/.test(lines[i]))) i += 1;
+    } else if (inline === "") {
+      while (i < lines.length && /^\s/.test(lines[i]) && lines[i].trim() !== "") i += 1;
+    }
+  }
+  return [...dupes];
+}
+
 for (const category of Object.keys(CATEGORY_SCHEMAS)) {
   if (selectedCategories.size > 0 && !selectedCategories.has(category)) {
     continue;
@@ -133,6 +167,13 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
       .toLowerCase();
 
     const entry = `${category}/${fileName}`;
+
+    const dupeFrontmatterKeys = duplicateTopLevelFrontmatterKeys(source);
+    if (dupeFrontmatterKeys.length > 0) {
+      failures.push(
+        `${entry}: duplicate frontmatter keys -> ${dupeFrontmatterKeys.join(", ")} (the site build's YAML parser rejects duplicate mapping keys and the deploy fails)`,
+      );
+    }
 
     if (!normalizedBody.trim()) {
       failures.push(`${entry}: metadata-only content is not allowed`);
