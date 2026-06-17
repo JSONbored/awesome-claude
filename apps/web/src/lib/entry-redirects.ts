@@ -17,6 +17,16 @@ export const ENTRY_REDIRECTS: Record<string, { category: string; slug: string }>
     category: "commands",
     slug: "mintlify-docs",
   },
+  // Duplicate dependency vulnerability-scan hook consolidated into `package-vulnerability-scanner`.
+  "hooks/dependency-security-scanner": {
+    category: "hooks",
+    slug: "package-vulnerability-scanner",
+  },
+  // Duplicate security-audit rule consolidated into `security-auditor`.
+  "rules/security-auditor-penetration-tester": {
+    category: "rules",
+    slug: "security-auditor",
+  },
 };
 
 /**
