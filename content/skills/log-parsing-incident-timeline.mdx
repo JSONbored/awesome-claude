@@ -13,6 +13,10 @@ repoUrl: "https://github.com/BurntSushi/ripgrep"
 documentationUrl: "https://github.com/BurntSushi/ripgrep"
 downloadUrl: /downloads/skills/log-parsing-incident-timeline.zip
 installable: true
+safetyNotes:
+  - "Setup downloads and unzips a package and runs ripgrep/shell scripts that read log files and write timeline output; review the scripts and run them in a trusted environment."
+privacyNotes:
+  - "Logs often contain IPs, user identifiers, tokens, and request payloads; parsing reads them locally, but redact sensitive fields before sharing the generated incident timeline."
 installCommand: "curl -L https://heyclau.de/downloads/skills/log-parsing-incident-timeline.zip -o log-parsing-incident-timeline.zip && unzip -o log-parsing-incident-timeline.zip -d ./log-parsing-incident-timeline"
 usageSnippet: "Claude can parse application logs, server logs, and system logs to extract errors, create incident timelines, identify patterns, and correlate events across distributed systems. Transform raw log data into actionable insights."
 copySnippet: |-
@@ -45,19 +49,11 @@ tags:
   - ripgrep
   - bash
 keywords:
-  - and
-  - bash
-  - claude
-  - development
-  - incident
-  - log
-  - logs
-  - observability
-  - parsing
-  - ripgrep
-  - skills
-  - timeline
-  - tools
+  - log parsing
+  - incident timeline
+  - log analysis claude code
+  - ripgrep log search
+  - incident response logs
 readingTime: 5
 packageVerified: true
 difficultyScore: 100
@@ -200,7 +196,7 @@ Claude will:
 
 ```
 "Correlate logs from:
-- API gateway (nginx)
+- Web server (nginx)
 - Application server (node.js)
 - Database (postgres)
 - Cache (redis)
