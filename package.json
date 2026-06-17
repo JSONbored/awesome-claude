@@ -56,6 +56,7 @@
     "generate:readme": "node scripts/generate-readme.mjs",
     "validate:readme": "node scripts/generate-readme.mjs --check",
     "audit:content": "node scripts/audit-content.mjs",
+    "audit:seo-snippets": "node scripts/audit-seo-snippets.mjs",
     "report:thin-content": "node scripts/report-thin-content.mjs",
     "report:trust-coverage": "node scripts/report-trust-coverage.mjs",
     "validate:mcp-trust": "node scripts/report-trust-coverage.mjs --category mcp --check --min-risk-coverage 100 --min-attribution-coverage 100",

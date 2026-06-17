@@ -75,6 +75,15 @@ Look for:
   cause.
 - Pages with rising impressions but flat clicks — snippet ceiling; tune copy.
 
+**Tooling:** before (or alongside) the manual pass, run `pnpm audit:seo-snippets`
+to get a ranked list of entries with weak `seoTitle`/`seoDescription` (missing,
+out-of-length, duplicate across entries, or just echoing the on-page title). Pass
+a GSC Pages CSV export to prioritize by impressions:
+`pnpm audit:seo-snippets -- --gsc gsc-pages.csv`. The tool only **detects and
+ranks** — write the improved snippets by hand (auto-generated snippets read as
+duplicate/templated and Google discounts them). Route confirmed thin/duplicate
+pages to #2260 / #2261.
+
 Compare CTR **within a page type** (entry vs. compare vs. category), not across
 types. A 2% CTR on a broad category page and a 2% CTR on a long-tail compare
 page mean different things.
