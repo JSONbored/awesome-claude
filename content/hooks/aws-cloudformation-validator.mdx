@@ -17,6 +17,9 @@ documentationUrl: "https://github.com/aws-cloudformation/cfn-lint"
 retrievalSources:
   - "https://github.com/aws-cloudformation/cfn-lint"
   - "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html"
+  - "https://docs.aws.amazon.com/cli/latest/reference/cloudformation/validate-template.html"
+  - "https://github.com/stelligent/cfn_nag"
+  - "https://www.checkov.io/"
   - "https://code.claude.com/docs/en/hooks"
 installable: true
 installCommand: >-
@@ -144,6 +147,19 @@ robotsFollow: true
 - Development workflow validation for cloud resources providing immediate feedback during template editing
 - Compliance checking against AWS best practices ensuring templates follow security and operational guidelines
 - Multi-region validation ensuring templates work correctly across different AWS regions and availability zones
+
+## CloudFormation Validation Tools Compared
+
+This hook defaults to `cfn-lint` and falls back to the AWS CLI. How the common CloudFormation/IaC validators differ:
+
+| Tool | What it checks | Catches security issues? | Needs AWS credentials? |
+| --- | --- | --- | --- |
+| **cfn-lint** (this hook) | Template syntax, resource-property schemas, and AWS best-practice rules | Partial (best-practice rules) | No — fully local |
+| **aws cloudformation validate-template** (fallback) | Basic syntax and template structure via the CloudFormation API | No | Yes — calls the AWS API |
+| **cfn_nag** | Pattern-based scan for insecure infrastructure patterns (open security groups, wildcard IAM, unencrypted resources) | Yes | No — fully local |
+| **Checkov** | 1,000+ policy checks for security and compliance across CloudFormation, Terraform, and Kubernetes | Yes | No — fully local |
+
+For most pre-deployment checks, `cfn-lint` gives the best signal-to-noise on a single template; pair it with `cfn_nag` or Checkov when you need dedicated security/compliance scanning.
 
 ## Installation
 
