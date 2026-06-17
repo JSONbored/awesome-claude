@@ -9,9 +9,13 @@ seoDescription: "Optimize frontend build performance with Vite's lightning-fast 
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-23"
-documentationUrl: "https://vitejs.dev/"
+documentationUrl: "https://vite.dev/guide/"
 downloadUrl: /downloads/skills/vite-build-optimization.zip
 installable: true
+safetyNotes:
+  - "Scaffolds and runs Vite (npm create vite, install, dev/build/preview servers that listen on a port and install dependencies); review plugins and config before running."
+privacyNotes:
+  - "Vite exposes only env vars prefixed VITE_ to client code — keep secrets unprefixed/server-side, and review what build config and source maps embed before publishing."
 installCommand: npm create vite@latest my-app
 usageSnippet: npm create vite@latest my-app
 copySnippet: |-
@@ -60,7 +64,8 @@ skillLevel: advanced
 verificationStatus: draft
 verifiedAt: "2025-10-23"
 retrievalSources:
-  - "https://vitejs.dev/"
+  - "https://vite.dev/guide/"
+  - "https://vite.dev/guide/build"
 testedPlatforms:
   - Claude
   - Codex
@@ -82,18 +87,11 @@ tags:
   - performance
   - frontend
 keywords:
-  - build
-  - build-tools
-  - claude
-  - development
-  - frontend
-  - optimization
-  - performance
-  - skills
-  - specialist
-  - tools
-  - vite
-  - webpack
+  - vite build optimization
+  - vite config claude code
+  - vite bundle size
+  - vite code splitting
+  - frontend build performance
 readingTime: 6
 packageVerified: true
 difficultyScore: 100
