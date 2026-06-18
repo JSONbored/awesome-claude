@@ -1,0 +1,228 @@
+---
+title: Dart Agent Skills
+slug: dart-agent-skills
+category: skills
+description: >-
+  Official Dart team Agent Skills for AI coding agents working on Dart unit
+  tests, CLI apps, coverage, runtime errors, mocks, package conflicts, static
+  analysis, Native Assets, FFI, ffigen, and pattern matching.
+cardDescription: >-
+  Dart team skills for Claude Code, Codex, Gemini CLI, and other agents
+  covering tests, CLI apps, coverage, runtime errors, mocks, pub conflicts,
+  static analysis, FFI, native assets, and patterns.
+seoTitle: Dart Agent Skills for Claude Code, Codex, Gemini CLI, FFI, and Tests
+seoDescription: >-
+  Install Dart Agent Skills for Claude Code, Codex, Gemini CLI, and other
+  agents to improve Dart unit tests, CLI apps, coverage, runtime errors,
+  package conflicts, static analysis, FFI, native assets, ffigen, and pattern
+  matching workflows.
+author: Dart Team
+authorProfileUrl: "https://github.com/dart-lang"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/dart-lang/skills"
+documentationUrl: "https://github.com/dart-lang/skills#readme"
+websiteUrl: "https://skills.sh/dart-lang/skills"
+downloadUrl: "https://github.com/dart-lang/skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add dart-lang/skills --skill '*' --agent universal --yes"
+usageSnippet: >-
+  Install all Dart skills into the standard `.agents/skills` folder, then use
+  focused workflows for tests, static analysis, runtime errors, pub conflicts,
+  FFI/native assets, ffigen, CLI apps, or pattern matching.
+copySnippet: |-
+  npx skills add dart-lang/skills --skill '*' --agent universal --yes
+
+  # Update installed skills
+  npx skills update
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/dart-lang/skills"
+  - "https://raw.githubusercontent.com/dart-lang/skills/main/README.md"
+  - "https://skills.sh/dart-lang/skills"
+  - "https://raw.githubusercontent.com/dart-lang/skills/main/skills/dart-run-static-analysis/SKILL.md"
+  - "https://raw.githubusercontent.com/dart-lang/skills/main/skills/dart-setup-ffi-assets/SKILL.md"
+  - "https://raw.githubusercontent.com/dart-lang/skills/main/skills/dart-fix-runtime-errors/SKILL.md"
+  - "https://raw.githubusercontent.com/dart-lang/skills/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Gemini CLI
+  - Generic Agent Skills hosts
+prerequisites:
+  - "Dart SDK and project-local tooling installed for the package being edited."
+  - "An AI coding assistant or skill host compatible with Agent Skills, preferably using the standard `.agents/skills` install target."
+  - "Project `pubspec.yaml`, `analysis_options.yaml`, test structure, package constraints, and platform targets available before modifying code."
+  - "For FFI or Native Assets work, compatible host compiler toolchains, package hooks, native source, binding generation configuration, and platform targets."
+safetyNotes:
+  - "Dart skills can modify source code, tests, pubspec dependencies, analysis options, generated mocks, coverage output, native hooks, FFI bindings, and package constraints."
+  - "`dart fix --apply`, formatter runs, mock generation, build_runner, ffigen, and Native Assets hooks can create broad mechanical diffs; inspect changes before committing."
+  - "Native Assets and FFI workflows may compile C/C++ code, run local toolchains, download precompiled binaries, and link dynamic or static libraries."
+  - "Downloaded binaries should use cryptographic hash validation and offline fallbacks as the skill describes."
+  - "Package conflict fixes can upgrade or downgrade dependencies and affect transitive package behavior across Dart and Flutter projects."
+privacyNotes:
+  - "Dart projects may contain private package names, API schemas, service URLs, test fixtures, generated mocks, coverage paths, stack traces, native library names, and build logs."
+  - "Runtime-error workflows can expose stack traces, local paths, active app state, logs, and user-input data from the running program."
+  - "FFI and Native Assets workflows may include proprietary C/C++ source, platform-specific build settings, binary hashes, and downloaded artifact URLs."
+  - "Keep credentials, private package registries, source paths when sensitive, proprietary native code, test data, and generated coverage reports out of public prompts, issues, PRs, and examples."
+tags:
+  - dart
+  - skills
+  - testing
+  - static-analysis
+  - ffi
+  - cli
+  - native-assets
+  - mocks
+keywords:
+  - Dart Agent Skills
+  - dart skills Codex
+  - dart skills Claude Code
+  - Dart static analysis skill
+  - Dart FFI skill
+  - Dart Native Assets skill
+  - Dart unit test skill
+  - dart package conflicts skill
+  - ffigen agent skill
+readingTime: 8
+difficultyScore: 75
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Dart Agent Skills
+
+`dart-lang/skills` is the official Dart team Agent Skills repository. It gives
+AI coding agents repeatable workflows for common Dart development tasks:
+unit tests, CLI apps, coverage, runtime errors, generated mocks, package
+conflicts, static analysis, FFI, Native Assets, ffigen, and pattern matching.
+
+The README describes skills as complementary to MCP: MCP gives an agent access
+to specialized tools, while a skill teaches the agent how to use tools for a
+specific task. That is useful for Claude Code, Codex, Gemini CLI, and other
+coding agents that need Dart-specific guardrails instead of generic language
+advice.
+
+## Knowledge Freshness
+
+The repository is maintained by the Dart team and representative skills include
+recent 2026 metadata. Dart analyzer behavior, language features, package
+versions, Native Assets hooks, ffigen, `package:test`, `package:checks`,
+`package:mockito`, and build tooling can change.
+
+Use the skills for workflow structure and Dart-specific guardrails, then verify
+exact commands, packages, SDK constraints, analyzer settings, and generated
+outputs against the target project and current Dart documentation.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The `dart-lang/skills` repository README.
+- The public skills.sh listing for Dart skills.
+- Representative `SKILL.md` files for static analysis, FFI/Native Assets, and
+  runtime-error workflows.
+- The repository license text.
+- Current GitHub repository metadata from the official Dart organization.
+
+## Core Workflow
+
+Install all Dart skills into the standard universal skill location:
+
+```bash
+npx skills add dart-lang/skills --skill '*' --agent universal --yes
+```
+
+Update installed skills:
+
+```bash
+npx skills update
+```
+
+The README recommends the universal `.agents/skills` target so most agents can
+discover the installed skills.
+
+## Capability Scope
+
+The repository currently lists these Dart skills:
+
+| Skill | Scope |
+| --- | --- |
+| `dart-add-unit-test` | Write and organize unit tests with `package:test` |
+| `dart-build-cli-app` | CLI entrypoints, exit codes, and cross-platform script structure |
+| `dart-collect-coverage` | Collect coverage and create LCOV reports |
+| `dart-setup-ffi-assets` | Compile and package C/C++ code using Native Assets hooks |
+| `dart-fix-runtime-errors` | Locate stack traces, fix failures, and verify with reload or tests |
+| `dart-generate-test-mocks` | Generate mocks with `package:mockito` and `build_runner` |
+| `dart-migrate-to-checks-package` | Replace matcher-style expectations with `package:checks` |
+| `dart-resolve-package-conflicts` | Fix pub dependency version conflicts |
+| `dart-run-static-analysis` | Run `dart analyze`, apply `dart fix`, format, and verify diagnostics |
+| `dart-use-ffigen` | Generate FFI bindings instead of hand-writing `dart:ffi` bindings |
+| `dart-use-pattern-matching` | Apply switch expressions and Dart pattern matching where appropriate |
+
+## Production Rules
+
+Use these skills with Dart-specific change control:
+
+- Inspect `pubspec.yaml`, `analysis_options.yaml`, SDK constraints, package
+  layout, test conventions, and generated-file rules before editing.
+- Run `dart analyze` and focused tests before broad changes.
+- Preview `dart fix --dry-run` before applying mechanical fixes.
+- Review generated mocks, bindings, coverage output, and formatter changes
+  before committing.
+- For FFI and Native Assets, keep path handling portable, validate downloaded
+  binaries, and avoid raw shell toolchain orchestration where package APIs exist.
+- Treat package conflict resolution as a dependency change with possible
+  transitive runtime impact.
+- Do not publish generated examples, stack traces, native source, or test data
+  that expose private code or environment details.
+
+## Use Cases
+
+- Ask Codex to run Dart static analysis, preview automated fixes, and resolve
+  remaining analyzer errors safely.
+- Use Claude Code to add unit tests for a package with `package:test`.
+- Ask Gemini CLI to resolve `pub get` dependency conflicts without blindly
+  upgrading unrelated packages.
+- Use an agent to set up Native Assets hooks for a C library with hash-checked
+  prebuilt binary fallback.
+- Have an assistant generate ffigen bindings rather than writing brittle
+  `dart:ffi` bindings by hand.
+
+## Source Review
+
+- The README describes Agent Skills for Dart as maintained by the Dart team.
+- The README says the skills provide tailored instructions for common Dart
+  development workflows.
+- The README says skills complement MCP by teaching an agent how to use tools
+  for a specific task.
+- The install command uses `npx skills add dart-lang/skills --skill '*' --agent
+  universal --yes`.
+- The available skills list covers unit tests, CLI apps, coverage, FFI/native
+  assets, runtime errors, mocks, package conflicts, static analysis, ffigen, and
+  pattern matching.
+- The static-analysis skill documents `analysis_options.yaml`, strict type
+  checks, analyzer plugins, `dart analyze`, `dart fix --dry-run`, `dart fix
+  --apply`, and formatting.
+- The Native Assets skill covers build/link hooks, compiler toolchains,
+  precompiled binary downloads, cryptographic validation, and tree-shaking.
+- The license file identifies the repository as BSD-style terms from the Dart
+  authors.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`, open pull
+requests, and repository-wide content for `dart-lang/skills`, Dart Agent
+Skills, Dart skills, Dart static analysis skills, Dart FFI skills, Dart Native
+Assets skills, and representative skill names. No dedicated Dart Agent Skills
+entry, exact source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The upstream
+repository is maintained by the Dart team and uses BSD-style license terms.
