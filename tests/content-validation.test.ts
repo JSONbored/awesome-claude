@@ -152,11 +152,12 @@ describe("content validation", () => {
 
   it("rejects duplicate top-level frontmatter keys with YAML-safe key syntax", () => {
     const tmpDir = makeTempContentRoot();
-    const hookDir = path.join(tmpDir, "content", "hooks");
-    fs.mkdirSync(hookDir, { recursive: true });
-    fs.writeFileSync(
-      path.join(hookDir, "duplicate-keys.mdx"),
-      `---
+    try {
+      const hookDir = path.join(tmpDir, "content", "hooks");
+      fs.mkdirSync(hookDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(hookDir, "duplicate-keys.mdx"),
+        `---
 title: Duplicate Keys
 slug: duplicate-keys
 category: hooks
@@ -172,12 +173,50 @@ scriptBody: |-
 
 Example hook body.
 `,
-      "utf8",
-    );
+        "utf8",
+      );
 
-    expect(() => runContentValidation(tmpDir)).toThrow(
-      /duplicate frontmatter keys -> build-status/,
-    );
+      expect(() => runContentValidation(tmpDir)).toThrow(
+        /duplicate frontmatter keys -> build-status/,
+      );
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  it("does not treat top-level YAML sequence URLs as duplicate keys", () => {
+    const tmpDir = makeTempContentRoot();
+    try {
+      const hookDir = path.join(tmpDir, "content", "hooks");
+      fs.mkdirSync(hookDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(hookDir, "url-list.mdx"),
+        `---
+title: URL List
+slug: url-list
+category: hooks
+description: Example hook used by validation tests.
+cardDescription: Example hook used by validation tests.
+scriptLanguage: bash
+sourceUrls:
+- https://example.com/docs
+- https://example.com/source
+scriptBody: |-
+  #!/bin/bash
+  printf "%s\\n" "safe hook"
+---
+
+Example hook body.
+`,
+        "utf8",
+      );
+
+      expect(runContentValidation(tmpDir)).toContain(
+        "Content validation passed.",
+      );
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
   });
 
   it("rejects predictable shared /tmp debug logs in hook script bodies", () => {

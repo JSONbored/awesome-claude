@@ -116,7 +116,7 @@ function duplicateTopLevelFrontmatterKeys(source) {
   const dupes = new Set();
   let i = 0;
   while (i < lines.length) {
-    const head = /^([^#\s][^:]*?)\s*:(.*)$/.exec(lines[i]);
+    const head = /^(?!-\s)([^#\s][^:]*?)\s*:(.*)$/.exec(lines[i]);
     if (!head) {
       i += 1;
       continue;
