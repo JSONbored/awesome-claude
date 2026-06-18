@@ -217,6 +217,25 @@ describe("PR preview artifact validation flow", () => {
     );
   });
 
+  it("uploads preview Worker versions to the non-production Wrangler environment", () => {
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.join(repoRoot, "apps/web/package.json"), "utf8"),
+    ) as { scripts: Record<string, string> };
+    const wranglerConfig = fs.readFileSync(
+      path.join(repoRoot, "apps/web/wrangler.jsonc"),
+      "utf8",
+    );
+
+    expect(packageJson.scripts["versions:upload"]).toContain("--env dev");
+    expect(packageJson.scripts["versions:upload"]).not.toContain('--env ""');
+    expect(wranglerConfig).toContain('"name": "heyclaude-prod"');
+    expect(wranglerConfig).toContain('"dev": {');
+    expect(wranglerConfig).toContain('"name": "heyclaude-dev"');
+    expect(wranglerConfig).toContain(
+      '"database_name": "heyclaude-dev-site-state"',
+    );
+  });
+
   it("does not persist GitHub credentials in the submission-gate validation checkout", () => {
     const workflow = readContentValidationWorkflow();
     const jobBlock =

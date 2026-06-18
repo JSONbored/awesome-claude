@@ -92,4 +92,17 @@
       "dataset": "ai_signals",
     },
   ],
+  "env": {
+    "dev": {
+      "name": "heyclaude-dev",
+      "d1_databases": [
+        {
+          "binding": "SITE_DB",
+          "database_name": "heyclaude-dev-site-state",
+          "database_id": "e2e92b77-b5b6-419f-90fe-25a8537d6c12",
+          "migrations_dir": "migrations",
+        },
+      ],
+    },
+  },
 }
