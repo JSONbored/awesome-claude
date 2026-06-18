@@ -44,11 +44,11 @@ retrievalSources:
 - https://code.claude.com/docs/en/slash-commands
 - https://code.claude.com/docs/en/common-workflows
 safetyNotes:
-- The recipe's allowed-tools pre-approves Bash test commands (e.g. npm/pnpm/npx test), letting Claude run them without per-call confirmation. Scope these to your real runner and review project-scope .claude/commands files before trusting a repository, since a checked-in command can grant broad tool access.
+- The base recipe does not pre-approve Bash commands. Review the project's test scripts first, then approve the exact test command when Claude Code prompts or add a narrowly scoped command only after you trust it.
 - Claude may create and edit test and source files as part of the loop (Read/Edit/Write). Run it in version control so changes are reviewable and reversible.
 - If you extend the prompt with auto-commit or deploy steps, add explicit safety review; the base recipe does not commit or push.
 privacyNotes:
-- The command body can read project files via @ references and !`command` injection; only reference files you are comfortable sending to the model as prompt context. The base recipe reads package.json to detect the test framework.
+- The command body can read project files via @ references and !`command` injection if you add them; only reference files you are comfortable sending to the model as prompt context. The base recipe asks you to inspect project test scripts instead of injecting package.json automatically.
 ---
 
 `/tdd-workflow` is **not a built-in Claude Code command**. There is no shipped TDD command and no built-in TDD flags. This entry is a **custom slash command recipe**: you save a Markdown prompt file in your repo and Claude Code exposes it as `/tdd-workflow`. It works by injecting a fixed red-green-refactor prompt into the session, then letting Claude drive your existing test runner.
@@ -73,7 +73,7 @@ Save this as `.claude/commands/tdd-workflow.md`:
 ---
 description: Drive a red-green-refactor TDD loop for the requested change
 argument-hint: [feature description]
-allowed-tools: Read, Edit, Write, Bash(npm test*), Bash(pnpm test*), Bash(npx vitest*)
+allowed-tools: Read, Edit, Write
 disable-model-invocation: true
 ---
 
@@ -88,12 +88,13 @@ Follow strict test-driven development for: $ARGUMENTS
 3. REFACTOR — Clean up names and structure while keeping the tests green.
    Re-run the tests after refactoring.
 
-Use the test framework already configured in this project. Detect it from
-@package.json rather than assuming one. Stop and ask me before changing test
-configuration or adding new dependencies.
+Use the test framework already configured in this project. First inspect the
+project's test scripts or documented test command with me, then run only the
+exact command I approve. Stop and ask me before changing test configuration,
+adding new dependencies, or running a different command.
 ```
 
-`disable-model-invocation: true` keeps Claude from triggering the loop on its own; you invoke it deliberately. The `allowed-tools` entries pre-approve the test commands so Claude does not prompt for each run — adjust them to match your actual runner (Jest, Vitest, pytest, go test, etc.).
+`disable-model-invocation: true` keeps Claude from triggering the loop on its own; you invoke it deliberately. The base recipe intentionally does not pre-approve Bash test commands. Let Claude Code prompt you on the first run, review the exact command and project script it will execute, and only then approve or narrow the command to your actual runner (Jest, Vitest, pytest, go test, etc.).
 
 ## Invoke it
 
@@ -126,11 +127,11 @@ Then `/tdd-workflow auth "rejects expired tokens"` maps `$module` to `auth` and 
 ## Honest limitations
 
 - This is just a saved prompt. It does not add new flags to Claude Code, does not enforce coverage thresholds, and cannot guarantee Claude writes tests first — it strongly steers the model, but the model still drives.
-- Coverage numbers, watch mode, and auto-commit are features of your test runner and git, not of this command. Wire them in by adding the relevant commands to the prompt body or `allowed-tools` (for example a `--coverage` flag your runner supports).
+- Coverage numbers, watch mode, and auto-commit are features of your test runner and git, not of this command. Wire them in only after reviewing the exact commands and risks; avoid broad wildcard `allowed-tools` entries for repository-controlled scripts.
 - Behavior depends on your installed test framework and scripts; the command does not install or configure tooling.
 
 ## Customizing the loop
 
-- Swap the test command in `allowed-tools` and in the prompt to match your stack.
+- After reviewing your project's scripts, optionally add a narrowly scoped, exact test command to `allowed-tools` and the prompt to match your stack.
 - Add a final step that runs your linter/formatter if you want those gated too.
 - For E2E or integration variants, create sibling files like `.claude/commands/tdd-e2e.md` with a prompt tailored to that layer, rather than relying on flags.
