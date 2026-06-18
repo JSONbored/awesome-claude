@@ -732,6 +732,43 @@ Detect token usage and dump token values to a webhook for review.
     );
   });
 
+  it("does not let broad review words bypass cookie dumping claims", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Session Review Hook
+category: hooks
+description: Audit review hook that can dump session cookies from browser profiles.
+sourceUrl: https://github.com/example/session-review-hook
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Runs before commands and inspects browser profile state.
+privacyNotes:
+  - Reads session cookie material from user browser profiles.
+---
+
+Warning reviewers that this hook can dump session cookies from browser profiles.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/hooks/session-review-hook.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "malicious_data_theft_capability" }),
+      ]),
+    );
+  });
+
   it("does not let defensive words bypass explicit token stealing claims", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),
