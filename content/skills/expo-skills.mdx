@@ -1,0 +1,240 @@
+---
+title: Expo Skills
+slug: expo-skills
+category: skills
+description: >-
+  Official Expo AI agent skills for building, deploying, upgrading, observing,
+  and debugging Expo and React Native apps with Expo Router, EAS, native
+  modules, App Clips, Tailwind, native UI, and EAS Update insights.
+cardDescription: >-
+  Expo-authored skill pack for Claude Code, Codex, Cursor, and other AI agents
+  working on Expo, React Native, EAS, native modules, and mobile deployment.
+seoTitle: Expo Skills for Claude Code, Codex, Cursor, and AI Agents
+seoDescription: >-
+  Install official Expo Skills for Claude Code, Codex, Cursor, and AI coding
+  agents to build, upgrade, deploy, and debug Expo and React Native apps.
+author: Expo
+authorProfileUrl: "https://github.com/expo"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/expo/skills"
+documentationUrl: "https://docs.expo.dev/skills/"
+websiteUrl: "https://docs.expo.dev/skills/"
+downloadUrl: "https://github.com/expo/skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add expo/skills"
+usageSnippet: >-
+  Install Expo Skills through the Claude Code or Codex plugin marketplace, or
+  use the skills CLI for Cursor and other agents, then ask the agent to load the
+  focused skill for Expo Router UI, EAS deployment, native modules, updates, or
+  SDK upgrades.
+copySnippet: |-
+  # Claude Code
+  /plugin install expo@claude-plugins-official
+
+  # Codex
+  codex plugin add expo@openai-curated
+
+  # Skills CLI
+  npx skills add expo/skills
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/expo/skills"
+  - "https://docs.expo.dev/skills.md"
+  - "https://raw.githubusercontent.com/expo/skills/main/README.md"
+  - "https://raw.githubusercontent.com/expo/skills/main/skills.sh.json"
+  - "https://raw.githubusercontent.com/expo/skills/main/plugins/expo/skills/building-native-ui/SKILL.md"
+  - "https://raw.githubusercontent.com/expo/skills/main/plugins/expo/skills/expo-deployment/SKILL.md"
+  - "https://raw.githubusercontent.com/expo/skills/main/plugins/expo/.codex-plugin/plugin.json"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cursor
+  - GitHub Copilot
+  - Gemini
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code, Codex, Cursor, or another Agent Skills-compatible AI coding agent."
+  - "Expo or React Native project when applying project-specific skills."
+  - "Expo CLI, EAS CLI, simulator/device, or Expo account access when building, deploying, observing, or querying EAS state."
+  - "Current Expo docs, Expo CLI help, EAS CLI help, or Expo MCP access for exact commands and service behavior."
+safetyNotes:
+  - "Expo Skills can guide agents through native project changes, EAS builds, store submissions, EAS Update rollouts, and EAS Observe queries; those actions can affect real apps and users."
+  - "Do not let an agent trigger EAS builds, submissions, rollouts, or production updates without reviewing project, profile, branch, runtime version, and account context."
+  - "Native modules, config plugins, App Clips, brownfield integration, and prebuild steps can modify iOS and Android project files; inspect diffs before committing."
+  - "Follow the skill's Expo Go-first guidance before creating custom native builds unless custom native code or platform targets require them."
+privacyNotes:
+  - "Expo and EAS work can involve bundle identifiers, project IDs, app metadata, Apple and Google credentials, service account files, release channels, crash metrics, user counts, update payload sizes, screenshots, and build logs."
+  - "Keep Expo tokens, Apple credentials, Google service account JSON, signing keys, keystore files, secrets, private crash data, and unpublished app metadata out of prompts, public PRs, screenshots, and logs."
+  - "The Expo plugin can bundle MCP configuration; connected agents may access docs, EAS services, simulator screenshots, build status, workflow state, or update health depending on granted permissions."
+tags:
+  - expo
+  - skills
+  - react-native
+  - eas
+  - mobile
+  - ai-agents
+  - codex
+  - mcp
+keywords:
+  - expo skills
+  - expo agent skills
+  - expo claude code
+  - expo codex plugin
+  - expo cursor skills
+  - expo react native agent
+  - eas ai agent
+  - expo mcp skills
+readingTime: 8
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Expo Skills
+
+`expo/skills` is Expo's official skill repository and plugin package for AI
+coding agents working on Expo and React Native apps. It teaches agents how to
+build native-feeling UI, configure Expo Router, use EAS Build and EAS Workflows,
+upgrade Expo SDKs, work with native modules, inspect EAS Update health, and
+handle mobile deployment workflows.
+
+The official docs position Expo documentation, Expo CLI, and EAS CLI as the
+source of truth. The skills help agents apply that guidance inside real projects
+without guessing from stale model memory.
+
+## Knowledge Freshness
+
+Expo SDKs, React Native versions, EAS CLI behavior, Expo Router conventions,
+native module APIs, Apple and Google store requirements, and EAS Update health
+signals change over time. Use the skill pack for workflows and guardrails, then
+verify exact commands against current Expo docs, CLI help, package versions, and
+the target project's config.
+
+The companion Expo MCP server can provide live docs and EAS access when a
+project has been configured for that level of agent authority.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- Expo's official `expo/skills` GitHub repository.
+- Expo's `docs.expo.dev/skills.md` documentation page.
+- The repository README and `skills.sh.json` grouping metadata.
+- Representative skill manifests for `building-native-ui`, `expo-deployment`,
+  `expo-module`, `eas-update-insights`, and `upgrading-expo`.
+- The Codex plugin metadata for the official Expo plugin.
+- The MIT license file.
+
+## Core Workflow
+
+Claude Code users can install from the official Claude Code plugin marketplace:
+
+```text
+/plugin install expo@claude-plugins-official
+```
+
+Codex users can install from the OpenAI-curated marketplace:
+
+```bash
+codex plugin add expo@openai-curated
+```
+
+Cursor and other Agent Skills-compatible tools can use the skills CLI:
+
+```bash
+npx skills add expo/skills
+```
+
+After installing, ask an Expo-specific task such as "upgrade this app to the
+latest Expo SDK", "build an Expo Router settings screen", "create an EAS
+workflow for PR previews", or "check whether this EAS Update rollout is
+healthy". The agent should load the relevant skill automatically.
+
+## Capability Scope
+
+Expo currently publishes skills across app design, native/platform work,
+deployment, observability, and maintenance:
+
+| Skill | Scope |
+| --- | --- |
+| `building-native-ui` | Expo Router screens, navigation, styling, animations, native tabs, UI patterns, safe-area behavior, and Expo Go-first development |
+| `native-data-fetching` | Fetch API, React Query, SWR, caching, offline support, and Expo Router data loaders |
+| `expo-api-routes` | Expo Router API routes with EAS Hosting |
+| `expo-tailwind-setup` | Tailwind CSS v4, `react-native-css`, and NativeWind v5 setup |
+| `use-dom` | Expo DOM components for gradually using web code in native apps |
+| `expo-dev-client` | Local and TestFlight development client builds |
+| `expo-module` | Expo native modules and views with Swift, Kotlin, TypeScript, config plugins, lifecycle hooks, and autolinking |
+| `expo-ui` | `@expo/ui` native UI with SwiftUI and Jetpack Compose surfaces |
+| `add-app-clip` | iOS App Clip targets, AASA files, associated domains, and Smart App Banners |
+| `expo-brownfield` | Adding Expo or React Native to existing iOS or Android apps |
+| `expo-deployment` | EAS Build, EAS Submit, app stores, TestFlight, Play Store, web hosting, and API route deployment |
+| `expo-cicd-workflows` | EAS Workflow YAML, CI/CD automation, preview builds, and deployment pipelines |
+| `expo-observe` | EAS Observe setup and launch, route, event, and version metrics |
+| `eas-update-insights` | EAS Update health, crash rates, launch counts, unique users, payload size, and rollout gates |
+| `upgrading-expo` | Expo SDK upgrades, dependency conflicts, deprecated package migrations, and cache cleanup |
+
+## Production Rules
+
+Use Expo Skills to improve agent accuracy, but keep production authority
+explicit:
+
+- Verify whether a task works in Expo Go before creating a custom development
+  build.
+- Review `app.json`, `eas.json`, workflows, native project files, config
+  plugins, and generated native module code before committing.
+- Check target platforms, profiles, channels, branches, runtime versions, and
+  store accounts before running EAS build, submit, update, or workflow commands.
+- Inspect EAS Update health and crash signals before expanding rollouts.
+- Keep production secrets, signing credentials, service account files, and
+  unpublished app metadata outside prompts and commits.
+- Test on real devices or simulators when changing navigation, native modules,
+  App Clips, updates, notifications, deep links, or platform-specific UI.
+
+## Use Cases
+
+- Ask Codex to upgrade an Expo SDK and resolve deprecated packages.
+- Let Claude Code generate an Expo Router screen with native-feeling UI and
+  safe-area behavior.
+- Use Cursor to create an EAS Workflow that builds preview apps on pull
+  requests.
+- Ask an agent to inspect EAS Update crash rate and launch data before a
+  rollout continues.
+- Pair the Expo plugin's skills with Expo MCP when the agent needs live docs,
+  compatible dependency installation, EAS build monitoring, or simulator
+  screenshots.
+
+## Source Review
+
+- Expo's docs page describes Expo Skills as official AI agent skills for
+  building, deploying, and debugging Expo and React Native apps.
+- The docs page documents Claude Code plugin installation,
+  `codex plugin add expo@openai-curated`, and skills CLI installation for
+  Cursor and other agents.
+- The docs page lists the current skill inventory and links each skill manifest.
+- The README describes the repository as official Expo-authored skills for
+  building, deploying, upgrading, and debugging Expo apps.
+- `skills.sh.json` groups skills into App Design, Native Platform, Deploy and
+  Observe, and Maintenance.
+- The Codex plugin metadata identifies the `expo` plugin as official Expo
+  skills with read, write, interactive, and MCP capabilities.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`, open pull
+requests, and repository-wide content for `Expo Skills`, `Expo Agent Skills`,
+`expo/skills`, `expo codex plugin`, `EAS skills`, and `Expo MCP skills`.
+Existing Expo MCP content covers the MCP server, but no dedicated official Expo
+Skills entry, exact source URL duplicate, target file, or open duplicate PR was
+found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Expo Skills are
+published by Expo under the MIT license. Expo also offers hosted EAS services
+and commercial developer infrastructure outside this directory.
