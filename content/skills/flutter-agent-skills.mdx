@@ -1,0 +1,226 @@
+---
+title: Flutter Agent Skills
+slug: flutter-agent-skills
+category: skills
+description: >-
+  Official Flutter team Agent Skills for AI coding agents building Flutter apps,
+  fixing layout issues, adding widget and integration tests, creating widget
+  previews, applying layered architecture, routing, localization, JSON
+  serialization, and HTTP workflows.
+cardDescription: >-
+  Flutter team skills for Claude Code, Codex, Gemini CLI, and other agents
+  covering layout errors, integration tests, widget tests, previews,
+  architecture, routing, localization, JSON, and HTTP.
+seoTitle: Flutter Agent Skills for Claude Code, Codex, Gemini CLI, MCP, and Tests
+seoDescription: >-
+  Install Flutter Agent Skills for Claude Code, Codex, Gemini CLI, and other
+  agents to build Flutter apps with layout fixes, MCP-assisted integration
+  tests, widget tests, previews, architecture, routing, localization, JSON, and
+  HTTP workflows.
+author: Flutter Team
+authorProfileUrl: "https://github.com/flutter"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/flutter/skills"
+documentationUrl: "https://github.com/flutter/skills#readme"
+websiteUrl: "https://skills.sh/flutter/skills"
+downloadUrl: "https://github.com/flutter/skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add flutter/skills --skill '*' --agent universal --yes"
+usageSnippet: >-
+  Install the Flutter skills into the standard `.agents/skills` folder, then
+  use focused workflows for layout errors, tests, previews, architecture,
+  routing, localization, JSON serialization, or HTTP integration.
+copySnippet: |-
+  npx skills add flutter/skills --skill '*' --agent universal --yes
+
+  # Update installed skills
+  npx skills update
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/flutter/skills"
+  - "https://raw.githubusercontent.com/flutter/skills/main/README.md"
+  - "https://skills.sh/flutter/skills"
+  - "https://raw.githubusercontent.com/flutter/skills/main/skills/flutter-fix-layout-issues/SKILL.md"
+  - "https://raw.githubusercontent.com/flutter/skills/main/skills/flutter-add-integration-test/SKILL.md"
+  - "https://raw.githubusercontent.com/flutter/skills/main/skills/flutter-apply-architecture-best-practices/SKILL.md"
+  - "https://raw.githubusercontent.com/flutter/skills/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Gemini CLI
+  - Generic Agent Skills hosts
+prerequisites:
+  - "Flutter SDK and Dart tooling installed for the target project."
+  - "An AI coding assistant or skill host compatible with Agent Skills, preferably using the standard `.agents/skills` install target."
+  - "Project-specific Flutter targets, devices, emulators, browsers, test commands, and package constraints available before modifying app code."
+  - "For MCP-assisted testing or UI exploration, access to the Dart/Flutter MCP server or equivalent app interaction tools."
+safetyNotes:
+  - "Flutter skills can modify application code, tests, pubspec dependencies, routing, localization files, serialization code, architecture boundaries, and app entry points."
+  - "Integration-test workflows may enable Flutter Driver extensions, add keys to widgets, launch apps through MCP tools, interact with running UI, and create driver scripts."
+  - "Do not run device, emulator, browser, Firebase Test Lab, or network-backed integration tests against production services without explicit approval and test credentials."
+  - "Architecture and routing changes can alter navigation, state management, API access, caching, offline behavior, and user-visible app flows."
+  - "Use project-local conventions and Flutter version constraints before applying generated examples."
+privacyNotes:
+  - "Flutter projects may contain API URLs, Firebase project IDs, mobile bundle IDs, analytics keys, user fixtures, screenshots, test traces, device logs, crash output, and integration-test artifacts."
+  - "MCP app exploration can expose widget trees, screen text, test data, typed inputs, navigation paths, and screenshots from the running app."
+  - "HTTP, JSON, localization, and repository-layer work may touch private API schemas, user data models, translations, product copy, and backend payloads."
+  - "Keep credentials, private endpoints, screenshots with user data, device logs, Firebase tokens, and proprietary UI flows out of public prompts, issues, PRs, and examples."
+tags:
+  - flutter
+  - dart
+  - skills
+  - mobile
+  - mcp
+  - testing
+  - ui
+  - localization
+keywords:
+  - Flutter Agent Skills
+  - flutter skills Codex
+  - flutter skills Claude Code
+  - Flutter MCP integration test
+  - Flutter layout error skill
+  - Flutter widget test skill
+  - Flutter architecture best practices skill
+  - Flutter localization skill
+readingTime: 8
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Flutter Agent Skills
+
+`flutter/skills` is the official Flutter team Agent Skills repository. It gives
+AI coding agents repeatable, Flutter-specific workflows for common app work:
+layout errors, widget previews, widget tests, integration tests, responsive
+layouts, layered architecture, routing, localization, JSON serialization, and
+HTTP requests.
+
+The README explicitly frames skills as complementary to MCP: MCP gives the
+agent specialized tools, while a skill teaches the agent how to use tools for a
+specific task. That makes this pack useful for Claude Code, Codex, Gemini CLI,
+and any skill-aware coding assistant working inside Flutter apps.
+
+## Knowledge Freshness
+
+The repository is maintained by the Flutter team and the representative skills
+include metadata showing recent 2026 updates. Flutter SDK behavior, Dart
+language features, package APIs, integration testing, widget preview systems,
+MCP tooling, and recommended architecture patterns can change.
+
+Use these skills to guide workflow and best practices, then verify exact
+commands, package versions, SDK constraints, device targets, and test behavior
+against the target Flutter project and current Flutter documentation.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The `flutter/skills` repository README.
+- The public skills.sh listing for Flutter skills.
+- Representative `SKILL.md` files for layout debugging, integration tests, and
+  architecture best practices.
+- The repository license text.
+- Current GitHub repository metadata from the official Flutter organization.
+
+## Core Workflow
+
+Install all Flutter skills into the standard universal skill location:
+
+```bash
+npx skills add flutter/skills --skill '*' --agent universal --yes
+```
+
+Update installed skills:
+
+```bash
+npx skills update
+```
+
+The README recommends using the universal `.agents/skills` target so most
+agents can discover the installed skills.
+
+## Capability Scope
+
+The repository currently lists these Flutter skills:
+
+| Skill | Scope |
+| --- | --- |
+| `flutter-add-integration-test` | Configure integration tests and convert MCP UI actions into permanent tests |
+| `flutter-add-widget-preview` | Add interactive previews for UI components and screen states |
+| `flutter-add-widget-test` | Write component-level tests with `WidgetTester` |
+| `flutter-apply-architecture-best-practices` | Structure apps with UI, logic, and data layers |
+| `flutter-build-responsive-layout` | Build adaptive layouts with `LayoutBuilder`, `MediaQuery`, `Expanded`, and `Flexible` |
+| `flutter-fix-layout-issues` | Diagnose overflows, unbounded constraints, ParentData errors, and layout failures |
+| `flutter-implement-json-serialization` | Map JSON to Dart model classes with `fromJson` and `toJson` |
+| `flutter-setup-declarative-routing` | Configure router-based navigation and deep links |
+| `flutter-setup-localization` | Add localization dependencies, generated l10n, and translations |
+| `flutter-use-http-package` | Make GET, POST, PUT, and DELETE requests with the `http` package |
+
+## Production Rules
+
+Use these skills with project-specific Flutter discipline:
+
+- Inspect the target Flutter version, Dart SDK constraint, app structure,
+  package manager state, and test setup before editing.
+- Prefer nearby project conventions for state management, routing, networking,
+  localization, theming, and dependency injection.
+- For layout errors, capture the primary Flutter exception before applying a
+  generic constraint fix.
+- For integration tests, add stable keys, use test entry points, and avoid
+  hitting production APIs or accounts.
+- For architecture changes, keep UI, ViewModel or logic, repositories, services,
+  and models in clear layers rather than mixing data access into widgets.
+- Run focused widget, integration, or `flutter test` validation before broad
+  refactors.
+- Redact screenshots, logs, API payloads, and test data before sharing output.
+
+## Use Cases
+
+- Ask Codex to fix a `RenderFlex overflowed` or unbounded `ListView` error with
+  a source-backed Flutter layout workflow.
+- Use Claude Code to turn an MCP-explored checkout flow into a permanent
+  Flutter integration test.
+- Have Gemini CLI add widget tests for a UI component using `WidgetTester`.
+- Ask an agent to add localization scaffolding with `flutter_localizations`,
+  `intl`, generated ARB files, and `l10n.yaml`.
+- Use an assistant to refactor a feature into Flutter's recommended layered
+  architecture without mixing UI and data logic.
+
+## Source Review
+
+- The README describes Flutter Agent Skills as maintained by the Flutter team.
+- The README states the skills provide tailored instructions for happy-path
+  Flutter app development workflows.
+- The README says skills complement MCP by teaching agents how to use tools for
+  a task.
+- The install command uses `npx skills add flutter/skills --skill '*' --agent
+  universal --yes`.
+- The available skills list covers integration tests, widget previews, widget
+  tests, architecture, responsive layouts, layout fixes, JSON serialization,
+  declarative routing, localization, and HTTP.
+- The integration-test skill includes MCP-assisted UI exploration and conversion
+  into permanent integration tests.
+- The layout skill documents common Flutter constraint errors and repair
+  workflows.
+- The license file identifies the repository as BSD-3-Clause.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`, open pull
+requests, and repository-wide content for `flutter/skills`, Flutter Agent
+Skills, Flutter skills, Flutter MCP integration tests, Flutter layout skills,
+and representative skill names. No dedicated Flutter Agent Skills entry, exact
+source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The upstream
+repository is maintained by the Flutter team and licensed under BSD-3-Clause.
