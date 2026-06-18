@@ -234,6 +234,61 @@ describe("submission risk invariants", () => {
     );
   });
 
+  it("keeps identity attestation risk matching narrow and synchronized with CI", () => {
+    const sensitiveReport = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 334,
+        title: "content(mcp): add identity attestation mcp",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Identity Attestation MCP",
+            slug: "identity-attestation-mcp",
+            description:
+              "MCP server for attestations of user identity before account access.",
+            privacyNotes: ["Can process user identity evidence."],
+          }),
+          "content/mcp/identity-attestation-mcp.mdx",
+        ),
+      ],
+    });
+    const benignReport = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 335,
+        title: "content(guides): add iam artifact attestations",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Artifact Attestations for IAM Docs",
+            slug: "iam-artifact-attestations",
+            category: "guides",
+            description:
+              "Guide for artifact provenance in IAM documentation workflows.",
+            safetyNotes: [
+              "Provenance evidence only; no runtime document processing.",
+            ],
+          }),
+          "content/guides/iam-artifact-attestations.mdx",
+        ),
+      ],
+    });
+
+    expect(sensitiveReport.reviewFlags.map((flag) => flag.id)).toContain(
+      "financial_or_identity_sensitive",
+    );
+    expect(benignReport.reviewFlags.map((flag) => flag.id)).not.toContain(
+      "financial_or_identity_sensitive",
+    );
+  });
+
   it("uses same-repo frontmatter contributors when maintainer content carries submitter metadata", () => {
     const report = analyzeDirectContentRisk({
       pullRequest: {

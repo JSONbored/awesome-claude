@@ -50,7 +50,7 @@ const GITHUB_LOGIN_PATTERN =
 const FINANCIAL_OR_IDENTITY_PATTERN =
   /\b(private key|wallet|kyc|usdc|x402|payment|crypto|on-chain)\b/i;
 const SENSITIVE_ATTESTATION_FORWARD_TERMS =
-  "wallet|kyc|payment|crypto|on-chain identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
+  "wallet|kyc|payment|crypto|on-chain identity|user identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
 const SENSITIVE_ATTESTATION_REVERSE_TERMS =
   "wallet|kyc|payment|crypto|on-chain identity|identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
 const IDENTITY_ATTESTATION_PATTERN = new RegExp(

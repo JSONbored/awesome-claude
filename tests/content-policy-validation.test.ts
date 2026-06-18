@@ -971,8 +971,41 @@ Use this server only for attestation of identity flows that have consent.
       "financial_or_identity_sensitive",
     );
     expect(
-      output.classificationWarnings.map((warning: { id: string }) => warning.id),
+      output.classificationWarnings.map(
+        (warning: { id: string }) => warning.id,
+      ),
     ).toContain("missing_safety_notes");
+  });
+
+  it("does not classify generic identity management artifact attestations as identity-sensitive", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Artifact Attestations for IAM Docs
+category: guides
+description: Guide for artifact provenance in IAM documentation workflows.
+documentationUrl: https://example.com/iam-artifact-attestations
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Provenance evidence only; no runtime document processing.
+---
+
+Use artifact attestations for identity management documentation and release
+provenance checks.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/guides/iam-artifact-attestations.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(
+      output.reviewFlags.map((flag: { id: string }) => flag.id),
+    ).not.toContain("financial_or_identity_sensitive");
   });
 
   it("classifies reverse-order identity proof attestations as identity-sensitive", () => {
