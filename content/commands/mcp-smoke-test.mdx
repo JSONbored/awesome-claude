@@ -35,6 +35,7 @@ prerequisites:
 safetyNotes:
   - "Prefer read-only tools during verification; avoid destructive MCP tools on production data."
   - "Remove failing servers from MCP config before sharing logs externally."
+  - "Before using the server-name argument in terminal commands, select an exact name from claude mcp list and reject names that do not match ^[A-Za-z0-9_.-]{1,64}$."
 privacyNotes:
   - "MCP tool outputs may include repository paths; redact before posting publicly."
 tags:
@@ -69,11 +70,12 @@ code.claude.com.
 When you invoke this command, follow these steps:
 
 1. **List configured servers.** Run `claude mcp list` and confirm the target server appears with the expected scope (project, user, or local).
-2. **Inspect one server.** Run `claude mcp get <server-name>` to review transport, command or URL, and pending approval status documented in the MCP guide.
-3. **Check live status in Claude Code.** Ask the operator to open `/mcp` and confirm authentication status, tool count, and any servers flagged as needing auth.
-4. **Handle pending approval.** If the guide shows `Pending approval` for a project `.mcp.json` server, complete the interactive approval flow before testing tools.
-5. **Exercise one read-only tool.** With explicit user approval, invoke a documented read-only MCP tool with minimal arguments and record errors or OAuth prompts.
-6. **Summarize rollback.** If verification fails, document removal steps using `claude mcp remove <server-name>` and reverting `.mcp.json` edits.
+2. **Validate the target name.** Select the exact server name from the `claude mcp list` output. Reject the input and stop if it contains whitespace, shell metacharacters, or does not match `^[A-Za-z0-9_.-]{1,64}$`.
+3. **Inspect one server safely.** Run `claude mcp get -- "<validated-server-name>"` to review transport, command or URL, and pending approval status documented in the MCP guide. Treat the validated name as a separate quoted argument; do not paste or interpolate unvalidated text into a shell command.
+4. **Check live status in Claude Code.** Ask the operator to open `/mcp` and confirm authentication status, tool count, and any servers flagged as needing auth.
+5. **Handle pending approval.** If the guide shows `Pending approval` for a project `.mcp.json` server, complete the interactive approval flow before testing tools.
+6. **Exercise one read-only tool.** With explicit user approval, invoke a documented read-only MCP tool with minimal arguments and record errors or OAuth prompts.
+7. **Summarize rollback.** If verification fails, document removal steps using `claude mcp remove -- "<validated-server-name>"` and reverting `.mcp.json` edits.
 
 ## Output format
 
@@ -89,11 +91,11 @@ Verified against Claude Code MCP documentation on **2026-06-16**:
 
 - **`claude mcp list`** lists configured MCP servers and shows pending approval
   states for project-scoped `.mcp.json` entries.
-- **`claude mcp get <name>`** prints configuration details for a single server.
+- **`claude mcp get <name>`** prints configuration details for a single server; this runbook requires validating the name first and passing it as a separate quoted argument.
 - The **`/mcp` panel** shows authentication status, tool counts, and servers
   that advertise tools but expose none.
 - Remote servers may require **OAuth** completed through the `/mcp` menu.
-- **`claude mcp remove <name>`** removes a configured server when rollback is needed.
+- **`claude mcp remove <name>`** removes a configured server when rollback is needed; use only the same validated name selected from `claude mcp list`.
 
 ## Duplicate Check
 
