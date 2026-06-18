@@ -1,0 +1,190 @@
+---
+title: CAMEL-AI CAMEL
+slug: camel-ai
+category: tools
+description: >-
+  Open-source Python multi-agent framework for building agent societies,
+  role-playing agents, stateful ChatAgent workflows, RAG agents, synthetic data
+  generation, MCP-enabled use cases, and research-scale agent experiments.
+cardDescription: >-
+  Python multi-agent framework for agent societies, ChatAgent workflows, RAG,
+  tool use, MCP examples, data generation, and large-scale agent research.
+seoTitle: CAMEL-AI CAMEL Multi-Agent Framework for Agent Societies and MCP Workflows
+seoDescription: >-
+  CAMEL-AI CAMEL is an Apache-2.0 Python framework for multi-agent systems,
+  agent societies, ChatAgent workflows, RAG, tool use, MCP examples, synthetic
+  data generation, and scalable agent research.
+author: CAMEL-AI
+authorProfileUrl: "https://github.com/camel-ai"
+dateAdded: "2026-06-18"
+websiteUrl: "https://www.camel-ai.org/"
+documentationUrl: "https://docs.camel-ai.org/"
+repoUrl: "https://github.com/camel-ai/camel"
+packageUrl: "https://pypi.org/pypi/camel-ai/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/camel-ai/camel"
+  - "https://raw.githubusercontent.com/camel-ai/camel/master/README.md"
+  - "https://raw.githubusercontent.com/camel-ai/camel/master/pyproject.toml"
+  - "https://github.com/camel-ai/camel/blob/master/LICENSE"
+  - "https://pypi.org/pypi/camel-ai/json"
+installable: true
+installCommand: "pip install camel-ai"
+usageSnippet: >-
+  Install `camel-ai`, configure the model provider credentials required by your
+  selected model route, then build a ChatAgent, agent society, RAG workflow, or
+  MCP-enabled use case with reviewed tools and scoped credentials.
+copySnippet: |-
+  pip install camel-ai
+estimatedSetupTime: 25 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 through 3.14 and an isolated Python environment managed with pip, uv, or another package manager."
+  - "A configured model provider such as OpenAI or another provider supported by the selected CAMEL model route."
+  - "Provider API keys, search credentials, vector database credentials, or tool-specific secrets stored outside source control."
+  - "Optional extras for web tools, document tools, RAG, model platforms, storage backends, dev tools, or research tools only when those integrations are required."
+  - "A review plan for any agent society, MCP server, browser/search tool, code tool, or account-writing tool attached to a CAMEL agent."
+safetyNotes:
+  - "CAMEL agents can coordinate multi-step tasks, call tools, use web/search integrations, connect to MCP examples, and run with provider credentials; review tool permissions before giving agents write access or account access."
+  - "Large-scale agent societies and role-playing workflows can generate high volumes of model calls, tool calls, logs, synthetic data, and intermediate artifacts; set budgets, rate limits, and stop conditions before long runs."
+  - "RAG, document, media, browser, communication, and data-tool extras may access local files, third-party APIs, vector stores, notebooks, or generated datasets; isolate experiments from production systems."
+  - "CAMEL examples include MCP-oriented use cases, but MCP does not make connected tools safe by default. Scope server permissions, credentials, filesystem access, and approval gates separately."
+  - "Do not treat generated code, generated datasets, citations, research summaries, or multi-agent decisions as verified until they have been reviewed against source data and policy requirements."
+privacyNotes:
+  - "Prompts, model responses, agent messages, tool arguments, tool outputs, retrieved documents, search results, logs, generated datasets, traces, and errors may include user or workspace data."
+  - "Model providers, search providers, MCP servers, vector stores, web tools, document parsers, browser tools, and observability integrations may receive data from CAMEL workflows."
+  - "Keep provider API keys, OAuth tokens, MCP server credentials, vector database URLs, generated logs, and synthetic datasets out of committed examples, screenshots, public issues, and shared notebooks."
+  - "If `CAMEL_MODEL_LOG_ENABLED` or other logging/tracing integrations are enabled, review request/response logs and model configuration logs before sharing or retaining them."
+tags:
+  - camel-ai
+  - multi-agent
+  - ai-agents
+  - agent-framework
+  - python
+  - mcp
+  - rag
+  - synthetic-data
+keywords:
+  - CAMEL-AI
+  - CAMEL multi-agent framework
+  - camel-ai Python agents
+  - agent societies
+  - ChatAgent
+  - CAMEL MCP
+  - multi-agent systems
+  - communicative agents
+  - AI society agents
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+CAMEL is CAMEL-AI's open-source Python framework for building and studying
+multi-agent systems. Its core concepts include `ChatAgent`, agent societies,
+role-playing workflows, stateful memory, task automation, RAG agents, synthetic
+data generation, model integrations, and toolkits for web, documents, media,
+communication, data, research, storage, and development workflows.
+
+It belongs in the directory because it is one of the clearest high-demand
+multi-agent framework gaps: the repo is active, the package is on PyPI, the
+project publishes official docs, and the README explicitly covers agent
+societies, RAG cookbooks, MCP-oriented use cases, and scalable agent research.
+
+## Install
+
+Install the base Python package:
+
+```bash
+pip install camel-ai
+```
+
+For web-search examples and related tools, install the matching extra:
+
+```bash
+pip install "camel-ai[web_tools]"
+```
+
+The upstream `pyproject.toml` also defines optional extras for RAG, document
+tools, media tools, communication tools, data tools, research tools, development
+tools, model platforms, Hugging Face integrations, storage backends, and docs.
+Install only the extras needed by the workflow.
+
+## Agent Capabilities
+
+| Area | CAMEL Coverage |
+| --- | --- |
+| Agent runtime | `ChatAgent`, agent messages, role-playing, societies, workforce patterns, and multi-step task automation |
+| Multi-agent systems | Agent societies, role-playing examples, workforce use cases, collaborative research assistants, and judging workflows |
+| Tools and integrations | Web tools, document tools, media tools, communication tools, data tools, research tools, dev tools, storage backends, and model platforms |
+| RAG | RAG, Graph RAG, dynamic knowledge graph examples, PDF/document parsing, and vector-store integrations through optional extras |
+| MCP relevance | `mcp` is a core dependency in the current project metadata, and the README lists MCP-oriented use cases such as ACI MCP, Cloudflare MCP CAMEL, and Airbnb MCP |
+| Research workflows | Synthetic data generation, benchmarks, role simulations, large-scale agent experiments, and cited research artifacts |
+| Logging | Optional request/response and model-configuration logging through CAMEL environment variables |
+
+## MCP Fit
+
+CAMEL is not listed here as a standalone MCP server. It is a multi-agent
+framework that can sit above MCP tools and servers in agent workflows. That is
+useful for teams testing how Claude-adjacent agents coordinate across external
+tools, but it also raises the normal MCP trust questions: what each server can
+read, what it can write, which credentials it receives, and whether an operator
+approves high-impact actions.
+
+## Use Cases
+
+- Build Python `ChatAgent` workflows with model and tool integrations.
+- Prototype role-playing agent societies for task automation and research.
+- Run multi-agent RAG, Graph RAG, and document-processing experiments.
+- Evaluate synthetic data generation and benchmark-oriented agent behavior.
+- Connect agent workflows to web/search tools, vector stores, communication
+  tools, model platforms, or MCP-oriented examples.
+- Study scaling behavior, stateful memory, emergent coordination, and
+  multi-agent failure modes.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `camel-ai/camel` as an Apache-2.0 repository with active
+  development, 17,000+ stars, and a latest release `v0.2.90`.
+- The upstream README describes CAMEL as an open-source community and framework
+  for studying agents at scale, with agents, tasks, prompts, models, simulated
+  environments, agent societies, data generation, task automation, and world
+  simulation.
+- The README documents `pip install camel-ai`, a `ChatAgent` quick start,
+  optional `camel-ai[web_tools]`, `OPENAI_API_KEY`, model request/response
+  logging variables, official docs, cookbooks, RAG examples, agent society
+  examples, and MCP-oriented use cases.
+- `pyproject.toml` declares the `camel-ai` package, Python `>=3.10,<3.15`,
+  Apache-2.0 licensing, an `mcp>=1.3.0` dependency, and optional extras for
+  RAG, web tools, document tools, media tools, communication tools, data tools,
+  research tools, dev tools, model platforms, Hugging Face, storage, and docs.
+- PyPI resolves package metadata for `camel-ai` version `0.2.90`.
+
+## Safety and Privacy
+
+CAMEL is powerful because it combines model calls, agent memory, tool use,
+multi-agent coordination, and optional integrations. Treat each agent run as an
+automation surface. Keep credentials scoped, cap long-running experiments,
+review tool permissions, and inspect generated outputs before they affect
+repositories, accounts, infrastructure, users, or datasets.
+
+Logging and observability are especially sensitive in multi-agent systems.
+Prompts, intermediate messages, retrieved documents, generated code, tool
+arguments, model responses, and synthetic data can leak private context when
+shared in notebooks, examples, issue reports, dashboards, or retained logs.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, open pull requests, and repository-wide
+content for `camel-ai/camel`, CAMEL-AI, CAMEL multi-agent framework,
+`camel-ai`, `ChatAgent`, agent societies, CAMEL MCP, ACI MCP, Cloudflare MCP
+CAMEL, Airbnb MCP, and communicative agents. Existing entries cover adjacent
+agent frameworks such as LangGraph, CrewAI, AutoGen, Agno, Mastra, Pydantic AI,
+Smolagents, Letta, LiveKit Agents, and mcp-agent, but no dedicated CAMEL tools
+entry, exact source URL duplicate, target file, or open duplicate PR was found.
