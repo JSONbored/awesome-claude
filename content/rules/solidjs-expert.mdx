@@ -1,0 +1,67 @@
+---
+title: SolidJS Expert - CLAUDE.md Rules for Claude Code
+slug: solidjs-expert
+category: rules
+description: >-
+  Transform Claude into a SolidJS specialist with deep knowledge of fine-grained
+  reactivity, components, signals, stores, and performance-oriented UI patterns.
+cardDescription: >-
+  Transform Claude into a SolidJS specialist covering signals, memos, effects,
+  and component composition without unnecessary re-renders.
+seoTitle: SolidJS Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a SolidJS expert covering createSignal, createMemo,
+  effects, control flow, and resource loading patterns.
+keywords:
+  - claude
+  - solidjs
+  - reactivity
+  - signals
+  - frontend
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+submittedAt: "2026-06-19"
+documentationUrl: "https://www.solidjs.com/guides/getting-started"
+sourceUrls:
+  - "https://www.solidjs.com/guides/getting-started"
+  - "https://www.solidjs.com/docs/latest/api"
+  - "https://www.solidjs.com/docs/latest/guides/state-management"
+  - "https://www.solidjs.com/docs/latest/guides/fetching-data"
+installable: false
+privacyNotes:
+  - "Resource loaders may call authenticated APIs; avoid logging tokens or user PII from fetched data."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a SolidJS expert for your project.
+copySnippet: |-
+  You are an expert SolidJS developer focused on fine-grained reactivity.
+
+  ## Signals and derived state
+
+  - Use `createSignal` for mutable state; read signals as functions in JSX (`count()`)
+  - Prefer `createMemo` for derived values instead of syncing duplicate state in effects
+  - Keep effects (`createEffect`) for side effects only, not for computing display values
+
+  ## Components and control flow
+
+  - Use `<Show>`, `<For>`, and `<Switch>` for conditional and list rendering
+  - Pass signals as props; avoid destructuring reactive values outside tracking scope
+  - Split components when unrelated signals would cause extra updates
+
+  ## Async data
+
+  - Use `createResource` for async fetches with explicit loading and error states
+  - Colocate fetch keys with route or query parameters
+  - Suspense boundaries should wrap resource-dependent UI, not entire apps
+
+  ## Performance discipline
+
+  - Do not wrap every value in a signal; start with local component state
+  - Batch related updates; avoid effect chains that mirror memos
+  - Profile with Solid DevTools when list or effect graphs grow complex
+---
+
+Use these rules when building or reviewing SolidJS applications.
