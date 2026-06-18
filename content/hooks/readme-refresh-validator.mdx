@@ -68,6 +68,16 @@ scriptBody: |-
 
   command -v jq >/dev/null 2>&1 || exit 0
 
+  sanitize_output() {
+    # Strip ASCII control characters before printing untrusted package or path
+    # names to the terminal.
+    LC_ALL=C tr -d '\000-\037\177'
+  }
+
+  safe() {
+    printf '%s' "$1" | sanitize_output
+  }
+
   INPUT=$(cat)
   FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
 
@@ -92,7 +102,7 @@ scriptBody: |-
   fi
 
   if [ -z "$readme" ] || [ ! -f "$readme" ]; then
-    [ -n "$pkg" ] && echo "README refresh: no README found near $FILE - add one with Install and Usage sections (see standard-readme)." >&2
+    [ -n "$pkg" ] && echo "README refresh: no README found near $(safe "$FILE") - add one with Install and Usage sections (see standard-readme)." >&2
     exit 0
   fi
 
@@ -111,8 +121,12 @@ scriptBody: |-
       else empty end' -- "$pkg" 2>/dev/null)
     printf '%s\n' "$bins" | while IFS= read -r b; do
       [ -z "$b" ] && continue
-      if ! grep -qiF -e "$b" -- "$readme"; then
-        echo "README refresh: CLI command '$b' (from package.json bin) is not mentioned in $readme." >&2
+      if ! printf '%s' "$b" | LC_ALL=C grep -qE '^[[:alnum:]_.@/:+-]+$'; then
+        echo "README refresh: skipping package.json bin with unsupported characters: '$(safe "$b")'." >&2
+        continue
+      fi
+      if ! grep -qiF -- "$b" "$readme"; then
+        echo "README refresh: CLI command '$(safe "$b")' (from package.json bin) is not mentioned in $(safe "$readme")." >&2
       fi
     done
   fi
@@ -128,7 +142,7 @@ safetyNotes:
   - "Section and command matching uses simple text heuristics, so it can miss an unconventional README layout or flag a command that is documented only indirectly."
 privacyNotes:
   - "Reads the local README and package.json only; it makes no network calls."
-  - "Prints missing section names and undocumented command names to local hook stderr; it writes no logs."
+  - "Prints missing section names and sanitized undocumented command names to local hook stderr; it writes no logs."
   - "Command and file names shown in output may reveal project structure in your terminal."
 tags:
   - "documentation"
