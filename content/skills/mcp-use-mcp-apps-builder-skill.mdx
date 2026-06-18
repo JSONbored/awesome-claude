@@ -1,0 +1,232 @@
+---
+title: mcp-use MCP Apps Builder Skill
+slug: mcp-use-mcp-apps-builder-skill
+category: skills
+description: >-
+  Agent Skill from mcp-use for building production MCP servers and MCP Apps with
+  tools, resources, prompts, widgets, authentication, deployment, inspector
+  testing, and framework-specific guardrails.
+cardDescription: >-
+  mcp-use Agent Skill for MCP server and MCP Apps work across tools, resources,
+  prompts, widgets, auth, deployment, and production patterns.
+seoTitle: mcp-use MCP Apps Builder Skill for Claude Code, Codex, and MCP Servers
+seoDescription: >-
+  Install the mcp-use MCP Apps Builder Skill for Claude Code, Codex, Cursor, and
+  other coding agents to build MCP servers and MCP Apps with mcp-use tools,
+  resources, prompts, widgets, auth, inspector testing, and deployment patterns.
+author: mcp-use
+authorProfileUrl: "https://github.com/mcp-use"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/mcp-use/mcp-use"
+documentationUrl: "https://github.com/mcp-use/mcp-use/blob/main/skills/mcp-apps-builder/SKILL.md"
+websiteUrl: "https://www.skills.sh/mcp-use/mcp-use/mcp-apps-builder"
+downloadUrl: "https://github.com/mcp-use/mcp-use/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add https://github.com/mcp-use/mcp-use --skill mcp-apps-builder"
+usageSnippet: >-
+  Install the mcp-apps-builder skill before asking an agent to scaffold, modify,
+  debug, review, or deploy mcp-use MCP servers or MCP Apps.
+copySnippet: |-
+  npx skills add https://github.com/mcp-use/mcp-use --skill mcp-apps-builder
+
+  # Update installed skills
+  npx skills update
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/mcp-use/mcp-use"
+  - "https://raw.githubusercontent.com/mcp-use/mcp-use/main/README.md"
+  - "https://raw.githubusercontent.com/mcp-use/mcp-use/main/skills/mcp-apps-builder/SKILL.md"
+  - "https://raw.githubusercontent.com/mcp-use/mcp-use/main/skills/mcp-apps-builder/references/foundations/architecture.md"
+  - "https://raw.githubusercontent.com/mcp-use/mcp-use/main/skills/mcp-apps-builder/references/server/tools.md"
+  - "https://raw.githubusercontent.com/mcp-use/mcp-use/main/skills/mcp-apps-builder/references/widgets/basics.md"
+  - "https://www.skills.sh/mcp-use/mcp-use/mcp-apps-builder"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Cursor
+  - Generic Agent Skills hosts
+prerequisites:
+  - "Node.js, npm or pnpm, and a workspace where an MCP server or MCP App can be scaffolded or edited."
+  - "A coding agent or skill host that can install Agent Skills from GitHub."
+  - "For TypeScript projects, familiarity with `mcp-use/server`, Zod schemas, resources, prompts, widgets, and the project package manager."
+  - "For Python projects, familiarity with the mcp-use Python SDK and the target transport."
+  - "For deployment work, an approved deployment target such as Manufact/mcp-use cloud, plus any required secrets, domains, OAuth clients, and environment variables."
+safetyNotes:
+  - "This skill guides agents through MCP server work that can expose tools, resources, prompts, widgets, middleware, auth flows, and remote deployment surfaces."
+  - "MCP tools can call external APIs, read or mutate local data, proxy other MCP servers, or trigger side effects depending on implementation."
+  - "Widget and MCP Apps work can render user-provided data in interactive UI surfaces; validate data and avoid trusting client-side state."
+  - "Authentication examples may involve OAuth, Supabase, Clerk, Auth0, WorkOS, Keycloak, custom auth, API keys, and session handling. Keep secrets in environment variables."
+  - "Deployment guidance can make a server reachable by external clients; review tool authority, CORS, auth, logging, rate limits, and observability before publishing."
+privacyNotes:
+  - "MCP Apps and servers may process prompts, tool arguments, API responses, user identity, OAuth scopes, logs, widget props, resources, and generated UI state."
+  - "The skill's reference files can lead agents to inspect local source, configs, package metadata, auth providers, deployment logs, and connected MCP server definitions."
+  - "Do not paste API keys, OAuth secrets, cookies, session tokens, production customer data, or private server URLs into prompts, examples, generated docs, issues, or PRs."
+  - "When using hosted deployment or inspector tools, review the retention policies for mcp-use, Manufact, MCP clients, model providers, and connected services."
+tags:
+  - mcp-use
+  - skills
+  - mcp
+  - mcp-apps
+  - widgets
+  - agent-skills
+  - typescript
+  - python
+keywords:
+  - mcp-use skill
+  - MCP Apps Builder Skill
+  - mcp apps builder Claude Code
+  - mcp-use Codex skill
+  - MCP server skill
+  - MCP widgets skill
+  - ChatGPT MCP Apps skill
+  - Claude MCP Apps skill
+readingTime: 8
+difficultyScore: 82
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# mcp-use MCP Apps Builder Skill
+
+`mcp-use/mcp-use` publishes `mcp-apps-builder`, an Agent Skill for building
+production-ready MCP servers and MCP Apps. It is written as a navigation guide:
+the skill tells coding agents which reference files to read before implementing
+tools, resources, prompts, widgets, authentication, deployment, or framework
+changes.
+
+This is useful for Claude Code, Codex, Cursor, and other coding agents because
+MCP Apps work is easy to get subtly wrong: tool schemas, resource wiring, widget
+state, auth, deployment, and client compatibility all affect whether the final
+server is safe and usable.
+
+## Knowledge Freshness
+
+The upstream repository is active and the skill is tied to current mcp-use SDK
+patterns. MCP Apps, ChatGPT Apps, Claude MCP clients, widget APIs, transport
+support, OAuth behavior, inspector behavior, and Manufact/mcp-use cloud
+deployment can change quickly.
+
+Use the skill for workflow structure and mcp-use-specific guardrails, then check
+the current repository README, docs, SDK package versions, and reference files
+before generating or modifying production MCP code.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The `mcp-use/mcp-use` repository README.
+- The upstream `skills/mcp-apps-builder/SKILL.md` file.
+- Representative reference files for architecture, tool implementation, and
+  widget basics.
+- The public skills.sh listing for `mcp-apps-builder`.
+- Current GitHub repository metadata for `mcp-use/mcp-use`.
+
+## Core Workflow
+
+Install the skill from the mcp-use repository:
+
+```bash
+npx skills add https://github.com/mcp-use/mcp-use --skill mcp-apps-builder
+```
+
+Update installed skills:
+
+```bash
+npx skills update
+```
+
+Then invoke it before MCP server work:
+
+```text
+Use the mcp-use MCP Apps Builder Skill before modifying this MCP server.
+```
+
+The skill's first rule is to determine whether the workspace is already an
+mcp-use project. If a package imports from `mcp-use/server` or depends on
+`mcp-use`, it tells the agent to modify the existing project rather than
+scaffold a fresh app.
+
+## Capability Scope
+
+The skill covers mcp-use MCP server and MCP Apps development:
+
+| Area | What the skill routes agents to check |
+| --- | --- |
+| Project detection | Existing mcp-use dependency/imports vs greenfield scaffold |
+| Architecture | Server structure, primitives, lifecycle, and production boundaries |
+| Tools | `server.tool()`, schemas, annotations, validation, and side effects |
+| Resources | Static resources, dynamic resources, resource templates, and references |
+| Prompts | Prompt templates, variables, and discovery behavior |
+| Widgets | MCP Apps UI resources, widget metadata, props, state, files, and theming |
+| Responses | Text, markdown, structured objects, widgets, mixed content, and errors |
+| Proxying | Composing or proxying MCP servers through mcp-use |
+| Authentication | OAuth and provider-specific patterns such as Supabase, Clerk, Auth0, WorkOS, Keycloak, and custom auth |
+| Deployment | Local inspector testing and production deployment through mcp-use/Manufact workflows |
+| Anti-patterns | Missing validation, excessive tool surfaces, state mistakes, unsafe auth, and poor error handling |
+
+## Production Rules
+
+Use this skill with MCP-specific change control:
+
+- Read the relevant reference files before editing `server.tool()`,
+  `server.resource()`, `server.prompt()`, widget code, auth middleware, or
+  deployment configuration.
+- Keep one tool per capability and give each tool a clear schema, description,
+  and side-effect boundary.
+- Validate user input at the tool boundary with Zod or equivalent schema logic.
+- Keep widget state owned by the widget and pass only necessary props from tool
+  responses.
+- Do not expose secrets, private URLs, OAuth client secrets, cookies, or tokens
+  in generated config, docs, examples, prompts, screenshots, logs, or PR text.
+- Test locally with the mcp-use inspector before deployment.
+- Treat deployment as a security boundary: review auth, CORS, rate limits,
+  logging, observability, and public tool authority before publishing.
+
+## Use Cases
+
+- Ask Codex to scaffold a new mcp-use server without mixing up tools, resources,
+  prompts, and widgets.
+- Use Claude Code to add a widget-backed MCP App tool to an existing project.
+- Ask Cursor to review an MCP server for schema, validation, auth, and widget
+  state mistakes.
+- Use an agent to convert a local prototype into a production-deployable MCP App
+  with inspector testing and deployment notes.
+- Guide a code review for unsafe MCP tool surfaces, proxying behavior, auth
+  gaps, or over-broad side effects.
+
+## Source Review
+
+- The repository README describes mcp-use as a fullstack MCP framework for
+  building MCP Apps for ChatGPT and Claude, plus MCP servers for AI agents.
+- The README links directly to the `mcp-apps-builder` skill on skills.sh.
+- The skills.sh page provides the install command and identifies the repository
+  as `mcp-use/mcp-use`.
+- The `SKILL.md` file states that agents should read it before creating,
+  modifying, debugging, reviewing, or answering questions about MCP server work.
+- The skill routes agents to detailed reference files instead of relying on
+  short examples in the entrypoint.
+- The architecture, tools, and widget reference files document production
+  patterns beyond a generic prompt snippet.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/mcp/`, `content/agents/`,
+`content/tools/`, open pull requests, and repository-wide content for
+`mcp-use/mcp-use`, `mcp-apps-builder`, `MCP Apps Builder Skill`, `mcp-use skill`,
+`mcp-builder`, and `openapi-to-mcp`. Existing MCP capability-pack skills cover
+OAuth hardening, Streamable HTTP migration, server authoring security, and
+other general MCP topics, but no dedicated mcp-use MCP Apps Builder Skill entry,
+exact source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The skill lives
+in the `mcp-use/mcp-use` repository. The repository metadata reports MIT license
+for mcp-use, while this skill folder includes Apache-2.0 license text; verify
+the exact license file if redistributing bundled skill artifacts.
