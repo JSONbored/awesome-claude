@@ -842,6 +842,133 @@ LLM providers through a proxy gateway.
     ).not.toContain("missing_pr_file_content");
   });
 
+  it("does not classify GitHub artifact attestations as identity-sensitive", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: GitHub Artifact Attestation Checklist
+category: guides
+description: Source-backed guide for verifying GitHub Artifact Attestations, release artifact provenance, build workflow metadata, and digest evidence.
+documentationUrl: https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Attestations prove artifact provenance, not malware safety or runtime behavior.
+---
+
+Use this checklist to verify GitHub artifact attestation provenance before
+trusting release artifacts.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/guides/github-artifact-attestation-checklist.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(
+      output.reviewFlags.map((flag: { id: string }) => flag.id),
+    ).not.toContain("financial_or_identity_sensitive");
+  });
+
+  it("still classifies wallet attestations as identity-sensitive", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Wallet Attestation MCP
+category: mcp
+description: MCP server for wallet attestations, KYC review, and on-chain identity workflows.
+documentationUrl: https://example.com/wallet-attestation-mcp
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Requires explicit user approval before reading wallet or identity data.
+privacyNotes:
+  - Can process wallet, KYC, and on-chain identity records.
+---
+
+Use wallet attestations only after reviewing account permissions.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/mcp/wallet-attestation-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags.map((flag: { id: string }) => flag.id)).toContain(
+      "financial_or_identity_sensitive",
+    );
+  });
+
+  it("classifies reverse-order identity proof attestations as identity-sensitive", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Passport Proof Attestation Review
+category: guides
+description: Guide for passport identity proof review before issuing user attestations.
+documentationUrl: https://example.com/passport-proof-attestations
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Requires explicit user approval before reviewing identity documents.
+privacyNotes:
+  - Can process passport and identity proof evidence.
+---
+
+Use passport identity proof data only with consent before producing an attestation.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/guides/passport-proof-attestation-review.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags.map((flag: { id: string }) => flag.id)).toContain(
+      "financial_or_identity_sensitive",
+    );
+  });
+
+  it("does not classify distant generic attestation references as identity-sensitive", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const filler = "release provenance metadata ".repeat(10);
+    const content = `---
+title: Artifact Attestation Release Notes
+category: guides
+description: Guide for GitHub artifact attestation review using release provenance metadata.
+documentationUrl: https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Attestations prove build provenance only.
+---
+
+Artifact attestation checks verify build provenance and digest evidence. ${filler}
+Passport checks belong to a separate identity review and are not part of this artifact workflow.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/guides/artifact-attestation-release-notes.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(
+      output.reviewFlags.map((flag: { id: string }) => flag.id),
+    ).not.toContain("financial_or_identity_sensitive");
+  });
+
   it("allows the TODO|FIXME|XXX code-comment marker (prohibited_content false positive)", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),
