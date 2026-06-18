@@ -942,6 +942,39 @@ Use wallet attestations only after reviewing account permissions.
     );
   });
 
+  it("classifies forward-order identity attestations as identity-sensitive", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Identity Attestation MCP
+category: mcp
+description: MCP server for attestations of user identity before account access.
+documentationUrl: https://example.com/identity-attestation-mcp
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+privacyNotes:
+  - Can process user identity evidence.
+---
+
+Use this server only for attestation of identity flows that have consent.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/mcp/identity-attestation-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags.map((flag: { id: string }) => flag.id)).toContain(
+      "financial_or_identity_sensitive",
+    );
+    expect(
+      output.classificationWarnings.map((warning: { id: string }) => warning.id),
+    ).toContain("missing_safety_notes");
+  });
+
   it("classifies reverse-order identity proof attestations as identity-sensitive", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),
