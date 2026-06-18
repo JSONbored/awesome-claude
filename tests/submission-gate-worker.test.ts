@@ -353,7 +353,7 @@ describe("Cloudflare submission gate helpers", () => {
     });
   });
 
-  it("treats neutral Superagent scans as a non-blocking validation pass", async () => {
+  it("requires manual review for neutral Superagent scans", async () => {
     const fetchMock = vi.fn(async () =>
       Response.json({
         check_runs: [
@@ -382,12 +382,14 @@ describe("Cloudflare submission gate helpers", () => {
         requiredChecks: ["validate-content", "Superagent Security Scan"],
       }),
     ).resolves.toMatchObject({
-      state: "passed",
+      state: "failed",
+      summary:
+        "Required validation failed: Superagent Security Scan concluded neutral.",
       checks: [
         { name: "validate-content", status: "passed" },
         {
           name: "Superagent Security Scan",
-          status: "passed",
+          status: "failed",
           details: "concluded neutral",
         },
       ],
@@ -1793,7 +1795,7 @@ ${urls}
     );
   });
 
-  it("formats neutral Superagent Discord status as non-blocking", () => {
+  it("formats neutral Superagent Discord status as inconclusive", () => {
     const payload = buildDiscordDecisionPayload({
       repoFullName: "JSONbored/awesome-claude",
       prNumber: 826,
@@ -1812,7 +1814,7 @@ ${urls}
       "#826 merged · Chrome DevTools MCP server",
     );
     expect(JSON.stringify(payload)).toContain(
-      "Superagent neutral, non-blocking",
+      "Superagent neutral/inconclusive",
     );
   });
 
