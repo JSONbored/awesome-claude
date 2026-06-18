@@ -20,7 +20,7 @@ retrievalSources:
   - "https://developer.harness.io/docs/platform/automation/api/api-quickstart/"
   - "https://code.claude.com/docs/en/mcp"
 installable: true
-installCommand: "claude mcp add harness -e HARNESS_API_KEY=pat.xxx.xxx.xxx -- npx harness-mcp-v2@latest"
+installCommand: "claude mcp add harness -e HARNESS_API_KEY=pat.ACCOUNT_ID.TOKEN_ID.SECRET -- npx harness-mcp-v2@latest"
 usageSnippet: >-
   Ask Claude to list all failed pipeline executions across projects, debug a CI build failure,
   review DORA metrics, triage security vulnerabilities, audit cloud cost recommendations, plan
@@ -32,7 +32,7 @@ copySnippet: |-
         "command": "npx",
         "args": ["harness-mcp-v2@latest"],
         "env": {
-          "HARNESS_API_KEY": "pat.xxx.xxx.xxx"
+          "HARNESS_API_KEY": "pat.ACCOUNT_ID.TOKEN_ID.SECRET"
         }
       }
     }
@@ -44,7 +44,7 @@ configSnippet: |-
         "command": "npx",
         "args": ["harness-mcp-v2@latest"],
         "env": {
-          "HARNESS_API_KEY": "pat.xxx.xxx.xxx",
+          "HARNESS_API_KEY": "pat.ACCOUNT_ID.TOKEN_ID.SECRET",
           "HARNESS_DEFAULT_ORG": "default",
           "HARNESS_DEFAULT_PROJECT": "your_project"
         }
@@ -142,7 +142,7 @@ coverage requires only a declarative data file, not new tool registrations.
 
 ```bash
 claude mcp add harness \
-  -e HARNESS_API_KEY=pat.xxx.xxx.xxx \
+  -e HARNESS_API_KEY=pat.ACCOUNT_ID.TOKEN_ID.SECRET \
   -- npx harness-mcp-v2@latest
 ```
 
@@ -157,7 +157,7 @@ PAT tokens embed the account ID — no separate `HARNESS_ACCOUNT_ID` needed for 
       "command": "npx",
       "args": ["harness-mcp-v2@latest"],
       "env": {
-        "HARNESS_API_KEY": "pat.xxx.xxx.xxx",
+        "HARNESS_API_KEY": "pat.ACCOUNT_ID.TOKEN_ID.SECRET",
         "HARNESS_DEFAULT_ORG": "default",
         "HARNESS_DEFAULT_PROJECT": "my_project"
       }
@@ -169,7 +169,7 @@ PAT tokens embed the account ID — no separate `HARNESS_ACCOUNT_ID` needed for 
 ### HTTP transport (shared deployments)
 
 ```bash
-HARNESS_API_KEY=pat.xxx npx harness-mcp-v2 http --port 8080
+HARNESS_API_KEY=pat.ACCOUNT_ID.TOKEN_ID.SECRET npx harness-mcp-v2 http --port 8080
 ```
 
 ## Requirements
