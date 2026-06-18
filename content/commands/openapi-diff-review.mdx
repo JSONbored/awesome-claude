@@ -36,6 +36,8 @@ prerequisites:
 safetyNotes:
   - "Read-only lint comparison; does not deploy APIs or mutate service configuration."
   - "Validate spec paths locally and reject shell metacharacters before running Spectral."
+  - "Do not rely on Spectral configuration from an untrusted PR checkout; use a pinned trusted ruleset from the base branch, or run Spectral in a sandbox with restricted filesystem, credential, and network access."
+  - "Inspect or reject head-branch changes to `.spectral.yaml`, JavaScript rulesets, and Spectral custom function files before linting."
 privacyNotes:
   - "OpenAPI files may describe internal hostnames or auth schemes; redact before external sharing."
 tags:
@@ -71,12 +73,14 @@ built-in Claude Code command page on code.claude.com.
 When you invoke this command, follow these steps:
 
 1. **Validate paths.** Confirm both arguments are repository-relative `.yaml`, `.yml`, or `.json` files without shell metacharacters.
-2. **Lint the base spec.** Run `spectral lint <base-spec> --ruleset <ruleset>` (or rely on `.spectral.yaml` in the working directory when no ruleset flag is passed).
-3. **Lint the head spec.** Run the same Spectral command against `<head-spec>`.
-4. **Compare failures.** Diff rule codes and paths that appear only in the head run or increased in severity per Spectral severity levels (`error`, `warn`, `info`, `hint`).
-5. **Map to contract impact.** Flag removed operations, narrowed schemas, or new required fields surfaced by OpenAPI rules as potential breaking changes for reviewers.
-6. **Recommend release bump.** Suggest major, minor, or patch based on breaking versus additive Spectral findings.
-7. **List follow-ups.** Note ruleset updates, client regeneration, or docs edits required before release.
+2. **Pin trusted Spectral configuration.** Do not rely on `.spectral.yaml`, `.spectral.js`, or custom function files from the head branch of an untrusted PR. Use a reviewed ruleset path from the base branch, or run Spectral inside a sandbox with no repository secrets, no broad filesystem writes, and restricted network access.
+3. **Review ruleset changes first.** Inspect or reject PR changes to Spectral config, JavaScript rulesets, and custom functions before any lint run, because Spectral can execute Node.js code from those files.
+4. **Lint the base spec.** Run `spectral lint <base-spec> --ruleset <trusted-ruleset>` using the trusted ruleset selected above.
+5. **Lint the head spec.** Run the same Spectral command and trusted ruleset against `<head-spec>`.
+6. **Compare failures.** Diff rule codes and paths that appear only in the head run or increased in severity per Spectral severity levels (`error`, `warn`, `info`, `hint`).
+7. **Map to contract impact.** Flag removed operations, narrowed schemas, or new required fields surfaced by OpenAPI rules as potential breaking changes for reviewers.
+8. **Recommend release bump.** Suggest major, minor, or patch based on breaking versus additive Spectral findings.
+9. **List follow-ups.** Note ruleset updates, client regeneration, or docs edits required before release.
 
 ## Output format
 
