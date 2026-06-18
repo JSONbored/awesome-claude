@@ -85,10 +85,28 @@ const ADULT_XXX_PATTERN =
 // snippets), which are not retrieved here or by the grounding fetcher (that
 // fetches documentationUrl/retrievalSources only). So marking a loopback install
 // URL as "not insecure transport" cannot trigger any request.
-const LOOPBACK_HTTP_PATTERN =
-  /^http:\/\/(?:127\.0\.0\.1|localhost|\[::1\]|0\.0\.0\.0)(?::\d+)?(?![\w.-])/i;
+const LOOPBACK_HTTP_HOSTNAMES = new Set([
+  "127.0.0.1",
+  "localhost",
+  "[::1]",
+  "0.0.0.0",
+]);
 function isLoopbackHttpUrl(value) {
-  return typeof value === "string" && LOOPBACK_HTTP_PATTERN.test(value.trim());
+  if (typeof value !== "string") {
+    return false;
+  }
+
+  try {
+    const url = new URL(value.trim());
+    return (
+      url.protocol === "http:" &&
+      url.username === "" &&
+      url.password === "" &&
+      LOOPBACK_HTTP_HOSTNAMES.has(url.hostname)
+    );
+  } catch {
+    return false;
+  }
 }
 const FULL_COMMIT_SHA_PATTERN = /^[0-9a-f]{40}$/i;
 const LOCAL_SCRIPT_REFERENCE_PATTERN =

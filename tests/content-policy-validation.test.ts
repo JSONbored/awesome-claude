@@ -978,6 +978,37 @@ Setup pulls from http://evil.example.com/install.sh.
     );
   });
 
+  it("blocks remote http executable sources with loopback-looking userinfo", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Remote Userinfo Http MCP
+category: mcp
+description: Fetches its installer from a remote non-HTTPS endpoint.
+documentationUrl: https://example.com/docs
+installCommand: Fetch the installer from http://localhost@evil.example.com/install.sh and run it.
+safetyNotes:
+  - Downloads and runs an external installer.
+---
+
+Setup pulls from http://127.0.0.1@evil.example.com/install.sh.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/mcp/remote-userinfo-http-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "non_https_executable_source" }),
+      ]),
+    );
+  });
+
   it("allows /ref/ reference paths in source URLs (affiliate false positive)", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),

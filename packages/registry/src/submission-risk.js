@@ -78,10 +78,28 @@ const ADULT_XXX_PATTERN =
 // scripts/ci/validate-content-policy.mjs (intentionally duplicated — the CI
 // script and the CF-worker risk scorer are separate runtimes with no shared
 // import, like the other *_PATTERN constants in both files).
-const LOOPBACK_HTTP_PATTERN =
-  /^http:\/\/(?:127\.0\.0\.1|localhost|\[::1\]|0\.0\.0\.0)(?::\d+)?(?![\w.-])/i;
+const LOOPBACK_HTTP_HOSTNAMES = new Set([
+  "127.0.0.1",
+  "localhost",
+  "[::1]",
+  "0.0.0.0",
+]);
 function isLoopbackHttpUrl(value) {
-  return typeof value === "string" && LOOPBACK_HTTP_PATTERN.test(value.trim());
+  if (typeof value !== "string") {
+    return false;
+  }
+
+  try {
+    const url = new URL(value.trim());
+    return (
+      url.protocol === "http:" &&
+      url.username === "" &&
+      url.password === "" &&
+      LOOPBACK_HTTP_HOSTNAMES.has(url.hostname)
+    );
+  } catch {
+    return false;
+  }
 }
 const CREDENTIAL_THEFT_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b/i;
