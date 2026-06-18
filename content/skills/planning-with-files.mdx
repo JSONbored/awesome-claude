@@ -23,19 +23,15 @@ authorProfileUrl: "https://github.com/OthmanAdi"
 dateAdded: "2026-06-18"
 repoUrl: "https://github.com/OthmanAdi/planning-with-files"
 documentationUrl: "https://github.com/OthmanAdi/planning-with-files#readme"
-downloadUrl: "https://github.com/OthmanAdi/planning-with-files/archive/refs/heads/master.zip"
+downloadUrl: "https://github.com/OthmanAdi/planning-with-files/archive/refs/tags/v3.1.3.zip"
 installable: true
-installCommand: "npx skills add OthmanAdi/planning-with-files --skill planning-with-files -g"
+installCommand: "curl -L https://github.com/OthmanAdi/planning-with-files/archive/refs/tags/v3.1.3.zip -o planning-with-files-v3.1.3.zip && unzip -o planning-with-files-v3.1.3.zip -d ./planning-with-files-v3.1.3"
 usageSnippet: >-
   Install the planning-with-files Agent Skill before a complex coding,
   debugging, research, migration, or multi-agent task so the agent keeps a
   durable `task_plan.md`, `findings.md`, and `progress.md` on disk.
 copySnippet: |-
-  npx skills add OthmanAdi/planning-with-files --skill planning-with-files -g
-
-  # Claude Code plugin route
-  /plugin marketplace add OthmanAdi/planning-with-files
-  /plugin install planning-with-files@planning-with-files
+  curl -L https://github.com/OthmanAdi/planning-with-files/archive/refs/tags/v3.1.3.zip -o planning-with-files-v3.1.3.zip && unzip -o planning-with-files-v3.1.3.zip -d ./planning-with-files-v3.1.3
 configSnippet: |-
   [features]
   hooks = true
@@ -45,19 +41,19 @@ verificationStatus: validated
 verifiedAt: "2026-06-18"
 retrievalSources:
   - "https://github.com/OthmanAdi/planning-with-files"
-  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/skills/planning-with-files/SKILL.md"
-  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/docs/installation.md"
-  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/docs/codex.md"
-  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/docs/quickstart.md"
-  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/docs/evals.md"
-  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/MIGRATION.md"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/v3.1.3/skills/planning-with-files/SKILL.md"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/v3.1.3/docs/installation.md"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/v3.1.3/docs/codex.md"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/v3.1.3/docs/quickstart.md"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/v3.1.3/docs/evals.md"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/v3.1.3/MIGRATION.md"
 sourceUrls:
-  - "https://github.com/OthmanAdi/planning-with-files/blob/master/skills/planning-with-files/SKILL.md"
-  - "https://github.com/OthmanAdi/planning-with-files/blob/master/docs/installation.md"
-  - "https://github.com/OthmanAdi/planning-with-files/blob/master/docs/codex.md"
-  - "https://github.com/OthmanAdi/planning-with-files/blob/master/docs/quickstart.md"
-  - "https://github.com/OthmanAdi/planning-with-files/blob/master/docs/evals.md"
-  - "https://github.com/OthmanAdi/planning-with-files/blob/master/MIGRATION.md"
+  - "https://github.com/OthmanAdi/planning-with-files/blob/v3.1.3/skills/planning-with-files/SKILL.md"
+  - "https://github.com/OthmanAdi/planning-with-files/blob/v3.1.3/docs/installation.md"
+  - "https://github.com/OthmanAdi/planning-with-files/blob/v3.1.3/docs/codex.md"
+  - "https://github.com/OthmanAdi/planning-with-files/blob/v3.1.3/docs/quickstart.md"
+  - "https://github.com/OthmanAdi/planning-with-files/blob/v3.1.3/docs/evals.md"
+  - "https://github.com/OthmanAdi/planning-with-files/blob/v3.1.3/MIGRATION.md"
   - "https://github.com/OthmanAdi/planning-with-files/releases/tag/v3.1.3"
 testedPlatforms:
   - Claude Code
@@ -164,18 +160,15 @@ This listing is grounded in:
 
 ## Core Install Paths
 
-For Agent Skills hosts that use the `skills` installer:
+Download the reviewed release archive instead of installing from a mutable branch:
 
 ```bash
-npx skills add OthmanAdi/planning-with-files --skill planning-with-files -g
+curl -L https://github.com/OthmanAdi/planning-with-files/archive/refs/tags/v3.1.3.zip -o planning-with-files-v3.1.3.zip && unzip -o planning-with-files-v3.1.3.zip -d ./planning-with-files-v3.1.3
 ```
 
-For Claude Code's plugin marketplace route:
-
-```text
-/plugin marketplace add OthmanAdi/planning-with-files
-/plugin install planning-with-files@planning-with-files
-```
+If using Claude Code's plugin marketplace route, verify that the marketplace entry
+resolves to the reviewed `v3.1.3` release before installing because marketplace
+lookups may track the upstream default branch.
 
 For Codex, install the `.codex/skills/planning-with-files` directory and merge
 the `.codex/hooks.json` lifecycle entries into the project or global Codex hook
