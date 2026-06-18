@@ -1,0 +1,228 @@
+---
+title: OfficeCLI
+slug: officecli
+category: tools
+description: >-
+  Apache-2.0 single-binary CLI for AI agents and developers to create, inspect,
+  render, validate, and modify Word, Excel, and PowerPoint files without a
+  local Microsoft Office installation.
+cardDescription: >-
+  Let agents read, render, and edit `.docx`, `.xlsx`, and `.pptx` files through
+  a structured Office document CLI with JSON, screenshots, watch mode, and skills.
+seoTitle: OfficeCLI for AI Agents, Word, Excel, PowerPoint, DOCX, XLSX, PPTX Automation
+seoDescription: >-
+  Use OfficeCLI to automate Word, Excel, and PowerPoint documents with AI
+  agents, including DOCX, XLSX, PPTX creation, structured JSON inspection,
+  Office rendering to HTML and PNG, live watch mode, templates, merge, dump,
+  batch operations, and agent skill installation for Codex, Claude Code,
+  OpenClaw, Cursor, Windsurf, and other hosts.
+author: iOfficeAI
+authorProfileUrl: "https://github.com/iOfficeAI"
+dateAdded: "2026-06-18"
+websiteUrl: "https://officecli.ai"
+documentationUrl: "https://github.com/iOfficeAI/OfficeCLI/blob/main/README.md"
+repoUrl: "https://github.com/iOfficeAI/OfficeCLI"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+sourceUrls:
+  - "https://github.com/iOfficeAI/OfficeCLI/blob/main/SKILL.md"
+  - "https://github.com/iOfficeAI/OfficeCLI/blob/main/install.sh"
+  - "https://github.com/iOfficeAI/OfficeCLI/blob/main/install.ps1"
+  - "https://github.com/iOfficeAI/OfficeCLI/releases/tag/v1.0.115"
+  - "https://github.com/iOfficeAI/OfficeCLI/blob/main/LICENSE"
+installable: true
+installCommand: "officecli install"
+usageSnippet: >-
+  Download the platform binary from GitHub Releases, run `officecli install`,
+  then use `officecli create`, `officecli view`, `officecli get --json`,
+  `officecli add`, `officecli set`, `officecli merge`, or `officecli watch` to
+  automate `.docx`, `.xlsx`, and `.pptx` files.
+copySnippet: |-
+  officecli --version
+  officecli create deck.pptx
+  officecli add deck.pptx / --type slide --prop title="Q4 Report"
+  officecli view deck.pptx html
+  officecli get deck.pptx '/slide[1]' --json
+configSnippet: |-
+  {
+    "autoUpdate": "officecli config autoUpdate false",
+    "skipUpdateOnce": "OFFICECLI_SKIP_UPDATE=1 officecli --version",
+    "residentMode": "officecli open report.docx && officecli close report.docx",
+    "agentSkill": "The installer can copy SKILL.md into detected agent skill directories"
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "A supported OfficeCLI binary for macOS, Windows, Linux, or Alpine Linux from GitHub Releases or the upstream installer scripts."
+  - "Permission to install a CLI binary into the selected PATH location and, on first install, permission to write an `officecli` skill into detected agent skill directories."
+  - "Target `.docx`, `.xlsx`, or `.pptx` files, or a workflow that creates those files from scratch."
+  - "A review boundary for document contents, generated previews, screenshots, exports, local watch servers, auto-update behavior, and agent write operations."
+  - "Optional browser/headless-browser support for screenshot and watch workflows where visual rendering is needed."
+safetyNotes:
+  - "OfficeCLI can create, edit, remove, merge, validate, render, and batch-modify Office documents. Require confirmation before overwriting deliverables, deleting content, replacing text globally, or pushing generated files to users."
+  - "The installer scripts download release binaries from `d.officecli.ai` with GitHub fallback and verify SHA256 when the checksum manifest is available. Pin versions and review scripts for managed environments."
+  - "First install can copy `SKILL.md` into detected agent directories such as Claude Code, Codex CLI, Cursor, Windsurf, OpenClaw, Hermes Agent, and others. Review which agent hosts will receive the skill."
+  - "OfficeCLI checks for updates automatically in the background according to the README; disable with `officecli config autoUpdate false` or skip per run with `OFFICECLI_SKIP_UPDATE=1` when reproducibility matters."
+  - "`officecli watch` starts a local preview server, and `view screenshot` or `view html` can create rendered artifacts that expose document content."
+  - "Resident mode keeps documents open in memory for faster multi-step edits. Close files explicitly after long sessions to flush changes and release locks."
+privacyNotes:
+  - "OfficeCLI can read and render the full contents of Word documents, Excel workbooks, PowerPoint decks, comments, notes, formulas, images, charts, tables, document properties, and extracted text."
+  - "Generated HTML, PNG screenshots, PDFs, JSON output, batch dumps, templates, merge data, watch sessions, and logs can contain confidential document data."
+  - "Agent skills may teach connected agents how to read and edit local documents. Keep private document paths, customer content, credentials, and unreleased deliverables out of shared prompts, issues, PRs, and examples."
+  - "The local preview server should be treated as document exposure on the local machine; avoid binding or proxying it beyond trusted local workflows."
+  - "Auto-update checks, installer downloads, release mirrors, GitHub fallback URLs, and Discord/community support are external data flows separate from local document processing."
+tags:
+  - officecli
+  - office
+  - agent-skills
+  - docx
+  - xlsx
+  - pptx
+  - documents
+  - automation
+keywords:
+  - OfficeCLI
+  - OfficeCLI AI agents
+  - Word automation AI agent
+  - Excel automation AI agent
+  - PowerPoint automation AI agent
+  - DOCX CLI
+  - XLSX CLI
+  - PPTX CLI
+  - Office document agent skill
+  - Codex Office skill
+  - Claude Code Office skill
+  - OpenClaw Office skill
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+OfficeCLI is an open-source command-line tool for creating, reading, rendering,
+validating, and modifying Office documents from a terminal or AI agent. It
+targets `.docx`, `.xlsx`, and `.pptx` files and is distributed as a
+self-contained binary, so a local Microsoft Office install is not required for
+the documented workflows.
+
+Use it when an agent needs a structured way to inspect and edit Word, Excel, or
+PowerPoint files instead of guessing through raw OOXML or relying on separate
+language libraries for every format. It is especially useful for document
+generation loops where the agent needs to render, inspect, adjust, and save the
+same file.
+
+## Install
+
+Download the matching binary from GitHub Releases, then run:
+
+```bash
+officecli install
+officecli --version
+```
+
+The upstream README also documents shell and PowerShell installers. In managed
+environments, prefer a pinned release asset or inspect the installer before
+running it.
+
+Basic workflow:
+
+```bash
+officecli create deck.pptx
+officecli add deck.pptx / --type slide --prop title="Q4 Report"
+officecli view deck.pptx html
+officecli get deck.pptx '/slide[1]' --json
+officecli close deck.pptx
+```
+
+## Capabilities
+
+| Area | OfficeCLI Coverage |
+| --- | --- |
+| Formats | Word `.docx`, Excel `.xlsx`, and PowerPoint `.pptx` |
+| Read/inspect | `view`, `get`, `query`, `validate`, structured JSON output, outline, stats, issues, text, annotated text, HTML, screenshot, SVG, PDF, and form-field views where supported |
+| Edit | `create`, `add`, `set`, `remove`, `move`, `copy`, find/replace, selectors, stable IDs, and format-specific DOM operations |
+| Visual loop | Built-in rendering engine for HTML, screenshots, and `watch` preview workflows |
+| Batch workflows | Resident mode, `open`/`close`, batch replay, template merge, and document dump/replay workflows |
+| Word | Paragraphs, runs, tables, styles, textboxes, headers/footers, images, equations, comments, footnotes, watermarks, bookmarks, TOC, fields, revisions, sections, and document properties |
+| Excel | Cells, formulas, sheets, tables, sorting, conditional formatting, charts, pivot tables, slicers, named ranges, validation, images, comments, sparklines, and CSV/TSV import |
+| PowerPoint | Slides, shapes, images, tables, charts, animations, transitions, 3D models, zoom, themes, connectors, video/audio, groups, notes, comments, and placeholders |
+| Agent skills | `SKILL.md` teaches agents installation, help-first behavior, resident mode, structured output, and command patterns |
+
+## Use Cases
+
+- Generate a PowerPoint deck from an agent prompt, render it, inspect layout,
+  and adjust slide content without opening PowerPoint.
+- Extract structured JSON from a Word document or PowerPoint slide for analysis.
+- Build Excel workbooks with formulas, charts, pivot tables, and sheet
+  formatting from an automated workflow.
+- Run CI document checks for structure, text, formatting, or generated
+  artifacts.
+- Fill `.docx`, `.xlsx`, or `.pptx` templates with JSON data using `merge`.
+- Let an agent learn from an existing Office document with `dump`, modify the
+  replayable structure, and generate a new file.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub metadata reported `iOfficeAI/OfficeCLI` as an Apache-2.0 C#
+  repository with topics including `agent`, `ai`, `cli`, `office`, `skills`,
+  and `openclaw`.
+- GitHub metadata reported latest release `v1.0.115`, published on
+  2026-06-18, with macOS, Linux, Alpine Linux, Windows, and `SHA256SUMS`
+  release assets.
+- The README describes OfficeCLI as a single-binary tool for AI agents to read,
+  edit, and automate Word, Excel, and PowerPoint files without requiring a
+  local Office installation.
+- The README documents rendering `.docx`, `.xlsx`, and `.pptx` to HTML or PNG,
+  live preview through `officecli watch`, structured JSON with `get --json`,
+  document creation, add/set/remove operations, merge, dump, batch, and
+  resident mode.
+- The README documents manual GitHub Release downloads, `officecli install`,
+  shell and PowerShell installer scripts, background update checks, disabling
+  auto-update with `officecli config autoUpdate false`, and skipping update
+  checks with `OFFICECLI_SKIP_UPDATE=1`.
+- `SKILL.md` declares an `officecli` Agent Skill for creating, analyzing,
+  proofreading, and modifying `.docx`, `.xlsx`, and `.pptx` files, with
+  help-first command guidance, resident mode guidance, view modes, watch mode,
+  and structured output patterns.
+- `install.sh` resolves the latest release tag, downloads the selected platform
+  binary from the OfficeCLI mirror with GitHub fallback, verifies `SHA256SUMS`
+  when available, installs atomically, updates PATH when needed, and copies the
+  `officecli` skill into detected agent directories on first install.
+- `install.ps1` performs equivalent Windows download, checksum, install, PATH,
+  and detected-agent skill installation behavior for `officecli.exe`.
+- The repository license is Apache-2.0.
+
+## Safety and Privacy
+
+OfficeCLI should be treated as a document automation tool with write access. It
+can make real changes to files that may be sent to customers, executives,
+students, clients, regulators, or public audiences. Keep a backup or versioned
+copy before broad edits, use `get` and `view` to inspect current state, and
+require confirmation before destructive changes or final delivery.
+
+Rendered artifacts are useful for agents but can expose the entire document.
+HTML previews, screenshots, PDFs, JSON dumps, and watch sessions should stay in
+trusted workspaces. If the installer copies `SKILL.md` into agent directories,
+review which hosts received it before asking those agents to work on sensitive
+documents.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, README entries, open pull requests, and
+repository-wide content for OfficeCLI, `iOfficeAI/OfficeCLI`, Office document
+agent skill, Word automation AI agent, Excel automation AI agent, PowerPoint
+automation AI agent, and matching source URLs. No dedicated OfficeCLI entry,
+exact source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. OfficeCLI is
+Apache-2.0 open-source software; GitHub Releases, OfficeCLI mirrors, Discord,
+agent hosts, generated documents, template inputs, model providers, and any
+downstream Office-compatible viewers may have separate licenses, terms,
+privacy controls, and operational requirements.
