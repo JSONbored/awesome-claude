@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1293+ file-backed entries</strong> stay useful as both an
+        <strong>1294+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1293</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1294</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -73,7 +73,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>176</code><br>
+          <code>177</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -746,7 +746,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (176)
+## 🧰 Tools (177)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
@@ -778,6 +778,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Cherry Studio](https://heyclau.de/entry/tools/cherry-studio)** - Cross-platform AI desktop client with multiple LLM providers, local model support, 300+ assistants, document and image handling, WebDAV backup, MCP server support, mini programs, and enterprise deployment options.
 - **[Chroma](https://heyclau.de/entry/tools/chroma)** - Open-source AI data infrastructure for storing documents, embeddings, metadata, and retrieval indexes across local, self-hosted, and managed Chroma Cloud deployments.
 - **[Claude Code](https://heyclau.de/entry/tools/claude-code)** - Anthropic command-line coding agent for codebase questions, edits, tests, and terminal-centered development tasks.
+- **[ClawHub](https://heyclau.de/entry/tools/clawhub)** - MIT-licensed OpenClaw skill and plugin registry with a hosted catalog, `clawhub` CLI, npm package, native OpenClaw install flows, SKILL.md publishing, plugin package publishing, vector search, scan status, moderation controls, install lockfiles, and opt-out install telemetry.
 - **[Cline](https://heyclau.de/entry/tools/cline)** - Open-source autonomous coding agent extension for planning, editing, running commands, and using tools from VS Code.
 - **[Cloudflare Agents SDK](https://heyclau.de/entry/tools/cloudflare-agents-sdk)** - Cloudflare framework for building, deploying, and running AI agents on Workers with durable platform primitives.
 - **[CodeRabbit](https://heyclau.de/entry/tools/coderabbit)** - AI code review platform for pull request summaries, review comments, repository context, and engineering feedback loops.
