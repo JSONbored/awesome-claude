@@ -202,7 +202,9 @@ function safeServerName(value: string, fallback: string) {
 }
 
 function baseExecutableName(value: unknown) {
-  const command = String(value || "").trim().replace(/\\/g, "/");
+  const command = String(value || "")
+    .trim()
+    .replace(/\\/g, "/");
   return command.split("/").pop() || "";
 }
 
