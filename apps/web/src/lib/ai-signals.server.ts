@@ -20,6 +20,23 @@
 
 import { matchAiBot, matchAiReferrer } from "@/lib/ai-sources";
 
+type CfRequest = Request & {
+  cf?: {
+    botManagement?: { verifiedBot?: boolean };
+    verifiedBotCategory?: string;
+  };
+};
+
+type SignalBucket = {
+  count: number;
+  resetAt: number;
+};
+
+const REFERRAL_WINDOW_MS = 60_000;
+const MAX_REFERRALS_PER_WINDOW = 3;
+const MAX_SIGNAL_BUCKETS = 5_000;
+const signalBuckets = new Map<string, SignalBucket>();
+
 /** Minimal shape of the Analytics Engine binding (avoids a hard dep on the CF types). */
 interface AnalyticsEngineDataset {
   writeDataPoint(event: {
@@ -46,6 +63,63 @@ function normalizePath(url: string): string {
   }
 }
 
+function isVerifiedCloudflareBot(request: Request): boolean {
+  const cf = (request as CfRequest).cf;
+  return cf?.botManagement?.verifiedBot === true || Boolean(cf?.verifiedBotCategory);
+}
+
+function isPageLikeRequest(request: Request): boolean {
+  if (request.method !== "GET") return false;
+
+  const path = normalizePath(request.url);
+  if (path.startsWith("/api/") || path === "/api") return false;
+  if (path.startsWith("/assets/") || path.startsWith("/downloads/")) return false;
+  if (path.includes(".")) return false;
+
+  return true;
+}
+
+function getClientKey(request: Request): string {
+  return request.headers.get("cf-connecting-ip") || "unknown";
+}
+
+function pruneExpiredSignalBuckets(now: number) {
+  for (const [key, bucket] of signalBuckets) {
+    if (bucket.resetAt <= now) signalBuckets.delete(key);
+  }
+}
+
+function evictOldestSignalBuckets() {
+  // Map insertion order gives us a deterministic oldest-bucket eviction policy.
+  while (signalBuckets.size >= MAX_SIGNAL_BUCKETS) {
+    const key = signalBuckets.keys().next().value;
+    if (key === undefined) break;
+    signalBuckets.delete(key);
+  }
+}
+
+function consumeReferralQuota(request: Request, source: string): boolean {
+  const now = Date.now();
+  const key = `${source}:${getClientKey(request)}:${normalizePath(request.url)}`;
+  const existing = signalBuckets.get(key);
+  if (existing && existing.resetAt > now) {
+    if (existing.count >= MAX_REFERRALS_PER_WINDOW) return false;
+    existing.count += 1;
+    return true;
+  }
+
+  pruneExpiredSignalBuckets(now);
+  evictOldestSignalBuckets();
+  signalBuckets.set(key, { count: 1, resetAt: now + REFERRAL_WINDOW_MS });
+  return true;
+}
+
+export const __aiSignalsTestHooks = {
+  reset() {
+    signalBuckets.clear();
+  },
+};
+
 /**
  * Record AI crawler + AI-referral signals for a request. Safe to call on every request;
  * only matched requests write a data point. Never throws.
@@ -56,7 +130,7 @@ export function logAiSignals(request: Request, env: unknown): void {
     if (!dataset) return;
 
     const ua = request.headers.get("user-agent");
-    const bot = matchAiBot(ua);
+    const bot = isVerifiedCloudflareBot(request) ? matchAiBot(ua) : null;
     if (bot) {
       dataset.writeDataPoint({
         blobs: ["crawler", bot.operator, bot.token, bot.purpose, normalizePath(request.url)],
@@ -66,8 +140,10 @@ export function logAiSignals(request: Request, env: unknown): void {
       return; // a crawler is never also a human referral
     }
 
+    if (!isPageLikeRequest(request)) return;
+
     const source = matchAiReferrer(request.headers.get("referer"));
-    if (source) {
+    if (source && consumeReferralQuota(request, source)) {
       dataset.writeDataPoint({
         blobs: ["referral", source, normalizePath(request.url)],
         doubles: [1],
