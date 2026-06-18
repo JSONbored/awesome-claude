@@ -2768,7 +2768,7 @@ docsUrl: "https://docs.anthropic.com/en/docs/claude-code/security#events"
     );
   });
 
-  it("treats same canonical project across different categories as a strict duplicate", () => {
+  it("treats same canonical project across different categories as related, not strict duplicate", () => {
     const existingMcp = extractContentDuplicateSignals({
       filePath: "content/mcp/langchain-mcp-server.mdx",
       content: `---
@@ -2794,13 +2794,7 @@ repoUrl: "https://github.com/langchain-ai/langchain.git"
 
     expect(
       findStrictContentDuplicateMatch(candidateSkill, [existingMcp]),
-    ).toMatchObject({
-      reasons: expect.arrayContaining([
-        expect.stringContaining(
-          "same canonical source URL https://github.com/langchain-ai/langchain across skills/mcp",
-        ),
-      ]),
-    });
+    ).toBeNull();
     expect(findRelatedContentMatches(candidateSkill, [existingMcp])).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -2814,7 +2808,7 @@ repoUrl: "https://github.com/langchain-ai/langchain.git"
     );
   });
 
-  it("treats same canonical website across different categories as a strict duplicate", () => {
+  it("treats same canonical website across different categories as related, not strict duplicate", () => {
     const existingTool = extractContentDuplicateSignals({
       filePath: "content/tools/acme-claude.mdx",
       content: `---
@@ -2840,13 +2834,7 @@ websiteUrl: "https://acme-claude.example/product?utm_source=submission"
 
     expect(
       findStrictContentDuplicateMatch(candidateMcp, [existingTool]),
-    ).toMatchObject({
-      reasons: expect.arrayContaining([
-        expect.stringContaining(
-          "same canonical source URL https://acme-claude.example/product across mcp/tools",
-        ),
-      ]),
-    });
+    ).toBeNull();
     expect(findRelatedContentMatches(candidateMcp, [existingTool])).toEqual(
       expect.arrayContaining([
         expect.objectContaining({

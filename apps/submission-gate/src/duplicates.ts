@@ -6,7 +6,6 @@ export type ContentDuplicateSignals = {
   normalizedTitle: string;
   normalizedDescription: string;
   urls: string[];
-  strictDuplicateUrls: string[];
   domains: string[];
   label?: string;
   url?: string;
@@ -78,24 +77,6 @@ const URL_FIELDS = new Set([
   "website_url",
 ]);
 
-const CROSS_CATEGORY_STRICT_URL_FIELDS = new Set([
-  "downloadUrl",
-  "githubUrl",
-  "packageUrl",
-  "repoUrl",
-  "repositoryUrl",
-  "sourceUrl",
-  "sourceUrls",
-  "websiteUrl",
-  "download_url",
-  "github_url",
-  "package_url",
-  "repo_url",
-  "repository_url",
-  "source_url",
-  "source_urls",
-  "website_url",
-]);
 const DOMAIN_ONLY_EXCLUSIONS = new Set([
   "github.com",
   "npmjs.com",
@@ -291,14 +272,6 @@ export function extractContentDuplicateSignals(params: {
     (entry) => entry.url,
   );
   const urls = [...new Set(urlEntries.map((entry) => entry.url))];
-  const strictDuplicateUrls = [
-    ...new Set(
-      urlEntries
-        .filter((entry) => CROSS_CATEGORY_STRICT_URL_FIELDS.has(entry.key))
-        .map((entry) => entry.url),
-    ),
-  ];
-
   return {
     filePath: params.filePath,
     category: normalizeText(fields.category) || parts.category,
@@ -307,7 +280,6 @@ export function extractContentDuplicateSignals(params: {
     normalizedTitle: normalizeText(fields.title),
     normalizedDescription: normalizeText(fields.description),
     urls,
-    strictDuplicateUrls,
     domains: [...new Set(urls.map(domainFromUrl).filter(Boolean))],
     label: params.label,
     url: params.url,
@@ -449,9 +421,6 @@ export function findStrictContentDuplicateMatch(
 
     const sharedUrls = intersection(candidate.urls, existing.urls);
     const blockingSharedUrls = strictDuplicateUrls(sharedUrls);
-    const crossCategoryBlockingSharedUrls = strictDuplicateUrls(
-      intersection(candidate.strictDuplicateUrls, existing.strictDuplicateUrls),
-    );
     const catalogSubpathUrls = multiEntryCatalogSubpathUrls(blockingSharedUrls);
     if (
       catalogSubpathUrls.length &&
@@ -460,17 +429,6 @@ export function findStrictContentDuplicateMatch(
     ) {
       reasons.push(
         `same multi-entry catalog subpath URL ${catalogSubpathUrls[0]}`,
-      );
-    }
-    if (
-      crossCategoryBlockingSharedUrls.length &&
-      candidate.category &&
-      existing.category &&
-      candidate.category !== existing.category &&
-      !isCollectionBridge(candidate, existing)
-    ) {
-      reasons.push(
-        `same canonical source URL ${crossCategoryBlockingSharedUrls[0]} across ${candidate.category}/${existing.category}`,
       );
     }
     if (
