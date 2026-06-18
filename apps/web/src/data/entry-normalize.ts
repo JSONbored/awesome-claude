@@ -375,7 +375,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
   const source = inferSource(entry);
   const safetyNotes = compactText(entry.safetyNotes);
   const privacyNotes = compactText(entry.privacyNotes);
-  const copyPayload = entry.copySnippet ?? entry.usageSnippet ?? entry.body;
+  const copyPayload = entry.copySnippet ?? entry.body ?? entry.usageSnippet;
   const platforms = inferPlatforms(entry);
   const reviewedAt =
     entry.reviewedAt ?? entry.trustSignals?.lastVerifiedAt ?? entry.contentUpdatedAt;
