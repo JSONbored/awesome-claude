@@ -154,12 +154,15 @@ Add the server to your configuration file:
 }
 ```
 
-To run it as a remote, streamable-HTTP endpoint instead of stdio, start the image with the `http`
-argument and publish port 8080:
+To run it as a local, streamable-HTTP endpoint instead of stdio, start the image with the `http`
+argument and bind port 8080 to loopback only:
 
 ```bash
-docker run --rm -e ES_URL -e ES_API_KEY -p 8080:8080 docker.elastic.co/mcp/elasticsearch http
+docker run --rm -e ES_URL -e ES_API_KEY -p 127.0.0.1:8080:8080 docker.elastic.co/mcp/elasticsearch http
 ```
+
+Do not publish this endpoint on a network-reachable interface unless you first add endpoint
+authentication and firewall rules that limit access to trusted clients.
 
 ## Configuration
 
@@ -182,6 +185,8 @@ docker run --rm -e ES_URL -e ES_API_KEY -p 8080:8080 docker.elastic.co/mcp/elast
 - Authenticate with an API key (`ES_API_KEY`) or basic credentials; scope it to read-only on only
   the indices Claude should reach.
 - Treat `ES_URL` and credentials as secrets — keep them in the MCP client config or environment.
+- Bind HTTP mode to localhost (`127.0.0.1`) by default; if you expose it remotely, require
+  endpoint authentication and firewall access to trusted clients only.
 - `ES_SSL_SKIP_VERIFY` disables TLS verification and is intended for development only.
 - The `search` and `esql` tools execute live read queries, so a broad query can add cluster load.
 
