@@ -300,6 +300,7 @@ export function buildDirectoryEntries(entries) {
           ? entry.sourceUrls
           : undefined,
       packageUrl: entry.packageUrl || undefined,
+      githubUrl: entry.githubUrl || undefined,
       repositoryUrl: entry.repositoryUrl || undefined,
       websiteUrl: entry.websiteUrl || undefined,
       ...buildEntryProvenanceFields(entry),

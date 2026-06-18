@@ -2336,12 +2336,16 @@ async function deterministicContentPrecheck(params: {
     })),
   ];
   const duplicateReview = buildContentDuplicateReview(candidate, existing);
+  const hardCloseDuplicate =
+    duplicateReview.strictDuplicate ||
+    (duplicateReview.legacyDuplicate?.reasons.some((reason) =>
+      reason.startsWith("same canonical source URL "),
+    )
+      ? duplicateReview.legacyDuplicate
+      : null);
   return {
     content: candidateContent,
-    decision: duplicateCloseDecision(
-      duplicateReview.strictDuplicate,
-      candidate,
-    ),
+    decision: duplicateCloseDecision(hardCloseDuplicate, candidate),
     duplicateReview: summarizeDuplicateReview(duplicateReview),
     sourceEvidence,
   };
