@@ -1,0 +1,180 @@
+---
+title: Microsoft Agent Framework
+slug: microsoft-agent-framework
+category: tools
+description: >-
+  Microsoft framework for building, orchestrating, and deploying production AI
+  agents and multi-agent workflows across Python and .NET, with workflows,
+  middleware, OpenTelemetry, Foundry hosting, A2A, MCP, and Semantic Kernel
+  migration support.
+cardDescription: >-
+  Build production Python and .NET agents with Microsoft Agent Framework,
+  including workflows, orchestration, middleware, observability, Foundry
+  hosting, A2A, MCP, and Semantic Kernel migration paths.
+seoTitle: Microsoft Agent Framework for Python and .NET Production AI Agents
+seoDescription: >-
+  Use Microsoft Agent Framework to build production AI agents and multi-agent
+  workflows in Python and .NET with workflows, middleware, OpenTelemetry,
+  Foundry hosting, A2A, MCP, Semantic Kernel migration, PyPI, and NuGet support.
+author: Microsoft
+authorProfileUrl: "https://github.com/microsoft"
+dateAdded: "2026-06-18"
+websiteUrl: "https://learn.microsoft.com/en-us/agent-framework/"
+documentationUrl: "https://learn.microsoft.com/en-us/agent-framework/"
+repoUrl: "https://github.com/microsoft/agent-framework"
+packageUrl: "https://pypi.org/pypi/agent-framework/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/microsoft/agent-framework"
+  - "https://learn.microsoft.com/en-us/agent-framework/overview/"
+  - "https://learn.microsoft.com/en-us/agent-framework/get-started/your-first-agent"
+  - "https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-semantic-kernel/"
+  - "https://pypi.org/pypi/agent-framework/json"
+  - "https://www.nuget.org/packages/Microsoft.Agents.AI"
+installable: true
+installCommand: "pip install agent-framework"
+usageSnippet: >-
+  Install `agent-framework` for Python or `Microsoft.Agents.AI` for .NET, then
+  define agents, providers, tools, workflows, middleware, observability, and
+  hosting based on the target production runtime.
+copySnippet: |-
+  pip install agent-framework
+estimatedSetupTime: 30 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 or newer for the Python SDK, or a supported .NET runtime for the `Microsoft.Agents.AI` package."
+  - "A selected model/provider route, such as Microsoft Foundry, Azure OpenAI, OpenAI, GitHub Copilot SDK, or another supported provider."
+  - "Azure identity, Foundry project, endpoint, model deployment, or API-key configuration appropriate for the chosen provider and runtime."
+  - "A deployment plan for workflows, hosting, A2A, MCP, Durable Task, Azure Functions, local development, or cloud execution."
+  - "Migration review if moving from Semantic Kernel or AutoGen into Microsoft Agent Framework."
+safetyNotes:
+  - "Microsoft Agent Framework can orchestrate agents, tools, workflows, middleware, hosting, A2A, MCP, and third-party providers; review each external system before granting access."
+  - "Production agents need explicit approval gates, retries, cancellation, idempotency, rollback behavior, tool authorization, and human-in-the-loop boundaries."
+  - "DefaultAzureCredential is convenient for development but can probe multiple credential sources; choose explicit production credentials and managed identity patterns where appropriate."
+  - "Foundry-hosted agents, cloud workflows, Durable Task, Azure Functions, and A2A/MCP endpoints need authentication, least privilege, network controls, logging policy, and abuse protection."
+  - "Migration from Semantic Kernel or AutoGen should include behavior parity tests, trace comparison, provider compatibility review, and safety regression checks."
+privacyNotes:
+  - "Prompts, instructions, tool arguments, tool outputs, workflow state, middleware data, traces, provider responses, logs, credentials, and hosted-agent metadata may contain sensitive user or business data."
+  - "Do not expose Azure credentials, Foundry project endpoints, model deployment names, API keys, private file paths, customer records, internal documents, or raw exceptions through examples, traces, logs, or support issues."
+  - "When using third-party providers, A2A agents, MCP servers, observability systems, or cloud hosting, review where data is sent, stored, retained, and governed."
+  - "If workflows are durable or restartable, define retention and access controls for checkpoints, state stores, trace spans, and replayable execution history."
+tags:
+  - microsoft
+  - agents
+  - agent-framework
+  - python
+  - dotnet
+  - workflows
+  - mcp
+keywords:
+  - Microsoft Agent Framework
+  - microsoft agent-framework
+  - agent-framework Python package
+  - Microsoft.Agents.AI
+  - Semantic Kernel migration
+  - production AI agents .NET
+  - Python .NET agent framework
+  - Microsoft Agent Framework MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Microsoft Agent Framework is Microsoft's open framework for building,
+orchestrating, and deploying production AI agents and multi-agent workflows in
+Python and .NET. It provides agent APIs, workflow orchestration, middleware,
+OpenTelemetry observability, Foundry-hosted agent patterns, declarative agents,
+Durable Task and Azure Functions hosting samples, A2A support, MCP integration,
+and migration guidance from Semantic Kernel and AutoGen.
+
+Use it when a team wants a Microsoft-backed agent framework for production
+systems rather than a prototype-only assistant. It is especially relevant for
+Azure, Microsoft Foundry, .NET, Python, Semantic Kernel migration, enterprise
+observability, and multi-agent workflow searches.
+
+## Install
+
+For Python:
+
+```bash
+pip install agent-framework
+```
+
+For .NET:
+
+```bash
+dotnet add package Microsoft.Agents.AI
+```
+
+Foundry, Azure identity, Durable Task, Azure Functions, and provider-specific
+features may require additional packages and cloud configuration.
+
+## Agent Capabilities
+
+| Area | Microsoft Agent Framework Coverage |
+| --- | --- |
+| Languages | Python and C#/.NET implementations with consistent framework concepts |
+| Agents | Provider-backed agents, declarative agents, tools, middleware, and hosting patterns |
+| Workflows | Sequential, concurrent, handoff, group collaboration, streaming, checkpointing, human-in-the-loop, and time-travel patterns |
+| Hosting | Foundry-hosted agents, local development, cloud deployment, Durable Task, Azure Functions, and A2A samples |
+| Observability | Built-in OpenTelemetry integration for distributed tracing, monitoring, and debugging |
+| Interop | MCP, A2A, Microsoft Foundry, Azure OpenAI, OpenAI, GitHub Copilot SDK, and provider flexibility |
+| Migration | Microsoft Learn migration guides from Semantic Kernel and AutoGen |
+
+## Use Cases
+
+- Build Python or .NET agents that need production hosting and observability.
+- Orchestrate multi-agent workflows with handoffs, group collaboration, and
+  durable checkpointing.
+- Migrate Semantic Kernel or AutoGen projects to Microsoft Agent Framework.
+- Host agents through Microsoft Foundry, Azure Functions, Durable Task, or local
+  development workflows.
+- Connect agents to MCP servers, A2A agents, Microsoft Foundry, Azure OpenAI,
+  OpenAI, or GitHub Copilot SDK routes.
+- Add middleware for request processing, exception handling, telemetry, and
+  policy enforcement.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository describes Microsoft Agent Framework as an open
+  multi-language framework for production AI agents and multi-agent workflows in
+  Python and .NET.
+- Microsoft Learn documents the framework overview, first-agent quickstart, and
+  Semantic Kernel migration path.
+- The repository README lists workflow orchestration, middleware, Foundry-hosted
+  agents, OpenTelemetry observability, declarative agents, agent skills, A2A,
+  MCP, Durable Task, Azure Functions, and local/cloud samples.
+- PyPI resolves the `agent-framework` package at version `1.9.0` with Python
+  `>=3.10`.
+- NuGet resolves the `Microsoft.Agents.AI` package, with version `1.10.0`
+  available through the package feed at verification time.
+
+## Safety and Privacy
+
+Microsoft Agent Framework is a production agent framework, so its risk comes
+from the providers, tools, workflows, hosted infrastructure, MCP servers, A2A
+agents, credentials, and durable state connected to it. Treat each workflow edge
+and tool call like a production integration with authentication, authorization,
+rate limits, audit logs, and rollback behavior.
+
+When agents run through Foundry, Azure, third-party providers, A2A, MCP, or
+observability systems, review which prompts, tool results, traces, workflow
+state, and errors leave the application boundary. Durable workflows and
+checkpointing can retain sensitive context beyond a single request.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/agents/`, `content/mcp/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+`microsoft/agent-framework`, Microsoft Agent Framework, `agent-framework`,
+`Microsoft.Agents.AI`, Semantic Kernel migration, Microsoft Foundry agents, A2A,
+and Microsoft Agent Framework MCP. Existing content includes Microsoft Agent
+Skills, Semantic Kernel agent persona content, Microsoft AutoGen, and adjacent
+MCP references, but no dedicated Microsoft Agent Framework tools entry, exact
+source URL duplicate, target file, or open duplicate PR was found.
