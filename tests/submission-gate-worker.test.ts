@@ -2541,6 +2541,8 @@ ${urls}
     expect(helperSource).toContain("DIRECTORY_ENTRY_URL_SIGNAL_FIELDS");
     expect(helperSource).toContain("entry[field]");
     expect(helperSource).toContain("Array.isArray(entry.sourceUrls)");
+    expect(helperSource).toContain("entry.trustSignals");
+    expect(helperSource).toContain("trustSignalSourceUrls");
   });
 
   it("detects duplicate submissions from list-form source URLs", () => {

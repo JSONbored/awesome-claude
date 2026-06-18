@@ -228,7 +228,6 @@ describe("registry artifacts", () => {
       docsUrl: "https://example.com/docs-alias",
       downloadUrl: "https://example.com/download.zip",
       packageUrl: "https://www.npmjs.com/package/source-backed-tool",
-      githubUrl: "https://github.com/example/source-backed-tool-alt",
       repoUrl: "https://github.com/example/source-backed-tool",
       repositoryUrl: "https://gitlab.com/example/source-backed-tool",
       sourceUrl: "https://example.com/source",
