@@ -1,0 +1,160 @@
+---
+title: Tinybird MCP Server for Claude
+slug: tinybird-mcp-server
+category: mcp
+description: >-
+  Connect Claude to your Tinybird workspace — query real-time data sources, run text-to-SQL,
+  call published API endpoints as tools, explore datasources, and analyze analytics data — with
+  the official Tinybird hosted MCP server.
+cardDescription: "Official Tinybird MCP: query real-time data, run SQL & call API endpoints from Claude."
+seoTitle: "Tinybird MCP Server for Claude — Real-Time Analytics & SQL Queries"
+seoDescription: "Connect Claude to Tinybird with the official hosted MCP server: query real-time data, run text-to-SQL, call published API endpoints, and explore datasources — no local install required."
+author: Tinybird
+authorProfileUrl: "https://github.com/tinybirdco"
+dateAdded: "2026-06-18"
+documentationUrl: "https://www.tinybird.co/docs/forward/work-with-data/mcp"
+websiteUrl: "https://tinybird.co"
+retrievalSources:
+  - "https://www.tinybird.co/docs/forward/work-with-data/mcp"
+  - "https://www.tinybird.co/blog/introducing-the-tinybird-mcp-server-your-real-time-data-llm-ready"
+  - "https://www.tinybird.co/docs/forward/analytics-agents/mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add tinybird --transport http \"https://mcp.tinybird.co?token=YOUR_TINYBIRD_TOKEN\""
+usageSnippet: >-
+  Ask Claude to query a Tinybird datasource, explore your API endpoints as tools, or run a text-to-SQL query against your real-time data.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "tinybird": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "https://mcp.tinybird.co?token=YOUR_TINYBIRD_TOKEN"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "tinybird": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "https://mcp.tinybird.co?token=YOUR_TINYBIRD_TOKEN"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Tinybird account and a workspace token (admin or resource-scoped from your Tinybird workspace settings)."
+  - "For EU or other regions, append `&host=https://api.EU_REGION.tinybird.co` to the URL."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server is hosted by Tinybird; queries and results pass through Tinybird's infrastructure."
+  - "Use resource-scoped tokens to limit Claude's access to specific datasources or endpoints; avoid using admin tokens for production AI workflows."
+  - "Published API endpoints are exposed as live tools — Claude can call them with real parameters, triggering actual queries against your data."
+privacyNotes:
+  - "Query results, datasource schemas, and endpoint response data surface in Claude's context; treat production analytics data as sensitive."
+  - "Tinybird tokens are secrets — use resource-scoped tokens with the minimum required permissions and rotate them on exposure."
+tags:
+  - tinybird
+  - analytics
+  - real-time-data
+  - clickhouse
+  - sql
+  - data-api
+keywords:
+  - tinybird mcp server
+  - tinybird mcp claude
+  - real-time analytics mcp
+  - tinybird sql claude code
+  - clickhouse mcp claude
+  - data api mcp claude
+  - text to sql mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Tinybird MCP Server** is the official hosted Model Context Protocol server from Tinybird.
+It connects Claude to your Tinybird workspace — making every published API endpoint available as
+an MCP tool, enabling natural-language and text-to-SQL queries against your real-time data
+sources, and exposing workspace exploration tools. No local installation is required; the server
+runs at `https://mcp.tinybird.co` and authenticates via a Tinybird token.
+
+Tinybird announced the hosted MCP server in January 2026. It uses Streamable HTTP transport.
+
+## Key capabilities
+
+- **Endpoint tools** — every published Tinybird API endpoint becomes an MCP tool Claude can call
+  with real parameters.
+- **`text_to_sql`** — convert natural-language questions into SQL queries against your data.
+- **`execute_query`** — run raw SQL against any datasource.
+- **`explore_data`** — get a summary of what data is available in a datasource.
+- **`list_datasources`** — list all datasources in your workspace.
+- **`list_endpoints`** — list all published API endpoints and their parameters.
+
+## How it compares
+
+| Server | Real-time queries | Custom endpoint tools | Text-to-SQL | Hosted | Auth |
+|---|---|---|---|---|---|
+| **Tinybird MCP** | Yes (ClickHouse) | Yes (per-endpoint tools) | Yes | Yes | Token |
+| MotherDuck MCP | Yes (DuckDB) | No | Yes | Local | Token |
+| Mixpanel MCP | Limited (analytics) | No | No | Yes | OAuth |
+| BigQuery MCP | Yes | No | Limited | Local | OAuth |
+
+Tinybird's MCP is unique in automatically exposing every published API endpoint as a tool,
+making it ideal for real-time analytics APIs and event-driven data products.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add tinybird --transport http \
+  "https://mcp.tinybird.co?token=YOUR_TINYBIRD_TOKEN"
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "tinybird": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.tinybird.co?token=YOUR_TINYBIRD_TOKEN"]
+    }
+  }
+}
+```
+
+Replace `YOUR_TINYBIRD_TOKEN` with your workspace token from the Tinybird console.
+
+### Other regions
+
+Append `&host=https://api.REGION.tinybird.co` for non-default regions. For JWTs, the `host`
+parameter is always required.
+
+## Requirements
+
+- A Tinybird account and workspace token.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Use resource-scoped tokens (limit to specific endpoints or datasources) rather than admin
+  tokens for AI-driven workflows.
+- Tokens passed as URL query parameters may appear in logs — prefer injecting them via environment
+  variables when possible.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Tinybird's MCP documentation at `tinybird.co/docs/forward/work-with-data/mcp` confirms the
+  hosted endpoint `https://mcp.tinybird.co`, Streamable HTTP transport, token authentication,
+  the endpoint-as-tools model, and the core tools (`text_to_sql`, `execute_query`, `explore_data`,
+  `list_datasources`, `list_endpoints`).
+- Tinybird's blog post confirms the hosted MCP server launched in January 2026 and describes the
+  real-time analytics use cases.
+- Tinybird's analytics agents documentation covers the MCP integration pattern for AI agents.
+- Claude Code's MCP documentation describes the `--transport http` installation pattern used above.
