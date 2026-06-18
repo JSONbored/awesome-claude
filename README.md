@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1292+ file-backed entries</strong> stay useful as both an
+        <strong>1293+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1292</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1293</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -83,7 +83,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#rules"><strong>📏 Rules</strong></a><br>
-          <code>72</code><br>
+          <code>73</code><br>
           <sub>Prompt guardrails, project rules, and operating constraints.</sub>
         </td>
 </tr>
@@ -1096,7 +1096,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Zero-Budget SaaS Launch Capability Pack Skill](https://heyclau.de/entry/skills/zero-budget-saas-launch-capability-pack)** - Expert zero-budget launch capability pack for building and shipping SaaS using free-tier infrastructure and constrained execution plans.
 - **[Zod Schema Validation Skill](https://heyclau.de/entry/skills/zod-schema-validator)** - TypeScript-first validation skill using Zod — define schemas once, get runtime checks and inferred types for APIs, forms, and data pipelines.
 
-## 📏 Rules (72)
+## 📏 Rules (73)
 
 - **[AI Assistant Secret Handling Rules](https://heyclau.de/entry/rules/ai-assistant-secret-handling-rules)** - Source-backed rules for AI coding assistants that must avoid exposing, copying, logging, committing, or normalizing secrets while editing code, configs, tests, prompts, documentation, and CI workflows.
 - **[AI-Generated Frontend Accessibility Review Rules](https://heyclau.de/entry/rules/ai-generated-frontend-accessibility-review-rules)** - Source-backed rules for reviewing AI-generated frontend UI changes for accessibility before merge, with semantic HTML, keyboard paths, focus management, labels, automated scan limits, manual checks, and privacy-safe evidence.
@@ -1116,6 +1116,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Django Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/django-expert)** - Transform Claude into a Django specialist with deep knowledge of models, views, DRF serializers, migrations, middleware, and production deployment patterns.
 - **[Documentation Freshness Rules](https://heyclau.de/entry/rules/documentation-freshness-rules)** - Source-backed rules for public AI workflow registries that need to keep directory entries, source links, version claims, examples, install guidance, compatibility notes, and last-reviewed metadata fresh enough to trust.
 - **[.NET and C# Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/dotnet-csharp-expert)** - A CLAUDE.md rule set that turns Claude into a senior .NET reviewer aligned with current Microsoft guidance across ASP.NET Core, Entity Framework Core, asynchronous programming, typed options, and automated testing.
+- **[Electron Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/electron-expert)** - Transform Claude into an Electron specialist with deep knowledge of main/preload processes, IPC, security hardening, auto-updates, and desktop packaging patterns.
 - **[Express Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/express-expert)** - Transform Claude into an Express.js specialist with deep knowledge of routing, middleware, error handling, security headers, and production deployment patterns.
 - **[FastAPI Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/fastapi-expert)** - Transform Claude into a FastAPI specialist with deep knowledge of async routes, Pydantic validation, dependency injection, OpenAPI, and production API patterns.
 - **[Generated Artifact Churn Rules for Registry Repositories](https://heyclau.de/entry/rules/generated-artifact-churn-rules)** - Source-backed rules for registry repositories that must keep contributor PRs focused on source files while generated indexes, feeds, downloads, search data, README output, and previews are rebuilt by trusted automation.
