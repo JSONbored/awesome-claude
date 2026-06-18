@@ -1,0 +1,192 @@
+---
+title: OpenAI Agents Python SDK
+slug: openai-agents-python-sdk
+category: tools
+description: >-
+  Official Python framework for building multi-agent workflows with agents,
+  tools, handoffs, guardrails, sessions, tracing, realtime voice agents, MCP
+  tools, hosted tools, human-in-the-loop flows, and sandbox agents.
+cardDescription: >-
+  Build Python multi-agent workflows with the official OpenAI Agents SDK,
+  including tools, handoffs, guardrails, sessions, tracing, realtime agents, MCP
+  integrations, and sandbox agents.
+seoTitle: OpenAI Agents Python SDK for Multi-Agent Workflows, MCP Tools, and Tracing
+seoDescription: >-
+  Use the official OpenAI Agents SDK for Python to build multi-agent workflows
+  with `openai-agents`, tools, handoffs, guardrails, sessions, tracing,
+  realtime voice agents, MCP tools, hosted tools, and sandbox agents.
+author: OpenAI
+authorProfileUrl: "https://github.com/openai"
+dateAdded: "2026-06-18"
+websiteUrl: "https://openai.github.io/openai-agents-python/"
+documentationUrl: "https://openai.github.io/openai-agents-python/"
+repoUrl: "https://github.com/openai/openai-agents-python"
+packageUrl: "https://pypi.org/pypi/openai-agents/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/openai/openai-agents-python"
+  - "https://github.com/openai/openai-agents-python/blob/main/README.md"
+  - "https://github.com/openai/openai-agents-python/blob/main/pyproject.toml"
+  - "https://github.com/openai/openai-agents-python/blob/main/LICENSE"
+  - "https://openai.github.io/openai-agents-python/"
+  - "https://pypi.org/pypi/openai-agents/json"
+installable: true
+installCommand: "uv add openai-agents"
+usageSnippet: >-
+  Add `openai-agents` to a Python 3.10+ project, set provider credentials, and
+  define agents with instructions, tools, handoffs, guardrails, sessions, and
+  tracing enabled for review.
+copySnippet: |-
+  uv add openai-agents
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 or newer and a project environment managed with uv, pip, or another Python package manager."
+  - "OpenAI API credentials or another configured model provider supported through the SDK's provider-agnostic routes."
+  - "A reviewed tool boundary for function tools, hosted tools, MCP tools, handoffs, sandbox agents, and any external systems the agent can call."
+  - "A tracing, logging, and retention policy for prompts, tool calls, sessions, provider responses, and run metadata."
+  - "Optional voice, Redis, SQLAlchemy, realtime, sandbox, or deployment dependencies only when those runtime capabilities are actually needed."
+safetyNotes:
+  - "Agents can call function tools, hosted tools, MCP tools, realtime tools, and sandbox agents; treat every tool as an API endpoint with explicit authorization, input validation, rate limits, and side-effect controls."
+  - "Sandbox agents can inspect files, run commands, apply patches, and carry workspace state across longer tasks; restrict workspace scope and require human approval before destructive or high-impact actions."
+  - "Guardrails are useful runtime checks, but they do not replace permission checks, least-privilege credentials, audit logs, or human review for risky operations."
+  - "Handoffs and agents-as-tools can delegate work across agents; document which agent owns each tool, decision, retry, rollback, and escalation path."
+  - "Realtime voice agents and human-in-the-loop flows need clear consent, interruption, recording, and operator takeover behavior."
+privacyNotes:
+  - "Prompts, instructions, tool arguments, tool outputs, session history, traces, realtime audio events, sandbox files, logs, provider responses, and errors may contain user or workspace data."
+  - "Do not expose secrets, tokens, private file paths, customer records, credentials, internal identifiers, or raw exceptions through traces, logs, prompts, tool schemas, or examples."
+  - "When using MCP servers, hosted tools, Redis sessions, SQL-backed sessions, or observability systems, review each service's retention, access control, and third-party data handling separately."
+  - "If sandbox agents operate on repositories or user files, define which files can be mounted, modified, committed, uploaded, logged, or returned to the model."
+tags:
+  - openai
+  - agents
+  - python
+  - agent-framework
+  - mcp
+  - tracing
+  - voice
+keywords:
+  - OpenAI Agents Python SDK
+  - OpenAI Agents SDK
+  - openai-agents Python package
+  - Python agent framework
+  - multi-agent workflows Python
+  - OpenAI Agents MCP tools
+  - OpenAI Agents tracing
+  - OpenAI sandbox agents
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+OpenAI Agents Python SDK is OpenAI's official Python framework for building
+agentic applications and multi-agent workflows. The SDK centers on agents with
+instructions, tools, guardrails, handoffs, sessions, tracing, realtime voice
+agents, and sandbox agents, while also supporting OpenAI APIs and other model
+providers.
+
+Use it when a Python project needs a code-first agent runtime rather than a
+single prompt wrapper. It is especially relevant for teams building production
+agent workflows that need inspectable traces, delegated agents, tool execution,
+MCP integration, session storage, human review, or voice interaction.
+
+## Install
+
+For uv-managed projects:
+
+```bash
+uv add openai-agents
+```
+
+For pip-managed projects:
+
+```bash
+pip install openai-agents
+```
+
+Optional extras cover voice, Redis sessions, SQLAlchemy sessions, realtime,
+MCP-related runtime dependencies, sandbox providers, deployment integrations,
+and other advanced capabilities. Install only the extras required by the
+workflow you are actually running.
+
+## Agent Capabilities
+
+| Area | Python SDK Coverage |
+| --- | --- |
+| Agents | Instructions, model configuration, tools, guardrails, handoffs, and run behavior |
+| Tools | Function tools, hosted tools, MCP tools, agents-as-tools, and sandbox agents |
+| Workflow Control | Handoffs, human-in-the-loop review, sessions, retries, and run configuration |
+| Observability | Built-in tracing for debugging and optimizing agent runs |
+| Realtime | Voice agent support through realtime agent APIs and optional voice dependencies |
+| Sandboxes | Agents that can work against controlled filesystem or container-like workspaces |
+| Provider Routing | OpenAI Responses and Chat Completions APIs plus provider-agnostic support for other LLM routes |
+
+## MCP Fit
+
+The SDK is relevant to MCP searches because its tool layer can use MCP tools
+alongside function tools and hosted tools. That makes it useful for Python agent
+apps that want to call existing MCP servers without writing every integration
+as a custom Python adapter.
+
+Keep the trust boundary explicit: an MCP server can expose local files, SaaS
+accounts, databases, browser automation, cloud infrastructure, or internal APIs.
+The agent framework wires those capabilities into a workflow, but the
+application still owns authorization, least privilege, logging, approval gates,
+and rollback behavior.
+
+## Use Cases
+
+- Build Python assistants that coordinate several specialized agents.
+- Route work between agents with handoffs or agents-as-tools.
+- Add MCP tools to an OpenAI Agents workflow.
+- Use guardrails and human review around higher-risk tool calls.
+- Trace agent runs for debugging, evaluation, and release review.
+- Add session memory backed by local, Redis, SQL, or custom stores.
+- Build realtime voice agents with the optional voice and realtime paths.
+- Run sandbox agents against controlled workspaces for longer coding or
+  repository tasks.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes the OpenAI Agents SDK as a lightweight framework
+  for multi-agent workflows and says it supports OpenAI APIs plus other LLMs.
+- The README lists agents, sandbox agents, agents-as-tools, handoffs, tools,
+  guardrails, human-in-the-loop flows, sessions, tracing, and realtime agents as
+  core concepts.
+- The README documents `pip install openai-agents` and `uv add openai-agents`
+  install paths, with optional voice and Redis extras.
+- `pyproject.toml` declares the `openai-agents` package, Python `>=3.10`, MIT
+  licensing, the OpenAI author, OpenAI docs, repository URL, MCP package
+  dependency, and optional extras for voice, realtime, Redis, SQLAlchemy,
+  sandbox providers, deployment providers, and Temporal.
+- PyPI resolves package metadata for `openai-agents` version `0.17.5`.
+
+## Safety and Privacy
+
+The SDK's risk profile depends on the tools and systems attached to each agent.
+Treat function tools, MCP tools, hosted tools, realtime actions, sandbox agents,
+and delegated agents as separate trust boundaries with their own permissions,
+audit trail, and failure mode.
+
+Tracing, session storage, voice events, sandbox files, tool results, provider
+responses, and logs can contain sensitive user or workspace data. Review what is
+stored, who can read it, how long it is retained, and whether data crosses
+OpenAI, other model providers, MCP servers, databases, observability systems, or
+deployment platforms.
+
+## Duplicate Check
+
+Checked current `content/agents/`, `content/guides/`, `content/mcp/`,
+`content/tools/`, `content/skills/`, open pull requests, and repository-wide
+content for `openai/openai-agents-python`, OpenAI Agents Python SDK, OpenAI
+Agents SDK, `openai-agents`, OpenAI Agents MCP tools, OpenAI Agents tracing, and
+OpenAI sandbox agents. Existing entries include an OpenAI Agents SDK production
+specialist agent and a trace-to-eval guide, but no dedicated installable Python
+SDK tools entry, exact source URL duplicate, target file, or open duplicate PR
+was found.
