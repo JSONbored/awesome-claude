@@ -149,10 +149,10 @@ installCommand: |-
   downloader_re="(^|[;&${pipe_char}[:space:]])${downloader_names}([[:space:]]|$)"
   archive_re='https?://[^[:space:]]*(\.zip|\.tar\.gz|\.tgz|\.tar\.xz|\.tar\.bz2|\.mcpb|\.deb|\.rpm|\.pkg|\.dmg|\.exe|\.msi|\.AppImage|install\.sh|setup\.sh|bootstrap\.sh)([?#][^[:space:]]*)?'
   pipe_installer_re="${downloader_names}[^${pipe_char}]*https?://[^${pipe_char}[:space:]]*(install|setup|bootstrap|\.sh)[^${pipe_char}]*\\${pipe_char}[[:space:]]*(sudo[[:space:]]+)?${shell_names}"
-  verify_re='(^|[;&]|&&|\|\|)|[[:space:]]\|[[:space:]]*'
+  command_chain_re='(^|&&)'
   checksum_re='(sha256sum[[:space:]][^;&|#]*(--check|-c)|shasum[[:space:]][^;&|#]*(-a[[:space:]]+256|--algorithm([=[:space:]]+)256)[^;&|#]*(--check|-c))'
   signature_re='(cosign[[:space:]]+verify-blob|gpg[[:space:]][^;&|#]*--verify|minisign[[:space:]][^;&|#]*-V)'
-  verification_command_re="(${verify_re})[[:space:]]*(${checksum_re}|${signature_re})([[:space:]]|$)"
+  verification_command_re="${command_chain_re}[[:space:]]*(${checksum_re}|${signature_re})[^;&|#]*"
 
   escape_ere() {
     printf '%s' "$1" | sed -E 's/[][(){}.^$*+?|\]/\\&/g'
@@ -178,7 +178,7 @@ installCommand: |-
           }
         }
       ')
-      artifact_verification_re="(${artifact_re}[^;&#]*${verification_command_re}|${verification_command_re}[^;&#]*${artifact_re})"
+      artifact_verification_re="${verification_command_re}${artifact_re}[^;&|#]*($|&&)"
       if printf '%s\n' "$after_url" | grep -Eq -- "$artifact_verification_re"; then
         return 0
       fi
@@ -394,10 +394,10 @@ scriptBody: |-
   downloader_re="(^|[;&${pipe_char}[:space:]])${downloader_names}([[:space:]]|$)"
   archive_re='https?://[^[:space:]]*(\.zip|\.tar\.gz|\.tgz|\.tar\.xz|\.tar\.bz2|\.mcpb|\.deb|\.rpm|\.pkg|\.dmg|\.exe|\.msi|\.AppImage|install\.sh|setup\.sh|bootstrap\.sh)([?#][^[:space:]]*)?'
   pipe_installer_re="${downloader_names}[^${pipe_char}]*https?://[^${pipe_char}[:space:]]*(install|setup|bootstrap|\.sh)[^${pipe_char}]*\\${pipe_char}[[:space:]]*(sudo[[:space:]]+)?${shell_names}"
-  verify_re='(^|[;&]|&&|\|\|)|[[:space:]]\|[[:space:]]*'
+  command_chain_re='(^|&&)'
   checksum_re='(sha256sum[[:space:]][^;&|#]*(--check|-c)|shasum[[:space:]][^;&|#]*(-a[[:space:]]+256|--algorithm([=[:space:]]+)256)[^;&|#]*(--check|-c))'
   signature_re='(cosign[[:space:]]+verify-blob|gpg[[:space:]][^;&|#]*--verify|minisign[[:space:]][^;&|#]*-V)'
-  verification_command_re="(${verify_re})[[:space:]]*(${checksum_re}|${signature_re})([[:space:]]|$)"
+  verification_command_re="${command_chain_re}[[:space:]]*(${checksum_re}|${signature_re})[^;&|#]*"
 
   escape_ere() {
     printf '%s' "$1" | sed -E 's/[][(){}.^$*+?|\]/\\&/g'
@@ -423,7 +423,7 @@ scriptBody: |-
           }
         }
       ')
-      artifact_verification_re="(${artifact_re}[^;&#]*${verification_command_re}|${verification_command_re}[^;&#]*${artifact_re})"
+      artifact_verification_re="${verification_command_re}${artifact_re}[^;&|#]*($|&&)"
       if printf '%s\n' "$after_url" | grep -Eq -- "$artifact_verification_re"; then
         return 0
       fi
@@ -485,7 +485,7 @@ prerequisites:
   - "A team policy for when package, installer, or archive downloads require checksums, signatures, pinned releases, or manual source review."
 safetyNotes:
   - "Runs before Bash tool calls and reads only the proposed command string from Claude Code hook input."
-  - "Blocks matching curl/wget package or archive downloads with exit code 2 unless a later executable verification step references the downloaded artifact name. Downloader-to-shell installer pipelines are blocked unless allowlisted."
+  - "Blocks matching curl/wget package or archive downloads with exit code 2 unless a later executable verification step is chained with && and references the downloaded artifact name. Downloader-to-shell installer pipelines are blocked unless allowlisted."
   - "Does not download, execute, hash, delete, install, or modify files; it is a pre-execution guard around the proposed command text."
   - "Regex matching can miss unusual shell constructs or flag legitimate internal download workflows; comments and digest-print-only commands are not accepted as verification, and `PACKAGE_DOWNLOAD_GUARD_ALLOWLIST` is available for reviewed patterns."
   - "Set `PACKAGE_DOWNLOAD_GUARD_MODE=advisory` to warn without blocking while a team tunes the policy."
@@ -552,13 +552,14 @@ Claude Code passes the pending Bash tool call to the hook on stdin. The script
 extracts `.tool_input.command`, checks for `curl` or `wget`, and then looks for
 package/archive URL shapes or installer pipes. If a risky download is found, it
 requires a later executable checksum-check or signature-verification command in
-the same proposed command that references the downloaded artifact name. Without
+the same proposed command that is chained with `&&` and references the
+downloaded artifact name. Without
 that command, it exits `2`, which tells Claude Code to block the Bash call.
 
 The guard is intentionally text-based. It strips shell comments before looking
 for verification commands and blocks downloader-to-shell installer pipelines so
-comment-only, unrelated, out-of-order, or digest-print-only snippets do not
-count as verification. It does
+comment-only, unrelated, out-of-order, neutralized, or digest-print-only snippets
+do not count as verification. It does
 not claim to verify the checksum itself; its job is to stop the session long
 enough for a human or agent to add the reviewed verification step before using
 the downloaded artifact.
@@ -620,9 +621,10 @@ the downloaded artifact.
 - Verification commands can be present but wrong. Review the expected digest,
   signing identity, release source, and pinned version before trusting the
   artifact. Digest-print-only commands such as `openssl dgst -sha256 file`,
-  unrelated checks, or checks that do not reference the downloaded artifact name
-  do not satisfy the guard because they do not compare that artifact against a
-  trusted value.
+  unrelated checks, neutralized checks such as `|| true`, or checks that do not
+  reference the downloaded artifact name after the verification command do not
+  satisfy the guard because they do not compare that artifact against a trusted
+  value.
 
 ## Duplicate And History Check
 
