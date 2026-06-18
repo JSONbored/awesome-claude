@@ -1,0 +1,234 @@
+---
+title: Anthropic Agent Skills
+slug: anthropic-agent-skills
+category: skills
+description: >-
+  Anthropic's public Agent Skills repository for Claude, with example skills,
+  document skills, the Agent Skills specification pointer, a template skill,
+  Claude Code plugin installation, Claude.ai usage guidance, and Claude API
+  skill creation references.
+cardDescription: >-
+  Anthropic's public skills repository for Claude: example skills, document
+  skills, MCP builder, skill creator, template skill, and Claude plugin setup.
+seoTitle: Anthropic Agent Skills for Claude Code, Claude.ai, Claude API, MCP Builder, and Skill Creator
+seoDescription: >-
+  Browse Anthropic Agent Skills for Claude Code, Claude.ai, and the Claude API,
+  including example skills, document skills, MCP builder, skill creator,
+  template skill, and Agent Skills specification references.
+author: Anthropic
+authorProfileUrl: "https://github.com/anthropics"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/anthropics/skills"
+documentationUrl: "https://github.com/anthropics/skills#readme"
+websiteUrl: "https://skills.sh/anthropics/skills"
+downloadUrl: "https://github.com/anthropics/skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "/plugin marketplace add anthropics/skills"
+usageSnippet: >-
+  Register Anthropic's skills repository as a Claude Code plugin marketplace,
+  install document-skills or example-skills, or use the repository as a
+  reference for Claude.ai, Claude API skill creation, and custom Agent Skills.
+copySnippet: |-
+  /plugin marketplace add anthropics/skills
+
+  # Install a plugin from the marketplace
+  /plugin install document-skills@anthropic-agent-skills
+  /plugin install example-skills@anthropic-agent-skills
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/anthropics/skills"
+  - "https://raw.githubusercontent.com/anthropics/skills/main/README.md"
+  - "https://raw.githubusercontent.com/anthropics/skills/main/skills/mcp-builder/SKILL.md"
+  - "https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md"
+  - "https://raw.githubusercontent.com/anthropics/skills/main/template/SKILL.md"
+  - "https://raw.githubusercontent.com/anthropics/skills/main/spec/agent-skills-spec.md"
+testedPlatforms:
+  - Claude Code
+  - Claude.ai
+  - Claude API
+  - Agent Skills compatible hosts
+prerequisites:
+  - "Claude Code for plugin marketplace installation, Claude.ai paid plan access for built-in/example skill usage, or Claude API access for programmatic skill creation."
+  - "A target task where a demonstration skill, document skill, MCP builder workflow, skill creator workflow, or custom skill template is appropriate."
+  - "Review of the repository disclaimer and license/source-availability notes before relying on a skill in production."
+  - "Local testing for any copied or customized skill before using it on sensitive documents, production workflows, or customer data."
+safetyNotes:
+  - "The repository is explicitly presented as demonstration and educational material; behavior available in Claude products can differ from repository examples."
+  - "Document skills can read, transform, and create files such as PDFs, Word documents, PowerPoint decks, and spreadsheets, so review generated artifacts before sharing or publishing them."
+  - "The MCP builder skill guides agents through creating MCP servers and evaluations; generated servers still need security review, least-privilege tool design, authentication review, and transport testing."
+  - "The skill creator workflow can generate instructions, scripts, references, and assets; review all generated resources before installing them into an agent host."
+privacyNotes:
+  - "Skill usage can expose documents, spreadsheets, slide decks, prompts, company workflows, brand guidelines, MCP designs, API details, and generated artifacts to Claude or the configured model/runtime."
+  - "Do not upload or commit customer documents, regulated data, private brand assets, secrets, credentials, or unreleased business plans unless the environment and account policy allow that data."
+  - "When creating custom skills, check bundled scripts, references, and assets for private data before sharing a repository, plugin, or ZIP archive."
+tags:
+  - anthropic
+  - skills
+  - claude-code
+  - claude-ai
+  - claude-api
+  - mcp
+  - documents
+  - skill-authoring
+keywords:
+  - Anthropic Agent Skills
+  - anthropics skills
+  - Claude Code skills
+  - Claude.ai skills
+  - Claude API skills
+  - MCP builder skill
+  - skill creator skill
+  - Agent Skills specification
+  - custom Claude skills
+  - document skills Claude
+readingTime: 7
+difficultyScore: 72
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Anthropic Agent Skills
+
+`anthropics/skills` is Anthropic's public repository for Claude skills. It
+contains example skills, document skills, an Agent Skills specification pointer,
+a minimal template skill, and Claude Code plugin marketplace instructions.
+
+Use this listing for Anthropic's own public skills repository and reference
+materials. Use narrower entries when evaluating a single community skill,
+third-party skill pack, MCP server, or tool.
+
+## Knowledge Freshness
+
+Claude Code plugin behavior, Claude.ai skill availability, Claude API skill
+endpoints, and the Agent Skills specification can change. Verify current
+Anthropic support docs, Claude API docs, and the live
+`https://agentskills.io/specification` page before building production
+automation around repository examples.
+
+The repository README says these skills demonstrate patterns and possibilities,
+and that implementations or behaviors in Claude products may differ. Treat the
+repository as a source-backed reference, not a guarantee that every listed skill
+is available or identical in every Claude surface.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The upstream `anthropics/skills` README.
+- Representative `SKILL.md` files for `mcp-builder` and `skill-creator`.
+- The template `SKILL.md` for the minimal required skill structure.
+- The repository spec pointer to the Agent Skills specification.
+- Current GitHub repository metadata.
+
+## Core Workflow
+
+Register the repository as a Claude Code plugin marketplace:
+
+```text
+/plugin marketplace add anthropics/skills
+```
+
+Install a plugin from that marketplace:
+
+```text
+/plugin install document-skills@anthropic-agent-skills
+/plugin install example-skills@anthropic-agent-skills
+```
+
+After installation, invoke a skill by task. For example:
+
+```text
+Use the PDF skill to extract the form fields from path/to/file.pdf.
+```
+
+Claude.ai users can use built-in/example skills where available on paid plans,
+and Claude API users can use pre-built or custom skills through Anthropic's
+Skills API workflow.
+
+## Capability Scope
+
+The README organizes the repository into:
+
+| Area | Scope |
+| --- | --- |
+| `skills/` | Creative and design examples, development and technical examples, enterprise and communication examples, and document skills |
+| `spec/` | Pointer to the Agent Skills specification |
+| `template/` | Minimal starter `SKILL.md` structure |
+
+Skill examples include document formats such as `docx`, `pdf`, `pptx`, and
+`xlsx`, plus development-oriented examples such as `mcp-builder`,
+`skill-creator`, `webapp-testing`, and `claude-api`.
+
+The README states that many skills are open source under Apache 2.0, while the
+document creation and editing skills under `docx`, `pdf`, `pptx`, and `xlsx`
+are source-available references rather than open source.
+
+## Production Rules
+
+- Treat this repository as a reference and demo collection unless a specific
+  Claude surface documents production support for the exact skill.
+- Test skills thoroughly in your own environment before relying on them for
+  critical workflows.
+- Review document outputs, generated files, and transformed data before sharing
+  or publishing.
+- Review generated MCP servers for authentication, tool permissions, transport
+  choices, error handling, and evaluation coverage before deployment.
+- Do not copy example skills into internal plugins without checking license,
+  source-availability, data-handling, and security requirements.
+- Keep customer documents, secrets, regulated data, and proprietary workflows
+  out of public examples, issues, screenshots, and committed custom skills.
+
+## Use Cases
+
+- Install Anthropic's document skills in Claude Code for PDF, DOCX, PPTX, or
+  XLSX workflows where available.
+- Use `mcp-builder` as a reference workflow for planning, implementing, and
+  evaluating a high-quality MCP server.
+- Use `skill-creator` to understand the structure, iteration loop, and testing
+  approach for custom skills.
+- Browse the template skill when creating a minimal `SKILL.md`.
+- Use the repository to learn how Claude skills package instructions, scripts,
+  references, and assets.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The README describes skills as folders of instructions, scripts, and
+  resources that Claude loads dynamically for specialized tasks.
+- The README says the repository contains Anthropic's implementation of skills
+  for Claude and points the Agent Skills standard to `agentskills.io`.
+- The README documents Claude Code plugin marketplace installation with
+  `/plugin marketplace add anthropics/skills` and direct installs for
+  `document-skills` and `example-skills`.
+- The README describes Claude.ai paid-plan usage and Claude API skill creation
+  through Anthropic docs.
+- The `mcp-builder` skill describes MCP server design, tool naming, context
+  management, SDK choices, testing with MCP Inspector, and evaluation creation.
+- The `skill-creator` skill describes drafting, testing, evaluating, and
+  iterating custom skills with `SKILL.md`, scripts, references, and assets.
+- The template skill shows the minimal `name` and `description` frontmatter.
+- The repository README distinguishes open-source example skills from
+  source-available document skills.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`,
+`content/agents/`, open pull requests, and repository-wide content for
+`anthropics/skills`, Anthropic Agent Skills, Claude Code skills, Claude API
+skills, `mcp-builder`, `skill-creator`, document skills, and Agent Skills
+specification. Existing content discusses Anthropic skills generally and covers
+some skill-authoring concepts, but no dedicated `anthropics/skills` repository
+entry, exact source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The repository
+is maintained by Anthropic and includes mixed open-source and source-available
+skill materials as described in the upstream README.
