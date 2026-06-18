@@ -1,0 +1,243 @@
+---
+title: Addy Osmani Agent Skills
+slug: addy-agent-skills
+category: skills
+description: >-
+  Production-grade engineering Agent Skills by Addy Osmani for AI coding
+  agents, covering spec-driven development, planning, incremental builds,
+  testing, source-grounded implementation, code review, simplification,
+  security, performance, documentation, observability, CI/CD, and shipping.
+cardDescription: >-
+  Lifecycle skill pack for AI coding agents: spec, plan, build, test, review,
+  simplify, harden, observe, document, and ship production software.
+seoTitle: Addy Osmani Agent Skills for Claude Code, Codex, Cursor, Gemini CLI, and AI Coding Agents
+seoDescription: >-
+  Install Addy Osmani's Agent Skills for AI coding agents to guide spec-driven
+  development, planning, TDD, source-driven implementation, code review,
+  security, performance, observability, CI/CD, and shipping workflows.
+author: Addy Osmani
+authorProfileUrl: "https://github.com/addyosmani"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/addyosmani/agent-skills"
+documentationUrl: "https://github.com/addyosmani/agent-skills#readme"
+websiteUrl: "https://github.com/addyosmani/agent-skills"
+downloadUrl: "https://github.com/addyosmani/agent-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "/plugin marketplace add addyosmani/agent-skills"
+usageSnippet: >-
+  Install the Claude Code plugin or clone the repository, then load the
+  lifecycle skills and commands that match the current task: /spec, /plan,
+  /build, /test, /review, /code-simplify, /ship, or focused SKILL.md files.
+copySnippet: |-
+  /plugin marketplace add addyosmani/agent-skills
+  /plugin install agent-skills@addy-agent-skills
+
+  # HTTPS fallback for environments without GitHub SSH setup
+  /plugin marketplace add https://github.com/addyosmani/agent-skills.git
+  /plugin install agent-skills@addy-agent-skills
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/addyosmani/agent-skills"
+  - "https://raw.githubusercontent.com/addyosmani/agent-skills/main/README.md"
+  - "https://raw.githubusercontent.com/addyosmani/agent-skills/main/docs/getting-started.md"
+  - "https://raw.githubusercontent.com/addyosmani/agent-skills/main/plugin.json"
+  - "https://raw.githubusercontent.com/addyosmani/agent-skills/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Cursor
+  - Antigravity CLI
+  - Gemini CLI
+  - Windsurf
+  - OpenCode
+  - GitHub Copilot
+  - Codex and other Markdown-instruction agents
+prerequisites:
+  - "An AI coding agent that supports Claude Code plugins, native skills, rules files, AGENTS.md, or Markdown instruction loading."
+  - "GitHub access to clone or install the repository, with HTTPS fallback when SSH marketplace cloning is unavailable."
+  - "Project-specific validation commands so the skills' verification gates can run against real tests, builds, linters, previews, or deployment checks."
+  - "Team agreement on when agent-created specs, task files, and command artifacts should remain in version control or be removed before merge."
+safetyNotes:
+  - "The pack can guide agents through implementation, git workflow, CI/CD, security hardening, deployment, and shipping; keep high-impact writes, pushes, production deploys, and infrastructure changes behind human review."
+  - "Slash commands such as /build auto reduce manual steps after an approved plan, but they still require verification gates and pauses on failures or risky steps."
+  - "The skills intentionally push agents to surface assumptions, ask on confusion, resist scope creep, and verify results; do not weaken those gates when using the pack for production work."
+  - "Treat scripts, hooks, commands, and agent personas from the repository as project automation until reviewed against local policy."
+privacyNotes:
+  - "Using the skills can expose specs, task plans, source code, tests, product requirements, architecture decisions, security assumptions, logs, metrics, deployment plans, and review findings to the configured model provider."
+  - "Do not include secrets, customer data, credentials, private incident details, unreleased roadmap items, or proprietary architecture diagrams in prompts or generated artifacts unless the environment is approved for that data."
+  - "If generated specs, task files, ADRs, or reports are committed, review them for private assumptions, internal URLs, sensitive dependencies, and disclosure-sensitive launch details."
+tags:
+  - addy-osmani
+  - skills
+  - ai-agents
+  - claude-code
+  - codex
+  - engineering-workflow
+  - tdd
+  - code-review
+keywords:
+  - Addy Osmani Agent Skills
+  - addyosmani agent-skills
+  - production-grade engineering skills
+  - Claude Code agent skills
+  - Codex agent skills
+  - AI coding agent skills
+  - spec driven development skill
+  - test driven development agent skill
+  - source driven development skill
+  - agent code review skill
+readingTime: 7
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Addy Osmani Agent Skills
+
+`addyosmani/agent-skills` is a production-grade engineering skill pack for AI
+coding agents. It organizes senior-engineering workflows into installable
+skills, Claude Code slash commands, agent personas, and reference checklists.
+
+The repository is useful when you want an agent to follow a disciplined
+development lifecycle instead of jumping straight from prompt to code.
+
+## Knowledge Freshness
+
+Engineering workflows age more slowly than framework APIs, but tool setup,
+agent host support, marketplace commands, Claude Code plugin behavior, Gemini
+CLI skill installation, Antigravity plugin installation, and host-specific
+rules-file behavior can still change. Verify the current setup docs and local
+agent host behavior before assuming an install path works.
+
+When a skill asks for source-grounded implementation or verification, fetch the
+current framework docs and run the actual project checks. The skill pack gives
+the agent a process; local source code, dependency versions, and test results
+remain the operational truth.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The upstream `addyosmani/agent-skills` README.
+- The getting-started guide for universal Markdown-instruction usage.
+- The plugin metadata for package name, version, and description.
+- Repository license and GitHub metadata.
+
+## Core Workflow
+
+Install in Claude Code through the plugin marketplace:
+
+```text
+/plugin marketplace add addyosmani/agent-skills
+/plugin install agent-skills@addy-agent-skills
+```
+
+Use the HTTPS fallback when SSH marketplace cloning is not available:
+
+```text
+/plugin marketplace add https://github.com/addyosmani/agent-skills.git
+/plugin install agent-skills@addy-agent-skills
+```
+
+For other agents, clone the repository and load the relevant `SKILL.md` file,
+rules file, command, or agent persona according to that host's setup model.
+
+```bash
+git clone https://github.com/addyosmani/agent-skills.git
+```
+
+Then route work through lifecycle commands or focused skills:
+
+```text
+/spec
+/plan
+/build
+/test
+/review
+/code-simplify
+/ship
+```
+
+## Capability Scope
+
+The README describes 24 total skills: 23 lifecycle skills plus the
+`using-agent-skills` meta-skill. Coverage includes:
+
+| Phase | Example Skills |
+| --- | --- |
+| Define | `interview-me`, `idea-refine`, `spec-driven-development` |
+| Plan | `planning-and-task-breakdown` |
+| Build | `incremental-implementation`, `context-engineering`, `source-driven-development`, `frontend-ui-engineering`, `api-and-interface-design` |
+| Verify | `test-driven-development`, `browser-testing-with-devtools`, `debugging-and-error-recovery` |
+| Review | `code-review-and-quality`, `code-simplification`, `security-and-hardening`, `performance-optimization` |
+| Ship | `git-workflow-and-versioning`, `ci-cd-and-automation`, `documentation-and-adrs`, `observability-and-instrumentation`, `shipping-and-launch` |
+
+The repository also includes agent personas for code review, testing, security
+review, and web performance, plus references for testing, security,
+performance, and accessibility checklists.
+
+## Production Rules
+
+- Start non-trivial work with a spec or explicit assumptions before code.
+- Keep each implementation slice small enough to verify and review.
+- Do not skip test, build, lint, runtime, or source-citation gates just because
+  an agent followed a skill.
+- Use source-driven development when framework APIs, versions, or official
+  recommendations matter.
+- Keep generated specs, task files, ADRs, reports, and launch notes free of
+  secrets or private customer data before committing them.
+- Treat `/build auto`, deployment, git, CI/CD, and shipping workflows as
+  approval-gated when they can write, push, deploy, or change production state.
+
+## Use Cases
+
+- Ask Claude Code to turn a vague feature idea into a reviewed spec before
+  implementation starts.
+- Have Codex break a validated spec into small, testable implementation tasks.
+- Use Cursor or Gemini CLI with source-driven development when framework docs
+  need to be checked before writing code.
+- Run a structured review using the code-review and simplification skills
+  before opening or merging a PR.
+- Apply observability, CI/CD, documentation, and shipping skills before a
+  production release.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The README describes the project as production-grade engineering skills for
+  AI coding agents.
+- The README documents seven slash commands: `/spec`, `/plan`, `/build`,
+  `/test`, `/review`, `/code-simplify`, and `/ship`.
+- The README lists 24 total skills and describes setup paths for Claude Code,
+  Cursor, Antigravity CLI, Gemini CLI, Windsurf, OpenCode, GitHub Copilot,
+  Kiro, Codex, and other agents that accept Markdown instructions.
+- The getting-started guide says each skill is a Markdown `SKILL.md` workflow
+  with triggers, process, verification, rationalizations, and red flags.
+- The getting-started guide explains that each skill is a Markdown `SKILL.md`
+  workflow with triggers, process, verification, rationalizations, and red
+  flags, and recommends loading skills selectively by task.
+- `plugin.json` identifies the plugin as `agent-skills` version `1.0.0` with
+  the description "Production-grade engineering skills for AI coding agents."
+- GitHub reports MIT licensing for the repository.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`,
+`content/agents/`, open pull requests, and repository-wide content for
+`addyosmani/agent-skills`, Addy Osmani Agent Skills, production-grade
+engineering skills, `/spec`, `/plan`, `/build`, `using-agent-skills`,
+`spec-driven-development`, and `source-driven-development`. Existing entries
+cover several individual engineering skill themes, but no dedicated
+`addyosmani/agent-skills` collection entry, exact source URL duplicate, target
+file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The repository
+is maintained by Addy Osmani and is published under the MIT License.
