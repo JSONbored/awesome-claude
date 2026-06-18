@@ -213,6 +213,7 @@ describe("submission gate GitHub client", () => {
               name: "validate-web",
               status: "completed",
               conclusion: "success",
+              app: { slug: "github-actions" },
               completed_at: "2026-01-02T00:00:00Z",
             },
             {
@@ -226,6 +227,7 @@ describe("submission gate GitHub client", () => {
               name: "coverage",
               status: "completed",
               conclusion: "failure",
+              app: { slug: "github-actions" },
               completed_at: "2026-01-02T00:00:00Z",
             },
           ],
@@ -346,6 +348,42 @@ describe("submission gate GitHub client", () => {
           name: "Superagent Security Scan",
           status: "failed",
           details: "concluded failure",
+        },
+      ],
+    });
+  });
+
+  it("fails closed for unknown required check-run names", async () => {
+    mockFetchQueue([
+      {
+        body: {
+          check_runs: [
+            {
+              name: "new-required-check",
+              status: "completed",
+              conclusion: "success",
+              app: { slug: "attacker-ci" },
+              completed_at: "2026-01-02T00:00:00Z",
+            },
+          ],
+        },
+      },
+    ]);
+
+    await expect(
+      getCommitValidationState({
+        token: "ghs",
+        repo,
+        ref: "abc123",
+        requiredChecks: ["new-required-check"],
+      }),
+    ).resolves.toMatchObject({
+      state: "pending",
+      checks: [
+        {
+          name: "new-required-check",
+          status: "missing",
+          details: "has not reported yet",
         },
       ],
     });

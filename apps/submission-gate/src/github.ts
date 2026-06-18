@@ -494,8 +494,21 @@ type CheckRun = {
   } | null;
 };
 
+const GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS = ["github-actions"];
 const TRUSTED_CHECK_RUN_APP_SLUGS: Record<string, string[]> = {
-  "validate-content": ["github-actions"],
+  coverage: GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "classify-pr": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "pipelock-advisory-scan": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "required-pr-gate": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "superagent-repo-scan": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-ci": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-content": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-content-config": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-content-policy": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-pr-preview": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-raycast": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-registry": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-web": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
   "Superagent Security Scan": ["superagent", "superagent-security-scan"],
 };
 
@@ -540,7 +553,7 @@ function sortNewestFirst<
 
 function isTrustedCheckRun(run: CheckRun, name: string) {
   const trustedAppSlugs = TRUSTED_CHECK_RUN_APP_SLUGS[name];
-  if (!trustedAppSlugs?.length) return true;
+  if (!trustedAppSlugs?.length) return false;
   const appSlug = run.app?.slug || "";
   return trustedAppSlugs.includes(appSlug);
 }
