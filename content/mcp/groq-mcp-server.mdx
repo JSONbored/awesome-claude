@@ -19,7 +19,7 @@ retrievalSources:
   - "https://raw.githubusercontent.com/groq/groq-mcp-server/main/README.md"
   - "https://code.claude.com/docs/en/mcp"
 installable: true
-installCommand: "claude mcp add groq -e GROQ_API_KEY=your-api-key -- uvx groq-mcp"
+installCommand: "claude mcp add groq -- uvx groq-mcp"
 usageSnippet: >-
   Ask Claude to describe an image using a Groq vision model, convert text to speech with
   Arista-PlayAI voice, transcribe an audio file with Whisper-large-v3, process a batch of
@@ -61,7 +61,7 @@ safetyNotes:
   - "Text-to-speech and speech-to-text outputs are saved to `BASE_OUTPUT_PATH` (default: ~/Desktop) — ensure this path has appropriate access controls."
 privacyNotes:
   - "Text, images, and audio passed to Groq tools are sent to Groq's API for inference — do not pass sensitive or personally identifiable data."
-  - "Your `GROQ_API_KEY` is passed as an environment variable — treat it as a secret and store it securely."
+  - "Your `GROQ_API_KEY` is a secret — store it only in your MCP client configuration or a protected environment file, not in shell history or command-line arguments."
 disclosure: "Groq is a commercial AI inference provider. The MCP server is officially maintained by Groq."
 tags:
   - groq
@@ -120,10 +120,10 @@ making it ideal for latency-sensitive workflows and real-time voice applications
 ### Claude Code
 
 ```bash
-claude mcp add groq -e GROQ_API_KEY=your-api-key -- uvx groq-mcp
+claude mcp add groq -- uvx groq-mcp
 ```
 
-Get your free API key at [console.groq.com](https://console.groq.com).
+Get your free API key at [console.groq.com](https://console.groq.com), then add it to your MCP client configuration (for example, in the Claude Desktop JSON shown below). Avoid pasting API keys into shell commands because they can be saved in shell history or exposed through process listings.
 
 ### Claude Desktop
 
@@ -148,8 +148,8 @@ Get your free API key at [console.groq.com](https://console.groq.com).
 # Install the package
 pip install groq-mcp
 
-# Auto-generate and save configuration
-groq-mcp-config --api-key=your-api-key
+# Auto-generate and save configuration, then add GROQ_API_KEY in the generated client config
+groq-mcp-config
 ```
 
 ## Requirements
@@ -163,6 +163,8 @@ groq-mcp-config --api-key=your-api-key
 - Compound-beta web search and code execution are sandboxed by Groq.
 - TTS/STT files are saved locally to `BASE_OUTPUT_PATH` — keep this path private if outputs
   contain sensitive content.
+- Do not pass `GROQ_API_KEY` directly on the command line; command arguments can be stored
+  in shell history or exposed to other local processes.
 
 ## Source Verification Notes
 
