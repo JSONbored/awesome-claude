@@ -1952,6 +1952,11 @@ ${urls}
     expect(source).toContain(
       "resetAttemptCount: shouldResetManualTerminal || shouldResetTerminalState",
     );
+    expect(source).toContain('existingStatus === "closed"');
+    expect(source).toContain(
+      'isReopenedPullRequestEvent(String(eventName || ""), webhook)',
+    );
+    expect(source).toContain("eventName,");
     expect(source).toContain("clearTerminal:");
     expect(source).toContain("lastReviewKey: reviewScanKey || undefined");
     expect(source).toContain('reason: "already_reviewed"');

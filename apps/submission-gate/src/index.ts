@@ -873,6 +873,8 @@ async function recordReviewedScanKey(params: {
 async function shouldInspectPullRequestFilesForWebhook(
   env: Env,
   target: ReviewTarget,
+  eventName?: string,
+  webhook?: Record<string, unknown>,
 ) {
   const existing = await getPrState(env.SUBMISSION_GATE_DB, {
     repo: target.repoFullName,
@@ -880,11 +882,19 @@ async function shouldInspectPullRequestFilesForWebhook(
   });
   const reviewScanKey = reviewScanKeyForTarget(target);
   const existingReviewKey = String(existing?.lastReviewKey || "");
+  const existingStatus = String(existing?.status || "");
   if (
     hasTerminalGateDecision(existing) &&
-    String(existing?.status || "") !== "closed" &&
+    existingStatus === "closed" &&
+    isReopenedPullRequestEvent(String(eventName || ""), webhook)
+  ) {
+    return true;
+  }
+  if (
+    hasTerminalGateDecision(existing) &&
+    existingStatus !== "closed" &&
     !(
-      String(existing?.status || "") === "ignored" &&
+      existingStatus === "ignored" &&
       reviewScanKey &&
       existingReviewKey !== reviewScanKey
     )
@@ -2660,6 +2670,8 @@ async function githubWebhookRoute(
     const shouldInspect = await shouldInspectPullRequestFilesForWebhook(
       env,
       target,
+      eventName,
+      payload,
     );
     if (!shouldInspect) {
       return json({ ok: true, ignored: true, reason: "already_reviewed" });
