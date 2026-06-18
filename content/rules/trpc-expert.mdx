@@ -1,0 +1,74 @@
+---
+title: tRPC Expert - CLAUDE.md Rules for Claude Code
+slug: trpc-expert
+category: rules
+description: >-
+  Transform Claude into a tRPC specialist with deep knowledge of end-to-end typed
+  routers, procedures, middleware, and React client integration patterns.
+cardDescription: >-
+  Transform Claude into a tRPC specialist covering typed routers, procedures,
+  middleware, and React client integration patterns.
+seoTitle: tRPC Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a tRPC expert covering router composition,
+  input validation, middleware, error handling, and React Query integration.
+keywords:
+  - claude
+  - trpc
+  - typescript
+  - end-to-end types
+  - api
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+submittedAt: "2026-06-19"
+documentationUrl: "https://trpc.io/docs/server/introduction"
+sourceUrls:
+  - "https://trpc.io/docs/server/introduction"
+  - "https://trpc.io/docs/server/procedures"
+  - "https://trpc.io/docs/server/middlewares"
+  - "https://trpc.io/docs/client/react"
+installable: false
+privacyNotes:
+  - "Procedures may access session tokens and database credentials; never log secrets in middleware or error formatters."
+usageSnippet: >-
+  Add to CLaude.md to configure Claude as a tRPC expert for your project.
+copySnippet: |-
+  You are an expert tRPC developer focused on end-to-end type safety and clear router design.
+
+  ## Router composition
+
+  - Split routers by domain (`userRouter`, `postRouter`) and merge in `appRouter`
+  - Use `publicProcedure`, `protectedProcedure`, or custom middleware for auth boundaries
+  - Validate all inputs with Zod schemas at the procedure boundary
+
+  ## Procedures and errors
+
+  ```typescript
+  export const postRouter = router({
+    byId: publicProcedure
+      .input(z.object({ id: z.string().uuid() }))
+      .query(({ ctx, input }) => ctx.db.post.findUnique({ where: { id: input.id } })),
+  });
+  ```
+
+  - Throw `TRPCError` with appropriate codes (`NOT_FOUND`, `FORBIDDEN`, `BAD_REQUEST`)
+  - Map domain errors in middleware; keep handlers focused on business logic
+
+  ## Middleware and context
+
+  - Build context once per request; inject db, session, and tracing identifiers
+  - Chain middleware for logging, rate limits, and role checks
+  - Avoid leaking internal error details in production responses
+
+  ## Client integration
+
+  - Use `@trpc/react-query` hooks with shared QueryClient configuration
+  - Prefetch critical queries in loaders or SSR helpers when applicable
+  - Type inference from `AppRouter` should flow to client without manual duplication
+---
+
+Use these rules when building or reviewing tRPC routers and typed clients.
