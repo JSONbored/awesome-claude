@@ -963,7 +963,7 @@ downloadUrl: "https://github.com/example/project/archive/refs/heads/main.zip"
     });
   });
 
-  it("treats isolated auxiliary source fetch errors as warnings when canonical evidence passes", async () => {
+  it("keeps retryable auxiliary canonical source fields blocking when canonical evidence passes", async () => {
     const report = await checkSubmittedSourceEvidence(
       `---
 title: GitHub Blob Warning Fixture
@@ -982,15 +982,17 @@ sourceUrls:
       }),
     );
 
-    expect(report.status).toBe("passed");
-    expect(report.warnings).toHaveLength(1);
-    expect(report.warnings[0]).toMatchObject({
-      field: "sourceUrls",
-      status: "retryable",
-      outcome: "fetch_error",
-      role: "canonical",
-      blocking: false,
-    });
+    expect(report.status).toBe("retryable");
+    expect(report.warnings).toHaveLength(0);
+    expect(report.urls).toContainEqual(
+      expect.objectContaining({
+        field: "sourceUrls",
+        status: "retryable",
+        outcome: "fetch_error",
+        role: "canonical",
+        blocking: true,
+      }),
+    );
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 

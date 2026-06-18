@@ -399,10 +399,7 @@ function hasVerifiableCanonicalSource(urls: SourceEvidenceItem[]) {
 }
 
 function isDowngradableInconclusiveSource(item: SourceEvidenceItem) {
-  return (
-    item.status === "retryable" &&
-    !PRIMARY_CANONICAL_SOURCE_FIELDS.has(item.field)
-  );
+  return item.role === "distribution" && item.status === "retryable";
 }
 
 function downgradeInconclusiveSourceWarnings(urls: SourceEvidenceItem[]) {
