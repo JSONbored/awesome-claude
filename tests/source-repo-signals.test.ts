@@ -2,9 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   applySourceRepoSignal,
+  applySourceRepoSignalToEntry,
+  collectSourceRepos,
   fetchGitHubSourceSignal,
   parseGitHubRepoUrl,
   querySourceRepoSignals,
+  readSourceRepoSignalState,
   refreshSourceRepoSignalsForEntries,
   type SourceRepoSignalState,
 } from "../apps/web/src/lib/source-repo-signals.server";
@@ -81,11 +84,13 @@ describe("source repo signals", () => {
     );
     expect(parseGitHubRepoUrl("https://example.com/OpenAI/whisper")).toBeNull();
     // The www. alias resolves to the same repo as the bare github.com host.
-    expect(parseGitHubRepoUrl("https://www.github.com/OpenAI/whisper")).toEqual({
-      owner: "OpenAI",
-      repo: "whisper",
-      key: "openai/whisper",
-    });
+    expect(parseGitHubRepoUrl("https://www.github.com/OpenAI/whisper")).toEqual(
+      {
+        owner: "OpenAI",
+        repo: "whisper",
+        key: "openai/whisper",
+      },
+    );
     // Only a leading www. is stripped — other subdomains stay rejected.
     expect(
       parseGitHubRepoUrl("https://gist.github.com/OpenAI/whisper"),
@@ -121,6 +126,18 @@ describe("source repo signals", () => {
     expect(entry).not.toHaveProperty("repoUpdatedAt");
     expect(entry).not.toHaveProperty("repoStats");
     expect(entry.repoUrl).toBe("https://github.com/example/tool");
+    expect(applySourceRepoSignal({ title: "No repo" }, state)).toEqual({
+      title: "No repo",
+    });
+    expect(
+      applySourceRepoSignal(
+        {
+          repoUrl: "https://github.com/example/tool",
+          githubStars: 1,
+        },
+        { available: false, signals: new Map() },
+      ),
+    ).toMatchObject({ githubStars: 1 });
   });
 
   it("overlays cached source signals without changing source provenance", () => {
@@ -200,6 +217,7 @@ describe("source repo signals", () => {
       repoUpdatedAt: "2026-06-02T11:00:00Z",
       status: "ok",
     });
+    expect(await querySourceRepoSignals(db, [])).toEqual(new Map());
   });
 
   it("preserves last good values when upstream refresh fails", async () => {
@@ -242,6 +260,119 @@ describe("source repo signals", () => {
 
     expect(signal).toEqual({
       stars: 1200,
+      forks: null,
+      repoUpdatedAt: null,
+    });
+  });
+
+  it("collects repo keys, handles empty runtime state, and skips fresh cache rows", async () => {
+    expect(
+      collectSourceRepos([
+        { repoUrl: "https://github.com/Example/Tool" },
+        { repoStats: { url: "git@github.com:example/tool.git" } },
+        { repoUrl: "https://example.com/not-github" },
+      ]),
+    ).toEqual(["example/tool"]);
+
+    await expect(readSourceRepoSignalState([])).resolves.toEqual({
+      available: false,
+      signals: new Map(),
+    });
+    await expect(applySourceRepoSignalToEntry(null)).resolves.toBeNull();
+    await expect(
+      applySourceRepoSignalToEntry({
+        title: "Runtime entry",
+        repoUrl: "https://github.com/example/tool",
+      }),
+    ).resolves.toMatchObject({
+      title: "Runtime entry",
+      repoUrl: "https://github.com/example/tool",
+    });
+
+    const db = new FakeD1();
+    db.rows.set("example/tool", {
+      repo: "example/tool",
+      stars: 50,
+      forks: 5,
+      repo_updated_at: "2026-06-01T00:00:00Z",
+      fetched_at: "2026-06-03T00:00:00Z",
+      status: "ok",
+      last_error: null,
+    });
+    await expect(
+      refreshSourceRepoSignalsForEntries(
+        [
+          { repoUrl: "https://github.com/example/tool" },
+          { repoUrl: "https://github.com/example/other" },
+        ],
+        {
+          db,
+          now: new Date("2026-06-03T12:00:00Z"),
+          limit: 1,
+          fetcher: async () =>
+            new Response(
+              JSON.stringify({
+                stargazers_count: 7,
+                forks_count: 1,
+                updated_at: "2026-06-03T11:00:00Z",
+              }),
+            ),
+        },
+      ),
+    ).resolves.toMatchObject({
+      available: true,
+      totalRepos: 2,
+      refreshed: 1,
+      failed: 0,
+    });
+    expect(db.rows.get("example/tool")?.stars).toBe(50);
+    expect(db.rows.get("example/other")?.stars).toBe(7);
+    await expect(
+      refreshSourceRepoSignalsForEntries(
+        [{ repoUrl: "https://github.com/example/tool" }],
+        { db: null },
+      ),
+    ).resolves.toEqual({
+      available: false,
+      totalRepos: 0,
+      refreshed: 0,
+      failed: 0,
+    });
+  });
+
+  it("classifies GitHub source signal failures and sparse payloads", async () => {
+    await expect(fetchGitHubSourceSignal("missing-slash")).rejects.toThrow(
+      "invalid_repo",
+    );
+    await expect(
+      fetchGitHubSourceSignal("example/tool", async () => {
+        throw new Error("offline");
+      }),
+    ).rejects.toThrow("offline");
+    await expect(
+      fetchGitHubSourceSignal("example/tool", async () => {
+        return new Response(JSON.stringify({ message: "n/a" }), {
+          status: 503,
+        });
+      }),
+    ).rejects.toThrow("github_api_503");
+    let fallbackCall = 0;
+    await expect(
+      fetchGitHubSourceSignal("example/tool", async () => {
+        fallbackCall += 1;
+        if (fallbackCall === 1) {
+          return new Response("unavailable", { status: 503 });
+        }
+        throw new Error("shields offline");
+      }),
+    ).rejects.toThrow("github_api_503");
+    await expect(
+      fetchGitHubSourceSignal(
+        "example/tool",
+        async () => new Response(JSON.stringify({}), { status: 200 }),
+      ),
+    ).resolves.toEqual({
+      stars: null,
       forks: null,
       repoUpdatedAt: null,
     });

@@ -25,6 +25,7 @@ describe("central API router security", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.unstubAllGlobals();
+    delete (globalThis as typeof globalThis & { __env__?: unknown }).__env__;
     delete process.env.BRANDFETCH_CLIENT_ID;
   });
 
@@ -117,6 +118,92 @@ describe("central API router security", () => {
     await expect(response.json()).resolves.toMatchObject({
       ok: false,
       error: { code: "invalid_content_type" },
+    });
+  });
+
+  it("normalizes malformed JSON bodies before route handlers run", async () => {
+    const { createApiHandler, apiJson } = await import("@/lib/api/router");
+    const POST = createApiHandler("submissions.preflight", async () =>
+      apiJson({ ok: true }),
+    );
+
+    const response = await POST(
+      new Request("https://heyclau.de/api/submissions/preflight", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "198.51.100.102",
+        },
+        body: "{",
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "invalid_json" },
+    });
+  });
+
+  it("honors Cloudflare rate-limit bindings and fails open when the binding errors", async () => {
+    const blockedLimit = vi.fn(async () => ({ success: false }));
+    (globalThis as typeof globalThis & { __env__?: unknown }).__env__ = {
+      API_REGISTRY_RATE_LIMIT: { limit: blockedLimit },
+    };
+    const { createApiHandler, apiJson } = await import("@/lib/api/router");
+    const GET = createApiHandler("registry.search", async () =>
+      apiJson({ ok: true }),
+    );
+
+    const blocked = await GET(
+      new Request("https://heyclau.de/api/registry/search?q=mcp", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "198.51.100.103",
+        },
+      }),
+    );
+    expect(blocked.status).toBe(429);
+    expect(blockedLimit).toHaveBeenCalledWith({
+      key: "registry-search:198.51.100.103",
+    });
+
+    const failingLimit = vi.fn(async () => {
+      throw new Error("rate limit unavailable");
+    });
+    (globalThis as typeof globalThis & { __env__?: unknown }).__env__ = {
+      API_REGISTRY_RATE_LIMIT: { limit: failingLimit },
+    };
+
+    const allowed = await GET(
+      new Request("https://heyclau.de/api/registry/search?q=mcp", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "198.51.100.104",
+        },
+      }),
+    );
+    expect(allowed.status).toBe(200);
+    await expect(allowed.json()).resolves.toEqual({ ok: true });
+  });
+
+  it("normalizes unhandled route errors to internal API errors", async () => {
+    const { createApiHandler } = await import("@/lib/api/router");
+    const GET = createApiHandler("registry.feed", async () => {
+      throw new Error("boom");
+    });
+
+    const response = await GET(
+      new Request("https://heyclau.de/api/registry/feed", {
+        headers: { origin: "https://heyclau.de" },
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "internal_error" },
     });
   });
 

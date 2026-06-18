@@ -1,7 +1,7 @@
 import { ENTRIES } from "@/data/entries";
 import type { Contributor } from "@/types/registry";
 
-function contributorSlug(value: string) {
+export function contributorSlug(value: string) {
   return value
     .trim()
     .toLowerCase()
@@ -10,7 +10,7 @@ function contributorSlug(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-function githubHandle(profileUrl?: string) {
+export function githubHandle(profileUrl?: string) {
   if (!profileUrl) return undefined;
   try {
     const url = new URL(profileUrl);

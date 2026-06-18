@@ -1,15 +1,20 @@
 import { describe, expect, it } from "vitest";
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
 
 import {
   buildMcpReleaseIssue,
   buildMcpReleaseReport,
   buildRaycastReleaseIssue,
   buildRaycastReleaseReport,
+  isVersionAhead,
   isTrustedReleaseWatchIssue,
   latestSemverTag,
   MCP_RELEASE_DUE_MARKER,
   RAYCAST_RELEASE_DUE_MARKER,
   readReleaseWatchConfig,
+  relevantCommits,
 } from "../scripts/lib/release-watch-core.mjs";
 
 describe("release watch", () => {
@@ -23,6 +28,14 @@ describe("release watch", () => {
       tag: "mcp-v0.3.0",
       version: "0.3.0",
     });
+    expect(latestSemverTag(["mcp-v1.0", "other-v9.9.9"], "mcp-v")).toBeNull();
+    expect(
+      latestSemverTag(["mcp.release.1.0.0"], "mcp.release."),
+    ).toMatchObject({ version: "1.0.0" });
+    expect(isVersionAhead("1.2.4", "1.2.3")).toBe(true);
+    expect(isVersionAhead("1.2.3", "1.2.3")).toBe(false);
+    expect(isVersionAhead("1.2.2", "1.2.3")).toBe(false);
+    expect(isVersionAhead("bad", "1.2.3")).toBe(false);
   });
 
   it("reports an MCP release when the package is ahead of npm and its tag", () => {
@@ -108,6 +121,24 @@ describe("release watch", () => {
     expect(config.assignees).toEqual(["JSONbored"]);
   });
 
+  it("fails closed when release-watch config is missing or has no assignees", () => {
+    const missingRoot = mkdtempSync(join(tmpdir(), "release-watch-missing-"));
+    expect(() => readReleaseWatchConfig({ repoRoot: missingRoot })).toThrow(
+      "Unable to read release watch config",
+    );
+
+    const emptyRoot = mkdtempSync(join(tmpdir(), "release-watch-empty-"));
+    mkdirSync(join(emptyRoot, ".github"));
+    writeFileSync(
+      join(emptyRoot, ".github", "release-watch.json"),
+      JSON.stringify({ assignees: [" ", ""] }),
+      { flag: "w" },
+    );
+    expect(() => readReleaseWatchConfig({ repoRoot: emptyRoot })).toThrow(
+      "must define at least one assignee",
+    );
+  });
+
   it("filters Raycast release checks to Raycast-relevant files", () => {
     const report = buildRaycastReleaseReport({
       latestTag: { tag: "raycast-v1.0.0", version: "1.0.0" },
@@ -135,6 +166,27 @@ describe("release watch", () => {
     expect(issue.labels).toEqual(["release", "raycast"]);
     expect(issue.assignees).toEqual(["release-maintainer"]);
     expect(issue.body).toContain(RAYCAST_RELEASE_DUE_MARKER);
+  });
+
+  it("filters relevant commits by exact and nested path prefixes", () => {
+    expect(
+      relevantCommits(
+        [
+          { sha: "a", subject: "exact", files: ["packages/mcp"] },
+          { sha: "b", subject: "nested", files: ["packages/mcp/src/index.js"] },
+          { sha: "c", subject: "sibling", files: ["packages/mcp-extra/file"] },
+        ],
+        ["packages/mcp"],
+      ).map((commit) => commit.sha),
+    ).toEqual(["a", "b"]);
+
+    expect(
+      buildRaycastReleaseReport({
+        latestTag: null,
+        packageVersion: "1.0.0",
+        commits: [{ sha: "a", subject: "docs", files: ["README.md"] }],
+      }),
+    ).toMatchObject({ due: false, commits: [] });
   });
 
   it("only trusts existing release-watch issues from automation or trusted labels", () => {
@@ -168,6 +220,18 @@ describe("release watch", () => {
         ["release", "mcp"],
       ),
     ).toBe(true);
+    expect(isTrustedReleaseWatchIssue(null, ["release"])).toBe(false);
+    expect(
+      isTrustedReleaseWatchIssue(
+        {
+          body: MCP_RELEASE_DUE_MARKER,
+          pull_request: {},
+          user: { login: "github-actions[bot]" },
+          labels: ["release"],
+        },
+        ["release"],
+      ),
+    ).toBe(false);
   });
 
   it("escapes backslashes and pipes in commit subjects before issue upserts", () => {
@@ -187,5 +251,18 @@ describe("release watch", () => {
     expect(buildMcpReleaseIssue(report).body).toContain(
       "fix(mcp): handle path \\\\tmp \\| fallback",
     );
+    expect(
+      buildMcpReleaseIssue(
+        {
+          ...report,
+          commits: Array.from({ length: 30 }, (_, index) => ({
+            sha: `${index}`.padStart(16, "a"),
+            subject: `fix(mcp): commit ${index}`,
+            files: [],
+          })),
+        },
+        { config: { assignees: ["JSONbored"] } },
+      ).body,
+    ).toContain("older relevant commits omitted");
   });
 });

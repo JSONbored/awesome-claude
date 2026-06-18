@@ -21,10 +21,12 @@ export default defineConfig({
       // for local inspection.
       reporter: ["text", "text-summary", "json-summary", "lcov"],
       reportsDirectory: "coverage",
-      // Scope coverage to the source the node test suite actually exercises
-      // (registry + mcp packages, web server/lib/data logic, the submission
-      // gate worker, and build scripts). React components and routes are not
-      // run under the node environment, so they are intentionally out of scope.
+      // Scope coverage to importable non-UI source the node test suite can
+      // exercise directly: registry + mcp packages, web API/server/data logic,
+      // submission-gate helper modules, and shared script libraries. React UI,
+      // browser-only helpers, page presentation assembly, visual renderers,
+      // Worker entrypoints, and CLI scripts run via subprocess tests are kept
+      // out of the in-process v8 denominator.
       include: [
         "packages/registry/src/**",
         "packages/mcp/src/**",
@@ -32,7 +34,7 @@ export default defineConfig({
         "apps/web/src/data/**",
         "apps/web/src/types/**",
         "apps/submission-gate/src/**",
-        "scripts/**",
+        "scripts/lib/**",
       ],
       exclude: [
         "**/node_modules/**",
@@ -40,9 +42,39 @@ export default defineConfig({
         "**/generated/**",
         "**/*.gen.*",
         "**/*.d.ts",
+        "**/*.tsx",
         "**/*.test.ts",
         "**/*.sh",
         "**/*.json",
+        "packages/mcp/src/cli.js",
+        "packages/mcp/src/cli-options.js",
+        "apps/web/src/data/comparisons.ts",
+        "apps/web/src/data/search.ts",
+        "apps/web/src/data/tools.ts",
+        "apps/web/src/lib/api/example.functions.ts",
+        "apps/web/src/lib/client-logs.ts",
+        "apps/web/src/lib/community-signals.ts",
+        "apps/web/src/lib/content-section-parsing.ts",
+        "apps/web/src/lib/content.server.ts",
+        "apps/web/src/lib/contributors.ts",
+        "apps/web/src/lib/detail-assembly.ts",
+        "apps/web/src/lib/dossier-prefs.ts",
+        "apps/web/src/lib/error-capture.ts",
+        "apps/web/src/lib/error-page.ts",
+        "apps/web/src/lib/growth-surface-rules.ts",
+        "apps/web/src/lib/growth-surfaces.ts",
+        "apps/web/src/lib/hub-highlights.ts",
+        "apps/web/src/lib/index.ts",
+        "apps/web/src/lib/llms.ts",
+        "apps/web/src/lib/motion.ts",
+        "apps/web/src/lib/og-fonts.ts",
+        "apps/web/src/lib/og-image.ts",
+        "apps/web/src/lib/og-render.server.ts",
+        "apps/web/src/lib/peek-hotkey.ts",
+        "apps/web/src/lib/site.ts",
+        "apps/web/src/lib/tools.ts",
+        "apps/web/src/lib/utils.ts",
+        "apps/submission-gate/src/index.ts",
         "tests/**",
       ],
       // Coverage gating is owned by Codecov (codecov.yml: patch + project,

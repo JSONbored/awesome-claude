@@ -124,6 +124,78 @@ describe("website submission preflight API", () => {
     });
   });
 
+  it("continues preflight when duplicate lookup is unavailable", async () => {
+    directoryEntriesMock.mockRejectedValueOnce(new Error("directory offline"));
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const { POST } = await import("@/routes/api/submissions/preflight");
+    const response = await POST(
+      preflightRequest({ fields: validFields() }, "203.0.113.14"),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      valid: true,
+      duplicates: [],
+    });
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining("submissions.preflight.directory_entries_failed"),
+    );
+  });
+
+  it("reports duplicate title warnings separately from source-url blockers", async () => {
+    directoryEntriesMock.mockResolvedValue([
+      {
+        category: "mcp",
+        slug: "same-title",
+        title: "Direct Submit API Asset",
+        repoUrl: "https://github.com/other/repo",
+        canonicalUrl: "",
+        trustSignals: { sourceUrls: [] },
+      },
+      {
+        category: "mcp",
+        slug: "same-source",
+        title: "Different Asset",
+        documentationUrl: "https://example.com/docs",
+        canonicalUrl: "https://heyclau.de/entry/mcp/same-source",
+        trustSignals: { sourceUrls: ["https://example.com/docs/"] },
+      },
+    ]);
+
+    const { POST } = await import("@/routes/api/submissions/preflight");
+    const response = await POST(
+      preflightRequest(
+        {
+          fields: validFields({
+            slug: "new-submit-api-asset",
+            docs_url: "https://example.com/docs/#install",
+          }),
+        },
+        "203.0.113.15",
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      valid: false,
+      blockers: expect.arrayContaining([
+        expect.objectContaining({
+          code: "duplicate_existing",
+          message: "Likely duplicate of mcp:same-source.",
+        }),
+      ]),
+      warnings: expect.arrayContaining([
+        expect.objectContaining({
+          code: "possible_duplicate_title",
+          message: "Similar existing title: mcp:same-title.",
+        }),
+      ]),
+    });
+  });
+
   it("routes product-shaped submissions away from free content", async () => {
     const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(

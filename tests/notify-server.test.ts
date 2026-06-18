@@ -1,9 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import {
-  escapeDiscordMarkdown,
-  sendDiscordMessage,
-} from "@/lib/notify.server";
+import { escapeDiscordMarkdown, sendDiscordMessage } from "@/lib/notify.server";
 
 describe("Discord notifications", () => {
   afterEach(() => {
@@ -34,5 +31,20 @@ describe("Discord notifications", () => {
     expect(escapeDiscordMarkdown("@everyone **urgent** <@&123>")).toBe(
       "@\u200beveryone \\*\\*urgent\\*\\* \\<@\u200b&123\\>",
     );
+  });
+
+  it("treats missing or unreachable Discord webhooks as best effort", async () => {
+    await expect(sendDiscordMessage("", "hello")).resolves.toBe(false);
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new Error("offline");
+      }),
+    );
+
+    await expect(
+      sendDiscordMessage("https://discord.example/webhook", "hello"),
+    ).resolves.toBe(false);
   });
 });

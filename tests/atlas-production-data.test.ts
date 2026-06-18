@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { ARTIFACT_CONTRACTS } from "@/data/changelog";
+import { ARTIFACT_CONTRACTS, CHANGELOG, RELEASE_NOTES } from "@/data/changelog";
 import { ECOSYSTEM_FEEDS } from "@/data/ecosystem-feeds";
 import {
   BEST_LISTS,
@@ -61,6 +61,18 @@ describe("Atlas production data wiring", () => {
       expect(feed.sha256).toBe(contract?.sha256);
       expect(feed.sha256).not.toContain("…");
     }
+  });
+
+  it("derives changelog and release-note rows from registry artifact changes", () => {
+    expect(CHANGELOG.length).toBeGreaterThan(0);
+    expect(RELEASE_NOTES.length).toBeGreaterThan(0);
+    expect(CHANGELOG.map((change) => change.kind)).toContain("added");
+    expect(CHANGELOG.every((change) => change.hash.length > 0)).toBe(true);
+
+    const [latest] = RELEASE_NOTES;
+    expect(latest.stream).toBe("release");
+    expect(latest.title).toMatch(/registry entr(?:y|ies) changed/);
+    expect(latest.diff).toBeTruthy();
   });
 
   it("keeps linked public feed URLs backed by real routes or artifacts", () => {

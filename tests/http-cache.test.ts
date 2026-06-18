@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { respondFeed } from "@/lib/feeds";
-import { cachedJsonResponse } from "@/lib/http-cache";
+import { cachedJsonResponse, cachedTextResponse } from "@/lib/http-cache";
 
 describe("HTTP cache helpers", () => {
   it("accepts Cloudflare weak ETag revalidation headers", async () => {
@@ -43,6 +43,28 @@ describe("HTTP cache helpers", () => {
       "max-age=63072000",
     );
   });
+
+  it("normalizes text bodies and revalidates text responses with weak ETags", async () => {
+    const first = await cachedTextResponse(
+      new Request("https://heyclau.de/llms.txt"),
+      "hello",
+      { headers: { "cache-control": "public, max-age=60" } },
+    );
+    const etag = first.headers.get("etag");
+
+    expect(await first.text()).toBe("hello\n");
+    expect(first.headers.get("content-type")).toBe("text/plain; charset=utf-8");
+    expect(first.headers.get("cache-control")).toBe("public, max-age=60");
+
+    const second = await cachedTextResponse(
+      new Request("https://heyclau.de/llms.txt", {
+        headers: { "if-none-match": `W/${etag}` },
+      }),
+      "hello\n",
+    );
+    expect(second.status).toBe(304);
+    expect(await second.text()).toBe("");
+  });
 });
 
 describe("feed response helpers", () => {
@@ -50,7 +72,7 @@ describe("feed response helpers", () => {
     const request = new Request("https://heyclau.de/feed.xml");
     const rss = await respondFeed(
       request,
-      "<rss version=\"2.0\"></rss>",
+      '<rss version="2.0"></rss>',
       "2026-05-29T00:00:00.000Z",
     );
     const atom = await respondFeed(
@@ -60,7 +82,11 @@ describe("feed response helpers", () => {
       "application/atom+xml; charset=utf-8",
     );
 
-    expect(rss.headers.get("content-type")).toBe("application/rss+xml; charset=utf-8");
-    expect(atom.headers.get("content-type")).toBe("application/atom+xml; charset=utf-8");
+    expect(rss.headers.get("content-type")).toBe(
+      "application/rss+xml; charset=utf-8",
+    );
+    expect(atom.headers.get("content-type")).toBe(
+      "application/atom+xml; charset=utf-8",
+    );
   });
 });

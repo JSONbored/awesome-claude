@@ -1,6 +1,6 @@
 import { siteConfig } from "./site";
 
-function urlOrigin(value: string) {
+export function urlOrigin(value: string) {
   if (!value) return "";
   try {
     return new URL(value).origin;
