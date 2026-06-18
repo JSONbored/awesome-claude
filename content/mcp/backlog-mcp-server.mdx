@@ -1,0 +1,177 @@
+---
+title: Backlog MCP Server for Claude
+slug: backlog-mcp-server
+category: mcp
+description: >-
+  Manage Backlog projects from Claude — create and update issues, comment on tickets, manage
+  wiki pages, review pull requests, and navigate your Nulab Backlog space — with the official
+  Backlog MCP server supporting stdio and HTTP transports.
+cardDescription: "Official Backlog MCP: issues, wikis, pull requests & project management from Claude."
+seoTitle: "Backlog MCP Server for Claude — Issues, Wiki, Pull Requests & Project Management"
+seoDescription: "Connect Claude to Backlog (Nulab) with the official MCP server: manage issues and comments, create and read wiki pages, review pull requests, track notifications, and navigate project spaces — MIT licensed."
+author: Nulab
+authorProfileUrl: "https://github.com/nulab"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/nulab/backlog-mcp-server/main/README.md"
+websiteUrl: "https://backlog.com"
+repoUrl: "https://github.com/nulab/backlog-mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/nulab/backlog-mcp-server/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add backlog -e BACKLOG_DOMAIN=yourspace.backlog.com -e BACKLOG_API_KEY=<your-api-key> -- npx backlog-mcp-server"
+usageSnippet: >-
+  Ask Claude to list open issues in a Backlog project, create a new bug report, add a comment
+  to a ticket, summarize recent changes in the wiki, or review open pull requests — using
+  natural language against your Backlog space.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "backlog": {
+        "command": "npx",
+        "args": ["backlog-mcp-server"],
+        "env": {
+          "BACKLOG_DOMAIN": "yourspace.backlog.com",
+          "BACKLOG_API_KEY": "<your-api-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "backlog": {
+        "command": "npx",
+        "args": ["backlog-mcp-server"],
+        "env": {
+          "BACKLOG_DOMAIN": "yourspace.backlog.com",
+          "BACKLOG_API_KEY": "<your-api-key>",
+          "MAX_TOKENS": "50000"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Backlog account on backlog.com or your Backlog.jp/enterprise space."
+  - "A Backlog API key: Personal Settings → API → Generate API Key."
+  - "Node.js with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Tools can create, update, and delete projects, issues, wikis, and pull requests — changes affect your live Backlog space."
+  - "Use `ENABLE_TOOLSETS` to restrict which tool groups are available if you only need read access."
+privacyNotes:
+  - "Issue content, comments, wiki pages, pull request details, and user information from your Backlog space are surfaced in Claude's context."
+  - "Your `BACKLOG_API_KEY` grants account-level Backlog access — keep it in the MCP config env and never commit it to version control."
+tags:
+  - backlog
+  - project-management
+  - issue-tracking
+  - nulab
+  - git
+  - wiki
+keywords:
+  - backlog mcp server
+  - backlog mcp claude
+  - nulab backlog mcp claude code
+  - issue tracking mcp claude
+  - backlog project management ai
+  - backlog wiki mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Backlog MCP Server** is the official Model Context Protocol server from Nulab for
+[Backlog](https://backlog.com), the project management and collaboration platform popular in
+Japan and across Asia. It provides tools for managing projects, issues, wikis, Git repositories,
+pull requests, notifications, and documents. Both stdio (local `npx`) and HTTP transports are
+supported. Licensed under MIT.
+
+## Key capabilities
+
+- **Issues** — create, read, update, and delete issues; add comments.
+- **Projects** — manage projects and issue types.
+- **Wikis** — create and read wiki pages.
+- **Git** — repository management, pull requests, PR comments.
+- **Notifications** — list, mark read/unread, check unread counts.
+- **Documents** — navigate document trees and listings.
+- **Space info** — retrieve space settings, user list, and authenticated user info.
+
+## How it compares
+
+| Server | Issues | Wiki | Pull requests | Git | Notes |
+|---|---|---|---|---|---|
+| **Backlog MCP** | Yes | Yes | Yes | Yes | Official Nulab |
+| Jira MCP | Yes | Yes (Confluence) | No | No | Atlassian |
+| Linear MCP | Yes (issues) | No | No | No | Engineering-focused |
+| Asana MCP | Yes (tasks) | No | No | No | Task management |
+
+Backlog is the only project management MCP that integrates issue tracking, wiki documentation,
+and Git pull request review in a single server.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add backlog \
+  -e BACKLOG_DOMAIN=yourspace.backlog.com \
+  -e BACKLOG_API_KEY=<your-api-key> \
+  -- npx backlog-mcp-server
+```
+
+Generate your API key at: **Personal Settings → API → Generate API Key** in your Backlog account.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "backlog": {
+      "command": "npx",
+      "args": ["backlog-mcp-server"],
+      "env": {
+        "BACKLOG_DOMAIN": "yourspace.backlog.com",
+        "BACKLOG_API_KEY": "<your-api-key>"
+      }
+    }
+  }
+}
+```
+
+## Configuration options
+
+| Env var | Default | Purpose |
+|---|---|---|
+| `BACKLOG_DOMAIN` | — | Required. Your space domain (e.g. `yourspace.backlog.com`) |
+| `BACKLOG_API_KEY` | — | Required. API key from Personal Settings |
+| `BACKLOG_OAUTH_CLIENT_ID` | — | Optional OAuth 2.0 client ID |
+| `BACKLOG_OAUTH_CLIENT_SECRET` | — | Optional OAuth 2.0 client secret |
+| `MAX_TOKENS` | `50000` | Response token limit |
+| `ENABLE_TOOLSETS` | all | Comma-separated toolsets to enable |
+| `MCP_TRANSPORT` | `stdio` | `stdio` or `http` |
+
+## Requirements
+
+- A Backlog account (backlog.com, backlog.jp, or self-hosted).
+- Node.js (for `npx`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- `BACKLOG_API_KEY` grants full account access — keep it in the MCP config env.
+- Use `ENABLE_TOOLSETS` to restrict to read-only toolsets in team deployments.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official repository `nulab/backlog-mcp-server` (MIT) documents `npx backlog-mcp-server`,
+  `BACKLOG_DOMAIN`/`BACKLOG_API_KEY` configuration, all tool categories (Project, Issue, Wiki,
+  Git, Notifications, Document, Space), OAuth 2.0 support, response token limits, toolset
+  filtering, and HTTP transport mode.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.
