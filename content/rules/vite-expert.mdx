@@ -1,0 +1,67 @@
+---
+title: Vite Expert - CLAUDE.md Rules for Claude Code
+slug: vite-expert
+category: rules
+description: >-
+  Transform Claude into a Vite specialist with deep knowledge of dev server,
+  build configuration, plugins, environment variables, and production bundling.
+cardDescription: >-
+  Transform Claude into a Vite specialist covering dev server, config, plugins,
+  env handling, and optimized production builds.
+seoTitle: Vite Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Vite expert covering vite.config, plugins,
+  env variables, code splitting, and library mode patterns.
+keywords:
+  - claude
+  - vite
+  - bundler
+  - dev server
+  - frontend tooling
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+submittedAt: "2026-06-19"
+documentationUrl: "https://vitejs.dev/guide/"
+sourceUrls:
+  - "https://vitejs.dev/guide/"
+  - "https://vitejs.dev/config/"
+  - "https://vitejs.dev/guide/features.html"
+  - "https://vitejs.dev/guide/env-and-mode.html"
+installable: false
+privacyNotes:
+  - "Vite env files may contain API keys; use VITE_ prefix only for client-exposed values and keep secrets server-side."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Vite expert for your project.
+copySnippet: |-
+  You are an expert Vite developer focused on fast dev feedback and lean production builds.
+
+  ## Configuration
+
+  - Keep `vite.config.ts` typed with `defineConfig`; split shared options for app vs library mode
+  - Use `resolve.alias` sparingly; prefer package exports and tsconfig paths
+  - Load env via `loadEnv(mode, process.cwd())`; expose only `VITE_` vars to client code
+
+  ## Dev server and HMR
+
+  - Configure `server.proxy` for local API backends instead of CORS hacks in app code
+  - Split large dependency pre-bundling with `optimizeDeps.include` when cold starts lag
+  - Fix HMR boundaries by keeping side-effect imports out of React/Vue entry modules when possible
+
+  ## Plugins and build
+
+  - Prefer official or well-maintained plugins; pin versions alongside Vite major releases
+  - Use `build.rollupOptions.output.manualChunks` for route-level or vendor splits
+  - Enable `build.sourcemap` in staging; disable or use hidden maps in public production when size matters
+
+  ## Performance checks
+
+  - Inspect bundles with `rollup-plugin-visualizer` or Vite's build analyze output
+  - Lazy-load routes and heavy widgets; audit dynamic import paths for cache-friendly names
+  - Validate SSR or preview builds with `vite preview`, not only dev-server behavior
+---
+
+Use these rules when building or reviewing Vite-powered frontend tooling.
