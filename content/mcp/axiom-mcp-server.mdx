@@ -1,0 +1,177 @@
+---
+title: Axiom MCP Server for Claude
+slug: axiom-mcp-server
+category: mcp
+description: >-
+  Query observability data, manage dashboards, and monitor your systems from Claude — run APL
+  queries against datasets, list metrics, inspect monitors, and retrieve saved queries — with
+  the official Axiom remote MCP server.
+cardDescription: "Official Axiom MCP: APL queries, dashboards & monitoring from Claude."
+seoTitle: "Axiom MCP Server for Claude — APL Queries, Dashboards & Observability"
+seoDescription: "Connect Claude to Axiom with the official remote MCP server: run APL queries against observability datasets, manage dashboards, list metrics, and inspect monitors — OAuth or API token. 18 tools for log analytics and monitoring."
+author: Axiom, Inc.
+authorProfileUrl: "https://github.com/axiomhq"
+dateAdded: "2026-06-18"
+documentationUrl: "https://axiom.co/docs/console/intelligence/mcp-server"
+websiteUrl: "https://axiom.co"
+repoUrl: "https://github.com/axiomhq/mcp"
+retrievalSources:
+  - "https://axiom.co/docs/console/intelligence/mcp-server"
+  - "https://axiom.co/docs/apl"
+  - "https://github.com/axiomhq/mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http axiom https://mcp.axiom.co/mcp"
+usageSnippet: >-
+  Ask Claude to run an APL query for error rates in the last hour, list your observability
+  dashboards, check active monitor alerts, or retrieve a saved query — using natural language
+  against your Axiom datasets.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "axiom": {
+        "type": "http",
+        "url": "https://mcp.axiom.co/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "axiom": {
+        "type": "http",
+        "url": "https://mcp.axiom.co/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An Axiom account — authenticate via OAuth when prompted in Claude Code, or generate an API token in Axiom settings."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The MCP server includes dashboard management tools (create, update, delete) — review any write operations before confirming."
+  - "APL queries run against live datasets; complex queries over large time windows may be slow or consume significant dataset quota."
+privacyNotes:
+  - "Log data, traces, metrics, and monitor configurations from your Axiom datasets and organization are surfaced in Claude's context."
+  - "OAuth is the recommended authentication method — no API token is stored in your MCP configuration."
+tags:
+  - axiom
+  - observability
+  - log-analytics
+  - apl
+  - monitoring
+  - dashboards
+  - telemetry
+keywords:
+  - axiom mcp server
+  - axiom mcp claude
+  - log analytics mcp claude code
+  - APL query mcp
+  - observability ai assistant mcp
+  - axiom dashboards mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Axiom MCP Server** is the official remote Model Context Protocol server from Axiom.
+It connects Claude to your Axiom observability data — datasets, dashboards, monitors, metrics,
+and saved queries — through 18 tools built around Axiom's APL (Axiom Processing Language) query engine.
+
+With the MCP server, Claude can run ad-hoc APL queries over your log data, inspect dashboard
+definitions, check monitor status, and browse dataset schemas without leaving your IDE.
+
+Authentication uses OAuth (recommended) or an Axiom API token.
+
+## Key capabilities
+
+- **APL queries** — execute `queryApl` and `queryMetrics` for ad-hoc analytics over any dataset.
+- **Dataset exploration** — list datasets, introspect schemas, and retrieve field metadata.
+- **Dashboards** — list, get, create, update, and delete dashboards.
+- **Monitors** — list monitors and retrieve execution history.
+- **Metrics** — list metrics, tags, and tag values for metric discovery.
+- **Saved queries** — retrieve starred APL queries from your workspace.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `queryApl` | Execute an APL query against a dataset |
+| `queryMetrics` | Query metric data with filtering |
+| `listDatasets` | List all available datasets |
+| `getDatasetSchema` | Introspect dataset field schema |
+| `listMetrics` | List defined metrics |
+| `listMetricTags` / `getMetricTagValues` / `searchMetrics` | Metric discovery |
+| `createDashboard` / `getDashboard` / `listDashboards` / `updateDashboard` / `deleteDashboard` | Dashboard CRUD |
+| `getMonitors` / `getMonitorsHistory` | Monitor status and history |
+| `getSavedQueries` | Retrieve saved/starred queries |
+
+## How it compares
+
+| Server | APL/custom queries | Dashboards | Monitors | Metrics | Auth |
+|---|---|---|---|---|---|
+| **Axiom MCP** | Yes (APL) | Yes | Yes | Yes | OAuth / API token |
+| Grafana MCP | Limited | Yes | Yes | Yes | API key |
+| Datadog MCP | Metrics + logs | Yes | Yes | Yes | API key |
+| Honeycomb MCP | Yes (BubbleUp) | Limited | Yes | Yes | OAuth / API key |
+
+Axiom's APL is a powerful columnar query language for log analytics, making the MCP server
+well-suited for ad-hoc investigation queries over structured log and trace datasets.
+
+## Installation
+
+### Claude Code (OAuth — recommended)
+
+```bash
+claude mcp add --transport http axiom https://mcp.axiom.co/mcp
+```
+
+Run `/mcp` in Claude Code to authenticate via OAuth.
+
+### Claude Code (API token)
+
+```bash
+claude mcp add --transport http axiom "https://mcp.axiom.co/mcp?org-id=YOUR_ORG_ID" \
+  --header "Authorization: Bearer YOUR_AXIOM_API_TOKEN"
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "axiom": {
+      "type": "http",
+      "url": "https://mcp.axiom.co/mcp"
+    }
+  }
+}
+```
+
+## Alternative endpoint
+
+For clients requiring server-sent events, use `https://mcp.axiom.co/sse` instead of the
+streamable HTTP endpoint.
+
+## Requirements
+
+- An Axiom account.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- OAuth authentication minimizes credential exposure.
+- API tokens can be scoped to specific permissions and rotated from Axiom settings.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Axiom's MCP documentation at `axiom.co/docs/console/intelligence/mcp-server` confirms the
+  hosted endpoints, OAuth + API token auth, and the 18-tool surface including APL query,
+  dashboard management, and monitor tools.
+- Axiom's APL documentation at `axiom.co/docs/apl` documents the query language used by
+  `queryApl` and related query tools.
+- GitHub repo `axiomhq/mcp` (MIT) is the open-source Cloudflare Workers reference implementation.
