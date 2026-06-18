@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1294+ file-backed entries</strong> stay useful as both an
+        <strong>1295+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1294</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1295</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -73,7 +73,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>177</code><br>
+          <code>178</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -746,7 +746,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (177)
+## 🧰 Tools (178)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
@@ -811,6 +811,7 @@ Get a free API key on https://app.zyntra.app/
 - **[GitHub Copilot](https://heyclau.de/entry/tools/github-copilot)** - AI developer assistant across GitHub, editors, pull requests, chat, code review, and agentic coding workflows.
 - **[Gitleaks](https://heyclau.de/entry/tools/gitleaks)** - Open-source secret scanner for finding passwords, API keys, tokens, and other credentials in git history, files, directories, and stdin.
 - **[Google Agent Development Kit](https://heyclau.de/entry/tools/google-agent-development-kit)** - Apache-2.0 code-first toolkit for building, running, evaluating, and deploying AI agents, workflows, tools, sessions, and multi-agent systems.
+- **[Google Workspace CLI](https://heyclau.de/entry/tools/google-workspace-cli)** - Apache-2.0 `gws` command-line tool for Google Workspace APIs with structured JSON output, dynamic Discovery API commands, npm and release installers, Gemini CLI extension metadata, and 100+ bundled Agent Skills.
 - **[Goose](https://heyclau.de/entry/tools/goose)** - Open-source, extensible AI agent that goes beyond code suggestions to install, execute, edit, and test with any LLM, available as a desktop app, CLI, and API with 70+ MCP extensions.
 - **[Gradio](https://heyclau.de/entry/tools/gradio)** - Apache-2.0 Python framework for building and sharing machine-learning demos, AI web apps, model interfaces, chatbots, API front ends, and interactive evaluation tools.
 - **[Graphite Diamond](https://heyclau.de/entry/tools/graphite-diamond)** - AI code review assistant for pull requests, engineering feedback, and review workflow acceleration inside Graphite.
