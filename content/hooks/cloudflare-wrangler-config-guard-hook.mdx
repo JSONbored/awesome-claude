@@ -24,8 +24,8 @@ submittedAt: "2026-06-04"
 documentationUrl: "https://developers.cloudflare.com/workers/wrangler/configuration/"
 repoUrl: "https://github.com/cloudflare/workers-sdk"
 installable: true
-installCommand: "mkdir -p .claude/hooks && touch .claude/hooks/wrangler-config-guard.sh && chmod +x .claude/hooks/wrangler-config-guard.sh"
-usageSnippet: "Add the script to `.claude/hooks/wrangler-config-guard.sh` and configure it as a PostToolUse hook for Write/Edit/MultiEdit."
+installCommand: "mkdir -p $HOME/.claude/hooks && touch $HOME/.claude/hooks/wrangler-config-guard.sh && chmod +x $HOME/.claude/hooks/wrangler-config-guard.sh"
+usageSnippet: "Install the reviewed script outside the workspace at `$HOME/.claude/hooks/wrangler-config-guard.sh` and reference that trusted path from user-level Claude Code settings."
 copySnippet: |-
   {
     "hooks": {
@@ -35,7 +35,7 @@ copySnippet: |-
           "hooks": [
             {
               "type": "command",
-              "command": "./.claude/hooks/wrangler-config-guard.sh"
+              "command": "$HOME/.claude/hooks/wrangler-config-guard.sh"
             }
           ]
         }
@@ -51,7 +51,7 @@ configSnippet: |-
           "hooks": [
             {
               "type": "command",
-              "command": "./.claude/hooks/wrangler-config-guard.sh"
+              "command": "$HOME/.claude/hooks/wrangler-config-guard.sh"
             }
           ]
         }
@@ -471,8 +471,10 @@ can still execute local build commands and bundler plugins.
 
 ## Hook Configuration
 
-Add the hook command to `.claude/settings.json` or the appropriate user-level
-Claude Code settings file:
+Save the hook executable outside the project workspace, then add the hook command
+to your user-level Claude Code settings file. Do not point PostToolUse hooks at
+scripts stored inside the project, because Claude can edit those files before the
+hook command runs:
 
 ```json
 {
@@ -483,7 +485,7 @@ Claude Code settings file:
         "hooks": [
           {
             "type": "command",
-            "command": "./.claude/hooks/wrangler-config-guard.sh"
+            "command": "$HOME/.claude/hooks/wrangler-config-guard.sh"
           }
         ]
       }
@@ -494,7 +496,10 @@ Claude Code settings file:
 
 ## Hook Script
 
-Save this as `.claude/hooks/wrangler-config-guard.sh` and make it executable:
+Save this as `$HOME/.claude/hooks/wrangler-config-guard.sh` and make it executable.
+Keep the script outside the project workspace so ordinary `Write`, `Edit`, and
+`MultiEdit` operations cannot replace the command target that Claude Code will
+execute after the edit:
 
 ```bash
 #!/usr/bin/env bash
