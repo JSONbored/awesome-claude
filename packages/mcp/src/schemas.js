@@ -274,6 +274,11 @@ export const SearchDuplicateEntriesInputSchema = z
     name: z.string().trim().min(1).max(240).optional(),
     title: z.string().trim().min(1).max(240).optional(),
     sourceUrl: z.string().trim().min(1).max(500).optional(),
+    sourceUrls: z.array(z.string().trim().min(1).max(500)).max(10).optional(),
+    githubUrl: z.string().trim().min(1).max(500).optional(),
+    docsUrl: z.string().trim().min(1).max(500).optional(),
+    downloadUrl: z.string().trim().min(1).max(500).optional(),
+    websiteUrl: z.string().trim().min(1).max(500).optional(),
     brandDomain: z.string().trim().min(1).max(255).optional(),
     limit: z.number().int().min(1).max(10).optional(),
   })

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
 
+import { callRegistryTool } from "../packages/mcp/src/registry.js";
+import {
+  jsonSchemaForTool,
+  parseToolArguments,
+} from "../packages/mcp/src/schemas.js";
 import { searchDuplicateEntries } from "../packages/mcp/src/submissions.js";
 
 type RegistryEntry = Record<string, unknown>;
@@ -219,6 +224,88 @@ describe("searchDuplicateEntries source-URL matching", () => {
     expect(
       (websiteResult.matches as Array<{ reasons: string[] }>)[0].reasons,
     ).toContain("source_url");
+  });
+
+  it("exposes sourceUrls and fielded URL args through the public MCP schema", () => {
+    expect(() =>
+      parseToolArguments("search_duplicate_entries", {
+        sourceUrls: ["https://github.com/domdomegg/airtable-mcp-server"],
+        githubUrl: "https://github.com/domdomegg/airtable-mcp-server",
+        docsUrl: "https://docs.example.com/airtable",
+        downloadUrl: "https://example.com/downloads/airtable.zip",
+        websiteUrl: "https://airtable-mcp.example",
+      }),
+    ).not.toThrow();
+
+    const inputSchema = jsonSchemaForTool("search_duplicate_entries") as {
+      properties?: Record<string, unknown>;
+    };
+    expect(inputSchema.properties).toMatchObject({
+      sourceUrls: expect.any(Object),
+      githubUrl: expect.any(Object),
+      docsUrl: expect.any(Object),
+      downloadUrl: expect.any(Object),
+      websiteUrl: expect.any(Object),
+    });
+  });
+
+  it("accepts fielded URL args through the public MCP tool path", async () => {
+    const result = await callRegistryTool(
+      "search_duplicate_entries",
+      {
+        githubUrl: "https://github.com/domdomegg/airtable-mcp-server/",
+        limit: 3,
+      },
+      {
+        readJsonArtifact: async (relativePath: string) => {
+          if (relativePath === "search-index.json") {
+            return { entries: [entry()] };
+          }
+          throw new Error(`Unexpected artifact read: ${relativePath}`);
+        },
+      },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      count: 1,
+      matches: [
+        expect.objectContaining({
+          reasons: expect.arrayContaining(["source_url"]),
+        }),
+      ],
+    });
+  });
+
+  it("accepts sourceUrls through the public MCP tool path", async () => {
+    const result = await callRegistryTool(
+      "search_duplicate_entries",
+      {
+        sourceUrls: [
+          "https://github.com/unrelated/repo",
+          "https://github.com/domdomegg/airtable-mcp-server/",
+        ],
+        limit: 3,
+      },
+      {
+        readJsonArtifact: async (relativePath: string) => {
+          if (relativePath === "search-index.json") {
+            return { entries: [entry()] };
+          }
+          throw new Error(`Unexpected artifact read: ${relativePath}`);
+        },
+      },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      count: 1,
+      matches: [
+        expect.objectContaining({
+          reasons: expect.arrayContaining(["source_url"]),
+        }),
+      ],
+    });
   });
 
   it("returns count: 0 when no URL candidates are supplied", () => {
