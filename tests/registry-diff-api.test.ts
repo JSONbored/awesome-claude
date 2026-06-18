@@ -125,67 +125,58 @@ describe("/api/registry/diff", () => {
     });
   });
 
-  it("filters added entries by sinceDate and always surfaces updated/removed entries", async () => {
+  it("returns the full changelog for date cursors so backdated additions are not hidden", async () => {
     const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2026-01-01&limit=10"));
 
     expect(response.status).toBe(200);
     const body = await response.json();
     const keys = body.entries.map((entry: { key: string }) => entry.key);
-    // `added` entries on or after 2026-01-01 (drops the 2025-10-10 row).
-    expect(keys).toContain("skills:new-may");
-    expect(keys).toContain("mcp:new-apr");
-    expect(keys).not.toContain("hooks:old-2025");
-    // Every updated/removed entry passes through regardless of dateAdded.
-    expect(keys).toContain("skills:edit-recent");
-    expect(keys).toContain("mcp:removed-thing");
-    expect(body.totalAvailable).toBe(4);
+    expect(keys).toEqual([
+      "skills:new-may",
+      "mcp:new-apr",
+      "hooks:old-2025",
+      "skills:edit-recent",
+      "mcp:removed-thing",
+    ]);
+    expect(body.totalAvailable).toBe(5);
   });
 
-  it("returns only updated/removed entries when sinceDate is newer than every added entry", async () => {
+  it("returns the full changelog even when sinceDate is newer than every added entry", async () => {
     const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2030-01-01&limit=10"));
 
     expect(response.status).toBe(200);
     const body = await response.json();
-    const keys = body.entries.map((entry: { key: string }) => entry.key);
-    expect(keys).toEqual(
-      expect.arrayContaining(["skills:edit-recent", "mcp:removed-thing"]),
-    );
-    expect(keys).not.toContain("skills:new-may");
-    expect(keys).not.toContain("mcp:new-apr");
-    expect(keys).not.toContain("hooks:old-2025");
-  });
-
-  it("returns every entry when sinceDate is older than every added entry", async () => {
-    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
-    const response = await GET(request("?since=2024-01-01&limit=10"));
-
-    expect(response.status).toBe(200);
-    const body = await response.json();
+    expect(body.entries.map((entry: { key: string }) => entry.key)).toEqual([
+      "skills:new-may",
+      "mcp:new-apr",
+      "hooks:old-2025",
+      "skills:edit-recent",
+      "mcp:removed-thing",
+    ]);
     expect(body.totalAvailable).toBe(5);
   });
 
-  it("preserves entries order (changelog order, not filter-class order)", async () => {
+  it("preserves changelog order for date cursor responses", async () => {
     const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2026-01-01&limit=10"));
     const body = await response.json();
     const keys = body.entries.map((entry: { key: string }) => entry.key);
-    // Original changelog order: new-may, new-apr, old-2025, edit-recent, removed-thing
-    // With old-2025 filtered out, we expect: new-may, new-apr, edit-recent, removed-thing
     expect(keys).toEqual([
       "skills:new-may",
       "mcp:new-apr",
+      "hooks:old-2025",
       "skills:edit-recent",
       "mcp:removed-thing",
     ]);
   });
 
-  it("applies limit AFTER filtering", async () => {
+  it("applies limit after selecting the date-cursor changelog", async () => {
     const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2026-01-01&limit=2"));
     const body = await response.json();
-    expect(body.totalAvailable).toBe(4);
+    expect(body.totalAvailable).toBe(5);
     expect(body.count).toBe(2);
     expect(body.entries).toHaveLength(2);
   });
@@ -210,12 +201,12 @@ describe("/api/registry/diff", () => {
     expect(body.totalAvailable).toBe(5);
   });
 
-  it("emits the date-cursor note explaining filtered semantics", async () => {
+  it("emits the date-cursor note explaining advisory semantics", async () => {
     const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2026-01-01"));
     const body = await response.json();
-    expect(body.note).toMatch(/Date cursors filter/);
-    expect(body.note).toMatch(/updated.*removed/);
+    expect(body.note).toMatch(/Date cursors are advisory/);
+    expect(body.note).toMatch(/backdated additions/);
   });
 
   it("still returns response.ok for the e2e smoke shape", async () => {
