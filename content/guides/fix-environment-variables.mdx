@@ -128,13 +128,15 @@ Start inside Claude Code with `/doctor`, which validates your configuration file
 
 **MCP server starts without expected variables.** Variables in `settings.json` `env` don't propagate to MCP child processes. Move them to a per-server `env` block in `.mcp.json`. To see server stderr, run `claude --debug mcp`.
 
-**Isolate the problem with a clean configuration.** Launch `claude --safe-mode` to disable all customizations (CLAUDE.md, skills, plugins, hooks, MCP servers, custom commands) while keeping auth, model selection, and permissions working. If the problem disappears, one of those surfaces is the cause. To bypass everything under `~/.claude` as well, point `CLAUDE_CONFIG_DIR` at an empty directory and launch from a folder with no project config:
+**Isolate the problem with a clean configuration.** Launch `claude --safe-mode` to disable all customizations (CLAUDE.md, skills, plugins, hooks, MCP servers, custom commands) while keeping auth, model selection, and permissions working. If the problem disappears, one of those surfaces is the cause. To bypass everything under `~/.claude` as well, create a fresh private temporary directory, point `CLAUDE_CONFIG_DIR` at an empty subdirectory inside it, and launch from a folder with no project config:
 
 ```bash
-cd /tmp && CLAUDE_CONFIG_DIR=/tmp/claude-clean claude
+clean_root="$(mktemp -d)" && chmod 700 "$clean_root"
+mkdir "$clean_root/config" "$clean_root/work"
+cd "$clean_root/work" && CLAUDE_CONFIG_DIR="$clean_root/config" claude
 ```
 
-On Linux and Windows you'll be prompted to log in again in the clean session because credentials live under the config directory; on macOS they're in the Keychain and carry over. If the problem persists even here, the cause is outside your user and project configuration — check for environment variables affecting Claude Code and managed settings via `/status`.
+On Linux and Windows you'll be prompted to log in again in the clean session because credentials live under the config directory; on macOS they're in the Keychain and carry over. Never use a fixed path in a shared temporary directory for this test, because another local user could pre-create or tamper with it. If the problem persists even here, the cause is outside your user and project configuration — check for environment variables affecting Claude Code and managed settings via `/status`.
 
 **Search isn't finding files.** If the bundled `ripgrep` can't run on your system, install your platform's `ripgrep` package and set `USE_BUILTIN_RIPGREP=0`.
 
