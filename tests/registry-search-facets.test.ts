@@ -223,6 +223,27 @@ describe("computeRegistrySearchFacets", () => {
     });
   });
 
+  it("counts platform buckets that match inherited object property names", () => {
+    const entries = [
+      makeEntry({
+        slug: "constructor-platform",
+        platforms: ["constructor", "__proto__", "constructor"],
+      }),
+      makeEntry({
+        slug: "mixed-platform",
+        platforms: ["constructor", "claude-code"],
+      }),
+    ];
+
+    expect(
+      computeRegistrySearchFacets(entries, defaultFilters).platforms,
+    ).toEqual({
+      constructor: 2,
+      ["__proto__"]: 1,
+      "claude-code": 1,
+    });
+  });
+
   it("uses compact trust-signal booleans when full note text is omitted", () => {
     const compact = makeEntry({
       slug: "compact-notes",
