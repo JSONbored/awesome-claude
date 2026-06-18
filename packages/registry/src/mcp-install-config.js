@@ -6,7 +6,6 @@ export const MCP_INSTALL_TARGET_IDS = [
 ];
 
 const SERVER_CONFIG_TYPES = new Set(["stdio", "http", "sse"]);
-const ONE_CLICK_STDIO_COMMANDS = new Set(["npx", "uvx"]);
 
 function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -60,15 +59,6 @@ function isSafeRemoteMcpUrl(value) {
   }
 }
 
-function baseExecutableName(value) {
-  const command = String(value || "").trim().replace(/\\/g, "/");
-  return command.split("/").pop() || "";
-}
-
-export function isOneClickSafeStdioCommand(value) {
-  return ONE_CLICK_STDIO_COMMANDS.has(baseExecutableName(value).toLowerCase());
-}
-
 function normalizeArgs(value) {
   if (value === undefined) return undefined;
   if (!Array.isArray(value)) return null;
@@ -110,9 +100,7 @@ export function normalizeMcpServerConfig(value) {
 
   const normalizedType = normalizeType(config.type);
   if (!SERVER_CONFIG_TYPES.has(normalizedType)) return null;
-  if (normalizedType === "stdio") {
-    if (!hasCommand || !isOneClickSafeStdioCommand(config.command)) return null;
-  }
+  if (normalizedType === "stdio" && !hasCommand) return null;
   if (normalizedType === "http" || normalizedType === "sse") {
     if (!hasUrl || !isSafeRemoteMcpUrl(config.url)) return null;
   }

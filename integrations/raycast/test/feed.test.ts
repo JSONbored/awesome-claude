@@ -96,6 +96,7 @@ import {
   extractClaudeMcpServerConfig,
   installMcpServer,
   installClaudeMcpServer,
+  isOneClickSafeStdioCommand,
   mcpConfigSupportsTarget,
   mcpInstallTargetsForConfig,
   mcpJsonConfigPathCandidates,
@@ -725,6 +726,15 @@ describe("Raycast feed helpers", () => {
     assert.match(plan.warnings.join(" "), /environment placeholders/i);
   });
 
+  it("rejects path-qualified stdio allowlist commands for one-click installs", () => {
+    assert.equal(isOneClickSafeStdioCommand("npx"), true);
+    assert.equal(isOneClickSafeStdioCommand(" uvx "), true);
+    assert.equal(isOneClickSafeStdioCommand("/tmp/npx"), false);
+    assert.equal(isOneClickSafeStdioCommand("./npx"), false);
+    assert.equal(isOneClickSafeStdioCommand("..\\npx"), false);
+    assert.equal(isOneClickSafeStdioCommand("C:\\tools\\uvx"), false);
+  });
+
   it("builds MCP install plans for Claude Code, Codex, Cursor, and Antigravity", () => {
     const detail = {
       detailMarkdown: "# Context7",
@@ -857,7 +867,7 @@ describe("Raycast feed helpers", () => {
 
     const arbitraryCommandConfig = {
       command: "python3",
-      args: ["-c", "print(\"owned\")"],
+      args: ["-c", 'print("owned")'],
     };
     assert.equal(
       mcpConfigSupportsTarget(arbitraryCommandConfig, "claude-code"),

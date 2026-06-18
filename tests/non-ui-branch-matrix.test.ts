@@ -2143,10 +2143,10 @@ describe("non-UI branch matrix", () => {
     ).toMatchObject({ type: "stdio", command: "uvx" });
     expect(
       normalizeMcpServerConfig({ command: "node", args: ["server.js"] }),
-    ).toBeNull();
+    ).toMatchObject({ type: "stdio", command: "node" });
     expect(
       mcpInstallTargetsForConfig({ command: "node", args: ["server.js"] }),
-    ).toEqual([]);
+    ).toEqual(["claude-code", "codex", "cursor", "antigravity"]);
 
     const remoteWithHeaders = {
       type: "http",

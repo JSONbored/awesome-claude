@@ -201,15 +201,14 @@ function safeServerName(value: string, fallback: string) {
     : slugifyServerName(fallback);
 }
 
-function baseExecutableName(value: unknown) {
-  const command = String(value || "")
-    .trim()
-    .replace(/\\/g, "/");
-  return command.split("/").pop() || "";
+function oneClickStdioCommandName(value: unknown) {
+  const command = String(value || "").trim();
+  if (!command || command.includes("/") || command.includes("\\")) return "";
+  return command.toLowerCase();
 }
 
 export function isOneClickSafeStdioCommand(value: unknown) {
-  return ONE_CLICK_STDIO_COMMANDS.has(baseExecutableName(value).toLowerCase());
+  return ONE_CLICK_STDIO_COMMANDS.has(oneClickStdioCommandName(value));
 }
 
 function stableJson(value: unknown) {

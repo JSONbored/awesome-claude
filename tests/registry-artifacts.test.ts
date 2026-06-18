@@ -723,6 +723,42 @@ describe("registry artifacts", () => {
         },
       }),
     };
+    const arbitraryStdioEntry = {
+      ...baseEntry,
+      slug: "arbitrary-stdio-fixture",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          local: {
+            command: "python3",
+            args: ["server.py"],
+          },
+        },
+      }),
+    };
+    const pathQualifiedStdioEntry = {
+      ...baseEntry,
+      slug: "path-qualified-stdio-fixture",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          local: {
+            command: "/tmp/npx",
+            args: ["-y", "fixture-mcp"],
+          },
+        },
+      }),
+    };
+    const windowsPathQualifiedStdioEntry = {
+      ...baseEntry,
+      slug: "windows-path-qualified-stdio-fixture",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          local: {
+            command: "C:\\tools\\uvx",
+            args: ["fixture-mcp"],
+          },
+        },
+      }),
+    };
     const manualEntry = {
       ...baseEntry,
       slug: "manual-fixture",
@@ -733,6 +769,9 @@ describe("registry artifacts", () => {
     const raycastEntries = buildRaycastEnvelope([
       stdioEntry,
       sseEntry,
+      arbitraryStdioEntry,
+      pathQualifiedStdioEntry,
+      windowsPathQualifiedStdioEntry,
       manualEntry,
     ] as any).entries;
     const stdioFeedEntry = raycastEntries.find(
@@ -744,7 +783,23 @@ describe("registry artifacts", () => {
     const manualFeedEntry = raycastEntries.find(
       (entry) => entry.slug === "manual-fixture",
     );
+    const arbitraryStdioFeedEntry = raycastEntries.find(
+      (entry) => entry.slug === "arbitrary-stdio-fixture",
+    );
+    const pathQualifiedStdioFeedEntry = raycastEntries.find(
+      (entry) => entry.slug === "path-qualified-stdio-fixture",
+    );
+    const windowsPathQualifiedStdioFeedEntry = raycastEntries.find(
+      (entry) => entry.slug === "windows-path-qualified-stdio-fixture",
+    );
     const stdioDetail = buildRaycastDetail(stdioEntry as any);
+    const arbitraryStdioDetail = buildRaycastDetail(arbitraryStdioEntry as any);
+    const pathQualifiedStdioDetail = buildRaycastDetail(
+      pathQualifiedStdioEntry as any,
+    );
+    const windowsPathQualifiedStdioDetail = buildRaycastDetail(
+      windowsPathQualifiedStdioEntry as any,
+    );
     const manualDetail = buildRaycastDetail(manualEntry as any);
 
     expect(stdioFeedEntry).toMatchObject({
@@ -759,6 +814,34 @@ describe("registry artifacts", () => {
       "cursor",
       "antigravity",
     ]);
+    expect(arbitraryStdioFeedEntry).toMatchObject({
+      installable: false,
+      hasInstallCommand: false,
+      hasConfigSnippet: false,
+    });
+    expect(arbitraryStdioFeedEntry).not.toHaveProperty("mcpInstallTargets");
+    expect(arbitraryStdioDetail.configSnippet).toBe("");
+    expect(String(arbitraryStdioDetail.detailMarkdown)).not.toContain(
+      "## Config",
+    );
+    for (const feedEntry of [
+      pathQualifiedStdioFeedEntry,
+      windowsPathQualifiedStdioFeedEntry,
+    ]) {
+      expect(feedEntry).toMatchObject({
+        installable: false,
+        hasInstallCommand: false,
+        hasConfigSnippet: false,
+      });
+      expect(feedEntry).not.toHaveProperty("mcpInstallTargets");
+    }
+    for (const detail of [
+      pathQualifiedStdioDetail,
+      windowsPathQualifiedStdioDetail,
+    ]) {
+      expect(detail.configSnippet).toBe("");
+      expect(String(detail.detailMarkdown)).not.toContain("## Config");
+    }
     expect(manualFeedEntry).toMatchObject({
       installable: true,
       hasInstallCommand: true,
