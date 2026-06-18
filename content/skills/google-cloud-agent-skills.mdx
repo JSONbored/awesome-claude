@@ -1,0 +1,243 @@
+---
+title: Google Cloud Agent Skills
+slug: google-cloud-agent-skills
+category: skills
+description: >-
+  Google Agent Skills catalog for AI agents working with Google Cloud, Gemini
+  Enterprise Agent Platform, Gemini APIs, Skill Registry, Cloud Run, BigQuery,
+  Firebase, GKE, Cloud SQL, AlloyDB, gcloud, auth, onboarding, and
+  Well-Architected Framework guidance.
+cardDescription: >-
+  Google product skills for Claude Code, Codex, Gemini CLI, and other agents
+  covering Agent Platform, Gemini API, Cloud Run, BigQuery, Firebase, GKE, and
+  gcloud workflows.
+seoTitle: Google Cloud Agent Skills for Claude Code, Codex, Gemini API, and Agent Platform
+seoDescription: >-
+  Install Google Cloud Agent Skills for Claude Code, Codex, Gemini CLI, and
+  other agents to use Gemini API, Agent Platform, Skill Registry, Cloud Run,
+  BigQuery, Firebase, GKE, gcloud, auth, onboarding, and Well-Architected
+  guidance.
+author: Google
+authorProfileUrl: "https://github.com/google"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/google/skills"
+documentationUrl: "https://github.com/google/skills#readme"
+websiteUrl: "https://skills.sh/google/skills"
+downloadUrl: "https://github.com/google/skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add google/skills"
+usageSnippet: >-
+  Install Google's Agent Skills catalog, then select focused skills for Gemini
+  API, Agent Platform, gcloud, Cloud Run, BigQuery, Firebase, GKE, Google Cloud
+  auth, onboarding, or Well-Architected review.
+copySnippet: |-
+  npx skills add google/skills
+
+  # After the prompt opens, choose the Google Cloud or Agent Platform skills
+  # that match the project: Gemini API, Skill Registry, Cloud Run, BigQuery,
+  # Firebase, GKE, auth, onboarding, gcloud, or Well-Architected guidance.
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/google/skills"
+  - "https://raw.githubusercontent.com/google/skills/main/README.md"
+  - "https://skills.sh/google/skills"
+  - "https://raw.githubusercontent.com/google/skills/main/skills/cloud/agent-platform-skill-registry/SKILL.md"
+  - "https://raw.githubusercontent.com/google/skills/main/skills/cloud/gemini-api/SKILL.md"
+  - "https://raw.githubusercontent.com/google/skills/main/skills/cloud/gcloud/SKILL.md"
+  - "https://raw.githubusercontent.com/google/skills/main/skills/cloud/cloud-run-basics/SKILL.md"
+  - "https://raw.githubusercontent.com/google/skills/main/skills/cloud/bigquery-basics/SKILL.md"
+  - "https://raw.githubusercontent.com/google/skills/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Gemini CLI
+  - Generic Agent Skills hosts
+prerequisites:
+  - "AI coding assistant or skill host compatible with the Agent Skills standard and the skills CLI."
+  - "Google Cloud project, credentials, billing, enabled APIs, IAM roles, and target region when a selected skill touches cloud resources."
+  - "Current gcloud, bq, kubectl, Terraform, SDK, or product-specific tooling required by the selected Google Cloud workflow."
+  - "Clear approval boundary before any agent runs cloud deployment, IAM, data, billing, registry, or destructive operations."
+safetyNotes:
+  - "Google Cloud skills can create, update, delete, deploy, query, or configure cloud resources, datasets, IAM policies, service accounts, APIs, containers, jobs, and networking."
+  - "The gcloud skill requires command validation and safety guardrails before invoking Google Cloud CLI commands; do not let agents improvise cloud commands from memory."
+  - "Skill Registry guidance includes skill lifecycle management such as upload, update, and permanent delete operations; validate environment and approval before use."
+  - "Cloud Run, GKE, BigQuery, Firebase, Cloud SQL, AlloyDB, and Gemini API workflows can create cost, expose endpoints, alter data, or change production behavior."
+  - "The repository notes active development, so verify exact commands, product names, API availability, and launch-stage limits before production use."
+privacyNotes:
+  - "Google Cloud workflows may expose project IDs, service account emails, OAuth tokens, API keys, ADC credentials, Terraform state, dataset names, table schemas, query text, logs, traces, prompts, model outputs, embeddings, and customer data."
+  - "BigQuery, Firebase, Cloud SQL, AlloyDB, GKE, and Agent Platform workflows may process regulated or proprietary data; review data residency, IAM, retention, audit logging, and sharing rules before use."
+  - "Gemini API and Agent Platform skills can send prompts, files, images, audio, video, tool inputs, structured outputs, cached contexts, and batch datasets to Google services."
+  - "Keep credentials, project IDs when sensitive, private queries, logs, trace payloads, Terraform state, customer data, and generated datasets out of public prompts, issues, PRs, and screenshots."
+tags:
+  - google
+  - google-cloud
+  - skills
+  - gemini
+  - agent-platform
+  - cloud-run
+  - bigquery
+  - gcloud
+keywords:
+  - Google Cloud Agent Skills
+  - google skills Codex
+  - google skills Claude Code
+  - Gemini API agent skill
+  - Agent Platform Skill Registry
+  - Cloud Run agent skill
+  - BigQuery agent skill
+  - gcloud CLI skill
+  - Google Cloud Well-Architected skills
+readingTime: 8
+difficultyScore: 80
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Google Cloud Agent Skills
+
+`google/skills` is Google's Agent Skills catalog for Google products and
+technologies, including Google Cloud and Gemini Enterprise Agent Platform. It
+lets coding agents install focused guidance for Gemini API, Agent Platform
+Skill Registry, Cloud Run, BigQuery, Firebase, GKE, Cloud SQL, AlloyDB,
+Workload Manager, gcloud, authentication, onboarding, network observability,
+and Google Cloud Well-Architected Framework reviews.
+
+This entry is separate from Google Agents CLI Skills. `google/agents-cli` gives
+agents an end-to-end ADK build/eval/deploy lifecycle, while `google/skills`
+provides product-specific Google Cloud and Agent Platform capability packs that
+can be installed alongside any other coding-agent workflow.
+
+## Knowledge Freshness
+
+The README says the repository is under active development. Its current catalog
+includes Agent Platform APIs, Gemini API guidance, Google Cloud basics,
+auth/onboarding recipes, network observability, and Well-Architected Framework
+skills. Google Cloud APIs, product names, SDK recommendations, launch stages,
+IAM roles, pricing, quotas, regions, model names, and CLI flags change often.
+
+Use these skills for source-backed Google workflow guidance, then verify exact
+commands, flags, permissions, data movement, and production constraints against
+the target Google Cloud project and current official docs before running
+changes.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The `google/skills` repository README.
+- The public skills.sh listing for `google/skills`.
+- Representative `SKILL.md` files for Agent Platform Skill Registry, Gemini
+  API, gcloud, Cloud Run, and BigQuery.
+- The Apache-2.0 license text.
+- Current GitHub repository metadata.
+
+## Core Workflow
+
+Install the Google skills catalog:
+
+```bash
+npx skills add google/skills
+```
+
+Then choose the focused skill or skills for the task. For example:
+
+- Gemini API on Agent Platform for multimodal generation, function calling,
+  structured output, embeddings, context caching, Live API, and batch
+  prediction.
+- Skill Registry for discovering, uploading, updating, and managing Agent
+  Platform skills.
+- gcloud for safe Google Cloud CLI usage with command validation and data
+  reduction rules.
+- Cloud Run, BigQuery, Firebase, GKE, Cloud SQL, AlloyDB, Workload Manager, auth
+  recipes, onboarding, network observability, or Well-Architected review.
+
+## Capability Scope
+
+The README currently lists skills across these areas:
+
+| Area | Example skills |
+| --- | --- |
+| Gemini Enterprise Agent Platform | Gemini API, Gemini Interactions API, Managed Agents API, Skill Registry API |
+| Google Cloud basics | AlloyDB, BigQuery, Cloud Run, Cloud SQL, Firebase, GKE, Workload Manager |
+| Recipes | Google Cloud onboarding, authentication, network observability |
+| Well-Architected Framework | Security, reliability, cost optimization, operational excellence, performance, sustainability |
+| CLI safety | gcloud command validation, non-interactive execution, filters, projections, and destructive-action guardrails |
+
+The catalog also links to adjacent official Flutter and Dart skills
+repositories for teams working across Google application stacks.
+
+## Production Rules
+
+Use these skills with strict cloud-change boundaries:
+
+- Start with the narrowest product skill that matches the task.
+- Validate Google Cloud authentication, target project, location, enabled APIs,
+  IAM roles, billing, and quotas before running commands.
+- Use current command help and official docs for CLI syntax instead of relying
+  on memory.
+- Require explicit approval before create, update, delete, deploy, IAM,
+  network, billing, data export, registry, or production-impacting operations.
+- Prefer read-only discovery with reduced output before making changes.
+- Treat Agent Platform, Gemini API, BigQuery, Cloud Run, Firebase, GKE, Cloud
+  SQL, AlloyDB, and Terraform actions as operational changes, not harmless
+  examples.
+- Record what project, region, resource, command, and validation result was
+  used without leaking credentials or private data.
+
+## Use Cases
+
+- Ask Codex to choose the right Gemini API setup for Agent Platform and avoid
+  deprecated SDKs.
+- Use Claude Code to inspect a Cloud Run deployment plan before running gcloud
+  commands.
+- Have an agent write or review BigQuery SQL, data ingestion, MCP usage, IAM,
+  and AI/ML workflow guidance from source-backed skill references.
+- Use Gemini CLI to prepare Google Cloud authentication and onboarding steps
+  for a new project.
+- Ask an agent to run a Well-Architected review for security, reliability,
+  cost, performance, operations, or sustainability.
+
+## Source Review
+
+- The README describes the repository as Agent Skills for Google products and
+  technologies, including Google Cloud.
+- The README documents installation with `npx skills add google/skills`.
+- The available skills list includes Gemini API on Agent Platform, Gemini
+  Interactions API, Managed Agents API, Skill Registry API, AlloyDB, BigQuery,
+  Cloud Run, Cloud SQL, Firebase, GKE, Workload Manager, auth/onboarding
+  recipes, network observability, and Well-Architected pillars.
+- The Agent Platform Skill Registry skill covers skill discovery, lifecycle
+  management, operation monitoring, and local skill generation.
+- The Gemini API skill requires the unified Google Gen AI SDK and warns against
+  legacy SDKs.
+- The gcloud skill requires leaf-command validation, data reduction, explicit
+  project/location scoping, non-interactive execution, and destructive-action
+  authorization.
+- The Cloud Run and BigQuery skills provide concrete prerequisites, roles,
+  commands, and product-specific references.
+- The license file identifies the repository as Apache-2.0.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`, open pull
+requests, and repository-wide content for `google/skills`, Google Cloud Agent
+Skills, Gemini API skills, Agent Platform Skill Registry, Cloud Run skills,
+BigQuery skills, Firebase skills, GKE skills, and gcloud skills. Existing
+Google entries cover separate tools and MCP servers, including Google ADK,
+Firebase MCP, and Google Agents CLI; no dedicated `google/skills` capability
+pack, exact source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The upstream
+repository is Apache-2.0 licensed and states that it is under active
+development. Google Cloud, Gemini Enterprise Agent Platform, Gemini APIs,
+Firebase, BigQuery, Cloud Run, GKE, Cloud SQL, AlloyDB, and related services may
+have separate billing, terms, IAM, privacy, residency, retention, and launch
+stage constraints.
