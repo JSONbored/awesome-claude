@@ -24,7 +24,7 @@ repoUrl: "https://github.com/metatool-ai/metamcp"
 documentationUrl: "https://docs.metamcp.com"
 packageUrl: "https://github.com/metatool-ai/metamcp/pkgs/container/metamcp"
 installable: true
-installCommand: "git clone https://github.com/metatool-ai/metamcp.git && cd metamcp && cp example.env .env && docker compose up -d"
+installCommand: "git clone https://github.com/metatool-ai/metamcp.git && cd metamcp && cp example.env .env && ${EDITOR:-vi} .env"
 usageSnippet: "Deploy MetaMCP with Docker Compose, create namespaces and endpoints, then connect MCP clients to the generated SSE or Streamable HTTP endpoint with the approved auth mode."
 copySnippet: |-
   {
@@ -148,12 +148,17 @@ The repository documents Docker Compose as the recommended quick start:
 git clone https://github.com/metatool-ai/metamcp.git
 cd metamcp
 cp example.env .env
-docker compose up -d
+${EDITOR:-vi} .env
 ```
 
-Review `.env` before starting the service. Replace default secrets, bootstrap
-users, bootstrap passwords, API key settings, app URL, registration settings,
-Postgres credentials, and OIDC settings before exposing the service.
+Review and save `.env` before starting the service. Replace default secrets,
+bootstrap users, bootstrap passwords, API key settings, app URL, registration
+settings, Postgres credentials, and OIDC settings before exposing the service.
+After hardening the environment and network settings, start MetaMCP:
+
+```bash
+docker compose up -d
+```
 
 For MCP clients that support remote servers, connect to the MetaMCP endpoint URL
 with the approved auth header. For stdio-only clients, the README recommends
