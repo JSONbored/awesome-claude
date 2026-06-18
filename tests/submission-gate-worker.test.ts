@@ -2060,6 +2060,14 @@ ${urls}
     expect(retryBranch).toContain('status: "merge_pending"');
     expect(retryBranch).toContain('decision: "merge_pending"');
     expect(retryBranch).toContain("merge retry pending");
+    expect(retryBranch).toContain(
+      "const pendingDecision = defaultManualDecision",
+    );
+    expect(retryBranch).toContain(
+      "const pendingReport = await upsertMarkerComment",
+    );
+    expect(retryBranch).toContain("markerComment(");
+    expect(retryBranch).toContain("pendingDecision");
     expect(retryBranch).toContain("nextReviewAt: isoAfter(retryDelaySeconds)");
     expect(retryBranch).toContain("retryDelaySeconds");
     expect(retryBranch).toContain(

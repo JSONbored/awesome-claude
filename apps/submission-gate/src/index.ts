@@ -3760,6 +3760,22 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               }`,
               "- The gate will retry after transient GitHub merge state settles.",
             ].join("\n");
+            const pendingDecision = defaultManualDecision(pendingSummary, {
+              code: "merge_retry_pending",
+              retryable: true,
+              message: error instanceof Error ? error.message : "unknown",
+            });
+            const pendingReport = await upsertMarkerComment({
+              token,
+              repo,
+              issueNumber: target.number,
+              marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+              body: markerComment(
+                pendingDecision,
+                env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+              ),
+              apiVersion: env.GITHUB_API_VERSION,
+            });
             await upsertPrState(env.SUBMISSION_GATE_DB, {
               repo: target.repoFullName,
               number: target.number,
@@ -3773,7 +3789,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               verdictSummary: pendingSummary,
               nextReviewAt: isoAfter(retryDelaySeconds),
               lastError: error instanceof Error ? error.message : "unknown",
-              ...decisionMetadata(acceptedDecision, acceptedReport),
+              ...decisionMetadata(pendingDecision, pendingReport),
             });
             await insertAudit(env.SUBMISSION_GATE_DB, {
               id: crypto.randomUUID(),
