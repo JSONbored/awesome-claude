@@ -71,9 +71,16 @@ scriptBody: |-
     *package-lock.json|*yarn.lock|*pnpm-lock.yaml) ;;
     *) exit 0 ;;
   esac
-  echo "package-lock-risk: reviewing $(basename "$FILE")" >&2
+  SAFE_FILE=$(basename "$FILE" | LC_ALL=C tr -d '\000-\037\177')
+  echo "package-lock-risk: reviewing $SAFE_FILE" >&2
   if [[ "$FILE" == *package-lock.json ]] && command -v jq >/dev/null 2>&1; then
-    HOSTS=$(jq -r '..|.resolved? // empty' "$FILE" 2>/dev/null | sed -n 's#.*//\([^/]*\)/.*#\1#p' | sort -u | head -n 20)
+    HOSTS=$(jq -r '..|.resolved? // empty' "$FILE" 2>/dev/null \
+      | LC_ALL=C tr -d '\000-\037\177' \
+      | sed -n 's#^[A-Za-z][A-Za-z0-9+.-]*://##p' \
+      | sed 's#/.*##; s#.*@##; s#^\[\([^]]*\)\].*#\1#; s#:[0-9][0-9]*$##' \
+      | awk 'NF' \
+      | sort -u \
+      | head -n 20)
     if [ -n "$HOSTS" ]; then
       echo "Resolved registry hosts:" >&2
       printf '%s\n' "$HOSTS" >&2
