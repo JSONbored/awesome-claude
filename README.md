@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1265+ file-backed entries</strong> stay useful as both an
+        <strong>1269+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1265</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1269</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -73,7 +73,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>160</code><br>
+          <code>164</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -745,7 +745,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (160)
+## 🧰 Tools (164)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
@@ -794,6 +794,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Evidently](https://heyclau.de/entry/tools/evidently)** - Open-source ML and LLM observability framework for evaluating, testing, and monitoring data quality, drift, model behavior, and AI application outputs.
 - **[Exa](https://heyclau.de/entry/tools/exa)** - Search and web retrieval API designed for AI applications, agents, research workflows, and semantic web discovery.
 - **[Firecrawl](https://heyclau.de/entry/tools/firecrawl)** - Web scraping and crawling API for turning websites into clean markdown, structured data, and LLM-ready content.
+- **[Flowise](https://heyclau.de/entry/tools/flowise)** - Visual low-code builder for AI agents, RAG apps, chatbots, agentic workflows, multi-agent systems, LangChain-based components, API-serving flows, and self-hosted deployments through npm, Docker, and cloud platforms.
 - **[Garak](https://heyclau.de/entry/tools/garak)** - Open-source LLM vulnerability scanner for probing model behavior, prompt attack surfaces, and safety failures.
 - **[Gemini CLI](https://heyclau.de/entry/tools/gemini-cli)** - Google's open-source terminal AI agent for Gemini-powered coding and automation, with code understanding, file edits, shell commands, web fetching, Google Search grounding, MCP server integrations, checkpointing, GEMINI.md context files, and GitHub workflow automation.
 - **[Giskard](https://heyclau.de/entry/tools/giskard)** - AI testing platform for evaluating, scanning, and monitoring machine learning and LLM application quality.
@@ -833,6 +834,7 @@ Get a free API key on https://app.zyntra.app/
 - **[LiveKit Agents](https://heyclau.de/entry/tools/livekit-agents)** - Open-source framework for building realtime voice, video, and multimodal AI agents with LiveKit rooms, STT, LLMs, TTS, job scheduling, telephony, MCP tools, testing, and production deployment paths.
 - **[llama.cpp](https://heyclau.de/entry/tools/llama-cpp)** - MIT-licensed C/C++ LLM inference runtime for running GGUF models locally or through a lightweight OpenAI-compatible llama-server.
 - **[LlamaIndex](https://heyclau.de/entry/tools/llamaindex)** - Open-source framework for building agentic LLM applications over private data with ingestion, indexes, retrieval, RAG, tools, workflows, and evaluation.
+- **[LobeHub (formerly LobeChat)](https://heyclau.de/entry/tools/lobehub)** - Self-hostable AI agent workspace formerly known as LobeChat, with agent builder, agent groups, personal memory, model-provider routing, skills, MCP-compatible plugins, Docker deployment, Vercel deployment, and IM gateway workflows.
 - **[Lovable](https://heyclau.de/entry/tools/lovable)** - AI app builder for generating and iterating on web applications from natural language product requests.
 - **[Make](https://heyclau.de/entry/tools/make)** - Visual automation platform for building integrations, scenarios, API workflows, and AI-connected business processes.
 - **[Marimo](https://heyclau.de/entry/tools/marimo)** - Apache-2.0 reactive Python notebook stored as pure Python for reproducible experiments, SQL-backed data workflows, script execution, app deployment, and AI-assisted editing.
@@ -862,6 +864,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Official MCP TypeScript SDK](https://heyclau.de/entry/tools/official-mcp-typescript-sdk)** - Official TypeScript SDK for Model Context Protocol clients and servers, with the production v1 `@modelcontextprotocol/sdk` package, active v2 server and client package work, Node.js, Bun, and Deno support, transports, OAuth helpers, tools, resources, prompts, examples, and API documentation.
 - **[Ollama](https://heyclau.de/entry/tools/ollama)** - Local model runner for downloading, serving, and integrating open models with developer tools and agent workflows.
 - **[Open SWE](https://heyclau.de/entry/tools/open-swe)** - Open-source framework for building internal coding agents that accept tasks via Slack, Linear, or GitHub, execute code changes in isolated cloud sandboxes, and open draft pull requests automatically.
+- **[Open WebUI](https://heyclau.de/entry/tools/open-webui)** - Self-hosted AI platform and web UI for Ollama, OpenAI-compatible APIs, RAG, Python function tools, model builder workflows, artifacts, web search, vector databases, enterprise auth, observability, plugins, and MCP-adjacent OpenAPI integrations.
 - **[OpenAI Agents JavaScript SDK](https://heyclau.de/entry/tools/openai-agents-js-sdk)** - Official JavaScript and TypeScript framework for building multi-agent workflows with agents, tools, handoffs, guardrails, sessions, tracing, realtime voice agents, MCP tools, hosted tools, and sandbox agents.
 - **[OpenAI Agents Python SDK](https://heyclau.de/entry/tools/openai-agents-python-sdk)** - Official Python framework for building multi-agent workflows with agents, tools, handoffs, guardrails, sessions, tracing, realtime voice agents, MCP tools, hosted tools, human-in-the-loop flows, and sandbox agents.
 - **[OpenAI Codex CLI](https://heyclau.de/entry/tools/openai-codex-cli)** - Lightweight, open-source coding agent from OpenAI that runs in your terminal, edits and runs code locally with configurable sandbox and approval modes, and authenticates with a ChatGPT plan or API key.
@@ -879,6 +882,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Qwen-Agent](https://heyclau.de/entry/tools/qwen-agent)** - Open-source Qwen agent framework for building LLM applications with function calling, tools, planning, memory, RAG, MCP support, Docker-based code interpreter, Gradio GUI demos, BrowserQwen, Custom Assistant, and Qwen Chat backend usage.
 - **[Qwen Code](https://heyclau.de/entry/tools/qwen-code)** - Open-source terminal AI coding agent from Qwen with Auto-Memory, Auto-Skills, SubAgents, Agent Teams, dynamic workflows, MCP support, multi-provider model routing, IDE plugins, desktop app, daemon mode, SDKs, IM bots, sandboxing, and worktree-aware coding workflows.
 - **[Ragas](https://heyclau.de/entry/tools/ragas)** - Open-source evaluation framework for testing RAG systems, prompts, agents, workflows, and other LLM application behavior.
+- **[RAGFlow](https://heyclau.de/entry/tools/ragflow)** - Open-source RAG and agentic retrieval platform with DeepDoc document understanding, visual chunking, grounded citations, heterogeneous data-source ingestion, agent workflows, MCP support, code executor support, and Docker self-hosting.
 - **[Ray](https://heyclau.de/entry/tools/ray)** - Apache-2.0 distributed AI compute engine for scaling Python, ML data processing, training, tuning, reinforcement learning, and model serving workloads.
 - **[Raycast](https://heyclau.de/entry/tools/raycast)** - macOS launcher and extension platform with AI commands, automations, team workflows, and developer-focused integrations.
 - **[Replit Agent](https://heyclau.de/entry/tools/replit-agent)** - Browser-based AI software builder for generating, editing, deploying, and iterating on applications in Replit.
