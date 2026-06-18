@@ -250,6 +250,68 @@ describe("source repo signals", () => {
     });
   });
 
+  it("does not send configured GitHub tokens for content-controlled repo lookups", async () => {
+    const previousToken = process.env.GITHUB_TOKEN;
+    process.env.GITHUB_TOKEN = "secret-token";
+    const seenHeaders: HeadersInit[] = [];
+
+    try {
+      await fetchGitHubSourceSignal("example/tool", async (_url, init) => {
+        seenHeaders.push(init?.headers ?? {});
+        return new Response(
+          JSON.stringify({
+            private: false,
+            stargazers_count: 10,
+            forks_count: 2,
+            updated_at: "2026-06-02T11:00:00Z",
+          }),
+          { status: 200 },
+        );
+      });
+    } finally {
+      if (previousToken === undefined) {
+        delete process.env.GITHUB_TOKEN;
+      } else {
+        process.env.GITHUB_TOKEN = previousToken;
+      }
+    }
+
+    expect(seenHeaders).toHaveLength(1);
+    expect(JSON.stringify(seenHeaders[0]).toLowerCase()).not.toContain(
+      "authorization",
+    );
+  });
+
+  it("rejects private GitHub repository payloads before caching", async () => {
+    const db = new FakeD1();
+    const result = await refreshSourceRepoSignalsForEntries(
+      [{ repoUrl: "https://github.com/example/private-tool" }],
+      {
+        db,
+        now: new Date("2026-06-02T12:00:00Z"),
+        fetcher: async () =>
+          new Response(
+            JSON.stringify({
+              private: true,
+              stargazers_count: 123,
+              forks_count: 9,
+              updated_at: "2026-06-02T11:00:00Z",
+            }),
+            { status: 200 },
+          ),
+      },
+    );
+
+    expect(result).toMatchObject({ refreshed: 0, failed: 1 });
+    expect(db.rows.get("example/private-tool")).toMatchObject({
+      stars: null,
+      forks: null,
+      repo_updated_at: null,
+      status: "error",
+      last_error: "github_api_private_repo",
+    });
+  });
+
   it("falls back to Shields stars when GitHub is unavailable", async () => {
     let call = 0;
     const signal = await fetchGitHubSourceSignal("example/tool", async () => {
