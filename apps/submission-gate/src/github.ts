@@ -495,7 +495,12 @@ type CheckRun = {
 };
 
 const GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS = ["github-actions"];
+const SUPERAGENT_CHECK_RUN_APP_SLUGS = [
+  "superagent",
+  "superagent-security-scan",
+];
 const TRUSTED_CHECK_RUN_APP_SLUGS: Record<string, string[]> = {
+  "Contributor trust": SUPERAGENT_CHECK_RUN_APP_SLUGS,
   coverage: GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
   "classify-pr": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
   "pipelock-advisory-scan": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
@@ -509,7 +514,7 @@ const TRUSTED_CHECK_RUN_APP_SLUGS: Record<string, string[]> = {
   "validate-raycast": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
   "validate-registry": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
   "validate-web": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
-  "Superagent Security Scan": ["superagent", "superagent-security-scan"],
+  "Superagent Security Scan": SUPERAGENT_CHECK_RUN_APP_SLUGS,
 };
 
 type CommitStatus = {
