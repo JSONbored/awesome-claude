@@ -491,7 +491,7 @@ export const seoClusterDefinitions: SeoClusterDefinition[] = [
     description: "Vector databases and stores for embeddings and retrieval-augmented generation.",
     seoTitle: "Best vector databases for RAG (2026)",
     seoDescription:
-      "Compare the best vector databases for RAG — embeddings storage and retrieval for AI applications.",
+      "Compare the best vector databases for RAG — embeddings storage, retrieval quality, metadata filtering, and AI application search.",
     categories: ["tools"],
     tags: ["vector-database", "retrieval", "rag"],
     keywords: ["vector database", "embeddings", "rag"],
@@ -505,7 +505,7 @@ export const seoClusterDefinitions: SeoClusterDefinition[] = [
       "Frameworks for building retrieval-augmented generation pipelines and data-aware LLM apps.",
     seoTitle: "Best RAG frameworks for LLM apps (2026)",
     seoDescription:
-      "Compare the best RAG frameworks — retrieval, indexing, and data-aware LLM application development.",
+      "Compare the best RAG frameworks — retrieval, indexing, grounding, and data-aware LLM application development workflows.",
     categories: ["tools"],
     tags: ["rag", "retrieval", "agent-framework"],
     keywords: ["rag framework", "retrieval augmented generation"],
@@ -533,7 +533,7 @@ export const seoClusterDefinitions: SeoClusterDefinition[] = [
       "Browser automation tools and frameworks for AI agents — scripted control, AI-driven actions, and hosted browsers.",
     seoTitle: "Best browser automation tools for AI agents (2026)",
     seoDescription:
-      "Compare the best browser automation tools for AI — scripted, AI-driven, and hosted browser control.",
+      "Compare the best browser automation tools for AI — scripted, AI-driven, and hosted browser control for agent workflows.",
     categories: ["tools"],
     tags: ["browser-automation"],
     keywords: ["browser automation", "web automation", "ai browser"],
@@ -561,7 +561,7 @@ export const seoClusterDefinitions: SeoClusterDefinition[] = [
       "Tools for running and serving LLMs locally and in production — inference engines and model runtimes.",
     seoTitle: "Best LLM serving & inference tools (2026)",
     seoDescription:
-      "Compare the best LLM serving and inference tools — local runtimes and production model serving.",
+      "Compare the best LLM serving and inference tools — local runtimes, hosted APIs, and production model serving.",
     categories: ["tools"],
     tags: ["inference"],
     keywords: ["llm serving", "llm inference", "run llm locally"],
@@ -602,7 +602,7 @@ export const seoClusterDefinitions: SeoClusterDefinition[] = [
     description: "Agents that automate testing, TDD, and quality workflows in Claude Code.",
     seoTitle: "Best testing automation agents for Claude Code (2026)",
     seoDescription:
-      "Find the best testing automation agents for Claude — TDD, test generation, and quality workflows.",
+      "Find the best testing automation agents for Claude — TDD, test generation, regression coverage, and quality workflows.",
     categories: ["agents"],
     tags: ["testing"],
     keywords: ["testing agent", "test automation", "tdd"],
@@ -644,7 +644,7 @@ export const seoClusterDefinitions: SeoClusterDefinition[] = [
       "CLAUDE.md rule sets for frontend development — React, TypeScript, and modern UI frameworks.",
     seoTitle: "Best frontend CLAUDE.md rules for Claude Code (2026)",
     seoDescription:
-      "Find the best frontend CLAUDE.md rules — React, TypeScript, and modern UI framework standards.",
+      "Find the best frontend CLAUDE.md rules — React, TypeScript, accessibility, and modern UI framework standards.",
     categories: ["rules"],
     tags: ["frontend", "react", "typescript"],
     keywords: ["frontend rules", "react rules", "claude.md frontend"],
