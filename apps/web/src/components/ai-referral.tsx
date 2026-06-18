@@ -5,6 +5,25 @@ import { matchAiReferrer } from "@/lib/ai-sources";
 
 const SESSION_FLAG = "ai-referral-tracked";
 
+export function emitAiReferralEvent(source: string, landing: string): boolean {
+  if (typeof window === "undefined") return false;
+  const umami = (window as Window & { umami?: { track?: (...args: unknown[]) => void } }).umami;
+  if (typeof umami?.track !== "function") return false;
+
+  try {
+    trackEvent("ai-referral", { source, landing });
+  } catch {
+    return false;
+  }
+
+  try {
+    window.sessionStorage.setItem(SESSION_FLAG, "1");
+  } catch {
+    // ignore -- worst case we emit again next mount.
+  }
+  return true;
+}
+
 /**
  * Fire a one-per-session umami `ai-referral` event when the visitor arrived from an AI
  * assistant (ChatGPT, Claude, Perplexity, Gemini, Copilot, …). This is the human-facing
@@ -28,13 +47,14 @@ export function AiReferral() {
     const source = matchAiReferrer(document.referrer);
     if (!source) return;
 
-    try {
-      window.sessionStorage.setItem(SESSION_FLAG, "1");
-    } catch {
-      // ignore — worst case we emit again next mount, which umami dedupes poorly but
-      // is rare and harmless.
-    }
-    trackEvent("ai-referral", { source, landing: window.location.pathname });
+    const emit = () => emitAiReferralEvent(source, window.location.pathname);
+    if (emit()) return;
+
+    const onLoad = () => {
+      emit();
+    };
+    window.addEventListener("load", onLoad, { once: true });
+    return () => window.removeEventListener("load", onLoad);
   }, []);
 
   return null;
