@@ -1,0 +1,150 @@
+---
+title: Airbyte MCP Server for Claude
+slug: airbyte-mcp-server
+category: mcp
+description: >-
+  Connect Claude to your data through Airbyte's 50+ agent connectors — query CRMs, billing
+  systems, project management tools, communication platforms, and more — with the official Airbyte
+  remote MCP server for AI agents.
+cardDescription: "Official Airbyte Agent MCP: query 50+ data connectors from Claude via OAuth."
+seoTitle: "Airbyte MCP Server for Claude — 50+ Data Connectors for AI Agents"
+seoDescription: "Connect Claude to Airbyte's Agent MCP server: query and update data across 50+ connectors — CRMs, billing, project management, communication tools — all via OAuth with no local install."
+author: Airbyte
+authorProfileUrl: "https://github.com/airbytehq"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.airbyte.com/ai-agents/interfaces/mcp/"
+websiteUrl: "https://airbyte.com"
+repoUrl: "https://github.com/airbytehq/airbyte"
+retrievalSources:
+  - "https://docs.airbyte.com/ai-agents/interfaces/mcp/"
+  - "https://docs.airbyte.com/developers/mcp-servers"
+  - "https://airbyte.com/blog/knowledge-mcp-server"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http airbyte-agent https://mcp.airbyte.ai/mcp"
+usageSnippet: >-
+  Ask Claude to retrieve contacts from your CRM, list open deals, search invoices, or query project management data — across any Airbyte-connected data source.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "airbyte-agent": {
+        "type": "http",
+        "url": "https://mcp.airbyte.ai/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "airbyte-agent": {
+        "type": "http",
+        "url": "https://mcp.airbyte.ai/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - "An Airbyte account (free to start) and connected data sources."
+  - "Authenticate via OAuth on first tool use — credentials for third-party services are entered in the browser, not in the chat."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server is hosted and managed by Airbyte — credentials for connected services are entered via browser OAuth flows or secure forms, never in the AI chat."
+  - "Depending on the connector, the MCP can create and update records (not just read) — review Claude's proposed actions before confirming writes."
+  - "Access is scoped by the permissions granted during OAuth; use least-privilege scopes for each connected service."
+privacyNotes:
+  - "Data retrieved from connected services (contacts, deals, invoices, messages) is surfaced in Claude's context."
+  - "All credential flows are browser-based and never transmitted through the AI chat interface."
+tags:
+  - airbyte
+  - data-integration
+  - crm
+  - connectors
+  - etl
+  - data-pipeline
+keywords:
+  - airbyte mcp server
+  - airbyte mcp claude
+  - data connector mcp claude code
+  - crm data mcp ai
+  - airbyte agent connectors
+  - multi-source data mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Airbyte Agent MCP Server** is the official remote Model Context Protocol server from
+Airbyte for AI agents. It exposes 50+ Airbyte agent connectors to Claude — enabling natural
+language queries and actions across CRMs, billing systems, project management platforms,
+communication tools, and more. The server is hosted and managed by Airbyte at
+`https://mcp.airbyte.ai/mcp`; no local installation is required.
+
+Authentication is via OAuth 2.0 with your Airbyte account; credentials for individual third-party
+services are entered in the browser, never in the AI chat, for security.
+
+## Key capabilities
+
+- **CRM data** — list, search, and retrieve contacts, deals, leads, and accounts.
+- **Billing & finance** — access invoices, subscriptions, and billing records.
+- **Project management** — list issues, tasks, and project data.
+- **Communication** — access messages, tickets, and support records.
+- **Create & update** — some connectors support creating and updating records in addition to
+  reading.
+- **Entity discovery** — automatically discover available entities and actions per connected
+  service.
+
+Supported actions include `list`, `get`, `search`, `create`, and `update` — varying by connector.
+
+## How it compares
+
+| Server | Data sources covered | Write actions | No local install | Auth |
+|---|---|---|---|---|
+| **Airbyte MCP** | 50+ connectors | Yes (per-connector) | Yes | OAuth |
+| Zapier MCP | 7000+ apps (read-heavy) | Limited | Yes | OAuth |
+| Composio MCP | 100+ tools | Yes | Yes | OAuth |
+| n8n MCP | 400+ integrations | Yes | No (self-hosted) | API key |
+
+Airbyte's MCP is notable for its deep, schema-aware data access — each connector exposes
+structured entity types rather than generic webhook actions.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http airbyte-agent https://mcp.airbyte.ai/mcp
+```
+
+After adding, run `/mcp` in Claude Code to connect your Airbyte account and configure data
+source access.
+
+### Claude Desktop
+
+Open Settings → Connectors to add the Airbyte MCP server through the built-in interface.
+
+## Requirements
+
+- An Airbyte account with connected data sources.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Credentials are always entered in the browser — Airbyte's servers handle token storage.
+- Scope each connected service to the minimum required permissions during OAuth consent.
+- Review write operations (create/update) before confirming — these modify real data in connected
+  systems.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Airbyte's Agent MCP documentation at `docs.airbyte.com/ai-agents/interfaces/mcp/` confirms the
+  hosted endpoint `https://mcp.airbyte.ai/mcp`, OAuth 2.0 authentication, browser-based
+  credential flows, and the Claude Code installation command.
+- Airbyte's developers MCP overview at `docs.airbyte.com/developers/mcp-servers` describes the
+  primary MCP use case for AI agents with Airbyte connectors.
+- Airbyte's main repository `github.com/airbytehq/airbyte` is the authoritative source for the
+  Airbyte platform.
+- Claude Code's MCP documentation describes the `--transport http` installation pattern used above.

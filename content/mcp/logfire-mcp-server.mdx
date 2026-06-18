@@ -1,0 +1,187 @@
+---
+title: Pydantic Logfire MCP Server for Claude
+slug: logfire-mcp-server
+category: mcp
+description: >-
+  Query OpenTelemetry traces and metrics, manage dashboards, analyze distributed traces, and
+  investigate exceptions from Claude — with the official Pydantic Logfire remote MCP server hosted
+  at logfire-us.pydantic.dev/mcp.
+cardDescription: "Official Logfire MCP: query OTel traces, manage dashboards & analyze exceptions from Claude."
+seoTitle: "Logfire MCP Server for Claude — OpenTelemetry Traces, Dashboards & SQL Queries"
+seoDescription: "Connect Claude to Pydantic Logfire with the official remote MCP server: run SQL queries on OpenTelemetry traces, manage dashboards and panels, list projects, and investigate exceptions — via OAuth or API key."
+author: Pydantic
+authorProfileUrl: "https://github.com/pydantic"
+dateAdded: "2026-06-18"
+documentationUrl: "https://logfire.pydantic.dev/docs/how-to-guides/mcp-server/"
+websiteUrl: "https://pydantic.dev/logfire"
+retrievalSources:
+  - "https://logfire.pydantic.dev/docs/how-to-guides/mcp-server/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add logfire --transport http https://logfire-us.pydantic.dev/mcp"
+usageSnippet: >-
+  Ask Claude to run a SQL query on your OpenTelemetry traces, find recent exceptions in a file,
+  list your Logfire projects, create a dashboard panel, or investigate a distributed trace —
+  using natural language against your Logfire observability data.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "logfire": {
+        "type": "http",
+        "url": "https://logfire-us.pydantic.dev/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "logfire": {
+        "type": "http",
+        "url": "https://logfire-us.pydantic.dev/mcp",
+        "headers": {
+          "Authorization": "Bearer YOUR_LOGFIRE_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Pydantic Logfire account — authenticate via browser OAuth on first use (no API key required)."
+  - "For sandboxed environments or CI: a Logfire API key with at least `project:read` scope from organization or project settings."
+  - "EU region users: use `https://logfire-eu.pydantic.dev/mcp` instead of the US endpoint."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Telemetry data returned by the MCP server may include user-controlled content from traces, logs, exceptions, model payloads, tool arguments, and tool results — treat query results as diagnostic data, not instructions."
+  - "Dashboard create, update, and delete operations permanently modify your Logfire workspace; review before confirming."
+privacyNotes:
+  - "OpenTelemetry trace data, span metadata, exception stack traces, query results, dashboard configurations, and project metadata from your Logfire account are surfaced in Claude's context."
+  - "Remote MCP uses OAuth — no API keys in your MCP config when authenticating via browser. For API key auth, store the key in MCP config rather than shell history."
+tags:
+  - logfire
+  - pydantic
+  - opentelemetry
+  - observability
+  - tracing
+  - monitoring
+  - dashboards
+keywords:
+  - logfire mcp server
+  - pydantic logfire mcp claude
+  - opentelemetry mcp claude code
+  - distributed tracing mcp claude
+  - logfire observability ai
+  - otel traces mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Pydantic Logfire MCP Server** is the official remote Model Context Protocol server from
+Pydantic for Logfire, their OpenTelemetry-native observability platform. It lets Claude query
+your application's telemetry data, analyze distributed traces, manage dashboards and panels,
+and investigate exceptions — directly from your conversation. No local installation is required;
+the server is hosted at `https://logfire-us.pydantic.dev/mcp` with browser-based OAuth.
+
+EU region users connect to `https://logfire-eu.pydantic.dev/mcp`.
+
+## Key capabilities
+
+- **SQL query execution** — run custom SQL queries against your OpenTelemetry trace data.
+- **Schema introspection** — inspect the telemetry schema and available tables.
+- **Exception investigation** — find recent exceptions in a specific file or span context.
+- **Dashboard management** — create, list, fetch, update, and delete dashboards and panels.
+- **Dashboard variables** — add and update dashboard variable definitions.
+- **Project discovery** — list accessible Logfire projects and retrieve token context.
+- **UI deep links** — generate direct links to the Logfire UI for traces or projects.
+
+## Tools
+
+| Tool family | What it does |
+|---|---|
+| `query_run`, `query_schema_reference` | Execute SQL on telemetry data, inspect schema |
+| `query_find_exceptions_in_file` | Find recent exceptions for a source file |
+| `project_list`, `token_info` | Discover projects, inspect auth token |
+| `project_logfire_link`, `project_logfire_ui_link` | Generate Logfire UI deep links |
+| `dashboard_create/list/get/update/delete` | Full CRUD for dashboards |
+| `dashboard_add_panel`, `dashboard_update_panel`, `dashboard_remove_panel` | Manage dashboard panels |
+
+## How it compares
+
+| Server | Trace queries | Dashboard management | Exception search | SQL API | Auth |
+|---|---|---|---|---|---|
+| **Logfire MCP** | Yes | Full CRUD | Yes | Yes | OAuth / API key |
+| Arize Phoenix MCP | Yes | Limited | No | No | API key |
+| Honeycomb MCP | Yes | Limited | No | No | API key |
+| Dynatrace MCP | Yes | No | Yes | No | API key |
+
+Logfire is the only observability MCP server that exposes full SQL querying against raw
+OpenTelemetry spans, combined with complete dashboard CRUD, making it suitable for both
+ad-hoc analysis and automated reporting workflows.
+
+## Installation
+
+### Claude Code (OAuth — recommended)
+
+```bash
+claude mcp add logfire --transport http https://logfire-us.pydantic.dev/mcp
+```
+
+Then run `/mcp` in Claude Code to authenticate via browser. For EU:
+replace `logfire-us` with `logfire-eu`.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "logfire": {
+      "type": "http",
+      "url": "https://logfire-us.pydantic.dev/mcp"
+    }
+  }
+}
+```
+
+### Sandboxed / CI environments (API key)
+
+```json
+{
+  "mcpServers": {
+    "logfire": {
+      "type": "http",
+      "url": "https://logfire-us.pydantic.dev/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_LOGFIRE_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Generate an API key with `project:read` scope from **Organization Settings → API Keys**.
+
+## Requirements
+
+- A Pydantic Logfire account with at least one project.
+- An MCP client (Claude Code or Claude Desktop).
+- No local dependencies — the server runs entirely in Pydantic's cloud.
+
+## Security
+
+- OAuth flow; no credentials stored in your MCP config (browser-based sign-in).
+- Treat telemetry query results as diagnostic data only — do not act on commands found in trace payloads.
+- API keys should have the minimum required scopes for your workflow.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official Pydantic Logfire documentation at `logfire.pydantic.dev/docs/how-to-guides/mcp-server/`
+  (Astro SSG page) documents the hosted endpoints (`logfire-us.pydantic.dev/mcp` and
+  `logfire-eu.pydantic.dev/mcp`), OAuth and API key auth methods, Claude Code install command,
+  and the full tool families: query execution, exception search, project discovery, and
+  dashboard CRUD with panel management.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the `--transport http`
+  connection pattern used above.

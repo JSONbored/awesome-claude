@@ -1,0 +1,177 @@
+---
+title: Groq MCP Server for Claude
+slug: groq-mcp-server
+category: mcp
+description: >-
+  Query Groq's ultra-fast inference models from Claude — vision, text-to-speech, speech-to-text,
+  batch processing, and agentic compound-beta tools with web search and code execution — using the
+  official Groq Model Context Protocol server.
+cardDescription: "Official Groq MCP: fast inference, vision, TTS/STT, batch processing & compound tools from Claude."
+seoTitle: "Groq MCP Server for Claude — Ultra-Fast Inference, Vision, TTS/STT & Compound Beta Tools"
+seoDescription: "Connect Claude to Groq with the official MCP server: query Groq's LLaMA/Mixtral/Whisper models for vision, text-to-speech, transcription, batch processing, and compound-beta agentic tools with web search and code execution."
+author: Groq
+authorProfileUrl: "https://github.com/groq"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/groq/groq-mcp-server"
+websiteUrl: "https://console.groq.com"
+repoUrl: "https://github.com/groq/groq-mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/groq/groq-mcp-server/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add groq -e GROQ_API_KEY=your-api-key -- uvx groq-mcp"
+usageSnippet: >-
+  Ask Claude to describe an image using a Groq vision model, convert text to speech with
+  Arista-PlayAI voice, transcribe an audio file with Whisper-large-v3, process a batch of
+  prompts from a JSONL file, or use compound-beta to retrieve live data from the web and
+  compute with it.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "groq": {
+        "command": "uvx",
+        "args": ["groq-mcp"],
+        "env": {
+          "GROQ_API_KEY": "your-api-key"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "groq": {
+        "command": "uvx",
+        "args": ["groq-mcp"],
+        "env": {
+          "GROQ_API_KEY": "your-api-key",
+          "BASE_OUTPUT_PATH": "/path/to/output/directory"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Groq API key (free at console.groq.com)."
+  - "Python with `uv` installed: `pip install uv` or `brew install uv`."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The `compound-beta` tools include code execution and live web search — code runs in Groq's sandboxed environment but web requests are made to external URLs."
+  - "Text-to-speech and speech-to-text outputs are saved to `BASE_OUTPUT_PATH` (default: ~/Desktop) — ensure this path has appropriate access controls."
+privacyNotes:
+  - "Text, images, and audio passed to Groq tools are sent to Groq's API for inference — do not pass sensitive or personally identifiable data."
+  - "Your `GROQ_API_KEY` is passed as an environment variable — treat it as a secret and store it securely."
+disclosure: "Groq is a commercial AI inference provider. The MCP server is officially maintained by Groq."
+tags:
+  - groq
+  - inference
+  - llm
+  - vision
+  - speech
+  - audio
+  - batch-processing
+keywords:
+  - groq mcp server
+  - groq mcp claude
+  - fast inference mcp claude code
+  - groq vision mcp
+  - text to speech mcp claude
+  - whisper transcription mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Groq MCP Server** is the official Model Context Protocol server from
+[Groq](https://groq.com), the AI inference company behind GroqCloud. It lets Claude access
+Groq's ultra-fast inference for text generation, vision, text-to-speech, speech-to-text,
+and batch processing — plus the `compound-beta` agentic system that adds live web search and
+code execution to Groq model calls. Licensed under MIT.
+
+## Key capabilities
+
+- **Text generation** — query any Groq-hosted model (LLaMA 3, Mixtral, Gemma, DeepSeek) at
+  Groq's low-latency speeds.
+- **Vision** — describe images, extract structured JSON, and analyze visual data using Groq's
+  vision models.
+- **Text-to-speech (TTS)** — convert text to audio with voices from PlayAI (Arista, Atlas, etc.).
+- **Speech-to-text (STT)** — transcribe and translate audio files using `whisper-large-v3`.
+- **Batch processing** — process thousands of prompts from a JSONL file asynchronously.
+- **Compound-beta** — Groq's agentic tool system: web search + code execution in a single
+  Groq inference call; can fetch live data, compute with it, and return results.
+- **Documentation access** — built-in access to Groq documentation for building applications.
+
+## How it compares
+
+| Server | Text gen | Vision | TTS/STT | Batch | Agentic tools | Inference speed |
+|---|---|---|---|---|---|---|
+| **Groq MCP** | Yes | Yes | Yes | Yes | Yes (compound-beta) | Ultra-fast (LPU) |
+| OpenAI MCP | Yes | Yes | Yes | Yes | Yes (Assistants) | Standard |
+| Anthropic MCP | Yes | Yes | No | No | No | Standard |
+| Ollama MCP | Yes | Yes | No | No | No | Local |
+
+Groq's LPU hardware delivers inference speeds up to 10× faster than GPU-based providers,
+making it ideal for latency-sensitive workflows and real-time voice applications.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add groq -e GROQ_API_KEY=your-api-key -- uvx groq-mcp
+```
+
+Get your free API key at [console.groq.com](https://console.groq.com).
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "groq": {
+      "command": "uvx",
+      "args": ["groq-mcp"],
+      "env": {
+        "GROQ_API_KEY": "your-api-key",
+        "BASE_OUTPUT_PATH": "/path/to/outputs"
+      }
+    }
+  }
+}
+```
+
+### Configuration generation
+
+```bash
+# Install the package
+pip install groq-mcp
+
+# Auto-generate and save configuration
+groq-mcp-config --api-key=your-api-key
+```
+
+## Requirements
+
+- A Groq API key (free tier available).
+- Python with `uv` installed (`pip install uv`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Compound-beta web search and code execution are sandboxed by Groq.
+- TTS/STT files are saved locally to `BASE_OUTPUT_PATH` — keep this path private if outputs
+  contain sensitive content.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `groq/groq-mcp-server` (MIT, 42 stars) documents the `groq-mcp`
+  PyPI package installed via `uvx`, `GROQ_API_KEY` and `BASE_OUTPUT_PATH` configuration,
+  vision (image analysis), TTS (PlayAI voices), STT (Whisper), batch processing (JSONL),
+  the compound-beta agentic system (web search + code execution), and the `groq-mcp-config`
+  utility for auto-generating client configs.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  setup pattern used above.

@@ -1,0 +1,173 @@
+---
+title: Inngest MCP Server for Claude
+slug: inngest-mcp-server
+category: mcp
+description: >-
+  Connect Claude to your local Inngest Dev Server — list functions, send events, invoke functions,
+  monitor run status, and search Inngest documentation — with the built-in Inngest Model Context
+  Protocol server that ships with the Inngest dev environment.
+cardDescription: "Built-in Inngest MCP: list functions, send events, invoke & monitor runs from Claude."
+seoTitle: "Inngest MCP Server for Claude — Dev Server MCP for Durable Functions & Workflows"
+seoDescription: "Connect Claude to your Inngest Dev Server via MCP: list registered functions, send events, invoke functions directly, monitor run status, and search Inngest docs — locally with no API key required."
+author: Inngest
+authorProfileUrl: "https://github.com/inngest"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/inngest/website/main/pages/docs/ai-dev-tools/mcp.mdx"
+websiteUrl: "https://www.inngest.com"
+repoUrl: "https://github.com/inngest/inngest"
+retrievalSources:
+  - "https://raw.githubusercontent.com/inngest/website/main/pages/docs/ai-dev-tools/mcp.mdx"
+  - "https://raw.githubusercontent.com/inngest/inngest/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http inngest-dev http://127.0.0.1:8288/mcp"
+usageSnippet: >-
+  Start the Inngest Dev Server with `npx inngest-cli@latest dev`, then ask Claude to list all
+  registered functions, send a test event, invoke a function directly, or monitor a run — using
+  natural language against your local dev environment.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "inngest-dev": {
+        "type": "http",
+        "url": "http://127.0.0.1:8288/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "inngest-dev": {
+        "type": "http",
+        "url": "http://127.0.0.1:8288/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js installed — run `npx inngest-cli@latest dev` to start the Inngest Dev Server before connecting."
+  - "The Inngest Dev Server must be running at `http://localhost:8288` for the MCP endpoint to be available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The MCP server runs locally alongside your Inngest dev server — it has no network access and cannot affect production environments."
+  - "`send_event` and `invoke_function` trigger real function executions in your local dev environment; confirm before running functions with external side effects."
+privacyNotes:
+  - "Function definitions, event payloads, run logs, and Inngest documentation content from your local dev server are surfaced in Claude's context."
+  - "No API keys or credentials are required — the MCP server runs entirely on localhost without sending data to Inngest's servers."
+tags:
+  - inngest
+  - durable-functions
+  - background-jobs
+  - workflows
+  - event-driven
+  - devtools
+  - local-dev
+keywords:
+  - inngest mcp server
+  - inngest mcp claude
+  - durable functions mcp claude code
+  - inngest dev server mcp
+  - background jobs ai claude
+  - event driven workflows mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Inngest MCP Server** is built directly into the Inngest Dev Server. When you run
+`npx inngest-cli@latest dev`, the MCP endpoint is automatically available at
+`http://127.0.0.1:8288/mcp` — no additional install or API key required. It gives Claude direct
+access to your registered Inngest functions, event system, run monitoring, and documentation,
+enabling AI-assisted development for durable functions, workflows, and background jobs.
+
+The Inngest server is Apache-2.0 (SDKs) and SSPL (server/CLI).
+
+## Key capabilities
+
+- **Function discovery** — list all functions registered with the local dev server.
+- **Event triggering** — send arbitrary events to trigger functions and test workflows.
+- **Direct invocation** — invoke functions synchronously and get immediate results.
+- **Run monitoring** — fetch run status and poll for completion on asynchronous workflows.
+- **Documentation access** — search and read Inngest documentation without leaving your IDE.
+
+## Tools
+
+| Tool | Category | Purpose |
+|---|---|---|
+| `list_functions` | Event Management | List all registered Inngest functions |
+| `send_event` | Event Management | Trigger a function via an Inngest event |
+| `invoke_function` | Event Management | Directly invoke a function and get its result |
+| `get_run_status` | Execution Monitoring | Fetch the status of a specific run |
+| `poll_run_status` | Execution Monitoring | Wait for a run to complete and return result |
+| `grep_docs` | Documentation | Search Inngest documentation offline |
+| `read_doc` | Documentation | Read a specific Inngest documentation page |
+| `list_docs` | Documentation | List available Inngest documentation pages |
+
+## How it compares
+
+| Server | Function listing | Event triggering | Run monitoring | Docs search | Auth |
+|---|---|---|---|---|---|
+| **Inngest MCP** | Yes | Yes | Yes | Yes | None (local) |
+| Temporal MCP | Yes | Limited | Yes | No | API key |
+| Trigger.dev MCP | Yes | Yes | Limited | No | CLI session |
+| BullMQ MCP | Limited | Yes | Limited | No | Redis creds |
+
+Inngest's MCP is the only background-job/workflow server that ships with offline documentation
+search, requires zero authentication, and runs entirely on localhost with no external dependencies.
+
+## Installation
+
+### Step 1: Start the Inngest Dev Server
+
+```bash
+npx inngest-cli@latest dev
+```
+
+The MCP endpoint becomes available at `http://127.0.0.1:8288/mcp` automatically.
+
+### Step 2: Connect Claude Code
+
+```bash
+claude mcp add --transport http inngest-dev http://127.0.0.1:8288/mcp
+```
+
+### Step 2 (alternative): Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "inngest-dev": {
+      "type": "http",
+      "url": "http://127.0.0.1:8288/mcp"
+    }
+  }
+}
+```
+
+## Requirements
+
+- Node.js (for `npx inngest-cli`) or the Inngest binary from GitHub Releases.
+- The Inngest Dev Server running at `http://localhost:8288`.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Entirely local — no API keys, no network traffic to Inngest's servers.
+- `send_event` and `invoke_function` run against your local dev server only.
+- For production Inngest workflows, use the Inngest Cloud dashboard separately.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official Inngest documentation MDX source at
+  `raw.githubusercontent.com/inngest/website/main/pages/docs/ai-dev-tools/mcp.mdx` documents the
+  MCP endpoint at `http://127.0.0.1:8288/mcp`, all eight tools (send_event, list_functions,
+  invoke_function, get_run_status, poll_run_status, grep_docs, read_doc, list_docs),
+  the zero-authentication local model, and the Claude Code install command.
+- Main Inngest repository `inngest/inngest` README confirms `npx inngest-cli@latest dev` as the
+  command to start the dev server.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the `--transport http`
+  connection pattern used above.

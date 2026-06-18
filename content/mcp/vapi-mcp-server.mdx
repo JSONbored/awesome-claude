@@ -1,0 +1,188 @@
+---
+title: Vapi MCP Server for Claude
+slug: vapi-mcp-server
+category: mcp
+description: >-
+  Build and manage AI voice assistants and phone agents from Claude — create assistants, make
+  outbound calls, manage phone numbers, and configure custom tools — with the official Vapi Model
+  Context Protocol server backed by the Vapi API.
+cardDescription: "Official Vapi MCP: voice assistants, outbound calls & phone number management from Claude."
+seoTitle: "Vapi MCP Server for Claude — Voice AI Assistants & Phone Agents via Claude Code"
+seoDescription: "Connect Claude to Vapi with the official MCP server: create voice assistants, start outbound calls, manage phone numbers, and configure custom tools — via OAuth or API key. MIT-licensed, runs via npx."
+author: Vapi
+authorProfileUrl: "https://github.com/VapiAI"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/VapiAI/mcp-server"
+websiteUrl: "https://vapi.ai"
+repoUrl: "https://github.com/VapiAI/mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/VapiAI/mcp-server/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add vapi -- npx -y @vapi-ai/mcp-server"
+usageSnippet: >-
+  Ask Claude to list your Vapi assistants, create a new voice assistant, start an outbound call,
+  buy a phone number, or configure a custom tool — using natural language through the Vapi API.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "vapi": {
+        "command": "npx",
+        "args": ["-y", "@vapi-ai/mcp-server"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "vapi": {
+        "command": "npx",
+        "args": ["-y", "@vapi-ai/mcp-server"],
+        "env": {
+          "VAPI_TOKEN": "your-vapi-api-key"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Vapi account — authenticate via browser OAuth on first use (no API key copy-paste required)."
+  - "Node.js (v18+) with `npx` available, and an MCP client such as Claude Code or Claude Desktop."
+  - "To use an API key instead of OAuth, get one from the Vapi dashboard under API Keys."
+safetyNotes:
+  - "`vapi_create_call` starts a real outbound phone call immediately — confirm the recipient number before invoking."
+  - "`vapi_buy_phone_number` purchases a real phone number and incurs billing charges on your Vapi account."
+  - "Write operations (create, update, delete) for assistants, calls, and phone numbers are irreversible in some cases — review before confirming."
+privacyNotes:
+  - "Assistant configurations, call history, phone numbers, and custom tool definitions from your Vapi account are surfaced in Claude's context."
+  - "OAuth authenticates without storing credentials; if using an API key, store it in Claude Code's MCP config rather than shell history."
+tags:
+  - vapi
+  - voice-ai
+  - phone-agents
+  - assistants
+  - telephony
+  - ai-agents
+  - voice
+keywords:
+  - vapi mcp server
+  - vapi mcp claude
+  - voice assistant mcp claude code
+  - ai phone agent mcp claude
+  - vapi claude integration
+  - voice ai mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Vapi MCP Server** is the official Model Context Protocol server from Vapi. It gives Claude
+direct access to your Vapi account — voice assistants, outbound calls, phone numbers, and custom
+tools — so you can build and manage AI phone agents using natural language. Authentication is via
+browser OAuth on first use (no API key required), or optionally via a `VAPI_TOKEN` environment
+variable. Licensed under MIT.
+
+A hosted remote endpoint is also available at `https://mcp.vapi.ai/mcp` via `mcp-remote`.
+
+## Key capabilities
+
+- **Voice assistants** — create, configure, update, and delete AI voice assistants with custom
+  voices, prompts, and conversation flows.
+- **Outbound calls** — start immediate or scheduled outbound phone calls via `vapi_create_call`.
+- **Phone numbers** — browse, purchase, configure, and release phone numbers.
+- **Custom tools** — register API integrations and custom function tools for assistants to invoke.
+- **OAuth login** — sign in and out via browser without touching API keys.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `vapi_list_assistants` / `vapi_get_assistant` | Browse assistant configurations |
+| `vapi_create_assistant` / `vapi_update_assistant` / `vapi_delete_assistant` | Manage assistants |
+| `vapi_list_calls` / `vapi_get_call` | Browse call history and details |
+| `vapi_create_call` | Start an outbound call (immediate or scheduled) |
+| `vapi_list_phone_numbers` / `vapi_buy_phone_number` | Manage phone numbers |
+| `vapi_list_tools` / `vapi_create_tool` / `vapi_update_tool` | Manage custom API tools |
+| `vapi_login` / `vapi_logout` | Manage OAuth session |
+
+## How it compares
+
+| Server | Voice assistants | Outbound calls | Phone numbers | Custom tools | Auth |
+|---|---|---|---|---|---|
+| **Vapi MCP** | Full CRUD | Yes | Buy + manage | Full CRUD | OAuth / API key |
+| Twilio MCP | No | Yes | Buy + manage | No | API key |
+| ElevenLabs MCP | Voice only | No | No | No | API key |
+| Bland AI MCP | Limited | Yes | Limited | No | API key |
+
+Vapi is the only voice AI MCP server that provides full assistant lifecycle management (create,
+configure, deploy), outbound call control, and custom tool registration in a single integration.
+
+## Installation
+
+### Claude Code (OAuth — recommended)
+
+```bash
+claude mcp add vapi -- npx -y @vapi-ai/mcp-server
+```
+
+On first use, Claude Code will open a browser window for Vapi OAuth sign-in — no API key required.
+
+### Claude Code (API key)
+
+```bash
+claude mcp add vapi -e VAPI_TOKEN=your-api-key -- npx -y @vapi-ai/mcp-server
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "vapi": {
+      "command": "npx",
+      "args": ["-y", "@vapi-ai/mcp-server"],
+      "env": {
+        "VAPI_TOKEN": "your-vapi-api-key"
+      }
+    }
+  }
+}
+```
+
+### Remote (hosted) endpoint
+
+```json
+{
+  "mcpServers": {
+    "vapi": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.vapi.ai/mcp"]
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Vapi account (sign up free at vapi.ai).
+- Node.js v18+ with `npx`.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- OAuth flow stores credentials securely without API key exposure.
+- `vapi_create_call` triggers real phone calls — confirm recipient before invoking.
+- `vapi_buy_phone_number` incurs real charges — review before confirming.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `VapiAI/mcp-server` (MIT, 55+ stars) documents the
+  `@vapi-ai/mcp-server` npm package, OAuth flow, `VAPI_TOKEN` env var, hosted endpoint at
+  `https://mcp.vapi.ai/mcp`, and all 20 tools across assistants, calls, phone numbers, and
+  custom tools.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  setup pattern used above.

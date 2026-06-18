@@ -1,0 +1,168 @@
+---
+title: Jina AI MCP Server for Claude
+slug: jina-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Jina AI's Reader, Search, Embeddings, and Reranker APIs — read URLs as
+  clean markdown, run web and academic searches, extract PDFs, and rerank results — with the
+  official Jina AI remote MCP server.
+cardDescription: "Official Jina AI MCP: read URLs, web/arxiv search, embeddings & reranker from Claude."
+seoTitle: "Jina AI MCP Server for Claude — Web Reader, Search & Embeddings"
+seoDescription: "Connect Claude to Jina AI with the official remote MCP server: read any URL as clean markdown, run web and arXiv searches, extract PDFs, classify text, and rerank results — no install required."
+author: Jina AI
+authorProfileUrl: "https://github.com/jina-ai"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/jina-ai/MCP"
+websiteUrl: "https://jina.ai"
+repoUrl: "https://github.com/jina-ai/MCP"
+retrievalSources:
+  - "https://github.com/jina-ai/MCP"
+  - "https://jina.ai/api-dashboard/"
+  - "https://docs.jina.ai/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add -s user --transport http jina https://mcp.jina.ai/v1 --header \"Authorization: Bearer ${JINA_API_KEY}\""
+usageSnippet: >-
+  Ask Claude to read a URL as markdown, search the web or arXiv, extract a PDF, or rerank a list of documents by relevance.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "jina-mcp-server": {
+        "command": "npx",
+        "args": ["mcp-remote", "https://mcp.jina.ai/v1",
+                 "--header", "Authorization: Bearer ${JINA_API_KEY}"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "jina-mcp-server": {
+        "command": "npx",
+        "args": ["mcp-remote", "https://mcp.jina.ai/v1",
+                 "--header", "Authorization: Bearer ${JINA_API_KEY}"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Jina AI API key (free at jina.ai) — optional for basic read/search but required for parallel search and higher rate limits."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server is hosted remotely by Jina AI — all requests leave your machine and are processed by Jina's infrastructure."
+  - "URL read and PDF extract tools fetch third-party content on your behalf; review the content before using it in sensitive contexts."
+privacyNotes:
+  - "URLs you pass to read_url, search_web, and similar tools are sent to Jina AI's servers; check Jina's privacy policy for data handling."
+  - "JINA_API_KEY is a secret — store it in your environment or MCP client config, never in shared repositories."
+tags:
+  - jina
+  - web-search
+  - embeddings
+  - reranker
+  - web-reader
+  - rag
+  - research
+keywords:
+  - jina ai mcp server
+  - jina reader mcp claude
+  - web search mcp claude
+  - arxiv search mcp
+  - url to markdown mcp
+  - embeddings reranker mcp claude
+  - jina ai claude integration
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Jina AI MCP Server** is the official remote Model Context Protocol server from Jina AI. It
+gives Claude access to Jina's full Search Foundation stack: Reader (URL-to-markdown), web and
+academic search, image search, embeddings, reranker, and PDF extraction. The server is hosted at
+`https://mcp.jina.ai/v1` — no local installation is required. It ships 19 tools and is licensed
+under Apache-2.0.
+
+Basic tools (reading a URL, single search) work without an API key but are rate-limited. A free
+key from [jina.ai](https://jina.ai) unlocks parallel search, higher quotas, and all premium APIs.
+
+## Key capabilities
+
+- **`read_url`** — fetch any URL and convert it to clean, LLM-friendly markdown.
+- **`capture_screenshot_url`** — capture a screenshot of a URL.
+- **`parallel_read_url`** — fetch multiple URLs simultaneously.
+- **`search_web`** — run a web search and return structured results.
+- **`search_arxiv`** — search academic papers on arXiv.
+- **`search_ssrn`** — search papers on SSRN.
+- **`search_images`** — search the web for images.
+- **`sort_by_relevance`** — rerank a list of text passages by relevance to a query.
+- **`classify_text`** — classify text into provided categories.
+- **`deduplicate_strings`** — remove near-duplicate items from a list.
+- **`extract_pdf`** — extract and convert PDF content to markdown.
+- **`expand_query`** — generate richer search query variants.
+- **`primer`** — fetch a short summary of a topic to ground a conversation.
+- **`guess_datetime_url`** — estimate the publish date of a URL.
+
+## How it compares
+
+| Server | Reader | Web search | Academic search | Embeddings/Reranker | Transport |
+|---|---|---|---|---|---|
+| **Jina AI MCP** | Yes (19 tools) | Yes | arXiv + SSRN | Yes | Remote HTTP |
+| Brave Search MCP | No | Yes | No | No | Local/Remote |
+| Exa MCP | No | Yes (neural) | Yes | No | Remote |
+| Tavily MCP | No | Yes | No | No | Remote |
+| Firecrawl MCP | Yes (crawl) | No | No | No | Remote |
+
+Jina is the only MCP server combining URL-to-markdown, parallel web + academic search, and
+embeddings/reranker in a single endpoint — making it well-suited for RAG pipelines and research
+workflows.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add -s user --transport http jina https://mcp.jina.ai/v1 \
+  --header "Authorization: Bearer ${JINA_API_KEY}"
+```
+
+Omit the `--header` flag if you want to try without an API key (rate-limited).
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "jina-mcp-server": {
+      "command": "npx",
+      "args": [
+        "mcp-remote", "https://mcp.jina.ai/v1",
+        "--header", "Authorization: Bearer ${JINA_API_KEY}"
+      ]
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Jina AI API key (free tier available at [jina.ai](https://jina.ai)).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- The server is fully remote — your API key travels in the `Authorization` header; use HTTPS.
+- Treat `JINA_API_KEY` as a secret: store it in your shell environment or MCP client config, never
+  commit it.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- The official repository `github.com/jina-ai/MCP` (Apache-2.0) documents the remote endpoint,
+  the 19 tools, the optional API-key header, and the Claude Code installation command.
+- Jina's API dashboard confirms API key issuance and rate-limit tiers.
+- Jina's developer documentation describes the Reader, Search, Embeddings, and Reranker services
+  that back the MCP tools.
+- Claude Code's MCP documentation describes the `--transport http` flag and the `--header` pattern
+  used above.

@@ -1,0 +1,140 @@
+---
+title: Semgrep MCP Server for Claude
+slug: semgrep-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Semgrep — scan code for security vulnerabilities, run custom rules, inspect the
+  AST, and pull AppSec Platform findings — with the official Semgrep Model Context Protocol server.
+cardDescription: "Official Semgrep MCP server: scan code for vulnerabilities and run custom rules from Claude."
+seoTitle: "Semgrep MCP Server for Claude — Scan Code for Vulnerabilities"
+seoDescription: "Connect Claude to Semgrep with the official MCP server: scan code for security issues, run custom rules, inspect the AST, and fetch AppSec Platform findings over stdio or HTTP."
+author: Semgrep
+authorProfileUrl: "https://semgrep.dev"
+dateAdded: "2026-06-17"
+documentationUrl: "https://github.com/semgrep/semgrep/tree/develop/cli/src/semgrep/mcp"
+websiteUrl: "https://semgrep.dev"
+repoUrl: "https://github.com/semgrep/semgrep"
+retrievalSources:
+  - "https://github.com/semgrep/semgrep/tree/develop/cli/src/semgrep/mcp"
+  - "https://semgrep.dev/docs/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add semgrep -- uvx semgrep-mcp"
+usageSnippet: >-
+  Ask Claude to scan the current code for security issues, run a custom Semgrep rule, or list findings.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "semgrep": {
+        "command": "uvx",
+        "args": ["semgrep-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "semgrep": {
+        "command": "uvx",
+        "args": ["semgrep-mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "uv (uvx) to run semgrep-mcp, or Docker (ghcr.io/semgrep/mcp), or the hosted endpoint (https://mcp.semgrep.ai/mcp)."
+  - "Optional: a Semgrep AppSec Platform token (SEMGREP_APP_TOKEN) to fetch platform findings."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The scanning tools read your source code to analyze it; run the server only on code you trust it to access."
+  - "Custom-rule scanning executes Semgrep rules you provide — review rules from untrusted sources before running."
+privacyNotes:
+  - "Code snippets, scan results, and findings enter the MCP client context and the model's prompt; the hosted endpoint also sends code to Semgrep's service."
+  - "SEMGREP_APP_TOKEN is a secret — keep it in the client config or environment, never in shared repositories."
+tags:
+  - semgrep
+  - security
+  - sast
+  - code-scanning
+  - vulnerabilities
+keywords:
+  - semgrep mcp server
+  - connect claude to semgrep
+  - scan code for vulnerabilities with claude
+  - semgrep sast mcp claude code
+  - custom semgrep rules mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Semgrep MCP Server** is the official Model Context Protocol server for Semgrep, the static
+analysis (SAST) tool. It lets Claude scan code for security vulnerabilities, run custom rules,
+inspect the abstract syntax tree, and pull findings from the Semgrep AppSec Platform — in natural
+language. It runs locally via `uvx semgrep-mcp` or Docker, or as a hosted endpoint, supports stdio,
+streamable-HTTP, and SSE transports, and is licensed under MIT.
+
+## Key capabilities
+
+| Tool | What it does |
+| --- | --- |
+| `security_check` | Scan code for security vulnerabilities |
+| `semgrep_scan` | Scan files with a config string |
+| `semgrep_scan_with_custom_rule` | Scan with a custom Semgrep rule |
+| `get_abstract_syntax_tree` | Output the AST for code |
+| `semgrep_findings` | Fetch findings from the AppSec Platform |
+| `supported_languages` | List supported languages |
+| `semgrep_rule_schema` | Return the Semgrep rule JSON Schema |
+
+Semgrep focuses on static analysis of your own code; pair it with a dependency/supply-chain scanner
+(for example Snyk or Socket) for full coverage.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add semgrep -- uvx semgrep-mcp
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "semgrep": {
+      "command": "uvx",
+      "args": ["semgrep-mcp"]
+    }
+  }
+}
+```
+
+Docker (`docker run -i --rm ghcr.io/semgrep/mcp -t stdio`) and a hosted endpoint
+(`https://mcp.semgrep.ai/mcp`, streamable-HTTP) are also available. Set `SEMGREP_APP_TOKEN` to fetch
+AppSec Platform findings.
+
+## Requirements
+
+- `uv` (`uvx`), Docker, or the hosted endpoint.
+- Optional `SEMGREP_APP_TOKEN` for platform findings.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- The scanning tools read your source code — run the server only on code you trust it to access.
+- Custom-rule scanning executes rules you supply; review rules from untrusted sources first.
+- Treat `SEMGREP_APP_TOKEN` as a secret.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- The official Semgrep MCP code (in `github.com/semgrep/semgrep` under
+  `cli/src/semgrep/mcp`, MIT) documents the `semgrep-mcp` package, the Docker image
+  `ghcr.io/semgrep/mcp`, the hosted `mcp.semgrep.ai/mcp` endpoint, stdio/streamable-HTTP/SSE
+  transports, the optional `SEMGREP_APP_TOKEN`, and the seven tools above.
+- Semgrep's documentation describes the underlying static-analysis engine and rules.
+- Claude Code's MCP documentation describes the connector setup pattern used here.

@@ -1,0 +1,150 @@
+---
+title: Clerk MCP Server for Claude
+slug: clerk-mcp-server
+category: mcp
+description: >-
+  Get accurate Clerk SDK snippets and implementation patterns directly inside Claude — for
+  authentication flows, Organizations, custom sign-in, B2B SaaS, and more — with the official
+  Clerk remote MCP server.
+cardDescription: "Official Clerk MCP: Clerk SDK snippets and auth implementation patterns inside Claude."
+seoTitle: "Clerk MCP Server for Claude — Auth SDK Snippets & Implementation Patterns"
+seoDescription: "Connect Claude to Clerk's official MCP server: get framework-specific SDK snippets and implementation patterns for authentication, Organizations, and B2B SaaS features — directly in Claude Code or Desktop."
+author: Clerk
+authorProfileUrl: "https://github.com/clerk"
+dateAdded: "2026-06-18"
+documentationUrl: "https://clerk.com/docs/guides/ai/mcp/clerk-mcp-server"
+websiteUrl: "https://clerk.com"
+repoUrl: "https://github.com/clerk/mcp-tools"
+retrievalSources:
+  - "https://clerk.com/docs/guides/ai/mcp/clerk-mcp-server"
+  - "https://github.com/clerk/mcp-tools"
+  - "https://clerk.com/changelog/2026-01-20-clerk-mcp-server"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add clerk --transport http https://mcp.clerk.com/mcp"
+usageSnippet: >-
+  Ask Claude for the correct Clerk SDK snippet for a specific feature — sign-in, Organizations, custom flows, or B2B SaaS patterns — and it will retrieve an up-to-date, framework-specific example from Clerk's server.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "clerk": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "https://mcp.clerk.com/mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "clerk": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "https://mcp.clerk.com/mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "No API keys required — the Clerk MCP server is publicly accessible."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server is read-only — it serves documentation and SDK snippets only; it does not access your Clerk dashboard or application data."
+  - "No authentication credentials or secret keys are transmitted."
+privacyNotes:
+  - "Queries you send (e.g. feature names, framework) are sent to mcp.clerk.com — Clerk's hosted infrastructure; no personal or application data is required."
+tags:
+  - clerk
+  - authentication
+  - auth
+  - sdk
+  - developer-tools
+  - next-js
+  - react
+keywords:
+  - clerk mcp server
+  - clerk sdk snippets claude
+  - clerk authentication mcp
+  - clerk next.js mcp
+  - clerk implementation patterns ai
+  - auth sdk mcp claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Clerk MCP Server** is the official Model Context Protocol server from Clerk. It provides AI
+coding assistants — Claude, Cursor, GitHub Copilot — with accurate, up-to-date Clerk SDK snippets
+and implementation patterns, eliminating hallucinated API calls and stale code examples. The server
+is hosted at `https://mcp.clerk.com/mcp`, requires no authentication, and is free to use.
+
+Clerk launched this server specifically to improve the quality of AI-assisted Clerk integrations,
+where outdated training data often produces incorrect SDK usage.
+
+## Key capabilities
+
+- **`clerk_sdk_snippet`** — retrieve a framework-specific code snippet for a particular Clerk
+  feature (sign-in, Organizations, custom flows, session management, etc.).
+- **`list_clerk_sdk_snippets`** — list all available snippets and bundle categories.
+
+Snippet bundles include: `b2b-saas`, `organizations`, `custom-flows`, `authentication`,
+and framework-specific patterns for Next.js, React, and other supported frameworks.
+
+## How it compares
+
+| Server | Auth SDK docs | Framework-specific | No credentials | Hosted |
+|---|---|---|---|---|
+| **Clerk MCP** | Yes (Clerk) | Next.js, React, Express | Yes | Yes |
+| Auth0 MCP | Auth0 docs | Limited | API key | No |
+| WorkOS MCP | WorkOS guides | Limited | API key | No |
+| Supabase MCP | Auth + DB | Limited | API key | No |
+
+Clerk's MCP is notable for requiring zero configuration — connect and immediately get accurate
+snippets without any account or API key.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add clerk --transport http https://mcp.clerk.com/mcp
+```
+
+Then run `/mcp` in a Claude Code session to verify the connection.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "clerk": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.clerk.com/mcp"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop after saving.
+
+## Requirements
+
+- No API keys or accounts required.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- The server is read-only (SDK snippets + documentation only) — no write access, no account
+  connection, no credentials required.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Clerk's official documentation at `clerk.com/docs/guides/ai/mcp/clerk-mcp-server` confirms the
+  remote endpoint `https://mcp.clerk.com/mcp`, the two tools (`clerk_sdk_snippet` and
+  `list_clerk_sdk_snippets`), the snippet bundles, and the no-auth requirement.
+- Clerk's changelog entry confirms the server launched in public beta in January 2026.
+- The `github.com/clerk/mcp-tools` repository documents Clerk's MCP SDK for building auth-enabled
+  MCP integrations and confirms the organization's MCP toolchain.
+- Claude Code's MCP documentation describes the `--transport http` installation pattern used above.
