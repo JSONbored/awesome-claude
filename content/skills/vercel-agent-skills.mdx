@@ -1,0 +1,254 @@
+---
+title: Vercel Agent Skills
+slug: vercel-agent-skills
+category: skills
+description: >-
+  Vercel Labs' official Agent Skills collection for AI coding agents working on
+  Vercel deployments, React and Next.js performance, React Native, web design
+  guidelines, writing guidelines, composition patterns, view transitions, CLI
+  token workflows, and Vercel optimization audits.
+cardDescription: >-
+  Official Vercel Labs skills for React, Next.js, deployments, Vercel CLI
+  tokens, optimization audits, design review, writing review, and mobile UI.
+seoTitle: Vercel Agent Skills for Claude Code, Codex, React, Next.js, and Deployments
+seoDescription: >-
+  Install Vercel Agent Skills for AI coding agents that need React and Next.js
+  best practices, deploy-to-Vercel workflows, Vercel optimization audits,
+  design review, writing review, and token-safe Vercel CLI guidance.
+author: Vercel Labs
+authorProfileUrl: "https://github.com/vercel-labs"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/vercel-labs/agent-skills"
+documentationUrl: "https://github.com/vercel-labs/agent-skills#readme"
+websiteUrl: "https://skills.sh/vercel-labs/agent-skills"
+downloadUrl: "https://github.com/vercel-labs/agent-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add vercel-labs/agent-skills"
+usageSnippet: >-
+  Install the Vercel Labs skill collection, then let your agent invoke the
+  focused skill for React performance, Vercel deploys, token-safe CLI work,
+  project optimization, design review, writing review, React Native, or view
+  transitions.
+copySnippet: |-
+  npx skills add vercel-labs/agent-skills
+
+  # Focused examples when your installer supports --skill
+  npx skills add vercel-labs/agent-skills --skill vercel-optimize
+  npx skills add vercel-labs/agent-skills --skill deploy-to-vercel
+  npx skills add vercel-labs/agent-skills --skill vercel-react-best-practices
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/vercel-labs/agent-skills"
+  - "https://raw.githubusercontent.com/vercel-labs/agent-skills/main/README.md"
+  - "https://raw.githubusercontent.com/vercel-labs/agent-skills/main/skills.sh.json"
+  - "https://raw.githubusercontent.com/vercel-labs/agent-skills/main/skills/vercel-optimize/SKILL.md"
+  - "https://raw.githubusercontent.com/vercel-labs/agent-skills/main/skills/react-best-practices/SKILL.md"
+  - "https://raw.githubusercontent.com/vercel-labs/agent-skills/main/skills/deploy-to-vercel/SKILL.md"
+  - "https://raw.githubusercontent.com/vercel-labs/agent-skills/main/skills/vercel-cli-with-tokens/SKILL.md"
+  - "https://raw.githubusercontent.com/vercel-labs/agent-skills/main/skills/web-design-guidelines/SKILL.md"
+  - "https://raw.githubusercontent.com/vercel-labs/agent-skills/main/skills/writing-guidelines/SKILL.md"
+  - "https://skills.sh/vercel-labs/agent-skills"
+testedPlatforms:
+  - Agent Skills compatible hosts
+  - Claude Code compatible skill installers
+  - Codex compatible skill installers
+  - Cursor compatible skill installers
+prerequisites:
+  - "An Agent Skills compatible host or local installer that can install GitHub-hosted skills."
+  - "A Vercel, React, Next.js, React Native, design-review, writing-review, or deployment task where Vercel's guidance applies."
+  - "Vercel CLI and an authenticated account or token only for skills that deploy, inspect, or optimize a Vercel project."
+  - "Explicit approval before an agent commits, pushes, deploys, links a project, modifies environment variables, or runs account-scoped Vercel commands."
+safetyNotes:
+  - "The deploy-to-vercel and Vercel CLI token skills can guide agents toward git pushes, preview deployments, Vercel project linking, environment variable changes, and account-scoped CLI calls; keep human approval on those actions."
+  - "The vercel-cli-with-tokens skill includes token-handling workflows. Prefer environment variables over command-line token flags and avoid echoing secrets into prompts, logs, screenshots, or public PRs."
+  - "The vercel-optimize skill reads Vercel metrics, usage, project configuration, and code scan results; verify the linked project and team scope before collecting or acting on recommendations."
+  - "The web-design-guidelines and writing-guidelines skills fetch current upstream rule documents at use time, so review fetched guidance before treating output as policy."
+  - "React, Next.js, and React Native performance rules are strong defaults, but agents still need local tests, framework-version checks, and product-specific review before broad refactors."
+privacyNotes:
+  - "Deployment and optimization workflows may expose project names, team slugs, deployment URLs, routes, metrics, usage details, billing signals, source paths, build configuration, environment variable names, and CLI account context."
+  - "Keep VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID, API keys, environment values, claim URLs, deployment logs, and private preview URLs out of public artifacts unless intentionally disclosed."
+  - "Design, writing, React, and performance reviews can reveal proprietary UI, product copy, documentation strategy, source code, routes, and business priorities to the configured model provider."
+tags:
+  - vercel
+  - skills
+  - react
+  - nextjs
+  - deployment
+  - performance
+  - design-review
+  - writing
+keywords:
+  - Vercel Agent Skills
+  - Vercel skills
+  - Vercel Claude Code skills
+  - Vercel Codex skills
+  - React best practices skill
+  - Next.js performance skill
+  - deploy to Vercel skill
+  - Vercel optimize skill
+  - Vercel CLI token skill
+  - web design guidelines skill
+readingTime: 7
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Vercel Agent Skills
+
+`vercel-labs/agent-skills` is Vercel Labs' official collection of Agent Skills
+for AI coding agents. The repository packages reusable instructions and helper
+assets for React, Next.js, React Native, Vercel deployment, token-safe Vercel
+CLI use, Vercel project optimization, UI review, writing review, composition
+patterns, and React view transitions.
+
+Use this listing for the skill collection itself. Use separate Vercel platform,
+React, or Next.js entries when evaluating a runtime, framework, or service
+rather than installable agent instructions.
+
+## Knowledge Freshness
+
+Vercel platform behavior, CLI flags, deployment flows, Observability features,
+React and Next.js APIs, React Native patterns, and Vercel's design and writing
+guidelines can change quickly. The skills are durable workflow instructions,
+but exact CLI behavior, metrics availability, and framework APIs should be
+checked against current docs, installed tool versions, and fetched guideline
+sources before implementation.
+
+For Vercel optimization tasks, verify the linked project, team scope, Vercel
+CLI version, and metric availability before collecting data or recommending
+changes. For web and writing reviews, fetch the current upstream guideline
+documents referenced by those skills.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The upstream `vercel-labs/agent-skills` README.
+- The `skills.sh.json` grouping manifest.
+- Representative `SKILL.md` files for `vercel-optimize`,
+  `vercel-react-best-practices`, `deploy-to-vercel`,
+  `vercel-cli-with-tokens`, `web-design-guidelines`, and
+  `writing-guidelines`.
+- The public skills.sh listing for the collection.
+- Current GitHub repository metadata.
+
+## Core Workflow
+
+Install the full skill collection:
+
+```bash
+npx skills add vercel-labs/agent-skills
+```
+
+When your installer supports focused installs, choose the task-specific skill:
+
+```bash
+npx skills add vercel-labs/agent-skills --skill vercel-optimize
+npx skills add vercel-labs/agent-skills --skill deploy-to-vercel
+npx skills add vercel-labs/agent-skills --skill vercel-react-best-practices
+```
+
+Then invoke the relevant skill by task:
+
+```text
+Review this Next.js page with Vercel React best practices.
+```
+
+```text
+Audit this linked Vercel project for cost and performance issues.
+```
+
+```text
+Deploy this app to Vercel as a preview after I approve the push/deploy step.
+```
+
+## Capability Scope
+
+The README and manifest describe these skill areas:
+
+| Area | Example Skills |
+| --- | --- |
+| React and Next.js | `vercel-react-best-practices`, `vercel-composition-patterns`, `vercel-react-view-transitions` |
+| Vercel platform | `vercel-optimize`, `deploy-to-vercel`, `vercel-cli-with-tokens` |
+| Interface quality | `web-design-guidelines` |
+| Documentation and prose | `writing-guidelines` |
+| Mobile apps | `vercel-react-native-skills` |
+
+The collection can help an agent review performance rules, structure UI
+components, run Vercel optimization audits, choose a safe deployment path, and
+apply Vercel writing or interface standards. It does not provide account
+credentials, replace Vercel support, guarantee current API behavior, or remove
+the need for user approval before writes, pushes, deploys, or billing-relevant
+project actions.
+
+## Production Rules
+
+- Confirm the Vercel project and team scope before linking, deploying, reading
+  metrics, or applying account-level changes.
+- Never put Vercel tokens in command-line flags, public logs, committed files,
+  screenshots, or PR bodies.
+- Treat git pushes, project linking, production deploys, environment-variable
+  changes, and billing or usage recommendations as approval-gated actions.
+- Verify React, Next.js, React Native, and Vercel CLI versions before applying
+  large performance or deployment refactors.
+- Fetch current web-design and writing guideline sources before using those
+  review skills as policy.
+- Run local tests, preview builds, or deployment checks before treating an
+  agent-guided change as production-ready.
+
+## Use Cases
+
+- Ask Claude Code or Codex to review a React component against Vercel's
+  performance guidance.
+- Have an agent run a Vercel optimization audit that starts from metrics rather
+  than repo-wide guessing.
+- Use token-safe Vercel CLI guidance in non-interactive CI or remote coding
+  environments.
+- Ask an agent to deploy a preview while keeping production deploys and git
+  pushes behind explicit approval.
+- Review UI code or documentation against Vercel's current guideline sources.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The README describes the repository as a collection of Agent Skills for AI
+  coding agents and documents installation with
+  `npx skills add vercel-labs/agent-skills`.
+- The README lists Vercel, React, React Native, web design, writing,
+  composition, view-transition, deployment, and optimization skills.
+- `skills.sh.json` groups skills into React, Vercel, and Design categories.
+- `vercel-optimize/SKILL.md` requires metrics-first Vercel optimization,
+  explicit project/scope handling, Vercel CLI prerequisites, and
+  Observability-related caveats.
+- `deploy-to-vercel/SKILL.md` says preview deployments are the default unless
+  production is explicitly requested and includes approval gates before git
+  push deploys.
+- `vercel-cli-with-tokens/SKILL.md` warns against passing tokens as CLI flags
+  and prefers the `VERCEL_TOKEN` environment variable.
+- The README states the collection follows the Agent Skills format and lists
+  MIT under License; individual skills also include Vercel-authored metadata.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`,
+`content/agents/`, open pull requests, and repository-wide content for
+`vercel-labs/agent-skills`, Vercel Agent Skills, Vercel skills,
+`vercel-optimize`, `deploy-to-vercel`, `vercel-react-best-practices`, Vercel
+CLI token skill, and web design guidelines skill. Existing content includes
+React, Next.js, Vercel, and deployment-related skills, but no dedicated Vercel
+Labs Agent Skills collection entry, exact source URL duplicate, target file, or
+open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The collection
+is maintained by Vercel Labs; Vercel also offers hosted commercial platform
+services.
