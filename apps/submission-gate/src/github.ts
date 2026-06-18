@@ -488,6 +488,15 @@ type CheckRun = {
   details_url?: string;
   started_at?: string | null;
   completed_at?: string | null;
+  app?: {
+    slug?: string | null;
+    owner?: { login?: string | null } | null;
+  } | null;
+};
+
+const TRUSTED_CHECK_RUN_APP_SLUGS: Record<string, string[]> = {
+  "validate-content": ["github-actions"],
+  "Superagent Security Scan": ["superagent", "superagent-security-scan"],
 };
 
 type CommitStatus = {
@@ -529,8 +538,19 @@ function sortNewestFirst<
   });
 }
 
+function isTrustedCheckRun(run: CheckRun, name: string) {
+  const trustedAppSlugs = TRUSTED_CHECK_RUN_APP_SLUGS[name];
+  if (!trustedAppSlugs?.length) return true;
+  const appSlug = run.app?.slug || "";
+  return trustedAppSlugs.includes(appSlug);
+}
+
 function latestNamedCheckRun(checkRuns: CheckRun[], name: string) {
-  return sortNewestFirst(checkRuns.filter((run) => run.name === name))[0];
+  return sortNewestFirst(
+    checkRuns.filter(
+      (run) => run.name === name && isTrustedCheckRun(run, name),
+    ),
+  )[0];
 }
 
 function latestStatusContext(statuses: CommitStatus[], context: string) {
