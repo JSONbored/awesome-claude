@@ -198,7 +198,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const shouldLoadAnalytics = pathname !== "/brief/approve";
+  const shouldLoadAnalytics =
+    pathname !== "/brief/approve" &&
+    Boolean(siteConfig.umamiScriptUrl && siteConfig.umamiWebsiteId);
 
   return (
     <html lang="en">

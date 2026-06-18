@@ -2,8 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { getEnvString } from "@/lib/cloudflare-env.server";
 
-const DEFAULT_UPSTREAM = "https://tasty.aethereal.dev";
-
 /**
  * First-party umami tracker proxy.
  *
@@ -19,7 +17,8 @@ export const Route = createFileRoute("/u/script.js")({
   server: {
     handlers: {
       GET: async () => {
-        const upstream = getEnvString("UMAMI_UPSTREAM_URL") || DEFAULT_UPSTREAM;
+        const upstream = getEnvString("UMAMI_UPSTREAM_URL");
+        if (!upstream) return new Response("", { status: 404 });
         try {
           const response = await fetch(`${upstream}/script.js`, {
             signal: AbortSignal.timeout(8000),

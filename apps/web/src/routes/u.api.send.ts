@@ -11,7 +11,6 @@ import {
 import { logApiWarn } from "@/lib/api-logs";
 import { getEnvString } from "@/lib/cloudflare-env.server";
 
-const DEFAULT_UPSTREAM = "https://tasty.aethereal.dev";
 const BODY_LIMIT_BYTES = 16 * 1024;
 const RATE_LIMIT = {
   scope: "umami-collector",
@@ -114,7 +113,9 @@ export async function POST(request: Request): Promise<Response> {
     throw error;
   }
 
-  const upstream = getEnvString("UMAMI_UPSTREAM_URL") || DEFAULT_UPSTREAM;
+  const upstream = getEnvString("UMAMI_UPSTREAM_URL");
+  if (!upstream) return apiError("analytics_not_configured", 404, { requestId });
+
   const headers = new Headers({
     "content-type": "application/json",
     // umami drops requests without a User-Agent.
