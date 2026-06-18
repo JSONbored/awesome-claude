@@ -1940,6 +1940,16 @@ ${urls}
       "directContentReviewabilityForTarget(",
     );
     const applyIndex = pullRequestBlock.indexOf("applyUnderReviewToTarget");
+    const shouldInspectBlock = source.slice(
+      source.indexOf("async function shouldInspectPullRequestFilesForWebhook"),
+      source.indexOf("function reviewTargetFromPullPayload"),
+    );
+    const reopenedClosedIndex = shouldInspectBlock.indexOf(
+      'existingStatus === "closed"',
+    );
+    const reviewKeySkipIndex = shouldInspectBlock.indexOf(
+      "return !reviewScanKey || existingReviewKey !== reviewScanKey",
+    );
 
     expect(source).toContain('reason: "No source content entry file changed."');
     expect(source).toContain("function recordReviewedScanKey");
@@ -1964,6 +1974,8 @@ ${urls}
     expect(inspectIndex).toBeGreaterThan(0);
     expect(classifyIndex).toBeGreaterThan(inspectIndex);
     expect(applyIndex).toBeGreaterThan(classifyIndex);
+    expect(reopenedClosedIndex).toBeGreaterThan(0);
+    expect(reviewKeySkipIndex).toBeGreaterThan(reopenedClosedIndex);
   });
 
   it("distinguishes generated-artifact tampering from ordinary non-content PRs", () => {
