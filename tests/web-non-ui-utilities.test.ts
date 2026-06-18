@@ -22,6 +22,7 @@ import { ENTRIES } from "../apps/web/src/data/entries";
 import { COMPARISONS } from "../apps/web/src/data/comparisons";
 import {
   CONTRIBUTORS,
+  contributorForVerifiedAuthor,
   contributorSlug,
   getContributor,
   githubHandle,
@@ -550,6 +551,12 @@ describe("web non-UI utility coverage", () => {
     const topContributor = CONTRIBUTORS[0];
     expect(getContributor(topContributor.slug)).toBe(topContributor);
     expect(topContributor.acceptedCount).toBeGreaterThan(0);
+    expect(
+      contributorForVerifiedAuthor(topContributor.name, topContributor.name),
+    ).toBe(topContributor);
+    expect(
+      contributorForVerifiedAuthor(topContributor.name, "spoofing-submitter"),
+    ).toBeUndefined();
 
     expect(SPONSORS.map((sponsor) => sponsor.slug)).toEqual([
       "cloudflare",

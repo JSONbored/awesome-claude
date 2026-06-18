@@ -56,3 +56,13 @@ export const CONTRIBUTORS: Contributor[] = (() => {
 export function getContributor(slug: string) {
   return CONTRIBUTORS.find((c) => c.slug === slug);
 }
+
+export function contributorForVerifiedAuthor(author?: string, submittedBy?: string) {
+  if (!author || !submittedBy) return undefined;
+
+  const authorSlug = contributorSlug(author);
+  const submittedBySlug = contributorSlug(submittedBy);
+  if (!authorSlug || authorSlug !== submittedBySlug) return undefined;
+
+  return getContributor(submittedBySlug);
+}
