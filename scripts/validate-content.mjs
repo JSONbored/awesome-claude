@@ -107,27 +107,34 @@ function findPredictableSharedTmpDebugPaths(scriptBody) {
 // a repeated indent-0 key is unambiguously a dupe (no false positives). The block-scalar / sequence skipping
 // keeps indented nested/list lines from being mistaken for a top-level key. (#frontmatter-dupe-key)
 function duplicateTopLevelFrontmatterKeys(source) {
-  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(String(source || ""));
+  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(
+    String(source || ""),
+  );
   if (!match) return [];
   const lines = match[1].split(/\r?\n/);
   const seen = new Set();
   const dupes = new Set();
   let i = 0;
   while (i < lines.length) {
-    const head = /^([A-Za-z][A-Za-z0-9_]*):(.*)$/.exec(lines[i]);
+    const head = /^([^#\s][^:]*?)\s*:(.*)$/.exec(lines[i]);
     if (!head) {
       i += 1;
       continue;
     }
-    const key = head[1];
+    const key = head[1].trim().replace(/^['"]|['"]$/g, "");
     if (seen.has(key)) dupes.add(key);
     else seen.add(key);
     const inline = head[2].trim();
     i += 1;
     if (/^[|>][+-]?\d*$/.test(inline)) {
-      while (i < lines.length && (lines[i].trim() === "" || /^\s/.test(lines[i]))) i += 1;
+      while (
+        i < lines.length &&
+        (lines[i].trim() === "" || /^\s/.test(lines[i]))
+      )
+        i += 1;
     } else if (inline === "") {
-      while (i < lines.length && /^\s/.test(lines[i]) && lines[i].trim() !== "") i += 1;
+      while (i < lines.length && /^\s/.test(lines[i]) && lines[i].trim() !== "")
+        i += 1;
     }
   }
   return [...dupes];
@@ -148,6 +155,16 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
 
     const filePath = path.join(categoryDir, fileName);
     const source = fs.readFileSync(filePath, "utf8");
+    const entry = `${category}/${fileName}`;
+
+    const dupeFrontmatterKeys = duplicateTopLevelFrontmatterKeys(source);
+    if (dupeFrontmatterKeys.length > 0) {
+      failures.push(
+        `${entry}: duplicate frontmatter keys -> ${dupeFrontmatterKeys.join(", ")} (the site build's YAML parser rejects duplicate mapping keys and the deploy fails)`,
+      );
+      continue;
+    }
+
     const parsed = parseSafeFrontmatter(source);
     const normalizedBody = normalizeBody(parsed.content, category);
     const inferred = inferStructuredFields(
@@ -165,15 +182,6 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
     )
       .trim()
       .toLowerCase();
-
-    const entry = `${category}/${fileName}`;
-
-    const dupeFrontmatterKeys = duplicateTopLevelFrontmatterKeys(source);
-    if (dupeFrontmatterKeys.length > 0) {
-      failures.push(
-        `${entry}: duplicate frontmatter keys -> ${dupeFrontmatterKeys.join(", ")} (the site build's YAML parser rejects duplicate mapping keys and the deploy fails)`,
-      );
-    }
 
     if (!normalizedBody.trim()) {
       failures.push(`${entry}: metadata-only content is not allowed`);
