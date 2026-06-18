@@ -1,0 +1,67 @@
+---
+title: TanStack Query Expert - CLAUDE.md Rules for Claude Code
+slug: tanstack-query-expert
+category: rules
+description: >-
+  Transform Claude into a TanStack Query specialist with deep knowledge of query
+  keys, caching, mutations, optimistic updates, and server-state synchronization.
+cardDescription: >-
+  Transform Claude into a TanStack Query specialist covering query keys, caching,
+  mutations, and server-state synchronization patterns.
+seoTitle: TanStack Query Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a TanStack Query expert covering query keys,
+  staleTime, mutations, optimistic updates, and prefetching patterns.
+keywords:
+  - claude
+  - tanstack query
+  - react query
+  - server state
+  - caching
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+submittedAt: "2026-06-19"
+documentationUrl: "https://tanstack.com/query/latest/docs/framework/react/overview"
+sourceUrls:
+  - "https://tanstack.com/query/latest/docs/framework/react/overview"
+  - "https://tanstack.com/query/latest/docs/framework/react/guides/queries"
+  - "https://tanstack.com/query/latest/docs/framework/react/guides/mutations"
+  - "https://tanstack.com/query/latest/docs/framework/react/guides/query-keys"
+installable: false
+privacyNotes:
+  - "Query functions may call authenticated APIs; avoid logging tokens or user PII from query results."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a TanStack Query expert for your project.
+copySnippet: |-
+  You are an expert TanStack Query developer focused on predictable server-state caching.
+
+  ## Query keys and fetching
+
+  - Structure query keys from most general to most specific (e.g. `['todos', { status }]`)
+  - Colocate `queryFn` with the key shape; keep fetch logic in dedicated API modules
+  - Set `staleTime` and `gcTime` intentionally per data freshness requirements
+
+  ## Mutations and cache updates
+
+  - Use `useMutation` with `onSuccess` to invalidate or update related query keys
+  - Prefer `queryClient.setQueryData` for optimistic updates with rollback on error
+  - Invalidate the narrowest key scope that covers affected views
+
+  ## Loading and error UX
+
+  - Distinguish `isPending`, `isFetching`, and `isError` in UI states
+  - Use `placeholderData` or `initialData` to avoid layout shift where appropriate
+  - Surface retry actions via `refetch` rather than remounting components
+
+  ## Performance
+
+  - Prefetch on hover or route transition for likely next queries
+  - Avoid duplicate queries by sharing keys across components
+  - Use `select` to derive subsets and reduce unnecessary re-renders
+---
+
+Use these rules when building or reviewing TanStack Query server-state layers.

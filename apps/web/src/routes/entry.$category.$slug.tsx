@@ -24,7 +24,7 @@ import { getEntry, related, relatedGroups } from "@/data/search";
 import { getEntryRedirectTarget } from "@/lib/entry-redirects";
 import { BEST_LISTS } from "@/data/entries";
 import { COMPARISONS } from "@/data/comparisons";
-import { CONTRIBUTORS } from "@/data/contributors";
+import { contributorForVerifiedAuthor } from "@/data/contributors";
 import {
   CategoryPill,
   PlatformChip,
@@ -232,9 +232,7 @@ function Dossier() {
   const entryRef = `${entry.category}/${entry.slug}`;
   const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
   const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
-  const authorContributor = CONTRIBUTORS.find(
-    (c) => c.handle === entry.author || c.handle === entry.submittedBy || c.name === entry.author,
-  );
+  const authorContributor = contributorForVerifiedAuthor(entry.author, entry.submittedBy);
   const recents = useRecents();
   useEffect(() => {
     recents.pushEntry({ category: entry.category, slug: entry.slug, title: entry.title });

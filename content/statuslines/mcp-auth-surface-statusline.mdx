@@ -20,8 +20,34 @@ sourceUrls:
   - "https://code.claude.com/docs/en/statusline"
   - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
 installable: true
-installCommand: >-
-  mkdir -p .claude/statuslines && touch .claude/statuslines/mcp-auth-surface.sh && chmod +x .claude/statuslines/mcp-auth-surface.sh
+installCommand: |-
+  mkdir -p .claude/statuslines
+  tmp="$(mktemp .claude/statuslines/mcp-auth-surface.sh.XXXXXX)"
+  cat > "$tmp" <<'EOF'
+  #!/usr/bin/env bash
+  set -u
+
+  input=$(cat)
+  if ! command -v jq >/dev/null 2>&1; then
+    printf 'MCP auth: jq unavailable\n'
+    exit 0
+  fi
+
+  servers=$(printf '%s' "$input" | jq -c '.mcp.servers // []' 2>/dev/null || printf '[]')
+  server_count=$(printf '%s' "$servers" | jq 'length' 2>/dev/null || printf '0')
+  remote_count=$(printf '%s' "$servers" | jq '[.[] | select((.url // .endpoint // "") | test("^https?://"))] | length' 2>/dev/null || printf '0')
+  credential_hint=$(printf '%s' "$servers" | jq '[.[] | select((.auth // .authorization // .headers // .env // null) != null)] | length' 2>/dev/null || printf '0')
+
+  if [ "$credential_hint" -gt 0 ]; then
+    state="credentials: review"
+  else
+    state="credentials: none shown"
+  fi
+
+  printf 'MCP auth: %s servers | %s remote | %s\n' "$server_count" "$remote_count" "$state"
+  EOF
+  chmod 700 "$tmp"
+  mv -f "$tmp" .claude/statuslines/mcp-auth-surface.sh
 usageSnippet: "MCP auth: 3 servers | 1 remote | credentials: review"
 copySnippet: |-
   {

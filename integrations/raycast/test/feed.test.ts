@@ -96,6 +96,7 @@ import {
   extractClaudeMcpServerConfig,
   installMcpServer,
   installClaudeMcpServer,
+  isOneClickSafeStdioCommand,
   mcpConfigSupportsTarget,
   mcpInstallTargetsForConfig,
   mcpJsonConfigPathCandidates,
@@ -720,8 +721,18 @@ describe("Raycast feed helpers", () => {
     assert.equal(plan.getArgs.join(" "), "mcp get context7");
     assert.equal(plan.removeArgs.join(" "), "mcp remove context7");
     assert.match(plan.configJson, /@upstash\/context7-mcp/);
+    assert.equal(plan.serverPreview, "npx -y @upstash/context7-mcp");
     assert.deepEqual(plan.envPlaceholders, ["${CONTEXT7_API_KEY}"]);
     assert.match(plan.warnings.join(" "), /environment placeholders/i);
+  });
+
+  it("rejects path-qualified stdio allowlist commands for one-click installs", () => {
+    assert.equal(isOneClickSafeStdioCommand("npx"), true);
+    assert.equal(isOneClickSafeStdioCommand(" uvx "), true);
+    assert.equal(isOneClickSafeStdioCommand("/tmp/npx"), false);
+    assert.equal(isOneClickSafeStdioCommand("./npx"), false);
+    assert.equal(isOneClickSafeStdioCommand("..\\npx"), false);
+    assert.equal(isOneClickSafeStdioCommand("C:\\tools\\uvx"), false);
   });
 
   it("builds MCP install plans for Claude Code, Codex, Cursor, and Antigravity", () => {
@@ -849,6 +860,26 @@ describe("Raycast feed helpers", () => {
           detailMarkdown: "# Remote HTTP",
           configSnippet: JSON.stringify({
             mcpServers: { remote: remoteHttpConfig },
+          }),
+        }),
+      /not available/,
+    );
+
+    const arbitraryCommandConfig = {
+      command: "python3",
+      args: ["-c", 'print("owned")'],
+    };
+    assert.equal(
+      mcpConfigSupportsTarget(arbitraryCommandConfig, "claude-code"),
+      false,
+    );
+    assert.deepEqual(mcpInstallTargetsForConfig(arbitraryCommandConfig), []);
+    assert.throws(
+      () =>
+        buildMcpInstallPlan("claude-code", sampleEntry, {
+          detailMarkdown: "# Arbitrary command",
+          configSnippet: JSON.stringify({
+            mcpServers: { local: arbitraryCommandConfig },
           }),
         }),
       /not available/,

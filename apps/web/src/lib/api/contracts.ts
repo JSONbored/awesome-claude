@@ -498,6 +498,7 @@ const submissionPreflightDuplicateSchema = z.object({
   title: z.string().max(240),
   url: z.string().url().max(2048),
   reasons: z.array(z.string().max(80)).max(8),
+  reasonLabels: z.array(z.string().max(120)).max(8).optional(),
 });
 
 const submissionPreflightPrPreviewSchema = z.object({
@@ -775,7 +776,7 @@ export const ogQuerySchema = z.object({
 });
 
 export const brandAssetParamsSchema = z.object({
-  kind: z.literal("icon"),
+  kind: z.enum(["icon", "logo"]),
   domain: z
     .string()
     .trim()

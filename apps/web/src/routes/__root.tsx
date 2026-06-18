@@ -23,6 +23,7 @@ import { ShortcutsProvider } from "@/components/shortcuts-dialog";
 import { SkipLink } from "@/components/skip-link";
 import { RouteProgress } from "@/components/route-progress";
 import { WebMcpProvider } from "@/components/webmcp-provider";
+import { AiReferral } from "@/components/ai-referral";
 import { WebVitals } from "@/components/web-vitals";
 import { siteConfig } from "@/lib/site";
 import { absoluteUrl } from "@/lib/seo";
@@ -198,7 +199,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const shouldLoadAnalytics = pathname !== "/brief/approve";
+  const shouldLoadAnalytics =
+    pathname !== "/brief/approve" &&
+    Boolean(siteConfig.umamiScriptUrl && siteConfig.umamiWebsiteId);
 
   return (
     <html lang="en">
@@ -244,6 +247,7 @@ function RootComponent() {
                 <BackToTop />
                 <WebMcpProvider />
                 <WebVitals />
+                <AiReferral />
                 <Toaster
                   position="bottom-right"
                   mobileOffset={{ bottom: "16px" }}

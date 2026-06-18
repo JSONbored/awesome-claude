@@ -184,7 +184,9 @@ export function hubStats(entries: Entry[]): HubStat[] {
   const pct = (n: number) => Math.round((n / total) * 100);
 
   const trusted = entries.filter((e) => e.trust === "trusted").length;
-  const sourced = entries.filter((e) => e.source !== "unverified").length;
+  const sourced = entries.filter(
+    (e) => e.source === "source-backed" || e.source === "first-party",
+  ).length;
   const safety = entries.filter((e) => Boolean(e.safetyNotes)).length;
   const privacy = entries.filter((e) => Boolean(e.privacyNotes)).length;
   const reviewed = entries.filter((e) => Boolean(e.reviewed)).length;

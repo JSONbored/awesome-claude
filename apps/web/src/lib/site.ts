@@ -47,11 +47,10 @@ export const siteConfig = {
   jobsEmail: "jobs@heyclau.de",
   twitterUrl: publicEnv("NEXT_PUBLIC_TWITTER_URL") || "https://x.com/jsonbored",
   discordUrl: publicEnv("NEXT_PUBLIC_DISCORD_URL") || "https://discord.com/invite/Ax3Py4YDrq",
-  // Served same-origin via the /u/script.js proxy (see routes/u.script[.]js.ts)
-  // so the CSP needs no third-party script-src. umami auto-derives its collector
-  // from the script directory (/u/api/send). The instance origin is configured
-  // server-side as UMAMI_UPSTREAM_URL on the proxy routes.
-  umamiScriptUrl: publicEnv("VITE_UMAMI_SCRIPT_URL") || "/u/script.js",
+  // Analytics is opt-in: set VITE_UMAMI_SCRIPT_URL (for example /u/script.js)
+  // after configuring and reviewing the corresponding script source. Keeping the
+  // default empty avoids sitewide execution of JavaScript from an external origin.
+  umamiScriptUrl: publicEnv("VITE_UMAMI_SCRIPT_URL"),
   umamiWebsiteId: publicEnv("VITE_UMAMI_WEBSITE_ID") || "b734c138-2949-4527-9160-7fe5d0e81121",
   // Empty string intentionally disables the private gate and shows manual PR instructions.
   submissionGateUrl: publicHttpUrl(

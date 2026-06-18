@@ -4,14 +4,14 @@ slug: claude-code-github-actions-review-workflow
 category: guides
 description: >-
   Set up Claude Code GitHub Actions for pull request review: install the Claude
-  GitHub app, store ANTHROPIC_API_KEY in secrets, use anthropics/claude-code-action@v1
-  with prompt-based automation, and follow documented security practices.
+  GitHub app, store ANTHROPIC_API_KEY in secrets, pin anthropics/claude-code-action to an audited commit SHA
+  with least-privilege permissions, and follow documented security practices.
 cardDescription: >-
   Automate PR review with Claude Code GitHub Actions using official setup steps.
 seoTitle: Claude Code GitHub Actions Review Workflow
 seoDescription: >-
   Guide to Claude Code GitHub Actions for PR review: GitHub app install, workflow
-  secrets, claude-code-action@v1 prompts, @claude mentions, and security practices
+  secrets, pinned claude-code-action prompts, @claude mentions, and security practices
   from official documentation.
 author: kiannidev
 authorProfileUrl: "https://github.com/kiannidev"
@@ -24,8 +24,8 @@ sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1389"
 documentationUrl: "https://code.claude.com/docs/en/github-actions"
 usageSnippet: >-
   Run /install-github-app or follow manual setup, add ANTHROPIC_API_KEY as a GitHub
-  secret, copy the example workflow using anthropics/claude-code-action@v1, then
-  trigger review with @claude comments or a pull_request prompt job.
+  secret, pin the example workflow action to an audited commit SHA, then trigger review with
+  @claude comments or a constrained pull_request prompt job.
 prerequisites:
   - "Repository admin access to install the Claude GitHub app and add secrets."
   - "Anthropic API access or approved provider setup documented for your org."
@@ -33,10 +33,13 @@ prerequisites:
   - "Branch protection requiring human review before merging automation output."
 safetyNotes:
   - "The Claude GitHub app requests Contents, Issues, and Pull requests read and write permissions—scope installation to intended repositories."
-  - "Never commit API keys; use GitHub encrypted secrets such as ANTHROPIC_API_KEY."
+  - "Never commit API keys; use GitHub encrypted secrets such as ANTHROPIC_API_KEY, and only expose them to workflows you trust."
+  - "Pin third-party GitHub Actions to reviewed immutable commit SHAs rather than mutable tags."
+  - "Declare least-privilege GITHUB_TOKEN permissions explicitly before enabling AI review workflows."
   - "Review Claude suggestions before merging; automation should not bypass CODEOWNERS."
   - "Workflows consume GitHub Actions minutes and Claude API tokens—set timeouts and max-turn limits."
 privacyNotes:
+  - "PR diffs and issue comments are attacker-controlled on public repositories; treat them as prompt-injection input and avoid giving untrusted PRs secret-backed tool access."
   - "PR diffs and issue comments are sent to the model provider during workflow runs."
   - "Logs may retain prompts—align retention with corporate data handling rules."
   - "Use repository secrets rather than echoing credentials in workflow YAML."
@@ -68,9 +71,9 @@ robotsFollow: true
 
 Official Claude Code GitHub Actions documentation describes installing the Claude
 GitHub app, storing `ANTHROPIC_API_KEY` in repository secrets, and running
-`anthropics/claude-code-action@v1` workflows triggered by `@claude` mentions or
-automation `prompt` inputs. Use `CLAUDE.md` for review standards and keep human
-merge approval.
+`anthropics/claude-code-action` workflows triggered by `@claude` mentions or
+automation `prompt` inputs. Pin the action to a reviewed commit SHA, declare
+least-privilege workflow permissions, and keep human merge approval.
 
 ## Prerequisites & Requirements
 
@@ -104,26 +107,43 @@ GA workflows use `prompt` for instructions and `claude_args` for CLI flags such 
    install and secret creation (direct Claude API users per docs).
 
 2. **Manual fallback.** Install https://github.com/apps/claude, add
-   `ANTHROPIC_API_KEY` repository secret, and copy `examples/claude.yml` from the
-   Claude Code Action repository into `.github/workflows/`.
+   `ANTHROPIC_API_KEY` repository secret, review `examples/claude.yml` from the
+   Claude Code Action repository, pin the action to an audited commit SHA, and
+   copy the constrained workflow into `.github/workflows/`.
 
-3. **Add review workflow.** Example automation from official docs:
+3. **Add review workflow.** Start from official docs, then harden the copyable
+   workflow before enabling it. This example only runs automatically for
+   same-repository PRs so forked, untrusted PR content does not receive
+   secret-backed agent/tool access:
 
 ```yaml
 name: Code Review
 on:
   pull_request:
     types: [opened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   review:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: anthropics/claude-code-action@v1
+      # Replace <REVIEWED_COMMIT_SHA> with an audited immutable commit from
+      # https://github.com/anthropics/claude-code-action/releases.
+      - uses: anthropics/claude-code-action@<REVIEWED_COMMIT_SHA>
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: "Review this pull request for correctness and security issues"
           claude_args: "--max-turns 10"
 ```
+
+   For public fork PRs, prefer a maintainer-approved `@claude` comment or a
+   separate `workflow_dispatch` flow after reviewing the diff, instead of
+   automatically providing secrets to attacker-controlled content.
 
 4. **Optional plugin skill review.** Docs show installing a plugin with
    `plugin_marketplaces` and `plugins`, then passing a namespaced `/plugin:skill`
@@ -142,7 +162,8 @@ jobs:
 
 ### Action still on @beta inputs
 
-Upgrade to `@v1`, replace `direct_prompt` with `prompt`, and move CLI flags into
+Upgrade to the v1 action, replace `direct_prompt` with `prompt`, pin the action
+to a reviewed commit SHA, and move CLI flags into
 `claude_args` per the breaking changes table in official docs.
 
 ### @claude does not respond
@@ -162,11 +183,11 @@ Verified against https://code.claude.com/docs/en/github-actions on **2026-06-16*
 
 - Quick setup uses `/install-github-app`; manual setup uses the Claude GitHub app and
   `ANTHROPIC_API_KEY` secret.
-- GA workflows use `anthropics/claude-code-action@v1` with `prompt` and `claude_args`.
+- GA workflows use the v1 `anthropics/claude-code-action` with `prompt` and `claude_args`; pin copied workflows to a reviewed commit SHA.
 - App permissions include Contents, Issues, and Pull requests read/write.
 - Docs describe `@claude` comment triggers and automation prompts on events like
   `pull_request` and `schedule`.
-- Security section requires GitHub Secrets and reviewing suggestions before merge.
+- Security section requires GitHub Secrets and reviewing suggestions before merge; this guide additionally constrains permissions and untrusted PR exposure for safer copy/paste use.
 
 ## Duplicate Check
 

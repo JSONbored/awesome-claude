@@ -353,7 +353,7 @@ describe("Cloudflare submission gate helpers", () => {
     });
   });
 
-  it("treats neutral Superagent scans as a non-blocking validation pass", async () => {
+  it("requires manual review for neutral Superagent scans", async () => {
     const fetchMock = vi.fn(async () =>
       Response.json({
         check_runs: [
@@ -382,12 +382,14 @@ describe("Cloudflare submission gate helpers", () => {
         requiredChecks: ["validate-content", "Superagent Security Scan"],
       }),
     ).resolves.toMatchObject({
-      state: "passed",
+      state: "failed",
+      summary:
+        "Required validation failed: Superagent Security Scan concluded neutral.",
       checks: [
         { name: "validate-content", status: "passed" },
         {
           name: "Superagent Security Scan",
-          status: "passed",
+          status: "failed",
           details: "concluded neutral",
         },
       ],
@@ -579,12 +581,16 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"MEMBER"');
     expect(source).toContain('"COLLABORATOR"');
     expect(source).toContain("targetFromIssueCommentRecheck");
+    expect(source).toContain("trustedManualRecheck = false");
     expect(source).toContain("shouldResetManualTerminal");
     expect(source).toContain("shouldResetTerminalState");
     expect(source).toContain(
       "resetAttemptCount: shouldResetManualTerminal || shouldResetTerminalState",
     );
     expect(source).toContain(
+      'trustedManualRecheck === true &&\n    String(existing?.status || "") === "manual"',
+    );
+    expect(source).not.toContain(
       'forceRecheck === true && String(existing?.status || "") === "manual"',
     );
     expect(source).toContain(
@@ -593,7 +599,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain(
       "forceRecheck === true ||\n      isReopenedPullRequestEvent",
     );
-    expect(issueCommentBlock).toContain("payload,\n      true,");
+    expect(issueCommentBlock).toContain("payload,\n      true,\n      true,");
   });
 
   it("renders Taopedia-style verdict comments with stable sections", () => {
@@ -963,7 +969,7 @@ downloadUrl: "https://github.com/example/project/archive/refs/heads/main.zip"
     });
   });
 
-  it("treats isolated auxiliary source fetch errors as warnings when canonical evidence passes", async () => {
+  it("keeps retryable auxiliary canonical source fields blocking when canonical evidence passes", async () => {
     const report = await checkSubmittedSourceEvidence(
       `---
 title: GitHub Blob Warning Fixture
@@ -982,15 +988,17 @@ sourceUrls:
       }),
     );
 
-    expect(report.status).toBe("passed");
-    expect(report.warnings).toHaveLength(1);
-    expect(report.warnings[0]).toMatchObject({
-      field: "sourceUrls",
-      status: "retryable",
-      outcome: "fetch_error",
-      role: "canonical",
-      blocking: false,
-    });
+    expect(report.status).toBe("retryable");
+    expect(report.warnings).toHaveLength(0);
+    expect(report.urls).toContainEqual(
+      expect.objectContaining({
+        field: "sourceUrls",
+        status: "retryable",
+        outcome: "fetch_error",
+        role: "canonical",
+        blocking: true,
+      }),
+    );
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 
@@ -1793,7 +1801,7 @@ ${urls}
     );
   });
 
-  it("formats neutral Superagent Discord status as non-blocking", () => {
+  it("formats neutral Superagent Discord status as inconclusive", () => {
     const payload = buildDiscordDecisionPayload({
       repoFullName: "JSONbored/awesome-claude",
       prNumber: 826,
@@ -1812,7 +1820,7 @@ ${urls}
       "#826 merged · Chrome DevTools MCP server",
     );
     expect(JSON.stringify(payload)).toContain(
-      "Superagent neutral, non-blocking",
+      "Superagent neutral/inconclusive",
     );
   });
 
@@ -2052,6 +2060,14 @@ ${urls}
     expect(retryBranch).toContain('status: "merge_pending"');
     expect(retryBranch).toContain('decision: "merge_pending"');
     expect(retryBranch).toContain("merge retry pending");
+    expect(retryBranch).toContain(
+      "const pendingDecision = defaultManualDecision",
+    );
+    expect(retryBranch).toContain(
+      "const pendingReport = await upsertMarkerComment",
+    );
+    expect(retryBranch).toContain("markerComment(");
+    expect(retryBranch).toContain("pendingDecision");
     expect(retryBranch).toContain("nextReviewAt: isoAfter(retryDelaySeconds)");
     expect(retryBranch).toContain("retryDelaySeconds");
     expect(retryBranch).toContain(
@@ -2142,9 +2158,13 @@ ${urls}
     expect(terminalSetBlock).not.toContain('"merge"');
     expect(terminalSetBlock).not.toContain('"import"');
     expect(source).toContain("forceRecheck = false");
+    expect(source).toContain("trustedManualRecheck = false");
+    expect(source).toContain("trustedManualRecheck === true");
+    expect(source).toContain("message.payload.trustedManualRecheck === true");
     expect(source).toContain(
-      "payload: { eventName, deliveryId, target, webhook, forceRecheck }",
+      'if (existingStatus === "manual" && !trustedManualRecheck)',
     );
+    expect(source).toContain("trustedManualRecheck,");
     expect(source).toContain(
       'String(message.payload.eventName || "") === "issue_comment"',
     );
@@ -2518,6 +2538,44 @@ ${urls}
     }
     expect(helperSource).toContain("DIRECTORY_ENTRY_URL_SIGNAL_FIELDS");
     expect(helperSource).toContain("entry[field]");
+    expect(helperSource).toContain("Array.isArray(entry.sourceUrls)");
+  });
+
+  it("detects duplicate submissions from list-form source URLs", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/tools/source-list.mdx",
+      content: `---
+title: Shared Source Tool
+slug: source-list
+category: tools
+description: Local CLI for analyzing Claude Code usage.
+sourceUrls:
+  - "https://github.com/acme/shared-project"
+---
+`,
+      label: "accepted entry content/tools/source-list.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/tools/source-list-copy.mdx",
+      content: `---
+title: Shared Source Tool Copy
+slug: source-list-copy
+category: tools
+description: Local CLI for analyzing Claude Code usage.
+sourceUrls:
+  - "https://github.com/acme/shared-project?utm_source=form"
+---
+`,
+    });
+
+    expect(candidate.urls).toContain("https://github.com/acme/shared-project");
+    expect(
+      findStrictContentDuplicateMatch(candidate, [existing]),
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same canonical source URL"),
+      ]),
+    });
   });
 
   it("detects neutral duplicate submissions from canonical source URLs", () => {
@@ -2726,7 +2784,7 @@ docsUrl: "https://docs.anthropic.com/en/docs/claude-code/security#events"
     );
   });
 
-  it("treats same canonical project across different categories as a strict duplicate", () => {
+  it("treats same canonical project across different categories as related, not strict duplicate", () => {
     const existingMcp = extractContentDuplicateSignals({
       filePath: "content/mcp/langchain-mcp-server.mdx",
       content: `---
@@ -2752,13 +2810,7 @@ repoUrl: "https://github.com/langchain-ai/langchain.git"
 
     expect(
       findStrictContentDuplicateMatch(candidateSkill, [existingMcp]),
-    ).toMatchObject({
-      reasons: expect.arrayContaining([
-        expect.stringContaining(
-          "same canonical source URL https://github.com/langchain-ai/langchain across skills/mcp",
-        ),
-      ]),
-    });
+    ).toBeNull();
     expect(findRelatedContentMatches(candidateSkill, [existingMcp])).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -2772,7 +2824,7 @@ repoUrl: "https://github.com/langchain-ai/langchain.git"
     );
   });
 
-  it("treats same canonical website across different categories as a strict duplicate", () => {
+  it("treats same canonical website across different categories as related, not strict duplicate", () => {
     const existingTool = extractContentDuplicateSignals({
       filePath: "content/tools/acme-claude.mdx",
       content: `---
@@ -2798,13 +2850,7 @@ websiteUrl: "https://acme-claude.example/product?utm_source=submission"
 
     expect(
       findStrictContentDuplicateMatch(candidateMcp, [existingTool]),
-    ).toMatchObject({
-      reasons: expect.arrayContaining([
-        expect.stringContaining(
-          "same canonical source URL https://acme-claude.example/product across mcp/tools",
-        ),
-      ]),
-    });
+    ).toBeNull();
     expect(findRelatedContentMatches(candidateMcp, [existingTool])).toEqual(
       expect.arrayContaining([
         expect.objectContaining({

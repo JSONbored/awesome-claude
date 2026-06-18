@@ -1,0 +1,230 @@
+---
+title: Superpowers Skills
+slug: superpowers-skills
+category: skills
+description: >-
+  MIT-licensed Superpowers skill and plugin framework by Jesse Vincent for
+  Claude Code, Codex App, Codex CLI, Cursor, Gemini CLI, Antigravity, Kimi
+  Code, OpenCode, Pi, GitHub Copilot CLI, and other coding agents, covering
+  brainstorming, planning, TDD, systematic debugging, subagent-driven
+  development, code review, git worktrees, and finish-the-branch workflows.
+cardDescription: >-
+  Coding-agent skills framework for planning, TDD, debugging, subagents, code
+  review, worktrees, branch finishing, and cross-harness workflows.
+seoTitle: Superpowers Skills for Claude Code, Codex, Cursor, Gemini CLI, OpenCode, and Coding Agents
+seoDescription: >-
+  Install Superpowers Skills for Claude Code, Codex App, Codex CLI, Cursor,
+  Gemini CLI, Antigravity, Kimi Code, OpenCode, Pi, and GitHub Copilot CLI to
+  guide AI coding agents through brainstorming, implementation planning,
+  test-driven development, systematic debugging, subagent-driven development,
+  code review, git worktrees, and delivery workflows.
+author: Jesse Vincent
+authorProfileUrl: "https://github.com/obra"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/obra/superpowers#readme"
+repoUrl: "https://github.com/obra/superpowers"
+downloadUrl: "https://github.com/obra/superpowers/archive/refs/heads/main.zip"
+installable: true
+installCommand: "/plugin install superpowers@claude-plugins-official"
+usageSnippet: >-
+  Install Superpowers through the supported marketplace or plugin mechanism
+  for the current agent harness, then let its startup hook and
+  `using-superpowers` bootstrap route coding work through the relevant skills.
+copySnippet: |-
+  /plugin install superpowers@claude-plugins-official
+
+  # Codex users can install Superpowers from the official Codex plugin
+  # marketplace through the app or `/plugins` flow.
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/obra/superpowers/blob/main/README.md"
+  - "https://github.com/obra/superpowers/blob/main/.claude-plugin/plugin.json"
+  - "https://github.com/obra/superpowers/blob/main/.codex-plugin/plugin.json"
+  - "https://github.com/obra/superpowers/blob/main/hooks/hooks-codex.json"
+  - "https://github.com/obra/superpowers/blob/main/skills/using-superpowers/SKILL.md"
+  - "https://github.com/obra/superpowers/blob/main/skills/subagent-driven-development/SKILL.md"
+  - "https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md"
+sourceUrls:
+  - "https://github.com/obra/superpowers/blob/main/README.md"
+  - "https://github.com/obra/superpowers/blob/main/.claude-plugin/plugin.json"
+  - "https://github.com/obra/superpowers/blob/main/.codex-plugin/plugin.json"
+  - "https://github.com/obra/superpowers/blob/main/hooks/hooks-codex.json"
+  - "https://github.com/obra/superpowers/blob/main/skills/using-superpowers/SKILL.md"
+  - "https://github.com/obra/superpowers/blob/main/skills/subagent-driven-development/SKILL.md"
+  - "https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md"
+testedPlatforms:
+  - Claude Code
+  - Codex App
+  - Codex CLI
+  - Cursor
+  - Gemini CLI
+  - Antigravity
+  - Kimi Code
+  - OpenCode
+  - Pi
+  - GitHub Copilot CLI
+prerequisites:
+  - "A supported coding-agent harness and its plugin or extension install path."
+  - "A repository where Superpowers can add skills, startup hooks, and workflow instructions for the selected agent."
+  - "A willingness to follow structured workflows such as brainstorming, planning, TDD, subagent implementation, code review, and branch finishing."
+  - "Project-specific instructions that clearly state where Superpowers workflows should be adapted or overridden."
+  - "Telemetry and network policy review before using the optional brainstorming visual companion."
+safetyNotes:
+  - "Superpowers installs skills plus harness-specific bootstrap or hook behavior that can affect how an agent responds from session start. Review installed hooks and plugin metadata for the target harness."
+  - "The `using-superpowers` skill strongly requires skill checks before agent responses, while also stating that explicit user and project instructions take precedence. Keep that priority order intact."
+  - "The workflow skills can direct agents to create specs, plans, branches, worktrees, tests, commits, subagent tasks, review packages, and long-running implementation loops."
+  - "Subagent-driven development can run for extended periods and dispatch multiple agents. Use clear budgets, model selection rules, task boundaries, and stop conditions."
+  - "The TDD skill intentionally requires failing tests before production code. Confirm that this discipline fits the project before enabling it as a default workflow."
+  - "The optional visual companion uses a browser/server flow during brainstorming. Review local server behavior, ports, and auth before using it with private project context."
+privacyNotes:
+  - "Superpowers workflows can expose product ideas, specs, design docs, implementation plans, source code, tests, diffs, review findings, git history, branch names, tool outputs, and agent handoff prompts."
+  - "The README states that the optional visual companion may load the Prime Radiant logo from the creator's website with the Superpowers version, and can be disabled with `SUPERPOWERS_DISABLE_TELEMETRY` or compatible Claude telemetry opt-outs."
+  - "Do not include secrets, customer data, unpublished product strategy, private incidents, or proprietary code in public examples, review packages, support issues, or visual companion artifacts."
+  - "Subagent prompts and review packages should be treated as private development artifacts because they may include source snippets, diffs, file paths, test output, and architecture decisions."
+tags:
+  - superpowers
+  - agent-skills
+  - claude-code
+  - codex
+  - cursor
+  - gemini-cli
+  - opencode
+  - tdd
+  - subagents
+  - code-review
+keywords:
+  - Superpowers Skills
+  - obra superpowers
+  - Superpowers Claude Code
+  - Superpowers Codex
+  - Superpowers Cursor
+  - Superpowers Gemini CLI
+  - coding agent skills framework
+  - subagent-driven development skill
+  - TDD coding agent skill
+  - AI coding agent workflow skills
+  - using-superpowers skill
+readingTime: 7
+difficultyScore: 87
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Superpowers Skills
+
+Superpowers is a coding-agent skills framework and software development
+methodology. It packages skills, plugin manifests, startup hooks, and
+cross-harness instructions so agents follow structured workflows for design,
+planning, TDD, debugging, subagent execution, code review, worktrees, and
+branch completion.
+
+Use this listing for the Superpowers skill/plugin pack. Use separate entries
+when evaluating an individual agent harness, a code-review tool, or a specific
+subagent runtime.
+
+## Knowledge Freshness
+
+Verified on **2026-06-18**, `obra/superpowers` reported version `6.0.2` in
+its Claude and Codex plugin metadata, had a latest GitHub release `v6.0.2`
+published on 2026-06-17, and showed active repository updates on 2026-06-18.
+
+The repository supports multiple agent harnesses, and each harness has its own
+install path. Re-check the README and plugin metadata before installing,
+because marketplace behavior, hooks, and update paths can differ by host.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The upstream README and current GitHub repository metadata.
+- Claude Code and Codex plugin manifests.
+- The Codex hook configuration.
+- Representative `using-superpowers`, `subagent-driven-development`, and
+  `brainstorming` skill files.
+- The latest GitHub release metadata and MIT license metadata.
+
+## Core Workflow
+
+Claude Code users can install from the official Claude plugin marketplace:
+
+```text
+/plugin install superpowers@claude-plugins-official
+```
+
+Codex App and Codex CLI users install from the official Codex plugin
+marketplace through the app or `/plugins` flow. Other supported hosts use
+their own install commands, including Cursor, Gemini CLI, Antigravity,
+OpenCode, Kimi Code, Pi, Factory Droid, and GitHub Copilot CLI.
+
+Once installed, Superpowers uses startup/bootstrap behavior so the agent sees
+the skill library and checks for relevant skills before coding-agent work.
+
+## Capability Scope
+
+| Area | Coverage |
+| --- | --- |
+| Design and planning | Brainstorming, spec writing, implementation planning, and plan execution workflows |
+| Implementation discipline | Test-driven development, verification before completion, and systematic debugging |
+| Subagents | Subagent-driven development, parallel-agent dispatch, task review, review packages, and model selection guidance |
+| Code review | Requesting and receiving code review, severity-based review findings, and finish-the-branch decisions |
+| Git workflows | Git worktrees, branch isolation, task commits, final review, merge/PR/keep/discard options |
+| Skill authoring | Writing and testing new skills, including examples and skill quality guidance |
+| Cross-harness support | Claude Code, Codex, Cursor, Gemini CLI, Antigravity, Kimi, OpenCode, Pi, Copilot CLI, and related plugin metadata |
+
+## Use Cases
+
+- Add a structured software-development workflow to an AI coding agent.
+- Make an agent slow down for brainstorming and design before implementation.
+- Enforce red-green-refactor TDD on feature and bug-fix work.
+- Run implementation plans through isolated subagents and task-scoped review.
+- Improve debugging by requiring root-cause tracing and verification before
+  declaring completion.
+- Coordinate branch finishing, final review, and PR or merge decisions.
+
+## Production Rules
+
+- Confirm the installed host and marketplace path before relying on a
+  Superpowers workflow.
+- Keep explicit user and project instructions higher priority than
+  Superpowers defaults.
+- Review session-start hooks and bootstrap files before enabling the plugin in
+  a private or regulated codebase.
+- Do not let subagent loops run without budgets, task boundaries, model
+  selection rules, and clear stop conditions.
+- Treat generated specs, plans, review packages, and subagent prompts as
+  private development artifacts.
+- Disable optional telemetry or visual companion network access when project
+  policy requires local-only behavior.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub metadata reported `obra/superpowers` as an MIT-licensed repository
+  with more than 200,000 stars, default branch `main`, latest release
+  `v6.0.2`, and active updates on 2026-06-18.
+- The README described Superpowers as a software development methodology for
+  coding agents with supported install paths for Claude Code, Antigravity,
+  Codex App, Codex CLI, Cursor, Factory Droid, Gemini CLI, GitHub Copilot CLI,
+  Kimi Code, OpenCode, and Pi.
+- `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` both declared
+  version `6.0.2`, MIT licensing, and skills/workflow coverage for planning,
+  TDD, debugging, collaboration, code review, and agent workflows.
+- `hooks/hooks-codex.json` declared a Codex `SessionStart` hook that runs the
+  Superpowers session-start bootstrap for startup, resume, and clear events.
+- `skills/using-superpowers/SKILL.md` described skill invocation rules,
+  platform adaptation, user-instruction precedence, and skill-loading
+  mechanisms across Claude Code, Codex, Copilot CLI, Gemini CLI, and other
+  environments.
+- `skills/subagent-driven-development/SKILL.md` described fresh implementer
+  subagents, per-task review, final branch review, model selection, and
+  stop conditions for plan execution.
+- `skills/brainstorming/SKILL.md` described the design-before-implementation
+  workflow, approval gates, spec writing, review, and optional visual
+  companion behavior.

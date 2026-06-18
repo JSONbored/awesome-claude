@@ -93,7 +93,7 @@ Recent fixes address streaming mode notification delivery and end-of-stream exce
 
 ## Minimal Query Loop (Python)
 
-The Agent SDK runs the same agent loop and built-in tools as Claude Code, programmable from a `query` call. This minimal example lists files in the working directory using an explicit, narrow tool allowlist:
+The Agent SDK runs the same agent loop and built-in tools as Claude Code, programmable from a `query` call. This minimal example lists files in the working directory using an explicit read-only tool allowlist. Avoid allowing `Bash` for directory-listing tasks because it grants broad shell execution rather than read-only discovery; run production agents from an isolated working directory and add command-scoped or sandboxed shell permissions only when a workflow truly requires them:
 
 ```python
 import asyncio
@@ -102,8 +102,8 @@ from claude_agent_sdk import query, ClaudeAgentOptions
 
 async def main():
     async for message in query(
-        prompt="What files are in this directory?",
-        options=ClaudeAgentOptions(allowed_tools=["Bash", "Glob"]),
+        prompt="Use Glob to list the files in this directory.",
+        options=ClaudeAgentOptions(allowed_tools=["Glob"]),
     ):
         if hasattr(message, "result"):
             print(message.result)

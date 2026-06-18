@@ -153,7 +153,7 @@ function compactCiSummary(value: unknown) {
         : lower.includes("failed") || lower.includes("failure")
           ? "failed"
           : lower.includes("neutral")
-            ? "neutral, non-blocking"
+            ? "neutral/inconclusive"
             : lower.includes("passed") || lower.includes("success")
               ? "passed"
               : "reported";

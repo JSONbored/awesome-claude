@@ -56,12 +56,37 @@ const PRIVACY_NOTE_REQUIRED_FLAGS = new Set([
 
 const UNSAFE_FRONTMATTER_LANGUAGE_ERROR =
   "Executable JavaScript frontmatter is not allowed in content policy validation";
+const FINANCIAL_OR_IDENTITY_PATTERN =
+  /\b(private key|wallet|kyc|usdc|x402|payment|crypto|on-chain)\b/i;
+// Keep generic artifact attestations out of the financial/identity bucket while
+// still catching nearby wallet, KYC, identity-proof, passport, or biometric use.
+const SENSITIVE_ATTESTATION_WINDOW = 120;
+const SENSITIVE_ATTESTATION_FORWARD_TERMS =
+  "wallet|kyc|payment|crypto|on-chain identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
+const SENSITIVE_ATTESTATION_REVERSE_TERMS =
+  "wallet|kyc|payment|crypto|on-chain identity|identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
+const IDENTITY_ATTESTATION_PATTERN = new RegExp(
+  `\\battestations?\\b[\\s\\S]{0,${SENSITIVE_ATTESTATION_WINDOW}}\\b(?:${SENSITIVE_ATTESTATION_FORWARD_TERMS})s?\\b`,
+  "i",
+);
+const IDENTITY_ATTESTATION_REVERSE_PATTERN = new RegExp(
+  `\\b(?:${SENSITIVE_ATTESTATION_REVERSE_TERMS})s?\\b[\\s\\S]{0,${SENSITIVE_ATTESTATION_WINDOW}}\\battestations?\\b`,
+  "i",
+);
 const DEFENSIVE_SECURITY_MITIGATION_PATTERN =
   /\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b[\s\S]{0,160}\b(?:(?:credential|password|cookie|session|token|wallet|secret|leak)s?|expos(?:e|ing|ure))\b|\b(?:credential|password|cookie|session|token|wallet|secret)s?\b[\s\S]{0,160}\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b/i;
 const RESOURCE_THEFT_CAPABILITY_PATTERN =
   /\b(?:this|the|our)?\s*(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b[\s\S]{0,40}\b(?:can|will|does|advertises?|offers?|enables?|designed to|built to)\b[\s\S]{0,80}\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b|\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(?:with|using|through|by)\b[\s\S]{0,40}\b(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b/i;
 const CREDENTIAL_THEFT_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b/i;
+const THEFT_INTERDICTION_ACTION_PATTERN =
+  /\b(?:detects?|blocks?|prevents?|warns? before)\b/i;
+const THEFT_INTERDICTION_TARGET_PATTERN =
+  /\b(?:commands?|patterns?|attempts?|requests?|prompts?|output)\b/i;
+const THEFT_INTERDICTION_RESULT_PATTERN =
+  /\b(?:blocks?|prevents?|before they run)\b/i;
+const THEFT_INTERDICTION_WINDOW = 120;
+const THEFT_CONTEXT_TO_CLAIM_WINDOW = 220;
 const CREDENTIAL_THEFT_DESTINATION_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,120}\b(?:to|into|via|through|over|using|at)\b[\s\S]{0,40}\b(webhooks?|remote servers?|external endpoints?|third[- ]part(?:y|ies)|apis?|https?:\/\/)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,120}\b(?:to|into|via|through|over|using|at)\b[\s\S]{0,40}\b(webhooks?|remote servers?|external endpoints?|third[- ]part(?:y|ies)|apis?|https?:\/\/)\b/i;
 const EXPLICIT_CREDENTIAL_STEALING_PATTERN =
@@ -145,13 +170,63 @@ function normalizeRepo(value) {
   return normalizeText(value).toLowerCase();
 }
 
+function globalPattern(pattern) {
+  const flags = pattern.flags.includes("g")
+    ? pattern.flags
+    : `${pattern.flags}g`;
+  return new RegExp(pattern.source, flags);
+}
+
+function hasOrderedPatternWindow(text, firstPattern, secondPattern, maxChars) {
+  for (const match of text.matchAll(globalPattern(firstPattern))) {
+    const start = (match.index ?? 0) + match[0].length;
+    if (secondPattern.test(text.slice(start, start + maxChars))) return true;
+  }
+  return false;
+}
+
+function hasDefensiveTheftInterdiction(text) {
+  // Only safe-harbor theft wording when it describes blocking/detecting risky
+  // command, prompt, request, or output patterns, not the tool's own capability.
+  const actionBeforeTarget = hasOrderedPatternWindow(
+    text,
+    THEFT_INTERDICTION_ACTION_PATTERN,
+    THEFT_INTERDICTION_TARGET_PATTERN,
+    THEFT_INTERDICTION_WINDOW,
+  );
+  const targetBeforeTheft = hasOrderedPatternWindow(
+    text,
+    THEFT_INTERDICTION_TARGET_PATTERN,
+    CREDENTIAL_THEFT_PATTERN,
+    THEFT_CONTEXT_TO_CLAIM_WINDOW,
+  );
+  const theftBeforeResult = hasOrderedPatternWindow(
+    text,
+    CREDENTIAL_THEFT_PATTERN,
+    THEFT_INTERDICTION_RESULT_PATTERN,
+    THEFT_INTERDICTION_WINDOW,
+  );
+
+  return (actionBeforeTarget && targetBeforeTheft) || theftBeforeResult;
+}
+
 function hasDefensiveSecuritySafeHarbor(text) {
+  const hasCredentialTheftWording = CREDENTIAL_THEFT_PATTERN.test(text);
   return (
     DEFENSIVE_SECURITY_MITIGATION_PATTERN.test(text) &&
+    (!hasCredentialTheftWording || hasDefensiveTheftInterdiction(text)) &&
     !RESOURCE_THEFT_CAPABILITY_PATTERN.test(text) &&
     !CREDENTIAL_THEFT_DESTINATION_PATTERN.test(text) &&
     !EXPLICIT_CREDENTIAL_STEALING_PATTERN.test(text) &&
     !ABUSE_ENABLEMENT_PATTERN.test(text)
+  );
+}
+
+function hasFinancialOrIdentitySensitiveSignal(text) {
+  return (
+    FINANCIAL_OR_IDENTITY_PATTERN.test(text) ||
+    IDENTITY_ATTESTATION_PATTERN.test(text) ||
+    IDENTITY_ATTESTATION_REVERSE_PATTERN.test(text)
   );
 }
 
@@ -955,11 +1030,7 @@ function addContentRiskSignals(report, fields, content) {
     );
   }
 
-  if (
-    /\b(private key|wallet|kyc|usdc|x402|payment|crypto|on-chain|attestation)\b/i.test(
-      text,
-    )
-  ) {
+  if (hasFinancialOrIdentitySensitiveSignal(text)) {
     addFlag(
       report,
       "high",

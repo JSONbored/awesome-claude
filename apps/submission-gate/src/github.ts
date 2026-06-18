@@ -582,14 +582,6 @@ export async function getCommitValidationState(params: {
       });
       continue;
     }
-    if (/superagent/i.test(name) && run.conclusion === "neutral") {
-      checkResults.push({
-        name,
-        status: "passed",
-        details: "concluded neutral",
-      });
-      continue;
-    }
     if (run.conclusion !== "success") {
       checkResults.push({
         name,

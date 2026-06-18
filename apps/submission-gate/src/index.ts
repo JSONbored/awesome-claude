@@ -2163,6 +2163,12 @@ function contentSignalSourceFromDirectoryEntry(entry: Record<string, unknown>) {
     const value = entry[field];
     if (value) lines.push(`${field}: ${yamlScalar(value)}`);
   }
+  if (Array.isArray(entry.sourceUrls) && entry.sourceUrls.length) {
+    lines.push("sourceUrls:");
+    for (const value of entry.sourceUrls) {
+      lines.push(`  - ${yamlScalar(value)}`);
+    }
+  }
   lines.push("---", "");
   return lines.join("\n");
 }
@@ -2348,6 +2354,7 @@ async function enqueueReviewTarget(
   eventName: string,
   webhook?: Record<string, unknown>,
   forceRecheck = false,
+  trustedManualRecheck = false,
 ) {
   if (target.baseRef !== contentGateBaseRef(env)) return false;
   const targetKey = targetKeyForReview(target);
@@ -2367,7 +2374,8 @@ async function enqueueReviewTarget(
       isReopenedPullRequestEvent(eventName, webhook) ||
       eventName === "scheduled");
   const shouldResetManualTerminal =
-    forceRecheck === true && String(existing?.status || "") === "manual";
+    trustedManualRecheck === true &&
+    String(existing?.status || "") === "manual";
   const shouldQueueReview =
     !hasTerminalGateDecision(existing) ||
     shouldResetIgnoredScan ||
@@ -2408,7 +2416,14 @@ async function enqueueReviewTarget(
   await env.SUBMISSION_REVIEW_QUEUE.send({
     kind: "review_pr",
     targetKey,
-    payload: { eventName, deliveryId, target, webhook, forceRecheck },
+    payload: {
+      eventName,
+      deliveryId,
+      target,
+      webhook,
+      forceRecheck,
+      trustedManualRecheck,
+    },
   });
   return true;
 }
@@ -2721,6 +2736,7 @@ async function githubWebhookRoute(
       eventName,
       payload,
       true,
+      true,
     );
     const targetKey = targetKeyForReview(target);
     return json({ ok: true, queued: true, targetKey });
@@ -3027,6 +3043,9 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       const forceRecheck =
         message.payload.forceRecheck === true ||
         String(message.payload.eventName || "") === "issue_comment";
+      const trustedManualRecheck =
+        message.payload.trustedManualRecheck === true ||
+        String(message.payload.eventName || "") === "issue_comment";
       const existing = await getPrState(env.SUBMISSION_GATE_DB, {
         repo: target.repoFullName,
         number: target.number,
@@ -3072,7 +3091,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             return;
           }
           const existingStatus = String(existing?.status || "");
-          if (existingStatus === "manual" && !forceRecheck) {
+          if (existingStatus === "manual" && !trustedManualRecheck) {
             await insertAudit(env.SUBMISSION_GATE_DB, {
               id: crypto.randomUUID(),
               targetKey: message.targetKey,
@@ -3741,6 +3760,22 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               }`,
               "- The gate will retry after transient GitHub merge state settles.",
             ].join("\n");
+            const pendingDecision = defaultManualDecision(pendingSummary, {
+              code: "merge_retry_pending",
+              retryable: true,
+              message: error instanceof Error ? error.message : "unknown",
+            });
+            const pendingReport = await upsertMarkerComment({
+              token,
+              repo,
+              issueNumber: target.number,
+              marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+              body: markerComment(
+                pendingDecision,
+                env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+              ),
+              apiVersion: env.GITHUB_API_VERSION,
+            });
             await upsertPrState(env.SUBMISSION_GATE_DB, {
               repo: target.repoFullName,
               number: target.number,
@@ -3754,7 +3789,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               verdictSummary: pendingSummary,
               nextReviewAt: isoAfter(retryDelaySeconds),
               lastError: error instanceof Error ? error.message : "unknown",
-              ...decisionMetadata(acceptedDecision, acceptedReport),
+              ...decisionMetadata(pendingDecision, pendingReport),
             });
             await insertAudit(env.SUBMISSION_GATE_DB, {
               id: crypto.randomUUID(),

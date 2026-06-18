@@ -1,0 +1,232 @@
+---
+title: Skills CLI
+slug: skills-cli
+category: tools
+description: >-
+  MIT-licensed `skills` CLI from Vercel Labs for installing, using, finding,
+  listing, updating, removing, and initializing Agent Skills across Claude Code,
+  Codex, Cursor, OpenCode, OpenClaw, Gemini CLI, GitHub Copilot, Windsurf, Zed,
+  and dozens of other agent hosts.
+cardDescription: >-
+  Manage SKILL.md agent skills with `npx skills`: add, use, find, list, update,
+  remove, initialize, symlink, copy, and target supported agent hosts.
+seoTitle: Skills CLI for Agent Skills, Claude Code, Codex, Cursor, OpenCode, and OpenClaw
+seoDescription: >-
+  Use the Vercel Labs Skills CLI to install Agent Skills with `npx skills add`,
+  run skills without installing via `skills use`, search skills, update
+  project or global installs, remove skills, create SKILL.md templates, and
+  manage skills across Claude Code, Codex, Cursor, OpenCode, OpenClaw, Gemini
+  CLI, GitHub Copilot, Windsurf, Zed, and 70+ agent hosts.
+author: Vercel Labs
+authorProfileUrl: "https://github.com/vercel-labs"
+dateAdded: "2026-06-18"
+websiteUrl: "https://skills.sh/vercel-labs/skills"
+documentationUrl: "https://github.com/vercel-labs/skills#readme"
+repoUrl: "https://github.com/vercel-labs/skills"
+packageUrl: "https://registry.npmjs.org/skills/latest"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/vercel-labs/skills/blob/main/package.json"
+  - "https://github.com/vercel-labs/skills/blob/main/src/cli.ts"
+  - "https://github.com/vercel-labs/skills/blob/main/src/add.ts"
+  - "https://github.com/vercel-labs/skills/blob/main/src/installer.ts"
+  - "https://github.com/vercel-labs/skills/blob/main/src/telemetry.ts"
+  - "https://github.com/vercel-labs/skills/releases/tag/v1.5.12"
+installable: true
+installCommand: "npm install -g skills"
+usageSnippet: >-
+  Use `npx skills add <source>` to install Agent Skills from GitHub, GitLab,
+  git URLs, local paths, or direct skill paths into project or global agent
+  directories. Use `skills use` when you want a temporary prompt for one skill
+  instead of installing it.
+copySnippet: |-
+  npx skills add vercel-labs/agent-skills
+  npx skills add vercel-labs/agent-skills --list
+  npx skills add vercel-labs/agent-skills --skill frontend-design -a claude-code
+  npx skills use vercel-labs/agent-skills@web-design-guidelines | claude
+  npx skills list
+  npx skills update -g
+  npx skills init my-skill
+configSnippet: |-
+  {
+    "projectInstall": "npx skills add vercel-labs/agent-skills --skill frontend-design -a claude-code",
+    "globalInstall": "npx skills add vercel-labs/agent-skills --skill frontend-design -g -a claude-code -y",
+    "temporaryUse": "npx skills use vercel-labs/agent-skills@web-design-guidelines | claude",
+    "disableTelemetry": "DISABLE_TELEMETRY=1 npx skills list"
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js 18 or newer for the published `skills` npm package."
+  - "At least one supported agent host installed if using auto-detected targets, such as Claude Code, Codex, Cursor, OpenCode, OpenClaw, Gemini CLI, GitHub Copilot, Windsurf, Zed, or another supported agent."
+  - "A reviewed skill source from GitHub, GitLab, a git URL, a local path, a direct skill folder, or another supported provider."
+  - "A decision between project-scoped skills that live under the current repository and global skills that live under the user's home/config directories."
+  - "A policy for whether installed skills are symlinked from one canonical copy or copied independently into each agent directory."
+safetyNotes:
+  - "Agent Skills are executable instructions for coding agents. Inspect `SKILL.md` and supporting files before installing or using skills from unknown repositories."
+  - "`skills add`, `skills update`, `skills remove`, and `experimental_sync` can write, replace, symlink, copy, or remove skill folders across many local agent directories. Review `--agent`, `--skill`, `--all`, `--global`, and `--yes` flags before running broad operations."
+  - "`skills use` can materialize a skill into a temporary directory and print the generated prompt, or start a supported agent interactively with that prompt. Treat untrusted skill text as prompt-bearing code."
+  - "Symlink install mode keeps a canonical copy and links agent directories to it. Copy mode creates independent copies. Choose deliberately when working across shared repos, Windows environments, containers, or synchronized directories."
+  - "The CLI includes explicit warnings for OpenClaw community skills in `skills use`; do not bypass those warnings unless you understand the trust model for the selected source."
+  - "The security audit lookup is best-effort and never blocks installation. A missing or safe-looking audit result is not a substitute for reviewing the skill source."
+privacyNotes:
+  - "By default, the CLI can send telemetry to `add-skill.vercel.sh` unless `DISABLE_TELEMETRY` or `DO_NOT_TRACK` is set."
+  - "Telemetry fields in source include CLI version, CI flag, detected agent name, event type, source, selected skills, selected agents, global flag, source type, update counts, find query, and result counts."
+  - "Security-audit lookup requests can send the skill source and selected skill slugs to the audit endpoint."
+  - "Local project and global installs can persist source names, selected skills, agent targets, canonical paths, lock data, symlinks, and copied skill contents on disk."
+  - "Skill contents used through `skills use` are embedded into the generated prompt and may be sent to the downstream model provider or interactive agent process."
+tags:
+  - skills-cli
+  - agent-skills
+  - skill-manager
+  - claude-code
+  - codex
+  - cursor
+  - openclaw
+  - cli
+keywords:
+  - Skills CLI
+  - npx skills
+  - skills add
+  - skills use
+  - Agent Skills CLI
+  - install Agent Skills
+  - Claude Code skills install
+  - Codex skills install
+  - Cursor skills install
+  - SKILL.md installer
+  - skills.sh CLI
+  - Vercel Labs skills
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Skills CLI is the Vercel Labs command-line tool behind the open Agent Skills
+ecosystem. It installs `SKILL.md`-based skill packages into project or global
+agent directories, resolves skills from several source formats, and can target
+Claude Code, Codex, Cursor, OpenCode, OpenClaw, Gemini CLI, GitHub Copilot,
+Windsurf, Zed, and many other agent hosts.
+
+Use it when you want one command surface for installing, testing, updating, or
+removing reusable Agent Skills instead of manually copying folders between
+agent-specific skill directories.
+
+## Install
+
+For one-off use, run through `npx`:
+
+```bash
+npx skills add vercel-labs/agent-skills
+```
+
+For a persistent local command:
+
+```bash
+npm install -g skills
+skills --help
+```
+
+The package exposes both `skills` and `add-skill` binaries.
+
+## Capability Map
+
+| Command | Purpose |
+| --- | --- |
+| `skills add <source>` | Install one or more skills from GitHub shorthand, GitHub URL, direct skill path, GitLab URL, git URL, or local path |
+| `skills use <source>` | Generate a one-skill prompt without installing, or launch a supported agent interactively with that prompt |
+| `skills list` / `skills ls` | List installed project or global skills, optionally filtered by agent or emitted as JSON |
+| `skills find [query]` | Search skills interactively or by keyword |
+| `skills update [skills...]` | Update project, global, or named skills using lock/source metadata where available |
+| `skills remove [skills...]` | Remove skills from global or project scope and selected agent directories |
+| `skills init [name]` | Create a new `SKILL.md` template in the current directory or a named subdirectory |
+| `experimental_install` | Restore from `skills-lock.json` |
+| `experimental_sync` | Sync skills from `node_modules` into agent directories |
+
+## Source Formats
+
+The README documents these install inputs:
+
+- GitHub shorthand such as `vercel-labs/agent-skills`.
+- Full GitHub URLs.
+- Direct paths to a skill folder inside a repository.
+- GitLab URLs.
+- Generic git URLs.
+- Local paths.
+
+Install can target all skills, named skills, all agents, named agents, project
+scope, global scope, symlink mode, or copy mode. Noninteractive flags are useful
+for automation, but they should be reserved for reviewed sources.
+
+## Supported Agents
+
+The README says the CLI supports OpenCode, Claude Code, Codex, Cursor, and 68
+more agents. The source defines per-agent project and global skill directories,
+including support for Claude Code, OpenClaw, Codex, Cursor, Continue, Gemini
+CLI, GitHub Copilot, Goose, Hermes Agent, Kiro, OpenCode, Roo, Windsurf, Zed,
+and many other hosts.
+
+Universal agents share the canonical `.agents/skills` style directory, while
+other agents receive symlinks or copies into their own discovery paths.
+
+## Safety Boundary
+
+Skills CLI manages files that coding agents will later read as instructions.
+That gives it a higher trust bar than a normal package installer:
+
+- Review each source repository and `SKILL.md` before installing.
+- Prefer project installs when a skill should be reviewed and versioned with a
+  team repository.
+- Prefer global installs only for skills you trust across projects.
+- Use `--list` before installing from unfamiliar repositories.
+- Avoid `--all`, `--agent '*'`, `--skill '*'`, and `-y` until the target source
+  and agent directories are clear.
+- Use `DISABLE_TELEMETRY=1` or `DO_NOT_TRACK=1` when telemetry is not allowed.
+
+## Use Cases
+
+- Install a shared frontend, security, release, or MCP-authoring skill into
+  Claude Code and Codex from one command.
+- Preview available skills in a repository before deciding which one to install.
+- Generate a temporary skill prompt for a single task without changing local
+  agent directories.
+- Keep project skill installs in a repository so the team gets the same agent
+  instructions.
+- Update or remove global skills that were installed across several agent
+  hosts.
+- Bootstrap a new `SKILL.md` file when authoring a reusable agent skill.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub metadata reported `vercel-labs/skills` as a TypeScript repository with
+  the description `The open agent skills tool - npx skills`, homepage
+  `skills.sh`, active updates on 2026-06-18, latest release `v1.5.12`
+  published on 2026-06-18, and more than 22,000 stars.
+- npm metadata for `skills` reported version `1.5.12`, description `The open
+  agent skills ecosystem`, MIT license, Node.js `>=18`, and binaries `skills`
+  and `add-skill`.
+- The README documents `skills add`, `skills use`, `skills list`, `skills
+  find`, `skills remove`, `skills update`, `skills init`, source formats,
+  project/global scopes, symlink/copy install methods, and supported agents.
+- The public skills.sh page for `vercel-labs/skills` reported one listed skill,
+  `find-skills`, and the install command `npx skills add vercel-labs/skills`.
+- `src/cli.ts` wires the main command surface, help output, version handling,
+  and command dispatch for add, use, find, list, remove, sync, update, and
+  install-from-lock flows.
+- `src/add.ts` handles source parsing, private-repo detection, security audit
+  display, agent detection, selected skills, selected agents, universal-agent
+  handling, and OpenClaw community-skill warnings.
+- `src/installer.ts` sanitizes skill names, validates install paths, manages
+  canonical skill directories, creates symlinks or copies, and handles
+  project/global target directories.
+- `src/telemetry.ts` shows telemetry and audit endpoints, opt-out environment
+  variables, event fields, CI detection, detected-agent inclusion, and
+  best-effort audit data fetch behavior.
+- Release `v1.5.12` lists improvements for Eve support, local skill overwrite
+  behavior during all-agent installs, and manifest creation.

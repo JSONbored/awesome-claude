@@ -1,5 +1,7 @@
 import { buildSubmissionPrDraft, validateSubmission } from "@heyclaude/registry/submission";
 import { analyzeSubmissionDraftRisk } from "@heyclaude/registry/submission-risk";
+import { parseGitHubRepoUrl } from "@heyclaude/registry/source-repo";
+import { canonicalizeSourceUrl } from "@heyclaude/registry/source-url";
 
 import { getDirectoryEntries, type DirectoryEntry } from "@/lib/content.server";
 import { siteConfig } from "@/lib/site";
@@ -13,7 +15,29 @@ type DuplicateCandidate = {
   title: string;
   url: string;
   reasons: string[];
+  reasonLabels: string[];
 };
+
+const DUPLICATE_REASON_LABELS = {
+  slug: "same slug",
+  source_url: "same source",
+  title: "same title",
+  similar_title: "similar title",
+  same_repo: "same GitHub repository",
+  same_host: "same source host",
+} as const;
+
+const COMMON_SOURCE_HOSTS = new Set([
+  "bitbucket.org",
+  "github.com",
+  "gitlab.com",
+  "marketplace.visualstudio.com",
+  "npmjs.com",
+  "pypi.org",
+  "raw.githubusercontent.com",
+]);
+
+const TITLE_STOP_WORDS = new Set(["and", "for", "mcp", "server", "the", "tool", "with"]);
 
 function normalizeText(value: unknown) {
   return String(value ?? "").trim();
@@ -23,19 +47,65 @@ function normalizeComparable(value: unknown) {
   return normalizeText(value).toLowerCase().replace(/\s+/g, " ");
 }
 
-function normalizeUrl(value: unknown) {
-  const text = normalizeText(value);
-  if (!text) return "";
+function duplicateReasonLabels(reasons: string[]) {
+  return reasons.map(
+    (reason) => DUPLICATE_REASON_LABELS[reason as keyof typeof DUPLICATE_REASON_LABELS] || reason,
+  );
+}
+
+function sourceHost(value: unknown) {
+  const canonical = canonicalizeSourceUrl(value);
+  if (!canonical) return "";
   try {
-    const url = new URL(text);
-    url.hash = "";
-    if (url.pathname !== "/" && url.pathname.endsWith("/")) {
-      url.pathname = url.pathname.slice(0, -1);
-    }
-    return url.toString().toLowerCase();
+    return new URL(canonical).hostname.replace(/^www\./, "").toLowerCase();
   } catch {
-    return text.toLowerCase();
+    return "";
   }
+}
+
+function titleWords(value: unknown) {
+  return new Set(
+    normalizeComparable(value)
+      .split(/[^a-z0-9]+/i)
+      .map((word) => word.trim())
+      .filter((word) => word.length > 2 && !TITLE_STOP_WORDS.has(word)),
+  );
+}
+
+function isSimilarTitle(submittedTitle: string, entryTitle: string) {
+  const submitted = normalizeComparable(submittedTitle);
+  const existing = normalizeComparable(entryTitle);
+  if (!submitted || !existing || submitted === existing) return false;
+  const submittedWords = titleWords(submitted);
+  const existingWords = titleWords(existing);
+  if (!submittedWords.size || !existingWords.size) return false;
+  const shared = [...submittedWords].filter((word) => existingWords.has(word));
+  return (
+    shared.length >= 2 && shared.length / Math.min(submittedWords.size, existingWords.size) >= 0.6
+  );
+}
+
+function sourceProfile(values: unknown[]) {
+  const canonicalUrls = new Set<string>();
+  const hosts = new Set<string>();
+  const githubRepos = new Set<string>();
+
+  for (const value of values) {
+    const canonical = canonicalizeSourceUrl(value);
+    if (canonical) canonicalUrls.add(canonical);
+
+    const host = sourceHost(canonical || value);
+    if (host && !COMMON_SOURCE_HOSTS.has(host)) hosts.add(host);
+
+    const repo = parseGitHubRepoUrl(canonical || value);
+    if (repo) githubRepos.add(repo.url.toLowerCase());
+  }
+
+  return { canonicalUrls, hosts, githubRepos };
+}
+
+function intersects(left: Set<string>, right: Set<string>) {
+  return [...left].some((value) => right.has(value));
 }
 
 function normalizeError(error: unknown) {
@@ -50,20 +120,18 @@ function normalizeError(error: unknown) {
 
 function submittedSourceUrls(fields: Record<string, unknown>) {
   return [fields.github_url, fields.docs_url, fields.source_url, fields.download_url]
-    .map(normalizeUrl)
+    .map(canonicalizeSourceUrl)
     .filter(Boolean);
 }
 
-function entrySourceUrls(entry: DirectoryEntry) {
+function entrySourceValues(entry: DirectoryEntry) {
   return [
     entry.repoUrl,
     entry.githubUrl,
     entry.documentationUrl,
     entry.downloadUrl,
     ...(entry.trustSignals?.sourceUrls ?? []),
-  ]
-    .map(normalizeUrl)
-    .filter(Boolean);
+  ];
 }
 
 function duplicateCandidates(params: {
@@ -73,8 +141,14 @@ function duplicateCandidates(params: {
   slug: string;
 }) {
   const title = normalizeComparable(params.fields.name || params.fields.title || "");
-  const sourceUrls = submittedSourceUrls(params.fields);
-  const sourceUrlSet = new Set(sourceUrls);
+  const submittedValues = [
+    params.fields.github_url,
+    params.fields.docs_url,
+    params.fields.source_url,
+    params.fields.download_url,
+  ];
+  const submittedProfile = sourceProfile(submittedValues);
+  const sourceUrlSet = new Set(submittedSourceUrls(params.fields));
   const candidates: DuplicateCandidate[] = [];
 
   for (const entry of params.entries) {
@@ -87,21 +161,32 @@ function duplicateCandidates(params: {
 
     if (title && normalizeComparable(entry.title) === title) {
       reasons.push("title");
+    } else if (title && isSimilarTitle(title, entry.title)) {
+      reasons.push("similar_title");
     }
 
+    const entryProfile = sourceProfile(entrySourceValues(entry));
     if (sourceUrlSet.size) {
-      const shared = entrySourceUrls(entry).find((url) => sourceUrlSet.has(url));
+      const shared = [...entryProfile.canonicalUrls].find((url) => sourceUrlSet.has(url));
       if (shared) reasons.push("source_url");
+    }
+    if (intersects(submittedProfile.githubRepos, entryProfile.githubRepos)) {
+      reasons.push("same_repo");
+    }
+    if (intersects(submittedProfile.hosts, entryProfile.hosts)) {
+      reasons.push("same_host");
     }
 
     if (!reasons.length) continue;
+    const uniqueReasons = [...new Set(reasons)];
     candidates.push({
       key: `${entry.category}:${entry.slug}`,
       category: entry.category,
       slug: entry.slug,
       title: entry.title,
       url: entry.canonicalUrl || `${siteConfig.url}/entry/${entry.category}/${entry.slug}`,
-      reasons: [...new Set(reasons)],
+      reasons: uniqueReasons,
+      reasonLabels: duplicateReasonLabels(uniqueReasons),
     });
   }
 
@@ -230,14 +315,33 @@ export async function buildSubmissionPreflight(fields: Record<string, unknown>) 
 
   for (const duplicate of duplicates) {
     if (duplicate.reasons.includes("slug") || duplicate.reasons.includes("source_url")) {
-      blockers.push(blocker("duplicate_existing", `Likely duplicate of ${duplicate.key}.`));
+      const labels = duplicateReasonLabels(
+        duplicate.reasons.filter((reason) => reason === "slug" || reason === "source_url"),
+      ).join(", ");
+      blockers.push(
+        blocker("duplicate_existing", `Likely duplicate of ${duplicate.key}: ${labels}.`),
+      );
     }
   }
 
   for (const duplicate of duplicates) {
     if (duplicate.reasons.includes("title")) {
       warnings.push(
-        warning("possible_duplicate_title", `Similar existing title: ${duplicate.key}.`),
+        warning(
+          "possible_duplicate_title",
+          `Existing entry uses the same title: ${duplicate.key}.`,
+        ),
+      );
+    }
+    const relatedReasons = duplicate.reasons.filter(
+      (reason) => !["slug", "source_url", "title"].includes(reason),
+    );
+    if (relatedReasons.length) {
+      warnings.push(
+        warning(
+          "possible_duplicate_existing",
+          `Possible related existing entry ${duplicate.key}: ${duplicateReasonLabels(relatedReasons).join(", ")}.`,
+        ),
       );
     }
   }

@@ -4,8 +4,8 @@ slug: unsafe-shell-command-blocker-hook
 category: hooks
 description: >-
   PreToolUse Bash guardrail implementing the Claude Code hooks guide drop-table
-  example: exit 2 with stderr feedback when Bash command text contains the
-  documented destructive SQL substring.
+  example: exit 2 with stderr feedback when Bash command text contains a
+  case-insensitive DROP TABLE pattern.
 cardDescription: >-
   Block Bash tool calls matching the hooks-guide drop-table guardrail example.
 seoTitle: Destructive SQL Bash Guardrail Hook for Claude Code
@@ -28,7 +28,7 @@ installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/block-drop-table.sh && chmod +x .claude/hooks/block-drop-table.sh
 usageSnippet: >-
-  PreToolUse Bash guardrail exits 2 when command text contains the hooks-guide drop-table substring.
+  PreToolUse Bash guardrail exits 2 when command text contains a case-insensitive DROP TABLE pattern.
 copySnippet: |-
   {
     "hooks": {
@@ -74,7 +74,7 @@ scriptBody: |-
   esac
   command_text=$(printf '%s' "$input" | jq -r '.tool_input.command // .toolInput.command // empty')
   [ -z "$command_text" ] && exit 0
-  if printf '%s' "$command_text" | grep -Fq "drop table"; then
+  if printf '%s' "$command_text" | grep -Eiq 'drop[[:space:]]*(/\*[^*]*\*/[[:space:]]*)*table'; then
     echo "Blocked: dropping tables is not allowed" >&2
     exit 2
   fi
@@ -103,7 +103,7 @@ robotsFollow: true
 ---
 
 This hook applies the **hooks guide drop-table guardrail example** to Bash
-`PreToolUse` events so destructive SQL substrings are denied before execution.
+`PreToolUse` events so destructive SQL patterns are denied before execution.
 
 ## Scope
 
@@ -119,8 +119,9 @@ Claude Code hook shipped by Anthropic.
 
 ## Expected behavior
 
-When Bash command text contains the documented `drop table` substring, the hook
-writes feedback to stderr and exits 2 so Claude Code denies the tool call.
+When Bash command text contains a case-insensitive `DROP TABLE` pattern, including
+extra whitespace or block comments between keywords, the hook writes feedback to
+stderr and exits 2 so Claude Code denies the tool call.
 
 ## Source Verification Notes
 

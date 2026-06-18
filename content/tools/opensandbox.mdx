@@ -1,0 +1,227 @@
+---
+title: OpenSandbox
+slug: opensandbox
+category: tools
+description: >-
+  Apache-2.0 sandbox runtime and SDK suite for AI agents, with Python,
+  Java/Kotlin, JavaScript/TypeScript, C#/.NET, and Go SDKs, Docker and
+  Kubernetes runtimes, OpenSandbox MCP server, CLI, code interpreter,
+  filesystem and command tools, network policy, credential vault, and secure
+  container runtime guidance.
+cardDescription: >-
+  Sandbox runtime for AI agents with multi-language SDKs, MCP tools, Docker,
+  Kubernetes, egress controls, credential vault, and code execution.
+seoTitle: OpenSandbox AI Agent Sandbox Runtime, MCP Server, CLI, and Multi-Language SDKs
+seoDescription: >-
+  Use OpenSandbox to run AI agent workloads in isolated sandboxes with Python,
+  Java, JavaScript, .NET, and Go SDKs, an MCP server for Claude Code and Cursor,
+  CLI tools, Docker and Kubernetes runtimes, network policies, credential
+  vault, command execution, file operations, and code interpreter workflows.
+author: OpenSandbox
+authorProfileUrl: "https://github.com/opensandbox-group"
+dateAdded: "2026-06-18"
+websiteUrl: "https://open-sandbox.ai"
+documentationUrl: "https://open-sandbox.ai"
+repoUrl: "https://github.com/opensandbox-group/OpenSandbox"
+packageUrl: "https://pypi.org/pypi/opensandbox/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/opensandbox-group/OpenSandbox"
+  - "https://github.com/opensandbox-group/OpenSandbox/blob/main/README.md"
+  - "https://github.com/opensandbox-group/OpenSandbox/blob/main/cli/README.md"
+  - "https://github.com/opensandbox-group/OpenSandbox/blob/main/sdks/mcp/sandbox/python/README.md"
+  - "https://github.com/opensandbox-group/OpenSandbox/blob/main/SECURITY.md"
+  - "https://pypi.org/pypi/opensandbox/json"
+  - "https://pypi.org/pypi/opensandbox-cli/json"
+  - "https://pypi.org/pypi/opensandbox-mcp/json"
+installable: true
+installCommand: "pip install opensandbox"
+usageSnippet: >-
+  Install the Python SDK for application code, `opensandbox-cli` for terminal
+  workflows, or `opensandbox-mcp` to expose sandbox lifecycle, command, and
+  text-file operations to Claude Code, Cursor, or other MCP-capable clients.
+copySnippet: |-
+  pip install opensandbox
+  pip install opensandbox-cli
+  pip install opensandbox-mcp
+estimatedSetupTime: 45 minutes
+difficulty: advanced
+prerequisites:
+  - "Python 3.10 or newer for the Python SDK, CLI, and MCP package, or the selected Java/Kotlin, JavaScript/TypeScript, .NET, or Go runtime for another SDK."
+  - "Docker for local execution, or Kubernetes and cluster access for distributed scheduling."
+  - "An OpenSandbox server endpoint, protocol, API key, sandbox image, timeout, network policy, and cleanup policy."
+  - "Credential Vault and egress policy design before letting agent workloads reach external APIs or private services."
+  - "Security review for Docker, Kubernetes, gVisor, Kata Containers, Firecracker microVMs, ingress routing, volumes, and persistent storage patterns."
+safetyNotes:
+  - "OpenSandbox exposes sandbox creation, command execution, file read/write/delete/search/move, endpoint exposure, metrics, and lifecycle control; restrict who can call those tools and which images they can run."
+  - "MCP clients can ask OpenSandbox to write files, run commands, install dependencies, expose ports, and kill or renew sandboxes. Require approval gates for high-impact workloads."
+  - "Container and Kubernetes sandboxes are isolation boundaries, not magic safety guarantees; configure seccomp, capabilities, mounts, network egress, resource limits, image trust, and cleanup behavior."
+  - "Credential Vault can reduce secret exposure, but injected credentials still need least privilege, rotation, audit logging, and outbound network controls."
+  - "Security policy says only the latest release and main branch are actively supported with security updates; pin versions and plan upgrades accordingly."
+privacyNotes:
+  - "Sandbox workloads can process source code, prompts, tool arguments, command output, uploaded files, generated files, environment variables, credentials, logs, metrics, endpoints, and network destinations."
+  - "The MCP server and CLI can store API keys, domain configuration, sandbox IDs, command history, file paths, and endpoint details in local configs, shell history, logs, or MCP client state."
+  - "Kubernetes, Docker registries, ingress gateways, credential vaults, OpenTelemetry or audit systems, and hosted OpenSandbox endpoints may retain workload metadata and outputs depending on deployment."
+  - "Do not run untrusted code with access to private networks, production credentials, customer data, or broad egress without isolation, monitoring, and retention rules."
+tags:
+  - opensandbox
+  - sandbox
+  - ai-agents
+  - mcp
+  - code-execution
+  - kubernetes
+  - docker
+  - security
+keywords:
+  - OpenSandbox
+  - OpenSandbox MCP
+  - AI agent sandbox runtime
+  - sandbox runtime for AI agents
+  - opensandbox Python SDK
+  - opensandbox CLI
+  - opensandbox-mcp
+  - Claude Code sandbox MCP
+  - Kubernetes AI agent sandbox
+  - code interpreter sandbox
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+OpenSandbox is an Apache-2.0 sandbox platform for AI applications and agents.
+The project provides multi-language SDKs, a CLI, an MCP server, Docker and
+Kubernetes runtimes, network policy controls, credential vault support,
+command/file/code-interpreter environments, and guidance for secure container
+runtimes such as gVisor, Kata Containers, and Firecracker microVMs.
+
+Use it when an agent needs an isolated place to run commands, write files,
+execute code, expose temporary services, or run workload-specific tools without
+handing the agent direct access to the host machine.
+
+## Install
+
+For the Python SDK:
+
+```bash
+pip install opensandbox
+```
+
+For the CLI:
+
+```bash
+pip install opensandbox-cli
+```
+
+For MCP clients:
+
+```bash
+pip install opensandbox-mcp
+opensandbox-mcp --domain localhost:8080 --protocol http
+```
+
+The README also documents Java/Kotlin, JavaScript/TypeScript, .NET, and Go SDK
+installation paths. Pick the SDK that matches the agent host and runtime.
+
+## MCP Setup
+
+The OpenSandbox MCP server exposes sandbox lifecycle, command execution, and
+text file operations to MCP-capable clients. A Claude Code stdio setup uses:
+
+```bash
+claude mcp add opensandbox-sandbox --transport stdio -- \
+  opensandbox-mcp --api-key "$OPEN_SANDBOX_API_KEY" --domain "$OPEN_SANDBOX_DOMAIN"
+```
+
+The MCP docs also describe HTTP transport and Cursor configuration. Treat the
+MCP server as a privileged tool boundary because it can create sandboxes, run
+commands, read and write files, expose endpoints, and terminate workloads.
+
+## Agent Capabilities
+
+| Area | OpenSandbox Coverage |
+| --- | --- |
+| SDKs | Python, Java/Kotlin, JavaScript/TypeScript, C#/.NET, and Go |
+| CLI | `osb` commands for sandbox lifecycle, commands, files, egress, credential vault, diagnostics, and skills |
+| MCP | `opensandbox-mcp` tools for sandbox create/connect/kill/list/renew/metrics, command run/interrupt, and text file operations |
+| Runtime | Docker local runtime and high-performance Kubernetes runtime |
+| Environments | Command, filesystem, code interpreter, browser automation, VNC, VS Code, and agent examples |
+| Network | Ingress gateway, endpoint exposure, and sandbox egress controls |
+| Secrets | Credential Vault for controlled outbound requests |
+| Isolation | Guidance for gVisor, Kata Containers, and Firecracker microVMs |
+
+## Use Cases
+
+- Give Claude Code, Cursor, or another MCP client a sandboxed command and file
+  execution surface.
+- Run coding-agent workloads inside Docker or Kubernetes instead of directly on
+  a developer workstation.
+- Expose a temporary service from a sandbox and return its endpoint to an agent.
+- Add egress policy and credential vault controls around agent workloads.
+- Run code interpreter tasks, browser automation, VNC desktops, or VS Code
+  environments inside managed sandboxes.
+- Compare OpenSandbox with E2B, Daytona, Microsandbox, and other agent sandbox
+  infrastructure.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes OpenSandbox as a general-purpose sandbox
+  platform for AI applications with multi-language SDKs, unified sandbox APIs,
+  Docker/Kubernetes runtimes, agent examples, network policy, credential vault,
+  and secure runtime guidance.
+- The README states that OpenSandbox is listed in the CNCF Landscape.
+- The README documents Python, Java/Kotlin, JavaScript/TypeScript, .NET, and
+  Go SDK installation paths.
+- The README documents `osb`, `opensandbox-mcp`, local Docker server startup,
+  code interpreter SDK usage, and examples for Claude Code, Gemini CLI, OpenAI
+  Codex CLI, Qwen Code, Kimi CLI, LangGraph, Google ADK, and OpenClaw.
+- The MCP README says the MCP server exposes sandbox lifecycle management,
+  command execution, and text file operations to Claude Code, Cursor, and
+  other MCP-capable clients.
+- The CLI README documents sandbox creation, command execution, file upload and
+  download, network egress policy, credential vault state, diagnostics, and
+  OpenSandbox-specific skill installation.
+- PyPI resolves `opensandbox` version `0.1.11`, `opensandbox-cli` version
+  `0.1.1`, and `opensandbox-mcp` version `0.1.1`.
+- The latest GitHub release is `java/code-interpreter/v1.0.13`, published on
+  2026-06-16.
+- `SECURITY.md` documents supported versions, release signatures, security
+  reporting, egress policy best practices, audit logging, and least privilege.
+
+## Safety and Privacy
+
+OpenSandbox reduces risk by giving agents a dedicated execution environment,
+but it still runs real code, files, services, images, credentials, and network
+requests. The sandbox runtime, image source, network policy, credential vault,
+volume mounts, endpoint exposure, logs, and cleanup policy determine the real
+security boundary.
+
+Do not treat MCP access as harmless. The MCP server exposes operations that can
+create workloads, write files, run commands, expose ports, and return outputs
+to the model. Keep sensitive workloads behind approval, least privilege,
+network restrictions, observability, and retention controls.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/agents/`, `content/mcp/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+OpenSandbox, `opensandbox-group/OpenSandbox`, `alibaba/OpenSandbox`,
+`opensandbox`, `opensandbox-cli`, `opensandbox-mcp`, OpenSandbox MCP, AI agent
+sandbox runtime, Kubernetes agent sandbox, Docker agent sandbox, and code
+interpreter sandbox. Existing E2B, Daytona, Microsandbox, and sandbox-security
+content cover adjacent infrastructure, but no dedicated OpenSandbox tools
+entry, exact source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. OpenSandbox is
+Apache-2.0 open-source software; hosted OpenSandbox endpoints, Kubernetes
+clusters, Docker registries, gVisor, Kata Containers, Firecracker microVMs,
+cloud providers, MCP clients, model providers, observability systems, and
+credential vault integrations may have separate licenses, billing, terms,
+privacy controls, and operational requirements.

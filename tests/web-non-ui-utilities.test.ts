@@ -22,6 +22,7 @@ import { ENTRIES } from "../apps/web/src/data/entries";
 import { COMPARISONS } from "../apps/web/src/data/comparisons";
 import {
   CONTRIBUTORS,
+  contributorForVerifiedAuthor,
   contributorSlug,
   getContributor,
   githubHandle,
@@ -550,6 +551,12 @@ describe("web non-UI utility coverage", () => {
     const topContributor = CONTRIBUTORS[0];
     expect(getContributor(topContributor.slug)).toBe(topContributor);
     expect(topContributor.acceptedCount).toBeGreaterThan(0);
+    expect(
+      contributorForVerifiedAuthor(topContributor.name, topContributor.name),
+    ).toBe(topContributor);
+    expect(
+      contributorForVerifiedAuthor(topContributor.name, "spoofing-submitter"),
+    ).toBeUndefined();
 
     expect(SPONSORS.map((sponsor) => sponsor.slug)).toEqual([
       "cloudflare",
@@ -599,6 +606,12 @@ describe("web non-UI utility coverage", () => {
         repoStats: { stars: 42 },
         dateAdded: "2026-01-04",
       }),
+      entry({
+        slug: "external",
+        title: "External",
+        source: "external",
+        dateAdded: "2026-01-03",
+      }),
       entry({ slug: "newest", title: "Newest", dateAdded: "2026-01-07" }),
     ];
 
@@ -618,7 +631,14 @@ describe("web non-UI utility coverage", () => {
         "reviewed",
       ]),
     );
-    expect(trustPosture(entries)).toEqual({ trusted: 1, pct: 25 });
+    expect(
+      hubStats(entries).find((stat) => stat.key === "sourced"),
+    ).toMatchObject({
+      label: "Source-backed",
+      count: 3,
+      pct: 60,
+    });
+    expect(trustPosture(entries)).toEqual({ trusted: 1, pct: 20 });
     expect(trustPosture([])).toEqual({ trusted: 0, pct: 0 });
   });
 

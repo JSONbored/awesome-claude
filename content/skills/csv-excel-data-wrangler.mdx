@@ -13,7 +13,7 @@ documentationUrl: "https://pandas.pydata.org/"
 downloadUrl: /downloads/skills/csv-excel-data-wrangler.zip
 installable: true
 privacyNotes:
-  - "The skill reads your CSV/Excel/JSON files locally with pandas; processing stays on-machine, but generated outputs and logs can contain values from your source data — review before sharing."
+  - "Claude Pro / Code Interpreter workflows require uploading CSV or Excel files to the Claude conversation for remote processing; local pandas runs read files on your machine. Generated outputs, logs, and conversation history can contain values from your source data — review before sharing."
 safetyNotes:
   - "Installs Python packages (pip install pandas openpyxl) and runs scripts that read and write data files, overwriting outputs at the target path; review transformations before running on important data."
 installCommand: pip install pandas openpyxl

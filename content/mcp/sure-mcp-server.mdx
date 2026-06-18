@@ -1,0 +1,281 @@
+---
+title: Sure MCP Server
+slug: sure-mcp-server
+category: mcp
+description: >-
+  Self-hosted MCP endpoint built into Sure Finance for external AI assistants
+  that need token-authenticated access to personal finance data, accounts,
+  transactions, holdings, budgets, balance sheets, income statements, uploaded
+  family files, bank-statement imports, and goal creation.
+cardDescription: >-
+  Connect Claude, GPT agents, OpenClaw, or custom clients to a self-hosted Sure
+  Finance instance over MCP for personal finance tools and data.
+seoTitle: Sure Finance MCP Server for Claude, OpenClaw, GPT Agents, and Personal Finance AI
+seoDescription: >-
+  Configure the Sure Finance MCP server from we-promise/sure to expose
+  transactions, accounts, holdings, budgets, balance sheets, income statements,
+  uploaded financial documents, bank-statement imports, and goal creation to
+  Claude, OpenClaw, GPT agents, or custom JSON-RPC MCP clients.
+author: Sure
+authorProfileUrl: "https://github.com/we-promise"
+dateAdded: "2026-06-18"
+brandName: Sure Finance
+brandDomain: sure.am
+websiteUrl: "https://sure.am"
+documentationUrl: "https://github.com/we-promise/sure/blob/main/docs/hosting/mcp.md"
+repoUrl: "https://github.com/we-promise/sure"
+packageUrl: "https://github.com/we-promise/sure/pkgs/container/sure"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: FinanceApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/we-promise/sure/blob/main/README.md"
+  - "https://github.com/we-promise/sure/blob/main/app/controllers/mcp_controller.rb"
+  - "https://github.com/we-promise/sure/blob/main/app/models/assistant.rb"
+  - "https://github.com/we-promise/sure/blob/main/compose.example.ai.yml"
+  - "https://github.com/we-promise/sure/blob/main/test/controllers/mcp_controller_test.rb"
+  - "https://github.com/we-promise/sure/blob/main/.sure-version"
+installable: true
+installCommand: "curl -o compose.yml https://raw.githubusercontent.com/we-promise/sure/main/compose.example.yml && curl -o compose.ai.yml https://raw.githubusercontent.com/we-promise/sure/main/compose.example.ai.yml && curl -o pipelock.example.yaml https://raw.githubusercontent.com/we-promise/sure/main/pipelock.example.yaml"
+usageSnippet: >-
+  Self-host Sure, set `MCP_API_TOKEN` and `MCP_USER_EMAIL`, connect an external
+  assistant to `/mcp` or the Pipelock proxy on port 8889, and authorize only
+  clients that should see the selected user's family finance data.
+copySnippet: |-
+  curl -o compose.yml https://raw.githubusercontent.com/we-promise/sure/main/compose.example.yml
+  curl -o compose.ai.yml https://raw.githubusercontent.com/we-promise/sure/main/compose.example.ai.yml
+  curl -o pipelock.example.yaml https://raw.githubusercontent.com/we-promise/sure/main/pipelock.example.yaml
+
+  # .env
+  MCP_API_TOKEN=generate-a-random-token-here
+  MCP_USER_EMAIL=user@example.com
+
+  docker compose -f compose.ai.yml up -d
+configSnippet: |-
+  {
+    "mcpServers": {
+      "sure": {
+        "url": "https://your-sure-instance/mcp",
+        "headers": {
+          "Authorization": "Bearer ${SURE_MCP_TOKEN}"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 45 minutes
+difficulty: advanced
+prerequisites:
+  - "A self-hosted Sure instance or a Sure deployment you administer."
+  - "Docker Compose or another supported Sure deployment path, plus PostgreSQL, Redis, storage, and web access configured for the app."
+  - "`MCP_API_TOKEN` and `MCP_USER_EMAIL` for env-token auth, or an OAuth/Doorkeeper access token with `read_write` scope."
+  - "A Sure user whose email matches `MCP_USER_EMAIL` when using env-token auth; the MCP server accesses that user's family finance data."
+  - "An MCP or JSON-RPC client that supports a remote HTTP endpoint with bearer-token headers, or a proxy layer that adapts the endpoint for your client."
+  - "A privacy and approval plan for financial data, uploaded documents, goal creation, bank-statement import, logs, traces, LLM providers, and external assistant routing."
+safetyNotes:
+  - "Sure MCP exposes personal finance tools over a token-authenticated endpoint. Treat the bearer token as access to the configured user's family finance data."
+  - "Current code accepts Doorkeeper bearer tokens with `read_write` scope and also supports `MCP_API_TOKEN` plus `MCP_USER_EMAIL` as an env-token fallback."
+  - "Most tools read financial data, but `create_goal` creates a Sure goal and `import_bank_statement` can create a transaction import from an uploaded bank-statement PDF."
+  - "The AI compose file recommends routing external AI traffic through Pipelock's MCP reverse proxy on port 8889, but it also notes that `/mcp` remains reachable on the web port when published."
+  - "The source version checked during review was `0.7.2-alpha.7`, while the latest GitHub release was `v0.7.1-hotfix.1`; verify deployment maturity before relying on it for production financial workflows."
+  - "Do not connect untrusted MCP clients, broad autonomous agents, or public endpoints to a Sure instance containing real account, transaction, investment, tax, or document data."
+privacyNotes:
+  - "MCP tools can expose account names, balances, linked-provider status, transaction history, merchants, categories, tags, holdings, securities, budgets, income, expenses, net worth, goals, and family file search results."
+  - "The bank-statement import tool can send uploaded PDF content to the configured LLM provider for extraction and then create an import for review."
+  - "The family-file search tool can expose excerpts from uploaded documents such as tax returns, bank statements, contracts, insurance policies, investment reports, CSVs, spreadsheets, and other stored files."
+  - "OpenAI-compatible providers, Anthropic support, external assistants, OpenClaw, Pipelock, vector stores, Langfuse tracing, proxy logs, Rails logs, OAuth tokens, and bearer headers may all become part of the data-flow boundary depending on configuration."
+  - "Keep `MCP_API_TOKEN`, OAuth access tokens, `EXTERNAL_ASSISTANT_TOKEN`, provider keys, document excerpts, transaction exports, and Pipelock logs out of public prompts, issues, screenshots, and commits."
+tags:
+  - sure-finance
+  - mcp
+  - personal-finance
+  - self-hosted
+  - openclaw
+  - oauth
+  - pipelock
+  - finance-ai
+keywords:
+  - Sure Finance MCP
+  - we-promise sure MCP server
+  - Sure MCP server Claude
+  - self-hosted personal finance MCP
+  - OpenClaw Sure Finance
+  - Sure external AI assistant
+  - finance MCP server
+  - personal finance AI agent
+  - MCP bank transactions
+  - MCP financial data
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Sure MCP Server is the remote MCP endpoint built into
+`we-promise/sure`, the community-maintained Sure Finance fork of Maybe Finance.
+It lets external AI assistants query a self-hosted Sure instance through
+JSON-RPC 2.0 methods for initialization, tool listing, and tool calls.
+
+Use it when a finance-aware assistant needs structured access to a user's Sure
+data instead of copy-pasted exports. The strongest fit is a self-hosted Sure
+deployment where the operator wants Claude, OpenClaw, GPT agents, or a custom
+agent to analyze accounts, transactions, budgets, holdings, documents, and
+goals while keeping Sure as the system of record.
+
+## Status
+
+Verified on **2026-06-18**:
+
+- GitHub repository: `we-promise/sure`
+- Current source version in `.sure-version`: `0.7.2-alpha.7`
+- Latest GitHub release found during review: `v0.7.1-hotfix.1`, published on
+  2026-06-11
+- License: AGPL-3.0
+- GitHub metadata showed more than 8,700 stars and activity on 2026-06-18
+- MCP implementation is present in `main`, documented in `docs/hosting/mcp.md`,
+  routed as `POST /mcp`, exposed through Settings > MCP, and covered by
+  controller tests
+
+This entry treats the MCP surface as real but still early-maturity. Re-check the
+upstream docs, release notes, and `.sure-version` before using it for production
+financial workflows.
+
+## Install
+
+Sure's self-hosting docs use Docker Compose as the recommended deployment path.
+For the AI and MCP stack, fetch the standard compose file, the AI compose file,
+and the Pipelock example configuration:
+
+```bash
+curl -o compose.yml https://raw.githubusercontent.com/we-promise/sure/main/compose.example.yml
+curl -o compose.ai.yml https://raw.githubusercontent.com/we-promise/sure/main/compose.example.ai.yml
+curl -o pipelock.example.yaml https://raw.githubusercontent.com/we-promise/sure/main/pipelock.example.yaml
+```
+
+Set MCP credentials in `.env`:
+
+```bash
+MCP_API_TOKEN=generate-a-random-token-here
+MCP_USER_EMAIL=user@example.com
+```
+
+Then start the AI compose stack:
+
+```bash
+docker compose -f compose.ai.yml up -d
+```
+
+The MCP docs describe direct access at `POST /mcp`. The AI compose file also
+configures Pipelock as an MCP reverse proxy on port `8889` and recommends
+external AI clients connect through that proxy for scanning.
+
+## Client Configuration
+
+For remote MCP clients that support HTTP endpoints and headers, connect directly
+to Sure:
+
+```json
+{
+  "mcpServers": {
+    "sure": {
+      "url": "https://your-sure-instance/mcp",
+      "headers": {
+        "Authorization": "Bearer ${SURE_MCP_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+For deployments using Pipelock, point the client at the Pipelock MCP proxy
+instead:
+
+```text
+https://your-pipelock-proxy.example.com
+```
+
+Some stdio-only MCP clients may need a bridge or proxy because Sure's endpoint is
+a remote JSON-RPC HTTP endpoint rather than a local stdio server.
+
+## Protocol and Auth
+
+The `McpController` implements:
+
+| Method | Purpose |
+| --- | --- |
+| `initialize` | Returns protocol version `2025-03-26`, tool capability metadata, and server info |
+| `tools/list` | Returns Sure assistant function tools with names, descriptions, and input schemas |
+| `tools/call` | Executes one Sure assistant function and returns JSON as MCP text content |
+
+Authentication paths:
+
+| Path | Source Behavior |
+| --- | --- |
+| Doorkeeper access token | Current controller accepts bearer tokens for active users when token scope includes `read_write` |
+| Env-token fallback | `MCP_API_TOKEN` must match the bearer token and `MCP_USER_EMAIL` must match an existing Sure user |
+| OAuth metadata | `.well-known` metadata advertises authorization and token endpoints, dynamic registration, PKCE S256, and `read_write` scope |
+
+The settings page displays the instance MCP URL and lets a user revoke connected
+Doorkeeper tokens.
+
+## Tool Scope
+
+The current `Assistant.function_classes` registry includes:
+
+| Tool | Scope |
+| --- | --- |
+| `get_transactions` | Search and page through transactions by date, account, category, merchant, tag, amount, and order |
+| `get_accounts` | Return account names, balances, classification, type, provider, status, and historical balances |
+| `get_holdings` | Search current investment and crypto holdings with account and security filters |
+| `get_balance_sheet` | Return assets, liabilities, net worth, monthly history, and debt-to-asset insight |
+| `get_income_statement` | Aggregate income, expenses, categories, net income, savings rate, and monthly spending metrics |
+| `get_budget` | Show monthly budget progress and prior-month comparison data |
+| `import_bank_statement` | Extract transactions from an uploaded bank-statement PDF and create a transaction import for review |
+| `search_family_files` | Search uploaded family documents through the configured vector store |
+| `create_goal` | Create a family savings goal linked to depository accounts after confirmation |
+
+## Best Use Cases
+
+- Ask an external assistant to explain spending patterns from Sure
+  transactions without exporting CSVs into a chat.
+- Build a local OpenClaw or custom agent that calls Sure for finance context and
+  keeps conversational orchestration outside the Rails app.
+- Query account balances, investment holdings, net worth, income statements, and
+  budget trends through a structured tool interface.
+- Search uploaded financial documents, tax files, insurance policies, or bank
+  statements from a family vault.
+- Route inbound MCP traffic through Pipelock for DLP, prompt-injection, tool
+  poisoning, and tool-call-policy scanning.
+- Keep the app's internal AI assistant on the builtin provider while delegating
+  chat to an external assistant that calls back through MCP.
+
+## Safety and Privacy
+
+Sure MCP is useful because it gives agents structured access to sensitive
+finance data. That same access makes it high risk. Scope tokens to trusted
+clients, keep the endpoint behind TLS and a private network where possible, and
+prefer the Pipelock reverse proxy for inbound MCP traffic. The compose comments
+explicitly warn that `/mcp` remains reachable on the web port when that port is
+published, so network design still matters.
+
+Use human confirmation for any tool that writes state, especially `create_goal`
+and `import_bank_statement`. Treat document search and bank-statement extraction
+as sensitive data flows because uploaded files and extracted excerpts may reach
+model providers, vector stores, external agents, logs, traces, and MCP clients.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/agents/`,
+`content/skills/`, README entries, open pull requests, and repository-wide
+content for Sure Finance, Sure MCP, `we-promise/sure`, Maybe Finance MCP,
+OpenClaw Sure, personal finance MCP, and finance AI MCP. No dedicated Sure MCP
+Server entry, exact source URL duplicate, target file, or open duplicate PR was
+found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Sure is
+AGPL-3.0 open-source software. The hosted Sure site, OpenClaw, Pipelock,
+OpenAI-compatible providers, Anthropic support, vector stores, Langfuse, banking
+providers, app hosting, and mobile/debug builds may have separate terms, costs,
+security boundaries, and privacy controls.

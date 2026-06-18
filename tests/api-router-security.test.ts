@@ -343,6 +343,40 @@ describe("central API router security", () => {
     expect(routerSource).toContain("binding.limit({ key })");
   });
 
+  it("serves Brandfetch logo proxy URLs through the trusted asset CDN", async () => {
+    process.env.BRANDFETCH_CLIENT_ID = "test-client";
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url =
+        input instanceof Request
+          ? input.url
+          : input instanceof URL
+            ? input.toString()
+            : String(input);
+      expect(url).toContain("https://cdn.brandfetch.io/domain/example.com/");
+      expect(url).toContain("/logo.png");
+      expect(url).toContain("c=test-client");
+      return new Response("png", {
+        headers: {
+          "content-length": "3",
+          "content-type": "image/png",
+        },
+      });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { GET } = await import("@/routes/api/brand-assets/$kind/$domain");
+    const response = await GET(
+      new Request("https://heyclau.de/api/brand-assets/logo/example.com"),
+      { params: { kind: "logo", domain: "example.com" } },
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("content-type")).toBe("image/png");
+    expect(response.headers.get("x-brand-asset-source")).toBe("brandfetch");
+    await expect(response.text()).resolves.toBe("png");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   it("rejects Brandfetch icons outside the trusted asset CDN", async () => {
     process.env.BRANDFETCH_CLIENT_ID = "test-client";
     const fetchMock = vi.fn(async () =>

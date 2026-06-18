@@ -26,7 +26,7 @@ usageSnippet: >-
   to summarize older history, `/clear` between unrelated tasks, and `/doctor`
   (or `claude doctor` from your shell) for an automated health check.
 safetyNotes:
-  - "/heapdump writes a JavaScript heap snapshot (which can contain session content) to your Desktop or home directory; review the file before attaching it to a public issue."
+  - "/heapdump writes a JavaScript heap snapshot (which can contain session content) to your Desktop or home directory; do not attach heap snapshots to public issues, and share only redacted diagnostics through a private support channel when requested."
 privacyNotes:
   - "/usage cost figures and /context breakdowns are computed locally from this machine's session history and do not include usage from other devices or claude.ai."
 tags:
@@ -91,7 +91,7 @@ claude --version    # Confirm which build you are on before reporting an issue
 | Symptom | What to do |
 | :--- | :--- |
 | High CPU or memory usage | `/compact` regularly; restart between major tasks; add large build dirs to `.gitignore`; try `claude --safe-mode` |
-| Memory stays high after the above | Run `/heapdump` to write a heap snapshot and memory breakdown to `~/Desktop`, then attach both files when reporting on GitHub |
+| Memory stays high after the above | Run `/heapdump` to write a heap snapshot and memory breakdown to `~/Desktop`; do not upload the heap snapshot publicly, and share only redacted diagnostics through private support if requested |
 | `Autocompact is thrashing...` error | Read oversized files in smaller chunks; `/compact keep only the plan and the diff`; move big reads to a subagent; `/clear` if history is no longer needed |
 | Command hangs or freezes | Press Ctrl+C to cancel; if still stuck, close the terminal and reopen, then `claude --resume` |
 | Slow responses / large token use | Use `/context` to find the bloat; `/clear` between tasks; switch to Sonnet with `/model`; lower thinking effort with `/effort` |
@@ -108,7 +108,7 @@ Work through these documented steps in order:
 3. Add large build directories to your `.gitignore` file so they are not scanned.
 4. Restart with `claude --safe-mode` to check whether a plugin, MCP server, or hook is the source. Safe mode disables all customizations for the session; if usage drops, the cause is one of your customizations.
 
-If memory usage stays high after these steps, run `/heapdump`. It writes a JavaScript heap snapshot and a memory breakdown to `~/Desktop` (or your home directory on Linux without a Desktop folder). The breakdown shows resident set size, JS heap, array buffers, and unaccounted native memory, which tells you whether growth is in JavaScript objects or native code. You can open the `.heapsnapshot` file in Chrome DevTools under Memory then Load to inspect retainers, and attach both files when reporting a memory issue on GitHub.
+If memory usage stays high after these steps, run `/heapdump`. It writes a JavaScript heap snapshot and a memory breakdown to `~/Desktop` (or your home directory on Linux without a Desktop folder). The breakdown shows resident set size, JS heap, array buffers, and unaccounted native memory, which tells you whether growth is in JavaScript objects or native code. You can open the `.heapsnapshot` file in Chrome DevTools under Memory then Load to inspect retainers. Do not attach heap snapshots to public GitHub issues; share only redacted memory breakdowns or excerpts through a private support channel if requested.
 
 ## Auto-compaction thrashing
 
@@ -152,4 +152,4 @@ Run `/doctor` for a one-pass check of installation health, settings validity, MC
 
 > **Still stuck?**
 >
-> If `/safe-mode` shows the slowdown comes from a customization, work through Debug your configuration to isolate the plugin, MCP server, or hook. For a deep memory investigation, attach your `/heapdump` output to a GitHub issue.
+> If `/safe-mode` shows the slowdown comes from a customization, work through Debug your configuration to isolate the plugin, MCP server, or hook. For a deep memory investigation, keep `/heapdump` output private because it can contain session data; share only redacted diagnostics through a private support channel if requested.

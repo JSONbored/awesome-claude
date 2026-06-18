@@ -924,7 +924,10 @@ scriptBody: |-
       "git restore --worktree --staged -- . ':!README.md'",
     );
     expect(source).toContain("unexpected_files");
-    expect(source).toContain('git ls-remote --heads origin "$BRANCH_NAME"');
+    expect(source).toContain(
+      'git ls-remote --heads origin "refs/heads/$BRANCH_NAME"',
+    );
+    expect(source).not.toContain('git ls-remote --heads origin "$BRANCH_NAME"');
     expect(source).toContain(
       '--force-with-lease="refs/heads/$BRANCH_NAME:$remote_branch_sha"',
     );

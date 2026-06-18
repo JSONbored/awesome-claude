@@ -23,6 +23,8 @@ export const REGISTRY_ARTIFACT_SCHEMA_VERSION = 2;
 export const SITE_URL = "https://heyclau.de";
 export const RAYCAST_COPY_PREVIEW_LIMIT = 800;
 
+const RAYCAST_ONE_CLICK_STDIO_COMMANDS = new Set(["npx", "uvx"]);
+
 function stripLoneSurrogates(value) {
   const text = String(value || "");
   let output = "";
@@ -165,10 +167,34 @@ function compactDefinedObject(value) {
   );
 }
 
+function raycastOneClickStdioCommandName(value) {
+  const command = String(value || "").trim();
+  if (!command || command.includes("/") || command.includes("\\")) return "";
+  return command.toLowerCase();
+}
+
+function isRaycastOneClickMcpInstallConfig(config) {
+  const type = String(config?.type || "")
+    .trim()
+    .toLowerCase();
+  if (type !== "stdio") return true;
+  return RAYCAST_ONE_CLICK_STDIO_COMMANDS.has(
+    raycastOneClickStdioCommandName(config.command),
+  );
+}
+
+function resolveRaycastMcpInstallConfig(entry) {
+  const mcpInstallConfig = resolveMcpInstallConfig(entry);
+  if (!mcpInstallConfig) return null;
+  return isRaycastOneClickMcpInstallConfig(mcpInstallConfig.config)
+    ? mcpInstallConfig
+    : null;
+}
+
 export function buildRaycastDetailMarkdown(entry) {
   const lines = [`# ${entry.title}`, "", entry.description];
   const mcpInstallConfig =
-    entry.category === "mcp" ? resolveMcpInstallConfig(entry) : null;
+    entry.category === "mcp" ? resolveRaycastMcpInstallConfig(entry) : null;
   const configSnippet =
     entry.category === "mcp"
       ? mcpInstallConfig?.configSnippet
@@ -512,7 +538,7 @@ function buildListTrustSignals(entry) {
 
 function buildCompactInstallFields(entry) {
   const mcpInstallConfig =
-    entry.category === "mcp" ? resolveMcpInstallConfig(entry) : null;
+    entry.category === "mcp" ? resolveRaycastMcpInstallConfig(entry) : null;
   if (entry.category === "mcp") {
     return compactDefinedObject({
       installable: Boolean(
@@ -543,7 +569,7 @@ function buildCompactInstallFields(entry) {
 
 function buildRaycastInstallDetailFields(entry) {
   const mcpInstallConfig =
-    entry.category === "mcp" ? resolveMcpInstallConfig(entry) : null;
+    entry.category === "mcp" ? resolveRaycastMcpInstallConfig(entry) : null;
   if (entry.category === "mcp") {
     return compactDefinedObject({
       ...buildCompactInstallFields(entry),

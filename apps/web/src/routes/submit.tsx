@@ -68,6 +68,7 @@ type PreflightResponse = {
     title: string;
     url: string;
     reasons: string[];
+    reasonLabels?: string[];
   }>;
   nextAction?: {
     label: string;
@@ -617,13 +618,13 @@ function ServerPreflightBlock({
         <PreflightRow key={item.code} kind="blocker" message={item.message} />
       ))}
       {warnings.map((item) => (
-        <PreflightRow key={item.code} kind="warning" message={item.message} />
+        <PreflightRow key={`${item.code}:${item.message}`} kind="warning" message={item.message} />
       ))}
       {duplicates.map((item) => (
         <PreflightRow
           key={item.key}
           kind="warning"
-          message={`Possible duplicate: ${item.key} (${item.reasons.join(", ")})`}
+          message={`Possible duplicate: ${item.key} (${(item.reasonLabels ?? item.reasons).join(", ")})`}
         />
       ))}
       {result.nextAction?.url && result.routeSuggestion !== "submit_pr" && (

@@ -32,7 +32,7 @@ export function PageHeader({
   return (
     <div className={cn(className)}>
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <Breadcrumbs home items={breadcrumbs} className="mb-6" />
+        <Breadcrumbs home items={breadcrumbs} markLastAsCurrent={false} className="mb-6" />
       )}
       <SectionHeader
         as="h1"
