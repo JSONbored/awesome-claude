@@ -1,0 +1,171 @@
+---
+title: Official MCP PHP SDK
+slug: official-mcp-php-sdk
+category: tools
+description: >-
+  Official PHP SDK for Model Context Protocol clients and servers, built with
+  the PHP Foundation and Symfony project, published as `mcp/sdk` on Packagist,
+  with framework-agnostic APIs, attribute discovery, manual registration, stdio
+  and HTTP transports, sessions, tools, resources, prompts, sampling, and logs.
+cardDescription: >-
+  Build MCP clients and servers in PHP with the official `mcp/sdk` Composer
+  package, framework-agnostic APIs, attributes, stdio and HTTP transports, and
+  session support.
+seoTitle: Official MCP PHP SDK for Model Context Protocol Servers and Clients
+seoDescription: >-
+  Use the official Model Context Protocol PHP SDK to build MCP servers and
+  clients with Composer package `mcp/sdk`, PHP 8.1+, framework-agnostic APIs,
+  attributes, stdio and HTTP transports, sessions, tools, resources, and prompts.
+author: Model Context Protocol
+authorProfileUrl: "https://github.com/modelcontextprotocol"
+dateAdded: "2026-06-18"
+websiteUrl: "https://modelcontextprotocol.io"
+documentationUrl: "https://php.sdk.modelcontextprotocol.io/"
+repoUrl: "https://github.com/modelcontextprotocol/php-sdk"
+packageUrl: "https://packagist.org/packages/mcp/sdk"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/php-sdk"
+  - "https://github.com/modelcontextprotocol/php-sdk/blob/main/README.md"
+  - "https://github.com/modelcontextprotocol/php-sdk/blob/main/composer.json"
+  - "https://github.com/modelcontextprotocol/php-sdk/blob/main/LICENSE"
+  - "https://github.com/modelcontextprotocol/php-sdk/blob/main/ROADMAP.md"
+  - "https://repo.packagist.org/p2/mcp/sdk.json"
+installable: true
+installCommand: "composer require mcp/sdk"
+usageSnippet: >-
+  Install `mcp/sdk` with Composer, then build an MCP server or client with
+  stdio or HTTP transport and register capabilities with attributes or manual
+  builder calls.
+copySnippet: |-
+  composer require mcp/sdk
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "PHP 8.1+ project with Composer and the required PHP extensions."
+  - "A decision between server, client, or mixed SDK usage."
+  - "A selected transport, such as stdio for local integrations or HTTP for web-based MCP servers."
+  - "Session storage, authorization, and data-exposure boundaries for production deployments."
+safetyNotes:
+  - "The official PHP SDK is experimental until its first major release; pin versions and review upstream roadmap changes before production use."
+  - "Validate tool arguments, enforce caller permissions, bound file and network access, and sanitize exceptions before returning MCP responses."
+  - "HTTP transports, PSR middleware, and session stores need authentication, TLS, request limits, CORS/host review, logging policy, and abuse protection."
+  - "Attribute-based discovery can expose methods automatically; constrain discovery paths and review every discovered tool, resource, and prompt."
+privacyNotes:
+  - "PHP MCP clients and servers may expose tool arguments, tool results, resource contents, prompt templates, session identifiers, request metadata, logs, progress events, and exceptions."
+  - "Avoid leaking secrets, customer data, private files, internal identifiers, stack traces, privileged paths, or session contents through schemas, responses, errors, or logs."
+  - "Document which MCP client, PHP runtime, framework layer, session store, model provider, transport, and logging system can observe each request."
+tags:
+  - php
+  - mcp
+  - sdk
+  - composer
+  - symfony
+  - official
+keywords:
+  - official MCP PHP SDK
+  - Model Context Protocol PHP SDK
+  - PHP MCP server SDK
+  - PHP MCP client SDK
+  - mcp sdk composer
+  - mcp/sdk Packagist
+  - Symfony MCP PHP
+  - PHP Foundation MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The official MCP PHP SDK is the Model Context Protocol project's PHP
+implementation for building MCP clients and servers. It is published on
+Packagist as `mcp/sdk` and provides framework-agnostic APIs for exposing PHP
+tools, resources, and prompts or connecting PHP applications to MCP servers.
+
+The upstream README says the project is a collaboration between the PHP
+Foundation and the Symfony project. It also states that the SDK is experimental
+until its first major release, so production users should pin versions and track
+the roadmap.
+
+## Composer Install
+
+Install the package:
+
+```bash
+composer require mcp/sdk
+```
+
+The Packagist metadata currently resolves `mcp/sdk` with PHP `^8.1`,
+Apache-2.0 licensing, PSR dependencies, JSON schema support, and Symfony UID
+compatibility ranges.
+
+## MCP Fit
+
+Choose the official PHP SDK when a PHP application, Symfony-style codebase, web
+service, or internal tool needs to act as an MCP server or client. It is a good
+fit for teams that want to expose existing PHP application capabilities without
+building a separate Node.js or Python bridge.
+
+The SDK is framework-agnostic, but HTTP deployments still need normal web
+application controls: authentication, request limits, sessions, logging, and
+careful capability exposure.
+
+## Core Capabilities
+
+| Area | PHP SDK Coverage |
+| --- | --- |
+| Package | `mcp/sdk` Composer package on Packagist |
+| Server APIs | Attribute discovery, manual registration, hybrid registration, tools, resources, prompts, and server-initiated communication |
+| Client APIs | Connect to MCP servers, list/call tools, read resources, retrieve prompts, completions, progress, sampling, and logging handlers |
+| Transports | stdio and HTTP transport coverage in upstream docs |
+| Session storage | In-memory, file-based, and PSR-16 session storage options |
+| Standards | PSR HTTP, PSR container, PSR event dispatcher, PSR log, and Symfony project practices |
+
+## Use Cases
+
+- Expose PHP application methods as MCP tools with PHP attributes.
+- Build an MCP server around Symfony or framework-agnostic PHP services.
+- Connect a PHP application to local or remote MCP servers.
+- Use stdio for local CLI-style MCP integrations.
+- Use HTTP transport for web-based MCP servers.
+- Store MCP sessions in memory, files, or PSR-16 caches.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README identifies this as the official PHP SDK for Model Context
+  Protocol.
+- The README says the project is a collaboration between the PHP Foundation and
+  the Symfony project.
+- The README states that the SDK is experimental until its first major release.
+- The README documents `composer require mcp/sdk`, framework-agnostic server and
+  client APIs, attribute discovery, manual registration, stdio transport, HTTP
+  transport, sessions, tools, resources, prompts, sampling, logging, and progress
+  support.
+- `composer.json` declares package `mcp/sdk`, PHP `^8.1`, Apache-2.0 licensing,
+  PSR dependencies, JSON schema support, and PSR-4 autoloading under `Mcp\\`.
+- Packagist resolves package metadata for `mcp/sdk`.
+
+## Safety and Privacy
+
+Attribute discovery is useful, but it can expose methods more broadly than
+intended if discovery paths are loose. Keep discovery paths narrow, review every
+registered capability, and avoid exposing administrative methods or raw domain
+objects as MCP tools.
+
+For HTTP deployments, review authentication, session storage, CORS, host
+handling, request limits, exception mapping, and log retention before exposing
+an MCP endpoint.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `modelcontextprotocol/php-sdk`,
+official MCP PHP SDK, Model Context Protocol PHP SDK, PHP MCP server SDK, PHP
+MCP client SDK, `mcp/sdk`, Packagist MCP SDK, Symfony MCP PHP, and PHP
+Foundation MCP. No dedicated official PHP SDK entry, exact source URL duplicate,
+target file, or open duplicate PR was found.
