@@ -1322,10 +1322,23 @@ Use this hook after reviewing the notes.`,
       (entry) => entry.category === "skills",
     );
     expect(skills.length).toBeGreaterThan(0);
+    const packageBackedSkills = skills.filter((entry) => entry.downloadUrl);
+    const copyOnlySkill = skills.find(
+      (entry) =>
+        entry.slug === "nanoclaw-container-isolation-review-capability-pack",
+    );
+    expect(packageBackedSkills.length).toBeGreaterThan(0);
+    expect(copyOnlySkill?.installable).toBe(false);
+    expect(copyOnlySkill?.downloadUrl).toBe("");
+    expect(copyOnlySkill?.skillPackage).toBeUndefined();
 
     for (const entry of skills) {
-      expect(entry.skillPackage?.format).toBe("agent-skill");
-      expect(entry.skillPackage?.entrypoint).toBe("SKILL.md");
+      if (entry.downloadUrl) {
+        expect(entry.skillPackage?.format).toBe("agent-skill");
+        expect(entry.skillPackage?.entrypoint).toBe("SKILL.md");
+      } else {
+        expect(entry.skillPackage).toBeUndefined();
+      }
       expect(entry.platformCompatibility?.map((item) => item.platform)).toEqual(
         expect.arrayContaining([
           "Claude",

@@ -279,6 +279,27 @@ describe("inferStructuredFields", () => {
     );
   });
 
+  it("does not recommend package fields for non-installable skills", () => {
+    const result = validateEntry("skills", {
+      slug: "copy-only-capability-pack",
+      title: "Copy-only Capability Pack",
+      description: "Review capability pack with copyable instructions.",
+      cardDescription: "Copyable review instructions.",
+      installable: false,
+      usageSnippet: "Use this pack during a review.",
+      copySnippet: "Review checklist.",
+      skillType: "capability-pack",
+      skillLevel: "expert",
+      verificationStatus: "validated",
+      verifiedAt: "2026-01-01",
+      retrievalSources: ["https://docs.example.com"],
+      testedPlatforms: ["Claude"],
+    });
+
+    expect(result.missingRecommended).not.toContain("installCommand");
+    expect(result.missingRecommended).not.toContain("downloadUrl");
+  });
+
   it("orders frontmatter while dropping empty values and appending unknown keys", () => {
     expect(
       orderFrontmatter({

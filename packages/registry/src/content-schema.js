@@ -664,8 +664,10 @@ export function validateEntry(category, data, inferred = {}) {
   }
 
   if ((category === "mcp" || category === "skills") && !merged.installable) {
-    const installIndex = recommendedFields.indexOf("installCommand");
-    if (installIndex >= 0) recommendedFields.splice(installIndex, 1);
+    for (const field of ["installCommand", "downloadUrl"]) {
+      const installIndex = recommendedFields.indexOf(field);
+      if (installIndex >= 0) recommendedFields.splice(installIndex, 1);
+    }
   }
 
   if (category === "skills" && merged.downloadUrl && !merged.installCommand) {
