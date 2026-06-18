@@ -1,0 +1,180 @@
+---
+title: Appwrite MCP Server for Claude
+slug: appwrite-mcp-server
+category: mcp
+description: >-
+  Connect Claude to the full Appwrite backend platform — databases, authentication, serverless
+  functions, teams, messaging, and storage — with the official Appwrite MCP server using dynamic
+  dispatch across the entire Appwrite API surface.
+cardDescription: "Official Appwrite MCP: databases, auth, functions, teams, messaging & storage from Claude."
+seoTitle: "Appwrite MCP Server for Claude — Databases, Auth, Functions & Backend Operations"
+seoDescription: "Connect Claude to Appwrite with the official MCP server: manage databases, users, serverless functions, teams, messaging, and storage across the full Appwrite API — MIT licensed, dynamic tool dispatch with write confirmation."
+author: Appwrite
+authorProfileUrl: "https://github.com/appwrite"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/appwrite/mcp-for-api/main/README.md"
+websiteUrl: "https://appwrite.io"
+repoUrl: "https://github.com/appwrite/mcp-for-api"
+retrievalSources:
+  - "https://raw.githubusercontent.com/appwrite/mcp-for-api/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add appwrite -e APPWRITE_PROJECT_ID=<project-id> -e APPWRITE_API_KEY=<api-key> -- uvx mcp-server-appwrite"
+usageSnippet: >-
+  Ask Claude to list users in your Appwrite project, query a database collection, invoke a
+  serverless function, manage team memberships, or check messaging delivery status — using
+  natural language against the full Appwrite API surface.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "appwrite": {
+        "command": "uvx",
+        "args": ["mcp-server-appwrite"],
+        "env": {
+          "APPWRITE_PROJECT_ID": "<project-id>",
+          "APPWRITE_API_KEY": "<api-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "appwrite": {
+        "command": "uvx",
+        "args": ["mcp-server-appwrite"],
+        "env": {
+          "APPWRITE_PROJECT_ID": "<project-id>",
+          "APPWRITE_API_KEY": "<api-key>",
+          "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An Appwrite account — log in at cloud.appwrite.io or self-hosted."
+  - "An Appwrite project with an API key that has the required scopes for your use case."
+  - "Python with `uvx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Mutation operations (write, update, delete) require `confirm_write=true` to be passed explicitly, adding a confirmation step before any destructive action."
+  - "The API key scope determines what operations are available — use least-privilege scopes for your use case."
+privacyNotes:
+  - "User records, database documents, function logs, team memberships, and messaging data from your Appwrite project are surfaced in Claude's context."
+  - "Your `APPWRITE_API_KEY` grants project-level access — keep it in the MCP config env and never commit it to version control."
+tags:
+  - appwrite
+  - database
+  - authentication
+  - serverless
+  - backend
+  - baas
+keywords:
+  - appwrite mcp server
+  - appwrite mcp claude
+  - backend as a service mcp claude code
+  - appwrite database mcp
+  - appwrite auth mcp claude
+  - open source firebase mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Appwrite MCP Server** is the official Model Context Protocol server from Appwrite, the
+open-source backend-as-a-service platform. Rather than mapping one MCP tool per API endpoint
+(which would produce hundreds of tools), it uses a two-tool dynamic dispatch architecture:
+`appwrite_search_tools` discovers what's available, and `appwrite_call_tool` executes any
+Appwrite API operation — covering Databases, Users/Auth, Functions, Teams, Messaging, and
+Storage. Mutation operations require explicit `confirm_write=true`. Python 3.12+, MIT licensed.
+
+## Key capabilities
+
+- **Databases** — create collections, insert/query/update/delete documents.
+- **Auth/Users** — manage users, sessions, and authentication providers.
+- **Serverless Functions** — create, deploy, and invoke functions; read logs.
+- **Teams** — manage team memberships and roles.
+- **Messaging** — check message delivery status across email, SMS, and push.
+- **Storage** — manage buckets and files.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `appwrite_search_tools` | Discover available Appwrite API operations |
+| `appwrite_call_tool` | Execute any Appwrite API operation (pass `confirm_write=true` for mutations) |
+
+The two-tool design keeps MCP tool selection fast while covering the full Appwrite API surface
+via dynamic dispatch internally.
+
+## How it compares
+
+| Server | Database | Auth | Functions | Storage | Notes |
+|---|---|---|---|---|---|
+| **Appwrite MCP** | Yes | Yes | Yes | Yes | Official, full platform |
+| Firebase MCP | Yes | Yes | No | Yes | Firebase/Google |
+| Supabase MCP | Yes | Yes | Yes (Edge) | Yes | Official |
+| PocketBase MCP | Yes | Yes | No | No | Community |
+
+Appwrite MCP is the official Appwrite server with full platform coverage via dynamic dispatch,
+including mutation confirmation for safety.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add appwrite \
+  -e APPWRITE_PROJECT_ID=<project-id> \
+  -e APPWRITE_API_KEY=<api-key> \
+  -- uvx mcp-server-appwrite
+```
+
+For self-hosted Appwrite, add `-e APPWRITE_ENDPOINT=https://your-appwrite.example.com/v1`.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "appwrite": {
+      "command": "uvx",
+      "args": ["mcp-server-appwrite"],
+      "env": {
+        "APPWRITE_PROJECT_ID": "<project-id>",
+        "APPWRITE_API_KEY": "<api-key>"
+      }
+    }
+  }
+}
+```
+
+Get your API key from the **Appwrite Console → Project → Settings → API Keys**.
+
+## Requirements
+
+- Appwrite project (cloud.appwrite.io or self-hosted).
+- API key with appropriate scopes.
+- Python 3.12+ with `uvx` (from `uv`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Use least-privilege API key scopes — only grant access to the services you need.
+- All mutations require `confirm_write=true` — Claude will not silently modify data.
+- Keep `APPWRITE_API_KEY` in the MCP config env; never commit it to version control.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official repository `appwrite/mcp-for-api` (MIT) on PyPI as `mcp-server-appwrite` (v0.4.1)
+  documents the `uvx mcp-server-appwrite` install, `APPWRITE_PROJECT_ID`/`APPWRITE_API_KEY`/
+  `APPWRITE_ENDPOINT` configuration, two-tool dynamic dispatch architecture
+  (`appwrite_search_tools` and `appwrite_call_tool`), `confirm_write=true` mutation confirmation,
+  and coverage of Databases, Users, Functions, Teams, Messaging, and Storage.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.
