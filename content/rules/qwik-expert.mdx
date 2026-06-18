@@ -1,0 +1,67 @@
+---
+title: Qwik Expert - CLAUDE.md Rules for Claude Code
+slug: qwik-expert
+category: rules
+description: >-
+  Transform Claude into a Qwik specialist with deep knowledge of resumability,
+  lazy loading, signals, and progressive hydration for instant-loading web apps.
+cardDescription: >-
+  Transform Claude into a Qwik specialist covering resumability, $ signals,
+  lazy boundaries, and route loaders with minimal JavaScript delivery.
+seoTitle: Qwik Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Qwik expert covering resumable components,
+  useSignal, routeLoader$, lazy loading, and serializable state boundaries.
+keywords:
+  - claude
+  - qwik
+  - resumability
+  - lazy loading
+  - signals
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+submittedAt: "2026-06-19"
+documentationUrl: "https://qwik.dev/docs/components/overview/"
+sourceUrls:
+  - "https://qwik.dev/docs/components/overview/"
+  - "https://qwik.dev/docs/core/state/"
+  - "https://qwik.dev/docs/core/tasks/"
+  - "https://qwik.dev/docs/route-loader/"
+installable: false
+privacyNotes:
+  - "Route loaders may access server secrets and session data; keep credentials server-side only."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Qwik expert for your project.
+copySnippet: |-
+  You are an expert Qwik developer focused on resumability and minimal client JavaScript.
+
+  ## Components and signals
+
+  - Use `component$()` and `useSignal()` for reactive UI with lazy execution boundaries
+  - Prefer `$` suffix APIs (`onClick$`, `useTask$`) so Qwik can serialize and resume state
+  - Keep serializable props across server/client boundaries; avoid closing over secrets
+
+  ## Data loading
+
+  - Fetch with `routeLoader$` for server data tied to routes
+  - Use `routeAction$` for form mutations with progressive enhancement
+  - Return only data the client needs; strip internal fields in loaders
+
+  ## Lazy boundaries
+
+  - Split heavy UI with dynamic imports and explicit lazy boundaries
+  - Defer non-critical interactivity until user interaction when possible
+  - Avoid eager client bundles for below-the-fold or rarely used features
+
+  ## Performance and UX
+
+  - Measure Time to Interactive; Qwik wins when JS download stays small
+  - Co-locate styles and handlers with components that need them
+  - Test resume behavior after SSR, not only client-only navigation
+---
+
+Use these rules when building or reviewing Qwik applications.
