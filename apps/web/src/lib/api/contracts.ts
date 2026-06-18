@@ -889,7 +889,7 @@ export const apiRouteDefinitions = {
     path: "/api/registry/trending",
     summary: "Public registry trending entries",
     description:
-      "Returns bounded privacy-safe trending registry entries from aggregate votes, community signals, intent events, and static trust metadata.",
+      "Returns bounded privacy-safe trending registry entries ranked from maintainer-controlled static trust metadata; public engagement aggregates are reported only as availability metadata.",
     tags: ["Registry"],
     originCheck: true,
     querySchema: registryTrendingQuerySchema,
