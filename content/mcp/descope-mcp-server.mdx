@@ -1,0 +1,157 @@
+---
+title: Descope MCP Server for Claude
+slug: descope-mcp-server
+category: mcp
+description: >-
+  Manage your Descope project from Claude — search users, configure auth flows, inspect audit
+  logs, manage tenants, and search docs — with the official Descope remote MCP server at
+  mcp.descope.com.
+cardDescription: "Official Descope MCP: user management, auth flows, audit logs & docs from Claude."
+seoTitle: "Descope MCP Server for Claude — User Management, Auth Flows & Audit Logs"
+seoDescription: "Connect Claude to Descope with the official remote MCP server: search users, configure authentication flows, inspect audit logs, manage tenants, and access keys — plus semantic documentation search. No API key needed."
+author: Descope
+authorProfileUrl: "https://github.com/descope"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.descope.com/mcp/mcp-server"
+websiteUrl: "https://www.descope.com"
+retrievalSources:
+  - "https://docs.descope.com/mcp/mcp-server"
+  - "https://www.descope.com/blog/post/docs-mcp-server"
+  - "https://docs.descope.com/management/user-management/user-tracking"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http descope https://mcp.descope.com"
+usageSnippet: >-
+  Ask Claude to search users in a Descope tenant, inspect an auth flow, review recent audit
+  logs, or answer questions about Descope's documentation — using natural language.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "descope": {
+        "type": "http",
+        "url": "https://mcp.descope.com"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "descope": {
+        "type": "http",
+        "url": "https://mcp.descope.com"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Descope account — sign in via your Descope account when prompted on first tool use."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Write operations (creating users, modifying flows, managing access control) require explicit session elevation — the server starts in read-only mode by default."
+  - "The server has access to your entire Descope project including user PII, tenant config, and auth secrets — scope usage to least-privilege workflows."
+privacyNotes:
+  - "User profiles, tenant configurations, authentication flow definitions, audit log entries, and API key metadata from your Descope project are surfaced in Claude's context."
+  - "Authenticated via your Descope account; no API keys are stored in the MCP configuration."
+tags:
+  - descope
+  - authentication
+  - user-management
+  - auth-flows
+  - identity
+  - access-control
+  - audit-logs
+keywords:
+  - descope mcp server
+  - descope mcp claude
+  - user management mcp claude code
+  - authentication flows mcp
+  - descope identity management ai
+  - auth access control mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Descope MCP Server** is the official remote Model Context Protocol server from Descope.
+It connects Claude directly to your Descope project — letting you search users, configure
+authentication flows, inspect audit logs, manage tenants, and access auth keys through natural
+language without leaving your IDE.
+
+According to Descope's documentation, "The Descope MCP Server lets you manage your Descope
+project from any MCP-compatible AI assistant. Ask your assistant to search users, configure
+flows, inspect audit logs, manage tenants, and more."
+
+The server also includes built-in documentation search via `docs_search` and `docs_ask_question`
+tools, backed by Inkeep's retrieval-augmented generation. Authentication uses your Descope account.
+
+## Key capabilities
+
+- **User management** — search and manage users across tenants.
+- **Authentication flows** — inspect and configure auth flow definitions.
+- **Audit logs** — query and filter audit log entries.
+- **Tenant management** — list tenants, inspect tenant configuration.
+- **Access control** — manage roles, permissions, and connections.
+- **Auth keys** — list and inspect API and auth keys.
+- **Documentation search** — `docs_search` for semantic queries across Descope docs.
+- **Product Q&A** — `docs_ask_question` for grounded natural-language answers.
+
+## How it compares
+
+| Server | User management | Auth flows | Audit logs | Docs search | Auth |
+|---|---|---|---|---|---|
+| **Descope MCP** | Yes | Yes | Yes | Yes | Account sign-in |
+| Auth0 MCP | Yes | Limited | Yes | No | API token |
+| Okta MCP | Yes | Limited | Yes | No | API token |
+| Stytch MCP | Yes | No | Limited | No | API key |
+
+Descope's MCP is notable for bundling semantic documentation search alongside live management
+tools, covering both operational and learning workflows in one server.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http descope https://mcp.descope.com
+```
+
+Run `/mcp` in Claude Code to authenticate with your Descope account.
+
+### Claude Desktop
+
+Go to Settings → Connectors and add the server URL, or configure manually:
+
+```json
+{
+  "mcpServers": {
+    "descope": {
+      "type": "http",
+      "url": "https://mcp.descope.com"
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Descope account.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Account-based sign-in — no API keys to manage.
+- Write operations require explicit session elevation and are time-bounded.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Descope's MCP server documentation at `docs.descope.com/mcp/mcp-server` confirms the hosted
+  endpoint at `https://mcp.descope.com`, account authentication model, and the management
+  API scope (users, tenants, flows, access control, connections, audit logs, auth keys).
+- Descope's launch blog at `descope.com/blog/post/docs-mcp-server` (June 8, 2026) announces
+  the docs MCP server with `docs_search` and `docs_ask_question` backed by Inkeep RAG.
+- Descope's user management documentation at `docs.descope.com/management/user-management/
+  user-tracking` confirms the user search and management capabilities surfaced via the MCP.
