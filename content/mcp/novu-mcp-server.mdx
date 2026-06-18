@@ -1,0 +1,226 @@
+---
+title: Novu MCP Server for Claude
+slug: novu-mcp-server
+category: mcp
+description: >-
+  Official remote MCP server for managing Novu notification workflows from Claude:
+  trigger workflows, inspect subscribers, update preferences, debug delivery, and
+  manage notification infrastructure through natural language.
+cardDescription: "Official Novu MCP: trigger workflows, manage subscribers, inspect delivery, and update preferences from Claude."
+seoTitle: "Novu MCP Server for Claude - Notification Workflows, Subscribers, and Delivery Debugging"
+seoDescription: "Connect Claude to Novu with the official remote MCP server for notification workflows, subscribers, preferences, delivery logs, integrations, and multi-channel messaging."
+author: Novu
+authorProfileUrl: "https://github.com/novuhq"
+dateAdded: "2026-06-18"
+brandName: Novu
+brandDomain: novu.co
+documentationUrl: "https://docs.novu.co/platform/build-with-ai/mcp"
+websiteUrl: "https://novu.co"
+retrievalSources:
+  - "https://docs.novu.co/platform/build-with-ai/mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http novu https://mcp.novu.co/ --header \"Authorization: Bearer YOUR_NOVU_API_KEY\""
+usageSnippet: >-
+  Ask Claude to show your notification workflows, find a subscriber, update subscriber
+  preferences, trigger a workflow, check failed deliveries, or list active channel
+  integrations against your Novu environment.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "novu": {
+        "type": "http",
+        "url": "https://mcp.novu.co/",
+        "headers": {
+          "Authorization": "Bearer YOUR_NOVU_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "novu": {
+        "type": "http",
+        "url": "https://mcp.novu.co/",
+        "headers": {
+          "Authorization": "Bearer YOUR_NOVU_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Novu account."
+  - "A Novu secret API key from the Novu dashboard."
+  - "An MCP-compatible client such as Claude Code, Claude Desktop, Cursor, or Codex."
+  - "Use `https://mcp.novu.co/?region=eu` instead of the default URL when your Novu dashboard is in the EU region."
+safetyNotes:
+  - "Novu MCP tools can create, update, and delete subscribers, workflows, integrations, and notification preferences in the connected Novu environment."
+  - "`trigger_workflow` and `bulk_trigger_workflow` can send real notifications to real recipients, so confirm subscriber IDs, workflow names, payloads, and environment before using them in production."
+  - "Delivery debugging and notification-log tools can expose operational incidents, failed-message context, and channel-provider behavior."
+privacyNotes:
+  - "Subscriber names, email addresses, phone numbers, device tokens, workflow payloads, notification preferences, channel integrations, delivery logs, and environment metadata can be surfaced in Claude's context."
+  - "Keep the Novu API key in the MCP client configuration or secret store; do not paste it into prompts, screenshots, commits, or shared support messages."
+  - "Use the correct Novu region endpoint so notification metadata stays aligned with the account's intended data residency."
+disclosure: "Novu is an open-source notification infrastructure platform with a commercial cloud offering. This listing covers Novu's official hosted MCP endpoint documented by Novu."
+tags:
+  - novu
+  - notifications
+  - workflows
+  - subscribers
+  - email
+  - sms
+  - push-notifications
+  - in-app-notifications
+keywords:
+  - novu mcp server
+  - novu mcp claude
+  - claude novu notifications
+  - notification workflow mcp
+  - subscriber management mcp
+  - multi channel notifications claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Novu MCP is Novu's official remote Model Context Protocol server for connecting
+AI tools to notification infrastructure. It lets Claude work with subscribers,
+notification preferences, workflows, triggered events, delivery logs,
+environments, and integrations through a hosted HTTP endpoint at
+`https://mcp.novu.co/`.
+
+The server is useful when Claude needs to inspect or operate notification
+systems without manually translating every request into direct API calls. A
+typical session can search subscriber records, inspect workflows, update
+preferences, trigger a test workflow, or debug failed notifications.
+
+## Key Capabilities
+
+- **Subscriber management** - create, inspect, update, delete, and search
+  subscribers.
+- **Notification preferences** - read and update how subscribers receive
+  notifications.
+- **Workflow management** - create, inspect, update, list, and delete
+  notification workflows.
+- **Triggering** - trigger individual or bulk workflow events.
+- **Delivery operations** - inspect notification records, debug failures, and
+  cancel pending triggered events.
+- **Integrations** - list channel integrations and mark primary integrations.
+- **Environment awareness** - check API key status and list Novu environments.
+
+## Tools
+
+Novu documents 23 MCP tools across these areas:
+
+| Tool Area | Example Tools | Purpose |
+|---|---|---|
+| Account | `get_api_key_status`, `get_environments` | Validate the key and inspect environments |
+| Subscribers | `create_subscriber`, `get_subscriber`, `update_subscriber`, `delete_subscriber`, `find_subscribers` | Manage subscriber records |
+| Preferences | `get_subscriber_preferences`, `update_subscriber_preferences` | Read and update notification preferences |
+| Workflows | `create_workflow`, `get_workflow`, `get_workflows`, `update_workflow`, `delete_workflow` | Manage workflow definitions |
+| Triggering | `trigger_workflow`, `bulk_trigger_workflow`, `cancel_triggered_event` | Send or cancel workflow events |
+| Notifications | `get_notification`, `get_notifications` | Inspect notification and delivery records |
+| Integrations | `get_integrations`, `get_active_integrations`, `delete_integration`, `set_primary_integration` | Manage channel providers |
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http novu https://mcp.novu.co/ \
+  --header "Authorization: Bearer YOUR_NOVU_API_KEY"
+```
+
+For a user-scoped install:
+
+```bash
+claude mcp add --scope user --transport http novu https://mcp.novu.co/ \
+  --header "Authorization: Bearer YOUR_NOVU_API_KEY"
+```
+
+Use the EU endpoint when your dashboard is `eu.dashboard.novu.co`:
+
+```bash
+claude mcp add --transport http novu "https://mcp.novu.co/?region=eu" \
+  --header "Authorization: Bearer YOUR_NOVU_API_KEY"
+```
+
+### Claude Desktop
+
+Claude Desktop uses `mcp-remote` for remote MCP servers:
+
+```json
+{
+  "mcpServers": {
+    "novu": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://mcp.novu.co/",
+        "--header",
+        "Authorization: Bearer ${NOVU_API_KEY}"
+      ],
+      "env": {
+        "NOVU_API_KEY": "YOUR_NOVU_API_KEY"
+      }
+    }
+  }
+}
+```
+
+### Codex
+
+Add the API key to your shell environment:
+
+```bash
+export NOVU_API_KEY="YOUR_NOVU_API_KEY"
+```
+
+Then configure the remote MCP server:
+
+```toml
+[mcp_servers.novu]
+url = "https://mcp.novu.co/"
+bearer_token_env_var = "NOVU_API_KEY"
+```
+
+## Use Cases
+
+- Check whether a subscriber exists before triggering a lifecycle notification.
+- Inspect workflow definitions before changing message copy or channel routing.
+- Debug failed deliveries and compare channel-provider state across email, SMS,
+  push, in-app, or chat.
+- Update subscriber notification preferences from a support or operations
+  workflow.
+- Send controlled test notifications during release verification.
+
+## Safety and Privacy
+
+Novu MCP operates against live notification infrastructure. Treat workflow
+triggers, bulk sends, subscriber deletion, integration changes, and preference
+updates as production-impacting actions unless you are connected to a dedicated
+development environment.
+
+Notification systems often contain direct contact details and behavioral
+metadata. Keep API keys out of chat, use the right region endpoint, avoid
+sending sensitive subscriber data unless needed, and review Claude-generated
+workflow or delivery changes before applying them.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Novu's official MCP documentation at
+  `https://docs.novu.co/platform/build-with-ai/mcp` documents the hosted MCP URL,
+  US and EU region variants, API-key authentication, Claude Code, Claude Desktop,
+  Cursor, and Codex setup paths, plus the available tool groups.
+- Claude Code MCP documentation at `https://code.claude.com/docs/en/mcp`
+  documents the `claude mcp add --transport http` pattern used above.
+- No `repoUrl` is declared because the earlier resubmission pointed at
+  `https://github.com/novuhq/smithery-mcp`, which returned 404 during gate
+  review. This entry uses reachable Novu documentation and website sources
+  instead of a placeholder repository URL.
