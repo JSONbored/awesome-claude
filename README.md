@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1269+ file-backed entries</strong> stay useful as both an
+        <strong>1270+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1269</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1270</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -73,7 +73,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>164</code><br>
+          <code>165</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -745,7 +745,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (164)
+## 🧰 Tools (165)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
@@ -753,6 +753,7 @@ Get a free API key on https://app.zyntra.app/
 - **[AgentOps](https://heyclau.de/entry/tools/agentops)** - Open-source observability platform and SDK for tracing, debugging, replaying, and cost-monitoring AI agent and LLM application runs.
 - **[Agno](https://heyclau.de/entry/tools/agno)** - Open-source SDK and runtime for building, running, and managing agent platforms with agents, teams, workflows, memory, knowledge, tools, MCP, and AgentOS.
 - **[Aider](https://heyclau.de/entry/tools/aider)** - Open-source terminal coding assistant that edits files in Git repositories using chat-driven development loops.
+- **[AnythingLLM](https://heyclau.de/entry/tools/anythingllm)** - Local-first AI application for private chat, document RAG, workspace agents, MCP-compatible tools, model routing, memories, scheduled tasks, multimodal workflows, multi-user Docker deployments, and self-hosted agent automation.
 - **[Apache Airflow](https://heyclau.de/entry/tools/apache-airflow)** - Apache-2.0 platform for programmatically authoring, scheduling, monitoring, and operating workflow DAGs across workers, executors, providers, and task logs.
 - **[Apify](https://heyclau.de/entry/tools/apify)** - Web automation and scraping platform with actors, datasets, APIs, and integrations for data extraction workflows.
 - **[Arcade](https://heyclau.de/entry/tools/arcade-ai)** - Tool-calling platform for AI agents with authenticated actions, user approvals, and external service integrations.
