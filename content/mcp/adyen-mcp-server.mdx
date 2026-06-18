@@ -1,0 +1,181 @@
+---
+title: Adyen MCP Server for Claude
+slug: adyen-mcp-server
+category: mcp
+description: >-
+  Integrate with Adyen's payment platform from Claude — create payment sessions and links,
+  cancel/refund payments, manage terminals, webhooks, API credentials, and merchant accounts
+  — with the official Adyen Model Context Protocol server covering Checkout and Management APIs.
+cardDescription: "Official Adyen MCP: payment sessions, links, refunds, terminals & webhooks from Claude."
+seoTitle: "Adyen MCP Server for Claude — Payment Sessions, Links, Refunds & Terminal Management via MCP"
+seoDescription: "Connect Claude to Adyen with the official MCP server: create payment sessions and links, cancel and refund payments, manage terminals, webhooks, API credentials, and merchant accounts across Adyen Checkout and Management APIs. MIT licensed."
+author: Adyen
+authorProfileUrl: "https://github.com/adyen"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.adyen.com/development-resources/mcp-server/"
+websiteUrl: "https://adyen.com"
+repoUrl: "https://github.com/adyen/adyen-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/adyen/adyen-mcp/main/README.md"
+  - "https://docs.adyen.com/development-resources/mcp-server/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add adyen -- npx -y @adyen/mcp --adyenApiKey=YOUR_ADYEN_API_KEY --env=TEST"
+usageSnippet: >-
+  Ask Claude to create a payment session for a checkout, generate a payment link for an order,
+  cancel an authorized payment, refund a captured payment, list terminal settings, test a webhook,
+  or review API credentials for your Adyen merchant account.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "adyen": {
+        "command": "npx",
+        "args": ["-y", "@adyen/mcp", "--adyenApiKey=YOUR_ADYEN_API_KEY", "--env=TEST"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "adyen": {
+        "command": "npx",
+        "args": [
+          "-y", "@adyen/mcp",
+          "--adyenApiKey=YOUR_ADYEN_API_KEY",
+          "--env=LIVE",
+          "--livePrefix=YOUR_LIVE_URL_PREFIX"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "An Adyen account with a web service API key (customer area → Developers → API credentials)."
+  - "The API key user must have appropriate roles: Checkout Webservice, Management API - Accounts Read, Merchant PAL Webservice, and others depending on tools used (see docs)."
+  - "Node.js with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "This server can create payment sessions, generate payment links, cancel authorized payments, and initiate refunds — these are live financial operations."
+  - "Use `--env=TEST` during development with Adyen's test API keys to avoid live transactions."
+  - "Restrict enabled tools to only what is needed via the `--tools` parameter (e.g., `--tools=create_session,list_merchants`)."
+privacyNotes:
+  - "Payment session data, merchant account details, terminal configurations, and webhook payloads from your Adyen instance are surfaced in Claude's context."
+  - "Your Adyen API key is passed as a CLI argument — use environment variable substitution (e.g., `--adyenApiKey=${ADYEN_API_KEY}`) to avoid exposing it in config files."
+disclosure: "Adyen is a commercial global payment platform. The MCP server is officially maintained by Adyen."
+tags:
+  - adyen
+  - payments
+  - payment-links
+  - checkout
+  - terminals
+  - fintech
+  - webhooks
+keywords:
+  - adyen mcp server
+  - adyen mcp claude
+  - payment processing mcp claude code
+  - adyen checkout mcp
+  - payment links mcp
+  - adyen terminal management mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Adyen MCP Server** is the official Model Context Protocol server from
+[Adyen](https://adyen.com), one of the world's leading global payment platforms. It gives
+Claude access to both the Adyen Checkout API (payment sessions, payment links, refunds,
+cancellations) and the Adyen Management API (merchant accounts, terminals, webhooks, payment
+methods, API credentials, users). The server supports scoping active tools to only those
+needed for a given workflow via `--tools`. Licensed under MIT.
+
+## Key capabilities
+
+- **Checkout API** — create payment sessions, get session results, list payment methods,
+  create and update payment links.
+- **Payments modification** — cancel authorized payments and refund captured payments.
+- **Terminal management** — list terminals, reassign terminals, manage Android apps, terminal
+  settings, and terminal actions.
+- **Webhooks** — list, get, and test webhooks at company and merchant levels.
+- **Management API** — list merchant accounts, payment method settings, API credentials, and
+  allowed origins.
+
+## Tools (40+)
+
+| Category | Tools |
+|---|---|
+| Checkout — Sessions | `create_session`, `get_session`, `get_payment_methods` |
+| Checkout — Payment Links | `create_payment_link`, `get_payment_link`, `update_payment_link` |
+| Checkout — Modifications | `cancel_payment`, `refund_payment` |
+| Terminals | `list_terminals`, `reassign_terminal`, `get_terminal_settings`, `update_terminal_settings` |
+| Webhooks | `list_company_webhooks`, `list_merchant_webhooks`, `test_webhook` |
+| Accounts | `list_merchants` |
+| Payment Methods | `list_payment_method_settings` |
+| API Credentials | `list_api_credentials` |
+
+## How it compares
+
+| Server | Sessions | Payment links | Refunds | Terminal mgmt | Webhooks |
+|---|---|---|---|---|---|
+| **Adyen MCP** | Yes | Yes | Yes | Yes | Yes |
+| Stripe MCP | Yes | Yes | Yes | No | Limited |
+| Razorpay MCP | No | Yes | Yes | No | No |
+| Square MCP | Yes | Yes | Yes | Limited | Limited |
+
+Adyen's terminal management tools — for point-of-sale hardware, Android apps, and terminal
+settings — are unique among payment MCP servers.
+
+## Installation
+
+### Test environment (recommended to start)
+
+```bash
+claude mcp add adyen -- npx -y @adyen/mcp \
+  --adyenApiKey=YOUR_ADYEN_API_KEY \
+  --env=TEST
+```
+
+### Live environment
+
+```bash
+claude mcp add adyen -- npx -y @adyen/mcp \
+  --adyenApiKey=YOUR_ADYEN_API_KEY \
+  --env=LIVE \
+  --livePrefix=YOUR_LIVE_URL_PREFIX
+```
+
+### Scoping tools
+
+```bash
+npx -y @adyen/mcp \
+  --adyenApiKey=YOUR_ADYEN_API_KEY \
+  --env=TEST \
+  --tools=create_session,get_payment_methods,create_payment_link
+```
+
+## Requirements
+
+- An Adyen account with a webservice API key.
+- Node.js with `npx`.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Always start with `--env=TEST` to test with Adyen's sandbox before enabling live operations.
+- Scope tools with `--tools` to apply least-privilege access.
+- Pass the API key via environment variable substitution rather than hardcoding it.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `adyen/adyen-mcp` (MIT) documents the `@adyen/mcp` npm package,
+  `--adyenApiKey`, `--env=TEST/LIVE`, `--livePrefix`, and `--tools` CLI parameters, all 40+
+  tools across Checkout API, Management API, terminal management, and webhooks, plus the
+  required webservice user roles.
+- Adyen documentation at `docs.adyen.com/development-resources/mcp-server/` (HTTP 200) covers
+  setup, authentication, and tool availability.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.
