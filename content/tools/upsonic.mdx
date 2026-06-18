@@ -1,0 +1,193 @@
+---
+title: Upsonic
+slug: upsonic
+category: tools
+description: >-
+  Python framework for autonomous AI agents, traditional agents, custom tools,
+  MCP tools, prebuilt autonomous agents, workspace-restricted file and shell
+  operations, E2B sandbox execution, OCR, document processing, and vector
+  storage integrations.
+cardDescription: >-
+  Build Python autonomous agents with custom tools, MCP tools, prebuilt agents,
+  workspace restrictions, sandbox execution, OCR, and document workflows.
+seoTitle: Upsonic Python Agent Framework for Autonomous Agents, MCP Tools, OCR, and OpenClaw Workflows
+seoDescription: >-
+  Use Upsonic to build Python autonomous agents with custom tools, MCP tools,
+  prebuilt autonomous agents, workspace-restricted file and shell operations,
+  E2B sandboxes, OCR, document processing, and vector storage integrations.
+author: Upsonic
+authorProfileUrl: "https://github.com/Upsonic"
+dateAdded: "2026-06-18"
+websiteUrl: "https://docs.upsonic.ai"
+documentationUrl: "https://docs.upsonic.ai"
+repoUrl: "https://github.com/Upsonic/Upsonic"
+packageUrl: "https://pypi.org/project/upsonic/"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/Upsonic/Upsonic"
+  - "https://raw.githubusercontent.com/Upsonic/Upsonic/master/README.md"
+  - "https://raw.githubusercontent.com/Upsonic/Upsonic/master/pyproject.toml"
+  - "https://raw.githubusercontent.com/Upsonic/Upsonic/master/LICENCE"
+  - "https://pypi.org/pypi/upsonic/json"
+installable: true
+installCommand: "uv pip install upsonic"
+usageSnippet: >-
+  Install Upsonic in an isolated Python environment, create an autonomous or
+  traditional agent, set a scoped workspace for file and shell work, add only
+  reviewed tools or MCP servers, then configure OCR, vector storage, or sandbox
+  providers as needed.
+copySnippet: |-
+  uv pip install upsonic
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 or newer."
+  - "An isolated virtual environment managed with uv, pip, or similar tooling."
+  - "Model provider credentials for the model route the agent will use."
+  - "A reviewed workspace directory for autonomous file and shell operations."
+  - "Optional E2B sandbox, MCP server, OCR engine, vector database, or storage backend credentials if those extras are enabled."
+safetyNotes:
+  - "Upsonic autonomous agents can use file operations, shell operations, custom tools, MCP tools, document processing, OCR, vector stores, and external model providers; scope every capability before using private data."
+  - "The README says file and shell operations are restricted to the configured workspace and dangerous commands are blocked. Verify that boundary locally before relying on it for sensitive repositories or production systems."
+  - "MCP tools can connect agents to external data sources and services; review server provenance, tool names, read/write behavior, credentials, and approval flow before enabling them."
+  - "OCR and document loaders can parse invoices, PDFs, Office files, HTML, Markdown, JSON, YAML, XML, and other documents depending on installed extras; handle extracted text as sensitive."
+  - "Optional sandbox, vector database, storage, model, embedding, and telemetry dependencies can introduce additional network calls, costs, and retention behavior."
+privacyNotes:
+  - "Prompts, task descriptions, workspace files, shell output, custom tool inputs, MCP payloads, OCR text, document chunks, embeddings, vector records, model responses, traces, and logs may contain sensitive data."
+  - "Configured model providers, MCP servers, OCR services, E2B sandboxes, vector databases, storage backends, and observability or telemetry integrations may receive task data depending on selected extras."
+  - "The package dependency list includes Sentry SDK with OpenTelemetry support; review runtime telemetry configuration before production use."
+  - "Keep provider keys, sandbox tokens, vector database credentials, storage URLs, workspace paths, extracted document text, and generated agent outputs out of public prompts, logs, issues, and examples."
+tags:
+  - upsonic
+  - ai-agents
+  - autonomous-agents
+  - python
+  - mcp
+  - agent-framework
+  - openclaw
+  - ocr
+  - rag
+  - sandboxes
+keywords:
+  - Upsonic
+  - Upsonic agent framework
+  - Upsonic MCP tools
+  - Upsonic autonomous agents
+  - Python autonomous agent framework
+  - OpenClaw agent framework
+  - MCP agent framework
+  - Upsonic OCR
+  - E2B sandbox agent
+  - prebuilt autonomous agents
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Upsonic is a Python framework for building autonomous and traditional AI agents.
+It supports autonomous agents with configured workspaces, custom tools, MCP
+tools, prebuilt autonomous agents, OCR and document processing, sandbox
+providers, vector database integrations, storage extras, and model-provider
+extras.
+
+This entry is relevant for Upsonic, Upsonic agent framework, Upsonic MCP tools,
+Upsonic autonomous agents, Python autonomous agent framework, OpenClaw agent
+framework, MCP agent framework, Upsonic OCR, E2B sandbox agent, and prebuilt
+autonomous agents searches.
+
+## Install
+
+The README documents installing the PyPI package with uv:
+
+```bash
+uv pip install upsonic
+```
+
+For project-based development, install it into a virtual environment and add
+only the extras you need, such as MCP, OCR, vector databases, storage, model
+providers, or document loaders.
+
+## Core Capabilities
+
+| Area | Upsonic Coverage |
+| --- | --- |
+| Autonomous Agents | `AutonomousAgent` with workspace-scoped tasks |
+| Traditional Agents | `Agent` and `Task` APIs for conventional tool-using agents |
+| Custom Tools | Python functions exposed as agent tools through decorators |
+| MCP Tools | Optional MCP extra for connecting agents to external MCP services |
+| Prebuilt Agents | Community-contributed prebuilt autonomous agents with skills, prompts, and first messages |
+| Sandboxes | E2B sandbox provider path for isolated cloud execution environments |
+| OCR | Unified OCR interface with EasyOCR, RapidOCR, Tesseract, PaddleOCR, DeepSeek OCR, and DeepSeek via Ollama listed in the README |
+| Documents | Optional loaders for CSV, Docling, DOCX, HTML, JSON, Markdown, PDF, text, XML, YAML, and related formats |
+| Storage | Optional SQLite, Redis, Postgres, Mongo, Mem0, and vector database integrations |
+| Models | Optional model-provider extras for Anthropic, Azure, Bedrock, Cohere, Google, Groq, Mistral, OpenAI, xAI, and related providers |
+
+## MCP and OpenClaw Fit
+
+Upsonic directly targets autonomous-agent builders and is source-tagged for MCP,
+Model Context Protocol, OpenClaw, Claude, computer use, RAG, and autonomous
+agents. The README positions it for building autonomous agents similar to
+OpenClaw and Claude Cowork, while also supporting more traditional agent
+systems.
+
+Use it when you want a Python framework with a small agent API and optional MCP
+tooling, rather than a full desktop client or visual workflow platform.
+
+## Use Cases
+
+- Build a Python autonomous agent that works inside a specific workspace.
+- Add custom Python functions as reviewed tools.
+- Connect MCP tools to an agent workflow.
+- Start from a prebuilt autonomous agent and adapt its prompt, skill, and first
+  message.
+- Run OCR over invoices, PDFs, or scanned documents before agent processing.
+- Add vector storage or document loaders for RAG workflows.
+- Evaluate E2B sandbox execution for safer autonomous work.
+- Compare Upsonic with OpenClaw, Hermes Agent, Qwen-Agent, AG2, CAMEL-AI,
+  LangGraph, CrewAI, and mcp-agent.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `Upsonic/Upsonic` as an MIT-licensed repository with active
+  development, 7,800+ stars, and latest release `v0.77.3`.
+- The README describes Upsonic as a Python framework for building autonomous
+  agents like OpenClaw and Claude Cowork, as well as traditional agent systems.
+- The README documents installation through `uv pip install upsonic`.
+- The README shows `AutonomousAgent` and `Task` usage with a configured
+  workspace and states that file and shell operations are restricted to that
+  workspace while path traversal and dangerous commands are blocked.
+- The README documents custom tools, MCP tools, prebuilt autonomous agents, E2B
+  sandbox provider guidance, OCR and document processing, and supported OCR
+  engines.
+- `pyproject.toml` declares the `upsonic` package at version `0.77.3`, Python
+  `>=3.10`, MIT license, core dependencies, and optional extras for MCP,
+  storage, vector databases, models, embeddings, OCR, and document loaders.
+- PyPI reports `upsonic` version `0.77.3`.
+
+## Safety and Privacy
+
+The main safety question is not whether Upsonic can run an agent; it is what
+workspace, tools, MCP servers, OCR engines, model providers, storage backends,
+and sandboxes the agent is allowed to use. Start with a disposable workspace,
+small tool set, and non-production credentials.
+
+For document and RAG workflows, extracted text and embeddings can be more
+sensitive than the original file names suggest. Define retention, deletion,
+model-provider routing, and vector-store access rules before indexing private
+documents.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, README output, open pull requests, and
+repository-wide content for `Upsonic/Upsonic`, Upsonic, Upsonic agent framework,
+Upsonic MCP tools, Upsonic autonomous agents, Python autonomous agent framework,
+OpenClaw agent framework, MCP agent framework, Upsonic OCR, E2B sandbox agent,
+and prebuilt autonomous agents. No dedicated Upsonic tools entry, exact source
+URL duplicate, target file, or open duplicate PR was found.
