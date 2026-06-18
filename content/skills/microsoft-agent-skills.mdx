@@ -1,0 +1,212 @@
+---
+title: Microsoft Agent Skills
+slug: microsoft-agent-skills
+category: skills
+description: >-
+  Microsoft-maintained Agent Skills, plugins, custom agents, AGENTS.md
+  templates, and MCP configurations for Azure SDKs, Microsoft Foundry, Microsoft
+  365 Agents SDK, Copilot SDK, MCP server building, and cloud solution work.
+cardDescription: >-
+  Install Microsoft Agent Skills for Azure SDK and Foundry development with
+  Claude, Codex, GitHub Copilot, and other skills-compatible coding agents.
+seoTitle: Microsoft Agent Skills for Claude Code, Codex, and Copilot
+seoDescription: >-
+  Install microsoft/skills with npx to add Microsoft Agent Skills for Azure
+  SDKs, Microsoft Foundry, MCP builders, Copilot SDK work, custom agents,
+  AGENTS.md templates, and MCP configurations.
+author: Microsoft
+authorProfileUrl: "https://github.com/microsoft"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/microsoft/skills"
+documentationUrl: "https://microsoft.github.io/skills/"
+websiteUrl: "https://skills.sh/microsoft/skills"
+downloadUrl: "https://github.com/microsoft/skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add microsoft/skills"
+usageSnippet: >-
+  Run `npx skills add microsoft/skills`, select only the Azure, Foundry,
+  Copilot, MCP, or language SDK skills needed for the current project, and
+  verify current Microsoft Learn docs before coding.
+copySnippet: |-
+  # Install interactively
+  npx skills add microsoft/skills
+
+  # Manual install example
+  git clone https://github.com/microsoft/skills.git
+  cp -r agent-skills/.github/skills/azure-cosmos-db-py your-project/.github/skills/
+skillType: general
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/microsoft/skills"
+  - "https://raw.githubusercontent.com/microsoft/skills/main/README.md"
+  - "https://raw.githubusercontent.com/microsoft/skills/main/Agents.md"
+  - "https://microsoft.github.io/skills/"
+  - "https://skills.sh/microsoft/skills"
+testedPlatforms:
+  - Claude
+  - Codex
+  - GitHub Copilot
+  - OpenCode
+  - Cursor
+prerequisites:
+  - "Node.js and npx for the skills installer."
+  - "A coding agent or editor setup that can load Agent Skills from `.github/skills`, `.claude/skills`, `.opencode/skills`, or a supported skills directory."
+  - "Relevant Azure, Microsoft Foundry, Microsoft 365, GitHub, or SDK credentials for the specific skill being used."
+  - "Current Microsoft Learn, SDK, and package-version checks before implementing against Azure or Foundry APIs."
+  - "A narrow skill-selection plan; the upstream README warns against loading every skill at once."
+safetyNotes:
+  - "Some skills guide Azure or Foundry provisioning, hosted agents, model deployments, toolboxes, workflows, storage, messaging, identity, Key Vault, monitoring, and governance tasks that can affect live cloud resources."
+  - "Validate resource names, subscriptions, tenants, regions, RBAC, quotas, and costs before approving generated commands or infrastructure changes."
+  - "The upstream README describes the repository as work in progress with active skill updates and expanding tests."
+  - "Use skills selectively; loading all skills can dilute context and produce mixed SDK patterns."
+  - "Skills and MCP configs may invoke external documentation, GitHub, browser automation, Azure CLI, azd, or SDK commands depending on the selected workflow."
+privacyNotes:
+  - "Azure subscription IDs, tenant IDs, resource names, logs, traces, SDK error output, repository code, architecture notes, and Foundry project details can enter prompts or tool output."
+  - "Do not paste service principals, access tokens, connection strings, Key Vault secrets, managed identity credentials, or customer data into public issues, screenshots, or committed configs."
+  - "Microsoft Docs MCP, Context7, GitHub, browser, or other MCP integrations may send query text and project context to external services depending on local configuration."
+tags:
+  - microsoft
+  - azure
+  - foundry
+  - agent-skills
+  - mcp
+keywords:
+  - microsoft skills
+  - microsoft agent skills
+  - azure agent skills
+  - microsoft foundry skills
+  - npx skills add microsoft skills
+  - copilot sdk skills
+  - mcp builder skill
+readingTime: 6
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Microsoft Agent Skills
+
+`microsoft/skills` is a Microsoft-maintained Agent Skills repository for coding
+agents working with Azure SDKs, Microsoft Foundry, Microsoft 365 agents,
+Copilot SDK patterns, MCP servers, custom agents, and project-level agent
+instructions.
+
+The repository includes skills, plugins, custom agents, AGENTS.md templates, and
+MCP configurations. It is useful when an agent needs current Microsoft domain
+context that is too specific or too fast-moving for model memory alone.
+
+## What Is Inside
+
+The upstream README currently advertises a large skill catalog, plus plugins,
+custom agents, AGENTS.md templates, MCP configs, and documentation.
+
+| Area | Examples |
+| --- | --- |
+| Core | `mcp-builder`, `skill-creator`, `copilot-sdk`, cloud solution architecture |
+| Foundry | projects, models, hosted agents, toolboxes, workflows, IQ knowledge bases, managed skills, memory, observability, governance |
+| Python | Azure AI Projects, Cosmos DB, AI Search, Storage, Service Bus, Monitor, Key Vault, FastAPI patterns |
+| .NET | Azure AI, Search, Key Vault, Resource Manager, Foundry, and service SDK patterns |
+| TypeScript | Azure SDK, Aspire, storage, AI, and app patterns |
+| Java | Azure SDK and service patterns |
+| Rust | Azure and infrastructure-oriented SDK patterns |
+
+## Installation
+
+Install interactively with the skills CLI:
+
+```bash
+npx skills add microsoft/skills
+```
+
+The installer lets you select the skills needed for the current project. The
+README says selected skills are installed into the chosen agent directory and
+can be symlinked across multiple agent configs.
+
+Manual install is also documented upstream:
+
+```bash
+git clone https://github.com/microsoft/skills.git
+cp -r agent-skills/.github/skills/azure-cosmos-db-py your-project/.github/skills/
+```
+
+## Selection Guidance
+
+Do not load the whole catalog by default. The upstream README explicitly warns
+that loading all skills causes context rot: diluted attention, wasted tokens,
+and conflated patterns. Select only the Azure SDK, Foundry, Copilot, MCP, or
+language-specific skills needed for the task.
+
+Before implementation, use fresh sources:
+
+- Search Microsoft Learn or Microsoft Docs MCP for current API signatures.
+- Verify installed SDK package versions.
+- Check the target language package docs and examples.
+- Use Context7 or other current documentation sources when the selected skill
+  asks for it.
+
+## Use Cases
+
+- Add Azure SDK implementation patterns to a coding agent session.
+- Build or review Microsoft Foundry hosted agents, toolboxes, workflows,
+  memory, observability, or governance flows.
+- Create an MCP server in Python, Node/TypeScript, or .NET with the
+  `mcp-builder` skill.
+- Use `skill-creator` to author new project skills with tests and acceptance
+  criteria.
+- Ground GitHub Copilot SDK or Microsoft 365 Agents SDK work in current
+  patterns.
+- Add project-level `AGENTS.md` guidance for repository-specific agent behavior.
+
+## Safety and Privacy
+
+Many Microsoft skills are operational. Depending on the selected skill, an
+agent may propose Azure CLI, azd, SDK, infrastructure, model deployment,
+identity, storage, monitoring, or governance changes. Treat those as production
+changes until proven otherwise.
+
+Review cloud subscription, tenant, region, resource group, RBAC, quota, and
+cost impact before approving generated commands. Keep credentials in local
+secret stores or environment variables, not in prompts or committed files.
+
+## Troubleshooting
+
+### The agent mixes SDK versions
+
+Stop and verify package versions, then re-open the relevant Microsoft Learn or
+SDK docs. The upstream Agents.md warns that Azure SDKs and Foundry APIs change
+constantly and stale patterns break code.
+
+### The agent loads too much context
+
+Remove unrelated skills from the active project directory. Reinstall only the
+language, service, or Foundry skills required for the current change.
+
+### A skill suggests a risky Azure command
+
+Ask the agent to produce a dry-run plan first, including subscription, tenant,
+region, resource group, permissions, cost impact, rollback path, and validation
+command.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes Microsoft Agent Skills as skills, custom
+  agents, AGENTS.md templates, and MCP configurations for Azure SDKs and
+  Microsoft AI Foundry.
+- The README documents `npx skills add microsoft/skills` as the quick-start
+  installer.
+- The README warns to use skills selectively rather than loading all skills.
+- `Agents.md` says Azure SDKs and Foundry APIs change constantly and instructs
+  agents to search current docs and verify SDK versions before implementing.
+- The repository is MIT licensed and published by `microsoft/skills`.
+
+## Duplicate Check
+
+No existing `microsoft/skills`, Microsoft Agent Skills, or Microsoft Foundry
+skills catalog entry was found in `content/skills`.
