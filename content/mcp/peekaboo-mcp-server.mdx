@@ -1,0 +1,185 @@
+---
+title: Peekaboo MCP Server
+slug: peekaboo-mcp-server
+category: mcp
+description: >-
+  macOS automation MCP server and CLI from OpenClaw that gives AI agents
+  screen capture, window/app discovery, UI element inspection, clicks, typing,
+  scrolling, hotkeys, menu actions, dialog control, and optional AI visual
+  analysis through local or hosted model providers.
+cardDescription: >-
+  Control macOS apps from MCP clients with screenshots, UI inspection, clicks,
+  typing, hotkeys, menus, windows, dialogs, and optional visual AI analysis.
+seoTitle: Peekaboo MCP Server for Claude Code, Codex, Cursor, and macOS Automation
+seoDescription: >-
+  Configure Peekaboo MCP for Claude Code, Codex, Cursor, and macOS automation
+  with screen capture, UI interaction, accessibility tools, background input,
+  app/window controls, and optional AI visual analysis.
+author: OpenClaw
+authorProfileUrl: "https://github.com/openclaw"
+dateAdded: "2026-06-18"
+brandName: Peekaboo
+brandDomain: peekaboo.boo
+repoUrl: "https://github.com/openclaw/Peekaboo"
+documentationUrl: "https://github.com/openclaw/Peekaboo/blob/main/README.md"
+websiteUrl: "https://www.peekaboo.boo"
+packageUrl: "https://registry.npmjs.org/%40steipete%2Fpeekaboo/latest"
+installable: true
+installCommand: "npx -y @steipete/peekaboo"
+usageSnippet: >-
+  Run `npx -y @steipete/peekaboo` as the MCP server on macOS 15+, grant Screen
+  Recording and Accessibility permissions, then start with read-only capture
+  and app/window inspection before allowing input automation.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "peekaboo": {
+        "command": "npx",
+        "args": ["-y", "@steipete/peekaboo"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "peekaboo": {
+        "command": "npx",
+        "args": ["-y", "@steipete/peekaboo"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - "macOS 15.0 or newer for the supported automation APIs."
+  - "Node.js 22 or newer when using the npm MCP wrapper."
+  - "Screen Recording permission for the terminal, editor, daemon, or Bridge host that runs Peekaboo."
+  - "Accessibility permission for reliable element interaction, window focus, menu control, and action-based clicks."
+  - "Event Synthesizing permission when using background keyboard input, coordinate clicks, paste, or synthetic click fallback."
+safetyNotes:
+  - "Peekaboo can see the screen, capture windows, inspect UI elements, click controls, type text, paste content, use hotkeys, scroll, drag, drive menus, manage windows, and run natural-language automation."
+  - "Start with read-only commands such as `see`, `image`, `list`, `window list`, or `tools` before enabling input automation."
+  - "Require human approval before sending messages, changing accounts, submitting forms, purchasing, deleting data, moving files, or acting in production apps."
+  - "Use dedicated test accounts, test apps, and explicit allowlists when exposing Peekaboo to an agent that can operate logged-in macOS applications."
+  - "HTTP and SSE MCP transports are documented as stubbed in the MCP command docs; stdio is the default supported integration path."
+privacyNotes:
+  - "Screen captures, window titles, app names, UI labels, form fields, menus, dialogs, file paths, clipboard contents, and generated snapshots may be exposed to the MCP client and model provider."
+  - "Logged-in apps can show personal data, customer data, credentials, recovery codes, private messages, source code, internal dashboards, or confidential documents."
+  - "Optional AI analysis may send screenshots or extracted UI context to configured model providers unless the user selects a local provider path."
+  - "Snapshots, retained frames, metadata, and optional video output can persist on disk; prune caches and outputs when working with sensitive screens."
+sourceUrls:
+  - "https://github.com/openclaw/Peekaboo"
+  - "https://github.com/openclaw/Peekaboo/blob/main/README.md"
+  - "https://github.com/openclaw/Peekaboo/blob/main/docs/commands/mcp.md"
+  - "https://github.com/openclaw/Peekaboo/blob/main/docs/permissions.md"
+  - "https://github.com/openclaw/Peekaboo/blob/main/package.json"
+tags:
+  - macos
+  - automation
+  - screen-capture
+  - ui-automation
+  - openclaw
+keywords:
+  - Peekaboo MCP
+  - Peekaboo macOS automation
+  - OpenClaw Peekaboo
+  - macOS automation MCP server
+  - screenshot MCP server
+  - Claude Code macOS automation
+  - Codex macOS automation
+  - Cursor MCP screen capture
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Peekaboo is a macOS automation CLI and MCP server for agents that need to see
+and operate desktop applications. It can capture screens or windows, inspect UI
+elements, click by label or element ID, type text, send hotkeys, manage windows
+and Spaces, interact with menus and dialogs, and run optional visual analysis
+through configured model providers.
+
+The npm package exposes the MCP wrapper as `@steipete/peekaboo`, while the
+Homebrew path installs the native macOS app and CLI.
+
+## Source Review
+
+- https://github.com/openclaw/Peekaboo
+- https://github.com/openclaw/Peekaboo/blob/main/README.md
+- https://github.com/openclaw/Peekaboo/blob/main/docs/commands/mcp.md
+- https://github.com/openclaw/Peekaboo/blob/main/docs/permissions.md
+- https://github.com/openclaw/Peekaboo/blob/main/package.json
+
+Verified on **2026-06-18**. The README documents the MCP server for Codex,
+Claude Code, and Cursor, plus the `npx -y @steipete/peekaboo` startup path. The
+MCP command docs identify stdio as the default supported transport and note that
+HTTP/SSE transports are stubbed.
+
+## Features
+
+- macOS screen, window, and menu-bar capture with optional Retina scaling.
+- UI inspection through `see`, snapshots, element IDs, and labels.
+- Click, type, press, hotkey, paste, scroll, swipe, drag, move, menu, menubar,
+  dock, app, window, space, and dialog automation.
+- Direct accessibility actions such as `set-value` and `perform-action`.
+- Natural-language automation through the `agent` command.
+- MCP server and CLI backed by the same tool catalog.
+- Optional model-provider integration through configured AI providers.
+- Permission tools for Screen Recording, Accessibility, and Event Synthesizing.
+
+## Installation
+
+Run as an MCP server through npm:
+
+```json
+{
+  "mcpServers": {
+    "peekaboo": {
+      "command": "npx",
+      "args": ["-y", "@steipete/peekaboo"]
+    }
+  }
+}
+```
+
+For the full native CLI/app path:
+
+```bash
+brew install steipete/tap/peekaboo
+```
+
+Then verify permissions:
+
+```bash
+peekaboo permissions status
+```
+
+## Use Cases
+
+- Let a coding agent inspect a macOS app window while debugging UI state.
+- Capture screenshots and UI element maps for local app QA.
+- Automate repeatable desktop workflows in a dedicated test account.
+- Run browser or app interactions when a browser-only MCP is not enough.
+- Use local or hosted visual models to answer questions about a captured screen.
+
+## Safety and Privacy
+
+Peekaboo operates at the desktop boundary, so it should be treated as sensitive
+automation. Start read-only, grant the narrowest practical macOS permissions,
+and use explicit human approval before any agent action that changes data,
+sends communication, submits a form, or manipulates a logged-in app.
+
+When optional AI analysis is enabled, confirm whether screenshots or extracted
+UI context are sent to a hosted model provider. Use local models or isolated
+test environments for confidential screens.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `openclaw/Peekaboo`, Peekaboo MCP,
+`@steipete/peekaboo`, macOS automation MCP, screenshot MCP server, and OpenClaw
+Peekaboo. Existing browser and desktop automation entries cover BrowserMCP,
+Chrome MCP, Playwright MCP, Windows MCP, and bb-browser, but no dedicated
+Peekaboo MCP entry, exact source URL duplicate, target file, or open duplicate
+PR was found.
