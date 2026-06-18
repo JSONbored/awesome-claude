@@ -579,12 +579,16 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"MEMBER"');
     expect(source).toContain('"COLLABORATOR"');
     expect(source).toContain("targetFromIssueCommentRecheck");
+    expect(source).toContain("trustedManualRecheck = false");
     expect(source).toContain("shouldResetManualTerminal");
     expect(source).toContain("shouldResetTerminalState");
     expect(source).toContain(
       "resetAttemptCount: shouldResetManualTerminal || shouldResetTerminalState",
     );
     expect(source).toContain(
+      'trustedManualRecheck === true &&\n    String(existing?.status || "") === "manual"',
+    );
+    expect(source).not.toContain(
       'forceRecheck === true && String(existing?.status || "") === "manual"',
     );
     expect(source).toContain(
@@ -593,7 +597,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain(
       "forceRecheck === true ||\n      isReopenedPullRequestEvent",
     );
-    expect(issueCommentBlock).toContain("payload,\n      true,");
+    expect(issueCommentBlock).toContain("payload,\n      true,\n      true,");
   });
 
   it("renders Taopedia-style verdict comments with stable sections", () => {
@@ -2142,9 +2146,13 @@ ${urls}
     expect(terminalSetBlock).not.toContain('"merge"');
     expect(terminalSetBlock).not.toContain('"import"');
     expect(source).toContain("forceRecheck = false");
+    expect(source).toContain("trustedManualRecheck = false");
+    expect(source).toContain("trustedManualRecheck === true");
+    expect(source).toContain("message.payload.trustedManualRecheck === true");
     expect(source).toContain(
-      "payload: { eventName, deliveryId, target, webhook, forceRecheck }",
+      'if (existingStatus === "manual" && !trustedManualRecheck)',
     );
+    expect(source).toContain("trustedManualRecheck,");
     expect(source).toContain(
       'String(message.payload.eventName || "") === "issue_comment"',
     );
