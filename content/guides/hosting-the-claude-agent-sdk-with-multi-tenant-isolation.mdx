@@ -102,19 +102,24 @@ are applied at your proxy, not inside the SDK call alone.
 1. **Provision per-tenant directories.** Create `tenantDir` and `configDir` paths
    with permissions so tenants cannot read each other's files.
 
-2. **Apply SDK options on every query.** TypeScript example from official docs:
+2. **Apply SDK options on every query.** Build a minimal allowlisted
+   environment for the tenant subprocess instead of inheriting all host
+   variables, which may include deployment-wide secrets:
 
 ```typescript
+const tenantEnv = {
+  PATH: process.env.PATH ?? "",
+  HOME: tenantDir,
+  CLAUDE_CONFIG_DIR: configDir,
+  CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1",
+};
+
 for await (const message of query({
   prompt,
   options: {
     cwd: tenantDir,
     settingSources: [],
-    env: {
-      ...process.env,
-      CLAUDE_CONFIG_DIR: configDir,
-      CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1",
-    },
+    env: tenantEnv,
   },
 })) {
   // handle messages
