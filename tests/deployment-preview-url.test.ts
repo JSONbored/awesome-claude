@@ -217,7 +217,7 @@ describe("PR preview artifact validation flow", () => {
     );
   });
 
-  it("uploads preview Worker versions to the non-production Wrangler environment", () => {
+  it("keeps production uploads defaulted while exposing a dev Worker version upload", () => {
     const packageJson = JSON.parse(
       fs.readFileSync(path.join(repoRoot, "apps/web/package.json"), "utf8"),
     ) as { scripts: Record<string, string> };
@@ -226,8 +226,12 @@ describe("PR preview artifact validation flow", () => {
       "utf8",
     );
 
-    expect(packageJson.scripts["versions:upload"]).toContain("--env dev");
-    expect(packageJson.scripts["versions:upload"]).not.toContain('--env ""');
+    expect(packageJson.scripts["versions:upload"]).toContain('--env ""');
+    expect(packageJson.scripts["versions:upload"]).not.toContain("--env dev");
+    expect(packageJson.scripts["versions:upload:dev"]).toContain("--env dev");
+    expect(packageJson.scripts["preversions:upload:dev"]).toBe(
+      "pnpm run generate:artifacts",
+    );
     expect(wranglerConfig).toContain('"name": "heyclaude-prod"');
     expect(wranglerConfig).toContain('"dev": {');
     expect(wranglerConfig).toContain('"name": "heyclaude-dev"');
