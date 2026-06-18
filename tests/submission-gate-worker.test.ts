@@ -2518,6 +2518,44 @@ ${urls}
     }
     expect(helperSource).toContain("DIRECTORY_ENTRY_URL_SIGNAL_FIELDS");
     expect(helperSource).toContain("entry[field]");
+    expect(helperSource).toContain("Array.isArray(entry.sourceUrls)");
+  });
+
+  it("detects duplicate submissions from list-form source URLs", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/tools/source-list.mdx",
+      content: `---
+title: Shared Source Tool
+slug: source-list
+category: tools
+description: Local CLI for analyzing Claude Code usage.
+sourceUrls:
+  - "https://github.com/acme/shared-project"
+---
+`,
+      label: "accepted entry content/tools/source-list.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/tools/source-list-copy.mdx",
+      content: `---
+title: Shared Source Tool Copy
+slug: source-list-copy
+category: tools
+description: Local CLI for analyzing Claude Code usage.
+sourceUrls:
+  - "https://github.com/acme/shared-project?utm_source=form"
+---
+`,
+    });
+
+    expect(candidate.urls).toContain("https://github.com/acme/shared-project");
+    expect(
+      findStrictContentDuplicateMatch(candidate, [existing]),
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same canonical source URL"),
+      ]),
+    });
   });
 
   it("detects neutral duplicate submissions from canonical source URLs", () => {

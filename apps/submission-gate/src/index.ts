@@ -2163,6 +2163,12 @@ function contentSignalSourceFromDirectoryEntry(entry: Record<string, unknown>) {
     const value = entry[field];
     if (value) lines.push(`${field}: ${yamlScalar(value)}`);
   }
+  if (Array.isArray(entry.sourceUrls) && entry.sourceUrls.length) {
+    lines.push("sourceUrls:");
+    for (const value of entry.sourceUrls) {
+      lines.push(`  - ${yamlScalar(value)}`);
+    }
+  }
   lines.push("---", "");
   return lines.join("\n");
 }

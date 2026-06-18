@@ -65,6 +65,7 @@ const URL_FIELDS = new Set([
   "repoUrl",
   "repositoryUrl",
   "sourceUrl",
+  "sourceUrls",
   "websiteUrl",
   "docs_url",
   "download_url",
@@ -73,6 +74,7 @@ const URL_FIELDS = new Set([
   "repo_url",
   "repository_url",
   "source_url",
+  "source_urls",
   "website_url",
 ]);
 
@@ -83,6 +85,7 @@ const CROSS_CATEGORY_STRICT_URL_FIELDS = new Set([
   "repoUrl",
   "repositoryUrl",
   "sourceUrl",
+  "sourceUrls",
   "websiteUrl",
   "download_url",
   "github_url",
@@ -90,6 +93,7 @@ const CROSS_CATEGORY_STRICT_URL_FIELDS = new Set([
   "repo_url",
   "repository_url",
   "source_url",
+  "source_urls",
   "website_url",
 ]);
 const DOMAIN_ONLY_EXCLUSIONS = new Set([
@@ -135,6 +139,37 @@ export function parseSimpleFrontmatter(source: string) {
     if (!value || value === "|" || value === ">") continue;
     fields[key] = unquoteYamlScalar(value);
   }
+  return fields;
+}
+
+function parseSimpleFrontmatterListFields(
+  source: string,
+  listFields: Set<string>,
+) {
+  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(
+    String(source || ""),
+  );
+  const fields: Record<string, string[]> = {};
+  if (!match) return fields;
+
+  let currentKey = "";
+  for (const line of match[1].split(/\r?\n/)) {
+    const listStart = /^([A-Za-z][A-Za-z0-9_]*):\s*$/.exec(line);
+    if (listStart) {
+      currentKey = listFields.has(listStart[1]) ? listStart[1] : "";
+      if (currentKey) fields[currentKey] = fields[currentKey] || [];
+      continue;
+    }
+    if (!currentKey) continue;
+    const item = /^\s+-\s*(.*?)\s*$/.exec(line);
+    if (item) {
+      const value = unquoteYamlScalar(item[1]);
+      if (value) fields[currentKey].push(value);
+      continue;
+    }
+    if (!/^\s/.test(line)) currentKey = "";
+  }
+
   return fields;
 }
 
@@ -236,13 +271,25 @@ export function extractContentDuplicateSignals(params: {
 }): ContentDuplicateSignals {
   const fields = parseSimpleFrontmatter(params.content);
   const parts = pathParts(params.filePath);
-  const urlEntries = Object.entries(fields)
+  const listFields = parseSimpleFrontmatterListFields(
+    params.content,
+    URL_FIELDS,
+  );
+  const scalarUrlEntries = Object.entries(fields)
     .filter(([key]) => URL_FIELDS.has(key))
     .map(([key, value]) => ({
       key,
       url: normalizeUrl(value),
-    }))
-    .filter((entry) => entry.url);
+    }));
+  const listUrlEntries = Object.entries(listFields).flatMap(([key, values]) =>
+    values.map((value) => ({
+      key,
+      url: normalizeUrl(value),
+    })),
+  );
+  const urlEntries = [...scalarUrlEntries, ...listUrlEntries].filter(
+    (entry) => entry.url,
+  );
   const urls = [...new Set(urlEntries.map((entry) => entry.url))];
   const strictDuplicateUrls = [
     ...new Set(
