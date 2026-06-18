@@ -1,3 +1,5 @@
+import { parseSafeFrontmatter } from "../../../packages/registry/src/frontmatter.js";
+
 export type ContentDuplicateSignals = {
   filePath: string;
   category: string;
@@ -107,19 +109,18 @@ function unquoteYamlScalar(value: string) {
 }
 
 export function parseSimpleFrontmatter(source: string) {
-  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(
-    String(source || ""),
-  );
+  const { data } = parseSafeFrontmatter(source, { fallbackOnError: true });
   const fields: Record<string, string> = {};
-  if (!match) return fields;
 
-  for (const line of match[1].split(/\r?\n/)) {
-    const scalar = /^([A-Za-z][A-Za-z0-9_]*):\s*(.*?)\s*$/.exec(line);
-    if (!scalar) continue;
-    const [, key, value] = scalar;
-    if (!value || value === "|" || value === ">") continue;
-    fields[key] = unquoteYamlScalar(value);
+  for (const [key, value] of Object.entries(data || {})) {
+    if (value === null || typeof value === "undefined") continue;
+    if (typeof value === "string") {
+      fields[key] = value.trim();
+      continue;
+    }
+    fields[key] = String(value).trim();
   }
+
   return fields;
 }
 

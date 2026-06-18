@@ -3245,6 +3245,31 @@ websiteUrl: "https://www.w3.org/WAI/test-evaluate/"
     });
   });
 
+  it("blocks protected metadata edits written with valid YAML forms", () => {
+    const before = `---
+title: Existing Tool
+slug: existing-tool
+category: tools
+---
+`;
+    const after = `---
+title: Existing Tool
+slug: existing-tool
+category: tools
+"repoUrl": https://github.com/example/evil
+downloadUrl: >
+  https://example.com/evil-package.zip
+packageVerified: true
+---
+`;
+
+    expect(protectedFrontmatterChanges(before, after)).toEqual([
+      "downloadUrl",
+      "packageVerified",
+      "repoUrl",
+    ]);
+  });
+
   it("blocks content edits that change protected provenance fields", () => {
     const before = `---
 title: Existing Tool
