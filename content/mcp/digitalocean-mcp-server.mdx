@@ -3,35 +3,35 @@ title: DigitalOcean MCP Server for Claude
 slug: digitalocean-mcp-server
 category: mcp
 description: >-
-  Connect Claude to DigitalOcean — manage Apps, Droplets, managed Databases, Kubernetes, Container
-  Registry, networking, and Functions — with DigitalOcean's official Model Context Protocol server.
-cardDescription: "DigitalOcean's official MCP server: manage Apps, Droplets, Databases, and Kubernetes from Claude."
-seoTitle: "DigitalOcean MCP Server for Claude — Manage Your Cloud"
-seoDescription: "Connect Claude to DigitalOcean with the official MCP server: manage Apps, Droplets, managed Databases, Kubernetes, and networking with a DIGITALOCEAN_API_TOKEN."
-author: DigitalOcean
-authorProfileUrl: "https://www.digitalocean.com"
-dateAdded: "2026-06-17"
+  Manage DigitalOcean cloud infrastructure from Claude — App Platform, managed databases,
+  Droplets, Kubernetes, Container Registry, networking, Spaces, serverless functions, and
+  GenAI workloads — with the official DigitalOcean MCP server covering 20 service modules.
+cardDescription: "Official DigitalOcean MCP: Apps, Droplets, databases, K8s, networking & GenAI from Claude."
+seoTitle: "DigitalOcean MCP Server for Claude — Apps, Droplets, Databases, Kubernetes & Networking"
+seoDescription: "Connect Claude to DigitalOcean with the official MCP server: manage App Platform, managed databases, Droplets, DOKS Kubernetes, Container Registry, networking, Spaces, functions, and GenAI workloads across 20 service modules."
+author: DigitalOcean Labs
+authorProfileUrl: "https://github.com/digitalocean-labs"
+dateAdded: "2026-06-18"
 documentationUrl: "https://github.com/digitalocean-labs/mcp-digitalocean"
-websiteUrl: "https://www.digitalocean.com"
+websiteUrl: "https://digitalocean.com"
 repoUrl: "https://github.com/digitalocean-labs/mcp-digitalocean"
 retrievalSources:
-  - "https://github.com/digitalocean-labs/mcp-digitalocean"
-  - "https://docs.digitalocean.com/"
+  - "https://raw.githubusercontent.com/digitalocean-labs/mcp-digitalocean/main/README.md"
   - "https://code.claude.com/docs/en/mcp"
-  - "https://developers.cloudflare.com/"
-  - "https://docs.netlify.com/"
 installable: true
-installCommand: "claude mcp add digitalocean -e DIGITALOCEAN_API_TOKEN=<your-token> -- npx -y @digitalocean/mcp --services apps,droplets,databases"
+installCommand: "claude mcp add digitalocean-mcp -e DIGITALOCEAN_API_TOKEN=your-token -- npx @digitalocean/mcp --services apps,databases,droplets,networking"
 usageSnippet: >-
-  Ask Claude to list your Droplets, deploy an App, or inspect a managed database.
+  Ask Claude to list your App Platform deployments, check managed database cluster status,
+  create a new Droplet, inspect Kubernetes node pools, manage DNS records, browse the
+  DigitalOcean model catalog, or search DigitalOcean documentation.
 copySnippet: |-
   {
     "mcpServers": {
-      "digitalocean": {
+      "digitalocean-mcp": {
         "command": "npx",
-        "args": ["-y", "@digitalocean/mcp", "--services", "apps,droplets,databases"],
+        "args": ["@digitalocean/mcp", "--services", "apps,databases,droplets,networking"],
         "env": {
-          "DIGITALOCEAN_API_TOKEN": "<your-token>"
+          "DIGITALOCEAN_API_TOKEN": "your-api-token"
         }
       }
     }
@@ -39,123 +39,150 @@ copySnippet: |-
 configSnippet: |-
   {
     "mcpServers": {
-      "digitalocean": {
-        "command": "npx",
-        "args": ["-y", "@digitalocean/mcp", "--services", "apps,droplets,databases"],
-        "env": {
-          "DIGITALOCEAN_API_TOKEN": "<your-token>"
-        }
+      "digitalocean-apps": {
+        "type": "http",
+        "url": "https://apps.mcp.digitalocean.com/mcp"
+      },
+      "digitalocean-databases": {
+        "type": "http",
+        "url": "https://databases.mcp.digitalocean.com/mcp"
+      },
+      "digitalocean-droplets": {
+        "type": "http",
+        "url": "https://droplets.mcp.digitalocean.com/mcp"
       }
     }
   }
-estimatedSetupTime: 5 minutes
+estimatedSetupTime: 10 minutes
 difficulty: intermediate
 prerequisites:
-  - "A DigitalOcean account."
-  - "A DigitalOcean API token (DIGITALOCEAN_API_TOKEN) with the scopes for the services you enable."
-  - "Node.js (npx) to run @digitalocean/mcp, or use the hosted remote endpoint."
+  - "A DigitalOcean account with an API token from the DigitalOcean control panel (API → Tokens/Keys)."
+  - "Node.js with `npx` available."
+  - "Store the token in the `DIGITALOCEAN_API_TOKEN` environment variable — never hardcode it in config files."
   - "An MCP client such as Claude Code or Claude Desktop."
 safetyNotes:
-  - "Tools can create, update, restart, and delete live infrastructure (Apps, Droplets, Databases) — scope the API token and select only the --services you need."
-  - "Destructive actions (delete, rollback) act on production resources; confirm before running them through Claude."
+  - "This server can create, resize, snapshot, and delete Droplets, Kubernetes clusters, managed databases, and App Platform deployments — these are live cloud operations that incur costs."
+  - "Use the `--services` parameter to limit active service modules to only those needed for your workflow."
+  - "The docs service (`--services docs`) requires no API token and is safe to use without billing impact."
 privacyNotes:
-  - "Resource metadata, logs, and metrics enter the MCP client context and the model's prompt."
-  - "The DIGITALOCEAN_API_TOKEN is a secret — store it in the client config or environment, never in shared repositories."
+  - "Cloud resource metadata, database connection details, deployment configurations, and account billing information from your DigitalOcean account are surfaced in Claude's context."
+  - "Store your API token as an environment variable — do not commit it to version control."
+disclosure: "DigitalOcean is a commercial cloud provider. The MCP server is maintained by DigitalOcean Labs."
 tags:
   - digitalocean
-  - deployment
-  - cloud
+  - cloud-infrastructure
+  - droplets
   - kubernetes
-  - infrastructure
+  - databases
+  - devops
 keywords:
   - digitalocean mcp server
-  - connect claude to digitalocean
-  - manage droplets with claude
+  - digitalocean mcp claude
+  - cloud infrastructure mcp claude code
+  - droplets management mcp
+  - kubernetes mcp claude
   - digitalocean app platform mcp
-  - deploy to digitalocean from claude
 robotsIndex: true
 robotsFollow: true
 ---
 
 ## Overview
 
-The **DigitalOcean MCP Server** is DigitalOcean's official Model Context Protocol server. It gives
-Claude structured access to the DigitalOcean API so you can manage Apps, Droplets, managed
-Databases, Kubernetes (DOKS), Container Registry, networking, Functions, Spaces, and more — in
-natural language. It runs locally via `npx @digitalocean/mcp` (or a hosted remote endpoint) and is
-licensed under MIT.
+The **DigitalOcean MCP Server** is the official Model Context Protocol server from
+[DigitalOcean Labs](https://github.com/digitalocean-labs). It provides access to 20 DigitalOcean
+service modules — App Platform, managed databases, Droplets, Kubernetes (DOKS), Container Registry,
+networking, Spaces object storage, serverless functions, GenAI workloads, and more. Two deployment
+modes: a `npx @digitalocean/mcp` local client with `--services` scoping, or per-service remote
+hosted endpoints at `*.mcp.digitalocean.com/mcp`. Licensed under MIT.
 
 ## Key capabilities
 
-The server exposes tools grouped by service area, selected with the `--services` flag:
+- **App Platform** — list, manage, and deploy App Platform applications.
+- **Managed databases** — provision and monitor Postgres, MySQL, Redis, MongoDB clusters.
+- **Droplets** — create, resize, snapshot, and delete virtual machines.
+- **Kubernetes (DOKS)** — manage clusters and node pools.
+- **Container Registry** — manage repositories, tags, and manifests.
+- **Networking** — domains, DNS records, certificates, firewalls, load balancers, VPCs, CDNs.
+- **Spaces** — object storage management and access keys.
+- **Functions** — serverless function namespaces, actions, packages, and triggers.
+- **GenAI** — batch inference, custom models, model catalog, dedicated inference, evaluation.
+- **Docs** — search and retrieve DigitalOcean documentation (no API token required).
 
-- **Apps (App Platform)** — list, create, get, update, delete, restart, and deploy apps; tail logs.
-- **Droplets** — manage Droplets, regions, and instance sizes.
-- **Managed Databases** — inspect and manage database clusters.
-- **Kubernetes (DOKS)** & **Container Registry (DOCR)** — manage clusters and images.
-- **Networking, Functions, Spaces, Volumes** — manage supporting infrastructure.
-- **Insights & Marketplace** — metrics, alerts, and Marketplace resources.
+## Services (20 modules)
+
+| Service | Hosted endpoint | Description |
+|---|---|---|
+| `apps` | `apps.mcp.digitalocean.com/mcp` | App Platform applications and deployments |
+| `databases` | `databases.mcp.digitalocean.com/mcp` | Managed database clusters |
+| `droplets` | `droplets.mcp.digitalocean.com/mcp` | Virtual machines |
+| `doks` | `doks.mcp.digitalocean.com/mcp` | Kubernetes clusters |
+| `docr` | `docr.mcp.digitalocean.com/mcp` | Container Registry |
+| `networking` | `networking.mcp.digitalocean.com/mcp` | DNS, firewalls, load balancers, VPCs |
+| `spaces` | `spaces.mcp.digitalocean.com/mcp` | Object storage |
+| `functions` | `functions.mcp.digitalocean.com/mcp` | Serverless functions |
+| `genai-custom-models` | `genai-custom-models.mcp.digitalocean.com/mcp` | Custom AI models |
+| `inference-modelcatalog` | `inference-modelcatalog.mcp.digitalocean.com/mcp` | AI model catalog |
+| `docs` | `docs.mcp.digitalocean.com/mcp` | Documentation search (no token) |
+| `accounts` | `accounts.mcp.digitalocean.com/mcp` | Account, billing, SSH keys |
+| `volumes` | `volumes.mcp.digitalocean.com/mcp` | Block storage |
+| `insights` | `insights.mcp.digitalocean.com/mcp` | Monitoring and uptime |
+| `marketplace` | `marketplace.mcp.digitalocean.com/mcp` | Marketplace apps |
 
 ## How it compares
 
-Several cloud-platform MCP servers let Claude manage deployments; they differ by platform scope:
+| Server | VMs | Managed DBs | K8s | Serverless | GenAI | Auth |
+|---|---|---|---|---|---|---|
+| **DigitalOcean MCP** | Yes | Yes | Yes | Yes | Yes | API token |
+| AWS MCP | Yes | Yes | Yes | Yes | Yes | IAM credentials |
+| GCP MCP | Yes | Yes | Yes | Yes | Yes | Service account |
+| Azure MCP | Yes | Yes | Yes | Yes | Yes | Service principal |
 
-| MCP server | Platform | Manages via Claude | Connection |
-| --- | --- | --- | --- |
-| **DigitalOcean MCP** | DigitalOcean | Apps, Droplets, Databases, Kubernetes, networking | Local npx or hosted HTTP |
-| **Cloudflare MCP** | Cloudflare | Workers, Pages, and platform resources | Hosted HTTP / local |
-| **Netlify MCP** | Netlify | Sites, deploys, env vars, domains | Hosted HTTP |
-
-Use the DigitalOcean server when your infrastructure runs on DigitalOcean; the Cloudflare and
-Netlify servers cover their own platforms' primitives.
+DigitalOcean offers 20 pre-built hosted MCP endpoints at `*.mcp.digitalocean.com/mcp` for
+remote OAuth-authenticated access without a local client.
 
 ## Installation
 
-### Claude Code
+### Local client with service scoping
 
 ```bash
-claude mcp add digitalocean -e DIGITALOCEAN_API_TOKEN=<your-token> -- \
-  npx -y @digitalocean/mcp --services apps,droplets,databases
+claude mcp add digitalocean-mcp \
+  -e DIGITALOCEAN_API_TOKEN=your-api-token \
+  -- npx @digitalocean/mcp --services apps,databases,droplets,networking
 ```
 
-### Claude Desktop
+### Per-service remote endpoints (no local install)
 
-```json
-{
-  "mcpServers": {
-    "digitalocean": {
-      "command": "npx",
-      "args": ["-y", "@digitalocean/mcp", "--services", "apps,droplets,databases"],
-      "env": {
-        "DIGITALOCEAN_API_TOKEN": "<your-token>"
-      }
-    }
-  }
-}
+```bash
+claude mcp add --transport http digitalocean-apps https://apps.mcp.digitalocean.com/mcp
+claude mcp add --transport http digitalocean-databases https://databases.mcp.digitalocean.com/mcp
 ```
 
-DigitalOcean also offers hosted remote MCP endpoints (for example `https://apps.mcp.digitalocean.com/mcp`)
-if you prefer not to run the server locally.
+### Documentation search (no API token)
+
+```bash
+claude mcp add --transport http digitalocean-docs https://docs.mcp.digitalocean.com/mcp
+```
 
 ## Requirements
 
-- A DigitalOcean account and an API token with appropriate scopes.
-- Node.js (for `npx`), or use a hosted remote endpoint.
+- A DigitalOcean account with an API token.
+- Node.js with `npx` (for the local client mode).
 - An MCP client (Claude Code or Claude Desktop).
 
 ## Security
 
-- Scope the `DIGITALOCEAN_API_TOKEN` to least privilege and enable only the `--services` you need.
-- Tools can create and delete production infrastructure — review destructive actions before running.
-- Treat the API token as a secret; keep it in the client config or environment.
+- Scope `--services` to only the service modules needed for your workflow.
+- Store the API token as `DIGITALOCEAN_API_TOKEN` environment variable — never hardcode.
+- Cloud operations incur costs — confirm before creating or resizing resources.
 
 ## Source Verification Notes
 
-Verified on **2026-06-17**:
+Verified on **2026-06-18**:
 
-- The official repository `github.com/digitalocean-labs/mcp-digitalocean` (MIT) documents
-  `npx @digitalocean/mcp`, the `--services` selection, the `DIGITALOCEAN_API_TOKEN` requirement, the
-  hosted remote endpoints, and the service areas listed above.
-- DigitalOcean's product documentation describes the underlying App Platform, Droplet, Database, and
-  Kubernetes services.
-- Claude Code's MCP documentation describes the connector setup pattern used here.
+- Official GitHub repository `digitalocean-labs/mcp-digitalocean` (MIT) documents the
+  `@digitalocean/mcp` npm package, `DIGITALOCEAN_API_TOKEN` configuration, `--services`
+  scoping parameter, all 20 service modules with hosted MCP endpoints at
+  `*.mcp.digitalocean.com/mcp`, and the Claude Code install commands for both local and remote
+  modes.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio and
+  `--transport http` connection patterns used above.
