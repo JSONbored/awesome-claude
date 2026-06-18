@@ -1,3 +1,5 @@
+import { execFileSync } from "node:child_process";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -134,5 +136,20 @@ describe("auditEntries", () => {
 describe("normalizeSnippet", () => {
   it("collapses whitespace and lowercases", () => {
     expect(normalizeSnippet("  Foo   Bar\n")).toBe("foo bar");
+  });
+});
+
+describe("module import", () => {
+  it("does not run the CLI guard when process.argv[1] is absent", () => {
+    const output = execFileSync(
+      process.execPath,
+      [
+        "-e",
+        "import('./scripts/audit-seo-snippets.mjs').then(({ auditEntries }) => console.log(typeof auditEntries))",
+      ],
+      { cwd: process.cwd(), encoding: "utf8" },
+    );
+
+    expect(output.trim()).toBe("function");
   });
 });

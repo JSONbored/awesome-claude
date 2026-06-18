@@ -245,7 +245,10 @@ export async function main(argv = process.argv.slice(2)) {
   return all;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
   main().catch((error) => {
     console.error(error instanceof Error ? error.message : error);
     process.exit(1);
