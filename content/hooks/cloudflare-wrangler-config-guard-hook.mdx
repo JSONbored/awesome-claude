@@ -529,13 +529,43 @@ if [ -z "$file_path" ] || [ ! -f "$file_path" ]; then
   exit 0
 fi
 
+if [ -L "$file_path" ]; then
+  echo "Wrangler config guard blocked: config path must not be a symlink." >&2
+  exit 1
+fi
+
 WRANGLER_CONFIG_PATH="$file_path" node <<'NODE'
 const fs = require("node:fs");
+const pathModule = require("node:path");
 const path = process.env.WRANGLER_CONFIG_PATH;
-const raw = fs.readFileSync(path, "utf8");
 const name = path.split(/[\\/]/).pop();
+const maxConfigBytes = 1024 * 1024;
 const errors = [];
 const warnings = [];
+
+const stats = fs.lstatSync(path);
+if (stats.isSymbolicLink()) {
+  errors.push("Config path must not be a symlink.");
+}
+
+const realPath = fs.realpathSync(path);
+const projectRoot = fs.realpathSync(process.cwd());
+const relativePath = pathModule.relative(projectRoot, realPath);
+if (relativePath.startsWith("..") || pathModule.isAbsolute(relativePath)) {
+  errors.push("Config path must stay within the current project.");
+}
+
+if (stats.size > maxConfigBytes) {
+  errors.push("Config file is too large to inspect safely.");
+}
+
+if (errors.length) {
+  console.error(`Wrangler config guard: checking ${name}`);
+  for (const error of errors) console.error(`[error] ${error}`);
+  process.exit(1);
+}
+
+const raw = fs.readFileSync(path, "utf8");
 
 function displayName(value) {
   return JSON.stringify(String(value)).replace(/[\u007f-\u009f]/g, (char) => {
@@ -790,8 +820,8 @@ try {
   } else {
     checkToml();
   }
-} catch (error) {
-  errors.push(`Parse failed: ${error.message}`);
+} catch {
+  errors.push("Parse failed: review the Wrangler config syntax before continuing.");
 }
 
 for (const warning of warnings) console.error(`[warn] ${warning}`);
