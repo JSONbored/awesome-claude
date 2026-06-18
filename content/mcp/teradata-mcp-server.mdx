@@ -1,0 +1,190 @@
+---
+title: Teradata MCP Server for Claude
+slug: teradata-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Teradata — list databases and tables, inspect DDL, run SQL queries,
+  preview data, analyze column quality, and explore DBA diagnostics — with the official
+  Teradata MCP server supporting optional ML tool expansion via the teradataml Python package.
+cardDescription: "Official Teradata MCP: query databases, inspect schemas, run SQL & analyze data quality from Claude."
+seoTitle: "Teradata MCP Server for Claude — SQL Queries, Schema Inspection & Data Quality"
+seoDescription: "Connect Claude to Teradata with the official MCP server: list databases, inspect table DDL, run SQL queries, preview data, analyze column statistics, and explore DBA diagnostics — MIT licensed, single DATABASE_URI required."
+author: Teradata
+authorProfileUrl: "https://github.com/Teradata"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/Teradata/teradata-mcp-server/main/README.md"
+websiteUrl: "https://www.teradata.com"
+repoUrl: "https://github.com/Teradata/teradata-mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/Teradata/teradata-mcp-server/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add teradata -e DATABASE_URI=\"teradata://username:password@host:1025/databasename\" -- uvx teradata-mcp-server"
+usageSnippet: >-
+  Ask Claude to list all databases on the Teradata system, show the DDL for a table, run a
+  SQL query and return results, preview rows from a large dataset, or analyze missing values
+  across columns — using natural language against your Teradata warehouse.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "teradata": {
+        "command": "uvx",
+        "args": ["teradata-mcp-server"],
+        "env": {
+          "DATABASE_URI": "teradata://username:password@host:1025/databasename"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "teradata": {
+        "command": "uvx",
+        "args": ["teradata-mcp-server"],
+        "env": {
+          "DATABASE_URI": "teradata://username:password@host:1025/databasename",
+          "DEFAULT_ROW_LIMIT": "1000",
+          "MAX_ROW_LIMIT": "50000"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A Teradata database instance accessible from your network."
+  - "A Teradata username and password with appropriate query permissions."
+  - "Python with `uvx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The `base_query` tool executes arbitrary SQL on your Teradata system — only connect with credentials scoped to the minimum required permissions."
+  - "Row limits (`DEFAULT_ROW_LIMIT`, `MAX_ROW_LIMIT`) prevent accidental full-table scans returning millions of rows; leave defaults in place unless you need larger result sets."
+privacyNotes:
+  - "Query results, schema definitions, DDL, and session/system metadata from your Teradata instance are surfaced in Claude's context."
+  - "Your database credentials are embedded in the `DATABASE_URI` — keep it in the MCP config env and never commit it to version control."
+tags:
+  - teradata
+  - database
+  - sql
+  - data-warehouse
+  - analytics
+  - data-quality
+keywords:
+  - teradata mcp server
+  - teradata mcp claude
+  - teradata sql mcp claude code
+  - data warehouse mcp claude
+  - teradata analytics ai
+  - teradata schema inspection mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Teradata MCP Server** is the official Model Context Protocol server from Teradata,
+giving Claude structured access to Teradata databases. It covers database and table discovery,
+DDL inspection, SQL execution, data previewing, DBA diagnostics, column quality analysis, and
+session monitoring. Install the optional `teradataml` Python package to unlock ~89 additional
+ML tools for statistical modeling and machine learning workflows. Licensed under MIT.
+
+## Key capabilities
+
+- **Database discovery** — list all databases and their tables/views.
+- **Schema inspection** — retrieve full DDL for any table or view.
+- **SQL execution** — run arbitrary SQL queries with configurable row limits.
+- **Data preview** — preview rows from tables quickly without writing SQL.
+- **Column quality** — statistical summaries and missing value analysis.
+- **DBA diagnostics** — session info, system space, and user/permission queries.
+- **ML tools** (optional) — `teradataml` adds ~89 dynamic tools: KMeans, XGBoost, AutoML, etc.
+
+## Tools (key selection)
+
+| Tool | Category | Purpose |
+|---|---|---|
+| `base_databaseList` | Discovery | List all databases |
+| `base_tableList` | Discovery | List tables and views in a database |
+| `base_tableDDL` | Schema | Show DDL for a table |
+| `base_query` | SQL | Execute arbitrary SQL |
+| `base_tablePreview` | Data | Preview rows from a table |
+| `dba_sessionInfo` | DBA | Active session information |
+| `dba_systemSpace` | DBA | System-wide space summary |
+| `sec_userDbPermissions` | Security | User database permissions |
+| `qlty_columnSummary` | Quality | Column-level statistics |
+| `qlty_missingValues` | Quality | Missing value analysis |
+
+## Configuration options
+
+| Env var | Default | Purpose |
+|---|---|---|
+| `DATABASE_URI` | — | Required. Full connection URI |
+| `LOGMECH` | `TD2` | Auth mechanism: `TD2` or `LDAP` |
+| `TD_POOL_SIZE` | `5` | Connection pool size |
+| `DEFAULT_ROW_LIMIT` | `1000` | Default row cap for results |
+| `MAX_ROW_LIMIT` | `50000` | Hard ceiling on results |
+| `MCP_TRANSPORT` | `stdio` | Transport: `stdio`, `sse`, or `streamable-http` |
+
+## How it compares
+
+| Server | Teradata | SQL execution | DDL inspection | Column quality | ML tools |
+|---|---|---|---|---|---|
+| **Teradata MCP** | Yes | Yes | Yes | Yes | Opt-in (teradataml) |
+| Snowflake MCP | No | Yes | Yes | No | No |
+| BigQuery MCP | No | Yes | Yes | No | No |
+| DuckDB MCP | No | Yes | Yes | No | No |
+
+Teradata MCP is the only data warehouse MCP with built-in column quality analysis and optional
+ML model tools via `teradataml`.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add teradata \
+  -e DATABASE_URI="teradata://username:password@host:1025/databasename" \
+  -- uvx teradata-mcp-server
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "teradata": {
+      "command": "uvx",
+      "args": ["teradata-mcp-server"],
+      "env": {
+        "DATABASE_URI": "teradata://username:password@host:1025/databasename"
+      }
+    }
+  }
+}
+```
+
+For LDAP authentication, add `"LOGMECH": "LDAP"` to the env block.
+
+## Requirements
+
+- Teradata database instance (on-premises or Teradata VantageCloud).
+- Python with `uvx` (from `uv`).
+- An MCP client (Claude Code or Claude Desktop).
+- Optional: `pip install teradataml` for ML tools.
+
+## Security
+
+- Use credentials scoped to least privilege — read-only if SQL execution isn't needed.
+- `base_query` runs arbitrary SQL; ensure the Teradata user does not have destructive permissions.
+- Keep the `DATABASE_URI` secret; it contains your username and password.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official repository `Teradata/teradata-mcp-server` (MIT) on PyPI as `teradata-mcp-server`
+  documents the `DATABASE_URI` connection URI format, all tool categories (base, dba, sec, qlty),
+  optional teradataml ML tools, connection pool and row limit configuration, and multiple transport
+  modes.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.
