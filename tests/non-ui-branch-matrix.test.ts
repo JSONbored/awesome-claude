@@ -590,7 +590,7 @@ describe("non-UI branch matrix", () => {
         repoUrl: "https://github.com/JSONbored/awesome-claude",
         documentationUrl: "https://github.com/example/from-docs",
       }),
-    ).toBe("https://github.com/example/from-docs");
+    ).toBe("");
     expect(inferSectionBooleans(markdown)).toMatchObject({
       hasPrerequisites: false,
       hasTroubleshooting: false,

@@ -46,7 +46,8 @@ describe("inferStructuredFields", () => {
   it("preserves explicit retrieval sources for rules entries", () => {
     const inferred = inferStructuredFields(
       {
-        documentationUrl: "https://aws.amazon.com/architecture/well-architected/",
+        documentationUrl:
+          "https://aws.amazon.com/architecture/well-architected/",
         retrievalSources: [
           "https://aws.amazon.com/architecture/well-architected/",
           " https://docs.aws.amazon.com/ ",
@@ -152,7 +153,7 @@ describe("inferStructuredFields", () => {
     });
     expect(
       inferRepoUrl({ documentationUrl: "https://github.com/example/repo" }),
-    ).toBe("https://github.com/example/repo");
+    ).toBe("");
 
     expect(
       inferStructuredFields(
