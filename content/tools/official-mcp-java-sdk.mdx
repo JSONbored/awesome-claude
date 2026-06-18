@@ -1,0 +1,179 @@
+---
+title: Official MCP Java SDK
+slug: official-mcp-java-sdk
+category: tools
+description: >-
+  Official Java SDK for Model Context Protocol clients and servers, maintained
+  in collaboration with Spring AI, with Java 17+ support, Maven artifacts,
+  synchronous and asynchronous APIs, Reactive Streams, Project Reactor,
+  JDK HttpClient, Servlet transport, JSON binding modules, and conformance tests.
+cardDescription: >-
+  Build MCP clients and servers in Java with the official Java SDK, Maven
+  artifacts, Java 17+, Reactive Streams, JDK HttpClient, Servlet transport, and
+  Spring AI integration guidance.
+seoTitle: Official MCP Java SDK for Model Context Protocol and Spring AI
+seoDescription: >-
+  Use the official Model Context Protocol Java SDK to build MCP clients and
+  servers with Java 17+, Maven, Reactive Streams, Project Reactor, JDK HttpClient,
+  Servlet transport, JSON binding modules, conformance tests, and Spring AI MCP.
+author: Model Context Protocol
+authorProfileUrl: "https://github.com/modelcontextprotocol"
+dateAdded: "2026-06-18"
+websiteUrl: "https://modelcontextprotocol.io"
+documentationUrl: "https://java.sdk.modelcontextprotocol.io/latest/"
+repoUrl: "https://github.com/modelcontextprotocol/java-sdk"
+packageUrl: "https://central.sonatype.com/artifact/io.modelcontextprotocol.sdk/mcp"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/java-sdk"
+  - "https://github.com/modelcontextprotocol/java-sdk/blob/main/README.md"
+  - "https://github.com/modelcontextprotocol/java-sdk/blob/main/pom.xml"
+  - "https://github.com/modelcontextprotocol/java-sdk/blob/main/mcp/pom.xml"
+  - "https://github.com/modelcontextprotocol/java-sdk/blob/main/mcp-core/pom.xml"
+  - "https://github.com/modelcontextprotocol/java-sdk/blob/main/LICENSE"
+installable: true
+installCommand: "mvn dependency:get -Dartifact=io.modelcontextprotocol.sdk:mcp:2.0.0"
+usageSnippet: >-
+  Add the `io.modelcontextprotocol.sdk:mcp` Maven artifact to a Java 17+ project,
+  then use the SDK client or server APIs with the transport and JSON binding
+  modules that match your application.
+copySnippet: |-
+  <dependency>
+    <groupId>io.modelcontextprotocol.sdk</groupId>
+    <artifactId>mcp</artifactId>
+    <version>2.0.0</version>
+  </dependency>
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Java 17 or newer and a Maven or Gradle build configured for the selected SDK artifact version."
+  - "A choice of core Java SDK usage, Spring AI MCP integration, or both."
+  - "A target transport, such as stdio, JDK HttpClient, Servlet, WebFlux, WebMVC, or another framework path."
+  - "Authentication, authorization, and data-exposure requirements for production clients and servers."
+safetyNotes:
+  - "The official Java SDK is a protocol library; production risk comes from your MCP tools, resources, prompts, transports, authorization hooks, and framework integration."
+  - "Validate tool inputs, enforce caller permissions, bound side effects, and avoid returning raw Java exceptions or internal stack details to MCP clients."
+  - "Servlet, Spring, and remote transport deployments need authentication, TLS, request limits, observability policy, cancellation behavior, and abuse protection."
+  - "Spring AI MCP security and annotation support may simplify integration, but application owners still need to review authorization, tenant boundaries, and data retention."
+privacyNotes:
+  - "Java MCP clients and servers may expose tool arguments, tool results, resource contents, prompt templates, request metadata, correlation IDs, logs, traces, and authorization context."
+  - "Avoid leaking secrets, customer data, private resources, internal identifiers, stack traces, privileged paths, or token values through schemas, responses, errors, or logs."
+  - "Document which MCP client, server process, Java framework, model provider, transport, and observability system can observe each request."
+tags:
+  - java
+  - mcp
+  - sdk
+  - spring-ai
+  - maven
+  - official
+keywords:
+  - official MCP Java SDK
+  - Model Context Protocol Java SDK
+  - Java MCP server SDK
+  - Java MCP client SDK
+  - Spring AI MCP Java
+  - io.modelcontextprotocol.sdk mcp
+  - MCP Maven dependency
+  - Java Streamable HTTP MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The official MCP Java SDK is the Model Context Protocol project's Java
+implementation for building MCP clients and servers. The repository is
+maintained in collaboration with Spring AI and publishes Maven artifacts under
+`io.modelcontextprotocol.sdk`.
+
+The SDK is relevant for Java teams that want MCP support without leaving the
+JVM, including enterprise services, Spring applications, internal developer
+platforms, agent gateways, and tools that need synchronous or asynchronous MCP
+communication.
+
+## Maven Dependency
+
+Add the convenience SDK artifact:
+
+```xml
+<dependency>
+  <groupId>io.modelcontextprotocol.sdk</groupId>
+  <artifactId>mcp</artifactId>
+  <version>2.0.0</version>
+</dependency>
+```
+
+The upstream project also includes a BOM, core module, Jackson JSON binding
+modules, and testing modules for more granular dependency control.
+
+## MCP Fit
+
+Choose the official Java SDK when you need MCP client or server support in a
+Java 17+ codebase, especially where Maven, Servlet infrastructure, JDK
+HttpClient, Project Reactor, Reactive Streams, SLF4J, Jackson, or Spring AI are
+already part of the stack.
+
+The SDK supports both blocking-friendly and asynchronous patterns. Production
+use still needs normal API review: authentication, authorization, logging, error
+handling, cancellation, and tenant boundaries.
+
+## Module Map
+
+| Module | Purpose |
+| --- | --- |
+| `mcp-bom` | Dependency version management |
+| `mcp-core` | Core reference implementation, stdio, JDK HttpClient, Servlet, and JSON binding interfaces |
+| `mcp-json-jackson2` | Jackson 2 JSON binding implementation |
+| `mcp-json-jackson3` | Jackson 3 JSON binding implementation |
+| `mcp` | Convenience bundle for core plus Jackson 3 |
+| `mcp-test` | Shared testing utilities |
+
+## Use Cases
+
+- Add an MCP server to a Java service or internal platform.
+- Build an MCP client that connects to local or remote MCP servers.
+- Use Java 17+, Reactor, and Reactive Streams for async MCP communication.
+- Expose MCP server endpoints through Servlet-based infrastructure.
+- Integrate MCP with Spring AI client, server, annotation, and security support.
+- Run or interpret MCP conformance tests for Java implementations.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README identifies the repository as the MCP Java SDK.
+- The repository description identifies it as the official Java SDK for Model
+  Context Protocol clients and servers, maintained in collaboration with Spring
+  AI.
+- The README documents Java 17+, Maven Central, Java client and server docs,
+  Spring AI MCP docs, Spring Boot starters, annotations, security support, and
+  conformance test results.
+- The root `pom.xml` declares group `io.modelcontextprotocol.sdk`, Java 17,
+  MIT licensing, Maven modules, JDK HttpClient, Servlet, Reactor, SLF4J, Jackson,
+  and project metadata.
+- The `mcp` module POM describes the Java MCP SDK artifact and depends on
+  `mcp-core` plus the Jackson 3 JSON module.
+- Sonatype Central resolves the `io.modelcontextprotocol.sdk:mcp` artifact.
+
+## Safety and Privacy
+
+Java MCP services frequently run inside enterprise applications with user data,
+service credentials, logs, and observability pipelines. Keep tools narrow,
+validate arguments, enforce authorization, and return controlled errors instead
+of raw exceptions or stack traces.
+
+For Spring, Servlet, or remote deployments, review authentication, OAuth/API-key
+policy, request limits, observability propagation, tenant boundaries, and
+retention before exposing MCP endpoints.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `modelcontextprotocol/java-sdk`,
+official MCP Java SDK, Model Context Protocol Java SDK, Java MCP server SDK,
+Java MCP client SDK, Spring AI MCP Java, `io.modelcontextprotocol.sdk:mcp`, and
+MCP Maven dependency. No dedicated official Java SDK entry, exact source URL
+duplicate, target file, or open duplicate PR was found.
