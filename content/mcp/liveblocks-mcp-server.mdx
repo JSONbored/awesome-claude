@@ -19,30 +19,16 @@ repoUrl: "https://github.com/liveblocks/liveblocks-mcp-server"
 retrievalSources:
   - "https://raw.githubusercontent.com/liveblocks/liveblocks-mcp-server/main/README.md"
   - "https://code.claude.com/docs/en/mcp"
-installable: true
-installCommand: "claude mcp add liveblocks -e LIVEBLOCKS_SECRET_KEY=sk_<your-key> -- npx -y github:liveblocks/liveblocks-mcp-server"
+installable: false
 usageSnippet: >-
   Ask Claude to list all active Liveblocks rooms, retrieve the collaborative storage state
   from a room, broadcast an event to all connected users, manage comment threads, or check
   inbox notifications for a specific user — using natural language against the Liveblocks API.
-copySnippet: |-
-  {
-    "mcpServers": {
-      "liveblocks": {
-        "command": "npx",
-        "args": ["-y", "github:liveblocks/liveblocks-mcp-server"],
-        "env": {
-          "LIVEBLOCKS_SECRET_KEY": "sk_<your-key>"
-        }
-      }
-    }
-  }
 configSnippet: |-
   {
     "mcpServers": {
       "liveblocks": {
-        "command": "npx",
-        "args": ["-y", "github:liveblocks/liveblocks-mcp-server"],
+        "command": "<reviewed-immutable-liveblocks-mcp-command>",
         "env": {
           "LIVEBLOCKS_SECRET_KEY": "sk_<your-key>"
         }
@@ -54,14 +40,13 @@ difficulty: beginner
 prerequisites:
   - "A Liveblocks account — sign up at liveblocks.io."
   - "A Liveblocks secret key from the Dashboard: Project Settings → API Keys → Secret key."
-  - "Node.js with `npx` available."
   - "An MCP client such as Claude Code or Claude Desktop."
 safetyNotes:
   - "Tools can create, update, and delete rooms, threads, and comments — changes affect your live Liveblocks collaboration infrastructure."
   - "Broadcasting events via `broadcast-event` sends real-time messages to all connected users in a room immediately."
 privacyNotes:
   - "Room metadata, collaborative storage content, Yjs document state, thread and comment content, and user notification settings from your Liveblocks project are surfaced in Claude's context."
-  - "Your `LIVEBLOCKS_SECRET_KEY` grants full project API access — keep it in the MCP config env and never commit it."
+  - "Your `LIVEBLOCKS_SECRET_KEY` grants full project API access — keep it out of source control and only add it to a trusted MCP config after selecting a verified install source."
 tags:
   - liveblocks
   - real-time
@@ -88,8 +73,10 @@ collaborative storage, Yjs documents, threads, comments, inbox notifications, an
 settings — giving Claude direct management access to your Liveblocks collaboration
 infrastructure. Apache-2.0 licensed.
 
-Note: The package is installed directly from GitHub (not yet published to npm registry) using
-the `github:` specifier.
+Note: This entry is not marked installable because the upstream MCP server is currently
+documented as a direct GitHub install rather than a versioned package registry artifact.
+Wait for a published package, signed release, or maintainer-reviewed immutable commit pin
+before adding it to Claude.
 
 ## Key capabilities
 
@@ -130,29 +117,11 @@ comment threads, Yjs document access, and inbox notification management.
 
 ## Installation
 
-### Claude Code
-
-```bash
-claude mcp add liveblocks \
-  -e LIVEBLOCKS_SECRET_KEY=sk_<your-key> \
-  -- npx -y github:liveblocks/liveblocks-mcp-server
-```
-
-### Claude Desktop
-
-```json
-{
-  "mcpServers": {
-    "liveblocks": {
-      "command": "npx",
-      "args": ["-y", "github:liveblocks/liveblocks-mcp-server"],
-      "env": {
-        "LIVEBLOCKS_SECRET_KEY": "sk_<your-key>"
-      }
-    }
-  }
-}
-```
+This entry intentionally does not provide a copyable install command yet. The upstream
+documentation currently uses a mutable GitHub package specifier, which can execute whatever
+code is on the repository default branch at install time. Use this MCP server only after
+Liveblocks publishes a versioned package, signed release, or immutable commit-pinned install
+source that you have reviewed and trust.
 
 Get your secret key from **Dashboard → Project Settings → API Keys → Secret key** (format:
 `sk_prod_...` or `sk_dev_...`).
@@ -161,7 +130,7 @@ Get your secret key from **Dashboard → Project Settings → API Keys → Secre
 
 - A Liveblocks account with at least one project.
 - Secret key (`sk_...`) from the Liveblocks Dashboard.
-- Node.js (for `npx`).
+- A reviewed, immutable install source for the MCP server.
 - An MCP client (Claude Code or Claude Desktop).
 
 ## Security
@@ -169,13 +138,15 @@ Get your secret key from **Dashboard → Project Settings → API Keys → Secre
 - `LIVEBLOCKS_SECRET_KEY` grants full project API access — never commit it or share it.
 - Broadcasting events is instant — confirm the target room before triggering.
 - Use separate `sk_dev_...` keys for development to avoid affecting production rooms.
+- Avoid running mutable GitHub package specifiers directly with `npx`; prefer a versioned
+  package, signed release, or reviewed immutable commit pin.
 
 ## Source Verification Notes
 
 Verified on **2026-06-18**:
 
-- Official repository `liveblocks/liveblocks-mcp-server` (Apache-2.0) documents the GitHub
-  specifier install, `LIVEBLOCKS_SECRET_KEY` configuration (format `sk_...`), all 39 tools
+- Official repository `liveblocks/liveblocks-mcp-server` (Apache-2.0) documents
+  `LIVEBLOCKS_SECRET_KEY` configuration (format `sk_...`), all 39 tools
   across rooms, events, storage, Yjs, threads, comments, inbox notifications, and notification
   settings.
 - Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
