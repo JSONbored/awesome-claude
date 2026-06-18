@@ -2123,14 +2123,14 @@ describe("non-UI branch matrix", () => {
 
   it("covers MCP install config normalization and target invariants", () => {
     const stdio = normalizeMcpServerConfig({
-      command: "node",
-      args: [1, true, "server.js"],
+      command: "npx",
+      args: [1, true, "@example/mcp"],
       env: { PORT: 3000, DEBUG: false },
     });
     expect(stdio).toMatchObject({
       type: "stdio",
-      command: "node",
-      args: ["1", "true", "server.js"],
+      command: "npx",
+      args: ["1", "true", "@example/mcp"],
     });
     expect(mcpInstallTargetsForConfig(stdio)).toEqual([
       "claude-code",
@@ -2138,6 +2138,15 @@ describe("non-UI branch matrix", () => {
       "cursor",
       "antigravity",
     ]);
+    expect(
+      normalizeMcpServerConfig({ command: "uvx", args: ["example-mcp"] }),
+    ).toMatchObject({ type: "stdio", command: "uvx" });
+    expect(
+      normalizeMcpServerConfig({ command: "node", args: ["server.js"] }),
+    ).toMatchObject({ type: "stdio", command: "node" });
+    expect(
+      mcpInstallTargetsForConfig({ command: "node", args: ["server.js"] }),
+    ).toEqual(["claude-code", "codex", "cursor", "antigravity"]);
 
     const remoteWithHeaders = {
       type: "http",
@@ -2176,12 +2185,10 @@ describe("non-UI branch matrix", () => {
     expect(
       normalizeMcpServerConfig({ type: "http", url: "http://example.com" }),
     ).toBeNull();
-    expect(
-      normalizeMcpServerConfig({ command: "node", args: [{}] }),
-    ).toBeNull();
+    expect(normalizeMcpServerConfig({ command: "npx", args: [{}] })).toBeNull();
     expect(
       normalizeMcpServerConfig({
-        command: "node",
+        command: "npx",
         headers: { Authorization: { secret: true } },
       }),
     ).toBeNull();

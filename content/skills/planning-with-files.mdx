@@ -1,0 +1,300 @@
+---
+title: Planning with Files
+slug: planning-with-files
+category: skills
+description: >-
+  MIT-licensed Agent Skill for persistent file-based planning across Claude
+  Code, Codex, Cursor, Gemini CLI, OpenCode, Hermes Agent, OpenClaw, Kiro, and
+  other SKILL.md-compatible coding agents, with task_plan.md, findings.md,
+  progress.md, hooks, session recovery, attestation, and opt-in long-running
+  run modes.
+cardDescription: >-
+  Persistent markdown planning skill for long-running coding-agent work that
+  survives context loss, /clear, compaction, crashes, and multi-agent handoffs.
+seoTitle: Planning with Files Skill for Claude Code, Codex, Cursor, OpenCode, and Long-Running Agents
+seoDescription: >-
+  Install Planning with Files to give Claude Code, Codex, Cursor, Gemini CLI,
+  OpenCode, Hermes Agent, OpenClaw, Kiro, and other Agent Skills hosts a
+  persistent task_plan.md, findings.md, and progress.md workflow with hooks,
+  session recovery, attestation, completion checks, Codex hook support, and
+  opt-in autonomous or gated long-running agent modes.
+author: Ahmad Othman Ammar Adi
+authorProfileUrl: "https://github.com/OthmanAdi"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/OthmanAdi/planning-with-files"
+documentationUrl: "https://github.com/OthmanAdi/planning-with-files#readme"
+downloadUrl: "https://github.com/OthmanAdi/planning-with-files/archive/refs/heads/master.zip"
+installable: true
+installCommand: "npx skills add OthmanAdi/planning-with-files --skill planning-with-files -g"
+usageSnippet: >-
+  Install the planning-with-files Agent Skill before a complex coding,
+  debugging, research, migration, or multi-agent task so the agent keeps a
+  durable `task_plan.md`, `findings.md`, and `progress.md` on disk.
+copySnippet: |-
+  npx skills add OthmanAdi/planning-with-files --skill planning-with-files -g
+
+  # Claude Code plugin route
+  /plugin marketplace add OthmanAdi/planning-with-files
+  /plugin install planning-with-files@planning-with-files
+configSnippet: |-
+  [features]
+  hooks = true
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/OthmanAdi/planning-with-files"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/skills/planning-with-files/SKILL.md"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/docs/installation.md"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/docs/codex.md"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/docs/quickstart.md"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/docs/evals.md"
+  - "https://raw.githubusercontent.com/OthmanAdi/planning-with-files/master/MIGRATION.md"
+sourceUrls:
+  - "https://github.com/OthmanAdi/planning-with-files/blob/master/skills/planning-with-files/SKILL.md"
+  - "https://github.com/OthmanAdi/planning-with-files/blob/master/docs/installation.md"
+  - "https://github.com/OthmanAdi/planning-with-files/blob/master/docs/codex.md"
+  - "https://github.com/OthmanAdi/planning-with-files/blob/master/docs/quickstart.md"
+  - "https://github.com/OthmanAdi/planning-with-files/blob/master/docs/evals.md"
+  - "https://github.com/OthmanAdi/planning-with-files/blob/master/MIGRATION.md"
+  - "https://github.com/OthmanAdi/planning-with-files/releases/tag/v3.1.3"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Cursor
+  - GitHub Copilot
+  - Mastra Code
+  - Gemini CLI
+  - Kiro
+  - Hermes Agent
+  - CodeBuddy
+  - FactoryAI Droid
+  - OpenCode
+  - Continue
+  - Pi Agent
+  - OpenClaw
+  - Antigravity
+  - Kilocode
+  - AdaL CLI
+prerequisites:
+  - "An Agent Skills host or Claude Code plugin environment that can load `SKILL.md` instructions."
+  - "Node.js and npx for the documented cross-host `npx skills add` install path, or Claude Code plugin marketplace support for the plugin route."
+  - "For Codex hook automation, Codex skills installed under `.codex/skills` or `~/.codex/skills`, hooks copied into `.codex/hooks.json` or `~/.codex/hooks.json`, and `hooks = true` enabled under `[features]` in `~/.codex/config.toml`."
+  - "A repository or workspace where the agent is allowed to write `task_plan.md`, `findings.md`, `progress.md`, and optional `.planning/` directories."
+  - "A team policy for whether planning files should be committed, ignored, redacted, or kept local when they contain incident, customer, credential-adjacent, or roadmap details."
+safetyNotes:
+  - "Planning with Files writes persistent planning state into the active project. Review whether `task_plan.md`, `findings.md`, `progress.md`, `.planning/`, and handoff files should be committed, ignored, or scrubbed before sharing."
+  - "The skill uses hooks and helper scripts to re-inject plan context, remind the agent to update progress, run session catchup, and check completion. Inspect the installed hook scripts before enabling them in shared repositories or global agent config."
+  - "Planning files become model context. Do not paste untrusted web content, issue comments, logs, or external instructions into planning files without summarizing and neutralizing prompt-injection text."
+  - "The upstream eval notes describe a prior prompt-injection amplification risk from web fetch/search content being written into planning files and re-read by hooks; current SKILL.md removes WebFetch/WebSearch from allowed tools and documents the security boundary."
+  - "Codex users should merge hook entries into existing hook configs rather than overwriting them, and avoid enabling duplicate workspace plus global hooks that would run twice."
+  - "Autonomous and gated modes are opt-in for long-running runs. Understand whether the host can hard-block, follow up, or only notify before relying on a completion gate."
+privacyNotes:
+  - "The planning files can contain task goals, source paths, branch names, PR URLs, test output, error logs, research findings, product decisions, customer context, security findings, and operational handoff details."
+  - "Session-catchup workflows inspect local agent session stores such as Claude Code project history, Codex sessions, or other host-specific stores to recover context after `/clear` or compaction."
+  - "Hook-injected planning content is sent to the active model provider as part of the agent context. Keep secrets, access tokens, private incident data, customer records, and unreleased roadmap details out of planning files unless the provider and retention policy are approved."
+  - "Attestation stores hashes of plan content for tamper detection, but it does not encrypt the planning files or make their content safe to publish."
+tags:
+  - planning-with-files
+  - agent-skills
+  - claude-code
+  - codex
+  - cursor
+  - long-running-agents
+  - hooks
+  - context-engineering
+keywords:
+  - Planning with Files
+  - planning-with-files skill
+  - Claude Code planning skill
+  - Codex planning skill
+  - persistent file planning agent
+  - task_plan.md findings.md progress.md
+  - long-running agent planning
+  - SKILL.md planning workflow
+  - Codex hooks planning skill
+  - Manus style planning skill
+  - agent context loss recovery
+  - AI coding agent task plan
+readingTime: 8
+difficultyScore: 82
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Planning with Files
+
+Planning with Files is an Agent Skill that gives coding agents a durable
+three-file planning workflow: `task_plan.md` for phases and decisions,
+`findings.md` for research and discoveries, and `progress.md` for session logs
+and validation. The key value is simple: the plan lives on disk, so long
+coding-agent work can recover after context loss, `/clear`, compaction,
+crashes, or handoff between sessions.
+
+Use it for multi-step implementation, debugging, migration, research,
+architecture, security, or operations work where the agent needs to preserve
+intent across many tool calls. Skip it for quick one-shot questions or trivial
+single-file edits.
+
+## Knowledge Freshness
+
+Repository metadata and docs were verified on **2026-06-18**. The latest
+release was `v3.1.3`, published on 2026-06-16 as a hotfix for invalid YAML
+frontmatter in v3.1.2. GitHub metadata reported more than 23,000 stars, active
+updates on 2026-06-16, an MIT license, and topics covering Claude, Codex,
+Cursor, agent skills, planning, autonomous agents, context engineering, and
+long-running agents.
+
+The skill supports many host variants, but hook behavior depends on each host.
+Before relying on automation, verify the exact install path, hook feature flag,
+and lifecycle events for your host.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The canonical `skills/planning-with-files/SKILL.md` file.
+- Installation, Codex setup, quickstart, workflow, eval, migration, changelog,
+  and release documentation from the upstream repository.
+- Current GitHub repository metadata and release metadata.
+
+## Core Install Paths
+
+For Agent Skills hosts that use the `skills` installer:
+
+```bash
+npx skills add OthmanAdi/planning-with-files --skill planning-with-files -g
+```
+
+For Claude Code's plugin marketplace route:
+
+```text
+/plugin marketplace add OthmanAdi/planning-with-files
+/plugin install planning-with-files@planning-with-files
+```
+
+For Codex, install the `.codex/skills/planning-with-files` directory and merge
+the `.codex/hooks.json` lifecycle entries into the project or global Codex hook
+config. Then enable hooks:
+
+```toml
+[features]
+hooks = true
+```
+
+Do not overwrite an existing global hook config without merging. Duplicate
+workspace and global hook installs can produce duplicate reminders.
+
+## Capability Scope
+
+| Area | Planning with Files Coverage |
+| --- | --- |
+| Persistent plan | Creates and maintains `task_plan.md`, `findings.md`, and `progress.md` in the project |
+| Skill metadata | Canonical `SKILL.md` with description, allowed tools, hooks, version metadata, and user invocation |
+| Hooks | UserPromptSubmit, PreToolUse, PostToolUse, Stop, and PreCompact behavior where the host supports them |
+| Session recovery | `session-catchup.py` reads host session stores to recover context after `/clear` or compaction |
+| Parallel work | `.planning/<date-slug>/` isolated plan directories plus active-plan resolution |
+| Completion checks | Scripts for checking phase completion and, in opt-in modes, deliberate completion gating |
+| Attestation | Plan hash attestation scripts that can refuse to inject changed plan content until re-attested |
+| Long-running modes | v3 autonomous and gated modes for reducing recitation or adding a deliberate completion gate |
+| Host variants | Claude Code, Codex, Cursor, Copilot, Gemini CLI, Kiro, Hermes, OpenCode, Continue, Pi, OpenClaw, Antigravity, Kilocode, AdaL, and others |
+| Templates | Starter templates for task plans, findings, progress, and autonomous plans |
+| Evals | Upstream eval docs report structured-workflow fidelity testing and blind A/B comparisons |
+
+## Core Workflow
+
+The skill teaches the agent to create the three planning files before complex
+work starts, update findings after research, update progress after actions,
+mark phases complete, and log errors instead of repeating the same failed
+approach.
+
+The core rhythm is:
+
+1. Create or read `task_plan.md`, `findings.md`, and `progress.md`.
+2. Break the work into phases with `Status` fields.
+3. Write research and decisions into `findings.md`.
+4. Write actions, test results, and errors into `progress.md`.
+5. Before major decisions, re-read the plan.
+6. Before stopping, verify that every required phase is complete.
+
+This is useful for agents because it moves durable task state out of the
+context window and into project files the agent can re-read.
+
+## Codex Notes
+
+The Codex docs describe two install scopes:
+
+- Workspace install: commit `.codex/` into the repository so the team shares
+  the same skill and hook behavior.
+- Personal install: copy the skill and hooks into `~/.codex/`.
+
+Codex hook automation requires `hooks = true` under `[features]` in
+`~/.codex/config.toml`. The docs also mention `codex_hooks = true` as a
+deprecated alias and note that current Codex hooks documentation disables hooks
+on Windows.
+
+## Production Rules
+
+Planning files are not inert notes. They are read by the agent and can be
+re-injected into model context by hooks. Treat them like prompt-bearing
+workflow state:
+
+- Summarize untrusted web or issue content before writing it into planning
+  files.
+- Avoid storing secrets, tokens, internal incident details, customer data, or
+  unreleased roadmap material in files that might be committed or shared.
+- Review hook scripts before enabling them globally.
+- Use attestation when plan integrity matters.
+- Keep autonomous and gated modes opt-in until you know how the host enforces
+  Stop behavior.
+
+## Use Cases
+
+- Preserve context across long Claude Code, Codex, Cursor, or OpenCode coding
+  tasks.
+- Keep implementation phases, errors, and validation state visible during a
+  migration or refactor.
+- Recover a task after `/clear`, compaction, or a crash.
+- Coordinate multiple agents or terminals through isolated `.planning/`
+  directories.
+- Run research-heavy workflows where findings need to survive context loss.
+- Add a completion check before an agent declares a large task done.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub metadata reported `OthmanAdi/planning-with-files` as an MIT-licensed
+  Python repository with the description `Persistent file-based planning for AI
+  coding agents and long-running agentic tasks`, latest release `v3.1.3`
+  published on 2026-06-16, and more than 23,000 stars.
+- The canonical `skills/planning-with-files/SKILL.md` declares the skill name,
+  quoted description, `user-invocable: true`, allowed tools, lifecycle hook
+  commands, metadata version `3.1.3`, and instructions for persistent planning
+  files, session catchup, rules, templates, scripts, attestation, and parallel
+  plan isolation.
+- The README describes the project as persistent file-based planning for AI
+  coding agents, with `task_plan.md`, `findings.md`, and `progress.md`, support
+  for the SKILL.md standard, and host-specific integrations.
+- The install docs document Claude Code plugin install, manual plugin install,
+  skill-only install, verification, updates, and platform-specific docs.
+- The Codex docs document `.codex/skills`, `.codex/hooks.json`, Codex hook
+  feature flags, workspace or personal install scope, lifecycle hooks, and
+  warnings about merging existing hook configs.
+- The quickstart documents the three-file workflow, phase status updates,
+  findings updates, progress updates, isolated plan directories, and completion
+  checks.
+- The eval docs report a structured-workflow benchmark using Anthropic's
+  skill-creator framework, with `with_skill` satisfying 29 of 30 assertions and
+  blind A/B comparators preferring the skill output in 3 of 3 comparisons for
+  the tested tasks.
+- The migration docs describe v3 autonomous mode, gated mode, a structured
+  run-ledger, phase coordination fields, attestation, and no default behavior
+  change from v2.43.0 without explicit opt-in.
+- Release `v3.1.3` fixed invalid YAML frontmatter from v3.1.2 by quoting the
+  English SKILL.md descriptions and added tests that parse every SKILL.md
+  frontmatter as YAML.

@@ -162,6 +162,9 @@ describe("registry submission parsing and validation", () => {
       "Add MCP Server: Demo MCP Server",
     );
     expect(buildSubmissionPrBody(validMcpFields)).toContain("### Safety notes");
+    expect(parseSubmissionPrBody(draft.body)).toMatchObject({
+      contact_email: "@example",
+    });
     expect(looksLikeSubmissionPrDraft(draft)).toBe(true);
     expect(
       validateSubmission({ title: "Add MCP server: Demo", body: draft.body }),
@@ -235,6 +238,26 @@ describe("registry submission parsing and validation", () => {
         "Skills install_command references a local installer script; include the exact installer source URL in retrieval_sources or provide full_copyable_content",
       ]),
     );
+
+    for (const contact_email of [
+      "user@example.com@attacker.com",
+      "user@.example.com",
+      "user@example.com.",
+    ]) {
+      expect(
+        validateSubmission({
+          title: "Add MCP server: Bad contact",
+          body: buildSubmissionPrBody({
+            ...validMcpFields,
+            contact_email,
+          }),
+        }).errors,
+      ).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining("Invalid public contact"),
+        ]),
+      );
+    }
   });
 });
 

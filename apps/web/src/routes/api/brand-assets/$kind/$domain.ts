@@ -1,6 +1,9 @@
 import { createApiFileRoute } from "@/lib/api/file-route";
 
-import { normalizeBrandDomain } from "@heyclaude/registry/brand-assets";
+import {
+  brandfetchLogoUrl,
+  normalizeBrandDomain,
+} from "@heyclaude/registry/brand-assets";
 
 import { brandAssetParamsSchema } from "@/lib/api/contracts";
 import { apiError, createApiHandler, type InferApiParams } from "@/lib/api/router";
@@ -43,6 +46,15 @@ async function resolveBrandIconUrl(domain: string, clientId: string) {
   const exact =
     results.find((result) => normalizeBrandDomain(result.domain) === domain) || results[0];
   return typeof exact?.icon === "string" ? exact.icon : "";
+}
+
+function resolveBrandLogoUrl(domain: string, clientId: string) {
+  return brandfetchLogoUrl(domain, {
+    clientId,
+    height: 256,
+    type: "logo",
+    width: 512,
+  });
 }
 
 function normalizeTrustedBrandAssetUrl(value: string) {
@@ -120,7 +132,7 @@ async function readArrayBufferWithinLimit(response: Response, maxBytes: number) 
 }
 
 export const GET = createApiHandler("brandAsset.read", async ({ params, requestId }) => {
-  const { domain } = params as InferApiParams<typeof brandAssetParamsSchema>;
+  const { domain, kind } = params as InferApiParams<typeof brandAssetParamsSchema>;
   const normalizedDomain = normalizeBrandDomain(domain);
   const clientId = brandfetchClientId();
 
@@ -131,7 +143,10 @@ export const GET = createApiHandler("brandAsset.read", async ({ params, requestI
     return apiError("brand_asset_not_configured", 503, { requestId });
   }
 
-  const upstreamCandidate = await resolveBrandIconUrl(normalizedDomain, clientId);
+  const upstreamCandidate =
+    kind === "logo"
+      ? resolveBrandLogoUrl(normalizedDomain, clientId)
+      : await resolveBrandIconUrl(normalizedDomain, clientId);
   if (!upstreamCandidate) {
     return apiError("brand_asset_not_found", 404, { requestId });
   }

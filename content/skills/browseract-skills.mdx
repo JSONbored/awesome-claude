@@ -1,0 +1,282 @@
+---
+title: BrowserAct Skills
+slug: browseract-skills
+category: skills
+description: >-
+  MIT-licensed BrowserAct Agent Skill pack for installing and operating the
+  `browser-act` browser automation CLI from Claude Code, Codex, OpenClaw,
+  Cursor, OpenCode, Windsurf, Gemini CLI, and other skills-compatible agents.
+cardDescription: >-
+  BrowserAct entry skill for agent-safe browser automation, indexed page
+  interaction, session isolation, remote assist, and reusable Skill Forge flows.
+seoTitle: BrowserAct Skills for Claude Code, Codex, OpenClaw, Cursor, and Agent Browser Automation
+seoDescription: >-
+  Install BrowserAct Skills to let Claude Code, Codex, OpenClaw, Cursor,
+  OpenCode, Windsurf, Gemini CLI, and other agents use the browser-act CLI for
+  browser automation, indexed interactions, sessions, screenshots, network
+  capture, remote assist, Skill Forge, and reusable web automation skills.
+author: BrowserAct
+authorProfileUrl: "https://github.com/browser-act"
+dateAdded: "2026-06-18"
+websiteUrl: "https://www.browseract.com"
+documentationUrl: "https://github.com/browser-act/skills/blob/main/README.md"
+repoUrl: "https://github.com/browser-act/skills"
+downloadUrl: "https://github.com/browser-act/skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "uv tool install browser-act-cli --python 3.12"
+usageSnippet: >-
+  Install the BrowserAct entry skill from
+  `https://github.com/browser-act/skills/tree/main/browser-act`, install the
+  `browser-act` CLI with uv, then have the agent run `browser-act get-skills
+  core --skill-version 2.0.2` before any browser automation command.
+copySnippet: |-
+  uv tool install browser-act-cli --python 3.12
+
+  # Install the BrowserAct entry skill into your agent host.
+  # Skill source: https://github.com/browser-act/skills/tree/main/browser-act
+
+  browser-act get-skills core --skill-version 2.0.2
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/browser-act/skills/blob/main/README.md"
+  - "https://github.com/browser-act/skills/blob/main/browser-act/SKILL.md"
+  - "https://github.com/browser-act/skills/blob/main/docs/installation.md"
+  - "https://github.com/browser-act/skills/blob/main/docs/skills.md"
+  - "https://github.com/browser-act/skills/blob/main/docs/commands.md"
+  - "https://github.com/browser-act/skills/blob/main/docs/skill-forge.md"
+  - "https://github.com/browser-act/skills/blob/main/LICENSE"
+sourceUrls:
+  - "https://github.com/browser-act/skills/blob/main/browser-act/SKILL.md"
+  - "https://github.com/browser-act/skills/blob/main/docs/installation.md"
+  - "https://github.com/browser-act/skills/blob/main/docs/skills.md"
+  - "https://github.com/browser-act/skills/blob/main/docs/commands.md"
+  - "https://github.com/browser-act/skills/blob/main/docs/skill-forge.md"
+  - "https://github.com/browser-act/skills/blob/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - OpenClaw
+  - Cursor
+  - OpenCode
+  - Windsurf
+  - Gemini CLI
+  - VS Code
+  - Skills-compatible agent hosts
+prerequisites:
+  - "Python 3.12 or newer and the uv package manager for the documented CLI install path."
+  - "A compatible agent host that can read `SKILL.md` files and execute shell commands."
+  - "Chrome or Chromium for local `chrome` and `chrome-direct` browser modes."
+  - "A BrowserAct API key only for optional stealth browsers, stealth extraction, managed proxies, and CAPTCHA assistance."
+  - "A policy for which websites, accounts, browser profiles, uploads, downloads, form submissions, cookies, and network captures an agent may access."
+safetyNotes:
+  - "BrowserAct can open pages, click, type, upload files, inspect state, capture screenshots, read page text, handle dialogs, export cookies, capture network requests, and operate logged-in browser sessions."
+  - "Use BrowserAct only on sites, accounts, and data sources where the user has authorization. Do not use it to evade access controls, violate site terms, scrape disallowed data, or bypass rate limits."
+  - "The entry skill declares confirmation gates for browser creation, deletion, local Chrome profile import, proxy/security changes, logins, form submissions, file uploads, and other sensitive operations; preserve those gates in agent workflows."
+  - "`solve-captcha` may send the challenge image to BrowserAct's verification-assistance service according to the skill metadata; do not use it with sensitive or unauthorized pages."
+  - "`remote-assist` can generate a live handoff URL for a human to take over. Treat that URL as access to the active browser session."
+  - "Skill Forge can generate reusable automation skills from explored sites. Review generated scripts, selectors, network assumptions, output schemas, and site authorization before reusing them at scale."
+privacyNotes:
+  - "BrowserAct workflows can expose page content, screenshots, URLs, credentials typed into forms, cookies, browser profiles, uploaded files, downloaded files, network requests, HAR data, session names, browser descriptions, and logs."
+  - "The BrowserAct skill metadata states that cookies, login sessions, page content, credentials, and browser profile data stay local, except the CAPTCHA challenge image when `solve-captcha` is invoked."
+  - "Chrome-direct and profile import workflows can connect agents to existing local browser state. Treat those modes as account access, not a blank test browser."
+  - "Log reports, feedback, Discord support, generated Skill Forge packages, and shared screenshots can leak private browsing or account context if submitted without review."
+  - "Managed proxy, stealth browser, and API-key features create additional BrowserAct service dependencies beyond local CLI execution."
+tags:
+  - browseract
+  - browser-automation
+  - agent-skills
+  - claude-code
+  - codex
+  - openclaw
+  - cursor
+  - web-automation
+keywords:
+  - BrowserAct Skills
+  - browser-act skill
+  - BrowserAct Claude Code skill
+  - BrowserAct Codex skill
+  - BrowserAct OpenClaw skill
+  - browser automation agent skill
+  - browser-act get-skills
+  - Skill Forge BrowserAct
+  - agent browser automation CLI
+  - indexed browser interaction skill
+readingTime: 7
+difficultyScore: 86
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# BrowserAct Skills
+
+BrowserAct Skills is the Agent Skill entry point for the `browser-act` CLI. The
+entry skill is intentionally small: it tells the agent when BrowserAct should
+be used, declares the CLI install path, and requires the agent to load current
+runtime guidance through `browser-act get-skills core --skill-version 2.0.2`
+before running automation commands.
+
+Use it when an agent needs a real browser workflow with indexed interactions,
+session ownership, screenshots, network capture, local or managed browser
+modes, and human handoff. It is a better fit for browser operation than for
+static HTTP fetching, and it should stay behind explicit authorization and
+confirmation boundaries.
+
+## Knowledge Freshness
+
+The upstream skill declares version `2.0.2` and uses a two-layer design: a
+stable installed `SKILL.md` plus environment-aware runtime content returned by
+the CLI. That means the current browser list, active sessions, API-key status,
+directives, and command details are not fully represented in the static skill
+file.
+
+Always run the documented `get-skills core` command at the start of a session
+and do not truncate its output. Verify CLI and skill compatibility before
+running sensitive browser operations.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The upstream `browser-act/skills` README.
+- The BrowserAct entry `SKILL.md`.
+- BrowserAct installation, skills, command reference, and Skill Forge docs.
+- Repository license and current GitHub metadata.
+
+## Core Workflow
+
+Install the CLI:
+
+```bash
+uv tool install browser-act-cli --python 3.12
+```
+
+Install the skill from:
+
+```text
+https://github.com/browser-act/skills/tree/main/browser-act
+```
+
+Then have the agent load runtime instructions:
+
+```bash
+browser-act get-skills core --skill-version 2.0.2
+```
+
+For full browser automation, the docs use the loop:
+
+```text
+open -> state -> interact -> state -> close
+```
+
+For example, after selecting an approved browser and target URL, an agent calls
+`state`, reads indexed elements, then uses commands such as `click <index>`,
+`input <index> <text>`, `select <index> <option>`, `screenshot`, or `network
+requests`.
+
+## Capability Scope
+
+| Area | BrowserAct Coverage |
+| --- | --- |
+| Entry skill | Activates BrowserAct and directs agents to current `get-skills` runtime guidance |
+| CLI install | `uv tool install browser-act-cli --python 3.12` |
+| Browser modes | Local Chrome, Chrome direct/CDP, and optional stealth browser modes |
+| Interaction | Indexed `state` output, click, input, select, type, keys, scroll, upload, screenshots, JavaScript eval, waits, tabs, dialogs, and cookies |
+| Network | Request listing, request detail, HAR start/stop, offline toggle, and network clearing |
+| Sessions | Named sessions, browser descriptions, multi-browser isolation, and session close/list commands |
+| Human handoff | `remote-assist` for human takeover when automation stalls |
+| Skill Forge | Optional extension skill that explores a site once and generates a reusable, parameterized skill package |
+
+## Use Cases
+
+- Let an agent inspect and interact with a JavaScript-rendered site through a
+  real browser.
+- Use a supervised local Chrome session for an account workflow after explicit
+  approval.
+- Capture screenshots or network requests for debugging a web workflow.
+- Hand off a difficult browser step to a human, then let the agent continue.
+- Generate a reusable site-specific skill with Skill Forge after a reviewed
+  exploration pass.
+- Run multiple approved browser sessions without mixing cookies, account state,
+  or task ownership.
+
+## Production Rules
+
+- Use BrowserAct only on authorized websites, accounts, and datasets.
+- Run `browser-act get-skills core --skill-version 2.0.2` before the first
+  browser command in each session.
+- Preserve confirmation gates for browser creation, profile import, form
+  submission, uploads, proxy changes, CAPTCHA assistance, and remote handoff.
+- Prefer read-only inspection, screenshots, and `state` review before write
+  actions such as clicks, form inputs, cookie changes, or uploads.
+- Close sessions after use and review logs, screenshots, network captures, and
+  generated Skill Forge packages before sharing them.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub metadata reported `browser-act/skills` as an MIT-licensed Python
+  repository with topics including `ai-agents`, `automation`,
+  `claude-code-skills`, `openclaw-skills`, `codex-skill`,
+  `web-scraping`, `data-extraction`, `cursor`, and `openclaw`.
+- The README describes BrowserAct as a browser automation CLI built for AI
+  agents, with local Chrome, stealth browser modes, isolated sessions,
+  indexed interaction, remote handoff, and Skill Forge.
+- `browser-act/SKILL.md` declares skill name `browser-act`, version `2.0.2`,
+  the `uv tool install browser-act-cli --python 3.12` install command,
+  BrowserAct homepage, Python/uv requirements, local browser-profile storage,
+  CDP permissions, confirmation requirements, and the `get-skills core`
+  startup command.
+- `docs/installation.md` documents agent-based skill installation, manual CLI
+  install, optional API-key authentication for stealth browsers, stealth
+  extraction, managed proxies, and CAPTCHA assistance, plus Python 3.12+ and
+  Chrome/Chromium requirements.
+- `docs/skills.md` documents the two-layer architecture: installed entry skill
+  plus runtime content returned by `get-skills`, including environment state,
+  browser list, sessions, core commands, and dynamic directives.
+- `docs/commands.md` documents browser interaction, navigation, state,
+  click/input/select, screenshots, network capture, cookies, CAPTCHA, remote
+  assist, browser management, authentication, proxy management, and
+  `get-skills` commands.
+- `docs/skill-forge.md` documents the optional Skill Forge extension for
+  generating reusable, parameterized skill packages from reviewed browser
+  explorations.
+
+## Safety and Privacy
+
+BrowserAct is powerful enough to act inside real websites and accounts. Keep
+the scope explicit: which site, which account, which browser profile, what
+data may be read, and what operations require confirmation. Do not let an
+agent import a local profile, submit a form, upload a file, buy proxy capacity,
+solve a challenge, or share a remote-assist URL without user approval.
+
+The BrowserAct skill itself says sensitive data remains local except for
+CAPTCHA challenge images when `solve-captcha` is used. That is still a real
+data-flow decision. Avoid those features on sensitive pages, and review logs,
+screenshots, network captures, and generated Skill Forge packages before
+sharing them.
+
+## Duplicate Check
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`,
+`content/agents/`, guides, README entries, open pull requests, and
+repository-wide content for BrowserAct, `browser-act/skills`, `browser-act`
+skill, BrowserAct Claude Code skill, BrowserAct Codex skill, BrowserAct
+OpenClaw skill, Skill Forge, and matching source URLs. No dedicated BrowserAct
+Skills entry, exact source URL duplicate, target file, or open duplicate PR was
+found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. BrowserAct
+Skills is MIT-licensed open-source content; BrowserAct's optional managed
+proxies, stealth browsers beyond the free tier, API-key features, CAPTCHA
+assistance, Discord support, target websites, browser providers, and generated
+skills may have separate licenses, pricing, privacy controls, and operational
+requirements.

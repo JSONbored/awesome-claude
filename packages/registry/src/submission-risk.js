@@ -103,6 +103,14 @@ function isLoopbackHttpUrl(value) {
 }
 const CREDENTIAL_THEFT_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b/i;
+const THEFT_INTERDICTION_ACTION_PATTERN =
+  /\b(?:detects?|blocks?|prevents?|warns? before)\b/i;
+const THEFT_INTERDICTION_TARGET_PATTERN =
+  /\b(?:commands?|patterns?|attempts?|requests?|prompts?|output)\b/i;
+const THEFT_INTERDICTION_RESULT_PATTERN =
+  /\b(?:blocks?|prevents?|before they run)\b/i;
+const THEFT_INTERDICTION_WINDOW = 120;
+const THEFT_CONTEXT_TO_CLAIM_WINDOW = 220;
 const CREDENTIAL_THEFT_DESTINATION_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,120}\b(?:to|into|via|through|over|using|at)\b[\s\S]{0,40}\b(webhooks?|remote servers?|external endpoints?|third[- ]part(?:y|ies)|apis?|https?:\/\/)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,120}\b(?:to|into|via|through|over|using|at)\b[\s\S]{0,40}\b(webhooks?|remote servers?|external endpoints?|third[- ]part(?:y|ies)|apis?|https?:\/\/)\b/i;
 const EXPLICIT_CREDENTIAL_STEALING_PATTERN =
@@ -161,9 +169,51 @@ function hasFinancialOrIdentitySensitiveSignal(text) {
   );
 }
 
+function globalPattern(pattern) {
+  const flags = pattern.flags.includes("g")
+    ? pattern.flags
+    : `${pattern.flags}g`;
+  return new RegExp(pattern.source, flags);
+}
+
+function hasOrderedPatternWindow(text, firstPattern, secondPattern, maxChars) {
+  for (const match of text.matchAll(globalPattern(firstPattern))) {
+    const start = (match.index ?? 0) + match[0].length;
+    if (secondPattern.test(text.slice(start, start + maxChars))) return true;
+  }
+  return false;
+}
+
+function hasDefensiveTheftInterdiction(text) {
+  // Only safe-harbor theft wording when it describes blocking/detecting risky
+  // command, prompt, request, or output patterns, not the tool's own capability.
+  const actionBeforeTarget = hasOrderedPatternWindow(
+    text,
+    THEFT_INTERDICTION_ACTION_PATTERN,
+    THEFT_INTERDICTION_TARGET_PATTERN,
+    THEFT_INTERDICTION_WINDOW,
+  );
+  const targetBeforeTheft = hasOrderedPatternWindow(
+    text,
+    THEFT_INTERDICTION_TARGET_PATTERN,
+    CREDENTIAL_THEFT_PATTERN,
+    THEFT_CONTEXT_TO_CLAIM_WINDOW,
+  );
+  const theftBeforeResult = hasOrderedPatternWindow(
+    text,
+    CREDENTIAL_THEFT_PATTERN,
+    THEFT_INTERDICTION_RESULT_PATTERN,
+    THEFT_INTERDICTION_WINDOW,
+  );
+
+  return (actionBeforeTarget && targetBeforeTheft) || theftBeforeResult;
+}
+
 function hasDefensiveSecuritySafeHarbor(text) {
+  const hasCredentialTheftWording = CREDENTIAL_THEFT_PATTERN.test(text);
   return (
     DEFENSIVE_SECURITY_MITIGATION_PATTERN.test(text) &&
+    (!hasCredentialTheftWording || hasDefensiveTheftInterdiction(text)) &&
     !RESOURCE_THEFT_CAPABILITY_PATTERN.test(text) &&
     !CREDENTIAL_THEFT_DESTINATION_PATTERN.test(text) &&
     !EXPLICIT_CREDENTIAL_STEALING_PATTERN.test(text) &&

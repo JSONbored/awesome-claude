@@ -118,7 +118,8 @@ describe("website submission preflight API", () => {
       blockers: expect.arrayContaining([
         expect.objectContaining({
           code: "duplicate_existing",
-          message: "Likely duplicate of mcp:direct-submit-api-asset.",
+          message:
+            "Likely duplicate of mcp:direct-submit-api-asset: same slug.",
         }),
       ]),
     });
@@ -184,13 +185,127 @@ describe("website submission preflight API", () => {
       blockers: expect.arrayContaining([
         expect.objectContaining({
           code: "duplicate_existing",
-          message: "Likely duplicate of mcp:same-source.",
+          message: "Likely duplicate of mcp:same-source: same source.",
         }),
       ]),
       warnings: expect.arrayContaining([
         expect.objectContaining({
           code: "possible_duplicate_title",
-          message: "Similar existing title: mcp:same-title.",
+          message: "Existing entry uses the same title: mcp:same-title.",
+        }),
+      ]),
+      duplicates: expect.arrayContaining([
+        expect.objectContaining({
+          key: "mcp:same-source",
+          reasonLabels: expect.arrayContaining(["same source"]),
+        }),
+      ]),
+    });
+  });
+
+  it("canonicalizes tracked source URLs before duplicate matching", async () => {
+    directoryEntriesMock.mockResolvedValue([
+      {
+        category: "mcp",
+        slug: "tracked-source",
+        title: "Tracked Source",
+        documentationUrl: "https://example.com/docs?a=1&b=2",
+        canonicalUrl: "https://heyclau.de/entry/mcp/tracked-source",
+        trustSignals: { sourceUrls: [] },
+      },
+    ]);
+
+    const { POST } = await import("@/routes/api/submissions/preflight");
+    const response = await POST(
+      preflightRequest(
+        {
+          fields: validFields({
+            name: "New Tracked Source",
+            slug: "new-tracked-source",
+            docs_url:
+              "https://www.example.com/docs/?utm_source=newsletter&b=2&a=1#install",
+          }),
+        },
+        "203.0.113.16",
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      routeSuggestion: "fix_required",
+      blockers: expect.arrayContaining([
+        expect.objectContaining({
+          code: "duplicate_existing",
+          message: "Likely duplicate of mcp:tracked-source: same source.",
+        }),
+      ]),
+    });
+  });
+
+  it("warns on similar titles and shared source hosts without blocking submission", async () => {
+    directoryEntriesMock.mockResolvedValue([
+      {
+        category: "mcp",
+        slug: "direct-submit-api-connector",
+        title: "Direct Submit API Connector",
+        documentationUrl:
+          "https://docs.example.org/direct-submit-api-connector",
+        canonicalUrl:
+          "https://heyclau.de/entry/mcp/direct-submit-api-connector",
+        trustSignals: { sourceUrls: [] },
+      },
+      {
+        category: "mcp",
+        slug: "github-repo-match",
+        title: "Different GitHub Tool",
+        repoUrl: "https://github.com/example/shared-repo",
+        canonicalUrl: "https://heyclau.de/entry/mcp/github-repo-match",
+        trustSignals: { sourceUrls: [] },
+      },
+    ]);
+
+    const { POST } = await import("@/routes/api/submissions/preflight");
+    const response = await POST(
+      preflightRequest(
+        {
+          fields: validFields({
+            name: "Direct Submit API Asset",
+            slug: "new-submit-api-asset",
+            docs_url: "https://docs.example.org/new-submit-api-asset",
+            github_url:
+              "https://github.com/example/shared-repo/tree/main/packages/mcp",
+          }),
+        },
+        "203.0.113.17",
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      routeSuggestion: "submit_pr",
+      warnings: expect.arrayContaining([
+        expect.objectContaining({
+          code: "possible_duplicate_existing",
+          message:
+            "Possible related existing entry mcp:direct-submit-api-connector: similar title, same source host.",
+        }),
+        expect.objectContaining({
+          code: "possible_duplicate_existing",
+          message:
+            "Possible related existing entry mcp:github-repo-match: same GitHub repository.",
+        }),
+      ]),
+      duplicates: expect.arrayContaining([
+        expect.objectContaining({
+          key: "mcp:direct-submit-api-connector",
+          reasonLabels: expect.arrayContaining([
+            "similar title",
+            "same source host",
+          ]),
+        }),
+        expect.objectContaining({
+          key: "mcp:github-repo-match",
+          reasonLabels: expect.arrayContaining(["same GitHub repository"]),
         }),
       ]),
     });

@@ -470,6 +470,45 @@ Native macOS MCP server.`);
     );
   });
 
+  it("keeps credential-theft request changes for cookie dumping with review wording", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 132,
+        title: "content(hooks): add session review hook",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Session Review Hook",
+            slug: "session-review-hook",
+            category: "hooks",
+            description:
+              "Audit review hook that can dump session cookies from browser profiles.",
+            repoUrl: "https://github.com/example/session-review-hook",
+            docsUrl: "https://example.com/session-review-hook",
+            safetyNotes: [
+              "Runs before commands and inspects browser profile state.",
+            ],
+            privacyNotes: [
+              "Reads session cookie material from user browser profiles.",
+            ],
+          }),
+          "content/hooks/session-review-hook.mdx",
+        ),
+      ],
+    });
+
+    expect(report.reviewFlags.map((flag) => flag.id)).toContain(
+      "malicious_data_theft_capability",
+    );
+    expect(directContentRequestChangesReasons(report).join("\n")).toContain(
+      "credential, token, session, or wallet theft",
+    );
+  });
+
   it("keeps credential-theft request changes for explicit stealing claims with defensive wording", () => {
     const report = analyzeDirectContentRisk({
       pullRequest: {

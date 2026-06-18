@@ -19,6 +19,7 @@ const SAFE_ENV_KEY_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const ENV_EXPANSION_PATTERN = /\$\{([A-Z_][A-Z0-9_]*)(?::-([^}]*))?\}/g;
 const LITERAL_PLACEHOLDER_PATTERN =
   /<[^>\n]{2,}>|\b(?:YOUR|REPLACE|TODO|INSERT)_[A-Z0-9_]+\b|(?:YOUR|REPLACE|INSERT)[ _-]?(?:KEY|TOKEN|SECRET|ID)/i;
+const ONE_CLICK_STDIO_COMMANDS = new Set(["npx", "uvx"]);
 
 export type McpInstallTargetId =
   | "claude-code"
@@ -53,6 +54,7 @@ export type McpInstallPlan = {
   warnings: string[];
   envPlaceholders: string[];
   sourceUrl?: string;
+  serverPreview: string;
 };
 
 export type McpInstallResult = {
@@ -197,6 +199,16 @@ function safeServerName(value: string, fallback: string) {
   return SAFE_SERVER_NAME_PATTERN.test(candidate)
     ? candidate
     : slugifyServerName(fallback);
+}
+
+function oneClickStdioCommandName(value: unknown) {
+  const command = String(value || "").trim();
+  if (!command || command.includes("/") || command.includes("\\")) return "";
+  return command.toLowerCase();
+}
+
+export function isOneClickSafeStdioCommand(value: unknown) {
+  return ONE_CLICK_STDIO_COMMANDS.has(oneClickStdioCommandName(value));
 }
 
 function stableJson(value: unknown) {
@@ -423,6 +435,9 @@ export function mcpConfigSupportsTarget(
     const url = getServerUrl(config);
     if (!url || !isSafeRemoteMcpUrl(url)) return false;
   }
+  if (type === "stdio" && !isOneClickSafeStdioCommand(config.command)) {
+    return false;
+  }
   if (target === "codex") {
     if (type === "sse") return false;
     if (type === "http" && hasStaticOrEnvHttpHeaders(config)) {
@@ -436,6 +451,18 @@ export function mcpInstallTargetsForConfig(config: McpServerConfig) {
   return MCP_INSTALL_TARGETS.map((target) => target.id).filter((target) =>
     mcpConfigSupportsTarget(config, target),
   );
+}
+
+function formatServerPreview(config: McpServerConfig) {
+  const type = normalizedConfigType(config);
+  if (type === "stdio") {
+    const command = typeof config.command === "string" ? config.command : "";
+    return [command, ...normalizeServerArgs(config, "MCP")]
+      .filter(Boolean)
+      .join(" ");
+  }
+  const url = getServerUrl(config);
+  return url ? `${type.toUpperCase()} ${url}` : "Unknown MCP server config";
 }
 
 function buildCliArgs(
@@ -530,6 +557,7 @@ export function buildMcpInstallPlan(
   const config = normalizeConfigForTarget(targetId, extracted.config);
   const configJson = stableJson(config);
   const envPlaceholders = collectEnvPlaceholders(config);
+  const serverPreview = formatServerPreview(config);
   const warnings = [
     ...(envPlaceholders.length
       ? [
@@ -561,6 +589,7 @@ export function buildMcpInstallPlan(
     warnings,
     envPlaceholders,
     sourceUrl: sourceUrlFor(entry, detail),
+    serverPreview,
     ...cliArgs,
   };
 }
