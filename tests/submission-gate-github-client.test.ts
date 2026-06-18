@@ -261,7 +261,7 @@ describe("submission gate GitHub client", () => {
         expect.objectContaining({ name: "validate-web", status: "passed" }),
         expect.objectContaining({
           name: "Superagent Security Scan",
-          status: "passed",
+          status: "failed",
           details: "concluded neutral",
         }),
         expect.objectContaining({
