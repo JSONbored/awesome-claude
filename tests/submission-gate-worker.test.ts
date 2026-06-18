@@ -1943,6 +1943,8 @@ ${urls}
 
     expect(source).toContain('reason: "No source content entry file changed."');
     expect(source).toContain("function recordReviewedScanKey");
+    expect(source).toContain("async function cleanupIgnoredReviewTarget");
+    expect(source).toContain("labels: RECONCILED_GATE_LABELS");
     expect(source).toContain(
       "function shouldInspectPullRequestFilesForWebhook",
     );
@@ -1956,9 +1958,48 @@ ${urls}
     expect(source).toContain("lastReviewKey: reviewScanKey || undefined");
     expect(source).toContain('reason: "already_reviewed"');
     expect(pullRequestBlock).toContain('reviewability.kind === "ignore"');
+    expect(pullRequestBlock).toContain(
+      "await cleanupIgnoredReviewTarget(env, target, deliveryId);",
+    );
     expect(inspectIndex).toBeGreaterThan(0);
     expect(classifyIndex).toBeGreaterThan(inspectIndex);
     expect(applyIndex).toBeGreaterThan(classifyIndex);
+  });
+
+  it("cleans stale gate metadata when webhook paths ignore former content PRs", () => {
+    const source = readWorkerSource();
+    const pullRequestIndex = source.indexOf(
+      'if (eventName === "pull_request")',
+    );
+    const issueCommentIndex = source.indexOf(
+      'if (eventName === "issue_comment")',
+      pullRequestIndex,
+    );
+    const validationIndex = source.indexOf(
+      "if (VALIDATION_WEBHOOK_EVENTS.has(eventName))",
+      issueCommentIndex,
+    );
+    const pullRequestBlock = source.slice(pullRequestIndex, issueCommentIndex);
+    const issueCommentBlock = source.slice(issueCommentIndex, validationIndex);
+    const validationBlock = source.slice(
+      validationIndex,
+      source.indexOf(
+        "return json({ ok: true, ignored: true });",
+        validationIndex,
+      ),
+    );
+
+    expect(source).toContain("async function cleanupIgnoredReviewTarget");
+    expect(source).toContain("labels: RECONCILED_GATE_LABELS");
+    expect(pullRequestBlock).toContain(
+      "await cleanupIgnoredReviewTarget(env, target, deliveryId);",
+    );
+    expect(issueCommentBlock).toContain(
+      "await cleanupIgnoredReviewTarget(env, target, deliveryId);",
+    );
+    expect(validationBlock).toContain(
+      "await cleanupIgnoredReviewTarget(env, target, deliveryId);",
+    );
   });
 
   it("distinguishes generated-artifact tampering from ordinary non-content PRs", () => {

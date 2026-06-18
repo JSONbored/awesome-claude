@@ -1022,6 +1022,30 @@ async function applyUnderReviewToTarget(
   });
 }
 
+async function cleanupIgnoredReviewTarget(
+  env: Env,
+  target: ReviewTarget,
+  deliveryId: string,
+) {
+  const token = await installationTokenForTarget(env, target);
+  if (token) {
+    const repo = parseRepo(target.repoFullName);
+    await removeLabels({
+      token,
+      repo,
+      issueNumber: target.number,
+      labels: RECONCILED_GATE_LABELS,
+      apiVersion: env.GITHUB_API_VERSION,
+    });
+  }
+  await recordReviewedScanKey({
+    env,
+    target,
+    deliveryId,
+    status: "ignored",
+  });
+}
+
 async function directContentReviewabilityForTarget(
   env: Env,
   target: ReviewTarget,
@@ -2681,12 +2705,7 @@ async function githubWebhookRoute(
       });
     }
     if (reviewability.kind === "ignore") {
-      await recordReviewedScanKey({
-        env,
-        target,
-        deliveryId,
-        status: "ignored",
-      });
+      await cleanupIgnoredReviewTarget(env, target, deliveryId);
       return json({ ok: true, ignored: true, reason: reviewability.reason });
     }
     const reviewScope =
@@ -2724,6 +2743,7 @@ async function githubWebhookRoute(
       });
     }
     if (reviewability.kind === "ignore") {
+      await cleanupIgnoredReviewTarget(env, target, deliveryId);
       return json({ ok: true, ignored: true, reason: reviewability.reason });
     }
     const reviewScope =
@@ -2755,7 +2775,10 @@ async function githubWebhookRoute(
         await recordRetryableTargetError(env, target, deliveryId, error);
         continue;
       }
-      if (reviewability.kind === "ignore") continue;
+      if (reviewability.kind === "ignore") {
+        await cleanupIgnoredReviewTarget(env, target, deliveryId);
+        continue;
+      }
       if (
         await enqueueReviewTarget(env, target, deliveryId, eventName, payload)
       ) {
@@ -4067,12 +4090,11 @@ async function discoverOpenContentPullRequests(
       continue;
     }
     if (reviewability.kind === "ignore") {
-      await recordReviewedScanKey({
+      await cleanupIgnoredReviewTarget(
         env,
         target,
-        deliveryId: `scheduled-discovery-${Date.now()}-${target.number}`,
-        status: "ignored",
-      });
+        `scheduled-discovery-${Date.now()}-${target.number}`,
+      );
       continue;
     }
     const reviewScope =
