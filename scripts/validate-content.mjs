@@ -250,25 +250,26 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
       }
     }
 
+    const retrievalSources = Array.isArray(parsed.data.retrievalSources)
+      ? parsed.data.retrievalSources
+          .map((value) => String(value).trim())
+          .filter(Boolean)
+      : [];
+
+    for (const url of retrievalSources) {
+      if (!/^https:\/\//i.test(url)) {
+        failures.push(
+          `${entry}: retrievalSources must use https URLs -> ${url}`,
+        );
+      }
+    }
+
     if (category === "skills") {
       const skillType = String(
         parsed.data.skillType ?? inferred.skillType ?? "",
       )
         .trim()
         .toLowerCase();
-      const retrievalSources = Array.isArray(parsed.data.retrievalSources)
-        ? parsed.data.retrievalSources
-            .map((value) => String(value).trim())
-            .filter(Boolean)
-        : [];
-
-      for (const url of retrievalSources) {
-        if (!/^https:\/\//i.test(url)) {
-          failures.push(
-            `${entry}: retrievalSources must use https URLs -> ${url}`,
-          );
-        }
-      }
 
       if (skillType === "capability-pack") {
         const requiredSections = [

@@ -829,6 +829,15 @@ export function validateEntry(category, data, inferred = {}) {
     }
   }
 
+  if (Array.isArray(merged.retrievalSources)) {
+    for (const retrievalSource of merged.retrievalSources) {
+      if (!isHttpsUrl(retrievalSource)) {
+        semanticErrors.push("retrievalSources must use https URLs");
+        break;
+      }
+    }
+  }
+
   for (const field of [
     "submittedByUrl",
     "sourceSubmissionUrl",

@@ -64,6 +64,21 @@ describe("inferStructuredFields", () => {
     ]);
   });
 
+  it("rejects non-HTTPS retrieval sources for non-skill entries", () => {
+    const result = validateEntry("rules", {
+      slug: "demo-rule",
+      title: "Demo Rule",
+      description: "Test rule",
+      author: "JSONbored",
+      dateAdded: "2026-01-01",
+      retrievalSources: ["not-a-url", "ftp://attacker.invalid/source"],
+    });
+
+    expect(result.semanticErrors).toContain(
+      "retrievalSources must use https URLs",
+    );
+  });
+
   it("does not infer guide code examples as install commands", () => {
     const inferred = inferStructuredFields(
       {},
