@@ -86,7 +86,7 @@ jobs:
           git add README.md
           git commit -m "docs(readme): refresh generated catalog index"
 
-          remote_branch_sha="$(git ls-remote --heads origin "$BRANCH_NAME" | awk '{print $1}')"
+          remote_branch_sha="$(git ls-remote --heads origin "refs/heads/$BRANCH_NAME" | awk '{print $1}')"
           if [[ -n "$remote_branch_sha" ]]; then
             git push --force-with-lease="refs/heads/$BRANCH_NAME:$remote_branch_sha" origin "$BRANCH_NAME:$BRANCH_NAME"
           else
