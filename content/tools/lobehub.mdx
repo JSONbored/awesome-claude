@@ -1,0 +1,196 @@
+---
+title: LobeHub (formerly LobeChat)
+slug: lobehub
+category: tools
+description: >-
+  Self-hostable AI agent workspace formerly known as LobeChat, with agent
+  builder, agent groups, personal memory, model-provider routing, skills,
+  MCP-compatible plugins, Docker deployment, Vercel deployment, and IM gateway
+  workflows.
+cardDescription: >-
+  Self-hostable agent workspace for building, scheduling, grouping, and running
+  AI agents with memory, model routing, skills, MCP-compatible plugins, and
+  Docker deployment.
+seoTitle: LobeHub LobeChat Agent Workspace with MCP-Compatible Skills and Self Hosting
+seoDescription: >-
+  LobeHub, formerly LobeChat, is a self-hostable AI agent workspace for agent
+  teams, agent groups, memory, skills, MCP-compatible plugins, model routing,
+  Docker deployment, and private LLM chat workflows.
+author: LobeHub
+authorProfileUrl: "https://github.com/lobehub"
+dateAdded: "2026-06-18"
+websiteUrl: "https://lobehub.com/"
+documentationUrl: "https://lobehub.com/docs"
+repoUrl: "https://github.com/lobehub/lobehub"
+packageUrl: "https://hub.docker.com/r/lobehub/lobehub"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Web
+sourceUrls:
+  - "https://github.com/lobehub/lobehub"
+  - "https://raw.githubusercontent.com/lobehub/lobehub/canary/README.md"
+  - "https://raw.githubusercontent.com/lobehub/lobehub/canary/package.json"
+  - "https://raw.githubusercontent.com/lobehub/lobehub/canary/LICENSE"
+  - "https://hub.docker.com/r/lobehub/lobehub"
+  - "https://lobehub.com/docs/self-hosting/environment-variables"
+installable: true
+installCommand: "docker compose up -d"
+usageSnippet: >-
+  Deploy LobeHub with Docker Compose, Vercel, or another supported hosting
+  path, configure model-provider keys, then create agents, groups, memory,
+  skills, and MCP-compatible plugin workflows with scoped credentials.
+copySnippet: |-
+  docker compose up -d
+estimatedSetupTime: 45 minutes
+difficulty: intermediate
+prerequisites:
+  - "Docker Compose, Vercel, or another supported deployment target from the official self-hosting documentation."
+  - "Model-provider credentials such as `OPENAI_API_KEY`, plus any provider-specific proxy, model list, auth, storage, sandbox, analytics, or database settings required by the deployment."
+  - "A review of the official deployment files, image tags, mounted volumes, environment variables, and network bindings before running LobeHub on a machine with sensitive data."
+  - "A storage, auth, backup, retention, and update plan for a self-hosted agent workspace."
+  - "Policy for which users, agents, skills, MCP-compatible plugins, and external model providers can access private prompts, files, memory, and account data."
+safetyNotes:
+  - "Review the official deployment guide, generated Compose files, image tags, mounted volumes, and network bindings before running LobeHub on production or personal machines."
+  - "LobeHub can organize agent teams, schedule work, use memory, connect skills, and use MCP-compatible plugins. Restrict write-capable plugins, account integrations, and scheduled actions until permissions are reviewed."
+  - "Docker deployment can expose persistent storage, service ports, and provider credentials. Keep compose files, environment files, backups, and reverse-proxy configs under normal server hardening rules."
+  - "The current repository license file uses the LobeHub Community License with additional commercial derivative-work conditions, while `package.json` still reports MIT. Treat the LICENSE file as the review source for usage decisions."
+  - "Do not assume self-hosting removes third-party risk: model providers, plugins, skills, analytics, storage providers, and sandbox integrations can still receive data."
+privacyNotes:
+  - "Agent prompts, chat history, scheduled tasks, personal memory, workspace context, uploaded files, model responses, tool calls, plugin traffic, MCP-compatible plugin payloads, logs, and analytics can contain private data."
+  - "Model provider API keys, auth secrets, S3/storage credentials, database URLs, sandbox credentials, and analytics settings should stay in deployment secrets, not committed configs or screenshots."
+  - "If using shared workspaces, define who can inspect agent memory, saved prompts, generated pages, project history, plugin configuration, logs, and scheduled task results."
+  - "Before enabling cloud providers, plugins, skills, or analytics, review data retention and regional handling outside the self-hosted instance."
+tags:
+  - lobehub
+  - lobechat
+  - ai-agents
+  - agent-workspace
+  - mcp
+  - skills
+  - self-hosted
+  - docker
+  - chatgpt
+  - claude
+keywords:
+  - LobeHub
+  - LobeChat
+  - LobeHub agents
+  - LobeChat self hosted
+  - LobeHub MCP
+  - LobeHub skills
+  - AI agent workspace
+  - agent groups
+  - personal memory agents
+  - self hosted ChatGPT
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+LobeHub, formerly known as LobeChat, is a self-hostable AI agent workspace for
+creating, organizing, scheduling, and collaborating with agents. The current
+README describes the product as a "Chief Agent Operator" that treats agents as
+the unit of work: agents can be built, grouped, scheduled, connected to skills,
+and supported by personal memory.
+
+This entry is useful for Claude-adjacent users because LobeHub sits in a very
+active search cluster around self-hosted AI chat, AI agent teams, model-provider
+routing, LobeChat, MCP-compatible plugins, skills, and private agent workspaces.
+It is more product/platform-shaped than a small SDK, so the operational and
+license caveats matter.
+
+## Deploy
+
+LobeHub documents self-hosted deployment paths through Docker, Vercel, Alibaba
+Cloud, and other supported targets. Use the official self-hosting guide for the
+current Compose file and environment-variable requirements.
+
+The minimal runtime command after configuration is:
+
+```bash
+docker compose up -d
+```
+
+At minimum, the README's quick-start environment table requires:
+
+```bash
+OPENAI_API_KEY=...
+```
+
+The docs also cover broader environment-variable categories for model service
+providers, authentication, S3 storage, cloud sandbox settings, analytics, and
+other deployment options.
+
+## Agent Capabilities
+
+| Area | LobeHub Coverage |
+| --- | --- |
+| Agent workspace | Build, organize, schedule, and report on agent teammates |
+| Agent Builder | Describe an agent need and auto-configure an agent setup |
+| Agent Groups | Work with multiple agents in shared tasks and collaboration flows |
+| Memory | Personal memory and editable memory controls for agents |
+| Skills and plugins | Skills and MCP-compatible plugins for extending agent capabilities |
+| Model routing | Multi-model and multimodal provider access controlled by deployment config |
+| Self-hosting | Docker image, Docker Compose setup flow, Vercel, Alibaba Cloud, and other documented deployment paths |
+| Legacy search fit | The project is still widely searched as LobeChat, while the live repo and branding now use LobeHub |
+
+## MCP Fit
+
+LobeHub is not a standalone MCP server. It belongs in tools as a self-hostable
+agent workspace that can connect agents to skills and MCP-compatible plugins.
+For users comparing MCP clients, agent workspaces, and self-hosted AI chat
+frontends, that is a meaningful fit.
+
+Treat every plugin and skill as a separate trust boundary. If a plugin can read
+files, call SaaS APIs, write to accounts, browse, retrieve private docs, or
+schedule work, those permissions need explicit review before agents can use
+them unattended.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub redirects `lobehub/lobe-chat` to `lobehub/lobehub`; the live repository
+  reports active development, 78,000+ stars, topics including `agent`, `mcp`,
+  `skills`, and `chief-agent-operator`, and release `v2.2.6`.
+- The README describes LobeHub as an agent playground and workspace for hiring,
+  scheduling, reporting on, building, grouping, and collaborating with agents.
+- The README describes Agent Builder, Agent Groups, Pages, Schedule, Projects,
+  Workspace, Personal Memory, skills, and MCP-compatible plugins.
+- The README documents self-hosting with Vercel, Alibaba Cloud, and Docker, plus
+  environment settings such as `OPENAI_API_KEY`.
+- The docs expose environment-variable categories for model providers, auth, S3
+  storage, cloud sandbox settings, analytics, and customization.
+- The repository LICENSE file uses the LobeHub Community License, based on
+  Apache-2.0 with additional commercial derivative-work conditions. The current
+  `package.json` still reports `MIT`, so the dedicated LICENSE file should be
+  treated as the authoritative license source for review.
+
+## Safety and Privacy
+
+LobeHub is operational infrastructure, not just a UI. A self-hosted deployment
+can hold persistent chat history, personal memory, workspace state, model keys,
+provider routing, plugins, scheduled tasks, and generated artifacts. Put it
+behind normal server controls: secret management, TLS/reverse proxy, auth,
+backups, upgrade process, log review, and access controls.
+
+The strongest agent features also create the biggest review burden. Agent
+groups, schedules, memory, skills, and MCP-compatible plugins can turn a chat
+surface into an automation surface. Start with low-risk/read-only plugins,
+document who can enable new capabilities, and review retention before routing
+private or customer data through model providers.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, open pull requests, and repository-wide
+content for `lobehub/lobehub`, `lobehub/lobe-chat`, LobeHub, LobeChat, LobeHub
+agents, LobeChat self hosted, LobeHub MCP, LobeHub skills, agent groups,
+personal memory agents, and self-hosted ChatGPT. Existing content covers
+adjacent chat apps, agent frameworks, MCP servers, skills, and model-provider
+tools, but no dedicated LobeHub/LobeChat tools entry, exact source URL
+duplicate, target file, or open duplicate PR was found. Previous PR #3736 was
+closed for install safety after including the upstream remote setup command; this
+resubmission removes that command and uses Docker Compose deployment guidance.
