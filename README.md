@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1278+ file-backed entries</strong> stay useful as both an
+        <strong>1283+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1278</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1283</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -73,12 +73,12 @@
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>170</code><br>
+          <code>173</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
           <a href="#skills"><strong>🧠 Skills</strong></a><br>
-          <code>166</code><br>
+          <code>168</code><br>
           <sub>Source-backed skill packs and reusable capabilities.</sub>
         </td>
 <td align="center" width="20%">
@@ -745,12 +745,13 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (170)
+## 🧰 Tools (173)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
 - **[Agenta](https://heyclau.de/entry/tools/agenta)** - Open-source LLMOps platform for prompt management, prompt versioning, evaluation, and observability across LLM applications.
 - **[AgentOps](https://heyclau.de/entry/tools/agentops)** - Open-source observability platform and SDK for tracing, debugging, replaying, and cost-monitoring AI agent and LLM application runs.
+- **[AgentScope](https://heyclau.de/entry/tools/agentscope)** - Apache-2.0 Python framework for building visible, controllable, production AI agents and multi-agent services with event streaming, permission controls, workspaces, sandbox backends, middleware, MCP support, Mem0 memory, agent teams, and multi-tenant multi-session serving.
 - **[Agno](https://heyclau.de/entry/tools/agno)** - Open-source SDK and runtime for building, running, and managing agent platforms with agents, teams, workflows, memory, knowledge, tools, MCP, and AgentOS.
 - **[Aider](https://heyclau.de/entry/tools/aider)** - Open-source terminal coding assistant that edits files in Git repositories using chat-driven development loops.
 - **[AnythingLLM](https://heyclau.de/entry/tools/anythingllm)** - Local-first AI application for private chat, document RAG, workspace agents, MCP-compatible tools, model routing, memories, scheduled tasks, multimodal workflows, multi-user Docker deployments, and self-hosted agent automation.
@@ -782,6 +783,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Cosign](https://heyclau.de/entry/tools/cosign)** - Apache-2.0 Sigstore CLI for signing, verifying, and attesting containers, blobs, binaries, SBOMs, and OCI artifacts with keyless OIDC, KMS keys, Fulcio, Rekor, bundles, and registry storage.
 - **[CrewAI](https://heyclau.de/entry/tools/crewai)** - Framework and platform for building multi-agent workflows, role-based agents, process automation, and AI crews.
 - **[Crush](https://heyclau.de/entry/tools/crush)** - Terminal-based agentic AI coding assistant from Charm that works with many LLM providers, uses LSP and MCP for context, manages per-project sessions, and asks permission before running tools by default.
+- **[Cua Computer-Use Agents](https://heyclau.de/entry/tools/cua-computer-use-agents)** - MIT-licensed infrastructure for computer-use agents: background desktop drivers, MCP server support, Python SDKs, local/cloud sandboxes, macOS, Windows, Linux, Android, Cua Bench, GUI automation skills, and Lume virtualization for agents that see, click, type, and verify real desktops.
 - **[Cursor](https://heyclau.de/entry/tools/cursor)** - AI-native code editor for codebase-aware chat, agent-assisted edits, and software development workflows.
 - **[Dagster](https://heyclau.de/entry/tools/dagster)** - Apache-2.0 data orchestration platform for building, testing, deploying, observing, and automating data assets, jobs, schedules, sensors, and pipelines.
 - **[Daytona](https://heyclau.de/entry/tools/daytona)** - Open-source infrastructure for securely running AI-generated code in isolated sandboxes that start in milliseconds, with SDKs for Python, TypeScript, and other languages, persistent snapshots, and an optional managed cloud.
@@ -877,6 +879,7 @@ Get a free API key on https://app.zyntra.app/
 - **[OpenAPI Generator](https://heyclau.de/entry/tools/openapi-generator)** - Open-source code generation tool for producing API clients, server stubs, documentation, schemas, and configuration from OpenAPI specs.
 - **[OpenCode](https://heyclau.de/entry/tools/opencode)** - Terminal-first AI coding agent for local development workflows, codebase edits, and model-flexible automation.
 - **[OpenHands](https://heyclau.de/entry/tools/openhands)** - AI-driven software development platform with a local GUI, CLI, Software Agent SDK, agent sandboxes, terminal/browser tools, and hosted cloud options.
+- **[OpenSandbox](https://heyclau.de/entry/tools/opensandbox)** - Apache-2.0 sandbox runtime and SDK suite for AI agents, with Python, Java/Kotlin, JavaScript/TypeScript, C#/.NET, and Go SDKs, Docker and Kubernetes runtimes, OpenSandbox MCP server, CLI, code interpreter, filesystem and command tools, network policy, credential vault, and secure container runtime guidance.
 - **[Pipedream](https://heyclau.de/entry/tools/pipedream)** - Workflow automation platform for connecting APIs, building event-driven automations, and integrating developer tools.
 - **[Polars](https://heyclau.de/entry/tools/polars)** - MIT-licensed DataFrame query engine written in Rust for Python, Rust, Node.js, R, and SQL workflows with lazy execution, streaming, Arrow integration, and file, database, and cloud I/O.
 - **[Prefect](https://heyclau.de/entry/tools/prefect)** - Apache-2.0 Python workflow orchestration framework for resilient data pipelines with flows, tasks, deployments, schedules, retries, caching, workers, work pools, and observability.
@@ -918,8 +921,9 @@ Get a free API key on https://app.zyntra.app/
 - **[Zapier AI](https://heyclau.de/entry/tools/zapier-ai)** - Automation platform with AI-assisted workflows, app integrations, agents, actions, and business process automation.
 - **[Zed](https://heyclau.de/entry/tools/zed)** - Collaborative code editor with AI assistance, fast native performance, and developer-focused collaboration workflows.
 
-## 🧠 Skills (166)
+## 🧠 Skills (168)
 
+- **[Addy Osmani Agent Skills](https://heyclau.de/entry/skills/addy-osmani-agent-skills)** - Addy Osmani's production-grade Agent Skills pack for AI coding agents, with lifecycle slash commands, engineering workflow skills, review personas, quality gates, and cross-agent setup guidance for Claude Code, Cursor, Gemini CLI, Antigravity CLI, OpenCode, GitHub Copilot, and other agents.
 - **[Agent Evals Regression Gate Skill](https://heyclau.de/entry/skills/agent-evals-regression-gate)** - Build repeatable eval suites that catch quality regressions in AI agent behavior before merge or release.
 - **[Agent Skills Cross-Platform Adapter Capability Pack Skill](https://heyclau.de/entry/skills/agent-skills-cross-platform-adapter-capability-pack)** - Expert agent skills cross-platform adapter capability pack for porting Claude Code SKILL.md workflows to Codex, Cursor, Windsurf, and Generic AGENTS runbooks while preserving scope, safety notes, and source-backed contracts.
 - **[Agent Skills Enterprise Provisioning Capability Pack Skill](https://heyclau.de/entry/skills/agent-skills-enterprise-provisioning-capability-pack)** - Expert agent skills enterprise provisioning capability pack for rolling out Claude Code skills across Claude for Enterprise with scope controls, admin policy alignment, user-only versus model-invoked skills, and audit-ready docs.
@@ -1084,6 +1088,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Windsurf AI-Native Collaborative Development Skill](https://heyclau.de/entry/skills/windsurf-collaborative-development)** - Master collaborative AI-assisted development with Windsurf IDE's Cascade AI, multi-file context awareness, and Flow patterns for team workflows.
 - **[WordPress Agent Skills](https://heyclau.de/entry/skills/wordpress-agent-skills)** - WordPress contributor-reviewed Agent Skills for AI coding assistants working on Gutenberg blocks, block themes, plugins, REST APIs, Interactivity API, Abilities API, WP-CLI, Playground, performance, PHPStan, and directory rules.
 - **[Wrangler Deployment Operations Capability Pack Skill](https://heyclau.de/entry/skills/wrangler-deployment-operations-capability-pack)** - Expert Wrangler CLI deployment skill for release planning, config review, environment checks, version traffic splits, trigger application, and rollback.
+- **[wshobson Agentic Plugin Marketplace](https://heyclau.de/entry/skills/wshobson-agentic-plugin-marketplace)** - Multi-harness agentic plugin marketplace with 84 plugins, 192 agents, 156 skills, 102 commands, and 16 orchestrators for Claude Code, Codex CLI, Cursor, OpenCode, Gemini CLI, and GitHub Copilot from one Markdown source tree.
 - **[Zero-Budget SaaS Launch Capability Pack Skill](https://heyclau.de/entry/skills/zero-budget-saas-launch-capability-pack)** - Expert zero-budget launch capability pack for building and shipping SaaS using free-tier infrastructure and constrained execution plans.
 - **[Zod Schema Validation Skill](https://heyclau.de/entry/skills/zod-schema-validator)** - TypeScript-first validation skill using Zod — define schemas once, get runtime checks and inferred types for APIs, forms, and data pipelines.
 
