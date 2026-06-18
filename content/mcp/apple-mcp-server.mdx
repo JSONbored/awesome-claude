@@ -1,0 +1,182 @@
+---
+title: Apple MCP Server
+slug: apple-mcp-server
+category: mcp
+description: >-
+  macOS MCP server that lets Claude, Cursor, and other MCP clients interact with
+  Apple Contacts, Notes, Messages, Mail, Reminders, Calendar, and Maps through
+  native Apple app automation.
+cardDescription: >-
+  Connect MCP clients to Apple Contacts, Notes, Messages, Mail, Reminders,
+  Calendar, and Maps for macOS-native personal workflow automation.
+seoTitle: Apple MCP Server for Claude, Cursor, macOS Apps, Mail, Messages, and Calendar
+seoDescription: >-
+  Configure Apple MCP Server with Claude, Cursor, and macOS to search contacts,
+  create notes, read or send messages and mail, manage reminders and calendar
+  events, and use Apple Maps from MCP clients.
+author: Dhravya Shah
+authorProfileUrl: "https://github.com/Dhravya"
+dateAdded: "2026-06-18"
+brandName: Apple MCP
+brandDomain: github.com
+repoUrl: "https://github.com/supermemoryai/apple-mcp"
+documentationUrl: "https://github.com/supermemoryai/apple-mcp/blob/main/README.md"
+websiteUrl: "https://github.com/supermemoryai/apple-mcp"
+packageUrl: "https://registry.npmjs.org/apple-mcp/latest"
+installable: true
+installCommand: "bunx --no-cache apple-mcp@latest"
+usageSnippet: >-
+  Run Apple MCP with `bunx --no-cache apple-mcp@latest` on macOS, grant only the
+  Apple app permissions you intend to use, and require approval before any
+  message, email, calendar, reminder, note, or Maps write action.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "apple-mcp": {
+        "command": "bunx",
+        "args": ["--no-cache", "apple-mcp@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "apple-mcp": {
+        "command": "bunx",
+        "args": ["--no-cache", "apple-mcp@latest"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - "macOS with Apple Contacts, Notes, Messages, Mail, Reminders, Calendar, and Maps available for the workflows you intend to automate."
+  - "Bun available to the MCP client runtime when using the documented `bunx` command."
+  - "Apple app permissions granted only for the apps and accounts the agent should access."
+  - "A dedicated test account or tightly reviewed personal account boundary for message, email, calendar, reminder, and note operations."
+safetyNotes:
+  - "Apple MCP can read personal app data and perform write actions in native Apple apps."
+  - "The tool surface includes searching contacts, listing or creating notes, reading or sending Messages, reading or sending Mail, creating reminders, creating calendar events, and saving Maps locations or guides."
+  - "Require explicit human approval before sending any message or email, creating calendar events, changing reminders, creating notes in important folders, saving locations, or using contact data for outreach."
+  - "Do not run broad chained commands against a real personal account until you have tested the exact workflow with safe data."
+  - "macOS automation may surface app data from whichever Apple ID, email account, calendar, note folder, or Messages account is active on the machine."
+privacyNotes:
+  - "Contacts, phone numbers, email addresses, message history, mailboxes, notes, reminders, calendar events, locations, Maps guides, unread counts, and account names may be exposed to the MCP client and model provider."
+  - "Message and email bodies can contain private conversations, credentials, customer data, legal or medical details, financial information, and internal company context."
+  - "Calendar and Maps data can reveal location history, travel plans, personal routines, meetings, relationships, and home or office addresses."
+  - "Use separate macOS users, app accounts, allowlisted data, or read-only workflows when testing with sensitive Apple app data."
+sourceUrls:
+  - "https://github.com/supermemoryai/apple-mcp"
+  - "https://github.com/supermemoryai/apple-mcp/blob/main/README.md"
+  - "https://github.com/supermemoryai/apple-mcp/blob/main/package.json"
+  - "https://github.com/supermemoryai/apple-mcp/blob/main/manifest.json"
+  - "https://github.com/supermemoryai/apple-mcp/blob/main/tools.ts"
+tags:
+  - macos
+  - apple
+  - productivity
+  - automation
+  - personal-knowledge
+keywords:
+  - Apple MCP
+  - apple-mcp
+  - macOS MCP server
+  - Claude Apple Messages MCP
+  - Apple Mail MCP
+  - Apple Calendar MCP
+  - Apple Notes MCP
+  - Apple Contacts MCP
+  - Apple Maps MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Apple MCP is a macOS MCP server for automating native Apple apps from Claude,
+Cursor, and other MCP clients. It exposes tools for Contacts, Notes, Messages,
+Mail, Reminders, Calendar, and Maps, making it useful for personal productivity
+workflows where the agent needs to work with apps already configured on the
+Mac.
+
+Because the server can read private app data and trigger write actions, it
+should be treated as sensitive desktop automation rather than a generic
+read-only data connector.
+
+## Source Review
+
+- https://github.com/supermemoryai/apple-mcp
+- https://github.com/supermemoryai/apple-mcp/blob/main/README.md
+- https://github.com/supermemoryai/apple-mcp/blob/main/package.json
+- https://github.com/supermemoryai/apple-mcp/blob/main/manifest.json
+- https://github.com/supermemoryai/apple-mcp/blob/main/tools.ts
+
+Verified on **2026-06-18**. The README documents Smithery and manual setup,
+including the `bunx --no-cache apple-mcp@latest` command. The npm package is
+`apple-mcp`, the manifest lists macOS as the supported platform, and `tools.ts`
+defines tools for Contacts, Notes, Messages, Mail, Reminders, Calendar, and
+Maps.
+
+## Features
+
+- Search and retrieve records from Apple Contacts.
+- Search, list, and create Apple Notes.
+- Send, read, schedule, and check unread Apple Messages.
+- Read unread mail, search mailboxes, list accounts, get latest mail, and send
+  messages through Apple Mail.
+- List, search, open, and create Apple Reminders.
+- Search, list, open, and create Apple Calendar events.
+- Search locations, save places, get directions, create Maps guides, and add
+  locations to guides.
+- Install through Bun or one-click desktop-extension flows published by the
+  upstream project.
+
+## Installation
+
+For MCP clients that launch local stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "apple-mcp": {
+      "command": "bunx",
+      "args": ["--no-cache", "apple-mcp@latest"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server, then grant only the macOS app
+permissions needed for the workflow you are testing.
+
+## Use Cases
+
+- Ask Claude to search Apple Notes or Contacts while planning a follow-up.
+- Create a reminder or calendar event from a reviewed conversation summary.
+- Search Apple Mail for context before drafting a reply.
+- Use Maps to look up a destination or save a reviewed location.
+- Chain personal productivity steps across Notes, Contacts, Messages, Mail,
+  Calendar, Reminders, and Maps after human approval.
+
+## Safety and Privacy
+
+Apple MCP sits directly on top of personal macOS apps. Treat it like a desktop
+automation tool with access to private communications and life-log data, not
+like a narrow search plugin.
+
+Start with read-only operations, test against non-sensitive data, and require a
+human confirmation step before sending messages, sending emails, creating or
+changing events, modifying reminders, creating notes in important folders, or
+saving locations. Keep personal Apple IDs, company mailboxes, customer data,
+medical or legal records, and private conversations out of exploratory agent
+sessions whenever possible.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `supermemoryai/apple-mcp`,
+`apple-mcp`, Apple MCP, macOS MCP server, Apple Mail MCP, Apple Messages MCP,
+Apple Calendar MCP, Apple Notes MCP, and Apple Contacts MCP. Existing desktop
+automation entries cover browser, screenshot, and macOS UI automation, but no
+dedicated Apple-native app MCP entry, exact source URL duplicate, target file,
+or open duplicate PR was found.
