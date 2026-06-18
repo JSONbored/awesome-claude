@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1304+ file-backed entries</strong> stay useful as both an
+        <strong>1305+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1304</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1305</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -78,7 +78,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#skills"><strong>🧠 Skills</strong></a><br>
-          <code>173</code><br>
+          <code>174</code><br>
           <sub>Source-backed skill packs and reusable capabilities.</sub>
         </td>
 <td align="center" width="20%">
@@ -931,7 +931,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Zapier AI](https://heyclau.de/entry/tools/zapier-ai)** - Automation platform with AI-assisted workflows, app integrations, agents, actions, and business process automation.
 - **[Zed](https://heyclau.de/entry/tools/zed)** - Collaborative code editor with AI assistance, fast native performance, and developer-focused collaboration workflows.
 
-## 🧠 Skills (173)
+## 🧠 Skills (174)
 
 - **[Addy Osmani Agent Skills](https://heyclau.de/entry/skills/addy-osmani-agent-skills)** - Addy Osmani's production-grade Agent Skills pack for AI coding agents, with lifecycle slash commands, engineering workflow skills, review personas, quality gates, and cross-agent setup guidance for Claude Code, Cursor, Gemini CLI, Antigravity CLI, OpenCode, GitHub Copilot, and other agents.
 - **[Agent Evals Regression Gate Skill](https://heyclau.de/entry/skills/agent-evals-regression-gate)** - Build repeatable eval suites that catch quality regressions in AI agent behavior before merge or release.
@@ -1087,6 +1087,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Subagent Transcript Cleanup Capability Pack Skill](https://heyclau.de/entry/skills/subagent-transcript-cleanup-capability-pack)** - Expert capability pack for reviewing Claude Code subagent transcript files, documented retention settings, compaction events, and summary handoff so verbose delegated work stays out of the main conversation.
 - **[Supabase Agent Skills](https://heyclau.de/entry/skills/supabase-agent-skills)** - Official Supabase Agent Skills for AI coding agents working with Supabase Database, Auth, Edge Functions, Realtime, Storage, Vectors, CLI, MCP, RLS, migrations, and Postgres performance.
 - **[Supabase Realtime Database Builder Skill](https://heyclau.de/entry/skills/supabase-realtime-database)** - Build full-stack apps on Supabase via @supabase/supabase-js: a hosted Postgres database with row-level security, realtime subscriptions over websockets, Auth, storage, Edge Functions for serverless logic, and pgvector for embeddings.
+- **[Superpowers Skills](https://heyclau.de/entry/skills/superpowers-skills)** - MIT-licensed Superpowers skill and plugin framework by Jesse Vincent for Claude Code, Codex App, Codex CLI, Cursor, Gemini CLI, Antigravity, Kimi Code, OpenCode, Pi, GitHub Copilot CLI, and other coding agents, covering brainstorming, planning, TDD, systematic debugging, subagent-driven development, code review, git worktrees, and finish-the-branch workflows.
 - **[Svelte SvelteKit Full-Stack Development Skill](https://heyclau.de/entry/skills/svelte-sveltekit-fullstack)** - Build full-stack web apps with Svelte and SvelteKit. Minimal runtime overhead, reactive components, and server-side rendering. The most admired frontend framework of 2025. Svelte compiles components to vanilla JavaScript at build time, resulting in zero runtime overhead and exceptional performance.
 - **[TanStack Query Data Fetching Skill](https://heyclau.de/entry/skills/tanstack-query-data-fetching)** - Build React server-state workflows with TanStack Query v5, including query keys, QueryClient setup, cache defaults, mutations, invalidation, hydration, retries, and privacy-aware data handling.
 - **[tRPC Type-Safe API Builder Skill](https://heyclau.de/entry/skills/trpc-type-safe-api)** - Build end-to-end type-safe APIs with tRPC and TypeScript, eliminating code generation and runtime bloat for full-stack applications. tRPC provides end-to-end type safety without code generation, schema stitching, or serialization layers - delivering a lighter, more intuitive developer experience than REST or GraphQL.
