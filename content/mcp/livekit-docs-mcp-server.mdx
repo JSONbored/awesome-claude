@@ -1,0 +1,204 @@
+---
+title: LiveKit Docs MCP Server
+slug: livekit-docs-mcp-server
+category: mcp
+description: >-
+  Connect Claude Code, Cursor, Codex, VS Code, Gemini CLI, Copilot CLI, and
+  other MCP clients to LiveKit's free documentation MCP server for current
+  realtime voice AI, WebRTC, SDK, CLI, and agent implementation context.
+cardDescription: >-
+  Official LiveKit Docs MCP server for browsing docs, fetching pages, searching
+  SDK code, checking changelogs, and keeping coding agents current.
+seoTitle: LiveKit Docs MCP Server for Claude Code and Codex
+seoDescription: >-
+  Use the official LiveKit Docs MCP server at docs.livekit.io/mcp with Claude
+  Code, Cursor, Codex, VS Code, and Gemini CLI for current LiveKit docs and SDK
+  code search.
+author: LiveKit
+authorProfileUrl: "https://github.com/livekit"
+dateAdded: "2026-06-18"
+brandName: LiveKit
+brandDomain: livekit.io
+documentationUrl: "https://docs.livekit.io/reference/developer-tools/docs-mcp.md"
+websiteUrl: "https://docs.livekit.io/intro/coding-agents.md"
+sourceUrls:
+  - "https://docs.livekit.io/intro/coding-agents.md"
+  - "https://docs.livekit.io/reference/developer-tools/docs-mcp.md"
+  - "https://docs.livekit.io/reference/developer-tools/livekit-cli/docs.md"
+  - "https://docs.livekit.io/llms.txt"
+  - "https://docs.livekit.io/agents/logic/tools/mcp.md"
+retrievalSources:
+  - "https://docs.livekit.io/intro/coding-agents.md"
+  - "https://docs.livekit.io/reference/developer-tools/docs-mcp.md"
+  - "https://docs.livekit.io/reference/developer-tools/livekit-cli/docs.md"
+  - "https://docs.livekit.io/llms.txt"
+  - "https://docs.livekit.io/agents/logic/tools/mcp.md"
+installable: true
+installCommand: "claude mcp add --transport http livekit-docs https://docs.livekit.io/mcp"
+usageSnippet: >-
+  Add the Streamable HTTP MCP endpoint, confirm the livekit-docs server is
+  connected in your client, then ask the agent to start with get_docs_overview
+  or get_pages before falling back to docs_search or code_search.
+copySnippet: |-
+  claude mcp add --transport http livekit-docs https://docs.livekit.io/mcp
+configSnippet: |-
+  {
+    "mcpServers": {
+      "livekit-docs": {
+        "transportType": "http",
+        "url": "https://docs.livekit.io/mcp",
+        "verifySsl": true
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Code, Cursor, Codex, VS Code, Gemini CLI, Copilot CLI, Google Antigravity, or another MCP client with Streamable HTTP support."
+  - "Network access to https://docs.livekit.io/mcp."
+  - "For LiveKit implementation work, access to the LiveKit project, SDK, or repository you are modifying."
+safetyNotes:
+  - "The LiveKit Docs MCP server is a documentation and public-source-code context server; it is not a connection to your LiveKit Cloud project, rooms, participants, calls, or credentials."
+  - "The endpoint uses Streamable HTTP. A plain browser GET may not behave like an MCP client request, so verify it from an MCP-compatible client."
+  - "One documented tool can submit documentation feedback. Do not let an agent submit feedback that includes secrets, private code, customer data, or unsupported claims."
+  - "LiveKit's APIs and agent SDKs move quickly. Use the MCP server or the matching CLI docs commands immediately before editing production agent, telephony, deployment, or SDK integration code."
+privacyNotes:
+  - "Docs queries, page paths, code-search terms, and feedback text are sent to LiveKit's hosted documentation service."
+  - "Avoid sending proprietary code, call transcripts, phone numbers, customer identifiers, API keys, LiveKit secrets, SIP credentials, or private incident details in docs-search prompts."
+  - "If an MCP client forwards tool results into a model provider, LiveKit docs excerpts and any user-supplied query text may also be processed by that provider."
+  - "The server can fetch public LiveKit documentation and public LiveKit GitHub repository content; it should not be treated as a private project data source."
+tags:
+  - livekit
+  - mcp
+  - docs
+  - voice-ai
+  - agents
+  - webrtc
+  - codex
+keywords:
+  - livekit mcp
+  - livekit docs mcp
+  - livekit claude code
+  - livekit codex mcp
+  - livekit cursor mcp
+  - livekit voice ai docs
+  - livekit agents mcp
+  - docs livekit io mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+LiveKit Docs MCP Server is LiveKit's official Streamable HTTP MCP endpoint at
+`https://docs.livekit.io/mcp`. It gives coding agents direct access to current
+LiveKit documentation, docs-page rendering, SDK code search, changelogs, pricing
+context, and public SDK metadata without making the agent scrape the site or
+guess from stale training data.
+
+This is most useful when building realtime voice AI agents, WebRTC frontends,
+telephony flows, LiveKit Agent deployments, or SDK integrations where method
+names, package versions, and best practices change quickly.
+
+## Client Setup
+
+LiveKit documents first-party setup snippets for common coding-agent clients:
+
+| Client | Setup |
+| --- | --- |
+| Claude Code | `claude mcp add --transport http livekit-docs https://docs.livekit.io/mcp` |
+| Codex | `codex mcp add --url https://docs.livekit.io/mcp livekit-docs` |
+| VS Code | `code --add-mcp '{"name":"livekit-docs","type":"http","url":"https://docs.livekit.io/mcp"}'` |
+| Cursor | Add `{"livekit-docs": {"url": "https://docs.livekit.io/mcp"}}` to the MCP configuration |
+| Gemini CLI | `gemini mcp add --transport http livekit-docs https://docs.livekit.io/mcp` |
+
+For any other MCP-compatible client, configure the server URL as
+`https://docs.livekit.io/mcp` with HTTP or Streamable HTTP transport.
+
+## Tools
+
+The reference currently documents these tools:
+
+| Tool | Purpose |
+| --- | --- |
+| `get_docs_overview` | Browse the full docs table of contents and page descriptions |
+| `get_pages` | Render one or more documentation pages as Markdown, including supported public LiveKit GitHub URLs |
+| `docs_search` | Search documentation by keyword and return page placement plus snippets |
+| `get_changelog` | Retrieve recent release and changelog entries for LiveKit SDKs and packages |
+| `list_sdks` | List LiveKit SDK repositories with package names |
+| `submit_docs_feedback` | Submit constructive feedback on the documentation |
+| `code_search` | Search public LiveKit GitHub repositories for code identifiers, classes, functions, and examples |
+| `get_pricing_info` | Retrieve LiveKit Cloud pricing context, plan information, and inference pricing assumptions |
+
+The server also exposes resources for LiveKit SDK metadata and the docs
+overview. LiveKit's `lk docs` CLI subcommand is powered by the same docs MCP
+surface, so CLI users can use the same workflow from a terminal.
+
+## Recommended Agent Workflow
+
+Start with browsing before search:
+
+1. Use `get_docs_overview` to understand the current docs structure.
+2. Use `get_pages` for the specific page before changing implementation code.
+3. Use `docs_search` only when you do not know the right page.
+4. Use `code_search` for API names, classes, decorators, examples, and SDK
+   signatures that are not fully covered in docs.
+5. Use `get_changelog` when behavior changed after an SDK upgrade.
+
+LiveKit's own coding-agent guidance recommends preferring browsing and full
+pages over snippets because search results only provide excerpts.
+
+## Use Cases
+
+- Ask Claude Code to check the latest LiveKit Agents quickstart before editing a
+  voice AI project.
+- Let Codex fetch current pages for sessions, tasks, handoffs, MCP toolsets,
+  telephony, deployment, or testing before writing code.
+- Search public LiveKit SDK repositories for classes such as `AgentSession`,
+  decorators such as `function_tool`, or examples for plugin configuration.
+- Check release notes when a project has mismatched LiveKit package versions.
+- Pair the docs MCP server with LiveKit Agent Skills so the agent has both
+  current source-backed docs and reusable architecture guidance.
+
+## Safety and Privacy
+
+Treat this as a public documentation context source. It can help an agent write
+better LiveKit code, but it does not validate your private LiveKit Cloud state,
+room configuration, SIP provider setup, phone-number compliance, or production
+deployment policy.
+
+Do not paste secrets, customer records, call transcripts, private repository
+code, LiveKit API keys, SIP credentials, or incident details into docs-search
+queries or feedback submissions. Review generated changes before deploying
+voice, telephony, recording, billing, or production agent behavior.
+
+## Source Review
+
+- `docs.livekit.io/intro/coding-agents.md` documents LiveKit coding-agent
+  support for Claude Code, Cursor, Codex, Gemini CLI, docs access, the Docs MCP
+  server, and LiveKit Agent Skills.
+- `docs.livekit.io/reference/developer-tools/docs-mcp.md` documents the server
+  URL, Streamable HTTP transport, client install snippets, tools, and resources.
+- `docs.livekit.io/reference/developer-tools/livekit-cli/docs.md` documents the
+  matching `lk docs` commands and confirms they are powered by the LiveKit Docs
+  MCP server.
+- `docs.livekit.io/llms.txt` publishes the Markdown-oriented docs index used by
+  coding agents and LLM workflows.
+- `docs.livekit.io/agents/logic/tools/mcp.md` documents how LiveKit Agents can
+  consume MCP servers through `MCPToolset`, which is adjacent but distinct from
+  this docs server.
+
+## Duplicate Review
+
+Checked current `content/mcp/`, `content/skills/`, `content/tools/`, open pull
+requests, and repository-wide content for `LiveKit Docs MCP`, `livekit-docs`,
+`docs.livekit.io/mcp`, `LiveKit coding agents`, and `LiveKit MCP server`.
+Existing LiveKit Agents and LiveKit Agent Skills entries mention the docs MCP
+server as companion context, but no dedicated LiveKit Docs MCP entry, exact
+source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The LiveKit Docs
+MCP server is a free documentation endpoint from LiveKit. LiveKit also offers
+commercial cloud infrastructure for hosted realtime and agent workloads.
