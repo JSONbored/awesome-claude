@@ -1,0 +1,157 @@
+---
+title: Descope MCP Server for Claude
+slug: descope-mcp-server
+category: mcp
+description: >-
+  Manage your Descope project from Claude — users, tenants, authentication flows, access control,
+  audit logs, and auth keys — plus semantic search across Descope's full documentation library, with
+  the official Descope remote MCP server.
+cardDescription: "Official Descope MCP: user management, flows, audit logs & docs search from Claude."
+seoTitle: "Descope MCP Server for Claude — User Management, Auth Flows & Docs Search"
+seoDescription: "Connect Claude to Descope with the official remote MCP server: manage users, tenants, authentication flows, access keys, and audit logs — with built-in semantic docs search. No API key needed, authenticate via your Descope account."
+author: Descope
+authorProfileUrl: "https://github.com/descope"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.descope.com/mcp/docs-mcp-server"
+websiteUrl: "https://www.descope.com"
+retrievalSources:
+  - "https://docs.descope.com/mcp/docs-mcp-server"
+  - "https://docs.descope.com/mcp"
+  - "https://www.descope.com/blog/post/docs-mcp-server"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http descope https://mcp.descope.com"
+usageSnippet: >-
+  Ask Claude to list users in a Descope tenant, inspect an auth flow, review recent audit logs,
+  or search the Descope documentation — using natural language.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "descope": {
+        "type": "http",
+        "url": "https://mcp.descope.com"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "descope": {
+        "type": "http",
+        "url": "https://mcp.descope.com"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Descope account — sign in via your Descope account when prompted on first tool use."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Write operations (creating users, modifying flows, managing access control) require explicit session elevation — read-only queries work without extra confirmation."
+  - "The server has access to your entire Descope project including user PII, tenant config, and auth secrets — scope usage to least-privilege workflows."
+privacyNotes:
+  - "User profiles, tenant configurations, authentication flow definitions, audit log entries, and API key metadata from your Descope project are surfaced in Claude's context."
+  - "Authenticated via your Descope account; no API keys are stored in the MCP configuration."
+tags:
+  - descope
+  - authentication
+  - user-management
+  - auth-flows
+  - identity
+  - access-control
+  - audit-logs
+keywords:
+  - descope mcp server
+  - descope mcp claude
+  - user management mcp claude code
+  - authentication flows mcp
+  - descope identity management ai
+  - auth access control mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Descope MCP Server** is the official remote Model Context Protocol server from Descope.
+It connects Claude directly to your Descope project — letting you manage users, tenants,
+authentication flows, access control, audit logs, and API keys through natural language without
+leaving your IDE.
+
+In addition to management tools, the server includes a built-in documentation layer:
+`docs_search` and `docs_ask_question` give your AI assistant semantic access to the full Descope
+documentation library and SDK references, so Claude can answer Descope product questions without
+a web search.
+
+Authentication uses your Descope account — no API keys or tokens to configure.
+
+## Key capabilities
+
+- **User management** — create, inspect, update, and deactivate users across tenants.
+- **Tenant management** — list tenants, inspect tenant configuration, manage tenant-level settings.
+- **Auth flows** — read and inspect authentication flow definitions, identify misconfigured steps.
+- **Access control** — manage roles, permissions, and group memberships.
+- **Audit logs** — query and filter audit log entries for security investigations.
+- **API key & auth key management** — list and inspect credential objects.
+- **Documentation search** — semantic search across all Descope docs via `docs_search`.
+- **Product Q&A** — natural language answers to Descope product questions via `docs_ask_question`.
+
+## How it compares
+
+| Server | User management | Auth flows | Audit logs | Docs search | Auth |
+|---|---|---|---|---|---|
+| **Descope MCP** | Yes | Yes | Yes | Yes | Account sign-in |
+| Auth0 MCP | Yes | Limited | Yes | No | API token |
+| Okta MCP | Yes | Limited | Yes | No | API token |
+| Stytch MCP | Yes | No | Limited | No | API key |
+
+Descope's MCP is notable for bundling semantic documentation search alongside management tools,
+so Claude can both act on your project and answer product questions in a single server.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http descope https://mcp.descope.com
+```
+
+Run `/mcp` in Claude Code to authenticate via your Descope account.
+
+### Claude Desktop
+
+Go to Settings → Connectors and add the Descope server, or add it manually:
+
+```json
+{
+  "mcpServers": {
+    "descope": {
+      "type": "http",
+      "url": "https://mcp.descope.com"
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Descope account.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Account-based OAuth sign-in — no API keys to create or rotate.
+- Write operations require explicit session elevation to prevent accidental changes.
+- Usage is scoped to the projects your Descope account has access to.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Descope's MCP documentation at `docs.descope.com/mcp/docs-mcp-server` confirms the hosted
+  endpoint, account-based authentication, and management + documentation tool categories.
+- Descope's MCP overview at `docs.descope.com/mcp` documents the full server URL and
+  client-specific setup instructions for Claude Code, VS Code, and Cursor.
+- Descope's launch blog post at `descope.com/blog/post/docs-mcp-server` (June 8, 2026)
+  announces the docs MCP server with `docs_search` and `docs_ask_question` tools.
