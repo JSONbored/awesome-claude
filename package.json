@@ -13,7 +13,7 @@
     "dev": "pnpm --filter web dev",
     "build": "pnpm --filter web build",
     "preview": "pnpm --filter web preview",
-    "deploy:dev": "pnpm --filter web run deploy:dev",
+    "deploy:dev": "node -e \"console.error('Dev deployments were retired; use pnpm deploy:prod for production deployments.'); process.exit(1)\"",
     "deploy:prod": "pnpm --filter web run deploy:prod",
     "type-check": "pnpm --filter web type-check",
     "validate:content": "node scripts/validate-content.mjs",
