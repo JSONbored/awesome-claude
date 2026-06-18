@@ -1,0 +1,246 @@
+---
+title: Skillshare
+slug: skillshare
+category: tools
+description: >-
+  MIT-licensed Go CLI for syncing AI agent skills, agents, rules, commands,
+  prompts, and other file-based resources across Codex, Claude Code, OpenClaw,
+  Cursor, Windsurf, Gemini-style targets, and dozens of other AI CLI tools.
+cardDescription: >-
+  Keep one source of truth for AI CLI skills, agents, rules, commands, and
+  prompts, then sync them into Codex, Claude, OpenClaw, Cursor, and more.
+seoTitle: Skillshare AI Agent Skills Manager for Codex, Claude Code, OpenClaw, and Cursor
+seoDescription: >-
+  Use Skillshare to sync Agent Skills, custom agents, rules, commands, prompts,
+  and extras across Codex, Claude Code, OpenClaw, Cursor, OpenCode, Windsurf,
+  Gemini-style targets, and 60+ AI CLI skill directories with audit scanning,
+  project mode, copy/symlink modes, and team repositories.
+author: runkids
+authorProfileUrl: "https://github.com/runkids"
+dateAdded: "2026-06-18"
+websiteUrl: "https://skillshare.runkids.cc"
+documentationUrl: "https://github.com/runkids/skillshare/tree/main/website/docs"
+repoUrl: "https://github.com/runkids/skillshare"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+sourceUrls:
+  - "https://github.com/runkids/skillshare/blob/main/README.md"
+  - "https://github.com/runkids/skillshare/blob/main/install.sh"
+  - "https://github.com/runkids/skillshare/blob/main/install.ps1"
+  - "https://github.com/runkids/skillshare/blob/main/website/docs/reference/targets/supported-targets.md"
+  - "https://github.com/runkids/skillshare/blob/main/website/docs/reference/targets/configuration.md"
+  - "https://github.com/runkids/skillshare/blob/main/website/docs/understand/audit-engine.md"
+  - "https://github.com/runkids/skillshare/releases/tag/v0.20.20"
+installable: true
+installCommand: "brew install skillshare"
+usageSnippet: >-
+  Install `skillshare`, run `skillshare init` to detect local AI CLI targets,
+  then run `skillshare sync --dry-run` before syncing skills, agents, and extras
+  into Codex, Claude Code, OpenClaw, Cursor, OpenCode, Windsurf, and other
+  configured targets.
+copySnippet: |-
+  brew install skillshare
+  skillshare init
+  skillshare sync --dry-run
+  skillshare audit
+  skillshare sync
+configSnippet: |-
+  source: ~/.config/skillshare/skills
+  mode: merge
+  targets:
+    claude:
+      path: ~/.claude/skills
+    codex:
+      path: ~/.codex/skills
+      mode: symlink
+    openclaw:
+      path: ~/.openclaw/skills
+    cursor:
+      path: ~/.cursor/skills
+      mode: copy
+  ignore:
+    - "**/.git/**"
+    - "**/node_modules/**"
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "A supported install path: Homebrew, GitHub release archive, shell installer, PowerShell installer, or GitHub Actions setup action."
+  - "One or more local AI CLI tools with skill directories, such as Codex, Claude Code, OpenClaw, Cursor, OpenCode, Windsurf, Qwen, Goose, or a custom target."
+  - "A source directory for reviewed skills, agents, and extras, or a project-level `.skillshare/` configuration for repo-local skills."
+  - "A policy for symlink, copy, or merge mode per target, especially on Windows or tools that cannot follow symlinks."
+  - "A review and audit process for remote skill repositories before syncing them into agent runtimes."
+safetyNotes:
+  - "Skillshare writes into multiple agent skill directories. A bad sync can propagate unsafe, stale, or target-incompatible instructions across every configured AI CLI."
+  - "Run `skillshare sync --dry-run` before the first sync, after target changes, and before `--force`, especially when local skills already exist in target directories."
+  - "The README documents shell and PowerShell installers that download and execute release artifacts from GitHub. Inspect installer scripts or use a pinned release/Homebrew path when supply-chain control matters."
+  - "The Unix installer may use `sudo` when installing to `/usr/local/bin`; review `INSTALL_DIR` and PATH behavior before running in managed environments."
+  - "The audit engine is a useful gate for prompt injection, hidden Unicode, credential access, data exfiltration, destructive commands, hardcoded secrets, and tamper checks, but it is pattern-based and does not prove a skill is safe."
+  - "Avoid `--force` and broad include patterns until target filters, `.skillignore`, copy/symlink behavior, and backups have been reviewed."
+privacyNotes:
+  - "Skillshare can read, copy, symlink, collect, audit, back up, commit, push, and pull local skill, agent, rule, command, prompt, and extra files."
+  - "Skills can contain prompts, workflow instructions, local paths, target-specific rules, credentials by mistake, internal URLs, repository conventions, customer context, or model-provider guidance."
+  - "Audit reports, backups, UI views, logs, git commits, and synced target directories can reveal the contents of private skills and agent instructions."
+  - "Remote installs from GitHub, GitLab, Bitbucket, Azure DevOps, or self-hosted Git expose repository URLs and may fetch untrusted content into the local source directory before sync."
+  - "The README describes Skillshare as local, lightweight, offline-capable, and without telemetry; still treat any configured remotes, git pushes, setup actions, and hosted documentation links as external data flows."
+tags:
+  - skillshare
+  - agent-skills
+  - codex
+  - claude-code
+  - openclaw
+  - cursor
+  - skill-sync
+  - audit
+keywords:
+  - Skillshare
+  - skillshare AI skills manager
+  - Codex skills sync
+  - Claude Code skills sync
+  - OpenClaw skills sync
+  - Cursor skills manager
+  - Agent Skills manager
+  - sync AI agent skills
+  - skillshare audit
+  - skillshare project skills
+  - skillshare extras
+  - cross-machine skill sync
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Skillshare is a local-first CLI for managing AI agent skills and related
+file-based resources from one source directory. Instead of copying skill folders
+manually between Codex, Claude Code, OpenClaw, Cursor, OpenCode, Windsurf, and
+other tools, Skillshare keeps a source tree and syncs it into configured target
+directories with merge, copy, or symlink modes.
+
+Use it when a team or power user needs consistent Agent Skills, custom agents,
+rules, commands, prompts, or other extras across multiple agent hosts, machines,
+or repositories. It is especially relevant when the same `SKILL.md` library
+needs to work in Codex and Claude Code while also staying available to OpenClaw
+or Cursor.
+
+## Install
+
+The README documents Homebrew:
+
+```bash
+brew install skillshare
+skillshare init
+skillshare sync --dry-run
+skillshare sync
+```
+
+It also documents shell and PowerShell installers plus GitHub Actions setup.
+Review installer scripts before using the pipe-to-shell path in managed or
+security-sensitive environments.
+
+For a first sync, start with a dry run:
+
+```bash
+skillshare init
+skillshare sync --dry-run
+skillshare audit
+skillshare sync
+```
+
+## Capabilities
+
+| Area | Skillshare Coverage |
+| --- | --- |
+| Source of truth | Stores reviewed skills under `~/.config/skillshare/skills/` by default, with project mode under `.skillshare/` |
+| Targets | Auto-detects and syncs to Codex, Claude, OpenClaw, Cursor, OpenCode, Windsurf, Qwen, Goose, Copilot, Gemini-style aliases, and many more targets |
+| Sync modes | Supports merge, copy, and symlink modes so targets can preserve local files or receive real copies when symlinks are not supported |
+| Agents and extras | Syncs custom agents plus extras such as rules, commands, prompts, and other file-based resources |
+| Filtering | Uses `.skillignore`, `SKILL.md` target metadata, and per-target include/exclude filters to control what reaches each runtime |
+| Team workflows | Supports tracked repositories, project skills, git-backed commit/push/pull flows, and GitHub Actions setup |
+| Audit engine | Scans skills for prompt injection, hidden Unicode, data exfiltration, credential access, destructive commands, hardcoded secrets, tampering, and metadata trust issues |
+| UI | Includes terminal/UI workflows such as `skillshare tui` and `skillshare ui` for managing skills and audit state |
+
+## Use Cases
+
+- Keep the same skill library synchronized between Codex, Claude Code, OpenClaw,
+  Cursor, and OpenCode.
+- Maintain project-specific `.skillshare/` skills inside a repository while
+  leaving global personal skills separate.
+- Share a reviewed team skill repository across machines with `pull`, `sync`,
+  and tracked repos.
+- Audit a third-party skill folder before it reaches a live agent runtime.
+- Sync rules, commands, prompts, and custom agents alongside normal skills.
+- Use copy mode for targets that cannot follow symlinks while preserving merge
+  mode for tools that can.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub metadata reported `runkids/skillshare` as an MIT-licensed Go
+  repository with topics including `skills`, `codex`, `claude-code`,
+  `openclaw`, `cursor`, `skills-management`, `skills-audit`,
+  `cross-machine-sync`, `gemini`, `copilot`, `gui`, and `agenthub`.
+- GitHub metadata reported latest release `v0.20.20`, published on 2026-06-18,
+  with macOS, Linux, Windows, UI, and checksum assets.
+- The README describes Skillshare as one source of truth for AI CLI skills,
+  agents, rules, commands, and more, syncing to Codex, Claude Code, OpenClaw,
+  OpenCode, and 60+ more tools.
+- The README states that Skillshare supports skills, custom agents, rules,
+  commands, prompts, extras, GitHub/GitLab/Bitbucket/Azure/self-hosted Git
+  installs, security audit, project skills, team repositories, offline-capable
+  local operation, and no telemetry.
+- The README documents Homebrew, shell installer, PowerShell installer, GitHub
+  Actions setup, `skillshare init`, `skillshare sync`, `skillshare audit`,
+  project mode, agent sync, extras sync, commit, upgrade, and UI commands.
+- `install.sh` detects OS/architecture, resolves the latest GitHub Release,
+  downloads the matching tarball, extracts `skillshare`, installs it into
+  `INSTALL_DIR` or uses `sudo`, and prints next-step commands.
+- `install.ps1` resolves the latest GitHub Release, downloads the matching
+  Windows zip, extracts `skillshare.exe`, installs under the user local app
+  data programs path, and adds that directory to the user PATH if needed.
+- The supported-targets docs list built-in targets including Claude, Codex,
+  Cursor, OpenClaw, OpenCode, Goose, Copilot, Qwen, Windsurf, Warp, Zed, and
+  many others, with global and project paths.
+- The configuration docs document `source`, `mode`, `targets`, `target_naming`,
+  include/exclude filters, `skills`, `agents_source`, `extras_source`, `extras`,
+  ignore patterns, and YAML schema comments.
+- The audit-engine docs describe automatic audit during install, manual
+  `skillshare audit`, 100+ built-in rules, severity tiers, prompt injection,
+  hidden Unicode, data exfiltration, credential access, destructive commands,
+  hardcoded secrets, content integrity, and metadata trust verification.
+
+## Safety and Privacy
+
+Skillshare is helpful precisely because it touches many agent runtimes. Treat a
+sync as a deployment step. Dry-run first, audit untrusted skills, and keep
+target filters tight until you know which skills belong in Codex, Claude Code,
+OpenClaw, Cursor, and other configured tools.
+
+The install scripts are convenient but still execute downloaded release
+artifacts. Prefer pinned versions, Homebrew, or manual release verification
+when operating in a managed environment. The latest release includes a
+`checksums.txt` asset, but the shell and PowerShell installer snippets should
+still be reviewed before execution.
+
+Do not sync private prompts, customer-specific workflows, internal URLs,
+credentials, or sensitive local-path assumptions into shared repositories or
+team targets unless that distribution is intentional.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, README entries, open pull requests, and
+repository-wide content for Skillshare, `runkids/skillshare`, skillshare AI
+skills manager, Codex skills sync, Claude Code skills sync, OpenClaw skills
+sync, and matching source URLs. No dedicated Skillshare entry, exact source URL
+duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Skillshare is
+MIT-licensed open-source software; GitHub Releases, Homebrew, GitHub Actions,
+remote Git hosts, target AI CLI tools, and any synced third-party skill
+repositories may have separate licenses, terms, billing, privacy controls, and
+operational requirements.
