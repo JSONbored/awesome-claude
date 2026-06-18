@@ -55,7 +55,7 @@ copySnippet: |-
 
   - Prefer official or well-maintained plugins; pin versions alongside Vite major releases
   - Use `build.rollupOptions.output.manualChunks` for route-level or vendor splits
-  - Enable `build.sourcemap` in staging; disable or use hidden maps in public production when size matters
+  - Enable `build.sourcemap` in staging only; disable production source maps unless they are uploaded to a private error-reporting service and excluded from public deploys
 
   ## Performance checks
 
