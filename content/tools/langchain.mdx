@@ -1,0 +1,186 @@
+---
+title: LangChain
+slug: langchain
+category: tools
+description: >-
+  Open-source agent engineering framework for building LLM applications with
+  agents, model abstractions, tools, middleware, RAG, streaming, memory, MCP
+  adapters, LangGraph-backed execution, and LangSmith observability hooks.
+cardDescription: >-
+  Build LLM apps and agents with LangChain's model interface, tools,
+  middleware, RAG, streaming, memory, MCP adapters, LangGraph execution, and
+  LangSmith tracing.
+seoTitle: LangChain Agent Framework for LLM Apps, RAG, Tools, MCP, and LangGraph
+seoDescription: >-
+  Use LangChain to build Python LLM applications and agents with create_agent,
+  model providers, tools, middleware, RAG, streaming, memory, MCP adapters,
+  LangGraph-backed execution, and LangSmith observability.
+author: LangChain
+authorProfileUrl: "https://github.com/langchain-ai"
+dateAdded: "2026-06-18"
+websiteUrl: "https://docs.langchain.com/langchain/"
+documentationUrl: "https://docs.langchain.com/oss/python/langchain/overview"
+repoUrl: "https://github.com/langchain-ai/langchain"
+packageUrl: "https://pypi.org/project/langchain/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+sourceUrls:
+  - "https://github.com/langchain-ai/langchain"
+  - "https://github.com/langchain-ai/langchain/blob/master/README.md"
+  - "https://github.com/langchain-ai/langchain/blob/master/LICENSE"
+  - "https://docs.langchain.com/oss/python/langchain/overview"
+  - "https://docs.langchain.com/oss/python/langchain/agents"
+  - "https://docs.langchain.com/oss/python/langchain/mcp"
+  - "https://docs.langchain.com/oss/python/langchain/rag"
+  - "https://pypi.org/project/langchain/"
+installable: true
+installCommand: "uv add langchain"
+usageSnippet: >-
+  Install the Python package, configure model-provider credentials, create an
+  agent with a model, tools, prompt, and middleware, then add RAG, memory,
+  streaming, MCP adapters, LangSmith tracing, or LangGraph-level control as the
+  application matures.
+copySnippet: |-
+  uv add langchain
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python project with uv, pip, Poetry, or another dependency manager."
+  - "Model-provider credentials or local model configuration for the chat, embedding, reranking, and tool-calling models the app will use."
+  - "A clear tool-permission model before connecting agents to files, APIs, databases, browsers, shells, MCP servers, or business systems."
+  - "RAG storage, source-document permissions, refresh policy, and deletion policy before indexing private or customer data."
+  - "Optional LangSmith tracing, deployment, or evaluation configuration if production observability is required."
+safetyNotes:
+  - "LangChain agents can call tools, retrievers, APIs, MCP-connected tools, model-provider features, and custom middleware; review every tool for side effects before exposing it to users."
+  - "Human-in-the-loop approval, retries, guardrails, routing, PII middleware, and custom middleware reduce risk only when they are configured around real production actions and failure modes."
+  - "RAG workflows are vulnerable to indirect prompt injection from retrieved documents; retrieved content should be treated as data, separated from instructions, and filtered for untrusted or adversarial text."
+  - "LangChain agents are built on LangGraph for durable execution and control, but durable state still needs timeouts, idempotency, rollback paths, and reviewer ownership for write actions."
+  - "LangSmith traces, evals, and deployment features can improve debugging and release confidence, but they are quality signals rather than proof that an agent is correct or safe."
+privacyNotes:
+  - "Prompts, chat history, system prompts, tool schemas, tool arguments, tool results, retrieved documents, embeddings, vector-store records, middleware state, memory, traces, eval inputs, and model responses can contain sensitive data."
+  - "Configured model providers, embedding providers, vector databases, search APIs, MCP servers, tools, and observability destinations may receive or retain user data depending on the application design."
+  - "Use redaction, tenant boundaries, access controls, log retention, dataset deletion, and source-document permission filtering before indexing private corpora or tracing production traffic."
+  - "Do not place API keys, customer data, private documents, internal URLs, prompt secrets, or proprietary tool outputs in public examples, eval datasets, traces, screenshots, or shared notebooks."
+tags:
+  - langchain
+  - agent-framework
+  - rag
+  - tools
+  - mcp
+  - langgraph
+  - python
+keywords:
+  - LangChain
+  - LangChain agents
+  - LangChain RAG
+  - LangChain MCP
+  - LangChain create_agent
+  - LangChain Python
+  - LangChain tools
+  - LangChain middleware
+  - LangChain vs LangGraph
+  - LangChain observability
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+LangChain is the core Python framework from LangChain for building LLM-powered
+applications and agents. It provides a standard model interface, agent harness,
+tool abstractions, middleware, RAG patterns, streaming, memory, structured
+output, MCP integration through adapters, and a path into LangGraph and
+LangSmith for deeper control, debugging, evaluation, and deployment.
+
+This entry covers the main `langchain-ai/langchain` framework, not the
+separate LangGraph orchestration framework, LangSmith observability platform,
+LangChain.js package, or LangSmith MCP server entries.
+
+## Install
+
+The upstream README currently shows:
+
+```bash
+uv add langchain
+```
+
+The package is also published on PyPI as `langchain`. Most real applications
+also need provider packages, credentials, vector-store integrations, MCP
+adapters, or observability configuration depending on the selected stack.
+
+## Core Capabilities
+
+| Area | LangChain Coverage |
+| --- | --- |
+| Agents | `create_agent` harness for composing a model, tools, prompt, and middleware |
+| Models | Standard interface for chat models, embeddings, and provider routing |
+| Tools | Python function tools, provider tools, external APIs, retrievers, and MCP-connected tools |
+| Middleware | Guardrails, PII handling, retries, routing, human-in-the-loop gates, and custom hooks |
+| RAG | Retrieval and agentic RAG patterns using documents, retrievers, vector stores, and contextual prompts |
+| Memory | Short-term and long-term memory patterns for multi-turn and persistent workflows |
+| Streaming | Token and event streaming for responsive agent and app interfaces |
+| Observability | LangSmith tracing, debugging, eval, and deployment integration |
+| Control | LangChain agents are built on LangGraph for durable execution, persistence, and human-in-the-loop support |
+
+## MCP and Agent Fit
+
+LangChain is not itself an MCP server category entry. It is an agent and LLM
+application framework that can connect agents to MCP servers through the
+LangChain MCP adapter package, alongside local tools, provider-native tools,
+retrievers, and external APIs.
+
+That makes it high-value for Claude, Codex, Gemini CLI, Cursor, and MCP-heavy
+teams that need a code-first framework around tools, retrieval, model routing,
+agent control, and production observability.
+
+## Use Cases
+
+- Build a Python AI agent around Claude, OpenAI, Gemini, local models, or
+  provider-compatible routes.
+- Add tool calling, middleware, guardrails, and human approval to agent
+  workflows.
+- Build RAG applications over private documents, support tickets, docs, or
+  internal knowledge bases.
+- Connect agent workflows to MCP servers through LangChain MCP adapters.
+- Standardize model-provider access while keeping the app portable.
+- Add LangSmith traces and evals when debugging production agent behavior.
+- Move lower-level state, branching, persistence, and durable workflows into
+  LangGraph when the application needs more control.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository describes LangChain as a framework for building
+  agents and LLM-powered applications, with interoperable components and
+  third-party integrations.
+- The repository homepage points to the current Python docs at
+  `docs.langchain.com/oss/python/langchain/overview`.
+- The official overview describes `create_agent` as a configurable agent
+  harness composed from model, tools, prompt, and middleware.
+- The docs describe LangChain agents as built on LangGraph, using LangGraph's
+  durable execution, human-in-the-loop support, persistence, and related
+  controls.
+- The MCP docs resolve and reference the `langchain-mcp-adapters` package for
+  connecting LangChain agents to MCP servers.
+- The RAG docs cover agentic RAG and warn about indirect prompt injection from
+  retrieved documents.
+- PyPI lists the package as `langchain`, MIT licensed, with current Python
+  package metadata and repository links.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, README output, registry package metadata, and open
+pull requests for `LangChain`, `langchain-ai/langchain`, `docs.langchain.com`,
+`python.langchain.com`, `LangChain agents`, `LangChain RAG`, `LangChain MCP`,
+`create_agent`, and `langchain-mcp-adapters`. Existing entries cover LangGraph,
+LangSmith, LangSmith MCP Server, LlamaIndex comparisons, and integrations in
+other tools, but no dedicated core LangChain tools entry, exact source URL
+duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
