@@ -35,17 +35,17 @@ sourceUrls:
   - "https://github.com/casdoor/casdoor/blob/master/mcpself/base.go"
   - "https://github.com/casdoor/casdoor/blob/master/mcpself/auth.go"
 installable: true
-installCommand: "docker run -p 8000:8000 casbin/casdoor-all-in-one"
+installCommand: "docker run -p 127.0.0.1:8000:8000 casbin/casdoor-all-in-one"
 usageSnippet: >-
   Start Casdoor with the official Docker image or source install, change the
   fresh-install admin password, configure applications/users/providers, then
   use `/api/mcp` for scoped Casdoor MCP admin tools or `/api/server/:owner/:name`
   for reviewed upstream MCP server proxying.
 copySnippet: |-
-  docker run -p 8000:8000 casbin/casdoor-all-in-one
+  docker run -p 127.0.0.1:8000:8000 casbin/casdoor-all-in-one
 
-  # Fresh local installs listen on port 8000.
-  # Change the default built-in/admin password before exposing the service.
+  # Fresh local installs are bound to loopback on port 8000.
+  # Change the default built-in/admin password before any non-local bind or exposure.
 estimatedSetupTime: 45 minutes
 difficulty: advanced
 prerequisites:
