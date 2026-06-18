@@ -434,15 +434,6 @@ export function inferRepoUrl(data = {}) {
     return String(data.repoUrl);
   }
 
-  if (
-    data.documentationUrl &&
-    /^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/i.test(
-      String(data.documentationUrl).trim(),
-    )
-  ) {
-    return String(data.documentationUrl).trim();
-  }
-
   return "";
 }
 

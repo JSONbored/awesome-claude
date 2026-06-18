@@ -1060,7 +1060,7 @@ export function buildPluginExportFeed(entries) {
     category: entry.category,
     ...buildEntryProvenanceFields(entry),
     ...buildEntryBrandFields(entry),
-    sourceUrl: entry.repoUrl || entry.documentationUrl || entry.githubUrl,
+    sourceUrl: entry.repoUrl || entry.githubUrl || entry.documentationUrl,
     installCommand: entry.installCommand || entry.commandSyntax || "",
     platformCompatibility:
       entry.category === "skills" ? buildSkillPlatformCompatibility(entry) : [],
