@@ -1,0 +1,168 @@
+---
+title: Courier MCP Server for Claude
+slug: courier-mcp-server
+category: mcp
+description: >-
+  Manage Courier notifications from Claude — send messages and templates, manage user profiles
+  and preferences, configure notification routing, handle automations and journeys, and manage
+  subscriber lists — with the official Courier remote MCP server.
+cardDescription: "Official Courier MCP: send messages, manage users, routing & automations from Claude."
+seoTitle: "Courier MCP Server for Claude — Multi-Channel Notification Management"
+seoDescription: "Connect Claude to Courier with the official remote MCP server: send notifications, manage user profiles and preferences, configure routing and automations, and handle subscriber lists — 109 tools from Claude Code or Desktop."
+author: Courier
+authorProfileUrl: "https://github.com/trycourier"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/trycourier/courier-mcp"
+websiteUrl: "https://courier.com"
+repoUrl: "https://github.com/trycourier/courier-mcp"
+retrievalSources:
+  - "https://github.com/trycourier/courier-mcp"
+  - "https://www.courier.com/blog/courier-mcp-server-open-source-how-it-works"
+  - "https://courier.com"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add Courier --transport http --header \"api_key: YOUR_COURIER_API_KEY\" https://mcp.courier.com"
+usageSnippet: >-
+  Ask Claude to send a notification to a user, list your notification templates, update a user profile, or configure a routing strategy in Courier.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "courier": {
+        "type": "http",
+        "url": "https://mcp.courier.com",
+        "headers": {
+          "api_key": "YOUR_COURIER_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "courier": {
+        "type": "http",
+        "url": "https://mcp.courier.com",
+        "headers": {
+          "api_key": "YOUR_COURIER_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Courier account and an API key from app.courier.com/settings/api-keys."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server is hosted by Courier and authenticated via API key — it can send real notifications to real users and modify account data."
+  - "With 109 tools covering sends, user data, and automations, the blast radius is significant — scope your API key to the minimum required permissions and test in a Courier sandbox environment first."
+  - "Bulk operations and automation invocations are available — review Claude's proposed actions before executing in production."
+privacyNotes:
+  - "User profile data, notification content, recipient identifiers, and audience lists are sent to Courier's servers when executing tools."
+  - "Courier API keys are secrets — store them in your environment or MCP client config headers, never in repositories."
+tags:
+  - courier
+  - notifications
+  - email
+  - push
+  - sms
+  - transactional
+  - multi-channel
+keywords:
+  - courier mcp server
+  - courier notification mcp claude
+  - multi-channel notifications mcp
+  - courier automations ai
+  - notification routing mcp claude code
+  - courier user profiles ai
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Courier MCP Server** is the official Model Context Protocol server from Courier. It exposes
+the full Courier notification platform to Claude — sending messages, managing user profiles and
+preferences, configuring routing and brands, invoking automations and journeys, and handling
+subscriber lists — through 109 tools via an HTTP-hosted endpoint at `https://mcp.courier.com`.
+Authentication requires a Courier API key. The server is MIT-licensed and wraps the official
+`@trycourier/courier` Node SDK.
+
+## Key capabilities
+
+The server provides 109 tools across these categories:
+
+- **Messaging** — send notifications and templates; manage sent messages and their status.
+- **User profiles** — create, update, and retrieve user profiles and preferences.
+- **Lists & audiences** — manage subscriber lists and audience segments.
+- **Notification templates** — configure templates and campaigns.
+- **Brands** — manage notification brands and styling.
+- **Routing strategies** — configure how notifications are dispatched across channels.
+- **Automations & journeys** — invoke automations and manage multi-step journeys.
+- **Bulk operations** — send messages to large recipient sets.
+- **Tenants** — multi-tenant account management.
+- **Audit events** — inspect inbound and audit events.
+
+## How it compares
+
+| Server | Multi-channel | Automations | User profiles | Template management | Auth |
+|---|---|---|---|---|---|
+| **Courier MCP** | Email, push, SMS, in-app | Yes | Yes | Yes | API key |
+| Knock MCP | Email, push, SMS, in-app | Yes (workflows) | Yes | Yes | OAuth |
+| SendGrid MCP | Email only | Limited | Limited | Yes | API key |
+| Twilio MCP | SMS, voice | No | Limited | No | API key |
+
+Courier's MCP is notable for its breadth — 109 tools covering the full notification lifecycle,
+including routing strategies and journey management — all through a single hosted HTTP endpoint.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add Courier --transport http \
+  --header "api_key: YOUR_COURIER_API_KEY" \
+  https://mcp.courier.com
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "courier": {
+      "type": "http",
+      "url": "https://mcp.courier.com",
+      "headers": {
+        "api_key": "YOUR_COURIER_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Replace `YOUR_COURIER_API_KEY` with your key from app.courier.com/settings/api-keys.
+
+## Requirements
+
+- A Courier account and API key.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Test in Courier's sandbox/test mode before using the MCP server against your production
+  environment — sending tools will dispatch real notifications.
+- Scope API keys to the minimum required permissions.
+- Treat Courier API keys as secrets.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- The official repository `github.com/trycourier/courier-mcp` (MIT, v1.3.0 released March 2026)
+  documents the hosted endpoint `https://mcp.courier.com`, the `api_key` header authentication,
+  the Claude Code installation command, and the 109-tool catalog.
+- Courier's blog post on the MCP server explains the architecture (Stainless-generated SDK
+  wrapper, HTTP transport) and the design goal of being safe to hand to an AI agent.
+- Claude Code's MCP documentation describes the `--transport http` and `--header` patterns used
+  above.
