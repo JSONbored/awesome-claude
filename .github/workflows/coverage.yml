@@ -88,7 +88,15 @@ jobs:
       - name: Run Vitest suite with coverage
         run: pnpm test:coverage
 
-      - name: Upload coverage to Codecov
+      - name: Upload coverage to Codecov (pull request)
+        if: github.event_name == 'pull_request'
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+
+      - name: Upload coverage to Codecov (trusted)
+        if: github.event_name != 'pull_request'
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
