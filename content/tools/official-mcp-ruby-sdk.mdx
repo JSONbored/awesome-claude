@@ -1,0 +1,170 @@
+---
+title: Official MCP Ruby SDK
+slug: official-mcp-ruby-sdk
+category: tools
+description: >-
+  Official Ruby SDK for Model Context Protocol clients and servers, published as
+  the `mcp` gem with JSON-RPC handling, tool, prompt, and resource registration,
+  stdio and Streamable HTTP transports, Rack/Rails integration, roots, sampling,
+  elicitation, logging, cancellation, pagination, and RubyGems metadata.
+cardDescription: >-
+  Build MCP clients and servers in Ruby with the official `mcp` gem, JSON-RPC,
+  tools, resources, prompts, stdio, Streamable HTTP, Rack, and Rails integration.
+seoTitle: Official MCP Ruby SDK and mcp Gem for Model Context Protocol
+seoDescription: >-
+  Use the official Model Context Protocol Ruby SDK to build MCP clients and
+  servers with the `mcp` gem, JSON-RPC 2.0, tools, resources, prompts, stdio,
+  Streamable HTTP, Rack, Rails, roots, sampling, and elicitation.
+author: Model Context Protocol
+authorProfileUrl: "https://github.com/modelcontextprotocol"
+dateAdded: "2026-06-18"
+websiteUrl: "https://modelcontextprotocol.io"
+documentationUrl: "https://ruby.sdk.modelcontextprotocol.io/"
+repoUrl: "https://github.com/modelcontextprotocol/ruby-sdk"
+packageUrl: "https://rubygems.org/api/v1/gems/mcp.json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/ruby-sdk"
+  - "https://github.com/modelcontextprotocol/ruby-sdk/blob/main/README.md"
+  - "https://github.com/modelcontextprotocol/ruby-sdk/blob/main/mcp.gemspec"
+  - "https://github.com/modelcontextprotocol/ruby-sdk/blob/main/LICENSE"
+  - "https://rubygems.org/api/v1/gems/mcp.json"
+installable: true
+installCommand: "gem install mcp"
+usageSnippet: >-
+  Install the `mcp` gem, then create an `MCP::Server` or client with stdio or
+  Streamable HTTP transport and register tools, resources, and prompts.
+copySnippet: |-
+  gem install mcp
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Ruby project compatible with the gem's required Ruby version and runtime dependencies."
+  - "A decision between local stdio integration, Rack/Rails Streamable HTTP, or client-side MCP usage."
+  - "A session strategy for Streamable HTTP when using Rack-compatible frameworks."
+  - "Authorization, side-effect, and data-exposure requirements for production tools and resources."
+safetyNotes:
+  - "The official Ruby SDK is a protocol library; risk comes from your registered tools, resources, prompts, transports, session handling, and framework integration."
+  - "Validate tool arguments, enforce caller permissions, bound file and network access, and sanitize exceptions before returning MCP responses."
+  - "The upstream README warns that Streamable HTTP session and SSE state are in memory by default; multi-process Rack/Rails deployments need stateless mode or sticky sessions."
+  - "Rails controller integrations that create servers per request should review user context, tool selection, and request-specific authorization carefully."
+privacyNotes:
+  - "Ruby MCP clients and servers may expose tool arguments, tool results, resource contents, prompt templates, request context, session IDs, logs, progress events, exceptions, and filesystem roots."
+  - "Avoid leaking secrets, customer data, private files, internal identifiers, stack traces, privileged paths, or session contents through schemas, responses, errors, or logs."
+  - "Document which MCP client, Ruby process, Rack/Rails layer, session store, model provider, transport, and logging system can observe each request."
+tags:
+  - ruby
+  - mcp
+  - sdk
+  - gem
+  - rails
+  - official
+keywords:
+  - official MCP Ruby SDK
+  - Model Context Protocol Ruby SDK
+  - Ruby MCP server SDK
+  - Ruby MCP client SDK
+  - mcp Ruby gem
+  - Rails MCP server
+  - Rack MCP Streamable HTTP
+  - RubyGems mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The official MCP Ruby SDK is the Model Context Protocol project's Ruby
+implementation for building MCP clients and servers. It is published as the
+`mcp` gem and provides JSON-RPC handling, server and client APIs, transport
+implementations, capability registration, and framework-friendly deployment
+patterns.
+
+Ruby demand is narrower than Python or TypeScript, but the search intent is
+clear: developers looking for a Ruby MCP SDK usually need a direct gem,
+Rack/Rails deployment guidance, or a way to expose existing Ruby application
+capabilities without another language bridge.
+
+## Install
+
+Add the gem to a Gemfile:
+
+```ruby
+gem "mcp"
+```
+
+Or install it directly:
+
+```bash
+gem install mcp
+```
+
+## MCP Fit
+
+Choose the official Ruby SDK when a Ruby application, Rails service, Rack app,
+CLI, or internal tool needs to act as an MCP server or client. It is especially
+useful when existing business logic already lives in Ruby and should be exposed
+through carefully reviewed tools or resources.
+
+The SDK supports local stdio usage and Streamable HTTP. HTTP deployments need
+normal web-app review for sessions, auth, request routing, and error handling.
+
+## Core Capabilities
+
+| Area | Ruby SDK Coverage |
+| --- | --- |
+| Package | `mcp` gem on RubyGems |
+| Server APIs | JSON-RPC 2.0 handling, initialization, capability negotiation, tools, prompts, resources, templates, roots, sampling, elicitation, logging, cancellation, and pagination |
+| Client APIs | Connect to MCP servers and use tools, resources, prompts, completions, and capability extensions |
+| Transports | stdio and Streamable HTTP, including SSE behavior |
+| Frameworks | Rack-compatible transport with Rails mount and controller examples |
+| Configuration | Exception reporter, around-request hooks, explicit configuration, and server context |
+
+## Use Cases
+
+- Expose Rails or Ruby service methods as MCP tools.
+- Build a local Ruby MCP server over stdio.
+- Mount a Streamable HTTP MCP endpoint in Rails routes.
+- Create per-request Rails controller MCP servers with user context.
+- Build a Ruby MCP client for internal automation.
+- Add roots, sampling, elicitation, or capability extensions to Ruby workflows.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README identifies this as the official Ruby SDK for Model Context
+  Protocol servers and clients.
+- The README documents Gemfile and `gem install mcp` installation paths.
+- The README covers JSON-RPC handling, tools, prompts, resources, stdio
+  transport, Streamable HTTP, Rack/Rails usage, roots, sampling, elicitation,
+  logging, cancellation, pagination, and configuration hooks.
+- The README warns that Streamable HTTP session and SSE state are stored in
+  memory by default and need single-process, sticky-session, or stateless
+  deployment choices.
+- `mcp.gemspec` declares gem name `mcp`, Apache-2.0 licensing, required Ruby
+  version `>= 2.7.0`, documentation/source URLs, and `json_schemer` dependency.
+- RubyGems resolves package metadata for `mcp`.
+
+## Safety and Privacy
+
+Ruby MCP servers can sit very close to Rails models, user data, background jobs,
+and internal services. Keep tool schemas narrow, validate arguments, check user
+authorization, and avoid returning raw exceptions or Active Record objects to
+clients.
+
+For Streamable HTTP, treat session handling as a production design decision.
+Single-process state, sticky sessions, stateless mode, and per-request server
+construction all create different privacy and correctness boundaries.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `modelcontextprotocol/ruby-sdk`,
+official MCP Ruby SDK, Model Context Protocol Ruby SDK, Ruby MCP server SDK,
+Ruby MCP client SDK, `mcp` Ruby gem, Rails MCP server, Rack MCP Streamable HTTP,
+and RubyGems MCP. No dedicated official Ruby SDK entry, exact source URL
+duplicate, target file, or open duplicate PR was found.
