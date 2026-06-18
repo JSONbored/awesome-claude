@@ -1,0 +1,180 @@
+---
+title: Opik MCP Server for Claude
+slug: opik-mcp-server
+category: mcp
+description: >-
+  Debug, evaluate, and monitor LLM applications from Claude — read traces and spans, score
+  outputs, save prompts, run evaluation experiments, and query project metrics — with the
+  official Opik MCP server by Comet.
+cardDescription: "Official Opik MCP: LLM traces, evals, prompts & experiments from Claude."
+seoTitle: "Opik MCP Server for Claude — LLM Observability, Traces & Evals by Comet"
+seoDescription: "Connect Claude to Opik with the official MCP server: read LLM traces, score outputs, save prompts, run evaluation experiments, and query project metrics — via uvx opik-mcp. Open-source LLM observability for Claude Code."
+author: Comet
+authorProfileUrl: "https://github.com/comet-ml"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/comet-ml/opik-mcp"
+websiteUrl: "https://www.comet.com/site/products/opik/"
+repoUrl: "https://github.com/comet-ml/opik-mcp"
+retrievalSources:
+  - "https://github.com/comet-ml/opik-mcp"
+  - "https://github.com/comet-ml/opik"
+  - "https://www.comet.com/docs/opik/changelog/2026/3/3"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add opik -e OPIK_API_KEY=your-api-key -- uvx opik-mcp"
+usageSnippet: >-
+  Ask Claude to pull the last 10 LLM traces, score a set of outputs, retrieve a saved prompt,
+  or run an evaluation experiment — using natural language against your Opik workspace.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "opik": {
+        "command": "uvx",
+        "args": ["opik-mcp"],
+        "env": {
+          "OPIK_API_KEY": "your-api-key",
+          "OPIK_WORKSPACE": "default"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "opik": {
+        "command": "uvx",
+        "args": ["opik-mcp"],
+        "env": {
+          "OPIK_API_KEY": "your-api-key",
+          "OPIK_WORKSPACE": "default"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An Opik account (cloud at comet.com or self-hosted) and an API key from your workspace settings."
+  - "Python with `uv` installed: `pip install uv` or `brew install uv`."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The `write` tool can create traces, spans, scores, and prompts in your Opik workspace — review any write operations before confirming."
+  - "The `run_experiment` tool executes evaluation experiments end-to-end, which may incur LLM API costs depending on your experiment configuration."
+privacyNotes:
+  - "LLM traces (including prompts and completions), evaluation scores, experiment results, and prompt library contents from your Opik workspace are surfaced in Claude's context."
+  - "Your `OPIK_API_KEY` is passed as an environment variable — store it in a secrets manager rather than plaintext shell config."
+tags:
+  - opik
+  - llm-observability
+  - tracing
+  - evaluation
+  - evals
+  - prompt-management
+  - comet
+keywords:
+  - opik mcp server
+  - comet opik mcp claude
+  - llm observability mcp claude code
+  - llm tracing mcp
+  - ai evaluation experiments mcp
+  - prompt management mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Opik MCP Server** is the official Model Context Protocol server for
+[Opik](https://github.com/comet-ml/opik), Comet's open-source LLM observability platform.
+It connects Claude directly to your Opik workspace — traces, spans, evaluation scores, prompts,
+datasets, and experiments — through six outcome-oriented tools.
+
+Install via `uvx` (the Python-based runner). The earlier TypeScript `npx opik-mcp` version is
+deprecated and sunsets November 15, 2026 per the Opik changelog.
+
+## Key capabilities
+
+- **Traces & spans** — retrieve and filter LLM execution traces and individual span details.
+- **Scoring** — log evaluation scores and qualitative feedback against trace outputs.
+- **Prompt management** — read and write prompts in the Opik prompt library.
+- **Experiments** — run evaluation experiments end-to-end via `run_experiment`.
+- **Projects** — browse projects, filter by metrics, and query aggregate stats.
+- **Ollie (AI assistant)** — `ask_ollie` for investigative queries and synthesis across your data.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `read` | Retrieve entities by ID, name, or URI |
+| `list` | Browse collections with filtering and pagination |
+| `write` | Create traces, spans, scores, comments, prompts, experiments |
+| `schema` | Introspect write-operation shapes before calling them |
+| `run_experiment` | Execute evaluation experiments end-to-end |
+| `ask_ollie` | Investigative synthesis via the in-product AI assistant |
+
+## How it compares
+
+| Server | Traces & spans | Evals & experiments | Prompt library | Datasets | Auth |
+|---|---|---|---|---|---|
+| **Opik MCP** | Yes | Yes | Yes | Yes | API key |
+| LangSmith MCP | Yes | Yes | Yes | Yes | API key |
+| Arize Phoenix MCP | Yes | Yes | No | Yes | API key |
+| Weights &amp; Biases MCP | Yes | Yes | Limited | Yes | API key |
+
+Opik is fully open-source (Apache-2.0) and supports both cloud (comet.com) and self-hosted
+deployments, giving teams full control over where trace data is stored.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add opik -e OPIK_API_KEY=your-api-key -- uvx opik-mcp
+```
+
+Get your API key from Opik workspace settings → API Keys.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "opik": {
+      "command": "uvx",
+      "args": ["opik-mcp"],
+      "env": {
+        "OPIK_API_KEY": "your-api-key",
+        "OPIK_WORKSPACE": "default"
+      }
+    }
+  }
+}
+```
+
+### Self-hosted Opik
+
+Set `OPIK_URL_OVERRIDE=http://localhost:5173/api` to point to your local instance.
+
+## Requirements
+
+- An Opik account (cloud or self-hosted) and an API key.
+- Python with `uv` installed.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- API key authentication — generate a dedicated key from workspace settings.
+- Self-hosted deployment keeps all trace data within your infrastructure.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- GitHub repo `comet-ml/opik-mcp` (Apache-2.0) is the official source; the README documents
+  the six tools (`read`, `list`, `write`, `schema`, `run_experiment`, `ask_ollie`), the
+  `uvx opik-mcp` install path, and deprecation of the TypeScript package.
+- GitHub repo `comet-ml/opik` (Apache-2.0, 10k+ stars) is the main Opik platform repo
+  documenting the full LLM observability, evaluation, and prompt engineering workflow.
+- Opik changelog entry for March 3, 2026 at `comet.com/docs/opik/changelog/2026/3/3`
+  documents the MCP server revamp with remote MCP support, improved auth, and expanded
+  native features including prompt and dataset workflows.

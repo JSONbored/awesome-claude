@@ -1,0 +1,181 @@
+---
+title: Portainer MCP Server for Claude
+slug: portainer-mcp-server
+category: mcp
+description: >-
+  Manage Docker and Kubernetes infrastructure from Claude — list environments, inspect
+  containers, manage GitOps workflows, troubleshoot resources, and proxy Docker/K8s API calls
+  — with the official Portainer MCP server generated from the Portainer OpenAPI spec.
+cardDescription: "Official Portainer MCP: Docker/K8s environments, GitOps, container inspection & API proxy from Claude."
+seoTitle: "Portainer MCP Server for Claude — Docker Containers, Kubernetes & GitOps Management"
+seoDescription: "Connect Claude to Portainer with the official MCP server: list and inspect Docker/Kubernetes environments, manage GitOps workflows, troubleshoot containers and services, and proxy Docker/K8s API requests — MIT licensed, via uvx or Docker."
+author: Portainer
+authorProfileUrl: "https://github.com/portainer"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/portainer/portainer-mcp"
+websiteUrl: "https://portainer.io"
+repoUrl: "https://github.com/portainer/portainer-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/portainer/portainer-mcp/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add portainer -e PORTAINER_URL=https://portainer.example.com -e PORTAINER_API_KEY=ptr_xxxxx -- uvx --from \"mcp-portainer~=2.42.0\" mcp-portainer"
+usageSnippet: >-
+  Ask Claude to list all Docker environments, inspect a specific container, check Kubernetes
+  service status, review GitOps deployment configurations, or query the underlying Docker API
+  through the proxy for advanced troubleshooting.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "portainer": {
+        "command": "uvx",
+        "args": ["--from", "mcp-portainer~=2.42.0", "mcp-portainer"],
+        "env": {
+          "PORTAINER_URL": "https://portainer.example.com",
+          "PORTAINER_API_KEY": "ptr_xxxxx"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "portainer": {
+        "command": "uvx",
+        "args": ["--from", "mcp-portainer~=2.42.0", "mcp-portainer"],
+        "env": {
+          "PORTAINER_URL": "https://portainer.example.com",
+          "PORTAINER_API_KEY": "ptr_xxxxx",
+          "PORTAINER_TLS_VERIFY": "0"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A running Portainer instance (CE or Business Edition)."
+  - "A Portainer API key: My Account → Access tokens → Add access token."
+  - "Python with `uv` installed: `pip install uv` or `brew install uv`."
+  - "Match the MCP server minor version to your Portainer instance minor version (e.g., `mcp-portainer~=2.42.0` for Portainer 2.42.x)."
+  - "Set `PORTAINER_TLS_VERIFY=0` if your Portainer instance uses self-signed TLS certificates."
+safetyNotes:
+  - "The server exposes the full Portainer REST API — including container start/stop/delete, stack deployment, and Kubernetes resource management."
+  - "The API proxy tools forward requests directly to your Docker/Kubernetes API — review before executing any destructive operations."
+  - "For team deployments over HTTP, the container requires TLS (either BYO certificates or a TLS-terminated reverse proxy) — do not expose plaintext on the public internet."
+privacyNotes:
+  - "Container names, environment configurations, Docker/Kubernetes resource details, and GitOps credentials from your Portainer instance are surfaced in Claude's context."
+  - "Your Portainer API key grants the same access as your Portainer user account — treat it as a secret."
+tags:
+  - portainer
+  - docker
+  - kubernetes
+  - containers
+  - gitops
+  - infrastructure
+  - devops
+keywords:
+  - portainer mcp server
+  - portainer mcp claude
+  - docker management mcp claude code
+  - kubernetes mcp claude
+  - container infrastructure mcp
+  - gitops mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Portainer MCP Server** is the official Model Context Protocol server from
+[Portainer](https://portainer.io), the container management platform. Generated directly
+from the Portainer OpenAPI specification via FastMCP, it exposes the full Portainer REST API
+as MCP tools — environments, containers, stacks, GitOps, Kubernetes resources, and Docker/K8s
+API proxy access. Supports both single-user stdio mode via `uvx` and multi-user container
+deployment. Licensed under MIT.
+
+Match the MCP server minor version to your Portainer instance (e.g., `mcp-portainer~=2.42.0`
+for Portainer 2.42.x).
+
+## Key capabilities
+
+- **Environments** — list and inspect Docker and Kubernetes environments managed by Portainer.
+- **Container management** — list, inspect, start/stop/restart containers; view logs.
+- **GitOps workflows** — review and manage GitOps stack configurations.
+- **Kubernetes resources** — inspect namespaces, pods, services, and deployments.
+- **API proxy** — proxy requests directly to the underlying Docker or Kubernetes API of any
+  Portainer-managed environment for advanced troubleshooting.
+- **Team deployment** — deploy as a container with a shared gate secret and per-user Portainer
+  API keys for multi-user access.
+
+## How it compares
+
+| Server | Docker/K8s environments | GitOps | API proxy | Multi-user | Auth |
+|---|---|---|---|---|---|
+| **Portainer MCP** | Yes | Yes | Yes | Yes | API key |
+| Docker MCP | Docker only | No | Partial | No | Socket |
+| Kubernetes MCP | K8s only | No | No | No | kubeconfig |
+| Rancher MCP | Yes | No | No | No | API key |
+
+Portainer's API proxy capability is unique — it lets Claude make arbitrary Docker and Kubernetes
+API calls through Portainer's authenticated proxy, enabling deep troubleshooting without
+direct socket or cluster access.
+
+## Installation
+
+### Single user (stdio via uvx)
+
+```bash
+claude mcp add portainer \
+  -e PORTAINER_URL=https://portainer.example.com \
+  -e PORTAINER_API_KEY=ptr_xxxxx \
+  -- uvx --from "mcp-portainer~=2.42.0" mcp-portainer
+```
+
+Create an API key in Portainer: My Account → Access tokens → Add access token.
+
+### Team deployment (container via HTTP)
+
+```bash
+TOKEN=$(openssl rand -hex 32)
+docker run -d --name portainer-mcp -p 17717:17717 \
+  -v /etc/portainer-mcp/tls:/tls:ro \
+  -e PORTAINER_URL=https://portainer.example.com \
+  -e PORTAINER_MCP_AUTH_TOKEN="$TOKEN" \
+  -e PORTAINER_MCP_ALLOWED_HOSTS=mcp.example.com:17717 \
+  -e PORTAINER_MCP_TLS_CERT=/tls/cert.pem \
+  -e PORTAINER_MCP_TLS_KEY=/tls/key.pem \
+  portainer/portainer-mcp:2.42
+```
+
+```bash
+claude mcp add portainer --transport http https://mcp.example.com:17717/mcp \
+  --header "Authorization: Bearer <gate-token>" \
+  --header "X-Portainer-API-Key: <ptr_user_key>"
+```
+
+## Requirements
+
+- A running Portainer instance with API token authentication.
+- Python with `uv` installed.
+- An MCP client (Claude Code or Claude Desktop).
+- Minor version match between `mcp-portainer` and your Portainer instance.
+
+## Security
+
+- Use least-privilege API keys for each user.
+- For team deployments, always use TLS (BYO certificates or reverse proxy) — never expose
+  the container directly on plaintext in production.
+- The `PORTAINER_MCP_ALLOWED_HOSTS` allowlist prevents DNS-rebinding attacks.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `portainer/portainer-mcp` (MIT) documents the `mcp-portainer`
+  pip package, `PORTAINER_URL`/`PORTAINER_API_KEY`/`PORTAINER_TLS_VERIFY` configuration, the
+  version-matching requirement, the Claude Code `claude mcp add` install command, the Docker
+  container deployment mode with `PORTAINER_MCP_AUTH_TOKEN`/`PORTAINER_MCP_ALLOWED_HOSTS`, and
+  the HTTP team deployment pattern with per-user `X-Portainer-API-Key` headers.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio and
+  HTTP connector patterns used above.

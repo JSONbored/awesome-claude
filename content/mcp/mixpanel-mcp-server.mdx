@@ -1,0 +1,171 @@
+---
+title: Mixpanel MCP Server for Claude
+slug: mixpanel-mcp-server
+category: mcp
+description: >-
+  Query Mixpanel analytics data from Claude — run insights, funnels, flows, retention analysis,
+  manage dashboards, explore events and properties, run experiments, and analyze session replays —
+  with the official Mixpanel remote MCP server.
+cardDescription: "Official Mixpanel MCP: insights, funnels, retention, dashboards & flags from Claude."
+seoTitle: "Mixpanel MCP Server for Claude — Analytics, Funnels & Feature Flags"
+seoDescription: "Connect Claude to Mixpanel with the official remote MCP server: run insights, funnel analysis, retention queries, manage dashboards, and experiment with feature flags — no dashboard navigation required."
+author: Mixpanel
+authorProfileUrl: "https://mixpanel.com"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.mixpanel.com/docs/mcp"
+websiteUrl: "https://mixpanel.com"
+retrievalSources:
+  - "https://docs.mixpanel.com/docs/mcp"
+  - "https://mixpanel.com/blog/mixpanel-mcp-server/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http mixpanel https://mcp.mixpanel.com/mcp"
+usageSnippet: >-
+  Ask Claude to run a funnel analysis, check weekly retention, browse recent events, or create a dashboard from your Mixpanel data — using natural language.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mixpanel": {
+        "command": "npx",
+        "args": ["mcp-remote", "https://mcp.mixpanel.com/mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mixpanel": {
+        "command": "npx",
+        "args": ["mcp-remote", "https://mcp.mixpanel.com/mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Mixpanel account — authenticate via OAuth when prompted on first tool use."
+  - "EU customers should use `https://mcp-eu.mixpanel.com/mcp`; India customers `https://mcp-in.mixpanel.com/mcp`."
+  - "Service Account credentials (Beta) are available for headless/CI use."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server is hosted by Mixpanel and authenticated via OAuth — your existing Mixpanel project permissions are automatically applied."
+  - "The MCP server grants read and write access to your Mixpanel project; it can create and modify dashboards, reports, and feature flags."
+  - "Treat Service Account credentials as secrets; do not commit them to repositories."
+privacyNotes:
+  - "Queries and analytics results (event data, user properties, funnel metrics) are sent through Mixpanel's hosted MCP infrastructure."
+  - "Session replay summaries and user segment data may surface in Claude's context — treat these as sensitive product analytics."
+tags:
+  - mixpanel
+  - analytics
+  - product-analytics
+  - funnels
+  - retention
+  - feature-flags
+  - experiments
+keywords:
+  - mixpanel mcp server
+  - mixpanel claude integration
+  - product analytics mcp
+  - funnel analysis mcp claude
+  - retention mcp claude code
+  - mixpanel feature flags ai
+  - mixpanel dashboard management ai
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Mixpanel MCP Server** is the official remote Model Context Protocol server from Mixpanel.
+It gives Claude direct access to your Mixpanel product analytics — run insights, funnels, flows,
+and retention queries; manage dashboards; discover events and properties; run A/B experiments; and
+analyze session replays — all through natural language, without opening the Mixpanel dashboard.
+
+The server launched in public beta in April 2026. Authentication is via OAuth (recommended) or
+Service Account credentials (beta, for headless workflows). Regional endpoints are available for
+US, EU, and India.
+
+## Key capabilities
+
+The server exposes 40+ tools across six categories:
+
+- **Analytics** — run insights, funnels, flows, retention, and cohort queries.
+- **Dashboards** — create, retrieve, and manage boards and reports.
+- **Data discovery** — browse events, properties, and data quality issues.
+- **Data management** — edit events and properties, manage tags, dismiss issues.
+- **Experiments & feature flags (Beta)** — create and configure feature flags, run A/B experiments.
+- **Session replays** — analyze user behavior alongside event-level data.
+
+## How it compares
+
+| Server | Funnel/retention queries | Dashboard management | Feature flags | Session replays | Auth |
+|---|---|---|---|---|---|
+| **Mixpanel MCP** | Yes | Yes | Yes (Beta) | Yes | OAuth / Service Account |
+| Amplitude MCP | Yes | Limited | No | No | API key |
+| PostHog MCP | Yes | Yes | Yes | Yes | API key |
+| Google Analytics MCP | Limited | Limited | No | No | OAuth |
+
+Mixpanel's MCP is notable for combining analytics queries, dashboard management, feature flags,
+and session replay access in a single hosted endpoint with OAuth-based access control.
+
+## Installation
+
+### Claude Code (OAuth — recommended)
+
+```bash
+claude mcp add --transport http mixpanel https://mcp.mixpanel.com/mcp
+```
+
+Run `/mcp` in Claude Code to complete the OAuth flow.
+
+### Claude Desktop (OAuth)
+
+```json
+{
+  "mcpServers": {
+    "mixpanel": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.mixpanel.com/mcp"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop; you will be prompted to authenticate with your Mixpanel account on first use.
+
+### Service Account (headless/CI)
+
+Generate credentials in Mixpanel under Organization Settings → Service Accounts, then encode as
+`base64(username:secret)` and add the `Authorization: Bearer Basic <base64>` header to your MCP
+client configuration.
+
+### Regional endpoints
+
+| Region | URL |
+|---|---|
+| US | `https://mcp.mixpanel.com/mcp` |
+| EU | `https://mcp-eu.mixpanel.com/mcp` |
+| India | `https://mcp-in.mixpanel.com/mcp` |
+
+## Requirements
+
+- A Mixpanel account.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- OAuth is preferred; it automatically scopes access to your existing Mixpanel project permissions.
+- Service Account credentials are secrets — store them securely and rotate on exposure.
+- The server can write to dashboards and feature flags; review Claude's proposed changes before
+  confirming in production projects.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Mixpanel's official MCP documentation at `docs.mixpanel.com/docs/mcp` confirms the US/EU/IN
+  endpoints, OAuth and Service Account authentication, the 40+ tools across six categories, and
+  the Claude Code installation command.
+- Mixpanel's blog announcement confirms the server launched in public beta in April 2026 and
+  describes the natural-language analytics use cases.
+- Claude Code's MCP documentation describes the `--transport http` installation pattern used above.

@@ -1,0 +1,187 @@
+---
+title: Metabase MCP Server for Claude
+slug: metabase-mcp-server
+category: mcp
+description: >-
+  Query and explore your Metabase instance from Claude — list dashboards and cards, retrieve
+  and execute saved questions, run SQL queries, export large result sets, and search across
+  all Metabase resources — with the Metabase MCP server optimized for 90% token reduction.
+cardDescription: "Metabase MCP: list dashboards, run queries, execute SQL & export results from Claude."
+seoTitle: "Metabase MCP Server for Claude — Dashboards, SQL Queries & Analytics"
+seoDescription: "Connect Claude to Metabase with the Metabase MCP server: list and retrieve dashboards and cards, execute saved questions, run SQL against your databases, export up to 1M rows, and search all Metabase resources — MIT licensed."
+author: Jericho Sequitin
+authorProfileUrl: "https://github.com/jerichosequitin"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/jerichosequitin/metabase-mcp/master/README.md"
+websiteUrl: "https://www.metabase.com"
+repoUrl: "https://github.com/jerichosequitin/metabase-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/jerichosequitin/metabase-mcp/master/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add metabase -e METABASE_URL=https://your-metabase.example.com -e METABASE_API_KEY=<your-api-key> -- npx -y @jerichosequitin/metabase-mcp"
+usageSnippet: >-
+  Ask Claude to list all dashboards, retrieve the data from a specific question, run a custom
+  SQL query against your warehouse, export a large dataset to CSV, or search for all cards
+  related to a specific topic — using natural language against your Metabase instance.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "metabase": {
+        "command": "npx",
+        "args": ["-y", "@jerichosequitin/metabase-mcp"],
+        "env": {
+          "METABASE_URL": "https://your-metabase.example.com",
+          "METABASE_API_KEY": "<your-api-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "metabase": {
+        "command": "npx",
+        "args": ["-y", "@jerichosequitin/metabase-mcp"],
+        "env": {
+          "METABASE_URL": "https://your-metabase.example.com",
+          "METABASE_API_KEY": "<your-api-key>",
+          "METABASE_READ_ONLY_MODE": "true"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Metabase instance (Metabase Cloud or self-hosted)."
+  - "A Metabase API key (Metabase 50+): Admin Panel → Settings → Authentication → API Keys."
+  - "Or email/password credentials for older Metabase versions."
+  - "Node.js with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Read-only mode is enabled by default (`METABASE_READ_ONLY_MODE=true`), restricting Claude to SELECT queries only."
+  - "The `execute` tool runs SQL against your connected databases — ensure the Metabase service account has appropriate read permissions."
+privacyNotes:
+  - "Dashboard data, card results, database schema information, and query results from your Metabase instance are surfaced in Claude's context."
+  - "Your `METABASE_API_KEY` (or email/password) grants Metabase API access — keep credentials in the MCP config env."
+tags:
+  - metabase
+  - analytics
+  - dashboards
+  - sql
+  - business-intelligence
+  - data-visualization
+keywords:
+  - metabase mcp server
+  - metabase mcp claude
+  - business intelligence mcp claude code
+  - metabase sql mcp
+  - analytics dashboard ai claude
+  - metabase query mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Metabase MCP Server** connects Claude to your Metabase instance, giving read access
+to dashboards, cards, tables, databases, and collections — plus the ability to execute queries
+and export large result sets. Engineered for 90% token reduction through intelligent response
+optimization: structured metadata is compressed and paginated to keep responses within Claude's
+context window. Featured on Claude.ai. MIT licensed, 82+ stars.
+
+## Key capabilities
+
+- **List & retrieve** — list dashboards, cards, tables, databases, and collections; retrieve
+  any item by ID in bulk (up to 50 per call).
+- **Search** — query across all Metabase resources with filtering.
+- **Execute** — run SQL queries or execute saved cards against your databases.
+- **Export** — export up to 1M rows from any card in CSV, JSON, or XLSX format.
+- **Cache management** — granular internal cache invalidation.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `list` | List all records for a resource type (cards, dashboards, tables, databases, collections) |
+| `retrieve` | Get detailed info for specific items by ID (batch up to 50) |
+| `search` | Query across all Metabase resources with filtering |
+| `execute` | Run SQL queries or execute saved cards |
+| `export` | Export up to 1M rows in CSV, JSON, or XLSX |
+| `clear_cache` | Granular internal cache management |
+
+## Authentication options
+
+| Method | Env vars | Notes |
+|---|---|---|
+| API Key (recommended) | `METABASE_API_KEY` | Metabase 50+ only |
+| Email/password | `METABASE_USER_EMAIL` + `METABASE_PASSWORD` | Works with older versions |
+
+## How it compares
+
+| Server | Dashboards | SQL execution | Bulk export | Token optimization | Notes |
+|---|---|---|---|---|---|
+| **Metabase MCP** | Yes | Yes | Yes (1M rows) | Yes (90% reduction) | Community |
+| Grafana MCP | Yes | Yes | No | No | Official |
+| Tableau MCP | Yes | No | No | No | Official |
+| Looker MCP | Yes | Yes | No | No | Community |
+
+Metabase MCP's bulk export capability (up to 1M rows as CSV/JSON/XLSX) is unique among BI
+MCP servers.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add metabase \
+  -e METABASE_URL=https://your-metabase.example.com \
+  -e METABASE_API_KEY=<your-api-key> \
+  -- npx -y @jerichosequitin/metabase-mcp
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "metabase": {
+      "command": "npx",
+      "args": ["-y", "@jerichosequitin/metabase-mcp"],
+      "env": {
+        "METABASE_URL": "https://your-metabase.example.com",
+        "METABASE_API_KEY": "<your-api-key>"
+      }
+    }
+  }
+}
+```
+
+Generate an API key at **Admin Panel → Settings → Authentication → API Keys** (requires
+Metabase version 50 or later).
+
+## Requirements
+
+- Metabase instance (Cloud or self-hosted).
+- API key (Metabase 50+) or email/password credentials.
+- Node.js (for `npx`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Read-only mode is on by default — set `METABASE_READ_ONLY_MODE=false` only if you need
+  write operations.
+- SQL execution runs against your connected databases via Metabase's service account — check
+  that account's permissions before enabling non-read-only mode.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Repository `jerichosequitin/metabase-mcp` (MIT) on npm as `@jerichosequitin/metabase-mcp`
+  (v1.1.6) documents all six tools, `METABASE_URL`/`METABASE_API_KEY`/
+  `METABASE_USER_EMAIL`/`METABASE_PASSWORD`/`METABASE_READ_ONLY_MODE` env vars, 1M-row bulk
+  export, 90% token reduction optimization, and Claude.ai featured listing.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

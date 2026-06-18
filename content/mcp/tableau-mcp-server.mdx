@@ -1,0 +1,198 @@
+---
+title: Tableau MCP Server for Claude
+slug: tableau-mcp-server
+category: mcp
+description: >-
+  Query Tableau datasources, list and view workbooks, get rendered view images, explore
+  Pulse metrics, search content, and run admin insights from Claude — with the official
+  Tableau MCP server covering 30+ tools for Tableau Server and Tableau Cloud.
+cardDescription: "Official Tableau MCP: query datasources, view workbooks, Pulse metrics & admin insights from Claude."
+seoTitle: "Tableau MCP Server for Claude — Query Datasources, Workbooks, Views & Pulse Metrics"
+seoDescription: "Connect Claude to Tableau with the official MCP server: query datasources with VizQL, list and view workbooks, get rendered view images, explore Pulse metrics, search content, and run admin insights — Apache-2.0, 30+ tools."
+author: Tableau
+authorProfileUrl: "https://github.com/tableau"
+dateAdded: "2026-06-18"
+documentationUrl: "https://tableau.github.io/tableau-mcp/"
+websiteUrl: "https://www.tableau.com"
+repoUrl: "https://github.com/tableau/tableau-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/tableau/tableau-mcp/main/README.md"
+  - "https://tableau.github.io/tableau-mcp/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add tableau -e SERVER=https://your-tableau-server.com -e SITE_NAME=your_site -e PAT_NAME=your_pat -e PAT_VALUE=your_pat_value -- npx -y @tableau/mcp-server@latest"
+usageSnippet: >-
+  Ask Claude to query the Superstore datasource for the top 5 states by sales in 2025,
+  find the most viewed workbook in the last year, show an image of a specific dashboard view,
+  list Pulse metric subscriptions, or generate a stale content report for your Tableau site.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "tableau": {
+        "command": "npx",
+        "args": ["-y", "@tableau/mcp-server@latest"],
+        "env": {
+          "SERVER": "https://your-tableau-server.com",
+          "SITE_NAME": "your_site",
+          "PAT_NAME": "your_pat",
+          "PAT_VALUE": "your_pat_value"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "tableau": {
+        "command": "npx",
+        "args": ["-y", "@tableau/mcp-server@latest"],
+        "env": {
+          "SERVER": "https://your-tableau-server.com",
+          "SITE_NAME": "your_site",
+          "PAT_NAME": "your_pat",
+          "PAT_VALUE": "your_pat_value"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A Tableau Server or Tableau Cloud account with a Personal Access Token (PAT) — create one in My Account Settings."
+  - "Your Tableau Server URL, site name, PAT name, and PAT value."
+  - "Node.js 22.7.5+ with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The `delete-workbook`, `delete-datasource`, and `delete-extract-refresh-task` tools permanently remove Tableau content — confirm before executing."
+  - "The `revoke-access-token` tool revokes OAuth tokens; use with care as it may interrupt other integrations."
+  - "Admin insights tools (`query-admin-insights-*`) expose site-wide usage data — restrict access to users with admin roles."
+privacyNotes:
+  - "Datasource query results, workbook metadata, view images, user lists, and Pulse metric data from your Tableau site are surfaced in Claude's context."
+  - "View images rendered via `get-view-image` include the actual data visualization — do not use in contexts where dashboard data is confidential."
+  - "Your PAT value grants full REST API access — treat it as a secret."
+disclosure: "Tableau is a product of Salesforce. The MCP server is officially maintained by Tableau."
+tags:
+  - tableau
+  - analytics
+  - business-intelligence
+  - data-visualization
+  - bi
+  - salesforce
+keywords:
+  - tableau mcp server
+  - tableau mcp claude
+  - analytics mcp claude code
+  - tableau datasource query mcp
+  - business intelligence mcp claude
+  - tableau workbooks ai
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Tableau MCP Server** is the official Model Context Protocol server from
+[Tableau](https://www.tableau.com) (Salesforce). It gives Claude access to Tableau Server and
+Tableau Cloud — querying datasources, listing and inspecting workbooks, rendering view images,
+exploring Pulse metrics, searching content, and running administrative insights. The server
+supports both Tableau Server (on-premises) and Tableau Cloud. Licensed under Apache-2.0.
+
+## Key capabilities
+
+- **Datasource queries** — query Tableau published datasources using natural language; results
+  computed by Tableau's VizQL engine.
+- **Workbooks & views** — list workbooks, get workbook metadata, list and retrieve individual
+  views as data or rendered PNG images.
+- **Pulse metrics** — list metric definitions, subscriptions, and generate Pulse insight briefs.
+- **Content exploration** — search across all Tableau content types.
+- **Admin insights** — query usage events, site content inventories, job performance reports,
+  and get stale content reports.
+- **Tasks & jobs** — list extract refresh tasks and scheduled jobs.
+- **Desktop integration** — list Tableau Desktop instances, list dashboards and worksheets,
+  apply workbooks, and get workbook XML.
+
+## Tools (30+)
+
+| Category | Tools |
+|---|---|
+| Datasources | `list-datasources`, `query-datasource`, `get-datasource-metadata`, `delete-datasource` |
+| Workbooks | `list-workbooks`, `get-workbook`, `delete-workbook` |
+| Views | `list-views`, `get-view`, `get-view-data`, `get-view-image`, `list-custom-views`, `get-custom-view-image` |
+| Projects | `list-projects` |
+| Pulse | `list-all-pulse-metric-definitions`, `list-pulse-metrics-from-metric-ids`, `generate-pulse-insight-brief` |
+| Content | `search-content` |
+| Admin Insights | `query-admin-insights-ts-events`, `query-admin-insights-site-content`, `get-stale-content-report` |
+| Tasks &amp; Jobs | `list-extract-refresh-tasks`, `list-jobs`, `list-users` |
+
+## How it compares
+
+| Server | Datasource queries | View images | Pulse metrics | Admin insights | Auth |
+|---|---|---|---|---|---|
+| **Tableau MCP** | Yes | Yes | Yes | Yes | PAT |
+| Power BI MCP | Limited | No | No | No | OAuth |
+| Looker MCP | Yes | No | No | No | API key |
+| Metabase MCP | Yes | No | No | No | API key |
+
+`get-view-image` returns rendered PNG images of Tableau dashboards directly in Claude — no
+other BI MCP server provides native screenshot/render access to live dashboards.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add tableau \
+  -e SERVER=https://your-tableau-server.com \
+  -e SITE_NAME=your_site \
+  -e PAT_NAME=your_pat \
+  -e PAT_VALUE=your_pat_value \
+  -- npx -y @tableau/mcp-server@latest
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "tableau": {
+      "command": "npx",
+      "args": ["-y", "@tableau/mcp-server@latest"],
+      "env": {
+        "SERVER": "https://your-tableau-server.com",
+        "SITE_NAME": "your_site",
+        "PAT_NAME": "your_pat",
+        "PAT_VALUE": "your_pat_value"
+      }
+    }
+  }
+}
+```
+
+Create a PAT in Tableau: My Account Settings → Personal Access Tokens → Create new token.
+
+## Requirements
+
+- Tableau Server or Tableau Cloud with PAT authentication.
+- Node.js 22.7.5+.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Use a least-privilege PAT scoped to the specific site and operations needed.
+- Admin insights tools expose org-wide usage data — restrict to administrators.
+- Delete tools are destructive and permanent; confirm before executing.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `tableau/tableau-mcp` (Apache-2.0, Tableau Supported) documents
+  the `@tableau/mcp-server` npm package, `SERVER`/`SITE_NAME`/`PAT_NAME`/`PAT_VALUE`
+  configuration, Node.js 22.7.5+ requirement, and example prompts including datasource queries,
+  content exploration, and view image rendering.
+- Source `src/tools/web/toolName.ts` enumerates all 34 web tool names including datasource,
+  workbook, view, pulse, content, admin-insights, tasks, and token management tools.
+- Official documentation at `tableau.github.io/tableau-mcp/` (HTTP 200) is the Tableau-hosted
+  reference.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  setup pattern used above.

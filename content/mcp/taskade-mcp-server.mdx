@@ -1,0 +1,175 @@
+---
+title: Taskade MCP Server for Claude
+slug: taskade-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Taskade — manage workspaces, projects, tasks, and AI agents — with the
+  official Taskade MCP server, covering 57 tools for the full Taskade platform including
+  projects, tasks, AI agent conversations, media, and templates.
+cardDescription: "Official Taskade MCP: 57 tools for workspaces, projects, tasks & AI agents from Claude."
+seoTitle: "Taskade MCP Server for Claude — Workspaces, Projects, Tasks & AI Agents"
+seoDescription: "Connect Claude to Taskade with the official MCP server: manage workspaces, projects, tasks, and AI agents with 57 tools — MIT licensed, TASKADE_API_KEY required."
+author: Taskade
+authorProfileUrl: "https://github.com/taskade"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/taskade/mcp/main/packages/server/README.md"
+websiteUrl: "https://www.taskade.com"
+repoUrl: "https://github.com/taskade/mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/taskade/mcp/main/packages/server/README.md"
+  - "https://www.taskade.com/learn/connect/mcp-server"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add taskade -e TASKADE_API_KEY=<your-api-key> -- npx -y @taskade/mcp-server"
+usageSnippet: >-
+  Ask Claude to list your Taskade workspaces, create a project, add tasks, check off
+  completed items, or start an AI agent conversation — using natural language against the
+  full Taskade platform.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "taskade": {
+        "command": "npx",
+        "args": ["-y", "@taskade/mcp-server"],
+        "env": {
+          "TASKADE_API_KEY": "<your-api-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "taskade": {
+        "command": "npx",
+        "args": ["-y", "@taskade/mcp-server"],
+        "env": {
+          "TASKADE_API_KEY": "<your-api-key>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Taskade account — log in at taskade.com."
+  - "A Taskade API key: Settings → Apps & Integrations → API → Generate API Key."
+  - "Node.js with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Tools can create, update, and delete projects, tasks, and AI agents in your Taskade account — changes affect live data."
+  - "AI agent tools (`agentCreate`, `agentUpdate`, `agentDelete`) modify live agent configurations — review before executing."
+privacyNotes:
+  - "Workspace names, project content, task details, and AI agent conversation history from your Taskade account are surfaced in Claude's context."
+  - "Your `TASKADE_API_KEY` grants full account access — keep it in the MCP config env and never commit it to version control."
+tags:
+  - taskade
+  - project-management
+  - tasks
+  - ai-agents
+  - workspaces
+  - productivity
+keywords:
+  - taskade mcp server
+  - taskade mcp claude
+  - project management mcp claude code
+  - taskade ai agents mcp
+  - task management ai claude
+  - taskade workspaces mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Taskade MCP Server** is the official Model Context Protocol server from Taskade, providing
+57 tools for the full Taskade platform: workspaces, folders, projects, tasks, AI agents, media, and
+templates. It lets Claude read and write your Taskade data in natural language — create projects
+from templates, manage tasks, inspect agent conversations, and more. Licensed under MIT.
+
+## Key capabilities
+
+- **Workspaces & folders** — list all workspaces, navigate folder hierarchies.
+- **Projects** — create, copy, get, and manage projects within workspaces.
+- **Tasks** — create, update, delete, complete, and uncomplete tasks.
+- **AI agents** — create, update, delete agents; browse conversation history.
+- **Templates** — instantiate projects from Taskade's template library.
+- **Media** — list, get, and delete media attachments.
+
+## Tools (57 total, key selection)
+
+| Tool | Category | Purpose |
+|---|---|---|
+| `workspacesGet` | Workspaces | List all workspaces |
+| `workspaceFoldersGet` | Folders | List folders in a workspace |
+| `workspaceCreateProject` | Projects | Create a project in a workspace |
+| `projectGet` / `projectCreate` / `projectCopy` | Projects | Project CRUD |
+| `taskCreate` / `taskUpdate` / `taskDelete` | Tasks | Task lifecycle |
+| `taskComplete` / `taskUncomplete` | Tasks | Toggle task completion |
+| `agentCreate` / `agentUpdate` / `agentDelete` | AI Agents | Agent management |
+| `agentConvosGet` / `agentConvoGet` | AI Agents | Agent conversation history |
+| `projectFromTemplate` | Templates | Instantiate project from template |
+| `mediasGet` / `mediaGet` / `mediaDelete` | Media | Media management |
+
+## How it compares
+
+| MCP server | Tasks | AI agents | Templates | Projects | Notes |
+|---|---|---|---|---|---|
+| **Taskade MCP** | Yes | Yes | Yes | Yes | 57 tools, official |
+| Asana MCP | Yes | No | Limited | Yes | Asana-only |
+| Linear MCP | Yes (issues) | No | No | Yes (teams) | Engineering focus |
+| Notion MCP | Partial | No | Yes | Yes (pages/DBs) | Document-first |
+
+Taskade is unique in combining task management with built-in AI agent creation and conversation
+history in a single MCP integration.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add taskade \
+  -e TASKADE_API_KEY=<your-api-key> \
+  -- npx -y @taskade/mcp-server
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "taskade": {
+      "command": "npx",
+      "args": ["-y", "@taskade/mcp-server"],
+      "env": {
+        "TASKADE_API_KEY": "<your-api-key>"
+      }
+    }
+  }
+}
+```
+
+Generate your API key at **Settings → Apps & Integrations → API → Generate API Key** in
+your Taskade account.
+
+## Requirements
+
+- A Taskade account with an API key.
+- Node.js (for `npx`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Keep `TASKADE_API_KEY` in the MCP config env; never commit it to version control.
+- Task and agent operations modify live data — review Claude's planned actions before confirming.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official MCP repository `taskade/mcp` (MIT) documents the `@taskade/mcp-server` npm package,
+  `TASKADE_API_KEY` environment variable, all 57 tools across workspaces, folders, projects, tasks,
+  AI agents, templates, and media, and the Claude Code install command.
+- Taskade's learn page at `taskade.com/learn/connect/mcp-server` describes the integration setup.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

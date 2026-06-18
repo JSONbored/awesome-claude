@@ -1,0 +1,196 @@
+---
+title: Elasticsearch MCP Server for Claude
+slug: elasticsearch-mcp-server
+category: mcp
+description: >-
+  Connect Claude to your Elasticsearch cluster — search indices, inspect mappings, run ES|QL, and
+  check shard health — with Elastic's official Model Context Protocol server.
+cardDescription: "Elastic's official MCP server: query Elasticsearch indices, mappings, and ES|QL from Claude."
+seoTitle: "Elasticsearch MCP Server for Claude — Search & Query Your Cluster"
+seoDescription: "Connect Claude to Elasticsearch with Elastic's official MCP server: run search, ES|QL, mappings, and index tools over stdio or HTTP from Claude Code or Desktop."
+author: Elastic
+authorProfileUrl: "https://www.elastic.co"
+dateAdded: "2026-06-17"
+documentationUrl: "https://github.com/elastic/mcp-server-elasticsearch"
+websiteUrl: "https://www.elastic.co"
+repoUrl: "https://github.com/elastic/mcp-server-elasticsearch"
+retrievalSources:
+  - "https://github.com/elastic/mcp-server-elasticsearch"
+  - "https://www.elastic.co/search-labs/blog/model-context-protocol-elasticsearch"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://www.postgresql.org/docs/"
+  - "https://www.mongodb.com/docs/"
+installable: true
+installCommand: "claude mcp add elasticsearch -- docker run -i --rm -e ES_URL=<your-cluster-url> -e ES_API_KEY=<your-api-key> docker.elastic.co/mcp/elasticsearch stdio"
+usageSnippet: >-
+  Ask Claude to list indices, inspect a mapping, or run an ES|QL query against your cluster.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "elasticsearch-mcp-server": {
+        "command": "docker",
+        "args": [
+          "run", "-i", "--rm",
+          "-e", "ES_URL", "-e", "ES_API_KEY",
+          "docker.elastic.co/mcp/elasticsearch", "stdio"
+        ],
+        "env": {
+          "ES_URL": "<elasticsearch-cluster-url>",
+          "ES_API_KEY": "<elasticsearch-api-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "elasticsearch-mcp-server": {
+        "command": "docker",
+        "args": [
+          "run", "-i", "--rm",
+          "-e", "ES_URL", "-e", "ES_API_KEY",
+          "docker.elastic.co/mcp/elasticsearch", "stdio"
+        ],
+        "env": {
+          "ES_URL": "<elasticsearch-cluster-url>",
+          "ES_API_KEY": "<elasticsearch-api-key>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Docker installed (the server is distributed as the docker.elastic.co/mcp/elasticsearch image)."
+  - "An Elasticsearch cluster URL (ES_URL) you can reach."
+  - "An Elasticsearch API key (ES_API_KEY) or username/password (ES_USERNAME + ES_PASSWORD)."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Search, ES|QL, and shard tools run live read queries against the configured cluster; a broad or expensive query can add load."
+  - "Scope the Elasticsearch API key to least privilege (read-only on the indices Claude should see) before connecting."
+privacyNotes:
+  - "Index data, field mappings, and query results enter the MCP client context and the model's prompt."
+  - "ES_URL and ES_API_KEY are secrets — store them in the client config or environment, never in shared repositories."
+tags:
+  - elasticsearch
+  - search
+  - observability
+  - database
+  - analytics
+keywords:
+  - elasticsearch mcp server
+  - connect claude to elasticsearch
+  - elasticsearch mcp claude code
+  - es|ql from claude
+  - search elasticsearch indices with ai
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Elasticsearch MCP Server** is Elastic's official Model Context Protocol server. It connects
+Claude (and other MCP clients) directly to an Elasticsearch cluster, so you can search indices,
+inspect mappings, run ES|QL, and check shard health in natural language — without writing a custom
+API layer. It is distributed as the `docker.elastic.co/mcp/elasticsearch` container image and
+licensed under Apache-2.0.
+
+## Key capabilities
+
+The server exposes five tools, each mapping to a real Elasticsearch operation:
+
+- **`list_indices`** — list the indices available on the cluster.
+- **`get_mappings`** — return the field mappings for a specific index.
+- **`search`** — run a search using Elasticsearch Query DSL.
+- **`esql`** — run an ES|QL query for tabular, pipe-style analytics.
+- **`get_shards`** — report shard allocation and health.
+
+## How it compares
+
+Several data-store MCP servers let Claude query a backing store; they differ by data model and
+query language:
+
+| MCP server | Data model | Query interface | Transports |
+| --- | --- | --- | --- |
+| **Elasticsearch MCP** | Search & analytics indices | Query DSL + ES&#124;QL | stdio, streamable-HTTP |
+| **PostgreSQL MCP** | Relational tables | SQL | stdio |
+| **MongoDB MCP** | Document collections | MongoDB query / aggregation | stdio |
+
+Choose the Elasticsearch server when your data lives in Elasticsearch and you want full-text search,
+relevance ranking, or ES|QL analytics; the PostgreSQL and MongoDB servers cover their own
+relational and document workloads.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add elasticsearch -- docker run -i --rm \
+  -e ES_URL=<your-cluster-url> \
+  -e ES_API_KEY=<your-api-key> \
+  docker.elastic.co/mcp/elasticsearch stdio
+```
+
+### Claude Desktop
+
+Add the server to your configuration file:
+
+```json
+{
+  "mcpServers": {
+    "elasticsearch-mcp-server": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "ES_URL", "-e", "ES_API_KEY",
+        "docker.elastic.co/mcp/elasticsearch", "stdio"
+      ],
+      "env": {
+        "ES_URL": "<elasticsearch-cluster-url>",
+        "ES_API_KEY": "<elasticsearch-api-key>"
+      }
+    }
+  }
+}
+```
+
+To run it as a remote, streamable-HTTP endpoint instead of stdio, start the image with the `http`
+argument and publish port 8080:
+
+```bash
+docker run --rm -e ES_URL -e ES_API_KEY -p 8080:8080 docker.elastic.co/mcp/elasticsearch http
+```
+
+## Configuration
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `ES_URL` | Yes | Elasticsearch cluster URL. |
+| `ES_API_KEY` | One of | API-key authentication. |
+| `ES_USERNAME` + `ES_PASSWORD` | One of | Basic authentication (alternative to the API key). |
+| `ES_SSL_SKIP_VERIFY` | No | Skip TLS verification — development only. |
+
+## Requirements
+
+- Docker, to pull and run the `docker.elastic.co/mcp/elasticsearch` image.
+- A reachable Elasticsearch cluster URL.
+- An API key or username/password with access to the indices you want Claude to query.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Authenticate with an API key (`ES_API_KEY`) or basic credentials; scope it to read-only on only
+  the indices Claude should reach.
+- Treat `ES_URL` and credentials as secrets — keep them in the MCP client config or environment.
+- `ES_SSL_SKIP_VERIFY` disables TLS verification and is intended for development only.
+- The `search` and `esql` tools execute live read queries, so a broad query can add cluster load.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- The official repository `github.com/elastic/mcp-server-elasticsearch` documents the
+  `docker.elastic.co/mcp/elasticsearch` image, the stdio and streamable-HTTP modes, the
+  `ES_URL`/`ES_API_KEY` configuration, and the five tools listed above (Apache-2.0).
+- Elastic's Search Labs write-up describes the server's purpose and capabilities.
+- Claude Code's MCP documentation describes the connector setup pattern used here.

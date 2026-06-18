@@ -1,0 +1,194 @@
+---
+title: ConfigCat MCP Server for Claude
+slug: configcat-mcp-server
+category: mcp
+description: >-
+  Manage ConfigCat feature flags from Claude — create, update, and delete flags and targeting
+  rules, manage environments, find and clean up stale flags, and audit change history — with the
+  official ConfigCat MCP server and its 52 tools for the full ConfigCat Management API.
+cardDescription: "Official ConfigCat MCP: 52 tools for feature flags, targeting rules, environments & audits from Claude."
+seoTitle: "ConfigCat MCP Server for Claude — Feature Flags, Targeting Rules & Audit Logs"
+seoDescription: "Connect Claude to ConfigCat with the official MCP server: manage feature flags, targeting rules, environments, segments, webhooks, and SDK keys with 52 tools — MIT licensed, Management API credentials required."
+author: ConfigCat
+authorProfileUrl: "https://github.com/configcat"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/configcat/mcp-server/main/README.md"
+websiteUrl: "https://configcat.com"
+repoUrl: "https://github.com/configcat/mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/configcat/mcp-server/main/README.md"
+  - "https://configcat.com/docs/advanced/mcp-server/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add configcat -e CONFIGCAT_API_USER=<your-api-user> -e CONFIGCAT_API_PASS=<your-api-pass> -- npx -y @configcat/mcp-server"
+usageSnippet: >-
+  Ask Claude to list all feature flags in a product, find zombie flags that are stuck at 100%
+  rollout, create a new flag with targeting rules, or retrieve SDK keys for each environment —
+  using natural language against the ConfigCat Management API.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "configcat": {
+        "command": "npx",
+        "args": ["-y", "@configcat/mcp-server"],
+        "env": {
+          "CONFIGCAT_API_USER": "<your-api-user>",
+          "CONFIGCAT_API_PASS": "<your-api-pass>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "configcat": {
+        "command": "npx",
+        "args": ["-y", "@configcat/mcp-server"],
+        "env": {
+          "CONFIGCAT_API_USER": "<your-api-user>",
+          "CONFIGCAT_API_PASS": "<your-api-pass>",
+          "CONFIGCAT_BASE_URL": "https://api.configcat.com"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A ConfigCat account — log in at app.configcat.com."
+  - "Management API credentials: My Account → Public API Credentials → + Create new credentials (these are separate from SDK keys)."
+  - "Node.js with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Tools can create, update, and delete feature flags, targeting rules, environments, and segments — changes affect live feature flag configuration."
+  - "Use `list-staleflags` before deleting flags to identify zombie flags and avoid breaking active SDKs."
+privacyNotes:
+  - "Feature flag configurations, targeting rules, audience segments, SDK keys, and audit log entries from your ConfigCat account are surfaced in Claude's context."
+  - "`CONFIGCAT_API_USER` and `CONFIGCAT_API_PASS` are Management API credentials — keep them in the MCP config env and never commit them to version control."
+disclosure: "ConfigCat is a commercial feature flag service. The MCP server is officially maintained by ConfigCat."
+tags:
+  - configcat
+  - feature-flags
+  - feature-management
+  - targeting
+  - rollout
+  - devops
+keywords:
+  - configcat mcp server
+  - configcat mcp claude
+  - feature flags mcp claude code
+  - feature management mcp
+  - feature flag targeting ai claude
+  - configcat management api mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **ConfigCat MCP Server** is the official Model Context Protocol server from ConfigCat,
+providing 52 tools for the full ConfigCat Management API. It lets Claude manage feature flags,
+targeting rules, environments, segments, webhooks, and SDK keys in natural language — including
+a dedicated `list-staleflags` tool for finding zombie flags stuck at 100% rollout that are
+ready for cleanup. Licensed under MIT.
+
+## Key capabilities
+
+- **Feature flags** — create, read, update, delete flags and their targeting rules.
+- **Flag values** — get and set flag values per environment.
+- **Environments** — list, create, and update environment configurations.
+- **Segments** — manage user segment definitions for targeted rollouts.
+- **Stale flag detection** — identify zombie/unused flags with `list-staleflags`.
+- **Audit logs** — retrieve change history at product and organization level.
+- **SDK keys** — retrieve SDK keys per environment.
+- **Webhooks** — create webhooks and retrieve signing keys.
+- **Organization management** — invite members, manage permissions.
+
+## Tools (52 total, key selection)
+
+| Tool | Purpose |
+|---|---|
+| `list-settings` / `create-setting` / `update-setting` / `delete-setting` | Feature flag CRUD |
+| `get-setting-value` / `update-setting-value` | Flag value management |
+| `list-environments` / `create-environment` / `update-environment` | Environment lifecycle |
+| `list-products` / `list-configs` | Product and config navigation |
+| `list-segments` / `create-segment` / `update-segment` | User segment management |
+| `list-staleflags` | Find zombie/unused flags at 100% rollout |
+| `get-sdk-keys` | Retrieve SDK keys per environment |
+| `list-auditlogs` / `list-organization-auditlogs` | Audit trail |
+| `list-webhooks` / `create-webhook` | Webhook management |
+| `update-sdk-documentation` | Fetch SDK code examples for integration |
+
+## Credentials
+
+ConfigCat uses **Management API credentials** (not SDK keys) for the MCP server. Generate them at:
+
+**My Account → Public API Credentials → + Create new credentials**
+
+These credentials use HTTP Basic auth (`CONFIGCAT_API_USER` / `CONFIGCAT_API_PASS`) and grant
+access to the Management API — distinct from SDK keys used in application code.
+
+## How it compares
+
+| Server | Flag CRUD | Stale detection | Targeting rules | Audit logs | Notes |
+|---|---|---|---|---|---|
+| **ConfigCat MCP** | Yes | Yes | Yes | Yes | 52 tools, official |
+| LaunchDarkly MCP | Yes | No | Yes | Yes | 14 tools, official |
+| Unleash MCP | Yes | No | Partial | No | 11 tools, official |
+| GrowthBook MCP | Yes | No | Partial | No | Official |
+
+ConfigCat's `list-staleflags` tool for zombie flag detection has no equivalent in other
+feature flag MCP servers.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add configcat \
+  -e CONFIGCAT_API_USER=<your-api-user> \
+  -e CONFIGCAT_API_PASS=<your-api-pass> \
+  -- npx -y @configcat/mcp-server
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "configcat": {
+      "command": "npx",
+      "args": ["-y", "@configcat/mcp-server"],
+      "env": {
+        "CONFIGCAT_API_USER": "<your-api-user>",
+        "CONFIGCAT_API_PASS": "<your-api-pass>"
+      }
+    }
+  }
+}
+```
+
+## Requirements
+
+- A ConfigCat account with Management API credentials.
+- Node.js (for `npx`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Management API credentials (`API_USER`/`API_PASS`) grant full account access — keep them in
+  the MCP config env and never commit to version control.
+- SDK keys are separate from Management API credentials; the MCP server does not expose live
+  user traffic data.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official repository `configcat/mcp-server` (MIT) on npm as `@configcat/mcp-server` documents
+  all 52 tools, `CONFIGCAT_API_USER`/`CONFIGCAT_API_PASS` management credentials, the default
+  `CONFIGCAT_BASE_URL`, and the `list-staleflags` capability.
+- ConfigCat documentation at `configcat.com/docs/advanced/mcp-server/` describes the integration
+  setup and credential generation process.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

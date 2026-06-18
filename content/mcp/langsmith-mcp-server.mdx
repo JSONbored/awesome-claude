@@ -1,0 +1,177 @@
+---
+title: LangSmith MCP Server for Claude
+slug: langsmith-mcp-server
+category: mcp
+description: >-
+  Connect Claude to LangSmith — retrieve conversation threads and traces, fetch and push prompts,
+  browse evaluation datasets and experiments, and access billing usage — with the official LangSmith
+  Model Context Protocol server from LangChain.
+cardDescription: "Official LangSmith MCP: traces, prompts, datasets & experiments from Claude."
+seoTitle: "LangSmith MCP Server for Claude — AI Tracing, Prompts & Evaluation"
+seoDescription: "Connect Claude to LangSmith with the official MCP server: retrieve LLM traces and runs, fetch prompts, browse evaluation datasets, and analyze experiments — from Claude Code or Desktop."
+author: LangChain
+authorProfileUrl: "https://github.com/langchain-ai"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.langchain.com/langsmith/langsmith-mcp-server"
+websiteUrl: "https://smith.langchain.com"
+repoUrl: "https://github.com/langchain-ai/langsmith-mcp-server"
+retrievalSources:
+  - "https://github.com/langchain-ai/langsmith-mcp-server"
+  - "https://docs.langchain.com/langsmith/langsmith-mcp-server"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add langsmith -e LANGSMITH_API_KEY=your-key -- uvx langsmith-mcp-server"
+usageSnippet: >-
+  Ask Claude to fetch recent LangSmith traces for a run, retrieve a saved prompt, browse an evaluation dataset, or summarize experiment metrics.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "langsmith": {
+        "command": "uvx",
+        "args": ["langsmith-mcp-server"],
+        "env": {
+          "LANGSMITH_API_KEY": "your-langsmith-api-key"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "langsmith": {
+        "command": "uvx",
+        "args": ["langsmith-mcp-server"],
+        "env": {
+          "LANGSMITH_API_KEY": "your-langsmith-api-key"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A LangSmith API key from smith.langchain.com (free tier available)."
+  - "Python package manager `uv` installed (for `uvx`)."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server runs locally via `uvx` and connects to the LangSmith cloud API using your API key."
+  - "The server provides read access to your traces, prompts, datasets, and experiments; it can also push prompts (write)."
+  - "Trace data may contain sensitive LLM inputs and outputs from your production systems — treat retrieved traces as confidential."
+privacyNotes:
+  - "Conversation threads, prompt content, run inputs/outputs, and dataset examples are surfaced in Claude's context."
+  - "LANGSMITH_API_KEY is a secret — store it in your environment or MCP client config, never in repositories."
+tags:
+  - langsmith
+  - langchain
+  - tracing
+  - observability
+  - prompts
+  - evaluation
+  - llm-ops
+keywords:
+  - langsmith mcp server
+  - langsmith mcp claude
+  - llm tracing mcp claude code
+  - langsmith prompts ai
+  - langchain evaluation mcp
+  - llm observability mcp claude
+  - langsmith traces claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **LangSmith MCP Server** is the official Model Context Protocol server from LangChain for
+LangSmith. It gives Claude direct access to your LangSmith workspace — retrieving LLM run traces
+with FQL filtering, fetching and pushing prompts, browsing evaluation datasets and experiments,
+and accessing billing usage — through natural language. It runs locally via `uvx` and is
+MIT-licensed.
+
+## Key capabilities
+
+- **Conversation threads** — retrieve message history from LangSmith conversation threads with
+  pagination.
+- **Prompts** — list, fetch, and push prompts to and from your LangSmith prompt hub.
+- **Traces & runs** — fetch LangSmith runs (traces, chains, tool calls) with FQL filter support.
+- **Datasets & examples** — list and read evaluation datasets and their examples.
+- **Experiments** — list experiment projects with metrics and evaluation results.
+- **Billing usage** — retrieve organization-level billing usage data.
+
+## How it compares
+
+| Server | LLM traces | Prompt management | Dataset access | Experiment metrics | Auth |
+|---|---|---|---|---|---|
+| **LangSmith MCP** | Yes | Yes (read+write) | Yes | Yes | API key |
+| Weights & Biases MCP | Yes | Limited | Yes | Yes | API key |
+| MLflow MCP | Yes | Limited | Yes | Yes | Token |
+| Arize MCP | Yes | No | Limited | Limited | API key |
+
+LangSmith's MCP is notable for combining trace retrieval with bidirectional prompt management —
+you can read production traces and push improved prompts back to the hub in the same session.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add langsmith \
+  -e LANGSMITH_API_KEY=your-key \
+  -- uvx langsmith-mcp-server
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "langsmith": {
+      "command": "uvx",
+      "args": ["langsmith-mcp-server"],
+      "env": {
+        "LANGSMITH_API_KEY": "your-langsmith-api-key"
+      }
+    }
+  }
+}
+```
+
+### Multi-workspace
+
+```json
+{
+  "env": {
+    "LANGSMITH_API_KEY": "your-key",
+    "LANGSMITH_WORKSPACE_ID": "your-workspace-id"
+  }
+}
+```
+
+### Custom endpoint (self-hosted LangSmith)
+
+Set `LANGSMITH_ENDPOINT` to your self-hosted LangSmith URL.
+
+## Requirements
+
+- A LangSmith API key (free tier available at smith.langchain.com).
+- `uv` installed (`pip install uv` or `brew install uv`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- The server only reads (and optionally writes prompts to) your LangSmith workspace.
+- Treat `LANGSMITH_API_KEY` as a secret.
+- Trace data may include sensitive LLM inputs and outputs from your applications — use this in
+  trusted environments only.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- The official repository `github.com/langchain-ai/langsmith-mcp-server` (MIT) documents the
+  `uvx langsmith-mcp-server` install command, `LANGSMITH_API_KEY` and `LANGSMITH_WORKSPACE_ID`
+  env vars, stdio transport, and the six capability areas (threads, prompts, runs, datasets,
+  experiments, billing).
+- LangChain's LangSmith MCP documentation at `docs.langchain.com/langsmith/langsmith-mcp-server`
+  confirms the server features and setup instructions.
+- Claude Code's MCP documentation describes the `-e` env var injection pattern used above.

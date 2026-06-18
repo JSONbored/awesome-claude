@@ -1,0 +1,184 @@
+---
+title: Aiven MCP Server for Claude
+slug: aiven-mcp-server
+category: mcp
+description: >-
+  Manage your Aiven cloud database services from Claude — list and monitor PostgreSQL, Apache
+  Kafka, ClickHouse, Valkey, and OpenSearch services, execute SQL queries, manage Kafka topics
+  and schemas, tail logs, and optimize queries — with the official Aiven MCP server.
+cardDescription: "Official Aiven MCP: manage PostgreSQL, Kafka, ClickHouse & OpenSearch services from Claude."
+seoTitle: "Aiven MCP Server for Claude — PostgreSQL, Kafka, ClickHouse & Cloud Database Management"
+seoDescription: "Connect Claude to Aiven with the official MCP server: list and monitor cloud database services, execute PostgreSQL queries, manage Kafka topics and schemas, tail service logs, and optimize slow queries — Apache-2.0 licensed."
+author: Aiven
+authorProfileUrl: "https://github.com/Aiven-Open"
+dateAdded: "2026-06-18"
+documentationUrl: "https://aiven.io/docs/tools/mcp-server"
+websiteUrl: "https://aiven.io"
+repoUrl: "https://github.com/Aiven-Open/mcp-aiven"
+retrievalSources:
+  - "https://raw.githubusercontent.com/Aiven-Open/mcp-aiven/main/README.md"
+  - "https://aiven.io/docs/tools/mcp-server"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --scope user aiven-mcp -e AIVEN_TOKEN=<your-token> -- npx -y mcp-aiven"
+usageSnippet: >-
+  Ask Claude to list all your Aiven services, check a PostgreSQL database's query statistics,
+  tail logs for a slow Kafka topic, list schema registry subjects, or suggest query
+  optimizations for a slow running query — using your Aiven API token.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "aiven-mcp": {
+        "command": "npx",
+        "args": ["-y", "mcp-aiven"],
+        "env": {
+          "AIVEN_TOKEN": "<your-token>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "aiven-mcp": {
+        "command": "npx",
+        "args": ["-y", "mcp-aiven"],
+        "env": {
+          "AIVEN_TOKEN": "<your-token>",
+          "AIVEN_READ_ONLY": "false",
+          "AIVEN_SERVICES_SCOPE": "kafka,pg"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An Aiven account — sign up at aiven.io."
+  - "An Aiven API token: User Information → Authentication → Generate Token."
+  - "Node.js with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Write operations (create/update services, deploy apps) are available but require `AIVEN_READ_ONLY=false` — the server defaults to read-only mode."
+  - "Aiven services include managed production databases — confirm before creating or modifying services."
+privacyNotes:
+  - "Service metadata, metrics, application logs, PostgreSQL query stats, Kafka topic configurations, and Schema Registry content from your Aiven account are surfaced in Claude's context."
+  - "Your `AIVEN_TOKEN` grants account-level API access — keep it in the MCP config env and never commit it to version control."
+disclosure: "Aiven is a commercial managed database service provider. The MCP server is officially maintained by Aiven."
+tags:
+  - aiven
+  - postgresql
+  - kafka
+  - clickhouse
+  - opensearch
+  - cloud-database
+  - managed-services
+keywords:
+  - aiven mcp server
+  - aiven mcp claude
+  - managed database mcp claude code
+  - aiven kafka mcp
+  - aiven postgresql mcp claude
+  - cloud database management ai claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Aiven MCP Server** is the official Model Context Protocol server from Aiven, the
+managed cloud database platform. It gives Claude access to your Aiven projects and services —
+PostgreSQL, Apache Kafka, ClickHouse, Valkey (managed Redis), and OpenSearch — for monitoring,
+diagnostics, query execution, and configuration management. Two install modes: local `npx` with
+an API token, or the hosted remote endpoint at `https://mcp.aiven.live/mcp` using OAuth.
+Apache-2.0 licensed.
+
+## Key capabilities
+
+- **Project & service management** — list/get/create/update projects and services.
+- **Service metrics & logs** — fetch metrics, application logs, service events, and query activity.
+- **Apache Kafka** — topic CRUD, produce/consume messages, Kafka Connect lifecycle, Schema Registry.
+- **PostgreSQL** — execute SQL queries, query statistics, available extensions, PgBouncer pools, query optimization.
+- **Applications** — deploy and redeploy Aiven applications, manage VCS integrations.
+- **Cloud & VPC** — list available clouds per project, list project VPCs.
+- **Documentation search** — query Aiven knowledge base (hosted server mode).
+
+## How it compares
+
+| Server | PostgreSQL | Kafka | ClickHouse | OpenSearch | Notes |
+|---|---|---|---|---|---|
+| **Aiven MCP** | Yes | Yes | Yes | Yes | Official, multi-service |
+| Confluent MCP | No | Yes | No | No | Kafka-only, official |
+| Neon MCP | Yes (Neon) | No | No | No | Serverless Postgres only |
+| Turso MCP | No (SQLite) | No | No | No | Edge SQLite only |
+
+Aiven MCP is unique in providing a single interface across multiple managed database types —
+PostgreSQL, Kafka, ClickHouse, OpenSearch, and Valkey — from one API token.
+
+## Installation
+
+### Claude Code (stdio with API token)
+
+```bash
+claude mcp add --scope user aiven-mcp \
+  -e AIVEN_TOKEN=<your-token> \
+  -- npx -y mcp-aiven
+```
+
+### Claude Code (hosted HTTP with OAuth)
+
+```bash
+claude mcp add --scope user --transport http aiven-mcp "https://mcp.aiven.live/mcp"
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "aiven-mcp": {
+      "command": "npx",
+      "args": ["-y", "mcp-aiven"],
+      "env": {
+        "AIVEN_TOKEN": "<your-token>"
+      }
+    }
+  }
+}
+```
+
+Generate your API token at **User Information → Authentication → Generate Token** in the
+Aiven Console.
+
+## Configuration options
+
+| Env var | Default | Purpose |
+|---|---|---|
+| `AIVEN_TOKEN` | — | Required (stdio mode). Aiven API token |
+| `AIVEN_READ_ONLY` | `true` | Restrict to read-only operations |
+| `AIVEN_SERVICES_SCOPE` | all | Comma-separated filter: `kafka,pg,clickhouse` |
+
+## Requirements
+
+- An Aiven account with at least one service.
+- Node.js (for `npx`), or use the hosted remote endpoint.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Read-only by default — set `AIVEN_READ_ONLY=false` only when you need write operations.
+- Use `AIVEN_SERVICES_SCOPE` to expose only the service types you need.
+- Keep `AIVEN_TOKEN` in the MCP config env; treat it as an account-level secret.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official repository `Aiven-Open/mcp-aiven` (Apache-2.0) on npm as `mcp-aiven` (v1.9.2)
+  documents `npx -y mcp-aiven`, `AIVEN_TOKEN`/`AIVEN_READ_ONLY`/`AIVEN_SERVICES_SCOPE`
+  configuration, stdio and hosted HTTP modes, all service categories (PostgreSQL, Kafka,
+  ClickHouse, Valkey, OpenSearch), and the hosted endpoint at `https://mcp.aiven.live/mcp`.
+- Official Aiven MCP documentation at `aiven.io/docs/tools/mcp-server` (SSR HTML, HTTP 200)
+  describes the integration setup and credential generation.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.
