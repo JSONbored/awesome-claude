@@ -1,0 +1,188 @@
+---
+title: AntV Chart MCP Server for Claude
+slug: antv-chart-mcp-server
+category: mcp
+description: >-
+  Generate 26+ chart types from Claude — bar, line, pie, scatter, area, network graph, mind map,
+  flow diagram, funnel, treemap, sankey, word cloud, and more — with the official AntV
+  mcp-server-chart backed by the AntV visualization library.
+cardDescription: "AntV Chart MCP: generate 26+ chart types (bar, pie, network, mind map, flow) from Claude."
+seoTitle: "AntV Chart MCP Server for Claude — Generate Bar, Line, Network & Flow Charts via Claude Code"
+seoDescription: "Generate 26+ chart types from Claude with the AntV mcp-server-chart: bar, column, line, scatter, pie, area, funnel, treemap, network graph, mind map, flow diagram, sankey, word cloud, and more — no API key required."
+author: AntV
+authorProfileUrl: "https://github.com/antvis"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/antvis/mcp-server-chart"
+websiteUrl: "https://antv.antgroup.com"
+repoUrl: "https://github.com/antvis/mcp-server-chart"
+retrievalSources:
+  - "https://raw.githubusercontent.com/antvis/mcp-server-chart/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add chart -- npx -y @antv/mcp-server-chart"
+usageSnippet: >-
+  Ask Claude to generate a bar chart comparing sales across regions, a network graph visualizing
+  connections between nodes, a mind map exploring a concept, or a funnel chart showing conversion
+  rates — and receive a rendered chart image.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mcp-server-chart": {
+        "command": "npx",
+        "args": ["-y", "@antv/mcp-server-chart"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mcp-server-chart": {
+        "command": "npx",
+        "args": ["-y", "@antv/mcp-server-chart"],
+        "env": {
+          "VIS_REQUEST_SERVER": "https://your-private-server/api/chart"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js (v18+) with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+  - "For private deployment: a self-hosted AntV chart service — set `VIS_REQUEST_SERVER` to your endpoint."
+safetyNotes:
+  - "By default, chart generation requests are sent to AntV Studio's hosted service at `antv-studio.alipay.com/api/gpt-vis` (operated by Ant Group/Alipay) — your chart data and configuration are transmitted externally."
+  - "For fully private operation, deploy a self-hosted chart service and set the `VIS_REQUEST_SERVER` environment variable to your endpoint."
+privacyNotes:
+  - "Chart data (axis values, labels, dataset contents) is sent to AntV Studio's external API by default — do not include sensitive or proprietary data in charts unless using a private deployment."
+  - "Set `VIS_REQUEST_SERVER` to a self-hosted endpoint to keep all chart data within your infrastructure."
+tags:
+  - antv
+  - charts
+  - data-visualization
+  - visualization
+  - graphs
+  - diagrams
+  - analytics
+keywords:
+  - antv chart mcp server
+  - chart generation mcp claude
+  - data visualization mcp claude code
+  - bar chart mcp server
+  - network graph mcp claude
+  - mcp server chart generation
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **AntV Chart MCP Server** is the official Model Context Protocol server from AntV (Ant Group's
+visualization team). It gives Claude the ability to generate 26+ chart types — including standard
+charts, diagrams, and maps — by describing what you want in natural language. Powered by the AntV
+visualization library and rendered via AntV Studio. Install via `npx @antv/mcp-server-chart`.
+Licensed under MIT.
+
+By default, chart generation uses AntV Studio's hosted API. For privacy-sensitive workflows,
+configure a self-hosted chart service via the `VIS_REQUEST_SERVER` environment variable.
+
+## Key capabilities
+
+- **Standard charts** — bar, column, line, area, scatter, pie, histogram, boxplot, violin.
+- **Composition charts** — dual-axes, treemap, funnel, sankey, waterfall.
+- **Relational diagrams** — network graph, organization chart, flow diagram, fishbone diagram.
+- **Text visualization** — word cloud, mind map.
+- **Geographic charts** — district map, path map.
+- **Other** — venn diagram, liquid chart, radar chart.
+
+## Tools (26+)
+
+| Tool | Description |
+|---|---|
+| `generate_bar_chart` | Horizontal comparison of categories |
+| `generate_column_chart` | Vertical comparison of categories |
+| `generate_line_chart` | Trend over time or continuous variable |
+| `generate_scatter_chart` | Relationship between two variables |
+| `generate_pie_chart` | Part-to-whole proportions |
+| `generate_funnel_chart` | Conversion rates across stages |
+| `generate_network_graph` | Connections and relationships between nodes |
+| `generate_mind_map` | Hierarchical thought exploration |
+| `generate_flow_diagram` | Process steps and decision flows |
+| `generate_sankey_chart` | Data flow and volume between nodes |
+| `generate_treemap_chart` | Hierarchical data by area size |
+| `generate_word_cloud` | Word frequency visualization |
+| `generate_organization_chart` | Org structure and hierarchy |
+| `generate_fishbone_diagram` | Root cause analysis (Ishikawa) |
+| `generate_district_map` / `generate_path_map` | Geographic and route visualization |
+
+## How it compares
+
+| Server | Chart types | No API key | Local rendering | Diagrams | Geographic |
+|---|---|---|---|---|---|
+| **AntV Chart MCP** | 26+ | Yes (default cloud) | Private deploy | Yes | Yes |
+| Observable Plot MCP | ~10 | Yes | Yes | No | Limited |
+| Mermaid MCP | ~8 | Yes | Yes | Yes | No |
+| Vega-Lite MCP | ~15 | Yes | Yes | No | No |
+
+AntV provides the broadest chart type coverage including geographic maps and relational
+diagrams like fishbone and network graphs — categories not typically available in code-based
+chart MCP servers.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add chart -- npx -y @antv/mcp-server-chart
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "mcp-server-chart": {
+      "command": "npx",
+      "args": ["-y", "@antv/mcp-server-chart"]
+    }
+  }
+}
+```
+
+### Private deployment
+
+```json
+{
+  "mcpServers": {
+    "mcp-server-chart": {
+      "command": "npx",
+      "args": ["-y", "@antv/mcp-server-chart"],
+      "env": {
+        "VIS_REQUEST_SERVER": "https://your-chart-server/api/chart"
+      }
+    }
+  }
+}
+```
+
+## Requirements
+
+- Node.js v18+ with `npx`.
+- An MCP client (Claude Code or Claude Desktop).
+- For private deployment: a self-hosted AntV-compatible chart service.
+
+## Security
+
+- Default operation sends chart data to AntV Studio (Ant Group/Alipay-hosted API) — use private deploy for sensitive data.
+- Disable specific tools via `DISABLED_TOOLS` environment variable.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `antvis/mcp-server-chart` (MIT, 4100+ stars) documents the
+  `@antv/mcp-server-chart` npm package, 26+ chart generation tools, `VIS_REQUEST_SERVER`
+  configuration for private deployment, and the default Alipay-hosted chart service.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio
+  connector setup pattern used above.
