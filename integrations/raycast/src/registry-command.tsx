@@ -815,13 +815,14 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
           pickNotes(detail.safetyNotes, entry.safetyNotes),
           pickNotes(detail.privacyNotes, entry.privacyNotes),
         );
+        const configPreview = `\n\nServer to install:\n${plan.serverPreview}`;
         const installSummary =
           plan.installKind === "cli"
             ? `This will add a ${plan.scopeLabel}-scoped MCP server through the ${target.label} CLI.`
             : `This will update your ${plan.scopeLabel} ${target.label} MCP config and create a backup before replacing an existing server.`;
         const confirmed = await confirmAlert({
           title: `Install ${plan.name} in ${target.label}?`,
-          message: `${installSummary}${notesSummary}${warningSummary}`,
+          message: `${installSummary}${configPreview}${notesSummary}${warningSummary}`,
           primaryAction: { title: "Install" },
           dismissAction: { title: "Cancel" },
         });

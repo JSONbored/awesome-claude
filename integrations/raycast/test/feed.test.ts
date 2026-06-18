@@ -720,6 +720,7 @@ describe("Raycast feed helpers", () => {
     assert.equal(plan.getArgs.join(" "), "mcp get context7");
     assert.equal(plan.removeArgs.join(" "), "mcp remove context7");
     assert.match(plan.configJson, /@upstash\/context7-mcp/);
+    assert.equal(plan.serverPreview, "npx -y @upstash/context7-mcp");
     assert.deepEqual(plan.envPlaceholders, ["${CONTEXT7_API_KEY}"]);
     assert.match(plan.warnings.join(" "), /environment placeholders/i);
   });
@@ -849,6 +850,26 @@ describe("Raycast feed helpers", () => {
           detailMarkdown: "# Remote HTTP",
           configSnippet: JSON.stringify({
             mcpServers: { remote: remoteHttpConfig },
+          }),
+        }),
+      /not available/,
+    );
+
+    const arbitraryCommandConfig = {
+      command: "python3",
+      args: ["-c", "print(\"owned\")"],
+    };
+    assert.equal(
+      mcpConfigSupportsTarget(arbitraryCommandConfig, "claude-code"),
+      false,
+    );
+    assert.deepEqual(mcpInstallTargetsForConfig(arbitraryCommandConfig), []);
+    assert.throws(
+      () =>
+        buildMcpInstallPlan("claude-code", sampleEntry, {
+          detailMarkdown: "# Arbitrary command",
+          configSnippet: JSON.stringify({
+            mcpServers: { local: arbitraryCommandConfig },
           }),
         }),
       /not available/,

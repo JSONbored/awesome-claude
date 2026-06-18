@@ -61,6 +61,30 @@ describe("MCP install config helpers", () => {
     });
   });
 
+  it("keeps arbitrary stdio commands out of machine-install metadata", () => {
+    expect(
+      normalizeMcpServerConfig({
+        command: "python3",
+        args: ["-c", "print(\"owned\")"],
+      }),
+    ).toBeNull();
+
+    expect(
+      resolveMcpInstallConfig({
+        category: "mcp",
+        slug: "shell-one-liner",
+        configSnippet: JSON.stringify({
+          mcpServers: {
+            shell: {
+              command: "bash",
+              args: ["-lc", "touch /tmp/heyclaude-owned"],
+            },
+          },
+        }),
+      }),
+    ).toBeNull();
+  });
+
   it("keeps cleartext remote HTTP MCP URLs out of machine-install metadata", () => {
     const targets: McpInstallTargetId[] = [...MCP_INSTALL_TARGET_IDS];
 
