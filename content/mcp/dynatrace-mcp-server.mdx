@@ -1,0 +1,180 @@
+---
+title: Dynatrace MCP Server for Claude
+slug: dynatrace-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Dynatrace observability data — run DQL queries, investigate problems and
+  vulnerabilities, analyze Kubernetes events, forecast timeseries, and resolve entity names —
+  with the official Dynatrace open-source MCP server.
+cardDescription: "Official Dynatrace MCP: DQL queries, problem investigation & entity analysis from Claude."
+seoTitle: "Dynatrace MCP Server for Claude — Observability, DQL & Problem Investigation"
+seoDescription: "Connect Claude to Dynatrace with the official open-source MCP server: run DQL queries, investigate problems and vulnerabilities, analyze Kubernetes events, forecast timeseries, and explore entities — from Claude Code or Desktop."
+author: Dynatrace
+authorProfileUrl: "https://github.com/dynatrace-oss"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.dynatrace.com/docs/dynatrace-intelligence/dynatrace-mcp"
+websiteUrl: "https://dynatrace.com"
+repoUrl: "https://github.com/dynatrace-oss/dynatrace-mcp"
+retrievalSources:
+  - "https://github.com/dynatrace-oss/dynatrace-mcp"
+  - "https://docs.dynatrace.com/docs/dynatrace-intelligence/dynatrace-mcp"
+  - "https://www.dynatrace.com/hub/detail/dynatrace-mcp-server/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add dynatrace -e DT_ENVIRONMENT=https://YOUR_ENV.apps.dynatrace.com -- npx -y @dynatrace-oss/dynatrace-mcp-server@latest"
+usageSnippet: >-
+  Ask Claude to run a DQL query against Dynatrace, investigate an open problem, analyze Kubernetes events, or resolve entity names and IDs.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "dynatrace": {
+        "command": "npx",
+        "args": ["-y", "@dynatrace-oss/dynatrace-mcp-server@latest"],
+        "env": {
+          "DT_ENVIRONMENT": "https://YOUR_ENV.apps.dynatrace.com"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "dynatrace": {
+        "command": "npx",
+        "args": ["-y", "@dynatrace-oss/dynatrace-mcp-server@latest"],
+        "env": {
+          "DT_ENVIRONMENT": "https://YOUR_ENV.apps.dynatrace.com"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A Dynatrace Platform environment URL (e.g. `https://abc12345.apps.dynatrace.com`)."
+  - "First-run auth is handled via browser-based Authorization Code Flow — no token needed initially."
+  - "For headless use: a Dynatrace Platform Token with `mcp-gateway:servers:invoke` and `mcp-gateway:servers:read` permissions."
+  - "Node.js and an MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server connects to your live Dynatrace environment — keep DT_ENVIRONMENT scoped to a non-production environment during initial testing."
+  - "Platform tokens are stored in the OS keychain by default; ensure keychain access is secured on shared systems."
+  - "DQL execution and automation tools (event notifications, Slack messaging) can take actions on your Dynatrace account — review Claude's proposed operations before executing."
+privacyNotes:
+  - "DQL query results, entity data, problem details, and log content from your Dynatrace environment are surfaced in Claude's context."
+  - "Dynatrace Platform Tokens are secrets — store them in your environment or MCP client config, never in repositories."
+tags:
+  - dynatrace
+  - observability
+  - monitoring
+  - dql
+  - apm
+  - kubernetes
+  - performance
+keywords:
+  - dynatrace mcp server
+  - dynatrace dql mcp claude
+  - dynatrace problem investigation ai
+  - kubernetes observability mcp
+  - dynatrace mcp claude code
+  - apm mcp server claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Dynatrace MCP Server** (`@dynatrace-oss/dynatrace-mcp-server`) is the official open-source
+Model Context Protocol server from Dynatrace. It gives Claude access to your Dynatrace
+observability platform — running DQL queries, investigating problems and vulnerabilities, analyzing
+Kubernetes events, forecasting timeseries, and exploring entities — through natural language.
+
+Authentication uses browser-based Authorization Code Flow on first run (no token needed to get
+started); tokens are stored in the OS keychain. For headless/CI workflows, a Platform Token with
+the required permissions can be used instead. The server runs as a local stdio process and is
+MIT-licensed.
+
+Dynatrace also provides a native hosted MCP gateway at
+`https://{env}.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp`
+for environments where a local npm install is not desirable.
+
+## Key capabilities
+
+- **DQL queries** — generate, explain, and execute Dynatrace Query Language queries.
+- **Problem investigation** — retrieve and analyze open problems and vulnerabilities.
+- **Kubernetes event analysis** — explore and correlate Kubernetes events.
+- **Timeseries analysis** — forecast and analyze metric timeseries data.
+- **Entity resolution** — resolve entity names to IDs and explore entity metadata.
+- **Document retrieval** — retrieve Dynatrace troubleshooting documentation and guidance.
+- **Automation** — trigger event notifications and Slack messages from workflows.
+- **Davis AI** — access Davis Intelligence for AI-powered root cause analysis.
+
+## How it compares
+
+| Server | DQL/query language | Problem investigation | Kubernetes | AI-native analysis | Transport |
+|---|---|---|---|---|---|
+| **Dynatrace MCP** | Yes (DQL) | Yes | Yes | Davis AI | stdio |
+| New Relic MCP | Yes (NRQL) | Yes | Limited | No | Remote HTTP |
+| Datadog MCP | Yes (DQL/Logs) | Yes | Yes | No | Remote HTTP |
+| Honeycomb MCP | Limited | Yes | No | No | Remote HTTP |
+
+Dynatrace's MCP is notable for its Davis AI integration — providing AI-native root-cause analysis
+and anomaly detection, not just raw query access.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add dynatrace \
+  -e DT_ENVIRONMENT=https://YOUR_ENV.apps.dynatrace.com \
+  -- npx -y @dynatrace-oss/dynatrace-mcp-server@latest
+```
+
+Replace `YOUR_ENV` with your environment ID. On first run, a browser window opens for
+Authorization Code Flow authentication.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "dynatrace": {
+      "command": "npx",
+      "args": ["-y", "@dynatrace-oss/dynatrace-mcp-server@latest"],
+      "env": {
+        "DT_ENVIRONMENT": "https://YOUR_ENV.apps.dynatrace.com"
+      }
+    }
+  }
+}
+```
+
+### Platform Token (headless)
+
+Set `DT_PLATFORM_TOKEN` in your environment alongside `DT_ENVIRONMENT` to authenticate without a
+browser. The token requires `mcp-gateway:servers:invoke` and `mcp-gateway:servers:read` scopes.
+
+## Requirements
+
+- A Dynatrace Platform environment.
+- Node.js (npx).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Prefer browser-based auth for interactive use; tokens live in the OS keychain.
+- For CI/headless use, create a scoped Platform Token and rotate it regularly.
+- Never commit `DT_PLATFORM_TOKEN` to source control.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- The official repository `github.com/dynatrace-oss/dynatrace-mcp` (MIT, 122 stars) documents the
+  `@dynatrace-oss/dynatrace-mcp-server` package, `DT_ENVIRONMENT` env var, Authorization Code
+  Flow and Platform Token authentication, stdio transport, and the capability categories.
+- Dynatrace's official MCP documentation at `docs.dynatrace.com/docs/dynatrace-intelligence/dynatrace-mcp`
+  confirms the native hosted gateway URL pattern and required permissions.
+- The Dynatrace Hub listing confirms the DQL, problem, Kubernetes, timeseries, and Davis AI
+  capabilities as the primary tools.
+- Claude Code's MCP documentation describes the `-e` env var injection pattern used above.

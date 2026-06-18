@@ -1,0 +1,164 @@
+---
+title: Customer.io MCP Server for Claude
+slug: customerio-mcp-server
+category: mcp
+description: >-
+  Manage Customer.io from Claude — create segments, inspect customer profiles, send broadcasts and
+  campaigns, work with journeys, and access the full Journeys UI and CDP Data Pipelines APIs —
+  with the official Customer.io remote MCP server.
+cardDescription: "Official Customer.io MCP: segments, campaigns, profiles & journeys from Claude."
+seoTitle: "Customer.io MCP Server for Claude — Segments, Campaigns & Lifecycle Messaging"
+seoDescription: "Connect Claude to Customer.io with the official MCP server: create segments, inspect customer profiles, manage campaigns and broadcasts, work with journeys — from Claude Code or Desktop."
+author: Customer.io
+authorProfileUrl: "https://github.com/customerio"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.customer.io/ai/mcp/get-started/"
+websiteUrl: "https://customer.io"
+retrievalSources:
+  - "https://docs.customer.io/ai/mcp/get-started/"
+  - "https://customer.io/learn/integrations/mcp-server"
+  - "https://docs.customer.io/ai/mcp/claude/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http customerio https://mcp.customer.io/mcp"
+usageSnippet: >-
+  Ask Claude to create a new Customer.io segment, inspect a customer's profile and event history, send a broadcast, or build a journey — using natural language.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "customerio": {
+        "type": "http",
+        "url": "https://mcp.customer.io/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "customerio": {
+        "type": "http",
+        "url": "https://mcp.customer.io/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Customer.io account — authenticate via OAuth when prompted on first tool use."
+  - "EU customers should use `https://mcp-eu.customer.io/mcp` instead of the US endpoint."
+  - "An MCP client such as Claude Code or Claude Desktop (MCP requires a paid Claude plan)."
+safetyNotes:
+  - "The server exposes three tool categories: read (GET), write (POST/PUT/PATCH), and delete (DELETE) — approve each independently."
+  - "By default, the MCP server cannot delete customer profiles or modify live active campaigns — only create new items — reducing accidental audience impact."
+  - "Write and delete tools can trigger real sends and modify live data; review Claude's proposed actions before confirming."
+privacyNotes:
+  - "Customer profiles, segment definitions, journey configurations, and campaign data from your Customer.io workspace are surfaced in Claude's context."
+  - "Customer.io's MCP server is authenticated via OAuth — no API keys are stored in your MCP config."
+tags:
+  - customerio
+  - lifecycle-messaging
+  - email
+  - campaigns
+  - crm
+  - customer-data
+  - marketing-automation
+keywords:
+  - customer.io mcp server
+  - customerio mcp claude
+  - lifecycle messaging mcp claude code
+  - customer.io segments ai
+  - customer.io campaigns mcp
+  - marketing automation mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Customer.io MCP Server** is the official Model Context Protocol server from Customer.io.
+It gives Claude direct access to your Customer.io workspace — segments, customer profiles,
+campaigns, broadcasts, journeys, and the full Journeys UI and CDP Data Pipelines APIs — through
+natural language. Authentication is via OAuth with your Customer.io account; no API keys are
+required.
+
+The server exposes three tool categories — read, write, and delete — so you can approve each
+category independently. By default, editing or deleting active campaigns and segments is
+restricted to prevent accidental audience changes.
+
+## Key capabilities
+
+- **Customer segments** — create and manage segments using customer attributes and behavioral data.
+- **Customer profiles** — inspect individual profiles, event history, and engagement patterns.
+- **Campaigns & broadcasts** — create and send targeted broadcasts with personalization data.
+- **Journeys** — build and manage multi-step messaging journeys.
+- **Full API access** — the Journeys UI API and CDP Data Pipelines API are exposed via three
+  tool categories: `cio_read_api` (GET), `cio_write_api` (POST/PUT/PATCH), and
+  `cio_delete_api` (DELETE).
+- **Delivery metrics** — retrieve real-time delivery and engagement metrics.
+
+## How it compares
+
+| Server | Lifecycle messaging | Segments | Journey builder | Campaign management | Auth |
+|---|---|---|---|---|---|
+| **Customer.io MCP** | Yes | Yes | Yes | Yes | OAuth |
+| Klaviyo MCP | Yes | Yes | Limited | Yes | API key |
+| Braze MCP | Yes | Yes | Yes | Yes | API key |
+| Mailchimp MCP | Email only | Yes | Limited | Yes | OAuth |
+
+Customer.io's MCP is notable for exposing the full API surface (read + write + delete) with
+explicit per-category permission controls, making it suitable for both analyst (read-only) and
+operator (full access) workflows.
+
+## Installation
+
+### Claude Code (OAuth)
+
+```bash
+claude mcp add --transport http customerio https://mcp.customer.io/mcp
+```
+
+Run `/mcp` in Claude Code to authenticate via OAuth with your Customer.io account.
+
+### Claude Desktop
+
+Go to Settings → Connectors and add the Customer.io MCP connection, or manually add the server:
+
+```json
+{
+  "mcpServers": {
+    "customerio": {
+      "type": "http",
+      "url": "https://mcp.customer.io/mcp"
+    }
+  }
+}
+```
+
+### EU region
+
+Use `https://mcp-eu.customer.io/mcp` instead of the US endpoint.
+
+## Requirements
+
+- A Customer.io account.
+- A paid Claude plan (MCP is not available on Claude's free tier).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- OAuth authentication — no API keys to manage or rotate.
+- Approve read, write, and delete tool categories independently.
+- Default restrictions prevent deleting profiles and editing live active campaigns.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Customer.io's MCP getting-started guide at `docs.customer.io/ai/mcp/get-started/` confirms the
+  US and EU endpoints, OAuth auth, three API tool categories, and the default restrictions on
+  editing live data.
+- Customer.io's MCP integration page confirms full Journeys UI API + CDP Data Pipelines API
+  access and the three-tool architecture.
+- Customer.io's Claude setup guide at `docs.customer.io/ai/mcp/claude/` documents the HTTP
+  transport and Claude Code installation pattern.
+- Claude Code's MCP documentation describes the `--transport http` installation pattern used above.

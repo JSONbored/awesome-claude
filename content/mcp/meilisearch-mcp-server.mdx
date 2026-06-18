@@ -1,0 +1,158 @@
+---
+title: Meilisearch MCP Server for Claude
+slug: meilisearch-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Meilisearch — manage indexes, add and search documents, tune settings, and
+  monitor tasks — with Meilisearch's official Model Context Protocol server.
+cardDescription: "Meilisearch's official MCP server: manage indexes, documents, search, and settings from Claude."
+seoTitle: "Meilisearch MCP Server for Claude — Search & Index Management"
+seoDescription: "Connect Claude to Meilisearch with the official MCP server: manage indexes, documents, search, settings, API keys, and tasks over stdio from Claude Code or Desktop."
+author: Meilisearch
+authorProfileUrl: "https://www.meilisearch.com"
+dateAdded: "2026-06-17"
+documentationUrl: "https://github.com/meilisearch/meilisearch-mcp"
+websiteUrl: "https://www.meilisearch.com"
+repoUrl: "https://github.com/meilisearch/meilisearch-mcp"
+retrievalSources:
+  - "https://github.com/meilisearch/meilisearch-mcp"
+  - "https://www.meilisearch.com/docs"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://www.elastic.co/search-labs/blog/model-context-protocol-elasticsearch"
+  - "https://www.algolia.com/doc/"
+installable: true
+installCommand: "claude mcp add meilisearch -e MEILI_HTTP_ADDR=<your-meili-url> -e MEILI_MASTER_KEY=<your-key> -- uvx -n meilisearch-mcp"
+usageSnippet: >-
+  Ask Claude to list indexes, add documents, run a search, or check task status on your Meilisearch instance.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "meilisearch": {
+        "command": "uvx",
+        "args": ["-n", "meilisearch-mcp"],
+        "env": {
+          "MEILI_HTTP_ADDR": "<your-meili-url>",
+          "MEILI_MASTER_KEY": "<your-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "meilisearch": {
+        "command": "uvx",
+        "args": ["-n", "meilisearch-mcp"],
+        "env": {
+          "MEILI_HTTP_ADDR": "<your-meili-url>",
+          "MEILI_MASTER_KEY": "<your-key>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A reachable Meilisearch instance URL (MEILI_HTTP_ADDR)."
+  - "A Meilisearch master or API key (MEILI_MASTER_KEY) when your instance requires authentication."
+  - "uv (uvx) or pip to run meilisearch-mcp, or Docker (getmeili/meilisearch-mcp)."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Tools create and delete indexes and documents and rotate API keys — scope the key and confirm destructive actions."
+  - "Settings and index deletes change live search behavior; review before running them through Claude."
+privacyNotes:
+  - "Indexed documents and search results enter the MCP client context and the model's prompt."
+  - "MEILI_HTTP_ADDR and MEILI_MASTER_KEY are secrets — keep them in the client config or environment."
+tags:
+  - meilisearch
+  - search
+  - full-text-search
+  - indexing
+  - database
+keywords:
+  - meilisearch mcp server
+  - connect claude to meilisearch
+  - meilisearch search mcp claude code
+  - manage meilisearch indexes with ai
+  - full-text search mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Meilisearch MCP Server** is Meilisearch's official Model Context Protocol server. It lets
+Claude manage a Meilisearch instance in natural language — creating and configuring indexes, adding
+and searching documents, tuning settings, managing API keys, and monitoring tasks. It runs over
+stdio via `uvx`/`pip` (or the `getmeili/meilisearch-mcp` Docker image) and is licensed under MIT.
+
+## Key capabilities
+
+- **Index operations** — create, list, update, and delete indexes.
+- **Document management** — add, update, and delete documents.
+- **Search** — run searches against an index.
+- **Settings** — configure ranking, filtering, and other index settings.
+- **API keys & tasks** — manage keys and monitor async task status, health, and system stats.
+
+## How it compares
+
+Several search-engine MCP servers give Claude full-text and relevance search; they differ in hosting
+and focus:
+
+| MCP server | Engine | Hosting | Notable |
+| --- | --- | --- | --- |
+| **Meilisearch MCP** | Meilisearch | Self-host or Meilisearch Cloud | Fast, typo-tolerant search; simple setup |
+| **Elasticsearch MCP** | Elasticsearch | Self-host or Elastic Cloud | Query DSL + ES&#124;QL analytics |
+| **Algolia MCP** | Algolia | Hosted SaaS | Managed relevance + analytics |
+
+Choose Meilisearch when you want a lightweight, typo-tolerant search engine you can self-host; the
+Elasticsearch and Algolia servers cover heavier analytics and fully managed search.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add meilisearch -e MEILI_HTTP_ADDR=<your-meili-url> -e MEILI_MASTER_KEY=<your-key> -- \
+  uvx -n meilisearch-mcp
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "meilisearch": {
+      "command": "uvx",
+      "args": ["-n", "meilisearch-mcp"],
+      "env": {
+        "MEILI_HTTP_ADDR": "<your-meili-url>",
+        "MEILI_MASTER_KEY": "<your-key>"
+      }
+    }
+  }
+}
+```
+
+## Requirements
+
+- A reachable Meilisearch instance and (if required) a master/API key.
+- `uv`/`pip` or Docker to run the server.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Scope the Meilisearch key to least privilege; prefer a search-only key where Claude only queries.
+- Index/document deletes and settings changes affect live search — review before running.
+- Treat `MEILI_HTTP_ADDR` and `MEILI_MASTER_KEY` as secrets.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- The official repository `github.com/meilisearch/meilisearch-mcp` (MIT) documents the
+  `meilisearch-mcp` package (uvx/pip/Docker), stdio transport, the
+  `MEILI_HTTP_ADDR`/`MEILI_MASTER_KEY` configuration, and the index, document, search, settings,
+  API-key, and task tools above.
+- Meilisearch's documentation describes the underlying index and search features.
+- Claude Code's MCP documentation describes the connector setup pattern used here.

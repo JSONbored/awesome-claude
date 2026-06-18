@@ -1,0 +1,195 @@
+---
+title: Unleash MCP Server for Claude
+slug: unleash-mcp-server
+category: mcp
+description: >-
+  Create and manage Unleash feature flags from Claude — evaluate whether a change needs a flag,
+  detect existing flags to prevent duplicates, set rollout strategies, toggle environments,
+  and get cleanup guidance — with the official Unleash MCP server following Unleash best practices.
+cardDescription: "Official Unleash MCP: create flags, set rollouts, toggle environments & cleanup from Claude."
+seoTitle: "Unleash MCP Server for Claude — Feature Flag Lifecycle Management via Claude Code"
+seoDescription: "Connect Claude to Unleash with the official MCP server: evaluate changes, create feature flags, detect duplicates, set rollout strategies, toggle environments, and get cleanup instructions — MIT licensed, npx @unleash/mcp."
+author: Unleash
+authorProfileUrl: "https://github.com/Unleash"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.getunleash.io/integrations/mcp"
+websiteUrl: "https://getunleash.io"
+repoUrl: "https://github.com/Unleash/unleash-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/Unleash/unleash-mcp/main/README.md"
+  - "https://docs.getunleash.io/integrations/mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add unleash -e UNLEASH_BASE_URL=https://your-instance.unleash.cloud -e UNLEASH_PAT=your-pat -- npx -y @unleash/mcp@latest --log-level error"
+usageSnippet: >-
+  Ask Claude to evaluate a code change to determine if a feature flag is needed, create a new
+  flag with proper naming and typing, set a gradual rollout to 10% of users, or generate
+  cleanup instructions for removing a flag after a full release.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "unleash": {
+        "command": "npx",
+        "args": ["-y", "@unleash/mcp@latest", "--log-level", "error"],
+        "env": {
+          "UNLEASH_BASE_URL": "https://your-instance.unleash.cloud",
+          "UNLEASH_PAT": "your-personal-access-token"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "unleash": {
+        "command": "npx",
+        "args": ["-y", "@unleash/mcp@latest", "--log-level", "error"],
+        "env": {
+          "UNLEASH_BASE_URL": "https://your-instance.unleash.cloud",
+          "UNLEASH_PAT": "your-personal-access-token"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An Unleash instance (hosted at unleash.cloud or self-hosted)."
+  - "A personal access token with permission to create feature flags (Settings → API Access → Personal access tokens)."
+  - "Node.js 22+ with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "`toggle_flag_environment` enables or disables a feature flag in a production environment — confirm before toggling live flags."
+  - "`create_flag` writes to your Unleash instance; capabilities are scoped by your PAT's permissions."
+  - "Remote MCP (`--transport http`) is experimental and must be enabled on your Unleash instance."
+privacyNotes:
+  - "Feature flag names, descriptions, targeting rules, rollout configurations, and project metadata from your Unleash instance are surfaced in Claude's context."
+  - "Your `UNLEASH_PAT` is a secret — store it as an environment variable and do not commit it to version control."
+disclosure: "Unleash is an open-source feature flag management platform. The MCP server is officially maintained by Unleash."
+tags:
+  - unleash
+  - feature-flags
+  - feature-management
+  - rollouts
+  - gradual-rollout
+keywords:
+  - unleash mcp server
+  - unleash mcp claude
+  - feature flags mcp claude code
+  - unleash feature management ai
+  - gradual rollout mcp
+  - feature flag lifecycle mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Unleash MCP Server** is the official Model Context Protocol server from
+[Unleash](https://getunleash.io), the open-source feature flag management platform. It guides
+Claude through the full feature flag lifecycle — evaluating whether a change needs a flag,
+detecting duplicates, creating flags, setting rollout strategies, toggling environments, and
+generating cleanup instructions when a flag is ready to retire. Licensed under MIT.
+
+Supports both the local `npx @unleash/mcp` stdio mode and remote HTTP to your Unleash
+instance's built-in MCP endpoint (experimental).
+
+## Key capabilities
+
+- **Change evaluation** — `evaluate_change` scores risk and recommends whether a feature flag
+  is appropriate for a given code change.
+- **Duplicate detection** — `detect_flag` scans existing flags before creating to prevent
+  duplicates and encourage reuse.
+- **Flag creation** — `create_flag` creates a flag with proper validation and typing following
+  Unleash best practices.
+- **Code wrapping** — `wrap_change` generates language-specific code to wrap a change in
+  the newly created flag.
+- **Rollout management** — `set_flag_rollout` configures gradual rollout strategies.
+- **Environment control** — `toggle_flag_environment` enables or disables a flag per environment.
+- **Cleanup** — `cleanup_flag` generates step-by-step instructions for safely removing a flag.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `evaluate_change` | Score a code change and recommend flag usage |
+| `detect_flag` | Find existing flags to prevent duplicates |
+| `create_flag` | Create a feature flag in Unleash |
+| `wrap_change` | Generate flag-wrapped code for a change |
+| `set_flag_rollout` | Configure rollout strategy |
+| `get_flag_state` | Get flag metadata and strategies |
+| `list_flags` | List all flags in a project |
+| `list_projects` | List available Unleash projects |
+| `toggle_flag_environment` | Enable or disable a flag in an environment |
+| `remove_flag_strategy` | Delete a flag's activation strategy |
+| `cleanup_flag` | Generate instructions for removing a flag |
+
+## How it compares
+
+| Server | Flag creation | Rollout mgmt | Env toggle | Cleanup guidance | Self-hosted |
+|---|---|---|---|---|---|
+| **Unleash MCP** | Yes | Yes | Yes | Yes | Yes |
+| LaunchDarkly MCP | Yes | Yes | Yes | No | Limited |
+| GrowthBook MCP | Yes | Limited | No | No | Yes |
+| ConfigCat MCP | Yes | Yes | No | No | Yes |
+
+Unleash's `cleanup_flag` tool generates actionable cleanup instructions — unique among feature
+flag MCP servers — guiding the full flag retirement workflow from evaluation to removal.
+
+## Installation
+
+### Claude Code (local)
+
+```bash
+claude mcp add unleash \
+  --env UNLEASH_BASE_URL=https://your-instance.unleash.cloud \
+  --env UNLEASH_PAT=your-personal-access-token \
+  -- npx -y @unleash/mcp@latest --log-level error
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "unleash": {
+      "command": "npx",
+      "args": ["-y", "@unleash/mcp@latest", "--log-level", "error"],
+      "env": {
+        "UNLEASH_BASE_URL": "https://your-instance.unleash.cloud",
+        "UNLEASH_PAT": "your-personal-access-token"
+      }
+    }
+  }
+}
+```
+
+### Remote HTTP (experimental)
+
+```bash
+claude mcp add unleash https://your-instance.unleash.cloud/api/admin/mcp --transport http
+```
+
+## Requirements
+
+- An Unleash instance (cloud or self-hosted) with a personal access token.
+- Node.js 22+.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Use a least-privilege PAT scoped to the projects you need.
+- `toggle_flag_environment` can affect production traffic — confirm before executing.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `Unleash/unleash-mcp` (MIT) documents the `@unleash/mcp` npm
+  package, `UNLEASH_BASE_URL`/`UNLEASH_PAT` configuration, Node.js 22+ requirement, all 11
+  tools, the Claude Code install command, the four-step core workflow (evaluate → detect →
+  create → wrap), and the experimental remote HTTP mode.
+- Unleash documentation at `docs.getunleash.io/integrations/mcp` (HTTP 200) covers setup and
+  tool reference.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the connector
+  pattern used above.

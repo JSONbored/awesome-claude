@@ -1,0 +1,160 @@
+---
+title: MCP SQLite Server for Claude
+slug: mcp-sqlite-server
+category: mcp
+description: >-
+  Read and write any local SQLite database from Claude — get database info, list tables,
+  inspect schemas, create/read/update/delete records, and run raw SQL queries — with the
+  MCP SQLite server that connects to any `.db` file you specify.
+cardDescription: "MCP SQLite: read and write any local SQLite database from Claude with full CRUD and raw SQL."
+seoTitle: "MCP SQLite Server for Claude — Read, Write & Query Local SQLite Databases"
+seoDescription: "Connect Claude to any local SQLite database with MCP SQLite: get database info, list tables, inspect schemas, create/read/update/delete records, and run raw SQL queries — ISC licensed, no credentials required."
+author: jparkerweb
+authorProfileUrl: "https://github.com/jparkerweb"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/jparkerweb/mcp-sqlite/main/README.md"
+websiteUrl: "https://github.com/jparkerweb/mcp-sqlite"
+repoUrl: "https://github.com/jparkerweb/mcp-sqlite"
+retrievalSources:
+  - "https://raw.githubusercontent.com/jparkerweb/mcp-sqlite/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add sqlite -- npx -y mcp-sqlite /path/to/database.db"
+usageSnippet: >-
+  Ask Claude to list all tables in your SQLite database, show the schema for a table, query
+  records matching specific criteria, insert new rows, update existing records, or run a custom
+  SQL query — against any `.db` file on your local system.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "sqlite": {
+        "command": "npx",
+        "args": ["-y", "mcp-sqlite", "/path/to/database.db"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "sqlite": {
+        "command": "npx",
+        "args": ["-y", "mcp-sqlite", "/path/to/database.db"]
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "A local SQLite database file (`.db`) you want to connect to."
+  - "Node.js with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The `query` tool executes arbitrary SQL including INSERT, UPDATE, and DELETE statements — it is not read-only."
+  - "Point the server at a copy or test database to avoid accidental data loss before trusting it with production data."
+privacyNotes:
+  - "All database content including table schemas, record data, and query results are surfaced in Claude's context — do not connect databases containing sensitive personal or credential data unless you intend to share it with the model."
+  - "No credentials are required and no data is sent to external services — the server operates entirely locally."
+tags:
+  - sqlite
+  - database
+  - local
+  - sql
+  - crud
+  - devtools
+keywords:
+  - mcp sqlite server
+  - sqlite mcp claude
+  - sqlite database mcp claude code
+  - local database mcp claude
+  - sqlite crud ai claude
+  - query sqlite with claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **MCP SQLite Server** is a lightweight MCP server that connects Claude to any local SQLite
+database file. Specify the path to your `.db` file as a command-line argument — no API keys,
+no credentials, no configuration needed. It provides full CRUD operations plus raw SQL
+execution. ISC licensed with 110+ stars.
+
+## Key capabilities
+
+- **Database info** — get database path, size, and metadata.
+- **Table listing** — list all tables in the connected database.
+- **Schema inspection** — get column definitions and types for any table.
+- **CRUD operations** — create, read, update, and delete records.
+- **Raw SQL** — execute arbitrary SQL queries including DDL statements.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `db_info` | Get database path, size, and metadata |
+| `list_tables` | List all tables in the database |
+| `get_table_schema` | Get column definitions and types for a table |
+| `create_record` | Insert a new record into a table |
+| `read_records` | Query records with optional filters |
+| `update_records` | Update existing records matching a filter |
+| `delete_records` | Delete records matching a filter |
+| `query` | Execute arbitrary SQL |
+
+## How it compares
+
+| Server | SQLite | No credentials | Raw SQL | CRUD | Notes |
+|---|---|---|---|---|---|
+| **MCP SQLite** | Yes | Yes | Yes | Yes | Local .db file |
+| DuckDB MCP | No (DuckDB) | Yes | Yes | Yes | Analytical focus |
+| DBHub MCP | Yes + others | No (API key) | Yes | Yes | Multi-database hub |
+| Postgres MCP | No (Postgres) | No (connection str) | Yes | Yes | Remote database |
+
+MCP SQLite is the simplest path to reading and writing a local SQLite database from Claude —
+no credentials, no server, just a `.db` file path.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add sqlite -- npx -y mcp-sqlite /path/to/database.db
+```
+
+Replace `/path/to/database.db` with the actual path to your SQLite file.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "sqlite": {
+      "command": "npx",
+      "args": ["-y", "mcp-sqlite", "/path/to/database.db"]
+    }
+  }
+}
+```
+
+## Requirements
+
+- A local `.db` SQLite database file.
+- Node.js (for `npx`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- The `query` tool allows full SQL — point at a copy or test database before using on
+  production data.
+- No external connections are made — all operations are local.
+- No credentials or API keys required.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Repository `jparkerweb/mcp-sqlite` (ISC) on npm as `mcp-sqlite` documents the
+  `npx -y mcp-sqlite /path/to/database.db` install command, all eight tools (db_info,
+  list_tables, get_table_schema, create_record, read_records, update_records, delete_records,
+  query), and the zero-credential local-only architecture.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

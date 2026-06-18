@@ -1,0 +1,173 @@
+---
+title: Rootly MCP Server for Claude
+slug: rootly-mcp-server
+category: mcp
+description: >-
+  Manage production incidents from Claude — create incidents, check on-call schedules, find related
+  past incidents, suggest solutions, track post-mortems, and orchestrate response workflows —
+  with the official Rootly remote MCP server.
+cardDescription: "Official Rootly MCP: incident management, on-call & post-mortems from Claude."
+seoTitle: "Rootly MCP Server for Claude — Incident Management, On-Call & Post-Mortems"
+seoDescription: "Connect Claude to Rootly with the official remote MCP server: create and manage incidents, check on-call schedules, find related past incidents, suggest solutions, and track post-mortems — 200+ tools, OAuth or API key."
+author: Rootly AI Labs
+authorProfileUrl: "https://github.com/Rootly-AI-Labs"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.rootly.com/integrations/mcp-server"
+websiteUrl: "https://rootly.com"
+repoUrl: "https://github.com/Rootly-AI-Labs/Rootly-MCP-server"
+retrievalSources:
+  - "https://docs.rootly.com/integrations/mcp-server"
+  - "https://rootly.com/blog/introducing-the-rootly-mcp-server"
+  - "https://github.com/Rootly-AI-Labs/Rootly-MCP-server"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http rootly https://mcp.rootly.com/mcp"
+usageSnippet: >-
+  Ask Claude to create a production incident, check who is on-call, find similar past incidents,
+  suggest solutions based on runbook history, or draft a post-incident review — using natural
+  language against your live Rootly workspace.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "rootly": {
+        "type": "http",
+        "url": "https://mcp.rootly.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "rootly": {
+        "type": "http",
+        "url": "https://mcp.rootly.com/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Rootly account — authenticate via OAuth when prompted, or generate an API key in Rootly → Account → Manage API Keys."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The MCP server can create and update production incidents — review Claude's proposed actions before confirming write operations during live incidents."
+  - "Security-sensitive operations and bulk deletions are excluded from the default tool set; the hosted endpoint returns approximately 70 frequently-used tools in 'slim' mode."
+  - "A Global API Key is recommended for full cross-team visibility; team-scoped keys may return incomplete results for on-call and analytics tools."
+privacyNotes:
+  - "Incident details, on-call schedules, escalation policies, team configurations, and post-incident review data from your Rootly workspace are surfaced in Claude's context."
+  - "OAuth is the recommended authentication method — no API token is stored in your MCP configuration."
+tags:
+  - rootly
+  - incident-management
+  - on-call
+  - post-mortems
+  - devops
+  - site-reliability
+  - sre
+keywords:
+  - rootly mcp server
+  - rootly mcp claude
+  - incident management mcp claude code
+  - on-call scheduling mcp
+  - site reliability engineering mcp
+  - post-mortem mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Rootly MCP Server** is the official remote Model Context Protocol server from Rootly AI Labs.
+It connects Claude directly to your Rootly incident management workspace — giving you natural-language
+access to incident creation, on-call schedules, escalation policies, playbooks, runbooks,
+post-incident reviews, and intelligent incident correlation.
+
+With 200+ tools (or the hosted slim profile of ~70 frequently-used tools), the server covers
+the full incident lifecycle from detection through review.
+
+Authentication uses OAuth (recommended) or a Rootly API token for programmatic access.
+
+## Key capabilities
+
+- **Incident management** — create incidents, update status, add action items, and close incidents.
+- **On-call analytics** — query on-call shift metrics, get handoff summaries, check current coverage.
+- **Intelligent matching** — find related past incidents by symptom and suggest solutions from prior runbooks.
+- **Escalation policies** — list and inspect escalation chains and alert routing.
+- **Schedules & teams** — view on-call schedules, override rotations, list team members.
+- **Playbooks & workflows** — trigger incident workflows and playbooks from natural language.
+- **Post-incident reviews** — track and draft post-mortem documents.
+- **Dashboards** — pull incident metrics and reliability dashboards.
+
+## How it compares
+
+| Server | Incident lifecycle | On-call analytics | AI matching | Post-mortems | Auth |
+|---|---|---|---|---|---|
+| **Rootly MCP** | Yes | Yes | Yes | Yes | OAuth / API key |
+| PagerDuty MCP | Yes | Yes | No | Limited | API key |
+| Opsgenie MCP | Yes | Limited | No | No | API key |
+| FireHydrant MCP | Yes | Limited | No | Yes | API key |
+
+Rootly's MCP is notable for the AI-powered `find_related_incidents` and `suggest_solutions` tools,
+which use semantic matching against incident history — not just keyword search.
+
+## Installation
+
+### Claude Code (OAuth — recommended)
+
+```bash
+claude mcp add --transport http rootly https://mcp.rootly.com/mcp
+```
+
+Run `/mcp` in Claude Code to authenticate via OAuth.
+
+### Claude Code (API token)
+
+```bash
+claude mcp add --transport http rootly https://mcp.rootly.com/mcp \
+  --header "Authorization: Bearer YOUR_ROOTLY_API_TOKEN"
+```
+
+Generate a Global API Key in Rootly → Account → Manage API Keys for full functionality.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "rootly": {
+      "type": "http",
+      "url": "https://mcp.rootly.com/mcp"
+    }
+  }
+}
+```
+
+## Alternative endpoints
+
+| Endpoint | URL |
+|---|---|
+| Streamable HTTP (recommended) | `https://mcp.rootly.com/mcp` |
+| SSE (stable fallback) | `https://mcp.rootly.com/sse` |
+| Code mode | `https://mcp.rootly.com/mcp-codemode` |
+
+## Requirements
+
+- A Rootly account with appropriate team access.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- OAuth authentication minimizes credential exposure.
+- Security-sensitive operations and deletions are excluded from the default tool set.
+- Use a Global API Key for full visibility; team-scoped keys limit cross-team data access.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Rootly's MCP documentation at `docs.rootly.com/integrations/mcp-server` confirms the hosted
+  endpoint, OAuth + API token auth, 200+ tools, and the slim profile (~70 tools).
+- Rootly's launch blog at `rootly.com/blog/introducing-the-rootly-mcp-server` documents the
+  AI-matching tools (`find_related_incidents`, `suggest_solutions`) and the incident lifecycle scope.
+- GitHub repo `Rootly-AI-Labs/Rootly-MCP-server` (Apache-2.0) is the open-source reference
+  implementation.

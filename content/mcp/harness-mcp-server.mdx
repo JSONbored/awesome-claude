@@ -1,0 +1,197 @@
+---
+title: Harness MCP Server for Claude
+slug: harness-mcp-server
+category: mcp
+description: >-
+  Access the entire Harness.io DevOps platform from Claude — CI/CD pipelines, GitOps, feature
+  flags, cloud cost, security testing, chaos engineering, and more — through 11 consolidated
+  tools covering 216 resource types across 36 toolsets, with 32 built-in prompt templates.
+cardDescription: "Official Harness MCP: 11 tools, 216 resources — CI/CD, GitOps, feature flags & chaos from Claude."
+seoTitle: "Harness MCP Server for Claude — CI/CD, GitOps, Feature Flags & Cloud Cost via MCP"
+seoDescription: "Connect Claude to Harness with the official MCP server: manage CI/CD pipelines, GitOps, feature flags, cloud cost, security testing, and chaos engineering via 11 consolidated tools and 216 resource types — MIT licensed."
+author: Harness
+authorProfileUrl: "https://github.com/harness"
+dateAdded: "2026-06-18"
+documentationUrl: "https://developer.harness.io/docs/platform/automation/api/api-quickstart/"
+websiteUrl: "https://harness.io"
+repoUrl: "https://github.com/harness/mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/harness/mcp-server/main/README.md"
+  - "https://developer.harness.io/docs/platform/automation/api/api-quickstart/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add harness -e HARNESS_API_KEY=pat.ACCOUNT_ID.TOKEN_ID.SECRET -- npx harness-mcp-v2@latest"
+usageSnippet: >-
+  Ask Claude to list all failed pipeline executions across projects, debug a CI build failure,
+  review DORA metrics, triage security vulnerabilities, audit cloud cost recommendations, plan
+  a feature flag rollout, or approve a pending pipeline execution.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "harness": {
+        "command": "npx",
+        "args": ["harness-mcp-v2@latest"],
+        "env": {
+          "HARNESS_API_KEY": "pat.ACCOUNT_ID.TOKEN_ID.SECRET"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "harness": {
+        "command": "npx",
+        "args": ["harness-mcp-v2@latest"],
+        "env": {
+          "HARNESS_API_KEY": "pat.ACCOUNT_ID.TOKEN_ID.SECRET",
+          "HARNESS_DEFAULT_ORG": "default",
+          "HARNESS_DEFAULT_PROJECT": "your_project"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A Harness account — log in at app.harness.io."
+  - "A Harness API key: My Profile → API Keys → + New API Key → + Token. PAT/SAT tokens embed the account ID automatically."
+  - "Node.js with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Tools can create and execute CI/CD pipelines, deploy services, configure feature flags, and run chaos experiments — all affecting live environments."
+  - "The `harness_create` and `harness_execute` tools perform live platform operations; confirm before executing destructive or production actions."
+  - "Use `HARNESS_DEFAULT_ORG` and `HARNESS_DEFAULT_PROJECT` to scope operations and limit blast radius."
+privacyNotes:
+  - "Pipeline configurations, deployment histories, cost data, security findings, feature flag targeting rules, and IDP content from your Harness account are surfaced in Claude's context."
+  - "Your `HARNESS_API_KEY` grants broad platform access — treat it as a secret."
+disclosure: "Harness is a commercial DevOps platform. The MCP server is officially maintained by Harness."
+tags:
+  - harness
+  - cicd
+  - devops
+  - gitops
+  - feature-flags
+  - chaos-engineering
+  - cloud-cost
+keywords:
+  - harness mcp server
+  - harness mcp claude
+  - cicd mcp claude code
+  - devops platform mcp
+  - harness pipeline ai
+  - gitops mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Harness MCP Server** is the official Model Context Protocol server from
+[Harness](https://harness.io). Rather than mapping one tool per API endpoint (which would
+produce 240+ tools), it uses a registry-based dispatch with 11 consolidated tools and 216
+resource types — keeping LLM tool selection manageable while covering the entire Harness
+platform: CI/CD, GitOps, Feature Flags, Cloud Cost Management, Security Testing, Chaos
+Engineering, IDP, Governance, and more. Includes 32 built-in prompt templates. Licensed under
+MIT.
+
+## Key capabilities
+
+- **CI/CD** — list and debug pipeline executions, trigger builds, approve pending pipelines.
+- **GitOps** — manage services, environments, and deployment strategies.
+- **Feature Flags** — plan rollouts, create flags, review flag state.
+- **Cloud Cost Management** — review recommendations, audit waste.
+- **Security Testing** — triage vulnerabilities and review scan results.
+- **Chaos Engineering** — list and review chaos experiment results.
+- **IDP & Knowledge Graph** — search internal developer portal and knowledge resources.
+- **Multi-project discovery** — agents navigate org → project → resource hierarchies dynamically.
+- **32 prompt templates** — pre-built prompts for common workflows like "build & deploy app",
+  "debug failed pipeline", "review DORA metrics", "triage vulnerabilities".
+
+## Tools (11 consolidated)
+
+| Tool | Purpose |
+|---|---|
+| `harness_list` | List resources of any of 216 types |
+| `harness_get` | Get details of a specific resource |
+| `harness_create` | Create a new resource |
+| `harness_update` | Update an existing resource |
+| `harness_delete` | Delete a resource |
+| `harness_execute` | Trigger an execution (pipeline, chaos exp, etc.) |
+| `harness_approve` | Approve a pending step or execution |
+| `harness_search` | Search across resource types |
+| `harness_analyze` | Analyze resource data and relationships |
+| `harness_prompt` | Invoke a built-in prompt template |
+| `harness_config` | Inspect server configuration and toolsets |
+
+## How it compares
+
+| Server | CI/CD | GitOps | Feature Flags | Cost mgmt | Chaos | Tools |
+|---|---|---|---|---|---|---|
+| **Harness MCP** | Yes | Yes | Yes | Yes | Yes | 11 (216 types) |
+| GitHub Actions MCP | Yes | Limited | No | No | No | 30+ |
+| ArgoCD MCP | No | Yes | No | No | No | 15+ |
+| Jenkins MCP | Yes | No | No | No | No | 10+ |
+
+11 tools covering 216 resource types is uniquely scalable — adding new Harness platform
+coverage requires only a declarative data file, not new tool registrations.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add harness \
+  -e HARNESS_API_KEY=pat.ACCOUNT_ID.TOKEN_ID.SECRET \
+  -- npx harness-mcp-v2@latest
+```
+
+PAT tokens embed the account ID — no separate `HARNESS_ACCOUNT_ID` needed for PAT/SAT tokens.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "harness": {
+      "command": "npx",
+      "args": ["harness-mcp-v2@latest"],
+      "env": {
+        "HARNESS_API_KEY": "pat.ACCOUNT_ID.TOKEN_ID.SECRET",
+        "HARNESS_DEFAULT_ORG": "default",
+        "HARNESS_DEFAULT_PROJECT": "my_project"
+      }
+    }
+  }
+}
+```
+
+### HTTP transport (shared deployments)
+
+```bash
+HARNESS_API_KEY=pat.ACCOUNT_ID.TOKEN_ID.SECRET npx harness-mcp-v2 http --port 8080
+```
+
+## Requirements
+
+- A Harness account with a PAT/SAT API token.
+- Node.js with `npx`.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Scope `HARNESS_DEFAULT_ORG` and `HARNESS_DEFAULT_PROJECT` to limit blast radius.
+- Review pipeline executions and chaos experiments before confirming — they affect production.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `harness/mcp-server` (MIT) documents the `harness-mcp-v2` npm
+  package, `HARNESS_API_KEY` configuration with embedded account ID in PAT/SAT tokens, the
+  11 consolidated tools, 216 resource types across 36 toolsets, 32 prompt templates, stdio and
+  HTTP transports, and the hosted Harness MCP option requiring Harness Support enablement.
+- Harness API documentation at `developer.harness.io/docs/platform/automation/api/api-quickstart/`
+  (HTTP 200) covers API key creation and authentication.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

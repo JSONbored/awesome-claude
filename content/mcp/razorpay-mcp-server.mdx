@@ -1,0 +1,204 @@
+---
+title: Razorpay MCP Server for Claude
+slug: razorpay-mcp-server
+category: mcp
+description: >-
+  Automate payments, orders, refunds, settlements, and Razorpay checkout integrations from Claude
+  with the official Razorpay MCP Server — hosted remotely at mcp.razorpay.com or self-hosted,
+  covering 40+ payment API tools for South Asia's leading payments platform.
+cardDescription: "Official Razorpay MCP: payments, orders, refunds, settlements & checkout integration from Claude."
+seoTitle: "Razorpay MCP Server for Claude — Payments, Orders, Refunds & Checkout Integration via MCP"
+seoDescription: "Connect Claude to Razorpay with the official MCP server: automate payments, create orders, manage refunds, query settlements, handle UPI/QR codes, and generate Razorpay checkout integration code — 40+ tools, hosted remote or self-hosted."
+author: Razorpay
+authorProfileUrl: "https://github.com/razorpay"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/razorpay/razorpay-mcp-server"
+websiteUrl: "https://razorpay.com"
+repoUrl: "https://github.com/razorpay/razorpay-mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/razorpay/razorpay-mcp-server/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add razorpay -e AUTH_HEADER=\"Basic YOUR_BASE64_KEY_SECRET\" -- npx mcp-remote https://mcp.razorpay.com/mcp --header \"Authorization:${AUTH_HEADER}\""
+usageSnippet: >-
+  Ask Claude to fetch all payments for the last 7 days, create a payment link for ₹500,
+  check the status of a refund, generate a settlement reconciliation report, or produce
+  a complete Razorpay Checkout integration for your React app.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "razorpay": {
+        "command": "npx",
+        "args": [
+          "mcp-remote",
+          "https://mcp.razorpay.com/mcp",
+          "--header",
+          "Authorization:Basic YOUR_BASE64_KEY_SECRET"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "razorpay": {
+        "command": "npx",
+        "args": [
+          "mcp-remote",
+          "https://mcp.razorpay.com/mcp",
+          "--header",
+          "Authorization: Basic ${AUTH_HEADER}"
+        ],
+        "env": {
+          "AUTH_HEADER": "YOUR_BASE64_ENCODED_KEY_SECRET"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A Razorpay account with Key ID and Key Secret from the Dashboard → Settings → API Keys."
+  - "Base64-encode your credentials: `echo -n 'key_id:key_secret' | base64` and use the result as the Authorization value."
+  - "Node.js with `npx` installed."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server can create orders, capture payments, create refunds, and generate payment links — these are live financial operations on your Razorpay account."
+  - "Use test mode credentials (key IDs starting with `rzp_test_`) during development to avoid real charges."
+  - "Treat your Razorpay Key Secret and Base64-encoded credentials as sensitive secrets — do not commit them to version control."
+privacyNotes:
+  - "Payment details, customer information, refund records, and settlement reports from your Razorpay account are surfaced in Claude's context."
+  - "The remote MCP server is hosted by Razorpay — requests go through Razorpay's infrastructure; review Razorpay's privacy policy for data handling."
+disclosure: "Razorpay is a commercial payments platform. The MCP server is officially maintained by Razorpay."
+tags:
+  - payments
+  - razorpay
+  - fintech
+  - payment-links
+  - upi
+  - india
+  - checkout
+keywords:
+  - razorpay mcp server
+  - razorpay mcp claude
+  - payment automation mcp claude code
+  - razorpay checkout integration ai
+  - india payments mcp server
+  - upi payment mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Razorpay MCP Server** is the official Model Context Protocol server from
+[Razorpay](https://razorpay.com) — India's leading payment gateway. It provides 40+ tools
+for payments, orders, refunds, payment links, UPI/QR codes, settlements, payouts, recurring
+payment tokens, and an AI-powered checkout integration generator.
+
+The recommended setup uses Razorpay's hosted remote server at `https://mcp.razorpay.com/mcp`
+with Basic auth using your API key and secret. A self-hosted Go binary option is also available
+for on-premises deployments. Licensed under MIT.
+
+## Key capabilities
+
+- **Payment management** — fetch, capture, initiate, and update payments; resend/submit OTP for
+  authentication flows.
+- **Orders** — create, fetch, update orders and retrieve associated payments.
+- **Payment links** — create standard and UPI payment links; send via SMS/email.
+- **Refunds** — create instant refunds and fetch refund status.
+- **QR codes** — generate, fetch, and close Razorpay QR codes.
+- **Settlements** — fetch settlement reports and instant settlement details.
+- **Payouts** — query payout details from Razorpay X.
+- **Tokens** — list and revoke saved recurring payment methods.
+- **Checkout integration** — `detect_stack` and `integrate_razorpay_checkout` generate
+  end-to-end Razorpay Standard Checkout code for your detected framework.
+
+## Tools (40+)
+
+| Tool | Category |
+|---|---|
+| `fetch_payment`, `capture_payment`, `fetch_all_payments` | Payments |
+| `create_order`, `fetch_order`, `fetch_order_payments` | Orders |
+| `create_payment_link`, `create_payment_link_upi`, `send_payment_link` | Payment Links |
+| `create_refund`, `fetch_refund`, `fetch_all_refunds` | Refunds |
+| `create_qr_code`, `fetch_qr_code`, `close_qr_code` | QR Codes |
+| `fetch_all_settlements`, `fetch_settlement_recon_details` | Settlements |
+| `fetch_all_payouts`, `fetch_payout_by_id` | Payouts |
+| `fetch_tokens`, `revoke_token` | Recurring Tokens |
+| `detect_stack`, `integrate_razorpay_checkout` | Checkout Integration |
+
+## How it compares
+
+| Server | Payments | Refunds | Settlement recon | Checkout codegen | Auth |
+|---|---|---|---|---|---|
+| **Razorpay MCP** | Yes | Yes | Yes | Yes | Basic (key&#124;secret) |
+| Stripe MCP | Yes | Yes | No | No | API key |
+| PayPal MCP | Yes | Yes | No | No | OAuth |
+| Square MCP | Yes | Yes | Limited | No | API key |
+
+Razorpay's `integrate_razorpay_checkout` tool is unique — it detects your project's
+framework and generates a complete Razorpay Standard Checkout integration, including frontend
+and backend code.
+
+## Installation
+
+### Claude Code (remote server)
+
+```bash
+# Base64-encode your credentials first:
+echo -n 'rzp_live_KEY_ID:KEY_SECRET' | base64
+
+# Then add the MCP server:
+claude mcp add razorpay \
+  -e AUTH_HEADER="Basic <your-base64-credentials>" \
+  -- npx mcp-remote https://mcp.razorpay.com/mcp \
+  --header "Authorization:${AUTH_HEADER}"
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "razorpay": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://mcp.razorpay.com/mcp",
+        "--header",
+        "Authorization: Basic YOUR_BASE64_KEY_SECRET"
+      ]
+    }
+  }
+}
+```
+
+### Local / self-hosted
+
+See the GitHub repository for the self-hosted Go binary build instructions.
+
+## Requirements
+
+- A Razorpay account with API credentials (Key ID and Key Secret).
+- Node.js with `npx` (for `mcp-remote`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Use test credentials (`rzp_test_...`) during development; switch to live credentials for
+  production after verifying workflows.
+- Never commit credentials or Base64-encoded key secrets to version control.
+- Payment operations are live — always confirm financial actions before executing.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `razorpay/razorpay-mcp-server` (MIT, 225 stars) documents the
+  hosted remote MCP endpoint at `https://mcp.razorpay.com/mcp`, the `mcp-remote` connection
+  pattern with `Authorization: Basic <Base64(key:secret)>` header, all 40+ tools (payments,
+  orders, refunds, QR codes, settlements, payouts, tokens, checkout codegen), and the self-hosted
+  Go binary option.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the MCP connector
+  pattern used above.
