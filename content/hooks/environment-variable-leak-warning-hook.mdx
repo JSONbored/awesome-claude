@@ -74,7 +74,7 @@ scriptBody: |-
     *) exit 0 ;;
   esac
   file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // .toolInput.file_path // .tool_input.path // .toolInput.path // empty')
-  content=$(printf '%s' "$input" | jq -r '[.tool_input.content,.toolInput.content,.tool_input.new_string,.toolInput.new_string] | map(select(. != null and . != "")) | .[0] // empty')
+  content=$(printf '%s' "$input" | jq -r '[.tool_input.content,.toolInput.content,.tool_input.new_string,.toolInput.new_string,.tool_input.edits[]?.new_string,.toolInput.edits[]?.new_string] | map(select(type == "string" and . != "")) | join("\n")')
   case "$file_path" in
     *.md|*.mdx|*.ts|*.tsx|*.js|*.jsx|*.py|*.go|*.yaml|*.yml|*.json|*.env*) ;;
     *) exit 0 ;;
@@ -82,7 +82,7 @@ scriptBody: |-
   case "$file_path" in
     *.env|*.env.*|*/.env|*/.env/*) exit 0 ;;
   esac
-  if printf '%s' "$content" | grep -Eiq 'AKIA[0-9A-Z]{{16}}|ghp_[A-Za-z0-9]{{20,}}|github_pat_[A-Za-z0-9_]{{40,}}'; then
+  if printf '%s' "$content" | grep -Eiq 'AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{40,}'; then
     echo "Blocked: proposed edit matches common hardcoded credential shapes." >&2
     exit 2
   fi
