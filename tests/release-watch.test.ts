@@ -25,7 +25,7 @@ describe("release watch", () => {
     });
   });
 
-  it("reports an MCP release when the package is ahead of npm", () => {
+  it("reports an MCP release when the package is ahead of npm and its tag", () => {
     const report = buildMcpReleaseReport({
       latestTag: { tag: "mcp-v0.2.0", version: "0.2.0" },
       packageVersion: "0.3.0",
@@ -43,11 +43,63 @@ describe("release watch", () => {
       due: true,
       proposedVersion: "0.3.0",
       packageAhead: true,
+      tagBehind: true,
     });
     const issue = buildMcpReleaseIssue(report);
     expect(issue.labels).toEqual(["release", "mcp"]);
     expect(issue.assignees).toEqual(["JSONbored"]);
     expect(issue.body).toContain(MCP_RELEASE_DUE_MARKER);
+  });
+
+  it("does not report an MCP release from relevant commits after an already released version", () => {
+    const report = buildMcpReleaseReport({
+      latestTag: { tag: "mcp-v0.3.1", version: "0.3.1" },
+      packageVersion: "0.3.1",
+      publishedVersion: "0.3.1",
+      commits: [
+        {
+          sha: "d798e46ba0000000",
+          subject: "feat(mcp): token-efficient get_entry_detail with bodyMode",
+          files: ["packages/mcp/src/registry.js"],
+        },
+        {
+          sha: "a787813400000000",
+          subject: "fix(registry): restrict install command inference",
+          files: ["packages/registry/src/artifacts.js"],
+        },
+      ],
+    });
+
+    expect(report).toMatchObject({
+      due: false,
+      proposedVersion: "0.3.1",
+      latestTag: "mcp-v0.3.1",
+      publishedVersion: "0.3.1",
+      packageAhead: false,
+      tagBehind: false,
+    });
+    expect(report.commits).toHaveLength(2);
+  });
+
+  it("does not report an MCP release when the package version already has a release tag", () => {
+    const report = buildMcpReleaseReport({
+      latestTag: { tag: "mcp-v0.3.0", version: "0.3.0" },
+      packageVersion: "0.3.0",
+      publishedVersion: "0.2.0",
+      commits: [
+        {
+          sha: "eeeeeeeeeeeeeeee",
+          subject: "chore(mcp): retry failed package publish",
+          files: ["packages/mcp/package.json"],
+        },
+      ],
+    });
+
+    expect(report).toMatchObject({
+      due: false,
+      packageAhead: true,
+      tagBehind: false,
+    });
   });
 
   it("loads release assignees from shared workflow config", () => {

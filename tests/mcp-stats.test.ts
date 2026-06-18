@@ -54,6 +54,19 @@ describe("classifyTransport", () => {
   it("is Unspecified with no config/install signal", () => {
     expect(classifyTransport(mk({}))).toBe("Unspecified");
   });
+
+  it("does not infer transport from unrelated non-empty config", () => {
+    expect(
+      classifyTransport(
+        mk({ configSnippet: '{"env":{"API_KEY":"required"}}' }),
+      ),
+    ).toBe("Unspecified");
+    expect(
+      classifyTransport(
+        mk({ copySnippet: '{"headers":{"authorization":"Bearer token"}}' }),
+      ),
+    ).toBe("Unspecified");
+  });
 });
 
 describe("hostingOf", () => {
@@ -115,6 +128,19 @@ describe("distributions", () => {
       ["stdio (local)", 2],
       ["HTTP", 1],
       ["SSE", 1],
+    ]);
+  });
+
+  it("keeps Unspecified last when an entry has no declared transport", () => {
+    const { rows, total } = transportDistribution([
+      mk({ configSnippet: '{"transport":"sse","url":"https://b/sse"}' }),
+      mk({ configSnippet: '{"env":{"TOKEN":"required"}}' }),
+    ]);
+
+    expect(total).toBe(2);
+    expect(rows.map((r) => [r.label, r.count])).toEqual([
+      ["SSE", 1],
+      ["Unspecified", 1],
     ]);
   });
 
