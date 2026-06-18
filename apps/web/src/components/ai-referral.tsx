@@ -24,6 +24,10 @@ export function emitAiReferralEvent(source: string, landing: string): boolean {
   return true;
 }
 
+export function shouldWaitForAiReferralLoad(): boolean {
+  return typeof document !== "undefined" && document.readyState !== "complete";
+}
+
 /**
  * Fire a one-per-session umami `ai-referral` event when the visitor arrived from an AI
  * assistant (ChatGPT, Claude, Perplexity, Gemini, Copilot, …). This is the human-facing
@@ -49,6 +53,10 @@ export function AiReferral() {
 
     const emit = () => emitAiReferralEvent(source, window.location.pathname);
     if (emit()) return;
+    if (!shouldWaitForAiReferralLoad()) {
+      emit();
+      return;
+    }
 
     const onLoad = () => {
       emit();

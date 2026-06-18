@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { emitAiReferralEvent } from "@/components/ai-referral";
+import {
+  emitAiReferralEvent,
+  shouldWaitForAiReferralLoad,
+} from "@/components/ai-referral";
 
 function sessionStorageStub() {
   return {
@@ -57,5 +60,16 @@ describe("emitAiReferralEvent", () => {
 
     expect(emitAiReferralEvent("perplexity", "/mcp")).toBe(false);
     expect(sessionStorage.setItem).not.toHaveBeenCalled();
+  });
+
+  it("only waits for load while the document is still loading", () => {
+    vi.stubGlobal("document", { readyState: "loading" });
+    expect(shouldWaitForAiReferralLoad()).toBe(true);
+
+    vi.stubGlobal("document", { readyState: "interactive" });
+    expect(shouldWaitForAiReferralLoad()).toBe(true);
+
+    vi.stubGlobal("document", { readyState: "complete" });
+    expect(shouldWaitForAiReferralLoad()).toBe(false);
   });
 });
