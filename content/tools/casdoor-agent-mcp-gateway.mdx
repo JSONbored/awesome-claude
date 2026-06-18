@@ -1,0 +1,213 @@
+---
+title: Casdoor Agent MCP Gateway
+slug: casdoor-agent-mcp-gateway
+category: tools
+description: >-
+  Apache-2.0 AI-first IAM, auth server, and agent/MCP gateway with a web UI,
+  OAuth/OIDC, SAML, CAS, LDAP, SCIM, WebAuthn, MFA, OpenClaw/A2A positioning,
+  an `/api/mcp` endpoint for Casdoor administration tools, and configurable
+  upstream MCP server proxying with tool allowlists and bearer-token forwarding.
+cardDescription: >-
+  Use Casdoor as an IAM-backed agent and MCP gateway: manage identity,
+  applications, users, OAuth/OIDC, SSO, MFA, and MCP server proxying from one
+  open-source control plane.
+seoTitle: Casdoor Agent MCP Gateway, AI IAM, OAuth, OIDC, SSO, and OpenClaw Auth
+seoDescription: >-
+  Configure Casdoor for AI agents, MCP gateway use, OpenClaw-adjacent
+  workflows, OAuth/OIDC, SAML, LDAP, SCIM, MFA, WebAuthn, user and application
+  management, upstream MCP server proxying, and scoped MCP admin tools.
+author: Casdoor
+authorProfileUrl: "https://github.com/casdoor"
+dateAdded: "2026-06-18"
+websiteUrl: "https://casdoor.ai"
+documentationUrl: "https://casdoor.ai/docs/overview"
+repoUrl: "https://github.com/casdoor/casdoor"
+packageUrl: "https://hub.docker.com/r/casbin/casdoor-all-in-one"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/casdoor/casdoor/blob/master/README.md"
+  - "https://github.com/casdoor/casdoor/blob/master/routers/router.go"
+  - "https://github.com/casdoor/casdoor/blob/master/controllers/mcp_server.go"
+  - "https://github.com/casdoor/casdoor/blob/master/object/server.go"
+  - "https://github.com/casdoor/casdoor/blob/master/mcpself/base.go"
+  - "https://github.com/casdoor/casdoor/blob/master/mcpself/auth.go"
+installable: true
+installCommand: "docker run -p 8000:8000 casbin/casdoor-all-in-one"
+usageSnippet: >-
+  Start Casdoor with the official Docker image or source install, change the
+  fresh-install admin password, configure applications/users/providers, then
+  use `/api/mcp` for scoped Casdoor MCP admin tools or `/api/server/:owner/:name`
+  for reviewed upstream MCP server proxying.
+copySnippet: |-
+  docker run -p 8000:8000 casbin/casdoor-all-in-one
+
+  # Fresh local installs listen on port 8000.
+  # Change the default built-in/admin password before exposing the service.
+estimatedSetupTime: 45 minutes
+difficulty: advanced
+prerequisites:
+  - "A deployment plan for Casdoor itself: Docker all-in-one for a local trial, Docker Compose, Helm, or source install with Go 1.25, Node.js 20, Yarn 1.x, and a supported database."
+  - "Immediate credential rotation for the fresh-install `built-in/admin` / `123` account before any shared, networked, or production exposure."
+  - "Identity architecture for organizations, applications, providers, OAuth/OIDC clients, SAML, LDAP, SCIM, MFA, WebAuthn, and user lifecycle behavior."
+  - "MCP client and auth plan for the `/api/mcp` endpoint, including token issuance, scopes, session handling, and least-privilege access."
+  - "Reviewed upstream MCP server URLs, bearer tokens, tool inventory, and allowlist policy before using Casdoor as an MCP proxy."
+safetyNotes:
+  - "Casdoor is an IAM and authentication control plane. Mistakes can lock users out, weaken SSO, expose tokens, or grant access across applications."
+  - "The README documents fresh-install credentials of `built-in/admin` / `123`; rotate credentials and configure database/secrets before exposing Casdoor."
+  - "The `/api/mcp` handler can call application and user CRUD tools. Write scopes can add, update, or delete applications and users, so use narrow OAuth scopes and audit tool calls."
+  - "The server proxy route forwards MCP JSON-RPC calls to configured upstream MCP URLs and can attach a stored bearer token. Treat every configured server URL and token as privileged infrastructure."
+  - "Casdoor's proxy enforces configured tool allowlists for `tools/call`, but an empty or stale allowlist can make a gateway endpoint more permissive than intended."
+  - "MCP scanning and intranet discovery helpers should only target authorized private networks and should use strict host, port, timeout, and concurrency limits."
+privacyNotes:
+  - "Casdoor may process users, organizations, applications, providers, roles, permissions, OAuth/OIDC/SAML/LDAP/SCIM identifiers, MFA/WebAuthn state, access tokens, logs, audit events, and webhook payloads."
+  - "MCP requests can include tool names, tool arguments, tool results, user/application records, upstream server URLs, bearer tokens, access scopes, and proxy metadata."
+  - "OpenClaw, A2A, agent, transcript, and session graph features may expose prompts, agent actions, identity context, and workflow traces depending on deployment and retention settings."
+  - "Do not paste admin tokens, provider secrets, upstream MCP bearer tokens, database credentials, SSO metadata, or exported user records into public examples, issues, PRs, or model prompts."
+tags:
+  - casdoor
+  - mcp
+  - mcp-gateway
+  - iam
+  - oauth
+  - oidc
+  - sso
+  - openclaw
+keywords:
+  - Casdoor MCP gateway
+  - Casdoor agent IAM
+  - Casdoor AI gateway
+  - OpenClaw auth server
+  - MCP auth gateway
+  - MCP server proxy IAM
+  - OAuth OIDC MCP gateway
+  - agent identity access management
+  - MCP tool allowlist
+  - AI-first IAM
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Casdoor is an open-source identity and access management platform that now
+positions itself as an AI-first IAM, auth server, and MCP gateway. The project
+combines a web UI for users, organizations, applications, providers, SSO, MFA,
+and enterprise identity flows with agent-facing routes for MCP server proxying
+and Casdoor administration tools.
+
+Use it when the agent stack needs identity infrastructure near the MCP layer:
+OAuth/OIDC, SAML, CAS, LDAP, SCIM, WebAuthn, TOTP/MFA, application/user
+management, upstream MCP server inventory, and controlled gateway access from a
+single open-source service.
+
+## Install
+
+For a quick local trial, the README documents the all-in-one Docker image:
+
+```bash
+docker run -p 8000:8000 casbin/casdoor-all-in-one
+```
+
+Then open the local web UI on port `8000`. Fresh installs use
+`built-in/admin` / `123` according to the README; change that password before
+exposing the instance.
+
+Source installs require Go, Node.js, Yarn, and database configuration. The
+README also documents Docker Compose and Helm deployment paths.
+
+## Agent and MCP Capabilities
+
+| Area | Casdoor Coverage |
+| --- | --- |
+| IAM control plane | Web UI and APIs for users, organizations, applications, providers, MFA, SSO, and enterprise identity configuration |
+| Protocols | OAuth 2.0/OIDC, SAML, CAS, LDAP, SCIM, WebAuthn/passkeys, TOTP, MFA, Face ID, Google Workspace, and Azure AD positioning |
+| MCP self endpoint | `/api/mcp` handles MCP JSON-RPC methods such as `initialize`, `ping`, `tools/list`, and `tools/call` |
+| MCP admin tools | Current handler dispatches application and user tools such as `get_applications`, `add_application`, `get_users`, and `update_user` |
+| Scope filtering | OAuth token claims are mapped to tool access through built-in scopes such as `application:read`, `application:write`, `user:read`, and `user:write` |
+| MCP proxy | `/api/server/:owner/:name` proxies configured upstream MCP servers over HTTP/HTTPS and can forward stored bearer tokens |
+| Tool controls | Configured upstream server tools can be synced and marked allowed/forbidden before `tools/call` requests are proxied |
+| Agent surfaces | Repository metadata and UI/API files include agent, A2A, MCP gateway, OpenClaw session graph, and transcript-related surfaces |
+
+## Use Cases
+
+- Put IAM and OAuth/OIDC controls near an agent or MCP deployment.
+- Expose selected Casdoor administration operations to MCP clients with scoped
+  access.
+- Proxy a reviewed upstream MCP server through an IAM-backed gateway route.
+- Maintain an allowlist for MCP tools before agent clients can invoke them.
+- Manage application and user records from an agent workflow while keeping
+  identity changes auditable.
+- Evaluate OpenClaw-adjacent identity, agent gateway, and transcript/session
+  workflows in a self-hosted stack.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository describes Casdoor as an open-source agent-first IAM,
+  LLM MCP and agent gateway, and auth server with web UI support.
+- The repository metadata includes `mcp`, `mcp-gateway`, `agent`,
+  `ai-gateway`, `iam`, `oauth`, `oidc`, `openclaw`, `saml`, `scim`, and
+  `webauthn` topics.
+- The README identifies Casdoor as an AI-first IAM and AI MCP gateway, with
+  OAuth/OIDC, SAML, CAS, LDAP, SCIM, WebAuthn, TOTP, MFA, Face ID, Google
+  Workspace, Azure AD, MCP, and A2A support.
+- The README documents source, Docker all-in-one, Docker Compose, and Helm
+  install paths, and notes fresh-install credentials of `built-in/admin` /
+  `123`.
+- `routers/router.go` registers `/api/mcp` for Casdoor's own MCP handler and
+  `/api/server/:owner/:name` for upstream server proxying.
+- `mcpself/base.go` implements MCP JSON-RPC handling for `initialize`,
+  `notifications/initialized`, `ping`, `tools/list`, and `tools/call`, with
+  server info `Casdoor MCP Server` version `1.0.0`.
+- `mcpself/base.go`, `mcpself/application.go`, and `mcpself/user.go` expose
+  application and user read/write tools through the current MCP self handler.
+- `mcpself/auth.go` extracts bearer tokens, resolves token applications, parses
+  JWT claims, and reads OAuth scopes for MCP authorization.
+- `mcpself/permission.go` maps built-in scopes to tool access and expands
+  convenience scopes such as `read`, `write`, and `admin`.
+- `controllers/mcp_server.go` validates configured upstream MCP server URLs,
+  limits proxy schemes to HTTP/HTTPS, forwards stored bearer tokens, and checks
+  configured tool allowlists for `tools/call` requests.
+- `object/server.go` stores upstream MCP server URL, token, application, and
+  synced tool metadata, with per-tool `isAllowed` flags.
+- `mcp/util.go` uses the official Model Context Protocol Go SDK to connect to
+  upstream servers and list tools, and includes intranet scanning helpers with
+  scheme, timeout, concurrency, port, path, and CIDR sanitizers.
+- `controllers/agent.go` and `object/agent.go` implement CRUD APIs and storage
+  for agent records.
+- The latest GitHub release is `v3.97.1`, published on 2026-06-18.
+- The repository license is Apache-2.0.
+
+## Safety and Privacy
+
+Casdoor sits on a sensitive trust boundary. It can manage identities,
+applications, SSO providers, MFA settings, access tokens, and MCP gateway
+routes. Start with a private deployment, rotate default credentials, configure
+least-privilege OAuth scopes, and test agent-accessible write tools before
+connecting production users or applications.
+
+Gateway mode should be treated as infrastructure, not just an app shortcut.
+Configured upstream MCP URLs, stored bearer tokens, synced tool lists, and
+allowlist state determine what an agent can reach. Review each upstream server
+and keep proxy endpoints, logs, tokens, and SSO metadata out of public examples.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+Casdoor, `casdoor/casdoor`, Casdoor MCP Gateway, Casdoor Agent MCP Gateway,
+OpenClaw auth server, AI-first IAM, MCP auth gateway, and matching source URLs.
+No dedicated Casdoor entry, exact source URL duplicate, target file, or open
+duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Casdoor is
+Apache-2.0 open-source software; identity providers, SSO platforms, databases,
+container registries, Helm deployments, model providers, MCP clients, upstream
+MCP servers, and hosted infrastructure may have separate licenses, billing,
+terms, privacy controls, and operational requirements.
