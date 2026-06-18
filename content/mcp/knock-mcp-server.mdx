@@ -1,0 +1,160 @@
+---
+title: Knock MCP Server for Claude
+slug: knock-mcp-server
+category: mcp
+description: >-
+  Manage your Knock notification infrastructure from Claude — create and edit workflows, channels,
+  templates, and email layouts, manage users and tenants, commit changes across environments, and
+  debug message logs — with the official Knock remote MCP server.
+cardDescription: "Official Knock MCP: manage notification workflows, templates & user data from Claude."
+seoTitle: "Knock MCP Server for Claude — Notification Infrastructure Management"
+seoDescription: "Connect Claude to Knock with the official remote MCP server: create and manage notification workflows, channels, templates, and users; commit to environments; and debug message logs — from Claude Code or Desktop."
+author: Knock
+authorProfileUrl: "https://github.com/knocklabs"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.knock.app/developer-tools/mcp-server"
+websiteUrl: "https://knock.app"
+repoUrl: "https://github.com/knocklabs/knock-mcp"
+retrievalSources:
+  - "https://github.com/knocklabs/knock-mcp"
+  - "https://docs.knock.app/developer-tools/mcp-server"
+  - "https://knock.app"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http knock https://mcp.knock.app/mcp"
+usageSnippet: >-
+  Ask Claude to create a new notification workflow, update an email template, manage user data in Knock, or inspect sent message logs.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "knock": {
+        "command": "npx",
+        "args": ["mcp-remote", "https://mcp.knock.app/mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "knock": {
+        "command": "npx",
+        "args": ["mcp-remote", "https://mcp.knock.app/mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Knock account — authenticate via OAuth when prompted on first tool use."
+  - "Node.js 18+ for `mcp-remote` (Claude Desktop); Claude Code supports `--transport http` natively."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server is hosted by Knock on Cloudflare Workers and authenticated via OAuth 2.1 + PKCE — no API keys required, but write access to your Knock environment is granted after login."
+  - "Knock's MCP server has no deletion tools by design, reducing destructive-action risk; all changes are staged and require explicit commit/promote steps."
+  - "Committing and promoting changes across environments is irreversible — review diffs before asking Claude to promote to production."
+privacyNotes:
+  - "Requests include your notification workflow definitions, template content, user/tenant identifiers, and message logs — all processed by Knock's servers."
+  - "Knock's OAuth flow stores session credentials securely; avoid sharing MCP session tokens."
+tags:
+  - knock
+  - notifications
+  - email
+  - push
+  - sms
+  - workflow
+  - transactional
+keywords:
+  - knock mcp server
+  - notification workflow mcp claude
+  - knock app claude integration
+  - transactional notifications mcp
+  - knock template management ai
+  - notification infrastructure mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Knock MCP Server** is the official remote Model Context Protocol server from Knock. It
+exposes the full Knock notification platform to Claude — workflows, channels, templates, email
+layouts, user data, and environment management — so you can build and manage your notification
+infrastructure through natural language. Authentication is via OAuth 2.1 (sign in with your Knock
+account); no local installation or API keys are required.
+
+The server is deployed on Cloudflare Workers with Durable Objects for stateful MCP sessions, and
+is licensed under MIT.
+
+## Key capabilities
+
+- **Workflow management** — create and edit notification workflows via natural language.
+- **Channel & template management** — manage email, push, SMS, and in-app channels; edit templates
+  and email layouts.
+- **Commit & promote** — stage resource changes and promote them across environments.
+- **User & tenant data** — create, update, and inspect Knock users, tenants, and objects.
+- **Message log inspection** — view sent message logs and debug delivery issues.
+- **Documentation search** — search Knock docs from within your AI assistant.
+- **Management API access** — explore Knock's OpenAPI spec and call the Management API via
+  sandboxed JavaScript execution.
+
+## How it compares
+
+| Server | Notification workflows | Multi-channel | Environment promotion | OAuth auth | Hosted |
+|---|---|---|---|---|---|
+| **Knock MCP** | Yes | Email, push, SMS, in-app | Yes | Yes | Yes (CF Workers) |
+| SendGrid MCP | Email only | No | No | API key | No |
+| Courier MCP | Yes | Email, push, SMS | Limited | API key | No |
+| Resend MCP | Email only | No | No | API key | No |
+
+Knock's MCP is unique in offering full workflow lifecycle management (create → edit → commit →
+promote) across multiple channels without a local install.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http knock https://mcp.knock.app/mcp
+```
+
+Start Claude Code and run `/mcp` to authenticate via OAuth.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "knock": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.knock.app/mcp"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop; you will be prompted to authenticate with your Knock account on first use.
+
+## Requirements
+
+- A Knock account.
+- Node.js 18+ (for `mcp-remote` with Claude Desktop).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- OAuth 2.1 + PKCE authentication — no long-lived API keys to manage.
+- No deletion tools in the MCP server by design — changes require explicit commit and promotion.
+- Review all environment promotions before executing to avoid unintended changes in production.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- The official repository `github.com/knocklabs/knock-mcp` (MIT) confirms the remote endpoint
+  `https://mcp.knock.app/mcp`, OAuth 2.1 + PKCE auth, Cloudflare Workers deployment, and the
+  no-deletion-by-design policy.
+- Knock's developer documentation at `docs.knock.app/developer-tools/mcp-server` documents the
+  Claude Code and Claude Desktop installation commands, OAuth authentication flow, and the full
+  capability set.
+- Claude Code's MCP documentation describes the `--transport http` flag used in the installation
+  command.
