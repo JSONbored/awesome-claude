@@ -126,11 +126,14 @@ side by side.
 
 When you hand a session off to the cloud (or resume a Dispatch session), the
 branch it created may not exist on your machine yet. Copy the branch name from
-the session toolbar, then fetch and check it out:
+the session toolbar, validate it as a branch name, then use quoted arguments
+when you fetch and check it out:
 
 ```bash
-git fetch origin <branch-name>
-git checkout <branch-name>
+branch='<branch-name>'
+git check-ref-format --branch "$branch"
+git fetch origin "$branch"
+git checkout "$branch"
 ```
 
 ## Step-by-Step Implementation Guide
