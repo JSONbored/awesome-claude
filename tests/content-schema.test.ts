@@ -28,6 +28,26 @@ describe("inferStructuredFields", () => {
     expect(inferred.copySnippet).toBe("## Rule Body\n\nUse these rules.");
   });
 
+  it("preserves explicit retrieval sources for rules entries", () => {
+    const inferred = inferStructuredFields(
+      {
+        documentationUrl: "https://aws.amazon.com/architecture/well-architected/",
+        retrievalSources: [
+          "https://aws.amazon.com/architecture/well-architected/",
+          " https://docs.aws.amazon.com/ ",
+          "",
+        ],
+      },
+      "## Usage\n\nUse AWS rules.",
+      "rules",
+    );
+
+    expect(inferred.retrievalSources).toEqual([
+      "https://aws.amazon.com/architecture/well-architected/",
+      "https://docs.aws.amazon.com/",
+    ]);
+  });
+
   it("does not infer guide code examples as install commands", () => {
     const inferred = inferStructuredFields(
       {},

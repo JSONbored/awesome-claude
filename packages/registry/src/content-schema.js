@@ -600,16 +600,13 @@ export function inferStructuredFields(data, body, category) {
           ? String(data.dateAdded).trim()
           : ""
       : "";
-  const retrievalSources =
-    category === "skills"
-      ? Array.isArray(data.retrievalSources)
-        ? data.retrievalSources
-            .map(String)
-            .map((value) => value.trim())
-            .filter(Boolean)
-        : data.documentationUrl
-          ? [String(data.documentationUrl).trim()]
-          : []
+  const retrievalSources = Array.isArray(data.retrievalSources)
+    ? data.retrievalSources
+        .map(String)
+        .map((value) => value.trim())
+        .filter(Boolean)
+    : category === "skills" && data.documentationUrl
+      ? [String(data.documentationUrl).trim()]
       : [];
   const testedPlatforms =
     category === "skills"
