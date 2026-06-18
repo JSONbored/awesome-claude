@@ -1,0 +1,189 @@
+---
+title: Docs MCP Server for Claude (Grounded Docs)
+slug: arabold-docs-mcp-server
+category: mcp
+description: >-
+  Index any documentation — websites, GitHub repos, npm/PyPI packages, local files — and give
+  Claude always-current, version-specific answers with the open-source Grounded Docs MCP server.
+  An offline-first alternative to Context7, Nia, and Ref.Tools.
+cardDescription: "Grounded Docs MCP: scrape & search any docs locally — websites, GitHub, npm, PDF, Office files."
+seoTitle: "Grounded Docs MCP Server for Claude — Version-Specific Documentation Index for Any Library"
+seoDescription: "Self-host an always-current documentation index for Claude with the Grounded Docs MCP server: scrape docs from URLs, GitHub, npm, PyPI, or local files — then search with version-specific semantic queries. MIT, 1400+ stars, runs locally."
+author: arabold
+authorProfileUrl: "https://github.com/arabold"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/arabold/docs-mcp-server"
+websiteUrl: "https://github.com/arabold/docs-mcp-server"
+repoUrl: "https://github.com/arabold/docs-mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/arabold/docs-mcp-server/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http docs-mcp http://localhost:6280/sse"
+usageSnippet: >-
+  Start the server with `npx @arabold/docs-mcp-server@latest`, open the web UI at
+  http://localhost:6280 to index a library's docs (e.g. React 18 reference), then ask Claude
+  version-specific questions grounded in the exact documentation you indexed.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "docs-mcp-server": {
+        "type": "sse",
+        "url": "http://localhost:6280/sse"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "docs-mcp-server": {
+        "type": "sse",
+        "url": "http://localhost:6280/sse"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 22+ with `npx` available."
+  - "Start the server with `npx @arabold/docs-mcp-server@latest` before connecting — it listens at http://localhost:6280."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server runs entirely on your machine — no data is sent to external services; all indexed content and queries stay local."
+  - "The `scrape` tool fetches URLs and GitHub repos from the internet to build the index — only scrape documentation you are authorized to access."
+privacyNotes:
+  - "All indexed documentation and search queries stay within your local environment — nothing is sent to external APIs."
+  - "Scraped content (HTML, Markdown, PDF, Office documents, source code) is stored in a local SQLite database on your machine."
+tags:
+  - documentation
+  - semantic-search
+  - local-first
+  - devtools
+  - context7-alternative
+  - grounding
+keywords:
+  - docs mcp server claude
+  - documentation mcp server claude code
+  - grounded docs mcp local
+  - context7 alternative mcp claude
+  - version specific documentation claude
+  - scrape docs mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Grounded Docs MCP Server** gives Claude access to an always-current, version-specific
+documentation index that you control. Start the server, use the web UI or CLI to scrape
+documentation from any source — websites, GitHub repositories, npm/PyPI packages, or local
+folders — then ask Claude questions grounded in the exact library versions in your project.
+Licensed under MIT with 1400+ stars on GitHub.
+
+A fully self-hosted, open-source alternative to Context7, Nia, and Ref.Tools.
+
+## Key capabilities
+
+- **Multi-source indexing** — scrape websites, GitHub repos, npm packages, PyPI packages, local
+  folders, and ZIP archives into a searchable local index.
+- **Version-specific search** — queries target a specific library and version, so Claude answers
+  based on the exact docs you indexed rather than training-data generalizations.
+- **Broad format support** — HTML, Markdown, MDX, reStructuredText, PDF, Word, Excel, PowerPoint,
+  OpenDocument, EPUB, Jupyter Notebooks, 90+ source-code languages, JSON, YAML, CSV, and more.
+- **CLI mode** — use `npx @arabold/docs-mcp-server@latest scrape react https://react.dev` and
+  `search` commands in pipelines and agent scripts without running the server.
+- **Web UI** — built-in management interface at http://localhost:6280 for browsing indexed sources.
+- **Docker** — run as a container with a persistent volume for the index.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `scrape_documentation` | Fetch and index documentation from a URL, GitHub repo, npm/PyPI package, or local path |
+| `search_documentation` | Semantic and full-text search across the indexed documentation for a specific library |
+| `list_documentation` | List all indexed documentation sources with version info |
+| `remove_documentation` | Remove a source from the index |
+| `fetch_url` | Fetch a single URL as Markdown without indexing |
+
+## How it compares
+
+| Server | Self-hosted | Version-specific | Sources | Format coverage | Stars |
+|---|---|---|---|---|---|
+| **Grounded Docs MCP** | Yes | Yes | URL/GitHub/npm/PyPI/local | 90+ formats | 1400+ |
+| Context7 | No (cloud) | Yes | npm/GitHub | Markdown/code | N/A |
+| Ref.Tools MCP | No (cloud) | Limited | URL/GitHub | HTML/Markdown | — |
+| devdocs MCP | Yes | No | DevDocs mirror | HTML/Markdown | — |
+
+Grounded Docs is the only option that runs fully offline, supports Office documents, PDFs, and
+Jupyter Notebooks, and gives you complete control over which exact docs version is indexed.
+
+## Installation
+
+### Step 1: Start the Grounded Docs server
+
+```bash
+npx @arabold/docs-mcp-server@latest
+```
+
+The server starts at `http://localhost:6280`. Open that URL in your browser to manage indexed
+documentation via the web UI.
+
+### Step 2: Connect Claude Code
+
+```bash
+claude mcp add --transport http docs-mcp http://localhost:6280/sse
+```
+
+### Step 2 (alternative): Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "docs-mcp-server": {
+      "type": "sse",
+      "url": "http://localhost:6280/sse"
+    }
+  }
+}
+```
+
+### Docker
+
+```bash
+docker run -d -p 6280:6280 \
+  -v docs-mcp-data:/data \
+  ghcr.io/arabold/docs-mcp-server:latest
+```
+
+### CLI (no server required)
+
+```bash
+# Index React docs
+npx @arabold/docs-mcp-server@latest scrape react https://react.dev/reference/react
+
+# Search the index
+npx @arabold/docs-mcp-server@latest search react "useEffect cleanup" --output yaml
+```
+
+## Requirements
+
+- Node.js 22+ with `npx`.
+- An MCP client (Claude Code or Claude Desktop).
+- The server must be running at `http://localhost:6280` before connecting.
+
+## Security
+
+- Fully local — no network traffic to external APIs.
+- All data stored in a local SQLite database; only `scrape_documentation` makes outbound requests
+  to fetch the source URLs you specify.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `arabold/docs-mcp-server` (MIT, 1400+ stars) documents the
+  `@arabold/docs-mcp-server` npm package, SSE endpoint at `http://localhost:6280/sse`,
+  the five tools (scrape, search, list, remove, fetch-url), CLI mode, Docker image, Node.js 22+
+  requirement, and all supported file formats.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the `--transport http`
+  SSE connection pattern used above.
