@@ -22,6 +22,12 @@ installable: true
 installCommand: "/plan-mode [task] [depth]"
 usageSnippet: "/plan-mode [task] [depth]"
 copySnippet: "/plan-mode [task] [depth]"
+safetyNotes:
+  - "Review generated changes and commands before applying them; slash commands can ask the agent to read, write, edit, or run tools in the current project."
+  - "Limit scope to the intended files and run in a trusted checkout when the command analyzes code, tests, security findings, or generated output."
+privacyNotes:
+  - "Prompts, source files, logs, errors, dependency metadata, and generated reports may be sent to the configured AI model during command execution."
+  - "Redact secrets, customer data, private repository details, and proprietary code before sharing command output outside the workspace."
 tags:
   - plan-mode
   - extended-thinking
@@ -295,7 +301,7 @@ Boundary Identification:
    - Team: 4 developers
 
 4. Payment Service
-   - Domain: Billing, subscriptions
+   - Domain: Transactions, invoice records
    - Data: 8M transactions, 200GB
    - Load: 800 req/s
    - Team: 3 developers
@@ -370,7 +376,7 @@ Phase 6: Migration Strategy (12 months)
 Quarter 1: Foundation
 
 - Week 1-4: Setup Kubernetes cluster
-- Week 5-8: Implement API gateway
+- Week 5-8: Implement edge routing layer
 - Week 9-12: Extract User Service (lowest risk)
 
 Quarter 2: Core Services
