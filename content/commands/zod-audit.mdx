@@ -21,6 +21,9 @@ usageSnippet: /zod-audit security apps/web
 copySnippet: /zod-audit security apps/web
 privacyNotes:
   - "Reads the source files it audits, which may include schema definitions and sample data, and sends them to the model as part of the request; it does not transmit them anywhere else."
+safetyNotes:
+  - "Review generated changes and commands before applying them; slash commands can ask the agent to read, write, edit, or run tools in the current project."
+  - "Limit scope to the intended files and run in a trusted checkout when the command analyzes code, tests, security findings, or generated output."
 tags:
   - zod
   - validation

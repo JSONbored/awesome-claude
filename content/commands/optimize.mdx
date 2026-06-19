@@ -20,6 +20,12 @@ installable: true
 installCommand: "/optimize [options] <file_or_function>"
 usageSnippet: "/optimize [options] <file_or_function>"
 copySnippet: "/optimize [options] <file_or_function>"
+safetyNotes:
+  - "Review generated changes and commands before applying them; slash commands can ask the agent to read, write, edit, or run tools in the current project."
+  - "Limit scope to the intended files and run in a trusted checkout when the command analyzes code, tests, security findings, or generated output."
+privacyNotes:
+  - "Prompts, source files, logs, errors, dependency metadata, and generated reports may be sent to the configured AI model during command execution."
+  - "Redact secrets, customer data, private repository details, and proprietary code before sharing command output outside the workspace."
 tags:
   - performance
   - optimization

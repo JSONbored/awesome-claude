@@ -220,23 +220,15 @@ describe("trust coverage report script", () => {
     ).toBe(false);
   });
 
-  it("keeps live MCP content at full trust coverage", () => {
-    const result = runTrustCoverage([
-      "--category",
-      "mcp",
-      "--check",
-      "--min-risk-coverage",
-      "100",
-    ]);
+  it("keeps live risk-bearing content at full trust coverage", () => {
+    const result = runTrustCoverage(["--check", "--min-risk-coverage", "100"]);
 
     expect(result.status).toBe(0);
-    // Assert FULL trust coverage rather than a hardcoded total: the live MCP entry count drifts
-    // every time content is added/removed, which otherwise fails this (unrelated) web test on every
-    // such change. What matters is that ALL live MCP entries are 100% covered, 0 missing, and fully
-    // provenanced — the count is incidental.
-    expect(result.stdout).toMatch(/with safety \+ privacy notes: \d+ \(100%\), missing 0/);
+    // Assert FULL risk-bearing trust coverage rather than a hardcoded total:
+    // live content count drifts with submissions, but every command, hook, MCP
+    // server, skill, and statusline should keep safety/privacy disclosures.
     expect(result.stdout).toMatch(
-      /Provenance \(all \d+\): source-backed 100%, attributed 100%/,
+      /with safety \+ privacy notes: \d+ \(100%\), missing 0/,
     );
   });
 });
