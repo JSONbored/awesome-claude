@@ -4,7 +4,6 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -25,6 +24,7 @@ import { RouteProgress } from "@/components/route-progress";
 import { WebMcpProvider } from "@/components/webmcp-provider";
 import { AiReferral } from "@/components/ai-referral";
 import { WebVitals } from "@/components/web-vitals";
+import { UmamiTracker } from "@/components/umami-tracker";
 import { siteConfig } from "@/lib/site";
 import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
@@ -198,23 +198,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: React.ReactNode }) {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const shouldLoadAnalytics =
-    pathname !== "/brief/approve" &&
-    Boolean(siteConfig.umamiScriptUrl && siteConfig.umamiWebsiteId);
-
   return (
     <html lang="en">
       <head>
         <HeadContent />
-        {shouldLoadAnalytics && (
-          <script
-            id="umami-analytics"
-            defer
-            src={siteConfig.umamiScriptUrl}
-            data-website-id={siteConfig.umamiWebsiteId}
-          />
-        )}
       </head>
       <body>
         {children}
@@ -246,6 +233,12 @@ function RootComponent() {
                 <CompareDrawer />
                 <BackToTop />
                 <WebMcpProvider />
+                {siteConfig.umamiWebsiteId && (
+                  <UmamiTracker
+                    websiteId={siteConfig.umamiWebsiteId}
+                    allowedHosts={siteConfig.umamiAllowedHosts}
+                  />
+                )}
                 <WebVitals />
                 <AiReferral />
                 <Toaster

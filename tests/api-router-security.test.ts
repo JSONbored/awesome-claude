@@ -896,6 +896,7 @@ describe("umami collector proxy security", () => {
     vi.unstubAllGlobals();
     vi.spyOn(console, "warn").mockImplementation(() => {});
     process.env.UMAMI_UPSTREAM_URL = "https://umami.example";
+    process.env.UMAMI_ALLOWED_UPSTREAM_ORIGINS = "https://umami.example";
     const { __rateLimitTestHooks } = await import("@/lib/api-security");
     __rateLimitTestHooks.reset();
   });
@@ -1026,6 +1027,23 @@ describe("umami collector proxy security", () => {
     expect(response.status).toBe(202);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0]?.[0]).toBe("https://umami.example/api/send");
+  });
+
+  it("refuses to proxy analytics to unapproved upstream origins", async () => {
+    process.env.UMAMI_UPSTREAM_URL = "https://untrusted.example";
+    process.env.UMAMI_ALLOWED_UPSTREAM_ORIGINS = "https://umami.example";
+    const fetchMock = vi.fn(async () => new Response("ok", { status: 202 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    const response = await POST(analyticsRequest('{"payload":{}}'));
+
+    expect(response.status).toBe(404);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "analytics_not_configured" },
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("does not proxy the tracker script as same-origin JavaScript", async () => {

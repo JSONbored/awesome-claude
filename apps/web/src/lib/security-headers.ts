@@ -12,7 +12,8 @@ export function urlOrigin(value: string) {
 const scriptSrc = [
   // Keep scripts constrained to same-origin application bundles. The legacy
   // first-party analytics script proxy is disabled because it could serve
-  // external JavaScript as same-origin code.
+  // external JavaScript as same-origin code; browser analytics is emitted by
+  // our bundled first-party tracker through /u/api/send.
   "script-src 'self' 'unsafe-inline'",
   process.env.NODE_ENV === "production" ? "" : "'unsafe-eval'",
   "https://challenges.cloudflare.com",

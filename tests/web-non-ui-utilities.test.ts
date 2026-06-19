@@ -90,6 +90,11 @@ import {
   trackEvent,
 } from "../apps/web/src/lib/analytics";
 import {
+  buildUmamiPayload,
+  isAllowedUmamiHost,
+  shouldTrackUmamiPage,
+} from "../apps/web/src/components/umami-tracker";
+import {
   logApiError,
   logApiInfo,
   logApiWarn,
@@ -702,6 +707,44 @@ describe("web non-UI utility coverage", () => {
       "example.com",
     );
     expect(outboundHost("not a url")).toBe("unknown");
+    vi.stubGlobal("window", {
+      location: {
+        hostname: "heyclau.de",
+        pathname: "/entry/mcp/example",
+        search: "?view=full",
+      },
+      screen: {
+        width: 1440,
+        height: 900,
+      },
+      localStorage,
+      sessionStorage,
+      dispatchEvent,
+    });
+    vi.stubGlobal("document", { title: "Example MCP" });
+    vi.stubGlobal("navigator", { language: "en-US" });
+    expect(isAllowedUmamiHost("HeyClau.DE", ["heyclau.de"])).toBe(true);
+    expect(isAllowedUmamiHost("preview.heyclau.de", ["heyclau.de"])).toBe(
+      false,
+    );
+    expect(isAllowedUmamiHost("localhost", [])).toBe(true);
+    expect(shouldTrackUmamiPage("/brief/approve")).toBe(false);
+    expect(shouldTrackUmamiPage("/entry/mcp/example")).toBe(true);
+    expect(
+      buildUmamiPayload("site-1", "https://referrer.example/docs", "open", {
+        category: "mcp",
+      }),
+    ).toEqual({
+      website: "site-1",
+      screen: "1440x900",
+      language: "en-US",
+      title: "Example MCP",
+      hostname: "heyclau.de",
+      url: "/entry/mcp/example?view=full",
+      referrer: "https://referrer.example/docs",
+      name: "open",
+      data: { category: "mcp" },
+    });
 
     expect(readCopyPref()).toBeNull();
     writeCopyPref("config");

@@ -18,6 +18,7 @@ const RATE_LIMIT = {
   limit: 60,
   windowMs: 60_000,
 } as const;
+const DEFAULT_ALLOWED_UPSTREAM_ORIGINS = ["https://tasty.aethereal.dev"] as const;
 
 function getRequestId(request: Request) {
   return (
@@ -25,9 +26,27 @@ function getRequestId(request: Request) {
   );
 }
 
+function allowedUpstreamOrigins() {
+  const configured = getEnvString("UMAMI_ALLOWED_UPSTREAM_ORIGINS");
+  return configured
+    ? configured
+        .split(",")
+        .map((origin) => origin.trim())
+        .filter(Boolean)
+    : [...DEFAULT_ALLOWED_UPSTREAM_ORIGINS];
+}
+
+function validatedUpstreamOrigin(upstream: string) {
+  try {
+    const origin = new URL(upstream).origin;
+    return allowedUpstreamOrigins().includes(origin) ? origin : "";
+  } catch {
+    return "";
+  }
+}
+
 /**
- * First-party umami collector proxy. The tracker served from `/u/script.js`
- * posts events here (umami derives the collector from the script directory); we
+ * First-party umami collector proxy. The bundled tracker posts events here; we
  * forward them to the umami instance server-side, preserving the visitor
  * User-Agent and IP (umami needs both for sessions + geolocation). Keeps
  * `connect-src` to `'self'` — no third-party analytics origin in the CSP. Lives
@@ -62,7 +81,7 @@ export async function POST(request: Request): Promise<Response> {
     throw error;
   }
 
-  const upstream = getEnvString("UMAMI_UPSTREAM_URL");
+  const upstream = validatedUpstreamOrigin(getEnvString("UMAMI_UPSTREAM_URL"));
   if (!upstream) return apiError("analytics_not_configured", 404, { requestId });
 
   const headers = new Headers({
