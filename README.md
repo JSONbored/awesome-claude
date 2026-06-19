@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1305+ file-backed entries</strong> stay useful as both an
+        <strong>1307+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1305</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1307</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -73,7 +73,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>181</code><br>
+          <code>183</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -747,7 +747,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (181)
+## 🧰 Tools (183)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
@@ -867,6 +867,7 @@ Get a free API key on https://app.zyntra.app/
 - **[n8n](https://heyclau.de/entry/tools/n8n)** - Source-available workflow automation platform for self-hosted integrations, AI workflows, triggers, and data pipelines.
 - **[Nanobot AI](https://heyclau.de/entry/tools/nanobot-ai)** - MIT-licensed personal AI agent framework with a small Python core, WebUI, CLI, chat channels, persistent goals, memory, MCP servers, CLI Apps, cron, shell and file tools, provider routing, OpenAI-compatible API serving, and deployment paths for long-running self-hosted agents.
 - **[NanoClaw](https://heyclau.de/entry/tools/nanoclaw)** - Open-source platform that runs Claude agents in isolated per-session containers, connects them to messaging channels, keeps per-agent memory and scheduled tasks, and routes credentials through a vault so keys never enter containers.
+- **[NVIDIA SkillSpector](https://heyclau.de/entry/tools/nvidia-skillspector)** - Apache-2.0 security scanner from NVIDIA for AI agent skills, with static pattern checks, optional LLM semantic analysis, MCP least-privilege and tool poisoning analyzers, OSV.dev vulnerability lookups, risk scoring, and terminal, JSON, Markdown, and SARIF reports.
 - **[Official MCP C# SDK](https://heyclau.de/entry/tools/official-mcp-csharp-sdk)** - Official C# SDK for Model Context Protocol servers and clients, maintained by the MCP project in collaboration with Microsoft, with NuGet packages for core MCP APIs, hosting and dependency injection extensions, ASP.NET Core HTTP servers, samples, API documentation, and cross-application access support.
 - **[Official MCP Go SDK](https://heyclau.de/entry/tools/official-mcp-go-sdk)** - Official Go SDK for Model Context Protocol servers and clients, maintained by the MCP project in collaboration with Google, with packages for MCP, JSON-RPC, OAuth primitives, OAuth protected-resource metadata, clients, servers, transports, examples, and conformance work.
 - **[Official MCP Java SDK](https://heyclau.de/entry/tools/official-mcp-java-sdk)** - Official Java SDK for Model Context Protocol clients and servers, maintained in collaboration with Spring AI, with Java 17+ support, Maven artifacts, synchronous and asynchronous APIs, Reactive Streams, Project Reactor, JDK HttpClient, Servlet transport, JSON binding modules, and conformance tests.
@@ -920,6 +921,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Temporal](https://heyclau.de/entry/tools/temporal)** - MIT-licensed durable execution platform for building resilient applications with Workflows, Activities, Workers, Task Queues, Namespaces, retries, schedules, and event history.
 - **[Trigger.dev](https://heyclau.de/entry/tools/trigger-dev)** - Background job and workflow platform for TypeScript applications, long-running tasks, schedules, and durable automation.
 - **[TruLens](https://heyclau.de/entry/tools/trulens)** - Open-source evaluation and tracing framework for measuring AI agents, RAG systems, LLM apps, retrieval quality, feedback metrics, and trace-level regressions.
+- **[Upsonic](https://heyclau.de/entry/tools/upsonic)** - Python framework for autonomous AI agents, traditional agents, custom tools, MCP tools, prebuilt autonomous agents, workspace-restricted file and shell operations, E2B sandbox execution, OCR, document processing, and vector storage integrations.
 - **[Vercel AI SDK](https://heyclau.de/entry/tools/vercel-ai-sdk)** - TypeScript toolkit for building AI applications with model providers, streaming UI, tools, agents, and framework adapters.
 - **[v0](https://heyclau.de/entry/tools/vercel-v0)** - Vercel AI interface builder for generating, editing, and iterating on React and web UI from prompts.
 - **[vLLM](https://heyclau.de/entry/tools/vllm)** - Open-source high-throughput LLM inference and serving engine with PagedAttention, continuous batching, OpenAI-compatible APIs, tool calling, and structured outputs.
