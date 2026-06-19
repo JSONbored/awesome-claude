@@ -509,8 +509,12 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
     expect(source).toContain("strictDuplicatePolicy:");
-    expect(source).toContain("const hardCloseDuplicate =");
-    expect(source).toContain('reason.startsWith("same canonical source URL ")');
+    expect(source).toContain(`decision: duplicateCloseDecision(
+      duplicateReview.strictDuplicate`);
+    expect(source).not.toContain("const hardCloseDuplicate =");
+    expect(source).not.toContain(
+      'reason.startsWith("same canonical source URL ")',
+    );
     expect(source).toContain("relatedContentPolicy:");
     expect(source).toContain("collectionPolicy:");
     expect(source).toContain("defensiveSecurityPolicy:");
@@ -2843,6 +2847,53 @@ docsUrl: "https://docs.anthropic.com/en/docs/claude-code/security#events"
             expect.stringContaining(
               "same canonical source URL https://docs.anthropic.com/en/docs/claude-code/security across hooks/guides",
             ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
+  it("keeps legacy-only canonical URL matches out of strict duplicate closure", () => {
+    const earlierOpenPr = extractContentDuplicateSignals({
+      filePath: "content/tools/shared-project-tool.mdx",
+      content: `---
+title: Shared Project Tool
+slug: shared-project-tool
+category: tools
+description: Tooling for the Shared Project command-line workflow.
+repoUrl: "https://github.com/acme/shared-project"
+---
+`,
+      label: "earlier open PR #10",
+    });
+    const laterCandidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/shared-project-server.mdx",
+      content: `---
+title: Shared Project MCP Server
+slug: shared-project-server
+category: mcp
+description: MCP server for exposing Shared Project context to Claude.
+repoUrl: "https://github.com/acme/shared-project.git?utm_source=heyclaude"
+---
+`,
+      label: "PR #20",
+    });
+
+    const duplicateReview = buildContentDuplicateReview(laterCandidate, [
+      earlierOpenPr,
+    ]);
+
+    expect(duplicateReview.legacyDuplicate).toMatchObject({
+      reasons: expect.arrayContaining([
+        "same canonical source URL https://github.com/acme/shared-project",
+      ]),
+    });
+    expect(duplicateReview.strictDuplicate).toBeNull();
+    expect(findRelatedContentMatches(laterCandidate, [earlierOpenPr])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            "same canonical source URL https://github.com/acme/shared-project across mcp/tools",
           ]),
         }),
       ]),
