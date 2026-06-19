@@ -140,6 +140,7 @@ components:
               - label
               - count
               - description
+          maxItems: 64
       required:
         - schemaVersion
         - kind

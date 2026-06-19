@@ -84,7 +84,8 @@
                 "description": { "type": "string" }
               },
               "required": ["category", "label", "count", "description"]
-            }
+            },
+            "maxItems": 64
           }
         },
         "required": [

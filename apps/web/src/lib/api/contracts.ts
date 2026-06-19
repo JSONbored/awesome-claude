@@ -368,14 +368,16 @@ export const registryFeedResponseSchema = z
     artifactContracts: z.record(z.string(), z.unknown()).optional(),
     qualitySummary: z.unknown().optional(),
     trustSummary: z.unknown().optional(),
-    categories: z.array(
-      z.object({
-        category: z.string(),
-        label: z.string(),
-        count: z.number().int().nonnegative(),
-        description: z.string(),
-      }),
-    ),
+    categories: z
+      .array(
+        z.object({
+          category: z.string(),
+          label: z.string(),
+          count: z.number().int().nonnegative(),
+          description: z.string(),
+        }),
+      )
+      .max(64),
   })
   .passthrough();
 
