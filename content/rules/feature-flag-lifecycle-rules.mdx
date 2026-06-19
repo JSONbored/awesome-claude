@@ -1,0 +1,247 @@
+---
+title: Feature Flag Lifecycle Review Rules
+slug: feature-flag-lifecycle-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing feature flag changes across their full
+  lifecycle, covering flag creation, naming, default values, kill switches,
+  targeting, rollout safety, cleanup of stale flags, and privacy-safe
+  configuration evidence.
+cardDescription: >-
+  Review feature flag changes for safe defaults, kill switches, targeting,
+  staged rollout, stale-flag cleanup, and privacy-safe configuration.
+seoTitle: Feature Flag Lifecycle Review Rules
+seoDescription: >-
+  Practical feature flag review rules for the whole lifecycle: naming, safe
+  defaults, kill switches, targeting, staged rollout, observability, technical
+  debt cleanup, and privacy-safe flag configuration evidence.
+author: jaso0n0818
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+documentationUrl: "https://martinfowler.com/articles/feature-toggles.html"
+sourceUrls:
+  - "https://martinfowler.com/articles/feature-toggles.html"
+  - "https://openfeature.dev/docs/reference/intro/"
+  - "https://openfeature.dev/specification/glossary/"
+  - "https://en.wikipedia.org/wiki/Feature_toggle"
+installable: false
+usageSnippet: >-
+  Apply these rules when a change adds, modifies, targets, rolls out, or removes
+  a feature flag, or when a flag has outlived its release and should be cleaned
+  up.
+copySnippet: |-
+  You are reviewing a feature flag change across its lifecycle.
+
+  Rules:
+  1. Treat every flag as temporary by default; require an owner, an intended
+     flag type (release, experiment, ops, or permission), and a planned removal
+     condition before it ships.
+  2. Require a safe, explicit default for when the flag system is unreachable so
+     that evaluation failures fall back to known behavior instead of crashing.
+  3. Keep flag evaluation side-effect free and consistent for a given context;
+     do not let a single request see conflicting flag states mid-flow.
+  4. Roll out behind staged targeting (internal, percentage, then general) and
+     pair every risky flag with a documented kill switch and rollback path.
+  5. Remove stale flags after the rollout settles; delete both the flag wiring
+     and the dead code path so the toggle does not become permanent debt.
+  6. Keep targeting rules, user attributes, and flag configuration privacy-safe
+     and out of public logs, comments, and screenshots.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, configuration change, or flag management entry that adds, edits, targets, rolls out, or removes a feature flag.
+  - Access to the project's flag management system or configuration source, flag naming conventions, and the owning team for the affected flags.
+  - A non-production environment or test project where targeting and default-value behavior can be exercised without affecting real users.
+  - Permission to block merge when a flag lacks an owner, a safe default, a removal plan, or a kill switch for risky behavior.
+safetyNotes:
+  - "A missing or unsafe default value can turn a flag-service outage into a production incident when evaluation falls back to the wrong path."
+  - "Percentage and targeting rollouts can expose unfinished behavior to real users; risky flags need a kill switch and rollback path that is tested before wide release."
+  - "Stale flags accumulate as technical debt and can silently re-enable or disable behavior long after the original release, so removal should delete both the flag and its dead code path."
+privacyNotes:
+  - "Flag targeting can reference user identifiers, email domains, plan tiers, regions, cohorts, and other attributes that are sensitive when shared."
+  - "Do not paste raw targeting rules, segment definitions, user lists, or flag-evaluation context into public PR comments without redaction."
+  - "Use synthetic users and test segments when demonstrating targeting, especially for auth, billing, healthcare, or other regulated flows."
+tags:
+  - feature-flags
+  - release-management
+  - rollout-safety
+  - technical-debt
+  - code-review
+  - configuration
+---
+
+## Purpose
+
+Use these rules when a change creates, modifies, targets, rolls out, or removes
+a feature flag. The goal is to keep flags safe while they are live and to keep
+them from becoming permanent technical debt after the release they were meant
+to gate has shipped.
+
+This is a review policy, not a flag-platform tutorial. It tells reviewers what
+must be true about a flag's ownership, default behavior, rollout plan, and
+cleanup before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know what the flag does and how long it should live.
+
+1. **Flag intent.** Whether the flag is a release toggle, an experiment, an
+   operational/ops toggle, or a permission toggle, since each type has a
+   different expected lifetime and owner.
+2. **Default and fallback.** The value used when the flag service is
+   unreachable, the SDK fails to initialize, or the context is missing.
+3. **Targeting model.** The attributes, segments, percentages, and environments
+   used to decide who sees the new behavior.
+4. **Rollout and rollback.** The staged plan, the kill switch, and the steps to
+   disable the flag quickly if the new path misbehaves.
+5. **Removal condition.** The event or date after which the flag and its code
+   path should be deleted, plus the owner responsible for cleanup.
+
+If the change cannot state the flag's type, default, and removal condition,
+require that context before reviewing rollout details.
+
+## Naming And Ownership Rules
+
+- Give each flag a descriptive, scoped name that encodes its purpose and the
+  surface it controls, not a generic `new-feature` or `test` label.
+- Record an owning team or person and the flag type so reviewers know who
+  retires it and when.
+- Avoid reusing a retired flag key for a new purpose; stale evaluation caches or
+  configs can map old keys to unexpected behavior.
+- Keep one flag responsible for one decision; do not overload a single flag to
+  gate several unrelated changes.
+- Document the intended short lifetime for release and experiment flags so the
+  flag is expected to disappear rather than persist.
+
+## Default And Evaluation Rules
+
+- Every flag must define an explicit default that represents safe, current
+  behavior when the flag system cannot be reached.
+- Evaluation must be deterministic for a given context within a request so a
+  single flow does not branch inconsistently partway through.
+- Do not block critical request paths on a slow or failing flag lookup; prefer
+  cached or default evaluation over a hard dependency.
+- Keep flag checks free of side effects; reading a flag should not mutate state,
+  write data, or trigger external calls.
+- Fail closed for permission and security flags and fail to the known-good path
+  for release flags, and make that choice explicit in review.
+
+## Rollout And Kill-Switch Rules
+
+- Stage exposure from internal users to a small percentage to general
+  availability instead of flipping a flag to everyone at once.
+- Pair every risky or irreversible behavior with a documented kill switch and a
+  rollback path that has been exercised, not just described.
+- Keep targeting changes auditable so reviewers can see who changed exposure,
+  when, and to which segments.
+- Avoid coupling a flag flip to an irreversible data migration; the toggle
+  should be reversible even after data has been written.
+- Verify that turning the flag off restores prior behavior cleanly, including
+  cached values, derived state, and downstream consumers.
+
+## Cleanup And Technical-Debt Rules
+
+Flags are temporary by default. Removal is part of the change, not an optional
+follow-up.
+
+- Remove the flag wiring and the now-dead code path together once the rollout
+  has settled and the decision is permanent.
+- Delete stale targeting rules, segments, and configuration so retired flags do
+  not keep evaluating in the background.
+- Track long-lived flags explicitly; an ops or permission flag that stays should
+  be a deliberate, documented decision, not an accident.
+- Treat a flag that has been fully rolled out for a long time as technical debt
+  and schedule its removal.
+- When removing a flag, keep the surviving behavior equal to the value that was
+  live in production to avoid a silent behavior change.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- a new flag has no owner, no flag type, and no removal condition;
+- the flag has no safe default for when the flag service is unavailable;
+- risky or irreversible behavior ships without a documented, tested kill switch;
+- a percentage or targeting rollout is set straight to general availability for
+  unverified behavior;
+- a flag flip is coupled to an irreversible migration with no rollback path;
+- removing a flag changes the live production behavior instead of preserving it;
+- targeting rules, user lists, or segment definitions expose sensitive
+  attributes in public review artifacts.
+
+## Review Checklist
+
+- [ ] {"task": "Intent and owner clear", "description": "The flag has a type, an owner, and a documented removal condition"}
+- [ ] {"task": "Safe default defined", "description": "Evaluation falls back to known-good behavior when the flag service is unreachable"}
+- [ ] {"task": "Evaluation is clean", "description": "Flag checks are deterministic per context and free of side effects"}
+- [ ] {"task": "Rollout is staged", "description": "Exposure ramps from internal to percentage to general with a tested kill switch"}
+- [ ] {"task": "Cleanup planned", "description": "Stale flag wiring, code paths, and targeting are removed once the rollout settles"}
+- [ ] {"task": "Privacy safe", "description": "Targeting rules, segments, and user attributes avoid sensitive data in public artifacts"}
+
+## AI Review Rules
+
+AI assistants can help find flag risk, but they should show their evidence.
+
+- Ask the assistant to identify the flag type, default value, and removal
+  condition before giving a verdict.
+- Require the file, key, and code path for every flag the change touches.
+- Have the assistant separate confirmed issues, such as a missing default, from
+  checks it could not run.
+- Do not let the assistant assume a kill switch exists; require the rollback
+  path to be shown.
+- Re-run review after targeting, percentage, or default-value changes.
+
+## Troubleshooting
+
+- **A flag outage broke production:** add an explicit safe default and stop
+  treating the flag lookup as a hard dependency on the critical path.
+- **Behavior changed after a flag was deleted:** set the surviving code to the
+  value that was actually live before removing the toggle.
+- **A flag never gets removed:** assign an owner and a removal condition at
+  creation and treat fully rolled-out flags as scheduled debt.
+- **Turning a flag off did not roll back:** check cached evaluations, derived
+  state, and downstream consumers, and verify the off path in a test
+  environment.
+- **Targeting leaked user data:** use synthetic segments and redact targeting
+  details before posting them in public review.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, statuslines, guides, collections, skills, open
+PRs, and closed PRs for feature flag management, feature toggle rollout,
+release management, kill switches, staged rollout, and technical-debt cleanup
+of stale flags.
+
+Adjacent content includes general release and code-review rules, but no entry
+covers the full feature flag lifecycle as a portable pre-merge review policy.
+This entry is distinct because it decides what must be true about a flag's
+ownership, default behavior, staged rollout, kill switch, and stale-flag cleanup
+before a flag change can merge.
+
+No prior closed PR for this rule was found during the duplicate/history check.
+
+## Flag Type Reference
+
+Feature toggles are not all the same. The categories below follow the toggle
+taxonomy and the lifetime guidance documented by the sources, and they drive how
+long a flag should live and how aggressively it should be cleaned up.
+
+| Flag type  | Typical lifetime | Review focus                                                  |
+| ---------- | ---------------- | ------------------------------------------------------------- |
+| Release    | Short            | Remove once the feature is permanent; never reuse the key     |
+| Experiment | Short            | Tie to an experiment window; remove after the decision        |
+| Ops        | Long but bounded | Document why it persists; keep a safe default and kill switch |
+| Permission | Long             | Fail closed; treat as access control, not a release toggle    |
+
+A short-lived release toggle that survives long after launch has become
+technical debt: it adds branching, complicates testing, and risks re-enabling
+unfinished behavior. Schedule its removal as part of the rollout, not as an
+open-ended follow-up.
+
+## Sources
+
+- Martin Fowler feature toggles: https://martinfowler.com/articles/feature-toggles.html
+- OpenFeature reference introduction: https://openfeature.dev/docs/reference/intro/
+- OpenFeature glossary: https://openfeature.dev/specification/glossary/
+- Feature toggle (Wikipedia): https://en.wikipedia.org/wiki/Feature_toggle
