@@ -885,13 +885,6 @@ async function shouldInspectPullRequestFilesForWebhook(
   const existingStatus = String(existing?.status || "");
   if (
     hasTerminalGateDecision(existing) &&
-    existingStatus === "closed" &&
-    isReopenedPullRequestEvent(String(eventName || ""), webhook)
-  ) {
-    return true;
-  }
-  if (
-    hasTerminalGateDecision(existing) &&
     existingStatus !== "closed" &&
     !(
       existingStatus === "ignored" &&

@@ -1949,8 +1949,8 @@ ${urls}
       source.indexOf("async function shouldInspectPullRequestFilesForWebhook"),
       source.indexOf("function reviewTargetFromPullPayload"),
     );
-    const reopenedClosedIndex = shouldInspectBlock.indexOf(
-      'existingStatus === "closed"',
+    const terminalClosedExclusionIndex = shouldInspectBlock.indexOf(
+      'existingStatus !== "closed"',
     );
     const reviewKeySkipIndex = shouldInspectBlock.indexOf(
       "return !reviewScanKey || existingReviewKey !== reviewScanKey",
@@ -1969,9 +1969,12 @@ ${urls}
     expect(source).toContain(
       "resetAttemptCount: shouldResetManualTerminal || shouldResetTerminalState",
     );
-    expect(source).toContain('existingStatus === "closed"');
-    expect(source).toContain(
+    expect(source).toContain('existingStatus !== "closed"');
+    expect(shouldInspectBlock).not.toContain(
       'isReopenedPullRequestEvent(String(eventName || ""), webhook)',
+    );
+    expect(source).toContain(
+      "isReopenedPullRequestEvent(eventName, webhook)",
     );
     expect(source).toContain("eventName,");
     expect(source).toContain("clearTerminal:");
@@ -1984,8 +1987,8 @@ ${urls}
     expect(inspectIndex).toBeGreaterThan(0);
     expect(classifyIndex).toBeGreaterThan(inspectIndex);
     expect(applyIndex).toBeGreaterThan(classifyIndex);
-    expect(reopenedClosedIndex).toBeGreaterThan(0);
-    expect(reviewKeySkipIndex).toBeGreaterThan(reopenedClosedIndex);
+    expect(terminalClosedExclusionIndex).toBeGreaterThan(0);
+    expect(reviewKeySkipIndex).toBeGreaterThan(terminalClosedExclusionIndex);
   });
 
   it("cleans stale gate metadata when webhook paths ignore former content PRs", () => {
