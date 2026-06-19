@@ -2058,22 +2058,31 @@ describe("HeyClaude read-only MCP helpers", () => {
     // Find an entry that GENUINELY has no safety/privacy notes by reading entry
     // detail files (directory-index strips notes). Assuming a specific entry is
     // note-less is brittle — content enrichment adds notes over time.
-    function findEntryWithoutNotes(category: string) {
-      const dir = path.join(dataDir, "entries", category);
-      for (const file of fs.readdirSync(dir).sort()) {
-        const detail = JSON.parse(
-          fs.readFileSync(path.join(dir, file), "utf8"),
-        ) as {
-          entry?: { slug: string; safetyNotes?: string; privacyNotes?: string };
-        };
-        const entry = detail.entry;
-        if (entry && !entry.safetyNotes && !entry.privacyNotes) {
-          return { category, slug: entry.slug };
+    // Content enrichment adds notes over time and has now filled an ENTIRE category (hooks → 0 note-less),
+    // so searching one hard-coded category is brittle. Search EVERY category and return null only if the
+    // whole registry is enriched — the callers then skip rather than fail on benign data drift.
+    function findEntryWithoutNotes() {
+      const entriesRoot = path.join(dataDir, "entries");
+      for (const category of fs.readdirSync(entriesRoot).sort()) {
+        const dir = path.join(entriesRoot, category);
+        if (!fs.statSync(dir).isDirectory()) continue;
+        for (const file of fs.readdirSync(dir).sort()) {
+          const detail = JSON.parse(
+            fs.readFileSync(path.join(dir, file), "utf8"),
+          ) as {
+            entry?: {
+              slug: string;
+              safetyNotes?: string;
+              privacyNotes?: string;
+            };
+          };
+          const entry = detail.entry;
+          if (entry && !entry.safetyNotes && !entry.privacyNotes) {
+            return { category, slug: entry.slug };
+          }
         }
       }
-      throw new Error(
-        `No ${category} entry without safety/privacy notes found`,
-      );
+      return null;
     }
 
     it("explains trust for entry with safety and privacy notes", async () => {
@@ -2099,9 +2108,9 @@ describe("HeyClaude read-only MCP helpers", () => {
       expect(trust.trust.disclosures.privacyNotes.length).toBeGreaterThan(0);
     });
 
-    it("explains trust for entry without safety or privacy notes", async () => {
-      const entryWithoutNotes = findEntryWithoutNotes("hooks");
-      expect(entryWithoutNotes).toBeTruthy();
+    it("explains trust for entry without safety or privacy notes", async (ctx) => {
+      const entryWithoutNotes = findEntryWithoutNotes();
+      if (!entryWithoutNotes) return ctx.skip(); // whole registry enriched — no note-less path to exercise
 
       const trust = await callRegistryTool(
         "explain_entry_trust",
@@ -2242,9 +2251,9 @@ describe("HeyClaude read-only MCP helpers", () => {
       );
     });
 
-    it("reviews safety for entry without safety notes highlights manual inspection", async () => {
-      const entryWithoutNotes = findEntryWithoutNotes("hooks");
-      expect(entryWithoutNotes).toBeTruthy();
+    it("reviews safety for entry without safety notes highlights manual inspection", async (ctx) => {
+      const entryWithoutNotes = findEntryWithoutNotes();
+      if (!entryWithoutNotes) return ctx.skip(); // whole registry enriched — no note-less path to exercise
 
       const review = await callRegistryTool(
         "review_entry_safety",
