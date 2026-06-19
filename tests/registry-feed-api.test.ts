@@ -18,6 +18,14 @@ describe("/api/registry/feed", () => {
       platformFeeds?: Record<string, string>;
       jobs?: string;
       endpoints?: Record<string, string>;
+      contracts?: Record<string, string>;
+      artifacts?: Record<string, unknown>;
+      categories?: Array<{
+        category?: string;
+        label?: string;
+        count?: number;
+        description?: string;
+      }>;
     };
 
     expect(body.qualityMethodology).toBe("/quality#methodology");
@@ -33,5 +41,23 @@ describe("/api/registry/feed", () => {
       platformFeed: "/data/feeds/platforms/{platform}.json",
       jobs: "/api/jobs?limit=100",
     });
+
+    expect(body.contracts).toMatchObject({
+      registryEntries: expect.stringContaining("trustSignals"),
+      writes: expect.stringContaining("PR-first"),
+    });
+    expect(Object.keys(body.artifacts ?? {})).toEqual(
+      expect.arrayContaining(["directory", "search"]),
+    );
+    expect(body.categories).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          category: "mcp",
+          label: "MCP Servers",
+          count: expect.any(Number),
+          description: expect.any(String),
+        }),
+      ]),
+    );
   });
 });
