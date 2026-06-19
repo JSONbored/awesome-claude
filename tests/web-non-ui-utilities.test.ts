@@ -181,6 +181,8 @@ describe("web non-UI utility coverage", () => {
     // not render the nonsensical "1000k" / "1000M".
     expect(formatCompact(999_999)).toBe("1M");
     expect(formatCompact(999_500_000)).toBe("1B");
+    // Billions keep one decimal at >=100B (no regression to integer "124B").
+    expect(formatCompact(123_500_000_000)).toBe("123.5B");
     expect(timeAgo(null)).toBe("—");
     expect(timeAgo("not-a-date")).toBe("—");
     expect(timeAgo("2026-01-10T11:59:45.000Z")).toBe("just now");

@@ -2,21 +2,19 @@
 export function formatCompact(n: number | undefined | null): string {
   if (n == null || Number.isNaN(n)) return "—";
   if (n < 1_000) return String(n);
-  // Units largest-first. `toFixed` can round a near-boundary value up to "1000"
-  // (e.g. 999_999 / 1_000 → 999.999 → "1000"), which rendered the nonsensical
-  // "1000k"/"1000M". Promote that to the next unit ("1M"/"1B") instead.
-  const units: ReadonlyArray<readonly [number, string, string]> = [
-    [1_000_000_000, "B", "B"],
-    [1_000_000, "M", "B"],
-    [1_000, "k", "M"],
-  ];
-  for (const [base, suffix, promoted] of units) {
-    if (n < base) continue;
-    const v = n / base;
-    const text = v >= 100 ? v.toFixed(0) : v.toFixed(1).replace(/\.0$/, "");
-    return text === "1000" && suffix !== "B" ? `1${promoted}` : `${text}${suffix}`;
-  }
-  return String(n);
+  if (n < 1_000_000) return withUnit(n / 1_000, "k", "M");
+  if (n < 1_000_000_000) return withUnit(n / 1_000_000, "M", "B");
+  // Billions: always one decimal (matches the original behavior — 123.5B, not 124B), and there's no
+  // higher unit to promote into, so the boundary-promotion in withUnit doesn't apply here.
+  return `${(n / 1_000_000_000).toFixed(1).replace(/\.0$/, "")}B`;
+}
+
+/** Format a k/M value: integer at ≥100 (so "120k", not "120.0k"), else one decimal. If rounding
+ *  overflows the unit to "1000" (e.g. 999_999/1_000 → 999.999 → "1000"), promote to the next unit
+ *  ("1M"/"1B") instead of the nonsensical "1000k"/"1000M". */
+function withUnit(v: number, suffix: string, promoted: string): string {
+  const text = v >= 100 ? v.toFixed(0) : v.toFixed(1).replace(/\.0$/, "");
+  return text === "1000" ? `1${promoted}` : `${text}${suffix}`;
 }
 
 /** Format an ISO date relative to now: "3d ago", "2h ago", "just now". */
