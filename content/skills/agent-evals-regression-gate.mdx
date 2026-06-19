@@ -46,6 +46,9 @@ prerequisites:
   - "Existing prompts, tools, or agent workflows to evaluate"
   - A representative set of real user tasks or transcripts
   - CI or local runner where eval suites can be executed repeatedly
+privacyNotes:
+  - "Inputs can include source files, prompts, logs, account metadata, repository details, and operational context that may be sent to the configured AI model."
+  - "Redact secrets, customer data, private URLs, credentials, and proprietary implementation details before sharing prompts, reports, or generated artifacts."
 tags:
   - evals
   - regression
@@ -103,11 +106,11 @@ This skill helps you turn subjective "looks good" checks into measurable, repeat
 
 This skill defines the regression-gate workflow; you can back the scoring with an existing eval framework:
 
-| Framework | Focus | Notable for |
-| --- | --- | --- |
-| **Promptfoo** | Test-style LLM evals + red-teaming | YAML test cases, CI-friendly, assertion library |
-| **Ragas** | RAG-specific evaluation | Retrieval/answer metrics (faithfulness, relevance) |
-| **DeepEval** | Pytest-style LLM evals | Familiar unit-test ergonomics and metric library |
+| Framework     | Focus                              | Notable for                                        |
+| ------------- | ---------------------------------- | -------------------------------------------------- |
+| **Promptfoo** | Test-style LLM evals + red-teaming | YAML test cases, CI-friendly, assertion library    |
+| **Ragas**     | RAG-specific evaluation            | Retrieval/answer metrics (faithfulness, relevance) |
+| **DeepEval**  | Pytest-style LLM evals             | Familiar unit-test ergonomics and metric library   |
 
 Use Promptfoo for broad CI assertions, Ragas when the system is retrieval-augmented, or DeepEval if you want pytest-native ergonomics — then feed their results into this gate's pass/fail thresholds.
 
