@@ -250,16 +250,23 @@ export async function resolveFromPrComments(event, env = process.env) {
   if (!Array.isArray(comments)) return null;
   const branch = [];
   const commit = [];
-  const anchor = /<a\s+href=['"]([^'"]+)['"]\s*>\s*([^<]*?Preview URL)\s*<\/a>/gi;
+  const anchor =
+    /<a\s+href=['"]([^'"]+)['"]\s*>\s*([^<]*?Preview URL)\s*<\/a>/gi;
   for (const comment of comments) {
-    if (!/cloudflare/i.test(comment?.user?.login || "")) continue;
+    // EXACT bot login only — the `[bot]` suffix is GitHub-reserved and unspoofable, so a public-repo user
+    // with "cloudflare" in their name can't post a comment with a spoofed preview URL (Superagent P2). This
+    // mirrors the same hardening in reviewbot's capture.ts findPreviewUrlFromPrComments.
+    if ((comment?.user?.login ?? "") !== "cloudflare-workers-and-pages[bot]")
+      continue;
     const body = String(comment.body || "");
     let match;
     while ((match = anchor.exec(body)) !== null) {
       const url = match[1];
       const label = match[2].toLowerCase();
-      if (label.includes("branch")) branch.push({ url, source: "cf-comment:branch" });
-      else if (label.includes("commit")) commit.push({ url, source: "cf-comment:commit" });
+      if (label.includes("branch"))
+        branch.push({ url, source: "cf-comment:branch" });
+      else if (label.includes("commit"))
+        commit.push({ url, source: "cf-comment:commit" });
     }
   }
   return selectPreviewUrl([...branch, ...commit]);
