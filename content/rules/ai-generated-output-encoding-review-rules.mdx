@@ -1,0 +1,231 @@
+---
+title: AI-Generated Output Encoding Review Rules
+slug: ai-generated-output-encoding-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated output for injection and
+  content-spoofing before merge, covering context-appropriate escaping for HTML,
+  JavaScript, CSS, and URL contexts, Content-Type and security headers,
+  template safety, and privacy-safe test evidence.
+cardDescription: >-
+  Review AI-generated output for XSS and content injection: context-appropriate
+  escaping, secure Content-Type and headers, and template auto-escaping.
+seoTitle: AI-Generated Output Encoding Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated output: context-aware HTML, JS, CSS,
+  and URL escaping to prevent XSS and content injection, Content-Type and
+  security headers, template auto-escaping, CSP, and privacy-safe test cases.
+author: jaso0n0818
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+documentationUrl: "https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html"
+sourceUrls:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html"
+  - "https://owasp.org/www-community/attacks/Content_Spoofing"
+  - "https://cwe.mitre.org/data/definitions/116.html"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits code that generates
+  HTML, JSON, XML, CSV, or any other response that includes user-supplied or
+  database-sourced content.
+copySnippet: |-
+  You are reviewing AI-generated output code for injection and content-spoofing.
+
+  Rules:
+  1. Identify every output context (HTML body, attribute, script, style, URL,
+     JSON, CSV) and apply the escaping that matches that exact context.
+  2. Never concatenate user-supplied or database-sourced values into HTML, JS,
+     or CSS without escaping them for the target context first.
+  3. Use a template engine with automatic context-aware escaping on by default;
+     flag any raw, unescaped, or trusted-markup bypass.
+  4. Set an explicit Content-Type with charset and include Content-Security-Policy,
+     X-Content-Type-Options, and X-Frame-Options on every rendered page.
+  5. Validate and reject dangerous content (javascript: URLs, data: URIs, event
+     handlers) at ingestion, not only at output.
+  6. Test with HTML tags, script payloads, URL schemes, and style expressions
+     as inputs, and keep test payloads free of real user data.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet of AI-generated code that renders user-supplied or database-sourced values into an HTTP response or file output.
+  - Knowledge of the template engine, framework, or serializer in use, since auto-escaping behavior and bypass mechanisms differ between them.
+  - A browser or HTTP client where rendered output can be inspected to confirm escaping is actually applied in the final document.
+  - Permission to block merge when user-supplied values reach a response context without context-appropriate escaping or when security headers are missing.
+safetyNotes:
+  - "Cross-site scripting from unescaped output lets an attacker execute scripts in victims' browsers, steal session cookies, and perform actions as the user."
+  - "AI assistants frequently produce template code that uses raw or unescaped output helpers on values that look safe in test data but become injectable on attacker-controlled input."
+  - "Content-Type sniffing by browsers can cause a JSON or CSV response to be interpreted as HTML if the header is missing or incorrect, turning non-HTML output into an injection surface."
+privacyNotes:
+  - "XSS test payloads should use obviously synthetic content; do not paste real user-submitted data that may contain personal information into public PR comments as test evidence."
+  - "Output-encoding failures that reflect personal data in error pages or debug output can expose it to other users or to browser extensions."
+  - "Be careful with logging escaped and unescaped versions of input for debugging, since the unescaped value can contain personal data."
+tags:
+  - xss
+  - output-encoding
+  - security
+  - content-injection
+  - ai-generated-code
+  - code-review
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits code that produces
+output containing user-supplied or database-sourced values. The goal is to stop
+generated templates and serializers from shipping cross-site scripting or
+content-injection just because the output looks correct on safe test data, since
+injection payloads only appear in adversarial input.
+
+This is a review policy, not a template-engine tutorial. It tells reviewers what
+must be true about generated output's escaping, headers, and validation before
+the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know what is rendered and in which context.
+
+1. **Output context.** Whether the value appears in an HTML body, attribute,
+   script block, style block, URL, JSON, XML, CSV, or another format.
+2. **Value origin.** Whether the value comes from user input, a database, an
+   external API, or a fully trusted internal source.
+3. **Escaping mechanism.** Whether the template engine auto-escapes for the
+   output context, or whether the developer explicitly applies an escape call.
+4. **Raw bypasses.** Whether the code uses raw output, trusted-markup, or
+   unescaped helpers on any value that is not fully server-controlled.
+5. **Headers.** Whether the response sets an explicit Content-Type with charset
+   and security headers to prevent MIME sniffing and framing attacks.
+
+If the change cannot say which values are user-sourced and which output context
+they appear in, require that context before reviewing the escaping calls.
+
+## Context-Aware Escaping Rules
+
+- Apply HTML entity escaping for values inserted into HTML body text or
+  attribute values.
+- Apply JavaScript string escaping for values inserted inside a script block or
+  an event-handler attribute.
+- Apply CSS escaping for values inserted into style blocks or style attributes.
+- Apply URL percent-encoding for values inserted into URL query strings, paths,
+  or href attributes, and validate the scheme before inserting.
+- Apply JSON serialization (never manual concatenation) for values embedded in a
+  JSON response or a script-embedded JSON block.
+- Do not reuse one escaping function across all contexts; each context has its
+  own safe character set.
+
+## Template Safety Rules
+
+- Use a template engine that applies context-aware escaping by default for all
+  variable interpolations.
+- Flag every raw, unescaped, or trusted-markup output helper and require
+  justification; these should be limited to fully server-controlled content.
+- Do not pass user-supplied values to `innerHTML`, `document.write`, `eval`,
+  or dynamic `script` element creation in generated client-side code.
+- Reject `javascript:` URLs, `data:` URIs used as navigable hrefs, and
+  on-event attributes built from user values.
+- When building HTML dynamically in server code, use a DOM builder or a safe
+  HTML library rather than string concatenation.
+
+## Header And Content-Type Rules
+
+- Set an explicit `Content-Type` header with charset on every response that
+  could contain user-supplied content.
+- Add `X-Content-Type-Options: nosniff` to prevent MIME-type sniffing from
+  reinterpreting a JSON or CSV response as HTML.
+- Set `X-Frame-Options` or a `frame-ancestors` CSP directive on pages that
+  should not be embedded.
+- Add a `Content-Security-Policy` header that restricts script sources and
+  disallows inline scripts where the feature allows it.
+- Remove or restrict the `Referrer-Policy` to avoid leaking sensitive URL
+  fragments to third-party origins.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- a user-sourced value is inserted into an HTML, JS, CSS, or URL context
+  without the matching escaping function for that context;
+- a template uses a raw or unescaped helper on any value that is not fully
+  server-controlled;
+- client-side code sets `innerHTML` or calls `eval` with a user-sourced value;
+- a `javascript:` URL or `data:` URI is accepted from user input without
+  validation;
+- the response is missing an explicit `Content-Type` and charset on content
+  that could be rendered as HTML;
+- `X-Content-Type-Options: nosniff` is absent from API or download responses
+  that could be sniffed as HTML.
+
+## Review Checklist
+
+- [ ] {"task": "Contexts mapped", "description": "Every output context (HTML, JS, CSS, URL, JSON) is identified for each user-sourced value"}
+- [ ] {"task": "Escaping matches context", "description": "The escaping function applied matches the output context, not just a generic escape"}
+- [ ] {"task": "No raw bypasses", "description": "Raw/unescaped helpers are absent or limited to verified server-controlled content"}
+- [ ] {"task": "Headers set", "description": "Content-Type with charset, X-Content-Type-Options, and relevant security headers are present"}
+- [ ] {"task": "Dangerous input rejected", "description": "javascript: URLs, data: URIs, and event-handler values are rejected at ingestion"}
+- [ ] {"task": "Privacy safe", "description": "Test payloads are synthetic and do not include real personal data"}
+
+## AI Review Rules
+
+AI assistants can review output code, but they should show evidence.
+
+- Ask the assistant to list every output context and the escaping applied for
+  each user-sourced value before giving a verdict.
+- Require it to flag any raw or unescaped helper used on a value that is not
+  fully server-controlled.
+- Have the assistant provide HTML-tag, script, URL-scheme, and style test inputs
+  alongside valid values.
+- Do not let the assistant claim auto-escaping covers a context without
+  confirming the engine's escaping scope for that specific context.
+- Re-run review after changes to templates, output helpers, header configuration,
+  or content validation.
+
+## Troubleshooting
+
+- **A script executes on page load:** trace the value to its output context,
+  apply the correct escaping, and confirm the browser renders text, not markup.
+- **A JSON response is interpreted as HTML:** add `Content-Type: application/json`
+  and `X-Content-Type-Options: nosniff`.
+- **A raw helper passes a user value to HTML:** move to the auto-escaping
+  helper or entity-encode the value before passing it.
+- **A `javascript:` href is accepted:** validate the scheme at ingestion and
+  reject anything that is not `https` or `http`.
+- **A test payload contained real personal data:** replace with a synthetic
+  payload and scrub the public artifact.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, statuslines, guides, collections, skills, open
+PRs, and closed PRs for XSS, output encoding, content injection, content
+spoofing, template safety, and security headers.
+
+Adjacent content includes general security-audit rules and the WCAG accessibility
+auditor, but no entry is a portable pre-merge review policy specifically for
+AI-generated output encoding. This entry is distinct because it decides what
+must be true about generated output's context-aware escaping, template raw
+bypasses, security headers, and validation before the change can merge.
+
+No prior closed PR for this rule was found during the duplicate/history check.
+
+## Output Context Reference
+
+The contexts below each require a different escaping function. Applying the
+wrong one — or a generic one — can leave an injection path open.
+
+| Output context          | Unsafe example                        | Safe direction                               |
+| ----------------------- | ------------------------------------- | -------------------------------------------- |
+| HTML body               | `"<b>" + value + "</b>"`              | HTML entity encoding (`&lt;`, `&amp;`, etc.) |
+| HTML attribute          | `'href="' + value + '"'`              | HTML attribute encoding                      |
+| Script block            | `var x = "` + value + `"`             | JavaScript string escaping                   |
+| Style block / attribute | `color: ` + value                     | CSS encoding                                 |
+| URL query / path        | `?q=` + value                         | Percent-encoding + scheme validation         |
+| JSON in HTML            | `<script>var d=` + JSON + `</script>` | JSON serializer + JS unicode escaping        |
+
+Context-aware auto-escaping from the template engine handles most rows
+automatically, but the script-in-HTML and URL cases often need explicit handling
+even when auto-escaping is on.
+
+## Sources
+
+- OWASP HTTP Headers Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html
+- OWASP Content Spoofing: https://owasp.org/www-community/attacks/Content_Spoofing
+- CWE-116 Improper Encoding or Escaping of Output: https://cwe.mitre.org/data/definitions/116.html
