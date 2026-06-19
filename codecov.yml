@@ -4,12 +4,17 @@
 # scoped in vitest.config.ts to registry/mcp packages, web lib/data/types, the
 # submission gate, and build scripts).
 #
-# Rollout posture: both statuses are INFORMATIONAL (report-only, never block a
-# merge) so we can watch the signal first. To make new code enforceable later,
-# set `informational: false` on `patch` (and add it to branch protection). We
-# deliberately avoid a fixed global target — `target: auto` compares each PR
-# against its own base commit, so merging one PR never moves the bar under other
-# open PRs (the churn we hit with vitest's global threshold ratchet).
+# Posture: ENFORCING (no longer informational). A PR whose CHANGED lines fall
+# below 70% coverage posts a FAILING `codecov/patch` status; an overall coverage
+# drop beyond the threshold posts a FAILING `codecov/project` status. `project`
+# keeps `target: auto` + a 1% threshold so it compares each PR to its own base
+# (avoiding the fixed-global-ratchet churn) while still failing real regressions.
+#
+# NOTE: codecov is deliberately NOT a required branch-protection check —
+# coverage.yml runs ONLY on code PRs, so a required codecov check would block
+# content-only PRs forever (the check never posts). Enforcement instead comes from
+# the failing codecov statuses, which reviewbot's gate treats as a hard blocker
+# (it won't approve or auto-merge over a red check).
 
 coverage:
   status:
@@ -17,14 +22,14 @@ coverage:
       default:
         target: auto
         threshold: 1%
-        informational: true
+        informational: false
         if_ci_failed: ignore
         only_pulls: false
     patch:
       default:
         target: 70%
         threshold: 5%
-        informational: true
+        informational: false
         if_ci_failed: ignore
         only_pulls: true
 
