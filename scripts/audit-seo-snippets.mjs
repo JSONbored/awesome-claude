@@ -199,15 +199,28 @@ function parseArgs(argv) {
   return args;
 }
 
-function renderMarkdown(findings, total) {
-  const weighted = findings.some((f) => f.impressions > 0);
+export function renderMarkdown(
+  findings,
+  {
+    total,
+    flagged = findings.length,
+    weighted = findings.some((f) => f.impressions > 0),
+  },
+) {
   const lines = [
     "# SEO snippet audit",
     "",
-    `${findings.length} of ${total} entries have weak seoTitle/seoDescription${weighted ? " (ranked by GSC impressions)" : ""}.`,
+    `${flagged} of ${total} entries have weak seoTitle/seoDescription${weighted ? " (ranked by GSC impressions)" : ""}.`,
     "Detection only — improve these by hand; do not auto-generate snippets.",
     "",
   ];
+  if (flagged > 0) {
+    const shown =
+      findings.length === flagged
+        ? `Showing all ${flagged} findings.`
+        : `Showing top ${findings.length} of ${flagged} findings.`;
+    lines.push(shown, "");
+  }
   for (const f of findings) {
     const impr = f.impressions ? ` · ${f.impressions} impressions` : "";
     lines.push(`## ${f.path}${impr}`);
@@ -235,7 +248,13 @@ export async function main(argv = process.argv.slice(2)) {
       ),
     );
   } else {
-    console.log(renderMarkdown(findings, entries.length));
+    console.log(
+      renderMarkdown(findings, {
+        total: entries.length,
+        flagged: all.length,
+        weighted: all.some((f) => f.impressions > 0),
+      }),
+    );
     if (all.length > findings.length) {
       console.log(
         `… and ${all.length - findings.length} more (raise --limit to see them).`,
