@@ -493,8 +493,21 @@ jobs:
         if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         run: pnpm install --frozen-lockfile
 
-      - name: Build registry artifacts
+      # Shared prebuild cache (same key as coverage.yml + the other validate jobs). Under the Actions
+      # concurrency throttle jobs run staggered, so the first to build populates this key and the rest
+      # restore it and skip the rebuild. Additive: a miss just rebuilds as before. (#shared-prebuild-cache)
+      - name: Restore prebuild artifacts
+        id: prebuild-cache
         if: ${{ needs.classify-pr.outputs.registry == 'true' }}
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            apps/web/public/data
+            apps/web/src/generated
+            apps/web/src/routeTree.gen.ts
+          key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
+      - name: Build registry artifacts
+        if: ${{ needs.classify-pr.outputs.registry == 'true' && steps.prebuild-cache.outputs.cache-hit != 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Test registry artifact contracts
@@ -648,8 +661,18 @@ jobs:
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: rm -rf reports/junit && mkdir -p reports/junit
 
-      - name: Build registry artifacts
+      - name: Restore prebuild artifacts
+        id: prebuild-cache
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            apps/web/public/data
+            apps/web/src/generated
+            apps/web/src/routeTree.gen.ts
+          key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
+      - name: Build registry artifacts
+        if: ${{ needs.classify-pr.outputs.web == 'true' && steps.prebuild-cache.outputs.cache-hit != 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Generate README for source-only import validation
@@ -727,8 +750,18 @@ jobs:
         if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         run: pnpm install --frozen-lockfile
 
-      - name: Build registry artifacts
+      - name: Restore prebuild artifacts
+        id: prebuild-cache
         if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            apps/web/public/data
+            apps/web/src/generated
+            apps/web/src/routeTree.gen.ts
+          key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
+      - name: Build registry artifacts
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' && steps.prebuild-cache.outputs.cache-hit != 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Test MCP package
@@ -788,8 +821,18 @@ jobs:
         if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         run: pnpm install --frozen-lockfile
 
-      - name: Build feed artifacts
+      - name: Restore prebuild artifacts
+        id: prebuild-cache
         if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            apps/web/public/data
+            apps/web/src/generated
+            apps/web/src/routeTree.gen.ts
+          key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
+      - name: Build feed artifacts
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' && steps.prebuild-cache.outputs.cache-hit != 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Clean test reports
