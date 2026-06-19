@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import {
@@ -20,10 +20,11 @@ import {
   BadgeCheck,
   Globe2,
 } from "lucide-react";
-import { getEntry, related } from "@/data/search";
+import { getEntry, related, relatedGroups } from "@/data/search";
+import { getEntryRedirectTarget } from "@/lib/entry-redirects";
 import { BEST_LISTS } from "@/data/entries";
 import { COMPARISONS } from "@/data/comparisons";
-import { CONTRIBUTORS } from "@/data/contributors";
+import { contributorForVerifiedAuthor } from "@/data/contributors";
 import {
   CategoryPill,
   PlatformChip,
@@ -35,6 +36,7 @@ import { TrustDrilldown } from "@/components/trust-drilldown";
 import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
+import { ComparisonTable } from "@/components/comparison-table";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
 import { categoryLabels, categoryUsageHints } from "@/lib/site";
@@ -50,6 +52,7 @@ import { SourceCitations } from "@/components/source-citations";
 import { ProvenanceBlock } from "@/components/provenance-block";
 import { StickyMetaBar } from "@/components/sticky-meta-bar";
 import { EntrySignalsPanel } from "@/components/entry-signals-panel";
+import { EntryBrandMark } from "@/components/entry-brand-mark";
 import { TRUST_LABEL, PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
 import { installRiskLevel, INSTALL_RISK_LABEL, INSTALL_RISK_DETAIL } from "@/lib/trust";
 import { useEffect, useMemo, useState } from "react";
@@ -114,28 +117,19 @@ function entrySchema(e: Entry, url: string): Record<string, unknown> {
   return { ...base, "@type": "CreativeWork" };
 }
 
-// Guides are how-to content: emit a HowTo whose steps come from the guide's H2/H3 headings,
-// so step-by-step guides become eligible for HowTo rich results.
-function guideHeadingSteps(e: Entry) {
-  return (e.headings ?? []).filter((heading) => heading.depth === 2 || heading.depth === 3);
-}
-function guideHowTo(e: Entry, url: string) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: e.title,
-    description: e.description,
-    step: guideHeadingSteps(e).map((heading, index) => ({
-      "@type": "HowToStep",
-      position: index + 1,
-      name: heading.text,
-      url: `${url}#${heading.id}`,
-    })),
-  };
-}
-
 export const Route = createFileRoute("/entry/$category/$slug")({
   loader: async ({ params }): Promise<{ entry: import("@/types/registry").Entry }> => {
+    // Consolidated/removed entries 301 to their surviving canonical page so the
+    // old URL keeps its SEO signal instead of 404ing.
+    const consolidated = getEntryRedirectTarget(params.category, params.slug);
+    if (consolidated) {
+      throw redirect({
+        to: "/entry/$category/$slug",
+        params: consolidated,
+        replace: true,
+        statusCode: 301,
+      });
+    }
     const fullEntry = await loadFullEntry({
       data: { category: params.category, slug: params.slug },
     }).catch(() => null);
@@ -186,6 +180,9 @@ export const Route = createFileRoute("/entry/$category/$slug")({
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
         { property: "og:image", content: ogUrl },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { property: "article:published_time", content: e.dateAdded },
         { property: "article:modified_time", content: e.reviewedAt ?? e.dateAdded },
         ...(e.author ? [{ property: "article:author", content: e.author }] : []),
@@ -196,30 +193,55 @@ export const Route = createFileRoute("/entry/$category/$slug")({
         { name: "twitter:description", content: metaDescription },
         { name: "twitter:image", content: ogUrl },
       ],
-      links: [{ rel: "canonical", href: url }],
+      links: [
+        { rel: "canonical", href: url },
+        {
+          rel: "alternate",
+          type: "text/plain",
+          href: absoluteUrl(`/api/registry/entries/${params.category}/${params.slug}/llms`),
+          title: "Citation facts (plain text)",
+        },
+      ],
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(ld) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
         { type: "application/ld+json", children: stringifyJsonLd(entrySchema(e, url)) },
-        ...(e.category === "guides" && guideHeadingSteps(e).length >= 2
-          ? [{ type: "application/ld+json", children: stringifyJsonLd(guideHowTo(e, url)) }]
-          : []),
       ],
     };
   },
   component: Dossier,
 });
 
+const RELATION_LABELS: Record<string, string> = {
+  alternative: "Alternatives",
+  "works-with": "Works with",
+  complementary: "Complementary",
+  extends: "Extends",
+  prerequisite: "Prerequisites",
+  "same-project": "Same project",
+  "same-ecosystem": "Same ecosystem",
+  "collection-member": "In the same collection",
+  related: "Related",
+};
+
 function Dossier() {
   const data = Route.useLoaderData() as { entry: Entry };
   const entry = data.entry;
-  const rel = related(entry);
+  // Memoized: related() scans all entries (tag-overlap fallback); recomputing on every harness/tab
+  // toggle was wasted work. entry is stable per page.
+  const rel = useMemo(() => related(entry), [entry]);
+  const relGroups = useMemo(() => relatedGroups(entry), [entry]);
+  // Up to 3 closest alternatives for a side-by-side comparison table — prefer
+  // the typed "alternative" relation, fall back to the flat related set.
+  const alternatives = useMemo(() => {
+    const altGroup = relGroups.find((g) => g.relation === "alternative");
+    const pool = altGroup && altGroup.entries.length > 0 ? altGroup.entries : rel;
+    return pool.slice(0, 3);
+  }, [relGroups, rel]);
   const entryRef = `${entry.category}/${entry.slug}`;
   const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
   const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
-  const authorContributor = CONTRIBUTORS.find(
-    (c) => c.handle === entry.author || c.handle === entry.submittedBy || c.name === entry.author,
-  );
+  const authorContributor = contributorForVerifiedAuthor(entry.author, entry.submittedBy);
   const recents = useRecents();
   useEffect(() => {
     recents.pushEntry({ category: entry.category, slug: entry.slug, title: entry.title });
@@ -252,10 +274,20 @@ function Dossier() {
     if (hasSchema) items.push({ id: "schema", label: "Schema details" });
     items.push({ id: "about", label: "About this resource" });
     items.push({ id: "citations", label: "Source citations" });
+    items.push({ id: "badge", label: "Add a badge" });
+    if (alternatives.length > 0) items.push({ id: "compare", label: "How it compares" });
     if (rel.length > 0) items.push({ id: "related", label: "Related" });
     items.push({ id: "signals", label: "Signals" });
     return items;
-  }, [risk, entry.safetyNotes, entry.privacyNotes, entry.prerequisites, hasSchema, rel.length]);
+  }, [
+    risk,
+    entry.safetyNotes,
+    entry.privacyNotes,
+    entry.prerequisites,
+    hasSchema,
+    alternatives.length,
+    rel.length,
+  ]);
 
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
 
@@ -276,7 +308,7 @@ function Dossier() {
       />
 
       {/* Header */}
-      <header className="mt-6 grid gap-6 border-b border-border pb-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <header className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-6 border-b border-border pb-8 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <CategoryPill>{entry.category}</CategoryPill>
@@ -306,7 +338,10 @@ function Dossier() {
             />
           </div>
 
-          <h1 className="mt-4 h-display-1 text-ink text-balance">{entry.title}</h1>
+          <div className="mt-4 flex min-w-0 items-start gap-4">
+            <EntryBrandMark entry={entry} size="lg" priority className="mt-1" />
+            <h1 className="min-w-0 flex-1 h-display-1 text-ink text-balance">{entry.title}</h1>
+          </div>
           <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
             {entry.description}
           </p>
@@ -355,7 +390,7 @@ function Dossier() {
         </div>
 
         {/* Sticky install panel */}
-        <aside className="lg:sticky lg:top-20 lg:self-start">
+        <aside className="min-w-0 lg:sticky lg:top-20 lg:self-start">
           <div className="overflow-hidden rounded-xl border border-border bg-surface">
             <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
               <div className="eyebrow">Install</div>
@@ -481,7 +516,7 @@ function Dossier() {
       <div id="dossier-header-sentinel" aria-hidden className="h-px w-full" />
 
       {/* Body */}
-      <div className="grid gap-8 py-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 py-8 lg:grid-cols-[minmax(0,1fr)_280px]">
         <div className="min-w-0 space-y-8">
           {risk !== "low" && (
             <section
@@ -552,13 +587,10 @@ function Dossier() {
                 </p>
                 {entry.platforms.length > 0 && (
                   <p>
-                    Compatible with{" "}
-                    <span className="text-ink">{entry.platforms.join(", ")}</span>.
+                    Compatible with <span className="text-ink">{entry.platforms.join(", ")}</span>.
                   </p>
                 )}
-                {entry.tags.length > 0 && (
-                  <p>Covers {entry.tags.slice(0, 8).join(", ")}.</p>
-                )}
+                {entry.tags.length > 0 && <p>Covers {entry.tags.slice(0, 8).join(", ")}.</p>}
                 <p className="text-ink-muted">
                   Trust and source signals come from metadata review, not runtime scanning — always
                   read the source before installing anything that touches your filesystem, network,
@@ -611,13 +643,44 @@ function Dossier() {
             <SourceCitations entry={entry} />
           </DossierSection>
 
-          {rel.length > 0 && (
+          <BadgeSection category={entry.category} slug={entry.slug} title={entry.title} />
+
+          {alternatives.length > 0 && (
+            <DossierSection id="compare" title="How it compares">
+              <p className="mb-4 text-sm text-ink-muted">
+                {entry.title} side by side with{" "}
+                {alternatives.length === 1
+                  ? "its closest alternative"
+                  : `${alternatives.length} alternatives`}{" "}
+                on trust, install, platform support, and disclosed safety notes — all from reviewed
+                registry metadata.
+              </p>
+              <ComparisonTable entries={[entry, ...alternatives]} />
+            </DossierSection>
+          )}
+
+          {(relGroups.length > 0 || rel.length > 0) && (
             <DossierSection id="related" title="Related resources">
-              <div className="grid gap-3 sm:grid-cols-2">
-                {rel.slice(0, 4).map((e) => (
-                  <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
-                ))}
-              </div>
+              {relGroups.length > 0 ? (
+                <div className="flex flex-col gap-6">
+                  {relGroups.map((g) => (
+                    <div key={g.relation}>
+                      <div className="eyebrow mb-2">{RELATION_LABELS[g.relation] ?? "Related"}</div>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {g.entries.map((e) => (
+                          <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {rel.slice(0, 4).map((e) => (
+                    <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+                  ))}
+                </div>
+              )}
               <div className="mt-3 text-right">
                 <Link
                   to="/$category"
@@ -684,6 +747,45 @@ function Dossier() {
         </aside>
       </div>
     </div>
+  );
+}
+
+function BadgeSection({
+  category,
+  slug,
+  title,
+}: {
+  category: string;
+  slug: string;
+  title: string;
+}) {
+  const badgeUrl = absoluteUrl(`/badge/${category}/${slug}.svg`);
+  const entryUrl = absoluteUrl(`/entry/${category}/${slug}`);
+  const markdown = `[![Listed on HeyClaude](${badgeUrl})](${entryUrl})`;
+  return (
+    <DossierSection id="badge" icon={BadgeCheck} title="Add this badge to your README">
+      <p className="text-ink-muted">
+        Show that <span className="text-ink">{title}</span> is listed on HeyClaude. Paste this
+        Markdown into your README — it renders the badge and links back to this page.
+      </p>
+      <div className="mt-3 flex items-center gap-3">
+        <a href={entryUrl} target="_blank" rel="noreferrer">
+          <img src={badgeUrl} alt="Listed on HeyClaude" height={20} className="h-5 w-auto" />
+        </a>
+      </div>
+      <div className="mt-3 flex items-start gap-2">
+        <pre className="min-w-0 flex-1 overflow-auto rounded-md bg-surface-2 p-3 font-mono text-[12px] leading-relaxed text-ink">
+          <code>{markdown}</code>
+        </pre>
+        <CopyButton
+          value={markdown}
+          label="Copy"
+          iconOnly
+          size="md"
+          toastLabel="Badge Markdown copied"
+        />
+      </div>
+    </DossierSection>
   );
 }
 
@@ -787,7 +889,7 @@ function SchemaDetails({ entry }: { entry: Entry }) {
             <PillList label="Retrieval sources" values={entry.retrievalSources} />
             <PillList label="Tested platforms" values={entry.testedPlatforms} />
             {entry.platformCompatibility?.length ? (
-              <div className="mt-3 overflow-hidden rounded-lg border border-border">
+              <div className="mt-3 overflow-x-auto rounded-lg border border-border">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-surface-2 text-ink-subtle">
                     <tr>
