@@ -1,0 +1,180 @@
+---
+title: GrowthBook MCP Server for Claude
+slug: growthbook-mcp-server
+category: mcp
+description: >-
+  Manage A/B experiments and feature flags in GrowthBook from Claude — list and create
+  experiments, manage feature flags, check experiment results, and interact with your
+  GrowthBook workspace — with the official GrowthBook MCP server.
+cardDescription: "Official GrowthBook MCP: A/B experiments, feature flags & results from Claude."
+seoTitle: "GrowthBook MCP Server for Claude — A/B Testing, Feature Flags & Experiment Management"
+seoDescription: "Connect Claude to GrowthBook with the official MCP server: list and create A/B experiments, manage feature flags, review experiment results, and interact with your GrowthBook workspace — MIT licensed."
+author: GrowthBook
+authorProfileUrl: "https://github.com/growthbook"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.growthbook.io/integrations/mcp"
+websiteUrl: "https://growthbook.io"
+repoUrl: "https://github.com/growthbook/growthbook-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/growthbook/growthbook-mcp/main/README.md"
+  - "https://docs.growthbook.io/integrations/mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add growthbook -e GB_API_KEY=your-api-key -e GB_EMAIL=you@example.com -- npx @growthbook/growthbook-mcp"
+usageSnippet: >-
+  Ask Claude to list all running experiments, get the results of a specific A/B test, create
+  a new feature flag, or add a new experiment targeting a specific user segment in GrowthBook.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "growthbook": {
+        "command": "npx",
+        "args": ["@growthbook/growthbook-mcp"],
+        "env": {
+          "GB_API_KEY": "your-api-key",
+          "GB_EMAIL": "you@example.com"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "growthbook": {
+        "command": "npx",
+        "args": ["@growthbook/growthbook-mcp"],
+        "env": {
+          "GB_API_KEY": "your-api-key",
+          "GB_EMAIL": "you@example.com",
+          "GB_API_URL": "https://api.growthbook.io",
+          "GB_APP_ORIGIN": "https://app.growthbook.io"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A GrowthBook account (cloud at growthbook.io or self-hosted)."
+  - "A GrowthBook API key (from API Keys settings or a Personal Access Token with appropriate permissions)."
+  - "Your GrowthBook account email (used when creating experiments and feature flags)."
+  - "Node.js with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "`create_experiment` and `create_feature` write to your GrowthBook workspace — capabilities are scoped by your API key/PAT permissions."
+  - "Creating experiments or feature flags may immediately affect production if they are in a live environment — review before confirming."
+privacyNotes:
+  - "Experiment configurations, feature flag definitions, targeting rules, and experiment results from your GrowthBook workspace are surfaced in Claude's context."
+  - "Your `GB_API_KEY` is a secret — store it as an environment variable, not in version-controlled config files."
+disclosure: "GrowthBook is an open-source A/B testing and feature flag platform. The MCP server is officially maintained by GrowthBook."
+tags:
+  - growthbook
+  - ab-testing
+  - feature-flags
+  - experiments
+  - analytics
+keywords:
+  - growthbook mcp server
+  - growthbook mcp claude
+  - ab testing mcp claude code
+  - feature flags mcp claude
+  - experiment management mcp
+  - growthbook feature flag ai
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **GrowthBook MCP Server** is the official Model Context Protocol server from
+[GrowthBook](https://growthbook.io), the open-source A/B testing and feature flag platform.
+It connects Claude directly to your GrowthBook workspace — listing and creating experiments,
+managing feature flags, reviewing experiment results, and more. Permissions follow your API
+key's access level. Licensed under MIT.
+
+Supports both GrowthBook Cloud (`api.growthbook.io`) and self-hosted instances via the
+`GB_API_URL` and `GB_APP_ORIGIN` environment variables.
+
+## Key capabilities
+
+- **Experiments** — list experiments, get details and results, create new A/B tests.
+- **Feature flags** — list feature flags, create new flags, update targeting rules.
+- **Self-hosted support** — point to any GrowthBook instance via `GB_API_URL`.
+- **Custom headers** — add tenant IDs, auth tokens, or proxy headers via
+  `GB_HTTP_HEADER_<NAME>` environment variables.
+
+## How it compares
+
+| Server | A/B experiments | Feature flags | Self-hosted | Auth |
+|---|---|---|---|---|
+| **GrowthBook MCP** | Yes | Yes | Yes | API key |
+| LaunchDarkly MCP | No | Yes | Limited | API key |
+| Unleash MCP | No | Yes | Yes | PAT |
+| ConfigCat MCP | No | Yes | Yes | API key |
+
+GrowthBook is the only open-source option with native A/B experiment management alongside
+feature flags — giving full control over the experiment lifecycle from Claude.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add growthbook \
+  -e GB_API_KEY=your-api-key \
+  -e GB_EMAIL=you@example.com \
+  -- npx @growthbook/growthbook-mcp
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "growthbook": {
+      "command": "npx",
+      "args": ["@growthbook/growthbook-mcp"],
+      "env": {
+        "GB_API_KEY": "your-api-key",
+        "GB_EMAIL": "you@example.com"
+      }
+    }
+  }
+}
+```
+
+### Self-hosted GrowthBook
+
+```json
+{
+  "env": {
+    "GB_API_KEY": "your-api-key",
+    "GB_EMAIL": "you@example.com",
+    "GB_API_URL": "https://your-growthbook.example.com/api",
+    "GB_APP_ORIGIN": "https://your-growthbook.example.com"
+  }
+}
+```
+
+## Requirements
+
+- A GrowthBook account with an API key and your account email.
+- Node.js with `npx`.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Capabilities are scoped by your API key's permissions — use a least-privilege key.
+- Feature flags and experiments may affect production; review before creating or modifying.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `growthbook/growthbook-mcp` (MIT) documents the
+  `@growthbook/growthbook-mcp` npm package, `GB_API_KEY`/`GB_EMAIL`/`GB_API_URL`/
+  `GB_APP_ORIGIN` configuration, `GB_HTTP_HEADER_*` custom headers, and the official docs link.
+- GrowthBook documentation at `docs.growthbook.io/integrations/mcp` (HTTP 200) covers setup
+  and available capabilities.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

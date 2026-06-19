@@ -1,0 +1,143 @@
+---
+title: Weights & Biases MCP Server for Claude
+slug: wandb-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Weights & Biases — query runs, metrics, and experiments, analyze Weave traces,
+  inspect registries and artifacts, and create reports — with the official W&B MCP server.
+cardDescription: "Official W&B MCP server: query runs, Weave traces, artifacts, and reports from Claude."
+seoTitle: "Weights & Biases MCP Server for Claude — Query Runs & Weave"
+seoDescription: "Connect Claude to Weights & Biases with the official MCP server: query runs, metrics, and experiments, analyze Weave traces, inspect artifacts, and create reports."
+author: Weights & Biases
+authorProfileUrl: "https://wandb.ai"
+dateAdded: "2026-06-17"
+documentationUrl: "https://github.com/wandb/wandb-mcp-server"
+websiteUrl: "https://wandb.ai"
+repoUrl: "https://github.com/wandb/wandb-mcp-server"
+retrievalSources:
+  - "https://github.com/wandb/wandb-mcp-server"
+  - "https://docs.wandb.ai/"
+  - "https://weave-docs.wandb.ai/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http wandb https://mcp.withwandb.com/mcp --header \"Authorization: Bearer <your-api-key>\""
+usageSnippet: >-
+  Ask Claude to compare two training runs, analyze a Weave trace, or summarize an experiment's metrics.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "wandb": {
+        "command": "uvx",
+        "args": ["--from", "git+https://github.com/wandb/wandb-mcp-server", "wandb_mcp_server"],
+        "env": {
+          "WANDB_API_KEY": "<your-api-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "wandb": {
+        "command": "uvx",
+        "args": ["--from", "git+https://github.com/wandb/wandb-mcp-server", "wandb_mcp_server"],
+        "env": {
+          "WANDB_API_KEY": "<your-api-key>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "A Weights & Biases account and API key (WANDB_API_KEY)."
+  - "For the local server: uv (uvx). For the hosted server: no install, use https://mcp.withwandb.com/mcp."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Tools read your W&B runs, traces, and artifacts and can create reports; scope the API key to the projects Claude should access."
+  - "Logging analysis back to W&B writes to your workspace — review before running it through Claude."
+privacyNotes:
+  - "Run metrics, experiment configs, Weave traces, and artifact metadata enter the MCP client context and the model's prompt."
+  - "The WANDB_API_KEY is a secret — keep it in the client config or environment, never in shared repositories."
+tags:
+  - weights-and-biases
+  - mlops
+  - experiment-tracking
+  - observability
+  - weave
+keywords:
+  - weights and biases mcp server
+  - wandb mcp claude
+  - connect claude to weights and biases
+  - query wandb runs with ai
+  - weave traces mcp claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Weights & Biases MCP Server** is the official Model Context Protocol server for W&B. It lets
+Claude query and analyze your machine-learning data in natural language — runs, metrics, and
+experiments; Weave LLM traces; registries and artifacts; and W&B documentation. Use the hosted
+endpoint (`https://mcp.withwandb.com/mcp`) or run it locally via `uvx`. It supports stdio and HTTP
+transports and is licensed under MIT.
+
+## Key capabilities
+
+The server exposes 16 tools across the W&B platform:
+
+| Area | What Claude can do |
+| --- | --- |
+| **Runs & experiments** | Query runs, metrics, and experiment configs; compare results |
+| **Weave** | Analyze LLM/agent traces captured with Weave |
+| **Registry & artifacts** | List registries and artifacts; compare artifact versions |
+| **Reports & docs** | Create W&B reports; search the W&B documentation |
+| **Automations** | List automations and integrations; log analysis back to W&B |
+
+## Installation
+
+### Claude Code (hosted)
+
+```bash
+claude mcp add --transport http wandb https://mcp.withwandb.com/mcp \
+  --header "Authorization: Bearer <your-api-key>"
+```
+
+### Claude Desktop (local)
+
+```json
+{
+  "mcpServers": {
+    "wandb": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/wandb/wandb-mcp-server", "wandb_mcp_server"],
+      "env": {
+        "WANDB_API_KEY": "<your-api-key>"
+      }
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Weights & Biases account and API key.
+- `uv` (`uvx`) for the local server, or use the hosted endpoint.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Scope the `WANDB_API_KEY` to the projects Claude should access.
+- The report-creation and log-analysis tools write to your W&B workspace — review before running.
+- Treat the API key as a secret.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- The official repository `github.com/wandb/wandb-mcp-server` (MIT) documents the hosted
+  `mcp.withwandb.com/mcp` endpoint, the local `uvx` install, the `WANDB_API_KEY` requirement, stdio
+  and HTTP transports, and the 16 tools summarized above.
+- W&B's and Weave's documentation describe the underlying runs, artifacts, and trace features.
+- Claude Code's MCP documentation describes the connector setup pattern used here.

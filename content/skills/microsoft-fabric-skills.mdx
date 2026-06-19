@@ -1,0 +1,315 @@
+---
+title: Microsoft Fabric Skills
+slug: microsoft-fabric-skills
+category: skills
+description: >-
+  Microsoft-maintained Fabric skill bundles for AI coding assistants working
+  with Warehouses, Lakehouses, Spark, Power BI semantic models, Eventhouse/KQL,
+  Eventstreams, Dataflows Gen2, migrations, and medallion architectures.
+cardDescription: >-
+  Fabric skill bundles for Copilot CLI, Claude Code, Codex, Cursor, and Windsurf
+  covering authoring, consumption, operations, migrations, and Fabric MCP setup.
+seoTitle: Microsoft Fabric Skills for Claude Code, Codex, and Copilot
+seoDescription: >-
+  Install Microsoft Fabric skills for AI assistants to work with Fabric
+  Warehouses, Lakehouses, Spark, Power BI, KQL, Eventstreams, Dataflows, and MCP.
+author: Microsoft
+authorProfileUrl: "https://github.com/microsoft"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/microsoft/skills-for-fabric"
+documentationUrl: "https://github.com/microsoft/skills-for-fabric#readme"
+websiteUrl: "https://github.com/microsoft/skills-for-fabric"
+downloadUrl: "https://github.com/microsoft/skills-for-fabric/archive/refs/heads/main.zip"
+installable: true
+installCommand: "/plugin install fabric-skills@fabric-collection"
+usageSnippet: >-
+  Add the microsoft/skills-for-fabric marketplace in GitHub Copilot CLI, install
+  fabric-skills or a focused Fabric bundle, then authenticate with Azure before
+  asking the assistant to work against Fabric resources.
+copySnippet: |-
+  /plugin marketplace add microsoft/skills-for-fabric
+  /plugin install fabric-skills@fabric-collection
+
+  # Focused bundles
+  /plugin install fabric-authoring@fabric-collection
+  /plugin install fabric-consumption@fabric-collection
+  /plugin install fabric-operations@fabric-collection
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/microsoft/skills-for-fabric"
+  - "https://raw.githubusercontent.com/microsoft/skills-for-fabric/main/README.md"
+  - "https://raw.githubusercontent.com/microsoft/skills-for-fabric/main/package.json"
+  - "https://raw.githubusercontent.com/microsoft/skills-for-fabric/main/mcp-setup/README.md"
+  - "https://raw.githubusercontent.com/microsoft/skills-for-fabric/main/CHANGELOG.md"
+testedPlatforms:
+  - GitHub Copilot
+  - Claude
+  - Codex
+  - Cursor
+  - Windsurf
+prerequisites:
+  - "GitHub Copilot CLI installed and authenticated for the recommended plugin marketplace flow."
+  - "Microsoft Fabric workspace access and the relevant item permissions for Warehouses, Lakehouses, Eventhouses, semantic models, Eventstreams, Dataflows, or reports."
+  - "Azure CLI and Azure authentication for operations that call Fabric REST APIs or workload-specific endpoints."
+  - "Workload-specific tokens, endpoints, SQL connection details, KQL endpoints, Power BI permissions, or Spark/Lakehouse context as required by the selected skill."
+  - "Optional Fabric MCP server URL and credentials if registering an external Fabric MCP server with local AI tools."
+safetyNotes:
+  - "Fabric authoring skills can guide creation or modification of Fabric items, notebooks, schemas, ingestion pipelines, semantic models, reports, Eventstreams, Dataflows Gen2, and deployment automation."
+  - "Consumption skills may query live Warehouses, Lakehouses, Power BI semantic models, Eventhouse/KQL databases, and catalog metadata; use read-only roles for exploration."
+  - "Operations skills can investigate performance, health, and slow-query behavior using workspace and workload telemetry; validate before applying generated tuning or remediation steps."
+  - "Migration and medallion architecture skills can propose broad data-platform changes; review storage paths, costs, retention, governance, and downstream BI impact before execution."
+  - "The included MCP setup scripts register external Fabric MCP servers only; they do not create, host, or secure a Fabric MCP server for you."
+privacyNotes:
+  - "Fabric workspace names, tenant IDs, subscription IDs, item IDs, schemas, table names, query text, logs, semantic model metadata, report definitions, and sample data may enter prompts or tool outputs."
+  - "Do not paste Azure access tokens, Fabric API tokens, connection strings, service principals, workspace secrets, customer data, or regulated datasets into prompts, public issues, screenshots, or committed configs."
+  - "If you register an external Fabric MCP server, queries and metadata are sent to that server according to its own auth, logging, and retention behavior."
+  - "Use least-privilege Fabric roles, development workspaces, sample data, or obfuscated datasets when testing assistant-generated Fabric workflows."
+tags:
+  - microsoft-fabric
+  - fabric
+  - skills
+  - data-engineering
+  - power-bi
+  - lakehouse
+  - kql
+  - mcp
+keywords:
+  - microsoft fabric skills
+  - fabric skills claude code
+  - fabric skills copilot cli
+  - microsoft fabric ai assistant
+  - microsoft fabric mcp
+  - fabric data engineering skill
+  - power bi semantic model skills
+  - fabric lakehouse skills
+readingTime: 6
+difficultyScore: 82
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Microsoft Fabric Skills
+
+`microsoft/skills-for-fabric` is a Microsoft-maintained collection of AI coding
+assistant skills for Microsoft Fabric developers, analysts, and operators. It
+packages Fabric-specific instructions for authoring, consumption, operations,
+migration, and end-to-end architecture work across Fabric workloads.
+
+Use this when an assistant needs current Fabric domain context instead of
+generic SQL, Spark, Power BI, or Azure advice. The repository includes GitHub
+Copilot CLI plugin bundles, root-level instructions for compatible tools, skill
+folders, prompt examples, and helper scripts for registering external Fabric MCP
+servers.
+
+## Knowledge Freshness
+
+Fabric APIs, workload capabilities, Copilot CLI plugin behavior, and supported
+MCP registration patterns can change quickly. Before applying generated
+commands, verify the current Microsoft Fabric documentation, the installed
+skills-for-fabric revision, the Fabric workspace region, and the available
+workload endpoints for the tenant.
+
+Prefer the upstream README, CHANGELOG, selected skill folder, and current
+Microsoft Fabric docs over model memory when there is a conflict.
+
+## Retrieval Sources
+
+Use these sources to ground an agent session:
+
+- The upstream `microsoft/skills-for-fabric` README for install and bundle
+  selection.
+- The selected folder under `skills/` for workload-specific workflow rules.
+- `package.json` for project identity, license, package description, and shipped
+  directories.
+- `mcp-setup/README.md` for the external Fabric MCP registration boundary.
+- `CHANGELOG.md` for recent bundle and skill changes.
+
+## Core Workflow
+
+1. Choose the narrowest bundle or workload filter for the task.
+2. Confirm the target tenant, workspace, capacity, and Fabric item before
+   querying or authoring.
+3. Authenticate with Azure CLI or the workload-specific credential path required
+   by the selected skill.
+4. Ask the agent to inspect current sources and produce a plan before generating
+   commands, notebooks, schemas, KQL, T-SQL, reports, or deployment scripts.
+5. Review the generated plan and commands manually, then run them against a
+   development workspace or read-only role first.
+
+## Capability Scope
+
+This capability pack helps an AI assistant reason about Microsoft Fabric
+workloads and implementation patterns. It can guide SQL DW, Spark/Lakehouse,
+Power BI, Eventhouse/KQL, Eventstreams, Dataflows Gen2, search, migration, and
+architecture tasks when the user provides the right workspace context and
+credentials.
+
+It does not provide Fabric credentials, grant permissions, host a Fabric MCP
+server, guarantee current API support, or replace workspace governance and data
+platform review.
+
+## Production Rules
+
+- Do not run destructive Fabric, SQL, Spark, KQL, Dataflows, Eventstream,
+  semantic model, report, or deployment changes without human review.
+- Use least-privilege roles, development workspaces, and sample or obfuscated
+  data for first-pass validation.
+- Pin or record the skills-for-fabric source revision used for production
+  runbooks.
+- Keep Azure and Fabric tokens, connection strings, workspace secrets, and
+  customer data out of prompts and committed config.
+- Treat external Fabric MCP servers as separate trust boundaries with their own
+  authentication, logging, retention, and network exposure risks.
+
+## Bundles
+
+The recommended install path is through GitHub Copilot CLI:
+
+```text
+/plugin marketplace add microsoft/skills-for-fabric
+/plugin install fabric-skills@fabric-collection
+```
+
+Focused bundles are available when the agent only needs one operating mode:
+
+```text
+/plugin install fabric-authoring@fabric-collection
+/plugin install fabric-consumption@fabric-collection
+/plugin install fabric-operations@fabric-collection
+```
+
+You can also filter the complete bundle by workload:
+
+```text
+/plugin install fabric-skills@fabric-collection --filter "sqldw-*"
+/plugin install fabric-skills@fabric-collection --filter "spark-*"
+/plugin install fabric-skills@fabric-collection --filter "eventhouse-*"
+```
+
+| Bundle | Use It For |
+| --- | --- |
+| `fabric-skills` | Complete Fabric skill bundle across authoring, consumption, operations, migrations, and architecture |
+| `fabric-authoring` | REST APIs, CLI automation, notebooks, T-SQL, KQL, Dataflows Gen2, Eventstreams, schemas, semantic models, and deployment |
+| `fabric-consumption` | Read-only exploration, query, discovery, monitoring, catalog search, and data-understanding workflows |
+| `fabric-operations` | Diagnostics, performance investigation, warehouse query insights, and slow-query analysis |
+
+## Workloads Covered
+
+The skill catalog includes Fabric-focused coverage for:
+
+- SQL data warehouse authoring, consumption, and operations.
+- Spark and Lakehouse authoring, consumption, and operations.
+- Power BI report planning, design, authoring, management, and semantic models.
+- Eventhouse and KQL authoring and consumption.
+- Eventstreams and Dataflows Gen2 authoring and consumption.
+- Fabric catalog search and Fabric IQ.
+- Databricks, Synapse, and HDInsight migration scenarios.
+- End-to-end medallion architecture design.
+
+## Other Agent Hosts
+
+GitHub Copilot CLI plugin installation is the primary path, but the repository
+also includes compatibility files for other coding agents:
+
+| Host | Source File |
+| --- | --- |
+| Claude Code | `CLAUDE.md` |
+| Codex, Jules, OpenCode | `AGENTS.md` |
+| Cursor | `.cursorrules` |
+| Windsurf | `.windsurfrules` |
+
+For these hosts, clone the repository or copy the relevant instruction content
+into the project or agent configuration that loads local rules and skills.
+
+## Authentication
+
+Most useful Fabric operations require Azure and Fabric authentication. Start by
+signing in with Azure CLI and requesting a Fabric token:
+
+```bash
+az login
+az account get-access-token --resource https://api.fabric.microsoft.com
+```
+
+SQL, Spark, Power BI, KQL, and other workload paths may need different
+endpoints, token audiences, or permissions. The selected skill should guide the
+agent toward the workload-specific command pattern, but humans still need to
+verify the target tenant, workspace, item, role, and environment before running
+generated commands.
+
+## MCP Setup
+
+The repository includes an `mcp-setup` folder for registering an external Fabric
+MCP server with local AI tools. That is registration support, not a hosted MCP
+server implementation.
+
+For example, the Bash helper expects an existing server URL:
+
+```bash
+./register-fabric-mcp.sh --server-url "https://your-fabric-mcp-server.com" --server-name "fabric"
+```
+
+Use this only after your organization or vendor has provided a Fabric MCP server
+and its authentication model. Store bearer tokens in environment variables or
+secret stores, not in prompts or committed MCP config.
+
+## Use Cases
+
+- Ask a coding agent to design a medallion architecture for Fabric Lakehouse
+  ingestion.
+- Generate or review Fabric REST API automation for item creation and deployment.
+- Investigate slow SQL warehouse queries or Spark job behavior with Fabric
+  operations context.
+- Build a Power BI semantic model or report plan from existing workspace
+  metadata.
+- Explore Eventhouse/KQL data or Eventstreams configuration with domain-specific
+  prompts.
+- Plan migrations from Databricks, Synapse, or HDInsight into Fabric.
+- Register an external Fabric MCP server after the endpoint and credentials are
+  already approved.
+
+## Safety and Privacy
+
+Fabric skills can help an assistant reason about live enterprise data platforms.
+Treat generated commands as proposals until a human checks workspace scope,
+tenant, region, capacity, billing, RBAC, data residency, and downstream report
+or pipeline impact.
+
+For exploratory work, prefer development workspaces, read-only roles, short
+query windows, and sample datasets. For authoring or migration work, review
+schema changes, notebook code, ingestion paths, deployment scripts, semantic
+model edits, and report changes before execution. If an external Fabric MCP
+server is registered, verify its URL, authentication type, logging behavior, and
+retention policy before sending workspace data through it.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README documents Fabric skill bundles, focused authoring,
+  consumption, and operations installs, workload filters, prompt examples,
+  Azure authentication, MCP setup links, and compatibility files for Claude,
+  Cursor, Windsurf, and AGENTS.md-based tools.
+- `package.json` identifies the project as `@microsoft/skills-for-fabric`,
+  MIT licensed, with files under `agents`, `skills`, and `mcp-setup`.
+- The `skills` directory contains Fabric workload skill folders for SQL DW,
+  Spark, Eventhouse/KQL, Eventstreams, Dataflows Gen2, semantic models, Power BI
+  reports, Fabric IQ, migrations, and medallion architecture.
+- The MCP setup README states that its scripts register external Fabric MCP
+  servers and do not create or run servers themselves.
+
+## Duplicate Check
+
+Checked current `content/skills/`, `content/mcp/`, `content/tools/`, open pull
+requests, prior PR history, and repository-wide content for `Microsoft Fabric`,
+`skills-for-fabric`, `fabric-skills`, `fabric-collection`, `Fabric MCP`,
+`Fabric Lakehouse`, and `Power BI semantic model skills`. Existing Microsoft
+entries cover general Microsoft Agent Skills, Microsoft Learn MCP, AutoGen, and
+Microsoft MCP Gateway. No dedicated Microsoft Fabric skills entry, source URL
+duplicate, or open duplicate PR was found.

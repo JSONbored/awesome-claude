@@ -1,0 +1,200 @@
+---
+title: Koog
+slug: koog
+category: tools
+description: >-
+  JetBrains incubator Kotlin and JVM agent framework for building predictable,
+  fault-tolerant AI agents with graph workflows, tools, MCP integration,
+  memory, streaming, OpenTelemetry, Spring/Ktor integrations, and multiple LLM
+  providers.
+cardDescription: >-
+  Kotlin/JVM AI agent framework from JetBrains with MCP, graph workflows,
+  memory, streaming, tools, OpenTelemetry, and Spring/Ktor integration.
+seoTitle: Koog Kotlin AI Agent Framework for JVM, MCP, and Multi-Agent Workflows
+seoDescription: >-
+  Use JetBrains Koog to build Kotlin and JVM AI agents with graph workflows,
+  MCP tools, memory, streaming, OpenTelemetry observability, Spring Boot, Ktor,
+  OpenAI, Anthropic, Google, OpenRouter, Ollama, DeepSeek, and Bedrock.
+author: JetBrains
+authorProfileUrl: "https://github.com/JetBrains"
+dateAdded: "2026-06-18"
+websiteUrl: "https://docs.koog.ai"
+documentationUrl: "https://docs.koog.ai"
+repoUrl: "https://github.com/JetBrains/koog"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/JetBrains/koog"
+  - "https://raw.githubusercontent.com/JetBrains/koog/develop/README.md"
+  - "https://raw.githubusercontent.com/JetBrains/koog/develop/gradle/libs.versions.toml"
+  - "https://raw.githubusercontent.com/JetBrains/koog/develop/LICENSE.txt"
+  - "https://docs.koog.ai"
+  - "https://docs.koog.ai/key-features/"
+  - "https://docs.koog.ai/quickstart/"
+installable: true
+installCommand: 'implementation("ai.koog:koog-agents:0.5.0")'
+usageSnippet: >-
+  Add the Koog agents dependency to a Kotlin or JVM project, configure a model
+  provider key, then build an AIAgent with reviewed tools, graph workflow,
+  memory, MCP, and observability boundaries.
+copySnippet: |-
+  dependencies {
+      implementation("ai.koog:koog-agents:0.5.0")
+  }
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - "JDK 17 or newer for JVM usage, plus Kotlin and Gradle or Maven project setup."
+  - "Current Koog docs and artifact version review before pinning dependencies; the live GitHub release and README examples may not match every package index yet."
+  - "Model provider credentials for OpenAI, Anthropic, Google, DeepSeek, OpenRouter, Ollama, Bedrock, or the provider selected by the application."
+  - "Clear tool, MCP, graph workflow, persistence, memory, and retry boundaries before connecting agents to production systems."
+  - "Observability destination, retention policy, and redaction plan if using OpenTelemetry, W&B Weave, Langfuse, traces, or custom logs."
+safetyNotes:
+  - "Koog is marked as a JetBrains incubator project and the README uses Kotlin Alpha language/project signals; production adopters should pin versions, test upgrades, and track breaking changes."
+  - "Agents can call custom tools, MCP tools, graph workflow nodes, provider APIs, memory stores, and enterprise integrations; review permissions and side effects for every tool before enabling it."
+  - "Fault tolerance, retries, state restoration, history compression, and graph workflows can replay or resume actions; design idempotency, compensation, and escalation behavior for side-effecting tools."
+  - "Spring Boot, Ktor, Android, iOS, JS, WasmJS, and backend deployments each need separate security, platform, and packaging review."
+  - "OpenTelemetry traces and model/tool logs help debug agents, but they can also expose sensitive prompts, tool results, and application state."
+privacyNotes:
+  - "Prompts, system instructions, chat history, tool schemas, tool arguments, tool outputs, graph state, memory records, embeddings, traces, model responses, and errors can be sent to configured model providers or observability backends."
+  - "MCP tools and custom Kotlin/JVM tools may expose databases, application internals, filesystem data, cloud resources, user records, credentials, or private business logic to the agent loop."
+  - "History compression, persistence, shared memory, vector embeddings, and ranked document storage can retain user or workspace data across runs unless retention and deletion rules are explicit."
+  - "Do not publish provider keys, internal service URLs, trace exports, memory dumps, mobile app data, user records, or production incident logs in examples, issues, screenshots, or PRs."
+tags:
+  - koog
+  - jetbrains
+  - kotlin
+  - java
+  - jvm
+  - agents
+  - mcp
+  - multi-agent
+  - opentelemetry
+  - spring
+keywords:
+  - Koog
+  - JetBrains Koog
+  - Kotlin AI agent framework
+  - JVM AI agents
+  - Koog MCP
+  - Kotlin MCP agent framework
+  - OpenTelemetry AI agents
+  - Spring Boot AI agents
+  - Ktor AI agents
+  - Koog multi-agent workflows
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Koog is JetBrains' Kotlin-based framework for building AI agents in idiomatic
+Kotlin and JVM projects. It targets agents that need tools, complex workflows,
+conversation history, provider switching, MCP integration, memory, streaming,
+OpenTelemetry observability, and framework integration with Spring Boot or Ktor.
+
+Use this listing for the Koog framework itself. It is distinct from general Java
+or Kotlin MCP SDKs: Koog is an agent application framework, while the official
+MCP SDKs focus on implementing Model Context Protocol clients and servers.
+
+## Install
+
+The README documents Gradle and Maven usage. For Gradle Kotlin DSL:
+
+```kotlin
+dependencies {
+    implementation("ai.koog:koog-agents:0.5.0")
+}
+```
+
+Before adopting Koog in a production project, check the current Koog docs,
+GitHub release notes, and package index for the dependency version to pin. The
+repository is active, and version examples can move as the incubator project
+evolves.
+
+## Core Capabilities
+
+| Area | Koog Coverage |
+| --- | --- |
+| Languages and platforms | Kotlin/JVM, JS, WasmJS, Android, iOS, and backend service use cases |
+| Agent runtime | `AIAgent`, Kotlin DSLs, tool calls, graph workflows, streaming, retries, and state restoration |
+| Providers | Google, OpenAI, Anthropic, DeepSeek, OpenRouter, Ollama, and Bedrock |
+| MCP | Use Model Context Protocol tools from Koog agents |
+| Memory and retrieval | Shared agent memory, vector embeddings, ranked document storage, and knowledge retrieval |
+| Observability | OpenTelemetry exporters plus integrations such as W&B Weave and Langfuse |
+| JVM integration | Spring Boot and Ktor application integration |
+| Workflow design | Flexible graph workflows, modular features, custom tools, and tracing |
+
+## MCP Fit
+
+Koog belongs in MCP-adjacent searches because the framework can use MCP tools
+inside Kotlin and JVM agent applications. That makes it useful for teams that
+already run Java/Kotlin backend systems and want agents to call standardized MCP
+tools without switching the whole agent runtime to Python or TypeScript.
+
+Keep tool boundaries explicit. MCP tools can expose file systems, databases,
+cloud APIs, SaaS accounts, browser automation, or internal platform operations.
+Koog can orchestrate those calls, but your application still owns
+authorization, input validation, audit logs, human approval, retries, and
+rollback behavior.
+
+## Use Cases
+
+- Build a Kotlin backend agent that calls typed tools and MCP servers.
+- Add AI agent workflows to Spring Boot or Ktor applications.
+- Run graph-based agent workflows with retries and state restoration.
+- Switch between OpenAI, Anthropic, Google, OpenRouter, Ollama, DeepSeek, or
+  Bedrock providers without redesigning the agent.
+- Add memory, retrieval, and history compression to longer conversations.
+- Export traces to observability systems while debugging agent behavior.
+- Explore Kotlin Multiplatform agent surfaces for JVM, mobile, JS, or WasmJS.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes Koog as a Kotlin-based framework for building
+  and running AI agents in idiomatic Kotlin.
+- The README lists multiplatform development, reliability and fault tolerance,
+  history compression, Spring Boot and Ktor integration, OpenTelemetry
+  exporters, provider switching, MCP tools, memory, streaming, modular features,
+  graph workflows, custom tools, and tracing.
+- The README lists Google, OpenAI, Anthropic, DeepSeek, OpenRouter, Ollama, and
+  Bedrock as supported provider families.
+- The README says JDK 17 or newer is required for JVM usage and documents
+  Gradle and Maven dependency examples.
+- `gradle/libs.versions.toml` records Kotlin, coroutine, serialization, Ktor,
+  Spring Boot, Spring AI, OpenTelemetry, AWS SDK, and MCP Kotlin SDK dependency
+  versions used by the repository.
+- GitHub reports JetBrains ownership, Apache-2.0 licensing, a current release,
+  active repository updates, and topics including MCP, Kotlin, Java, JVM,
+  OpenAI, Anthropic, Ollama, Bedrock, Ktor, Spring, and multi-agent systems.
+
+## Safety and Privacy
+
+Koog's operational risk comes from what each agent can call and remember.
+Review every tool, MCP server, model provider, memory backend, trace exporter,
+and workflow node as an independent trust boundary. Use narrow credentials,
+idempotent tool behavior, timeouts, audit logs, and human approval for
+side-effecting actions.
+
+Because Koog supports persistence, state restoration, memory, embeddings, and
+observability, sensitive user or workspace data can remain available beyond a
+single prompt. Define retention, deletion, access control, and redaction rules
+before using it for production or regulated workflows.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, `content/guides/`, open pull requests, and repository-wide
+content for `Koog`, `JetBrains/koog`, `docs.koog.ai`, `koog-agents`,
+`Kotlin AI agent framework`, `Koog MCP`, and `JVM AI agents`. Existing Java,
+Kotlin, MCP SDK, LangChain4j, Microsoft Agent Framework, and Spring-related
+entries are adjacent, but no dedicated Koog tools entry, exact source URL
+duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

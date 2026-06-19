@@ -1,0 +1,220 @@
+---
+title: Claude Code Troubleshooting Triage Capability Pack Skill
+slug: claude-code-troubleshooting-triage-capability-pack
+category: skills
+description: >-
+  Expert Claude Code troubleshooting triage capability pack for diagnosing install
+  failures, auth errors, MCP issues, sandbox blocks, and update regressions with
+  source-backed triage matrices and privacy-safe support output.
+cardDescription: >-
+  Triage Claude Code failures with source-backed checklists for auth, MCP, sandbox,
+  network, and update regression diagnosis.
+seoTitle: Claude Code Troubleshooting Triage Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code troubleshooting triage: symptom
+  classification, log review, MCP and sandbox checks, and escalation paths aligned
+  to official troubleshooting documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 1550
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1550"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when triaging Claude Code install, auth, MCP, sandbox, network, or
+  update failures before escalating to admins or support.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code troubleshooting triage capability pack for this incident."
+
+  # Required output
+  1) Symptom classification and affected surface
+  2) First-pass diagnostic checklist results
+  3) Likely root cause with evidence links
+  4) Fix steps and rollback options
+  5) Privacy-safe summary for user or admin handoff
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-15"
+retrievalSources:
+  - "https://code.claude.com/docs/en/troubleshooting"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/sandboxing"
+  - "https://code.claude.com/docs/en/security"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code version, OS, install method, and recent config or update changes."
+  - "Access to local logs, settings files, and MCP configuration relevant to the failure."
+  - "Ability to reproduce the failure in a controlled session when safe."
+  - "Admin contact path for managed policy, network proxy, or enterprise auth issues."
+safetyNotes:
+  - "This skill triages failures; it must not disable sandbox, security, or managed policy without explicit admin approval."
+  - "Do not paste secrets, OAuth tokens, or session cookies into public troubleshooting threads."
+  - "Avoid running destructive fix steps (global uninstall, credential deletion) without user confirmation."
+  - "MCP and plugin removals can break team workflows; document rollback before changes."
+privacyNotes:
+  - "Troubleshooting logs can expose repo paths, auth emails, internal URLs, and MCP tool arguments."
+  - "Support handoffs may include session transcripts; redact customer or employee identifiers first."
+  - "Network proxy and ZDR settings can reveal enterprise security posture; keep details in private channels."
+  - "Diagnostic exports may contain API usage metadata governed by org retention policies."
+tags:
+  - claude-code
+  - troubleshooting
+  - support
+  - mcp
+  - capability-pack
+keywords:
+  - Claude Code troubleshooting triage capability pack
+  - Claude Code auth failure triage
+  - Claude Code MCP troubleshooting checklist
+  - Claude Code sandbox error diagnosis
+  - Claude Code support triage workflow
+readingTime: 9
+difficultyScore: 79
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code troubleshooting, MCP, sandboxing,
+security, and settings documentation verified on **2026-06-15**. Error messages
+and defaults change with releases; prefer live docs and changelog notes.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/troubleshooting
+- https://code.claude.com/docs/en/mcp
+- https://code.claude.com/docs/en/sandboxing
+- https://code.claude.com/docs/en/security
+- https://code.claude.com/docs/en/settings
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against public Claude Code troubleshooting and integration docs on
+**2026-06-15**:
+
+- Official troubleshooting docs cover install paths, auth, updates, MCP, and common
+  environment conflicts with linked fix steps.
+- MCP and sandbox docs explain permission prompts, managed policy overrides, and
+  isolation failures that mimic generic app errors.
+- Settings documentation maps user, project, and managed layers that affect triage order.
+
+## Scope Note
+
+This pack triages Claude Code operational failures for champions, admins, and support
+workflows. It is distinct from incident timeline reconstruction skills focused on
+production outages outside Claude Code.
+
+## Core Workflow
+
+1. Capture symptom, Claude Code version, OS, install channel, and recent changes.
+2. Classify failure surface: auth, network, MCP, sandbox, plugin, update, or project config.
+3. Run first-pass checks from official troubleshooting docs for that surface.
+4. Collect minimal logs and settings evidence without exposing secrets.
+5. Identify likely root cause and alternative hypotheses with confidence notes.
+6. Propose fix steps, rollback options, and admin escalation triggers.
+7. Deliver privacy-safe summary for user or internal handoff.
+
+## Capability Scope
+
+- Symptom classification by Claude Code surface.
+- First-pass diagnostic checklists from official docs.
+- MCP, sandbox, and settings drift detection.
+- Fix and rollback planning with escalation paths.
+- Privacy-safe support handoff summaries.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill during internal support or champion
+  office hours for Claude Code failures.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, Generic AGENTS**: apply the triage checklist when
+  supporting Claude Code deployments using public documentation.
+
+## Required Inputs
+
+- Error messages, timestamps, and reproduction steps.
+- Claude Code version and installation method.
+- Relevant settings, MCP configs, and recent update or policy changes.
+- Network, proxy, or managed policy context for enterprise users.
+
+## Production Rules
+
+- Start with official troubleshooting doc steps before experimental fixes.
+- Prefer reversible changes; document rollback for MCP and plugin edits.
+- Escalate to admins when managed policy or ZDR blocks the fix path.
+- Never share live tokens or session exports in public channels.
+- Label unverified hypotheses clearly in handoff notes.
+- Close triage with explicit next owner and verification step.
+
+## Review Matrix
+
+| Topic | Signal | Action |
+| --- | --- | --- |
+| Auth | OAuth or SSO loop | Check clock, redirect, managed auth policy |
+| MCP | Tool timeout | Verify server, OAuth token, allowlist |
+| Sandbox | Write blocked | Review allowWrite and managed overrides |
+| Update | Post-upgrade regression | Compare version with changelog breaking notes |
+| Network | Proxy errors | Validate enterprise proxy and DNS settings |
+| Config | Project vs user drift | Align settings layers and document override |
+
+## Output Contract
+
+1. Symptom classification and affected surface.
+2. Diagnostic checklist results with evidence.
+3. Likely root cause and alternatives.
+4. Fix steps, rollback, and escalation path.
+5. Privacy-safe handoff summary.
+
+## Troubleshooting
+
+**Issue:** Official doc step does not match local UI
+**Fix:** Confirm Claude Code channel/version; check changelog for renamed settings.
+
+**Issue:** MCP works locally but fails for one user
+**Fix:** Compare user OAuth tokens, managed MCP allowlist, and project `.mcp.json` scope.
+
+**Issue:** Sandbox errors after policy update
+**Fix:** Diff managed policy JSON against last known good; reproduce in staging project.
+
+**Issue:** Intermittent network failures only on VPN
+**Fix:** Document proxy exceptions required by troubleshooting docs; escalate to IT.
+
+## Duplicate Check
+
+Checked `content/skills/`, `content/guides/`, open PRs, and the live catalog for
+Claude Code troubleshooting workflows. Official troubleshooting docs exist, but no
+`skills` entry provides this reusable triage capability pack with review matrix
+and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by `kiannidev`.
+It is based on public Claude Code documentation and the public Anthropic `claude-code`
+repository. No paid placement, referral link, affiliate link, or vendor sponsorship is used.

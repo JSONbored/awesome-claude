@@ -470,6 +470,10 @@ export const newsletterSubscribeBodySchema = z.object({
   source: z.string().trim().max(64).optional().default("site"),
 });
 
+export const newsletterConfirmBodySchema = z.object({
+  token: z.string().trim().min(1).max(4096),
+});
+
 export const newsletterWebhookBodySchema = z
   .object({
     type: z.string().optional(),
@@ -494,6 +498,7 @@ const submissionPreflightDuplicateSchema = z.object({
   title: z.string().max(240),
   url: z.string().url().max(2048),
   reasons: z.array(z.string().max(80)).max(8),
+  reasonLabels: z.array(z.string().max(120)).max(8).optional(),
 });
 
 const submissionPreflightPrPreviewSchema = z.object({
@@ -771,7 +776,7 @@ export const ogQuerySchema = z.object({
 });
 
 export const brandAssetParamsSchema = z.object({
-  kind: z.literal("icon"),
+  kind: z.enum(["icon", "logo"]),
   domain: z
     .string()
     .trim()
@@ -884,7 +889,7 @@ export const apiRouteDefinitions = {
     path: "/api/registry/trending",
     summary: "Public registry trending entries",
     description:
-      "Returns bounded privacy-safe trending registry entries from aggregate votes, community signals, intent events, and static trust metadata.",
+      "Returns bounded privacy-safe trending registry entries ranked from maintainer-controlled static trust metadata; public engagement aggregates are reported only as availability metadata.",
     tags: ["Registry"],
     originCheck: true,
     querySchema: registryTrendingQuerySchema,
@@ -1040,6 +1045,21 @@ export const apiRouteDefinitions = {
     bodyLimitBytes: 8 * 1024,
     rateLimit: {
       scope: "newsletter-subscribe",
+      limit: 15,
+      windowMs: 60_000,
+      binding: "API_STRICT_RATE_LIMIT",
+    },
+  }),
+  "newsletter.confirm": route({
+    id: "newsletter.confirm",
+    method: "POST",
+    path: "/api/public/newsletter/confirm",
+    summary: "Confirm a newsletter subscription",
+    tags: ["Newsletter"],
+    bodySchema: newsletterConfirmBodySchema,
+    bodyLimitBytes: 8 * 1024,
+    rateLimit: {
+      scope: "newsletter-confirm",
       limit: 15,
       windowMs: 60_000,
       binding: "API_STRICT_RATE_LIMIT",

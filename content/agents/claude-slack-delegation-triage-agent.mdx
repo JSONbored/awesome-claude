@@ -1,0 +1,134 @@
+---
+title: Claude Slack Delegation Triage Agent
+slug: claude-slack-delegation-triage-agent
+category: agents
+description: >-
+  Community reusable agent prompt for triaging Slack messages delegated to Claude Code
+  using official Slack integration docs: classify intent, bind repo context, route work safely,
+  and draft human-approved replies before autonomous sessions start.
+cardDescription: >-
+  Triage Slack delegations to Claude Code using official Slack integration documentation.
+seoTitle: Claude Slack Delegation Triage Agent
+seoDescription: >-
+  Reusable agent prompt to triage Slack delegations to Claude Code grounded in official Slack
+  docs: classify intent, route repos, flag risks, and draft human-approved replies.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1578
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1578"
+documentationUrl: "https://code.claude.com/docs/en/slack"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent on inbound Slack delegations to classify the ask, pick the right repo and
+  branch, block risky auto-fixes, and draft a reply for human approval before Claude Code acts.
+prerequisites:
+  - "Claude Slack integration enabled per official Slack documentation."
+  - "Mapping from Slack channels or workspaces to repositories and CODEOWNERS."
+  - "Team policy for which delegation types may spawn Claude Code sessions automatically."
+  - "Issue tracker links or thread context for reproducibility."
+safetyNotes:
+  - "Public Slack threads are not private; avoid pasting secrets into delegated prompts."
+  - "Auto-starting Claude sessions from Slack can race on shared branches—prefer worktrees."
+  - "Customer-facing replies require human approval before posting from bot identities."
+  - "Destructive fixes suggested from vague Slack messages should be blocked pending clarification."
+privacyNotes:
+  - "Slack delegations may contain customer names, incident details, and internal URLs."
+  - "Claude session transcripts from Slack triggers follow normal data handling for your plan."
+  - "Triage summaries shared outside the channel should redact proprietary product codenames."
+tags:
+  - claude-code
+  - slack
+  - delegation
+  - triage
+  - workflow
+  - engineering
+keywords:
+  - claude slack delegation triage agent
+  - slack to claude code workflow
+  - claude code slack integration triage
+  - human approved slack replies claude
+  - engineering ask routing slack claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Claude Slack Delegation Triage Agent is a community-authored reusable prompt for handling
+engineering asks through Claude's Slack integration. It applies official Claude Code Slack
+documentation—not an official Anthropic support agent.
+
+## Scope Note
+
+This prompt operationalizes documented Slack delegation and handoff patterns from
+code.claude.com. Team communication policy remains with your organization.
+
+## Agent Prompt
+
+You are a Claude Slack delegation triage specialist. Turn Slack messages into actionable,
+safely scoped Claude Code tasks using official Slack integration documentation.
+
+Workflow:
+
+1. **Parse message.** Extract ask type: bug, feature, question, incident, chore, or meta.
+2. **Context binding.** Identify repo, service, environment, and linked issues or PRs.
+3. **Clarify gaps.** List missing repro steps, logs, or ownership before starting code work.
+4. **Route.** Recommend CLI session, web session, worktree, or issue-only response per integration capabilities.
+5. **Risk screen.** Flag asks involving prod changes, secrets, customer data, or broad refactors.
+6. **Draft reply.** Write a concise Slack response with plan, ETA class, and requested inputs.
+7. **Handoff.** Provide Claude Code prompt stub if human approves execution.
+
+Output contract:
+
+- Classification and confidence.
+- Repo, branch, or worktree recommendation.
+- Risk flags and required clarifications.
+- Draft Slack reply and optional Claude Code task prompt.
+
+## Features
+
+- Applies documented Slack integration capabilities to triage workflows.
+- Separates informational answers from repo-changing work.
+- Encourages human-approved public replies.
+- Reduces branch collision via worktree routing.
+
+## Use Cases
+
+- Triage engineering help Slack messages during release week.
+- Route incident threads to the correct service repository.
+- Prevent Claude from pushing directly to main from vague Slack pings.
+- Standardize delegation replies across global engineering teams.
+
+## Source Notes
+
+Verified against Claude Code Slack integration documentation on **2026-06-16**:
+
+- Official docs describe connecting Claude Code to Slack workspaces and delegating engineering
+  work from channels or threads into Claude sessions.
+- Documentation covers integration setup expectations and how delegated tasks relate to
+  repository context and session permissions.
+- Teams must still apply normal code review, branch protection, and secret handling policies
+  when acting on Slack-delegated Claude output.
+
+## Duplicate Check
+
+Checked content/guides and content/agents for Slack delegation coverage.
+delegating-engineering-work-from-slack-to-claude-code is a setup guide. No agents entry
+provides Slack delegation triage with reply drafting and risk routing grounded in official Slack docs.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code Slack documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code Slack - https://code.claude.com/docs/en/slack
+- Claude Code features overview - https://code.claude.com/docs/en/features-overview
+- Claude Code repository - https://github.com/anthropics/claude-code

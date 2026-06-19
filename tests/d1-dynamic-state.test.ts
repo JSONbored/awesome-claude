@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -30,13 +30,20 @@ import {
 } from "../apps/web/src/lib/d1-batch";
 import {
   buildPublicJobsIndex,
+  getJobBySlug,
+  getJobs,
+  mapJobListingRow,
   normalizeJobLocation,
   queryActiveJobs,
+  sortJobs,
+  toPublicJobListing,
 } from "../apps/web/src/lib/jobs";
 import {
   REQUIRED_JOB_COLUMNS,
   checkJobsSchema,
   getJobsHealth,
+  queryAdminJobBySlug,
+  queryAdminJobs,
   updateAdminJobState,
   upsertAdminJob,
 } from "../apps/web/src/lib/job-admin";
@@ -254,6 +261,11 @@ class FakeD1 implements D1DatabaseLike {
     return [];
   }
 }
+
+afterEach(() => {
+  delete (globalThis as typeof globalThis & { __env__?: unknown }).__env__;
+  vi.restoreAllMocks();
+});
 
 describe("D1 dynamic state helpers", () => {
   it("validates entry keys and provides zero-count fallback state", () => {
@@ -517,6 +529,75 @@ describe("D1 dynamic state helpers", () => {
     });
   });
 
+  it("uses runtime SITE_DB for safe vote counts and fails closed on unexpected D1 errors", async () => {
+    const db = new FakeD1();
+    db.voteCounts.set("mcp:example-server", 7);
+    db.intentEventRows = [
+      {
+        entry_key: "mcp:example-server",
+        event_type: "open",
+        created_at: "2026-05-01T00:00:00Z",
+      },
+    ];
+    (globalThis as typeof globalThis & { __env__?: unknown }).__env__ = {
+      SITE_DB: db,
+    };
+
+    await expect(safeVoteCounts(["mcp:example-server"])).resolves.toEqual({
+      available: true,
+      counts: { "mcp:example-server": 7 },
+    });
+    await expect(
+      safeIntentEventCounts(["mcp:example-server"]),
+    ).resolves.toEqual({
+      available: true,
+      counts: {
+        "mcp:example-server": {
+          copy: 0,
+          open: 1,
+          install: 0,
+          download: 0,
+          vote: 0,
+        },
+      },
+    });
+
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    (globalThis as typeof globalThis & { __env__?: unknown }).__env__ = {
+      SITE_DB: {
+        prepare() {
+          throw new Error("unexpected outage");
+        },
+      },
+    };
+    await expect(safeVoteCounts(["mcp:example-server"])).resolves.toEqual({
+      available: false,
+      counts: { "mcp:example-server": 0 },
+    });
+    expect(warn).toHaveBeenCalledWith(
+      "[votes] failed to read counts",
+      expect.any(Error),
+    );
+    await expect(
+      safeIntentEventCounts(["mcp:example-server"]),
+    ).resolves.toEqual({
+      available: false,
+      counts: {
+        "mcp:example-server": {
+          copy: 0,
+          open: 0,
+          install: 0,
+          download: 0,
+          vote: 0,
+        },
+      },
+    });
+    expect(warn).toHaveBeenCalledWith(
+      "[intent-events] failed to read counts",
+      expect.any(Error),
+    );
+  });
+
   it("returns explicit empty jobs state unless active D1 rows exist", async () => {
     const db = new FakeD1();
 
@@ -626,6 +707,17 @@ describe("D1 dynamic state helpers", () => {
     });
     expect(publicIndex.entries[0]).not.toHaveProperty("postedByEmail");
     expect(publicIndex.entries[0]).not.toHaveProperty("paidPlacementExpiresAt");
+
+    (globalThis as typeof globalThis & { __env__?: unknown }).__env__ = {
+      SITE_DB: db,
+    };
+    await expect(getJobs()).resolves.toMatchObject([
+      { slug: "ai-systems-engineer" },
+    ]);
+    await expect(getJobBySlug("ai-systems-engineer")).resolves.toMatchObject({
+      slug: "ai-systems-engineer",
+    });
+    await expect(getJobBySlug("missing-role")).resolves.toBeNull();
   });
 
   it("normalizes job locations without re-wrapping abbreviations", () => {
@@ -640,6 +732,111 @@ describe("D1 dynamic state helpers", () => {
       normalizeJobLocation("San Francisco, California, United States"),
     ).toBe("San Francisco, CA, US");
     expect(normalizeJobLocation("Remote (EU)")).toBe("Remote (EU)");
+  });
+
+  it("maps sparse job rows through public fallbacks without leaking private fields", () => {
+    const mapped = mapJobListingRow({
+      slug: "fallback-role",
+      title: "Fallback Role",
+      company_name: "Example Co",
+      company_url: null,
+      location_text: "United Kingdom",
+      summary: null,
+      description_md: "Fallback description.",
+      employment_type: null,
+      posted_at: null,
+      compensation_summary: null,
+      equity_summary: null,
+      bonus_summary: null,
+      benefits_json: "not-json",
+      responsibilities_json: JSON.stringify([
+        "Build and maintain production-quality systems aligned with the role and company product surface.",
+        "Own useful role-specific automation.",
+      ]),
+      requirements_json: JSON.stringify({ invalid: true }),
+      apply_url: null,
+      tier: "unknown",
+      status: "unknown",
+      source: "unknown",
+      source_kind: "unknown",
+      source_url: null,
+      first_seen_at: null,
+      last_checked_at: null,
+      source_checked_at: null,
+      stale_check_count: null,
+      curation_note: null,
+      paid_placement_expires_at: "2026-06-01T00:00:00Z",
+      claimed_employer: 0,
+      posted_by_email: "private@example.com",
+      expires_at: null,
+      is_remote: null,
+      is_worldwide: null,
+    });
+
+    expect(mapped).toMatchObject({
+      slug: "fallback-role",
+      location: "UK",
+      description: "Fallback description.",
+      applyUrl: "/jobs/post",
+      tier: "standard",
+      status: "active",
+      source: "manual",
+      sourceKind: "employer_submitted",
+      sourceUrl: undefined,
+      benefits: undefined,
+      responsibilities: ["Own useful role-specific automation."],
+      requirements: undefined,
+      isRemote: true,
+      isWorldwide: false,
+    });
+
+    const sponsored = toPublicJobListing(
+      {
+        ...mapped,
+        sponsored: true,
+        featured: true,
+        source: "curated",
+        sourceKind: "official_ats",
+        compensation: "$180k-$220k",
+        claimedEmployer: true,
+        lastCheckedAt: "2026-05-01T00:00:00Z",
+      },
+      "https://heyclau.de",
+    );
+    expect(sponsored).toMatchObject({
+      webUrl: "https://heyclau.de/jobs/fallback-role",
+      sourceLabel: "Editorially curated",
+      applySourceLabel: "External apply via ATS",
+      lastVerifiedAt: "2026-05-01T00:00:00Z",
+    });
+    expect(sponsored.labels).toEqual(
+      expect.arrayContaining([
+        "Sponsored",
+        "Editorially curated",
+        "Claimed employer",
+        "Remote",
+        "Compensation listed",
+      ]),
+    );
+    expect(sponsored).not.toHaveProperty("postedByEmail");
+    expect(sponsored).not.toHaveProperty("paidPlacementExpiresAt");
+
+    const careers = toPublicJobListing({
+      ...mapped,
+      sourceKind: "employer_careers",
+    });
+    expect(careers.applySourceLabel).toBe("External apply via employer site");
+    expect(buildPublicJobsIndex([])).toMatchObject({
+      generatedAt: "",
+      count: 0,
+      entries: [],
+    });
+    expect(
+      sortJobs([
+        { ...mapped, slug: "older", postedAt: "2026-01-01T00:00:00Z" },
+        { ...mapped, slug: "newer", postedAt: "2026-02-01T00:00:00Z" },
+      ]).map((item) => item.slug),
+    ).toEqual(["newer", "older"]);
   });
 
   it("keeps active D1 rows out of public jobs when depth and source of truth are too weak", async () => {
@@ -723,6 +920,28 @@ describe("D1 dynamic state helpers", () => {
     expect(db.runCalls.at(-1)?.query).toContain("ON CONFLICT(slug)");
     expect(db.runCalls.at(-1)?.values).toContain("reviewed-ai-engineer");
 
+    await expect(
+      queryAdminJobs(db, {
+        status: "pending_review",
+        tier: "featured",
+        source: "manual",
+        sourceKind: "employer_submitted",
+        limit: 500,
+        offset: -10,
+      }),
+    ).resolves.toEqual([
+      expect.objectContaining({ slug: "reviewed-ai-engineer" }),
+    ]);
+    expect(db.allCalls.at(-1)?.query).toContain(
+      "WHERE status = ? AND tier = ? AND source = ? AND source_kind = ?",
+    );
+    expect(db.allCalls.at(-1)?.values.slice(-2)).toEqual([100, 0]);
+
+    await expect(
+      queryAdminJobBySlug(db, "reviewed-ai-engineer"),
+    ).resolves.toMatchObject({ slug: "reviewed-ai-engineer" });
+    await expect(queryAdminJobBySlug(db, "missing-role")).resolves.toBeNull();
+
     await updateAdminJobState(db, {
       slug: "reviewed-ai-engineer",
       action: "revalidate",
@@ -741,6 +960,18 @@ describe("D1 dynamic state helpers", () => {
     });
     expect(db.runCalls.at(-1)?.query).toContain("stale_pending_review");
 
+    await expect(
+      updateAdminJobState(db, {
+        slug: "missing-role",
+        action: "revalidate",
+      }),
+    ).rejects.toMatchObject({ name: "JobNotFoundError" });
+    await expect(
+      updateAdminJobState(db, {
+        slug: "missing-role",
+        action: "stale",
+      }),
+    ).rejects.toMatchObject({ name: "JobNotFoundError" });
     await expect(
       updateAdminJobState(db, {
         slug: "missing-role",

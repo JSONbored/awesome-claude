@@ -11,7 +11,9 @@ import { TrustDrilldown } from "@/components/trust-drilldown";
 import { CopyButton } from "@/components/copy-button";
 import { SourceCitations } from "@/components/source-citations";
 import { formatCompact } from "@/lib/format";
+import { brandIdentityLabel } from "@/lib/brand-icons";
 import type { Entry } from "@/types/registry";
+import { EntryBrandMark } from "./entry-brand-mark";
 
 export interface RowDef {
   label: string;
@@ -23,6 +25,20 @@ export const COMPARISON_ROWS: RowDef[] = [
   { label: "Trust", render: (e) => <TrustDrilldown entry={e} /> },
   { label: "Install risk", render: (e) => <InstallRiskBadge entry={e} /> },
   { label: "Notes", render: (e) => <NotesPresenceChips entry={e} /> },
+  {
+    label: "Brand",
+    render: (e) => {
+      const label = brandIdentityLabel(e);
+      return label ? (
+        <span className="inline-flex items-center gap-2 text-sm text-ink">
+          <EntryBrandMark entry={e} size="sm" />
+          <span>{label}</span>
+        </span>
+      ) : (
+        <span className="text-xs text-ink-subtle">—</span>
+      );
+    },
+  },
   { label: "Category", render: (e) => <CategoryPill>{e.category}</CategoryPill> },
   {
     label: "Source",
@@ -151,13 +167,16 @@ export function ComparisonTable({ entries }: { entries: Entry[] }) {
                 key={`${e.category}/${e.slug}`}
                 className="min-w-[260px] max-w-[320px] border-b border-r border-border bg-surface p-3 text-left align-top"
               >
-                <Link
-                  to="/entry/$category/$slug"
-                  params={{ category: e.category, slug: e.slug }}
-                  className="font-display text-sm font-semibold text-ink hover:underline"
-                >
-                  {e.title}
-                </Link>
+                <div className="flex min-w-0 items-start gap-2">
+                  <EntryBrandMark entry={e} size="sm" className="mt-0.5" />
+                  <Link
+                    to="/entry/$category/$slug"
+                    params={{ category: e.category, slug: e.slug }}
+                    className="min-w-0 font-display text-sm font-semibold text-ink hover:underline"
+                  >
+                    {e.title}
+                  </Link>
+                </div>
                 <p className="mt-1 line-clamp-2 text-xs text-ink-muted">{e.description}</p>
                 <Link
                   to="/entry/$category/$slug"

@@ -1,0 +1,180 @@
+---
+title: Flowise
+slug: flowise
+category: tools
+description: >-
+  Visual low-code builder for AI agents, RAG apps, chatbots, agentic workflows,
+  multi-agent systems, LangChain-based components, API-serving flows, and
+  self-hosted deployments through npm, Docker, and cloud platforms.
+cardDescription: >-
+  Visual builder for AI agents, RAG apps, chatbots, agentic workflows,
+  multi-agent systems, LangChain components, and self-hosted flow deployment.
+seoTitle: Flowise Visual AI Agent Builder for RAG, Chatbots, and Agentic Workflows
+seoDescription: >-
+  Flowise is a visual low-code AI agent builder for RAG apps, chatbots,
+  LangChain components, agentic workflows, multi-agent systems, APIs, Docker
+  self-hosting, and Flowise Cloud.
+author: FlowiseAI
+authorProfileUrl: "https://github.com/FlowiseAI"
+dateAdded: "2026-06-18"
+websiteUrl: "https://flowiseai.com/"
+documentationUrl: "https://docs.flowiseai.com/"
+repoUrl: "https://github.com/FlowiseAI/Flowise"
+packageUrl: "https://registry.npmjs.org/flowise"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Web
+sourceUrls:
+  - "https://github.com/FlowiseAI/Flowise"
+  - "https://raw.githubusercontent.com/FlowiseAI/Flowise/main/README.md"
+  - "https://raw.githubusercontent.com/FlowiseAI/Flowise/main/LICENSE.md"
+  - "https://raw.githubusercontent.com/FlowiseAI/Flowise/main/package.json"
+  - "https://registry.npmjs.org/flowise"
+  - "https://docs.flowiseai.com/"
+installable: true
+installCommand: "npm install -g flowise"
+usageSnippet: >-
+  Install Flowise with Node.js 20+, start the visual builder, connect model and
+  vector-store credentials, then publish reviewed chatflows, agentflows, or API
+  endpoints with scoped environment variables.
+copySnippet: |-
+  npm install -g flowise
+  npx flowise start
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js 20.0.0 or newer for npm installation."
+  - "Docker Compose if using the documented Docker self-host path."
+  - "Provider credentials for selected LLMs, embedding models, vector stores, document loaders, tools, or workflow integrations."
+  - "Persistent database/storage configuration, auth settings, and environment variables before exposing a shared Flowise instance."
+  - "A review plan for which users can create chatflows, agentflows, tools, webhooks, credentials, and public API endpoints."
+safetyNotes:
+  - "Flowise can turn visual flows into callable chatbots, agents, RAG pipelines, and API endpoints. Review each flow's tools, credentials, webhooks, and external actions before production use."
+  - "Self-hosted deployments should protect the UI, credentials, flow exports, logs, and API endpoints with authentication, network controls, secret management, and backups."
+  - "RAG flows may ingest private documents, chunk content, create embeddings, and query external vector databases; scope datasets and retention before sharing flows."
+  - "Agentic workflows and multi-agent systems can call external services repeatedly; set quotas, rate limits, and approval gates for write actions."
+  - "The repository license file says most code is Apache-2.0, while enterprise directories and files with explicit copyright notices use a commercial license; verify license boundaries before redistribution."
+privacyNotes:
+  - "Prompts, uploaded documents, chunks, embeddings, vector metadata, tool inputs, tool outputs, model responses, credentials, flow definitions, logs, and exported chatflows may contain private data."
+  - "Model providers, embedding providers, vector stores, document loaders, search APIs, workflow integrations, and hosted Flowise Cloud may receive data depending on flow configuration."
+  - "Do not commit `.env` files, provider keys, vector database secrets, webhook URLs, exported credentials, generated logs, or private flow templates."
+  - "Before publishing a chatbot or API endpoint, review whether prompts, source documents, dataset IDs, and tool outputs are exposed to users or downstream systems."
+tags:
+  - flowise
+  - ai-agents
+  - agentic-workflow
+  - multi-agent
+  - rag
+  - low-code
+  - no-code
+  - langchain
+  - chatbot
+  - self-hosted
+keywords:
+  - Flowise
+  - Flowise AI agent builder
+  - Flowise RAG
+  - visual AI agents
+  - low-code AI agent builder
+  - Flowise chatflow
+  - Flowise agentflow
+  - LangChain visual builder
+  - self hosted AI chatbot builder
+  - multi-agent workflow builder
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Flowise is a visual, low-code builder for AI agents, RAG applications,
+chatbots, agentic workflows, and multi-agent systems. It provides a web UI where
+teams compose model nodes, tools, memory, retrievers, vector stores, prompts,
+and API-facing flows without writing every integration from scratch.
+
+This entry fills a clear directory gap. Langflow and Dify are already present as
+adjacent visual builders, but Flowise is a separate high-search project with
+strong demand around "Flowise AI agent builder", "Flowise RAG", "chatflow",
+"agentflow", and self-hosted LangChain-style visual workflows.
+
+## Install
+
+Install the published npm package:
+
+```bash
+npm install -g flowise
+npx flowise start
+```
+
+The README also documents Docker Compose and Docker image paths:
+
+```bash
+docker compose up -d
+```
+
+For source development, the monorepo uses `pnpm`, with `server`, `ui`,
+`components`, and `api-documentation` modules.
+
+## Core Capabilities
+
+| Area | Flowise Coverage |
+| --- | --- |
+| Visual builder | Drag-and-connect flow authoring for LLM apps, chatbots, RAG, and agents |
+| Agent workflows | Agentic workflows, agentflow patterns, multi-agent systems, tools, memory, and orchestration nodes |
+| RAG | Document loaders, chunking, embeddings, retrievers, vector stores, reranking, and chat-with-data patterns |
+| Runtime | Node backend, React frontend, component integrations, and Swagger/OpenAPI-style API documentation |
+| Deployment | npm package, Docker Compose, Docker image, source development, Flowise Cloud, and self-hosting docs for major cloud platforms |
+| Integrations | LangChain-style components, model providers, vector databases, workflow automation, APIs, and webhook-oriented deployment patterns |
+
+## Use Cases
+
+- Prototype RAG chatbots over internal docs or knowledge bases.
+- Build visual agent workflows that call tools and route steps.
+- Publish a chatflow or agentflow behind an API endpoint.
+- Compare visual agent builders such as Flowise, Langflow, Dify, and LobeHub.
+- Let non-specialist teams inspect the graph behind a chatbot or RAG workflow.
+- Self-host an AI chatbot builder with provider credentials kept in your own
+  infrastructure.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `FlowiseAI/Flowise` as an active repository with 53,000+ stars,
+  24,000+ forks, and latest release `flowise@3.1.2`.
+- The repository description says "Build AI Agents, Visually"; topics include
+  low-code, no-code, LangChain, RAG, chatbot, workflow automation, agentic AI,
+  agentic workflow, agents, and multi-agent systems.
+- The README documents Node.js `>=20.0.0`, `npm install -g flowise`,
+  `npx flowise start`, Docker Compose, Docker image usage, source development
+  with `pnpm`, environment variables, documentation, self-hosted deployment
+  options, and Flowise Cloud.
+- The npm registry resolves package `flowise` version `3.1.2` with the `flowise`
+  CLI binary.
+- The repository license file says enterprise directory content and files with
+  explicit copyright notices use a commercial license, while content outside
+  those restricted areas is available under Apache-2.0.
+
+## Safety and Privacy
+
+Flowise makes it easy to expose a flow as a chatbot or API endpoint. That is
+useful, but it also means credentials, prompts, tools, retrievers, and document
+sources need review before a flow is shared. Treat exported flows like
+configuration code: inspect them for secrets, endpoints, prompts, dataset names,
+and write-capable tools.
+
+For RAG and agent workflows, test retrieval quality, rate limits, and tool side
+effects before trusting output. A visually clear graph is not a security
+boundary; users still need auth, logs, secret storage, and production review.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, open pull requests, and repository-wide
+content for `FlowiseAI/Flowise`, Flowise, `flowise`, Flowise AI agent builder,
+Flowise RAG, Flowise chatflow, Flowise agentflow, visual AI agents, low-code AI
+agent builder, LangChain visual builder, and multi-agent workflow builder.
+Existing entries cover adjacent builders such as Langflow, Dify, LobeHub, Open
+WebUI, and RAGFlow, but no dedicated Flowise tools entry, exact source URL
+duplicate, target file, or open duplicate PR was found.

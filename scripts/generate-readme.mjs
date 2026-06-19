@@ -257,7 +257,7 @@ packages use checksums and package trust metadata after review.
 
 1. Direct content PRs should add or update exactly one \`content/<category>/<slug>.mdx\` file.
 2. For direct content PRs, run \`pnpm validate:content:strict\` and do not commit generated output.
-3. For platform, package, API, MCP, Raycast, or maintainer artifact work, run \`pnpm --filter web run prebuild\`, \`pnpm validate:packages\`, \`pnpm scan:packages\`, \`pnpm validate:clean\`, \`pnpm audit:content\`, \`pnpm validate:emails\`, \`pnpm validate:raycast-feed\`, \`pnpm test:mcp\`, \`pnpm test:registry-artifacts\`, \`pnpm test:seo-jsonld\`, \`pnpm test:commercial-intake\`, \`MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint\`, and \`pnpm build\` as relevant.
+3. For platform, package, API, MCP, Raycast, or maintainer artifact work, run \`pnpm --filter web run prebuild\`, \`pnpm validate:packages\`, \`pnpm scan:packages\`, \`pnpm validate:clean\`, \`pnpm audit:content\`, \`pnpm validate:raycast-feed\`, \`pnpm test:mcp\`, \`pnpm test:registry-artifacts\`, \`pnpm test:seo-jsonld\`, \`pnpm test:commercial-intake\`, \`MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint\`, and \`pnpm build\` as relevant.
 4. Generated registry, route, package-download, and README artifacts are build or maintainer automation outputs, not normal content PR diffs.
 
 </details>
@@ -337,12 +337,17 @@ function validateReadmeCatalog(readmeContent) {
       );
     }
 
+    // Prettier escapes markdown-significant punctuation in prose (e.g. `*.md`
+    // becomes `\*.md`), so compare descriptions against an un-escaped view of
+    // the rendered README — otherwise any description containing `*`, `_`, `[`,
+    // etc. falsely reads as "missing".
+    const unescapedReadme = readmeContent.replace(/\\([^0-9A-Za-z\s])/g, "$1");
     for (const entry of entries) {
       const url = `https://heyclau.de/entry/${category}/${entry.slug}`;
       if (!readmeContent.includes(url)) {
         errors.push(`README catalog is missing ${category}/${entry.slug}.`);
       }
-      if (entry.description && !readmeContent.includes(entry.description)) {
+      if (entry.description && !unescapedReadme.includes(entry.description)) {
         errors.push(
           `README catalog is missing the frontmatter description for ${category}/${entry.slug}.`,
         );

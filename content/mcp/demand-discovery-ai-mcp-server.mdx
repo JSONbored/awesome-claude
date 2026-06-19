@@ -1,0 +1,190 @@
+---
+title: Demand Discovery AI MCP Server for Claude
+slug: demand-discovery-ai-mcp-server
+category: mcp
+description: >-
+  Free hosted Demand Discovery AI MCP server that answers startup validation
+  questions, explains demand signals, and kicks off market research reports with
+  no API key required.
+cardDescription: >-
+  Connect Claude to Demand Discovery AI for Build/Pivot/Kill guidance, ICP
+  discovery help, and free market research kickoff at mcp.demanddiscovery.ai.
+seoTitle: Demand Discovery AI MCP Server for Claude
+seoDescription: >-
+  Use the Demand Discovery AI MCP server with Claude to validate startup ideas with
+  behavioral signals, compare validation approaches, and start free reports.
+author: Demand Discovery AI
+authorProfileUrl: "https://github.com/demand-discovery-ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1503
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1503"
+repoUrl: "https://github.com/demand-discovery-ai/mcp"
+documentationUrl: "https://mcp.demanddiscovery.ai"
+websiteUrl: "https://demanddiscovery.ai"
+installable: true
+installCommand: >-
+  npx demand-discovery-install
+usageSnippet: >-
+  Run npx demand-discovery-install for Claude Desktop or add
+  https://mcp.demanddiscovery.ai/api/mcp manually; no API key or signup is required.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "demand-discovery": {
+        "url": "https://mcp.demanddiscovery.ai/api/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "demand-discovery": {
+        "url": "https://mcp.demanddiscovery.ai/api/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Desktop, Claude Code, Cursor, Windsurf, or another MCP client with remote HTTP transport."
+  - "Internet access to mcp.demanddiscovery.ai."
+  - "Optional email when using start_demand_report to prefill the free market research form."
+  - "Understanding that paid Demand Discovery reports and Agentic Launch are separate product steps."
+safetyNotes:
+  - "start_demand_report returns deep links that prefill forms; confirm details before submitting personal email."
+  - "MCP answers are advisory and based on behavioral frameworks, not guaranteed market outcomes."
+  - "Do not rehost or proxy the hosted MCP responses; the manifest prohibits mirroring on third-party infrastructure."
+  - "Paid $49 Demand Discovery reports are human-in-the-loop product steps outside the free MCP Q&A tools."
+privacyNotes:
+  - "Free MCP tools do not require signup, but report kickoff may collect startup name, problem, solution, and email."
+  - "Prompts about your idea are processed by Demand Discovery AI under its proprietary service terms."
+  - "Avoid sharing confidential unreleased product details unless you accept third-party processing risk."
+tags:
+  - startups
+  - validation
+  - market-research
+  - demand-signals
+  - remote-mcp
+keywords:
+  - demand discovery mcp
+  - startup validation claude
+  - demand score mcp
+  - mcp.demanddiscovery.ai
+  - build pivot kill
+readingTime: 4
+difficultyScore: 15
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Demand Discovery AI™ provides a free, stateless Model Context Protocol server for founders validating startup ideas. Instead of opinion-only chat, the server explains behavioral demand signals, compares validation approaches, and can kick off a free Market Research report directly from your assistant.
+
+Public install assets live in [demand-discovery-ai/mcp](https://github.com/demand-discovery-ai/mcp). The canonical endpoint is `https://mcp.demanddiscovery.ai/api/mcp`, registered as `ai.demanddiscovery/mcp`.
+
+## Features
+
+- Seven tools covering Q&A, frameworks, product details, signal explanations, and report kickoff.
+- Build / Pivot / Kill verdict™ framework grounded in behavioral signal categories.
+- Free Market Research deep-link generation via `start_demand_report`.
+- No API key or signup required for MCP access.
+- One-command installer `npx demand-discovery-install` for Claude Desktop.
+
+## Use Cases
+
+- Ask whether an idea shows real demand signals versus surface-level interest.
+- Learn how to find ICPs to interview before building.
+- Compare Demand Discovery with surveys, waitlists, or generic AI advice.
+- Start a prefilled free market research report from chat.
+- Understand the four behavioral data-source categories behind the Demand Score™.
+
+## Installation
+
+### Claude Desktop one-liner
+
+```bash
+npx demand-discovery-install
+```
+
+Restart Claude Desktop after the installer writes your config.
+
+### Manual HTTP connector
+
+```json
+{
+  "mcpServers": {
+    "demand-discovery": {
+      "url": "https://mcp.demanddiscovery.ai/api/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+Install examples for Claude Code, Cursor, and Windsurf are in the GitHub repository `examples/` folder.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "demand-discovery": {
+      "url": "https://mcp.demanddiscovery.ai/api/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+## Examples
+
+### Validation question
+
+```text
+How do I find real prospects to talk to about my B2B compliance startup idea?
+```
+
+### Framework overview
+
+```text
+Explain the three-step Demand Discovery framework and what the Demand Score measures.
+```
+
+### Start a report
+
+```text
+Start a demand report for an AI tool that helps founders validate ideas. Problem: founders guess. Solution: behavioral demand testing.
+```
+
+## Security
+
+- Review prefilled report links before submitting emails or confidential details.
+- Treat MCP guidance as research support, not an investment or go/no-go decision by itself.
+- Respect trademark and acceptable-use terms in the published `mcp.json` manifest.
+
+## Troubleshooting
+
+### Tools missing after install
+
+Fully quit and relaunch Claude Desktop; the installer updates config only at startup.
+
+### start_demand_report missing fields
+
+Provide `name`, `problem`, and `solution`; optional `target_market` and `email` improve the prefilled form.
+
+### Manifest or registry mismatch
+
+Fetch the live manifest from `https://mcp.demanddiscovery.ai/api/mcp/manifest` if a registry mirror lags.
+
+### Paid next steps confusion
+
+The MCP server explains paid Demand Discovery reports and Agentic Launch; those purchases happen on demanddiscovery.ai, not inside MCP auth.

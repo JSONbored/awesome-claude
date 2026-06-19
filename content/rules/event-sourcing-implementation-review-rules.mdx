@@ -1,0 +1,250 @@
+---
+title: Event Sourcing Implementation Review Rules
+slug: event-sourcing-implementation-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing event-sourcing implementation changes,
+  covering immutable event design, event schema evolution without breaking
+  projections, idempotent event handlers, snapshot and replay correctness,
+  and consistent event-store access patterns.
+cardDescription: >-
+  Review event-sourcing code for immutable events, schema evolution safety,
+  idempotent handlers, snapshot correctness, and event-store consistency.
+seoTitle: Event Sourcing Implementation Review Rules
+seoDescription: >-
+  Practical review rules for event-sourcing and CQRS: immutable event design,
+  backward-compatible schema evolution, idempotent event handlers, snapshot and
+  replay correctness, event-store access patterns, and projection consistency.
+keywords:
+  - event sourcing implementation review rules
+  - CQRS event store immutable events code review
+  - event schema evolution projection safety merge gate
+  - idempotent event handler review checklist
+  - snapshot replay correctness event sourcing
+author: jaso0n0818
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+documentationUrl: "https://martinfowler.com/eaaDev/EventSourcing.html"
+sourceUrls:
+  - "https://martinfowler.com/eaaDev/EventSourcing.html"
+  - "https://martinfowler.com/bliki/CQRS.html"
+  - "https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing"
+  - "https://www.eventstore.com/event-sourcing"
+installable: false
+usageSnippet: >-
+  Apply these rules when a change adds or edits event types, event handlers,
+  projections, aggregate command handlers, snapshots, or event-store access
+  in an event-sourced system.
+copySnippet: |-
+  You are reviewing an event-sourcing implementation change.
+
+  Rules:
+  1. Treat every event as an immutable, append-only fact; never mutate or delete
+     a persisted event, and include all information the event represents at the
+     time it occurred.
+  2. Evolve event schemas backward-compatibly: add optional fields, never remove
+     or rename required fields, and version events when a breaking change is
+     unavoidable.
+  3. Make every event handler and projection idempotent so replaying or
+     redelivering an event produces the same state as processing it once.
+  4. Keep aggregates thin: commands validate and emit events, and the apply method
+     only rebuilds state from events without executing side effects.
+  5. Verify that snapshots and replay produce identical aggregate state, and that
+     old events can be replayed correctly after a schema change.
+  6. Scope event-store reads to the aggregate or stream they need; never rebuild
+     the whole store to handle a single command.
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - A pull request or diff that adds or edits event types, handlers, projections, aggregates, snapshots, or event-store queries in an event-sourced system.
+  - Knowledge of the event store and framework in use, since stream naming, optimistic concurrency, and replay semantics differ between implementations.
+  - Access to a test environment where event replay, schema evolution, and snapshot consistency can be exercised without corrupting the production event log.
+  - Permission to block merge when an event schema change breaks existing projections, a handler is not idempotent, or aggregate state diverges between load paths.
+safetyNotes:
+  - "Mutating or deleting a persisted event corrupts the audit log and breaks replays that depend on the original event sequence, potentially causing unrecoverable inconsistency."
+  - "A non-backward-compatible event schema change can break all running projections that read older events, causing data loss in read models or replay failures."
+  - "A non-idempotent event handler can apply the same event twice on replay or redelivery, producing incorrect aggregate state that is invisible in normal operation but surfaces during recovery."
+privacyNotes:
+  - "Event stores often contain an immutable history of personal data; deletion requests for GDPR or similar regulations must be handled by encryption-key rotation or event compaction, not by deleting events."
+  - "Do not include sensitive personal data (passwords, payment card details, health records) directly in event payloads; reference identifiers and look up sensitive data separately."
+  - "Be careful with event replay in non-production environments that copy the production event log, since they inherit all personal data in the event history."
+tags:
+  - event-sourcing
+  - cqrs
+  - architecture
+  - event-driven
+  - reliability
+  - code-review
+---
+
+## Purpose
+
+Use these rules when a change touches an event-sourced system. The goal is to
+keep the event log correct and replayable — events must be immutable facts, schema
+changes must not break existing projections, and handlers must produce the same
+state whether they process an event once or a hundred times.
+
+This is a review policy, not an event-store tutorial. It tells reviewers what
+must be true about generated event types, handlers, and projections before the
+change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know what the change affects and how it fits the
+event-sourcing model.
+
+1. **Change surface.** Whether the change touches event types, command handlers,
+   event apply methods, projections, snapshots, or event-store queries.
+2. **Schema compatibility.** Whether new or changed event types are still
+   readable by existing handlers and projections that process old events.
+3. **Idempotency.** Whether event handlers and projections produce the same
+   output when processing the same event more than once.
+4. **Aggregate boundary.** Whether commands validate intent and emit events,
+   and whether the apply method only rebuilds state without side effects.
+5. **Replay correctness.** Whether replaying the event stream from scratch
+   produces the same aggregate state as the current loaded state.
+
+If the change cannot say whether an event schema change is backward-compatible or
+whether a handler is idempotent, require that context before reviewing the logic.
+
+## Event Immutability And Design Rules
+
+- Treat every persisted event as an immutable, append-only record; never update
+  or delete an event already written to the store.
+- Include all information the event represents at the time it occurred, rather
+  than referencing mutable state that may change later.
+- Use past-tense names that describe what happened, not commands or intentions.
+- Keep events self-contained so a handler can process them correctly without
+  querying external state for information that should have been captured at
+  publish time.
+- Do not embed business logic in event types; they are data records, not
+  behavior carriers.
+
+## Schema Evolution Rules
+
+Projections and handlers must continue to work correctly when reading old events.
+
+- Add new fields as optional with safe defaults so older events without the
+  field are still processable.
+- Never remove a required field, rename a field, or change a field's type in
+  a way that breaks deserialization of existing stored events.
+- Introduce a new event type version (such as `v2` suffix or a version field)
+  when a breaking change is unavoidable, and handle both versions in affected
+  handlers.
+- Test schema changes by replaying production-shaped events of the old version
+  through the new handler and confirming the output is correct.
+- Keep a schema registry or documentation that records what each event version
+  contains so future handlers can be written correctly.
+
+## Idempotency And Handler Rules
+
+- Make every event handler and projection idempotent by tracking the event id
+  and skipping or merging duplicate processing.
+- Do not rely on the event store to guarantee exactly-once delivery; assume
+  at-least-once and design handlers accordingly.
+- Perform side effects (writes to external systems, emails, notifications) only
+  after confirming the event has not already been processed.
+- Keep handler logic deterministic given the same event and prior state so
+  replay always converges to the same result.
+- Separate read-model updates from side-effect commands so projections can be
+  rebuilt without re-triggering external actions.
+
+## Aggregate And Command-Handler Rules
+
+- Validate command preconditions against current aggregate state before emitting
+  events, and reject invalid commands before writing to the store.
+- Let the aggregate's apply method rebuild state from events only; it must not
+  call external services, write to stores, or produce side effects.
+- Use optimistic concurrency (expected version) when appending events to prevent
+  conflicting concurrent writes.
+- Keep aggregates small and cohesive around a single consistency boundary.
+- Load aggregates by replaying their event stream or from a snapshot plus
+  subsequent events, not by reading projected read-model state.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- a change mutates or deletes an already-persisted event;
+- an event schema change removes, renames, or breaks a required field in a
+  way that stops existing projections from deserializing old events;
+- an event handler or projection is not idempotent and will produce incorrect
+  state on replay or redelivery;
+- an aggregate's apply method calls external services or produces side effects;
+- snapshot state and full-replay state diverge in tests;
+- a personal data field (password, payment data, health record) is embedded
+  directly in an event payload instead of by reference.
+
+## Review Checklist
+
+- [ ] {"task": "Events immutable", "description": "No persisted event is mutated or deleted; events record past facts as self-contained data"}
+- [ ] {"task": "Schema backward-compatible", "description": "New or changed events can be read by existing handlers that process older versions"}
+- [ ] {"task": "Handlers idempotent", "description": "Event handlers and projections produce the same result when processing the same event multiple times"}
+- [ ] {"task": "Aggregate boundary correct", "description": "Apply methods only rebuild state; command handlers validate and emit; no side effects in apply"}
+- [ ] {"task": "Replay consistent", "description": "Replaying the event stream produces the same aggregate state as the snapshot-plus-delta path"}
+- [ ] {"task": "Privacy safe", "description": "Sensitive personal data is referenced, not embedded; the event log is treated as immutable personal-data history"}
+
+## AI Review Rules
+
+AI assistants can review event-sourcing code, but they should show evidence.
+
+- Ask the assistant to identify whether the change touches event types, handlers,
+  projections, or aggregates before judging correctness.
+- Require it to flag any event schema field that is removed or renamed, and
+  confirm old event versions are still handled.
+- Have the assistant check handler idempotency explicitly, not just assume it.
+- Do not let the assistant assume snapshot and replay produce the same state
+  without showing a test that confirms it.
+- Re-run review after any change to event fields, handler logic, or snapshot
+  creation.
+
+## Troubleshooting
+
+- **Replay produces different state than snapshot-plus-delta:** check whether
+  apply methods have hidden side effects or non-deterministic logic.
+- **A projection broke after a schema change:** add backward-compatible defaults
+  for new fields and preserve old field names; version the event if needed.
+- **A side effect ran twice on replay:** track the event id and make the handler
+  skip already-processed events.
+- **An aggregate query pulls the whole store:** scope the stream read to the
+  aggregate id and load only relevant events.
+- **Personal data must be deleted:** implement encryption-key rotation or
+  compaction, never delete the event itself.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, statuslines, guides, collections, skills, open
+PRs, and closed PRs for event sourcing, CQRS, event store, event schema
+evolution, idempotent handlers, and aggregate design.
+
+Adjacent content includes general architecture and API design rules, but no
+entry is a portable pre-merge review policy specifically for event-sourcing
+implementation correctness. This entry is distinct because it decides what must
+be true about event immutability, schema evolution safety, handler idempotency,
+and replay consistency before the change can merge.
+
+No prior closed PR for this rule was found during the duplicate/history check.
+
+## Event Type Reference
+
+The table below maps common event-sourcing concerns to the review question that
+surfaces them, following the pattern described in the sources.
+
+| Concern                | Review question                                | Consequence of getting it wrong                  |
+| ---------------------- | ---------------------------------------------- | ------------------------------------------------ |
+| Event immutability     | Is any stored event mutated or deleted?        | Corrupted audit log and broken replays           |
+| Schema evolution       | Can existing handlers read old event versions? | Projection failures and data loss in read models |
+| Handler idempotency    | Does re-processing produce the same state?     | Incorrect aggregates on replay or redelivery     |
+| Apply side effects     | Does apply call external services?             | Double side effects on replay                    |
+| Optimistic concurrency | Is expected version checked on append?         | Lost updates from concurrent command handlers    |
+
+Getting any one of these wrong can produce silent inconsistency that only
+surfaces under replay, recovery, or concurrent load.
+
+## Sources
+
+- Martin Fowler — Event Sourcing: https://martinfowler.com/eaaDev/EventSourcing.html
+- Martin Fowler — CQRS: https://martinfowler.com/bliki/CQRS.html
+- Azure Architecture Center — Event Sourcing pattern: https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing
+- EventStoreDB — What is event sourcing: https://www.eventstore.com/event-sourcing

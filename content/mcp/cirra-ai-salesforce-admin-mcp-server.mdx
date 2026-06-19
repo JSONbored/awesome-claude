@@ -1,0 +1,190 @@
+---
+title: Cirra AI Salesforce Admin MCP Server for Claude
+slug: cirra-ai-salesforce-admin-mcp-server
+category: mcp
+description: >-
+  Commercial Cirra AI MCP server that connects Claude and other MCP clients to
+  Salesforce orgs via OAuth for metadata, permissions, flows, Apex, and SOQL
+  administration through natural language.
+cardDescription: >-
+  Connect Claude to Cirra AI to manage Salesforce objects, permissions, flows,
+  and Apex through a hosted OAuth MCP server.
+seoTitle: Cirra AI Salesforce Admin MCP Server for Claude
+seoDescription: >-
+  Use the Cirra AI Salesforce Admin MCP server with Claude to create metadata,
+  manage permissions, build flows, and run SOQL via OAuth-backed streamable HTTP.
+author: Cirra AI
+authorProfileUrl: "https://github.com/cirra-ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1488
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1488"
+repoUrl: "https://github.com/cirra-ai"
+documentationUrl: "https://cirra.ai/products/salesforce-admin-mcp/"
+websiteUrl: "https://cirra.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http cirra https://mcp.cirra.ai/sfdc/mcp
+usageSnippet: >-
+  Sign up at cirra.ai, authorize your Salesforce org with OAuth, then add
+  https://mcp.cirra.ai/sfdc/mcp as a remote HTTP connector in Claude or another
+  MCP client.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "cirra": {
+        "url": "https://mcp.cirra.ai/sfdc/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "cirra": {
+        "url": "https://mcp.cirra.ai/sfdc/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Cirra AI account with a connected Salesforce org authorized through Salesforce OAuth."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or another MCP client with remote HTTP transport."
+  - "Salesforce user with permissions matching the admin tasks you want the AI to perform."
+  - "Awareness that metadata and configuration changes affect production or sandbox orgs immediately."
+safetyNotes:
+  - "Cirra runs as the connected Salesforce user; destructive metadata changes follow your org permissions."
+  - "Review flow, Apex, and permission-set edits before approving automated tool calls in production orgs."
+  - "OAuth tokens grant persistent org access until revoked in Salesforce or Cirra."
+  - "Prefer sandbox connections while testing new admin automation workflows."
+privacyNotes:
+  - "Org metadata, record samples, and SOQL results are processed by Cirra under its own data-handling terms."
+  - "Cirra states it does not store Salesforce data on its servers and encrypts data in transit."
+  - "Do not paste OAuth codes, refresh tokens, or session cookies into public issues or shared chat logs."
+tags:
+  - salesforce
+  - crm
+  - metadata
+  - admin
+  - remote-mcp
+keywords:
+  - cirra ai mcp
+  - salesforce admin mcp
+  - salesforce claude connector
+  - cirra salesforce oauth
+  - metadata management mcp
+readingTime: 4
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Cirra AI provides a commercial Model Context Protocol server for Salesforce administration. After OAuth connects your org, MCP clients such as Claude Desktop, Claude Code, ChatGPT, and Cursor can create and manage objects, fields, page layouts, permission sets, flows, validation rules, Apex, and SOQL queries through conversation.
+
+The server is listed in the [official MCP Registry](https://registry.modelcontextprotocol.io/) as `ai.cirra/salesforce-mcp` with endpoint `https://mcp.cirra.ai/sfdc/mcp`. Cirra also publishes admin skills at [skills.cirra.ai](https://skills.cirra.ai) for deeper Apex, Flow, and audit workflows.
+
+## Features
+
+- Custom object and field creation with page layouts and record types.
+- Permission set, profile, and field-level security management.
+- Flow, validation rule, and approval process configuration.
+- Apex class and trigger authoring with SOQL and data inspection.
+- OAuth authentication scoped to the connected Salesforce user.
+- Support for multiple orgs including sandboxes, scratch orgs, and production.
+
+## Use Cases
+
+- Create a custom object with fields and a page layout from a plain-English spec.
+- Audit who has access to a sensitive field or permission set.
+- Draft a record-triggered flow for case routing with best-practice guidance.
+- Run SOQL to inspect data before a metadata change.
+- Generate documentation after a multi-step admin update.
+
+## Installation
+
+### Cirra account setup
+
+1. Sign up at [cirra.ai](https://cirra.ai) and start the free plan if needed.
+2. Authorize your Salesforce org through standard Salesforce OAuth.
+3. Copy the MCP URL from the Cirra dashboard.
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter `https://mcp.cirra.ai/sfdc/mcp`.
+3. Complete OAuth when prompted and enable the connector.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http cirra https://mcp.cirra.ai/sfdc/mcp
+claude mcp list
+```
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "cirra": {
+      "url": "https://mcp.cirra.ai/sfdc/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+Authentication is handled through Cirra and Salesforce OAuth during connector setup, not via static API keys in the JSON config.
+
+## Examples
+
+### Create a custom object
+
+```text
+Create a custom object called Project Milestone with fields for due date, owner, and status, then add it to the default page layout.
+```
+
+### Permission audit
+
+```text
+Who currently has edit access to the Account.BillingAddress field?
+```
+
+### Flow assistance
+
+```text
+Build a record-triggered flow that assigns new Cases to the correct queue based on priority.
+```
+
+## Security
+
+- Cirra can only perform actions your connected Salesforce user is allowed to perform in Setup.
+- Use sandbox orgs for experimentation before applying changes to production.
+- Revoke Cirra OAuth access from Salesforce Setup if a connector is compromised.
+
+## Troubleshooting
+
+### OAuth or connector errors
+
+Re-authorize the org from the Cirra dashboard and confirm the Salesforce user still has API access.
+
+### Metadata deploy failures
+
+Check validation errors in the tool response; field types, dependencies, and managed-package constraints may block changes.
+
+### Unexpected permission denials
+
+The connected user may lack Modify All Data or object-level permissions required for the requested admin task.
+
+### Credits exhausted
+
+Free plans include monthly credits; upgrade or wait for the next billing cycle if tool calls are rate-limited.

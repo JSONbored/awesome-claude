@@ -40,6 +40,12 @@ prerequisites:
   - Agent flow that processes user input or external web/content data
   - Ability to add policy checks before tool execution
   - Test harness for adversarial prompt scenarios
+safetyNotes:
+  - "Treat findings and generated mitigations as review inputs; validate suspected vulnerabilities and patches before changing production controls."
+  - "Coordinate disclosure-sensitive security work privately and avoid running destructive probes outside authorized systems."
+privacyNotes:
+  - "Security prompts and reports can include source snippets, vulnerability details, internal URLs, dependency metadata, and operational context."
+  - "Redact secrets, customer data, exploit details, private infrastructure names, and unreleased findings before sharing outputs publicly."
 tags:
   - prompt-injection
   - guardrails

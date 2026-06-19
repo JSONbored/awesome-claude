@@ -76,6 +76,8 @@ export interface BrandInfo {
   brandName?: string;
   brandDomain?: string;
   brandIconUrl?: string;
+  brandLogoUrl?: string;
+  brandAssetSource?: string;
   brandColors?: string[];
   brandVerifiedAt?: string;
 }
@@ -348,8 +350,10 @@ export interface CommercialTool {
   description: string;
   websiteUrl: string;
   affiliateUrl?: string;
+  brandName?: string;
   brandDomain?: string;
   brandIconUrl?: string;
+  brandAssetSource?: string;
   pricingModel: PricingModel;
   disclosure: Disclosure;
   category: string;

@@ -1,0 +1,184 @@
+---
+title: Letta
+slug: letta
+category: tools
+description: >-
+  Open-source platform for stateful agents with long-term memory, Letta Code
+  local CLI agents, hosted Letta API agents, Python and TypeScript clients,
+  skills, subagents, custom tools, MCP dependencies, and persistent agent state.
+cardDescription: >-
+  Build stateful agents with Letta, including long-term memory, Letta Code,
+  hosted API agents, Python and TypeScript clients, skills, subagents, custom
+  tools, and persistent agent state.
+seoTitle: Letta Stateful Agent Platform for Long-Term Memory, Skills, Subagents, and API Agents
+seoDescription: >-
+  Use Letta, formerly MemGPT, to build stateful AI agents with long-term memory,
+  Letta Code CLI agents, hosted API agents, Python and TypeScript clients,
+  skills, subagents, custom tools, MCP dependencies, and persistent memory.
+author: Letta
+authorProfileUrl: "https://github.com/letta-ai"
+dateAdded: "2026-06-18"
+websiteUrl: "https://docs.letta.com/"
+documentationUrl: "https://docs.letta.com/"
+repoUrl: "https://github.com/letta-ai/letta"
+packageUrl: "https://pypi.org/pypi/letta/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/letta-ai/letta"
+  - "https://github.com/letta-ai/letta/blob/main/pyproject.toml"
+  - "https://docs.letta.com/guides/build-with-letta/quickstart"
+  - "https://docs.letta.com/letta-code"
+  - "https://docs.letta.com/api-overview/introduction"
+  - "https://pypi.org/pypi/letta/json"
+installable: true
+installCommand: "pip install letta"
+usageSnippet: >-
+  Install `letta` for the open-source server/CLI package, or use the Letta API
+  clients for hosted agents; define memory blocks, tools, skills, subagents, and
+  data-retention boundaries before exposing persistent agents to users.
+copySnippet: |-
+  pip install letta
+estimatedSetupTime: 30 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.11 or newer for the open-source `letta` package, or Node.js 18+ for Letta Code workflows."
+  - "A decision between local Letta Code, local/self-hosted Letta server, and hosted Letta API usage."
+  - "Letta API credentials or local server credentials when using hosted or API-backed agents."
+  - "A model/provider configuration for the selected Letta route, plus any required OpenAI, Anthropic, Google, Mistral, Bedrock, or local-model credentials."
+  - "A memory and retention policy for user profile data, persona data, agent state, tool outputs, files, skills, subagents, traces, and logs."
+safetyNotes:
+  - "Letta is designed for persistent stateful agents; memory blocks, agent state, skills, subagents, and tool outputs can influence future behavior long after the original request."
+  - "Letta Code runs agents locally in a terminal context and can be used for coding and computer tasks; scope file access, command execution, network access, and approvals before use."
+  - "Custom tools, web search, fetch tools, MCP dependencies, sandbox integrations, external-tools extras, and subagents can mutate external systems or retrieve sensitive data if misconfigured."
+  - "Hosted Letta API usage requires API-key handling, data-retention review, access control, workspace separation, and auditability before production user data is stored."
+  - "Long-term memory should have explicit update, correction, deletion, export, and review paths so stale or sensitive memories do not silently persist."
+privacyNotes:
+  - "Agent memory, memory blocks, persona data, user profile data, prompts, messages, tool arguments, tool outputs, files, traces, logs, API responses, and subagent state may contain sensitive personal or business data."
+  - "Do not store secrets, private credentials, regulated records, private repository content, customer data, or sensitive personal attributes in persistent memory unless the retention and access policy allows it."
+  - "When using hosted Letta, Letta Code, MCP dependencies, external tools, provider APIs, databases, telemetry, or cloud sandboxes, review where data is sent, stored, retained, and deleted."
+  - "If agents self-improve or update memory automatically, add review and rollback controls for incorrect, stale, private, or user-contested memories."
+tags:
+  - letta
+  - memgpt
+  - agents
+  - memory
+  - stateful-agents
+  - skills
+  - subagents
+keywords:
+  - Letta
+  - Letta formerly MemGPT
+  - stateful agents
+  - long-term agent memory
+  - Letta Code
+  - Letta API agents
+  - Letta skills
+  - Letta subagents
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Letta is an open-source platform for stateful agents with long-term memory. It
+supports local terminal agents through Letta Code, API-backed agents through
+Letta's hosted or self-hosted agent API, Python and TypeScript clients, memory
+blocks, custom tools, skills, subagents, and persistent agent state.
+
+Use it when a project needs agents that remember user, persona, task, or
+environment context across sessions rather than treating every chat as
+stateless. It is especially relevant for long-term memory, MemGPT migration,
+stateful agents, local coding agents, API agents, skills, and subagents
+searches.
+
+## Install
+
+For the open-source Python package:
+
+```bash
+pip install letta
+```
+
+The repository also points Letta Code users to the Node-based CLI:
+
+```bash
+npm install -g @letta-ai/letta-code
+```
+
+For hosted Letta API clients, the docs use `@letta-ai/letta-client` for
+TypeScript and `letta-client` for Python. Choose the local, self-hosted, or
+hosted path deliberately because persistence and data handling differ.
+
+## Agent Capabilities
+
+| Area | Letta Coverage |
+| --- | --- |
+| Stateful Agents | Long-term memory, memory blocks, persona/user state, and persistent agent state |
+| Local CLI | Letta Code terminal agents for local coding and computer workflows |
+| API Agents | Hosted or self-hosted Letta API, Python client, TypeScript client, and agent message APIs |
+| Skills and Subagents | Letta Code skills, subagents, and bundled reusable capabilities |
+| Tools | Custom tools, web search, fetch tools, MCP dependencies, and external-tool extras |
+| Storage and Runtime | Python server package, database dependencies, optional Postgres/Redis/Pinecone/SQLite extras, telemetry, and sandbox extras |
+| Provider Support | OpenAI, Anthropic, Google, Mistral, Bedrock, realtime, local/self-hosted routes, and related provider dependencies |
+
+## MCP Fit
+
+Letta is relevant to MCP and skills searches because its Python package depends
+on MCP packages and its model centers on persistent agents that can use tools,
+skills, and subagents over time. That makes memory governance more important
+than in a one-shot tool-calling framework.
+
+If a Letta agent can call MCP tools or custom tools, the tool results can become
+part of persistent agent context. Keep tool permissions, memory update rules,
+and deletion flows aligned so sensitive results do not become durable memory by
+accident.
+
+## Use Cases
+
+- Build agents that maintain long-term memory across sessions.
+- Run local Letta Code agents with skills and subagents.
+- Integrate stateful agents into an application through the Letta API.
+- Store user, persona, project, or task context in explicit memory blocks.
+- Build custom tools that interact with a persistent agent state.
+- Compare Letta's memory-first model with stateless agent frameworks.
+- Prototype MemGPT-style long-lived agents with local or hosted deployment
+  choices.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository identifies Letta as formerly MemGPT and describes it
+  as AI with advanced memory that can learn and self-improve over time.
+- The docs cover Letta Code, Letta API quickstart paths, skills, subagents, and
+  API usage.
+- `pyproject.toml` declares the `letta` package, Apache licensing, Python
+  `>=3.11,<3.14`, the `letta` CLI script, `letta-client`, MCP dependencies,
+  OpenAI/Anthropic/Google/Mistral/Bedrock dependencies, database extras,
+  external-tool extras, server extras, telemetry, and sandbox-related extras.
+- PyPI resolves package metadata for `letta` version `0.16.8`.
+
+## Safety and Privacy
+
+Letta's central feature is durable memory, so the main safety question is not
+only what an agent can do now, but what it will remember and reuse later. Define
+memory schemas, retention, user correction, deletion, export, and audit paths
+before storing real user or customer data.
+
+For local Letta Code agents, treat terminal access, file access, tools, skills,
+subagents, and network access as high-impact capabilities. For hosted Letta API
+agents, review API keys, workspace access, provider routes, data retention, and
+third-party processing before sending production data.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/agents/`, `content/mcp/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+`letta-ai/letta`, Letta, MemGPT, Letta Code, Letta API agents, Letta skills,
+Letta subagents, stateful agents, and long-term agent memory. Existing entries
+cover vector stores, memory MCP servers, and adjacent agent frameworks, but no
+dedicated Letta tools entry, exact source URL duplicate, target file, or open
+duplicate PR was found.

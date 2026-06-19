@@ -1,0 +1,241 @@
+---
+title: WordPress Agent Skills
+slug: wordpress-agent-skills
+category: skills
+description: >-
+  WordPress contributor-reviewed Agent Skills for AI coding assistants working
+  on Gutenberg blocks, block themes, plugins, REST APIs, Interactivity API,
+  Abilities API, WP-CLI, Playground, performance, PHPStan, and directory rules.
+cardDescription: >-
+  WordPress skill pack for Claude, Codex, Cursor, and Copilot covering modern
+  blocks, themes, plugins, REST, security, WP-CLI, Playground, and performance.
+seoTitle: WordPress Agent Skills for Claude Code, Codex, Cursor, and Copilot
+seoDescription: >-
+  Install WordPress Agent Skills to give Claude Code, Codex, Cursor, and
+  Copilot current WordPress block, plugin, theme, REST API, WP-CLI, and
+  Playground guidance.
+author: WordPress Contributors
+authorProfileUrl: "https://github.com/WordPress"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/WordPress/agent-skills"
+documentationUrl: "https://github.com/WordPress/agent-skills#readme"
+websiteUrl: "https://github.com/WordPress/agent-skills"
+downloadUrl: "https://github.com/WordPress/agent-skills/archive/refs/heads/trunk.zip"
+installable: true
+installCommand: "npx skills add WordPress/agent-skills --skill wordpress-router"
+usageSnippet: >-
+  Start with the wordpress-router skill to classify the repository, then add
+  focused WordPress skills for blocks, themes, plugins, REST APIs, WP-CLI,
+  Playground, performance, PHPStan, or directory guidelines.
+copySnippet: |-
+  npx skills add WordPress/agent-skills --list
+
+  # Install a starting router skill
+  npx skills add WordPress/agent-skills --skill wordpress-router
+
+  # Install focused skills for a project
+  npx skills add WordPress/agent-skills --skill wp-plugin-development wp-block-development wp-playground
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/WordPress/agent-skills"
+  - "https://raw.githubusercontent.com/WordPress/agent-skills/trunk/README.md"
+  - "https://raw.githubusercontent.com/WordPress/agent-skills/trunk/docs/ai-authorship.md"
+  - "https://raw.githubusercontent.com/WordPress/agent-skills/trunk/skills/wordpress-router/SKILL.md"
+  - "https://raw.githubusercontent.com/WordPress/agent-skills/trunk/skills/wp-block-development/SKILL.md"
+  - "https://raw.githubusercontent.com/WordPress/agent-skills/trunk/skills/wp-plugin-development/SKILL.md"
+  - "https://raw.githubusercontent.com/WordPress/agent-skills/trunk/LICENSE"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cursor
+  - GitHub Copilot
+  - Generic AGENTS
+prerequisites:
+  - "AI coding assistant or skill installer compatible with Agent Skills-style repositories."
+  - "WordPress plugin, theme, block theme, Gutenberg block, WordPress core checkout, or full-site repository."
+  - "Target WordPress and PHP version constraints, especially when working below WordPress 6.9 or with older PHP support."
+  - "Repo-local test/build tooling such as Composer, npm, @wordpress/scripts, wp-env, WP-CLI, PHPUnit, Playwright, PHPCS, or PHPStan where available."
+safetyNotes:
+  - "WordPress plugin, theme, REST API, WP-CLI, database, cron, and performance changes can affect production sites, admin access, public endpoints, stored content, and user data."
+  - "Security-sensitive work needs capability checks, nonces, sanitization, escaping, prepared SQL, REST permission callbacks, and explicit authorization review."
+  - "Block changes can create Invalid block errors if saved markup changes without proper deprecations and migrations."
+  - "Do not run WP-CLI write operations, database migrations, search-replace, cron tasks, plugin activation, or cache flushes on production without explicit approval and backups."
+  - "The repo discloses AI-assisted generation from official WordPress and Gutenberg documentation followed by WordPress contributor review; still verify against current project constraints."
+privacyNotes:
+  - "WordPress work can expose database content, user accounts, emails, cookies, nonces, application passwords, REST payloads, site URLs, plugin settings, telemetry, performance profiles, and logs."
+  - "Keep wp-config secrets, salts, database credentials, application passwords, admin cookies, production exports, customer data, and private plugin code out of prompts, screenshots, issues, and public PRs."
+  - "When using Playground, mounted local code may be copied into an in-memory filesystem; check that the mounted project does not contain secrets before sharing snapshots or repro links."
+tags:
+  - wordpress
+  - skills
+  - gutenberg
+  - plugins
+  - blocks
+  - rest-api
+  - wp-cli
+  - ai-agents
+keywords:
+  - wordpress agent skills
+  - wordpress claude code
+  - wordpress codex skills
+  - wordpress cursor skills
+  - gutenberg ai agent
+  - wordpress plugin development skill
+  - wordpress block development skill
+  - wp-cli agent skills
+readingTime: 8
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# WordPress Agent Skills
+
+`WordPress/agent-skills` packages contributor-reviewed WordPress guidance for
+AI coding assistants. It helps agents classify WordPress repositories, choose
+modern workflows, and avoid outdated patterns when working on Gutenberg blocks,
+block themes, plugins, REST endpoints, Interactivity API, Abilities API,
+WP-CLI, WordPress Playground, PHPStan, performance, and plugin directory rules.
+
+The README states that the skills were generated from official Gutenberg and
+WordPress documentation with GPT-5.2 Codex, then reviewed, edited, and tested by
+WordPress contributors. Treat that disclosure as important context: this is an
+AI-assisted, human-reviewed skill pack, not an unreviewed prompt dump.
+
+## Knowledge Freshness
+
+The skills target WordPress 6.9+ with PHP 7.2.24+ compatibility guidance. They
+lean on current Gutenberg and WordPress developer documentation, but WordPress
+APIs, block editor behavior, REST patterns, plugin directory rules, PHPStan
+baselines, and Playground tooling can change.
+
+Use the skills for workflows and guardrails, then verify exact APIs and behavior
+against the target project's WordPress version, PHP version, installed plugins,
+theme architecture, and existing tooling.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The `WordPress/agent-skills` repository README.
+- The repository's AI authorship disclosure.
+- Representative skill manifests for routing, block development, plugin
+  development, REST APIs, performance, and Playground.
+- The GPL-2.0-or-later license text.
+- Repository metadata from the official WordPress GitHub organization.
+
+## Core Workflow
+
+List available skills:
+
+```bash
+npx skills add WordPress/agent-skills --list
+```
+
+Install the router skill to classify a WordPress repository and route work:
+
+```bash
+npx skills add WordPress/agent-skills --skill wordpress-router
+```
+
+Install focused skills for a project:
+
+```bash
+npx skills add WordPress/agent-skills --skill wp-plugin-development wp-block-development wp-playground
+```
+
+The repository also includes build and install scripts for global or project
+scope installation across Claude Code, Codex, VS Code/GitHub Copilot, and
+Cursor targets.
+
+## Capability Scope
+
+The repository currently lists these skills:
+
+| Skill | Scope |
+| --- | --- |
+| `wordpress-router` | Classify WordPress repos and route to the right workflow |
+| `wp-project-triage` | Detect project type, tooling, tests, and versions |
+| `wp-block-development` | Gutenberg blocks, `block.json`, rendering, attributes, deprecations, and build tooling |
+| `wp-block-themes` | Block themes, `theme.json`, templates, patterns, and style variations |
+| `wp-plugin-development` | Plugin architecture, hooks, settings API, lifecycle, security, and packaging |
+| `wp-rest-api` | REST routes, schema, authentication, permission callbacks, and response shaping |
+| `wp-interactivity-api` | Frontend interactivity with `data-wp-*` directives and stores |
+| `wp-abilities-api` | Capability-based permissions and REST API authentication |
+| `wp-abilities-audit` | Audit plugin REST surfaces and propose Abilities API registrations |
+| `wp-abilities-verify` | Verify Abilities API registrations against declared annotations |
+| `wp-wpcli-and-ops` | WP-CLI, automation, multisite, and search-replace |
+| `wp-performance` | Backend profiling, Query Monitor headers, object cache, cron, HTTP API, and database optimization |
+| `wp-phpstan` | PHPStan configuration, baselines, and WordPress-specific typing |
+| `wp-playground` | Disposable WordPress instances, Blueprints, snapshots, versions, and Xdebug |
+| `wpds` | WordPress Design System guidance |
+| `wp-plugin-directory-guidelines` | WordPress Plugin Directory rules |
+| `blueprint` | WordPress Playground Blueprints |
+
+## Production Rules
+
+Use these skills to make WordPress changes more disciplined, but keep site
+safety explicit:
+
+- Run repository triage before broad edits so the agent understands whether it
+  is touching a plugin, theme, block theme, WordPress core checkout, or full
+  site.
+- Prefer existing project tooling and conventions over invented structure.
+- Review every security-sensitive change for nonces, capabilities,
+  sanitization, escaping, SQL preparation, REST permission callbacks, and
+  authorization logic.
+- Add block deprecations when saved markup changes.
+- Test plugin activation, settings saves, REST routes, WP-CLI commands, and
+  build outputs before shipping.
+- Avoid production write operations unless the user has explicitly approved the
+  target site, command, backup plan, and rollback path.
+
+## Use Cases
+
+- Ask Codex to triage a WordPress plugin repo before editing hooks or settings.
+- Have Claude Code add a Gutenberg block with `block.json`, rendering, and
+  deprecation guidance.
+- Use Cursor to audit REST endpoints for missing permission callbacks or weak
+  schema validation.
+- Ask an agent to profile a slow backend route with WP-CLI and Query Monitor
+  headers.
+- Use WordPress Playground skills to create a disposable repro for a plugin or
+  theme issue.
+
+## Source Review
+
+- The README describes Agent Skills for WordPress as portable bundles for
+  Claude, Copilot, Codex, Cursor, and other AI assistants.
+- The README lists 17 skills covering routing, triage, blocks, themes, plugins,
+  REST, Interactivity API, Abilities API, WP-CLI, performance, PHPStan,
+  Playground, design system, plugin directory guidelines, and blueprints.
+- The AI authorship disclosure states the skills were created from official
+  Gutenberg trunk documentation and WordPress developer docs, generated with
+  GPT-5.2 Codex, reviewed by WordPress contributors, and tested with AI
+  assistants.
+- Representative manifests document concrete workflows such as running triage
+  scripts, listing blocks, using `@wordpress/create-block`, enforcing REST
+  permission callbacks, and measuring backend performance before optimizing.
+- The license file identifies the repository as GPL-2.0-or-later.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`, open pull
+requests, and repository-wide content for `WordPress Agent Skills`,
+`WordPress/agent-skills`, `wordpress-router`, `wp-block-development`,
+`wp-plugin-development`, and `wp-playground`. No dedicated WordPress Agent
+Skills entry, exact source URL duplicate, target file, or open duplicate PR was
+found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The upstream
+repository discloses AI-assisted generation from official WordPress/Gutenberg
+documentation followed by WordPress contributor review and testing. The
+repository is GPL-2.0-or-later.

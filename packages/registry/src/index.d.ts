@@ -461,6 +461,10 @@ export declare const KNOWN_BRANDS: Array<{
 export declare function normalizeBrandDomain(value?: unknown): string;
 export declare function domainFromUrl(value?: unknown): string;
 export declare function isHostingOrRegistryDomain(domain?: string): boolean;
+export declare function shouldAutoResolveBrandAsset(
+  domain?: unknown,
+  data?: Record<string, unknown>,
+): boolean;
 export declare function normalizeBrandColors(value?: unknown): string[];
 export declare function isAllowedBrandAssetUrl(value?: unknown): boolean;
 export declare function brandfetchClientId(params?: {

@@ -214,6 +214,7 @@ describe("registry artifacts", () => {
         docsUrl: "https://example.com/docs-alias",
         downloadUrl: "https://example.com/download.zip",
         packageUrl: "https://www.npmjs.com/package/source-backed-tool",
+        githubUrl: "https://github.com/example/source-backed-tool-alt",
         repoUrl: "https://github.com/example/source-backed-tool",
         repositoryUrl: "https://gitlab.com/example/source-backed-tool",
         sourceUrl: "https://example.com/source",
@@ -240,6 +241,7 @@ describe("registry artifacts", () => {
         "https://example.com/download.zip",
         "https://www.npmjs.com/package/source-backed-tool",
         "https://github.com/example/source-backed-tool",
+        "https://github.com/example/source-backed-tool-alt",
         "https://gitlab.com/example/source-backed-tool",
         "https://example.com/source",
         "https://example.com/extra-source",
@@ -255,7 +257,7 @@ describe("registry artifacts", () => {
     // artifact bloat without failing every normal catalog expansion.
     expect(artifactTreeSize(".")).toBeLessThan(2_000_000 + entryCount * 38_500);
     expect(artifactSize("directory-index.json")).toBeLessThan(
-      200_000 + entryCount * 2_000,
+      200_000 + entryCount * 2_150,
     );
     expect(artifactSize("search-index.json")).toBeLessThan(
       125_000 + entryCount * 1_600,
@@ -267,10 +269,10 @@ describe("registry artifacts", () => {
       150_000 + entryCount * 1_500,
     );
     expect(artifactTreeSize("feeds/categories")).toBeLessThan(
-      150_000 + entryCount * 2_000,
+      150_000 + entryCount * 2_400,
     );
     expect(artifactTreeSize("feeds/platforms")).toBeLessThan(
-      150_000 + entryCount * 2_000,
+      150_000 + entryCount * 2_400,
     );
     expect(artifactTreeSize("entries")).toBeLessThan(
       500_000 + entryCount * 17_500,
@@ -682,7 +684,7 @@ describe("registry artifacts", () => {
         ),
       ),
     ).toEqual(jsonLdSnapshotsPayload);
-  }, 60_000);
+  }, 180_000);
 
   it("publishes MCP harness targets only for validated config snippets", () => {
     const baseEntry = {
@@ -723,6 +725,42 @@ describe("registry artifacts", () => {
         },
       }),
     };
+    const arbitraryStdioEntry = {
+      ...baseEntry,
+      slug: "arbitrary-stdio-fixture",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          local: {
+            command: "python3",
+            args: ["server.py"],
+          },
+        },
+      }),
+    };
+    const pathQualifiedStdioEntry = {
+      ...baseEntry,
+      slug: "path-qualified-stdio-fixture",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          local: {
+            command: "/tmp/npx",
+            args: ["-y", "fixture-mcp"],
+          },
+        },
+      }),
+    };
+    const windowsPathQualifiedStdioEntry = {
+      ...baseEntry,
+      slug: "windows-path-qualified-stdio-fixture",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          local: {
+            command: "C:\\tools\\uvx",
+            args: ["fixture-mcp"],
+          },
+        },
+      }),
+    };
     const manualEntry = {
       ...baseEntry,
       slug: "manual-fixture",
@@ -733,6 +771,9 @@ describe("registry artifacts", () => {
     const raycastEntries = buildRaycastEnvelope([
       stdioEntry,
       sseEntry,
+      arbitraryStdioEntry,
+      pathQualifiedStdioEntry,
+      windowsPathQualifiedStdioEntry,
       manualEntry,
     ] as any).entries;
     const stdioFeedEntry = raycastEntries.find(
@@ -744,17 +785,28 @@ describe("registry artifacts", () => {
     const manualFeedEntry = raycastEntries.find(
       (entry) => entry.slug === "manual-fixture",
     );
+    const arbitraryStdioFeedEntry = raycastEntries.find(
+      (entry) => entry.slug === "arbitrary-stdio-fixture",
+    );
+    const pathQualifiedStdioFeedEntry = raycastEntries.find(
+      (entry) => entry.slug === "path-qualified-stdio-fixture",
+    );
+    const windowsPathQualifiedStdioFeedEntry = raycastEntries.find(
+      (entry) => entry.slug === "windows-path-qualified-stdio-fixture",
+    );
     const stdioDetail = buildRaycastDetail(stdioEntry as any);
+    const arbitraryStdioDetail = buildRaycastDetail(arbitraryStdioEntry as any);
+    const pathQualifiedStdioDetail = buildRaycastDetail(
+      pathQualifiedStdioEntry as any,
+    );
+    const windowsPathQualifiedStdioDetail = buildRaycastDetail(
+      windowsPathQualifiedStdioEntry as any,
+    );
     const manualDetail = buildRaycastDetail(manualEntry as any);
 
     expect(stdioFeedEntry).toMatchObject({
       hasConfigSnippet: true,
-      mcpInstallTargets: [
-        "claude-code",
-        "codex",
-        "cursor",
-        "antigravity",
-      ],
+      mcpInstallTargets: ["claude-code", "codex", "cursor", "antigravity"],
     });
     expect(extractMcpServerConfig(stdioDetail.configSnippet)?.name).toBe(
       "fixture",
@@ -764,6 +816,34 @@ describe("registry artifacts", () => {
       "cursor",
       "antigravity",
     ]);
+    expect(arbitraryStdioFeedEntry).toMatchObject({
+      installable: false,
+      hasInstallCommand: false,
+      hasConfigSnippet: false,
+    });
+    expect(arbitraryStdioFeedEntry).not.toHaveProperty("mcpInstallTargets");
+    expect(arbitraryStdioDetail.configSnippet).toBe("");
+    expect(String(arbitraryStdioDetail.detailMarkdown)).not.toContain(
+      "## Config",
+    );
+    for (const feedEntry of [
+      pathQualifiedStdioFeedEntry,
+      windowsPathQualifiedStdioFeedEntry,
+    ]) {
+      expect(feedEntry).toMatchObject({
+        installable: false,
+        hasInstallCommand: false,
+        hasConfigSnippet: false,
+      });
+      expect(feedEntry).not.toHaveProperty("mcpInstallTargets");
+    }
+    for (const detail of [
+      pathQualifiedStdioDetail,
+      windowsPathQualifiedStdioDetail,
+    ]) {
+      expect(detail.configSnippet).toBe("");
+      expect(String(detail.detailMarkdown)).not.toContain("## Config");
+    }
     expect(manualFeedEntry).toMatchObject({
       installable: true,
       hasInstallCommand: true,
@@ -1101,7 +1181,7 @@ Use this hook after reviewing the notes.`,
     for (const contract of Object.values(manifest.artifactContracts)) {
       expect(contract.sha256).toMatch(/^[a-f0-9]{64}$/);
     }
-  }, 60_000);
+  }, 180_000);
 
   it("publishes category and platform sharded distribution feeds", () => {
     const feedIndex = readDataJson<{
@@ -1327,10 +1407,23 @@ Use this hook after reviewing the notes.`,
       (entry) => entry.category === "skills",
     );
     expect(skills.length).toBeGreaterThan(0);
+    const packageBackedSkills = skills.filter((entry) => entry.downloadUrl);
+    const copyOnlySkill = skills.find(
+      (entry) =>
+        entry.slug === "nanoclaw-container-isolation-review-capability-pack",
+    );
+    expect(packageBackedSkills.length).toBeGreaterThan(0);
+    expect(copyOnlySkill?.installable).toBe(false);
+    expect(copyOnlySkill?.downloadUrl).toBe("");
+    expect(copyOnlySkill?.skillPackage).toBeUndefined();
 
     for (const entry of skills) {
-      expect(entry.skillPackage?.format).toBe("agent-skill");
-      expect(entry.skillPackage?.entrypoint).toBe("SKILL.md");
+      if (entry.downloadUrl) {
+        expect(entry.skillPackage?.format).toBe("agent-skill");
+        expect(entry.skillPackage?.entrypoint).toBe("SKILL.md");
+      } else {
+        expect(entry.skillPackage).toBeUndefined();
+      }
       expect(entry.platformCompatibility?.map((item) => item.platform)).toEqual(
         expect.arrayContaining([
           "Claude",

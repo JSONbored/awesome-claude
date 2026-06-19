@@ -428,4 +428,226 @@ export const seoClusterDefinitions: SeoClusterDefinition[] = [
     keywords: ["offline", "filesystem", "repository"],
     itemLimit: 18,
   },
+  {
+    slug: "ai-coding-agents",
+    title: "Best AI coding agents",
+    eyebrow: "AI coding agents",
+    description:
+      "AI coding agents and assistants for building, editing, and shipping code — from terminal agents to AI-native editors.",
+    seoTitle: "Best AI coding agents and assistants (2026)",
+    seoDescription:
+      "Compare the best AI coding agents and assistants — terminal agents, AI editors, and autonomous coders — for Claude-era development.",
+    categories: ["tools"],
+    tags: ["ai-coding", "agents", "coding-agent", "ai-agents"],
+    keywords: ["ai coding agent", "ai coding assistant", "autonomous coding"],
+    itemLimit: 16,
+  },
+  {
+    slug: "llm-observability-tools",
+    title: "Best LLM observability tools",
+    eyebrow: "LLM observability",
+    description:
+      "Observability and tracing platforms for LLM and agent applications — traces, metrics, prompts, and evaluation.",
+    seoTitle: "Best LLM observability & tracing tools (2026)",
+    seoDescription:
+      "Compare the best LLM observability tools — tracing, metrics, prompt management, and evaluation for AI applications.",
+    categories: ["tools"],
+    tags: ["observability", "evaluation"],
+    keywords: ["llm observability", "llm tracing", "llm monitoring"],
+    itemLimit: 14,
+  },
+  {
+    slug: "llm-evaluation-tools",
+    title: "Best LLM evaluation tools",
+    eyebrow: "LLM evaluation",
+    description:
+      "Evaluation and testing frameworks for LLM and RAG applications — scoring, regression testing, and red-teaming.",
+    seoTitle: "Best LLM evaluation & testing tools (2026)",
+    seoDescription:
+      "Compare the best LLM evaluation tools — eval frameworks, regression testing, and scoring for AI applications.",
+    categories: ["tools"],
+    tags: ["evaluation", "testing"],
+    keywords: ["llm evaluation", "llm eval", "rag evaluation"],
+    itemLimit: 14,
+  },
+  {
+    slug: "ai-security-tools",
+    title: "Best AI & LLM security tools",
+    eyebrow: "AI security",
+    description:
+      "Security tooling for AI and LLM applications — vulnerability scanning, guardrails, red-teaming, and supply-chain checks.",
+    seoTitle: "Best AI & LLM security tools (2026)",
+    seoDescription:
+      "Compare the best AI and LLM security tools — scanning, guardrails, red-teaming, and supply-chain security.",
+    categories: ["tools"],
+    tags: ["security"],
+    keywords: ["llm security", "ai security", "prompt injection", "red teaming"],
+    itemLimit: 14,
+  },
+  {
+    slug: "vector-databases-for-rag",
+    title: "Best vector databases for RAG",
+    eyebrow: "Vector databases",
+    description: "Vector databases and stores for embeddings and retrieval-augmented generation.",
+    seoTitle: "Best vector databases for RAG (2026)",
+    seoDescription:
+      "Compare the best vector databases for RAG — embeddings storage, retrieval quality, metadata filtering, and AI application search.",
+    categories: ["tools"],
+    tags: ["vector-database", "retrieval", "rag"],
+    keywords: ["vector database", "embeddings", "rag"],
+    itemLimit: 12,
+  },
+  {
+    slug: "rag-frameworks",
+    title: "Best RAG frameworks",
+    eyebrow: "RAG frameworks",
+    description:
+      "Frameworks for building retrieval-augmented generation pipelines and data-aware LLM apps.",
+    seoTitle: "Best RAG frameworks for LLM apps (2026)",
+    seoDescription:
+      "Compare the best RAG frameworks — retrieval, indexing, grounding, and data-aware LLM application development workflows.",
+    categories: ["tools"],
+    tags: ["rag", "retrieval", "agent-framework"],
+    keywords: ["rag framework", "retrieval augmented generation"],
+    itemLimit: 12,
+  },
+  {
+    slug: "ai-agent-frameworks",
+    title: "Best AI agent frameworks",
+    eyebrow: "Agent frameworks",
+    description:
+      "Frameworks for building single- and multi-agent LLM systems with orchestration and tool use.",
+    seoTitle: "Best AI agent frameworks (2026)",
+    seoDescription:
+      "Compare the best AI agent frameworks — orchestration, multi-agent systems, and tool use for LLM apps.",
+    categories: ["tools"],
+    tags: ["agent-framework", "agents", "orchestration"],
+    keywords: ["agent framework", "multi-agent", "agent orchestration"],
+    itemLimit: 14,
+  },
+  {
+    slug: "browser-automation-tools",
+    title: "Best browser automation tools for AI",
+    eyebrow: "Browser automation",
+    description:
+      "Browser automation tools and frameworks for AI agents — scripted control, AI-driven actions, and hosted browsers.",
+    seoTitle: "Best browser automation tools for AI agents (2026)",
+    seoDescription:
+      "Compare the best browser automation tools for AI — scripted, AI-driven, and hosted browser control for agent workflows.",
+    categories: ["tools"],
+    tags: ["browser-automation"],
+    keywords: ["browser automation", "web automation", "ai browser"],
+    itemLimit: 8,
+  },
+  {
+    slug: "workflow-automation-tools",
+    title: "Best workflow & data orchestration tools",
+    eyebrow: "Workflow automation",
+    description:
+      "Workflow automation and data orchestration tools for pipelines, scheduling, and durable execution.",
+    seoTitle: "Best workflow & data orchestration tools (2026)",
+    seoDescription:
+      "Compare the best workflow automation and data orchestration tools — pipelines, scheduling, and durable execution.",
+    categories: ["tools"],
+    tags: ["workflow-automation", "orchestration", "workflows", "data-engineering"],
+    keywords: ["workflow automation", "data orchestration", "pipelines"],
+    itemLimit: 14,
+  },
+  {
+    slug: "llm-serving-tools",
+    title: "Best LLM serving & inference tools",
+    eyebrow: "LLM serving",
+    description:
+      "Tools for running and serving LLMs locally and in production — inference engines and model runtimes.",
+    seoTitle: "Best LLM serving & inference tools (2026)",
+    seoDescription:
+      "Compare the best LLM serving and inference tools — local runtimes, hosted APIs, and production model serving.",
+    categories: ["tools"],
+    tags: ["inference"],
+    keywords: ["llm serving", "llm inference", "run llm locally"],
+    itemLimit: 6,
+  },
+  {
+    slug: "claude-code-agents",
+    title: "Best Claude Code agents",
+    eyebrow: "Claude Code agents",
+    description:
+      "Specialized agents for Claude Code — architecture, review, testing, security, and domain expertise.",
+    seoTitle: "Best Claude Code agents & subagents (2026)",
+    seoDescription:
+      "Find the best Claude Code agents and subagents — architecture, code review, testing, security, and domain experts.",
+    categories: ["agents"],
+    tags: ["claude-code", "agents"],
+    keywords: ["claude code agent", "claude subagent"],
+    itemLimit: 16,
+  },
+  {
+    slug: "security-review-agents",
+    title: "Best security review agents for Claude",
+    eyebrow: "Security agents",
+    description:
+      "Agents focused on security review, vulnerability detection, and secure-coding enforcement for Claude.",
+    seoTitle: "Best security review agents for Claude Code (2026)",
+    seoDescription:
+      "Find the best security review agents for Claude — vulnerability detection, OWASP, and secure-coding enforcement.",
+    categories: ["agents"],
+    tags: ["security", "security-review", "review"],
+    keywords: ["security agent", "code security review", "owasp"],
+    itemLimit: 12,
+  },
+  {
+    slug: "testing-automation-agents",
+    title: "Best testing automation agents for Claude",
+    eyebrow: "Testing agents",
+    description: "Agents that automate testing, TDD, and quality workflows in Claude Code.",
+    seoTitle: "Best testing automation agents for Claude Code (2026)",
+    seoDescription:
+      "Find the best testing automation agents for Claude — TDD, test generation, regression coverage, and quality workflows.",
+    categories: ["agents"],
+    tags: ["testing"],
+    keywords: ["testing agent", "test automation", "tdd"],
+    itemLimit: 12,
+  },
+  {
+    slug: "backend-claude-rules",
+    title: "Best backend CLAUDE.md rules",
+    eyebrow: "Backend rules",
+    description:
+      "CLAUDE.md rule sets for backend development — APIs, databases, microservices, and server frameworks.",
+    seoTitle: "Best backend CLAUDE.md rules for Claude Code (2026)",
+    seoDescription:
+      "Find the best backend CLAUDE.md rules — API design, databases, microservices, and server frameworks.",
+    categories: ["rules"],
+    tags: ["backend", "api", "database", "microservices"],
+    keywords: ["backend rules", "claude.md backend", "api rules"],
+    itemLimit: 14,
+  },
+  {
+    slug: "security-claude-rules",
+    title: "Best security CLAUDE.md rules",
+    eyebrow: "Security rules",
+    description:
+      "CLAUDE.md rule sets for secure coding — OWASP, vulnerability prevention, and code-review standards.",
+    seoTitle: "Best security CLAUDE.md rules for Claude Code (2026)",
+    seoDescription:
+      "Find the best security CLAUDE.md rules — OWASP, secure coding, and review standards for Claude Code.",
+    categories: ["rules"],
+    tags: ["security", "owasp", "code-review"],
+    keywords: ["security rules", "secure coding", "owasp"],
+    itemLimit: 12,
+  },
+  {
+    slug: "frontend-claude-rules",
+    title: "Best frontend CLAUDE.md rules",
+    eyebrow: "Frontend rules",
+    description:
+      "CLAUDE.md rule sets for frontend development — React, TypeScript, and modern UI frameworks.",
+    seoTitle: "Best frontend CLAUDE.md rules for Claude Code (2026)",
+    seoDescription:
+      "Find the best frontend CLAUDE.md rules — React, TypeScript, accessibility, and modern UI framework standards.",
+    categories: ["rules"],
+    tags: ["frontend", "react", "typescript"],
+    keywords: ["frontend rules", "react rules", "claude.md frontend"],
+    itemLimit: 12,
+  },
 ];

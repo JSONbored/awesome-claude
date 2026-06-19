@@ -1,0 +1,104 @@
+---
+title: Archon
+slug: archon
+category: tools
+description: >-
+  Open-source workflow engine for AI coding agents that runs YAML-defined development
+  processes with deterministic phases, isolated git worktrees, validation gates, and
+  integration with Claude Code and other AI assistants.
+cardDescription: YAML workflow engine for deterministic, repeatable AI coding agent development.
+seoTitle: Archon — Open-Source Workflow Engine for AI Coding Agents
+seoDescription: >-
+  Archon is an open-source workflow engine for AI coding agents with YAML workflows,
+  isolated worktrees, validation gates, and Claude Code integration.
+author: coleam00
+dateAdded: "2026-06-16"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1593
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1593"
+websiteUrl: "https://github.com/coleam00/Archon"
+repoUrl: "https://github.com/coleam00/Archon"
+documentationUrl: "https://github.com/coleam00/Archon"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+prerequisites:
+  - "Local environment capable of building the Archon repository from source."
+  - "Git access to clone https://github.com/coleam00/Archon."
+  - "Target project repository where workflow files will be stored."
+safetyNotes:
+  - "Review YAML workflow nodes before running bash or git operations in isolated worktrees."
+  - "Self-hosted deployments require patching and backup like other internal developer platforms."
+  - "Archon telemetry is documented in the repository; review before enterprise rollout."
+  - "Workflow runs can create branches and pull requests; scope repository permissions narrowly."
+privacyNotes:
+  - "Workflow execution data stays in your Archon deployment, git worktrees, and connected repositories."
+  - "AI assistant clients may send prompts and tool output to model providers per client privacy settings."
+  - "Shared workflow repos may expose internal process details; restrict repository access accordingly."
+  - "Review Archon repository privacy and telemetry sections before processing sensitive codebases."
+tags:
+  - workflow-engine
+  - yaml-workflows
+  - open-source
+  - ai-coding
+  - claude-code
+keywords:
+  - archon workflow engine
+  - yaml ai coding workflows
+  - deterministic ai coding agents
+  - archon coleam00
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Archon is an open-source workflow engine for AI coding agents. The project README
+describes encoding development processes as YAML workflows with planning, implementation,
+validation, review, and pull request phases so agent runs follow a deterministic structure.
+
+Teams commit workflows under `.archon/workflows/` and run them from Claude Code, the
+Archon CLI, or connected platform adapters.
+
+## Features
+
+- YAML-defined development workflows with deterministic node sequencing.
+- Isolated git worktrees per workflow run for parallel agent work.
+- Mix of deterministic bash or test nodes and AI planning or review nodes.
+- Default workflows for issue fixes, idea-to-PR flows, PR review, and validation.
+- Repository setup wizard and skills copied into target projects per official README.
+
+## Use Cases
+
+- Standardize bug-fix and feature workflows across Claude Code projects.
+- Run repeatable validate-and-PR pipelines with human approval gates in YAML.
+- Encode team code review or conflict-resolution processes as reusable workflows.
+- Compare structured Archon runs against ad hoc agent chat sessions.
+
+## Source Notes
+
+Verified against the public Archon repository README on **2026-06-16**:
+
+- README describes Archon as a workflow engine for AI coding agents with YAML workflows
+  covering planning, implementation, validation, code review, and PR creation.
+- Official getting started guidance recommends cloning the GitHub repository and using
+  the guided setup wizard rather than undocumented install paths.
+- README documents default workflows, isolated worktrees, and platform adapters including
+  CLI and web UI integration with Claude Code.
+
+## Duplicate Check
+
+Checked content/tools for Archon or duplicate AI coding workflow engines.
+No existing tools entry covers coleam00/Archon as a YAML workflow engine for AI coding agents.
+
+## Editorial Disclosure
+
+Submitted as an independent community tools entry by kiannidev, based on the public
+coleam00/Archon repository README. No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Archon repository - https://github.com/coleam00/Archon

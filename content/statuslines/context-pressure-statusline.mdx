@@ -43,7 +43,7 @@ scriptBody: |-
   set -u
 
   main() {
-  read -r input || input=""
+  read -r input || input="${input:-}"
   limit="${CLAUDE_CONTEXT_LIMIT:-200000}"
   used=$(printf '%s' "$input" | jq -r '.session.totalTokens // .usage.input_tokens // .cost.total_tokens // 0')
 

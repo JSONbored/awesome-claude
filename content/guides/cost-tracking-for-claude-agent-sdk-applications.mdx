@@ -3,17 +3,18 @@ title: Cost Tracking for Claude Agent SDK Applications
 slug: cost-tracking-for-claude-agent-sdk-applications
 category: guides
 description: >-
-  A practical walkthrough of tracking token usage and cost in the Claude Agent
-  SDK: the result message total_cost_usd estimate, per-step and per-model usage,
-  deduplicating parallel tool calls, accumulating across calls, and cache tokens.
+  A practical walkthrough of token and spend accounting in the Claude Agent SDK.
+  Read total_cost_usd from the result message, deduplicate parallel tool calls
+  that share an assistant id, break spend down per model with modelUsage, sum
+  cost across query() calls yourself, and read cache_creation/cache_read tokens.
 cardDescription: >-
-  Track token usage and cost in the Claude Agent SDK via the result message
-  estimate, per-step/per-model usage, and cache tokens.
-seoTitle: Cost Tracking for Claude Agent SDK Applications
+  Read total_cost_usd from the result message, dedupe parallel tool calls by id,
+  split spend per model, and track cache token fields.
+seoTitle: "Claude Agent SDK Cost Tracking: total_cost_usd & Usage"
 seoDescription: >-
-  How to track token usage and cost in the Claude Agent SDK: read total_cost_usd
-  and usage from the result message, per-step and per-model breakdowns,
-  deduplicate parallel tool calls, accumulate across calls, and read cache tokens.
+  Account for Agent SDK spend: read total_cost_usd from the result message,
+  dedupe parallel tool calls by id, break it down per model, and read cache
+  tokens.
 author: JPette1783
 authorProfileUrl: "https://github.com/JPette1783"
 submittedBy: JPette1783

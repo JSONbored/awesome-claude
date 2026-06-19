@@ -1,0 +1,102 @@
+---
+title: /targeted-test-generation - Targeted Test Generation Runbook
+slug: targeted-test-generation
+category: commands
+description: >-
+  Community slash command runbook for adding minimal automated tests around a
+  changed module: inspect the git diff, mirror repository test conventions, and
+  draft focused unit or integration tests using Anthropic develop-tests guidance.
+cardDescription: >-
+  Draft minimal tests for a changed file using git diff and repo test conventions.
+seoTitle: /targeted-test-generation - Targeted Test Generation Runbook
+seoDescription: >-
+  Claude Code slash command runbook to generate targeted automated tests for changed
+  code using git diff inspection and Anthropic develop-tests guidance.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 745
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/745"
+documentationUrl: "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+  - "https://git-scm.com/docs/git-diff"
+installable: true
+installCommand: "/targeted-test-generation <file-or-symbol>"
+commandSyntax: "/targeted-test-generation <file-or-symbol>"
+usageSnippet: "/targeted-test-generation src/utils/parseConfig.ts"
+copySnippet: "/targeted-test-generation <file-or-symbol>"
+prerequisites:
+  - "Git repository with an existing test runner configured in package scripts or docs."
+  - "A concrete code change or diff hunk to cover with new or updated tests."
+safetyNotes:
+  - "Generated tests are drafts; run the project's test command locally before committing."
+  - "Do not add network calls, production credentials, or destructive setup to proposed tests."
+privacyNotes:
+  - "Use synthetic fixtures only; do not copy production logs or customer records into tests."
+tags:
+  - testing
+  - tdd
+  - quality
+  - slash-command
+keywords:
+  - targeted test generation slash command
+  - claude code unit test workflow
+---
+
+The `/targeted-test-generation` runbook adds **automated tests for changed code**
+using git diff inspection plus Anthropic develop-tests guidance. It complements
+`/prompt-eval-runbook`, which focuses on prompt evaluation rather than code tests.
+
+## Scope
+
+This is a **community custom slash command** for `.claude/commands/`. It is not a
+built-in Claude Code command page on code.claude.com.
+
+
+## Usage
+
+```
+/targeted-test-generation <file-or-symbol>
+```
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Inspect the change.** Run `git diff -- <file-or-symbol>` and list public behavior that changed or lacks coverage.
+2. **Find test conventions.** Locate adjacent tests and match framework, naming, imports, and assertion style already used in the repository.
+3. **Define minimal cases.** Draft happy path, boundary, and failure cases tied to the diff—not broad unrelated coverage.
+4. **Write draft tests.** Propose new test blocks or files that compile with the project's runner and import paths.
+5. **Pick the narrowest run command.** Read `package.json`, `pyproject.toml`, or project docs for the smallest test invocation (for example a single file or pattern).
+6. **Run locally with approval.** Execute the narrow test command only after the operator confirms; report failures verbatim.
+7. **List remaining gaps.** Note edge cases that need human judgment or integration coverage.
+
+## Output format
+
+- Target file or symbol under test
+- Scenario table with expected results and proposed test names
+- Draft test code blocks
+- Exact local test command
+- Remaining manual gaps
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- Anthropic develop-tests guidance recommends defining **representative tasks,
+  success criteria, and regression checks** before promoting changes.
+- **`git diff [<options>] [--] [<path>…]`** shows changes for a specific path so
+  reviewers can tie tests to the modified module.
+- This runbook applies those ideas to **code-level automated tests**, not prompt
+  fixture evaluation covered by `/prompt-eval-runbook`.
+
+## Duplicate Check
+
+`/prompt-eval-runbook` covers prompt and skill evaluation fixtures. No command in
+`content/commands/` documents this git-diff-driven targeted **code test** generation
+runbook.

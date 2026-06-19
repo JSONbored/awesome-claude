@@ -93,6 +93,7 @@ export function CompatibilityMatrix({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Filter capabilities…"
+            aria-label="Filter capabilities"
             className="h-9 w-full rounded-md border border-border bg-background pl-8 pr-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent/40"
           />
         </div>
@@ -186,7 +187,8 @@ export function CompatibilityMatrix({
                               )}
                               title={`${meta.label} · click for details`}
                             >
-                              {meta.glyph}
+                              <span aria-hidden>{meta.glyph}</span>
+                              <span className="sr-only">{meta.label}</span>
                             </button>
                           </PopoverTrigger>
                           <PopoverContent align="center" className="w-[320px] p-0">
@@ -203,7 +205,8 @@ export function CompatibilityMatrix({
                           title={meta.label}
                           className={cn("inline-block font-mono text-base leading-none", meta.tone)}
                         >
-                          {meta.glyph}
+                          <span aria-hidden>{meta.glyph}</span>
+                          <span className="sr-only">{meta.label}</span>
                         </span>
                       )}
                     </td>

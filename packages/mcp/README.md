@@ -11,7 +11,7 @@
   <a href="https://github.com/JSONbored/awesome-claude">GitHub</a> •
   <a href="https://www.npmjs.com/package/@heyclaude/mcp">npm</a> •
   <a href="https://heyclau.de/api/mcp">MCP endpoint</a> •
-  <a href="https://github.com/JSONbored/awesome-claude/releases/tag/mcp-v0.3.0">v0.3.0 release</a>
+  <a href="https://github.com/JSONbored/awesome-claude/releases/tag/mcp-v0.3.1">v0.3.1 release</a>
 </p>
 
 Read-only Model Context Protocol server for the HeyClaude registry.
@@ -30,6 +30,10 @@ strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
 
 - `search_registry` - search public registry entries by query, category, and
   platform.
+- `recommend_for_task` - answer "what should I use to do X" in one call: returns
+  the best-match entries for a plain-language task, each with why it fits, a
+  trust summary, safety/privacy notes, and an inline install block, plus a
+  `topPick` and consolidated `installPlan`.
 - `server_info` - fetch package version, registry generation, tool list, public
   access policy, and rate-limit metadata.
 - `list_category_entries` - browse entries with bounded pagination and optional
@@ -39,9 +43,14 @@ strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
 - `get_related_entries` - find related entries based on category, tags,
   platforms, keywords, and source metadata.
 - `get_entry_detail` - fetch an entry detail payload by category and slug.
+  Defaults to a token-efficient body excerpt (reporting `bodyChars`,
+  `bodyTruncated`, and any `omittedFields`); pass `bodyMode: "full"` for the
+  complete content or `"none"` to drop the body. Omitted copyable fields are
+  available via `get_copyable_asset`.
 - `get_copyable_asset` - fetch the category-aware copy/install asset for an
   entry, such as full prompt text, config snippets, commands, scripts, or
-  collection items.
+  collection items. Pass `assetType` (e.g. `install_command`) to return only
+  that asset and skip the large `full_content`/`script` payloads.
 - `compare_entries` - compare 2-5 entries by fit, category, platform support,
   install complexity, and source metadata.
 - `get_registry_stats` - fetch aggregate counts, freshness metadata, and real

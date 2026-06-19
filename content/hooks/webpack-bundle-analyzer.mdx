@@ -11,6 +11,10 @@ seoDescription: >-
   analys...
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
+documentationUrl: "https://github.com/webpack-contrib/webpack-bundle-analyzer"
+retrievalSources:
+  - "https://github.com/webpack-contrib/webpack-bundle-analyzer"
+  - "https://code.claude.com/docs/en/hooks"
 dateAdded: "2025-09-19"
 installable: true
 installCommand: >-
@@ -52,17 +56,15 @@ tags:
   - performance
   - optimization
   - analysis
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - analysis
-  - analyzer
-  - bundle
-  - claude
-  - development
-  - hooks
-  - optimization
-  - performance
-  - tools
-  - webpack
+  - webpack bundle analyzer hook
+  - claude code webpack bundle analyzer hook
+  - webpack bundle analyzer claude hook
+  - claude webpack bundle analyzer automation
 readingTime: 5
 difficultyScore: 0
 hasTroubleshooting: true

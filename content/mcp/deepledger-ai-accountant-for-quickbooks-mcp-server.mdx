@@ -1,0 +1,104 @@
+---
+title: DeepLedger — AI Accountant for QuickBooks MCP Server
+slug: deepledger-ai-accountant-for-quickbooks-mcp-server
+category: mcp
+description: >-
+  DeepLedger MCP server ai.deepledger/mcp for QuickBooks recording, reconciliation, and
+  month-end close workflows over streamable HTTP.
+cardDescription: >-
+  Connect Claude to DeepLedger for QuickBooks accounting, reconcile, and month-end close tools.
+seoTitle: DeepLedger QuickBooks MCP Server for Claude
+seoDescription: >-
+  Configure DeepLedger MCP at mcp.deepledger.ai for QuickBooks recording, reconciliation,
+  and month-end close; registry entry ai.deepledger/mcp.
+author: DeepLedger
+authorProfileUrl: "https://deepledger.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+sourceSubmissionNumber: 1501
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1501"
+documentationUrl: "https://deepledger.ai"
+websiteUrl: "https://deepledger.ai"
+retrievalSources:
+  - "https://deepledger.ai"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+installable: true
+installCommand: "claude mcp add --transport http deepledger https://mcp.deepledger.ai/mcp"
+usageSnippet: >-
+  Connect the DeepLedger streamable HTTP endpoint after completing vendor onboarding and
+  QuickBooks authorization in the DeepLedger dashboard.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "deepledger": {
+        "url": "https://mcp.deepledger.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "deepledger": {
+        "url": "https://mcp.deepledger.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "DeepLedger account and QuickBooks connection authorized in the vendor dashboard."
+  - "Finance stakeholder approval before enabling write tools against production books."
+  - "MCP client with streamable HTTP transport support."
+safetyNotes:
+  - "Accounting MCP tools can create or modify ledger records—use sandbox companies first."
+  - "Month-end close and reconciliation tools affect financial reporting—require human sign-off."
+  - "Treat OAuth tokens and session headers as secrets with least-privilege QuickBooks scopes."
+privacyNotes:
+  - "QuickBooks transactions, vendor names, and account metadata enter MCP client context."
+  - "DeepLedger hosted endpoints process financial data on vendor infrastructure—review DPA terms."
+tags:
+  - quickbooks
+  - accounting
+  - finance
+  - mcp
+keywords:
+  - DeepLedger MCP server
+  - QuickBooks AI accountant MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+**DeepLedger — AI Accountant for QuickBooks** is registered as **`ai.deepledger/mcp`**. Public
+site copy describes AI-assisted **recording, reconciliation, and month-end close** for QuickBooks,
+with a streamable HTTP MCP endpoint at **https://mcp.deepledger.ai/mcp**.
+
+## Installation
+
+```bash
+claude mcp add --transport http deepledger https://mcp.deepledger.ai/mcp
+```
+
+Complete vendor onboarding and QuickBooks authorization before enabling write tools.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- **deepledger.ai** product pages describe QuickBooks accounting automation scope.
+- MCP Registry lists **`ai.deepledger/mcp`** with remote **https://mcp.deepledger.ai/mcp**.
+- Registry description cites recording, reconcile, and month-end close capabilities.
+
+## Duplicate Check
+
+No existing **`content/mcp/`** entry covers DeepLedger QuickBooks accounting MCP tools.
+
+## Editorial Disclosure
+
+Community listing by **kiannidev** from public DeepLedger site and MCP Registry metadata.

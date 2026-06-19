@@ -52,6 +52,11 @@ const SERVER_ONLY_STUBS: Record<string, string> = {
       throw new Error("Submission risk analysis cannot run in the browser.");
     };
   `,
+  "\0heyclaude-og-render-client-stub": `
+    export const renderOgPng = () => {
+      throw new Error("OG PNG rendering (workers-og + WASM) cannot run in the browser.");
+    };
+  `,
   "\0heyclaude-submission-client-stub": `
     const fail = () => { throw new Error("Submission intake helpers cannot run in the browser."); };
     export const buildSubmissionPrDraft = fail;
@@ -78,6 +83,9 @@ function serverOnlyClientStubs(): Plugin {
       if (source.endsWith("download-assets.server")) {
         return "\0heyclaude-download-assets-client-stub";
       }
+      if (source.endsWith("og-render.server")) {
+        return "\0heyclaude-og-render-client-stub";
+      }
       if (source === "@heyclaude/mcp/server") return "\0heyclaude-mcp-server-client-stub";
       if (source === "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js") {
         return "\0heyclaude-mcp-transport-client-stub";
@@ -99,8 +107,15 @@ function serverOnlyClientStubs(): Plugin {
 // @lovable.dev/vite-tanstack-config keeps the public nitro option type narrow,
 // but it forwards unknown Nitro options at runtime. This registers the Cloudflare
 // scheduled Worker plugin without changing the wrapper package.
+// All scheduled Worker plugins must be listed explicitly — Nitro does NOT
+// auto-discover plugins/**, so an unlisted plugin silently never runs. Each
+// plugin gates on its own cron string, so registering all three is safe.
 const nitroOptions = {
-  plugins: ["./plugins/source-repo-signals-scheduled.ts"],
+  plugins: [
+    "./plugins/source-repo-signals-scheduled.ts",
+    "./plugins/newsletter-digest-scheduled.ts",
+    "./plugins/indexnow-scheduled.ts",
+  ],
 } as unknown as true;
 
 export default defineConfig({

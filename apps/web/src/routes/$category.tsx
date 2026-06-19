@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { CATEGORIES, type Category } from "@/types/registry";
@@ -10,8 +11,12 @@ import {
   categoryQuickstarts,
 } from "@/lib/site";
 import { ResourceCard } from "@/components/resource-card";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
+import { CategoryRankingTable } from "@/components/category-ranking-table";
+import { hubHighlights, hubStats } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl, categoryAccent } from "@/lib/og-image";
@@ -19,9 +24,8 @@ import { ogImageUrl, categoryAccent } from "@/lib/og-image";
 const categoryIds = new Set(CATEGORIES.map((c) => c.id));
 
 // Reuse the canonical registry ranking (recommendedScore) so hub order matches /browse.
-function topEntriesFor(id: string) {
-  return search({ categories: [id as Category] });
-}
+// Cached per render pass so head() and the component don't each re-run the search.
+const topEntriesFor = cache((id: string) => search({ categories: [id as Category] }));
 
 function faqFor(id: string, label: string) {
   return [
@@ -89,15 +93,6 @@ export const Route = createFileRoute("/$category")({
         { "@type": "ListItem", position: 2, name: label, item: url },
       ],
     };
-    const faq = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: faqFor(id, label).map((item) => ({
-        "@type": "Question",
-        name: item.q,
-        acceptedAnswer: { "@type": "Answer", text: item.a },
-      })),
-    };
 
     return {
       meta: [
@@ -107,6 +102,9 @@ export const Route = createFileRoute("/$category")({
         { property: "og:description", content: description },
         { property: "og:url", content: url },
         { property: "og:image", content: ogImage },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImage },
@@ -123,7 +121,6 @@ export const Route = createFileRoute("/$category")({
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(itemList) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
-        { type: "application/ld+json", children: stringifyJsonLd(faq) },
       ],
     };
   },
@@ -152,17 +149,25 @@ function CategoryHub() {
   const quickstart = categoryQuickstarts[id] ?? [];
   const faqs = faqFor(id, label);
 
-  return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
-      <Breadcrumbs items={[{ label: "Directory", to: "/browse" }, { label }]} home />
+  // Data-derived signals computed across the full category set.
+  const highlights = hubHighlights(entries);
+  const stats = hubStats(entries);
+  // Extractable, citeable lead facts computed from the reviewed metadata.
+  const sourcedPct = stats.find((s) => s.key === "sourced")?.pct;
+  const safetyPct = stats.find((s) => s.key === "safety")?.pct;
+  const installableCount = entries.filter((e) => Boolean(e.installCommand)).length;
 
-      <header className="mt-6 max-w-3xl">
-        <div className="eyebrow">{entries.length} entries</div>
-        <h1 className="mt-2 h-display-1 text-ink text-balance">Claude {label}</h1>
-        <p className="mt-4 text-pretty text-base text-ink-muted sm:text-lg">
-          {categorySeoDescriptions[id] ?? categoryDescriptions[id]}
-        </p>
-        <div className="mt-6 flex flex-wrap items-center gap-2 text-sm">
+  return (
+    <PageContainer>
+      <PageHeader
+        breadcrumbs={[{ label: "Directory", to: "/browse" }]}
+        eyebrow={`${entries.length} entries`}
+        title={`Claude ${label}`}
+        description={categorySeoDescriptions[id] ?? categoryDescriptions[id]}
+      />
+
+      <div className="mt-6 max-w-3xl">
+        <div className="flex flex-wrap items-center gap-2 text-sm">
           <Link
             to="/browse"
             search={{ category: id }}
@@ -184,9 +189,24 @@ function CategoryHub() {
             </ul>
           </div>
         )}
-      </header>
+      </div>
 
-      <section className="mt-10">
+      {sourcedPct !== undefined && (
+        <p className="mt-6 max-w-3xl text-pretty text-sm text-ink-muted">
+          Of {entries.length} Claude {label.toLowerCase()} in the directory,{" "}
+          <strong className="font-medium text-ink">{sourcedPct}% are source-backed</strong>
+          {safetyPct !== undefined ? <>, {safetyPct}% disclose safety notes</> : null}, and{" "}
+          <strong className="font-medium text-ink">{installableCount}</strong> ship a one-line
+          install command.
+        </p>
+      )}
+
+      <HubHighlights
+        highlights={highlights}
+        caption={`Standout Claude ${label}, picked from their own metadata — trust tier, provenance, documentation, and recency.`}
+      />
+
+      <section className="mt-12">
         <h2 className="h-display-2 text-ink">Top {label}</h2>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {top.map((e) => (
@@ -205,6 +225,10 @@ function CategoryHub() {
           </div>
         )}
       </section>
+
+      <CategoryRankingTable entries={entries.slice(0, 12)} label={label} />
+
+      <HubSignalStats stats={stats} total={entries.length} />
 
       <section className="mt-14">
         <h2 className="h-display-2 text-ink">Frequently asked</h2>
@@ -225,6 +249,6 @@ function CategoryHub() {
         source={`category:${id}`}
         className="mt-14"
       />
-    </div>
+    </PageContainer>
   );
 }

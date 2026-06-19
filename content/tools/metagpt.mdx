@@ -1,0 +1,225 @@
+---
+title: MetaGPT
+slug: metagpt
+category: tools
+description: >-
+  Open-source Python multi-agent framework that assigns product manager,
+  architect, project manager, engineer, and other software-company roles to LLM
+  agents for natural-language programming, repo generation, data interpretation,
+  research, debate, and custom agent workflows.
+cardDescription: >-
+  Multi-agent software-company framework for turning one-line requirements into
+  user stories, requirements, architecture, APIs, documents, code, and agent
+  workflows.
+seoTitle: MetaGPT Multi-Agent Framework for Software Company Agent Workflows
+seoDescription: >-
+  MetaGPT is an MIT-licensed Python multi-agent framework for natural-language
+  programming, software-company agent teams, role-based SOP workflows, CLI repo
+  generation, Data Interpreter, and custom agents.
+author: FoundationAgents
+authorProfileUrl: "https://github.com/FoundationAgents"
+dateAdded: "2026-06-18"
+websiteUrl: "https://github.com/FoundationAgents/MetaGPT#readme"
+documentationUrl: "https://docs.deepwisdom.ai/main/en/"
+repoUrl: "https://github.com/FoundationAgents/MetaGPT"
+packageUrl: "https://pypi.org/pypi/metagpt/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/FoundationAgents/MetaGPT"
+  - "https://raw.githubusercontent.com/FoundationAgents/MetaGPT/main/README.md"
+  - "https://raw.githubusercontent.com/FoundationAgents/MetaGPT/main/setup.py"
+  - "https://raw.githubusercontent.com/FoundationAgents/MetaGPT/main/requirements.txt"
+  - "https://github.com/FoundationAgents/MetaGPT/blob/main/LICENSE"
+  - "https://pypi.org/pypi/metagpt/json"
+installable: true
+installCommand: "pip install --upgrade metagpt"
+usageSnippet: >-
+  Install `metagpt`, initialize `~/.metagpt/config2.yaml`, configure the LLM
+  provider, and run the CLI against a scoped requirement or use the Python API
+  for reviewed multi-agent workflows.
+copySnippet: |-
+  pip install --upgrade metagpt
+estimatedSetupTime: 30 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.9 through 3.11 and an isolated Python environment."
+  - "Node.js and pnpm for workflows that render diagrams or use MetaGPT's documented software-company generation path."
+  - "LLM provider configuration in `~/.metagpt/config2.yaml`, such as OpenAI, Azure, Ollama, Groq, or another supported provider route."
+  - "API keys, base URLs, local model endpoints, and generated workspace paths kept outside source control."
+  - "A review plan for generated repositories, diagrams, requirements, documents, code, and Data Interpreter outputs before use."
+safetyNotes:
+  - "MetaGPT can generate full repositories under a workspace from one-line requirements. Review generated code, dependencies, licenses, prompts, and build scripts before running or publishing anything."
+  - "The framework coordinates multiple LLM roles and can call code, web, RAG, browser, email, GitHub, and provider integrations through its dependencies and optional extras; scope credentials and tools per workflow."
+  - "Generated requirements, API designs, architecture documents, diagrams, and code can be plausible but wrong. Treat them as drafts until tested against source requirements and local constraints."
+  - "Data Interpreter and notebook-style workflows may execute code, create plots, read files, and emit artifacts; run them in an isolated environment for untrusted data."
+  - "Long multi-agent runs can consume significant model tokens and external API quota, so set cost ceilings, timeouts, and stopping criteria before production use."
+privacyNotes:
+  - "Requirements, prompts, role messages, generated code, diagrams, documents, repo files, notebook outputs, model responses, logs, and traces may contain private product or workspace data."
+  - "Configured LLM providers, browser/search tools, RAG/vector services, GitHub integrations, email/IMAP tools, cloud providers, and generated workspaces may receive or retain workflow data."
+  - "Do not commit `~/.metagpt/config2.yaml`, provider keys, local model URLs, generated repos with secrets, workspace logs, notebook outputs, or customer requirements."
+  - "If teams share MetaGPT outputs, strip private prompts, internal system names, customer data, generated credentials, and non-public architecture details first."
+tags:
+  - metagpt
+  - multi-agent
+  - ai-agents
+  - agent-framework
+  - python
+  - software-engineering
+  - natural-language-programming
+  - data-interpreter
+keywords:
+  - MetaGPT
+  - MetaGPT multi-agent framework
+  - FoundationAgents MetaGPT
+  - software company as multi-agent system
+  - AI software company
+  - natural language programming
+  - metagpt CLI
+  - Data Interpreter
+  - multi-agent software engineering
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+MetaGPT is an open-source Python framework for building software-company style
+multi-agent workflows. Its README frames the core pattern as assigning different
+roles to GPT-backed agents so they collaborate on complex tasks. For software
+generation, MetaGPT can take a one-line requirement and produce artifacts such
+as user stories, competitive analysis, requirements, data structures, APIs,
+documents, and repository files.
+
+The entry is useful for Claude-adjacent teams because MetaGPT is a high-search,
+high-star agent framework with a distinct mental model: instead of a single
+coding assistant or generic tool-calling loop, it models a team with product
+manager, architect, project manager, engineer, and related roles following
+orchestrated SOPs.
+
+## Install
+
+Install the PyPI package:
+
+```bash
+pip install --upgrade metagpt
+```
+
+The README also documents conda setup, source installs, and a requirement to
+install Node.js and pnpm before actual use:
+
+```bash
+conda create -n metagpt python=3.9
+conda activate metagpt
+```
+
+Initialize configuration before running workflows:
+
+```bash
+metagpt --init-config
+```
+
+Then edit `~/.metagpt/config2.yaml` with the selected LLM provider, model, base
+URL, and API key.
+
+## Common Commands
+
+Generate a small project from a requirement:
+
+```bash
+metagpt "Create a 2048 game"
+```
+
+Use MetaGPT as a Python library:
+
+```python
+from metagpt.software_company import generate_repo
+
+repo = generate_repo("Create a 2048 game")
+print(repo)
+```
+
+Run a Data Interpreter workflow:
+
+```python
+import asyncio
+from metagpt.roles.di.data_interpreter import DataInterpreter
+
+
+async def main():
+    di = DataInterpreter()
+    await di.run("Run data analysis on sklearn Iris dataset, include a plot")
+
+
+asyncio.run(main())
+```
+
+## Agent Capabilities
+
+| Area | MetaGPT Coverage |
+| --- | --- |
+| Multi-agent model | Product manager, architect, project manager, engineer, and other role-based agents |
+| Software generation | User stories, competitive analysis, requirements, data structures, APIs, documents, diagrams, and repository files |
+| CLI | `metagpt` console script for running natural-language requirements |
+| Python API | `generate_repo`, `ProjectRepo`, Data Interpreter, and custom role/workflow development |
+| Provider config | `~/.metagpt/config2.yaml` with OpenAI-style, Azure, Ollama, Groq, and other model routes described by the README |
+| Optional capabilities | Search, Selenium/browser workflows, RAG, Data Interpreter, Android assistant extras, GitHub/email/cloud integrations, and test/dev extras |
+| Research surface | MetaGPT paper, AFlow/SPO/AOT research links, agent tutorials, debate, researcher, and Data Interpreter use cases |
+
+## MCP Fit
+
+MetaGPT is not an MCP server. It belongs in tools as a framework and CLI for
+role-based multi-agent workflows. It can still be useful in the same search
+cluster as MCP because teams often compare MCP tool access with higher-level
+agent frameworks. If MetaGPT agents are connected to external tools, browsers,
+repos, email, or RAG systems, apply the same permission and approval discipline
+you would apply to MCP-connected agents.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `FoundationAgents/MetaGPT` as an MIT-licensed repository with
+  68,000+ stars and a latest release tag `v0.8.1`.
+- The README describes MetaGPT as a multi-agent framework that assigns
+  different roles to GPTs and models a software company as a multi-agent
+  system.
+- The README documents `pip install --upgrade metagpt`, Python 3.9+ and
+  `<3.12`, Node.js and pnpm prerequisites, `metagpt --init-config`,
+  `~/.metagpt/config2.yaml`, CLI usage, Python library usage, and Data
+  Interpreter usage.
+- `setup.py` declares the `metagpt` package, MIT license, Python `>=3.9,<3.12`,
+  console script `metagpt=metagpt.software_company:app`, and extras for
+  Selenium, search, RAG, tests, development, and Android assistant workflows.
+- `requirements.txt` includes provider, browser, RAG/vector, GitHub, email,
+  notebook, data, and model integration dependencies.
+- PyPI resolves package metadata for `metagpt` version `0.8.2`; current `main`
+  source metadata shows a newer `setup.py` version value, so version-sensitive
+  install decisions should check PyPI and the upstream repository before
+  pinning.
+
+## Safety and Privacy
+
+MetaGPT's most attractive workflow is also the risky one: a brief requirement
+can produce many files, diagrams, dependencies, and design decisions. Keep that
+output in a reviewable workspace, run tests before trusting it, and do not let
+generated repositories inherit production credentials or privileged shells.
+
+Role messages, product requirements, architecture documents, generated source,
+notebook outputs, and tool results may expose sensitive product plans or
+customer context. Treat `~/.metagpt/config2.yaml`, generated workspaces, logs,
+and shared artifacts as private until reviewed.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, open pull requests, and repository-wide
+content for `FoundationAgents/MetaGPT`, `geekan/MetaGPT`, MetaGPT, `metagpt`,
+AI software company, software company as multi-agent system, Data Interpreter,
+natural-language programming, and role-based multi-agent framework. Existing
+entries cover adjacent agent frameworks and coding agents such as AutoGen,
+CrewAI, LangGraph, Agno, Mastra, Pydantic AI, Smolagents, CAMEL, OpenHands,
+Open SWE, mini-SWE-agent, and Claude Code, but no dedicated MetaGPT tools entry,
+exact source URL duplicate, target file, or open duplicate PR was found.

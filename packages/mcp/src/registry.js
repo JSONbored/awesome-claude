@@ -71,6 +71,7 @@ const platformAliases = new Map([
 export const READ_ONLY_TOOL_NAMES = [
   "search_registry",
   "plan_workflow_toolbox",
+  "recommend_for_task",
   "server_info",
   "list_category_entries",
   "get_recent_updates",
@@ -121,9 +122,22 @@ export const TOOL_DEFINITIONS = [
   {
     name: "plan_workflow_toolbox",
     description:
-      "Plan a read-only Claude or Codex workflow toolbox from ranked HeyClaude registry entries with trust, install, and follow-up guidance.",
+      "Plan a read-only Claude or Codex workflow toolbox from ranked HeyClaude registry entries. Each entry includes an inline install block (install command, config snippet, download URL) and the recommended stack is summarized as a copy-pasteable installPlan, alongside trust and follow-up guidance.",
     inputSchema: jsonSchemaForTool("plan_workflow_toolbox"),
     outputSchema: jsonSchemaForToolOutput("plan_workflow_toolbox"),
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+  },
+  {
+    name: "recommend_for_task",
+    description:
+      "Answer 'what should I use to do X' in one call. Given a plain-language task (and optional platform/category), returns the best-match HeyClaude entries ranked by fit — each with why it fits, trust summary, disclosed safety/privacy notes, and an inline install block — plus a topPick and a consolidated installPlan. Unlike plan_workflow_toolbox it does not force category diversity; it returns the genuinely best matches. Collapses the search → compare → detail → asset loop into a single answer-shaped response.",
+    inputSchema: jsonSchemaForTool("recommend_for_task"),
+    outputSchema: jsonSchemaForToolOutput("recommend_for_task"),
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -158,13 +172,13 @@ export const TOOL_DEFINITIONS = [
   {
     name: "get_entry_detail",
     description:
-      "Fetch a read-only HeyClaude registry entry detail payload by category and slug.",
+      "Fetch a read-only HeyClaude registry entry detail payload by category and slug. By default (bodyMode='excerpt') the body markdown is trimmed to a short lead and large copyable fields are omitted to conserve context, with bodyChars/bodyTruncated/omittedFields describing what was dropped; pass bodyMode='full' for the complete content or 'none' to drop the body entirely. Use get_copyable_asset to retrieve omitted install/script content.",
     inputSchema: jsonSchemaForTool("get_entry_detail"),
   },
   {
     name: "get_copyable_asset",
     description:
-      "Fetch the category-aware copy/install asset for a HeyClaude entry without writing local files.",
+      "Fetch the category-aware copy/install asset for a HeyClaude entry without writing local files. Pass assetType (e.g. 'install_command', 'config_snippet') to return only that asset and avoid the full_content/script payloads when you do not need them.",
     inputSchema: jsonSchemaForTool("get_copyable_asset"),
   },
   {
@@ -1035,6 +1049,44 @@ function toolboxNextActions(entry) {
   ];
 }
 
+const TOOLBOX_CONFIG_SNIPPET_INLINE_LIMIT = 600;
+
+// Distills the ready-to-run install surface for a toolbox entry from its full
+// payload so the planner returns copy-pasteable commands instead of pointing at
+// more tool calls. Large config snippets are summarized rather than inlined to
+// preserve the lean response contract (callers use get_copyable_asset for them).
+function toolboxInstall(entry) {
+  if (!entry) return null;
+  const installCommand = String(
+    entry.installCommand || entry.commandSyntax || "",
+  ).trim();
+  const configSnippet = String(entry.configSnippet || "").trim();
+  const downloadUrl = String(entry.downloadUrl || "").trim();
+  const usageSnippet = String(entry.usageSnippet || "").trim();
+
+  const install = {
+    installable: Boolean(entry.installable),
+    primaryAssetType: categoryPrimaryAsset(entry)?.type || "",
+  };
+  if (installCommand) install.installCommand = installCommand;
+  if (downloadUrl) install.downloadUrl = downloadUrl;
+  if (usageSnippet) install.usageSnippet = usageSnippet;
+  if (configSnippet) {
+    if (configSnippet.length <= TOOLBOX_CONFIG_SNIPPET_INLINE_LIMIT) {
+      install.configSnippet = configSnippet;
+    } else {
+      install.configSnippetChars = configSnippet.length;
+      install.configHint =
+        "Config snippet is large; call get_copyable_asset for the full snippet.";
+    }
+  }
+  if (!installCommand && !downloadUrl && !configSnippet && !usageSnippet) {
+    install.note =
+      "No install command published; use the source or canonical URL.";
+  }
+  return install;
+}
+
 function toolboxCategoryMix(entries) {
   const counts = new Map();
   for (const entry of entries) {
@@ -1094,14 +1146,37 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
     );
   }
   const ranked = rankSearchEntries(matched, query);
-  const selected = selectDiverseRankedEntries(ranked, limit).map((item) => ({
-    ...toEntrySummary(item.entry),
-    searchScore: item.score,
-    searchReasons: item.reasons,
-    toolboxReasons: toolboxFitReasons(item.entry, item),
-    caveats: toolboxCaveats(item.entry),
-    nextActions: toolboxNextActions(item.entry),
-  }));
+  // Read the full payload for each selected entry so the planner can inline
+  // ready-to-run install commands; fall back to the search-index summary if a
+  // detail read fails so one bad entry never breaks the whole plan.
+  const selected = await Promise.all(
+    selectDiverseRankedEntries(ranked, limit).map(async (item) => {
+      const full = await readEntry(
+        item.entry.category,
+        item.entry.slug,
+        options,
+      ).catch(() => null);
+      return {
+        ...toEntrySummary(item.entry),
+        searchScore: item.score,
+        searchReasons: item.reasons,
+        toolboxReasons: toolboxFitReasons(item.entry, item),
+        caveats: toolboxCaveats(item.entry),
+        install: toolboxInstall(full || item.entry),
+        nextActions: toolboxNextActions(item.entry),
+      };
+    }),
+  );
+
+  // Consolidated, ordered install commands for the recommended stack.
+  const installPlan = selected
+    .filter((entry) => entry.install?.installCommand)
+    .map((entry) => ({
+      key: entry.key,
+      title: entry.title,
+      category: entry.category,
+      installCommand: entry.install.installCommand,
+    }));
 
   return {
     ok: true,
@@ -1110,6 +1185,7 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
     platform: platform || "",
     count: selected.length,
     entries: selected,
+    installPlan,
     categoryMix: toolboxCategoryMix(selected),
     trustSummary: toolboxTrustSummary(selected),
     recommendedNextTools: [
@@ -1120,9 +1196,80 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
     ],
     plannerNotes: [
       "This planner is metadata review only; it is not install approval or malware scanning, and it does not execute or install entries.",
+      "Each entry carries an inline install block and the recommended stack is summarized in installPlan; still review trust before running anything.",
       "Recommendations are bounded and category-diverse where matching entries allow it.",
       "Prefer source-backed entries with safety/privacy notes for risk-bearing MCP, hooks, skills, commands, and statuslines.",
       "Use get_entry_detail, explain_entry_trust, compare_entries, and get_copyable_asset before relying on any entry.",
+    ],
+  };
+}
+
+export async function recommendForTask(args = {}, options = {}) {
+  const task = String(args.task || "").trim();
+  if (task.length < 2) {
+    return invalid("Task description must be at least 2 characters.");
+  }
+  const query = normalizeText(task);
+  const category = normalizeText(args.category);
+  const platform = normalizePlatform(args.platform);
+  const limit = Math.min(5, normalizeLimit(args.limit, 3));
+  const searchIndex = unwrapEntries(
+    await readJsonArtifact("search-index.json", options),
+  );
+  const scoped = searchIndex
+    .filter((entry) => !category || entry.category === category)
+    .filter((entry) => entryMatchesPlatform(entry, platform));
+  let matched = scoped.filter((entry) => entryMatchesQuery(entry, query));
+  const queryTokens = searchTokens(query);
+  if (!matched.length && queryTokens.length) {
+    matched = scoped.filter((entry) =>
+      queryTokens.some((token) => entrySearchText(entry).includes(token)),
+    );
+  }
+  // Best-match ranking, top-N — unlike the toolbox planner this does NOT force
+  // category diversity; it returns the genuinely closest entries for the task.
+  const ranked = rankSearchEntries(matched, query).slice(0, limit);
+  const recommendations = await Promise.all(
+    ranked.map(async (item) => {
+      const full = await readEntry(
+        item.entry.category,
+        item.entry.slug,
+        options,
+      ).catch(() => null);
+      return {
+        ...toEntrySummary(item.entry),
+        searchScore: item.score,
+        searchReasons: item.reasons,
+        why: toolboxFitReasons(item.entry, item),
+        caveats: toolboxCaveats(item.entry),
+        install: toolboxInstall(full || item.entry),
+      };
+    }),
+  );
+
+  const installPlan = recommendations
+    .filter((entry) => entry.install?.installCommand)
+    .map((entry) => ({
+      key: entry.key,
+      title: entry.title,
+      category: entry.category,
+      installCommand: entry.install.installCommand,
+    }));
+
+  return {
+    ok: true,
+    task,
+    category: category || "",
+    platform: platform || "",
+    count: recommendations.length,
+    topPick: recommendations[0]?.key || "",
+    recommendations,
+    installPlan,
+    trustSummary: toolboxTrustSummary(recommendations),
+    notes: [
+      "Best-match recommendations for the task; unlike plan_workflow_toolbox they are not forced to span categories.",
+      "This is metadata review only — it does not execute, install, or scan entries. Review trust before running anything.",
+      "Use compare_entries to weigh the top picks and explain_entry_trust before relying on any entry.",
     ],
   };
 }
@@ -1344,6 +1491,111 @@ export async function getRelatedEntries(args = {}, options = {}) {
   };
 }
 
+const ENTRY_BODY_EXCERPT_CHARS = 1200;
+
+// Large copyable-content fields that largely duplicate the body or the install
+// asset. In non-full modes they are omitted (and surfaced via omittedFields)
+// because the caller should pull them from get_copyable_asset when needed,
+// rather than paying for tens of kilobytes on every detail lookup.
+const ENTRY_ASSET_FIELDS = ["scriptBody", "fullCopyableContent", "copySnippet"];
+
+function excerptText(text, limit) {
+  if (text.length <= limit) {
+    return text;
+  }
+  const slice = text.slice(0, limit);
+  // Back off to the last paragraph/sentence/word boundary so the excerpt does
+  // not end mid-word; fall back to the hard cut if no decent boundary exists.
+  const boundary = Math.max(
+    slice.lastIndexOf("\n\n"),
+    slice.lastIndexOf("\n"),
+    slice.lastIndexOf(". "),
+    slice.lastIndexOf(" "),
+  );
+  const cut = boundary > limit * 0.6 ? slice.slice(0, boundary) : slice;
+  return `${cut.trimEnd()}…`;
+}
+
+// Projects an entry's heavy content to the requested verbosity so the default
+// get_entry_detail response stays token-efficient. Returns the (possibly
+// trimmed) entry plus body metadata describing exactly what was returned.
+function projectEntryBody(entry, requestedMode) {
+  const mode =
+    requestedMode === "none" || requestedMode === "full"
+      ? requestedMode
+      : "excerpt";
+  const body = typeof entry.body === "string" ? entry.body : "";
+  const bodyChars = body.length;
+
+  if (mode === "full") {
+    return {
+      entry,
+      bodyMeta: {
+        bodyMode: "full",
+        bodyChars,
+        bodyTruncated: false,
+        omittedFields: [],
+      },
+    };
+  }
+
+  // Lean modes: drop large copyable asset fields, keep small useful ones.
+  const projected = { ...entry };
+  const omittedFields = [];
+  for (const field of ENTRY_ASSET_FIELDS) {
+    const value = projected[field];
+    const size = typeof value === "string" ? value.length : 0;
+    if (size > ENTRY_BODY_EXCERPT_CHARS) {
+      delete projected[field];
+      omittedFields.push({ field, chars: size });
+    }
+  }
+
+  if (mode === "none") {
+    delete projected.body;
+    return {
+      entry: projected,
+      bodyMeta: withAssetHint({
+        bodyMode: "none",
+        bodyChars,
+        bodyTruncated: bodyChars > 0,
+        omittedFields,
+      }),
+    };
+  }
+
+  if (bodyChars > ENTRY_BODY_EXCERPT_CHARS) {
+    projected.body = excerptText(body, ENTRY_BODY_EXCERPT_CHARS);
+    return {
+      entry: projected,
+      bodyMeta: withAssetHint({
+        bodyMode: "excerpt",
+        bodyChars,
+        bodyTruncated: true,
+        omittedFields,
+      }),
+    };
+  }
+
+  return {
+    entry: projected,
+    bodyMeta: withAssetHint({
+      bodyMode: "excerpt",
+      bodyChars,
+      bodyTruncated: false,
+      omittedFields,
+    }),
+  };
+}
+
+function withAssetHint(bodyMeta) {
+  if (bodyMeta.omittedFields.length > 0) {
+    bodyMeta.assetHint =
+      "Large copyable fields were omitted to save context; call get_copyable_asset for the full script or snippet.";
+  }
+  return bodyMeta;
+}
+
 export async function getEntryDetail(args = {}, options = {}) {
   const category = normalizeText(args.category);
   const slug = normalizeText(args.slug);
@@ -1356,15 +1608,22 @@ export async function getEntryDetail(args = {}, options = {}) {
     return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
   }
 
+  const normalizedEntry = {
+    ...entry,
+    safetyNotes: notes(entry.safetyNotes),
+    privacyNotes: notes(entry.privacyNotes),
+  };
+  const { entry: projectedEntry, bodyMeta } = projectEntryBody(
+    normalizedEntry,
+    args.bodyMode,
+  );
+
   return {
     ok: true,
     key: `${entry.category}:${entry.slug}`,
     canonicalUrl: entryCanonicalUrl(entry),
-    entry: {
-      ...entry,
-      safetyNotes: notes(entry.safetyNotes),
-      privacyNotes: notes(entry.privacyNotes),
-    },
+    ...bodyMeta,
+    entry: projectedEntry,
     trust: entryTrustSummary(entry),
   };
 }
@@ -1382,8 +1641,8 @@ export async function getCopyableAsset(args = {}, options = {}) {
     return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
   }
 
-  const primary = categoryPrimaryAsset(entry);
-  const assets = [
+  const requestedType = normalizeText(args.assetType);
+  const allAssets = [
     contentAsset(
       "full_content",
       "Full usable entry content",
@@ -1411,6 +1670,15 @@ export async function getCopyableAsset(args = {}, options = {}) {
     contentAsset("usage", "Usage snippet", entry.usageSnippet, "markdown"),
     contentAsset("items", "Collection items", entry.items, "json"),
   ].filter(Boolean);
+  // When a specific assetType is requested, return only that asset so the
+  // caller does not pay for the (potentially tens-of-KB) full_content/script
+  // payloads it did not ask for.
+  const assets = requestedType
+    ? allAssets.filter((asset) => asset.type === requestedType)
+    : allAssets;
+  const primary = requestedType
+    ? assets[0] || null
+    : categoryPrimaryAsset(entry);
   const compatibility = buildSkillPlatformCompatibility(entry);
 
   return {
@@ -1421,6 +1689,7 @@ export async function getCopyableAsset(args = {}, options = {}) {
     title: entry.title,
     canonicalUrl: entryCanonicalUrl(entry),
     platform: platform || "",
+    requestedAssetType: requestedType || "",
     primaryAsset: primary,
     assets,
     installCommand: entry.installCommand || "",
@@ -2123,7 +2392,12 @@ export async function readRegistryResource(args = {}, options = {}) {
     };
   } else if (parsed.hostname === "entry" && parts.length === 2) {
     const [category, slug] = parts.map(normalizeText);
-    const detail = await getEntryDetail({ category, slug }, options);
+    // Resource reads return the full document; only the tool defaults to a
+    // token-efficient excerpt.
+    const detail = await getEntryDetail(
+      { category, slug, bodyMode: "full" },
+      options,
+    );
     payload = detail;
   } else if (
     parsed.hostname === "registry" &&
@@ -2519,6 +2793,9 @@ export async function callRegistryTool(name, args = {}, options = {}) {
       break;
     case "plan_workflow_toolbox":
       result = await planWorkflowToolbox(parsedArgs, options);
+      break;
+    case "recommend_for_task":
+      result = await recommendForTask(parsedArgs, options);
       break;
     case "server_info":
       result = await getServerInfo(parsedArgs, options);

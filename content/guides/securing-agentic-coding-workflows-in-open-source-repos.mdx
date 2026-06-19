@@ -1,0 +1,214 @@
+---
+title: Securing Agentic Coding Workflows In Open Source Repos
+slug: securing-agentic-coding-workflows-in-open-source-repos
+category: guides
+description: >-
+  A maintainer guide for securing agentic coding workflows in open-source
+  repositories: version-controlled MCP configs, permission defaults, contributor
+  PR review for AI-generated changes, hooks, sandbox boundaries, and public
+  disclosure hygiene.
+cardDescription: >-
+  Secure open-source repos for Claude Code agentic workflows with MCP policy,
+  permissions, review gates, and contributor safety practices.
+seoTitle: Securing Agentic Coding Workflows In Open Source Repos
+seoDescription: >-
+  Learn how open-source maintainers secure agentic coding workflows: checked-in
+  MCP templates with env expansion, Claude Code permissions, AI PR review,
+  hooks, sandboxing, and security disclosure aligned to official docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 778
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/778"
+documentationUrl: "https://code.claude.com/docs/en/security"
+usageSnippet: >-
+  Before enabling Claude Code across an open-source repo, commit safe MCP
+  templates without secrets, document permission expectations in CONTRIBUTING,
+  require human review for AI-assisted PRs, and route vulnerabilities through
+  SECURITY.md instead of public issues.
+prerequisites:
+  - "Maintainer or core contributor access to repository settings, branch protection, and SECURITY.md."
+  - "Agreement on which Claude Code surfaces contributors may use (CLI, plugins, MCP servers)."
+  - "CI with secret scanning, dependency review, or equivalent checks enabled where available."
+  - "A sandbox or disposable environment policy for running untrusted contributor install scripts."
+safetyNotes:
+  - "Project-scoped .mcp.json is designed for version control; never commit raw tokens—use ${VAR} expansion documented for contributors."
+  - "Anthropic reviews directory connectors but does not security-audit arbitrary MCP servers; maintainers must threat-model third-party servers before recommending them."
+  - "Treat AI-generated contributor PRs as untrusted until a human reviewer verifies behavior, dependencies, and security-sensitive paths."
+  - "Auto-approve modes suitable for solo work are risky in public repos; default contributors to explicit permission prompts."
+privacyNotes:
+  - "Public issue and PR threads must not contain live credentials, customer data, or unfixed vulnerability exploit details."
+  - "Agent session transcripts and MCP tool output can leak proprietary fork context; remind contributors not to paste secrets into prompts."
+  - "SECURITY.md should describe private disclosure channels; keep reproduction steps minimal in public comments until coordinated disclosure completes."
+sourceUrls:
+  - "https://code.claude.com/docs/en/security"
+  - "https://code.claude.com/docs/en/best-practices"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/sandboxing"
+  - "https://opensource.guide/best-practices/"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - open-source
+  - security
+  - claude-code
+  - mcp
+  - maintainers
+  - agentic-workflows
+keywords:
+  - secure agentic coding workflows open source
+  - Claude Code open source security
+  - MCP config open source repository
+  - AI contributor pull request security
+  - Claude Code permissions maintainers
+readingTime: 9
+difficultyScore: 60
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Open-source repos need explicit guardrails when contributors use agentic coding
+tools. Commit MCP structure without secrets, document permission expectations,
+require human review for AI-assisted diffs, enable sandboxing for risky commands,
+and keep vulnerability reports on private disclosure paths.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "SECURITY.md exists", "description": "Private reporting path and response expectations are documented"}
+- [ ] {"task": "Branch protection", "description": "Required reviews and CI gates apply to main"}
+- [ ] {"task": "MCP template reviewed", "description": "Project .mcp.json uses env expansion, not committed secrets"}
+- [ ] {"task": "Contributor guide updated", "description": "CONTRIBUTING explains approved Claude Code workflows"}
+- [ ] {"task": "Scanning enabled", "description": "Secret scanning or equivalent checks run on PRs"}
+
+## Core Concepts Explained
+
+### Public repos amplify agent blast radius
+
+Claude Code security documentation states that MCP server lists live in checked-in
+settings and that users configure permissions for MCP servers they trust.
+In open source, those configs and plugin hints are visible to every fork—design
+them assuming attackers read the file.
+
+### MCP in git is structure, not credentials
+
+Official MCP docs support `${VAR}` expansion in `.mcp.json` so teams share
+server definitions while contributors export secrets locally. Pair templates with
+README or CONTRIBUTING instructions naming required variables.
+
+### AI-assisted PRs need maintainer review discipline
+
+Claude Code best practices emphasize verifying proposed commands and changes
+before approval. For OSS, extend that to dependency changes, new install scripts,
+and auth paths—even when CI passes.
+
+### Sandboxing and permissions are team policy levers
+
+Security docs describe sandboxed bash, write-scope limits to the working
+directory, and permission modes. Maintainers can document recommended defaults
+for contributors without forcing a single global mode.
+
+## Step-by-Step Implementation Guide
+
+1. **Audit checked-in agent config.** Review `.mcp.json`, plugin manifests,
+   `.claude/settings.json` examples, and hook samples for secrets or overly broad
+   tool allowlists.
+
+2. **Replace secrets with env contracts.** Use `${API_KEY}` placeholders; document
+   export steps in CONTRIBUTING, not in committed values.
+
+3. **Publish workflow expectations.** State which MCP servers are optional vs
+   required, and that contributors must run untrusted install scripts only in
+   disposable environments.
+
+4. **Harden PR review for AI changes.** Require human reviewers for auth, network,
+   dependency, and release automation diffs; link to a checklist in the PR template.
+
+5. **Enable sandbox guidance.** Recommend `/sandbox` or dev containers for
+   contributors running Claude Code against unfamiliar forks.
+
+6. **Add narrow hooks if needed.** Use reviewed hooks for notifications or
+   config-change auditing—not hidden network exfiltration.
+
+7. **Train on disclosure.** Route suspected vulnerabilities through SECURITY.md;
+   never debate exploit details in public issues.
+
+8. **Review quarterly.** Re-read MCP additions, plugin updates, and permission
+   drift as Claude Code releases change defaults.
+
+## Maintainer Checklist for AI Contributor PRs
+
+| Area | Review question |
+| --- | --- |
+| Dependencies | Did manifests or lockfiles change without justification? |
+| Install scripts | Any new postinstall, curl pipe, or binary download? |
+| Auth paths | Do changes touch login, tokens, or session handling? |
+| MCP config | Are new servers documented with least-privilege scopes? |
+| Tests | Do behavior claims have CI or reproducible commands? |
+| Secrets | Did scanners flag tokens or private URLs in the diff? |
+
+## Example CONTRIBUTING Snippet
+
+```markdown
+## Agentic coding tools
+
+- Use project `.mcp.json` templates with local env vars only; never commit secrets.
+- Run Claude Code install/build steps from this PR in a disposable environment first.
+- Mark AI-assisted PRs in the description and complete the security checklist.
+- Report vulnerabilities privately per SECURITY.md—not in public issues.
+```
+
+## Troubleshooting
+
+### Contributor committed an API key
+
+Rotate the credential, purge history per your policy, and switch the config to
+`${VAR}` expansion with scanner follow-up.
+
+### Recommended MCP server is too powerful
+
+Remove it from the default template; document it as opt-in with oauth.scopes pins
+and maintainer approval.
+
+### CI green but behavior looks wrong
+
+Require reviewer-owned evidence per best practices—generated explanations are not
+proof in public repos.
+
+### Fork maintainer enabled bypassPermissions
+
+Document that bypass modes are maintainer-local only; do not check bypass settings
+into shared project files.
+
+## Source Verification Notes
+
+Verified against Claude Code security, best practices, MCP, and sandboxing
+documentation on **2026-06-16**:
+
+- Security docs describe permission-based architecture, MCP user configuration
+  responsibility, prompt injection mitigations, and secure credential storage.
+- MCP docs describe project-scoped `.mcp.json` for teams, env expansion, OAuth
+  scope pinning, and trust verification for new servers.
+- Best practices docs emphasize reviewing commands and changes before approval.
+- Open Source Guides best practices reinforce clear contribution and security
+  expectations for public communities.
+
+## Duplicate Check
+
+This guide complements `review-ai-generated-code-before-merge` (PR reviewer
+checklist), `safe-claude-code-hooks` (hook-specific safety), and
+`secret-handling-for-mcp-servers-and-agent-tools` (credential handling mechanics).
+None combine maintainer-oriented open-source policy for MCP templates, contributor
+AI PR review, sandbox guidance, and SECURITY.md disclosure in one workflow.
+
+## References
+
+- Claude Code security - https://code.claude.com/docs/en/security
+- Claude Code best practices - https://code.claude.com/docs/en/best-practices
+- Claude Code MCP - https://code.claude.com/docs/en/mcp

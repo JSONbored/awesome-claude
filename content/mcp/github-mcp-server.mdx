@@ -20,16 +20,20 @@ seoDescription: >-
 author: GitHub
 authorProfileUrl: "https://github.com/github"
 dateAdded: "2025-09-18"
-documentationUrl: "https://www.npmjs.com/package/@modelcontextprotocol/server-github"
+documentationUrl: "https://github.com/github/github-mcp-server"
+retrievalSources:
+  - "https://github.com/github/github-mcp-server"
 downloadUrl: /downloads/mcp/github-mcp-server.mcpb
 packageVerified: true
 installable: true
 installCommand: >-
-  claude mcp add github --env GITHUB_PERSONAL_ACCESS_TOKEN=YOUR_TOKEN -- npx -y
-  @modelcontextprotocol/server-github && claude mcp list
+  claude mcp add github -e GITHUB_PERSONAL_ACCESS_TOKEN=YOUR_TOKEN -- docker run
+  -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server &&
+  claude mcp list
 usageSnippet: >-
-  claude mcp add github --env GITHUB_PERSONAL_ACCESS_TOKEN=YOUR_TOKEN -- npx -y
-  @modelcontextprotocol/server-github && claude mcp list
+  claude mcp add github -e GITHUB_PERSONAL_ACCESS_TOKEN=YOUR_TOKEN -- docker run
+  -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server &&
+  claude mcp list
 copySnippet: |-
   {
     "github": {
@@ -37,10 +41,14 @@ copySnippet: |-
         "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
       },
       "args": [
-        "-y",
-        "@modelcontextprotocol/server-github"
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
       ],
-      "command": "npx"
+      "command": "docker"
     }
   }
 configSnippet: |-
@@ -51,10 +59,14 @@ configSnippet: |-
           "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
         },
         "args": [
-          "-y",
-          "@modelcontextprotocol/server-github"
+          "run",
+          "-i",
+          "--rm",
+          "-e",
+          "GITHUB_PERSONAL_ACCESS_TOKEN",
+          "ghcr.io/github/github-mcp-server"
         ],
-        "command": "npx",
+        "command": "docker",
         "type": "stdio"
       }
     }
@@ -66,7 +78,7 @@ prerequisites:
   - >-
     GitHub Personal Access Token with repo scope (generate from GitHub Settings
     > Developer Settings > Personal Access Tokens)
-  - "Node.js and npx available (comes with Node.js, verify with: npx --version)"
+  - "Docker installed and running (verify with: docker --version)"
   - Internet connection (remote GitHub API access required)
   - >-
     Understanding of GitHub API rate limits (5,000 requests/hour for Personal
@@ -91,17 +103,10 @@ tags:
   - api
   - official
 keywords:
-  - api
-  - claude
-  - development
-  - git
-  - github
-  - mcp
-  - mcp servers
-  - official
-  - repositories
-  - server
-  - tools
+  - github mcp server
+  - claude github integration
+  - github api mcp server
+  - connect claude to github
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true
@@ -142,7 +147,7 @@ Transform how you interact with GitHub repositories by connecting Claude to the 
 ### Claude Code
 
 1. Generate a GitHub Personal Access Token with repo scope from GitHub Settings > Developer Settings
-2. Run: claude mcp add github --env GITHUB_PERSONAL_ACCESS_TOKEN=YOUR_TOKEN -- npx -y @modelcontextprotocol/server-github
+2. Run: claude mcp add github -e GITHUB_PERSONAL_ACCESS_TOKEN=YOUR_TOKEN -- docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server
 3. Verify installation: claude mcp list
 4. Test connection: claude mcp status github
 
@@ -158,7 +163,7 @@ Transform how you interact with GitHub repositories by connecting Claude to the 
 
 - GitHub account (sign up at https://github.com if needed)
 - GitHub Personal Access Token with repo scope (generate from GitHub Settings > Developer Settings > Personal Access Tokens)
-- Node.js and npx available (comes with Node.js, verify with: npx --version)
+- Docker installed and running (verify with: docker --version)
 - Internet connection (remote GitHub API access required)
 - Understanding of GitHub API rate limits (5,000 requests/hour for Personal Access Tokens, 15,000/hour for GitHub Apps on Enterprise Cloud)
 - Understanding of repository permissions (read access for viewing, write access for creating/updating files)
@@ -175,8 +180,8 @@ Transform how you interact with GitHub repositories by connecting Claude to the 
     "env": {
       "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
     },
-    "args": ["-y", "@modelcontextprotocol/server-github"],
-    "command": "npx"
+    "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"],
+    "command": "docker"
   }
 }
 ```

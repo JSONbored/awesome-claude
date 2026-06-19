@@ -1,0 +1,168 @@
+---
+title: Deepgram MCP Server for Claude
+slug: deepgram-mcp-server
+category: mcp
+description: >-
+  Transcribe audio, synthesize speech, and run audio intelligence directly from Claude with
+  the official Deepgram MCP server — dynamic tool discovery fetches new capabilities from
+  Deepgram's API at runtime without requiring package upgrades.
+cardDescription: "Official Deepgram MCP: speech-to-text, TTS & audio intelligence — dynamic runtime tools."
+seoTitle: "Deepgram MCP Server for Claude — Speech-to-Text, TTS & Audio Intelligence via Claude Code"
+seoDescription: "Connect Claude to Deepgram with the official MCP server: transcribe audio files, synthesize speech, and run audio intelligence — with dynamic tool discovery that surfaces new Deepgram capabilities at runtime. MIT, pip install deepgram-mcp."
+author: Deepgram
+authorProfileUrl: "https://github.com/deepgram"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/deepgram/mcp"
+websiteUrl: "https://deepgram.com"
+repoUrl: "https://github.com/deepgram/mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/deepgram/mcp/main/README.md"
+  - "https://docs.deepgram.com/docs/mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add deepgram -e DEEPGRAM_API_KEY=your-api-key -- deepgram-mcp"
+usageSnippet: >-
+  Ask Claude to transcribe an audio file URL, convert text to speech with a specific Deepgram
+  voice, or run audio intelligence (sentiment, topics, summaries) on a recorded meeting — all
+  via natural language using Deepgram's API.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "deepgram": {
+        "command": "deepgram-mcp",
+        "env": {
+          "DEEPGRAM_API_KEY": "your-api-key"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "deepgram": {
+        "command": "deepgram-mcp",
+        "env": {
+          "DEEPGRAM_API_KEY": "your-api-key"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Deepgram API key (free tier at console.deepgram.com)."
+  - "Python with `pip` available: `pip install deepgram-mcp` to install the package."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Audio files and transcription payloads are sent to Deepgram's cloud API for processing — do not transcribe audio containing highly sensitive PII without reviewing Deepgram's data retention policies."
+  - "Text-to-speech outputs are returned as audio data via the API; no files are written to disk unless you explicitly save them."
+privacyNotes:
+  - "Audio content (speech, recordings) is transmitted to Deepgram's servers for transcription and synthesis — review Deepgram's privacy policy for data handling and retention."
+  - "Your `DEEPGRAM_API_KEY` is passed as an environment variable — treat it as a secret."
+disclosure: "Deepgram is a commercial speech AI provider. The MCP server is officially maintained by Deepgram."
+tags:
+  - deepgram
+  - speech-to-text
+  - transcription
+  - audio
+  - text-to-speech
+  - audio-intelligence
+keywords:
+  - deepgram mcp server
+  - deepgram mcp claude
+  - speech to text mcp claude code
+  - audio transcription mcp server
+  - text to speech mcp claude
+  - audio intelligence mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Deepgram MCP Server** is the official Model Context Protocol server from
+[Deepgram](https://deepgram.com), the AI speech API company. It gives Claude access to
+Deepgram's speech-to-text transcription, text-to-speech synthesis, and audio intelligence
+capabilities. A notable architectural difference: the tool list is fetched from Deepgram's API
+at runtime — new capabilities appear automatically as Deepgram releases them, without requiring
+a package upgrade. Licensed under MIT.
+
+## Key capabilities
+
+- **Speech-to-text** — transcribe audio from URLs or uploaded files using Deepgram's Nova and
+  Whisper-based models; supports 30+ languages.
+- **Text-to-speech** — synthesize natural speech from text using Deepgram's Aura voice library.
+- **Audio intelligence** — run summarization, topic detection, sentiment analysis, and intent
+  recognition on audio content.
+- **Dynamic tool discovery** — tools are fetched from Deepgram's API at startup, so the server
+  always exposes the latest capabilities without package upgrades.
+
+## How it compares
+
+| Server | STT | TTS | Audio intelligence | Dynamic tools | Auth |
+|---|---|---|---|---|---|
+| **Deepgram MCP** | Yes | Yes | Yes | Yes | API key |
+| Groq MCP | Yes (Whisper) | Yes | No | No | API key |
+| OpenAI MCP | Yes (Whisper) | Yes | No | No | API key |
+| AssemblyAI MCP | Yes | No | Yes | No | API key |
+
+Deepgram's dynamic tool list means new API features are immediately available in Claude without
+server restarts or package updates — a capability unique among audio MCP servers.
+
+## Installation
+
+### Install the package
+
+```bash
+pip install deepgram-mcp
+```
+
+### Claude Code
+
+```bash
+claude mcp add deepgram -e DEEPGRAM_API_KEY=your-api-key -- deepgram-mcp
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "deepgram": {
+      "command": "deepgram-mcp",
+      "env": {
+        "DEEPGRAM_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+### SSE / HTTP mode
+
+```bash
+deepgram-mcp --transport sse --port 8000
+```
+
+## Requirements
+
+- A Deepgram API key (free tier at console.deepgram.com).
+- Python with `pip` (`pip install deepgram-mcp`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- API key authentication — generate a project-scoped key from the Deepgram console.
+- Audio is processed server-side by Deepgram; no audio files are stored locally by default.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `deepgram/mcp` (MIT) documents the `deepgram-mcp` pip package,
+  `DEEPGRAM_API_KEY` configuration, Claude Code install command, dynamic tool discovery from
+  Deepgram's API, the `--transport sse` HTTP mode, and the Deepgram CLI integration.
+- Deepgram documentation at `docs.deepgram.com/docs/mcp` (HTTP 200) covers the MCP server
+  setup, supported models, and audio intelligence capabilities.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

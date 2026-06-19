@@ -15,10 +15,13 @@ export interface Crumb {
 export function Breadcrumbs({
   items,
   home = false,
+  markLastAsCurrent = true,
   className,
 }: {
   items: Crumb[];
   home?: boolean;
+  /** Treat the final crumb as the current page. Disable for ancestor-only trails. */
+  markLastAsCurrent?: boolean;
   className?: string;
 }) {
   return (
@@ -38,10 +41,11 @@ export function Breadcrumbs({
         )}
         {items.map((c, i) => {
           const isLast = i === items.length - 1;
+          const isCurrent = markLastAsCurrent && isLast;
           return (
             <Fragment key={`${c.label}-${i}`}>
               <li className="min-w-0">
-                {c.to && !isLast ? (
+                {c.to && !isCurrent ? (
                   <Link
                     to={c.to}
                     params={c.params}
@@ -52,10 +56,10 @@ export function Breadcrumbs({
                   </Link>
                 ) : (
                   <span
-                    aria-current={isLast ? "page" : undefined}
+                    aria-current={isCurrent ? "page" : undefined}
                     className={cn(
                       "block truncate px-1.5 py-0.5 font-medium",
-                      isLast ? "text-ink" : "text-ink-muted",
+                      isCurrent ? "text-ink" : "text-ink-muted",
                     )}
                   >
                     {c.label}

@@ -16,8 +16,10 @@ import { ENTRIES, QUALITY_STATS } from "@/data/entries";
 import { ARTIFACT_CONTRACTS, CHANGELOG } from "@/data/changelog";
 import { FeedHealthPanel } from "@/components/feed-health-panel";
 import { CountUp } from "@/components/count-up";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { entryRef } from "@/lib/entry-identity";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/quality")({
@@ -91,24 +93,47 @@ function scoreEntry(e: (typeof ENTRIES)[number]): QualityRow {
   return { entry: e, score: Math.max(0, score), recommendations: recs };
 }
 
+// Precomputed once at module load — the registry is static, so these no longer
+// re-run (927× scoreEntry + sort + per-category scans, ~28K iterations) on every
+// SSR render of /quality.
+const QUALITY_ROWS = ENTRIES.map(scoreEntry);
+const IMPROVEMENT_QUEUE = [...QUALITY_ROWS].sort((a, b) => a.score - b.score).slice(0, 8);
+const TRUST_QUEUE = QUALITY_ROWS.filter(
+  (r) => r.recommendations.length > 0 && r.score >= 60,
+).slice(0, 8);
+const CATEGORY_COVERAGE = new Map(
+  CATEGORIES.map((c) => {
+    const inCat = ENTRIES.filter((e) => e.category === c.id);
+    const len = inCat.length;
+    return [
+      c.id,
+      {
+        count: len,
+        trustedPct: len
+          ? Math.round((inCat.filter((e) => e.trust === "trusted").length / len) * 100)
+          : 0,
+        safetyPct: len ? Math.round((inCat.filter((e) => e.safetyNotes).length / len) * 100) : 0,
+        sourcedPct: len
+          ? Math.round((inCat.filter((e) => e.source !== "unverified").length / len) * 100)
+          : 0,
+      },
+    ];
+  }),
+);
+
 function QualityPage() {
   const total = QUALITY_STATS.totalEntries;
   const pct = (n: number) => Math.round((n / total) * 100);
-  const rows = ENTRIES.map(scoreEntry);
-  const improvementQueue = [...rows].sort((a, b) => a.score - b.score).slice(0, 8);
-  const trustQueue = rows.filter((r) => r.recommendations.length > 0 && r.score >= 60).slice(0, 8);
+  const improvementQueue = IMPROVEMENT_QUEUE;
+  const trustQueue = TRUST_QUEUE;
 
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
-      <Breadcrumbs home items={[{ label: "Quality" }]} />
-      <div className="mt-4 eyebrow">Registry quality</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">Our quality pledge</h1>
-      <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
-        Every entry is reviewed for source-backed identity and metadata completeness before it
-        lands. We surface the trust signals you'd look for yourself — not malware verdicts. Always
-        read the source before installing anything that touches your filesystem, network, or
-        credentials.
-      </p>
+    <PageContainer>
+      <PageHeader
+        eyebrow="Registry quality"
+        title="Our quality pledge"
+        description="Every entry is reviewed for source-backed identity and metadata completeness before it lands. We surface the trust signals you'd look for yourself — not malware verdicts. Always read the source before installing anything that touches your filesystem, network, or credentials."
+      />
       <p className="mt-2 text-xs text-ink-subtle">
         Last rebuilt{" "}
         {new Date(ARTIFACT_CONTRACTS[0].builtAt).toISOString().slice(0, 16).replace("T", " ")} UTC
@@ -137,15 +162,9 @@ function QualityPage() {
       </div>
 
       <h2 className="mt-12 h-display-2 text-ink text-balance">Coverage by category</h2>
-      <div className="mt-4 overflow-hidden rounded-xl border border-border bg-surface">
+      <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-surface">
         {CATEGORIES.map((c) => {
-          const inCat = ENTRIES.filter((e) => e.category === c.id);
-          const trusted = inCat.filter((e) => e.trust === "trusted").length;
-          const safety = inCat.filter((e) => e.safetyNotes).length;
-          const sourced = inCat.filter((e) => e.source !== "unverified").length;
-          const trustedPct = inCat.length ? Math.round((trusted / inCat.length) * 100) : 0;
-          const safetyPct = inCat.length ? Math.round((safety / inCat.length) * 100) : 0;
-          const sourcedPct = inCat.length ? Math.round((sourced / inCat.length) * 100) : 0;
+          const cov = CATEGORY_COVERAGE.get(c.id)!;
           return (
             <Link
               key={c.id}
@@ -155,10 +174,10 @@ function QualityPage() {
             >
               <div className="font-display font-semibold text-ink">{c.label}</div>
               <div className="hidden text-xs text-ink-muted md:block">{c.blurb}</div>
-              <Bar label="Source" pct={sourcedPct} />
-              <Bar label="Trusted" pct={trustedPct} />
-              <Bar label="Safety" pct={safetyPct} />
-              <div className="text-right font-mono text-xs text-ink-subtle">{inCat.length}</div>
+              <Bar label="Source" pct={cov.sourcedPct} />
+              <Bar label="Trusted" pct={cov.trustedPct} />
+              <Bar label="Safety" pct={cov.safetyPct} />
+              <div className="text-right font-mono text-xs text-ink-subtle">{cov.count}</div>
             </Link>
           );
         })}
@@ -195,7 +214,7 @@ function QualityPage() {
         </code>
         .
       </p>
-      <div className="mt-4 overflow-hidden rounded-xl border border-border bg-surface">
+      <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-surface">
         <div className="grid grid-cols-[1fr_120px_180px_180px] gap-4 border-b border-border bg-surface-2 px-5 py-2 text-[11px] uppercase tracking-wider text-ink-subtle">
           <span>Path</span>
           <span className="text-right">Size</span>
@@ -329,7 +348,7 @@ function QualityPage() {
           source="quality"
         />
       </div>
-    </div>
+    </PageContainer>
   );
 }
 
@@ -404,7 +423,7 @@ function Queue({ title, help, rows }: { title: string; help: string; rows: Quali
       </div>
       <ul>
         {rows.map((r) => (
-          <li key={r.entry.slug} className="border-b border-border px-5 py-3 last:border-0">
+          <li key={entryRef(r.entry)} className="border-b border-border px-5 py-3 last:border-0">
             <div className="flex items-center justify-between gap-3">
               <Link
                 to="/entry/$category/$slug"

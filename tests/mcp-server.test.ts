@@ -86,6 +86,7 @@ function validToolArguments(name: string) {
   const argsByTool: Record<string, unknown> = {
     search_registry: { query: "mcp", limit: 1 },
     plan_workflow_toolbox: { goal: "code review automation", limit: 2 },
+    recommend_for_task: { task: "code review automation", limit: 2 },
     server_info: {},
     list_category_entries: { category: "mcp", limit: 1 },
     get_recent_updates: { limit: 1 },
@@ -674,6 +675,168 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
   });
 
+  it("returns a token-efficient body excerpt by default and honors bodyMode", async () => {
+    const full = await callRegistryTool(
+      "get_entry_detail",
+      { category: skill.category, slug: skill.slug, bodyMode: "full" },
+      { dataDir },
+    );
+    expect(full).toMatchObject({
+      ok: true,
+      bodyMode: "full",
+      bodyTruncated: false,
+      bodyChars: expect.any(Number),
+      omittedFields: [],
+    });
+    expect(full.entry.body.length).toBe(full.bodyChars);
+
+    const excerpt = await callRegistryTool(
+      "get_entry_detail",
+      { category: skill.category, slug: skill.slug },
+      { dataDir },
+    );
+    expect(excerpt.bodyMode).toBe("excerpt");
+    expect(excerpt.bodyChars).toBe(full.bodyChars);
+    expect(Array.isArray(excerpt.omittedFields)).toBe(true);
+    if (full.bodyChars > 1200) {
+      expect(excerpt.bodyTruncated).toBe(true);
+      expect(excerpt.entry.body.length).toBeLessThan(full.bodyChars);
+      expect(excerpt.entry.body.endsWith("…")).toBe(true);
+    } else {
+      expect(excerpt.bodyTruncated).toBe(false);
+      expect(excerpt.entry.body).toBe(full.entry.body);
+    }
+
+    const omitted = await callRegistryTool(
+      "get_entry_detail",
+      { category: skill.category, slug: skill.slug, bodyMode: "none" },
+      { dataDir },
+    );
+    expect(omitted.bodyMode).toBe("none");
+    expect(omitted.entry).not.toHaveProperty("body");
+    // Non-body fields survive the projection.
+    expect(omitted.entry.slug).toBe(skill.slug);
+    expect(omitted.trust).toEqual(full.trust);
+  });
+
+  it("omits large copyable asset fields in lean modes and points to get_copyable_asset", async () => {
+    const directory = JSON.parse(
+      fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
+    ) as { entries: Array<{ category: string; slug: string }> };
+
+    // Find an entry whose scriptBody/fullCopyableContent exceeds the excerpt
+    // threshold so we exercise the asset-omission path deterministically.
+    let heavy: { category: string; slug: string } | null = null;
+    for (const candidate of directory.entries) {
+      const file = path.join(
+        dataDir,
+        "entries",
+        candidate.category,
+        `${candidate.slug}.json`,
+      );
+      if (!fs.existsSync(file)) continue;
+      const entry = JSON.parse(fs.readFileSync(file, "utf8")).entry as Record<
+        string,
+        unknown
+      >;
+      const big = ["scriptBody", "fullCopyableContent", "copySnippet"].some(
+        (field) =>
+          typeof entry[field] === "string" &&
+          (entry[field] as string).length > 1200,
+      );
+      if (big) {
+        heavy = { category: candidate.category, slug: candidate.slug };
+        break;
+      }
+    }
+    if (!heavy) return; // No heavy-asset entry in this dataset; nothing to assert.
+
+    const full = await callRegistryTool(
+      "get_entry_detail",
+      { ...heavy, bodyMode: "full" },
+      { dataDir },
+    );
+    expect(full.omittedFields).toEqual([]);
+
+    const lean = await callRegistryTool("get_entry_detail", heavy, { dataDir });
+    expect(lean.omittedFields.length).toBeGreaterThan(0);
+    const omittedNames = lean.omittedFields.map(
+      (item: { field: string }) => item.field,
+    );
+    for (const field of omittedNames) {
+      expect(lean.entry).not.toHaveProperty(field);
+    }
+    expect(lean.assetHint).toContain("get_copyable_asset");
+    // The full content is still retrievable via the dedicated asset tool.
+    const asset = await callRegistryTool("get_copyable_asset", heavy, {
+      dataDir,
+    });
+    expect(asset.ok).toBe(true);
+  });
+
+  it("rejects an unknown bodyMode for get_entry_detail", async () => {
+    await expect(
+      callRegistryTool(
+        "get_entry_detail",
+        { category: skill.category, slug: skill.slug, bodyMode: "summary" },
+        { dataDir },
+      ),
+    ).resolves.toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_request",
+        details: expect.arrayContaining([
+          expect.objectContaining({ path: "bodyMode" }),
+        ]),
+      },
+    });
+  });
+
+  it("recommends best-match entries for a task with inline install", async () => {
+    const result = await callRegistryTool(
+      "recommend_for_task",
+      { task: "review pull requests", limit: 3 },
+      { dataDir },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      task: "review pull requests",
+      count: expect.any(Number),
+      topPick: expect.any(String),
+      recommendations: expect.any(Array),
+      installPlan: expect.any(Array),
+      trustSummary: expect.any(Object),
+      notes: expect.any(Array),
+    });
+    expect(result.recommendations.length).toBeGreaterThan(0);
+    expect(result.recommendations.length).toBeLessThanOrEqual(3);
+    expect(result.topPick).toBe(result.recommendations[0].key);
+
+    const pick = result.recommendations[0];
+    expect(pick).toMatchObject({
+      key: expect.any(String),
+      category: expect.any(String),
+      slug: expect.any(String),
+      why: expect.any(Array),
+      install: expect.objectContaining({ installable: expect.any(Boolean) }),
+    });
+    // installPlan only lists entries that actually publish a command.
+    for (const planned of result.installPlan) {
+      expect(typeof planned.installCommand).toBe("string");
+      expect(planned.installCommand.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("rejects an empty recommend_for_task task", async () => {
+    await expect(
+      callRegistryTool("recommend_for_task", { task: " " }, { dataDir }),
+    ).resolves.toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
+    });
+  });
+
   it("plans a ranked read-only workflow toolbox", async () => {
     const result = await callRegistryTool(
       "plan_workflow_toolbox",
@@ -723,8 +886,21 @@ describe("HeyClaude read-only MCP helpers", () => {
   });
 
   it("returns trust-aware planner metadata with bounded category diversity", async () => {
+    const entryDetails: Record<string, { entry: Record<string, unknown> }> = {
+      "entries/mcp/workflow-audit-mcp.json": {
+        entry: {
+          category: "mcp",
+          slug: "workflow-audit-mcp",
+          installable: true,
+          installCommand: "npx -y workflow-audit-mcp",
+          configSnippet: '{"mcpServers":{"audit":{}}}',
+        },
+      },
+    };
     const readJsonArtifact = async (relativePath: string) => {
-      expect(relativePath).toBe("search-index.json");
+      if (relativePath !== "search-index.json") {
+        return entryDetails[relativePath] ?? null;
+      }
       return {
         entries: [
           {
@@ -832,11 +1008,36 @@ describe("HeyClaude read-only MCP helpers", () => {
         expect.stringContaining("get_copyable_asset"),
       ]),
     );
+
+    // Inline install surface is pulled from the full entry payload...
+    const auditEntry = result.entries.find(
+      (entry: any) => entry.slug === "workflow-audit-mcp",
+    );
+    expect(auditEntry.install).toMatchObject({
+      installable: true,
+      installCommand: "npx -y workflow-audit-mcp",
+      configSnippet: '{"mcpServers":{"audit":{}}}',
+    });
+    // ...and surfaced in the consolidated install plan.
+    expect(result.installPlan).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          key: "mcp:workflow-audit-mcp",
+          installCommand: "npx -y workflow-audit-mcp",
+        }),
+      ]),
+    );
+    // Entries without a published install command fall back gracefully.
+    const sourceEntry = result.entries.find(
+      (entry: any) => entry.slug === "workflow-source-mcp",
+    );
+    expect(sourceEntry.install).toMatchObject({ installable: false });
+    expect(sourceEntry.install.installCommand).toBeUndefined();
   });
 
   it("does not fill planner results with unrelated trust-only matches", async () => {
     const readJsonArtifact = async (relativePath: string) => {
-      expect(relativePath).toBe("search-index.json");
+      if (relativePath !== "search-index.json") return null;
       return {
         entries: [
           {
@@ -877,7 +1078,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("matches a lowercase planner goal against mixed-case entry text", async () => {
     const readJsonArtifact = async (relativePath: string) => {
-      expect(relativePath).toBe("search-index.json");
+      if (relativePath !== "search-index.json") return null;
       return {
         entries: [
           {
@@ -922,7 +1123,9 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("rejects blank planner goals when called directly", async () => {
     const readJsonArtifact = async () => {
-      throw new Error("Expected direct planner validation before artifact read.");
+      throw new Error(
+        "Expected direct planner validation before artifact read.",
+      );
     };
 
     await expect(
@@ -938,7 +1141,9 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("rejects 1-character planner goals when called directly", async () => {
     const readJsonArtifact = async () => {
-      throw new Error("Expected direct planner validation before artifact read.");
+      throw new Error(
+        "Expected direct planner validation before artifact read.",
+      );
     };
 
     await expect(
@@ -1198,6 +1403,54 @@ describe("HeyClaude read-only MCP helpers", () => {
       reviewNotes: expect.arrayContaining([
         expect.stringContaining("metadata review"),
       ]),
+    });
+  });
+
+  it("filters get_copyable_asset to a single requested assetType", async () => {
+    const full = await callRegistryTool(
+      "get_copyable_asset",
+      { category: skill.category, slug: skill.slug },
+      { dataDir },
+    );
+    expect(full.requestedAssetType).toBe("");
+    expect(full.assets.length).toBeGreaterThan(0);
+
+    const wantType = full.assets[0].type;
+    const filtered = await callRegistryTool(
+      "get_copyable_asset",
+      { category: skill.category, slug: skill.slug, assetType: wantType },
+      { dataDir },
+    );
+    expect(filtered.ok).toBe(true);
+    expect(filtered.requestedAssetType).toBe(wantType);
+    expect(filtered.assets.every((a: any) => a.type === wantType)).toBe(true);
+    expect(filtered.assets.length).toBeLessThanOrEqual(full.assets.length);
+    expect(filtered.primaryAsset?.type).toBe(wantType);
+
+    // Requesting an assetType the entry lacks returns an empty list, not an error.
+    const absent = await callRegistryTool(
+      "get_copyable_asset",
+      { category: skill.category, slug: skill.slug, assetType: "items" },
+      { dataDir },
+    );
+    expect(absent.ok).toBe(true);
+    expect(absent.assets.every((a: any) => a.type === "items")).toBe(true);
+
+    // Unknown assetType is rejected by the schema.
+    await expect(
+      callRegistryTool(
+        "get_copyable_asset",
+        { category: skill.category, slug: skill.slug, assetType: "nope" },
+        { dataDir },
+      ),
+    ).resolves.toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_request",
+        details: expect.arrayContaining([
+          expect.objectContaining({ path: "assetType" }),
+        ]),
+      },
     });
   });
 
@@ -1802,6 +2055,27 @@ describe("HeyClaude read-only MCP helpers", () => {
   });
 
   describe("trust-review helper edge cases", () => {
+    // Find an entry that GENUINELY has no safety/privacy notes by reading entry
+    // detail files (directory-index strips notes). Assuming a specific entry is
+    // note-less is brittle — content enrichment adds notes over time.
+    function findEntryWithoutNotes(category: string) {
+      const dir = path.join(dataDir, "entries", category);
+      for (const file of fs.readdirSync(dir).sort()) {
+        const detail = JSON.parse(
+          fs.readFileSync(path.join(dir, file), "utf8"),
+        ) as {
+          entry?: { slug: string; safetyNotes?: string; privacyNotes?: string };
+        };
+        const entry = detail.entry;
+        if (entry && !entry.safetyNotes && !entry.privacyNotes) {
+          return { category, slug: entry.slug };
+        }
+      }
+      throw new Error(
+        `No ${category} entry without safety/privacy notes found`,
+      );
+    }
+
     it("explains trust for entry with safety and privacy notes", async () => {
       const trust = await callRegistryTool(
         "explain_entry_trust",
@@ -1826,14 +2100,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     it("explains trust for entry without safety or privacy notes", async () => {
-      const directory = JSON.parse(
-        fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
-      ) as {
-        entries: Array<{ category: string; slug: string }>;
-      };
-      const entryWithoutNotes = directory.entries.find(
-        (e) => e.category === "hooks" && e.slug !== "documentation-generator",
-      );
+      const entryWithoutNotes = findEntryWithoutNotes("hooks");
       expect(entryWithoutNotes).toBeTruthy();
 
       const trust = await callRegistryTool(
@@ -1976,17 +2243,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     it("reviews safety for entry without safety notes highlights manual inspection", async () => {
-      const directory = JSON.parse(
-        fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
-      ) as {
-        entries: Array<{ category: string; slug: string }>;
-      };
-      const entryWithoutNotes = directory.entries.find(
-        (e) =>
-          e.category === "hooks" &&
-          e.slug !== "documentation-generator" &&
-          e.slug !== "retro-daily",
-      );
+      const entryWithoutNotes = findEntryWithoutNotes("hooks");
       expect(entryWithoutNotes).toBeTruthy();
 
       const review = await callRegistryTool(

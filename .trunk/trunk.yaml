@@ -23,6 +23,11 @@ lint:
     - linters: [prettier]
       paths:
         - integrations/raycast/raycast-env.d.ts
+        # Author-submitted content (.mdx) is not prettier-governed — markdownlint
+        # still covers it. This stops pre-existing content formatting from failing
+        # the code `ci` lane (e.g. when a code PR's diff includes content changes)
+        # without bulk-reformatting community submissions.
+        - content/**
   enabled:
     - actionlint@1.7.12
     - checkov@3.2.525

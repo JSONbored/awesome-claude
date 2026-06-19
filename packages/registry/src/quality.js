@@ -33,15 +33,6 @@ function normalizeBodyForDuplicateCheck(entry) {
     .trim();
 }
 
-function hashString(value) {
-  let hash = 0;
-  for (let index = 0; index < value.length; index += 1) {
-    hash = (hash << 5) - hash + value.charCodeAt(index);
-    hash |= 0;
-  }
-  return Math.abs(hash).toString(36);
-}
-
 export function buildSourceProvenance(entry) {
   const sourceUrls = [
     entry.documentationUrl,
@@ -196,7 +187,9 @@ export function findDuplicateBodyGroups(entries) {
   for (const entry of entries) {
     const normalized = normalizeBodyForDuplicateCheck(entry);
     if (normalized.length < 180) continue;
-    const key = hashString(normalized);
+    // Key by the exact normalized body so two distinct bodies can't be reported
+    // as duplicates via a hash collision.
+    const key = normalized;
     const existing = buckets.get(key) ?? [];
     existing.push({
       key: `${entry.category}:${entry.slug}`,

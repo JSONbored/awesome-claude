@@ -22,7 +22,7 @@ function responseErrorMessage(data: unknown, fallback: string) {
 
 export async function subscribeToNewsletter(
   input: SubscribeInput,
-): Promise<{ ok: true } | { ok: false; error: string }> {
+): Promise<{ ok: true; pending: boolean } | { ok: false; error: string }> {
   try {
     const res = await fetch("/api/newsletter/subscribe", {
       method: "POST",
@@ -33,7 +33,10 @@ export async function subscribeToNewsletter(
     if (!res.ok) {
       return { ok: false, error: responseErrorMessage(data, `Subscribe failed (${res.status}).`) };
     }
-    return { ok: true };
+    // `pending` is true under double opt-in: a confirmation email was sent and
+    // the contact is added only after the user clicks the link.
+    const pending = Boolean((data as { pending?: unknown })?.pending);
+    return { ok: true, pending };
   } catch {
     return { ok: false, error: "Network error. Try again in a moment." };
   }

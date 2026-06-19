@@ -22,14 +22,14 @@ brandDomain: github.com
 repoUrl: "https://github.com/InditexTech/mcp-teams-server"
 documentationUrl: "https://github.com/InditexTech/mcp-teams-server/blob/master/README.md"
 installable: true
-installCommand: "uv run mcp-teams-server"
+installCommand: "uvx --from git+https://github.com/InditexTech/mcp-teams-server mcp-teams-server"
 usageSnippet: "Use MCP Teams Server only with a dedicated Azure Bot app, a scoped Team ID and Channel ID, and human review before Claude posts or mentions anyone."
 copySnippet: |-
   {
     "mcpServers": {
       "msteams": {
-        "command": "uv",
-        "args": ["run", "mcp-teams-server"],
+        "command": "uvx",
+        "args": ["--from", "git+https://github.com/InditexTech/mcp-teams-server", "mcp-teams-server"],
         "env": {
           "TEAMS_APP_ID": "<entra-app-id>",
           "TEAMS_APP_PASSWORD": "<client-secret>",
@@ -45,8 +45,8 @@ configSnippet: |-
   {
     "mcpServers": {
       "msteams": {
-        "command": "uv",
-        "args": ["run", "mcp-teams-server"],
+        "command": "uvx",
+        "args": ["--from", "git+https://github.com/InditexTech/mcp-teams-server", "mcp-teams-server"],
         "env": {
           "TEAMS_APP_ID": "<entra-app-id>",
           "TEAMS_APP_PASSWORD": "<client-secret>",
@@ -61,7 +61,7 @@ configSnippet: |-
 estimatedSetupTime: 30 minutes
 difficulty: advanced
 prerequisites:
-  - Python 3.10 and uv available to the MCP client runtime.
+  - Python 3.10 and uv/uvx available to the MCP client runtime.
   - Microsoft Teams account and a Team/Channel where the bot app is installed.
   - Microsoft Entra ID application registration with client secret credentials.
   - Azure Bot registration connected to the Microsoft Teams channel.
@@ -74,6 +74,7 @@ safetyNotes:
   - Channel read tools can expose existing conversations, replies, message IDs, pagination cursors, and team member context to the model.
   - The required Microsoft Graph permission includes ChannelMessage.Read.All resource-specific consent, and Teams app permissions include message send/read and member read scopes.
   - Use a dedicated bot application, scoped Team ID, scoped Channel ID, least-privilege permissions, and explicit approval for every write operation.
+  - Launch with `uvx --from git+https://github.com/InditexTech/mcp-teams-server mcp-teams-server` or from a verified checkout; do not use plain `uv run mcp-teams-server` from untrusted workspaces because local projects, virtual environments, or PATH entries can hijack the executable while receiving Teams secrets.
 privacyNotes:
   - Teams channels can contain customer data, employee names, emails, incident details, roadmap discussions, support conversations, credentials, links, and confidential attachments or references.
   - Tool calls and logs can expose TEAMS_APP_ID, tenant IDs, team IDs, channel IDs, thread IDs, message IDs, member names, member emails, message bodies, replies, mentions, and pagination cursors.
@@ -157,8 +158,8 @@ the dedicated bot credentials:
 {
   "mcpServers": {
     "msteams": {
-      "command": "uv",
-      "args": ["run", "mcp-teams-server"],
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/InditexTech/mcp-teams-server", "mcp-teams-server"],
       "env": {
         "TEAMS_APP_ID": "<entra-app-id>",
         "TEAMS_APP_PASSWORD": "<client-secret>",

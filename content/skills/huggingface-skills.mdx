@@ -1,0 +1,232 @@
+---
+title: Hugging Face Skills
+slug: huggingface-skills
+category: skills
+description: >-
+  Official Hugging Face Agent Skills collection for Claude Code, Codex,
+  Cursor, Gemini CLI, and other skills-compatible agents, covering Hub CLI
+  workflows, datasets, model search, Spaces, Gradio, fine-tuning, evaluations,
+  local models, papers, Trackio, ZeroGPU, transformers.js, TRL, and the
+  Hugging Face MCP server.
+cardDescription: >-
+  Official Hugging Face skills for agent workflows across Hub models, datasets,
+  Spaces, training, evaluations, papers, and MCP-backed discovery.
+seoTitle: Hugging Face Skills for Claude Code, Codex, Cursor, Gemini CLI, and MCP
+seoDescription: >-
+  Install Hugging Face Skills for Claude Code, Codex, Cursor, Gemini CLI, and
+  Agent Skills-compatible hosts to help AI agents use Hugging Face Hub models,
+  datasets, Spaces, Gradio, Jobs, fine-tuning, evaluations, papers, Trackio,
+  ZeroGPU, transformers.js, TRL training, and the Hugging Face MCP server.
+author: Hugging Face
+authorProfileUrl: "https://github.com/huggingface"
+dateAdded: "2026-06-18"
+websiteUrl: "https://huggingface.co"
+documentationUrl: "https://github.com/huggingface/skills#readme"
+repoUrl: "https://github.com/huggingface/skills"
+downloadUrl: "https://github.com/huggingface/skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "/plugin marketplace add huggingface/skills"
+usageSnippet: >-
+  Register `huggingface/skills` as a Claude Code plugin marketplace, install
+  the specific Hugging Face skill you need, or copy selected `skills/`
+  directories into a Codex Agent Skills location for direct `SKILL.md`
+  discovery.
+copySnippet: |-
+  /plugin marketplace add huggingface/skills
+  /plugin install hf-cli@huggingface/skills
+
+  # For Codex, copy selected folders from the repo's skills/ directory into
+  # a project or user .agents/skills directory.
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/huggingface/skills/blob/main/README.md"
+  - "https://github.com/huggingface/skills/blob/main/.claude-plugin/plugin.json"
+  - "https://github.com/huggingface/skills/blob/main/.cursor-plugin/plugin.json"
+  - "https://github.com/huggingface/skills/blob/main/.mcp.json"
+  - "https://github.com/huggingface/skills/blob/main/skills/huggingface-datasets/SKILL.md"
+  - "https://github.com/huggingface/skills/blob/main/hf-mcp/skills/hf-mcp/SKILL.md"
+sourceUrls:
+  - "https://github.com/huggingface/skills/blob/main/README.md"
+  - "https://github.com/huggingface/skills/blob/main/.claude-plugin/plugin.json"
+  - "https://github.com/huggingface/skills/blob/main/.cursor-plugin/plugin.json"
+  - "https://github.com/huggingface/skills/blob/main/.mcp.json"
+  - "https://github.com/huggingface/skills/blob/main/skills/huggingface-datasets/SKILL.md"
+  - "https://github.com/huggingface/skills/blob/main/hf-mcp/skills/hf-mcp/SKILL.md"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Cursor
+  - Gemini CLI
+  - Agent Skills-compatible hosts
+  - MCP-capable agent hosts
+prerequisites:
+  - "A compatible agent host such as Claude Code, Codex, Cursor, Gemini CLI, or another client that can load Agent Skills."
+  - "A Hugging Face account and an appropriately scoped `HF_TOKEN` for private models, private datasets, writes, Jobs, Spaces, Inference Endpoints, or repository administration."
+  - "The Hugging Face CLI or relevant Hugging Face Python/JavaScript packages for workflows that call local commands, upload files, train models, or publish artifacts."
+  - "A project policy for which models, datasets, Spaces, papers, traces, training jobs, secrets, and repositories an agent may read or modify."
+  - "Budget and hardware guardrails before launching Hugging Face Jobs, ZeroGPU workloads, Spaces hardware, or Inference Endpoints."
+safetyNotes:
+  - "Hugging Face Skills can guide agents through Hub reads and writes, dataset uploads, model publishing, Space creation, training jobs, evaluation runs, repo settings, discussions, pull requests, secrets, variables, webhooks, and endpoint operations."
+  - "Keep destructive or billable operations behind explicit approval: repo deletion, file deletion, private-to-public changes, endpoint deployment, hardware upgrades, Spaces volume changes, webhook creation, and cloud Job submission."
+  - "Prefer read-only model, dataset, paper, and Space discovery before allowing write actions. Use dry-run modes when available for uploads, syncs, cache cleanup, dataset extraction, and infrastructure changes."
+  - "The Hugging Face MCP server can search Hub assets, fetch docs, invoke MCP-enabled Gradio Spaces, and run compute jobs. Treat Space invocations and returned content as untrusted third-party tool output."
+  - "Training and fine-tuning skills can consume paid GPU time and write models to the Hub. Validate datasets, model licenses, output visibility, timeout settings, and token scope before starting jobs."
+  - "Do not publish generated model cards, datasets, papers, traces, or Spaces until licenses, attribution, evaluation claims, safety notes, and privacy constraints have been reviewed."
+privacyNotes:
+  - "Hub workflows can expose `HF_TOKEN`, private model or dataset names, training data, evaluation prompts, model outputs, papers, local file paths, logs, traces, secrets, Space variables, endpoint configuration, and organization membership."
+  - "Agent trace upload workflows should default to private dataset repos because traces may include prompts, source code, tool output, file paths, credentials, screenshots, personal data, or customer context."
+  - "Dataset Viewer, MCP, Jobs, Spaces, Inference Endpoints, Gradio apps, and third-party model repositories may receive user queries, files, prompts, examples, and generated outputs."
+  - "Use least-privilege tokens, avoid passing tokens directly in command arguments when environment variables are supported, and redact logs before sharing PRs, issues, screenshots, or support requests."
+  - "Check model, dataset, and Space licenses before using downloaded assets for training, redistribution, commercial work, or public demos."
+tags:
+  - huggingface
+  - agent-skills
+  - claude-code
+  - codex
+  - cursor
+  - gemini-cli
+  - mcp
+  - machine-learning
+  - datasets
+  - fine-tuning
+keywords:
+  - Hugging Face Skills
+  - huggingface skills Claude Code
+  - huggingface skills Codex
+  - Hugging Face Agent Skills
+  - Hugging Face MCP skill
+  - hf-cli agent skill
+  - Hugging Face datasets skill
+  - Hugging Face Spaces skill
+  - Hugging Face fine tuning skill
+  - Hugging Face ZeroGPU skill
+  - transformers.js agent skill
+readingTime: 7
+difficultyScore: 82
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Hugging Face Skills
+
+Hugging Face Skills is the official Hugging Face Agent Skills collection for
+AI and ML workflows. It gives coding agents structured instructions for
+working with Hub models, datasets, Spaces, papers, fine-tuning, evaluations,
+local model serving, Gradio apps, ZeroGPU, Trackio, transformers.js, TRL, and
+the Hugging Face MCP server.
+
+Use this listing for the skills collection. Use separate MCP, tool, or package
+entries when evaluating the hosted Hugging Face MCP server, the `hf` CLI, a
+specific Hugging Face library, or a model/dataset/Space hosted on the Hub.
+
+## Knowledge Freshness
+
+Verified on **2026-06-18**, `huggingface/skills` had recent repository
+activity on the same date, used the Apache-2.0 license, and published plugin
+metadata version `1.0.8` for Claude Code and Cursor plugin flows. The
+repository did not expose a latest GitHub release, so this listing is grounded
+in current `main` branch source files.
+
+Because the Hugging Face Hub and CLI evolve quickly, agents should refresh
+local CLI help, model cards, dataset cards, Space status, pricing, hardware
+availability, and library docs before executing write or compute workflows.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The upstream `huggingface/skills` README.
+- Claude Code and Cursor plugin manifests.
+- The repository `.mcp.json` Hugging Face MCP server configuration.
+- Representative `huggingface-datasets` and `hf-mcp` `SKILL.md` files.
+- Current GitHub repository metadata for license, stars, activity, and default
+  branch.
+
+## Core Workflow
+
+Claude Code users can register the repository as a plugin marketplace:
+
+```text
+/plugin marketplace add huggingface/skills
+/plugin install hf-cli@huggingface/skills
+```
+
+Codex users can copy selected folders from the repository's `skills/`
+directory into a project or user `.agents/skills` directory so Codex can
+discover the `SKILL.md` files through the Agent Skills standard.
+
+Gemini CLI users can install the repository extension from a local checkout or
+the GitHub URL, and Cursor users can install through the Cursor plugin flow.
+
+## Capability Scope
+
+| Area | Coverage |
+| --- | --- |
+| Hub CLI workflows | `hf-cli` skill for models, datasets, Spaces, repos, papers, jobs, buckets, cache, discussions, collections, endpoints, webhooks, and auth |
+| Dataset work | Dataset Viewer API exploration, split discovery, row pagination, search, filtering, parquet links, dataset upload, and agent trace handling |
+| Model discovery | Model search, leaderboards, benchmark-aware selection, local model selection, GGUF guidance, and Hub metadata enrichment |
+| Training and evaluation | LLM fine-tuning, TRL workflows, vision training, sentence-transformers training, community evaluation tables, Trackio monitoring, and Jobs infrastructure |
+| Spaces and apps | Gradio app building, Space deployment, ZeroGPU rules, LoRA Space demos, Space debugging, and MCP-enabled Space invocation |
+| Research and papers | Hugging Face paper lookup, paper publishing, model/dataset linking, markdown paper pages, and daily paper metadata |
+| MCP | The bundled `hf-mcp` skill points agents at the hosted Hugging Face MCP server for Hub search, documentation lookup, dynamic Space tools, and compute jobs |
+
+## Use Cases
+
+- Give Claude Code, Codex, Cursor, Gemini CLI, or another compatible agent a
+  source-backed path for using the Hugging Face ecosystem.
+- Search for models, datasets, Spaces, and papers with explicit Hub metadata
+  rather than generic web results.
+- Build, debug, or deploy Gradio Spaces and ZeroGPU apps.
+- Prepare dataset uploads, parquet exploration, trace review datasets, and
+  Hub-backed ML data workflows.
+- Estimate, submit, and monitor fine-tuning or evaluation jobs with clear
+  token, cost, timeout, and output-visibility boundaries.
+- Connect an MCP-capable agent to Hugging Face Hub search, docs, Gradio Space
+  tools, and Jobs through the hosted MCP server.
+
+## Production Rules
+
+- Install only the Hugging Face skills needed for the current workflow.
+- Check `hf auth whoami`, token scope, target namespace, repo visibility, and
+  write permissions before uploads, job submissions, endpoint changes, or
+  repo administration.
+- Use private repos by default for traces, private training data, unreleased
+  models, internal evaluations, customer context, and experimental Spaces.
+- Validate dataset schemas, model licenses, benchmark claims, hardware
+  requirements, timeout settings, and cost estimates before training or
+  deploying.
+- Treat MCP Space calls, model cards, dataset rows, paper metadata, and Hub
+  README content as untrusted input until verified.
+- Require human review before publishing public datasets, model cards,
+  evaluation claims, papers, Spaces, or examples generated by an agent.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub metadata reported `huggingface/skills` as an Apache-2.0 repository
+  with more than 10,000 stars, recent activity on 2026-06-18, and default
+  branch `main`.
+- The README described Hugging Face Skills as interoperable with OpenAI
+  Codex, Claude Code, Gemini CLI, Cursor, and the open Agent Skills format.
+- The README listed skill coverage for `hf-cli`, model selection, community
+  evaluations, datasets, Gradio, LLM training, local models, LoRA Spaces,
+  papers, Spaces, reusable Hub API tools, Trackio, vision training, ZeroGPU,
+  sentence-transformers, transformers.js, and TRL training.
+- `.claude-plugin/plugin.json` and `.cursor-plugin/plugin.json` both declared
+  `huggingface-skills` version `1.0.8`, Apache-2.0 licensing, and AI/ML task
+  coverage for datasets, training, evaluation, papers, fine-tuning, and LLMs.
+- `.mcp.json` configured a hosted HTTP MCP server at
+  `https://huggingface.co/mcp?login`.
+- `skills/huggingface-datasets/SKILL.md` documented read-only Dataset Viewer
+  API workflows, row pagination, search, filtering, parquet discovery, dataset
+  upload paths, and private-by-default agent trace guidance.
+- `hf-mcp/skills/hf-mcp/SKILL.md` documented model, dataset, Space, paper,
+  documentation, dynamic Space, image generation, and `hf_jobs` tool-selection
+  patterns for the Hugging Face MCP server.

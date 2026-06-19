@@ -1,0 +1,225 @@
+---
+title: README Catalog Integrity Review Capability Pack Skill
+slug: readme-catalog-integrity-review-capability-pack
+category: skills
+description: >-
+  Expert README and catalog integrity review capability pack for validating
+  generated README tables against raw content files, slug consistency, broken
+  links, duplicate entries, and source URL reachability before merge.
+cardDescription: >-
+  Audit README catalog integrity against content sources, slugs, links, and
+  duplicates before publishing or merging catalog changes.
+seoTitle: README Catalog Integrity Review Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for README catalog integrity review: slug alignment,
+  link checks, duplicate detection, and content-to-catalog consistency validation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 728
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/728"
+repoUrl: "https://github.com/JSONbored/awesome-claude"
+documentationUrl: "https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md"
+downloadUrl: "https://github.com/JSONbored/awesome-claude/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when reviewing a content catalog PR or regenerating README output
+  and you need to verify every listed entry maps to one raw MDX file, slugs match
+  paths, links resolve, and duplicates are absent before merge.
+copySnippet: |-
+  # Trigger
+  "Apply the README catalog integrity review capability pack."
+
+  # Required output
+  1) Content file to catalog row mapping with slug alignment
+  2) Broken or redirected link inventory
+  3) Duplicate title, slug, repo, and docs URL findings
+  4) Generated-artifact boundary violations (if any)
+  5) Privacy-safe integrity summary with pass/fail recommendation
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/examples/content/SCHEMA.md"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Repository with raw `content/<category>/<slug>.mdx` sources and generated README or registry artifacts."
+  - "Diff or file list showing which content entries changed in the PR under review."
+  - "Network access or cached evidence to verify HTTP reachability of frontmatter URLs."
+  - "Contributor context for whether the PR should touch only one raw content file."
+safetyNotes:
+  - "Catalog integrity review is read-only analysis; do not auto-merge PRs that edit generated README, workflows, or bulk artifacts unless policy explicitly allows it."
+  - "Flag entries whose frontmatter URLs redirect to unrelated products, parked pages, or affiliate landings."
+  - "One-file content PR policy violations often indicate accidental scope creep—surface them before maintainer review."
+  - "This skill validates integrity; it must not approve catalogs with unreachable canonical sources or unresolved duplicate slugs."
+privacyNotes:
+  - "Integrity logs may include internal staging URLs or private fork names if reviewers paste raw fetch output."
+  - "README tables can expose contributor GitHub usernames and submission issue numbers—redact customer-specific fork names in public summaries."
+  - "Public reports should list pass/fail counts and representative examples, not full HTTP response bodies."
+tags:
+  - readme
+  - catalog-integrity
+  - content-validation
+  - duplicate-check
+  - capability-pack
+  - heyClaude
+keywords:
+  - README catalog integrity review
+  - content catalog slug alignment
+  - awesome claude duplicate check
+  - generated README validation
+  - content file catalog mapping
+  - HeyClaude catalog review
+readingTime: 8
+difficultyScore: 72
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in HeyClaude `CONTRIBUTING.md`, content schema
+examples, and Claude Code skills documentation verified on **2026-06-16**.
+Submission rules, validation scripts, and generated-artifact boundaries can
+change; prefer live repository docs and CI policy over cached assumptions.
+
+## Retrieval Sources
+
+- https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md
+- https://github.com/JSONbored/awesome-claude/blob/main/examples/content/SCHEMA.md
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against HeyClaude contribution docs and Claude Code skills documentation
+on **2026-06-16**:
+
+- HeyClaude content PRs should add exactly one raw `content/<category>/<slug>.mdx`
+  file; README and registry outputs are generated by maintainer automation.
+- Frontmatter requires verifiable source URLs, practical safety and privacy notes,
+  and duplicate checks documented in the submission.
+- Content schema examples define slug, category, and metadata fields that must
+  align with on-disk paths for catalog integrity.
+- Claude Code skills use `SKILL.md`-style reusable instructions; this pack adapts
+  that pattern for catalog reviewers rather than runtime coding agents.
+- Google Search Central helpful-content guidance supports evaluating whether catalog
+  copy is useful and source-backed rather than promotional filler.
+
+## Scope Note
+
+This is not a replacement for CI validators or maintainer merge bots. Use it as a
+reusable review workflow for humans and agents checking README catalog integrity
+before approving content submissions or investigating drift reports.
+
+## Core Workflow
+
+1. Inventory changed files: confirm the PR touches one raw MDX source unless an
+   explicit maintainer regeneration PR is in scope.
+2. Map catalog rows to `content/<category>/<slug>.mdx` paths; flag slug or
+   category mismatches.
+3. Verify frontmatter URLs (`documentationUrl`, `repoUrl`, `downloadUrl`,
+   `authorProfileUrl`, listed `sourceUrls`) for reachability and canonical choice.
+4. Search for duplicates by title, slug, repo URL, docs domain, and overlapping
+   purpose across `content/` and open PRs.
+5. Compare README or site catalog text against source frontmatter titles and
+   descriptions for truncation or stale aliases.
+6. Check generated-artifact boundaries: contributor PRs should not hand-edit
+   README tables, lockfiles, or CI scripts without maintainer direction.
+7. Assess safety and privacy notes against listed tools; flag generic placeholder
+   notes that do not describe runtime risk.
+8. Produce a pass/fail integrity summary with required fixes before merge.
+
+## Capability Scope
+
+- Content file to catalog row mapping and slug alignment.
+- Broken, redirected, or parked link inventory.
+- Duplicate title, slug, repo, and documentation URL detection.
+- Generated-artifact boundary violation surfacing.
+- Source URL reachability and canonical URL assessment.
+- Privacy-safe integrity reporting for PR or gate review.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when reviewing HeyClaude content
+  PRs, auditing README drift, or preparing maintainer triage notes.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic catalog review checklist in content ops runbooks.
+
+## Required Inputs
+
+- PR diff or file list with category, slug, and frontmatter URLs.
+- Reachability evidence for listed URLs (status code, final URL, date).
+- Duplicate search results across `content/` directories and open PRs.
+- Policy context for one-file submissions and generated README boundaries.
+
+## Production Rules
+
+- Prefer one canonical verifiable URL in `documentationUrl`; supporting links belong
+  in `sourceUrls` or `retrievalSources`.
+- Fail reviews when slug path disagrees with frontmatter `slug` or `category`.
+- Do not approve catalogs listing entries whose primary docs return 404 or parked pages.
+- Record verification date and concrete fetched facts in review output.
+- Redact tokens, internal URLs, and customer examples from public summaries.
+- Separate helpful-content quality from link reachability; both are required.
+
+## Review Matrix
+
+| Signal | Pass | Fail | Action |
+| --- | --- | --- | --- |
+| Slug path | Matches `content/<category>/<slug>.mdx` | Mismatch or missing file | Fix frontmatter or path |
+| One-file PR | Single raw MDX changed | README or bulk edits | Split or close PR |
+| Canonical URL | Live official or repo docs | 404 or parked page | Fix URL or close entry |
+| Duplicates | Distinct purpose and slug | Same repo or workflow | Close or differentiate |
+| Catalog row | Title/description aligned | Stale or truncated alias | Regenerate or fix source |
+| Safety notes | Specific runtime risk | Generic N/A placeholder | Rewrite notes |
+
+## Output Contract
+
+1. Content file to catalog row mapping with slug alignment results.
+2. Broken or redirected link inventory with final URLs.
+3. Duplicate findings across title, slug, repo, and docs URL dimensions.
+4. Generated-artifact boundary violations (if any).
+5. Pass/fail recommendation with required fixes.
+6. Privacy-safe integrity summary for PR or gate review.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open pull
+requests for README catalog integrity, content catalog validation, and HeyClaude
+duplicate review workflows. `source-backed-content-prs` teaches submission
+authoring; `agent-skills-retrieval-source-verification-capability-pack` focuses on
+skill source URLs—not README row alignment against `content/` paths. No existing
+`skills` entry provides a reusable README catalog integrity review capability pack
+with mapping workflow, review matrix, and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public HeyClaude contribution docs, content schema
+examples, Claude Code skills documentation, and Google Search Central
+helpful-content guidance. No paid placement, referral link, affiliate link, or
+vendor sponsorship is used.

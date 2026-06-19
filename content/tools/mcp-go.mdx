@@ -1,0 +1,199 @@
+---
+title: mcp-go
+slug: mcp-go
+category: tools
+description: >-
+  MIT-licensed Go implementation of the Model Context Protocol for building MCP
+  servers and clients with tools, resources, prompts, stdio, SSE, Streamable
+  HTTP, hooks, session management, validation, sampling, roots, and tracing.
+cardDescription: >-
+  Build MCP servers and clients in Go with a high-level SDK covering tools,
+  resources, prompts, transports, sessions, hooks, validation, and tracing.
+seoTitle: mcp-go Go SDK for Model Context Protocol Servers and Clients
+seoDescription: >-
+  Use mcp-go to build Model Context Protocol servers and clients in Go with
+  stdio, SSE, Streamable HTTP, tools, resources, prompts, session management,
+  hooks, sampling, roots, validation, and tracing.
+author: mark3labs
+authorProfileUrl: "https://github.com/mark3labs"
+dateAdded: "2026-06-18"
+websiteUrl: "https://mcp-go.dev/"
+documentationUrl: "https://pkg.go.dev/github.com/mark3labs/mcp-go"
+repoUrl: "https://github.com/mark3labs/mcp-go"
+packageUrl: "https://pkg.go.dev/github.com/mark3labs/mcp-go"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/mark3labs/mcp-go"
+  - "https://github.com/mark3labs/mcp-go/blob/main/README.md"
+  - "https://github.com/mark3labs/mcp-go/blob/main/go.mod"
+  - "https://github.com/mark3labs/mcp-go/blob/main/LICENSE"
+  - "https://pkg.go.dev/github.com/mark3labs/mcp-go"
+installable: true
+installCommand: "go get github.com/mark3labs/mcp-go"
+usageSnippet: >-
+  Add `github.com/mark3labs/mcp-go` to a Go project, create an MCP server with
+  typed tools, resources, or prompts, and serve it over stdio, SSE, or
+  Streamable HTTP depending on the client boundary.
+copySnippet: |-
+  go get github.com/mark3labs/mcp-go
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Go toolchain compatible with the module's current `go.mod` requirements."
+  - "A defined MCP client boundary, such as stdio for local clients or Streamable HTTP/SSE for networked clients."
+  - "Reviewed tool, resource, and prompt schemas before exposing application behavior to LLM clients."
+  - "Authentication, authorization, and transport security plan for any non-local MCP server."
+safetyNotes:
+  - "mcp-go is a library for exposing application behavior through MCP; the risk depends on the tools, resources, prompts, and transports built with it."
+  - "Treat tool handlers like API endpoints: validate inputs, enforce authorization, bound side effects, and return safe errors."
+  - "Use stdio for local-only workflows when possible; add authentication, TLS, rate limits, request logging, and origin controls for HTTP or SSE deployments."
+  - "Session, hook, task, sampling, roots, and tracing features can affect control flow or expose extra context, so review them before production use."
+privacyNotes:
+  - "MCP servers built with mcp-go may expose resource contents, tool arguments, prompt templates, request metadata, session state, traces, logs, and application errors to MCP clients and model providers."
+  - "Do not include secrets, internal identifiers, customer data, or privileged paths in tool descriptions, validation errors, logs, traces, or examples."
+  - "Network transports can expose MCP traffic beyond the local machine; document data retention, authentication, and observability behavior for each deployment."
+tags:
+  - go
+  - golang
+  - mcp
+  - sdk
+  - developer-tools
+  - protocol
+keywords:
+  - mcp-go
+  - Go MCP SDK
+  - Golang MCP server
+  - Model Context Protocol Go
+  - Go MCP client
+  - Streamable HTTP MCP Go
+  - MCP tools Go
+  - MCP resources Go
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+`mcp-go` is a Go SDK for building Model Context Protocol servers and clients. It
+provides high-level APIs for defining tools, resources, prompts, request
+handlers, transports, sessions, hooks, task-augmented tools, sampling, roots,
+validation, and tracing.
+
+Use it when a Go service needs to expose data or actions to Claude, Cursor,
+Codex, VS Code, custom MCP hosts, or another MCP-compatible client without
+hand-rolling the JSON-RPC protocol layer.
+
+## Core Capabilities
+
+| Area | mcp-go Coverage |
+| --- | --- |
+| Servers | `server.NewMCPServer`, tool/resource/prompt registration, request routing, recovery, and server options |
+| Tools | Typed tool schemas, argument helpers, handlers, validation, task tools, and middleware hooks |
+| Resources | Static resources, dynamic resource templates, MIME types, and resource handlers |
+| Prompts | Reusable prompt templates and prompt handlers |
+| Transports | stdio, SSE, Streamable HTTP, in-process sessions, and transport options |
+| Protocol Features | Session management, sampling, roots, elicitation, OAuth protected-resource metadata, and notifications |
+| Testing/Operations | Test helpers, tracing, hooks, output validation, panic recovery tests, and concurrency coverage |
+
+## Quick Start
+
+Install the module:
+
+```bash
+go get github.com/mark3labs/mcp-go
+```
+
+A minimal stdio server defines a tool and handler:
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+
+    "github.com/mark3labs/mcp-go/mcp"
+    "github.com/mark3labs/mcp-go/server"
+)
+
+func main() {
+    s := server.NewMCPServer(
+        "Demo",
+        "1.0.0",
+        server.WithToolCapabilities(false),
+    )
+
+    tool := mcp.NewTool("hello_world",
+        mcp.WithDescription("Say hello to someone"),
+        mcp.WithString("name", mcp.Required()),
+    )
+
+    s.AddTool(tool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+        name, err := request.RequireString("name")
+        if err != nil {
+            return mcp.NewToolResultError(err.Error()), nil
+        }
+        return mcp.NewToolResultText(fmt.Sprintf("Hello, %s!", name)), nil
+    })
+
+    if err := server.ServeStdio(s); err != nil {
+        panic(err)
+    }
+}
+```
+
+## MCP Fit
+
+Go teams can use `mcp-go` to expose existing service logic as MCP tools,
+resources, and prompts while keeping protocol handling in a library. The same
+server can start as a local stdio integration for desktop clients and later
+move to Streamable HTTP or SSE when a hosted boundary is needed.
+
+Because MCP tools are action surfaces, treat each handler with the same rigor
+as an internal API endpoint: validation, authorization, observability, and
+clear side-effect boundaries matter.
+
+## Use Cases
+
+- Build a Go MCP server around internal APIs, CLIs, databases, or developer
+  tools.
+- Expose structured resources from a Go service to MCP-compatible clients.
+- Add MCP support to an existing Go daemon or developer platform.
+- Prototype stdio MCP servers before deploying a network transport.
+- Use testing helpers and validation to keep tool schemas stable.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes `mcp-go` as a Go implementation of the Model
+  Context Protocol with tools, resources, prompts, transports, session
+  management, hooks, OAuth protected-resource metadata, and code generation
+  notes.
+- `go.mod` declares the module path `github.com/mark3labs/mcp-go` and current
+  Go/dependency requirements.
+- GitHub reports MIT licensing and active development for `mark3labs/mcp-go`.
+- pkg.go.dev resolves package documentation for `github.com/mark3labs/mcp-go`.
+
+## Safety and Privacy
+
+`mcp-go` itself is a library. The sensitive part is the server you build with
+it. Keep tool handlers narrow, validate all arguments, avoid broad filesystem or
+network access by default, and add explicit authentication before exposing
+HTTP/SSE transports outside localhost.
+
+Be careful with generated tool descriptions and error messages: they become
+model-visible context. Avoid leaking secrets, internal identifiers, private
+paths, customer records, or privileged operational details through schemas,
+logs, traces, or validation errors.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `mark3labs/mcp-go`, `mcp-go`, Go MCP
+SDK, Golang MCP server, Model Context Protocol Go, Go MCP client, Streamable
+HTTP MCP Go, and MCP tools Go. No dedicated `mcp-go` entry, exact source URL
+duplicate, target file, or open duplicate PR was found.

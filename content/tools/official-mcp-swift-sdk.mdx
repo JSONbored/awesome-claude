@@ -1,0 +1,178 @@
+---
+title: Official MCP Swift SDK
+slug: official-mcp-swift-sdk
+category: tools
+description: >-
+  Official Swift SDK for Model Context Protocol clients and servers, with Swift
+  Package Manager installation, Swift 6+ support, Apple platform availability,
+  MCP client and server APIs, stdio and HTTP transports, tools, resources,
+  prompts, sampling, authentication, and conformance executables.
+cardDescription: >-
+  Build MCP clients and servers in Swift with the official Swift SDK, Swift
+  Package Manager, Apple platform support, stdio and HTTP transports, and MCP
+  client/server APIs.
+seoTitle: Official MCP Swift SDK for Model Context Protocol Clients and Servers
+seoDescription: >-
+  Use the official Model Context Protocol Swift SDK to build MCP clients and
+  servers with Swift Package Manager, Swift 6+, Apple platforms, stdio and HTTP
+  transports, tools, resources, prompts, sampling, elicitation, and auth support.
+author: Model Context Protocol
+authorProfileUrl: "https://github.com/modelcontextprotocol"
+dateAdded: "2026-06-18"
+websiteUrl: "https://modelcontextprotocol.io"
+documentationUrl: "https://github.com/modelcontextprotocol/swift-sdk#readme"
+repoUrl: "https://github.com/modelcontextprotocol/swift-sdk"
+packageUrl: "https://github.com/modelcontextprotocol/swift-sdk"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/swift-sdk"
+  - "https://github.com/modelcontextprotocol/swift-sdk/blob/main/README.md"
+  - "https://github.com/modelcontextprotocol/swift-sdk/blob/main/Package.swift"
+  - "https://github.com/modelcontextprotocol/swift-sdk/blob/main/LICENSE"
+installable: true
+installCommand: ".package(url: \"https://github.com/modelcontextprotocol/swift-sdk.git\", from: \"0.11.0\")"
+usageSnippet: >-
+  Add the Swift package dependency, depend on the `MCP` product in your target,
+  then create a client or server with the transport that matches your app.
+copySnippet: |-
+  dependencies: [
+      .package(url: "https://github.com/modelcontextprotocol/swift-sdk.git", from: "0.11.0")
+  ]
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Swift 6.0+ and Xcode 16+ or a compatible Swift Package Manager toolchain."
+  - "A supported platform target such as macOS, iOS, tvOS, watchOS, visionOS, or Mac Catalyst."
+  - "A selected MCP transport, such as stdio for local integrations or HTTP for remote servers."
+  - "Authorization, side-effect, and data-exposure requirements for production tools and resources."
+safetyNotes:
+  - "The official Swift SDK is a protocol library; risk comes from your MCP tools, resources, prompts, transports, auth flows, and platform integration."
+  - "Validate tool inputs, enforce caller permissions, bound file and network access, and sanitize errors before returning MCP responses."
+  - "HTTP transports and bearer-token validation need authentication, TLS, request limits, token storage review, logging policy, and abuse protection."
+  - "Apple platform availability differs across macOS, iOS, tvOS, watchOS, visionOS, and Mac Catalyst; test the exact targets you ship."
+privacyNotes:
+  - "Swift MCP clients and servers may expose tool arguments, tool results, resource contents, prompt templates, auth tokens, HTTP metadata, logs, progress events, and errors."
+  - "Avoid leaking secrets, private files, customer data, internal identifiers, privileged paths, or raw stack traces through schemas, responses, errors, or logs."
+  - "Document which MCP client, server process, Apple platform, transport, model provider, and logging system can observe each request."
+tags:
+  - swift
+  - mcp
+  - sdk
+  - apple
+  - spm
+  - official
+keywords:
+  - official MCP Swift SDK
+  - Model Context Protocol Swift SDK
+  - Swift MCP server SDK
+  - Swift MCP client SDK
+  - Swift Package Manager MCP
+  - Apple MCP SDK
+  - MCP Swift HTTP transport
+  - MCP Swift authentication
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The official MCP Swift SDK is the Model Context Protocol project's Swift
+implementation for building MCP clients and servers. It supports Swift Package
+Manager installation, a library product named `MCP`, Apple platform targets, and
+both client and server APIs for the current MCP specification line documented by
+upstream.
+
+This is a focused fit for Apple-platform tools, macOS developer utilities,
+Swift server experiments, and agent workflows that need MCP support without
+leaving the Swift ecosystem.
+
+## Swift Package Manager
+
+Add the package dependency:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/modelcontextprotocol/swift-sdk.git", from: "0.11.0")
+]
+```
+
+Then add the product to your target:
+
+```swift
+.target(
+    name: "YourTarget",
+    dependencies: [
+        .product(name: "MCP", package: "swift-sdk")
+    ]
+)
+```
+
+## MCP Fit
+
+Choose the official Swift SDK when an Apple-platform app, macOS utility, Swift
+service, or developer tool needs to act as an MCP client or server. The SDK is
+especially relevant where Swift concurrency, Swift Package Manager, Apple
+platform availability, or local macOS integration matter.
+
+Production use still requires normal API review. Treat MCP tools as callable
+API endpoints and resources as model-visible data surfaces.
+
+## Core Capabilities
+
+| Area | Swift SDK Coverage |
+| --- | --- |
+| Product | `MCP` Swift Package Manager library product |
+| Platforms | macOS, Mac Catalyst, iOS, watchOS, tvOS, and visionOS availability in `Package.swift` |
+| Client APIs | Connect to MCP servers, list/call tools, read resources, prompts, completions, sampling, roots, and logging |
+| Server APIs | Tools, resources, prompts, completions, sampling, elicitations, roots, logging, initialize hook, and shutdown behavior |
+| Transports | stdio and HTTP transport coverage in upstream docs |
+| Auth | Client credential, authorization code, token provider/storage, private-key JWT, protected-resource metadata, and bearer-token validation docs |
+
+## Use Cases
+
+- Build a macOS MCP client or local developer utility in Swift.
+- Add MCP server behavior to a Swift service or Apple-platform tool.
+- Connect Swift apps to local stdio MCP servers.
+- Use HTTP transport for remote MCP servers.
+- Add MCP authentication support to Swift clients or protected resources.
+- Build conformance or testing utilities around the SDK's executable targets.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README identifies the project as the official Swift SDK for Model
+  Context Protocol.
+- The README says the SDK implements both client and server components according
+  to the 2025-11-25 MCP specification.
+- The README documents Swift 6.0+ and Xcode 16+ requirements.
+- The README documents Swift Package Manager installation with the
+  `modelcontextprotocol/swift-sdk.git` package URL and `MCP` product.
+- `Package.swift` declares the package name, `MCP` library product, Apple
+  platform availability, Swift tools version, transport/auth-related
+  dependencies, and conformance executable targets.
+- The license file documents the MCP project's license transition terms for
+  Apache-2.0, MIT, and CC-BY-4.0 documentation contributions.
+
+## Safety and Privacy
+
+Swift MCP clients and servers may run in user-facing apps or local macOS tools,
+where privacy expectations are high. Keep resources narrow, validate inputs,
+check user intent before side effects, and avoid logging secrets or private
+resource contents.
+
+For HTTP and authentication flows, review token storage, bearer-token
+validation, TLS, request limits, error handling, and platform-specific logging
+before production use.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `modelcontextprotocol/swift-sdk`,
+official MCP Swift SDK, Model Context Protocol Swift SDK, Swift MCP server SDK,
+Swift MCP client SDK, Swift Package Manager MCP, Apple MCP SDK, MCP Swift HTTP
+transport, and MCP Swift authentication. No dedicated official Swift SDK entry,
+exact source URL duplicate, target file, or open duplicate PR was found.

@@ -16,6 +16,8 @@ import {
   buildFeedSnapshotMetadata,
   buildContributeEntryUrl,
   buildEntrySummary,
+  buildInstallNotesSummary,
+  normalizeNotes,
   buildSuggestChangeUrl,
   buildSubmitPrUrl,
   categoryLabel,
@@ -94,6 +96,7 @@ import {
   extractClaudeMcpServerConfig,
   installMcpServer,
   installClaudeMcpServer,
+  isOneClickSafeStdioCommand,
   mcpConfigSupportsTarget,
   mcpInstallTargetsForConfig,
   mcpJsonConfigPathCandidates,
@@ -718,8 +721,18 @@ describe("Raycast feed helpers", () => {
     assert.equal(plan.getArgs.join(" "), "mcp get context7");
     assert.equal(plan.removeArgs.join(" "), "mcp remove context7");
     assert.match(plan.configJson, /@upstash\/context7-mcp/);
+    assert.equal(plan.serverPreview, "npx -y @upstash/context7-mcp");
     assert.deepEqual(plan.envPlaceholders, ["${CONTEXT7_API_KEY}"]);
     assert.match(plan.warnings.join(" "), /environment placeholders/i);
+  });
+
+  it("rejects path-qualified stdio allowlist commands for one-click installs", () => {
+    assert.equal(isOneClickSafeStdioCommand("npx"), true);
+    assert.equal(isOneClickSafeStdioCommand(" uvx "), true);
+    assert.equal(isOneClickSafeStdioCommand("/tmp/npx"), false);
+    assert.equal(isOneClickSafeStdioCommand("./npx"), false);
+    assert.equal(isOneClickSafeStdioCommand("..\\npx"), false);
+    assert.equal(isOneClickSafeStdioCommand("C:\\tools\\uvx"), false);
   });
 
   it("builds MCP install plans for Claude Code, Codex, Cursor, and Antigravity", () => {
@@ -847,6 +860,26 @@ describe("Raycast feed helpers", () => {
           detailMarkdown: "# Remote HTTP",
           configSnippet: JSON.stringify({
             mcpServers: { remote: remoteHttpConfig },
+          }),
+        }),
+      /not available/,
+    );
+
+    const arbitraryCommandConfig = {
+      command: "python3",
+      args: ["-c", 'print("owned")'],
+    };
+    assert.equal(
+      mcpConfigSupportsTarget(arbitraryCommandConfig, "claude-code"),
+      false,
+    );
+    assert.deepEqual(mcpInstallTargetsForConfig(arbitraryCommandConfig), []);
+    assert.throws(
+      () =>
+        buildMcpInstallPlan("claude-code", sampleEntry, {
+          detailMarkdown: "# Arbitrary command",
+          configSnippet: JSON.stringify({
+            mcpServers: { local: arbitraryCommandConfig },
           }),
         }),
       /not available/,
@@ -1211,6 +1244,50 @@ describe("Raycast feed helpers", () => {
       "[Context7](https://heyclau.de/mcp/context7)",
     );
     assert.match(buildEntrySummary(sampleEntry), /Fetch up-to-date docs/);
+  });
+
+  it("summarizes safety and privacy notes for install confirmation", () => {
+    assert.equal(buildInstallNotesSummary(undefined, undefined), "");
+    assert.equal(buildInstallNotesSummary([], ["   "]), "");
+
+    const summary = buildInstallNotesSummary(
+      ["Runs a server process", "Writes to your MCP config"],
+      ["Reads local credentials"],
+    );
+    assert.match(summary, /⚠️ Safety:/);
+    assert.match(summary, /• Runs a server process/);
+    assert.match(summary, /🔒 Privacy:/);
+    assert.match(summary, /• Reads local credentials/);
+
+    const capped = buildInstallNotesSummary(
+      ["one", "two", "three", "four", "five"],
+      undefined,
+    );
+    assert.match(capped, /• …and 2 more/);
+    assert.equal(/• one|• two|• three/.test(capped), true);
+    assert.equal(capped.includes("• four"), false);
+
+    // Tolerates malformed payloads without throwing (non-array / non-string).
+    assert.equal(
+      buildInstallNotesSummary(
+        "not-an-array" as unknown as string[],
+        [42, "  "] as unknown as string[],
+      ),
+      "\n\n🔒 Privacy:\n• 42",
+    );
+  });
+
+  it("normalizes notes and drops blank/malformed values", () => {
+    assert.deepEqual(normalizeNotes(undefined), []);
+    assert.deepEqual(normalizeNotes("nope" as unknown as string[]), []);
+    assert.deepEqual(normalizeNotes(["  ", "", " keep "]), ["keep"]);
+    // A whitespace-only "detail" list must not suppress a real entry fallback.
+    const detailNotes = ["   "];
+    const entryNotes = ["Real disclosure"];
+    const chosen = normalizeNotes(detailNotes).length
+      ? detailNotes
+      : entryNotes;
+    assert.deepEqual(chosen, entryNotes);
   });
 
   it("validates and parses full detail payloads", () => {

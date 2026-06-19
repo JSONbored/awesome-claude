@@ -327,13 +327,66 @@ export function buildEntryRelations(target, entries, params = {}) {
 export function buildRegistryRelationGraph(entries, params = {}) {
   const limit = params.limit ?? DEFAULT_RELATION_LIMIT;
 
+  // Candidate inverted index (#relation-index). scoreCandidate can only cross the score>=18 threshold
+  // when two entries share a collection ref, GitHub repo, source URL, source domain, or text token —
+  // category overlap alone tops out at 16 (<18). So gathering candidates from those buckets is COMPLETE
+  // (no entry that would relate is missed), turning the O(n^2) all-pairs scan into O(n * candidates).
+  // Candidates are fed to the unchanged buildEntryRelations in ORIGINAL order, and non-candidates would
+  // have scored null anyway, so the output is byte-identical to the all-pairs version.
+  const indexOf = new Map();
+  const byKey = new Map();
+  const repoBucket = new Map();
+  const urlBucket = new Map();
+  const domainBucket = new Map();
+  const tokenBucket = new Map();
+  const refsToKey = new Map();
+  const pushTo = (map, key, entry) => {
+    if (!key) return;
+    const list = map.get(key);
+    if (list) list.push(entry);
+    else map.set(key, [entry]);
+  };
+  entries.forEach((entry, i) => {
+    indexOf.set(entry, i);
+    byKey.set(entryKey(entry), entry);
+    pushTo(repoBucket, githubRepoKey(entry), entry);
+    for (const url of sourceUrls(entry).map(normalizeToken).filter(Boolean))
+      pushTo(urlBucket, url, entry);
+    for (const domain of sourceDomains(entry).map(normalizeToken).filter(Boolean))
+      pushTo(domainBucket, domain, entry);
+    for (const token of textTokens(entry).map(normalizeToken).filter(Boolean))
+      pushTo(tokenBucket, token, entry);
+    for (const ref of collectionRefs(entry)) pushTo(refsToKey, ref, entry);
+  });
+
+  const candidatesFor = (entry) => {
+    const set = new Set();
+    const collect = (list) => {
+      if (list) for (const e of list) set.add(e);
+    };
+    collect(repoBucket.get(githubRepoKey(entry)));
+    for (const url of sourceUrls(entry).map(normalizeToken).filter(Boolean))
+      collect(urlBucket.get(url));
+    for (const domain of sourceDomains(entry).map(normalizeToken).filter(Boolean))
+      collect(domainBucket.get(domain));
+    for (const token of textTokens(entry).map(normalizeToken).filter(Boolean))
+      collect(tokenBucket.get(token));
+    for (const ref of collectionRefs(entry)) {
+      const referenced = byKey.get(ref);
+      if (referenced) set.add(referenced);
+    }
+    collect(refsToKey.get(entryKey(entry)));
+    set.delete(entry);
+    return [...set].sort((a, b) => indexOf.get(a) - indexOf.get(b));
+  };
+
   const rows = entries.map((entry) => ({
     key: entryKey(entry),
     category: entry.category,
     slug: entry.slug,
     title: entry.title,
     url: entryUrl(entry),
-    related: buildEntryRelations(entry, entries, { limit }),
+    related: buildEntryRelations(entry, candidatesFor(entry), { limit }),
   }));
 
   return {

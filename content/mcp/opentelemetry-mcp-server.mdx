@@ -1,0 +1,204 @@
+---
+title: OpenTelemetry MCP Server for Claude
+slug: opentelemetry-mcp-server
+category: mcp
+description: >-
+  Analyze distributed traces and LLM observability data from Claude — search traces and spans,
+  find errors, list services, analyze LLM token usage, identify slow LLM operations, and
+  discover AI model usage patterns — with the OpenTelemetry MCP server supporting Jaeger,
+  Grafana Tempo, and Traceloop backends.
+cardDescription: "OpenTelemetry MCP: search traces, find errors, analyze LLM token usage & discover AI model patterns."
+seoTitle: "OpenTelemetry MCP Server for Claude — Distributed Traces, LLM Observability & Error Analysis"
+seoDescription: "Connect Claude to your OpenTelemetry backend with the OpenTelemetry MCP server: search traces and spans, find errors, list services, analyze LLM token usage and costs, identify slow AI operations, and discover model usage patterns — Apache-2.0, supports Jaeger, Tempo, and Traceloop."
+author: Traceloop
+authorProfileUrl: "https://github.com/traceloop"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/traceloop/opentelemetry-mcp-server/main/README.md"
+websiteUrl: "https://traceloop.com"
+repoUrl: "https://github.com/traceloop/opentelemetry-mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/traceloop/opentelemetry-mcp-server/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add opentelemetry -e BACKEND_TYPE=jaeger -e BACKEND_URL=http://localhost:16686 -- uvx opentelemetry-mcp"
+usageSnippet: >-
+  Ask Claude to find all traces with errors from the last hour, list services reporting to
+  Jaeger, show token usage across all LLM calls, identify the slowest AI agent operations,
+  or compare model performance across different LLM providers — using natural language against
+  your OpenTelemetry tracing backend.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "opentelemetry": {
+        "command": "uvx",
+        "args": ["opentelemetry-mcp"],
+        "env": {
+          "BACKEND_TYPE": "jaeger",
+          "BACKEND_URL": "http://localhost:16686"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "opentelemetry": {
+        "command": "uvx",
+        "args": ["opentelemetry-mcp"],
+        "env": {
+          "BACKEND_TYPE": "jaeger",
+          "BACKEND_URL": "http://localhost:16686",
+          "MAX_TRACES_PER_QUERY": "100",
+          "BACKEND_TIMEOUT": "30"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "An OpenTelemetry-compatible tracing backend: Jaeger (local), Grafana Tempo, or Traceloop Cloud."
+  - "Services instrumented with OpenTelemetry sending traces to your backend."
+  - "Python 3.11+ with `uvx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "All tools are read-only — the server queries trace data but does not modify your application or tracing backend."
+  - "Trace data may contain sensitive information (request parameters, user IDs, SQL queries) — ensure Claude has appropriate access to this data."
+privacyNotes:
+  - "Distributed trace content including service names, operation names, error messages, HTTP parameters, and LLM prompt/response metadata may be surfaced in Claude's context."
+  - "For Traceloop backend, `BACKEND_API_KEY` is required and grants access to your Traceloop organization's trace data."
+tags:
+  - opentelemetry
+  - observability
+  - tracing
+  - llm-observability
+  - jaeger
+  - grafana-tempo
+  - devops
+keywords:
+  - opentelemetry mcp server
+  - opentelemetry mcp claude
+  - distributed tracing mcp claude code
+  - llm observability mcp
+  - trace analysis ai claude
+  - jaeger mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **OpenTelemetry MCP Server** is the official MCP server from Traceloop (makers of
+OpenLLMetry) that connects Claude to your distributed tracing backend. It supports Jaeger
+(local/cloud), Grafana Tempo, and Traceloop Cloud as backends. Beyond standard trace search,
+it includes specialized LLM observability tools: token usage analysis, expensive trace
+identification, slow LLM operation detection, and AI model discovery. Apache-2.0 licensed,
+Python 3.11+ required.
+
+## Key capabilities
+
+- **Trace search** — search traces with filters by service, time range, and duration.
+- **Span search** — find individual spans across services.
+- **Error detection** — find traces containing errors or exceptions.
+- **Service listing** — discover all services reporting to the backend.
+- **LLM usage** — aggregate token usage and costs across all LLM calls.
+- **Model discovery** — list all LLM models in use across your system.
+- **Performance analysis** — identify most expensive and slowest LLM operations.
+
+## Tools
+
+| Tool | Category | Purpose |
+|---|---|---|
+| `search_traces` | Tracing | Search traces with advanced filters |
+| `search_spans` | Tracing | Search individual spans within traces |
+| `get_trace` | Tracing | Get complete trace details by trace ID |
+| `list_services` | Discovery | List all services reporting to the backend |
+| `find_errors` | Diagnostics | Find traces containing errors |
+| `get_llm_usage` | LLM Observability | Aggregate token usage across LLM calls |
+| `list_llm_models` | LLM Observability | Discover which LLM models are in use |
+| `get_llm_model_stats` | LLM Observability | Per-model performance statistics |
+| `get_llm_expensive_traces` | LLM Observability | Find traces with highest token consumption |
+| `get_llm_slow_traces` | LLM Observability | Find slowest LLM operations |
+
+## Configuration
+
+| Env var | Required | Purpose |
+|---|---|---|
+| `BACKEND_TYPE` | Yes | `jaeger`, `tempo`, or `traceloop` |
+| `BACKEND_URL` | Yes | Backend API endpoint |
+| `BACKEND_API_KEY` | For Traceloop | Traceloop Cloud API key |
+| `MAX_TRACES_PER_QUERY` | No (default 100) | Cap result set size |
+| `BACKEND_TIMEOUT` | No (default 30) | Request timeout in seconds |
+
+## How it compares
+
+| Server | Trace search | LLM token analysis | Error detection | Backends |
+|---|---|---|---|---|
+| **OpenTelemetry MCP** | Yes | Yes | Yes | Jaeger, Tempo, Traceloop |
+| Honeycomb MCP | Yes | No | Yes | Honeycomb only |
+| Axiom MCP | Yes | No | Yes | Axiom only |
+| Dynatrace MCP | Yes | No | Yes | Dynatrace only |
+
+OpenTelemetry MCP is the only tracing MCP with dedicated LLM observability tools — token usage,
+model discovery, and slow AI operation identification — across multiple backends.
+
+## Installation
+
+### Claude Code (Jaeger local)
+
+```bash
+claude mcp add opentelemetry \
+  -e BACKEND_TYPE=jaeger \
+  -e BACKEND_URL=http://localhost:16686 \
+  -- uvx opentelemetry-mcp
+```
+
+### Claude Code (Grafana Tempo)
+
+```bash
+claude mcp add opentelemetry \
+  -e BACKEND_TYPE=tempo \
+  -e BACKEND_URL=https://tempo.example.com \
+  -- uvx opentelemetry-mcp
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "opentelemetry": {
+      "command": "uvx",
+      "args": ["opentelemetry-mcp"],
+      "env": {
+        "BACKEND_TYPE": "jaeger",
+        "BACKEND_URL": "http://localhost:16686"
+      }
+    }
+  }
+}
+```
+
+## Requirements
+
+- OpenTelemetry-compatible backend (Jaeger, Grafana Tempo, or Traceloop).
+- Instrumented services sending traces.
+- Python 3.11+ with `uvx` (from `uv`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Read-only access to your tracing backend.
+- Trace data may contain sensitive application data — ensure appropriate access controls on
+  the backend itself.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Repository `traceloop/opentelemetry-mcp-server` (Apache-2.0) on PyPI as `opentelemetry-mcp`
+  (v0.2.2) documents the `uvx opentelemetry-mcp` install, `BACKEND_TYPE`/`BACKEND_URL`/
+  `BACKEND_API_KEY` configuration, support for Jaeger/Tempo/Traceloop backends, all ten tools
+  including the LLM-specific observability tools, Python 3.11+ requirement, and 191 stars.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

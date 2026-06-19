@@ -1,0 +1,143 @@
+---
+title: Glean MCP Server for Claude
+slug: glean-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Glean — run company-wide enterprise search and chat with Glean Assistant across
+  your connected workplace apps — with the official Glean Model Context Protocol server.
+cardDescription: "Official Glean MCP server: enterprise search and Glean Assistant chat from Claude."
+seoTitle: "Glean MCP Server for Claude — Enterprise Search & Chat"
+seoDescription: "Connect Claude to Glean with the official MCP server: run company-wide enterprise search and chat with Glean Assistant across your connected workplace apps from Claude Code or Desktop."
+author: Glean
+authorProfileUrl: "https://www.glean.com"
+dateAdded: "2026-06-17"
+documentationUrl: "https://github.com/gleanwork/mcp-server"
+websiteUrl: "https://www.glean.com"
+repoUrl: "https://github.com/gleanwork/mcp-server"
+retrievalSources:
+  - "https://github.com/gleanwork/mcp-server"
+  - "https://developers.glean.com/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add glean -e GLEAN_API_TOKEN=<your-token> -e GLEAN_INSTANCE=<your-instance> -- npx -y @gleanwork/mcp-server"
+usageSnippet: >-
+  Ask Claude to search your company's knowledge in Glean or to chat with Glean Assistant about it.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "glean": {
+        "command": "npx",
+        "args": ["-y", "@gleanwork/mcp-server"],
+        "env": {
+          "GLEAN_API_TOKEN": "<your-token>",
+          "GLEAN_INSTANCE": "<your-instance>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "glean": {
+        "command": "npx",
+        "args": ["-y", "@gleanwork/mcp-server"],
+        "env": {
+          "GLEAN_API_TOKEN": "<your-token>",
+          "GLEAN_INSTANCE": "<your-instance>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A Glean account/instance (GLEAN_INSTANCE) and an API token (GLEAN_API_TOKEN)."
+  - "Node.js (npx) and an MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Glean recommends the remote MCP server integrated directly in Glean; this local server is intended for experimental and testing use."
+  - "Search and chat run against your connected company data — scope the API token to the right user/permissions."
+privacyNotes:
+  - "Search results and Glean Assistant responses surface internal company content into the MCP client context and the model's prompt."
+  - "GLEAN_API_TOKEN and GLEAN_INSTANCE are secrets — keep them in the client config or environment, never in shared repositories."
+tags:
+  - glean
+  - enterprise-search
+  - knowledge-management
+  - rag
+  - productivity
+keywords:
+  - glean mcp server
+  - connect claude to glean
+  - enterprise search mcp claude
+  - glean assistant mcp
+  - company knowledge search with claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Glean MCP Server** is the official Model Context Protocol server from Glean. It lets Claude run
+company-wide enterprise search and chat with Glean Assistant across your connected workplace apps —
+bringing internal knowledge into Claude in natural language. It runs locally via
+`npx @gleanwork/mcp-server` over stdio and is licensed under MIT.
+
+Glean recommends using the remote MCP server integrated directly in Glean for production; this local
+server is primarily intended for experimental and testing use.
+
+## Key capabilities
+
+- **Company search** — search across the apps and content Glean has indexed for your organization.
+- **Glean Assistant chat** — ask questions and get answers grounded in your company's knowledge.
+
+Results respect the permissions of the authenticated Glean user, so Claude only sees what that user
+is allowed to see.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add glean \
+  -e GLEAN_API_TOKEN=<your-token> \
+  -e GLEAN_INSTANCE=<your-instance> -- \
+  npx -y @gleanwork/mcp-server
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "glean": {
+      "command": "npx",
+      "args": ["-y", "@gleanwork/mcp-server"],
+      "env": {
+        "GLEAN_API_TOKEN": "<your-token>",
+        "GLEAN_INSTANCE": "<your-instance>"
+      }
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Glean instance and API token.
+- Node.js (`npx`) and an MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- For production, prefer Glean's integrated remote MCP server; the local server is for testing.
+- Search and chat surface internal company data — scope the token to the right user and permissions.
+- Treat `GLEAN_API_TOKEN` and `GLEAN_INSTANCE` as secrets.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- The official repository `github.com/gleanwork/mcp-server` (MIT) documents the
+  `@gleanwork/mcp-server` package, the `GLEAN_API_TOKEN`/`GLEAN_INSTANCE` configuration, the search
+  and chat capabilities, and the recommendation to use Glean's integrated remote MCP for production.
+- Glean's developer documentation describes the underlying search and assistant APIs.
+- Claude Code's MCP documentation describes the connector setup pattern used here.

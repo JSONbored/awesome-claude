@@ -1,5 +1,13 @@
 # @heyclaude/mcp Changelog
 
+## 0.3.1 - Stdio Proxy and Planner Type Fixes
+
+- Keep submission draft helper tools local to the stdio proxy instead of
+  forwarding them to the remote MCP endpoint.
+- Export the workflow planner toolbox schema from the package runtime and type
+  declarations so TypeScript consumers can import the planner API without
+  missing-export errors.
+
 ## 0.3.0 - Safety Metadata and Submission Policy
 
 - Expose registry `safetyNotes` and `privacyNotes` in MCP search, detail,

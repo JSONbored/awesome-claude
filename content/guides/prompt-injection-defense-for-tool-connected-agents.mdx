@@ -1,0 +1,164 @@
+---
+title: Prompt Injection Defense For Tool Connected Agents
+slug: prompt-injection-defense-for-tool-connected-agents
+category: guides
+description: >-
+  Defend tool-connected agents against prompt injection using documented Claude Code
+  security practices: MCP trust verification, approval gates, least-privilege tools,
+  untrusted content handling, and human review before side-effect tool calls.
+cardDescription: >-
+  Reduce prompt injection risk for MCP and tool-connected Claude Code agents.
+seoTitle: Prompt Injection Defense For Tool Connected Agents
+seoDescription: >-
+  Guide to prompt injection defense for tool-connected agents: MCP trust checks,
+  permission prompts, scoped credentials, untrusted content isolation, and review
+  gates from official Claude Code and MCP security documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1185
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1185"
+documentationUrl: "https://code.claude.com/docs/en/security"
+usageSnippet: >-
+  Before connecting MCP servers or enabling autonomous tools, verify trust, require
+  approvals for side effects, scope credentials narrowly, treat external content as
+  untrusted input, and keep a human reviewer on destructive actions.
+prerequisites:
+  - "Inventory of MCP servers, plugins, and tools connected to Claude Code."
+  - "Team policy for permission modes and auto-approve settings."
+  - "Ability to test workflows in an isolated profile before production use."
+  - "Maintainer or security reviewer for side-effect tool approvals."
+safetyNotes:
+  - "MCP servers that fetch external content can carry prompt injection—official security docs warn operators to verify trust before use."
+  - "Project-scoped .mcp.json servers require trust verification and approval prompts in Claude Code before first use."
+  - "Auto-approve or bypass permission modes increase injection blast radius—avoid for repos with untrusted inputs."
+  - "Side-effect tools (write, bash, network) need explicit human gates when content origin is untrusted."
+privacyNotes:
+  - "Injected prompts may exfiltrate data through tool arguments—scope OAuth tokens and filesystem paths narrowly."
+  - "Logs of tool calls may contain injected instructions—restrict log sharing externally."
+  - "Revoke MCP OAuth and remove servers promptly when injection is suspected."
+sourceUrls:
+  - "https://code.claude.com/docs/en/security"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - security
+  - prompt-injection
+  - mcp
+  - claude-code
+  - tools
+keywords:
+  - prompt injection defense tool connected agents
+  - MCP prompt injection Claude Code
+  - secure tool use Claude Code
+readingTime: 8
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Tool-connected agents can be steered by untrusted text in files, web pages, or MCP
+resources. Apply documented Claude Code security practices: verify MCP trust,
+keep approval prompts enabled, scope credentials and paths, treat external
+content as hostile input, and require human review before destructive tool use.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Tool inventory", "description": "List MCP servers and high-risk tools in use"}
+- [ ] {"task": "Permission policy", "description": "Document allowed permission modes per repo"}
+- [ ] {"task": "Test profile", "description": "Isolated Claude Code profile for injection drills"}
+- [ ] {"task": "Review owner", "description": "Human approves side-effect tools on untrusted content"}
+
+## Core Concepts Explained
+
+### Untrusted content reaches the model
+
+When agents read issues, web pages, PDFs, or MCP resources, attacker-controlled
+text can attempt to override instructions. Official Claude Code security
+documentation treats third-party MCP servers and external fetches as operator
+verified—not automatically safe.
+
+### Tools amplify successful injection
+
+A injected instruction that reaches an agent with bash, write, or network tools
+can cause real changes. Least-privilege tool allowlists and permission prompts
+reduce impact documented in security and MCP guides.
+
+### Trust verification is mandatory for project MCP
+
+Claude Code prompts for trust verification before using project-scoped servers
+from `.mcp.json`. Skipping review or auto-approving undermines injection defenses.
+
+## Step-by-Step Implementation Guide
+
+1. **Inventory connected tools.** List MCP servers, plugins, and default tools
+   with read vs write vs network capability.
+
+2. **Enable trust verification.** Keep Claude Code prompts for new project MCP
+   servers; document approved servers in team security notes.
+
+3. **Tighten permission modes.** Prefer explicit prompts over bypass modes when
+   repositories ingest external content (issues, comments, web fetches).
+
+4. **Scope credentials and paths.** Use `oauth.scopes` pins, sandbox settings,
+   and narrow filesystem allowlists per security documentation.
+
+5. **Isolate untrusted inputs.** Process external content in read-only passes
+   first; defer side-effect tools until a human validates summary.
+
+6. **Add hooks or review gates.** Use PreToolUse hooks (see secure hooks guide)
+   to block destructive patterns on sensitive branches.
+
+7. **Run injection drills.** Test with benign canary strings in staging issues
+   or mock MCP resources; confirm approvals fire.
+
+8. **Document incident response.** Remove suspect MCP servers, rotate tokens,
+   and revert commits if injection succeeds.
+
+## Troubleshooting
+
+### Agent executed tool after malicious issue comment
+
+Revoke MCP tokens, disable auto-approve, add CODEOWNERS review on tool-heavy paths.
+
+### MCP server fetches untrusted web content
+
+Restrict server network allowlists or disable server until maintainer patches fetch policy.
+
+### Permission prompts disabled team-wide
+
+Re-enable managed settings defaults; audit `settings.json` for bypass flags.
+
+## Source Verification Notes
+
+Verified against Claude Code security, MCP, and MCP security best practices
+documentation on **2026-06-16**:
+
+- Security docs state operators must verify third-party MCP servers; Anthropic
+  does not security-audit arbitrary servers.
+- Project-scoped MCP from `.mcp.json` requires trust verification and approval
+  before use.
+- Servers fetching external content can expose workflows to prompt injection.
+- MCP security best practices recommend least privilege, explicit authorization,
+  and careful handling of tool-visible data.
+
+## Duplicate Check
+
+Complements `threat-model-mcp-servers-before-installation` (pre-install review)
+and `secret-handling-for-mcp-servers-and-agent-tools` (credential hygiene). No
+existing guide focuses on prompt injection defense patterns for already-connected
+tool workflows.
+
+## References
+
+- Claude Code security - https://code.claude.com/docs/en/security
+- MCP security best practices - https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices

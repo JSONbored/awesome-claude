@@ -1,0 +1,183 @@
+---
+title: Clarid Compliance MCP Server for Claude
+slug: clarid-compliance-mcp-server
+category: mcp
+description: >-
+  Clarid AI hosted MCP server that checks bank and credit-union marketing
+  materials for FDIC, NCUA, TILA, Reg DD, Reg Z, UDAAP, and Equal Housing
+  compliance over streamable HTTP.
+cardDescription: >-
+  Connect Claude to Clarid Compliance to review marketing copy against banking
+  and lending advertising regulations through a remote MCP server.
+seoTitle: Clarid Compliance MCP Server for Claude
+seoDescription: >-
+  Use the Clarid Compliance MCP server with Claude to validate bank marketing
+  against FDIC, NCUA, TILA, Reg DD, Reg Z, UDAAP, and Equal Housing rules.
+author: Clarid AI
+authorProfileUrl: "https://github.com/clarid-ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1489
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1489"
+documentationUrl: "https://clarid.ai"
+websiteUrl: "https://clarid.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http clarid-compliance https://mcp.clarid.ai/mcp
+usageSnippet: >-
+  Add https://mcp.clarid.ai/mcp as a remote HTTP connector in Claude or another
+  MCP client, then submit marketing copy for regulatory compliance review.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "clarid-compliance": {
+        "url": "https://mcp.clarid.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "clarid-compliance": {
+        "url": "https://mcp.clarid.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Pro, Team, or Enterprise with Connectors support, or another MCP client with streamable HTTP transport."
+  - "Marketing or compliance content you are authorized to submit for review."
+  - "Understanding that Clarid output supports compliance workflows and is not legal advice."
+  - "Internet access to reach the Clarid hosted endpoint."
+safetyNotes:
+  - "Marketing copy you submit is sent to Clarid for automated compliance analysis."
+  - "Do not treat MCP output as a substitute for counsel review before publishing regulated materials."
+  - "Confirm institution-specific policies still apply after automated checks pass."
+  - "Avoid submitting customer PII unless your compliance program explicitly allows it."
+privacyNotes:
+  - "Submitted marketing text is processed by Clarid AI under its own privacy and retention terms."
+  - "Campaign drafts may contain product terms, rates, or institution names that should stay internal."
+  - "Use least-privilege connectors and avoid sharing draft materials in public chat logs."
+tags:
+  - compliance
+  - banking
+  - marketing
+  - regulations
+  - remote-mcp
+keywords:
+  - clarid compliance mcp
+  - bank marketing compliance
+  - fdic ncua udaap mcp
+  - clarid ai claude
+  - marketing review mcp
+readingTime: 4
+difficultyScore: 25
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Clarid AI offers a hosted Model Context Protocol server for marketing compliance review aimed at community banks and credit unions. The server checks advertising and promotional materials against regulations including FDIC, NCUA, TILA, Reg DD, Reg Z, UDAAP, and Equal Housing requirements.
+
+The service is registered in the [official MCP Registry](https://registry.modelcontextprotocol.io/) as `ai.clarid/compliance` with remote endpoint `https://mcp.clarid.ai/mcp`. Source references are published at [github.com/clarid-ai/compliance-checker](https://github.com/clarid-ai/compliance-checker).
+
+## Features
+
+- Marketing compliance checks for banking and lending advertising rules.
+- Streamable HTTP transport for remote MCP clients.
+- Structured compliance feedback suitable for marketing and compliance teams.
+- Hosted service with no local CLI installation required.
+- Complements Clarid's broader compliance platform for HMDA, fair lending, and exam readiness.
+
+## Use Cases
+
+- Review a new deposit account landing page before publication.
+- Check email campaign copy for UDAAP and disclosure issues.
+- Validate social posts promoting mortgage or HELOC products.
+- Screen branch signage language for Equal Housing and member-share disclaimers.
+- Pre-flight website hero copy during a rebranding project.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://mcp.clarid.ai/mcp`.
+3. Enable the connector and submit marketing copy through chat.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http clarid-compliance https://mcp.clarid.ai/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add a remote HTTP connector pointing at `https://mcp.clarid.ai/mcp` with streamable HTTP support.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "clarid-compliance": {
+      "url": "https://mcp.clarid.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+## Examples
+
+### Landing page review
+
+```text
+Review this homepage hero copy for FDIC, UDAAP, and Equal Housing compliance: [paste draft].
+```
+
+### Email campaign check
+
+```text
+Check this promotional email for Reg Z and TILA disclosure issues before we send it.
+```
+
+### Social post screening
+
+```text
+Does this Instagram caption for a new savings account violate NCUA advertising rules?
+```
+
+## Security
+
+- Clarid output is advisory; have qualified compliance staff or counsel approve final materials.
+- Do not publish regulated copy based solely on automated MCP feedback.
+- Restrict connector access to users who may handle draft marketing content.
+
+## Troubleshooting
+
+### Connector timeout
+
+Retry after a few seconds; hosted endpoints may cold-start on first request.
+
+### Incomplete findings
+
+Provide full campaign context, product type, and audience so the model can evaluate disclosures correctly.
+
+### Ambiguous product claims
+
+Include APR/APY figures, fee schedules, and membership eligibility details when reviewing lending or deposit promotions.
+
+### Wrong regulation scope
+
+Clarid Compliance focuses on marketing rules; use Clarid's separate HMDA validator MCP for LAR file checks.

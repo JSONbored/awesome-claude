@@ -10,7 +10,7 @@ export function ComparisonTray() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface/95 backdrop-blur">
-      <div className="mx-auto flex max-w-[1400px] items-center gap-3 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-page items-center gap-3 px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2 text-sm font-medium text-ink">
           <GitCompare className="h-4 w-4" />
           Compare
@@ -21,7 +21,7 @@ export function ComparisonTray() {
         <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
           {items.map((e) => (
             <span
-              key={e.slug}
+              key={`${e.category}/${e.slug}`}
               className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 text-xs"
             >
               <ReadinessDot entry={e} />

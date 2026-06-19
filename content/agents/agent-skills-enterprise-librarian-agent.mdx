@@ -3,18 +3,17 @@ title: Agent Skills Enterprise Librarian Agent
 slug: agent-skills-enterprise-librarian-agent
 category: agents
 description: >-
-  Source-backed agent that curates an organization's Agent Skills library,
-  reviewing SKILL.md quality, descriptions and triggers, scope and precedence,
-  tool restrictions, and invocation control so skills are discoverable and safe,
-  grounded in the official Claude Code skills docs.
+  An agent prompt for curating an organization's Agent Skills: reviewing each
+  SKILL.md name and description, scope (personal, project, or plugin) and
+  precedence, per-skill allowed-tools, and whether Claude or the user invokes
+  it.
 cardDescription: >-
-  Curate an org Agent Skills library: SKILL.md quality, descriptions, scope and
-  precedence, tool restrictions, and invocation control.
-seoTitle: Agent Skills Enterprise Librarian Agent
+  Reviews an org's SKILL.md library — description and trigger quality, scope and
+  precedence, per-skill allowed-tools, and model-vs-user invocation control.
+seoTitle: Agent Skills Library Curator — Claude Code Agent
 seoDescription: >-
-  Reusable agent prompt that curates an organization's Agent Skills library,
-  reviewing SKILL.md quality, descriptions, scope and precedence, tool
-  restrictions, and invocation control, grounded in official Claude Code docs.
+  Agent prompt that curates a Claude Code skills library: SKILL.md quality,
+  scope and precedence, per-skill allowed-tools, and invocation control.
 author: JPette1783
 authorProfileUrl: "https://github.com/JPette1783"
 submittedBy: JPette1783
@@ -22,8 +21,11 @@ submittedByUrl: "https://github.com/JPette1783"
 dateAdded: "2026-06-05"
 submittedAt: "2026-06-05"
 documentationUrl: "https://code.claude.com/docs/en/skills"
+retrievalSources:
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/settings"
 installable: false
-usageSnippet: "Use this agent to curate an organization's Agent Skills: review SKILL.md quality, descriptions and triggers, scope and precedence, tool restrictions, and invocation control."
+usageSnippet: "Point this agent at your SKILL.md files to review description and trigger quality, scope and precedence, per-skill allowed-tools, and whether each skill is model- or user-invoked."
 prerequisites:
   - "A set of Agent Skills (personal, project, or plugin) with their SKILL.md files."
   - "Knowledge of which skills should be org-wide versus project-specific."

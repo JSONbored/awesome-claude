@@ -1,0 +1,244 @@
+---
+title: Supabase Agent Skills
+slug: supabase-agent-skills
+category: skills
+description: >-
+  Official Supabase Agent Skills for AI coding agents working with Supabase
+  Database, Auth, Edge Functions, Realtime, Storage, Vectors, CLI, MCP, RLS,
+  migrations, and Postgres performance.
+cardDescription: >-
+  Supabase skill pack for product-wide Supabase development and Postgres best
+  practices, installable with skills.sh or Supabase's Claude Code plugin.
+seoTitle: Supabase Agent Skills for Claude Code and AI Coding Agents
+seoDescription: >-
+  Install official Supabase Agent Skills for Claude Code, Codex, Cursor, and AI
+  coding agents to improve Supabase Auth, RLS, migrations, MCP, and Postgres
+  work.
+author: Supabase
+authorProfileUrl: "https://github.com/supabase"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/supabase/agent-skills"
+documentationUrl: "https://supabase.com/docs/guides/ai-tools/ai-skills"
+websiteUrl: "https://supabase.com/docs/guides/ai-tools/ai-skills"
+downloadUrl: "https://github.com/supabase/agent-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add supabase/agent-skills"
+usageSnippet: >-
+  Install all Supabase skills or add the focused supabase and
+  supabase-postgres-best-practices skills, then keep current Supabase docs and
+  MCP access available for exact API, CLI, and security details.
+copySnippet: |-
+  npx skills add supabase/agent-skills
+
+  # Install a focused skill
+  npx skills add supabase/agent-skills --skill supabase
+  npx skills add supabase/agent-skills --skill supabase-postgres-best-practices
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/supabase/agent-skills"
+  - "https://supabase.com/docs/guides/ai-tools/ai-skills.md"
+  - "https://supabase.com/.well-known/agent-skills/"
+  - "https://raw.githubusercontent.com/supabase/agent-skills/main/README.md"
+  - "https://raw.githubusercontent.com/supabase/agent-skills/main/skills/supabase/SKILL.md"
+  - "https://raw.githubusercontent.com/supabase/agent-skills/main/skills/supabase-postgres-best-practices/SKILL.md"
+  - "https://raw.githubusercontent.com/supabase/agent-skills/main/package.json"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cursor
+  - GitHub Copilot
+  - Generic AGENTS
+prerequisites:
+  - "AI coding agent or skill installer compatible with Agent Skills repositories."
+  - "Supabase project, local Supabase app, or planned Supabase integration."
+  - "Current Supabase docs access, Supabase CLI help, or Supabase MCP server access for exact commands and API details."
+  - "Database access appropriate to the task when validating SQL, RLS, migrations, advisors, or performance fixes."
+safetyNotes:
+  - "The skills guide agents toward Supabase schema, auth, RLS, migration, MCP, and Postgres work that can affect real user data; generated SQL and policies need human review."
+  - "The Supabase skill explicitly treats RLS, exposed schemas, service-role keys, JWT claims, views, storage policies, and SECURITY DEFINER functions as security-sensitive areas."
+  - "Do not let an agent apply migrations or production SQL just because the skill suggests a workflow; run advisors, inspect generated SQL, and verify against the intended environment."
+  - "The repository includes Supabase MCP configuration for docs-only MCP access. Project-scoped MCP or database access still needs proper authentication, least privilege, and review."
+privacyNotes:
+  - "Supabase tasks can involve schemas, SQL, RLS policies, migrations, auth settings, JWT claims, storage paths, Edge Function code, logs, and customer data."
+  - "Keep SUPABASE_ACCESS_TOKEN, service_role keys, database passwords, JWT secrets, project refs, connection strings, OAuth secrets, and private schema dumps out of prompts, screenshots, public PRs, and committed configs."
+  - "When using Supabase MCP or CLI tools, the connected agent may see project metadata, database structure, logs, or SQL results depending on granted permissions."
+  - "Docs-only MCP access is safer than project MCP access, but user queries and docs snippets can still be forwarded into the configured model provider."
+tags:
+  - supabase
+  - skills
+  - ai-agents
+  - postgres
+  - auth
+  - rls
+  - mcp
+  - claude-code
+keywords:
+  - supabase agent skills
+  - supabase skills
+  - supabase claude code
+  - supabase codex skill
+  - supabase cursor skill
+  - supabase postgres best practices
+  - supabase mcp skill
+  - supabase rls ai agent
+readingTime: 7
+difficultyScore: 74
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Supabase Agent Skills
+
+`supabase/agent-skills` is Supabase's official skill repository for AI coding
+agents. It packages task-specific instructions and references so agents can work
+more reliably with Supabase products, Supabase CLI, Supabase MCP, Row Level
+Security, migrations, and Postgres performance.
+
+The repository currently publishes two skills:
+
+- `supabase`: broad Supabase development guidance covering Database, Auth, Edge
+  Functions, Realtime, Storage, Vectors, Cron, Queues, client libraries, SSR
+  integrations, CLI, MCP, migrations, RLS, security audits, and extensions.
+- `supabase-postgres-best-practices`: Postgres performance and design guidance
+  from Supabase, organized across query performance, connection management,
+  security and RLS, schema design, locking, access patterns, monitoring, and
+  advanced features.
+
+Use this entry when an agent needs reusable Supabase operating guidance. Use a
+separate Supabase MCP listing when the question is specifically about connecting
+an agent to Supabase's hosted MCP tools.
+
+## Knowledge Freshness
+
+Supabase products, CLI commands, MCP behavior, SSR helpers, Auth guidance,
+Postgres features, and security recommendations change frequently. The broad
+`supabase` skill explicitly instructs agents to verify current docs and
+changelog context before implementing features instead of relying on model
+memory.
+
+For exact implementation details, pair the skills with current Supabase docs,
+the Supabase MCP server, `supabase --help`, package-specific documentation, and
+the actual version installed in the target project.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- Supabase's official `supabase/agent-skills` repository.
+- Supabase's Agent Skills docs page.
+- Supabase's `.well-known/agent-skills/` discovery index.
+- The `supabase` skill manifest.
+- The `supabase-postgres-best-practices` skill manifest.
+- Repository package metadata, which identifies the package as official
+  Supabase agent skills under MIT licensing.
+
+## Core Workflow
+
+Install all Supabase skills:
+
+```bash
+npx skills add supabase/agent-skills
+```
+
+Install a focused skill:
+
+```bash
+npx skills add supabase/agent-skills --skill supabase
+npx skills add supabase/agent-skills --skill supabase-postgres-best-practices
+```
+
+Claude Code users can also install Supabase's skill marketplace and plugins:
+
+```bash
+claude plugin marketplace add supabase/agent-skills
+claude plugin install supabase@supabase-agent-skills
+claude plugin install postgres-best-practices@supabase-agent-skills
+```
+
+The `.well-known/agent-skills/` endpoint publishes archive URLs and SHA-256
+digests for released skill bundles. That makes it useful for agents and
+installers that support Agent Skills discovery metadata.
+
+## Capability Scope
+
+The broad `supabase` skill applies to product-wide Supabase development:
+
+- Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, and Queues.
+- `supabase-js`, `@supabase/ssr`, and integrations for frameworks such as
+  Next.js, React, SvelteKit, Astro, and Remix.
+- Auth troubleshooting for sessions, JWTs, cookies, `getSession`, `getUser`,
+  `getClaims`, RLS, and login/logout flows.
+- Supabase CLI, Supabase MCP, schema changes, migrations, security audits, and
+  extensions such as `pg_graphql`, `pg_cron`, and `pg_vector`.
+
+The Postgres best-practices skill focuses on query optimization, indexes,
+connection pooling, schema design, concurrency, locking, security, RLS,
+monitoring, diagnostics, and advanced Postgres features.
+
+## Production Rules
+
+Treat Supabase work as production-sensitive when it touches data, identity,
+authorization, or migrations.
+
+- Review generated SQL, policies, triggers, views, and functions before they run
+  against shared or production databases.
+- Never expose `service_role` keys, secret keys, database passwords, JWT
+  secrets, OAuth secrets, or connection strings in public clients or prompts.
+- Enable and review RLS for tables in exposed schemas instead of relying on
+  role grants alone.
+- Avoid using user-editable metadata in authorization decisions.
+- Be careful with `SECURITY DEFINER`, views, storage upserts, migration history,
+  and SQL execution through MCP or CLI tools.
+- Run Supabase advisors, tests, and real verification queries when a change
+  affects schema, access control, or performance.
+
+## Use Cases
+
+- Ask Claude Code to set up Supabase Auth with SSR while checking current docs.
+- Have Codex review RLS policies for common Supabase-specific mistakes.
+- Use Cursor to optimize a slow Postgres query with Supabase's index and
+  connection-management guidance.
+- Ask an agent to generate a migration plan, then inspect and validate the SQL
+  before applying it.
+- Pair the skills with Supabase MCP docs access so the agent can retrieve
+  current product documentation while following the skill's security workflow.
+
+## Source Review
+
+- The repository README describes Supabase Agent Skills as folders of
+  instructions, scripts, and resources for agents, compatible with Claude Code,
+  GitHub Copilot, Cursor, Cline, and other agents.
+- Supabase's docs page documents `npx skills add supabase/agent-skills`, focused
+  `--skill` installation, project-scope installation, and the relationship to
+  Supabase's combined plugin setup.
+- The `.well-known/agent-skills/` endpoint exposes `supabase` and
+  `supabase-postgres-best-practices` archives with SHA-256 digests.
+- The `supabase` skill manifest lists product-wide Supabase triggers and
+  includes security-sensitive guidance for RLS, Data API exposure, JWT claims,
+  service-role keys, views, storage, dependency pinning, CLI usage, and MCP
+  setup.
+- The Postgres best-practices skill manifest describes eight prioritized
+  categories covering performance, connection management, schema design,
+  locking, security, access patterns, monitoring, and advanced features.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/mcp/`, `content/tools/`, open pull
+requests, and repository-wide content for `Supabase Agent Skills`,
+`supabase/agent-skills`, `supabase-postgres-best-practices`, `Supabase skills`,
+and `Supabase MCP skill`. Existing Supabase content covers realtime database
+skills and Supabase expert rules, but no dedicated official Supabase Agent
+Skills entry, exact source URL duplicate, target file, or open duplicate PR was
+found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Supabase Agent
+Skills are published by Supabase under MIT package metadata. Supabase also
+offers hosted commercial infrastructure and platform services.

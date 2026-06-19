@@ -1,0 +1,201 @@
+---
+title: RAGFlow
+slug: ragflow
+category: tools
+description: >-
+  Open-source RAG and agentic retrieval platform with DeepDoc document
+  understanding, visual chunking, grounded citations, heterogeneous data-source
+  ingestion, agent workflows, MCP support, code executor support, and Docker
+  self-hosting.
+cardDescription: >-
+  RAGFlow is a self-hostable RAG engine and context layer with DeepDoc parsing,
+  visual chunking, grounded citations, agent workflows, MCP, and Docker.
+seoTitle: RAGFlow Open-Source RAG Engine with Agents, MCP, and DeepDoc
+seoDescription: >-
+  RAGFlow is an Apache-2.0 RAG engine and agentic context layer for LLM apps,
+  with DeepDoc document understanding, visual chunking, grounded citations,
+  agent workflows, MCP support, and Docker self-hosting.
+author: InfinityFlow
+authorProfileUrl: "https://github.com/infiniflow"
+dateAdded: "2026-06-18"
+websiteUrl: "https://ragflow.io/"
+documentationUrl: "https://ragflow.io/docs/dev/"
+repoUrl: "https://github.com/infiniflow/ragflow"
+packageUrl: "https://hub.docker.com/r/infiniflow/ragflow"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Web
+sourceUrls:
+  - "https://github.com/infiniflow/ragflow"
+  - "https://raw.githubusercontent.com/infiniflow/ragflow/main/README.md"
+  - "https://github.com/infiniflow/ragflow/blob/main/LICENSE"
+  - "https://hub.docker.com/r/infiniflow/ragflow"
+  - "https://ragflow.io/docs/dev/"
+  - "https://ragflow.io/docs/launch_mcp_server"
+installable: true
+installCommand: "docker compose -f docker-compose.yml up -d"
+usageSnippet: >-
+  Clone RAGFlow, configure the Docker environment, start the stack from the
+  `docker` directory, add model-provider keys, ingest datasets, then wire RAG,
+  agentic workflow, MCP, or API access only after reviewing dataset permissions.
+copySnippet: |-
+  git clone https://github.com/infiniflow/ragflow.git
+  cd ragflow/docker
+  docker compose -f docker-compose.yml up -d
+estimatedSetupTime: 60 minutes
+difficulty: advanced
+prerequisites:
+  - "CPU with at least 4 cores, 16 GB RAM, 50 GB disk, Docker 24.0.0 or newer, and Docker Compose v2.26.1 or newer for the documented self-hosted path."
+  - "Python 3.13 for source/development workflows."
+  - "gVisor if the code executor sandbox feature will be used."
+  - "Configured model-provider and embedding-provider keys in the documented service configuration."
+  - "Dataset access policy for documents, images, scanned files, spreadsheets, web pages, structured data, and synchronized external sources before ingestion."
+safetyNotes:
+  - "RAGFlow is a multi-service RAG platform, not a small CLI. Review Docker services, exposed ports, persistent volumes, model-provider keys, parser settings, and update strategy before production use."
+  - "The README notes x86 Docker image availability and separate guidance for ARM64 builds; verify architecture before deploying on ARM hosts."
+  - "Deep document parsing, OCR, chunking, embeddings, reranking, agent workflows, MCP, and code executor features can process sensitive files and produce misleading outputs if retrieval quality is not tested."
+  - "The code executor feature requires sandbox review. Use gVisor or another isolation plan before running generated or user-provided code."
+  - "MCP support should be configured with localhost binding, API-key hygiene, dataset-level scoping, and read-only retrieval defaults unless a broader tool surface has been reviewed."
+privacyNotes:
+  - "Uploaded documents, parsed chunks, OCR text, embeddings, dataset metadata, chat history, citations, agent workflow state, code executor inputs, MCP payloads, logs, and model responses may contain private or regulated data."
+  - "Model providers, embedding providers, rerankers, synchronized data sources, object storage, databases, and MCP clients may receive data depending on deployment settings."
+  - "Keep RAGFlow API keys, provider keys, service configuration, dataset IDs, document IDs, logs, backups, and generated citations out of prompts, public issues, screenshots, and committed examples."
+  - "Define retention, deletion, access review, and export rules before ingesting customer, financial, legal, healthcare, source-code, or credential-bearing documents."
+tags:
+  - ragflow
+  - rag
+  - retrieval-augmented-generation
+  - ai-agents
+  - mcp
+  - agentic-retrieval
+  - context-engine
+  - self-hosted
+  - docker
+  - deepdoc
+keywords:
+  - RAGFlow
+  - RAGFlow RAG engine
+  - RAGFlow MCP
+  - RAGFlow agents
+  - DeepDoc
+  - agentic retrieval
+  - context engine
+  - open source RAG
+  - self hosted RAG platform
+  - RAGFlow OpenClaw skill
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+RAGFlow is an open-source Retrieval-Augmented Generation engine and agentic
+context layer for LLM applications. It combines DeepDoc document understanding,
+visual and template-based chunking, grounded citations, model and embedding
+configuration, heterogeneous data-source ingestion, APIs, agent workflow
+features, MCP support, and Docker self-hosting.
+
+This tools entry is distinct from the existing RAGFlow MCP server entry. The MCP
+entry focuses on connecting Claude and other MCP clients to a running RAGFlow
+deployment for retrieval. This entry covers the main RAGFlow platform that
+creates and operates the datasets, parsing pipeline, retrieval stack, agents,
+and deployment environment that the MCP server depends on.
+
+## Install
+
+RAGFlow's documented self-host path uses Docker Compose from the repository's
+`docker` directory:
+
+```bash
+git clone https://github.com/infiniflow/ragflow.git
+cd ragflow/docker
+docker compose -f docker-compose.yml up -d
+```
+
+The README also documents host requirements, `vm.max_map_count`, x86 Docker
+image constraints, GPU mode for DeepDoc tasks, and model-provider configuration
+in the service configuration template.
+
+## Core Capabilities
+
+| Area | RAGFlow Coverage |
+| --- | --- |
+| Document understanding | DeepDoc-powered extraction for complicated unstructured formats |
+| Chunking | Template-based chunking, visual chunking, and human intervention over chunks |
+| Grounding | Traceable citations and reference views for grounded answers |
+| Data sources | Word, slides, spreadsheets, text, images, scanned documents, structured data, web pages, and synchronized external sources |
+| Retrieval | Multiple recall, fused reranking, embedding model configuration, and RAG APIs |
+| Agents | Agentic workflow, agent capabilities, memory support, and code executor component according to README updates |
+| MCP | Built-in MCP support and a separate MCP server path for retrieval from selected datasets |
+| Deployment | Cloud service, Docker self-hosting, source development, Docker image builds, x86 images, and ARM64 build guidance |
+
+## MCP and OpenClaw Fit
+
+RAGFlow is relevant to MCP searches in two ways. First, the main platform can be
+used as the knowledge and retrieval backend behind the existing RAGFlow MCP
+server entry. Second, the README records MCP and agentic workflow support in the
+main platform roadmap/updates.
+
+The README also links a RAGFlow Skill on OpenClaw for accessing RAGFlow datasets.
+That makes RAGFlow a useful bridge across the MCP, agent, skill, and RAG
+clusters. The operational boundary is still the RAGFlow dataset: agents should
+only retrieve from dataset IDs and document IDs they are meant to see.
+
+## Use Cases
+
+- Build a self-hosted RAG system over PDFs, spreadsheets, scanned files, web
+  pages, and structured documents.
+- Inspect and correct chunking before exposing retrieval to agents or users.
+- Provide grounded citations and reference views for answer review.
+- Connect Claude or other MCP clients to selected RAGFlow datasets through the
+  existing RAGFlow MCP server.
+- Evaluate DeepDoc parsing, OCR, reranking, and multi-recall retrieval quality.
+- Build an internal context layer for agentic workflows, code execution, and
+  enterprise LLM applications.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `infiniflow/ragflow` as an Apache-2.0 repository with active
+  development, 83,000+ stars, and latest release `v0.26.1`.
+- The README describes RAGFlow as an open-source RAG engine that fuses RAG with
+  agent capabilities to create a context layer for LLMs.
+- The README documents DeepDoc, template-based chunking, grounded citations,
+  heterogeneous data-source support, automated RAG workflows, configurable LLMs
+  and embedding models, multiple recall, fused reranking, APIs, and Docker
+  self-hosting.
+- The README's recent update list includes agentic workflow and MCP support,
+  Python/JavaScript code executor support, memory for AI agents, multiple chat
+  channels, and an official RAGFlow Skill on OpenClaw.
+- The self-hosting section documents CPU/RAM/disk/Docker/Python prerequisites,
+  gVisor for code executor sandboxing, `vm.max_map_count`, x86 image caveats,
+  Docker Compose startup, status checks, and model API key setup.
+- The existing HeyClaude content already has a RAGFlow MCP server entry; no
+  dedicated tools entry for the main RAGFlow platform was found.
+
+## Safety and Privacy
+
+RAGFlow's output quality depends on ingestion quality, parser configuration,
+chunking, embedding choice, reranking, dataset permissions, and model-provider
+behavior. Treat every dataset as sensitive by default until access scope,
+retention, and retrieval evaluation are documented.
+
+The platform can parse files, store embeddings, synchronize external sources,
+run agent workflows, expose MCP retrieval, and execute code when enabled. Keep
+provider keys and API keys scoped, isolate code execution, bind local services
+carefully, and test retrieval before allowing agents to answer from private
+datasets.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, open pull requests, and repository-wide
+content for `infiniflow/ragflow`, RAGFlow, RAGFlow RAG engine, RAGFlow MCP,
+RAGFlow agents, DeepDoc, agentic retrieval, context engine, self-hosted RAG
+platform, and RAGFlow OpenClaw skill. Existing content includes
+`content/mcp/ragflow-mcp-server.mdx`, which covers the built-in MCP retrieval
+server for a running RAGFlow deployment. No dedicated RAGFlow tools entry for
+the main platform, exact source URL duplicate in tools, target file, or open
+duplicate PR was found.

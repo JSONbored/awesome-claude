@@ -1,0 +1,175 @@
+---
+title: Official MCP Rust SDK
+slug: official-mcp-rust-sdk
+category: tools
+description: >-
+  Official Rust SDK for Model Context Protocol clients and servers, published as
+  the `rmcp` crate with tokio async runtime support, server and client features,
+  tool macros, resources, prompts, sampling, roots, logging, completions,
+  notifications, Streamable HTTP, child-process transports, and OAuth support.
+cardDescription: >-
+  Build MCP clients and servers in Rust with the official `rmcp` SDK, tokio
+  async runtime support, tool macros, resources, prompts, transports, and
+  docs.rs API documentation.
+seoTitle: Official MCP Rust SDK and rmcp Crate for Model Context Protocol
+seoDescription: >-
+  Use the official Model Context Protocol Rust SDK to build MCP servers and
+  clients with the `rmcp` crate, tokio, tool macros, resources, prompts,
+  Streamable HTTP transports, child-process transports, OAuth, and docs.rs docs.
+author: Model Context Protocol
+authorProfileUrl: "https://github.com/modelcontextprotocol"
+dateAdded: "2026-06-18"
+websiteUrl: "https://modelcontextprotocol.io"
+documentationUrl: "https://docs.rs/rmcp/latest/rmcp/"
+repoUrl: "https://github.com/modelcontextprotocol/rust-sdk"
+packageUrl: "https://docs.rs/rmcp/latest/rmcp/"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/rust-sdk"
+  - "https://github.com/modelcontextprotocol/rust-sdk/blob/main/README.md"
+  - "https://github.com/modelcontextprotocol/rust-sdk/blob/main/Cargo.toml"
+  - "https://github.com/modelcontextprotocol/rust-sdk/blob/main/crates/rmcp/Cargo.toml"
+  - "https://github.com/modelcontextprotocol/rust-sdk/blob/main/crates/rmcp-macros/Cargo.toml"
+  - "https://github.com/modelcontextprotocol/rust-sdk/blob/main/LICENSE"
+installable: true
+installCommand: "cargo add rmcp"
+usageSnippet: >-
+  Add the `rmcp` crate to a Rust project, enable the client/server and transport
+  features you need, then implement MCP handlers or use the tool macro helpers.
+copySnippet: |-
+  cargo add rmcp
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - "Rust toolchain and Cargo project compatible with the SDK crate version and edition requirements."
+  - "Tokio async-runtime familiarity for client, server, transport, and handler integration."
+  - "A selected feature set for server, client, macros, Streamable HTTP, child-process, OAuth, or schema generation support."
+  - "Reviewed authorization, side-effect, and data-exposure boundaries for production MCP tools and resources."
+safetyNotes:
+  - "The official Rust SDK is a protocol library; risk comes from the tools, resources, prompts, transports, auth flows, and long-running task behavior you implement with it."
+  - "Validate tool parameters, enforce caller permissions, bound file and network access, and sanitize errors before returning MCP responses."
+  - "Streamable HTTP servers, child-process transports, and OAuth flows need normal production controls: auth, TLS, request limits, lifecycle handling, logging policy, and abuse protection."
+  - "Feature flags can pull in transport, HTTP, OAuth, schema, and process dependencies; review the enabled feature set before shipping."
+privacyNotes:
+  - "Rust MCP services may expose tool arguments, tool results, resource contents, prompt templates, task state, authentication metadata, logs, traces, and subprocess output."
+  - "Avoid returning secrets, private files, customer data, internal identifiers, privileged paths, or raw dependency/runtime errors to MCP clients."
+  - "Document which MCP client, server process, transport, subprocess, model provider, and observability system can observe each request."
+tags:
+  - rust
+  - mcp
+  - sdk
+  - rmcp
+  - tokio
+  - official
+keywords:
+  - official MCP Rust SDK
+  - rmcp crate
+  - Model Context Protocol Rust SDK
+  - Rust MCP server SDK
+  - Rust MCP client SDK
+  - tokio MCP Rust
+  - Rust Streamable HTTP MCP
+  - MCP tool macros Rust
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The official MCP Rust SDK is the Model Context Protocol project's Rust
+implementation for building MCP clients and servers. The repository is published
+around the `rmcp` crate and an `rmcp-macros` procedural macro crate, with tokio
+async runtime support and docs.rs API documentation.
+
+Rust developers are a high-intent segment for MCP infrastructure because they
+often care about typed protocol surfaces, async transport behavior, low-overhead
+services, and strict production boundaries.
+
+## Package Layout
+
+| Crate | Best Fit |
+| --- | --- |
+| `rmcp` | Core MCP protocol implementation for clients, servers, handlers, transports, and models |
+| `rmcp-macros` | Procedural macros for generating MCP tool implementations |
+
+## Quick Start
+
+Install the core crate:
+
+```bash
+cargo add rmcp
+```
+
+Then enable the SDK features that match your deployment, such as server, client,
+macros, Streamable HTTP, child-process transport, schema generation, or OAuth
+support. The upstream `crates/rmcp/Cargo.toml` documents the feature list.
+
+## MCP Fit
+
+Choose the official Rust SDK when an MCP integration needs Rust's type system,
+async execution, transport control, service embedding, or tight resource bounds.
+It is a strong fit for developer tools, local services, infrastructure agents,
+gateway processes, and systems that already use tokio-based Rust components.
+
+The SDK provides protocol and transport primitives. It does not make unsafe
+tools safe by itself, so production use still requires clear authorization and
+data-exposure boundaries.
+
+## Core Capabilities
+
+| Area | Rust SDK Coverage |
+| --- | --- |
+| Server APIs | Server handlers, tool registration, resources, prompts, notifications, and tasks |
+| Client APIs | MCP client support and child-process transport examples |
+| Tool macros | `#[tool]`, `#[tool_router]`, and related macro support through `rmcp-macros` |
+| Transports | stdio/async I/O, child process, Streamable HTTP client and server features |
+| Protocol features | Sampling, roots, logging, completions, notifications, subscriptions, and schema support |
+| Auth | Optional OAuth and JWT-related feature support |
+
+## Use Cases
+
+- Build a typed Rust MCP server around local services or infrastructure APIs.
+- Implement a Rust MCP client or conformance test harness.
+- Expose tools with procedural macro routing.
+- Connect to child-process MCP servers from a Rust application.
+- Run Streamable HTTP MCP client or server transports.
+- Build low-overhead MCP services where resource bounds matter.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README identifies RMCP as an official Rust Model Context Protocol
+  SDK implementation with tokio async runtime support.
+- The README lists `rmcp` as the core protocol crate and `rmcp-macros` as the
+  procedural macro crate for tool implementations.
+- The workspace `Cargo.toml` declares versioned `rmcp` and `rmcp-macros` members,
+  Apache-2.0 licensing, Rust 2024 edition, repository metadata, and MCP keywords.
+- `crates/rmcp/Cargo.toml` documents the package name, docs.rs documentation
+  URL, dependencies, default features, server/client features, Streamable HTTP
+  features, OAuth-related features, schema support, and child-process transport
+  support.
+- docs.rs resolves current API documentation for `rmcp`.
+
+## Safety and Privacy
+
+Rust helps with type safety and resource control, but MCP safety still depends on
+your handler design. Keep tool surfaces narrow, validate parameters, check
+permissions, and avoid returning raw internal errors or private data to clients.
+
+For hosted or process-spawning deployments, review transport lifecycle,
+subprocess boundaries, authentication, logging, backpressure, cancellation, and
+task cleanup before production use.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `modelcontextprotocol/rust-sdk`,
+official MCP Rust SDK, Model Context Protocol Rust SDK, `rmcp` crate, Rust MCP
+server SDK, Rust MCP client SDK, tokio MCP Rust, and MCP tool macros Rust. Some
+unrelated entries contain `mcp` inside product names, but no dedicated official
+Rust SDK entry, exact source URL duplicate, target file, or open duplicate PR
+was found.

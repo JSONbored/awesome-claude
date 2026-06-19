@@ -1,5 +1,6 @@
 import atlasRegistry from "@/generated/atlas-registry.json";
 import { seoClusterDefinitions } from "@/data/seo-cluster-definitions";
+import { entryRef } from "@/lib/entry-identity";
 import type { Category, Entry } from "@/types/registry";
 import { buildEntry, type RegistryEntry } from "@/data/entry-normalize";
 
@@ -11,12 +12,21 @@ type RegistryChangelogEntry = {
   type?: string;
 };
 
-const registryEntries = (atlasRegistry.entries ?? []) as RegistryEntry[];
+export const REGISTRY_ENTRIES = (atlasRegistry.entries ?? []) as RegistryEntry[];
 const registryChangelog = (atlasRegistry.changelog ?? []) as RegistryChangelogEntry[];
 const generatedAt = atlasRegistry.generatedAt;
 export const REGISTRY_GENERATED_AT = generatedAt;
 
-export const ENTRIES: Entry[] = registryEntries.map(buildEntry);
+export const ENTRIES: Entry[] = REGISTRY_ENTRIES.map(buildEntry);
+
+// O(1) lookup by `category/slug`. Hot SSR paths (entry loader, /og route, the
+// /$category/$slug redirect, related()/relatedGroups(), trending) previously did
+// O(n) ENTRIES.find per lookup — and trending does ~50 lookups per request.
+const ENTRY_BY_REF: Map<string, Entry> = new Map(ENTRIES.map((entry) => [entryRef(entry), entry]));
+
+export function entryByRef(category: string, slug: string): Entry | undefined {
+  return ENTRY_BY_REF.get(`${category}/${slug}`);
+}
 
 export const BRIEF_ISSUES = registryChangelog.slice(0, 6).map((item, index) => ({
   slug: `registry-brief-${String(index + 1).padStart(3, "0")}`,

@@ -4,8 +4,8 @@ slug: fastapi-python-backend
 category: skills
 description: "Build high-performance async REST APIs with FastAPI, Python's fastest-growing web framework. Automatic OpenAPI/Swagger documentation, type-safe validation with Pydantic, native async/await support, and dependency injection for clean architecture."
 cardDescription: "Build high-performance async REST APIs with FastAPI, Python's fastest-growing web framework."
-seoTitle: FastAPI Python API Development Skill
-seoDescription: "Build high-performance async REST APIs with FastAPI, Python's fastest-growing web framework. Automatic OpenAPI/Swagger documentation, type-safe validation wi..."
+seoTitle: "FastAPI Skill: Build Async Python REST APIs with Claude"
+seoDescription: "Build high-performance async REST APIs with FastAPI — automatic OpenAPI/Swagger docs, Pydantic type-safe validation, native async/await, and dependency injection."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-23"
@@ -69,7 +69,7 @@ copySnippet: |-
       raise HTTPException(status_code=404, detail="Post not found")
 
   # Run with: uvicorn main:app --reload
-  # Docs at: http://localhost:8000/docs
+  # Docs at: localhost:8000/docs
 skillType: general
 skillLevel: advanced
 verificationStatus: draft
@@ -90,6 +90,10 @@ prerequisites:
   - pydantic ^2.0.0
   - "ASGI server (uvicorn, hypercorn, or daphne) for running FastAPI applications in production"
   - "Database driver for async operations (asyncpg for PostgreSQL, aiomysql for MySQL, or motor for MongoDB) when using database integration"
+safetyNotes:
+  - "Installs and runs server packages (pip install fastapi uvicorn pydantic sqlalchemy) and starts an ASGI web server that listens on a network port. Review dependencies and bind to trusted interfaces before exposing endpoints."
+privacyNotes:
+  - "API endpoints and database integrations can read and persist user-supplied data. Validate and scope what the service stores or logs, and keep database credentials and connection strings out of committed code."
 tags:
   - fastapi
   - python
@@ -97,17 +101,11 @@ tags:
   - async
   - pydantic
 keywords:
-  - api
-  - async
-  - backend
-  - claude
-  - development
-  - expert
-  - fastapi
-  - pydantic
-  - python
-  - skills
-  - tools
+  - fastapi python backend
+  - async rest api
+  - fastapi pydantic
+  - python api development
+  - fastapi tutorial
 readingTime: 6
 packageVerified: true
 difficultyScore: 100
@@ -294,7 +292,7 @@ Claude will:
 **Solution:** Only use async for I/O operations (database, HTTP calls). CPU-bound tasks should use sync functions. Ensure database driver supports async (asyncpg, aiomysql). Check connection pool settings.
 
 **Issue:** "CORS errors in browser"
-**Solution:** Add CORSMiddleware with correct origins: `app.add_middleware(CORSMiddleware, allow_origins=['http://localhost:3000'], allow_credentials=True)`. Don't use wildcard in production.
+**Solution:** Add CORSMiddleware with correct origins: `app.add_middleware(CORSMiddleware, allow_origins=['https://app.example.com'], allow_credentials=True)`. Don't use wildcard in production.
 
 **Issue:** "Dependency injection not working"
 **Solution:** Ensure dependencies return values, not None. Use `Depends()` in function signature, not inside function body. Check dependency order - dependencies can depend on other dependencies.

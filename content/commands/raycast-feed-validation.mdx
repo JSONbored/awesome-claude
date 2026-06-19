@@ -1,0 +1,120 @@
+---
+title: /raycast-feed-validation - Raycast Feed Validation Command for Claude Code
+slug: raycast-feed-validation
+category: commands
+description: >-
+  Slash command that validates a HeyClaude Raycast extension feed JSON file
+  against registry schema expectations: required entry fields, forbidden
+  payload keys, HTTPS detail URLs, MCP install targets, and copy preview limits.
+cardDescription: >-
+  Validate HeyClaude Raycast feed JSON schema, URLs, and entry field rules.
+seoTitle: /raycast-feed-validation - Raycast Feed Validation Command for Claude Code
+seoDescription: >-
+  Claude Code slash command to validate HeyClaude Raycast extension feed JSON
+  against schema, URL, and MCP install rules.
+author: kiannidev
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 755
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/755"
+documentationUrl: "https://github.com/anthropics/claude-code"
+repoUrl: "https://github.com/anthropics/claude-code"
+sourceUrls:
+  - "https://github.com/anthropics/claude-code"
+  - "https://github.com/JSONbored/awesome-claude"
+  - "https://heyclau.de/data/raycast-index.json"
+installable: true
+installCommand: "/raycast-feed-validation [feed-path]"
+commandSyntax: "/raycast-feed-validation [feed-path]"
+usageSnippet: "/raycast-feed-validation apps/web/public/data/raycast-index.json"
+copySnippet: "/raycast-feed-validation [feed-path]"
+prerequisites:
+  - "Raycast feed JSON file path (default: `apps/web/public/data/raycast-index.json`)."
+  - "awesome-claude repository clone with `integrations/raycast/` sources for cross-checks."
+  - "Node.js environment to run `scripts/validate-raycast-feed.mjs` when available."
+safetyNotes:
+  - "Read-only JSON validation; does not publish feeds, modify Raycast store listings, or write CDN objects."
+  - "Validation failures block packaging until required fields and HTTPS URLs are corrected."
+  - "Do not embed full MDX bodies or script payloads in feed entries; feeds are metadata-only."
+privacyNotes:
+  - "Feed entries expose public titles, tags, and canonical URLs only; drafts should not be published early."
+  - "Validation logs may echo slugs and descriptions from the feed into model context."
+tags:
+  - raycast
+  - heyclaude
+  - feed
+  - validation
+  - integration
+keywords:
+  - raycast feed validation command
+  - heyclaude raycast index json
+  - awesome claude feed validator
+  - raycast extension feed schema
+---
+
+The `/raycast-feed-validation` command validates **HeyClaude Raycast feed JSON** before release. It aligns with `integrations/raycast/` expectations and the `validate-raycast-feed` script used in awesome-claude CI.
+
+## Usage
+
+```
+/raycast-feed-validation [feed-path]
+```
+
+- With a `feed-path`: validate that JSON file.
+- Without an argument: default to `apps/web/public/data/raycast-index.json`.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Load the feed.** Parse the JSON at the given path. Confirm top-level metadata: generated timestamp, entry array, and version fields expected by `integrations/raycast/src/feed.ts`.
+2. **Validate required entry fields.** Each entry must include `category`, `slug`, `title`, `description`, `tags`, `detailUrl`, and `webUrl` per Raycast registry command requirements.
+3. **Reject forbidden fields.** Fail if entries embed `body`, `sections`, `headings`, `codeBlocks`, or `scriptBody` — feeds must stay metadata-only for Raycast performance and privacy.
+4. **Check URLs.** Ensure `detailUrl` and `webUrl` use HTTPS and resolve under the HeyClaude data routes (`heyclau.de/data/raycast/...` and canonical browse URLs).
+5. **Validate MCP install metadata.** When `mcpInstallTargets` is present, confirm values are from the allowed target ID set used by the Raycast MCP installer.
+6. **Enforce copy preview limits.** Verify summary and copy preview strings respect `RAYCAST_COPY_PREVIEW_LIMIT` used by the extension UI.
+7. **Cross-check directory index.** When `directory-index.json` is available, confirm feed slugs align with directory entries and no orphaned or duplicate slugs exist.
+
+## Output format
+
+- **Feed:** path, entry count, generated timestamp.
+- **Errors:** field, entry slug, rule violated.
+- **Warnings:** non-blocking inconsistencies with `integrations/raycast/`.
+- **MCP targets:** invalid or missing install target IDs.
+- **Verdict:** pass / fail with first blocking error.
+
+## Requirements
+
+- Valid Raycast feed JSON readable in the awesome-claude workspace.
+- Optional: run `node scripts/validate-raycast-feed.mjs` for CI-parity checks.
+- `integrations/raycast/` sources for schema cross-reference.
+
+## Safety notes
+
+Read-only validation of JSON metadata. Does not publish feeds or modify Raycast extension packages. Blocking errors must be fixed before shipping feed updates to production CDN paths.
+
+## Privacy notes
+
+Feeds should contain only public registry metadata. Do not place draft bodies, credentials, or private employer data in feed entries.
+
+## Source Verification Notes
+
+Verified against the public Anthropic `claude-code` repository and awesome-claude Raycast integration on **2026-06-14**:
+
+- awesome-claude ships `integrations/raycast/` with feed consumers documented in the Raycast README.
+- `scripts/validate-raycast-feed.mjs` encodes required fields, forbidden keys, and MCP install rules.
+- Production feed example is published at `heyclau.de/data/raycast-index.json`.
+- `integrations/raycast/src/feed.ts` defines how entries map to Raycast list UI actions.
+- Claude Code custom commands support running repository validation scripts before release.
+
+## Duplicate Check
+
+Checked `content/commands` and `integrations/raycast/`. No slash command documents Raycast feed JSON validation. Registry content validation covers MDX frontmatter, not Raycast index JSON. This command complements CI scripts with an operator-facing runbook.
+
+## References
+
+- Claude Code repository: https://github.com/anthropics/claude-code
+- awesome-claude Raycast integration: https://github.com/JSONbored/awesome-claude/tree/main/integrations/raycast
+- HeyClaude Raycast feed: https://heyclau.de/data/raycast-index.json

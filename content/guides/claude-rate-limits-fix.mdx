@@ -1,141 +1,181 @@
 ---
-title: "Claude Rate Limits Fix: Complete Optimization Guide 2025"
+title: "Fix Claude Code Rate Limits and Usage Errors"
 slug: claude-rate-limits-fix
 category: guides
 description: >-
-  Fix Claude 429 errors and usage limits with proven solutions reducing token
-  consumption by 70%. Master rate limit optimization for 18.3M affected users.
+  Diagnose and fix Claude Code 429 errors, session and weekly usage limits, and
+  high token consumption using built-in commands and documented settings.
 cardDescription: >-
-  Fix Claude 429 errors and usage limits with proven solutions reducing token
-  consumption by 70%.
-seoTitle: "Claude Rate Limits Fix: Complete Optimization Guide 2025"
+  Tell apart 429, session, and weekly usage errors, then bring token spend
+  down with in-session commands.
+seoTitle: "Fix Claude Code Rate Limits and Usage Errors"
 seoDescription: >-
-  Fix Claude 429 errors and usage limits with proven solutions reducing token
-  consumption by 70%. Master rate limit optimization for 18.3M affected users.
+  Understand Claude Code rate limit and usage-limit errors, then reduce token
+  consumption with /usage, /context, /compact, /model, and documented env vars.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+dateModified: "2026-06-16"
+documentationUrl: "https://code.claude.com/docs/en/costs"
+retrievalSources:
+  - "https://code.claude.com/docs/en/costs"
+  - "https://code.claude.com/docs/en/errors"
+  - "https://code.claude.com/docs/en/troubleshooting"
 installable: false
 usageSnippet: >-
-  Fix Claude rate limits and 429 errors with this comprehensive optimization
-  guide proven to reduce token consumption by 70%. Learn exponential backoff
-  implementation, usage limits optimization, and API rate limit handling that
-  maintains 95% productivity. Perfect for the 18.3 million users hitting limits
-  within 30 minutes after the July-August 2025 changes.
+  Tell Claude Code rate limit and usage errors apart, recover from session and
+  weekly limits with /usage and /usage-credits, tune retries and concurrency
+  with CLAUDE_CODE_MAX_RETRIES and CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY, and cut
+  token use with /context, /compact, /clear, /model, and MAX_THINKING_TOKENS.
+safetyNotes:
+  - "Changing retry, timeout, and concurrency environment variables or spend limits alters how Claude Code calls the API; review these before applying them in shared or CI environments."
+privacyNotes:
+  - "/usage and cost figures are computed locally from this machine's session history and reflect only this device; the commands send no data beyond normal model requests."
 tags:
   - tutorial
-  - advanced
   - rate-limits
   - 429-errors
+  - cost-management
 keywords:
-  - claude rate limits
-  - fix claude rate limit
-  - claude usage limits
-  - claude api throttling
-readingTime: 4
-difficultyScore: 57
-hasTroubleshooting: false
+  - claude code rate limits
+  - claude code 429 error
+  - claude code usage limits
+  - reduce claude code token usage
+readingTime: 7
+difficultyScore: 45
+hasTroubleshooting: true
 hasPrerequisites: false
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
 ---
 
-## TL;DR
+## Overview
 
-Fix Claude rate limits and 429 errors with this comprehensive optimization guide proven to reduce token consumption by 70%. Learn exponential backoff implementation, usage limits optimization, and API rate limit handling that maintains 95% productivity. Perfect for the 18.3 million users hitting limits within 30 minutes after the July-August 2025 changes.
+When Claude Code stops mid-task with a 429, a "usage limit" message, or a capacity error, the first step is figuring out which kind of limit you hit, because the fixes are different. There are three distinct situations, and Claude Code uses different wording for each:
 
-**Key Points:**
+- **Subscription usage limits** (Pro, Max, Team, Enterprise): a rolling allowance ran out. You'll see `You've hit your session limit`, `You've hit your weekly limit`, or `You've hit your Opus limit`, each with a reset time.
+- **API rate limits** (`429`): the per-key, per-workspace, or cloud-provider rate limit was exceeded. You'll see `Request rejected (429)`.
+- **Temporary capacity throttles and overloads**: short-lived, not tied to your quota. You'll see `Server is temporarily limiting requests (not your usage limit)` or `Repeated 529 Overloaded errors`. Claude Code retries these automatically before showing them.
 
-- Claude 429 error solutions - reduce failed requests by 95% with exponential backoff
-- Usage limits optimization - save 60-70% tokens through intelligent model selection
-- API rate limit handling - implement production-ready retry logic with jitter
-- 20 minutes implementation with immediate 70% consumption reduction
+Claude Code bills against API token consumption, while subscription plans bundle usage into the plan. Either way, the durable fix for "I keep hitting limits" is the same: reduce how many tokens each turn consumes. This guide covers diagnosing the error, recovering from each kind, and cutting token usage so you hit limits less often.
 
-Fix Claude's restrictive rate limits introduced in July-August 2025 that now affect 18.3 million monthly users, with many hitting limits within 30 minutes and waiting 2-3 hours for resets. This comprehensive guide provides actionable Claude 429 error solutions, usage limits optimization strategies, and API rate limit handling implementations that reduce token consumption by 70% while maintaining output quality. Based on extensive testing and community solutions from users experiencing daily disruptions.
+This guide reflects the behavior documented at [Manage costs effectively](https://code.claude.com/docs/en/costs), [Error reference](https://code.claude.com/docs/en/errors), and [Troubleshooting](https://code.claude.com/docs/en/troubleshooting). Run `claude --version` to confirm your build, since cost reporting and commands change between releases.
 
-> **Tutorial Requirements**
->
-> **Prerequisites:** Basic API knowledge, Claude account (Pro/API)<br />
-> **Time Required:** 20 minutes active implementation<br />
-> **Tools Needed:** Claude API key, code editor, monitoring tools<br />
-> **Outcome:** 70% reduced consumption, 95% fewer 429 errors
+## Commands and settings reference
 
-## What You'll Learn
+These slash commands run inside an interactive Claude Code session. The environment variables go in your shell, `settings.json`, or an MCP/launch config.
 
-<!-- Section type: feature_grid -->
+```text
+# Diagnose where you stand
+/usage            # Plan usage bars, reset times, and a per-source breakdown
+                  #   (subscriptions). Press d / w to toggle 24h vs 7d.
+/usage-credits    # Set a monthly spend cap, or buy/request extra usage on
+                  #   Pro and Max (admin-gated on Team and Enterprise)
+/cost             # Session token/cost summary (locally estimated, not your bill)
+/context          # Show what is consuming the context window right now
+/status           # Confirm the active credential (catch a stray API key)
+/doctor           # Automated check of install, settings, MCP, and context usage
 
-## Step-by-Step Claude Rate Limits Fix
+# Reduce token usage in the current session
+/clear            # Drop all context and start fresh between unrelated tasks
+/compact          # Summarize history now; add focus, e.g.
+/compact keep only the plan and the diff
+/model            # Switch model mid-session (e.g. Opus -> Sonnet)
+/effort           # Lower the extended-thinking effort level on simpler tasks
+/config           # Set default model, disable thinking, and other defaults
+/mcp              # List configured MCP servers and disable unused ones
 
-1. **Step 1: Diagnose Your Rate Limit Issues**
+# Environment variables (defaults shown where applicable)
+CLAUDE_CODE_MAX_RETRIES=10               # Retry attempts for transient failures
+API_TIMEOUT_MS=600000                    # Per-request timeout in milliseconds
+CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY=... # Lower to reduce parallel-tool 429s
+MAX_THINKING_TOKENS=8000                 # Cap thinking budget (fixed-budget models)
+CLAUDE_CODE_DISABLE_1M_CONTEXT=1         # Remove 1M-context variants from picker
+```
 
-2. **Step 2: Implement Claude 429 Error Solutions**
+> Note: The `/usage` dollar figure and `/cost` are locally estimated from token counts and can differ from your actual bill. For authoritative billing on API usage, check the Usage page in the [Claude Console](https://platform.claude.com/usage). Subscription session-cost figures aren't relevant for billing because usage is included in the plan.
 
-3. **Step 3: Optimize Claude Usage Limits**
+## Telling the errors apart
 
-4. **Step 4: Setup Claude API Rate Limit Handling**
+Match the message in your terminal to the right recovery path. The first column is what Claude Code actually prints.
 
-## Claude Usage Limits Optimization Deep Dive
+| Message you see | What it means | Counts against quota? | What to do first |
+| --- | --- | --- | --- |
+| `You've hit your session limit · resets <time>` | Rolling subscription allowance used up | Yes (plan) | Wait for reset, or `/usage-credits` |
+| `You've hit your weekly limit · resets <day>` | Weekly subscription allowance used up | Yes (plan) | Wait for reset, or `/usage-credits` |
+| `You've hit your Opus limit · resets <time>` | Opus-specific allowance used up | Yes (plan) | `/model` to Sonnet, or wait |
+| `Request rejected (429)` | API key / workspace / cloud rate limit exceeded | Yes (API tier) | `/status`, reduce concurrency, raise tier |
+| `Server is temporarily limiting requests (not your usage limit)` | Short-lived API throttle | No | Wait briefly, retry; auto-retried first |
+| `Repeated 529 Overloaded errors` | API at capacity for everyone | No | Check status.claude.com, `/model` to switch |
+| `Usage credits required for 1M context` | 1M-context entitlement check, not a quota | No | `/model` to a non-`[1m]` variant, or `/usage-credits` |
+| `Credit balance is too low` | Console prepaid credits exhausted | Yes (API balance) | Add credits, or `/login` to a subscription |
 
-<!-- Section type: accordion -->
+A useful first move when you see a `429` or capacity error is to remember Claude Code already retried it. Transient failures (server errors, overloads, timeouts, temporary 429 throttles, dropped connections) are retried up to `CLAUDE_CODE_MAX_RETRIES` times (default 10) with exponential backoff, showing a `Retrying in Ns · attempt x/y` countdown. If you reached the error message, those retries were exhausted, so retrying instantly rarely helps.
 
-## Claude 429 Error Solutions by Scenario
+## Fixing subscription usage limits
 
-<!-- Section type: tabs -->
+When you hit `You've hit your session limit` / `weekly limit` / `Opus limit`, Claude Code blocks further requests until the reset time printed in the message. To recover:
 
-## Alternative Workflow Patterns to Minimize Usage
+- **Wait for the reset time** shown in the error. It's a rolling window, not a hard daily reset.
+- **Run `/usage`** to see your plan limits, what's consuming them, and exactly when each window resets. Press `d` or `w` to switch between the last 24 hours and last 7 days. The breakdown attributes usage to skills, subagents, plugins, and individual MCP servers.
+- **Run `/usage-credits`** to buy additional usage on Pro and Max, or to request it from your admin on Team and Enterprise. You can also use it to set a monthly spend cap so a runaway session can't drain your account.
+- **Switch off Opus** with `/model` if you only hit the Opus-specific limit. Sonnet handles most coding tasks and has a separate, larger allowance.
+- **Upgrade the plan** for higher base limits via [claude.com/pricing](https://claude.com/pricing) if you regularly run out.
 
-> **Critical Usage Optimization Patterns**
->
-> **Pattern 1: Multi-Instance Deployment**
-> Run separate Claude sessions for documentation, coding, and testing. Each maintains isolated context windows, reducing consumption by 35-45%.
->
-> **Pattern 2: Hybrid Human-AI Workflow**
-> Use local tools for syntax checking and basic refactoring. Reserve Claude for complex architecture, reducing usage by 60-70%.
->
-> **Pattern 3: Template-Based Generation**
-> Create reusable templates for common patterns. Call Claude only for customization, cutting requests by 40%.
+To see your remaining allowance *before* you hit the wall, add the `rate_limits` fields to a [custom status line](https://code.claude.com/docs/en/statusline#rate-limit-usage), or click the usage ring next to the model picker in the Desktop app.
 
-## Community-Proven Workarounds
+## Fixing API 429 errors
 
-<!-- Section type: feature_grid -->
+`Request rejected (429)` means you exceeded the rate limit configured for your API key, Amazon Bedrock project, or Google Vertex AI project, not your subscription. Work through these in order:
 
-## Validation and Testing Your Fix
+1. **Confirm the active credential** with `/status`. A stray `ANTHROPIC_API_KEY` in your environment can silently route requests through a low-tier key instead of your subscription. This is the single most common cause of unexpected 429s.
+2. **Reduce concurrency.** Lower `CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY`, avoid running many parallel subagents, or switch to a smaller model with `/model` for high-volume scripted runs.
+3. **Raise your tier.** Check your provider console for the active limits and request a higher tier. For Anthropic API keys, see the [rate limits reference](https://platform.claude.com/docs/en/api/rate-limits) for how tiers work and how to set per-workspace caps.
+4. **Cap Claude Code's share for teams.** Claude Code authentication uses an auto-created "Claude Code" workspace that counts toward your org's overall API rate limits. Set a [workspace rate limit](https://platform.claude.com/docs/en/api/rate-limits#setting-lower-limits-for-workspaces) on it so Claude Code can't starve other production workloads.
 
-**Claude Rate Limits Fix Verification:**
+For team rate-limit planning, the docs publish per-user Token-Per-Minute (TPM) and Request-Per-Minute (RPM) starting points by org size:
 
-- **429 Error Rate**: < 5% of requests (Should drop from 30-40% to under 5% within 24 hours)
-- **Token Reduction**: 60-70% decrease (Measure weekly average vs baseline before optimization)
-- **Productivity Metric**: 95% maintained (Output volume should remain stable despite limits)
-- **Cost Analysis**: $9.18 vs $20/month (API usage for 200 lines daily vs Pro subscription)
-- **Reset Wait Time**: < 30 minutes (Down from 2-3 hours through intelligent scheduling)
-- **Weekly Lockouts**: 0 occurrences (No Thursday/Friday exhaustion with 60-30-10 rule)
+| Team size | TPM per user | RPM per user |
+| --- | --- | --- |
+| 1-5 users | 200k-300k | 5-7 |
+| 5-20 users | 100k-150k | 2.5-3.5 |
+| 20-50 users | 50k-75k | 1.25-1.75 |
+| 50-100 users | 25k-35k | 0.62-0.87 |
+| 100-500 users | 15k-20k | 0.37-0.47 |
+| 500+ users | 10k-15k | 0.25-0.35 |
 
-## Competitive Analysis
+These limits apply at the organization level, so individual users can temporarily consume more than their share when others aren't active. TPM per user drops as the org grows because fewer people use Claude Code concurrently at larger scale.
 
-<!-- Section type: comparison_table -->
+## Handling capacity errors (429 throttle, 529 overloaded)
 
-## Next Steps and Advanced Optimization
+These are not your fault and don't count against your quota:
 
-## Implementation Monitoring Tools
+- **`Server is temporarily limiting requests (not your usage limit)`**: a short-lived API throttle. Claude Code retries it automatically. Wait briefly and try again; check [status.claude.com](https://status.claude.com) if it persists.
+- **`Repeated 529 Overloaded errors`**: the API is at capacity across all users. Capacity is tracked per model, so run `/model` and switch to a different model to keep working. Claude Code may prompt you, e.g. `Opus is experiencing high load, please use /model to switch to Sonnet`. Check [status.claude.com](https://status.claude.com) for incident notices.
 
-<!-- Section type: related_content -->
+If timeouts rather than throttles are the problem on a slow network or proxy, raise `API_TIMEOUT_MS` (default 600000 ms).
 
----
+## Reducing token usage so you hit limits less
 
-> **You've Mastered Claude Rate Limits Fix!**
->
-> **Congratulations!** You can now handle 429 errors and optimize usage limits effectively.
->
-> **What you achieved:**
->
-> - ✅ Reduced 429 errors by 95% with exponential backoff
-> - ✅ Cut token consumption by 70% through optimization
-> - ✅ Implemented API rate limit handling with circuit breakers
-> - ✅ Deployed monitoring preventing unexpected lockouts
->
-> **Impact:** Join the successful users who've overcome the August 2025 rate limit crisis while maintaining productivity.
->
-> **Ready for more?** Explore our [tutorials collection](/guides/tutorials) or implement [enterprise solutions](/guides/enterprise) for guaranteed availability.
+Token cost scales with context size, so the durable fix is keeping context small. Claude Code already helps automatically via prompt caching (cheap repeated content) and auto-compaction (summarizing history near the context limit). On top of that:
 
-_Last updated: September 2025 | Based on testing with 18.3M affected users | Share your success with #ClaudeRateLimitsFix_
+- **Clear between tasks.** Use `/clear` when switching to unrelated work so stale context stops costing tokens on every message. `/rename` before clearing and `/resume` later if you'll come back.
+- **Compact with focus.** `/compact Focus on code samples and API usage` tells Claude what to preserve. You can also add a "Compact instructions" section to your `CLAUDE.md`.
+- **Choose the right model.** Sonnet handles most coding and costs less than Opus; reserve Opus for complex architecture or multi-step reasoning. Use `/model` to switch, or set a default in `/config`. For simple subagents, set `model: haiku`.
+- **Watch the context window.** Run `/context` to see what's consuming space, and configure your status line to display context usage continuously.
+- **Trim MCP overhead.** MCP tool definitions are deferred by default, but unused servers still add cost. Run `/mcp` to disable servers you aren't using, and prefer CLI tools (`gh`, `aws`, `gcloud`) where possible since they add no per-tool listing.
+- **Tune extended thinking.** Thinking tokens bill as output tokens. For simpler tasks, lower the effort level with `/effort` or `/model`, disable thinking in `/config`, or on fixed-budget models lower it with `MAX_THINKING_TOKENS=8000`. Adaptive-reasoning models ignore nonzero budgets, so use effort levels there.
+- **Keep `CLAUDE.md` lean.** It loads at session start and stays in context. Aim for under 200 lines; move specialized workflow instructions into on-demand skills.
+- **Offload verbose output.** Use a PreToolUse hook to filter large logs or test output before Claude sees it, and delegate test runs, doc fetches, and log processing to subagents so the verbose output stays in their context.
+- **Write specific prompts.** "Add input validation to the login function in auth.ts" reads far fewer files than "improve this codebase." Use plan mode (Shift+Tab) for complex tasks and Escape / `/rewind` to course-correct before wasted work compounds.
+
+## When sessions get slow or stuck instead
+
+High CPU or memory and thrashing can look like a limit problem but aren't:
+
+- **High CPU/memory:** use `/compact` regularly, restart Claude Code between major tasks, add large build dirs to `.gitignore`, and restart with `claude --safe-mode` to test whether a plugin, MCP server, or hook is the cause.
+- **`Autocompact is thrashing: the context refilled to the limit...`:** a large file or tool output keeps refilling context. Read the file in smaller chunks, run `/compact keep only the plan and the diff`, move the work to a subagent, or `/clear` if the history is no longer needed.
+- **Hang or freeze:** press Ctrl+C to cancel; if unresponsive, close the terminal and rerun `claude --resume` in the same directory to recover the session.
+
+For anything not covered here, `/doctor` checks install health, settings, MCP config, and context usage in one pass.

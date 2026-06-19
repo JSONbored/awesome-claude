@@ -50,7 +50,7 @@ const GITHUB_LOGIN_PATTERN =
 const FINANCIAL_OR_IDENTITY_PATTERN =
   /\b(private key|wallet|kyc|usdc|x402|payment|crypto|on-chain)\b/i;
 const SENSITIVE_ATTESTATION_FORWARD_TERMS =
-  "wallet|kyc|payment|crypto|on-chain identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
+  "wallet|kyc|payment|crypto|on-chain identity|user identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
 const SENSITIVE_ATTESTATION_REVERSE_TERMS =
   "wallet|kyc|payment|crypto|on-chain identity|identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
 const IDENTITY_ATTESTATION_PATTERN = new RegExp(
@@ -65,8 +65,52 @@ const DEFENSIVE_SECURITY_MITIGATION_PATTERN =
   /\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b[\s\S]{0,160}\b(?:(?:credential|password|cookie|session|token|wallet|secret|leak)s?|expos(?:e|ing|ure))\b|\b(?:credential|password|cookie|session|token|wallet|secret)s?\b[\s\S]{0,160}\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b/i;
 const RESOURCE_THEFT_CAPABILITY_PATTERN =
   /\b(?:this|the|our)?\s*(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b[\s\S]{0,40}\b(?:can|will|does|advertises?|offers?|enables?|designed to|built to)\b[\s\S]{0,80}\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b|\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(?:with|using|through|by)\b[\s\S]{0,40}\b(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b/i;
+// Adult "xxx" only in an explicit adult context, so legitimate developer idioms
+// `TODO|FIXME|XXX` (code markers) and `(XXX) XXX-XXXX` (phone masks) are not
+// flagged. Mirrors scripts/ci/validate-content-policy.mjs.
+const ADULT_XXX_PATTERN =
+  /\bxxx[\s._-]*(?:porn|porno|sex|sexual|adult|nude|nudes|nsfw|hardcore|rated|video|videos|movie|movies|content|hub|tube|cam|cams|chat)\b|\b(?:porn|porno|sex|sexual|adult|nude|nudes|nsfw|hardcore)[\s._-]*xxx\b|\bxxx\.(?:com|net|org|xxx|tube|hub)\b|\.xxx\b/i;
+// Loopback HTTP endpoints (127.0.0.1 / localhost / [::1] / 0.0.0.0, any
+// port/path) are not an insecure-transport risk — many local MCP servers and
+// hooks legitimately run on http loopback. No SSRF surface: this risk scorer
+// only string-classifies install-text URLs and never fetches them; the exemption
+// only suppresses the `non_https_executable_source` flag. Mirrors
+// scripts/ci/validate-content-policy.mjs (intentionally duplicated — the CI
+// script and the CF-worker risk scorer are separate runtimes with no shared
+// import, like the other *_PATTERN constants in both files).
+const LOOPBACK_HTTP_HOSTNAMES = new Set([
+  "127.0.0.1",
+  "localhost",
+  "[::1]",
+  "0.0.0.0",
+]);
+function isLoopbackHttpUrl(value) {
+  if (typeof value !== "string") {
+    return false;
+  }
+
+  try {
+    const url = new URL(value.trim());
+    return (
+      url.protocol === "http:" &&
+      url.username === "" &&
+      url.password === "" &&
+      LOOPBACK_HTTP_HOSTNAMES.has(url.hostname)
+    );
+  } catch {
+    return false;
+  }
+}
 const CREDENTIAL_THEFT_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b/i;
+const THEFT_INTERDICTION_ACTION_PATTERN =
+  /\b(?:detects?|blocks?|prevents?|warns? before)\b/i;
+const THEFT_INTERDICTION_TARGET_PATTERN =
+  /\b(?:commands?|patterns?|attempts?|requests?|prompts?|output)\b/i;
+const THEFT_INTERDICTION_RESULT_PATTERN =
+  /\b(?:blocks?|prevents?|before they run)\b/i;
+const THEFT_INTERDICTION_WINDOW = 120;
+const THEFT_CONTEXT_TO_CLAIM_WINDOW = 220;
 const CREDENTIAL_THEFT_DESTINATION_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,120}\b(?:to|into|via|through|over|using|at)\b[\s\S]{0,40}\b(webhooks?|remote servers?|external endpoints?|third[- ]part(?:y|ies)|apis?|https?:\/\/)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,120}\b(?:to|into|via|through|over|using|at)\b[\s\S]{0,40}\b(webhooks?|remote servers?|external endpoints?|third[- ]part(?:y|ies)|apis?|https?:\/\/)\b/i;
 const EXPLICIT_CREDENTIAL_STEALING_PATTERN =
@@ -125,9 +169,51 @@ function hasFinancialOrIdentitySensitiveSignal(text) {
   );
 }
 
+function globalPattern(pattern) {
+  const flags = pattern.flags.includes("g")
+    ? pattern.flags
+    : `${pattern.flags}g`;
+  return new RegExp(pattern.source, flags);
+}
+
+function hasOrderedPatternWindow(text, firstPattern, secondPattern, maxChars) {
+  for (const match of text.matchAll(globalPattern(firstPattern))) {
+    const start = (match.index ?? 0) + match[0].length;
+    if (secondPattern.test(text.slice(start, start + maxChars))) return true;
+  }
+  return false;
+}
+
+function hasDefensiveTheftInterdiction(text) {
+  // Only safe-harbor theft wording when it describes blocking/detecting risky
+  // command, prompt, request, or output patterns, not the tool's own capability.
+  const actionBeforeTarget = hasOrderedPatternWindow(
+    text,
+    THEFT_INTERDICTION_ACTION_PATTERN,
+    THEFT_INTERDICTION_TARGET_PATTERN,
+    THEFT_INTERDICTION_WINDOW,
+  );
+  const targetBeforeTheft = hasOrderedPatternWindow(
+    text,
+    THEFT_INTERDICTION_TARGET_PATTERN,
+    CREDENTIAL_THEFT_PATTERN,
+    THEFT_CONTEXT_TO_CLAIM_WINDOW,
+  );
+  const theftBeforeResult = hasOrderedPatternWindow(
+    text,
+    CREDENTIAL_THEFT_PATTERN,
+    THEFT_INTERDICTION_RESULT_PATTERN,
+    THEFT_INTERDICTION_WINDOW,
+  );
+
+  return (actionBeforeTarget && targetBeforeTheft) || theftBeforeResult;
+}
+
 function hasDefensiveSecuritySafeHarbor(text) {
+  const hasCredentialTheftWording = CREDENTIAL_THEFT_PATTERN.test(text);
   return (
     DEFENSIVE_SECURITY_MITIGATION_PATTERN.test(text) &&
+    (!hasCredentialTheftWording || hasDefensiveTheftInterdiction(text)) &&
     !RESOURCE_THEFT_CAPABILITY_PATTERN.test(text) &&
     !CREDENTIAL_THEFT_DESTINATION_PATTERN.test(text) &&
     !EXPLICIT_CREDENTIAL_STEALING_PATTERN.test(text) &&
@@ -820,6 +906,7 @@ function addContentRiskSignals(report, fields, text) {
       fields.usage_snippet,
       fields.usageSnippet,
       fields.copySnippet,
+      fields.config_snippet,
       fields.configSnippet,
     ].join("\n"),
   );
@@ -848,7 +935,11 @@ function addContentRiskSignals(report, fields, text) {
     );
   }
 
-  if (executableSourceUrls.some((url) => url.startsWith("http://"))) {
+  if (
+    executableSourceUrls.some(
+      (url) => url.startsWith("http://") && !isLoopbackHttpUrl(url),
+    )
+  ) {
     addFlag(
       report,
       "critical",
@@ -927,7 +1018,8 @@ function addContentRiskSignals(report, fields, text) {
 
   if (
     /\b(csam|child sexual abuse|child exploitation)\b/i.test(text) ||
-    /\b(porn|pornographic|explicit sexual|xxx|onlyfans)\b/i.test(text) ||
+    /\b(porn|pornographic|explicit sexual|onlyfans)\b/i.test(text) ||
+    ADULT_XXX_PATTERN.test(text) ||
     /\bterrorist recruitment|violent extremist recruitment\b/i.test(text)
   ) {
     addFlag(
@@ -1474,6 +1566,7 @@ function frontmatterFields(data = {}, category = "") {
     install_command: normalizeText(data.installCommand),
     usage_snippet: normalizeText(data.usageSnippet),
     full_copyable_content: normalizeText(data.copySnippet),
+    configSnippet: normalizeText(data.configSnippet),
     brand_domain: normalizeText(data.brandDomain),
     safety_notes: stringList(data.safetyNotes).join("\n"),
     privacy_notes: stringList(data.privacyNotes).join("\n"),

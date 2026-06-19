@@ -1,0 +1,236 @@
+---
+title: OpenClaw MCP Server for Claude
+slug: openclaw-mcp-server
+category: mcp
+description: >-
+  Connect Claude, Codex, Claude Code, and other MCP clients to OpenClaw
+  Gateway-backed channel conversations with the official `openclaw mcp serve`
+  bridge, plus manage OpenClaw-saved outbound MCP server definitions.
+cardDescription: >-
+  Official OpenClaw MCP bridge for routed channel conversations, transcript
+  reads, live event polling, reply sends, approvals, and OpenClaw MCP registry
+  management.
+seoTitle: OpenClaw MCP Server for Claude - Channel Conversations and MCP Registry
+seoDescription: >-
+  Use `openclaw mcp serve` to expose OpenClaw Gateway conversations to Claude
+  and other MCP clients, read transcripts, poll live events, send replies, handle
+  approval requests, and manage saved MCP server definitions.
+author: OpenClaw
+authorProfileUrl: "https://github.com/openclaw"
+dateAdded: "2026-06-18"
+brandName: OpenClaw
+brandDomain: openclaw.ai
+documentationUrl: "https://docs.openclaw.ai/cli/mcp"
+websiteUrl: "https://openclaw.ai"
+repoUrl: "https://github.com/openclaw/openclaw"
+packageUrl: "https://registry.npmjs.org/openclaw"
+sourceUrls:
+  - "https://docs.openclaw.ai/cli/mcp"
+  - "https://docs.openclaw.ai/cli/mcp.md"
+  - "https://github.com/openclaw/openclaw"
+  - "https://registry.npmjs.org/openclaw"
+  - "https://docs.openclaw.ai/gateway/security"
+  - "https://docs.openclaw.ai/gateway/security/exposure-runbook"
+installable: true
+installCommand: "npm install -g openclaw@latest"
+usageSnippet: >-
+  Install the OpenClaw CLI, run or connect to an OpenClaw Gateway with routed
+  channel sessions, then configure your MCP client to launch `openclaw mcp
+  serve`.
+copySnippet: |-
+  openclaw mcp serve
+configSnippet: |-
+  {
+    "mcpServers": {
+      "openclaw": {
+        "command": "openclaw",
+        "args": ["mcp", "serve"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "OpenClaw CLI installed from npm and a working OpenClaw Gateway."
+  - "An MCP client such as Claude Code, Codex, Claude Desktop, or another stdio-capable host."
+  - "Existing OpenClaw session route metadata for conversations you want exposed through MCP."
+  - "Gateway token or password files when connecting to a remote OpenClaw Gateway."
+  - "Channel pairing, sender allowlists, and trust policies reviewed before exposing live messaging routes."
+safetyNotes:
+  - "`messages_send` can send text back through an existing OpenClaw channel route, so confirm the target conversation before approving replies."
+  - "`permissions_respond` can resolve exec or plugin approval requests observed while the bridge is connected."
+  - "The live event queue and Claude channel notifications exist only while the MCP bridge session is connected; use transcript reads for older history."
+  - "Remote Gateway URLs, token files, and password files should be treated as secrets and scoped to trusted machines."
+  - "OpenClaw channel safety remains controlled by the underlying Gateway, pairing policy, sender allowlists, and sandbox settings."
+privacyNotes:
+  - "Routed conversation titles, transcript history, non-text message metadata, sender identifiers, account IDs, thread IDs, and live inbound events may be exposed to the MCP client and model."
+  - "Approval request details can reveal command text, plugin names, paths, or operational intent while the bridge is connected."
+  - "MCP client logs, transcript exports, and model prompts may retain OpenClaw conversation content outside the Gateway."
+  - "Do not paste Gateway tokens, password file contents, channel credentials, or MCP server secrets into prompts, public issues, screenshots, or committed config."
+tags:
+  - openclaw
+  - mcp
+  - gateway
+  - channels
+  - claude-code
+keywords:
+  - openclaw mcp
+  - openclaw mcp serve
+  - openclaw mcp server
+  - openclaw claude mcp
+  - openclaw claude code
+  - openclaw mcp registry
+  - openclaw channel bridge
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+OpenClaw ships an official MCP surface through the `openclaw mcp` CLI. The most
+important path for Claude and other external clients is `openclaw mcp serve`,
+which starts a stdio MCP server, connects to an OpenClaw Gateway over WebSocket,
+and exposes routed OpenClaw channel conversations as MCP tools.
+
+Use this when an MCP client should inspect and reply to OpenClaw-backed
+conversations without running a separate bridge for each channel. OpenClaw also
+uses the same `openclaw mcp` namespace for its client-side MCP registry, where
+operators can save, inspect, probe, and update third-party MCP server
+definitions for OpenClaw-managed runtimes.
+
+## Features
+
+- Start OpenClaw as a stdio MCP server with `openclaw mcp serve`.
+- Connect the bridge to a local or remote OpenClaw Gateway.
+- List routed conversations with `conversations_list`.
+- Fetch a single conversation with `conversation_get`.
+- Read recent transcript history with `messages_read`.
+- Inspect non-text transcript message metadata with `attachments_fetch`.
+- Poll or wait for live inbound events with `events_poll` and `events_wait`.
+- Send a text reply through an existing route with `messages_send`.
+- List and resolve live exec or plugin approvals with `permissions_list_open`
+  and `permissions_respond`.
+- Enable Claude-specific channel notifications for live messages and permission
+  events.
+- Manage OpenClaw-saved outbound MCP server definitions with `openclaw mcp add`,
+  `set`, `configure`, `tools`, `login`, `logout`, `status`, `doctor`, `probe`,
+  `reload`, and `unset`.
+- Inspect the MCP registry from the OpenClaw Control UI at `/mcp`.
+
+## Installation
+
+Install the OpenClaw CLI:
+
+```bash
+npm install -g openclaw@latest
+```
+
+Configure a local MCP client to launch the OpenClaw bridge:
+
+```json
+{
+  "mcpServers": {
+    "openclaw": {
+      "command": "openclaw",
+      "args": ["mcp", "serve"]
+    }
+  }
+}
+```
+
+For a remote Gateway, pass a WebSocket URL and a token or password file:
+
+```bash
+openclaw mcp serve --url wss://gateway-host:18789 --token-file ~/.openclaw/gateway.token
+openclaw mcp serve --url wss://gateway-host:18789 --password-file ~/.openclaw/gateway.password
+```
+
+Use `openclaw mcp serve --claude-channel-mode off` when a generic MCP client
+should use only standard MCP polling tools instead of Claude-specific channel
+notifications.
+
+## Bridge Tools
+
+| Tool | Purpose |
+| --- | --- |
+| `conversations_list` | List recent session-backed conversations with route metadata |
+| `conversation_get` | Read one routed conversation by session key |
+| `messages_read` | Read recent transcript messages for a conversation |
+| `attachments_fetch` | Extract non-text transcript message metadata |
+| `events_poll` | Read live queued events since a numeric cursor |
+| `events_wait` | Long-poll for the next matching live event |
+| `messages_send` | Send a text reply through the existing conversation route |
+| `permissions_list_open` | List live approval requests seen by the bridge |
+| `permissions_respond` | Allow or deny one observed approval request |
+
+## MCP Registry Commands
+
+The non-`serve` commands make OpenClaw act as a client-side MCP registry. They
+save and inspect server definitions under `mcp.servers` in OpenClaw config.
+They do not expose OpenClaw over MCP by themselves.
+
+Common registry commands:
+
+```bash
+openclaw mcp list
+openclaw mcp status --verbose
+openclaw mcp doctor --probe
+openclaw mcp probe context7 --json
+openclaw mcp add memory --command npx --arg -y --arg @modelcontextprotocol/server-memory
+openclaw mcp set docs '{"url":"https://mcp.example.com","transport":"streamable-http"}'
+openclaw mcp configure docs --auth oauth --oauth-scope 'docs.read'
+openclaw mcp login docs
+openclaw mcp unset context7
+```
+
+Use `probe` or `doctor --probe` when you need live proof that a saved MCP server
+connects and lists capabilities.
+
+## Use Cases
+
+- Let Claude Code or Codex inspect OpenClaw conversations that already have
+  Gateway route metadata.
+- Read recent transcript history before responding to a channel thread.
+- Watch live inbound events from OpenClaw-backed channels while an MCP client is
+  connected.
+- Send a text reply through the same recorded route after human review.
+- Surface live OpenClaw approval requests inside an MCP client session.
+- Maintain a central registry of MCP servers that OpenClaw-managed runtimes can
+  later consume.
+
+## Safety and Privacy
+
+OpenClaw MCP inherits the authority of the connected Gateway and its configured
+channels. Sender allowlists, pairing policies, sandboxing, and channel trust
+boundaries still belong in OpenClaw Gateway configuration. The bridge only sends
+text through existing routes, but those routes may point at real messaging
+surfaces.
+
+The live event queue starts when the bridge connects and disappears when the MCP
+client disconnects. Use `messages_read` for durable transcript history. Approval
+state is also live-session scoped, so `permissions_list_open` only includes
+requests observed while the bridge was connected.
+
+For remote Gateways, keep token and password files out of prompts, screenshots,
+logs, and commits. Before exposing OpenClaw beyond localhost, review the
+official Gateway security and exposure runbooks.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- OpenClaw's MCP documentation describes `openclaw mcp serve` as the path for
+  running OpenClaw as an MCP server and the other `openclaw mcp` subcommands as
+  the client-side registry path.
+- The documentation lists the bridge tools for conversations, transcript reads,
+  live event polling, message sends, and approval handling.
+- The documentation describes Claude-specific channel notifications and notes
+  that generic MCP clients should rely on the standard polling tools.
+- The OpenClaw npm package is published as `openclaw` with the upstream
+  `openclaw/openclaw` repository.
+
+## Duplicate Check
+
+No dedicated OpenClaw MCP server entry was found in `content/mcp`. Existing
+OpenClaw entries in `content/skills` are skill packs, not the official MCP
+bridge or MCP registry documentation.

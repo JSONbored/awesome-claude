@@ -1,0 +1,188 @@
+---
+title: Zendesk MCP Server for Claude
+slug: zendesk-mcp-server
+category: mcp
+description: >-
+  Retrieve and manage Zendesk tickets, analyze support conversations, draft ticket responses,
+  and search the Zendesk Help Center knowledge base — with the open-source Zendesk MCP server
+  supporting ticket CRUD, threaded comments, and built-in analysis prompts.
+cardDescription: "Zendesk MCP: tickets, comments, knowledge base, analyze & draft responses from Claude."
+seoTitle: "Zendesk MCP Server for Claude — Tickets, Comments, Knowledge Base & Response Drafting"
+seoDescription: "Connect Claude to Zendesk with the open-source MCP server: fetch, create, and update tickets; read and post comments; search the Help Center knowledge base; draft ticket responses — via uvx zendesk-mcp-server, Apache-2.0."
+author: reminia
+authorProfileUrl: "https://github.com/reminia"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/reminia/zendesk-mcp-server"
+websiteUrl: "https://zendesk.com"
+repoUrl: "https://github.com/reminia/zendesk-mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/reminia/zendesk-mcp-server/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add zendesk -e ZENDESK_SUBDOMAIN=your-subdomain -e ZENDESK_EMAIL=you@example.com -e ZENDESK_API_KEY=your-api-key -- uvx zendesk-mcp-server"
+usageSnippet: >-
+  Ask Claude to list the latest open tickets, analyze a specific ticket's history, draft a
+  response to a customer complaint, search the Help Center for relevant articles, or create
+  a new ticket from a customer email.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "zendesk": {
+        "command": "uvx",
+        "args": ["zendesk-mcp-server"],
+        "env": {
+          "ZENDESK_SUBDOMAIN": "your-subdomain",
+          "ZENDESK_EMAIL": "you@example.com",
+          "ZENDESK_API_KEY": "your-api-key"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "zendesk": {
+        "command": "uvx",
+        "args": ["zendesk-mcp-server"],
+        "env": {
+          "ZENDESK_SUBDOMAIN": "your-subdomain",
+          "ZENDESK_EMAIL": "you@example.com",
+          "ZENDESK_API_KEY": "your-api-key"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - "A Zendesk account with Admin or Agent access."
+  - "Your Zendesk subdomain (the part before `.zendesk.com`), email address, and API token (Settings → API → Zendesk API → Add API Token)."
+  - "Python with `uv` installed: `pip install uv` or `brew install uv`."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "`create_ticket` and `update_ticket` write to your live Zendesk instance — changes affect real customer tickets and are visible to your support team."
+  - "`create_ticket_comment` posts public or internal notes on tickets — set the `public` parameter to `false` for internal notes only."
+privacyNotes:
+  - "Ticket content including customer messages, email addresses, and conversation history are surfaced in Claude's context."
+  - "The Zendesk Help Center knowledge base (zendesk://knowledge-base) exposes all published articles in your instance."
+  - "Treat your Zendesk API token as a secret — do not commit it to version control."
+tags:
+  - zendesk
+  - customer-support
+  - help-desk
+  - tickets
+  - knowledge-base
+keywords:
+  - zendesk mcp server
+  - zendesk mcp claude
+  - customer support mcp claude code
+  - ticket management mcp
+  - zendesk help center mcp
+  - support ticket ai claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Zendesk MCP Server** connects Claude to your Zendesk support instance for ticket
+management, comment threading, and knowledge base access. It includes two specialized prompts —
+`analyze-ticket` and `draft-ticket-response` — that leverage Claude's reasoning to help
+support agents understand complex tickets and write effective responses faster. Licensed under
+Apache-2.0 with 104 stars on GitHub.
+
+## Key capabilities
+
+- **Ticket management** — fetch the latest tickets with pagination, retrieve individual tickets
+  by ID, create new tickets, and update ticket fields (status, priority, assignee).
+- **Comment threading** — read all comments on a ticket and post new public or internal notes.
+- **Knowledge base** — access the entire Zendesk Help Center via the `zendesk://knowledge-base`
+  resource for grounded responses based on your documentation.
+- **Analysis prompts** — built-in `analyze-ticket` and `draft-ticket-response` prompts for
+  structured ticket analysis and AI-assisted response drafting.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `get_tickets` | Fetch latest tickets with pagination (max 100 per page) |
+| `get_ticket` | Retrieve a specific ticket by ID |
+| `get_ticket_comments` | Get all comments for a ticket |
+| `create_ticket_comment` | Add a public or internal note to a ticket |
+| `create_ticket` | Create a new support ticket |
+| `update_ticket` | Update ticket status, priority, or assignee |
+
+## How it compares
+
+| Server | Ticket CRUD | Comments | Knowledge base | Built-in prompts | Auth |
+|---|---|---|---|---|---|
+| **Zendesk MCP** | Yes | Yes | Yes | Yes | API token |
+| Intercom MCP | Yes | Yes | Limited | No | API key |
+| Freshdesk MCP | Yes | Limited | No | No | API key |
+| HubSpot MCP | Partial | Yes | No | No | OAuth |
+
+The built-in analysis and response-drafting prompts are purpose-built for support workflows —
+unique among help desk MCP servers.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add zendesk \
+  -e ZENDESK_SUBDOMAIN=your-subdomain \
+  -e ZENDESK_EMAIL=you@example.com \
+  -e ZENDESK_API_KEY=your-api-key \
+  -- uvx zendesk-mcp-server
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "zendesk": {
+      "command": "uvx",
+      "args": ["zendesk-mcp-server"],
+      "env": {
+        "ZENDESK_SUBDOMAIN": "your-subdomain",
+        "ZENDESK_EMAIL": "you@example.com",
+        "ZENDESK_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+Get your API token in Zendesk: Admin Center → Apps and integrations → APIs → Zendesk API
+→ Add API token.
+
+### Docker
+
+```bash
+docker run --rm -i --env-file /path/to/.env zendesk-mcp-server
+```
+
+## Requirements
+
+- A Zendesk account with API access and an API token.
+- Python with `uv` installed.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Uses API token + email authentication — no OAuth or stored sessions.
+- Keep your API token out of version control; use environment variables or a secrets manager.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- GitHub repository `reminia/zendesk-mcp-server` (Apache-2.0, 104 stars) documents the
+  `zendesk-mcp-server` PyPI package (v0.1.1), the `ZENDESK_SUBDOMAIN`/`ZENDESK_EMAIL`/
+  `ZENDESK_API_KEY` environment variables, all six tools (get_tickets, get_ticket,
+  get_ticket_comments, create_ticket_comment, create_ticket, update_ticket), the
+  `zendesk://knowledge-base` resource, the analyze-ticket and draft-ticket-response prompts,
+  and the Docker build option.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

@@ -1,0 +1,131 @@
+---
+title: MCP Registry Metadata Reviewer Agent
+slug: mcp-registry-metadata-reviewer-agent
+category: agents
+description: >-
+  Community reusable agent prompt for pre-publish review of MCP Registry server.json
+  metadata using official quickstart and authentication documentation: namespace checks,
+  package pointers, field validation, and duplicate listing detection.
+cardDescription: Pre-publish review MCP Registry server.json using official quickstart documentation.
+seoTitle: MCP Registry Metadata Reviewer Agent
+seoDescription: >-
+  Reusable agent prompt for MCP Registry server.json pre-publish review grounded in official
+  quickstart and authentication docs: namespaces, package pointers, validation, duplicates.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1571
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1571"
+documentationUrl: "https://modelcontextprotocol.io/registry/quickstart"
+repoUrl: "https://github.com/modelcontextprotocol/registry"
+installable: false
+usageSnippet: >-
+  Use this agent before submitting server.json to the MCP Registry to verify quickstart publish
+  requirements, namespace auth, reachable package URLs, and duplicate listings.
+prerequisites:
+  - Draft server.json metadata prepared per MCP Registry quickstart steps.
+  - Namespace authentication completed via documented GitHub, DNS, or HTTP challenges.
+  - Reachability checks for npm, PyPI, Docker, GitHub, or remote URLs in metadata.
+  - Search results across registry listings for duplicate names or domains.
+safetyNotes:
+  - Incorrect package coordinates can misdirect installers—verify artifact hashes or tags when possible.
+  - Private-only servers are out of registry scope; reject metadata pointing at private registries.
+  - Metadata review does not certify tool safety—note security scanning limitations explicitly.
+  - Publisher OAuth credentials must not appear in review logs or public tickets.
+privacyNotes:
+  - Draft metadata may include private repo URLs—redact before sharing review summaries.
+  - Authentication debug output can expose tenant identifiers—keep reports internal.
+  - Public approve/reject summaries should list field-level fixes, not full server.json secrets.
+tags:
+  - mcp
+  - registry
+  - metadata
+  - review
+  - publishing
+keywords:
+  - mcp registry metadata reviewer
+  - server.json pre publish review
+  - registry quickstart validation
+  - namespace authentication mcp registry
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Registry Metadata Reviewer Agent is a community-authored reusable prompt for pre-publish
+validation of MCP Registry server.json files. It applies official quickstart and authentication
+documentation—not an official MCP Registry reviewer service.
+
+## Scope Note
+
+This prompt maps review steps to documented quickstart publish requirements on
+modelcontextprotocol.io. Ongoing curation after publish is covered by mcp-registry-curator-agent.
+
+## Agent Prompt
+
+You are an MCP Registry metadata reviewer. Validate server.json drafts before submission using
+official quickstart and authentication documentation.
+
+Workflow:
+
+1. **Quickstart alignment.** Confirm draft follows publish steps documented in the registry quickstart.
+2. **Namespace auth.** Verify reverse-DNS namespace ownership evidence matches authentication docs.
+3. **Package pointers.** Ensure public npm/PyPI/Docker/remote URLs resolve and match described versions.
+4. **Field validation.** Check required discovery fields, execution instructions, and validation limits.
+5. **Scope rules.** Reject private-only installation paths per registry scope documentation.
+6. **Duplicates.** Search existing listings for conflicting names, repos, or domains.
+7. **Decision.** Approve submission, request fixes, or reject with explicit required changes.
+
+Output contract:
+
+- Quickstart checklist with pass/fail per documented requirement.
+- Namespace and URL reachability summary.
+- Duplicate findings.
+- Approve / revise / reject recommendation.
+
+## Features
+
+- Applies registry quickstart publish requirements to review checklists.
+- Validates namespace authentication before submission.
+- Flags out-of-scope private server metadata early.
+- Produces publisher-ready fix lists.
+
+## Use Cases
+
+- Publisher QA before first registry submission.
+- Maintainer review of community registry pull requests.
+- CI gate validating server.json before automated publish jobs.
+- Security team pre-flight before marketplace ingestion.
+
+## Source Notes
+
+Verified against MCP Registry quickstart and authentication documentation on **2026-06-16**:
+
+- Quickstart documentation lists concrete publish steps including preparing server.json,
+  authenticating publishers, and submitting metadata to the registry API.
+- Authentication docs describe namespace verification through GitHub, DNS, or HTTP challenges
+  required before claiming reverse-DNS server names.
+- Registry about documentation defines public accessibility requirements and metadata fields
+  stored in standardized server.json format.
+
+## Duplicate Check
+
+Checked content/agents and content/skills for registry review workflows.
+mcp-registry-curator-agent covers post-publish curation and deprecations.
+mcp-registry-publishing-capability-pack is a skills checklist for authors.
+No agents entry applies quickstart publish requirements to pre-submission server.json review.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public MCP Registry
+quickstart and authentication documentation. No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- MCP Registry quickstart - https://modelcontextprotocol.io/registry/quickstart
+- MCP Registry authentication - https://modelcontextprotocol.io/registry/authentication
+- MCP Registry repository - https://github.com/modelcontextprotocol/registry

@@ -1,0 +1,111 @@
+---
+title: HAPI MCP Server
+slug: hapi-mcp-server
+category: mcp
+description: >-
+  HAPI MCP exposes OpenAPI specifications as MCP tools dynamically using the la-rebelion
+  hapimcp project and MCP Registry package ai.com.mcp/hapi-mcp.
+cardDescription: >-
+  Turn OpenAPI specs into MCP tools with HAPI MCP and Docker-hosted hapi-cli.
+seoTitle: HAPI MCP Server for Claude
+seoDescription: >-
+  Configure HAPI MCP Server from la-rebelion/hapimcp: OpenAPI-to-MCP tools, Docker OCI
+  package, and MCP Registry entry ai.com.mcp/hapi-mcp.
+author: HAPI MCP
+authorProfileUrl: "https://github.com/la-rebelion"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+sourceSubmissionNumber: 1490
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1490"
+repoUrl: "https://github.com/la-rebelion/hapimcp"
+documentationUrl: "https://raw.githubusercontent.com/la-rebelion/hapimcp/main/README.md"
+retrievalSources:
+  - "https://raw.githubusercontent.com/la-rebelion/hapimcp/main/README.md"
+  - "https://github.com/la-rebelion/hapimcp"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+installable: true
+installCommand: "docker run -p 3030:3030 -v ~/.hapi:/app/.hapi docker.io/hapimcp/hapi-cli:0.6.0 serve"
+usageSnippet: >-
+  Run hapi-cli via Docker with a mounted OpenAPI project, connect MCP clients to the
+  streamable HTTP endpoint, and scope Authorization headers per registry guidance.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "hapi": {
+        "url": "https://YOUR_HAPI_HOST:3030/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "hapi": {
+        "url": "https://YOUR_HAPI_HOST:3030/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer YOUR_TOKEN"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "OpenAPI specification file or project configured for HAPI CLI serve mode."
+  - "Docker available for the OCI package docker.io/hapimcp/hapi-cli."
+  - "Review of which API operations become MCP tools before enabling write methods."
+safetyNotes:
+  - "HAPI exposes live API operations as MCP tools—inherited auth, rate limits, and write scope apply."
+  - "Mount only trusted OpenAPI specs; malicious operations become callable tools."
+  - "Protect Authorization headers; registry metadata marks them as secrets."
+privacyNotes:
+  - "Tool calls may send API payloads, account metadata, and response bodies to the MCP client."
+  - "Self-hosted Docker deployments keep traffic on your infrastructure; review OpenAPI response schemas for PII."
+tags:
+  - openapi
+  - hapi
+  - mcp
+  - api-first
+keywords:
+  - HAPI MCP server
+  - OpenAPI to MCP tools
+  - la-rebelion hapimcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+HAPI MCP converts **OpenAPI catalogs into MCP tools** without rewriting backend services.
+The project README and MCP Registry entry **`ai.com.mcp/hapi-mcp`** document Docker-based
+**`hapi-cli serve`** workflows and streamable HTTP transport.
+
+## Installation
+
+### Docker (registry package)
+
+```bash
+docker run -p 3030:3030 -v ~/.hapi:/app/.hapi docker.io/hapimcp/hapi-cli:0.6.0 serve YOUR_PROJECT
+```
+
+Point MCP clients at the documented **`/mcp`** HTTP endpoint with required Authorization headers.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- GitHub repository **la-rebelion/hapimcp** README describes OpenAPI-in, MCP-tools-out workflow.
+- MCP Registry lists **`ai.com.mcp/hapi-mcp`** with OCI package **docker.io/hapimcp/hapi-cli:0.6.0**.
+- Registry transport type is **streamable-http** with secret Authorization header guidance.
+
+## Duplicate Check
+
+No existing **`content/mcp/`** entry documents HAPI OpenAPI-to-MCP tooling.
+
+## Editorial Disclosure
+
+Community MCP listing by **kiannidev** from public README and MCP Registry metadata. No affiliate links.

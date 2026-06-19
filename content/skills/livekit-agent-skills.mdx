@@ -1,0 +1,236 @@
+---
+title: LiveKit Agent Skills
+slug: livekit-agent-skills
+category: skills
+description: >-
+  Official LiveKit Agent Skills for AI coding agents building low-latency voice
+  AI, LiveKit Agents workflows, handoffs, mandatory tests, and simulation
+  scenario suites.
+cardDescription: >-
+  LiveKit skill pack for voice AI architecture, handoffs, testing discipline,
+  and simulation scenarios for Claude Code, Codex, Cursor, and other agents.
+seoTitle: LiveKit Agent Skills for Claude Code and AI Voice Agents
+seoDescription: >-
+  Install LiveKit Agent Skills for Claude Code, Codex, Cursor, and AI coding
+  agents to build tested realtime voice AI agents with LiveKit Agents guidance.
+author: LiveKit
+authorProfileUrl: "https://github.com/livekit"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/livekit/agent-skills"
+documentationUrl: "https://github.com/livekit/agent-skills#readme"
+websiteUrl: "https://github.com/livekit/agent-skills"
+downloadUrl: "https://github.com/livekit/agent-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add livekit/agent-skills"
+usageSnippet: >-
+  Install the LiveKit Agent Skills, keep the LiveKit Docs MCP server available
+  for current API facts, then invoke the livekit-agents skill for voice AI
+  architecture or livekit-simulations for scenario-based agent testing.
+copySnippet: |-
+  npx skills add livekit/agent-skills
+
+  # Install one focused skill when your installer supports --skill
+  npx skills add livekit/agent-skills --skill livekit-agents
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/livekit/agent-skills"
+  - "https://raw.githubusercontent.com/livekit/agent-skills/main/README.md"
+  - "https://raw.githubusercontent.com/livekit/agent-skills/main/skills/livekit-agents/SKILL.md"
+  - "https://raw.githubusercontent.com/livekit/agent-skills/main/skills/livekit-simulations/SKILL.md"
+  - "https://raw.githubusercontent.com/livekit/agent-skills/main/LICENSE"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "AI coding agent or skill installer compatible with Agent Skill-style repositories."
+  - "LiveKit Agents project or planned voice AI implementation."
+  - "LiveKit Cloud project credentials when using the recommended LiveKit Cloud path."
+  - "LiveKit Docs MCP server or current docs access for API signatures, CLI commands, model support, deployment, and configuration facts."
+  - "Testing environment for LiveKit Agents behavior, including local unit tests or simulation runs where supported."
+safetyNotes:
+  - "The livekit-agents skill intentionally pushes agents toward implementation work for voice AI systems that can join realtime rooms, call tools, speak to users, and route calls; generated code still needs human review."
+  - "The skill requires tests for agent behavior, but tests do not prove latency, safety, consent, telephony legality, privacy, or production readiness by themselves."
+  - "The livekit-simulations skill includes private-beta caveats for simulation commands and requires current CLI help or docs verification before running `lk agent simulate`."
+  - "Do not let a coding agent invent LiveKit API signatures from memory; the skill repeatedly requires MCP/docs verification because the SDK changes quickly."
+  - "Voice agent handoffs, tasks, tool calls, and simulation scenarios can influence real user conversations if deployed; validate in staging rooms before production."
+privacyNotes:
+  - "LiveKit voice agent work can involve audio, video, transcripts, room metadata, participant identities, phone call details, test personas, tool inputs, tool outputs, and logs."
+  - "The skills are prompt/instruction assets, but the implementations they guide may send data to LiveKit, STT providers, LLM providers, TTS providers, MCP servers, telephony providers, and observability backends."
+  - "Keep LIVEKIT_API_SECRET, provider keys, SIP credentials, room tokens, recordings, transcripts, and generated scenario files containing sensitive business logic out of prompts, public issues, screenshots, and committed configs."
+  - "The simulations skill says scenario generation reads the user's local agent code and should not upload that code; preserve that local-only boundary when using it."
+tags:
+  - livekit
+  - skills
+  - voice-ai
+  - ai-agents
+  - testing
+  - simulations
+  - mcp
+  - claude-code
+keywords:
+  - livekit agent skills
+  - livekit-agents skill
+  - livekit simulations skill
+  - voice ai agent skills
+  - claude code livekit skill
+  - codex livekit skill
+  - livekit docs mcp skill
+  - ai voice agent testing
+readingTime: 6
+difficultyScore: 72
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# LiveKit Agent Skills
+
+`livekit/agent-skills` is LiveKit's official skill repository for AI coding
+agents that build and test realtime voice AI systems. It packages two reusable
+skills:
+
+- `livekit-agents`: opinionated guidance for building low-latency LiveKit
+  Agents implementations with workflow design, handoffs, tasks, and mandatory
+  testing.
+- `livekit-simulations`: guidance for generating local simulation scenarios
+  from an agent's own code and user-stated test focus, then running those
+  scenarios through LiveKit's simulation tooling where available.
+
+Use this when the task is about voice AI architecture, LiveKit Agents project
+structure, handoffs, test strategy, or simulation coverage. Use the separate
+LiveKit Agents framework entry when evaluating the runtime/package itself.
+
+## Knowledge Freshness
+
+The skill repository intentionally avoids freezing LiveKit API signatures into
+the prompt. LiveKit Agents, LiveKit Cloud, LiveKit Inference, CLI commands,
+simulation support, model providers, and deployment guidance can change quickly.
+
+Prefer current `docs.livekit.io`, the LiveKit Docs MCP server, the installed SDK
+version, and `lk ... --help` output over model memory. The skills provide durable
+behavioral guidance; live docs provide exact API facts.
+
+## Retrieval Sources
+
+Use these sources to ground an agent session:
+
+- Upstream `livekit/agent-skills` README for install, available skills, design
+  philosophy, and MCP pairing.
+- `skills/livekit-agents/SKILL.md` for voice AI architecture, handoffs, tasks,
+  testing requirements, and LiveKit Cloud assumptions.
+- `skills/livekit-simulations/SKILL.md` for local scenario generation,
+  simulation beta caveats, risk checklists, and coverage enforcement.
+- Upstream license and repository metadata for source trust and distribution.
+- LiveKit Docs MCP server or current `docs.livekit.io` pages for API signatures
+  and command behavior.
+
+## Core Workflow
+
+1. Install the skill repository with the supported skill installer.
+2. Confirm whether the task is building a LiveKit agent, modifying an existing
+   agent, or testing an existing agent.
+3. Load `livekit-agents` for architecture and implementation guidance, or
+   `livekit-simulations` when the user wants scenarios, stress tests, or
+   regression coverage.
+4. Verify all LiveKit SDK, CLI, MCP, deployment, and model-provider details
+   against current docs before writing code.
+5. Include tests or simulation scenarios before calling the implementation done.
+
+## Capability Scope
+
+This capability pack helps AI coding agents approach LiveKit voice AI work with
+the right operating model: latency-first architecture, small contexts, focused
+tools, handoffs, tasks, current-docs verification, and test coverage.
+
+It does not provide LiveKit credentials, create a LiveKit Cloud project, replace
+the LiveKit Docs MCP server, guarantee current SDK signatures, certify a voice
+agent for production, or resolve consent, telecom, privacy, and recording
+requirements.
+
+## Production Rules
+
+- Do not ship a LiveKit voice agent without behavior tests or reviewed
+  simulation coverage.
+- Do not rely on model memory for LiveKit APIs; verify signatures, CLI flags,
+  and deployment steps through current docs or MCP.
+- Keep voice agent context, tools, and handoff scopes small enough for realtime
+  latency.
+- Keep LiveKit secrets, provider keys, room tokens, SIP credentials,
+  recordings, transcripts, and generated scenarios out of public artifacts.
+- Treat simulation support as version- and account-dependent when the upstream
+  skill marks it private beta.
+
+## Install
+
+Install the full skill repository:
+
+```bash
+npx skills add livekit/agent-skills
+```
+
+When your installer supports installing a focused skill, install only the
+architecture skill for implementation tasks:
+
+```bash
+npx skills add livekit/agent-skills --skill livekit-agents
+```
+
+## Skill Inventory
+
+| Skill | Use It For |
+| --- | --- |
+| `livekit-agents` | Building or modifying LiveKit Agents implementations, especially voice AI workflows, handoffs, task structure, latency-sensitive design, and mandatory behavior tests |
+| `livekit-simulations` | Generating local test scenarios, risk checklists, scenario YAML, and simulation runs for existing LiveKit voice or chat agents |
+
+## Pair With LiveKit Docs MCP
+
+The upstream README explicitly positions these skills alongside the LiveKit Docs
+MCP server:
+
+- Skills teach the agent how to approach voice AI work.
+- MCP/docs provide current facts: API signatures, configuration options, command
+  flags, deployment steps, examples, and model-provider details.
+
+That division matters. A model can remember old LiveKit APIs and still produce
+plausible code. The skill tells the agent to verify rather than guess.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes `livekit/agent-skills` as reusable skills for
+  AI coding agents building with LiveKit.
+- The README lists `livekit-agents` and `livekit-simulations` as the available
+  skills and documents installation with `npx skills add livekit/agent-skills`.
+- The README states the skills are designed to work with the LiveKit Docs MCP
+  server, with skills providing behavioral guidance and MCP providing factual
+  API information.
+- `skills/livekit-agents/SKILL.md` describes LiveKit Cloud-oriented voice agent
+  guidance, current-docs verification, latency-first architecture, handoffs,
+  tasks, and mandatory tests.
+- `skills/livekit-simulations/SKILL.md` describes local scenario generation,
+  risk checklist coverage, authored scenarios, `lk agent simulate`, and private
+  beta caveats for simulation command availability.
+- GitHub reports MIT licensing and current activity for `livekit/agent-skills`.
+
+## Duplicate Check
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`,
+`content/agents/`, guides, open and closed pull requests, and repository-wide
+content for `livekit/agent-skills`, `LiveKit Agent Skill`, `livekit-agents
+skill`, `livekit-simulations`, `LiveKit Docs MCP`, `voice AI agent skills`, and
+`npx skills add livekit/agent-skills`. The existing LiveKit Agents tools entry
+mentions the skill as recommended companion context, but no dedicated LiveKit
+Agent Skills entry, source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The skill
+repository is MIT licensed and maintained by LiveKit.

@@ -1,0 +1,161 @@
+---
+title: Fast Mode Tradeoffs For Claude Code Workflows
+slug: fast-mode-tradeoffs-for-claude-code-workflows
+category: guides
+description: >-
+  Decide when Claude Code fast mode (/fast) is worth the higher Opus per-token
+  cost: toggle steps, pricing tradeoffs, rate-limit fallback, admin controls,
+  and workflows where standard mode is safer.
+cardDescription: >-
+  Choose fast mode vs standard Opus using official /fast tradeoffs, pricing, and
+  rate-limit behavior.
+seoTitle: Fast Mode Tradeoffs For Claude Code Workflows
+seoDescription: >-
+  Guide to Claude Code fast mode tradeoffs: /fast toggle, Opus pricing, when to
+  use fast vs standard mode, effort levels, usage credits, and org admin controls.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1450
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1450"
+documentationUrl: "https://code.claude.com/docs/en/fast-mode"
+usageSnippet: >-
+  Use this guide before enabling /fast for a session: confirm Opus eligibility,
+  usage credits, cost tradeoffs, and whether interactive latency matters more than
+  per-token spend for your task.
+prerequisites:
+  - "Claude Code v2.1.36 or later with Anthropic API or subscription access."
+  - "Usage credits enabled for billing beyond plan-included usage when required."
+  - "Team or Enterprise admins have enabled fast mode if org policy applies."
+  - "Task classification: interactive iteration vs long autonomous batch work."
+safetyNotes:
+  - "Fast mode is not available on Bedrock, Vertex, Azure Foundry, or third-party providers."
+  - "Enabling /fast mid-conversation can charge full fast-mode uncached input for entire context—prefer enabling at session start."
+  - "Fast mode persists across sessions unless admins set fastModePerSessionOptIn in managed settings."
+privacyNotes:
+  - "Fast mode does not change data handling; prompts and code still follow your plan's privacy settings."
+  - "Org admins can disable fast mode entirely with CLAUDE_CODE_DISABLE_FAST_MODE=1."
+  - "Usage credit billing for fast mode is separate from plan-included usage counters."
+sourceUrls:
+  - "https://code.claude.com/docs/en/fast-mode"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - fast-mode
+  - opus
+  - cost
+  - performance
+  - workflow
+keywords:
+  - Claude Code fast mode tradeoffs
+  - /fast command Claude Code
+  - fast mode vs standard Opus
+  - Claude Code fast mode pricing
+  - when to use fast mode
+readingTime: 8
+difficultyScore: 48
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Fast mode (`/fast`) speeds up Opus responses at higher per-token cost. Use it for
+interactive debugging and iteration; keep standard mode for long autonomous runs,
+CI jobs, and cost-sensitive batches.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Version check", "description": "Claude Code v2.1.36+ installed"}
+- [ ] {"task": "Credits enabled", "description": "Usage credits turned on when required by plan"}
+- [ ] {"task": "Org policy", "description": "Team/Enterprise admin enabled fast mode if applicable"}
+- [ ] {"task": "Task type", "description": "Interactive latency-sensitive work identified"}
+
+## Core Concepts Explained
+
+### Same model, different speed configuration
+
+Official docs state fast mode uses Claude Opus with an API configuration that
+prioritizes speed over cost efficiency—not a separate model tier.
+
+### Toggle and indicators
+
+Run `/fast` (Tab completes) or set `"fastMode": true` in user settings. Active
+sessions show a `↯` icon and "Fast mode ON" confirmation.
+
+### Cost tradeoff is front-loaded
+
+The first enable in a conversation bills fast-mode uncached input for the entire
+context. Enabling at session start is cheaper than switching mid-thread.
+
+### Separate rate limits
+
+Fast mode draws from its own rate limit pool. When limits hit, Claude falls back
+to standard speed and pricing until cooldown expires.
+
+## Step-by-Step Decision Guide
+
+1. **Classify the task.** Interactive debugging → consider fast mode. Overnight
+   batch refactors → standard mode.
+
+2. **Check eligibility.** Confirm Anthropic subscription/API path, credits, and
+   org enablement.
+
+3. **Enable at session start** if you choose fast mode—avoid mid-conversation toggles.
+
+4. **Combine with effort level carefully.** Lower effort plus fast mode maximizes
+   speed but may reduce quality on complex reasoning.
+
+5. **Monitor `/usage`.** Watch credit draw; fast tokens do not consume plan-included usage.
+
+6. **Disable when done.** Run `/fast` again; note you stay on Opus until `/model` changes.
+
+## Pricing Snapshot (from official docs)
+
+| Model | Fast input (MTok) | Fast output (MTok) |
+| --- | --- | --- |
+| Opus 4.8 | $10 | $50 |
+| Opus 4.7 / 4.6 | $30 | $150 |
+
+Compare against standard Opus pricing before enabling for long sessions.
+
+## Admin and Org Controls
+
+- Enable or disable in Console (API) or Claude AI admin settings (Team/Enterprise).
+- Set `fastModePerSessionOptIn: true` to reset fast mode off each session.
+- Set `CLAUDE_CODE_DISABLE_FAST_MODE=1` to block entirely.
+
+## Troubleshooting
+
+### "/fast" says disabled by organization
+
+Ask an admin to enable fast mode or use standard Opus.
+
+### Gray ↯ icon
+
+Fast mode rate limit cooldown—working at standard speed until it clears.
+
+### Expected Sonnet speedup
+
+Fast mode applies to Opus only; use `/model` for Sonnet/Haiku tasks.
+
+## Source Verification Notes
+
+Verified against Claude Code fast mode documentation on **2026-06-16**: toggle
+via `/fast`, Opus-only support, pricing table, usage credit billing, rate limit
+fallback, and admin controls including `fastModePerSessionOptIn`.
+
+## Duplicate Check
+
+No existing `guides` entry focuses on fast mode cost/latency tradeoffs. General
+cost guides cover token usage broadly; this guide maps directly to `/fast` docs.
+
+## References
+
+- Claude Code fast mode - https://code.claude.com/docs/en/fast-mode

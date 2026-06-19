@@ -1,0 +1,203 @@
+---
+title: Cherry Studio
+slug: cherry-studio
+category: tools
+description: >-
+  Cross-platform AI desktop client with multiple LLM providers, local model
+  support, 300+ assistants, document and image handling, WebDAV backup, MCP
+  server support, mini programs, and enterprise deployment options.
+cardDescription: >-
+  Use Cherry Studio as a desktop AI client with many model providers, local
+  models, assistants, document handling, WebDAV backup, and MCP support.
+seoTitle: Cherry Studio AI Desktop Client for LLMs, Assistants, Documents, and MCP
+seoDescription: >-
+  Use Cherry Studio for a cross-platform AI desktop client with OpenAI,
+  Anthropic, Gemini, local Ollama and LM Studio models, 300+ assistants,
+  documents, WebDAV backup, MCP server support, and enterprise options.
+author: CherryHQ
+authorProfileUrl: "https://github.com/CherryHQ"
+dateAdded: "2026-06-18"
+websiteUrl: "https://cherryai.com"
+documentationUrl: "https://docs.cherry-ai.com/docs/en-us"
+repoUrl: "https://github.com/CherryHQ/cherry-studio"
+packageUrl: "https://github.com/CherryHQ/cherry-studio/releases"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/CherryHQ/cherry-studio"
+  - "https://raw.githubusercontent.com/CherryHQ/cherry-studio/main/README.md"
+  - "https://raw.githubusercontent.com/CherryHQ/cherry-studio/main/package.json"
+  - "https://raw.githubusercontent.com/CherryHQ/cherry-studio/main/LICENSE"
+  - "https://github.com/CherryHQ/cherry-studio/releases"
+installable: true
+installCommand: "Download the current Cherry Studio desktop release for your operating system from GitHub Releases."
+usageSnippet: >-
+  Install the Cherry Studio desktop app, add only the model providers and local
+  services you intend to use, configure MCP servers and WebDAV backup
+  deliberately, then review document, assistant, and enterprise data flows.
+copySnippet: |-
+  Open https://github.com/CherryHQ/cherry-studio/releases
+  Download the release asset for Windows, macOS, or Linux.
+estimatedSetupTime: 15 minutes
+difficulty: beginner
+prerequisites:
+  - "Windows, macOS, or Linux desktop environment."
+  - "Model provider credentials for cloud services, or local Ollama / LM Studio setup for local model use."
+  - "A review of AGPL-3.0 community edition terms and any Enterprise Edition terms before organization-wide use."
+  - "WebDAV credentials only if file backup and sync are needed."
+  - "A reviewed MCP server list before connecting tools that can read files, call APIs, or mutate external systems."
+safetyNotes:
+  - "Cherry Studio is a desktop AI client that can connect to multiple cloud providers, local model servers, MCP servers, mini programs, document parsers, backup services, and enterprise backends; review each integration before adding sensitive data."
+  - "MCP server support can expose model-callable tools. Only connect servers you trust, and scope file, shell, browser, SaaS, and write-capable tools carefully."
+  - "Document and image processing can read local files and generate derived text, charts, summaries, or code blocks that may persist in app state or backups."
+  - "WebDAV backup and sync can move local conversation or document state to a remote storage provider; verify endpoint, encryption, retention, and restore behavior."
+  - "The README describes Enterprise Edition and private deployment options; confirm licensing, access control, data backup, and team management requirements before rollout."
+privacyNotes:
+  - "Prompts, model responses, local documents, images, Office files, PDFs, assistant settings, topic history, MCP tool arguments, WebDAV backups, provider keys, and logs may contain sensitive data."
+  - "Cloud model providers, AI web services, local model servers, MCP servers, WebDAV endpoints, mini programs, and enterprise services may receive data depending on configuration."
+  - "Keep provider API keys, WebDAV credentials, enterprise endpoints, local model URLs, MCP config, document contents, and exported chats out of public prompts, screenshots, issues, and examples."
+  - "For team use, define which models, assistants, MCP servers, backups, knowledge bases, and enterprise admin controls are approved."
+tags:
+  - cherry-studio
+  - ai-desktop-client
+  - ai-agents
+  - assistants
+  - mcp
+  - local-models
+  - ollama
+  - lm-studio
+  - document-chat
+  - openclaw
+keywords:
+  - Cherry Studio
+  - Cherry Studio MCP
+  - Cherry Studio AI client
+  - AI desktop client
+  - local model desktop client
+  - Ollama LM Studio client
+  - AI assistants desktop app
+  - Cherry Studio OpenClaw
+  - Cherry Studio Codex
+  - MCP desktop client
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Cherry Studio is a cross-platform AI desktop client for Windows, macOS, and
+Linux. It supports multiple LLM providers, local models through Ollama and LM
+Studio, more than 300 preconfigured assistants, custom assistants, multi-model
+conversations, document and image handling, Mermaid rendering, WebDAV file
+management and backup, mini programs, and MCP server support.
+
+It is relevant for searches around Cherry Studio, Cherry Studio MCP, AI desktop
+client, local model desktop client, Ollama LM Studio client, AI assistants
+desktop app, MCP desktop client, Cherry Studio OpenClaw, and Cherry Studio
+Codex.
+
+## Install
+
+Cherry Studio distributes desktop builds through GitHub Releases. Choose the
+release asset for your operating system and verify it matches the official
+`CherryHQ/cherry-studio` repository before installing.
+
+```text
+Open https://github.com/CherryHQ/cherry-studio/releases
+Download the release asset for Windows, macOS, or Linux.
+```
+
+For development builds, the repository is an Electron/Vite application with
+Node.js 24.11.1 or newer declared in `package.json`, plus pnpm workspace tooling.
+End users should normally start from release builds instead of local source
+builds.
+
+## Core Capabilities
+
+| Area | Cherry Studio Coverage |
+| --- | --- |
+| Desktop Client | Windows, macOS, and Linux AI productivity client |
+| Providers | OpenAI, Gemini, Anthropic, Claude web service, Perplexity, Poe, and others documented in the README |
+| Local Models | Ollama and LM Studio support |
+| Assistants | 300+ preconfigured assistants and custom assistant creation |
+| Conversations | Multi-model simultaneous conversations and topic management |
+| Documents | Text, image, Office, PDF, Markdown, Mermaid, and code rendering features |
+| Backup | WebDAV file management and backup support |
+| MCP | MCP server support for connecting external tools |
+| Extensions | Mini program support, roadmap plugin system, and theme ecosystem |
+| Enterprise | Enterprise Edition with centralized model access, employees, shared knowledge base, access control, data backup, and private deployment positioning |
+
+## MCP and Agent Fit
+
+Cherry Studio belongs in MCP and agent discovery because it is a desktop client
+where users can combine model providers, local models, assistants, documents,
+and MCP servers. The repository topics also align with Claude Code, Codex,
+OpenClaw, skills, Hermes Agent, and agent skills searches.
+
+The operational boundary is client configuration. A desktop app that connects
+to many providers and MCP servers can quietly become a routing point for
+sensitive prompts, files, local model endpoints, external tools, and backup
+destinations.
+
+## Use Cases
+
+- Use one desktop client for several cloud and local LLM providers.
+- Compare outputs through multi-model conversations.
+- Run assistant workflows over local documents, PDFs, images, and Office files.
+- Connect local Ollama or LM Studio models without a browser-only workflow.
+- Add selected MCP servers to an everyday desktop AI client.
+- Back up or sync app data with a reviewed WebDAV endpoint.
+- Evaluate a team-oriented desktop client before deciding whether Enterprise
+  Edition features are needed.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `CherryHQ/cherry-studio` as an AGPL-3.0 repository with active
+  development, 47,000+ stars, and latest release `v1.9.11`.
+- The repository description presents Cherry Studio as an AI productivity studio
+  with smart chat, autonomous agents, 300+ assistants, and unified access to
+  frontier LLMs.
+- The README describes Cherry Studio as a desktop client for Windows, Mac, and
+  Linux with multiple LLM provider support.
+- The README lists cloud LLM services, AI web service integration, local model
+  support with Ollama and LM Studio, 300+ preconfigured assistants, custom
+  assistants, multi-model simultaneous conversations, document/image/Office/PDF
+  handling, WebDAV file management and backup, Mermaid chart visualization,
+  global search, topic management, translation, mini programs, and MCP server
+  support.
+- The README documents a roadmap that includes MCP Marketplace, knowledge
+  management, OCR, TTS, plugin system, ASR, and mobile/platform work.
+- The README describes an Enterprise Edition with centralized model management,
+  employee management, shared knowledge base, access control, data backup, and
+  private deployment positioning.
+- `package.json` identifies the project as a private Electron/Vite desktop app,
+  declares Node.js `>=24.11.1`, and lists desktop build targets for Windows,
+  macOS, and Linux.
+
+## Safety and Privacy
+
+Cherry Studio can sit in the middle of many data flows: local files, model
+providers, local model servers, assistant definitions, MCP tools, WebDAV backup,
+mini programs, and enterprise services. Review those flows before importing
+private documents or enabling broad MCP servers.
+
+For organizational use, decide whether the AGPL community edition, release
+builds, source builds, or Enterprise Edition are appropriate. Also define which
+providers, local servers, assistants, MCP servers, backups, and knowledge
+sources are approved.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, README output, open pull requests, and
+repository-wide content for `CherryHQ/cherry-studio`, Cherry Studio, Cherry
+Studio MCP, Cherry Studio AI client, AI desktop client, local model desktop
+client, Ollama LM Studio client, AI assistants desktop app, Cherry Studio
+OpenClaw, Cherry Studio Codex, and MCP desktop client. Existing content only
+mentions Cherry Studio as an MCP-compatible client in the TrendRadar MCP entry;
+no dedicated Cherry Studio tools entry, exact source URL duplicate, target file,
+or open duplicate PR was found.

@@ -1,11 +1,32 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { Calendar } from "lucide-react";
 import { BRIEF_ISSUES, WEEKLY_BRIEF } from "@/data/entries";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { absoluteUrl } from "@/lib/seo";
 
+type PublishedBriefSummary = { number: number; periodThrough: string; title: string };
+
+// Published (approved/sent) issues from D1. Empty until the first brief is
+// approved, at which point the archive lists real persisted issues.
+const loadPublishedBriefs = createServerFn({ method: "GET" }).handler(
+  async (): Promise<PublishedBriefSummary[]> => {
+    const { listPublishedBriefs } = await import("@/lib/brief-issues.server");
+    const issues = await listPublishedBriefs(24);
+    return issues.map((issue) => {
+      const payload = issue.payload as { title?: string };
+      return {
+        number: issue.number,
+        periodThrough: issue.period_through,
+        title: typeof payload.title === "string" ? payload.title : `Weekly Brief #${issue.number}`,
+      };
+    });
+  },
+);
+
 export const Route = createFileRoute("/brief")({
+  loader: () => loadPublishedBriefs(),
   head: () => ({
     meta: [
       { title: "Weekly Brief — HeyClaude" },
@@ -28,6 +49,7 @@ export const Route = createFileRoute("/brief")({
 const latest = BRIEF_ISSUES[0];
 
 function BriefPage() {
+  const published = Route.useLoaderData();
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
       <Breadcrumbs home items={[{ label: "Weekly Brief" }]} />
@@ -94,36 +116,63 @@ function BriefPage() {
           <div className="mt-12 flex items-end justify-between border-b border-border pb-3">
             <h2 className="font-display text-xl font-semibold tracking-tight text-ink">Archive</h2>
             <span className="font-mono text-[11px] text-ink-subtle">
-              {BRIEF_ISSUES.length - 1} past issues
+              {published.length > 0 ? published.length : BRIEF_ISSUES.length - 1} past issues
             </span>
           </div>
-          <ol className="mt-4 space-y-3 stagger-children">
-            {BRIEF_ISSUES.slice(1).map((b) => (
-              <li
-                key={b.slug}
-                className="group hover-lift rounded-xl border border-border bg-surface p-5 transition-[border-color,background-color] duration-200 ease-out hover:border-ink/20 hover:bg-surface-2"
-              >
-                <div className="flex items-center justify-between text-xs text-ink-subtle">
-                  <span className="font-mono">Issue #{String(b.number).padStart(2, "0")}</span>
-                  <span>{b.date}</span>
-                </div>
-                <h3 className="mt-2 font-display text-lg font-semibold text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
-                  {b.title}
-                </h3>
-                <p className="mt-1 text-pretty text-sm text-ink-muted">{b.summary}</p>
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {b.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="inline-flex rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-ink-muted"
-                    >
-                      #{t}
-                    </span>
-                  ))}
-                </div>
-              </li>
-            ))}
-          </ol>
+          {published.length > 0 ? (
+            <ol className="mt-4 space-y-3 stagger-children">
+              {published.map((issue: PublishedBriefSummary) => (
+                <li
+                  key={issue.number}
+                  className="group hover-lift rounded-xl border border-border bg-surface p-5 transition-[border-color,background-color] duration-200 ease-out hover:border-ink/20 hover:bg-surface-2"
+                >
+                  <Link
+                    to="/brief/$number"
+                    params={{ number: String(issue.number) }}
+                    className="block"
+                  >
+                    <div className="flex items-center justify-between text-xs text-ink-subtle">
+                      <span className="font-mono">
+                        Issue #{String(issue.number).padStart(2, "0")}
+                      </span>
+                      <span>{issue.periodThrough}</span>
+                    </div>
+                    <h3 className="mt-2 font-display text-lg font-semibold text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
+                      {issue.title}
+                    </h3>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <ol className="mt-4 space-y-3 stagger-children">
+              {BRIEF_ISSUES.slice(1).map((b) => (
+                <li
+                  key={b.slug}
+                  className="group hover-lift rounded-xl border border-border bg-surface p-5 transition-[border-color,background-color] duration-200 ease-out hover:border-ink/20 hover:bg-surface-2"
+                >
+                  <div className="flex items-center justify-between text-xs text-ink-subtle">
+                    <span className="font-mono">Issue #{String(b.number).padStart(2, "0")}</span>
+                    <span>{b.date}</span>
+                  </div>
+                  <h3 className="mt-2 font-display text-lg font-semibold text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
+                    {b.title}
+                  </h3>
+                  <p className="mt-1 text-pretty text-sm text-ink-muted">{b.summary}</p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {b.tags.map((t) => (
+                      <span
+                        key={t}
+                        className="inline-flex rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-ink-muted"
+                      >
+                        #{t}
+                      </span>
+                    ))}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
 
         <aside className="lg:sticky lg:top-20 lg:self-start">

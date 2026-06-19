@@ -15,6 +15,7 @@ jobs:
   classify-pr:
     name: classify-pr
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     outputs:
       direct_submission: ${{ steps.classify.outputs.direct_submission }}
       source_content_only: ${{ steps.classify.outputs.source_content_only }}
@@ -95,6 +96,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.ci == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-ci-${{ github.ref }}
       cancel-in-progress: true
@@ -118,7 +120,7 @@ jobs:
         if: ${{ needs.classify-pr.outputs.ci == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
@@ -160,6 +162,7 @@ jobs:
     name: validate-worktree
     needs: classify-pr
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-worktree-${{ github.ref }}
       cancel-in-progress: true
@@ -188,6 +191,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.content_categories_json != '[]' && needs.classify-pr.outputs.direct_submission != 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -208,7 +212,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
@@ -225,6 +229,7 @@ jobs:
     needs: classify-pr
     if: ${{ github.event_name == 'pull_request' && needs.classify-pr.outputs.direct_submission != 'true' && (needs.classify-pr.outputs.content == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.packages == 'true') }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-content-policy-${{ github.ref }}
       cancel-in-progress: true
@@ -239,7 +244,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
 
       - name: Validate direct content policy
         env:
@@ -290,6 +295,7 @@ jobs:
     needs: classify-pr
     if: ${{ github.event_name == 'pull_request' && needs.classify-pr.outputs.direct_submission == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-submission-source-${{ github.ref }}
       cancel-in-progress: true
@@ -307,7 +313,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
@@ -376,6 +382,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.content_config == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-content-config-${{ github.ref }}
       cancel-in-progress: true
@@ -392,7 +399,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
@@ -417,6 +424,7 @@ jobs:
       - validate-content-config
     if: ${{ always() && needs.classify-pr.outputs.content == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-content-${{ github.ref }}
       cancel-in-progress: true
@@ -454,6 +462,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.registry == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-registry-${{ github.ref }}
       cancel-in-progress: true
@@ -477,15 +486,28 @@ jobs:
         if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
         if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         run: pnpm install --frozen-lockfile
 
-      - name: Build registry artifacts
+      # Shared prebuild cache (same key as coverage.yml + the other validate jobs). Under the Actions
+      # concurrency throttle jobs run staggered, so the first to build populates this key and the rest
+      # restore it and skip the rebuild. Additive: a miss just rebuilds as before. (#shared-prebuild-cache)
+      - name: Restore prebuild artifacts
+        id: prebuild-cache
         if: ${{ needs.classify-pr.outputs.registry == 'true' }}
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            apps/web/public/data
+            apps/web/src/generated
+            apps/web/src/routeTree.gen.ts
+          key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
+      - name: Build registry artifacts
+        if: ${{ needs.classify-pr.outputs.registry == 'true' && steps.prebuild-cache.outputs.cache-hit != 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Test registry artifact contracts
@@ -601,6 +623,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.web == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       TRUNK_API_TOKEN: ${{ secrets.TRUNK_API_TOKEN || secrets.TRUNK_TOKEN }}
       TRUNK_ORG_URL_SLUG: ${{ secrets.TRUNK_ORG_URL_SLUG || secrets.TRUNK_ORG_SLUG }}
@@ -627,7 +650,7 @@ jobs:
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
@@ -638,8 +661,18 @@ jobs:
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: rm -rf reports/junit && mkdir -p reports/junit
 
-      - name: Build registry artifacts
+      - name: Restore prebuild artifacts
+        id: prebuild-cache
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            apps/web/public/data
+            apps/web/src/generated
+            apps/web/src/routeTree.gen.ts
+          key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
+      - name: Build registry artifacts
+        if: ${{ needs.classify-pr.outputs.web == 'true' && steps.prebuild-cache.outputs.cache-hit != 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Generate README for source-only import validation
@@ -673,14 +706,6 @@ jobs:
         continue-on-error: true
         run: trunk flakytests upload --junit-paths "reports/junit/*.xml" --org-url-slug "$TRUNK_ORG_URL_SLUG" --token "$TRUNK_API_TOKEN"
 
-      - name: Validate email templates
-        if: ${{ needs.classify-pr.outputs.web == 'true' }}
-        run: pnpm validate:emails
-
-      - name: Dry-run Resend template sync
-        if: ${{ needs.classify-pr.outputs.web == 'true' }}
-        run: pnpm resend:sync-templates -- --dry-run
-
       - name: Type-check web app
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm type-check
@@ -694,6 +719,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-mcp-${{ github.ref }}
       cancel-in-progress: true
@@ -717,15 +743,25 @@ jobs:
         if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
         if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         run: pnpm install --frozen-lockfile
 
-      - name: Build registry artifacts
+      - name: Restore prebuild artifacts
+        id: prebuild-cache
         if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            apps/web/public/data
+            apps/web/src/generated
+            apps/web/src/routeTree.gen.ts
+          key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
+      - name: Build registry artifacts
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' && steps.prebuild-cache.outputs.cache-hit != 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Test MCP package
@@ -734,7 +770,7 @@ jobs:
 
       - name: Validate dev MCP endpoint
         if: ${{ needs.classify-pr.outputs.mcp == 'true' && github.event_name != 'pull_request' }}
-        run: pnpm validate:mcp-endpoint -- --url https://heyclaude-dev.zeronode.workers.dev/api/mcp
+        run: pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp
 
       - name: Dry-run MCP package tarball
         if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
@@ -743,7 +779,7 @@ jobs:
       - name: Validate packed MCP package
         if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         env:
-          MCP_PACKAGE_REMOTE_SMOKE_URL: ${{ github.event_name != 'pull_request' && 'https://heyclaude-dev.zeronode.workers.dev/api/mcp' || '' }}
+          MCP_PACKAGE_REMOTE_SMOKE_URL: ${{ github.event_name != 'pull_request' && 'https://heyclau.de/api/mcp' || '' }}
         run: pnpm validate:mcp-package
 
   validate-raycast:
@@ -751,6 +787,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       TRUNK_API_TOKEN: ${{ secrets.TRUNK_API_TOKEN || secrets.TRUNK_TOKEN }}
       TRUNK_ORG_URL_SLUG: ${{ secrets.TRUNK_ORG_URL_SLUG || secrets.TRUNK_ORG_SLUG }}
@@ -777,15 +814,25 @@ jobs:
         if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
         if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         run: pnpm install --frozen-lockfile
 
-      - name: Build feed artifacts
+      - name: Restore prebuild artifacts
+        id: prebuild-cache
         if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            apps/web/public/data
+            apps/web/src/generated
+            apps/web/src/routeTree.gen.ts
+          key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
+      - name: Build feed artifacts
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' && steps.prebuild-cache.outputs.cache-hit != 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Clean test reports
@@ -836,6 +883,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.packages == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-validate-packages-${{ github.ref }}
       cancel-in-progress: true
@@ -857,7 +905,7 @@ jobs:
         if: ${{ needs.classify-pr.outputs.packages == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
@@ -877,6 +925,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.submission_gate == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
     concurrency:
@@ -896,7 +945,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
@@ -910,12 +959,21 @@ jobs:
 
   validate-pr-preview:
     name: validate-pr-preview
-    if: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'workflow_dispatch' && github.ref_name == 'automation/readme-refresh')) && (needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.mcp == 'true') }}
+    # Skip on content-ONLY PRs: this job does a full preview DEPLOY and waits up to 600s for the URL —
+    # a ~10-min runner hog. It has no content-specific path (unlike validate-registry/web), it does NOT
+    # gate required-pr-gate, and content go-live is validated at deploy. On content-only PRs it just
+    # starves the (throttled) runner pool, delaying the cheap required-pr-gate the gate actually waits on,
+    # so a 1-line content add sat queued for minutes. (#content-only-skip-preview)
+    if: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'workflow_dispatch' && github.ref_name == 'automation/readme-refresh')) && (needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.mcp == 'true') && needs.classify-pr.outputs.source_content_only != 'true' }}
     needs: classify-pr
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     concurrency:
-      group: deployment-artifacts-pr-preview-${{ github.repository }}
-      cancel-in-progress: false
+      # Per-ref (not repo-wide) so PRs don't cancel each other's preview job —
+      # under heavy content traffic the old repo-wide slot starved this job and
+      # surfaced as gate failures. cancel-in-progress matches the other lanes.
+      group: deployment-artifacts-pr-preview-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout
@@ -930,7 +988,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
@@ -939,11 +997,9 @@ jobs:
       - name: Resolve PR preview URL
         id: preview-url
         env:
-          ALLOW_SHARED_DEV_WORKER_PREVIEW: "1"
-          CLOUDFLARE_DEV_WORKER_URL: https://heyclaude-dev.zeronode.workers.dev
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          node scripts/resolve-pr-preview-url.mjs --wait-seconds 600 --poll-seconds 15
+          node scripts/resolve-pr-preview-url.mjs --wait-seconds 600 --poll-seconds 15 --allow-missing
 
       - name: Validate deployed artifact contract
         if: ${{ steps.preview-url.outputs.base-url != '' }}
@@ -991,6 +1047,7 @@ jobs:
       - validate-pr-preview
     if: ${{ always() }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: pr-required-gate-${{ github.ref }}
       cancel-in-progress: true

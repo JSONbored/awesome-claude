@@ -43,6 +43,12 @@ prerequisites:
   - Cloudflare account and worker project
   - D1/KV/R2 bindings access
   - Defined data model and SLA targets
+safetyNotes:
+  - "May produce commands or configuration for live infrastructure, CI, releases, or indexing; test changes in staging or dry-run mode first."
+  - "Use least-privilege API tokens and review workflow, deploy, DNS, cache, and release changes before applying them to production."
+privacyNotes:
+  - "Inputs can include repository metadata, workflow logs, deployment settings, domain names, analytics exports, and service configuration."
+  - "Redact tokens, account IDs, private URLs, customer data, and proprietary deployment details before sharing generated reports or prompts."
 tags:
   - cloudflare
   - workers
