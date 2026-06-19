@@ -182,7 +182,8 @@ export function matchesSearchFilters(entry: Entry, filters: SearchFilters = {}) 
   if (filters.installable && !entry.installCommand && !entry.configSnippet && !entry.fullCopy)
     return false;
   if (filters.hasSafetyNotes && !entry.safetyNotes) return false;
-  if (prepared.queryProfile && !matchesEntryQueryProfile(entry, prepared.queryProfile)) return false;
+  if (prepared.queryProfile && !matchesEntryQueryProfile(entry, prepared.queryProfile))
+    return false;
   if (prepared.q && prepared.queryProfile === null) return false;
   if (filters.q && prepared.queryProfile === undefined && !matchesEntryQuery(entry, filters.q))
     return false;

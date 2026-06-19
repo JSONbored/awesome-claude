@@ -60,7 +60,9 @@ describe("entry query matching", () => {
     });
     const longQuery = `${"browser ".repeat(20)}${"x,".repeat(10_000)}`;
 
-    expect(normalizeSearchQuery(` ${"a".repeat(300)} `).length).toBeLessThanOrEqual(256);
+    expect(
+      normalizeSearchQuery(` ${"a".repeat(300)} `).length,
+    ).toBeLessThanOrEqual(256);
     expect(matchesEntryQuery(browserEntry, longQuery)).toBe(true);
     expect(matchesEntryQuery(browserEntry, ",".repeat(10_000))).toBe(false);
   });
