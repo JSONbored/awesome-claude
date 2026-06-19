@@ -80,7 +80,7 @@ describe("PR change classifier", () => {
     }
   });
 
-  it("routes direct content entry PRs through the focused submission lane", () => {
+  it("routes direct content entry PRs through the focused submission and registry artifact lanes", () => {
     const { cwd, baseSha } = createFixtureRepo();
 
     const contentDir = path.join(cwd, "content", "agents");
@@ -99,7 +99,7 @@ describe("PR change classifier", () => {
       direct_submission: "true",
       source_content_only: "true",
       readme_only: "false",
-      registry: "false",
+      registry: "true",
       raycast: "false",
       web: "false",
     });
