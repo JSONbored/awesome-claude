@@ -144,6 +144,19 @@ describe("OpenAPI route coverage", () => {
       liveRequest: false,
     });
     expect(
+      JSON.parse(
+        ENDPOINTS.find((endpoint) => endpoint.id === "registry-feed")
+          ?.responseExample ?? "{}",
+      ),
+    ).toMatchObject({
+      schemaVersion: 1,
+      kind: "registry-feed",
+      qualityMethodology: "/quality#methodology",
+      categoryFeeds: { mcp: "/data/feeds/categories/mcp.json" },
+      platformFeeds: { claude: "/data/feeds/platforms/claude.json" },
+      jobs: "/api/jobs?limit=100",
+    });
+    expect(
       ENDPOINTS.find((endpoint) => endpoint.id === "jobs-detail"),
     ).toMatchObject({
       liveRequest: true,
