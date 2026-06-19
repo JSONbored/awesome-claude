@@ -2,8 +2,8 @@
 title: MCP Server Authoring Security Capability Pack Skill
 slug: mcp-server-authoring-security-capability-pack
 category: skills
-description: "Expert MCP capability skill for secure server authoring, tool schema discipline, auth boundaries, and adversarial prompt hardening."
-cardDescription: "Deep MCP server skill for secure tool design, permissioning, contract stability, and production-grade safety controls."
+description: "Expert MCP capability skill for secure server authoring, tool schema discipline, authorization boundaries, and prompt-injection risk review."
+cardDescription: "MCP server skill for secure tool design, authorization boundaries, contract stability, and production safety controls."
 seoTitle: MCP Server Authoring Security Capability Pack Skill
 seoDescription: "Advanced AI skill for secure MCP server authoring with robust tool contracts, auth controls, and prompt-injection defenses."
 author: JSONbored
@@ -29,8 +29,17 @@ verificationStatus: validated
 verifiedAt: "2026-04-10"
 retrievalSources:
   - "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices"
+  - "https://modelcontextprotocol.io/docs/tutorials/security/authorization"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/server/tools"
   - "https://modelcontextprotocol.io/specification/2025-06-18"
-  - "https://modelcontextprotocol.io/docs/"
+safetyNotes:
+  - "Use the skill as a review and implementation checklist; do not deploy MCP auth, credential flow, or permission changes without human review."
+  - "Validate tool schemas, authorization decisions, and logging behavior with tests before exposing an MCP server to real users or external clients."
+  - "Treat generated threat models as incomplete until checked against current MCP security and authorization docs."
+privacyNotes:
+  - "Tool inventories, auth flows, logs, incident examples, prompts, and server code shared with this skill may enter model context."
+  - "Redact access credentials, client secrets, user records, tenant identifiers, and production request bodies before using them as examples."
 testedPlatforms:
   - Claude
   - Codex
@@ -65,16 +74,33 @@ robotsFollow: true
 
 ## Knowledge Freshness
 
-This capability pack is pinned to documentation verified on **2026-04-10**.
+This capability pack is pinned to documentation re-verified on **2026-06-19**.
 When upstream docs change, refresh endpoint contracts, examples, and constraints before using this skill for production changes.
 
 ## Retrieval Sources
 
 - https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices
+- https://modelcontextprotocol.io/docs/tutorials/security/authorization
+- https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
+- https://modelcontextprotocol.io/specification/2025-06-18/server/tools
 - https://modelcontextprotocol.io/specification/2025-06-18
-- https://modelcontextprotocol.io/docs/
 
 Always prefer direct retrieval from official docs/API references over model memory for limits, endpoint signatures, and behavior guarantees.
+
+## Source Verification Notes
+
+Verified on **2026-06-19**:
+
+- The MCP security best-practices page explicitly covers MCP-specific risks and
+  mitigations including confused deputy flows, credential boundary mistakes,
+  SSRF, session integrity risks, local server compromise, and scope
+  minimization.
+- The MCP authorization docs and 2025-06-18 authorization specification describe
+  OAuth-based authorization patterns, protected resource metadata, credential
+  handling, and discovery expectations for protected MCP servers.
+- The MCP tools specification defines server-exposed tools and their schema
+  metadata. This skill turns those source-backed concerns into a reusable review
+  and implementation checklist; it is not itself an official MCP specification.
 
 ## Core Workflow
 
@@ -93,7 +119,7 @@ This capability pack teaches agents how to design MCP servers that remain safe u
 - Threat modeling for tool invocation flows
 - Input validation and schema hardening
 - AuthN/AuthZ boundaries for tools and resources
-- Prompt-injection and data exfiltration defenses
+- Prompt-injection, session integrity, and data exposure risk review
 - Audit logging and incident response readiness
 
 ## Compatibility
