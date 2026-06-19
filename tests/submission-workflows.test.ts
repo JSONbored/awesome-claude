@@ -464,7 +464,7 @@ describe("submission automation workflows", () => {
     );
   });
 
-  it("routes hook-only content PRs through focused direct submission validation", () => {
+  it("routes hook-only content PRs through direct submission and registry validation", () => {
     const lanes = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": contentFixture(`
 title: Retro Daily
@@ -477,7 +477,7 @@ description: Daily Claude Code retro dashboard hook.
     expect(lanes.content).toBe("true");
     expect(lanes.content_categories_json).toBe('["hooks"]');
     expect(lanes.direct_submission).toBe("true");
-    expect(lanes.registry).toBe("false");
+    expect(lanes.registry).toBe("true");
     expect(lanes.web).toBe("false");
     expect(lanes.mcp).toBe("false");
     expect(lanes.raycast).toBe("false");
@@ -1316,7 +1316,7 @@ diff --git a/README.md b/README.md
     expect(source).toContain("content_categories_json");
   });
 
-  it("routes hook-only content PRs to hook content and direct submission validation", () => {
+  it("routes hook-only content PRs to hook content, direct submission, and registry validation", () => {
     const outputs = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": "---\ntitle: Retro Daily\n---\n",
     });
@@ -1330,7 +1330,7 @@ diff --git a/README.md b/README.md
     expect(outputs.mcp).toBe("false");
     expect(outputs.raycast).toBe("false");
     expect(outputs.packages).toBe("false");
-    expect(outputs.registry).toBe("false");
+    expect(outputs.registry).toBe("true");
     expect(outputs.ci).toBe("false");
   });
 
