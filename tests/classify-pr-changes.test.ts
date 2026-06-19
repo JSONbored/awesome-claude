@@ -271,6 +271,40 @@ describe("PR change classifier", () => {
     });
   });
 
+  it("fails closed by routing otherwise unclassified scripts through CI validation", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+    const scriptDir = path.join(cwd, "scripts");
+    fs.mkdirSync(scriptDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(scriptDir, "report-thin-content.mjs"),
+      "console.log('changed');\n",
+    );
+    git(cwd, ["add", "scripts/report-thin-content.mjs"]);
+    git(cwd, ["commit", "-m", "update unclassified script"]);
+
+    const outputs = runClassifier(cwd, baseSha);
+    expect(outputs).toMatchObject({
+      ci: "true",
+    });
+  });
+
+  it("fails closed by routing otherwise unclassified regression tests through CI validation", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+    const testsDir = path.join(cwd, "tests");
+    fs.mkdirSync(testsDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(testsDir, "codeql-regressions.test.ts"),
+      "import { expect, it } from 'vitest';\nit('changed', () => expect(true).toBe(true));\n",
+    );
+    git(cwd, ["add", "tests/codeql-regressions.test.ts"]);
+    git(cwd, ["commit", "-m", "update unclassified test"]);
+
+    const outputs = runClassifier(cwd, baseSha);
+    expect(outputs).toMatchObject({
+      ci: "true",
+    });
+  });
+
   it("routes private submission gate changes through the gate lane", () => {
     const { cwd, baseSha } = createFixtureRepo();
     const gateDir = path.join(cwd, "apps", "submission-gate", "src");
