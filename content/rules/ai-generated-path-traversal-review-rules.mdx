@@ -1,0 +1,230 @@
+---
+title: AI-Generated Path Traversal Review Rules
+slug: ai-generated-path-traversal-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated file-handling code for path
+  traversal before merge, covering canonical path validation, safe root
+  confinement, upload filename sanitization, archive extraction limits, and
+  privacy-safe test evidence.
+cardDescription: >-
+  Review AI-generated file-handling code for path traversal: canonical paths,
+  root confinement, upload filename sanitization, and archive extraction limits.
+seoTitle: AI-Generated Path Traversal Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated file-handling code: canonical path
+  validation, safe root confinement, upload filename sanitization, archive
+  extraction zip-slip prevention, least privilege, and privacy-safe test cases.
+author: jaso0n0818
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+documentationUrl: "https://owasp.org/www-community/attacks/Path_Traversal"
+sourceUrls:
+  - "https://owasp.org/www-community/attacks/Path_Traversal"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html"
+  - "https://cwe.mitre.org/data/definitions/22.html"
+  - "https://portswigger.net/web-security/file-path-traversal"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits code that reads, writes,
+  or serves files using a path derived from user input, including uploads,
+  downloads, archive extraction, and configuration loading.
+copySnippet: |-
+  You are reviewing AI-generated file-handling code for path traversal.
+
+  Rules:
+  1. Resolve the final path to its canonical, absolute form and assert it is
+     still inside the allowed root before opening, reading, writing, or serving.
+  2. Never join user-supplied path components directly; treat them as untrusted
+     filename parts, strip directory separators and null bytes, and reject
+     anything that escapes the root after resolution.
+  3. Validate uploaded filenames against an allow-list of extensions and store
+     files under server-generated names in a non-web-accessible directory.
+  4. When extracting archives, resolve each entry's path inside the target
+     directory first and reject any entry whose resolved path escapes it.
+  5. Apply least-privilege file-system permissions so even a bypass can only
+     reach files the service legitimately needs.
+  6. Test with valid paths, dot-dot sequences, URL-encoded traversal, null bytes,
+     and absolute paths, and keep test data free of real file content.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet of AI-generated file-handling code with enough context to know where the path comes from and where it leads.
+  - Knowledge of the language's path and file APIs, since canonical resolution and root-confinement APIs differ between runtimes.
+  - A sandbox directory where traversal-style test inputs can be exercised without touching system files.
+  - Permission to block merge when a path derived from user input is not confined to a known-safe root after canonical resolution.
+safetyNotes:
+  - "Path traversal lets an attacker read or overwrite arbitrary files including configuration, credentials, and source code, so a single unvalidated path open can compromise the host."
+  - "AI assistants frequently join user input with os.path.join or Path / without confirming the result stays inside the root, which looks correct for normal filenames but traverses on dot-dot sequences."
+  - "Archive extraction without per-entry path validation is a well-known zip-slip variant that can overwrite any file the process can reach."
+privacyNotes:
+  - "Test cases for path traversal must use synthetic file trees; do not include real credential files, system paths, or personal data as test fixtures."
+  - "Do not paste actual file contents that were reached during testing into public PR comments; use placeholder content."
+  - "Be careful with error messages that include the resolved path, since they can expose internal directory structure to an attacker."
+tags:
+  - path-traversal
+  - security
+  - file-handling
+  - input-validation
+  - ai-generated-code
+  - code-review
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits code that handles
+file paths from user input. The goal is to stop generated file-handling from
+shipping a path traversal just because it works on well-formed filenames, since
+traversal payloads look like normal strings until they are resolved.
+
+This is a review policy, not a file-API tutorial. It tells reviewers what must
+be true about generated path construction, root confinement, and upload handling
+before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know where the path comes from and what it can reach.
+
+1. **Path origin.** Whether the path component comes from a request parameter,
+   filename, URL segment, form field, header, or archive entry.
+2. **Construction method.** How the final path is assembled from the input, and
+   whether a canonical resolution step happens before the file is opened.
+3. **Allowed root.** The directory the code intends to confine access to, and
+   whether the resolved path is asserted to be inside it.
+4. **File operations.** Whether the code reads, writes, serves, deletes, or
+   extracts files, since each has different traversal consequences.
+5. **Upload and archive handling.** Whether filenames or archive entry names are
+   sanitized before use.
+
+If the change cannot state where the path comes from and what root it should
+stay inside, require that context before reviewing the file operations.
+
+## Path Resolution And Confinement Rules
+
+- Resolve the user-supplied path to its canonical absolute form using the
+  runtime's path-resolution API before any file operation.
+- Assert that the resolved canonical path still begins with the allowed root
+  after resolution; reject the request if it does not.
+- Never trust that `os.path.join` or string concatenation constrains the result;
+  an absolute input or a dot-dot sequence can override a prefix.
+- Check the confinement assertion after resolution, not before, since
+  normalization and symlink resolution happen at that step.
+- Perform the assertion in one place and pass the resolved, confirmed path to
+  file operations rather than re-deriving it at each call.
+
+## Input Sanitization Rules
+
+- Strip directory separators, dot-dot sequences, and null bytes from
+  user-supplied filename components before use.
+- Reject any input that contains a directory separator, absolute path indicator,
+  or null byte rather than trying to clean and reuse it.
+- Do not rely on a denylist of traversal patterns; use canonical resolution and
+  root-confinement instead, since encoding and separator variants bypass lists.
+- Validate that the sanitized component is non-empty and matches the expected
+  character class before assembling the final path.
+- Prefer a server-generated name over a user-supplied name for stored files.
+
+## Upload And Archive Rules
+
+- Validate uploaded filenames against a fixed allow-list of safe extensions and
+  reject anything not on the list.
+- Store uploaded files under a server-generated name in a directory that is not
+  web-accessible and does not execute uploaded content.
+- When extracting archives, resolve each entry's path inside the destination
+  directory and reject any entry that escapes it before writing a single byte.
+- Limit the uncompressed size and file count of accepted archives to prevent
+  decompression bombs alongside traversal.
+- Avoid preserving permissions, symlinks, or device entries from extracted
+  archives unless the application explicitly requires them.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- a user-supplied path is joined or opened without canonical resolution and
+  root-confinement assertions;
+- the confinement assertion runs on the raw input instead of the resolved path;
+- uploaded filenames are used as-is or after a denylist strip rather than
+  server-generated names with allow-list extension validation;
+- archive extraction does not resolve each entry's path inside the destination
+  before writing;
+- file operations run with more privilege than the application needs to serve
+  the feature;
+- test evidence includes real system paths, credential files, or personal data.
+
+## Review Checklist
+
+- [ ] {"task": "Origin mapped", "description": "The review identifies where the path comes from and what file operations it controls"}
+- [ ] {"task": "Canonical and confined", "description": "Path is resolved to canonical form and asserted to be inside the allowed root before use"}
+- [ ] {"task": "Separators stripped", "description": "Directory separators, dot-dot, and null bytes are rejected, not cleaned"}
+- [ ] {"task": "Uploads safe", "description": "Uploaded filenames use allow-list extensions and server-generated storage names"}
+- [ ] {"task": "Archives validated", "description": "Each archive entry's path is confined before extraction"}
+- [ ] {"task": "Privacy safe", "description": "Test cases use synthetic paths and avoid real credential files or personal data"}
+
+## AI Review Rules
+
+AI assistants can review file-handling code, but they should show evidence.
+
+- Ask the assistant to trace the path from input to file open and show where
+  canonical resolution and confinement happen.
+- Require it to flag any path.join, Path /, or open call that uses unsanitized
+  input before resolution.
+- Have the assistant provide dot-dot, URL-encoded, and absolute-path test inputs
+  alongside valid filenames.
+- Do not let the assistant claim confinement is safe based on a prefix string
+  check before resolution.
+- Re-run review after any change to path construction, upload handling, or
+  archive extraction.
+
+## Troubleshooting
+
+- **A dot-dot sequence escaped the root:** move the confinement assertion to
+  after canonical resolution and reject inputs rather than cleaning them.
+- **An uploaded file overwrote a server file:** use a server-generated name and
+  a non-executable, non-web-accessible storage directory.
+- **Archive extraction wrote outside the target:** resolve each entry inside the
+  destination and reject any that escape before writing.
+- **A URL-encoded traversal bypassed a filter:** switch from a denylist to
+  canonical resolution and root confinement.
+- **A test fixture exposed a real credential:** replace it with a synthetic file
+  tree and scrub the public artifact.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, statuslines, guides, collections, skills, open
+PRs, and closed PRs for path traversal, directory traversal, file upload
+security, zip-slip, and file-path validation.
+
+Adjacent content includes general security-audit rules, but no entry is a
+portable pre-merge review policy specifically for path traversal in AI-generated
+file-handling code. This entry is distinct because it decides what must be true
+about generated path construction, root confinement, upload handling, and
+archive extraction before the change can merge.
+
+No prior closed PR for this rule was found during the duplicate/history check.
+
+## Traversal Payload Reference
+
+The payload types below are common path-traversal shapes that bypass naive
+prefix or denylist checks. A canonical resolution and root-confinement assertion
+handles all of them in one step.
+
+| Payload type           | Example                       | Why it bypasses a simple check                       |
+| ---------------------- | ----------------------------- | ---------------------------------------------------- |
+| Dot-dot sequence       | `../../etc/passwd`            | Traverses up before join result is checked           |
+| URL-encoded dots       | `..%2F..%2Fetc%2Fpasswd`      | Denylist misses encoded separators                   |
+| Null byte              | `safe.txt\0../../etc`         | Terminates string in C-backed runtimes               |
+| Absolute path override | `/etc/passwd`                 | `os.path.join` ignores prefix when input is absolute |
+| Zip-slip entry         | `../../../evil.sh` in archive | Archive entry name traverses on extraction           |
+
+Canonical path resolution and a root-confinement assertion applied after
+resolution handle all five because the final path is always compared to the
+allowed root before any file system operation.
+
+## Sources
+
+- OWASP Path Traversal: https://owasp.org/www-community/attacks/Path_Traversal
+- OWASP File Upload Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html
+- CWE-22 Path Traversal: https://cwe.mitre.org/data/definitions/22.html
+- PortSwigger Web Security Academy — path traversal: https://portswigger.net/web-security/file-path-traversal
