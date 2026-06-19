@@ -23,6 +23,7 @@ export function timeAgo(iso: string | undefined | null): string {
   const d = new Date(iso).getTime();
   if (Number.isNaN(d)) return "—";
   const diff = Date.now() - d;
+  if (diff < 0) return "—";
   const min = Math.round(diff / 60_000);
   if (min < 1) return "just now";
   if (min < 60) return `${min}m ago`;
