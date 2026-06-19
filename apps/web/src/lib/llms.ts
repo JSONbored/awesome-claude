@@ -43,6 +43,9 @@ export function buildLlmsTxt(origin: string): string {
   lines.push(
     `- [Full corpus](${origin}/llms-full.txt): every entry with descriptions, metadata, and install/config snippets`,
   );
+  lines.push(
+    `- [Trust methodology](${origin}/quality#methodology): source backing, safety/privacy notes, and package verification definitions`,
+  );
   lines.push(`- [OpenAPI spec](${origin}/openapi.json): machine-readable REST API`);
   lines.push(`- [API feed](${origin}/api/registry/feed): endpoint map and distribution feeds`);
   lines.push(

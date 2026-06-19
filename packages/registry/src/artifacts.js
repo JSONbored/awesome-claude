@@ -1304,6 +1304,7 @@ export function buildRegistryManifest(entries, extra = {}) {
       relationGraph: dataUrl("relation-graph.json"),
       contentQuality: dataUrl("content-quality-report.json"),
       contentQualityPrompts: dataUrl("content-quality-prompts.json"),
+      qualityMethodology: "/quality#methodology",
       jsonLdSnapshots: dataUrl("jsonld-snapshots.json"),
       llmsFull: "/llms-full.txt",
       entryDetails: dataUrl("entries"),

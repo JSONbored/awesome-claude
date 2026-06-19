@@ -269,6 +269,7 @@ const RESPONSE_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
   "registry.feed": {
     schemaVersion: 1,
     kind: "registry-feed",
+    qualityMethodology: "/quality#methodology",
     categoryFeeds: { mcp: "/data/feeds/categories/mcp.json" },
     platformFeeds: { claude: "/data/feeds/platforms/claude.json" },
     jobs: "/api/jobs?limit=100",

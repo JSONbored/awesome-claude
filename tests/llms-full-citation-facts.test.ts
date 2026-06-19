@@ -1,7 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/feeds", () => ({ etagFor: vi.fn(async () => "test-etag") }));
-vi.mock("@/lib/security-headers", () => ({ applySecurityHeaders: (headers: Headers) => headers }));
+vi.mock("@/lib/security-headers", () => ({
+  applySecurityHeaders: (headers: Headers) => headers,
+}));
 
 vi.mock("@/data/entries", () => ({
   REGISTRY_ENTRIES: [
@@ -15,7 +17,9 @@ vi.mock("@/data/entries", () => ({
       repoUrl: "https://github.com/example/citation-shape-fixture",
       safetyNotes: ["Runs local checks before writing files."],
       privacyNotes: ["Reads only files selected by the user."],
-      platformCompatibility: [{ platform: "claude-code", supportLevel: "native-skill" }],
+      platformCompatibility: [
+        { platform: "claude-code", supportLevel: "native-skill" },
+      ],
       dateAdded: "2026-06-14",
     },
   ],
@@ -35,22 +39,42 @@ vi.mock("@/data/entries", () => ({
       safetyNotesList: ["Runs local checks before writing files."],
       privacyNotes: "Reads only files selected by the user.",
       privacyNotesList: ["Reads only files selected by the user."],
-      platformCompatibility: [{ platform: "claude-code", support: "native-skill" }],
+      platformCompatibility: [
+        { platform: "claude-code", support: "native-skill" },
+      ],
     },
   ],
 }));
 
 describe("buildLlmsFullTxt", () => {
+  it("advertises the trust methodology from the short LLM manifest", async () => {
+    const { buildLlmsTxt } = await import("@/lib/llms");
+
+    const output = buildLlmsTxt("https://heyclau.de");
+
+    expect(output).toContain(
+      "- [Trust methodology](https://heyclau.de/quality#methodology): source backing, safety/privacy notes, and package verification definitions",
+    );
+  });
+
   it("builds citation facts from raw registry entries, not normalized web entries", async () => {
     const { buildLlmsFullTxt } = await import("@/lib/llms");
 
     const output = buildLlmsFullTxt("https://heyclau.de");
 
     expect(output).toContain("Citation facts:\n");
-    expect(output).toContain("- Source URLs: https://example.com/docs, https://github.com/example/citation-shape-fixture");
-    expect(output).toContain("- Safety notes: Runs local checks before writing files.");
-    expect(output).toContain("- Privacy notes: Reads only files selected by the user.");
-    expect(output).toContain("- Platform compatibility: claude-code (native-skill)");
+    expect(output).toContain(
+      "- Source URLs: https://example.com/docs, https://github.com/example/citation-shape-fixture",
+    );
+    expect(output).toContain(
+      "- Safety notes: Runs local checks before writing files.",
+    );
+    expect(output).toContain(
+      "- Privacy notes: Reads only files selected by the user.",
+    );
+    expect(output).toContain(
+      "- Platform compatibility: claude-code (native-skill)",
+    );
     expect(output).not.toContain("(undefined)");
   });
 });
