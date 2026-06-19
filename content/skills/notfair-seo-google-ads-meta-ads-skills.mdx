@@ -1,0 +1,158 @@
+---
+title: NotFair SEO, Google Ads, and Meta Ads Skills
+slug: notfair-seo-google-ads-meta-ads-skills
+category: skills
+description: >-
+  Open-source Claude Code skills for SEO, GEO, Google Ads, and Meta Ads,
+  connecting to live data through the Google Ads MCP, Meta Ads MCP, Google
+  Search Console MCP, and Google Analytics (GA4) MCP.
+cardDescription: >-
+  Claude Code skill pack for SEO audits, keyword research, Google Ads
+  management, and Meta Ads optimization, powered by four live MCPs.
+seoTitle: NotFair Claude Code Skills for SEO, GEO, Google Ads, and Meta Ads
+seoDescription: >-
+  Install NotFair's open-source Claude Code skills for SEO analysis, GEO
+  optimization, content writing, Google Ads audits, keyword and bid management,
+  and Meta Ads ROAS and creative-fatigue review, via the Google Ads MCP, Meta
+  Ads MCP, Google Search Console MCP, and Google Analytics (GA4) MCP.
+author: nowork-studio
+authorProfileUrl: "https://github.com/nowork-studio"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/nowork-studio/NotFair"
+documentationUrl: "https://github.com/nowork-studio/NotFair#readme"
+websiteUrl: "https://github.com/nowork-studio/NotFair"
+downloadUrl: "https://github.com/nowork-studio/NotFair/archive/refs/heads/main.zip"
+installable: true
+installCommand: "/plugin marketplace add nowork-studio/NotFair"
+usageSnippet: >-
+  Register the NotFair repository as a Claude Code plugin marketplace, then
+  install the seo, google-ads, or meta-ads skill pack; Claude will connect to
+  live account data through the Google Ads MCP, Meta Ads MCP, Google Search
+  Console MCP, and Google Analytics (GA4) MCP.
+copySnippet: |-
+  /plugin marketplace add nowork-studio/NotFair
+
+  # Install individual skill packs
+  /plugin install seo@NotFair
+  /plugin install google-ads@NotFair
+  /plugin install meta-ads@NotFair
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/nowork-studio/NotFair"
+  - "https://raw.githubusercontent.com/nowork-studio/NotFair/main/README.md"
+  - "https://github.com/nowork-studio/NotFair/tree/main/seo"
+  - "https://github.com/nowork-studio/NotFair/tree/main/google-ads"
+  - "https://github.com/nowork-studio/NotFair/tree/main/meta-ads"
+testedPlatforms:
+  - Claude Code
+prerequisites:
+  - "Claude Code with plugin marketplace support."
+  - "Google Ads MCP configured and authenticated for Google Ads skill packs."
+  - "Meta Ads MCP configured and authenticated for Meta Ads skill packs."
+  - "Google Search Console MCP and Google Analytics (GA4) MCP for SEO and GEO skill packs."
+  - "Active Google Ads, Meta Ads, Google Search Console, or GA4 accounts for the relevant skill areas."
+safetyNotes:
+  - "Google Ads skills can read, pause, enable, and modify campaigns, ad groups, keywords, bids, and budgets through the Google Ads MCP; review recommended changes before approving writes."
+  - "Meta Ads skills can read and modify Meta campaigns, ad sets, and ads through the Meta Ads MCP; confirm edits before applying them to live accounts."
+  - "SEO skills make read-only calls to Google Search Console MCP and Google Analytics (GA4) MCP; no site content or ad account data is written by the SEO pack."
+privacyNotes:
+  - "Ad account data including spend, performance metrics, keywords, audiences, and creative assets are sent to Claude through the configured MCP connections."
+  - "Google Search Console and GA4 data including search queries, page performance, and traffic metrics are sent to Claude through those MCPs."
+  - "Do not use these skills with accounts that contain regulated, sensitive, or confidential data unless your environment and account policy permit that exposure."
+tags:
+  - seo
+  - google-ads
+  - meta-ads
+  - mcp
+  - claude-code
+  - skills
+  - marketing
+  - geo
+  - keyword-research
+  - content-writing
+keywords:
+  - NotFair Claude Code skills
+  - SEO skills Claude Code
+  - Google Ads MCP skills
+  - Meta Ads MCP skills
+  - Google Search Console MCP
+  - Google Analytics GA4 MCP
+  - GEO optimization Claude
+  - keyword research Claude
+  - ad audit Claude Code
+  - marketing agent skills
+readingTime: 5
+difficultyScore: 65
+hasTroubleshooting: false
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# NotFair SEO, Google Ads, and Meta Ads Skills
+
+`nowork-studio/NotFair` is an open-source Claude Code skill pack for
+marketing work. It organizes capabilities into three areas — `seo/`,
+`google-ads/`, and `meta-ads/` — and connects to live account data through
+the Google Ads MCP, Meta Ads MCP, Google Search Console MCP, and Google
+Analytics (GA4) MCP.
+
+## Skill Areas
+
+**SEO (`seo/`):** Site analysis, keyword research, meta tag optimization,
+schema markup generation, GEO (Generative Engine Optimization), and
+content writing. Pulls live data from the Google Search Console MCP and
+Google Analytics (GA4) MCP.
+
+**Google Ads (`google-ads/`):** Account audits, wasted-spend detection,
+search-term cleanup, keyword management, and bid management. Reads and
+writes through the Google Ads MCP.
+
+**Meta Ads (`meta-ads/`):** ROAS analysis, creative fatigue detection, and
+audience overlap review for Facebook and Instagram campaigns. Reads and
+writes through the Meta Ads MCP.
+
+## Install
+
+```text
+/plugin marketplace add nowork-studio/NotFair
+/plugin install seo@NotFair
+/plugin install google-ads@NotFair
+/plugin install meta-ads@NotFair
+```
+
+## MCP Dependencies
+
+Each skill area connects to its respective MCP server. Configure and
+authenticate the relevant MCP before running a skill:
+
+- **Google Ads MCP** — required for google-ads skills
+- **Meta Ads MCP** — required for meta-ads skills
+- **Google Search Console MCP** — required for SEO site-analysis skills
+- **Google Analytics (GA4) MCP** — required for traffic and content-performance skills
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The repository is MIT-licensed and maintained by nowork-studio.
+- Three skill directories are present: `seo/`, `google-ads/`, and `meta-ads/`.
+- The repository has approximately 2.9k GitHub stars.
+- Skills are Claude Code plugins that use the notfair Google Ads MCP and
+  Meta Ads MCP for live account access, alongside the Google Search Console
+  MCP and Google Analytics (GA4) MCP for SEO data.
+
+## Duplicate Review
+
+No existing entry for `nowork-studio/NotFair`, NotFair, or these specific
+marketing MCP skill packs was found in `content/skills/`, `content/tools/`,
+`content/mcp/`, or open pull requests.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The
+repository is maintained by nowork-studio under the MIT license.
