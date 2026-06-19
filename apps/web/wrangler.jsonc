@@ -75,6 +75,10 @@
     "NEXT_PUBLIC_POLAR_FEATURED_JOB_90_URL": "/jobs/post?tier=featured",
     "NEXT_PUBLIC_POLAR_SPONSORED_JOB_90_URL": "/jobs/post?tier=sponsored",
     "VITE_SUBMISSION_GATE_URL": "https://submission-gate.heyclau.de",
+    "VITE_UMAMI_SCRIPT_URL": "/u/script.js",
+    "VITE_UMAMI_WEBSITE_ID": "b734c138-2949-4527-9160-7fe5d0e81121",
+    "UMAMI_UPSTREAM_URL": "https://tasty.aethereal.dev",
+    "UMAMI_WEBSITE_ID": "b734c138-2949-4527-9160-7fe5d0e81121",
   },
   "d1_databases": [
     {

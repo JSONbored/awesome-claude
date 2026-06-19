@@ -240,6 +240,24 @@ describe("PR preview artifact validation flow", () => {
     );
   });
 
+  it("keeps the first-party Umami proxy wired in production config", () => {
+    const wranglerConfig = fs.readFileSync(
+      path.join(repoRoot, "apps/web/wrangler.jsonc"),
+      "utf8",
+    );
+
+    expect(wranglerConfig).toContain('"VITE_UMAMI_SCRIPT_URL": "/u/script.js"');
+    expect(wranglerConfig).toContain(
+      '"VITE_UMAMI_WEBSITE_ID": "b734c138-2949-4527-9160-7fe5d0e81121"',
+    );
+    expect(wranglerConfig).toContain(
+      '"UMAMI_UPSTREAM_URL": "https://tasty.aethereal.dev"',
+    );
+    expect(wranglerConfig).toContain(
+      '"UMAMI_WEBSITE_ID": "b734c138-2949-4527-9160-7fe5d0e81121"',
+    );
+  });
+
   it("does not persist GitHub credentials in the submission-gate validation checkout", () => {
     const workflow = readContentValidationWorkflow();
     const jobBlock =
