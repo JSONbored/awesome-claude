@@ -1977,9 +1977,7 @@ ${urls}
     expect(shouldInspectBlock).not.toContain(
       'isReopenedPullRequestEvent(String(eventName || ""), webhook)',
     );
-    expect(source).toContain(
-      "isReopenedPullRequestEvent(eventName, webhook)",
-    );
+    expect(source).toContain("isReopenedPullRequestEvent(eventName, webhook)");
     expect(source).toContain("eventName,");
     expect(source).toContain("clearTerminal:");
     expect(source).toContain("lastReviewKey: reviewScanKey || undefined");
@@ -2026,6 +2024,11 @@ ${urls}
     expect(issueCommentBlock).toContain(
       "await cleanupIgnoredReviewTarget(env, target, deliveryId);",
     );
+    expect(validationBlock).toContain(
+      "await shouldInspectPullRequestFilesForWebhook(",
+    );
+    expect(validationBlock).toContain("const shouldCleanupIgnored =");
+    expect(validationBlock).toContain("if (shouldCleanupIgnored) {");
     expect(validationBlock).toContain(
       "await cleanupIgnoredReviewTarget(env, target, deliveryId);",
     );

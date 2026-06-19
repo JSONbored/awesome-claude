@@ -2793,7 +2793,16 @@ async function githubWebhookRoute(
         continue;
       }
       if (reviewability.kind === "ignore") {
-        await cleanupIgnoredReviewTarget(env, target, deliveryId);
+        const shouldCleanupIgnored =
+          await shouldInspectPullRequestFilesForWebhook(
+            env,
+            target,
+            eventName,
+            payload,
+          );
+        if (shouldCleanupIgnored) {
+          await cleanupIgnoredReviewTarget(env, target, deliveryId);
+        }
         continue;
       }
       if (
