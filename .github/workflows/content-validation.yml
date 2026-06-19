@@ -999,7 +999,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          node scripts/resolve-pr-preview-url.mjs --wait-seconds 600 --poll-seconds 15 --allow-missing
+          # The resolver reads the Cloudflare Workers Builds PR comment (where the Branch/Commit Preview URL is
+          # published), so it resolves within a poll once the preview deploy lands — 240s covers the build; it
+          # no longer dead-waits the old 600s when (e.g.) the head commit was skipped by build-watch-paths.
+          node scripts/resolve-pr-preview-url.mjs --wait-seconds 240 --poll-seconds 15 --allow-missing
 
       - name: Validate deployed artifact contract
         if: ${{ steps.preview-url.outputs.base-url != '' }}
