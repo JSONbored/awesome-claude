@@ -189,6 +189,7 @@ describe("web non-UI utility coverage", () => {
     expect(timeAgo("2026-01-10T11:30:00.000Z")).toBe("30m ago");
     expect(timeAgo("2026-01-10T09:00:00.000Z")).toBe("3h ago");
     expect(timeAgo("2025-12-01T00:00:00.000Z")).toBe("1mo ago");
+    expect(timeAgo("2027-06-01T00:00:00.000Z")).toBe("—");
 
     vi.useRealTimers();
   });

@@ -91,6 +91,58 @@ jobs:
             fi
           fi
 
+  # Build the registry artifacts ONCE per PR. validate-registry/web/mcp/raycast all consume the SAME
+  # prebuild output; previously each rebuilt it (~66s) because the shared cache misses when jobs start
+  # concurrently — up to ~264s of duplicated runner-time. This job populates the cache first, then those
+  # jobs `needs: prebuild` and restore instead of rebuilding (4 builds/PR -> 1; coverage.yml is a separate
+  # workflow so it still builds its own — 5 -> 2 total). Trades ~10-20s of single-PR wall-clock for a large
+  # runner-time saving, which speeds the queue under the Actions concurrency cap. (#prebuild-once)
+  prebuild:
+    name: prebuild
+    needs: classify-pr
+    if: ${{ needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.mcp == 'true' || needs.classify-pr.outputs.raycast == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: pr-prebuild-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          # Full history: the prebuild derives entry `updatedAt` from `git log -- content`.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.17.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Same cache key + paths as the consumer jobs. A miss builds + saves it (post-step); the dependents
+      # then restore the hit and skip their own build. A hit (re-run / staggered) skips the build here too.
+      - name: Restore prebuild artifacts
+        id: prebuild-cache
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            apps/web/public/data
+            apps/web/src/generated
+            apps/web/src/routeTree.gen.ts
+          key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
+
+      - name: Build registry artifacts
+        if: ${{ steps.prebuild-cache.outputs.cache-hit != 'true' }}
+        run: pnpm --filter web run prebuild
+
   validate-ci:
     name: validate-ci
     needs: classify-pr
@@ -459,7 +511,7 @@ jobs:
 
   validate-registry:
     name: validate-registry
-    needs: classify-pr
+    needs: [classify-pr, prebuild]
     if: ${{ needs.classify-pr.outputs.registry == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -620,7 +672,7 @@ jobs:
 
   validate-web:
     name: validate-web
-    needs: classify-pr
+    needs: [classify-pr, prebuild]
     if: ${{ needs.classify-pr.outputs.web == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -720,7 +772,7 @@ jobs:
 
   validate-mcp:
     name: validate-mcp
-    needs: classify-pr
+    needs: [classify-pr, prebuild]
     if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -788,7 +840,7 @@ jobs:
 
   validate-raycast:
     name: validate-raycast
-    needs: classify-pr
+    needs: [classify-pr, prebuild]
     if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -1040,6 +1092,7 @@ jobs:
     name: required-pr-gate
     needs:
       - classify-pr
+      - prebuild
       - validate-worktree
       - validate-ci
       - validate-content
