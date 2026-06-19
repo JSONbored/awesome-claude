@@ -11,7 +11,7 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 import { ResourceCard } from "@/components/resource-card";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
-import { countSearchResults, search } from "@/data/search";
+import { countSearchResults, normalizeSearchQuery, search } from "@/data/search";
 import {
   CATEGORIES,
   type Category,
@@ -123,7 +123,7 @@ const defaultSearch = {
 };
 
 const searchSchema = z.object({
-  q: z.string().catch(defaultSearch.q).default(defaultSearch.q),
+  q: z.string().transform(normalizeSearchQuery).catch(defaultSearch.q).default(defaultSearch.q),
   category: z.string().catch(defaultSearch.category).default(defaultSearch.category),
   trust: z.string().catch(defaultSearch.trust).default(defaultSearch.trust),
   source: z.string().catch(defaultSearch.source).default(defaultSearch.source),

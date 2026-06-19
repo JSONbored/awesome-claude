@@ -4,6 +4,7 @@ import {
   countSearchResults,
   filterSearchEntries,
   matchesEntryQuery,
+  normalizeSearchQuery,
 } from "../apps/web/src/data/search";
 import type { Entry } from "../apps/web/src/types/registry";
 
@@ -49,6 +50,19 @@ describe("entry query matching", () => {
 
     expect(matchesEntryQuery(githubEntry, "gh review")).toBe(true);
     expect(matchesEntryQuery(githubEntry, "cc review")).toBe(true);
+  });
+
+  it("bounds query normalization and token matching work", () => {
+    const browserEntry = entry({
+      title: "Browser Bridge",
+      description: "Runs Playwright automation for Claude Code sessions.",
+      tags: ["browser-automation"],
+    });
+    const longQuery = `${"browser ".repeat(20)}${"x,".repeat(10_000)}`;
+
+    expect(normalizeSearchQuery(` ${"a".repeat(300)} `).length).toBeLessThanOrEqual(256);
+    expect(matchesEntryQuery(browserEntry, longQuery)).toBe(true);
+    expect(matchesEntryQuery(browserEntry, ",".repeat(10_000))).toBe(false);
   });
 });
 

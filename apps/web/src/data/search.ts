@@ -21,6 +21,8 @@ export interface SearchFilters {
 }
 
 const TOKEN_SPLIT_PATTERN = /[^a-z0-9+#.-]+/i;
+const MAX_QUERY_LENGTH = 256;
+const MAX_QUERY_TOKENS = 12;
 
 const QUERY_ALIASES: Record<string, string[]> = {
   browser: ["chrome", "playwright", "web"],
@@ -43,14 +45,48 @@ interface EntrySearchProfile {
   words: string[];
 }
 
+interface QuerySearchProfile {
+  normalizedQuery: string;
+  tokens: string[];
+}
+
+interface PreparedSearchFilters extends SearchFilters {
+  queryProfile?: QuerySearchProfile | null;
+}
+
 const ENTRY_SEARCH_PROFILES = new WeakMap<Entry, EntrySearchProfile>();
 
+export function normalizeSearchQuery(query: string) {
+  return query.slice(0, MAX_QUERY_LENGTH).trim().toLowerCase();
+}
+
 function tokenizeSearchQuery(query: string) {
-  return query
-    .split(TOKEN_SPLIT_PATTERN)
-    .map((token) => token.trim().toLowerCase())
-    .filter((token) => token.length >= 2)
-    .slice(0, 12);
+  const tokens: string[] = [];
+  let token = "";
+
+  for (let index = 0; index < query.length && tokens.length < MAX_QUERY_TOKENS; index += 1) {
+    const char = query[index]!;
+    if (/[a-z0-9+#.-]/i.test(char)) {
+      token += char.toLowerCase();
+      continue;
+    }
+
+    if (token.length >= 2) tokens.push(token);
+    token = "";
+  }
+
+  if (tokens.length < MAX_QUERY_TOKENS && token.length >= 2) tokens.push(token);
+  return tokens;
+}
+
+function querySearchProfile(query: string): QuerySearchProfile | null {
+  const normalizedQuery = normalizeSearchQuery(query);
+  if (!normalizedQuery) return null;
+
+  const tokens = tokenizeSearchQuery(normalizedQuery);
+  if (!tokens.length) return null;
+
+  return { normalizedQuery, tokens };
 }
 
 function expandedTokenCandidates(token: string) {
@@ -106,13 +142,8 @@ function candidateMatchesText(candidate: string, profile: EntrySearchProfile) {
   );
 }
 
-export function matchesEntryQuery(entry: Entry, query: string) {
-  const normalizedQuery = query.trim().toLowerCase();
-  if (!normalizedQuery) return true;
-
-  const tokens = tokenizeSearchQuery(normalizedQuery);
-  if (!tokens.length) return false;
-
+function matchesEntryQueryProfile(entry: Entry, queryProfile: QuerySearchProfile) {
+  const { normalizedQuery, tokens } = queryProfile;
   const profile = entrySearchProfile(entry);
   if (
     normalizedQuery.length > 2
@@ -127,7 +158,22 @@ export function matchesEntryQuery(entry: Entry, query: string) {
   );
 }
 
+export function matchesEntryQuery(entry: Entry, query: string) {
+  const profile = querySearchProfile(query);
+  if (!profile) return !normalizeSearchQuery(query);
+  return matchesEntryQueryProfile(entry, profile);
+}
+
+function prepareSearchFilters(filters: SearchFilters = {}): PreparedSearchFilters {
+  return {
+    ...filters,
+    q: filters.q ? normalizeSearchQuery(filters.q) : filters.q,
+    queryProfile: filters.q ? querySearchProfile(filters.q) : null,
+  };
+}
+
 export function matchesSearchFilters(entry: Entry, filters: SearchFilters = {}) {
+  const prepared = filters as PreparedSearchFilters;
   if (filters.categories?.length && !filters.categories.includes(entry.category)) return false;
   if (filters.platforms?.length && !entry.platforms.some((p) => filters.platforms!.includes(p)))
     return false;
@@ -136,18 +182,23 @@ export function matchesSearchFilters(entry: Entry, filters: SearchFilters = {}) 
   if (filters.installable && !entry.installCommand && !entry.configSnippet && !entry.fullCopy)
     return false;
   if (filters.hasSafetyNotes && !entry.safetyNotes) return false;
-  if (filters.q && !matchesEntryQuery(entry, filters.q)) return false;
+  if (prepared.queryProfile && !matchesEntryQueryProfile(entry, prepared.queryProfile)) return false;
+  if (prepared.q && prepared.queryProfile === null) return false;
+  if (filters.q && prepared.queryProfile === undefined && !matchesEntryQuery(entry, filters.q))
+    return false;
   return true;
 }
 
 export function filterSearchEntries(filters: SearchFilters = {}, entries: Entry[] = ENTRIES) {
-  return entries.filter((entry) => matchesSearchFilters(entry, filters));
+  const prepared = prepareSearchFilters(filters);
+  return entries.filter((entry) => matchesSearchFilters(entry, prepared));
 }
 
 export function countSearchResults(filters: SearchFilters = {}, entries: Entry[] = ENTRIES) {
+  const prepared = prepareSearchFilters(filters);
   let count = 0;
   for (const entry of entries) {
-    if (matchesSearchFilters(entry, filters)) count += 1;
+    if (matchesSearchFilters(entry, prepared)) count += 1;
   }
   return count;
 }

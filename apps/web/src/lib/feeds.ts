@@ -8,7 +8,7 @@
  * helper `respondFeed` handles `If-None-Match` and emits cache headers.
  */
 import { ENTRIES } from "@/data/entries";
-import { filterSearchEntries } from "@/data/search";
+import { filterSearchEntries, normalizeSearchQuery } from "@/data/search";
 import { CHANGELOG, RELEASE_NOTES } from "@/data/changelog";
 import { getGrowthSurfaces } from "@/lib/growth-surfaces";
 import { ifNoneMatchMatches } from "@/lib/http-cache";
@@ -247,7 +247,7 @@ export interface SavedSearchQuery {
 export function applySavedSearch(q: SavedSearchQuery): FeedItem[] {
   return filterSearchEntries(
     {
-      q: q.q,
+      q: q.q ? normalizeSearchQuery(q.q) : q.q,
       categories: q.category ? [q.category as Category] : undefined,
       trust: q.trust ? [q.trust as TrustLevel] : undefined,
       source: q.source ? [q.source as SourceStatus] : undefined,
