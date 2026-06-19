@@ -7,6 +7,7 @@ import {
   findDuplicateSnippets,
   normalizeSnippet,
   parseGscImpressions,
+  renderMarkdown,
   snippetIssues,
 } from "../scripts/audit-seo-snippets.mjs";
 
@@ -130,6 +131,55 @@ describe("auditEntries", () => {
     expect(keys).toContain("mcp/dupe-a");
     // "broken" has the most issues → ranked first
     expect(findings[0].key).toBe("mcp/broken");
+  });
+});
+
+describe("renderMarkdown", () => {
+  it("reports total flagged entries separately from displayed findings", () => {
+    const output = renderMarkdown(
+      [
+        {
+          key: "mcp/postgres",
+          category: "mcp",
+          slug: "postgres",
+          path: "/entry/mcp/postgres",
+          impressions: 0,
+          issues: [
+            {
+              field: "seoTitle",
+              code: "echoes-base",
+              detail: "seoTitle just repeats the on-page title",
+            },
+          ],
+        },
+      ],
+      { total: 10, flagged: 7 },
+    );
+
+    expect(output).toContain(
+      "7 of 10 entries have weak seoTitle/seoDescription.",
+    );
+    expect(output).toContain("Showing top 1 of 7 findings.");
+    expect(output).not.toContain(
+      "1 of 10 entries have weak seoTitle/seoDescription.",
+    );
+  });
+
+  it("reports when the full finding set is displayed", () => {
+    const findings = auditEntries([
+      entry({ slug: "short-a", seoTitle: "Short", seoDescription: "short" }),
+      entry({ slug: "short-b", seoTitle: "Tiny", seoDescription: "tiny" }),
+    ]);
+
+    const output = renderMarkdown(findings, {
+      total: 2,
+      flagged: findings.length,
+    });
+
+    expect(output).toContain(
+      "2 of 2 entries have weak seoTitle/seoDescription.",
+    );
+    expect(output).toContain("Showing all 2 findings.");
   });
 });
 
