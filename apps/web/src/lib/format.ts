@@ -2,15 +2,21 @@
 export function formatCompact(n: number | undefined | null): string {
   if (n == null || Number.isNaN(n)) return "—";
   if (n < 1_000) return String(n);
-  if (n < 1_000_000) {
-    const v = n / 1_000;
-    return `${v >= 100 ? v.toFixed(0) : v.toFixed(1).replace(/\.0$/, "")}k`;
+  // Units largest-first. `toFixed` can round a near-boundary value up to "1000"
+  // (e.g. 999_999 / 1_000 → 999.999 → "1000"), which rendered the nonsensical
+  // "1000k"/"1000M". Promote that to the next unit ("1M"/"1B") instead.
+  const units: ReadonlyArray<readonly [number, string, string]> = [
+    [1_000_000_000, "B", "B"],
+    [1_000_000, "M", "B"],
+    [1_000, "k", "M"],
+  ];
+  for (const [base, suffix, promoted] of units) {
+    if (n < base) continue;
+    const v = n / base;
+    const text = v >= 100 ? v.toFixed(0) : v.toFixed(1).replace(/\.0$/, "");
+    return text === "1000" && suffix !== "B" ? `1${promoted}` : `${text}${suffix}`;
   }
-  if (n < 1_000_000_000) {
-    const v = n / 1_000_000;
-    return `${v >= 100 ? v.toFixed(0) : v.toFixed(1).replace(/\.0$/, "")}M`;
-  }
-  return `${(n / 1_000_000_000).toFixed(1).replace(/\.0$/, "")}B`;
+  return String(n);
 }
 
 /** Format an ISO date relative to now: "3d ago", "2h ago", "just now". */
