@@ -61,17 +61,8 @@ describe("generated churn policy", () => {
     expect(gitignore).toContain("!content/mcp/*.mcpb");
   });
 
-  it("keeps CodeRabbit out of one-shot content submission review", () => {
-    const source = read(".coderabbit.yaml");
-    expect(source).toContain("path_filters:");
-    expect(source).toContain('"!content/**"');
-    expect(source).toContain('"!apps/web/public/data/**"');
-    expect(source).toContain('"!apps/web/src/generated/**"');
-    expect(source).toContain('"!apps/web/public/downloads/**"');
-    expect(source).toContain('"!apps/web/src/routeTree.gen.ts"');
-    expect(source).toContain('"!README.md"');
-    expect(source).toContain("ignore_title_keywords:");
-    expect(source).toContain('"content("');
+  it("does not keep a CodeRabbit review config in the repo", () => {
+    expect(fs.existsSync(path.join(repoRoot, ".coderabbit.yaml"))).toBe(false);
   });
 
   it("generates registry and route artifacts before web build gates", () => {
