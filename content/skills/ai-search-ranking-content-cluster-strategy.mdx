@@ -2,14 +2,14 @@
 title: AI Search Ranking Content Cluster Strategy Skill
 slug: ai-search-ranking-content-cluster-strategy
 category: skills
-description: "Build SEO-forward content clusters that align with search intent, topical authority, and conversion pathways for AI tooling niches."
-cardDescription: "Content strategy skill for ranking and growth using intent mapping, cluster architecture, and structured publishing workflows."
+description: "Plan SEO-forward content clusters that align search intent, topical coverage, internal links, and conversion pathways for AI tooling niches."
+cardDescription: "Content strategy skill for intent mapping, pillar/cluster architecture, internal linking, and structured publishing workflows."
 seoTitle: AI Search Ranking Content Cluster Strategy Skill
-seoDescription: "Reusable AI skill for planning and executing SEO content clusters that improve rankings, authority, and qualified traffic."
+seoDescription: "Reusable AI skill for planning SEO content clusters around search intent, pillar pages, internal links, and refresh workflows."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2026-04-10"
-documentationUrl: "https://developers.google.com/search/docs"
+documentationUrl: "https://www.conductor.com/academy/topic-clusters/"
 downloadUrl: /downloads/skills/ai-search-ranking-content-cluster-strategy.zip
 installable: true
 installCommand: "curl -L https://heyclau.de/downloads/skills/ai-search-ranking-content-cluster-strategy.zip -o ai-search-ranking-content-cluster-strategy.zip && unzip -o ai-search-ranking-content-cluster-strategy.zip -d ./ai-search-ranking-content-cluster-strategy"
@@ -28,7 +28,18 @@ skillLevel: advanced
 verificationStatus: draft
 verifiedAt: "2026-04-10"
 retrievalSources:
-  - "https://developers.google.com/search/docs"
+  - "https://www.conductor.com/academy/topic-clusters/"
+  - "https://www.siteimprove.com/blog/pillar-and-cluster-content-strategy/"
+  - "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+  - "https://developers.google.com/search/docs/crawling-indexing/links-crawlable"
+safetyNotes:
+  - "Treat the output as a planning aid, not an automated ranking guarantee; review topics, claims, and internal links before publishing."
+  - "Do not use the skill to mass-publish thin, duplicated, or unsupported AI-generated pages."
+  - "Verify current Google Search guidance and source evidence before changing high-value SEO pages."
+privacyNotes:
+  - "Keyword lists, analytics exports, drafts, customer pain points, and conversion data shared with the skill may enter model context."
+  - "Remove private customer data, unpublished strategy, revenue figures, and credentialed analytics exports before using examples in prompts."
 testedPlatforms:
   - Claude
   - Codex
@@ -63,7 +74,11 @@ robotsFollow: true
 
 ## Overview
 
-This skill helps AI agents create practical, ranking-oriented content programs. It focuses on intent-driven coverage, robust internal linking, and repeatable publishing operations.
+This skill helps AI agents plan practical content-cluster programs. It focuses
+on intent-driven coverage, pillar/cluster structure, internal linking, and
+repeatable publishing operations. It should not be used as a promise that a page
+will rank; the output still needs editorial review, source checking, and current
+Search guidance.
 
 ## Compatibility
 
@@ -90,6 +105,7 @@ This skill helps AI agents create practical, ranking-oriented content programs. 
 - Cluster architecture and page-level briefs
 - Internal link model for authority flow
 - Refresh strategy based on performance signals
+- Explicit assumptions, unsupported claims, and measurement risks
 
 ## How to Use This Skill
 
@@ -114,9 +130,25 @@ This skill helps AI agents create practical, ranking-oriented content programs. 
 
 Treat tooling details as time-sensitive. Re-validate APIs, limits, pricing, auth models, and deployment flags immediately before implementation. If docs conflict with prior memory, follow current official docs and release notes.
 
+## Source Verification Notes
+
+Verified on **2026-06-19**:
+
+- Conductor and Siteimprove describe topic/pillar cluster structures and the
+  role of internal links between pillar pages and cluster pages.
+- Google Search Central provides the baseline search-quality and crawlability
+  guidance used here: create helpful content, make links crawlable, and avoid
+  search-first publishing that does not serve readers.
+- This skill packages those sources into a reusable planning workflow. It does
+  not claim that content clusters guarantee rankings or traffic.
+
 ## Retrieval Sources
 
-- https://developers.google.com/search/docs
+- https://www.conductor.com/academy/topic-clusters/
+- https://www.siteimprove.com/blog/pillar-and-cluster-content-strategy/
+- https://developers.google.com/search/docs/fundamentals/seo-starter-guide
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+- https://developers.google.com/search/docs/crawling-indexing/links-crawlable
 
 ## Output Contract
 
