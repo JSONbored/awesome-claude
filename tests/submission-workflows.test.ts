@@ -213,14 +213,20 @@ describe("submission automation workflows", () => {
 
     expect(source).toContain("validate-worktree:");
     expect(source).toContain('git diff --check "$BASE_SHA"...HEAD');
-    expect(source).toContain("Run Vitest suite");
-    expect(source).toContain("pnpm test");
+    // The full Vitest suite is NOT duplicated in the validate lanes — it runs once in coverage.yml
+    // (pnpm test:coverage); validate-web keeps only the web-specific gates below. (#dedupe-suite)
+    expect(source).not.toContain("Run Vitest suite");
+    const coverageWorkflow = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/coverage.yml"),
+      "utf8",
+    );
+    expect(coverageWorkflow).toContain("pnpm test:coverage");
     expect(source).toContain("pnpm type-check");
     expect(source).toContain("pnpm build");
     expect(source).not.toContain("pnpm test:e2e");
     expect(source).not.toContain("playwright install");
     expect(source).toContain("Resolve PR preview URL");
-    expect(source).toContain("--wait-seconds 600");
+    expect(source).toContain("--wait-seconds 240");
     expect(source).toContain(
       "github.event.pull_request.head.repo.full_name == github.repository",
     );
@@ -393,7 +399,7 @@ describe("submission automation workflows", () => {
     );
     expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).toContain("Resolve PR preview URL");
-    expect(source).toContain("--wait-seconds 600");
+    expect(source).toContain("--wait-seconds 240");
     // Preview resolution degrades gracefully: with the shared dev Worker retired,
     // it validates a real prod preview-version URL when resolvable and skips
     // cleanly otherwise (downstream steps are gated on a non-empty base-url).

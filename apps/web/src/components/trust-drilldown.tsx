@@ -57,10 +57,10 @@ export function TrustDrilldown({
           </div>
           <Link
             to="/quality"
-            hash="preflight"
+            hash="methodology"
             className="inline-flex h-7 items-center gap-1 rounded-md border border-border bg-background px-2 text-[11px] font-medium text-ink hover:bg-surface-2"
           >
-            Run preflight
+            Methodology
             <ArrowUpRight className="h-3 w-3" />
           </Link>
         </header>

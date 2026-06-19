@@ -1,9 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 
 import {
   normalizeBaseUrl,
+  resolveFromPrComments,
   selectPreviewUrl,
 } from "../scripts/resolve-pr-preview-url.mjs";
 import { repoRoot } from "./helpers/registry-fixtures";
@@ -114,7 +115,7 @@ describe("PR preview artifact validation flow", () => {
     expect(workflow).not.toContain(
       "https://heyclaude-dev.zeronode.workers.dev",
     );
-    expect(workflow).toContain("--wait-seconds 600");
+    expect(workflow).toContain("--wait-seconds 240");
     expect(workflow).not.toContain("REQUIRE_PR_PREVIEW");
     expect(workflow).toContain("--allow-missing");
     expect(workflow).toContain("pnpm validate:deployment-artifacts");
@@ -302,5 +303,79 @@ describe("PR preview artifact validation flow", () => {
       `"${["PILOT", "BASE", "REF"].join("_")}"`,
     );
     expect(wranglerConfig).toContain('"name": "heyclaude-submission-gate"');
+  });
+});
+
+describe("resolveFromPrComments — reads the Cloudflare Workers Builds PR comment", () => {
+  afterEach(() => vi.unstubAllGlobals());
+  const env = {
+    GITHUB_TOKEN: "t",
+    GITHUB_REPOSITORY: "JSONbored/awesome-claude",
+  };
+  // The real comment markup Cloudflare posts (both links present).
+  const cfBody =
+    "| ✅ Deployment successful! | heyclaude-prod | def6d9d7 | " +
+    "<a href='https://71ca0b68-heyclaude-prod.zeronode.workers.dev'>Commit Preview URL</a><br><br>" +
+    "<a href='https://codex-quality-methodology-copy-heyclaude-prod.zeronode.workers.dev'>Branch Preview URL</a> | Jun 19 2026 |";
+
+  function stubComments(comments) {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify(comments), {
+            status: 200,
+            headers: { "content-type": "application/json" },
+          }),
+      ),
+    );
+  }
+
+  it("prefers the stable Branch Preview URL from the cloudflare bot comment", async () => {
+    stubComments([
+      { user: { login: "someone" }, body: "unrelated" },
+      { user: { login: "cloudflare-workers-and-pages[bot]" }, body: cfBody },
+    ]);
+    expect(
+      await resolveFromPrComments({ pull_request: { number: 4045 } }, env),
+    ).toEqual({
+      url: "https://codex-quality-methodology-copy-heyclaude-prod.zeronode.workers.dev",
+      source: "cf-comment:branch",
+    });
+  });
+
+  it("falls back to the per-commit Preview URL when no Branch URL is present", async () => {
+    stubComments([
+      {
+        user: { login: "cloudflare-workers-and-pages[bot]" },
+        body: "<a href='https://71ca0b68-heyclaude-prod.zeronode.workers.dev'>Commit Preview URL</a>",
+      },
+    ]);
+    const resolved = await resolveFromPrComments(
+      { pull_request: { number: 1 } },
+      env,
+    );
+    expect(resolved?.url).toBe(
+      "https://71ca0b68-heyclaude-prod.zeronode.workers.dev",
+    );
+  });
+
+  it("rejects SPOOFED commenters (exact bot login only) and returns null without a PR number", async () => {
+    // A public-repo user whose name merely CONTAINS "cloudflare" must not be able to inject a preview URL —
+    // only the unspoofable `cloudflare-workers-and-pages[bot]` login counts (Superagent P2 hardening).
+    stubComments([
+      {
+        user: { login: "cloudflare-impostor" },
+        body: "<a href='https://evil-heyclaude-prod.zeronode.workers.dev'>Branch Preview URL</a>",
+      },
+      {
+        user: { login: "cloudflare-workers-and-pages" },
+        body: "<a href='https://evil2-heyclaude-prod.zeronode.workers.dev'>Branch Preview URL</a>",
+      },
+    ]);
+    expect(
+      await resolveFromPrComments({ pull_request: { number: 2 } }, env),
+    ).toBeNull();
+    expect(await resolveFromPrComments({}, env)).toBeNull();
   });
 });
