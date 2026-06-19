@@ -266,7 +266,10 @@ export function normalizeBrandColors(value) {
 export function isAllowedBrandAssetUrl(value) {
   const raw = clean(value);
   if (!raw) return true;
-  if (raw.startsWith("/")) return /^\/[a-z0-9/_+.-]+$/i.test(raw);
+  if (raw.startsWith("/")) {
+    if (raw.startsWith("//")) return false;
+    return /^\/[a-z0-9/_+.-]+$/i.test(raw);
+  }
 
   try {
     const parsed = new URL(raw);

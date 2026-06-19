@@ -109,6 +109,20 @@ describe("brand icon display helpers", () => {
         brandIconUrl: "/assets/brands/local.svg",
       }),
     ).toBe(true);
+    expect(
+      hasDisplayableBrandIcon({
+        title: "Tracker Brand",
+        brandIconUrl: "//tracker.example/pixel.png",
+        brandAssetSource: "manual",
+      }),
+    ).toBe(false);
+    expect(
+      displayableBrandIconUrl({
+        title: "Tracker Brand",
+        brandIconUrl: "//tracker.example/pixel.png",
+        brandAssetSource: "manual",
+      }),
+    ).toBeUndefined();
   });
 
   it("provides stable labels and suppresses generic auto-resolved identities", () => {

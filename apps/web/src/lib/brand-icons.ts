@@ -1,4 +1,5 @@
 import {
+  isAllowedBrandAssetUrl,
   normalizeBrandDomain,
   shouldAutoResolveBrandAsset,
 } from "@heyclaude/registry/brand-assets";
@@ -54,7 +55,7 @@ export function brandDisplayName(target: BrandIconTarget): string {
 export function hasDisplayableBrandIcon(target: BrandIconTarget | null | undefined): boolean {
   if (!target) return false;
   const iconUrl = clean(target.brandIconUrl);
-  if (!iconUrl) return false;
+  if (!iconUrl || !isAllowedBrandAssetUrl(iconUrl)) return false;
 
   const source = brandAssetSource(target);
   if (source === "none") return false;

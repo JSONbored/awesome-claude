@@ -31,6 +31,7 @@ describe("brand asset helpers", () => {
       true,
     );
     expect(isAllowedBrandAssetUrl("/bad path")).toBe(false);
+    expect(isAllowedBrandAssetUrl("//tracker.example/pixel.png")).toBe(false);
     expect(isAllowedBrandAssetUrl("http://cdn.brandfetch.io/logo.png")).toBe(
       false,
     );
@@ -162,7 +163,7 @@ describe("brand asset helpers", () => {
       buildBrandAssetMetadata({
         title: "Rejected Brand Asset",
         brandDomain: "example.com",
-        brandIconUrl: "https://evil.example/icon.png",
+        brandIconUrl: "//tracker.example/pixel.png",
         brandLogoUrl: "javascript:alert(1)",
         brandAssetSource: "brandfetch",
       }),
