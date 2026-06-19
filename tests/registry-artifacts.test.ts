@@ -512,6 +512,7 @@ describe("registry artifacts", () => {
     expect(manifest.artifacts.registryTrust).toBe(
       "/data/registry-trust-report.json",
     );
+    expect(manifest.artifacts.qualityMethodology).toBe("/quality#methodology");
     expect(manifest.trustSummary).toEqual(trustReportPayload.summary);
   });
 
@@ -1488,6 +1489,7 @@ Use this hook after reviewing the notes.`,
     );
     expect(manifest.qualitySummary).toBeTruthy();
     expect(manifest.artifacts.llmsFull).toBe("/llms-full.txt");
+    expect(manifest.artifacts.qualityMethodology).toBe("/quality#methodology");
     expect(manifest.artifacts.contentQualityPrompts).toBe(
       "/data/content-quality-prompts.json",
     );

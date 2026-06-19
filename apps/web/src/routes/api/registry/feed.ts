@@ -34,6 +34,7 @@ export const GET = createApiHandler("registry.feed", async ({ request }) => {
       pluginExportFeed: "/data/plugin-export-feed.json",
       changelogFeed: "/data/registry-changelog.json",
       registryTrust: "/data/registry-trust-report.json",
+      qualityMethodology: "/quality#methodology",
       rssFeed: "/feed.xml",
       atomFeed: "/atom.xml",
       distributionFeedIndex: "/data/feeds/index.json",

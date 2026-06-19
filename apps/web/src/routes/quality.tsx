@@ -98,9 +98,10 @@ function scoreEntry(e: (typeof ENTRIES)[number]): QualityRow {
 // SSR render of /quality.
 const QUALITY_ROWS = ENTRIES.map(scoreEntry);
 const IMPROVEMENT_QUEUE = [...QUALITY_ROWS].sort((a, b) => a.score - b.score).slice(0, 8);
-const TRUST_QUEUE = QUALITY_ROWS.filter(
-  (r) => r.recommendations.length > 0 && r.score >= 60,
-).slice(0, 8);
+const TRUST_QUEUE = QUALITY_ROWS.filter((r) => r.recommendations.length > 0 && r.score >= 60).slice(
+  0,
+  8,
+);
 const CATEGORY_COVERAGE = new Map(
   CATEGORIES.map((c) => {
     const inCat = ENTRIES.filter((e) => e.category === c.id);
@@ -160,6 +161,50 @@ function QualityPage() {
           percent={pct(QUALITY_STATS.reviewed)}
         />
       </div>
+
+      <section id="methodology" className="mt-12 scroll-mt-24">
+        <div className="max-w-3xl">
+          <h2 className="h-display-2 text-ink text-balance">Trust methodology</h2>
+          <p className="mt-2 text-sm leading-6 text-ink-muted">
+            These notes define the public labels used across entries, exports, and reports. They are
+            editorial metadata checks for source identity, install caution, and registry
+            completeness. These checks are not a guarantee that upstream code is safe, and they are
+            not malware scans or vulnerability assessments.
+          </p>
+        </div>
+        <div className="mt-5 grid gap-3 md:grid-cols-2">
+          <MethodologyCard
+            id="trust-levels"
+            title="Trust levels"
+            body="Trusted means a maintainer reviewed the listing metadata and source backing. Review, limited, and blocked are caution states that ask readers to inspect the source before installing. A trust badge is not an endorsement or runtime security guarantee."
+          />
+          <MethodologyCard
+            id="source-provenance"
+            title="Source provenance"
+            body="Source-backed means the listing has a reachable repository, package registry, official documentation, or project source URL that supports the claimed identity. We do not infer source backing from marketing copy alone."
+          />
+          <MethodologyCard
+            id="safety-notes"
+            title="Safety notes"
+            body="Risk-bearing categories should explain execution, filesystem access, network access, credentials, destructive actions, background workers, or account-write behavior before a user runs them."
+          />
+          <MethodologyCard
+            id="privacy-notes"
+            title="Privacy notes"
+            body="Privacy notes call out local files, prompts, credentials, telemetry, third-party services, logs, retention, or user-data exposure so readers can decide whether a resource fits their threat model."
+          />
+          <MethodologyCard
+            id="integrity"
+            title="Package and download trust"
+            body="Checksums pin hosted downloads byte-for-byte. Package verification means maintainers reviewed the package metadata and source path for the listed artifact. It is not a code audit, malware verdict, or proof that future releases are safe. Community PRs cannot mark packages as verified."
+          />
+          <MethodologyCard
+            id="freshness"
+            title="Freshness"
+            body="Reviewed and verified dates show the last source or metadata check we recorded. Older checks are still useful provenance, but stale entries should be rechecked before install or citation."
+          />
+        </div>
+      </section>
 
       <h2 className="mt-12 h-display-2 text-ink text-balance">Coverage by category</h2>
       <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-surface">
@@ -349,6 +394,15 @@ function QualityPage() {
         />
       </div>
     </PageContainer>
+  );
+}
+
+function MethodologyCard({ id, title, body }: { id: string; title: string; body: string }) {
+  return (
+    <article id={id} className="scroll-mt-24 rounded-lg border border-border bg-surface p-4">
+      <h3 className="font-display text-base font-semibold text-ink">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-ink-muted">{body}</p>
+    </article>
   );
 }
 

@@ -691,20 +691,24 @@ jobs:
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm validate:openapi
 
-      - name: Run Vitest suite
+      # The full Vitest suite runs once in the `coverage` job (`pnpm test:coverage` = the same `vitest run`,
+      # plus coverage + Codecov upload). Running it again here was pure duplication — ~2 min of identical
+      # work AND a second runner slot held under the Actions concurrency cap, which starves the queue. The
+      # web lane keeps the web-specific gates below (type-check + build); the suite is gated by `coverage`.
+      # (Trunk flaky-test upload also lived here but was token-gated and inert; move it to `coverage` if
+      # flaky detection is ever enabled, so it sits with the one job that runs the suite.) (#dedupe-suite)
+
+      # Incremental type-check cache: `tsc --noEmit` (incremental) writes apps/web/.cache/tsc.tsbuildinfo,
+      # so a warm run only re-checks changed files (~4x faster locally). Keyed per-sha with a prefix
+      # restore-key so each run restores the most recent prior buildinfo. (#tsc-incremental-cache)
+      - name: Restore type-check cache
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
-        run: pnpm test
-
-      - name: Install Trunk CLI
-        if: ${{ needs.classify-pr.outputs.web == 'true' && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}
-        run: |
-          curl https://get.trunk.io -fsSL | bash -s -- -y
-          echo "$HOME/.trunk/bin" >> "$GITHUB_PATH"
-
-      - name: Upload test results to Trunk
-        if: ${{ needs.classify-pr.outputs.web == 'true' && always() && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}
-        continue-on-error: true
-        run: trunk flakytests upload --junit-paths "reports/junit/*.xml" --org-url-slug "$TRUNK_ORG_URL_SLUG" --token "$TRUNK_API_TOKEN"
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: apps/web/.cache
+          key: tsc-web-v1-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            tsc-web-v1-${{ runner.os }}-
 
       - name: Type-check web app
         if: ${{ needs.classify-pr.outputs.web == 'true' }}

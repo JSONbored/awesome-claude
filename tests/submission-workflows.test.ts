@@ -213,8 +213,14 @@ describe("submission automation workflows", () => {
 
     expect(source).toContain("validate-worktree:");
     expect(source).toContain('git diff --check "$BASE_SHA"...HEAD');
-    expect(source).toContain("Run Vitest suite");
-    expect(source).toContain("pnpm test");
+    // The full Vitest suite is NOT duplicated in the validate lanes — it runs once in coverage.yml
+    // (pnpm test:coverage); validate-web keeps only the web-specific gates below. (#dedupe-suite)
+    expect(source).not.toContain("Run Vitest suite");
+    const coverageWorkflow = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/coverage.yml"),
+      "utf8",
+    );
+    expect(coverageWorkflow).toContain("pnpm test:coverage");
     expect(source).toContain("pnpm type-check");
     expect(source).toContain("pnpm build");
     expect(source).not.toContain("pnpm test:e2e");
