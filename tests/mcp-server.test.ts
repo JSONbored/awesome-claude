@@ -2058,22 +2058,37 @@ describe("HeyClaude read-only MCP helpers", () => {
     // Find an entry that GENUINELY has no safety/privacy notes by reading entry
     // detail files (directory-index strips notes). Assuming a specific entry is
     // note-less is brittle — content enrichment adds notes over time.
-    function findEntryWithoutNotes(category: string) {
-      const dir = path.join(dataDir, "entries", category);
-      for (const file of fs.readdirSync(dir).sort()) {
-        const detail = JSON.parse(
-          fs.readFileSync(path.join(dir, file), "utf8"),
-        ) as {
-          entry?: { slug: string; safetyNotes?: string; privacyNotes?: string };
-        };
-        const entry = detail.entry;
-        if (entry && !entry.safetyNotes && !entry.privacyNotes) {
-          return { category, slug: entry.slug };
+    function findEntryWithoutNotes(preferredCategory?: string) {
+      const entriesDir = path.join(dataDir, "entries");
+      const categories = preferredCategory
+        ? [
+            preferredCategory,
+            ...fs
+              .readdirSync(entriesDir)
+              .filter((category) => category !== preferredCategory)
+              .sort(),
+          ]
+        : fs.readdirSync(entriesDir).sort();
+
+      for (const category of categories) {
+        const dir = path.join(entriesDir, category);
+        for (const file of fs.readdirSync(dir).sort()) {
+          const detail = JSON.parse(
+            fs.readFileSync(path.join(dir, file), "utf8"),
+          ) as {
+            entry?: {
+              slug: string;
+              safetyNotes?: string;
+              privacyNotes?: string;
+            };
+          };
+          const entry = detail.entry;
+          if (entry && !entry.safetyNotes && !entry.privacyNotes) {
+            return { category, slug: entry.slug };
+          }
         }
       }
-      throw new Error(
-        `No ${category} entry without safety/privacy notes found`,
-      );
+      throw new Error("No entry without safety/privacy notes found");
     }
 
     it("explains trust for entry with safety and privacy notes", async () => {
