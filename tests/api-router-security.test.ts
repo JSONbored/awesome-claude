@@ -1028,7 +1028,7 @@ describe("umami collector proxy security", () => {
     expect(fetchMock.mock.calls[0]?.[0]).toBe("https://umami.example/api/send");
   });
 
-  it("normalizes trailing slashes when fetching the tracker script", async () => {
+  it("does not proxy the tracker script as same-origin JavaScript", async () => {
     process.env.UMAMI_UPSTREAM_URL = "https://umami.example/";
     const fetchMock = vi.fn(
       async () => new Response("console.log('ok')", { status: 200 }),
@@ -1038,11 +1038,9 @@ describe("umami collector proxy security", () => {
 
     const response = await GET();
 
-    expect(response.status).toBe(200);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(fetchMock.mock.calls[0]?.[0]).toBe(
-      "https://umami.example/script.js",
-    );
+    expect(response.status).toBe(404);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(response.headers.get("content-type")).toBeNull();
   });
 
   it("rate-limits repeated analytics posts per client", async () => {
