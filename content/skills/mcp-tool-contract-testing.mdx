@@ -40,6 +40,12 @@ prerequisites:
   - MCP server implementation and tool catalog
   - Staging environment for test execution
   - Known expected outputs per critical tool
+safetyNotes:
+  - "Use this skill as planning or review guidance; verify generated commands, code, configuration, and infrastructure changes before running them."
+  - "Apply least-privilege credentials and test in staging or a disposable branch before using it on production systems, CI, deployment, or account-write workflows."
+privacyNotes:
+  - "Inputs can include source files, prompts, logs, account metadata, repository details, and operational context that may be sent to the configured AI model."
+  - "Redact secrets, customer data, private URLs, credentials, and proprietary implementation details before sharing prompts, reports, or generated artifacts."
 tags:
   - mcp
   - testing
