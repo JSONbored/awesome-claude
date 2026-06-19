@@ -1,5 +1,10 @@
 import { ENTRIES, entryByRef } from "./entries";
 import { sameEntry } from "@/lib/entry-identity";
+import {
+  normalizeSearchQuery,
+  TOKEN_SPLIT_PATTERN,
+  tokenizeSearchQuery,
+} from "@/lib/search-query-tokenization";
 import type {
   Category,
   Entry,
@@ -19,10 +24,6 @@ export interface SearchFilters {
   hasSafetyNotes?: boolean;
   sort?: "popular" | "newest" | "title";
 }
-
-const TOKEN_SPLIT_PATTERN = /[^a-z0-9+#.-]+/i;
-const MAX_QUERY_LENGTH = 256;
-const MAX_QUERY_TOKENS = 12;
 
 const QUERY_ALIASES: Record<string, string[]> = {
   browser: ["chrome", "playwright", "web"],
@@ -56,28 +57,7 @@ interface PreparedSearchFilters extends SearchFilters {
 
 const ENTRY_SEARCH_PROFILES = new WeakMap<Entry, EntrySearchProfile>();
 
-export function normalizeSearchQuery(query: string) {
-  return query.slice(0, MAX_QUERY_LENGTH).trim().toLowerCase();
-}
-
-function tokenizeSearchQuery(query: string) {
-  const tokens: string[] = [];
-  let token = "";
-
-  for (let index = 0; index < query.length && tokens.length < MAX_QUERY_TOKENS; index += 1) {
-    const char = query[index]!;
-    if (/[a-z0-9+#.-]/i.test(char)) {
-      token += char.toLowerCase();
-      continue;
-    }
-
-    if (token.length >= 2) tokens.push(token);
-    token = "";
-  }
-
-  if (tokens.length < MAX_QUERY_TOKENS && token.length >= 2) tokens.push(token);
-  return tokens;
-}
+export { normalizeSearchQuery };
 
 function querySearchProfile(query: string): QuerySearchProfile | null {
   const normalizedQuery = normalizeSearchQuery(query);

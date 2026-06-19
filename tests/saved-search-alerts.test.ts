@@ -7,6 +7,7 @@ import {
   type SavedSearchAlertEntry,
   type SavedSearchAlertSearch,
 } from "@/lib/saved-search-alerts";
+import { normalizeSearchQuery } from "@/lib/search-query-tokenization";
 
 const entry: SavedSearchAlertEntry = {
   category: "mcp",
@@ -55,6 +56,16 @@ describe("saved-search in-app alert matching", () => {
     expect(savedSearchQueryMatchesEntry(entry, "postgres memory")).toBe(true);
     expect(savedSearchQueryMatchesEntry(entry, "repo memory")).toBe(true);
     expect(savedSearchQueryMatchesEntry(entry, "calendar memory")).toBe(false);
+  });
+
+  it("bounds saved-search query normalization and token matching", () => {
+    const longQuery = `${"postgres ".repeat(20)}${"x,".repeat(10_000)}`;
+
+    expect(
+      normalizeSearchQuery(` ${"a".repeat(300)} `).length,
+    ).toBeLessThanOrEqual(256);
+    expect(savedSearchQueryMatchesEntry(entry, longQuery)).toBe(true);
+    expect(savedSearchQueryMatchesEntry(entry, ",".repeat(10_000))).toBe(false);
   });
 
   it("honors category, platform, trust, and source filters", () => {

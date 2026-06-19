@@ -1,4 +1,9 @@
 import type { AlertCadence, AlertChannel } from "@/lib/recents";
+import {
+  normalizeSearchQuery,
+  TOKEN_SPLIT_PATTERN,
+  tokenizeSearchQuery,
+} from "@/lib/search-query-tokenization";
 import type { Category, Platform, SourceStatus, TrustLevel } from "@/types/registry";
 
 export interface SavedSearchAlertSchedule {
@@ -56,8 +61,6 @@ export interface SavedSearchAlert {
   date: string;
 }
 
-const TOKEN_SPLIT_PATTERN = /[^a-z0-9+#.-]+/i;
-
 const QUERY_ALIASES: Record<string, string[]> = {
   browser: ["chrome", "playwright", "web"],
   cc: ["claude", "claude-code"],
@@ -84,14 +87,6 @@ export function activeInAppSavedSearches(
   return searches.filter(
     (search) => search.alerts?.enabled && search.alerts.channels?.includes("inapp"),
   );
-}
-
-function tokenizeSearchQuery(query: string) {
-  return query
-    .split(TOKEN_SPLIT_PATTERN)
-    .map((token) => token.trim().toLowerCase())
-    .filter((token) => token.length >= 2)
-    .slice(0, 12);
 }
 
 function expandedTokenCandidates(token: string) {
@@ -128,7 +123,7 @@ export function savedSearchQueryMatchesEntry(
   entry: SavedSearchAlertEntry,
   query: string | undefined,
 ) {
-  const normalizedQuery = query?.trim().toLowerCase() ?? "";
+  const normalizedQuery = query ? normalizeSearchQuery(query) : "";
   if (!normalizedQuery) return true;
 
   const tokens = tokenizeSearchQuery(normalizedQuery);
