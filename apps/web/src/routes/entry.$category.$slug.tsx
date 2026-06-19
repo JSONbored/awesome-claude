@@ -36,8 +36,9 @@ import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { buildEntryJsonLd } from "@heyclaude/registry/seo";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
-import { categoryLabels, categoryUsageHints } from "@/lib/site";
+import { categoryLabels, categoryUsageHints, siteConfig } from "@/lib/site";
 import { tagSlug } from "@/lib/tags";
 // (HoverChevrons removed — related uses static grid)
 import { ShareMenu } from "@/components/share-menu";
@@ -200,7 +201,10 @@ export const Route = createFileRoute("/entry/$category/$slug")({
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(ld) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
-        { type: "application/ld+json", children: stringifyJsonLd(entrySchema(e, url)) },
+        {
+          type: "application/ld+json",
+          children: stringifyJsonLd(buildEntryJsonLd(e, { siteUrl: siteConfig.url })),
+        },
         ...(e.category === "guides" && guideHeadingSteps(e).length >= 2
           ? [{ type: "application/ld+json", children: stringifyJsonLd(guideHowTo(e, url)) }]
           : []),
