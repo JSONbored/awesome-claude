@@ -189,7 +189,9 @@ const flags = {
   content: contentCategoryTouched || contentValidationInfra,
   content_config: contentValidationInfra,
   registry:
-    contentCategoryTouched || generatedArtifactInfra || submissionAutomationInfra,
+    contentCategoryTouched ||
+    generatedArtifactInfra ||
+    submissionAutomationInfra,
   web:
     !directSubmission &&
     (contentCategoryTouched ||
