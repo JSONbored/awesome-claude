@@ -104,8 +104,11 @@ stay inside, require that context before reviewing the file operations.
 
 - Resolve the user-supplied path to its canonical absolute form using the
   runtime's path-resolution API before any file operation.
-- Assert that the resolved canonical path still begins with the allowed root
-  after resolution; reject the request if it does not.
+- Assert that the resolved canonical path is inside the allowed root using a
+  boundary-aware check after resolution. For example, compare
+  `path.relative(allowedRoot, candidate)` and reject results that start with
+  `..` or are absolute, or require equality with the root or the root plus a
+  path separator after normalizing both paths.
 - Never trust that `os.path.join` or string concatenation constrains the result;
   an absolute input or a dot-dot sequence can override a prefix.
 - Check the confinement assertion after resolution, not before, since
@@ -173,7 +176,8 @@ AI assistants can review file-handling code, but they should show evidence.
 - Have the assistant provide dot-dot, URL-encoded, and absolute-path test inputs
   alongside valid filenames.
 - Do not let the assistant claim confinement is safe based on a prefix string
-  check before resolution.
+  check either before or after resolution; require a boundary-aware containment
+  test.
 - Re-run review after any change to path construction, upload handling, or
   archive extraction.
 
