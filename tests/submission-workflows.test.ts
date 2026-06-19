@@ -452,6 +452,22 @@ describe("submission automation workflows", () => {
     );
   });
 
+  it("does not persist GitHub credentials in the prebuild checkout", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/content-validation.yml"),
+      "utf8",
+    );
+    const prebuildBlock =
+      source.match(/\n  prebuild:[\s\S]*?\n  validate-ci:/)?.[0] || "";
+
+    expect(prebuildBlock).toContain("name: prebuild");
+    expect(prebuildBlock).toContain(
+      "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+    );
+    expect(prebuildBlock).toContain("fetch-depth: 0");
+    expect(prebuildBlock).toContain("persist-credentials: false");
+  });
+
   it("keeps source-only import diffs focused on content and build artifacts", () => {
     const source = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/content-validation.yml"),

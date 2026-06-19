@@ -113,6 +113,7 @@ jobs:
         with:
           # Full history: the prebuild derives entry `updatedAt` from `git log -- content`.
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup pnpm
         uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
