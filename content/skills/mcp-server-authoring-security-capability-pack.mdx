@@ -42,6 +42,12 @@ prerequisites:
   - MCP server implementation or design draft
   - Tool inventory and expected consumers
   - Logging/alerting sink for security events
+safetyNotes:
+  - "Treat findings and generated mitigations as review inputs; validate suspected vulnerabilities and patches before changing production controls."
+  - "Coordinate disclosure-sensitive security work privately and avoid running destructive probes outside authorized systems."
+privacyNotes:
+  - "Security prompts and reports can include source snippets, vulnerability details, internal URLs, dependency metadata, and operational context."
+  - "Redact secrets, customer data, exploit details, private infrastructure names, and unreleased findings before sharing outputs publicly."
 tags:
   - mcp
   - security
