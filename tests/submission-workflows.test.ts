@@ -220,7 +220,7 @@ describe("submission automation workflows", () => {
     expect(source).not.toContain("pnpm test:e2e");
     expect(source).not.toContain("playwright install");
     expect(source).toContain("Resolve PR preview URL");
-    expect(source).toContain("--wait-seconds 600");
+    expect(source).toContain("--wait-seconds 240");
     expect(source).toContain(
       "github.event.pull_request.head.repo.full_name == github.repository",
     );
@@ -393,7 +393,7 @@ describe("submission automation workflows", () => {
     );
     expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).toContain("Resolve PR preview URL");
-    expect(source).toContain("--wait-seconds 600");
+    expect(source).toContain("--wait-seconds 240");
     // Preview resolution degrades gracefully: with the shared dev Worker retired,
     // it validates a real prod preview-version URL when resolvable and skips
     // cleanly otherwise (downstream steps are gated on a non-empty base-url).
