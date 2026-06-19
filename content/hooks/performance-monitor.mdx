@@ -29,6 +29,12 @@ configSnippet: "{\n  \"hooks\": {\n    \"Stop\": [\n      {\n        \"matchers\
 scriptLanguage: bash
 scriptBody: "#!/bin/bash\necho \"\U0001F50D Performance Monitor - Analyzing system performance...\"\necho \"\U0001F4CA Monitoring Areas:\"\necho \"  • Application Performance Metrics\"\necho \"  • Database Performance\"\necho \"  • Frontend Performance (Web Vitals)\"\necho \"  • Infrastructure Monitoring\"\nif command -v node >/dev/null 2>&1; then\n  echo \"✓ Node.js available for performance profiling\"\nfi\nif command -v lighthouse >/dev/null 2>&1; then\n  echo \"✓ Lighthouse available for web performance\"\nfi\nif command -v artillery >/dev/null 2>&1; then\n  echo \"✓ Artillery available for load testing\"\nfi\necho \"\U0001F4BB System Performance:\"\nif command -v free >/dev/null 2>&1; then\n  mem_usage=$(free | grep Mem | awk '{printf \"%.2f\", $3/$2 * 100.0}')\n  echo \"  Memory Usage: ${mem_usage}%\"\nfi\ndisk_usage=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')\necho \"  Disk Usage: ${disk_usage}%\"\necho \"\U0001F4A1 Performance Recommendations:\"\necho \"  • Implement response time tracking for API endpoints\"\necho \"  • Set up Web Vitals monitoring for frontend performance\"\necho \"  • Monitor database query performance\"\necho \"  • Set up automated performance testing\"\necho \"\U0001F3AF Performance monitor analysis complete!\"\nexit 0"
 trigger: Stop
+safetyNotes:
+  - "Runs as part of an automated hook or local workflow; test on a disposable branch before enabling it on write or blocking paths."
+  - "Review generated reports, file edits, benchmark output, or shell commands before treating hook output as a merge or release gate."
+privacyNotes:
+  - "Hook inputs and reports can include repository paths, markdown content, benchmark results, lint findings, environment details, or CI logs."
+  - "Redact private URLs, tokens, customer data, and proprietary file contents before publishing hook output."
 tags:
   - performance
   - monitoring
