@@ -1,0 +1,168 @@
+---
+title: Cloudflare Workers Deployment Review Agent
+slug: cloudflare-workers-deployment-review-agent
+category: agents
+description: >-
+  Source-backed agent for reviewing Cloudflare Workers deployments before
+  production release, covering wrangler config, bindings, routes, secrets,
+  compatibility flags, and rollback plans aligned to official Cloudflare docs.
+cardDescription: >-
+  Review Cloudflare Workers deployments for wrangler config, bindings, routes,
+  secrets, compatibility flags, and rollback readiness.
+seoTitle: Cloudflare Workers Deployment Review Agent
+seoDescription: >-
+  Reusable AI agent prompt for Cloudflare Workers deployment review using
+  Wrangler, Workers bindings, routes, secrets, observability, and rollback
+  planning grounded in official Cloudflare documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 674
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/674"
+documentationUrl: "https://developers.cloudflare.com/workers/wrangler/commands/#deploy"
+repoUrl: "https://github.com/cloudflare/workers-sdk"
+installable: false
+usageSnippet: >-
+  Use this agent before deploying or promoting a Cloudflare Worker, reviewing
+  wrangler config, bindings, routes, secrets, and rollback readiness.
+prerequisites:
+  - >-
+    Worker source repository with wrangler config, routes, and environment
+    definitions for staging and production.
+  - >-
+    Cloudflare account access to inspect bindings (KV, R2, D1, Queues, AI, etc.),
+    routes, and deployment history.
+  - >-
+    CI or local Wrangler deploy command output from a staging dry run when available.
+  - >-
+    Maintainer approval path before production deploy or traffic shift.
+safetyNotes:
+  - >-
+    Workers deployments can change live traffic immediately; treat production
+    deploy review as release-impacting work requiring explicit approval.
+  - >-
+    Do not run production deploy commands from unreviewed forks or unverified CI
+    workflows with Cloudflare API tokens.
+  - >-
+    Bindings to production KV, R2, D1, or Queues can cause data loss or cross-
+    environment contamination if environment names are wrong.
+  - >-
+    Wrangler rollback and versions features reduce but do not eliminate blast
+    radius; verify rollback steps before deploy.
+privacyNotes:
+  - >-
+    Wrangler configs, Worker logs, and binding metadata can expose account IDs,
+    internal hostnames, customer routes, and secret names.
+  - >-
+    Workers observability logs may contain request payloads, auth headers, and
+    user identifiers; redact before sharing review notes externally.
+  - >-
+    API tokens and OAuth client secrets must not appear in prompts, PR comments,
+    or generated review output.
+  - >-
+    Third-party observability exports remain subject to vendor retention policies
+    separate from Cloudflare account settings.
+tags:
+  - cloudflare
+  - workers
+  - wrangler
+  - deployment
+  - devops
+keywords:
+  - Cloudflare Workers deployment review agent
+  - wrangler deploy readiness review
+  - Workers bindings routes review
+  - Cloudflare production deploy checklist
+  - Workers rollback planning agent
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Cloudflare Workers Deployment Review Agent is a reusable agent prompt for
+reviewing Worker deployments before they reach production traffic. It focuses on
+Wrangler configuration correctness, binding targets, route coverage, secret
+handling, compatibility flags, observability readiness, and rollback plans.
+
+Use this agent before `wrangler deploy`, promoting a versions deployment, or
+merging infrastructure PRs that change routes, bindings, or environment names.
+
+## Agent Prompt
+
+You are a Cloudflare Workers deployment reviewer. Use official Cloudflare Workers,
+Wrangler, bindings, and observability documentation plus the public `workers-sdk`
+repository as evidence. Review staging behavior before recommending production deploy.
+
+Review workflow:
+
+1. Config. Inspect wrangler.toml/json, environment names, compatibility_date/flags,
+   and build commands for staging vs production parity.
+2. Bindings. Verify KV, R2, D1, Queues, AI, and service bindings point to intended
+   resources—not staging assets in production slots.
+3. Routes and triggers. Confirm routes, custom domains, cron triggers, and queue
+   consumers match the intended traffic scope.
+4. Secrets and vars. Check secret names, non-secret vars, and absence of credentials
+   in repo files or CI logs.
+5. Deploy mechanics. Review deploy command, versions upload, gradual rollout, and
+   documented rollback via Wrangler versions or previous deployment IDs.
+6. Observability. Ensure Workers logs, traces, or analytics will surface regressions
+   with actionable dashboards or alerts.
+7. Decision. Approve staging deploy, block production promote, or request fixes with
+   explicit owners.
+
+Output contract:
+
+- Environment and config summary.
+- Binding and route findings with severity.
+- Secret and compatibility review notes.
+- Rollback plan with triggers.
+- Deploy decision and follow-up tasks.
+
+## Features
+
+- Reviews Wrangler config and environment separation.
+- Validates bindings, routes, triggers, and secrets before deploy.
+- Checks compatibility flags and build parity across environments.
+- Produces rollback plans tied to Wrangler versions behavior.
+
+## Use Cases
+
+- Pre-flight review before production Worker deploys.
+- Audit infrastructure PRs that add D1, KV, R2, or Queue bindings.
+- Validate cron or queue consumer deployments with blast-radius notes.
+- Handoff review between staging promotion and customer-facing release.
+
+## Source Notes
+
+- Cloudflare documents Wrangler deploy commands, configuration files, environments,
+  and bindings with explicit warnings about production impact.
+- Workers observability docs describe logs and tracing surfaces useful for post-deploy
+  verification.
+- The public `workers-sdk` repository provides Wrangler behavior references for
+  deploy, versions, and rollback commands.
+
+## Duplicate Check
+
+Checked `content/agents/`, `content/skills/`, open PRs, and the live catalog.
+Skills such as `wrangler-deployment-operations-capability-pack` and
+`cloudflare-workers-d1-kv-r2-capability-pack` cover operational patterns, and
+`cloudflare-deploy-readiness` is a slash command. No `agents` entry provides a
+Workers deployment review agent prompt with binding/route/rollback output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `kiannidev`, based on public
+Cloudflare Workers documentation and the public `cloudflare/workers-sdk` repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Wrangler deploy commands: https://developers.cloudflare.com/workers/wrangler/commands/#deploy
+- Workers configuration: https://developers.cloudflare.com/workers/wrangler/configuration/
+- Workers bindings: https://developers.cloudflare.com/workers/runtime-apis/bindings/
+- Workers logs: https://developers.cloudflare.com/workers/observability/logs/workers-logs/
+- workers-sdk repository: https://github.com/cloudflare/workers-sdk

@@ -1,0 +1,167 @@
+---
+title: Claude Code Slack Triage Capability Pack Skill
+slug: claude-code-slack-triage-capability-pack
+category: skills
+description: >-
+  Expert Claude Code Slack triage capability pack applying documented Slack integration
+  steps to classify delegations, map repositories, gate risky auto-sessions, and
+  draft human-approved replies before Claude Code acts.
+cardDescription: >-
+  Triage Slack-to-Claude Code delegations with source-backed classification and
+  approval checklists.
+seoTitle: Claude Code Slack Triage Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code Slack triage: classify Slack
+  delegations, route repos, block risky auto-fixes, and draft replies from official
+  Slack integration documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1524
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1524"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/slack"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill on inbound Slack delegations before starting Claude Code sessions:
+  classify intent, pick repo context, flag risks, draft human-approved replies.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code Slack triage capability pack for this thread."
+
+  # Required output
+  1) Delegation classification and priority
+  2) Repository and branch routing recommendation
+  3) Risk flags and approval gates
+  4) Draft reply for human review
+  5) Privacy-safe triage summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/slack"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/security"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Claude Slack integration enabled per official Slack documentation."
+  - "Channel-to-repository mapping and CODEOWNERS rules documented."
+  - "Policy for which delegations may auto-start Claude Code sessions."
+safetyNotes:
+  - "Public Slack threads are not private—never paste secrets into delegations."
+  - "Auto-started sessions can race on shared branches—prefer worktrees."
+  - "Customer-facing bot replies require human approval."
+privacyNotes:
+  - "Slack threads may contain customer names and incident details."
+  - "Triage summaries for external channels need redaction."
+tags:
+  - claude-code
+  - slack
+  - triage
+  - delegation
+  - capability-pack
+keywords:
+  - Claude Code Slack triage capability pack
+  - Slack delegation Claude Code routing
+  - Slack engineering triage workflow
+readingTime: 8
+difficultyScore: 70
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in Claude Code Slack integration documentation verified on **2026-06-16**.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/slack
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/security
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Official Slack docs describe connecting Claude Code to Slack workspaces, delegating
+engineering work from channels, and starting sessions from Slack triggers with
+team policy considerations.
+
+## Scope Note
+
+Community triage workflow skill applying documented Slack integration steps—not
+an official Anthropic product. Differs from `claude-slack-delegation-triage-agent`
+(agent prompt) by providing capability pack matrices and output contracts.
+
+## Core Workflow
+
+1. Classify delegation: bug, feature, question, incident, or out-of-scope.
+2. Map to repository, branch, and owner using channel conventions.
+3. Flag risks: destructive fixes, missing repro, secrets in thread.
+4. Draft reply requesting clarifications or approving session start.
+5. Require human send approval before bot posts or sessions launch.
+
+## Capability Scope
+
+- Slack delegation classification and priority tiers.
+- Repository and branch routing recommendations.
+- Risk flagging before autonomous sessions.
+- Human-approved reply drafting.
+- Privacy-safe triage summaries.
+
+## Production Rules
+
+- Never auto-post customer-facing replies without human approval.
+- Block session start when threads contain secrets or missing reproduction steps.
+- Prefer worktrees when parallel Slack delegations target the same repo.
+- Escalate destructive fix requests to CODEOWNERS in private threads.
+- Redact customer identifiers in cross-channel summaries.
+
+## Review Matrix
+
+| Delegation type | Route | Gate |
+| --- | --- | --- |
+| Bug with repro | Mapped repo + branch | Human approves session |
+| Vague feature ask | Request clarification | No session until scoped |
+| Incident | Private channel + owner | No public exploit details |
+| Out of scope | Decline politely | No session |
+
+## Output Contract
+
+1. Classification and priority.
+2. Repo routing recommendation.
+3. Risk flags.
+4. Draft reply.
+5. Privacy-safe summary.
+
+## Duplicate Check
+
+Agent prompt covers similar routing; this skill adds structured review matrix and
+output contract for capability-pack invocation.
+
+## Troubleshooting
+
+**Issue:** Wrong repo routed from channel
+**Fix:** Update channel-to-repo map in team docs; confirm thread context links.
+
+**Issue:** Session started without approval
+**Fix:** Tighten policy; require explicit human `/approve` step in runbook.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` from public docs.

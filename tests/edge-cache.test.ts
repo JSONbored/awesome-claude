@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { applyEdgeCacheHeaders } from "@/lib/security-headers";
+import { applyEdgeCacheHeaders, urlOrigin } from "@/lib/security-headers";
 import { repoRoot } from "./helpers/registry-fixtures";
 
 function htmlHeaders(extra: Record<string, string> = {}) {
@@ -10,6 +10,14 @@ function htmlHeaders(extra: Record<string, string> = {}) {
 }
 
 describe("edge cache policy", () => {
+  it("normalizes optional configured origins defensively", () => {
+    expect(urlOrigin("https://submission-gate.heyclau.de/path")).toBe(
+      "https://submission-gate.heyclau.de",
+    );
+    expect(urlOrigin("")).toBe("");
+    expect(urlOrigin("not a url")).toBe("");
+  });
+
   it("caches a plain 200 text/html GET response at the edge", () => {
     const headers = applyEdgeCacheHeaders(htmlHeaders(), 200, "GET");
     expect(headers.get("cache-control")).toContain("s-maxage=300");
@@ -35,11 +43,19 @@ describe("edge cache policy", () => {
   });
 
   it("does not cache non-GET, non-200, or non-HTML responses", () => {
-    expect(applyEdgeCacheHeaders(htmlHeaders(), 200, "POST").has("cache-control")).toBe(false);
-    expect(applyEdgeCacheHeaders(htmlHeaders(), 404, "GET").has("cache-control")).toBe(false);
-    expect(applyEdgeCacheHeaders(htmlHeaders(), 500, "GET").has("cache-control")).toBe(false);
+    expect(
+      applyEdgeCacheHeaders(htmlHeaders(), 200, "POST").has("cache-control"),
+    ).toBe(false);
+    expect(
+      applyEdgeCacheHeaders(htmlHeaders(), 404, "GET").has("cache-control"),
+    ).toBe(false);
+    expect(
+      applyEdgeCacheHeaders(htmlHeaders(), 500, "GET").has("cache-control"),
+    ).toBe(false);
     const json = new Headers({ "content-type": "application/json" });
-    expect(applyEdgeCacheHeaders(json, 200, "GET").has("cache-control")).toBe(false);
+    expect(applyEdgeCacheHeaders(json, 200, "GET").has("cache-control")).toBe(
+      false,
+    );
   });
 
   it("sets Cache-Control on the /data/* static-asset rule", () => {

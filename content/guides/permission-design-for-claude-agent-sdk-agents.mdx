@@ -3,17 +3,18 @@ title: Permission Design for Claude Agent SDK Agents
 slug: permission-design-for-claude-agent-sdk-agents
 category: guides
 description: >-
-  A practical walkthrough of permission design in the Claude Agent SDK: the
-  evaluation order (hooks, deny, mode, allow, canUseTool), allow/deny rules,
-  permission modes, the canUseTool callback, and locking down an agent.
+  A practical walkthrough of least-privilege permission design in the Claude
+  Agent SDK. Learn the evaluation order (hooks → deny → mode → allow →
+  canUseTool), how allowedTools and disallowedTools differ, the six permission
+  modes, and how to lock an agent to a fixed tool surface with dontAsk.
 cardDescription: >-
-  Design permissions for Claude Agent SDK agents: evaluation order, allow/deny
-  rules, permission modes, and the canUseTool callback.
-seoTitle: Permission Design for Claude Agent SDK Agents
+  Least-privilege Agent SDK permissions: the hooks→deny→mode→allow→canUseTool
+  order, allow/deny rules, modes, and a dontAsk lockdown.
+seoTitle: "Agent SDK Permissions: Modes, Allow/Deny & canUseTool"
 seoDescription: >-
-  How to design permissions in the Claude Agent SDK: the hooks, deny, mode,
-  allow, canUseTool evaluation order, allowedTools/disallowedTools rules,
-  permission modes, and locking down an agent with dontAsk.
+  Design least-privilege Agent SDK agents: tool-evaluation order, allowedTools
+  vs disallowedTools, permission modes, canUseTool callback, and dontAsk
+  lockdown.
 author: JPette1783
 authorProfileUrl: "https://github.com/JPette1783"
 submittedBy: JPette1783

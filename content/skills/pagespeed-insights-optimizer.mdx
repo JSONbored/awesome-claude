@@ -35,6 +35,10 @@ verificationStatus: draft
 verifiedAt: "2026-04-10"
 retrievalSources:
   - "https://web.dev/articles/vitals"
+safetyNotes:
+  - "The install command downloads a zip from heyclau.de and unzips it into the working directory, and the skill runs local build/type-check commands and can patch frontend code for verification; review the package and any proposed code changes before applying."
+privacyNotes:
+  - "Running PageSpeed Insights / Lighthouse submits the target URL to Google's PSI service (and field data may be drawn from the public CrUX dataset); only test URLs you are authorized to assess and avoid authenticated or preview URLs that would expose private content."
 testedPlatforms:
   - Claude
   - Codex
@@ -54,16 +58,10 @@ tags:
   - web-performance
   - optimization
 keywords:
-  - ai-skill
-  - pagespeed
-  - lighthouse
-  - lcp
-  - cls
-  - tbt
-  - performance
-  - optimization
-  - core-web-vitals
-  - skills
+  - pagespeed insights optimizer skill
+  - lighthouse optimization claude
+  - core web vitals skill
+  - improve pagespeed score claude
 readingTime: 7
 packageVerified: true
 difficultyScore: 78

@@ -21,7 +21,11 @@
     "mode": "smart",
   },
   "triggers": {
-    "crons": ["17 */6 * * *"],
+    // 6-hourly: source-repo signals + catch up on approved Weekly Brief sends.
+    // Daily 05:00 UTC: IndexNow changed-URL push.
+    // Fridays 14:00 UTC: generate the next Weekly Brief draft for review.
+    // Sundays 16:00 UTC: send the approved Weekly Brief at its scheduled slot.
+    "crons": ["17 */6 * * *", "0 5 * * *", "0 14 * * FRI", "0 16 * * SUN"],
   },
   "assets": {
     "directory": "dist/client",
@@ -71,6 +75,10 @@
     "NEXT_PUBLIC_POLAR_FEATURED_JOB_90_URL": "/jobs/post?tier=featured",
     "NEXT_PUBLIC_POLAR_SPONSORED_JOB_90_URL": "/jobs/post?tier=sponsored",
     "VITE_SUBMISSION_GATE_URL": "https://submission-gate.heyclau.de",
+    "VITE_UMAMI_SCRIPT_URL": "/u/script.js",
+    "VITE_UMAMI_WEBSITE_ID": "b734c138-2949-4527-9160-7fe5d0e81121",
+    "UMAMI_UPSTREAM_URL": "https://tasty.aethereal.dev",
+    "UMAMI_WEBSITE_ID": "b734c138-2949-4527-9160-7fe5d0e81121",
   },
   "d1_databases": [
     {
@@ -80,54 +88,17 @@
       "migrations_dir": "migrations",
     },
   ],
+  // AI-citation signal tap: crawler hits + AI-referral landings (see lib/ai-signals.server.ts).
+  // Query via the Analytics Engine SQL API; free tier covers our volume (3-month retention).
+  "analytics_engine_datasets": [
+    {
+      "binding": "AI_SIGNALS",
+      "dataset": "ai_signals",
+    },
+  ],
   "env": {
     "dev": {
       "name": "heyclaude-dev",
-      "vars": {
-        "NEXT_PUBLIC_DISCORD_URL": "https://discord.com/invite/Ax3Py4YDrq",
-        "NEXT_PUBLIC_TWITTER_URL": "https://x.com/jsonbored",
-        "NEXT_PUBLIC_POLAR_FREE_JOB_URL": "/jobs/post?tier=free",
-        "NEXT_PUBLIC_POLAR_SPONSORED_JOB_URL": "/jobs/post?tier=sponsored",
-        "NEXT_PUBLIC_POLAR_FEATURED_JOB_URL": "/jobs/post?tier=featured",
-        "NEXT_PUBLIC_POLAR_JOB_BOARD_URL": "/jobs/post?tier=standard",
-        "NEXT_PUBLIC_POLAR_FEATURED_JOB_90_URL": "/jobs/post?tier=featured",
-        "NEXT_PUBLIC_POLAR_SPONSORED_JOB_90_URL": "/jobs/post?tier=sponsored",
-        "VITE_SUBMISSION_GATE_URL": "https://submission-gate.heyclau.de",
-      },
-      "ratelimits": [
-        {
-          "name": "API_REGISTRY_RATE_LIMIT",
-          "namespace_id": "1002001",
-          "simple": {
-            "limit": 600,
-            "period": 60,
-          },
-        },
-        {
-          "name": "API_DYNAMIC_RATE_LIMIT",
-          "namespace_id": "1002002",
-          "simple": {
-            "limit": 180,
-            "period": 60,
-          },
-        },
-        {
-          "name": "API_STRICT_RATE_LIMIT",
-          "namespace_id": "1002003",
-          "simple": {
-            "limit": 60,
-            "period": 60,
-          },
-        },
-        {
-          "name": "API_MCP_RATE_LIMIT",
-          "namespace_id": "1002004",
-          "simple": {
-            "limit": 60,
-            "period": 60,
-          },
-        },
-      ],
       "d1_databases": [
         {
           "binding": "SITE_DB",

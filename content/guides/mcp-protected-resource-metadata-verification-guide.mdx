@@ -71,6 +71,47 @@ that presented access tokens were issued for that MCP server.
 3. Fetch the protected resource metadata document and record the
    authorization_servers value.
 4. Fetch authorization server metadata from the advertised authorization server.
+
+## Discovery and Token Requests on the Wire
+
+These are the exact HTTP artifacts the MCP authorization spec defines. Use them as the literal pattern when capturing and comparing a server's behavior:
+
+```http
+# 1. Unauthenticated request -> server challenges with metadata location
+GET /mcp HTTP/1.1
+Host: mcp.example.com
+
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer ...resource_metadata...
+
+# 2. Client fetches Protected Resource Metadata (RFC 9728), reads authorization_servers
+GET /.well-known/oauth-protected-resource
+
+# 3. Client fetches Authorization Server Metadata (RFC 8414)
+GET /.well-known/oauth-authorization-server
+
+# 4. Authorization + token requests MUST carry the resource parameter (RFC 8707),
+#    canonical, percent-encoded; sent regardless of AS support
+&resource=https%3A%2F%2Fmcp.example.com
+
+# 5. Authenticated MCP request -- token in the header, never the query string
+GET /mcp HTTP/1.1
+Host: mcp.example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+```
+
+## Canonical Resource URI: Valid vs Invalid
+
+The `resource` parameter MUST use the canonical URI of the MCP server. The spec lists exactly which forms are valid and which are not:
+
+| URI | Valid? | Why |
+| --- | --- | --- |
+| `https://mcp.example.com/mcp` | Valid | Scheme + host + path |
+| `https://mcp.example.com` | Valid | Scheme + host (no trailing slash preferred) |
+| `https://mcp.example.com:8443` | Valid | Explicit port allowed |
+| `https://mcp.example.com/server/mcp` | Valid | Path identifies an individual MCP server |
+| `mcp.example.com` | Invalid | Missing scheme |
+| `https://mcp.example.com#fragment` | Invalid | Contains a fragment |
 5. Check whether the client sends the MCP server URI as the OAuth resource
    parameter during authorization and token requests.
 6. Inspect a staging token only in a private environment. The audience or

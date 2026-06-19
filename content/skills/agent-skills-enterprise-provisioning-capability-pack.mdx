@@ -1,0 +1,223 @@
+---
+title: Agent Skills Enterprise Provisioning Capability Pack Skill
+slug: agent-skills-enterprise-provisioning-capability-pack
+category: skills
+description: >-
+  Expert agent skills enterprise provisioning capability pack for rolling out
+  Claude Code skills across Claude for Enterprise with scope controls, admin
+  policy alignment, user-only versus model-invoked skills, and audit-ready docs.
+cardDescription: >-
+  Provision Claude Code agent skills for enterprise teams with scope controls,
+  admin alignment, and source-backed rollout checklists.
+seoTitle: Agent Skills Enterprise Provisioning Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for agent skills enterprise provisioning, Claude
+  for Enterprise skill rollout, admin policy alignment, scope controls, and
+  model-invocation governance.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1535
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1535"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when provisioning Claude Code agent skills for an enterprise
+  organization and you need scope controls, admin policy alignment, and a
+  rollout plan for model-invoked versus user-only skills.
+copySnippet: |-
+  # Trigger
+  "Apply the agent skills enterprise provisioning capability pack for this org."
+
+  # Required output
+  1) Skill inventory and scope classification
+  2) Enterprise admin and policy alignment review
+  3) Model-invocation and side-effect risk assessment
+  4) Rollout phases with verification checkpoints
+  5) Privacy-safe enterprise comms summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://code.claude.com/docs/en/admin-setup"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Claude for Enterprise or equivalent org-wide Claude Code deployment context."
+  - "Inventory of approved skills, plugins, or internal SKILL.md packages to provision."
+  - "Access to admin setup docs, enterprise policy constraints, and security review stakeholders."
+  - "Understanding of which repositories and teams will receive each skill scope."
+safetyNotes:
+  - "Model-invoked skills load descriptions at session start and can trigger side effects if not marked user-only or restricted with allowed-tools."
+  - "Enterprise-wide skill rollout amplifies any destructive workflow across all provisioned users."
+  - "Skills referencing external MCP servers inherit third-party data-handling risk outside Anthropic policies."
+  - "Admin-managed allowlists and enterprise settings may block certain skill locations or plugin sources."
+  - "This skill recommends rollout phases; it must not deploy skills org-wide without explicit admin approval."
+privacyNotes:
+  - "Enterprise skill inventories can reveal internal team workflows, compliance processes, and repository naming conventions."
+  - "Skill descriptions loaded at startup may expose sensitive operational details to every session in scope."
+  - "Rollout comms should describe approved skill categories and boundaries, not full internal SKILL.md contents."
+tags:
+  - agent-skills
+  - enterprise
+  - provisioning
+  - admin-setup
+  - capability-pack
+keywords:
+  - agent skills enterprise provisioning
+  - Claude Code enterprise skills rollout
+  - enterprise skill scope controls
+  - model-invoked skills governance
+  - Claude for Enterprise admin skills
+  - skill provisioning checklist
+readingTime: 9
+difficultyScore: 81
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: true
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code skills, features overview, and
+admin setup documentation verified on **2026-06-14**. Enterprise policy options
+and skill location rules can change; prefer live official docs and admin
+confirmation over cached rollout assumptions.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://code.claude.com/docs/en/admin-setup
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code skills and admin documentation and the
+public Anthropic `claude-code` repository on **2026-06-14**:
+
+- Claude Code skills are packaged as `SKILL.md` files with frontmatter controlling
+  description, allowed tools, and model invocation behavior.
+- Skill descriptions load at session start when model invocation is enabled,
+  affecting token cost and automatic skill selection for every user in scope.
+- Claude Code supports user-only skills via `disable-model-invocation` for
+  workflows that should not auto-load or auto-trigger.
+- Admin setup documentation covers enterprise configuration surfaces that may
+  restrict plugins, MCP servers, or managed skill distribution paths.
+- Enterprise rollouts should align skill scope with repository and team boundaries
+  rather than pushing all skills globally by default.
+
+## Scope Note
+
+This is not an admin console tutorial. Use it as a reusable enterprise rollout
+workflow for provisioning source-backed agent skills with governance and audit
+checkpoints.
+
+## Core Workflow
+
+1. Inventory candidate skills: internal packages, approved HeyClaude entries, and
+   team-authored `SKILL.md` files with scope and owner.
+2. Classify each skill by scope: project, user, plugin, or managed enterprise path.
+3. Review model invocation: identify auto-loaded descriptions versus user-only skills.
+4. Assess side-effect risk: allowed tools, MCP dependencies, hooks, and destructive
+   production rules requiring approval gates.
+5. Align with admin policy: confirm enterprise settings allow the skill source,
+   plugin channel, and any required MCP servers.
+6. Plan phased rollout: pilot repository, expanded team, then org-wide provisioning
+   with rollback steps for each phase.
+7. Prepare user comms: when to invoke each skill, what data it may access, and
+   which skills remain user-only.
+8. Define verification: sample sessions, `/context` skill load review, and security
+   sign-off before next phase.
+9. Document residual risks, unsupported workflows, and deprovision procedure.
+
+## Capability Scope
+
+- Skill inventory and scope classification.
+- Enterprise admin and policy alignment review.
+- Model-invocation and side-effect risk assessment.
+- Phased rollout with verification checkpoints.
+- Deprovision and rollback planning.
+- Privacy-safe enterprise comms summary.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when planning enterprise skill
+  rollout, admin reviews, or internal skill catalog governance.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic enterprise skill governance checklist in platform runbooks.
+
+## Required Inputs
+
+- Candidate skill list with owners, scope, and source URLs.
+- Enterprise admin constraints and approved plugin or MCP policies.
+- Target repositories, teams, and rollout timeline.
+- Security and legal stakeholders for side-effect skill approval.
+
+## Production Rules
+
+- Default new enterprise skills to user-only until reviewed for model invocation.
+- Restrict side-effect skills with explicit allowed-tools and approval requirements.
+- Do not provision community skills without source verification and owner assignment.
+- Align MCP-dependent skills with enterprise MCP allowlists before rollout.
+- Keep pilot phases small enough to rollback without org-wide impact.
+- Redact internal workflow details in public documentation.
+- Re-audit skills after major Claude Code or admin policy upgrades.
+
+## Review Matrix
+
+| Skill trait | Pilot OK | Org-wide OK | Gate |
+| --- | --- | --- | --- |
+| Read-only checklist | Yes | Yes | Document owner |
+| MCP write tools | Pilot only | Requires approval | Security review |
+| Model-invoked side effects | No | No | Mark user-only first |
+| Unverified community source | No | No | Source verification |
+| Large description payload | Pilot | Review `/context` cost | Trim or split skill |
+
+## Output Contract
+
+1. Skill inventory and scope classification.
+2. Admin and policy alignment review.
+3. Model-invocation and side-effect risk assessment.
+4. Phased rollout plan with verification checkpoints.
+5. Rollback and deprovision procedure.
+6. Privacy-safe enterprise comms summary.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for agent skills enterprise provisioning and Claude Code enterprise
+skill rollout workflows. Admin docs cover configuration, but no `skills` entry
+provides a reusable enterprise provisioning capability pack with rollout matrix
+and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.

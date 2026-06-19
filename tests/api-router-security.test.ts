@@ -25,6 +25,7 @@ describe("central API router security", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.unstubAllGlobals();
+    delete (globalThis as typeof globalThis & { __env__?: unknown }).__env__;
     delete process.env.BRANDFETCH_CLIENT_ID;
   });
 
@@ -117,6 +118,92 @@ describe("central API router security", () => {
     await expect(response.json()).resolves.toMatchObject({
       ok: false,
       error: { code: "invalid_content_type" },
+    });
+  });
+
+  it("normalizes malformed JSON bodies before route handlers run", async () => {
+    const { createApiHandler, apiJson } = await import("@/lib/api/router");
+    const POST = createApiHandler("submissions.preflight", async () =>
+      apiJson({ ok: true }),
+    );
+
+    const response = await POST(
+      new Request("https://heyclau.de/api/submissions/preflight", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "198.51.100.102",
+        },
+        body: "{",
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "invalid_json" },
+    });
+  });
+
+  it("honors Cloudflare rate-limit bindings and fails open when the binding errors", async () => {
+    const blockedLimit = vi.fn(async () => ({ success: false }));
+    (globalThis as typeof globalThis & { __env__?: unknown }).__env__ = {
+      API_REGISTRY_RATE_LIMIT: { limit: blockedLimit },
+    };
+    const { createApiHandler, apiJson } = await import("@/lib/api/router");
+    const GET = createApiHandler("registry.search", async () =>
+      apiJson({ ok: true }),
+    );
+
+    const blocked = await GET(
+      new Request("https://heyclau.de/api/registry/search?q=mcp", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "198.51.100.103",
+        },
+      }),
+    );
+    expect(blocked.status).toBe(429);
+    expect(blockedLimit).toHaveBeenCalledWith({
+      key: "registry-search:198.51.100.103",
+    });
+
+    const failingLimit = vi.fn(async () => {
+      throw new Error("rate limit unavailable");
+    });
+    (globalThis as typeof globalThis & { __env__?: unknown }).__env__ = {
+      API_REGISTRY_RATE_LIMIT: { limit: failingLimit },
+    };
+
+    const allowed = await GET(
+      new Request("https://heyclau.de/api/registry/search?q=mcp", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "198.51.100.104",
+        },
+      }),
+    );
+    expect(allowed.status).toBe(200);
+    await expect(allowed.json()).resolves.toEqual({ ok: true });
+  });
+
+  it("normalizes unhandled route errors to internal API errors", async () => {
+    const { createApiHandler } = await import("@/lib/api/router");
+    const GET = createApiHandler("registry.feed", async () => {
+      throw new Error("boom");
+    });
+
+    const response = await GET(
+      new Request("https://heyclau.de/api/registry/feed", {
+        headers: { origin: "https://heyclau.de" },
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "internal_error" },
     });
   });
 
@@ -254,6 +341,100 @@ describe("central API router security", () => {
       windowMs: 60_000,
     });
     expect(routerSource).toContain("binding.limit({ key })");
+  });
+
+  it("serves Brandfetch logo proxy URLs through the trusted asset CDN", async () => {
+    process.env.BRANDFETCH_CLIENT_ID = "test-client";
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url =
+        input instanceof Request
+          ? input.url
+          : input instanceof URL
+            ? input.toString()
+            : String(input);
+      expect(url).toContain("https://cdn.brandfetch.io/domain/example.com/");
+      expect(url).toContain("/logo.png");
+      expect(url).toContain("c=test-client");
+      return new Response("png", {
+        headers: {
+          "content-length": "3",
+          "content-type": "image/png",
+        },
+      });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { GET } = await import("@/routes/api/brand-assets/$kind/$domain");
+    const response = await GET(
+      new Request("https://heyclau.de/api/brand-assets/logo/example.com"),
+      { params: { kind: "logo", domain: "example.com" } },
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("content-type")).toBe("image/png");
+    expect(response.headers.get("x-brand-asset-source")).toBe("brandfetch");
+    await expect(response.text()).resolves.toBe("png");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("serves Brandfetch icons only for exact normalized domain matches", async () => {
+    process.env.BRANDFETCH_CLIENT_ID = "test-client";
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        Response.json([
+          {
+            domain: "www.example.com",
+            icon: "https://cdn.brandfetch.io/example/icon.png",
+          },
+        ]),
+      )
+      .mockResolvedValueOnce(
+        new Response("png", {
+          headers: {
+            "content-length": "3",
+            "content-type": "image/png; charset=utf-8",
+          },
+        }),
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { GET } = await import("@/routes/api/brand-assets/$kind/$domain");
+    const response = await GET(
+      new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
+      { params: { kind: "icon", domain: "example.com" } },
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("content-type")).toBe("image/png");
+    await expect(response.text()).resolves.toBe("png");
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not serve the first Brandfetch icon when the result domain differs", async () => {
+    process.env.BRANDFETCH_CLIENT_ID = "test-client";
+    const fetchMock = vi.fn(async () =>
+      Response.json([
+        {
+          domain: "other.example",
+          icon: "https://cdn.brandfetch.io/other/icon.png",
+        },
+      ]),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { GET } = await import("@/routes/api/brand-assets/$kind/$domain");
+    const response = await GET(
+      new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
+      { params: { kind: "icon", domain: "example.com" } },
+    );
+
+    expect(response.status).toBe(404);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "brand_asset_not_found" },
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it("rejects Brandfetch icons outside the trusted asset CDN", async () => {
@@ -706,5 +887,175 @@ describe("in-memory fallback rate limiter", () => {
     }
 
     expect(__rateLimitTestHooks.size()).toBeLessThanOrEqual(cap);
+  });
+});
+
+describe("umami collector proxy security", () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    vi.unstubAllGlobals();
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    process.env.UMAMI_UPSTREAM_URL = "https://umami.example";
+    const { __rateLimitTestHooks } = await import("@/lib/api-security");
+    __rateLimitTestHooks.reset();
+  });
+
+  function analyticsRequest(
+    body: string,
+    headers: Record<string, string> = {},
+  ) {
+    return new Request("https://heyclau.de/u/api/send", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        origin: "https://heyclau.de",
+        "cf-connecting-ip": "198.51.100.80",
+        "user-agent": "Vitest/1.0",
+        ...headers,
+      },
+      body,
+    });
+  }
+
+  it("rejects cross-origin analytics posts before proxying", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    const response = await POST(
+      analyticsRequest('{"payload":{}}', {
+        origin: "https://attacker.example",
+      }),
+    );
+
+    expect(response.status).toBe(403);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects non-JSON analytics posts before proxying", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    const response = await POST(
+      analyticsRequest("plain", { "content-type": "text/plain;charset=UTF-8" }),
+    );
+
+    expect(response.status).toBe(415);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects oversized analytics posts before reading and proxying", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    const response = await POST(
+      analyticsRequest("{}", { "content-length": String(17 * 1024) }),
+    );
+
+    expect(response.status).toBe(413);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("redacts brief approval tokens before proxying analytics", async () => {
+    const fetchMock = vi.fn(async () => new Response("ok", { status: 202 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    const response = await POST(
+      analyticsRequest(
+        JSON.stringify({
+          type: "event",
+          payload: {
+            website: "site-id",
+            url: "/brief/approve?token=signed-secret&source=email",
+          },
+        }),
+      ),
+    );
+
+    expect(response.status).toBe(202);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const init = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(String(init.body)).toContain("token=%5Bredacted%5D");
+    expect(String(init.body)).toContain("source=email");
+    expect(String(init.body)).not.toContain("signed-secret");
+  });
+
+  it("redacts common sensitive analytics URL params on every path", async () => {
+    const fetchMock = vi.fn(async () => new Response("ok", { status: 202 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    const response = await POST(
+      analyticsRequest(
+        JSON.stringify({
+          type: "event",
+          payload: {
+            website: "site-id",
+            url: "/entry/mcp/example?token=signed-secret&email=reader@example.com&code=oauth-code&state=nonce&view=full",
+          },
+        }),
+      ),
+    );
+
+    expect(response.status).toBe(202);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const init = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    const forwarded = String(init.body);
+    expect(forwarded).toContain("token=%5Bredacted%5D");
+    expect(forwarded).toContain("email=%5Bredacted%5D");
+    expect(forwarded).toContain("code=%5Bredacted%5D");
+    expect(forwarded).toContain("state=%5Bredacted%5D");
+    expect(forwarded).toContain("view=full");
+    expect(forwarded).not.toContain("signed-secret");
+    expect(forwarded).not.toContain("reader@example.com");
+    expect(forwarded).not.toContain("oauth-code");
+    expect(forwarded).not.toContain("nonce");
+  });
+
+  it("normalizes trailing slashes when forwarding collector events", async () => {
+    process.env.UMAMI_UPSTREAM_URL = "https://umami.example/";
+    const fetchMock = vi.fn(async () => new Response("ok", { status: 202 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    const response = await POST(analyticsRequest('{"payload":{}}'));
+
+    expect(response.status).toBe(202);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://umami.example/api/send");
+  });
+
+  it("normalizes trailing slashes when fetching the tracker script", async () => {
+    process.env.UMAMI_UPSTREAM_URL = "https://umami.example/";
+    const fetchMock = vi.fn(
+      async () => new Response("console.log('ok')", { status: 200 }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const { GET } = await import("../apps/web/src/routes/u.script[.]js");
+
+    const response = await GET();
+
+    expect(response.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0]?.[0]).toBe(
+      "https://umami.example/script.js",
+    );
+  });
+
+  it("rate-limits repeated analytics posts per client", async () => {
+    const fetchMock = vi.fn(async () => new Response("ok", { status: 202 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("../apps/web/src/routes/u.api.send");
+
+    let response = new Response(null, { status: 500 });
+    for (let i = 0; i < 61; i += 1) {
+      response = await POST(analyticsRequest('{"payload":{}}'));
+    }
+
+    expect(response.status).toBe(429);
+    expect(fetchMock).toHaveBeenCalledTimes(60);
   });
 });

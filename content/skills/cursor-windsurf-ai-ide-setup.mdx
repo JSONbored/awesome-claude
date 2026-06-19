@@ -5,13 +5,17 @@ category: skills
 description: "Configure and optimize Cursor and Windsurf AI code editors for maximum productivity. Set up agent mode, composer features, keybindings, and AI-powered refactoring workflows. Customize with .cursorrules and .windsurfrules for project-specific guidance."
 cardDescription: Configure and optimize Cursor and Windsurf AI code editors for maximum productivity.
 seoTitle: Cursor Windsurf AI Code Editor Skill - Claude Code Skills
-seoDescription: "Configure and optimize Cursor and Windsurf AI code editors for maximum productivity. Set up agent mode, composer features, keybindings, and AI-powered refact..."
+seoDescription: "Configure and optimize Cursor and Windsurf AI editors: agent mode, composer, keybindings, and .cursorrules/.windsurfrules for project-specific AI workflows."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-23"
-documentationUrl: "https://cursor.sh/docs"
+documentationUrl: "https://docs.cursor.com/welcome"
 downloadUrl: /downloads/skills/cursor-windsurf-ai-ide-setup.zip
 installable: true
+safetyNotes:
+  - "Setup downloads and unzips a package and changes IDE configuration files; review what it writes and run it in a trusted workspace."
+privacyNotes:
+  - "Cursor and Windsurf send your code and prompts to their AI backends to power completion and chat; review each editor's data-handling settings and keep API keys out of committed config."
 installCommand: "curl -L https://heyclau.de/downloads/skills/cursor-windsurf-ai-ide-setup.zip -o cursor-windsurf-ai-ide-setup.zip && unzip -o cursor-windsurf-ai-ide-setup.zip -d ./cursor-windsurf-ai-ide-setup"
 usageSnippet: "Claude can help you configure and optimize Cursor or Windsurf AI code editors for maximum productivity. Both editors provide AI-powered code completion, multi-file editing, and intelligent refactoring. Cursor excels with its Agent mode and Composer features, while Windsurf emphasizes collaborative flows and Cascade AI. From initial setup to advanced workflows, Claude handles IDE configuration and optimization."
 copySnippet: |-
@@ -67,7 +71,9 @@ skillLevel: advanced
 verificationStatus: draft
 verifiedAt: "2025-10-23"
 retrievalSources:
-  - "https://cursor.sh/docs"
+  - "https://docs.cursor.com/welcome"
+  - "https://docs.cursor.com/context/rules-for-ai"
+  - "https://docs.windsurf.com/windsurf/cascade"
 testedPlatforms:
   - Claude
   - Codex
@@ -89,18 +95,10 @@ tags:
   - ai-coding
   - editor
 keywords:
-  - ai-coding
-  - claude
-  - cursor
-  - cursor/windsurf
-  - development
-  - editor
-  - ide
-  - optimization
-  - setup
-  - skills
-  - tools
-  - windsurf
+  - cursor windsurf setup
+  - cursor ai editor configuration
+  - windsurf ide setup
+  - cursorrules windsurfrules
 readingTime: 6
 packageVerified: true
 difficultyScore: 100

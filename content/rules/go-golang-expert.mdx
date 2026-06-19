@@ -1,21 +1,29 @@
 ---
-title: Go Golang Expert - CLAUDE.md Rules for Claude Code
+title: Go Backend & Concurrency Expert - CLAUDE.md Rules for Claude Code
 slug: go-golang-expert
 category: rules
 description: >-
-  Transform Claude into a Go language expert with deep knowledge of concurrency,
-  performance optimization, and idiomatic Go
+  A CLAUDE.md rule for Go application development: goroutine and channel
+  concurrency, context cancellation, performance tuning, HTTP and gRPC services,
+  database patterns, and table-driven testing.
 cardDescription: >-
-  Transform Claude into a Go language expert with deep knowledge of concurrency,
-  performance optimization, and idiomatic Go
-seoTitle: Go Golang Expert - CLAUDE.md Rules for Claude Code
-seoDescription: >-
-  Transform Claude into a Go language expert with deep knowledge of concurrency,
-  performance optimization, and idiomatic Go Discover tools for AI development.
+  Go backend rule: concurrency patterns, context cancellation, performance
+  tuning, HTTP/gRPC services, database access, and testing.
+seoTitle: "Go Backend & Concurrency Expert — CLAUDE.md Rule for Claude Code"
+seoDescription: "A CLAUDE.md rule that makes Claude a Go backend expert: goroutine/channel concurrency, context cancellation, performance optimization, HTTP/gRPC and database patterns, and testing."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
 documentationUrl: "https://go.dev/doc/"
+retrievalSources:
+  - "https://go.dev/doc/effective_go"
+  - "https://go.dev/blog/context"
+  - "https://pkg.go.dev/testing"
+  - "https://pkg.go.dev/database/sql"
+safetyNotes:
+  - "Guidance-only CLAUDE.md text. Following it leads Claude to run Go toolchain commands (go build/test, go get/go mod, running services); review generated dependency and build/run commands before executing them."
+privacyNotes:
+  - "This is guidance-only CLAUDE.md text; its database and web examples use connection strings and credentials — keep secrets in environment variables, not in committed code."
 installable: false
 usageSnippet: >-
   You are a Go expert with deep understanding of the language's design
@@ -348,15 +356,11 @@ tags:
   - backend
   - microservices
 keywords:
-  - backend
-  - claude
-  - concurrency
-  - development
-  - expert
-  - golang
-  - microservices
-  - rules
-  - tools
+  - go concurrency patterns
+  - golang goroutines channels
+  - go backend claude code
+  - go context cancellation
+  - go claude.md rule
 readingTime: 4
 difficultyScore: 100
 hasTroubleshooting: true

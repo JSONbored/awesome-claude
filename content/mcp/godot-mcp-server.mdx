@@ -33,8 +33,7 @@ copySnippet: |-
         "command": "npx",
         "args": ["@coding-solo/godot-mcp"],
         "env": {
-          "GODOT_PATH": "PATH_TO_GODOT_EXECUTABLE",
-          "DEBUG": "true"
+          "GODOT_PATH": "PATH_TO_GODOT_EXECUTABLE"
         }
       }
     }
@@ -46,8 +45,7 @@ configSnippet: |-
         "command": "npx",
         "args": ["@coding-solo/godot-mcp"],
         "env": {
-          "GODOT_PATH": "PATH_TO_GODOT_EXECUTABLE",
-          "DEBUG": "true"
+          "GODOT_PATH": "PATH_TO_GODOT_EXECUTABLE"
         }
       }
     }
@@ -121,7 +119,7 @@ environment variables, and setup details.
 - Create scenes, add nodes, load sprites and textures, export MeshLibrary
   resources, and save scenes.
 - Get and update UID references for Godot 4.4 and newer projects.
-- Optional debug logging through the `DEBUG` environment variable.
+- Optional debug logging through the `DEBUG` environment variable when troubleshooting.
 
 ## Installation
 
@@ -134,8 +132,7 @@ For MCP clients that launch stdio servers:
       "command": "npx",
       "args": ["@coding-solo/godot-mcp"],
       "env": {
-        "GODOT_PATH": "PATH_TO_GODOT_EXECUTABLE",
-        "DEBUG": "true"
+        "GODOT_PATH": "PATH_TO_GODOT_EXECUTABLE"
       }
     }
   }
@@ -143,7 +140,9 @@ For MCP clients that launch stdio servers:
 ```
 
 Omit `GODOT_PATH` when automatic Godot detection works for your environment.
-Restart the MCP client after adding the server.
+Leave debug logging disabled for normal use; set `DEBUG` to `true` only while
+troubleshooting and review logs before sharing them. Restart the MCP client after
+adding the server.
 
 ## Use Cases
 

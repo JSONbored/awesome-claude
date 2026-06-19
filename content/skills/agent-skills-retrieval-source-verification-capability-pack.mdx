@@ -1,0 +1,226 @@
+---
+title: Agent Skills Retrieval Source Verification Capability Pack Skill
+slug: agent-skills-retrieval-source-verification-capability-pack
+category: skills
+description: >-
+  Expert agent skills retrieval source verification capability pack for
+  validating canonical URLs, documentation reachability, repo provenance, and
+  duplicate source claims before publishing or submitting Claude Code skills.
+cardDescription: >-
+  Verify agent skill retrieval sources, canonical URLs, and provenance with
+  source-backed checklists before submission.
+seoTitle: Agent Skills Retrieval Source Verification Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for agent skills retrieval source verification,
+  canonical URL checks, documentation reachability, repo provenance, and
+  duplicate source review.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1533
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1533"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when authoring or reviewing an agent skill and you need to
+  verify retrieval sources, canonical URLs, documentation reachability, and
+  provenance before submission or merge.
+copySnippet: |-
+  # Trigger
+  "Apply the agent skills retrieval source verification capability pack."
+
+  # Required output
+  1) Canonical source URL inventory and reachability results
+  2) Provenance and duplicate-source assessment
+  3) Documentation versus repo truth alignment review
+  4) Retrieval source quality and freshness notes
+  5) Privacy-safe verification summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Draft skill frontmatter with `retrievalSources`, `repoUrl`, and `documentationUrl` fields populated."
+  - "Network access or cached evidence to verify HTTP reachability of listed source URLs."
+  - "The skill's claimed scope, slug, and category for duplicate comparison against existing entries."
+  - "Contributor or reviewer context for whether docs, repo, or package is the canonical source of truth."
+safetyNotes:
+  - "Retrieval sources must point to primary official documentation or verifiable repositories, not affiliate landing pages or unreviewed mirrors."
+  - "Parked domains, empty documentation pages, and redirect chains to unrelated products fail source verification."
+  - "Listing many URLs without explaining which is canonical creates reviewer ambiguity and increases duplicate risk."
+  - "This skill verifies sources; it must not approve a submission whose claims cannot be substantiated by fetched evidence."
+privacyNotes:
+  - "Source verification logs may include internal staging URLs, private repo names, or authentication-gated docs if reviewers paste raw fetch output."
+  - "Some documentation pages embed organization-specific examples that should be redacted before public issue comments."
+  - "Public verification summaries should list reachability status and canonical URL choice, not full HTTP response bodies."
+tags:
+  - agent-skills
+  - retrieval-sources
+  - source-verification
+  - provenance
+  - capability-pack
+keywords:
+  - agent skills retrieval source verification
+  - Claude Code skills source verification
+  - skill canonical URL review
+  - skills documentation reachability
+  - skill provenance audit
+  - HeyClaude source verification
+readingTime: 8
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code skills and features overview
+documentation verified on **2026-06-14**. Source verification requirements and
+submission gate behavior can evolve; prefer live official docs and reachable
+primary sources over cached URL assumptions.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code skills documentation and the public
+Anthropic `claude-code` repository on **2026-06-14**:
+
+- Claude Code skills are defined in `SKILL.md` files with frontmatter that can
+  include descriptions, allowed tools, and supporting references.
+- Skill descriptions load into Claude Code context at session start when model
+  invocation is enabled, so inaccurate source claims affect every session.
+- HeyClaude content submissions require verifiable canonical sources; thin,
+  parked, or unreachable documentation URLs trigger manual review or closure.
+- Using the public `anthropics/claude-code` repository as `documentationUrl`
+  provides a stable, HTTP-verifiable canonical source when topic docs live on
+  separate documentation hosts listed in `retrievalSources`.
+- Google Search Central helpful-content guidance supports evaluating whether
+  skill copy is useful, specific, and source-backed rather than promotional.
+
+## Scope Note
+
+This is not a web crawling or legal provenance service. Use it as a reusable
+verification workflow for authors and reviewers validating agent skill retrieval
+sources before HeyClaude submission or internal skill publication.
+
+## Core Workflow
+
+1. Inventory all source fields: `documentationUrl`, `repoUrl`, `downloadUrl`,
+   and every entry in `retrievalSources`.
+2. Select one canonical source of truth and ensure other URLs support rather
+   than contradict it.
+3. Verify reachability: HTTP 200 for public docs and repos, note redirects,
+   parked pages, auth walls, and final resolved URLs.
+4. Compare skill claims to fetched evidence: feature names, commands, flags,
+   and workflows must appear in official docs or repo README.
+5. Check duplicate history: search existing skills by slug, title, repo URL,
+   docs domain, and overlapping purpose.
+6. Assess freshness: record verification date in **Knowledge Freshness** and
+   flag time-sensitive features such as beta flags or enterprise-only scope.
+7. Review privacy and safety notes against source truth; do not invent runtime
+   guarantees absent from official documentation.
+8. Document unresolved gaps explicitly rather than substituting forum posts or
+   unverified social threads as primary sources.
+9. Produce a verification summary suitable for PR body or gate review.
+
+## Capability Scope
+
+- Canonical source URL selection and reachability checks.
+- Provenance and duplicate-source assessment.
+- Documentation versus repository truth alignment.
+- Retrieval source quality and freshness review.
+- Submission-ready verification summary.
+- Privacy-safe reporting of fetch results.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when authoring `SKILL.md`
+  files, preparing HeyClaude submissions, or reviewing contributor PRs.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic source-verification checklist in content review runbooks.
+
+## Required Inputs
+
+- Draft skill frontmatter and body with claimed capabilities and source URLs.
+- Reachability evidence for each listed URL (status code, final URL, date).
+- Duplicate search results across `content/skills/` and open PRs.
+- Category, slug, and intended audience for the skill under review.
+
+## Production Rules
+
+- Prefer one canonical verifiable URL in `documentationUrl`; list topic docs in
+  `retrievalSources`.
+- Do not use affiliate, referral, or paid listing pages as primary sources.
+- Do not approve skills whose core claims lack official documentation support.
+- Record verification date and concrete fetched facts in **Source Verification Notes**.
+- Redact auth tokens, internal URLs, and customer examples from public summaries.
+- Close or revise submissions with parked docs rather than retrying identical URLs.
+- Separate helpful-content quality review from reachability checks; both matter.
+
+## Review Matrix
+
+| Signal | Pass | Fail | Action |
+| --- | --- | --- | --- |
+| Canonical URL | Official repo or live docs | Parked or empty page | Change canonical source |
+| Reachability | HTTP 200 public | 404 or auth wall | Fix URL or scope claim |
+| Claim alignment | Supported by source | Unsupported feature | Revise skill body |
+| Duplicates | Distinct slug/purpose | Same repo/title/workflow | Close or differentiate |
+| Freshness | Dated verification | Stale beta claim | Update Knowledge Freshness |
+| Promo tone | Practical workflow | Affiliate copy | Rewrite or close |
+
+## Output Contract
+
+1. Canonical source URL inventory and reachability results.
+2. Provenance and duplicate-source assessment.
+3. Documentation versus repo truth alignment review.
+4. Retrieval source quality and freshness notes.
+5. Pass/fail recommendation with required fixes.
+6. Privacy-safe verification summary for PR or gate review.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for agent skills retrieval source verification, canonical URL
+review, and HeyClaude source verification workflows. Official submission docs
+describe source requirements, but no `skills` entry provides a reusable
+retrieval source verification capability pack with review matrix and output
+contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.

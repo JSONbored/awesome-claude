@@ -22,35 +22,13 @@ dateAdded: "2026-06-05"
 brandName: PAL MCP
 repoUrl: "https://github.com/BeehiveInnovations/pal-mcp-server"
 documentationUrl: "https://github.com/BeehiveInnovations/pal-mcp-server"
-installable: true
-installCommand: "git clone https://github.com/BeehiveInnovations/pal-mcp-server.git && cd pal-mcp-server && ./run-server.sh"
+installable: false
 usageSnippet: "Use PAL MCP when an MCP client should ask other model providers or CLI subagents for reviews, plans, debugging, consensus, or handoff work."
-copySnippet: |-
-  {
-    "mcpServers": {
-      "pal": {
-        "command": "bash",
-        "args": [
-          "-c",
-          "uvx --from git+https://github.com/BeehiveInnovations/pal-mcp-server.git pal-mcp-server"
-        ],
-        "env": {
-          "DEFAULT_MODEL": "auto",
-          "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY",
-          "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY"
-        }
-      }
-    }
-  }
 configSnippet: |-
   {
     "mcpServers": {
       "pal": {
-        "command": "bash",
-        "args": [
-          "-c",
-          "uvx --from git+https://github.com/BeehiveInnovations/pal-mcp-server.git pal-mcp-server"
-        ],
+        "command": "<reviewed-local-pal-mcp-server-command>",
         "env": {
           "DEFAULT_MODEL": "auto",
           "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY",
@@ -70,6 +48,7 @@ safetyNotes:
   - PAL can send code, prompts, files, findings, and conversation context to multiple external model providers.
   - CLI subagents may inspect the workspace, run tools, and return results from separate contexts; restrict roles and provider access.
   - Keep disabled tools disabled unless the workflow needs them, and review tool configuration before broad code analysis or security review.
+  - Review and pin a trusted upstream release, tag, or commit before running any source-based PAL setup command.
   - Multi-model consensus can still be wrong; use it as review input, not automatic approval.
 privacyNotes:
   - Provider API keys, OpenRouter keys, Azure credentials, local model endpoints, and CLI auth tokens are sensitive secrets.
@@ -130,25 +109,17 @@ configuration flags.
 
 ## Installation
 
-Clone and run the automatic setup:
+PAL MCP's upstream repository documents source-based setup paths. Before adding
+it to an MCP client, choose and review a trusted release, tag, or commit from the
+upstream project instead of running code from the mutable default branch.
 
-```sh
-git clone https://github.com/BeehiveInnovations/pal-mcp-server.git
-cd pal-mcp-server
-./run-server.sh
-```
-
-The repository also documents an `uvx` setup shape for MCP clients:
+Use a reviewed local command in your MCP client configuration:
 
 ```json
 {
   "mcpServers": {
     "pal": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "uvx --from git+https://github.com/BeehiveInnovations/pal-mcp-server.git pal-mcp-server"
-      ],
+      "command": "<reviewed-local-pal-mcp-server-command>",
       "env": {
         "DEFAULT_MODEL": "auto",
         "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY",

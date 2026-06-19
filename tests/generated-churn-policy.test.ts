@@ -61,17 +61,11 @@ describe("generated churn policy", () => {
     expect(gitignore).toContain("!content/mcp/*.mcpb");
   });
 
-  it("keeps CodeRabbit out of one-shot content submission review", () => {
-    const source = read(".coderabbit.yaml");
-    expect(source).toContain("path_filters:");
-    expect(source).toContain('"!content/**"');
-    expect(source).toContain('"!apps/web/public/data/**"');
-    expect(source).toContain('"!apps/web/src/generated/**"');
-    expect(source).toContain('"!apps/web/public/downloads/**"');
-    expect(source).toContain('"!apps/web/src/routeTree.gen.ts"');
-    expect(source).toContain('"!README.md"');
-    expect(source).toContain("ignore_title_keywords:");
-    expect(source).toContain('"content("');
+  it("keeps CodeRabbit fully removed (eliminated 2026-06-19; reviewbot is the reviewer)", () => {
+    // CodeRabbit was removed entirely — config and bot — in favor of reviewbot's one-shot review. The old
+    // test asserted the .coderabbit.yaml path_filters; now the invariant is that the config never returns.
+    expect(fs.existsSync(path.join(repoRoot, ".coderabbit.yaml"))).toBe(false);
+    expect(fs.existsSync(path.join(repoRoot, ".coderabbit.yml"))).toBe(false);
   });
 
   it("generates registry and route artifacts before web build gates", () => {

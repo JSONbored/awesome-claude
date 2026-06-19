@@ -29,7 +29,7 @@ function safeErrorMessage(error) {
   return toError(error).message || "Remote MCP request failed.";
 }
 
-function createTimeoutFetch(timeoutMs) {
+export function createTimeoutFetch(timeoutMs) {
   return async (url, init = {}) => {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), timeoutMs);

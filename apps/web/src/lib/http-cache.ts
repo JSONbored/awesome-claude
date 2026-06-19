@@ -18,15 +18,18 @@ export async function buildEtag(body: string) {
   return `"sha256-${toHex(digest).slice(0, 32)}"`;
 }
 
-function hasMatchingEtag(request: Request, etag: string) {
-  const normalize = (value: string) => value.replace(/^W\//, "");
+export function ifNoneMatchMatches(header: string | null, etag: string) {
+  if (!header) return false;
+  const normalize = (value: string) => value.trim().replace(/^W\//i, "");
   const normalizedEtag = normalize(etag);
-  return request.headers
-    .get("if-none-match")
-    ?.split(",")
-    .map((value) => value.trim())
+  return header
+    .split(",")
     .map(normalize)
-    .includes(normalizedEtag);
+    .some((candidate) => candidate === "*" || candidate === normalizedEtag);
+}
+
+function hasMatchingEtag(request: Request, etag: string) {
+  return ifNoneMatchMatches(request.headers.get("if-none-match"), etag);
 }
 
 export async function cachedJsonResponse(

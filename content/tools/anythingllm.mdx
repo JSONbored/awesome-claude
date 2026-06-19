@@ -1,0 +1,203 @@
+---
+title: AnythingLLM
+slug: anythingllm
+category: tools
+description: >-
+  Local-first AI application for private chat, document RAG, workspace agents,
+  MCP-compatible tools, model routing, memories, scheduled tasks, multimodal
+  workflows, multi-user Docker deployments, and self-hosted agent automation.
+cardDescription: >-
+  Run a local-first AI workspace with document chat, RAG, agents, MCP-compatible
+  tools, model routing, memories, scheduled tasks, and Docker self-hosting.
+seoTitle: AnythingLLM Local-First AI App for RAG, Agents, and MCP Tools
+seoDescription: >-
+  Use AnythingLLM for local-first AI workspaces with document RAG, AI agents,
+  MCP compatibility, model routing, memories, scheduled tasks, multimodal
+  support, multi-user Docker deployment, and self-hosted LLM workflows.
+author: Mintplex Labs
+authorProfileUrl: "https://github.com/Mintplex-Labs"
+dateAdded: "2026-06-18"
+websiteUrl: "https://anythingllm.com"
+documentationUrl: "https://docs.anythingllm.com"
+repoUrl: "https://github.com/Mintplex-Labs/anything-llm"
+packageUrl: "https://hub.docker.com/r/mintplexlabs/anythingllm"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/Mintplex-Labs/anything-llm"
+  - "https://raw.githubusercontent.com/Mintplex-Labs/anything-llm/master/README.md"
+  - "https://raw.githubusercontent.com/Mintplex-Labs/anything-llm/master/docker/HOW_TO_USE_DOCKER.md"
+  - "https://github.com/Mintplex-Labs/anything-llm/blob/master/LICENSE"
+  - "https://hub.docker.com/r/mintplexlabs/anythingllm"
+installable: true
+installCommand: "docker pull mintplexlabs/anythingllm"
+usageSnippet: >-
+  Pull the official Docker image, review the upstream Docker storage and
+  capability requirements, configure provider keys and telemetry settings, then
+  connect local or hosted models, documents, agents, MCP-compatible tools, and
+  workspace users.
+copySnippet: |-
+  docker pull mintplexlabs/anythingllm
+estimatedSetupTime: 30 minutes
+difficulty: intermediate
+prerequisites:
+  - "Docker for the documented self-hosted path, or the desktop application for a local workstation install."
+  - "At least the upstream minimum host resources, with disk sized for documents, embeddings, vector storage, models, logs, and backups."
+  - "A local or remote LLM provider, embedding provider, and optional speech or image models for the workflows the workspace will run."
+  - "A storage, backup, retention, and access-control plan before ingesting private documents or opening a multi-user Docker instance."
+  - "Review of the Docker guide, including container capabilities, host-network access, persistent storage, and provider connectivity."
+safetyNotes:
+  - "AnythingLLM can run agents, scheduled tasks, MCP-compatible tools, browser-like workspace actions, developer APIs, and external model calls; scope tools and credentials before enabling them for users."
+  - "The upstream Docker guide includes examples that add the SYS_ADMIN capability to the container. Review whether that capability is acceptable for the host before copying production run commands."
+  - "Multi-user Docker deployments need normal production controls: authentication, TLS, network isolation, secret management, persistent-volume ownership, backups, and upgrade planning."
+  - "Agent tools, custom agents, model routing, memories, and scheduled tasks can change behavior over time; use least privilege, logging, review gates, and rollback plans for write-capable workflows."
+  - "Localhost services such as Ollama, Chroma, LocalAI, or LM Studio may need Docker host routing adjustments; avoid exposing local provider ports wider than intended."
+privacyNotes:
+  - "Uploaded documents, parsed chunks, embeddings, workspace memories, prompts, chat history, agent state, scheduled task inputs, MCP payloads, provider responses, logs, and API calls may contain sensitive data."
+  - "The README documents anonymous telemetry and an opt-out through DISABLE_TELEMETRY=true or the in-app privacy setting; review this before using regulated or confidential data."
+  - "Even with telemetry disabled, outbound calls may still go to configured LLMs, embedding models, vector databases, external tools, cdn.anythingllm.com, GitHub, or GitHubusercontent depending on the deployment."
+  - "Keep provider keys, JWT secrets, workspace invite links, storage paths, private documents, and generated citations out of public prompts, screenshots, issues, and examples."
+tags:
+  - anythingllm
+  - local-ai
+  - rag
+  - ai-agents
+  - mcp
+  - self-hosted
+  - document-chat
+  - model-routing
+  - openclaw
+  - docker
+keywords:
+  - AnythingLLM
+  - AnythingLLM MCP
+  - AnythingLLM agents
+  - AnythingLLM RAG
+  - local first AI app
+  - self hosted ChatGPT
+  - no code AI agent builder
+  - document chat with agents
+  - OpenClaw AI agents
+  - private AI workspace
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AnythingLLM is a local-first AI workspace for chatting with documents, building
+agent workflows, connecting local or hosted model providers, and running a
+private AI interface for individuals or teams. It combines document ingestion,
+RAG, source citations, workspace agents, MCP compatibility, model routing,
+memories, scheduled tasks, multimodal support, a developer API, Docker
+self-hosting, and desktop app distribution.
+
+This is high-value content for people searching for AnythingLLM, local-first AI
+apps, self-hosted ChatGPT alternatives, AI agents, RAG chat, MCP-compatible
+tools, OpenClaw-adjacent agent tooling, private document chat, and no-code agent
+builders.
+
+## Install
+
+AnythingLLM can be installed as a desktop app or run as a Docker deployment. A
+conservative first step for the Docker path is to pull the official image and
+then review the upstream Docker guide before launching it:
+
+```bash
+docker pull mintplexlabs/anythingllm
+```
+
+The Docker guide documents persistent storage, environment variables, model
+provider connection details, Docker Compose examples, and host routing for local
+services such as Ollama or LM Studio. Review the container capability and storage
+choices before using the documented run commands on a production host.
+
+## Core Capabilities
+
+| Area | AnythingLLM Coverage |
+| --- | --- |
+| Document Chat | Upload documents, parse content, build workspace context, and answer with source citations |
+| RAG | Built-in document pipelines, embeddings, vector storage, and retrieval-backed chat |
+| Agents | Workspace agents, custom agents, scheduled tasks, intelligent skill selection, and no-code agent flows |
+| MCP | MCP-compatible tool integration for adding external tools to agent workflows |
+| Models | Local and hosted LLM providers including Ollama, LM Studio, OpenAI, Anthropic, Gemini, Azure OpenAI, Bedrock, OpenRouter, Mistral, Groq, Cohere, LiteLLM, and others |
+| Vector Storage | LanceDB by default, plus PGVector, Astra DB, Pinecone, Chroma, Weaviate, Qdrant, Milvus, and Zilliz options |
+| Deployment | Desktop app, Docker image, Docker Compose guidance, cloud templates, bare-metal path, and multi-user Docker instance support |
+| Platform | Developer API, embeddable chat widget, multimodal support, memories, model routing, telemetry controls, and browser extension ecosystem |
+
+## MCP and Agent Fit
+
+AnythingLLM belongs in MCP and agent discovery because it gives non-specialist
+users a practical workspace for connecting tools, documents, models, and agents.
+Instead of starting from a code-first framework, users can create a workspace,
+attach documents, configure models, enable agent tools, and expose a repeatable
+agent workflow through the UI.
+
+It is also relevant to OpenClaw and skill searches because the upstream
+repository topics include OpenClaw and agentic AI positioning. The important
+boundary is operational: every enabled tool, scheduled task, model route,
+document collection, and memory store should be reviewed as a data flow and
+permission boundary.
+
+## Use Cases
+
+- Build a private document-chat workspace over PDFs, text files, and office
+  documents.
+- Run local-first RAG with Ollama, LM Studio, local embeddings, and LanceDB.
+- Give a team a multi-user AI workspace without starting from a blank agent
+  framework.
+- Add MCP-compatible tools to an agent workspace.
+- Route different chats or workflows to different model providers.
+- Schedule recurring agent tasks with full workspace context.
+- Prototype no-code agent flows before moving specialized logic into a
+  framework such as LangGraph, Qwen-Agent, AG2, or CAMEL-AI.
+- Compare local-first tools such as AnythingLLM, Open WebUI, LibreChat,
+  RAGFlow, Dify, and Flowise for private AI workspace needs.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `Mintplex-Labs/anything-llm` as an MIT-licensed repository with
+  active development, 61,000+ stars, and latest release `v1.14.1`.
+- The README describes AnythingLLM as an all-in-one AI app for chatting with
+  documents, using AI agents, multi-user operation, local-first use, and low
+  setup friction.
+- The README lists dynamic model routing, memories, scheduled tasks, intelligent
+  skill selection, no-code AI agent builder, MCP compatibility, multimodal
+  support, custom agents, agents inside workspaces, document support, source
+  citations, developer API, and embeddable chat widget support.
+- The README lists many local and hosted LLM providers, embedding providers,
+  speech providers, and vector databases, including LanceDB as the default
+  vector database.
+- The Docker guide documents the official `mintplexlabs/anythingllm` image,
+  persistent storage, minimum host expectations, Docker Compose examples, host
+  routing for local services, and source-build guidance.
+- The README documents anonymous telemetry, opt-out controls, and remaining
+  outbound connections that can still happen depending on configured providers
+  and deployment settings.
+
+## Safety and Privacy
+
+AnythingLLM is a full AI workspace, not just a chat UI. Agents, MCP-compatible
+tools, scheduled tasks, custom memories, document ingestion, model routing, and
+developer APIs can all change what data is sent where and what actions the
+workspace can perform.
+
+For self-hosting, treat the Docker environment file, JWT secret, provider keys,
+storage volume, uploaded documents, parsed chunks, embeddings, logs, backups,
+and telemetry settings as sensitive infrastructure. Review the Docker
+capability requirements before copying run examples, especially on shared hosts
+or machines that also run private services.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, open pull requests, and repository-wide
+content for `Mintplex-Labs/anything-llm`, AnythingLLM, `anythingllm.com`,
+AnythingLLM MCP, AnythingLLM agents, AnythingLLM RAG, local-first AI app,
+self-hosted ChatGPT, no-code AI agent builder, document chat with agents, and
+OpenClaw AI agents. No dedicated AnythingLLM entry, exact source URL duplicate,
+target file, or open duplicate PR was found.

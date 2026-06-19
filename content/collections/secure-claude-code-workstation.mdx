@@ -2,13 +2,7 @@
 title: Secure Claude Code Workstation
 slug: secure-claude-code-workstation
 category: collections
-description: >-
-  A defense-in-depth bundle for hardening an agentic Claude Code workstation:
-  block secrets and sensitive data before they are written, verify dependency
-  provenance and known vulnerabilities, review supply-chain risk and run code
-  security audits, and harden MCP tool access against prompt injection. It pulls
-  together existing hooks, commands, rules, and skills into one secure setup,
-  organized around the NIST Secure Software Development Framework.
+description: "A defense-in-depth bundle for hardening an agentic Claude Code workstation: block secrets and sensitive data before they are written, verify dependency provenance and known vulnerabilities, review supply-chain risk and run code security audits, and harden MCP tool access against prompt injection."
 cardDescription: >-
   Defense-in-depth bundle of secret, dependency, audit, and MCP hardening
   entries for an agentic Claude Code setup.
@@ -37,15 +31,13 @@ items:
     category: hooks
   - slug: lockfile-provenance-checker
     category: hooks
-  - slug: dependency-security-scanner
-    category: hooks
   - slug: package-vulnerability-scanner
     category: hooks
   - slug: dependency-risk-review
     category: commands
   - slug: security-audit
     category: commands
-  - slug: security-auditor-penetration-tester
+  - slug: security-auditor
     category: rules
   - slug: mcp-server-security-hardening
     category: skills
@@ -55,11 +47,10 @@ installationOrder:
   - pre-write-secret-scanner
   - sensitive-data-alert-scanner
   - lockfile-provenance-checker
-  - dependency-security-scanner
   - package-vulnerability-scanner
   - dependency-risk-review
   - security-audit
-  - security-auditor-penetration-tester
+  - security-auditor
   - mcp-server-security-hardening
   - prompt-injection-defense-guardrails
 estimatedSetupTime: 40 minutes
@@ -98,13 +89,13 @@ A layered, defense-in-depth setup for an agentic Claude Code workstation, organi
 ### 2. Dependency and supply-chain (SSDF PS — protect the software)
 
 - **lockfile-provenance-checker** (hook) — flags npm lockfile entries resolved from outside the public registry or missing an integrity hash.
-- **dependency-security-scanner** (hook) and **package-vulnerability-scanner** (hook) — scan dependency changes for known vulnerabilities.
+- **package-vulnerability-scanner** (hook) — scans dependency changes for known vulnerabilities.
 - **dependency-risk-review** (command) — reviews supply-chain posture with OpenSSF Scorecard health signals.
 
 ### 3. Audit and policy (SSDF RV — respond to vulnerabilities)
 
 - **security-audit** (command) — runs an on-demand code security audit.
-- **security-auditor-penetration-tester** (rules) — keeps the assistant in a security-first, adversarial mindset.
+- **security-auditor** (rules) — keeps the assistant in a security-first, adversarial mindset.
 
 ### 4. MCP and prompt-injection hardening
 

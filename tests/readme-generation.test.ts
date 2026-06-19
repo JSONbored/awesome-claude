@@ -75,13 +75,16 @@ function generateReadme() {
 describe("generated README catalog", () => {
   const readme = generateReadme();
   const entries = readContentEntries();
+  // Prettier escapes markdown punctuation in prose (e.g. `*.md` -> `\*.md`), so
+  // compare descriptions against an un-escaped view of the rendered README.
+  const unescapedReadme = readme.replace(/\\([^0-9A-Za-z\s])/g, "$1");
 
   it("includes every file-backed content entry with its canonical URL and description", () => {
     for (const entry of entries) {
       expect(readme, `${entry.category}/${entry.slug}`).toContain(
         `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
-      expect(readme, `${entry.category}/${entry.slug}`).toContain(
+      expect(unescapedReadme, `${entry.category}/${entry.slug}`).toContain(
         entry.description,
       );
     }

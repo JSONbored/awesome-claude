@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -22,6 +23,8 @@ import { ShortcutsProvider } from "@/components/shortcuts-dialog";
 import { SkipLink } from "@/components/skip-link";
 import { RouteProgress } from "@/components/route-progress";
 import { WebMcpProvider } from "@/components/webmcp-provider";
+import { AiReferral } from "@/components/ai-referral";
+import { WebVitals } from "@/components/web-vitals";
 import { siteConfig } from "@/lib/site";
 import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
@@ -125,6 +128,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: siteConfig.name },
       { property: "og:locale", content: "en_US" },
       { property: "og:image", content: defaultOgImage },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: defaultOgImage },
       ...(twitterHandle
@@ -141,11 +147,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "alternate", type: "application/rss+xml", href: "/feed.xml", title: "HeyClaude" },
       { rel: "alternate", type: "application/atom+xml", href: "/atom.xml", title: "HeyClaude" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      // Self-hosted fonts (public/fonts.css mirrors Google's exact woff2 + unicode-ranges),
+      // so no third-party request. Preload the most-used latin display + body faces.
+      { rel: "stylesheet", href: "/fonts.css" },
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
+        rel: "preload",
+        href: "/fonts/space-grotesk-700-latin.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        href: "/fonts/dm-sans-400-latin.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
       },
     ],
     scripts: [
@@ -181,16 +198,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: React.ReactNode }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const shouldLoadAnalytics =
+    pathname !== "/brief/approve" &&
+    Boolean(siteConfig.umamiScriptUrl && siteConfig.umamiWebsiteId);
+
   return (
     <html lang="en">
       <head>
         <HeadContent />
-        <script
-          id="umami-analytics"
-          defer
-          src={siteConfig.umamiScriptUrl}
-          data-website-id={siteConfig.umamiWebsiteId}
-        />
+        {shouldLoadAnalytics && (
+          <script
+            id="umami-analytics"
+            defer
+            src={siteConfig.umamiScriptUrl}
+            data-website-id={siteConfig.umamiWebsiteId}
+          />
+        )}
       </head>
       <body>
         {children}
@@ -205,8 +229,8 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <WatchProvider>
-          <RecentsProvider>
+        <RecentsProvider>
+          <WatchProvider>
             <CompareProvider>
               <ShortcutsProvider>
                 <div className="flex min-h-screen flex-col bg-background">
@@ -222,6 +246,8 @@ function RootComponent() {
                 <CompareDrawer />
                 <BackToTop />
                 <WebMcpProvider />
+                <WebVitals />
+                <AiReferral />
                 <Toaster
                   position="bottom-right"
                   mobileOffset={{ bottom: "16px" }}
@@ -230,8 +256,8 @@ function RootComponent() {
                 />
               </ShortcutsProvider>
             </CompareProvider>
-          </RecentsProvider>
-        </WatchProvider>
+          </WatchProvider>
+        </RecentsProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

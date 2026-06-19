@@ -1,0 +1,205 @@
+---
+title: Hermes Agent
+slug: hermes-agent
+category: tools
+description: >-
+  Nous Research AI agent with terminal UI, messaging gateway, skills, memory,
+  MCP integration, scheduled automations, subagents, terminal backends, OpenClaw
+  migration, model switching, and persistent cross-session workflows.
+cardDescription: >-
+  Run a Nous Research agent with skills, memory, MCP integration, messaging
+  gateway, scheduled automations, subagents, and OpenClaw migration.
+seoTitle: Hermes Agent by Nous Research for Skills, Memory, MCP, and OpenClaw Migration
+seoDescription: >-
+  Use Hermes Agent for persistent AI workflows with a terminal UI, messaging
+  gateway, skills, memory, MCP integration, scheduled tasks, subagents, model
+  switching, terminal backends, and OpenClaw migration.
+author: Nous Research
+authorProfileUrl: "https://github.com/NousResearch"
+dateAdded: "2026-06-18"
+websiteUrl: "https://hermes-agent.nousresearch.com"
+documentationUrl: "https://hermes-agent.nousresearch.com/docs/"
+repoUrl: "https://github.com/NousResearch/hermes-agent"
+packageUrl: "https://pypi.org/project/hermes-agent/"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/NousResearch/hermes-agent"
+  - "https://raw.githubusercontent.com/NousResearch/hermes-agent/main/README.md"
+  - "https://raw.githubusercontent.com/NousResearch/hermes-agent/main/pyproject.toml"
+  - "https://raw.githubusercontent.com/NousResearch/hermes-agent/main/package.json"
+  - "https://raw.githubusercontent.com/NousResearch/hermes-agent/main/LICENSE"
+  - "https://pypi.org/pypi/hermes-agent/json"
+installable: true
+installCommand: "uv tool install hermes-agent"
+usageSnippet: >-
+  Install the Hermes Agent package, run `hermes` for the terminal UI, choose a
+  model provider, review enabled tools and terminal backends, then configure
+  skills, memory, MCP servers, scheduled jobs, or messaging gateways as needed.
+copySnippet: |-
+  uv tool install hermes-agent
+  hermes
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - "Python 3.11 through 3.13 for the packaged Python project."
+  - "uv, pipx, or another isolated Python application installer."
+  - "Model provider credentials for Nous Portal, OpenRouter, NovitaAI, NVIDIA NIM, OpenAI-compatible endpoints, or another configured provider."
+  - "A clear tool and terminal-backend policy before enabling local shell, Docker, SSH, Singularity, Modal, Daytona, browser, search, messaging, or MCP features."
+  - "Messaging platform bot tokens, workspace credentials, and allowed-user lists if Telegram, Discord, Slack, WhatsApp, Signal, Email, Home Assistant, or other gateway routes are enabled."
+safetyNotes:
+  - "Hermes Agent can run tools, shell commands, terminal sessions, scheduled jobs, subagents, skills, MCP servers, messaging gateways, and remote backends; review permissions before using it on sensitive systems."
+  - "The README documents one-line shell installers for some platforms. Inspect installer scripts and prefer isolated package installs or disposable environments when evaluating the agent."
+  - "OpenClaw migration can import settings, memories, skills, command allowlists, messaging settings, API keys, audio assets, and workspace instructions; use dry-run and non-secret presets before migrating real profiles."
+  - "Scheduled automations and messaging gateways can run unattended and deliver results to external chat systems, so restrict allowed users, home directories, credentials, and write-capable tools."
+  - "Terminal backends such as local shell, Docker, SSH, Singularity, Modal, and Daytona can touch local files, containers, remote hosts, cloud sandboxes, and GPU infrastructure."
+privacyNotes:
+  - "Conversation history, memory files, user profiles, skill outputs, session search indexes, tool arguments, tool results, model responses, gateway messages, audio transcripts, and logs may contain sensitive data."
+  - "Model providers, messaging platforms, search/image/TTS/browser tool gateways, MCP servers, and remote terminal backends may receive prompts, files, commands, account identifiers, or generated outputs depending on configuration."
+  - "OpenClaw migration may copy memories, persona files, skills, API keys, messaging settings, command allowlists, TTS assets, and workspace instructions into the Hermes profile."
+  - "Keep provider keys, bot tokens, OAuth grants, migrated secrets, workspace paths, generated summaries, and session search data out of public prompts, screenshots, issues, and examples."
+tags:
+  - hermes-agent
+  - nous-research
+  - ai-agents
+  - agent-skills
+  - memory
+  - mcp
+  - openclaw
+  - claude-code
+  - codex
+  - messaging-gateway
+keywords:
+  - Hermes Agent
+  - Nous Research Hermes Agent
+  - Hermes Agent MCP
+  - Hermes Agent skills
+  - Hermes Agent memory
+  - Hermes Agent OpenClaw migration
+  - self improving AI agent
+  - Claude Code agent skills
+  - Codex agent memory
+  - OpenClaw alternative
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Hermes Agent is a Nous Research agent for persistent, cross-session AI
+workflows. It combines a terminal UI, model switching, skills, memory,
+conversation search, scheduled automations, subagents, messaging gateways, MCP
+integration, and multiple terminal backends. It is positioned for users who
+want an agent that can keep working outside a single laptop session, including
+from chat platforms and cloud or remote execution environments.
+
+This entry is especially relevant for Hermes Agent, Nous Research Hermes Agent,
+Hermes Agent MCP, Hermes Agent skills, Hermes Agent memory, OpenClaw migration,
+Claude Code agent skills, Codex agent memory, and self-improving AI agent
+searches.
+
+## Install
+
+The Python package exposes `hermes`, `hermes-agent`, and `hermes-acp` console
+scripts. A conservative isolated install path is:
+
+```bash
+uv tool install hermes-agent
+hermes
+```
+
+The upstream README also documents platform-specific quick installers and a
+managed checkout layout. Review installer behavior, created directories,
+bundled dependencies, and shell integration before using those paths on a
+primary workstation.
+
+## Core Capabilities
+
+| Area | Hermes Agent Coverage |
+| --- | --- |
+| Agent UI | Terminal UI with multiline editing, slash-command autocomplete, history, interrupts, and streaming tool output |
+| Models | Provider switching across Nous Portal, OpenRouter, NovitaAI, NVIDIA NIM, Xiaomi MiMo, z.ai, Kimi/Moonshot, MiniMax, Hugging Face, OpenAI, and custom endpoints |
+| Skills | Agent-created and user-managed skills, self-improvement during use, Skills Hub compatibility, and OpenClaw skill migration |
+| Memory | Persistent memory, session search, user profile modeling, summaries, and cross-session recall |
+| MCP | MCP integration for connecting external servers and optional MCP package extra in the Python project |
+| Messaging | Gateway process for Telegram, Discord, Slack, WhatsApp, Signal, Email, Home Assistant, and other platform routes documented upstream |
+| Scheduling | Natural-language cron jobs and scheduled automations delivered through configured platforms |
+| Execution | Local, Docker, SSH, Singularity, Modal, and Daytona terminal backends |
+| Migration | `hermes claw migrate` workflow for importing OpenClaw settings, skills, memories, allowlists, messaging settings, and selected secrets |
+
+## MCP, Skills, and OpenClaw Fit
+
+Hermes sits directly in the MCP, skills, and agent-harness cluster. It can use
+MCP servers as part of its tool surface, create and improve reusable skills, and
+migrate OpenClaw profiles for users moving between agent systems. That makes it
+useful content for people comparing Claude Code, Codex, OpenClaw, Gemini CLI,
+and Hermes-style persistent agents.
+
+The operational concern is that Hermes is not a passive chat interface. Once
+tools, gateways, scheduled tasks, terminal backends, and MCP servers are enabled,
+it can execute real actions across local systems, remote hosts, chat platforms,
+model providers, and cloud sandboxes.
+
+## Use Cases
+
+- Run an AI agent from a terminal UI with persistent conversation state.
+- Move agent workflows from OpenClaw into a Hermes profile with dry-run
+  migration first.
+- Use skills and memory to preserve procedures and user preferences across
+  sessions.
+- Connect MCP servers to extend the agent's tool surface.
+- Schedule recurring reports, audits, backups, or review jobs.
+- Talk to the same agent through Telegram, Discord, Slack, WhatsApp, Signal, or
+  Email.
+- Run work in local shell, Docker, SSH, Singularity, Modal, or Daytona
+  environments.
+- Compare persistent agent systems against Claude Code, Codex, OpenClaw,
+  Qwen-Agent, CAMEL-AI, AG2, and mcp-agent workflows.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `NousResearch/hermes-agent` as an MIT-licensed repository with
+  active development, 196,000+ stars, and latest release `v2026.6.5`.
+- The README describes Hermes Agent as a self-improving AI agent with skills
+  created from experience, skill improvement during use, memory, session search,
+  user modeling, scheduled automations, subagents, and terminal backends.
+- The README lists model-provider options, a terminal UI, messaging gateways,
+  skills, memory, scheduled automations, subagents, local/Docker/SSH/Singularity
+  /Modal/Daytona terminal backends, MCP integration, and OpenClaw migration.
+- `pyproject.toml` declares the `hermes-agent` Python package at version
+  `0.16.0`, Python `>=3.11,<3.14`, MIT license, console scripts for `hermes`,
+  `hermes-agent`, and `hermes-acp`, and optional extras for MCP, messaging,
+  model/tool backends, dashboard, voice, Honcho, and other integrations.
+- PyPI reports `hermes-agent` version `0.16.0` with wheel and source
+  distribution uploaded on 2026-06-06.
+- `package.json` documents the JavaScript workspace side of the project,
+  including web, TUI, and desktop workspaces and Node.js 20+.
+
+## Safety and Privacy
+
+Hermes can become a long-running personal or team agent, so treat its profile as
+an operational environment rather than a disposable chat history. Review tool
+enablement, command allowlists, terminal backend choice, messaging platform
+permissions, scheduled jobs, model-provider routing, MCP server access, and
+migration inputs before putting real accounts or private repos behind it.
+
+Memory and session search are useful because they preserve context, but that
+also means sensitive data can persist across conversations. Define retention,
+export, deletion, backup, and profile-separation rules before using Hermes with
+customer data, source code, credentials, private chat messages, or production
+systems.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, README output, open pull requests, and
+repository-wide content for `NousResearch/hermes-agent`, Hermes Agent, Nous
+Research Hermes Agent, Hermes Agent MCP, Hermes Agent skills, Hermes Agent
+memory, Hermes Agent OpenClaw migration, `hermes-agent` PyPI package, Claude
+Code agent skills, Codex agent memory, and OpenClaw alternative. No dedicated
+Hermes Agent tools entry, exact source URL duplicate, target file, or open
+duplicate PR was found.

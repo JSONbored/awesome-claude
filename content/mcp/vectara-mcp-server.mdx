@@ -1,0 +1,180 @@
+---
+title: Vectara MCP Server for Claude
+slug: vectara-mcp-server
+category: mcp
+description: >-
+  Query your Vectara RAG corpora from Claude — ask grounded questions with full answer
+  generation, run semantic search to retrieve ranked document chunks, and detect and correct
+  hallucinations using Vectara's Hallucination Correction API — with the official Vectara MCP
+  server.
+cardDescription: "Official Vectara MCP: RAG query, semantic search & hallucination correction from Claude."
+seoTitle: "Vectara MCP Server for Claude — RAG Query, Semantic Search & Hallucination Correction"
+seoDescription: "Connect Claude to Vectara with the official MCP server: grounded RAG answers with answer generation, semantic search over document chunks, factual consistency evaluation, and hallucination correction — Apache-2.0 licensed."
+author: Vectara
+authorProfileUrl: "https://github.com/vectara"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/vectara/vectara-mcp/main/README.md"
+websiteUrl: "https://vectara.com"
+repoUrl: "https://github.com/vectara/vectara-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/vectara/vectara-mcp/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add vectara -e VECTARA_API_KEY=<your-api-key> -- uvx vectara-mcp --stdio"
+usageSnippet: >-
+  Ask Claude to answer questions about your document corpus with grounded citations, retrieve
+  the top-ranked document chunks for a query, evaluate whether a generated claim is factually
+  consistent with source documents, or correct hallucinations in a response — using the
+  Vectara retrieval and hallucination correction APIs.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "vectara": {
+        "command": "uvx",
+        "args": ["vectara-mcp", "--stdio"],
+        "env": {
+          "VECTARA_API_KEY": "<your-api-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "vectara": {
+        "command": "uvx",
+        "args": ["vectara-mcp", "--stdio"],
+        "env": {
+          "VECTARA_API_KEY": "<your-api-key>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A Vectara account — sign up at vectara.com."
+  - "A Vectara API key with query permissions on your target corpus."
+  - "A Vectara corpus created and populated with documents."
+  - "Python with `uvx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The `ask_vectara` and `search_vectara` tools query your configured corpus — they are read-only operations against your indexed documents."
+  - "`setup_vectara_api_key` and `clear_vectara_api_key` modify the in-session API key state; these do not write to disk."
+privacyNotes:
+  - "Document chunks retrieved from your Vectara corpus are surfaced in Claude's context — ensure your corpus does not contain sensitive data you don't want in the AI's context window."
+  - "Your `VECTARA_API_KEY` is used to authenticate all queries — keep it in the MCP config env."
+disclosure: "Vectara is a commercial RAG platform. The MCP server is officially maintained by Vectara."
+tags:
+  - vectara
+  - rag
+  - semantic-search
+  - hallucination-detection
+  - vector-database
+  - document-retrieval
+keywords:
+  - vectara mcp server
+  - vectara mcp claude
+  - rag mcp claude code
+  - semantic search mcp claude
+  - hallucination correction mcp
+  - vectara retrieval ai claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Vectara MCP Server** is the official Model Context Protocol server from Vectara,
+providing grounded RAG (Retrieval-Augmented Generation) capabilities to Claude. It exposes
+six tools: RAG query with answer generation, semantic search over document chunks, hallucination
+detection, factual consistency evaluation, and dynamic API key management. The corpus key is
+passed as a tool argument at query time (not an env var), making it easy to query different
+corpora in the same session. Licensed under Apache-2.0.
+
+## Key capabilities
+
+- **RAG query** — ask natural language questions and get grounded answers with source citations.
+- **Semantic search** — retrieve ranked document chunks without LLM answer generation.
+- **Hallucination correction** — detect and fix hallucinations using Vectara's VHC API.
+- **Factual consistency** — evaluate whether a claim is factually consistent with source docs.
+- **Session API key management** — configure or clear the API key within a session.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `ask_vectara` | RAG query returning grounded generated answer |
+| `search_vectara` | Semantic search returning ranked document chunks |
+| `correct_hallucinations` | Identify and fix hallucinations via Vectara VHC API |
+| `eval_factual_consistency` | Evaluate factual accuracy against source documents |
+| `setup_vectara_api_key` | Configure API key for current session |
+| `clear_vectara_api_key` | Remove stored API key from server memory |
+
+## How it compares
+
+| Server | RAG answers | Semantic search | Hallucination correction | Notes |
+|---|---|---|---|---|
+| **Vectara MCP** | Yes | Yes | Yes | Official; corpus key per query |
+| Pinecone MCP | No | Yes | No | Vector search only |
+| Qdrant MCP | No | Yes | No | Vector search only |
+| Chroma MCP | No | Yes | No | Local vector DB |
+| Weaviate MCP | Yes | Yes | No | Official |
+
+Vectara's built-in hallucination correction (VHC API) is unique — no other RAG MCP server
+offers an integrated hallucination detection and correction tool.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add vectara \
+  -e VECTARA_API_KEY=<your-api-key> \
+  -- uvx vectara-mcp --stdio
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "vectara": {
+      "command": "uvx",
+      "args": ["vectara-mcp", "--stdio"],
+      "env": {
+        "VECTARA_API_KEY": "<your-api-key>"
+      }
+    }
+  }
+}
+```
+
+The corpus key (`VECTARA_CORPUS_KEY`) is a **tool argument** passed at query time — ask Claude
+to query a specific corpus by name or key rather than setting it as a static env var.
+
+## Requirements
+
+- A Vectara account with at least one populated corpus.
+- API key with query permissions.
+- Python with `uvx` (from `uv`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- `VECTARA_API_KEY` grants query access to your corpora — use a scoped key with only read/query
+  permissions.
+- Document content retrieved from corpora enters Claude's context — ensure sensitive documents
+  are not in public or shared corpora.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official repository `vectara/vectara-mcp` (Apache-2.0) on PyPI as `vectara-mcp` documents
+  the `uvx vectara-mcp --stdio` install, `VECTARA_API_KEY` environment variable, corpus key as
+  a tool argument (not an env var), all six tools (ask_vectara, search_vectara,
+  correct_hallucinations, eval_factual_consistency, setup_vectara_api_key, clear_vectara_api_key),
+  and the hallucination correction via Vectara's VHC API.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

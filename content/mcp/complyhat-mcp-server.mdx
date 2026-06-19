@@ -1,0 +1,196 @@
+---
+title: ComplyHat MCP Server for Claude
+slug: complyhat-mcp-server
+category: mcp
+description: >-
+  ComplyHat remote MCP server that turns AI agents into compliance documenters
+  for SR 26-2, EU AI Act, NIST AI RMF, and ISO/IEC 42001 with OAuth and audit-ready
+  DOCX output.
+cardDescription: >-
+  Connect Claude to ComplyHat to draft framework-specific compliance reports,
+  run bias and drift tools, and maintain compliance memory through one MCP URL.
+seoTitle: ComplyHat MCP Server for Claude
+seoDescription: >-
+  Use the ComplyHat MCP server with Claude for EU AI Act, SR 26-2, NIST AI RMF,
+  and ISO/IEC 42001 documentation via OAuth at https://complyhat.ai/api/mcp.
+author: ComplyHat
+authorProfileUrl: "https://complyhat.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1495
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1495"
+documentationUrl: "https://docs.complyhat.ai"
+websiteUrl: "https://complyhat.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http complyhat https://complyhat.ai/api/mcp
+usageSnippet: >-
+  Paste https://complyhat.ai/api/mcp into your MCP host, complete OAuth on first
+  tool call, then invoke entity tools such as reports, bias_tests, and frameworks.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "complyhat": {
+        "url": "https://complyhat.ai/api/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "complyhat": {
+        "url": "https://complyhat.ai/api/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "ComplyHat account; OAuth consent runs automatically on the first tool invocation."
+  - "Claude Code, Claude Desktop, Codex, OpenClaw, NemoClaw, or another MCP-capable host."
+  - "Evidence summaries your host can extract for model tests; ComplyHat does not read source code or weights."
+  - "Human review workflow before submitting compliance documents to regulators or counsel."
+safetyNotes:
+  - "finalize report modes persist approved compliance prose with cryptographic hashes; review before finalizing."
+  - "Bias, drift, and explainability tools operate on host-supplied datasets and model metadata."
+  - "ComplyHat output is documentation support, not legal advice or an automatic compliance determination."
+  - "Paid plans bill per MCP install seat; confirm billing scope before team-wide rollout."
+privacyNotes:
+  - "ComplyHat computes scores in memory and persists summary artifacts, not raw training data or source code."
+  - "OAuth tokens and workspace data are tenant-isolated under ComplyHat's security model."
+  - "Approved reports and compliance memory may contain model names, risk positions, and audit metadata."
+tags:
+  - compliance
+  - ai-governance
+  - eu-ai-act
+  - audit
+  - remote-mcp
+keywords:
+  - complyhat mcp
+  - eu ai act claude
+  - ai compliance documentation mcp
+  - nist ai rmf mcp
+  - sr 26-2 compliance
+readingTime: 4
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+ComplyHat is a hosted Model Context Protocol server that helps AI agents draft, test, and finalize compliance documentation across four frameworks: SR 26-2, EU AI Act, NIST AI RMF, and ISO/IEC 42001. Your host agent supplies extracted evidence; ComplyHat computes scores, tags prose as `[EXTRACTED]`, `[INFERRED]`, or `[AMBIGUOUS]`, and renders regulator-ready DOCX outputs after human approval.
+
+Install documentation is at [docs.complyhat.ai/quickstart](https://docs.complyhat.ai/quickstart.md). The canonical MCP URL is `https://complyhat.ai/api/mcp`, registered as `ai.complyhat/compliance`.
+
+## Features
+
+- Eleven entity tools plus a `guidance` meta-tool behind one MCP URL.
+- Framework templates for Annex IV, ongoing monitoring, and management attestations.
+- Bias, drift, explainability, adversarial, and data-governance workflows.
+- Immutable audit events and sha256-finalized reports.
+- Compliance memory wiki that compounds approved positions across filings.
+- OAuth 2.1 with dynamic client registration; no API keys to paste manually.
+
+## Use Cases
+
+- Start an EU AI Act draft report for a production model and review tagged citations.
+- Run a bias test and attach results to a quarterly compliance packet.
+- Check which frameworks apply to a new generative-AI use case.
+- Append an approved legal position to the tenant compliance memory wiki.
+- Export a finalized DOCX for counsel review before regulatory submission.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http complyhat https://complyhat.ai/api/mcp
+```
+
+### Claude Desktop
+
+Add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "complyhat": {
+      "transport": "streamable-http",
+      "url": "https://complyhat.ai/api/mcp"
+    }
+  }
+}
+```
+
+### Codex CLI
+
+```bash
+codex mcp add --url https://complyhat.ai/api/mcp complyhat
+```
+
+Restart your host after adding the connector. OAuth runs on the first tool call.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "complyhat": {
+      "url": "https://complyhat.ai/api/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+## Examples
+
+### Framework status
+
+```text
+Call the frameworks tool with mode status and summarize which templates my workspace supports.
+```
+
+### Start a draft report
+
+```text
+Start an EU AI Act draft report for model ID 00000000-0000-0000-0000-000000000000 named Q2 validation.
+```
+
+### Bias test
+
+```text
+Run a bias test for our credit model and summarize disparate impact results for counsel review.
+```
+
+## Security
+
+- Humans must approve reports before treating them as regulatory submissions.
+- ComplyHat never marks a model compliant automatically; finalize only after review.
+- Revoke OAuth access from ComplyHat or the MCP host if a connector is decommissioned.
+
+## Troubleshooting
+
+### OAuth consent loop
+
+Sign in at [complyhat.ai/login](https://complyhat.ai/login) and confirm your host completed the consent screen.
+
+### Missing evidence fields
+
+Supply predictions, labels, protected attributes, or distribution snapshots from the host; ComplyHat does not read private codebases.
+
+### 409 on wiki write
+
+Pass `prev_version` from the latest `wiki.read` response when replacing compliance memory.
+
+### Framework version drift
+
+Use `frameworks.check_freshness` and verify amendments at the regulator source before submission.

@@ -15,6 +15,10 @@ seoDescription: >-
   validation ...
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
+documentationUrl: "https://kubernetes.io/docs/concepts/overview/working-with-objects/"
+retrievalSources:
+  - "https://kubernetes.io/docs/concepts/overview/working-with-objects/"
+  - "https://code.claude.com/docs/en/hooks"
 dateAdded: "2025-09-19"
 installable: true
 installCommand: >-
@@ -56,18 +60,15 @@ tags:
   - yaml
   - validation
   - devops
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - claude
-  - development
-  - devops
-  - hooks
-  - k8s
-  - kubernetes
-  - manifest
-  - tools
-  - validation
-  - validator
-  - yaml
+  - kubernetes manifest validator hook
+  - claude code kubernetes manifest validator hook
+  - kubernetes manifest validator claude hook
+  - claude kubernetes manifest validator automation
 readingTime: 2
 difficultyScore: 0
 hasTroubleshooting: true

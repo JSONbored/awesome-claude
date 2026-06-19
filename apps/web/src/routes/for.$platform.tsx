@@ -1,4 +1,6 @@
+import { cache } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { PageContainer } from "@/components/page-container";
 import { ArrowRight } from "lucide-react";
 import { CATEGORIES, PLATFORM_LABEL, type Platform } from "@/types/registry";
 import { search } from "@/data/search";
@@ -6,15 +8,16 @@ import { categoryLabels } from "@/lib/site";
 import { ResourceCard } from "@/components/resource-card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
+import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 
 const PLATFORM_IDS = new Set(Object.keys(PLATFORM_LABEL));
 
-function platformEntries(platform: string) {
-  return search({ platforms: [platform as Platform] });
-}
+// Cached per render pass so head() and the component don't each re-run the search.
+const platformEntries = cache((platform: string) => search({ platforms: [platform as Platform] }));
 
 export const Route = createFileRoute("/for/$platform")({
   loader: ({ params }) => {
@@ -51,20 +54,6 @@ export const Route = createFileRoute("/for/$platform")({
         { "@type": "ListItem", position: 3, name: label, item: url },
       ],
     };
-    const faq = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: `What Claude resources work with ${label}?`,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `HeyClaude lists ${entries.length} ${label}-compatible resources across MCP servers, agents, skills, hooks, commands, rules, and more — each metadata-reviewed for source and safety signals.`,
-          },
-        },
-      ],
-    };
     return {
       meta: [
         { title },
@@ -73,6 +62,9 @@ export const Route = createFileRoute("/for/$platform")({
         { property: "og:description", content: description },
         { property: "og:url", content: url },
         { property: "og:image", content: ogImage },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImage },
       ],
@@ -80,7 +72,6 @@ export const Route = createFileRoute("/for/$platform")({
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(itemList) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
-        { type: "application/ld+json", children: stringifyJsonLd(faq) },
       ],
     };
   },
@@ -108,18 +99,31 @@ function PlatformPage() {
     entries: all.filter((e) => e.category === c.id).slice(0, 6),
   })).filter((s) => s.entries.length > 0);
 
+  // Data-derived framing unique to this platform's catalog.
+  const posture = trustPosture(all);
+  const highlights = hubHighlights(all);
+  const stats = hubStats(all);
+  const categoryCount = new Set(all.map((e) => e.category)).size;
+
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
+    <PageContainer>
       <Breadcrumbs
-        items={[{ label: "Directory", to: "/browse" }, { label: "Platforms", to: "/for" }, { label }]}
+        items={[
+          { label: "Directory", to: "/browse" },
+          { label: "Platforms", to: "/for" },
+          { label },
+        ]}
         home
       />
       <header className="mt-6 max-w-3xl">
         <div className="eyebrow">{all.length} compatible resources</div>
         <h1 className="mt-2 h-display-1 text-ink text-balance">Claude resources for {label}</h1>
         <p className="mt-4 text-pretty text-base text-ink-muted sm:text-lg">
-          Source-backed MCP servers, agents, skills, hooks, commands, and rules that work with{" "}
-          <span className="text-ink">{label}</span> — curated and metadata-reviewed in HeyClaude.
+          {all.length} source-backed Claude resources that work with{" "}
+          <span className="text-ink">{label}</span>, spanning {categoryCount}{" "}
+          {categoryCount === 1 ? "category" : "categories"} — curated and metadata-reviewed in
+          HeyClaude.
+          {posture.trusted > 0 ? <> {posture.pct}% sit in the trusted tier.</> : null}
         </p>
         <div className="mt-6">
           <Link
@@ -132,6 +136,13 @@ function PlatformPage() {
         </div>
       </header>
 
+      <HubHighlights
+        highlights={highlights}
+        caption={`Standout ${label}-compatible resources, picked from their own metadata — trust tier, provenance, documentation, and recency.`}
+      />
+
+      <HubSignalStats stats={stats} total={all.length} />
+
       {sections.map((section) => (
         <section key={section.category.id} className="mt-12">
           <div className="flex items-baseline justify-between gap-3">
@@ -139,11 +150,11 @@ function PlatformPage() {
               {categoryLabels[section.category.id] ?? section.category.label}
             </h2>
             <Link
-              to="/$category"
-              params={{ category: section.category.id }}
+              to="/for/$platform/$category"
+              params={{ platform, category: section.category.id }}
               className="story-link text-sm font-medium text-ink"
             >
-              All {categoryLabels[section.category.id] ?? section.category.label} →
+              All {categoryLabels[section.category.id] ?? section.category.label} for {label} →
             </Link>
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -161,6 +172,6 @@ function PlatformPage() {
         source={`platform:${platform}`}
         className="mt-14"
       />
-    </div>
+    </PageContainer>
   );
 }

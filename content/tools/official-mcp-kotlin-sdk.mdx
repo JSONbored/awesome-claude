@@ -1,0 +1,181 @@
+---
+title: Official MCP Kotlin SDK
+slug: official-mcp-kotlin-sdk
+category: tools
+description: >-
+  Official Kotlin Multiplatform SDK for Model Context Protocol clients and
+  servers, maintained in collaboration with JetBrains, with JVM, Native, JS, and
+  Wasm targets, coroutine APIs, Gradle artifacts, Ktor integration, stdio, SSE,
+  Streamable HTTP, WebSocket, tools, resources, prompts, sampling, and roots.
+cardDescription: >-
+  Build MCP clients and servers in Kotlin with the official Kotlin Multiplatform
+  SDK, Gradle artifacts, Ktor integration, coroutine APIs, and cross-platform
+  transports.
+seoTitle: Official MCP Kotlin SDK for Multiplatform Model Context Protocol Apps
+seoDescription: >-
+  Use the official Model Context Protocol Kotlin SDK to build MCP clients and
+  servers with Kotlin Multiplatform, JVM, Native, JS, Wasm, Ktor, Gradle,
+  coroutine APIs, Streamable HTTP, SSE, WebSocket, tools, resources, and prompts.
+author: Model Context Protocol
+authorProfileUrl: "https://github.com/modelcontextprotocol"
+dateAdded: "2026-06-18"
+websiteUrl: "https://modelcontextprotocol.io"
+documentationUrl: "https://kotlin.sdk.modelcontextprotocol.io/"
+repoUrl: "https://github.com/modelcontextprotocol/kotlin-sdk"
+packageUrl: "https://central.sonatype.com/artifact/io.modelcontextprotocol/kotlin-sdk"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/kotlin-sdk"
+  - "https://github.com/modelcontextprotocol/kotlin-sdk/blob/main/README.md"
+  - "https://github.com/modelcontextprotocol/kotlin-sdk/blob/main/build.gradle.kts"
+  - "https://github.com/modelcontextprotocol/kotlin-sdk/blob/main/gradle.properties"
+  - "https://github.com/modelcontextprotocol/kotlin-sdk/blob/main/LICENSE"
+  - "https://kotlin.sdk.modelcontextprotocol.io/"
+installable: true
+installCommand: "implementation(\"io.modelcontextprotocol:kotlin-sdk:0.13.0\")"
+usageSnippet: >-
+  Add `io.modelcontextprotocol:kotlin-sdk` to a Gradle Kotlin project, or use
+  the client/server-only artifacts when you only need one side of the protocol.
+copySnippet: |-
+  dependencies {
+      implementation("io.modelcontextprotocol:kotlin-sdk:0.13.0")
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Kotlin 2.2+ project with Gradle and Maven Central configured."
+  - "A selected target set: JVM, Native, JS, Wasm, or Kotlin Multiplatform common code."
+  - "Ktor client or server engine dependencies when using HTTP, SSE, or Streamable HTTP transports."
+  - "Authorization, side-effect, and data-exposure boundaries for production MCP tools and resources."
+safetyNotes:
+  - "The official Kotlin SDK is a protocol library; risk comes from your MCP tools, resources, prompts, transports, Ktor engine choices, and server deployment."
+  - "Validate all tool inputs, enforce caller permissions, bound file and network access, and sanitize errors before returning MCP responses."
+  - "HTTP, SSE, Streamable HTTP, WebSocket, and Ktor deployments need authentication, TLS, CORS/host review, request limits, logging policy, and abuse protection."
+  - "Kotlin Multiplatform targets can behave differently across JVM, Native, JS, and Wasm; test transport and serialization behavior on the exact target you ship."
+privacyNotes:
+  - "Kotlin MCP clients and servers may expose tool arguments, tool results, resource contents, prompt templates, transport metadata, coroutine errors, logs, and traces."
+  - "Avoid leaking secrets, customer data, private resources, internal identifiers, privileged paths, or raw stack traces through schemas, responses, errors, or logs."
+  - "Document which MCP client, server target, Ktor engine, model provider, transport, and observability system can observe each request."
+tags:
+  - kotlin
+  - mcp
+  - sdk
+  - multiplatform
+  - ktor
+  - official
+keywords:
+  - official MCP Kotlin SDK
+  - Model Context Protocol Kotlin SDK
+  - Kotlin Multiplatform MCP
+  - Kotlin MCP server SDK
+  - Kotlin MCP client SDK
+  - JetBrains MCP Kotlin
+  - io.modelcontextprotocol kotlin-sdk
+  - Ktor MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The official MCP Kotlin SDK is the Model Context Protocol project's Kotlin
+Multiplatform implementation for building MCP clients and servers. It is
+maintained under the `modelcontextprotocol` organization in collaboration with
+JetBrains and publishes Gradle/Maven artifacts under `io.modelcontextprotocol`.
+
+The SDK targets JVM, Native, JS, and Wasm, which makes it useful for teams that
+want one Kotlin codebase to cover local tools, backend services, desktop-adjacent
+clients, and multiplatform agent infrastructure.
+
+## Gradle Dependency
+
+For the umbrella SDK artifact:
+
+```kotlin
+dependencies {
+    implementation("io.modelcontextprotocol:kotlin-sdk:0.13.0")
+}
+```
+
+For smaller dependency surfaces, upstream also documents:
+
+```kotlin
+dependencies {
+    implementation("io.modelcontextprotocol:kotlin-sdk-client:0.13.0")
+    implementation("io.modelcontextprotocol:kotlin-sdk-server:0.13.0")
+}
+```
+
+## MCP Fit
+
+Choose the official Kotlin SDK when you need MCP support in Kotlin
+Multiplatform, JVM, Ktor, or JetBrains-oriented environments. It is a strong fit
+for Kotlin service teams, multiplatform tool builders, Android-adjacent
+experiments, and JVM teams that prefer coroutine-first APIs.
+
+Because the SDK supports multiple runtime targets and transports, production
+review should happen per target. A safe JVM server configuration does not prove
+the same behavior on Native, JS, or Wasm.
+
+## Core Capabilities
+
+| Area | Kotlin SDK Coverage |
+| --- | --- |
+| Artifacts | `kotlin-sdk`, `kotlin-sdk-client`, and `kotlin-sdk-server` |
+| Targets | JVM, Native, JS, and Wasm through Kotlin Multiplatform |
+| Transports | stdio, SSE, Streamable HTTP, WebSocket, and ChannelTransport for testing |
+| Server features | Tools, resources, prompts, completion, logging, and pagination |
+| Client features | Roots, sampling, and server interaction APIs |
+| Runtime integration | Ktor client/server dependencies supplied by the application |
+
+## Use Cases
+
+- Add an MCP server to a Kotlin or JVM service.
+- Build a Kotlin MCP client for agent tooling or internal automation.
+- Share MCP protocol code across JVM, Native, JS, and Wasm targets.
+- Wire Streamable HTTP or SSE support through Ktor.
+- Use client-only or server-only artifacts to reduce dependency scope.
+- Test MCP behavior with ChannelTransport before exposing a real transport.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository description identifies it as the official Kotlin SDK
+  for Model Context Protocol clients and servers, maintained in collaboration
+  with JetBrains.
+- The README describes a Kotlin Multiplatform SDK for MCP targeting JVM, Native,
+  JS, and Wasm.
+- The README documents artifacts for umbrella, client-only, and server-only SDK
+  usage.
+- The README covers stdio, SSE, Streamable HTTP, WebSocket, ChannelTransport,
+  tools, resources, prompts, completion, logging, pagination, roots, and
+  sampling.
+- `gradle.properties` declares group `io.modelcontextprotocol` and version
+  `0.13.0`.
+- The license file documents the MCP project's license transition terms for
+  Apache-2.0, MIT, and CC-BY-4.0 documentation contributions.
+
+## Safety and Privacy
+
+Kotlin MCP applications often bridge JVM services, Ktor servers, local tools, and
+multiplatform clients. Keep tool schemas narrow, validate all inputs, check user
+authorization, and avoid exposing private data through resources or error paths.
+
+Review each target and transport separately. Ktor engine choices, browser-like
+targets, Native builds, WebSocket/SSE behavior, and logging pipelines can all
+change the practical privacy boundary.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `modelcontextprotocol/kotlin-sdk`,
+official MCP Kotlin SDK, Model Context Protocol Kotlin SDK, Kotlin Multiplatform
+MCP, Kotlin MCP server SDK, Kotlin MCP client SDK, JetBrains MCP Kotlin,
+`io.modelcontextprotocol:kotlin-sdk`, and Ktor MCP server. Existing JetBrains
+content covers the JetBrains IDE MCP server, not this SDK. No dedicated official
+Kotlin SDK entry, exact source URL duplicate, target file, or open duplicate PR
+was found.

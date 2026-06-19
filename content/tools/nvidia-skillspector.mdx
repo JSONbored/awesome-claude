@@ -1,0 +1,233 @@
+---
+title: NVIDIA SkillSpector
+slug: nvidia-skillspector
+category: tools
+description: >-
+  Apache-2.0 security scanner from NVIDIA for AI agent skills, with static
+  pattern checks, optional LLM semantic analysis, MCP least-privilege and tool
+  poisoning analyzers, OSV.dev vulnerability lookups, risk scoring, and
+  terminal, JSON, Markdown, and SARIF reports.
+cardDescription: >-
+  Scan AI agent skills before installing them with NVIDIA SkillSpector: static
+  checks, optional LLM review, MCP risk analyzers, OSV lookups, and SARIF.
+seoTitle: NVIDIA SkillSpector Agent Skill Security Scanner
+seoDescription: >-
+  Use NVIDIA SkillSpector to scan Claude Code, Codex, Gemini CLI, Cursor, and
+  other AI agent skills for prompt injection, data exfiltration, privilege
+  escalation, supply-chain risk, MCP least-privilege gaps, MCP tool poisoning,
+  malicious behavior, and SARIF-ready findings.
+author: NVIDIA
+authorProfileUrl: "https://github.com/NVIDIA"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/NVIDIA/SkillSpector"
+documentationUrl: "https://github.com/NVIDIA/SkillSpector/blob/main/README.md"
+websiteUrl: "https://github.com/NVIDIA/SkillSpector"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/NVIDIA/SkillSpector/blob/main/pyproject.toml"
+  - "https://github.com/NVIDIA/SkillSpector/blob/main/src/skillspector/cli.py"
+  - "https://github.com/NVIDIA/SkillSpector/blob/main/src/skillspector/input_handler.py"
+  - "https://github.com/NVIDIA/SkillSpector/blob/main/docs/B.3.1-mcp-least-privilege.md"
+  - "https://github.com/NVIDIA/SkillSpector/blob/main/docs/B.3.2-mcp-tool-poisoning.md"
+  - "https://github.com/NVIDIA/SkillSpector/blob/main/docs/SC4-osv-live-vulnerability-lookups.md"
+  - "https://github.com/NVIDIA/SkillSpector/blob/main/LICENSE"
+installable: true
+installCommand: "git clone https://github.com/NVIDIA/SkillSpector.git && cd SkillSpector && make install"
+usageSnippet: >-
+  Clone SkillSpector, install it in a Python 3.12+ virtual environment, then run
+  `skillspector scan ./my-skill/ --no-llm` for static-only review or configure a
+  supported provider for semantic LLM analysis.
+copySnippet: |-
+  git clone https://github.com/NVIDIA/SkillSpector.git
+  cd SkillSpector
+  uv venv .venv
+  source .venv/bin/activate
+  make install
+
+  skillspector scan ./my-skill/ --no-llm
+configSnippet: |-
+  {
+    "staticOnly": "skillspector scan ./my-skill/ --no-llm",
+    "jsonReport": "skillspector scan ./my-skill/ --no-llm --format json --output report.json",
+    "sarifReport": "skillspector scan ./my-skill/ --no-llm --format sarif --output report.sarif"
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.12 or newer and a virtual environment, or Docker if building the included container image."
+  - "Git when scanning remote repositories or installing from the source repository."
+  - "A local skill directory, single `SKILL.md`, zip archive, raw file URL, or Git repository URL to scan."
+  - "Provider credentials only if enabling optional LLM semantic analysis with OpenAI, Anthropic, NVIDIA build, or an OpenAI-compatible local endpoint."
+  - "A policy for handling scan reports, SARIF uploads, temporary clones, downloaded files, and skill source content."
+safetyNotes:
+  - "SkillSpector is a scanner, not a sandbox. Scanning a Git URL clones code, scanning a URL downloads content, and scanning a zip extracts it; review untrusted inputs in a disposable workspace or container."
+  - "Use `--no-llm` when skill contents should not be sent to an external model provider for semantic analysis."
+  - "LLM-based findings are useful triage signals but should not be treated as formal proof that a skill is safe or malicious."
+  - "SARIF, JSON, Markdown, and terminal reports can include file paths, snippets, tool names, dependency names, vulnerability IDs, and recommendations; handle reports as security-sensitive artifacts."
+  - "OSV.dev live lookups send dependency package names and versions to the public OSV API, with fallback behavior documented for offline or failed requests."
+  - "The README classifies the project as useful before installing skills, but operators should still review scripts, permissions, MCP tools, network access, and installer commands manually."
+privacyNotes:
+  - "SkillSpector can read skill manifests, source files, scripts, dependencies, local paths, raw URLs, Git clone contents, zip contents, and generated report outputs."
+  - "Optional LLM analysis may send skill content, code excerpts, metadata, and findings to the configured model provider or OpenAI-compatible endpoint."
+  - "LangGraph/LangChain-related runtime configuration and any enabled tracing can record scan metadata depending on the local environment variables."
+  - "Do not scan private skills, customer code, secrets, proprietary prompts, credentials, or regulated data with LLM analysis enabled unless that data flow is approved."
+tags:
+  - skillspector
+  - nvidia
+  - agent-skills
+  - security
+  - static-analysis
+  - mcp-security
+  - sarif
+  - osv
+keywords:
+  - NVIDIA SkillSpector
+  - SkillSpector agent skill scanner
+  - AI agent skill security scanner
+  - Claude Code skill security
+  - Codex skill security
+  - MCP least privilege analyzer
+  - MCP tool poisoning scanner
+  - agent skills SARIF
+  - OSV agent skill scanner
+  - malicious skill detection
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+NVIDIA SkillSpector is an open-source security scanner for AI agent skills. It
+is designed to answer a practical question before installing a skill: does this
+bundle contain risky instructions, scripts, dependencies, permissions, or MCP
+metadata that deserve review?
+
+Use it as a pre-install or CI triage tool for Claude Code, Codex CLI, Gemini
+CLI, Cursor, and other Agent Skills-style ecosystems. It accepts Git
+repositories, URLs, zip files, directories, and single files, then produces
+risk-scored terminal, JSON, Markdown, or SARIF reports.
+
+## Install
+
+The README documents source-based installation in an activated virtual
+environment:
+
+```bash
+git clone https://github.com/NVIDIA/SkillSpector.git
+cd SkillSpector
+uv venv .venv
+source .venv/bin/activate
+make install
+```
+
+Run a static-only scan without sending content to an LLM provider:
+
+```bash
+skillspector scan ./my-skill/ --no-llm
+```
+
+Generate machine-readable output:
+
+```bash
+skillspector scan ./my-skill/ --no-llm --format json --output report.json
+skillspector scan ./my-skill/ --no-llm --format sarif --output report.sarif
+```
+
+The README also documents Docker builds and optional LLM analysis through
+OpenAI, Anthropic, NVIDIA build, or OpenAI-compatible local endpoints.
+
+## Capabilities
+
+| Area | SkillSpector Coverage |
+| --- | --- |
+| Inputs | Git repositories, raw file URLs, local zip files, single Markdown files, and local directories |
+| Static analysis | Prompt injection, data exfiltration, privilege escalation, supply-chain, excessive agency, output handling, memory poisoning, tool misuse, rogue-agent, trigger abuse, YARA, AST, and taint checks |
+| MCP security | Dedicated MCP least-privilege and MCP tool-poisoning analyzers |
+| LLM analysis | Optional semantic review for developer intent, security discovery, quality policy, and description-behavior mismatch |
+| Dependency risk | OSV.dev live vulnerability lookups with documented fallback behavior |
+| Reporting | Terminal, JSON, Markdown, and SARIF output with risk scoring and severity labels |
+
+## Use Cases
+
+- Scan a third-party Agent Skill before installing it into Claude Code, Codex,
+  Gemini CLI, Cursor, or a similar agent runtime.
+- Add a static-only `--no-llm` check to a skill registry review workflow.
+- Generate SARIF for CI, code scanning, or security-review artifacts.
+- Review MCP-enabled skills for underdeclared capabilities, wildcard
+  permissions, missing permissions, overdeclared permissions, hidden tool
+  instructions, Unicode deception, parameter injection, and
+  description-behavior mismatches.
+- Triage suspected malicious skills that ask for broad shell, file, network,
+  environment, memory, or MCP tool access.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes SkillSpector as a security scanner for AI agent
+  skills used by Claude Code, Codex CLI, Gemini CLI, and similar tools.
+- The README states that SkillSpector scans Git repos, URLs, zip files,
+  directories, and single files.
+- The README lists 64 vulnerability patterns across 16 categories, including
+  prompt injection, data exfiltration, privilege escalation, supply-chain risk,
+  excessive agency, output handling, memory poisoning, tool misuse, rogue
+  agent, trigger abuse, YARA signatures, MCP least privilege, and MCP tool
+  poisoning.
+- The README documents fast static analysis plus optional LLM semantic
+  evaluation.
+- The README documents terminal, JSON, Markdown, and SARIF output, with risk
+  scoring and recommendations.
+- `pyproject.toml` declares the `skillspector` CLI, Python 3.12+ support,
+  Apache-2.0 licensing, LangGraph, OpenAI, Anthropic, NVIDIA, YARA, and
+  security-scanner dependencies.
+- `src/skillspector/cli.py` exposes `skillspector scan`, `--no-llm`,
+  `--format`, `--output`, and `--yara-rules-dir` options and exits nonzero for
+  high-risk scan results.
+- `src/skillspector/input_handler.py` resolves Git URLs, raw file URLs, local
+  zip files, single Markdown files, and directories into a local scan path.
+- `docs/B.3.1-mcp-least-privilege.md` documents implemented MCP
+  least-privilege checks for underdeclared, wildcard, missing, and overdeclared
+  permissions.
+- `docs/B.3.2-mcp-tool-poisoning.md` documents implemented tool-poisoning
+  checks for hidden instructions, Unicode deception, parameter injection, and
+  description-behavior mismatch.
+- `docs/SC4-osv-live-vulnerability-lookups.md` documents OSV.dev batch lookups,
+  caching, fallback behavior, severity mapping, and validation tests.
+- GitHub metadata reported the repository under `NVIDIA/SkillSpector`, Apache
+  2.0 licensing, Python as the primary language, active updates in June 2026,
+  and no latest GitHub release at the time of review.
+- PyPI did not resolve a public `skillspector` package at review time, so this
+  entry uses the source install path from the README instead of a package URL.
+
+## Safety and Privacy
+
+SkillSpector helps reduce skill-install risk, but it does not make untrusted
+skills safe to execute. Use it before installation, inspect the flagged files
+manually, and prefer disposable workspaces or containers when scanning unknown
+repositories, URLs, or zip archives.
+
+Static-only scans avoid model-provider disclosure. If LLM analysis is enabled,
+skill content and findings can leave the local machine through the configured
+provider or endpoint. Treat reports as sensitive because they may include paths,
+source snippets, dependency names, vulnerability IDs, and details about private
+agent workflows.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/skills/`, `content/mcp/`,
+`content/agents/`, README entries, open pull requests, and repository-wide
+content for SkillSpector, NVIDIA SkillSpector, `NVIDIA/SkillSpector`,
+`skillspector`, agent skill scanner, malicious skill detection, MCP least
+privilege scanner, and MCP tool poisoning scanner. No dedicated SkillSpector
+entry, exact source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. NVIDIA
+SkillSpector is Apache-2.0 open-source software; model providers, OSV.dev,
+LangGraph/LangChain tracing, Docker images, Git hosting, CI systems, SARIF
+viewers, and scanned skill sources may have separate terms, billing, retention,
+privacy controls, and operational requirements.

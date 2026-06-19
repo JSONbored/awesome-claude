@@ -13,6 +13,10 @@ submittedBy: zriyansh
 submittedByUrl: "https://github.com/zriyansh"
 websiteUrl: "https://authsome.ai"
 documentationUrl: "https://authsome.ai/docs"
+retrievalSources:
+  - "https://authsome.ai/docs"
+  - "https://github.com/agentrhq/authsome"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
 repoUrl: "https://github.com/agentrhq/authsome"
 pricingModel: free
 disclosure: editorial
@@ -51,6 +55,18 @@ safetyNotes:
 ## Editorial notes
 
 Authsome fits agent builders that want OAuth2 and API key handling without sending credentials to a third-party service. Login once via browser PKCE or device code, the encrypted vault sits at ~/.authsome, and a local HTTPS proxy injects credentials at request time so the agent's process env never holds raw secrets. 45 providers ship bundled (14 OAuth2, 31 API key) including GitHub, Google, OpenAI, Linear, Slack, Notion, Resend, and Stripe. MIT licensed, Python 3.13+.
+
+## Credential-handling approaches compared
+
+Authsome's broker model differs from the common ways agents get credentials:
+
+| Approach | Agent sees the raw secret? | Where secrets live | Best for |
+| --- | --- | --- | --- |
+| **Inline / env-var keys** | Yes | Process env or code | Quick prototypes |
+| **Cloud secrets manager** | Yes (when fetched at runtime) | Managed cloud vault | Server applications |
+| **Authsome local broker** | No — the loopback proxy injects them | Encrypted local vault (`~/.authsome`) | Local AI agents |
+
+The point of the broker model is that the agent process never holds raw secrets: it calls the local proxy, which adds the `Authorization` header on the way out to the provider.
 
 ## Disclosure
 

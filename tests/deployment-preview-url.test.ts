@@ -1,9 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 
 import {
   normalizeBaseUrl,
+  resolveFromPrComments,
   selectPreviewUrl,
 } from "../scripts/resolve-pr-preview-url.mjs";
 import { repoRoot } from "./helpers/registry-fixtures";
@@ -27,13 +28,43 @@ describe("PR preview artifact validation flow", () => {
           source: "status",
         },
         {
-          url: "https://heyclaude-dev.zeronode.workers.dev",
+          url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
           source: "deploy",
         },
       ]),
     ).toEqual({
-      url: "https://heyclaude-dev.zeronode.workers.dev",
+      url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
       source: "deploy",
+    });
+  });
+
+  it("ignores sibling-project and retired dev-worker URLs", () => {
+    // The account hosts other projects; their deployment statuses must never be
+    // selected as a HeyClaude preview (regression: gittensory.aethereal.dev).
+    // The retired dev worker hosts must also be rejected now that it is gone.
+    for (const url of [
+      "https://gittensory.aethereal.dev",
+      "https://heyclaude-dev.zeronode.workers.dev",
+      "https://dev.heyclau.de",
+    ]) {
+      expect(
+        selectPreviewUrl([{ url, source: "github-deployment:x" }]),
+      ).toBeNull();
+    }
+    expect(
+      selectPreviewUrl([
+        {
+          url: "https://gittensory.aethereal.dev",
+          source: "github-deployment:gittensory",
+        },
+        {
+          url: "https://heyclau.de",
+          source: "github-deployment:Production",
+        },
+      ]),
+    ).toEqual({
+      url: "https://heyclau.de",
+      source: "github-deployment:Production",
     });
   });
 
@@ -49,12 +80,12 @@ describe("PR preview artifact validation flow", () => {
           source: "github-status:CodeRabbit",
         },
         {
-          url: "https://heyclaude-dev.zeronode.workers.dev",
+          url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
           source: "github-deployment:preview",
         },
       ]),
     ).toEqual({
-      url: "https://heyclaude-dev.zeronode.workers.dev",
+      url: "https://abc123-heyclaude-prod.zeronode.workers.dev",
       source: "github-deployment:preview",
     });
   });
@@ -74,14 +105,19 @@ describe("PR preview artifact validation flow", () => {
         /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
       )?.[0] || "";
     expect(previewBlock).toContain(
-      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
+      "group: deployment-artifacts-pr-preview-${{ github.ref }}\n",
     );
     expect(previewBlock).not.toContain("github.event.pull_request.number");
-    expect(workflow).toContain("ALLOW_SHARED_DEV_WORKER_PREVIEW");
-    expect(workflow).toContain("https://heyclaude-dev.zeronode.workers.dev");
-    expect(workflow).toContain("--wait-seconds 600");
+    // The shared heyclaude-dev worker has been retired; PR previews resolve from
+    // the real per-PR prod preview-version deployment statuses, and the resolver
+    // degrades gracefully (--allow-missing) instead of falling back to dev.
+    expect(workflow).not.toContain("ALLOW_SHARED_DEV_WORKER_PREVIEW");
+    expect(workflow).not.toContain(
+      "https://heyclaude-dev.zeronode.workers.dev",
+    );
+    expect(workflow).toContain("--wait-seconds 240");
     expect(workflow).not.toContain("REQUIRE_PR_PREVIEW");
-    expect(workflow).not.toContain("--allow-missing");
+    expect(workflow).toContain("--allow-missing");
     expect(workflow).toContain("pnpm validate:deployment-artifacts");
     expect(workflow).toContain(
       "Deployed preview did not satisfy the artifact contract before timeout.",
@@ -182,6 +218,47 @@ describe("PR preview artifact validation flow", () => {
     );
   });
 
+  it("keeps production uploads defaulted while exposing a dev Worker version upload", () => {
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.join(repoRoot, "apps/web/package.json"), "utf8"),
+    ) as { scripts: Record<string, string> };
+    const wranglerConfig = fs.readFileSync(
+      path.join(repoRoot, "apps/web/wrangler.jsonc"),
+      "utf8",
+    );
+
+    expect(packageJson.scripts["versions:upload"]).toContain('--env ""');
+    expect(packageJson.scripts["versions:upload"]).not.toContain("--env dev");
+    expect(packageJson.scripts["versions:upload:dev"]).toContain("--env dev");
+    expect(packageJson.scripts["preversions:upload:dev"]).toBe(
+      "pnpm run generate:artifacts",
+    );
+    expect(wranglerConfig).toContain('"name": "heyclaude-prod"');
+    expect(wranglerConfig).toContain('"dev": {');
+    expect(wranglerConfig).toContain('"name": "heyclaude-dev"');
+    expect(wranglerConfig).toContain(
+      '"database_name": "heyclaude-dev-site-state"',
+    );
+  });
+
+  it("keeps the first-party Umami proxy wired in production config", () => {
+    const wranglerConfig = fs.readFileSync(
+      path.join(repoRoot, "apps/web/wrangler.jsonc"),
+      "utf8",
+    );
+
+    expect(wranglerConfig).toContain('"VITE_UMAMI_SCRIPT_URL": "/u/script.js"');
+    expect(wranglerConfig).toContain(
+      '"VITE_UMAMI_WEBSITE_ID": "b734c138-2949-4527-9160-7fe5d0e81121"',
+    );
+    expect(wranglerConfig).toContain(
+      '"UMAMI_UPSTREAM_URL": "https://tasty.aethereal.dev"',
+    );
+    expect(wranglerConfig).toContain(
+      '"UMAMI_WEBSITE_ID": "b734c138-2949-4527-9160-7fe5d0e81121"',
+    );
+  });
+
   it("does not persist GitHub credentials in the submission-gate validation checkout", () => {
     const workflow = readContentValidationWorkflow();
     const jobBlock =
@@ -226,5 +303,79 @@ describe("PR preview artifact validation flow", () => {
       `"${["PILOT", "BASE", "REF"].join("_")}"`,
     );
     expect(wranglerConfig).toContain('"name": "heyclaude-submission-gate"');
+  });
+});
+
+describe("resolveFromPrComments — reads the Cloudflare Workers Builds PR comment", () => {
+  afterEach(() => vi.unstubAllGlobals());
+  const env = {
+    GITHUB_TOKEN: "t",
+    GITHUB_REPOSITORY: "JSONbored/awesome-claude",
+  };
+  // The real comment markup Cloudflare posts (both links present).
+  const cfBody =
+    "| ✅ Deployment successful! | heyclaude-prod | def6d9d7 | " +
+    "<a href='https://71ca0b68-heyclaude-prod.zeronode.workers.dev'>Commit Preview URL</a><br><br>" +
+    "<a href='https://codex-quality-methodology-copy-heyclaude-prod.zeronode.workers.dev'>Branch Preview URL</a> | Jun 19 2026 |";
+
+  function stubComments(comments) {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify(comments), {
+            status: 200,
+            headers: { "content-type": "application/json" },
+          }),
+      ),
+    );
+  }
+
+  it("prefers the stable Branch Preview URL from the cloudflare bot comment", async () => {
+    stubComments([
+      { user: { login: "someone" }, body: "unrelated" },
+      { user: { login: "cloudflare-workers-and-pages[bot]" }, body: cfBody },
+    ]);
+    expect(
+      await resolveFromPrComments({ pull_request: { number: 4045 } }, env),
+    ).toEqual({
+      url: "https://codex-quality-methodology-copy-heyclaude-prod.zeronode.workers.dev",
+      source: "cf-comment:branch",
+    });
+  });
+
+  it("falls back to the per-commit Preview URL when no Branch URL is present", async () => {
+    stubComments([
+      {
+        user: { login: "cloudflare-workers-and-pages[bot]" },
+        body: "<a href='https://71ca0b68-heyclaude-prod.zeronode.workers.dev'>Commit Preview URL</a>",
+      },
+    ]);
+    const resolved = await resolveFromPrComments(
+      { pull_request: { number: 1 } },
+      env,
+    );
+    expect(resolved?.url).toBe(
+      "https://71ca0b68-heyclaude-prod.zeronode.workers.dev",
+    );
+  });
+
+  it("rejects SPOOFED commenters (exact bot login only) and returns null without a PR number", async () => {
+    // A public-repo user whose name merely CONTAINS "cloudflare" must not be able to inject a preview URL —
+    // only the unspoofable `cloudflare-workers-and-pages[bot]` login counts (Superagent P2 hardening).
+    stubComments([
+      {
+        user: { login: "cloudflare-impostor" },
+        body: "<a href='https://evil-heyclaude-prod.zeronode.workers.dev'>Branch Preview URL</a>",
+      },
+      {
+        user: { login: "cloudflare-workers-and-pages" },
+        body: "<a href='https://evil2-heyclaude-prod.zeronode.workers.dev'>Branch Preview URL</a>",
+      },
+    ]);
+    expect(
+      await resolveFromPrComments({ pull_request: { number: 2 } }, env),
+    ).toBeNull();
+    expect(await resolveFromPrComments({}, env)).toBeNull();
   });
 });

@@ -65,7 +65,10 @@ describe("/api/registry/trending", () => {
     state.entries.length = 0;
     state.entries.push(
       entry("alpha"),
-      entry("beta"),
+      entry("beta", {
+        downloadTrust: "first-party",
+        verificationStatus: "production",
+      }),
       entry("skill", { category: "skills" }),
     );
     state.votes = {
@@ -101,16 +104,13 @@ describe("/api/registry/trending", () => {
       kind: "registry-trending",
       category: "mcp",
       platform: "claude",
-      count: 2,
+      count: 1,
       signalsAvailable: { votes: true, community: true, intent: true },
     });
     expect(body.entries[0]).toMatchObject({
       slug: "beta",
-      reasons: expect.arrayContaining([
-        "upvotes",
-        "community_works",
-        "recent_intent",
-      ]),
+      score: 4,
+      reasons: ["first_party_package", "production_verified"],
       trustSignals: { sourceStatus: "available" },
     });
     for (const entry of body.entries) {

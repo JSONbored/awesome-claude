@@ -1,0 +1,76 @@
+---
+title: /catalog-collision-scan - Catalog Collision Scan Slash Command
+slug: catalog-collision-scan
+category: commands
+description: >-
+  Slash command runbook for scanning HeyClaude catalog collisions by slug, title, repo URL,
+  and docs URL before opening a content-only PR—using audit-content patterns and GitHub code search.
+cardDescription: >-
+  Scan catalog collisions by slug, title, and source URLs before submitting a content PR.
+seoTitle: /catalog-collision-scan - Catalog Collision Scan Slash Command
+seoDescription: >-
+  Claude Code slash command runbook to detect duplicate catalog entries via local audit scripts
+  and GitHub code search before opening one-file content PRs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+sourceSubmissionNumber: 750
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/750"
+documentationUrl: "https://docs.github.com/en/search-github/searching-on-github/searching-code"
+repoUrl: "https://github.com/JSONbored/awesome-claude"
+sourceUrls:
+  - "https://docs.github.com/en/search-github/searching-on-github/searching-code"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/scripts/audit-content.mjs"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/scripts/validate-content.mjs"
+installable: true
+installCommand: "/catalog-collision-scan <category> <proposed-slug>"
+commandSyntax: "/catalog-collision-scan <category> <proposed-slug>"
+usageSnippet: "/catalog-collision-scan mcp hapi-mcp-server"
+copySnippet: "/catalog-collision-scan <category> <proposed-slug>"
+prerequisites:
+  - "Local clone of awesome-claude with Node.js for audit-content scripts."
+  - "GitHub CLI authenticated when using code search against the upstream repository."
+safetyNotes:
+  - "Read-only search workflow—does not modify catalog files automatically."
+  - "GitHub code search results may lag newly merged entries; also grep local content/ before opening PRs."
+privacyNotes:
+  - "Search queries and repository paths enter Claude session context; avoid embedding secrets in search terms."
+tags:
+  - commands
+  - duplicate-check
+  - catalog
+keywords:
+  - catalog collision scan command
+  - duplicate entry search runbook
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Run a **collision scan** before opening a one-file content PR: local `content/` grep,
+`node scripts/audit-content.mjs`, and GitHub code search for slug/title/source overlap.
+
+## Workflow
+
+1. `/catalog-collision-scan <category> <proposed-slug>`
+2. Grep `content/<category>/` for slug, title fragments, repoUrl, and documentationUrl candidates.
+3. Run `node scripts/audit-content.mjs -- --category <category>` for semantic duplicates in metadata.
+4. Use GitHub code search (`docs.github.com` searching-code guide) for open PR overlap.
+5. Document findings in the PR Duplicate Check section.
+
+## Source Verification Notes
+
+Verified on **2026-06-17** against GitHub code search docs and repository audit scripts.
+
+## Duplicate Check
+
+Distinct from **content-only-submission-pr-gate-rules** (full PR gate policy). This command is an
+operator runbook for pre-submit collision scanning only.
+
+## Editorial Disclosure
+
+Community command runbook by **kiannidev** for maintainers preparing content-only submissions.

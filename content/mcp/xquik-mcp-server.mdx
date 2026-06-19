@@ -23,10 +23,10 @@ brandAssetSource: manual
 repoUrl: https://github.com/Xquik-dev/x-twitter-scraper
 documentationUrl: https://docs.xquik.com/mcp/overview
 installable: true
-installCommand: 'npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header "x-api-key:${XQUIK_API_KEY}"'
+installCommand: "XQUIK_API_KEY=xq_YOUR_KEY_HERE npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header 'x-api-key:${XQUIK_API_KEY}'"
 usageSnippet: |-
   export XQUIK_API_KEY=xq_YOUR_KEY_HERE
-  npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header "x-api-key:${XQUIK_API_KEY}"
+  npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header 'x-api-key:${XQUIK_API_KEY}'
 copySnippet: |-
   {
     "mcpServers": {
@@ -107,12 +107,12 @@ The server exposes `explore` for searching the API catalog and `xquik` for authe
 
 ```bash
 export XQUIK_API_KEY=xq_YOUR_KEY_HERE
-npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header "x-api-key:${XQUIK_API_KEY}"
+npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header 'x-api-key:${XQUIK_API_KEY}'
 ```
 
 ## Auth Requirements
 
-Xquik supports API-key authentication through the `x-api-key` header and OAuth 2.1 for clients that support browser-based MCP connectors. Create an API key from the Xquik dashboard, keep it out of prompts and logs, and connect an X account only when you need write workflows.
+Xquik supports API-key authentication through the `x-api-key` header and OAuth 2.1 for clients that support browser-based MCP connectors. Create an API key from the Xquik dashboard, keep it out of prompts, logs, and shell-expanded command arguments, and connect an X account only when you need write workflows. The `mcp-remote` command examples quote the header placeholder with single quotes so the client can resolve `XQUIK_API_KEY` from the environment without placing the expanded secret in shell argv.
 
 ## Capabilities
 

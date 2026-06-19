@@ -1,0 +1,138 @@
+---
+title: Upstash MCP Server for Claude
+slug: upstash-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Upstash — create and manage serverless Redis databases, inspect QStash message
+  logs, and debug Workflow runs — with Upstash's official Model Context Protocol server.
+cardDescription: "Upstash's official MCP server: manage serverless Redis, QStash, and Workflow from Claude."
+seoTitle: "Upstash MCP Server for Claude — Serverless Redis & QStash"
+seoDescription: "Connect Claude to Upstash with the official MCP server: create and manage serverless Redis databases, inspect QStash logs, and debug Workflow runs from Claude Code or Desktop."
+author: Upstash
+authorProfileUrl: "https://upstash.com"
+dateAdded: "2026-06-17"
+documentationUrl: "https://github.com/upstash/mcp-server"
+websiteUrl: "https://upstash.com"
+repoUrl: "https://github.com/upstash/mcp-server"
+retrievalSources:
+  - "https://github.com/upstash/mcp-server"
+  - "https://upstash.com/docs"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://redis.io/docs/latest/"
+installable: true
+installCommand: "claude mcp add upstash -- npx -y @upstash/mcp-server@latest --email <your-email> --api-key <your-api-key>"
+usageSnippet: >-
+  Ask Claude to create a Redis database, check its metrics, or inspect QStash message logs and Workflow runs.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "upstash": {
+        "command": "npx",
+        "args": ["-y", "@upstash/mcp-server@latest", "--email", "<your-email>", "--api-key", "<your-api-key>"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "upstash": {
+        "command": "npx",
+        "args": ["-y", "@upstash/mcp-server@latest", "--email", "<your-email>", "--api-key", "<your-api-key>"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "An Upstash account."
+  - "Your Upstash account email and a management API key (Upstash Console -> Account -> API Keys)."
+  - "Node.js (npx) and an MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Tools can create and delete databases and modify resources; a read-only API key automatically disables state-modifying tools."
+  - "Database deletion and configuration changes affect live resources; review before running them through Claude."
+privacyNotes:
+  - "Resource metadata, metrics, and message logs enter the MCP client context and the model's prompt."
+  - "The Upstash email and API key are credentials — keep them in the client config or environment, never in shared repositories."
+tags:
+  - upstash
+  - redis
+  - serverless
+  - qstash
+  - database
+keywords:
+  - upstash mcp server
+  - connect claude to upstash
+  - serverless redis mcp claude
+  - upstash qstash mcp
+  - manage upstash with ai
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Upstash MCP Server** is Upstash's official Model Context Protocol server. It lets Claude manage
+and debug Upstash resources in natural language — creating and managing serverless Redis databases,
+inspecting QStash message logs, diagnosing Workflow runs, and operating Upstash Box. It runs over
+stdio via `npx @upstash/mcp-server` and is licensed under MIT.
+
+## Key capabilities
+
+- **Redis** — create and manage serverless databases, backups, and performance metrics.
+- **QStash** — inspect webhook/message logs and manage messages.
+- **Workflow** — monitor runs, diagnose failures, and retry operations.
+- **Upstash Box** — provision VMs, manage snapshots, and inspect logs.
+
+A read-only API key automatically disables the state-modifying tools.
+
+## How it compares
+
+| MCP server | Focus | Hosting | Notable |
+| --- | --- | --- | --- |
+| **Upstash MCP** | Serverless Redis, QStash, Workflow | Fully managed (Upstash Cloud) | Manage + debug resources, not raw key access |
+| **Redis MCP** | Redis data operations | Self-host or Redis Cloud | Direct key/value and data-structure access |
+
+Use the Upstash server to provision and debug Upstash resources; pair it with a Redis data server
+when you also need direct key-level operations.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add upstash -- npx -y @upstash/mcp-server@latest --email <your-email> --api-key <your-api-key>
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "upstash": {
+      "command": "npx",
+      "args": ["-y", "@upstash/mcp-server@latest", "--email", "<your-email>", "--api-key", "<your-api-key>"]
+    }
+  }
+}
+```
+
+## Requirements
+
+- An Upstash account, account email, and a management API key.
+- Node.js (`npx`) and an MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Use a read-only API key when Claude only needs to inspect resources — it disables modifying tools.
+- Database deletion and config changes affect live resources; review destructive actions first.
+- Treat the Upstash email and API key as credentials.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- The official repository `github.com/upstash/mcp-server` (MIT) documents the
+  `@upstash/mcp-server` package, the `--email`/`--api-key` arguments, stdio transport, the read-only
+  key behavior, and the Redis, QStash, Workflow, and Box capabilities above.
+- Upstash's documentation describes the underlying serverless Redis, QStash, and Workflow products.
+- Claude Code's MCP documentation describes the connector setup pattern used here.

@@ -1,0 +1,188 @@
+---
+title: Contentful MCP Server for Claude
+slug: contentful-mcp-server
+category: mcp
+description: >-
+  Create, update, publish, and manage content in Contentful from Claude — entries, assets,
+  content types, locales, spaces, environments, and AI actions — with the official
+  Contentful Management API MCP server supporting semantic search and vector-based content discovery.
+cardDescription: "Official Contentful MCP: entries, assets, content types, locales & AI actions from Claude."
+seoTitle: "Contentful MCP Server for Claude — Content Management, Entries, Assets & AI Actions via MCP"
+seoDescription: "Connect Claude to Contentful with the official MCP server: create, update, publish entries and assets, manage content types, locales, spaces, and Contentful AI Actions — 40+ tools with semantic vector search, MIT licensed."
+author: Contentful
+authorProfileUrl: "https://github.com/contentful"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/contentful/contentful-mcp-server"
+websiteUrl: "https://www.contentful.com"
+repoUrl: "https://github.com/contentful/contentful-mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/contentful/contentful-mcp-server/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add contentful -e CONTENTFUL_MANAGEMENT_ACCESS_TOKEN=your-cma-token -e SPACE_ID=your-space-id -- npx -y @contentful/mcp-server"
+usageSnippet: >-
+  Ask Claude to create a new blog post entry in Contentful, update product entries with new
+  pricing, upload and organize marketing images, translate content to Spanish using an AI action,
+  or use semantic search to find entries by meaning.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "contentful-mcp": {
+        "command": "npx",
+        "args": ["-y", "@contentful/mcp-server"],
+        "env": {
+          "CONTENTFUL_MANAGEMENT_ACCESS_TOKEN": "your-cma-token",
+          "SPACE_ID": "your-space-id",
+          "ENVIRONMENT_ID": "master"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "contentful-mcp": {
+        "command": "npx",
+        "args": ["-y", "@contentful/mcp-server"],
+        "env": {
+          "CONTENTFUL_MANAGEMENT_ACCESS_TOKEN": "your-cma-token",
+          "SPACE_ID": "your-space-id",
+          "ENVIRONMENT_ID": "master",
+          "CONTENTFUL_HOST": "api.contentful.com",
+          "PROTECTED_ENVIRONMENTS": "master,staging"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A Contentful account with a Space ID (Dashboard → Settings → General Settings)."
+  - "A Contentful Management API (CMA) personal access token (Dashboard → Settings → API Keys → Personal Access Tokens)."
+  - "Node.js with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "This server uses the Contentful Management API — it can create, update, publish, unpublish, and delete entries, assets, content types, and environments."
+  - "Use `PROTECTED_ENVIRONMENTS` (comma-separated list) to block write/delete operations on specific environments like `master` or `staging`."
+  - "Creating or deleting Contentful environments is irreversible for the deleted environment; confirm before executing destructive operations."
+privacyNotes:
+  - "Content entries, asset metadata, content type schemas, locale settings, and AI action configurations from your Contentful space are surfaced in Claude's context."
+  - "Your `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN` grants full read/write access to the space — treat it as a secret and do not commit it to version control."
+disclosure: "Contentful is a commercial headless CMS. The MCP server is officially maintained by Contentful."
+tags:
+  - contentful
+  - headless-cms
+  - content-management
+  - cms
+  - entries
+  - assets
+keywords:
+  - contentful mcp server
+  - contentful mcp claude
+  - headless cms mcp claude code
+  - content management mcp server
+  - contentful entries ai
+  - contentful assets mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Contentful MCP Server** is the official Model Context Protocol server from
+[Contentful](https://www.contentful.com), the leading headless CMS. It gives Claude full
+access to the Contentful Management API — creating, updating, publishing, and deleting entries,
+assets, content types, locales, spaces, and environments using natural language. Also supports
+Contentful AI Actions for custom AI-powered workflows and vector-based `semantic_search` for
+meaning-based content discovery. Licensed under MIT.
+
+## Key capabilities
+
+- **Entries** — create, search, get, update, publish, unpublish, delete; semantic vector search.
+- **Assets** — upload, list, get, update, publish, unpublish, delete marketing images and files.
+- **Content types** — create, update, publish, unpublish, delete content models.
+- **Spaces & environments** — list spaces, create/delete environments, manage locales.
+- **AI Actions** — create, invoke, and manage Contentful's built-in AI workflow actions.
+- **Protected environments** — block writes to specified environments (e.g. `master`) to
+  prevent accidental changes.
+
+## Tools (40+)
+
+| Category | Tools |
+|---|---|
+| Entries | `search_entries`, `semantic_search`, `get_entry`, `create_entry`, `update_entry`, `publish_entry`, `unpublish_entry`, `delete_entry` |
+| Assets | `upload_asset`, `list_assets`, `get_asset`, `update_asset`, `publish_asset`, `unpublish_asset`, `delete_asset` |
+| Content Types | `list_content_types`, `get_content_type`, `create_content_type`, `update_content_type`, `publish_content_type`, `delete_content_type` |
+| Spaces | `list_spaces`, `get_space`, `list_environments`, `create_environment`, `delete_environment` |
+| Locales | `list_locales`, `create_locale`, `update_locale`, `delete_locale` |
+| AI Actions | `create_ai_action`, `invoke_ai_action`, `list_ai_actions`, `publish_ai_action`, `delete_ai_action` |
+
+## How it compares
+
+| Server | Entries CRUD | Asset mgmt | Semantic search | AI Actions | Auth |
+|---|---|---|---|---|---|
+| **Contentful MCP** | Yes | Yes | Yes | Yes | CMA token |
+| Strapi MCP | Yes | Yes | No | No | API key |
+| Sanity MCP | Yes | Yes | No | No | OAuth |
+| Ghost MCP | Yes | Limited | No | No | API key |
+
+Contentful's `semantic_search` tool enables vector-based meaning search over entries — not just
+keyword filtering — making it the only headless CMS MCP server with native AI-powered content
+discovery.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add contentful \
+  -e CONTENTFUL_MANAGEMENT_ACCESS_TOKEN=your-cma-token \
+  -e SPACE_ID=your-space-id \
+  -- npx -y @contentful/mcp-server
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "contentful-mcp": {
+      "command": "npx",
+      "args": ["-y", "@contentful/mcp-server"],
+      "env": {
+        "CONTENTFUL_MANAGEMENT_ACCESS_TOKEN": "your-cma-token",
+        "SPACE_ID": "your-space-id",
+        "ENVIRONMENT_ID": "master"
+      }
+    }
+  }
+}
+```
+
+### Protecting environments
+
+Add `PROTECTED_ENVIRONMENTS=master,staging` to block write/delete operations on those environments.
+
+## Requirements
+
+- A Contentful account with Space ID and CMA personal access token.
+- Node.js with `npx`.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Use `PROTECTED_ENVIRONMENTS` to prevent accidental writes to `master` or other sensitive
+  environments.
+- CMA tokens have full read/write access — scope to least privilege if possible.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `contentful/contentful-mcp-server` (MIT, 58 stars) documents
+  the `@contentful/mcp-server` npm package, the `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN`,
+  `SPACE_ID`, `ENVIRONMENT_ID`, and `PROTECTED_ENVIRONMENTS` config, all 40+ tools across
+  entries/assets/content-types/spaces/locales/AI-actions, and the Claude Desktop `.dxt`
+  release artifact.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  setup pattern used above.

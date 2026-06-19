@@ -4,7 +4,7 @@ import { ENTRIES } from "@/data/entries";
 import { registryTrendingQuerySchema } from "@/lib/api/contracts";
 import { createApiHandler, type InferApiQuery } from "@/lib/api/router";
 import { entryCommunityTarget, safeCommunitySignalCounts } from "@/lib/community-signals";
-import { communityDiscoveryScore, totalIntentCount } from "@/lib/growth-ranking";
+import { communityDiscoveryScore } from "@/lib/growth-ranking";
 import { cachedJsonResponse } from "@/lib/http-cache";
 import { safeIntentEventCounts } from "@/lib/intent-events";
 import { safeVoteCounts } from "@/lib/votes";
@@ -42,10 +42,6 @@ const matchesPlatform = (entry: Entry, value: string) => {
 
 const reasonCodes = (input: ReturnType<typeof trendInput>) =>
   [
-    input.votes ? "upvotes" : "",
-    input.communitySignals?.used ? "community_used" : "",
-    input.communitySignals?.works ? "community_works" : "",
-    totalIntentCount(input.intentCounts) ? "recent_intent" : "",
     input.firstPartyPackage ? "first_party_package" : "",
     input.productionVerified ? "production_verified" : "",
   ].filter(Boolean);

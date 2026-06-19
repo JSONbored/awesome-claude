@@ -1,5 +1,13 @@
-import { ENTRIES } from "./entries";
-import type { Category, Entry, Platform, SourceStatus, TrustLevel } from "@/types/registry";
+import { ENTRIES, entryByRef } from "./entries";
+import { sameEntry } from "@/lib/entry-identity";
+import type {
+  Category,
+  Entry,
+  EntryRelationType,
+  Platform,
+  SourceStatus,
+  TrustLevel,
+} from "@/types/registry";
 
 export interface SearchFilters {
   q?: string;
@@ -12,31 +20,192 @@ export interface SearchFilters {
   sort?: "popular" | "newest" | "title";
 }
 
-export function search(filters: SearchFilters = {}): Entry[] {
-  const q = filters.q?.trim().toLowerCase() ?? "";
-  let rows = ENTRIES.filter((e) => {
-    if (filters.categories?.length && !filters.categories.includes(e.category)) return false;
-    if (filters.platforms?.length && !e.platforms.some((p) => filters.platforms!.includes(p)))
-      return false;
-    if (filters.trust?.length && !filters.trust.includes(e.trust)) return false;
-    if (filters.source?.length && !filters.source.includes(e.source)) return false;
-    if (filters.installable && !e.installCommand && !e.configSnippet && !e.fullCopy) return false;
-    if (filters.hasSafetyNotes && !e.safetyNotes) return false;
-    if (q) {
-      const hay = [
-        e.title,
-        e.description,
-        e.author,
-        e.category,
-        ...(e.tags ?? []),
-        ...(e.keywords ?? []),
-      ]
-        .join(" ")
-        .toLowerCase();
-      if (!hay.includes(q)) return false;
+const TOKEN_SPLIT_PATTERN = /[^a-z0-9+#.-]+/i;
+const MAX_QUERY_LENGTH = 256;
+const MAX_QUERY_TOKENS = 12;
+
+const QUERY_ALIASES: Record<string, string[]> = {
+  browser: ["chrome", "playwright", "web"],
+  cc: ["claude", "claude-code"],
+  claude: ["claude-code"],
+  gh: ["github"],
+  mcp: ["model-context-protocol"],
+  repo: ["repository", "github"],
+  repos: ["repository", "github"],
+  safe: ["safety", "security", "secure", "trust", "privacy"],
+  security: ["safe", "safety", "secure", "trust"],
+  skill: ["skills"],
+  skills: ["skill"],
+  statusline: ["statuslines", "status"],
+  statuslines: ["statusline", "status"],
+};
+
+interface EntrySearchProfile {
+  haystack: string;
+  words: string[];
+}
+
+interface QuerySearchProfile {
+  normalizedQuery: string;
+  tokens: string[];
+}
+
+interface PreparedSearchFilters extends SearchFilters {
+  queryProfile?: QuerySearchProfile | null;
+}
+
+const ENTRY_SEARCH_PROFILES = new WeakMap<Entry, EntrySearchProfile>();
+
+export function normalizeSearchQuery(query: string) {
+  return query.slice(0, MAX_QUERY_LENGTH).trim().toLowerCase();
+}
+
+function tokenizeSearchQuery(query: string) {
+  const tokens: string[] = [];
+  let token = "";
+
+  for (let index = 0; index < query.length && tokens.length < MAX_QUERY_TOKENS; index += 1) {
+    const char = query[index]!;
+    if (/[a-z0-9+#.-]/i.test(char)) {
+      token += char.toLowerCase();
+      continue;
     }
+
+    if (token.length >= 2) tokens.push(token);
+    token = "";
+  }
+
+  if (tokens.length < MAX_QUERY_TOKENS && token.length >= 2) tokens.push(token);
+  return tokens;
+}
+
+function querySearchProfile(query: string): QuerySearchProfile | null {
+  const normalizedQuery = normalizeSearchQuery(query);
+  if (!normalizedQuery) return null;
+
+  const tokens = tokenizeSearchQuery(normalizedQuery);
+  if (!tokens.length) return null;
+
+  return { normalizedQuery, tokens };
+}
+
+function expandedTokenCandidates(token: string) {
+  return [token, ...(QUERY_ALIASES[token] ?? [])];
+}
+
+function normalizedSearchText(entry: Entry) {
+  return [
+    entry.category,
+    entry.slug,
+    entry.title,
+    entry.description,
+    entry.cardDescription,
+    entry.author,
+    entry.trust,
+    entry.source,
+    ...(entry.platforms ?? []),
+    ...(entry.tags ?? []),
+    ...(entry.keywords ?? []),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function entrySearchProfile(entry: Entry) {
+  let profile = ENTRY_SEARCH_PROFILES.get(entry);
+  if (!profile) {
+    const haystack = normalizedSearchText(entry);
+    const words = [
+      ...new Set(
+        haystack
+          .split(TOKEN_SPLIT_PATTERN)
+          .map((word) => word.trim().toLowerCase())
+          .filter(Boolean),
+      ),
+    ];
+    profile = {
+      haystack,
+      words,
+    };
+    ENTRY_SEARCH_PROFILES.set(entry, profile);
+  }
+  return profile;
+}
+
+function candidateMatchesText(candidate: string, profile: EntrySearchProfile) {
+  if (candidate.length <= 2) {
+    return profile.words.some((word) => word === candidate || word.startsWith(candidate));
+  }
+  return (
+    profile.haystack.includes(candidate) || profile.words.some((word) => word.startsWith(candidate))
+  );
+}
+
+function matchesEntryQueryProfile(entry: Entry, queryProfile: QuerySearchProfile) {
+  const { normalizedQuery, tokens } = queryProfile;
+  const profile = entrySearchProfile(entry);
+  if (
+    normalizedQuery.length > 2
+      ? profile.haystack.includes(normalizedQuery)
+      : candidateMatchesText(normalizedQuery, profile)
+  ) {
     return true;
-  });
+  }
+
+  return tokens.every((token) =>
+    expandedTokenCandidates(token).some((candidate) => candidateMatchesText(candidate, profile)),
+  );
+}
+
+export function matchesEntryQuery(entry: Entry, query: string) {
+  const profile = querySearchProfile(query);
+  if (!profile) return !normalizeSearchQuery(query);
+  return matchesEntryQueryProfile(entry, profile);
+}
+
+function prepareSearchFilters(filters: SearchFilters = {}): PreparedSearchFilters {
+  return {
+    ...filters,
+    q: filters.q ? normalizeSearchQuery(filters.q) : filters.q,
+    queryProfile: filters.q ? querySearchProfile(filters.q) : null,
+  };
+}
+
+export function matchesSearchFilters(entry: Entry, filters: SearchFilters = {}) {
+  const prepared = filters as PreparedSearchFilters;
+  if (filters.categories?.length && !filters.categories.includes(entry.category)) return false;
+  if (filters.platforms?.length && !entry.platforms.some((p) => filters.platforms!.includes(p)))
+    return false;
+  if (filters.trust?.length && !filters.trust.includes(entry.trust)) return false;
+  if (filters.source?.length && !filters.source.includes(entry.source)) return false;
+  if (filters.installable && !entry.installCommand && !entry.configSnippet && !entry.fullCopy)
+    return false;
+  if (filters.hasSafetyNotes && !entry.safetyNotes) return false;
+  if (prepared.queryProfile && !matchesEntryQueryProfile(entry, prepared.queryProfile))
+    return false;
+  if (prepared.q && prepared.queryProfile === null) return false;
+  if (filters.q && prepared.queryProfile === undefined && !matchesEntryQuery(entry, filters.q))
+    return false;
+  return true;
+}
+
+export function filterSearchEntries(filters: SearchFilters = {}, entries: Entry[] = ENTRIES) {
+  const prepared = prepareSearchFilters(filters);
+  return entries.filter((entry) => matchesSearchFilters(entry, prepared));
+}
+
+export function countSearchResults(filters: SearchFilters = {}, entries: Entry[] = ENTRIES) {
+  const prepared = prepareSearchFilters(filters);
+  let count = 0;
+  for (const entry of entries) {
+    if (matchesSearchFilters(entry, prepared)) count += 1;
+  }
+  return count;
+}
+
+export function search(filters: SearchFilters = {}): Entry[] {
+  let rows = filterSearchEntries(filters);
 
   const sort = filters.sort ?? "popular";
   rows = [...rows].sort((a, b) => {
@@ -62,23 +231,24 @@ function recommendedScore(entry: Entry) {
 }
 
 export function getEntry(category: string, slug: string): Entry | undefined {
-  return ENTRIES.find((e) => e.category === category && e.slug === slug);
+  return entryByRef(category, slug);
 }
 
 export function related(entry: Entry, limit = 4): Entry[] {
   const graphEntries = (entry.relatedEntries ?? [])
-    .map((relation) =>
-      ENTRIES.find(
-        (candidate) => candidate.category === relation.category && candidate.slug === relation.slug,
-      ),
-    )
+    .map((relation) => entryByRef(relation.category, relation.slug))
     .filter((candidate): candidate is Entry => Boolean(candidate))
     .filter((candidate) => candidate.category !== entry.category || candidate.slug !== entry.slug)
     .slice(0, limit);
 
   if (graphEntries.length > 0) return graphEntries;
 
-  return ENTRIES.filter((e) => e.slug !== entry.slug)
+  return relatedBySimilarity(entry, ENTRIES, limit);
+}
+
+export function relatedBySimilarity(entry: Entry, entries: Entry[], limit = 4): Entry[] {
+  return entries
+    .filter((candidate) => !sameEntry(candidate, entry))
     .map((e) => {
       let score = 0;
       if (e.category === entry.category) score += 3;
@@ -89,4 +259,42 @@ export function related(entry: Entry, limit = 4): Entry[] {
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map((x) => x.e);
+}
+
+// Order for surfacing relation groups (most decision-relevant first). "duplicate" is excluded.
+const RELATION_ORDER: EntryRelationType[] = [
+  "alternative",
+  "works-with",
+  "complementary",
+  "extends",
+  "prerequisite",
+  "same-project",
+  "same-ecosystem",
+  "collection-member",
+  "related",
+];
+
+// Group an entry's graph relations by their typed relation, so the entry page can render labeled
+// "Works with" / "Alternatives" / "Prerequisites" sections. Returns [] when there's no graph
+// relation data (the caller falls back to the flat related() grid).
+export function relatedGroups(
+  entry: Entry,
+  perGroup = 6,
+): { relation: EntryRelationType; entries: Entry[] }[] {
+  const byRelation = new Map<EntryRelationType, Entry[]>();
+  for (const rel of entry.relatedEntries ?? []) {
+    if (rel.relation === "duplicate") continue;
+    const candidate = entryByRef(rel.category, rel.slug);
+    if (!candidate) continue;
+    if (sameEntry(candidate, entry)) continue;
+    const list = byRelation.get(rel.relation) ?? [];
+    if (!byRelation.has(rel.relation)) byRelation.set(rel.relation, list);
+    if (list.length < perGroup && !list.some((e) => sameEntry(e, candidate))) {
+      list.push(candidate);
+    }
+  }
+  return RELATION_ORDER.map((relation) => ({
+    relation,
+    entries: byRelation.get(relation) ?? [],
+  })).filter((g) => g.entries.length > 0);
 }

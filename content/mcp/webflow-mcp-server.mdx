@@ -1,0 +1,177 @@
+---
+title: Webflow MCP Server for Claude
+slug: webflow-mcp-server
+category: mcp
+description: >-
+  Manage Webflow sites, pages, CMS collections, collection items, assets, and forms from Claude —
+  with the official Webflow MCP server that connects AI agents to the Webflow Data API via OAuth.
+cardDescription: "Official Webflow MCP: sites, pages, CMS collections & assets from Claude."
+seoTitle: "Webflow MCP Server for Claude — CMS Collections, Pages & Assets via Claude Code"
+seoDescription: "Connect Claude to Webflow with the official MCP server: list sites, manage pages, create and update CMS collections and items, upload assets, and handle form submissions — via OAuth with the Webflow Data API."
+author: Webflow
+authorProfileUrl: "https://github.com/webflow"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/webflow/mcp-server"
+websiteUrl: "https://webflow.com"
+repoUrl: "https://github.com/webflow/mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/webflow/mcp-server/main/README.md"
+  - "https://feluda.ai/mcp-servers/webflow"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http webflow https://mcp.webflow.com/sse"
+usageSnippet: >-
+  Ask Claude to list your Webflow sites, fetch all pages in a site, create a new CMS collection
+  item, update page content, or retrieve form submissions — using natural language through the
+  Webflow Data API.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "webflow": {
+        "url": "https://mcp.webflow.com/sse",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "webflow": {
+        "command": "npx",
+        "args": ["webflow-mcp-server"],
+        "env": {
+          "WEBFLOW_TOKEN": "your-webflow-api-token"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Webflow account — authenticate via OAuth on first use when using the remote server."
+  - "For the local server: Node.js 22.3.0+ and a Webflow API token from Account Settings → Integrations → API Access."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "CMS collection item create, update, and delete operations write directly to your Webflow project — confirm before applying changes to live sites."
+  - "Publishing operations make content publicly visible immediately; review changes before asking Claude to publish."
+  - "The remote server requires OAuth authorization — you control which sites Claude can access during the OAuth flow."
+privacyNotes:
+  - "Site structure, page content, CMS collection schemas, collection items, form submissions, and asset metadata from your Webflow workspace are surfaced in Claude's context."
+  - "OAuth authentication scopes access to specific sites you authorize — no credentials are stored in your MCP config when using the remote server."
+tags:
+  - webflow
+  - cms
+  - no-code
+  - web-design
+  - content-management
+  - pages
+  - collections
+keywords:
+  - webflow mcp server
+  - webflow mcp claude
+  - cms management mcp claude code
+  - webflow collections ai
+  - webflow data api mcp
+  - webflow pages claude integration
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Webflow MCP Server** is the official Model Context Protocol server from Webflow. It gives
+Claude access to the Webflow Data API — sites, pages, CMS collections, collection items, assets,
+forms, and more. Authenticate via OAuth (no API tokens required) using the hosted remote server at
+`https://mcp.webflow.com/sse`, or run locally with a Webflow API token. Licensed under MIT.
+
+The remote server includes a Webflow Designer companion app that syncs changes to your live canvas
+in real time.
+
+## Key capabilities
+
+- **Sites** — list all Webflow sites and retrieve site details.
+- **Pages** — list, inspect, and update static page content.
+- **CMS collections** — create, update, and delete CMS collection schemas.
+- **Collection items** — full CRUD plus publish operations for CMS content items.
+- **Assets** — list, get, and upload assets to your Webflow site.
+- **Forms** — list forms and retrieve submission data.
+- **Custom domains** — list configured custom domains.
+- **Webhooks** — manage Webflow webhook subscriptions.
+
+## How it compares
+
+| Server | CMS collections | Page management | Asset management | Designer sync | Auth |
+|---|---|---|---|---|---|
+| **Webflow MCP** | Full CRUD | Yes | Yes | Yes | OAuth |
+| Contentful MCP | Full CRUD | No | Yes | No | API key |
+| Sanity MCP | Full CRUD | No | Limited | No | OAuth |
+| Builder.io MCP | Limited | Yes | Limited | No | API key |
+
+Webflow's MCP is the only web-building platform to offer a live Designer sync — changes made
+by Claude appear in the Webflow canvas in real time.
+
+## Installation
+
+### Claude Code (remote, OAuth)
+
+```bash
+claude mcp add --transport http webflow https://mcp.webflow.com/sse
+```
+
+On first use, Claude Code will open a browser window for Webflow OAuth — select which sites
+to authorize.
+
+### Claude Desktop (remote)
+
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "url": "https://mcp.webflow.com/sse",
+      "type": "http"
+    }
+  }
+}
+```
+
+### Claude Desktop (local, API key)
+
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "command": "npx",
+      "args": ["webflow-mcp-server"],
+      "env": {
+        "WEBFLOW_TOKEN": "your-webflow-api-token"
+      }
+    }
+  }
+}
+```
+
+Get your API token from **Account Settings → Integrations → API Access** in Webflow.
+
+## Requirements
+
+- A Webflow account and at least one site.
+- For local server: Node.js 22.3.0+ (npm is included).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Remote server uses OAuth — access is limited to sites you authorize during sign-in.
+- Publishing operations immediately affect live content; review before confirming.
+- For local server, store your API token in MCP config rather than shell history.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `webflow/mcp-server` (MIT, 132+ stars) documents the `webflow-mcp-server`
+  npm package, hosted endpoint at `https://mcp.webflow.com/sse`, OAuth flow, local API-token
+  config, and Webflow Designer integration.
+- MCP server listing at `feluda.ai/mcp-servers/webflow` independently confirms the remote
+  OAuth endpoint and CMS/page management capabilities.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the
+  `--transport http` connection pattern used above.

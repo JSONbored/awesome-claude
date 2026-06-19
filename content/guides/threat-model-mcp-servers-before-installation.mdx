@@ -18,6 +18,11 @@ authorProfileUrl: "https://github.com/MkDev11"
 submittedBy: MkDev11
 submittedByUrl: "https://github.com/MkDev11"
 dateAdded: "2026-06-04"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+retrievalSources:
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/security"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
 usageSnippet: >-
   Before installing an MCP server, map every tool, resource, prompt, credential,
   data source, transport, and side effect. Approve only the minimum permissions
@@ -28,13 +33,13 @@ prerequisites:
   - Permission to install the server in an isolated test profile before connecting it to production or personal data.
   - A rollback plan for removing the server and revoking tokens.
 safetyNotes:
-  - Do not connect an MCP server to sensitive files, production systems, browsers, or cloud credentials until its tool surface and runtime permissions are reviewed.
-  - Treat each exposed tool as code execution or data access according to what it can actually do, not according to the server's marketing category.
-  - Prefer least-privilege credentials, local test data, scoped directories, and explicit human approval for tools with side effects.
+  - An MCP server gives Claude Code model-callable tools that can run on your behalf; a stdio server runs as a local process with your environment access, so treat installing one as running third-party code.
+  - Anthropic reviews connectors against its listing criteria before adding them to the Anthropic Directory but does not security-audit or manage any MCP server, so trust verification is your responsibility (per code.claude.com/docs/en/security).
+  - Servers that fetch external content can expose you to prompt injection; Claude Code requires trust verification for new MCP servers and prompts for approval before using project-scoped servers from .mcp.json. Prefer least-privilege credentials, scoped directories, and explicit approval for side-effect tools.
 privacyNotes:
-  - MCP servers can expose local files, resources, prompt templates, tool arguments, tool outputs, logs, tokens, and retrieved data to the connected client and model workflow.
-  - Review whether logs, traces, caches, crash reports, browser profiles, or remote APIs retain prompts or tool outputs.
-  - Revoke credentials and delete persisted caches when uninstalling a server that had access to private repositories, databases, or personal files.
+  - MCP servers can expose local files, resources, prompt templates, tool arguments, tool outputs, logs, and retrieved data to the connected client and model workflow.
+  - For HTTP/SSE transports, OAuth access tokens are stored in the system keychain (macOS) or a credentials file; use "Clear authentication" in the /mcp menu to revoke access. For stdio servers, credentials come from the environment you pass in.
+  - Restrict OAuth scopes with oauth.scopes in .mcp.json so a remote server only receives the access it needs, and revoke credentials and delete persisted state when uninstalling a server that had access to private repositories, databases, or files.
 sourceUrls:
   - "https://modelcontextprotocol.io/specification/2025-06-18/server/tools"
   - "https://modelcontextprotocol.io/specification/2025-06-18/server/resources"
@@ -77,10 +82,10 @@ Code, Claude Desktop, an editor, or any other MCP client.
 
 ## Prerequisites & Requirements
 
-- [ ] {"task": "Server inventory", "description": "Docs, package source, config examples, and declared tools/resources/prompts are available"}
-- [ ] {"task": "Data map", "description": "You know which files, APIs, databases, browsers, or cloud services the server can access"}
-- [ ] {"task": "Test profile", "description": "You can install the server with non-production data before granting sensitive access"}
-- [ ] {"task": "Revocation path", "description": "You know how to remove the server, rotate credentials, and delete persisted state"}
+- [ ] Server inventory: docs, package source, config examples, and declared tools/resources/prompts are available.
+- [ ] Data map: you know which files, APIs, databases, browsers, or cloud services the server can access.
+- [ ] Test profile: you can install the server with non-production data before granting sensitive access.
+- [ ] Revocation path: you know how to remove the server, rotate credentials, and delete persisted state.
 
 ## Core Concepts Explained
 
@@ -108,6 +113,46 @@ with your team's policy.
 Authorization matters, but it is only one boundary. Also review the server's
 package provenance, runtime isolation, logs, storage, network destinations,
 credential scope, and uninstall process.
+
+The MCP authorization spec is explicit that auth applies differently per
+transport: authorization is **OPTIONAL**, HTTP-based transports **SHOULD**
+conform to the OAuth flow, and STDIO transports **SHOULD NOT** follow it and
+instead retrieve credentials from the environment. So the trust questions you
+ask depend on how the server connects, not just whether it "has auth."
+
+### Anthropic does not security-audit MCP servers
+
+Per the Claude Code security docs, Anthropic reviews connectors against its
+listing criteria before adding them to the Anthropic Directory, but does **not**
+security-audit or manage any MCP server. Claude Code does require trust
+verification for first-time codebase runs and new MCP servers, and prompts for
+approval before using project-scoped servers from `.mcp.json`. The guidance is
+to write your own servers or use ones from providers you trust. Vetting a
+specific server before it touches your data is your job.
+
+## Trust Questions by Transport
+
+Different transports expose different attack surfaces. Use the questions that
+match how the server connects.
+
+| Transport | How it runs | Key trust questions |
+| --- | --- | --- |
+| stdio (local process) | Local command (for example `npx`, `python`) with the env you pass via `--env`. No OAuth; credentials come from the environment. | Do I trust the package and every dependency it pulls? What does the `--` command actually launch? Which env vars/secrets does it receive? Can it read or write outside the project? |
+| HTTP (remote, recommended) | Remote endpoint over HTTPS; supports OAuth 2.0 via `/mcp`. | Do I trust the operator of this URL? What OAuth scopes does it request, and can I pin them with `oauth.scopes`? Does it fetch external content that could carry prompt injection? |
+| SSE (remote, deprecated) | Remote endpoint; same OAuth support as HTTP but the SSE transport is deprecated. | Same as HTTP, plus: can I migrate to an HTTP server instead, since SSE is deprecated? |
+| Project-scoped `.mcp.json` | Any of the above, but shared with the team via version control. | Was this entry reviewed in code review? Did Claude Code prompt me for approval before first use? Has the tool surface changed since approval? |
+
+## Threats and Mitigations
+
+| Threat | Mitigation grounded in the docs |
+| --- | --- |
+| A tool runs code or makes changes you did not expect | Treat installing a server as running third-party code; require explicit approval for side-effect tools. Claude Code's permission model is read-only by default and asks before modifying actions. |
+| Prompt injection from a server that fetches external content | Only connect servers you trust; Claude Code isolates web-fetch context and requires trust verification for new MCP servers, but no system is fully immune. |
+| Over-broad OAuth scopes on a remote server | Pin the scope set with `oauth.scopes` in `.mcp.json` so the server only receives an approved subset; widen only when a needed tool returns `403 insufficient_scope`. |
+| Leaked or stolen access tokens | Tokens are stored in the system keychain (macOS) or a credentials file; the spec recommends short-lived tokens and rotating refresh tokens. Use "Clear authentication" in `/mcp` to revoke. |
+| A reused token reaching the wrong service | The spec requires audience-bound tokens (RFC 8707 `resource` parameter) and forbids token passthrough; servers must reject tokens not issued for them. |
+| Unreviewed team server entering everyone's setup | Project-scoped `.mcp.json` servers require per-user approval before use; reset choices with `claude mcp reset-project-choices`. |
+| Tool surface expanding after an update | Pin versions for sensitive stdio servers and re-inventory tools; Claude Code can refresh tools live via `list_changed` notifications, so the surface can change without a reinstall. |
 
 ## Step-by-Step Implementation Guide
 
@@ -151,16 +196,61 @@ credential scope, and uninstall process.
    granted credentials, known risks, owner, review date, and removal steps. When
    uninstalling, remove config, delete cached state, and revoke tokens.
 
+## Vetting Commands and Config
+
+Use the `claude mcp` CLI and the in-session `/mcp` panel to inspect a server
+before and after you add it. Add at the narrowest scope first (`local` is the
+default), review, and only widen scope once you trust it. The commands below are
+from the Claude Code MCP reference.
+
+```bash
+# Inspect what is already configured before adding anything
+claude mcp list                 # all servers; project-scoped ones show "Pending approval"
+claude mcp get <name>           # one server's transport, URL/command, and OAuth state
+
+# Add at the most restricted scope while you test (local is the default)
+claude mcp add --transport http <name> --scope local https://mcp.example.com/mcp
+
+# Add a local stdio server: everything after -- is the command Claude will RUN
+claude mcp add --env API_KEY=TEST_TOKEN --transport stdio <name> \
+  -- npx -y some-mcp-server
+
+# Inside Claude Code: review status, tool counts, and complete/clear OAuth
+/mcp
+
+# Reset project-scoped approval choices, or remove the server entirely
+claude mcp reset-project-choices
+claude mcp remove <name>
+```
+
+Pin OAuth scopes for a remote server so it only receives an approved subset,
+rather than every scope the upstream advertises. Add this to the server's entry
+in `.mcp.json` (`scopes` is a single space-separated string):
+
+```json
+{
+  "mcpServers": {
+    "example": {
+      "type": "http",
+      "url": "https://mcp.example.com/mcp",
+      "oauth": {
+        "scopes": "read:items search:read"
+      }
+    }
+  }
+}
+```
+
 ## Pre-Install Checklist
 
-- [ ] {"task": "Owner is identifiable", "description": "Maintainer, package, docs, license, and update channel are known"}
-- [ ] {"task": "Tool surface is reviewed", "description": "Every model-callable action has a documented side effect and approval expectation"}
-- [ ] {"task": "Resource surface is reviewed", "description": "Every data source is scoped to the minimum directory, project, or account"}
-- [ ] {"task": "Prompt templates are reviewed", "description": "Prompts do not hide unsafe instructions or request unnecessary data"}
-- [ ] {"task": "Credentials are scoped", "description": "Tokens are least-privilege, revocable, and separate from personal or production secrets"}
-- [ ] {"task": "Runtime is isolated", "description": "The server cannot casually read the whole home directory or unrestricted network"}
-- [ ] {"task": "Logs are understood", "description": "Prompt, argument, output, trace, cache, and crash-report retention is acceptable"}
-- [ ] {"task": "Rollback is tested", "description": "Config removal, cache deletion, and credential revocation steps are known"}
+- [ ] Owner is identifiable: maintainer, package, docs, license, and update channel are known.
+- [ ] Tool surface is reviewed: every model-callable action has a documented side effect and approval expectation.
+- [ ] Resource surface is reviewed: every data source is scoped to the minimum directory, project, or account.
+- [ ] Prompt templates are reviewed: prompts do not hide unsafe instructions or request unnecessary data.
+- [ ] Credentials are scoped: tokens are least-privilege, revocable, and separate from personal or production secrets; OAuth scopes pinned with `oauth.scopes`.
+- [ ] Runtime is isolated: the server cannot casually read the whole home directory or reach unrestricted network destinations.
+- [ ] Logs are understood: prompt, argument, output, trace, cache, and crash-report retention is acceptable.
+- [ ] Rollback is tested: config removal (`claude mcp remove`), credential revocation ("Clear authentication" in `/mcp`), and cache deletion steps are known.
 
 ## When to Reject or Delay Installation
 
@@ -199,9 +289,9 @@ or production context.
 
 ## References
 
+- Claude Code: Connect to tools via MCP (add commands, scopes, OAuth, `/mcp`) - https://code.claude.com/docs/en/mcp
+- Claude Code: Security (permission model, prompt injection, MCP security) - https://code.claude.com/docs/en/security
+- Model Context Protocol: Authorization (OAuth 2.1, transports, audience binding) - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
 - Model Context Protocol: Tools - https://modelcontextprotocol.io/specification/2025-06-18/server/tools
 - Model Context Protocol: Resources - https://modelcontextprotocol.io/specification/2025-06-18/server/resources
 - Model Context Protocol: Prompts - https://modelcontextprotocol.io/specification/2025-06-18/server/prompts
-- Model Context Protocol: Authorization - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
-- Model Context Protocol: Security best practices - https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices
-- NIST SP 800-218: Secure Software Development Framework - https://csrc.nist.gov/pubs/sp/800/218/final

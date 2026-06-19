@@ -1,6 +1,15 @@
 import * as React from "react";
+import { useRecents } from "@/lib/recents";
+import {
+  activeInAppSavedSearches,
+  buildSavedSearchAlerts,
+  savedSearchAlertTargetId,
+  type SavedSearchAlertSearch,
+} from "@/lib/saved-search-alerts";
+import type { RegistryEntry } from "@/data/entry-normalize";
+import type { Entry } from "@/types/registry";
 
-export type WatchKind = "entry" | "validator" | "changelog-stream" | "integration";
+export type WatchKind = "entry" | "validator" | "changelog-stream" | "integration" | "saved-search";
 
 export interface WatchTarget {
   id: string;
@@ -31,6 +40,7 @@ interface WatchCtx {
   toggle: (target: Omit<WatchTarget, "addedAt">) => void;
   markAllRead: () => void;
   unreadCount: number;
+  savedSearchAlertCount: number;
 }
 
 const STORAGE_KEY = "hc.watch.v1";
@@ -104,11 +114,80 @@ function eventToAlert(event: RegistryEvent, target: WatchTarget): Alert | null {
   };
 }
 
+function savedSearchSignature(searches: SavedSearchAlertSearch[]) {
+  return searches
+    .map((search) =>
+      [
+        search.id,
+        search.label,
+        search.q,
+        search.category,
+        search.trust,
+        search.source,
+        search.platform,
+        search.alerts?.enabled ? "1" : "0",
+        search.alerts?.channels?.join(",") ?? "",
+      ].join("\t"),
+    )
+    .join("\n");
+}
+
+function entryDetailUrl(event: RegistryEvent) {
+  if (event.kind !== "entry" || !event.category || !event.slug) return null;
+  return `/data/entries/${encodeURIComponent(event.category)}/${encodeURIComponent(event.slug)}.json`;
+}
+
+async function loadEventEntries(events: RegistryEvent[]) {
+  const refs = new Map<string, string>();
+  for (const event of events) {
+    if (event.kind !== "entry" || !event.category || !event.slug) continue;
+    const href = entryDetailUrl(event);
+    if (href) refs.set(`${event.category}/${event.slug}`, href);
+  }
+  if (refs.size === 0) return new Map<string, Entry>();
+
+  const { buildEntry } = await import("@/data/entry-normalize");
+  const rows = await Promise.all(
+    [...refs.entries()].map(async ([ref, href]) => {
+      try {
+        const response = await fetch(href, { headers: { accept: "application/json" } });
+        if (!response.ok) return null;
+        const payload = (await response.json()) as {
+          entry?: Record<string, unknown>;
+          trustSignals?: Record<string, unknown>;
+        };
+        if (!payload.entry) return null;
+        const rawEntry = {
+          ...payload.entry,
+          trustSignals: payload.trustSignals,
+        } as RegistryEntry;
+        return [ref, buildEntry(rawEntry)] as const;
+      } catch {
+        return null;
+      }
+    }),
+  );
+
+  return new Map(rows.filter((row): row is [string, Entry] => Boolean(row)));
+}
+
 export function WatchProvider({ children }: { children: React.ReactNode }) {
+  const recents = useRecents();
   const [hydrated, setHydrated] = React.useState(false);
   const [targets, setTargets] = React.useState<WatchTarget[]>([]);
   const [lastSeenAt, setLastSeenAt] = React.useState("1970-01-01");
   const [remoteEvents, setRemoteEvents] = React.useState<RegistryEvent[]>([]);
+  const [eventEntriesByRef, setEventEntriesByRef] = React.useState<Map<string, Entry>>(
+    () => new Map(),
+  );
+  const savedSearches = React.useMemo(
+    () => activeInAppSavedSearches(recents.saved),
+    [recents.saved],
+  );
+  const savedSearchesKey = React.useMemo(
+    () => savedSearchSignature(savedSearches),
+    [savedSearches],
+  );
 
   React.useEffect(() => {
     const s = loadState();
@@ -123,8 +202,9 @@ export function WatchProvider({ children }: { children: React.ReactNode }) {
   }, [targets, lastSeenAt, hydrated]);
 
   React.useEffect(() => {
-    if (!hydrated || targets.length === 0) {
+    if (!hydrated || (targets.length === 0 && savedSearches.length === 0)) {
       setRemoteEvents([]);
+      setEventEntriesByRef(new Map());
       return;
     }
     let cancelled = false;
@@ -135,37 +215,54 @@ export function WatchProvider({ children }: { children: React.ReactNode }) {
         });
         if (!response.ok) throw new Error(`alerts API returned ${response.status}`);
         const payload = (await response.json()) as { events?: RegistryEvent[] };
-        if (!cancelled) setRemoteEvents(Array.isArray(payload.events) ? payload.events : []);
+        const events = Array.isArray(payload.events) ? payload.events : [];
+        const nextEntries =
+          savedSearches.length > 0 ? await loadEventEntries(events) : new Map<string, Entry>();
+        if (!cancelled) {
+          setRemoteEvents(events);
+          setEventEntriesByRef(nextEntries);
+        }
       } catch {
-        if (!cancelled) setRemoteEvents([]);
+        if (!cancelled) {
+          setRemoteEvents([]);
+          setEventEntriesByRef(new Map());
+        }
       }
     }
     void loadAlerts();
     return () => {
       cancelled = true;
     };
-  }, [hydrated, targets.length]);
+  }, [hydrated, targets.length, savedSearches.length, savedSearchesKey]);
 
   const alerts = React.useMemo(() => {
     const byId = new Map(targets.map((target) => [target.id, target]));
-    return remoteEvents
+    const watchedEntryAlerts = remoteEvents
       .map((event) => {
         const targetId = eventTargetId(event);
         const target = targetId ? byId.get(targetId) : undefined;
         return target ? eventToAlert(event, target) : null;
       })
-      .filter((alert): alert is Alert => Boolean(alert))
-      .sort((left, right) => right.date.localeCompare(left.date));
-  }, [targets, remoteEvents]);
+      .filter((alert): alert is Alert => Boolean(alert));
+    const savedSearchAlerts = buildSavedSearchAlerts(
+      savedSearches,
+      remoteEvents,
+      eventEntriesByRef,
+    );
+    return [...watchedEntryAlerts, ...savedSearchAlerts].sort((left, right) =>
+      right.date.localeCompare(left.date),
+    );
+  }, [targets, remoteEvents, savedSearches, eventEntriesByRef]);
 
   const value = React.useMemo<WatchCtx>(() => {
     const ids = new Set(targets.map((t) => t.id));
+    const savedSearchIds = new Set(savedSearches.map(savedSearchAlertTargetId));
     const unreadCount = alerts.filter((a) => a.date > lastSeenAt).length;
     return {
       targets,
       alerts,
       lastSeenAt,
-      isWatching: (id) => ids.has(id),
+      isWatching: (id) => ids.has(id) || savedSearchIds.has(id),
       toggle: (t) =>
         setTargets((cur) =>
           cur.some((x) => x.id === t.id)
@@ -174,8 +271,9 @@ export function WatchProvider({ children }: { children: React.ReactNode }) {
         ),
       markAllRead: () => setLastSeenAt(new Date().toISOString()),
       unreadCount,
+      savedSearchAlertCount: savedSearches.length,
     };
-  }, [targets, alerts, lastSeenAt]);
+  }, [targets, savedSearches, alerts, lastSeenAt]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

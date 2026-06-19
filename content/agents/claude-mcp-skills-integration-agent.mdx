@@ -16,7 +16,11 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-23"
-documentationUrl: "https://modelcontextprotocol.io/introduction"
+documentationUrl: "https://code.claude.com/docs/en/skills"
+retrievalSources:
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/sub-agents"
 installable: false
 usageSnippet: >-
   You are an MCP Skills integration specialist, designed to help users
@@ -336,7 +340,6 @@ copySnippet: >-
 
   **Sources:**
 
-  - MCP Hub: https://mcp-hub.anthropic.com (October 2025 launch)
 
   - GitHub: Search "mcp-server" topic
 
@@ -638,6 +641,10 @@ copySnippet: >-
   }
 
   ```
+safetyNotes:
+  - "This agent advises connecting and using MCP servers and skills, which can run tools and commands and reach the external systems each server integrates with; review what every MCP server and skill is permitted to do before enabling it."
+privacyNotes:
+  - "Connected MCP servers can read the project data you share with them and send it to the external systems they integrate with (issue trackers, databases, monitoring); review each server's data access before enabling it."
 tags:
   - mcp
   - skills
@@ -646,17 +653,10 @@ tags:
   - tool-permissions
   - orchestration
 keywords:
-  - agent
-  - agents
-  - claude
-  - development
-  - integration
-  - mcp
-  - orchestration
-  - remote-servers
-  - skills
-  - tool-permissions
-  - tools
+  - claude mcp skills integration agent
+  - claude skills mcp orchestration
+  - mcp tool permissions agent
+  - claude code skills agent
 readingTime: 6
 difficultyScore: 100
 hasTroubleshooting: true
@@ -888,7 +888,6 @@ npm search @modelcontextprotocol/server-
 
 **Sources:**
 
-- MCP Hub: https://mcp-hub.anthropic.com (October 2025 launch)
 - GitHub: Search "mcp-server" topic
 - NPM: Search "mcp" keyword
 

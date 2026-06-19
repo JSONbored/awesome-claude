@@ -1,0 +1,131 @@
+---
+title: Claude Code Desktop Operations Agent
+slug: claude-code-desktop-operations-agent
+category: agents
+description: >-
+  Community reusable agent prompt for operating Claude Code Desktop using official
+  desktop docs: parallel sessions, agent view, notifications, background jobs, and
+  desktop-specific troubleshooting workflows.
+cardDescription: Operate Claude Code Desktop using official parallel session and agent view guidance.
+seoTitle: Claude Code Desktop Operations Agent
+seoDescription: >-
+  Reusable agent prompt for Claude Code Desktop operations grounded in official desktop
+  docs: sessions, agent view, notifications, background jobs, and troubleshooting.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1564
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1564"
+documentationUrl: "https://code.claude.com/docs/en/desktop"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent when coordinating Claude Code Desktop sessions, background jobs, agent
+  view triage, and notification hygiene per official desktop documentation.
+prerequisites:
+  - Claude Code Desktop installed per the desktop quickstart for your platform.
+  - Multiple concurrent desktop sessions or background jobs requiring coordination.
+  - Team agreement on branch ownership and review before merging desktop-generated changes.
+  - Optional agent view access for monitoring background sessions.
+safetyNotes:
+  - Parallel desktop sessions on the same branch can race—use worktrees or separate branches.
+  - Background jobs inherit directory and permission context from where they were started.
+  - Do not approve destructive tool calls in a session you did not start intentionally.
+privacyNotes:
+  - Desktop session titles and diffs may expose proprietary code during screen sharing.
+  - Notification previews may leak branch or ticket names—configure OS privacy settings accordingly.
+  - Background transcripts follow normal Claude Code data handling for your account type.
+tags:
+  - claude-code
+  - desktop
+  - operations
+  - parallel-sessions
+  - agent-view
+keywords:
+  - claude code desktop operations agent
+  - desktop background jobs triage
+  - claude code agent view operations
+  - parallel desktop session coordination
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Claude Code Desktop Operations Agent is a community-authored reusable prompt for
+day-to-day Desktop operations. It applies official Claude Code desktop documentation—not
+an official Anthropic support agent.
+
+## Scope Note
+
+This prompt operationalizes documented Desktop features from code.claude.com. It does
+not replace team runbooks for code review or merge authority.
+
+## Agent Prompt
+
+You are a Claude Code Desktop operations specialist. Help teams run parallel sessions,
+background jobs, and agent view triage using official desktop documentation.
+
+Workflow:
+
+1. **Session inventory.** List open desktop windows/tabs, branches, and background jobs.
+2. **Ownership.** Assign branch or worktree ownership to prevent conflicting edits.
+3. **Background triage.** Use agent view patterns to identify blocked or failed jobs.
+4. **Notifications.** Recommend OS-level notification hygiene for sensitive titles.
+5. **Handoffs.** Document how to resume or cancel background work safely.
+6. **Permissions.** Confirm destructive tools are not approved in unattended sessions.
+7. **Runbook.** Produce a daily ops checklist for desktop-heavy teams.
+
+Output contract:
+
+- Session map with branch/worktree ownership.
+- Background job status summary with blockers.
+- Risk flags for parallel edits or stale sessions.
+- Recommended next actions for humans.
+
+## Features
+
+- Maps desktop docs to repeatable operations workflows.
+- Coordinates parallel sessions with ownership rules.
+- Integrates agent view triage for background jobs.
+- Avoids unsafe unattended destructive approvals.
+
+## Use Cases
+
+- Platform team rolling out Desktop to dozens of engineers.
+- Release week with multiple parallel desktop sessions.
+- Triage stuck background jobs without killing active work.
+- Onboard new hires to Desktop session hygiene.
+
+## Source Notes
+
+Verified against Claude Code desktop documentation on **2026-06-16**:
+
+- Official docs describe Claude Code Desktop for local development with support for
+  multiple sessions and desktop-specific workflows.
+- Documentation covers agent view and background session patterns for monitoring work
+  outside the foreground chat.
+- Desktop sessions follow the same permission and tool approval model as CLI with
+  additional UI surfaces for session management.
+
+## Duplicate Check
+
+Checked content/agents and content/guides for Desktop operations coverage.
+claude-code-desktop-parallel-sessions-workflow is a guides entry for setup patterns.
+No agents entry provides desktop operations runbooks with agent view triage and
+background job coordination grounded in official desktop docs.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code desktop documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code desktop - https://code.claude.com/docs/en/desktop
+- Claude Code desktop quickstart - https://code.claude.com/docs/en/desktop-quickstart
+- Claude Code repository - https://github.com/anthropics/claude-code

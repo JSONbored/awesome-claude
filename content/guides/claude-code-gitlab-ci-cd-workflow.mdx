@@ -1,0 +1,136 @@
+---
+title: Claude Code GitLab CI/CD Workflow
+slug: claude-code-gitlab-ci-cd-workflow
+category: guides
+description: >-
+  Set up Claude Code in GitLab CI/CD with maintainer-approved prompts,
+  least-privilege tool access, and Bedrock or Vertex OIDC alternatives from
+  official GitLab integration docs.
+cardDescription: >-
+  Run Claude Code in GitLab CI with least-privilege tools, review gates, and provider options.
+seoTitle: Claude Code GitLab CI/CD Workflow
+seoDescription: >-
+  Guide to Claude Code GitLab CI/CD: maintainer-approved prompts, npm CLI
+  install, claude -p automation, GitLab MCP tools, and Bedrock or Vertex
+  authentication from official docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1390
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1390"
+documentationUrl: "https://code.claude.com/docs/en/gitlab-ci-cd"
+usageSnippet: >-
+  Install Claude Code with npm in a manually triggered CI job, run claude -p
+  with least-privilege --allowedTools, and review MR output before merge.
+prerequisites:
+  - "GitLab project with CI/CD variables permission and a protected default branch policy."
+  - "Anthropic API key or approved Bedrock or Vertex provider configuration restricted to protected, maintainer-approved pipelines."
+  - "Human review before merging Claude-opened merge requests."
+safetyNotes:
+  - "Do not run write-capable Claude jobs from untrusted MR, mention, or user-supplied prompt text without maintainer approval."
+  - "Avoid Bash by default; grant exact tools only for the task, and keep --permission-mode acceptEdits out of attacker-influenced flows."
+  - "Never commit API keys; store ANTHROPIC_API_KEY only in protected CI/CD variables or use cloud OIDC/WIF for protected pipelines."
+  - "GitLab MCP write tools can open MRs and post comments as the job identity."
+privacyNotes:
+  - "Issue titles, MR diffs, and AI_FLOW variables can enter model context during jobs; treat them as untrusted input unless a maintainer curated them."
+  - "CI logs may retain prompts—align retention with corporate policy."
+sourceUrls:
+  - "https://code.claude.com/docs/en/gitlab-ci-cd"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - gitlab
+  - cicd
+  - ci
+keywords:
+  - Claude Code GitLab CI/CD
+  - GitLab claude -p workflow
+  - ANTHROPIC_API_KEY GitLab variable
+readingTime: 9
+difficultyScore: 55
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Official GitLab CI/CD documentation describes running Claude Code in isolated
+GitLab jobs with repository cloning and **`claude -p`** automation. This guide
+uses an **npm-based CLI install** and adds safer defaults: maintainer-triggered
+jobs, protected credentials, no default Bash access, and human review before
+any generated changes are merged.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Protected secret", "description": "ANTHROPIC_API_KEY stored as a protected CI/CD variable, or replaced with Bedrock/Vertex OIDC for protected pipelines"}
+- [ ] {"task": "Job scope", "description": "rules limit write-capable Claude jobs to maintainer-triggered protected pipelines"}
+- [ ] {"task": "Review gate", "description": "Maintainers review Claude MRs like any contributor"}
+- [ ] {"task": "CLAUDE.md", "description": "Repository standards file guides automated changes"}
+
+## Step-by-Step Setup
+
+1. Add **`ANTHROPIC_API_KEY`** only as a protected, masked CI/CD variable available to protected maintainer-triggered pipelines, or use Bedrock/Vertex OIDC for protected pipelines.
+2. Add a **`claude`** stage job using a Node image; install Git and the CLI with **`npm install -g @anthropic-ai/claude-code`**.
+3. Set **`GIT_STRATEGY: fetch`** so the job clones the target repository.
+4. Run **`claude -p`** with a maintainer-controlled prompt and an exact **`--allowedTools`** list. Start read-only; add write or GitLab MCP tools only for trusted, reviewed flows.
+5. Do not grant **`Bash`** or use **`--permission-mode acceptEdits`** when prompts can be influenced by MRs, mentions, issues, or other untrusted users.
+6. Optionally enable **`/bin/gitlab-mcp-server`** when your runner image provides it and restrict GitLab MCP tools to the specific read/write actions required.
+7. For **Amazon Bedrock** or **Google Vertex AI**, follow the OIDC or Workload Identity Federation sections in the official doc instead of **`ANTHROPIC_API_KEY`**.
+
+## Example job shape (npm install)
+
+```yaml
+stages:
+  - ai
+
+claude:
+  stage: ai
+  image: node:24-alpine
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+  variables:
+    GIT_STRATEGY: fetch
+  before_script:
+    - apk add --no-cache git
+    - npm install -g @anthropic-ai/claude-code
+  script:
+    - >
+      claude -p "${MAINTAINER_APPROVED_PROMPT:-'Summarize the repository and suggest a reviewed change plan'}"
+      --allowedTools "Read"
+```
+
+Start with read-only tools. For trusted maintainer-triggered jobs that should
+prepare changes, add only the exact non-shell tools required, keep generated
+changes behind merge-request review, and avoid exposing protected credentials to
+untrusted MR, mention, or variable-driven prompts. Official docs also document
+Bedrock and Vertex job templates with cloud OIDC.
+
+## Source Verification Notes
+
+Verified against **Claude Code GitLab CI/CD** documentation on **2026-06-16**:
+
+- Integration is maintained by GitLab and runs Claude Code in isolated CI jobs.
+- Quick setup can use **`ANTHROPIC_API_KEY`** as a masked CI/CD variable, but production jobs should restrict secrets to protected maintainer-approved pipelines or use cloud OIDC/WIF.
+- Jobs can react to web triggers, merge request events, or mention-driven flows with **`AI_FLOW_*`** variables; treat those values as untrusted unless a maintainer curated them.
+- Official examples use **`claude -p`** and scoped **`--allowedTools`**; keep risky tools such as **`Bash`** out of default copy-paste workflows.
+- Enterprise setups document **Bedrock OIDC** and **Vertex Workload Identity Federation** alternatives.
+
+## Duplicate Check
+
+Distinct from **`claude-code-github-actions-review-workflow`** (GitHub Actions) and
+**`claude-code-gitlab-ci-agent-capability-pack`** (skills review matrix). This
+guide covers **GitLab CI job setup** from the official GitLab integration doc.
+
+## Troubleshooting
+
+**Issue:** Job cannot comment or open MRs
+**Fix:** Confirm GitLab token permissions and include **`mcp__gitlab`** in **`--allowedTools`** when using GitLab MCP per official troubleshooting.
+
+**Issue:** Authentication errors
+**Fix:** Validate **`ANTHROPIC_API_KEY`** or cloud OIDC/WIF variables per provider section in the official doc.

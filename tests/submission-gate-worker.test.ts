@@ -53,10 +53,20 @@ import {
 import { repoRoot } from "./helpers/registry-fixtures";
 
 function readWorkerSource() {
-  return fs.readFileSync(
-    path.join(repoRoot, "apps/submission-gate/src/index.ts"),
-    "utf8",
-  );
+  // The orchestrator was split: pure decision/retry helpers now live in
+  // decisions.ts and are re-imported into index.ts. Concatenate both files so
+  // source-pinned assertions keep matching regardless of which file a symbol
+  // (function, constant, or call site) now lives in.
+  return [
+    fs.readFileSync(
+      path.join(repoRoot, "apps/submission-gate/src/index.ts"),
+      "utf8",
+    ),
+    fs.readFileSync(
+      path.join(repoRoot, "apps/submission-gate/src/decisions.ts"),
+      "utf8",
+    ),
+  ].join("\n");
 }
 
 function readReviewSource() {
@@ -323,6 +333,7 @@ describe("Cloudflare submission gate helpers", () => {
             name: "validate-content",
             status: "completed",
             conclusion: "success",
+            app: { slug: "github-actions" },
             completed_at: "2026-06-02T00:00:00Z",
           },
         ],
@@ -343,7 +354,7 @@ describe("Cloudflare submission gate helpers", () => {
     });
   });
 
-  it("treats neutral Superagent scans as a non-blocking validation pass", async () => {
+  it("requires manual review for neutral Superagent scans", async () => {
     const fetchMock = vi.fn(async () =>
       Response.json({
         check_runs: [
@@ -351,12 +362,14 @@ describe("Cloudflare submission gate helpers", () => {
             name: "validate-content",
             status: "completed",
             conclusion: "success",
+            app: { slug: "github-actions" },
             completed_at: "2026-06-02T00:00:00Z",
           },
           {
             name: "Superagent Security Scan",
             status: "completed",
             conclusion: "neutral",
+            app: { slug: "superagent" },
             completed_at: "2026-06-02T00:00:01Z",
           },
         ],
@@ -372,12 +385,14 @@ describe("Cloudflare submission gate helpers", () => {
         requiredChecks: ["validate-content", "Superagent Security Scan"],
       }),
     ).resolves.toMatchObject({
-      state: "passed",
+      state: "failed",
+      summary:
+        "Required validation failed: Superagent Security Scan concluded neutral.",
       checks: [
         { name: "validate-content", status: "passed" },
         {
           name: "Superagent Security Scan",
-          status: "passed",
+          status: "failed",
           details: "concluded neutral",
         },
       ],
@@ -480,7 +495,9 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("privateStrictDuplicateContradicted(");
     expect(source).toContain("duplicateEvidenceConflictExhaustedDecision(");
     expect(source).toContain("duplicateEvidenceContractExhaustedDecision(");
-    expect(readReviewSource()).toContain("duplicate_evidence_contract_exhausted");
+    expect(readReviewSource()).toContain(
+      "duplicate_evidence_contract_exhausted",
+    );
     expect(source).not.toContain("duplicateEvidenceConflictMergeDecision(");
     expect(source).toContain("privateEvidenceClaimsDeadSourceUrl(");
     expect(source).toContain("privateEvidenceMatchesReachableSourceUrl(");
@@ -492,6 +509,12 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
     expect(source).toContain("strictDuplicatePolicy:");
+    expect(source).toContain(`decision: duplicateCloseDecision(
+      duplicateReview.strictDuplicate`);
+    expect(source).not.toContain("const hardCloseDuplicate =");
+    expect(source).not.toContain(
+      'reason.startsWith("same canonical source URL ")',
+    );
     expect(source).toContain("relatedContentPolicy:");
     expect(source).toContain("collectionPolicy:");
     expect(source).toContain("defensiveSecurityPolicy:");
@@ -567,12 +590,16 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"MEMBER"');
     expect(source).toContain('"COLLABORATOR"');
     expect(source).toContain("targetFromIssueCommentRecheck");
+    expect(source).toContain("trustedManualRecheck = false");
     expect(source).toContain("shouldResetManualTerminal");
     expect(source).toContain("shouldResetTerminalState");
     expect(source).toContain(
       "resetAttemptCount: shouldResetManualTerminal || shouldResetTerminalState",
     );
     expect(source).toContain(
+      'trustedManualRecheck === true &&\n    String(existing?.status || "") === "manual"',
+    );
+    expect(source).not.toContain(
       'forceRecheck === true && String(existing?.status || "") === "manual"',
     );
     expect(source).toContain(
@@ -581,7 +608,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain(
       "forceRecheck === true ||\n      isReopenedPullRequestEvent",
     );
-    expect(issueCommentBlock).toContain("payload,\n      true,");
+    expect(issueCommentBlock).toContain("payload,\n      true,\n      true,");
   });
 
   it("renders Taopedia-style verdict comments with stable sections", () => {
@@ -846,14 +873,12 @@ documentationUrl: "https://example.com/docs"
 packageUrl: "https://hub.docker.com/r/example/project"
 ---
 `,
-      vi
-        .fn<typeof fetch>()
-        .mockImplementation(async (url) => {
-          const hostname = new URL(String(url)).hostname;
-          return new Response(null, {
-            status: hostname === "hub.docker.com" ? 429 : 200,
-          });
-        }),
+      vi.fn<typeof fetch>().mockImplementation(async (url) => {
+        const hostname = new URL(String(url)).hostname;
+        return new Response(null, {
+          status: hostname === "hub.docker.com" ? 429 : 200,
+        });
+      }),
     );
 
     expect(report.status).toBe("passed");
@@ -953,7 +978,7 @@ downloadUrl: "https://github.com/example/project/archive/refs/heads/main.zip"
     });
   });
 
-  it("treats isolated auxiliary source fetch errors as warnings when canonical evidence passes", async () => {
+  it("keeps retryable auxiliary canonical source fields blocking when canonical evidence passes", async () => {
     const report = await checkSubmittedSourceEvidence(
       `---
 title: GitHub Blob Warning Fixture
@@ -972,15 +997,17 @@ sourceUrls:
       }),
     );
 
-    expect(report.status).toBe("passed");
-    expect(report.warnings).toHaveLength(1);
-    expect(report.warnings[0]).toMatchObject({
-      field: "sourceUrls",
-      status: "retryable",
-      outcome: "fetch_error",
-      role: "canonical",
-      blocking: false,
-    });
+    expect(report.status).toBe("retryable");
+    expect(report.warnings).toHaveLength(0);
+    expect(report.urls).toContainEqual(
+      expect.objectContaining({
+        field: "sourceUrls",
+        status: "retryable",
+        outcome: "fetch_error",
+        role: "canonical",
+        blocking: true,
+      }),
+    );
     expect(sourceEvidenceCloseDecision(report)).toBeNull();
   });
 
@@ -1783,7 +1810,7 @@ ${urls}
     );
   });
 
-  it("formats neutral Superagent Discord status as non-blocking", () => {
+  it("formats neutral Superagent Discord status as inconclusive", () => {
     const payload = buildDiscordDecisionPayload({
       repoFullName: "JSONbored/awesome-claude",
       prNumber: 826,
@@ -1802,7 +1829,7 @@ ${urls}
       "#826 merged · Chrome DevTools MCP server",
     );
     expect(JSON.stringify(payload)).toContain(
-      "Superagent neutral, non-blocking",
+      "Superagent neutral/inconclusive",
     );
   });
 
@@ -1922,9 +1949,21 @@ ${urls}
       "directContentReviewabilityForTarget(",
     );
     const applyIndex = pullRequestBlock.indexOf("applyUnderReviewToTarget");
+    const shouldInspectBlock = source.slice(
+      source.indexOf("async function shouldInspectPullRequestFilesForWebhook"),
+      source.indexOf("function reviewTargetFromPullPayload"),
+    );
+    const terminalClosedExclusionIndex = shouldInspectBlock.indexOf(
+      'existingStatus !== "closed"',
+    );
+    const reviewKeySkipIndex = shouldInspectBlock.indexOf(
+      "return !reviewScanKey || existingReviewKey !== reviewScanKey",
+    );
 
     expect(source).toContain('reason: "No source content entry file changed."');
     expect(source).toContain("function recordReviewedScanKey");
+    expect(source).toContain("async function cleanupIgnoredReviewTarget");
+    expect(source).toContain("labels: RECONCILED_GATE_LABELS");
     expect(source).toContain(
       "function shouldInspectPullRequestFilesForWebhook",
     );
@@ -1934,13 +1973,65 @@ ${urls}
     expect(source).toContain(
       "resetAttemptCount: shouldResetManualTerminal || shouldResetTerminalState",
     );
+    expect(source).toContain('existingStatus !== "closed"');
+    expect(shouldInspectBlock).not.toContain(
+      'isReopenedPullRequestEvent(String(eventName || ""), webhook)',
+    );
+    expect(source).toContain("isReopenedPullRequestEvent(eventName, webhook)");
+    expect(source).toContain("eventName,");
     expect(source).toContain("clearTerminal:");
     expect(source).toContain("lastReviewKey: reviewScanKey || undefined");
     expect(source).toContain('reason: "already_reviewed"');
     expect(pullRequestBlock).toContain('reviewability.kind === "ignore"');
+    expect(pullRequestBlock).toContain(
+      "await cleanupIgnoredReviewTarget(env, target, deliveryId);",
+    );
     expect(inspectIndex).toBeGreaterThan(0);
     expect(classifyIndex).toBeGreaterThan(inspectIndex);
     expect(applyIndex).toBeGreaterThan(classifyIndex);
+    expect(terminalClosedExclusionIndex).toBeGreaterThan(0);
+    expect(reviewKeySkipIndex).toBeGreaterThan(terminalClosedExclusionIndex);
+  });
+
+  it("cleans stale gate metadata when webhook paths ignore former content PRs", () => {
+    const source = readWorkerSource();
+    const pullRequestIndex = source.indexOf(
+      'if (eventName === "pull_request")',
+    );
+    const issueCommentIndex = source.indexOf(
+      'if (eventName === "issue_comment")',
+      pullRequestIndex,
+    );
+    const validationIndex = source.indexOf(
+      "if (VALIDATION_WEBHOOK_EVENTS.has(eventName))",
+      issueCommentIndex,
+    );
+    const pullRequestBlock = source.slice(pullRequestIndex, issueCommentIndex);
+    const issueCommentBlock = source.slice(issueCommentIndex, validationIndex);
+    const validationBlock = source.slice(
+      validationIndex,
+      source.indexOf(
+        "return json({ ok: true, ignored: true });",
+        validationIndex,
+      ),
+    );
+
+    expect(source).toContain("async function cleanupIgnoredReviewTarget");
+    expect(source).toContain("labels: RECONCILED_GATE_LABELS");
+    expect(pullRequestBlock).toContain(
+      "await cleanupIgnoredReviewTarget(env, target, deliveryId);",
+    );
+    expect(issueCommentBlock).toContain(
+      "await cleanupIgnoredReviewTarget(env, target, deliveryId);",
+    );
+    expect(validationBlock).toContain(
+      "await shouldInspectPullRequestFilesForWebhook(",
+    );
+    expect(validationBlock).toContain("const shouldCleanupIgnored =");
+    expect(validationBlock).toContain("if (shouldCleanupIgnored) {");
+    expect(validationBlock).toContain(
+      "await cleanupIgnoredReviewTarget(env, target, deliveryId);",
+    );
   });
 
   it("distinguishes generated-artifact tampering from ordinary non-content PRs", () => {
@@ -2042,6 +2133,14 @@ ${urls}
     expect(retryBranch).toContain('status: "merge_pending"');
     expect(retryBranch).toContain('decision: "merge_pending"');
     expect(retryBranch).toContain("merge retry pending");
+    expect(retryBranch).toContain(
+      "const pendingDecision = defaultManualDecision",
+    );
+    expect(retryBranch).toContain(
+      "const pendingReport = await upsertMarkerComment",
+    );
+    expect(retryBranch).toContain("markerComment(");
+    expect(retryBranch).toContain("pendingDecision");
     expect(retryBranch).toContain("nextReviewAt: isoAfter(retryDelaySeconds)");
     expect(retryBranch).toContain("retryDelaySeconds");
     expect(retryBranch).toContain(
@@ -2132,9 +2231,13 @@ ${urls}
     expect(terminalSetBlock).not.toContain('"merge"');
     expect(terminalSetBlock).not.toContain('"import"');
     expect(source).toContain("forceRecheck = false");
+    expect(source).toContain("trustedManualRecheck = false");
+    expect(source).toContain("trustedManualRecheck === true");
+    expect(source).toContain("message.payload.trustedManualRecheck === true");
     expect(source).toContain(
-      "payload: { eventName, deliveryId, target, webhook, forceRecheck }",
+      'if (existingStatus === "manual" && !trustedManualRecheck)',
     );
+    expect(source).toContain("trustedManualRecheck,");
     expect(source).toContain(
       'String(message.payload.eventName || "") === "issue_comment"',
     );
@@ -2508,6 +2611,46 @@ ${urls}
     }
     expect(helperSource).toContain("DIRECTORY_ENTRY_URL_SIGNAL_FIELDS");
     expect(helperSource).toContain("entry[field]");
+    expect(helperSource).toContain("Array.isArray(entry.sourceUrls)");
+    expect(helperSource).toContain("entry.trustSignals");
+    expect(helperSource).toContain("trustSignalSourceUrls");
+  });
+
+  it("detects duplicate submissions from list-form source URLs", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/tools/source-list.mdx",
+      content: `---
+title: Shared Source Tool
+slug: source-list
+category: tools
+description: Local CLI for analyzing Claude Code usage.
+sourceUrls:
+  - "https://github.com/acme/shared-project"
+---
+`,
+      label: "accepted entry content/tools/source-list.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/tools/source-list-copy.mdx",
+      content: `---
+title: Shared Source Tool Copy
+slug: source-list-copy
+category: tools
+description: Local CLI for analyzing Claude Code usage.
+sourceUrls:
+  - "https://github.com/acme/shared-project?utm_source=form"
+---
+`,
+    });
+
+    expect(candidate.urls).toContain("https://github.com/acme/shared-project");
+    expect(
+      findStrictContentDuplicateMatch(candidate, [existing]),
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same canonical source URL"),
+      ]),
+    });
   });
 
   it("detects neutral duplicate submissions from canonical source URLs", () => {
@@ -2716,7 +2859,54 @@ docsUrl: "https://docs.anthropic.com/en/docs/claude-code/security#events"
     );
   });
 
-  it("treats same canonical project across different categories as a strict duplicate", () => {
+  it("keeps legacy-only canonical URL matches out of strict duplicate closure", () => {
+    const earlierOpenPr = extractContentDuplicateSignals({
+      filePath: "content/tools/shared-project-tool.mdx",
+      content: `---
+title: Shared Project Tool
+slug: shared-project-tool
+category: tools
+description: Tooling for the Shared Project command-line workflow.
+repoUrl: "https://github.com/acme/shared-project"
+---
+`,
+      label: "earlier open PR #10",
+    });
+    const laterCandidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/shared-project-server.mdx",
+      content: `---
+title: Shared Project MCP Server
+slug: shared-project-server
+category: mcp
+description: MCP server for exposing Shared Project context to Claude.
+repoUrl: "https://github.com/acme/shared-project.git?utm_source=heyclaude"
+---
+`,
+      label: "PR #20",
+    });
+
+    const duplicateReview = buildContentDuplicateReview(laterCandidate, [
+      earlierOpenPr,
+    ]);
+
+    expect(duplicateReview.legacyDuplicate).toMatchObject({
+      reasons: expect.arrayContaining([
+        "same canonical source URL https://github.com/acme/shared-project",
+      ]),
+    });
+    expect(duplicateReview.strictDuplicate).toBeNull();
+    expect(findRelatedContentMatches(laterCandidate, [earlierOpenPr])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            "same canonical source URL https://github.com/acme/shared-project across mcp/tools",
+          ]),
+        }),
+      ]),
+    );
+  });
+
+  it("treats same canonical project across different categories as related, not strict duplicate", () => {
     const existingMcp = extractContentDuplicateSignals({
       filePath: "content/mcp/langchain-mcp-server.mdx",
       content: `---
@@ -2742,13 +2932,7 @@ repoUrl: "https://github.com/langchain-ai/langchain.git"
 
     expect(
       findStrictContentDuplicateMatch(candidateSkill, [existingMcp]),
-    ).toMatchObject({
-      reasons: expect.arrayContaining([
-        expect.stringContaining(
-          "same canonical source URL https://github.com/langchain-ai/langchain across skills/mcp",
-        ),
-      ]),
-    });
+    ).toBeNull();
     expect(findRelatedContentMatches(candidateSkill, [existingMcp])).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -2762,7 +2946,7 @@ repoUrl: "https://github.com/langchain-ai/langchain.git"
     );
   });
 
-  it("treats same canonical website across different categories as a strict duplicate", () => {
+  it("treats same canonical website across different categories as related, not strict duplicate", () => {
     const existingTool = extractContentDuplicateSignals({
       filePath: "content/tools/acme-claude.mdx",
       content: `---
@@ -2788,13 +2972,7 @@ websiteUrl: "https://acme-claude.example/product?utm_source=submission"
 
     expect(
       findStrictContentDuplicateMatch(candidateMcp, [existingTool]),
-    ).toMatchObject({
-      reasons: expect.arrayContaining([
-        expect.stringContaining(
-          "same canonical source URL https://acme-claude.example/product across mcp/tools",
-        ),
-      ]),
-    });
+    ).toBeNull();
     expect(findRelatedContentMatches(candidateMcp, [existingTool])).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -3187,6 +3365,31 @@ websiteUrl: "https://www.w3.org/WAI/test-evaluate/"
         expect.stringContaining("same collection source set"),
       ]),
     });
+  });
+
+  it("blocks protected metadata edits written with valid YAML forms", () => {
+    const before = `---
+title: Existing Tool
+slug: existing-tool
+category: tools
+---
+`;
+    const after = `---
+title: Existing Tool
+slug: existing-tool
+category: tools
+"repoUrl": https://github.com/example/evil
+downloadUrl: >
+  https://example.com/evil-package.zip
+packageVerified: true
+---
+`;
+
+    expect(protectedFrontmatterChanges(before, after)).toEqual([
+      "downloadUrl",
+      "packageVerified",
+      "repoUrl",
+    ]);
   });
 
   it("blocks content edits that change protected provenance fields", () => {

@@ -56,7 +56,8 @@ scriptBody: |-
     tmp_report=$(mktemp "$report_dir/.osv-report.XXXXXX") || exit 0
     trap 'rm -f "$tmp_report"' EXIT
 
-    if osv-scanner --format json . > "$tmp_report" 2>/dev/null; then
+    osv-scanner --format json . > "$tmp_report" 2>/dev/null || true
+    if [ -s "$tmp_report" ] && { ! command -v jq >/dev/null 2>&1 || jq -e . "$tmp_report" >/dev/null 2>&1; }; then
       mv -f "$tmp_report" "$report"
       trap - EXIT
     fi

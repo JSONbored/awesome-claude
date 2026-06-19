@@ -1,0 +1,162 @@
+---
+title: Android Skills MCP Server for Claude
+slug: android-skills-mcp-server
+category: mcp
+description: >-
+  Access AI-optimized Android development guides from Claude — search and retrieve SKILL.md
+  content covering Jetpack Compose, Navigation 3, CameraX, AGP 9, App Functions, Edge-to-Edge,
+  Android Profilers, XR, Google Play, and the Android CLI — with the Android Skills MCP server.
+cardDescription: "Android Skills MCP: search AI-optimized Android SKILL.md guides for Compose, Navigation, AGP & more."
+seoTitle: "Android Skills MCP Server for Claude — Jetpack Compose, Navigation 3 & Android Dev Guides"
+seoDescription: "Connect Claude to Android development skills with the Android Skills MCP server: search and retrieve AI-optimized SKILL.md guides for Jetpack Compose, Navigation 3, CameraX migration, AGP 9 upgrade, App Functions, Edge-to-Edge, and more — Apache-2.0 licensed, no API key required."
+author: Jaewoong Eum (skydoves)
+authorProfileUrl: "https://github.com/skydoves"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/skydoves/android-skills-mcp/main/README.md"
+websiteUrl: "https://github.com/skydoves/android-skills-mcp"
+repoUrl: "https://github.com/skydoves/android-skills-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/skydoves/android-skills-mcp/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add android-skills -- npx -y android-skills-mcp"
+usageSnippet: >-
+  Ask Claude to explain how to implement Edge-to-Edge in your Android app, guide you through
+  the AGP 9 upgrade process, show the Navigation 3 API, or help with CameraX migration — using
+  the bundled offline Android SKILL.md documentation without any API keys or network calls.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "android-skills": {
+        "command": "npx",
+        "args": ["-y", "android-skills-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "android-skills": {
+        "command": "npx",
+        "args": ["-y", "android-skills-mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server runs entirely offline — no network requests are made during queries. All skill content is bundled with the npm package."
+privacyNotes:
+  - "No API keys, user data, or query content is sent to any external service. All lookups happen locally against the bundled skill snapshot."
+tags:
+  - android
+  - jetpack-compose
+  - mobile
+  - google
+  - devtools
+  - documentation
+keywords:
+  - android skills mcp server
+  - android mcp claude
+  - jetpack compose mcp claude code
+  - android development ai claude
+  - android skills documentation mcp
+  - navigation 3 mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Android Skills MCP Server** gives Claude offline access to AI-optimized SKILL.md guides
+from the official [android/skills](https://github.com/android/skills) repository. These guides
+are designed for LLM-assisted Android development — they cover the most complex, frequently
+changing areas of Android development where context and step-by-step guidance matter most.
+
+Unlike documentation scrapers or web search, this server ships the skill content as a bundled
+offline snapshot — no API keys needed, no network calls at query time. Developed by
+Jaewoong Eum (Google Developer Expert, Android), who maintains popular Android libraries.
+Licensed under Apache-2.0.
+
+## Covered skills
+
+| Skill | Description |
+|---|---|
+| Jetpack Compose | Modern declarative UI toolkit |
+| Navigation 3 | New type-safe navigation API |
+| CameraX migration | Migrate from Camera1/2 to CameraX |
+| AGP 9 Upgrade | Android Gradle Plugin 9 upgrade guide |
+| App Functions | System-level shortcut and intent integration |
+| Edge-to-Edge | Full-screen window insets and display cutouts |
+| Android Profilers | Memory, CPU, and network profiling |
+| XR Display Glasses | Extended reality development for Android |
+| Google Play | Play Store policies, review, and distribution |
+| Android CLI | Command-line tools for Android development |
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `list_skills` | Enumerate all available Android skills |
+| `search_skills` | BM25 full-text search across skill content |
+| `get_skill` | Retrieve the full content of a skill by ID |
+
+## How it compares
+
+| Server | Android-specific | Offline | No API key | LLM-optimized content |
+|---|---|---|---|---|
+| **Android Skills MCP** | Yes | Yes | Yes | Yes (SKILL.md format) |
+| Context7 MCP | No (multi-platform) | No | No | No |
+| DevDocs MCP | No (multi-platform) | No | No | No |
+| Google Workspace MCP | No | No | Yes (OAuth) | No |
+
+Android Skills MCP is the only Android-specific documentation server with offline, LLM-optimized
+SKILL.md content that requires no API key.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add android-skills -- npx -y android-skills-mcp
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "android-skills": {
+      "command": "npx",
+      "args": ["-y", "android-skills-mcp"]
+    }
+  }
+}
+```
+
+## Requirements
+
+- Node.js (for `npx`).
+- An MCP client (Claude Code or Claude Desktop).
+- No API keys, no internet access required at runtime.
+
+## Security
+
+- Entirely offline — no external network requests at query time.
+- All skill content is bundled with the npm package at publish time.
+- No user data or query content is sent anywhere.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Repository `skydoves/android-skills-mcp` (Apache-2.0) on npm as `android-skills-mcp`
+  documents the zero-config install, three tools (list_skills, search_skills, get_skill),
+  BM25 search, the bundled offline skill snapshot, and all covered Android development topics.
+- The server wraps content from `android/skills` (the official Google Android skills repo),
+  optimized for LLM consumption in SKILL.md format.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

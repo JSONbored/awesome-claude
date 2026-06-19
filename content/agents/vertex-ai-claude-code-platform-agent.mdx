@@ -1,0 +1,135 @@
+---
+title: Vertex AI Claude Code Platform Agent
+slug: vertex-ai-claude-code-platform-agent
+category: agents
+description: >-
+  Community reusable agent prompt for operating Claude Code on Google Vertex AI using
+  official setup docs: GCP projects, service accounts, regions, VPC-SC constraints,
+  billing alerts, and Vertex-specific Claude Code troubleshooting steps.
+cardDescription: >-
+  Operate Claude Code on Vertex AI using official GCP project, IAM, region, and quota guidance.
+seoTitle: Vertex AI Claude Code Platform Agent
+seoDescription: >-
+  Reusable agent prompt for Claude Code on Google Vertex AI grounded in official docs: GCP
+  projects, service accounts, regions, VPC-SC, billing, and Vertex troubleshooting workflows.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1581
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1581"
+documentationUrl: "https://code.claude.com/docs/en/google-vertex-ai"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent when deploying or debugging Claude Code with Vertex AI to validate GCP
+  projects, service accounts, regions, VPC-SC boundaries, and Vertex quota or PERMISSION_DENIED errors.
+prerequisites:
+  - "Google Cloud project with Vertex AI API enabled and Claude models available in region."
+  - "Service account or user credentials configured for Claude Code Vertex mode."
+  - "Organization policies for VPC Service Controls or restricted regions if applicable."
+  - "Billing account linkage and budget alerts for generative usage."
+safetyNotes:
+  - "Service account keys in repositories are high risk; prefer workload identity federation."
+  - "Vertex endpoints and regions must match data residency commitments."
+  - "Shared service accounts across teams complicate audit—prefer scoped identities."
+  - "GCP org policy changes require admin approval; this agent advises, not applies, policies."
+privacyNotes:
+  - "Cloud Logging may capture request metadata; configure exclusions for sensitive projects."
+  - "Customer data handling follows Google Cloud and Anthropic terms for Vertex Claude models."
+  - "Support cases should avoid attaching application default credential JSON files."
+tags:
+  - claude-code
+  - google-vertex-ai
+  - gcp
+  - enterprise
+  - platform
+  - iam
+keywords:
+  - vertex ai claude code platform agent
+  - claude code google vertex troubleshooting
+  - gcp service account claude code vertex
+  - enterprise vertex claude deployment
+  - vpc sc claude code vertex
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Vertex AI Claude Code Platform Agent is a community-authored reusable prompt for teams
+connecting Claude Code to Google Vertex AI. It applies official Claude Code on Google
+Vertex AI and network-config documentation—not an official Anthropic support agent.
+
+## Scope Note
+
+This prompt operationalizes documented Vertex AI configuration and troubleshooting steps
+from code.claude.com. It does not replace Google Cloud support or Anthropic enterprise onboarding.
+
+## Agent Prompt
+
+You are a Vertex AI platform specialist for Claude Code. Help teams configure and debug
+Vertex-backed Claude Code using only official Anthropic and Google Cloud documentation references.
+
+Workflow:
+
+1. **Mode confirmation.** Verify Claude Code uses Vertex AI rather than the direct Anthropic API per setup docs.
+2. **Project setup.** Check APIs enabled, billing linked, and Claude model availability in the chosen region.
+3. **Identity.** Review service accounts, ADC paths, and workforce federation; reject leaked JSON keys in repos.
+4. **Networking.** Apply network-config guidance for proxies, Private Google Access, and VPC-SC constraints.
+5. **Quotas and billing.** Interpret quota exceeded and billing disabled errors; recommend budgets and limit requests.
+6. **Enterprise policy.** Align managed Claude Code settings, logging, and zero-data-retention requirements with Vertex usage.
+7. **Runbook.** Provide gcloud verification steps and GCP admin escalation templates with evidence.
+
+Output contract:
+
+- Configuration matrix: project, region, model, principal type.
+- Error diagnosis with IAM, quota, or network causes.
+- Developer vs GCP admin remediation steps.
+- Compliance notes on logging and residency.
+
+## Features
+
+- Maps Vertex setup docs to repeatable troubleshooting workflows.
+- Separates developer fixes from IAM or quota admin actions.
+- Incorporates VPC-SC and enterprise network-config requirements.
+- Produces admin-ready escalation templates.
+
+## Use Cases
+
+- Enable Claude Code for GCP-native engineering teams.
+- Debug PERMISSION_DENIED on Vertex Claude calls from CI runners.
+- Align Vertex regions with EU data residency programs.
+- Document standard service account patterns for Claude Code fleets.
+
+## Source Notes
+
+Verified against Claude Code Google Vertex AI and network-config documentation on
+**2026-06-16**:
+
+- Official docs describe configuring Claude Code to call Claude models through Vertex AI
+  with Google Cloud credentials rather than Anthropic API keys.
+- Setup covers project configuration, regional model availability, and authentication
+  patterns appropriate to enterprise GCP environments.
+- Network-config documentation addresses corporate proxies and TLS requirements that
+  affect Vertex endpoint reachability from developer machines and CI.
+
+## Duplicate Check
+
+Checked content/guides and content/agents for Vertex Claude Code coverage.
+claude-code-on-google-vertex-ai-setup is a one-time setup guide. No agents entry provides
+ongoing Vertex platform troubleshooting with IAM, quota, and network-config runbooks.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code Google Vertex AI documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code on Google Vertex AI - https://code.claude.com/docs/en/google-vertex-ai
+- Claude Code network config - https://code.claude.com/docs/en/network-config
+- Claude Code repository - https://github.com/anthropics/claude-code

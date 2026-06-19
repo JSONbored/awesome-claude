@@ -3,6 +3,7 @@ import { createFileRoute, Link, stripSearchParams } from "@tanstack/react-router
 import { z } from "zod";
 import { ArrowRight, Clock, Flame, Info, Rss, Star, TrendingUp } from "lucide-react";
 import { BRIEF_ISSUES } from "@/data/entries";
+import { PageContainer } from "@/components/page-container";
 import { getEntry, search } from "@/data/search";
 import { CategoryPill, SourceBadge, TrustBadge } from "@/components/badges";
 import { TrendingPodium } from "@/components/trending-podium";
@@ -12,6 +13,7 @@ import { CATEGORIES, type Entry } from "@/types/registry";
 import { formatCompact } from "@/lib/format";
 import { breadcrumbScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 import { cn } from "@/lib/utils";
 
 const defaultSearch = {
@@ -71,6 +73,17 @@ export const Route = createFileRoute("/trending")({
           "Trending Claude Code MCP servers, agents, skills, hooks, and commands from live community and intent signals.",
       },
       { property: "og:url", content: absoluteUrl("/trending") },
+      {
+        property: "og:image",
+        content: ogImageUrl({ title: "Trending Claude workflows", eyebrow: "Trending" }),
+      },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        name: "twitter:image",
+        content: ogImageUrl({ title: "Trending Claude workflows", eyebrow: "Trending" }),
+      },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/trending") }],
     scripts: [
@@ -217,7 +230,7 @@ function TrendingPage() {
   const shareUrl = `/trending${sp.category ? `?category=${sp.category}` : ""}`;
 
   return (
-    <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6">
+    <PageContainer className="py-12">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
@@ -402,6 +415,6 @@ function TrendingPage() {
           </Link>
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }

@@ -1,0 +1,258 @@
+---
+title: ".NET Agent Skills"
+slug: dotnet-agent-skills
+category: skills
+description: >-
+  Microsoft .NET team skill marketplace for AI coding agents working on .NET,
+  C#, ASP.NET Core, Blazor, MAUI, diagnostics, MSBuild, NuGet, upgrades,
+  tests, AI workflows, RAG pipelines, and C# MCP servers.
+cardDescription: >-
+  Official .NET Agent Skills marketplace for Claude Code, Codex, Copilot, and
+  Cursor, including C# MCP server creation, testing, diagnostics, and publish
+  workflows.
+seoTitle: .NET Agent Skills for Claude Code, Codex, Copilot, Cursor, and MCP
+seoDescription: >-
+  Install Microsoft's .NET Agent Skills to give Claude Code, Codex, Copilot,
+  and Cursor current .NET, C#, ASP.NET Core, Blazor, MAUI, MSBuild, NuGet,
+  diagnostics, testing, upgrade, AI, RAG, and MCP guidance.
+author: ".NET Team at Microsoft"
+authorProfileUrl: "https://github.com/dotnet"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/dotnet/skills"
+documentationUrl: "https://github.com/dotnet/skills#readme"
+websiteUrl: "https://dotnet.github.io/skills/"
+downloadUrl: "https://github.com/dotnet/skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "codex plugin marketplace add dotnet/skills"
+usageSnippet: >-
+  Add the dotnet/skills marketplace, then install the dotnet-ai plugin for C#
+  MCP server creation, testing, debugging, publishing, LLM integration, RAG,
+  and agentic workflow guidance.
+copySnippet: |-
+  codex plugin marketplace add dotnet/skills
+
+  # Open Codex, then install from the plugin browser
+  /plugins
+
+  # Claude Code or Copilot CLI marketplace flow
+  /plugin marketplace add dotnet/skills
+  /plugin install dotnet-ai@dotnet-agent-skills
+
+  # Install one skill directly
+  skill-installer install https://github.com/dotnet/skills/tree/main/plugins/dotnet-ai/skills/mcp-csharp-create
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/dotnet/skills"
+  - "https://raw.githubusercontent.com/dotnet/skills/main/README.md"
+  - "https://raw.githubusercontent.com/dotnet/skills/main/.agents/plugins/marketplace.json"
+  - "https://raw.githubusercontent.com/dotnet/skills/main/plugins/dotnet-ai/.codex-plugin/plugin.json"
+  - "https://raw.githubusercontent.com/dotnet/skills/main/plugins/dotnet-ai/skills/mcp-csharp-create/SKILL.md"
+  - "https://raw.githubusercontent.com/dotnet/skills/main/plugins/dotnet-aspnetcore/skills/dotnet-webapi/SKILL.md"
+  - "https://raw.githubusercontent.com/dotnet/skills/main/plugins/dotnet-diag/skills/analyzing-dotnet-performance/SKILL.md"
+  - "https://raw.githubusercontent.com/dotnet/skills/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - GitHub Copilot
+  - Cursor
+  - VS Code
+prerequisites:
+  - "An AI coding assistant or skill host that supports Agent Skills, plugin marketplaces, or direct skill installation."
+  - ".NET SDK and project-local build/test tooling appropriate for the repository being edited."
+  - "For MCP server work, the official C# MCP SDK, MCP project templates, and a target transport choice such as stdio or HTTP."
+  - "For diagnostics, permission to collect traces, dumps, logs, counters, binlogs, or test output from the target environment."
+safetyNotes:
+  - ".NET build, test, upgrade, package, template, publish, and migration tasks can modify project files, lock files, generated code, packages, app settings, and deployment artifacts."
+  - "Diagnostics skills may suggest collecting traces, dumps, counters, crash data, MSBuild binlogs, or performance profiles; collect those artifacts only with explicit approval and storage controls."
+  - "MCP server skills can expose local code, files, APIs, credentials, or production services as callable tools; review tool descriptions, parameter validation, authorization, and transport choice before connecting clients."
+  - "NuGet and publish workflows can push packages or artifacts to public or private feeds; verify package IDs, versions, API keys, feed targets, and release policy before publishing."
+  - "Upgrade and modernization guidance should be verified against each application's framework support window, deployment target, package compatibility, and rollback plan."
+privacyNotes:
+  - ".NET repositories may contain connection strings, appsettings secrets, user secrets, certificates, environment variables, telemetry keys, logs, traces, dumps, package credentials, and production data."
+  - "MSBuild binlogs, crash dumps, profiler output, and test artifacts can contain source paths, dependency graphs, request data, exception payloads, configuration values, and environment details."
+  - "MCP servers created with these skills may forward prompts and tool inputs to local processes, HTTP services, databases, cloud APIs, or third-party model providers depending on the implementation."
+  - "Keep private NuGet credentials, signing keys, deployment secrets, customer data, dumps, and proprietary source out of public prompts, issues, pull requests, and shared artifacts."
+tags:
+  - dotnet
+  - skills
+  - csharp
+  - mcp
+  - aspnetcore
+  - blazor
+  - diagnostics
+  - ai-agents
+keywords:
+  - dotnet agent skills
+  - .NET skills for Codex
+  - .NET skills Claude Code
+  - C# MCP server skill
+  - dotnet mcp csharp create
+  - ASP.NET Core AI agent skills
+  - dotnet diagnostics skill
+  - dotnet-ai plugin
+readingTime: 8
+difficultyScore: 82
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# .NET Agent Skills
+
+`dotnet/skills` is the official .NET team marketplace for Agent Skills and
+custom agents. It gives Claude Code, Codex, GitHub Copilot, Cursor, and other
+skill-aware coding agents source-backed guidance for .NET, C#, ASP.NET Core,
+Blazor, MAUI, Entity Framework, diagnostics, MSBuild, NuGet, tests, upgrades,
+AI workflows, RAG pipelines, and C# MCP servers.
+
+This is especially useful for teams that want AI coding agents to follow modern
+.NET conventions instead of generic C# advice. The repository ships a
+Codex-native marketplace manifest, plugin manifests, individual `SKILL.md`
+files, and a dashboard for accuracy and efficiency scoring trends.
+
+## Knowledge Freshness
+
+The repository is maintained by the .NET team at Microsoft and currently
+includes plugins for core .NET work, data access, diagnostics, MSBuild, NuGet,
+upgrades, MAUI, AI, template authoring, tests, ASP.NET Core, Blazor, and .NET
+11 APIs. .NET SDKs, templates, NuGet packages, ASP.NET Core APIs, MCP SDK
+patterns, and preview framework guidance change quickly.
+
+Use the skills for workflow structure and agent guardrails, then verify exact
+commands, package versions, target frameworks, and deployment constraints
+against the application's repository and the currently installed .NET SDK.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The `dotnet/skills` repository README.
+- The `.agents/plugins/marketplace.json` marketplace manifest.
+- The `dotnet-ai` plugin manifest.
+- Representative `SKILL.md` files for C# MCP server creation and testing.
+- Representative ASP.NET Core Web API and diagnostics skills.
+- The repository license and official GitHub organization metadata.
+
+## Core Workflow
+
+Install the marketplace for Codex:
+
+```bash
+codex plugin marketplace add dotnet/skills
+```
+
+Open Codex and install from the plugin browser:
+
+```text
+/plugins
+```
+
+For Claude Code or Copilot CLI:
+
+```text
+/plugin marketplace add dotnet/skills
+/plugin install dotnet-ai@dotnet-agent-skills
+```
+
+Install an individual skill directly when you only want one workflow:
+
+```bash
+skill-installer install https://github.com/dotnet/skills/tree/main/plugins/dotnet-ai/skills/mcp-csharp-create
+```
+
+## Capability Scope
+
+The marketplace currently exposes these plugin groups:
+
+| Plugin | Scope |
+| --- | --- |
+| `dotnet` | Core .NET coding tasks |
+| `dotnet-data` | Entity Framework and .NET data access |
+| `dotnet-diag` | Performance investigations, debugging, and incident analysis |
+| `dotnet-msbuild` | Build failure diagnosis, performance, code quality, and modernization |
+| `dotnet-nuget` | Dependency management, package management, and modernization |
+| `dotnet-upgrade` | Framework, language, and compatibility upgrades |
+| `dotnet-maui` | .NET MAUI setup, diagnostics, and troubleshooting |
+| `dotnet-ai` | LLM integration, agentic workflows, RAG, MCP, and ML.NET |
+| `dotnet-template-engine` | Template discovery, scaffolding, and authoring |
+| `dotnet-test` | Test execution, filtering, platform detection, and MSTest workflows |
+| `dotnet-aspnetcore` | Middleware, endpoints, real-time communication, and API patterns |
+| `dotnet-blazor` | Blazor component authoring, interactivity, and web app patterns |
+| `dotnet11` | New .NET 11 APIs and language features |
+
+For MCP-specific traffic, the `dotnet-ai` plugin is the highest-value starting
+point. It includes C# MCP server workflows for creating servers with the
+official SDK and templates, choosing stdio or HTTP transports, implementing
+tools, adding prompts and resources, debugging servers, testing with MCP client
+integration tests, and preparing publish workflows.
+
+## Production Rules
+
+Use these skills as expert workflow guidance, but keep repository and runtime
+boundaries explicit:
+
+- Inspect the target solution, SDK version, target frameworks, package graph,
+  tests, and deployment path before broad changes.
+- Keep generated code, package upgrades, lock files, and project file edits
+  separately reviewable.
+- Run `dotnet build`, targeted tests, and the repository's existing validation
+  before proposing production changes.
+- For ASP.NET Core work, preserve existing controller or minimal API style
+  rather than mixing patterns.
+- For MCP servers, document every tool, validate parameters, restrict network
+  and filesystem access, and choose stdio or HTTP transport based on the
+  intended trust boundary.
+- For diagnostics, avoid collecting dumps, traces, counters, or binlogs unless
+  the user approves the environment, retention plan, and redaction path.
+- For NuGet publish tasks, verify package identity, feed target, API key scope,
+  signing policy, and rollback path before pushing artifacts.
+
+## Use Cases
+
+- Ask Codex to scaffold a C# MCP server with the official SDK and stdio
+  transport.
+- Have Claude Code add MCP tool tests using the C# MCP client SDK.
+- Use Copilot to diagnose an ASP.NET Core Web API endpoint and produce OpenAPI
+  metadata that matches the existing API style.
+- Ask Cursor to review a hot path for .NET performance anti-patterns.
+- Use an agent to triage MSBuild failures, NuGet dependency drift, or .NET
+  upgrade blockers with source-specific workflows instead of generic guesses.
+
+## Source Review
+
+- The README describes `.NET Agent Skills` as the .NET team's curated set of
+  core skills and custom agents for coding agents.
+- The repository includes a dashboard for accuracy and efficiency scoring
+  trends across contained plugins.
+- The Codex installation section says the repository ships a Codex-native
+  marketplace manifest at `.agents/plugins/marketplace.json`.
+- The marketplace manifest names `.NET Team at Microsoft` as the owner and
+  lists plugin groups for core .NET, data, diagnostics, MSBuild, NuGet,
+  upgrades, MAUI, AI, template engine, tests, ASP.NET Core, Blazor, and .NET
+  11 work.
+- The `mcp-csharp-create` skill covers `dotnet new mcpserver`, the official C#
+  MCP SDK, tool/prompt/resource implementation, and stdio versus HTTP
+  transport choices.
+- The `mcp-csharp-test` skill covers unit tests, MCP protocol integration
+  tests, HTTP MCP testing, and evaluations for server quality.
+- The license file identifies the repository as MIT licensed.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`, open pull
+requests, and repository-wide content for `.NET Agent Skills`, `dotnet/skills`,
+`dotnet-agent-skills`, `mcp-csharp-create`, `dotnet-ai`, and C# MCP skill
+phrases. Existing .NET content is older rules or agent guidance, not this
+official Microsoft skill marketplace, and no exact source URL duplicate or open
+duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The upstream
+repository is maintained under the official `dotnet` GitHub organization and is
+MIT licensed.

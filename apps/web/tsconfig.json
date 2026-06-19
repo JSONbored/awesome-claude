@@ -14,6 +14,11 @@
     "verbatimModuleSyntax": false,
     "noEmit": true,
 
+    /* Incremental type-check: `tsc --noEmit` writes a .tsbuildinfo so CI (which caches it) only
+       re-checks changed files instead of the whole app each run. Path is gitignored + cached. */
+    "incremental": true,
+    "tsBuildInfoFile": "./.cache/tsc.tsbuildinfo",
+
     /* Linting */
     "skipLibCheck": true,
     "strict": true,

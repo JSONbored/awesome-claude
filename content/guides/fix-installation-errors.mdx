@@ -13,12 +13,20 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/troubleshoot-install"
+retrievalSources:
+  - "https://code.claude.com/docs/en/troubleshoot-install"
+  - "https://code.claude.com/docs/en/setup"
 installable: false
 usageSnippet: >-
   This tutorial teaches you to install Claude Code without permission errors in
   15-25 minutes. You'll learn platform-specific installation methods, fix npm
   EACCES errors, and configure PATH correctly. Perfect for developers
   encountering common installation issues.
+safetyNotes:
+  - "Some fixes use privileged operations (sudo chown/mkdir to repair ownership, swap-file creation) and edit shell profiles or proxy variables; run them only on systems you control and never use sudo npm install -g."
+privacyNotes:
+  - "Proxy and TLS fixes may reference internal hosts, credentials, and CA certificate paths; keep proxy URLs with embedded credentials out of committed config and shared logs."
 tags:
   - tutorial
   - beginner
@@ -38,97 +46,104 @@ robotsIndex: true
 robotsFollow: true
 ---
 
-## TL;DR
+## Overview
 
-This tutorial teaches you to install Claude Code without permission errors in 15-25 minutes. You'll learn platform-specific installation methods, fix npm EACCES errors, and configure PATH correctly. Perfect for developers encountering common installation issues.
+Most Claude Code installation failures come from a small set of causes: the install directory isn't on your `PATH`, you have more than one copy of `claude` installed, npm grabbed the wrong platform or threw permission errors, or a corporate proxy/firewall blocked the download. This guide maps the error you actually see to the fix the official docs recommend, then gives you copy-paste commands and a verification step.
 
-**Key Points:**
+The recommended way to install is the native installer, which places the binary at `~/.local/bin/claude` on macOS/Linux/WSL or `%USERPROFILE%\.local\bin\claude.exe` on Windows and auto-updates in the background. npm is also supported and installs the same native binary through a per-platform optional dependency. If you previously used `npm install -g` and keep hitting permission or update problems, switching to the native installer (or to Homebrew/WinGet) resolves most of them.
 
-- Native curl installer eliminates most npm permission issues
-- User-level npm configuration prevents EACCES errors permanently
-- Shell-specific PATH setup ensures 'command not found' resolution
-- 15-25 minutes total with 6 verification steps
+System requirements to confirm first:
 
-Master Claude Code installation without encountering common npm permission errors. By completion, you'll have Claude Code running in your terminal and understand PATH configuration fundamentals. This guide covers multiple installation methods, PATH configurations, and real-world troubleshooting scenarios.
+- **OS:** macOS 13.0+, Windows 10 1809+/Server 2019+, Ubuntu 20.04+, Debian 10+, or Alpine 3.19+
+- **Hardware:** 4 GB+ RAM, x64 or ARM64 CPU (the installer can be OOM-killed below 4 GB)
+- **npm path only:** Node.js 18 or later
+- **Location:** an [Anthropic-supported country](https://www.anthropic.com/supported-countries)
 
-> **Tutorial Requirements**
->
-> **Prerequisites:** Basic terminal knowledge
-> **Time Required:** 15-25 minutes active work
-> **Tools Needed:** Node.js 18+, Terminal, Browser
-> **Outcome:** Working Claude Code installation with proper PATH
+## Troubleshooting table
 
-## What You'll Learn
+Match the symptom to its cause and fix. All entries are drawn from the official troubleshooting docs.
 
-<!-- Section type: feature_grid -->
+| Symptom | Cause | Fix |
+| --- | --- | --- |
+| `command not found: claude` / `'claude' is not recognized` | Install succeeded but `~/.local/bin` isn't on `PATH` | Add the install dir to `PATH` and restart the shell (see commands below). |
+| `EACCES` / permission denied writing to a global dir | A global npm install can't write to its prefix; `sudo` makes it worse | Don't use `sudo`. Switch to the native installer, or repair the npm global directory. |
+| Auto-update notice that the npm global dir isn't writable | npm-managed install lacks write access for background updates | Run `claude doctor` for the listed fix, or move to the native installer. |
+| `Could not find native binary package "@anthropic-ai/claude-code-<platform>"` | Optional dependencies were skipped (`--omit=optional`, `--no-optional`, `optional=false`) | Re-run npm install without those flags so the platform binary is fetched. |
+| npm platform-mismatch error inside WSL | WSL picked up the Windows `npm` | Run `npm config set os linux`, then reinstall with `--force` (no `sudo`). |
+| `exec: node: not found` running `claude` in WSL | WSL is using the Windows Node.js | Install Node via your Linux package manager or nvm; check `which node` is a `/usr/` path, not `/mnt/c/`. |
+| `Killed` during install on Linux | OOM killer; server has under 4 GB RAM | Add swap space (or use a larger instance), then reinstall. |
+| `Failed to fetch version` / can't reach download server | `downloads.claude.ai` blocked by network/proxy | Test connectivity; set `HTTPS_PROXY`/`HTTP_PROXY`; or try VPN/alternative installer. |
+| `TLS connect error` / `unable to get local issuer certificate` | Stale CA certs or proxy TLS inspection | Update system CA certificates, or point the installer at your corporate CA bundle. |
+| `irm`/`&&` not recognized, or `bash` not a cmdlet on Windows | Install command copied for the wrong shell | Use the installer matching your shell (PowerShell `irm`, CMD `curl`/batch). |
+| `claude` opens the Desktop app on Windows | Old Claude Desktop registered `Claude.exe` ahead on `PATH` | Update Claude Desktop to the latest version. |
+| Two versions / unexpected behavior | Multiple installs (native + npm `-g` + legacy `~/.claude/local`) | Keep the native install only; uninstall the others. |
+| `claude --version` works but startup crashes/hangs | Missing shared libs or wrong binary variant | Check `ldd "$(command -v claude)"` for `not found`; install missing libs / reinstall correct variant. |
 
-## Step-by-Step Tutorial
+## Fix commands
 
-1. **Verify System Requirements**
+Run the diagnostic first, then apply the fix that matches your symptom. These are macOS/Linux/WSL examples; Windows equivalents are noted inline.
 
-2. **Configure npm Directory**
+```bash
+# 0. Diagnose: detailed report of your install, PATH, and last update attempt
+claude doctor
 
-3. **Install Claude Code**
+# 1. command not found -> add the native install dir to PATH
+# Zsh (macOS default):
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+# Bash (most Linux):
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
 
-4. **Configure PATH for Your Shell**
+# Confirm the directory is now on PATH (no output = still missing)
+echo "$PATH" | tr ':' '\n' | grep -Fx "$HOME/.local/bin"
 
-5. **Verify and Troubleshoot**
+# 2. Find and remove conflicting installs (keep only the native one)
+which -a claude
+npm uninstall -g @anthropic-ai/claude-code   # remove a global npm copy
+rm -rf ~/.claude/local                        # remove the legacy local npm copy
 
-6. **First Project Setup**
+# 3. npm permission (EACCES) / can't auto-update:
+#    prefer the native installer (see Setup docs) instead of sudo npm.
+#    If the native dir isn't writable, create it and take ownership:
+sudo mkdir -p ~/.local/bin
+sudo chown -R "$(whoami)" ~/.local
 
-## Key Concepts Explained
+# 4. WSL platform mismatch with npm (do NOT use sudo):
+npm config set os linux
+npm install -g @anthropic-ai/claude-code --force
 
-Understanding these concepts ensures you can adapt this tutorial to your specific needs and troubleshoot issues effectively.
+# 5. Network/proxy blocked the download:
+curl -sI https://downloads.claude.ai/claude-code-releases/latest   # HTTP/2 200 = reachable
+export HTTPS_PROXY=https://proxy.example.com:8080
+export HTTP_PROXY=https://proxy.example.com:8080
 
-<!-- Section type: accordion -->
+# 6. Low-memory Linux 'Killed': add 2 GB swap, then reinstall
+sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile
+sudo mkswap /swapfile && sudo swapon /swapfile
 
-## Practical Examples
+# 7. Apply a pending update immediately
+claude update
+```
 
-<!-- Section type: tabs -->
+On Windows PowerShell, install or repair using the official PowerShell installer documented in the [setup guide](https://code.claude.com/docs/en/setup), add `%USERPROFILE%\.local\bin` to your User `PATH`, and restart the terminal. On macOS you can also install via Homebrew (`brew install --cask claude-code`) and on Windows via WinGet (`winget install Anthropic.ClaudeCode`); both avoid npm entirely. Note that `brew`, `winget`, `apt`, `dnf`, and `apk` installs do not auto-update — upgrade them with their own commands (for example `brew upgrade claude-code`, `winget upgrade Anthropic.ClaudeCode`).
 
-## Troubleshooting Guide
+## Verify the installation
 
-> **Common Issues and Solutions**
->
-> **Issue 1: EACCES permission denied to /usr/local/lib**
-> **Solution:** Never use sudo. Reconfigure npm prefix to ~/.npm-global directory. This fixes the root cause permanently.
->
-> **Issue 2: claude: command not found after installation**
-> **Solution:** Add npm global bin to PATH. Source your shell config file immediately.
->
-> **Issue 3: Update installed. Restart to apply loop**
-> **Solution:** Run claude migrate-installer command. Switches to native installer with working auto-updates.
+After applying a fix, confirm Claude Code resolves and runs:
 
-## Advanced Techniques
+```bash
+# Should print a version number, not "command not found"
+claude --version
 
-> **Professional Tips**
->
-> **Performance Optimization:** Consider pinning to a stable version for consistent performance. Test newer versions in development first.
->
-> **Security Best Practice:** Always configure API keys as environment variables. Never commit keys to version control.
->
-> **Scalability Pattern:** Use Volta for team installations. Provides automatic version switching and improved shell startup.
+# Full health check: install location, PATH, conflicts, last update result
+claude doctor
+```
 
-## Validation and Testing
+If `claude --version` prints a version, the install and `PATH` are correct. If it still fails, re-check `PATH` and conflicting installs above. When everything passes, open a terminal in your project and run `claude` to start a session and authenticate (Claude Code requires a Pro, Max, Team, Enterprise, or Console account — the free Claude.ai plan does not include access).
 
-<!-- Section type: feature_grid -->
+## Still stuck
 
-## Next Steps and Learning Path
+If none of the above resolves it, check the [Claude Code GitHub issues](https://github.com/anthropics/claude-code/issues) for known problems or open a new one with your OS, the exact install command you ran, and the full error output. If `claude --version` works but something else is wrong, attach the output of `claude doctor`.
 
-## Related Learning Resources
-
-<!-- Section type: related_content -->
-
-> **Tutorial Complete!**
->
-> **Congratulations!** You've mastered Claude Code installation without permission errors.
->
-> **What you achieved:**
->
-> - ✅ Configured npm to avoid EACCES errors permanently
-> - ✅ Installed Claude Code with proper PATH configuration
-> - ✅ Learned platform-specific installation methods
->
-> **Ready for more?** Explore our [tutorials collection](/guides/tutorials) or join our [community](/community) to share your installation experience and help others overcome setup challenges.
-
-_Last updated: September 2025 | Found this helpful? Share it with developers struggling with Claude Code installation and explore more [Claude tutorials](/guides/tutorials)._
+_Last verified against the official Claude Code installation and troubleshooting docs (June 2026)._

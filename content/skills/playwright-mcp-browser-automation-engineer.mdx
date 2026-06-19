@@ -40,6 +40,12 @@ prerequisites:
   - Browser automation target URL(s)
   - Playwright MCP server configured in your agent environment
   - Test credentials with least required permissions
+safetyNotes:
+  - "Can design automation for live browsers, accounts, workflows, or infrastructure; use staging targets and human approval before destructive or account-write actions."
+  - "Keep API tokens and service credentials least-privileged, and verify generated runbooks before scheduling or unattended execution."
+privacyNotes:
+  - "Inputs and outputs can include browser state, account metadata, workflow payloads, infrastructure inventory, logs, and operational screenshots."
+  - "Redact credentials, session data, customer records, internal hostnames, and private workspace details before sharing prompts or artifacts."
 tags:
   - playwright
   - mcp

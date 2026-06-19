@@ -1,0 +1,134 @@
+---
+title: Enterprise Network Proxy Debugging Agent
+slug: enterprise-network-proxy-debugging-agent
+category: agents
+description: >-
+  Community reusable agent prompt for debugging Claude Code behind corporate HTTP proxies
+  and mTLS using official network-config docs: HTTP_PROXY variables, certificate trust,
+  downloads reachability, and remote MCP URL failures.
+cardDescription: >-
+  Debug Claude Code behind corporate proxies using official network-config documentation.
+seoTitle: Enterprise Network Proxy Debugging Agent
+seoDescription: >-
+  Reusable agent prompt to debug Claude Code on enterprise networks grounded in official
+  network-config docs: HTTP_PROXY, mTLS, downloads reachability, and remote MCP URLs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1576
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1576"
+documentationUrl: "https://code.claude.com/docs/en/network-config"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent when Claude Code fails behind a corporate proxy to verify HTTP_PROXY settings,
+  TLS trust, Anthropic endpoint reachability, and remote MCP URL allowlists per network-config docs.
+prerequisites:
+  - "Corporate proxy host, port, and authentication requirements from IT."
+  - "Claude Code network-config settings and shell environment variables."
+  - "Symptoms such as failed install fetch, auth errors, MCP remote timeouts, or SSL failures."
+  - "Optional mTLS client certificate paths and enterprise CA bundle locations."
+safetyNotes:
+  - "Do not paste proxy credentials or client private keys into shared chat logs."
+  - "Disabling TLS verification globally is not an acceptable production fix."
+  - "Split-tunnel VPN changes affect MCP SaaS endpoints—coordinate with security teams."
+  - "Debugging commands should use read-only curl or openssl checks before changing production laptops."
+privacyNotes:
+  - "Proxy logs may capture Anthropic API paths and internal MCP hostnames."
+  - "Packet captures for debugging must follow company retention and access policies."
+  - "Support tickets should redact employee emails and internal gateway URLs when possible."
+tags:
+  - claude-code
+  - enterprise
+  - proxy
+  - mtls
+  - network
+  - debugging
+keywords:
+  - enterprise network proxy debugging agent
+  - claude code HTTP_PROXY troubleshooting
+  - corporate proxy mtls claude code
+  - claude code network config debug
+  - remote mcp proxy allowlist
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Enterprise Network Proxy Debugging Agent is a community-authored reusable prompt for
+diagnosing Claude Code failures on locked-down networks. It applies official Claude Code
+network-config documentation—not an official Anthropic support agent.
+
+## Scope Note
+
+This prompt operationalizes documented proxy, TLS, and connectivity troubleshooting steps
+from code.claude.com. IT policy decisions remain with your network and security teams.
+
+## Agent Prompt
+
+You are an enterprise network proxy debugger for Claude Code. Identify why installs, auth,
+or MCP remote calls fail behind corporate egress controls using official network-config docs.
+
+Workflow:
+
+1. **Capture symptoms.** Classify install fetch failures, CLI auth errors, MCP timeouts, or TLS handshake failures.
+2. **Environment.** Inspect HTTP_PROXY, HTTPS_PROXY, NO_PROXY, and Claude-specific network settings documented for Claude Code.
+3. **Trust store.** Verify enterprise root CAs and client mTLS certs are visible to Node and Claude Code.
+4. **Reachability.** Test documented Anthropic and downloads endpoints with curl through the proxy.
+5. **MCP remote.** Confirm SaaS MCP URLs are allowed by firewall and proxy PAC rules.
+6. **Policy conflicts.** Check managed settings vs local overrides that block network or MCP categories.
+7. **Fix plan.** Propose IT ticket items and safe local changes ranked by risk.
+
+Output contract:
+
+- Failure classification with reproducible test commands (redacted).
+- Root cause hypothesis with evidence.
+- IT vs developer action list.
+- Verification steps after changes.
+
+## Features
+
+- Maps network-config docs to practical proxy debugging workflows.
+- Covers installer download hosts separate from API traffic.
+- Includes remote MCP allowlist considerations.
+- Avoids insecure TLS bypass recommendations.
+
+## Use Cases
+
+- New engineer laptop cannot authenticate Claude Code on corporate VPN.
+- Remote MCP connector works at home but fails in office network.
+- mTLS rollout breaks Claude Code until CA bundles are updated.
+- Platform team documents standard proxy env templates for Claude Code.
+
+## Source Notes
+
+Verified against Claude Code network-config documentation on **2026-06-16**:
+
+- Official docs describe HTTP_PROXY and HTTPS_PROXY environment variables and corporate
+  proxy configuration patterns for Claude Code clients.
+- Documentation covers TLS and certificate trust considerations for enterprise networks
+  intercepting HTTPS traffic to Anthropic endpoints.
+- Separate connectivity requirements apply to installer downloads, API sessions, and
+  optional remote MCP connectors documented in MCP setup guides.
+
+## Duplicate Check
+
+Checked content/guides and content/agents for enterprise network coverage.
+enterprise-network-proxy-and-mtls-setup-for-claude-code is a setup guide. No agents entry
+provides interactive proxy debugging runbooks grounded in network-config documentation.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code network-config documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code network config - https://code.claude.com/docs/en/network-config
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- Claude Code repository - https://github.com/anthropics/claude-code

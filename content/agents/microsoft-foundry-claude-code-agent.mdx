@@ -1,0 +1,136 @@
+---
+title: Microsoft Foundry Claude Code Agent
+slug: microsoft-foundry-claude-code-agent
+category: agents
+description: >-
+  Community reusable agent prompt for operating Claude Code on Microsoft Foundry using
+  official setup docs: Azure subscriptions, Entra ID auth, deployment names, enterprise
+  network config, and Foundry-specific Claude Code troubleshooting steps.
+cardDescription: >-
+  Operate Claude Code on Microsoft Foundry using official Azure auth, deployment, and network guidance.
+seoTitle: Microsoft Foundry Claude Code Agent
+seoDescription: >-
+  Reusable agent prompt for Claude Code on Microsoft Foundry grounded in official docs: Azure
+  resources, Entra ID, deployments, network config, and Foundry troubleshooting workflows.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1582
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1582"
+documentationUrl: "https://code.claude.com/docs/en/microsoft-foundry"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent when deploying or debugging Claude Code with Microsoft Foundry to validate
+  Azure auth, deployment names, network config, and Foundry 401/403 integration errors.
+prerequisites:
+  - "Azure subscription with Microsoft Foundry access and approved Claude deployments."
+  - "Authentication configured per Foundry docs using Entra ID or approved credential patterns."
+  - "Corporate network or proxy requirements documented in Claude Code network-config guidance."
+  - "Enterprise managed settings for Claude Code if rolling out to a large organization."
+safetyNotes:
+  - "Client secrets and connection strings must not be committed to repositories."
+  - "Deployment names and API versions must match Foundry-supported Claude models only."
+  - "Cross-subscription resources can break policy—keep Foundry resources in approved subscriptions."
+  - "Azure RBAC changes require admin approval; this agent advises, not applies, policies."
+privacyNotes:
+  - "Azure Monitor and Foundry logs may store request metadata; configure retention accordingly."
+  - "Customer content handling follows Microsoft and Anthropic agreements for Foundry Claude."
+  - "Support tickets should redact tenant IDs and subscription names when posted publicly."
+tags:
+  - claude-code
+  - microsoft-foundry
+  - azure
+  - enterprise
+  - platform
+  - authentication
+keywords:
+  - microsoft foundry claude code agent
+  - claude code azure foundry troubleshooting
+  - entra id claude code foundry
+  - enterprise foundry claude deployment
+  - azure deployment claude code foundry
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Microsoft Foundry Claude Code Agent is a community-authored reusable prompt for teams
+deploying Claude Code against Microsoft Foundry on Azure. It applies official Claude
+Code on Microsoft Foundry and network-config documentation—not an official Anthropic
+support agent.
+
+## Scope Note
+
+This prompt operationalizes documented Foundry configuration and troubleshooting steps
+from code.claude.com. It does not replace Azure support or Anthropic enterprise onboarding.
+
+## Agent Prompt
+
+You are a Microsoft Foundry platform specialist for Claude Code. Help Azure operators
+configure and debug Foundry-backed Claude Code using only official documentation references.
+
+Workflow:
+
+1. **Mode confirmation.** Verify Claude Code targets Foundry rather than the direct Anthropic API per setup docs.
+2. **Azure resources.** Identify subscription, resource group, Foundry project, and Claude deployments.
+3. **Authentication.** Review Entra ID, managed identity, or approved credential flows; reject secrets in git.
+4. **Networking.** Apply network-config guidance for proxies, private endpoints, and firewall rules for Azure AI endpoints.
+5. **Deployments.** Match feature needs to deployed Claude model names and API versions documented for Foundry.
+6. **Enterprise policy.** Align managed Claude Code settings, logging, and compliance requirements with Foundry usage.
+7. **Runbook.** Provide az CLI checks and Azure admin escalation templates with evidence.
+
+Output contract:
+
+- Configuration summary with subscription, deployment, and auth method.
+- Error diagnosis with Azure-specific causes and evidence.
+- Developer vs Azure admin remediation steps.
+- Compliance notes on logging and data handling.
+
+## Features
+
+- Maps Foundry setup docs to repeatable troubleshooting workflows.
+- Promotes Azure authentication hygiene without secret sprawl.
+- Incorporates enterprise network-config requirements.
+- Produces admin-ready escalation templates.
+
+## Use Cases
+
+- Roll out Claude Code to Azure-first engineering organizations.
+- Debug 401/403 errors against Foundry Claude deployments from CI.
+- Standardize deployment names across business units.
+- Prepare platform admin tickets with precise RBAC changes.
+
+## Source Notes
+
+Verified against Claude Code Microsoft Foundry and network-config documentation on
+**2026-06-16**:
+
+- Official docs describe configuring Claude Code to call Claude models through Microsoft
+  Foundry with Azure credentials rather than Anthropic API keys.
+- Setup covers Foundry project configuration, deployment selection, and authentication
+  patterns appropriate to enterprise Azure environments.
+- Network-config documentation addresses corporate proxies and TLS requirements that
+  affect Foundry endpoint reachability from developer machines and CI.
+
+## Duplicate Check
+
+Checked content/guides and content/agents for Foundry Claude Code coverage.
+claude-code-on-microsoft-foundry-setup is a one-time setup guide. No agents entry provides
+ongoing Foundry platform troubleshooting with Azure auth and network-config runbooks.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code Microsoft Foundry documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code on Microsoft Foundry - https://code.claude.com/docs/en/microsoft-foundry
+- Claude Code network config - https://code.claude.com/docs/en/network-config
+- Claude Code repository - https://github.com/anthropics/claude-code

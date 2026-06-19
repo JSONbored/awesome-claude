@@ -1,0 +1,95 @@
+---
+title: Tool Search For Agents With Large MCP Tool Sets
+slug: tool-search-for-agents-with-large-mcp-tool-sets
+category: guides
+description: >-
+  Configure Claude Agent SDK and Claude Code tool search so large MCP catalogs
+  defer schemas until needed, using ENABLE_TOOL_SEARCH modes, alwaysLoad discipline,
+  and context budgeting from official tool-search documentation.
+cardDescription: >-
+  Defer large MCP tool schemas with tool search and alwaysLoad discipline.
+seoTitle: Tool Search For Agents With Large MCP Tool Sets
+seoDescription: >-
+  Guide to tool search for agents with large MCP tool sets: ENABLE_TOOL_SEARCH,
+  deferred schemas, alwaysLoad, and context budgeting from Agent SDK docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1413
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1413"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/tool-search"
+usageSnippet: >-
+  When MCP servers expose dozens of tools, enable tool search deferral, reserve
+  alwaysLoad for small always-on servers, and monitor context with /context.
+prerequisites:
+  - "Multiple MCP servers or large tool catalogs in Agent SDK or Claude Code."
+  - "Ability to set ENABLE_TOOL_SEARCH and edit .mcp.json alwaysLoad flags."
+  - "Representative tasks showing which tools are needed every turn versus rarely."
+safetyNotes:
+  - "Deferred tools still execute with full permissions once discovered—scope allowlists."
+  - "alwaysLoad on large servers negates tool search benefits."
+  - "Tool search adds a discovery step; verify critical tools are reachable under load."
+privacyNotes:
+  - "Tool schemas may describe internal APIs—treat deferred catalogs as sensitive config."
+  - "Search queries sent to discover tools enter model context like other prompts."
+sourceUrls:
+  - "https://code.claude.com/docs/en/agent-sdk/tool-search"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - agent-sdk
+  - mcp
+  - tool-search
+  - context-window
+  - claude-code
+keywords:
+  - tool search large MCP tool sets
+  - ENABLE_TOOL_SEARCH Claude Code
+  - MCP alwaysLoad tool search
+readingTime: 8
+difficultyScore: 56
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Tool search keeps large MCP catalogs out of the initial context by deferring tool
+definitions until Claude needs them. Use default deferral, tune `ENABLE_TOOL_SEARCH`,
+and mark only tiny servers with `alwaysLoad: true`.
+
+## Step-by-Step Guide
+
+1. Inventory MCP servers and tool counts per server.
+2. Identify tools required on every turn (mark server `alwaysLoad: true` only if small).
+3. Leave tool search enabled for catalog servers with many tools.
+4. Set `ENABLE_TOOL_SEARCH=auto` if you want upfront load until 10% context threshold.
+5. Run `/context` before and after changes to measure savings.
+6. Test tasks that need rare tools to confirm discovery still works.
+
+## Troubleshooting
+
+**Issue:** Claude never finds a rare tool
+**Fix:** Temporarily alwaysLoad that server or improve tool descriptions.
+
+**Issue:** Context still full at start
+**Fix:** Remove alwaysLoad from large servers; reduce built-in tool list.
+
+## Source Verification Notes
+
+Verified against Agent SDK tool-search and MCP docs on **2026-06-16**: default
+deferral, `ENABLE_TOOL_SEARCH` modes, and `alwaysLoad` behavior.
+
+## Duplicate Check
+
+Complements `controlling-mcp-result-size-and-context-pressure` (output token limits).
+
+## References
+
+- Agent SDK tool search - https://code.claude.com/docs/en/agent-sdk/tool-search

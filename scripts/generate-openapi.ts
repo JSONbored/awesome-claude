@@ -212,7 +212,7 @@ function buildOpenApiDocument() {
       description:
         "Read-only registry, distribution feeds, and tightly scoped dynamic endpoints. Public registry publishing is not exposed through the API.",
     },
-    servers: [{ url: "https://heyclau.de" }, { url: "https://dev.heyclau.de" }],
+    servers: [{ url: "https://heyclau.de" }],
     security: [{ OriginCheck: [] }],
     components: {
       securitySchemes: {

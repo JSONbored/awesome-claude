@@ -1,0 +1,202 @@
+---
+title: Claude Code Sandboxed Bash Policy Capability Pack Skill
+slug: claude-code-sandboxed-bash-policy-capability-pack
+category: skills
+description: >-
+  Expert Claude Code sandboxed bash policy capability pack applying documented
+  /sandbox enablement, filesystem and network boundaries, autoAllowBashIfSandboxed
+  review, and fail-closed settings for autonomous shell workflows.
+cardDescription: >-
+  Design sandboxed bash policies with source-backed /sandbox checklists and
+  permission boundaries.
+seoTitle: Claude Code Sandboxed Bash Policy Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code sandboxed bash policy: /sandbox
+  setup, network and filesystem rules, autoAllowBashIfSandboxed, and fail-closed
+  settings from official sandboxing documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1515
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1515"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/sandboxing"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when defining or reviewing Claude Code bash sandbox policies before
+  enabling autonomous agents or autoAllowBashIfSandboxed in shared repositories.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code sandboxed bash policy capability pack for this project."
+
+  # Required output
+  1) Sandbox dependency and /sandbox status checklist
+  2) Filesystem and network boundary recommendations
+  3) autoAllowBashIfSandboxed risk review
+  4) Fail-closed and rollback plan
+  5) Privacy-safe policy summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/sandboxing"
+  - "https://code.claude.com/docs/en/permissions"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code on macOS, Linux, or WSL with sandbox dependencies installable."
+  - "Permission to edit project or managed settings.json sandbox blocks."
+  - "Inventory of bash commands agents run in CI and local workflows."
+  - "Security stakeholder for production repository policy sign-off."
+safetyNotes:
+  - "Sandboxing reduces blast radius but does not replace human review of diffs."
+  - "autoAllowBashIfSandboxed auto-approves some sandboxed commands—pair with deny rules."
+  - "Missing dependencies can disable sandbox silently unless fail-closed settings apply."
+  - "Network allowlists still permit egress to listed domains—document allowed hosts."
+privacyNotes:
+  - "Sandbox logs and permission prompts may capture command text and paths."
+  - "Allowed write paths may include files with secrets—keep credentials out of sandbox scope."
+  - "Policy summaries for external auditors should omit internal hostnames when possible."
+tags:
+  - claude-code
+  - sandbox
+  - bash
+  - policy
+  - capability-pack
+keywords:
+  - Claude Code sandboxed bash policy capability pack
+  - autoAllowBashIfSandboxed review checklist
+  - Claude Code /sandbox policy
+  - bash sandbox filesystem network rules
+readingTime: 9
+difficultyScore: 77
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in Claude Code sandboxing, permissions, and settings documentation
+verified on **2026-06-16**. Sandbox defaults and dependency checks change with
+releases; verify `/sandbox` after upgrades.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/sandboxing
+- https://code.claude.com/docs/en/permissions
+- https://code.claude.com/docs/en/settings
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official sandboxing documentation on **2026-06-16**:
+
+- Sandboxed bash isolates filesystem and network access with configurable boundaries.
+- `/sandbox` reports dependency status and configuration health.
+- Settings support fail-closed behavior when sandbox dependencies are unavailable.
+- `autoAllowBashIfSandboxed` can auto-approve commands that run inside the sandbox.
+- Permissions and deny rules remain the authoritative enforcement layer.
+
+## Scope Note
+
+Community reusable policy skill—not an official Anthropic product. Applies
+documented sandbox setup and review steps; implementation guides cover first-time
+enablement separately.
+
+## Core Workflow
+
+1. Run `/sandbox` and record dependency status.
+2. Inventory bash commands agents need (build, test, lint, deploy).
+3. Map required filesystem read/write paths and network destinations.
+4. Draft sandbox settings with minimal allowlists.
+5. Review `autoAllowBashIfSandboxed` against deny rules for destructive patterns.
+6. Enable fail-closed settings for CI and managed environments.
+7. Test representative commands in a staging repository.
+8. Publish privacy-safe policy summary for the team.
+
+## Capability Scope
+
+- Sandbox dependency verification.
+- Filesystem and network boundary design.
+- autoAllowBashIfSandboxed risk review.
+- Fail-closed and rollback planning.
+- Stakeholder policy summaries.
+
+## Compatibility
+
+### Native
+
+- **Claude Code**: use as an Agent Skill when rolling out sandbox policy to teams.
+
+### Manual Adaptation
+
+- **Generic AGENTS**: apply checklist when evaluating Claude Code sandbox configs.
+
+## Required Inputs
+
+- Target repository layout and build/test commands.
+- Current settings.json sandbox and permissions blocks.
+- Network egress requirements (registries, APIs, proxies).
+- Managed policy constraints for enterprise deployments.
+
+## Production Rules
+
+- Verify `/sandbox` after every Claude Code upgrade.
+- Deny destructive patterns even when sandboxed.
+- Document allowed domains; avoid wildcard egress in production.
+- Never store secrets in sandbox-writable paths by convention.
+- Require human approval before widening write or network scope.
+- Roll back policy changes that block legitimate CI commands.
+
+## Review Matrix
+
+| Command class | Sandbox stance | Notes |
+| --- | --- | --- |
+| Read-only lint | Allow in sandbox | Low risk with read scope |
+| Package install | Network allowlist | Pin registries |
+| rm -rf patterns | Deny | Even if sandboxed |
+| curl unknown hosts | Deny or allowlist | Prevents exfiltration |
+| Deploy scripts | Foreground approval | No silent auto-allow |
+
+## Output Contract
+
+1. /sandbox status checklist.
+2. Filesystem and network recommendations.
+3. autoAllowBashIfSandboxed findings.
+4. Fail-closed and rollback plan.
+5. Privacy-safe policy summary.
+
+## Troubleshooting
+
+**Issue:** Sandbox silently disabled
+**Fix:** Enable fail-closed; install documented dependencies; re-run `/sandbox`.
+
+**Issue:** CI blocked after policy tighten
+**Fix:** Diff deny rules; add minimal network allowlist for registry hosts.
+
+## Duplicate Check
+
+`sandboxed-bash-setup-for-autonomous-coding-agents` is a setup guide. No `skills`
+entry provides this sandbox policy capability pack with review matrix.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` based on public Claude Code documentation. No
+paid placement or affiliate links.

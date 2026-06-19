@@ -28,10 +28,15 @@ safetyNotes:
   - Do not collect traces from production accounts unless test data and retention are approved.
 privacyNotes:
   - Redact screenshots, network payloads, auth tokens, private URLs, and user content before sharing traces externally.
+documentationUrl: "https://playwright.dev/docs/trace-viewer"
 sourceUrls:
   - "https://playwright.dev/docs/trace-viewer"
+  - "https://playwright.dev/docs/trace-viewer-intro"
   - "https://playwright.dev/docs/debug"
   - "https://playwright.dev/docs/test-configuration"
+retrievalSources:
+  - "https://playwright.dev/docs/trace-viewer"
+  - "https://playwright.dev/docs/trace-viewer-intro"
 tags:
   - playwright
   - debugging
@@ -69,6 +74,65 @@ smaller and more factual.
 5. Ask the AI to propose a patch and a verification command.
 6. Re-run the failing test before trusting the explanation.
 
+## Enable Tracing And Open The Trace
+
+Configure tracing in `playwright.config.ts`. The `on-first-retry` value records
+a trace only when a failed test is retried, which keeps successful runs cheap
+while still capturing evidence for flaky failures:
+
+```ts
+// playwright.config.ts
+import { defineConfig } from "@playwright/test";
+
+export default defineConfig({
+  retries: 1,
+  use: {
+    trace: "on-first-retry",
+  },
+});
+```
+
+Other supported values are `off`, `on` (record for every test),
+`on-all-retries`, and `retain-on-failure` (record every test but discard traces
+from runs that pass).
+
+During local development you can force tracing for a run without relying on
+retry logic, then open the resulting archive in Trace Viewer:
+
+```sh
+# Record a trace for the run
+npx playwright test --trace on
+
+# Open a local trace archive
+npx playwright show-trace path/to/trace.zip
+
+# Open a remote trace archive
+npx playwright show-trace https://example.com/trace.zip
+```
+
+You can also drag and drop a `trace.zip` onto the hosted viewer at
+`https://trace.playwright.dev`, or open it from the HTML report by clicking the
+trace icon next to a test.
+
+## What The Trace Viewer Shows
+
+Use this map to decide which panel holds the evidence you need before building an
+AI evidence packet:
+
+| Panel | What it contains | Use it to |
+| --- | --- | --- |
+| Actions | Timeline of every test action | Find the first unexpected step |
+| Snapshots | DOM state before, during, and after each action | See what the page actually looked like |
+| Screenshots | Filmstrip of frames across the run | Spot the moment the UI diverged |
+| Source | The test source line for the selected action | Tie a failure back to code |
+| Call | Timing, locator, and parameters for an action | Confirm the right element was targeted |
+| Log | Step-by-step execution log | Trace actionability and waits |
+| Errors | Assertion and runtime errors | Read the exact failure message |
+| Console | Browser console logs and warnings | Catch client-side errors |
+| Network | Requests, status codes, and payloads | Find failed or missing requests |
+| Metadata | Run details (browser, viewport, retries) | Explain CI-only differences |
+| Attachments | Visual regression comparisons | Diff expected vs actual images |
+
 ## What To Hand The AI
 
 - Test name and expected user behavior.
@@ -90,13 +154,9 @@ then provide a small evidence packet.
 Compare CI trace video/screenshots with local traces. Device scale factor,
 viewport, locale, timezone, and missing seed data are common differences.
 
-## Duplicate Check
-
-Existing entries cover Playwright testing and MCP browser automation. This guide
-focuses on Trace Viewer evidence packets for AI-assisted debugging.
-
 ## References
 
 - Trace Viewer - https://playwright.dev/docs/trace-viewer
+- Trace Viewer intro - https://playwright.dev/docs/trace-viewer-intro
 - Debugging tests - https://playwright.dev/docs/debug
 - Test configuration - https://playwright.dev/docs/test-configuration

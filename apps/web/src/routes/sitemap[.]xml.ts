@@ -8,6 +8,7 @@ import { siteConfig } from "@/lib/site";
 import { applySecurityHeaders } from "@/lib/security-headers";
 import { CATEGORIES, PLATFORM_LABEL } from "@/types/registry";
 import { getIndexableTagGroups } from "@/lib/tags";
+import { isSitemapIndexableEntry } from "@/lib/sitemap-policy";
 import { COMPARISONS } from "@/data/comparisons";
 
 function escapeXml(value: string) {
@@ -55,6 +56,7 @@ async function renderSitemap() {
     "/ecosystem",
     "/platforms",
     "/quality",
+    "/state-of-claude-tooling",
     "/trending",
     "/compare",
     "/changelog",
@@ -86,18 +88,50 @@ async function renderSitemap() {
   const contributorPaths = CONTRIBUTORS.map((contributor) => `/contributors/${contributor.slug}`);
   const integrationPaths = INTEGRATIONS.map((integration) => `/integrations/${integration.slug}`);
   const jobPaths = (await getJobs()).map((job) => `/jobs/${job.slug}`);
+  // category × platform intersection hubs — only those with >=2 entries (the route noindexes
+  // thinner ones), so the sitemap never advertises a thin page.
+  // One pass over ENTRIES building a `${category}/${platform}` -> count map (was platforms ×
+  // categories × ENTRIES.filter ≈ 83K iterations per request).
+  const intersectionCounts = new Map<string, number>();
+  for (const entry of ENTRIES) {
+    for (const platform of entry.platforms ?? []) {
+      const key = `${entry.category}/${platform}`;
+      intersectionCounts.set(key, (intersectionCounts.get(key) ?? 0) + 1);
+    }
+  }
+  const intersectionPaths: string[] = [];
+  for (const platform of Object.keys(PLATFORM_LABEL)) {
+    for (const category of CATEGORIES) {
+      if ((intersectionCounts.get(`${category.id}/${platform}`) ?? 0) >= 2) {
+        intersectionPaths.push(`/for/${platform}/${category.id}`);
+      }
+    }
+  }
+
+  // Published Weekly Brief archive issues (fail-open: empty in dev/preview or
+  // before the first brief is approved).
+  const { listPublishedBriefs } = await import("@/lib/brief-issues.server");
+  const briefPaths = (await listPublishedBriefs(100)).map((issue) =>
+    urlItem(`/brief/${issue.number}`, "0.5", "monthly", issue.period_through),
+  );
 
   const rows = [
     ...staticPaths.map((pathname) => urlItem(pathname, pathname === "" ? "1" : "0.7")),
     ...feedPaths.map((pathname) => urlItem(pathname, "0.4")),
-    ...CATEGORIES.map((category) =>
+    ...briefPaths,
+    // `tools` has no /$category hub — its URL is the static commercial /tools page,
+    // already emitted in staticPaths above. Exclude it here to avoid a duplicate.
+    ...CATEGORIES.filter((category) => category.id !== "tools").map((category) =>
       urlItem(`/${category.id}`, "0.8", "weekly", categoryLastmod.get(category.id)),
     ),
     ...getIndexableTagGroups().map((group) => urlItem(`/tags/${group.slug}`, "0.5")),
     ...Object.keys(PLATFORM_LABEL).map((platform) => urlItem(`/for/${platform}`, "0.6")),
+    ...intersectionPaths.map((pathname) => urlItem(pathname, "0.55")),
     ...COMPARISONS.map((comparison) => urlItem(`/compare/${comparison.slug}`, "0.6")),
     ...bestPaths.map((pathname) => urlItem(pathname, "0.75")),
-    ...ENTRIES.map((entry) =>
+    // Advertise every indexable entry page (all categories, including `tools`).
+    // Entries opt out per-entry with `robotsIndex:false` (see isSitemapIndexableEntry).
+    ...ENTRIES.filter(isSitemapIndexableEntry).map((entry) =>
       urlItem(
         `/entry/${entry.category}/${entry.slug}`,
         "0.8",

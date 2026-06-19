@@ -3,6 +3,7 @@ import * as React from "react";
 import { ArrowRight, Rss } from "lucide-react";
 import { INTEGRATIONS } from "@/data/integrations";
 import { IntegrationCard } from "@/components/integration-card";
+import { PageContainer } from "@/components/page-container";
 import {
   CompatibilityMatrix,
   type MatrixRow,
@@ -227,7 +228,7 @@ function EcosystemPage() {
   const entries = ENTRIES.length;
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
+    <PageContainer>
       {/* Hero */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
@@ -338,7 +339,7 @@ function EcosystemPage() {
           </div>
         </div>
       </section>
-    </div>
+    </PageContainer>
   );
 }
 

@@ -1,0 +1,212 @@
+---
+title: Hyperbrowser MCP Server
+slug: hyperbrowser-mcp-server
+category: mcp
+description: >-
+  Hyperbrowser's MCP server for AI agents that need hosted browser scraping,
+  crawling, structured extraction, Bing search, persistent browser profiles, and
+  browser-use, OpenAI CUA, or Claude computer-use browser agents.
+cardDescription: >-
+  Hosted browser automation MCP for scraping, crawling, structured extraction,
+  search, persistent profiles, and computer-use browser agents.
+seoTitle: Hyperbrowser MCP Server for Claude, Cursor, Windsurf, and Browser Agents
+seoDescription: >-
+  Configure Hyperbrowser MCP with Claude, Cursor, Windsurf, and other MCP clients
+  to scrape pages, crawl websites, extract structured data, search with Bing,
+  manage persistent profiles, and run browser-use or computer-use agents.
+author: Hyperbrowser
+authorProfileUrl: "https://github.com/hyperbrowserai"
+dateAdded: "2026-06-18"
+brandName: Hyperbrowser
+brandDomain: hyperbrowser.ai
+repoUrl: "https://github.com/hyperbrowserai/mcp"
+documentationUrl: "https://github.com/hyperbrowserai/mcp/blob/main/README.md"
+websiteUrl: "https://hyperbrowser.ai/docs"
+packageUrl: "https://registry.npmjs.org/hyperbrowser-mcp/latest"
+sourceUrls:
+  - "https://github.com/hyperbrowserai/mcp"
+  - "https://github.com/hyperbrowserai/mcp/blob/main/README.md"
+  - "https://github.com/hyperbrowserai/mcp/blob/main/package.json"
+  - "https://github.com/hyperbrowserai/mcp/blob/main/src/server.ts"
+  - "https://registry.npmjs.org/hyperbrowser-mcp/latest"
+retrievalSources:
+  - "https://github.com/hyperbrowserai/mcp"
+  - "https://github.com/hyperbrowserai/mcp/blob/main/README.md"
+  - "https://github.com/hyperbrowserai/mcp/blob/main/package.json"
+  - "https://github.com/hyperbrowserai/mcp/blob/main/src/server.ts"
+  - "https://github.com/hyperbrowserai/mcp/blob/main/LICENSE"
+  - "https://registry.npmjs.org/hyperbrowser-mcp/latest"
+installable: true
+installCommand: "claude mcp add hyperbrowser -e HYPERBROWSER_API_KEY=your-api-key -- npx -y hyperbrowser-mcp"
+usageSnippet: >-
+  Add Hyperbrowser MCP with a Hyperbrowser API key, then ask Claude to scrape,
+  crawl, extract structured data, search, or run a browser agent only against
+  approved URLs and accounts.
+copySnippet: |-
+  claude mcp add hyperbrowser \
+    -e HYPERBROWSER_API_KEY=your-api-key \
+    -- npx -y hyperbrowser-mcp
+configSnippet: |-
+  {
+    "mcpServers": {
+      "hyperbrowser": {
+        "command": "npx",
+        "args": ["-y", "hyperbrowser-mcp"],
+        "env": {
+          "HYPERBROWSER_API_KEY": "YOUR-API-KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js 18 or newer for the `hyperbrowser-mcp` npm package."
+  - "A Hyperbrowser account and `HYPERBROWSER_API_KEY` for hosted browser sessions."
+  - "An MCP client such as Claude Desktop, Claude Code, Cursor, Windsurf, or another client that can run stdio MCP servers."
+  - "Explicit approval for the URLs, websites, accounts, browser profiles, and data classes the agent may access."
+safetyNotes:
+  - "Hyperbrowser MCP can scrape pages, crawl linked pages, extract structured data, search with Bing, create persistent profiles, delete profiles, list profiles, and run browser automation agents."
+  - "Browser-use, OpenAI CUA, and Claude computer-use tools can click, type, navigate, and interact with web apps. Keep human approval around authenticated, paid, destructive, or account-changing actions."
+  - "Persistent browser profiles can retain session state. Delete profiles that should not be reused and avoid sharing profile identifiers in public logs or prompts."
+  - "Scraping and crawling should respect site terms, robots expectations, rate limits, authentication boundaries, and internal data handling rules."
+  - "Do not give the MCP server broad access to private web apps, admin consoles, payments, or production dashboards without a scoped task and review plan."
+privacyNotes:
+  - "Webpage URLs, page content, screenshots or extracted data, search queries, browser actions, profile identifiers, and tool outputs may be processed by Hyperbrowser and the connected model provider."
+  - "Authenticated browser sessions can expose cookies, account data, private documents, customer data, admin UI state, and generated artifacts to the MCP client and model provider."
+  - "Keep `HYPERBROWSER_API_KEY`, cookies, one-time codes, session URLs, API responses, and extracted private data out of prompts, commits, issue comments, screenshots, and shared logs."
+  - "For regulated or customer-sensitive data, review Hyperbrowser, MCP client, and model-provider retention policies before using browser automation."
+tags:
+  - hyperbrowser
+  - mcp
+  - browser-automation
+  - scraping
+  - crawling
+  - structured-data
+  - computer-use
+keywords:
+  - Hyperbrowser MCP
+  - hyperbrowser-mcp Claude
+  - Hyperbrowser MCP server
+  - browser automation MCP
+  - computer use MCP
+  - browser-use agent MCP
+  - web scraping MCP
+  - structured extraction MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Hyperbrowser MCP Server connects MCP clients to Hyperbrowser's hosted browser
+automation platform. The upstream README describes tools for scraping pages,
+crawling websites, extracting structured data, searching with Bing, managing
+persistent browser profiles, and running browser agents through Browser Use,
+OpenAI computer use, or Claude computer use.
+
+Use it when an agent needs a real browser-backed workflow rather than a simple
+HTTP fetch: dynamic pages, multi-page crawl jobs, structured extraction from web
+content, or controlled browser-agent runs.
+
+## Source Review
+
+This listing is grounded in:
+
+- https://github.com/hyperbrowserai/mcp
+- https://github.com/hyperbrowserai/mcp/blob/main/README.md
+- https://github.com/hyperbrowserai/mcp/blob/main/package.json
+- https://github.com/hyperbrowserai/mcp/blob/main/src/server.ts
+- https://github.com/hyperbrowserai/mcp/blob/main/LICENSE
+- https://registry.npmjs.org/hyperbrowser-mcp/latest
+
+The repository README identifies the project as Hyperbrowser's Model Context
+Protocol server. The npm package is published as `hyperbrowser-mcp`, exposes a
+`hyperbrowser-mcp` binary, and requires Node.js 18 or newer.
+
+## Install
+
+For Claude Code, add the server with an API key:
+
+```bash
+claude mcp add hyperbrowser \
+  -e HYPERBROWSER_API_KEY=your-api-key \
+  -- npx -y hyperbrowser-mcp
+```
+
+For JSON-based MCP clients, use:
+
+```json
+{
+  "mcpServers": {
+    "hyperbrowser": {
+      "command": "npx",
+      "args": ["-y", "hyperbrowser-mcp"],
+      "env": {
+        "HYPERBROWSER_API_KEY": "YOUR-API-KEY"
+      }
+    }
+  }
+}
+```
+
+The upstream README also documents Cursor, Windsurf, Claude Desktop, local
+development, and Smithery installation examples.
+
+## Tool Scope
+
+The README lists these tools:
+
+| Tool | Purpose |
+| --- | --- |
+| `scrape_webpage` | Extract formatted content such as Markdown or screenshots from a page |
+| `crawl_webpages` | Follow linked pages and extract LLM-friendly content |
+| `extract_structured_data` | Convert messy HTML into structured JSON |
+| `search_with_bing` | Run web search through Bing |
+| `browser_use_agent` | Run browser automation with Browser Use |
+| `openai_computer_use_agent` | Run browser automation with OpenAI computer use |
+| `claude_computer_use_agent` | Run browser automation with Claude computer use |
+| `create_profile` | Create a persistent Hyperbrowser profile |
+| `delete_profile` | Delete a persistent Hyperbrowser profile |
+| `list_profiles` | List existing persistent profiles |
+
+## Operating Guidance
+
+- Use read-only scraping, crawling, extraction, or search before browser-agent
+  actions that click, type, submit forms, or change account state.
+- Scope browser-agent tasks to explicit domains, accounts, and goals.
+- Use temporary profiles for one-off tasks and delete them after use.
+- Keep persistent profiles separate by environment, customer, and permission
+  boundary.
+- Review extracted data before using it in reports, code generation, outreach,
+  compliance tasks, or customer-facing output.
+- Confirm terms of service, authentication requirements, and rate limits before
+  scraping or crawling third-party sites.
+
+## Best Use Cases
+
+- Scrape dynamic docs pages for implementation context when ordinary fetches
+  miss rendered content.
+- Crawl approved product or documentation pages into Markdown for agent review.
+- Extract structured data from messy HTML tables, profiles, directories, or
+  listings.
+- Run controlled browser-agent tasks that need visual page state or multi-step
+  navigation.
+- Keep persistent browser profiles for repeated testing against approved
+  non-production accounts.
+
+## Duplicate Review
+
+Checked current MCP, agents, skills, and open pull requests for
+`hyperbrowserai/mcp`, `hyperbrowser-mcp`, Hyperbrowser MCP, Hyperbrowser browser
+automation MCP, and related browser-automation entries. Existing Browserbase,
+BrowserMCP, Chrome MCP, Playwright MCP, Firecrawl, Exa, Jina, and scraping
+entries cover adjacent workflows, but no dedicated Hyperbrowser MCP Server
+entry or matching source URL was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Hyperbrowser MCP
+is published by Hyperbrowser and the upstream repository uses MIT license text;
+the npm package metadata currently reports `ISC`, so verify license metadata if
+you redistribute bundled artifacts.

@@ -2,13 +2,7 @@
 title: Database Migration Safety Gate - Claude Code Hook
 slug: database-migration-safety-gate
 category: hooks
-description: >-
-  PreToolUse hook that inspects a database migration before it is written and
-  blocks irreversible or lock-heavy operations — DROP TABLE/COLUMN, TRUNCATE,
-  table/column RENAME, and CREATE INDEX without CONCURRENTLY — following the
-  strong_migrations safe-migration checks. An explicit acknowledgement comment
-  lets an intentional change through, so risky schema edits are a deliberate
-  choice rather than an accident.
+description: "PreToolUse hook that inspects a database migration before it is written and blocks irreversible or lock-heavy operations — DROP TABLE/COLUMN, TRUNCATE, table/column RENAME, and CREATE INDEX without CONCURRENTLY — following the strong_migrations safe-migration checks."
 cardDescription: >-
   Block DROP, TRUNCATE, RENAME, and non-concurrent index migrations unless
   explicitly acknowledged.

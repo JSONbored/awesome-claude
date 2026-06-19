@@ -1,11 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PLATFORM_LABEL, type Platform } from "@/types/registry";
-import { search } from "@/data/search";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { ENTRIES } from "@/data/entries";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 
 const PLATFORMS = Object.keys(PLATFORM_LABEL) as Platform[];
+
+// Per-platform entry counts via a single pass over the static registry, computed
+// once at module load — was one full search() (filter+sort) per platform on
+// every SSR render of /for.
+const PLATFORM_COUNTS = new Map<string, number>(PLATFORMS.map((p) => [p, 0]));
+for (const entry of ENTRIES) {
+  for (const platform of entry.platforms ?? []) {
+    if (PLATFORM_COUNTS.has(platform)) {
+      PLATFORM_COUNTS.set(platform, (PLATFORM_COUNTS.get(platform) ?? 0) + 1);
+    }
+  }
+}
 
 export const Route = createFileRoute("/for/")({
   head: () => {
@@ -42,19 +55,15 @@ export const Route = createFileRoute("/for/")({
 });
 
 function PlatformsIndex() {
-  const counts = new Map<string, number>(
-    PLATFORMS.map((p) => [p, search({ platforms: [p] }).length]),
-  );
+  const counts = PLATFORM_COUNTS;
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
-      <Breadcrumbs items={[{ label: "Directory", to: "/browse" }, { label: "Platforms" }]} home />
-      <header className="mt-6 max-w-3xl">
-        <div className="eyebrow">{PLATFORMS.length} platforms</div>
-        <h1 className="mt-2 h-display-1 text-ink text-balance">Claude resources by platform</h1>
-        <p className="mt-4 text-pretty text-base text-ink-muted sm:text-lg">
-          Pick your editor or runtime to see every compatible Claude resource in the directory.
-        </p>
-      </header>
+    <PageContainer>
+      <PageHeader
+        breadcrumbs={[{ label: "Directory", to: "/browse" }]}
+        eyebrow={`${PLATFORMS.length} platforms`}
+        title="Claude resources by platform"
+        description="Pick your editor or runtime to see every compatible Claude resource in the directory."
+      />
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {PLATFORMS.map((p) => (
           <Link
@@ -70,6 +79,6 @@ function PlatformsIndex() {
           </Link>
         ))}
       </div>
-    </div>
+    </PageContainer>
   );
 }

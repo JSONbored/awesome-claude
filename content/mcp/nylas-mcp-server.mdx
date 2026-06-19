@@ -1,0 +1,247 @@
+---
+title: Nylas MCP Server for Claude
+slug: nylas-mcp-server
+category: mcp
+description: >-
+  Connect Claude Code, Codex, Cursor, Windsurf, VS Code, and other MCP clients
+  to Nylas email, calendar, contacts, and Notetaker tools across Gmail, Outlook,
+  Exchange, Yahoo, iCloud, and IMAP accounts.
+cardDescription: >-
+  Nylas MCP gives agents typed email, calendar, contacts, availability,
+  Notetaker, draft, and send tools through the Nylas CLI or hosted HTTP endpoint.
+seoTitle: Nylas MCP Server for Claude - Email and Calendar Agent Tools
+seoDescription: >-
+  Use the Nylas MCP server with Claude, Codex, Cursor, and Windsurf for
+  multi-provider email, calendar, contacts, Notetaker, and send-confirmed tools.
+author: Nylas
+authorProfileUrl: "https://github.com/nylas"
+dateAdded: "2026-06-18"
+brandName: Nylas
+brandDomain: nylas.com
+documentationUrl: "https://developer.nylas.com/docs/dev-guide/mcp/"
+websiteUrl: "https://cli.nylas.com/guides/give-ai-agent-email-address"
+repoUrl: "https://github.com/nylas/cli"
+sourceUrls:
+  - "https://developer.nylas.com/docs/dev-guide/mcp/"
+  - "https://cli.nylas.com/guides/give-ai-agent-email-address"
+  - "https://developer.nylas.com/docs/cookbook/ai/mcp/codex-cli/"
+  - "https://www.nylas.com/blog/nylas-mcp-server-ai-agents/"
+  - "https://github.com/nylas/cli"
+retrievalSources:
+  - "https://developer.nylas.com/docs/dev-guide/mcp/"
+  - "https://cli.nylas.com/guides/give-ai-agent-email-address"
+  - "https://developer.nylas.com/docs/cookbook/ai/mcp/codex-cli/"
+  - "https://www.nylas.com/blog/nylas-mcp-server-ai-agents/"
+  - "https://github.com/nylas/cli"
+installable: true
+installCommand: "nylas mcp install --assistant claude-code"
+usageSnippet: >-
+  Run nylas init or configure a Nylas API key and connected grant, then install
+  the local MCP server for Claude Code with nylas mcp install --assistant
+  claude-code or connect directly to the hosted regional endpoint.
+copySnippet: |-
+  nylas mcp install --assistant claude-code
+configSnippet: |-
+  {
+    "mcpServers": {
+      "nylas": {
+        "command": "nylas",
+        "args": ["mcp", "serve"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Nylas account, Nylas application, API key, and at least one connected grant for the mailbox or calendar the agent may access."
+  - "Nylas CLI installed and authenticated, or an MCP client that can connect to the hosted Streamable HTTP endpoint."
+  - "Claude Code, Claude Desktop, Codex, Cursor, Windsurf, VS Code, or another MCP-compatible client."
+  - "US or EU Nylas application region selected before choosing the hosted MCP endpoint."
+  - "User confirmation workflow for send, delete, event, and Notetaker actions."
+safetyNotes:
+  - "Nylas MCP can read email bodies, search threads, list contacts, inspect calendars, create and update events, create drafts, send messages, delete drafts, delete events, and schedule or send Notetaker bots."
+  - "Nylas documents a two-step send flow: send_message and send_draft require confirm_send_message or confirm_send_draft first; keep that confirmation boundary visible to users."
+  - "delete_draft and delete_event are irreversible tool actions; require explicit user confirmation before allowing them."
+  - "Email and calendar content can contain prompt injection that tries to make the agent leak data or send unauthorized messages; validate instructions against the user's original intent."
+  - "Hosted MCP uses the same API key and grant authority as direct Nylas API calls, so scope grants and application access deliberately."
+privacyNotes:
+  - "Connected inboxes, email bodies, threads, folders, contacts, calendars, availability, events, grant metadata, Notetaker media links, and search queries may be exposed to the MCP client and model provider."
+  - "Store NYLAS_API_KEY in an environment variable or the Nylas CLI credential store; do not paste raw API keys into prompts, committed config, screenshots, or PR bodies."
+  - "Local Nylas CLI credentials are stored in the operating system credential store, with non-secret grant metadata cached separately."
+  - "When using the hosted endpoint, prompts and tool calls reach Nylas over the selected US or EU regional MCP URL."
+  - "Use narrow date ranges, folders, search filters, and account hints to avoid sending unnecessary mailbox history into the agent context."
+tags:
+  - nylas
+  - mcp
+  - email
+  - calendar
+  - contacts
+  - scheduling
+  - codex
+  - claude-code
+keywords:
+  - nylas mcp
+  - email mcp server
+  - calendar mcp server
+  - claude email mcp
+  - codex email mcp
+  - ai agent email
+  - mcp inbox calendar
+  - nylas claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Nylas MCP connects AI agents to real email, calendar, contacts, availability,
+and Notetaker workflows through the Nylas platform. It is useful when Claude
+Code, Codex, Cursor, Windsurf, or another MCP client needs to check an inbox,
+search message history, draft a reply, inspect a calendar, create an event, or
+schedule a Notetaker without custom Gmail, Microsoft Graph, Exchange, Yahoo,
+iCloud, or IMAP integration code.
+
+There are two practical setup paths:
+
+- Local Nylas CLI MCP server, installed into a supported agent with
+  `nylas mcp install`.
+- Hosted regional MCP endpoint at `https://mcp.us.nylas.com` or
+  `https://mcp.eu.nylas.com`, authenticated with a Bearer token.
+
+## Setup Paths
+
+### Nylas CLI Installer
+
+Install and initialize the Nylas CLI, then register the MCP server with your
+agent:
+
+```bash
+brew install nylas/nylas-cli/nylas
+nylas init
+nylas mcp install --assistant claude-code
+nylas mcp status
+```
+
+The same installer supports other clients:
+
+```bash
+nylas mcp install --assistant cursor
+nylas mcp install --assistant windsurf
+nylas mcp install --assistant vscode
+nylas mcp install --assistant codex
+nylas mcp install --all
+```
+
+For local stdio configuration, the server command is:
+
+```json
+{
+  "mcpServers": {
+    "nylas": {
+      "command": "nylas",
+      "args": ["mcp", "serve"]
+    }
+  }
+}
+```
+
+### Hosted MCP Endpoint
+
+Use the hosted endpoint when your client supports Streamable HTTP and you want
+to skip a local CLI process. Choose the URL that matches the Nylas application
+region:
+
+| Region | URL |
+| --- | --- |
+| US | `https://mcp.us.nylas.com` |
+| EU | `https://mcp.eu.nylas.com` |
+
+For Codex, store the API key in an environment variable instead of the config
+file:
+
+```toml
+[mcp_servers.nylas]
+url = "https://mcp.us.nylas.com"
+bearer_token_env_var = "NYLAS_API_KEY"
+tool_timeout_sec = 90
+```
+
+For Cursor-style JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "nylas": {
+      "type": "streamable-http",
+      "url": "https://mcp.us.nylas.com",
+      "headers": {
+        "Authorization": "Bearer ${NYLAS_API_KEY}"
+      }
+    }
+  }
+}
+```
+
+## Tool Surface
+
+Nylas documents 36 MCP tools across email, calendar, contacts, time conversion,
+grant lookup, search syntax, and Notetaker workflows.
+
+| Group | Representative Tools |
+| --- | --- |
+| Account and time | `get_grant`, `current_time`, `datetime_to_epoch`, `epoch_to_datetime` |
+| Email read/search | `list_messages`, `get_message`, `list_threads`, `list_folders`, `get_folder_by_id`, `get_search_syntax` |
+| Draft and send | `create_draft`, `update_draft`, `delete_draft`, `confirm_send_draft`, `send_draft`, `confirm_send_message`, `send_message` |
+| Calendar | `list_calendars`, `list_events`, `get_event`, `availability`, `create_event`, `update_event`, `delete_event` |
+| Contacts | `list_contacts`, `get_contact` |
+| Notetaker | `list_notetakers`, `get_notetaker`, `get_notetaker_media`, `schedule_notetaker`, `send_notetaker`, standalone Notetaker variants |
+
+## Use Cases
+
+- Ask Claude Code to find a recent signup, deploy, billing, or incident email.
+- Let Codex check whether a calendar slot is free before proposing a meeting.
+- Draft an email reply while keeping final send approval separate.
+- Search work and personal grants for a thread when the user does not remember
+  which inbox contains it.
+- Use contacts and availability to prepare scheduling or recruiting workflows.
+- Send or schedule a Notetaker bot for meeting capture after the user approves
+  the target meeting.
+
+## Safety and Privacy
+
+Mailbox and calendar access is a high-trust integration. Treat email bodies,
+calendar descriptions, invites, attachments, and contact records as untrusted
+input, because they may include prompt injection or instructions that conflict
+with the user's request. Do not let a quoted email tell the agent to leak keys,
+forward confidential data, or bypass confirmation.
+
+Nylas requires confirmation tools before direct send actions, but the user still
+needs a clear review step. Drafts, event creation, event deletion, and Notetaker
+actions can affect real people outside the repository. Keep destructive tools
+behind explicit user approval and prefer narrow search filters so the model sees
+only the messages and events needed for the task.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- Nylas's MCP documentation confirms the hosted US and EU endpoints, Bearer
+  token authentication, CLI installer commands for Claude Code, Cursor,
+  Windsurf, VS Code, Codex, and all agents, plus manual config examples.
+- The Codex MCP guide confirms `bearer_token_env_var`, project and global config
+  options, connection verification with `get_grant`, examples for inbox triage,
+  calendar review, draft replies, availability, and account-scoped search.
+- The Nylas MCP docs and blog document the 36-tool surface, two-step send
+  confirmation, prompt-injection concerns, and the need to confirm irreversible
+  delete actions.
+- The `nylas/cli` repository is MIT licensed and documents `nylas mcp` for AI
+  assistant integration, local credential storage, and CLI install options.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `Nylas`, `nylas mcp`, `mcp.us.nylas`,
+`mcp.eu.nylas`, `agent email`, `email mcp`, and `calendar mcp`. Existing entries
+cover Google Workspace, CalendarMCP, Keeper.sh calendar, AgentTrust identity, and
+disposable email use cases, but no dedicated Nylas MCP server entry, Nylas CLI
+source URL duplicate, or open duplicate PR was found.

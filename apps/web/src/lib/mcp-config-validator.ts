@@ -1,3 +1,5 @@
+import { isPinnedPackageSpec, parsePackageSpec } from "@heyclaude/registry/package-spec";
+
 export type McpConfigServerReport = {
   name: string;
   transport: "stdio" | "remote" | "unknown";
@@ -21,8 +23,7 @@ export type McpConfigValidation = {
 
 const SENSITIVE_ENV_PATTERN =
   /(api[_-]?key|auth|authorization|bearer|client[_-]?secret|credential|env|password|private[_-]?key|secret|token|x-api-key)/i;
-const PLACEHOLDER_PATTERN =
-  /(\$\{[A-Z0-9_]+\}|YOUR_|REPLACE_|INSERT_|<[^>]+>|\bxxx+\b|\bTODO\b)/i;
+const PLACEHOLDER_PATTERN = /(\$\{[A-Z0-9_]+\}|YOUR_|REPLACE_|INSERT_|<[^>]+>|\bxxx+\b|\bTODO\b)/i;
 const SECRET_VALUE_PATTERN =
   /\b(gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{40,}|glpat-[A-Za-z0-9_-]{20,}|sk-(?:proj-)?[A-Za-z0-9_-]{20,}|xox[baprs]-[A-Za-z0-9-]{20,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{20,}|Bearer\s+[A-Za-z0-9._~+/=-]{16,})\b/;
 const SHELL_OPERATOR_PATTERN = /(?:&&|\|\||[;|`<>]|\$\()/;
@@ -60,28 +61,17 @@ function encodeSearchParamKey(value: string) {
   return new URLSearchParams([[value, ""]]).toString().slice(0, -1);
 }
 
-function decodeRedactedPlaceholders(
-  value: string,
-  placeholders: RedactedUrlPlaceholder[],
-) {
+function decodeRedactedPlaceholders(value: string, placeholders: RedactedUrlPlaceholder[]) {
   return placeholders.reduce((decoded, redaction) => {
     if (redaction.kind === "username") {
-      return decoded.replace(
-        "://$%7BURL_USERNAME%7D",
-        `://${redaction.placeholder}`,
-      );
+      return decoded.replace("://$%7BURL_USERNAME%7D", `://${redaction.placeholder}`);
     }
     if (redaction.kind === "password") {
-      return decoded.replace(
-        ":$%7BURL_PASSWORD%7D@",
-        `:${redaction.placeholder}@`,
-      );
+      return decoded.replace(":$%7BURL_PASSWORD%7D@", `:${redaction.placeholder}@`);
     }
 
     const key = escapeRegExp(encodeSearchParamKey(redaction.key));
-    const placeholder = escapeRegExp(
-      encodeSearchParamValue(redaction.placeholder),
-    );
+    const placeholder = escapeRegExp(encodeSearchParamValue(redaction.placeholder));
     return decoded.replace(
       new RegExp(`([?&]${key}=)${placeholder}(?=([&#]|$))`),
       (_match, prefix: string) => `${prefix}${redaction.placeholder}`,
@@ -105,10 +95,7 @@ function normalizeServerName(value: string) {
 
 function redactEnvValue(key: string, value: unknown) {
   const normalized = String(value ?? "");
-  if (
-    !SENSITIVE_ENV_PATTERN.test(key) &&
-    !SECRET_VALUE_PATTERN.test(normalized)
-  ) {
+  if (!SENSITIVE_ENV_PATTERN.test(key) && !SECRET_VALUE_PATTERN.test(normalized)) {
     return normalized;
   }
   if (!normalized || PLACEHOLDER_PATTERN.test(normalized)) return normalized;
@@ -134,20 +121,14 @@ function redactUrlValue(value: string) {
       redacted = true;
     }
     for (const [key, queryValue] of parsed.searchParams.entries()) {
-      if (
-        SENSITIVE_ENV_PATTERN.test(key) ||
-        SECRET_VALUE_PATTERN.test(queryValue)
-      ) {
+      if (SENSITIVE_ENV_PATTERN.test(key) || SECRET_VALUE_PATTERN.test(queryValue)) {
         const placeholder = `\${${key.toUpperCase().replace(/[^A-Z0-9_]/g, "_") || "SECRET"}}`;
         parsed.searchParams.set(key, placeholder);
         redactedPlaceholders.push({ kind: "query", key, placeholder });
         redacted = true;
       }
     }
-    const serialized = decodeRedactedPlaceholders(
-      parsed.toString(),
-      redactedPlaceholders,
-    );
+    const serialized = decodeRedactedPlaceholders(parsed.toString(), redactedPlaceholders);
     const fallback = redactEnvValue("url", serialized);
     return {
       value: fallback,
@@ -170,10 +151,7 @@ function redactArgValue(value: string) {
   if (equalIndex > 0) {
     const rawKey = normalized.slice(0, equalIndex);
     const rawValue = normalized.slice(equalIndex + 1);
-    if (
-      SENSITIVE_ENV_PATTERN.test(rawKey) ||
-      SECRET_VALUE_PATTERN.test(rawValue)
-    ) {
+    if (SENSITIVE_ENV_PATTERN.test(rawKey) || SECRET_VALUE_PATTERN.test(rawValue)) {
       const placeholder = rawKey.toUpperCase().replace(/[^A-Z0-9_]/g, "_");
       return {
         value: `${rawKey}=\${${placeholder || "SECRET"}}`,
@@ -196,9 +174,7 @@ function splitArgPlaceholder(value: string) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "");
-  return SENSITIVE_SPLIT_ARG_KEYS.has(key)
-    ? key.toUpperCase().replace(/[^A-Z0-9_]/g, "_")
-    : "";
+  return SENSITIVE_SPLIT_ARG_KEYS.has(key) ? key.toUpperCase().replace(/[^A-Z0-9_]/g, "_") : "";
 }
 
 function redactArgArray(values: unknown[]): SanitizedValue {
@@ -289,21 +265,40 @@ function firstPackageOperand(args: string[]) {
   return args.find((arg) => arg && arg !== "--" && !arg.startsWith("-")) || "";
 }
 
+function commandName(command: string) {
+  const base =
+    command
+      .trim()
+      .split(/[\\/]/)
+      .pop()
+      ?.replace(/^["']|["']$/g, "")
+      .toLowerCase() || "";
+  return base.replace(/\.(?:bat|cmd|com|exe|ps1)$/i, "");
+}
+
+function packageRunnerName(command: string, args: string[]) {
+  const lower = commandName(command);
+  if (["npx", "uvx", "bunx"].includes(lower)) return lower;
+  if ((lower === "pnpm" || lower === "yarn") && args.includes("dlx")) {
+    return `${lower} dlx`;
+  }
+  if (lower === "npm" && args.some((arg) => ["exec", "x"].includes(arg))) {
+    return "npm exec";
+  }
+  return "";
+}
+
 function packageFromRunner(command: string, args: string[]) {
-  const lower = command.toLowerCase();
-  if (lower.endsWith("npx") || lower === "npx") return firstPackageOperand(args);
+  const lower = commandName(command);
+  if (lower === "npx") return firstPackageOperand(args);
   if (["uvx", "bunx"].includes(lower)) return firstPackageOperand(args);
   if (lower === "pnpm" || lower === "yarn") {
     const runnerIndex = args.findIndex((arg) => arg === "dlx");
-    return firstPackageOperand(
-      runnerIndex >= 0 ? args.slice(runnerIndex + 1) : args,
-    );
+    return firstPackageOperand(runnerIndex >= 0 ? args.slice(runnerIndex + 1) : args);
   }
   if (lower === "npm") {
     const runnerIndex = args.findIndex((arg) => ["exec", "x"].includes(arg));
-    return firstPackageOperand(
-      runnerIndex >= 0 ? args.slice(runnerIndex + 1) : args,
-    );
+    return firstPackageOperand(runnerIndex >= 0 ? args.slice(runnerIndex + 1) : args);
   }
   if (lower === "docker") {
     const runIndex = args.findIndex((arg) => arg === "run");
@@ -360,9 +355,7 @@ function validateServer(name: string, raw: unknown) {
   const env = isRecord(raw.env) ? raw.env : {};
   const envKeys = Object.keys(env).sort();
   const sanitizedRaw = sanitizeConfigValue("", raw);
-  const sanitizedRawValue = isRecord(sanitizedRaw.value)
-    ? sanitizedRaw.value
-    : {};
+  const sanitizedRawValue = isRecord(sanitizedRaw.value) ? sanitizedRaw.value : {};
   const sanitizedArgs = asStringArray(sanitizedRawValue.args);
   const sanitized = {
     ...sanitizedRawValue,
@@ -371,9 +364,7 @@ function validateServer(name: string, raw: unknown) {
   const redactedSecretCount = sanitizedRaw.redactedCount;
 
   if (!command && !url) {
-    errors.push(
-      "Server must define command for stdio or url for remote transport.",
-    );
+    errors.push("Server must define command for stdio or url for remote transport.");
   }
   if (hasCommand && typeof raw.command !== "string") {
     errors.push("command must be a string.");
@@ -381,35 +372,32 @@ function validateServer(name: string, raw: unknown) {
   if ("args" in raw && !Array.isArray(raw.args)) {
     errors.push("args must be an array of strings.");
   }
-  if (
-    "args" in raw &&
-    Array.isArray(raw.args) &&
-    args.length !== raw.args.length
-  ) {
+  if ("args" in raw && Array.isArray(raw.args) && args.length !== raw.args.length) {
     errors.push("args must contain only strings.");
   }
   if ("env" in raw && !isRecord(raw.env)) {
     errors.push("env must be an object of environment variables.");
   }
   if (command && SHELL_OPERATOR_PATTERN.test(command)) {
-    errors.push(
-      "command must be an executable name/path, not a shell pipeline.",
-    );
+    errors.push("command must be an executable name/path, not a shell pipeline.");
   }
   for (const [index, arg] of args.entries()) {
     if (SHELL_OPERATOR_PATTERN.test(arg)) {
-      warnings.push(
-        `Argument contains shell-like syntax: ${sanitizedArgs[index] ?? "${SECRET}"}`,
-      );
+      warnings.push(`Argument contains shell-like syntax: ${sanitizedArgs[index] ?? "${SECRET}"}`);
     }
   }
+  const packageName = command ? packageFromRunner(command, args) : "";
+  const runnerName = command ? packageRunnerName(command, args) : "";
   if (command) {
-    const packageName = packageFromRunner(command, args);
-    if (
-      ["npx", "uvx", "bunx"].includes(command.toLowerCase()) &&
-      !packageName
-    ) {
+    if (["npx", "uvx", "bunx"].includes(commandName(command)) && !packageName) {
       errors.push(`${command} server is missing a package name in args.`);
+    }
+    if (packageName && runnerName && !isPinnedPackageSpec(packageName)) {
+      const parsed = parsePackageSpec(packageName);
+      const suggestedName = parsed?.name || packageName;
+      warnings.push(
+        `${runnerName} runs unpinned package ${packageName}; pin an exact version such as ${suggestedName}@1.2.3 before granting MCP tool access.`,
+      );
     }
   }
   if (url) {
@@ -421,13 +409,8 @@ function validateServer(name: string, raw: unknown) {
         // URL.hostname returns IPv6 hosts wrapped in brackets, so the loopback
         // address surfaces as "[::1]" (never the bare "::1").
         parsed.hostname === "[::1]";
-      if (
-        parsed.protocol !== "https:" &&
-        !(isLocal && parsed.protocol === "http:")
-      ) {
-        warnings.push(
-          "Remote MCP URLs should use HTTPS unless they are localhost.",
-        );
+      if (parsed.protocol !== "https:" && !(isLocal && parsed.protocol === "http:")) {
+        warnings.push("Remote MCP URLs should use HTTPS unless they are localhost.");
       }
     } catch {
       errors.push("url must be a valid URL.");
@@ -449,14 +432,9 @@ function validateServer(name: string, raw: unknown) {
 
   return {
     name: normalizedName || name,
-    transport: url
-      ? ("remote" as const)
-      : command
-        ? ("stdio" as const)
-        : ("unknown" as const),
+    transport: url ? ("remote" as const) : command ? ("stdio" as const) : ("unknown" as const),
     command,
-    url:
-      typeof sanitizedRawValue.url === "string" ? sanitizedRawValue.url : url,
+    url: typeof sanitizedRawValue.url === "string" ? sanitizedRawValue.url : url,
     packageName: command ? packageFromRunner(command, sanitizedArgs) : "",
     envKeys,
     errors,
@@ -482,9 +460,7 @@ function buildReportText(result: Omit<McpConfigValidation, "reportText">) {
       `Transport: ${server.transport}`,
       server.packageName ? `Package: ${server.packageName}` : "",
       server.url ? `URL: ${server.url}` : "",
-      server.envKeys.length
-        ? `Env keys: ${server.envKeys.join(", ")}`
-        : "Env keys: none",
+      server.envKeys.length ? `Env keys: ${server.envKeys.join(", ")}` : "Env keys: none",
     );
     for (const error of server.errors) lines.push(`- Error: ${error}`);
     for (const warning of server.warnings) lines.push(`- Warning: ${warning}`);
@@ -527,11 +503,7 @@ export function validateMcpConfigText(input: string): McpConfigValidation {
   try {
     parsed = JSON.parse(normalizedInput);
   } catch (error) {
-    errors.push(
-      error instanceof Error
-        ? `Invalid JSON: ${error.message}`
-        : "Invalid JSON.",
-    );
+    errors.push(error instanceof Error ? `Invalid JSON: ${error.message}` : "Invalid JSON.");
     const result = {
       ok: false,
       errors,
@@ -546,9 +518,7 @@ export function validateMcpConfigText(input: string): McpConfigValidation {
   const extracted = extractServers(parsed);
   if (extracted.rootError) errors.push(extracted.rootError);
   if (extracted.wrapped) {
-    warnings.push(
-      "Input looked like a bare servers object; output wraps it in mcpServers.",
-    );
+    warnings.push("Input looked like a bare servers object; output wraps it in mcpServers.");
   }
 
   const reports = Object.entries(extracted.servers).map(([name, value]) =>
@@ -572,16 +542,12 @@ export function validateMcpConfigText(input: string): McpConfigValidation {
   );
   const sanitizedConfig = {
     ...sanitizedRootConfig,
-    mcpServers: Object.fromEntries(
-      reports.map((report) => [report.name, report.sanitized]),
-    ),
+    mcpServers: Object.fromEntries(reports.map((report) => [report.name, report.sanitized])),
   };
 
   for (const report of reports) {
     errors.push(...report.errors.map((error) => `${report.name}: ${error}`));
-    warnings.push(
-      ...report.warnings.map((warning) => `${report.name}: ${warning}`),
-    );
+    warnings.push(...report.warnings.map((warning) => `${report.name}: ${warning}`));
   }
 
   const result = {
@@ -589,9 +555,7 @@ export function validateMcpConfigText(input: string): McpConfigValidation {
     errors,
     warnings,
     servers: reports.map(({ sanitized: _sanitized, ...report }) => report),
-    fixedConfigText: reports.length
-      ? JSON.stringify(sanitizedConfig, null, 2)
-      : "",
+    fixedConfigText: reports.length ? JSON.stringify(sanitizedConfig, null, 2) : "",
     redactedSecretCount,
   };
   return { ...result, reportText: buildReportText(result) };

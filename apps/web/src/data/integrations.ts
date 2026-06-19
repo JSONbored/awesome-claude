@@ -67,7 +67,9 @@ export const INTEGRATIONS: Integration[] = [
     tier: "First-party server",
     status: "live",
     mark: "mcp",
-    npmPackage: "@modelcontextprotocol/sdk",
+    // Our own published package — the live badge must reflect @heyclaude/mcp's
+    // real version + weekly downloads, NOT the upstream MCP SDK's (which has ~39M/wk).
+    npmPackage: "@heyclaude/mcp",
     githubRepo: "jsonbored/awesome-claude",
     bullets: [
       "20+ tools: search, trending, compare, get_entry_detail, prepare_submission_draft, explain_entry_trust",
@@ -79,7 +81,7 @@ export const INTEGRATIONS: Integration[] = [
       label: "Source",
       href: "https://github.com/jsonbored/awesome-claude/tree/main/packages/mcp",
     },
-    version: "0.3.0",
+    version: "0.3.1",
     updatedAt: REGISTRY_UPDATED_DATE,
     install: [
       {

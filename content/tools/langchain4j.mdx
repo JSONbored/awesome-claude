@@ -1,0 +1,215 @@
+---
+title: LangChain4j
+slug: langchain4j
+category: tools
+description: >-
+  Idiomatic Java/JVM library for building LLM-powered applications with unified
+  model APIs, tool calling, agentic workflows, RAG, chat memory, embedding
+  stores, MCP client support, and Spring Boot, Quarkus, Helidon, and Micronaut
+  integrations.
+cardDescription: >-
+  Java/JVM LLM framework for agents, RAG, tool calling, MCP tool providers,
+  vector stores, chat memory, and enterprise Java integrations.
+seoTitle: LangChain4j Java Agent Framework for RAG, Tool Calling, and MCP
+seoDescription: >-
+  LangChain4j is an Apache-2.0 Java/JVM LLM framework for agents, RAG, tool
+  calling, MCP clients and tool providers, vector stores, chat memory, and
+  Spring Boot or Quarkus AI apps.
+author: LangChain4j
+authorProfileUrl: "https://github.com/langchain4j"
+dateAdded: "2026-06-18"
+websiteUrl: "https://docs.langchain4j.dev/"
+documentationUrl: "https://docs.langchain4j.dev/"
+repoUrl: "https://github.com/langchain4j/langchain4j"
+packageUrl: "https://search.maven.org/artifact/dev.langchain4j/langchain4j"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/langchain4j/langchain4j"
+  - "https://raw.githubusercontent.com/langchain4j/langchain4j/main/README.md"
+  - "https://raw.githubusercontent.com/langchain4j/langchain4j/main/docs/docs/tutorials/agents.md"
+  - "https://raw.githubusercontent.com/langchain4j/langchain4j/main/docs/docs/tutorials/mcp.md"
+  - "https://raw.githubusercontent.com/langchain4j/langchain4j/main/docs/docs/tutorials/rag.md"
+  - "https://github.com/langchain4j/langchain4j/blob/main/LICENSE"
+  - "https://search.maven.org/artifact/dev.langchain4j/langchain4j"
+installable: true
+installCommand: "Add the needed dev.langchain4j Maven or Gradle modules from the official docs."
+usageSnippet: >-
+  Add the LangChain4j modules for your model provider, RAG store, agentic
+  workflow, or MCP transport, then build typed AI services and tool providers
+  inside a normal Java application.
+copySnippet: |-
+  <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j</artifactId>
+  </dependency>
+estimatedSetupTime: 25 minutes
+difficulty: intermediate
+prerequisites:
+  - "Java/JVM project using Maven, Gradle, Spring Boot, Quarkus, Helidon, Micronaut, or a plain Java build."
+  - "Selected LangChain4j modules for the model provider, embedding store, RAG pipeline, MCP transport, framework integration, or agentic workflow you need."
+  - "Provider credentials, model endpoints, vector database credentials, MCP server URLs, or local stdio/Docker server commands stored outside source control."
+  - "Version alignment between LangChain4j core modules, beta modules, framework integrations, and enterprise dependency constraints."
+  - "A review plan for any tool-calling, MCP-connected, browser-like, database, filesystem, or account-writing capability."
+safetyNotes:
+  - "LangChain4j can bind model calls to Java tools, MCP tools, RAG retrievers, and framework services. Treat each tool as application code with permissions, side effects, and audit requirements."
+  - "The MCP tutorial supports stdio, Streamable HTTP, WebSocket, Docker stdio, and legacy HTTP/SSE transports. Review subprocess commands, Docker socket access, server URLs, and credentials before connecting agents."
+  - "Use MCP tool filtering and tool-name mapping when a server exposes many tools or overlapping tool names; do not expose write-capable tools by default."
+  - "RAG examples may read local directories, parse documents, and store embeddings in external vector stores. Scope ingestion paths and retention rules before indexing private data."
+  - "The agentic module is documented as experimental, so teams should pin versions, test workflows, and avoid relying on unstable APIs for critical production behavior."
+privacyNotes:
+  - "Prompts, chat memory, tool arguments, tool outputs, retrieved document chunks, embeddings, vector-store metadata, model responses, logs, and MCP traffic may include private application or customer data."
+  - "Model providers, embedding providers, vector stores, MCP servers, framework logs, tracing systems, and Java application logs may observe or retain LangChain4j workflow data."
+  - "Do not commit provider keys, MCP server credentials, vector database secrets, local document paths, generated traces, or raw RAG datasets."
+  - "If request/response or MCP transport logging is enabled for debugging, review logs before sharing them because they can include prompts, tool payloads, retrieved content, and credentials."
+tags:
+  - langchain4j
+  - java
+  - jvm
+  - ai-agents
+  - agent-framework
+  - rag
+  - mcp
+  - spring-boot
+  - quarkus
+keywords:
+  - LangChain4j
+  - Java AI agents
+  - Java RAG framework
+  - LangChain4j MCP
+  - JVM LLM framework
+  - Spring Boot AI agents
+  - Quarkus LangChain4j
+  - Java tool calling
+  - langchain4j-agentic
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+LangChain4j is an idiomatic Java/JVM library for building LLM-powered
+applications. It provides unified APIs over model providers and embedding
+stores, plus higher-level abstractions for chat memory, tools, RAG, AI
+services, agentic workflows, MCP tool providers, and framework integrations.
+
+This is a high-value directory gap because most agent framework coverage is
+Python or TypeScript-heavy. LangChain4j targets Java teams that want typed APIs,
+POJOs, annotations, interfaces, dependency injection, Maven/Gradle modules, and
+enterprise framework support without porting Python agent examples into a JVM
+codebase.
+
+## Install
+
+LangChain4j is distributed as Java modules. Add the module coordinates needed
+for the selected model, tool, RAG, MCP, or framework integration.
+
+Base Maven shape:
+
+```xml
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j</artifactId>
+</dependency>
+```
+
+MCP Docker stdio support uses a separate module:
+
+```xml
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-mcp-docker</artifactId>
+</dependency>
+```
+
+Check the official docs and Maven Central for current versions and module names,
+especially when mixing core, beta, community, Spring Boot, Quarkus, Helidon, or
+Micronaut dependencies.
+
+## Agent Capabilities
+
+| Area | LangChain4j Coverage |
+| --- | --- |
+| JVM application layer | Typed AI services, Java interfaces, annotations, POJOs, dependency injection, fluent builders, and framework integration |
+| Model APIs | Unified access patterns for many chat, language, image, embedding, and streaming model providers |
+| RAG | Easy RAG, naive RAG, advanced RAG, document loading, splitting, embedding, retrieval, reranking, and vector-store integrations |
+| Agents | `langchain4j-agentic` workflows, `@Agent`, `AgenticServices`, `AgenticScope`, sequential workflows, loops, and composed subagents |
+| Tools | Java tool calling, tool providers, tool specifications, and integration with AI services |
+| MCP | MCP client/tool-provider support for stdio, Streamable HTTP, WebSocket, Docker stdio, and legacy HTTP/SSE transports |
+| Frameworks | Spring Boot, Quarkus, Helidon, Micronaut, Payara Micro, Kotlin, testing, observability, and guardrails tutorials |
+
+## MCP Fit
+
+LangChain4j is not a standalone MCP server entry. It belongs in tools because it
+lets JVM applications consume MCP tools and connect them to AI services. The MCP
+tutorial documents `McpTransport`, `McpClient`, `McpToolProvider`, tool-name
+filters, tool-name mapping, multiple MCP clients, and dynamic client/filter
+management.
+
+That makes it useful for Java teams building Claude-adjacent agent products
+where MCP servers provide the external tool surface. It also means teams need
+strict permission design: use read-only tools first, filter tools by name, map
+conflicting tool names, and avoid handing broad filesystem, Docker, SaaS, or
+database access to a model loop without review.
+
+## Use Cases
+
+- Build Java or Kotlin LLM applications with model-provider abstraction.
+- Add RAG over internal docs, support content, code search, or product data.
+- Connect Spring Boot or Quarkus services to model calls and tool calling.
+- Let AI services call selected MCP tools through stdio, HTTP, WebSocket, or
+  Docker stdio transports.
+- Compose typed agentic workflows with shared state and subagents.
+- Use enterprise JVM observability, tests, dependency management, and deployment
+  practices around agent workflows.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `langchain4j/langchain4j` as an Apache-2.0 repository with
+  active development, 12,000+ stars, and latest release tag `1.16.3`.
+- The repository description and README identify LangChain4j as an idiomatic
+  Java/JVM library for LLM applications with unified model APIs, embedding
+  stores, tool calling, agents, RAG, and enterprise Java integrations.
+- The README says LangChain4j supports 20+ LLM providers, 30+ embedding stores,
+  low-level prompt/chat-memory/function-calling abstractions, high-level agents
+  and RAG patterns, and examples for plain Java, Quarkus, Spring Boot, Helidon,
+  and Micronaut.
+- The agents tutorial documents the experimental `langchain4j-agentic` module,
+  `@Agent`, `AgenticServices`, `AgenticScope`, sequential workflows, loop
+  workflows, and shared variables across agents.
+- The MCP tutorial documents stdio, Streamable HTTP, WebSocket, Docker stdio,
+  and legacy HTTP/SSE transports, plus `McpClient`, `McpToolProvider`, tool-name
+  filtering, tool-name mapping, and binding MCP tools into AI services.
+- The RAG tutorial documents indexing, retrieval, Easy RAG, naive RAG, advanced
+  RAG, embedding stores, document loading, splitting, and retrieval patterns.
+
+## Safety and Privacy
+
+LangChain4j runs inside the JVM application boundary, so its safety depends on
+normal application engineering: dependency pinning, secrets management, tool
+authorization, logging policy, tenant isolation, and tests. Treat model-visible
+tools as public method surfaces until each one has scoped input validation,
+authorization, rate limiting, and audit logging.
+
+MCP integration deserves extra review. A stdio server may start a local
+subprocess, a Docker transport may touch container runtime access, and HTTP or
+WebSocket transports may send user context to remote services. Filter tools
+aggressively and avoid exposing write-capable tool sets before an operator has a
+clear approval path.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, open pull requests, and repository-wide
+content for `langchain4j/langchain4j`, LangChain4j, `dev.langchain4j`,
+`langchain4j-agentic`, Java AI agents, Java RAG framework, Spring Boot AI
+agents, Quarkus LangChain4j, LangChain4j MCP, and JVM LLM framework. Existing
+entries cover adjacent Python/TypeScript frameworks, RAG stores, MCP SDKs, and
+agent platforms such as LangChain, LangGraph, LlamaIndex, Haystack, Agno,
+Pydantic AI, Mastra, CrewAI, AutoGen, CAMEL, Smolagents, and the official MCP
+SDKs, but no dedicated LangChain4j tools entry, exact source URL duplicate,
+target file, or open duplicate PR was found.

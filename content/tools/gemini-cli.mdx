@@ -1,0 +1,186 @@
+---
+title: Gemini CLI
+slug: gemini-cli
+category: tools
+description: >-
+  Google's open-source terminal AI agent for Gemini-powered coding and
+  automation, with code understanding, file edits, shell commands, web fetching,
+  Google Search grounding, MCP server integrations, checkpointing, GEMINI.md
+  context files, and GitHub workflow automation.
+cardDescription: >-
+  Use Google's Gemini CLI as a terminal AI agent for codebase work, shell
+  commands, web fetching, Search grounding, MCP integrations, checkpointing, and
+  scripted automation.
+seoTitle: Gemini CLI Terminal AI Agent for Coding, MCP, Search Grounding, and Automation
+seoDescription: >-
+  Install Gemini CLI with npm, npx, Homebrew, MacPorts, or Conda and use
+  Google's open-source terminal agent for codebase edits, shell commands, web
+  fetching, Google Search grounding, MCP servers, GEMINI.md context files,
+  checkpoints, and GitHub automation.
+author: Google
+authorProfileUrl: "https://github.com/google-gemini"
+dateAdded: "2026-06-18"
+websiteUrl: "https://github.com/google-gemini/gemini-cli#readme"
+documentationUrl: "https://github.com/google-gemini/gemini-cli#readme"
+repoUrl: "https://github.com/google-gemini/gemini-cli"
+packageUrl: "https://registry.npmjs.org/@google/gemini-cli"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/google-gemini/gemini-cli"
+  - "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/README.md"
+  - "https://github.com/google-gemini/gemini-cli/blob/main/package.json"
+  - "https://github.com/google-gemini/gemini-cli/blob/main/LICENSE"
+  - "https://registry.npmjs.org/@google/gemini-cli"
+installable: true
+installCommand: "npm install -g @google/gemini-cli"
+usageSnippet: >-
+  Install `@google/gemini-cli`, authenticate with a Google account, Gemini API
+  key, or Vertex AI route, then run `gemini` inside a version-controlled project
+  with approval, sandbox, MCP, and file-access boundaries reviewed.
+copySnippet: |-
+  npm install -g @google/gemini-cli
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js 20 or newer for the npm package, or a supported Homebrew, MacPorts, or Conda install path."
+  - "A Google account, Gemini API key, or Vertex AI configuration for the selected authentication route."
+  - "A project workspace where file access, shell commands, web fetching, and MCP server access are intentionally scoped."
+  - "A decision on stable, preview, or nightly release channels before using the CLI in team workflows."
+  - "Reviewed MCP server configuration if custom integrations will be exposed to Gemini CLI."
+safetyNotes:
+  - "Gemini CLI can read and edit local files, run shell commands, fetch web content, use Google Search grounding, and call configured MCP servers; keep it inside version-controlled workspaces and review high-impact actions."
+  - "MCP integrations can expose databases, SaaS accounts, browsers, cloud resources, files, or internal APIs to the agent; apply least privilege and approval gates per server."
+  - "Preview and nightly release channels may contain regressions or unvetted changes; use stable releases for shared or production workflows unless testing intentionally."
+  - "Non-interactive scripting can run without the same operator attention as an interactive session; constrain prompts, output parsing, credentials, and command permissions."
+  - "GitHub workflow automation through Gemini CLI should be reviewed like any other code-review or issue-triage automation before granting repository permissions."
+privacyNotes:
+  - "Prompts, selected source files, GEMINI.md context, shell output, web fetches, MCP tool arguments, MCP tool results, checkpoints, and command output may be sent through the configured Gemini or Vertex AI route."
+  - "Keep API keys, Google Cloud project IDs, service credentials, private paths, customer data, and internal code out of prompts, logs, shared terminal output, and public issues."
+  - "Google account, Gemini API, Vertex AI, retention, quota, telemetry, and billing behavior depend on the selected authentication mode and organizational settings."
+  - "MCP server logs, Gemini CLI logs, terminal history, GitHub workflow logs, and generated artifacts can retain sensitive code or operational context."
+tags:
+  - google
+  - gemini
+  - cli
+  - terminal-agent
+  - ai-coding
+  - mcp
+  - automation
+keywords:
+  - Gemini CLI
+  - Google Gemini CLI
+  - "@google/gemini-cli"
+  - terminal AI agent
+  - Gemini coding agent
+  - Gemini CLI MCP
+  - GEMINI.md
+  - Gemini CLI GitHub Action
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Gemini CLI is Google's open-source terminal AI agent for Gemini-powered coding,
+repository work, and automation. It can inspect and edit codebases, run shell
+commands, fetch web content, use Google Search grounding, connect to MCP
+servers, checkpoint conversations, load project context through `GEMINI.md`, and
+run non-interactively in scripts.
+
+Use it when a developer wants a Google-backed terminal agent rather than an IDE
+extension or a hosted chat surface. It is especially relevant for Gemini coding
+agent, terminal AI agent, MCP client, Google Search grounding, and GitHub
+workflow automation searches.
+
+## Install
+
+Run without a global install:
+
+```bash
+npx @google/gemini-cli
+```
+
+Install globally with npm:
+
+```bash
+npm install -g @google/gemini-cli
+```
+
+The upstream docs also describe Homebrew, MacPorts, and Conda install paths.
+Use the stable channel for shared workflows unless you are intentionally testing
+preview or nightly releases.
+
+## Agent Capabilities
+
+| Area | Gemini CLI Coverage |
+| --- | --- |
+| Terminal Agent | Interactive `gemini` CLI and non-interactive prompt mode |
+| Coding Workflows | Codebase understanding, file edits, debugging, troubleshooting, and app generation |
+| Tools | File operations, shell commands, web fetching, Google Search grounding, and MCP servers |
+| Context | `GEMINI.md` project context files and include-directory support |
+| Automation | JSON and streaming output formats for scripts and long-running workflows |
+| GitHub | Separate Gemini CLI GitHub Action for PR reviews, issue triage, mentions, and custom workflows |
+| Releases | Stable, preview, and nightly npm release channels |
+
+## MCP Fit
+
+Gemini CLI has built-in MCP support for custom integrations. That makes it a
+natural target for teams using the same MCP servers across Claude Code, Codex,
+Cursor, Gemini CLI, and other agent hosts.
+
+Treat each MCP server as a separate trust boundary. A harmless read-only docs
+server has a different risk profile than a server that can write to GitHub,
+query production databases, control a browser, deploy infrastructure, or access
+private files.
+
+## Use Cases
+
+- Ask Gemini to inspect, explain, or edit a local repository from the terminal.
+- Use Google Search grounding while debugging current behavior or APIs.
+- Connect Gemini CLI to MCP servers for custom tools and internal systems.
+- Script codebase explanations, audits, or automation through non-interactive
+  prompt mode.
+- Store project guidance in `GEMINI.md` files.
+- Run Gemini CLI GitHub Action workflows for pull request review or issue
+  triage after repository permissions are reviewed.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository describes Gemini CLI as an open-source AI agent that
+  brings Gemini into the terminal.
+- The README documents npm, npx, Homebrew, MacPorts, and Conda install paths.
+- The README describes file operations, shell commands, web fetching, Google
+  Search grounding, MCP support, checkpointing, `GEMINI.md`, non-interactive
+  mode, JSON output modes, and GitHub Action integration.
+- `package.json` declares the `@google/gemini-cli` package, `gemini` binary,
+  GitHub repository, workspace layout, and Node.js engine requirement.
+- The npm registry resolves `@google/gemini-cli` with latest version `0.47.0`
+  and Apache-2.0 licensing.
+
+## Safety and Privacy
+
+Gemini CLI is a local agent with access to the directory and tools you expose.
+Start in a version-controlled workspace, review proposed edits and shell
+commands, and keep destructive or credentialed operations behind explicit
+operator approval.
+
+When using MCP, Google Search grounding, web fetching, Vertex AI, API-key
+authentication, or GitHub automation, review which prompts, source files, tool
+outputs, logs, checkpoints, and workflow artifacts leave the local machine or
+repository boundary.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+`google-gemini/gemini-cli`, Gemini CLI, `@google/gemini-cli`, Google Gemini
+CLI, Gemini terminal agent, Gemini CLI MCP, and `GEMINI.md`.
+Existing content includes `gemini-mcp-tool`, which is a separate MCP bridge that
+calls Gemini CLI from Claude, and multiple skill entries that mention Gemini CLI
+compatibility. No dedicated official Gemini CLI tools entry, exact source URL
+duplicate, target file, or open duplicate PR was found.

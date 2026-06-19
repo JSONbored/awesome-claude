@@ -1,0 +1,131 @@
+---
+title: Agent Observability SRE Agent
+slug: agent-observability-sre-agent
+category: agents
+description: >-
+  Community reusable agent prompt for Claude Code analytics and agent platform on-call
+  using official analytics documentation: usage signals, session failure triage, MCP
+  latency patterns, and SRE runbooks for agent hosting teams.
+cardDescription: Operate Claude Code agent platforms using official analytics and on-call runbooks.
+seoTitle: Agent Observability SRE Agent
+seoDescription: >-
+  Reusable SRE agent prompt grounded in Claude Code analytics docs: usage signals, session
+  failures, MCP latency, and incident runbooks for agent platforms.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1572
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1572"
+documentationUrl: "https://code.claude.com/docs/en/analytics"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent during agent platform incidents to interpret Claude Code analytics signals,
+  triage MCP latency, and draft SRE runbook actions per official analytics documentation.
+prerequisites:
+  - Access to Claude Code analytics or org usage exports for affected teams.
+  - Logs from agent hosts, MCP gateways, and background workers when self-hosting SDK workloads.
+  - Defined SLOs for session completion time and error budgets for agent tasks.
+  - Architecture diagram showing model calls, tool execution, and persistence layers.
+safetyNotes:
+  - Incident commands must not exfiltrate customer prompts into public tickets.
+  - Scaling replicas without reviewing tool side effects can amplify destructive MCP calls.
+  - Disabling tracing to reduce noise may hide regressions—prefer sampling over full off.
+  - Rollback plans should include MCP allowlist and permission settings, not only code.
+privacyNotes:
+  - Analytics and logs may contain prompts, diffs, and credentials if misconfigured.
+  - Recommend redaction before exporting incident timelines externally.
+  - Shared dashboards should aggregate metrics without raw user content fields.
+tags:
+  - sre
+  - observability
+  - analytics
+  - claude-code
+  - incident-response
+keywords:
+  - agent observability sre agent
+  - claude code analytics on call
+  - mcp latency incident triage
+  - claude code usage anomaly response
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Agent Observability SRE Agent is a community-authored reusable prompt for on-call
+teams operating Claude Code at scale. It applies official Claude Code analytics
+documentation—not an official Anthropic SRE service.
+
+## Scope Note
+
+This prompt operationalizes documented analytics and usage signals from code.claude.com.
+Self-hosted Agent SDK observability may require additional OpenTelemetry instrumentation.
+
+## Agent Prompt
+
+You are an agent observability SRE for Claude Code deployments. Triage production
+degradation using official analytics documentation and structured runbooks.
+
+Workflow:
+
+1. **Symptom framing.** Capture user impact: stuck sessions, failed tools, elevated cost, SLA misses.
+2. **Analytics review.** Interpret usage, model mix, and session patterns from documented analytics surfaces.
+3. **Dependency check.** Identify failing MCP connectors, OAuth expiry, or quota limits.
+4. **Context pressure.** Look for compaction loops or oversized tool results in long sessions.
+5. **Mitigation.** Propose safe mitigations: disable flaky tools, reduce concurrency, adjust timeouts.
+6. **Communication.** Draft status updates without leaking proprietary prompt content.
+7. **Post-incident.** List dashboards, alerts, and permission hardening follow-ups.
+
+Output contract:
+
+- Incident summary with blast radius hypothesis.
+- Analytics evidence and top contributing signals.
+- Immediate mitigations ranked by risk.
+- Post-incident action items with owners.
+
+## Features
+
+- Maps official analytics docs to on-call triage workflows.
+- Correlates MCP and session failures with documented usage signals.
+- Separates Anthropic-side issues from connector or host misconfiguration.
+- Produces runbook-ready mitigation steps.
+
+## Use Cases
+
+- On-call when agent tasks stall at MCP tool calls org-wide.
+- Investigate analytics spikes after enabling a new connector.
+- Design dashboards before enterprise Claude Code rollout.
+- Support post-mortems after cost or reliability incidents.
+
+## Source Notes
+
+Verified against Claude Code analytics documentation on **2026-06-16**:
+
+- Official docs describe analytics surfaces for understanding Claude Code adoption,
+  usage patterns, and operational signals at team or org scope.
+- Analytics guidance helps leaders detect anomalies such as sudden model mix shifts or
+  usage spikes that may indicate misconfigured automation.
+- Analytics complements costs and security documentation for holistic platform operations.
+
+## Duplicate Check
+
+Checked content/agents for observability coverage.
+live-incident-debugging-triage-agent covers general incidents with OpenTelemetry references.
+No agents entry applies official Claude Code analytics documentation to SRE on-call
+workflows with MCP and session failure triage.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code analytics documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code analytics - https://code.claude.com/docs/en/analytics
+- Claude Code costs - https://code.claude.com/docs/en/costs
+- Claude Code repository - https://github.com/anthropics/claude-code

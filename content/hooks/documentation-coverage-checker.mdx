@@ -18,7 +18,9 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-19"
-documentationUrl: "https://jsdoc.app/"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch
@@ -61,18 +63,15 @@ tags:
   - analysis
   - automation
   - best-practices
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - analysis
-  - automation
-  - best-practices
-  - checker
-  - claude
-  - code-quality
-  - coverage
-  - development
-  - documentation
-  - hooks
-  - tools
+  - documentation coverage checker hook
+  - claude code documentation coverage checker hook
+  - documentation coverage checker claude hook
+  - claude documentation coverage checker automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true

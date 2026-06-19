@@ -33,6 +33,18 @@ export function getAdminTokens() {
   return getScopedAdminTokens(PRIMARY_ADMIN_TOKEN_NAMES);
 }
 
+// Constant-time string compare so admin-token checks don't leak via early-exit timing
+// (consistent with the timing-safe comparisons used elsewhere in the codebase).
+function timingSafeEqual(a: string, b: string): boolean {
+  const enc = new TextEncoder();
+  const aBytes = enc.encode(a);
+  const bBytes = enc.encode(b);
+  const len = Math.max(aBytes.length, bBytes.length);
+  let mismatch = aBytes.length ^ bBytes.length;
+  for (let i = 0; i < len; i++) mismatch |= (aBytes[i] ?? 0) ^ (bBytes[i] ?? 0);
+  return mismatch === 0;
+}
+
 function hasAdminToken(request: Request, tokens: readonly string[]) {
   if (tokens.length === 0) return false;
 
@@ -41,7 +53,11 @@ function hasAdminToken(request: Request, tokens: readonly string[]) {
     ?.replace(/^Bearer\s+/i, "")
     .trim();
   const headerToken = request.headers.get("x-admin-token")?.trim();
-  return tokens.some((token) => bearer === token || headerToken === token);
+  return tokens.some(
+    (token) =>
+      (bearer !== undefined && timingSafeEqual(bearer, token)) ||
+      (headerToken !== undefined && timingSafeEqual(headerToken, token)),
+  );
 }
 
 export function isAdminAuthorized(request: Request) {

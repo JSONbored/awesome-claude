@@ -16,7 +16,9 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
-documentationUrl: "https://jestjs.io/docs/getting-started"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/test-runner-hook.sh && chmod +x
@@ -59,19 +61,15 @@ tags:
   - ci-cd
   - watch
   - parallel
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - automation
-  - ci-cd
-  - claude
-  - development
-  - hook
-  - hooks
-  - parallel
-  - runner
-  - test
-  - testing
-  - tools
-  - watch
+  - test runner hook
+  - claude code test runner hook
+  - test runner claude hook
+  - claude test runner automation
 readingTime: 4
 difficultyScore: 0
 hasTroubleshooting: true

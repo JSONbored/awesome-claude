@@ -1,0 +1,226 @@
+---
+title: mcp-use OpenAPI to MCP Skill
+slug: mcp-use-openapi-to-mcp-skill
+category: skills
+description: >-
+  Agent Skill from mcp-use for turning OpenAPI or Swagger specs into MCP servers
+  with operation-to-tool mapping, auth wiring, Zod schema generation, inspector
+  testing, and streamable HTTP deployment.
+cardDescription: >-
+  mcp-use skill for wrapping OpenAPI and Swagger specs as MCP tools with
+  mechanical schema mapping, auth wiring, tests, and deployment guidance.
+seoTitle: OpenAPI to MCP Skill for Claude Code, Codex, and mcp-use
+seoDescription: >-
+  Install the mcp-use OpenAPI to MCP Skill for Claude Code, Codex, Cursor, and
+  other agents to generate MCP servers from OpenAPI or Swagger specs with typed
+  tools, auth, tests, and deployment workflows.
+author: mcp-use
+authorProfileUrl: "https://github.com/mcp-use"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/mcp-use/mcp-use"
+documentationUrl: "https://github.com/mcp-use/mcp-use/blob/main/skills/openapi-to-mcp/SKILL.md"
+websiteUrl: "https://www.skills.sh/mcp-use/mcp-use/openapi-to-mcp"
+downloadUrl: "https://github.com/mcp-use/mcp-use/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add https://github.com/mcp-use/mcp-use --skill openapi-to-mcp"
+usageSnippet: >-
+  Install the openapi-to-mcp skill before asking an agent to wrap an OpenAPI or
+  Swagger document as a Claude-compatible MCP server.
+copySnippet: |-
+  npx skills add https://github.com/mcp-use/mcp-use --skill openapi-to-mcp
+
+  # Update installed skills
+  npx skills update
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/mcp-use/mcp-use"
+  - "https://raw.githubusercontent.com/mcp-use/mcp-use/main/skills/openapi-to-mcp/SKILL.md"
+  - "https://raw.githubusercontent.com/mcp-use/mcp-use/main/skills/openapi-to-mcp/references/mapping-rules.md"
+  - "https://raw.githubusercontent.com/mcp-use/mcp-use/main/skills/openapi-to-mcp/references/auth.md"
+  - "https://raw.githubusercontent.com/mcp-use/mcp-use/main/skills/openapi-to-mcp/references/testing.md"
+  - "https://www.skills.sh/mcp-use/mcp-use/openapi-to-mcp"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Cursor
+  - Generic Agent Skills hosts
+prerequisites:
+  - "An OpenAPI 3.x or Swagger 2.0 spec from a local file, URL, or pasted source."
+  - "Node.js and npm or pnpm for `create-mcp-use-app`, TypeScript, swagger-parser, Zod, and mcp-use tooling."
+  - "An MCP client or coding agent that can install and use Agent Skills from GitHub."
+  - "Known target API base URL, authentication scheme, operation filter, and deployment intent before broad tool generation."
+  - "API credentials kept outside prompts and committed files, using environment variables and `.env.example` documentation."
+safetyNotes:
+  - "Generated MCP tools can expose every selected REST operation from a source API, including destructive or account-changing endpoints if the operation filter is too broad."
+  - "Large OpenAPI specs can create noisy tool surfaces. Filter by tag or operation list when the API has many endpoints."
+  - "Auth wiring may include API keys, bearer tokens, basic auth, OAuth bearer tokens, and environment variables; never put secret values in the spec, generated source, prompts, or PR text."
+  - "The skill recommends streamable HTTP for generated mcp-use servers; review deployment auth, CORS, rate limits, logs, and public reachability before publishing."
+  - "Human review is needed for generated schemas, tool descriptions, error handling, and write operations before giving an agent access to real accounts."
+privacyNotes:
+  - "OpenAPI specs can expose private endpoint names, internal domains, auth schemes, schemas, object fields, customer concepts, and operational workflows."
+  - "Tool calls can send prompts, arguments, request bodies, auth-scoped API responses, error payloads, and logs through the MCP server, model provider, and deployment platform."
+  - "Keep API keys, tokens, OAuth secrets, cookies, private base URLs, customer data, and internal spec comments out of public examples, repository files, issue comments, and screenshots."
+  - "For third-party or customer APIs, confirm data retention and logging behavior across the MCP client, mcp-use deployment target, model provider, and API provider."
+tags:
+  - mcp-use
+  - skills
+  - openapi
+  - swagger
+  - mcp
+  - api
+  - zod
+  - typescript
+keywords:
+  - OpenAPI to MCP
+  - OpenAPI MCP skill
+  - Swagger to MCP
+  - mcp-use OpenAPI skill
+  - Claude OpenAPI MCP
+  - Codex OpenAPI MCP
+  - generate MCP server from OpenAPI
+  - wrap REST API as MCP
+readingTime: 8
+difficultyScore: 84
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# mcp-use OpenAPI to MCP Skill
+
+`openapi-to-mcp` is an Agent Skill in `mcp-use/mcp-use` for converting OpenAPI
+or Swagger specs into MCP servers. It tells a coding agent how to scope the API,
+dereference the spec, scaffold with `create-mcp-use-app`, map operations to
+tools, generate Zod schemas, wire authentication, test the server, and deploy it
+as a streamable HTTP MCP endpoint.
+
+This is a strong fit for Claude Code, Codex, Cursor, and other coding agents
+when a user says things like "turn this OpenAPI spec into an MCP server," "make
+this API usable from Claude," or "wrap this Swagger doc as MCP tools."
+
+## Knowledge Freshness
+
+The skill is tied to active mcp-use TypeScript SDK patterns and current MCP
+transport/deployment expectations. OpenAPI tooling, mcp-use scaffold templates,
+MCP Apps support, streamable HTTP behavior, inspector testing, and deployment
+paths can change.
+
+Use the skill for its end-to-end workflow, then verify exact commands, template
+names, package versions, transport guidance, auth conventions, and deployment
+requirements against the current mcp-use repository and docs.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The upstream `skills/openapi-to-mcp/SKILL.md` file.
+- The OpenAPI mapping, auth, and testing reference files in the same skill
+  folder.
+- The public skills.sh listing for `openapi-to-mcp`.
+- Current GitHub repository metadata for `mcp-use/mcp-use`.
+
+## Core Workflow
+
+Install the skill from the mcp-use repository:
+
+```bash
+npx skills add https://github.com/mcp-use/mcp-use --skill openapi-to-mcp
+```
+
+Update installed skills:
+
+```bash
+npx skills update
+```
+
+Then invoke it before starting an OpenAPI wrapper:
+
+```text
+Use the mcp-use OpenAPI to MCP Skill to turn this OpenAPI spec into an MCP server.
+```
+
+The skill starts by locking the spec source, server base URL, auth scheme,
+operation filter, and widget requirements before code generation. That prevents
+the common failure mode where an agent exposes hundreds of low-value or unsafe
+tools from a large API.
+
+## Capability Scope
+
+The skill covers a full OpenAPI-to-MCP build path:
+
+| Stage | Scope |
+| --- | --- |
+| Scoping | Spec source, base URL, auth, operation filter, and widget decision |
+| Spec ingestion | Local file, URL, or pasted OpenAPI/Swagger source |
+| Dereferencing | Swagger Parser workflow, `$ref` handling, and Swagger 2.0 conversion |
+| Scaffold | `create-mcp-use-app` blank or MCP Apps templates |
+| Project structure | `index.ts`, client, auth, operations, schema, scripts, and `.env.example` |
+| Tool mapping | `operationId`, paths, methods, summaries, descriptions, parameters, request bodies, responses, and security |
+| Schema generation | OpenAPI schema to Zod conversion for strings, enums, numbers, arrays, objects, unions, nullable fields, and descriptions |
+| Auth | API key, bearer, basic, OAuth bearer, and env-var boundaries |
+| Transport | Streamable HTTP through mcp-use `server.listen()` |
+| Testing | mcp-use client, inspector, curl-style checks, and representative tool calls |
+| Deployment | Production deployment flow, env var setup, and public endpoint review |
+
+## Production Rules
+
+Use this skill with source-of-truth discipline:
+
+- Treat the OpenAPI document as the contract for tool names, descriptions,
+  parameter shapes, request bodies, response shapes, and auth requirements.
+- Do not invent operations or broaden the exposed API beyond the selected filter.
+- Prefer mechanical fidelity to the spec over hand-written creative summaries.
+- Keep auth secrets in environment variables and document only variable names in
+  `.env.example`.
+- Review generated write operations, admin operations, bulk mutations, and
+  payment/account-changing tools before giving an agent access to credentials.
+- Run local mcp-use client or inspector tests before deployment.
+- Deploy only after checking transport, auth, CORS, rate limits, logging,
+  observability, and public reachability.
+
+## Use Cases
+
+- Convert an internal OpenAPI spec into a private MCP server for Claude Code.
+- Wrap a third-party REST API as a small set of filtered MCP tools.
+- Generate typed tool schemas from a Swagger document instead of hand-writing
+  brittle argument schemas.
+- Test an API wrapper with the mcp-use inspector before connecting it to
+  production credentials.
+- Build a streamable HTTP MCP endpoint that can later support Claude, ChatGPT,
+  or other remote MCP clients.
+
+## Source Review
+
+- The skill describes an end-to-end recipe: scope, ingest spec, map operations,
+  scaffold, generate tools, wire auth, test, and deploy.
+- The entrypoint explicitly covers OpenAPI 3.x and Swagger 2.0 specs from a file,
+  URL, or pasted source.
+- The skill says each operation becomes one MCP tool and that the OpenAPI
+  document is the source of truth.
+- It instructs agents to filter large specs by tag or operation list to avoid
+  polluting the model's tool list.
+- The mapping reference covers operation naming, parameter and request-body
+  handling, response-shape gotchas, and schema conversion.
+- The auth and testing references cover environment-variable auth wiring and
+  live validation with mcp-use tooling.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/mcp/`, `content/agents/`,
+`content/tools/`, open pull requests, and repository-wide content for
+`openapi-to-mcp`, `OpenAPI to MCP Skill`, `mcp-use OpenAPI`, `Swagger to MCP`,
+`generate MCP server from OpenAPI`, and `wrap REST API as MCP`. Existing content
+includes general MCP authoring/security skills and some OpenAPI-related MCP
+servers, but no dedicated mcp-use OpenAPI-to-MCP Agent Skill entry, exact source
+URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The skill lives
+in the `mcp-use/mcp-use` repository and should be reviewed against the upstream
+license files before redistributing bundled artifacts.

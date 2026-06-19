@@ -1,208 +1,204 @@
 ---
-title: Claude Code Multi-Directory Setup Enterprise Workflow 2025
+title: Multi-Directory and Monorepo Setup in Claude Code
 slug: multi-directory-setup
 category: guides
 description: >-
-  Master Claude Code multi-directory enterprise workflow. Step-by-step setup,
-  automation hooks, and proven enterprise strategies for 30-100x productivity
-  boost.
-cardDescription: Master Claude Code multi-directory enterprise workflow.
-seoTitle: Claude Code Multi-Directory Setup Enterprise Workflow 2025
+  How to give Claude Code access to more than one directory: the --add-dir flag,
+  the /add-dir command, and the permissions.additionalDirectories setting, plus
+  how each one handles CLAUDE.md, rules, and skills in monorepos.
+cardDescription: >-
+  Give Claude Code access to sibling packages or separate repositories with
+  --add-dir, /add-dir, and additionalDirectories, and know what each one loads.
+seoTitle: Multi-Directory and Monorepo Setup in Claude Code
 seoDescription: >-
-  Master Claude Code multi-directory enterprise workflow. Step-by-step setup,
-  automation hooks, and proven enterprise strategies for 30-100x productivity
-  boost.
+  Working across multiple directories in Claude Code: the --add-dir flag,
+  /add-dir command, and permissions.additionalDirectories setting, how each
+  loads CLAUDE.md and skills, and where to start Claude in a monorepo.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/large-codebases"
 installable: false
 usageSnippet: >-
-  Complete multi-directory workflow optimized with Claude Code. This process
-  delivers 30-100x productivity improvements while reducing time-to-market by
-  79%. Includes 5 process steps, 12 tool integrations, and full automation
-  capabilities.
+  Use this guide to read and edit files in a sibling package or a separate
+  repository from one Claude Code session, choosing between --add-dir, /add-dir,
+  and the additionalDirectories setting based on what you want loaded.
+prerequisites:
+  - "Claude Code installed and runnable as `claude`."
+  - "A working directory you start Claude from; additional directories are granted relative to it."
+safetyNotes:
+  - "Any directory you grant with --add-dir, /add-dir, or additionalDirectories is readable and editable by Claude in that session; only add directories you intend Claude to modify."
+privacyNotes:
+  - "Granting a directory exposes its file contents to the session and the model provider; do not add directories containing secrets or unrelated private code."
 tags:
   - workflow
-  - enterprise development
-  - advanced
-  - automation
+  - monorepo
+  - configuration
+  - intermediate
 keywords:
-  - claude multi directory
-  - multi project claude setup
-  - claude workspace setup
-  - repository workflow
-readingTime: 5
-difficultyScore: 87
+  - claude code multi directory
+  - claude code add-dir
+  - claude code additionalDirectories
+  - claude code monorepo setup
+  - claude code multiple repositories
+readingTime: 6
+difficultyScore: 45
 hasTroubleshooting: true
-hasPrerequisites: false
+hasPrerequisites: true
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
 ---
 
-## TL;DR
+## Overview
 
-Complete multi-directory workflow optimized with Claude Code. This process delivers 30-100x productivity improvements while reducing time-to-market by 79%. Includes 5 process steps, 12 tool integrations, and full automation capabilities.
+A Claude Code session can read and edit files in its working directory by default. Working across more than one directory comes up in two common situations:
 
-**Key Points:**
+- **A monorepo**, where a change to a shared package needs matching edits in the packages that import it.
+- **Separate repositories** checked out side by side, where one task spans both.
 
-- 30-100x productivity gains - verified at TELUS and Bridgewater
-- 79% faster feature deployment - measured at Rakuten implementation
-- 1M token context window - enabled through API optimization
-- 4-week implementation with 89% developer adoption rate
+Claude Code gives you three ways to grant access beyond the working directory: the `--add-dir` launch flag, the `/add-dir` in-session command, and the `permissions.additionalDirectories` setting. They differ mainly in scope (one session versus committed config) and in what they load from the added directory: file access only, or also that directory's `CLAUDE.md`, rules, and skills.
 
-Transform your enterprise codebase management with this comprehensive workflow powered by Claude Code. This process helps maintain high code quality standards across multiple directories.
+This guide covers those three mechanisms and the decision that comes before them: where to start Claude.
 
-> **Workflow Overview**
->
-> **Process Type:** Enterprise Development Automation  
-> **Complexity:** Advanced (requires DevOps knowledge)  
-> **Implementation Time:** 4 weeks full deployment  
-> **Team Size:** 5-10 developers minimum  
-> **ROI Timeline:** Value realization within 30 days  
-> **Difficulty:** Advanced
+## Choose where to start Claude
 
-## Workflow Architecture
+Before adding directories, pick your launch point. Where you run `claude` determines which files Claude can touch without a grant and which `CLAUDE.md` files load at startup.
 
-Understanding the complete process structure ensures successful implementation across distributed development teams. This workflow consists of 5 main phases with 8 decision points and 15 automation opportunities.
+| Start from      | File access                            | CLAUDE.md loaded at launch                              | Use when                                   |
+| :-------------- | :------------------------------------- | :----------------------------------------------------- | :----------------------------------------- |
+| Repository root | Every file in the tree                 | Root only; subdirectory files load on demand           | Tasks span multiple packages or subsystems |
+| A subdirectory  | That subtree only, until you grant more | That directory's plus every ancestor's                 | Work is scoped to one package or subsystem |
 
-<!-- Section type: feature_grid -->
+If you start from the repository root of a single large tree, Claude already reaches every file and you do not need to add directories. The mechanisms below matter when you start from a subdirectory, or when a task spans separate checkouts.
 
-## Complete Process Flow
+Note that project settings in `.claude/settings.json` load only from the directory you start in; they are not inherited from parent directories the way `CLAUDE.md` files are.
 
-1. **Phase 1: Initiation and Setup**
+## Grant access for one session: `--add-dir` and `/add-dir`
 
-2. **Phase 2: Multi-Directory Configuration**
+To add a directory at launch, pass `--add-dir`:
 
-3. **Phase 3: Context Window Optimization**
+```bash
+# Start in packages/api and also reach the sibling shared package
+claude --add-dir ../shared
 
-4. **Phase 4: Hook System Implementation**
-
-5. **Phase 5: Production Deployment**
-
-## Tool Integration Requirements
-
-<!-- Section type: feature_grid -->
-
-## Automation Strategies
-
-### Custom Command Implementation
-
-Create powerful slash commands streamlining repetitive tasks across repositories. Commands execute consistently reducing human error by 85%.
-
-```markdown
-
+# Multiple directories, including a separate repository
+claude --add-dir ../shared --add-dir ~/code/other-repo
 ```
 
-### Hook Configuration for Quality
+To add a directory after a session has already started, use the `/add-dir` command:
 
-Implement post-edit hooks maintaining code quality automatically. Hooks trigger after file modifications ensuring standards compliance.
-
-```javascript
-
+```text
+/add-dir ../web
 ```
 
-## Performance Metrics
+Either way, Claude can read and edit files in the added directory for the rest of that session. Neither change is persisted; the next session starts from your working directory again.
 
-<!-- Section type: tabs -->
+By default, a directory added this way does **not** load its `CLAUDE.md`, `.claude/rules/`, or `CLAUDE.local.md`. To also load those memory files, set the `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD` environment variable:
 
-## Common Challenges and Solutions
+```bash
+CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir ../shared-config
+```
 
-<!-- Section type: accordion -->
+With the variable set, Claude loads `CLAUDE.md`, `.claude/CLAUDE.md`, `.claude/rules/*.md`, and `CLAUDE.local.md` from the added directory. (`CLAUDE.local.md` is skipped if you exclude `local` from `--setting-sources`.) Skills in an added directory load on demand regardless of this variable.
 
-## Best Practices
+## Grant access permanently: `additionalDirectories`
 
-### Planning-First Development
+To make sibling access part of the project so everyone working in this area gets it, use the `permissions.additionalDirectories` setting in `.claude/settings.json`:
 
-Always research before coding. Claude analyzes codebases identifying patterns and dependencies first. This approach reduces rework by 75% compared to immediate coding. Teams report 90% first-attempt success rates using planning phases.
+```json
+{
+  "permissions": {
+    "additionalDirectories": [
+      "../shared",
+      "../web"
+    ]
+  }
+}
+```
 
-Break complex features into 3-5 manageable stages. Each stage should complete within one context window. This prevents overflow and maintains Claude's effectiveness throughout development.
+Relative paths resolve against the directory you start Claude from. With the configuration above, a session launched in `packages/api/` can read and edit files in `packages/shared/` and `packages/web/` without any flag.
 
-### Test-Driven Implementation
+Commit the setting to `.claude/settings.json` for everyone, or put it in `.claude/settings.local.json` for a personal, gitignored selection.
 
-Request test creation before implementation code. Tests define expected behavior clearly for Claude. This methodology achieves 98% test coverage consistently. Bug rates decrease by 85% using test-first approaches.
+Unlike `--add-dir`, the `additionalDirectories` setting grants **file access only**. It never loads the added directory's `CLAUDE.md`, rules, or skills, and the `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD` variable has no effect on it. If you need a sibling's instructions or skills loaded, add it with `--add-dir` instead.
 
-Claude generates comprehensive test suites in minutes. Tests cover edge cases humans often miss. Automated test execution catches regressions immediately.
+## Reference: which mechanism loads what
 
-### Progressive Rollout Strategy
+| Added with                             | Scope               | Read/edit access | Loads CLAUDE.md and rules                  | Loads skills |
+| :------------------------------------- | :------------------ | :--------------- | :----------------------------------------- | :----------- |
+| `additionalDirectories` setting        | Committed / local config | Yes         | Never                                      | Never        |
+| `--add-dir` flag                       | One session         | Yes              | Only with `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1` | Yes          |
+| `/add-dir` command                     | Rest of the session | Yes              | Only with `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1` | Yes          |
 
-Start with read-only analysis tasks building confidence. Gradually increase Claude's permissions as teams adapt. Begin with documentation and move to code generation.
+Pick based on intent: `additionalDirectories` for stable, team-wide sibling access where you only need files; `--add-dir` / `/add-dir` for one-off access, or when you want the sibling's conventions and skills in context too.
 
-Monitor team feedback adjusting workflows accordingly. Celebrate early wins building momentum for adoption. Provide continuous training and support during rollout phases.
+## Monorepo layout that scales
 
-## Performance Benchmarks
+Adding directories is one of several settings that keep Claude focused in a large codebase. A typical monorepo combines them:
 
-<!-- Section type: comparison_table -->
+- **Layer `CLAUDE.md` files by directory.** A root file sets repository-wide rules; each package adds its own. Claude loads the root plus the package you start in, and pulls in a subdirectory's file on demand when it reads there. Keep each file focused on its own area so context is not spent on unrelated subsystems.
+- **Exclude irrelevant `CLAUDE.md` files** with `claudeMdExcludes` (glob patterns matched against absolute paths) for packages you never touch, such as other teams' code or vendored subtrees.
+- **Block reads of generated and vendored code** with `Read` deny rules in `permissions.deny`, for example `"Read(./**/dist/**)"` and `"Read(./vendor/**)"`. Searches already respect `.gitignore`, so this is for checked-in artifacts.
+- **Grant sibling access** with `additionalDirectories` when a change spans packages.
 
-## Implementation Roadmap
+A committed `packages/api/.claude/settings.json` that combines these:
 
-<!-- Section type: feature_grid -->
+```json
+{
+  "permissions": {
+    "additionalDirectories": [
+      "../shared"
+    ],
+    "deny": [
+      "Read(./**/dist/**)",
+      "Read(./**/build/**)"
+    ]
+  }
+}
+```
 
-## Integration with Existing Tools
+Because project settings load only from your starting directory, each subdirectory's `.claude/settings.json` must be self-contained rather than layered on a root file.
 
-### Monorepo Management
+## Worktrees and sparse paths
 
-Integrate with Nx, Lerna, or Rush seamlessly. Claude understands monorepo structures navigating dependencies intelligently. Performance improves 50% using proper monorepo configurations.
+If you start sessions in a new git worktree with `--worktree`, the entire repository is checked out by default. In a large repository, the `worktree.sparsePaths` setting uses git sparse-checkout to write only the listed directories (plus root-level files) to disk:
 
-Configure workspace-specific CLAUDE.md files for modules. Each team maintains their context independently. Central configuration ensures consistency across projects.
+```json
+{
+  "worktree": {
+    "sparsePaths": [
+      ".claude",
+      "packages/api",
+      "packages/shared"
+    ],
+    "symlinkDirectories": [
+      "node_modules"
+    ]
+  }
+}
+```
 
-### CI/CD Pipeline Integration
+Paths are relative to the repository root regardless of where you launch Claude. List directories, not individual files; root-level files like lock files and `tsconfig.base.json` are always included. Add `.claude` if you want the repository root's `.claude/` available inside the worktree. Pair with `symlinkDirectories` to avoid duplicating large directories such as `node_modules` across worktrees.
 
-Connect Claude with GitHub Actions or Jenkins pipelines. Automated PR creation includes all CI checks. Deployment workflows trigger automatically after approvals.
+Note that `sparsePaths` and `symlinkDirectories` are read from your starting directory before the worktree is created; after creation the session's working directory is the worktree root, so put permission rules and hooks you need inside worktrees in the repository root's `.claude/settings.json`.
 
-Claude generates pipeline configurations understanding project requirements. Test suites run automatically validating all changes. Security scans execute preventing vulnerability introduction.
+## Scoping a change that spans packages
 
-## Security Considerations
+Configuration controls what Claude can see; how you scope the task affects the result:
 
-<!-- Section type: quick_reference -->
+- **Hand over the whole change in one session.** Giving Claude the shared edit and its call sites together keeps decisions consistent across packages instead of being re-derived per package.
+- **Save the plan to a file before editing.** A long cross-package session compacts its context along the way; a plan written to a markdown file in the repository survives where conversation history may not.
 
-## Team Training Resources
+## Troubleshooting
 
-### Getting Started Guide
+- **Claude says it cannot edit a sibling package.** You started in a subdirectory without granting the sibling. Add it with `--add-dir`, `/add-dir`, or `additionalDirectories`, or start Claude from the repository root.
+- **A sibling's `CLAUDE.md` is being ignored.** The `additionalDirectories` setting never loads memory files. Use `--add-dir` with `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1`, or layer a `CLAUDE.md` in your own tree instead.
+- **A relative path resolves to the wrong place.** Relative paths resolve against the directory you start Claude in, not the repository root (sparse paths are the exception). Confirm your launch directory, or use an absolute path.
+- **Settings in `.claude/settings.json` are not taking effect.** Project settings load only from the directory you start in. A root settings file does not apply when you launch from a subdirectory.
 
-Begin with official Anthropic documentation understanding core concepts. Practice on non-critical projects building confidence gradually. Join community forums accessing shared experiences and solutions.
+## Related resources
 
-Schedule regular team sessions sharing discoveries and techniques. Document internal best practices maintaining knowledge base. Create custom examples relevant to your codebase.
-
-### Advanced Techniques
-
-Master context window management maximizing token efficiency. Develop custom MCP servers for proprietary integrations. Build team-specific command libraries automating workflows.
-
-Implement sophisticated hook chains handling complex validations. Create AI sub-agents for specialized domain tasks. Optimize performance through strategic session management.
-
-## Measuring Success
-
-> **Key Performance Indicators**
->
-> Track development velocity improvements measuring feature completion rates. Monitor code quality metrics including coverage and bug rates. Measure developer satisfaction through regular surveys and feedback. Calculate ROI comparing implementation costs against productivity gains.
->
-> Success indicators include 30x+ productivity on specific tasks. Achieve 89% developer adoption within one month. Maintain 95%+ code quality scores consistently. Reduce time-to-market by minimum 50% overall.
-
-## Future Enhancements
-
-### Extended Thinking Capabilities
-
-Claude's thinking capacity expands to sophisticated reasoning chains. Complex architectural decisions become automated with explanations. Performance improvements expected reaching 200x for specific scenarios.
-
-### Enhanced Memory Systems
-
-Persistent context across sessions eliminates repeated explanations. Project understanding deepens through accumulated knowledge. Team insights share automatically improving collective efficiency.
-
-## Troubleshooting Guide
-
-## Related Workflows and Next Steps
-
-<!-- Section type: related_content -->
-
-> **Ready to Implement?**
->
-> **Start Your Workflow Journey**
->
-> 1. **Assess:** Evaluate your current development velocity and pain points
-> 2. **Plan:** Use our [implementation roadmap](#implementation-roadmap) for systematic deployment
-> 3. **Pilot:** Begin with 5-10 developer pilot group
-> 4. **Scale:** Expand to additional teams and projects
->
-> **Need Expert Guidance?** Join our [community](/community) for implementation support or explore our [consulting services](/services) for customized deployment assistance.
-
-_Last updated: September 2025 | Comprehensive workflow for enterprise development teams | Explore more [business workflows](/guides/workflows)._
+- [Set up Claude Code in a monorepo or large codebase](https://code.claude.com/docs/en/large-codebases)
+- [Settings reference](https://code.claude.com/docs/en/settings)
+- [Memory and project instructions](https://code.claude.com/docs/en/memory)

@@ -18,14 +18,15 @@ author: MkDev11
 submittedBy: MkDev11
 submittedByUrl: "https://github.com/MkDev11"
 dateAdded: "2026-06-04"
-documentationUrl: "https://www.w3.org/TR/dwbp/"
+documentationUrl: "https://www.writethedocs.org/guide/writing/docs-principles/"
 sourceUrls:
-  - "https://www.w3.org/TR/dwbp/"
-  - "https://www.w3.org/TR/cooluris/"
-  - "https://www.rfc-editor.org/rfc/rfc9110.html"
-  - "https://schema.org/dateModified"
-  - "https://schema.org/datePublished"
-  - "https://schema.org/softwareVersion"
+  - "https://www.writethedocs.org/guide/writing/docs-principles/"
+  - "https://www.writethedocs.org/guide/docs-as-code/"
+  - "https://keepachangelog.com/en/1.1.0/"
+retrievalSources:
+  - "https://www.writethedocs.org/guide/writing/docs-principles/"
+  - "https://www.writethedocs.org/guide/docs-as-code/"
+  - "https://keepachangelog.com/en/1.1.0/"
 installable: false
 usageSnippet: >-
   Apply these rules before merging or refreshing a public registry entry whose
@@ -203,11 +204,23 @@ portable do/don't behavior for contributors and reviewers deciding whether a
 public registry entry's documentation and source claims are fresh enough to
 merge.
 
+## Source Mapping
+
+Each freshness rule below traces to an established documentation-maintenance
+practice. Use this table to ground a review decision in a public source rather
+than personal preference.
+
+| Freshness rule in this entry | Grounding practice | Source |
+| --- | --- | --- |
+| Treat install commands, version claims, and behavior as stale until re-checked against source | "Current": consider incorrect documentation worse than missing documentation; keep docs up to date as the software changes | [Write the Docs - Documentation Principles](https://www.writethedocs.org/guide/writing/docs-principles/) |
+| Prefer version-agnostic canonical URLs; use versioned pages only when behavior is version-specific | "Current": write version-agnostic content to reduce maintenance burden | [Write the Docs - Documentation Principles](https://www.writethedocs.org/guide/writing/docs-principles/) |
+| Expect to refresh examples and notes whenever the underlying source changes | "ARID" (Accept some Repetition In Documentation): hand-written docs repeat source detail and must be updated alongside code | [Write the Docs - Documentation Principles](https://www.writethedocs.org/guide/writing/docs-principles/) |
+| Review source URLs and block merge on unverifiable claims; keep generated artifacts out of contributor PRs | Docs-as-Code: version control, code review, and automated tests for docs; block merging features that lack matching docs | [Write the Docs - Docs as Code](https://www.writethedocs.org/guide/docs-as-code/) |
+| Record reviewed version and what should trigger a refresh (new major version, deprecation, removal) | Keep a Changelog: one entry per version, ISO 8601 dates, and explicit Deprecated / Removed / Security change types | [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) |
+| Keep old release notes as history, not as evidence of current behavior | Keep a Changelog: the latest version comes first; changelogs are for humans, not a substitute for current docs | [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) |
+
 ## References
 
-- W3C Data on the Web Best Practices: https://www.w3.org/TR/dwbp/
-- W3C Cool URIs for the Semantic Web: https://www.w3.org/TR/cooluris/
-- RFC 9110 HTTP Semantics: https://www.rfc-editor.org/rfc/rfc9110.html
-- Schema.org dateModified property: https://schema.org/dateModified
-- Schema.org datePublished property: https://schema.org/datePublished
-- Schema.org softwareVersion property: https://schema.org/softwareVersion
+- Write the Docs, Documentation Principles: https://www.writethedocs.org/guide/writing/docs-principles/
+- Write the Docs, Docs as Code: https://www.writethedocs.org/guide/docs-as-code/
+- Keep a Changelog 1.1.0: https://keepachangelog.com/en/1.1.0/

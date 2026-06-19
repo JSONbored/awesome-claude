@@ -1,29 +1,35 @@
 ---
-title: Claude 4 Extended Thinking
+title: Claude Extended Thinking
 slug: claude-4-extended-thinking-tutorial
 category: guides
 description: >-
-  Implement Claude 4 Extended Thinking API in 25 minutes. Master 500K token
-  reasoning chains, thinking budget optimization, and industry-leading 74.5%
-  accuracy.
-cardDescription: Implement Claude 4 Extended Thinking API in 25 minutes.
-seoTitle: Claude 4 Extended Thinking
+  How to use Claude's extended thinking: the API `thinking` config with
+  budget_tokens, when to spend more reasoning, and the think/ultrathink prompting
+  convention in Claude Code.
+cardDescription: Use Claude's extended thinking via the API and in Claude Code.
+seoTitle: Claude Extended Thinking
 seoDescription: >-
-  Implement Claude 4 Extended Thinking API in 25 minutes. Master 500K token
-  reasoning chains, thinking budget optimization, and industry-leading 74.5%
-  accuracy.
+  Enable Claude's extended thinking with the API `thinking` config and
+  budget_tokens, learn when to raise the budget, and understand the
+  think/ultrathink convention in Claude Code.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"
+retrievalSources:
+  - "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"
+  - "https://code.claude.com/docs/en/best-practices"
 installable: false
 usageSnippet: >-
-  This tutorial teaches you to implement Claude 4's extended thinking API with
-  up to 500K token reasoning chains in 25 minutes. You'll learn thinking budget
-  optimization that cuts costs by 60%, build multi-hour coding workflows
-  achieving 74.5% SWE-bench accuracy, and master the hybrid reasoning model that
-  outperforms GPT-5 in sustained tasks. Perfect for developers and AI engineers
-  who want to leverage Claude's most advanced 2025 feature for complex
-  problem-solving.
+  Extended thinking lets Claude reason step by step before answering. This guide
+  shows the API request shape (the `thinking` block with `budget_tokens`), how
+  the budget relates to `max_tokens`, the rules for passing thinking blocks back
+  during tool use and multi-turn, and how the think/ultrathink keywords work as a
+  Claude Code prompting convention.
+safetyNotes:
+  - "The API examples make live, billed model requests; set a sensible budget_tokens / MAX_THINKING_TOKENS and test before using high thinking budgets in production."
+privacyNotes:
+  - "Extended thinking sends your prompt and context to the configured model provider and the thinking tokens are billed; the think/ultrathink keyword tiers are a Claude Code convention whose token budgets are not published."
 tags:
   - tutorial
   - advanced
@@ -31,10 +37,10 @@ tags:
   - production-ready
 keywords:
   - claude extended thinking
-  - claude 4 tutorial
+  - claude thinking budget
   - reasoning prompts
   - advanced claude workflows
-readingTime: 4
+readingTime: 6
 difficultyScore: 52
 hasTroubleshooting: true
 hasPrerequisites: false
@@ -43,103 +49,172 @@ robotsIndex: true
 robotsFollow: true
 ---
 
-## TL;DR
+## Overview
 
-This tutorial teaches you to implement Claude 4's extended thinking API with up to 500K token reasoning chains in 25 minutes. You'll learn thinking budget optimization that cuts costs by 60%, build multi-hour coding workflows achieving 74.5% SWE-bench accuracy, and master the hybrid reasoning model that outperforms GPT-5 in sustained tasks. Perfect for developers and AI engineers who want to leverage Claude's most advanced 2025 feature for complex problem-solving.
+Extended thinking gives Claude an explicit, step-by-step reasoning pass before it writes its final answer. When you enable it, Claude emits `thinking` content blocks that contain its internal reasoning, then uses that reasoning to craft the response. It is most useful for problems where a single forward pass tends to be brittle: multi-step math and logic, complex code changes, careful analysis, and tasks where you would normally ask a person to "show their work."
 
-**Key Points:**
+There are two ways you typically interact with it:
 
-- Implement extended thinking API with Python/JavaScript - achieve 74.5% coding accuracy
-- Optimize thinking budgets from 1K-200K tokens - reduce costs by 60-70%
-- Build production workflows with tool integration - 54% productivity gains reported
-- 25 minutes total with 4 hands-on exercises covering real implementation patterns
+- **Through the API**, where you turn on extended thinking by adding a `thinking` object with a token budget to your request.
+- **Inside Claude Code**, where you can nudge Claude to spend more reasoning effort using natural-language keywords like "think" and "ultrathink." This keyword tiering is a prompting convention, not a documented API parameter (more on that below).
 
-Master Claude 4's revolutionary extended thinking API that enables reasoning chains up to 500K tokens. By completion, you'll have a production-ready implementation achieving 74.5% accuracy on complex coding tasks and understand how companies like GitHub, Cursor, and Replit leverage this technology for 54% productivity gains. This guide includes 6 practical examples, 8 code samples, and 4 real-world production patterns.
+This guide covers both, sticking to what the official docs actually specify.
 
-> **Tutorial Requirements**
->
-> **Prerequisites:** Basic API knowledge, Python or JavaScript experience
->
-> **Time Required:** 25 minutes active work
->
-> **Tools Needed:** Anthropic API key, code editor, terminal
->
-> **Outcome:** Working extended thinking implementation with 60% cost optimization
+## Enabling extended thinking via the API
 
-## What You'll Learn
+To turn on extended thinking, add a `thinking` block to your Messages API request. The block takes `type: "enabled"` and a `budget_tokens` value:
 
-<!-- Section type: feature_grid -->
+```json
+{
+    "model": "claude-sonnet-4-6",
+    "max_tokens": 16000,
+    "thinking": {
+        "type": "enabled",
+        "budget_tokens": 10000
+    },
+    "messages": [
+        {
+            "role": "user",
+            "content": "Your question here"
+        }
+    ]
+}
+```
 
-## Step-by-Step Tutorial
+The two required fields:
 
-1. **Step 1: Setup and Basic Configuration**
+- **`type`** — set to `"enabled"` to activate extended thinking.
+- **`budget_tokens`** — the maximum number of tokens Claude may spend on internal reasoning. This is separate from, and must be **less than**, `max_tokens`. `budget_tokens` caps the thinking; `max_tokens` caps the whole response.
 
-2. **Step 2: Implement Thinking Budget Control**
+A few important consequences of that relationship:
 
-3. **Step 3: Testing with Real Workloads**
+- Claude does not always consume the entire budget. The docs note this especially at larger ranges (above ~32k), where the model may stop reasoning before hitting the cap.
+- Because `budget_tokens` must be below `max_tokens`, you cannot combine extended thinking with `max_tokens: 0` (the prompt-caching pre-warming pattern).
+- You are billed for the **full thinking tokens generated**, even when the response only shows summarized thinking. The billed output token count therefore will not match the visible token count in the response.
 
-4. **Step 4: Production Optimization and Caching**
+Not every model supports manual extended thinking. The newest models (for example `claude-opus-4-8`) instead use **adaptive thinking** (`thinking: {"type": "adaptive"}`), where the model decides on its own when and how much to think rather than taking a fixed `budget_tokens`. Check the current model support list in the docs before wiring a specific model to a `budget_tokens` value.
 
-## Key Concepts Explained
+### Streaming
 
-Understanding these concepts ensures you can adapt this tutorial to your specific needs and troubleshoot issues effectively.
+Streaming is **not required** at any size threshold, but it is useful for long thinking passes so you can surface progress instead of waiting for the full response. When streaming is enabled, thinking text arrives via `thinking_delta` events:
 
-<!-- Section type: accordion -->
+```python
+with client.messages.stream(
+    model="claude-sonnet-4-6",
+    max_tokens=16000,
+    thinking={"type": "enabled", "budget_tokens": 10000},
+    messages=[...],
+) as stream:
+    for event in stream:
+        if event.type == "content_block_delta":
+            if event.delta.type == "thinking_delta":
+                print(event.delta.thinking, end="", flush=True)
+```
 
-## Practical Examples
+### Passing thinking blocks back during tool use and multi-turn
 
-<!-- Section type: tabs -->
+This is the rule that most often trips people up. During tool use and multi-turn conversations, you **must pass any `thinking` blocks back to the API unmodified**, in their original order. Each thinking block carries a `signature` field (encrypted reasoning state); rearranging, editing, or dropping blocks in a turn that used them causes a validation error.
 
-## Troubleshooting Guide
+```python
+# First request
+response = client.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=16000,
+    thinking={"type": "enabled", "budget_tokens": 10000},
+    tools=[weather_tool],
+    messages=[{"role": "user", "content": "What's the weather in Paris?"}],
+)
 
-> **Common Issues and Solutions**
->
-> **Issue 1: "Rate limit exceeded after 2 complex prompts"**
->
-> **Solution:** Upgrade from Pro ($20) to Max tier ($100-200/month). Pro tier aggressively limits extended thinking requests. This fixes token allocation restrictions and prevents workflow interruptions.
->
-> **Issue 2: "Thinking blocks appear as 'redacted_thinking' (5% of responses)"**
->
-> **Solution:** This is normal safety filtering. The final response remains unaffected. Continue using the output as these blocks don't impact quality or accuracy.
->
-> **Issue 3: "Response timeout on requests over 21,333 tokens"**
->
-> **Solution:** Enable streaming for all production requests. Streaming is mandatory for extended thinking to prevent timeouts and provide real-time feedback.
+# Extract the thinking and tool_use blocks from the response
+thinking_block = next((b for b in response.content if b.type == "thinking"), None)
+tool_use_block = next((b for b in response.content if b.type == "tool_use"), None)
 
-## Advanced Techniques
+# Second request — the thinking block MUST be passed back with the tool result
+continuation = client.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=16000,
+    thinking={"type": "enabled", "budget_tokens": 10000},
+    tools=[weather_tool],
+    messages=[
+        {"role": "user", "content": "What's the weather in Paris?"},
+        {"role": "assistant", "content": [thinking_block, tool_use_block]},
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "tool_result",
+                    "tool_use_id": tool_use_block.id,
+                    "content": "Current temperature: 88°F",
+                }
+            ],
+        },
+    ],
+)
+```
 
-> **Professional Tips**
->
-> **Performance Optimization:** Combine Sonnet 4 for routine tasks with selective Opus 4.1 deployment reduces costs by 60-70% while maintaining output quality. GitHub and Cursor use this hybrid approach.
->
-> **Security Best Practice:** Always preserve thinking blocks in multi-turn conversations for audit trails. Never modify or reorder thinking sequences as this causes API validation errors.
->
-> **Scalability Pattern:** For enterprise deployments like Carlyle Group's 50% accuracy improvements, implement four-tier access control (Read-Only, Command, Write, Admin) with thinking budget limits per tier.
+Two related tool-use constraints with thinking enabled: only `tool_choice: {"type": "auto"}` (the default) or `tool_choice: {"type": "none"}` are allowed — forcing a specific tool returns an error — and you cannot toggle thinking on or off partway through a tool-use loop.
 
-## Validation and Testing
+### Summarized vs. omitted thinking
 
-<!-- Section type: feature_grid -->
+On Claude 4 models the Messages API returns **summarized** thinking by default: a condensed version of the full reasoning. You still pay for the full thinking tokens; the summary is produced by a separate model. You can also set `display: "omitted"` so no thinking text comes over the wire (the `signature` still carries the encrypted reasoning needed for multi-turn continuity), which gives faster time-to-first-text in streaming pipelines that never surface reasoning to a user.
 
-## Next Steps and Learning Path
+```json
+{
+    "thinking": {
+        "type": "enabled",
+        "budget_tokens": 10000,
+        "display": "omitted"
+    }
+}
+```
 
-## Quick Reference
+## When to spend more thinking
 
-<!-- Section type: quick_reference -->
+Larger budgets can improve quality on genuinely hard problems by giving Claude room for more thorough analysis — but more thinking is not free (you pay for every thinking token) and it adds latency. The docs' guidance is to start with a reasonable value such as `10000` and adjust by problem complexity. Use the table below as a starting heuristic.
 
-## Related Learning Resources
+| Task profile | Suggested approach | Why |
+| --- | --- | --- |
+| Simple lookups, formatting, short rewrites | Leave thinking off | A direct answer is faster and cheaper; reasoning adds little |
+| Moderate reasoning: multi-step questions, small refactors | Start near `budget_tokens: 10000` | The docs' recommended starting point; usually enough headroom |
+| Hard problems: tricky math/logic, complex multi-file changes, deep analysis | Raise the budget, then measure | Bigger budgets help on complex work; verify the gain is real for your task |
+| Very large budgets (above ~32k) | Raise only if measurements justify it | Claude often won't use the whole budget here, so extra budget may not pay off |
 
-<!-- Section type: related_content -->
+Always confirm `budget_tokens` stays below `max_tokens`, and treat budget tuning empirically: raise it only while quality keeps improving on your own evals.
 
-> **Tutorial Complete!**
->
-> **Congratulations!** You've mastered Claude 4's extended thinking API and can now build production systems achieving 74.5% coding accuracy.
->
-> **What you achieved:**
->
-> - ✅ Implemented extended thinking with 1K-200K token budgets
-> - ✅ Reduced operational costs by 60-70% with smart optimization
-> - ✅ Built production workflows matching GitHub and Cursor's implementations
->
-> **Ready for more?** Explore our [tutorials collection](/guides/tutorials) to continue learning and discover how teams achieve 54% productivity gains with extended thinking.
+## The think / ultrathink convention in Claude Code
 
-_Last updated: September 2025 | Found this helpful? Share it with your team and explore more [Claude tutorials](/guides/tutorials)._
+In Claude Code you don't set `budget_tokens` directly. Instead, people use natural-language cues in the prompt — "think", "think hard", "think harder", "ultrathink" — to signal that they want Claude to spend more effort reasoning before acting.
+
+Important caveats, so you don't build on shaky assumptions:
+
+- These keyword tiers are a **community/prompting convention**, not a documented API parameter. The official Claude Code best-practices page does not define them or publish their exact token budgets.
+- Because the budgets are **not published**, treat the tiers as *relative* effort levels rather than precise numbers. Do not hard-code or quote specific token counts for them — any such figures circulating online are unofficial.
+
+| Keyword cue | Relative effort | Good fit for |
+| --- | --- | --- |
+| (no cue) | Default | Routine edits, questions, small fixes |
+| "think" | More than default | Tasks that benefit from a brief planning pass |
+| "think hard" / "think harder" | Higher | Trickier changes, ambiguous requirements |
+| "ultrathink" | Highest | The hardest problems where you explicitly want maximum deliberation |
+
+What the official Claude Code best-practices *do* recommend, and which pairs naturally with more reasoning:
+
+- **Explore, then plan, then code.** Use plan mode to let Claude read the relevant files and produce an implementation plan before it edits anything, so it doesn't solve the wrong problem.
+- **Give Claude a way to verify its work.** A test suite, a build, a linter, or a screenshot comparison closes the loop so Claude can iterate to a pass on its own instead of relying on "looks done."
+- **Provide specific context.** Reference exact files with `@`, name constraints, point to existing patterns, and describe the symptom and what "fixed" looks like.
+- **Add an adversarial review step.** Have a fresh subagent review the diff against your plan and report gaps before you treat the task as done.
+
+Reasoning effort is most worthwhile precisely where these practices say planning matters: multi-file changes, unfamiliar code, and tasks where the approach is uncertain.
+
+## Troubleshooting
+
+- **Validation error on a follow-up request.** You almost certainly dropped, edited, or reordered a `thinking` block from a previous turn. Pass thinking blocks back unmodified, in original order, including their `signature`.
+- **Forced tool choice fails with thinking on.** Only `auto` or `none` tool choice is supported with extended thinking. Remove the forced `tool` / `any` choice, or disable thinking for that call.
+- **Billed token count doesn't match what you see.** Expected with summarized thinking — you are billed for the full thinking tokens, not the visible summary.
+- **`max_tokens: 0` rejected with thinking enabled.** `budget_tokens` must be below `max_tokens`, so the cache pre-warming pattern can't be combined with extended thinking.
+- **Your model rejects `budget_tokens`.** The newest models use adaptive thinking (`type: "adaptive"`) instead of a manual budget. Confirm your model is on the manual-thinking support list.
+
+## References
+
+- Extended thinking — Anthropic docs: https://platform.claude.com/docs/en/build-with-claude/extended-thinking
+- Claude Code best practices: https://code.claude.com/docs/en/best-practices

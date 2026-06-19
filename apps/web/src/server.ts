@@ -1,5 +1,6 @@
 import "./lib/error-capture";
 
+import { logAiSignals } from "./lib/ai-signals.server";
 import { runWithCloudflareRuntime } from "./lib/cloudflare-env.server";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
@@ -51,6 +52,9 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    // Best-effort AI-citation signal tap (crawler hits + AI-referral landings). Synchronous,
+    // never throws, no-ops without the AI_SIGNALS Analytics Engine binding.
+    logAiSignals(request, env);
     return runWithCloudflareRuntime(request, env, ctx, async () => {
       try {
         const handler = await getServerEntry();

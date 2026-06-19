@@ -3,143 +3,273 @@ title: Claude Agent Development
 slug: claude-agent-development-framework
 category: guides
 description: >-
-  Build Claude autonomous agents with 90.2% better performance. Learn
-  multi-agent orchestration, subagents implementation, and deployment achieving
-  $0.045/task.
-cardDescription: Build Claude autonomous agents with 90.2% better performance.
-seoTitle: Claude Agent Development
+  Build autonomous agents with the Claude Agent SDK and Claude Code subagents:
+  the query loop, built-in tools, subagent delegation, and permission controls.
+cardDescription: Build autonomous agents with the Claude Agent SDK and subagents.
+seoTitle: Claude Agent Development with the Agent SDK and Subagents
 seoDescription: >-
-  Build Claude autonomous agents with 90.2% better performance. Learn
-  multi-agent orchestration, subagents implementation, and deployment achieving
-  $0.045/task.
+  Build autonomous agents with the Claude Agent SDK and Claude Code subagents.
+  The query loop, built-in tools, subagent delegation, and permissions, grounded
+  in the official docs.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/overview"
+retrievalSources:
+  - "https://code.claude.com/docs/en/agent-sdk/overview"
+  - "https://code.claude.com/docs/en/agent-sdk/python"
+  - "https://code.claude.com/docs/en/sub-agents"
 installable: false
 usageSnippet: >-
-  This tutorial teaches you to build production-ready Claude autonomous agents
-  achieving 90.2% performance improvements through multi-agent orchestration in
-  30 minutes. You'll learn subagents implementation with isolated 200K token
-  contexts, orchestrator-worker patterns reducing costs to $0.045 per task, and
-  deployment strategies achieving 99.95% uptime. Perfect for developers wanting
-  to leverage Claude 4's 74.5% SWE-bench scores and July 2025 sub-agent
-  capabilities.
+  Build agents two ways with Claude: the Agent SDK (a Python/TypeScript library
+  that runs the Claude Code agent loop in your own process with built-in Read,
+  Edit, Bash, and search tools) and Claude Code subagents (specialized assistants
+  defined as Markdown files that run in isolated context windows). This guide
+  covers a minimal query() loop, the built-in tools, subagent definitions and
+  delegation, model selection, and permission controls.
 tags:
   - tutorial
-  - advanced
   - agent-development
-  - multi-agent
+  - agent-sdk
+  - subagents
 keywords:
-  - claude agent framework
+  - claude agent sdk
+  - claude code subagents
   - agent development
-  - claude code agents
-  - ai agent workflow
-readingTime: 4
+  - query loop
+  - agent permissions
+readingTime: 6
 difficultyScore: 39
 hasTroubleshooting: true
-hasPrerequisites: false
+hasPrerequisites: true
 hasBreakingChanges: false
+safetyNotes:
+  - "Agents built with the Agent SDK run real tools (Bash commands, file edits, web fetches) autonomously in your process and on your filesystem; scope capability with allowed_tools/permission_mode and review what each tool and connected MCP server can do before granting it."
+privacyNotes:
+  - "The SDK authenticates with ANTHROPIC_API_KEY (or a third-party provider's credentials); keep the key in an environment variable, never in agent prompts or committed code. Connected MCP servers and the WebFetch/WebSearch tools can send project data to external systems."
 robotsIndex: true
 robotsFollow: true
 ---
 
 ## TL;DR
 
-This tutorial teaches you to build production-ready Claude autonomous agents achieving 90.2% performance improvements through multi-agent orchestration in 30 minutes. You'll learn subagents implementation with isolated 200K token contexts, orchestrator-worker patterns reducing costs to $0.045 per task, and deployment strategies achieving 99.95% uptime. Perfect for developers wanting to leverage Claude 4's 74.5% SWE-bench scores and July 2025 sub-agent capabilities.
+There are two complementary ways to build agents with Claude:
 
-**Key Points:**
+- **The Claude Agent SDK** — a Python and TypeScript library that gives you the same agent loop, built-in tools, and context management that power Claude Code, runnable inside your own application. You call `query()` (or `ClaudeSDKClient`) and Claude autonomously reads files, runs commands, edits code, and searches the web.
+- **Claude Code subagents** — specialized assistants defined as Markdown files with YAML frontmatter. Each runs in its own context window with a focused system prompt, restricted tools, and an optional cheaper model. The main agent delegates matching tasks and gets back only a summary.
 
-- Multi-agent orchestration - achieve 90.2% better performance than single agents
-- Subagents implementation - parallel processing with isolated 200K token contexts
-- Production deployment - scale to 5,000 requests/second with 99.95% uptime
-- 30 minutes total with complete working code and $0.045 per complex task
+This guide shows a minimal SDK `query()` loop, the built-in tools you get for free, how to define and delegate to subagents, and how to control models and permissions.
 
-Master Claude agent development with this comprehensive framework proven to deliver 90.2% performance improvements through multi-agent orchestration. By completion, you'll have built a production-ready autonomous agent system using Claude 4's revolutionary capabilities, implemented the 3 Amigo pattern reducing development time to 3 hours, and deployed with enterprise monitoring achieving 99.95% uptime. This guide includes 15 practical examples, production-tested code samples, and real-world implementations from Lindy AI's 10x growth and Anthropic's internal 2-3x productivity gains.
-
-> **Tutorial Requirements**
+> **Prerequisites**
 >
-> **Prerequisites:** Basic Python/JavaScript, API experience, Claude account<br />
-> **Time Required:** 30 minutes active work<br />
-> **Tools Needed:** Claude API key, MCP server, Docker (optional)<br />
-> **Outcome:** Working multi-agent system processing tasks at $0.045 each
+> **Knowledge:** Basic Python or TypeScript and API experience<br />
+> **Tools:** An Anthropic API key from the [Console](https://platform.claude.com/); Python 3.10+ for the Python SDK<br />
+> **Auth:** `export ANTHROPIC_API_KEY=your-api-key` (the SDK also supports Amazon Bedrock, Google Vertex AI, and Microsoft Azure providers via environment variables)
 
-## What You'll Learn
+## What the Agent SDK gives you
 
-<!-- Section type: feature_grid -->
+The Agent SDK includes built-in tools for reading files, running commands, and editing code, so your agent can start working immediately without you implementing tool execution. This is the key difference from the Anthropic Client SDK, where you send prompts and write the tool-execution loop yourself.
 
-## Step-by-Step Claude Agent Development
+Install it:
 
-1. **Step 1: Setup Claude API & Core Architecture**
+```bash
+# Python (requires Python 3.10+)
+pip install claude-agent-sdk
 
-2. **Step 2: Implement Orchestrator-Worker Pattern**
+# TypeScript
+npm install @anthropic-ai/claude-agent-sdk
+```
 
-3. **Step 3: Implement Subagent Context Isolation**
+The TypeScript SDK bundles a native Claude Code binary for your platform as an optional dependency, so you don't need to install Claude Code separately.
 
-4. **Step 4: Production Deployment with Monitoring**
+## Step 1: A minimal query loop
 
-## Key Concepts Explained
+`query()` runs a one-off task and yields messages as Claude works. This Python example asks the agent to fix a bug, pre-approving the `Read`, `Edit`, and `Bash` tools:
 
-Understanding these concepts ensures you can adapt this tutorial to your specific needs and troubleshoot issues effectively.
+```python
+import asyncio
+from claude_agent_sdk import query, ClaudeAgentOptions
 
-<!-- Section type: accordion -->
 
-## Practical Examples
+async def main():
+    async for message in query(
+        prompt="Find and fix the bug in auth.py",
+        options=ClaudeAgentOptions(allowed_tools=["Read", "Edit", "Bash"]),
+    ):
+        print(message)  # Claude reads the file, finds the bug, edits it
 
-<!-- Section type: tabs -->
 
-## Troubleshooting Guide
+asyncio.run(main())
+```
 
-> **Common Issues and Solutions**
+The TypeScript equivalent uses the same shape:
+
+```typescript
+import { query } from "@anthropic-ai/claude-agent-sdk";
+
+for await (const message of query({
+  prompt: "Find and fix the bug in auth.ts",
+  options: { allowedTools: ["Read", "Edit", "Bash"] }
+})) {
+  console.log(message); // Claude reads the file, finds the bug, edits it
+}
+```
+
+For multi-turn conversations that keep context, use `ClaudeSDKClient` instead of `query()`:
+
+```python
+async with ClaudeSDKClient() as client:
+    await client.query("First question")
+    async for message in client.receive_response():
+        print(message)
+
+    await client.query("Follow-up question")  # Same session context
+    async for message in client.receive_response():
+        print(message)
+```
+
+## Step 2: Built-in tools
+
+Everything that makes Claude Code powerful is available in the SDK. You enable tools by listing them in `allowed_tools` (Python) / `allowedTools` (TypeScript). Key built-in tools:
+
+| Tool | What it does |
+| --- | --- |
+| **Read** | Read any file in the working directory |
+| **Write** | Create new files |
+| **Edit** | Make precise edits to existing files |
+| **Bash** | Run terminal commands, scripts, git operations |
+| **Glob** | Find files by pattern (`**/*.ts`, `src/**/*.py`) |
+| **Grep** | Search file contents with regex |
+| **WebSearch** | Search the web for current information |
+| **WebFetch** | Fetch and parse web page content |
+
+Beyond tools, the SDK also exposes hooks (`PreToolUse`, `PostToolUse`, `Stop`, `SessionStart`, and more), MCP server connections, sessions you can resume or fork, and Claude Code's filesystem-based configuration (skills, commands, `CLAUDE.md` memory, and plugins) loaded from `.claude/`.
+
+## Step 3: Delegate to subagents
+
+Subagents are specialized AI assistants that handle specific types of tasks. Each runs in its own context window with a custom system prompt, specific tool access, and independent permissions. When Claude encounters a task that matches a subagent's description, it delegates to that subagent, which works independently and returns results.
+
+Subagents help you:
+
+- **Preserve context** by keeping exploration and implementation out of your main conversation
+- **Enforce constraints** by limiting which tools a subagent can use
+- **Reuse configurations** across projects with user-level subagents
+- **Specialize behavior** with focused system prompts for specific domains
+- **Control costs** by routing tasks to faster, cheaper models like Haiku
+
+### Define a subagent as a file
+
+Subagents are Markdown files with YAML frontmatter; the body becomes the subagent's system prompt. Save them to `.claude/agents/` (project scope, check into version control) or `~/.claude/agents/` (available across all your projects). Only `name` and `description` are required:
+
+```markdown
+---
+name: code-reviewer
+description: Reviews code for quality and best practices
+tools: Read, Glob, Grep
+model: sonnet
+---
+
+You are a code reviewer. When invoked, analyze the code and provide
+specific, actionable feedback on quality, security, and best practices.
+```
+
+Claude uses the `description` to decide when to delegate, so write it clearly. You can also create and manage subagents interactively with the `/agents` command, which takes effect without a session restart (files edited directly on disk require a restart).
+
+### Define subagents from the Agent SDK
+
+In the SDK, pass an `agents` map and include `Agent` in `allowed_tools` so subagent invocations are auto-approved:
+
+```python
+import asyncio
+from claude_agent_sdk import query, ClaudeAgentOptions, AgentDefinition
+
+
+async def main():
+    async for message in query(
+        prompt="Use the code-reviewer agent to review this codebase",
+        options=ClaudeAgentOptions(
+            allowed_tools=["Read", "Glob", "Grep", "Agent"],
+            agents={
+                "code-reviewer": AgentDefinition(
+                    description="Expert code reviewer for quality and security reviews.",
+                    prompt="Analyze code quality and suggest improvements.",
+                    tools=["Read", "Glob", "Grep"],
+                )
+            },
+        ),
+    ):
+        if hasattr(message, "result"):
+            print(message.result)
+
+
+asyncio.run(main())
+```
+
+Claude Code also ships built-in subagents it uses automatically: **Explore** (a fast, read-only Haiku agent for codebase search), **Plan** (read-only research during plan mode), and **general-purpose** (all tools, for complex multi-step tasks).
+
+## Agent SDK vs subagents: when to use which
+
+| | Agent SDK | Claude Code subagents |
+| --- | --- | --- |
+| **What it is** | Python/TypeScript library that runs the agent loop in your process | Markdown files that define specialized assistants within a session |
+| **Where it runs** | Your application / infrastructure | Inside a Claude Code (or SDK) session, in an isolated context window |
+| **Best for** | Custom applications, CI/CD, production automation | Offloading focused side tasks (search, review, debugging) to preserve main context |
+| **Configuration** | Code (`ClaudeAgentOptions`, `AgentDefinition`) | YAML frontmatter (`name`, `description`, `tools`, `model`, ...) |
+| **Defined by** | `query()` / `ClaudeSDKClient` calls | `.claude/agents/*.md`, `~/.claude/agents/*.md`, `/agents`, or `--agents` JSON |
+
+They are not mutually exclusive: an SDK agent can delegate to subagents, and subagents inherit the same built-in tools.
+
+## Step 4: Choose models and control permissions
+
+**Models.** A subagent's `model` field accepts an alias (`sonnet`, `opus`, `haiku`, `fable`), a full model ID (for example `claude-opus-4-8`), or `inherit`. It defaults to `inherit` (the main conversation's model). Routing inexpensive, high-volume work to Haiku is the documented way to control cost.
+
+**Permissions.** Control exactly which tools an agent can use so it can analyze without modifying, or require approval for sensitive actions. The main levers:
+
+| Field (Python / frontmatter) | Effect |
+| --- | --- |
+| `allowed_tools` / `tools` | Tools the agent may use (a read-only agent might list only `Read`, `Glob`, `Grep`) |
+| `disallowedTools` | Tools to deny, removed from the inherited or specified list |
+| `permission_mode` / `permissionMode` | `default`, `acceptEdits`, `plan`, `bypassPermissions`, and more |
+| `max_turns` / `maxTurns` | Caps the number of agentic turns before the agent stops |
+
+A read-only reviewer is simply an agent whose tool list contains only `Read`, `Glob`, and `Grep` — it can analyze but cannot edit or run commands.
+
+## Troubleshooting
+
+> **Common issues and fixes**
 >
-> **Issue 1: 429 Rate Limit Errors with Multi-Agent Systems**<br />
-> **Solution:** Implement exponential backoff with jitter (2^attempt seconds + 10% random). Use token bucket algorithm limiting to 50 RPM for Tier 1. This reduces 429 errors by 95%.
+> **`No matching distribution found for claude-agent-sdk`**<br />
+> Your Python interpreter is older than 3.10. The Python package requires Python 3.10 or later. Check with `python3 --version` (macOS/Linux) or `py --version` (Windows).
 >
-> **Issue 2: Context Window Overflow in Long Sessions**<br />
-> **Solution:** Compress contexts by 60-80% using priority-based retention. Keep top 50 high-priority messages and summarize older content. Implement ephemeral caching for 90% token savings.
+> **Subagent edits to a file you didn't expect**<br />
+> The subagent inherited all tools because `tools` was omitted. List only the tools it needs (for a reviewer, the read-only set) to enforce least privilege.
 >
-> **Issue 3: Subagent Memory Conflicts**<br />
-> **Solution:** Enforce strict context isolation with independent 200K token windows per agent. Use reference pointers instead of copying data between agents. Orchestrator maintains global state separately.
+> **A subagent file isn't picked up**<br />
+> Subagents are loaded at session start. If you add or edit a file directly on disk, restart your session. Subagents created through `/agents` take effect immediately.
 >
-> **Issue 4: High Token Costs with 15x Consumption**<br />
-> **Solution:** Route 70% tasks to Haiku ($0.25/$1.25), 25% to Sonnet ($3/$15), reserve 5% for Opus ($15/$75). Implement prompt caching and batch processing. Average cost reduces to $0.045 per complex task.
-
-## Advanced Techniques
-
-> **Professional Tips**
+> **Subagent never gets delegated to**<br />
+> Claude decides delegation from the `description` field. Make it specific about when the subagent should be used.
 >
-> **Performance Optimization:** Parallel subagent execution reduces task time by 90% for research. Spawn 3-20 agents dynamically based on complexity. Monitor token usage per agent to identify optimization opportunities.
->
-> **Security Best Practice:** Always implement least privilege for agent tools. Use MCP bearer tokens with granular authorization. Audit all agent actions with complete trails. Never expose API keys in agent contexts.
->
-> **Scalability Pattern:** Deploy on Kubernetes with horizontal pod autoscaling (3-50 replicas). Use spot instances for 60% cost reduction. Implement circuit breakers opening after 5 consecutive failures.
->
-> **Cost Management:** Track token usage in real-time with model-specific pricing. Use Batch API for 50% discount on non-urgent tasks. Cache repeated content with 1-hour TTL for 90% savings.
+> **Authentication errors**<br />
+> Set `ANTHROPIC_API_KEY` as an environment variable, or configure a supported provider (Amazon Bedrock, Google Vertex AI, or Microsoft Azure) via its environment variables and credentials.
 
-## Validation and Testing
+## Safety and privacy
 
-<!-- Section type: feature_grid -->
+Agents run real tools autonomously. Before granting `Bash`, `Edit`, `Write`, or MCP servers, decide whether the task actually needs them and prefer the narrowest tool set. Keep your API key in an environment variable, never in prompts or committed code, and remember that `WebFetch`, `WebSearch`, and connected MCP servers can send project data to external systems.
 
-## Next Steps and Learning Path
+## Quick reference
 
-## Quick Reference
+- **Install:** `pip install claude-agent-sdk` / `npm install @anthropic-ai/claude-agent-sdk`
+- **Run a task:** `query(prompt=..., options=ClaudeAgentOptions(allowed_tools=[...]))`
+- **Multi-turn:** `ClaudeSDKClient` with `client.query()` + `client.receive_response()`
+- **Subagent file:** `.claude/agents/<name>.md` with `name` + `description` frontmatter (required), optional `tools` and `model`
+- **Manage subagents interactively:** `/agents`
+- **Restrict capability:** `allowed_tools` / `disallowedTools` / `permission_mode`
 
-<!-- Section type: quick_reference -->
+## Next steps
 
-## Related Learning Resources
+- [Agent SDK overview](https://code.claude.com/docs/en/agent-sdk/overview)
+- [Python Agent SDK reference](https://code.claude.com/docs/en/agent-sdk/python)
+- [Create custom subagents](https://code.claude.com/docs/en/sub-agents)
 
-<!-- Section type: related_content -->
-
-> **Tutorial Complete!**
->
-> **Congratulations!** You've mastered Claude autonomous agent development and can now build multi-agent systems achieving 90.2% performance improvements.
->
-> **What you achieved:**
->
-> - ✅ Built orchestrator-worker pattern with parallel processing
-> - ✅ Implemented subagent isolation with 200K token contexts
-> - ✅ Deployed production monitoring achieving 99.95% uptime
-> - ✅ Optimized costs to $0.045 per complex task
->
-> **Ready for more?** Explore our [tutorials collection](/guides/tutorials) or join our [community](/community) to share your agent implementations and learn advanced orchestration patterns.
-
-_Last updated: September 2025 | Found this helpful? Share it with your team and explore more [Claude tutorials](/guides/tutorials)._
+_Sources: Claude Agent SDK overview, Python SDK reference, and Create custom subagents (code.claude.com)._

@@ -12,11 +12,13 @@
  */
 import { createApiFileRoute } from "@/lib/api/file-route";
 
+import { BodyTooLargeError, readRequestTextWithinLimit } from "@/lib/api-security";
 import { getEnvString } from "@/lib/cloudflare-env.server";
 
 const ALLOWED_REPO = "jsonbored/awesome-claude";
 const ALLOWED_BRANCH = "main";
 const CACHE_KEY = "https://heyclau.de/internal/alerts-cache";
+export const GITHUB_WEBHOOK_BODY_LIMIT_BYTES = 1024 * 1024;
 
 export interface RegistryEvent {
   id: string;
@@ -119,76 +121,87 @@ async function appendEvents(events: RegistryEvent[]): Promise<void> {
 export const Route = createApiFileRoute("/api/public/github/webhook")({
   server: {
     handlers: {
-      POST: async ({ request }) => {
-        const secret = getEnvString("GITHUB_WEBHOOK_SECRET");
-        if (!secret) return new Response("Webhook not configured", { status: 503 });
-
-        const body = await request.text();
-        const sig = request.headers.get("x-hub-signature-256");
-        if (!(await verify(secret, sig, body))) {
-          return new Response("Invalid signature", { status: 401 });
-        }
-
-        const event = request.headers.get("x-github-event") ?? "";
-        if (event === "ping") return new Response("pong");
-
-        let payload: Record<string, unknown>;
-        try {
-          payload = JSON.parse(body);
-        } catch {
-          return new Response("Invalid JSON", { status: 400 });
-        }
-
-        const repo = (payload.repository as { full_name?: string } | undefined)?.full_name;
-        if (repo && repo !== ALLOWED_REPO) {
-          return new Response("Unknown repo", { status: 403 });
-        }
-
-        const events: RegistryEvent[] = [];
-
-        if (event === "push") {
-          const ref = String(payload.ref ?? "");
-          if (ref !== `refs/heads/${ALLOWED_BRANCH}`) {
-            return new Response("Ignored branch", { status: 200 });
-          }
-          const commits = (payload.commits ?? []) as PushFile[];
-          for (const c of commits) {
-            const commit = c.id ?? "unknown";
-            const date = c.timestamp ?? new Date().toISOString();
-            for (const p of c.added ?? []) {
-              const ev = classify(p, "added", commit, date);
-              if (ev) events.push(ev);
-            }
-            for (const p of c.modified ?? []) {
-              const ev = classify(p, "updated", commit, date);
-              if (ev) events.push(ev);
-            }
-            for (const p of c.removed ?? []) {
-              const ev = classify(p, "removed", commit, date);
-              if (ev) events.push(ev);
-            }
-          }
-        } else if (event === "release") {
-          const rel = payload.release as
-            | { tag_name?: string; published_at?: string; html_url?: string }
-            | undefined;
-          events.push({
-            id: `release:${rel?.tag_name ?? Date.now()}`,
-            kind: "changelog",
-            action: "added",
-            commit: rel?.tag_name ?? "release",
-            date: rel?.published_at ?? new Date().toISOString(),
-            title: rel?.tag_name,
-          });
-        } else {
-          return new Response("Ignored event", { status: 200 });
-        }
-
-        if (events.length) await appendEvents(events);
-        return new Response(JSON.stringify({ ok: true, count: events.length }), {
-          headers: { "Content-Type": "application/json" },
-        });
-      },
+      POST: async ({ request }) => handleGithubWebhookPost(request),
     },
   },
 });
+
+export async function handleGithubWebhookPost(request: Request) {
+  const secret = getEnvString("GITHUB_WEBHOOK_SECRET");
+  if (!secret) return new Response("Webhook not configured", { status: 503 });
+
+  let body: string;
+  try {
+    body = await readRequestTextWithinLimit(request, GITHUB_WEBHOOK_BODY_LIMIT_BYTES);
+  } catch (error) {
+    if (error instanceof BodyTooLargeError) {
+      return new Response("Payload too large", { status: 413 });
+    }
+    throw error;
+  }
+
+  const sig = request.headers.get("x-hub-signature-256");
+  if (!(await verify(secret, sig, body))) {
+    return new Response("Invalid signature", { status: 401 });
+  }
+
+  const event = request.headers.get("x-github-event") ?? "";
+  if (event === "ping") return new Response("pong");
+
+  let payload: Record<string, unknown>;
+  try {
+    payload = JSON.parse(body);
+  } catch {
+    return new Response("Invalid JSON", { status: 400 });
+  }
+
+  const repo = (payload.repository as { full_name?: string } | undefined)?.full_name;
+  if (repo && repo !== ALLOWED_REPO) {
+    return new Response("Unknown repo", { status: 403 });
+  }
+
+  const events: RegistryEvent[] = [];
+
+  if (event === "push") {
+    const ref = String(payload.ref ?? "");
+    if (ref !== `refs/heads/${ALLOWED_BRANCH}`) {
+      return new Response("Ignored branch", { status: 200 });
+    }
+    const commits = (payload.commits ?? []) as PushFile[];
+    for (const c of commits) {
+      const commit = c.id ?? "unknown";
+      const date = c.timestamp ?? new Date().toISOString();
+      for (const p of c.added ?? []) {
+        const ev = classify(p, "added", commit, date);
+        if (ev) events.push(ev);
+      }
+      for (const p of c.modified ?? []) {
+        const ev = classify(p, "updated", commit, date);
+        if (ev) events.push(ev);
+      }
+      for (const p of c.removed ?? []) {
+        const ev = classify(p, "removed", commit, date);
+        if (ev) events.push(ev);
+      }
+    }
+  } else if (event === "release") {
+    const rel = payload.release as
+      | { tag_name?: string; published_at?: string; html_url?: string }
+      | undefined;
+    events.push({
+      id: `release:${rel?.tag_name ?? Date.now()}`,
+      kind: "changelog",
+      action: "added",
+      commit: rel?.tag_name ?? "release",
+      date: rel?.published_at ?? new Date().toISOString(),
+      title: rel?.tag_name,
+    });
+  } else {
+    return new Response("Ignored event", { status: 200 });
+  }
+
+  if (events.length) await appendEvents(events);
+  return new Response(JSON.stringify({ ok: true, count: events.length }), {
+    headers: { "Content-Type": "application/json" },
+  });
+}

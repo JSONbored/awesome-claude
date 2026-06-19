@@ -8,13 +8,18 @@ description: >-
 cardDescription: >-
   Real-time AI cost tracking statusline with per-session spend analytics, model
   pricing, and budget alerts
-seoTitle: Real Time Cost Tracker - Statuslines
-seoDescription: >-
-  Real-time AI cost tracking statusline with per-session spend analytics, model
-  pricing, and budget alerts Discover tools for AI development.
+seoTitle: "Real-Time Cost Tracker Statusline for Claude Code"
+seoDescription: "A Claude Code statusline that tracks AI cost in real time — per-session spend, model pricing, and budget alerts shown live in your terminal."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+safetyNotes:
+  - "Runs as a Claude Code statusline command on every refresh and depends on the local shell environment; a failure only affects status rendering, not your session."
+privacyNotes:
+  - "Reads the Claude Code statusline JSON from stdin (model, token usage, and cost) and renders it in the local terminal; it does not send data off-machine."
 installable: true
 usageSnippet: "\U0001F4B5 $0.0234 │ 7,800 tokens"
 copySnippet: |-
@@ -59,18 +64,11 @@ tags:
   - analytics
   - monitoring
 keywords:
-  - analytics
-  - budget
-  - claude
-  - cost
-  - development
-  - monitoring
-  - pricing
-  - real
-  - statuslines
-  - time
-  - tools
-  - tracker
+  - claude code cost tracker
+  - claude cost statusline
+  - ai cost tracking
+  - token cost statusline
+  - claude budget alerts
 readingTime: 1
 difficultyScore: 2
 hasTroubleshooting: true

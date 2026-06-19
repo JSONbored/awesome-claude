@@ -1,0 +1,181 @@
+---
+title: Fly.io MCP Server for Claude
+slug: fly-io-mcp-server
+category: mcp
+description: >-
+  Manage Fly.io applications, machines, volumes, secrets, certificates, and organizations from
+  Claude — with the official Fly.io MCP server built into the flyctl CLI.
+cardDescription: "Official Fly.io MCP: manage apps, machines, secrets & deployments from Claude."
+seoTitle: "Fly.io MCP Server for Claude — Deploy & Manage Fly Apps"
+seoDescription: "Connect Claude to Fly.io with the official MCP server (built into flyctl): manage applications, machines, volumes, secrets, logs, and organizations from Claude Code or Desktop."
+author: Fly.io
+authorProfileUrl: "https://github.com/superfly"
+dateAdded: "2026-06-18"
+documentationUrl: "https://fly.io/docs/mcp/flyctl-server/"
+websiteUrl: "https://fly.io"
+repoUrl: "https://github.com/superfly/flyctl"
+retrievalSources:
+  - "https://github.com/superfly/flyctl"
+  - "https://fly.io/docs/mcp/flyctl-server/"
+  - "https://fly.io/docs/mcp/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "fly mcp server --claude"
+usageSnippet: >-
+  Ask Claude to list your Fly apps, check machine status, pull secrets, inspect logs, or create and scale machines on Fly.io.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "fly": {
+        "command": "fly",
+        "args": ["mcp", "server"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "fly": {
+        "command": "fly",
+        "args": ["mcp", "server"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - "flyctl installed — see fly.io/docs/flyctl/install/ (Homebrew: `brew install flyctl`)"
+  - "Logged in to Fly.io: `fly auth login`"
+  - "Or set `FLY_ACCESS_TOKEN` environment variable for headless/CI use."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The Fly.io MCP server runs locally with full access to your authenticated Fly.io account — it can create, delete, and modify apps, machines, and secrets."
+  - "Fly.io warns that running the server remotely can give others access to run commands on your behalf; keep it bound to localhost unless you intend remote access."
+  - "Destructive operations (machine deletion, secret updates) are available — review Claude's proposed commands before executing in production environments."
+privacyNotes:
+  - "App names, machine IDs, secret names (not values unless explicitly requested), and log content may be surfaced into Claude's context."
+  - "Fly.io API tokens (`FLY_ACCESS_TOKEN`) grant full account access — store them in your environment, not in repositories."
+tags:
+  - fly-io
+  - deployment
+  - cloud
+  - infrastructure
+  - paas
+  - devops
+  - machines
+keywords:
+  - fly.io mcp server
+  - flyctl mcp claude
+  - deploy fly.io from claude
+  - fly app management ai
+  - fly machines mcp
+  - paas mcp server claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Fly.io MCP Server** is the official Model Context Protocol integration built directly into
+the `flyctl` CLI. It lets Claude manage your Fly.io infrastructure — applications, machines,
+volumes, secrets, certificates, logs, and organizations — through natural language. It runs
+locally as a stdio process using your `fly auth login` session (or `FLY_ACCESS_TOKEN`) and is
+part of the MIT-licensed `flyctl` codebase.
+
+Run `fly mcp server --claude` to auto-configure Claude Code, or configure it manually in Claude
+Desktop. The server also supports SSE and streaming HTTP transports for remote deployments.
+
+## Key capabilities
+
+- **App management** — list, inspect, and manage Fly applications.
+- **Machine operations** — create, start, stop, and delete Fly Machines (lightweight VMs).
+- **Volumes** — manage persistent storage volumes attached to machines.
+- **Secrets** — inspect and update application secrets.
+- **Certificates** — manage TLS certificates for custom domains.
+- **Logs** — retrieve recent application and machine logs.
+- **Organizations** — list and switch between Fly organizations.
+
+## How it compares
+
+| Server | PaaS platform | Machine-level ops | Secrets access | CLI-integrated | Transport |
+|---|---|---|---|---|---|
+| **Fly.io MCP** | Fly.io | Yes (Fly Machines) | Yes | Yes | stdio / HTTP |
+| Railway MCP | Railway | No | Yes | Yes (CLI) | stdio / Remote |
+| Render MCP | Render | No | Limited | No | Remote |
+| DigitalOcean MCP | DO cloud | Yes (Droplets) | Limited | No | Remote |
+| Vercel MCP | Vercel edge | No | Yes | No | Remote |
+
+Fly.io's MCP is unique in offering machine-level control (create/destroy Fly Machines) alongside
+traditional app-layer operations, making it well-suited for infrastructure automation workflows.
+
+## Installation
+
+### Automatic (recommended)
+
+```bash
+# Install flyctl (macOS/Linux — see fly.io/docs/flyctl/install/)
+brew install flyctl
+
+# Log in
+fly auth login
+
+# Auto-configure Claude Code
+fly mcp server --claude
+```
+
+### Manual Claude Desktop config
+
+```json
+{
+  "mcpServers": {
+    "fly": {
+      "command": "fly",
+      "args": ["mcp", "server"]
+    }
+  }
+}
+```
+
+### API token (headless/CI)
+
+```bash
+# Set the token
+export FLY_ACCESS_TOKEN=<your-token>
+
+# Or pass it explicitly
+fly mcp server --access-token $FLY_ACCESS_TOKEN --claude
+```
+
+### Other editors
+
+```bash
+fly mcp server --cursor     # Cursor
+fly mcp server --vscode     # VS Code
+fly mcp server --zed        # Zed
+```
+
+## Requirements
+
+- `flyctl` CLI (install via Homebrew: `brew install flyctl`, or from fly.io/docs/flyctl/install/)
+- A Fly.io account (`fly auth login`)
+- An MCP client (Claude Code or Claude Desktop)
+
+## Security
+
+- The server runs locally with your full Fly.io account access — scope your token or account
+  to only the organizations and apps you need.
+- Do not expose the server on a non-localhost bind address unless you intend to share access.
+- Treat `FLY_ACCESS_TOKEN` as a secret.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- The official `flyctl` repository `github.com/superfly/flyctl` (MIT) is the authoritative source
+  for the `fly mcp server` command.
+- Fly.io's MCP server documentation at `fly.io/docs/mcp/flyctl-server/` documents the `--claude`,
+  `--cursor`, `--zed`, and other client flags; the auth priority order (header > `--access-token` >
+  `FLY_ACCESS_TOKEN`); and the stdio/SSE/HTTP transport options.
+- Fly.io's MCP overview at `fly.io/docs/mcp/` confirms the managed capabilities: apps,
+  certificates, logs, Machines, organizations, secrets, and volumes.
+- Claude Code's MCP documentation describes the stdio connector pattern used here.

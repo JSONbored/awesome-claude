@@ -1,0 +1,176 @@
+---
+title: Official MCP Python SDK
+slug: official-mcp-python-sdk
+category: tools
+description: >-
+  Official Python SDK for Model Context Protocol clients and servers, published
+  as the `mcp` package on PyPI, with FastMCP server helpers, client support,
+  tools, resources, prompts, stdio, SSE, Streamable HTTP, authentication,
+  elicitation, sampling, logging, and standalone development tools.
+cardDescription: >-
+  Build MCP clients and servers in Python with the official `mcp` SDK package,
+  including FastMCP, tools, resources, prompts, stdio, SSE, Streamable HTTP,
+  authentication, and development tooling.
+seoTitle: Official MCP Python SDK for Model Context Protocol Servers
+seoDescription: >-
+  Use the official Model Context Protocol Python SDK to build MCP servers and
+  clients with FastMCP, PyPI package `mcp`, uv or pip installs, tools, resources,
+  prompts, stdio, SSE, Streamable HTTP, auth, sampling, and elicitation support.
+author: Model Context Protocol
+authorProfileUrl: "https://github.com/modelcontextprotocol"
+dateAdded: "2026-06-18"
+websiteUrl: "https://modelcontextprotocol.io"
+documentationUrl: "https://py.sdk.modelcontextprotocol.io/"
+repoUrl: "https://github.com/modelcontextprotocol/python-sdk"
+packageUrl: "https://pypi.org/pypi/mcp/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/python-sdk"
+  - "https://github.com/modelcontextprotocol/python-sdk/blob/main/README.md"
+  - "https://github.com/modelcontextprotocol/python-sdk/blob/main/README.v2.md"
+  - "https://github.com/modelcontextprotocol/python-sdk/blob/main/pyproject.toml"
+  - "https://github.com/modelcontextprotocol/python-sdk/blob/main/LICENSE"
+  - "https://pypi.org/pypi/mcp/json"
+installable: true
+installCommand: "uv add \"mcp[cli]\""
+usageSnippet: >-
+  Add `mcp[cli]` with uv or pip for the current stable v1 line, then use FastMCP
+  helpers to register tools, resources, prompts, and transports.
+copySnippet: |-
+  uv add "mcp[cli]"
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 or newer and a project managed with uv, pip, or another Python package manager."
+  - "A decision between stable v1 usage and explicit v2 alpha testing with a pinned pre-release."
+  - "A target transport, such as stdio for local tools or Streamable HTTP for hosted MCP servers."
+  - "Clear authorization, side-effect, and data-exposure boundaries for production tools and resources."
+safetyNotes:
+  - "The official Python SDK is a protocol library; risk comes from the tools, resources, prompts, transports, auth flows, and server process you build with it."
+  - "Validate all tool inputs, enforce caller permissions, bound file and network access, and sanitize errors before returning them to an MCP client."
+  - "HTTP, SSE, and ASGI deployments need authentication, TLS, CORS review, host/path routing controls, request limits, logging policy, and abuse protection."
+  - "The upstream README says v2 is alpha; production projects should stay on the stable v1 line unless they intentionally pin and test a pre-release."
+privacyNotes:
+  - "MCP Python servers may expose local files, application data, tool arguments, tool results, resource contents, prompt templates, authentication state, logs, traces, and errors."
+  - "Do not leak secrets, customer data, private paths, internal identifiers, token values, or privileged resource contents through schemas, examples, responses, or logs."
+  - "Document which MCP client, model provider, server process, transport, ASGI layer, and observability system can observe each request."
+tags:
+  - python
+  - mcp
+  - sdk
+  - fastmcp
+  - official
+  - protocol
+keywords:
+  - official MCP Python SDK
+  - Model Context Protocol Python SDK
+  - Python MCP server SDK
+  - Python MCP client SDK
+  - FastMCP Python
+  - mcp PyPI package
+  - uv add mcp cli
+  - Python Streamable HTTP MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The official MCP Python SDK is the Model Context Protocol project's Python
+implementation for building MCP clients and servers. It is published on PyPI as
+`mcp` and includes server helpers, client support, protocol types, transports,
+authentication support, standalone development tooling, and documentation for
+common MCP primitives.
+
+As of **2026-06-18**, upstream documents v1.x as the current stable release line
+and v2 as alpha. This entry describes the official SDK as a whole while treating
+stable v1 as the default production install path.
+
+## Install
+
+For uv-managed projects:
+
+```bash
+uv add "mcp[cli]"
+```
+
+For pip-managed projects:
+
+```bash
+pip install "mcp[cli]"
+```
+
+The upstream v2 documentation requires explicit pre-release pins such as
+`mcp==2.0.0aN`; do not rely on unpinned installs to test alpha behavior.
+
+## MCP Fit
+
+Choose the official Python SDK when a Python application, local automation
+script, data workflow, API service, or agent runtime needs first-party MCP
+client or server support. It is especially useful for teams already using Python
+for internal tools, notebooks, FastAPI or ASGI services, data systems, or
+developer automation.
+
+The SDK can expose tools, resources, prompts, and transports, but the application
+still owns authorization and data minimization. Treat each tool like an API
+endpoint and each resource like model-visible data.
+
+## Core Capabilities
+
+| Area | Python SDK Coverage |
+| --- | --- |
+| Server helpers | FastMCP-style helpers for registering tools, resources, and prompts |
+| Clients | Python client APIs for connecting to MCP servers |
+| Transports | stdio, SSE, and Streamable HTTP coverage in the upstream docs |
+| Protocol behavior | MCP messages, lifecycle events, sessions, completions, elicitation, and sampling |
+| Authentication | OAuth/client authentication coverage in advanced docs |
+| Development tools | `mcp` command-line tooling through the `cli` extra |
+
+## Use Cases
+
+- Build a Python MCP server around internal APIs or data workflows.
+- Expose safe read-only resources from a local or hosted Python service.
+- Add model-callable Python tools to Claude Desktop, Claude Code, or another MCP client.
+- Test MCP clients and servers from Python automation.
+- Mount a Streamable HTTP MCP server into an ASGI deployment.
+- Evaluate v2 alpha behavior while keeping production packages pinned to v1.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository identifies itself as the official Python SDK for Model
+  Context Protocol clients and servers.
+- The README says v1.x is the current stable release and v2 is alpha.
+- The README documents `uv add "mcp[cli]"` and `pip install "mcp[cli]"` install
+  paths for the stable package.
+- The README covers clients, servers, resources, prompts, tools, stdio, SSE,
+  Streamable HTTP, authentication, elicitation, sampling, logging, and
+  notifications.
+- `pyproject.toml` declares the `mcp` package, Python `>=3.10`, MIT licensing,
+  the `mcp` CLI script, and the project documentation/repository URLs.
+- PyPI resolves package metadata for `mcp`.
+
+## Safety and Privacy
+
+Python MCP servers frequently sit close to local files, notebooks, data stores,
+cloud credentials, and internal APIs. Keep resource exposure narrow, validate
+arguments, check user authorization, and avoid returning raw exceptions or
+private data to clients.
+
+For hosted deployments, review ASGI mounting, CORS, host/path routing,
+authentication, TLS, logging, and retention. Keep v2 alpha tests isolated from
+production package constraints until the upstream line is stable.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `modelcontextprotocol/python-sdk`,
+official MCP Python SDK, Model Context Protocol Python SDK, Python MCP server
+SDK, Python MCP client SDK, FastMCP Python, `mcp` PyPI package, and Python
+Streamable HTTP MCP. Existing guides cite the Python SDK for MCP tutorials and
+auth context, but no dedicated official Python SDK entry, exact source URL
+duplicate, target file, or open duplicate PR was found.

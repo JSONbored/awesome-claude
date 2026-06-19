@@ -57,16 +57,15 @@ tags:
   - validation
   - type-safety
   - compilation
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - checker
-  - claude
-  - compilation
-  - development
-  - hooks
-  - tools
-  - type-safety
-  - typescript
-  - validation
+  - typescript compilation checker hook
+  - claude code typescript compilation checker hook
+  - typescript compilation checker claude hook
+  - claude typescript compilation checker automation
 readingTime: 5
 difficultyScore: 0
 hasTroubleshooting: true

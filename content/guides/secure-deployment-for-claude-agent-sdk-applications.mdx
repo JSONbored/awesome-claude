@@ -83,6 +83,38 @@ non-root user, sets `--network none`, and reaches the outside only through a
 mounted Unix socket to a host proxy. gVisor intercepts syscalls in userspace for a
 smaller kernel attack surface; VMs add hardware-level isolation.
 
+## Hardened Container Example
+
+A security-hardened container configuration might look like this:
+
+```bash
+docker run \
+  --cap-drop ALL \
+  --security-opt no-new-privileges \
+  --security-opt seccomp=/path/to/seccomp-profile.json \
+  --read-only \
+  --tmpfs /tmp:rw,noexec,nosuid,size=100m \
+  --tmpfs /home/agent:rw,noexec,nosuid,size=500m \
+  --network none \
+  --memory 2g \
+  --cpus 2 \
+  --pids-limit 100 \
+  --user 1000:1000 \
+  -v /path/to/code:/workspace:ro \
+  -v /var/run/proxy.sock:/var/run/proxy.sock:ro \
+  agent-image
+```
+
+| Option | Purpose |
+| --- | --- |
+| `--cap-drop ALL` | Removes Linux capabilities like `NET_ADMIN` and `SYS_ADMIN` that could enable privilege escalation |
+| `--security-opt no-new-privileges` | Prevents processes from gaining privileges through setuid binaries |
+| `--read-only` | Makes the container's root filesystem immutable, preventing the agent from persisting changes |
+| `--network none` | Removes all network interfaces; the agent communicates through the mounted Unix socket below |
+| `--memory 2g` | Limits memory usage to prevent resource exhaustion |
+| `--pids-limit 100` | Limits process count to prevent fork bombs |
+| `--user 1000:1000` | Runs as a non-root user |
+
 ## Least privilege
 
 Restrict the agent to what its task needs: mount only required directories

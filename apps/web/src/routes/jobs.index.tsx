@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { PageContainer } from "@/components/page-container";
 import { absoluteUrl } from "@/lib/seo";
 import { createServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
@@ -177,7 +178,7 @@ function JobsPage() {
     q || tier !== "all" || remote !== "all" || type !== "all" || freshOnly || featuredOnly;
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
+    <PageContainer>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0">
           <div className="eyebrow">Hiring</div>
@@ -207,6 +208,7 @@ function JobsPage() {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search title, company, stack…"
+              aria-label="Search jobs by title, company, or stack"
               className="h-9 w-full rounded-md border border-border bg-background pl-8 pr-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent/40"
             />
           </div>
@@ -232,6 +234,7 @@ function JobsPage() {
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
+            aria-label="Filter by job type"
             className="h-9 rounded-md border border-border bg-background px-2 text-xs text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent/40"
           >
             <option value="all">Any type</option>
@@ -372,7 +375,7 @@ function JobsPage() {
           </div>
         </aside>
       </div>
-    </div>
+    </PageContainer>
   );
 }
 

@@ -1,0 +1,104 @@
+name: coverage
+
+# Non-required coverage signal for Codecov. Runs only when CODE changes (never
+# on content-only PRs/pushes — content does not affect the node-suite coverage),
+# so the heavy v8-instrumented run stays off the content-submission hot path and
+# off the required `validate-web` gate. Uploads lcov to Codecov, which posts the
+# project/patch statuses (informational; see codecov.yml).
+on:
+  pull_request:
+    paths-ignore:
+      - "content/**"
+      - "README.md"
+      - "docs/**"
+      - "**/*.md"
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "content/**"
+      - "README.md"
+      - "docs/**"
+      - "**/*.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: coverage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  coverage:
+    name: coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.17.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare test reports dir
+        run: rm -rf reports/junit && mkdir -p reports/junit
+
+      # EXPERIMENT: cache the generated prebuild artifacts. Key hashes every
+      # input to `prebuild` (content, the build script, registry builder source,
+      # routes, prettier via the lockfile). A hit restores the artifacts and the
+      # build step below is skipped. Because content/** changes on nearly every
+      # merge, this only hits across runs that share an identical content
+      # snapshot — in practice, re-pushes of the same code PR (the iterate loop).
+      # Note: prebuild also derives entry `updatedAt` from `git log -- content`;
+      # a hit requires byte-identical content, so within a non-rebased PR the git
+      # history (and thus updatedAt) is identical too. The display timestamp can
+      # only go stale in the rare case of byte-identical content with a different
+      # commit touch-history, which is acceptable for a non-required lane.
+      - name: Restore prebuild artifacts
+        id: prebuild-cache
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            apps/web/public/data
+            apps/web/src/generated
+            apps/web/src/routeTree.gen.ts
+          key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
+
+      - name: Build registry artifacts
+        if: steps.prebuild-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter web run prebuild
+
+      - name: Apply local D1 migrations
+        run: pnpm --filter web db:migrate:local
+
+      - name: Run Vitest suite with coverage
+        run: pnpm test:coverage
+
+      - name: Upload coverage to Codecov (pull request)
+        if: github.event_name == 'pull_request'
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+
+      - name: Upload coverage to Codecov (trusted)
+        if: github.event_name != 'pull_request'
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false

@@ -17,7 +17,14 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-23"
-documentationUrl: "https://epoch.ai/data-insights/context-windows"
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+  - "https://epoch.ai/data-insights/context-windows"
+safetyNotes:
+  - "Runs as a Claude Code statusline command on every refresh and depends on the local shell environment; a failure only affects status rendering, not your session."
+privacyNotes:
+  - "Reads the Claude Code statusline JSON from stdin (model, token usage, context occupancy) and renders it in the local terminal; it does not send data off-machine."
 installable: true
 usageSnippet: "\U0001F4CA Claude Sonnet 4\nOccupancy: 42% (420,000/1,000,000 tokens) | ✓ Safe\nTTFT: ~1.2s | Rate: 1,245 tok/min | Total: 520,000"
 copySnippet: |-
@@ -56,18 +63,11 @@ tags:
   - latency
   - production
 keywords:
-  - claude
-  - dashboard
-  - development
-  - latency
-  - metrics
-  - model
-  - multi-model
-  - occupancy
-  - performance
-  - production
-  - statuslines
-  - tools
+  - claude model performance statusline
+  - context window occupancy statusline
+  - token usage dashboard statusline
+  - claude latency statusline
+  - claude code statusline
 readingTime: 2
 difficultyScore: 7
 hasTroubleshooting: true

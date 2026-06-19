@@ -1,0 +1,138 @@
+---
+title: Confluent MCP Server for Claude
+slug: confluent-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Confluent Cloud and Apache Kafka — manage topics, produce and consume messages,
+  run Flink SQL, and operate Schema Registry and connectors — with Confluent's official MCP server.
+cardDescription: "Confluent's official MCP server: Kafka topics, Flink SQL, Schema Registry, and connectors from Claude."
+seoTitle: "Confluent MCP Server for Claude — Kafka, Flink & Schema Registry"
+seoDescription: "Connect Claude to Confluent Cloud and Apache Kafka with the official MCP server: manage topics, messages, consumer groups, Flink SQL, Schema Registry, and connectors."
+author: Confluent
+authorProfileUrl: "https://www.confluent.io"
+dateAdded: "2026-06-17"
+documentationUrl: "https://github.com/confluentinc/mcp-confluent"
+websiteUrl: "https://www.confluent.io"
+repoUrl: "https://github.com/confluentinc/mcp-confluent"
+retrievalSources:
+  - "https://github.com/confluentinc/mcp-confluent"
+  - "https://docs.confluent.io/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add confluent -- npx -y @confluentinc/mcp-confluent --config ./config.yaml"
+usageSnippet: >-
+  Ask Claude to list Kafka topics, produce a test message, run a Flink SQL statement, or inspect a connector.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "confluent": {
+        "command": "npx",
+        "args": ["-y", "@confluentinc/mcp-confluent", "--config", "/path/to/config.yaml"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "confluent": {
+        "command": "npx",
+        "args": ["-y", "@confluentinc/mcp-confluent", "--config", "/path/to/config.yaml"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - "A Confluent Cloud account (API key + secret) or a reachable Apache Kafka cluster (bootstrap servers)."
+  - "An optional Schema Registry endpoint if you manage schemas."
+  - "A config.yaml (or environment variables) with your connection details — see config.example.yaml."
+  - "Node.js (npx) and an MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Tools can create and delete topics, produce messages, and manage connectors on live clusters — scope API keys to least privilege."
+  - "Producing messages and altering connectors affects production data pipelines; review before running through Claude."
+privacyNotes:
+  - "Message payloads, schemas, and operational metrics enter the MCP client context and the model's prompt."
+  - "API keys and secrets live in config.yaml or environment variables — treat them as secrets, never commit them."
+tags:
+  - confluent
+  - kafka
+  - streaming
+  - flink
+  - schema-registry
+keywords:
+  - confluent mcp server
+  - kafka mcp claude
+  - connect claude to kafka
+  - confluent cloud mcp
+  - flink sql schema registry mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Confluent MCP Server** is Confluent's official, open-source Model Context Protocol server. It
+lets Claude interact with Confluent Cloud, Confluent Platform, and Apache Kafka in natural
+language — managing topics, producing and consuming messages, running Flink SQL, and operating
+Schema Registry and Kafka Connect. It runs via `npx @confluentinc/mcp-confluent`, supports stdio,
+HTTP, and SSE transports, and is licensed under MIT.
+
+## Key capabilities
+
+The server exposes 50+ tools across the Confluent stack:
+
+| Area | What Claude can do |
+| --- | --- |
+| **Kafka** | List, create, and delete topics; produce/consume messages; manage consumer groups |
+| **Flink SQL** | Create statements, manage catalogs and tables, profile queries |
+| **Schema Registry** | List, create, and delete schemas |
+| **Connectors** | Inspect and manage Kafka Connect connectors |
+| **Tableflow & Metrics** | Manage Tableflow topics; query operational metrics and billing |
+
+## Installation
+
+First create a `config.yaml` from `config.example.yaml` with your connection details (Confluent Cloud
+API key/secret, or Kafka bootstrap servers and an optional Schema Registry endpoint).
+
+### Claude Code
+
+```bash
+claude mcp add confluent -- npx -y @confluentinc/mcp-confluent --config ./config.yaml
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "confluent": {
+      "command": "npx",
+      "args": ["-y", "@confluentinc/mcp-confluent", "--config", "/path/to/config.yaml"]
+    }
+  }
+}
+```
+
+Select transports explicitly with `--transport http,sse,stdio` if you need remote modes.
+
+## Requirements
+
+- Confluent Cloud (API key + secret) or an Apache Kafka cluster (bootstrap servers).
+- An optional Schema Registry endpoint for schema tools.
+- Node.js (`npx`) and an MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Scope Confluent Cloud API keys to least privilege; restrict which clusters and topics Claude can reach.
+- Topic creation/deletion, message production, and connector changes affect live pipelines — review first.
+- Keep API keys and secrets in `config.yaml` or environment variables; never commit them.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- The official repository `github.com/confluentinc/mcp-confluent` (MIT) documents the
+  `@confluentinc/mcp-confluent` package, the `--config` / `--transport` flags, stdio/HTTP/SSE support,
+  Confluent Cloud and Kafka connection requirements, and the 50+ tools summarized above.
+- Confluent's documentation describes the underlying Kafka, Flink, Schema Registry, and Connect features.
+- Claude Code's MCP documentation describes the connector setup pattern used here.

@@ -1,0 +1,137 @@
+---
+title: Claude Code Slash Commands For Maintainers
+slug: claude-code-slash-commands-for-maintainers
+category: guides
+description: >-
+  Use Claude Code slash commands for maintainer workflows: project commands in .claude/commands, namespacing, permission-safe defaults, review before merge, and documenting command scope for contributors.
+cardDescription: >-
+  Build maintainer slash commands with scoped .claude/commands and review discipline.
+seoTitle: Claude Code Slash Commands For Maintainers
+seoDescription: >-
+  Guide to Claude Code slash commands for maintainers: project command files, naming, permissions, review workflow, and contributor documentation from official slash command docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1182
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1182"
+documentationUrl: "https://code.claude.com/docs/en/slash-commands"
+usageSnippet: >-
+  Add reviewed markdown commands under .claude/commands, namespace by team function, avoid destructive defaults, document args in frontmatter, and test commands in CI or staging before publishing to main.
+prerequisites:
+  - "Claude Code with slash command support enabled."
+  - "Repository write access to add .claude/commands files."
+  - "Maintainer agreement on which workflows become shared commands."
+  - "Staging branch or fork to test commands before merging to default branch."
+safetyNotes:
+  - "Slash commands expand agent capabilities—commands that run bash or edit files need explicit safety review."
+  - "Do not embed secrets or production URLs with credentials in command templates."
+  - "Avoid commands that disable sandbox or permission prompts without CODEOWNERS gate."
+privacyNotes:
+  - "Command templates may include internal service names—sanitize before open-sourcing repos."
+  - "Shared commands appear in autocomplete for all contributors—scrub customer examples."
+  - "Command output logs follow normal session retention policies."
+sourceUrls:
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://code.claude.com/docs/en/plugins"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - slash-commands
+  - maintainers
+  - workflow
+  - commands
+keywords:
+  - Claude Code slash commands maintainers
+  - project slash commands .claude/commands
+  - maintainer Claude Code commands
+readingTime: 8
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Build maintainer slash commands with scoped .claude/commands and review discipline.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Check", "description": "Claude Code with slash command support enabled."}
+- [ ] {"task": "Check", "description": "Repository write access to add .claude/commands files."}
+- [ ] {"task": "Check", "description": "Maintainer agreement on which workflows become shared commands."}
+- [ ] {"task": "Check", "description": "Staging branch or fork to test commands before merging to default branch."}
+
+## Core Concepts Explained
+
+### Project vs personal commands
+
+Official docs distinguish personal commands from project-scoped commands checked into
+the repository for team sharing.
+
+### Commands shape agent behavior
+
+A slash command is a reusable prompt template—maintainers should treat changes as
+policy updates.
+
+### Frontmatter controls metadata
+
+Document description, allowed tools, or argument hints in command frontmatter when
+supported.
+
+## Step-by-Step Implementation Guide
+
+1. **Pick maintainer workflows.** Examples: `/review-pr`, `/release-notes`, `/triage-flaky`.
+
+2. **Create `.claude/commands/` directory** if missing; add one markdown file per command.
+
+3. **Write self-contained prompts.** Include context the agent needs without relying
+on chat history.
+
+4. **Namespace names.** Prefix team-specific commands (`/acme-review`) to avoid clashes.
+
+5. **Review in PR.** Require maintainer approval; note safety implications in PR body.
+
+6. **Test on sample tasks.** Run each command against a known small issue before broad announcement.
+
+7. **Document in CONTRIBUTING.** List available commands, owners, and expected outputs.
+
+8. **Deprecate safely.** Remove commands in a dedicated PR and announce replacements.
+
+## Troubleshooting
+
+### Command not appearing in autocomplete
+
+Confirm file path `.claude/commands/name.md` and reload session; check plugin conflicts.
+
+### Command runs wrong repo context
+
+Ensure contributors run Claude Code from repository root or document required cwd.
+
+### Built-in command name collision
+
+Rename project command with team prefix.
+
+## Source Verification Notes
+
+Verified against official documentation on **2026-06-16**:
+
+- Slash commands documentation describes user and project commands invoked with /name syntax.
+- Project commands live under .claude/commands as markdown with optional frontmatter.
+- Commands can standardize maintainer workflows like review, release, or triage prompts.
+- Teams should review command diffs like code because they shape agent behavior.
+- Namespacing commands reduces collision with built-in or plugin commands.
+
+## Duplicate Check
+
+Complements `content/commands/*` catalog entries and plugin command bundles. This guide focuses on maintainer-authored project slash commands in `.claude/commands`.
+
+## References
+
+- Primary documentation - https://code.claude.com/docs/en/slash-commands

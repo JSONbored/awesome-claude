@@ -1,0 +1,204 @@
+---
+title: Zotero MCP Server
+slug: zotero-mcp-server
+category: mcp
+description: >-
+  MCP server for connecting Claude, ChatGPT, Cursor, and other MCP clients to a
+  local or web Zotero research library for paper search, metadata, full text,
+  annotations, notes, collections, semantic search, and citation workflows.
+cardDescription: >-
+  Search and work with Zotero libraries from MCP clients, including metadata,
+  full text, annotations, notes, collections, optional semantic search, and
+  write-mode Zotero Web API operations.
+seoTitle: Zotero MCP Server for Claude, ChatGPT, Cursor, and Research Libraries
+seoDescription: >-
+  Configure Zotero MCP Server with Claude, ChatGPT, Cursor, and other MCP
+  clients to search Zotero papers, retrieve metadata and annotations, use
+  optional semantic search, and manage research library workflows.
+author: 54yyyu
+authorProfileUrl: "https://github.com/54yyyu"
+dateAdded: "2026-06-18"
+brandName: Zotero MCP
+brandDomain: stevenyuyy.com
+repoUrl: "https://github.com/54yyyu/zotero-mcp"
+documentationUrl: "https://github.com/54yyyu/zotero-mcp/blob/main/README.md"
+websiteUrl: "https://stevenyuyy.com/zotero-mcp/"
+packageUrl: "https://pypi.org/pypi/zotero-mcp-server/json"
+installable: true
+installCommand: "uv tool install zotero-mcp-server"
+usageSnippet: >-
+  Install `zotero-mcp-server`, run `zotero-mcp setup`, enable Zotero's local API
+  for local reads, and add `zotero-mcp` as the MCP command in your client.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "zotero": {
+        "command": "zotero-mcp",
+        "env": {
+          "ZOTERO_LOCAL": "true"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "zotero": {
+        "command": "zotero-mcp",
+        "env": {
+          "ZOTERO_LOCAL": "true"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 or newer available to the MCP client runtime."
+  - "Zotero 7 or newer with the local API enabled for local library access."
+  - "`uv`, `pip`, or `pipx` available for installing `zotero-mcp-server`."
+  - "A Zotero API key, library ID, and library type when using Zotero Web API or write-mode workflows."
+  - "Optional extras for semantic search, PDF outline extraction, EPUB annotations, or Scite citation intelligence."
+safetyNotes:
+  - "Local Zotero mode is intended for local library access, while write operations require Zotero Web API credentials."
+  - "Write-mode tools can add papers by DOI or URL, create and manage collections, update metadata, modify tags, create notes or annotations, and merge duplicates."
+  - "Use dry-run or preview steps where available before duplicate merges, broad tag changes, collection changes, or metadata updates."
+  - "Do not expose an unauthenticated SSE or HTTP server to the public internet unless you understand the tunnel, host binding, and client trust boundary."
+  - "Treat paper text, abstracts, notes, annotations, webpages, and PDFs as untrusted research content when the MCP client also has tools that can write files, run code, browse, or send messages."
+privacyNotes:
+  - "Zotero libraries can reveal research direction, reviewer assignments, medical or legal topics, customer work, citations, private notes, annotations, group libraries, tags, collections, and local file paths."
+  - "Zotero Web API keys and library IDs should be scoped carefully and kept out of prompts, logs, shared screenshots, and committed configuration files."
+  - "Optional semantic search can create a local embedding database, and hosted embedding providers such as OpenAI or Gemini may receive research text when selected."
+  - "Tunneled ChatGPT or web-client setups may expose library search and document context outside the local machine; review the tunnel URL, session handling, and tool permissions before use."
+sourceUrls:
+  - "https://github.com/54yyyu/zotero-mcp"
+  - "https://github.com/54yyyu/zotero-mcp/blob/main/README.md"
+  - "https://github.com/54yyyu/zotero-mcp/blob/main/docs/getting-started.md"
+  - "https://github.com/54yyyu/zotero-mcp/blob/main/pyproject.toml"
+  - "https://pypi.org/pypi/zotero-mcp-server/json"
+tags:
+  - zotero
+  - research
+  - papers
+  - citations
+  - semantic-search
+keywords:
+  - Zotero MCP
+  - zotero-mcp-server
+  - Zotero Claude MCP
+  - Zotero ChatGPT MCP
+  - research library MCP
+  - citation management MCP
+  - academic paper MCP
+  - Zotero semantic search
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Zotero MCP Server connects MCP clients to Zotero research libraries. It supports
+local Zotero access for offline-friendly reads, Zotero Web API access for cloud
+or write workflows, and hybrid setups that read locally while using web API
+credentials for operations the local API cannot perform.
+
+The server exposes paper search, item metadata, full text, collections, tags,
+recent items, notes, annotations, duplicate handling, DOI or URL imports,
+optional PDF/EPUB helpers, optional semantic search, and optional Scite citation
+intelligence.
+
+## Source Review
+
+- https://github.com/54yyyu/zotero-mcp
+- https://github.com/54yyyu/zotero-mcp/blob/main/README.md
+- https://github.com/54yyyu/zotero-mcp/blob/main/docs/getting-started.md
+- https://github.com/54yyyu/zotero-mcp/blob/main/pyproject.toml
+- https://pypi.org/pypi/zotero-mcp-server/json
+
+Verified on **2026-06-18**. The repository README documents Claude Desktop,
+ChatGPT Developer Mode, Chorus, and general MCP-client usage. The PyPI package
+is `zotero-mcp-server`, requires Python 3.10 or newer, and exposes the
+`zotero-mcp` and `zotero-cli` console commands.
+
+## Features
+
+- Search Zotero items by title, creator, content, tags, collections, or recent
+  additions.
+- Retrieve item metadata, BibTeX-style citation data, full text, child items,
+  notes, annotations, collections, and tags.
+- Add papers by DOI, URL, arXiv, generic webpage, or local file when write mode
+  is configured.
+- Create and manage collections, update metadata, batch-update tags, and merge
+  duplicates with preview-oriented workflows.
+- Run optional semantic search with local default embeddings or configured
+  OpenAI/Gemini embeddings.
+- Use optional PDF outline extraction, EPUB annotation support, and Scite
+  citation intelligence.
+- Run the standalone `zotero-cli` for terminal research-library automation.
+
+## Installation
+
+Install the package:
+
+```bash
+uv tool install zotero-mcp-server
+zotero-mcp setup
+```
+
+For local Zotero access, enable Zotero's local API and configure the MCP client:
+
+```json
+{
+  "mcpServers": {
+    "zotero": {
+      "command": "zotero-mcp",
+      "env": {
+        "ZOTERO_LOCAL": "true"
+      }
+    }
+  }
+}
+```
+
+For write-mode or cloud-library access, add the Zotero Web API environment
+variables documented upstream, such as `ZOTERO_API_KEY`, `ZOTERO_LIBRARY_ID`,
+and `ZOTERO_LIBRARY_TYPE`.
+
+## Use Cases
+
+- Ask Claude to find papers in a Zotero library by topic, author, tag, or
+  collection.
+- Retrieve paper metadata, citations, notes, annotations, and full text for a
+  literature review.
+- Use semantic search to find conceptually related papers instead of only exact
+  keyword matches.
+- Add new papers by DOI or URL and organize them into collections with tags.
+- Review duplicate papers and merge them only after confirming the preview.
+- Connect a research library to ChatGPT Developer Mode through a carefully
+  configured tunnel when a web-based MCP client is required.
+
+## Safety and Privacy
+
+Research libraries are sensitive even when the papers are public. Zotero items,
+notes, annotations, collections, tags, group-library membership, local paths,
+queries, and generated summaries can reveal academic, medical, legal, product,
+or competitive research direction.
+
+Keep Zotero API keys out of prompts and committed config files. Prefer local
+read-only mode for sensitive libraries, use narrow web API permissions for
+write-mode workflows, and review every broad metadata, tag, collection, note,
+annotation, import, or duplicate-merge operation before applying it.
+
+If you enable semantic search, confirm whether embeddings are produced locally
+or sent to a hosted provider. If you expose the MCP server through SSE, HTTP, or
+a tunnel, treat the tunnel URL and session configuration as sensitive access to
+your research library.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `54yyyu/zotero-mcp`,
+`zotero-mcp-server`, Zotero MCP, Zotero Claude MCP, research library MCP, and
+citation management MCP. Existing arXiv and literature-search entries cover
+paper discovery, but no dedicated Zotero MCP entry, exact source URL duplicate,
+target file, or open duplicate PR was found.
