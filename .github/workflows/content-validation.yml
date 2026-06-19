@@ -916,7 +916,12 @@ jobs:
 
   validate-pr-preview:
     name: validate-pr-preview
-    if: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'workflow_dispatch' && github.ref_name == 'automation/readme-refresh')) && (needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.mcp == 'true') }}
+    # Skip on content-ONLY PRs: this job does a full preview DEPLOY and waits up to 600s for the URL —
+    # a ~10-min runner hog. It has no content-specific path (unlike validate-registry/web), it does NOT
+    # gate required-pr-gate, and content go-live is validated at deploy. On content-only PRs it just
+    # starves the (throttled) runner pool, delaying the cheap required-pr-gate the gate actually waits on,
+    # so a 1-line content add sat queued for minutes. (#content-only-skip-preview)
+    if: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'workflow_dispatch' && github.ref_name == 'automation/readme-refresh')) && (needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.mcp == 'true') && needs.classify-pr.outputs.source_content_only != 'true' }}
     needs: classify-pr
     runs-on: ubuntu-latest
     timeout-minutes: 30
