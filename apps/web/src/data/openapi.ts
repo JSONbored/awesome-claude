@@ -273,6 +273,12 @@ const RESPONSE_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
     categoryFeeds: { mcp: "/data/feeds/categories/mcp.json" },
     platformFeeds: { claude: "/data/feeds/platforms/claude.json" },
     jobs: "/api/jobs?limit=100",
+    endpoints: {
+      qualityMethodology: "/quality#methodology",
+      categoryFeed: "/data/feeds/categories/{category}.json",
+      platformFeed: "/data/feeds/platforms/{platform}.json",
+      jobs: "/api/jobs?limit=100",
+    },
   },
   "registry.trending": {
     schemaVersion: 1,
