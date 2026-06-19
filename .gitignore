@@ -28,6 +28,9 @@ apps/web/public/downloads/
 apps/web/src/generated/
 apps/web/src/routeTree.gen.ts
 
+# Incremental type-check cache (tsc --noEmit .tsbuildinfo; restored from CI cache).
+apps/web/.cache/
+
 # D1 schema migrations must stay tracked even if a global ignore has *.sql
 !apps/web/migrations/
 !apps/web/migrations/*.sql
