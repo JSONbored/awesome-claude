@@ -1,0 +1,245 @@
+---
+title: Third-Party API Resilience Review Rules
+slug: third-party-api-resilience-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing code that calls third-party or remote APIs,
+  covering timeouts, bounded retries with backoff and jitter, idempotency,
+  circuit breaking, rate-limit handling, graceful degradation, and privacy-safe
+  failure logging.
+cardDescription: >-
+  Review remote API calls for timeouts, bounded retries with backoff and jitter,
+  idempotency, circuit breakers, rate-limit handling, and safe failure logging.
+seoTitle: Third-Party API Resilience Review Rules
+seoDescription: >-
+  Practical review rules for third-party and remote API calls: timeouts, bounded
+  retry with exponential backoff and jitter, idempotency keys, circuit breakers,
+  rate-limit and 429 handling, graceful degradation, and privacy-safe logs.
+author: jaso0n0818
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+documentationUrl: "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/"
+sourceUrls:
+  - "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/"
+  - "https://learn.microsoft.com/en-us/azure/architecture/patterns/retry"
+  - "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+  - "https://learn.microsoft.com/en-us/azure/architecture/patterns/throttling"
+  - "https://sre.google/sre-book/handling-overload/"
+installable: false
+usageSnippet: >-
+  Apply these rules when a change adds or edits a call to a third-party,
+  external, or remote service, including HTTP APIs, SDKs, webhooks, and
+  background jobs that depend on a network dependency.
+copySnippet: |-
+  You are reviewing code that calls a third-party or remote API.
+
+  Rules:
+  1. Set an explicit timeout on every remote call; never let a request inherit an
+     unbounded or default-infinite wait that can pin a thread or worker.
+  2. Bound retries with a small cap and exponential backoff plus jitter, and only
+     retry transient failures, not deterministic 4xx errors.
+  3. Make any retried write idempotent, using an idempotency key or a safe
+     upsert, so a retry cannot duplicate a charge, message, or record.
+  4. Add a circuit breaker or failure threshold so a failing dependency stops
+     receiving traffic and gets time to recover instead of being hammered.
+  5. Respect rate limits and 429 or Retry-After responses; degrade gracefully
+     with cached or default behavior when the dependency is unavailable.
+  6. Log failures with enough context to debug, but keep tokens, credentials,
+     request bodies, and personal data out of logs and error messages.
+estimatedSetupTime: 25 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request or diff that adds or changes a call to a third-party, external, or remote service through HTTP, an SDK, a webhook, or a queued job.
+  - Knowledge of the client library and runtime in use, since timeout, retry, and connection-pool defaults differ between HTTP clients and SDKs.
+  - Awareness of whether the call is a read or a write, since write retries need idempotency while read retries mainly need bounds.
+  - Permission to block merge when a remote call has no timeout, unbounded retries, a non-idempotent retried write, or credential leakage in logs.
+safetyNotes:
+  - "A remote call with no timeout can hang a request thread or worker indefinitely when the dependency is slow, cascading into resource exhaustion across the service."
+  - "Unbounded or un-jittered retries can turn a brief dependency blip into a retry storm that overloads the dependency and the caller, a self-inflicted denial of service."
+  - "Retrying a non-idempotent write without an idempotency key can duplicate charges, orders, emails, or records when the first attempt actually succeeded but the response was lost."
+privacyNotes:
+  - "Request and response payloads for third-party APIs often carry access tokens, API keys, signed URLs, customer identifiers, and personal data."
+  - "Do not log full request bodies, authorization headers, or raw error responses, and do not paste them into public PR comments; redact secrets and personal data first."
+  - "Use synthetic accounts and test credentials when demonstrating failure handling, especially for payment, messaging, auth, or health integrations."
+tags:
+  - resilience
+  - api-integration
+  - retries
+  - timeouts
+  - reliability
+  - code-review
+---
+
+## Purpose
+
+Use these rules when a change calls a third-party or remote service. The goal is
+to keep one slow or failing dependency from degrading the whole service and to
+keep retried writes from duplicating side effects, instead of assuming the
+network and the dependency are always fast and available.
+
+This is a review policy, not a client-library tutorial. It tells reviewers what
+must be true about a remote call's timeouts, retries, idempotency, and failure
+handling before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know what the call does and how it can fail.
+
+1. **Call shape.** Whether the call is a read or a write, synchronous or
+   queued, and on the critical request path or in the background.
+2. **Failure modes.** Whether the change handles timeouts, connection errors,
+   5xx responses, 429 rate limits, and partial or lost responses.
+3. **Client configuration.** The timeout, retry, connection-pool, and
+   keep-alive settings of the HTTP client or SDK actually in use.
+4. **Side effects.** Whether a retried write can duplicate a charge, message,
+   record, or external action if the first attempt already succeeded.
+5. **Fallback.** What the caller does when the dependency is unavailable, such
+   as cached data, a default, a queued retry, or a clear error to the user.
+
+If the change cannot say whether the call is a read or a write and how it
+behaves on timeout, require that context before reviewing retry tuning.
+
+## Timeout Rules
+
+- Set an explicit, finite timeout on every remote call; do not rely on a default
+  that may be very long or unbounded.
+- Keep timeouts shorter than the caller's own deadline so a slow dependency
+  cannot blow the overall request budget.
+- Apply both connection and read timeouts where the client distinguishes them.
+- Make sure a timeout actually cancels the work and frees the thread, connection,
+  or worker rather than leaking it.
+- Budget timeouts across chained calls so several dependencies in series cannot
+  sum to an unacceptable total latency.
+
+## Retry And Backoff Rules
+
+- Cap retries at a small number; unbounded retries amplify load during an
+  incident instead of helping.
+- Use exponential backoff with jitter so many clients do not retry in
+  lockstep and create a synchronized retry storm.
+- Retry only transient failures such as timeouts, connection errors, 5xx, and
+  429; do not retry deterministic 4xx errors that will fail again.
+- Respect a `Retry-After` header when the dependency provides one instead of
+  using a fixed delay.
+- Account for retries in the total time budget so retrying does not silently
+  exceed the caller's deadline.
+
+## Idempotency Rules
+
+Retries and at-least-once delivery mean a write can run more than once. The
+change must make that safe.
+
+- Make retried writes idempotent with an idempotency key, a conditional update,
+  or a safe upsert keyed on a stable identifier.
+- Treat queued and webhook handlers as at-least-once; deduplicate on a stable
+  event or message id.
+- Avoid non-idempotent side effects on a path that can retry, such as charging,
+  sending, or incrementing without a guard.
+- Persist the result of a completed external action so a retry can detect it
+  already happened instead of repeating it.
+- Confirm that the dependency's own idempotency support, if any, is actually
+  used and keyed correctly.
+
+## Circuit Breaking And Rate-Limit Rules
+
+- Add a circuit breaker or failure threshold so a consistently failing
+  dependency stops receiving calls and is given time to recover.
+- Shed or queue load when the dependency signals overload rather than retrying
+  immediately into a struggling service.
+- Respect documented rate limits and handle 429 responses with backoff instead
+  of treating them as generic errors.
+- Degrade gracefully when the dependency is down: serve cached or default data,
+  queue the work, or return a clear, actionable error.
+- Keep one failing dependency from taking down unrelated features by isolating
+  its failures.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- a remote call has no explicit timeout or relies on an unbounded default;
+- retries are uncapped, lack backoff and jitter, or retry deterministic 4xx
+  errors;
+- a retried or at-least-once write is not idempotent and can duplicate a charge,
+  message, or record;
+- a failing dependency has no circuit breaker, fallback, or graceful
+  degradation on the critical path;
+- 429 or `Retry-After` responses are ignored or treated as generic failures;
+- logs or error messages expose tokens, credentials, request bodies, or
+  personal data.
+
+## Review Checklist
+
+- [ ] {"task": "Call shape known", "description": "The review identifies read vs write, sync vs queued, and critical-path vs background"}
+- [ ] {"task": "Timeouts set", "description": "Every remote call has an explicit, finite timeout within the caller's deadline"}
+- [ ] {"task": "Retries bounded", "description": "Retries are capped with backoff and jitter and only cover transient failures"}
+- [ ] {"task": "Writes idempotent", "description": "Retried or at-least-once writes use an idempotency key or safe upsert"}
+- [ ] {"task": "Failure isolated", "description": "A circuit breaker, fallback, or graceful degradation protects the caller"}
+- [ ] {"task": "Privacy safe", "description": "Logs and errors avoid tokens, credentials, request bodies, and personal data"}
+
+## AI Review Rules
+
+AI assistants can help review remote calls, but they should show their evidence.
+
+- Ask the assistant to state the client's actual timeout and retry settings, not
+  the library's documented defaults.
+- Require it to classify the call as a read or a write before judging retry
+  safety.
+- Have the assistant point to the idempotency mechanism for any retried write,
+  or flag its absence.
+- Do not let the assistant assume a circuit breaker or fallback exists; require
+  the code path to be shown.
+- Re-run review after changes to timeouts, retry counts, backoff, or error
+  handling.
+
+## Troubleshooting
+
+- **Requests hang under dependency slowness:** add explicit connection and read
+  timeouts and confirm they cancel the underlying work.
+- **A blip became an outage:** cap retries, add backoff with jitter, and add a
+  circuit breaker so the caller stops hammering the dependency.
+- **A retry created a duplicate charge or message:** add an idempotency key or a
+  stable dedupe id and persist completion of the external action.
+- **The integration ignores rate limits:** handle 429 and `Retry-After` and back
+  off instead of retrying immediately.
+- **Logs leaked a token:** redact authorization headers and request bodies and
+  scrub the public artifact before sharing.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, statuslines, guides, collections, skills, open
+PRs, and closed PRs for API resilience, retries, timeouts, circuit breakers,
+rate limiting, idempotency, and remote dependency failure handling.
+
+Adjacent content includes general code-review and security rules, but no entry
+is a portable pre-merge review policy for third-party and remote API resilience.
+This entry is distinct because it decides what must be true about a remote
+call's timeouts, bounded retries, idempotency, circuit breaking, and failure
+logging before the change can merge.
+
+No prior closed PR for this rule was found during the duplicate/history check.
+
+## Retry Budget Reference
+
+The categories below follow the timeout, retry, and overload guidance in the
+sources and drive how a remote call should be tuned.
+
+| Failure signal             | Retry?              | Reviewer action                                          |
+| -------------------------- | ------------------- | -------------------------------------------------------- |
+| Timeout / connection error | Yes, bounded        | Confirm cap, backoff, jitter, and idempotency for writes |
+| 5xx server error           | Yes, bounded        | Same as above; ensure deadline budget covers retries     |
+| 429 / `Retry-After`        | Yes, respect header | Back off per header; do not retry immediately            |
+| 4xx (400, 401, 403, 404)   | No                  | Fail fast; fix the request or auth, do not retry         |
+
+Exponential backoff with jitter and a small retry cap keeps a transient blip
+from becoming a synchronized retry storm, and an idempotency key keeps a retried
+write from duplicating its side effect.
+
+## Sources
+
+- AWS Builders' Library — timeouts, retries, and backoff with jitter: https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/
+- Azure Architecture Center — Retry pattern: https://learn.microsoft.com/en-us/azure/architecture/patterns/retry
+- Azure Architecture Center — Circuit Breaker pattern: https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker
+- Azure Architecture Center — Throttling pattern: https://learn.microsoft.com/en-us/azure/architecture/patterns/throttling
+- Google SRE Book — Handling Overload: https://sre.google/sre-book/handling-overload/
