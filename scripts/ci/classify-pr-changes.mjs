@@ -176,10 +176,7 @@ const generatedArtifactInfra = touches(
 const submissionAutomationInfra = touches(
   /^scripts\/(analyze-submission-risk|import-submission-issue|validate-submission-issue)\.mjs$/,
 );
-const scriptOrTestInfra = touches(
-  /^scripts\//,
-  /^tests\/.*\.test\.ts$/,
-);
+const scriptOrTestInfra = touches(/^scripts\//, /^tests\/.*\.test\.ts$/);
 const submissionGateInfra = touches(
   /^apps\/submission-gate\//,
   /^tests\/submission-gate-.*\.test\.ts$/,
