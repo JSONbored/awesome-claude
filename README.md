@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1307+ file-backed entries</strong> stay useful as both an
+        <strong>1316+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1307</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1316</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -83,7 +83,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#rules"><strong>📏 Rules</strong></a><br>
-          <code>73</code><br>
+          <code>82</code><br>
           <sub>Prompt guardrails, project rules, and operating constraints.</sub>
         </td>
 </tr>
@@ -1110,10 +1110,14 @@ Get a free API key on https://app.zyntra.app/
 - **[Zero-Budget SaaS Launch Capability Pack Skill](https://heyclau.de/entry/skills/zero-budget-saas-launch-capability-pack)** - Expert zero-budget launch capability pack for building and shipping SaaS using free-tier infrastructure and constrained execution plans.
 - **[Zod Schema Validation Skill](https://heyclau.de/entry/skills/zod-schema-validator)** - TypeScript-first validation skill using Zod — define schemas once, get runtime checks and inferred types for APIs, forms, and data pipelines.
 
-## 📏 Rules (73)
+## 📏 Rules (82)
 
 - **[AI Assistant Secret Handling Rules](https://heyclau.de/entry/rules/ai-assistant-secret-handling-rules)** - Source-backed rules for AI coding assistants that must avoid exposing, copying, logging, committing, or normalizing secrets while editing code, configs, tests, prompts, documentation, and CI workflows.
 - **[AI-Generated Frontend Accessibility Review Rules](https://heyclau.de/entry/rules/ai-generated-frontend-accessibility-review-rules)** - Source-backed rules for reviewing AI-generated frontend UI changes for accessibility before merge, with semantic HTML, keyboard paths, focus management, labels, automated scan limits, manual checks, and privacy-safe evidence.
+- **[AI-Generated Path Traversal Review Rules](https://heyclau.de/entry/rules/ai-generated-path-traversal-review-rules)** - Source-backed rules for reviewing AI-generated file-handling code for path traversal before merge, covering canonical path validation, safe root confinement, upload filename sanitization, archive extraction limits, and privacy-safe test evidence.
+- **[AI-Generated Regex Safety Review Rules](https://heyclau.de/entry/rules/ai-generated-regex-safety-review-rules)** - Source-backed rules for reviewing AI-generated regular expressions before merge, covering catastrophic backtracking and ReDoS risk, input bounds, anchor and escaping correctness, validation versus parsing, safe engines, and privacy-safe test evidence.
+- **[AI-Generated SQL Injection Review Rules](https://heyclau.de/entry/rules/ai-generated-sql-injection-review-rules)** - Source-backed rules for reviewing AI-generated database access code for SQL injection before merge, covering parameterized queries, identifier handling, ORM safety, dynamic query construction, least-privilege access, and privacy-safe test evidence.
+- **[AI-Generated SSRF Review Rules](https://heyclau.de/entry/rules/ai-generated-ssrf-review-rules)** - Source-backed rules for reviewing AI-generated code that makes server-side URL or network requests for server-side request forgery before merge, covering URL allow-lists, block-lists for internal networks, redirect handling, response isolation, and privacy-safe test evidence.
 - **[AI Prompt Engineering Expert for Claude](https://heyclau.de/entry/rules/ai-prompt-engineering-expert)** - A CLAUDE.md rule set that turns Claude into a prompt-engineering reviewer for coding work — enforcing explicit requirements, task decomposition, example-driven prompts, and context management.
 - **[Angular Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/angular-expert)** - Transform Claude into an Angular specialist with deep knowledge of standalone components, Angular Signals, dependency injection, RxJS patterns, and the Angular Style Guide.
 - **[API Design Expert for Claude - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/api-design-expert)** - Transform Claude into a comprehensive API design specialist focused on RESTful APIs, GraphQL, OpenAPI, and modern API architecture patterns
@@ -1131,8 +1135,10 @@ Get a free API key on https://app.zyntra.app/
 - **[Documentation Freshness Rules](https://heyclau.de/entry/rules/documentation-freshness-rules)** - Source-backed rules for public AI workflow registries that need to keep directory entries, source links, version claims, examples, install guidance, compatibility notes, and last-reviewed metadata fresh enough to trust.
 - **[.NET and C# Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/dotnet-csharp-expert)** - A CLAUDE.md rule set that turns Claude into a senior .NET reviewer aligned with current Microsoft guidance across ASP.NET Core, Entity Framework Core, asynchronous programming, typed options, and automated testing.
 - **[Electron Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/electron-expert)** - Transform Claude into an Electron specialist with deep knowledge of main/preload processes, IPC, security hardening, auto-updates, and desktop packaging patterns.
+- **[Event Sourcing Implementation Review Rules](https://heyclau.de/entry/rules/event-sourcing-implementation-review-rules)** - Source-backed rules for reviewing event-sourcing implementation changes, covering immutable event design, event schema evolution without breaking projections, idempotent event handlers, snapshot and replay correctness, and consistent event-store access patterns.
 - **[Express Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/express-expert)** - Transform Claude into an Express.js specialist with deep knowledge of routing, middleware, error handling, security headers, and production deployment patterns.
 - **[FastAPI Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/fastapi-expert)** - Transform Claude into a FastAPI specialist with deep knowledge of async routes, Pydantic validation, dependency injection, OpenAPI, and production API patterns.
+- **[Feature Flag Lifecycle Review Rules](https://heyclau.de/entry/rules/feature-flag-lifecycle-rules)** - Source-backed rules for reviewing feature flag changes across their full lifecycle, covering flag creation, naming, default values, kill switches, targeting, rollout safety, cleanup of stale flags, and privacy-safe configuration evidence.
 - **[Generated Artifact Churn Rules for Registry Repositories](https://heyclau.de/entry/rules/generated-artifact-churn-rules)** - Source-backed rules for registry repositories that must keep contributor PRs focused on source files while generated indexes, feeds, downloads, search data, README output, and previews are rebuilt by trusted automation.
 - **[Go Backend & Concurrency Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/go-golang-expert)** - A CLAUDE.md rule for Go application development: goroutine and channel concurrency, context cancellation, performance tuning, HTTP and gRPC services, database patterns, and table-driven testing.
 - **[Go Golang Language Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/golang-expert)** - Transform Claude into a Go ecosystem expert specializing in tooling, library development, CLI applications, and Go build system mastery
@@ -1170,12 +1176,15 @@ Get a free API key on https://app.zyntra.app/
 - **[Safe Shell Command Rules for Agentic Coding Sessions](https://heyclau.de/entry/rules/safe-shell-command-rules)** - Source-backed rules for AI coding agents that propose, compose, review, or run shell commands during coding sessions where quoting, expansion, command injection, file writes, network calls, and destructive operations can cause harm.
 - **[Security Auditor Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/security-auditor)** - Configure Claude as a security expert for vulnerability assessment, penetration testing, and security best practices
 - **[Security-First React Components for Claude](https://heyclau.de/entry/rules/security-first-react-components)** - Security-first React component architect with XSS prevention, CSP integration, input sanitization, and OWASP Top 10 mitigation patterns
+- **[Structured Logging Review Rules](https://heyclau.de/entry/rules/structured-logging-review-rules)** - Source-backed rules for reviewing application logging changes, covering structured machine-readable events, consistent levels, correlation and trace context, actionable messages, log volume and cost, and keeping secrets and personal data out of logs.
 - **[Supabase Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/supabase-expert)** - Transform Claude into a Supabase specialist with deep knowledge of Postgres, Row Level Security, Auth, Storage, Edge Functions, and realtime subscriptions.
 - **[Svelte Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/svelte-expert)** - Transform Claude into a Svelte specialist with deep knowledge of reactivity, components, stores, SvelteKit routing, and performance-conscious UI patterns.
 - **[Swift Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/swift-expert)** - Transform Claude into a Swift specialist with deep knowledge of value semantics, protocols, async/await, SwiftUI patterns, and Apple platform API design.
 - **[TanStack Query Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/tanstack-query-expert)** - Transform Claude into a TanStack Query specialist with deep knowledge of query keys, caching, mutations, optimistic updates, and server-state synchronization.
 - **[Terraform Infrastructure Architect for Claude](https://heyclau.de/entry/rules/terraform-infrastructure-architect)** - Expert in Terraform infrastructure as code with AI-assisted generation, modular patterns, state management, and multi-cloud deployments
+- **[Test Double Misuse Review Rules](https://heyclau.de/entry/rules/test-double-misuse-review-rules)** - Source-backed rules for reviewing test code for test-double misuse, covering over-mocking that decouples tests from real behavior, under-mocking that creates slow or flaky tests, mock-return-value drift, missing contract tests for faked dependencies, and keeping test data free of personal information.
 - **[Vitest Test-Driven Development Rule for Claude Code](https://heyclau.de/entry/rules/test-driven-development-enforcer)** - A CLAUDE.md rule that drives test-first development with Vitest: write a failing Vitest test, add the minimum code to pass, then refactor. It covers vitest.config setup, expect assertions, vi mocks and fake timers, coverage thresholds, and running specs in watch mode or once with vitest run.
+- **[Third-Party API Resilience Review Rules](https://heyclau.de/entry/rules/third-party-api-resilience-review-rules)** - Source-backed rules for reviewing code that calls third-party or remote APIs, covering timeouts, bounded retries with backoff and jitter, idempotency, circuit breaking, rate-limit handling, graceful degradation, and privacy-safe failure logging.
 - **[tRPC Expert - CLAUDE.md Rules for Claude Code](https://heyclau.de/entry/rules/trpc-expert)** - Transform Claude into a tRPC specialist with deep knowledge of end-to-end typed routers, procedures, middleware, and React client integration patterns.
 - **[TypeScript 5.x Strict Mode Expert for Claude](https://heyclau.de/entry/rules/typescript-5x-strict-mode-expert)** - TypeScript 5.x strict mode expert with template literal types, strict null checks, type guards, and ESLint integration for enterprise-grade type safety
 - **[TypeScript API Client Compatibility Review Rules](https://heyclau.de/entry/rules/typescript-api-client-compatibility-review-rules)** - Source-backed rules for reviewing TypeScript API client compatibility before merge, with exported type-surface diffs, inferred router inputs and outputs, runtime validator alignment, downstream compile checks, and privacy-safe evidence.
