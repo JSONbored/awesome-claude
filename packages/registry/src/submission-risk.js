@@ -906,6 +906,7 @@ function addContentRiskSignals(report, fields, text) {
       fields.usage_snippet,
       fields.usageSnippet,
       fields.copySnippet,
+      fields.config_snippet,
       fields.configSnippet,
     ].join("\n"),
   );
@@ -1565,6 +1566,7 @@ function frontmatterFields(data = {}, category = "") {
     install_command: normalizeText(data.installCommand),
     usage_snippet: normalizeText(data.usageSnippet),
     full_copyable_content: normalizeText(data.copySnippet),
+    configSnippet: normalizeText(data.configSnippet),
     brand_domain: normalizeText(data.brandDomain),
     safety_notes: stringList(data.safetyNotes).join("\n"),
     privacy_notes: stringList(data.privacyNotes).join("\n"),
