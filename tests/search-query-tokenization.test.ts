@@ -16,8 +16,14 @@ describe("search query tokenization", () => {
   });
 
   it("tokenizes without materializing split arrays on delimiter runs", () => {
-    expect(tokenizeSearchQuery("postgres memory")).toEqual(["postgres", "memory"]);
-    expect(tokenizeSearchQuery("browser playwright")).toEqual(["browser", "playwright"]);
+    expect(tokenizeSearchQuery("postgres memory")).toEqual([
+      "postgres",
+      "memory",
+    ]);
+    expect(tokenizeSearchQuery("browser playwright")).toEqual([
+      "browser",
+      "playwright",
+    ]);
     expect(tokenizeSearchQuery(",".repeat(10_000))).toEqual([]);
     expect(
       tokenizeSearchQuery(`${"browser ".repeat(20)}${"x,".repeat(10_000)}`),
