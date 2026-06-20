@@ -10,6 +10,7 @@ import { CATEGORIES, PLATFORM_LABEL } from "@/types/registry";
 import { getIndexableTagGroups } from "@/lib/tags";
 import { isSitemapIndexableEntry } from "@/lib/sitemap-policy";
 import { COMPARISONS } from "@/data/comparisons";
+import { REPORT_PATHS } from "@/lib/data-reports";
 
 function escapeXml(value: string) {
   return value
@@ -56,7 +57,7 @@ async function renderSitemap() {
     "/ecosystem",
     "/platforms",
     "/quality",
-    "/state-of-claude-tooling",
+    ...REPORT_PATHS,
     "/trending",
     "/compare",
     "/changelog",
