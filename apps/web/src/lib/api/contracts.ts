@@ -339,6 +339,48 @@ export const registrySearchResponseSchema = z.object({
   facets: registrySearchFacetsSchema.optional(),
 });
 
+const registryFeedLinkMapSchema = z.record(z.string(), z.string());
+
+export const registryFeedResponseSchema = z
+  .object({
+    schemaVersion: z.number(),
+    kind: z.literal("registry-feed"),
+    generatedAt: z.string(),
+    site: z.object({
+      name: z.string(),
+      url: z.string().url(),
+      description: z.string(),
+    }),
+    qualityMethodology: z.string(),
+    categoryFeeds: registryFeedLinkMapSchema,
+    platformFeeds: registryFeedLinkMapSchema,
+    jobs: z.string(),
+    endpoints: z
+      .object({
+        jobs: z.string(),
+        qualityMethodology: z.string(),
+        categoryFeed: z.string(),
+        platformFeed: z.string(),
+      })
+      .catchall(z.string()),
+    contracts: z.record(z.string(), z.string()),
+    artifacts: z.record(z.string(), z.unknown()),
+    artifactContracts: z.record(z.string(), z.unknown()).optional(),
+    qualitySummary: z.unknown().optional(),
+    trustSummary: z.unknown().optional(),
+    categories: z
+      .array(
+        z.object({
+          category: z.string(),
+          label: z.string(),
+          count: z.number().int().nonnegative(),
+          description: z.string(),
+        }),
+      )
+      .max(64),
+  })
+  .passthrough();
+
 export const registryTrendingResponseSchema = z.object({
   schemaVersion: z.number(),
   kind: z.literal("registry-trending"),
@@ -876,6 +918,8 @@ export const apiRouteDefinitions = {
       "Discovers API, RSS, changelog, category feeds, platform feeds, category and platform shards, and artifact URLs.",
     tags: ["Registry"],
     originCheck: true,
+    responseSchema: registryFeedResponseSchema,
+    responseSchemaName: "RegistryFeedResponse",
     rateLimit: {
       scope: "registry-feed",
       limit: 120,
