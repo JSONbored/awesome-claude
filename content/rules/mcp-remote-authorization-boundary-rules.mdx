@@ -111,6 +111,24 @@ Return a concise decision with:
 - blocking gaps
 - safe public wording for any limitations
 
+## Authorization Error Status Codes
+
+The specification requires servers to return appropriate HTTP status codes for authorization errors. Confirm the server maps these correctly during review.
+
+| Status Code | Description | Usage |
+| --- | --- | --- |
+| 401 | Unauthorized | Authorization required or token invalid |
+| 403 | Forbidden | Invalid scopes or insufficient permissions |
+| 400 | Bad Request | Malformed authorization request |
+
+A request without a token, or with an invalid or expired token, must receive an HTTP 401 with a `WWW-Authenticate` header pointing to the resource metadata URL. An authenticated request carries the token in the `Authorization` header, never in the URI query string:
+
+```http
+GET /mcp HTTP/1.1
+Host: mcp.example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+```
+
 ## References
 
 - MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization

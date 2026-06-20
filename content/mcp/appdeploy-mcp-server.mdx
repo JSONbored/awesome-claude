@@ -1,0 +1,185 @@
+---
+title: AppDeploy MCP Server for Claude
+slug: appdeploy-mcp-server
+category: mcp
+description: >-
+  AppDeploy hosted MCP server for chat-native full-stack web app deployment with templates, QA snapshots, version rollback, and live public URLs from Claude or ChatGPT.
+cardDescription: >-
+  Connect Claude to AppDeploy to deploy full-stack web apps from chat, run QA checks, and manage versions with live public URLs.
+seoTitle: AppDeploy MCP Server for Claude
+seoDescription: >-
+  Use the AppDeploy MCP server with Claude to deploy frontend and full-stack apps, inspect QA results, and roll back versions via https://api-v2.appdeploy.ai/mcp.
+author: AppDeploy
+authorProfileUrl: "https://appdeploy.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1469
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1469"
+repoUrl: "https://appdeploy.ai"
+documentationUrl: "https://appdeploy.ai/mcp-docs"
+websiteUrl: "https://appdeploy.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http appdeploy https://api-v2.appdeploy.ai/mcp
+usageSnippet: >-
+  Add https://api-v2.appdeploy.ai/mcp as a custom connector and complete AppDeploy OAuth (Google, Apple, X, or Guest).
+copySnippet: |-
+  {
+    "mcpServers": {
+      "appdeploy": {
+        "url": "https://api-v2.appdeploy.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "appdeploy": {
+        "url": "https://api-v2.appdeploy.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "AppDeploy account via OAuth (Google, Apple, X, or Guest)."
+  - "Claude Pro/Team with Connectors, ChatGPT, Cursor, Codex, or Grok MCP support."
+  - "Clear description of the app you want deployed before invoking write tools."
+  - "Awareness that deploy_app and delete_app are destructive operations."
+safetyNotes:
+  - "deploy_app publishes publicly reachable URLs; review app content before deploying."
+  - "delete_app permanently removes apps—use only on explicit user request."
+  - "Deployed apps may access AppDeploy-provided database, storage, and auth services."
+  - "OAuth sessions grant persistent deploy access until disconnected."
+privacyNotes:
+  - "App source, deployment logs, and QA snapshots are stored on AppDeploy infrastructure."
+  - "Public URLs may expose app functionality and any data users submit to the deployed app."
+  - "Guest OAuth still ties deployments to an AppDeploy identity—avoid sharing accounts."
+tags:
+  - deployment
+  - hosting
+  - full-stack
+  - remote-mcp
+  - oauth
+keywords:
+  - appdeploy mcp
+  - deploy app from claude
+  - chat native deployment
+  - api-v2.appdeploy.ai
+  - appdeploy qa
+readingTime: 4
+difficultyScore: 30
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+AppDeploy is a chat-native deployment platform exposed through Model Context Protocol. Describe an app in Claude, ChatGPT, Cursor, or Codex and AppDeploy returns a live public URL with hosting, optional backend services, autonomous black-box QA, and version rollback—no Git or manual infra setup required.
+
+Documentation: [appdeploy.ai/mcp-docs](https://appdeploy.ai/mcp-docs). Endpoint: `https://api-v2.appdeploy.ai/mcp`.
+
+## Features
+
+- Deploy frontend-only and full-stack apps with public URLs.
+- get_app_template and get_deploy_instructions for agent-guided builds.
+- Autonomous E2E QA with snapshots and runtime error reporting.
+- Version listing and apply_app_version rollback.
+- OAuth authentication with multiple identity providers.
+
+## Use Cases
+
+- Deploy a Pomodoro timer or team leaderboard from a single chat prompt.
+- Iterate on a bakery pre-order site and inspect QA failures.
+- Roll back a broken deployment to the previous version.
+- Upload binary assets before deploying a media-heavy app.
+- List all apps owned by the current user before updating one.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Open Claude **Settings → Connectors → Add custom connector**.
+2. Name it AppDeploy and set URL to `https://api-v2.appdeploy.ai/mcp`.
+3. Complete OAuth sign-in when prompted.
+4. Ask the assistant to fetch deploy instructions before the first deploy_app call.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http appdeploy https://api-v2.appdeploy.ai/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "appdeploy": {
+      "url": "https://api-v2.appdeploy.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+OAuth handles authentication; no manual API key is required for standard connector setup.
+
+## Examples
+
+### New app
+
+```text
+Deploy a Pomodoro timer with start, pause, reset, and a notification sound when time is up.
+```
+
+### Check status
+
+```text
+Call get_app_status for my latest app and summarise QA results.
+```
+
+### Rollback
+
+```text
+Roll back my bakery app to the previous working version.
+```
+
+## Security
+
+- Review generated code and third-party dependencies before deploying public apps.
+- Do not deploy apps that collect sensitive data without proper auth and encryption.
+- Use delete_app only after explicit user confirmation.
+
+## Troubleshooting
+
+### Tools fail after connect
+
+Disconnect and reconnect to refresh the OAuth token.
+
+### Deployment stuck deploying
+
+Wait one to two minutes and poll get_app_status again.
+
+### Blank live page
+
+Inspect runtime errors via get_app_status and redeploy fixes.
+
+### QA failures
+
+Call get_e2e_qa_run_details, fix code, and redeploy.
+
+## Duplicate Check
+
+No existing AppDeploy or `api-v2.appdeploy.ai` entry was found in `content/mcp/`. This differs from Vercel or Netlify MCP integrations because AppDeploy is chat-native with built-in QA and templated full-stack deploy flows.

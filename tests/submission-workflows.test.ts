@@ -213,14 +213,30 @@ describe("submission automation workflows", () => {
 
     expect(source).toContain("validate-worktree:");
     expect(source).toContain('git diff --check "$BASE_SHA"...HEAD');
-    expect(source).toContain("Run Vitest suite");
-    expect(source).toContain("pnpm test");
+    // The full Vitest suite is NOT duplicated in the validate lanes — it runs once in coverage.yml
+    // (pnpm test:coverage); validate-web keeps only the web-specific gates below. (#dedupe-suite)
+    expect(source).not.toContain("Run Vitest suite");
+    const coverageWorkflow = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/coverage.yml"),
+      "utf8",
+    );
+    expect(coverageWorkflow).toContain("pnpm test:coverage");
+    expect(coverageWorkflow).toContain("Determine coverage scope");
+    expect(coverageWorkflow).toContain("run_coverage=");
+    expect(coverageWorkflow).toContain(
+      "Coverage skipped for content/docs/markdown-only PR.",
+    );
+    expect(coverageWorkflow).toContain("report_type: test_results");
+    expect(coverageWorkflow).toContain("reports/junit/vitest.xml");
+    expect(coverageWorkflow).not.toMatch(/pull_request:\s*\n\s+paths-ignore:/);
+    expect(source).not.toContain("Require coverage workflow for code PRs");
+    expect(source).not.toContain("node scripts/ci/require-coverage-check.mjs");
     expect(source).toContain("pnpm type-check");
     expect(source).toContain("pnpm build");
     expect(source).not.toContain("pnpm test:e2e");
     expect(source).not.toContain("playwright install");
     expect(source).toContain("Resolve PR preview URL");
-    expect(source).toContain("--wait-seconds 600");
+    expect(source).toContain("--wait-seconds 240");
     expect(source).toContain(
       "github.event.pull_request.head.repo.full_name == github.repository",
     );
@@ -229,7 +245,7 @@ describe("submission automation workflows", () => {
         /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
       )?.[0] || "";
     expect(previewBlock).toContain(
-      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
+      "group: deployment-artifacts-pr-preview-${{ github.ref }}\n",
     );
     expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).not.toContain("CLOUDFLARE_API_TOKEN");
@@ -389,19 +405,20 @@ describe("submission automation workflows", () => {
         /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
       )?.[0] || "";
     expect(previewBlock).toContain(
-      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
+      "group: deployment-artifacts-pr-preview-${{ github.ref }}\n",
     );
     expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).toContain("Resolve PR preview URL");
-    expect(source).toContain("--wait-seconds 600");
-    expect(source).not.toContain("--allow-missing");
+    expect(source).toContain("--wait-seconds 240");
+    // Preview resolution degrades gracefully: with the shared dev Worker retired,
+    // it validates a real prod preview-version URL when resolvable and skips
+    // cleanly otherwise (downstream steps are gated on a non-empty base-url).
+    expect(source).toContain("--allow-missing");
     expect(source).toContain("pnpm validate:deployment-artifacts");
     expect(source).toContain("pnpm validate:mcp-endpoint");
     expect(source).not.toContain("Deploy same-repo PR preview to dev Worker");
     expect(source).not.toContain("CLOUDFLARE_API_TOKEN");
     expect(source).not.toContain("vars.DEPLOYMENT_ARTIFACT_BASE_URL");
-    expect(source).toContain("Dry-run Resend template sync");
-    expect(source).toContain("pnpm resend:sync-templates -- --dry-run");
   });
 
   it("feeds deterministic content policy into required PR validation", () => {
@@ -445,6 +462,22 @@ describe("submission automation workflows", () => {
     );
   });
 
+  it("does not persist GitHub credentials in the prebuild checkout", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/content-validation.yml"),
+      "utf8",
+    );
+    const prebuildBlock =
+      source.match(/\n  prebuild:[\s\S]*?\n  validate-ci:/)?.[0] || "";
+
+    expect(prebuildBlock).toContain("name: prebuild");
+    expect(prebuildBlock).toContain(
+      "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+    );
+    expect(prebuildBlock).toContain("fetch-depth: 0");
+    expect(prebuildBlock).toContain("persist-credentials: false");
+  });
+
   it("keeps source-only import diffs focused on content and build artifacts", () => {
     const source = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/content-validation.yml"),
@@ -463,7 +496,7 @@ describe("submission automation workflows", () => {
     );
   });
 
-  it("routes hook-only content PRs through focused direct submission validation", () => {
+  it("routes hook-only content PRs through direct submission and registry validation", () => {
     const lanes = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": contentFixture(`
 title: Retro Daily
@@ -476,7 +509,7 @@ description: Daily Claude Code retro dashboard hook.
     expect(lanes.content).toBe("true");
     expect(lanes.content_categories_json).toBe('["hooks"]');
     expect(lanes.direct_submission).toBe("true");
-    expect(lanes.registry).toBe("false");
+    expect(lanes.registry).toBe("true");
     expect(lanes.web).toBe("false");
     expect(lanes.mcp).toBe("false");
     expect(lanes.raycast).toBe("false");
@@ -923,7 +956,10 @@ scriptBody: |-
       "git restore --worktree --staged -- . ':!README.md'",
     );
     expect(source).toContain("unexpected_files");
-    expect(source).toContain('git ls-remote --heads origin "$BRANCH_NAME"');
+    expect(source).toContain(
+      'git ls-remote --heads origin "refs/heads/$BRANCH_NAME"',
+    );
+    expect(source).not.toContain('git ls-remote --heads origin "$BRANCH_NAME"');
     expect(source).toContain(
       '--force-with-lease="refs/heads/$BRANCH_NAME:$remote_branch_sha"',
     );
@@ -1312,7 +1348,7 @@ diff --git a/README.md b/README.md
     expect(source).toContain("content_categories_json");
   });
 
-  it("routes hook-only content PRs to hook content and direct submission validation", () => {
+  it("routes hook-only content PRs to hook content, direct submission, and registry validation", () => {
     const outputs = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": "---\ntitle: Retro Daily\n---\n",
     });
@@ -1326,7 +1362,7 @@ diff --git a/README.md b/README.md
     expect(outputs.mcp).toBe("false");
     expect(outputs.raycast).toBe("false");
     expect(outputs.packages).toBe("false");
-    expect(outputs.registry).toBe("false");
+    expect(outputs.registry).toBe("true");
     expect(outputs.ci).toBe("false");
   });
 

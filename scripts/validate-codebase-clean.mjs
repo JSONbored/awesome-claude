@@ -44,6 +44,7 @@ const forbiddenPaths = [
 
 const ignoredDirs = new Set([
   ".git",
+  ".claude",
   ".next",
   "dist",
   "dist-ssr",
@@ -316,7 +317,6 @@ if (fs.existsSync(tasksPath)) {
     "validate:packages",
     "validate:raycast-feed",
     "validate:d1-jobs",
-    "validate:emails",
     "test:mcp",
     "test",
     "type-check",
@@ -343,7 +343,6 @@ for (const scriptName of [
   "validate:packages",
   "validate:raycast-feed",
   "validate:d1-jobs",
-  "validate:emails",
   "test:mcp",
   "test",
   "type-check",

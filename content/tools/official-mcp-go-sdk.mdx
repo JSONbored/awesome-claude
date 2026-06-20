@@ -1,0 +1,199 @@
+---
+title: Official MCP Go SDK
+slug: official-mcp-go-sdk
+category: tools
+description: >-
+  Official Go SDK for Model Context Protocol servers and clients, maintained by
+  the MCP project in collaboration with Google, with packages for MCP,
+  JSON-RPC, OAuth primitives, OAuth protected-resource metadata, clients,
+  servers, transports, examples, and conformance work.
+cardDescription: >-
+  Build official MCP clients and servers in Go with the modelcontextprotocol
+  Go SDK, including MCP, JSON-RPC, OAuth, transports, examples, and spec
+  compatibility.
+seoTitle: Official MCP Go SDK for Model Context Protocol Servers and Clients
+seoDescription: >-
+  Use the official Model Context Protocol Go SDK to build MCP servers and
+  clients with Go packages for MCP, JSON-RPC transports, OAuth primitives,
+  protected-resource metadata, examples, and current MCP spec compatibility.
+author: Model Context Protocol
+authorProfileUrl: "https://github.com/modelcontextprotocol"
+dateAdded: "2026-06-18"
+websiteUrl: "https://modelcontextprotocol.io"
+documentationUrl: "https://pkg.go.dev/github.com/modelcontextprotocol/go-sdk"
+repoUrl: "https://github.com/modelcontextprotocol/go-sdk"
+packageUrl: "https://pkg.go.dev/github.com/modelcontextprotocol/go-sdk"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/go-sdk"
+  - "https://github.com/modelcontextprotocol/go-sdk/blob/main/README.md"
+  - "https://github.com/modelcontextprotocol/go-sdk/blob/main/go.mod"
+  - "https://github.com/modelcontextprotocol/go-sdk/blob/main/LICENSE"
+  - "https://pkg.go.dev/github.com/modelcontextprotocol/go-sdk"
+installable: true
+installCommand: "go get github.com/modelcontextprotocol/go-sdk"
+usageSnippet: >-
+  Add `github.com/modelcontextprotocol/go-sdk` to a Go project, import the
+  `mcp` package, create a client or server, and run it over stdio, command, or
+  another supported transport.
+copySnippet: |-
+  go get github.com/modelcontextprotocol/go-sdk
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Go toolchain compatible with the SDK's current `go.mod` requirement and Go support policy."
+  - "A target MCP spec version and compatibility plan for the clients or servers you need to support."
+  - "Authentication, authorization, and transport-security requirements for non-local MCP deployments."
+  - "Reviewed tool, resource, prompt, and OAuth behavior before exposing production services."
+safetyNotes:
+  - "The official Go SDK is a protocol library; the risk is in the MCP clients, servers, tools, resources, prompts, and transports you build with it."
+  - "Validate inputs, enforce capability checks, and bound side effects for every tool handler."
+  - "Use local transports for local-only integrations, and add authentication, TLS, authorization, logging, and rate limits before exposing network transports."
+  - "OAuth and protected-resource metadata are security-sensitive surfaces; test them against the current MCP specification and client expectations."
+privacyNotes:
+  - "MCP clients and servers built with the SDK may expose request metadata, tool arguments, tool results, resource contents, prompt templates, OAuth state, errors, traces, and logs."
+  - "Do not leak private resource contents, customer data, internal identifiers, tokens, privileged paths, or operational metadata in schemas, error messages, examples, or logs."
+  - "Document which model provider, client, server, and transport can observe each request before deploying outside localhost."
+tags:
+  - go
+  - golang
+  - mcp
+  - sdk
+  - official
+  - protocol
+keywords:
+  - official MCP Go SDK
+  - modelcontextprotocol go-sdk
+  - Model Context Protocol Go SDK
+  - Go MCP server official SDK
+  - Go MCP client official SDK
+  - MCP JSON-RPC Go
+  - MCP OAuth Go SDK
+  - MCP specification Go
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The official MCP Go SDK is the Model Context Protocol project's Go
+implementation for building MCP clients and servers. The repository is
+maintained by the `modelcontextprotocol` organization in collaboration with
+Google and provides importable packages for MCP APIs, JSON-RPC transport work,
+OAuth primitives, and protected-resource metadata extensions.
+
+This entry covers the official SDK. The catalog may also include community Go
+SDKs such as `mark3labs/mcp-go`; those remain viable alternatives, but this
+source is the official SDK maintained under the Model Context Protocol project.
+
+## Core Capabilities
+
+| Area | Official Go SDK Coverage |
+| --- | --- |
+| MCP APIs | `github.com/modelcontextprotocol/go-sdk/mcp` for constructing and using MCP clients and servers |
+| JSON-RPC | `github.com/modelcontextprotocol/go-sdk/jsonrpc` for custom transport implementers |
+| OAuth | `auth` primitives and `oauthex` extensions such as ProtectedResourceMetadata |
+| Clients | `mcp.NewClient`, command transport usage, sessions, and tool calls |
+| Servers | `mcp.NewServer`, tool registration, typed inputs/outputs, and stdio server examples |
+| Spec Compatibility | README matrix for SDK versions and supported MCP specification versions |
+| Examples | Example clients and servers in the repository |
+
+## Quick Start
+
+Install the module:
+
+```bash
+go get github.com/modelcontextprotocol/go-sdk
+```
+
+A minimal server creates an MCP server, registers a typed tool, and runs over
+stdio:
+
+```go
+package main
+
+import (
+    "context"
+    "log"
+
+    "github.com/modelcontextprotocol/go-sdk/mcp"
+)
+
+type Input struct {
+    Name string `json:"name" jsonschema:"the name of the person to greet"`
+}
+
+type Output struct {
+    Greeting string `json:"greeting"`
+}
+
+func SayHi(ctx context.Context, req *mcp.CallToolRequest, input Input) (*mcp.CallToolResult, Output, error) {
+    return nil, Output{Greeting: "Hi " + input.Name}, nil
+}
+
+func main() {
+    server := mcp.NewServer(&mcp.Implementation{Name: "greeter", Version: "v1.0.0"}, nil)
+    mcp.AddTool(server, &mcp.Tool{Name: "greet", Description: "say hi"}, SayHi)
+    if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
+        log.Fatal(err)
+    }
+}
+```
+
+## MCP Fit
+
+Choose the official Go SDK when a Go application needs to track current MCP
+specification behavior closely, use official protocol types, or build clients
+and servers against the same project that maintains the protocol. It is a good
+fit for infrastructure teams, platform teams, and Go service owners adding MCP
+support to existing systems.
+
+Because this is a protocol SDK, production safety depends on the handlers and
+transports you build. Treat each tool as an API endpoint and each resource as a
+model-visible data exposure.
+
+## Use Cases
+
+- Add an MCP server to a Go service or CLI.
+- Build an MCP client or test harness in Go.
+- Implement a custom JSON-RPC transport around official MCP types.
+- Prototype OAuth-protected MCP resources.
+- Track compatibility with the current MCP specification version matrix.
+- Compare official SDK behavior against community Go MCP SDKs.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README identifies the repository as the official Go SDK for the
+  Model Context Protocol.
+- The README lists importable packages for `mcp`, `jsonrpc`, `auth`, and
+  `oauthex`, plus a version compatibility matrix for MCP specification support.
+- `go.mod` declares module path `github.com/modelcontextprotocol/go-sdk`.
+- The license file documents the project's licensing transition to Apache-2.0
+  for new code/spec contributions, MIT for unrelicensed existing code, and
+  CC-BY-4.0 for documentation contributions excluding specifications.
+- pkg.go.dev resolves documentation for `github.com/modelcontextprotocol/go-sdk`.
+
+## Safety and Privacy
+
+The official SDK handles protocol mechanics; it does not make your tool surface
+safe by itself. Validate arguments, check user permissions, limit side effects,
+sanitize errors, and avoid exposing sensitive resources by default.
+
+Network transports and OAuth flows should be threat-modeled before production.
+Document what data is visible to MCP clients, model providers, logs, traces, and
+resource servers for each deployment.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `modelcontextprotocol/go-sdk`,
+official MCP Go SDK, Model Context Protocol Go SDK, Go MCP server official SDK,
+Go MCP client official SDK, MCP JSON-RPC Go, and MCP OAuth Go SDK. Existing
+work may cover the community `mark3labs/mcp-go` SDK, but no dedicated official
+Go SDK entry, exact source URL duplicate, target file, or open duplicate PR was
+found.

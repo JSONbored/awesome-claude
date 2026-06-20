@@ -1,0 +1,257 @@
+---
+title: NVIDIA Agent Skills
+slug: nvidia-agent-skills
+category: skills
+description: >-
+  Official NVIDIA-verified Agent Skills catalog for AI agents working with
+  CUDA-X, RAG Blueprint, NemoClaw and OpenClaw, NeMo, TAO, cuOpt, Omniverse,
+  Physical AI, vision AI, simulation, robotics, and GPU workflows.
+cardDescription: >-
+  NVIDIA-verified skills for Claude Code, Codex, Cursor, and Kiro covering GPU
+  acceleration, RAG, NemoClaw/OpenClaw, CUDA, NeMo, TAO, Omniverse, and
+  Physical AI workflows.
+seoTitle: NVIDIA Agent Skills for Claude Code, Codex, Cursor, RAG, and NemoClaw
+seoDescription: >-
+  Install NVIDIA Agent Skills for source-backed Claude Code, Codex, Cursor, and
+  Kiro workflows across RAG Blueprint, NemoClaw/OpenClaw, CUDA-X, NeMo, TAO,
+  cuOpt, Omniverse, Physical AI, vision AI, robotics, and GPU systems.
+author: NVIDIA
+authorProfileUrl: "https://github.com/NVIDIA"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/NVIDIA/skills"
+documentationUrl: "https://docs.nvidia.com/skills"
+websiteUrl: "https://build.nvidia.com/skills/"
+downloadUrl: "https://github.com/NVIDIA/skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add nvidia/skills"
+usageSnippet: >-
+  Install the NVIDIA skills catalog, list available skills, then add focused
+  workflows such as RAG Blueprint, NemoClaw/OpenClaw, cuOpt, TAO, NeMo,
+  Omniverse, or Physical AI skills for your target agent.
+copySnippet: |-
+  npx skills add nvidia/skills --list
+
+  # Install a focused skill for Codex
+  npx skills add nvidia/skills --skill rag-blueprint --agent codex
+
+  # Install NemoClaw / OpenClaw onboarding guidance for Claude Code
+  npx skills add nvidia/skills --skill nemoclaw-user-get-started --agent claude-code
+
+  # Install the NVIDIA plugin marketplace bundle in Codex
+  codex plugin marketplace add NVIDIA/skills
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/NVIDIA/skills"
+  - "https://raw.githubusercontent.com/NVIDIA/skills/main/README.md"
+  - "https://raw.githubusercontent.com/NVIDIA/skills/main/skills.sh.json"
+  - "https://raw.githubusercontent.com/NVIDIA/skills/main/plugins/nvidia-skills/.codex-plugin/plugin.json"
+  - "https://raw.githubusercontent.com/NVIDIA/skills/main/skills/nemoclaw-user-get-started/SKILL.md"
+  - "https://raw.githubusercontent.com/NVIDIA/skills/main/skills/rag-blueprint/SKILL.md"
+  - "https://raw.githubusercontent.com/NVIDIA/skills/main/skills/cuopt-numerical-optimization-api-python/SKILL.md"
+  - "https://raw.githubusercontent.com/NVIDIA/skills/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Cursor
+  - Kiro CLI
+  - Generic Agent Skills hosts
+prerequisites:
+  - "An AI coding assistant or skill host compatible with the Agent Skills standard, skills CLI, or Codex/Claude plugin marketplace."
+  - "NVIDIA, CUDA, RAG, NeMo, TAO, Omniverse, NemoClaw, or product-specific repository context for the workflow being requested."
+  - "For GPU workflows, compatible NVIDIA driver, CUDA runtime, container runtime, NGC credentials, or Kubernetes/Docker tooling as required by the selected product skill."
+  - "For NemoClaw/OpenClaw workflows, review Docker, OpenShell, inference provider, network policy, messaging, and sandbox prerequisites before running installers."
+safetyNotes:
+  - "Many NVIDIA skills can operate infrastructure, containers, Kubernetes clusters, model services, RAG stacks, GPU workloads, datasets, inference endpoints, or sandbox policies."
+  - "NemoClaw/OpenClaw onboarding can install software, configure Docker, build sandbox images, register inference providers, enable web search, and configure messaging channels; review every prompt before applying changes."
+  - "RAG Blueprint skills can deploy, configure, restart, or shut down Docker Compose, Helm, vector database, NIM, guardrails, observability, and ingestion services."
+  - "GPU training, inference, simulation, vision, medical, and Physical AI workflows can consume expensive compute, modify datasets, produce model artifacts, and affect operational environments."
+  - "The repository documents signed skills, governance cards, and benchmark reports; still verify each installed skill against the current repository and your local trust policy."
+privacyNotes:
+  - "NVIDIA workflows may touch NGC API keys, model provider keys, Docker credentials, inference routes, logs, traces, datasets, video, medical images, clinical speech, user prompts, vector stores, telemetry, and sandbox tokens."
+  - "NemoClaw/OpenClaw setup may involve provider API keys, web search keys, messaging bot tokens, authenticated dashboard URLs, local inference endpoints, and policy configuration."
+  - "RAG, vision, medical AI, and video search skills may process private documents, images, videos, DICOM metadata, transcripts, embeddings, summaries, and generated annotations."
+  - "Keep customer data, regulated datasets, NGC credentials, bot tokens, dashboard URLs, traces, model artifacts, and private deployment logs out of public prompts, issues, and pull requests."
+tags:
+  - nvidia
+  - skills
+  - ai-agents
+  - codex
+  - rag
+  - nemoclaw
+  - cuda
+  - physical-ai
+keywords:
+  - NVIDIA Agent Skills
+  - NVIDIA verified agent skills
+  - nvidia skills Codex
+  - nvidia skills Claude Code
+  - NemoClaw OpenClaw skills
+  - NVIDIA RAG Blueprint skill
+  - CUDA AI agent skills
+  - Physical AI agent skills
+  - signed agent skills
+readingTime: 8
+difficultyScore: 84
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# NVIDIA Agent Skills
+
+`NVIDIA/skills` is NVIDIA's official catalog of verified Agent Skills for AI
+coding agents. It teaches agents how to work with NVIDIA software and platform
+workflows across CUDA-X libraries, RAG Blueprint, NemoClaw and OpenClaw,
+NeMo, TAO, cuOpt, Omniverse, Physical AI, video search, simulation, robotics,
+vision AI, medical AI, and GPU-accelerated data science.
+
+This is not a generic prompt collection. The repository describes daily sync
+from product repositories, signed skill artifacts, skill cards, benchmark
+reports, evaluation datasets, security scanning, and marketplace syndication
+for Agent Skills-compatible clients.
+
+## Knowledge Freshness
+
+The repository is active and skills are mirrored from product teams into the
+catalog by an automated sync pipeline. NVIDIA notes that skills are added
+continuously. GPU software, CUDA libraries, RAG services, NIM models, NeMo
+recipes, TAO workflows, NemoClaw sandbox behavior, and deployment guidance can
+change quickly.
+
+Use the skills for product-specific workflow routing and source-backed
+guardrails, then verify commands, versions, driver requirements, model names,
+container images, and deployment assumptions against the current upstream
+product repository and your target environment.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The `NVIDIA/skills` repository README.
+- The `skills.sh.json` grouping metadata.
+- The Codex plugin manifest for `nvidia-skills`.
+- Representative `SKILL.md` files for NemoClaw/OpenClaw onboarding, RAG
+  Blueprint operations, and cuOpt Python optimization.
+- The repository license text.
+- Current GitHub repository metadata from the official NVIDIA organization.
+
+## Core Workflow
+
+List available NVIDIA skills:
+
+```bash
+npx skills add nvidia/skills --list
+```
+
+Install one skill for Codex:
+
+```bash
+npx skills add nvidia/skills --skill rag-blueprint --agent codex
+```
+
+Install NemoClaw/OpenClaw onboarding guidance for Claude Code:
+
+```bash
+npx skills add nvidia/skills --skill nemoclaw-user-get-started --agent claude-code
+```
+
+Install the NVIDIA plugin marketplace bundle for Codex:
+
+```bash
+codex plugin marketplace add NVIDIA/skills
+```
+
+## Capability Scope
+
+The catalog currently groups skills across these areas:
+
+| Group | Example scope |
+| --- | --- |
+| Agentic AI | AIQ, NeMo Retriever, NemoClaw, Nemotron policy generation, RAG Blueprint, RAG eval, skill card generation |
+| Physical AI | Omniverse, OpenUSD, CAD-to-simulation, video data augmentation, neural reconstruction, resilient infrastructure |
+| Vision AI | DeepStream, TAO Toolkit, video search and summarization, medical imaging, object detection, OCR, VLM workflows |
+| Conversational AI | Digital health ASR, clinical speech workflows, Nemotron Speech |
+| Simulation and Modeling | Earth2Studio and PhysicsNeMo workflows |
+| Data Science | cuDF, cuPyNumeric, accelerated analytics, parallel data loading |
+| Training AI | NeMo, Megatron-Core, DALI, TAO, Nemotron customization, large-scale distributed training |
+| Optimization | cuOpt routing, linear programming, MILP, QP, server APIs, and formulation guidance |
+| GPU Platform | CUDA-Q, Holoscan, Dynamo, Kubernetes, Docker, NIM, and GPU infrastructure workflows |
+
+The plugin manifest frames the bundle as guided help for NVIDIA AI, GPU,
+robotics, simulation, and 3D workflows. It also includes example prompts for
+CUDA-X research, physical-world video to 3D neural scene workflows, and secure
+OpenClaw deployment.
+
+## Production Rules
+
+Treat these skills as high-powered operational guidance:
+
+- Start with a narrow product skill instead of applying broad NVIDIA advice to
+  every GPU problem.
+- Verify hardware, driver, CUDA, container, Kubernetes, and API-key
+  prerequisites before running deployment or training commands.
+- For NemoClaw/OpenClaw, review installer behavior, Docker access, inference
+  provider registration, web search, messaging tokens, network policy tiers,
+  dashboard URLs, and sandbox rollback behavior before accepting prompts.
+- For RAG Blueprint work, detect the active deployment mode before changing
+  Docker Compose, Helm, vector database, NIM, guardrails, observability, or
+  ingestion configuration.
+- For GPU training and inference, estimate compute cost, data movement, model
+  artifacts, and rollback path before launching long-running jobs.
+- For signed skills, verify detached OMS signatures against the NVIDIA trust
+  anchor when supply-chain integrity matters.
+- Keep generated data, medical artifacts, videos, embeddings, model weights,
+  logs, and deployment output out of public prompts unless explicitly approved.
+
+## Use Cases
+
+- Ask Codex to deploy or troubleshoot NVIDIA RAG Blueprint using the right
+  Docker, Helm, NIM, vector database, and observability paths.
+- Use Claude Code to install NemoClaw, configure an OpenClaw sandbox, and
+  review security policy choices before running the first agent prompt.
+- Ask Cursor to model and solve an LP, MILP, or QP with the cuOpt Python API.
+- Use an agent to route Physical AI or Omniverse workflows from CAD to
+  simulation-ready assets.
+- Give an AI assistant source-backed NVIDIA guidance for TAO, DeepStream,
+  NeMo, Megatron-Core, video search, CUDA-Q, Holoscan, Dynamo, or cuDF work.
+
+## Source Review
+
+- The README describes `NVIDIA Agent Skills` as official, NVIDIA-verified
+  skills for AI agents.
+- The README states that the catalog teaches agents how to use NVIDIA software
+  including CUDA-X libraries, AI Blueprints, and platform tools.
+- The catalog documents install flows for the skills CLI, Claude Code, Codex,
+  Cursor, and Kiro CLI.
+- The README states that every published skill ships with `SKILL.md`,
+  `skill-card.md`, `skill.oms.sig`, a Tier-3 evaluation dataset, and
+  `BENCHMARK.md`.
+- The Codex plugin manifest describes guided help for NVIDIA AI, GPU, robotics,
+  simulation, and 3D workflows, with `Interactive` and `Write` capabilities.
+- The NemoClaw quickstart skill covers installing NemoClaw, launching a
+  sandbox, registering inference, applying policies, and running OpenClaw.
+- The RAG Blueprint skill covers deployment, configuration, troubleshooting,
+  shutdown, Docker/Compose, Kubernetes/Helm, MCP configuration, observability,
+  guardrails, ingestion, and model infrastructure.
+- The license file identifies the repository as Apache-2.0 for code and
+  configuration plus CC-BY-4.0 for documentation.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`, open pull
+requests, and repository-wide content for `NVIDIA Agent Skills`,
+`NVIDIA/skills`, `nvidia-skills`, `NemoClaw`, `OpenClaw`, `rag-blueprint`,
+`cuopt-numerical-optimization-api-python`, and related NVIDIA skill phrases. No
+dedicated NVIDIA Agent Skills entry, exact source URL duplicate, target file, or
+open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The upstream
+repository is published by the official NVIDIA GitHub organization. Its license
+states Apache-2.0 for code and configuration plus CC-BY-4.0 for documentation.

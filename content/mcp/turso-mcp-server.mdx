@@ -1,0 +1,163 @@
+---
+title: Turso MCP Server for Claude
+slug: turso-mcp-server
+category: mcp
+description: >-
+  Connect Claude to a local or in-memory Turso/libSQL database — query, insert, update, delete,
+  and manage schemas with nine dedicated tools — using the official MCP server built into the
+  Turso CLI with the `--mcp` flag.
+cardDescription: "Official Turso MCP: query, modify, and schema-manage libSQL databases from Claude."
+seoTitle: "Turso MCP Server for Claude — libSQL Database Queries & Schema Management"
+seoDescription: "Connect Claude to Turso/libSQL with the official built-in MCP server: run SELECT queries, insert and update data, modify schemas, and explore database structure — using the tursodb --mcp flag."
+author: Turso
+authorProfileUrl: "https://github.com/tursodatabase"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.turso.tech/agentfs/guides/mcp"
+websiteUrl: "https://turso.tech"
+repoUrl: "https://github.com/tursodatabase/turso"
+retrievalSources:
+  - "https://github.com/tursodatabase/turso"
+  - "https://docs.turso.tech/agentfs/guides/mcp"
+  - "https://turso.tech/blog/introducing-the-turso-database-mcp-server"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add my-database -- tursodb ./path/to/database.db --mcp"
+usageSnippet: >-
+  Ask Claude to query your Turso database, insert new records, describe a table schema, or modify data using natural language.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "my-database": {
+        "command": "tursodb",
+        "args": ["./path/to/database.db", "--mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "my-database": {
+        "command": "tursodb",
+        "args": ["./path/to/database.db", "--mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Turso CLI installed: `brew install tursodatabase/tap/turso` or from turso.tech/docs/cli/installation."
+  - "A Turso/libSQL database file, or use `tursodb --mcp` for an ephemeral in-memory database."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The MCP server exposes full read and write access to the connected database — Claude can INSERT, UPDATE, DELETE, and ALTER TABLE."
+  - "Test with a development or in-memory database before connecting to a database with production data."
+  - "The `schema_change` tool (CREATE, ALTER, DROP) is available — review schema-modifying operations before executing."
+privacyNotes:
+  - "All table contents, row data, and schema definitions are surfaced in Claude's context when queries are run."
+  - "Treat database files as sensitive if they contain personal or confidential data."
+tags:
+  - turso
+  - libsql
+  - sqlite
+  - database
+  - sql
+  - embedded-db
+keywords:
+  - turso mcp server
+  - turso mcp claude
+  - libsql mcp claude code
+  - sqlite mcp claude
+  - turso database ai
+  - embedded database mcp server claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Turso MCP Server** is the official Model Context Protocol integration built into the Turso
+CLI. Running `tursodb <database.db> --mcp` starts a local stdio MCP server that gives Claude nine
+tools for working with any Turso/libSQL (SQLite-compatible) database — queries, inserts, updates,
+deletes, and schema management — all through natural language.
+
+For quick prototyping without a file, `tursodb --mcp` creates an ephemeral in-memory database.
+
+## Key capabilities
+
+Nine tools are exposed:
+
+- **`open_database`** — open a different database file.
+- **`current_database`** — describe the currently connected database.
+- **`list_tables`** — list all tables in the database.
+- **`describe_table`** — get the schema of a specific table.
+- **`execute_query`** — run a read-only `SELECT` query.
+- **`insert_data`** — insert new rows into a table.
+- **`update_data`** — update existing rows.
+- **`delete_data`** — delete rows from a table.
+- **`schema_change`** — execute `CREATE`, `ALTER`, or `DROP` DDL statements.
+
+## How it compares
+
+| Server | Local SQLite/libSQL | In-memory option | Full CRUD | Schema changes | Transport |
+|---|---|---|---|---|---|
+| **Turso MCP** | Yes (libSQL) | Yes | Yes | Yes | stdio |
+| SQLite MCP (generic) | Yes | No | Yes | Yes | stdio |
+| MotherDuck MCP | No (DuckDB/cloud) | No | Yes | Yes | stdio |
+| PlanetScale MCP | No (MySQL/cloud) | No | Limited | No | Remote HTTP |
+
+Turso's MCP is unique in being the only official libSQL/SQLite-compatible MCP server with
+in-memory database support — ideal for rapid prototyping and testing AI-driven database workflows.
+
+## Installation
+
+### Claude Code
+
+```bash
+# Connect to a database file
+claude mcp add my-database -- tursodb ./my-app.db --mcp
+
+# Or use an in-memory database
+claude mcp add in-memory-db -- tursodb --mcp
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "my-database": {
+      "command": "tursodb",
+      "args": ["./path/to/database.db", "--mcp"]
+    }
+  }
+}
+```
+
+### Multiple databases
+
+Add multiple MCP entries with different names and database paths to switch between databases.
+
+## Requirements
+
+- Turso CLI (install via `brew install tursodatabase/tap/turso` or from turso.tech).
+- A Turso/libSQL database file (or use in-memory mode).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Provide only the minimum database access Claude needs; use a read-only database copy if
+  write operations are not required.
+- In-memory databases are ephemeral — they do not persist after the MCP server exits.
+- Never connect the MCP server to a database containing production credentials or sensitive PII
+  without appropriate access controls.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- The official Turso repository `github.com/tursodatabase/turso` is the authoritative source for
+  the `tursodb --mcp` command and the built-in MCP server.
+- Turso's MCP documentation at `docs.turso.tech/agentfs/guides/mcp` documents the Claude Code
+  installation command, in-memory database option, and the nine tool categories.
+- Turso's blog announcement describes the `--mcp` flag behavior and Claude integration pattern.
+- Claude Code's MCP documentation describes the `--` separator pattern used above.

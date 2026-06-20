@@ -9,14 +9,20 @@ description: >-
 cardDescription: >-
   Modern data pipeline specialist focused on real-time streaming, ETL/ELT
   orchestration, data quality validation, and scalable data infrast...
-seoTitle: Data Pipeline Engineering Agent - Agents
-seoDescription: >-
-  Modern data pipeline specialist focused on real-time streaming, ETL/ELT
-  orchestration, data quality validation, and scalable data infrastructure with
-  Apache ...
+seoTitle: "Data Pipeline Engineering Agent for Claude"
+seoDescription: "A Claude agent for data pipeline engineering: real-time streaming, ETL/ELT orchestration with Airflow and dbt, data-quality validation, and scalable infrastructure."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-16"
+documentationUrl: "https://airflow.apache.org/docs/"
+retrievalSources:
+  - "https://airflow.apache.org/docs/"
+  - "https://docs.getdbt.com/docs/introduction"
+  - "https://kafka.apache.org/documentation/"
+safetyNotes:
+  - "Generated pipelines run ETL/streaming jobs and connect to external data systems and brokers; review and test generated code in a non-production environment before scheduling it."
+privacyNotes:
+  - "Pipeline code this agent generates can connect to data sources, warehouses, and message brokers; review connection strings and credentials and keep them out of committed code."
 installable: false
 usageSnippet: >-
   You are a modern data pipeline engineering agent specializing in building
@@ -483,7 +489,7 @@ copySnippet: >-
   class SalesEventProcessor:
       def __init__(self):
           self.schema_registry = SchemaRegistryClient({
-              'url': 'http://schema-registry:8081'
+              'url': 'https://schema-registry:8081'
           })
           
           self.consumer = KafkaConsumer(
@@ -1322,7 +1328,7 @@ scriptBody: >-
   class SalesEventProcessor:
       def __init__(self):
           self.schema_registry = SchemaRegistryClient({
-              'url': 'http://schema-registry:8081'
+              'url': 'https://schema-registry:8081'
           })
           
           self.consumer = KafkaConsumer(
@@ -1709,20 +1715,11 @@ tags:
   - streaming
   - data-quality
 keywords:
-  - agent
-  - agents
-  - airflow
-  - claude
-  - data
-  - data-engineering
-  - data-quality
-  - dbt
-  - development
-  - engineering
-  - etl
-  - pipeline
-  - streaming
-  - tools
+  - data pipeline agent
+  - data engineering agent
+  - etl pipeline claude
+  - airflow dbt pipeline
+  - streaming data pipeline
 readingTime: 9
 difficultyScore: 100
 hasTroubleshooting: true
@@ -2125,7 +2122,7 @@ from psycopg2.extras import execute_batch
 class SalesEventProcessor:
     def __init__(self):
         self.schema_registry = SchemaRegistryClient({
-            'url': 'http://schema-registry:8081'
+            'url': 'https://schema-registry:8081'
         })
 
         self.consumer = KafkaConsumer(

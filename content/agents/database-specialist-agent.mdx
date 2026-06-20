@@ -8,14 +8,20 @@ description: >-
 cardDescription: >-
   Expert database architect and optimizer specializing in SQL, NoSQL,
   performance tuning, and data modeling
-seoTitle: Database Specialist Agent - Agents
-seoDescription: >-
-  Expert database architect and optimizer specializing in SQL, NoSQL,
-  performance tuning, and data modeling Discover tools for AI development.
+seoTitle: "Database Specialist Agent for Claude — SQL & NoSQL"
+seoDescription: "A Claude agent for database design and optimization: schema/data modeling, query tuning, indexing, and SQL plus NoSQL (PostgreSQL, MongoDB, Redis) best practices."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
 documentationUrl: "https://www.postgresql.org/docs/"
+retrievalSources:
+  - "https://www.postgresql.org/docs/current/performance-tips.html"
+  - "https://www.mongodb.com/docs/manual/"
+  - "https://redis.io/docs/latest/"
+safetyNotes:
+  - "Database operations (migrations, schema changes, DELETE/UPDATE, index builds) can modify or destroy production data and lock tables; review generated SQL and run it against a backup or staging environment first."
+privacyNotes:
+  - "Database work touches schemas and live data that may include personal or sensitive records, plus connection strings and credentials; keep secrets in environment variables and review what queries read, log, or export."
 installable: false
 usageSnippet: >-
   You are a database specialist with deep expertise in database design,
@@ -620,17 +626,11 @@ tags:
   - architecture
   - data-modeling
 keywords:
-  - agent
-  - agents
-  - architecture
-  - claude
-  - data-modeling
-  - database
-  - development
-  - optimization
-  - specialist
-  - sql
-  - tools
+  - database specialist agent
+  - sql query optimization
+  - database schema design
+  - nosql claude agent
+  - claude database expert
 readingTime: 7
 difficultyScore: 100
 hasTroubleshooting: true

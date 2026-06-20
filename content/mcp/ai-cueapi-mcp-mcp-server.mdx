@@ -1,0 +1,216 @@
+---
+title: CueAPI MCP Server for Claude
+slug: ai-cueapi-mcp-mcp-server
+category: mcp
+description: >-
+  Official CueAPI stdio MCP server for scheduling agent work, claiming executions,
+  and reporting evidence-backed outcomes with verified handoffs across time and
+  environments.
+cardDescription: >-
+  Connect Claude to CueAPI to create cues, list executions, claim worker jobs,
+  and report outcomes with evidence through the @cueapi/mcp stdio server.
+seoTitle: CueAPI MCP Server for Claude
+seoDescription: >-
+  Use the CueAPI MCP server with Claude to schedule recurring cues, claim
+  executions, send heartbeats, and report verified outcomes via @cueapi/mcp.
+author: CueAPI
+authorProfileUrl: "https://github.com/cueapi"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1498
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1498"
+repoUrl: "https://github.com/cueapi/cueapi-mcp"
+documentationUrl: "https://docs.cueapi.ai"
+websiteUrl: "https://cueapi.ai"
+installable: true
+installCommand: >-
+  claude mcp add cueapi --env CUEAPI_API_KEY=cue_sk_YOUR_KEY -- npx -y @cueapi/mcp
+usageSnippet: >-
+  Generate a cue_sk_* API key at cueapi.ai, then run npx -y @cueapi/mcp with
+  CUEAPI_API_KEY set in the MCP client environment.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "cueapi": {
+        "command": "npx",
+        "args": ["-y", "@cueapi/mcp"],
+        "env": {
+          "CUEAPI_API_KEY": "cue_sk_YOUR_KEY"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "cueapi": {
+        "command": "npx",
+        "args": ["-y", "@cueapi/mcp"],
+        "env": {
+          "CUEAPI_API_KEY": "cue_sk_YOUR_KEY",
+          "CUEAPI_BASE_URL": "https://api.cueapi.ai"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "CueAPI account and API key prefixed with cue_sk_ from https://cueapi.ai."
+  - "Node.js 18+ with npx available for @cueapi/mcp."
+  - "Claude Desktop, Claude Code, Cursor, Zed, or another MCP host with stdio support."
+  - "Optional CUEAPI_BASE_URL when self-hosting CueAPI core instead of the hosted API."
+safetyNotes:
+  - "cueapi_delete_cue and cueapi_fire_cue are destructive or side-effecting; confirm targets before approval."
+  - "Worker claim tools mutate execution state; misconfigured heartbeats can lose leases on in-flight jobs."
+  - "Webhook payloads from fired cues may trigger external systems; validate callback URLs."
+  - "API keys prefixed cue_sk_* grant account-level scheduling and execution access."
+privacyNotes:
+  - "Execution history, callback URLs, and outcome evidence may include internal system identifiers."
+  - "Store CUEAPI_API_KEY in MCP env vars, not in chat, issues, or committed config files."
+  - "Self-hosted deployments keep data within your infrastructure per your CueAPI core configuration."
+tags:
+  - agents
+  - scheduling
+  - orchestration
+  - handoffs
+  - stdio
+keywords:
+  - cueapi mcp
+  - agent scheduling claude
+  - cueapi_create_cue
+  - execution heartbeat mcp
+  - cueapi/mcp npm
+readingTime: 4
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+CueAPI is an open coordination layer for multi-step agent work. The official [cueapi/cueapi-mcp](https://github.com/cueapi/cueapi-mcp) package exposes CueAPI as a stdio Model Context Protocol server so hosts like Claude Desktop, Cursor, and Zed can schedule cues, inspect executions, claim worker jobs, and report evidence-backed outcomes from chat.
+
+CueAPI closes handoffs with structured proof—external IDs, result URLs, or artifacts—so silent failures are easier to detect across long-running workflows.
+
+## Features
+
+- Create recurring cron cues or one-time `at` schedules.
+- List, pause, resume, update, fire, and delete cues.
+- List and fetch execution history with state and outcomes.
+- Claim executions individually or claim-next with optional task filters.
+- Send execution heartbeats to extend worker leases.
+- Report write-once outcomes with verifiable evidence.
+
+## Use Cases
+
+- Schedule a daily digest webhook without maintaining a separate cron service.
+- Claim the next available worker execution from an MCP-hosted agent session.
+- Fire an ad-hoc cue with a payload override for a one-shot integration test.
+- Inspect the last five runs of a production cue before changing its schedule.
+- Report an outcome URL after an external job completes.
+
+## Installation
+
+### npm global install
+
+```bash
+npm install -g @cueapi/mcp
+```
+
+### Claude Desktop
+
+Add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "cueapi": {
+      "command": "npx",
+      "args": ["-y", "@cueapi/mcp"],
+      "env": {
+        "CUEAPI_API_KEY": "cue_sk_..."
+      }
+    }
+  }
+}
+```
+
+### Claude Code
+
+```bash
+claude mcp add cueapi --env CUEAPI_API_KEY=cue_sk_YOUR_KEY -- npx -y @cueapi/mcp
+```
+
+Restart the host after updating MCP configuration.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "cueapi": {
+      "command": "npx",
+      "args": ["-y", "@cueapi/mcp"],
+      "env": {
+        "CUEAPI_API_KEY": "cue_sk_YOUR_KEY",
+        "CUEAPI_BASE_URL": "https://api.cueapi.ai"
+      },
+      "type": "stdio"
+    }
+  }
+}
+```
+
+Set `CUEAPI_BASE_URL` only when pointing at a self-hosted CueAPI core deployment.
+
+## Examples
+
+### Schedule a daily cue
+
+```text
+Create a CueAPI cron cue that fires every weekday at 09:00 UTC and posts to my webhook.
+```
+
+### Inspect executions
+
+```text
+List the last five executions for cue_abc123 and summarize failures.
+```
+
+### Claim and report
+
+```text
+Claim the next available execution for task_name=data-sync, process it, then report the outcome URL.
+```
+
+## Security
+
+- Treat `cue_sk_*` keys like production credentials; rotate them if exposed.
+- Confirm callback URLs before firing cues that dispatch to external webhooks.
+- Use heartbeats during long-running claims so another worker cannot steal the lease unexpectedly.
+
+## Troubleshooting
+
+### Invalid API key
+
+Generate a fresh `cue_sk_*` key at [cueapi.ai](https://cueapi.ai) and update the MCP env block.
+
+### 404 on pause or resume older docs
+
+Current tools use `PATCH /v1/cues/{id}` with status `paused` or `active`; upgrade `@cueapi/mcp` if you run an old release.
+
+### Claim starvation
+
+Prefer `cueapi_list_claimable_executions` with server-side `task` or `agent` filters instead of client-side filtering.
+
+### Self-hosted connection errors
+
+Set `CUEAPI_BASE_URL` to your core API origin and verify TLS or VPN reachability from the MCP host.

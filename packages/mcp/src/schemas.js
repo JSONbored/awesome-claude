@@ -115,6 +115,32 @@ export const PlanWorkflowToolboxInputSchema = z
   })
   .strict();
 
+export const RecommendForTaskInputSchema = z
+  .object({
+    task: z
+      .string()
+      .trim()
+      .min(2)
+      .max(240)
+      .describe(
+        "Plain-language description of what you want to accomplish, e.g. 'review pull requests in Claude Code' or 'connect to a Postgres database'.",
+      ),
+    category: pathPart
+      .optional()
+      .describe("Restrict recommendations to a single category."),
+    platform: platform
+      .optional()
+      .describe("Restrict to entries compatible with this platform."),
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(5)
+      .optional()
+      .describe("Maximum recommendations to return (default 3)."),
+  })
+  .strict();
+
 export const ServerInfoInputSchema = z.object({}).strict();
 
 export const ListCategoryEntriesInputSchema = z
@@ -148,6 +174,12 @@ export const EntryDetailInputSchema = z
   .object({
     category: pathPart,
     slug: pathPart,
+    bodyMode: z
+      .enum(["none", "excerpt", "full"])
+      .describe(
+        "How much entry content to return. 'excerpt' (default) trims the body markdown to a short lead and omits large copyable fields (scriptBody, fullCopyableContent, copySnippet), reporting what was dropped via bodyChars/bodyTruncated/omittedFields; 'none' also drops the body; 'full' returns everything. Use get_copyable_asset for omitted install/script content, and request 'full' only when you truly need the complete inline content — it can be tens of kilobytes.",
+      )
+      .optional(),
   })
   .strict();
 
@@ -156,6 +188,20 @@ export const CopyableAssetInputSchema = z
     category: pathPart,
     slug: pathPart,
     platform: platform.optional(),
+    assetType: z
+      .enum([
+        "full_content",
+        "install_command",
+        "config_snippet",
+        "script",
+        "command_syntax",
+        "usage",
+        "items",
+      ])
+      .optional()
+      .describe(
+        "Return only this asset type instead of every asset. Use it to avoid paying for the full_content or script payload (up to tens of KB) when you only need, e.g., the install_command or config_snippet.",
+      ),
   })
   .strict();
 
@@ -228,6 +274,11 @@ export const SearchDuplicateEntriesInputSchema = z
     name: z.string().trim().min(1).max(240).optional(),
     title: z.string().trim().min(1).max(240).optional(),
     sourceUrl: z.string().trim().min(1).max(500).optional(),
+    sourceUrls: z.array(z.string().trim().min(1).max(500)).max(10).optional(),
+    githubUrl: z.string().trim().min(1).max(500).optional(),
+    docsUrl: z.string().trim().min(1).max(500).optional(),
+    downloadUrl: z.string().trim().min(1).max(500).optional(),
+    websiteUrl: z.string().trim().min(1).max(500).optional(),
     brandDomain: z.string().trim().min(1).max(255).optional(),
     limit: z.number().int().min(1).max(10).optional(),
   })
@@ -294,6 +345,7 @@ export const ReviewEntrySafetyInputSchema = z
 export const TOOL_INPUT_SCHEMAS = {
   search_registry: SearchRegistryInputSchema,
   plan_workflow_toolbox: PlanWorkflowToolboxInputSchema,
+  recommend_for_task: RecommendForTaskInputSchema,
   server_info: ServerInfoInputSchema,
   list_category_entries: ListCategoryEntriesInputSchema,
   get_recent_updates: RecentUpdatesInputSchema,

@@ -1,0 +1,191 @@
+---
+title: Linux MCP Server for Claude
+slug: linux-mcp-server
+category: mcp
+description: >-
+  Run Linux system diagnostics from Claude — inspect CPU, memory, disk, network, services,
+  processes, and journal logs — with the official Linux MCP Server from Red Hat's RHEL
+  Lightspeed team, supporting both local and remote SSH-connected hosts.
+cardDescription: "Red Hat's Linux MCP: system diagnostics for CPU, memory, services, logs & processes from Claude."
+seoTitle: "Linux MCP Server for Claude — System Diagnostics, Services & Journal Logs"
+seoDescription: "Connect Claude to any Linux host with the RHEL Lightspeed MCP server: inspect CPU, memory, disk, network connections, systemd services, journal logs, and running processes — Apache-2.0 licensed, no required env vars for local use."
+author: Red Hat RHEL Lightspeed
+authorProfileUrl: "https://github.com/rhel-lightspeed"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/rhel-lightspeed/linux-mcp-server/main/README.md"
+websiteUrl: "https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux"
+repoUrl: "https://github.com/rhel-lightspeed/linux-mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/rhel-lightspeed/linux-mcp-server/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add linux -- uvx linux-mcp-server"
+usageSnippet: >-
+  Ask Claude to check system CPU load and memory usage, list all failed systemd services,
+  retrieve recent journal logs for a specific service, show running processes sorted by CPU,
+  or inspect active network connections — using natural language against any Linux host.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "linux": {
+        "command": "uvx",
+        "args": ["linux-mcp-server"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "linux": {
+        "command": "uvx",
+        "args": ["linux-mcp-server"],
+        "env": {
+          "LINUX_MCP_TOOLSET": "fixed",
+          "LINUX_MCP_COMMAND_TIMEOUT": "30"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Linux system running locally or accessible via SSH."
+  - "Python with `uvx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The default `fixed` toolset is read-only — no changes are made to the system; only diagnostic information is retrieved."
+  - "Set `LINUX_MCP_TOOLSET=run_script` to enable script execution — this allows arbitrary command execution on the host; only enable in trusted environments."
+  - "For remote hosts, `LINUX_MCP_SSH_KEY_PATH` is used for key-based SSH authentication — ensure the key is protected with appropriate permissions."
+privacyNotes:
+  - "System information including hostname, OS release, CPU model, active network connections, service names, process names, and journal log content are surfaced in Claude's context."
+  - "Journal logs may contain sensitive application data — scope `LINUX_MCP_ALLOWED_LOG_PATHS` to limit which logs are readable."
+tags:
+  - linux
+  - devops
+  - sysadmin
+  - rhel
+  - systemd
+  - diagnostics
+  - monitoring
+keywords:
+  - linux mcp server
+  - linux mcp claude
+  - system diagnostics mcp claude code
+  - rhel lightspeed mcp
+  - linux sysadmin ai claude
+  - systemd services mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Linux MCP Server** is the official Model Context Protocol server from Red Hat's RHEL
+Lightspeed team, giving Claude read-only access to Linux system diagnostics. It covers system
+information, CPU, memory, disk usage, network connections, systemd services, journal logs, and
+running processes — for both local and SSH-connected remote hosts. Licensed under Apache-2.0.
+
+The default `fixed` toolset is strictly read-only. An optional `run_script` toolset enables
+arbitrary command execution when needed for advanced diagnostics.
+
+## Key capabilities
+
+- **System info** — hostname, OS release, kernel version, uptime.
+- **CPU & memory** — CPU model, core count, load averages, memory usage.
+- **Disk** — filesystem mount point usage and capacity.
+- **Services** — list all systemd units, get status of specific services.
+- **Journal logs** — retrieve recent logs filtered by service or unit.
+- **Processes** — list running processes sorted by CPU or memory.
+- **Network** — active network connections and listening ports.
+- **Remote hosts** — SSH key-based connections for remote system diagnostics.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `system_info` | Hostname, OS release, kernel, uptime |
+| `cpu_info` | CPU model, core count, load averages |
+| `memory_info` | Memory usage via `free` |
+| `disk_usage` | Filesystem mount point usage |
+| `list_services` | All systemctl service units |
+| `service_status` | Status of a specific service |
+| `service_logs` | Recent journal logs for a service |
+| `journal_logs` | Filtered systemd journal queries |
+| `list_processes` | Running processes sorted by CPU |
+| `network_connections` | Active network connections |
+
+## Configuration options
+
+| Env var | Default | Purpose |
+|---|---|---|
+| `LINUX_MCP_TOOLSET` | `fixed` | `fixed` (read-only), `run_script`, or `both` |
+| `LINUX_MCP_SSH_KEY_PATH` | — | SSH private key for remote hosts |
+| `LINUX_MCP_KEY_PASSPHRASE` | — | SSH key passphrase |
+| `LINUX_MCP_ALLOWED_LOG_PATHS` | — | Comma-separated allowed log file paths |
+| `LINUX_MCP_COMMAND_TIMEOUT` | `30` | Command timeout in seconds |
+| `LINUX_MCP_TRANSPORT` | `stdio` | `stdio`, `http`, or `streamable-http` |
+
+## How it compares
+
+| Server | Read-only mode | Remote SSH | systemd | Journal logs | Notes |
+|---|---|---|---|---|---|
+| **Linux MCP** | Yes (default) | Yes | Yes | Yes | Official, RHEL-backed |
+| Desktop Commander | No | No | No | No | Full shell access |
+| CLI MCP Server | No | No | No | No | General command runner |
+
+Linux MCP is the only system diagnostics MCP with a read-only default mode, SSH remote support,
+and native systemd/journal integration from an enterprise Linux vendor.
+
+## Installation
+
+### Claude Code (local)
+
+```bash
+claude mcp add linux -- uvx linux-mcp-server
+```
+
+### Claude Code (remote SSH host)
+
+```bash
+claude mcp add linux \
+  -e LINUX_MCP_SSH_KEY_PATH=/path/to/private-key \
+  -- uvx linux-mcp-server
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "linux": {
+      "command": "uvx",
+      "args": ["linux-mcp-server"]
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Linux system (local or remote via SSH).
+- Python with `uvx` (from `uv`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- The default `fixed` toolset is read-only — no system modifications are possible.
+- Only enable `run_script` toolset if you need arbitrary command execution and trust the
+  Claude session completely.
+- Restrict readable log paths with `LINUX_MCP_ALLOWED_LOG_PATHS` in production environments.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official repository `rhel-lightspeed/linux-mcp-server` (Apache-2.0) on PyPI as
+  `linux-mcp-server` documents the `uvx` install, all diagnostic tools (system_info, cpu_info,
+  memory_info, disk_usage, list_services, service_status, service_logs, journal_logs,
+  list_processes, network_connections), the `fixed`/`run_script`/`both` toolset modes, SSH
+  remote configuration, and optional env vars.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

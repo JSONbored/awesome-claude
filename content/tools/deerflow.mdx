@@ -1,0 +1,201 @@
+---
+title: DeerFlow
+slug: deerflow
+category: tools
+description: >-
+  ByteDance long-horizon super-agent harness for research, coding, creation,
+  subagents, skills, memory, sandboxes, MCP server support, messaging channels,
+  LangGraph workflows, and Docker or local development.
+cardDescription: >-
+  Run a ByteDance super-agent harness with skills, memory, subagents,
+  sandboxes, MCP server support, messaging channels, and LangGraph workflows.
+seoTitle: DeerFlow Super-Agent Harness for Skills, Memory, Sandboxes, MCP, and Subagents
+seoDescription: >-
+  Use DeerFlow by ByteDance for long-horizon agent workflows with skills,
+  memory, subagents, sandbox execution, MCP server support, messaging channels,
+  LangGraph, Docker deployment, and Claude Code or Codex provider routes.
+author: ByteDance
+authorProfileUrl: "https://github.com/bytedance"
+dateAdded: "2026-06-18"
+websiteUrl: "https://deerflow.tech"
+documentationUrl: "https://github.com/bytedance/deer-flow"
+repoUrl: "https://github.com/bytedance/deer-flow"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/bytedance/deer-flow"
+  - "https://raw.githubusercontent.com/bytedance/deer-flow/main/README.md"
+  - "https://raw.githubusercontent.com/bytedance/deer-flow/main/Install.md"
+  - "https://raw.githubusercontent.com/bytedance/deer-flow/main/Makefile"
+  - "https://raw.githubusercontent.com/bytedance/deer-flow/main/backend/pyproject.toml"
+  - "https://raw.githubusercontent.com/bytedance/deer-flow/main/frontend/package.json"
+  - "https://raw.githubusercontent.com/bytedance/deer-flow/main/LICENSE"
+installable: true
+installCommand: "git clone https://github.com/bytedance/deer-flow.git && cd deer-flow && make setup"
+usageSnippet: >-
+  Clone DeerFlow, run the setup wizard, configure at least one reviewed model
+  provider, choose Docker or local development, review sandbox and file-write
+  settings, then start the app only after required credentials are scoped.
+copySnippet: |-
+  git clone https://github.com/bytedance/deer-flow.git
+  cd deer-flow
+  make setup
+estimatedSetupTime: 45 minutes
+difficulty: advanced
+prerequisites:
+  - "Python 3.12 or newer and Node.js 22 or newer for the documented development paths."
+  - "Docker if using the recommended Docker development or production paths."
+  - "uv, pnpm, Make, and platform shell support for the repository commands."
+  - "At least one model provider configured in `config.yaml`, with non-production API keys or CLI auth while evaluating."
+  - "A policy for sandbox mode, bash access, file-write tools, web search, MCP server exposure, messaging channels, and persistent runtime data before shared use."
+safetyNotes:
+  - "DeerFlow orchestrates subagents, skills, memory, sandboxes, file-system access, bash access, MCP server support, messaging integrations, and model-provider calls; review each enabled capability before using real projects."
+  - "The setup wizard can write model keys to `.env` and generate `config.yaml`; keep secret-bearing files out of commits, screenshots, prompts, and support issues."
+  - "Sandbox and file-write settings determine whether agents can execute code, write files, run bash commands, or use containerized environments. Keep destructive and write-capable tools disabled until reviewed."
+  - "MCP server and messaging channel modes can expose agent workflows to other clients or chat systems; bind endpoints carefully and restrict users, tokens, and allowed tools."
+  - "Production Docker mode starts long-running services; size the host, persistence, network exposure, logs, and backup strategy before sharing it with a team."
+privacyNotes:
+  - "Prompts, research queries, source files, generated reports, memory entries, skills, sandbox artifacts, model responses, web search results, MCP payloads, chat messages, logs, and config files may contain sensitive data."
+  - "Configured model providers, web search providers, messaging platforms, MCP clients, sandbox services, and observability integrations may receive task data depending on enabled features."
+  - "Claude Code and Codex CLI provider routes may read local auth files or OAuth tokens according to configuration; do not expose those files to the app unless that path is intended."
+  - "Define retention, deletion, workspace separation, and export policies before using DeerFlow with customer data, private repositories, regulated documents, or production credentials."
+tags:
+  - deerflow
+  - bytedance
+  - ai-agents
+  - super-agent
+  - langgraph
+  - skills
+  - memory
+  - mcp
+  - sandboxes
+  - subagents
+keywords:
+  - DeerFlow
+  - ByteDance DeerFlow
+  - deer-flow
+  - DeerFlow MCP
+  - DeerFlow skills
+  - DeerFlow memory
+  - super agent harness
+  - long horizon AI agent
+  - LangGraph super agent
+  - Claude Code Codex agent harness
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+DeerFlow is a ByteDance open-source super-agent harness for long-horizon agent
+workflows. It combines subagents, memory, skills, sandboxes, tools, messaging
+channels, MCP server support, and LangGraph-based backend components for tasks
+that can take minutes or hours across research, coding, and content creation.
+
+This is useful for searches around DeerFlow, ByteDance DeerFlow, deer-flow,
+DeerFlow MCP, DeerFlow skills, DeerFlow memory, super agent harness, long-horizon
+AI agent, LangGraph super agent, Claude Code provider, and Codex provider.
+
+## Install
+
+The repository documents a setup wizard from the project root:
+
+```bash
+git clone https://github.com/bytedance/deer-flow.git
+cd deer-flow
+make setup
+```
+
+The setup flow asks for model, web search, and execution preferences and can
+prepare `config.yaml` and `.env`. For Docker evaluation, the agent-oriented
+install guide recommends preparing Docker prerequisites first and starting
+services separately. Do not assume the app is running until the launch command
+has been executed and reviewed.
+
+## Core Capabilities
+
+| Area | DeerFlow Coverage |
+| --- | --- |
+| Agent Harness | Long-horizon super-agent workflow for research, coding, and creation |
+| Subagents | Isolated subagents for decomposed workstreams |
+| Skills | Extensible skills that agents can use during workflows |
+| Memory | Long-term memory and persistent runtime state for repeated work |
+| Sandboxes | Docker and sandbox execution modes for safer task isolation |
+| MCP | MCP server support documented as an advanced path |
+| Messaging | IM channels and messaging integrations for agent interaction |
+| Models | Hosted model APIs, OpenAI-compatible routes, Claude Code OAuth, Codex CLI, OpenRouter, vLLM, and other configured providers |
+| Deployment | Docker development, production Docker, and local development paths |
+| Frontend | Next.js frontend with dashboard-oriented dependencies and pnpm workspace tooling |
+
+## MCP and Agent Fit
+
+DeerFlow belongs in an MCP and agent directory because it is not just another
+chat UI. It is an agent harness that can coordinate subagents, invoke tools,
+persist memory, run inside sandboxes, expose MCP server behavior, and route work
+through coding-agent credentials such as Claude Code or Codex CLI when
+configured.
+
+The important boundary is configuration. Model providers, bash access,
+file-write tools, sandbox mode, messaging channels, and MCP server exposure
+should all be reviewed before a DeerFlow deployment touches a private codebase
+or shared team account.
+
+## Use Cases
+
+- Run long-horizon research or report-generation workflows.
+- Coordinate coding and creation tasks with subagents and skills.
+- Evaluate a LangGraph-backed super-agent harness.
+- Route models through hosted APIs, OpenAI-compatible gateways, Codex CLI, or
+  Claude Code OAuth.
+- Use Docker-backed development or production services for a persistent agent
+  workspace.
+- Experiment with MCP server integration around a larger agent runtime.
+- Compare DeerFlow with OpenHands, Hermes Agent, MetaGPT, CAMEL-AI, Qwen-Agent,
+  AG2, CrewAI, LangGraph, and mcp-agent.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `bytedance/deer-flow` as an MIT-licensed ByteDance repository
+  with active development, 71,000+ stars, and 9,000+ forks.
+- The repository description presents DeerFlow as a long-horizon SuperAgent
+  harness for researching, coding, and creating with sandboxes, memories,
+  tools, skills, subagents, and message gateway support.
+- The README describes DeerFlow 2.0 as a super-agent harness that orchestrates
+  subagents, memory, and sandboxes powered by extensible skills.
+- The README documents setup through `make setup`, Docker and local development
+  paths, deployment sizing guidance, sandbox mode, MCP server support, IM
+  channels, LangSmith and Langfuse tracing, skills and tools, Claude Code
+  integration, subagents, sandbox/file-system behavior, context engineering,
+  and long-term memory.
+- `Install.md` is explicitly written for coding agents and instructs agents to
+  avoid reading secret-bearing files while preparing Docker or local setup.
+- `backend/pyproject.toml` declares Python `>=3.12`, FastAPI, LangGraph SDK,
+  messaging dependencies, and `deerflow-harness`.
+- The Makefile documents setup, doctor, config, install, development, Docker,
+  and production commands.
+
+## Safety and Privacy
+
+DeerFlow can run unattended, call model providers, use web search, invoke tools,
+run bash commands, write files, use sandboxes, expose MCP behavior, and connect
+to messaging channels. Treat the generated configuration and runtime directory
+as operational state, not sample-only data.
+
+For evaluation, use a throwaway clone, sandbox credentials, test model keys, and
+non-production documents. Before team use, review host sizing, CORS/origin
+settings, single-worker gateway behavior, persistent storage, logs, backups,
+network exposure, and which tools are allowed to write or execute.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, README output, open pull requests, and
+repository-wide content for `bytedance/deer-flow`, DeerFlow, `deer-flow`,
+ByteDance DeerFlow, DeerFlow MCP, DeerFlow skills, DeerFlow memory, super agent
+harness, long-horizon AI agent, LangGraph super agent, Claude Code provider,
+and Codex provider. No dedicated DeerFlow tools entry, exact source URL
+duplicate, target file, or open duplicate PR was found.

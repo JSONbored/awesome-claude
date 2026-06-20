@@ -1,0 +1,254 @@
+---
+title: wshobson Agentic Plugin Marketplace
+slug: wshobson-agentic-plugin-marketplace
+category: skills
+description: >-
+  Multi-harness agentic plugin marketplace with 84 plugins, 192 agents, 156
+  skills, 102 commands, and 16 orchestrators for Claude Code, Codex CLI,
+  Cursor, OpenCode, Gemini CLI, and GitHub Copilot from one Markdown source
+  tree.
+cardDescription: >-
+  Installable Claude Code and Codex plugin marketplace for agent teams, skills,
+  commands, orchestrators, and portable multi-harness workflows.
+seoTitle: wshobson Agentic Plugin Marketplace for Claude Code, Codex, Cursor, OpenCode, Gemini CLI, and Copilot
+seoDescription: >-
+  Add the wshobson Agentic Plugin Marketplace to Claude Code or Codex to browse
+  installable agent teams, Agent Skills, slash commands, orchestrators, and
+  portable multi-harness workflows for development, security, infrastructure,
+  documentation, testing, ML, and operations.
+author: Seth Hobson
+authorProfileUrl: "https://github.com/wshobson"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/wshobson/agents"
+documentationUrl: "https://github.com/wshobson/agents#readme"
+websiteUrl: "https://sethhobson.com"
+downloadUrl: "https://github.com/wshobson/agents/archive/refs/heads/main.zip"
+installable: true
+installCommand: "/plugin marketplace add wshobson/agents"
+usageSnippet: >-
+  Add `wshobson/agents` as a Claude Code plugin marketplace, then install
+  specific plugins such as `python-development`, `git-pr-workflows`,
+  `full-stack-orchestration`, `agent-teams`, `plugin-eval`, or
+  `incident-response`; Codex users can add the same repository through
+  `npx codex-marketplace add wshobson/agents`.
+copySnippet: |-
+  # Claude Code
+  /plugin marketplace add wshobson/agents
+  /plugin install python-development
+
+  # Codex CLI
+  npx codex-marketplace add wshobson/agents
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/wshobson/agents"
+  - "https://raw.githubusercontent.com/wshobson/agents/main/README.md"
+  - "https://raw.githubusercontent.com/wshobson/agents/main/docs/harnesses.md"
+  - "https://raw.githubusercontent.com/wshobson/agents/main/docs/plugins.md"
+  - "https://raw.githubusercontent.com/wshobson/agents/main/docs/agent-skills.md"
+  - "https://raw.githubusercontent.com/wshobson/agents/main/.claude-plugin/marketplace.json"
+  - "https://raw.githubusercontent.com/wshobson/agents/main/plugins/python-development/.claude-plugin/plugin.json"
+  - "https://raw.githubusercontent.com/wshobson/agents/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Cursor
+  - OpenCode
+  - Gemini CLI
+  - GitHub Copilot
+  - Agent Skills compatible hosts
+prerequisites:
+  - "Claude Code plugin marketplace support, Codex marketplace support, Cursor 2.5+ plugin support, OpenCode, Gemini CLI, GitHub Copilot, or a manual workflow that can consume the generated Markdown artifacts."
+  - "Review of the target plugin manifest, agents, skills, commands, tools, external dependencies, and any generated harness-specific artifacts before installation."
+  - "Node.js and npx for the documented Codex marketplace flow; git, make, and the target CLI for clone-and-generate Gemini or OpenCode workflows."
+  - "A clear plugin scope, such as Python development, PR workflows, full-stack orchestration, security review, incident response, documentation, testing, or agent-team coordination."
+  - "Project-level rules for file writes, shell commands, network access, MCP servers, credentials, cloud infrastructure, and long-running agent workflows."
+safetyNotes:
+  - "This marketplace installs executable agent workflow instructions, slash commands, skills, and agent profiles. Review each selected plugin before giving it write, shell, network, MCP, cloud, browser, or deployment access."
+  - "Some plugins target security scans, infrastructure, Kubernetes, cloud architecture, CI/CD, incident response, dependency management, and multi-agent orchestration; keep destructive, expensive, or production-impacting commands behind human approval."
+  - "The marketplace includes external git-subdir plugin entries as well as local plugins. Verify external source repositories, manifests, licenses, update cadence, and dependency behavior separately."
+  - "Cross-harness adapters intentionally transform source artifacts for Codex, Cursor, OpenCode, Gemini, and Copilot; inspect generated artifacts when relying on tool allowlists, model mappings, command conversion, or skill size limits."
+  - "Do not assume every plugin is appropriate for every repository, compliance environment, model provider, or agent sandbox."
+privacyNotes:
+  - "Installed plugins can expose project files, source code, issues, pull requests, logs, architecture notes, prompts, tool outputs, credentials accidentally present in context, cloud resource names, deployment details, and incident data to the configured agent runtime."
+  - "MCP, memory, browser, cloud, and external plugin integrations may send prompts, file snippets, traces, or task context to additional local or remote services depending on configuration."
+  - "Generated Codex, Cursor, OpenCode, Gemini, and Copilot artifacts may persist agent instructions, skills, commands, and project assumptions on disk."
+  - "Keep secrets, customer data, regulated records, private infrastructure details, and unreleased business or incident material out of public plugin configs, examples, issues, PRs, screenshots, and generated docs."
+tags:
+  - agent-skills
+  - claude-code
+  - codex
+  - plugins
+  - multi-agent
+  - cursor
+  - opencode
+  - gemini-cli
+keywords:
+  - wshobson agents
+  - Agentic Plugin Marketplace
+  - Claude Code plugin marketplace
+  - Codex plugin marketplace
+  - Codex CLI agent skills
+  - multi-harness agent plugins
+  - Claude Code agent teams
+  - OpenCode skills marketplace
+  - Gemini CLI agent skills
+  - agentic workflow plugins
+readingTime: 9
+difficultyScore: 86
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# wshobson Agentic Plugin Marketplace
+
+`wshobson/agents` is an installable agentic plugin marketplace for Claude Code
+and adjacent coding-agent harnesses. The repository README describes one
+Markdown source tree that feeds Claude Code, Codex CLI, Cursor, OpenCode,
+Gemini CLI, and GitHub Copilot artifacts.
+
+Use this listing for the marketplace itself. Use narrower listings when
+reviewing a single plugin, one generated harness adapter, or a specific agent
+team inside the repository.
+
+## Knowledge Freshness
+
+Repository metadata, source files, and marketplace docs were verified on
+2026-06-18. The README lists 84 plugins, 192 agents, 156 skills, 102 commands,
+and 16 orchestrators. The committed Claude marketplace metadata reports version
+1.7.1.
+
+Claude Code plugin behavior, Codex marketplace support, Cursor plugin behavior,
+OpenCode configuration, Gemini CLI extension support, Copilot agent discovery,
+model aliases, skill-size limits, and MCP integration rules can change. Use
+the marketplace docs as the starting point, then verify the target harness docs
+and inspect the plugin you plan to install.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The upstream repository README.
+- The cross-harness capability matrix in `docs/harnesses.md`.
+- The plugin catalog in `docs/plugins.md`.
+- The Agent Skills catalog in `docs/agent-skills.md`.
+- The Claude plugin marketplace manifest.
+- A representative `python-development` plugin manifest.
+- The MIT license file.
+- Current GitHub repository metadata.
+
+## Core Workflow
+
+Claude Code users can register the marketplace and install individual plugins:
+
+```text
+/plugin marketplace add wshobson/agents
+/plugin install python-development
+```
+
+Codex users can add the committed Codex marketplace registry:
+
+```bash
+npx codex-marketplace add wshobson/agents
+```
+
+Gemini and OpenCode workflows use a clone-and-generate path:
+
+```bash
+gh repo clone wshobson/agents ~/agents
+cd ~/agents
+make generate HARNESS=gemini
+gemini extensions install .
+```
+
+OpenCode users should follow the repository's `make install-opencode` flow,
+which generates and symlinks OpenCode artifacts.
+
+## Capability Scope
+
+The README and docs describe a broad marketplace:
+
+| Area | Source-backed scope |
+| --- | --- |
+| Plugins | 84 installable units across development, docs, workflows, testing, security, data, operations, infrastructure, ML, and business categories |
+| Agents | 192 domain experts for architecture, languages, infra, security, data, ML, docs, business, and SEO |
+| Skills | 156 local Agent Skills across 41 plugins with progressive disclosure |
+| Commands | 102 slash commands for scaffolding, security scans, tests, infrastructure, and workflows |
+| Orchestrators | 16 multi-agent workflows for full-stack delivery, security, ML, and incident response |
+| Evaluation | `plugin-eval` framework with static, LLM judge, and Monte Carlo evaluation modes |
+
+The plugin catalog highlights common installs such as `code-documentation`,
+`debugging-toolkit`, `git-pr-workflows`, `backend-development`,
+`frontend-mobile-development`, `full-stack-orchestration`, `unit-testing`,
+`cloud-infrastructure`, `incident-response`, `python-development`, and
+`javascript-typescript`.
+
+## Multi-Harness Fit
+
+The harness docs describe Claude Code as the source-of-truth implementation,
+with generated or committed support for other runtimes:
+
+| Harness | Repository support |
+| --- | --- |
+| Claude Code | Native marketplace and plugin source under `plugins/` |
+| Codex CLI | Committed `.agents/plugins/marketplace.json` and per-plugin Codex manifests |
+| Cursor | Committed `.cursor-plugin/` and curated `.cursor/rules/` |
+| OpenCode | Generated `.opencode/` agents, commands, skills, and config |
+| Gemini CLI | Committed `gemini-extension.json` plus generated skills, agents, and commands |
+| GitHub Copilot | Generated `.copilot/` agents, skills, and commands |
+
+This makes the repository useful for searches around "Claude Code plugin
+marketplace", "Codex plugin marketplace", "Codex CLI agent skills", "Gemini
+CLI agent skills", "OpenCode skills", and "multi-harness agent plugins".
+
+## Production Rules
+
+- Install one plugin at a time and inspect its manifest, agents, commands, and
+  skills before using it on sensitive code.
+- Treat external plugin entries as separate supply-chain dependencies.
+- Keep shell commands, MCP servers, browser access, cloud access, deployments,
+  incident operations, and security scans behind explicit approval.
+- Check generated artifacts before relying on cross-harness behavior such as
+  tool allowlists, command conversion, model mapping, or skill truncation.
+- Avoid loading the entire marketplace into context when a narrower plugin is
+  enough.
+- Pin and review updates in team environments rather than silently refreshing
+  marketplace behavior across active projects.
+
+## Source Review
+
+- The README describes the project as an "Agentic Plugin Marketplace" with 84
+  plugins, 192 agents, 156 skills, 102 commands, and 16 orchestrators.
+- The README documents Claude Code marketplace installation with
+  `/plugin marketplace add wshobson/agents` and a Codex path using
+  `npx codex-marketplace add wshobson/agents`.
+- `docs/harnesses.md` documents Claude Code, Codex, Cursor, OpenCode, Gemini,
+  and Copilot support from a shared source tree.
+- `docs/plugins.md` lists 84 marketplace plugins, including development,
+  documentation, workflow, testing, quality, utility, AI/ML, memory, data,
+  database, operations, performance, and infrastructure categories.
+- `docs/agent-skills.md` documents 156 local skills across 41 plugins and
+  explains progressive disclosure.
+- `.claude-plugin/marketplace.json` identifies the marketplace as
+  `claude-code-workflows` and reports version 1.7.1.
+- `plugins/python-development/.claude-plugin/plugin.json` is a representative
+  local plugin manifest with MIT licensing.
+- The repository license is MIT.
+
+## Duplicate Check
+
+No existing HeyClaude content entry was found for `wshobson/agents`, the
+Agentic Plugin Marketplace, or a matching multi-harness agentic plugin
+marketplace entry at the time this listing was created.
+
+## Disclosure
+
+This is a community marketplace listing based on public source material. It is
+not a guarantee that every plugin, generated adapter, external dependency, or
+agent workflow is safe for a specific repository, organization, sandbox, model
+provider, compliance boundary, or production environment.

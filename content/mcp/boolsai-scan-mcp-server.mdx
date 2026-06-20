@@ -1,0 +1,186 @@
+---
+title: BoolsAI Scan MCP Server for Claude
+slug: boolsai-scan-mcp-server
+category: mcp
+description: >-
+  BoolsAI hosted MCP server with no authentication required for tech stack
+  scanning via boolsai_scan and boolsai_scan_paths tools on boolsai.ai/mcp.
+cardDescription: >-
+  Connect Claude to BoolsAI Scan for no-auth tech stack detection on URLs and
+  local paths through a hosted remote MCP server.
+seoTitle: BoolsAI Scan MCP Server for Claude
+seoDescription: >-
+  Use the BoolsAI Scan MCP server with Claude to detect technologies on websites
+  and paths with boolsai_scan and boolsai_scan_paths, no API key required.
+author: BoolsAI
+authorProfileUrl: "https://github.com/Boolsai-ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1480
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1480"
+repoUrl: "https://github.com/Boolsai-ai/mcp"
+documentationUrl: "https://github.com/Boolsai-ai/mcp"
+websiteUrl: "https://boolsai.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http boolsai https://boolsai.ai/mcp
+usageSnippet: >-
+  Add https://boolsai.ai/mcp as a remote HTTP connector; no API key is required
+  for boolsai_scan and boolsai_scan_paths.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "boolsai": {
+        "url": "https://boolsai.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "boolsai": {
+        "url": "https://boolsai.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Pro, Team, or Enterprise with Connectors support, or Claude Code with HTTP MCP transport."
+  - "Public URLs to scan or local project paths exposed through your MCP client's file access model."
+  - "Permission to probe target websites; avoid scanning systems you do not own without authorization."
+  - "Internet access so BoolsAI can fetch remote pages for stack detection."
+safetyNotes:
+  - "boolsai_scan fetches live websites and may trigger WAF or rate limits on target hosts."
+  - "Scanning third-party sites without permission may violate terms of service or security policies."
+  - "Detected stack data is heuristic and may include false positives or miss obfuscated technologies."
+  - "Do not use scan output as the sole input for security assessments or compliance audits."
+privacyNotes:
+  - "URLs and path lists you submit are sent to Boolsai.ai for analysis and may be logged for abuse prevention."
+  - "Local path scans depend on your MCP client; path names may reveal internal project structure if shared in chat."
+  - "Scan results can expose framework versions useful to attackers; handle reports as sensitive in competitive contexts."
+tags:
+  - tech-stack
+  - reconnaissance
+  - web-scanning
+  - remote-mcp
+  - no-auth
+keywords:
+  - boolsai mcp
+  - tech stack scanner
+  - boolsai_scan claude
+  - website technology detection
+  - mcp no auth
+readingTime: 4
+difficultyScore: 20
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+BoolsAI Scan provides a hosted Model Context Protocol server for detecting technologies used on websites and in project paths. No authentication is required. Tools include `boolsai_scan` for URL-based detection and `boolsai_scan_paths` for path-oriented analysis.
+
+Source and documentation are in [Boolsai-ai/mcp](https://github.com/Boolsai-ai/mcp). The endpoint is `https://boolsai.ai/mcp`.
+
+## Features
+
+- `boolsai_scan` detects CMS, frameworks, analytics, and hosting signals from URLs.
+- `boolsai_scan_paths` inspects technology markers from supplied path lists.
+- No API key or OAuth required for basic scanning.
+- Hosted remote HTTP transport at `boolsai.ai/mcp`.
+- Fast setup for competitive research and due diligence workflows.
+
+## Use Cases
+
+- Identify the CMS and JS framework on a prospect’s marketing site.
+- Compare tech stacks across competitor landing pages.
+- Pre-qualify integration partners by detecting API gateways and clouds.
+- Document stack assumptions before a migration proposal.
+- Batch-scan a list of URLs during market mapping.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://boolsai.ai/mcp`.
+3. Enable the connector; no API key is needed.
+4. Invoke scan tools from chat.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http boolsai https://boolsai.ai/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add a remote HTTP connector pointing at `https://boolsai.ai/mcp`.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "boolsai": {
+      "url": "https://boolsai.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+No headers or environment variables are required.
+
+## Examples
+
+### Scan a website
+
+```text
+Run boolsai_scan on https://example.com and list detected frameworks and analytics tools.
+```
+
+### Compare competitors
+
+```text
+Scan https://competitor-a.com and https://competitor-b.com and compare their tech stacks.
+```
+
+### Path-based scan
+
+```text
+Use boolsai_scan_paths on our repo’s package.json and config files to summarise the stack.
+```
+
+## Security
+
+- Scan only sites you are authorised to probe.
+- Treat version fingerprints as sensitive when disclosing externally.
+- Confirm findings manually before security or compliance decisions.
+
+## Troubleshooting
+
+### Scan blocked or empty
+
+The target may block bots or require JavaScript rendering; try the canonical HTTPS URL without redirects.
+
+### False positives
+
+Heuristic detection can mislabel CDNs or tag managers; corroborate with manual inspection.
+
+### Rate limits
+
+Space out bulk scans; excessive requests to the same domain may be throttled by BoolsAI or the target.
+
+### Path scan errors
+
+Ensure paths exist and your client can read them; remote MCP path scans depend on local file access configuration.

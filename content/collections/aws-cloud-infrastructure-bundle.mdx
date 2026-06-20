@@ -16,6 +16,13 @@ seoDescription: >-
   for t...
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
+documentationUrl: "https://code.claude.com/docs/en/sub-agents"
+retrievalSources:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://code.claude.com/docs/en/mcp"
+safetyNotes:
+  - "Bundles an AWS MCP server, a CloudFormation-validation hook, and infra agents that act against your AWS account using your own credentials and can run a hook automatically on events; review each tool's IAM scope and validate generated infrastructure changes before applying."
 dateAdded: "2025-10-02"
 installable: false
 usageSnippet: >-
@@ -53,17 +60,10 @@ tags:
   - cloudformation
   - serverless
 keywords:
-  - aws
-  - bundle
-  - claude
-  - cloud
-  - cloudformation
-  - collections
-  - development
-  - devops
-  - infrastructure
-  - serverless
-  - tools
+  - aws cloud infrastructure collection
+  - aws devops tools for claude
+  - aws infrastructure bundle claude
+  - cloudformation and aws agents collection
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true
@@ -153,7 +153,7 @@ Prioritize AWS cloud architect rule for AWS-specific patterns. Use backend archi
 
 ### AWS CLI version 1.x incompatible with MCP server features
 
-Upgrade to AWS CLI v2: curl https://awscli.amazonaws.com/install | bash. Verify with aws --version. MCP server requires CLI v2.0+ for SSO support.
+Upgrade to AWS CLI v2 using the official installer: download `https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip`, unzip it, and run `sudo ./aws/install`. Verify with `aws --version`. MCP server requires CLI v2.0+ for SSO support.
 
 ### Permission errors when validator checks CloudFormation templates
 

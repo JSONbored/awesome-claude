@@ -11,7 +11,7 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 import { ResourceCard } from "@/components/resource-card";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
-import { search } from "@/data/search";
+import { countSearchResults, normalizeSearchQuery, search } from "@/data/search";
 import {
   CATEGORIES,
   type Category,
@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import { useCompare } from "@/lib/compare";
 import { useRecents, type SavedSearch } from "@/lib/recents";
-import { ENTRIES } from "@/data/entries";
+import { entryByRef } from "@/data/entries";
 import { SavedSearchManager } from "@/components/saved-search-manager";
 import { FilterSummaryBar, type ActiveFilter } from "@/components/filter-summary-bar";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
@@ -123,7 +123,7 @@ const defaultSearch = {
 };
 
 const searchSchema = z.object({
-  q: z.string().catch(defaultSearch.q).default(defaultSearch.q),
+  q: z.string().transform(normalizeSearchQuery).catch(defaultSearch.q).default(defaultSearch.q),
   category: z.string().catch(defaultSearch.category).default(defaultSearch.category),
   trust: z.string().catch(defaultSearch.trust).default(defaultSearch.trust),
   source: z.string().catch(defaultSearch.source).default(defaultSearch.source),
@@ -172,6 +172,17 @@ export const Route = createFileRoute("/browse")({
   }),
   component: Browse,
 });
+
+const TRUST_LEVELS: TrustLevel[] = ["trusted", "review", "limited", "blocked"];
+const SOURCE_STATUSES: SourceStatus[] = ["first-party", "source-backed", "external"];
+const PLATFORM_IDS: Platform[] = [
+  "claude-code",
+  "claude-desktop",
+  "cursor",
+  "vscode",
+  "cli",
+  "raycast",
+];
 
 function Browse() {
   const sp = Route.useSearch();
@@ -312,18 +323,31 @@ function Browse() {
     setShown(PAGE);
   }, [sp.q, sp.category, sp.trust, sp.source, sp.platform, sp.sort]);
 
-  // Per-axis result counts: count if this filter were the only one in its axis.
-  const axisCount = (axis: "category" | "trust" | "source" | "platform", value: string) => {
-    const merged = { ...sp, [axis]: value } as typeof sp;
-    return search({
-      q: merged.q,
-      categories: merged.category ? [merged.category as Category] : undefined,
-      trust: merged.trust ? [merged.trust as TrustLevel] : undefined,
-      source: merged.source ? [merged.source as SourceStatus] : undefined,
-      platforms: merged.platform ? [merged.platform as Platform] : undefined,
-      sort: merged.sort,
-    }).length;
-  };
+  // Per-axis facet counts: how many results if this value were the only filter
+  // in its axis. Memoized on the search params and counted without sorting so
+  // sidebar counts do not pay for result ranking on every filter change.
+  const facetCounts = useMemo(() => {
+    const countFor = (axis: "category" | "trust" | "source" | "platform", value: string) => {
+      const merged = { ...sp, [axis]: value } as typeof sp;
+      return countSearchResults({
+        q: merged.q,
+        categories: merged.category ? [merged.category as Category] : undefined,
+        trust: merged.trust ? [merged.trust as TrustLevel] : undefined,
+        source: merged.source ? [merged.source as SourceStatus] : undefined,
+        platforms: merged.platform ? [merged.platform as Platform] : undefined,
+        sort: merged.sort,
+      });
+    };
+    return {
+      category: Object.fromEntries(CATEGORIES.map((c) => [c.id, countFor("category", c.id)])),
+      trust: Object.fromEntries(TRUST_LEVELS.map((t) => [t, countFor("trust", t)])),
+      source: Object.fromEntries(SOURCE_STATUSES.map((s) => [s, countFor("source", s)])),
+      platform: Object.fromEntries(PLATFORM_IDS.map((p) => [p, countFor("platform", p)])),
+    } as Record<string, Record<string, number>>;
+  }, [sp]);
+
+  const axisCount = (axis: "category" | "trust" | "source" | "platform", value: string) =>
+    facetCounts[axis]?.[value] ?? 0;
 
   // Focus search on "/" key.
   const searchRef = React.useRef<HTMLInputElement>(null);
@@ -335,7 +359,7 @@ function Browse() {
   });
 
   const recentEntries = recents.entries
-    .map((r) => ENTRIES.find((e) => e.category === r.category && e.slug === r.slug))
+    .map((r) => entryByRef(r.category, r.slug))
     .filter((e): e is NonNullable<typeof e> => !!e)
     .slice(0, 6);
 
@@ -385,14 +409,14 @@ function Browse() {
     return trials
       .map((t) => {
         const merged = { ...sp, ...t.patch };
-        const count = search({
+        const count = countSearchResults({
           q: merged.q,
           categories: merged.category ? [merged.category as Category] : undefined,
           trust: merged.trust ? [merged.trust as TrustLevel] : undefined,
           source: merged.source ? [merged.source as SourceStatus] : undefined,
           platforms: merged.platform ? [merged.platform as Platform] : undefined,
           sort: merged.sort,
-        }).length;
+        });
         return { label: t.label, count, apply: () => set(t.patch) };
       })
       .filter((s) => s.count > 0)
@@ -401,7 +425,8 @@ function Browse() {
   }, [sp, results.length]);
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
+    <div className="mx-auto max-w-page px-4 py-6 sm:px-6">
+      <h1 className="sr-only">Browse the directory</h1>
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
         {/* Filter sidebar */}
         <aside className="hidden lg:block">
@@ -431,7 +456,7 @@ function Browse() {
 
             <FilterSection title="Trust">
               <FilterChipGroup label="Filter by trust level">
-                {(["trusted", "review", "limited", "blocked"] as TrustLevel[]).map((t) => (
+                {TRUST_LEVELS.map((t) => (
                   <FilterChip
                     key={t}
                     active={sp.trust === t}
@@ -446,7 +471,7 @@ function Browse() {
 
             <FilterSection title="Source">
               <FilterChipGroup label="Filter by source status">
-                {(["first-party", "source-backed", "external"] as SourceStatus[]).map((s) => (
+                {SOURCE_STATUSES.map((s) => (
                   <FilterChip
                     key={s}
                     active={sp.source === s}
@@ -461,16 +486,7 @@ function Browse() {
 
             <FilterSection title="Platform">
               <FilterChipGroup label="Filter by platform">
-                {(
-                  [
-                    "claude-code",
-                    "claude-desktop",
-                    "cursor",
-                    "vscode",
-                    "cli",
-                    "raycast",
-                  ] as Platform[]
-                ).map((p) => (
+                {PLATFORM_IDS.map((p) => (
                   <FilterChip
                     key={p}
                     active={sp.platform === p}
@@ -813,19 +829,24 @@ function Browse() {
               {sp.view === "grid" ? (
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {results.slice(0, shown).map((e) => (
-                    <ResourceCard key={e.slug} entry={e} variant="grid" />
+                    <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
                   ))}
                 </div>
               ) : sp.view === "compact" ? (
                 <div className="mt-2 overflow-hidden rounded-lg border border-border bg-surface">
                   {results.slice(0, shown).map((e, i) => (
-                    <ResourceCard key={e.slug} entry={e} variant="compact" rank={i + 1} />
+                    <ResourceCard
+                      key={`${e.category}/${e.slug}`}
+                      entry={e}
+                      variant="compact"
+                      rank={i + 1}
+                    />
                   ))}
                 </div>
               ) : (
                 <div className="mt-2 overflow-hidden rounded-lg border border-border bg-surface">
                   {results.slice(0, shown).map((e) => (
-                    <ResourceCard key={e.slug} entry={e} />
+                    <ResourceCard key={`${e.category}/${e.slug}`} entry={e} />
                   ))}
                 </div>
               )}

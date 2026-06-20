@@ -1,0 +1,221 @@
+---
+title: Release Changelog Generation Capability Pack Skill
+slug: release-changelog-generation-capability-pack
+category: skills
+description: >-
+  Expert release changelog generation capability pack for drafting, validating,
+  and publishing user-facing release notes from conventional commits, tags,
+  and GitHub Releases with source-backed review matrices and privacy-safe output.
+cardDescription: >-
+  Generate and review release changelogs and GitHub release notes with
+  source-backed keep-a-changelog and conventional-commit discipline.
+seoTitle: Release Changelog Generation Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for release changelog generation: commit
+  classification, semver rationale, GitHub release notes, and maintainer review
+  aligned to keep-a-changelog and GitHub Releases documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 727
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/727"
+repoUrl: "https://github.com/olivierlacan/keep-a-changelog"
+documentationUrl: "https://keepachangelog.com/en/1.1.0/"
+downloadUrl: "https://github.com/olivierlacan/keep-a-changelog/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when preparing a release tag, drafting changelog sections,
+  validating conventional commit history, or publishing GitHub release notes.
+copySnippet: |-
+  # Trigger
+  "Apply the release changelog generation capability pack for this release."
+
+  # Required output
+  1) Commit history classification and semver recommendation
+  2) Draft changelog sections (Added, Changed, Fixed, Removed, Security)
+  3) GitHub release notes draft with upgrade guidance
+  4) Maintainer sign-off checklist and rollback notes
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-15"
+retrievalSources:
+  - "https://keepachangelog.com/en/1.1.0/"
+  - "https://www.conventionalcommits.org/en/v1.0.0/"
+  - "https://semver.org/"
+  - "https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes"
+  - "https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Access to merged commit history, tags, and release branch or main since the last release."
+  - "Project changelog policy (keep-a-changelog sections, semver rules, and pre-release handling)."
+  - "Permission to draft release notes without publishing until maintainer approval."
+  - "GitHub Releases or equivalent publish surface when shipping to users."
+safetyNotes:
+  - "This skill plans release publication; it must not create tags, publish releases, or push version bumps without explicit maintainer approval."
+  - "Security and breaking-change entries can affect downstream consumers; require owner review before public release."
+  - "Automated changelog tools may include contributor handles or internal ticket IDs; scrub before publishing."
+  - "Do not run release scripts or CI publish workflows from unreviewed fork contexts."
+privacyNotes:
+  - "Changelog drafts may expose unreleased features, customer names, internal URLs, and security fix details."
+  - "GitHub compare views and release automation logs can include private repository metadata."
+  - "Redact embargoed vulnerability details and internal-only migration notes from public release text."
+  - "Keep registry tokens, npm credentials, and signing keys out of prompts and generated notes."
+tags:
+  - changelog
+  - releases
+  - semver
+  - github-releases
+  - capability-pack
+keywords:
+  - release changelog generation capability pack
+  - keep a changelog release workflow
+  - GitHub release notes generation
+  - conventional commits release notes
+  - semver changelog review
+readingTime: 9
+difficultyScore: 82
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in keep-a-changelog 1.1.0, Conventional
+Commits 1.0.0, SemVer 2.0.0, and GitHub Releases documentation verified on
+**2026-06-15**. Release automation defaults and GitHub UI labels can change;
+prefer live docs over cached assumptions.
+
+## Retrieval Sources
+
+- https://keepachangelog.com/en/1.1.0/
+- https://www.conventionalcommits.org/en/v1.0.0/
+- https://semver.org/
+- https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+- https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
+
+## Source Verification Notes
+
+Verified against public keep-a-changelog, Conventional Commits, SemVer, and
+GitHub Releases docs on **2026-06-15**:
+
+- keep-a-changelog defines Added, Changed, Deprecated, Removed, Fixed, and
+  Security sections with an Unreleased heading for in-progress work.
+- Conventional Commits maps feat/fix/BREAKING CHANGE prefixes to semver bumps.
+- GitHub supports automatically generated release notes and configurable
+  categories for pull requests merged since the last tag.
+
+## Scope Note
+
+This pack focuses on maintainer-owned changelog generation and release-note
+review. It complements tool-specific packs (for example git-cliff or
+Changesets) by providing a source-backed cross-tool workflow.
+
+## Core Workflow
+
+1. Identify the previous release tag and the commit or PR range since that tag.
+2. Classify merged changes into keep-a-changelog sections and semver impact.
+3. Draft user-facing bullets; remove internal noise, duplicate entries, and
+   low-signal dependency bumps unless user-impacting.
+4. Flag breaking changes, security fixes, migrations, and deprecation windows.
+5. Produce GitHub release notes with upgrade steps and known limitations.
+6. Run a maintainer review matrix for accuracy, embargo, and support policy.
+7. Deliver a privacy-safe public draft plus an internal-only detail appendix
+   when needed.
+
+## Capability Scope
+
+- Commit and PR classification for changelog sections.
+- Semver recommendation with rationale.
+- GitHub Releases note drafting and category mapping.
+- Security and breaking-change escalation checks.
+- Maintainer sign-off and rollback planning.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when preparing releases,
+  version PRs, or GitHub release drafts.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, Generic AGENTS**: apply the workflow as a
+  deterministic checklist for any repository using keep-a-changelog conventions.
+
+## Required Inputs
+
+- Last release tag, default branch, and merge window.
+- Changelog file location and project semver policy.
+- List of merged PRs or commits with labels and conventional commit subjects.
+- Maintainer contacts for security, breaking changes, and publish approval.
+
+## Production Rules
+
+- Never publish security details before coordinated disclosure approval.
+- Separate user-facing release notes from internal runbook detail.
+- Require two-person review for major semver bumps when policy demands it.
+- Keep Unreleased sections current until the tag is cut.
+- Prefer links to docs and migration guides over long inline diffs.
+- Document rollback or hotfix criteria before tagging.
+
+## Review Matrix
+
+| Topic | Signal | Action |
+| --- | --- | --- |
+| Semver | Breaking API or schema change | Major bump + migration section |
+| Security | CVE or credential fix | Security section + embargo check |
+| Noise | Bot dependency bumps | Collapse or omit unless user-facing |
+| Accuracy | Missing contributor credit | Add thanks without internal IDs |
+| Upgrade | Config or env change | Add explicit upgrade steps |
+| Publish | Draft vs live release | Gate on maintainer approval |
+
+## Output Contract
+
+1. Semver recommendation with evidence from merged changes.
+2. Draft keep-a-changelog sections ready for CHANGELOG.md.
+3. GitHub release notes draft with upgrade guidance.
+4. Review matrix with owners and blockers.
+5. Privacy-safe public summary and optional internal appendix.
+
+## Troubleshooting
+
+**Issue:** Commits lack conventional prefixes
+**Fix:** Manually classify by diff impact; document mapping rules for next release.
+
+**Issue:** GitHub auto-generated notes miss monorepo packages
+**Fix:** Add package-scoped sections or use per-package tags when applicable.
+
+**Issue:** Security fix cannot be described publicly yet
+**Fix:** Use embargo wording and coordinate disclosure timeline with maintainers.
+
+**Issue:** Duplicate entries from cherry-picks or merge commits
+**Fix:** Deduplicate by PR number and squash-merge subject lines.
+
+## Duplicate Check
+
+Checked `content/skills/`, open PRs, and the live catalog for release changelog
+generation workflows. `git-cliff-release-changelog-capability-pack` covers
+git-cliff automation specifically, and `changesets-release-cutover-agent`
+covers Changesets cutovers in `agents`. No `skills` entry provides this
+general keep-a-changelog + GitHub Releases generation capability pack with
+review matrix and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public keep-a-changelog, Conventional Commits,
+SemVer, and GitHub documentation. No paid placement, referral link, affiliate
+link, or vendor sponsorship is used.

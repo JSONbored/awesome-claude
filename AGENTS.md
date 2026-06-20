@@ -95,6 +95,26 @@ pnpm build
 git diff --check
 ```
 
+### Test coverage gate
+
+`pnpm test:coverage` runs the full Vitest suite with v8 coverage and writes an
+lcov report to `coverage/lcov.info`. Coverage is scoped to the source the node
+suite actually exercises (the `registry`/`mcp` packages, web `lib`/`data`/`types`,
+the submission gate, and build scripts); React components and routes are out of
+scope because they are not run under the node environment.
+
+**Coverage gating is owned by Codecov, not a vitest threshold.** The `coverage`
+workflow (`.github/workflows/coverage.yml`) runs on code changes only (never
+content-only PRs/pushes) and uploads the lcov report. Codecov posts two statuses
+per `codecov.yml`: `codecov/patch` (coverage of the PR diff) and `codecov/project`
+(`target: auto`, base-relative). Both are **informational** (report-only) for
+now — flip `patch.informational` to `false` in `codecov.yml` when you want new
+code enforceable. `target: auto` compares each PR against its own base commit, so
+merging one PR never moves the bar under other open PRs — the cross-PR churn we
+had with the old global vitest threshold ratchet (now removed). The coverage run
+is kept off the required `validate-web` lane because v8 instrumentation is slow;
+`validate-web` still runs the plain `pnpm test`.
+
 ## PR Hygiene
 
 - Use Conventional Commit-style PR titles, for example `feat(submissions): add contributor preflight`.

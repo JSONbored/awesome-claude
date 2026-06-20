@@ -1,0 +1,179 @@
+---
+title: Hugging Face Smolagents
+slug: smolagents
+category: tools
+description: >-
+  Hugging Face Python agent library for CodeAgent and ToolCallingAgent workflows,
+  where agents write Python actions, call tools, use MCP tool collections,
+  connect to Hub tools and spaces, run with LiteLLM or local models, and use
+  optional sandboxes.
+cardDescription: >-
+  Build lightweight Python agents with Hugging Face Smolagents, including
+  CodeAgent, ToolCallingAgent, MCP tools, Hub tools, LiteLLM providers, local
+  models, CLI agents, and optional sandboxes.
+seoTitle: Hugging Face Smolagents for Code Agents, MCP Tools, and Python Agent Workflows
+seoDescription: >-
+  Use Smolagents to build Python CodeAgent and ToolCallingAgent workflows with
+  MCP tool collections, Hub tools, Spaces, LiteLLM, local models, CLI agents,
+  Docker, E2B, Modal, Blaxel, telemetry, and Hugging Face integrations.
+author: Hugging Face
+authorProfileUrl: "https://github.com/huggingface"
+dateAdded: "2026-06-18"
+websiteUrl: "https://huggingface.co/docs/smolagents/index"
+documentationUrl: "https://huggingface.co/docs/smolagents/index"
+repoUrl: "https://github.com/huggingface/smolagents"
+packageUrl: "https://pypi.org/pypi/smolagents/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/huggingface/smolagents"
+  - "https://github.com/huggingface/smolagents/blob/main/pyproject.toml"
+  - "https://github.com/huggingface/smolagents/blob/main/LICENSE"
+  - "https://huggingface.co/docs/smolagents/index"
+  - "https://huggingface.co/docs/smolagents/reference/agents"
+  - "https://pypi.org/pypi/smolagents/json"
+installable: true
+installCommand: "pip install \"smolagents[toolkit]\""
+usageSnippet: >-
+  Install `smolagents` with the extras you need, choose CodeAgent or
+  ToolCallingAgent, attach model and tool providers, and use a real sandbox
+  before allowing generated Python actions to touch files, networks, or systems.
+copySnippet: |-
+  pip install "smolagents[toolkit]"
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 or newer and a Python environment managed with pip, uv, or another package manager."
+  - "A selected model route, such as Hugging Face Inference Providers, local Transformers, Ollama, LiteLLM, OpenAI-compatible servers, Azure OpenAI, Bedrock, or another configured provider."
+  - "Provider credentials, Hugging Face tokens, local model access, or API keys stored outside source control."
+  - "A sandbox plan for CodeAgent execution when agents can run Python actions, browse, call tools, or interact with user files."
+  - "Optional extras for MCP, Docker, E2B, Modal, Blaxel, LiteLLM, telemetry, toolkit tools, vision, audio, or local model runtimes only when needed."
+safetyNotes:
+  - "Smolagents CodeAgent writes actions as Python code; run untrusted or high-impact actions in a real sandbox such as Docker, E2B, Modal, or Blaxel instead of treating local execution as a security boundary."
+  - "Agents can call MCP tools, Hub tools, Spaces, LangChain tools, web search, webpage tools, browser tools, local models, and provider APIs; review each tool's permissions and side effects before use."
+  - "The built-in local Python execution restrictions are not a complete sandbox, so do not expose sensitive files, credentials, shells, browsers, or network access without additional isolation."
+  - "CLI agents such as `smolagent` and `webagent` can perform multi-step actions; require explicit operator approval before purchases, account writes, file writes, command execution, or external submissions."
+  - "Telemetry, tracing, and provider integrations need review before production use because agent steps may include prompts, generated code, tool outputs, and errors."
+privacyNotes:
+  - "Prompts, generated Python code, tool arguments, tool outputs, execution logs, browser state, search results, Hub repository data, Spaces inputs, model responses, telemetry, and errors may contain user or workspace data."
+  - "Do not expose Hugging Face tokens, provider API keys, local file paths, customer records, private datasets, credentials, or raw exceptions through shared agents, Hub uploads, logs, screenshots, or public examples."
+  - "When using MCP servers, Hub tools, Spaces, LiteLLM providers, OpenAI-compatible gateways, local model servers, or sandbox providers, review data retention and third-party access separately."
+  - "If agents are shared to the Hugging Face Hub, review included tools, prompts, dependencies, examples, and repository files for secrets and private data before publishing."
+tags:
+  - huggingface
+  - smolagents
+  - agents
+  - python
+  - mcp
+  - code-agent
+  - agent-framework
+keywords:
+  - smolagents
+  - Hugging Face Smolagents
+  - CodeAgent
+  - ToolCallingAgent
+  - smolagents MCP tools
+  - Python code agents
+  - Hugging Face agent framework
+  - smolagent CLI
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Smolagents is Hugging Face's lightweight Python library for building agents in a
+few lines of code. Its main pattern is `CodeAgent`, where the model writes
+Python actions that call tools or orchestrate other agents. It also includes
+`ToolCallingAgent`, CLI commands, Hub integrations, tool imports, MCP tool
+collections, local and hosted model routes, and optional sandbox backends.
+
+Use it when a Python team wants a compact agent framework with direct code
+actions, Hugging Face ecosystem integration, local model support, and a clear
+path to MCP tools or Hub-shared tools.
+
+## Install
+
+For the default toolkit extras:
+
+```bash
+pip install "smolagents[toolkit]"
+```
+
+The package also exposes extras for MCP, Docker, E2B, Modal, Blaxel, LiteLLM,
+OpenAI, Bedrock, telemetry, Gradio, Transformers, vision, audio, vLLM, and other
+runtime options. Install only the extras required by the agent.
+
+## Agent Capabilities
+
+| Area | Smolagents Coverage |
+| --- | --- |
+| Agent Types | `CodeAgent` for Python-code actions and `ToolCallingAgent` for standard tool-calling workflows |
+| Tools | Python tools, MCP tool collections, LangChain tools, Hub tools, Spaces, web search, webpage tools, and browser tools |
+| Model Routes | Hugging Face Inference Providers, local Transformers, Ollama-style local routes, LiteLLM, OpenAI-compatible servers, Azure OpenAI, Bedrock, and other providers |
+| Sandboxes | Optional Docker, E2B, Modal, and Blaxel execution environments for generated code |
+| CLI | `smolagent` for general multi-step CodeAgent runs and `webagent` for browser-oriented workflows |
+| Sharing | Push and pull agents or tools through the Hugging Face Hub |
+| Observability | Optional telemetry and OpenTelemetry/OpenInference integrations |
+
+## MCP Fit
+
+Smolagents is relevant for MCP searches because its tools layer can import tool
+collections from MCP servers. That lets a CodeAgent or ToolCallingAgent call MCP
+tools alongside Hub tools, LangChain tools, Spaces, local tools, and provider
+tools.
+
+The framework does not remove MCP's normal trust boundary. If an MCP server can
+read files, browse, query a database, call SaaS APIs, or write to an account,
+Smolagents can put that capability inside an agent loop. Review permissions,
+tool schemas, logging, and approval gates before connecting powerful servers.
+
+## Use Cases
+
+- Build compact Python agents that write actions as Python code.
+- Compare CodeAgent behavior with standard tool-calling agents.
+- Connect an agent to MCP tools, Hugging Face Hub tools, or Spaces.
+- Run lightweight CLI agents for research or automation.
+- Use Hugging Face Inference Providers, local models, LiteLLM, or
+  OpenAI-compatible gateways.
+- Share reviewed agents and tools through the Hugging Face Hub.
+- Prototype agent workflows with Docker, E2B, Modal, or Blaxel sandboxing.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository describes Smolagents as a library for agents that
+  write Python code to call tools or orchestrate other agents.
+- The docs and package metadata identify `CodeAgent` and `ToolCallingAgent` as
+  core agent types.
+- `pyproject.toml` declares the `smolagents` package, Python `>=3.10`, CLI
+  scripts `smolagent` and `webagent`, Apache-2.0 licensing, MCP extras,
+  sandbox-related extras, model/provider extras, toolkit extras, and telemetry
+  extras.
+- The documentation covers the Smolagents overview and agent reference.
+- PyPI resolves package metadata for `smolagents` version `1.26.0`.
+
+## Safety and Privacy
+
+Generated Python actions are powerful. Treat CodeAgent output like code from an
+untrusted contributor until it has been sandboxed, reviewed, and scoped. Do not
+let local execution read secrets, write repositories, browse private accounts,
+or call production systems unless the permissions and rollback path are clear.
+
+MCP servers, Hub tools, Spaces, provider APIs, browser tools, telemetry, and
+sandbox providers can all observe or retain agent data. Review prompts, tool
+arguments, tool outputs, generated code, logs, model responses, and shared Hub
+artifacts before treating an agent as safe for production or public reuse.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/agents/`, `content/mcp/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+`huggingface/smolagents`, Smolagents, Hugging Face Smolagents, `CodeAgent`,
+`ToolCallingAgent`, Smolagents MCP tools, `smolagent`, `webagent`, and Python
+code agents. Existing entries cover adjacent agent frameworks, coding agents,
+MCP tools, and local model runtimes, but no dedicated Smolagents entry, exact
+source URL duplicate, target file, or open duplicate PR was found.

@@ -1,0 +1,88 @@
+---
+title: Playwright Expert - CLAUDE.md Rules for Claude Code
+slug: playwright-expert
+category: rules
+description: >-
+  Transform Claude into a Playwright specialist with deep knowledge of browser
+  automation, resilient locators, fixtures, tracing, and CI-friendly end-to-end
+  testing.
+cardDescription: >-
+  Transform Claude into a Playwright specialist covering locators, fixtures,
+  tracing, and reliable cross-browser E2E tests.
+seoTitle: Playwright Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Playwright expert covering browser
+  automation, resilient locators, fixtures, tracing, and CI-ready E2E tests.
+keywords:
+  - claude
+  - playwright
+  - e2e
+  - testing
+  - automation
+  - browser
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+documentationUrl: "https://playwright.dev/docs/intro"
+sourceUrls:
+  - "https://playwright.dev/docs/locators"
+  - "https://playwright.dev/docs/test-fixtures"
+  - "https://playwright.dev/docs/trace-viewer"
+  - "https://playwright.dev/docs/ci"
+  - "https://playwright.dev/docs/best-practices"
+installable: false
+privacyNotes:
+  - "Rules reference test credentials and environment URLs; store them in CI
+    secrets or local env files, never in committed test sources."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Playwright expert for your project.
+copySnippet: |-
+  You are an expert Playwright developer focused on reliable browser automation.
+
+  ## Locators
+
+  - Prefer role, label, and test-id locators over brittle CSS chains.
+  - Use auto-waiting assertions (`expect(locator).toBeVisible()`) instead of manual sleeps.
+
+  ## Fixtures and isolation
+
+  - Keep tests independent; reset state in `beforeEach` or dedicated fixtures.
+  - Share authenticated contexts through fixtures rather than global mutable state.
+
+  ## Debugging and CI
+
+  - Enable traces on first retry in CI and inspect failures with the trace viewer.
+  - Run headed locally only when debugging; keep CI headless and parallel-safe.
+---
+
+# Playwright Expert
+
+Use these rules when writing or reviewing Playwright end-to-end tests.
+
+## Locator strategy
+
+Prefer accessible locators (`getByRole`, `getByLabel`, `getByTestId`) and keep selectors stable across UI refactors. Avoid XPath unless no semantic locator exists.
+
+## Assertions and timing
+
+Rely on Playwright auto-waiting and web-first assertions. Do not add arbitrary `waitForTimeout` calls when an assertion or locator state can express the condition.
+
+## Fixtures
+
+Model login flows, API seeding, and shared browser contexts as fixtures. Keep each test able to run alone and in parallel without order dependence.
+
+## Tracing and CI
+
+Capture traces and screenshots on failure, shard suites in CI, and pin browser versions to match the project's Playwright release.
+
+## References
+
+- [Playwright documentation](https://playwright.dev/docs/intro)
+- [Locators](https://playwright.dev/docs/locators)
+- [Test fixtures](https://playwright.dev/docs/test-fixtures)
+- [Trace viewer](https://playwright.dev/docs/trace-viewer)
+- [CI guide](https://playwright.dev/docs/ci)

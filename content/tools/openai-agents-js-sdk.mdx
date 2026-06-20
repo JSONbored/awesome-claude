@@ -1,0 +1,187 @@
+---
+title: OpenAI Agents JavaScript SDK
+slug: openai-agents-js-sdk
+category: tools
+description: >-
+  Official JavaScript and TypeScript framework for building multi-agent
+  workflows with agents, tools, handoffs, guardrails, sessions, tracing,
+  realtime voice agents, MCP tools, hosted tools, and sandbox agents.
+cardDescription: >-
+  Build JavaScript and TypeScript multi-agent workflows with the official OpenAI
+  Agents SDK, including tools, handoffs, guardrails, sessions, tracing, MCP
+  tools, realtime agents, and sandbox agents.
+seoTitle: OpenAI Agents JavaScript SDK for TypeScript Multi-Agent Workflows
+seoDescription: >-
+  Use `@openai/agents` to build TypeScript and JavaScript multi-agent workflows
+  with OpenAI Agents SDK, tools, handoffs, guardrails, sessions, tracing,
+  realtime voice agents, MCP tools, hosted tools, and sandbox agents.
+author: OpenAI
+authorProfileUrl: "https://github.com/openai"
+dateAdded: "2026-06-18"
+websiteUrl: "https://openai.github.io/openai-agents-js/"
+documentationUrl: "https://openai.github.io/openai-agents-js/"
+repoUrl: "https://github.com/openai/openai-agents-js"
+packageUrl: "https://registry.npmjs.org/@openai/agents"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/openai/openai-agents-js"
+  - "https://github.com/openai/openai-agents-js/blob/main/README.md"
+  - "https://github.com/openai/openai-agents-js/blob/main/packages/agents/package.json"
+  - "https://github.com/openai/openai-agents-js/blob/main/LICENSE"
+  - "https://openai.github.io/openai-agents-js/"
+  - "https://registry.npmjs.org/@openai/agents"
+installable: true
+installCommand: "npm install @openai/agents zod"
+usageSnippet: >-
+  Install `@openai/agents` with `zod`, configure provider credentials, and
+  define TypeScript agents with instructions, tools, handoffs, guardrails,
+  sessions, tracing, and optional sandbox or realtime behavior.
+copySnippet: |-
+  npm install @openai/agents zod
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js 22 or later, Deno, Bun, or an explicitly reviewed Cloudflare Workers runtime with `nodejs_compat` enabled."
+  - "OpenAI API credentials or another configured model provider supported through the SDK's provider-agnostic routes."
+  - "A reviewed tool boundary for function tools, hosted tools, MCP tools, handoffs, sandbox agents, and any external systems the agent can call."
+  - "A TypeScript schema strategy for `zod`, tool inputs, tool outputs, guardrails, and runtime validation."
+  - "A tracing, logging, and retention policy for prompts, tool calls, sessions, provider responses, voice events, and run metadata."
+safetyNotes:
+  - "Agents can call function tools, hosted tools, MCP tools, realtime tools, and sandbox agents; treat every tool as an API endpoint with explicit authorization, input validation, rate limits, and side-effect controls."
+  - "Sandbox agents can inspect files, run commands, apply patches, and carry workspace state across longer tasks; restrict workspace scope and require human approval before destructive or high-impact actions."
+  - "Cloudflare Workers support is described upstream as experimental; review runtime compatibility, secrets, outbound network access, logging, request limits, and `nodejs_compat` behavior before production use."
+  - "Guardrails help validate inputs and outputs, but they do not replace permission checks, least-privilege credentials, audit logs, or human review for risky operations."
+  - "Handoffs and agents-as-tools can delegate work across agents; document which agent owns each tool, decision, retry, rollback, and escalation path."
+privacyNotes:
+  - "Prompts, instructions, tool arguments, tool outputs, session history, traces, realtime audio events, sandbox files, logs, provider responses, and errors may contain user or workspace data."
+  - "Do not expose secrets, tokens, private file paths, customer records, credentials, internal identifiers, raw exceptions, or voice transcripts through traces, logs, prompts, tool schemas, or examples."
+  - "When using MCP servers, hosted tools, session stores, worker logs, observability systems, or deployment platforms, review each service's retention, access control, and third-party data handling separately."
+  - "If sandbox agents operate on repositories or user files, define which files can be mounted, modified, committed, uploaded, logged, or returned to the model."
+tags:
+  - openai
+  - agents
+  - typescript
+  - javascript
+  - agent-framework
+  - mcp
+  - tracing
+keywords:
+  - OpenAI Agents JavaScript SDK
+  - OpenAI Agents TypeScript SDK
+  - OpenAI Agents JS SDK
+  - "@openai/agents"
+  - TypeScript agent framework
+  - JavaScript agent framework
+  - OpenAI Agents MCP tools
+  - OpenAI Agents tracing JavaScript
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+OpenAI Agents JavaScript SDK is OpenAI's official JavaScript and TypeScript
+framework for building agentic applications and multi-agent workflows. It is
+published as `@openai/agents` and supports agents with instructions, tools,
+guardrails, handoffs, sessions, tracing, realtime voice agents, and sandbox
+agents.
+
+Use it when a Node, Deno, Bun, or carefully reviewed Workers project needs a
+code-first TypeScript agent runtime with inspectable traces, schema-backed tool
+inputs, delegated agents, MCP integration, human review, session state, or voice
+interaction.
+
+## Install
+
+The upstream README documents this npm install path:
+
+```bash
+npm install @openai/agents zod
+```
+
+The package supports Node.js 22 or later, Deno, Bun, and experimental Cloudflare
+Workers support with `nodejs_compat` enabled. Review the runtime target before
+using filesystem, sandbox, realtime, or network-heavy capabilities.
+
+## Agent Capabilities
+
+| Area | JavaScript SDK Coverage |
+| --- | --- |
+| Agents | Instructions, model configuration, tools, guardrails, handoffs, and run behavior |
+| Tools | Function tools, hosted tools, MCP tools, agents-as-tools, and sandbox agents |
+| Workflow Control | Handoffs, human-in-the-loop review, sessions, retries, and run configuration |
+| Observability | Built-in tracing for debugging and optimizing agent runs |
+| Realtime | Voice agent support through realtime agent APIs |
+| Sandboxes | Agents paired with a filesystem workspace and sandbox environment |
+| Runtime Targets | Node.js 22+, Deno, Bun, and experimental Cloudflare Workers support |
+
+## MCP Fit
+
+The SDK matters for MCP and agent searches because its tools layer can use MCP
+tools alongside function tools and hosted tools. That makes it a practical
+choice for TypeScript agent apps that want to call existing MCP servers without
+rewriting every integration as a custom adapter.
+
+Keep the trust boundary explicit: an MCP server can expose files, SaaS accounts,
+databases, browser automation, cloud infrastructure, or internal APIs. The
+agent SDK wires those capabilities into a workflow, but the application still
+owns authorization, schema validation, least privilege, audit logs, approval
+gates, and rollback behavior.
+
+## Use Cases
+
+- Build TypeScript assistants that coordinate several specialized agents.
+- Route work between agents with handoffs or agents-as-tools.
+- Add MCP tools to a JavaScript or TypeScript OpenAI Agents workflow.
+- Use guardrails and human review around higher-risk tool calls.
+- Trace agent runs for debugging, evaluation, and release review.
+- Build realtime voice agents with full agent workflow support.
+- Run sandbox agents against controlled workspaces for longer coding or
+  repository tasks.
+- Prototype agent workflows in Node, Deno, Bun, or carefully reviewed Workers
+  runtimes.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes the OpenAI Agents SDK for JavaScript and
+  TypeScript as a lightweight framework for multi-agent workflows.
+- The README lists agents, sandbox agents, agents-as-tools, handoffs, tools,
+  guardrails, human-in-the-loop flows, sessions, tracing, and realtime agents as
+  core concepts.
+- The README documents support for Node.js 22 or later, Deno, Bun, and
+  experimental Cloudflare Workers support with `nodejs_compat`.
+- The README documents `npm install @openai/agents zod` as the install path.
+- `packages/agents/package.json` declares the `@openai/agents` package, MIT
+  licensing, repository URL, homepage URL, OpenAI package dependencies, and
+  `zod` peer dependency.
+- The npm registry resolves package metadata for `@openai/agents` version
+  `0.11.7`.
+
+## Safety and Privacy
+
+The SDK's risk profile depends on the tools and systems attached to each agent.
+Treat function tools, MCP tools, hosted tools, realtime actions, sandbox agents,
+and delegated agents as separate trust boundaries with their own permissions,
+audit trail, and failure mode.
+
+Tracing, session storage, voice events, sandbox files, tool results, provider
+responses, worker logs, and observability data can contain sensitive user or
+workspace data. Review what is stored, who can read it, how long it is retained,
+and whether data crosses OpenAI, other model providers, MCP servers, databases,
+logs, observability systems, or deployment platforms.
+
+## Duplicate Check
+
+Checked current `content/agents/`, `content/guides/`, `content/mcp/`,
+`content/tools/`, `content/skills/`, open pull requests, and repository-wide
+content for `openai/openai-agents-js`, OpenAI Agents JavaScript SDK, OpenAI
+Agents TypeScript SDK, `@openai/agents`, OpenAI Agents MCP tools, OpenAI Agents
+tracing JavaScript, and OpenAI sandbox agents. Existing content cites the JS
+tracing guide as a related source, but no dedicated installable JavaScript or
+TypeScript SDK tools entry, exact source URL duplicate, target file, or open
+duplicate PR was found.

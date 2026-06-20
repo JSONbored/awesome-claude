@@ -1,0 +1,235 @@
+---
+title: VoltAgent
+slug: voltagent
+category: tools
+description: >-
+  Open-source TypeScript agent engineering framework and platform for building
+  AI agents with tools, memory, workflows, RAG, guardrails, evals, MCP, voice,
+  and VoltOps observability.
+cardDescription: >-
+  TypeScript agent framework with workflows, MCP tools, memory, RAG,
+  guardrails, evals, voice, and VoltOps observability.
+seoTitle: VoltAgent TypeScript Agent Framework for Claude and AI Agents
+seoDescription: >-
+  VoltAgent is a TypeScript AI agent framework and engineering platform with
+  tools, memory, workflows, MCP, RAG, guardrails, evals, voice, and VoltOps
+  observability.
+author: VoltAgent
+authorProfileUrl: "https://github.com/VoltAgent"
+dateAdded: "2026-06-18"
+websiteUrl: "https://voltagent.dev/"
+documentationUrl: "https://voltagent.dev/docs/"
+repoUrl: "https://github.com/VoltAgent/voltagent"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Web
+sourceUrls:
+  - "https://github.com/VoltAgent/voltagent"
+  - "https://raw.githubusercontent.com/VoltAgent/voltagent/main/README.md"
+  - "https://raw.githubusercontent.com/VoltAgent/voltagent/main/package.json"
+  - "https://voltagent.dev/docs/agents/overview/"
+  - "https://voltagent.dev/docs/workflows/overview/"
+  - "https://voltagent.dev/docs/agents/mcp/"
+retrievalSources:
+  - "https://github.com/VoltAgent/voltagent"
+  - "https://raw.githubusercontent.com/VoltAgent/voltagent/main/README.md"
+  - "https://raw.githubusercontent.com/VoltAgent/voltagent/main/package.json"
+  - "https://voltagent.dev/docs/agents/overview/"
+  - "https://voltagent.dev/docs/workflows/overview/"
+  - "https://voltagent.dev/docs/agents/mcp/"
+installable: true
+installCommand: "npm create voltagent-app@latest"
+usageSnippet: >-
+  Create a VoltAgent app, define agents with @voltagent/core, attach typed
+  tools, memory, workflows, or MCP tools, then run the local server and inspect
+  behavior through VoltOps Console or your own observability path.
+copySnippet: |-
+  npm create voltagent-app@latest
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js 20 or newer and a package manager compatible with the generated VoltAgent project."
+  - "Model provider credentials for the selected provider, such as OpenAI, Anthropic, Google, or another supported route."
+  - "A TypeScript application boundary for exposing agent endpoints, workflows, tools, memory, and observability."
+  - "Database, vector store, memory adapter, or knowledge-base plan before enabling durable memory or RAG."
+  - "MCP server allowlist, authentication plan, and tool approval policy before connecting external MCP tools."
+safetyNotes:
+  - "VoltAgent agents can call application tools, MCP tools, model providers, workflow steps, memory adapters, RAG retrievers, and voice providers, so each integration needs explicit permission and review boundaries."
+  - "Typed tools and Zod schemas help define contracts, but they do not prove that an agent action is correct, reversible, policy-compliant, or safe for production."
+  - "Workflows can run application code, call APIs, suspend, resume, branch, run steps in parallel, and execute agent steps; review long-running and human approval flows before using them with real customer or infrastructure actions."
+  - "MCP support can expose filesystem, browser, database, cloud, or internal-service tools from external servers; use narrow server allowlists and audit tool descriptions before attaching them to agents."
+  - "Guardrails and evals are useful release controls, but production agents still need logs, rollback paths, rate limits, budget limits, and human review for high-impact actions."
+privacyNotes:
+  - "Prompts, instructions, tool arguments, tool results, workflow state, memory records, retrieved documents, voice inputs or outputs, traces, eval data, and logs may be sent to model providers, storage systems, MCP servers, or VoltOps depending on configuration."
+  - "Do not commit model API keys, MCP credentials, database URLs, webhook secrets, customer data, or prompt logs in the generated project."
+  - "Durable memory and RAG integrations can retain user messages, document chunks, embeddings, and metadata; define retention and deletion rules before production use."
+  - "When using VoltOps Console or self-hosted observability, review what traces, prompts, tool calls, metrics, and eval outputs are collected and who can access them."
+tags:
+  - voltagent
+  - agent-framework
+  - typescript
+  - mcp
+  - rag
+  - observability
+  - workflows
+  - guardrails
+keywords:
+  - voltagent
+  - voltagent ai agent framework
+  - typescript agent framework
+  - ai agent engineering platform
+  - voltagent mcp
+  - voltagent workflows
+  - voltagent rag
+  - voltagent observability
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+VoltAgent is a TypeScript agent engineering framework and platform for teams
+building application-level AI agents. The open-source framework centers on
+`@voltagent/core`, typed tools, model providers, memory, workflows, MCP,
+retrieval, guardrails, evals, streaming, and voice. The related VoltOps Console
+adds operational surfaces for observability, automation, deployment, prompts,
+guardrails, and evals.
+
+Use this when a Claude-adjacent project needs a code-first TypeScript agent
+stack instead of a visual builder or a Python-only framework. VoltAgent is
+especially relevant for teams that want explicit application code around agent
+state, tools, workflows, and production telemetry.
+
+## Core Capabilities
+
+| Area | VoltAgent Coverage |
+| --- | --- |
+| Agents | `Agent` instances with instructions, tools, memory, providers, streaming, and multimodal or voice extensions |
+| Tools | Zod-typed tools with lifecycle handling, cancellation, and model-call integration |
+| Workflows | Declarative multi-step workflows with schemas, branching, parallel steps, suspend/resume, hooks, and agent steps |
+| MCP | `MCPConfiguration` client support for stdio, SSE, HTTP, authorization, tool discovery, events, and cleanup |
+| Memory and RAG | Durable memory adapters, retrieval agents, managed knowledge base, embeddings, and document search patterns |
+| Operations | VoltOps Console for traces, observability, evals, prompts, guardrails, automation, and deployment workflows |
+| Safety Controls | Guardrails, eval suites, typed contracts, and workflow hooks for release checks and runtime policy |
+
+## Quick Start
+
+Create a new project:
+
+```bash
+npm create voltagent-app@latest
+```
+
+A typical generated app defines an agent, model, tools, optional memory, and a
+server:
+
+```ts
+import { Agent, Memory, VoltAgent } from "@voltagent/core";
+import { openai } from "@ai-sdk/openai";
+import { LibSQLMemoryAdapter } from "@voltagent/libsql";
+import { createPinoLogger } from "@voltagent/logger";
+import { honoServer } from "@voltagent/server-hono";
+
+const memory = new Memory({
+  storage: new LibSQLMemoryAdapter({ url: "file:./.voltagent/memory.db" }),
+});
+
+const agent = new Agent({
+  name: "support-agent",
+  instructions: "Answer from approved support context and cite tools used.",
+  model: openai("gpt-4o-mini"),
+  memory,
+});
+
+new VoltAgent({
+  agents: { agent },
+  server: honoServer(),
+  logger: createPinoLogger({ name: "support-agent", level: "info" }),
+});
+```
+
+## MCP Usage
+
+VoltAgent can load tools from MCP servers and pass them into agents. The docs
+show `MCPConfiguration` as the main client surface:
+
+```ts
+import { Agent, MCPConfiguration } from "@voltagent/core";
+
+const mcpConfig = new MCPConfiguration({
+  servers: {
+    docs: {
+      type: "http",
+      url: "https://mcp-server.example.com",
+    },
+  },
+});
+
+const tools = await mcpConfig.getTools();
+
+const agent = new Agent({
+  name: "docs-agent",
+  model: "openai/gpt-4o",
+  tools,
+});
+```
+
+The same MCP boundary can connect powerful tools to an agent, so treat every
+server as a separate trust relationship. Prefer scoped credentials, explicit
+server allowlists, and small tool sets before giving an agent access to
+filesystem, browser, database, infrastructure, or internal-service tools.
+
+## Workflow Fit
+
+VoltAgent workflows are useful when an agent product needs more than one model
+call. A workflow can validate input and output schemas, run TypeScript steps,
+call agents, branch, run parallel steps, suspend for human input, resume later,
+stream progress, and attach lifecycle hooks for logging or metrics.
+
+That makes VoltAgent a practical fit for:
+
+- Agent-backed customer-support or operations apps with typed business tools.
+- Internal automation where an agent step needs deterministic pre-processing or
+  post-processing.
+- RAG systems that combine retrieval, memory, tool calls, and evals.
+- Multi-agent workflows with supervisors or specialized sub-agents.
+- Production agent teams that need observability, guardrails, and repeatable
+  eval gates around releases.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes VoltAgent as an AI agent engineering platform
+  with an open-source TypeScript framework plus VoltOps Console.
+- The README lists core framework coverage for agents, tools, MCP, memory, RAG,
+  workflows, voice, guardrails, evals, model-provider compatibility, and
+  resumable streaming.
+- The official agent overview describes agents as model wrappers with
+  instructions, tools, memory, and related capabilities.
+- The workflow overview documents schema-validated workflows, suspend/resume,
+  hooks, step types, agent steps, branching, and parallel execution.
+- The MCP documentation describes `MCPConfiguration`, transport options, tool
+  discovery, agent integration, events, elicitation handlers, and disconnect
+  cleanup.
+- The repository metadata reports MIT licensing, Node.js 20+ engine
+  requirements, `pnpm` workspaces, and current active development.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/skills/`,
+`content/agents/`, guides, open and closed pull requests, and repository-wide
+content for `VoltAgent`, `voltagent`, `VoltAgent/voltagent`,
+`voltagent.dev`, `@voltagent/core`, `@voltagent/mcp-docs-server`,
+`VoltOps Console`, `TypeScript agent framework`, and `MCPConfiguration`.
+Existing entries cover adjacent tools such as LangGraph, Mastra, Agno, CrewAI,
+Pydantic AI, OpenAI Agents SDK review content, Cloudflare Agents SDK, and
+HumanLayer, but no dedicated VoltAgent tools entry, VoltAgent source URL
+duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. VoltAgent
+includes an MIT-licensed open-source framework and commercial or hosted platform
+surfaces around VoltOps.

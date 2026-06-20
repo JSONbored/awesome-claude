@@ -1,0 +1,232 @@
+---
+title: MCP Client Config Audit Capability Pack Skill
+slug: mcp-client-config-audit-capability-pack
+category: skills
+description: >-
+  Expert MCP client config audit capability pack for reviewing Claude Code MCP
+  server entries, scope placement, tool approval settings, env var secrets, and
+  startup context load before enabling servers in production repositories.
+cardDescription: >-
+  Audit Claude Code MCP client configuration, scope placement, tool approvals,
+  and secret handling with source-backed checklists.
+seoTitle: MCP Client Config Audit Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for MCP client config audit, Claude Code MCP
+  server scope, tool approval settings, environment secrets, and startup context
+  review.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1532
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1532"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when auditing Claude Code MCP configuration in a repository or
+  user profile and you need to verify server scope, secret handling, tool
+  approvals, and unnecessary startup context load.
+copySnippet: |-
+  # Trigger
+  "Apply the MCP client config audit capability pack for this workspace."
+
+  # Required output
+  1) MCP config inventory by scope (project, user, enterprise)
+  2) Server transport, auth, and secret-handling assessment
+  3) Tool approval and write-tool exposure review
+  4) Startup context and token-cost impact summary
+  5) Privacy-safe remediation plan
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://code.claude.com/docs/en/debug-your-config"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Redacted access to project `.mcp.json`, user MCP settings, or enterprise MCP policy for the workspace under review."
+  - "A list of MCP servers currently configured and the repositories or teams that depend on them."
+  - "Permission to inspect Claude Code startup behavior with `/context` or equivalent MCP tool listings."
+  - "Platform or security stakeholder available to approve config changes affecting production repositories."
+safetyNotes:
+  - "MCP config files can contain API keys, OAuth client secrets, and bearer tokens that must never be committed to git or pasted into public issues."
+  - "Enabling write or execute MCP tools in shared repositories expands the blast radius for every contributor using Claude Code in that repo."
+  - "Project-scoped servers affect all collaborators; user-scoped servers follow individual accounts across repositories unless restricted."
+  - "Removing an MCP server from config does not automatically revoke OAuth tokens issued to remote vendors."
+  - "This skill recommends config changes; it must not edit MCP settings or rotate secrets without explicit user approval."
+privacyNotes:
+  - "MCP config audits often expose internal service URLs, database hostnames, staging environment names, and account identifiers."
+  - "Tool schema listings loaded at startup can reveal internal API surface area if copied into public support threads."
+  - "Shared `.mcp.json` files checked into repositories may leak secrets through git history even after redaction in the current commit."
+  - "Public audit summaries should describe scope and risk categories, not live credentials or full server manifests."
+tags:
+  - mcp
+  - client-config
+  - audit
+  - claude-code
+  - capability-pack
+keywords:
+  - MCP client config audit
+  - Claude Code MCP configuration review
+  - MCP server scope audit
+  - MCP tool approval settings
+  - Claude Code .mcp.json review
+  - MCP startup context load
+readingTime: 9
+difficultyScore: 80
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code MCP, skills, features overview,
+and configuration debugging documentation verified on **2026-06-14**. MCP config
+file locations, approval controls, and enterprise policy options can change;
+prefer live official docs over remembered paths or flags.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/mcp
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://code.claude.com/docs/en/debug-your-config
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code MCP and configuration documentation and
+the public Anthropic `claude-code` repository on **2026-06-14**:
+
+- Claude Code reads MCP server definitions from project, user, and enterprise
+  configuration layers; project settings affect all repo collaborators.
+- MCP tool names and schemas load into context at session start, increasing
+  token usage even before any tool is invoked.
+- Claude Code supports tool approval requirements and scoping controls that
+  should gate destructive or production-impacting MCP actions.
+- Environment variables referenced in MCP launch commands are a common secret
+  leakage path when configs are committed or shared in screenshots.
+- Debug and config inspection workflows documented for Claude Code apply to
+  verifying which MCP servers are active in a given workspace.
+
+## Scope Note
+
+This is not a substitute for vendor trust review of remote MCP servers. Use it
+as a reusable client-side audit workflow for Claude Code MCP configuration
+before enabling servers in shared or production repositories.
+
+## Core Workflow
+
+1. Inventory active MCP servers by scope: project `.mcp.json`, user settings,
+   enterprise policy, and any checked-in examples or templates.
+2. Classify each server as local stdio, remote SSE, or streamable HTTP and note
+   the authentication method and secret storage location.
+3. Scan for secret leakage: API keys in repo files, env vars with overly broad
+   permissions, and committed OAuth client secrets in git history.
+4. Review tool surface: list available tools, mark write/execute/admin actions,
+   and compare against workflows the team actually needs.
+5. Review approval settings: confirm destructive tools require explicit approval
+   and that auto-approved read tools do not return excessive sensitive data.
+6. Measure startup impact: use `/context` or equivalent to estimate MCP schema
+   contribution to session load and remove unused servers.
+7. Check scope fit: move personal servers from project config to user scope or
+   remove servers that every collaborator inherits unnecessarily.
+8. Validate enterprise overrides: confirm org policy allows the server, transport,
+   and OAuth domains under review.
+9. Produce a remediation plan with ordered changes, rollback steps, and secret
+   rotation requirements.
+
+## Capability Scope
+
+- MCP config inventory across project, user, and enterprise scope.
+- Transport, auth, and secret-handling review.
+- Tool approval and write-tool exposure assessment.
+- Startup context and token-cost impact summary.
+- Remediation and rollback planning.
+- Privacy-safe config audit reporting.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when onboarding a repository,
+  reviewing shared MCP settings, or preparing a platform hygiene audit.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic MCP config checklist in platform runbooks.
+
+## Required Inputs
+
+- Redacted MCP config files or settings export for the workspace under review.
+- List of repositories, teams, and workflows depending on each MCP server.
+- Current tool approval policy and any enterprise MCP restrictions.
+- `/context` breakdown or equivalent MCP startup load observation if available.
+
+## Production Rules
+
+- Never commit live secrets in `.mcp.json` or launch command env blocks.
+- Prefer project scope only for servers the whole team needs; keep personal
+  integrations in user scope.
+- Require approval for write, delete, execute, and deploy-class MCP tools.
+- Remove unused MCP servers before optimizing prompts or skills.
+- Rotate credentials after removing a server from config or sharing audit logs.
+- Redact URLs, tokens, and internal hostnames in public summaries.
+- Pair this audit with a remote-server trust review for third-party vendors.
+
+## Review Matrix
+
+| Finding | Risk | Remediation |
+| --- | --- | --- |
+| Secret in git-tracked config | Critical | Rotate secret; move to env or secret store |
+| Write tool auto-approved | High | Enable approval gate or remove tool |
+| Unused server at startup | Medium | Remove from config to reduce context load |
+| Personal server in project scope | Medium | Move to user scope or document team need |
+| Remote server without trust review | High | Run remote-server trust review first |
+| Broad OAuth token in user scope | High | Revoke token; re-consent with least privilege |
+
+## Output Contract
+
+1. MCP config inventory by scope.
+2. Transport, auth, and secret-handling assessment.
+3. Tool approval and write-tool exposure review.
+4. Startup context and token-cost impact summary.
+5. Ordered remediation and rollback plan.
+6. Privacy-safe summary suitable for platform review or team comms.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for MCP client config audit, Claude Code `.mcp.json` review, and
+MCP startup context workflows. Official docs cover MCP setup, but no `skills`
+entry provides a reusable client config audit capability pack with remediation
+matrix and output contract. Complements remote-server trust review without
+duplicating vendor OAuth analysis.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.

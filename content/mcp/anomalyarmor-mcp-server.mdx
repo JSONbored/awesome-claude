@@ -1,0 +1,204 @@
+---
+title: AnomalyArmor MCP Server for Claude
+slug: anomalyarmor-mcp-server
+category: mcp
+description: >-
+  AnomalyArmor armor-mcp stdio server with 52 consolidated data observability tools for alerts, freshness, schema drift, quality metrics, lineage, and AI recommendations.
+cardDescription: >-
+  Connect Claude to AnomalyArmor for data health summaries, alert management, freshness checks, schema drift, and monitoring recommendations.
+seoTitle: AnomalyArmor MCP Server for Claude
+seoDescription: >-
+  Use the AnomalyArmor MCP server with Claude for data observability—alerts, freshness, schema drift, quality, and lineage via uvx armor-mcp.
+author: AnomalyArmor
+authorProfileUrl: "https://github.com/anomalyarmor"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1468
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1468"
+repoUrl: "https://github.com/anomalyarmor/agents"
+documentationUrl: "https://docs.anomalyarmor.ai"
+websiteUrl: "https://anomalyarmor.ai"
+installable: true
+installCommand: >-
+  claude mcp add armor -- uvx armor-mcp
+usageSnippet: >-
+  Run `uvx armor-mcp` with ARMOR_API_KEY set, or configure `~/.armor/config.yaml` after signing up at anomalyarmor.ai.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "armor": {
+        "command": "uvx",
+        "args": ["armor-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "armor": {
+        "command": "uvx",
+        "args": ["armor-mcp"],
+        "env": {
+          "ARMOR_API_KEY": "aa_live_your_key_here"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "AnomalyArmor account with an API key from Settings → API Keys."
+  - "Python uv/uvx available on the host running the MCP client."
+  - "Connected data sources already onboarded in AnomalyArmor."
+  - "Claude Code, Cursor, or another MCP client with stdio transport."
+safetyNotes:
+  - "Tools can create alert rules, freshness schedules, metrics, and monitoring configurations."
+  - "manage_asset and related tools may trigger discovery jobs on production sources."
+  - "Alert acknowledgement and resolution changes operational state."
+  - "Review AI recommendations before applying automated monitoring at scale."
+privacyNotes:
+  - "Table names, schema metadata, alert details, and sample metrics are sent to AnomalyArmor."
+  - "Natural language `ask_question` queries may expose internal data catalog context to the LLM."
+  - "API keys grant access until revoked in AnomalyArmor settings."
+tags:
+  - data-observability
+  - monitoring
+  - alerts
+  - data-quality
+  - stdio
+keywords:
+  - anomalyarmor mcp
+  - armor-mcp claude
+  - data observability mcp
+  - schema drift mcp
+  - freshness monitoring claude
+readingTime: 4
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+AnomalyArmor Agents ships `armor-mcp`, a Model Context Protocol server for data observability. Fifty-two consolidated tools cover health summaries, alerts, freshness, schema drift, data quality, lineage, tags, and AI-driven monitoring recommendations—designed for data teams using Claude Code or Cursor.
+
+Source lives in [anomalyarmor/agents](https://github.com/anomalyarmor/agents). Docs: [docs.anomalyarmor.ai](https://docs.anomalyarmor.ai).
+
+## Features
+
+- Consolidated action-parameter tools to reduce context window usage.
+- Health summaries, daily briefings, and alert inbox management.
+- Freshness schedules and schema drift monitoring.
+- Data quality metrics, validity rules, and referential checks.
+- AI recommendations and natural language ask_question intelligence.
+
+## Use Cases
+
+- Ask whether warehouse tables are healthy this morning.
+- Investigate why the orders table is stale and which dashboards are affected.
+- Create freshness monitoring for high-traffic finance tables.
+- Review unresolved critical alerts from yesterday.
+- Get AI recommendations for tables lacking coverage.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Generate an `aa_live_` API key in AnomalyArmor.
+2. Set ARMOR_API_KEY or create `~/.armor/config.yaml`.
+3. Add `uvx armor-mcp` to MCP client stdio configuration.
+4. Invoke health_summary or get_todays_briefing to verify connectivity.
+
+### Claude Code
+
+```bash
+claude mcp add armor -- uvx armor-mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "armor": {
+      "command": "uvx",
+      "args": ["armor-mcp"]
+    }
+  }
+}
+```
+
+For authenticated setups:
+
+```json
+{
+  "mcpServers": {
+    "armor": {
+      "command": "uvx",
+      "args": ["armor-mcp"],
+      "env": {
+        "ARMOR_API_KEY": "aa_live_your_key_here"
+      }
+    }
+  }
+}
+```
+
+Alternatively install the Claude plugin: `claude plugin install armor@anomalyarmor`.
+
+## Examples
+
+### Health check
+
+```text
+Is my data healthy? Summarise alerts, stale tables, and schema changes.
+```
+
+### Investigate stale table
+
+```text
+Why is the orders table stale and what depends on it?
+```
+
+### Recommend monitoring
+
+```text
+What should I monitor on my Snowflake warehouse based on table patterns?
+```
+
+## Security
+
+- Treat alert rule creation as production-impacting configuration.
+- Scope API keys to the minimum AnomalyArmor workspace needed.
+- Review ask_question responses before sharing externally—they may quote internal schema names.
+
+## Troubleshooting
+
+### No API key configured
+
+Set ARMOR_API_KEY or add api_key to ~/.armor/config.yaml.
+
+### MCP server not found
+
+Verify uvx is installed and restart the MCP client after config edits.
+
+### Empty asset list
+
+Connect a data source and run discovery in AnomalyArmor first.
+
+### Plugin skills missing
+
+Run `claude plugin list` to confirm armor@anomalyarmor is installed.
+
+## Duplicate Check
+
+No existing AnomalyArmor or `armor-mcp` entry was found in `content/mcp/`. This differs from generic SQL MCP servers because it targets observability alerts, freshness, and schema drift—not ad hoc querying.

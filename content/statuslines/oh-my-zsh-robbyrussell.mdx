@@ -3,20 +3,25 @@ title: Oh My Zsh Robbyrussell - Statuslines
 slug: oh-my-zsh-robbyrussell
 category: statuslines
 description: >-
-  Oh-My-Zsh robbyrussell theme replica with iconic arrow prompt, Git status
-  indicators, and directory path for seamless Claude Code shell integration.
+  A Claude Code statusline that recreates the Oh My Zsh robbyrussell theme: the
+  cyan ➜ arrow, the working-directory basename, and git:(branch) with a red ✗
+  when the tree is dirty, plus the active model name. A bash script parses the
+  status JSON with jq.
 cardDescription: >-
-  Oh-My-Zsh robbyrussell theme replica with iconic arrow prompt, Git status
-  indicators, and directory path for seamless Claude Code shell i...
-seoTitle: Oh My Zsh Robbyrussell - Statuslines
+  Recreate the Oh My Zsh robbyrussell prompt in Claude Code: cyan ➜ arrow,
+  directory basename, git:(branch), and a ✗ dirty marker.
+seoTitle: "Oh My Zsh robbyrussell Statusline for Claude Code"
 seoDescription: >-
-  Oh-My-Zsh robbyrussell theme replica with iconic arrow prompt, Git status
-  indicators, and directory path for seamless Claude Code shell integration.
-  Discover...
+  A Claude Code statusline replicating the Oh My Zsh robbyrussell prompt: the ➜
+  arrow, directory basename, git:(branch) branch, and a ✗ dirty indicator.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-23"
 documentationUrl: "https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#robbyrussell"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+  - "https://github.com/ohmyzsh/ohmyzsh/blob/master/themes/robbyrussell.zsh-theme"
+  - "https://docs.claude.com/en/docs/claude-code/statusline"
 installable: true
 usageSnippet: "➜  my-project git:(main) ✗ [claude-sonnet-4.5]"
 copySnippet: |-
@@ -125,6 +130,8 @@ prerequisites:
   - >-
     Terminal with ANSI color code support (256-color mode recommended for
     authentic robbyrussell colors)
+privacyNotes:
+  - "The script reads the workspace path, git branch, and dirty state from the Claude Code status JSON and your local repository to render the prompt; it only prints to your terminal and sends nothing over the network."
 tags:
   - oh-my-zsh
   - robbyrussell
@@ -132,17 +139,13 @@ tags:
   - shell-replica
   - git-integration
   - classic
+safetyNotes:
+  - "Runs as a Claude Code statusline command on every refresh and depends on the local shell environment; a failure only affects status rendering, not your session."
 keywords:
-  - classic
-  - claude
-  - development
-  - git-integration
-  - oh-my-zsh
-  - robbyrussell
-  - shell-replica
-  - statuslines
-  - tools
-  - zsh
+  - oh my zsh robbyrussell statusline
+  - zsh theme statusline
+  - robbyrussell claude statusline
+  - claude code statusline
 readingTime: 1
 difficultyScore: 3
 hasTroubleshooting: true
@@ -323,7 +326,7 @@ if ! command -v jq &> /dev/null; then
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sudo apt-get install -y jq || sudo yum install -y jq
     else
-        echo "Please install jq manually: https://stedolan.github.io/jq/"
+        echo "Please install jq manually: https://jqlang.github.io/jq/"
     fi
 fi
 

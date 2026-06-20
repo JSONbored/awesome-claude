@@ -1,0 +1,245 @@
+---
+title: Test Double Misuse Review Rules
+slug: test-double-misuse-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing test code for test-double misuse, covering
+  over-mocking that decouples tests from real behavior, under-mocking that
+  creates slow or flaky tests, mock-return-value drift, missing contract tests
+  for faked dependencies, and keeping test data free of personal information.
+cardDescription: >-
+  Review test doubles for over-mocking, under-mocking, mock drift, and missing
+  contract tests for faked dependencies to keep tests meaningful and reliable.
+seoTitle: Test Double Misuse Review Rules
+seoDescription: >-
+  Practical review rules for test doubles: over-mocking, under-mocking,
+  mock-return-value drift, missing contract verification, stub versus fake versus
+  mock choice, and keeping test data free of personal information.
+author: jaso0n0818
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+documentationUrl: "https://martinfowler.com/bliki/TestDouble.html"
+sourceUrls:
+  - "https://martinfowler.com/bliki/TestDouble.html"
+  - "https://martinfowler.com/articles/practical-test-pyramid.html"
+  - "https://martinfowler.com/articles/microservice-testing/"
+  - "https://en.wikipedia.org/wiki/Test_double"
+installable: false
+usageSnippet: >-
+  Apply these rules when a change adds, edits, or removes test doubles — mocks,
+  stubs, spies, fakes, or dummies — in unit, integration, or component tests.
+copySnippet: |-
+  You are reviewing test code for test-double misuse.
+
+  Rules:
+  1. Mock only what is slow, non-deterministic, or crosses a process boundary;
+     do not mock the thing under test or its direct collaborators when a real
+     or in-process fake is practical.
+  2. Keep mock return values truthful to what the real dependency returns; stale
+     or invented return values let tests pass while real integration breaks.
+  3. Verify interactions (calls, arguments, call count) only when the interaction
+     itself is the behavior under test, not as a default assertion style.
+  4. Back every widely faked dependency with at least one contract or integration
+     test that runs against the real collaborator so drift is caught.
+  5. Prefer stubs and fakes over mocks for simple value-returning collaborators;
+     reserve mocks for verifying side-effect interactions.
+  6. Keep test fixture data synthetic; do not copy production records or personal
+     data into test setups.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request or diff that adds, edits, or removes test doubles in unit, integration, or component tests.
+  - Knowledge of the test framework and mocking library in use, since stub, mock, spy, and fake semantics differ between libraries.
+  - Awareness of whether a contract or integration test already covers the faked dependency, or whether the PR should add one.
+  - Permission to block merge when a test double decouples the test from real behavior in a way that masks breakage.
+safetyNotes:
+  - "Tests that mock the system under test or its direct collaborators can pass confidently while the real wiring is broken, giving false assurance that hides regressions."
+  - "Mocking a dependency that has changed its behavior causes tests to pass against a stale contract, delaying discovery of integration failures until production."
+  - "Removing a mock without adding a real dependency can make a test suite unexpectedly slow or flaky if the dependency is an external service or database."
+privacyNotes:
+  - "Test fixtures and mock return values sometimes copy production data including personal identifiers, emails, phone numbers, and health records."
+  - "Do not paste real user records or production database rows into test setups or mock return values; use synthetic, obviously-fake data."
+  - "Be careful with snapshot and fixture files that may contain personal data captured from a staging or production environment."
+tags:
+  - testing
+  - mocks
+  - test-doubles
+  - reliability
+  - code-review
+  - test-quality
+---
+
+## Purpose
+
+Use these rules when a change adds or edits test doubles. The goal is to keep
+test doubles honest — catching real defects without giving false confidence when
+the production behavior drifts away from what the mock returns.
+
+This is a review policy, not a mocking-library tutorial. It tells reviewers what
+must be true about a test double's scope, return values, interaction assertions,
+and contract coverage before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know what is being faked and why.
+
+1. **Subject and collaborators.** Which class, function, or service is under
+   test and which of its collaborators are being replaced by test doubles.
+2. **Double type.** Whether the double is a stub (returns a value), a mock
+   (verifies calls), a spy (records calls), a fake (simplified implementation),
+   or a dummy (unused argument filler).
+3. **Return-value accuracy.** Whether the values the stub or mock returns match
+   what the real dependency actually returns.
+4. **Interaction assertions.** Whether the test verifies calls as a proxy for
+   the real observable behavior or because the interaction itself matters.
+5. **Contract coverage.** Whether any test runs against the real dependency to
+   catch drift in the mocked return values.
+
+If the change cannot say what is under test and why the collaborator is faked
+rather than used directly, require that context before reviewing the assertions.
+
+## Scope And Selection Rules
+
+- Mock collaborators that are slow, non-deterministic, or cross a process or
+  network boundary; do not mock the thing under test.
+- Use the real collaborator or an in-process fake when it is fast, deterministic,
+  and available in the test environment.
+- Prefer a stub or fake over a mock for value-returning collaborators where the
+  interaction is not the point of the test.
+- Reserve interaction verification (mock expectations) for side-effect behavior
+  where the call itself is the observable outcome.
+- Do not mock simple utilities, pure functions, or value objects; test them
+  directly instead.
+
+## Return-Value Accuracy Rules
+
+- Keep stub and mock return values consistent with what the real dependency
+  actually returns for the same input.
+- Update return values when the dependency's interface or behavior changes, not
+  only when tests fail.
+- Use a recorded or generated fixture derived from the real response when the
+  return value is complex, rather than a hand-invented one.
+- Avoid returning simplified or convenient values that the real dependency never
+  produces, since tests then pass cases that would fail in production.
+- Flag return values that omit required fields or use types the real dependency
+  does not produce.
+
+## Interaction Assertion Rules
+
+- Assert interactions only when the call, argument, or call count is itself the
+  behavior under test.
+- Do not assert every call as a default style; over-assertion makes tests fragile
+  to refactoring without catching more real defects.
+- Prefer asserting observable state or return values over asserting that
+  collaborators were called in a specific order.
+- Keep interaction assertions stable; if they break on every refactor, they are
+  probably testing implementation rather than behavior.
+- When a side-effect interaction must be verified, use the narrowest assertion
+  that proves the behavior.
+
+## Contract And Integration Coverage Rules
+
+Widely faked dependencies create a gap between the test suite and production.
+Close it with at least one test that uses the real thing.
+
+- Add a contract or integration test for any collaborator that is faked in many
+  test files, so interface drift is caught before it reaches production.
+- Run at least one integration-level test against the real database, HTTP
+  service, or message bus when unit tests fake those boundaries.
+- Use consumer-driven contract tests when the dependency is an external service
+  maintained by another team.
+- Update the contract test when the dependency's interface changes, not only
+  the unit test mock.
+- Make the gap explicit: if no contract test exists and none can be added, record
+  why and what manual verification happens instead.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- the thing under test itself is mocked, since the test cannot then catch a
+  defect in the subject;
+- a fast, deterministic, in-process collaborator is mocked without justification;
+- mock return values are obviously stale or invented values the real dependency
+  never produces;
+- interaction assertions verify every call by default rather than only side
+  effects that are the actual behavior;
+- a widely faked dependency has no contract or integration test and none is
+  planned;
+- test fixture data contains real personal data copied from production or
+  staging.
+
+## Review Checklist
+
+- [ ] {"task": "Subject identified", "description": "The change is clear about what is under test and why each collaborator is faked"}
+- [ ] {"task": "Double type appropriate", "description": "Stub, fake, or mock is chosen for the right reason; real collaborators are used when practical"}
+- [ ] {"task": "Return values accurate", "description": "Stub and mock values match what the real dependency produces"}
+- [ ] {"task": "Assertions focused", "description": "Interaction assertions verify side-effect behavior, not every internal call"}
+- [ ] {"task": "Contract coverage", "description": "Widely faked dependencies have at least one test against the real collaborator"}
+- [ ] {"task": "Privacy safe", "description": "Fixture data is synthetic and does not include real personal data"}
+
+## AI Review Rules
+
+AI assistants can review test code, but they should show evidence.
+
+- Ask the assistant to identify what is under test and what is faked before
+  judging the assertions.
+- Require it to flag any mock return value that differs from the real
+  dependency's known behavior.
+- Have the assistant check whether a contract or integration test backs the
+  faked dependency.
+- Do not let the assistant assume all mocks are correct because the test passes.
+- Re-run review after changes to mock return values, interaction assertions, or
+  the dependency's real interface.
+
+## Troubleshooting
+
+- **Tests pass but integration breaks:** add a contract or integration test
+  against the real dependency and update the mock return values.
+- **Tests break on every refactor:** replace interaction assertions with
+  observable-state or return-value assertions.
+- **A mock returns a value the real thing never produces:** update the return
+  value or generate it from a real response fixture.
+- **A fast utility is mocked unnecessarily:** remove the mock and use the real
+  implementation.
+- **Fixture data contains personal data:** replace with synthetic data and
+  scrub any snapshot files that captured real records.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, statuslines, guides, collections, skills, open
+PRs, and closed PRs for mock misuse, test doubles, over-mocking, stub accuracy,
+contract testing, and test-quality review rules.
+
+Adjacent content includes the test-driven-development-enforcer rule and
+vitest-expert rule, but no entry is a portable pre-merge review policy
+specifically for test-double selection, return-value accuracy, and contract
+coverage. This entry is distinct because it decides what must be true about a
+test double's scope, accuracy, and contract backing before the change can merge.
+
+No prior closed PR for this rule was found during the duplicate/history check.
+
+## Test Double Type Reference
+
+The types below follow the taxonomy described in the sources. Choosing the right
+type and using it correctly is what makes the test meaningful.
+
+| Type  | What it does                       | When to use it                           |
+| ----- | ---------------------------------- | ---------------------------------------- |
+| Dummy | Fills a parameter that is not used | Satisfying an interface requirement only |
+| Stub  | Returns a fixed value              | Providing indirect input to the subject  |
+| Spy   | Records calls for later assertion  | When you need to verify a call happened  |
+| Mock  | Pre-programmed with expectations   | Verifying a side-effect interaction      |
+| Fake  | Simplified working implementation  | Replacing a real but heavy dependency    |
+
+Mocks are the most powerful and the most dangerous: over-used, they verify
+implementation instead of behavior and allow return-value drift. Stubs and fakes
+give simpler, more stable tests when the interaction itself is not what matters.
+
+## Sources
+
+- Martin Fowler — Test Double: https://martinfowler.com/bliki/TestDouble.html
+- Martin Fowler — Practical Test Pyramid: https://martinfowler.com/articles/practical-test-pyramid.html
+- Martin Fowler — Testing Strategies in a Microservice Architecture: https://martinfowler.com/articles/microservice-testing/
+- Test double (Wikipedia): https://en.wikipedia.org/wiki/Test_double

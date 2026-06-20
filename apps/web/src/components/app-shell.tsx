@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Moon, Sun, Send, Github, Rss } from "lucide-react";
+import { Moon, Sun, Send, Github, Rss, Menu } from "lucide-react";
 import { CommandBar, useGlobalCommandKey } from "./command-bar";
 import { AlertsDropdown } from "./alerts-dropdown";
 import { useShortcuts } from "./shortcuts-dialog";
@@ -8,6 +8,13 @@ import { ScrollProgress } from "./scroll-progress";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { NewsletterInline } from "./newsletter-inline";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { CATEGORIES } from "@/types/registry";
 
 const NAV = [
@@ -26,6 +33,7 @@ export function TopBar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isHome = pathname === "/";
   const [elevated, setElevated] = React.useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
   React.useEffect(() => {
     const onScroll = () => setElevated(window.scrollY > 8);
     onScroll();
@@ -44,7 +52,16 @@ export function TopBar() {
       )}
     >
       <ScrollProgress />
-      <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-14 max-w-page items-center gap-4 px-4 sm:px-6">
+        <button
+          type="button"
+          onClick={() => setMobileNavOpen(true)}
+          aria-label="Open menu"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-ink-muted hover:text-ink md:hidden"
+        >
+          <Menu className="h-4 w-4" />
+        </button>
+
         <Link to="/" className="flex items-center gap-2">
           <span className="flex h-7 w-7 items-center justify-center rounded-md bg-ink text-background">
             <span className="font-display text-sm font-bold">hc</span>
@@ -61,6 +78,7 @@ export function TopBar() {
               <Link
                 key={item.to}
                 to={item.to}
+                aria-current={active ? "page" : undefined}
                 className={cn(
                   "relative rounded-md px-2.5 py-1.5 text-sm transition-colors duration-200 ease-out",
                   active ? "text-ink" : "text-ink-muted hover:bg-surface-2 hover:text-ink",
@@ -111,6 +129,36 @@ export function TopBar() {
           </Link>
         </div>
       </div>
+
+      <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+        <SheetContent side="left" className="w-72">
+          <SheetHeader>
+            <SheetTitle className="font-display text-base font-semibold text-ink">Menu</SheetTitle>
+            <SheetDescription className="sr-only">Primary site navigation links.</SheetDescription>
+          </SheetHeader>
+          <nav className="mt-6 flex flex-col gap-1">
+            {NAV.map((item) => {
+              const active = pathname.startsWith(item.to);
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setMobileNavOpen(false)}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "rounded-md px-3 py-2 text-sm transition-colors duration-200 ease-out",
+                    active
+                      ? "bg-surface-2 text-ink"
+                      : "text-ink-muted hover:bg-surface-2 hover:text-ink",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </SheetContent>
+      </Sheet>
     </header>
   );
 }
@@ -123,7 +171,7 @@ export function Footer() {
         source="footer"
         className="border-0 border-b border-border bg-background"
       />
-      <div className="mx-auto grid max-w-[1400px] gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 md:grid-cols-12">
+      <div className="mx-auto grid max-w-page gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 md:grid-cols-12">
         <div className="sm:col-span-2 md:col-span-3">
           <div className="flex items-center gap-2">
             <span className="flex h-7 w-7 items-center justify-center rounded-md bg-ink text-background">
@@ -152,6 +200,7 @@ export function Footer() {
             { to: "/best", label: "Best lists" },
             { to: "/compare", label: "Compare" },
             { to: "/quality", label: "Quality" },
+            { to: "/state-of-claude-tooling", label: "State of tooling" },
             { to: "/changelog", label: "Changelog" },
             { to: "/brief", label: "Weekly Brief" },
           ]}
@@ -183,7 +232,7 @@ export function Footer() {
         />
       </div>
       <div className="border-t border-border">
-        <div className="mx-auto max-w-[1400px] px-4 py-4 sm:px-6">
+        <div className="mx-auto max-w-page px-4 py-4 sm:px-6">
           <div className="eyebrow mb-2">Categories</div>
           <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-ink-muted">
             {CATEGORIES.map((c) => (
@@ -200,7 +249,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-[1400px] flex-col items-start gap-3 px-4 py-5 text-xs text-ink-subtle sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto flex max-w-page flex-col items-start gap-3 px-4 py-5 text-xs text-ink-subtle sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span>© {new Date().getFullYear()} HeyClaude · heyclau.de</span>
           <nav className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <Link to="/legal" className="hover:text-ink">
@@ -209,7 +258,7 @@ export function Footer() {
             <span aria-hidden className="text-ink-subtle/60">
               ·
             </span>
-            <Link to="/legal" className="hover:text-ink">
+            <Link to="/legal" hash="privacy" className="hover:text-ink">
               Privacy
             </Link>
             <span aria-hidden className="text-ink-subtle/60">

@@ -1,0 +1,223 @@
+---
+title: Subagent Foreground Background Delegation Capability Pack Skill
+slug: subagent-foreground-background-delegation-capability-pack
+category: skills
+description: >-
+  Expert subagent foreground background delegation capability pack for choosing
+  when to run Claude Code subagents interactively versus in the background,
+  coordinating parallel work, and returning summarized results safely.
+cardDescription: >-
+  Choose foreground versus background Claude Code subagent delegation with
+  source-backed coordination and safety checklists.
+seoTitle: Subagent Foreground Background Delegation Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for subagent foreground and background delegation,
+  Claude Code parallel task coordination, result summarization, and delegation
+  mode selection.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1538
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1538"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when deciding whether a Claude Code task should run in a
+  foreground subagent with interactive oversight or a background subagent with
+  summarized handoff back to the parent session.
+copySnippet: |-
+  # Trigger
+  "Apply the subagent foreground background delegation capability pack."
+
+  # Required output
+  1) Task classification and delegation mode recommendation
+  2) Parallelism and coordination plan
+  3) Result summarization and handoff contract
+  4) Oversight and rollback requirements
+  5) Privacy-safe delegation summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "A concrete parent-session task that may benefit from subagent delegation."
+  - "Understanding of expected outputs, deadlines, and whether interactive approval is required mid-task."
+  - "Inventory of tools, MCP servers, and file scopes the subagent will need."
+  - "Agreement on how subagent results will be summarized back into the parent session."
+safetyNotes:
+  - "Background subagents reduce interactive oversight; do not use them for destructive edits, production deploys, or credential-handling tasks."
+  - "Parallel background subagents multiply token cost and can race on the same files or external systems."
+  - "Foreground subagents keep the parent waiting; overusing them erases the latency benefits of delegation."
+  - "Subagents isolate context but still consume tokens in their own windows; unbounded parallel research can become expensive quickly."
+  - "This skill recommends delegation modes; it must not spawn background subagents for high-risk tasks without explicit approval."
+privacyNotes:
+  - "Background subagent transcripts may accumulate sensitive file contents, customer examples, and internal URLs before summarization."
+  - "Summaries returned to the parent session can still leak data if subagents paste raw tool output instead of redacted findings."
+  - "Public delegation notes should describe mode choice and oversight level, not full subagent transcripts."
+tags:
+  - subagent
+  - delegation
+  - foreground
+  - background
+  - capability-pack
+keywords:
+  - subagent foreground background delegation
+  - Claude Code background subagent
+  - Claude Code foreground subagent
+  - subagent parallel coordination
+  - subagent result summarization
+  - delegation mode selection
+readingTime: 9
+difficultyScore: 79
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code sub-agents, skills, and features
+overview documentation verified on **2026-06-14**. Subagent delegation modes and
+parallelism behavior can change; prefer live official docs over cached workflow
+assumptions.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/sub-agents
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code sub-agents documentation and the public
+Anthropic `claude-code` repository on **2026-06-14**:
+
+- Claude Code subagents run in isolated context windows, keeping large reads and
+  exploration out of the main session window.
+- Subagents can run as foreground delegations with interactive progress or
+  background tasks that continue while the parent works on other steps.
+- Background delegation suits read-only research with summarized handoff; foreground
+  delegation suits tasks needing mid-flight approval or clarification.
+- Parallel subagents can explore multiple paths concurrently but increase aggregate
+  token usage across windows.
+- Official documentation positions subagents as a context-management and parallelism
+  tool rather than a replacement for parent-session accountability.
+
+## Scope Note
+
+This is not a general project-management framework. Use it as a reusable workflow
+for choosing foreground versus background subagent delegation in Claude Code.
+
+## Core Workflow
+
+1. Classify the task: read-only research, code exploration, implementation slice,
+   verification, or production-impacting action.
+2. Assess oversight need: whether mid-task user approval, credential use, or write
+   tools require foreground interaction.
+3. Choose delegation mode:
+   - **Foreground** for clarifications, approvals, writes, and narrow implementation slices.
+   - **Background** for parallel read-only research with structured summary return.
+4. Define handoff contract: required summary sections, max length, redaction rules,
+   and explicit unknowns rather than raw tool dumps.
+5. Plan parallelism: limit concurrent background subagents to avoid file or MCP races.
+6. Coordinate sequencing: which subagent results block parent progress versus inform it.
+7. Set verification: parent session validates summaries against source files or tests
+   before acting on background findings.
+8. Document rollback: how to cancel background work and revert partial changes if the
+   parent rejects subagent output.
+9. Produce a privacy-safe delegation summary for the session record.
+
+## Capability Scope
+
+- Task classification and delegation mode selection.
+- Parallelism and coordination planning.
+- Result summarization and handoff contracts.
+- Oversight and rollback requirements.
+- Token-cost awareness for parallel subagents.
+- Privacy-safe delegation reporting.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when splitting large tasks across
+  subagents or deciding whether research can run in the background.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic delegation checklist in team runbooks.
+
+## Required Inputs
+
+- Parent task goal, constraints, and deadline sensitivity.
+- Tool and MCP requirements for the delegated slice.
+- Approval policy for writes, deploys, and external system changes.
+- Expected summary format for background handoff.
+
+## Production Rules
+
+- Never background-delegate production writes or credential operations.
+- Cap parallel background subagents to a small number with distinct scopes.
+- Require redacted summaries, not raw MCP or file dumps, in parent handoff.
+- Verify background findings before merging or deploying from subagent output.
+- Cancel orphaned background tasks when parent task direction changes.
+- Prefer foreground delegation when user intent is still ambiguous.
+- Record delegation mode and oversight level in support or incident notes.
+
+## Review Matrix
+
+| Task type | Mode | Why |
+| --- | --- | --- |
+| Repo-wide read-only survey | Background | Parallel OK with summary |
+| Single-file implementation | Foreground | Needs approval and tests |
+| MCP write action | Foreground or parent | No silent background writes |
+| Multi-hypothesis research | Background parallel | Summarize competing findings |
+| Ambiguous requirements | Foreground | Clarify before work proceeds |
+
+## Output Contract
+
+1. Task classification and delegation mode recommendation.
+2. Parallelism and coordination plan.
+3. Handoff and summarization contract.
+4. Oversight and rollback requirements.
+5. Verification steps for parent session.
+6. Privacy-safe delegation summary.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for subagent foreground background delegation and parallel subagent
+coordination workflows. Subagent docs describe modes, but no `skills` entry
+provides a reusable delegation selection capability pack with handoff matrix and
+output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.

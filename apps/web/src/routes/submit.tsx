@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
@@ -20,8 +20,10 @@ import {
 import { logClientError } from "@/lib/client-logs";
 import { siteConfig } from "@/lib/site";
 import { CopyButton } from "@/components/copy-button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/seo";
+import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/submit")({
   head: () => ({
@@ -66,6 +68,7 @@ type PreflightResponse = {
     title: string;
     url: string;
     reasons: string[];
+    reasonLabels?: string[];
   }>;
   nextAction?: {
     label: string;
@@ -214,8 +217,10 @@ function SubmitPage() {
     if (!category || submitBusy) return;
     setSubmitBusy(true);
     setSubmitError("");
+    trackEvent("submit-start", { category });
     try {
       if (!siteConfig.submissionGateUrl) {
+        trackEvent("submit-success", { category, path: "manual" });
         setDone({
           manualPr: {
             targetPath: prTarget,
@@ -246,6 +251,7 @@ function SubmitPage() {
       if (!response.ok || !payload?.ok) {
         throw new Error(payload?.error || "The private submission gate rejected the draft.");
       }
+      trackEvent("submit-success", { category, path: "gate" });
       const authUrl = payload.authUrl ? safeGitHubAuthUrl(payload.authUrl) : "";
       if (payload.authUrl && !authUrl) {
         throw new Error("The submission gate returned an invalid GitHub auth URL.");
@@ -505,9 +511,9 @@ function SubmitPage() {
             </div>
 
             {submitError && (
-              <div className="rounded-md border border-trust-blocked/40 bg-trust-blocked/10 px-3 py-2 text-sm text-ink">
-                {submitError}
-              </div>
+              <Alert variant="destructive">
+                <AlertDescription>{submitError}</AlertDescription>
+              </Alert>
             )}
           </div>
         )}
@@ -566,12 +572,14 @@ function ServerPreflightBlock({
   }
   if (error) {
     return (
-      <div className="rounded-md border border-trust-blocked/40 bg-trust-blocked/10 px-3 py-2 text-sm text-ink">
-        {error}{" "}
-        <button type="button" onClick={onRun} className="font-medium underline">
-          Retry
-        </button>
-      </div>
+      <Alert variant="destructive">
+        <AlertDescription>
+          {error}{" "}
+          <button type="button" onClick={onRun} className="font-medium underline">
+            Retry
+          </button>
+        </AlertDescription>
+      </Alert>
     );
   }
   if (!result) {
@@ -610,13 +618,13 @@ function ServerPreflightBlock({
         <PreflightRow key={item.code} kind="blocker" message={item.message} />
       ))}
       {warnings.map((item) => (
-        <PreflightRow key={item.code} kind="warning" message={item.message} />
+        <PreflightRow key={`${item.code}:${item.message}`} kind="warning" message={item.message} />
       ))}
       {duplicates.map((item) => (
         <PreflightRow
           key={item.key}
           kind="warning"
-          message={`Possible duplicate: ${item.key} (${item.reasons.join(", ")})`}
+          message={`Possible duplicate: ${item.key} (${(item.reasonLabels ?? item.reasons).join(", ")})`}
         />
       ))}
       {result.nextAction?.url && result.routeSuggestion !== "submit_pr" && (
@@ -732,10 +740,14 @@ function TextArea({
   onChange: (v: string) => void;
   examples?: string[];
 }) {
+  const id = useId();
   return (
     <div>
-      <div className="eyebrow mb-1.5">{label}</div>
+      <label htmlFor={id} className="eyebrow mb-1.5 block">
+        {label}
+      </label>
       <textarea
+        id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         rows={4}

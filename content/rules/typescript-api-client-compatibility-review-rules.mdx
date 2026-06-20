@@ -270,6 +270,27 @@ surfaces, API Extractor reports, inferred router inputs and outputs, runtime
 validator alignment, downstream compilation, and privacy-safe review evidence
 for typed web app consumers.
 
+## Declaration Publishing Reference
+
+| Field / construct | Handbook guidance |
+| --- | --- |
+| `types` | Points to your bundled declaration file (for example `"types": "./lib/main.d.ts"`). |
+| `typings` | Synonymous with `types` and can be used alternatively. |
+| Declaration dependencies | Must be marked in the `"dependencies"` section, not `"devDependencies"`, so consumers have access to required type declarations. |
+| `/// <reference types="..." />` | Use this form to depend on a declaration package. |
+| `/// <reference path="..." />` | Red flag — do not use this to reference another package's types. |
+
+```json
+{
+  "name": "package-name",
+  "version": "1.0.0",
+  "types": "./index.d.ts",
+  "typesVersions": {
+    ">=3.1": { "*": ["ts3.1/*"] }
+  }
+}
+```
+
 ## Sources
 
 - TypeScript declaration publishing: https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html

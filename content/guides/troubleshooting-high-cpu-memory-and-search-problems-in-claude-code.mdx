@@ -1,0 +1,144 @@
+---
+title: Troubleshooting High CPU Memory And Search Problems In Claude Code
+slug: troubleshooting-high-cpu-memory-and-search-problems-in-claude-code
+category: guides
+description: >-
+  Troubleshoot Claude Code high CPU, memory pressure, and search misses using
+  official commands: /compact, /context, /heapdump, ripgrep setup, safe mode,
+  and subagent delegation from the troubleshooting documentation.
+cardDescription: >-
+  Fix Claude Code CPU, memory, and search issues with /compact, /heapdump, and
+  ripgrep steps from official docs.
+seoTitle: Troubleshooting High CPU Memory And Search Problems In Claude Code
+seoDescription: >-
+  Troubleshoot Claude Code high CPU and memory usage plus search problems using
+  /compact, /context, /heapdump, USE_BUILTIN_RIPGREP, safe mode, and subagent
+  delegation from official troubleshooting docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1449
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1449"
+documentationUrl: "https://code.claude.com/docs/en/troubleshooting"
+usageSnippet: >-
+  When Claude Code feels slow or search misses files, run /context and /compact,
+  check CLAUDE.md load with /memory, install system ripgrep if needed, and capture
+  /heapdump before filing GitHub issues.
+prerequisites:
+  - "Claude Code installed with a reproducible slow or high-memory session."
+  - "Terminal access to run /context, /compact, /memory, and optional /heapdump."
+  - "Ability to install ripgrep on the host when search tools fail."
+  - "Optional isolated test repo to compare safe mode vs normal startup."
+safetyNotes:
+  - "/heapdump writes diagnostic files that may contain code paths and snippets—handle as sensitive."
+  - "claude --safe-mode disables customizations; re-enable only after identifying the culprit plugin or MCP server."
+  - "Auto-compaction thrashing can loop; restart sessions between major tasks when compaction runs repeatedly."
+privacyNotes:
+  - "Heap snapshots and /context output can expose repository paths and file names."
+  - "Attach diagnostics to GitHub issues only after redacting customer or secret content."
+  - "Subagent delegation still sends summaries to the parent session—sanitize before sharing externally."
+sourceUrls:
+  - "https://code.claude.com/docs/en/troubleshooting"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+tags:
+  - claude-code
+  - troubleshooting
+  - performance
+  - memory
+  - search
+keywords:
+  - Claude Code high CPU memory troubleshooting
+  - Claude Code search not finding files
+  - USE_BUILTIN_RIPGREP Claude Code
+  - Claude Code heapdump memory
+  - Claude Code compact context
+readingTime: 9
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Most CPU, memory, and search issues trace to context size or a misbehaving
+customization—not a mysterious leak. Official docs recommend measuring with
+`/context`, compacting, fixing ripgrep, using safe mode to isolate plugins, and
+delegating verbose work to subagents.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Symptom captured", "description": "Slow responses, high CPU, or missing search results documented"}
+- [ ] {"task": "Baseline measured", "description": "/context run before changes"}
+- [ ] {"task": "Ripgrep status", "description": "System ripgrep installed if search fails"}
+- [ ] {"task": "Safe repro", "description": "Optional test repo for --safe-mode comparison"}
+
+## Symptom → Action Matrix
+
+| Symptom | First steps (official docs) |
+| --- | --- |
+| High CPU / memory | `/compact`; restart between tasks; ignore large build dirs |
+| Memory stays high | `/heapdump` → attach snapshot when reporting |
+| Hangs / freezes | Restart session; check auto-compaction loops |
+| Search misses files | Install ripgrep; `USE_BUILTIN_RIPGREP=0` |
+| After plugin install | `claude --safe-mode` to isolate |
+
+## Step-by-Step Troubleshooting Guide
+
+1. **Measure context.** Run `/context` and `/usage` to see window fill and cost drivers.
+
+2. **Compact or restart.** `/compact` reduces history; restart between unrelated tasks.
+
+3. **Audit startup load.** `/memory` lists CLAUDE.md and auto-memory files loaded at boot.
+
+4. **Fix search tooling.** Install platform ripgrep; export `USE_BUILTIN_RIPGREP=0` if the
+   bundled binary fails on your OS (common on some Linux/WSL setups).
+
+5. **Isolate customizations.** Run `claude --safe-mode`—if performance improves, bisect
+   plugins, MCP servers, and hooks.
+
+6. **Delegate heavy reads.** Use subagents so large log or test output stays out of the
+   parent window.
+
+7. **Capture diagnostics.** If memory remains elevated, `/heapdump` to Desktop (or home on
+   Linux) and attach when opening a GitHub issue.
+
+## Search-Specific Notes
+
+Official troubleshooting cites cross-filesystem reads on WSL returning fewer matches.
+Move projects to the Linux filesystem or narrow search paths when hits are incomplete.
+
+## Troubleshooting
+
+### /compact loops immediately
+
+Reduce CLAUDE.md size, disable heavy MCP alwaysLoad servers, restart fresh session.
+
+### Ripgrep fix did not help
+
+Verify `which rg` in the same shell launching Claude Code; restart after env changes.
+
+### Safe mode fast but normal slow
+
+Remove recently added MCP servers or hooks one at a time; document culprit in team notes.
+
+## Source Verification Notes
+
+Verified against Claude Code troubleshooting documentation on **2026-06-16**:
+context measurement commands, compaction guidance, heapdump diagnostics, ripgrep
+environment variable, safe mode isolation, and subagent delegation for verbose output.
+
+## Duplicate Check
+
+`fix-memory-leak-performance` covers overlapping symptoms with a fix-oriented title.
+This guide follows issue #1449 SEO intent—structured troubleshooting for CPU, memory,
+and search together with step-by-step official command references.
+
+## References
+
+- Claude Code troubleshooting - https://code.claude.com/docs/en/troubleshooting

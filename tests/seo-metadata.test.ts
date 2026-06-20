@@ -37,10 +37,14 @@ const staticMetadataPages = [
 
 function pageMetadataDescription(pagePath: string) {
   const routePath = pagePath.replaceAll("/", ".");
-  const source = fs.readFileSync(
+  // Index routes live as either `<path>.tsx` or `<path>.index.tsx` (the latter
+  // when the path also has a `<path>.$param` sibling, e.g. contributors).
+  const candidates = [
     path.join(repoRoot, `apps/web/src/routes/${routePath}.tsx`),
-    "utf8",
-  );
+    path.join(repoRoot, `apps/web/src/routes/${routePath}.index.tsx`),
+  ];
+  const routeFile = candidates.find((candidate) => fs.existsSync(candidate)) ?? candidates[0];
+  const source = fs.readFileSync(routeFile, "utf8");
   const inlineDescription = source.match(
     /\{\s*name:\s*"description",\s*content:\s*["`]([^"`]+)["`]/,
   )?.[1];

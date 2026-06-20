@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Rss, Plus, RefreshCw, Minus, Shield, FileText, Package } from "lucide-react";
 import { CHANGELOG, RELEASE_NOTES, type ReleaseStream } from "@/data/changelog";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
+import { PageContainer } from "@/components/page-container";
 import { cn } from "@/lib/utils";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
@@ -103,7 +104,7 @@ function ChangelogPage() {
   const items = RELEASE_NOTES.filter((n) => filter === "all" || n.stream === filter);
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6">
+    <PageContainer className="py-12">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="eyebrow">Changelog</div>
@@ -312,6 +313,6 @@ function ChangelogPage() {
           </div>
         </aside>
       </div>
-    </div>
+    </PageContainer>
   );
 }

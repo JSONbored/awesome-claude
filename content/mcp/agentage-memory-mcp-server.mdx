@@ -1,0 +1,124 @@
+---
+title: Agentage Memory MCP Server for Claude
+slug: agentage-memory-mcp-server
+category: mcp
+description: >-
+  Remote Agentage Memory MCP server giving Claude one shared, portable memory
+  across every AI you use - search, read, write, edit, list, and delete plain
+  Markdown notes you own, over Streamable HTTP with OAuth 2.1.
+cardDescription: One memory for every AI - search, read, and write Markdown notes you own, from Claude over OAuth.
+seoTitle: Agentage Memory MCP Server for Claude
+seoDescription: >-
+  Connect Claude to Agentage Memory: a remote MCP server for one shared,
+  portable Markdown memory across Claude, Cursor, and ChatGPT, with OAuth 2.1,
+  PKCE, and Dynamic Client Registration.
+author: agentage
+authorProfileUrl: "https://agentage.io"
+submittedBy: vreshch
+submittedByUrl: "https://github.com/vreshch"
+dateAdded: "2026-06-18"
+brandName: Agentage Memory
+brandDomain: agentage.io
+websiteUrl: "https://memory.agentage.io"
+documentationUrl: "https://memory.agentage.io"
+installable: true
+installCommand: >-
+  claude mcp add --transport http agentage-memory https://memory.agentage.io/mcp && claude
+  mcp list
+usageSnippet: >-
+  claude mcp add --transport http agentage-memory https://memory.agentage.io/mcp && claude
+  mcp list
+copySnippet: |-
+  {
+    "agentage-memory": {
+      "url": "https://memory.agentage.io/mcp",
+      "transport": "http"
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agentage-memory": {
+        "url": "https://memory.agentage.io/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 1 minute
+difficulty: beginner
+prerequisites:
+  - agentage account (sign in at memory.agentage.io)
+  - OAuth 2.1 authentication (PKCE + Dynamic Client Registration, handled in the connect flow)
+  - Network access to memory.agentage.io (HTTPS required)
+  - Claude Desktop 0.7.0+ or Claude Code with MCP (HTTP transport) support
+privacyNotes:
+  - Notes you read or write are stored server-side in your Agentage Memory and mirrored locally as Markdown you can export anytime; note contents pass through model context.
+safetyNotes:
+  - The memory__write, memory__edit, and memory__delete tools create, modify, and remove your stored notes; review actions before granting broad access.
+tags:
+  - memory
+  - knowledge
+  - markdown
+  - oauth
+  - agentage
+keywords:
+  - agentage memory mcp server
+  - claude shared memory mcp
+  - remote memory mcp oauth
+  - cross-ai markdown memory
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Connect Claude to Agentage Memory, the shared memory layer for every AI. One Markdown memory that Claude, Cursor, and ChatGPT can all read and write through MCP, mirrored locally as plain .md files you own and can export anytime. The remote server speaks Streamable HTTP with OAuth 2.1, PKCE, and Dynamic Client Registration, so connecting is a one-time browser sign-in.
+
+## Features
+
+- One shared memory across Claude, Cursor, ChatGPT, and any MCP client
+- Plain-Markdown notes you own, mirrored locally and exportable anytime
+- Full-text search across your memory (memory__search)
+- Read, write, edit, list, and delete notes (memory__read / write / edit / list / delete)
+- Remote hosted server - no local install or runtime to maintain
+- OAuth 2.1 + PKCE + Dynamic Client Registration for secure, per-client access
+
+## Use Cases
+
+- Carry context, decisions, and preferences between different AI tools
+- Build a durable personal or team knowledge base your AIs read and update
+- Search past notes before starting new work
+- Keep an owned, exportable Markdown record instead of vendor-locked memory
+
+## Installation
+
+### Claude Code
+
+1. Run: claude mcp add --transport http agentage-memory https://memory.agentage.io/mcp
+2. Verify installation: claude mcp list
+3. Authenticate with your agentage account (OAuth flow opens in browser)
+
+### Claude Desktop
+
+1. Open your Claude Desktop configuration file
+2. Add the Agentage Memory server configuration (HTTP transport, URL https://memory.agentage.io/mcp)
+3. Restart Claude Desktop
+4. Authenticate with your agentage account (OAuth flow)
+
+## Configuration
+
+```json
+{
+  "agentage-memory": {
+    "url": "https://memory.agentage.io/mcp",
+    "transport": "http"
+  }
+}
+```
+
+## Security
+
+- OAuth 2.1 + PKCE required for access; unauthenticated requests return 401
+- Protected Resource Metadata (PRM) is served for discovery
+- Dynamic Client Registration issues per-client credentials
+- Tokens are bearer credentials - store securely, never commit to a repo

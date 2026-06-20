@@ -1,0 +1,132 @@
+---
+title: Dynamic Workflow Migration Planner Agent
+slug: dynamic-workflow-migration-planner-agent
+category: agents
+description: >-
+  Community reusable agent prompt for migrating teams to Claude Code dynamic workflows
+  using official workflows documentation: audit phases, YAML or config migration steps,
+  validation gates, and rollback planning for large codebase automation.
+cardDescription: Plan migration to Claude Code dynamic workflows using official workflows documentation.
+seoTitle: Dynamic Workflow Migration Planner Agent
+seoDescription: >-
+  Reusable agent prompt for dynamic workflow migration grounded in Claude Code workflows
+  docs: audit, migration steps, validation gates, and rollback planning.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1563
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1563"
+documentationUrl: "https://code.claude.com/docs/en/workflows"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent when migrating ad-hoc Claude prompts to documented dynamic workflows with
+  validation gates, scoped repos, and rollback plans per official workflows documentation.
+prerequisites:
+  - Inventory of existing slash commands, hooks, or manual Claude playbooks to migrate.
+  - Access to repositories where dynamic workflows will be committed.
+  - Team agreement on validation gates, human approvals, and rollback triggers.
+  - Pilot repository for testing migrated workflows before org-wide rollout.
+safetyNotes:
+  - Automated workflows can run destructive tools without mid-flight prompts—scope permissions narrowly.
+  - Pilot migrations on non-production repositories before enabling org-wide schedules.
+  - Rollback plans must include disabling workflow triggers and revoking connector access.
+  - Do not migrate production deploy steps until validation gates pass in staging.
+privacyNotes:
+  - Workflow definitions may embed internal service names, ticket templates, or customer examples.
+  - Migration audits can expose legacy prompts with secrets—scrub before archiving in git.
+  - Shared workflow repos inherit normal code review and access control requirements.
+tags:
+  - claude-code
+  - workflows
+  - migration
+  - automation
+  - planning
+keywords:
+  - dynamic workflow migration planner agent
+  - claude code workflows migration
+  - workflow validation gates claude code
+  - migrate prompts to claude workflows
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Dynamic Workflow Migration Planner Agent is a community-authored reusable prompt for
+planning migration to Claude Code dynamic workflows. It applies official workflows
+documentation—not an official Anthropic migration service.
+
+## Scope Note
+
+This prompt operationalizes documented workflow capabilities from code.claude.com.
+Execution and merge authority remain with your team.
+
+## Agent Prompt
+
+You are a dynamic workflow migration planner for Claude Code. Convert ad-hoc automation
+into documented workflows using official workflows guidance.
+
+Workflow:
+
+1. **Inventory legacy automation.** List slash commands, hooks, scripts, and manual runbooks.
+2. **Map to workflow phases.** Align each legacy step to workflow nodes with validation gates.
+3. **Scope repositories.** Limit workflow repos, connectors, and permissions per least privilege.
+4. **Pilot plan.** Choose a pilot repo, success metrics, and rollback triggers.
+5. **Validation design.** Define deterministic checks (tests, lint) between AI phases.
+6. **Rollout waves.** Sequence team adoption with training and support windows.
+7. **Rollback.** Document how to disable workflows and restore legacy playbooks.
+
+Output contract:
+
+- Legacy-to-workflow mapping table.
+- Pilot migration checklist with owners.
+- Validation gate definitions.
+- Rollout timeline and rollback runbook.
+
+## Features
+
+- Applies official workflows docs to migration planning.
+- Separates AI phases from deterministic validation nodes.
+- Emphasizes pilot repos and rollback before org-wide enablement.
+- Produces engineering-ready migration backlogs.
+
+## Use Cases
+
+- Migrate manual audit playbooks to dynamic workflows for large monorepos.
+- Standardize release hygiene workflows across business units.
+- Plan connector scope before enabling scheduled workflow runs.
+- Document rollback before enabling autonomous maintenance workflows.
+
+## Source Notes
+
+Verified against Claude Code workflows documentation on **2026-06-16**:
+
+- Official docs describe dynamic workflows for structuring multi-phase Claude Code
+  automation with explicit steps and validation patterns.
+- Documentation supports combining AI-driven phases with deterministic checks suitable
+  for large codebase audits and maintenance tasks.
+- Workflows integrate with repository context, permissions, and connector settings
+  documented elsewhere in Claude Code guides.
+
+## Duplicate Check
+
+Checked content/agents and content/guides for workflow migration coverage.
+dynamic-workflows-for-large-codebase-audits is a guides entry for audit workflows.
+No agents entry provides migration planning from legacy automation to dynamic workflows
+with pilot and rollback contracts grounded in official workflows docs.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code workflows documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code workflows - https://code.claude.com/docs/en/workflows
+- Dynamic workflows for large codebase audits guide - content/guides/dynamic-workflows-for-large-codebase-audits.mdx
+- Claude Code repository - https://github.com/anthropics/claude-code

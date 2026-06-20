@@ -20,7 +20,8 @@ function bucket(alert: Alert, lastSeenAt: string) {
 }
 
 export function AlertsDropdown() {
-  const { alerts, unreadCount, lastSeenAt, markAllRead, targets } = useWatch();
+  const { alerts, unreadCount, lastSeenAt, markAllRead, targets, savedSearchAlertCount } =
+    useWatch();
   const grouped = React.useMemo(() => {
     const out: Record<string, Alert[]> = { Today: [], "This week": [], Earlier: [] };
     for (const a of alerts) out[bucket(a, lastSeenAt)].push(a);
@@ -51,7 +52,7 @@ export function AlertsDropdown() {
           <div>
             <div className="eyebrow">Alerts</div>
             <div className="mt-0.5 text-xs text-ink-muted">
-              {targets.length} watched · {alerts.length} total
+              {targets.length} watched · {savedSearchAlertCount} saved · {alerts.length} total
             </div>
           </div>
           <button
@@ -66,7 +67,7 @@ export function AlertsDropdown() {
 
         {alerts.length === 0 ? (
           <div className="px-5 py-10 text-center text-xs text-ink-muted">
-            Nothing watched yet — tap the bell on any listing to get source-change alerts here.
+            No alerts yet - watch a listing or enable in-app alerts on a saved search.
           </div>
         ) : (
           <div className="max-h-[60vh] overflow-y-auto">
@@ -121,7 +122,8 @@ export function AlertsDropdown() {
         )}
 
         <footer className="border-t border-border px-4 py-2.5 text-[11px] text-ink-muted">
-          Alerts are read from the public registry event feed; watched targets stay in this browser.
+          Alerts are read from the public registry event feed; watched targets and saved searches
+          stay in this browser.
         </footer>
       </PopoverContent>
     </Popover>

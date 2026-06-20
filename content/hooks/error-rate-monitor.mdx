@@ -48,19 +48,15 @@ tags:
   - notification
   - debugging
   - alerts
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - alerts
-  - claude
-  - debugging
-  - development
-  - error
-  - errors
-  - hooks
-  - monitor
-  - monitoring
-  - notification
-  - rate
-  - tools
+  - error rate monitor hook
+  - claude code error rate monitor hook
+  - error rate monitor claude hook
+  - claude error rate monitor automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true

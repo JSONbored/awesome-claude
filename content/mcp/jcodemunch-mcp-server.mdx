@@ -1,0 +1,199 @@
+---
+title: jCodeMunch MCP Server
+slug: jcodemunch-mcp-server
+category: mcp
+description: >-
+  Token-efficient MCP server for source-code exploration that indexes codebases
+  with tree-sitter, then lets agents retrieve symbols, file outlines,
+  dependency context, blast radius, dead code, PR risk, and targeted source
+  snippets instead of reading whole files.
+cardDescription: >-
+  Give Claude, Codex, Cursor, and other agents structured code retrieval with
+  tree-sitter indexes, symbol search, context bundles, impact analysis, and
+  token-aware source lookup.
+seoTitle: jCodeMunch MCP Server for Claude Code, Codex, Cursor, and Token-Efficient Code Search
+seoDescription: >-
+  Configure jCodeMunch MCP for Claude Code, Codex, Cursor, and other agents to
+  index codebases with tree-sitter, search symbols, retrieve exact source,
+  inspect dependencies, analyze blast radius, and reduce code-reading tokens.
+author: J. Gravelle
+authorProfileUrl: "https://github.com/jgravelle"
+dateAdded: "2026-06-18"
+brandName: jCodeMunch
+brandDomain: gravelle.us
+repoUrl: "https://github.com/jgravelle/jcodemunch-mcp"
+documentationUrl: "https://github.com/jgravelle/jcodemunch-mcp/blob/main/LANGUAGE_SUPPORT.md"
+websiteUrl: "https://j.gravelle.us/jCodeMunch/"
+packageUrl: "https://pypi.org/pypi/jcodemunch-mcp/json"
+installable: true
+installCommand: "uvx jcodemunch-mcp"
+usageSnippet: >-
+  Run `uvx jcodemunch-mcp`, index a local folder or GitHub repository, then use
+  symbol, outline, context, dependency, and impact-analysis tools before falling
+  back to full-file reads.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "jcodemunch": {
+        "command": "uvx",
+        "args": ["jcodemunch-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "jcodemunch": {
+        "command": "uvx",
+        "args": ["jcodemunch-mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: advanced
+disclosure: "jCodeMunch is free for non-commercial use. Commercial use requires a paid license from the upstream author."
+prerequisites:
+  - "Python 3.10 or newer available to the MCP client runtime."
+  - "`uvx` or a Python package installation path for launching `jcodemunch-mcp`."
+  - "Local repository access or GitHub access for the codebases you want to index."
+  - "Review of the upstream dual-use license before using the tool in a company, client, SaaS, consulting, or other commercial workflow."
+  - "Optional API keys only if you enable hosted summarizers, semantic search providers, Groq integration, or private GitHub repository access."
+safetyNotes:
+  - "jCodeMunch can index source trees and return exact source snippets, symbol metadata, dependency context, git-derived risk signals, and repository structure to the MCP client."
+  - "Use repository allowlists and trusted-folder controls before giving an agent access to private, customer, regulated, or production codebases."
+  - "File watching, auto-reindexing, login-service registration, and MCP-client hooks are optional behaviors; review them before enabling persistent background behavior."
+  - "The upstream license permits non-commercial use for free but requires a paid license for commercial use."
+  - "Treat generated code summaries and repository analysis as advisory context, not approval to edit, delete, publish, or refactor without review."
+privacyNotes:
+  - "Local indexes can contain file paths, symbol names, signatures, summaries, byte offsets, source snippets, dependency relationships, and git-derived metadata."
+  - "Optional hosted summarizers or embedding providers may receive source-derived text when configured; prefer local or disabled summarizers for confidential repositories."
+  - "The upstream README discloses anonymous aggregate token-savings telemetry with an opt-out setting; review and disable it where policy requires."
+  - "Agent hooks and config-audit features may inspect MCP client settings and agent instruction files; review outputs before sharing them outside the project."
+sourceUrls:
+  - "https://github.com/jgravelle/jcodemunch-mcp"
+  - "https://github.com/jgravelle/jcodemunch-mcp/blob/main/pyproject.toml"
+  - "https://github.com/jgravelle/jcodemunch-mcp/blob/main/server.json"
+  - "https://github.com/jgravelle/jcodemunch-mcp/blob/main/LANGUAGE_SUPPORT.md"
+  - "https://github.com/jgravelle/jcodemunch-mcp/blob/main/LICENSE"
+  - "https://pypi.org/pypi/jcodemunch-mcp/json"
+tags:
+  - code-search
+  - tree-sitter
+  - codebase-analysis
+  - token-optimization
+  - developer-tools
+keywords:
+  - jCodeMunch MCP
+  - jcodemunch-mcp
+  - token efficient code search MCP
+  - Claude Code repository search MCP
+  - Codex codebase MCP
+  - Cursor code search MCP
+  - tree-sitter MCP server
+  - source code exploration MCP
+  - blast radius MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+jCodeMunch MCP is a source-code exploration server for agents that need precise
+code context without repeatedly loading entire files. It indexes repositories
+with tree-sitter, stores structured symbol metadata, and lets MCP clients fetch
+exact functions, classes, methods, outlines, dependency context, repository
+maps, and token-budgeted context bundles.
+
+The project is local-first and installable from PyPI as `jcodemunch-mcp`. The
+upstream license is dual-use: free for non-commercial use, with a paid license
+required for commercial use.
+
+## Source Review
+
+- https://github.com/jgravelle/jcodemunch-mcp
+- https://github.com/jgravelle/jcodemunch-mcp/blob/main/pyproject.toml
+- https://github.com/jgravelle/jcodemunch-mcp/blob/main/server.json
+- https://github.com/jgravelle/jcodemunch-mcp/blob/main/LANGUAGE_SUPPORT.md
+- https://github.com/jgravelle/jcodemunch-mcp/blob/main/LICENSE
+- https://pypi.org/pypi/jcodemunch-mcp/json
+
+Verified on **2026-06-18**. The PyPI package is `jcodemunch-mcp`, requires
+Python 3.10 or newer, exposes the `jcodemunch-mcp` command, and declares
+tree-sitter, MCP, HTTP, and configuration dependencies. The server manifest
+declares stdio transport and the GitHub repository source. The license file
+states that commercial use requires a paid license.
+
+## Features
+
+- Index local folders and GitHub repositories for structured code retrieval.
+- Search symbols by name, kind, language, fuzzy match, semantic match, or hybrid
+  retrieval when optional dependencies are configured.
+- Retrieve exact symbol implementations and file outlines instead of broad file
+  reads.
+- Assemble token-budgeted context bundles for coding tasks.
+- Inspect importers, references, class hierarchy, call hierarchy, dependency
+  cycles, coupling metrics, and blast radius.
+- Find dead code, untested symbols, changed symbols, similar symbols, hotspots,
+  and structural AST patterns.
+- Generate repository maps, task context, refactoring plans, symbol provenance,
+  and PR risk profiles.
+- Support many source languages through tree-sitter and custom extractors.
+
+## Installation
+
+For MCP clients that launch local stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "jcodemunch": {
+      "command": "uvx",
+      "args": ["jcodemunch-mcp"]
+    }
+  }
+}
+```
+
+You can also install the package directly:
+
+```bash
+pip install jcodemunch-mcp
+jcodemunch-mcp
+```
+
+Review the upstream license before using it in a commercial environment.
+
+## Use Cases
+
+- Let Claude Code, Codex, Cursor, or another agent find exact functions without
+  reading whole files.
+- Build a small context pack for a bug fix or feature without overloading the
+  model window.
+- Ask for blast radius, dependency, or call hierarchy before changing shared
+  code.
+- Find dead code, untested symbols, hotspots, or duplicate implementation
+  candidates.
+- Analyze a PR branch for symbol-level risk before review.
+- Explore unfamiliar repositories through structure-first search and outlines.
+
+## Safety and Privacy
+
+jCodeMunch works by indexing source repositories. That means the local index and
+MCP responses may expose proprietary code, file paths, symbol names, signatures,
+comments, architecture, dependency relationships, and git history. Use explicit
+allowlists, avoid indexing repositories outside the intended workspace, and do
+not connect confidential codebases to hosted summarizers unless that is allowed
+by policy.
+
+Review optional background features before enabling them. File watching,
+auto-reindexing, login-service installation, MCP-client hooks, config audits,
+and anonymous aggregate token-savings telemetry are useful in the right
+environment but should be deliberate choices.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `jgravelle/jcodemunch-mcp`,
+`jcodemunch-mcp`, jCodeMunch MCP, tree-sitter MCP, token-efficient code search,
+source code exploration MCP, and blast radius MCP. No dedicated jCodeMunch MCP
+entry, exact source URL duplicate, target file, or open duplicate PR was found.

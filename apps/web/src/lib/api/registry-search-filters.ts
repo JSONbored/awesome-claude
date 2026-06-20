@@ -33,14 +33,127 @@ export type RegistrySearchFilterDimension =
 
 const TOKEN_SPLIT_PATTERN = /[^a-z0-9+#.-]+/i;
 const QUERY_ALIASES: Record<string, string[]> = {
+  automation: ["automate", "automated", "qa", "testing"],
+  browser: ["chrome", "playwright", "web"],
   cc: ["claude", "claude-code"],
   claude: ["claude-code"],
+  design: ["ux", "ui"],
   gh: ["github"],
   ms: ["microsoft"],
+  mcp: ["model-context-protocol"],
   msteams: ["teams", "microsoft-teams"],
   repo: ["repository", "github"],
   repos: ["repository", "github"],
+  safe: ["safety", "security", "secure", "trust", "privacy"],
+  security: ["safe", "safety", "secure", "trust"],
+  skill: ["skills"],
+  skills: ["skill"],
+  statusline: ["statuslines", "status"],
+  statuslines: ["statusline", "status"],
 };
+
+type QueryIntentProfile = {
+  id: string;
+  tokens: string[];
+  categories?: string[];
+  platforms?: string[];
+  tags?: string[];
+  keywords?: string[];
+  titleTerms?: string[];
+  trustWeighted?: boolean;
+};
+
+type EntrySearchSignals = {
+  title: string;
+  slug: string;
+  category: string;
+  tags: Set<string>;
+  keywords: Set<string>;
+  platforms: Set<string>;
+  haystack: string;
+  words: Set<string>;
+};
+
+const QUERY_INTENT_PROFILES: QueryIntentProfile[] = [
+  {
+    id: "code review",
+    tokens: ["code", "review"],
+    categories: ["agents", "commands", "tools", "skills"],
+    tags: ["code-review", "review", "pull-request", "quality"],
+    keywords: ["code review", "code-review", "pr review", "repository review"],
+    titleTerms: ["code review", "review"],
+    trustWeighted: true,
+  },
+  {
+    id: "browser automation",
+    tokens: ["browser", "automation"],
+    categories: ["mcp", "agents", "tools", "guides"],
+    platforms: ["claude-code"],
+    tags: ["browser-automation", "browser", "chrome", "playwright", "web-testing"],
+    keywords: ["browser automation", "playwright", "chrome", "web qa", "screenshots"],
+    titleTerms: ["browser automation", "browser", "playwright", "chrome"],
+    trustWeighted: true,
+  },
+  {
+    id: "safe mcp",
+    tokens: ["safe", "mcp"],
+    categories: ["mcp", "guides", "skills"],
+    tags: ["security", "safety", "privacy", "least-privilege", "trust", "mcp"],
+    keywords: ["safe mcp", "mcp security", "least privilege", "trust review"],
+    titleTerms: ["mcp security", "safe mcp", "trust"],
+    trustWeighted: true,
+  },
+  {
+    id: "design skill",
+    tokens: ["design", "skill"],
+    categories: ["skills", "agents", "rules"],
+    tags: ["design", "ux", "ui", "frontend", "visual-qa"],
+    keywords: ["design skill", "ux", "ui", "frontend design", "visual qa"],
+    titleTerms: ["design", "ux", "ui"],
+  },
+  {
+    id: "statusline",
+    tokens: ["statusline"],
+    categories: ["statuslines"],
+    tags: ["statusline", "monitoring", "observability", "context", "usage"],
+    keywords: ["statusline", "claude code statusline", "workflow visibility"],
+    titleTerms: ["statusline"],
+    trustWeighted: true,
+  },
+  {
+    id: "raycast",
+    tokens: ["raycast"],
+    platforms: ["raycast"],
+    tags: ["raycast", "launcher", "extension", "productivity"],
+    keywords: ["raycast", "raycast extension", "launcher"],
+    titleTerms: ["raycast"],
+    trustWeighted: true,
+  },
+];
+
+const SEARCH_REASON_PRIORITY = [
+  "query intent",
+  "title phrase",
+  "slug phrase",
+  "intent title",
+  "intent tag",
+  "intent keyword",
+  "intent category",
+  "trust intent",
+  "source-backed",
+  "trusted package",
+  "safety notes",
+  "privacy notes",
+  "title term",
+  "slug term",
+  "tag match",
+  "keyword match",
+  "category match",
+  "category term",
+  "platform match",
+  "installable",
+  "reviewed",
+];
 
 function tokenizeSearchQuery(query: string) {
   return query
@@ -54,7 +167,20 @@ function expandedTokenCandidates(token: string) {
   return [token, ...(QUERY_ALIASES[token] ?? [])];
 }
 
+function expandedTokenSet(tokens: ReadonlyArray<string>) {
+  return new Set(tokens.flatMap((token) => expandedTokenCandidates(token)));
+}
+
+function normalizedSet(values: ReadonlyArray<unknown> | undefined) {
+  return new Set(
+    (values ?? [])
+      .map((value) => String(value).trim().toLowerCase())
+      .filter(Boolean),
+  );
+}
+
 function normalizedSearchText(entry: SearchDocument) {
+  const mcpInstallTargets = (entry as { mcpInstallTargets?: string[] }).mcpInstallTargets;
   return [
     entry.category,
     entry.slug,
@@ -66,6 +192,9 @@ function normalizedSearchText(entry: SearchDocument) {
     entry.brandDomain,
     entry.verificationStatus,
     entry.downloadTrust,
+    ...(entry.platforms ?? []),
+    ...(entry.supportLevels ?? []),
+    ...(mcpInstallTargets ?? []),
     ...(entry.tags ?? []),
     ...(entry.keywords ?? []),
   ]
@@ -88,6 +217,97 @@ function candidateMatchesText(candidate: string, haystack: string, words: Readon
     return [...words].some((word) => word === candidate || word.startsWith(candidate));
   }
   return haystack.includes(candidate) || [...words].some((word) => word.startsWith(candidate));
+}
+
+function buildEntrySearchSignals(entry: SearchDocument): EntrySearchSignals {
+  return {
+    title: entry.title.toLowerCase(),
+    slug: entry.slug.toLowerCase(),
+    category: entry.category.toLowerCase(),
+    tags: normalizedSet(entry.tags),
+    keywords: normalizedSet(entry.keywords),
+    platforms: normalizedSet(entry.platforms),
+    haystack: normalizedSearchText(entry),
+    words: entryWordSet(entry),
+  };
+}
+
+function valueMatchesCandidate(
+  value: string,
+  candidate: string,
+  words = new Set(
+    value
+      .split(TOKEN_SPLIT_PATTERN)
+      .map((word) => word.trim().toLowerCase())
+      .filter(Boolean),
+  ),
+) {
+  return candidateMatchesText(candidate, value, words);
+}
+
+function setMatchesCandidates(values: ReadonlySet<string>, candidates: ReadonlyArray<string>) {
+  return [...values].some((value) =>
+    candidates.some((candidate) => valueMatchesCandidate(value, candidate)),
+  );
+}
+
+function matchingIntentProfiles(tokens: ReadonlyArray<string>) {
+  const candidates = expandedTokenSet(tokens);
+  return QUERY_INTENT_PROFILES.filter((profile) =>
+    profile.tokens.every((token) => candidates.has(token)),
+  );
+}
+
+function scoreIntentProfile(
+  entry: SearchDocument,
+  signals: EntrySearchSignals,
+  profile: QueryIntentProfile,
+) {
+  let score = 0;
+  const reasons = new Set<string>();
+  const titleTerms = profile.titleTerms ?? [];
+
+  if (profile.categories?.includes(signals.category)) {
+    score += 28;
+    reasons.add("intent category");
+  }
+  if (profile.platforms && setMatchesCandidates(signals.platforms, profile.platforms)) {
+    score += 24;
+    reasons.add("platform match");
+  }
+  if (profile.tags && setMatchesCandidates(signals.tags, profile.tags)) {
+    score += 26;
+    reasons.add("intent tag");
+  }
+  if (profile.keywords && setMatchesCandidates(signals.keywords, profile.keywords)) {
+    score += 22;
+    reasons.add("intent keyword");
+  }
+  if (titleTerms.some((term) => valueMatchesCandidate(signals.title, term))) {
+    score += 24;
+    reasons.add("intent title");
+  }
+  if (profile.trustWeighted) {
+    let trustScore = 0;
+    if (entry.trustSignals?.sourceStatus === "available") trustScore += 8;
+    if (hasSafetyNotes(entry)) trustScore += 8;
+    if (hasPrivacyNotes(entry)) trustScore += 6;
+    if (entry.downloadTrust === "first-party" || entry.trustSignals?.packageVerified === true) {
+      trustScore += 6;
+    }
+    score += trustScore;
+    if (trustScore > 0) reasons.add("trust intent");
+  }
+  if (score > 0) reasons.add("query intent");
+
+  return { score, reasons };
+}
+
+function rankedSearchReasons(reasons: ReadonlySet<string>) {
+  const priority = new Map(SEARCH_REASON_PRIORITY.map((reason, index) => [reason, index]));
+  return [...reasons]
+    .sort((left, right) => (priority.get(left) ?? 999) - (priority.get(right) ?? 999))
+    .slice(0, 12);
 }
 
 export function matchesQuery(entry: SearchDocument, query: string) {
@@ -226,8 +446,10 @@ export function scoreSearchEntry(
   const category = entry.category.toLowerCase();
   const tags = new Set((entry.tags ?? []).map((tag) => tag.toLowerCase()));
   const keywords = new Set((entry.keywords ?? []).map((keyword) => keyword.toLowerCase()));
-  const haystack = normalizedSearchText(entry);
-  const words = entryWordSet(entry);
+  const platforms = normalizedSet(entry.platforms);
+  const signals = buildEntrySearchSignals(entry);
+  const haystack = signals.haystack;
+  const words = signals.words;
   let score = 0;
   const reasons = new Set<string>();
 
@@ -283,6 +505,10 @@ export function scoreSearchEntry(
       score += 12;
       reasons.add("category term");
     }
+    if (candidates.some((candidate) => setMatchesCandidates(platforms, [candidate]))) {
+      score += 20;
+      reasons.add("platform match");
+    }
     if (candidates.some((candidate) => candidateMatchesText(candidate, haystack, words))) {
       score += 4;
     }
@@ -313,10 +539,15 @@ export function scoreSearchEntry(
     score += 4;
     reasons.add("reviewed");
   }
+  for (const profile of matchingIntentProfiles(tokens)) {
+    const intent = scoreIntentProfile(entry, signals, profile);
+    score += intent.score;
+    for (const reason of intent.reasons) reasons.add(reason);
+  }
 
   return {
     score,
-    reasons: [...reasons].slice(0, 6),
+    reasons: rankedSearchReasons(reasons),
   };
 }
 

@@ -10,9 +10,15 @@ author: Trigger.dev
 dateAdded: "2026-04-27"
 websiteUrl: "https://trigger.dev"
 documentationUrl: "https://trigger.dev/docs"
+retrievalSources:
+  - "https://trigger.dev/docs"
+  - "https://www.inngest.com/docs"
+  - "https://docs.temporal.io/"
 repoUrl: "https://github.com/triggerdotdev/trigger.dev"
 pricingModel: open-source
 disclosure: editorial
+safetyNotes:
+  - "Trigger.dev runs your background tasks — including long-running and scheduled jobs — against connected services and credentials; review task code and scope credentials before deploying jobs to production."
 applicationCategory: DeveloperApplication
 operatingSystem: Web, Self-hosted
 tags:
@@ -22,6 +28,25 @@ keywords:
   - background jobs
   - ai workflows
 ---
+
+## Key capabilities
+
+- **Code-first background jobs** — define long-running tasks in your codebase (TypeScript) instead of wiring queues by hand.
+- **Durable execution** — tasks survive restarts with automatic retries and checkpointing.
+- **Scheduling** — cron and delayed triggers for recurring or deferred work.
+- **Observability** — a dashboard for runs, logs, retries, and failures.
+
+## How Trigger.dev compares
+
+Trigger.dev sits among durable-execution / background-job platforms; they differ by model and language focus:
+
+| Tool | Model | Open source | Notable for |
+| --- | --- | --- | --- |
+| **Trigger.dev** | Code-first background jobs with durable execution | Yes | TypeScript-native, batteries-included dashboard |
+| **Inngest** | Event-driven durable functions | Yes | Event/flow-control model with steps |
+| **Temporal** | Workflow-as-code durable execution | Yes | Language-agnostic, battle-tested at scale |
+
+Choose Trigger.dev for a TypeScript-native, low-setup experience; Inngest for an event-driven model, or Temporal for language-agnostic workflows at scale.
 
 ## Editorial notes
 

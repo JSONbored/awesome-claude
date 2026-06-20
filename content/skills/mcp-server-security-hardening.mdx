@@ -40,6 +40,12 @@ prerequisites:
   - Existing MCP server implementation (local or remote)
   - "Access to server config, dependency manifest, and deployment settings"
   - Ability to run integration tests after hardening
+safetyNotes:
+  - "Treat findings and generated mitigations as review inputs; validate suspected vulnerabilities and patches before changing production controls."
+  - "Coordinate disclosure-sensitive security work privately and avoid running destructive probes outside authorized systems."
+privacyNotes:
+  - "Security prompts and reports can include source snippets, vulnerability details, internal URLs, dependency metadata, and operational context."
+  - "Redact secrets, customer data, exploit details, private infrastructure names, and unreleased findings before sharing outputs publicly."
 tags:
   - mcp
   - security

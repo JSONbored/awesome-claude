@@ -11,6 +11,10 @@ seoDescription: >-
   com...
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
+documentationUrl: "https://graphql.org/learn/"
+retrievalSources:
+  - "https://graphql.org/learn/"
+  - "https://code.claude.com/docs/en/hooks"
 dateAdded: "2025-09-19"
 installable: true
 installCommand: >-
@@ -52,17 +56,15 @@ tags:
   - schema
   - validation
   - breaking-changes
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - api
-  - breaking-changes
-  - claude
-  - development
-  - graphql
-  - hooks
-  - schema
-  - tools
-  - validation
-  - validator
+  - graphql schema validator hook
+  - claude code graphql schema validator hook
+  - graphql schema validator claude hook
+  - claude graphql schema validator automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true

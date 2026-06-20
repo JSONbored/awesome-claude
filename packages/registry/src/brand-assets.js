@@ -225,6 +225,34 @@ export function isHostingOrRegistryDomain(domain) {
   );
 }
 
+function knownBrandTextCandidates(data = {}) {
+  const values = [data.brandName, data.title];
+  if (Array.isArray(data.tags)) values.push(...data.tags);
+  return values.map(clean).filter(Boolean);
+}
+
+function knownBrandMatchesDomain(data = {}, domain = "") {
+  const normalizedDomain = normalizeBrandDomain(domain);
+  if (!normalizedDomain) return false;
+  const texts = knownBrandTextCandidates(data);
+  if (!texts.length) return false;
+
+  return KNOWN_BRANDS.filter(
+    (brand) => normalizeBrandDomain(brand.domain) === normalizedDomain,
+  ).some((brand) =>
+    [brand.name, ...brand.aliases].some((alias) =>
+      texts.some((text) => textContainsAlias(text, alias)),
+    ),
+  );
+}
+
+export function shouldAutoResolveBrandAsset(domain, data = {}) {
+  const normalizedDomain = normalizeBrandDomain(domain);
+  if (!normalizedDomain) return false;
+  if (!isHostingOrRegistryDomain(normalizedDomain)) return true;
+  return knownBrandMatchesDomain(data, normalizedDomain);
+}
+
 export function normalizeBrandColors(value) {
   if (!Array.isArray(value)) return [];
   return value
@@ -238,7 +266,10 @@ export function normalizeBrandColors(value) {
 export function isAllowedBrandAssetUrl(value) {
   const raw = clean(value);
   if (!raw) return true;
-  if (raw.startsWith("/")) return /^\/[a-z0-9/_+.-]+$/i.test(raw);
+  if (raw.startsWith("/")) {
+    if (raw.startsWith("//")) return false;
+    return /^\/[a-z0-9/_+.-]+$/i.test(raw);
+  }
 
   try {
     const parsed = new URL(raw);
@@ -247,8 +278,7 @@ export function isAllowedBrandAssetUrl(value) {
     return (
       host === "cdn.brandfetch.io" ||
       host === "asset.brandfetch.io" ||
-      host === "heyclau.de" ||
-      host === "heyclaude-dev.zeronode.workers.dev"
+      host === "heyclau.de"
     );
   } catch {
     return false;
@@ -358,15 +388,26 @@ export function buildBrandAssetMetadata(data = {}, options = {}) {
     (brandDomain ? clean(data.title) : "");
   const source =
     clean(data.brandAssetSource) || (brandDomain ? "brandfetch" : "");
+  const shouldUseBrandfetch =
+    source === "brandfetch" &&
+    shouldAutoResolveBrandAsset(brandDomain, {
+      ...data,
+      brandName,
+      title: clean(data.title),
+    });
   const brandIconUrl =
     clean(data.brandIconUrl) ||
-    (source === "brandfetch"
+    (shouldUseBrandfetch
       ? brandAssetProxyUrl(brandDomain, {
           kind: "icon",
           siteUrl: options.assetBaseUrl || options.siteUrl,
         })
       : "");
   const brandLogoUrl = clean(data.brandLogoUrl);
+  const safeBrandIconUrl =
+    brandIconUrl && isAllowedBrandAssetUrl(brandIconUrl) ? brandIconUrl : "";
+  const safeBrandLogoUrl =
+    brandLogoUrl && isAllowedBrandAssetUrl(brandLogoUrl) ? brandLogoUrl : "";
   const brandColors = normalizeBrandColors(data.brandColors);
   const hasBrandMetadata = Boolean(
     brandName ||
@@ -383,16 +424,14 @@ export function buildBrandAssetMetadata(data = {}, options = {}) {
   return {
     brandName: brandName || undefined,
     brandDomain: brandDomain || undefined,
-    brandIconUrl:
-      brandIconUrl && isAllowedBrandAssetUrl(brandIconUrl)
-        ? brandIconUrl
-        : undefined,
-    brandLogoUrl:
-      brandLogoUrl && isAllowedBrandAssetUrl(brandLogoUrl)
-        ? brandLogoUrl
-        : undefined,
+    brandIconUrl: safeBrandIconUrl || undefined,
+    brandLogoUrl: safeBrandLogoUrl || undefined,
     brandAssetSource:
-      source && BRAND_ASSET_SOURCES.includes(source) ? source : undefined,
+      source &&
+      BRAND_ASSET_SOURCES.includes(source) &&
+      (source !== "brandfetch" || Boolean(safeBrandIconUrl || safeBrandLogoUrl))
+        ? source
+        : undefined,
     brandVerifiedAt: brandVerifiedAt || undefined,
     brandColors: brandColors.length ? brandColors : undefined,
   };

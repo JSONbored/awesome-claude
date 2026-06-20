@@ -1,0 +1,209 @@
+---
+title: Better Icons MCP Server
+slug: better-icons-mcp-server
+category: mcp
+description: >-
+  MCP server and Agent Skill from better-auth for searching, recommending,
+  retrieving, batching, and syncing Iconify-powered SVG icons from 200,000+
+  icons across 150+ collections.
+cardDescription: >-
+  Icon search and retrieval MCP for AI agents, with Iconify collections, SVG
+  output, recommendations, batch fetches, project sync, and learned preferences.
+seoTitle: Better Icons MCP Server for Claude Code, Cursor, Codex, and Iconify
+seoDescription: >-
+  Configure Better Icons MCP with Claude Code, Cursor, Codex, Windsurf, VS Code,
+  OpenCode, and Antigravity to search Iconify icon sets, retrieve SVGs, batch
+  icons, recommend icons, and sync icons into projects.
+author: better-auth
+authorProfileUrl: "https://github.com/better-auth"
+dateAdded: "2026-06-18"
+brandName: Better Icons
+brandDomain: github.com/better-auth/better-icons
+repoUrl: "https://github.com/better-auth/better-icons"
+documentationUrl: "https://github.com/better-auth/better-icons/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/better-icons/latest"
+sourceUrls:
+  - "https://github.com/better-auth/better-icons"
+  - "https://github.com/better-auth/better-icons/blob/main/README.md"
+  - "https://github.com/better-auth/better-icons/blob/main/package.json"
+  - "https://github.com/better-auth/better-icons/blob/main/skills/SKILL.md"
+  - "https://registry.npmjs.org/better-icons/latest"
+retrievalSources:
+  - "https://github.com/better-auth/better-icons"
+  - "https://raw.githubusercontent.com/better-auth/better-icons/main/README.md"
+  - "https://raw.githubusercontent.com/better-auth/better-icons/main/package.json"
+  - "https://raw.githubusercontent.com/better-auth/better-icons/main/skills/SKILL.md"
+  - "https://registry.npmjs.org/better-icons/latest"
+installable: true
+installCommand: "claude mcp add better-icons -- npx -y better-icons"
+usageSnippet: >-
+  Add Better Icons as an MCP server, then ask Claude to search icon collections,
+  retrieve SVGs, recommend icons for UI states, or sync approved icons into an
+  icons file.
+copySnippet: |-
+  claude mcp add better-icons -- npx -y better-icons
+
+  # Optional interactive setup for multiple clients
+  npx better-icons setup
+configSnippet: |-
+  {
+    "mcpServers": {
+      "better-icons": {
+        "command": "npx",
+        "args": ["-y", "better-icons"]
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 18 or newer for the `better-icons` npm package."
+  - "An MCP client such as Claude Code, Cursor, OpenCode, Windsurf, VS Code Copilot, Google Antigravity, or another stdio-capable MCP host."
+  - "Network access to Iconify icon data and package registry downloads."
+  - "For project sync, an approved target icons file and framework choice such as React, Vue, Svelte, Solid, or raw SVG."
+safetyNotes:
+  - "Better Icons can write icons into a project file through `sync_icon`; review the target path, component name, framework, and diff before committing generated code."
+  - "Icon output can include raw SVG, JSX/component usage, URLs, or generated project code. Review SVG attributes and generated code before use in production UI."
+  - "Learned preferences and recent icons can influence future recommendations; clear preferences when switching projects or style systems."
+  - "Batch retrieval can add many icons quickly. Keep requested sets bounded and avoid mixing unrelated icon styles in a shared design system."
+privacyNotes:
+  - "Icon search queries, selected icon IDs, preferred collections, recent icons, target icon file paths, framework names, and generated SVG/component code may be visible to the MCP client and model provider."
+  - "`sync_icon` can expose local project structure and icon-file conventions to the agent."
+  - "Avoid sending private product names, unreleased feature labels, customer-specific UI terms, or proprietary design-system names in icon search prompts when that context is sensitive."
+tags:
+  - better-icons
+  - mcp
+  - icons
+  - iconify
+  - svg
+  - design
+  - frontend
+  - skills
+keywords:
+  - Better Icons MCP
+  - better-icons Claude Code
+  - Iconify MCP server
+  - icon search MCP
+  - SVG icon MCP
+  - better-icons Cursor
+  - better-icons Codex
+  - AI icon search skill
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Better Icons is an MCP server, CLI, and Agent Skill for searching and retrieving
+icons from Iconify-powered collections. The upstream README describes 200,000+
+icons across 150+ collections, with tools for search, recommendations, similar
+icons, batch retrieval, project sync, recent icons, and learned collection
+preferences.
+
+Use it when an AI coding agent needs to pick real icons instead of inventing SVG
+paths or asking the user to manually browse icon sets.
+
+## Source Review
+
+This listing is grounded in:
+
+- https://github.com/better-auth/better-icons
+- https://raw.githubusercontent.com/better-auth/better-icons/main/README.md
+- https://raw.githubusercontent.com/better-auth/better-icons/main/package.json
+- https://raw.githubusercontent.com/better-auth/better-icons/main/skills/SKILL.md
+- https://registry.npmjs.org/better-icons/latest
+
+The package is published as `better-icons`, exposes a `better-icons` binary,
+requires Node.js 18 or newer, and reports MIT license metadata.
+
+## Install
+
+For Claude Code:
+
+```bash
+claude mcp add better-icons -- npx -y better-icons
+```
+
+For JSON-based MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "better-icons": {
+      "command": "npx",
+      "args": ["-y", "better-icons"]
+    }
+  }
+}
+```
+
+Better Icons also provides an interactive setup command:
+
+```bash
+npx better-icons setup
+```
+
+The README says setup can configure Cursor, Claude Code, OpenCode, Windsurf, VS
+Code Copilot, and Google Antigravity.
+
+## MCP Tools
+
+| Tool | Purpose |
+| --- | --- |
+| `search_icons` | Search across icon collections by query, limit, prefix, or category |
+| `get_icon` | Retrieve a single icon as SVG, component usage, or URL |
+| `get_icons` | Batch retrieve multiple icon IDs |
+| `list_collections` | Browse available icon sets |
+| `recommend_icons` | Recommend icons for a described use case |
+| `find_similar_icons` | Find variations of an icon across collections and styles |
+| `get_icon_preferences` | View learned collection preferences and usage stats |
+| `clear_icon_preferences` | Reset learned icon preferences |
+| `get_recent_icons` | Show recently used icons |
+| `sync_icon` | Add an icon into a project icons file |
+
+## Skill Support
+
+The repository also includes `skills/SKILL.md`, which teaches agents how to use
+the Better Icons CLI and MCP tools. It documents CLI commands for `search`,
+`get`, batch download, JSON output, `better-icons setup`, popular collections,
+Icon ID format, and MCP tool interfaces.
+
+Install the Agent Skill separately when your host supports skill installation:
+
+```bash
+npx skills add better-auth/better-icons
+```
+
+## Best Use Cases
+
+- Search for Lucide, Material Design, Heroicons, Tabler, Phosphor, Remix Icon,
+  Solar, or other Iconify-backed icons from an agent.
+- Retrieve raw SVG for a known `prefix:name` icon ID.
+- Ask an agent to recommend icons for authentication, navigation, settings,
+  billing, empty states, or status badges.
+- Batch fetch a consistent set of icons for a feature.
+- Sync approved icons into a shared React, Vue, Svelte, Solid, or raw SVG icons
+  file.
+
+## Safety Notes
+
+Better Icons is lower-risk than a browser or cloud-control MCP server, but it
+still writes project files when `sync_icon` is used. Review generated SVGs,
+component names, import/export shape, and target file paths before committing.
+Prefer a design-system-owned icon file instead of letting an agent scatter icon
+code throughout unrelated components.
+
+## Duplicate Review
+
+Checked current `content/mcp/`, `content/skills/`, `content/agents/`,
+`content/tools/`, open pull requests, and repository-wide content for
+`better-auth/better-icons`, Better Icons, Better Icons MCP, `better-icons`
+package, Iconify MCP, icon search MCP, and the included `better-icons` skill.
+No dedicated Better Icons MCP Server entry, exact source URL duplicate, target
+file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Better Icons is
+published from the `better-auth/better-icons` repository under MIT license
+metadata.

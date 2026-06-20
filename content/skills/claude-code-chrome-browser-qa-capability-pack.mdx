@@ -1,0 +1,158 @@
+---
+title: Claude Code Chrome Browser QA Capability Pack Skill
+slug: claude-code-chrome-browser-qa-capability-pack
+category: skills
+description: >-
+  Expert Claude Code Chrome browser QA capability pack applying documented Claude in
+  Chrome enablement, browser automation boundaries, and web QA checkpoint workflows.
+cardDescription: >-
+  Run browser QA with Claude in Chrome using source-backed enablement and safety
+  checklists.
+seoTitle: Claude Code Chrome Browser QA Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code Chrome browser QA: Claude in Chrome
+  setup, web flow checkpoints, and safety boundaries from official Chrome docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1522
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1522"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/chrome"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill for web app QA with Claude in Chrome after extension setup and before
+  approving browser control in production accounts.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code Chrome browser QA capability pack for this web flow."
+
+  # Required output
+  1) Chrome integration enablement checklist
+  2) QA flow steps with URL checkpoints
+  3) Browser permission and data exposure review
+  4) Defect observations with evidence
+  5) Privacy-safe QA summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/chrome"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/security"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Claude in Chrome extension installed per official Chrome documentation."
+  - "Staging web app URL and test credentials scoped to non-production."
+  - "Team policy for browser automation on authenticated sessions."
+safetyNotes:
+  - "Browser automation can access logged-in sessions—use staging accounts only."
+  - "Claude chooses Chrome before computer use for web tasks when configured."
+  - "Review permission prompts before approving navigation on sensitive pages."
+privacyNotes:
+  - "Browser QA sends page content to the model—avoid customer PII in test flows."
+  - "Screenshots and DOM snapshots may include session tokens in dev tools—close extras."
+tags:
+  - claude-code
+  - chrome
+  - browser-qa
+  - web
+  - capability-pack
+keywords:
+  - Claude Code Chrome browser QA capability pack
+  - Claude in Chrome QA workflow
+  - browser automation Claude Code checklist
+readingTime: 8
+difficultyScore: 72
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in Claude in Chrome documentation verified on **2026-06-16**.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/chrome
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/security
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Official Chrome docs describe Claude in Chrome for browser-based tasks, extension
+setup, and choosing browser automation before broader computer use for web work.
+
+## Scope Note
+
+Community QA workflow skill applying documented Chrome integration steps—not an
+official Anthropic test product.
+
+## Core Workflow
+
+1. Verify extension install and account linkage.
+2. Define QA flow with URL and assertion checkpoints.
+3. Run staging-only tests with scoped credentials.
+4. Capture defect notes with page references—not production data.
+5. Stop and escalate if unexpected auth or payment pages appear.
+
+## Capability Scope
+
+- Chrome extension enablement verification.
+- Web QA flow checkpoint design.
+- Browser permission and session exposure review.
+- Defect observation with page-level evidence.
+- Privacy-safe QA reporting.
+
+## Production Rules
+
+- Use staging credentials only; never production admin accounts.
+- Stop browser QA when payment or SSO pages appear unexpectedly.
+- Do not store session cookies in skill output or public tickets.
+- Prefer Claude in Chrome over computer use for standard web flows per docs.
+- Human sign-off required before filing external bug reports with screenshots.
+
+## Review Matrix
+
+| Flow | Checkpoint | Stop condition |
+| --- | --- | --- |
+| Login | Staging auth only | Production SSO prompt |
+| Checkout | Cart total visible | Real payment form |
+| Form validation | Error messages | PII in error text |
+
+## Output Contract
+
+1. Enablement checklist.
+2. Flow steps and checkpoints.
+3. Permission review.
+4. Defect observations.
+5. Privacy-safe summary.
+
+## Duplicate Check
+
+Distinct from `chrome-integration-for-web-app-debugging-with-claude-code` guide.
+
+## Troubleshooting
+
+**Issue:** Extension not controlling tab
+**Fix:** Re-link extension; confirm staging URL allowlist in team policy.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` from public docs.

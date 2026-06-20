@@ -1,0 +1,104 @@
+---
+title: /documentation-refresh - Documentation Refresh Runbook
+slug: documentation-refresh
+category: commands
+description: >-
+  Community slash command runbook to refresh stale project documentation after
+  code changes: use git history to find affected docs, compare README commands to
+  package scripts, and flag broken internal links before opening a docs PR.
+cardDescription: >-
+  Refresh stale docs using git history, README/script diffs, and link checks.
+seoTitle: /documentation-refresh - Documentation Refresh Runbook
+seoDescription: >-
+  Claude Code slash command runbook to update stale documentation using git log
+  history comparison and README versus package script alignment.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 747
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/747"
+documentationUrl: "https://git-scm.com/docs/git-log"
+repoUrl: "https://github.com/git/git"
+sourceUrls:
+  - "https://git-scm.com/docs/git-log"
+  - "https://git-scm.com/docs/git-diff"
+installable: true
+installCommand: "/documentation-refresh [since-ref]"
+commandSyntax: "/documentation-refresh [since-ref]"
+usageSnippet: "/documentation-refresh v1.4.0"
+copySnippet: "/documentation-refresh [since-ref]"
+prerequisites:
+  - "Git repository with commits and documentation files such as README.md or docs/."
+  - "Lockfiles or package manifests when comparing documented install commands."
+safetyNotes:
+  - "Read-only git history inspection unless the operator approves doc edits."
+  - "Validate git refs before interpolating them into shell commands."
+privacyNotes:
+  - "Commit messages and doc drafts enter model context; scrub internal-only details first."
+tags:
+  - documentation
+  - git
+  - maintainer
+  - slash-command
+keywords:
+  - documentation refresh slash command
+  - stale readme update workflow
+---
+
+## Scope
+
+This is a **community custom entry** you add under `.claude/commands/` or
+`.claude/hooks/`. It is not a built-in Claude Code feature named on
+code.claude.com.
+
+
+The `/documentation-refresh` runbook helps maintainers update docs after code
+changes using **git history commands documented on git-scm.com**. It is a custom
+`.claude/commands/` workflow, not a built-in Claude Code feature.
+
+## Usage
+
+```
+/documentation-refresh [since-ref]
+```
+
+- With `since-ref`: analyze commits after that tag or commit.
+- Without an argument: use the latest release tag from `git describe --tags --abbrev=0`.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Validate the ref.** Reject refs with shell metacharacters, then verify with `git rev-parse --verify --quiet <ref>^{commit}`.
+2. **List doc-touching commits.** Run `git log <ref>..HEAD --name-only --pretty=format:%h%x09%s` and collect commits that modify `README.md`, `docs/`, or `*.mdx` sources.
+3. **Find code changes needing doc updates.** Run `git diff <ref>..HEAD --stat` and flag user-visible changes (CLI flags, scripts, env vars, breaking API paths) without matching doc edits in the same paths.
+4. **Compare README commands to manifests.** Extract fenced bash blocks from README and compare npm/pnpm/yarn script names to `package.json` `scripts` keys; list mismatches.
+5. **Check internal links.** Grep markdown for relative links and confirm target paths still exist in the working tree.
+6. **Draft a refresh plan.** Produce a prioritized checklist of doc files, sections to rewrite, and links to fix before opening a docs PR.
+
+## Output format
+
+- Range analyzed and commit count
+- Doc files already touched vs missing updates
+- README/script mismatches
+- Broken internal links
+- Recommended edit order for the docs PR
+
+## Source Verification Notes
+
+Verified against Git documentation on **2026-06-16**:
+
+- **`git log [<revision-range>]`** shows commits reachable from HEAD within an
+  optional range such as `<ref>..HEAD`.
+- **`--name-only`** with `git log` lists paths changed by each commit.
+- **`git diff [<options>] <commit> <commit>`** shows file-level changes between
+  two points in history, supporting stale-doc detection after releases.
+- **`git rev-parse --verify`** validates that a ref resolves before use in history commands.
+
+## Duplicate Check
+
+`/docs` in `content/commands/` is a broad documentation generator. No command
+documents this git-history-driven **documentation refresh** maintainer runbook.

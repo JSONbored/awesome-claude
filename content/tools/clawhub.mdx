@@ -1,0 +1,261 @@
+---
+title: ClawHub
+slug: clawhub
+category: tools
+description: >-
+  MIT-licensed OpenClaw skill and plugin registry with a hosted catalog,
+  `clawhub` CLI, npm package, native OpenClaw install flows, SKILL.md
+  publishing, plugin package publishing, vector search, scan status,
+  moderation controls, install lockfiles, and opt-out install telemetry.
+cardDescription: >-
+  Find, inspect, install, publish, and update OpenClaw skills and plugins with
+  ClawHub's hosted registry, OpenClaw commands, and npm CLI.
+seoTitle: ClawHub OpenClaw Skill Registry, Plugin Registry, and Agent Skills CLI
+seoDescription: >-
+  Use ClawHub to search OpenClaw skills, install SKILL.md agent skill bundles,
+  publish OpenClaw skills and plugins, inspect scan status, pin installed
+  skills, manage lockfiles, browse plugin packages, and run the npm `clawhub`
+  CLI for registry-authenticated agent workflows.
+author: OpenClaw
+authorProfileUrl: "https://github.com/openclaw"
+dateAdded: "2026-06-18"
+websiteUrl: "https://clawhub.ai"
+documentationUrl: "https://github.com/openclaw/clawhub/blob/main/docs/clawhub.md"
+repoUrl: "https://github.com/openclaw/clawhub"
+packageUrl: "https://registry.npmjs.org/clawhub/latest"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/openclaw/clawhub/blob/main/README.md"
+  - "https://github.com/openclaw/clawhub/blob/main/docs/quickstart.md"
+  - "https://github.com/openclaw/clawhub/blob/main/docs/cli.md"
+  - "https://github.com/openclaw/clawhub/blob/main/docs/telemetry.md"
+  - "https://github.com/openclaw/clawhub/blob/main/docs/skill-format.md"
+  - "https://github.com/openclaw/clawhub/blob/main/packages/clawhub/package.json"
+installable: true
+installCommand: "npm install -g clawhub"
+usageSnippet: >-
+  Install the `clawhub` npm CLI for login, publishing, inspecting, and
+  registry-specific workflows. Use native `openclaw skills` and `openclaw
+  plugins` commands when installing skills or plugins into an OpenClaw
+  workspace.
+copySnippet: |-
+  npm install -g clawhub
+  clawhub --help
+  clawhub search "calendar"
+  clawhub inspect @openclaw/demo
+
+  openclaw skills search "calendar"
+  openclaw skills install @openclaw/demo
+  openclaw plugins install clawhub:<package>
+configSnippet: |-
+  {
+    "openclawSkills": {
+      "search": "openclaw skills search \"calendar\"",
+      "install": "openclaw skills install @openclaw/demo",
+      "update": "openclaw skills update --all"
+    },
+    "openclawPlugins": {
+      "search": "openclaw plugins search \"calendar\"",
+      "install": "openclaw plugins install clawhub:<package>",
+      "update": "openclaw plugins update --all"
+    },
+    "clawhubCli": {
+      "login": "clawhub login",
+      "publishSkill": "clawhub skill publish ./my-skill --dry-run",
+      "publishPlugin": "clawhub package publish <source> --family code-plugin --dry-run"
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js 22 or newer for the published `clawhub` npm CLI."
+  - "OpenClaw installed and configured when using native `openclaw skills` or `openclaw plugins` install/update commands."
+  - "A GitHub-backed ClawHub account or API token for publishing, delete/undelete, scan, and other authenticated registry workflows."
+  - "A valid skill folder with `SKILL.md` when publishing skills, or an OpenClaw-compatible plugin package/source when publishing plugins."
+  - "A review process for registry content, scan status, changelogs, compatibility metadata, published licenses, and local install destinations before installing into an agent runtime."
+safetyNotes:
+  - "ClawHub installs agent skills and OpenClaw plugins. Inspect source links, files, changelogs, declared runtime metadata, scan state, and plugin compatibility before installing or updating."
+  - "`clawhub install`, `openclaw skills install`, and update commands write local skill files and metadata such as `.clawhub/lock.json` and per-skill origin records. Pin important local installs before updating shared workspaces."
+  - "`clawhub token` prints the stored API token to stdout. Avoid exposing tokens through shell history, CI logs, support transcripts, screenshots, or model prompts."
+  - "Publishing a skill to ClawHub releases it under MIT-0 according to the skill-format docs; do not publish proprietary, private, customer, or conflicting-license content."
+  - "Plugin publishing resolves local folders, GitHub repositories, GitHub refs, or archives and checks OpenClaw compatibility metadata. Use `--dry-run`, verify artifacts, and review ClawPack digest/scan output before public release."
+  - "Scan-held or blocked releases can be hidden from public catalog and install surfaces while remaining visible to owners; do not assume search visibility proves a release is safe or accepted."
+privacyNotes:
+  - "The CLI stores API token and registry configuration in the operating-system config directory or the path set by `CLAWHUB_CONFIG_PATH`."
+  - "Logged-in `clawhub install` may send best-effort install telemetry containing the skill slug and version only; set `CLAWHUB_DISABLE_TELEMETRY=1` to opt out."
+  - "ClawHub public listings can expose skill files, source links, versions, changelogs, install counts, stars, comments, publisher identity, and scan summaries."
+  - "Publishing uploads `SKILL.md` plus supporting text files to the hosted registry. Keep secrets, private prompts, customer data, proprietary code, and credentials out of published bundles."
+  - "Self-hosting ClawHub involves Convex, GitHub OAuth, JWT/JWKS keys, OpenAI embeddings for vector search, file storage, moderation data, and report handling."
+tags:
+  - clawhub
+  - openclaw
+  - agent-skills
+  - skill-registry
+  - plugins
+  - cli
+  - vector-search
+  - moderation
+keywords:
+  - ClawHub
+  - OpenClaw skill registry
+  - OpenClaw plugin registry
+  - clawhub CLI
+  - OpenClaw skills install
+  - SKILL.md registry
+  - agent skill registry
+  - OpenClaw package catalog
+  - publish OpenClaw skill
+  - publish OpenClaw plugin
+  - OpenClaw plugin metadata
+  - ClawHub telemetry
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+ClawHub is the public registry for OpenClaw skills and plugins. It hosts
+versioned text-based agent skills built around `SKILL.md`, plus OpenClaw code
+plugins and bundle plugins with package metadata, compatibility data, source
+links, scan summaries, stars, install counters, and moderation state.
+
+Use it when you want an OpenClaw-native way to discover reusable agent skills,
+inspect them before install, publish skill versions with changelogs, or ship
+OpenClaw plugin packages through a catalog rather than passing around ad hoc
+GitHub links.
+
+## Install
+
+Install the ClawHub CLI from npm:
+
+```bash
+npm install -g clawhub
+clawhub --help
+```
+
+The upstream docs distinguish two command surfaces:
+
+- Use native OpenClaw commands when installing into OpenClaw:
+
+```bash
+openclaw skills search "calendar"
+openclaw skills install @openclaw/demo
+openclaw skills update --all
+openclaw plugins search "calendar"
+openclaw plugins install clawhub:<package>
+openclaw plugins update --all
+```
+
+- Use the `clawhub` CLI for registry-authenticated workflows:
+
+```bash
+clawhub login
+clawhub whoami
+clawhub search "calendar"
+clawhub inspect @openclaw/demo
+clawhub package explore
+```
+
+## Capabilities
+
+| Area | ClawHub Coverage |
+| --- | --- |
+| Skill registry | Hosts versioned `SKILL.md` bundles with supporting text files, semver versions, tags, changelogs, and source links |
+| OpenClaw install flow | Native `openclaw skills` and `openclaw plugins` commands search, install, and update registry-hosted content |
+| CLI workflows | `clawhub` supports login, device login, whoami, search, explore, inspect, install, update, list, pin, unpin, uninstall, publish, scan, delete, and undelete flows |
+| Plugin catalog | Stores OpenClaw code-plugin and bundle-plugin packages with family, trust, capability, compatibility, and artifact metadata |
+| Publishing | Publishes skills from folders containing `SKILL.md` and plugins from local folders, GitHub repos, GitHub refs, URLs, or archives |
+| Search | Combines exact matching and OpenAI embedding-backed vector search through the hosted registry stack |
+| Local state | Writes `.clawhub/lock.json` and per-skill `.clawhub/origin.json`; pinned skills are skipped by update commands and reject force overwrites |
+| Review signals | Public listings can include scan summaries, moderation state, version history, changelogs, stars, comments, and install counts |
+| Operator controls | CLI supports registry/site/workdir/config overrides, proxy environment variables, token output, and opt-out install telemetry |
+
+## Use Cases
+
+- Find and install OpenClaw-compatible agent skills without manually copying
+  `SKILL.md` folders from random repositories.
+- Publish a skill package with versioning, tags, changelogs, and declared
+  runtime requirements.
+- Publish OpenClaw plugins with compatibility metadata such as plugin API and
+  OpenClaw version support.
+- Inspect a skill or plugin before install, including files, versions, source
+  links, scan status, and metadata.
+- Pin a local install so automated updates do not overwrite a reviewed version.
+- Build a skill review workflow around ClawHub scan reports, moderation state,
+  and source-backed registry metadata.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub metadata reported `openclaw/clawhub` as an MIT-licensed TypeScript
+  repository with the description `Skill + Plugin Registry for OpenClaw`, a
+  homepage at `clawhub.ai`, active updates on 2026-06-18, and latest release
+  `v0.22.0` published on 2026-06-16.
+- The README describes ClawHub as the public skill registry for OpenClaw,
+  focused on publishing, versioning, and searching text-based agent skills
+  built from `SKILL.md` plus supporting files.
+- The README states that ClawHub also exposes a native OpenClaw package catalog
+  for code plugins and bundle plugins.
+- The public docs say to use native `openclaw` commands for installing into
+  OpenClaw, and the separate `clawhub` CLI for registry authentication,
+  publishing, delete/undelete, and registry-specific workflows.
+- The quickstart documents skill search/install/update commands, plugin
+  search/install/update commands, npm and pnpm CLI installation, GitHub login,
+  skill publishing, plugin publishing, `--dry-run`, and inspect-before-install
+  commands.
+- `docs/cli.md` documents the `clawhub` package and binary, global flags,
+  config file locations, token output, search/explore/inspect/install/update
+  commands, lockfile behavior, pinning, skill publishing, plugin publishing,
+  scan report download, and noninteractive options.
+- `docs/telemetry.md` states that telemetry is only sent when a user is logged
+  in, runs `clawhub install`, and telemetry is not disabled; the event contains
+  the skill slug and version, not folder paths, file contents, logs, prompts, or
+  CLI output.
+- `docs/skill-format.md` documents `SKILL.md` requirements, accepted text-based
+  supporting files, frontmatter metadata under `metadata.openclaw`, supported
+  install kinds, 50 MB bundle limit, MIT-0 licensing for published skills, and
+  the lack of paid-skill support.
+- `packages/clawhub/package.json` declares npm package `clawhub`, version
+  `0.22.0`, MIT license, Node.js `>=22`, repository directory
+  `packages/clawhub`, and the `clawhub` binary.
+- The npm registry metadata for `clawhub/latest` reported version `0.22.0`, an
+  npm tarball, provenance attestation metadata, MIT licensing, and the
+  `clawhub`/`clawdhub` binary mapping.
+
+## Safety and Privacy
+
+ClawHub is a distribution surface for agent behavior. Treat skills and plugins
+as code-adjacent content, not as harmless documentation. Inspect files,
+declared environment requirements, plugin compatibility, source links,
+changelogs, and scan status before installing into a real OpenClaw workspace.
+
+Publishing is also consequential. Skill uploads become public registry content
+licensed under MIT-0 on ClawHub. Use `--dry-run`, keep private material out of
+bundles, and make sure runtime requirements are declared in `SKILL.md` so users
+and scan tools can see what the skill expects.
+
+Logged-in installs may report aggregate install telemetry unless
+`CLAWHUB_DISABLE_TELEMETRY=1` is set. The upstream telemetry docs say the event
+contains only slug and version, but tokens, registry config, source URLs, and
+published files still need normal secret-handling discipline.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, README entries, open pull requests, and
+repository-wide content for ClawHub, `openclaw/clawhub`, OpenClaw skill
+registry, OpenClaw plugin registry, `clawhub` CLI, ClawHub package catalog, and
+matching source URLs. No dedicated ClawHub entry, exact source URL duplicate,
+target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. ClawHub is
+MIT-licensed open-source software; OpenClaw, npm, GitHub, Convex, OpenAI,
+hosting providers, plugin packages, model providers, and third-party services
+used by individual skills or plugins may have separate licenses, billing,
+terms, privacy controls, and operational requirements.

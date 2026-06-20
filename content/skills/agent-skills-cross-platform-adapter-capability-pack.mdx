@@ -1,0 +1,223 @@
+---
+title: Agent Skills Cross-Platform Adapter Capability Pack Skill
+slug: agent-skills-cross-platform-adapter-capability-pack
+category: skills
+description: >-
+  Expert agent skills cross-platform adapter capability pack for porting Claude
+  Code SKILL.md workflows to Codex, Cursor, Windsurf, and Generic AGENTS
+  runbooks while preserving scope, safety notes, and source-backed contracts.
+cardDescription: >-
+  Adapt Claude Code agent skills for Codex, Cursor, Windsurf, and Generic AGENTS
+  with source-backed portability checklists.
+seoTitle: Agent Skills Cross-Platform Adapter Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for agent skills cross-platform adaptation,
+  SKILL.md portability, platform-specific constraints, and safety note preservation
+  across Claude Code and other agent hosts.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1534
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1534"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when adapting a Claude Code SKILL.md capability pack for another
+  agent host and you need to preserve workflow scope, safety boundaries, and
+  source-backed output contracts across platforms.
+copySnippet: |-
+  # Trigger
+  "Apply the agent skills cross-platform adapter capability pack for this skill."
+
+  # Required output
+  1) Source skill scope and non-portable dependency inventory
+  2) Target platform capability gap assessment
+  3) Adapted workflow with preserved safety and privacy notes
+  4) Invocation and metadata mapping plan
+  5) Verification checklist for the adapted host
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "The source Claude Code `SKILL.md` or HeyClaude capability pack to adapt."
+  - "The target platform or host (Codex, Cursor, Windsurf, Generic AGENTS, or mixed)."
+  - "Knowledge of platform-specific skill, rule, or AGENTS.md conventions on the target host."
+  - "Redacted examples of commands, tools, or MCP dependencies the source skill assumes."
+safetyNotes:
+  - "Not every Claude Code command or MCP tool exists on other platforms; do not imply feature parity without verification."
+  - "Adapted skills must preserve destructive-action warnings and approval requirements from the source workflow."
+  - "Cross-platform copies should not strip `safetyNotes` or `privacyNotes` to save space."
+  - "Platform-specific secret handling differs; never copy Claude Code env patterns blindly into other hosts."
+  - "This skill produces adaptation plans; it must not run destructive commands on the target platform without explicit approval."
+privacyNotes:
+  - "Adaptation reviews may expose internal runbooks, customer workflows, and repository conventions embedded in source skills."
+  - "Generic AGENTS exports shared across teams can leak path patterns and tool names if pasted into public issues."
+  - "Public adaptation summaries should describe platform gaps and preserved boundaries, not full internal skill bodies."
+tags:
+  - agent-skills
+  - cross-platform
+  - portability
+  - skill-adaptation
+  - capability-pack
+keywords:
+  - agent skills cross-platform adapter
+  - Claude Code skill portability
+  - SKILL.md adaptation Cursor Codex
+  - agent skill platform mapping
+  - Generic AGENTS skill adapter
+  - cross-platform capability pack
+readingTime: 8
+difficultyScore: 77
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code skills and features overview
+documentation verified on **2026-06-14**. Target platform skill formats and tool
+surfaces change independently; prefer live host documentation when adapting
+workflows.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code skills documentation and the public
+Anthropic `claude-code` repository on **2026-06-14**:
+
+- Claude Code skills live in `SKILL.md` files with YAML frontmatter controlling
+  description, allowed tools, model invocation, and supporting references.
+- Skill descriptions can load at session start when model invocation is enabled,
+  making portability decisions affect token cost on every host that imports them.
+- Claude Code supports project, user, and plugin skill locations with different
+  scope semantics that do not map one-to-one to Cursor rules or Codex AGENTS files.
+- Official skills documentation describes `disable-model-invocation`,
+  `allowed-tools`, and user-only skills—features that require explicit mapping
+  on other platforms.
+- HeyClaude capability packs document **Compatibility** sections for native versus
+  manual adaptation; this skill operationalizes that pattern.
+
+## Scope Note
+
+This is not a fully automated converter. Use it as a reusable adaptation workflow
+when porting source-backed Claude Code skills to other agent hosts while
+preserving safety, privacy, and output contracts.
+
+## Core Workflow
+
+1. Extract the source contract: trigger phrase, required outputs, production
+   rules, safety notes, privacy notes, and retrieval sources.
+2. Inventory Claude Code-specific dependencies: slash commands, MCP tools, hooks,
+   subagents, compaction behavior, and path-scoped rules.
+3. Profile the target host: skill/rule file format, tool availability, context
+   loading behavior, and approval or sandbox constraints.
+4. Map metadata fields: title, description, tags, prerequisites, and verification
+   status to the closest supported equivalents.
+5. Replace non-portable steps with manual adaptation instructions rather than
+   silently dropping them.
+6. Preserve **Production Rules**, **Safety Notes**, and **Privacy Notes** verbatim
+   unless the target platform requires equivalent stronger wording.
+7. Add a **Compatibility** section stating native versus manual adaptation paths.
+8. Define a verification checklist on the target host with one read-only dry run.
+9. Document remaining gaps explicitly in the adaptation summary.
+
+## Capability Scope
+
+- Source skill scope and dependency inventory.
+- Target platform capability gap assessment.
+- Adapted workflow with preserved safety boundaries.
+- Invocation and metadata mapping plan.
+- Verification checklist for adapted hosts.
+- Privacy-safe adaptation reporting.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when exporting HeyClaude
+  capability packs to team runbooks or reviewing cross-platform skill ports.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: this skill is the
+  manual adaptation framework itself; apply its output contract on the target host.
+
+## Required Inputs
+
+- Source `SKILL.md` or capability pack MDX with frontmatter and body sections.
+- Target platform name and supported skill/rule conventions.
+- List of commands, tools, and integrations the source skill requires.
+- Stakeholder approval requirements for destructive or production-impacting steps.
+
+## Production Rules
+
+- Never claim feature parity across platforms without verifying tool support.
+- Preserve safety and privacy notes even when shortening workflow steps.
+- Mark Claude Code-only commands explicitly rather than omitting them silently.
+- Prefer manual adaptation sections over broken automatic translations.
+- Keep retrieval sources attached to adapted skills for reviewer verification.
+- Redact internal examples before publishing adapted skills to shared catalogs.
+- Re-verify adapted skills after major host upgrades or model changes.
+
+## Review Matrix
+
+| Source dependency | Claude Code | Other hosts | Adaptation |
+| --- | --- | --- | --- |
+| `/context` slash command | Native | Varies | Document manual equivalent or omit |
+| MCP tools | Native | Varies | List required servers or manual steps |
+| Subagents | Native | Limited | Split into sequential manual tasks |
+| SKILL frontmatter | Native | Partial | Map to closest metadata block |
+| Hooks | Native | Rare | Externalize as pre-step checklist |
+| Compaction rules | Native | N/A | Note as Claude Code-specific context |
+
+## Output Contract
+
+1. Source scope and non-portable dependency inventory.
+2. Target platform capability gap assessment.
+3. Adapted workflow with preserved safety and privacy notes.
+4. Invocation and metadata mapping plan.
+5. Verification checklist for the adapted host.
+6. Privacy-safe adaptation summary for reviewers or team docs.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for agent skills cross-platform adapter, SKILL.md portability,
+and platform mapping workflows. Individual skills include **Compatibility**
+sections, but no `skills` entry provides a reusable cross-platform adaptation
+capability pack with gap matrix and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.

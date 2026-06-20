@@ -9,6 +9,23 @@ https://heyclau.de/48486ebc7ddc47af875118345161ae70.txt
 The key is intentionally public. It proves site ownership for IndexNow
 submissions and is not treated as a secret.
 
+IndexNow notifies **Bing, Yandex, Seznam, and Naver** (Bing shares onward).
+**Google ignores IndexNow** — it uses `sitemap.xml` `lastmod` + crawl, which the
+site already emits. So this is purely the Bing/everyone-else accelerator.
+
+## Automated daily submission (changed URLs only)
+
+A Cloudflare cron (`apps/web/plugins/indexnow-scheduled.ts`, daily 05:00 UTC —
+see `wrangler.jsonc` `triggers.crons`) submits **only the entry URLs added or
+updated in the last 48h**, derived from each entry's `contentUpdatedAt` /
+`dateAdded`. It deliberately does **not** resubmit the whole sitemap —
+resubmitting unchanged URLs gives no benefit and reads as spam.
+
+- Runs on the production host (`heyclau.de`) only; dev/preview never submit.
+- No secret required (the key is public). Set `INDEXNOW_DISABLED=1` to turn it
+  off without a deploy.
+- The manual script below remains for a one-off full-sitemap (re)submission.
+
 ## Local Dry Run
 
 ```bash

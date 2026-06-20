@@ -1,0 +1,235 @@
+---
+title: Google Stitch Design Skills
+slug: google-stitch-design-skills
+category: skills
+description: >-
+  Agent Skills and plugin packs for Google Stitch design workflows, including
+  code-to-design, design generation, design-system extraction, React and React
+  Native conversion, shadcn/ui guidance, Remotion walkthroughs, and prompt
+  enhancement.
+cardDescription: >-
+  Install Stitch design, build, and utility skills for Claude Code, Codex,
+  Cursor, Gemini CLI, and other Agent Skills-compatible coding agents.
+seoTitle: Google Stitch Skills for Claude Code and Codex
+seoDescription: >-
+  Install Google Labs Code Stitch Design Skills for Claude Code, Codex, Cursor,
+  Gemini CLI, and Antigravity to generate designs, convert frontend code, manage
+  design systems, and build React or React Native components with Stitch MCP.
+author: Google Labs Code
+authorProfileUrl: "https://github.com/google-labs-code"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/google-labs-code/stitch-skills"
+documentationUrl: "https://github.com/google-labs-code/stitch-skills"
+websiteUrl: "https://stitch.withgoogle.com/docs/mcp/setup"
+downloadUrl: "https://github.com/google-labs-code/stitch-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add google-labs-code/stitch-skills"
+usageSnippet: >-
+  Configure the Stitch MCP server first, then install the Stitch skill library
+  with `npx skills add google-labs-code/stitch-skills` or add the plugin packs
+  for your agent.
+copySnippet: |-
+  # Select skills interactively
+  npx skills add google-labs-code/stitch-skills
+
+  # Claude Code plugin install
+  npx plugins add google-labs-code/stitch-skills --scope project --target claude-code
+
+  # Codex marketplace setup
+  codex plugin marketplace add google-labs-code/stitch-skills --ref main \
+    --sparse .agents/plugins \
+    --sparse plugins/stitch-design \
+    --sparse plugins/stitch-build \
+    --sparse plugins/stitch-utilities
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/google-labs-code/stitch-skills"
+  - "https://raw.githubusercontent.com/google-labs-code/stitch-skills/main/README.md"
+  - "https://stitch.withgoogle.com/docs/mcp/setup"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cursor
+  - Gemini
+  - Antigravity
+prerequisites:
+  - "Stitch MCP server configured and running in the target agent environment."
+  - "Node.js and npx for the `skills` or `plugins` installer commands."
+  - "A compatible coding agent such as Claude Code, Codex, Cursor, Gemini CLI, or Antigravity."
+  - "Access to the Stitch project, credentials, and environment variables required by the Stitch MCP setup."
+  - "Permission to upload local design assets, frontend code snapshots, HTML exports, or design-system files into Stitch."
+safetyNotes:
+  - "Several skills can scan local frontend source, extract static HTML, upload assets, create Stitch designs, edit screens, generate variants, or produce code from Stitch projects."
+  - "Review generated React, React Native, Remotion, and shadcn/ui output before merging it into production."
+  - "The upstream README says the project is not an officially supported Google product."
+  - "Selective installs may require dependent Stitch skills; follow the upstream dependency notes when installing individual skills."
+  - "Prefer reviewed commits or pinned refs for production plugin installs instead of blindly tracking a mutable default branch."
+privacyNotes:
+  - "Frontend source code, static HTML, screenshots, images, design-system files, project IDs, prompt text, and generated UI assets may be sent to Stitch through the configured MCP server."
+  - "Do not upload proprietary product designs, customer data, unreleased brand assets, or credentials unless your organization approves that Stitch workflow."
+  - "Keep Stitch credentials, MCP environment variables, and project identifiers out of prompts, public issues, screenshots, and committed configuration."
+tags:
+  - google-stitch
+  - agent-skills
+  - design
+  - react
+  - mcp
+keywords:
+  - google stitch skills
+  - stitch skills claude code
+  - stitch mcp skills
+  - codex stitch plugin
+  - stitch design agent skills
+  - stitch react components
+  - stitch code to design
+readingTime: 5
+difficultyScore: 62
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Google Stitch Design Skills
+
+Google Labs Code maintains `stitch-skills`, a library of Agent Skills and
+plugin packs for working with [Stitch](https://stitch.withgoogle.com). The
+repository follows the Agent Skills open standard and is positioned for coding
+agents such as Codex, Antigravity, Gemini CLI, Claude Code, and Cursor.
+
+The skills require the Stitch MCP server to be configured in the agent
+environment. Treat the skills as a design workflow layer over Stitch MCP, not as
+a standalone MCP server.
+
+## Plugin Packs
+
+The repository groups skills into three plugin packs:
+
+| Pack | Scope |
+| --- | --- |
+| `stitch-design` | Code-to-design import, design generation, design-system management, static HTML extraction, and Stitch uploads |
+| `stitch-build` | React components, React Native conversion, Remotion walkthrough videos, and shadcn/ui guidance |
+| `stitch-utilities` | DESIGN.md generation, prompt enhancement, multi-page Stitch loops, and premium design standards |
+
+## Included Skills
+
+### Design
+
+- `stitch::code-to-design` converts frontend code into a Stitch design through
+  HTML extraction, design-system handling, and upload.
+- `stitch::generate-design` creates new screens, edits existing screens, and
+  generates variants from text or images.
+- `stitch::manage-design-system` uploads a `DESIGN.md` file and applies themes
+  to screens.
+- `stitch::extract-design-md` extracts a design system from frontend source.
+- `stitch::extract-static-html` produces self-contained static HTML snapshots
+  from running web apps.
+- `stitch::upload-to-stitch` uploads local assets, mockups, or HTML to a Stitch
+  project.
+
+### Build
+
+- `react-components` converts Stitch screens into React component systems with
+  validation and design-token consistency.
+- `react-native` converts Stitch HTML into React Native components.
+- `remotion` generates walkthrough videos from Stitch projects.
+- `shadcn-ui` provides guidance for shadcn/ui integration and component builds.
+
+### Utilities
+
+- `design-md` analyzes Stitch projects and generates semantic `DESIGN.md`
+  files.
+- `enhance-prompt` turns rough UI ideas into Stitch-optimized prompts.
+- `stitch-loop` generates multi-page websites from a single prompt with
+  validation.
+- `taste-design` generates premium `DESIGN.md` standards for typography, color,
+  and UI quality.
+
+## Installation
+
+Install selectively with the skills CLI:
+
+```bash
+npx skills add google-labs-code/stitch-skills
+```
+
+Install plugin packs for Claude Code:
+
+```bash
+npx plugins add google-labs-code/stitch-skills --scope project --target claude-code
+```
+
+Install plugin packs for Cursor:
+
+```bash
+npx plugins add google-labs-code/stitch-skills --scope workspace --target cursor
+```
+
+Add the Stitch marketplace for Codex:
+
+```bash
+codex plugin marketplace add google-labs-code/stitch-skills --ref main \
+  --sparse .agents/plugins \
+  --sparse plugins/stitch-design \
+  --sparse plugins/stitch-build \
+  --sparse plugins/stitch-utilities
+```
+
+After adding the marketplace, install any combination of `stitch-design`,
+`stitch-build`, and `stitch-utilities`.
+
+## Requirements
+
+The upstream README says these skills require the Stitch MCP server to be
+configured and running in the agent environment. Follow the Stitch MCP setup
+docs for server registration, credentials, environment variables, and client
+configuration before invoking the skills.
+
+Selective installs can have dependencies between Stitch skills. If installing
+only one skill, review its adjacent resources and the upstream dependency notes
+instead of assuming it runs independently.
+
+## Use Cases
+
+- Convert an existing frontend route into a Stitch design for redesign work.
+- Generate design variants for a mobile or web screen.
+- Extract a `DESIGN.md` system from a frontend codebase.
+- Upload static HTML, mockups, or local assets into a Stitch project.
+- Convert Stitch screens into React or React Native component systems.
+- Generate a Remotion walkthrough video for a Stitch project.
+- Turn vague UI requests into more precise Stitch prompts.
+
+## Safety and Privacy
+
+These skills can read local frontend files, export static HTML, inspect design
+systems, upload assets, and ask Stitch MCP to create or update design projects.
+Review what files and project IDs the agent can access before running them in a
+private product repository.
+
+Generated code and design assets should be reviewed before they are merged or
+published. The repository is hosted under `google-labs-code`, but the README
+states that it is not an officially supported Google product.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes `stitch-skills` as Agent Skills and plugins for
+  Google Stitch that follow the Agent Skills open standard.
+- The README lists compatibility with Codex, Antigravity, Gemini CLI, Claude
+  Code, and Cursor.
+- The README documents plugin packs named `stitch-design`, `stitch-build`, and
+  `stitch-utilities`.
+- The README says the skills require Stitch MCP setup before use and warns that
+  selective installs may need dependencies.
+- The repository is Apache-2.0 licensed and maintained under
+  `google-labs-code/stitch-skills`.
+
+## Duplicate Check
+
+No existing `google-labs-code/stitch-skills`, Google Stitch Skills, or Stitch
+Design Skills entry was found in `content/skills`.

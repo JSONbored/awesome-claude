@@ -1,0 +1,173 @@
+---
+title: LaunchDarkly MCP Server for Claude
+slug: launchdarkly-mcp-server
+category: mcp
+description: >-
+  Manage LaunchDarkly feature flags, AI configs, environments, and audit logs from Claude — with the
+  official LaunchDarkly Model Context Protocol server backed by the LaunchDarkly REST API.
+cardDescription: "Official LaunchDarkly MCP: feature flags, AI configs, environments & audit logs from Claude."
+seoTitle: "LaunchDarkly MCP Server for Claude — Feature Flag Management via Claude Code"
+seoDescription: "Connect Claude to LaunchDarkly with the official MCP server: list, create, update, and delete feature flags, AI configs, environments, and code references — from Claude Code or Desktop. MIT-licensed stdio server."
+author: LaunchDarkly
+authorProfileUrl: "https://github.com/launchdarkly"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/launchdarkly/mcp-server"
+websiteUrl: "https://launchdarkly.com"
+repoUrl: "https://github.com/launchdarkly/mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/launchdarkly/mcp-server/main/README.md"
+  - "https://feluda.ai/mcp-servers/launchdarkly"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add launchdarkly -- npx -y --package @launchdarkly/mcp-server -- mcp start --api-key YOUR_API_KEY"
+usageSnippet: >-
+  Ask Claude to list all feature flags in a project, create a new flag for a gradual rollout, update
+  targeting rules, inspect AI config definitions, or review audit log entries — using natural language
+  against your LaunchDarkly account.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "LaunchDarkly": {
+        "command": "npx",
+        "args": ["-y", "--package", "@launchdarkly/mcp-server", "--", "mcp", "start", "--api-key", "YOUR_API_KEY"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "LaunchDarkly": {
+        "command": "npx",
+        "args": ["-y", "--package", "@launchdarkly/mcp-server", "--", "mcp", "start", "--api-key", "YOUR_API_KEY"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A LaunchDarkly account and an API key from the LaunchDarkly Authorization page (Settings → Authorization → API Keys)."
+  - "Node.js (v18+) with `npx` available, and an MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Feature flag operations include create, update (patch), and delete — changes affect live targeting rules for all users in the environment."
+  - "Audit log and code reference reads are non-destructive, but flag patch and delete operations are irreversible and will affect production traffic immediately."
+  - "Scope the API key to the minimum required permissions (read-only for analysis workflows, write only for flag management workflows)."
+privacyNotes:
+  - "Feature flag definitions, targeting rules, user segments, AI config prompts, environment configurations, and audit log entries from your LaunchDarkly project are surfaced in Claude's context."
+  - "Your API key is passed as a CLI argument — store it in Claude Code's MCP config rather than in shell history; rotate keys from the LaunchDarkly Authorization page."
+tags:
+  - launchdarkly
+  - feature-flags
+  - feature-management
+  - ai-configs
+  - experimentation
+  - devops
+  - rollout
+keywords:
+  - launchdarkly mcp server
+  - launchdarkly mcp claude
+  - feature flag management mcp claude code
+  - feature flags ai claude
+  - launchdarkly claude integration
+  - feature flag mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **LaunchDarkly MCP Server** is the official Model Context Protocol server from LaunchDarkly.
+It gives Claude direct read/write access to your LaunchDarkly project — feature flags, AI configs,
+environments, code references, and audit logs — through the LaunchDarkly REST API. It runs locally
+via `npx @launchdarkly/mcp-server` over stdio, authenticated with a LaunchDarkly API key. Licensed
+under MIT.
+
+## Key capabilities
+
+- **Feature flags** — list, create, inspect, update targeting rules (patch), and delete feature flags.
+- **AI Configs** — manage AI configuration definitions for model-backed features.
+- **Environments** — list and inspect the environments in your LaunchDarkly project.
+- **Audit log** — view the history of changes to your project's flags and settings.
+- **Code references** — connect feature flag keys to their locations in source code.
+
+## Tools
+
+| Resource | Operations |
+|---|---|
+| FeatureFlags | list, create, get, patch (update), delete |
+| AiConfigs | list, create, get, delete |
+| Environments | list, get |
+| AuditLog | list |
+| CodeReferences | list |
+
+## How it compares
+
+| Server | Feature flags | AI configs | Environments | Audit log | Auth |
+|---|---|---|---|---|---|
+| **LaunchDarkly MCP** | Full CRUD | Yes | Yes | Yes | API key |
+| Unleash MCP | Full CRUD | No | Yes | Limited | API key |
+| Flagsmith MCP | Full CRUD | No | Yes | No | API key |
+| Split.io MCP | Read + create | No | Yes | No | API key |
+
+LaunchDarkly's MCP is the only feature flag server to also expose AI Config management, making it
+well-suited for teams using LaunchDarkly's AI model-config feature alongside standard flag-based
+rollouts.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add launchdarkly -- npx -y --package @launchdarkly/mcp-server -- mcp start --api-key YOUR_API_KEY
+```
+
+Replace `YOUR_API_KEY` with an API key from **Settings → Authorization → API Keys** in your
+LaunchDarkly account.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "LaunchDarkly": {
+      "command": "npx",
+      "args": ["-y", "--package", "@launchdarkly/mcp-server", "--", "mcp", "start", "--api-key", "YOUR_API_KEY"]
+    }
+  }
+}
+```
+
+### Standalone binary
+
+Download the pre-compiled binary from the GitHub Releases page:
+
+```bash
+curl -L -o mcp-server https://github.com/launchdarkly/mcp-server/releases/latest/download/mcp-server-bun-darwin-arm64
+chmod +x mcp-server
+```
+
+Then reference the binary path in your MCP config instead of the `npx` command.
+
+## Requirements
+
+- A LaunchDarkly account with an API key (Settings → Authorization).
+- Node.js v18+ with `npx` (for the npm install method).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Use a dedicated API key with the minimum required scopes for your workflow.
+- For read-only analysis, create a reader-role API key to prevent accidental writes.
+- Flag patch and delete operations take effect immediately in the target environment.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official GitHub repository `launchdarkly/mcp-server` (MIT) documents the `@launchdarkly/mcp-server`
+  npm package, `npx` install path, `--api-key` flag, and available resource groups: FeatureFlags
+  (list/create/get/patch/delete), AiConfigs (list/create/get/delete), AuditLog, CodeReferences,
+  and Environments.
+- MCP server listing at `feluda.ai/mcp-servers/launchdarkly` independently confirms the feature
+  flag management and API key authentication model.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  setup pattern used above.

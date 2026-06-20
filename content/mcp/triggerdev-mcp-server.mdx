@@ -1,0 +1,160 @@
+---
+title: Trigger.dev MCP Server for Claude
+slug: triggerdev-mcp-server
+category: mcp
+description: >-
+  Initialize projects, trigger task runs, deploy to environments, and monitor execution from
+  Claude — with the official Trigger.dev MCP server for background job and AI agent workflow
+  orchestration.
+cardDescription: "Official Trigger.dev MCP: trigger tasks, deploy & monitor workflows from Claude."
+seoTitle: "Trigger.dev MCP Server for Claude — Background Jobs & AI Workflow Orchestration"
+seoDescription: "Connect Claude to Trigger.dev with the official MCP server: initialize projects, trigger tasks, deploy to environments, monitor run status, and search docs — via npx. Apache-2.0, durable execution for AI agents."
+author: Trigger.dev
+authorProfileUrl: "https://github.com/triggerdotdev"
+dateAdded: "2026-06-18"
+documentationUrl: "https://trigger.dev/docs/mcp-introduction"
+websiteUrl: "https://trigger.dev"
+repoUrl: "https://github.com/triggerdotdev/trigger.dev"
+retrievalSources:
+  - "https://trigger.dev/docs/mcp-introduction"
+  - "https://trigger.dev/changelog/official-mcp-server"
+  - "https://github.com/triggerdotdev/trigger.dev"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "npx trigger.dev@latest install-mcp --client claude-code"
+usageSnippet: >-
+  Ask Claude to trigger a background task, deploy the current project to production, list recent
+  run failures, or search the Trigger.dev documentation — using natural language.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "trigger": {
+        "command": "npx",
+        "args": ["trigger.dev@latest", "mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "trigger": {
+        "command": "npx",
+        "args": ["trigger.dev@latest", "mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Trigger.dev account — log in via the CLI when prompted (`npx trigger.dev@latest login`)."
+  - "Node.js 18+ for `npx`."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The MCP server can trigger task runs and deploy code to production environments — review Claude's proposed actions before confirming."
+  - "The `search_docs` tool works without authentication; all other tools require CLI login."
+  - "Triggered runs incur usage against your Trigger.dev plan; be mindful when using bulk trigger operations."
+privacyNotes:
+  - "Project configurations, task definitions, run histories, and dashboard metrics from your Trigger.dev workspace are surfaced in Claude's context."
+  - "Authentication uses the Trigger.dev CLI session token stored locally — no credentials are embedded in the MCP server configuration."
+tags:
+  - triggerdev
+  - background-jobs
+  - task-orchestration
+  - workflow-automation
+  - ai-agents
+  - durable-execution
+keywords:
+  - trigger.dev mcp server
+  - triggerdev mcp claude
+  - background jobs mcp claude code
+  - workflow orchestration mcp
+  - durable execution ai agents mcp
+  - trigger.dev tasks mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Trigger.dev MCP Server** is the official Model Context Protocol server for
+[Trigger.dev](https://github.com/triggerdotdev/trigger.dev), the open-source platform for
+durable background jobs and AI agent workflows. It connects Claude directly to your Trigger.dev
+projects — letting you initialize new projects, trigger task runs, deploy to environments, monitor
+execution, and search documentation from your IDE.
+
+Authentication uses the Trigger.dev CLI session. The documentation search tool (`search_docs`)
+works without any credentials, so you can start asking questions about the platform before
+logging in.
+
+## Key capabilities
+
+- **Documentation search** — search Trigger.dev docs without authentication.
+- **Project initialization** — scaffold new Trigger.dev projects from Claude.
+- **Project management** — list and manage projects and organizations.
+- **Task triggering** — invoke tasks by name with payloads, inspect task definitions.
+- **Deployment** — deploy to staging or production environments.
+- **Run monitoring** — filter and inspect run details, query execution history.
+- **Metrics** — query dashboard metrics via TRQL.
+
+## How it compares
+
+| Server | Task triggering | Deployment | Run monitoring | Docs search | Auth |
+|---|---|---|---|---|---|
+| **Trigger.dev MCP** | Yes | Yes | Yes | Yes | CLI login |
+| Inngest MCP | Yes (local) | No | Yes (local) | Yes | None (local) |
+| Temporal MCP (community) | Yes | No | Limited | No | API key |
+| Modal MCP (community) | Limited | No | Limited | No | API key |
+
+Trigger.dev is a managed, cloud-hosted platform with full durable execution semantics, retries,
+concurrency controls, and scheduling — making the MCP server well-suited for production
+background job management.
+
+## Installation
+
+### Claude Code (recommended)
+
+```bash
+npx trigger.dev@latest install-mcp --client claude-code
+```
+
+This wizard automatically configures the MCP server for Claude Code. Log in via the CLI if prompted:
+
+```bash
+npx trigger.dev@latest login
+```
+
+### Manual configuration (Claude Code / Claude Desktop)
+
+```json
+{
+  "mcpServers": {
+    "trigger": {
+      "command": "npx",
+      "args": ["trigger.dev@latest", "mcp"]
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Trigger.dev account.
+- Node.js 18+ (for `npx`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Authentication uses the Trigger.dev CLI session — credentials are stored locally in the CLI's session store, not in the MCP config.
+- Deployment and trigger tools require CLI login, preventing unauthenticated workflow execution.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Trigger.dev's MCP introduction at `trigger.dev/docs/mcp-introduction` confirms the `npx
+  trigger.dev@latest install-mcp` install path, CLI-based authentication, and the tool surface
+  including docs search, project init, task triggering, deployment, and run monitoring.
+- Trigger.dev's changelog at `trigger.dev/changelog/official-mcp-server` documents the official
+  MCP server launch as part of Launch Week 2.
+- GitHub repo `triggerdotdev/trigger.dev` (Apache-2.0, 15k+ stars) is the official open-source
+  codebase.

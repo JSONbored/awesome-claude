@@ -1,0 +1,266 @@
+---
+title: Google Workspace CLI
+slug: google-workspace-cli
+category: tools
+description: >-
+  Apache-2.0 `gws` command-line tool for Google Workspace APIs with structured
+  JSON output, dynamic Discovery API commands, npm and release installers,
+  Gemini CLI extension metadata, and 100+ bundled Agent Skills.
+cardDescription: >-
+  Use `gws` to let humans and AI agents operate Google Workspace APIs through
+  structured JSON, OAuth, helper commands, and bundled Agent Skills.
+seoTitle: Google Workspace CLI gws for AI Agents, Agent Skills, Gmail, Drive, Docs, Sheets
+seoDescription: >-
+  Install Google Workspace CLI `gws` for AI agents and agent skills across
+  Gmail, Drive, Docs, Sheets, Calendar, Chat, Admin SDK, Classroom, Meet, Apps
+  Script, Workspace Events, Model Armor, Gemini CLI, OpenClaw skills, and
+  structured JSON automation.
+author: Google Workspace CLI Contributors
+authorProfileUrl: "https://github.com/googleworkspace"
+dateAdded: "2026-06-18"
+websiteUrl: "https://developers.google.com/workspace"
+documentationUrl: "https://github.com/googleworkspace/cli/blob/main/README.md"
+repoUrl: "https://github.com/googleworkspace/cli"
+packageUrl: "https://registry.npmjs.org/@googleworkspace%2fcli/latest"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+sourceUrls:
+  - "https://github.com/googleworkspace/cli/blob/main/docs/skills.md"
+  - "https://github.com/googleworkspace/cli/blob/main/npm/install.js"
+  - "https://github.com/googleworkspace/cli/blob/main/.env.example"
+  - "https://github.com/googleworkspace/cli/blob/main/skills/gws-shared/SKILL.md"
+  - "https://github.com/googleworkspace/cli/blob/main/gemini-extension.json"
+  - "https://github.com/googleworkspace/cli/releases/tag/v0.22.5"
+installable: true
+installCommand: "npm install -g @googleworkspace/cli"
+usageSnippet: >-
+  Install `gws`, run `gws auth setup` or `gws auth login`, then use structured
+  JSON commands such as `gws drive files list --params '{"pageSize": 5}'`.
+  Agents can also install the bundled skills from the repository or use the
+  Gemini CLI extension after terminal authentication.
+copySnippet: |-
+  npm install -g @googleworkspace/cli
+  gws auth setup
+  gws auth login
+  gws drive files list --params '{"pageSize": 5}'
+  gws schema drive.files.list
+
+  npx skills add https://github.com/googleworkspace/cli
+configSnippet: |-
+  {
+    "auth": {
+      "interactive": "gws auth setup && gws auth login",
+      "credentialsFileEnv": "GOOGLE_WORKSPACE_CLI_CREDENTIALS_FILE",
+      "tokenEnv": "GOOGLE_WORKSPACE_CLI_TOKEN"
+    },
+    "agentSkills": {
+      "all": "npx skills add https://github.com/googleworkspace/cli",
+      "drive": "npx skills add https://github.com/googleworkspace/cli/tree/main/skills/gws-drive",
+      "gmail": "npx skills add https://github.com/googleworkspace/cli/tree/main/skills/gws-gmail"
+    },
+    "safety": {
+      "previewWrites": "Use --dry-run before write or delete workflows",
+      "sanitize": "Use --sanitize or GOOGLE_WORKSPACE_CLI_SANITIZE_TEMPLATE when Model Armor review is required"
+    }
+  }
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - "Node.js 18 or newer for the npm installer, or a platform-specific prebuilt binary from GitHub Releases."
+  - "A Google Cloud project and OAuth configuration, either created through `gws auth setup` or configured manually in Google Cloud Console."
+  - "A Google account or Google Workspace account with access to the target Drive, Gmail, Calendar, Sheets, Docs, Chat, Admin, Classroom, Meet, or other APIs."
+  - "Explicit scope selection for the APIs the agent may use; unverified OAuth apps in testing mode cannot request the full recommended scope set."
+  - "A review boundary for agent write/delete actions, exported credentials, service-account keys, JSON outputs, logs, and downloaded files."
+safetyNotes:
+  - "`gws` can read, create, update, send, delete, share, upload, export, and administer Google Workspace resources depending on OAuth scopes and the command used."
+  - "Require user confirmation before agent-initiated Gmail sends, Drive sharing, Calendar changes, Admin SDK actions, Apps Script pushes, file uploads, or destructive operations."
+  - "Use `--dry-run` for write workflows when supported, and keep OAuth scopes narrow instead of granting broad Workspace access for convenience."
+  - "The npm package runs a postinstall script that downloads a platform-specific binary from GitHub Releases and verifies the published SHA256 checksum before extracting it."
+  - "Model Armor sanitization can screen API responses before they reach an agent, but it may send prompt or response content to the configured Google Cloud Model Armor template."
+  - "The README says this project is under active development and not an officially supported Google product; expect breaking changes before v1.0."
+privacyNotes:
+  - "`gws` can expose emails, attachments, files, folders, shared drives, calendars, contacts, Chat spaces, Docs, Sheets, Slides, Forms, Keep notes, Meet data, Tasks, Classroom data, Apps Script projects, Admin reports, and audit logs."
+  - "Interactive credentials are encrypted at rest with a key stored in the OS keyring, with a file-key fallback when configured; exported credentials and service-account JSON files are highly sensitive."
+  - "`GOOGLE_WORKSPACE_CLI_TOKEN` has highest precedence when set; avoid leaking access tokens through shell history, `.env` files, CI logs, support messages, screenshots, or agent prompts."
+  - "Structured JSON, NDJSON pagination, downloads, `--output` files, log files, and model-visible command output can contain personal, customer, regulated, or confidential Workspace data."
+  - "Agent skills installed from the repository teach agents how to call `gws`; the data exposure risk is controlled by the authenticated account, scopes, local files, and command approvals."
+tags:
+  - google-workspace
+  - gws
+  - agent-skills
+  - gmail
+  - drive
+  - sheets
+  - calendar
+  - gemini-cli
+keywords:
+  - Google Workspace CLI
+  - gws CLI
+  - Google Workspace AI agent
+  - Google Workspace Agent Skills
+  - Gmail agent skills
+  - Google Drive agent skills
+  - Google Sheets agent automation
+  - Google Docs agent automation
+  - Gemini CLI Google Workspace extension
+  - OpenClaw Google Workspace skills
+  - Google Workspace structured JSON CLI
+  - Model Armor gws
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Google Workspace CLI, exposed as `gws`, is an Apache-2.0 command-line tool for
+operating Google Workspace APIs from a terminal or AI agent. The repository
+describes it as one CLI for Drive, Gmail, Calendar, Sheets, Docs, Chat, Admin,
+and the wider Workspace API surface, with structured JSON output and commands
+generated dynamically from Google's Discovery Service.
+
+For agent workflows, the repo ships a large Agent Skills library, a shared
+`gws` skill, service-specific skills, helper skills, persona bundles, recipes,
+and Gemini CLI extension metadata. That makes it a practical bridge between
+LLM agents and real Google Workspace operations without writing one-off REST
+wrappers for every Gmail, Drive, Calendar, Sheets, or Admin SDK task.
+
+## Install
+
+Install through npm:
+
+```bash
+npm install -g @googleworkspace/cli
+gws auth setup
+gws auth login
+gws drive files list --params '{"pageSize": 5}'
+```
+
+The README also documents platform-specific binaries from GitHub Releases,
+Homebrew on macOS/Linux, `cargo install` from source, and Nix.
+
+Install all bundled Agent Skills:
+
+```bash
+npx skills add https://github.com/googleworkspace/cli
+```
+
+Or install only a focused subset:
+
+```bash
+npx skills add https://github.com/googleworkspace/cli/tree/main/skills/gws-drive
+npx skills add https://github.com/googleworkspace/cli/tree/main/skills/gws-gmail
+```
+
+The README also documents OpenClaw setup by symlinking or copying the
+`skills/gws-*` folders into an OpenClaw skills directory, and Gemini CLI setup
+through:
+
+```bash
+gemini extensions install https://github.com/googleworkspace/cli
+```
+
+## Capabilities
+
+| Area | Google Workspace CLI Coverage |
+| --- | --- |
+| API surface | Dynamically builds commands from Google Discovery documents, covering Workspace APIs as they are discovered |
+| Core services | Drive, Gmail, Calendar, Sheets, Docs, Slides, Chat, Admin SDK, Tasks, People, Forms, Keep, Meet, Classroom, Apps Script, Workspace Events, and Model Armor |
+| Agent output | Structured JSON by default, with schema introspection, NDJSON pagination, binary output support, and predictable exit codes |
+| Helpers | Hand-crafted `+` commands for Gmail send/reply/triage/watch, Sheets read/append, Docs write, Drive upload, Calendar agenda/insert, Chat send, Apps Script push, workflow summaries, and Model Armor sanitization |
+| Agent Skills | 100+ `SKILL.md` files covering services, helpers, personas, and recipes for common Gmail, Drive, Docs, Sheets, Calendar, Chat, and Admin workflows |
+| Authentication | Browser OAuth, `gws auth setup`, OAuth credentials files, service-account JSON, pre-obtained access tokens, encrypted local credentials, and `.env` support |
+| Install paths | npm package, GitHub release binaries with SHA256 checks, Homebrew, Cargo, and Nix |
+| Agent hosts | Skills install path via `npx skills`, documented OpenClaw copy/symlink setup, and Gemini CLI extension metadata |
+
+## Use Cases
+
+- Give an agent structured, JSON-first access to Gmail, Drive, Calendar, Docs,
+  Sheets, Chat, and Admin SDK tasks.
+- Use the bundled skills as reusable workflows for Claude-style skill runners,
+  OpenClaw, Gemini CLI, and other agent hosts that can consume skill folders.
+- Build a Workspace operations assistant for inbox triage, Drive organization,
+  meeting prep, weekly summaries, file announcements, doc generation, and task
+  creation.
+- Run admin or audit workflows against Workspace APIs while keeping command
+  outputs machine-readable.
+- Use Model Armor sanitization for prompt or response review before sensitive
+  Workspace content reaches an agent.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub metadata reported `googleworkspace/cli` as an Apache-2.0 Rust
+  repository with topics including `google-workspace`, `agent-skills`,
+  `ai-agent`, `automation`, `cli`, `discovery-api`, `google-admin`,
+  `google-calendar`, `google-chat`, `google-docs`, `google-drive`,
+  `google-sheets`, `oauth2`, and `gemini-cli-extension`.
+- The README describes `gws` as a CLI for Google Workspace built for humans and
+  AI agents, with structured JSON output, dynamic Discovery Service command
+  generation, and 40+ agent skills in its opening summary.
+- The README states that the repo ships 100+ Agent Skills, including
+  service-specific skills, higher-level helpers, and curated recipes for Gmail,
+  Drive, Docs, Calendar, and Sheets.
+- `docs/skills.md` lists service skills, helper skills, persona skills, and
+  recipe skills for Workspace APIs and cross-service workflows.
+- The README documents npm, GitHub release binary, Cargo, Nix, and Homebrew
+  installation paths, plus `gws auth setup`, `gws auth login`, OAuth token,
+  credentials-file, and service-account authentication modes.
+- The README documents Gemini CLI extension installation and OpenClaw setup for
+  the bundled `skills/gws-*` folders.
+- The README documents helper commands, pagination, `--dry-run`, schema
+  introspection, structured exit codes, and Model Armor response sanitization.
+- `.env.example` documents token, credentials file, OAuth client, config
+  directory, Model Armor, sanitize mode, and project ID environment variables.
+- `skills/gws-shared/SKILL.md` declares a shared Agent Skill requiring the `gws`
+  binary and documenting global flags, dry-run, sanitize, output, upload,
+  pagination, and security rules for agents.
+- `npm/install.js` downloads the matching GitHub Release artifact, downloads
+  the `.sha256` file, verifies the SHA256 checksum, extracts the binary, and
+  writes the installed version marker.
+- `package.json` and npm registry metadata report npm package
+  `@googleworkspace/cli` version `0.22.5`, Apache-2.0 license, Node.js 18+
+  engine, `gws` binary, npm postinstall, supported platform artifacts, and
+  provenance attestation metadata.
+- The latest GitHub release was `v0.22.5`, published on 2026-03-31, with
+  macOS, Linux, and Windows artifacts plus checksum files.
+- The README states that the project is under active development, expects
+  breaking changes before v1.0, and is not an officially supported Google
+  product.
+
+## Safety and Privacy
+
+`gws` is powerful because it can operate a real Google account or Workspace
+tenant. Treat every authenticated command as account access. Start with narrow
+OAuth scopes, prefer read-only operations while testing, use `--dry-run` before
+writes where available, and require confirmation before sending email, sharing
+files, modifying calendars, changing admin state, pushing Apps Script code, or
+deleting data.
+
+Agent usage increases the risk because model-visible output can include private
+email, documents, spreadsheets, contacts, calendars, chat messages, attachments,
+audit events, or admin records. Keep credentials out of prompts and logs, avoid
+exporting broad credential files unless needed, and scope each agent task to the
+minimum Workspace services required.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, README entries, open pull requests, and
+repository-wide content for Google Workspace CLI, `googleworkspace/cli`,
+`@googleworkspace/cli`, `gws`, Google Workspace Agent Skills, Gemini CLI Google
+Workspace extension, and matching source URLs. No dedicated Google Workspace
+CLI entry, exact source URL duplicate, target file, or open duplicate PR was
+found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The project is
+Apache-2.0 open-source software from the `googleworkspace/cli` repository and
+explicitly says it is not an officially supported Google product. Google
+Workspace, Google Cloud, OAuth apps, Model Armor, npm, Homebrew, GitHub
+Releases, Nix, Gemini CLI, OpenClaw, and third-party agent hosts may have
+separate licenses, billing, terms, quotas, privacy controls, and operational
+requirements.

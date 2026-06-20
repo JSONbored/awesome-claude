@@ -1,0 +1,204 @@
+---
+title: Agentic Terminal Directory MCP Server for Claude
+slug: agentic-terminal-directory-mcp-server
+category: mcp
+description: >-
+  AT Directory hosted MCP server for discovering Observer Protocol–verified merchants accepting Lightning, BOLT12, L402, and USDT agentic payments with live rail verification.
+cardDescription: >-
+  Connect Claude to the Agentic Terminal Directory to search verified merchants, inspect payment rails, and verify endpoints before agent checkout.
+seoTitle: Agentic Terminal Directory MCP Server for Claude
+seoDescription: >-
+  Use the AT Directory MCP server with Claude to discover OP-verified merchants on Lightning, L402, BOLT12, and USDT rails via mcp.agenticterminal.ai.
+author: Observer Protocol
+authorProfileUrl: "https://github.com/observer-protocol"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1463
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1463"
+repoUrl: "https://github.com/observer-protocol/at-directory"
+documentationUrl: "https://agenticterminal.ai/api-docs"
+websiteUrl: "https://agenticterminal.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http at-directory https://mcp.agenticterminal.ai/mcp
+usageSnippet: >-
+  Add https://mcp.agenticterminal.ai/mcp as a remote connector; read tools work anonymously without credentials.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "at-directory": {
+        "url": "https://mcp.agenticterminal.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "at-directory": {
+        "url": "https://mcp.agenticterminal.ai/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer YOUR_DIRECTORY_ACCESS_CREDENTIAL"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "MCP client with streamable HTTP connector support."
+  - "Understanding that the directory is discovery-only—not in the payment path."
+  - "Optional Observer Protocol DirectoryAccessCredential for higher rate limits and write access."
+  - "Wallet or payment rail tooling separate from the directory for actual checkout."
+safetyNotes:
+  - "The directory indexes merchant claims and attestations; verify rails before sending funds."
+  - "`verify_payment_endpoint` probes live endpoints but agents still pay merchants directly."
+  - "Tier 1 merchants are self-attested; prefer Tier 2+ records for high-value purchases."
+  - "Never share private keys or wallet seeds through MCP chat sessions."
+privacyNotes:
+  - "Search queries and merchant IDs may appear in Agentic Terminal logs."
+  - "Payment transactions occur directly with merchants, not through the directory."
+  - "Optional credentials link your agent identity for rate-limit and review features."
+tags:
+  - payments
+  - bitcoin
+  - lightning
+  - directory
+  - remote-mcp
+keywords:
+  - at directory mcp
+  - agentic terminal
+  - lightning merchant mcp
+  - observer protocol
+  - agent payments directory
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+The Agentic Terminal Directory (AT Directory) is a verified merchant index for agentic commerce on the payment rails Bitcoin and Tether actually use—Lightning, BOLT12, L402, and USDT across supported chains. Agents discover merchants, inspect trust tiers from Observer Protocol, and verify payment endpoints before transacting. The directory is never in the payment path.
+
+Hosted MCP is at `https://mcp.agenticterminal.ai/mcp`. Source data and server code live in [observer-protocol/at-directory](https://github.com/observer-protocol/at-directory).
+
+## Features
+
+- Six tools: search_merchants, get_merchant, verify_payment_endpoint, list_categories, list_rails, whoami.
+- Anonymous read access for discovery and rail verification.
+- Observer Protocol trust tiers separate from agent-callable integration tiers.
+- Hosted streamable HTTP plus optional local `@agenticterminal/mcp-server` stdio package.
+- Web directory at agenticterminal.ai with matching data.
+
+## Use Cases
+
+- Search gift-card merchants accepting Lightning in a target category.
+- Inspect Bitrefill's attestation and agent endpoints before purchase.
+- Verify a merchant's Lightning endpoint is live before sending sats.
+- List supported USDT chains and filter merchants by rail.
+- Check your agent identity with whoami when using directory credentials.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add `https://mcp.agenticterminal.ai/mcp` as a custom connector—no install required.
+2. Optionally install `@agenticterminal/mcp-server` globally for local stdio use.
+3. Run `search_merchants` with rail and category filters.
+4. Call `verify_payment_endpoint` before initiating payment with your wallet.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http at-directory https://mcp.agenticterminal.ai/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "at-directory": {
+      "url": "https://mcp.agenticterminal.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+For authenticated setups:
+
+```json
+{
+  "mcpServers": {
+    "at-directory": {
+      "url": "https://mcp.agenticterminal.ai/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer YOUR_DIRECTORY_ACCESS_CREDENTIAL"
+      }
+    }
+  }
+}
+```
+
+Optional DirectoryAccessCredential raises rate limits and unlocks review writes; discovery reads need no auth.
+
+## Examples
+
+### Merchant search
+
+```text
+Search for merchants accepting Lightning in the gift-cards category.
+```
+
+### Rail verification
+
+```text
+Verify the Lightning payment endpoint for merchant bitrefill before checkout.
+```
+
+### Merchant detail
+
+```text
+Get full rails, agent endpoints, and attestation URL for merchant bitrefill.
+```
+
+## Security
+
+- Read OP trust tier and agent-callable tier before trusting a merchant.
+- Use live verification results; do not skip `verify_payment_endpoint` for large payments.
+- Agents bring their own wallet—never paste seeds or macaroons into chat.
+
+## Troubleshooting
+
+### Rate limited
+
+Obtain a DirectoryAccessCredential or reduce query frequency.
+
+### Verification inconclusive
+
+Some rails are attestation-only; read the tool response carefully.
+
+### Empty search
+
+Broaden category or rail filters; confirm merchant data passed CI validation.
+
+### Local stdio errors
+
+For dev, start the mock verifier per the repository README before stdio mode.
+
+## Duplicate Check
+
+No existing Agentic Terminal Directory or `agenticterminal.ai` entry was found in `content/mcp/`. This differs from generic payment MCP servers because it is a read-only verified merchant directory, not a wallet or checkout processor.

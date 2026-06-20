@@ -1,0 +1,184 @@
+---
+title: Dify
+slug: dify
+category: tools
+description: >-
+  Production-ready LLM app and agentic workflow platform with visual workflows,
+  RAG pipelines, agent capabilities, model management, observability, prompt
+  IDE, APIs, Dify Cloud, and self-hosted Docker Compose deployment.
+cardDescription: >-
+  Build agentic LLM apps with Dify's visual workflows, RAG pipelines, agents,
+  model management, observability, prompt IDE, APIs, cloud option, and
+  self-hosted deployment.
+seoTitle: Dify Agentic Workflow Platform for LLM Apps, RAG, Agents, and Observability
+seoDescription: >-
+  Use Dify to build production LLM applications with visual AI workflows, RAG
+  pipelines, agent capabilities, model providers, prompt IDE, observability,
+  APIs, Docker Compose self-hosting, Dify Cloud, and app deployment.
+author: LangGenius
+authorProfileUrl: "https://github.com/langgenius"
+dateAdded: "2026-06-18"
+websiteUrl: "https://dify.ai"
+documentationUrl: "https://docs.dify.ai/en/use-dify/getting-started/introduction"
+repoUrl: "https://github.com/langgenius/dify"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/langgenius/dify"
+  - "https://github.com/langgenius/dify/blob/main/README.md"
+  - "https://github.com/langgenius/dify/blob/main/LICENSE"
+  - "https://docs.dify.ai/en/use-dify/getting-started/introduction"
+  - "https://docs.dify.ai/en/use-dify/getting-started/quick-start"
+  - "https://docs.dify.ai/en/use-dify/build/workflow-chatflow"
+installable: true
+installCommand: "docker compose up -d"
+usageSnippet: >-
+  Clone Dify, copy the Docker environment file, start the Docker Compose stack,
+  then configure model providers, app workflows, knowledge bases, tools,
+  observability, access control, and data-retention boundaries before production
+  use.
+copySnippet: |-
+  cd docker
+  cp .env.example .env
+  docker compose up -d
+estimatedSetupTime: 30 minutes
+difficulty: intermediate
+prerequisites:
+  - "Docker and Docker Compose for the documented self-hosted quick start, or a Dify Cloud workspace."
+  - "At least the upstream minimum CPU and memory resources for local deployment."
+  - "Model provider credentials for the LLMs, embedding models, rerankers, or API-compatible routes the application will use."
+  - "Storage, database, vector, observability, network, and backup planning before hosting real user data."
+  - "Review of the Dify Open Source License conditions, including multi-tenant service and frontend logo/copyright restrictions."
+safetyNotes:
+  - "Dify can orchestrate workflows, RAG pipelines, agents, tools, APIs, model providers, and production application endpoints; review tool permissions and user-triggered actions before exposing apps."
+  - "Self-hosted deployments need normal production controls: authentication, TLS, network isolation, secret management, backups, database maintenance, object storage policy, and upgrade planning."
+  - "Agent and workflow nodes can call external tools, model providers, HTTP APIs, search tools, and custom integrations; apply least privilege and approval gates for write actions."
+  - "Enterprise, marketplace, cloud, and modified-license terms should be reviewed before using Dify as a multi-tenant service or white-labeled frontend."
+  - "Prompt IDE changes, workflow edits, model-provider changes, and dataset updates can alter production behavior; use versioning, staged releases, and rollback paths."
+privacyNotes:
+  - "Prompts, uploaded documents, knowledge-base chunks, embeddings, workflow variables, tool arguments, tool results, API requests, model responses, logs, annotations, and observability data may contain sensitive user or business data."
+  - "Do not store API keys, database credentials, private documents, customer records, regulated data, or internal URLs in examples, public apps, logs, screenshots, or shared prompts."
+  - "Review data paths for every model provider, embedding provider, reranker, tool, observability integration, storage backend, and Dify Cloud or self-hosted deployment component."
+  - "RAG and knowledge-base features need deletion, retention, access control, source freshness, and permission filtering policies before ingesting private corpora."
+tags:
+  - dify
+  - agentic-workflows
+  - rag
+  - agents
+  - llmops
+  - visual-builder
+  - self-hosted
+keywords:
+  - Dify
+  - Dify AI
+  - agentic workflow platform
+  - Dify RAG pipeline
+  - Dify agents
+  - Dify self hosted
+  - Dify workflow builder
+  - Dify LLMOps
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Dify is a production-oriented LLM application development platform for building
+agentic workflows, RAG applications, chat apps, model-backed APIs, and
+AI-powered products. It combines a visual workflow builder, RAG pipeline,
+agent capabilities, model management, prompt IDE, observability, logs,
+annotations, and backend APIs.
+
+Use it when a team wants a visual app and workflow platform rather than a
+code-first agent framework. It is especially relevant for Dify AI, agentic
+workflow platform, LLM app builder, RAG pipeline, workflow builder, and LLMOps
+searches.
+
+## Install
+
+The self-hosted quick start uses Docker Compose:
+
+```bash
+cd docker
+cp .env.example .env
+docker compose up -d
+```
+
+Dify also offers Dify Cloud and enterprise options. Review the license and
+commercial terms before running Dify as a multi-tenant service or changing
+frontend branding.
+
+## Platform Capabilities
+
+| Area | Dify Coverage |
+| --- | --- |
+| Visual Workflows | Workflow and chatflow canvas for composing LLM applications |
+| RAG | Knowledge bases, document ingestion, retrieval, and application context |
+| Agents | Function-calling or ReAct-style agents with prebuilt and custom tools |
+| Model Management | Multiple proprietary, open-source, self-hosted, and API-compatible model providers |
+| Prompt IDE | Prompt authoring, comparison, and application tuning interface |
+| LLMOps | Logs, annotations, observability integrations, and production feedback loops |
+| APIs | Backend APIs for integrating generated applications into product workflows |
+| Deployment | Dify Cloud, Docker Compose self-hosting, Kubernetes/community deployment paths, and enterprise options |
+
+## MCP and Agent Fit
+
+Dify is not just a prompt playground. Its agent and workflow features can call
+tools, retrieve data from knowledge bases, and expose application APIs. That
+makes it adjacent to MCP and agent directories even when a deployment does not
+itself run as an MCP server.
+
+For teams already using Claude Code, Codex, Gemini CLI, or MCP servers, Dify is
+often the visual product layer around similar tool, retrieval, model, and
+observability concerns.
+
+## Use Cases
+
+- Build visual AI workflows without writing every orchestration step by hand.
+- Ship RAG-backed chat or workflow applications.
+- Prototype agent workflows with tools and multiple model providers.
+- Add LLMOps logs, annotations, and observability to production apps.
+- Self-host an LLM app platform for internal teams.
+- Expose Dify applications through APIs in another product.
+- Compare visual builders such as Dify and Langflow against code-first agent
+  frameworks such as LangChain, LangGraph, Pydantic AI, or Mastra.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository describes Dify as an open-source LLM app development
+  platform that combines AI workflow, RAG pipeline, agent capabilities, model
+  management, observability, prompt IDE, and APIs.
+- The README documents a Docker Compose self-hosted quick start and Dify Cloud.
+- The README lists workflow, model-provider support, prompt IDE, RAG pipeline,
+  agent capabilities, LLMOps, and backend API features.
+- The license is the Dify Open Source License, based on Apache 2.0 with
+  additional commercial, multi-tenant, logo/copyright, and contributor
+  conditions.
+- The current Dify docs resolve the introduction, quick start, and workflow
+  documentation paths.
+
+## Safety and Privacy
+
+Dify can become a production application surface, not just a local developer
+tool. Treat workflows, tools, model providers, knowledge bases, logs, API
+endpoints, and user uploads as production data flows with authentication,
+authorization, retention, and audit requirements.
+
+For self-hosting, review Docker secrets, database credentials, object storage,
+vector storage, backups, TLS, network boundaries, and upgrade plans before
+exposing Dify to users. For Dify Cloud, review tenant isolation, retention,
+provider routing, and compliance requirements before sending sensitive data.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+`langgenius/dify`, Dify, Dify AI, `dify.ai`, `docs.dify.ai`, Dify RAG pipeline,
+Dify agents, Dify workflow builder, and Dify LLMOps. Existing content only
+mentions Dify as an adjacent visual builder inside the Langflow entry; no
+dedicated Dify tools entry, exact source URL duplicate, target file, or open
+duplicate PR was found.

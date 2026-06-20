@@ -1,0 +1,233 @@
+---
+title: LiveKit Agents
+slug: livekit-agents
+category: tools
+description: >-
+  Open-source framework for building realtime voice, video, and multimodal AI
+  agents with LiveKit rooms, STT, LLMs, TTS, job scheduling, telephony, MCP
+  tools, testing, and production deployment paths.
+cardDescription: >-
+  Realtime voice and multimodal agent framework with STT, LLM, TTS, telephony,
+  MCP, testing, and LiveKit deployment support.
+seoTitle: LiveKit Agents Realtime Voice AI Agent Framework
+seoDescription: >-
+  LiveKit Agents is an open-source framework for realtime voice and multimodal
+  AI agents with STT, LLM, TTS, WebRTC rooms, telephony, MCP tools, tests, and
+  deployment guides.
+author: LiveKit
+authorProfileUrl: "https://github.com/livekit"
+dateAdded: "2026-06-18"
+websiteUrl: "https://docs.livekit.io/agents/"
+documentationUrl: "https://docs.livekit.io/agents/"
+repoUrl: "https://github.com/livekit/agents"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Web
+sourceUrls:
+  - "https://github.com/livekit/agents"
+  - "https://raw.githubusercontent.com/livekit/agents/main/README.md"
+  - "https://raw.githubusercontent.com/livekit/agents/main/pyproject.toml"
+  - "https://docs.livekit.io/agents/"
+  - "https://docs.livekit.io/agents/start/voice-ai/"
+  - "https://docs.livekit.io/agents/deploy/"
+installable: true
+installCommand: 'pip install "livekit-agents[openai,deepgram,cartesia]"'
+usageSnippet: >-
+  Install LiveKit Agents with the model-provider plugins you need, configure
+  LIVEKIT_URL, LIVEKIT_API_KEY, and LIVEKIT_API_SECRET, then run a Python agent
+  in console, dev, or production mode.
+copySnippet: |-
+  pip install "livekit-agents[openai,deepgram,cartesia]"
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 or newer and an isolated project environment."
+  - "LiveKit Cloud project or self-hosted LiveKit server with LIVEKIT_URL, LIVEKIT_API_KEY, and LIVEKIT_API_SECRET."
+  - "Provider credentials for selected STT, LLM, TTS, realtime, avatar, or telephony integrations."
+  - "Microphone, browser, mobile, SIP, or room client path for connecting end users to the agent."
+  - "Consent, logging, retention, and escalation policy for realtime audio, video, transcripts, recordings, and phone calls."
+safetyNotes:
+  - "LiveKit Agents can join realtime rooms, hear users, speak back, call tools, exchange data with clients, and connect to telephony flows; treat it as production user-facing infrastructure."
+  - "Telephony integrations can place or receive phone calls through LiveKit's SIP stack. Confirm consent, caller identity, recording rules, transfer behavior, emergency limitations, and local telecom requirements before enabling calling workflows."
+  - "MCP support can attach external tools to a voice agent with little code, so restrict MCP servers, credentials, and tool scopes before allowing account, database, filesystem, browser, or infrastructure actions."
+  - "Semantic turn detection, interruption handling, and realtime models can improve conversation quality, but they do not guarantee that an agent understood intent or handled sensitive situations correctly."
+  - "Use the built-in tests, judges, staging rooms, rate limits, human escalation paths, and rollback plans before routing real customers or employees to a deployed agent."
+privacyNotes:
+  - "Realtime audio, video, transcripts, chat messages, room metadata, participant identities, SIP call details, tool inputs, tool outputs, and generated replies may pass through LiveKit, model providers, plugin providers, MCP servers, and your own logs."
+  - "Provider plugins for STT, LLM, TTS, realtime APIs, avatars, and telephony may send user data to separate third-party services with their own retention and privacy terms."
+  - "Do not expose LIVEKIT_API_SECRET, provider keys, SIP credentials, room tokens, call recordings, or generated transcripts in prompts, public issues, committed configs, screenshots, or client bundles."
+  - "If recording, transcribing, or storing conversations, define retention, deletion, access review, and user notification rules before launch."
+  - "Use synthetic calls, demo rooms, and test identities when validating prompts, tools, provider plugins, and evals."
+tags:
+  - livekit
+  - voice-ai
+  - ai-agents
+  - realtime
+  - webrtc
+  - telephony
+  - mcp
+  - python
+keywords:
+  - livekit agents
+  - realtime voice ai agents
+  - voice ai agent framework
+  - livekit voice agent
+  - livekit mcp
+  - ai telephony agent
+  - python voice agent
+  - multimodal ai agent
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+LiveKit Agents is an open-source framework for building realtime AI
+participants that run on servers and join LiveKit rooms. It is designed for
+voice, video, and multimodal agents that can listen, speak, see, call tools,
+exchange data with clients, and operate inside WebRTC or telephony sessions.
+
+This is a strong fit when a Claude-adjacent team is building an actual realtime
+agent product instead of a chat-only workflow: voice support, phone support,
+client SDKs, media transport, job dispatch, testing, and deployment all matter
+at the same time.
+
+## Core Capabilities
+
+| Area | LiveKit Agents Coverage |
+| --- | --- |
+| Realtime sessions | `AgentSession`, room connection, voice pipelines, interruption handling, and session lifecycle |
+| Agent runtime | `Agent`, `AgentServer`, entrypoints, job scheduling, dispatch APIs, and production start modes |
+| Models | STT, LLM, TTS, realtime model, VAD, and turn-detection integrations through LiveKit inference or provider plugins |
+| Clients | WebRTC clients and LiveKit SDKs for browser, mobile, and other frontend surfaces |
+| Telephony | SIP-based call flows for agents that can receive or place phone calls |
+| Data exchange | RPC and data APIs for client-agent communication beyond voice |
+| MCP | Native MCP support for connecting tools from MCP servers to agents |
+| Testing | Native test framework, unit categories, behavioral evals, provider tests, and judge-based assertions |
+
+## Quick Start
+
+Install the core package with the provider plugins you plan to use:
+
+```bash
+pip install "livekit-agents[openai,deepgram,cartesia]"
+```
+
+At minimum, a LiveKit-backed agent needs the LiveKit project/server connection:
+
+```bash
+export LIVEKIT_URL="wss://your-project.livekit.cloud"
+export LIVEKIT_API_KEY="..."
+export LIVEKIT_API_SECRET="..."
+```
+
+The repository documents local and production-oriented run modes:
+
+```bash
+python myagent.py console
+python myagent.py dev
+python myagent.py start
+python myagent.py connect --room <room> --identity <id>
+```
+
+For AI coding agents, the upstream README recommends pairing:
+
+- LiveKit Docs MCP server for current LiveKit docs and code examples.
+- LiveKit Agent Skill for architecture guidance, handoffs, tasks, and testing
+  patterns.
+
+```bash
+npx skills add livekit/agent-skills --skill livekit-agents
+```
+
+## Example Shape
+
+A minimal voice agent creates an `AgentServer`, starts an `AgentSession`, wires
+STT, LLM, and TTS providers, and starts an agent in a LiveKit room:
+
+```python
+from livekit.agents import Agent, AgentServer, AgentSession, JobContext, cli
+from livekit.agents import function_tool, inference
+
+
+@function_tool
+async def lookup_weather(location: str):
+    return {"weather": "sunny", "temperature": 70}
+
+
+server = AgentServer()
+
+
+@server.rtc_session()
+async def entrypoint(ctx: JobContext):
+    session = AgentSession(
+        vad=inference.VAD(),
+        stt=inference.STT("deepgram/nova-3", language="multi"),
+        llm=inference.LLM("openai/gpt-4.1-mini"),
+        tts=inference.TTS("cartesia/sonic-3"),
+    )
+
+    agent = Agent(
+        instructions="You are a helpful voice assistant.",
+        tools=[lookup_weather],
+    )
+
+    await session.start(agent=agent, room=ctx.room)
+    await session.generate_reply(instructions="Greet the user.")
+
+
+if __name__ == "__main__":
+    cli.run_app(server)
+```
+
+## Use Cases
+
+- Customer support voice agents that can answer, look up account state, and
+  escalate to a human.
+- Internal helpdesk or operations agents that join a room and guide an employee
+  through a task.
+- AI phone systems that receive inbound calls or place approved outbound calls.
+- Multimodal assistants that combine audio, video, screen state, and client
+  data APIs.
+- Voice-first product copilots that need browser, mobile, or embedded client
+  frontends.
+- Production agent experiments that need tests, evals, staging rooms, and
+  provider-switching before launch.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes LiveKit Agents as a framework for realtime,
+  programmable participants that run on servers and build conversational,
+  multimodal voice agents.
+- The README lists STT, LLM, TTS, realtime API integrations, job scheduling,
+  WebRTC clients, telephony, data APIs, semantic turn detection, native MCP
+  support, testing, and open-source deployment paths.
+- The README documents the core install command and required LiveKit
+  environment variables for the example agent.
+- The repository `AGENTS.md` documents Python 3.10+, `uv`, unit/provider/eval
+  test categories, and runtime commands for console, dev, start, and connect
+  modes.
+- The docs entry page describes LiveKit Agents as a realtime framework for
+  voice, video, and physical AI agents, with start, build, server lifecycle,
+  telephony, model, and deployment guides.
+- GitHub reports Apache-2.0 licensing for `livekit/agents`, current active
+  development, and a Python workspace with many provider plugins.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/skills/`,
+`content/agents/`, guides, open and closed pull requests, and repository-wide
+content for `LiveKit Agents`, `livekit/agents`, `livekit agents`, `voice AI
+agents`, `realtime voice agent`, `AgentSession`, `AgentServer`, and
+`livekit-agents`. Existing entries cover adjacent voice, MCP, framework, and
+agent tooling, but no dedicated LiveKit Agents tools entry, LiveKit Agents source
+URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. LiveKit Agents
+is Apache-2.0 open source; LiveKit also offers commercial cloud infrastructure
+and related services.

@@ -61,6 +61,40 @@ describe("MCP install config helpers", () => {
     });
   });
 
+  it("keeps arbitrary stdio commands valid for registry metadata", () => {
+    expect(
+      normalizeMcpServerConfig({
+        command: "python3",
+        args: ["-c", 'print("owned")'],
+      }),
+    ).toMatchObject({
+      type: "stdio",
+      command: "python3",
+      args: ["-c", 'print("owned")'],
+    });
+
+    const resolved = resolveMcpInstallConfig({
+      category: "mcp",
+      slug: "shell-one-liner",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          shell: {
+            command: "bash",
+            args: ["-lc", "touch /tmp/heyclaude-owned"],
+          },
+        },
+      }),
+    });
+    expect(resolved).toMatchObject({
+      targets: ["claude-code", "codex", "cursor", "antigravity"],
+      config: {
+        type: "stdio",
+        command: "bash",
+        args: ["-lc", "touch /tmp/heyclaude-owned"],
+      },
+    });
+  });
+
   it("keeps cleartext remote HTTP MCP URLs out of machine-install metadata", () => {
     const targets: McpInstallTargetId[] = [...MCP_INSTALL_TARGET_IDS];
 

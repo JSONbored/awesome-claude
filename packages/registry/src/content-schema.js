@@ -434,15 +434,6 @@ export function inferRepoUrl(data = {}) {
     return String(data.repoUrl);
   }
 
-  if (
-    data.documentationUrl &&
-    /^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/i.test(
-      String(data.documentationUrl).trim(),
-    )
-  ) {
-    return String(data.documentationUrl).trim();
-  }
-
   return "";
 }
 
@@ -475,6 +466,13 @@ export function inferHookTrigger(text = "") {
   return triggers.find((trigger) => text.includes(trigger)) || "";
 }
 
+const FIRST_CODE_BLOCK_INSTALL_CATEGORIES = new Set([
+  "mcp",
+  "skills",
+  "hooks",
+  "statuslines",
+]);
+
 export function inferStructuredFields(data, body, category) {
   const codeBlocks = extractCodeBlocks(body);
   const firstCodeBlock = codeBlocks[0];
@@ -498,7 +496,9 @@ export function inferStructuredFields(data, body, category) {
         ? commandFromTitle
         : downloadInstallCommand
           ? downloadInstallCommand
-          : firstCodeBlock && firstCodeBlock.code.split("\n").length === 1
+          : FIRST_CODE_BLOCK_INSTALL_CATEGORIES.has(category) &&
+              firstCodeBlock &&
+              firstCodeBlock.code.split("\n").length === 1
             ? firstCodeBlock.code.trim()
             : "";
 
@@ -523,10 +523,10 @@ export function inferStructuredFields(data, body, category) {
   const copySnippet =
     category === "guides" || category === "collections"
       ? ""
-      : category === "agents" || category === "rules"
-        ? String(body || "").trim()
-        : data.copySnippet
-          ? String(data.copySnippet)
+      : data.copySnippet
+        ? String(data.copySnippet)
+        : category === "agents" || category === "rules"
+          ? String(body || "").trim()
           : firstCodeBlock?.code?.trim() || usageSnippet || "";
 
   const scriptLanguage = data.scriptLanguage
@@ -591,16 +591,13 @@ export function inferStructuredFields(data, body, category) {
           ? String(data.dateAdded).trim()
           : ""
       : "";
-  const retrievalSources =
-    category === "skills"
-      ? Array.isArray(data.retrievalSources)
-        ? data.retrievalSources
-            .map(String)
-            .map((value) => value.trim())
-            .filter(Boolean)
-        : data.documentationUrl
-          ? [String(data.documentationUrl).trim()]
-          : []
+  const retrievalSources = Array.isArray(data.retrievalSources)
+    ? data.retrievalSources
+        .map(String)
+        .map((value) => value.trim())
+        .filter(Boolean)
+    : category === "skills" && data.documentationUrl
+      ? [String(data.documentationUrl).trim()]
       : [];
   const testedPlatforms =
     category === "skills"
@@ -667,8 +664,10 @@ export function validateEntry(category, data, inferred = {}) {
   }
 
   if ((category === "mcp" || category === "skills") && !merged.installable) {
-    const installIndex = recommendedFields.indexOf("installCommand");
-    if (installIndex >= 0) recommendedFields.splice(installIndex, 1);
+    for (const field of ["installCommand", "downloadUrl"]) {
+      const installIndex = recommendedFields.indexOf(field);
+      if (installIndex >= 0) recommendedFields.splice(installIndex, 1);
+    }
   }
 
   if (category === "skills" && merged.downloadUrl && !merged.installCommand) {
@@ -827,6 +826,15 @@ export function validateEntry(category, data, inferred = {}) {
     for (const sourceUrl of merged.sourceUrls) {
       if (!isHttpUrl(sourceUrl)) {
         semanticErrors.push("sourceUrls must use http or https");
+        break;
+      }
+    }
+  }
+
+  if (Array.isArray(merged.retrievalSources)) {
+    for (const retrievalSource of merged.retrievalSources) {
+      if (!isHttpsUrl(retrievalSource)) {
+        semanticErrors.push("retrievalSources must use https URLs");
         break;
       }
     }

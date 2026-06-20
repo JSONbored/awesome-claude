@@ -1,0 +1,233 @@
+---
+title: AI-Generated SSRF Review Rules
+slug: ai-generated-ssrf-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated code that makes server-side
+  URL or network requests for server-side request forgery before merge, covering
+  URL allow-lists, block-lists for internal networks, redirect handling,
+  response isolation, and privacy-safe test evidence.
+cardDescription: >-
+  Review AI-generated server-side URL requests for SSRF: URL allow-lists,
+  internal-network blocking, redirect limits, and response isolation.
+seoTitle: AI-Generated SSRF Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated server-side requests: SSRF via
+  allow-list vs block-list defense, internal-network blocking, redirect
+  following limits, DNS rebinding, response content isolation, and
+  privacy-safe test evidence.
+author: jaso0n0818
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+documentationUrl: "https://owasp.org/www-community/attacks/Server_Side_Request_Forgery"
+sourceUrls:
+  - "https://owasp.org/www-community/attacks/Server_Side_Request_Forgery"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html"
+  - "https://cwe.mitre.org/data/definitions/918.html"
+  - "https://portswigger.net/web-security/ssrf"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits code that makes a
+  server-side HTTP or network request to a URL influenced by user input, including
+  webhooks, proxy endpoints, URL-preview, and metadata fetch features.
+copySnippet: |-
+  You are reviewing AI-generated code for server-side request forgery (SSRF).
+
+  Rules:
+  1. Prefer an explicit allow-list of permitted hosts or URL prefixes over a
+     block-list; an allow-list cannot be bypassed by new internal addresses.
+  2. If a block-list is unavoidable, block all RFC-1918 and link-local ranges,
+     loopback, IPv6 link-local and loopback, and cloud metadata endpoints.
+  3. Limit redirect following or disable it; follow only the allowed number of
+     same-origin redirects and reject any that redirect to a blocked destination.
+  4. Resolve the hostname to an IP before connecting and check the resolved IP
+     against the allow-list or block-list to prevent DNS rebinding.
+  5. Return only the parsed content the feature needs, never the raw response,
+     headers, or error details that could be used to probe internal services.
+  6. Test with valid URLs, RFC-1918 addresses, metadata endpoints, loopback,
+     and redirect chains, and keep test targets synthetic.
+estimatedSetupTime: 25 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet of AI-generated code that makes a server-side request to a URL or hostname influenced by user input.
+  - Knowledge of the HTTP client in use, since redirect behavior, DNS resolution timing, and IP-binding options differ between libraries.
+  - A safe test environment where requests to internal address ranges and metadata endpoints can be attempted without reaching real infrastructure.
+  - Permission to block merge when a user-influenced URL can reach internal services, cloud metadata, or other out-of-scope destinations.
+safetyNotes:
+  - "SSRF lets an attacker use the server as a proxy to reach internal services, cloud metadata endpoints, and other resources that are not internet-exposed, potentially exposing credentials and configuration."
+  - "AI assistants frequently write server-side fetch code that accepts a user-supplied URL with no destination check, which looks correct for valid public URLs but becomes a full SSRF on internal targets."
+  - "Block-lists are fragile; a new cloud provider, a new internal range, or an IPv6 address can bypass them, so an allow-list of permitted destinations is safer when the feature can work with one."
+privacyNotes:
+  - "SSRF responses can contain cloud metadata credentials, internal service tokens, configuration, and personal data; do not include real infrastructure URLs or actual internal responses in test evidence."
+  - "Do not paste raw SSRF probe results, internal IP addresses, or cloud metadata content into public PR comments."
+  - "Use a dedicated test server or mock endpoint when demonstrating SSRF prevention so real internal services are never reached during review."
+tags:
+  - ssrf
+  - security
+  - server-side-requests
+  - input-validation
+  - ai-generated-code
+  - code-review
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits code that makes a
+server-side request to a URL influenced by user input. The goal is to stop
+generated fetch or HTTP-client code from shipping a server-side request forgery
+just because it works correctly on public URLs, since SSRF payloads are
+indistinguishable from valid URLs until they are resolved.
+
+This is a review policy, not an HTTP-client tutorial. It tells reviewers what
+must be true about generated request construction, destination validation, and
+response handling before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know where the URL comes from and what the server can
+reach.
+
+1. **URL origin.** Whether the URL or host comes from a request body, query
+   parameter, header, webhook registration, form, or configuration field.
+2. **Destination check.** Whether the code validates the URL against an
+   allow-list, a block-list, or nothing at all before making the request.
+3. **DNS resolution timing.** Whether the IP is resolved and checked before
+   connecting, or whether a block-list check happens before resolution (which
+   DNS rebinding can bypass).
+4. **Redirect behavior.** Whether the HTTP client follows redirects, how many
+   it allows, and whether redirects to blocked destinations are caught.
+5. **Response handling.** Whether the raw response, headers, or error detail
+   are returned to the caller or whether only parsed content is returned.
+
+If the change cannot say where the URL comes from and what the allowed
+destinations are, require that context before reviewing the HTTP client code.
+
+## Allow-List And Block-List Rules
+
+- Prefer an explicit allow-list of permitted hosts or URL prefixes; an
+  allow-list cannot be bypassed by new internal addresses or cloud ranges.
+- If a block-list is unavoidable, block RFC-1918 ranges (10/8, 172.16/12,
+  192.168/16), loopback (127.0.0.0/8), link-local (169.254/16), IPv6 loopback
+  (::1), IPv6 link-local (fe80::/10), and cloud metadata addresses
+  (169.254.169.254, 100.100.100.200).
+- Do not rely on scheme or TLD checks alone; they do not prevent requests to
+  internal IP addresses.
+- Reject non-HTTP schemes such as `file://`, `dict://`, `gopher://`, `ftp://`,
+  and `ldap://` unless the feature explicitly requires them.
+- Reject URLs with embedded credentials (userinfo) that could be used to
+  influence authentication or bypass filters.
+
+## DNS Rebinding And Redirect Rules
+
+- Resolve the hostname to an IP address and validate the resolved IP against the
+  allow-list or block-list before making the connection.
+- Do not check only the hostname string; a DNS rebinding attack can return an
+  internal IP on the second resolution after a hostname check.
+- Limit redirect following to a small number of hops and check each redirect
+  target against the same destination policy.
+- Disable automatic redirect following if the HTTP client does it silently
+  before the application can inspect the new destination.
+- Reject redirects that change the scheme or lead to a blocked destination.
+
+## Response Isolation Rules
+
+- Return only the parsed, typed content the feature needs from the response.
+- Do not forward raw response bodies, status codes, headers, or error messages
+  to the client, since they can be used to probe internal services.
+- Treat response content as untrusted; parse and validate it rather than
+  relaying it verbatim.
+- Do not let error details from the HTTP client expose internal addresses,
+  connection errors, or resolver messages.
+- Log the outcome without logging the full response body or internal-service
+  error detail.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- a server-side request is made to a user-influenced URL with no allow-list or
+  block-list check;
+- a block-list check runs against the hostname string before DNS resolution,
+  leaving a DNS rebinding window;
+- redirect following is unlimited or does not check each redirect target;
+- non-HTTP schemes or URLs with embedded credentials are accepted;
+- raw response bodies, headers, or internal error details are forwarded to the
+  caller;
+- test evidence uses real internal IP addresses or cloud metadata endpoints.
+
+## Review Checklist
+
+- [ ] {"task": "URL origin mapped", "description": "The review identifies where the URL or host comes from"}
+- [ ] {"task": "Destination validated", "description": "URL is checked against an allow-list or comprehensive block-list before the request"}
+- [ ] {"task": "DNS rebinding mitigated", "description": "IP is resolved and checked before connecting, not just the hostname string"}
+- [ ] {"task": "Redirects bounded", "description": "Redirect following is limited and each target is validated"}
+- [ ] {"task": "Response isolated", "description": "Only parsed content is returned; raw response and error detail are not forwarded"}
+- [ ] {"task": "Privacy safe", "description": "Test targets are synthetic and do not include real internal addresses or credentials"}
+
+## AI Review Rules
+
+AI assistants can review HTTP fetch code, but they should show evidence.
+
+- Ask the assistant to trace the URL from user input to the HTTP call and show
+  where destination validation happens.
+- Require it to flag any fetch or HTTP-client call that uses an unsanitized URL
+  before checking destination.
+- Have the assistant provide RFC-1918, loopback, metadata-endpoint, and
+  redirect-chain test inputs alongside valid public URLs.
+- Do not let the assistant claim block-list coverage is complete without
+  checking IPv6, link-local, and cloud metadata ranges.
+- Re-run review after any change to URL construction, HTTP client config, or
+  redirect settings.
+
+## Troubleshooting
+
+- **A request reached a cloud metadata endpoint:** add the metadata IP range to
+  the block-list or move to an allow-list of permitted external hosts.
+- **DNS rebinding bypassed a hostname check:** resolve the IP first and check
+  the resolved IP, not the hostname.
+- **Redirects pointed to an internal address:** cap redirect count and validate
+  each redirect target against the same policy.
+- **A non-HTTP scheme was accepted:** add explicit scheme validation and reject
+  everything except the schemes the feature needs.
+- **Internal error detail leaked to the client:** catch HTTP client exceptions
+  and return only a generic error to the caller.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, statuslines, guides, collections, skills, open
+PRs, and closed PRs for SSRF, server-side request forgery, URL validation,
+metadata endpoint protection, and redirect safety.
+
+Adjacent content includes general security-audit and API-integration rules, but
+no entry is a portable pre-merge review policy specifically for SSRF in
+AI-generated server-side request code. This entry is distinct because it decides
+what must be true about generated URL validation, DNS rebinding defense, redirect
+limits, and response isolation before the change can merge.
+
+No prior closed PR for this rule was found during the duplicate/history check.
+
+## SSRF Target Reference
+
+The destination categories below are the most common SSRF targets. An
+allow-list of permitted external hosts prevents all of them; a block-list must
+cover all rows to be effective.
+
+| Target category         | Example               | Defense                              |
+| ----------------------- | --------------------- | ------------------------------------ |
+| Cloud instance metadata | 169.254.169.254       | Block IP range or require allow-list |
+| RFC-1918 internal       | 10.0.0.1, 192.168.x.x | Block entire RFC-1918 ranges         |
+| Loopback                | 127.0.0.1, localhost  | Block 127.0.0.0/8 and ::1            |
+| IPv6 link-local         | fe80::1               | Block fe80::/10                      |
+| Non-HTTP scheme         | file:///etc/passwd    | Reject non-HTTP/HTTPS schemes        |
+| DNS rebind target       | evil.com → 10.0.0.1   | Resolve IP and check after DNS       |
+
+A post-resolution IP check handles DNS rebinding and covers all IP-based
+categories in a single assertion.
+
+## Sources
+
+- OWASP Server-Side Request Forgery: https://owasp.org/www-community/attacks/Server_Side_Request_Forgery
+- OWASP SSRF Prevention Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html
+- CWE-918 Server-Side Request Forgery: https://cwe.mitre.org/data/definitions/918.html
+- PortSwigger Web Security Academy — SSRF: https://portswigger.net/web-security/ssrf

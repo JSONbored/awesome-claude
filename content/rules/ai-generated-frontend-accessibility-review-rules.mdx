@@ -260,6 +260,41 @@ privacy-safe evidence must exist before a generated UI change can merge.
 No prior closed PR for `Closes #735` was found during the duplicate/history
 check.
 
+## Automated Scan Reference
+
+The Playwright accessibility-testing guide pairs Playwright with the `@axe-core/playwright` package. A baseline scan asserts that no automatically detectable violations exist for a page:
+
+```ts
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+test('should not have any automatically detectable accessibility issues', async ({ page }) => {
+  await page.goto('https://your-site.com/');
+
+  const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+
+  expect(accessibilityScanResults.violations).toEqual([]);
+});
+```
+
+To scan only the rules tagged for WCAG A and AA success criteria, constrain the run with `withTags`:
+
+```ts
+const accessibilityScanResults = await new AxeBuilder({ page })
+  .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+  .analyze();
+```
+
+`AxeBuilder` exposes the configuration the guide documents:
+
+| `AxeBuilder` method | What it does (per the Playwright guide) |
+| --- | --- |
+| `.analyze()` | Run the accessibility scan against the page. |
+| `.include()` | Constrain an accessibility scan to only run against one specific part of a page. |
+| `.exclude()` | Exclude part of a page from being scanned until you're able to fix the issues. |
+| `.withTags()` | Run only those rules tagged as corresponding to specific WCAG success criteria. |
+| `.disableRules()` | Temporarily disable individual rules until you're able to fix the issues. |
+
 ## Sources
 
 - Playwright accessibility testing: https://playwright.dev/docs/accessibility-testing

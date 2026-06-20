@@ -3,6 +3,7 @@ import { Check, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/lib/motion";
+import { trackEvent } from "@/lib/analytics";
 
 export function CopyButton({
   value,
@@ -12,6 +13,8 @@ export function CopyButton({
   disabled = false,
   toastLabel,
   iconOnly = false,
+  event,
+  eventData,
 }: {
   value: string;
   label?: string;
@@ -22,6 +25,10 @@ export function CopyButton({
   toastLabel?: string;
   /** When true, hide the visible label and render an icon-only square button. */
   iconOnly?: boolean;
+  /** Optional umami event name to emit on a successful copy (opt-in). */
+  event?: string;
+  /** Optional umami event data sent alongside `event`. */
+  eventData?: Record<string, unknown>;
 }) {
   const [copied, setCopied] = React.useState(false);
   const reduced = useReducedMotion();
@@ -38,6 +45,7 @@ export function CopyButton({
         try {
           await navigator.clipboard.writeText(value);
           setCopied(true);
+          if (event) trackEvent(event, eventData);
           toast.success(toastLabel ?? "Copied to clipboard", {
             description: value.length > 60 ? value.slice(0, 60) + "…" : value,
             duration: 1800,

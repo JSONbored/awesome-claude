@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SUPPORTED_PLATFORMS, PLATFORM_MATRIX } from "@/data/platforms";
 import { PLATFORM_LABEL, PLATFORM_SUPPORT_LABEL, type Platform } from "@/types/registry";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 
 export const Route = createFileRoute("/platforms")({
   head: () => ({
@@ -20,6 +22,17 @@ export const Route = createFileRoute("/platforms")({
           "Native skills, generated adapters, and manual-context fallbacks across every supported client.",
       },
       { property: "og:url", content: absoluteUrl("/platforms") },
+      {
+        property: "og:image",
+        content: ogImageUrl({ title: "Platform compatibility", eyebrow: "Platforms" }),
+      },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        name: "twitter:image",
+        content: ogImageUrl({ title: "Platform compatibility", eyebrow: "Platforms" }),
+      },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/platforms") }],
     scripts: [
@@ -41,14 +54,12 @@ export const Route = createFileRoute("/platforms")({
 
 function PlatformsPage() {
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
-      <Breadcrumbs home items={[{ label: "Platforms" }]} />
-      <div className="mt-4 eyebrow">Compatibility</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">Platform support matrix</h1>
-      <p className="mt-2 max-w-2xl text-ink-muted">
-        Native skills, generated adapters, and manual-context fallbacks across every supported
-        client.
-      </p>
+    <PageContainer>
+      <PageHeader
+        eyebrow="Compatibility"
+        title="Platform support matrix"
+        description="Native skills, generated adapters, and manual-context fallbacks across every supported client."
+      />
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {SUPPORTED_PLATFORMS.map((p) => {
@@ -84,6 +95,6 @@ function PlatformsPage() {
           );
         })}
       </div>
-    </div>
+    </PageContainer>
   );
 }

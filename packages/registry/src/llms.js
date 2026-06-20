@@ -42,9 +42,11 @@ function sectionText(entry) {
 }
 
 function listValue(values) {
-  const items = Array.isArray(values)
-    ? values.map((value) => clean(value)).filter(Boolean)
-    : [];
+  // Accepts an array (raw entries store notes as YAML lists) or a single string
+  // (the normalized client entry stores `safetyNotes`/`privacyNotes` as strings),
+  // so the same citation-fact builder works on both shapes.
+  const source = Array.isArray(values) ? values : values ? [values] : [];
+  const items = source.map((value) => clean(value)).filter(Boolean);
   return items.length ? items.join(", ") : "";
 }
 
@@ -78,10 +80,18 @@ function entryLastVerified(entry) {
   );
 }
 
-export function buildEntryCitationFacts(entry, params = {}) {
+/**
+ * Per-entry citation facts as ordered `[label, value]` pairs, filtered to
+ * non-empty values. Single source of truth shared by the plain-text LLMS
+ * endpoint (`buildEntryCitationFacts`) and the visible citation-facts block on
+ * entry pages, so the two can never drift. Every value is a real registry
+ * field — nothing is fabricated. Works on raw registry entries (notes as
+ * arrays) and normalized client entries (notes as strings) alike.
+ */
+export function entryCitationFacts(entry, params = {}) {
   const siteUrl = params.siteUrl || "https://heyclau.de";
   const permalink = `${siteUrl.replace(/\/$/, "")}/entry/${entry.category}/${entry.slug}`;
-  const facts = [
+  return [
     ["Canonical URL", permalink],
     ["Source URLs", listValue(entrySourceUrls(entry))],
     ["Brand", clean(entry.brandName)],
@@ -89,8 +99,8 @@ export function buildEntryCitationFacts(entry, params = {}) {
     ["Brand asset source", clean(entry.brandAssetSource)],
     ["Package URL", clean(entry.downloadUrl)],
     ["Package SHA256", clean(entry.downloadSha256)],
-    ["Safety notes", listValue(entry.safetyNotes)],
-    ["Privacy notes", listValue(entry.privacyNotes)],
+    ["Safety notes", listValue(entry.safetyNotesList ?? entry.safetyNotes)],
+    ["Privacy notes", listValue(entry.privacyNotesList ?? entry.privacyNotes)],
     [
       "Platform compatibility",
       listValue(
@@ -109,10 +119,11 @@ export function buildEntryCitationFacts(entry, params = {}) {
     ["License", clean(entry.license)],
     ["Last verified", entryLastVerified(entry)],
     ["Robots", entry.robotsIndex === false ? "noindex" : "indexable"],
-  ];
+  ].filter(([, value]) => value);
+}
 
-  return facts
-    .filter(([, value]) => value)
+export function buildEntryCitationFacts(entry, params = {}) {
+  return entryCitationFacts(entry, params)
     .map(([label, value]) => `- ${label}: ${value}`)
     .join("\n");
 }

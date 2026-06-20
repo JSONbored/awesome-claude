@@ -1,0 +1,178 @@
+---
+title: Arize Phoenix MCP Server for Claude
+slug: arize-phoenix-mcp-server
+category: mcp
+description: >-
+  Inspect LLM traces and spans, manage prompts, explore datasets, and review evaluation
+  experiments from Claude — with the official Arize Phoenix MCP server, built into the
+  open-source Phoenix AI observability platform.
+cardDescription: "Official Arize Phoenix MCP: LLM traces, prompts, datasets & experiments from Claude."
+seoTitle: "Arize Phoenix MCP Server for Claude — LLM Tracing, Evals & Prompt Management"
+seoDescription: "Connect Claude to Arize Phoenix with the official MCP server: read LLM traces and spans, manage prompts, explore datasets, inspect experiments, and query sessions — via npx. Open-source AI observability for Claude Code."
+author: Arize AI
+authorProfileUrl: "https://github.com/Arize-ai"
+dateAdded: "2026-06-18"
+documentationUrl: "https://arize.com/docs/phoenix"
+websiteUrl: "https://arize.com/phoenix/"
+repoUrl: "https://github.com/Arize-ai/phoenix"
+retrievalSources:
+  - "https://arize.com/docs/phoenix"
+  - "https://github.com/Arize-ai/phoenix"
+  - "https://github.com/Arize-ai/phoenix/tree/main/js/packages/phoenix-mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add phoenix -e PHOENIX_HOST=https://app.phoenix.arize.com -e PHOENIX_API_KEY=your-key -- npx -y @arizeai/phoenix-mcp@latest"
+usageSnippet: >-
+  Ask Claude to show the last 10 LLM traces in a project, retrieve annotation details for a
+  specific span, list your saved prompts, or summarize an experiment's results — against your
+  Phoenix workspace.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "phoenix": {
+        "command": "npx",
+        "args": ["-y", "@arizeai/phoenix-mcp@latest"],
+        "env": {
+          "PHOENIX_HOST": "https://app.phoenix.arize.com",
+          "PHOENIX_API_KEY": "your-api-key"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "phoenix": {
+        "command": "npx",
+        "args": ["-y", "@arizeai/phoenix-mcp@latest"],
+        "env": {
+          "PHOENIX_HOST": "https://app.phoenix.arize.com",
+          "PHOENIX_API_KEY": "your-api-key"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An Arize Phoenix account (cloud at app.phoenix.arize.com) or self-hosted Phoenix instance."
+  - "A Phoenix API key from your account settings."
+  - "Node.js 18+ for `npx`."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The `write` and upsert tools can create or modify prompts and add dataset examples — review Claude's proposed changes before confirming."
+  - "For self-hosted deployments, ensure your Phoenix instance is accessible from the machine running the MCP server."
+privacyNotes:
+  - "LLM traces (including prompts and completions), evaluation annotations, session data, datasets, and experiment results from your Phoenix workspace are surfaced in Claude's context."
+  - "Your `PHOENIX_API_KEY` is passed as an environment variable — store it in a secrets manager rather than plaintext shell config."
+tags:
+  - arize-phoenix
+  - llm-observability
+  - tracing
+  - evaluation
+  - evals
+  - prompt-management
+  - ai-observability
+keywords:
+  - arize phoenix mcp server
+  - phoenix mcp claude
+  - llm observability mcp claude code
+  - ai tracing evaluation mcp
+  - prompt management mcp
+  - arize ai observability mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Arize Phoenix MCP Server** is the official Model Context Protocol server for
+[Arize Phoenix](https://github.com/Arize-ai/phoenix), the open-source AI observability platform.
+It connects Claude directly to your Phoenix workspace — traces, spans, prompts, datasets, sessions,
+and evaluation experiments — through a comprehensive set of tools for LLM debugging and evaluation.
+
+Phoenix supports both cloud (app.phoenix.arize.com) and self-hosted deployments, so trace data can
+stay entirely within your own infrastructure.
+
+## Key capabilities
+
+- **Traces & spans** — retrieve LLM execution traces, individual spans, and annotations.
+- **Projects** — list projects, get project-level statistics.
+- **Sessions** — explore conversation sessions and multi-turn flows.
+- **Prompt management** — list prompts, retrieve versions, and upsert new prompt definitions.
+- **Datasets** — discover datasets and add new examples.
+- **Experiments** — access experiment runs and LLM-analyzed evaluation results.
+- **Annotation configs** — list available evaluation configurations and their schemas.
+
+## How it compares
+
+| Server | Traces & spans | Prompt library | Datasets | Experiments | Auth |
+|---|---|---|---|---|---|
+| **Arize Phoenix MCP** | Yes | Yes | Yes | Yes | API key |
+| Opik MCP | Yes | Yes | Yes | Yes | API key |
+| LangSmith MCP | Yes | Yes | Yes | Yes | API key |
+| Weights &amp; Biases MCP | Yes | Limited | Yes | Yes | API key |
+
+Arize Phoenix is fully open-source (Apache-2.0) with a first-class self-hosted deployment path,
+making it well-suited for teams with strict data residency requirements.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add phoenix \
+  -e PHOENIX_HOST=https://app.phoenix.arize.com \
+  -e PHOENIX_API_KEY=your-api-key \
+  -- npx -y @arizeai/phoenix-mcp@latest
+```
+
+Get your API key from Phoenix account settings → API Keys.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "phoenix": {
+      "command": "npx",
+      "args": ["-y", "@arizeai/phoenix-mcp@latest"],
+      "env": {
+        "PHOENIX_HOST": "https://app.phoenix.arize.com",
+        "PHOENIX_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+### Self-hosted Phoenix
+
+Set `PHOENIX_HOST=http://localhost:6006` (or your instance URL) instead of the cloud endpoint.
+
+### Optional configuration
+
+Set `PHOENIX_PROJECT=my-project` to default tool calls to a specific project.
+
+## Requirements
+
+- An Arize Phoenix account (cloud or self-hosted).
+- A Phoenix API key.
+- Node.js 18+ (for `npx`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- API key scoped to your Phoenix workspace.
+- Self-hosted deployment keeps all trace and evaluation data within your infrastructure.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- GitHub repo `Arize-ai/phoenix` contains the MCP package at `js/packages/phoenix-mcp/`.
+  The README documents the `npx @arizeai/phoenix-mcp@latest` install, `PHOENIX_HOST` /
+  `PHOENIX_API_KEY` env vars, and the full tool surface (prompts, projects, traces, sessions,
+  datasets, experiments).
+- Phoenix documentation at `arize.com/docs/phoenix` covers the observability platform,
+  tracing concepts, and evaluation workflows.

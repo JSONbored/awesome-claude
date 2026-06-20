@@ -1,6 +1,6 @@
 import { siteConfig } from "./site";
 
-function urlOrigin(value: string) {
+export function urlOrigin(value: string) {
   if (!value) return "";
   try {
     return new URL(value).origin;
@@ -10,9 +10,12 @@ function urlOrigin(value: string) {
 }
 
 const scriptSrc = [
+  // Keep scripts constrained to same-origin application bundles. The legacy
+  // first-party analytics script proxy is disabled because it could serve
+  // external JavaScript as same-origin code; browser analytics is emitted by
+  // our bundled first-party tracker through /u/api/send.
   "script-src 'self' 'unsafe-inline'",
   process.env.NODE_ENV === "production" ? "" : "'unsafe-eval'",
-  "https://umami.heyclau.de",
   "https://challenges.cloudflare.com",
 ]
   .filter(Boolean)
@@ -24,7 +27,6 @@ const connectSrc = Array.from(
       "connect-src 'self'",
       "https://api.github.com",
       "https://img.shields.io",
-      "https://umami.heyclau.de",
       "https://challenges.cloudflare.com",
       "https://submission-gate.heyclau.de",
       urlOrigin(siteConfig.submissionGateUrl),
@@ -39,11 +41,10 @@ const SECURITY_HEADERS = {
     "object-src 'none'",
     "frame-ancestors 'none'",
     scriptSrc,
-    // Allow the Google Fonts stylesheet + font files the app already links in __root.tsx
-    // (previously CSP-blocked, so the intended typography silently fell back to system fonts).
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    // Fonts are self-hosted (public/fonts.css + /fonts/*.woff2), so no third-party origins needed.
+    "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
-    "font-src 'self' data: https://fonts.gstatic.com",
+    "font-src 'self' data:",
     connectSrc,
     "frame-src https://challenges.cloudflare.com",
     "form-action 'self' https://github.com",

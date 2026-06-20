@@ -1,0 +1,247 @@
+---
+title: Langfuse Docs MCP Server for Claude
+slug: langfuse-docs-mcp-server
+category: mcp
+description: >-
+  Connect Claude Code, Cursor, Copilot, Windsurf, and other MCP clients to the
+  public Langfuse documentation MCP server for tracing, prompt management,
+  evaluation, and agent observability implementation help.
+cardDescription: >-
+  Public Langfuse Docs MCP server for agent-ready documentation search, page
+  retrieval, and implementation guidance over Langfuse observability docs.
+seoTitle: Langfuse Docs MCP Server for Claude
+seoDescription: >-
+  Use the public Langfuse Docs MCP server with Claude Code, Cursor, Copilot, and
+  Windsurf to search Langfuse docs and integrate tracing, prompts, and evals.
+author: Langfuse
+authorProfileUrl: "https://langfuse.com"
+dateAdded: "2026-06-18"
+brandName: Langfuse
+brandDomain: langfuse.com
+documentationUrl: "https://langfuse.com/docs/docs-mcp"
+websiteUrl: "https://langfuse.com/agents/agents"
+sourceUrls:
+  - "https://langfuse.com/docs/docs-mcp"
+  - "https://mcp.reference.langfuse.com/"
+  - "https://langfuse.com/docs/api-and-data-platform/features/mcp-server"
+  - "https://langfuse.com/docs/prompt-management/features/mcp-server"
+  - "https://langfuse.com/agents/agents"
+retrievalSources:
+  - "https://langfuse.com/docs/docs-mcp"
+  - "https://mcp.reference.langfuse.com/"
+  - "https://langfuse.com/docs/api-and-data-platform/features/mcp-server"
+  - "https://langfuse.com/docs/prompt-management/features/mcp-server"
+  - "https://langfuse.com/agents/agents"
+installable: true
+installCommand: "claude mcp add --transport http langfuse-docs https://langfuse.com/api/mcp --scope user"
+usageSnippet: >-
+  Add the unauthenticated Langfuse Docs MCP endpoint, start Claude Code, and run
+  /mcp to confirm the langfuse-docs server is connected before asking for
+  Langfuse tracing, prompt management, or evaluation implementation guidance.
+copySnippet: |-
+  claude mcp add --transport http langfuse-docs https://langfuse.com/api/mcp --scope user
+configSnippet: |-
+  {
+    "mcpServers": {
+      "langfuse-docs": {
+        "transportType": "http",
+        "url": "https://langfuse.com/api/mcp",
+        "verifySsl": true
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Code, Cursor, GitHub Copilot in VS Code, Windsurf, or another MCP client with Streamable HTTP support."
+  - "Network access to https://langfuse.com/api/mcp."
+  - "For clients without Streamable HTTP support, Node.js and npx if you proxy the endpoint through mcp-remote."
+  - "A separate Langfuse project and API keys only if you also connect the authenticated Langfuse platform MCP server."
+safetyNotes:
+  - "The public Docs MCP endpoint is unauthenticated and documentation-only; it should not be treated as a connection to your Langfuse project data."
+  - "Langfuse also documents an authenticated project MCP server at /api/public/mcp; that separate endpoint exposes read and write tools by default, so restrict write tools if you need read-only access."
+  - "MCP tool schemas are self-describing and may evolve; clients should inspect live capabilities instead of hard-coding a fixed tool list."
+  - "Use human review for generated tracing, prompt, evaluation, or production-debugging changes before shipping them."
+privacyNotes:
+  - "Queries sent to the public Docs MCP endpoint and search-docs API are processed by Langfuse's hosted documentation service."
+  - "Avoid including proprietary code, customer data, prompts, traces, or API keys in documentation-search queries."
+  - "The authenticated Langfuse platform MCP uses Basic Auth with project-scoped public and secret keys; never paste the raw key pair or base64 header into prompts, commits, screenshots, or shared logs."
+  - "If you connect the platform MCP, observations, prompt content, datasets, scores, comments, metrics, model metadata, and media from that project can be surfaced to the MCP client and model provider."
+tags:
+  - langfuse
+  - mcp
+  - observability
+  - tracing
+  - prompt-management
+  - evals
+  - docs
+keywords:
+  - langfuse mcp
+  - langfuse docs mcp
+  - langfuse claude code
+  - langfuse cursor mcp
+  - langfuse tracing mcp
+  - llm observability mcp
+  - langfuse prompt management mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Langfuse publishes a public Docs MCP server at `https://langfuse.com/api/mcp`.
+It exposes Langfuse documentation search and page retrieval to MCP clients, so
+Claude Code, Cursor, Copilot, Windsurf, and other agents can find current
+Langfuse implementation guidance without scraping the website by hand.
+
+Use this listing for the unauthenticated docs endpoint. Langfuse also documents
+an authenticated platform MCP server for project data at `/api/public/mcp`; that
+server is useful for prompts, traces, datasets, metrics, comments, evaluators,
+and scores, but it carries real project authority and should be configured more
+carefully.
+
+## Server Types
+
+| Server | Endpoint | Authentication | Primary Use |
+| --- | --- | --- | --- |
+| Langfuse Docs MCP | `https://langfuse.com/api/mcp` | None | Search Langfuse docs, fetch pages, retrieve a docs overview |
+| Langfuse Cloud MCP | `https://cloud.langfuse.com/api/public/mcp` | Basic Auth with project API keys | Work with project prompts, observations, datasets, scores, metrics, comments, models, media, evaluators, and health |
+| Regional Langfuse Cloud MCP | US, Japan, and HIPAA cloud endpoints | Basic Auth with project API keys | Same platform tools in a regional cloud environment |
+| Self-hosted Langfuse MCP | `https://your-domain.com/api/public/mcp` | Basic Auth with project API keys | Platform MCP for your self-hosted deployment |
+
+## Install In Claude Code
+
+Add the public docs server:
+
+```bash
+claude mcp add \
+  --transport http \
+  langfuse-docs \
+  https://langfuse.com/api/mcp \
+  --scope user
+```
+
+Then start Claude Code and run `/mcp` to confirm the `langfuse-docs` server is
+connected.
+
+## Manual Configuration
+
+Add this to a Claude settings file:
+
+```json
+{
+  "mcpServers": {
+    "langfuse-docs": {
+      "transportType": "http",
+      "url": "https://langfuse.com/api/mcp",
+      "verifySsl": true
+    }
+  }
+}
+```
+
+For clients that expect stdio rather than Streamable HTTP, Langfuse documents
+`mcp-remote` as a local proxy pattern:
+
+```json
+{
+  "mcpServers": {
+    "langfuse-docs": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://langfuse.com/api/mcp"]
+    }
+  }
+}
+```
+
+## Docs Tools
+
+The MCP reference currently identifies three public docs tools:
+
+| Tool | Purpose |
+| --- | --- |
+| `searchLangfuseDocs` | Search Langfuse documentation, GitHub issues, and discussions for a query |
+| `getLangfuseDocsPage` | Fetch a specific documentation page |
+| `getLangfuseOverview` | Retrieve a concise overview of Langfuse documentation |
+
+The same docs search is also exposed as a REST endpoint at
+`https://langfuse.com/api/search-docs` for lightweight non-MCP workflows.
+
+## Authenticated Platform MCP
+
+When an agent needs project data instead of docs, configure the authenticated
+Langfuse MCP server with a project-scoped public key and secret key encoded in a
+Basic Auth header:
+
+```bash
+claude mcp add --transport http langfuse https://cloud.langfuse.com/api/public/mcp \
+  --header "Authorization: Basic <base64(LANGFUSE_PUBLIC_KEY:LANGFUSE_SECRET_KEY)>"
+```
+
+Langfuse documents regional cloud endpoints for US, Japan, and HIPAA US regions,
+plus a self-hosted endpoint at `https://your-domain.com/api/public/mcp`.
+
+The platform MCP is broader than the docs endpoint. The MCP reference lists
+tools for prompt lookup and creation, prompt-label updates, observations,
+annotation queues, comments, datasets, dataset items, dataset runs, scores,
+score configs, metrics, models, media, evaluators, evaluation rules, and health
+checks. Both read and write tools are available by default, so configure your
+client's tool allowlist if the agent should only inspect data.
+
+## Use Cases
+
+- Ask Claude Code to find the current Langfuse tracing setup for a framework.
+- Let Cursor retrieve the right docs page before instrumenting an existing
+  OpenAI, LangChain, LangGraph, or agent workflow.
+- Compare prompt-management, evaluation, and observability docs without leaving
+  the editor.
+- Use the authenticated platform MCP to list prompts, inspect observations, pull
+  dataset items, or create evaluation artifacts after project credentials are
+  scoped and reviewed.
+- Pair the Docs MCP with the Langfuse Agent Skill when an agent can benefit from
+  both source-aware documentation search and a repeatable implementation
+  playbook.
+
+## Safety and Privacy
+
+Keep the two server surfaces separate. The public Docs MCP is useful context for
+implementation and troubleshooting, but it does not prove anything about your
+own Langfuse project. The authenticated platform MCP can access real project
+data and may create or update resources such as prompts, scores, comments,
+datasets, evaluators, or evaluation rules.
+
+For production projects, prefer project-scoped keys, store the Basic Auth header
+in local MCP configuration instead of prompts, and restrict write tools when the
+agent only needs investigation access. Review generated code before enabling
+tracing in production because traces can capture prompts, model outputs, tool
+arguments, costs, latency, metadata, and customer-sensitive payloads.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- Langfuse's Docs MCP page documents `https://langfuse.com/api/mcp`,
+  Streamable HTTP transport, no authentication, Claude Code setup, Cursor,
+  Copilot, Windsurf, `mcp-remote`, MCP reference links, and the REST
+  `search-docs` endpoint.
+- Langfuse's API and data-platform MCP page documents the authenticated
+  `/api/public/mcp` endpoint, regional cloud endpoints, self-hosted endpoint,
+  Basic Auth setup, and the warning that read and write tools are available by
+  default unless the client restricts them.
+- The Langfuse MCP reference documents a public Docs MCP server and an
+  authenticated Cloud MCP server, including docs tools and platform tool
+  categories.
+- The existing HeyClaude Langfuse entry is a general tools listing for the
+  observability platform. This entry is limited to the MCP connection surfaces,
+  with the public docs endpoint as its canonical source.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and prior closed PR history for `Langfuse MCP`, `langfuse-docs`,
+`https://langfuse.com/api/mcp`, `https://cloud.langfuse.com/api/public/mcp`, and
+`mcp.reference.langfuse.com`. The catalog already has `content/tools/langfuse.mdx`
+for the general Langfuse platform. A prior closed MCP attempt used the generic
+Langfuse repository as its canonical source and was rejected as same-source
+ambiguous. This resubmission is narrowed to the official Docs MCP and MCP
+reference sources, with explicit separation from the general tools listing.

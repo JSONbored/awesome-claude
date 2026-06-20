@@ -1,7 +1,7 @@
 import { ENTRIES } from "@/data/entries";
 import type { Contributor } from "@/types/registry";
 
-function contributorSlug(value: string) {
+export function contributorSlug(value: string) {
   return value
     .trim()
     .toLowerCase()
@@ -10,7 +10,7 @@ function contributorSlug(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-function githubHandle(profileUrl?: string) {
+export function githubHandle(profileUrl?: string) {
   if (!profileUrl) return undefined;
   try {
     const url = new URL(profileUrl);
@@ -55,4 +55,14 @@ export const CONTRIBUTORS: Contributor[] = (() => {
 
 export function getContributor(slug: string) {
   return CONTRIBUTORS.find((c) => c.slug === slug);
+}
+
+export function contributorForVerifiedAuthor(author?: string, submittedBy?: string) {
+  if (!author || !submittedBy) return undefined;
+
+  const authorSlug = contributorSlug(author);
+  const submittedBySlug = contributorSlug(submittedBy);
+  if (!authorSlug || authorSlug !== submittedBySlug) return undefined;
+
+  return getContributor(submittedBySlug);
 }

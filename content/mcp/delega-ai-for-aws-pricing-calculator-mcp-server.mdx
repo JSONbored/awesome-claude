@@ -1,0 +1,182 @@
+---
+title: delega.ai for AWS Pricing Calculator MCP Server for Claude
+slug: delega-ai-for-aws-pricing-calculator-mcp-server
+category: mcp
+description: >-
+  Delega hosted MCP server that creates AWS cost estimates and shareable AWS
+  Pricing Calculator links from natural language without leaving your AI client.
+cardDescription: >-
+  Connect Claude to delega.ai to generate AWS cost estimates and shareable
+  Pricing Calculator URLs through calculator.delega.ai/mcp.
+seoTitle: delega.ai for AWS Pricing Calculator MCP Server for Claude
+seoDescription: >-
+  Use the delega.ai AWS Pricing Calculator MCP server with Claude to estimate EC2,
+  RDS, S3, and other AWS costs with shareable calculator links.
+author: Delega
+authorProfileUrl: "https://github.com/delega-ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1502
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1502"
+documentationUrl: "https://calculator.delega.ai/start/client"
+websiteUrl: "https://calculator.delega.ai/start/client"
+installable: true
+installCommand: >-
+  claude mcp add --transport http delega https://calculator.delega.ai/mcp
+usageSnippet: >-
+  Add https://calculator.delega.ai/mcp as a remote HTTP connector, describe your
+  AWS architecture in chat, and receive cost breakdowns plus shareable calculator URLs.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "delega": {
+        "url": "https://calculator.delega.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "delega": {
+        "url": "https://calculator.delega.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Pro, Team, or Enterprise with Connectors support, or another MCP client with remote HTTP transport."
+  - "Basic familiarity with AWS services you want estimated (EC2, RDS, S3, Lambda, etc.)."
+  - "Understanding that estimates are planning aids, not invoices or committed AWS quotes."
+  - "Internet access to reach calculator.delega.ai."
+safetyNotes:
+  - "Cost estimates depend on list prices and assumptions; validate against current AWS Pricing Calculator before procurement."
+  - "Shareable links may expose architecture assumptions; review before sending to external clients."
+  - "This service complements, but does not replace, official AWS Cost Explorer or billing data."
+  - "Do not treat MCP output as a binding financial commitment with AWS."
+privacyNotes:
+  - "Architecture descriptions and service configurations you submit are processed by delega.ai to build estimates."
+  - "Avoid including internal account IDs, credentials, or confidential deal terms in prompts unless policy allows."
+  - "Shared calculator URLs may be visible to anyone with the link; distribute least-privilege versions."
+tags:
+  - aws
+  - pricing
+  - cloud-costs
+  - estimates
+  - remote-mcp
+keywords:
+  - delega aws pricing mcp
+  - aws calculator claude
+  - calculator.delega.ai mcp
+  - cloud cost estimate mcp
+  - delega ai pricing
+readingTime: 4
+difficultyScore: 20
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+delega.ai for AWS Pricing Calculator is a hosted Model Context Protocol server that turns natural-language infrastructure descriptions into AWS cost estimates and persistent AWS Pricing Calculator links. It is designed for architects, consultants, and sales engineers who need quick ballpark costs without leaving Claude or another MCP client.
+
+The service is registered as `ai.delega/aws-pricing-calculator` with endpoint `https://calculator.delega.ai/mcp`. Client onboarding begins at [calculator.delega.ai/start/client](https://calculator.delega.ai/start/client).
+
+## Features
+
+- Natural-language AWS architecture costing.
+- Shareable AWS Pricing Calculator URLs for proposals and reviews.
+- Support across common services such as EC2, RDS, and S3.
+- Remote streamable HTTP endpoint with no local install.
+- Free hosted access according to current Delega registry listings.
+
+## Use Cases
+
+- Estimate monthly cost for a three-tier web app during a discovery call.
+- Generate a shareable calculator link for a client proposal deck.
+- Compare instance sizes for a batch processing workload.
+- Sanity-check whether a design fits budget before deeper architecture work.
+- Produce a quick RDS and storage estimate for a migration discussion.
+
+## Installation
+
+### Choose your AI client
+
+Visit [calculator.delega.ai/start/client](https://calculator.delega.ai/start/client) and select Claude, Claude Code, Cursor, Codex, or another supported MCP host.
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter `https://calculator.delega.ai/mcp`.
+3. Enable the connector and describe your AWS stack in chat.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http delega https://calculator.delega.ai/mcp
+claude mcp list
+```
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "delega": {
+      "url": "https://calculator.delega.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+## Examples
+
+### Web application estimate
+
+```text
+Estimate the monthly AWS cost for two m5.large instances, an RDS MySQL db.t3.medium, and 500 GB S3 storage in us-east-1.
+```
+
+### Shareable link
+
+```text
+Create a shareable AWS Pricing Calculator link for that architecture I can send to a customer.
+```
+
+### Quick comparison
+
+```text
+Compare estimated monthly cost between m5.large and m6i.large for the app tier in eu-west-1.
+```
+
+## Security
+
+- Review generated links before external distribution; they may encode workload assumptions.
+- Cross-check material estimates against official AWS pricing before contracts or purchase orders.
+- Do not embed secrets or account-specific discounts unless you intend to share them.
+
+## Troubleshooting
+
+### Connector unavailable
+
+Retry after a short delay; third-party registry monitors occasionally report transient health issues.
+
+### Estimate seems stale
+
+AWS list prices and instance families change; regenerate the estimate with explicit regions and instance types.
+
+### Missing service support
+
+Name the AWS service explicitly and provide quantity, region, and utilization assumptions.
+
+### Different from awslabs pricing MCP
+
+Delega targets shareable Pricing Calculator links; AWS Labs pricing MCP focuses on raw price-list queries and IaC analysis.

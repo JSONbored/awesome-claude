@@ -15,11 +15,19 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-27"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+retrievalSources:
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://modelcontextprotocol.io/quickstart/server"
 installable: false
 usageSnippet: >-
   Master MCP server development for Claude Desktop. Build production-ready
   integrations in 60 minutes. Connect databases, APIs, and custom tools using
   TypeScript or Python with the Model Context Protocol.
+safetyNotes:
+  - "Building and connecting an MCP server runs a local process (or connects to a remote one) that executes tools with your user privileges; only connect servers you trust and review the command and URL first."
+privacyNotes:
+  - "Connecting servers can pass secrets via --env and OAuth tokens stored in Claude Code's local config; the server process can access whatever data and credentials you grant it."
 tags:
   - mcp-development
   - claude-desktop
@@ -41,155 +49,246 @@ robotsIndex: true
 robotsFollow: true
 ---
 
-## TL;DR
+## Overview
 
-Master MCP server development for Claude Desktop. Build production-ready integrations in 60 minutes. Connect databases, APIs, and custom tools using TypeScript or Python with the Model Context Protocol.
+The Model Context Protocol (MCP) is an open standard for connecting AI applications to external tools and data. An MCP server is a small program you write that exposes capabilities; an MCP host (Claude Code, Claude Desktop, and other clients) connects to it and lets Claude use what it offers. Once a server is connected to Claude Code, you can ask Claude to query your database, read an issue tracker, or call an API directly instead of pasting data into the chat.
 
-**Key Points:**
+This guide walks through the official MCP quickstart: a small weather server written in Python that exposes two tools, then how to connect it to Claude Code with `claude mcp add`. The same flow applies whether you write the server in Python, TypeScript, or another supported SDK.
 
-> **What you'll achieve:** Create your first MCP server connecting Claude to external systems. Deploy production-ready integrations with proper security, testing, and state management.
+### What a server can expose
 
-## Prerequisites & Requirements
+MCP servers provide three kinds of capabilities. Most servers start with tools.
 
-- [ ] {"task": "Claude Desktop installed (macOS, Windows, or Linux)", "description": "Version 1.0+ with MCP support enabled"}
-- [ ] {"task": "Node.js v18+ or Python 3.11+ environment", "description": "TypeScript SDK v1.18.1 or Python MCP v1.2.0+"}
-- [ ] {"task": "Familiarity with JSON-RPC and async programming", "description": "Understanding of protocol-based communication"}
-- [ ] {"task": "Access to Claude Desktop config file", "description": "Located at ~/Library/Application Support/Claude/"}
+| Primitive | What it is | Who triggers it | Typical use |
+| --- | --- | --- | --- |
+| **Tools** | Functions the model can call (with user approval) | The LLM, during a task | Run a query, call an API, perform an action |
+| **Resources** | File-like data identified by a URI that clients can read | The user / client (e.g. `@server:protocol://path` in Claude Code) | API responses, file contents, schemas |
+| **Prompts** | Pre-written templates that help accomplish a task | The user (surface as `/mcp__server__prompt` commands) | Reusable workflows and canned instructions |
 
-## Core Concepts Explained
+## Build a minimal server (Python)
 
-### Understanding the Model Context Protocol
+### Requirements
 
-MCP functions as a universal integration standard for AI applications. Think of it as USB-C for AI systems. Anthropic launched MCP in November 2024 to solve integration complexity. The protocol standardizes how Claude connects with tools, databases, and APIs. This eliminates the need for custom integrations per platform.
+- Python 3.10 or higher
+- The Python MCP SDK version 1.2.0 or higher
+- [`uv`](https://docs.astral.sh/uv/) for project and dependency management
 
-The protocol implements a client-host-server architecture efficiently. Claude Desktop acts as the host coordinating connections. Each server maintains a 1:1 relationship with clients. This design ensures security boundaries remain intact. Transport mechanisms evolved from stdio to Streamable HTTP in March 2025.
+When implementing a stdio-based server, never write to stdout (for example with `print()`): stdout carries the JSON-RPC messages, and writing to it corrupts the protocol and breaks the server. Log to stderr instead (`print(..., file=sys.stderr)` or the `logging` module).
 
-### MCP Architecture Components
+### Set up the project
 
-MCP servers expose three primary abstractions to AI. **Tools** are executable functions requiring human approval before execution. **Resources** provide contextual data through URI-identified content. **Prompts** offer reusable templates standardizing common workflows. Each component serves specific integration purposes effectively.
+After installing `uv`, create and set up the project:
 
-JSON-RPC 2.0 forms the protocol's messaging foundation. This enables language-agnostic implementations with readable debugging. The MCP ecosystem is growing rapidly with community contributions.
+```bash
+# Create a new directory for our project
+uv init weather
+cd weather
 
-## Step-by-Step Implementation Guide
+# Create virtual environment and activate it
+uv venv
+source .venv/bin/activate
 
-1. **Set Up Development Environment**
+# Install dependencies
+uv add "mcp[cli]" httpx
 
-2. **Create Server Scaffold Structure**
+# Create our server file
+touch weather.py
+```
 
-3. **Implement Tool Handlers**
+### Write the server
 
-4. **Configure State Management**
+`FastMCP` uses Python type hints and docstrings to generate tool definitions automatically, so each `@mcp.tool()` function becomes a callable tool. Put the following in `weather.py`. It queries the US National Weather Service API and exposes `get_alerts` and `get_forecast`:
 
-5. **Add Security Layers**
+```python
+from typing import Any
 
-6. **Configure Claude Desktop**
+import httpx
+from mcp.server.fastmcp import FastMCP
 
-7. **Test with MCP Inspector**
+# Initialize FastMCP server
+mcp = FastMCP("weather")
 
-## Common Implementation Patterns
+# Constants
+NWS_API_BASE = "https://api.weather.gov"
+USER_AGENT = "weather-app/1.0"
 
-### Database Connector Pattern
 
-Database servers require connection pooling and query optimization. Postgres MCP Pro demonstrates production patterns effectively. Connection pools maintain 10-50 concurrent connections typically. Query analysis prevents expensive operations automatically. Schema introspection enables intelligent query generation consistently.
+async def make_nws_request(url: str) -> dict[str, Any] | None:
+    """Make a request to the NWS API with proper error handling."""
+    headers = {"User-Agent": USER_AGENT, "Accept": "application/geo+json"}
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(url, headers=headers, timeout=30.0)
+            response.raise_for_status()
+            return response.json()
+        except Exception:
+            return None
 
-Health monitoring checks connection status every 30 seconds. Automatic reconnection handles network interruptions gracefully. Transaction support ensures data consistency across operations. These patterns apply to MongoDB, MySQL, and other databases. Production deployments handle thousands of queries hourly reliably.
 
-### API Integration Pattern
+def format_alert(feature: dict) -> str:
+    """Format an alert feature into a readable string."""
+    props = feature["properties"]
+    return f"""
+Event: {props.get("event", "Unknown")}
+Area: {props.get("areaDesc", "Unknown")}
+Severity: {props.get("severity", "Unknown")}
+Description: {props.get("description", "No description available")}
+Instructions: {props.get("instruction", "No specific instructions provided")}
+"""
 
-API servers implement rate limiting and retry logic. GitHub's server manages 80+ tools with authentication. Rate limiting uses token bucket algorithms effectively. Each tool respects API quotas preventing service disruption. Exponential backoff handles temporary failures automatically.
 
-GraphQL servers demonstrate efficient data fetching strategies. Schema introspection maps operations to MCP tools. Batching reduces round trips improving performance significantly. Caching layers decrease API calls by 70% typically. These optimizations enable responsive AI interactions consistently.
+@mcp.tool()
+async def get_alerts(state: str) -> str:
+    """Get weather alerts for a US state.
 
-### Enterprise Deployment Pattern
+    Args:
+        state: Two-letter US state code (e.g. CA, NY)
+    """
+    url = f"{NWS_API_BASE}/alerts/active/area/{state}"
+    data = await make_nws_request(url)
 
-Enterprise servers prioritize security and compliance requirements. Coinbase AgentKit demonstrates secure wallet management patterns. Multi-factor authentication protects sensitive operations effectively. Audit logging tracks all tool invocations comprehensively. Role-based access control limits tool availability appropriately.
+    if not data or "features" not in data:
+        return "Unable to fetch alerts or no alerts found."
 
-Cloudflare maintains 10+ specialized servers demonstrating scalability. Each server handles specific domain responsibilities clearly. Load balancing distributes requests across server instances. Monitoring dashboards track performance metrics continuously. These patterns support thousands of concurrent users reliably.
+    if not data["features"]:
+        return "No active alerts for this state."
 
-## Testing & Validation
+    alerts = [format_alert(feature) for feature in data["features"]]
+    return "\n---\n".join(alerts)
 
-- [ ] {"task": "Unit test individual tool handlers", "description": "npm test -- --coverage - 100% coverage for tool logic, input validation verified"}
-- [ ] {"task": "Integration test transport layer", "description": "npm run test:integration - All JSON-RPC methods respond correctly within 100ms"}
-- [ ] {"task": "Load test with concurrent connections", "description": "artillery run load-test.yml - Handles 100 concurrent sessions maintaining <200ms response"}
-- [ ] {"task": "Security scan for vulnerabilities", "description": "npm audit && snyk test - No high/critical vulnerabilities in dependencies"}
-- [ ] {"task": "Validate Claude Desktop integration", "description": "Check Claude Developer Tools - Server connected, all tools visible in Claude interface"}
 
-## Troubleshooting Guide
+@mcp.tool()
+async def get_forecast(latitude: float, longitude: float) -> str:
+    """Get weather forecast for a location.
 
-<!-- Section type: accordion -->
+    Args:
+        latitude: Latitude of the location
+        longitude: Longitude of the location
+    """
+    # First get the forecast grid endpoint
+    points_url = f"{NWS_API_BASE}/points/{latitude},{longitude}"
+    points_data = await make_nws_request(points_url)
 
-## Performance Optimization
+    if not points_data:
+        return "Unable to fetch forecast data for this location."
 
-### Response Time Optimization
+    # Get the forecast URL from the points response
+    forecast_url = points_data["properties"]["forecast"]
+    forecast_data = await make_nws_request(forecast_url)
 
-Optimize server response times targeting sub-100ms latency. Implement caching reducing database queries by 60%. Use connection pooling maintaining persistent connections efficiently. Index database queries improving lookup speeds dramatically. Profile code identifying bottlenecks using performance tools.
+    if not forecast_data:
+        return "Unable to fetch detailed forecast."
 
-Batch operations when processing multiple requests simultaneously. Stream large responses preventing memory exhaustion issues. Implement pagination for resource-heavy operations appropriately. These optimizations improve user experience significantly. Production servers achieve 50ms average response times.
+    # Format the periods into a readable forecast
+    periods = forecast_data["properties"]["periods"]
+    forecasts = []
+    for period in periods[:5]:  # Only show next 5 periods
+        forecast = f"""
+{period["name"]}:
+Temperature: {period["temperature"]}°{period["temperatureUnit"]}
+Wind: {period["windSpeed"]} {period["windDirection"]}
+Forecast: {period["detailedForecast"]}
+"""
+        forecasts.append(forecast)
 
-### Memory Management Strategies
+    return "\n---\n".join(forecasts)
 
-Monitor memory usage preventing gradual degradation patterns. Implement garbage collection triggers during idle periods. Clear unused cache entries using LRU eviction policies. Limit concurrent operations preventing memory spikes occurring. Profile heap usage identifying memory leak sources.
 
-Set maximum payload sizes preventing oversized requests. Implement circuit breakers protecting against cascading failures. Use worker threads for CPU-intensive operations effectively. These strategies maintain stable performance consistently. Production deployments handle 10,000+ daily requests reliably.
+def main():
+    # Initialize and run the server
+    mcp.run(transport="stdio")
 
-## Production Deployment
 
-### Deployment Architectures
+if __name__ == "__main__":
+    main()
+```
 
-Deploy servers using containerization ensuring consistency everywhere. Docker images package dependencies eliminating version conflicts. Kubernetes orchestrates scaling based on load automatically. Health checks ensure only healthy instances receive traffic. Rolling updates enable zero-downtime deployments consistently.
+Start it locally with `uv run weather.py`. The server runs over stdio and listens for messages from an MCP host.
 
-Serverless deployments reduce operational overhead significantly. AWS Lambda handles scaling automatically without management. Cloudflare Workers provide edge computing reducing latency. Azure Functions integrate with enterprise systems seamlessly. Choose architecture matching your scaling requirements appropriately.
+> **TypeScript instead?** The quickstart's TypeScript version uses `@modelcontextprotocol/sdk` and `zod`, registers tools with `server.registerTool(...)`, and runs over `StdioServerTransport`. The structure mirrors the Python version above.
 
-### Monitoring and Observability
+## Choosing a transport
 
-Implement comprehensive logging capturing all significant events. Structure logs using JSON enabling efficient querying. Include correlation IDs tracking requests across systems. Monitor error rates identifying issues before escalation. Alert on anomalies requiring immediate attention promptly.
+A transport is how the host and server exchange JSON-RPC messages. The minimal server above uses stdio. Remote servers use HTTP.
 
-Track custom metrics measuring business-specific outcomes effectively. Response times indicate user experience quality directly. Tool usage patterns reveal feature adoption rates. Error distributions highlight problematic code paths clearly. Dashboards visualize trends enabling proactive optimization continuously.
+| Transport | How it runs | Best for | Notes |
+| --- | --- | --- | --- |
+| **stdio** | Local process the host launches and talks to over stdin/stdout | Local tools, scripts, anything needing direct system access | Never log to stdout; Claude Code does not auto-reconnect local processes |
+| **HTTP** (Streamable HTTP) | Remote server reached over HTTP | Cloud-hosted services | Recommended remote transport; supports OAuth; `streamable-http` is the spec name and an accepted alias for `http` |
+| **SSE** | Remote server using Server-Sent Events | Legacy remote servers | Deprecated in Claude Code; use HTTP where available |
 
-## Best Practices Summary
+## Connect the server to Claude Code
 
-<!-- Section type: feature_grid -->
+Add the server with `claude mcp add`. For a local stdio server, everything after the `--` separator is the command Claude Code runs to launch your server:
 
-## Real-World Examples
+```bash
+claude mcp add weather -- uv --directory /ABSOLUTE/PATH/TO/weather run weather.py
+```
 
-### GitHub Integration Server
+The `--` (double dash) separates Claude Code's own options (`--transport`, `--env`, `--scope`) from the command that starts the server. Everything after `--` is passed through untouched. Use the absolute path to your project directory.
 
-GitHub's official MCP server demonstrates comprehensive API integration. The server exposes 80+ tools covering repository management. Authentication uses OAuth with fine-grained permissions. Rate limiting respects GitHub's API quotas automatically. Caching reduces API calls improving response times.
+Pass secrets to the process with `--env`:
 
-Repository operations include creation, cloning, and management. Issue tracking tools enable workflow automation effectively. Pull request tools streamline code review processes. Webhook integration enables real-time event processing. This server handles enterprise-scale operations reliably.
+```bash
+claude mcp add --env API_KEY=your-key weather -- uv --directory /ABSOLUTE/PATH/TO/weather run weather.py
+```
 
-### Postgres Database Connector
+> When using `--env`, place at least one other option between `--env` and the server name. If the name comes directly after `--env`, the CLI reads it as another `KEY=value` pair and rejects it.
 
-Postgres MCP Pro showcases advanced database integration patterns. Connection pooling maintains optimal resource utilization continuously. Query optimization prevents expensive operations automatically. Transaction support ensures data consistency properly. Health monitoring detects issues proactively.
+For a remote server, add it by URL instead:
 
-The server supports full CRUD operations comprehensively. Schema introspection enables intelligent query generation. Prepared statements prevent SQL injection attacks. Streaming supports large result sets efficiently. Production deployments handle millions of queries daily.
+```bash
+# Recommended remote transport
+claude mcp add --transport http my-remote-server https://mcp.example.com/mcp
+```
 
-### Slack Workflow Automation
+### Choose a scope
 
-Slack's MCP server enables sophisticated workflow automation. Message posting respects channel permissions appropriately. Thread management maintains conversation context effectively. File sharing handles attachments securely. User mention resolution works across workspaces.
+`--scope` controls where the configuration is stored and who sees it:
 
-Workflow triggers respond to specific events automatically. Approval flows route requests requiring authorization. Notification systems alert relevant team members promptly. Analytics track automation effectiveness measuring ROI. These capabilities transform team productivity significantly.
+| Scope | Loads in | Shared with team | Stored in |
+| --- | --- | --- | --- |
+| `local` (default) | Current project only | No | `~/.claude.json` |
+| `project` | Current project only | Yes, via version control | `.mcp.json` in project root |
+| `user` | All your projects | No | `~/.claude.json` |
 
-## Advanced Techniques
+```bash
+# Share the server with your team via a checked-in .mcp.json
+claude mcp add --scope project weather -- uv --directory /ABSOLUTE/PATH/TO/weather run weather.py
+```
 
-### Middleware Implementation
+For security, Claude Code prompts for approval before using project-scoped servers from a `.mcp.json` file.
 
-Implement cross-cutting concerns using middleware patterns effectively. Authentication middleware validates tokens before processing. Logging middleware captures request/response pairs comprehensively. Rate limiting middleware prevents abuse protecting resources. Error handling middleware standardizes error responses consistently.
+### Manage and verify
 
-Chain middleware functions creating processing pipelines efficiently. Order matters when composing middleware stacks. Early termination prevents unnecessary processing occurring. Context passing enables data sharing between layers. These patterns improve code maintainability significantly.
+```bash
+# List all configured servers
+claude mcp list
 
-### Streaming Response Patterns
+# Get details for one server
+claude mcp get weather
 
-Enable real-time feedback during long operations effectively. Server-Sent Events provide unidirectional streaming simply. WebSocket connections enable bidirectional communication when needed. Chunked transfer encoding streams HTTP responses progressively. Choose appropriate mechanism based on requirements.
+# Remove a server
+claude mcp remove weather
+```
 
-Implement progress indicators keeping users informed continuously. Stream partial results as processing completes incrementally. Handle connection interruptions gracefully resuming automatically. Buffer management prevents memory exhaustion occurring. These techniques improve perceived performance dramatically.
+Inside a Claude Code session, run `/mcp` to check connection status and the tool count for each server. With tools connected, you can ask Claude to use them in plain language, for example: "What are the active weather alerts in CA?"
 
-## FAQs
+## Using resources and prompts in Claude Code
 
-## Quick Reference
+If your server exposes resources, reference them with `@` mentions using the format `@server:protocol://resource/path`, for example `@github:issue://123`. Resources appear in the `@` autocomplete alongside files and are fetched automatically when referenced.
 
-<!-- Section type: quick_reference -->
+If your server exposes prompts, they show up as slash commands in the form `/mcp__servername__promptname`. Pass arguments space-separated after the command, for example `/mcp__github__pr_review 456`.
 
-## Related Learning Resources
+## Security notes
 
-<!-- Section type: related_content -->
+- Tools run with the privileges of the process you launch, so only connect servers you trust. Servers that fetch external content can expose you to prompt-injection risk.
+- Tool calls require user approval before they execute.
+- Remote servers often require authentication. Claude Code supports OAuth 2.0: add the server, then run `/mcp` and complete the browser login. Tokens are stored securely and refreshed automatically.
+- Have Claude scaffold a server for you with the official `mcp-server-dev` plugin: `/plugin install mcp-server-dev@claude-plugins-official`, then `/mcp-server-dev:build-mcp-server`.
+
+## References
+
+- [Build an MCP server (quickstart)](https://modelcontextprotocol.io/quickstart/server)
+- [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp)
+- [Model Context Protocol](https://modelcontextprotocol.io/)

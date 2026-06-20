@@ -1,0 +1,232 @@
+---
+title: MCP Remote Server Trust Review Capability Pack Skill
+slug: mcp-remote-server-trust-review-capability-pack
+category: skills
+description: >-
+  Expert MCP remote server trust review capability pack for auditing OAuth
+  flows, transport security, tool permissions, data exfiltration risk, and
+  vendor scope before connecting Claude Code to third-party MCP servers.
+cardDescription: >-
+  Review remote MCP server trust, OAuth scope, transport security, and tool
+  permissions with source-backed checklists.
+seoTitle: MCP Remote Server Trust Review Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for MCP remote server trust review, OAuth
+  consent, transport security, tool permission boundaries, and Claude Code
+  integration risk assessment.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1531
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1531"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when evaluating a remote MCP server before adding it to Claude
+  Code, Desktop, or another MCP client and you need a trust review of OAuth,
+  transport, tool scope, and data-handling boundaries.
+copySnippet: |-
+  # Trigger
+  "Apply the MCP remote server trust review capability pack for this server."
+
+  # Required output
+  1) Server identity, transport, and authentication summary
+  2) OAuth scope and consent-flow assessment
+  3) Tool permission and data-exfiltration risk matrix
+  4) Claude Code integration and MCP scoping recommendations
+  5) Privacy-safe rollout notes for security review
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://modelcontextprotocol.io/specification/2025-03-26"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "The remote MCP server URL, vendor documentation, and intended Claude Code or Desktop use case."
+  - "Access to the MCP server manifest, tool list, OAuth client registration details, and transport configuration."
+  - "Security or platform stakeholders available to review third-party data access before production rollout."
+  - "A concrete integration goal such as issue tracking, CRM lookup, database queries, or deployment automation."
+safetyNotes:
+  - "Remote MCP servers run outside Anthropic control; Claude Code MCP integration does not guarantee vendor security or data isolation."
+  - "OAuth tokens issued to an MCP server may grant persistent access to third-party accounts until revoked in the vendor admin console."
+  - "Tools that read, write, delete, or execute on external systems can cause irreversible production changes when invoked by the model."
+  - "SSE and streamable HTTP transports must use TLS; do not approve cleartext remote endpoints on untrusted networks."
+  - "This skill recommends scoping and approval steps; it must not add MCP servers or approve OAuth consent without explicit user authorization."
+privacyNotes:
+  - "MCP tool results can contain customer names, ticket contents, database rows, repository secrets, and internal URLs that should not be pasted into public issues."
+  - "OAuth consent screens and server logs may expose account emails, organization identifiers, and access tokens if shared without redaction."
+  - "Remote server vendors may retain prompts, tool arguments, and responses under their own privacy policies outside Anthropic data handling."
+  - "Public trust-review summaries should describe risk categories and mitigations, not full tool schemas or live OAuth tokens."
+tags:
+  - mcp
+  - remote-server
+  - trust-review
+  - oauth
+  - capability-pack
+keywords:
+  - MCP remote server trust review
+  - MCP OAuth scope review
+  - Claude Code MCP security
+  - MCP server transport security
+  - MCP tool permission audit
+  - remote MCP integration risk
+readingTime: 9
+difficultyScore: 81
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code MCP, skills, features overview,
+and Model Context Protocol specification documentation verified on
+**2026-06-14**. Remote MCP vendor behavior, OAuth scopes, and transport options
+can change; prefer live official docs and vendor security pages over cached
+assumptions.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/mcp
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://modelcontextprotocol.io/specification/2025-03-26
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code MCP documentation and the public
+Anthropic `claude-code` repository on **2026-06-14**:
+
+- Claude Code supports MCP servers through project, user, and enterprise
+  configuration; remote servers commonly use SSE or streamable HTTP transport.
+- MCP tool names and schemas load into Claude Code context at session start,
+  increasing token cost and expanding the model action surface.
+- OAuth-based remote MCP servers require user consent; tokens persist until
+  revoked and are managed outside Anthropic retention policies.
+- Third-party MCP servers are explicitly outside Anthropic Zero Data Retention
+  scope and follow vendor data-handling terms.
+- Claude Code allows MCP tool scoping and approval controls that should be
+  applied before enabling high-risk write or execute tools in production repos.
+
+## Scope Note
+
+This is not a vendor certification. Use it as a reusable trust-review workflow
+for platform and security teams evaluating remote MCP servers before connecting
+them to Claude Code, Claude Desktop, or other MCP clients.
+
+## Core Workflow
+
+1. Identify the server: vendor name, endpoint URL, transport type, auth method,
+   and whether the server is first-party, community-maintained, or internal.
+2. Review transport security: require HTTPS/TLS, validate certificate pinning
+   expectations, and reject mixed-content or localhost tunneling without review.
+3. Review authentication: distinguish API keys, OAuth 2.0, and no-auth servers;
+   confirm token storage location and rotation procedures.
+4. Map OAuth scopes to least privilege: read-only first, defer write/delete
+   scopes until a concrete workflow requires them.
+5. Inventory tools and resources: classify each as read, write, execute, or
+   admin; flag tools that accept free-form SQL, shell commands, or arbitrary URLs.
+6. Assess data exfiltration paths: tools that post to external webhooks, send
+   email, or upload files deserve higher scrutiny than read-only lookups.
+7. Review Claude Code integration settings: project versus user scope, allowed
+   tool subsets, approval requirements, and whether the server is needed in every
+   repository.
+8. Run a sandbox session: invoke one read-only tool, capture sample output size,
+   and confirm sensitive fields are redacted before broader rollout.
+9. Document residual risk, revocation steps, and monitoring expectations for
+   security and platform owners.
+
+## Capability Scope
+
+- Remote MCP server identity and transport review.
+- OAuth consent and scope least-privilege assessment.
+- Tool permission and exfiltration risk matrix.
+- Claude Code MCP scoping and approval recommendations.
+- Vendor retention and ZDR boundary notes.
+- Privacy-safe trust-review reporting.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when onboarding a remote MCP
+  vendor, reviewing OAuth scopes, or preparing a security sign-off checklist.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic checklist for MCP vendor reviews in platform runbooks.
+
+## Required Inputs
+
+- Remote MCP server URL, transport type, and authentication method.
+- Tool and resource manifest or live `/mcp` listing from a test session.
+- OAuth client ID, requested scopes, and token storage location if applicable.
+- Intended repositories, users, and workflows that will invoke the server.
+
+## Production Rules
+
+- Default to read-only tools until a reviewed workflow requires writes.
+- Require explicit user approval for destructive or production-impacting tools.
+- Scope MCP servers to the smallest project or user surface that needs them.
+- Revoke OAuth tokens and remove config entries when a vendor is decommissioned.
+- Do not paste live tokens, webhook secrets, or customer records into public PRs.
+- Treat community MCP servers as untrusted until source and maintainer are verified.
+- Document vendor retention separately from Anthropic data-handling policies.
+
+## Review Matrix
+
+| Signal | Lower risk | Higher risk | First action |
+| --- | --- | --- | --- |
+| Transport | HTTPS SSE or streamable HTTP | Cleartext or unknown proxy | Block until TLS verified |
+| Auth | Scoped OAuth read | Broad write/delete scopes | Reduce scopes or defer |
+| Tools | Read-only lookup | Execute shell/SQL/deploy | Require approval gates |
+| Data | Metadata summaries | Full ticket/DB dumps | Redact and scope outputs |
+| Scope | Single project | Global user install | Move to project config |
+| Vendor | First-party docs | Anonymous package | Source audit required |
+
+## Output Contract
+
+1. Server identity, transport, and authentication summary.
+2. OAuth scope and consent-flow assessment.
+3. Tool permission and exfiltration risk matrix.
+4. Claude Code integration and scoping recommendations.
+5. Residual risk, revocation, and monitoring notes.
+6. Privacy-safe summary suitable for security review or rollout comms.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for MCP remote server trust review, OAuth MCP audit, and Claude
+Code MCP security workflows. Official docs describe MCP setup, but no `skills`
+entry provides a reusable remote-server trust review capability pack with OAuth
+matrix and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, MCP specification references, and Google
+Search Central helpful-content guidance. No paid placement, referral link,
+affiliate link, or vendor sponsorship is used.

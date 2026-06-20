@@ -1,0 +1,237 @@
+---
+title: Claude Code Deep Links Runbook Capability Pack Skill
+slug: claude-code-deep-links-runbook-capability-pack
+category: skills
+description: >-
+  Expert Claude Code deep links runbook capability pack for building safe
+  claude-cli:// URLs, embedding them in incident runbooks, and validating cwd,
+  repo, and prompt parameters before users press Enter.
+cardDescription: >-
+  Build and review Claude Code claude-cli:// deep links for runbooks, alerts,
+  and shell automation with source-backed safety checks.
+seoTitle: Claude Code Deep Links Runbook Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code deep links, claude-cli:// URL
+  construction, runbook embedding, handler registration, and prompt review.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1543
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1543"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when authoring incident runbooks, alert links, or shell aliases
+  that should open Claude Code locally with a pre-filled but user-reviewed
+  prompt in the correct repository.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code deep links runbook capability pack to this link or runbook."
+
+  # Required output
+  1) Link purpose, audience, and trust boundary
+  2) Validated claude-cli://open URL with encoded q, cwd, and repo parameters
+  3) Platform rendering and handler registration notes
+  4) Prompt review and permission expectations for launched sessions
+  5) Privacy-safe runbook excerpt suitable for publication
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-13"
+retrievalSources:
+  - "https://code.claude.com/docs/en/deep-links"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/permissions"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code v2.1.91 or later on the machines that will click or open the link."
+  - "At least one prior interactive Claude Code session on each target machine so the claude-cli:// handler registers."
+  - "For repo links, a local clone where Claude Code has been run at least once so the owner/name slug resolves."
+  - "Permission to review runbook text, alert templates, and the decoded prompt before users press Enter."
+safetyNotes:
+  - "Deep links pre-fill prompts but never auto-send; users must press Enter after reviewing the external-link warning."
+  - "Untrusted pages can craft malicious prompts; treat every deep link like untrusted input until a human reviews it."
+  - "Prompts over 1,000 characters show an extended warning; require scroll review before sending long links."
+  - "Network and UNC paths are rejected for cwd; use absolute local paths or repo slugs instead."
+  - "If both cwd and repo are passed, cwd wins even when the path does not exist; validate parameters deliberately."
+  - "Organizations can disable handler registration with disableDeepLinkRegistration in settings or managed policy."
+privacyNotes:
+  - "Deep link URLs embed prompt text in query parameters, which may expose incident details, customer names, or internal service names in browser history, chat logs, or ticketing systems."
+  - "repo resolution uses the most recently used local clone path, which can reveal directory layout on shared screens via the welcome header."
+  - "Runbooks pasted into GitHub-rendered Markdown lose clickable claude-cli:// links; code-block copies still expose full URLs to readers."
+  - "Public runbooks should use redacted example prompts and generic repo slugs unless the audience is internal-only."
+tags:
+  - claude-code
+  - deep-links
+  - runbooks
+  - incident-response
+  - capability-pack
+keywords:
+  - Claude Code deep links
+  - claude-cli open URL
+  - Claude Code runbook link
+  - Claude Code repo parameter
+  - Claude Code external prompt warning
+  - Claude Code URL handler registration
+readingTime: 8
+difficultyScore: 77
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code deep links, skills,
+features-overview, settings, and permissions documentation verified on
+**2026-06-13**. Deep links require Claude Code v2.1.91 or later; prefer live
+official docs when validating handler behavior on new releases.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/deep-links
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://code.claude.com/docs/en/settings
+- https://code.claude.com/docs/en/permissions
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code deep links documentation on **2026-06-13**:
+
+- Deep links require Claude Code **v2.1.91 or later** and use the `claude-cli://open`
+  path with optional `q`, `cwd`, and `repo` query parameters.
+- Links pre-fill the prompt box but **never auto-send**; users must review the
+  external-link warning and press Enter.
+- The `q` parameter accepts URL-encoded text up to **5,000 characters**; use `%0A`
+  for line breaks in multi-line runbook prompts.
+- When both `cwd` and `repo` are supplied, **`cwd` takes precedence** even if the
+  path does not exist.
+- GitHub-rendered Markdown strips custom schemes such as `claude-cli://`; provide
+  copyable code blocks in public runbooks when click-through links are unavailable.
+
+## Scope Note
+
+This is not a generic URL-shortener guide. Use it when teams need repeatable,
+reviewable `claude-cli://open` links in runbooks, alerts, dashboards, or shell
+automation without auto-executing prompts on untrusted pages.
+
+## Core Workflow
+
+1. Define the runbook moment: incident triage, onboarding, CI failure review,
+   or recurring operational check.
+2. Choose the working-directory strategy:
+   - `cwd` when all users share a standardized absolute path.
+   - `repo` when each engineer clones to different locations and Claude Code has
+     recorded prior sessions in that clone.
+3. Draft the prompt text separately, then URL-encode it for the `q` parameter.
+   Use `%0A` for line breaks and stay within the 5,000 character maximum.
+4. Build the link starting from `claude-cli://open` and add only supported query
+   parameters: `q`, `cwd`, and `repo`.
+5. Validate trust boundaries. Deep links never execute automatically; confirm the
+   runbook tells users to read the external-link warning before pressing Enter.
+6. Test handler registration by starting one interactive Claude Code session on
+   each target OS, then open the link with `open`, `xdg-open`, or
+   `Start-Process` as appropriate.
+7. Verify the launched session shows the expected path in the welcome header,
+   the decoded prompt in the input box, and normal permission rules for the
+   selected directory.
+8. Document platform rendering limits. GitHub Markdown strips custom schemes, so
+   provide a copyable code block or an internal wiki that allows the scheme.
+9. For long operational playbooks, consider pairing a short deep-link prompt
+   with an in-repo `/skill` so the link only names the skill to invoke.
+
+## Capability Scope
+
+- `claude-cli://open` URL construction and parameter validation.
+- Runbook and alert embedding patterns with trust review.
+- Handler registration and terminal selection behavior on macOS, Linux, and
+  Windows.
+- External prompt warning and long-prompt review expectations.
+- Platform rendering constraints for custom URL schemes.
+- Privacy-safe runbook publication guidance.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when authoring or reviewing
+  deep links for incident response, onboarding, or local automation.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a checklist for validating Claude Code deep links in docs and support assets.
+
+## Required Inputs
+
+- Intended audience, trust level of the hosting page, and execution environment.
+- Target repository slug or absolute cwd path policy.
+- Draft prompt text before URL encoding.
+- Platforms that will render the link and whether custom schemes are allowed.
+
+## Production Rules
+
+- Never assume a deep link auto-starts work; users must review and press Enter.
+- Do not embed secrets, tokens, or customer-identifying data in `q` parameters.
+- Prefer `repo` for shared runbooks and `cwd` only when paths are standardized.
+- Confirm Claude Code has run once in target clones before relying on `repo`.
+- Provide code-block URLs where Markdown renderers strip custom schemes.
+- Use managed `disableDeepLinkRegistration` when organizational policy forbids
+  custom URL handlers.
+- Redact incident-specific details in public examples.
+
+## Review Matrix
+
+| Requirement | Parameter | Validation |
+| --- | --- | --- |
+| Shared clone locations vary | repo | Prior Claude Code session recorded for slug |
+| Standardized devcontainer path | cwd | Absolute local path, no network or UNC |
+| Multi-line diagnostic prompt | q | URL-encoded with `%0A`, under 5,000 chars |
+| GitHub README link | rendering | Use code block; scheme is stripped in Markdown |
+| Link does nothing on click | handler | Run one interactive session to register |
+| Wrong terminal opens | platform | macOS recent terminal, Linux `$TERMINAL`, Windows WT |
+
+## Output Contract
+
+1. Runbook purpose and trust boundary summary.
+2. Final `claude-cli://open` URL with decoded prompt preview.
+3. cwd versus repo rationale and expected launch directory.
+4. Handler registration and platform rendering notes.
+5. User review checklist before pressing Enter.
+6. Privacy-safe excerpt suitable for internal or public runbooks.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for Claude Code deep links, `claude-cli://`, runbook launch links,
+and external prompt handling. Official docs cover deep links directly, but no
+`skills` entry provides a reusable runbook authoring workflow with parameter
+matrix and trust review contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.

@@ -1,0 +1,228 @@
+---
+title: GSAP AI Skills
+slug: gsap-skills
+category: skills
+description: >-
+  Official GreenSock GSAP AI Skills for coding agents that need correct GSAP
+  tweens, timelines, ScrollTrigger, React cleanup, plugins, utilities,
+  framework lifecycle guidance, and animation performance patterns.
+cardDescription: >-
+  Official GSAP skill pack for JavaScript animation agents covering core GSAP,
+  timelines, ScrollTrigger, React, plugins, utilities, frameworks, and
+  performance.
+seoTitle: GSAP AI Skills for Claude Code, Codex, Cursor, and Copilot
+seoDescription: >-
+  Install official GSAP AI Skills for Claude Code, Codex, Cursor, and Copilot
+  to build correct JavaScript, React, Vue, Svelte, ScrollTrigger, and timeline
+  animations.
+author: GreenSock
+authorProfileUrl: "https://github.com/greensock"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/greensock/gsap-skills"
+documentationUrl: "https://github.com/greensock/gsap-skills#readme"
+websiteUrl: "https://gsap.com"
+downloadUrl: "https://github.com/greensock/gsap-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add https://github.com/greensock/gsap-skills"
+usageSnippet: >-
+  Install the GSAP skills, then let the agent load the focused skill for core
+  tweens, timelines, ScrollTrigger, React, plugins, utilities, framework
+  lifecycle, or animation performance before generating animation code.
+copySnippet: |-
+  npx skills add https://github.com/greensock/gsap-skills
+
+  # Target a specific supported agent when needed
+  npx skills add https://github.com/greensock/gsap-skills --agent codex
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/greensock/gsap-skills"
+  - "https://raw.githubusercontent.com/greensock/gsap-skills/main/README.md"
+  - "https://raw.githubusercontent.com/greensock/gsap-skills/main/skills/llms.txt"
+  - "https://raw.githubusercontent.com/greensock/gsap-skills/main/skills/gsap-core/SKILL.md"
+  - "https://raw.githubusercontent.com/greensock/gsap-skills/main/skills/gsap-scrolltrigger/SKILL.md"
+  - "https://raw.githubusercontent.com/greensock/gsap-skills/main/skills/gsap-react/SKILL.md"
+  - "https://raw.githubusercontent.com/greensock/gsap-skills/main/LICENSE"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cursor
+  - GitHub Copilot
+  - Gemini
+  - Generic AGENTS
+prerequisites:
+  - "AI coding agent or skill installer compatible with Agent Skills repositories."
+  - "JavaScript, TypeScript, React, Vue, Svelte, vanilla JS, Webflow, SVG, or frontend animation task."
+  - "GSAP package available in the target app when generating runnable animation code."
+  - "Browser or framework test surface for verifying animation timing, cleanup, responsiveness, and reduced-motion behavior."
+safetyNotes:
+  - "GSAP is primarily a frontend animation library, but generated animations can still break layout, accessibility, input handling, scroll behavior, or client performance."
+  - "ScrollTrigger, pinned sections, smooth scrolling, and layout-dependent timelines should be tested across viewport sizes and after dynamic content loads."
+  - "React, Vue, Svelte, and other framework integrations need cleanup on unmount so animations, event listeners, and ScrollTriggers do not leak across renders."
+  - "Remove development markers, debug helpers, and unnecessary long-running animations before production."
+privacyNotes:
+  - "The skills are local instruction files and do not require app data by themselves."
+  - "Do not paste proprietary designs, private Figma exports, customer analytics, unreleased campaign copy, or private frontend source into public prompts or issues when asking an agent to animate UI."
+  - "If the agent uses browser automation, visual captures, or external model providers while applying these skills, screenshots and source snippets may be processed outside the local project."
+tags:
+  - gsap
+  - greensock
+  - skills
+  - animation
+  - scrolltrigger
+  - react
+  - frontend
+  - ai-agents
+keywords:
+  - gsap skills
+  - gsap ai skills
+  - gsap claude code
+  - gsap codex skills
+  - gsap cursor rules
+  - scrolltrigger ai agent
+  - gsap react skill
+  - greensock agent skills
+readingTime: 7
+difficultyScore: 70
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# GSAP AI Skills
+
+`greensock/gsap-skills` is GreenSock's official Agent Skills repository for
+GSAP, the JavaScript animation platform. It teaches AI coding agents how to use
+GSAP core APIs, timelines, ScrollTrigger, plugins, React integration,
+framework-specific lifecycle cleanup, utilities, and performance guidance.
+
+The repo is especially useful when an agent is asked to create or review
+frontend animation in React, Next.js, Vue, Svelte, Astro, vanilla JavaScript,
+SVG, Webflow-adjacent workflows, or scroll-driven interfaces.
+
+## Knowledge Freshness
+
+The GSAP skill pack reflects current GreenSock guidance, including the source
+repo's note that GSAP plugins are available through the public `gsap` npm
+package after Webflow's GSAP acquisition. Agents should still verify package
+versions, framework setup, and current GSAP docs before changing production
+animation code.
+
+Use the skill instructions for durable patterns such as transform-based motion,
+timeline composition, ScrollTrigger cleanup, React scoping, and performance.
+Use live docs and the installed package for exact API details.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- GreenSock's official `greensock/gsap-skills` repository.
+- The repository README, which documents install paths and supported agents.
+- The skill index at `skills/llms.txt`.
+- The `gsap-core`, `gsap-scrolltrigger`, `gsap-react`, and `gsap-performance`
+  skill manifests.
+- GitHub repository metadata and the MIT license file.
+
+## Core Workflow
+
+Install with the skills CLI:
+
+```bash
+npx skills add https://github.com/greensock/gsap-skills
+```
+
+Target a specific supported agent when needed:
+
+```bash
+npx skills add https://github.com/greensock/gsap-skills --agent codex
+```
+
+Claude Code users can also add the plugin marketplace from inside Claude Code:
+
+```text
+/plugin marketplace add greensock/gsap-skills
+```
+
+Cursor users can install through the skills CLI or add `greensock/gsap-skills`
+as a remote rule.
+
+## Capability Scope
+
+The repository currently organizes GSAP guidance into eight focused skills:
+
+| Skill | Scope |
+| --- | --- |
+| `gsap-core` | `gsap.to`, `from`, `fromTo`, eases, durations, staggers, transforms, `autoAlpha`, and responsive `matchMedia` patterns |
+| `gsap-timeline` | Sequencing, position parameters, labels, nesting, and playback |
+| `gsap-scrolltrigger` | Scroll-linked animation, pinning, scrubbing, triggers, refresh behavior, markers, and cleanup |
+| `gsap-plugins` | ScrollToPlugin, ScrollSmoother, Flip, Draggable, Inertia, Observer, SplitText, ScrambleText, SVG plugins, CustomEase, EasePack, and related plugin setup |
+| `gsap-utils` | `gsap.utils` helpers such as `clamp`, `mapRange`, `normalize`, `interpolate`, `random`, `snap`, `toArray`, `wrap`, and `pipe` |
+| `gsap-react` | `useGSAP`, refs, `gsap.context`, cleanup, scoped selectors, callbacks, and SSR-safe React/Next.js usage |
+| `gsap-performance` | Transform and opacity preference, `will-change`, batching, `quickTo`, ScrollTrigger performance, and reducing simultaneous animation work |
+| `gsap-frameworks` | Vue, Svelte, Nuxt, SvelteKit, lifecycle hooks, selector scoping, and cleanup outside React |
+
+## Production Rules
+
+Use the skills to make animation code concrete and maintainable, then verify the
+rendered result in the app.
+
+- Prefer `x`, `y`, `scale`, rotation, and opacity over layout-heavy properties
+  such as `top`, `left`, width, height, margins, and padding.
+- Use timelines for sequencing instead of chains of manual delays.
+- Scope selectors in React and clean up with `useGSAP`, `gsap.context`, or the
+  framework's lifecycle hooks.
+- Kill or revert ScrollTriggers and animations on unmount or route changes.
+- Call `ScrollTrigger.refresh()` after real layout changes, not in tight loops.
+- Remove development markers and test pinned sections across desktop and mobile
+  viewports.
+- Respect `prefers-reduced-motion` and avoid scroll or motion effects that block
+  reading, clicking, focus, or keyboard navigation.
+
+## Use Cases
+
+- Ask Codex to convert a brittle CSS keyframe sequence into a GSAP timeline.
+- Have Claude Code add ScrollTrigger to a landing page while preserving cleanup
+  and reduced-motion behavior.
+- Let Cursor review a React animation for missing `useGSAP` scoping or leaked
+  ScrollTriggers.
+- Ask an agent to choose the right plugin for Flip, Draggable, MotionPath,
+  SplitText, or SVG animation.
+- Use the performance skill when a page has scroll jank, layout thrashing, or
+  too many simultaneous tweens.
+
+## Source Review
+
+- The README describes the repo as official AI skills for GSAP and lists
+  support for Claude Code, Cursor, Copilot, Codex, Windsurf, Antigravity, and
+  other Agent Skills-compatible agents.
+- The README documents `npx skills add https://github.com/greensock/gsap-skills`
+  as the recommended installation path and describes Claude Code, Cursor, and
+  manual installation options.
+- `skills/llms.txt` lists the eight available skills and trigger terms for
+  agents.
+- `gsap-core/SKILL.md` documents core tween APIs, transform aliases, ease,
+  stagger, `autoAlpha`, responsive `matchMedia`, and when to recommend GSAP.
+- `gsap-scrolltrigger/SKILL.md` documents scroll-linked animations, pinning,
+  scrubbing, refresh behavior, batching, and ScrollTrigger configuration.
+- `gsap-react/SKILL.md` documents `useGSAP`, scoped refs, `gsap.context`,
+  context-safe callbacks, cleanup, and SSR constraints.
+- `gsap-performance/SKILL.md` documents transform/opacity performance guidance,
+  `will-change`, batching, `quickTo`, and ScrollTrigger performance rules.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`, open pull
+requests, and repository-wide content for `GSAP AI Skills`, `GSAP Agent Skills`,
+`greensock/gsap-skills`, `gsap-skills`, `ScrollTrigger skill`, and `GreenSock`.
+No dedicated GSAP skills entry, exact source URL duplicate, target file, or open
+duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. GSAP AI Skills
+are published by GreenSock under the MIT license. GSAP and Webflow maintain
+their own product, licensing, and documentation surfaces outside this directory.

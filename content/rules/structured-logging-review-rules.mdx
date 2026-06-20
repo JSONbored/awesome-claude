@@ -1,0 +1,239 @@
+---
+title: Structured Logging Review Rules
+slug: structured-logging-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing application logging changes, covering
+  structured machine-readable events, consistent levels, correlation and trace
+  context, actionable messages, log volume and cost, and keeping secrets and
+  personal data out of logs.
+cardDescription: >-
+  Review logging changes for structured events, consistent levels, correlation
+  IDs, actionable messages, volume control, and no secrets or personal data.
+seoTitle: Structured Logging Review Rules
+seoDescription: >-
+  Practical logging review rules: structured machine-readable events, consistent
+  log levels, correlation and trace context, actionable messages, log volume and
+  cost control, and keeping credentials and personal data out of logs.
+author: jaso0n0818
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+documentationUrl: "https://12factor.net/logs"
+sourceUrls:
+  - "https://12factor.net/logs"
+  - "https://opentelemetry.io/docs/concepts/signals/logs/"
+  - "https://docs.python.org/3/howto/logging.html"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"
+installable: false
+usageSnippet: >-
+  Apply these rules when a change adds, edits, or removes log statements, changes
+  log levels or format, or introduces a logging library or configuration.
+copySnippet: |-
+  You are reviewing a change to application logging.
+
+  Rules:
+  1. Emit logs as structured, machine-readable events with stable field names,
+     not ad-hoc string concatenation that is hard to query.
+  2. Use log levels consistently: error for actionable failures, warn for
+     recoverable problems, info for milestones, and debug for detail.
+  3. Attach correlation and trace context (request, trace, and span ids) so a
+     single flow can be followed across services.
+  4. Write actionable messages that say what happened and what to do, and avoid
+     logging the same condition repeatedly in a hot path.
+  5. Control volume and cost; do not log large payloads, per-iteration spam, or
+     high-cardinality fields that explode index size.
+  6. Never log secrets, credentials, tokens, full request bodies, or personal
+     data; redact or omit sensitive fields at the source.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request or diff that adds, edits, or removes log statements, or that changes the logging library, format, levels, or configuration.
+  - Knowledge of the logging stack in use, since structured output, level semantics, and context propagation differ between libraries and runtimes.
+  - Awareness of where logs are shipped and retained, since volume, cost, and privacy exposure depend on the downstream log platform.
+  - Permission to block merge when a change logs secrets or personal data, floods a hot path, or removes context needed to debug incidents.
+safetyNotes:
+  - "Logging in a hot path or inside a tight loop can dominate latency and overwhelm the log pipeline, turning observability into a performance and availability problem."
+  - "High-cardinality fields and large payloads can explode log index size and cost, and can trip ingestion limits that drop later, more important logs."
+  - "Removing or downgrading logs that incident responders rely on can make a future outage much harder to diagnose, so changes to error and audit logs deserve extra scrutiny."
+privacyNotes:
+  - "Logs frequently capture access tokens, passwords, API keys, session ids, full request and response bodies, emails, and other personal data when developers log whole objects."
+  - "Do not paste raw log lines containing secrets or personal data into public PR comments; redact them and prefer synthetic examples."
+  - "Be careful with logging frameworks that serialize entire objects, since they can silently copy sensitive fields into logs and downstream log stores."
+tags:
+  - logging
+  - observability
+  - structured-logging
+  - privacy
+  - reliability
+  - code-review
+---
+
+## Purpose
+
+Use these rules when a change touches application logging. The goal is to keep
+logs useful, queryable, and affordable for debugging real incidents, while
+keeping secrets and personal data out of them, instead of logging everything as
+unstructured text.
+
+This is a review policy, not a logging-library tutorial. It tells reviewers what
+must be true about a log change's structure, levels, context, volume, and
+privacy before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know what is logged and where it goes.
+
+1. **Change surface.** Which statements are added, edited, or removed, and
+   whether they sit on a hot path, in a loop, or in error handling.
+2. **Level intent.** Whether each statement's level matches its severity and
+   whether the change shifts levels in a way that hides or floods signal.
+3. **Context.** Whether correlation, trace, and span identifiers are present so
+   logs can be tied to a request and to traces.
+4. **Payload.** What fields and objects are serialized, and whether any can
+   contain secrets, credentials, or personal data.
+5. **Destination.** Where logs are shipped and retained, since that governs
+   volume, cost, and privacy exposure.
+
+If the change cannot say which statements are on hot paths and what fields they
+serialize, require that context before reviewing wording.
+
+## Structure And Format Rules
+
+- Emit logs as structured events with stable, documented field names rather than
+  interpolated free-text strings.
+- Keep one event per logical occurrence; do not split a single condition across
+  several unrelated log lines.
+- Use consistent field names and types across the codebase so queries and
+  dashboards stay reliable.
+- Treat logs as an event stream the application writes to standard output, and
+  leave routing and storage to the platform.
+- Avoid embedding large blobs, stack-trace duplication, or serialized whole
+  objects where a few stable fields would do.
+
+## Level And Signal Rules
+
+- Reserve error for conditions that need action, and do not log expected
+  control-flow as errors.
+- Use warn for recoverable or degraded conditions, info for meaningful
+  milestones, and debug for verbose detail.
+- Do not log the same condition on every iteration of a hot loop; sample,
+  aggregate, or rate-limit instead.
+- Make sure changing a level does not silently remove a signal incident
+  responders depend on.
+- Keep noisy third-party logs from drowning the application's own signal.
+
+## Context And Correlation Rules
+
+- Attach request, trace, and span identifiers so a flow can be followed across
+  services and matched to traces.
+- Propagate correlation context through async work, queues, and background jobs,
+  not just the initial request.
+- Include enough stable context (operation, outcome, duration) to make a log
+  line actionable on its own.
+- Avoid logging unbounded user input as a field name or as a high-cardinality
+  value that fragments indexes.
+- Keep timestamps and time zones consistent and machine-parseable.
+
+## Volume, Cost, And Privacy Rules
+
+Logs are not free, and they can leak.
+
+- Control volume: avoid per-iteration logging, large payloads, and duplicate
+  lines that inflate ingestion and cost.
+- Watch cardinality: user ids, request bodies, and unbounded values as indexed
+  fields can explode storage.
+- Never log secrets, tokens, passwords, full authorization headers, or raw
+  request bodies; redact at the source.
+- Treat personal data in logs as regulated; minimize, mask, or omit it and honor
+  retention limits.
+- Prefer explicit, allow-listed fields over serializing whole objects that may
+  carry sensitive data.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- a log statement serializes secrets, credentials, tokens, full request bodies,
+  or personal data;
+- logging is added to a hot path or tight loop without sampling or rate limits;
+- levels are misused so failures are hidden or normal flow is logged as errors;
+- a change removes or downgrades error or audit logs that incident response
+  relies on, without justification;
+- high-cardinality or large-payload fields are logged in a way that will
+  explode index size and cost;
+- logs lack the correlation or trace context needed to follow a request across
+  services.
+
+## Review Checklist
+
+- [ ] {"task": "Structured events", "description": "Logs are machine-readable with stable field names, not interpolated strings"}
+- [ ] {"task": "Levels correct", "description": "Error, warn, info, and debug are used consistently for the right severities"}
+- [ ] {"task": "Context present", "description": "Correlation, trace, and span identifiers tie logs to requests and traces"}
+- [ ] {"task": "Volume controlled", "description": "No hot-path spam, large payloads, or high-cardinality fields that explode cost"}
+- [ ] {"task": "Actionable", "description": "Messages state what happened and what to do, and audit/error logs are preserved"}
+- [ ] {"task": "Privacy safe", "description": "No secrets, credentials, full bodies, or personal data are logged"}
+
+## AI Review Rules
+
+AI assistants can help review logging, but they should show their evidence.
+
+- Ask the assistant to flag any statement that serializes a whole object or
+  request body before judging the change.
+- Require it to identify hot-path or loop logging and propose sampling or rate
+  limits.
+- Have the assistant check that levels match severity rather than only that the
+  code compiles.
+- Do not let the assistant assume context propagation works; require the
+  correlation fields to be shown.
+- Re-run review after changes to log levels, fields, or the logging
+  configuration.
+
+## Troubleshooting
+
+- **Logs are hard to query:** move from interpolated strings to structured
+  fields with stable names.
+- **A loop floods the log pipeline:** sample, aggregate, or rate-limit and drop
+  the level to debug.
+- **A log leaked a token:** redact at the source, switch from whole-object
+  serialization to allow-listed fields, and scrub the artifact.
+- **Logs cost too much:** cut large payloads and high-cardinality fields and
+  review retention.
+- **An incident was hard to trace:** add correlation and trace ids and propagate
+  them through async work.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, statuslines, guides, collections, skills, open
+PRs, and closed PRs for structured logging, log levels, observability,
+correlation ids, log volume and cost, and logging of sensitive data.
+
+Adjacent content includes general observability and privacy rules, but no entry
+is a portable pre-merge review policy specifically for application logging
+changes. This entry is distinct because it decides what must be true about a log
+change's structure, levels, context, volume, and privacy before it can merge.
+
+No prior closed PR for this rule was found during the duplicate/history check.
+
+## Log Level Reference
+
+The level semantics below follow common logging guidance and drive how each
+statement should be classified during review.
+
+| Level | Use for                               | Reviewer action                                        |
+| ----- | ------------------------------------- | ------------------------------------------------------ |
+| error | Actionable failures needing attention | Ensure it is a real failure, not expected control flow |
+| warn  | Recoverable or degraded conditions    | Confirm it is not noise and is worth alerting on       |
+| info  | Meaningful milestones and outcomes    | Keep it sparse and stable for dashboards               |
+| debug | Verbose diagnostic detail             | Off by default in production; never log secrets        |
+
+Treating logs as a structured event stream, with consistent levels and
+correlation context, keeps them queryable for incidents while controlling volume
+and protecting sensitive data.
+
+## Sources
+
+- The Twelve-Factor App — logs: https://12factor.net/logs
+- OpenTelemetry — logs signal: https://opentelemetry.io/docs/concepts/signals/logs/
+- Python logging HOWTO: https://docs.python.org/3/howto/logging.html
+- OWASP Logging Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html

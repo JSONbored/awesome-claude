@@ -1,0 +1,169 @@
+---
+title: Official MCP TypeScript SDK
+slug: official-mcp-typescript-sdk
+category: tools
+description: >-
+  Official TypeScript SDK for Model Context Protocol clients and servers, with
+  the production v1 `@modelcontextprotocol/sdk` package, active v2 server and
+  client package work, Node.js, Bun, and Deno support, transports, OAuth helpers,
+  tools, resources, prompts, examples, and API documentation.
+cardDescription: >-
+  Build MCP clients and servers in TypeScript with the official
+  modelcontextprotocol SDK, including stdio and HTTP transports, tools,
+  resources, prompts, OAuth helpers, and examples.
+seoTitle: Official MCP TypeScript SDK for Model Context Protocol Apps
+seoDescription: >-
+  Use the official Model Context Protocol TypeScript SDK to build MCP servers
+  and clients with Node.js, Bun, Deno, tools, resources, prompts, transports,
+  OAuth helpers, examples, and the current v1-to-v2 package split.
+author: Model Context Protocol
+authorProfileUrl: "https://github.com/modelcontextprotocol"
+dateAdded: "2026-06-18"
+websiteUrl: "https://modelcontextprotocol.io"
+documentationUrl: "https://github.com/modelcontextprotocol/typescript-sdk#readme"
+repoUrl: "https://github.com/modelcontextprotocol/typescript-sdk"
+packageUrl: "https://registry.npmjs.org/%40modelcontextprotocol%2Fsdk"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/typescript-sdk"
+  - "https://github.com/modelcontextprotocol/typescript-sdk/blob/main/README.md"
+  - "https://github.com/modelcontextprotocol/typescript-sdk/blob/main/package.json"
+  - "https://github.com/modelcontextprotocol/typescript-sdk/blob/main/docs/server.md"
+  - "https://github.com/modelcontextprotocol/typescript-sdk/blob/main/docs/client.md"
+  - "https://registry.npmjs.org/%40modelcontextprotocol%2Fsdk"
+installable: true
+installCommand: "npm install @modelcontextprotocol/sdk"
+usageSnippet: >-
+  Install `@modelcontextprotocol/sdk` for the recommended production v1 SDK, or
+  evaluate the v2 alpha split packages from the upstream README when testing the
+  next SDK generation.
+copySnippet: |-
+  npm install @modelcontextprotocol/sdk
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js, Bun, or Deno runtime compatible with the SDK generation you choose."
+  - "A decision between production v1 package usage and the upstream v2 alpha split-package track."
+  - "A target MCP transport, such as stdio for local tools or Streamable HTTP for hosted servers."
+  - "Authentication, authorization, and side-effect boundaries for any production MCP server."
+safetyNotes:
+  - "The official TypeScript SDK is a protocol library; your MCP server's tool handlers, resources, prompts, transports, and auth logic determine the real risk."
+  - "Treat every registered tool as a model-callable API endpoint and validate inputs, enforce permissions, bound side effects, and sanitize failures."
+  - "HTTP and framework middleware deployments need host validation, authentication, TLS, request limits, logging policy, and abuse controls."
+  - "The upstream main branch documents v2 pre-alpha work; use the production v1 package for stable deployments unless you intentionally accept alpha API churn."
+privacyNotes:
+  - "MCP clients and servers built with the SDK may expose tool arguments, tool results, resource contents, prompt templates, OAuth state, errors, traces, and logs."
+  - "Avoid returning secrets, private file contents, customer data, privileged paths, internal identifiers, or operational metadata through schemas, examples, errors, or logs."
+  - "Document which MCP client, server, model provider, transport, middleware layer, and logging system can observe each request."
+tags:
+  - typescript
+  - javascript
+  - mcp
+  - sdk
+  - official
+  - protocol
+keywords:
+  - official MCP TypeScript SDK
+  - Model Context Protocol TypeScript SDK
+  - modelcontextprotocol sdk npm
+  - TypeScript MCP server SDK
+  - TypeScript MCP client SDK
+  - MCP Node.js SDK
+  - MCP Bun Deno TypeScript
+  - MCP Streamable HTTP TypeScript
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The official MCP TypeScript SDK is the Model Context Protocol project's
+TypeScript implementation for building MCP clients and servers. It is the
+highest-demand language SDK for many MCP developers because it maps directly to
+Node.js tooling, JavaScript/TypeScript agent stacks, and common web-service
+deployment paths.
+
+As of **2026-06-18**, the upstream README distinguishes two generations:
+production users are directed to the v1 SDK package, while the `main` branch is
+working on v2 pre-alpha split packages for server, client, and middleware use.
+
+## Package Tracks
+
+| Track | Package Surface | Best Fit |
+| --- | --- | --- |
+| v1 production | `@modelcontextprotocol/sdk` | Stable MCP TypeScript client and server development |
+| v2 alpha server | `@modelcontextprotocol/server` | Testing the next server package generation |
+| v2 alpha client | `@modelcontextprotocol/client` | Testing the next client package generation |
+| v2 middleware | `@modelcontextprotocol/node`, `@modelcontextprotocol/express`, `@modelcontextprotocol/hono` | Wiring MCP HTTP transport into Node.js, Express, or Hono |
+
+## Quick Start
+
+For production v1 usage, install the main SDK package:
+
+```bash
+npm install @modelcontextprotocol/sdk
+```
+
+For v2 alpha testing, follow the upstream README's split-package instructions
+for server, client, and optional middleware packages. Do not mix alpha package
+assumptions into production deployments without a migration plan.
+
+## MCP Fit
+
+Choose the official TypeScript SDK when you need MCP support in a TypeScript or
+JavaScript application, local CLI, agent runtime, serverless service, hosted
+HTTP server, or developer tool. The SDK is especially relevant when your system
+already uses Node.js, Bun, Deno, Express, Hono, zod-compatible schemas, or npm
+package distribution.
+
+The SDK provides protocol mechanics and examples, but it does not make a server
+safe by itself. Every tool, resource, prompt, transport, and auth callback still
+needs normal production review.
+
+## Use Cases
+
+- Build an MCP server that exposes TypeScript tools, resources, and prompts.
+- Build an MCP client or test harness in JavaScript or TypeScript.
+- Add stdio MCP support to a local CLI or desktop integration.
+- Wire Streamable HTTP MCP support into a hosted Node.js service.
+- Prototype Express, Hono, or Node.js HTTP middleware integrations.
+- Compare v1 production SDK behavior against the v2 alpha package split.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository identifies itself as the official TypeScript SDK for
+  Model Context Protocol clients and servers.
+- The README says the SDK runs on Node.js, Bun, and Deno.
+- The README lists server libraries, client libraries, optional middleware
+  packages, runnable examples, server docs, client docs, API docs, and MCP
+  specification links.
+- The README states that `main` contains v2 pre-alpha work and that v1 remains
+  the recommended production version until v2 stabilizes.
+- The npm registry resolves `@modelcontextprotocol/sdk` as the v1 package.
+- The README documents v2 alpha `@modelcontextprotocol/server` and
+  `@modelcontextprotocol/client` packages.
+
+## Safety and Privacy
+
+TypeScript MCP servers often run close to local files, developer credentials,
+internal services, and web APIs. Keep tool schemas narrow, validate all inputs,
+require authorization for sensitive actions, and return minimal error detail.
+
+For hosted HTTP deployments, add host validation, authentication, transport
+security, request limits, audit logging, and retention rules before exposing an
+MCP endpoint outside local development.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `modelcontextprotocol/typescript-sdk`,
+official MCP TypeScript SDK, Model Context Protocol TypeScript SDK,
+`@modelcontextprotocol/sdk`, TypeScript MCP server SDK, TypeScript MCP client
+SDK, MCP Node.js SDK, and MCP Streamable HTTP TypeScript. A guide cites the
+TypeScript SDK for MCP auth context, but no dedicated official TypeScript SDK
+entry, exact source URL duplicate, target file, or open duplicate PR was found.

@@ -1,0 +1,254 @@
+---
+title: Google Agents CLI Skills
+slug: google-agents-cli-skills
+category: skills
+description: >-
+  Google Agents CLI skill suite for coding agents that build, scaffold,
+  evaluate, deploy, publish, and observe ADK agents on Gemini Enterprise Agent
+  Platform, Agent Runtime, Cloud Run, GKE, and Google Cloud.
+cardDescription: >-
+  Skills and CLI commands that turn Claude Code, Codex, Gemini CLI, and other
+  coding agents into Google ADK and Agent Platform builders.
+seoTitle: Google Agents CLI Skills for Claude Code, Codex, Gemini CLI, and ADK
+seoDescription: >-
+  Install Google Agents CLI skills for Claude Code, Codex, Gemini CLI, and
+  other coding agents to scaffold, evaluate, deploy, publish, and observe ADK
+  agents on Google Cloud and Gemini Enterprise Agent Platform.
+author: Google
+authorProfileUrl: "https://github.com/google"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/google/agents-cli"
+documentationUrl: "https://google.github.io/agents-cli/"
+websiteUrl: "https://google.github.io/agents-cli/"
+downloadUrl: "https://github.com/google/agents-cli/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add google/agents-cli"
+usageSnippet: >-
+  Install the Google Agents CLI skills for your coding assistant, or run
+  `uvx google-agents-cli setup` to install the CLI plus skills before
+  scaffolding, evaluating, deploying, publishing, and observing ADK agents.
+copySnippet: |-
+  # Install only the skills
+  npx skills add google/agents-cli
+
+  # Install CLI plus skills
+  uvx google-agents-cli setup
+
+  # Create a prototype ADK agent project
+  agents-cli scaffold create my-agent --agent adk --prototype
+
+  # Run the evaluation loop
+  agents-cli eval run
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/google/agents-cli"
+  - "https://raw.githubusercontent.com/google/agents-cli/main/README.md"
+  - "https://google.github.io/agents-cli/reference/skills/"
+  - "https://raw.githubusercontent.com/google/agents-cli/main/gemini-extension.json"
+  - "https://raw.githubusercontent.com/google/agents-cli/main/skills/google-agents-cli-workflow/SKILL.md"
+  - "https://raw.githubusercontent.com/google/agents-cli/main/skills/google-agents-cli-scaffold/SKILL.md"
+  - "https://raw.githubusercontent.com/google/agents-cli/main/skills/google-agents-cli-eval/SKILL.md"
+  - "https://raw.githubusercontent.com/google/agents-cli/main/skills/google-agents-cli-deploy/SKILL.md"
+  - "https://raw.githubusercontent.com/google/agents-cli/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Gemini CLI
+  - Antigravity
+  - Generic coding agents
+prerequisites:
+  - "Coding assistant or skill host that can consume Agent Skills, or a local terminal where `uvx google-agents-cli setup` can install the CLI plus skills."
+  - "Python 3.11+, uv, and Node.js for the documented setup flow."
+  - "Google Cloud project, billing, credentials, APIs, IAM, region, and deployment target decisions when moving beyond local development."
+  - "Clear agent requirements before scaffolding: purpose, external APIs, tools, safety constraints, data sources, and deployment preference."
+safetyNotes:
+  - "The skills intentionally guide agents through scaffold, eval, deploy, publish, CI/CD, infrastructure, datastore, and observability workflows that can create or modify cloud resources."
+  - "Deployment and infrastructure commands may provision service accounts, IAM bindings, Terraform resources, Cloud Run services, Agent Runtime deployments, GKE resources, Artifact Registry images, Secret Manager entries, and CI/CD runners."
+  - "The workflow skill explicitly requires clarifying goals and writing a spec before scaffolding a new project; skipping that step can create wrong infrastructure or unsafe agent behavior."
+  - "Evaluation guidance may invoke LLM-as-judge, synthetic datasets, and prompt optimization; treat cost, data exposure, and nondeterminism as production concerns."
+  - "Do not run deploy, publish, infrastructure, datastore, or CI/CD commands without explicit human approval and a known Google Cloud target."
+privacyNotes:
+  - "Agents CLI projects can contain Google Cloud credentials, AI Studio keys, Secret Manager names, service account emails, project IDs, regions, Terraform state, eval traces, prompts, tool outputs, logs, traces, user data, embeddings, and datastore contents."
+  - "Eval artifacts and observability exports can include full prompts, tool calls, responses, failure rationales, trace IDs, and private application data."
+  - "Publishing to Gemini Enterprise, deploying to Agent Runtime, Cloud Run, or GKE, and enabling analytics can move agent traffic into Google Cloud services subject to separate terms and access controls."
+  - "Keep project IDs, credentials, Terraform state, traces, eval datasets, user data, private prompts, and secret names out of public issues, PRs, examples, and screenshots."
+tags:
+  - google
+  - skills
+  - agents
+  - adk
+  - codex
+  - claude-code
+  - gemini-cli
+  - google-cloud
+keywords:
+  - Google Agents CLI skills
+  - google agents cli Codex
+  - google agents cli Claude Code
+  - ADK agent skills
+  - Gemini Enterprise Agent Platform skills
+  - Agent Runtime deployment skills
+  - Google Cloud agent skills
+  - agents-cli eval deploy publish
+readingTime: 8
+difficultyScore: 82
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Google Agents CLI Skills
+
+`google/agents-cli` packages a CLI and seven Agent Skills for coding agents
+that build, evaluate, deploy, publish, and observe Google ADK agents. It is
+designed for Gemini CLI, Claude Code, Codex, Antigravity, and other coding
+agents that need source-backed Google Cloud and Gemini Enterprise Agent
+Platform workflows instead of generic agent advice.
+
+The project is the active successor named by Google Cloud Agent Starter Pack's
+README for new projects. It gives agents a lifecycle path from scaffolded ADK
+code to evals, deployment targets, Gemini Enterprise registration, and
+observability.
+
+## Knowledge Freshness
+
+The repository is current and the README describes `agents-cli` as the CLI and
+skills for building agents on Gemini Enterprise Agent Platform. The skills
+target Google ADK, Agent Runtime, Cloud Run, GKE, CI/CD, evals, datastore
+infrastructure, observability, and Gemini Enterprise publishing.
+
+Google Cloud product names, Agent Platform launch stages, CLI commands,
+deployment defaults, IAM requirements, eval metrics, and ADK APIs can change.
+Use the skills for lifecycle structure, then verify flags, cloud terms, service
+availability, pricing, and permissions against the current docs and target
+project before running infrastructure or deployment commands.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The `google/agents-cli` repository README.
+- The public Agents CLI documentation and skills reference.
+- The `gemini-extension.json` package metadata.
+- Representative `SKILL.md` files for workflow, scaffolding, evaluation, and
+  deployment.
+- The Apache-2.0 license text.
+- Current GitHub repository metadata.
+
+## Core Workflow
+
+Install only the skills:
+
+```bash
+npx skills add google/agents-cli
+```
+
+Install the CLI plus skills:
+
+```bash
+uvx google-agents-cli setup
+```
+
+Create a prototype ADK agent:
+
+```bash
+agents-cli scaffold create my-agent --agent adk --prototype
+```
+
+Run the evaluation loop:
+
+```bash
+agents-cli eval run
+```
+
+## Capability Scope
+
+The README lists these seven Agent Skills:
+
+| Skill | What it teaches the coding agent |
+| --- | --- |
+| `google-agents-cli-workflow` | Full lifecycle, code preservation, model selection, and troubleshooting |
+| `google-agents-cli-adk-code` | ADK Python API, agents, tools, orchestration, callbacks, and state |
+| `google-agents-cli-scaffold` | Project creation, enhancement, upgrade, templates, and deployment choices |
+| `google-agents-cli-eval` | Eval datasets, metrics, LLM-as-judge, adaptive rubrics, and quality flywheel |
+| `google-agents-cli-deploy` | Agent Runtime, Cloud Run, GKE, CI/CD, secrets, service accounts, and rollback |
+| `google-agents-cli-publish` | Gemini Enterprise registration |
+| `google-agents-cli-observability` | Cloud Trace, logging, analytics, and third-party observability integrations |
+
+The CLI commands cover setup, login, scaffold, run, install, lint, eval
+generate/grade/compare/analyze/optimize, deploy, publish, infrastructure,
+datastore provisioning, data ingestion, project info, and skill updates.
+
+## Production Rules
+
+Use these skills as an agent-building lifecycle, not a shortcut around cloud
+review:
+
+- Clarify the agent purpose, tools, APIs, data sources, safety constraints, and
+  deployment preference before scaffolding.
+- Prefer prototype-first development until behavior and eval cases are clear.
+- Preserve scaffolded manifests, deployment structure, and guidance files unless
+  the user explicitly approves structural changes.
+- Do not deploy, publish, provision infrastructure, set up CI/CD, or run
+  datastore ingestion without explicit approval and a known Google Cloud target.
+- Treat evals as the validation path for agent behavior; do not write brittle
+  tests that assert exact LLM output text.
+- Review IAM, service accounts, Secret Manager access, Terraform state, regions,
+  billing, and rollback before production deployment.
+- Summarize eval traces, deployment output, and observability data without
+  leaking prompts, credentials, user data, project IDs, or trace details.
+
+## Use Cases
+
+- Ask Codex to create a prototype ADK agent with the right scaffolding and
+  guidance files.
+- Use Claude Code to enhance an existing agent project with Agent Runtime,
+  Cloud Run, or GKE deployment support.
+- Have Gemini CLI build an eval dataset, run traces, grade results, and iterate
+  through a quality flywheel.
+- Use an agent to deploy only after explicit approval, with service account,
+  secret, region, and target checks.
+- Register a deployed agent with Gemini Enterprise and then inspect Cloud Trace,
+  logs, analytics, and observability output.
+
+## Source Review
+
+- The README says `agents-cli` provides CLI commands and skills for building
+  agents on Gemini Enterprise Agent Platform.
+- The README explicitly lists Gemini CLI, Claude Code, Codex, Antigravity, and
+  other coding agents as supported coding assistants.
+- The setup section documents `uvx google-agents-cli setup` and a skills-only
+  install path with `npx skills add google/agents-cli`.
+- The Agent Skills table lists seven skills covering workflow, ADK code,
+  scaffolding, evaluation, deployment, publishing, and observability.
+- The workflow skill requires understanding the agent requirements before code
+  or scaffolding, then routes through scaffold, build, eval, deploy, publish,
+  and observe phases.
+- The deploy skill covers Agent Runtime, Cloud Run, GKE, CI/CD, secrets,
+  service accounts, rollback, and production infrastructure.
+- The evaluation skill documents eval generation, grading, comparison, failure
+  analysis, and prompt optimization.
+- The license file identifies the repository as Apache-2.0.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`, open pull
+requests, and repository-wide content for `Google Agents CLI`,
+`google/agents-cli`, `google-agents-cli`, `agents-cli`, ADK agent skills, Agent
+Runtime deployment skills, and Gemini Enterprise Agent Platform skills. The
+existing Google Agent Development Kit entry covers `google/adk-python` as a
+tool/framework; no dedicated Google Agents CLI skills entry, exact source URL
+duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The upstream
+repository is Apache-2.0 licensed. Google Cloud, Gemini Enterprise Agent
+Platform, Agent Runtime, Cloud Run, GKE, AI Studio, model providers, and
+third-party observability or CI/CD services may have separate billing, terms,
+privacy, and access-control requirements.

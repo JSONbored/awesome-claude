@@ -1,0 +1,202 @@
+---
+title: Conveo MCP Server for Claude
+slug: conveo-mcp-server
+category: mcp
+description: >-
+  Official Conveo remote MCP server for AI-led qualitative research—design
+  studies, manage questions and stimuli, run analyses, and handle recruitment via
+  OAuth at app.conveo.ai.
+cardDescription: >-
+  Connect Claude to Conveo to create studies, manage research objectives, query
+  interview data, and configure recruitment through a hosted OAuth MCP server.
+seoTitle: Conveo MCP Server for Claude
+seoDescription: >-
+  Use the Conveo MCP server with Claude to design qualitative studies, manage
+  questions, run analyses, and access recruitment tools at app.conveo.ai/api/mcp.
+author: Conveo
+authorProfileUrl: "https://conveo.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1496
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1496"
+documentationUrl: "https://conveo.ai/docs/api-reference/mcp"
+websiteUrl: "https://conveo.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http conveo https://app.conveo.ai/api/mcp
+usageSnippet: >-
+  Add https://app.conveo.ai/api/mcp with OAuth client ID
+  7326f7bf-48d6-4b75-a418-0c9c0d8eb901, then authenticate with your Conveo account
+  on first tool use.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "conveo": {
+        "url": "https://app.conveo.ai/api/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "conveo": {
+        "url": "https://app.conveo.ai/api/mcp",
+        "type": "http",
+        "oauthClientId": "7326f7bf-48d6-4b75-a418-0c9c0d8eb901"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Conveo account with access to the studies you want to manage."
+  - "Claude Code, Claude Desktop, or another MCP client supporting remote HTTP and OAuth."
+  - "OAuth client ID 7326f7bf-48d6-4b75-a418-0c9c0d8eb901 from Conveo MCP docs; no client secret required."
+  - "Understanding that study edits and recruitment actions affect live research projects."
+safetyNotes:
+  - "Study, question, and quota tools can modify active research configurations."
+  - "Recruitment and participant-reporting tools may expose respondent metadata; handle under your privacy policy."
+  - "OAuth grants persistent Conveo access until revoked in the MCP client or Conveo account."
+  - "Review AI-generated study changes before launching participant-facing interviews."
+privacyNotes:
+  - "Interview transcripts, clips, and participant data are processed under Conveo's trust center policies."
+  - "OAuth tokens should remain in the MCP host configuration, not in chat or shared documents."
+  - "Quote reels and analysis outputs may include voice, video, and behavioral signals from participants."
+tags:
+  - research
+  - qualitative
+  - interviews
+  - insights
+  - remote-mcp
+keywords:
+  - conveo mcp
+  - qualitative research claude
+  - ai interview platform mcp
+  - conveo study design
+  - app.conveo.ai mcp
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Conveo exposes an official remote Model Context Protocol server for AI-led qualitative research. Connected assistants can design studies, manage research objectives and questions, attach stimuli, configure quotas, run analyses, and work with recruitment workflows inside a Conveo account.
+
+Documentation lives at [conveo.ai/docs/api-reference/mcp](https://conveo.ai/docs/api-reference/mcp). The server is registered as `ai.conveo/conveo` with endpoint `https://app.conveo.ai/api/mcp`.
+
+## Features
+
+- Study creation and configuration, including welcome pages and settings.
+- Research objective and question management with routing logic.
+- Stimuli creation and asset attachment.
+- Analysis sessions, study queries, and interview clip search.
+- Quote reel listing and snippet download preparation.
+- Recruitment overview and participant reporting tools.
+
+## Use Cases
+
+- Draft an interview guide from a research brief inside Claude Code.
+- Add screening questions and quota groups before launching a study.
+- Search interview clips for evidence supporting a product insight.
+- Update stimuli links after creative assets change.
+- Review recruitment status without leaving the coding environment.
+
+## Installation
+
+### Claude Code
+
+Add to `.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "Conveo": {
+      "type": "url",
+      "url": "https://app.conveo.ai/api/mcp",
+      "oauthClientId": "7326f7bf-48d6-4b75-a418-0c9c0d8eb901"
+    }
+  }
+}
+```
+
+Authenticate when Conveo tools are first invoked.
+
+### Claude Desktop
+
+Open **Settings → Developer → Edit Config** and add the same `Conveo` entry, then restart Claude Desktop.
+
+### CLI shortcut
+
+```bash
+claude mcp add --transport http conveo https://app.conveo.ai/api/mcp
+```
+
+Confirm OAuth client settings match Conveo docs if your client requires them explicitly.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "conveo": {
+      "url": "https://app.conveo.ai/api/mcp",
+      "type": "http",
+      "oauthClientId": "7326f7bf-48d6-4b75-a418-0c9c0d8eb901"
+    }
+  }
+}
+```
+
+Leave the OAuth client secret empty per Conveo documentation.
+
+## Examples
+
+### Create a study outline
+
+```text
+Create a Conveo study for concept testing of a new snack package with three research objectives.
+```
+
+### Query clips
+
+```text
+Search interview clips in my active study for mentions of price sensitivity.
+```
+
+### Update a question
+
+```text
+Add a follow-up question about purchase intent after the product exposure block.
+```
+
+## Security
+
+- Treat participant data as sensitive; follow Conveo's trust center and your organization's retention policy.
+- Revoke OAuth access when offboarding researchers or shared machines.
+- Preview study changes before publishing to live respondents.
+
+## Troubleshooting
+
+### OAuth redirect failures
+
+Confirm the OAuth client ID matches Conveo docs and that your MCP client supports OAuth 2.0.
+
+### Tools missing after restart
+
+Fully quit and relaunch Claude Desktop; some clients read MCP config only at startup.
+
+### Permission errors on study edits
+
+Verify the signed-in Conveo user owns or can edit the target study.
+
+### Analysis session empty
+
+Ensure interviews have completed and indexing finished before querying clips or themes.

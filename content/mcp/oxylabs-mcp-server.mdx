@@ -1,0 +1,191 @@
+---
+title: Oxylabs MCP Server for Claude
+slug: oxylabs-mcp-server
+category: mcp
+description: >-
+  Scrape any website, extract structured data, and search Google and Amazon from Claude —
+  with the official Oxylabs MCP server providing universal web scraping with JS rendering,
+  CAPTCHA bypass, AI-powered data extraction, and AI browser automation in one tool.
+cardDescription: "Official Oxylabs MCP: universal scraping, SERP scraping, Amazon scraping & AI extraction from Claude."
+seoTitle: "Oxylabs MCP Server for Claude — Web Scraping, SERP & AI Data Extraction"
+seoDescription: "Connect Claude to Oxylabs with the official MCP server: universal web scraping with JS rendering and CAPTCHA bypass, Google and Amazon scraper tools, AI-powered structured data extraction, and AI browser automation — MIT licensed."
+author: Oxylabs
+authorProfileUrl: "https://github.com/oxylabs"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/oxylabs/oxylabs-mcp/main/README.md"
+websiteUrl: "https://oxylabs.io"
+repoUrl: "https://github.com/oxylabs/oxylabs-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/oxylabs/oxylabs-mcp/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add oxylabs -e OXYLABS_USERNAME=<username> -e OXYLABS_PASSWORD=<password> -- uvx oxylabs-mcp"
+usageSnippet: >-
+  Ask Claude to scrape a product page with JS rendering, extract structured competitor pricing
+  data, fetch Google Search results for a keyword, or scrape Amazon product listings — using
+  natural language with automatic CAPTCHA bypass and anti-bot protection.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "oxylabs": {
+        "command": "uvx",
+        "args": ["oxylabs-mcp"],
+        "env": {
+          "OXYLABS_USERNAME": "<username>",
+          "OXYLABS_PASSWORD": "<password>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "oxylabs": {
+        "command": "uvx",
+        "args": ["oxylabs-mcp"],
+        "env": {
+          "OXYLABS_USERNAME": "<username>",
+          "OXYLABS_PASSWORD": "<password>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An Oxylabs account with Web Scraper API access — sign up at oxylabs.io."
+  - "Web Scraper API username and password from your Oxylabs dashboard."
+  - "Python with `uvx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "All scraping requests are proxied through Oxylabs infrastructure — your real IP is never exposed to target sites."
+  - "AI browser agent and AI crawler tools issue real web requests against target domains; ensure scraping complies with target site terms of service."
+privacyNotes:
+  - "Page content scraped from target sites is returned in Claude's context — treat sensitive competitor data or personal data in scraped results accordingly."
+  - "Your `OXYLABS_USERNAME` and `OXYLABS_PASSWORD` authenticate to the Oxylabs Web Scraper API — keep them in the MCP config env."
+disclosure: "Oxylabs is a commercial web scraping infrastructure provider. The MCP server is officially maintained by Oxylabs."
+tags:
+  - oxylabs
+  - web-scraping
+  - data-extraction
+  - serp
+  - ecommerce
+  - automation
+keywords:
+  - oxylabs mcp server
+  - oxylabs mcp claude
+  - web scraping mcp claude code
+  - scrape google results claude
+  - amazon scraping mcp
+  - ai data extraction mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Oxylabs MCP Server** is the official Model Context Protocol server from Oxylabs, the
+web scraping infrastructure provider. It gives Claude the ability to scrape any website with
+JavaScript rendering and CAPTCHA bypass, extract structured data using AI, search Google and
+Amazon, and automate browser tasks — all through Oxylabs' proxy infrastructure. Licensed under
+MIT.
+
+Two credential sets are available; configure only one:
+- **Web Scraper API** — `OXYLABS_USERNAME` + `OXYLABS_PASSWORD` (classic proxy-based scraping)
+- **AI Studio** — `OXYLABS_AI_STUDIO_API_KEY` (AI-powered extraction, browser agent, AI search)
+
+## Key capabilities
+
+- **Universal scraping** — scrape any URL with JS rendering, stealth mode, and CAPTCHA handling.
+- **Google Search scraping** — structured SERP results, local results, images, news.
+- **Amazon scraping** — search results and product detail pages with parsed structured data.
+- **AI extraction** — AI-powered structured data extraction from arbitrary web pages.
+- **AI crawler** — crawl entire sites with AI guidance.
+- **AI browser agent** — autonomous browser automation for complex multi-step tasks.
+- **AI search** — web-wide AI-powered search with result synthesis.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `universal_scraper` | Scrape any URL with JS rendering + CAPTCHA bypass |
+| `google_search_scraper` | Fetch Google Search results as structured data |
+| `amazon_search_scraper` | Scrape Amazon search result pages |
+| `amazon_product_scraper` | Scrape Amazon product detail pages |
+| `ai_scraper` | AI-powered structured extraction from any page |
+| `ai_crawler` | AI-guided site crawling |
+| `ai_browser_agent` | Autonomous multi-step browser automation |
+| `ai_search` | Web-wide AI search with synthesis |
+
+## How it compares
+
+| Server | JS rendering | CAPTCHA bypass | SERP scraping | AI extraction | Notes |
+|---|---|---|---|---|---|
+| **Oxylabs MCP** | Yes | Yes | Yes | Yes | Proxy-backed, official |
+| Bright Data MCP | Yes | Yes | Yes | Yes | Also proxy-backed, official |
+| Firecrawl MCP | Yes | Partial | No | Yes | Markdown extraction focus |
+| Apify MCP | Yes | Yes | Limited | Yes | Actor-based ecosystem |
+
+Oxylabs and Bright Data are the two proxy-backed commercial web scraping MCP servers; both
+handle JS rendering and CAPTCHA bypass at scale.
+
+## Installation
+
+### Claude Code (Web Scraper API)
+
+```bash
+claude mcp add oxylabs \
+  -e OXYLABS_USERNAME=<username> \
+  -e OXYLABS_PASSWORD=<password> \
+  -- uvx oxylabs-mcp
+```
+
+### Claude Code (AI Studio)
+
+```bash
+claude mcp add oxylabs \
+  -e OXYLABS_AI_STUDIO_API_KEY=<your-api-key> \
+  -- uvx oxylabs-mcp
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "oxylabs": {
+      "command": "uvx",
+      "args": ["oxylabs-mcp"],
+      "env": {
+        "OXYLABS_USERNAME": "<username>",
+        "OXYLABS_PASSWORD": "<password>"
+      }
+    }
+  }
+}
+```
+
+Configure only one credential set — enabling both exposes redundant tools.
+
+## Requirements
+
+- Oxylabs account with Web Scraper API or AI Studio access.
+- Python with `uvx` (from `uv`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Scraping is proxied through Oxylabs — your IP is not exposed.
+- Review scraping targets for compliance with their terms of service.
+- Keep API credentials in the MCP config env; do not commit them.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official repository `oxylabs/oxylabs-mcp` (MIT) documents the `uvx oxylabs-mcp` install,
+  the `OXYLABS_USERNAME`/`OXYLABS_PASSWORD` and `OXYLABS_AI_STUDIO_API_KEY` credential sets,
+  all eight tools including `universal_scraper`, `google_search_scraper`, `amazon_search_scraper`,
+  `amazon_product_scraper`, `ai_scraper`, `ai_crawler`, `ai_browser_agent`, and `ai_search`.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

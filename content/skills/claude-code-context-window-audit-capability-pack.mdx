@@ -1,0 +1,234 @@
+---
+title: Claude Code Context Window Audit Capability Pack Skill
+slug: claude-code-context-window-audit-capability-pack
+category: skills
+description: >-
+  Expert Claude Code context window audit capability pack for measuring what
+  loads at session start, what each read and extension adds, when compaction
+  drops path-scoped rules, and how to delegate or compact before quality drops.
+cardDescription: >-
+  Audit Claude Code context pressure with /context, compaction behavior, and
+  source-backed reduction strategies.
+seoTitle: Claude Code Context Window Audit Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for auditing Claude Code context window usage,
+  startup load, compaction survival, subagent delegation, and token reduction.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-13"
+submittedAt: "2026-06-13"
+sourceSubmissionNumber: 1541
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1541"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/context-window"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when a Claude Code session feels slow, forgetful, or expensive
+  and you need to identify what is filling the context window and what to trim,
+  compact, or delegate.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code context window audit capability pack to this session."
+
+  # Required output
+  1) Session context inventory and primary pressure lane
+  2) Source-backed review of startup load, reads, skills, MCP, rules, and hooks
+  3) Compaction-survival assessment for CLAUDE.md, rules, skills, and nested files
+  4) Minimal reduction plan with /context, /compact, /clear, or subagent delegation
+  5) Privacy-safe summary of local paths, settings, and transcript excerpts reviewed
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-13"
+retrievalSources:
+  - "https://code.claude.com/docs/en/context-window"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://code.claude.com/docs/en/costs"
+  - "https://code.claude.com/docs/en/debug-your-config"
+  - "https://code.claude.com/docs/en/prompt-caching"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "An active or recently compacted Claude Code session where context pressure, cost, or recall quality is a concern."
+  - "Permission to run `/context`, `/memory`, and optionally `/compact` or `/clear` in the affected session."
+  - "Redacted access to project and user `CLAUDE.md`, `.claude/rules/`, skill descriptions, MCP server list, and hook configuration when relevant."
+  - "A concrete symptom such as repeated compaction, rising token cost, missed conventions, or degraded tool selection."
+safetyNotes:
+  - "This skill recommends context-management actions; it must not run `/compact`, `/clear`, or delete local memory files without explicit user approval."
+  - "`/compact` and automatic compaction summarize conversation history and can drop path-scoped rules until matching files are read again."
+  - "Moving always-on instructions from path-scoped rules into project-root `CLAUDE.md` changes what survives compaction; show the proposed diff first."
+  - "Subagent delegation isolates large reads but still consumes tokens in the subagent window; do not spawn many parallel subagents without a cost plan."
+  - "Prompt-cache invalidation from model switches, large CLAUDE.md edits, or mid-session settings changes can cause expensive uncached turns."
+privacyNotes:
+  - "`/context` breakdowns, `/memory` listings, and session transcripts can expose repository paths, branch names, MCP server names, hook commands, and internal project structure."
+  - "Compaction summaries may retain task details, credentials mentioned in chat, customer names, or incident context unless redacted before sharing."
+  - "Auto memory and nested `CLAUDE.md` files may contain team-specific conventions, URLs, or identifiers that should not be pasted into public issues."
+  - "Public PR or support notes should summarize pressure categories and recommended actions, not full `/context` output or complete transcript dumps."
+tags:
+  - claude-code
+  - context-window
+  - compaction
+  - token-usage
+  - capability-pack
+keywords:
+  - Claude Code context window audit
+  - Claude Code /context breakdown
+  - Claude Code compaction survival
+  - Claude Code context pressure
+  - Claude Code subagent delegation
+  - Claude Code token reduction
+readingTime: 9
+difficultyScore: 79
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code context window, features
+overview, cost management, configuration debugging, prompt caching, and skills
+documentation verified on **2026-06-13**. Prefer live official docs over
+remembered token estimates when reviewing new Claude Code releases or model
+variants with extended context.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/context-window
+- https://code.claude.com/docs/en/features-overview
+- https://code.claude.com/docs/en/costs
+- https://code.claude.com/docs/en/debug-your-config
+- https://code.claude.com/docs/en/prompt-caching
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Scope Note
+
+This is not a generic prompt-engineering guide. Use it as a reusable audit
+workflow when a Claude Code session is hitting context limits, losing
+path-scoped rules after compaction, or spending tokens on startup load that
+should be on-demand. For step-by-step cost guidance, the adjacent docs at
+`content/guides/` and official cost pages remain references, not duplicates of
+this audit contract.
+
+## Core Workflow
+
+1. Capture the symptom lane: slow turns, rising cost, missed rules, wrong skill
+   selection, auto-compact thrashing, or inability to read needed files.
+2. Run `/context` for a live category breakdown and note the largest buckets:
+   system prompt, CLAUDE.md, skills, MCP, messages, tool results, and hooks.
+3. Run `/memory` to confirm which project-root `CLAUDE.md`, auto memory, and
+   nested files loaded at startup versus on demand.
+4. Inventory extension load from the features overview: CLAUDE.md (every request),
+   skill descriptions (every request unless user-only), MCP tool names at start,
+   path-scoped rules (on matching file reads), hooks (zero unless they return
+   output), and subagents (isolated window).
+5. Classify recent growth drivers: large file reads, verbose tool results, many
+   invoked skills, MCP schema expansion, hook output injected into context, or
+   long multi-task conversation history.
+6. Assess compaction survival. Project-root `CLAUDE.md`, auto memory, system
+   prompt, and invoked skill bodies reload; path-scoped rules and nested
+   `CLAUDE.md` are summarized away until a matching file is read again.
+7. Check skill truncation rules after compaction: invoked skill bodies re-inject
+   with per-skill and total caps; confirm critical instructions are near the top
+   of `SKILL.md` files.
+8. Recommend one reversible action at a time: focused `/compact`, `/clear` between
+   unrelated tasks, subagent delegation for large reads, `disable-model-invocation`
+   for side-effect skills, or moving must-survive rules to project-root
+   `CLAUDE.md`.
+9. Define verification: rerun `/context`, confirm expected rules still apply after
+   compaction, and validate cost or recall improvement on the next task slice.
+
+## Capability Scope
+
+- Live context breakdown interpretation with `/context`.
+- Startup load review for CLAUDE.md, auto memory, skills, and MCP.
+- Compaction survival matrix for rules, nested CLAUDE.md, and skill bodies.
+- Subagent delegation planning for large reads and research tasks.
+- Prompt-cache and model-switch impact awareness.
+- Privacy-safe reporting of context pressure findings.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when auditing an active session,
+  reviewing extension configuration, or preparing a compaction strategy.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic checklist for diagnosing Claude Code context pressure in
+  support tickets, onboarding docs, or team runbooks.
+
+## Required Inputs
+
+- Symptom description and when it started relative to compaction or task switches.
+- `/context` category breakdown or equivalent observation of pressure.
+- Redacted lists of loaded skills, MCP servers, rules, and large recent reads.
+- Model alias in use and whether extended `[1m]` context is available on the plan.
+
+## Production Rules
+
+- Treat context as the primary constraint; do not add more extensions before
+  measuring existing load.
+- Prefer `/clear` between unrelated tasks instead of one long mixed conversation.
+- Use focused `/compact` with instructions before automatic compaction guesses
+  what matters.
+- Delegate large research reads to subagents so file contents stay out of the
+  main window.
+- Do not move sensitive always-on secrets into `CLAUDE.md` just to survive
+  compaction; use safer project conventions instead.
+- Redact paths, customer names, credentials, and hook commands before posting
+  public summaries.
+
+## Review Matrix
+
+| Symptom | First route | Safer first check |
+| --- | --- | --- |
+| Rules stop applying after long session | Compaction survival | Confirm path-scoped rules vs project-root CLAUDE.md |
+| Cost spikes after model change | Prompt caching | Check cache invalidation and recent settings edits |
+| Wrong skill keeps loading | Skill descriptions | Review overlapping descriptions and user-only flags |
+| Cannot read needed files | Context pressure | Run `/context` and compact or delegate before more reads |
+| Verbose tool output dominates | Tool results | Summarize or delegate; avoid re-pasting large outputs |
+| Startup feels heavy before first prompt | Startup load | Review CLAUDE.md size, skill count, and MCP server list |
+
+## Output Contract
+
+1. Context inventory and primary pressure lane.
+2. Evidence reviewed, including `/context` categories and redaction notes.
+3. Compaction-survival assessment for rules, skills, and nested files.
+4. Minimal reduction recommendation with exact command or configuration change.
+5. Verification checklist for the next task slice.
+6. Privacy-safe summary suitable for an issue, runbook, or support handoff.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for `Claude Code Context Window Audit`, context window audit,
+`/context`, compaction survival, and token reduction workflows. Official docs
+cover context interactively, but no `skills` entry provides a reusable Claude
+Code context window audit workflow with output contract and review matrix. This
+entry complements cost and best-practices guides without duplicating them.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.

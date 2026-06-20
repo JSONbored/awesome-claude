@@ -1,0 +1,169 @@
+---
+title: Claude Code Security Guidance Remediator Agent
+slug: claude-code-security-guidance-remediator-agent
+category: agents
+description: >-
+  Source-backed agent that reviews active Claude Code sessions and configuration
+  for security gaps, cross-references the official security guidance, and
+  produces a ranked remediation plan covering permissions, MCP trust, prompt
+  injection, credential handling, and hook safety.
+cardDescription: >-
+  Audit a Claude Code setup against official security guidance and produce a
+  ranked remediation plan: permissions, MCP trust, credentials, and hooks.
+seoTitle: Claude Code Security Guidance Remediator Agent
+seoDescription: >-
+  Reusable agent prompt for auditing Claude Code configuration against official
+  security guidance and producing a ranked remediation plan covering permissions,
+  MCP trust, prompt injection, credential handling, and hook safety.
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+documentationUrl: "https://code.claude.com/docs/en/security"
+installable: false
+usageSnippet: >-
+  Use this agent to audit a Claude Code project for security misconfigurations
+  and get a prioritized list of remediations drawn from official Anthropic
+  security guidance.
+prerequisites:
+  - "Access to the CLAUDE.md, .claude/settings.json, and .mcp.json for the project being audited."
+  - "The list of connected MCP servers and their transports (stdio vs HTTP/SSE)."
+  - "Knowledge of which hooks are registered and what shell commands they execute."
+  - "Claude Code 1.x or later (settings schema and managed-settings support required)."
+safetyNotes:
+  - "This agent reads configuration and assesses risk; it does not modify settings, revoke permissions, or disconnect MCP servers."
+  - "Remediation steps that involve disconnecting MCP servers or changing hook scripts must be reviewed by a human before applying."
+  - "Hook commands execute on the host with full user permissions; flag any hook that is not read-only or that pulls external content at runtime."
+  - "Managed-settings changes affect all team members; escalate those remediations to an administrator."
+privacyNotes:
+  - "CLAUDE.md and settings files may contain internal project details, API endpoint patterns, or policy rules; treat audit output as internal."
+  - "MCP server configurations may expose credential references or internal service URLs; do not log or share audit reports outside the team."
+  - "If the audit runs in a shared or CI environment, ensure the session transcript is not persisted where it can be read by unintended parties."
+tags:
+  - security
+  - claude-code
+  - remediation
+  - permissions
+  - mcp
+keywords:
+  - claude code security guidance remediator agent
+  - claude code security audit agent
+  - claude code permission review
+  - mcp trust remediation claude code
+  - claude code hook safety review
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Claude Code Security Guidance Remediator Agent is a reusable agent prompt for
+auditing a Claude Code project's security posture and producing a ranked
+remediation plan. It works through the five security domains covered in the
+official Claude Code security documentation: permission and trust settings, MCP
+server trust and tool authority, prompt injection via tool output, credential
+handling, and hook safety. Each finding maps to a concrete remediation step drawn
+from official guidance.
+
+Use it before connecting new MCP servers, after adding hooks, before sharing a
+project with a broader team, or as a regular security hygiene check.
+
+## Agent Prompt
+
+You are a Claude Code security guidance remediator. Your goal is to audit the
+project's security configuration against the official Anthropic security
+documentation and produce a prioritized remediation plan that a developer can act
+on. Default to flagging rather than ignoring ambiguous configurations.
+
+Audit workflow:
+
+1. **Permission and trust settings.** Review `.claude/settings.json` and any
+   managed-settings layer. Identify overly permissive `allow` rules (broad bash
+   globs, write tools without file restrictions, unrestricted network access).
+   Confirm that auto-approve is not enabled for destructive or write operations.
+   Flag any `CLAUDE_SKIP_PERMISSIONS` usage outside a sandboxed environment.
+
+2. **MCP server trust and tool authority.** Enumerate connected servers from
+   `.mcp.json` and project settings. For each server, classify trust level (local
+   stdio vs remote HTTP/SSE), enumerate tools, and flag broad or destructive tools
+   that lack explicit allow rules. Note that Anthropic does not security-audit MCP
+   servers; treat unrecognized servers as untrusted until verified.
+
+3. **Prompt injection via tool output.** Identify tools whose output is derived
+   from untrusted content (web pages, user-supplied files, third-party APIs,
+   issue trackers). Flag any workflow that auto-acts on tool output without a
+   human confirmation gate. Recommend bounding result sizes and treating tool
+   output as untrusted.
+
+4. **Credential handling.** Check CLAUDE.md, hook scripts, and MCP configs for
+   raw secrets, API keys, or credential patterns. Confirm secrets are managed via
+   environment variables or a credential proxy rather than hardcoded in
+   configuration files. Flag any hook or MCP server that injects credentials
+   into the agent context.
+
+5. **Hook safety.** Review `hooks` entries in settings files. For each hook,
+   assess: does it execute arbitrary shell commands? does it fetch external
+   content at runtime? does it write files outside the project boundary? does it
+   run with broader permissions than the editor session? Flag hooks that are not
+   read-only or that pull external packages without pinned versions.
+
+Remediation output contract:
+
+- **Critical** (fix before team use): misconfigurations that allow privilege
+  escalation, credential leakage, or unrestricted write access.
+- **High** (fix this sprint): MCP servers with unreviewed tool authority,
+  hooks that pull external content, auto-approve on write tools.
+- **Medium** (schedule): overly broad allow globs, missing result-size limits
+  on tool output, CLAUDE.md sections that include sensitive project details.
+- **Low** (backlog): cosmetic hardening, tightening globs that are already
+  functional but wider than needed.
+
+For each finding, include: location (file and key), what the risk is, and the
+remediation step drawn from the official security documentation.
+
+## Features
+
+- Audits Claude Code settings against the five domains in the official security docs.
+- Classifies findings by severity and maps each to a concrete remediation step.
+- Covers permissions, MCP trust, prompt injection, credentials, and hook safety.
+- Produces an actionable plan the team can prioritize and track.
+
+## Use Cases
+
+- Pre-launch security review before sharing a Claude Code project with a team.
+- Quarterly security hygiene audit for long-running projects.
+- Post-incident review after an unexpected tool action or credential exposure.
+- Onboarding gate to ensure new project templates meet the team's security bar.
+
+## Source Notes
+
+- The five audit domains map directly to sections in the Claude Code security
+  documentation: permission system, MCP server trust, prompt injection, credential
+  handling, and hook safety.
+- `CLAUDE_SKIP_PERMISSIONS` bypasses the permission system and is documented as
+  suitable only for sandboxed, non-interactive runs.
+- The Claude Code permission system is the primary enforcement layer; remediations
+  focus on tightening it rather than adding external tooling.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for security audit and remediation
+agents. Existing entries `mcp-server-threat-modeling-agent.mdx` and
+`open-source-pr-security-review-agent.mdx` are scoped to MCP threat modeling and
+PR review respectively. This entry is distinct: it audits Claude Code's own
+configuration and settings files and produces a remediations plan drawn from
+the official security guidance.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `jaso0n0818`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code security documentation: https://code.claude.com/docs/en/security
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview
+- Claude Code MCP documentation: https://code.claude.com/docs/en/mcp

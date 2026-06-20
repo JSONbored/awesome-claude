@@ -488,6 +488,33 @@ type CheckRun = {
   details_url?: string;
   started_at?: string | null;
   completed_at?: string | null;
+  app?: {
+    slug?: string | null;
+    owner?: { login?: string | null } | null;
+  } | null;
+};
+
+const GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS = ["github-actions"];
+const SUPERAGENT_CHECK_RUN_APP_SLUGS = [
+  "superagent",
+  "superagent-security-scan",
+];
+const TRUSTED_CHECK_RUN_APP_SLUGS: Record<string, string[]> = {
+  "Contributor trust": SUPERAGENT_CHECK_RUN_APP_SLUGS,
+  coverage: GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "classify-pr": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "pipelock-advisory-scan": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "required-pr-gate": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "superagent-repo-scan": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-ci": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-content": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-content-config": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-content-policy": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-pr-preview": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-raycast": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-registry": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "validate-web": GITHUB_ACTIONS_CHECK_RUN_APP_SLUGS,
+  "Superagent Security Scan": SUPERAGENT_CHECK_RUN_APP_SLUGS,
 };
 
 type CommitStatus = {
@@ -529,8 +556,19 @@ function sortNewestFirst<
   });
 }
 
+function isTrustedCheckRun(run: CheckRun, name: string) {
+  const trustedAppSlugs = TRUSTED_CHECK_RUN_APP_SLUGS[name];
+  if (!trustedAppSlugs?.length) return false;
+  const appSlug = run.app?.slug || "";
+  return trustedAppSlugs.includes(appSlug);
+}
+
 function latestNamedCheckRun(checkRuns: CheckRun[], name: string) {
-  return sortNewestFirst(checkRuns.filter((run) => run.name === name))[0];
+  return sortNewestFirst(
+    checkRuns.filter(
+      (run) => run.name === name && isTrustedCheckRun(run, name),
+    ),
+  )[0];
 }
 
 function latestStatusContext(statuses: CommitStatus[], context: string) {
@@ -579,14 +617,6 @@ export async function getCommitValidationState(params: {
         name,
         status: "pending",
         details: `is ${run.status || "pending"}`,
-      });
-      continue;
-    }
-    if (/superagent/i.test(name) && run.conclusion === "neutral") {
-      checkResults.push({
-        name,
-        status: "passed",
-        details: "concluded neutral",
       });
       continue;
     }

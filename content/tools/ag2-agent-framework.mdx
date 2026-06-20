@@ -1,0 +1,169 @@
+---
+title: AG2 Agent Framework
+slug: ag2-agent-framework
+category: tools
+description: >-
+  Open-source Python AgentOS and multi-agent framework, evolved from AutoGen,
+  for building conversable agents, group chats, swarms, human-in-the-loop
+  workflows, tool use, RAG, code execution, and provider-backed agent systems.
+cardDescription: >-
+  Build Python multi-agent systems with AG2, the open-source AgentOS evolved
+  from AutoGen, including conversable agents, group chats, swarms, tools, human
+  review, RAG, and code execution.
+seoTitle: AG2 Agent Framework for AutoGen-Style Multi-Agent Python Workflows
+seoDescription: >-
+  Use AG2, formerly AutoGen, to build Python multi-agent workflows with
+  conversable agents, group chats, swarms, human-in-the-loop control, tool use,
+  RAG, code execution, provider extras, and the `ag2` PyPI package.
+author: AG2
+authorProfileUrl: "https://github.com/ag2ai"
+dateAdded: "2026-06-18"
+websiteUrl: "https://ag2.ai/"
+documentationUrl: "https://docs.ag2.ai/"
+repoUrl: "https://github.com/ag2ai/ag2"
+packageUrl: "https://pypi.org/pypi/ag2/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/ag2ai/ag2"
+  - "https://github.com/ag2ai/ag2/blob/main/pyproject.toml"
+  - "https://github.com/ag2ai/ag2/blob/main/LICENSE"
+  - "https://docs.ag2.ai/latest/docs/user-guide/basic-concepts/installing-ag2/"
+  - "https://docs.ag2.ai/latest/docs/user-guide/release-roadmap/"
+  - "https://pypi.org/pypi/ag2/json"
+installable: true
+installCommand: "pip install 'ag2[openai]'"
+usageSnippet: >-
+  Install `ag2` with the provider extras you need, configure model credentials
+  outside source control, then compose conversable agents, group chats, swarms,
+  tool use, human review, RAG, or code execution workflows.
+copySnippet: |-
+  pip install 'ag2[openai]'
+estimatedSetupTime: 25 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 or newer and a Python environment managed with pip, uv, or another package manager."
+  - "Model provider credentials for the selected provider extra, such as OpenAI, Anthropic, Gemini, Bedrock, Mistral, Ollama, Groq, xAI, or another supported route."
+  - "A secrets strategy for provider keys, AG2 config files, `.env` files, notebooks, and example `OAI_CONFIG_LIST`-style credentials."
+  - "A reviewed execution boundary for code execution, Docker, Jupyter, browser-use, RAG, retrieval, database, and external tool extras."
+  - "Awareness of the upstream v1.0 roadmap because the current framework is being tidied through deprecations while beta APIs move toward official status."
+safetyNotes:
+  - "AG2 agents can converse, call tools, execute code, use retrieval systems, run browser workflows, and coordinate group chats; require explicit permissions and approval gates for high-impact actions."
+  - "The upstream install docs and examples commonly involve provider credentials; keep API keys, config files, notebooks, and `.env` files out of commits and support tickets."
+  - "Code execution, Docker, Jupyter, browser-use, and RAG extras can touch local files, network services, notebooks, databases, and external websites; scope them tightly before granting agent access."
+  - "Multi-agent conversations can continue through nested chats, swarms, group chats, and custom reply handlers; define termination, escalation, retry, and human takeover behavior."
+  - "Track the release roadmap before upgrading because deprecations and the v1.0 transition can change which APIs should be used for new work."
+privacyNotes:
+  - "Prompts, messages, tool arguments, tool outputs, code snippets, notebook state, retrieved documents, vector-store contents, provider responses, traces, and execution logs may contain sensitive user or workspace data."
+  - "Do not expose secrets, API keys, private file paths, customer records, internal documents, database rows, or raw exceptions through agent messages, logs, notebooks, screenshots, or public examples."
+  - "Provider extras and retrieval integrations can route data through OpenAI, Anthropic, Google, AWS, local model servers, databases, vector stores, browser automation, or other third-party services."
+  - "If AG2 is used for code execution or browser automation, define which files, domains, credentials, downloads, screenshots, and logs can be read or retained."
+tags:
+  - ag2
+  - autogen
+  - agents
+  - multi-agent
+  - python
+  - agent-framework
+  - rag
+keywords:
+  - AG2 agent framework
+  - AG2 formerly AutoGen
+  - ag2 Python package
+  - AutoGen AgentOS
+  - Python multi-agent framework
+  - AG2 group chat
+  - AG2 swarms
+  - AG2 code execution
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AG2 is an open-source Python framework for building agentic AI systems and
+multi-agent workflows. It evolved from AutoGen and focuses on conversable
+agents, cooperation between agents, tool use, human-in-the-loop workflows,
+group chats, swarms, RAG, code execution, and provider-backed agent
+applications.
+
+Use AG2 when a Python project needs conversation-driven multi-agent patterns
+and wants the AutoGen lineage with the current AG2 package, docs, and roadmap.
+It is especially relevant for teams comparing role-based crews, graph
+workflows, and conversation-oriented agent systems.
+
+## Install
+
+AG2 requires Python 3.10 or newer. For an OpenAI-backed setup:
+
+```bash
+pip install 'ag2[openai]'
+```
+
+The package has many optional extras for providers, retrieval, tracing, code
+execution, browser workflows, database-backed RAG, realtime, A2A, AG-UI, and
+other integrations. Install the smallest set required by the workflow.
+
+## Agent Capabilities
+
+| Area | AG2 Coverage |
+| --- | --- |
+| Agents | Conversable agents, assistant agents, user proxy agents, and beta AgentOS direction |
+| Multi-Agent Patterns | Group chats, swarms, nested chats, sequential chats, custom reply handlers, and orchestration patterns |
+| Human Review | Human-in-the-loop workflows and user proxy interactions |
+| Tools | Registered tools, provider tools, code execution, browser-use, and integration extras |
+| Retrieval | RAG and retrievechat extras for Chroma, pgvector, MongoDB, Qdrant, Couchbase, and related stores |
+| Providers | Optional extras for OpenAI, Anthropic, Gemini, Bedrock, Mistral, Ollama, Groq, xAI, DashScope, and others |
+| Roadmap | Current APIs plus beta framework work moving toward AG2 v1.0 |
+
+## Use Cases
+
+- Build conversation-driven multi-agent teams in Python.
+- Coordinate agents through group chats, swarms, nested chats, or sequential
+  workflows.
+- Add human review or user proxy control to an autonomous workflow.
+- Register tools and provider calls for agents to use.
+- Add retrieval and RAG capabilities to agent conversations.
+- Run code execution workflows with scoped Docker, Jupyter, or browser
+  boundaries.
+- Evaluate whether AG2's AutoGen lineage fits better than graph-based or
+  role-based agent frameworks.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository identifies AG2 as the open-source AgentOS and says it
+  was formerly AutoGen.
+- The installation docs and package metadata describe the `ag2` PyPI package
+  and Python `>=3.10` requirement.
+- `pyproject.toml` declares Apache-2.0 licensing, the `ag2` project name,
+  homepage, documentation, source URL, provider extras, retrieval extras, code
+  execution extras, tracing extras, and integration extras.
+- The release roadmap says AG2 is moving toward v1.0 and that beta framework
+  work is expected to become the official version at v1.0.
+- PyPI resolves package metadata for `ag2` version `0.13.4`.
+
+## Safety and Privacy
+
+AG2 can sit close to model credentials, notebooks, local code execution,
+retrieval stores, browser automation, and multi-agent decision loops. Scope
+tools and execution environments narrowly, isolate credentials, and require
+human approval before agents write files, execute commands, browse on behalf of
+users, or mutate external systems.
+
+Multi-agent conversations can produce long message histories and intermediate
+outputs. Treat agent transcripts, retrieved documents, code execution logs,
+provider responses, and notebook state as sensitive unless deliberately
+published.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/agents/`, `content/mcp/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+`ag2ai/ag2`, AG2, AG2 AgentOS, AG2 formerly AutoGen, `ag2` PyPI package, AG2
+group chat, AG2 swarms, and AutoGen AgentOS. The directory already has a
+Microsoft AutoGen entry for `microsoft/autogen`, but no dedicated AG2 entry,
+AG2 source URL duplicate, target file, or open duplicate PR was found.

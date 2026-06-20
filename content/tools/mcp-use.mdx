@@ -1,0 +1,199 @@
+---
+title: mcp-use
+slug: mcp-use
+category: tools
+description: >-
+  Fullstack MCP framework for building MCP servers, MCP Apps, MCP agents, and
+  MCP clients with TypeScript and Python SDKs, scaffolding, inspector tooling,
+  hosted deployment, observability, OAuth, notifications, sampling, and agent
+  integrations.
+cardDescription: >-
+  Build MCP servers, MCP Apps, MCP agents, and clients with mcp-use's
+  TypeScript/Python SDKs, app scaffolding, inspector, deployment CLI, and
+  hosted production path.
+seoTitle: mcp-use Fullstack MCP Framework for MCP Apps, Servers, Agents, and Inspector
+seoDescription: >-
+  Use mcp-use to build MCP servers, MCP Apps, MCP agents, and MCP clients with
+  TypeScript and Python SDKs, create-mcp-use-app, inspector tooling, cloud
+  deployment, OAuth, observability, sampling, and ChatGPT or Claude support.
+author: mcp-use
+authorProfileUrl: "https://github.com/mcp-use"
+dateAdded: "2026-06-18"
+websiteUrl: "https://mcp-use.com"
+documentationUrl: "https://docs.mcp-use.com/home"
+repoUrl: "https://github.com/mcp-use/mcp-use"
+packageUrl: "https://www.npmjs.com/package/mcp-use"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+sourceUrls:
+  - "https://github.com/mcp-use/mcp-use"
+  - "https://github.com/mcp-use/mcp-use/blob/main/README.md"
+  - "https://github.com/mcp-use/mcp-use/blob/main/LICENSE"
+  - "https://docs.mcp-use.com/home"
+  - "https://docs.mcp-use.com/typescript/getting-started/quickstart"
+  - "https://docs.mcp-use.com/python/getting-started/quickstart"
+  - "https://docs.mcp-use.com/typescript/server"
+  - "https://docs.mcp-use.com/inspector/index"
+  - "https://registry.npmjs.org/mcp-use/latest"
+  - "https://pypi.org/project/mcp-use/"
+installable: true
+installCommand: "npx create-mcp-use-app@latest"
+usageSnippet: >-
+  Scaffold a TypeScript MCP server or MCP App with create-mcp-use-app, or
+  install the TypeScript or Python SDK directly, then test with the inspector
+  before connecting Claude, ChatGPT, other MCP clients, or hosted deployment.
+copySnippet: |-
+  npx create-mcp-use-app@latest
+  npm install mcp-use
+  pip install mcp-use
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js and npm or pnpm for the TypeScript SDK, CLI, inspector, and create-mcp-use-app scaffolder."
+  - "Python and pip, uv, or another package manager for the Python SDK."
+  - "Working knowledge of MCP tools, resources, prompts, transports, schemas, and the target MCP client behavior."
+  - "A deployment plan for local, hosted Manufact MCP Cloud, or another production runtime before exposing servers publicly."
+  - "OAuth clients, secrets, domains, CORS policy, network policy, logging policy, and model-provider credentials where the MCP server or app needs them."
+safetyNotes:
+  - "mcp-use can expose MCP tools, MCP Apps, widgets, resources, prompts, agent clients, and hosted endpoints; review tool side effects and public reachability before deployment."
+  - "The inspector is useful for testing but can expose tool schemas, server metadata, resources, logs, or local endpoints; do not leave sensitive inspectors reachable without access control."
+  - "Hosted deployment through Manufact MCP Cloud adds production observability, metrics, logs, branch deployments, and cloud runtime concerns that need normal secret, domain, auth, and retention review."
+  - "MCP Apps can render interactive widgets in Claude, ChatGPT, and other clients; validate widget inputs, output schemas, embedded resources, and client compatibility before sharing."
+  - "OAuth, notifications, sampling, code-mode behavior, and agent integrations can change what a model or user can trigger; apply least privilege and approval gates for write actions."
+privacyNotes:
+  - "Tool calls, widget props, MCP resources, prompts, request metadata, OAuth tokens, logs, metrics, traces, branch deployment events, inspector sessions, and agent transcripts can contain sensitive data."
+  - "Review data paths across the MCP client, model provider, mcp-use SDK, inspector, deployment target, external APIs, and hosted Manufact services before processing private or regulated data."
+  - "Do not include API keys, customer documents, internal URLs, OAuth secrets, private resource URIs, or production logs in examples, public repos, inspectors, widgets, traces, screenshots, or templates."
+  - "If an MCP server wraps third-party APIs, confirm the downstream API provider's logging, retention, deletion, and authorization behavior before exposing the tool to agents."
+tags:
+  - mcp-use
+  - mcp
+  - mcp-apps
+  - mcp-server
+  - mcp-client
+  - mcp-inspector
+  - agents
+  - typescript
+  - python
+keywords:
+  - mcp-use
+  - mcp-use framework
+  - mcp-use MCP Apps
+  - mcp-use MCP server
+  - create-mcp-use-app
+  - mcp-use inspector
+  - mcp-use Python
+  - mcp-use TypeScript
+  - MCP Apps Claude
+  - ChatGPT MCP Apps
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+mcp-use is a fullstack MCP framework for building MCP servers, MCP Apps,
+MCP agents, and MCP clients. It ships TypeScript and Python SDKs, a project
+scaffolder, local and online inspector tooling, MCP App widget support, hosted
+deployment through Manufact MCP Cloud, and package-level support for agent and
+client workflows.
+
+Use it when the goal is to build an MCP product surface, not only install one
+existing MCP server. It is especially relevant for searches around mcp-use,
+MCP Apps, ChatGPT MCP Apps, Claude MCP Apps, MCP server framework, MCP
+inspector, MCP client SDK, and MCP agent framework.
+
+## Install
+
+The TypeScript quickstart starts with the scaffold command:
+
+```bash
+npx create-mcp-use-app@latest
+```
+
+The core SDK packages can also be installed directly:
+
+```bash
+npm install mcp-use
+pip install mcp-use
+```
+
+The README also documents `@mcp-use/cli`, `@mcp-use/inspector`, and
+`create-mcp-use-app` as related TypeScript packages.
+
+## Core Capabilities
+
+| Area | mcp-use Coverage |
+| --- | --- |
+| MCP Servers | TypeScript and Python SDKs for defining MCP tools and serving them over MCP transports |
+| MCP Apps | Widget-backed tools that can render interactive app surfaces in MCP clients |
+| Inspector | Local, online, and standalone inspector paths for testing and debugging MCP servers and apps |
+| Scaffolding | `create-mcp-use-app` templates for MCP servers and MCP Apps |
+| Deployment | Manufact MCP Cloud and CLI deployment flow with production observability, metrics, logs, and branch deployments |
+| Agents | MCP agent and client implementations for calling MCP servers from model-backed workflows |
+| Client SDK | Direct MCP client sessions for calling tools without an LLM |
+| Runtime Features | OAuth, notifications, sampling, code mode, observability, and app/client compatibility hooks |
+| Languages | TypeScript package on npm and Python package on PyPI |
+
+## MCP and Agent Fit
+
+mcp-use sits directly in the MCP build layer. It is useful for teams that want
+to build tools for Claude, ChatGPT, Cursor, Codex, or other MCP clients, test
+them in an inspector, and then deploy them with a production runtime path.
+
+It also has an agent angle: the repository documents MCP agents and clients in
+both Python and TypeScript, including examples that connect configured MCP
+servers to model-backed agent workflows.
+
+## Use Cases
+
+- Scaffold a new MCP server or MCP App quickly.
+- Build a widget-backed MCP App for Claude, ChatGPT, or another MCP client.
+- Test local or hosted MCP servers with the mcp-use inspector.
+- Deploy an MCP server with branch deployments, logs, metrics, and
+  observability through Manufact MCP Cloud.
+- Wrap third-party APIs as MCP tools with TypeScript or Python.
+- Build an MCP client or MCP agent that calls configured MCP servers.
+- Standardize MCP server development across TypeScript and Python teams.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes mcp-use as a fullstack MCP framework for
+  building MCP Apps for ChatGPT and Claude, plus MCP servers for AI agents.
+- The README documents TypeScript and Python SDKs, `create-mcp-use-app`, the
+  mcp-use inspector, hosted deployment on Manufact MCP Cloud, and MCP agent and
+  client examples.
+- The repository metadata describes the project as a fullstack MCP framework
+  for MCP Apps and MCP servers, with topics for MCP, apps SDK, inspector,
+  server, client, agentic framework, Claude Code, OpenClaw, skills, and Claude
+  connectors.
+- The npm registry lists `mcp-use` as version `1.32.1`, MIT licensed, with a CLI
+  binary and keywords for MCP, ChatGPT Apps, OAuth, notifications, sampling,
+  SDK, inspector, and TypeScript.
+- PyPI lists `mcp-use` as version `1.7.0`, MIT licensed, and summarized as a
+  full stack MCP framework for Python to build MCP agents, clients, and servers.
+- The current docs resolve for home, TypeScript quickstart, Python quickstart,
+  TypeScript server, and inspector pages.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, README output, and open pull requests for `mcp-use`,
+`mcp-use/mcp-use`, `create-mcp-use-app`, `mcp-use inspector`, `MCP Apps`,
+`mcp-use TypeScript`, `mcp-use Python`, and `Manufact MCP Cloud`. Existing
+entries cover two specific Agent Skills from the same repository:
+`mcp-use-mcp-apps-builder-skill` and `mcp-use-openapi-to-mcp-skill`. Those are
+skill artifacts under `skills/...`; this entry covers the core fullstack
+mcp-use framework, SDKs, inspector, scaffolder, deployment path, MCP Apps,
+servers, clients, and agents. No dedicated core mcp-use tools entry or open
+duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The open-source
+SDKs are MIT licensed, and the project also points to hosted deployment through
+Manufact MCP Cloud.

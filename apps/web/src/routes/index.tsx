@@ -25,18 +25,67 @@ import { CountUp } from "@/components/count-up";
 import { HeroStatusRow } from "@/components/hero-status-row";
 import { HowItWorks } from "@/components/how-it-works";
 import { AgentNativeStrip } from "@/components/agent-native-strip";
-import { EcosystemPulse } from "@/components/ecosystem-pulse";
+import { EcosystemPulse, type EcosystemPulseData } from "@/components/ecosystem-pulse";
 import { useRecents } from "@/lib/recents";
-import { CATEGORIES, type Category } from "@/types/registry";
-import { ENTRIES, BRIEF_ISSUES, REGISTRY_GENERATED_AT } from "@/data/entries";
-import { search } from "@/data/search";
+import { useEffect, useState } from "react";
+import { createServerFn } from "@tanstack/react-start";
+import { CATEGORIES, type Category, type Entry } from "@/types/registry";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
+import { filterRecentPulseEntries } from "@/lib/ecosystem-pulse-window";
 
-// Pre-computed counts at module scope so SSR + first paint show real numbers.
-const TRUSTED_COUNT = ENTRIES.filter((e) => e.trust === "trusted").length;
-const SOURCE_BACKED_COUNT = ENTRIES.filter((e) => e.source !== "unverified").length;
-const REVIEWED_COUNT = ENTRIES.filter((e) => e.reviewed).length;
-const TOTAL = ENTRIES.length;
+// Home featured/brief/stats are computed server-side so the ~1 MB registry dataset stays out of
+// the / route's client chunk (the dataset is dynamically imported inside this server handler only).
+const loadHomeData = createServerFn({ method: "GET" }).handler(async () => {
+  const { ENTRIES, BRIEF_ISSUES, REGISTRY_GENERATED_AT } = await import("@/data/entries");
+  const { search } = await import("@/data/search");
+  const { CHANGELOG } = await import("@/data/changelog");
+  const { CONTRIBUTORS } = await import("@/data/contributors");
+  const categoryCounts: Record<string, number> = {};
+  for (const e of ENTRIES) categoryCounts[e.category] = (categoryCounts[e.category] ?? 0) + 1;
+  const recentChangelog = filterRecentPulseEntries(CHANGELOG);
+  const pulseCounts = recentChangelog.reduce(
+    (acc, c) => {
+      acc[c.kind] = (acc[c.kind] ?? 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+  return {
+    stats: {
+      total: ENTRIES.length,
+      trusted: ENTRIES.filter((e) => e.trust === "trusted").length,
+      sourceBacked: ENTRIES.filter((e) => e.source !== "unverified").length,
+      reviewed: ENTRIES.filter((e) => e.reviewed).length,
+    },
+    popular: search({ sort: "popular" }).slice(0, 6),
+    newest: search({ sort: "newest" }).slice(0, 4),
+    sourceBackedEntries: ENTRIES.filter(
+      (e) => e.source !== "unverified" && e.trust === "trusted",
+    ).slice(0, 4),
+    categoryCounts,
+    registryGeneratedAt: REGISTRY_GENERATED_AT,
+    brief: BRIEF_ISSUES[0] ?? null,
+    pulse: {
+      recent: recentChangelog.slice(0, 4).map((item) => ({
+        ref: item.ref,
+        kind: item.kind,
+        category: item.category,
+        title: item.title,
+        date: item.date,
+      })),
+      topContributors: [...CONTRIBUTORS]
+        .sort((a, b) => (b.acceptedCount ?? 0) - (a.acceptedCount ?? 0))
+        .slice(0, 4)
+        .map((contributor) => ({
+          slug: contributor.slug,
+          name: contributor.name,
+          acceptedCount: contributor.acceptedCount,
+        })),
+      counts: pulseCounts,
+    } satisfies EcosystemPulseData,
+  };
+});
 
 const CATEGORY_ICONS: Partial<Record<Category, typeof Bot>> = {
   agents: Bot,
@@ -84,24 +133,67 @@ export const Route = createFileRoute("/")({
           "Source-backed registry of MCP servers, agents, skills, hooks, commands, and rules. Reviewed before installing.",
       },
       { property: "og:url", content: absoluteUrl("/") },
+      {
+        property: "og:image",
+        content: ogImageUrl({ title: "The directory for Claude workflows", eyebrow: "HeyClaude" }),
+      },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        name: "twitter:image",
+        content: ogImageUrl({ title: "The directory for Claude workflows", eyebrow: "HeyClaude" }),
+      },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/") }],
   }),
+  loader: () => loadHomeData(),
   component: Home,
 });
 
 function Home() {
-  const popular = search({ sort: "popular" }).slice(0, 6);
-  const newest = search({ sort: "newest" }).slice(0, 4);
-  const sourceBacked = ENTRIES.filter(
-    (e) => e.source !== "unverified" && e.trust === "trusted",
-  ).slice(0, 4);
-  const latestBrief = BRIEF_ISSUES[0];
+  const data = Route.useLoaderData();
+  const popular = data.popular as Entry[];
+  const newest = data.newest as Entry[];
+  const sourceBacked = data.sourceBackedEntries as Entry[];
+  const categoryCounts = data.categoryCounts as Record<string, number>;
+  const pulse = data.pulse as EcosystemPulseData;
+  const latestBrief = data.brief;
+  const TOTAL = data.stats.total;
+  const TRUSTED_COUNT = data.stats.trusted;
+  const SOURCE_BACKED_COUNT = data.stats.sourceBacked;
+  const REVIEWED_COUNT = data.stats.reviewed;
+  const REGISTRY_GENERATED_AT = data.registryGeneratedAt;
   const recents = useRecents();
-  const recentEntries = recents.entries
+  // Resolve recently-viewed entries from the dataset lazily (client-only, below the fold) so the
+  // registry dataset stays out of the home route chunk.
+  const recentsKey = recents.entries
     .slice(0, 3)
-    .map((r) => ENTRIES.find((e) => e.category === r.category && e.slug === r.slug))
-    .filter((e): e is NonNullable<typeof e> => !!e);
+    .map((r) => `${r.category}/${r.slug}`)
+    .join(",");
+  const [recentEntries, setRecentEntries] = useState<Entry[]>([]);
+  useEffect(() => {
+    const refs = recentsKey ? recentsKey.split(",") : [];
+    if (refs.length === 0) {
+      setRecentEntries([]);
+      return;
+    }
+    let cancelled = false;
+    void import("@/data/entries").then(({ ENTRIES }) => {
+      if (cancelled) return;
+      setRecentEntries(
+        refs
+          .map((ref) => {
+            const [category, slug] = ref.split("/");
+            return ENTRIES.find((e) => e.category === category && e.slug === slug);
+          })
+          .filter((e): e is Entry => !!e),
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [recentsKey]);
 
   return (
     <div>
@@ -185,7 +277,7 @@ function Home() {
       </section>
 
       {/* Trust strip — moved up under hero */}
-      <section className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
+      <section className="mx-auto max-w-page px-4 py-8 sm:px-6">
         <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-5">
           <TrustStat
             icon={ShieldCheck}
@@ -232,7 +324,7 @@ function Home() {
       <HowItWorks />
 
       {/* Category shortcuts — Claude-native primary */}
-      <section className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
+      <section className="mx-auto max-w-page px-4 py-6 sm:px-6">
         <RailHeader
           eyebrow="Categories"
           title="Browse by surface"
@@ -241,7 +333,7 @@ function Home() {
         />
         <div className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-3 lg:grid-cols-5">
           {CATEGORIES.map((c) => {
-            const count = ENTRIES.filter((e) => e.category === c.id).length;
+            const count = categoryCounts[c.id] ?? 0;
             const Icon = CATEGORY_ICONS[c.id] ?? Sparkles;
             return (
               <Link
@@ -267,7 +359,7 @@ function Home() {
       </section>
 
       {recentEntries.length > 0 && (
-        <section className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
+        <section className="mx-auto max-w-page px-4 py-6 sm:px-6">
           <div className="mb-3 flex items-baseline justify-between gap-3">
             <div className="eyebrow">Recently viewed</div>
             <Link to="/browse" className="text-xs text-ink-muted hover:text-ink">
@@ -283,7 +375,7 @@ function Home() {
       )}
 
       {/* Popular */}
-      <section className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
+      <section className="mx-auto max-w-page px-4 py-6 sm:px-6">
         <RailHeader
           eyebrow="Popular starting points"
           title="What developers inspect first"
@@ -305,13 +397,13 @@ function Home() {
         </div>
         <div className="mt-4 grid gap-4 stagger-children sm:grid-cols-2 lg:grid-cols-3">
           {popular.map((e) => (
-            <ResourceCard key={e.slug} entry={e} variant="grid" />
+            <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
           ))}
         </div>
       </section>
 
       {/* Compare-ready rail (was: source-backed dup) */}
-      <section className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
+      <section className="mx-auto max-w-page px-4 py-12 sm:px-6">
         <div className="overflow-hidden rounded-xl border border-border bg-surface">
           <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-4">
             <div className="flex items-start gap-2">
@@ -333,7 +425,7 @@ function Home() {
           </div>
           <div className="divide-y divide-border">
             {sourceBacked.map((e) => (
-              <ResourceCard key={e.slug} entry={e} />
+              <ResourceCard key={`${e.category}/${e.slug}`} entry={e} />
             ))}
           </div>
           <div className="flex items-center justify-between border-t border-border bg-surface-2 px-5 py-3 text-xs text-ink-muted">
@@ -349,7 +441,7 @@ function Home() {
       <AgentNativeStrip />
 
       {/* Two-up: new + pulse */}
-      <section className="mx-auto grid max-w-[1400px] gap-8 px-4 py-6 sm:px-6 lg:grid-cols-3">
+      <section className="mx-auto grid max-w-page gap-8 px-4 py-6 sm:px-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <RailHeader
             eyebrow="New this week"
@@ -360,7 +452,7 @@ function Home() {
           />
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {newest.map((e) => (
-              <ResourceCard key={e.slug} entry={e} variant="grid" />
+              <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
             ))}
           </div>
           {latestBrief && (
@@ -384,12 +476,12 @@ function Home() {
           )}
         </div>
         <aside>
-          <EcosystemPulse />
+          <EcosystemPulse data={pulse} />
         </aside>
       </section>
 
       {/* CTA */}
-      <section className="mx-auto max-w-[1400px] px-4 py-16 sm:px-6">
+      <section className="mx-auto max-w-page px-4 py-16 sm:px-6">
         <div className="relative overflow-hidden rounded-xl border border-border bg-ink p-8 text-background">
           <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-accent/60" />
           <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">

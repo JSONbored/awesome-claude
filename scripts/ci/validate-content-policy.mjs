@@ -56,18 +56,83 @@ const PRIVACY_NOTE_REQUIRED_FLAGS = new Set([
 
 const UNSAFE_FRONTMATTER_LANGUAGE_ERROR =
   "Executable JavaScript frontmatter is not allowed in content policy validation";
+const FINANCIAL_OR_IDENTITY_PATTERN =
+  /\b(private key|wallet|kyc|usdc|x402|payment|crypto|on-chain)\b/i;
+// Keep generic artifact attestations out of the financial/identity bucket while
+// still catching nearby wallet, KYC, identity-proof, passport, or biometric use.
+const SENSITIVE_ATTESTATION_WINDOW = 120;
+const SENSITIVE_ATTESTATION_FORWARD_TERMS =
+  "wallet|kyc|payment|crypto|on-chain identity|user identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
+const SENSITIVE_ATTESTATION_REVERSE_TERMS =
+  "wallet|kyc|payment|crypto|on-chain identity|identity|personal identity|identity proof|identity verification|proof of personhood|verifiable credential|passport|government id|government-issued id|govt id|biometric";
+const IDENTITY_ATTESTATION_PATTERN = new RegExp(
+  `\\battestations?\\b[\\s\\S]{0,${SENSITIVE_ATTESTATION_WINDOW}}\\b(?:${SENSITIVE_ATTESTATION_FORWARD_TERMS})s?\\b`,
+  "i",
+);
+const IDENTITY_ATTESTATION_REVERSE_PATTERN = new RegExp(
+  `\\b(?:${SENSITIVE_ATTESTATION_REVERSE_TERMS})s?\\b[\\s\\S]{0,${SENSITIVE_ATTESTATION_WINDOW}}\\battestations?\\b`,
+  "i",
+);
 const DEFENSIVE_SECURITY_MITIGATION_PATTERN =
   /\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b[\s\S]{0,160}\b(?:(?:credential|password|cookie|session|token|wallet|secret|leak)s?|expos(?:e|ing|ure))\b|\b(?:credential|password|cookie|session|token|wallet|secret)s?\b[\s\S]{0,160}\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b/i;
 const RESOURCE_THEFT_CAPABILITY_PATTERN =
   /\b(?:this|the|our)?\s*(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b[\s\S]{0,40}\b(?:can|will|does|advertises?|offers?|enables?|designed to|built to)\b[\s\S]{0,80}\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b|\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(?:with|using|through|by)\b[\s\S]{0,40}\b(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b/i;
 const CREDENTIAL_THEFT_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b/i;
+const THEFT_INTERDICTION_ACTION_PATTERN =
+  /\b(?:detects?|blocks?|prevents?|warns? before)\b/i;
+const THEFT_INTERDICTION_TARGET_PATTERN =
+  /\b(?:commands?|patterns?|attempts?|requests?|prompts?|output)\b/i;
+const THEFT_INTERDICTION_RESULT_PATTERN =
+  /\b(?:blocks?|prevents?|before they run)\b/i;
+const THEFT_INTERDICTION_WINDOW = 120;
+const THEFT_CONTEXT_TO_CLAIM_WINDOW = 220;
 const CREDENTIAL_THEFT_DESTINATION_PATTERN =
   /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,120}\b(?:to|into|via|through|over|using|at)\b[\s\S]{0,40}\b(webhooks?|remote servers?|external endpoints?|third[- ]part(?:y|ies)|apis?|https?:\/\/)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,120}\b(?:to|into|via|through|over|using|at)\b[\s\S]{0,40}\b(webhooks?|remote servers?|external endpoints?|third[- ]part(?:y|ies)|apis?|https?:\/\/)\b/i;
 const EXPLICIT_CREDENTIAL_STEALING_PATTERN =
   /\b(?:credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\bsteals?\b|\bsteals?\b[\s\S]{0,80}\b(?:credential|password|cookie|session|token|wallet)s?\b|\b(?:credential|password|cookie) stealer|keylogger\b/i;
 const ABUSE_ENABLEMENT_PATTERN =
   /\b(build|create|generate|run|deploy|use|ship)\b[\s\S]{0,80}\b(credential stealer|password stealer|cookie stealer|keylogger|steal credentials|exfiltrat(?:e|ion)|harvest cookies|dump tokens?)\b/i;
+// Adult "xxx" only in an explicit adult context, so the legitimate developer
+// idioms `TODO|FIXME|XXX` (code markers) and `(XXX) XXX-XXXX` (phone masks) are
+// not flagged. The bare-word `xxx` alternative was removed from the
+// prohibited-content list in favor of this multi-token pattern.
+const ADULT_XXX_PATTERN =
+  /\bxxx[\s._-]*(?:porn|porno|sex|sexual|adult|nude|nudes|nsfw|hardcore|rated|video|videos|movie|movies|content|hub|tube|cam|cams|chat)\b|\b(?:porn|porno|sex|sexual|adult|nude|nudes|nsfw|hardcore)[\s._-]*xxx\b|\bxxx\.(?:com|net|org|xxx|tube|hub)\b|\.xxx\b/i;
+// Loopback HTTP endpoints (127.0.0.1 / localhost / [::1] / 0.0.0.0, any
+// port/path) are not an insecure-transport risk — many local MCP servers and
+// hooks legitimately run on http loopback (e.g. Figma Dev Mode
+// http://127.0.0.1:3845/mcp).
+//
+// No SSRF surface: this scanner only string-classifies URLs found in install
+// text; it never fetches them. The exemption applies solely to the
+// `non_https_executable_source` check over `executableSourceUrls` (install/usage
+// snippets), which are not retrieved here or by the grounding fetcher (that
+// fetches documentationUrl/retrievalSources only). So marking a loopback install
+// URL as "not insecure transport" cannot trigger any request.
+const LOOPBACK_HTTP_HOSTNAMES = new Set([
+  "127.0.0.1",
+  "localhost",
+  "[::1]",
+  "0.0.0.0",
+]);
+function isLoopbackHttpUrl(value) {
+  if (typeof value !== "string") {
+    return false;
+  }
+
+  try {
+    const url = new URL(value.trim());
+    return (
+      url.protocol === "http:" &&
+      url.username === "" &&
+      url.password === "" &&
+      LOOPBACK_HTTP_HOSTNAMES.has(url.hostname)
+    );
+  } catch {
+    return false;
+  }
+}
 const FULL_COMMIT_SHA_PATTERN = /^[0-9a-f]{40}$/i;
 const LOCAL_SCRIPT_REFERENCE_PATTERN =
   /(?:^|[\s`;&|])(?:(?:bash|sh|zsh|pwsh|powershell)\s+)?(?:\.{1,2}\/|[\w.-]+\/)?[\w./-]*(?:install|setup|start|bootstrap|init)[\w.-]*\.(?:sh|bash|zsh|ps1)\b/im;
@@ -105,13 +170,63 @@ function normalizeRepo(value) {
   return normalizeText(value).toLowerCase();
 }
 
+function globalPattern(pattern) {
+  const flags = pattern.flags.includes("g")
+    ? pattern.flags
+    : `${pattern.flags}g`;
+  return new RegExp(pattern.source, flags);
+}
+
+function hasOrderedPatternWindow(text, firstPattern, secondPattern, maxChars) {
+  for (const match of text.matchAll(globalPattern(firstPattern))) {
+    const start = (match.index ?? 0) + match[0].length;
+    if (secondPattern.test(text.slice(start, start + maxChars))) return true;
+  }
+  return false;
+}
+
+function hasDefensiveTheftInterdiction(text) {
+  // Only safe-harbor theft wording when it describes blocking/detecting risky
+  // command, prompt, request, or output patterns, not the tool's own capability.
+  const actionBeforeTarget = hasOrderedPatternWindow(
+    text,
+    THEFT_INTERDICTION_ACTION_PATTERN,
+    THEFT_INTERDICTION_TARGET_PATTERN,
+    THEFT_INTERDICTION_WINDOW,
+  );
+  const targetBeforeTheft = hasOrderedPatternWindow(
+    text,
+    THEFT_INTERDICTION_TARGET_PATTERN,
+    CREDENTIAL_THEFT_PATTERN,
+    THEFT_CONTEXT_TO_CLAIM_WINDOW,
+  );
+  const theftBeforeResult = hasOrderedPatternWindow(
+    text,
+    CREDENTIAL_THEFT_PATTERN,
+    THEFT_INTERDICTION_RESULT_PATTERN,
+    THEFT_INTERDICTION_WINDOW,
+  );
+
+  return (actionBeforeTarget && targetBeforeTheft) || theftBeforeResult;
+}
+
 function hasDefensiveSecuritySafeHarbor(text) {
+  const hasCredentialTheftWording = CREDENTIAL_THEFT_PATTERN.test(text);
   return (
     DEFENSIVE_SECURITY_MITIGATION_PATTERN.test(text) &&
+    (!hasCredentialTheftWording || hasDefensiveTheftInterdiction(text)) &&
     !RESOURCE_THEFT_CAPABILITY_PATTERN.test(text) &&
     !CREDENTIAL_THEFT_DESTINATION_PATTERN.test(text) &&
     !EXPLICIT_CREDENTIAL_STEALING_PATTERN.test(text) &&
     !ABUSE_ENABLEMENT_PATTERN.test(text)
+  );
+}
+
+function hasFinancialOrIdentitySensitiveSignal(text) {
+  return (
+    FINANCIAL_OR_IDENTITY_PATTERN.test(text) ||
+    IDENTITY_ATTESTATION_PATTERN.test(text) ||
+    IDENTITY_ATTESTATION_REVERSE_PATTERN.test(text)
   );
 }
 
@@ -235,7 +350,21 @@ function resolveFiles({ repoRoot, args }) {
   return source
     .map((file) => {
       const filename = normalizeText(file.filename);
-      const status = normalizeText(file.status) || "modified";
+      let status = normalizeText(file.status) || "modified";
+      // Defense-in-depth for delete-only PRs: a file reported as added/modified
+      // that is absent from the working tree (and carries no inline content) is
+      // effectively a deletion — e.g. its status was lost upstream (a bare-string
+      // --files-json defaults to "modified"). Reclassify as `removed` so it is
+      // exempted from content scanning instead of tripping missing_pr_file_content.
+      // Real PR CI checks the file out, so genuine adds/edits are unaffected. (#content-deletion)
+      if (
+        status !== "removed" &&
+        typeof file.content !== "string" &&
+        filename &&
+        !fs.existsSync(path.join(repoRoot, filename))
+      ) {
+        status = "removed";
+      }
       return {
         filename,
         status,
@@ -337,9 +466,16 @@ function isLikelyAffiliateUrl(value) {
       }
     }
 
-    return /\/(ref|refer|referral|affiliate|partners?)(?:\/|$)/i.test(
-      url.pathname,
-    );
+    // Explicit affiliate path segments anywhere in the path.
+    if (/\/(referral|affiliate|partners?)(?:\/|$)/i.test(url.pathname)) {
+      return true;
+    }
+    // Bare `/ref` or `/refer` ONLY as the terminal path segment (affiliate
+    // shortlinks like example.com/ref). A `ref` segment with more after it is
+    // almost always a docs "reference" section (e.g. go.dev/ref/mod), not an
+    // affiliate link, so it is not flagged here — genuine affiliate links use a
+    // `ref=` query param (handled above) instead.
+    return /^\/(ref|refer)\/?$/i.test(url.pathname);
   } catch {
     return /\b(affiliate|referral|ref=|via=)\b/i.test(raw);
   }
@@ -781,7 +917,11 @@ function addContentRiskSignals(report, fields, content) {
     );
   }
 
-  if (executableSourceUrls.some((url) => url.startsWith("http://"))) {
+  if (
+    executableSourceUrls.some(
+      (url) => url.startsWith("http://") && !isLoopbackHttpUrl(url),
+    )
+  ) {
     addFlag(
       report,
       "critical",
@@ -863,7 +1003,8 @@ function addContentRiskSignals(report, fields, content) {
 
   if (
     /\b(csam|child sexual abuse|child exploitation)\b/i.test(text) ||
-    /\b(porn|pornographic|explicit sexual|xxx|onlyfans)\b/i.test(text) ||
+    /\b(porn|pornographic|explicit sexual|onlyfans)\b/i.test(text) ||
+    ADULT_XXX_PATTERN.test(text) ||
     /\bterrorist recruitment|violent extremist recruitment\b/i.test(text)
   ) {
     addFlag(
@@ -889,11 +1030,7 @@ function addContentRiskSignals(report, fields, content) {
     );
   }
 
-  if (
-    /\b(private key|wallet|kyc|usdc|x402|payment|crypto|on-chain|attestation)\b/i.test(
-      text,
-    )
-  ) {
+  if (hasFinancialOrIdentitySensitiveSignal(text)) {
     addFlag(
       report,
       "high",

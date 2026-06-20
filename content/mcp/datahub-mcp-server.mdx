@@ -1,0 +1,197 @@
+---
+title: DataHub MCP Server for Claude
+slug: datahub-mcp-server
+category: mcp
+description: >-
+  Connect Claude to DataHub — search assets, trace data lineage, explore schemas, retrieve real
+  query history, and enrich metadata — with the official DataHub MCP server from Acryl Data,
+  supporting the full DataHub data catalog platform.
+cardDescription: "Official DataHub MCP: search assets, trace lineage, explore schemas & enrich metadata from Claude."
+seoTitle: "DataHub MCP Server for Claude — Data Catalog, Lineage & Metadata via MCP"
+seoDescription: "Connect Claude to DataHub with the official MCP server: search data assets, trace upstream/downstream lineage, explore schemas, retrieve real SQL queries run against datasets, and enrich metadata — Apache-2.0 licensed."
+author: Acryl Data
+authorProfileUrl: "https://github.com/acryldata"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/acryldata/mcp-server-datahub/main/README.md"
+websiteUrl: "https://datahubproject.io"
+repoUrl: "https://github.com/acryldata/mcp-server-datahub"
+retrievalSources:
+  - "https://raw.githubusercontent.com/acryldata/mcp-server-datahub/main/README.md"
+  - "https://docs.datahub.com/docs/features/feature-guides/mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add datahub -e DATAHUB_GMS_URL=https://your-datahub.example.com/api/gms -e DATAHUB_GMS_TOKEN=<your-token> -- uvx mcp-server-datahub"
+usageSnippet: >-
+  Ask Claude to search for all datasets containing PII, trace the upstream lineage of a
+  dashboard, show the schema for a Snowflake table, or retrieve real SQL queries that have
+  been run against a specific dataset — using natural language against your DataHub catalog.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "datahub": {
+        "command": "uvx",
+        "args": ["mcp-server-datahub"],
+        "env": {
+          "DATAHUB_GMS_URL": "https://your-datahub.example.com/api/gms",
+          "DATAHUB_GMS_TOKEN": "<your-token>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "datahub": {
+        "command": "uvx",
+        "args": ["mcp-server-datahub"],
+        "env": {
+          "DATAHUB_GMS_URL": "https://your-datahub.example.com/api/gms",
+          "DATAHUB_GMS_TOKEN": "<your-token>",
+          "TOOLS_IS_MUTATION_ENABLED": "false",
+          "SEMANTIC_SEARCH_ENABLED": "false"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A running DataHub instance (self-hosted or DataHub Cloud) with GMS endpoint accessible."
+  - "A DataHub personal access token: Settings → Access Tokens → + Generate Access Token."
+  - "Python with `uv` or `uvx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Metadata mutation tools (add/remove tags, terms, owners) are disabled by default — set `TOOLS_IS_MUTATION_ENABLED=true` to enable write operations."
+  - "Mutations affect production data catalog metadata; confirm before enabling in shared environments."
+privacyNotes:
+  - "Dataset schemas, table previews, lineage graphs, real SQL query history, and data owner information from your DataHub instance are surfaced in Claude's context."
+  - "Your `DATAHUB_GMS_TOKEN` grants catalog access — treat it as a secret."
+tags:
+  - datahub
+  - data-catalog
+  - data-lineage
+  - metadata
+  - data-governance
+  - data-discovery
+keywords:
+  - datahub mcp server
+  - datahub mcp claude
+  - data catalog mcp claude code
+  - data lineage mcp
+  - metadata management ai claude
+  - data governance mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **DataHub MCP Server** is the official Model Context Protocol server from Acryl Data for
+[DataHub](https://datahubproject.io) — the open source data catalog and metadata platform.
+It gives Claude structured access to your DataHub instance: search assets, trace lineage,
+explore schemas, retrieve real SQL queries run against datasets, and enrich metadata through
+optional mutation tools. Distributed as `mcp-server-datahub` on PyPI. Apache-2.0 licensed.
+
+## Key capabilities
+
+- **Asset search** — keyword, boolean, and structured search with filters (type, tag, owner, domain).
+- **Lineage tracing** — upstream and downstream data lineage across the full pipeline.
+- **Lineage path finding** — compute lineage paths between two specific assets.
+- **Query history** — retrieve real SQL queries that have been run against a dataset.
+- **Schema exploration** — list and inspect dataset schema fields and column types.
+- **Batch metadata retrieval** — get metadata for multiple assets in one call.
+- **Document search** — keyword and regex search over DataHub knowledge documents.
+- **Metadata mutation** (opt-in) — add/remove tags, glossary terms, owners; opt in via env var.
+
+## Tools (key selection)
+
+| Tool | Purpose |
+|---|---|
+| `search` | Keyword/boolean search with filters across all asset types |
+| `get_lineage` | Upstream/downstream lineage for any asset |
+| `get_lineage_paths_between` | Compute paths between two specific assets |
+| `get_dataset_queries` | Real SQL queries run against a dataset |
+| `list_schema_fields` | Explore dataset schema structure |
+| `get_entities` | Batch metadata retrieval for multiple assets |
+| `search_documents` / `grep_documents` | Keyword and regex search over docs |
+| `save_document` | Store notes/docs in DataHub knowledge base |
+| `add_tags` / `remove_tags` | Tag management (mutation opt-in required) |
+| `add_terms` / `remove_terms` | Glossary term management (mutation opt-in required) |
+
+## Configuration options
+
+| Env var | Default | Purpose |
+|---|---|---|
+| `DATAHUB_GMS_URL` | — | Required. GMS endpoint URL |
+| `DATAHUB_GMS_TOKEN` | — | Required. Personal access token |
+| `TOOLS_IS_MUTATION_ENABLED` | `false` | Enable write/mutation tools |
+| `TOOLS_IS_USER_ENABLED` | `false` | Enable user management tools |
+| `SEMANTIC_SEARCH_ENABLED` | `false` | Enable vector semantic search |
+| `TOOL_RESPONSE_TOKEN_LIMIT` | `80000` | Cap response token size |
+
+## How it compares
+
+| Server | Asset search | Lineage | Query history | Mutations | Notes |
+|---|---|---|---|---|---|
+| **DataHub MCP** | Yes | Yes | Yes | Opt-in | Full catalog; read-only by default |
+| OpenMetadata MCP | Yes | Yes | Limited | Yes | Alternative open catalog |
+| dbt MCP | Limited | Limited | No | No | dbt projects only |
+| Atlan MCP | Yes | Yes | Limited | Limited | Commercial catalog |
+
+DataHub MCP is unique in exposing real query history — actual SQL that ran against your data,
+not just schema metadata.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add datahub \
+  -e DATAHUB_GMS_URL=https://your-datahub.example.com/api/gms \
+  -e DATAHUB_GMS_TOKEN=<your-token> \
+  -- uvx mcp-server-datahub
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "datahub": {
+      "command": "uvx",
+      "args": ["mcp-server-datahub"],
+      "env": {
+        "DATAHUB_GMS_URL": "https://your-datahub.example.com/api/gms",
+        "DATAHUB_GMS_TOKEN": "<your-token>"
+      }
+    }
+  }
+}
+```
+
+For DataHub Cloud, the GMS URL is typically `https://your-org.acryl.io/api/gms`.
+
+## Requirements
+
+- DataHub instance (self-hosted via Docker Compose or DataHub Cloud).
+- Personal access token.
+- Python with `uvx` (from `uv`).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Mutation tools are off by default — only enable `TOOLS_IS_MUTATION_ENABLED=true` if you need
+  to write tags, terms, or owners.
+- Token grants catalog read access; protect it like any API credential.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official repository `acryldata/mcp-server-datahub` (Apache-2.0) on PyPI as `mcp-server-datahub`
+  (v0.6.0) documents the `DATAHUB_GMS_URL`/`DATAHUB_GMS_TOKEN` configuration, all search/lineage/
+  query/metadata tools, the optional mutation and semantic search env vars, and the `uvx` install.
+- DataHub feature guide at `docs.datahub.com/docs/features/feature-guides/mcp` describes the
+  integration setup.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

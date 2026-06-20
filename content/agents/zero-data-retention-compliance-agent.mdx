@@ -1,0 +1,135 @@
+---
+title: Zero Data Retention Compliance Agent
+slug: zero-data-retention-compliance-agent
+category: agents
+description: >-
+  Community reusable agent prompt for mapping Claude Code deployments to zero data
+  retention requirements using official ZDR docs: logging boundaries, MCP data flows,
+  session storage, and compliance evidence checklists for security review.
+cardDescription: >-
+  Map Claude Code deployments to zero data retention using official ZDR documentation.
+seoTitle: Zero Data Retention Compliance Agent
+seoDescription: >-
+  Reusable agent prompt for zero data retention compliance on Claude Code deployments
+  grounded in official ZDR docs: logging, MCP flows, session storage, and review checklists.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1577
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1577"
+documentationUrl: "https://code.claude.com/docs/en/zero-data-retention"
+repoUrl: "https://github.com/anthropics/claude-code"
+installable: false
+usageSnippet: >-
+  Use this agent before production rollout to verify zero data retention settings, MCP
+  connector data flows, session storage choices, and compliance evidence against official ZDR docs.
+prerequisites:
+  - "Contractual ZDR or equivalent requirements from legal or security stakeholders."
+  - "Deployment architecture for Claude Code, Agent SDK hosts, logging, and MCP connectors."
+  - "Current observability configuration including content logging flags."
+  - "Inventory of MCP servers and what data each tool transmits externally."
+safetyNotes:
+  - "ZDR compliance is organizational; this agent produces checklists, not legal determinations."
+  - "Third-party MCP servers may retain data outside Anthropic ZDR scope—flag each connector."
+  - "Session storage plugins and custom loggers can violate ZDR if misconfigured."
+  - "Do not mark compliant until human security review signs off with evidence."
+privacyNotes:
+  - "Compliance packets may summarize data categories but should not attach raw customer prompts."
+  - "MCP vendor DPAs and subprocessors must be cited for regulated workloads."
+  - "Evidence repositories need access controls separate from general engineering drives."
+tags:
+  - compliance
+  - zero-data-retention
+  - claude-code
+  - enterprise
+  - privacy
+  - mcp
+keywords:
+  - zero data retention compliance agent
+  - claude code zdr review
+  - enterprise claude code privacy checklist
+  - mcp data flow zdr compliance
+  - claude code logging boundaries
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Zero Data Retention Compliance Agent is a community-authored reusable prompt for aligning
+Claude Code deployments with zero data retention programs. It applies official Claude Code
+zero data retention documentation—not legal advice or an official Anthropic compliance agent.
+
+## Scope Note
+
+This prompt operationalizes documented ZDR expectations from code.claude.com. Legal and
+contract interpretation remains with your counsel and security teams.
+
+## Agent Prompt
+
+You are a zero data retention compliance reviewer for Claude Code deployments. Map technical
+controls to stated ZDR requirements using official Anthropic documentation only.
+
+Workflow:
+
+1. **Requirements intake.** Capture contractual ZDR scope, regulated data types, and retention prohibitions.
+2. **Anthropic surfaces.** Identify which Claude Code features are in scope and what official ZDR docs say about retention behavior.
+3. **Logging audit.** Find application logs, hooks, CI artifacts, and support exports that might store prompts or outputs.
+4. **Observability.** Verify tracing and APM configs disable or redact prompt content per policy.
+5. **MCP inventory.** For each connector, document data sent, vendor retention claims, and DPA coverage gaps.
+6. **Session storage.** Review external session stores, checkpoints, and cloud runs for persisted transcripts.
+7. **Evidence pack.** Produce checklist with pass/fail, owners, and remediation tasks for security sign-off.
+
+Output contract:
+
+- Control matrix mapped to requirements.
+- MCP and logging findings with severity.
+- Remediation backlog with owners.
+- Explicit non-compliance gaps requiring legal or vendor follow-up.
+
+## Features
+
+- Applies official ZDR documentation to practical deployment checks.
+- Treats MCP connectors as separate retention boundaries.
+- Highlights observability misconfiguration as a common ZDR failure mode.
+- Outputs security-review-ready evidence structures.
+
+## Use Cases
+
+- Enterprise security review before Claude Code team rollout.
+- Agent SDK production launch in regulated industries.
+- Annual re-certification of logging and MCP connector policies.
+- Vendor due diligence when adding new remote MCP tools.
+
+## Source Notes
+
+Verified against Claude Code zero data retention documentation on **2026-06-16**:
+
+- Official docs describe zero data retention expectations and configuration considerations
+  for Claude Code enterprise deployments.
+- Documentation distinguishes Anthropic-controlled retention from third-party MCP and
+  logging systems teams must evaluate separately.
+- Network, session, and connector choices documented elsewhere must align with ZDR
+  commitments stated in the ZDR guide.
+
+## Duplicate Check
+
+Checked content/agents and content/skills for ZDR workflows.
+ai-workflow-privacy-compliance-review-agent covers broader privacy topics.
+claude-code-zero-data-retention-review-capability-pack is a skills pack checklist.
+No agents entry applies official ZDR documentation to deployment compliance review with MCP inventory steps.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public Claude
+Code zero data retention documentation and the public anthropics/claude-code repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Claude Code zero data retention - https://code.claude.com/docs/en/zero-data-retention
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- Claude Code repository - https://github.com/anthropics/claude-code

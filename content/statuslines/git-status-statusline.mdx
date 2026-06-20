@@ -116,19 +116,17 @@ tags:
   - bash
   - powerline
   - status-indicators
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
+safetyNotes:
+  - "Runs as a Claude Code statusline command on every refresh and depends on the local shell environment; a failure only affects status rendering, not your session."
+privacyNotes:
+  - "Reads the Claude Code statusline JSON from stdin (model, workspace path, token usage) and renders it in the local terminal; it does not send data off-machine."
 keywords:
-  - bash
-  - claude
-  - developer
-  - development
-  - git
-  - powerline
-  - status
-  - status-indicators
-  - statusline
-  - statuslines
-  - tools
-  - version-control
+  - git status statusline
+  - git branch statusline
+  - version control statusline
+  - claude code statusline
 readingTime: 2
 difficultyScore: 3
 hasTroubleshooting: true

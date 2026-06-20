@@ -6,6 +6,7 @@ import { Star, ArrowUp, Shield, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useHarnessPref, readScrollPos, writeScrollPos, clearScrollPos } from "@/lib/dossier-prefs";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
+import { EntryBrandMark } from "./entry-brand-mark";
 
 /**
  * Appears once the user scrolls past the dossier header.
@@ -106,6 +107,7 @@ export function StickyMetaBar({
             >
               <CategoryPill>{entry.category}</CategoryPill>
             </Link>
+            <EntryBrandMark entry={entry} size="xs" />
             <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink sm:truncate">
               <span className="line-clamp-2 sm:line-clamp-1">{entry.title}</span>
             </span>

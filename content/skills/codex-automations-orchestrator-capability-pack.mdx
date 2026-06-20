@@ -4,7 +4,7 @@ slug: codex-automations-orchestrator-capability-pack
 category: skills
 description: "Expert automation-orchestration capability pack for designing safe, low-noise recurring Codex workflows with clear runbooks."
 cardDescription: "Plan and operate recurring agent automations with deterministic prompts, guardrails, and output contracts."
-seoTitle: Codex Automations Orchestrator Capability Pack Skill
+seoTitle: "Codex Automations Orchestrator Skill for Claude"
 seoDescription: "Advanced AI skill for Codex automation design, recurring task governance, and safe long-running operational workflows."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
@@ -29,7 +29,7 @@ verificationStatus: validated
 verifiedAt: "2026-04-11"
 retrievalSources:
   - "https://github.com/openai/codex"
-  - "https://spec.modelcontextprotocol.io/specification/"
+  - "https://modelcontextprotocol.io/specification/"
   - "https://www.rfc-editor.org/rfc/rfc5545"
 testedPlatforms:
   - Claude
@@ -42,6 +42,11 @@ prerequisites:
   - Automation goals and success metrics
   - Notification channel
   - Operational owner
+safetyNotes:
+  - "Designs and runs automation workflows that can execute commands and trigger external actions; review each automation's permissions and triggers before enabling it."
+privacyNotes:
+  - "Inputs can include source files, prompts, logs, account metadata, repository details, and operational context that may be sent to the configured AI model."
+  - "Redact secrets, customer data, private URLs, credentials, and proprietary implementation details before sharing prompts, reports, or generated artifacts."
 tags:
   - codex
   - automation
@@ -70,7 +75,7 @@ This capability pack is pinned to documentation verified on **2026-04-11**.
 ## Retrieval Sources
 
 - https://github.com/openai/codex
-- https://spec.modelcontextprotocol.io/specification/
+- https://modelcontextprotocol.io/specification/
 - https://www.rfc-editor.org/rfc/rfc5545
 
 ## Core Workflow

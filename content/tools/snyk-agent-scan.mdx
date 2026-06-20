@@ -1,0 +1,204 @@
+---
+title: Snyk Agent Scan
+slug: snyk-agent-scan
+category: tools
+description: >-
+  Security scanner from Snyk for discovering local AI agent components,
+  including MCP servers and Agent Skills, and checking them for prompt
+  injection, tool poisoning, tool shadowing, toxic flows, malware payloads,
+  credential handling, and hardcoded secrets.
+cardDescription: >-
+  Scan Claude, Cursor, Codex, Gemini, Windsurf, VS Code, and other local agent
+  configs for MCP and skill supply-chain risks.
+seoTitle: Snyk Agent Scan for MCP Servers, Agent Skills, Claude Code, and Codex
+seoDescription: >-
+  Use Snyk Agent Scan to discover and scan AI agents, MCP servers, and Agent
+  Skills across Claude Code, Codex, Cursor, Windsurf, Gemini CLI, VS Code, and
+  other clients for prompt injection, tool poisoning, secrets, and skill risks.
+author: Snyk
+authorProfileUrl: "https://github.com/snyk"
+dateAdded: "2026-06-18"
+websiteUrl: "https://github.com/snyk/agent-scan"
+repoUrl: "https://github.com/snyk/agent-scan"
+documentationUrl: "https://github.com/snyk/agent-scan/blob/main/README.md"
+packageUrl: "https://pypi.org/pypi/snyk-agent-scan/json"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+sourceUrls:
+  - "https://github.com/snyk/agent-scan"
+  - "https://github.com/snyk/agent-scan/blob/main/README.md"
+  - "https://github.com/snyk/agent-scan/blob/main/pyproject.toml"
+  - "https://github.com/snyk/agent-scan/blob/main/docs/issue-codes.md"
+  - "https://github.com/snyk/agent-scan/blob/main/TERMS.md"
+  - "https://pypi.org/pypi/snyk-agent-scan/json"
+installable: true
+installCommand: "uvx snyk-agent-scan@latest"
+usageSnippet: >-
+  Set `SNYK_TOKEN`, run `uvx snyk-agent-scan@latest`, review any prompt
+  injection, tool poisoning, toxic flow, skill, and secrets findings, and only
+  approve MCP server execution for trusted configs or sandboxed scans.
+copySnippet: |-
+  export SNYK_TOKEN=your-api-token-here
+  uvx snyk-agent-scan@latest
+
+  # Scan a specific MCP config
+  uvx snyk-agent-scan@latest ~/.vscode/mcp.json
+
+  # Scan a single Agent Skill
+  uvx snyk-agent-scan@latest ~/path/to/SKILL.md
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 or newer, through uv/uvx or another supported Python package execution path."
+  - "A Snyk account and `SNYK_TOKEN` environment variable for scan verification."
+  - "Permission to inspect the local user's AI agent configuration files, MCP server configs, and Agent Skill directories."
+  - "A sandbox, VM, container, or disposable environment when scanning untrusted MCP configs."
+safetyNotes:
+  - "Scanning MCP configuration files can execute the commands declared for stdio MCP servers so Agent Scan can retrieve tool descriptions."
+  - "Interactive scans ask for consent before starting each stdio MCP server; review the command and arguments before approving."
+  - "Use `--dangerously-run-mcp-servers` only in trusted environments after verifying every MCP server command."
+  - "CLI output is marked experimental upstream, so avoid building brittle production parsers around issue codes or output fields without Snyk guidance."
+  - "Sandbox untrusted third-party MCP configs, skills, plugins, or agent workspaces before scanning."
+privacyNotes:
+  - "Agent Scan can discover local agent configuration paths, MCP server names, commands, arguments, tool names, descriptions, prompts, resources, skill text, and local component inventories."
+  - "The README states skills, agent applications, tool names, and descriptions are shared with Snyk for validation."
+  - "Control-server bootstrap can send redacted CLI args, OS and Python details, hostname, username, shell, locale, timezone, working directory, home directory, executable path, and readable home-directory metadata when enabled."
+  - "Review Snyk Agent Scan terms, enterprise deployment guidance, and organization policy before scanning customer data, proprietary skills, or sensitive agent configurations."
+tags:
+  - snyk
+  - security
+  - mcp
+  - skills
+  - agents
+  - prompt-injection
+  - supply-chain
+  - scanner
+keywords:
+  - Snyk Agent Scan
+  - agent security scanner
+  - MCP server security scanner
+  - Agent Skills scanner
+  - prompt injection scanner
+  - tool poisoning scanner
+  - Claude Code security scan
+  - Codex MCP security scan
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Snyk Agent Scan is a security scanner for local AI agent components. It
+discovers installed agent harnesses, MCP servers, and Agent Skills, then scans
+them for risks such as prompt injection, tool poisoning, tool shadowing, toxic
+flows, malware payloads, untrusted content, credential handling, and hardcoded
+secrets.
+
+Use it when you need an inventory and security review of local agent supply
+chain components before trusting an MCP server, skill bundle, plugin, or agent
+configuration.
+
+## Source Review
+
+This listing is grounded in:
+
+- https://github.com/snyk/agent-scan
+- https://github.com/snyk/agent-scan/blob/main/README.md
+- https://github.com/snyk/agent-scan/blob/main/pyproject.toml
+- https://github.com/snyk/agent-scan/blob/main/docs/issue-codes.md
+- https://github.com/snyk/agent-scan/blob/main/TERMS.md
+- https://pypi.org/pypi/snyk-agent-scan/json
+
+The PyPI package is published as `snyk-agent-scan`, exposes the
+`snyk-agent-scan` command, requires Python 3.10 or newer, and reports
+Apache-2.0 license metadata.
+
+## Install
+
+Set a Snyk token:
+
+```bash
+export SNYK_TOKEN=your-api-token-here
+```
+
+Run a full local discovery scan:
+
+```bash
+uvx snyk-agent-scan@latest
+```
+
+Scan a specific MCP config or skill:
+
+```bash
+uvx snyk-agent-scan@latest ~/.vscode/mcp.json
+uvx snyk-agent-scan@latest ~/path/to/my/SKILL.md
+uvx snyk-agent-scan@latest ~/.claude/skills
+```
+
+## Coverage
+
+The README lists discovery support across common local agent environments,
+including Claude Code, Claude Desktop, Cursor, Windsurf, VS Code, Gemini CLI,
+OpenClaw, Amp, Kiro, Antigravity, Codex, and Amazon Q, with OS and scope
+coverage varying by client.
+
+Agent Scan can inspect both MCP servers and skills depending on the agent and
+configuration scope:
+
+- System, user, project/workspace, extension, and plugin locations.
+- MCP server configs and tool descriptions.
+- Agent Skills directories and `SKILL.md` files.
+- Local agent harness configuration files.
+
+## Findings
+
+The README and issue-code docs describe checks for risks such as:
+
+| Area | Examples |
+| --- | --- |
+| MCP server risks | Prompt injection, tool poisoning, tool shadowing, toxic flows |
+| Skill risks | Prompt injection, malware payloads, untrusted content |
+| Credential risks | Credential handling and hardcoded secrets |
+| Supply-chain risks | Unexpected tool descriptions, suspicious natural-language payloads, risky component inventory |
+
+## Operating Guidance
+
+- Run scans from a sandbox when reviewing unknown MCP configs or third-party
+  skill bundles.
+- Decline MCP server execution prompts unless the command and arguments are
+  expected.
+- Avoid `--dangerously-run-mcp-servers` outside controlled CI or trusted local
+  environments.
+- Use `--no-skills` when you want MCP-only scanning.
+- Treat JSON or rich CLI output as experimental unless Snyk documents a stable
+  contract for your use case.
+- Review the README's bootstrap and control-server notes before enterprise
+  deployment or background scanning.
+
+## Best Use Cases
+
+- Inventory local Claude Code, Codex, Cursor, Windsurf, Gemini, and VS Code
+  agent components before a security review.
+- Scan a newly installed MCP server before adding it to a developer workstation.
+- Review third-party Agent Skills for prompt injection, suspicious instructions,
+  and credential handling.
+- Add a sandboxed preflight check to an internal agent marketplace or plugin
+  intake process.
+- Give security teams a starting report for MCP and skill supply-chain risk.
+
+## Duplicate Review
+
+Checked current `content/tools/`, `content/mcp/`, `content/skills/`,
+`content/agents/`, open pull requests, and repository-wide content for
+`snyk/agent-scan`, Snyk Agent Scan, `snyk-agent-scan`, Agent Scan, MCP server
+security scanner, Agent Skills scanner, and prompt injection scanner. Existing
+content includes the separate Snyk MCP Server entry, but no dedicated Snyk Agent
+Scan tools entry, exact source URL duplicate, target file, or open duplicate PR
+was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Snyk Agent Scan
+is maintained by Snyk and published under Apache-2.0 license metadata.

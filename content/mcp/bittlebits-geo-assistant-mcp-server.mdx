@@ -1,0 +1,188 @@
+---
+title: BittleBits GEO Assistant MCP Server for Claude
+slug: bittlebits-geo-assistant-mcp-server
+category: mcp
+description: >-
+  BittleBits hosted MCP server for Generative Engine Optimization with get_score
+  and get_rewrite tools to measure and improve AI search visibility via OAuth.
+cardDescription: >-
+  Connect Claude to BittleBits for GEO scoring and content rewrites that improve
+  visibility in AI-powered search engines.
+seoTitle: BittleBits GEO Assistant MCP Server for Claude
+seoDescription: >-
+  Use the BittleBits MCP server with Claude to score pages for Generative Engine
+  Optimization and generate AI-search-friendly rewrites via OAuth.
+author: BittleBits
+authorProfileUrl: "https://github.com/bittlebitsai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1478
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1478"
+repoUrl: "https://github.com/bittlebitsai/bittlebits-plugin"
+documentationUrl: "https://github.com/bittlebitsai/bittlebits-plugin"
+websiteUrl: "https://bittlebits.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http bittlebits https://bittlebits.ai/mcp
+usageSnippet: >-
+  Add https://bittlebits.ai/mcp as a custom connector and complete OAuth
+  sign-in to use get_score and get_rewrite GEO tools.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "bittlebits": {
+        "url": "https://bittlebits.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "bittlebits": {
+        "url": "https://bittlebits.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "BittleBits account with OAuth access to GEO scoring and rewrite features."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or another MCP client with remote HTTP connectors."
+  - "URLs or page content you are authorised to analyse and rewrite for GEO."
+  - "Basic understanding of Generative Engine Optimization goals and brand voice guidelines."
+safetyNotes:
+  - "get_rewrite may replace marketing copy; review output before publishing to production sites."
+  - "get_score fetches and analyses live page content from URLs you provide."
+  - "OAuth tokens grant persistent BittleBits access until revoked."
+  - "Automated rewrites can introduce factual errors; human review is recommended."
+privacyNotes:
+  - "Page URLs and content sent to get_score are processed by BittleBits for analysis."
+  - "Rewrite requests may include proprietary marketing text; avoid sending unreleased campaign copy to untrusted sessions."
+  - "OAuth sessions should not be shared across users or pasted into public support threads."
+tags:
+  - geo
+  - seo
+  - content-optimization
+  - remote-mcp
+  - oauth
+keywords:
+  - bittlebits mcp
+  - generative engine optimization
+  - geo score claude
+  - ai search visibility
+  - content rewrite mcp
+readingTime: 4
+difficultyScore: 30
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+BittleBits provides a hosted Model Context Protocol server focused on Generative Engine Optimization (GEO). After OAuth authorisation, Claude can score how well a page performs in AI-powered search engines and request rewrites tuned for generative retrieval.
+
+The plugin source is in [bittlebitsai/bittlebits-plugin](https://github.com/bittlebitsai/bittlebits-plugin). The MCP endpoint is `https://bittlebits.ai/mcp`.
+
+## Features
+
+- `get_score` evaluates GEO readiness for a URL or page content.
+- `get_rewrite` produces AI-search-optimised copy suggestions.
+- OAuth authentication through BittleBits.
+- Hosted remote HTTP transport at `bittlebits.ai/mcp`.
+- Designed for marketing and content teams improving LLM discoverability.
+
+## Use Cases
+
+- Score a landing page before a product launch campaign.
+- Rewrite FAQ sections to rank better in AI answer engines.
+- Compare GEO scores across competitor pages.
+- Iterate on blog intros for generative search citations.
+- Batch-review key URLs during a quarterly content audit.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://bittlebits.ai/mcp`.
+3. Complete OAuth sign-in with your BittleBits account.
+4. Enable the connector and run GEO tools in chat.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http bittlebits https://bittlebits.ai/mcp
+claude mcp list
+```
+
+Complete OAuth through your client's connector flow when prompted.
+
+### Other MCP clients
+
+Add a remote HTTP connector at `https://bittlebits.ai/mcp` and authorise via OAuth.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "bittlebits": {
+      "url": "https://bittlebits.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+OAuth is handled by the connector UI; no static API key is required in config.
+
+## Examples
+
+### Score a page
+
+```text
+Use BittleBits to get the GEO score for https://example.com/pricing and explain the weakest factors.
+```
+
+### Rewrite hero copy
+
+```text
+Rewrite the hero section of our docs homepage for better generative search visibility while keeping a professional tone.
+```
+
+### Compare pages
+
+```text
+Score our blog index and product page and recommend which to optimise first for AI search.
+```
+
+## Security
+
+- Review all rewrites for factual accuracy and brand compliance before publishing.
+- Only analyse URLs you own or have permission to test.
+- Revoke OAuth access when offboarding contractors with content access.
+
+## Troubleshooting
+
+### OAuth or 401 errors
+
+Re-authorise the connector in Claude settings and confirm your BittleBits subscription includes GEO tools.
+
+### Low or empty scores
+
+Ensure the URL is publicly reachable without authentication walls or bot blocking.
+
+### Rewrite quality issues
+
+Provide brand voice constraints in the prompt and iterate; GEO rewrites are starting points, not final copy.
+
+### Connector not listed
+
+Verify your Claude plan supports custom Connectors and that an org admin completed setup in Team environments.

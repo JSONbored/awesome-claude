@@ -240,6 +240,38 @@ evidence must exist, when expand-contract rollout is required, how reviewers
 classify lock and data-loss risk, and what privacy constraints apply to
 migration evidence.
 
+## GitLab Operation Rollout Reference
+
+The GitLab database migration guide classifies common schema operations by the rollout procedure they require. Use this when checking a PR's deploy-order claim.
+
+| Operation | Rollout per GitLab guide |
+| --- | --- |
+| Adding tables | Safe; no code uses the table yet |
+| Adding indexes | Use `add_concurrent_index` (non-blocking) |
+| Dropping columns | Three releases: ignore (M), drop (M+1), remove ignore rule (M+2) |
+| Renaming columns | `rename_column_concurrently` with `disable_ddl_transaction!` |
+| Removing foreign keys | Wrap `remove_foreign_key_if_exists` in `with_lock_retries` |
+
+The three-release column-drop pattern in the guide:
+
+```ruby
+# Release M: ignore the column
+class User < ApplicationRecord
+  ignore_column :updated_at, remove_with: '12.7', remove_after: '2019-12-22'
+end
+
+# Release M+1: drop the column
+class RemoveUsersUpdatedAtColumn < Gitlab::Database::Migration[2.1]
+  def up
+    remove_column :users, :updated_at
+  end
+
+  def down
+    add_column :users, :updated_at, :datetime
+  end
+end
+```
+
 ## Sources
 
 - GitLab Docs: Avoiding downtime in migrations - https://docs.gitlab.com/development/database/avoiding_downtime_in_migrations/

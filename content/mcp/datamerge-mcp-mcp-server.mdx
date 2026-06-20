@@ -1,0 +1,206 @@
+---
+title: DataMerge MCP MCP Server for Claude
+slug: datamerge-mcp-mcp-server
+category: mcp
+description: >-
+  DataMerge native MCP server for B2B company enrichment, corporate hierarchies,
+  contact search, and lookalike discovery across 375M+ companies via remote HTTP
+  or local @datamerge/mcp stdio.
+cardDescription: >-
+  Connect Claude to DataMerge to enrich domains, traverse corporate trees, search
+  contacts, and discover lookalikes through mcp.datamerge.ai.
+seoTitle: DataMerge MCP MCP Server for Claude
+seoDescription: >-
+  Use the DataMerge MCP server with Claude for company enrichment, hierarchy
+  lookup, contact search, and lookalike discovery via mcp.datamerge.ai or
+  @datamerge/mcp.
+author: DataMerge
+authorProfileUrl: "https://github.com/poolside-ventures"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1500
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1500"
+repoUrl: "https://github.com/poolside-ventures/datamerge-mcp"
+documentationUrl: "https://www.datamerge.ai/docs/mcp.md"
+websiteUrl: "https://www.datamerge.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http datamerge https://mcp.datamerge.ai
+usageSnippet: >-
+  Connect to https://mcp.datamerge.ai with Authorization Token headers, or run
+  npx -y @datamerge/mcp locally with DATAMERGE_API_KEY in the MCP environment.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "datamerge": {
+        "url": "https://mcp.datamerge.ai",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "datamerge": {
+        "url": "https://mcp.datamerge.ai",
+        "type": "http",
+        "headers": {
+          "Authorization": "Token YOUR_DATAMERGE_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "DataMerge API key from https://app.datamerge.ai with available credits."
+  - "Claude with remote HTTP connectors or stdio MCP support for @datamerge/mcp."
+  - "Understanding that enrichment and contact lookups consume credits per successful record."
+  - "Patience for async jobs; many tools use start-and-poll or start_and_wait patterns."
+safetyNotes:
+  - "Contact search and enrichment can return personal emails and phone numbers; handle under privacy policy."
+  - "List create/delete tools mutate saved DataMerge collections in your account."
+  - "API keys in Authorization headers are billable credentials; never commit them to git."
+  - "Verify enrichment results before using them in automated CRM updates."
+privacyNotes:
+  - "Domains, executive names, and LinkedIn URLs sent to tools are processed by DataMerge APIs."
+  - "Store DATAMERGE_API_KEY in MCP headers or env vars, not in chat or public issues."
+  - "Mobile phone enrichment costs more credits and reveals sensitive contact data."
+tags:
+  - b2b-data
+  - enrichment
+  - companies
+  - contacts
+  - remote-mcp
+keywords:
+  - datamerge mcp
+  - company enrichment claude
+  - corporate hierarchy mcp
+  - poolside ventures datamerge
+  - mcp.datamerge.ai
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+DataMerge provides a native Model Context Protocol server for company and contact intelligence. AI agents can enrich domains, poll async jobs, fetch corporate hierarchies, search decision-makers, and discover lookalike companies without bespoke integration code.
+
+Documentation is at [datamerge.ai/docs/mcp.md](https://www.datamerge.ai/docs/mcp.md). The remote endpoint is `https://mcp.datamerge.ai`; local stdio mode uses the [@datamerge/mcp](https://github.com/poolside-ventures/datamerge-mcp) npm package.
+
+## Features
+
+- Company enrichment with async job polling and wait helpers.
+- Corporate hierarchy traversal for parents, subsidiaries, and global ultimate owners.
+- Contact search and enrichment by title, location, LinkedIn URL, or name plus domain.
+- Lookalike company discovery from seed domains or companies.
+- Credits balance and health-check tools.
+- Saved list management for companies and contacts.
+
+## Use Cases
+
+- Enrich a target account list before a quarterly territory review.
+- Map Stripe's corporate hierarchy for vendor risk analysis.
+- Find CFO and CTO contacts at a mid-market SaaS company.
+- Build a lookalike list from five seed domains in the same ICP.
+- Check remaining credits before a large batch enrichment job.
+
+## Installation
+
+### Remote HTTP (Cursor, Claude, Windsurf)
+
+```json
+{
+  "mcpServers": {
+    "datamerge": {
+      "url": "https://mcp.datamerge.ai",
+      "headers": {
+        "Authorization": "Token your-api-key"
+      }
+    }
+  }
+}
+```
+
+### Local stdio
+
+```bash
+claude mcp add datamerge --env DATAMERGE_API_KEY=your-api-key -- npx -y @datamerge/mcp
+```
+
+### Claude Code remote shortcut
+
+```bash
+claude mcp add --transport http datamerge https://mcp.datamerge.ai
+```
+
+Add the `Authorization: Token` header in your client auth settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "datamerge": {
+      "url": "https://mcp.datamerge.ai",
+      "type": "http",
+      "headers": {
+        "Authorization": "Token YOUR_DATAMERGE_API_KEY"
+      }
+    }
+  }
+}
+```
+
+You can also call `configure_datamerge` per session if the key is not preset.
+
+## Examples
+
+### Enrich a domain
+
+```text
+Enrich stripe.com and return legal entity, country, and employee count.
+```
+
+### Hierarchy lookup
+
+```text
+Show the full corporate hierarchy for Shopify including subsidiaries.
+```
+
+### Contact search
+
+```text
+Find the CEO and CTO at shopify.com and return verified email addresses if available.
+```
+
+## Security
+
+- Failed lookups typically cost zero credits, but successful enrichment still exposes sensitive business data.
+- Restrict API keys to users who may export contact information.
+- Rotate keys if they appear in MCP debug logs.
+
+## Troubleshooting
+
+### 401 or configure_datamerge prompts
+
+Set `DATAMERGE_API_KEY` or pass the key through `configure_datamerge`.
+
+### Jobs stuck in pending
+
+Poll with `get_company_enrichment_result` or use `start_company_enrichment_and_wait` for simpler flows.
+
+### Missing hierarchy nodes
+
+Some private or regional entities may be absent from vendor coverage; verify with a second source.
+
+### Windsurf config shape
+
+Windsurf uses `serverUrl` instead of `url`; see DataMerge docs for client-specific JSON.

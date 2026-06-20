@@ -58,19 +58,15 @@ tags:
   - jest
   - components
   - automation
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - automation
-  - claude
-  - component
-  - components
-  - development
-  - generator
-  - hooks
-  - jest
-  - react
-  - test
-  - testing
-  - tools
+  - react component test generator hook
+  - claude code react component test generator hook
+  - react component test generator claude hook
+  - claude react component test generator automation
 readingTime: 4
 difficultyScore: 0
 hasTroubleshooting: true

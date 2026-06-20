@@ -1,0 +1,241 @@
+---
+title: AccInt MCP Server for Claude
+slug: accint-mcp-server
+category: mcp
+description: >-
+  Local-first AccInt MCP server that gives Claude a scored Work Model through
+  `acc_retrieve` and `acc_act`, so agent work can compound from real outcomes
+  while the `acc.db` substrate stays on the user's machine.
+cardDescription: >-
+  Connect Claude to AccInt's local Work Model MCP server for scored retrieval,
+  recursive action, bounded local execution, and reality-credited outcomes.
+seoTitle: AccInt MCP Server for Claude
+seoDescription: >-
+  Install AccInt as a local MCP server for Claude to use `acc_retrieve` and
+  `acc_act` with a local Work Model, official MCP Registry MCPB packages, and
+  privacy-preserving `acc.db` storage on your machine.
+author: Max Baluev
+authorProfileUrl: "https://github.com/maxbaluev"
+submittedBy: maxbaluev
+submittedByUrl: "https://github.com/maxbaluev"
+dateAdded: "2026-06-18"
+brandName: AccInt
+brandDomain: accint.xyz
+repoUrl: "https://github.com/maxbaluev/accreted-intelligence"
+documentationUrl: "https://github.com/maxbaluev/accreted-intelligence#readme"
+websiteUrl: "https://accint.xyz"
+installable: true
+installCommand: >-
+  claude mcp add accint -- acc --db /absolute/path/to/acc.db mcp
+usageSnippet: >-
+  Install AccInt from the Official MCP Registry entry `io.github.maxbaluev/accint`
+  or from the repository install guide, then let Claude call `acc_retrieve` for
+  scored Work Model context and `acc_act` for solve, continue, exec, register,
+  browser, and outcome actions.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "accint": {
+        "command": "acc",
+        "args": ["--db", "/absolute/path/to/acc.db", "mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "accint": {
+        "command": "acc",
+        "args": ["--db", "/absolute/path/to/acc.db", "mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "Claude Code or another MCP client that can launch a local stdio server."
+  - "macOS, Linux, or Windows with permission to install the AccInt release binary."
+  - "Local disk space for `acc.db` plus the first-run embedding model download, which can be several GB."
+  - "Use the Official MCP Registry entry `io.github.maxbaluev/accint` when your client supports MCPB packages."
+safetyNotes:
+  - "The MCP server launches the local `acc` binary; review the release binary, EULA, and installer before running it on sensitive machines."
+  - "`acc_act` can run bounded local work through runtimes such as `exec`, `browser`, and registered reusable actions, so host permissions and approvals matter."
+  - "External actions such as publishing, sending, deploying, deleting important data, or using credentials are designed to require owner authority before leaving the machine."
+  - "The installer probes hardware, downloads and verifies the matching release binary, and may download a large embedding model on first run."
+  - "The public repository contains Apache-2.0 installer, docs, plugins, and registry glue; the core engine binary is proprietary under the AccInt EULA."
+privacyNotes:
+  - "The Work Model substrate is a local SQLite file (`acc.db`) owned by the user; the MCPB bundle does not include that database."
+  - "Retrieval, scoring, prediction, and the local sandbox run on the user's machine rather than in a cloud memory service."
+  - "The public installer enables opt-out anonymous telemetry for event names and source refs only; it does not send prompts, files, memory, or Work Model data."
+  - "Use `ACC_NO_TELEMETRY=1` during install or `acc telemetry off` later if anonymous installer/runtime telemetry is not acceptable."
+  - "Receipts, commitments, and learned outcomes are written into the local substrate, so choose the database path and file permissions deliberately."
+disclosure: >-
+  Source-backed public installer, host adapters, docs, plugins, and registry
+  metadata are Apache-2.0. The AccInt engine source is private, and the
+  prebuilt binary ships under the AccInt EULA.
+sourceUrls:
+  - "https://github.com/maxbaluev/accreted-intelligence"
+  - "https://github.com/maxbaluev/accreted-intelligence/blob/main/README.md"
+  - "https://github.com/maxbaluev/accreted-intelligence/blob/main/docs/install/README.md"
+  - "https://github.com/maxbaluev/accreted-intelligence/blob/main/docs/registry/mcp-registry.md"
+  - "https://registry.modelcontextprotocol.io/v0.1/servers/io.github.maxbaluev%2Faccint/versions/latest"
+  - "https://accint.xyz"
+tags:
+  - mcp
+  - local-first
+  - agent-memory
+  - work-model
+  - automation
+keywords:
+  - AccInt MCP
+  - Accreted Intelligence
+  - local Work Model
+  - acc_retrieve
+  - acc_act
+  - outcome credited memory
+  - MCPB
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+AccInt is a local Work Model MCP server for Claude and other coding agents. It
+exposes two MCP tools: `acc_retrieve`, which reads the scored substrate by
+late-interaction retrieval, and `acc_act`, which records commitments, solves
+sub-goals, runs bounded local work, registers reusable runtimes, and closes
+outcomes after reality answers.
+
+Use AccInt when you want agent work to compound across projects without sending
+the Work Model to a cloud memory service. The substrate is a local SQLite file
+(`acc.db`), and the same file can be shared across Claude Code, Codex, OpenCode,
+and Cursor host wiring.
+
+## Source Review
+
+- https://github.com/maxbaluev/accreted-intelligence
+- https://github.com/maxbaluev/accreted-intelligence/blob/main/README.md
+- https://github.com/maxbaluev/accreted-intelligence/blob/main/docs/install/README.md
+- https://github.com/maxbaluev/accreted-intelligence/blob/main/docs/registry/mcp-registry.md
+- https://registry.modelcontextprotocol.io/v0.1/servers/io.github.maxbaluev%2Faccint/versions/latest
+- https://accint.xyz
+
+These sources were reviewed on **2026-06-18**. Prefer the repository README,
+install guide, official MCP Registry entry, and live site for current install
+paths and platform support.
+
+## Features
+
+- Two MCP tools: `acc_retrieve` for scored Work Model retrieval and `acc_act`
+  for actions such as `solve`, `continue`, `outcome`, `exec`, `register`, and
+  browser or registered runtimes.
+- Local-first storage through a user-owned `acc.db` SQLite substrate.
+- Official MCP Registry identity `io.github.maxbaluev/accint` with MCPB
+  packages for supported macOS, Linux, and Windows targets.
+- Host wiring for Claude Code, Codex, OpenCode, and Cursor through
+  `acc hosts-sync`.
+- Outcome-credit workflow where passing tests, owner approval, delivered
+  actions, or other grounded results can strengthen future retrieval and action
+  choices.
+- Public Apache-2.0 installer/docs/plugins/registry glue with a proprietary
+  local engine binary under the AccInt EULA.
+
+## Installation
+
+Install AccInt from the Official MCP Registry entry `io.github.maxbaluev/accint`
+when your client supports MCPB packages. For broader self-serve setup, follow
+the repository install guide and review the installer before running it.
+
+If AccInt is already installed locally, add the stdio server to Claude Code:
+
+```bash
+claude mcp add accint -- acc --db /absolute/path/to/acc.db mcp
+```
+
+To wire all detected local agent hosts after installation:
+
+```bash
+acc hosts-sync
+acc status
+```
+
+MCPB-aware clients can install the official MCP Registry entry
+`io.github.maxbaluev/accint` instead of running the broad self-serve installer.
+The registry path ships the local `acc` binary, not a prebuilt `acc.db`.
+
+## Configuration
+
+If you wire the MCP server manually, point your client at the local `acc`
+binary and choose a database path:
+
+```json
+{
+  "mcpServers": {
+    "accint": {
+      "command": "acc",
+      "args": ["--db", "/absolute/path/to/acc.db", "mcp"]
+    }
+  }
+}
+```
+
+The same `acc.db` path can be reused across compatible host agents when you
+want one Work Model to accumulate lessons from multiple tools.
+
+## Use Cases
+
+- Let Claude retrieve project- or business-specific context that has been
+  strengthened by real outcomes rather than raw recall alone.
+- Record a commitment before agent work starts and close it when a test passes,
+  a browser flow completes, or the owner confirms the result.
+- Reuse routines that have already worked, such as scripts, browser flows, or
+  MCP runtimes, instead of re-reasoning through the same task every session.
+- Share one local Work Model between Claude Code and other coding-agent hosts.
+- Keep operational learning on a machine you control while still allowing
+  explicit, approved external actions.
+
+## Safety and Privacy
+
+AccInt runs as a local binary with real host permissions, so install it only on
+machines where that trust boundary is acceptable. Review the installer, release
+binary, EULA, and MCP client permissions before connecting it to sensitive
+workspaces. `acc_act` can invoke local execution, browser, and registered
+runtime paths; external actions are designed to require owner authority before
+publishing, sending, deploying, deleting important data, or using credentials.
+
+The Work Model stays in a local SQLite file chosen by the user. The MCPB bundle
+does not ship a database, and retrieval, scoring, prediction, and sandboxed work
+run locally. The public installer enables opt-out anonymous telemetry limited
+to event names and source refs; it excludes prompts, files, memory, and Work
+Model data. Disable it with `ACC_NO_TELEMETRY=1` during install or
+`acc telemetry off` later.
+
+## Troubleshooting
+
+### Claude cannot find the tools
+
+Run `acc hosts-sync`, restart Claude Code, then check that the configured MCP
+server points at the installed `acc` binary and a writable `acc.db` path.
+
+### First run takes a long time
+
+The installer may download the embedding model on first use, which can be
+several GB. Let the installer finish, then run `acc status` or `acc doctor` for
+health output.
+
+### You need a marketplace install
+
+Use the Official MCP Registry entry `io.github.maxbaluev/accint` when your
+client supports MCPB packages. The installer remains the broader path when you
+want host auto-wiring across local agent tools.
+
+### Telemetry is not acceptable
+
+Set `ACC_NO_TELEMETRY=1` before running the installer, or run
+`acc telemetry off` after installation.
+
+## Duplicate Check
+
+No `AccInt`, `Accreted Intelligence`, `accreted-intelligence`, `maxbaluev`, or
+matching AccInt source URL entry was found in `content/mcp` or the repository
+content before this submission.

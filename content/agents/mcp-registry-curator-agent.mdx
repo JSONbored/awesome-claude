@@ -1,0 +1,131 @@
+---
+title: MCP Registry Curator Agent
+slug: mcp-registry-curator-agent
+category: agents
+description: >-
+  Community reusable agent prompt for curating MCP Registry entries for team marketplaces
+  using official registry quickstart documentation: publish workflows, namespace ownership,
+  version bumps, deprecations, and aggregator sync hygiene.
+cardDescription: Curate MCP Registry entries using official registry quickstart publish workflows.
+seoTitle: MCP Registry Curator Agent
+seoDescription: >-
+  Reusable agent prompt for MCP Registry curation grounded in official quickstart documentation:
+  publishing, namespaces, versioning, deprecations, and aggregator sync hygiene.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1555
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1555"
+documentationUrl: "https://modelcontextprotocol.io/registry/quickstart"
+repoUrl: "https://github.com/modelcontextprotocol/registry"
+installable: false
+usageSnippet: >-
+  Use this agent to curate org MCP Registry listings: publish updates, deprecate stale servers,
+  verify namespace ownership, and sync metadata with downstream aggregators per quickstart docs.
+prerequisites:
+  - Verified namespace ownership for servers your organization publishes.
+  - Access to server.json metadata and package release pipelines for each MCP server.
+  - Downstream marketplace or allowlist that consumes registry API exports.
+  - Policy for deprecating servers and communicating breaking version bumps.
+safetyNotes:
+  - Publishing incorrect package pointers can redirect users to malicious artifacts—verify npm/PyPI/Docker coordinates.
+  - Deprecation without communication breaks enterprise allowlists—coordinate with platform teams.
+  - Registry curation does not replace security scanning of server code in package registries.
+  - Private servers are out of registry scope per official documentation.
+privacyNotes:
+  - server.json metadata may expose internal repo URLs or staging endpoints—redact public listings.
+  - Aggregator sync logs can reveal unpublished server names—restrict access.
+  - OAuth publisher credentials for registry authentication must stay in secret stores.
+tags:
+  - mcp
+  - registry
+  - curation
+  - publishing
+  - marketplace
+keywords:
+  - mcp registry curator agent
+  - publish mcp server registry quickstart
+  - registry namespace curation
+  - mcp marketplace metadata sync
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Registry Curator Agent is a community-authored reusable prompt for ongoing curation of
+MCP Registry listings. It applies official registry quickstart publish workflows—not an
+official MCP Registry staff role.
+
+## Scope Note
+
+This prompt operationalizes documented publish, version, and namespace steps from the MCP
+Registry quickstart. Runtime security of server code remains with package registries and
+your security team.
+
+## Agent Prompt
+
+You are an MCP Registry curator. Maintain accurate registry listings for your organization
+using official quickstart documentation.
+
+Workflow:
+
+1. **Catalog inventory.** List published server names, versions, and downstream consumers.
+2. **Namespace audit.** Confirm reverse-DNS namespaces still match verified GitHub or DNS ownership.
+3. **Publish hygiene.** Verify server.json package pointers and execution instructions before each release.
+4. **Version bumps.** Follow documented versioning guidance when shipping breaking changes.
+5. **Deprecations.** Mark stale servers deprecated and notify marketplace or allowlist owners.
+6. **Aggregator sync.** Schedule registry API pulls expected by downstream aggregators.
+7. **Report.** Produce curation summary with required publisher fixes.
+
+Output contract:
+
+- Registry catalog with version and owner matrix.
+- Deprecation and migration recommendations.
+- Publish blockers ranked by severity.
+- Aggregator sync status notes.
+
+## Features
+
+- Applies registry quickstart publish steps to curation runbooks.
+- Tracks namespace ownership and version lifecycle.
+- Coordinates deprecations with enterprise allowlists.
+- Supports marketplace teams consuming registry API exports.
+
+## Use Cases
+
+- Platform team maintaining org-published MCP servers.
+- Quarterly audit of registry listings before marketplace refresh.
+- Communicate breaking server.json changes to internal clients.
+- Onboard new publishers with quickstart-aligned checklists.
+
+## Source Notes
+
+Verified against MCP Registry quickstart documentation on **2026-06-16**:
+
+- Quickstart docs describe steps to publish an MCP server to the official registry including
+  authentication, server.json preparation, and submission workflow.
+- Documentation covers namespace verification requirements before publishers can claim reverse-DNS names.
+- Versioning and update guidance explains how publishers ship new metadata versions without breaking downstream aggregators unexpectedly.
+
+## Duplicate Check
+
+Checked content/agents and content/skills for registry publishing coverage.
+mcp-registry-publishing-capability-pack is a skills checklist for authors.
+No agents entry applies registry quickstart publish workflows to ongoing curation and
+deprecation management with aggregator sync responsibilities.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public MCP Registry
+quickstart documentation and the public modelcontextprotocol/registry repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- MCP Registry quickstart - https://modelcontextprotocol.io/registry/quickstart
+- MCP Registry about - https://modelcontextprotocol.io/registry/about
+- MCP Registry repository - https://github.com/modelcontextprotocol/registry

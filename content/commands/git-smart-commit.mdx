@@ -17,6 +17,10 @@ documentationUrl: "https://www.conventionalcommits.org/"
 installable: true
 usageSnippet: /git-smart-commit feat "add structured content schema"
 copySnippet: /git-smart-commit feat "add structured content schema"
+privacyNotes:
+  - "Reads your staged changes, diffs, and branch and repository metadata to draft a commit message; that content is sent to the model as part of the request and is not written or transmitted anywhere else."
+safetyNotes:
+  - "Creates git commits in your repository from the staged changes; review the generated commit before pushing."
 tags:
   - git
   - commit
@@ -40,7 +44,7 @@ allowedTools:
   - "Bash(git diff:*)"
   - "Bash(git commit:*)"
 argumentHint: "[type] [message]"
-model: claude-3-5-sonnet-20241022
+model: sonnet
 difficultyScore: 24
 hasTroubleshooting: true
 hasPrerequisites: false
@@ -108,7 +112,7 @@ allowed-tools:
   - Bash(git commit:*)
 argument-hint: [type] [message]
 description: Create a smart git commit
-model: claude-3-5-sonnet-20241022
+model: sonnet
 ```
 
 ## Steps

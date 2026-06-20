@@ -3,18 +3,17 @@ title: Agent View Fleet Operator Agent
 slug: agent-view-fleet-operator-agent
 category: agents
 description: >-
-  Source-backed agent that operates a fleet of Claude Code background sessions
-  through agent view, triaging which sessions need input, which are working, and
-  which are done, and deciding what to dispatch, answer, or stop, grounded in the
-  official Claude Code agent view docs.
+  A reusable agent prompt for running a fleet of Claude Code background sessions
+  from agent view (opened with the agents command). It triages which sessions
+  need input, which are still working, and which have finished, then decides
+  what to dispatch next, which to answer, and which to stop.
 cardDescription: >-
-  Operate a fleet of Claude Code background sessions via agent view: triage needs-
-  input, working, and completed, and dispatch or stop.
-seoTitle: Agent View Fleet Operator Agent for Claude Code
+  Keep many background Claude Code sessions productive: spot the ones blocked on
+  a question, queue new work, and retire finished runs.
+seoTitle: "Agent View Fleet Operator for Claude Code Sessions"
 seoDescription: >-
-  Reusable agent prompt that operates a fleet of Claude Code background sessions
-  through agent view, triaging needs-input, working, and completed sessions and
-  deciding what to dispatch, answer, or stop, grounded in official docs.
+  Manage parallel Claude Code agents from the agents command: see each session's
+  status at a glance, unblock those waiting on input, and assign the next tasks.
 author: JPette1783
 authorProfileUrl: "https://github.com/JPette1783"
 submittedBy: JPette1783
@@ -22,8 +21,12 @@ submittedByUrl: "https://github.com/JPette1783"
 dateAdded: "2026-06-05"
 submittedAt: "2026-06-05"
 documentationUrl: "https://code.claude.com/docs/en/agent-view"
+retrievalSources:
+  - "https://code.claude.com/docs/en/agent-view"
+  - "https://code.claude.com/docs/en/worktrees"
+  - "https://code.claude.com/docs/en/features-overview"
 installable: false
-usageSnippet: "Use this agent to operate a fleet of Claude Code background sessions through agent view: triage which need input, which are working, and which are done, and decide what to dispatch, answer, or stop."
+usageSnippet: "Open agent view with the agents command and let this prompt keep your parallel background sessions moving."
 prerequisites:
   - "Claude Code with agent view available (opened with the agents command) and one or more background sessions."
   - "A queue of tasks suitable for background dispatch."

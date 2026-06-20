@@ -4,7 +4,7 @@ slug: codex-plugin-creator-capability-pack
 category: skills
 description: "Expert Codex plugin capability pack for safe plugin scaffolding, manifest quality, MCP integration, and maintainable distribution."
 cardDescription: "Design and ship Codex plugins with clean manifests, bounded permissions, and reusable packaging standards."
-seoTitle: Codex Plugin Creator Capability Pack Skill
+seoTitle: "Codex Plugin Creator Skill — Scaffolding & MCP"
 seoDescription: "Advanced AI skill for Codex plugin architecture, secure manifest authoring, and plugin lifecycle operations."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
@@ -30,7 +30,7 @@ verifiedAt: "2026-04-11"
 retrievalSources:
   - "https://github.com/openai/codex"
   - "https://github.com/modelcontextprotocol"
-  - "https://spec.modelcontextprotocol.io/specification/"
+  - "https://modelcontextprotocol.io/specification/"
 testedPlatforms:
   - Claude
   - Codex
@@ -42,6 +42,11 @@ prerequisites:
   - Plugin use case and scope
   - Manifest and MCP requirements
   - Deployment target constraints
+safetyNotes:
+  - "Scaffolds and validates plugin manifests and may run plugin or build commands; review generated manifests and scripts before installing or executing them."
+privacyNotes:
+  - "Inputs can include source files, prompts, logs, account metadata, repository details, and operational context that may be sent to the configured AI model."
+  - "Redact secrets, customer data, private URLs, credentials, and proprietary implementation details before sharing prompts, reports, or generated artifacts."
 tags:
   - codex
   - plugins
@@ -71,7 +76,7 @@ This capability pack is pinned to documentation verified on **2026-04-11**.
 
 - https://github.com/openai/codex
 - https://github.com/modelcontextprotocol
-- https://spec.modelcontextprotocol.io/specification/
+- https://modelcontextprotocol.io/specification/
 
 ## Core Workflow
 

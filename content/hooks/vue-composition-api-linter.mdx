@@ -11,6 +11,10 @@ seoDescription: >-
   i...
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
+documentationUrl: "https://eslint.vuejs.org/"
+retrievalSources:
+  - "https://eslint.vuejs.org/"
+  - "https://code.claude.com/docs/en/hooks"
 dateAdded: "2025-09-19"
 installable: true
 installCommand: >-
@@ -52,19 +56,15 @@ tags:
   - composition-api
   - linting
   - best-practices
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - api
-  - best-practices
-  - claude
-  - composition
-  - composition-api
-  - development
-  - hooks
-  - linter
-  - linting
-  - tools
-  - vue
-  - vue3
+  - vue composition api linter hook
+  - claude code vue composition api linter hook
+  - vue composition api linter claude hook
+  - claude vue composition api linter automation
 readingTime: 5
 difficultyScore: 0
 hasTroubleshooting: true
