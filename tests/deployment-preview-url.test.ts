@@ -241,18 +241,26 @@ describe("PR preview artifact validation flow", () => {
     );
   });
 
-  it("keeps the first-party Umami proxy wired in production config", () => {
+  it("does not enable the first-party Umami script proxy in production config", () => {
     const wranglerConfig = fs.readFileSync(
       path.join(repoRoot, "apps/web/wrangler.jsonc"),
       "utf8",
     );
 
-    expect(wranglerConfig).toContain('"VITE_UMAMI_SCRIPT_URL": "/u/script.js"');
+    expect(wranglerConfig).not.toContain(
+      '"VITE_UMAMI_SCRIPT_URL": "/u/script.js"',
+    );
     expect(wranglerConfig).toContain(
       '"VITE_UMAMI_WEBSITE_ID": "b734c138-2949-4527-9160-7fe5d0e81121"',
     );
     expect(wranglerConfig).toContain(
+      '"VITE_UMAMI_ALLOWED_HOSTS": "heyclau.de,www.heyclau.de"',
+    );
+    expect(wranglerConfig).toContain(
       '"UMAMI_UPSTREAM_URL": "https://tasty.aethereal.dev"',
+    );
+    expect(wranglerConfig).toContain(
+      '"UMAMI_ALLOWED_UPSTREAM_ORIGINS": "https://tasty.aethereal.dev"',
     );
     expect(wranglerConfig).toContain(
       '"UMAMI_WEBSITE_ID": "b734c138-2949-4527-9160-7fe5d0e81121"',

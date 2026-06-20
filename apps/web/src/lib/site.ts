@@ -37,6 +37,15 @@ function publicHttpUrl(value: string) {
   }
 }
 
+function publicCsvEnv(name: string, fallback: readonly string[] = []) {
+  const value = publicEnv(name);
+  if (!value) return [...fallback];
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 export const siteConfig = {
   name: "HeyClaude",
   shortName: "heyclaude",
@@ -47,11 +56,10 @@ export const siteConfig = {
   jobsEmail: "jobs@heyclau.de",
   twitterUrl: publicEnv("NEXT_PUBLIC_TWITTER_URL") || "https://x.com/jsonbored",
   discordUrl: publicEnv("NEXT_PUBLIC_DISCORD_URL") || "https://discord.com/invite/Ax3Py4YDrq",
-  // Analytics is opt-in: set VITE_UMAMI_SCRIPT_URL (for example /u/script.js)
-  // after configuring and reviewing the corresponding script source. Keeping the
-  // default empty avoids sitewide execution of JavaScript from an external origin.
-  umamiScriptUrl: publicEnv("VITE_UMAMI_SCRIPT_URL"),
+  // Browser analytics uses our first-party React tracker and posts to /u/api/send.
+  // We intentionally do not proxy or execute the upstream Umami tracker script.
   umamiWebsiteId: publicEnv("VITE_UMAMI_WEBSITE_ID") || "b734c138-2949-4527-9160-7fe5d0e81121",
+  umamiAllowedHosts: publicCsvEnv("VITE_UMAMI_ALLOWED_HOSTS", ["heyclau.de", "www.heyclau.de"]),
   // Empty string intentionally disables the private gate and shows manual PR instructions.
   submissionGateUrl: publicHttpUrl(
     publicEnv("VITE_SUBMISSION_GATE_URL") || publicEnv("NEXT_PUBLIC_SUBMISSION_GATE_URL"),

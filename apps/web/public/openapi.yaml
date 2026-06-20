@@ -53,6 +53,107 @@ components:
           items:
             type: string
           maxItems: 6
+    RegistryFeedResponse:
+      type: object
+      properties:
+        schemaVersion:
+          type: number
+        kind:
+          type: string
+          enum:
+            - registry-feed
+        generatedAt:
+          type: string
+        site:
+          type: object
+          properties:
+            name:
+              type: string
+            url:
+              type: string
+              format: uri
+            description:
+              type: string
+          required:
+            - name
+            - url
+            - description
+        qualityMethodology:
+          type: string
+        categoryFeeds:
+          type: object
+          additionalProperties:
+            type: string
+        platformFeeds:
+          type: object
+          additionalProperties:
+            type: string
+        jobs:
+          type: string
+        endpoints:
+          type: object
+          properties:
+            jobs:
+              type: string
+            qualityMethodology:
+              type: string
+            categoryFeed:
+              type: string
+            platformFeed:
+              type: string
+          required:
+            - jobs
+            - qualityMethodology
+            - categoryFeed
+            - platformFeed
+          additionalProperties:
+            type: string
+        contracts:
+          type: object
+          additionalProperties:
+            type: string
+        artifacts:
+          type: object
+          additionalProperties: {}
+        artifactContracts:
+          type: object
+          additionalProperties: {}
+        qualitySummary: {}
+        trustSummary: {}
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              category:
+                type: string
+              label:
+                type: string
+              count:
+                type: integer
+                minimum: 0
+              description:
+                type: string
+            required:
+              - category
+              - label
+              - count
+              - description
+          maxItems: 64
+      required:
+        - schemaVersion
+        - kind
+        - generatedAt
+        - site
+        - qualityMethodology
+        - categoryFeeds
+        - platformFeeds
+        - jobs
+        - endpoints
+        - contracts
+        - artifacts
+        - categories
+      additionalProperties: {}
     RegistrySearchResult:
       type: object
       properties:
@@ -1617,8 +1718,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: {}
+                $ref: "#/components/schemas/RegistryFeedResponse"
         "400":
           description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
           content:

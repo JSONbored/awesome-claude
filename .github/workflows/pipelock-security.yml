@@ -10,6 +10,12 @@ on:
 permissions:
   contents: read
 
+# Cancel a superseded scan when a new commit is pushed to the same PR — otherwise rapid re-pushes
+# during iteration leave stale full-repo scans running and burning runner minutes. (#cancel-stale)
+concurrency:
+  group: pipelock-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   pipelock-advisory-scan:
     name: pipelock-advisory-scan

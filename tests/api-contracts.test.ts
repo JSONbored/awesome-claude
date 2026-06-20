@@ -155,6 +155,12 @@ describe("OpenAPI route coverage", () => {
       categoryFeeds: { mcp: "/data/feeds/categories/mcp.json" },
       platformFeeds: { claude: "/data/feeds/platforms/claude.json" },
       jobs: "/api/jobs?limit=100",
+      endpoints: {
+        qualityMethodology: "/quality#methodology",
+        categoryFeed: "/data/feeds/categories/{category}.json",
+        platformFeed: "/data/feeds/platforms/{platform}.json",
+        jobs: "/api/jobs?limit=100",
+      },
     });
     expect(
       ENDPOINTS.find((endpoint) => endpoint.id === "jobs-detail"),
@@ -289,6 +295,43 @@ describe("OpenAPI route coverage", () => {
         "downloadTrust",
         "claimStatus",
         "sourceStatus",
+      ]),
+    );
+  });
+
+  it("documents registry feed compatibility aliases in the generated schema", () => {
+    const registryFeedResponse =
+      parsedSchema.paths["/api/registry/feed"]?.get?.responses?.["200"];
+    const responseSchema = (
+      registryFeedResponse?.content as
+        | Record<string, { schema?: { $ref?: string } }>
+        | undefined
+    )?.["application/json"]?.schema;
+    expect(responseSchema?.$ref).toBe(
+      "#/components/schemas/RegistryFeedResponse",
+    );
+
+    const component = parsedSchema.components?.schemas?.RegistryFeedResponse as
+      | { required?: string[]; properties?: Record<string, unknown> }
+      | undefined;
+    expect(component?.required).toEqual(
+      expect.arrayContaining([
+        "schemaVersion",
+        "kind",
+        "qualityMethodology",
+        "categoryFeeds",
+        "platformFeeds",
+        "jobs",
+        "endpoints",
+      ]),
+    );
+    expect(Object.keys(component?.properties ?? {})).toEqual(
+      expect.arrayContaining([
+        "qualityMethodology",
+        "categoryFeeds",
+        "platformFeeds",
+        "jobs",
+        "endpoints",
       ]),
     );
   });

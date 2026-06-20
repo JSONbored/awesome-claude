@@ -190,11 +190,14 @@ longer a Next.js app.
 - `VITE_SUBMISSION_GATE_URL` or `NEXT_PUBLIC_SUBMISSION_GATE_URL` set to the
   submission-gate Worker origin:
   `https://submission-gate.heyclau.de`.
-- `VITE_UMAMI_SCRIPT_URL` set to `/u/script.js`.
 - `VITE_UMAMI_WEBSITE_ID` and `UMAMI_WEBSITE_ID` set to the Umami website ID.
-- `UMAMI_UPSTREAM_URL` set to the Umami instance origin. The public web tracker
-  is served first-party through `/u/script.js`, and collector posts are proxied
-  through `/u/api/send`, so the site CSP can keep analytics traffic on `self`.
+- `VITE_UMAMI_ALLOWED_HOSTS` set to production hostnames that should emit
+  browser analytics, for example `heyclau.de,www.heyclau.de`.
+- `UMAMI_UPSTREAM_URL` set to the Umami instance origin and
+  `UMAMI_ALLOWED_UPSTREAM_ORIGINS` set to the allowed upstream origin. Browser
+  analytics is emitted by bundled first-party code and collector posts are
+  proxied through `/u/api/send`; the site does not proxy or execute the upstream
+  Umami tracker script as same-origin JavaScript.
 
 Content submission writes are routed through the private submission gate; the
 public website only runs preflight and hands the contributor to GitHub auth.

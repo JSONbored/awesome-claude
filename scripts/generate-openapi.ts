@@ -17,6 +17,7 @@ const require = createRequire(import.meta.url);
 const {
   apiErrorEnvelopeSchema,
   registryBrandAssetSchema,
+  registryFeedResponseSchema,
   registryTrendingResponseSchema,
   registrySearchResultSchema,
   listApiRouteDefinitions,
@@ -171,6 +172,7 @@ function buildOpenApiDocument() {
 
   registry.register("ErrorEnvelope", apiErrorEnvelopeSchema);
   registry.register("RegistryBrandAsset", registryBrandAssetSchema);
+  registry.register("RegistryFeedResponse", registryFeedResponseSchema);
   registry.register("RegistrySearchResult", registrySearchResultSchema);
   registry.register("RegistryTrendingResponse", registryTrendingResponseSchema);
   registry.register("RegistryTrustSignals", registryTrustSignalsSchema);
