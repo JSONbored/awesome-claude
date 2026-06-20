@@ -797,6 +797,12 @@ function normalizeSubmissionUrlForMatch(value) {
   url.protocol = url.protocol.toLowerCase();
   url.hostname = url.hostname.toLowerCase().replace(/^www\./, "");
   url.hash = "";
+  if (
+    (url.protocol === "https:" && url.port === "443") ||
+    (url.protocol === "http:" && url.port === "80")
+  ) {
+    url.port = "";
+  }
   const droppedKeys = [];
   for (const key of url.searchParams.keys()) {
     if (isTrackingQueryKey(key)) droppedKeys.push(key);

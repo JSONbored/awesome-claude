@@ -39,6 +39,16 @@ describe("searchDuplicateEntries source-URL matching", () => {
     expect(result.count).toBe(1);
   });
 
+  it("matches explicit default-port variants against canonical entry URLs", () => {
+    const result = searchDuplicateEntries([entry()], {
+      sourceUrl: "https://github.com:443/domdomegg/airtable-mcp-server",
+    });
+    expect(result.count).toBe(1);
+    expect(
+      (result.matches as Array<{ reasons: string[] }>)[0].reasons,
+    ).toContain("source_url");
+  });
+
   it("matches a variant with utm_* and other tracking query params", () => {
     const result = searchDuplicateEntries([entry()], {
       sourceUrl:

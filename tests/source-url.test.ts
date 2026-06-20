@@ -52,4 +52,13 @@ describe("source URL canonicalization", () => {
     );
     expect(canonicalizeSourceUrl("not a url")).toBe("not a url");
   });
+
+  it("treats explicit default ports as equivalent to implicit ports", () => {
+    expect(canonicalizeSourceUrl("https://example.com:443/docs")).toBe(
+      canonicalizeSourceUrl("https://example.com/docs"),
+    );
+    expect(canonicalizeSourceUrl("http://example.com:80/docs")).toBe(
+      canonicalizeSourceUrl("http://example.com/docs"),
+    );
+  });
 });
