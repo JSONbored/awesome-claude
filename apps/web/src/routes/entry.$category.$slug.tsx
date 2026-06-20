@@ -20,7 +20,7 @@ import {
   BadgeCheck,
   Globe2,
 } from "lucide-react";
-import { getEntry, related, relatedGroups } from "@/data/search";
+import { getEntry, related, relatedGroups, relatedGuides } from "@/data/search";
 import { getEntryRedirectTarget } from "@/lib/entry-redirects";
 import { BEST_LISTS } from "@/data/entries";
 import { COMPARISONS } from "@/data/comparisons";
@@ -239,6 +239,16 @@ function Dossier() {
     const pool = altGroup && altGroup.entries.length > 0 ? altGroup.entries : rel;
     return pool.slice(0, 3);
   }, [relGroups, rel]);
+  // Deterministic "how do I use this" next-step links — guides sharing a tag,
+  // minus any guide already shown in the related grid (no duplicate links).
+  const guides = useMemo(() => {
+    const shown = new Set(
+      (relGroups.length > 0 ? relGroups.flatMap((g) => g.entries) : rel).map(
+        (e) => `${e.category}/${e.slug}`,
+      ),
+    );
+    return relatedGuides(entry).filter((g) => !shown.has(`${g.category}/${g.slug}`));
+  }, [entry, relGroups, rel]);
   const entryRef = `${entry.category}/${entry.slug}`;
   const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
   const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
@@ -279,6 +289,7 @@ function Dossier() {
     items.push({ id: "badge", label: "Add a badge" });
     if (alternatives.length > 0) items.push({ id: "compare", label: "How it compares" });
     if (rel.length > 0) items.push({ id: "related", label: "Related" });
+    if (guides.length > 0) items.push({ id: "guides", label: "Related guides" });
     items.push({ id: "signals", label: "Signals" });
     return items;
   }, [
@@ -289,6 +300,7 @@ function Dossier() {
     hasSchema,
     alternatives.length,
     rel.length,
+    guides.length,
   ]);
 
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
@@ -705,6 +717,19 @@ function Dossier() {
                 >
                   More in {categoryLabels[entry.category] ?? entry.category} →
                 </Link>
+              </div>
+            </DossierSection>
+          )}
+
+          {guides.length > 0 && (
+            <DossierSection id="guides" title="Related guides">
+              <p className="mb-3 text-sm text-ink-muted">
+                Source-backed guides for putting this to work.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {guides.map((g) => (
+                  <ResourceCard key={`${g.category}/${g.slug}`} entry={g} variant="grid" />
+                ))}
               </div>
             </DossierSection>
           )}
