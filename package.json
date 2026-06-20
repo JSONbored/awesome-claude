@@ -59,6 +59,7 @@
     "audit:coverage-gaps": "node scripts/audit-coverage-gaps.mjs",
     "audit:seo-snippets": "node scripts/audit-seo-snippets.mjs",
     "audit:comparison-candidates": "tsx scripts/audit-comparison-candidates.ts",
+    "growth:dashboard": "node scripts/growth-dashboard.mjs",
     "report:thin-content": "node scripts/report-thin-content.mjs",
     "report:trust-coverage": "node scripts/report-trust-coverage.mjs",
     "validate:mcp-trust": "node scripts/report-trust-coverage.mjs --category mcp --check --min-risk-coverage 100 --min-attribution-coverage 100",
