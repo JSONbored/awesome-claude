@@ -12,6 +12,7 @@ import { buildEntryJsonLdSnapshot } from "./seo.js";
 import { buildSubmissionSpecs } from "./submission-spec.js";
 import { SAFE_CONTENT_SLUG_PATTERN } from "./content-schema.js";
 import { resolveMcpInstallConfig } from "./mcp-install-config.js";
+import { normalizePlatforms } from "./platforms.js";
 import {
   buildRegistryRelationGraph,
   relationLookupFromGraph,
@@ -455,7 +456,9 @@ function buildEntryPlatformNames(entry) {
     if (tokens.has(platform)) platforms.add(platform);
   }
 
-  return [...platforms];
+  // Canonicalize so the same platform is never split across a free-form skill
+  // compatibility label ("Codex") and a slug ("codex") in generated facets.
+  return normalizePlatforms([...platforms]);
 }
 
 function sourceUrlsForEntry(entry) {
