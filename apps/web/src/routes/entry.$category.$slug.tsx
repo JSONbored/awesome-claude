@@ -193,7 +193,15 @@ export const Route = createFileRoute("/entry/$category/$slug")({
         { name: "twitter:description", content: metaDescription },
         { name: "twitter:image", content: ogUrl },
       ],
-      links: [{ rel: "canonical", href: url }],
+      links: [
+        { rel: "canonical", href: url },
+        {
+          rel: "alternate",
+          type: "text/plain",
+          href: absoluteUrl(`/api/registry/entries/${params.category}/${params.slug}/llms`),
+          title: "Citation facts (plain text)",
+        },
+      ],
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(ld) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },

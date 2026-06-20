@@ -339,17 +339,32 @@ describe("resolveFromPrComments — reads the Cloudflare Workers Builds PR comme
     );
   }
 
-  it("prefers the stable Branch Preview URL from the cloudflare bot comment", async () => {
+  it("prefers the stable Branch Preview URL from a fresh cloudflare bot comment", async () => {
     stubComments([
       { user: { login: "someone" }, body: "unrelated" },
       { user: { login: "cloudflare-workers-and-pages[bot]" }, body: cfBody },
     ]);
     expect(
-      await resolveFromPrComments({ pull_request: { number: 4045 } }, env),
+      await resolveFromPrComments(
+        { pull_request: { number: 4045, head: { sha: "def6d9d7abcdef" } } },
+        env,
+      ),
     ).toEqual({
       url: "https://codex-quality-methodology-copy-heyclaude-prod.zeronode.workers.dev",
       source: "cf-comment:branch",
     });
+  });
+
+  it("ignores stale cloudflare bot comments from older PR heads", async () => {
+    stubComments([
+      { user: { login: "cloudflare-workers-and-pages[bot]" }, body: cfBody },
+    ]);
+    expect(
+      await resolveFromPrComments(
+        { pull_request: { number: 4045, head: { sha: "abc1234newhead" } } },
+        env,
+      ),
+    ).toBeNull();
   });
 
   it("falls back to the per-commit Preview URL when no Branch URL is present", async () => {
