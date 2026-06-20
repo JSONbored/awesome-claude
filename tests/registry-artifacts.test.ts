@@ -1280,7 +1280,7 @@ Use this hook after reviewing the notes.`,
       expect(entry.trustSignals).toHaveProperty("hasPrivacyNotes");
     }
     expect(
-      searchEntries.some((entry) => entry.platforms?.includes("Gemini")),
+      searchEntries.some((entry) => entry.platforms?.includes("gemini")),
     ).toBe(true);
   });
 
