@@ -93,6 +93,54 @@ describe("SEO JSON-LD policy", () => {
     ).toBe(true);
   });
 
+  it("maps entry categories to correct JSON-LD @type via unified buildEntryJsonLd", () => {
+    const CODE_LIKE_CATEGORIES = ["commands", "hooks", "mcp", "statuslines"];
+
+    const guideEntry = entries.find((e) => e.category === "guides");
+    if (guideEntry) {
+      expect(
+        buildEntryJsonLd(guideEntry, { siteUrl: "https://heyclau.de" })[
+          "@type"
+        ],
+      ).toBe("TechArticle");
+    }
+
+    for (const category of CODE_LIKE_CATEGORIES) {
+      const codeEntry = entries.find((e) => e.category === category);
+      if (codeEntry) {
+        expect(
+          buildEntryJsonLd(codeEntry, { siteUrl: "https://heyclau.de" })[
+            "@type"
+          ],
+        ).toBe("SoftwareSourceCode");
+      }
+    }
+
+    const creativeEntry = entries.find(
+      (e) =>
+        e.category !== "guides" && !CODE_LIKE_CATEGORIES.includes(e.category),
+    );
+    if (creativeEntry) {
+      expect(
+        buildEntryJsonLd(creativeEntry, { siteUrl: "https://heyclau.de" })[
+          "@type"
+        ],
+      ).toBe("CreativeWork");
+    }
+  });
+
+  it("unified buildEntryJsonLd never emits fabricated trust-sensitive fields", () => {
+    for (const entry of entries.slice(0, 20)) {
+      const ld = buildEntryJsonLd(entry, {
+        siteUrl: "https://heyclau.de",
+      }) as Record<string, unknown>;
+      expect(ld.aggregateRating).toBeUndefined();
+      expect(ld.review).toBeUndefined();
+      expect(ld.ratingValue).toBeUndefined();
+      expect(ld.reviewCount).toBeUndefined();
+    }
+  });
+
   it("emits regular WebPage schema for plain pages", () => {
     const webpage = buildWebPageJsonLd({
       siteUrl: "https://heyclau.de",
