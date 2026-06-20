@@ -38,7 +38,10 @@ export function entryHubPaths(entry) {
   const category = String(entry?.category ?? "").trim();
   if (category) {
     paths.add(`/${category}`);
-    for (const report of CATEGORY_REPORTS[category] ?? []) paths.add(report);
+    const categoryReports = Object.hasOwn(CATEGORY_REPORTS, category)
+      ? CATEGORY_REPORTS[category]
+      : [];
+    for (const report of categoryReports) paths.add(report);
     for (const report of GLOBAL_REPORTS) paths.add(report);
   }
   for (const tag of entry?.tags ?? []) {
