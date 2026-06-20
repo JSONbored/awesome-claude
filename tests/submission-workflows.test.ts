@@ -221,6 +221,16 @@ describe("submission automation workflows", () => {
       "utf8",
     );
     expect(coverageWorkflow).toContain("pnpm test:coverage");
+    expect(coverageWorkflow).toContain("Determine coverage scope");
+    expect(coverageWorkflow).toContain("run_coverage=");
+    expect(coverageWorkflow).toContain(
+      "Coverage skipped for content/docs/markdown-only PR.",
+    );
+    expect(coverageWorkflow).toContain("report_type: test_results");
+    expect(coverageWorkflow).toContain("reports/junit/vitest.xml");
+    expect(coverageWorkflow).not.toMatch(/pull_request:\s*\n\s+paths-ignore:/);
+    expect(source).not.toContain("Require coverage workflow for code PRs");
+    expect(source).not.toContain("node scripts/ci/require-coverage-check.mjs");
     expect(source).toContain("pnpm type-check");
     expect(source).toContain("pnpm build");
     expect(source).not.toContain("pnpm test:e2e");
