@@ -84,6 +84,26 @@ describe("entryCitationFacts (shared citation-fact source)", () => {
     expect(f.get("Robots")).toBe("noindex");
   });
 
+  it("handles normalized client source and platform field names", () => {
+    const f = facts({
+      category: "skills",
+      slug: "normalized-entry",
+      docsUrl: "https://docs.example/normalized-entry",
+      sourceUrl: "https://github.com/example/normalized-entry",
+      websiteUrl: "https://example.test/normalized-entry",
+      platformCompatibility: [
+        { platform: "claude-code", support: "native-skill" },
+      ],
+    });
+
+    expect(f.get("Source URLs")).toBe(
+      "https://docs.example/normalized-entry, https://github.com/example/normalized-entry, https://example.test/normalized-entry",
+    );
+    expect(f.get("Platform compatibility")).toBe(
+      "claude-code (native-skill)",
+    );
+  });
+
   it("buildEntryCitationFacts is exactly the pairs joined — block and LLMS endpoint cannot drift", () => {
     const entry = {
       category: "mcp",

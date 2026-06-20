@@ -61,9 +61,9 @@ function bulletList(values) {
 
 function entrySourceUrls(entry) {
   return [
-    entry.documentationUrl,
+    entry.documentationUrl ?? entry.docsUrl,
     entry.repoUrl,
-    entry.githubUrl,
+    entry.githubUrl ?? entry.sourceUrl,
     entry.websiteUrl,
   ]
     .map(clean)
@@ -104,9 +104,10 @@ export function entryCitationFacts(entry, params = {}) {
     [
       "Platform compatibility",
       listValue(
-        entry.platformCompatibility?.map(
-          (item) => `${item.platform} (${item.supportLevel})`,
-        ),
+        entry.platformCompatibility?.map((item) => {
+          const support = item.supportLevel ?? item.support;
+          return support ? `${item.platform} (${support})` : item.platform;
+        }),
       ),
     ],
     ["Author", clean(entry.author)],
