@@ -49,6 +49,7 @@ import { HarnessBadge } from "@/components/harness-badge";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { SourceCitations } from "@/components/source-citations";
+import { CitationFacts } from "@/components/citation-facts";
 import { ProvenanceBlock } from "@/components/provenance-block";
 import { StickyMetaBar } from "@/components/sticky-meta-bar";
 import { EntrySignalsPanel } from "@/components/entry-signals-panel";
@@ -267,6 +268,7 @@ function Dossier() {
   const tocItems = useMemo<TocItem[]>(() => {
     const items: TocItem[] = [];
     if (risk !== "low") items.push({ id: "risk-callout", label: "Install risk" });
+    items.push({ id: "citation-facts", label: "Citation facts" });
     if (entry.safetyNotes) items.push({ id: "safety", label: "Safety notes" });
     if (entry.privacyNotes) items.push({ id: "privacy", label: "Privacy notes" });
     if (entry.prerequisites && entry.prerequisites.length > 0)
@@ -542,6 +544,20 @@ function Dossier() {
               </div>
             </section>
           )}
+          <DossierSection id="citation-facts" icon={FileText} title="Citation facts">
+            <p className="mb-4 max-w-2xl text-sm text-ink-muted">
+              Source-backed facts for citing this resource, derived directly from the registry —
+              also available as{" "}
+              <a
+                href={`/api/registry/entries/${entry.category}/${entry.slug}/llms`}
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                plain text
+              </a>{" "}
+              for AI assistants.
+            </p>
+            <CitationFacts entry={entry} />
+          </DossierSection>
           {entry.safetyNotes && (
             <DossierSection id="safety" icon={ShieldCheck} title="Safety notes" tone="trust">
               <NoteList value={entry.safetyNotesList ?? [entry.safetyNotes]} />
