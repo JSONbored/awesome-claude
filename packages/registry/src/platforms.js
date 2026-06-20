@@ -38,7 +38,7 @@ export const PLATFORM_LABELS = {
 };
 
 // Free-form / display aliases -> canonical ID (matched lowercased + trimmed).
-export const PLATFORM_ALIASES = {
+export const PLATFORM_ALIASES = Object.freeze({
   claude: "claude-code",
   "claude code": "claude-code",
   "claude-code": "claude-code",
@@ -62,12 +62,15 @@ export const PLATFORM_ALIASES = {
   aider: "aider",
   zed: "zed",
   continue: "continue",
-};
+});
 
 /** Canonical platform ID for a free-form value, or undefined when unknown. */
 export function normalizePlatform(value) {
   if (typeof value !== "string") return undefined;
-  return PLATFORM_ALIASES[value.trim().toLowerCase()];
+  const key = value.trim().toLowerCase();
+  return Object.hasOwn(PLATFORM_ALIASES, key)
+    ? PLATFORM_ALIASES[key]
+    : undefined;
 }
 
 /**
