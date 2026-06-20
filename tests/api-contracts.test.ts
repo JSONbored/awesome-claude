@@ -26,6 +26,7 @@ const apiRoutes = [
   "/api/registry/entries/{category}/{slug}",
   "/api/registry/entries/{category}/{slug}/llms",
   "/api/mcp",
+  "/api/reports/{report}",
   "/api/brand-assets/{kind}/{domain}",
   "/api/votes/query",
   "/api/votes/toggle",

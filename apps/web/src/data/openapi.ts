@@ -79,6 +79,7 @@ function exampleForPathParam(name: string, path: string) {
   if (name === "platform") return "claude";
   if (name === "kind") return "icon";
   if (name === "domain") return "anthropic.com";
+  if (name === "report") return "agent-skills.json";
   return "example";
 }
 
@@ -235,6 +236,21 @@ const BODY_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
 };
 
 const RESPONSE_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
+  "reports.export": {
+    report: "agent-skills",
+    title: "State of Agent Skills 2026",
+    asOf: "2026-06-20",
+    total: 174,
+    license: "CC BY 4.0",
+    stats: [{ key: "total", label: "Total skills", value: 174 }],
+    dimensions: [
+      {
+        key: "skill-type",
+        title: "Skill type",
+        rows: [{ label: "Capability pack", count: 110, percent: 63 }],
+      },
+    ],
+  },
   "registry.manifest": {
     schemaVersion: 2,
     generatedAt: "2026-05-29T00:00:00.000Z",

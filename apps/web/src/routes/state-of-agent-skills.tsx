@@ -11,6 +11,7 @@ import { stringifyJsonLd } from "@/lib/json-ld";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { ReportDownloads } from "@/components/report-downloads";
 import { DataSection, DataStat, DistTable } from "@/components/data-report";
 
 const AS_OF = String(REGISTRY_GENERATED_AT).slice(0, 10);
@@ -108,6 +109,8 @@ function StateOfAgentSkillsPage() {
           <DistTable rows={dimension.rows} />
         </DataSection>
       ))}
+
+      <ReportDownloads exportSlug={MODEL.exportSlug} />
 
       <section className="mt-12 rounded-xl border border-border bg-surface p-6">
         <div className="flex items-center gap-2">

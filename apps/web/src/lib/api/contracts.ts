@@ -488,6 +488,17 @@ export const entryParamsSchema = z.object({
   slug: safeSlugSchema,
 });
 
+export const reportExportParamsSchema = z.object({
+  // "<report-slug>.<json|csv>", e.g. "agent-skills.csv"
+  report: z
+    .string()
+    .trim()
+    .max(64)
+    .regex(/^[a-z0-9-]+\.(?:json|csv)$/, {
+      message: "report must be a report slug with a .json or .csv extension",
+    }),
+});
+
 export const votesQueryBodySchema = z.object({
   keys: z.array(entryKeySchema).max(1000).optional().default([]),
   clientId: z.string().trim().max(128).optional().default(""),
@@ -1009,6 +1020,23 @@ export const apiRouteDefinitions = {
       limit: 180,
       windowMs: 60_000,
       binding: "API_REGISTRY_RATE_LIMIT",
+    },
+  }),
+  "reports.export": route({
+    id: "reports.export",
+    method: "GET",
+    path: "/api/reports/{report}",
+    summary: "Registry data report export (JSON or CSV)",
+    description:
+      "Machine-readable export of a HeyClaude data report, selected by '<report-slug>.json' or '<report-slug>.csv'. Returns the report's headline stats and labelled distributions computed deterministically from the registry. Free to reuse under CC BY 4.0 with attribution.",
+    tags: ["Distribution"],
+    paramsSchema: reportExportParamsSchema,
+    responseContentType: "application/json",
+    rateLimit: {
+      scope: "reports-export",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
     },
   }),
   "mcp.streamable": route({
