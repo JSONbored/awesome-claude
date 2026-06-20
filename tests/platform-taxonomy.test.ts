@@ -23,6 +23,14 @@ describe("canonical platform taxonomy (#3920)", () => {
     expect(normalizePlatform(42)).toBeUndefined();
   });
 
+  it("treats prototype property names as unknown platform values", () => {
+    expect(normalizePlatform("constructor")).toBeUndefined();
+    expect(normalizePlatform("__proto__")).toBeUndefined();
+    expect(normalizePlatforms(["constructor", "__proto__", "Cursor"])).toEqual([
+      "cursor",
+    ]);
+  });
+
   it("dedupes equivalent platforms and drops unknowns, preserving order", () => {
     expect(
       normalizePlatforms(["Codex", "codex", "Cursor", "antigravity", "Claude"]),
