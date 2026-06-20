@@ -43,6 +43,14 @@ describe("/api/reports/{report}", () => {
     expect(text).toContain("hook-events");
   });
 
+  it("serves the AI agents report", async () => {
+    const res = await call("ai-agents.json");
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { report: string; total: number };
+    expect(body.report).toBe("ai-agents");
+    expect(body.total).toBeGreaterThan(50);
+  });
+
   it("sets caching and a download filename", async () => {
     const res = await call("agent-skills.csv");
     expect(res.headers.get("cache-control")).toContain("max-age");

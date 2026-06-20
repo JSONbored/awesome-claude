@@ -5,6 +5,7 @@ import { apiError, apiJson, createApiHandler, type InferApiParams } from "@/lib/
 import { ENTRIES, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { buildHooksReport } from "@/lib/hooks-stats";
 import { buildSkillsReport } from "@/lib/skills-stats";
+import { buildAgentsReport } from "@/lib/agents-stats";
 import { reportToCsv, reportToJson, type ReportModel } from "@/lib/data-reports";
 
 const AS_OF = String(REGISTRY_GENERATED_AT).slice(0, 10);
@@ -13,6 +14,7 @@ const AS_OF = String(REGISTRY_GENERATED_AT).slice(0, 10);
 const REPORT_BUILDERS: Record<string, () => ReportModel> = {
   "claude-code-hooks": () => buildHooksReport(ENTRIES, AS_OF),
   "agent-skills": () => buildSkillsReport(ENTRIES, AS_OF),
+  "ai-agents": () => buildAgentsReport(ENTRIES, AS_OF),
 };
 
 const CACHE_CONTROL = "public, max-age=3600, s-maxage=86400";

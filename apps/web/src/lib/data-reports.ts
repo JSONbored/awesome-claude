@@ -54,6 +54,7 @@ export const REPORT_PATHS = [
   "/mcp-security-report",
   "/state-of-claude-code-hooks",
   "/state-of-agent-skills",
+  "/state-of-ai-agents",
 ] as const;
 
 /** URL of a report's machine-readable export in the given format. */
