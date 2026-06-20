@@ -1,12 +1,37 @@
 import { createApiFileRoute } from "@/lib/api/file-route";
 
+import { platformFeedSlug } from "@heyclaude/registry/artifacts";
+
 import { createApiHandler } from "@/lib/api/router";
 import { getCategorySummaries, getRegistryManifest } from "@/lib/content.server";
 import { cachedJsonResponse } from "@/lib/http-cache";
+import { getPlatformPageDefinitions } from "@/lib/platform-pages";
 import { siteConfig } from "@/lib/site";
+
+const JOBS_API_PATH = "/api/jobs?limit=100";
+const QUALITY_METHODOLOGY_PATH = "/quality#methodology";
+const CATEGORY_FEED_PATH = "/data/feeds/categories/{category}.json";
+const PLATFORM_FEED_PATH = "/data/feeds/platforms/{platform}.json";
+
+function categoryFeedAliases(categories: Array<{ category: string }>) {
+  return Object.fromEntries(
+    categories.map(({ category }) => [category, `/data/feeds/categories/${category}.json`]),
+  );
+}
+
+function platformFeedAliases() {
+  return Object.fromEntries(
+    getPlatformPageDefinitions().map(({ platform, slug }) => [
+      slug,
+      `/data/feeds/platforms/${platformFeedSlug(platform)}.json`,
+    ]),
+  );
+}
 
 export const GET = createApiHandler("registry.feed", async ({ request }) => {
   const [manifest, categories] = await Promise.all([getRegistryManifest(), getCategorySummaries()]);
+  const categoryFeeds = categoryFeedAliases(categories);
+  const platformFeeds = platformFeedAliases();
 
   return cachedJsonResponse(request, {
     schemaVersion: 1,
@@ -17,6 +42,10 @@ export const GET = createApiHandler("registry.feed", async ({ request }) => {
       url: siteConfig.url,
       description: siteConfig.description,
     },
+    qualityMethodology: QUALITY_METHODOLOGY_PATH,
+    categoryFeeds,
+    platformFeeds,
+    jobs: JOBS_API_PATH,
     endpoints: {
       manifest: "/api/registry/manifest",
       categories: "/api/registry/categories",
@@ -28,18 +57,18 @@ export const GET = createApiHandler("registry.feed", async ({ request }) => {
       entryLlms: "/api/registry/entries/{category}/{slug}/llms",
       directoryIndex: "/data/directory-index.json",
       searchIndex: "/data/search-index.json",
-      jobs: "/api/jobs?limit=100",
+      jobs: JOBS_API_PATH,
       ecosystemFeed: "/data/ecosystem-feed.json",
       mcpRegistryFeed: "/data/mcp-registry-feed.json",
       pluginExportFeed: "/data/plugin-export-feed.json",
       changelogFeed: "/data/registry-changelog.json",
       registryTrust: "/data/registry-trust-report.json",
-      qualityMethodology: "/quality#methodology",
+      qualityMethodology: QUALITY_METHODOLOGY_PATH,
       rssFeed: "/feed.xml",
       atomFeed: "/atom.xml",
       distributionFeedIndex: "/data/feeds/index.json",
-      categoryFeed: "/data/feeds/categories/{category}.json",
-      platformFeed: "/data/feeds/platforms/{platform}.json",
+      categoryFeed: CATEGORY_FEED_PATH,
+      platformFeed: PLATFORM_FEED_PATH,
       contentQuality: "/data/content-quality-report.json",
       raycastFeed: "/data/raycast-index.json",
     },

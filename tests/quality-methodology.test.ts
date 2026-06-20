@@ -62,7 +62,12 @@ describe("quality methodology page", () => {
     expect(trustDrilldownSource).not.toContain('hash="preflight"');
     expect(sourceCitationsSource).toContain('hash="source-provenance"');
     expect(registryFeedSource).toContain(
-      'qualityMethodology: "/quality#methodology"',
+      'const QUALITY_METHODOLOGY_PATH = "/quality#methodology";',
     );
+    expect(
+      registryFeedSource.match(
+        /qualityMethodology:\s*QUALITY_METHODOLOGY_PATH/g,
+      ),
+    ).toHaveLength(2);
   });
 });

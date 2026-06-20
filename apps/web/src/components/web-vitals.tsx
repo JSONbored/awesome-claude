@@ -2,7 +2,14 @@ import * as React from "react";
 
 declare global {
   interface Window {
-    umami?: { track: (event: string, data?: Record<string, unknown>) => void };
+    umami?: {
+      track: (event?: string, data?: Record<string, unknown>) => void;
+      identify?: (
+        idOrData: string | Record<string, unknown>,
+        data?: Record<string, unknown>,
+      ) => void;
+      getSession?: () => { cache: string; website: string };
+    };
   }
 }
 
@@ -15,8 +22,8 @@ interface ReportedMetric {
 
 /**
  * Field Core Web Vitals (RUM). Reports INP/LCP/CLS/TTFB/FCP for real sessions
- * via the first-party umami tracker (loaded from /u.js; events post same-origin
- * to /api/send), so no CSP change is needed. Renders nothing; web-vitals is
+ * via the bundled first-party umami tracker (events post same-origin to
+ * /u/api/send), so no CSP change is needed. Renders nothing; web-vitals is
  * dynamically imported
  * inside the effect so it never enters the SSR path or the universal client chunk.
  */

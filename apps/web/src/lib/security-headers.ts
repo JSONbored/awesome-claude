@@ -10,8 +10,10 @@ export function urlOrigin(value: string) {
 }
 
 const scriptSrc = [
-  // umami is served first-party via the /u.js proxy, so no third-party
-  // analytics script-src is needed (see routes/u[.]js.ts).
+  // Keep scripts constrained to same-origin application bundles. The legacy
+  // first-party analytics script proxy is disabled because it could serve
+  // external JavaScript as same-origin code; browser analytics is emitted by
+  // our bundled first-party tracker through /u/api/send.
   "script-src 'self' 'unsafe-inline'",
   process.env.NODE_ENV === "production" ? "" : "'unsafe-eval'",
   "https://challenges.cloudflare.com",
