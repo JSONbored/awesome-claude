@@ -1,3 +1,5 @@
+import { normalizePlatform } from "@heyclaude/registry";
+
 import type {
   Category,
   Entry,
@@ -139,27 +141,6 @@ const CATEGORIES = new Set<Category>([
   "statuslines",
 ]);
 
-const PLATFORM_ALIASES: Record<string, Platform> = {
-  claude: "claude-code",
-  "claude code": "claude-code",
-  "claude-code": "claude-code",
-  "claude desktop": "claude-desktop",
-  "claude-desktop": "claude-desktop",
-  codex: "codex",
-  cursor: "cursor",
-  windsurf: "windsurf",
-  gemini: "gemini",
-  raycast: "raycast",
-  "generic agents": "cli",
-  "generic agents.md": "cli",
-  cli: "cli",
-  vscode: "vscode",
-  "vs code": "vscode",
-  aider: "aider",
-  zed: "zed",
-  continue: "continue",
-};
-
 const SUPPORT_ALIASES: Record<string, PlatformSupport> = {
   "native-skill": "native-skill",
   adapter: "adapter",
@@ -208,7 +189,8 @@ function stringList(value: unknown): string[] | undefined {
 }
 
 function platformFrom(value: string): Platform | undefined {
-  return PLATFORM_ALIASES[value.trim().toLowerCase()];
+  // Canonical IDs come from the registry's shared taxonomy (#3920).
+  return normalizePlatform(value) as Platform | undefined;
 }
 
 function inferPlatforms(entry: RegistryEntry): Platform[] {

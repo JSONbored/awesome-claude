@@ -668,7 +668,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
     expect(result.entries.length).toBeGreaterThan(0);
     expect(result.entries.length).toBeLessThanOrEqual(5);
-    expect(result.entries[0].platforms).toContain("Cursor");
+    expect(result.entries[0].platforms).toContain("cursor");
     expect(result.entries[0]).toMatchObject({
       searchScore: expect.any(Number),
       searchReasons: expect.any(Array),
@@ -1233,7 +1233,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(result).toMatchObject({
       ok: true,
       category: "skills",
-      platform: "Cursor",
+      platform: "cursor",
       tag: "evals",
       count: expect.any(Number),
       limit: 2,
@@ -1246,7 +1246,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       dateAdded: expect.any(String),
     });
     expect(result.entries[0].tags).toContain("evals");
-    expect(result.entries[0].platforms).toContain("Cursor");
+    expect(result.entries[0].platforms).toContain("cursor");
   });
 
   it("lists recent updates from generated registry metadata", async () => {
@@ -1330,7 +1330,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(guidance).toMatchObject({
       ok: true,
       key: `${skill.category}:${skill.slug}`,
-      platform: "Claude",
+      platform: "claude-code",
       trust: {
         recommendations: expect.any(Array),
       },
@@ -1395,7 +1395,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(review).toMatchObject({
       ok: true,
       count: 2,
-      platform: "Claude",
+      platform: "claude-code",
       summary: {
         sourceBacked: expect.any(Number),
         firstPartyPackages: expect.any(Number),
@@ -1502,7 +1502,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(compared).toMatchObject({
       ok: true,
       count: 2,
-      platform: "Claude",
+      platform: "claude-code",
       entries: [
         expect.objectContaining({
           key: `${skill.category}:${skill.slug}`,
@@ -1748,7 +1748,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     );
     expect(adapter).toMatchObject({
       ok: true,
-      platform: "Cursor",
+      platform: "cursor",
       adapterAvailable: true,
       adapterPath: `/data/skill-adapters/cursor/${skill.slug}.mdc`,
     });

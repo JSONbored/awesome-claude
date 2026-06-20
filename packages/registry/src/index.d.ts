@@ -1381,3 +1381,9 @@ export function formatSubmissionRiskMarkdown(
 export function directContentRequestChangesReasons(
   report: SubmissionRiskReport,
 ): string[];
+
+export const PLATFORM_IDS: string[];
+export const PLATFORM_LABELS: Record<string, string>;
+export const PLATFORM_ALIASES: Record<string, string>;
+export function normalizePlatform(value: unknown): string | undefined;
+export function normalizePlatforms(values: unknown): string[];
