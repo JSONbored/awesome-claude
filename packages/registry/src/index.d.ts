@@ -1295,6 +1295,10 @@ export function renderEntryLlms(
   entry: Partial<ContentEntry>,
   params?: Record<string, unknown>,
 ): string;
+export function entryCitationFacts(
+  entry: Partial<ContentEntry>,
+  params?: Record<string, unknown>,
+): Array<[string, string]>;
 export function buildEntryCitationFacts(
   entry: Partial<ContentEntry>,
   params?: Record<string, unknown>,
