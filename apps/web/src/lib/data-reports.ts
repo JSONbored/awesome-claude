@@ -131,7 +131,12 @@ export function reportToJson(model: ReportModel) {
 }
 
 function csvCell(value: string): string {
-  return /[",\r\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+  // Neutralize spreadsheet formula injection (CWE-1236). Row labels derive from
+  // community-submitted registry tags, so a cell could begin with a formula
+  // trigger (=, +, -, @, tab, CR); prefixing with a single quote makes Excel /
+  // Google Sheets / LibreOffice treat it as text rather than executing it.
+  const guarded = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+  return /[",\r\n]/.test(guarded) ? `"${guarded.replace(/"/g, '""')}"` : guarded;
 }
 
 /** Flat CSV of every dimension row (dimension,label,count,percent). */

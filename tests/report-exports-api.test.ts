@@ -95,4 +95,42 @@ describe("report serializers", () => {
     expect(csv.startsWith("dimension,label,count,percent\r\n")).toBe(true);
     expect(csv.endsWith("\r\n")).toBe(true);
   });
+
+  it("neutralizes spreadsheet formula injection in cell values (CWE-1236)", () => {
+    // Row labels come from community-submitted tags; a hostile tag must not
+    // become an executable spreadsheet formula in the CSV export.
+    const malicious = {
+      slug: "/x",
+      exportSlug: "x",
+      title: "X",
+      description: "",
+      keywords: [],
+      asOf: "2026-06-20",
+      total: 1,
+      stats: [],
+      dimensions: [
+        {
+          key: "use-cases",
+          title: "T",
+          help: "",
+          rows: [
+            { label: "=cmd|'/C calc'!A0", count: 1, pct: 100 },
+            { label: "@SUM(1+1)", count: 1, pct: 100 },
+            { label: "-2+3", count: 1, pct: 100 },
+            { label: "safe-tag", count: 1, pct: 100 },
+          ],
+        },
+      ],
+    } as Parameters<typeof reportToCsv>[0];
+
+    const csv = reportToCsv(malicious);
+    // Formula triggers are prefixed with a single quote (text, not formula)...
+    expect(csv).toContain("'=cmd");
+    expect(csv).toContain("'@SUM");
+    expect(csv).toContain("'-2+3");
+    // ...and no cell begins with a raw formula trigger.
+    expect(csv).not.toMatch(/(^|,)[=+@]/m);
+    // Benign values are untouched.
+    expect(csv).toContain("safe-tag");
+  });
 });

@@ -7,6 +7,8 @@ dist
 coverage
 reports
 test-results
+# `reports` (above) is for build/test output dirs; keep the source API route dir tracked.
+!/apps/web/src/routes/api/reports/
 .build-content-index.lock/
 TASKS.md
 .claude/
