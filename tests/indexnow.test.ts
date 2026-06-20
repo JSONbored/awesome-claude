@@ -110,6 +110,15 @@ describe("IndexNow hub expansion", () => {
     expect(paths).toEqual(["/rules", "/state-of-claude-tooling"]);
   });
 
+  it("treats inherited object property names as unknown categories", () => {
+    for (const category of ["constructor", "toString", "__proto__"]) {
+      expect(entryHubPaths({ category, slug: "x", tags: [] })).toEqual([
+        `/${category}`,
+        "/state-of-claude-tooling",
+      ]);
+    }
+  });
+
   it("emits no tag hubs when the entry has no tags", () => {
     const paths = entryHubPaths({ category: "skills", slug: "x" });
     expect(paths.some((p) => p.startsWith("/tags/"))).toBe(false);
