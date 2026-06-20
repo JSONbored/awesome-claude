@@ -238,11 +238,21 @@ function prNumber(event, env = process.env) {
   return match ? Number(match[1]) : null;
 }
 
+function commentMatchesHeadSha(body, event, env = process.env) {
+  const sha = headSha(event, env).trim().toLowerCase();
+  if (!sha) return true;
+  const normalizedBody = String(body || "").toLowerCase();
+  return [sha, sha.slice(0, 8), sha.slice(0, 7)].some(
+    (candidate) => candidate.length >= 7 && normalizedBody.includes(candidate),
+  );
+}
+
 // Cloudflare Workers Builds publishes per-PR preview URLs ONLY in a pull-request COMMENT (by
 // cloudflare-workers-and-pages[bot]) — never as a GitHub deployment, commit status, or check-run. So the
-// deployment/status/check-run lookups above can never find it; this reads the comment. Prefer the stable
-// "Branch Preview URL" (always points at the latest successful branch deploy, so it's correct even when the
-// PR head is a commit Workers Builds skipped via build-watch-paths) and fall back to the per-commit URL.
+// deployment/status/check-run lookups above can never find it; this reads the comment. Only trust comments
+// that mention the current head SHA so a stale branch-scoped preview from an older deployment cannot satisfy
+// checks for a newer PR head. Prefer the stable "Branch Preview URL" for fresh comments and fall back to the
+// per-commit URL.
 export async function resolveFromPrComments(event, env = process.env) {
   const pr = prNumber(event, env);
   if (!pr) return null;
@@ -259,6 +269,7 @@ export async function resolveFromPrComments(event, env = process.env) {
     if ((comment?.user?.login ?? "") !== "cloudflare-workers-and-pages[bot]")
       continue;
     const body = String(comment.body || "");
+    if (!commentMatchesHeadSha(body, event, env)) continue;
     let match;
     while ((match = anchor.exec(body)) !== null) {
       const url = match[1];
