@@ -36,6 +36,16 @@ function normalizeParamName(name) {
     .toLowerCase();
 }
 
+/** Drop explicit :443/:80 so default-port URLs compare equal. Mutates `url`. */
+export function stripDefaultSourcePort(url) {
+  if (
+    (url.protocol === "https:" && url.port === "443") ||
+    (url.protocol === "http:" && url.port === "80")
+  ) {
+    url.port = "";
+  }
+}
+
 /**
  * Return true for affiliate/referral params and the UTM params that the
  * submission validator already treats as promotional source noise.
@@ -114,6 +124,7 @@ export function canonicalizeSourceUrl(value) {
     url.hash = "";
     url.protocol = url.protocol.toLowerCase();
     url.hostname = url.hostname.replace(/^www\./i, "").toLowerCase();
+    stripDefaultSourcePort(url);
     while (url.pathname !== "/" && url.pathname.endsWith("/")) {
       url.pathname = url.pathname.slice(0, -1);
     }

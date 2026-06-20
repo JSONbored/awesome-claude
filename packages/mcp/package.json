@@ -76,6 +76,7 @@
     "test": "pnpm --dir ../.. exec vitest run tests/mcp-server.test.ts tests/mcp-cli.test.ts"
   },
   "dependencies": {
+    "@heyclaude/registry": "workspace:*",
     "@modelcontextprotocol/sdk": "1.29.0",
     "zod": "4.4.3"
   }

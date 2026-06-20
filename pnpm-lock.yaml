@@ -329,6 +329,9 @@ importers:
 
   packages/mcp:
     dependencies:
+      '@heyclaude/registry':
+        specifier: workspace:*
+        version: link:../registry
       '@modelcontextprotocol/sdk':
         specifier: 1.29.0
         version: 1.29.0(zod@4.4.3)
@@ -712,6 +715,7 @@ packages:
 
   '@daytonaio/sdk@0.138.0':
     resolution: {integrity: sha512-cnbsflZYJ1NA4pQ2uX2lLN4w4ZQsO/xqdGDnpmwSu/LIW5F+O5gA8z4mfuWdIRcFFT4UhIpTzMuh3zRwxH7dIw==}
+    deprecated: 'Moved to @daytona/sdk, same API, no breaking changes. Please update: npm uninstall @daytonaio/sdk && npm i @daytona/sdk'
 
   '@daytonaio/toolbox-api-client@0.138.0':
     resolution: {integrity: sha512-unM9e7MOQiyDXdY8hCW1uTctYbxpo/TGZ6L71ZXyS/j2Cnz9/ud4VWBLcQP2VzlC+lrBP2YMrhT90zSSvcNfmA==}
@@ -4809,6 +4813,7 @@ packages:
   tsconfck@3.1.6:
     resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: 5.9.3

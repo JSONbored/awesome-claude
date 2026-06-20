@@ -1,5 +1,7 @@
 export const SUBMISSION_SITE_URL = "https://heyclau.de/submit";
 
+import { stripDefaultSourcePort } from "@heyclaude/registry/source-url";
+
 function normalizeText(value) {
   return String(value || "").trim();
 }
@@ -797,6 +799,7 @@ function normalizeSubmissionUrlForMatch(value) {
   url.protocol = url.protocol.toLowerCase();
   url.hostname = url.hostname.toLowerCase().replace(/^www\./, "");
   url.hash = "";
+  stripDefaultSourcePort(url);
   const droppedKeys = [];
   for (const key of url.searchParams.keys()) {
     if (isTrackingQueryKey(key)) droppedKeys.push(key);

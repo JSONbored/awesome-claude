@@ -39,6 +39,45 @@ describe("searchDuplicateEntries source-URL matching", () => {
     expect(result.count).toBe(1);
   });
 
+  it("matches explicit :443 default-port variants against canonical entry URLs", () => {
+    const result = searchDuplicateEntries([entry()], {
+      sourceUrl: "https://github.com:443/domdomegg/airtable-mcp-server",
+    });
+    expect(result.count).toBe(1);
+    expect(
+      (result.matches as Array<{ reasons: string[] }>)[0].reasons,
+    ).toContain("source_url");
+  });
+
+  it("matches explicit :80 default-port variants against canonical entry URLs", () => {
+    const result = searchDuplicateEntries(
+      [
+        entry({
+          documentationUrl: "",
+          repoUrl: "http://docs.example.com/airtable",
+        }),
+      ],
+      { sourceUrl: "http://docs.example.com:80/airtable" },
+    );
+    expect(result.count).toBe(1);
+    expect(
+      (result.matches as Array<{ reasons: string[] }>)[0].reasons,
+    ).toContain("source_url");
+  });
+
+  it("does not collapse non-default ports during duplicate matching", () => {
+    const result = searchDuplicateEntries(
+      [
+        entry({
+          documentationUrl: "",
+          repoUrl: "https://example.com:8443/airtable",
+        }),
+      ],
+      { sourceUrl: "https://example.com/airtable" },
+    );
+    expect(result.count).toBe(0);
+  });
+
   it("matches a variant with utm_* and other tracking query params", () => {
     const result = searchDuplicateEntries([entry()], {
       sourceUrl:

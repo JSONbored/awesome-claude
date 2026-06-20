@@ -5,6 +5,7 @@ import {
   hasAffiliateParam,
   isAffiliateParam,
   isTrackingParam,
+  stripDefaultSourcePort,
   stripTrackingParams,
 } from "@heyclaude/registry/source-url";
 
@@ -51,5 +52,29 @@ describe("source URL canonicalization", () => {
       canonicalizeSourceUrl("https://example.com/docs"),
     );
     expect(canonicalizeSourceUrl("not a url")).toBe("not a url");
+  });
+
+  it("strips default ports but preserves non-default ports", () => {
+    expect(canonicalizeSourceUrl("https://example.com:443/docs?ref=x")).toBe(
+      canonicalizeSourceUrl("https://example.com/docs?ref=x"),
+    );
+    expect(canonicalizeSourceUrl("http://example.com:80/docs")).toBe(
+      canonicalizeSourceUrl("http://example.com/docs"),
+    );
+    expect(canonicalizeSourceUrl("https://example.com:8443/docs")).toBe(
+      "https://example.com:8443/docs",
+    );
+
+    const httpsUrl = new URL("https://example.com:443/x");
+    stripDefaultSourcePort(httpsUrl);
+    expect(httpsUrl.port).toBe("");
+
+    const httpUrl = new URL("http://example.com:80/x");
+    stripDefaultSourcePort(httpUrl);
+    expect(httpUrl.port).toBe("");
+
+    const customPort = new URL("https://example.com:8443/x");
+    stripDefaultSourcePort(customPort);
+    expect(customPort.port).toBe("8443");
   });
 });
