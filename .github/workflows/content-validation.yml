@@ -691,12 +691,13 @@ jobs:
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm validate:openapi
 
-      # The full Vitest suite runs once in the `coverage` job (`pnpm test:coverage` = the same `vitest run`,
-      # plus coverage + Codecov upload). Running it again here was pure duplication — ~2 min of identical
-      # work AND a second runner slot held under the Actions concurrency cap, which starves the queue. The
-      # web lane keeps the web-specific gates below (type-check + build); the suite is gated by `coverage`.
-      # (Trunk flaky-test upload also lived here but was token-gated and inert; move it to `coverage` if
-      # flaky detection is ever enabled, so it sits with the one job that runs the suite.) (#dedupe-suite)
+      # Keep the plain Vitest suite in the required web lane. The separate coverage
+      # workflow adds v8 instrumentation and Codecov reporting, but it is intentionally
+      # non-required/informational and must not be the only CI path that exercises
+      # security-sensitive regression tests.
+      - name: Run Vitest suite
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
+        run: pnpm test
 
       # Incremental type-check cache: `tsc --noEmit` (incremental) writes apps/web/.cache/tsc.tsbuildinfo,
       # so a warm run only re-checks changed files (~4x faster locally). Keyed per-sha with a prefix
