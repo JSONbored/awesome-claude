@@ -1,17 +1,12 @@
 name: coverage
 
-# Non-required coverage signal for Codecov. Runs only when CODE changes (never
-# on content-only PRs/pushes — content does not affect the node-suite coverage),
-# so the heavy v8-instrumented run stays off the content-submission hot path and
-# off the required `validate-web` gate. Uploads lcov to Codecov, which posts the
-# project/patch statuses (informational; see codecov.yml).
+# Coverage + full Vitest suite for code changes. This workflow always reports a
+# stable `coverage` PR check so branch protection can require it safely; pure
+# content/docs/markdown PRs skip inside the job instead of skipping the workflow.
+# Codecov consumes the generated lcov/JUnit reports for patch/project coverage
+# and Test Analytics, while this job remains the single test-producing lane.
 on:
   pull_request:
-    paths-ignore:
-      - "content/**"
-      - "README.md"
-      - "docs/**"
-      - "**/*.md"
   push:
     branches:
       - main
@@ -24,6 +19,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: coverage-${{ github.ref }}
@@ -36,25 +32,101 @@ jobs:
     timeout-minutes: 25
 
     steps:
+      - name: Determine coverage scope
+        id: coverage-scope
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync } from "node:fs";
+
+          function normalizePath(filename) {
+            return String(filename || "").replace(/\\/g, "/").replace(/^\.\//, "");
+          }
+
+          function isCoverageIgnoredPath(filename) {
+            const normalized = normalizePath(filename);
+            return (
+              normalized === "README.md" ||
+              normalized.startsWith("content/") ||
+              normalized.startsWith("docs/") ||
+              normalized.endsWith(".md")
+            );
+          }
+
+          async function listChangedFiles() {
+            const repo = process.env.GITHUB_REPOSITORY;
+            const prNumber = process.env.PR_NUMBER;
+            const token = process.env.GITHUB_TOKEN;
+            const files = [];
+
+            for (let page = 1; ; page += 1) {
+              const url = new URL(`https://api.github.com/repos/${repo}/pulls/${prNumber}/files`);
+              url.searchParams.set("per_page", "100");
+              url.searchParams.set("page", String(page));
+
+              const response = await fetch(url, {
+                headers: {
+                  accept: "application/vnd.github+json",
+                  authorization: `Bearer ${token}`,
+                  "x-github-api-version": "2022-11-28",
+                },
+              });
+              if (!response.ok) {
+                throw new Error(`GitHub pull files API returned ${response.status} ${response.statusText}`);
+              }
+
+              const pageFiles = await response.json();
+              if (!Array.isArray(pageFiles) || pageFiles.length === 0) break;
+              files.push(...pageFiles.map((file) => normalizePath(file.filename)).filter(Boolean));
+              if (pageFiles.length < 100) break;
+            }
+
+            return files;
+          }
+
+          const files = await listChangedFiles();
+          const runCoverage = files.length === 0 || files.some((file) => !isCoverageIgnoredPath(file));
+          appendFileSync(process.env.GITHUB_OUTPUT, `run_coverage=${runCoverage ? "true" : "false"}\n`);
+
+          if (runCoverage) {
+            console.log(`Coverage required for ${files.length} changed file(s).`);
+          } else {
+            console.log("Coverage skipped for content/docs/markdown-only PR.");
+          }
+          NODE
+
+      - name: Skip coverage for content/docs/markdown-only PR
+        if: ${{ github.event_name == 'pull_request' && steps.coverage-scope.outputs.run_coverage != 'true' }}
+        run: echo "No code files changed; coverage check passes without running the test suite."
+
       - name: Checkout
+        if: ${{ github.event_name != 'pull_request' || steps.coverage-scope.outputs.run_coverage == 'true' }}
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
           persist-credentials: false
 
       - name: Setup pnpm
+        if: ${{ github.event_name != 'pull_request' || steps.coverage-scope.outputs.run_coverage == 'true' }}
         uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
 
       - name: Setup Node.js
+        if: ${{ github.event_name != 'pull_request' || steps.coverage-scope.outputs.run_coverage == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
           node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
+        if: ${{ github.event_name != 'pull_request' || steps.coverage-scope.outputs.run_coverage == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: Prepare test reports dir
+        if: ${{ github.event_name != 'pull_request' || steps.coverage-scope.outputs.run_coverage == 'true' }}
         run: rm -rf reports/junit && mkdir -p reports/junit
 
       # EXPERIMENT: cache the generated prebuild artifacts. Key hashes every
@@ -69,6 +141,7 @@ jobs:
       # only go stale in the rare case of byte-identical content with a different
       # commit touch-history, which is acceptable for a non-required lane.
       - name: Restore prebuild artifacts
+        if: ${{ github.event_name != 'pull_request' || steps.coverage-scope.outputs.run_coverage == 'true' }}
         id: prebuild-cache
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
@@ -79,26 +152,45 @@ jobs:
           key: prebuild-v1-${{ runner.os }}-${{ hashFiles('content/**', 'scripts/build-content-index.mjs', 'packages/registry/src/**', 'packages/registry/package.json', 'apps/web/src/routes/**', 'pnpm-lock.yaml') }}
 
       - name: Build registry artifacts
-        if: steps.prebuild-cache.outputs.cache-hit != 'true'
+        if: ${{ (github.event_name != 'pull_request' || steps.coverage-scope.outputs.run_coverage == 'true') && steps.prebuild-cache.outputs.cache-hit != 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Apply local D1 migrations
+        if: ${{ github.event_name != 'pull_request' || steps.coverage-scope.outputs.run_coverage == 'true' }}
         run: pnpm --filter web db:migrate:local
 
       - name: Run Vitest suite with coverage
+        if: ${{ github.event_name != 'pull_request' || steps.coverage-scope.outputs.run_coverage == 'true' }}
         run: pnpm test:coverage
 
       - name: Upload coverage to Codecov (pull request)
-        if: github.event_name == 'pull_request'
+        if: ${{ github.event_name == 'pull_request' && steps.coverage-scope.outputs.run_coverage == 'true' }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           files: ./coverage/lcov.info
           fail_ci_if_error: false
 
       - name: Upload coverage to Codecov (trusted)
-        if: github.event_name != 'pull_request'
+        if: ${{ github.event_name != 'pull_request' }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/lcov.info
+          fail_ci_if_error: false
+
+      - name: Upload Vitest results to Codecov (pull request)
+        if: ${{ !cancelled() && github.event_name == 'pull_request' && steps.coverage-scope.outputs.run_coverage == 'true' }}
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          files: ./reports/junit/vitest.xml
+          report_type: test_results
+          fail_ci_if_error: false
+
+      - name: Upload Vitest results to Codecov (trusted)
+        if: ${{ !cancelled() && github.event_name != 'pull_request' }}
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./reports/junit/vitest.xml
+          report_type: test_results
           fail_ci_if_error: false

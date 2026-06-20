@@ -10,11 +10,10 @@
 # keeps `target: auto` + a 1% threshold so it compares each PR to its own base
 # (avoiding the fixed-global-ratchet churn) while still failing real regressions.
 #
-# NOTE: codecov is deliberately NOT a required branch-protection check —
-# coverage.yml runs ONLY on code PRs, so a required codecov check would block
-# content-only PRs forever (the check never posts). Enforcement instead comes from
-# the failing codecov statuses, which reviewbot's gate treats as a hard blocker
-# (it won't approve or auto-merge over a red check).
+# NOTE: require the GitHub Actions `coverage` check rather than Codecov's
+# provider-specific status names in branch protection. The workflow always posts
+# a stable PR check and skips internally for content/docs/markdown-only changes;
+# Codecov statuses remain the patch/project policy layer for code changes.
 
 coverage:
   status:
