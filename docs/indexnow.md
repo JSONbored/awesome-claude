@@ -13,6 +13,18 @@ IndexNow notifies **Bing, Yandex, Seznam, and Naver** (Bing shares onward).
 **Google ignores IndexNow** — it uses `sitemap.xml` `lastmod` + crawl, which the
 site already emits. So this is purely the Bing/everyone-else accelerator.
 
+## On-publish submission (entry + affected hubs)
+
+The `indexnow-on-publish` workflow runs when `content/**/*.mdx` lands on `main`.
+For each added/modified entry it submits that entry **plus the generated hubs
+whose content changes with it** — its category page, its tag pages, and the
+state report(s) covering that category — expanded by
+`scripts/indexnow-changed-urls.mjs` (tags read from the live entry-detail JSON,
+hubs from `scripts/lib/indexnow-hubs.mjs`). Submission stays bounded to those
+entries' hubs (never the whole sitemap), and every URL is HTTP-200 validated
+before submission. Best-list, comparison, and platform hubs need cross-entry
+registry data and are left to the daily cron's window.
+
 ## Automated daily submission (changed URLs only)
 
 A Cloudflare cron (`apps/web/plugins/indexnow-scheduled.ts`, daily 05:00 UTC —

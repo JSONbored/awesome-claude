@@ -1,3 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -10,6 +13,14 @@ import {
   keyLocationFor,
   normalizeSubmittedUrls,
 } from "../scripts/lib/indexnow.mjs";
+import {
+  CATEGORY_REPORTS,
+  GLOBAL_REPORTS,
+  entryHubPaths,
+  entryHubUrls,
+  tagSlug,
+} from "../scripts/lib/indexnow-hubs.mjs";
+import { repoRoot } from "./helpers/registry-fixtures";
 
 describe("IndexNow submission helpers", () => {
   it("builds the production key location from the public key file", () => {
@@ -66,5 +77,75 @@ describe("IndexNow submission helpers", () => {
       ["c", "d"],
       ["e"],
     ]);
+  });
+});
+
+describe("IndexNow hub expansion", () => {
+  it("expands a changed entry into its category, tag, and report hubs", () => {
+    const paths = entryHubPaths({
+      category: "hooks",
+      slug: "accessibility-checker",
+      tags: ["Accessibility", "a11y", "testing"],
+    });
+    expect(paths).toContain("/hooks"); // category page
+    expect(paths).toContain("/state-of-claude-code-hooks"); // category report
+    expect(paths).toContain("/state-of-claude-tooling"); // global report
+    expect(paths).toContain("/tags/accessibility"); // slugified tags
+    expect(paths).toContain("/tags/a11y");
+    expect(paths).toContain("/tags/testing");
+  });
+
+  it("never includes the entry's own URL and de-duplicates", () => {
+    const paths = entryHubPaths({
+      category: "hooks",
+      slug: "x",
+      tags: ["testing", "testing"],
+    });
+    expect(paths).not.toContain("/entry/hooks/x");
+    expect(new Set(paths).size).toBe(paths.length);
+  });
+
+  it("emits only the category page + global report for an unknown category", () => {
+    const paths = entryHubPaths({ category: "rules", slug: "x", tags: [] });
+    expect(paths).toEqual(["/rules", "/state-of-claude-tooling"]);
+  });
+
+  it("emits no tag hubs when the entry has no tags", () => {
+    const paths = entryHubPaths({ category: "skills", slug: "x" });
+    expect(paths.some((p) => p.startsWith("/tags/"))).toBe(false);
+  });
+
+  it("slugifies tags the way the site's tag routes do", () => {
+    expect(tagSlug("Code Review")).toBe("code-review");
+    expect(tagSlug("  C++ / Rust  ")).toBe("c-rust");
+    expect(tagSlug("a11y")).toBe("a11y");
+  });
+
+  it("builds absolute hub URLs against a base, without a double slash", () => {
+    const urls = entryHubUrls(
+      { category: "skills", slug: "x", tags: ["testing"] },
+      "https://heyclau.de/",
+    );
+    expect(urls).toContain("https://heyclau.de/skills");
+    expect(urls).toContain("https://heyclau.de/tags/testing");
+    expect(urls.every((u) => u.startsWith("https://heyclau.de/"))).toBe(true);
+    expect(urls.some((u) => u.includes("//tags"))).toBe(false);
+  });
+
+  it("maps only to report routes that actually exist (no drift)", () => {
+    const reportPaths = [
+      ...new Set([
+        ...Object.values(CATEGORY_REPORTS).flat(),
+        ...GLOBAL_REPORTS,
+      ]),
+    ];
+    for (const reportPath of reportPaths) {
+      const routeFile = path.join(
+        repoRoot,
+        "apps/web/src/routes",
+        `${reportPath.replace(/^\//, "")}.tsx`,
+      );
+      expect(fs.existsSync(routeFile), reportPath).toBe(true);
+    }
   });
 });
