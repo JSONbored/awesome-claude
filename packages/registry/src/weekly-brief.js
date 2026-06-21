@@ -139,23 +139,63 @@ function hasSaferInstallSignal(entry) {
   );
 }
 
+// Safety/privacy presence. The full content carries `safetyNotes`/`privacyNotes`
+// arrays, but the slimmer directory index the brief actually runs against in
+// production drops them and keeps only the `trustSignals.has*` booleans — read
+// both so the signal isn't silently dead in prod.
+function hasSafetyNotes(entry) {
+  return Boolean(
+    list(entry.safetyNotes).length || entry.trustSignals?.hasSafetyNotes,
+  );
+}
+
+function hasPrivacyNotes(entry) {
+  return Boolean(
+    list(entry.privacyNotes).length || entry.trustSignals?.hasPrivacyNotes,
+  );
+}
+
 function trustScore(entry) {
   return (
     (hasSource(entry) ? 8 : 0) +
     (hasSaferInstallSignal(entry) ? 6 : 0) +
-    (list(entry.safetyNotes).length ? 3 : 0) +
-    (list(entry.privacyNotes).length ? 3 : 0) +
+    (hasSafetyNotes(entry) ? 3 : 0) +
+    (hasPrivacyNotes(entry) ? 3 : 0) +
     (entry.claimStatus === "verified" || entry.reviewedBy ? 2 : 0)
   );
 }
 
+// A finer-grained "how substantial is this entry" score, used only to break
+// trust-score ties. Without it, a same-day batch of equally-trusted entries
+// (e.g. eight sibling review-rule packs) falls straight through to an
+// alphabetical tiebreak, which reads as an arbitrary A-Z list. These fields all
+// survive into the production directory index: source depth, description
+// substance, editorial review, and verification recency.
+function richnessScore(entry) {
+  const ts = entry.trustSignals ?? {};
+  const description = text(entry.cardDescription || entry.description || "");
+  const sources = Number(ts.sourceUrlCount) || sourceUrls(entry).length;
+  return (
+    Math.min(sources, 6) +
+    Math.min(Math.floor(description.length / 60), 4) +
+    (ts.firstPartyEditorial ? 2 : 0) +
+    (ts.lastVerifiedAt || entry.verifiedAt ? 1 : 0)
+  );
+}
+
+// Keep "new this week" genuinely newest-first, but when a same-day batch ties on
+// trust, separate them by substance (richness) rather than dropping straight to
+// an alphabetical A-Z list. Title remains the final stable tiebreak so the order
+// is deterministic.
 function sortEntries(left, right) {
   const dateCompare = isoDate(right.dateAdded).localeCompare(
     isoDate(left.dateAdded),
   );
   if (dateCompare !== 0) return dateCompare;
-  const scoreCompare = trustScore(right) - trustScore(left);
-  if (scoreCompare !== 0) return scoreCompare;
+  const trustCompare = trustScore(right) - trustScore(left);
+  if (trustCompare !== 0) return trustCompare;
+  const richCompare = richnessScore(right) - richnessScore(left);
+  if (richCompare !== 0) return richCompare;
   return text(left.title).localeCompare(text(right.title));
 }
 
