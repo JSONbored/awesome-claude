@@ -99,9 +99,7 @@ describe("entryCitationFacts (shared citation-fact source)", () => {
     expect(f.get("Source URLs")).toBe(
       "https://docs.example/normalized-entry, https://github.com/example/normalized-entry, https://example.test/normalized-entry",
     );
-    expect(f.get("Platform compatibility")).toBe(
-      "claude-code (native-skill)",
-    );
+    expect(f.get("Platform compatibility")).toBe("claude-code (native-skill)");
   });
 
   it("buildEntryCitationFacts is exactly the pairs joined — block and LLMS endpoint cannot drift", () => {
