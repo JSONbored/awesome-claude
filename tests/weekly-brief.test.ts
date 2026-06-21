@@ -119,6 +119,11 @@ describe("weekly brief generation", () => {
       saferInstallCount: 1,
       notableChangeCount: 1,
     });
+    // Auto-generated theme: dominant new-entry category + singularized counts.
+    expect(brief.theme).toBe(
+      "2 new this week, led by 2 MCP servers — plus 1 source-backed pick and 1 safer install, all metadata-reviewed for source and safety.",
+    );
+    expect(brief.note).toBe("");
     expect(brief.sections.newEntries.map((item) => item.key)).toEqual([
       "mcp:new-weak",
       "mcp:new-source-backed",

@@ -258,6 +258,51 @@ function selectChangelogChanges(changelogEntries, entries, params) {
   return selected;
 }
 
+const CATEGORY_NOUNS = {
+  mcp: ["MCP server", "MCP servers"],
+  rules: ["rule", "rules"],
+  hooks: ["hook", "hooks"],
+  skills: ["skill", "skills"],
+  commands: ["command", "commands"],
+  statuslines: ["statusline", "statuslines"],
+  agents: ["agent", "agents"],
+  guides: ["guide", "guides"],
+  tools: ["tool", "tools"],
+  collections: ["collection", "collections"],
+};
+
+function categoryNoun(category, count) {
+  const pair = CATEGORY_NOUNS[category];
+  if (!pair) return count === 1 ? "entry" : "entries";
+  return count === 1 ? pair[0] : pair[1];
+}
+
+/**
+ * A one-line, factual "this week" theme derived from the brief — the dominant
+ * new-entry category plus the review counts. Always present so the newsletter
+ * leads with context instead of a bare list. No popularity or hype claims.
+ */
+function briefTheme(newEntries, counts) {
+  const newCount = counts.newEntryCount;
+  const tail = `${counts.sourceBackedCount} source-backed ${counts.sourceBackedCount === 1 ? "pick" : "picks"} and ${counts.saferInstallCount} safer ${counts.saferInstallCount === 1 ? "install" : "installs"}`;
+  if (newCount === 0) {
+    return `A quieter week — ${tail} reviewed.`;
+  }
+  const byCategory = new Map();
+  for (const entry of newEntries) {
+    const category = text(entry.category);
+    if (category) byCategory.set(category, (byCategory.get(category) ?? 0) + 1);
+  }
+  const [topCategory, topCount] = [...byCategory.entries()].sort(
+    (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
+  )[0] ?? [undefined, 0];
+  const lead =
+    topCategory && topCount >= 2
+      ? `, led by ${topCount} ${categoryNoun(topCategory, topCount)}`
+      : "";
+  return `${newCount} new this week${lead} — plus ${tail}, all metadata-reviewed for source and safety.`;
+}
+
 export function buildWeeklyBrief(entries, options = {}) {
   const normalizedEntries = Array.isArray(entries)
     ? entries.filter((entry) => keyFor(entry) && text(entry.title))
@@ -327,6 +372,14 @@ export function buildWeeklyBrief(entries, options = {}) {
       saferInstallCount: saferInstalls.length,
       notableChangeCount: notableChanges.length,
     },
+    // Auto-generated one-line context; always present.
+    theme: briefTheme(newEntries, {
+      newEntryCount: newEntries.length,
+      sourceBackedCount: sourceBacked.length,
+      saferInstallCount: saferInstalls.length,
+    }),
+    // Optional maintainer note, filled in at approval time (empty by default).
+    note: "",
     sections: {
       newEntries,
       sourceBacked,

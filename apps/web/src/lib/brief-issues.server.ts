@@ -148,18 +148,29 @@ export async function getLatestDraft(): Promise<BriefIssue | null> {
  * replayed approval link can't reschedule an already-sent issue). Returns true
  * when a row transitioned to `approved`.
  */
-export async function approveBrief(number: number, scheduledSendAt: string): Promise<boolean> {
+export async function approveBrief(
+  number: number,
+  scheduledSendAt: string,
+  note = "",
+): Promise<boolean> {
   const db = getSiteDb();
   if (!db || !Number.isInteger(number)) return false;
+  // Optional maintainer note, merged into the payload so the audience send and
+  // the public /brief render it. Bounded; empty leaves the payload unchanged.
+  const trimmedNote = String(note ?? "")
+    .replace(/\r\n/g, "\n")
+    .trim()
+    .slice(0, 600);
   try {
     const result = await db
       .prepare(
         `UPDATE brief_issues
          SET status = 'approved', scheduled_send_at = ?, approved_at = ?,
+             payload = json_set(payload, '$.note', ?),
              updated_at = CURRENT_TIMESTAMP
          WHERE number = ? AND status = 'draft'`,
       )
-      .bind(scheduledSendAt, new Date().toISOString(), number)
+      .bind(scheduledSendAt, new Date().toISOString(), trimmedNote, number)
       .run();
     return Boolean(result?.meta?.changes);
   } catch (error) {

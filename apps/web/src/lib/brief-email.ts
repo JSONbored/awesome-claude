@@ -30,8 +30,14 @@ type BriefPayload = {
     sourceBackedCount?: number;
     saferInstallCount?: number;
   };
+  theme?: string;
+  note?: string;
   sections?: Record<string, BriefItem[] | undefined>;
 };
+
+// How many picks per section render as full cards before the rest collapse to
+// compact one-liners — keeps the email scannable without dropping coverage.
+const FEATURED_PER_SECTION = 4;
 
 const SECTIONS: BriefSection[] = [
   { key: "newEntries", label: "New this week", intro: "Fresh additions to the registry." },
@@ -130,6 +136,18 @@ function cardHtml(item: BriefItem, siteUrl: string): string {
   </table>`;
 }
 
+function overflowRowHtml(item: BriefItem, siteUrl: string): string {
+  const href = escapeHtml(absolute(String(item.url ?? ""), siteUrl));
+  const title = escapeHtml(String(item.title ?? ""));
+  const cat = escapeHtml(categoryLabel(item.category));
+  const catTag = cat
+    ? `<span style="font-size:10px;letter-spacing:0.05em;text-transform:uppercase;color:#a39e93;font-weight:700;">${cat}</span> `
+    : "";
+  return `<tr><td style="padding:8px 16px;border-bottom:1px solid #f0ede4;">
+      ${catTag}<a href="${href}" style="font-size:14px;font-weight:600;color:#171614;text-decoration:none;">${title}</a>
+    </td></tr>`;
+}
+
 function sectionHtml(
   section: BriefSection,
   items: BriefItem[] | undefined,
@@ -137,11 +155,18 @@ function sectionHtml(
 ): string {
   const rows = (items ?? []).filter((item) => item?.title);
   if (rows.length === 0) return "";
-  const cards = rows.map((item) => cardHtml(item, siteUrl)).join("");
+  const featured = rows.slice(0, FEATURED_PER_SECTION);
+  const overflow = rows.slice(FEATURED_PER_SECTION);
+  const cards = featured.map((item) => cardHtml(item, siteUrl)).join("");
+  const more = overflow.length
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:2px 0 10px;border:1px solid #e7e3d8;border-radius:10px;background:#ffffff;">${overflow
+        .map((item) => overflowRowHtml(item, siteUrl))
+        .join("")}</table>`
+    : "";
   return `<div style="margin:28px 0 12px;">
       <div style="font-size:16px;font-weight:700;color:#171614;">${escapeHtml(section.label)}</div>
       <div style="font-size:12px;color:#a39e93;margin-top:2px;">${escapeHtml(section.intro)}</div>
-    </div>${cards}`;
+    </div>${cards}${more}`;
 }
 
 function sectionText(
@@ -151,13 +176,23 @@ function sectionText(
 ): string {
   const rows = (items ?? []).filter((item) => item?.title);
   if (rows.length === 0) return "";
-  const list = rows
+  const featured = rows.slice(0, FEATURED_PER_SECTION);
+  const overflow = rows.slice(FEATURED_PER_SECTION);
+  const list = featured
     .map((item) => {
       const desc = item.description ? `\n    ${truncate(String(item.description), 120)}` : "";
       return `• ${item.title} [${categoryLabel(item.category)}]${desc}\n    ${absolute(String(item.url ?? ""), siteUrl)}`;
     })
     .join("\n");
-  return `\n${section.label.toUpperCase()}\n${section.intro}\n${list}\n`;
+  const more = overflow.length
+    ? `\n${overflow
+        .map(
+          (item) =>
+            `• ${item.title} [${categoryLabel(item.category)}] — ${absolute(String(item.url ?? ""), siteUrl)}`,
+        )
+        .join("\n")}`
+    : "";
+  return `\n${section.label.toUpperCase()}\n${section.intro}\n${list}${more}\n`;
 }
 
 export function buildBriefEmail(options: {
@@ -176,6 +211,21 @@ export function buildBriefEmail(options: {
     : `HeyClaude Weekly Brief — ${dateLabelNice}`;
 
   const summaryLine = `${summary.newEntryCount ?? 0} new this week · ${summary.sourceBackedCount ?? 0} source-backed · ${summary.saferInstallCount ?? 0} safer installs`;
+
+  const theme = String(brief.theme ?? "").trim();
+  const themeBlock = theme
+    ? `<p style="font-size:15px;line-height:1.55;color:#44403a;margin:0 0 22px;">${escapeHtml(theme)}</p>`
+    : "";
+
+  const note = String(brief.note ?? "").trim();
+  const noteBlock = note
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border-left:3px solid #171614;background:#faf8f2;border-radius:0 8px 8px 0;">
+        <tr><td style="padding:14px 18px;">
+          <div style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:#a39e93;font-weight:700;margin-bottom:6px;">From the editor</div>
+          <div style="font-size:14px;line-height:1.6;color:#44403a;white-space:pre-wrap;">${escapeHtml(note)}</div>
+        </td></tr>
+      </table>`
+    : "";
 
   const approveBlock = approveUrl
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 26px;background:#f0ede4;border:1px solid #e3dfd3;border-radius:12px;">
@@ -196,7 +246,9 @@ export function buildBriefEmail(options: {
         <tr><td>
           <div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#a39e93;font-weight:600;">HeyClaude Weekly Brief · ${escapeHtml(dateLabelNice)}</div>
           <h1 style="font-size:24px;line-height:1.25;margin:8px 0 6px;color:#171614;">${escapeHtml(title)}</h1>
-          <div style="font-size:13px;color:#8a857b;margin-bottom:22px;">${escapeHtml(summaryLine)}</div>
+          <div style="font-size:13px;color:#8a857b;margin-bottom:12px;">${escapeHtml(summaryLine)}</div>
+          ${themeBlock}
+          ${noteBlock}
           ${approveBlock}
           ${body || '<p style="color:#6b675f;">No notable activity this week.</p>'}
           <p style="margin-top:30px;padding-top:18px;border-top:1px solid #e7e3d8;font-size:12px;color:#a39e93;">Reviewed picks from <a href="${escapeHtml(siteUrl)}" style="color:#6b675f;">heyclau.de</a> — every entry is metadata-reviewed for source &amp; safety. No hype, no listicle filler.</p>
@@ -207,6 +259,8 @@ export function buildBriefEmail(options: {
 
   const text =
     `HeyClaude Weekly Brief — ${dateLabelNice}\n${title}\n${summaryLine}\n` +
+    (theme ? `\n${theme}\n` : "") +
+    (note ? `\nFrom the editor:\n${note}\n` : "") +
     (approveUrl ? `\nApprove & schedule: ${approveUrl}\n` : "") +
     SECTIONS.map((section) => sectionText(section, sections[section.key], siteUrl)).join("") +
     `\n— Reviewed picks from ${siteUrl}\n`;

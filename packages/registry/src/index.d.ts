@@ -910,6 +910,8 @@ export type WeeklyBrief = {
     saferInstallCount: number;
     notableChangeCount: number;
   };
+  theme: string;
+  note: string;
   sections: {
     newEntries: WeeklyBriefItem[];
     sourceBacked: WeeklyBriefItem[];

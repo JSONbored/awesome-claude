@@ -4,6 +4,10 @@ import { useState, type ReactNode } from "react";
 import { z } from "zod";
 
 const tokenInput = z.object({ token: z.string() });
+const confirmInput = z.object({
+  token: z.string(),
+  note: z.string().max(2000).optional(),
+});
 
 // Verify the signed link and return the draft it points at (read-only — the
 // approval itself is a separate POST so an email link-scanner can't auto-approve).
@@ -20,7 +24,7 @@ const verifyApprove = createServerFn({ method: "GET" })
   });
 
 const confirmApprove = createServerFn({ method: "POST" })
-  .inputValidator(tokenInput)
+  .inputValidator(confirmInput)
   .handler(async ({ data }) => {
     const { getEnvString } = await import("@/lib/cloudflare-env.server");
     const { verifyBriefApproveToken } = await import("@/lib/brief-token.server");
@@ -31,7 +35,7 @@ const confirmApprove = createServerFn({ method: "POST" })
     const payload = await verifyBriefApproveToken(secret, data.token, Date.now());
     if (!payload) return { ok: false as const, reason: "invalid" as const };
     const scheduledSendAt = nextSendSlot(new Date());
-    const changed = await approveBrief(payload.n, scheduledSendAt);
+    const changed = await approveBrief(payload.n, scheduledSendAt, data.note ?? "");
     return changed
       ? { ok: true as const, scheduledSendAt }
       : { ok: false as const, reason: "already" as const };
@@ -52,6 +56,7 @@ export const Route = createFileRoute("/brief/approve")({
 function ApprovePage() {
   const result = Route.useLoaderData();
   const { token } = Route.useSearch();
+  const [note, setNote] = useState("");
   const [state, setState] = useState<
     | { phase: "idle" }
     | { phase: "working" }
@@ -92,13 +97,30 @@ function ApprovePage() {
         </p>
       )}
       <div style={{ marginTop: 20 }}>
+        <label htmlFor="brief-note" className="block text-sm font-medium text-ink">
+          Add a short note to readers (optional)
+        </label>
+        <textarea
+          id="brief-note"
+          value={note}
+          onChange={(event) => setNote(event.target.value.slice(0, 600))}
+          rows={4}
+          maxLength={600}
+          placeholder="A line or two at the top of the issue — what you're into this week. Leave blank to skip and lead with the auto summary."
+          className="mt-2 w-full rounded-md border border-border bg-surface p-3 text-sm text-ink placeholder:text-ink-subtle"
+        />
+        <div className="mt-1 text-xs text-ink-subtle">
+          {note.trim().length}/600 · shows as a “From the editor” block above the picks.
+        </div>
+      </div>
+      <div style={{ marginTop: 16 }}>
         <button
           type="button"
           disabled={state.phase === "working"}
           onClick={async () => {
             setState({ phase: "working" });
             try {
-              const res = await confirmApprove({ data: { token } });
+              const res = await confirmApprove({ data: { token, note } });
               if (res.ok) setState({ phase: "done", scheduledSendAt: res.scheduledSendAt });
               else setState({ phase: "error", reason: res.reason });
             } catch {

@@ -285,6 +285,38 @@ describe("web non-UI utility coverage", () => {
     });
     expect(audience.subject).toBe("HeyClaude Weekly Brief — not-a-date");
     expect(audience.html).toContain("No notable activity this week.");
+
+    // Theme line, editor note, and density: 4 featured cards + compact overflow.
+    const full = buildBriefEmail({
+      brief: {
+        summary: {
+          newEntryCount: 6,
+          sourceBackedCount: 0,
+          saferInstallCount: 0,
+        },
+        theme: "6 new this week, led by 6 rules.",
+        note: "Glad to be back —\nreply and tell me what to cover.",
+        sections: {
+          newEntries: Array.from({ length: 6 }, (_, i) => ({
+            title: `Entry ${i}`,
+            url: `/entry/rules/e${i}`,
+            category: "rules",
+            description: "desc",
+          })),
+        },
+      },
+      siteUrl: "https://heyclau.de",
+      dateLabel: "2026-06-19",
+    });
+    expect(full.html).toContain("6 new this week, led by 6 rules.");
+    expect(full.html).toContain("From the editor");
+    expect(full.html).toContain("reply and tell me what to cover.");
+    expect(full.text).toContain("From the editor:");
+    // 4 full cards (14px 16px padding) + 2 compact overflow rows.
+    expect((full.html.match(/padding:14px 16px/g) ?? []).length).toBe(4);
+    expect(
+      (full.html.match(/border-bottom:1px solid #f0ede4/g) ?? []).length,
+    ).toBe(2);
   });
 
   it("signs brief approval tokens and rejects tampered, malformed, and expired tokens", async () => {

@@ -11,12 +11,19 @@ const loadBriefIssue = createServerFn({ method: "GET" })
     const { getBriefByNumber } = await import("@/lib/brief-issues.server");
     const issue = await getBriefByNumber(data.number);
     if (!issue) return { found: false as const };
-    const payload = issue.payload as { title?: string; sections?: BriefSectionsData };
+    const payload = issue.payload as {
+      title?: string;
+      theme?: string;
+      note?: string;
+      sections?: BriefSectionsData;
+    };
     return {
       found: true as const,
       number: issue.number,
       periodThrough: issue.period_through,
       title: typeof payload.title === "string" ? payload.title : `Weekly Brief #${issue.number}`,
+      theme: typeof payload.theme === "string" ? payload.theme : "",
+      note: typeof payload.note === "string" ? payload.note : "",
       sections: payload.sections ?? {},
     };
   });
@@ -73,7 +80,16 @@ function BriefIssuePage() {
           Issue #{String(issue.number).padStart(2, "0")} · Week of {issue.periodThrough}
         </div>
         <h1 className="mt-2 h-display-1 text-ink text-balance">{issue.title}</h1>
+        {issue.found && issue.theme ? (
+          <p className="mt-4 text-pretty text-lg text-ink-muted">{issue.theme}</p>
+        ) : null}
       </header>
+      {issue.found && issue.note ? (
+        <div className="mt-6 max-w-3xl rounded-xl border-l-2 border-accent bg-surface p-5">
+          <div className="eyebrow text-ink-subtle">From the editor</div>
+          <p className="mt-1 whitespace-pre-wrap text-pretty text-ink">{issue.note}</p>
+        </div>
+      ) : null}
       <div className="mt-8">
         <BriefSections sections={issue.found ? issue.sections : {}} />
       </div>
