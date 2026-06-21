@@ -78,9 +78,7 @@ function BriefPage() {
                 <div className="p-6">
                   <div className="eyebrow text-accent-ink dark:text-accent">Latest issue</div>
                   <h2 className="mt-1 h-display-2 text-ink text-balance">{latest.title}</h2>
-                  <p className="mt-2 text-pretty text-sm text-ink-muted drop-cap">
-                    {latest.summary}
-                  </p>
+                  <p className="mt-2 text-pretty text-sm text-ink-muted">{latest.summary}</p>
                   <div className="mt-5 grid gap-3 sm:grid-cols-3">
                     <BriefMetric label="New entries" value={WEEKLY_BRIEF.newEntries.length} />
                     <BriefMetric
@@ -107,7 +105,7 @@ function BriefPage() {
             </article>
           )}
 
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
             <BriefList title="New in the registry" items={WEEKLY_BRIEF.newEntries} />
             <BriefList title="Trusted installs" items={WEEKLY_BRIEF.trustedInstalls} />
             <BriefList title="Source-backed picks" items={WEEKLY_BRIEF.sourceBackedPicks} />
@@ -215,17 +213,17 @@ function BriefList({
   items: Array<{ ref: string; title: string; reason?: string; date?: string }>;
 }) {
   return (
-    <section className="rounded-xl border border-border bg-surface p-4">
+    <section className="rounded-xl border border-border bg-surface p-5">
       <h2 className="font-display text-base font-semibold text-ink">{title}</h2>
-      <ul className="mt-3 space-y-3 text-sm">
+      <ul className="mt-4 divide-y divide-border/60 text-sm">
         {items.map((item) => (
-          <li key={item.ref}>
+          <li key={item.ref} className="py-3 first:pt-0 last:pb-0">
             <a href={`/entry/${item.ref}`} className="font-medium text-ink hover:underline">
               {item.title}
             </a>
-            <div className="mt-0.5 font-mono text-[11px] text-ink-subtle">{item.ref}</div>
+            <div className="mt-1 font-mono text-[11px] text-ink-subtle">{item.ref}</div>
             {(item.reason || item.date) && (
-              <p className="mt-1 text-xs text-ink-muted">{item.reason ?? item.date}</p>
+              <p className="mt-1.5 text-xs text-ink-muted">{item.reason ?? item.date}</p>
             )}
           </li>
         ))}

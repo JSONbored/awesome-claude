@@ -33,7 +33,12 @@ const SUDO_VALUE_FLAGS = new Set([
   "--host",
 ]);
 
-const SHELL_TOKENS = ["bash", "zsh", "sh"];
+// POSIX shells that execute piped input. `dash` (the Debian/Ubuntu default
+// `/bin/sh`) and `ash` (BusyBox/Alpine, common in Docker images) appear in
+// real `curl … | dash`-style install snippets, so they are recognized as
+// shells alongside bash/zsh/sh. Matching is on the exact lead command word,
+// so a shell name used as an argument (e.g. `grep -v dash`) is not flagged.
+const SHELL_TOKENS = ["bash", "zsh", "sh", "dash", "ash"];
 const DOWNLOADER_TOKENS = ["curl", "wget"];
 
 function isWordCharacter(char) {
@@ -245,7 +250,12 @@ function hasPipeToShellInstall(line, lowerLine) {
       sawDownloader = false;
       continue;
     }
-    const lead = segmentLeadCommand(line, lowerLine, segment.start, segment.end);
+    const lead = segmentLeadCommand(
+      line,
+      lowerLine,
+      segment.start,
+      segment.end,
+    );
     if (sawDownloader && SHELL_TOKENS.includes(lead)) return true;
     if (DOWNLOADER_TOKENS.includes(lead)) sawDownloader = true;
   }
@@ -260,7 +270,12 @@ function hasBase64DecodedShell(line, lowerLine) {
       sawDecodedBase64 = false;
       continue;
     }
-    const lead = segmentLeadCommand(line, lowerLine, segment.start, segment.end);
+    const lead = segmentLeadCommand(
+      line,
+      lowerLine,
+      segment.start,
+      segment.end,
+    );
     if (sawDecodedBase64 && SHELL_TOKENS.includes(lead)) return true;
     if (lead === "base64") {
       sawDecodedBase64 = segmentHasDecodeFlag(
