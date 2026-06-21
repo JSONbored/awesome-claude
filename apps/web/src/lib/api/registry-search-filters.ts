@@ -1,3 +1,4 @@
+import { normalizePlatform } from "@heyclaude/registry";
 import type { SearchDocument } from "@heyclaude/registry";
 
 import {
@@ -326,7 +327,9 @@ export function matchesQuery(entry: SearchDocument, query: string) {
 
 export function matchesPlatform(entry: SearchDocument, platform: string) {
   if (!platform) return true;
-  return (entry.platforms ?? []).some((item) => String(item).trim().toLowerCase() === platform);
+  // Entry platforms are canonical IDs; map the filter input to canonical too.
+  const target = normalizePlatform(platform) ?? platform.trim().toLowerCase();
+  return (entry.platforms ?? []).some((item) => String(item).trim().toLowerCase() === target);
 }
 
 export function matchesBooleanFilter(value: boolean, filter: BooleanFilterValue) {

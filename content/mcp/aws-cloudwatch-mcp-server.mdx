@@ -1,0 +1,157 @@
+---
+title: AWS CloudWatch MCP Server
+slug: aws-cloudwatch-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server that gives troubleshooting agents task-oriented
+  access to Amazon CloudWatch metrics, alarms, logs, and PromQL queries for
+  AI-assisted root-cause analysis and remediation recommendations.
+cardDescription: >-
+  Connect Claude to Amazon CloudWatch to query metrics, inspect alarms, analyze
+  logs, and run PromQL for AI-assisted incident troubleshooting.
+seoTitle: "AWS CloudWatch MCP Server for Claude — Metrics, Alarms & Logs"
+seoDescription: >-
+  Connect Claude to the official AWS Labs CloudWatch MCP server for AI-assisted
+  observability: query metrics, analyze alarms and logs, and run PromQL over
+  stdio with uvx using your scoped AWS credentials.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-20"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/cloudwatch-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.cloudwatch-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/cloudwatch-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/cloudwatch-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.cloudwatch-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.cloudwatch-mcp-server@latest
+usageSnippet: >-
+  Configure the server with uvx and a scoped AWS profile, then ask Claude to
+  list active alarms, pull metric data, analyze a log group, or run a PromQL
+  query to investigate an incident.
+copySnippet: |-
+  {
+    "awslabs.cloudwatch-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.cloudwatch-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE}",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.cloudwatch-mcp-server": {
+        "command": "uvx",
+        "args": ["awslabs.cloudwatch-mcp-server@latest"],
+        "env": {
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "FASTMCP_LOG_LEVEL": "ERROR"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - An AWS account with CloudWatch telemetry (metrics, alarms, and/or logs).
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - "AWS credentials configured locally (for example via `aws configure` or `AWS_PROFILE`) with read access to the CloudWatch APIs you intend to use."
+  - An MCP client that supports stdio servers; the server runs locally on the same host as the client.
+safetyNotes:
+  - This server reads CloudWatch telemetry from your AWS account; scope the AWS credentials/profile to read-only CloudWatch access and the intended accounts and regions.
+  - "It is designed for observability and troubleshooting (metrics, alarms, logs, PromQL) and does not modify resources, but it can issue many CloudWatch read APIs that may incur AWS request costs."
+  - Run it only on a trusted host, since it uses the local machine's AWS credentials to reach your account.
+  - "Some PromQL tooling is region-limited and may require enabling OTel enrichment (`aws cloudwatch start-otel-enrichment`); review the server docs before relying on it."
+privacyNotes:
+  - Metric values, alarm states and history, log group contents, namespaces, dimensions, ARNs, and account/region metadata can be returned through tool calls and exposed to the model.
+  - Queries and time ranges you ask about are sent to the CloudWatch APIs using your configured credentials; keep account identifiers and credentials out of public prompts, issues, and screenshots.
+tags:
+  - aws
+  - cloudwatch
+  - observability
+  - monitoring
+  - aws-labs
+keywords:
+  - aws cloudwatch mcp server
+  - awslabs cloudwatch-mcp-server
+  - cloudwatch mcp claude
+  - aws observability mcp
+  - cloudwatch logs metrics alarms mcp
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AWS CloudWatch MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+Model Context Protocol server that gives troubleshooting agents task-oriented
+access to Amazon CloudWatch. Rather than wiring up custom CloudWatch API calls,
+Claude can pull metric data, inspect active alarms and their history, analyze
+log groups for anomalies and error patterns, and run PromQL queries — then
+reason over the results for AI-assisted root-cause analysis.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.cloudwatch-mcp-server` Python package and uses your local AWS
+credentials, so scope those credentials to read-only CloudWatch access.
+
+## Features
+
+- **Metrics** — retrieve metric data (including percentiles and math
+  expressions), get metric metadata, analyze trend/seasonality, and get
+  recommended alarm configurations.
+- **Alarms** — list currently active alarms and retrieve alarm state history to
+  understand what triggered an alert.
+- **Logs** — describe log groups and analyze a log group for anomalies, message
+  patterns, and error patterns within a time window.
+- **PromQL** — run instant and range PromQL queries and discover labels/series
+  for OTLP-ingested and enriched vended AWS metrics (region-limited).
+
+## Use Cases
+
+- Investigate an incident by correlating active alarms with their related
+  metrics and logs.
+- Ask Claude to summarize what a metric represents and recommend alarm
+  thresholds.
+- Analyze a log group for error spikes within a specific time window.
+- Run PromQL trend queries across services for cross-service observability.
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+ and `uv`.
+2. Configure an AWS profile with read access to CloudWatch.
+3. Add the server with the stdio configuration above (command `uvx`, package
+   `awslabs.cloudwatch-mcp-server@latest`, env `AWS_PROFILE`).
+4. Verify it is connected with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration and set
+`AWS_PROFILE` to a profile scoped to read-only CloudWatch access. The first run
+downloads the package via `uvx`.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). The server is observability-focused and
+read-oriented, but it uses your AWS credentials and can return account telemetry,
+so scope permissions tightly and verify the configuration against the linked
+source before using it in automated workflows.

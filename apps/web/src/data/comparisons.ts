@@ -567,6 +567,36 @@ export const COMPARISONS: Comparison[] = [
       "CI/CD and delivery MCP servers that let Claude manage pipelines and deployments, compared on trust, setup, and safety.",
     refs: ["mcp/circleci-mcp-server", "mcp/azure-devops-mcp-server", "mcp/argocd-mcp-server"],
   },
+  {
+    slug: "llm-observability-mcp-servers",
+    title: "Arize Phoenix vs Opik MCP servers for Claude",
+    heading: "LLM observability MCP servers compared",
+    seoDescription:
+      "Compare the Arize Phoenix and Opik MCP servers for Claude Code — tracing, evals, and prompt management, with trust, install, and safety side by side.",
+    intro:
+      "LLM observability MCP servers that give Claude access to traces, evals, and prompt management, compared on trust, setup, and safety.",
+    refs: ["mcp/arize-phoenix-mcp-server", "mcp/opik-mcp-server"],
+  },
+  {
+    slug: "paas-deployment-mcp-servers",
+    title: "Fly.io vs Railway MCP servers for Claude",
+    heading: "PaaS deployment MCP servers compared",
+    seoDescription:
+      "Compare the Fly.io and Railway MCP servers for Claude Code — deploy and manage apps on each platform, with trust, install, and safety side by side.",
+    intro:
+      "Platform-as-a-service deployment MCP servers that let Claude ship and manage apps, compared on trust, setup, and safety.",
+    refs: ["mcp/fly-io-mcp-server", "mcp/railway-mcp-server"],
+  },
+  {
+    slug: "mcp-gateway-servers",
+    title: "Bifrost vs MetaMCP vs tbxark MCP gateways for Claude",
+    heading: "MCP gateway servers compared",
+    seoDescription:
+      "Compare the Bifrost, MetaMCP, and tbxark MCP gateway and proxy servers for Claude Code — aggregate and route multiple MCP servers, with trust, install, and safety side by side.",
+    intro:
+      "MCP gateway and proxy servers that aggregate and route multiple MCP servers behind one endpoint, compared on trust, setup, and safety.",
+    refs: ["mcp/bifrost-mcp-gateway", "mcp/metamcp-gateway", "mcp/tbxark-mcp-proxy-server"],
+  },
 ];
 
 export function getComparison(slug: string) {

@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Collect changed entry URLs (live only)
+      - name: Collect changed entry + hub URLs (live only)
         id: urls
         env:
           # Passed via env (not inlined into the shell) to avoid script injection.
@@ -53,17 +53,33 @@ jobs:
           # ping URLs that no longer exist).
           changed="$(git diff --name-only --diff-filter=AM "$base" "$HEAD_SHA" -- 'content/**/*.mdx' || true)"
 
-          : > indexnow-urls.txt
+          # Reduce to flat <category>/<slug> entry refs (skip archive/ etc.).
+          refs=()
           while IFS= read -r file; do
             [ -z "$file" ] && continue
             rel="${file#content/}"          # <category>/<slug>.mdx
             category="${rel%%/*}"
             slug="${rel#*/}"; slug="${slug%.mdx}"
-            # Skip anything that isn't a flat <category>/<slug> entry (e.g. archive/).
             case "$slug" in */*) continue;; esac
-            url="https://heyclau.de/entry/${category}/${slug}"
-            # Only submit URLs that are actually live (filters non-entry paths and
-            # entries whose deploy hasn't propagated yet — the daily cron re-catches those).
+            refs+=("${category}/${slug}")
+          done <<< "$changed"
+
+          : > indexnow-urls.txt
+          if [ "${#refs[@]}" -eq 0 ]; then
+            echo "count=0" >> "$GITHUB_OUTPUT"
+            echo "No changed entries."
+            exit 0
+          fi
+
+          # Expand each changed entry into its URL + the generated hub URLs whose
+          # content changes with it (category page, tag pages, category state
+          # reports). Bounded to these entries' hubs — no full-sitemap bulk.
+          candidates="$(node scripts/indexnow-changed-urls.mjs "${refs[@]}")"
+
+          # Only submit URLs that are actually live (filters non-propagated
+          # deploys + any stale hub; the daily cron re-catches anything skipped).
+          while IFS= read -r url; do
+            [ -z "$url" ] && continue
             code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$url" || echo 000)"
             if [ "$code" = "200" ]; then
               echo "$url" >> indexnow-urls.txt
@@ -71,11 +87,11 @@ jobs:
             else
               echo "skip   $url (HTTP $code)"
             fi
-          done <<< "$changed"
+          done <<< "$candidates"
 
           count="$(grep -c . indexnow-urls.txt || true)"
           echo "count=$count" >> "$GITHUB_OUTPUT"
-          echo "Submitting $count live entry URL(s)."
+          echo "Submitting $count live URL(s)."
 
       - name: Submit to IndexNow
         if: steps.urls.outputs.count != '0'

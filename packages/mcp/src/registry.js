@@ -54,18 +54,29 @@ export const MCP_PUBLIC_POLICY = {
   note: "HeyClaude MCP tools only read public registry artifacts or prepare maintainer-reviewed submission drafts.",
 };
 
+// Maps a slugified platform filter input to a canonical platform ID, matching
+// the canonical IDs in generated artifacts (see packages/registry platforms.js).
 const platformAliases = new Map([
-  ["claude", "Claude"],
-  ["codex", "Codex"],
-  ["openai", "Codex"],
-  ["windsurf", "Windsurf"],
-  ["gemini", "Gemini"],
-  ["cursor", "Cursor"],
-  ["cursor-rules", "Cursor"],
-  ["generic-agents", "Generic AGENTS"],
-  ["agents", "Generic AGENTS"],
-  ["agents-context", "Generic AGENTS"],
-  ["agents-md", "Generic AGENTS"],
+  ["claude", "claude-code"],
+  ["claude-code", "claude-code"],
+  ["claude-desktop", "claude-desktop"],
+  ["codex", "codex"],
+  ["openai", "codex"],
+  ["windsurf", "windsurf"],
+  ["gemini", "gemini"],
+  ["cursor", "cursor"],
+  ["cursor-rules", "cursor"],
+  ["vscode", "vscode"],
+  ["vs-code", "vscode"],
+  ["raycast", "raycast"],
+  ["aider", "aider"],
+  ["zed", "zed"],
+  ["continue", "continue"],
+  ["cli", "cli"],
+  ["generic-agents", "cli"],
+  ["agents", "cli"],
+  ["agents-context", "cli"],
+  ["agents-md", "cli"],
 ]);
 
 export const READ_ONLY_TOOL_NAMES = [
@@ -1720,7 +1731,9 @@ export async function compareEntries(args = {}, options = {}) {
   const compared = entries.map((entry) => {
     const compatibility = buildSkillPlatformCompatibility(entry);
     const selectedCompatibility = platform
-      ? compatibility.find((item) => item.platform === platform) || null
+      ? compatibility.find(
+          (item) => normalizePlatform(item.platform) === platform,
+        ) || null
       : null;
     return {
       key: `${entry.category}:${entry.slug}`,
@@ -2528,7 +2541,9 @@ export async function getInstallGuidance(args = {}, options = {}) {
 
   const compatibility = buildSkillPlatformCompatibility(entry);
   const selectedCompatibility = platform
-    ? compatibility.find((item) => item.platform === platform) || null
+    ? compatibility.find(
+        (item) => normalizePlatform(item.platform) === platform,
+      ) || null
     : null;
 
   return {
@@ -2556,7 +2571,7 @@ export async function getPlatformAdapter(args = {}, options = {}) {
   const platform = normalizePlatform(args.platform || "cursor");
   if (!slug) return invalid("slug is required.");
 
-  if (platform !== "Cursor") {
+  if (platform !== "cursor") {
     return {
       ok: true,
       platform,
@@ -2579,7 +2594,7 @@ export async function getPlatformAdapter(args = {}, options = {}) {
     );
     return {
       ok: true,
-      platform: "Cursor",
+      platform: "cursor",
       slug,
       adapterAvailable: true,
       adapterPath: `/data/skill-adapters/cursor/${slug}.mdc`,
@@ -2733,7 +2748,9 @@ export async function reviewEntrySafety(args = {}, options = {}) {
       title: entry.title,
       canonicalUrl: entryCanonicalUrl(entry),
       selectedCompatibility: platform
-        ? compatibility.find((item) => item.platform === platform) || null
+        ? compatibility.find(
+            (item) => normalizePlatform(item.platform) === platform,
+          ) || null
         : null,
       trust: entryTrustSummary(entry),
     });

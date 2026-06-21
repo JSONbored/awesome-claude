@@ -261,6 +261,29 @@ export function relatedBySimilarity(entry: Entry, entries: Entry[], limit = 4): 
     .map((x) => x.e);
 }
 
+/**
+ * Up to `limit` guide entries that share tags with `entry`, ranked by tag
+ * overlap. Deterministic and relevance-constrained — a guide must share at
+ * least one tag — so entry pages can surface "how do I use this" next-step
+ * links without noise. Returns [] when the entry has no tags or no guide shares
+ * one. Ties break on slug for a stable order.
+ */
+export function relatedGuides(entry: Entry, limit = 3): Entry[] {
+  const entryTags = new Set((entry.tags ?? []).map((tag) => tag.toLowerCase()));
+  if (entryTags.size === 0) return [];
+  return ENTRIES.filter(
+    (candidate) => candidate.category === "guides" && !sameEntry(candidate, entry),
+  )
+    .map((guide) => ({
+      guide,
+      overlap: guide.tags.filter((tag) => entryTags.has(tag.toLowerCase())).length,
+    }))
+    .filter((scored) => scored.overlap > 0)
+    .sort((a, b) => b.overlap - a.overlap || a.guide.slug.localeCompare(b.guide.slug))
+    .slice(0, limit)
+    .map((scored) => scored.guide);
+}
+
 // Order for surfacing relation groups (most decision-relevant first). "duplicate" is excluded.
 const RELATION_ORDER: EntryRelationType[] = [
   "alternative",

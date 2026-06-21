@@ -156,6 +156,12 @@ describe("registry submission parsing and validation", () => {
     });
   });
 
+  it("treats prototype property heading names as literal field keys", () => {
+    expect(parseSubmissionPrBody("### Constructor\n\nbuilder")).toEqual({
+      constructor: "builder",
+    });
+  });
+
   it("builds PR drafts and validates risky submissions with clear errors", () => {
     const draft = buildSubmissionPrDraft(validMcpFields);
     expect(buildSubmissionPrTitle(validMcpFields)).toBe(

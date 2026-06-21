@@ -1,0 +1,164 @@
+---
+title: AWS Documentation MCP Server
+slug: aws-documentation-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server that lets AI assistants read, search, and get
+  recommendations across AWS documentation, returning pages as clean markdown
+  with no AWS account or credentials required.
+cardDescription: >-
+  Give Claude live access to AWS documentation: search, read pages as markdown,
+  fetch sections, and get related-page recommendations via uvx.
+seoTitle: "AWS Documentation MCP Server for Claude — Search & Read AWS Docs"
+seoDescription: >-
+  Connect Claude to the official AWS Labs AWS Documentation MCP server to search
+  AWS docs, convert pages to markdown, read sections, and get recommendations
+  over stdio with uvx — no AWS credentials needed.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-20"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/aws-documentation-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.aws-documentation-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/aws-documentation-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/aws-documentation-mcp-server/pyproject.toml"
+  - "https://github.com/awslabs/mcp/blob/main/src/aws-documentation-mcp-server/awslabs/aws_documentation_mcp_server/server.py"
+  - "https://pypi.org/project/awslabs.aws-documentation-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.aws-documentation-mcp-server@latest
+usageSnippet: >-
+  Configure the server with uvx in your MCP client, then ask Claude to search
+  AWS documentation or read a specific AWS docs URL; the server returns the
+  page as markdown without needing any AWS credentials.
+copySnippet: |-
+  {
+    "awslabs.aws-documentation-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "AWS_DOCUMENTATION_PARTITION": "aws"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.aws-documentation-mcp-server": {
+        "command": "uvx",
+        "args": ["awslabs.aws-documentation-mcp-server@latest"],
+        "env": {
+          "FASTMCP_LOG_LEVEL": "ERROR",
+          "AWS_DOCUMENTATION_PARTITION": "aws"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Python 3.10 or newer installed.
+  - "`uv` / `uvx` installed (Astral) to run the published Python package."
+  - An MCP client that supports stdio servers (Claude Code, Claude Desktop, Cursor, Kiro, or VS Code).
+  - Outbound HTTPS access so the server can fetch and search AWS documentation.
+safetyNotes:
+  - "The server is read-only: it fetches and searches public AWS documentation and does not call AWS service APIs or modify any AWS resources."
+  - It requires no AWS account or credentials; do not add AWS access keys for this server.
+  - "`AWS_DOCUMENTATION_PARTITION` selects the docs partition (`aws` global, or `aws-cn` for China); the available tools differ between partitions."
+privacyNotes:
+  - Documentation URLs and search terms you ask about are sent to the official AWS documentation search/read endpoints to retrieve content.
+  - The server fetches public documentation pages over HTTPS and returns them as markdown; no private account data is read.
+tags:
+  - aws
+  - documentation
+  - aws-labs
+  - search
+  - developer-tools
+keywords:
+  - aws documentation mcp server
+  - awslabs aws-documentation-mcp-server
+  - aws docs mcp claude
+  - search aws documentation mcp
+  - aws labs mcp server
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AWS Documentation MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+Model Context Protocol server that gives AI assistants structured access to AWS
+documentation. Instead of pasting AWS docs into a prompt, Claude can search the
+official AWS documentation, fetch a specific page and convert it to markdown,
+read individual sections, and get recommendations for related pages.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.aws-documentation-mcp-server` Python package and needs **no AWS account
+or credentials** — it only reads public AWS documentation.
+
+## Features
+
+- **Search documentation** — query the official AWS documentation search API
+  (available in the global `aws` partition).
+- **Read documentation** — fetch an AWS documentation page and convert it to
+  clean markdown for the model to consume.
+- **Read sections** — retrieve specific sections of a documentation page rather
+  than the whole article.
+- **Recommendations** — get content recommendations for related AWS
+  documentation pages (global partition).
+- **Available services list** — list AWS services available in China regions
+  (when using the `aws-cn` partition).
+
+## Use Cases
+
+- Ask Claude to find the AWS docs for a service or feature and summarize them.
+- Pull the current syntax for a CloudFormation resource or CLI command straight
+  from the source docs.
+- Resolve "which AWS service does X" questions with citations to official pages.
+- Keep answers grounded in up-to-date AWS documentation instead of stale model
+  knowledge.
+
+## Installation
+
+### Claude Code
+
+1. Ensure Python 3.10+ and `uv` are installed.
+2. Add the server with the stdio configuration shown above (command `uvx`,
+   package `awslabs.aws-documentation-mcp-server@latest`).
+3. Verify it is connected with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration. The first run
+downloads the package via `uvx`; set `AWS_DOCUMENTATION_PARTITION` to `aws` for
+global documentation or `aws-cn` for the China partition.
+
+## Partitions
+
+The `AWS_DOCUMENTATION_PARTITION` environment variable controls which AWS
+documentation partition the server targets. The default `aws` (global) partition
+exposes search, read, and recommendation tools; the `aws-cn` partition instead
+exposes a "get available services" listing. Tool availability differs between
+partitions, so pick the one that matches the regions you work in.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package. The server is read-only over public documentation, takes
+no AWS credentials, and is licensed Apache-2.0. Verify the package and
+configuration against the linked source before relying on it in automated
+workflows.

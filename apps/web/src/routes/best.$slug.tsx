@@ -7,6 +7,7 @@ import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { getBestListEditorial } from "@/data/best-list-editorial";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
@@ -78,6 +79,7 @@ export const Route = createFileRoute("/best/$slug")({
 
 function BestDetail() {
   const { list } = Route.useLoaderData() as { list: BestList };
+  const editorial = getBestListEditorial(list.slug);
 
   type Resolved = BestPick & { entry: Entry };
   const resolved: Resolved[] = list.picks
@@ -110,6 +112,29 @@ function BestDetail() {
       <blockquote className="mt-8 max-w-3xl border-l-2 border-accent pl-5">
         <p className="drop-cap text-pretty text-ink-muted">{list.intro}</p>
       </blockquote>
+
+      {editorial && (
+        <>
+          <section className="mt-8 max-w-3xl rounded-xl border border-accent/30 bg-accent/5 p-5">
+            <div className="eyebrow mb-1 text-accent-ink dark:text-accent">Short answer</div>
+            <p className="text-pretty text-ink">{editorial.shortAnswer}</p>
+          </section>
+          <section className="mt-8">
+            <h2 className="h-display-2 text-ink">How to choose</h2>
+            <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+              {editorial.decisionCriteria.map((criterion) => (
+                <div
+                  key={criterion.label}
+                  className="rounded-lg border border-border bg-surface p-4"
+                >
+                  <dt className="font-display text-sm font-semibold text-ink">{criterion.label}</dt>
+                  <dd className="mt-1 text-sm text-ink-muted">{criterion.detail}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        </>
+      )}
 
       {resolved.length >= 2 && (
         <section className="mt-10">
