@@ -47,11 +47,11 @@ testedPlatforms:
 prerequisites:
   - Hermes Agent with plugin support
   - Xquik API key before using account-backed reads
-  - Agent client with Agent Skills support for `npx skills add`
-  - `HERMES_TWEET_ENABLE_ACTIONS=true` plus explicit user approval before posts, follows, likes, reposts, deletes, or other account-changing actions
+  - "Agent client with Agent Skills support for `npx skills add`"
+  - "`HERMES_TWEET_ENABLE_ACTIONS=true` plus explicit user approval before posts, follows, likes, reposts, deletes, or other account-changing actions"
 safetyNotes:
-  - Start with `tweet_explore` for credential-free planning before using credentialed tools.
-  - Treat `tweet_action` as approval-gated and review exact endpoint, method, and payload before any public or account-changing action.
+  - "Start with `tweet_explore` for credential-free planning before using credentialed tools."
+  - "Treat `tweet_action` as approval-gated and review exact endpoint, method, and payload before any public or account-changing action."
   - Do not use Hermes Tweet for spam, deceptive engagement, harassment, impersonation, credential collection, or bulk unsolicited outreach.
 privacyNotes:
   - Xquik API keys must stay in plugin config or environment variables, never in prompts, shared logs, issues, PRs, screenshots, or committed files.
