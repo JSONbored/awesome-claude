@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1324+ file-backed entries</strong> stay useful as both an
+        <strong>1330+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1324</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1330</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -68,7 +68,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>454</code><br>
+          <code>459</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -78,7 +78,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#skills"><strong>🧠 Skills</strong></a><br>
-          <code>174</code><br>
+          <code>175</code><br>
           <sub>Source-backed skill packs and reusable capabilities.</sub>
         </td>
 <td align="center" width="20%">
@@ -296,7 +296,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (454)
+## 🔌 MCP Servers (459)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -350,6 +350,8 @@ packages use checksums and package trust metadata after review.
 - **[DataStax Astra DB MCP Server for Claude](https://heyclau.de/entry/mcp/astra-db-mcp-server)** - Connect Claude to DataStax Astra DB — manage collections and records, run bulk operations, and perform vector and hybrid search — with the official Astra DB Model Context Protocol server.
 - **[Auth0 MCP Server for Claude](https://heyclau.de/entry/mcp/auth0-mcp-server)** - Connect Claude to Auth0's official local MCP server for tenant administration, application setup, Actions, logs, forms, and scoped Management API workflows.
 - **[AutoRFP.ai MCP Server for Claude](https://heyclau.de/entry/mcp/autorfp-ai-mcp-server)** - Official AutoRFP.ai remote MCP server for read-only access to RFP projects, requirements, approved content library search, and organisation tags from Claude and other MCP clients via OAuth.
+- **[AWS Billing and Cost Management MCP Server](https://heyclau.de/entry/mcp/aws-billing-cost-management-mcp-server)** - Official AWS Labs MCP server for AWS Billing and Cost Management that lets AI assistants analyze costs and usage, monitor budgets and anomalies, and surface Cost Optimizer, Savings Plans, and Reserved Instance recommendations.
+- **[AWS CloudTrail MCP Server](https://heyclau.de/entry/mcp/aws-cloudtrail-mcp-server)** - Official AWS Labs MCP server for AWS CloudTrail that lets AI assistants query account activity for security investigations, compliance auditing, and operational troubleshooting via Event History and CloudTrail Lake SQL.
 - **[AWS CloudWatch MCP Server](https://heyclau.de/entry/mcp/aws-cloudwatch-mcp-server)** - Official AWS Labs MCP server that gives troubleshooting agents task-oriented access to Amazon CloudWatch metrics, alarms, logs, and PromQL queries for AI-assisted root-cause analysis and remediation recommendations.
 - **[AWS Documentation MCP Server](https://heyclau.de/entry/mcp/aws-documentation-mcp-server)** - Official AWS Labs MCP server that lets AI assistants read, search, and get recommendations across AWS documentation, returning pages as clean markdown with no AWS account or credentials required.
 - **[AWS DynamoDB MCP Server](https://heyclau.de/entry/mcp/aws-dynamodb-mcp-server)** - Official AWS Labs developer-experience MCP server for Amazon DynamoDB that provides expert data-modeling guidance, model validation against DynamoDB Local, source-database analysis, schema conversion, and CDK generation.
@@ -357,10 +359,13 @@ packages use checksums and package trust metadata after review.
 - **[Amazon EKS MCP Server](https://heyclau.de/entry/mcp/aws-eks-mcp-server)** - Official AWS Labs MCP server for Amazon EKS that gives AI code assistants real-time cluster state visibility and Kubernetes/EKS resource management, from cluster setup through deployment, troubleshooting, and optimization.
 - **[AWS FinOps MCP Server](https://heyclau.de/entry/mcp/aws-finops-mcp-server)** - Read-only AWS FinOps MCP server that lets Claude query Cost Explorer cost and usage data, compare AWS CLI profiles, filter by tags or dimensions, check AWS Budgets, and audit for stopped EC2 instances, unattached EBS volumes, and unassociated Elastic IP addresses across selected regions.
 - **[AWS Knowledge MCP Server](https://heyclau.de/entry/mcp/aws-knowledge-mcp-server)** - Official AWS Labs fully-managed remote MCP server providing up-to-date AWS documentation, code samples, agent skills, API and CloudFormation regional availability, and CDK/Amplify/Strands guidance over a hosted HTTP endpoint.
+- **[AWS Lambda Tool MCP Server](https://heyclau.de/entry/mcp/aws-lambda-tool-mcp-server)** - Official AWS Labs MCP server that exposes selected AWS Lambda functions as MCP tools without code changes, letting AI assistants invoke your allowlisted functions to reach private resources, databases, and internal applications.
 - **[Amazon Location Service MCP Server](https://heyclau.de/entry/mcp/aws-location-mcp-server)** - Official AWS Labs MCP server for Amazon Location Service that gives AI assistants place search, geocoding, reverse geocoding, nearby and open-now search, and route calculation with waypoint optimization.
 - **[MCP Proxy for AWS](https://heyclau.de/entry/mcp/aws-mcp-proxy-for-aws)** - AWS-maintained proxy and Python library that lets MCP clients and agent frameworks connect to IAM-secured MCP servers on AWS by signing requests with AWS SigV4 credentials.
 - **[AWS Serverless MCP Server](https://heyclau.de/entry/mcp/aws-serverless-mcp-server)** - Official AWS Labs MCP server for serverless development that gives AI assistants contextual guidance plus tools to initialize, build, deploy, and troubleshoot AWS SAM and Lambda-based serverless applications.
 - **[AWS Services MCP Server - MCP Servers](https://heyclau.de/entry/mcp/aws-services-mcp-server)** - Comprehensive AWS cloud services integration for infrastructure management, deployment, and monitoring
+- **[Amazon SNS / SQS MCP Server](https://heyclau.de/entry/mcp/aws-sns-sqs-mcp-server)** - Official AWS Labs MCP server for Amazon SNS and SQS that lets AI assistants list and manage SNS topics, subscriptions, and SQS queues and send/receive messages, with resource tagging so it only modifies what it created.
+- **[AWS Step Functions Tool MCP Server](https://heyclau.de/entry/mcp/aws-stepfunctions-tool-mcp-server)** - Official AWS Labs MCP server that exposes selected AWS Step Functions state machines as MCP tools without code changes, letting AI assistants run existing Standard and Express workflows that coordinate work across AWS services.
 - **[Axiom MCP Server for Claude](https://heyclau.de/entry/mcp/axiom-mcp-server)** - Query observability data, manage dashboards, and monitor your systems from Claude — run APL queries against datasets, list metrics, inspect monitors, and retrieve saved queries — with the official Axiom remote MCP server.
 - **[Azure DevOps MCP Server for Claude](https://heyclau.de/entry/mcp/azure-devops-mcp-server)** - Official Microsoft Azure DevOps MCP server for querying work items, pull requests, repositories, pipelines, wikis, test plans, and project metadata through remote HTTP or local stdio transports.
 - **[Azure MCP Server for Claude](https://heyclau.de/entry/mcp/azure-mcp-server)** - Official Microsoft Azure MCP server that connects Claude and other MCP clients to Azure subscriptions, resource groups, storage, databases, Key Vault, Monitor, App Service, AKS, AI Search, Cosmos DB, RBAC, pricing, and other Azure services through local stdio or self-hosted HTTP transports.
@@ -941,7 +946,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Zapier AI](https://heyclau.de/entry/tools/zapier-ai)** - Automation platform with AI-assisted workflows, app integrations, agents, actions, and business process automation.
 - **[Zed](https://heyclau.de/entry/tools/zed)** - Collaborative code editor with AI assistance, fast native performance, and developer-focused collaboration workflows.
 
-## 🧠 Skills (174)
+## 🧠 Skills (175)
 
 - **[Addy Osmani Agent Skills](https://heyclau.de/entry/skills/addy-osmani-agent-skills)** - Addy Osmani's production-grade Agent Skills pack for AI coding agents, with lifecycle slash commands, engineering workflow skills, review personas, quality gates, and cross-agent setup guidance for Claude Code, Cursor, Gemini CLI, Antigravity CLI, OpenCode, GitHub Copilot, and other agents.
 - **[Agent Evals Regression Gate Skill](https://heyclau.de/entry/skills/agent-evals-regression-gate)** - Build repeatable eval suites that catch quality regressions in AI agent behavior before merge or release.
@@ -1025,6 +1030,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Google Stitch Design Skills](https://heyclau.de/entry/skills/google-stitch-design-skills)** - Agent Skills and plugin packs for Google Stitch design workflows, including code-to-design, design generation, design-system extraction, React and React Native conversion, shadcn/ui guidance, Remotion walkthroughs, and prompt enhancement.
 - **[Google Workspace Gemini Automation Skill](https://heyclau.de/entry/skills/google-workspace-gemini-automation)** - Create useful Gemini-powered Google Workspace automations for docs, sheets, email triage, and internal workflow productivity.
 - **[GSAP AI Skills](https://heyclau.de/entry/skills/gsap-skills)** - Official GreenSock GSAP AI Skills for coding agents that need correct GSAP tweens, timelines, ScrollTrigger, React cleanup, plugins, utilities, framework lifecycle guidance, and animation performance patterns.
+- **[Hermes Tweet Hermes Agent X/Twitter Skill](https://heyclau.de/entry/skills/hermes-tweet-hermes-agent-x-twitter)** - Safety-reviewed Agent Skill for Hermes Tweet, the Hermes Agent plugin for X/Twitter endpoint discovery, credentialed reads, and approval-gated actions through Xquik.
 - **[HeyClaude Content Submission Factory](https://heyclau.de/entry/skills/heyclaude-content-submission-factory)** - Prepare complete, source-backed HeyClaude content submissions for agents, MCP servers, tools, skills, rules, commands, hooks, guides, collections, and statuslines.
 - **[HeyClaude Skill Submission Factory](https://heyclau.de/entry/skills/heyclaude-skill-submission-factory)** - Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare PR-first HeyClaude submissions.
 - **[Hono Edge API Development Skill](https://heyclau.de/entry/skills/hono-edge-api-development)** - Build and review Hono TypeScript APIs for Cloudflare Workers, Bun, Deno, Node.js, Vercel, Netlify, and other Web Standards runtimes with routing, middleware, validation, RPC clients, OpenAPI generation, deployment checks, and production safety review.
