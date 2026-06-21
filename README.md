@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1316+ file-backed entries</strong> stay useful as both an
+        <strong>1318+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1316</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1318</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -68,7 +68,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>446</code><br>
+          <code>448</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -296,7 +296,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (446)
+## 🔌 MCP Servers (448)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -350,6 +350,8 @@ packages use checksums and package trust metadata after review.
 - **[DataStax Astra DB MCP Server for Claude](https://heyclau.de/entry/mcp/astra-db-mcp-server)** - Connect Claude to DataStax Astra DB — manage collections and records, run bulk operations, and perform vector and hybrid search — with the official Astra DB Model Context Protocol server.
 - **[Auth0 MCP Server for Claude](https://heyclau.de/entry/mcp/auth0-mcp-server)** - Connect Claude to Auth0's official local MCP server for tenant administration, application setup, Actions, logs, forms, and scoped Management API workflows.
 - **[AutoRFP.ai MCP Server for Claude](https://heyclau.de/entry/mcp/autorfp-ai-mcp-server)** - Official AutoRFP.ai remote MCP server for read-only access to RFP projects, requirements, approved content library search, and organisation tags from Claude and other MCP clients via OAuth.
+- **[AWS CloudWatch MCP Server](https://heyclau.de/entry/mcp/aws-cloudwatch-mcp-server)** - Official AWS Labs MCP server that gives troubleshooting agents task-oriented access to Amazon CloudWatch metrics, alarms, logs, and PromQL queries for AI-assisted root-cause analysis and remediation recommendations.
+- **[AWS Documentation MCP Server](https://heyclau.de/entry/mcp/aws-documentation-mcp-server)** - Official AWS Labs MCP server that lets AI assistants read, search, and get recommendations across AWS documentation, returning pages as clean markdown with no AWS account or credentials required.
 - **[AWS FinOps MCP Server](https://heyclau.de/entry/mcp/aws-finops-mcp-server)** - Read-only AWS FinOps MCP server that lets Claude query Cost Explorer cost and usage data, compare AWS CLI profiles, filter by tags or dimensions, check AWS Budgets, and audit for stopped EC2 instances, unattached EBS volumes, and unassociated Elastic IP addresses across selected regions.
 - **[MCP Proxy for AWS](https://heyclau.de/entry/mcp/aws-mcp-proxy-for-aws)** - AWS-maintained proxy and Python library that lets MCP clients and agent frameworks connect to IAM-secured MCP servers on AWS by signing requests with AWS SigV4 credentials.
 - **[AWS Services MCP Server - MCP Servers](https://heyclau.de/entry/mcp/aws-services-mcp-server)** - Comprehensive AWS cloud services integration for infrastructure management, deployment, and monitoring

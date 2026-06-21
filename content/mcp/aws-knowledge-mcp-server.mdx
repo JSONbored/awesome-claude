@@ -1,0 +1,136 @@
+---
+title: AWS Knowledge MCP Server
+slug: aws-knowledge-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs fully-managed remote MCP server providing up-to-date AWS
+  documentation, code samples, agent skills, API and CloudFormation regional
+  availability, and CDK/Amplify/Strands guidance over a hosted HTTP endpoint.
+cardDescription: >-
+  Give Claude a hosted endpoint for live AWS documentation, code samples, agent
+  skills, and regional availability — no AWS account or local install needed.
+seoTitle: "AWS Knowledge MCP Server for Claude — Hosted AWS Docs & Guidance"
+seoDescription: >-
+  Connect Claude to the official AWS Labs Knowledge MCP server, a fully managed
+  remote HTTP endpoint for AWS documentation, code samples, agent skills, and
+  API/CloudFormation regional availability — no AWS credentials required.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-21"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/aws-knowledge-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/aws-knowledge-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx fastmcp run https://knowledge-mcp.global.api.aws
+usageSnippet: >-
+  Point your MCP client at the hosted HTTP endpoint (or proxy it via fastmcp for
+  stdio-only clients), then ask Claude for current AWS documentation, code
+  samples, regional API availability, or CDK/CloudFormation guidance.
+copySnippet: |-
+  {
+    "aws-knowledge-mcp-server": {
+      "url": "https://knowledge-mcp.global.api.aws",
+      "type": "http"
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "aws-knowledge-mcp-server": {
+        "url": "https://knowledge-mcp.global.api.aws",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An MCP client that supports remote HTTP MCP servers (or `uvx`/`fastmcp` to proxy the endpoint to stdio for clients that don't)."
+  - Outbound HTTPS access to the hosted endpoint `https://knowledge-mcp.global.api.aws`.
+safetyNotes:
+  - This is a fully managed remote server hosted by AWS; it serves public AWS knowledge and requires no AWS account or credentials, so do not add AWS access keys for it.
+  - "Because it is a remote server, your queries are sent to the AWS-hosted endpoint; only connect clients you trust to route requests there."
+  - Generative output about AWS APIs and resources can still be wrong; verify guidance against the official AWS documentation it links.
+privacyNotes:
+  - Your documentation queries and search terms are sent over HTTPS to the AWS-hosted knowledge endpoint to retrieve content.
+  - The server returns public AWS documentation, code samples, and availability data; it does not read any private account data.
+tags:
+  - aws
+  - documentation
+  - knowledge
+  - aws-labs
+  - remote
+keywords:
+  - aws knowledge mcp server
+  - awslabs aws-knowledge-mcp-server
+  - aws docs code samples mcp
+  - aws regional availability mcp
+  - hosted aws mcp server
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AWS Knowledge MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+fully managed **remote** Model Context Protocol server that gives AI assistants
+structured access to up-to-date AWS knowledge. Unlike the local AWS MCP servers,
+it runs as a hosted HTTP endpoint at `https://knowledge-mcp.global.api.aws`, so
+there is no local package to install and **no AWS account or credentials** are
+required — it serves public AWS content.
+
+It exposes AWS documentation, code samples, agent skills, API and CloudFormation
+regional availability, and CDK/Amplify/Strands guidance.
+
+## Features
+
+- **Documentation and references** — real-time access to AWS documentation, API
+  references, troubleshooting guidance, and architectural guidance.
+- **Regional availability** — which AWS APIs and CloudFormation resources are
+  available in which regions.
+- **Code and IaC guidance** — latest CDK and CloudFormation documentation,
+  best practices, and high-quality examples.
+- **Agent skills** — domain-specific AWS expertise: workflows, decision
+  frameworks, and reference material.
+- **Managed and remote** — less local setup than client-hosted servers.
+
+## Use Cases
+
+- Ground answers in current AWS documentation instead of stale model knowledge.
+- Check whether an AWS API or CloudFormation resource is available in a region.
+- Pull CDK/CloudFormation examples and best practices while building IaC.
+- Use AWS agent skills for domain-specific workflows and guidance.
+
+## Installation
+
+### Clients with HTTP transport
+
+Add the `configSnippet` above (an `http` server pointing at
+`https://knowledge-mcp.global.api.aws`) to your MCP client configuration.
+
+### Clients without HTTP transport
+
+Use the [`fastmcp`](https://github.com/jlowin/fastmcp) utility to proxy the
+endpoint to stdio, for example `uvx fastmcp run https://knowledge-mcp.global.api.aws`,
+and point your client at that local proxy.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository. The server
+is a managed remote endpoint serving public AWS knowledge with no credentials;
+queries are sent to the AWS-hosted endpoint, so only connect clients you trust.
+Verify the endpoint and configuration against the linked source before relying on
+it in automated workflows.

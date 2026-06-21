@@ -1,0 +1,155 @@
+---
+title: AWS Serverless MCP Server
+slug: aws-serverless-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server for serverless development that gives AI
+  assistants contextual guidance plus tools to initialize, build, deploy, and
+  troubleshoot AWS SAM and Lambda-based serverless applications.
+cardDescription: >-
+  Connect Claude to AWS serverless tooling: SAM init/build/deploy, Lambda
+  testing, web-app deployment, observability, and architecture guidance.
+seoTitle: "AWS Serverless MCP Server for Claude — SAM, Lambda & Deploy"
+seoDescription: >-
+  Connect Claude to the official AWS Labs Serverless MCP server for SAM
+  application lifecycle, Lambda testing, serverless web deployment,
+  observability, and architecture guidance over stdio with uvx.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-21"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/aws-serverless-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.aws-serverless-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/aws-serverless-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/aws-serverless-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.aws-serverless-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.aws-serverless-mcp-server@latest
+usageSnippet: >-
+  Configure the server with uvx and a scoped AWS profile, then ask Claude to
+  initialize or build a SAM app, test a Lambda function, get architecture
+  guidance, or deploy; add the write flag only when you intend deployments.
+copySnippet: |-
+  {
+    "awslabs.aws-serverless-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.aws-serverless-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE}",
+        "AWS_REGION": "us-east-1"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.aws-serverless-mcp-server": {
+        "command": "uvx",
+        "args": ["awslabs.aws-serverless-mcp-server@latest"],
+        "env": {
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "AWS_REGION": "us-east-1"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - An AWS account with permissions for the serverless resources you intend to inspect or deploy.
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - AWS SAM CLI and AWS CLI installed for the build/deploy and lifecycle tools.
+  - "AWS credentials configured locally (for example via `aws configure` or `AWS_PROFILE`) scoped to the intended account and region."
+  - An MCP client that supports stdio servers; the server runs locally on the same host as the client.
+safetyNotes:
+  - "The configuration above uses the read-only default. Adding the `--allow-write` flag lets the server deploy and modify infrastructure (SAM/CloudFormation stacks, Lambda functions, custom domains, CloudFront) and `--allow-sensitive-data-access` exposes logs; enable these only deliberately."
+  - This server can build and deploy real serverless infrastructure with your AWS credentials; scope the profile to the intended account and region, and prefer non-production targets while evaluating it.
+  - Run it only on a trusted host, and review generated SAM templates and deployment actions before applying them.
+privacyNotes:
+  - Application configuration, SAM templates, resource ARNs, and account/region metadata can be returned through tool calls and exposed to the model.
+  - "With sensitive-data access enabled, logs and metrics may be returned; keep account identifiers, credentials, and log contents out of public prompts, issues, and screenshots."
+tags:
+  - aws
+  - serverless
+  - lambda
+  - sam
+  - aws-labs
+keywords:
+  - aws serverless mcp server
+  - awslabs aws-serverless-mcp-server
+  - serverless mcp claude
+  - sam lambda deploy mcp
+  - serverless application mcp
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AWS Serverless MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+Model Context Protocol server that combines AI assistance with serverless
+expertise. It provides contextual guidance for serverless development and tools
+to initialize, build, deploy, monitor, and troubleshoot AWS SAM and Lambda-based
+applications across the development lifecycle.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.aws-serverless-mcp-server` Python package and uses your local AWS
+credentials. The configuration shown uses read-only defaults; write and
+sensitive-data access are opt-in flags.
+
+## Features
+
+- **Application lifecycle** — initialize, build, and deploy SAM applications with
+  the SAM CLI, and test Lambda functions locally and remotely (write mode).
+- **Web app deployment** — deploy full-stack, frontend, and backend web apps via
+  the Lambda Web Adapter, with custom domains and CloudFront (write mode).
+- **Observability** — retrieve logs and metrics for serverless resources.
+- **Guidance and templates** — Lambda use-case guidance, IaC-framework selection,
+  and sample SAM templates from Serverless Land.
+- **Event schemas** — schema types and EventBridge schema-registry discovery for
+  type-safe Lambda development.
+
+## Use Cases
+
+- Get architecture guidance and pick serverless patterns for a new application.
+- Initialize and build a SAM application from a template.
+- Test a Lambda function locally before deploying.
+- Deploy a serverless web application with a custom domain (write mode).
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+, `uv`, the AWS SAM CLI, and the AWS CLI.
+2. Configure an AWS profile and region scoped to the target account.
+3. Add the server with the read-only stdio configuration above. To enable
+   deployments, append `--allow-write` (and `--allow-sensitive-data-access` for
+   logs) to `args` — only when you intend those operations.
+4. Verify it is connected with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration and set
+`AWS_PROFILE`/`AWS_REGION`. The first run downloads the package via `uvx`.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). The server can build and deploy real
+serverless infrastructure when write access is enabled, so keep the write and
+sensitive-data flags opt-in, scope credentials tightly, and verify the
+configuration against the linked source before using it in automated workflows.

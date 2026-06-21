@@ -265,10 +265,10 @@ export function normalizeCategory(value) {
 
 function fieldKey(label) {
   const normalized = normalizeHeading(label);
-  return (
-    HEADING_KEY_MAP[normalized] ??
-    (normalized.startsWith("download-url") ? "download_url" : normalized)
-  );
+  if (Object.hasOwn(HEADING_KEY_MAP, normalized)) {
+    return HEADING_KEY_MAP[normalized];
+  }
+  return normalized.startsWith("download-url") ? "download_url" : normalized;
 }
 
 function parseJsonCodeBlock(value) {

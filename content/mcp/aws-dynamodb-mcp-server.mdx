@@ -1,0 +1,154 @@
+---
+title: AWS DynamoDB MCP Server
+slug: aws-dynamodb-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs developer-experience MCP server for Amazon DynamoDB that
+  provides expert data-modeling guidance, model validation against DynamoDB
+  Local, source-database analysis, schema conversion, and CDK generation.
+cardDescription: >-
+  Give Claude DynamoDB design expertise: data modeling, model validation,
+  source-DB analysis, schema conversion, and CDK resource generation.
+seoTitle: "AWS DynamoDB MCP Server for Claude — Data Modeling & Design"
+seoDescription: >-
+  Connect Claude to the official AWS Labs DynamoDB MCP server for expert data
+  modeling, model validation against DynamoDB Local, source-database analysis,
+  schema conversion, and CDK generation over stdio with uvx.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-21"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/dynamodb-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.dynamodb-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/dynamodb-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/dynamodb-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.dynamodb-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.dynamodb-mcp-server@latest
+usageSnippet: >-
+  Configure the server with uvx, then ask Claude to design a DynamoDB data model
+  for your access patterns, validate a model against DynamoDB Local, analyze a
+  source database, or generate CDK resources from the model.
+copySnippet: |-
+  {
+    "awslabs.dynamodb-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.dynamodb-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.dynamodb-mcp-server": {
+        "command": "uvx",
+        "args": ["awslabs.dynamodb-mcp-server@latest"],
+        "env": {
+          "FASTMCP_LOG_LEVEL": "ERROR"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - An MCP client that supports stdio servers (Claude Code, Claude Desktop, Cursor, Kiro, or VS Code).
+  - "Docker or a local DynamoDB Local setup if you want to use the model-validation tool, which creates tables and runs your access patterns."
+  - "Connection details/credentials for any source database (MySQL, PostgreSQL, SQL Server, Oracle) only if you use the source-database analyzer."
+safetyNotes:
+  - The core tools provide data-modeling guidance and are advisory; review all generated models, schemas, and CDK output before deploying anything to AWS.
+  - "Model validation sets up a local DynamoDB instance and creates test tables; the source-database analyzer connects to a database you point it at (RDS Data API or a direct connection)."
+  - Generated CDK apps and `dynamodb_data_model.json` files are written to your workspace; inspect them before running or committing.
+privacyNotes:
+  - Access patterns, entity definitions, and any source-database schema you share are processed to produce the model and validation artifacts.
+  - The source-database analyzer can read schema structure and access-pattern data from the database you connect; keep database credentials out of public prompts, issues, and screenshots.
+tags:
+  - aws
+  - dynamodb
+  - data-modeling
+  - database
+  - aws-labs
+keywords:
+  - aws dynamodb mcp server
+  - awslabs dynamodb-mcp-server
+  - dynamodb data modeling mcp
+  - dynamodb mcp claude
+  - dynamodb schema design mcp
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AWS DynamoDB MCP Server is the official [AWS Labs](https://github.com/awslabs/mcp)
+developer-experience Model Context Protocol server for Amazon DynamoDB. Rather
+than running table CRUD, it focuses on **design**: it gives Claude an expert
+DynamoDB data-modeling prompt and a set of tools to validate models, analyze an
+existing source database, convert a model into a machine-readable schema, and
+generate CDK resources.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.dynamodb-mcp-server` Python package. The core modeling guidance needs no
+AWS credentials; the validation and source-analysis tools touch a local
+DynamoDB instance or a source database you point them at.
+
+## Features
+
+- **Data modeling** — retrieve the DynamoDB Data Modeling Expert prompt with
+  enterprise design patterns, cost strategies, and multi-table philosophy.
+- **Model validation** — stand up DynamoDB Local, create tables and test data,
+  and execute the model's access patterns, saving validation results.
+- **Source DB analysis** — extract schema and access patterns from MySQL,
+  PostgreSQL, SQL Server, or Oracle to seed a DynamoDB model.
+- **Schema conversion** — convert a data model into a structured `schema.json`
+  for code generation, validated over multiple iterations.
+- **Resource generation** — generate a CDK app from the data model to deploy the
+  designed DynamoDB tables.
+
+## Use Cases
+
+- Design a DynamoDB data model from your application's access patterns.
+- Validate a proposed model against DynamoDB Local before committing to it.
+- Migrate from a relational database by analyzing its schema and access patterns.
+- Generate CDK infrastructure from a finalized DynamoDB data model.
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+ and `uv`.
+2. Add the server with the stdio configuration above (command `uvx`, package
+   `awslabs.dynamodb-mcp-server@latest`).
+3. Verify it is connected with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration. The first run
+downloads the package via `uvx`. For model validation, ensure Docker / DynamoDB
+Local is available.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). The server is design- and validation-focused;
+the modeling guidance is advisory and the validation/analysis tools touch a local
+DynamoDB instance or a source database you choose. Review generated models,
+schemas, and CDK output, and verify the configuration against the linked source
+before relying on it.
