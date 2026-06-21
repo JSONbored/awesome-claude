@@ -1,0 +1,154 @@
+---
+title: AWS CloudTrail MCP Server
+slug: aws-cloudtrail-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server for AWS CloudTrail that lets AI assistants query
+  account activity for security investigations, compliance auditing, and
+  operational troubleshooting via Event History and CloudTrail Lake SQL.
+cardDescription: >-
+  Connect Claude to AWS CloudTrail to look up account events, analyze user
+  activity, track API calls, and run CloudTrail Lake SQL for audits.
+seoTitle: "AWS CloudTrail MCP Server for Claude — Audit & Security Queries"
+seoDescription: >-
+  Connect Claude to the official AWS Labs CloudTrail MCP server to look up
+  account events, analyze user activity, track API calls, and run CloudTrail
+  Lake SQL queries over stdio with uvx using your scoped AWS credentials.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-21"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/cloudtrail-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.cloudtrail-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/cloudtrail-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/cloudtrail-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.cloudtrail-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.cloudtrail-mcp-server@latest
+usageSnippet: >-
+  Configure the server with uvx and a scoped AWS profile, then ask Claude to
+  look up CloudTrail events by user or API, analyze account activity over the
+  last 90 days, or run a CloudTrail Lake SQL query for deeper analysis.
+copySnippet: |-
+  {
+    "awslabs.cloudtrail-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.cloudtrail-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE}",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.cloudtrail-mcp-server": {
+        "command": "uvx",
+        "args": ["awslabs.cloudtrail-mcp-server@latest"],
+        "env": {
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "FASTMCP_LOG_LEVEL": "ERROR"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - An AWS account with CloudTrail enabled (Event History is on by default; CloudTrail Lake is needed for SQL queries).
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - "AWS credentials configured locally (for example via `aws configure` or `AWS_PROFILE`) with CloudTrail read permissions (`cloudtrail:LookupEvents`, `cloudtrail:StartQuery`, `cloudtrail:GetQueryResults`, and related)."
+  - An MCP client that supports stdio servers; the server runs locally on the same host as the client.
+safetyNotes:
+  - The provided tools are read-only — they look up CloudTrail events and run Lake queries, and do not modify infrastructure. Grant only the CloudTrail read permissions listed in the documentation (least privilege).
+  - This server reads audit data with your AWS credentials; scope the profile to the intended account and run it only on a trusted host.
+  - "CloudTrail Lake SQL queries against large event data stores can incur AWS query/scan costs; review query scope before running broad analyses."
+privacyNotes:
+  - "CloudTrail events expose account activity: usernames, access key IDs, source IPs, ARNs, and API call details can be returned to the model."
+  - Keep account identifiers, credentials, and returned event contents out of public prompts, issues, and screenshots, since audit data is sensitive.
+tags:
+  - aws
+  - cloudtrail
+  - security
+  - audit
+  - aws-labs
+keywords:
+  - aws cloudtrail mcp server
+  - awslabs cloudtrail-mcp-server
+  - cloudtrail mcp claude
+  - aws audit security mcp
+  - cloudtrail lake sql mcp
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AWS CloudTrail MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+Model Context Protocol server that lets AI assistants query AWS account activity
+for security investigations, compliance auditing, and operational
+troubleshooting. It provides access to CloudTrail Event History and CloudTrail
+Lake analytics so agents can track API calls and analyze user activity through
+standardized MCP tools.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.cloudtrail-mcp-server` Python package and uses your local AWS
+credentials. The provided tools are read-only.
+
+## Features
+
+- **Event lookup** — search CloudTrail events by username, event name, resource
+  name, and more, across the last 90 days of management events.
+- **CloudTrail Lake analytics** — run Trino-compatible SQL queries against
+  CloudTrail Lake for complex filtering and aggregation.
+- **User activity analysis** — track activity by username, access key, or other
+  user attributes.
+- **API call tracking** — monitor specific API calls and their patterns for
+  security and compliance.
+- **Event data store management** — list and explore CloudTrail Lake event data
+  stores and their capabilities.
+
+## Use Cases
+
+- Investigate a security incident by tracing who called which API and when.
+- Audit user activity across AWS services for compliance.
+- Run an ad hoc CloudTrail Lake SQL query for deeper analysis.
+- Troubleshoot an operational change by finding the API calls that caused it.
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+ and `uv`.
+2. Configure an AWS profile with CloudTrail read permissions.
+3. Add the server with the stdio configuration above (command `uvx`, package
+   `awslabs.cloudtrail-mcp-server@latest`, env `AWS_PROFILE`).
+4. Verify it is connected with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration and set
+`AWS_PROFILE`. The first run downloads the package via `uvx`.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). The server is read-only over CloudTrail, but
+it uses your AWS credentials and returns sensitive audit data, so scope
+permissions to CloudTrail reads, keep results private, and verify the
+configuration against the linked source before using it in automated workflows.
