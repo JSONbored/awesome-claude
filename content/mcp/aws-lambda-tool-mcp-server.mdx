@@ -1,0 +1,162 @@
+---
+title: AWS Lambda Tool MCP Server
+slug: aws-lambda-tool-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server that exposes selected AWS Lambda functions as MCP
+  tools without code changes, letting AI assistants invoke your allowlisted
+  functions to reach private resources, databases, and internal applications.
+cardDescription: >-
+  Expose allowlisted AWS Lambda functions to Claude as MCP tools — invoke
+  internal apps, databases, and private resources without code changes.
+seoTitle: "AWS Lambda Tool MCP Server for Claude — Functions as Tools"
+seoDescription: >-
+  Connect Claude to the official AWS Labs Lambda Tool MCP server to run
+  allowlisted AWS Lambda functions as MCP tools over stdio with uvx, reaching
+  private resources and internal apps using scoped AWS credentials.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-21"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/lambda-tool-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.lambda-tool-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/lambda-tool-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/lambda-tool-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.lambda-tool-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.lambda-tool-mcp-server@latest
+usageSnippet: >-
+  Allowlist which Lambda functions to expose via the FUNCTION_PREFIX, FUNCTION_LIST,
+  or FUNCTION_TAG_* environment variables, then ask Claude to call one of those
+  functions as a tool to reach internal apps, databases, or private networks.
+copySnippet: |-
+  {
+    "awslabs.lambda-tool-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.lambda-tool-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE}",
+        "AWS_REGION": "us-east-1",
+        "FUNCTION_PREFIX": "your-function-prefix",
+        "FUNCTION_LIST": "your-first-function,your-second-function",
+        "FUNCTION_TAG_KEY": "your-tag-key",
+        "FUNCTION_TAG_VALUE": "your-tag-value"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.lambda-tool-mcp-server": {
+        "command": "uvx",
+        "args": ["awslabs.lambda-tool-mcp-server@latest"],
+        "env": {
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "AWS_REGION": "us-east-1",
+          "FUNCTION_PREFIX": "your-function-prefix",
+          "FUNCTION_LIST": "your-first-function,your-second-function",
+          "FUNCTION_TAG_KEY": "your-tag-key",
+          "FUNCTION_TAG_VALUE": "your-tag-value"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - An AWS account with the Lambda functions you want to expose, and permission to invoke them.
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - "AWS credentials configured locally (for example via `aws configure` or `AWS_PROFILE`) scoped to `lambda:InvokeFunction` for the allowlisted functions only."
+  - "An allowlist of functions via `FUNCTION_PREFIX`, `FUNCTION_LIST`, or `FUNCTION_TAG_KEY`/`FUNCTION_TAG_VALUE`; only matching functions are exposed as tools."
+  - An MCP client that supports stdio servers; the server runs locally on the same host as the client.
+safetyNotes:
+  - "Only functions matching your `FUNCTION_PREFIX`/`FUNCTION_LIST`/`FUNCTION_TAG_*` allowlist are exposed; scope this narrowly so the model can invoke just the intended functions."
+  - "By design the client only needs `lambda:InvokeFunction`; each function uses its own execution role to reach other AWS services, keeping segregation of duties. Invoking a function runs whatever that function does (including writes), so only allowlist functions you trust the model to call."
+  - This server invokes real Lambda functions with your AWS credentials; scope the profile to invoke-only on the allowlisted functions and run it only on a trusted host.
+privacyNotes:
+  - Function names, ARNs, input arguments, and returned payloads pass through the model; an invoked function can read or write whatever its own role allows.
+  - Keep account identifiers, credentials, and sensitive function inputs/outputs out of public prompts, issues, and screenshots.
+tags:
+  - aws
+  - lambda
+  - serverless
+  - tools
+  - aws-labs
+keywords:
+  - aws lambda tool mcp server
+  - awslabs lambda-tool-mcp-server
+  - lambda functions as mcp tools
+  - mcp2lambda
+  - invoke lambda mcp claude
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AWS Lambda Tool MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+Model Context Protocol server that selects and runs AWS Lambda functions as MCP
+tools without code changes. It acts as a bridge between MCP clients and Lambda,
+so an AI model can invoke your functions to reach internal applications,
+databases, and private networks — without those resources needing public access.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.lambda-tool-mcp-server` Python package and uses your local AWS
+credentials. You choose which functions are exposed through an allowlist.
+
+## Features
+
+- **Functions as tools** — expose selected Lambda functions to the model as MCP
+  tools, with no changes to the function code.
+- **Allowlisting** — scope which functions are available via `FUNCTION_PREFIX`,
+  `FUNCTION_LIST`, or function tags.
+- **Private access** — reach internal apps, databases, VPC resources, and the
+  public internet through the function, not the client.
+- **Segregation of duties** — the client only invokes functions; each function
+  uses its own execution role for downstream AWS access.
+- **Input schemas** — optionally attach input schemas to functions via tags.
+
+## Use Cases
+
+- Let Claude call an internal API or database that lives in a private VPC.
+- Expose a curated set of operational Lambda functions as safe, named tools.
+- Reuse existing Lambda business logic as model tools without rewriting it.
+- Keep broad AWS permissions in function roles while the client stays invoke-only.
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+ and `uv`.
+2. Configure an AWS profile scoped to `lambda:InvokeFunction` for your functions.
+3. Add the server with the stdio configuration above and set an allowlist
+   (`FUNCTION_PREFIX`, `FUNCTION_LIST`, or `FUNCTION_TAG_*`).
+4. Verify it is connected with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration, set
+`AWS_PROFILE`/`AWS_REGION`, and define the function allowlist. The first run
+downloads the package via `uvx`.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). The server invokes real Lambda functions
+with your AWS credentials, so keep the client invoke-only, allowlist functions
+narrowly, and verify the configuration against the linked source before using it
+in automated workflows.
