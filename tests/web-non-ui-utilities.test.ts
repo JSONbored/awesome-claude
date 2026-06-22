@@ -317,6 +317,25 @@ describe("web non-UI utility coverage", () => {
     expect(
       (full.html.match(/border-bottom:1px solid #f0ede4/g) ?? []).length,
     ).toBe(2);
+
+    const prototypeCategory = buildBriefEmail({
+      brief: {
+        sections: {
+          newEntries: [
+            {
+              title: "Prototype category label",
+              url: "/entry/tools/prototype",
+              category: "constructor",
+              description: "Should render a human label, not Object.prototype.",
+            },
+          ],
+        },
+      },
+      siteUrl: "https://heyclau.de",
+      dateLabel: "2026-06-19",
+    });
+    expect(prototypeCategory.text).toContain("[Constructor]");
+    expect(prototypeCategory.text).not.toContain("[Function:");
   });
 
   it("signs brief approval tokens and rejects tampered, malformed, and expired tokens", async () => {
