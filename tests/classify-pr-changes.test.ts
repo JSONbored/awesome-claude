@@ -80,7 +80,7 @@ describe("PR change classifier", () => {
     }
   });
 
-  it("routes direct content entry PRs through the focused submission lane", () => {
+  it("routes direct content entry PRs through the focused submission and registry artifact lanes", () => {
     const { cwd, baseSha } = createFixtureRepo();
 
     const contentDir = path.join(cwd, "content", "agents");
@@ -99,7 +99,7 @@ describe("PR change classifier", () => {
       direct_submission: "true",
       source_content_only: "true",
       readme_only: "false",
-      registry: "false",
+      registry: "true",
       raycast: "false",
       web: "false",
     });
@@ -225,7 +225,29 @@ describe("PR change classifier", () => {
       raycast: "false",
     });
     expect(JSON.parse(outputs.changed_files_json)).toEqual([
-      "packages/registry/src/package-spec.js",
+      { filename: "packages/registry/src/package-spec.js", status: "added" },
+    ]);
+  });
+
+  it("threads a delete-only content PR as a removed entry (#content-deletion)", () => {
+    const { cwd } = createFixtureRepo();
+
+    const contentDir = path.join(cwd, "content", "agents");
+    fs.mkdirSync(contentDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(contentDir, "example.mdx"),
+      "---\ntitle: Example\n---\n",
+    );
+    git(cwd, ["add", "content/agents/example.mdx"]);
+    git(cwd, ["commit", "-m", "add content entry"]);
+    const baseSha = git(cwd, ["rev-parse", "HEAD"]);
+
+    git(cwd, ["rm", "content/agents/example.mdx"]);
+    git(cwd, ["commit", "-m", "remove content entry"]);
+
+    const outputs = runClassifier(cwd, baseSha);
+    expect(JSON.parse(outputs.changed_files_json)).toEqual([
+      { filename: "content/agents/example.mdx", status: "removed" },
     ]);
   });
 
@@ -246,6 +268,40 @@ describe("PR change classifier", () => {
       content: "false",
       registry: "true",
       web: "true",
+    });
+  });
+
+  it("fails closed by routing otherwise unclassified scripts through CI validation", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+    const scriptDir = path.join(cwd, "scripts");
+    fs.mkdirSync(scriptDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(scriptDir, "report-thin-content.mjs"),
+      "console.log('changed');\n",
+    );
+    git(cwd, ["add", "scripts/report-thin-content.mjs"]);
+    git(cwd, ["commit", "-m", "update unclassified script"]);
+
+    const outputs = runClassifier(cwd, baseSha);
+    expect(outputs).toMatchObject({
+      ci: "true",
+    });
+  });
+
+  it("fails closed by routing otherwise unclassified regression tests through CI validation", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+    const testsDir = path.join(cwd, "tests");
+    fs.mkdirSync(testsDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(testsDir, "codeql-regressions.test.ts"),
+      "import { expect, it } from 'vitest';\nit('changed', () => expect(true).toBe(true));\n",
+    );
+    git(cwd, ["add", "tests/codeql-regressions.test.ts"]);
+    git(cwd, ["commit", "-m", "update unclassified test"]);
+
+    const outputs = runClassifier(cwd, baseSha);
+    expect(outputs).toMatchObject({
+      ci: "true",
     });
   });
 

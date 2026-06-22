@@ -1,0 +1,187 @@
+---
+title: inference.sh MCP Server
+slug: inference-sh-mcp-server
+category: mcp
+description: >-
+  Hosted streamable-HTTP MCP server that exposes inference.sh platform tools for
+  running apps, managing tasks, proxying external MCP connectors, and calling
+  hundreds of hosted AI models from Claude Code, Cursor, and other MCP clients.
+cardDescription: >-
+  Connect Claude to inference.sh over streamable HTTP for app execution, task
+  management, connector proxies, and 250+ hosted model and tool endpoints.
+seoTitle: inference.sh MCP Server for Claude and MCP Clients
+seoDescription: >-
+  Configure the inference.sh MCP server with a Bearer API key to run platform
+  apps, manage tasks, discover remote MCP servers, and call hosted image, video,
+  LLM, search, and connector tools from Claude Code or Cursor.
+author: inference.sh
+authorProfileUrl: "https://github.com/inference-sh"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-22"
+brandName: inference.sh
+brandDomain: inference.sh
+websiteUrl: "https://inference.sh"
+documentationUrl: "https://inference.sh/docs/connectors/mcp-server"
+repoUrl: "https://github.com/inference-sh/grid"
+installable: true
+installCommand: >-
+  Run `belt login` to create an inference.sh API key, then add the streamable
+  HTTP MCP endpoint `https://api.inference.sh/mcp` with `Authorization: Bearer
+  inf_<your_api_key>` in your MCP client settings.
+usageSnippet: >-
+  After `belt login`, configure your MCP client with
+  `https://api.inference.sh/mcp` and a Bearer token, then list tools and call
+  platform apps or proxied connector tools from your agent session.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "inference": {
+        "type": "streamable-http",
+        "url": "https://api.inference.sh/mcp",
+        "headers": {
+          "Authorization": "Bearer inf_your_api_key"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "inference": {
+        "type": "streamable-http",
+        "url": "https://api.inference.sh/mcp",
+        "headers": {
+          "Authorization": "Bearer inf_your_api_key"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "An inference.sh account and API key from `belt login` or the platform dashboard."
+  - "An MCP client that supports streamable HTTP transport, such as Claude Code, Cursor, Cline, or Windsurf."
+  - "Review of which inference.sh apps, connectors, and proxy tools the agent may call before enabling write-capable workflows."
+  - "A billing and quota plan if the workflow will run image, video, LLM, search, or connector-backed tasks at scale."
+safetyNotes:
+  - "The hosted MCP server can execute inference.sh apps, platform tasks, and proxied connector tools that may create, update, or delete data in connected services such as GitHub, Linear, Slack, Notion, or databases."
+  - "Bearer API keys grant account-scoped access to platform capabilities; rotate compromised keys immediately and avoid committing tokens to repositories or shared MCP config files."
+  - "MCP proxy features can discover and call tools on remote MCP servers through inference.sh, which expands the runtime trust boundary beyond the primary client configuration."
+  - "Tool calls may trigger paid inference, connector actions, storage writes, or outbound network requests according to the selected app or connector."
+  - "Use least-privilege connector authorization and review each proxied server before enabling it in production agent workflows."
+privacyNotes:
+  - "Prompts, files, tool arguments, task metadata, connector payloads, and model outputs are processed by inference.sh and may transit connected third-party MCP services."
+  - "OAuth-backed connectors can expose account, workspace, issue, message, or repository content to the agent through proxied tool results."
+  - "API keys, connector tokens, and task logs should be treated as sensitive credentials and kept out of version control and public issue threads."
+  - "Hosted execution may retain usage, billing, and operational telemetry according to inference.sh policies; review the platform privacy documentation before processing regulated data."
+disclosure: >-
+  Hosted commercial AI agent runtime with a public MCP endpoint at
+  `https://api.inference.sh/mcp`. This entry documents the official inference.sh
+  platform MCP server, not a community reimplementation.
+sourceUrls:
+  - "https://inference.sh/docs/connectors/mcp-server"
+  - "https://inference.sh/docs/connectors/overview"
+  - "https://inference.sh/blog/guides/mcp-on-inference-sh"
+  - "https://api.inference.sh/.well-known/mcp-server-card"
+  - "https://raw.githubusercontent.com/inference-sh/grid/main/README.md"
+tags:
+  - inference
+  - hosted-mcp
+  - streamable-http
+  - connectors
+  - ai-runtime
+keywords:
+  - inference.sh MCP server
+  - inference-sh-mcp-server
+  - streamable HTTP MCP
+  - inference.sh connectors
+  - Claude inference.sh MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+inference.sh exposes a hosted Model Context Protocol server at
+`https://api.inference.sh/mcp`. MCP clients such as Claude Code and Cursor can
+connect over streamable HTTP with a Bearer API key and use platform tools to run
+apps, manage tasks, and access inference.sh capabilities without running local
+MCP processes.
+
+The platform also supports MCP in the opposite direction: inference.sh can
+connect to external MCP servers and surface their tools through connector
+proxies. That makes it useful when an agent needs both hosted model/app
+execution and third-party service tools from one runtime.
+
+## Source Review
+
+- https://inference.sh/docs/connectors/mcp-server
+- https://api.inference.sh/.well-known/mcp-server-card
+- https://inference.sh/blog/guides/mcp-on-inference-sh
+- https://github.com/inference-sh/grid
+
+## Install
+
+1. Install the inference.sh CLI (`belt`) and authenticate:
+
+```bash
+belt login
+```
+
+2. Copy the generated API key (`inf_...`) and add the MCP server to your client
+   settings.
+
+3. For Claude Code or Cursor, use streamable HTTP transport:
+
+```json
+{
+  "mcpServers": {
+    "inference": {
+      "type": "streamable-http",
+      "url": "https://api.inference.sh/mcp",
+      "headers": {
+        "Authorization": "Bearer inf_your_api_key"
+      }
+    }
+  }
+}
+```
+
+4. Restart the MCP client, list available tools, and confirm `initialize` and
+   `tools/list` succeed before enabling autonomous workflows.
+
+## Duplicate Check
+
+Searched `content/mcp/`, open PRs, and the live registry for:
+
+- `inference.sh`, `inference-sh`, `sh.inference`, `api.inference.sh`
+- slug `inference-sh-mcp-server`
+- docs URL `inference.sh/docs/connectors/mcp-server`
+- MCP server card host `api.inference.sh`
+
+No existing HeyClaude MCP entry documents this hosted inference.sh endpoint.
+
+## Runtime Notes
+
+- Transport: streamable HTTP (JSON-RPC 2.0) at `POST https://api.inference.sh/mcp`
+- Discovery card: `GET https://api.inference.sh/.well-known/mcp-server-card`
+- Supported protocol versions include `2025-11-25`, `2025-06-18`, and `2025-03-26`
+- Unauthenticated requests to the MCP endpoint return `401`, so clients must send a valid Bearer token
+
+## When To Use
+
+- You want Claude or another MCP client to call inference.sh apps and hosted
+  models without maintaining local MCP server processes.
+- You need connector proxy access to services like GitHub, Linear, Slack, or
+  Notion through inference.sh-managed authentication.
+- You are evaluating a hosted runtime that combines app execution, task
+  orchestration, and external MCP connectors behind one API key.
+
+## When Not To Use
+
+- You require fully offline or air-gapped MCP execution.
+- You cannot accept cloud processing of prompts, connector data, or generated
+  media.
+- You need a self-hosted open-source MCP server repository instead of a hosted
+  platform endpoint.

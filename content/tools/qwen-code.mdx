@@ -1,0 +1,188 @@
+---
+title: Qwen Code
+slug: qwen-code
+category: tools
+description: >-
+  Open-source terminal AI coding agent from Qwen with Auto-Memory, Auto-Skills,
+  SubAgents, Agent Teams, dynamic workflows, MCP support, multi-provider model
+  routing, IDE plugins, desktop app, daemon mode, SDKs, IM bots, sandboxing, and
+  worktree-aware coding workflows.
+cardDescription: >-
+  Run Qwen Code as a terminal coding agent with Auto-Memory, Auto-Skills,
+  SubAgents, Agent Teams, MCP, multi-provider routing, IDE plugins, desktop
+  app, daemon mode, and SDKs.
+seoTitle: Qwen Code Terminal Coding Agent for MCP, Auto-Skills, SubAgents, and Multi-Provider Workflows
+seoDescription: >-
+  Install Qwen Code with npm, Homebrew, or standalone scripts and use the
+  open-source terminal coding agent for Auto-Memory, Auto-Skills, SubAgents,
+  Agent Teams, MCP, hooks, sandboxing, worktrees, SDKs, daemon mode, and Qwen,
+  OpenAI, Anthropic, Gemini, Ollama, or vLLM providers.
+author: Qwen
+authorProfileUrl: "https://github.com/QwenLM"
+dateAdded: "2026-06-18"
+websiteUrl: "https://qwenlm.github.io/qwen-code-docs/en/users/overview/"
+documentationUrl: "https://qwenlm.github.io/qwen-code-docs/en/users/overview/"
+repoUrl: "https://github.com/QwenLM/qwen-code"
+packageUrl: "https://registry.npmjs.org/@qwen-code/qwen-code"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/QwenLM/qwen-code"
+  - "https://github.com/QwenLM/qwen-code/blob/main/package.json"
+  - "https://github.com/QwenLM/qwen-code/blob/main/LICENSE"
+  - "https://qwenlm.github.io/qwen-code-docs/en/users/overview/"
+  - "https://qwenlm.github.io/qwen-code-docs/en/users/configuration/auth/"
+  - "https://registry.npmjs.org/@qwen-code/qwen-code"
+installable: true
+installCommand: "npm install -g @qwen-code/qwen-code@latest"
+usageSnippet: >-
+  Install `@qwen-code/qwen-code`, authenticate a provider with `/auth`, then
+  run `qwen` in a version-controlled workspace with file, shell, MCP, skills,
+  subagent, sandbox, and provider boundaries reviewed.
+copySnippet: |-
+  npm install -g @qwen-code/qwen-code@latest
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js 22 or newer for the npm package, or a supported standalone script or Homebrew install path."
+  - "Provider credentials for Qwen, OpenAI, Anthropic, Gemini, Ollama, vLLM, or another compatible route."
+  - "A project workspace where file access, shell commands, Auto-Memory, Auto-Skills, SubAgents, Agent Teams, MCP, and hooks are intentionally scoped."
+  - "A policy for headless mode, daemon mode, IM bot access, IDE plugins, desktop app sessions, and SDK clients before using Qwen Code outside an interactive terminal."
+  - "Reviewed MCP server configuration if external tools, resources, or internal systems will be exposed to Qwen Code."
+safetyNotes:
+  - "Qwen Code can edit files, run commands, use MCP servers, launch subagents, apply skills, use hooks, operate in sandboxes, and manage worktrees; keep destructive or credentialed actions behind explicit approval."
+  - "Auto-Memory and Auto-Skills can persist or reuse context across tasks; review what is stored, updated, and replayed before using sensitive repositories or customer data."
+  - "Daemon mode and IM bot channels can expose a shared agent session over HTTP+SSE or messaging platforms; require authentication, network controls, audit logs, and operator visibility."
+  - "MCP servers can expose databases, SaaS accounts, browsers, cloud resources, files, or internal APIs to the agent; apply least privilege per server."
+  - "Multi-provider routing means prompts and code may go to different model providers at runtime; lock down provider choices for regulated or confidential work."
+privacyNotes:
+  - "Prompts, selected files, memory, skills, subagent transcripts, MCP tool arguments, MCP tool results, hooks, shell output, worktree paths, daemon traffic, IM bot messages, SDK messages, and provider responses may contain sensitive data."
+  - "Do not expose provider API keys, OAuth tokens, Qwen credentials, private repository content, customer data, or internal system details through prompts, logs, screenshots, bot messages, or shared sessions."
+  - "Provider privacy, retention, billing, and telemetry behavior depends on the selected Qwen, OpenAI, Anthropic, Gemini, local, or third-party model route."
+  - "Desktop, daemon, IDE, SDK, and IM-bot modes may retain or relay agent context outside the terminal session; review logs and storage for each mode."
+tags:
+  - qwen
+  - cli
+  - terminal-agent
+  - ai-coding
+  - mcp
+  - skills
+  - subagents
+keywords:
+  - Qwen Code
+  - qwen-code
+  - "@qwen-code/qwen-code"
+  - Qwen terminal coding agent
+  - Qwen Code MCP
+  - Qwen Code Auto-Skills
+  - Qwen Code SubAgents
+  - Qwen Code daemon mode
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Qwen Code is an open-source terminal AI coding agent from Qwen. It provides an
+interactive terminal UI, headless prompt mode, Auto-Memory, Auto-Skills,
+SubAgents, Agent Teams, dynamic workflows, MCP support, hooks, sandboxing, git
+worktrees, IDE integrations, desktop app builds, daemon mode, SDKs, and IM bot
+channels.
+
+Use it when a developer wants an open-source coding agent that can route across
+Qwen, OpenAI, Anthropic, Gemini, local, and third-party model providers while
+keeping MCP, skills, subagents, and terminal workflows in the same agent
+surface.
+
+## Install
+
+Install with npm:
+
+```bash
+npm install -g @qwen-code/qwen-code@latest
+```
+
+The upstream README also documents standalone Linux/macOS and Windows install
+scripts plus Homebrew. After installation, launch the terminal UI and configure
+authentication:
+
+```bash
+qwen
+/auth
+```
+
+## Agent Capabilities
+
+| Area | Qwen Code Coverage |
+| --- | --- |
+| Terminal Agent | Interactive `qwen` UI and headless `qwen -p` mode |
+| Agent Features | Auto-Memory, Auto-Skills, SubAgents, Agent Teams, dynamic workflows, hooks, and plan mode |
+| Tools | MCP, file references, LSP integration, shell commands, sandboxing, computer use, and git worktrees |
+| Providers | Qwen, OpenAI, Anthropic, Gemini, Ollama, vLLM, local models, and compatible third-party routes |
+| Surfaces | Terminal, IDE plugins, desktop app, daemon mode, SDKs, and IM bots |
+| SDKs | TypeScript, Python, and Java SDK paths documented in the upstream repository |
+| Session Modes | Interactive sessions, headless scripts, shared daemon sessions over HTTP+SSE, and messaging channels |
+
+## MCP and Skills Fit
+
+Qwen Code is directly relevant to MCP and skills searches because MCP,
+Auto-Skills, SubAgents, and Agent Teams are core positioning points in the
+upstream project. It can operate as a terminal agent that connects to MCP
+servers and uses skills or subagents to coordinate coding tasks.
+
+That also makes the trust boundary broader than a simple chat CLI. MCP servers,
+skills, hooks, subagents, and daemon or IM-bot sessions can all change what the
+agent sees and does. Review each configured capability before enabling it in a
+real repository.
+
+## Use Cases
+
+- Run an open-source coding agent from the terminal.
+- Use Qwen, OpenAI, Anthropic, Gemini, Ollama, vLLM, or compatible provider
+  routes from one coding-agent surface.
+- Connect MCP servers for custom repository, browser, cloud, or internal tools.
+- Use Auto-Skills, SubAgents, Agent Teams, hooks, and worktrees for larger
+  implementation tasks.
+- Run headless prompts in scripts or CI after permissions and output parsing are
+  constrained.
+- Share a session through daemon mode or IM bots only after authentication and
+  logging are reviewed.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository describes Qwen Code as an open-source AI coding agent
+  that lives in the terminal.
+- The README lists Auto-Memory, Auto-Skills, SubAgents, Agent Teams, MCP,
+  dynamic workflows, multi-protocol provider support, IDE plugins, desktop app,
+  daemon mode, SDKs, and IM bots.
+- `package.json` declares the `@qwen-code/qwen-code` package, `qwen` binary,
+  GitHub repository, workspace layout, channel packages, and Node.js `>=22.0.0`
+  engine requirement.
+- The docs cover the user overview and provider authentication.
+- The npm registry resolves `@qwen-code/qwen-code` at version `0.18.3`.
+
+## Safety and Privacy
+
+Qwen Code is a local coding agent with many expansion points. Start from a
+version-controlled workspace, review commands and file edits, scope MCP servers
+and skills tightly, and avoid enabling daemon, IM, SDK, or headless modes until
+the operator, credential, and logging model is clear.
+
+Because Qwen Code is multi-provider, prompts, source files, tool results,
+memory, skills, and subagent transcripts can cross different model providers or
+local gateways depending on runtime configuration. Lock provider choices for
+sensitive work and keep credentials out of prompts, logs, and repository files.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+`QwenLM/qwen-code`, Qwen Code, `@qwen-code/qwen-code`, Qwen terminal coding
+agent, Qwen Code MCP, Qwen Code Auto-Skills, Qwen Code SubAgents, and Qwen Code
+daemon mode. Existing content only mentions Qwen Code as a compatible MCP client
+in a Windows MCP entry; no dedicated Qwen Code tools entry, exact source URL
+duplicate, target file, or open duplicate PR was found.

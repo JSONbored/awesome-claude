@@ -3,21 +3,23 @@ title: Model Switch History Tracker - Statuslines
 slug: model-switch-history-tracker
 category: statuslines
 description: >-
-  Claude Code model switch detector tracking transitions between
-  Opus/Sonnet/Haiku with switch count, current model indicator, and cost impact
-  visualization.
+  Claude Code statusline that detects model switches between Opus, Sonnet, and
+  Haiku — shows current tier, total session switch count, and the last few
+  model transitions inline.
 cardDescription: >-
-  Claude Code model switch detector tracking transitions between
-  Opus/Sonnet/Haiku with switch count, current model indicator, and cost imp...
-seoTitle: Model Switch History Tracker - Statuslines
+  Statusline showing current Claude tier, session switch count, and recent
+  Opus/Sonnet/Haiku transitions — know when Claude auto-switched models.
+seoTitle: Claude Model Switch History Statusline for Claude Code
 seoDescription: >-
-  Claude Code model switch detector tracking transitions between
-  Opus/Sonnet/Haiku with switch count, current model indicator, and cost impact
-  visualization.
+  Claude Code statusline that tracks model-tier changes per session. Displays
+  the current Opus/Sonnet/Haiku indicator, total switch count, and a short
+  transition log directly in your statusline.
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-10-25"
-documentationUrl: "https://docs.claude.com/en/docs/claude-code/statusline"
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+retrievalSources:
+  - "https://code.claude.com/docs/en/statusline"
 installable: true
 usageSnippet: "\U0001F3B5 SONNET | 2 switches | Opus→Sonnet Haiku→Sonnet"
 copySnippet: |-
@@ -53,26 +55,22 @@ prerequisites:
   - >-
     Write access to home directory (~/.claude-code-model-history) for persistent
     model history files
+safetyNotes:
+  - Creates and writes to ~/.claude-code-model-history/ to persist model switch history across Claude Code invocations.
+  - Runs as a background statusline command on every Claude Code refresh (every 1000ms by default).
 tags:
   - model-switching
   - opus-sonnet-haiku
   - cost-optimization
   - model-tracking
   - switch-history
+privacyNotes:
+  - "Reads the Claude Code statusline JSON from stdin (model, workspace path, token usage) and renders it in the local terminal; it does not send data off-machine."
 keywords:
-  - claude
-  - cost-optimization
-  - development
-  - history
-  - model
-  - model-switching
-  - model-tracking
-  - opus-sonnet-haiku
-  - statuslines
-  - switch
-  - switch-history
-  - tools
-  - tracker
+  - claude model switch history
+  - opus sonnet haiku tracker
+  - model switching statusline
+  - claude code statusline
 readingTime: 2
 difficultyScore: 6
 hasTroubleshooting: true
@@ -318,7 +316,7 @@ if ! command -v jq &> /dev/null; then
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sudo apt-get install -y jq || sudo yum install -y jq
     else
-        echo "Please install jq manually: https://stedolan.github.io/jq/"
+        echo "Please install jq manually: https://jqlang.github.io/jq/"
     fi
 fi
 

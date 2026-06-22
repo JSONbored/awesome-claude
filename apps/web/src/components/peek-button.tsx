@@ -22,8 +22,10 @@ import {
 } from "./badges";
 import { SourceCitations } from "./source-citations";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
+import { EntryBrandMark } from "./entry-brand-mark";
 import { HarnessVariantPicker } from "./harness-variant-picker";
 import { useHarnessPref, useCopyPref, type CopyVariant } from "@/lib/dossier-prefs";
+import { entryDomId } from "@/lib/entry-identity";
 import { cn } from "@/lib/utils";
 import { setHotPeek, clearHotPeek, installPeekShortcut } from "@/lib/peek-hotkey";
 
@@ -45,6 +47,7 @@ export const PeekButton = React.forwardRef<PeekHandle, Props>(function PeekButto
   { entry, className },
   ref,
 ) {
+  const peekId = entryDomId(entry);
   const [open, setOpen] = React.useState(false);
   React.useImperativeHandle(ref, () => ({ open: () => setOpen(true) }), []);
   React.useEffect(() => {
@@ -80,15 +83,15 @@ export const PeekButton = React.forwardRef<PeekHandle, Props>(function PeekButto
       <SheetContent
         side="right"
         className="w-full overflow-y-auto sm:max-w-md"
-        aria-labelledby={`peek-title-${entry.slug}`}
+        aria-labelledby={`peek-title-${peekId}`}
       >
-        <PeekBody entry={entry} titleId={`peek-title-${entry.slug}`} />
+        <PeekBody entry={entry} peekId={peekId} />
       </SheetContent>
     </Sheet>
   );
 });
 
-function PeekBody({ entry, titleId }: { entry: Entry; titleId: string }) {
+function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
   const harnessAvailable = React.useMemo<Harness[]>(
     () => (entry.harnessVariants ? (Object.keys(entry.harnessVariants) as Harness[]) : []),
     [entry.harnessVariants],
@@ -105,12 +108,20 @@ function PeekBody({ entry, titleId }: { entry: Entry; titleId: string }) {
           <SourceBadge status={entry.source} />
           <InstallRiskBadge entry={entry} size="xs" />
         </div>
-        <SheetTitle id={titleId} className="font-display text-lg leading-tight text-ink">
-          {entry.title}
-        </SheetTitle>
-        <SheetDescription className="text-sm text-ink-muted">
-          {entry.cardDescription ?? entry.description}
-        </SheetDescription>
+        <div className="flex min-w-0 items-start gap-3">
+          <EntryBrandMark entry={entry} size="md" priority className="mt-0.5" />
+          <div className="min-w-0 flex-1">
+            <SheetTitle
+              id={`peek-title-${peekId}`}
+              className="font-display text-lg leading-tight text-ink"
+            >
+              {entry.title}
+            </SheetTitle>
+            <SheetDescription className="mt-1.5 text-sm text-ink-muted">
+              {entry.cardDescription ?? entry.description}
+            </SheetDescription>
+          </div>
+        </div>
         <div className="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
           <span>
             by <span className="text-ink">{entry.author}</span>
@@ -136,27 +147,27 @@ function PeekBody({ entry, titleId }: { entry: Entry; titleId: string }) {
 
       {harnessAvailable.length >= 2 && (
         <div className="mt-4">
-          <div id={`peek-harness-${entry.slug}`} className="eyebrow mb-2">
+          <div id={`peek-harness-${peekId}`} className="eyebrow mb-2">
             Harness variant
           </div>
           <HarnessVariantPicker
             available={harnessAvailable}
             value={harness as Harness | null}
             onChange={setHarness}
-            labelId={`peek-harness-${entry.slug}`}
+            labelId={`peek-harness-${peekId}`}
           />
         </div>
       )}
 
       <div className="mt-4">
         <div className="mb-2 flex flex-wrap items-center gap-2">
-          <span id={`peek-snippet-${entry.slug}`} className="eyebrow mr-1">
+          <span id={`peek-snippet-${peekId}`} className="eyebrow mr-1">
             Snippet
           </span>
           <CopySegmented
             variants={variants}
             entryTitle={entry.title}
-            labelId={`peek-snippet-${entry.slug}`}
+            labelId={`peek-snippet-${peekId}`}
           />
         </div>
         {variants.find((v) => v.id === variants.find((x) => x.value)?.id)?.value && (

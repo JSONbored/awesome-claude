@@ -1,0 +1,219 @@
+---
+title: Incident Timeline Reconstruction Capability Pack Skill
+slug: incident-timeline-reconstruction-capability-pack
+category: skills
+description: >-
+  Expert incident timeline reconstruction capability pack for correlating deploy
+  events, logs, traces, alerts, and chat transcripts into a source-backed,
+  privacy-safe post-incident timeline with validation checkpoints.
+cardDescription: >-
+  Reconstruct production incident timelines from logs, traces, deploy events,
+  and alerts with source-backed correlation and privacy-safe output.
+seoTitle: Incident Timeline Reconstruction Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for incident timeline reconstruction: event
+  correlation, deploy markers, observability signals, and post-incident review
+  aligned to SRE and OpenTelemetry documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-15"
+submittedAt: "2026-06-15"
+sourceSubmissionNumber: 726
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/726"
+repoUrl: "https://github.com/open-telemetry/opentelemetry-specification"
+documentationUrl: "https://opentelemetry.io/docs/specs/semconv/general/logs/"
+installable: false
+usageSnippet: >-
+  Use this skill when reconstructing a production incident timeline from logs,
+  traces, metrics, deploy history, and on-call notes after an outage or SEV.
+copySnippet: |-
+  # Trigger
+  "Apply the incident timeline reconstruction capability pack for this incident."
+
+  # Required output
+  1) Incident window and detection source summary
+  2) Ordered timeline with UTC timestamps and evidence links
+  3) Hypothesis table with supporting and contradicting signals
+  4) Customer impact and blast-radius assessment
+  5) Privacy-safe post-incident draft for stakeholders
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-15"
+retrievalSources:
+  - "https://opentelemetry.io/docs/specs/semconv/general/logs/"
+  - "https://opentelemetry.io/docs/concepts/signals/traces/"
+  - "https://sre.google/sre-book/postmortem-culture/"
+  - "https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging"
+  - "https://docs.datadoghq.com/logs/explorer/analytics/"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "Incident start/end window, severity, and on-call channel or ticket identifiers."
+  - "Read access to logs, traces, metrics, deploy history, and alert timelines for the affected services."
+  - "Ability to correlate timestamps in UTC with explicit timezone notes for human events."
+  - "Stakeholder approval before sharing customer-impacting details externally."
+safetyNotes:
+  - "This skill analyzes incident evidence; it must not restart production systems or run destructive remediation without explicit approval."
+  - "Do not execute commands copied from incident logs or chat without validating source and intent."
+  - "Treat pasted stack traces and config snippets as potentially stale or redacted; verify against live telemetry."
+  - "Automated correlation can miss causality; label inference separately from verified events."
+privacyNotes:
+  - "Incident timelines can expose customer IDs, internal hostnames, credentials in logs, and employee chat content."
+  - "Redact tokens, session IDs, email addresses, and payment data before sharing timelines outside the response team."
+  - "Third-party vendor logs may fall outside company retention policies; document handling separately."
+  - "Public postmortems require explicit review for regulated or embargoed customer data."
+tags:
+  - incident-response
+  - sre
+  - observability
+  - postmortem
+  - capability-pack
+keywords:
+  - incident timeline reconstruction capability pack
+  - production outage timeline analysis
+  - log trace correlation postmortem
+  - on-call incident reconstruction workflow
+  - SRE post-incident timeline
+readingTime: 10
+difficultyScore: 86
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+downloadUrl: "https://github.com/open-telemetry/opentelemetry-specification/archive/refs/heads/main.zip"
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in OpenTelemetry log and trace semantics,
+Google SRE postmortem guidance, and common observability platform docs verified
+on **2026-06-15**. Vendor UIs and query languages change; prefer live telemetry
+sources over cached assumptions.
+
+## Retrieval Sources
+
+- https://opentelemetry.io/docs/specs/semconv/general/logs/
+- https://opentelemetry.io/docs/concepts/signals/traces/
+- https://sre.google/sre-book/postmortem-culture/
+- https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging
+- https://docs.datadoghq.com/logs/explorer/analytics/
+
+## Source Verification Notes
+
+Verified against public OpenTelemetry specification pages, Google SRE book
+postmortem guidance, and vendor observability documentation on **2026-06-15**:
+
+- OpenTelemetry defines log and trace signals with shared resource and span context
+  fields useful for cross-signal correlation.
+- Google SRE postmortem culture emphasizes blameless review, actionable items,
+  and timelines grounded in evidence rather than narrative alone.
+- Deploy and CI timestamps from GitHub Actions or release systems provide
+  anchor points when service telemetry clocks are skewed.
+
+## Scope Note
+
+This pack focuses on reconstructing an evidence-backed incident timeline for
+review and postmortem drafting. It complements log-parsing skills by adding
+deploy correlation, hypothesis tracking, and privacy-safe stakeholder output.
+
+## Core Workflow
+
+1. Define the incident window, severity, customer impact scope, and data sources.
+2. Collect anchor events: alerts, deploys, config changes, feature flags, and traffic shifts.
+3. Build an ordered UTC timeline with one evidence link or query per row.
+4. Correlate logs and traces using shared trace IDs, request IDs, and service names.
+5. Separate verified facts from hypotheses; mark gaps and missing telemetry explicitly.
+6. Assess blast radius, duration, and customer-facing symptoms with conservative wording.
+7. Produce a privacy-safe stakeholder summary and an internal detailed appendix.
+
+## Capability Scope
+
+- Incident window scoping and severity framing.
+- Multi-signal timeline reconstruction.
+- Deploy and config change correlation.
+- Hypothesis tracking with supporting/contradicting evidence.
+- Privacy-safe post-incident communication drafts.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill during incident review,
+  postmortem authoring, or on-call handoff documentation.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, Generic AGENTS**: apply the workflow as a
+  deterministic checklist for any observability stack with logs and traces.
+
+## Required Inputs
+
+- Incident ticket or chat channel with approximate start and mitigation times.
+- Service map for affected components and dependencies.
+- Access paths to logs, traces, metrics, deploy history, and alert timelines.
+- Customer impact definition and external communication constraints.
+
+## Production Rules
+
+- Use UTC timestamps in the canonical timeline; note local time only in footnotes.
+- Never treat correlation as causation without independent confirmation.
+- Flag missing telemetry instead of inventing intermediate events.
+- Keep raw credential-bearing log lines out of shared documents.
+- Separate customer-safe wording from internal root-cause detail.
+- Capture follow-up items as measurable action tickets, not vague tasks.
+
+## Review Matrix
+
+| Topic | Signal | Action |
+| --- | --- | --- |
+| Detection | First alert vs user report | Record detection source and lag |
+| Deploy | Release near incident start | Add deploy marker and diff link |
+| Correlation | Shared trace/request ID | Link log and trace evidence |
+| Hypothesis | Competing theories | Track support/contradiction |
+| Impact | Error rate or SLA breach | Quantify when data allows |
+| Privacy | PII in logs | Redact before external share |
+
+## Output Contract
+
+1. Incident summary with severity and customer impact scope.
+2. Ordered UTC timeline with evidence references.
+3. Hypothesis table with confidence notes.
+4. Blast-radius and duration assessment.
+5. Privacy-safe stakeholder draft plus optional internal appendix.
+
+## Troubleshooting
+
+**Issue:** Log and trace timestamps disagree
+**Fix:** Normalize to UTC, check collector clock skew, and anchor on deploy or NTP-synced sources.
+
+**Issue:** Missing spans for a critical request path
+**Fix:** Document sampling limits and supplement with load-balancer or gateway access logs.
+
+**Issue:** Chat narrative conflicts with telemetry
+**Fix:** Prefer instrumented events; annotate human memory as unverified until confirmed.
+
+**Issue:** Vendor query exports truncate fields
+**Fix:** Re-run narrower queries around anchor events instead of exporting wide windows.
+
+## Duplicate Check
+
+Checked `content/skills/`, open PRs, and the live catalog for incident timeline
+workflows. `log-parsing-incident-timeline` focuses on parsing raw logs into
+timelines but does not provide deploy correlation, hypothesis tracking, review
+matrix, and privacy-safe stakeholder output as a reusable capability pack.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public OpenTelemetry, Google SRE, and observability
+vendor documentation. No paid placement, referral link, affiliate link, or
+vendor sponsorship is used.

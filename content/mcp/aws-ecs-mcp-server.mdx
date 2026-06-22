@@ -1,0 +1,162 @@
+---
+title: Amazon ECS MCP Server
+slug: aws-ecs-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server for Amazon ECS that helps AI assistants
+  containerize applications, deploy them to ECS, troubleshoot deployments, and
+  explore ECS and ECR resources across the container application lifecycle.
+cardDescription: >-
+  Connect Claude to Amazon ECS to containerize apps, deploy to ECS, explore
+  clusters/services/tasks, and troubleshoot container deployments.
+seoTitle: "Amazon ECS MCP Server for Claude — Containerize & Deploy"
+seoDescription: >-
+  Connect Claude to the official AWS Labs Amazon ECS MCP server to containerize
+  applications, deploy to ECS, inspect ECS/ECR resources, and troubleshoot
+  deployments over stdio with uvx using your scoped AWS credentials.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-21"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/ecs-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.ecs-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/ecs-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/ecs-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.ecs-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx --from awslabs-ecs-mcp-server ecs-mcp-server
+usageSnippet: >-
+  Configure the server with uvx and a scoped AWS profile, then ask Claude to
+  containerize an app, inspect ECS clusters/services/tasks, or troubleshoot a
+  deployment; flip the write/sensitive-data env toggles only when intended.
+copySnippet: |-
+  {
+    "awslabs.ecs-mcp-server": {
+      "command": "uvx",
+      "args": ["--from", "awslabs-ecs-mcp-server", "ecs-mcp-server"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE}",
+        "AWS_REGION": "us-east-1",
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "ALLOW_WRITE": "false",
+        "ALLOW_SENSITIVE_DATA": "false"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.ecs-mcp-server": {
+        "command": "uvx",
+        "args": ["--from", "awslabs-ecs-mcp-server", "ecs-mcp-server"],
+        "env": {
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "AWS_REGION": "us-east-1",
+          "FASTMCP_LOG_LEVEL": "ERROR",
+          "ALLOW_WRITE": "false",
+          "ALLOW_SENSITIVE_DATA": "false"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - An AWS account with Amazon ECS/ECR and permissions to view (and, if enabled, deploy) the target resources.
+  - Docker or Finch for containerization and local image builds.
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - "AWS credentials configured locally (for example via `aws configure` or `AWS_PROFILE`) scoped to the intended account, region, and resources."
+  - An MCP client that supports stdio servers; the server runs locally on the same host as the client.
+safetyNotes:
+  - "The configuration above is read-only. Setting `ALLOW_WRITE=true` lets the server create and modify infrastructure (ECR repos, CloudFormation stacks, ECS services) and `ALLOW_SENSITIVE_DATA=true` exposes logs; enable these only deliberately."
+  - AWS documents this server as primarily for development, testing, and non-critical environments; keep write/sensitive-data disabled for production accounts and prefer non-production targets while evaluating it.
+  - This server acts on real infrastructure with your AWS credentials; scope the profile to the intended account, region, and resources, and run it only on a trusted host.
+privacyNotes:
+  - Cluster, service, task, task-definition, and ECR metadata plus account/region identifiers can be returned through tool calls and exposed to the model.
+  - "With sensitive-data access enabled, logs and deployment details may be returned; keep account identifiers, credentials, and log contents out of public prompts, issues, and screenshots."
+tags:
+  - aws
+  - ecs
+  - containers
+  - deployment
+  - aws-labs
+keywords:
+  - amazon ecs mcp server
+  - awslabs ecs-mcp-server
+  - ecs mcp claude
+  - containerize deploy mcp aws
+  - ecs troubleshooting mcp
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Amazon ECS MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+Model Context Protocol server that helps AI assistants work with the full
+lifecycle of containerized applications on Amazon ECS — from containerizing an
+application, through deploying it to ECS, to troubleshooting deployments and
+exploring ECS/ECR resources.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.ecs-mcp-server` Python package and uses your local AWS credentials. The
+configuration shown is read-only; write and sensitive-data access are opt-in
+environment toggles.
+
+## Features
+
+- **Containerization guidance** — best-practice guidance for containerizing web
+  applications.
+- **Deployment** — deploy containerized apps with ECS Express Mode and automatic
+  infrastructure provisioning (write mode).
+- **ECR integration** — create ECR repositories and build/push Docker images
+  (write mode).
+- **Resource management** — list and explore ECS clusters, services, tasks, and
+  task definitions, plus ECR images.
+- **Troubleshooting** — diagnose and resolve common ECS deployment problems.
+
+## Use Cases
+
+- Containerize an existing web application with AWS best practices.
+- Deploy a container to ECS Express Mode with provisioned infrastructure (write).
+- Inspect the live state of ECS clusters, services, and tasks.
+- Troubleshoot a failing ECS deployment.
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+, `uv`, and Docker or Finch.
+2. Configure an AWS profile and region scoped to the target account.
+3. Add the server with the read-only stdio configuration above. To enable
+   deployments, set `ALLOW_WRITE=true` (and `ALLOW_SENSITIVE_DATA=true` for logs)
+   — only when you intend those operations.
+4. Verify it is connected with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration and set
+`AWS_PROFILE`/`AWS_REGION`. The first run downloads the package via `uvx`.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). AWS positions this server for development,
+testing, and non-critical environments; it can act on real infrastructure when
+write access is enabled, so keep the write/sensitive-data toggles off by default,
+scope credentials tightly, and verify the configuration against the linked source
+before using it in automated workflows.

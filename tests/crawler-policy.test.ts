@@ -3,7 +3,10 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { getRobotsPolicy, renderRobotsTxt } from "@/lib/robots-policy";
-import { applySecurityHeaders } from "@/lib/security-headers";
+import {
+  applySecurityHeaders,
+  getSecurityHeaders,
+} from "@/lib/security-headers";
 import { repoRoot } from "./helpers/registry-fixtures";
 
 describe("crawler and AI citation policy", () => {
@@ -70,6 +73,30 @@ describe("crawler and AI citation policy", () => {
     );
     expect(prodHeaders.get("x-robots-tag")).toBeNull();
     expect(prodHeaders.get("link")).toContain('rel="api-catalog"');
+
+    const stagingHeaders = applySecurityHeaders(
+      new Headers({ "content-type": "text/html" }),
+      new Request("https://preview-staging.heyclau.de/"),
+    );
+    expect(stagingHeaders.get("x-robots-tag")).toContain("noindex");
+
+    const malformedHeaders = applySecurityHeaders(
+      new Headers({ "content-type": "text/html" }),
+      { url: "not a url" } as Request,
+    );
+    expect(malformedHeaders.get("x-robots-tag")).toBeNull();
+  });
+
+  it("exposes the configured security headers as deployment metadata", () => {
+    const headers = new Map(
+      getSecurityHeaders().map((header) => [header.key, header.value]),
+    );
+
+    expect(headers.get("content-security-policy")).toContain(
+      "default-src 'self'",
+    );
+    expect(headers.get("permissions-policy")).toContain("camera=()");
+    expect(headers.get("x-frame-options")).toBe("DENY");
   });
 
   it("keeps llms.txt and corpus exports as cacheable security-headered discovery surfaces", () => {

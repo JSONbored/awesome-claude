@@ -1,0 +1,207 @@
+---
+title: TVWizard MCP Server for Claude
+slug: tvwizard-mcp-server
+category: mcp
+description: >-
+  TVWizard MCP server and cloud relay that lets Claude control Android TV and
+  Google TV devices remotely via six tv.* tools, title resolution, and a bridge APK.
+cardDescription: >-
+  Connect Claude to TVWizard to list TVs, send remote keys, launch apps, play
+  titles, and observe on-screen state through tv.djwizard.ai/mcp.
+seoTitle: TVWizard MCP Server for Claude
+seoDescription: >-
+  Use the TVWizard MCP server with Claude to control Android TV from anywhere with
+  tv.list_devices, tv.play_title, tv.observe, and bearer auth at tv.djwizard.ai.
+author: TVWizard
+authorProfileUrl: "https://github.com/fizzious1"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1504
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1504"
+repoUrl: "https://github.com/fizzious1/TVWizard-mcp"
+documentationUrl: "https://github.com/fizzious1/TVWizard-mcp/blob/main/docs/mcp-tools.md"
+websiteUrl: "https://tv.djwizard.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http tvwizard https://tv.djwizard.ai/mcp/
+usageSnippet: >-
+  Pair the TVWizard bridge APK, claim a bearer token at tv.djwizard.ai/claim.html,
+  then add https://tv.djwizard.ai/mcp/ with Authorization Bearer headers.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "tvwizard": {
+        "url": "https://tv.djwizard.ai/mcp/",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "tvwizard": {
+        "url": "https://tv.djwizard.ai/mcp/",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer YOUR_TVWIZARD_TOKEN"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "Android TV or Google TV device with the TVWizard bridge APK installed from GitHub releases."
+  - "Successful pairing via the 6-digit code at tv.djwizard.ai/claim.html."
+  - "Claude Desktop, Claude Code, or another MCP client with streamable HTTP and custom headers."
+  - "Bearer token stored in MCP headers, not committed to source control."
+safetyNotes:
+  - "tv.send_key and tv.launch_app can change power state, inputs, and foreground apps on a paired TV."
+  - "tv.play_title resolves streaming deep links that may start paid content or subscriptions."
+  - "Bearer tokens grant remote control of paired TVs; revoke tokens if leaked."
+  - "Commands fail loudly when the bridge is offline rather than queuing silent actions."
+privacyNotes:
+  - "tv.observe returns on-screen UI structure and may reveal watched content or account screens."
+  - "TVWizard states command content is not logged, sold, or used for model training; review the privacy policy."
+  - "Relay is hosted in Frankfurt (EU); bridge APK is open source for on-device inspection."
+tags:
+  - android-tv
+  - home-automation
+  - media
+  - remote-control
+  - remote-mcp
+keywords:
+  - tvwizard mcp
+  - android tv claude remote
+  - tv.play_title mcp
+  - tv.djwizard.ai mcp
+  - google tv control
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+TVWizard is a Model Context Protocol server plus cloud relay that turns any Claude-compatible chat into a universal remote for Android TV and Google TV. After pairing once with a six-digit code, you can list devices, send keys, launch apps, resolve titles to provider deep links, and read the on-screen state from anywhere.
+
+Source, docs, and releases are in [fizzious1/TVWizard-mcp](https://github.com/fizzious1/TVWizard-mcp). The relay endpoint is `https://tv.djwizard.ai/mcp/`, registered as `ai.djwizard/tvwizard`.
+
+## Features
+
+- `tv.list_devices` for TVs paired to your account.
+- `tv.send_key` for POWER, navigation, OK, BACK, and volume keys.
+- `tv.launch_app` for Android intents and HTTPS deep links.
+- `tv.list_apps` to enumerate installed applications.
+- `tv.play_title` with TMDB and JustWatch title resolution across regions.
+- `tv.observe` to read foreground app and visible UI nodes.
+
+## Use Cases
+
+- Turn off the bedroom TV from your phone while traveling.
+- Launch Netflix or YouTube for a specific title with natural language.
+- Inspect what app is foreground before sending navigation keys.
+- List installed streaming apps to build better voice commands.
+- Pause playback with BACK or HOME during automation experiments.
+
+## Installation
+
+### Pair the bridge
+
+1. Install the latest bridge APK from [GitHub releases](https://github.com/fizzious1/TVWizard-mcp/releases/latest).
+2. Open the app on the TV and tap **Pair** to display a six-digit code.
+3. Visit [tv.djwizard.ai/claim.html](https://tv.djwizard.ai/claim.html), claim the code, and copy the bearer token.
+
+### Claude Desktop
+
+Add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "tvwizard": {
+      "url": "https://tv.djwizard.ai/mcp/",
+      "transport": "streamable-http",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    }
+  }
+}
+```
+
+Fully quit and relaunch Claude Desktop after saving.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http tvwizard https://tv.djwizard.ai/mcp/
+```
+
+Configure the bearer token in your client's header settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "tvwizard": {
+      "url": "https://tv.djwizard.ai/mcp/",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer YOUR_TVWIZARD_TOKEN"
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+### Observe the screen
+
+```text
+Use tv.observe on my living-room TV and tell me what app is in the foreground.
+```
+
+### Play a title
+
+```text
+Put on Stranger Things season 1 episode 1 on the living-room TV.
+```
+
+### Power off
+
+```text
+Send POWER to the bedroom TV.
+```
+
+## Security
+
+- Revoke and re-pair if a bearer token may have leaked via chat or screenshots.
+- Avoid automating purchases or account changes on shared household TVs without consent.
+- Review the open-source bridge APK to understand what runs on the TV device.
+
+## Troubleshooting
+
+### Tools do not appear
+
+Confirm the Claude config path, merge into existing `mcpServers`, and restart fully.
+
+### authentication required
+
+The bearer token is missing, wrong, or revoked; re-claim at `/claim.html`.
+
+### bridge offline
+
+Ensure the TV is powered on, online, and the bridge app is running.
+
+### tv.play_title provider missing
+
+Catalog coverage varies by country; try `provider: "stremio"` when JustWatch data is sparse.

@@ -15,6 +15,9 @@ seoDescription: >-
   trans...
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
 dateAdded: "2025-09-19"
 installable: true
 installCommand: >-
@@ -56,17 +59,15 @@ tags:
   - translation
   - localization
   - validation
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - claude
-  - development
-  - hooks
-  - i18n
-  - internationalization
-  - localization
-  - tools
-  - translation
-  - validation
-  - validator
+  - i18n translation validator hook
+  - claude code i18n translation validator hook
+  - i18n translation validator claude hook
+  - claude i18n translation validator automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true

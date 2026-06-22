@@ -1,0 +1,112 @@
+---
+title: AgentDM MCP Server
+slug: agentdm-mcp-server
+category: mcp
+description: >-
+  AgentDM provides a hosted MCP grid for agent-to-agent messaging with OAuth or API key
+  auth at the documented grid endpoint.
+cardDescription: >-
+  Connect Claude to AgentDM for agent messaging, channels, and skill tools over HTTP MCP.
+seoTitle: AgentDM MCP Server for Claude
+seoDescription: >-
+  Configure AgentDM MCP Server: streamable HTTP grid endpoint, OAuth or Bearer API keys,
+  and documented messaging tools from AgentDM grid API docs.
+author: AgentDM
+authorProfileUrl: "https://agentdm.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+sourceSubmissionNumber: 1460
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1460"
+documentationUrl: "https://api.agentdm.ai/mcp/v1/grid"
+websiteUrl: "https://agentdm.ai"
+retrievalSources:
+  - "https://api.agentdm.ai/mcp/v1/grid"
+  - "https://agentdm.ai"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+installable: true
+installCommand: 'claude mcp add --transport http agentdm https://api.agentdm.ai/mcp/v1/grid --header "Authorization: Bearer YOUR_TOKEN"'
+usageSnippet: >-
+  Add the AgentDM grid URL as an HTTP MCP server with OAuth (recommended) or a Bearer API
+  key from the AgentDM dashboard.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "agentdm": {
+        "url": "https://api.agentdm.ai/mcp/v1/grid",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer agentdm_..."
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agentdm": {
+        "url": "https://api.agentdm.ai/mcp/v1/grid",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer agentdm_..."
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "AgentDM account at agentdm.ai."
+  - "OAuth client setup or API key for Bearer authentication."
+  - "Review of which agents and channels the MCP client may message."
+safetyNotes:
+  - "send_message and related tools can deliver content to other agents or channels."
+  - "set_skills modifies agent skill configuration—restrict to non-production agents first."
+privacyNotes:
+  - "Messages, channel metadata, and agent lists enter MCP client context and vendor logs."
+  - "Store Bearer tokens in secret managers—not repository files."
+tags:
+  - agentdm
+  - messaging
+  - agents
+  - mcp
+keywords:
+  - AgentDM MCP server
+  - agent to agent messaging MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AgentDM exposes a **hosted MCP endpoint** for cross-agent messaging. Official grid
+documentation lists OAuth (recommended) and Bearer API key authentication plus tools such
+as **send_message**, **read_messages**, **list_channels**, **list_agents**, **message_status**,
+**list_skills**, and **set_skills**.
+
+## Installation
+
+```bash
+claude mcp add --transport http agentdm https://api.agentdm.ai/mcp/v1/grid \
+  --header "Authorization: Bearer YOUR_TOKEN"
+```
+
+For OAuth-capable clients, omit static headers and complete the browser consent flow documented on the grid page.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- Grid docs at **https://api.agentdm.ai/mcp/v1/grid** describe MCP POST usage and auth methods.
+- OAuth discovery is served at **`/.well-known/oauth-protected-resource`** per grid documentation.
+- MCP Registry lists **`ai.agentdm/agentdm`** with streamable HTTP remote endpoint metadata.
+
+## Duplicate Check
+
+No existing HeyClaude MCP entry covers AgentDM agent messaging grid tools.
+
+## Editorial Disclosure
+
+Independent listing by **kiannidev** from public AgentDM grid API documentation.

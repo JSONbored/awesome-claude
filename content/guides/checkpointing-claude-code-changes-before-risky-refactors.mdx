@@ -65,14 +65,26 @@ what checkpoints do and do not cover.
 
 ## Rewind and summarize
 
-Run `/rewind`, or press `Esc` twice when the prompt input is empty, to open the
-rewind menu. It lists each prompt you sent. Choose an action:
+Open the rewind menu, which lists each prompt you sent, then choose an action:
 
-- **Restore code and conversation**: revert both to that point.
-- **Restore conversation**: rewind the conversation, keep current code.
-- **Restore code**: revert files, keep the conversation.
-- **Summarize from here** / **Summarize up to here**: compress part of the
-  conversation into a summary to free context, without changing files.
+```bash
+# Open the rewind menu (either works)
+/rewind
+# …or press Esc twice when the prompt input is empty
+
+# Prefer a separate branch over rewinding the current session:
+claude --continue --fork-session
+```
+
+Each menu action affects code, conversation, or both differently:
+
+| Action | Reverts code | Reverts conversation | Use when |
+| --- | --- | --- | --- |
+| Restore code and conversation | Yes | Yes | A change went wrong and you want a clean slate at that prompt |
+| Restore conversation | No | Yes | The code is fine but the discussion went off track |
+| Restore code | Yes | No | Keep the discussion, undo only the file changes |
+| Summarize from here | No | Compresses forward | Free context while keeping earlier history intact |
+| Summarize up to here | No | Compresses earlier | Free context while keeping recent messages in full |
 
 Restore options revert state; summarize options only compress conversation. In
 both summarize cases the original messages stay in the transcript.

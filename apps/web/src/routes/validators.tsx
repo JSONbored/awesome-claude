@@ -1,6 +1,8 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileJson, ShieldCheck, Terminal } from "lucide-react";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import {
   EXPERTISE_OPTIONS,
   RECENT_REVIEWED,
@@ -76,16 +78,12 @@ function ValidatorsPage() {
   const list = REVIEW_COVERAGE.filter((coverage) => active === "all" || coverage.id === active);
 
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
-      <div className="eyebrow">Review coverage</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">
-        What has been checked, and what still needs maintainer attention.
-      </h1>
-      <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
-        HeyClaude does not publish a named validator roster yet. This page exposes the real registry
-        coverage we can stand behind today: source status, maintainer review flags, and
-        safety/privacy metadata completeness.
-      </p>
+    <PageContainer className="py-12">
+      <PageHeader
+        eyebrow="Review coverage"
+        title="What has been checked, and what still needs maintainer attention."
+        description="HeyClaude does not publish a named validator roster yet. This page exposes the real registry coverage we can stand behind today: source status, maintainer review flags, and safety/privacy metadata completeness."
+      />
 
       <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
         <SummaryStat label="Entries" value={REVIEW_SUMMARY.total} />
@@ -256,7 +254,7 @@ function ValidatorsPage() {
         Want to improve coverage? Open a focused PR that adds source-backed safety, privacy, or
         provenance metadata for specific entries.
       </p>
-    </div>
+    </PageContainer>
   );
 }
 

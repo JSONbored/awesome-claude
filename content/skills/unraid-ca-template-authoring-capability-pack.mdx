@@ -2,14 +2,14 @@
 title: Unraid CA Template Authoring Capability Pack Skill
 slug: unraid-ca-template-authoring-capability-pack
 category: skills
-description: "Expert Unraid Community Apps template capability pack for high-quality XML metadata, safer defaults, and CA submission readiness."
-cardDescription: "Author polished Unraid CA templates with correct metadata, support links, and production-safe defaults."
+description: "Expert Unraid Community Apps template capability pack for source-backed XML metadata, safer defaults, and CA submission readiness."
+cardDescription: "Author Unraid CA templates with required XML fields, support links, and operationally honest defaults."
 seoTitle: Unraid CA Template Authoring Capability Pack Skill
 seoDescription: "Advanced AI skill for creating and validating Unraid Community Apps templates with polished metadata and submission standards."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2026-04-11"
-documentationUrl: "https://forums.unraid.net/forum/64-docker-engine/"
+documentationUrl: "https://ca.unraid.net/submit/help/repository-xml"
 downloadUrl: /downloads/skills/unraid-ca-template-authoring-capability-pack.zip
 installable: true
 installCommand: "curl -L https://heyclau.de/downloads/skills/unraid-ca-template-authoring-capability-pack.zip -o unraid-ca-template-authoring-capability-pack.zip && unzip -o unraid-ca-template-authoring-capability-pack.zip -d ./unraid-ca-template-authoring-capability-pack"
@@ -28,9 +28,18 @@ skillLevel: expert
 verificationStatus: validated
 verifiedAt: "2026-04-11"
 retrievalSources:
-  - "https://forums.unraid.net/"
-  - "https://github.com/bergware/dynamix"
-  - "https://docs.unraid.net/"
+  - "https://ca.unraid.net/submit/help/repository-xml"
+  - "https://github.com/unraid/unraid-community-apps-starter"
+  - "https://docs.unraid.net/community-applications/"
+  - "https://docs.unraid.net/unraid-os/using-unraid-to/run-docker-containers/overview/"
+  - "https://docs.unraid.net/unraid-connect/automated-flash-backup/"
+safetyNotes:
+  - "Treat generated templates as review drafts; validate XML fields, image names, support links, ports, volumes, and first-boot behavior before submission."
+  - "Keep defaults beginner-safe and document resource, network, socket, and permission tradeoffs clearly."
+  - "Do not submit templates for images or support paths you cannot maintain."
+privacyNotes:
+  - "Docker template XML and appdata paths can reveal environment names, paths, credentials, or application-specific secrets."
+  - "Redact private registry credentials, passwords, tokens, tunnel URLs, and user-specific paths before using real templates as examples."
 testedPlatforms:
   - Claude
   - Codex
@@ -65,13 +74,34 @@ robotsFollow: true
 
 ## Knowledge Freshness
 
-This capability pack is pinned to sources verified on **2026-04-11**.
+This capability pack is pinned to sources re-verified on **2026-06-19**.
 
 ## Retrieval Sources
 
-- https://forums.unraid.net/
-- https://github.com/bergware/dynamix
-- https://docs.unraid.net/
+- https://ca.unraid.net/submit/help/repository-xml
+- https://github.com/unraid/unraid-community-apps-starter
+- https://docs.unraid.net/community-applications/
+- https://docs.unraid.net/unraid-os/using-unraid-to/run-docker-containers/overview/
+- https://docs.unraid.net/unraid-connect/automated-flash-backup/
+
+## Source Verification Notes
+
+Verified on **2026-06-19**:
+
+- The Community Apps repository XML help page states that repositories need valid
+  template XML and that Docker app entries need a `<Repository>` tag while plugin
+  entries need a `<PluginURL>` tag.
+- The official Unraid Community Apps starter repo documents `ca_profile.xml`,
+  raw `TemplateURL` pointers, license expectations, and the same Docker/plugin
+  minimum fields.
+- Unraid docs describe Community Applications as the app discovery/install path
+  and note that application settings are saved as Docker template XML files.
+- Unraid's automated flash backup docs warn that Docker template XML files can
+  contain application-specific credentials, which grounds the privacy caveats in
+  this entry.
+- This HeyClaude skill packages those source-backed requirements into a reusable
+  authoring checklist; the external sources document the Unraid template rules,
+  not the existence of the downloaded HeyClaude skill package itself.
 
 ## Core Workflow
 
@@ -87,7 +117,7 @@ This skill helps agents produce community-ready Unraid templates that are practi
 
 ## Capability Scope
 
-- CA XML metadata completeness
+- CA XML metadata completeness and minimum Docker/plugin fields
 - Beginner-safe defaults and caveats
 - Support/docs linkage quality
 - Operational tradeoff transparency

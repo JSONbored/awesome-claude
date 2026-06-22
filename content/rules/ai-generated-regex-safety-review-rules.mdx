@@ -1,0 +1,240 @@
+---
+title: AI-Generated Regex Safety Review Rules
+slug: ai-generated-regex-safety-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated regular expressions before
+  merge, covering catastrophic backtracking and ReDoS risk, input bounds, anchor
+  and escaping correctness, validation versus parsing, safe engines, and
+  privacy-safe test evidence.
+cardDescription: >-
+  Review AI-generated regex for ReDoS and catastrophic backtracking, input
+  bounds, anchors, escaping, validation scope, safe engines, and test evidence.
+seoTitle: AI-Generated Regex Safety Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated regular expressions: catastrophic
+  backtracking and ReDoS, nested quantifiers, input length bounds, anchoring,
+  escaping, validation scope, linear-time engines, and privacy-safe test cases.
+author: jaso0n0818
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+documentationUrl: "https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS"
+sourceUrls:
+  - "https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS"
+  - "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions"
+  - "https://github.com/google/re2/wiki/WhyRE2"
+  - "https://docs.python.org/3/library/re.html"
+  - "https://cwe.mitre.org/data/definitions/1333.html"
+  - "https://nodejs.org/api/timers.html"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes, edits, or suggests a regular
+  expression used for validation, parsing, routing, redaction, search, or any
+  untrusted input handling.
+copySnippet: |-
+  You are reviewing an AI-generated regular expression for safety.
+
+  Rules:
+  1. Identify where the pattern runs and what input it sees; treat any regex on
+     user-controlled or network input as a potential denial-of-service surface.
+  2. Reject catastrophic-backtracking shapes such as nested quantifiers and
+     overlapping alternations on the same input, for example `(a+)+`, `(a|a)*`,
+     or `(.*)*`.
+  3. Bound the input length before matching and prefer anchored, specific
+     patterns over open-ended `.*` spans across large strings.
+  4. Verify anchoring, escaping, character classes, and flags so the pattern
+     matches exactly the intended set and nothing wider.
+  5. Prefer a linear-time engine or a real parser when the input is untrusted or
+     the grammar is non-trivial, instead of an ever-more-complex backtracking
+     regex.
+  6. Test with valid, invalid, boundary, and adversarial inputs, and keep test
+     strings free of real secrets or personal data.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet containing an AI-generated or AI-edited regular expression with enough context to know where it runs.
+  - Knowledge of the regex engine and language in use, since backtracking behavior, supported syntax, and timeout options differ between engines.
+  - A safe place to run the pattern against test input, such as a local script or sandbox, without sending real user data anywhere.
+  - Permission to block merge when a pattern has unbounded backtracking risk on untrusted input or matches a wider set than intended.
+safetyNotes:
+  - "A vulnerable regular expression on untrusted input can hang a request thread or worker through catastrophic backtracking, causing a regular-expression denial of service that takes down availability."
+  - "AI assistants often produce plausible-looking patterns with nested quantifiers or broad `.*` spans that pass simple cases but degrade to exponential time on crafted input."
+  - "Running an unfamiliar pattern against large or adversarial input without a length bound or timeout can stall the reviewing process itself, so test in a sandbox with bounded input."
+privacyNotes:
+  - "Regex test cases and match captures can contain emails, tokens, credentials, identifiers, or other personal data when the pattern targets real-world formats."
+  - "Do not paste production log lines, real secrets, or customer identifiers into public PR comments as regex test evidence; use synthetic samples."
+  - "Be careful with patterns that capture and log matched groups, since they can copy sensitive substrings into logs or error messages."
+tags:
+  - regex
+  - redos
+  - security
+  - input-validation
+  - ai-generated-code
+  - code-review
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits a regular
+expression. The goal is to stop a generated pattern from shipping a
+denial-of-service risk or a silently wrong match just because it looks correct
+and passes a couple of happy-path examples.
+
+This is a review policy, not a regex tutorial. It tells reviewers what must be
+true about a generated pattern's input exposure, backtracking behavior, and
+correctness before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know where the pattern runs and what it sees.
+
+1. **Execution point.** Whether the regex runs on request input, file content,
+   log lines, configuration, or trusted internal strings.
+2. **Input source and size.** Whether the input is user-controlled or network
+   facing and whether its length is bounded before matching.
+3. **Engine and flags.** The language and regex engine, since backtracking
+   behavior, supported features, and timeout support differ between them.
+4. **Intended match.** The exact set the pattern should accept and reject,
+   including boundary and malformed cases.
+5. **Failure handling.** What happens on no match, partial match, or a slow
+   match, and whether a timeout or length cap protects the caller.
+
+If the change cannot say where the pattern runs and how large its input can be,
+require that context before judging the pattern body.
+
+## Catastrophic Backtracking Rules
+
+- Reject nested quantifiers over the same or overlapping input, such as
+  `(a+)+`, `(a*)*`, `(.*)*`, or `(\d+)+`, on anything untrusted.
+- Reject overlapping alternations under a quantifier, such as `(a|a)*` or
+  `(\w|\d)*`, where the engine can match the same text many ways.
+- Watch for a quantified group followed by a required character that the input
+  can fail to provide, which forces exhaustive backtracking on near-matches.
+- Prefer specific character classes over broad `.` spans so the engine cannot
+  explore large numbers of partitions of the input.
+- When a pattern looks ambiguous, test it against a long string of the
+  worst-case character in a sandbox before trusting it.
+
+A pattern is dangerous when the engine can match the same input in exponentially
+many ways. Backtracking engines then explore those ways on a non-matching tail,
+and matching time explodes with input length.
+
+## Input Bound And Engine Rules
+
+- Bound input length before matching untrusted data so a single request cannot
+  feed an unbounded string to the engine.
+- Prefer a linear-time engine, such as an RE2-style automaton, when the input is
+  untrusted and the platform offers one.
+- Use an execution timeout or a worker boundary where the engine or runtime
+  supports it, so a slow match cannot pin the main thread indefinitely.
+- For complex or structured input, prefer a real parser over an
+  ever-growing regex; some grammars are not safely expressible as one pattern.
+- Compile patterns once and reuse them, but never trade safety for the
+  micro-optimization of a riskier pattern.
+
+## Correctness And Escaping Rules
+
+- Verify anchoring; an unanchored validation regex can accept input that merely
+  contains a valid substring rather than matching the whole value.
+- Escape literal metacharacters, especially dots in hostnames, slashes in paths,
+  and characters inside dynamically built patterns.
+- Never build a pattern by concatenating untrusted input without escaping it,
+  which is a regex-injection and correctness risk.
+- Confirm character classes, ranges, Unicode handling, and flags such as
+  case-insensitive, multiline, and dotall match the stated intent.
+- Treat a regex used for security decisions, such as allowlists or redaction,
+  as high risk and require explicit accept and reject test cases.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- a generated pattern has nested or overlapping quantifiers and runs on
+  untrusted input without a length bound or safe engine;
+- untrusted input reaches the regex with no length cap, timeout, or worker
+  isolation;
+- a validation pattern is unanchored or under-escaped so it accepts more than
+  the intended set;
+- a pattern is built by concatenating unescaped untrusted input;
+- a security-relevant allowlist, redaction, or routing regex ships without
+  accept and reject test cases;
+- test evidence contains real secrets, credentials, or personal data instead of
+  synthetic samples.
+
+## Review Checklist
+
+- [ ] {"task": "Exposure mapped", "description": "The review identifies where the regex runs and whether its input is untrusted"}
+- [ ] {"task": "No catastrophic backtracking", "description": "Nested or overlapping quantifiers on untrusted input are removed or proven safe"}
+- [ ] {"task": "Input bounded", "description": "Untrusted input has a length cap, timeout, or safe linear-time engine"}
+- [ ] {"task": "Correct and anchored", "description": "Anchoring, escaping, character classes, and flags match the intended set"}
+- [ ] {"task": "Tested adversarially", "description": "Valid, invalid, boundary, and worst-case inputs are exercised"}
+- [ ] {"task": "Privacy safe", "description": "Test strings and captured groups avoid real secrets and personal data"}
+
+## AI Review Rules
+
+AI assistants can write and review regex, but they should show their evidence.
+
+- Ask the assistant to state where the pattern runs and whether input is
+  untrusted before judging the pattern.
+- Require the assistant to call out nested quantifiers and broad `.*` spans
+  explicitly rather than only confirming the happy path.
+- Have the assistant provide accept, reject, and worst-case test strings, not
+  just one example that matches.
+- Do not let the assistant claim a pattern is ReDoS-safe from inspection alone
+  when a sandbox timing test is feasible.
+- Re-run review after any edit to quantifiers, alternations, anchors, or flags.
+
+## Troubleshooting
+
+- **The pattern hangs on some inputs:** look for nested or overlapping
+  quantifiers, add a length bound, and consider a linear-time engine.
+- **Validation accepts bad values:** add `^` and `$` anchors and tighten
+  character classes so the whole value must match.
+- **A hostname or path regex over-matches:** escape literal dots and slashes and
+  avoid broad `.` where a specific class is meant.
+- **The regex breaks on Unicode input:** confirm the engine's Unicode mode and
+  use explicit Unicode-aware classes or flags.
+- **Test data leaked a secret:** replace it with synthetic samples and scrub the
+  public artifact.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, statuslines, guides, collections, skills, open
+PRs, and closed PRs for regular expression safety, ReDoS, catastrophic
+backtracking, input validation, and AI-generated code review.
+
+Adjacent content includes general security-audit and code-review rules and
+input-validation guidance, but no entry is a portable pre-merge review policy
+specifically for AI-generated regular expressions. This entry is distinct
+because it decides what must be true about a generated pattern's input exposure,
+backtracking behavior, anchoring, and test evidence before it can merge.
+
+No prior closed PR for this rule was found during the duplicate/history check.
+
+## Backtracking Reference
+
+The patterns below are common catastrophic-backtracking shapes that AI
+assistants produce. Each can match the same prefix in many ways, so a
+backtracking engine explores those ways on a non-matching tail and matching time
+grows sharply with input length.
+
+| Risky shape   | Why it is dangerous                           | Safer direction                      |
+| ------------- | --------------------------------------------- | ------------------------------------ |
+| `(a+)+`       | Nested quantifier multiplies match partitions | Use `a+` or bound the input          |
+| `(a\|a)*`     | Overlapping alternation under a star          | Remove the ambiguous alternative     |
+| `(.*)*`       | Unbounded span quantified again               | Use a specific class and anchor      |
+| `^(\w+\s?)*$` | Optional separator inside a quantified group  | Tokenize or use a linear-time engine |
+
+A linear-time engine evaluates these in time proportional to the input length
+because it does not backtrack. When the platform exposes one, prefer it for
+untrusted input, and otherwise bound the input and add a timeout.
+
+## Sources
+
+- OWASP Regular expression Denial of Service (ReDoS): https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS
+- MDN regular expressions guide: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions
+- Google RE2 — why RE2: https://github.com/google/re2/wiki/WhyRE2
+- Python `re` module documentation: https://docs.python.org/3/library/re.html
+- CWE-1333 inefficient regular expression complexity: https://cwe.mitre.org/data/definitions/1333.html
+- Node.js timers (timeout/worker boundaries): https://nodejs.org/api/timers.html

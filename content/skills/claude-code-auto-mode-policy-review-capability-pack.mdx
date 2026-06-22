@@ -1,0 +1,200 @@
+---
+title: Claude Code Auto Mode Policy Review Capability Pack Skill
+slug: claude-code-auto-mode-policy-review-capability-pack
+category: skills
+description: >-
+  Expert capability pack for reviewing Claude Code autoMode settings blocks,
+  trusted infrastructure prose, classifier rule overrides, and documented
+  claude auto-mode CLI inspection before enabling permission-free auto mode.
+cardDescription: >-
+  Review autoMode environment, allow, and deny rules with claude auto-mode CLI checklists.
+seoTitle: Claude Code Auto Mode Policy Review Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code auto mode policy review using autoMode
+  settings, claude auto-mode config, and permissions.deny hard blocks from auto-mode-config docs.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1514
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1514"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/auto-mode-config"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use before enabling auto mode for a team to review autoMode.environment prose,
+  rule overrides, and effective classifier config with claude auto-mode commands.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code auto mode policy review capability pack for this project."
+
+  # Required output
+  1) autoMode scope and settings file map
+  2) Trusted infrastructure environment prose review
+  3) allow, soft_deny, and hard_deny override checklist
+  4) claude auto-mode config verification plan
+  5) Privacy-safe policy summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/auto-mode-config"
+  - "https://code.claude.com/docs/en/permissions"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Permission to edit user, local, or managed settings with autoMode blocks."
+  - "Inventory of trusted source control orgs, buckets, and internal domains."
+  - "Security stakeholder for managed permissions.deny hard blocks."
+safetyNotes:
+  - "Omitting $defaults from autoMode arrays replaces entire built-in rule lists per docs."
+  - "Developer-added allow entries can override organization soft_deny rules—use managed permissions.deny for non-negotiable blocks."
+  - "Auto mode runs without routine permission prompts; permissions.deny still blocks before the classifier."
+privacyNotes:
+  - "autoMode.environment prose may describe internal hostnames and bucket names—redact external copies."
+  - "Recently denied actions in /permissions may expose attempted commands—handle logs internally."
+  - "Managed settings distribution exposes organization infrastructure descriptions to enrolled clients."
+tags:
+  - claude-code
+  - auto-mode
+  - policy
+  - permissions
+  - capability-pack
+keywords:
+  - Claude Code auto mode policy review capability pack
+  - autoMode environment classifier checklist
+  - claude auto-mode config review
+readingTime: 9
+difficultyScore: 79
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in Claude Code auto-mode-config, permissions, and settings documentation
+verified on **2026-06-16**. Classifier defaults evolve—run **`claude auto-mode defaults`**
+after upgrades before assuming built-in rules unchanged.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/auto-mode-config
+- https://code.claude.com/docs/en/permissions
+- https://code.claude.com/docs/en/settings
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official auto-mode-config documentation on **2026-06-16**:
+
+- **`autoMode`** settings configure the auto mode classifier for trusted infrastructure
+  and rule overrides.
+- Classifier reads **`autoMode`** from user settings, **`.claude/settings.local.json`**, managed settings, and Agent SDK inline JSON—not shared **`.claude/settings.json`**.
+- **`autoMode.environment`** entries are **prose descriptions** of trusted repos, buckets, and domains; include **`"$defaults"`** to extend built-in lists.
+- **`allow`**, **`soft_deny`**, and **`hard_deny`** arrays also accept **`"$defaults"`**; omitting it replaces entire built-in lists for that section.
+- **`permissions.deny`** in managed settings blocks actions **before** the classifier and cannot be overridden.
+- Inspect effective rules with **`claude auto-mode config`**, built-ins with **`claude auto-mode defaults`**, and custom rule quality with **`claude auto-mode critique`**.
+- Repeated denials usually mean missing **`environment`** context for a destination.
+
+## Scope Note
+
+Community policy review skill—not an Anthropic product. Applies documented
+**autoMode** settings and CLI inspection commands from auto-mode-config docs.
+
+## Core Workflow
+
+1. Confirm auto mode requirements and plan eligibility per permission modes docs.
+2. Map which settings scope applies: user, local project, managed, or SDK inline JSON.
+3. Draft **`autoMode.environment`** prose for source control, buckets, and internal domains.
+4. Decide whether to extend or replace **`allow`**, **`soft_deny`**, and **`hard_deny`** lists with **`"$defaults"`**.
+5. Add **`permissions.deny`** managed hard blocks for actions that must never run.
+6. Run **`claude auto-mode config`** and compare output to intended policy.
+7. Optionally run **`claude auto-mode critique`** on custom prose rules.
+8. Review **Recently denied** entries in **`/permissions`** and add missing environment context.
+9. Publish privacy-safe policy summary for administrators.
+
+## Capability Scope
+
+- autoMode scope and settings file mapping.
+- Trusted infrastructure prose authoring review.
+- Rule override and $defaults inheritance checks.
+- CLI verification with auto-mode subcommands.
+- Denial triage and environment gap analysis.
+
+## Compatibility
+
+### Native
+
+- **Claude Code**: interactive and managed deployments using auto mode.
+
+### Manual Adaptation
+
+- **Agent SDK**: apply the same autoMode JSON in inline settings overrides per docs.
+
+## Required Inputs
+
+- Organization source control hosts and repo namespaces.
+- Trusted cloud bucket prefixes and internal API domains.
+- Existing managed permissions.deny patterns.
+- List of routine false-positive destinations from pilot users.
+
+## Production Rules
+
+- Prefer **`"$defaults"`** unless intentionally replacing entire built-in rule lists.
+- Use managed **`permissions.deny`** for non-negotiable security boundaries.
+- Write environment entries as prose a new engineer would understand—not regex patterns.
+- Re-run **`claude auto-mode config`** after every settings change.
+- Redact internal hostnames from external policy summaries when required.
+
+## Review Matrix
+
+| Check | Pass criteria | Doc basis |
+| --- | --- | --- |
+| Scope correct | autoMode in allowed settings files only | Where classifier reads config |
+| Environment prose | Source control and buckets listed | Define trusted infrastructure |
+| Defaults preserved | $defaults present when extending lists | Override block and allow rules |
+| Hard blocks | permissions.deny for must-never actions | permissions.deny precedence |
+| Effective config | claude auto-mode config matches intent | Inspect defaults and effective config |
+
+## Output Contract
+
+1. Settings scope map.
+2. Environment prose review notes.
+3. Rule override checklist.
+4. CLI verification plan and findings.
+5. Privacy-safe administrator summary.
+
+## Troubleshooting
+
+**Issue:** Routine internal push still denied
+**Fix:** Add the destination to **`autoMode.environment`**, then re-run **`claude auto-mode config`**.
+
+**Issue:** Custom soft_deny too permissive
+**Fix:** Confirm **`"$defaults"`** was not omitted accidentally—omission replaces all built-in soft blocks per docs.
+
+## Duplicate Check
+
+Distinct from `claude-code-sandboxed-bash-policy-capability-pack` (sandbox boundaries)
+and generic permissions guides. This pack focuses on **`autoMode` classifier configuration**
+and **`claude auto-mode`** CLI verification.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` based on public Claude Code auto-mode-config docs. No
+paid placement or affiliate links.

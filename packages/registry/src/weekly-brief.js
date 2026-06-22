@@ -139,23 +139,63 @@ function hasSaferInstallSignal(entry) {
   );
 }
 
+// Safety/privacy presence. The full content carries `safetyNotes`/`privacyNotes`
+// arrays, but the slimmer directory index the brief actually runs against in
+// production drops them and keeps only the `trustSignals.has*` booleans — read
+// both so the signal isn't silently dead in prod.
+function hasSafetyNotes(entry) {
+  return Boolean(
+    list(entry.safetyNotes).length || entry.trustSignals?.hasSafetyNotes,
+  );
+}
+
+function hasPrivacyNotes(entry) {
+  return Boolean(
+    list(entry.privacyNotes).length || entry.trustSignals?.hasPrivacyNotes,
+  );
+}
+
 function trustScore(entry) {
   return (
     (hasSource(entry) ? 8 : 0) +
     (hasSaferInstallSignal(entry) ? 6 : 0) +
-    (list(entry.safetyNotes).length ? 3 : 0) +
-    (list(entry.privacyNotes).length ? 3 : 0) +
+    (hasSafetyNotes(entry) ? 3 : 0) +
+    (hasPrivacyNotes(entry) ? 3 : 0) +
     (entry.claimStatus === "verified" || entry.reviewedBy ? 2 : 0)
   );
 }
 
+// A finer-grained "how substantial is this entry" score, used only to break
+// trust-score ties. Without it, a same-day batch of equally-trusted entries
+// (e.g. eight sibling review-rule packs) falls straight through to an
+// alphabetical tiebreak, which reads as an arbitrary A-Z list. These fields all
+// survive into the production directory index: source depth, description
+// substance, editorial review, and verification recency.
+function richnessScore(entry) {
+  const ts = entry.trustSignals ?? {};
+  const description = text(entry.cardDescription || entry.description || "");
+  const sources = Number(ts.sourceUrlCount) || sourceUrls(entry).length;
+  return (
+    Math.min(sources, 6) +
+    Math.min(Math.floor(description.length / 60), 4) +
+    (ts.firstPartyEditorial ? 2 : 0) +
+    (ts.lastVerifiedAt || entry.verifiedAt ? 1 : 0)
+  );
+}
+
+// Keep "new this week" genuinely newest-first, but when a same-day batch ties on
+// trust, separate them by substance (richness) rather than dropping straight to
+// an alphabetical A-Z list. Title remains the final stable tiebreak so the order
+// is deterministic.
 function sortEntries(left, right) {
   const dateCompare = isoDate(right.dateAdded).localeCompare(
     isoDate(left.dateAdded),
   );
   if (dateCompare !== 0) return dateCompare;
-  const scoreCompare = trustScore(right) - trustScore(left);
-  if (scoreCompare !== 0) return scoreCompare;
+  const trustCompare = trustScore(right) - trustScore(left);
+  if (trustCompare !== 0) return trustCompare;
+  const richCompare = richnessScore(right) - richnessScore(left);
+  if (richCompare !== 0) return richCompare;
   return text(left.title).localeCompare(text(right.title));
 }
 
@@ -258,6 +298,51 @@ function selectChangelogChanges(changelogEntries, entries, params) {
   return selected;
 }
 
+const CATEGORY_NOUNS = {
+  mcp: ["MCP server", "MCP servers"],
+  rules: ["rule", "rules"],
+  hooks: ["hook", "hooks"],
+  skills: ["skill", "skills"],
+  commands: ["command", "commands"],
+  statuslines: ["statusline", "statuslines"],
+  agents: ["agent", "agents"],
+  guides: ["guide", "guides"],
+  tools: ["tool", "tools"],
+  collections: ["collection", "collections"],
+};
+
+function categoryNoun(category, count) {
+  const pair = CATEGORY_NOUNS[category];
+  if (!pair) return count === 1 ? "entry" : "entries";
+  return count === 1 ? pair[0] : pair[1];
+}
+
+/**
+ * A one-line, factual "this week" theme derived from the brief — the dominant
+ * new-entry category plus the review counts. Always present so the newsletter
+ * leads with context instead of a bare list. No popularity or hype claims.
+ */
+function briefTheme(newEntries, counts) {
+  const newCount = counts.newEntryCount;
+  const tail = `${counts.sourceBackedCount} source-backed ${counts.sourceBackedCount === 1 ? "pick" : "picks"} and ${counts.saferInstallCount} safer ${counts.saferInstallCount === 1 ? "install" : "installs"}`;
+  if (newCount === 0) {
+    return `A quieter week — ${tail} reviewed.`;
+  }
+  const byCategory = new Map();
+  for (const entry of newEntries) {
+    const category = text(entry.category);
+    if (category) byCategory.set(category, (byCategory.get(category) ?? 0) + 1);
+  }
+  const [topCategory, topCount] = [...byCategory.entries()].sort(
+    (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
+  )[0] ?? [undefined, 0];
+  const lead =
+    topCategory && topCount >= 2
+      ? `, led by ${topCount} ${categoryNoun(topCategory, topCount)}`
+      : "";
+  return `${newCount} new this week${lead} — plus ${tail}, all metadata-reviewed for source and safety.`;
+}
+
 export function buildWeeklyBrief(entries, options = {}) {
   const normalizedEntries = Array.isArray(entries)
     ? entries.filter((entry) => keyFor(entry) && text(entry.title))
@@ -327,6 +412,14 @@ export function buildWeeklyBrief(entries, options = {}) {
       saferInstallCount: saferInstalls.length,
       notableChangeCount: notableChanges.length,
     },
+    // Auto-generated one-line context; always present.
+    theme: briefTheme(newEntries, {
+      newEntryCount: newEntries.length,
+      sourceBackedCount: sourceBacked.length,
+      saferInstallCount: saferInstalls.length,
+    }),
+    // Optional maintainer note, filled in at approval time (empty by default).
+    note: "",
     sections: {
       newEntries,
       sourceBacked,

@@ -10,9 +10,16 @@ author: Langfuse
 dateAdded: "2026-04-27"
 websiteUrl: "https://langfuse.com"
 documentationUrl: "https://langfuse.com/docs"
+retrievalSources:
+  - "https://langfuse.com/docs"
+  - "https://arize.com/docs/phoenix"
+  - "https://docs.langchain.com/langsmith/home"
+  - "https://docs.helicone.ai/"
 repoUrl: "https://github.com/langfuse/langfuse"
 pricingModel: open-source
 disclosure: heyclaude_pick
+privacyNotes:
+  - "Langfuse receives traces of your LLM/agent runs — prompts, outputs, and metadata — sent to Langfuse Cloud or your self-hosted instance; review what trace data leaves your environment and keep secrets out of logged inputs."
 applicationCategory: DeveloperApplication
 operatingSystem: Web, Self-hosted
 tags:
@@ -22,6 +29,26 @@ keywords:
   - llm tracing
   - prompt management
 ---
+
+## Key capabilities
+
+- **Tracing** — capture nested traces of LLM and agent runs with latency, token, and cost metadata.
+- **Prompt management** — version and deploy prompts, with playground iteration.
+- **Evaluation** — score runs with model-based and custom evaluators, plus datasets.
+- **Open source** — self-hostable, with an OpenTelemetry-compatible ingestion path.
+
+## How Langfuse compares
+
+Langfuse competes with other LLM observability/eval tools in this directory:
+
+| Tool | Type | Self-hostable | Notable for |
+| --- | --- | --- | --- |
+| **Langfuse** | Open-source observability + evals | Yes | Tracing, prompt management, and evals in one OSS platform |
+| **Arize Phoenix** | Open-source observability + evals | Yes | OpenTelemetry-based, local-first |
+| **LangSmith** | Proprietary observability + evals | Enterprise tier | Deep LangChain / LangGraph integration |
+| **Helicone** | Observability via a request-logging proxy | Yes | One-line proxy integration |
+
+Choose Langfuse for an all-in-one open-source platform (tracing + prompts + evals); Phoenix for OpenTelemetry-native local tracing, LangSmith for the LangChain ecosystem, or Helicone for proxy-based logging.
 
 ## Editorial notes
 

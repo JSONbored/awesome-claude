@@ -1,0 +1,154 @@
+---
+title: Descope MCP Server for Claude
+slug: descope-mcp-server
+category: mcp
+description: >-
+  Manage your Descope identity project from Claude — search users, configure auth flows, inspect
+  audit logs, manage tenants, and search Descope documentation — with the official Descope remote
+  MCP server hosted at mcp.descope.com.
+cardDescription: "Official Descope MCP: users, auth flows, audit logs, tenants & docs from Claude."
+seoTitle: "Descope MCP Server for Claude — Users, Auth Flows, Audit Logs & Tenants"
+seoDescription: "Connect Claude to Descope with the official remote MCP server: read and write tool groups for users, tenants, auth flows, access control, audit logs, auth keys, and documentation search. Account sign-in, starts read-only."
+author: Descope
+authorProfileUrl: "https://github.com/descope"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.descope.com/mcp/mcp-server"
+websiteUrl: "https://www.descope.com"
+retrievalSources:
+  - "https://kingy.ai/news/descope-mcp-server-guide/"
+  - "https://feluda.ai/mcp-servers/descope"
+  - "https://docs.descope.com/mcp/mcp-server"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http descope https://mcp.descope.com"
+usageSnippet: >-
+  Ask Claude to search users in a Descope project, inspect an auth flow, review audit log
+  entries, or answer questions about Descope concepts — using natural language.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "descope": {
+        "type": "http",
+        "url": "https://mcp.descope.com"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "descope": {
+        "type": "http",
+        "url": "https://mcp.descope.com"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Descope account — authenticate via your Descope account when prompted on first tool use."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Sessions start in read-only mode. Write operations require explicit elevation and out-of-band one-time passcode confirmation — preventing accidental changes to production auth infrastructure."
+  - "The server has access to your Descope project including user PII, tenant config, and auth secrets; scope usage to least-privilege workflows."
+privacyNotes:
+  - "User profiles, tenant configurations, auth flow definitions, audit log entries, and API key metadata from your Descope project are surfaced in Claude's context."
+  - "Authenticated via your Descope account — no API keys stored in the MCP configuration."
+tags:
+  - descope
+  - authentication
+  - user-management
+  - auth-flows
+  - identity
+  - access-control
+  - audit-logs
+keywords:
+  - descope mcp server
+  - descope mcp claude
+  - user management mcp claude code
+  - authentication flows mcp
+  - descope identity management ai
+  - auth audit logs mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Descope MCP Server** is the official remote Model Context Protocol server from Descope,
+hosted at `https://mcp.descope.com`. It provides read and write tool groups for project settings,
+access control, MCP server definitions, audits, auth keys, flows, tenants, users, documentation
+search, and grounded documentation Q&A.
+
+Sessions start in read-only mode. Write operations require explicit elevation with out-of-band
+one-time passcode confirmation, ensuring human oversight for any production changes.
+
+## Key capabilities
+
+- **User management** — create, modify, and inspect user objects within projects.
+- **Tenant operations** — list and manage multi-tenant configurations.
+- **Authentication flows** — view and configure authentication workflows.
+- **Audit logs** — review comprehensive access and change history.
+- **Project settings** — inspect and adjust project configuration.
+- **Access control** — manage roles, permissions, and auth keys.
+- **Documentation search** — semantic search over Descope docs via `docs_search`.
+- **Documentation Q&A** — grounded answers via `docs_ask_question`.
+
+## How it compares
+
+| Server | User management | Auth flows | Audit logs | Tenants | Auth |
+|---|---|---|---|---|---|
+| **Descope MCP** | Yes | Yes | Yes | Yes | Account sign-in |
+| Auth0 MCP | Yes | Limited | Yes | Limited | API token |
+| Okta MCP | Yes | Limited | Yes | Yes | API token |
+| Stytch MCP | Yes | No | Limited | No | API key |
+
+Descope's MCP starts read-only and gates write operations behind explicit elevation and OTP
+confirmation — a stronger default safety model than API-key-based alternatives.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http descope https://mcp.descope.com
+```
+
+Run `/mcp` in Claude Code to authenticate with your Descope account.
+
+### Claude Desktop
+
+Go to Settings → Connectors and enter `https://mcp.descope.com`, or add manually:
+
+```json
+{
+  "mcpServers": {
+    "descope": {
+      "type": "http",
+      "url": "https://mcp.descope.com"
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Descope account.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Read-only by default — write operations require OTP confirmation.
+- No API keys: uses account-based session authentication.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Third-party guide at `kingy.ai/news/descope-mcp-server-guide/` documents the read/write tool
+  groups: project settings, access control, MCP server definitions, audits, auth keys, flows,
+  tenants, users, docs search, and docs Q&A — plus the read-only default with OTP elevation.
+- Descope MCP directory listing at `feluda.ai/mcp-servers/descope` independently confirms user
+  management, tenant listing, flow management, access control, audit log viewing, auth key
+  management, and hosted endpoint at `https://mcp.descope.com`.
+- Descope's official MCP page at `docs.descope.com/mcp/mcp-server` is the canonical source
+  for install instructions and authentication model.

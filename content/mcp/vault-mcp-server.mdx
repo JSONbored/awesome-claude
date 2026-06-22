@@ -1,0 +1,166 @@
+---
+title: HashiCorp Vault MCP Server for Claude
+slug: vault-mcp-server
+category: mcp
+description: >-
+  Connect Claude to HashiCorp Vault — manage secrets engines, read and write KV secrets, and operate
+  the PKI engine — with HashiCorp's official Model Context Protocol server.
+cardDescription: "HashiCorp's official MCP server: manage Vault mounts, KV secrets, and PKI from Claude."
+seoTitle: "HashiCorp Vault MCP Server for Claude — Secrets & PKI"
+seoDescription: "Connect Claude to HashiCorp Vault with the official MCP server: manage secrets engines, read/write KV secrets, and run the PKI engine over stdio or HTTP."
+author: HashiCorp
+authorProfileUrl: "https://www.hashicorp.com"
+dateAdded: "2026-06-17"
+documentationUrl: "https://github.com/hashicorp/vault-mcp-server"
+websiteUrl: "https://www.hashicorp.com/products/vault"
+repoUrl: "https://github.com/hashicorp/vault-mcp-server"
+retrievalSources:
+  - "https://github.com/hashicorp/vault-mcp-server"
+  - "https://developer.hashicorp.com/vault"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add vault -e VAULT_ADDR=<your-vault-addr> -e VAULT_TOKEN=<your-token> -- docker run -i --rm -e VAULT_ADDR -e VAULT_TOKEN hashicorp/vault-mcp-server"
+usageSnippet: >-
+  Ask Claude to list secrets engines, read a KV secret, or issue a certificate from the PKI engine.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "vault-mcp-server": {
+        "command": "docker",
+        "args": [
+          "run", "-i", "--rm",
+          "-e", "VAULT_ADDR", "-e", "VAULT_TOKEN", "-e", "VAULT_NAMESPACE",
+          "hashicorp/vault-mcp-server"
+        ],
+        "env": {
+          "VAULT_ADDR": "<your-vault-addr>",
+          "VAULT_TOKEN": "<your-token>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "vault-mcp-server": {
+        "command": "docker",
+        "args": [
+          "run", "-i", "--rm",
+          "-e", "VAULT_ADDR", "-e", "VAULT_TOKEN", "-e", "VAULT_NAMESPACE",
+          "hashicorp/vault-mcp-server"
+        ],
+        "env": {
+          "VAULT_ADDR": "<your-vault-addr>",
+          "VAULT_TOKEN": "<your-token>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: advanced
+prerequisites:
+  - "A reachable HashiCorp Vault server address (VAULT_ADDR)."
+  - "A Vault token (VAULT_TOKEN) whose policy grants only the paths Claude should access."
+  - "Docker (the server is distributed as the hashicorp/vault-mcp-server image), or build the binary."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Tools create and delete secrets engines and write/delete secrets and PKI material — scope the Vault token policy to least privilege."
+  - "Mount and PKI operations change live Vault configuration; review before running them through Claude."
+privacyNotes:
+  - "Secret values read through the server enter the MCP client context and the model's prompt — only read what is necessary."
+  - "VAULT_ADDR and VAULT_TOKEN are secrets — keep them in the client config or environment, never in shared repositories."
+tags:
+  - vault
+  - secrets-management
+  - security
+  - pki
+  - hashicorp
+keywords:
+  - vault mcp server
+  - hashicorp vault mcp
+  - connect claude to vault
+  - manage vault secrets with claude
+  - vault pki mcp claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **HashiCorp Vault MCP Server** is HashiCorp's official Model Context Protocol server for Vault.
+It gives Claude structured access to a Vault instance so you can manage secrets engines (mounts),
+read and write key-value secrets, and operate the PKI engine — in natural language. It runs over
+stdio or streamable-HTTP, is distributed as the `hashicorp/vault-mcp-server` Docker image, and is
+licensed under MPL-2.0.
+
+## Key capabilities
+
+The server groups its tools by Vault subsystem:
+
+| Area | Tools |
+| --- | --- |
+| **Mount management** | `create_mount`, `list_mounts`, `delete_mount` |
+| **Key-Value secrets** | `write_secret`, `read_secret`, `list_secrets`, `delete_secret` |
+| **PKI engine** | `enable_pki`, `create_pki_issuer`, `list_pki_issuers`, `issue_pki_certificate`, role management |
+
+## Configuration
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `VAULT_ADDR` | Yes | Vault server address (defaults to a local dev address). |
+| `VAULT_TOKEN` | Yes | Token whose policy scopes what Claude can access. |
+| `VAULT_NAMESPACE` | No | Vault Enterprise / HCP namespace. |
+| `TRANSPORT_MODE` | No | Set to `http` for streamable-HTTP; defaults to stdio. |
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add vault -e VAULT_ADDR=<your-vault-addr> -e VAULT_TOKEN=<your-token> -- \
+  docker run -i --rm -e VAULT_ADDR -e VAULT_TOKEN hashicorp/vault-mcp-server
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "vault-mcp-server": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "VAULT_ADDR", "-e", "VAULT_TOKEN", "-e", "VAULT_NAMESPACE",
+        "hashicorp/vault-mcp-server"
+      ],
+      "env": {
+        "VAULT_ADDR": "<your-vault-addr>",
+        "VAULT_TOKEN": "<your-token>"
+      }
+    }
+  }
+}
+```
+
+## Requirements
+
+- A reachable Vault server (`VAULT_ADDR`) and a scoped token (`VAULT_TOKEN`).
+- Docker, or build the binary from source.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Scope the Vault token policy to least privilege — grant only the paths and operations Claude needs.
+- Mount, KV-delete, and PKI tools change live Vault state; review destructive actions before running.
+- Secret values read by Claude enter the model context — read only what is necessary.
+- Treat `VAULT_ADDR` and `VAULT_TOKEN` as secrets.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- The official repository `github.com/hashicorp/vault-mcp-server` (MPL-2.0) documents the
+  `hashicorp/vault-mcp-server` image, stdio and streamable-HTTP transports, the
+  `VAULT_ADDR`/`VAULT_TOKEN`/`VAULT_NAMESPACE` configuration, and the mount, KV, and PKI tools above.
+- HashiCorp's Vault documentation describes the underlying secrets engines and PKI workflows.
+- Claude Code's MCP documentation describes the connector setup pattern used here.

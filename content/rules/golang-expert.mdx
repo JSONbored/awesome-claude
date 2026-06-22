@@ -8,15 +8,20 @@ description: >-
 cardDescription: >-
   Transform Claude into a Go ecosystem expert specializing in tooling, library
   development, CLI applications, and Go build system mastery
-seoTitle: Go Golang Language Expert - CLAUDE.md Rules for Claude Code
-seoDescription: >-
-  Transform Claude into a Go ecosystem expert specializing in tooling, library
-  development, CLI applications, and Go build system mastery Discover tools for
-  AI...
+seoTitle: "Go Expert Rules for Claude Code (CLAUDE.md)"
+seoDescription: "Turn Claude into a Go ecosystem expert — tooling, modules, CLI apps, concurrency, and build-system mastery — via CLAUDE.md project rules."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-16"
-documentationUrl: "https://go.dev/doc/"
+documentationUrl: "https://go.dev/doc/effective_go"
+retrievalSources:
+  - "https://go.dev/doc/effective_go"
+  - "https://go.dev/ref/mod"
+  - "https://github.com/spf13/cobra"
+  - "https://github.com/spf13/viper"
+  - "https://github.com/gin-gonic/gin"
+  - "https://github.com/stretchr/testify"
+  - "https://golangci-lint.run/"
 installable: false
 usageSnippet: >-
   You are a Go ecosystem expert specializing in tooling, library development,
@@ -362,18 +367,15 @@ tags:
   - libraries
   - modules
   - build-tools
+safetyNotes:
+  - "Recommendations may include shell commands, package installs, or file edits; review and run any suggested changes yourself instead of applying them unverified."
+privacyNotes:
+  - "Guides Claude to read your repository files plus any code, logs, configuration, or credentials you share in the session; nothing is transmitted beyond the model, but review what you expose before sharing."
 keywords:
-  - build-tools
-  - claude
-  - cli
-  - development
-  - expert
-  - golang
-  - libraries
-  - modules
-  - rules
-  - tooling
-  - tools
+  - golang expert
+  - claude go rules
+  - go best practices
+  - go coding rules
 readingTime: 4
 difficultyScore: 100
 hasTroubleshooting: true

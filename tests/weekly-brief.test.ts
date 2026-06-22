@@ -119,6 +119,11 @@ describe("weekly brief generation", () => {
       saferInstallCount: 1,
       notableChangeCount: 1,
     });
+    // Auto-generated theme: dominant new-entry category + singularized counts.
+    expect(brief.theme).toBe(
+      "2 new this week, led by 2 MCP servers — plus 1 source-backed pick and 1 safer install, all metadata-reviewed for source and safety.",
+    );
+    expect(brief.note).toBe("");
     expect(brief.sections.newEntries.map((item) => item.key)).toEqual([
       "mcp:new-weak",
       "mcp:new-source-backed",
@@ -131,6 +136,63 @@ describe("weekly brief generation", () => {
     ]);
     expect(brief.sections.notableChanges.map((item) => item.key)).toEqual([
       "mcp:new-source-backed",
+    ]);
+  });
+
+  it("breaks same-day, same-trust ties by richness rather than alphabetically", () => {
+    const brief = buildWeeklyBrief(
+      [
+        // Alphabetically first but thin: a single source, terse description.
+        entry("alpha-thin", {
+          dateAdded: "2026-05-29",
+          description: "Thin entry.",
+          trustSignals: {
+            ...DEFAULT_TRUST_SIGNALS,
+            sourceStatus: "available",
+            sourceUrlCount: 1,
+            sourceUrls: ["https://example.com/alpha"],
+          },
+        }),
+        // Alphabetically last but substantial: many sources, long description,
+        // first-party editorial review. Same date and same trust score, so the
+        // old A-Z tiebreak would have buried it; richness now floats it up.
+        entry("zeta-rich", {
+          dateAdded: "2026-05-29",
+          description:
+            "A thoroughly documented entry with extensive usage notes, " +
+            "configuration guidance, troubleshooting steps, and a deep set of " +
+            "primary sources backing every capability it claims to support.",
+          trustSignals: {
+            ...DEFAULT_TRUST_SIGNALS,
+            sourceStatus: "available",
+            firstPartyEditorial: true,
+            sourceUrlCount: 5,
+            sourceUrls: [
+              "https://example.com/zeta/1",
+              "https://example.com/zeta/2",
+              "https://example.com/zeta/3",
+              "https://example.com/zeta/4",
+              "https://example.com/zeta/5",
+            ],
+          },
+        }),
+      ],
+      {
+        generatedAt: "2026-05-30T00:00:00.000Z",
+        days: 7,
+        limits: {
+          newEntries: 2,
+          sourceBacked: 2,
+          saferInstalls: 2,
+          notableChanges: 2,
+        },
+        changelogEntries: [],
+      },
+    );
+
+    expect(brief.sections.newEntries.map((item) => item.key)).toEqual([
+      "mcp:zeta-rich",
+      "mcp:alpha-thin",
     ]);
   });
 

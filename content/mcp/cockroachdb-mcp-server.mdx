@@ -1,0 +1,196 @@
+---
+title: CockroachDB Cloud MCP Server for Claude
+slug: cockroachdb-mcp-server
+category: mcp
+description: >-
+  Manage CockroachDB Cloud clusters from Claude — list databases and tables, inspect schemas,
+  run SELECT queries, explain query plans, monitor running queries, and optionally create tables
+  and insert data — with the official CockroachDB Cloud MCP server.
+cardDescription: "Official CockroachDB Cloud MCP: query schemas, run SELECT, explain plans & monitor clusters from Claude."
+seoTitle: "CockroachDB Cloud MCP Server for Claude — Schema Inspection, SQL Queries & Cluster Monitoring"
+seoDescription: "Connect Claude to CockroachDB Cloud with the official MCP server: list clusters, databases, and tables, inspect schemas, run SELECT queries, explain query plans, and monitor active queries — read-only by default, OAuth or service account authentication."
+author: Cockroach Labs
+authorProfileUrl: "https://github.com/cockroachdb"
+dateAdded: "2026-06-18"
+documentationUrl: "https://www.cockroachlabs.com/docs/cockroachcloud/connect-to-the-cockroachdb-cloud-mcp-server"
+websiteUrl: "https://www.cockroachlabs.com"
+repoUrl: "https://github.com/cockroachdb"
+retrievalSources:
+  - "https://www.cockroachlabs.com/docs/cockroachcloud/connect-to-the-cockroachdb-cloud-mcp-server"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add cockroachdb https://cockroachlabs.cloud/mcp --transport http --header \"mcp-cluster-id: YOUR_CLUSTER_ID\""
+usageSnippet: >-
+  Ask Claude to list all databases in a CockroachDB cluster, show the schema for a table,
+  run a SELECT query, explain a slow query plan, or monitor currently running queries — using
+  natural language against your CockroachDB Cloud cluster.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "cockroachdb": {
+        "type": "http",
+        "url": "https://cockroachlabs.cloud/mcp",
+        "headers": {
+          "mcp-cluster-id": "YOUR_CLUSTER_ID"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "cockroachdb": {
+        "type": "http",
+        "url": "https://cockroachlabs.cloud/mcp",
+        "headers": {
+          "mcp-cluster-id": "YOUR_CLUSTER_ID",
+          "Authorization": "Bearer YOUR_SERVICE_ACCOUNT_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A CockroachDB Cloud account with at least one cluster — sign up at cockroachlabs.com."
+  - "Your cluster ID (from the Cloud Console URL: cockroachlabs.cloud/cluster/YOUR_CLUSTER_ID)."
+  - "An MCP client such as Claude Code or Claude Desktop."
+  - "Optional: a CockroachDB Cloud service account API key for non-interactive auth."
+safetyNotes:
+  - "The server is read-only by default — SELECT, EXPLAIN, and schema queries only; no INSERT, UPDATE, or DELETE."
+  - "Write tools (create_database, create_table, insert_rows) can be enabled with explicit opt-in — only enable if needed."
+  - "DROP and TRUNCATE operations are not supported even with write opt-in."
+privacyNotes:
+  - "Database schemas, table structures, query results, and running query metadata from your CockroachDB Cloud cluster are surfaced in Claude's context."
+  - "Authentication uses OAuth (browser flow) or a service account API key — keep the API key in the MCP config headers."
+disclosure: "CockroachDB is a commercial distributed SQL database. The MCP server is officially maintained by Cockroach Labs."
+tags:
+  - cockroachdb
+  - database
+  - distributed-sql
+  - postgresql
+  - cloud-database
+  - sql
+keywords:
+  - cockroachdb mcp server
+  - cockroachdb cloud mcp claude
+  - distributed sql mcp claude code
+  - cockroachdb schema inspection mcp
+  - cockroachdb query mcp claude
+  - cloud database mcp claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **CockroachDB Cloud MCP Server** is the official remote Model Context Protocol server
+from Cockroach Labs for [CockroachDB Cloud](https://www.cockroachlabs.com). It connects Claude
+directly to your CockroachDB Cloud clusters via the hosted endpoint at
+`https://cockroachlabs.cloud/mcp` — no local install required. Read-only by default (SELECT,
+EXPLAIN, schema queries), with optional write capability for CREATE and INSERT operations.
+Authentication via OAuth browser flow or service account API key.
+
+## Key capabilities
+
+- **Cluster listing** — list all accessible clusters.
+- **Schema exploration** — list databases, tables, and get full table schemas.
+- **SQL queries** — execute SELECT statements against your cluster.
+- **Query plans** — run EXPLAIN on queries to diagnose performance.
+- **Active query monitoring** — show currently running queries.
+- **Write operations (opt-in)** — create databases and tables, insert rows.
+
+## Tools
+
+| Tool | Category | Purpose |
+|---|---|---|
+| `list_clusters` | Discovery | List all accessible clusters |
+| `get_cluster` | Discovery | Detailed cluster info |
+| `list_databases` | Schema | List databases in a cluster |
+| `list_tables` | Schema | List tables in a database |
+| `get_table_schema` | Schema | Full table schema |
+| `select_query` | SQL | Execute SELECT statements |
+| `explain_query` | SQL | Run EXPLAIN on a query |
+| `show_running_queries` | Monitoring | Monitor active queries |
+| `create_database` | Write (opt-in) | Create a new database |
+| `create_table` | Write (opt-in) | Define a new table |
+| `insert_rows` | Write (opt-in) | Insert rows |
+
+## How it compares
+
+| Server | Read-only default | Schema inspection | Query explain | No local install | Notes |
+|---|---|---|---|---|---|
+| **CockroachDB Cloud MCP** | Yes | Yes | Yes | Yes | Official, hosted |
+| Neon MCP | No | Yes | No | No | Serverless Postgres |
+| PlanetScale MCP | Yes | Yes | No | No | MySQL |
+| CockroachDB (self-hosted) | No | Yes | Yes | No | Third-party, OSS |
+
+CockroachDB Cloud MCP is unique in providing a read-only default with no local install,
+connecting directly to managed clusters via a hosted HTTP endpoint.
+
+## Installation
+
+### Claude Code (OAuth browser login)
+
+```bash
+claude mcp add cockroachdb \
+  https://cockroachlabs.cloud/mcp \
+  --transport http \
+  --header "mcp-cluster-id: YOUR_CLUSTER_ID"
+```
+
+Run `/mcp` in Claude Code to complete OAuth authentication.
+
+### Claude Code (service account API key)
+
+```bash
+claude mcp add cockroachdb \
+  https://cockroachlabs.cloud/mcp \
+  --transport http \
+  --header "mcp-cluster-id: YOUR_CLUSTER_ID" \
+  --header "Authorization: Bearer YOUR_SERVICE_ACCOUNT_API_KEY"
+```
+
+Find your cluster ID in the Cloud Console URL: `cockroachlabs.cloud/cluster/YOUR_CLUSTER_ID`.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "cockroachdb": {
+      "type": "http",
+      "url": "https://cockroachlabs.cloud/mcp",
+      "headers": {
+        "mcp-cluster-id": "YOUR_CLUSTER_ID"
+      }
+    }
+  }
+}
+```
+
+## Requirements
+
+- CockroachDB Cloud account with a cluster.
+- Cluster ID from the Cloud Console.
+- An MCP client (Claude Code or Claude Desktop).
+- No local install required.
+
+## Security
+
+- Read-only by default — no unintended data modification.
+- Service account API keys scope access per principal — use least-privilege keys.
+- DROP and TRUNCATE are not supported even with write opt-in.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official CockroachDB Cloud MCP documentation at
+  `www.cockroachlabs.com/docs/cockroachcloud/connect-to-the-cockroachdb-cloud-mcp-server`
+  (SSR HTML, HTTP 200) documents the hosted endpoint `https://cockroachlabs.cloud/mcp`, the
+  `mcp-cluster-id` header requirement, OAuth 2.1 and service account API key authentication,
+  all tools, read-only default mode, and opt-in write operations (create_database,
+  create_table, insert_rows; no DROP/TRUNCATE).
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the `--transport http`
+  connection pattern used above.

@@ -1,0 +1,168 @@
+---
+title: Magic UI MCP Server for Claude
+slug: magicui-mcp-server
+category: mcp
+description: >-
+  Browse and install Magic UI animated React components from Claude — search the component
+  registry by name or keyword, retrieve full installation details for any component, and
+  get guided setup instructions — with the official Magic UI MCP server.
+cardDescription: "Official Magic UI MCP: browse and install animated React components via the Magic UI registry from Claude."
+seoTitle: "Magic UI MCP Server for Claude — Animated React Components & Component Registry"
+seoDescription: "Connect Claude to Magic UI with the official MCP server: browse the Magic UI animated React component registry, search by keyword, and retrieve installation details for marquee, blur-fade, grid background, and 100+ other components — MIT licensed."
+author: Magic UI
+authorProfileUrl: "https://github.com/magicuidesign"
+dateAdded: "2026-06-18"
+documentationUrl: "https://raw.githubusercontent.com/magicuidesign/mcp/main/README.md"
+websiteUrl: "https://magicui.design"
+repoUrl: "https://github.com/magicuidesign/mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/magicuidesign/mcp/main/README.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "npx @magicuidesign/cli@latest install claude"
+usageSnippet: >-
+  Ask Claude to list all available Magic UI components, search for animation components by
+  keyword, show installation instructions for the Marquee component, or browse the registry
+  for grid background effects — using natural language to find and install Magic UI components.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "magic-ui": {
+        "command": "npx",
+        "args": ["-y", "@magicuidesign/mcp@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "magic-ui": {
+        "command": "npx",
+        "args": ["-y", "@magicuidesign/mcp@latest"]
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js with `npx` available."
+  - "A React project using Tailwind CSS (Magic UI components are Tailwind-based)."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server is read-only — it queries the Magic UI registry but does not install files into your project automatically."
+  - "Installation of components into your project is guided by Claude based on retrieved specs — you apply the changes."
+privacyNotes:
+  - "Registry queries and component names are sent to the Magic UI registry API. No personal data or project content is sent externally."
+tags:
+  - magicui
+  - react
+  - ui-components
+  - animation
+  - tailwind
+  - frontend
+keywords:
+  - magic ui mcp server
+  - magicui mcp claude
+  - animated react components mcp claude code
+  - magic ui registry mcp
+  - install magic ui with claude
+  - react animation components ai claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Magic UI MCP Server** is the official Model Context Protocol server from Magic UI,
+giving Claude access to the Magic UI component registry. Magic UI provides 100+ animated
+React components built with Tailwind CSS — marquees, carousels, blur fades, grid backgrounds,
+particle effects, and more. The MCP server surfaces the registry so Claude can guide
+installation of any component into your React project. MIT licensed.
+
+The simplest install is via the Magic UI CLI: `npx @magicuidesign/cli@latest install claude`,
+which configures the MCP automatically.
+
+## Key capabilities
+
+- **Browse registry** — list all available Magic UI components with optional filters.
+- **Search components** — keyword search across component names, titles, and descriptions.
+- **Get component details** — full installation guidance including CLI commands and dependencies.
+
+## Tools
+
+| Tool | Purpose |
+|---|---|
+| `listRegistryItems` | Browse Magic UI registry with filters (kind, query, limit, offset) |
+| `searchRegistryItems` | Keyword search across component names, titles, descriptions |
+| `getRegistryItem` | Full details and installation guidance for a specific component |
+
+## Featured components
+
+| Component | Description |
+|---|---|
+| Marquee | Infinite horizontal/vertical scroll animation |
+| Blur Fade | Reveal content with smooth blur-to-focus transitions |
+| Grid Background | Animated grid or dot background patterns |
+| Number Ticker | Animated number counter |
+| Animated Beam | SVG beam/connection animations |
+| Orbiting Circles | Concentric orbital animations |
+| Magic Card | Interactive gradient hover card effect |
+| Sparkles | Particle sparkle animation |
+| Globe | 3D animated globe visualization |
+| Terminal | Code terminal animation effect |
+
+## How it compares
+
+| Server | UI components | Animated | Registry browse | Install guidance |
+|---|---|---|---|---|
+| **Magic UI MCP** | Yes | Yes | Yes | Yes |
+| shadcn/ui MCP | Yes | Partial | Yes | Yes |
+| Storybook MCP | No (stories) | No | No | No |
+
+Magic UI MCP focuses specifically on animated components that add motion and visual polish to
+React apps — distinct from shadcn/ui's utility-first components.
+
+## Installation
+
+### Via Magic UI CLI (recommended)
+
+```bash
+npx @magicuidesign/cli@latest install claude
+```
+
+This automatically configures the MCP server in Claude Code.
+
+### Claude Desktop (manual)
+
+```json
+{
+  "mcpServers": {
+    "magic-ui": {
+      "command": "npx",
+      "args": ["-y", "@magicuidesign/mcp@latest"]
+    }
+  }
+}
+```
+
+## Requirements
+
+- Node.js (for `npx`).
+- A React + Tailwind CSS project.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Registry queries only — no write access to your project files.
+- No credentials required.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official repository `magicuidesign/mcp` (MIT) on npm as `@magicuidesign/mcp` (v2.0.0) documents
+  the CLI install via `npx @magicuidesign/cli@latest install claude`, all three tools
+  (listRegistryItems, searchRegistryItems, getRegistryItem), and the animated React component
+  registry coverage.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the stdio connector
+  pattern used above.

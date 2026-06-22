@@ -12,6 +12,7 @@ import { buildEntryJsonLdSnapshot } from "./seo.js";
 import { buildSubmissionSpecs } from "./submission-spec.js";
 import { SAFE_CONTENT_SLUG_PATTERN } from "./content-schema.js";
 import { resolveMcpInstallConfig } from "./mcp-install-config.js";
+import { normalizePlatforms } from "./platforms.js";
 import {
   buildRegistryRelationGraph,
   relationLookupFromGraph,
@@ -22,6 +23,8 @@ export const RAYCAST_SCHEMA_VERSION = 2;
 export const REGISTRY_ARTIFACT_SCHEMA_VERSION = 2;
 export const SITE_URL = "https://heyclau.de";
 export const RAYCAST_COPY_PREVIEW_LIMIT = 800;
+
+const RAYCAST_ONE_CLICK_STDIO_COMMANDS = new Set(["npx", "uvx"]);
 
 function stripLoneSurrogates(value) {
   const text = String(value || "");
@@ -165,10 +168,34 @@ function compactDefinedObject(value) {
   );
 }
 
+function raycastOneClickStdioCommandName(value) {
+  const command = String(value || "").trim();
+  if (!command || command.includes("/") || command.includes("\\")) return "";
+  return command.toLowerCase();
+}
+
+function isRaycastOneClickMcpInstallConfig(config) {
+  const type = String(config?.type || "")
+    .trim()
+    .toLowerCase();
+  if (type !== "stdio") return true;
+  return RAYCAST_ONE_CLICK_STDIO_COMMANDS.has(
+    raycastOneClickStdioCommandName(config.command),
+  );
+}
+
+function resolveRaycastMcpInstallConfig(entry) {
+  const mcpInstallConfig = resolveMcpInstallConfig(entry);
+  if (!mcpInstallConfig) return null;
+  return isRaycastOneClickMcpInstallConfig(mcpInstallConfig.config)
+    ? mcpInstallConfig
+    : null;
+}
+
 export function buildRaycastDetailMarkdown(entry) {
   const lines = [`# ${entry.title}`, "", entry.description];
   const mcpInstallConfig =
-    entry.category === "mcp" ? resolveMcpInstallConfig(entry) : null;
+    entry.category === "mcp" ? resolveRaycastMcpInstallConfig(entry) : null;
   const configSnippet =
     entry.category === "mcp"
       ? mcpInstallConfig?.configSnippet
@@ -429,7 +456,9 @@ function buildEntryPlatformNames(entry) {
     if (tokens.has(platform)) platforms.add(platform);
   }
 
-  return [...platforms];
+  // Canonicalize so the same platform is never split across a free-form skill
+  // compatibility label ("Codex") and a slug ("codex") in generated facets.
+  return normalizePlatforms([...platforms]);
 }
 
 function sourceUrlsForEntry(entry) {
@@ -512,7 +541,7 @@ function buildListTrustSignals(entry) {
 
 function buildCompactInstallFields(entry) {
   const mcpInstallConfig =
-    entry.category === "mcp" ? resolveMcpInstallConfig(entry) : null;
+    entry.category === "mcp" ? resolveRaycastMcpInstallConfig(entry) : null;
   if (entry.category === "mcp") {
     return compactDefinedObject({
       installable: Boolean(
@@ -543,7 +572,7 @@ function buildCompactInstallFields(entry) {
 
 function buildRaycastInstallDetailFields(entry) {
   const mcpInstallConfig =
-    entry.category === "mcp" ? resolveMcpInstallConfig(entry) : null;
+    entry.category === "mcp" ? resolveRaycastMcpInstallConfig(entry) : null;
   if (entry.category === "mcp") {
     return compactDefinedObject({
       ...buildCompactInstallFields(entry),
@@ -1060,7 +1089,7 @@ export function buildPluginExportFeed(entries) {
     category: entry.category,
     ...buildEntryProvenanceFields(entry),
     ...buildEntryBrandFields(entry),
-    sourceUrl: entry.repoUrl || entry.documentationUrl || entry.githubUrl,
+    sourceUrl: entry.repoUrl || entry.githubUrl || entry.documentationUrl,
     installCommand: entry.installCommand || entry.commandSyntax || "",
     platformCompatibility:
       entry.category === "skills" ? buildSkillPlatformCompatibility(entry) : [],
@@ -1278,6 +1307,7 @@ export function buildRegistryManifest(entries, extra = {}) {
       relationGraph: dataUrl("relation-graph.json"),
       contentQuality: dataUrl("content-quality-report.json"),
       contentQualityPrompts: dataUrl("content-quality-prompts.json"),
+      qualityMethodology: "/quality#methodology",
       jsonLdSnapshots: dataUrl("jsonld-snapshots.json"),
       llmsFull: "/llms-full.txt",
       entryDetails: dataUrl("entries"),

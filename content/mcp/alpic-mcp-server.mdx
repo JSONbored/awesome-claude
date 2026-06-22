@@ -1,0 +1,204 @@
+---
+title: Alpic MCP Server for Claude
+slug: alpic-mcp-server
+category: mcp
+description: >-
+  Alpic hosted MCP server to manage cloud-hosted MCP projects—deployments, debugging, and analytics—for apps built and shipped on the Alpic platform.
+cardDescription: >-
+  Connect Claude to Alpic to manage MCP project deployments, debug builds, and review analytics for servers hosted on Alpic cloud.
+seoTitle: Alpic MCP Server for Claude
+seoDescription: >-
+  Use the Alpic MCP server with Claude to manage hosted MCP projects, debug deployments, and check analytics via https://mcp.alpic.ai.
+author: Alpic
+authorProfileUrl: "https://github.com/alpic-ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1466
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1466"
+repoUrl: "https://alpic.ai"
+documentationUrl: "https://docs.alpic.ai"
+websiteUrl: "https://alpic.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http alpic https://mcp.alpic.ai
+usageSnippet: >-
+  Add https://mcp.alpic.ai as a remote connector after signing in to your Alpic account at app.alpic.ai.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "alpic": {
+        "url": "https://mcp.alpic.ai",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "alpic": {
+        "url": "https://mcp.alpic.ai",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer YOUR_ALPIC_TOKEN"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Alpic account with at least one MCP project deployed on Alpic cloud."
+  - "Claude or another MCP client with streamable HTTP connector support."
+  - "Authentication to Alpic (API key or OAuth depending on connector setup)."
+  - "Understanding that this server manages Alpic-hosted projects, not arbitrary third-party MCP URLs."
+safetyNotes:
+  - "Management tools may trigger redeployments or configuration changes on hosted MCP servers."
+  - "Analytics and logs may contain end-user queries from your deployed MCP apps."
+  - "Do not share Alpic credentials across untrusted chat sessions."
+  - "Verify target project/environment before approving destructive deploy actions."
+privacyNotes:
+  - "Project metadata, deployment logs, and analytics are processed by Alpic."
+  - "End-user traffic to your deployed MCP apps is subject to Alpic platform terms."
+  - "Store Alpic auth tokens in connector secrets, not in repositories."
+tags:
+  - hosting
+  - deployment
+  - mcp-platform
+  - remote-mcp
+  - analytics
+keywords:
+  - alpic mcp
+  - mcp deployment claude
+  - alpic cloud mcp
+  - mcp.alpic.ai
+  - chatgpt apps hosting
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+Alpic is a cloud platform for building, deploying, monitoring, and distributing ChatGPT apps and MCP servers. The Alpic MCP server lets operators manage projects hosted on Alpic—checking deployment health, debugging builds, and reviewing analytics—directly from Claude and other MCP clients.
+
+Platform documentation is at [docs.alpic.ai](https://docs.alpic.ai). The management connector is hosted at `https://mcp.alpic.ai`.
+
+## Features
+
+- Manage Alpic MCP projects and environments from chat.
+- Debug deployment failures and inspect build output.
+- Review analytics for distributed MCP apps.
+- Streamable HTTP and SSE-compatible hosted endpoint.
+- Integrates with Alpic's gateway, auth, and serverless hosting.
+
+## Use Cases
+
+- Check why a deployed MCP server failed its `/mcp` health check.
+- Review usage analytics after launching a ChatGPT app.
+- Compare staging and production deployment status.
+- Trigger redeploy after fixing repository configuration.
+- Audit OAuth and API-key auth settings on a hosted server.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Sign in at app.alpic.ai and deploy or link an MCP project.
+2. Add `https://mcp.alpic.ai` as a custom MCP connector.
+3. Authenticate with your Alpic account or token.
+4. Invoke project management tools from Claude.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http alpic https://mcp.alpic.ai
+claude mcp list
+```
+
+### Other MCP clients
+
+Add the connector using the JSON configuration below in your MCP client settings.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "alpic": {
+      "url": "https://mcp.alpic.ai",
+      "type": "http"
+    }
+  }
+}
+```
+
+For authenticated setups:
+
+```json
+{
+  "mcpServers": {
+    "alpic": {
+      "url": "https://mcp.alpic.ai",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer YOUR_ALPIC_TOKEN"
+      }
+    }
+  }
+}
+```
+
+Authenticate with Alpic credentials; unauthenticated calls cannot manage your projects.
+
+## Examples
+
+### Deploy status
+
+```text
+List my Alpic MCP projects and show the latest deployment status for each.
+```
+
+### Debug 404
+
+```text
+Why did my Alpic deployment fail the /mcp health check?
+```
+
+### Analytics
+
+```text
+Summarise MCP app traffic for my production project over the last 7 days.
+```
+
+## Security
+
+- Confirm project and environment before redeploy or delete operations.
+- Treat analytics exports as potentially containing user query metadata.
+- Use separate Alpic workspaces for production and experimentation.
+
+## Troubleshooting
+
+### 401 unauthorized
+
+Re-authenticate the connector with your Alpic account.
+
+### Project not found
+
+Verify the project ID and that your token has workspace access.
+
+### 404 on managed deploy
+
+Ensure the target server exposes `/mcp` as Alpic expects.
+
+### Stale analytics
+
+Allow time for telemetry ingestion; refresh after a few minutes.
+
+## Duplicate Check
+
+No existing Alpic management MCP entry was found in `content/mcp/`. This differs from generic cloud deploy MCP servers because it operates on Alpic-hosted MCP projects specifically.

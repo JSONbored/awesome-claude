@@ -43,6 +43,12 @@ prerequisites:
   - Solidity codebase and deployment scripts
   - Security requirements and risk tolerance
   - Testnet staging environment
+safetyNotes:
+  - "Do not deploy or transact from generated contract code without independent review, tests, and a dry run; smart contract mistakes can be irreversible."
+  - "Use local forks or testnets before mainnet and keep deployment wallets and RPC credentials least-privileged."
+privacyNotes:
+  - "Prompts and reports can include contract source, audit findings, addresses, deployment config, and transaction context."
+  - "Never paste private keys, seed phrases, unreleased exploit details, customer wallet data, or privileged RPC credentials into prompts."
 tags:
   - ethereum
   - base

@@ -1,8 +1,22 @@
 import { Link } from "@tanstack/react-router";
 import { GitCommit, Users } from "lucide-react";
-import { CHANGELOG } from "@/data/changelog";
-import { CONTRIBUTORS } from "@/data/contributors";
 import { CategoryPill } from "./badges";
+
+export type EcosystemPulseData = {
+  recent: Array<{
+    ref: string;
+    kind: string;
+    category?: string;
+    title: string;
+    date: string;
+  }>;
+  topContributors: Array<{
+    slug: string;
+    name: string;
+    acceptedCount?: number;
+  }>;
+  counts: Record<string, number>;
+};
 
 const KIND_DOT: Record<string, string> = {
   added: "bg-trust-trusted",
@@ -10,19 +24,8 @@ const KIND_DOT: Record<string, string> = {
   removed: "bg-trust-blocked",
 };
 
-export function EcosystemPulse() {
-  const recent = CHANGELOG.slice(0, 4);
-  const top = [...CONTRIBUTORS]
-    .sort((a, b) => (b.acceptedCount ?? 0) - (a.acceptedCount ?? 0))
-    .slice(0, 4);
-  const counts = CHANGELOG.reduce(
-    (acc, c) => {
-      acc[c.kind] = (acc[c.kind] ?? 0) + 1;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
-
+export function EcosystemPulse({ data }: { data: EcosystemPulseData }) {
+  const { recent, topContributors, counts } = data;
   return (
     <div className="flex flex-col gap-4">
       <div className="rounded-xl border border-border bg-surface">
@@ -73,7 +76,7 @@ export function EcosystemPulse() {
           </Link>
         </div>
         <ul className="divide-y divide-border">
-          {top.map((c) => (
+          {topContributors.map((c) => (
             <li key={c.slug}>
               <Link
                 to="/contributors/$slug"

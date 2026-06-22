@@ -1,0 +1,205 @@
+---
+title: mcp-agent
+slug: mcp-agent
+category: tools
+description: >-
+  Apache-2.0 Python framework for building MCP-native agents with composable
+  workflow patterns, full MCP server lifecycle management, durable Temporal
+  execution, agent-as-MCP-server support, and provider plugins for major LLMs.
+cardDescription: >-
+  Build MCP-native Python agents with composable workflow patterns, managed MCP
+  server connections, durable execution, and agent-as-MCP-server deployment.
+seoTitle: mcp-agent Python Framework for MCP Agents, Claude, Cursor, and Durable AI Workflows
+seoDescription: >-
+  Build MCP-native agents with mcp-agent, a Python framework for Model Context
+  Protocol server management, effective agent workflow patterns, durable
+  Temporal execution, agent-as-MCP-server deployment, and LLM provider plugins.
+author: LastMile AI
+authorProfileUrl: "https://github.com/lastmile-ai"
+dateAdded: "2026-06-18"
+websiteUrl: "https://docs.mcp-agent.com/get-started/welcome"
+documentationUrl: "https://docs.mcp-agent.com/get-started/welcome"
+repoUrl: "https://github.com/lastmile-ai/mcp-agent"
+packageUrl: "https://pypi.org/pypi/mcp-agent/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/lastmile-ai/mcp-agent"
+  - "https://github.com/lastmile-ai/mcp-agent/blob/main/README.md"
+  - "https://github.com/lastmile-ai/mcp-agent/blob/main/pyproject.toml"
+  - "https://pypi.org/pypi/mcp-agent/json"
+  - "https://docs.mcp-agent.com/get-started/welcome"
+  - "https://docs.mcp-agent.com/mcp-agent-sdk/effective-patterns/overview"
+installable: true
+installCommand: "uv add mcp-agent"
+usageSnippet: >-
+  Add `mcp-agent` to a Python project, define agents with MCP server names,
+  attach an LLM provider, and compose workflow patterns such as router,
+  orchestrator, evaluator-optimizer, parallel, or durable Temporal execution.
+copySnippet: |-
+  uv add "mcp-agent[openai]"
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 or newer and a project environment managed with uv, pip, or another Python package manager."
+  - "Model provider credentials for the selected provider, such as OpenAI, Anthropic, Google, Azure, Bedrock, or another supported route."
+  - "Reviewed MCP server configurations for the external tools, resources, and prompts the agent will use."
+  - "A secrets strategy for `mcp_agent.secrets.yaml`, environment variables, provider keys, and remote MCP credentials."
+  - "Temporal infrastructure only if durable execution and workflow recovery are required."
+safetyNotes:
+  - "mcp-agent manages MCP server lifecycles and can connect agents to filesystem, fetch, browser, SaaS, database, infrastructure, or custom MCP tools depending on configuration."
+  - "Workflow patterns can chain, route, parallelize, evaluate, optimize, pause, resume, and recover agent actions; use explicit approval gates for high-impact tools."
+  - "Agent-as-MCP-server deployment can expose an agent to other MCP clients, so review tool descriptions, permissions, authentication, rate limits, and operator visibility before sharing it."
+  - "Durable workflows can continue after process restarts when backed by Temporal; make cancellation, rollback, retry, and idempotency behavior explicit."
+  - "Do not let example filesystem, fetch, or remote MCP servers become production defaults without narrowing directories, URLs, accounts, and tool scopes."
+privacyNotes:
+  - "Prompts, instructions, tool arguments, MCP server outputs, workflow state, logs, traces, secrets YAML paths, provider responses, and durable execution history may be visible to model providers, MCP servers, observability systems, or Temporal."
+  - "Keep provider keys, MCP credentials, filesystem paths, customer data, prompt logs, and traces out of committed configs, screenshots, public issues, and shared examples."
+  - "If an agent uses external MCP servers, review each server's data retention, authentication, logging, and third-party data handling separately."
+  - "Durable workflow state and logs can retain user requests, tool results, and intermediate reasoning context longer than a one-shot script."
+tags:
+  - mcp
+  - agent-framework
+  - python
+  - workflows
+  - temporal
+  - llm-apps
+keywords:
+  - mcp-agent
+  - mcp agent framework
+  - Python MCP agent framework
+  - Model Context Protocol agents
+  - durable MCP agents
+  - Temporal AI agents
+  - agent as MCP server
+  - MCP workflow patterns
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+`mcp-agent` is a Python framework for building applications where MCP is the
+primary tool and context layer. It manages MCP server lifecycles, lets agents
+attach LLM providers, implements composable agent workflow patterns, and can
+scale from simple local agents to durable Temporal-backed workflows.
+
+Use it when a project needs code-first agent orchestration around MCP servers
+rather than a single hard-coded tool call. It is especially relevant for teams
+that want explicit Python application code for routing, orchestration,
+evaluation, optimization, parallel work, human input, durable execution, and
+agent-as-MCP-server deployment.
+
+## Core Capabilities
+
+| Area | mcp-agent Coverage |
+| --- | --- |
+| MCP Runtime | Managed MCP server connections, tools, resources, prompts, notifications, OAuth, sampling, elicitation, and roots |
+| Agents | Agent definitions with names, instructions, MCP server names, and attached augmented LLM providers |
+| Workflow Patterns | Router, orchestrator, evaluator-optimizer, parallel, map-reduce, and other effective-agent patterns |
+| Providers | Optional extras for OpenAI, Anthropic, Google, Azure, Bedrock, Cohere, LangChain, CrewAI, and related integrations |
+| Durable Execution | Temporal-backed workflows for pause, resume, recovery, and production workflow state |
+| Agent Servers | Patterns for exposing agents themselves as MCP servers |
+| Observability | Logging, traces, OpenTelemetry dependencies, and workflow visibility surfaces |
+
+## Quick Start
+
+Add the package to a Python project:
+
+```bash
+uv add "mcp-agent[openai]"
+```
+
+Or scaffold a starter project with the CLI:
+
+```bash
+uvx mcp-agent init
+```
+
+A minimal agent defines the app, chooses MCP servers, and attaches an LLM:
+
+```python
+import asyncio
+
+from mcp_agent.app import MCPApp
+from mcp_agent.agents.agent import Agent
+from mcp_agent.workflows.llm.augmented_llm_openai import OpenAIAugmentedLLM
+
+app = MCPApp(name="hello_world")
+
+async def main():
+    async with app.run():
+        agent = Agent(
+            name="finder",
+            instruction="Use filesystem and fetch to answer questions.",
+            server_names=["filesystem", "fetch"],
+        )
+        async with agent:
+            llm = await agent.attach_llm(OpenAIAugmentedLLM)
+            answer = await llm.generate_str("Summarize README.md in two sentences.")
+            print(answer)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## MCP Fit
+
+`mcp-agent` is useful when MCP servers are the primary capability surface for an
+agent. Instead of manually starting and wiring each server, the framework
+manages the connection lifecycle and makes those tools available to agent
+workflow code. The same application can start with local filesystem or fetch
+servers, then grow into SaaS, internal API, database, browser, or custom MCP
+server integrations.
+
+For production-style workflows, durable execution lets agent work continue
+across process restarts when backed by Temporal. Agent-as-MCP-server patterns
+let teams expose a composed agent behind MCP so another client can call it like
+any other MCP server.
+
+## Use Cases
+
+- Build Python agents that use existing MCP servers instead of custom adapters.
+- Compose router, orchestrator, evaluator-optimizer, parallel, or map-reduce
+  workflows around MCP tools.
+- Wrap a specialized agent as an MCP server for Claude, Cursor, VS Code, or
+  another MCP client.
+- Add durable execution to long-running agent workflows with Temporal.
+- Prototype MCP-native app patterns before committing to a larger agent
+  platform.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes `mcp-agent` as a composable framework for
+  building effective agents with Model Context Protocol.
+- The README lists full MCP support, effective agent patterns, durable Temporal
+  agents, agent-as-MCP-server support, and cloud deployment paths.
+- `pyproject.toml` lists the `mcp-agent` package, Python 3.10+ requirement,
+  Apache-2.0 license file, `mcp-agent` CLI, and optional provider extras.
+- PyPI reports the current `mcp-agent` package metadata.
+- The docs cover getting started and effective-agent workflow patterns.
+
+## Safety and Privacy
+
+Every MCP server attached to an agent is a trust boundary. Review the server's
+tool descriptions, credentials, network access, filesystem scope, account
+permissions, and logging before including it in an agent workflow.
+
+For production agents, make retries, cancellation, idempotency, approval gates,
+rate limits, and rollback behavior explicit. Durable workflow state, traces,
+logs, prompts, tool results, and provider responses may persist after a process
+ends, especially with Temporal or observability integrations enabled.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `lastmile-ai/mcp-agent`, `mcp-agent`,
+MCP agent framework, Python MCP agent framework, durable MCP agents, Temporal
+AI agents, agent-as-MCP-server, and MCP workflow patterns. Existing entries
+cover other agent frameworks such as VoltAgent and LiveKit Agents, but no
+dedicated `mcp-agent` entry, exact source URL duplicate, target file, or open
+duplicate PR was found.

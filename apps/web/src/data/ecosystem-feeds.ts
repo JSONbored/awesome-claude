@@ -37,7 +37,7 @@ const PURPOSES: Record<string, Pick<EcosystemFeed, "purpose" | "consumers">> = {
   },
 };
 
-function contentTypeFor(path: string): EcosystemFeed["contentType"] {
+export function contentTypeFor(path: string): EcosystemFeed["contentType"] {
   if (path.endsWith(".xml")) return "xml";
   if (path.endsWith(".txt")) return "txt";
   return "json";

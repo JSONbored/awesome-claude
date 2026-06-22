@@ -3,18 +3,18 @@ title: Claude Plugin Marketplace Reviewer Agent
 slug: claude-plugin-marketplace-reviewer-agent
 category: agents
 description: >-
-  Source-backed agent that reviews a Claude Code plugin or marketplace before a
-  team installs it, checking source trust, bundled components, context cost,
-  what the plugin will install, version pinning, and managed-scope controls,
-  grounded in the official discover-plugins docs.
+  A reusable agent prompt that vets a Claude Code plugin or marketplace before a
+  team installs it. It walks source trust, the plugin's Will-install list and
+  bundled components (skills, agents, hooks, MCP servers, commands), the
+  context-window cost, version pinning, and the user/project/local/managed
+  install scope.
 cardDescription: >-
-  Review a Claude Code plugin or marketplace before install: source trust,
-  bundled components, context cost, version pinning, and managed scope.
-seoTitle: Claude Plugin Marketplace Reviewer Agent
+  Vet a Claude Code plugin before install: source trust, the Will-install list,
+  bundled components, context cost, version pinning, and scope.
+seoTitle: "Claude Code Plugin Review Agent: Trust, Cost & Scope"
 seoDescription: >-
-  Reusable agent prompt that reviews a Claude Code plugin or marketplace before
-  a team installs it: source trust, bundled components, context cost, the will-
-  install list, version pinning, and managed-scope restrictions.
+  An agent prompt that vets a Claude Code plugin before install: source trust,
+  the Will-install list, bundled components, context cost, and install scope.
 author: JPette1783
 authorProfileUrl: "https://github.com/JPette1783"
 submittedBy: JPette1783
@@ -23,7 +23,7 @@ dateAdded: "2026-06-05"
 submittedAt: "2026-06-05"
 documentationUrl: "https://code.claude.com/docs/en/discover-plugins"
 installable: false
-usageSnippet: "Use this agent to review a Claude Code plugin or marketplace before a team installs it, checking source trust, bundled components, context cost, and version pinning."
+usageSnippet: "Point this agent at a plugin or marketplace you are weighing, and it returns a go/no-go with a recommended scope and which bundled pieces to disable."
 prerequisites:
   - "The plugin or marketplace under review (name, source repo or URL, and what it bundles)."
   - "Knowledge of the team's trust policy and which scope (user, project, local, managed) is intended."

@@ -30,7 +30,8 @@ const MAX_CATEGORY_BUCKETS = 32;
 
 function increment(buckets: RegistrySearchFacetBuckets, key: string) {
   if (!key) return;
-  buckets[key] = (buckets[key] ?? 0) + 1;
+  const count = Object.hasOwn(buckets, key) ? buckets[key] : 0;
+  buckets[key] = count + 1;
 }
 
 function sortBuckets(
@@ -52,7 +53,7 @@ function tally(
   bucketFor: (entry: SearchDocument) => string | ReadonlyArray<string>,
 ): RegistrySearchFacetBuckets {
   const except = new Set<RegistrySearchFilterDimension>([dimension]);
-  const buckets: RegistrySearchFacetBuckets = {};
+  const buckets = Object.create(null) as RegistrySearchFacetBuckets;
   for (const entry of entries) {
     if (!entryMatchesFilters(entry, filters, except)) continue;
     const bucket = bucketFor(entry);

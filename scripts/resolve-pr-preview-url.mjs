@@ -15,6 +15,23 @@ const blockedPreviewHosts = new Set([
 const nonDeploymentSourcePattern =
   /(?:coderabbit|superagent|contributor trust|pipelock|codeql|trunk|security scan|repo scan)/i;
 
+// A preview URL for this project must be a HeyClaude PRODUCTION host. This
+// Cloudflare account hosts several unrelated projects, so GitHub
+// deployment/status lookups can surface a sibling project's URL (e.g.
+// gittensory.aethereal.dev) — running the artifact contract against that is
+// wrong. Accept only the production site and Cloudflare Workers Builds preview
+// aliases for the prod worker (<version>-heyclaude-prod.<subdomain>.workers.dev).
+// Deliberately excludes the retired dev worker (heyclaude-dev.*.workers.dev and
+// dev.heyclau.de).
+function isHeyClaudePreviewHost(hostname) {
+  const host = String(hostname || "").toLowerCase();
+  return (
+    host === "heyclau.de" ||
+    host === "www.heyclau.de" ||
+    (host.endsWith(".workers.dev") && host.includes("heyclaude-prod"))
+  );
+}
+
 export function normalizeBaseUrl(value) {
   const trimmed = String(value || "").trim();
   if (!trimmed) return "";
@@ -41,6 +58,7 @@ export function selectPreviewUrl(candidates) {
     try {
       const parsed = new URL(url);
       if (blockedPreviewHosts.has(parsed.hostname.toLowerCase())) continue;
+      if (!isHeyClaudePreviewHost(parsed.hostname)) continue;
     } catch {
       continue;
     }
@@ -212,6 +230,59 @@ export async function resolveFromGithubStatuses(event, env = process.env) {
   return selectPreviewUrl(checkCandidates);
 }
 
+function prNumber(event, env = process.env) {
+  const fromEvent = event?.pull_request?.number ?? event?.number;
+  if (fromEvent) return Number(fromEvent);
+  // refs/pull/<n>/merge (or /head) when no event file is present.
+  const match = String(env.GITHUB_REF || "").match(/refs\/pull\/(\d+)\//);
+  return match ? Number(match[1]) : null;
+}
+
+function commentMatchesHeadSha(body, event, env = process.env) {
+  const sha = headSha(event, env).trim().toLowerCase();
+  if (!sha) return true;
+  const normalizedBody = String(body || "").toLowerCase();
+  return [sha, sha.slice(0, 8), sha.slice(0, 7)].some(
+    (candidate) => candidate.length >= 7 && normalizedBody.includes(candidate),
+  );
+}
+
+// Cloudflare Workers Builds publishes per-PR preview URLs ONLY in a pull-request COMMENT (by
+// cloudflare-workers-and-pages[bot]) — never as a GitHub deployment, commit status, or check-run. So the
+// deployment/status/check-run lookups above can never find it; this reads the comment. Only trust comments
+// that mention the current head SHA so a stale branch-scoped preview from an older deployment cannot satisfy
+// checks for a newer PR head. Prefer the stable "Branch Preview URL" for fresh comments and fall back to the
+// per-commit URL.
+export async function resolveFromPrComments(event, env = process.env) {
+  const pr = prNumber(event, env);
+  if (!pr) return null;
+  const comments = await githubJson(`/issues/${pr}/comments?per_page=100`, env);
+  if (!Array.isArray(comments)) return null;
+  const branch = [];
+  const commit = [];
+  const anchor =
+    /<a\s+href=['"]([^'"]+)['"]\s*>\s*([^<]*?Preview URL)\s*<\/a>/gi;
+  for (const comment of comments) {
+    // EXACT bot login only — the `[bot]` suffix is GitHub-reserved and unspoofable, so a public-repo user
+    // with "cloudflare" in their name can't post a comment with a spoofed preview URL (Superagent P2). This
+    // mirrors the same hardening in reviewbot's capture.ts findPreviewUrlFromPrComments.
+    if ((comment?.user?.login ?? "") !== "cloudflare-workers-and-pages[bot]")
+      continue;
+    const body = String(comment.body || "");
+    if (!commentMatchesHeadSha(body, event, env)) continue;
+    let match;
+    while ((match = anchor.exec(body)) !== null) {
+      const url = match[1];
+      const label = match[2].toLowerCase();
+      if (label.includes("branch"))
+        branch.push({ url, source: "cf-comment:branch" });
+      else if (label.includes("commit"))
+        commit.push({ url, source: "cf-comment:commit" });
+    }
+  }
+  return selectPreviewUrl([...branch, ...commit]);
+}
+
 async function resolvePreviewUrlOnce(args, env = process.env) {
   const explicit = selectPreviewUrl([
     { url: args["base-url"], source: "cli" },
@@ -222,6 +293,10 @@ async function resolvePreviewUrlOnce(args, env = process.env) {
   const event = readGithubEvent(args["event-path"] || env.GITHUB_EVENT_PATH);
   const fromDeployments = await resolveFromGithubDeployments(event, env);
   if (fromDeployments) return fromDeployments;
+
+  // Cloudflare Workers Builds reports the preview URL via a PR comment, so try that before statuses/checks.
+  const fromComments = await resolveFromPrComments(event, env);
+  if (fromComments) return fromComments;
 
   return resolveFromGithubStatuses(event, env);
 }

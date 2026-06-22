@@ -1,0 +1,201 @@
+---
+title: Cua Computer-Use Agents
+slug: cua-computer-use-agents
+category: tools
+description: >-
+  MIT-licensed infrastructure for computer-use agents: background desktop
+  drivers, MCP server support, Python SDKs, local/cloud sandboxes, macOS,
+  Windows, Linux, Android, Cua Bench, GUI automation skills, and Lume
+  virtualization for agents that see, click, type, and verify real desktops.
+cardDescription: >-
+  Build and benchmark computer-use agents with Cua drivers, MCP, sandboxes,
+  Python SDKs, GUI automation skills, and desktop virtualization.
+seoTitle: Cua Computer-Use Agents, MCP Driver, Sandboxes, and Desktop Automation SDK
+seoDescription: >-
+  Use Cua to build, benchmark, and deploy computer-use agents with a Python SDK,
+  MCP desktop driver, GUI automation skill, local and cloud sandboxes, macOS and
+  Windows background control, Cua Bench, and Lume virtualization.
+author: TryCua
+authorProfileUrl: "https://github.com/trycua"
+dateAdded: "2026-06-18"
+websiteUrl: "https://cua.ai"
+documentationUrl: "https://cua.ai/docs"
+repoUrl: "https://github.com/trycua/cua"
+packageUrl: "https://pypi.org/pypi/cua/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux, Android
+sourceUrls:
+  - "https://github.com/trycua/cua"
+  - "https://github.com/trycua/cua/blob/main/README.md"
+  - "https://github.com/trycua/cua/blob/main/pyproject.toml"
+  - "https://github.com/trycua/cua/blob/main/libs/cua-driver/README.md"
+  - "https://github.com/trycua/cua/blob/main/libs/python/mcp-server/pyproject.toml"
+  - "https://github.com/trycua/cua/blob/main/skills/gui-automation/SKILL.md"
+  - "https://github.com/trycua/cua/blob/main/LICENSE.md"
+  - "https://pypi.org/pypi/cua/json"
+  - "https://pypi.org/pypi/cua-agent/json"
+  - "https://pypi.org/pypi/cua-computer/json"
+installable: true
+installCommand: "pip install cua"
+usageSnippet: >-
+  Install `cua` for the computer-use SDK, or review the Cua Driver docs before
+  installing the MCP desktop driver that lets Claude Code, Cursor, Codex,
+  OpenClaw, or custom clients control desktop apps in the background.
+copySnippet: |-
+  pip install cua
+
+  # Cua Driver MCP registration after installing and reviewing the driver:
+  claude mcp add --transport stdio cua-driver -- cua-driver mcp
+estimatedSetupTime: 45 minutes
+difficulty: advanced
+prerequisites:
+  - "Python 3.12 or newer for the `cua` meta-package, with package-specific Python requirements checked for `cua-agent`, `cua-computer`, `cua-computer-server`, `cua-mcp-server`, and related packages."
+  - "A target runtime choice: local desktop, cloud Cua sandbox, Docker/container, QEMU VM, Lume macOS VM, Windows sandbox, Android, or bring-your-own image."
+  - "Explicit approval and scoping before giving an agent host desktop control, shell access, file access, screenshots, keyboard input, mouse input, or host-machine access."
+  - "Review of the Cua Driver install scripts before running curl-to-shell or PowerShell bootstrap commands from the README."
+  - "API keys, model/provider credentials, sandbox credentials, and trajectory-sharing policy when using AI annotations, cloud sandboxes, hosted services, or replay links."
+safetyNotes:
+  - "Cua can give agents eyes and hands on a computer: screenshots, clicks, typing, dragging, shell commands, window control, file paths, and desktop automation. Treat it as high-impact automation."
+  - "The README documents remote shell and PowerShell installer commands for Cua Driver and Lume. Review script contents, pin versions where possible, and avoid blind execution on sensitive machines."
+  - "The GUI automation skill includes form fuzzing examples and shell/file actions; use only on authorized apps, test environments, or isolated sandboxes."
+  - "Host-machine mode and background desktop control can interact with real apps without stealing focus. Keep host consent, allowlists, window targeting, and stop controls explicit."
+  - "Cua Bench, Cua sandboxes, Lume, Docker, QEMU, cloud VMs, Windows sandbox, Android images, and BYOI environments need resource limits, cleanup, network policy, and credential isolation."
+  - "Optional third-party components have separate license and safety implications; the README calls out Kasm, OmniParser, and optional `cua-agent[omni]` dependencies."
+privacyNotes:
+  - "Computer-use sessions can capture screenshots, typed text, window titles, app contents, browser pages, files, clipboard-like content, shell output, paths, downloads, and user workflows."
+  - "Cua trajectories are recorded under `~/.cua/trajectories/...`; sharing trajectories can upload or expose screenshots, actions, commands, and replayable workflow details."
+  - "Cloud sandboxes, Cua cloud, E2B-like backends, Docker registries, Lume images, MCP clients, model providers, and AI annotation features may process or store prompts, screenshots, tool actions, and environment metadata."
+  - "Do not use host or cloud computer-control flows on confidential documents, customer systems, authenticated browser sessions, secrets, payments, destructive admin panels, or regulated data unless policy explicitly allows it."
+tags:
+  - cua
+  - computer-use
+  - desktop-automation
+  - mcp
+  - agents
+  - sandbox
+  - benchmarks
+  - macos
+keywords:
+  - Cua computer-use agents
+  - Cua MCP driver
+  - computer-use agent SDK
+  - desktop automation agent
+  - Cua sandbox
+  - Cua Bench
+  - Claude Code computer use MCP
+  - Codex computer-use agent
+  - OpenClaw computer use
+  - Lume macOS virtualization
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Cua is open-source infrastructure for computer-use agents: agents that see
+screens, click buttons, type text, run tools, and verify UI state across real
+desktop or sandboxed environments. The repository includes Cua Drivers, Python
+SDK packages, a Cua MCP server package, Cua Bench, a GUI automation skill, and
+Lume virtualization for macOS/Linux VMs on Apple Silicon.
+
+Use Cua when a team needs more than browser automation: native desktop app
+control, sandboxed OS environments, GUI task benchmarks, or an MCP-compatible
+driver that lets agent clients control a desktop in the background.
+
+## Install
+
+For the Python SDK meta-package:
+
+```bash
+pip install cua
+```
+
+After installing and reviewing Cua Driver, the README documents this Claude
+Code MCP registration:
+
+```bash
+claude mcp add --transport stdio cua-driver -- cua-driver mcp
+```
+
+The README also documents remote installer scripts for Cua Driver and Lume.
+Review those scripts before running them, especially on a workstation with
+private files, authenticated apps, browser sessions, or production credentials.
+
+## Agent Capabilities
+
+| Area | Cua Coverage |
+| --- | --- |
+| Cua Driver | Background computer-use driver for macOS and Windows, with Linux pre-release support |
+| MCP | Driver and `cua-mcp-server` package for MCP-compatible agent clients |
+| Cua SDK | Python API for sandboxes, screenshots, shell commands, mouse, keyboard, and mobile gestures |
+| Sandboxes | Local and cloud Linux, macOS, Windows, Android, Docker/container, VM, and bring-your-own-image paths |
+| Cua Bench | Benchmarks and reinforcement-learning environments for OSWorld, ScreenSpot, Windows Arena, and custom tasks |
+| Lume | macOS/Linux VM management on Apple Silicon using Apple's Virtualization.Framework |
+| Skills | `gui-automation` Agent Skill for screenshot, click, type, drag, shell, zoom, window, and trajectory workflows |
+
+## Use Cases
+
+- Give Claude Code, Codex, Cursor, OpenClaw, or another agent client a
+  background desktop-control MCP driver.
+- Build computer-use agents that operate across Linux, macOS, Windows, Android,
+  Docker, or VM environments.
+- Run UI automation against native apps, not only web pages.
+- Benchmark agents on computer-use tasks and export trajectories for training.
+- Use Lume to create macOS/Linux VMs on Apple Silicon for agent testing.
+- Package GUI automation skills for repeatable QA and operator workflows.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository describes Cua as infrastructure to build, benchmark,
+  and deploy agents that use computers.
+- The README describes Cua Drivers, Cua sandboxes, Cua Bench, Lume, Python
+  packages, and Cua Driver MCP registration.
+- The README states that Cua Drivers support background computer-use on macOS
+  and Windows, with Linux as a pre-release backend.
+- The README lists support for local and cloud Linux, macOS, Windows, Android,
+  Docker/container, VM, and bring-your-own image workflows.
+- `libs/cua-driver/README.md` documents MCP over stdio and a Claude Code
+  computer-use compatibility mode.
+- `libs/python/mcp-server/pyproject.toml` declares the `cua-mcp-server`
+  package for Computer-Use Agent MCP.
+- `skills/gui-automation/SKILL.md` documents screenshot, click, type, drag,
+  shell, window, zoom, provider, and trajectory-sharing workflows.
+- PyPI resolves `cua` version `0.1.6`, `cua-agent` version `0.8.2`, and
+  `cua-computer` version `0.5.19`.
+- The latest GitHub release is `computer-v0.5.19`, published on 2026-06-18.
+- The repository license is MIT, while the README notes separate third-party
+  component licenses for Kasm, OmniParser, and optional `cua-agent[omni]`
+  dependencies.
+
+## Safety and Privacy
+
+Cua is powerful because it can connect agents to real or sandboxed computers.
+That also makes it easy to accidentally expose private screens, authenticated
+sessions, credentials, local files, browser state, app data, and production
+systems. Start in a sandbox, confirm the active target, and avoid host-machine
+control until consent, scope, and auditability are clear.
+
+The GUI automation skill records trajectories and can share replay links.
+Treat screenshots, actions, shell output, paths, and typed text as sensitive
+unless the session was deliberately created for public demo or benchmark use.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/agents/`, `content/mcp/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+`trycua/cua`, Cua, Cua Driver, Cua MCP driver, Cua Bench, Lume, computer-use
+agent SDK, computer-use agents, desktop automation agent, and Cua GUI
+automation skill. No dedicated Cua tools entry, exact source URL duplicate,
+target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Cua is
+MIT-licensed open-source software; Cua cloud services, model providers, MCP
+clients, cloud sandboxes, Docker, QEMU, Lume, Windows sandbox, Android images,
+trajectory hosting, and optional third-party components may have separate
+licenses, billing, terms, privacy controls, and access requirements.

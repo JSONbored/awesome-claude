@@ -1,0 +1,219 @@
+---
+title: Microsoft MCP for Beginners
+slug: microsoft-mcp-for-beginners
+category: guides
+description: >-
+  Microsoft open-source Model Context Protocol curriculum with hands-on MCP
+  server, client, security, transport, auth, deployment, Azure, VS Code,
+  Inspector, PostgreSQL, and cross-language examples.
+cardDescription: >-
+  Learn MCP through Microsoft's hands-on curriculum for servers, clients,
+  security, transports, auth, deployment, Azure, VS Code, and cross-language
+  examples.
+seoTitle: Microsoft MCP for Beginners Curriculum and Model Context Protocol Tutorial
+seoDescription: >-
+  Use Microsoft's MCP for Beginners curriculum to learn Model Context Protocol
+  fundamentals, MCP servers and clients, security, transports, auth, deployment,
+  VS Code integration, Azure workflows, Inspector debugging, and sample code.
+author: Microsoft
+authorProfileUrl: "https://github.com/microsoft"
+dateAdded: "2026-06-18"
+documentationUrl: "https://github.com/microsoft/mcp-for-beginners"
+repoUrl: "https://github.com/microsoft/mcp-for-beginners"
+pricingModel: free
+disclosure: editorial
+installable: false
+usageSnippet: >-
+  Use the Microsoft MCP for Beginners curriculum when learning or teaching MCP
+  fundamentals, building first MCP servers and clients, comparing transports,
+  reviewing security, testing with Inspector, and practicing cross-language
+  examples.
+prerequisites:
+  - Basic programming knowledge in at least one supported language such as C#, Java, JavaScript, Python, TypeScript, or Rust.
+  - Familiarity with client-server systems, REST APIs, HTTP, and command-line development workflows.
+  - A local development environment for whichever sample language, SDK, Docker, database, or cloud path you plan to run.
+  - Non-production model provider, Azure, database, or API credentials if you run optional samples that connect to external services.
+  - Sparse checkout or enough disk space if cloning the repository with its 50+ translated language directories and translated images.
+safetyNotes:
+  - "The curriculum includes runnable MCP servers, clients, deployment examples, cloud integrations, database labs, and tooling exercises; run samples in isolated projects with non-production credentials."
+  - "MCP servers expose model-callable tools. Review each sample's file, network, database, and cloud side effects before connecting it to Claude, VS Code, Cursor, or another host."
+  - "Security, OAuth, Entra ID, PostgreSQL, Azure, and deployment labs can create real accounts, containers, databases, tokens, or cloud resources if followed against live infrastructure."
+  - "Do not paste personal access tokens, Azure secrets, database credentials, customer data, or production URLs into sample configs, screenshots, public issues, or shared prompts."
+privacyNotes:
+  - "Sample prompts, MCP tool arguments, server logs, API responses, database rows, telemetry from external tools, and cloud diagnostics may contain sensitive learning or project data."
+  - "Running model-connected samples can send prompts, tool outputs, code snippets, and resource identifiers to the selected model provider or cloud service."
+  - "The repository is public and translated; keep local notes, secrets, generated configs, and lab outputs outside commits and issue comments."
+  - "When adapting the curriculum for teams, document which sample services are allowed, what data can be used, and how temporary credentials and cloud resources are deleted."
+sourceUrls:
+  - "https://github.com/microsoft/mcp-for-beginners"
+  - "https://raw.githubusercontent.com/microsoft/mcp-for-beginners/main/README.md"
+  - "https://raw.githubusercontent.com/microsoft/mcp-for-beginners/main/study_guide.md"
+  - "https://github.com/microsoft/mcp-for-beginners/tree/main/03-GettingStarted"
+  - "https://github.com/microsoft/mcp-for-beginners/tree/main/05-AdvancedTopics"
+  - "https://github.com/microsoft/mcp-for-beginners/tree/main/11-MCPServerHandsOnLabs"
+  - "https://github.com/microsoft/mcp-for-beginners/blob/main/LICENSE"
+tags:
+  - mcp
+  - model-context-protocol
+  - microsoft
+  - curriculum
+  - tutorial
+  - mcp-server
+  - mcp-client
+  - security
+  - azure
+  - cross-language
+keywords:
+  - Microsoft MCP for Beginners
+  - mcp for beginners
+  - Model Context Protocol tutorial
+  - MCP curriculum
+  - MCP server tutorial
+  - MCP client tutorial
+  - MCP security training
+  - MCP Inspector tutorial
+  - MCP Azure examples
+  - MCP PostgreSQL lab
+readingTime: 10
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Microsoft MCP for Beginners is an open-source curriculum for learning the Model
+Context Protocol through structured lessons and runnable examples. It starts
+with MCP fundamentals, core concepts, and security, then moves into first
+servers, first clients, LLM integration, VS Code integration, stdio, HTTP
+streaming, authentication, Inspector debugging, deployment, Azure, advanced
+protocol features, and a larger PostgreSQL hands-on lab path.
+
+This is a strong search target for Microsoft MCP for Beginners, MCP for
+Beginners, Model Context Protocol tutorial, MCP curriculum, MCP server tutorial,
+MCP client tutorial, MCP security, MCP Inspector, MCP Azure, MCP PostgreSQL, and
+cross-language MCP examples.
+
+## Learning Path
+
+The curriculum is organized as a progressive path:
+
+| Phase | Coverage |
+| --- | --- |
+| Foundation | MCP introduction, core concepts, client-server mental model, standardization, and security basics |
+| Getting Started | Environment setup, first server, first client, LLM client, VS Code integration, stdio, HTTP streaming, testing, deployment, simple auth, MCP hosts, Inspector, sampling, and MCP Apps |
+| Practical Implementation | SDK usage, debugging, testing, reusable prompt templates, pagination, and practical implementation patterns |
+| Advanced Topics | Azure integration, multi-modality, OAuth2, root contexts, routing, sampling, scaling, security, web search, realtime streaming, Entra ID auth, Foundry integration, context engineering, custom transports, protocol features, and adversarial multi-agent reasoning |
+| Community and Best Practices | Contribution guidance, early adoption lessons, best practices, case studies, and a Microsoft Foundry Toolkit workshop |
+| Hands-on Labs | A 13-lab MCP server and PostgreSQL integration path covering architecture, security, setup, database design, tools, semantic search, testing, VS Code, deployment, monitoring, and hardening |
+
+## Languages and Examples
+
+The README describes hands-on code examples across C#, Java, JavaScript, Python,
+TypeScript, and Rust. The sample sections include basic calculator-style MCP
+servers and more advanced implementations, so learners can compare how MCP
+concepts map across languages rather than only following a single SDK.
+
+The repository also includes automated translations in 50+ languages. For local
+use, the README documents sparse checkout commands that skip translations and
+translated images for a smaller clone.
+
+## How to Use It
+
+Use this curriculum when you need a structured path instead of a single quick
+start:
+
+1. Start with Modules 0-2 to learn the mental model and security boundaries.
+2. Use Module 3 to build and connect a first MCP server and client.
+3. Run the Inspector, VS Code, stdio, HTTP streaming, and auth lessons before
+   connecting real tools to an everyday agent workflow.
+4. Move into Azure, OAuth, routing, scaling, context engineering, and custom
+   transport topics once the basics are working.
+5. Use the PostgreSQL hands-on labs as a capstone for production-shaped MCP
+   server design.
+
+## MCP and Agent Fit
+
+This guide fits the HeyClaude MCP and agent ecosystem because it teaches the
+protocol layer behind MCP-enabled agents. Users who already have Claude Code,
+Claude Desktop, Cursor, VS Code, Codex, Gemini CLI, or OpenClaw workflows can
+use the curriculum to understand what their connected MCP servers are doing,
+how tools and transports work, and what security reviews should cover.
+
+It also gives teams a practical onboarding path for developers who need to build
+or review MCP servers rather than only install existing ones.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `microsoft/mcp-for-beginners` as an MIT-licensed Microsoft
+  repository with active development, 16,000+ stars, and 5,000+ forks.
+- The repository description says it introduces MCP fundamentals through
+  real-world, cross-language examples in .NET, Java, TypeScript, JavaScript,
+  Rust, and Python.
+- The README describes the curriculum as aligned with MCP Specification
+  `2025-11-25` and links official MCP documentation, specification,
+  specification versioning, GitHub organization, and community discussions.
+- The README lists learning objectives for MCP fundamentals, first MCP server,
+  model-to-tool integration, security best practices, deployment, and community
+  participation.
+- The module table covers fundamentals, security, first server/client, LLM
+  client, VS Code integration, stdio, HTTP streaming, testing, deployment,
+  simple auth, MCP hosts, Inspector, sampling, MCP Apps, Azure, OAuth, scaling,
+  context engineering, custom transports, protocol features, and PostgreSQL
+  labs.
+- The README documents 50+ automated translations and sparse checkout commands
+  for cloning without translation directories.
+
+## Safety and Privacy
+
+Treat this as a code curriculum, not just reading material. Some lessons ask the
+learner to run local servers and clients, connect model providers, configure
+MCP hosts, deploy services, use Azure or Microsoft Foundry tooling, and work
+with database labs. Use disposable projects, non-production credentials, and
+sample data until the behavior is understood.
+
+When adapting the curriculum for a team, define which model providers, cloud
+accounts, database instances, network endpoints, and MCP hosts may be used.
+Also document credential cleanup, generated config cleanup, and cloud resource
+teardown so a training exercise does not leave production-risk infrastructure
+behind.
+
+## Troubleshooting
+
+### The clone is unexpectedly large
+
+Use the sparse checkout path from the README to exclude translations and
+translated images when you only need the English curriculum and samples.
+
+### A sample server runs but the host cannot call it
+
+Confirm the sample transport, launch command, working directory, environment
+variables, and client configuration match the lesson. Stdio servers must keep
+protocol traffic on stdout and send logs elsewhere.
+
+### Cloud or database labs fail with permission errors
+
+Use a clean training tenant or sandbox account. Check role assignments, resource
+names, network rules, and secret values before retrying.
+
+### The lesson differs from the current MCP spec
+
+Use the repository README, official MCP specification links, and changelog as
+the source of truth for version expectations. MCP is still evolving, so record
+which spec date and SDK versions a team training path uses.
+
+## Duplicate Check
+
+Checked current `content/guides/`, `content/mcp/`, `content/tools/`,
+`content/skills/`, collections, README output, open pull requests, and
+repository-wide content for `microsoft/mcp-for-beginners`, Microsoft MCP for
+Beginners, MCP for Beginners, Model Context Protocol curriculum, MCP tutorial,
+MCP server tutorial, MCP client tutorial, MCP Inspector tutorial, MCP Azure
+examples, MCP PostgreSQL labs, and cross-language MCP examples. No dedicated
+Microsoft MCP for Beginners guide, exact source URL duplicate, target file, or
+open duplicate PR was found.

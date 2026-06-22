@@ -1,0 +1,261 @@
+---
+title: Azure Skills Plugin
+slug: azure-skills-plugin
+category: skills
+description: >-
+  Official Microsoft Azure Skills Plugin for coding agents, combining Azure
+  Agent Skills, Azure MCP Server configuration, and Foundry MCP workflows for
+  build, deploy, diagnostics, cost, compliance, AI, Kubernetes, storage, RBAC,
+  and migration scenarios.
+cardDescription: >-
+  Microsoft Azure skills plus Azure MCP and Foundry MCP configuration for
+  Claude Code, Codex, Copilot, Cursor, Gemini, and other agent hosts.
+seoTitle: Azure Skills Plugin for Claude Code, Codex, Copilot, and Azure MCP
+seoDescription: >-
+  Install Microsoft's Azure Skills Plugin for Claude Code, Codex, GitHub
+  Copilot, Cursor, and Gemini to give agents Azure skills, Azure MCP tools, and
+  Foundry MCP workflows for deploy, diagnostics, cost, compliance, AI, AKS, and
+  cloud migration work.
+author: Microsoft
+authorProfileUrl: "https://github.com/microsoft"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/microsoft/azure-skills"
+documentationUrl: "https://github.com/microsoft/azure-skills#readme"
+websiteUrl: "https://microsoft.github.io/azure-skills/"
+downloadUrl: "https://github.com/microsoft/azure-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "apm install microsoft/azure-skills"
+usageSnippet: >-
+  Install the Azure Skills Plugin, authenticate Azure CLI and Azure Developer
+  CLI as needed, then use the matching Azure skill before live Azure MCP actions.
+copySnippet: |-
+  apm install microsoft/azure-skills
+
+  # Claude Code marketplace install
+  /plugin install azure@claude-plugins-official
+
+  # Codex marketplace install
+  codex plugin marketplace add microsoft/azure-skills
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/microsoft/azure-skills"
+  - "https://raw.githubusercontent.com/microsoft/azure-skills/main/README.md"
+  - "https://raw.githubusercontent.com/microsoft/azure-skills/main/.github/plugins/azure-skills/.mcp.json"
+  - "https://raw.githubusercontent.com/microsoft/azure-skills/main/.github/plugins/azure-skills/skills/azure-prepare/SKILL.md"
+  - "https://raw.githubusercontent.com/microsoft/azure-skills/main/.github/plugins/azure-skills/skills/azure-ai/SKILL.md"
+  - "https://raw.githubusercontent.com/microsoft/azure-skills/main/.github/plugins/azure-skills/skills/azure-cost/SKILL.md"
+  - "https://microsoft.github.io/azure-skills/"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - GitHub Copilot
+  - Copilot CLI
+  - Cursor
+  - Gemini CLI
+  - IntelliJ IDEA
+prerequisites:
+  - "Azure account or subscription appropriate for the target work."
+  - "Node.js 18 or newer with `npx` available, because the included MCP configuration launches `@azure/mcp` through npx."
+  - "Azure CLI installed and authenticated with `az login` for live Azure resource work."
+  - "Azure Developer CLI installed and authenticated with `azd auth login` for azd deployment workflows."
+  - "A compatible plugin or skills host such as Claude Code, Codex, GitHub Copilot, Cursor, Gemini CLI, APM, VS Code, or IntelliJ IDEA."
+  - "Explicit subscription, tenant, resource group, cloud environment, and approval boundaries before live read/write actions."
+safetyNotes:
+  - "Azure Skills can guide agents through live cloud actions including infrastructure generation, validation, deployment, diagnostics, cost analysis, RBAC, Kubernetes, storage, AI services, and migration work."
+  - "The included MCP configuration starts the Azure MCP server, which can expose structured tools across Azure services when the local account is authenticated."
+  - "Deployment skills require plan and validation phases before live deployment. Do not skip `azure-prepare` or `azure-validate` steps when the upstream skill requires them."
+  - "Live Azure changes can create cost, modify production resources, change access control, deploy workloads, query logs, or expose service data. Keep human review around write operations."
+  - "For sovereign clouds, configure the Azure MCP server cloud argument explicitly instead of assuming Azure Public Cloud."
+privacyNotes:
+  - "Azure work can expose subscription IDs, tenant IDs, resource group names, resource inventories, cost data, log queries, Application Insights telemetry, storage paths, RBAC assignments, model deployment names, and cloud architecture details."
+  - "Authenticated MCP tools can read or operate on live Azure and Foundry resources according to the local account's permissions."
+  - "Keep Azure credentials, service principals, connection strings, keys, SAS tokens, deployment outputs, logs with customer data, and private topology details out of prompts, commits, issue comments, screenshots, and shared reports."
+  - "Review Microsoft, MCP host, model provider, and organization retention policies before routing production telemetry, cost data, or customer-sensitive resource context through an agent."
+tags:
+  - azure
+  - microsoft
+  - skills
+  - mcp
+  - cloud
+  - foundry
+  - deployment
+  - diagnostics
+keywords:
+  - Azure Skills Plugin
+  - azure skills Claude Code
+  - Azure MCP skills
+  - azure skills Codex
+  - Microsoft Azure agent skills
+  - Azure MCP Server skills
+  - Foundry MCP skills
+  - Azure deployment skill
+  - Azure cost skill
+readingTime: 8
+difficultyScore: 86
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Azure Skills Plugin
+
+`microsoft/azure-skills` is Microsoft's official Azure Skills Plugin for coding
+agents. It packages Azure-specific Agent Skills, Azure MCP Server configuration,
+and Foundry MCP workflows so compatible agents can move from generic Azure
+advice to source-backed planning, validation, diagnostics, cost review, and
+deployment workflows.
+
+The plugin is intended for multi-host use across GitHub Copilot, Copilot CLI,
+Claude Code, Codex, Cursor, Gemini CLI, VS Code, IntelliJ IDEA, and other
+compatible plugin or skill hosts.
+
+## Knowledge Freshness
+
+The repository is active and Azure service behavior changes frequently. Azure
+MCP tools, Foundry MCP capabilities, plugin host support, sovereign cloud
+configuration, service quotas, SDKs, azd behavior, and Azure pricing can change.
+
+Use the plugin for Microsoft-maintained workflow structure, then verify exact
+commands, service limits, subscription context, RBAC permissions, cloud
+environment, and pricing against current Azure docs and the target subscription.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The `microsoft/azure-skills` repository README.
+- The plugin `.mcp.json` that configures Azure MCP through `@azure/mcp`.
+- Representative Azure skill files for prepare, Azure AI, and cost workflows.
+- The public Azure Skills landing page.
+- Current GitHub repository metadata from the Microsoft organization.
+
+## Core Workflow
+
+Install through APM for multi-host setup:
+
+```bash
+apm install microsoft/azure-skills
+```
+
+For Claude Code, install the official marketplace plugin:
+
+```text
+/plugin install azure@claude-plugins-official
+```
+
+For Codex, add the marketplace and install the Azure plugin through `/plugins`:
+
+```bash
+codex plugin marketplace add microsoft/azure-skills
+```
+
+The included MCP configuration starts Azure MCP with:
+
+```json
+{
+  "mcpServers": {
+    "azure": {
+      "command": "npx",
+      "args": ["-y", "@azure/mcp@latest", "server", "start"]
+    }
+  }
+}
+```
+
+Authenticate Azure before asking an agent to inspect or operate on live
+resources:
+
+```bash
+az login
+azd auth login
+```
+
+## Capability Scope
+
+The repository currently ships Azure skills across these areas:
+
+| Area | Representative skills |
+| --- | --- |
+| Build and deploy | `azure-prepare`, `azure-validate`, `azure-deploy`, `azure-upgrade` |
+| Enterprise and platform planning | `azure-enterprise-infra-planner`, `azure-hosted-copilot-sdk`, `python-appservice-deploy` |
+| Kubernetes and AI runway | `azure-kubernetes`, `airunway-aks-setup` |
+| Diagnostics and observability | `azure-diagnostics`, `appinsights-instrumentation`, `azure-resource-lookup`, `azure-resource-visualizer` |
+| Cost and quotas | `azure-cost`, `azure-compute`, `azure-quotas` |
+| Compliance and reliability | `azure-compliance`, `azure-reliability` |
+| Data and messaging | `azure-storage`, `azure-kusto`, `azure-messaging` |
+| AI and Foundry | `azure-ai`, `azure-aigateway`, `microsoft-foundry` |
+| Identity and access | `azure-rbac`, `entra-app-registration`, `entra-agent-id` |
+| Migration | `azure-cloud-migrate` |
+
+The README describes three capability layers:
+
+- Azure skills for workflows, decision trees, and guardrails.
+- Azure MCP Server for live Azure tooling across Azure services.
+- Foundry MCP for Microsoft Foundry model, deployment, and agent workflows.
+
+## Production Rules
+
+Use this plugin with live-cloud discipline:
+
+- Identify the target tenant, subscription, resource group, region, and cloud
+  environment before querying or changing Azure resources.
+- Use the specific Azure skill for the job instead of generic cloud advice.
+- For deployment, preserve the upstream sequence: prepare a deployment plan,
+  validate it, then deploy.
+- Keep write operations gated by user approval, especially provisioning,
+  deletion, RBAC, production deployment, AKS, storage, networking, and model
+  deployment changes.
+- Prefer least-privilege Azure roles for the authenticated account or service
+  principal.
+- Treat cost, quota, diagnostic logs, resource inventory, and telemetry as
+  sensitive operational data.
+- For Azure China Cloud or Azure US Government, configure the Azure MCP server
+  `--cloud` argument as the README describes.
+
+## Use Cases
+
+- Ask Claude Code to prepare and validate an Azure deployment plan before
+  running `azd` or infrastructure commands.
+- Use Codex with Azure MCP to list resources, inspect diagnostics, or check
+  resource details in a scoped subscription.
+- Ask Copilot to use Azure cost skills to query spend, identify waste, or
+  forecast budget impact.
+- Use Azure AI skills for AI Search, Speech, Azure OpenAI, and Document
+  Intelligence implementation guidance.
+- Use Foundry MCP workflows for model discovery, deployment, and agent scenarios
+  in Microsoft Foundry.
+
+## Source Review
+
+- The README identifies `microsoft/azure-skills` as the official Azure Skills
+  Plugin.
+- The README says the plugin packages Azure skills, Azure MCP Server, and
+  Foundry MCP together.
+- The README documents installation for APM, GitHub Copilot CLI, VS Code,
+  Claude Code, Gemini CLI, Cursor, Codex CLI, and IntelliJ IDEA.
+- The plugin `.mcp.json` configures an `azure` MCP server using
+  `npx -y @azure/mcp@latest server start`.
+- Representative skill files define Microsoft-authored Azure workflows such as
+  `azure-prepare`, `azure-ai`, and `azure-cost`.
+- The README includes prerequisites for Node.js 18+, Azure CLI authentication,
+  and Azure Developer CLI authentication for deployment workflows.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/mcp/`, `content/agents/`,
+`content/tools/`, open pull requests, and repository-wide content for
+`microsoft/azure-skills`, Azure Skills Plugin, Azure skills, Azure MCP skills,
+Foundry MCP skills, Azure agent skills, and related Microsoft skills entries.
+Existing entries cover Microsoft Agent Skills, Microsoft Fabric Skills, Azure
+MCP, and Azure DevOps MCP separately, but no dedicated Azure Skills Plugin
+entry, exact source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The upstream
+repository is maintained by Microsoft and reports MIT license terms.

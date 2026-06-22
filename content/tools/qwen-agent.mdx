@@ -1,0 +1,181 @@
+---
+title: Qwen-Agent
+slug: qwen-agent
+category: tools
+description: >-
+  Open-source Qwen agent framework for building LLM applications with function
+  calling, tools, planning, memory, RAG, MCP support, Docker-based code
+  interpreter, Gradio GUI demos, BrowserQwen, Custom Assistant, and Qwen Chat
+  backend usage.
+cardDescription: >-
+  Build Qwen-powered agents with function calling, planning, memory, RAG, MCP,
+  code interpreter, Gradio demos, BrowserQwen, and custom assistant workflows.
+seoTitle: Qwen-Agent Framework for Qwen Agents, MCP, RAG, Function Calling, and Code Interpreter
+seoDescription: >-
+  Use Qwen-Agent to build Qwen-powered LLM agents with function calling, MCP
+  tools, RAG, planning, memory, code interpreter, BrowserQwen, Custom Assistant,
+  Gradio demos, DashScope, vLLM, Ollama, and OpenAI-compatible model services.
+author: Qwen
+authorProfileUrl: "https://github.com/QwenLM"
+dateAdded: "2026-06-18"
+websiteUrl: "https://qwenlm.github.io/Qwen-Agent/en/"
+documentationUrl: "https://qwenlm.github.io/Qwen-Agent/en/guide/"
+repoUrl: "https://github.com/QwenLM/Qwen-Agent"
+packageUrl: "https://pypi.org/project/qwen-agent/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+sourceUrls:
+  - "https://github.com/QwenLM/Qwen-Agent"
+  - "https://github.com/QwenLM/Qwen-Agent/blob/main/README.md"
+  - "https://github.com/QwenLM/Qwen-Agent/blob/main/LICENSE"
+  - "https://qwenlm.github.io/Qwen-Agent/en/"
+  - "https://qwenlm.github.io/Qwen-Agent/en/guide/"
+  - "https://qwenlm.github.io/Qwen-Agent/en/benchmarks/deepplanning/"
+  - "https://github.com/QwenLM/Qwen-Agent/blob/main/examples/assistant_mcp_sqlite_bot.py"
+  - "https://github.com/QwenLM/Qwen-Agent/blob/main/examples/assistant_rag.py"
+  - "https://github.com/QwenLM/Qwen-Agent/blob/main/browser_qwen.md"
+  - "https://pypi.org/project/qwen-agent/"
+installable: true
+installCommand: "pip install -U \"qwen-agent[gui,rag,code_interpreter,mcp]\""
+usageSnippet: >-
+  Install Qwen-Agent with the optional GUI, RAG, code interpreter, and MCP
+  extras, configure DashScope or an OpenAI-compatible Qwen model service, then
+  build an Assistant with tools, files, MCP servers, RAG, or a Gradio WebUI.
+copySnippet: |-
+  pip install -U "qwen-agent[gui,rag,code_interpreter,mcp]"
+estimatedSetupTime: 30 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python environment for installing `qwen-agent` and optional GUI, RAG, code interpreter, and MCP extras."
+  - "DashScope API key or a self-hosted/OpenAI-compatible Qwen model service such as vLLM or Ollama."
+  - "Docker installed and running before using the built-in code interpreter."
+  - "Node.js, uv, Git, SQLite, and the target MCP server prerequisites when running MCP examples."
+  - "A reviewed plan for tool permissions, document ingestion, browser-assistant access, GUI exposure, and model-service routing."
+safetyNotes:
+  - "Qwen-Agent can call custom tools, MCP tools, built-in code interpreter tools, RAG retrievers, browser-assistant workflows, and model-service APIs; review each tool for side effects before exposing it."
+  - "The code interpreter uses Docker-based isolation and the upstream README still says to use it with caution in production, so treat it as a risky execution surface rather than a full security boundary."
+  - "MCP configurations can expose filesystem, memory, SQLite, SaaS, browser, or internal API tools to the agent; scope paths and credentials narrowly."
+  - "RAG and long-document workflows can retrieve untrusted text into the model context; defend against prompt injection and stale or unauthorized source documents."
+  - "DashScope, vLLM, Ollama, and OpenAI-compatible deployments each have different tool-call parsing, model, reasoning, and operational behavior; test the exact route before relying on agent output."
+privacyNotes:
+  - "Prompts, chat history, function-call arguments, tool results, MCP tool payloads, code-interpreter files, RAG documents, embeddings, browser-assistant state, GUI sessions, model responses, and logs can contain sensitive data."
+  - "Do not place DashScope keys, model-service credentials, private files, customer documents, database contents, browser state, or internal URLs in public examples, notebooks, screenshots, or logs."
+  - "Self-hosted Qwen model services and DashScope routes have different retention, telemetry, network, and access-control boundaries; review them before processing regulated or proprietary data."
+  - "Code interpreter containers, mounted working directories, generated files, and RAG indexes need cleanup, retention, and access-control policies."
+tags:
+  - qwen
+  - agents
+  - function-calling
+  - rag
+  - mcp
+  - code-interpreter
+  - python
+keywords:
+  - Qwen-Agent
+  - Qwen Agent
+  - qwen-agent
+  - Qwen MCP
+  - Qwen RAG
+  - Qwen function calling
+  - Qwen code interpreter
+  - Qwen agent framework
+  - BrowserQwen
+  - Qwen custom assistant
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Qwen-Agent is an open-source framework for building LLM applications on Qwen
+models. It focuses on instruction following, tool usage, planning, memory,
+function calling, RAG, MCP, code interpreter workflows, and application examples
+such as BrowserQwen and Custom Assistant.
+
+Use it when a team wants to build Qwen-native agents rather than a generic
+multi-provider coding assistant. It is relevant for Qwen Agent, Qwen-Agent MCP,
+Qwen RAG, Qwen function calling, Qwen code interpreter, BrowserQwen, and Qwen
+Chat backend searches.
+
+## Install
+
+The upstream README documents a full install with optional GUI, RAG, code
+interpreter, and MCP extras:
+
+```bash
+pip install -U "qwen-agent[gui,rag,code_interpreter,mcp]"
+```
+
+Minimal installs can use `pip install -U qwen-agent`. Source installs are also
+documented from the `QwenLM/Qwen-Agent` repository.
+
+## Core Capabilities
+
+| Area | Qwen-Agent Coverage |
+| --- | --- |
+| Agent Framework | `Assistant`, base `Agent`, LLM components, tool components, and custom agent implementations |
+| Function Calling | LLM classes and agent classes for function/tool calling, including parallel function-call support |
+| MCP | MCP server configuration examples and MCP usage cookbooks |
+| RAG | RAG examples, long-document question answering, and agentic retrieval patterns |
+| Code Interpreter | Docker-based built-in code interpreter for local execution workflows |
+| GUI | Gradio WebUI support for quick agent demos |
+| Browser Assistant | BrowserQwen browser-assistant application built on Qwen-Agent |
+| Model Routing | DashScope model service, open-source Qwen deployments, vLLM, Ollama, and OpenAI-compatible services |
+| Benchmarks | DeepPlanning benchmark and docs for evaluating planning behavior |
+
+## MCP and Agent Fit
+
+Qwen-Agent is not an MCP server listing. It is an agent framework that can use
+MCP servers as tools through configuration, alongside built-in tools, custom
+tools, RAG, and code interpreter workflows.
+
+That makes it useful for Qwen teams experimenting with MCP-heavy agents,
+function calling, tool-integrated reasoning, long-document RAG, and local or
+hosted Qwen model deployments.
+
+## Use Cases
+
+- Build a Qwen-powered assistant that calls custom tools.
+- Add MCP server tools to a Qwen agent workflow.
+- Build RAG or long-document question-answering applications.
+- Run a Docker-based code interpreter in local testing workflows.
+- Launch a Gradio demo for an agent.
+- Use BrowserQwen as a browser-assistant reference application.
+- Compare Qwen-native agents against LangChain, LangGraph, Qwen Code, or
+  generic MCP clients.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository describes Qwen-Agent as a framework for developing
+  LLM applications based on Qwen instruction-following, tool-usage, planning,
+  and memory capabilities.
+- The README lists example applications including Browser Assistant, Code
+  Interpreter, and Custom Assistant, and says Qwen-Agent is the backend of Qwen
+  Chat.
+- The README documents installation from PyPI with optional extras for GUI,
+  RAG, code interpreter, and MCP support.
+- The model-service section documents DashScope, open-source Qwen deployments,
+  vLLM, Ollama, and OpenAI-compatible service options.
+- The README documents built-in agent classes, custom tools, Gradio WebUI,
+  MCP configuration examples, function-calling support, and a Docker-based code
+  interpreter caution.
+- The GitHub repository is Apache-2.0 licensed and the PyPI package
+  `qwen-agent` currently resolves with package metadata.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, README output, and open pull requests for
+`Qwen-Agent`, `Qwen Agent`, `QwenLM/Qwen-Agent`, `qwen-agent`, `qwen_agent`,
+`Qwen MCP`, `Qwen RAG`, `Qwen code interpreter`, `BrowserQwen`, and
+`Qwen custom assistant`. Existing Qwen Code content covers the terminal coding
+agent from `QwenLM/qwen-code`; no dedicated Qwen-Agent framework entry, exact
+source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

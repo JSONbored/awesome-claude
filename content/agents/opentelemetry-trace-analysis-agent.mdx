@@ -1,0 +1,132 @@
+---
+title: OpenTelemetry Trace Analysis Agent
+slug: opentelemetry-trace-analysis-agent
+category: agents
+description: >-
+  Community reusable agent prompt for analyzing OpenTelemetry traces from agent hosts
+  using official trace signal documentation: span hierarchy review, latency attribution,
+  error propagation, and privacy-safe instrumentation recommendations.
+cardDescription: Analyze OpenTelemetry traces for agent workloads using official trace signal docs.
+seoTitle: OpenTelemetry Trace Analysis Agent
+seoDescription: >-
+  Reusable agent prompt for OpenTelemetry trace analysis grounded in official trace signal
+  documentation: span hierarchy, latency, errors, and privacy-safe instrumentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1573
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1573"
+documentationUrl: "https://opentelemetry.io/docs/concepts/signals/traces/"
+repoUrl: "https://github.com/open-telemetry/opentelemetry-specification"
+installable: false
+usageSnippet: >-
+  Use this agent to inspect exported OpenTelemetry traces from agent hosts, attribute latency
+  to model versus tool spans, and recommend instrumentation fixes without logging raw prompts.
+prerequisites:
+  - Exported trace JSON or APM links for failing agent sessions.
+  - Service names for model client, tool executor, and storage layers.
+  - Instrumentation policy on whether prompt content may appear in span attributes.
+  - Baseline latency expectations for model turns and top MCP tools.
+safetyNotes:
+  - Do not copy raw span attributes containing prompts into public tickets.
+  - Recommend redaction and hashing when traces store user content.
+  - High-cardinality attributes can explode observability cost.
+  - Trace analysis informs changes; validate mitigations in staging before production.
+privacyNotes:
+  - Span attributes may accidentally capture API keys or JWT fragments if developers log headers.
+  - Shared trace viewers must restrict access when spans include proprietary code paths.
+  - Prefer aggregate latency reports over attaching full trace exports externally.
+tags:
+  - opentelemetry
+  - traces
+  - observability
+  - agents
+  - sre
+keywords:
+  - opentelemetry trace analysis agent
+  - agent trace instrumentation review
+  - mcp span latency analysis
+  - otel privacy safe agent observability
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+OpenTelemetry Trace Analysis Agent is a community-authored reusable prompt for reviewing
+traces from agent systems. It applies official OpenTelemetry trace signal documentation—not
+a vendor APM support agent.
+
+## Scope Note
+
+This prompt operationalizes OpenTelemetry trace concepts from opentelemetry.io. Host-specific
+instrumentation details remain with your platform team.
+
+## Agent Prompt
+
+You are an OpenTelemetry trace analyst for agent systems. Explain traces without leaking
+prompt content, using official trace signal documentation.
+
+Workflow:
+
+1. **Trace selection.** Pick representative failed and slow traces with complete span trees.
+2. **Hierarchy.** Map root session spans to model calls, tool executions, subagents, and I/O.
+3. **Latency attribution.** Quantify time in model API, MCP tools, DB, and queue waits.
+4. **Errors.** Follow exception events and status codes across service boundaries.
+5. **Gaps.** Note missing spans for MCP calls or broken context propagation.
+6. **Privacy.** Flag spans logging prompts, diffs, or secrets; recommend redaction patterns.
+7. **Recommendations.** Suggest span naming, attributes, sampling, and dashboards.
+
+Output contract:
+
+- Critical path summary with percent latency breakdown.
+- Error chain with service owners.
+- Instrumentation and privacy findings.
+- Prioritized engineering fixes.
+
+## Features
+
+- Applies OpenTelemetry trace docs to agent-specific span patterns.
+- Separates model latency from MCP dependency latency.
+- Promotes privacy-safe attribute design.
+- Produces engineer-ready instrumentation backlogs.
+
+## Use Cases
+
+- Debug p95 latency regressions after adding a new MCP server.
+- Audit traces before enabling enterprise content logging policies.
+- Validate OpenTelemetry export during Agent SDK hardening.
+- Support post-incident reviews with evidence-backed span analysis.
+
+## Source Notes
+
+Verified against OpenTelemetry trace signal documentation on **2026-06-16**:
+
+- Official docs describe traces as trees of spans representing causal relationships between
+  operations in distributed systems.
+- Trace documentation covers span attributes, events, and status fields used to diagnose latency
+  and errors across services.
+- OpenTelemetry guidance emphasizes sampling and cardinality control when instrumenting
+  high-volume agent workloads.
+
+## Duplicate Check
+
+Checked content/agents and content/guides for trace analysis coverage.
+llm-agent-application-observability is a guides entry for general OTel setup.
+No agents entry provides trace-structure analysis with privacy-safe instrumentation
+recommendations grounded in official OpenTelemetry trace signal documentation.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public
+OpenTelemetry documentation and the public OpenTelemetry specification repository.
+No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- OpenTelemetry traces - https://opentelemetry.io/docs/concepts/signals/traces/
+- OpenTelemetry observability primer - https://opentelemetry.io/docs/concepts/observability-primer/
+- OpenTelemetry specification repository - https://github.com/open-telemetry/opentelemetry-specification

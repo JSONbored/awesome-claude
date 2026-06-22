@@ -1,0 +1,169 @@
+---
+title: Claude Code Worktree Parallel Session Capability Pack Skill
+slug: claude-code-worktree-parallel-session-capability-pack
+category: skills
+description: >-
+  Expert Claude Code worktree parallel session capability pack applying documented
+  worktree isolation, branch ownership, and multi-session coordination steps for
+  parallel agent work without checkout races.
+cardDescription: >-
+  Coordinate parallel Claude Code sessions with worktree isolation checklists from
+  official docs.
+seoTitle: Claude Code Worktree Parallel Session Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for Claude Code worktree parallel sessions:
+  isolation, branch mapping, merge handoff, and agent view coordination from
+  official worktrees documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1516
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1516"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://code.claude.com/docs/en/worktrees"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when planning parallel Claude Code sessions that need git worktree
+  isolation instead of shared checkout edits.
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code worktree parallel session capability pack."
+
+  # Required output
+  1) Workstream-to-worktree mapping
+  2) Branch ownership and merge plan
+  3) Parallel session risk review
+  4) Handoff checklist between sessions
+  5) Privacy-safe coordination summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://code.claude.com/docs/en/worktrees"
+  - "https://code.claude.com/docs/en/agent-view"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Git repository supporting worktrees with clear branch naming conventions."
+  - "Multiple concurrent tasks requiring isolated checkouts."
+  - "Merge owner for integrating parallel session outputs."
+  - "Optional agent view access for monitoring background sessions."
+safetyNotes:
+  - "Parallel sessions without worktrees can race on the same files—prefer isolation."
+  - "Deleting agent view rows may remove Claude-created worktrees with uncommitted work."
+  - "Do not merge from parallel sessions without human review of each diff."
+privacyNotes:
+  - "Worktrees may duplicate proprietary code on disk—secure local storage accordingly."
+  - "Agent view lists working directories visible to anyone with terminal access."
+  - "Coordination summaries should not paste secrets from one workstream into another."
+tags:
+  - claude-code
+  - worktrees
+  - parallel-sessions
+  - git
+  - capability-pack
+keywords:
+  - Claude Code worktree parallel session capability pack
+  - worktree isolation Claude Code agents
+  - parallel Claude Code sessions git
+readingTime: 9
+difficultyScore: 74
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in Claude Code worktrees and agent view documentation verified on
+**2026-06-16**. Worktree CLI behavior evolves; prefer live docs.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/worktrees
+- https://code.claude.com/docs/en/agent-view
+- https://code.claude.com/docs/en/skills
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- Claude Code documents git worktrees for isolated parallel work on separate branches.
+- Agent view can list sessions across worktrees under a project cwd filter.
+- Background sessions may create worktrees that are removed when sessions are deleted.
+
+## Scope Note
+
+Community reusable coordination skill applying documented worktree steps—not an
+official Anthropic product.
+
+## Core Workflow
+
+1. Map each parallel task to a branch and worktree path.
+2. Assign merge owner and review gates per workstream.
+3. Launch sessions in separate worktrees—not one shared checkout.
+4. Monitor blocked sessions via agent view when using background dispatch.
+5. Review diffs before merging parallel outputs to main.
+6. Clean up worktrees after merge or explicit abandon.
+
+## Capability Scope
+
+- Workstream-to-worktree mapping.
+- Branch ownership and merge planning.
+- Parallel session risk review.
+- Agent view monitoring hooks.
+- Handoff and cleanup checklists.
+
+## Production Rules
+
+- One write owner per branch at a time.
+- Commit or push before deleting agent view rows tied to worktrees.
+- Never auto-merge parallel agent output without human diff review.
+
+## Review Matrix
+
+| Pattern | Risk | Mitigation |
+| --- | --- | --- |
+| Same branch, two sessions | High race | Separate worktrees/branches |
+| Background + interactive | Lock conflicts | Check computer-use/agent locks |
+| Long-lived worktree | Disk drift | Scheduled cleanup |
+
+## Output Contract
+
+1. Workstream-to-worktree map.
+2. Branch ownership plan.
+3. Risk review findings.
+4. Handoff checklist.
+5. Privacy-safe summary.
+
+## Duplicate Check
+
+Distinct from `using-worktrees-for-parallel-claude-code-sessions` guide (tutorial)
+and worktree coordinator agent (prompt).
+
+## Troubleshooting
+
+**Issue:** Sessions edit same checkout
+**Fix:** Create per-task worktrees; document paths in CLAUDE.md.
+
+**Issue:** Worktree deleted with uncommitted work
+**Fix:** Commit before deleting agent view rows; use `git worktree list` to audit.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` from public Claude Code docs.

@@ -98,10 +98,13 @@ export function buildMcpReleaseReport({
   const packageAhead = publishedVersion
     ? isVersionAhead(packageVersion, publishedVersion)
     : false;
+  const tagBehind = latestTag
+    ? isVersionAhead(packageVersion, latestTag.version)
+    : true;
 
   return {
     kind: "mcp",
-    due: packageAhead || relevant.length > 0,
+    due: packageAhead && tagBehind,
     proposedVersion: packageVersion,
     latestTag: latestTag?.tag ?? null,
     latestTagVersion: latestTag?.version ?? null,
@@ -109,6 +112,7 @@ export function buildMcpReleaseReport({
     publishedVersion,
     commits: relevant,
     packageAhead,
+    tagBehind,
   };
 }
 

@@ -1,10 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { PageContainer } from "@/components/page-container";
 import { CalendarDays, User } from "lucide-react";
 import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entries";
 import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
+import { ComparisonTable } from "@/components/comparison-table";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { getBestListEditorial } from "@/data/best-list-editorial";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
@@ -45,6 +48,9 @@ export const Route = createFileRoute("/best/$slug")({
         { property: "og:description", content: l.seoDescription },
         { property: "og:url", content: url },
         { property: "og:image", content: ogImage },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImage },
@@ -73,6 +79,7 @@ export const Route = createFileRoute("/best/$slug")({
 
 function BestDetail() {
   const { list } = Route.useLoaderData() as { list: BestList };
+  const editorial = getBestListEditorial(list.slug);
 
   type Resolved = BestPick & { entry: Entry };
   const resolved: Resolved[] = list.picks
@@ -84,7 +91,7 @@ function BestDetail() {
     .filter((p): p is Resolved => p !== null);
 
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
+    <PageContainer className="py-12">
       <Breadcrumbs home items={[{ label: "Best lists", to: "/best" }, { label: list.title }]} />
 
       <div className="mt-6 eyebrow">
@@ -105,6 +112,42 @@ function BestDetail() {
       <blockquote className="mt-8 max-w-3xl border-l-2 border-accent pl-5">
         <p className="drop-cap text-pretty text-ink-muted">{list.intro}</p>
       </blockquote>
+
+      {editorial && (
+        <>
+          <section className="mt-8 max-w-3xl rounded-xl border border-accent/30 bg-accent/5 p-5">
+            <div className="eyebrow mb-1 text-accent-ink dark:text-accent">Short answer</div>
+            <p className="text-pretty text-ink">{editorial.shortAnswer}</p>
+          </section>
+          <section className="mt-8">
+            <h2 className="h-display-2 text-ink">How to choose</h2>
+            <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+              {editorial.decisionCriteria.map((criterion) => (
+                <div
+                  key={criterion.label}
+                  className="rounded-lg border border-border bg-surface p-4"
+                >
+                  <dt className="font-display text-sm font-semibold text-ink">{criterion.label}</dt>
+                  <dd className="mt-1 text-sm text-ink-muted">{criterion.detail}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        </>
+      )}
+
+      {resolved.length >= 2 && (
+        <section className="mt-10">
+          <h2 className="h-display-2 text-ink">Compared at a glance</h2>
+          <p className="mt-2 max-w-3xl text-sm text-ink-muted">
+            The top {Math.min(resolved.length, 5)} picks side by side on trust, install, platform
+            support, and disclosed notes — full rationale for each below.
+          </p>
+          <div className="mt-5">
+            <ComparisonTable entries={resolved.slice(0, 5).map((p) => p.entry)} />
+          </div>
+        </section>
+      )}
 
       <ol className="mt-10 flex flex-col gap-6 stagger-children">
         {resolved.map((p: Resolved, i: number) => (
@@ -150,6 +193,6 @@ function BestDetail() {
       <div className="mt-12">
         <NewsletterInline variant="card" source={`best:${list.slug}`} />
       </div>
-    </div>
+    </PageContainer>
   );
 }

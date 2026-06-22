@@ -221,9 +221,9 @@ export async function fetchGitHubSourceSignal(repoKey: string, fetcher: Fetcher 
     "user-agent": "heyclau.de-source-signals",
     "x-github-api-version": GITHUB_API_VERSION,
   };
-  const token = getEnvString("GITHUB_TOKEN");
-  if (token) headers.authorization = `Bearer ${token}`;
-
+  // Registry entries control repo URLs, so do not attach the Worker GitHub
+  // token here. A broadly scoped token could otherwise turn this public signal
+  // refresh into an oracle for private repositories the token can access.
   const response = await fetcher(`https://api.github.com/repos/${owner}/${repo}`, {
     headers,
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
@@ -236,6 +236,8 @@ export async function fetchGitHubSourceSignal(repoKey: string, fetcher: Fetcher 
   }
 
   const data = (await response.json()) as Record<string, unknown>;
+  if (data.private === true) throw new Error("github_api_private_repo");
+
   return {
     stars: typeof data.stargazers_count === "number" ? data.stargazers_count : null,
     forks: typeof data.forks_count === "number" ? data.forks_count : null,

@@ -48,7 +48,7 @@ function ApiDocsPage() {
   );
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-page px-4 py-8 sm:px-6">
       <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
         <aside className="lg:sticky lg:top-20 lg:self-start">
           <div className="eyebrow">API · v1</div>

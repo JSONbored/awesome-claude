@@ -1,0 +1,231 @@
+---
+title: AI-Generated SQL Injection Review Rules
+slug: ai-generated-sql-injection-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated database access code for SQL
+  injection before merge, covering parameterized queries, identifier handling,
+  ORM safety, dynamic query construction, least-privilege access, and
+  privacy-safe test evidence.
+cardDescription: >-
+  Review AI-generated database code for SQL injection: parameterized queries,
+  safe identifiers, ORM escapes, dynamic SQL limits, and least-privilege access.
+seoTitle: AI-Generated SQL Injection Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated database code: parameterized queries
+  and prepared statements, identifier allow-lists, ORM raw-query safety, dynamic
+  SQL limits, least privilege, and privacy-safe injection test evidence.
+author: jaso0n0818
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+documentationUrl: "https://owasp.org/www-community/attacks/SQL_Injection"
+sourceUrls:
+  - "https://owasp.org/www-community/attacks/SQL_Injection"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html"
+  - "https://cwe.mitre.org/data/definitions/89.html"
+  - "https://portswigger.net/web-security/sql-injection"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits database access code,
+  including raw SQL, query builders, ORM raw queries, and dynamically
+  constructed statements.
+copySnippet: |-
+  You are reviewing AI-generated database access code for SQL injection.
+
+  Rules:
+  1. Require parameterized queries or prepared statements for all user-influenced
+     values; never concatenate or interpolate input into SQL text.
+  2. Treat identifiers (table, column, sort, direction) as un-parameterizable;
+     validate them against a fixed allow-list instead of inserting input.
+  3. Verify ORM and query-builder usage stays on safe APIs, and scrutinize any
+     raw-query or string-fragment escape hatch for injected input.
+  4. Reject dynamic query construction that builds SQL from untrusted strings,
+     including LIKE patterns, IN lists, and JSON or full-text fragments.
+  5. Enforce least privilege on the database account so an injection cannot read
+     or write beyond the feature's needs.
+  6. Test with valid, malformed, and injection-style inputs, and keep test data
+     free of real credentials or personal data.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet containing AI-generated or AI-edited database access code with enough context to know which values come from user input.
+  - Knowledge of the database driver, ORM, or query builder in use, since parameterization syntax and safe APIs differ between them.
+  - A non-production database or sandbox where injection-style inputs can be exercised without touching real data.
+  - Permission to block merge when user input reaches SQL without parameterization or when identifiers are taken from input without an allow-list.
+safetyNotes:
+  - "SQL injection lets an attacker read, modify, or destroy data and sometimes execute commands, so a single concatenated query on user input can compromise the whole database."
+  - "AI assistants often produce plausible queries that concatenate input or use a raw escape hatch on an otherwise safe ORM, which passes simple tests but is injectable."
+  - "Running injection-style test inputs against a production database can corrupt or expose real data, so exercise them only in a sandbox with least-privilege credentials."
+privacyNotes:
+  - "Database code and its test cases can reference real schemas, credentials, connection strings, and personal data when copied from production examples."
+  - "Do not paste real connection strings, credentials, or production query results into public PR comments; use synthetic schemas and data."
+  - "Be careful with error messages that echo SQL or row data, since verbose database errors can leak schema and personal information."
+tags:
+  - sql-injection
+  - security
+  - database
+  - input-validation
+  - ai-generated-code
+  - code-review
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits database access
+code. The goal is to stop a generated query from shipping a SQL injection just
+because it returns the right rows in a quick test, since injectable code often
+looks correct on valid input.
+
+This is a review policy, not a database tutorial. It tells reviewers what must be
+true about generated query construction, identifier handling, and privileges
+before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know which values are untrusted and how they reach SQL.
+
+1. **Input provenance.** Which values in the query come from request input,
+   headers, files, or other untrusted sources.
+2. **Construction style.** Whether the code uses parameterized queries, an ORM,
+   a query builder, or string concatenation to build SQL.
+3. **Identifier use.** Whether any table, column, sort field, or direction is
+   chosen from user input rather than a fixed set.
+4. **Escape hatches.** Whether the change uses a raw-query, raw-fragment, or
+   string-format API on an otherwise safe ORM.
+5. **Privileges.** What the database account can do, and whether it exceeds what
+   the feature needs.
+
+If the change cannot say which values are untrusted and how the query is built,
+require that context before reviewing the SQL text.
+
+## Parameterization Rules
+
+- Use parameterized queries or prepared statements for every user-influenced
+  value; bind parameters instead of building SQL strings.
+- Never concatenate or interpolate untrusted input into SQL text, including
+  through format strings or template literals.
+- Pass values as bound parameters even when they look numeric or constrained;
+  do not rely on type assumptions for safety.
+- For IN lists, generate one placeholder per value and bind each, rather than
+  joining input into a single string.
+- Build LIKE patterns from bound parameters and escape wildcard characters
+  rather than concatenating user input.
+
+## Identifier And Dynamic SQL Rules
+
+Identifiers cannot be bound as parameters, so they need a different defense.
+
+- Validate table, column, sort, and direction inputs against a fixed allow-list
+  and map to known-safe identifiers.
+- Do not insert user input as an identifier even when quoted; quoting is not a
+  substitute for an allow-list.
+- Keep dynamic query construction minimal and centralized so it can be reviewed
+  and tested in one place.
+- Reject building SQL from untrusted JSON, full-text, or expression fragments
+  without strict validation.
+- Prefer query builders that parameterize automatically over hand-built dynamic
+  SQL.
+
+## ORM And Privilege Rules
+
+- Keep ORM and query-builder usage on safe, parameterizing APIs, and flag any
+  raw-query or raw-fragment escape hatch for close review.
+- Verify that a raw query passed through an ORM still binds parameters and does
+  not interpolate input.
+- Enforce least privilege on the database account so an injection cannot reach
+  tables or operations beyond the feature.
+- Avoid running application queries as a superuser or schema owner.
+- Keep verbose database errors out of responses so a failed injection attempt
+  does not leak schema details.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- user-influenced input is concatenated or interpolated into SQL instead of
+  bound as a parameter;
+- a table, column, sort, or direction comes from user input without an
+  allow-list;
+- an ORM raw-query or raw-fragment escape hatch carries untrusted input;
+- dynamic SQL is built from untrusted JSON, expression, or full-text fragments
+  without strict validation;
+- the database account has privileges far beyond what the feature requires;
+- test evidence uses real credentials, connection strings, or personal data
+  instead of synthetic samples.
+
+## Review Checklist
+
+- [ ] {"task": "Input mapped", "description": "The review identifies which query values are untrusted and how they reach SQL"}
+- [ ] {"task": "Parameterized", "description": "User-influenced values are bound as parameters, never concatenated into SQL"}
+- [ ] {"task": "Identifiers allow-listed", "description": "Table, column, sort, and direction inputs are validated against a fixed set"}
+- [ ] {"task": "Escape hatches safe", "description": "ORM raw queries and fragments still bind parameters and avoid interpolation"}
+- [ ] {"task": "Least privilege", "description": "The database account cannot reach beyond what the feature needs"}
+- [ ] {"task": "Privacy safe", "description": "Test data avoids real credentials, connection strings, and personal data"}
+
+## AI Review Rules
+
+AI assistants can write and review database code, but they should show evidence.
+
+- Ask the assistant to mark every user-influenced value in the query before
+  judging safety.
+- Require it to flag string concatenation and raw escape hatches explicitly, not
+  only confirm the happy path.
+- Have the assistant provide injection-style test inputs alongside valid ones.
+- Do not let the assistant claim an ORM is safe without checking for raw-query
+  usage.
+- Re-run review after any change to query construction, identifiers, or raw
+  fragments.
+
+## Troubleshooting
+
+- **Input is concatenated into SQL:** switch to bound parameters or prepared
+  statements for every untrusted value.
+- **A sort or column comes from input:** map it through a fixed allow-list to a
+  known-safe identifier.
+- **An ORM raw query takes input:** bind parameters in the raw call or move back
+  to the safe ORM API.
+- **An IN list joins user values:** generate one placeholder per value and bind
+  each one.
+- **Errors leak schema:** return generic errors and keep verbose database
+  messages server-side only.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, statuslines, guides, collections, skills, open
+PRs, and closed PRs for SQL injection, parameterized queries, database security,
+input validation, and AI-generated code review.
+
+Adjacent content includes general security-audit and database-migration rules,
+but no entry is a portable pre-merge review policy specifically for SQL injection
+in AI-generated database code. This entry is distinct because it decides what
+must be true about generated query construction, identifier handling, and
+privileges before the change can merge.
+
+No prior closed PR for this rule was found during the duplicate/history check.
+
+## Construction Reference
+
+The construction styles below map to their injection risk and the safe direction
+a reviewer should require.
+
+| Construction style                 | Injection risk | Safe direction                          |
+| ---------------------------------- | -------------- | --------------------------------------- |
+| String concatenation of input      | High           | Replace with bound parameters           |
+| Format string / template literal   | High           | Replace with bound parameters           |
+| Identifier from user input         | High           | Allow-list and map to a fixed set       |
+| ORM raw query with input           | Medium-High    | Bind parameters or use the safe ORM API |
+| Parameterized / prepared statement | Low            | Keep; verify all values are bound       |
+
+Bound parameters keep data separate from SQL code, and an allow-list keeps
+untrusted input out of identifier positions, which together remove the most
+common SQL injection paths in generated code.
+
+## Sources
+
+- OWASP SQL Injection: https://owasp.org/www-community/attacks/SQL_Injection
+- OWASP SQL Injection Prevention Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html
+- OWASP Query Parameterization Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html
+- CWE-89 SQL Injection: https://cwe.mitre.org/data/definitions/89.html
+- PortSwigger Web Security Academy — SQL injection: https://portswigger.net/web-security/sql-injection

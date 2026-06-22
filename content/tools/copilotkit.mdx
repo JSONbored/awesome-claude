@@ -1,0 +1,221 @@
+---
+title: CopilotKit
+slug: copilotkit
+category: tools
+description: >-
+  MIT-licensed frontend stack for agent-native applications and generative UI,
+  with React, Angular, Vue, React Native, Slack and Teams surfaces, AG-UI
+  protocol support, shared state, human-in-the-loop workflows, backend tool
+  rendering, coding-agent skills, and runtime packages for agent apps.
+cardDescription: >-
+  Build agent-native apps with CopilotKit: generative UI, shared state,
+  human-in-the-loop flows, AG-UI, React, mobile, chat, and agent skills.
+seoTitle: CopilotKit Agent-Native Apps, Generative UI, AG-UI Protocol, and Coding Agent Skills
+seoDescription: >-
+  Use CopilotKit to build agent-native apps with React, Angular, Vue, React
+  Native, Slack, Teams, generative UI, AG-UI protocol, shared state,
+  human-in-the-loop approvals, backend tool rendering, CopilotKit runtime, and
+  Claude Code, Codex, Cursor, and Gemini agent skills.
+author: CopilotKit
+authorProfileUrl: "https://github.com/CopilotKit"
+dateAdded: "2026-06-18"
+websiteUrl: "https://docs.copilotkit.ai"
+documentationUrl: "https://docs.copilotkit.ai"
+repoUrl: "https://github.com/CopilotKit/CopilotKit"
+packageUrl: "https://www.npmjs.com/package/@copilotkit/react-core"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/CopilotKit/CopilotKit"
+  - "https://github.com/CopilotKit/CopilotKit/blob/main/README.md"
+  - "https://github.com/CopilotKit/CopilotKit/blob/main/package.json"
+  - "https://github.com/CopilotKit/CopilotKit/blob/main/packages/react-core/package.json"
+  - "https://github.com/CopilotKit/CopilotKit/blob/main/skills/copilotkit-setup/SKILL.md"
+  - "https://github.com/CopilotKit/CopilotKit/blob/main/skills/copilotkit-agui/SKILL.md"
+  - "https://github.com/CopilotKit/CopilotKit/blob/main/skills/copilotkit-debug/SKILL.md"
+  - "https://github.com/CopilotKit/CopilotKit/blob/main/LICENSE"
+  - "https://registry.npmjs.org/@copilotkit%2Freact-core/latest"
+  - "https://registry.npmjs.org/copilotkit/latest"
+installable: true
+installCommand: "npx copilotkit@latest create"
+usageSnippet: >-
+  Scaffold a CopilotKit app with `npx copilotkit@latest create`, install the
+  coding-agent skills with `npx copilotkit@latest skills install`, or install
+  packages such as `@copilotkit/react-core` and `@copilotkit/runtime` directly
+  into an existing React or Next.js project.
+copySnippet: |-
+  npx copilotkit@latest create
+
+  # Install CopilotKit coding-agent skills in an existing project
+  npx copilotkit@latest skills install
+
+  # Manual Next.js-style package install
+  npm install @copilotkit/react-core @copilotkit/runtime hono
+estimatedSetupTime: 30 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js 18 or newer and a package manager such as npm, pnpm, yarn, or bun."
+  - "A supported frontend or app surface, such as React, Next.js, Angular, Vue, React Native, Slack, Microsoft Teams, Discord, or Google Chat, with surface maturity checked against current docs."
+  - "An AI provider key or runtime route for OpenAI, Anthropic, Gemini, or another supported model/provider."
+  - "Backend runtime plan for CopilotKit runtime endpoints, Hono or Express integration, CORS, streaming, tool calls, threads, state, and deployment."
+  - "Data policy for shared state, user messages, tool arguments, tool results, generated UI, feedback, thread history, and CopilotKit Cloud or self-hosted Intelligence usage."
+safetyNotes:
+  - "CopilotKit connects UI, agents, tools, and backend runtimes. Treat backend tool rendering, tool calls, and generative UI as application behavior that can mutate state or trigger real actions."
+  - "Human-in-the-loop workflows should define which actions require user confirmation, how interruptions resume, and how failed or stale approvals are handled."
+  - "The CLI package description references workspace connection and local CLI authentication for CopilotKit Intelligence onboarding; review auth state, workspace linkage, and generated files before using it in a sensitive project."
+  - "Agent skills can modify app code, runtime routes, providers, packages, and integration wiring; review generated changes before committing or deploying."
+  - "AG-UI and SSE integrations require event ordering, error handling, CORS, retry, timeout, and streaming limits to avoid stuck runs or duplicated actions."
+privacyNotes:
+  - "CopilotKit apps can process user messages, shared state, UI events, tool arguments, tool outputs, generated components, screenshots or attachments from app workflows, thread history, feedback, logs, traces, and provider responses."
+  - "Cloud, enterprise, self-learning, Slack, Microsoft Teams, Discord, Google Chat, MCP docs search, and CopilotKit Intelligence features may send or retain additional data depending on configuration."
+  - "Shared state and generative UI can expose application data to agents and model providers; avoid placing secrets, regulated records, private customer data, or privileged admin state in agent-visible context."
+  - "Keep provider keys, CopilotKit workspace credentials, runtime URLs, private tool schemas, and generated support artifacts out of public issues, examples, screenshots, and PRs."
+tags:
+  - copilotkit
+  - agents
+  - generative-ui
+  - ag-ui
+  - react
+  - nextjs
+  - agent-skills
+  - human-in-the-loop
+keywords:
+  - CopilotKit
+  - CopilotKit agent-native apps
+  - CopilotKit generative UI
+  - AG-UI protocol
+  - CopilotKit React
+  - CopilotKit runtime
+  - CopilotKit agent skills
+  - Claude Code CopilotKit skills
+  - Codex CopilotKit skills
+  - human-in-the-loop agents
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+CopilotKit is a frontend and runtime stack for agent-native applications. The
+README describes generative UI, shared state, human-in-the-loop workflows, chat
+interfaces, backend tool rendering, and AG-UI protocol support across React,
+Angular, Vue, React Native, Slack, Microsoft Teams, and related surfaces.
+
+Use it when an agent needs to live inside an application UI rather than only in
+a terminal or chat transcript. CopilotKit is especially relevant for product
+teams building "AI copilots", generative UI, stateful agent workflows, tool
+approval flows, AG-UI-compatible backends, and coding-agent-assisted
+CopilotKit setup.
+
+## Install
+
+Scaffold a new app:
+
+```bash
+npx copilotkit@latest create
+```
+
+Install first-party CopilotKit coding-agent skills in an existing project:
+
+```bash
+npx copilotkit@latest skills install
+```
+
+Manual package installs depend on the target framework. For a common
+Next.js-style setup:
+
+```bash
+npm install @copilotkit/react-core @copilotkit/runtime hono
+```
+
+The coding-agent setup skill documents additional routes for frontend-only
+installs, standalone Express backends, runtime setup, provider setup, and
+project framework detection.
+
+## Agent Capabilities
+
+| Area | CopilotKit Coverage |
+| --- | --- |
+| UI Surfaces | React, Next.js, Angular, Vue, React Native, Slack, Microsoft Teams, Discord, and Google Chat paths |
+| Agent UX | Chat UI, message streaming, tool calls, agent responses, and human-in-the-loop workflows |
+| Generative UI | Agents render or update UI components from backend tool results and agent state |
+| Shared State | Agent and UI components can read and write synchronized state |
+| AG-UI | Event-based agent-user interaction protocol over SSE or binary protobuf transport |
+| Runtime | `@copilotkit/runtime`, Hono/Express handlers, agent runners, provider routes, and runtime endpoints |
+| Agent Skills | Setup, development, integrations, AG-UI, debug, upgrade, runtime, and self-update skills |
+| Debugging | Web inspector, structured error codes, runtime connectivity checks, SSE tracing, and MCP docs search |
+
+## Use Cases
+
+- Add a chat or copilot panel to a React or Next.js application.
+- Let an agent call backend tools that render UI components in the client.
+- Build AG-UI-compatible agent backends that stream typed events to a frontend.
+- Add user confirmations, edits, and approvals to an agent workflow.
+- Share application state between UI components and agent logic.
+- Install first-party CopilotKit skills so Claude Code, Codex, Cursor, Gemini,
+  or another coding agent can set up, debug, or upgrade CopilotKit.
+- Compare CopilotKit with LangGraph UI patterns, AG-UI integrations, MCP Apps,
+  A2UI, and custom agent frontend stacks.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes CopilotKit as an SDK for full-stack agentic
+  applications, generative UI, and chat applications.
+- The README documents `npx copilotkit@latest create` and
+  `npx copilotkit@latest skills install`.
+- The README lists React/Next.js, Angular, Vue, React Native, Slack, Microsoft
+  Teams, Discord, and Google Chat surfaces, with different support levels.
+- The README describes chat UI, backend tool rendering, generative UI, shared
+  state, human-in-the-loop workflows, and self-learning features.
+- The README identifies CopilotKit as the company behind the AG-UI protocol
+  and links to the AG-UI protocol repository.
+- The repository contains first-party Agent Skills for CopilotKit setup,
+  AG-UI, debugging, development, integrations, upgrades, runtime, and
+  self-update workflows.
+- `skills/copilotkit-setup/SKILL.md` documents Node.js 18+, provider keys,
+  framework detection, package installs, runtime wiring, and MCP docs search.
+- `skills/copilotkit-agui/SKILL.md` documents AG-UI event families, SSE
+  transport, state synchronization, tool calls, and human-in-the-loop flows.
+- `skills/copilotkit-debug/SKILL.md` documents runtime connectivity,
+  streaming, tool execution, version mismatches, structured error codes, and
+  AG-UI event tracing.
+- npm resolves `@copilotkit/react-core` version `1.60.2` with MIT licensing,
+  and `copilotkit` CLI version `3.0.3`.
+- The latest GitHub release is `v1.60.2`, published on 2026-06-17.
+- The repository license is MIT.
+
+## Safety and Privacy
+
+CopilotKit moves agents into product interfaces, where mistakes become user
+experience and application behavior. Treat tool calls, generated UI, shared
+state writes, user approvals, and Slack or Teams actions as real product
+surface area. Keep destructive tools and privileged state behind explicit
+authorization and auditable runtime behavior.
+
+The cloud and enterprise surfaces are separate from the MIT source code. Review
+which prompts, state, feedback, thread history, tool results, and user
+identifiers are sent to model providers, CopilotKit-hosted services, workplace
+chat platforms, or self-hosted infrastructure before enabling those features.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/agents/`, `content/mcp/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+CopilotKit, `CopilotKit/CopilotKit`, AG-UI, `@copilotkit/react-core`,
+`copilotkit` CLI, CopilotKit runtime, CopilotKit agent skills, generative UI,
+and human-in-the-loop agents. Existing AG2 content mentions AG-UI as an
+integration surface, but no dedicated CopilotKit tools entry, exact source URL
+duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. CopilotKit's
+repository is MIT-licensed open-source software, while CopilotKit Cloud,
+Enterprise Intelligence Platform, self-learning features, Slack or Teams early
+access, hosted docs search, model providers, and workplace chat platforms may
+have separate licenses, billing, terms, privacy controls, and access
+requirements.

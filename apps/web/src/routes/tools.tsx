@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, BadgeCheck } from "lucide-react";
 import { COMMERCIAL_TOOLS } from "@/data/tools";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PageContainer } from "@/components/page-container";
+import { EntryBrandMark } from "@/components/entry-brand-mark";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
 
 export const Route = createFileRoute("/tools")({
   head: () => ({
@@ -20,6 +22,17 @@ export const Route = createFileRoute("/tools")({
           "Editorial picks and disclosed partners. Free, open-source resources live in the directory.",
       },
       { property: "og:url", content: absoluteUrl("/tools") },
+      {
+        property: "og:image",
+        content: ogImageUrl({ title: "Tools that pair well with Claude", eyebrow: "Tools" }),
+      },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        name: "twitter:image",
+        content: ogImageUrl({ title: "Tools that pair well with Claude", eyebrow: "Tools" }),
+      },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/tools") }],
     scripts: [
@@ -41,9 +54,8 @@ export const Route = createFileRoute("/tools")({
 
 function ToolsPage() {
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
-      <Breadcrumbs home items={[{ label: "Tools" }]} />
-      <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
+    <PageContainer>
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow">Commercial tools</div>
           <h1 className="mt-2 h-display-1 text-ink text-balance">
@@ -74,10 +86,13 @@ function ToolsPage() {
             className="group flex flex-col gap-3 rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2"
           >
             <div className="flex items-start justify-between gap-2">
-              <div>
-                <div className="font-display text-lg font-semibold text-ink">{t.name}</div>
-                <div className="mt-0.5 text-xs text-ink-muted">
-                  {t.category} · {t.pricingModel}
+              <div className="flex min-w-0 items-start gap-3">
+                <EntryBrandMark entry={t} size="md" className="mt-0.5" />
+                <div className="min-w-0">
+                  <div className="font-display text-lg font-semibold text-ink">{t.name}</div>
+                  <div className="mt-0.5 text-xs text-ink-muted">
+                    {t.category} · {t.pricingModel}
+                  </div>
                 </div>
               </div>
               <DisclosureBadge value={t.disclosure} />
@@ -101,7 +116,7 @@ function ToolsPage() {
           </Link>
         ))}
       </div>
-    </div>
+    </PageContainer>
   );
 }
 

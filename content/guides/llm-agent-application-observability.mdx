@@ -57,7 +57,12 @@ keywords:
   - opentelemetry gen ai
   - ai application tracing
   - llm metrics logs traces
-readingTime: 8
+documentationUrl: "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+retrievalSources:
+  - "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+  - "https://opentelemetry.io/docs/"
+  - "https://code.claude.com/docs/en/monitoring-usage"
+readingTime: 9
 difficultyScore: 60
 hasTroubleshooting: true
 hasPrerequisites: true
@@ -110,6 +115,81 @@ OpenTelemetry's GenAI semantic conventions define common attributes for
 generative AI systems. Using shared names for provider, model, operation, usage,
 and request metadata makes traces easier to query across providers and tools.
 
+By convention, a GenAI span is named `{gen_ai.operation.name} {gen_ai.request.model}`
+(for example, `chat claude-3`), so traces stay readable even when several
+providers and models run side by side.
+
+### GenAI semantic-convention attributes
+
+These are the OpenTelemetry GenAI span attributes most relevant to LLM and agent
+instrumentation. Provider and model attributes are recommended on every model
+span; token usage and `error.type` should be set when available.
+
+| Attribute | Type | Example value | What it captures |
+| --- | --- | --- | --- |
+| `gen_ai.operation.name` | string | `chat`, `embeddings`, `execute_tool`, `invoke_agent` | The kind of GenAI operation the span represents |
+| `gen_ai.provider.name` | string | `anthropic`, `openai`, `aws.bedrock`, `gcp.vertex_ai` | The provider or platform serving the request |
+| `gen_ai.request.model` | string | `claude-3` | The model requested by the caller |
+| `gen_ai.response.model` | string | `claude-3-0613` | The model that actually produced the response |
+| `gen_ai.request.temperature` | double | `0.7` | Sampling temperature requested |
+| `gen_ai.request.max_tokens` | int | `100` | Maximum tokens requested for the completion |
+| `gen_ai.request.top_p` | double | `1.0` | Nucleus-sampling parameter requested |
+| `gen_ai.usage.input_tokens` | int | `100` | Tokens consumed by the prompt/input |
+| `gen_ai.usage.output_tokens` | int | `180` | Tokens produced in the completion |
+| `gen_ai.response.id` | string | `chatcmpl-123` | Provider-assigned response identifier |
+| `gen_ai.response.finish_reasons` | string[] | `["stop"]`, `["length"]` | Why generation stopped |
+| `error.type` | string | provider error code or exception name | Set when the operation fails |
+
+For aggregate health, the conventions also define client metrics:
+`gen_ai.client.operation.duration` (histogram, unit `s`) for operation latency
+and `gen_ai.client.token.usage` (histogram, unit `{token}`) for input/output
+token counts. Both carry the operation name, provider name, and request model as
+attributes, so latency and token cost can be sliced by model the same way traces
+are.
+
+### Instrumenting a model span
+
+The example below creates a model-call span and sets GenAI attributes by their
+semantic-convention names. Use your provider SDK in place of `call_model`; the
+attribute names stay the same across providers, which is the point of the shared
+conventions.
+
+```python
+from opentelemetry import trace
+
+tracer = trace.get_tracer("llm.app")
+
+def traced_chat(request_model: str, messages: list) -> dict:
+    # Span name follows the GenAI convention: "{operation} {model}".
+    with tracer.start_as_current_span(f"chat {request_model}") as span:
+        span.set_attribute("gen_ai.operation.name", "chat")
+        span.set_attribute("gen_ai.provider.name", "anthropic")
+        span.set_attribute("gen_ai.request.model", request_model)
+        span.set_attribute("gen_ai.request.max_tokens", 1024)
+        span.set_attribute("gen_ai.request.temperature", 0.2)
+
+        try:
+            response = call_model(request_model, messages)
+        except Exception as exc:
+            # Conditionally required when the operation fails.
+            span.set_attribute("error.type", type(exc).__name__)
+            span.record_exception(exc)
+            span.set_status(trace.StatusCode.ERROR)
+            raise
+
+        usage = response["usage"]
+        span.set_attribute("gen_ai.response.model", response["model"])
+        span.set_attribute("gen_ai.response.id", response["id"])
+        span.set_attribute("gen_ai.response.finish_reasons", [response["stop_reason"]])
+        span.set_attribute("gen_ai.usage.input_tokens", usage["input_tokens"])
+        span.set_attribute("gen_ai.usage.output_tokens", usage["output_tokens"])
+        return response
+```
+
+Note that prompt and completion text are deliberately not placed on the span;
+only ids, the model, finish reason, and token counts are recorded. Capture raw
+message content only through an approved debug path, per your redaction policy.
+
 ## Step-by-Step Implementation Guide
 
 1. **Pick the root span.** Create one root span for each user request,
@@ -149,6 +229,19 @@ and request metadata makes traces easier to query across providers and tools.
 9. **Build an incident view.** A useful dashboard answers: which model failed,
    which tool failed, where latency grew, whether retries helped, whether cost
    spiked, and whether a release changed behavior.
+
+## Reusing Existing Agent Telemetry
+
+If your agents run on top of Claude Code, you do not have to instrument the host
+from scratch. Claude Code can export OpenTelemetry data directly: set
+`CLAUDE_CODE_ENABLE_TELEMETRY=1`, choose exporters with `OTEL_METRICS_EXPORTER`
+and `OTEL_LOGS_EXPORTER` (both support `otlp`, `console`, or `none`; metrics also
+support `prometheus`), and point `OTEL_EXPORTER_OTLP_ENDPOINT` at your collector.
+It emits metrics such as `claude_code.token.usage`, `claude_code.cost.usage`,
+`claude_code.session.count`, and `claude_code.tool.execution`, plus
+`claude_code.api_error` and `claude_code.api_request` for model-call health. Send
+those into the same collector as your own GenAI spans so host usage and your
+application traces share one backend.
 
 ## Observability Checklist
 
@@ -205,3 +298,5 @@ with those tools.
 - OpenTelemetry sampling - https://opentelemetry.io/docs/concepts/sampling/
 - OpenTelemetry JavaScript instrumentation - https://opentelemetry.io/docs/languages/js/instrumentation/
 - OpenTelemetry Python instrumentation - https://opentelemetry.io/docs/languages/python/instrumentation/
+- OpenTelemetry documentation home - https://opentelemetry.io/docs/
+- Claude Code monitoring and OpenTelemetry export - https://code.claude.com/docs/en/monitoring-usage

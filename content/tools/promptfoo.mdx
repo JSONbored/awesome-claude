@@ -10,9 +10,15 @@ author: Promptfoo
 dateAdded: "2026-04-27"
 websiteUrl: "https://www.promptfoo.dev"
 documentationUrl: "https://www.promptfoo.dev/docs"
+retrievalSources:
+  - "https://www.promptfoo.dev/docs"
+  - "https://docs.garak.ai/"
+  - "https://docs.confident-ai.com/"
 repoUrl: "https://github.com/promptfoo/promptfoo"
 pricingModel: open-source
 disclosure: heyclaude_pick
+privacyNotes:
+  - "Promptfoo sends your prompts and test inputs to the model providers you configure to run evals and red-team probes; review which providers are used and keep secrets out of test cases."
 applicationCategory: DeveloperApplication
 operatingSystem: macOS, Windows, Linux, Web
 tags:
@@ -22,6 +28,18 @@ keywords:
   - llm red teaming
   - prompt testing
 ---
+
+## How Promptfoo compares
+
+Promptfoo spans LLM testing and red-teaming; related tools in this directory differ by focus:
+
+| Tool | Focus | Open source | Notable for |
+| --- | --- | --- | --- |
+| **Promptfoo** | LLM evals + red-teaming | Yes | YAML test cases, assertions, CI-friendly red-team plugins |
+| **Garak** | LLM vulnerability scanning | Yes | Broad library of attack probes |
+| **DeepEval** | Pytest-style LLM evals | Yes | Unit-test ergonomics and metric library |
+
+Choose Promptfoo for combined CI evals and red-teaming; Garak for dedicated probe-based scanning, or DeepEval for pytest-native evaluation.
 
 ## Editorial notes
 

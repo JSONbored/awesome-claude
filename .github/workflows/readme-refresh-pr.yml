@@ -21,6 +21,7 @@ jobs:
   refresh-readme:
     if: ${{ github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'docs(readme):') }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     concurrency:
       # Serialize all runs because each writes the shared automation/readme-refresh branch.
       group: refresh-readme-automation-readme-refresh
@@ -38,7 +39,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.16.0
+          node-version: 24.17.0
           cache: pnpm
 
       - name: Install dependencies
@@ -85,7 +86,7 @@ jobs:
           git add README.md
           git commit -m "docs(readme): refresh generated catalog index"
 
-          remote_branch_sha="$(git ls-remote --heads origin "$BRANCH_NAME" | awk '{print $1}')"
+          remote_branch_sha="$(git ls-remote --heads origin "refs/heads/$BRANCH_NAME" | awk '{print $1}')"
           if [[ -n "$remote_branch_sha" ]]; then
             git push --force-with-lease="refs/heads/$BRANCH_NAME:$remote_branch_sha" origin "$BRANCH_NAME:$BRANCH_NAME"
           else

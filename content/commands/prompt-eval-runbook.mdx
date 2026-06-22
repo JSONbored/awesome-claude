@@ -1,0 +1,80 @@
+---
+title: /prompt-eval-runbook - Prompt Eval Runbook Slash Command
+slug: prompt-eval-runbook
+category: commands
+description: >-
+  Slash command runbook for designing and running prompt evaluations: define tasks,
+  success criteria, golden outputs, regression checks, and privacy-safe reporting
+  using Anthropic test-and-evaluate guidance.
+cardDescription: >-
+  Run a structured prompt evaluation runbook with tasks, criteria, and regression checks.
+seoTitle: /prompt-eval-runbook - Prompt Eval Runbook Slash Command
+seoDescription: >-
+  Claude Code slash command runbook for prompt evaluations based on Anthropic
+  develop-tests documentation.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 757
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/757"
+documentationUrl: "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+sourceUrls:
+  - "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+  - "https://code.claude.com/docs/en/skills"
+installable: true
+installCommand: "/prompt-eval-runbook <feature-or-prompt-name>"
+commandSyntax: "/prompt-eval-runbook <feature-or-prompt-name>"
+usageSnippet: "/prompt-eval-runbook checkout-assistant"
+copySnippet: "/prompt-eval-runbook <feature-or-prompt-name>"
+prerequisites:
+  - "Representative user tasks and expected outcomes for the prompt under test."
+  - "Staging environment without production secrets in eval fixtures."
+safetyNotes:
+  - "Eval fixtures must not contain live credentials or customer PII."
+  - "Treat model outputs as draft until human reviewers sign off on regressions."
+privacyNotes:
+  - "Redact proprietary prompts before exporting eval results outside the team."
+tags:
+  - evals
+  - prompts
+  - slash-command
+  - quality
+keywords:
+  - prompt eval runbook slash command
+  - claude prompt evaluation workflow
+---
+
+The `/prompt-eval-runbook` command turns Anthropic test-and-evaluate guidance into a
+repeatable Claude Code session checklist for prompt or skill changes.
+
+## Usage
+
+```
+/prompt-eval-runbook <feature-or-prompt-name>
+```
+
+## What it does
+
+1. **Define tasks.** List 5–10 representative user tasks with clear success criteria.
+2. **Draft fixtures.** Create minimal inputs without production secrets.
+3. **Establish baselines.** Capture current outputs for comparison after prompt edits.
+4. **Run regression pass.** Re-run tasks after changes; flag quality, safety, or format regressions.
+5. **Score results.** Use pass/partial/fail per task with one-line evidence.
+6. **Document rollback.** Record prior prompt version or git ref to revert if eval fails.
+7. **Publish summary.** Produce a privacy-safe eval report for reviewers.
+
+## Output format
+
+- Task list and success criteria
+- Baseline vs candidate comparison table
+- Regression findings with severity
+- Ship/no-ship recommendation
+- Rollback reference
+
+## Requirements
+
+- Access to staging Claude Code or Agent SDK environment for running tasks.
+- Reviewer approval before promoting prompt changes to production users.

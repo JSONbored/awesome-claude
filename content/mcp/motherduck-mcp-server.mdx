@@ -1,0 +1,155 @@
+---
+title: MotherDuck MCP Server for Claude
+slug: motherduck-mcp-server
+category: mcp
+description: >-
+  Connect Claude to MotherDuck and DuckDB — run SQL queries and explore databases, tables, and
+  columns — with the official MotherDuck Model Context Protocol server.
+cardDescription: "Official MotherDuck/DuckDB MCP server: run SQL analytics and explore schemas from Claude."
+seoTitle: "MotherDuck MCP Server for Claude — DuckDB SQL Analytics"
+seoDescription: "Connect Claude to MotherDuck and DuckDB with the official MCP server: run SQL queries and list databases, tables, and columns over stdio or HTTP from Claude Code or Desktop."
+author: MotherDuck
+authorProfileUrl: "https://motherduck.com"
+dateAdded: "2026-06-17"
+documentationUrl: "https://github.com/motherduckdb/mcp-server-motherduck"
+websiteUrl: "https://motherduck.com"
+repoUrl: "https://github.com/motherduckdb/mcp-server-motherduck"
+retrievalSources:
+  - "https://github.com/motherduckdb/mcp-server-motherduck"
+  - "https://motherduck.com/docs/"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://duckdb.org/docs/"
+  - "https://clickhouse.com/docs"
+installable: true
+installCommand: "claude mcp add motherduck -e motherduck_token=<your-token> -- uvx mcp-server-motherduck --db-path md:"
+usageSnippet: >-
+  Ask Claude to list databases, describe a table, or run a SQL analytics query against MotherDuck or DuckDB.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "motherduck": {
+        "command": "uvx",
+        "args": ["mcp-server-motherduck", "--db-path", "md:"],
+        "env": {
+          "motherduck_token": "<your-token>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "motherduck": {
+        "command": "uvx",
+        "args": ["mcp-server-motherduck", "--db-path", "md:"],
+        "env": {
+          "motherduck_token": "<your-token>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "A MotherDuck account and token (motherduck_token) for cloud databases, or a local DuckDB file / :memory:."
+  - "uv (uvx) to run mcp-server-motherduck."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server is read-only by default; --read-write enables writes, and --allow-switch-databases enables switching — enable only when needed."
+  - "execute_query runs arbitrary SQL against the connected database; scope the token and database accordingly."
+privacyNotes:
+  - "Query results and schema metadata enter the MCP client context and the model's prompt."
+  - "The motherduck_token is a secret — keep it in the client config or environment, never in shared repositories."
+tags:
+  - motherduck
+  - duckdb
+  - analytics
+  - sql
+  - data-engineering
+keywords:
+  - motherduck mcp server
+  - duckdb mcp claude
+  - connect claude to motherduck
+  - sql analytics mcp claude code
+  - query duckdb with ai
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **MotherDuck MCP Server** is the official Model Context Protocol server for MotherDuck and
+DuckDB. It lets Claude run SQL analytics and explore schemas in natural language — against a cloud
+MotherDuck database (`md:`), a local DuckDB file, an in-memory database, or data in S3. It runs over
+stdio or HTTP via `uvx mcp-server-motherduck` and is licensed under MIT.
+
+## Key capabilities
+
+- **`execute_query`** — run a SQL query against the connected database.
+- **`list_databases`** — list available databases.
+- **`list_tables`** — list tables and views.
+- **`list_columns`** — describe a table's columns.
+- **`switch_database_connection`** — switch databases (requires `--allow-switch-databases`).
+
+## How it compares
+
+Several analytics-database MCP servers let Claude run SQL over columnar data; they differ in where
+the data lives:
+
+| MCP server | Engine | Data location | Notable |
+| --- | --- | --- | --- |
+| **MotherDuck MCP** | DuckDB / MotherDuck | Local file, in-memory, S3, or MotherDuck cloud | Same engine local and in the cloud |
+| **DuckDB MCP** | DuckDB | Local / in-process | Embedded analytics, no server |
+| **ClickHouse MCP** | ClickHouse | ClickHouse server / Cloud | Large-scale columnar analytics |
+
+Choose MotherDuck when you want DuckDB ergonomics that scale from a laptop to the cloud; the DuckDB
+and ClickHouse servers cover purely-embedded and large-scale-server analytics respectively.
+
+## Installation
+
+### Claude Code
+
+```bash
+# MotherDuck cloud:
+claude mcp add motherduck -e motherduck_token=<your-token> -- uvx mcp-server-motherduck --db-path md:
+
+# Local DuckDB file (read-only by default):
+claude mcp add duckdb -- uvx mcp-server-motherduck --db-path /path/to/data.duckdb
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "motherduck": {
+      "command": "uvx",
+      "args": ["mcp-server-motherduck", "--db-path", "md:"],
+      "env": {
+        "motherduck_token": "<your-token>"
+      }
+    }
+  }
+}
+```
+
+## Requirements
+
+- A MotherDuck token for cloud databases, or a local DuckDB file / `:memory:`.
+- `uv` (`uvx`) and an MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- The server defaults to read-only; add `--read-write` only when Claude needs to write.
+- `execute_query` runs arbitrary SQL — scope the token and the connected database.
+- Treat `motherduck_token` as a secret.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- The official repository `github.com/motherduckdb/mcp-server-motherduck` (MIT) documents
+  `uvx mcp-server-motherduck`, the `--db-path`/`--read-write`/`--allow-switch-databases` flags, stdio
+  and HTTP transports, the `motherduck_token` requirement, and the five tools above.
+- MotherDuck's and DuckDB's documentation describe the underlying SQL engine.
+- Claude Code's MCP documentation describes the connector setup pattern used here.

@@ -1,0 +1,151 @@
+---
+title: Weaviate MCP Server for Claude
+slug: weaviate-mcp-server
+category: mcp
+description: >-
+  Connect Claude to a Weaviate vector database — run hybrid search, inspect collection config, list
+  tenants, and upsert objects — using Weaviate's built-in Model Context Protocol server.
+cardDescription: "Weaviate's built-in MCP server: hybrid search and object ops on your vector database from Claude."
+seoTitle: "Weaviate MCP Server for Claude — Hybrid Vector Search"
+seoDescription: "Connect Claude to Weaviate with its built-in MCP server: hybrid search, collection config, tenants, and object upserts over the /v1/mcp endpoint with API-key auth."
+author: Weaviate
+authorProfileUrl: "https://weaviate.io"
+dateAdded: "2026-06-17"
+documentationUrl: "https://docs.weaviate.io/weaviate/configuration/mcp-server"
+websiteUrl: "https://weaviate.io"
+repoUrl: "https://github.com/weaviate/weaviate"
+retrievalSources:
+  - "https://docs.weaviate.io/weaviate/configuration/mcp-server"
+  - "https://github.com/weaviate/mcp-server-weaviate"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://docs.pinecone.io/"
+  - "https://qdrant.tech/documentation/"
+installable: true
+installCommand: "claude mcp add --transport http weaviate https://<your-weaviate-host>/v1/mcp"
+usageSnippet: >-
+  Ask Claude to run a hybrid query over a collection, list tenants, or upsert objects into Weaviate.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "weaviate": {
+        "url": "https://<your-weaviate-host>/v1/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "weaviate": {
+        "url": "https://<your-weaviate-host>/v1/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A Weaviate instance on v1.37.1 or later (self-hosted or Weaviate Cloud)."
+  - "The MCP server enabled on that instance via MCP_SERVER_ENABLED=true."
+  - "A Weaviate API key with the RBAC permissions for the collections Claude should reach."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The MCP server runs inside your Weaviate instance and respects its existing RBAC; scope the API key to least privilege."
+  - "The object-upsert tool writes data — restrict write access to the collections Claude should modify."
+privacyNotes:
+  - "Query text, retrieved objects, and collection metadata enter the MCP client context and the model's prompt."
+  - "The Weaviate endpoint URL and API key are secrets — keep them in the client config or environment, not in shared repositories."
+tags:
+  - weaviate
+  - vector-database
+  - search
+  - rag
+  - embeddings
+keywords:
+  - weaviate mcp server
+  - connect claude to weaviate
+  - weaviate hybrid search claude
+  - vector database mcp claude code
+  - rag with weaviate and claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Weaviate MCP Server** lets Claude work with a Weaviate vector database over the Model Context
+Protocol. As of Weaviate **v1.37.1**, the MCP server is **built into Weaviate itself** (the earlier
+standalone server is deprecated): enable it on your instance and Claude connects to the `/v1/mcp`
+endpoint to run hybrid search, inspect collection configuration, list tenants, and upsert objects.
+
+## Key capabilities
+
+The built-in server exposes four tools:
+
+- **`weaviate-query-hybrid`** — run a hybrid (vector + keyword) query over a collection.
+- **`weaviate-collections-get-config`** — read a collection's configuration.
+- **`weaviate-tenants-list`** — list tenants for a multi-tenant collection.
+- **`weaviate-objects-upsert`** — insert or update objects in a collection.
+
+## How it compares
+
+Several vector-database MCP servers give Claude retrieval over embeddings; they differ in how they
+are deployed and connected:
+
+| MCP server | Deployment | Connects via | Notable |
+| --- | --- | --- | --- |
+| **Weaviate MCP** | Built into Weaviate (v1.37.1+) | Hosted `/v1/mcp` HTTP endpoint | Native hybrid search + RBAC |
+| **Pinecone MCP** | Separate server for Pinecone | Local/hosted MCP server | Fully managed vector index |
+| **Qdrant MCP** | Separate server for Qdrant | Local/hosted MCP server | Self-host or Qdrant Cloud |
+
+Choose the Weaviate server when your vectors already live in Weaviate and you want native hybrid
+search; the Pinecone and Qdrant servers cover their own stores.
+
+## Installation
+
+First enable the MCP server on your Weaviate instance (v1.37.1+) by setting the environment variable
+`MCP_SERVER_ENABLED=true`. It is then served at `/v1/mcp` on the same port as the Weaviate REST API.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http weaviate https://<your-weaviate-host>/v1/mcp
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "weaviate": {
+      "url": "https://<your-weaviate-host>/v1/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Weaviate instance on v1.37.1 or later (self-hosted or Weaviate Cloud).
+- `MCP_SERVER_ENABLED=true` set on that instance.
+- A Weaviate API key whose RBAC role covers the collections Claude should access.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- The server runs inside Weaviate and honors its existing API-key authentication and RBAC.
+- Scope the API key to least privilege — read-only where Claude only needs to query.
+- The `weaviate-objects-upsert` tool writes data; restrict write access accordingly.
+- Treat the endpoint URL and API key as secrets.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- Weaviate's documentation (`docs.weaviate.io/weaviate/configuration/mcp-server`) describes the
+  built-in MCP server, the `MCP_SERVER_ENABLED` flag, the `/v1/mcp` endpoint, API-key/RBAC auth, and
+  the four tools listed above.
+- The former standalone repository `github.com/weaviate/mcp-server-weaviate` states it is deprecated
+  in favor of the built-in server.
+- Claude Code's MCP documentation describes the HTTP connector setup used here.

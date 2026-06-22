@@ -1,0 +1,194 @@
+---
+title: LibreChat
+slug: librechat
+category: tools
+description: >-
+  Self-hosted AI chat and agent platform with LibreChat Agents, MCP support,
+  reusable Skills, Subagents, Code Interpreter, web search, artifacts,
+  multi-provider model routing, secure multi-user auth, and Docker Compose
+  deployment.
+cardDescription: >-
+  Self-hosted ChatGPT-style platform with agents, MCP tools, Skills, Subagents,
+  Code Interpreter, web search, artifacts, multi-provider routing, and auth.
+seoTitle: LibreChat Self-Hosted AI Agents with MCP, Skills, and Code Interpreter
+seoDescription: >-
+  LibreChat is an MIT-licensed self-hosted AI chat and agent platform with MCP
+  support, Skills, Subagents, Code Interpreter, web search, artifacts,
+  multi-provider model routing, and secure multi-user auth.
+author: LibreChat
+authorProfileUrl: "https://github.com/danny-avila"
+dateAdded: "2026-06-18"
+websiteUrl: "https://librechat.ai/"
+documentationUrl: "https://docs.librechat.ai/"
+repoUrl: "https://github.com/danny-avila/LibreChat"
+packageUrl: "https://registry.librechat.ai/"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Web
+sourceUrls:
+  - "https://github.com/danny-avila/LibreChat"
+  - "https://raw.githubusercontent.com/danny-avila/LibreChat/main/README.md"
+  - "https://raw.githubusercontent.com/danny-avila/LibreChat/main/docker-compose.yml"
+  - "https://raw.githubusercontent.com/danny-avila/LibreChat/main/package.json"
+  - "https://raw.githubusercontent.com/danny-avila/LibreChat/main/LICENSE"
+  - "https://www.librechat.ai/docs/features/agents"
+  - "https://www.librechat.ai/docs/features/skills"
+  - "https://www.librechat.ai/docs/mcp_servers"
+installable: true
+installCommand: "docker compose up -d"
+usageSnippet: >-
+  Clone LibreChat, copy and configure `.env`, review `docker-compose.yml`,
+  start the stack with Docker Compose, then enable selected providers, agents,
+  MCP servers, Skills, and tools with scoped credentials.
+copySnippet: |-
+  git clone https://github.com/danny-avila/LibreChat.git
+  cd LibreChat
+  cp .env.example .env
+  docker compose up -d
+estimatedSetupTime: 45 minutes
+difficulty: intermediate
+prerequisites:
+  - "Docker Compose for the recommended local deployment path, or Node.js v20.19+ with separate MongoDB and MeiliSearch instances for npm-based setup."
+  - "Provider credentials for selected model routes such as Anthropic, OpenAI, Azure OpenAI, AWS Bedrock, Google, Vertex AI, OpenRouter, Groq, DeepSeek, Qwen, Ollama, or custom OpenAI-compatible endpoints."
+  - "Configured `.env`, optional `librechat.yaml`, MeiliSearch master key, MongoDB storage, pgvector/RAG API services, upload storage, and reverse-proxy settings for production."
+  - "A policy for which users can create agents, share agents, enable MCP servers, define Skills, run Code Interpreter, use web search, or upload files."
+  - "A backup, retention, auth, moderation, and update plan for multi-user self-hosted deployments."
+safetyNotes:
+  - "LibreChat can combine agents, MCP servers, Skills, Subagents, file search, web search, Code Interpreter, OpenAPI actions, functions, and custom endpoints; each connected tool needs explicit permission review."
+  - "The Docker Compose file starts application, MongoDB, MeiliSearch, pgvector, and RAG API services and mounts `.env`, uploads, logs, images, and skill directories. Review volumes and secrets before exposing the instance."
+  - "Code Interpreter is designed for sandboxed execution, but uploaded files, generated code, network access, and language runtimes still need isolation and quota controls."
+  - "MCP servers can expose read/write tools from local or remote systems. Start with read-only servers, restrict tool scopes, and review logs before enabling account, filesystem, database, browser, or infrastructure actions."
+  - "Multi-user auth, sharing, presets, agents, and prompt libraries can leak capabilities between users if roles, groups, and admin settings are misconfigured."
+privacyNotes:
+  - "Chats, prompts, file uploads, image inputs, tool calls, MCP payloads, Skills, Subagent transcripts, Code Interpreter files, RAG chunks, embeddings, message search data, logs, and exports may contain private data."
+  - "Model providers, rerankers, search providers, MCP servers, custom endpoints, storage services, and analytics integrations may receive user content depending on configuration."
+  - "Keep `.env`, model keys, OAuth secrets, LDAP settings, MongoDB data, MeiliSearch indexes, pgvector data, upload folders, logs, and generated artifacts out of public repos and screenshots."
+  - "Before using shared agents or marketplace-style workflows, define who can view prompts, files, agent configs, Skills, MCP server definitions, and conversation exports."
+tags:
+  - librechat
+  - ai-agents
+  - mcp
+  - skills
+  - subagents
+  - code-interpreter
+  - self-hosted
+  - chatgpt
+  - claude
+  - docker
+keywords:
+  - LibreChat
+  - LibreChat agents
+  - LibreChat MCP
+  - LibreChat Skills
+  - LibreChat Subagents
+  - self hosted ChatGPT
+  - AI chat platform
+  - Code Interpreter
+  - MCP server support
+  - multi-provider AI chat
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+LibreChat is a self-hosted AI chat and agent platform. It started as a
+ChatGPT-style interface, but the current project description and README put it
+squarely in the agent/operator category: LibreChat Agents, MCP support, reusable
+Skills, Subagents, Code Interpreter, OpenAPI actions, custom functions, web
+search, artifacts, image generation, multi-provider model routing, secure
+multi-user auth, moderation, and token-spend tools.
+
+It is a strong directory fit because it ranks across several active search
+clusters at once: self-hosted ChatGPT, Claude/OpenAI/Gemini model switching,
+MCP clients, agent builders, Skills, Subagents, Code Interpreter, RAG, and
+multi-user AI workspace deployment.
+
+## Install
+
+The README and docs recommend Docker as the fastest local path. Basic shape:
+
+```bash
+git clone https://github.com/danny-avila/LibreChat.git
+cd LibreChat
+cp .env.example .env
+docker compose up -d
+```
+
+The checked-in `docker-compose.yml` starts LibreChat, MongoDB, MeiliSearch,
+pgvector, and the LibreChat RAG API service. Edit `.env` and deployment
+configuration before using it beyond a local test.
+
+## Agent Capabilities
+
+| Area | LibreChat Coverage |
+| --- | --- |
+| Agents | No-code custom assistants, agent sharing, agent marketplace workflows, tools, file search, code execution, and provider compatibility |
+| MCP | MCP support for tools and MCP server configuration workflows |
+| Skills | Reusable `SKILL.md` instruction bundles for manual, automatic, or always-on agent workflows |
+| Subagents | Delegated child agent runs with isolated context windows |
+| Code Interpreter | Sandboxed code execution across Python, Node.js, Go, C/C++, Java, PHP, Rust, and Fortran according to the README |
+| Models | Anthropic Claude, AWS Bedrock, OpenAI, Azure OpenAI, Google, Vertex AI, Responses API, custom endpoints, Ollama, Groq, Mistral, OpenRouter, DeepSeek, Qwen, and more |
+| Retrieval and files | RAG API, pgvector service, file upload/analysis, message search, web search, reranking, and artifacts |
+| Operations | Multi-user auth, OAuth2, LDAP, email login, moderation, token spend tools, presets, import/export, resumable streams, and Docker deployment |
+
+## MCP and Skills Fit
+
+LibreChat is one of the clearest MCP/Skills-adjacent content gaps because the
+README explicitly connects LibreChat Agents with MCP servers, tools, file
+search, code execution, reusable Skills, and Subagents. It is not a single MCP
+server; it is a self-hosted platform where users configure agents and external
+capabilities.
+
+For HeyClaude users, that means LibreChat is a practical comparison point for
+Claude Desktop, Claude Code, LobeHub, Open WebUI, and other agent workspaces:
+the key question is not just whether it can call tools, but who controls the
+server config, which users can create agents, and how uploaded files, logs, and
+tool outputs are retained.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `danny-avila/LibreChat` as an active MIT-licensed repository
+  with 39,000+ stars, 8,000+ forks, and topics including `mcp`, `claude`,
+  `responses-api`, `gpt-5`, `artifacts`, and `webui`.
+- The repository description identifies LibreChat as an enhanced ChatGPT clone
+  with Agents, MCP, Skills, DeepSeek, Anthropic, AWS, OpenAI, Responses API,
+  Azure, Groq, GPT-5, Mistral, OpenRouter, Vertex AI, Gemini, Artifacts, model
+  switching, message search, Code Interpreter, OpenAPI Actions, Functions,
+  secure multi-user auth, presets, and self-hosting.
+- The README documents LibreChat Agents, Skills, Subagents, MCP support,
+  Code Interpreter, web search, artifacts, image generation via OpenAI, DALL-E,
+  Stable Diffusion, Flux, or MCP servers, file interactions, presets, auth, and
+  deployment/configuration features.
+- `docker-compose.yml` defines services for the API, MongoDB, MeiliSearch,
+  pgvector, and RAG API, with mounted `.env`, images, uploads, logs, and skill
+  directories.
+- The root `LICENSE` file is MIT. The current `package.json` reports `ISC`, so
+  license-sensitive usage should verify the dedicated LICENSE file and current
+  upstream release before redistribution.
+
+## Safety and Privacy
+
+LibreChat can become a full multi-user automation surface. Treat every enabled
+agent capability as a product permission: model endpoints, MCP servers, Skills,
+Subagents, Code Interpreter, web search, file upload, RAG, OpenAPI actions, and
+custom functions all deserve separate review.
+
+Self-hosting also creates operational duties. MongoDB, MeiliSearch, pgvector,
+uploads, logs, skill files, and environment variables need backups, access
+controls, retention rules, and update discipline. Do not expose a deployment to
+real users until auth, secrets, storage, moderation, and logs have been checked.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, open pull requests, and repository-wide
+content for `danny-avila/LibreChat`, LibreChat, LibreChat Agents, LibreChat MCP,
+LibreChat Skills, LibreChat Subagents, self-hosted ChatGPT, Code Interpreter,
+MCP server support, and multi-provider AI chat. Existing content covers adjacent
+agent workspaces, MCP servers, skills, Code Interpreter-related tools, and model
+provider tools, but no dedicated LibreChat tools entry, exact source URL
+duplicate, target file, or open duplicate PR was found.

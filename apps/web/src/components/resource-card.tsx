@@ -12,11 +12,13 @@ import {
   NotesPresenceChips,
 } from "./badges";
 import { CopyButton } from "./copy-button";
+import { EntryBrandMark } from "./entry-brand-mark";
 import { EntryFacets } from "./entry-facets";
 import { PeekButton, setHotPeek, clearHotPeek, type PeekHandle } from "./peek-button";
 import { PeekHint } from "./peek-hint";
-import { useCompare } from "@/lib/compare";
+import { useCompareActions, useIsCompared } from "@/lib/compare";
 import { cn } from "@/lib/utils";
+import { trackEvent, entryEventKey, outboundHost } from "@/lib/analytics";
 
 import { formatCompact, timeAgo } from "@/lib/format";
 const fmtNum = (n?: number) => formatCompact(n);
@@ -28,13 +30,13 @@ function SourceRepoStars({ entry, compact = false }: { entry: Entry; compact?: b
       className="inline-flex items-center gap-1 font-mono text-[11px] text-ink-subtle"
       title="Source repository stars"
     >
-      <Star className="h-3 w-3" /> {fmtNum(entry.repoStats.stars)}
+      <Star className="h-3 w-3" aria-hidden /> {fmtNum(entry.repoStats.stars)}
       {!compact && <span className="hidden sm:inline"> repo</span>}
     </span>
   );
 }
 
-export function ResourceCard({
+function ResourceCardInner({
   entry,
   variant = "row",
   rank,
@@ -43,8 +45,8 @@ export function ResourceCard({
   variant?: "row" | "grid" | "compact";
   rank?: number;
 }) {
-  const compare = useCompare();
-  const inCompare = compare.has(entry.slug);
+  const { toggle, setOpen } = useCompareActions();
+  const inCompare = useIsCompared(entry);
   const peekRef = React.useRef<PeekHandle>(null);
   const handle = React.useMemo(() => ({ open: () => peekRef.current?.open() }), []);
   const [hovered, setHovered] = React.useState(false);
@@ -71,13 +73,13 @@ export function ResourceCard({
 
   const onCompareToggle = () => {
     const wasIn = inCompare;
-    compare.toggle(entry);
+    toggle(entry);
     if (wasIn) {
       toast(`Removed “${entry.title}” from compare`);
     } else {
       toast.success("Added to compare", {
         description: entry.title,
-        action: { label: "View", onClick: () => compare.setOpen(true) },
+        action: { label: "View", onClick: () => setOpen(true) },
       });
     }
   };
@@ -98,6 +100,7 @@ export function ResourceCard({
               {String(rank).padStart(2, "0")}
             </span>
           )}
+          <EntryBrandMark entry={entry} size="xs" />
           <CategoryPill>{entry.category}</CategoryPill>
           <span className="min-w-0 flex-1 truncate font-medium text-ink group-hover:underline">
             {entry.title}
@@ -134,7 +137,10 @@ export function ResourceCard({
           className="flex flex-1 flex-col gap-3 p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60 rounded-lg"
         >
           <div className="flex items-start justify-between gap-2">
-            <CategoryPill>{entry.category}</CategoryPill>
+            <div className="flex min-w-0 items-center gap-2">
+              <EntryBrandMark entry={entry} size="xs" />
+              <CategoryPill>{entry.category}</CategoryPill>
+            </div>
             <div className="flex min-h-4 items-center text-xs text-ink-muted tabular-nums">
               <SourceRepoStars entry={entry} compact />
             </div>
@@ -171,6 +177,8 @@ export function ResourceCard({
                 value={installPayload}
                 label="Copy install"
                 toastLabel={`Copied install — ${entry.title}`}
+                event="copy-install"
+                eventData={{ entry: entryEventKey(entry.category, entry.slug) }}
               />
             </div>
           )}
@@ -208,31 +216,34 @@ export function ResourceCard({
           "bg-accent/5 before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-accent",
       )}
     >
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <CategoryPill>{entry.category}</CategoryPill>
-          <TrustBadge level={entry.trust} />
-          <SourceBadge status={entry.source} />
-          <InstallRiskBadge entry={entry} size="xs" />
-          {entry.platforms.slice(0, 2).map((p) => (
-            <PlatformChip key={p} id={p} />
-          ))}
-        </div>
+      <div className="flex min-w-0 flex-1 items-start gap-3">
+        <EntryBrandMark entry={entry} size="sm" className="mt-0.5" />
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <CategoryPill>{entry.category}</CategoryPill>
+            <TrustBadge level={entry.trust} />
+            <SourceBadge status={entry.source} />
+            <InstallRiskBadge entry={entry} size="xs" />
+            {entry.platforms.slice(0, 2).map((p) => (
+              <PlatformChip key={p} id={p} />
+            ))}
+          </div>
 
-        <Link
-          to="/entry/$category/$slug"
-          params={{ category: entry.category, slug: entry.slug }}
-          className="flex items-baseline gap-2"
-        >
-          <h3 className="font-display text-[15px] font-semibold tracking-tight text-ink group-hover:underline">
-            {entry.title}
-          </h3>
-          <span className="text-xs text-ink-subtle">by {entry.author}</span>
-        </Link>
-        <p className="line-clamp-2 max-w-3xl text-sm text-ink-muted">{entry.description}</p>
-        <div className="flex flex-wrap items-center gap-2 pt-0.5">
-          <EntryFacets entry={entry} density="card" />
-          <NotesPresenceChips entry={entry} />
+          <Link
+            to="/entry/$category/$slug"
+            params={{ category: entry.category, slug: entry.slug }}
+            className="flex items-baseline gap-2"
+          >
+            <h3 className="font-display text-[15px] font-semibold tracking-tight text-ink group-hover:underline">
+              {entry.title}
+            </h3>
+            <span className="text-xs text-ink-subtle">by {entry.author}</span>
+          </Link>
+          <p className="line-clamp-2 max-w-3xl text-sm text-ink-muted">{entry.description}</p>
+          <div className="flex flex-wrap items-center gap-2 pt-0.5">
+            <EntryFacets entry={entry} density="card" />
+            <NotesPresenceChips entry={entry} />
+          </div>
         </div>
       </div>
 
@@ -242,7 +253,7 @@ export function ResourceCard({
           {entry.repoStats?.stars !== undefined ? (
             <>
               <div className="flex items-center gap-1 font-mono">
-                <Star className="h-3 w-3" /> {fmtNum(entry.repoStats.stars)}
+                <Star className="h-3 w-3" aria-hidden /> {fmtNum(entry.repoStats.stars)}
               </div>
               <div className="font-mono text-ink-subtle">repo stars</div>
             </>
@@ -258,6 +269,8 @@ export function ResourceCard({
                 value={installPayload}
                 label="Install"
                 className="w-full justify-center"
+                event="copy-install"
+                eventData={{ entry: entryEventKey(entry.category, entry.slug) }}
               />
             ) : (
               <span aria-hidden className="block h-7 w-full" />
@@ -283,6 +296,12 @@ export function ResourceCard({
                 href={entry.sourceUrl}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() =>
+                  trackEvent("source-click", {
+                    entry: entryEventKey(entry.category, entry.slug),
+                    host: outboundHost(entry.sourceUrl!),
+                  })
+                }
                 className="inline-flex h-7 w-full items-center justify-center gap-1 rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:border-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
               >
                 Source <ArrowUpRight className="h-3 w-3" />
@@ -296,3 +315,11 @@ export function ResourceCard({
     </div>
   );
 }
+
+/**
+ * Memoized so that selecting/deselecting one card in the compare set does not
+ * re-render every other visible card. Cards subscribe to their own compare
+ * membership via `useIsCompared`, and `entry`/`variant`/`rank` props are stable
+ * references from the registry, so the shallow prop compare is effective.
+ */
+export const ResourceCard = React.memo(ResourceCardInner);

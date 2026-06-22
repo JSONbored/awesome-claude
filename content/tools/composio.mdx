@@ -10,9 +10,15 @@ author: Composio
 dateAdded: "2026-04-27"
 websiteUrl: "https://composio.dev"
 documentationUrl: "https://docs.composio.dev"
+retrievalSources:
+  - "https://docs.composio.dev"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://docs.n8n.io/"
 repoUrl: "https://github.com/ComposioHQ/composio"
 pricingModel: freemium
 disclosure: editorial
+privacyNotes:
+  - "Composio connects agents to your third-party accounts and handles their auth tokens to make API calls on your behalf; scope connected integrations and review what account data is accessed before granting access."
 applicationCategory: DeveloperApplication
 operatingSystem: Web
 tags:
@@ -22,6 +28,18 @@ keywords:
   - ai agent tools
   - tool integrations
 ---
+
+## How Composio compares
+
+Composio gives agents tool access; alternatives differ in openness and model:
+
+| Approach | What it is | Open standard | Notable for |
+| --- | --- | --- | --- |
+| **Composio** | Managed integration platform for agents | No | Large catalog of prebuilt tool integrations + managed auth |
+| **MCP (Model Context Protocol)** | Open protocol for tool/data access | Yes | Vendor-neutral standard with many community servers |
+| **n8n** | Workflow automation platform | Yes (fair-code) | Visual workflows that can wrap APIs as agent tools |
+
+Use Composio for a managed, batteries-included integration layer; MCP when you want an open, portable standard, or n8n for visual workflow automation around APIs.
 
 ## Editorial notes
 

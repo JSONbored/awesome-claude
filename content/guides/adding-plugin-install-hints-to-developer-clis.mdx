@@ -3,17 +3,17 @@ title: Adding Plugin Install Hints to Developer CLIs
 slug: adding-plugin-install-hints-to-developer-clis
 category: guides
 description: >-
-  A practical walkthrough of emitting the claude-code-hint marker from your CLI
-  so Claude Code prompts users to install your official plugin: the hint format,
-  gating on CLAUDECODE, where to emit it, and the official-marketplace requirement.
+  A practical walkthrough of the claude-code-hint protocol. When CLAUDECODE is
+  set, have your CLI write a self-closing tag to stderr; Claude Code strips the
+  line before it reaches the model and shows a one-time prompt to install your
+  plugin — but only for plugins in the official Anthropic marketplace.
 cardDescription: >-
-  Emit the claude-code-hint marker from your CLI so Claude Code prompts users to
-  install your official plugin, gated on CLAUDECODE.
-seoTitle: Adding Plugin Install Hints to Developer CLIs
+  Write a claude-code-hint tag to stderr under CLAUDECODE, and Claude Code
+  prompts users once to install your official-marketplace plugin.
+seoTitle: "Claude Code Plugin Install Hints: the claude-code-hint Tag"
 seoDescription: >-
-  How to emit a claude-code-hint marker from your CLI so Claude Code prompts
-  users to install your official-marketplace plugin: hint format, gating on the
-  CLAUDECODE env var, where to emit, and requirements.
+  Emit a claude-code-hint tag to stderr under CLAUDECODE so Claude Code shows a
+  one-time prompt to install your plugin from the official Anthropic marketplace.
 author: JPette1783
 authorProfileUrl: "https://github.com/JPette1783"
 submittedBy: JPette1783

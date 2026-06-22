@@ -1,0 +1,220 @@
+---
+title: Strands Agents
+slug: strands-agents
+category: tools
+description: >-
+  Open-source Python and TypeScript SDK for building model-driven AI agents
+  with any model provider, MCP tools, streaming, multi-agent patterns,
+  structured output, observability, hooks, guardrails, and production
+  deployment guidance.
+cardDescription: >-
+  Python and TypeScript agent SDK with model providers, MCP, streaming,
+  structured output, hooks, observability, tools, and multi-agent patterns.
+seoTitle: Strands Agents SDK for Python, TypeScript, MCP, and Multi-Agent Workflows
+seoDescription: >-
+  Use Strands Agents to build production AI agents in Python or TypeScript with
+  Bedrock, Anthropic, OpenAI, Gemini, Ollama, MCP tools, streaming, structured
+  output, hooks, observability, and multi-agent orchestration.
+author: Strands Agents
+authorProfileUrl: "https://github.com/strands-agents"
+dateAdded: "2026-06-18"
+websiteUrl: "https://strandsagents.com/"
+documentationUrl: "https://strandsagents.com/docs/user-guide/quickstart/overview/"
+repoUrl: "https://github.com/strands-agents/harness-sdk"
+packageUrl: "https://pypi.org/pypi/strands-agents/json"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/strands-agents/harness-sdk"
+  - "https://raw.githubusercontent.com/strands-agents/harness-sdk/main/README.md"
+  - "https://raw.githubusercontent.com/strands-agents/harness-sdk/main/strands-py/pyproject.toml"
+  - "https://raw.githubusercontent.com/strands-agents/harness-sdk/main/strands-ts/package.json"
+  - "https://raw.githubusercontent.com/strands-agents/harness-sdk/main/strands-ts/README.md"
+  - "https://raw.githubusercontent.com/strands-agents/harness-sdk/main/LICENSE.APACHE"
+  - "https://strandsagents.com/docs/user-guide/quickstart/overview/"
+  - "https://strandsagents.com/docs/user-guide/concepts/model-providers/"
+  - "https://pypi.org/pypi/strands-agents/json"
+  - "https://www.npmjs.com/package/@strands-agents/sdk"
+installable: true
+installCommand: "pip install strands-agents strands-agents-tools"
+usageSnippet: >-
+  Install the Python SDK or TypeScript SDK, configure the selected model
+  provider, then create an Agent with reviewed tools, MCP clients, hooks,
+  structured outputs, streaming, and observability for the workflow.
+copySnippet: |-
+  # Python
+  pip install strands-agents strands-agents-tools
+
+  # TypeScript
+  npm install @strands-agents/sdk
+estimatedSetupTime: 25 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.10 or newer for the Python SDK, or Node.js 20 or newer for the TypeScript SDK."
+  - "AWS credentials and Amazon Bedrock model access for the default provider, or configured credentials for Anthropic, OpenAI, Gemini, Ollama, LiteLLM, Mistral, Writer, SageMaker, or another selected provider."
+  - "A reviewed tool boundary for built-in tools, custom tools, MCP servers, HTTP calls, file editing, shell execution, sandboxing, A2A, and multi-agent workflows."
+  - "OpenTelemetry, tracing, logging, and retention decisions before using Strands for production agents."
+  - "Version pinning and compatibility review when mixing Python SDK, TypeScript SDK, model provider packages, MCP servers, and optional extras."
+safetyNotes:
+  - "Strands agents can call custom tools, MCP tools, vended tools, model providers, HTTP APIs, file editors, shell tools, sandboxes, and multi-agent orchestrators; every tool needs explicit permission and side-effect review."
+  - "The README says both SDKs default to Amazon Bedrock, so unattended examples may use AWS credentials and hosted model access unless the provider is changed."
+  - "TypeScript exports include vended file-editor, HTTP request, bash, sandbox, intervention, plugin, telemetry, and session-storage surfaces; keep production credentials and filesystem scope narrow."
+  - "Python optional extras include provider, A2A, bidirectional streaming, OpenTelemetry, Cedar, SageMaker, and other integrations; install only the extras needed for the current runtime."
+  - "Hooks, guardrails, structured output validation, steering handlers, and traces help control behavior, but they do not replace authorization, audit logs, human approval, rollback plans, or domain-specific tests."
+privacyNotes:
+  - "Prompts, chat history, system prompts, tool schemas, tool arguments, tool results, traces, hooks, model responses, streaming events, structured outputs, and errors can be sent to configured model providers or observability backends."
+  - "MCP servers and vended tools may expose local files, shell output, HTTP responses, cloud resources, SaaS records, credentials, source code, and user data to the agent loop."
+  - "AWS, Anthropic, OpenAI, Gemini, Ollama, LiteLLM, SageMaker, A2A, OpenTelemetry, and other integrations each have separate logging, retention, and access-control behavior."
+  - "Do not publish AWS credentials, provider API keys, Bedrock model access details, OpenTelemetry endpoints, trace IDs containing sensitive metadata, filesystem paths, or generated run logs in public issues or PRs."
+tags:
+  - strands-agents
+  - agents
+  - python
+  - typescript
+  - mcp
+  - multi-agent
+  - bedrock
+  - openai
+  - anthropic
+  - observability
+keywords:
+  - Strands Agents
+  - Strands Agents SDK
+  - strands-agents Python
+  - "@strands-agents/sdk"
+  - Python agent SDK
+  - TypeScript agent SDK
+  - Strands MCP
+  - Bedrock agent framework
+  - multi-agent Strands
+  - model-driven AI agents
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Strands Agents is an open-source SDK for building model-driven AI agents in
+Python and TypeScript. The canonical `strands-agents/harness-sdk` monorepo
+contains the Python SDK, TypeScript SDK, documentation site, WebAssembly
+support, developer CLI tooling, governance docs, and supporting packages.
+
+The project is relevant for Claude-adjacent teams because it treats the agent
+loop as application infrastructure: model providers, tools, MCP clients,
+streaming, structured output, hooks, traces, guardrails, and multi-agent
+patterns are first-class concerns rather than prompt-only conventions.
+
+## Install
+
+For Python projects:
+
+```bash
+pip install strands-agents strands-agents-tools
+```
+
+For TypeScript projects:
+
+```bash
+npm install @strands-agents/sdk
+```
+
+Both SDKs default to Amazon Bedrock in the upstream quick start. Configure AWS
+credentials and model access first, or explicitly select another provider such
+as Anthropic, OpenAI, Gemini, Ollama, LiteLLM, Mistral, Writer, SageMaker, or a
+custom model integration.
+
+## Core Capabilities
+
+| Area | Strands Agents Coverage |
+| --- | --- |
+| SDKs | Python package `strands-agents` and npm package `@strands-agents/sdk` |
+| Model Providers | Bedrock default plus Anthropic, OpenAI, Gemini, Ollama, LiteLLM, Mistral, Writer, SageMaker, and custom providers |
+| Tools | Python tools package, TypeScript Zod-typed tools, vended tools, custom tools, and MCP clients |
+| MCP | Python `mcp` dependency and TypeScript MCP client support for attaching external MCP servers |
+| Runtime Control | Agent loop, execution limits, hooks, steering handlers, guardrails, and streaming |
+| Outputs | Structured output with validation, including Zod-backed TypeScript workflows |
+| Multi-Agent | TypeScript graph and swarm patterns plus documented multi-agent examples |
+| Observability | OpenTelemetry dependencies, telemetry exports, traces, hooks, and production guidance |
+| Advanced Integrations | A2A, bidirectional streaming, Cedar policy hooks, sandbox exports, session storage, and WASM support |
+
+## MCP Fit
+
+Strands is useful for MCP searches because MCP can be used as a tool source
+inside the agent runtime. A Strands app can combine local or remote MCP servers
+with custom application tools, provider-native model calls, structured outputs,
+and multi-agent orchestration.
+
+Keep the boundary explicit. An MCP server may expose local files, browser
+automation, cloud infrastructure, documentation search, databases, SaaS
+accounts, or internal APIs. Strands provides the runtime connection; the app
+owner still has to define credentials, scopes, allowlists, logging, approvals,
+and rollback behavior.
+
+## Use Cases
+
+- Build Python or TypeScript assistants that can swap model providers without
+  rewriting the agent loop.
+- Connect MCP servers to an agent alongside custom application tools.
+- Add structured output validation to tool-using agents.
+- Stream agent responses and events into a product UI or operations console.
+- Coordinate multi-agent workflows with graph or swarm patterns.
+- Instrument production agents with hooks, telemetry, traces, and deployment
+  review.
+- Prototype with Bedrock, then move to Anthropic, OpenAI, Gemini, Ollama, or
+  another provider when deployment requirements change.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README describes Strands Agents as a model-driven SDK for
+  building AI agents in a few lines of code.
+- The README says the monorepo contains `strands-py/`, `strands-ts/`,
+  WebAssembly support, developer CLI tooling, docs, and governance/process
+  material.
+- The README documents Python installation with
+  `pip install strands-agents strands-agents-tools` and TypeScript installation
+  with `npm install @strands-agents/sdk`.
+- The README says both SDKs default to Amazon Bedrock and that the quickstart
+  covers Anthropic, OpenAI, Gemini, Ollama, and other providers.
+- The Python SDK `pyproject.toml` declares package `strands-agents`, Python
+  `>=3.10`, Apache-2.0 licensing, AWS authorship, `mcp`, Pydantic,
+  OpenTelemetry, and optional provider/A2A/bidirectional/Cedar extras.
+- The TypeScript package declares `@strands-agents/sdk`, Node `>=20.0.0`,
+  Apache-2.0 licensing, model exports, MCP client support, multi-agent exports,
+  telemetry, vended tools, vended plugins, interventions, sandbox exports, and
+  session storage.
+- PyPI resolves `strands-agents` version `1.44.0` and `strands-agents-tools`
+  version `0.8.1`; npm resolves `@strands-agents/sdk` version `1.6.0`.
+- GitHub reports Apache-2.0 licensing, an active default branch, and recent
+  activity for `strands-agents/harness-sdk`.
+
+## Safety and Privacy
+
+Strands is an application framework, so its risk profile comes from the model
+providers, tools, MCP servers, vended utilities, sandboxes, cloud resources, and
+observability systems connected to each agent. Treat each integration as a
+separate trust boundary with least-privilege credentials, audit logs, rate
+limits, timeouts, and human approval for high-impact actions.
+
+Telemetry, traces, hooks, session stores, model calls, tool calls, MCP results,
+streaming events, and error logs may contain sensitive workspace or user data.
+Decide what is retained, who can inspect it, and which providers receive it
+before deploying a Strands agent to production.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, `content/guides/`, open pull requests, and repository-wide
+content for `Strands Agents`, `Strands Agents SDK`,
+`strands-agents/harness-sdk`, `strandsagents.com`, `strands-agents`,
+`@strands-agents/sdk`, `strands-agents-tools`, and Strands MCP. Existing
+content mentions Strands only as an integration target for the AWS MCP Proxy;
+no dedicated Strands Agents tools entry, exact source URL duplicate, target
+file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

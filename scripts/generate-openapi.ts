@@ -17,6 +17,7 @@ const require = createRequire(import.meta.url);
 const {
   apiErrorEnvelopeSchema,
   registryBrandAssetSchema,
+  registryFeedResponseSchema,
   registryTrendingResponseSchema,
   registrySearchResultSchema,
   listApiRouteDefinitions,
@@ -171,6 +172,7 @@ function buildOpenApiDocument() {
 
   registry.register("ErrorEnvelope", apiErrorEnvelopeSchema);
   registry.register("RegistryBrandAsset", registryBrandAssetSchema);
+  registry.register("RegistryFeedResponse", registryFeedResponseSchema);
   registry.register("RegistrySearchResult", registrySearchResultSchema);
   registry.register("RegistryTrendingResponse", registryTrendingResponseSchema);
   registry.register("RegistryTrustSignals", registryTrustSignalsSchema);
@@ -212,7 +214,7 @@ function buildOpenApiDocument() {
       description:
         "Read-only registry, distribution feeds, and tightly scoped dynamic endpoints. Public registry publishing is not exposed through the API.",
     },
-    servers: [{ url: "https://heyclau.de" }, { url: "https://dev.heyclau.de" }],
+    servers: [{ url: "https://heyclau.de" }],
     security: [{ OriginCheck: [] }],
     components: {
       securitySchemes: {

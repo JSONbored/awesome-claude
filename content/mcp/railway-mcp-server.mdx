@@ -1,0 +1,171 @@
+---
+title: Railway MCP Server for Claude
+slug: railway-mcp-server
+category: mcp
+description: >-
+  Manage Railway projects, services, deployments, and environments from Claude — create projects,
+  deploy templates, pull variables, trigger redeployments, and more — with the official Railway MCP
+  server built into the Railway CLI.
+cardDescription: "Official Railway MCP: manage projects, deployments & environments from Claude Code."
+seoTitle: "Railway MCP Server for Claude — Deploy & Manage Railway Projects"
+seoDescription: "Connect Claude to Railway with the official MCP server (built into the Railway CLI): create projects, deploy templates, manage services, pull environment variables, and trigger redeployments from Claude Code or Desktop."
+author: Railway
+authorProfileUrl: "https://github.com/railwayapp"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.railway.com/cli/mcp"
+websiteUrl: "https://railway.com"
+repoUrl: "https://github.com/railwayapp/cli"
+retrievalSources:
+  - "https://docs.railway.com/cli/mcp"
+  - "https://docs.railway.com/guides/cli"
+  - "https://github.com/railwayapp/cli"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "railway mcp install --agent claude-code"
+usageSnippet: >-
+  Ask Claude to list your Railway projects, deploy a template, check service logs, or pull environment variables from a project.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "railway": {
+        "command": "railway",
+        "args": ["mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "railway": {
+        "command": "railway",
+        "args": ["mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - "Railway CLI installed: `npm i -g @railway/cli` (or `brew install railway` on macOS)."
+  - "Logged in to Railway: `railway login`"
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The Railway CLI MCP server runs as a local stdio process with full access to your authenticated Railway account — it can create, delete, and modify projects and services."
+  - "Use Railway's environment scoping and project permissions to limit blast radius; avoid running the MCP server under an account with access to production environments unless intentional."
+  - "A remote option (`--remote`) routes requests through `mcp.railway.com`; prefer local stdio if you prefer to keep credentials on-device."
+privacyNotes:
+  - "Railway commands may expose environment variable names and values from your projects into the Claude context; treat these as secrets."
+  - "The Railway CLI authenticates via stored tokens — keep your Railway account credentials secure."
+tags:
+  - railway
+  - deployment
+  - cloud
+  - infrastructure
+  - paas
+  - devops
+keywords:
+  - railway mcp server
+  - deploy railway from claude
+  - railway cli mcp
+  - manage railway projects with ai
+  - railway deployment mcp
+  - paas mcp server claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Railway MCP Server** is the official Model Context Protocol integration built directly into
+the Railway CLI. It lets Claude manage your Railway infrastructure — creating projects, deploying
+templates, inspecting services, pulling environment variables, and triggering redeployments —
+through natural language. It runs as a local stdio process using your existing `railway login`
+session and is licensed under MIT.
+
+A remote option is also available (`railway mcp install --remote`) which routes requests through
+`https://mcp.railway.com` instead of your local CLI.
+
+## Key capabilities
+
+- **Project management** — list, create, and inspect Railway projects.
+- **Service operations** — view services, check deployment status, trigger redeployments.
+- **Environment variables** — pull and inspect variables from any project environment.
+- **Template deployment** — deploy Railway templates from natural language.
+- **Log inspection** — retrieve recent service logs for debugging.
+- **Environment management** — list and switch between Railway environments.
+
+## How it compares
+
+| Server | Cloud deployments | Env var access | Log retrieval | Transport |
+|---|---|---|---|---|
+| **Railway MCP** | Yes (Railway PaaS) | Yes | Yes | stdio (local) or Remote |
+| Fly.io MCP | Yes (Fly.io) | Yes | Yes | stdio |
+| DigitalOcean MCP | Yes (DO cloud) | Limited | Limited | Remote |
+| Vercel MCP | Yes (Vercel) | Yes | Yes | Remote |
+| Render MCP | Yes (Render) | Limited | Yes | Remote |
+
+Railway's MCP is unique in bundling the integration into the CLI binary rather than shipping a
+separate npm package, meaning it always stays in sync with the Railway API.
+
+## Installation
+
+### Install the Railway CLI
+
+```bash
+# npm (macOS, Linux, Windows)
+npm i -g @railway/cli
+
+# macOS via Homebrew
+brew install railway
+```
+
+### Log in and configure Claude Code
+
+```bash
+railway login
+railway mcp install --agent claude-code
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "railway": {
+      "command": "railway",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### Remote mode (optional)
+
+To connect through Railway's hosted MCP endpoint instead of the local CLI:
+
+```bash
+railway mcp install --agent claude-code --remote
+```
+
+## Requirements
+
+- A Railway account.
+- Railway CLI installed via `npm i -g @railway/cli` or `brew install railway`.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Runs as a local stdio process — credentials stay on-device in stdio mode.
+- Use environment scoping and project-level permissions to limit what Claude can access.
+- Remote mode (`--remote`) sends requests through `mcp.railway.com`.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Railway's MCP documentation at `docs.railway.com/cli/mcp` confirms the built-in MCP
+  integration, `railway mcp install --agent claude-code` setup command, and both local
+  stdio and remote transport options.
+- Railway's CLI installation guide at `docs.railway.com/guides/cli` documents `npm i -g
+  @railway/cli` and `brew install railway` as the recommended install methods.
+- GitHub repo `railwayapp/cli` (MIT) is the official open-source Railway CLI codebase
+  containing the MCP integration.

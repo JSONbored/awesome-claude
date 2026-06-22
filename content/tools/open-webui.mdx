@@ -1,0 +1,187 @@
+---
+title: Open WebUI
+slug: open-webui
+category: tools
+description: >-
+  Self-hosted AI platform and web UI for Ollama, OpenAI-compatible APIs, RAG,
+  Python function tools, model builder workflows, artifacts, web search, vector
+  databases, enterprise auth, observability, plugins, and MCP-adjacent OpenAPI
+  integrations.
+cardDescription: >-
+  Self-hosted AI web UI for Ollama and OpenAI-compatible APIs with RAG, tools,
+  model builder, web search, vector databases, plugins, and enterprise auth.
+seoTitle: Open WebUI Self-Hosted AI Platform for Ollama, RAG, Tools, and MCP
+seoDescription: >-
+  Open WebUI is a self-hosted AI platform for Ollama and OpenAI-compatible APIs
+  with local RAG, Python tools, model builder, web search, vector databases,
+  plugins, enterprise auth, and mcpo MCP/OpenAPI integration.
+author: Open WebUI
+authorProfileUrl: "https://github.com/open-webui"
+dateAdded: "2026-06-18"
+websiteUrl: "https://openwebui.com/"
+documentationUrl: "https://docs.openwebui.com/"
+repoUrl: "https://github.com/open-webui/open-webui"
+packageUrl: "https://pypi.org/pypi/open-webui/json"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Web
+sourceUrls:
+  - "https://github.com/open-webui/open-webui"
+  - "https://raw.githubusercontent.com/open-webui/open-webui/main/README.md"
+  - "https://raw.githubusercontent.com/open-webui/open-webui/main/LICENSE"
+  - "https://raw.githubusercontent.com/open-webui/open-webui/main/pyproject.toml"
+  - "https://pypi.org/pypi/open-webui/json"
+  - "https://docs.openwebui.com/"
+installable: true
+installCommand: "pip install open-webui"
+usageSnippet: >-
+  Install `open-webui` with Python 3.11/3.12 or deploy the official Docker
+  image, then connect Ollama, OpenAI-compatible APIs, RAG stores, Python tools,
+  plugins, and auth providers according to the deployment boundary.
+copySnippet: |-
+  pip install open-webui
+  open-webui serve
+estimatedSetupTime: 30 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.11 or 3.12 for pip installation, or Docker/Kubernetes for container deployment."
+  - "Ollama, OpenAI-compatible endpoint, OpenAI API key, or another configured model provider."
+  - "Persistent storage for the application database and uploaded/RAG content; Docker users must mount `/app/backend/data` to avoid data loss."
+  - "Optional vector database, document extraction, web search, image generation, speech, enterprise auth, object storage, Redis, or observability services depending on enabled features."
+  - "A policy for which users can create models, add Python function tools, enable plugins, access documents, and connect external APIs."
+safetyNotes:
+  - "Open WebUI can run Python function-calling tools, RAG ingestion, web search, web browsing, image generation, plugins, and model/provider integrations; review each capability before enabling it for untrusted users."
+  - "Docker examples expose web ports and persistent volumes. Mount persistent data, set admin/auth controls, and avoid treating demo defaults as production hardening."
+  - "Python function tools and plugin pipelines can execute application logic and access configured services. Restrict tool creation and plugin installation to trusted administrators."
+  - "RAG and web browsing can ingest local documents, URLs, cloud files, and extracted text; test indexing quality and permissions before exposing private corpora to users."
+  - "Open WebUI uses a custom Open WebUI License with branding restrictions and enterprise-license exceptions. Verify license terms before redistribution, white-labeling, or commercial deployment."
+privacyNotes:
+  - "Chats, prompts, uploaded files, document chunks, embeddings, vector metadata, web search results, browser-fetched pages, Python tool inputs, plugin outputs, voice/video data, logs, metrics, and traces may contain private data."
+  - "Configured model providers, vector databases, document extraction engines, web search providers, image providers, object storage, Redis, auth providers, and observability backends may receive user data."
+  - "Keep provider keys, OAuth/LDAP/SSO secrets, database URLs, object storage keys, plugin credentials, uploaded files, RAG indexes, and OpenTelemetry exports out of public repos and screenshots."
+  - "Define retention, deletion, tenant separation, group permissions, export policy, and audit review before using Open WebUI as a shared internal workspace."
+tags:
+  - open-webui
+  - self-hosted
+  - ollama
+  - rag
+  - ai-agents
+  - mcp
+  - openapi
+  - tools
+  - vector-database
+  - docker
+keywords:
+  - Open WebUI
+  - Open WebUI Ollama
+  - Open WebUI RAG
+  - Open WebUI MCP
+  - Open WebUI tools
+  - self hosted AI web UI
+  - Ollama web UI
+  - OpenAI compatible API UI
+  - Python function calling tools
+  - mcpo Open WebUI
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Open WebUI is a self-hosted AI platform and web UI for Ollama,
+OpenAI-compatible APIs, local RAG, Python function tools, model builder
+workflows, web search, web browsing, image generation, storage backends,
+enterprise auth, observability, plugins, and scalable deployments.
+
+This tools entry is distinct from the existing `mcpo` MCP/OpenAPI proxy entry.
+`mcpo` is the bridge that exposes MCP tools as OpenAPI endpoints for clients
+such as Open WebUI. This entry covers the main Open WebUI application that users
+run, configure, and extend.
+
+## Install
+
+Open WebUI can be installed from PyPI with Python 3.11 or 3.12:
+
+```bash
+pip install open-webui
+open-webui serve
+```
+
+The README also documents Docker images for standard, CUDA, and bundled Ollama
+deployments, plus Kubernetes, Docker Compose, Kustomize, Helm, and other
+deployment options in the official docs.
+
+## Core Capabilities
+
+| Area | Open WebUI Coverage |
+| --- | --- |
+| Model access | Ollama, OpenAI-compatible APIs, LM Studio, Groq, Mistral, OpenRouter, and other endpoints |
+| RAG | Built-in inference engine for RAG, local documents, document library, web content, 9 vector databases, and multiple extraction engines |
+| Tools | Native Python function-calling tools with a built-in code editor and BYOF workflow |
+| Model builder | Create Ollama models and custom characters/agents through the web UI |
+| Search and browsing | Web search across many providers and URL ingestion into chats |
+| Media | Voice/video calls, speech-to-text, text-to-speech, and image generation/editing integrations |
+| Operations | RBAC, user groups, enterprise auth, SCIM, object storage, OpenTelemetry, Redis-backed scaling, and database/storage options |
+| Plugins | Open WebUI plugin support through Pipelines and related extension patterns |
+| MCP-adjacent path | `mcpo` can expose MCP tools as OpenAPI endpoints for Open WebUI and similar tools |
+
+## MCP Fit
+
+Open WebUI is not itself listed here as an MCP server. It is relevant to MCP
+searches because the Open WebUI ecosystem includes `mcpo`, already listed in
+this directory, which can expose MCP tools over OpenAPI for Open WebUI and other
+agent tools. The main application also has `mcp` in its Python dependencies and
+repository topics, so MCP-adjacent workflows are part of the ecosystem.
+
+The practical security boundary is still the same: decide which tools, OpenAPI
+actions, Python functions, plugins, and model providers users can reach from the
+web UI, then enforce that through roles, groups, secrets, and deployment config.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub reports `open-webui/open-webui` as an active repository with 142,000+
+  stars, release `v0.9.6`, and topics including `ollama`, `self-hosted`, `rag`,
+  `openai`, `mcp`, and `openapi`.
+- The README describes Open WebUI as an extensible, feature-rich, self-hosted AI
+  platform designed to operate offline, with Ollama and OpenAI-compatible API
+  support, built-in RAG, Docker/Kubernetes setup, RBAC, model builder, native
+  Python function-calling tools, local RAG, web search, web browsing, image
+  generation, vector database support, enterprise auth, observability, and
+  plugin support.
+- The README documents `pip install open-webui`, `open-webui serve`, Docker
+  installation, CUDA and bundled Ollama images, data-volume persistence, offline
+  mode, updating, and dev-tag caveats.
+- `pyproject.toml` declares the `open-webui` package, Python `>=3.11,<3.13`,
+  the project license file, `mcp==1.26.0`, OpenAI/Anthropic/Google clients,
+  LangChain packages, vector-store/database dependencies, extraction packages,
+  auth packages, Redis/session support, and optional database extras.
+- PyPI resolves `open-webui` package metadata for version `0.9.6`.
+- The root LICENSE file is the Open WebUI License with branding restrictions
+  and references to `LICENSE_HISTORY` for prior license terms.
+
+## Safety and Privacy
+
+Open WebUI can become a shared internal AI workspace very quickly. Before using
+it with real users, decide who can administer providers, create models, add
+Python tools, install plugins, access documents, export conversations, and
+change auth or storage settings.
+
+The same applies to RAG. Uploaded files, extracted text, embeddings, vector
+metadata, web results, browsed pages, and model responses can leak sensitive
+context through logs, providers, tools, or shared chats. Keep persistent storage
+mounted, secrets scoped, plugin access limited, and audit logs reviewed.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/mcp/`, `content/agents/`,
+`content/skills/`, guides, collections, open pull requests, and repository-wide
+content for `open-webui/open-webui`, Open WebUI, OpenWebUI, `open-webui`,
+Ollama web UI, Open WebUI RAG, Open WebUI MCP, Open WebUI tools, Python function
+calling tools, and self-hosted AI web UI. Existing content includes
+`content/mcp/mcpo-mcp-openapi-proxy.mdx`, which covers the Open WebUI ecosystem
+MCP-to-OpenAPI proxy. No dedicated Open WebUI tools entry for the main platform,
+exact source URL duplicate in tools, target file, or open duplicate PR was
+found.

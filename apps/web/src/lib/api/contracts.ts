@@ -339,6 +339,48 @@ export const registrySearchResponseSchema = z.object({
   facets: registrySearchFacetsSchema.optional(),
 });
 
+const registryFeedLinkMapSchema = z.record(z.string(), z.string());
+
+export const registryFeedResponseSchema = z
+  .object({
+    schemaVersion: z.number(),
+    kind: z.literal("registry-feed"),
+    generatedAt: z.string(),
+    site: z.object({
+      name: z.string(),
+      url: z.string().url(),
+      description: z.string(),
+    }),
+    qualityMethodology: z.string(),
+    categoryFeeds: registryFeedLinkMapSchema,
+    platformFeeds: registryFeedLinkMapSchema,
+    jobs: z.string(),
+    endpoints: z
+      .object({
+        jobs: z.string(),
+        qualityMethodology: z.string(),
+        categoryFeed: z.string(),
+        platformFeed: z.string(),
+      })
+      .catchall(z.string()),
+    contracts: z.record(z.string(), z.string()),
+    artifacts: z.record(z.string(), z.unknown()),
+    artifactContracts: z.record(z.string(), z.unknown()).optional(),
+    qualitySummary: z.unknown().optional(),
+    trustSummary: z.unknown().optional(),
+    categories: z
+      .array(
+        z.object({
+          category: z.string(),
+          label: z.string(),
+          count: z.number().int().nonnegative(),
+          description: z.string(),
+        }),
+      )
+      .max(64),
+  })
+  .passthrough();
+
 export const registryTrendingResponseSchema = z.object({
   schemaVersion: z.number(),
   kind: z.literal("registry-trending"),
@@ -446,6 +488,17 @@ export const entryParamsSchema = z.object({
   slug: safeSlugSchema,
 });
 
+export const reportExportParamsSchema = z.object({
+  // "<report-slug>.<json|csv>", e.g. "agent-skills.csv"
+  report: z
+    .string()
+    .trim()
+    .max(64)
+    .regex(/^[a-z0-9-]+\.(?:json|csv)$/, {
+      message: "report must be a report slug with a .json or .csv extension",
+    }),
+});
+
 export const votesQueryBodySchema = z.object({
   keys: z.array(entryKeySchema).max(1000).optional().default([]),
   clientId: z.string().trim().max(128).optional().default(""),
@@ -468,6 +521,10 @@ export const newsletterSubscribeBodySchema = z.object({
   email: safeEmailSchema,
   segments: z.array(newsletterSegmentIdSchema).max(20).optional().default([]),
   source: z.string().trim().max(64).optional().default("site"),
+});
+
+export const newsletterConfirmBodySchema = z.object({
+  token: z.string().trim().min(1).max(4096),
 });
 
 export const newsletterWebhookBodySchema = z
@@ -494,6 +551,7 @@ const submissionPreflightDuplicateSchema = z.object({
   title: z.string().max(240),
   url: z.string().url().max(2048),
   reasons: z.array(z.string().max(80)).max(8),
+  reasonLabels: z.array(z.string().max(120)).max(8).optional(),
 });
 
 const submissionPreflightPrPreviewSchema = z.object({
@@ -771,7 +829,7 @@ export const ogQuerySchema = z.object({
 });
 
 export const brandAssetParamsSchema = z.object({
-  kind: z.literal("icon"),
+  kind: z.enum(["icon", "logo"]),
   domain: z
     .string()
     .trim()
@@ -871,6 +929,8 @@ export const apiRouteDefinitions = {
       "Discovers API, RSS, changelog, category feeds, platform feeds, category and platform shards, and artifact URLs.",
     tags: ["Registry"],
     originCheck: true,
+    responseSchema: registryFeedResponseSchema,
+    responseSchemaName: "RegistryFeedResponse",
     rateLimit: {
       scope: "registry-feed",
       limit: 120,
@@ -884,7 +944,7 @@ export const apiRouteDefinitions = {
     path: "/api/registry/trending",
     summary: "Public registry trending entries",
     description:
-      "Returns bounded privacy-safe trending registry entries from aggregate votes, community signals, intent events, and static trust metadata.",
+      "Returns bounded privacy-safe trending registry entries ranked from maintainer-controlled static trust metadata; public engagement aggregates are reported only as availability metadata.",
     tags: ["Registry"],
     originCheck: true,
     querySchema: registryTrendingQuerySchema,
@@ -960,6 +1020,23 @@ export const apiRouteDefinitions = {
       limit: 180,
       windowMs: 60_000,
       binding: "API_REGISTRY_RATE_LIMIT",
+    },
+  }),
+  "reports.export": route({
+    id: "reports.export",
+    method: "GET",
+    path: "/api/reports/{report}",
+    summary: "Registry data report export (JSON or CSV)",
+    description:
+      "Machine-readable export of a HeyClaude data report, selected by '<report-slug>.json' or '<report-slug>.csv'. Returns the report's headline stats and labelled distributions computed deterministically from the registry. Free to reuse under CC BY 4.0 with attribution.",
+    tags: ["Distribution"],
+    paramsSchema: reportExportParamsSchema,
+    responseContentType: "application/json",
+    rateLimit: {
+      scope: "reports-export",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
     },
   }),
   "mcp.streamable": route({
@@ -1040,6 +1117,21 @@ export const apiRouteDefinitions = {
     bodyLimitBytes: 8 * 1024,
     rateLimit: {
       scope: "newsletter-subscribe",
+      limit: 15,
+      windowMs: 60_000,
+      binding: "API_STRICT_RATE_LIMIT",
+    },
+  }),
+  "newsletter.confirm": route({
+    id: "newsletter.confirm",
+    method: "POST",
+    path: "/api/public/newsletter/confirm",
+    summary: "Confirm a newsletter subscription",
+    tags: ["Newsletter"],
+    bodySchema: newsletterConfirmBodySchema,
+    bodyLimitBytes: 8 * 1024,
+    rateLimit: {
+      scope: "newsletter-confirm",
       limit: 15,
       windowMs: 60_000,
       binding: "API_STRICT_RATE_LIMIT",

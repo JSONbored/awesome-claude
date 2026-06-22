@@ -1,0 +1,168 @@
+---
+title: Brex MCP Server for Claude
+slug: brex-mcp-server
+category: mcp
+description: >-
+  Manage your Brex corporate card and banking account from Claude — expenses, cards, transactions,
+  users, bills, vendors, travel bookings, and spend analytics — with the official Brex remote
+  MCP server.
+cardDescription: "Official Brex MCP: expenses, cards, banking & spend analytics from Claude."
+seoTitle: "Brex MCP Server for Claude — Expenses, Corporate Cards & Banking via AI"
+seoDescription: "Connect Claude to Brex with the official remote MCP server: manage expenses, corporate cards, banking transactions, bills, vendors, and spend analytics — via OAuth or API key. 50+ tools for finance teams using Claude Code."
+author: Brex
+authorProfileUrl: "https://github.com/brexhq"
+dateAdded: "2026-06-18"
+documentationUrl: "https://www.brex.com/journal/brex-mcp-connect-brex-to-ai-tools"
+websiteUrl: "https://www.brex.com"
+retrievalSources:
+  - "https://www.brex.com/journal/brex-mcp-connect-brex-to-ai-tools"
+  - "https://www.brex.com/support/using-brex-in-ai-apps"
+  - "https://www.brex.com/product-announcements/access-brex-data-in-ai-assistants"
+  - "https://developer.brex.com/docs/mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http brex https://api.brex.com/mcp"
+usageSnippet: >-
+  Ask Claude to look up recent expenses, list outstanding bills, find card transactions by
+  merchant, or summarize department spend — using natural language against your live Brex account.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "brex": {
+        "type": "http",
+        "url": "https://api.brex.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "brex": {
+        "type": "http",
+        "url": "https://api.brex.com/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Brex account — authenticate via OAuth (recommended) when prompted, or generate a Bearer API key in Settings → Developer."
+  - "Permissions in your Brex workspace aligned with the data you need (expenses, cards, banking)."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Each tool requires specific Brex user capabilities — access is constrained by your existing Brex account permissions and team policies."
+  - "This MCP server provides read and write access to financial data including expenses, cards, and transactions; confirm any write operations before approving."
+  - "API key auth should use a token scoped to the minimum required permissions; rotate keys regularly from Settings → Developer."
+privacyNotes:
+  - "Expense details, card data, banking transactions, user profiles, and vendor information from your Brex workspace are surfaced in Claude's context."
+  - "OAuth is the recommended authentication method — no API token is stored in your MCP configuration."
+tags:
+  - brex
+  - expense-management
+  - corporate-cards
+  - banking
+  - finance
+  - spend-analytics
+keywords:
+  - brex mcp server
+  - brex mcp claude
+  - corporate expense management mcp
+  - brex cards claude code
+  - finance ai assistant mcp
+  - spend analytics mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Brex MCP Server** is the official remote Model Context Protocol server from Brex.
+It connects Claude directly to your Brex corporate card and banking account — expenses, cards,
+transactions, users, bills, vendors, travel, accounting, and spend analytics — through natural
+language.
+
+Per Brex's documentation, the MCP server lets you "connect AI assistants like Claude Code,
+Codex, or Cursor directly to your Brex account" to ask questions like "What did the engineering
+team spend on SaaS last month?" without leaving your IDE.
+
+Authentication uses OAuth (recommended) or a Brex API key. Tool access is governed by your
+existing Brex account permissions.
+
+## Key capabilities
+
+- **Expense analysis** — query expenses, filter by date/amount/merchant, identify missing receipts.
+- **Card management** — retrieve card details and spend limits.
+- **Banking** — monitor account balances and review banking transactions.
+- **Vendor management** — look up vendors, view bills and purchase orders.
+- **Travel** — access booking information and policy compliance details.
+- **Accounting** — check GL account integrations and accounting records.
+- **Administration** — search users, departments, and cost centers.
+- **Reporting** — generate and download account statements.
+
+## How it compares
+
+| Server | Expense management | Corporate cards | Banking | Travel | Auth |
+|---|---|---|---|---|---|
+| **Brex MCP** | Yes | Yes | Yes | Yes | OAuth / API key |
+| Ramp MCP | Yes | Yes | Yes | Limited | API key |
+| Expensify MCP | Yes | No | No | No | API key |
+| QuickBooks MCP | Yes (via ledger) | No | No | No | OAuth |
+
+Brex's MCP covers the full corporate spend stack (cards, expenses, banking, travel) in a single
+server, with OAuth support that requires no manual token management.
+
+## Installation
+
+### Claude Code (OAuth — recommended)
+
+```bash
+claude mcp add --transport http brex https://api.brex.com/mcp
+```
+
+Run `/mcp` in Claude Code to authenticate via OAuth.
+
+### Claude Code (API key)
+
+```bash
+claude mcp add --transport http brex https://api.brex.com/mcp \
+  --header "Authorization: Bearer YOUR_BREX_API_KEY"
+```
+
+Generate an API key in Brex → Settings → Developer.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "brex": {
+      "type": "http",
+      "url": "https://api.brex.com/mcp"
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Brex account with appropriate team member permissions.
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- OAuth authentication minimizes credential exposure — no API token required.
+- Tool access is bounded by your Brex account's existing roles and permissions.
+- API keys should be scoped to minimum permissions and rotated regularly.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Brex's MCP blog post at `brex.com/journal/brex-mcp-connect-brex-to-ai-tools` confirms the
+  hosted endpoint at `https://api.brex.com/mcp`, OAuth + API key auth, and the expense/card/
+  banking/travel tool surface.
+- Brex's AI apps support page at `brex.com/support/using-brex-in-ai-apps` documents the MCP
+  integration's 8 capability categories (expenses, cards, banking, vendors, travel, accounting,
+  administration, reporting) and example natural-language queries.
+- Brex's product announcement at `brex.com/product-announcements/access-brex-data-in-ai-
+  assistants` covers the Claude Code, Codex, and Cursor integration.

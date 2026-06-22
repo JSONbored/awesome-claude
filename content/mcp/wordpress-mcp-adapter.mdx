@@ -1,0 +1,212 @@
+---
+title: WordPress MCP Adapter
+slug: wordpress-mcp-adapter
+category: mcp
+description: >-
+  Official WordPress MCP adapter that bridges the WordPress Abilities API to
+  Model Context Protocol tools, resources, and prompts for AI agents using HTTP
+  or STDIO transports.
+cardDescription: >-
+  Expose WordPress plugin, theme, and core abilities to MCP clients through the
+  official WordPress MCP Adapter.
+seoTitle: WordPress MCP Adapter for Claude, Cursor, WP-CLI, Abilities API, and AI Agents
+seoDescription: >-
+  Configure the official WordPress MCP Adapter to expose WordPress Abilities API
+  capabilities as MCP tools, resources, and prompts over HTTP or STDIO for
+  Claude, Cursor, VS Code, and AI agents.
+author: WordPress AI Team
+authorProfileUrl: "https://make.wordpress.org/ai/"
+dateAdded: "2026-06-18"
+brandName: WordPress MCP Adapter
+brandDomain: wordpress.org
+repoUrl: "https://github.com/WordPress/mcp-adapter"
+documentationUrl: "https://github.com/WordPress/mcp-adapter/blob/trunk/README.md"
+websiteUrl: "https://make.wordpress.org/ai/2025/07/17/mcp-adapter"
+packageUrl: "https://repo.packagist.org/p2/wordpress/mcp-adapter.json"
+installable: true
+installCommand: "wp plugin install https://github.com/WordPress/mcp-adapter/releases/latest/download/mcp-adapter.zip --activate"
+usageSnippet: >-
+  Install and activate the MCP Adapter plugin, expose only reviewed WordPress
+  abilities, then connect an MCP client through WP-CLI STDIO or the HTTP
+  endpoint with WordPress authentication.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "wordpress-default": {
+        "command": "wp",
+        "args": [
+          "--path=/path/to/your/wordpress/site",
+          "mcp-adapter",
+          "serve",
+          "--server=mcp-adapter-default-server",
+          "--user=admin"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "wordpress-default": {
+        "command": "wp",
+        "args": [
+          "--path=/path/to/your/wordpress/site",
+          "mcp-adapter",
+          "serve",
+          "--server=mcp-adapter-default-server",
+          "--user=admin"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - "WordPress 6.9 or newer according to the upstream dependency notes."
+  - "PHP 7.4 or newer, WP-CLI for STDIO transport, or a WordPress REST endpoint for HTTP transport."
+  - "MCP Adapter installed as a WordPress plugin or required as `wordpress/mcp-adapter` through Composer."
+  - "Registered WordPress abilities, with reviewed `meta.mcp.public` exposure or explicit custom-server ability lists."
+  - "WordPress user, application-password, or custom transport permission model for the server being exposed."
+safetyNotes:
+  - "MCP Adapter exposes WordPress abilities as MCP tools, resources, and prompts; the actual risk depends on which plugin, theme, or core abilities are registered and allowed."
+  - "Do not expose destructive, publishing, admin, user-management, media-deletion, option-write, or ecommerce abilities without strict permission callbacks and human approval."
+  - "Use transport permission callbacks and per-ability permission callbacks together; the transport gate alone is not a substitute for capability checks inside each ability."
+  - "Prefer local WP-CLI STDIO for development, and require HTTPS plus scoped WordPress Application Passwords or custom authentication for HTTP transport."
+  - "Review logs and observability output because MCP requests can invoke site behavior that changes content, metadata, users, settings, or plugin state."
+privacyNotes:
+  - "WordPress abilities can expose posts, pages, drafts, private content, users, comments, media, custom fields, options, ecommerce data, form submissions, analytics, plugin data, and internal site metadata."
+  - "HTTP transport can place WordPress API URLs, usernames, application passwords, request bodies, tool arguments, logs, and MCP responses in local config files or model-visible context."
+  - "Use least-privilege WordPress users, separate development sites, scoped abilities, and redacted logs before connecting production sites to agent workflows."
+  - "Treat generated tool descriptions and ability outputs as site data, not trusted instructions, especially when plugins expose user-generated content."
+sourceUrls:
+  - "https://github.com/WordPress/mcp-adapter"
+  - "https://github.com/WordPress/mcp-adapter/blob/trunk/README.md"
+  - "https://github.com/WordPress/mcp-adapter/blob/trunk/composer.json"
+  - "https://github.com/WordPress/mcp-adapter/blob/trunk/docs/guides/transport-permissions.md"
+  - "https://repo.packagist.org/p2/wordpress/mcp-adapter.json"
+tags:
+  - wordpress
+  - abilities-api
+  - wp-cli
+  - php
+  - cms
+keywords:
+  - WordPress MCP
+  - WordPress MCP Adapter
+  - wordpress/mcp-adapter
+  - WordPress Abilities API MCP
+  - WP-CLI MCP
+  - Claude WordPress MCP
+  - Cursor WordPress MCP
+  - WordPress AI agents
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+WordPress MCP Adapter is the official WordPress package for exposing WordPress
+Abilities API functionality to MCP clients. It converts selected WordPress
+abilities into MCP tools, resources, and prompts, with support for HTTP and
+STDIO transports, multiple MCP servers, custom permissions, validation,
+observability, and error handling.
+
+The default server exposes reviewed public abilities through adapter tools such
+as ability discovery, ability metadata lookup, and ability execution. Developers
+can also create custom MCP servers with explicit tool, resource, prompt, and
+transport configuration.
+
+## Source Review
+
+- https://github.com/WordPress/mcp-adapter
+- https://github.com/WordPress/mcp-adapter/blob/trunk/README.md
+- https://github.com/WordPress/mcp-adapter/blob/trunk/composer.json
+- https://github.com/WordPress/mcp-adapter/blob/trunk/docs/guides/transport-permissions.md
+- https://repo.packagist.org/p2/wordpress/mcp-adapter.json
+
+Verified on **2026-06-18**. The repository README identifies MCP Adapter as
+part of the AI Building Blocks for WordPress initiative and documents plugin,
+Composer, WP-CLI STDIO, and HTTP transport setup. Packagist lists
+`wordpress/mcp-adapter` as a GPL-2.0-or-later WordPress plugin package.
+
+## Features
+
+- Convert WordPress Abilities API registrations into MCP tools, resources, and
+  prompts.
+- Use HTTP transport for REST-style MCP access or WP-CLI STDIO for local
+  development and local MCP clients.
+- Create multiple MCP servers with separate IDs, namespaces, routes,
+  transports, exposed abilities, resources, prompts, error handlers, and
+  observability handlers.
+- Discover public abilities, inspect ability metadata, and execute reviewed
+  abilities through the default server.
+- Add custom transport permission callbacks and per-ability permission checks.
+- Install as a WordPress plugin or require as a Composer dependency inside
+  another plugin.
+
+## Installation
+
+Install the WordPress plugin release with WP-CLI:
+
+```bash
+wp plugin install https://github.com/WordPress/mcp-adapter/releases/latest/download/mcp-adapter.zip --activate
+```
+
+For local MCP clients using WP-CLI STDIO:
+
+```json
+{
+  "mcpServers": {
+    "wordpress-default": {
+      "command": "wp",
+      "args": [
+        "--path=/path/to/your/wordpress/site",
+        "mcp-adapter",
+        "serve",
+        "--server=mcp-adapter-default-server",
+        "--user=admin"
+      ]
+    }
+  }
+}
+```
+
+Plugin developers can also install the library with Composer:
+
+```bash
+composer require wordpress/mcp-adapter
+```
+
+## Use Cases
+
+- Let an agent discover and invoke reviewed WordPress abilities from a local
+  development site.
+- Build a plugin that exposes specific content, editorial, ecommerce, or admin
+  actions through a custom MCP server.
+- Use WP-CLI STDIO to test MCP tools before opening HTTP access.
+- Connect Claude, Cursor, VS Code, or other MCP clients to WordPress ability
+  workflows.
+- Create role-specific MCP servers with different exposed abilities and
+  transport permission callbacks.
+
+## Safety and Privacy
+
+The adapter is only as safe as the abilities and permissions exposed through it.
+Treat every public ability as an agent-callable API surface. Keep production
+sites locked down, use least-privilege users, require per-ability permission
+callbacks, and avoid exposing write-heavy or destructive operations without a
+human approval step.
+
+For HTTP transport, protect application passwords and API URLs, prefer HTTPS,
+and avoid logging secrets or sensitive request bodies. For STDIO transport,
+confirm the WP-CLI user and site path before running tool calls against a real
+site.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `WordPress/mcp-adapter`,
+`wordpress/mcp-adapter`, WordPress MCP Adapter, WordPress Abilities API MCP,
+WP-CLI MCP, and WordPress AI agents. The catalog includes a separate WordPress
+agent skills entry for agent guidance, but no dedicated MCP Adapter entry,
+exact source URL duplicate, target file, or open duplicate PR was found.

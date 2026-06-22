@@ -1,0 +1,158 @@
+---
+title: Amazon EKS MCP Server
+slug: aws-eks-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server for Amazon EKS that gives AI code assistants
+  real-time cluster state visibility and Kubernetes/EKS resource management,
+  from cluster setup through deployment, troubleshooting, and optimization.
+cardDescription: >-
+  Connect Claude to Amazon EKS for cluster visibility, Kubernetes resource
+  management, log/event retrieval, and guided troubleshooting.
+seoTitle: "Amazon EKS MCP Server for Claude — Cluster Ops & Kubernetes"
+seoDescription: >-
+  Connect Claude to the official AWS Labs Amazon EKS MCP server for cluster
+  state visibility, Kubernetes resource lifecycle management, logs/events, and
+  troubleshooting over stdio with uvx using your scoped AWS credentials.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-21"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/eks-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.eks-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/eks-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/eks-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.eks-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.eks-mcp-server@latest
+usageSnippet: >-
+  Configure the server with uvx and a scoped AWS profile, then ask Claude to
+  show cluster state, list Kubernetes resources, fetch pod logs and events, or
+  troubleshoot an EKS issue; add the write flag only when you intend mutations.
+copySnippet: |-
+  {
+    "awslabs.eks-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.eks-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE}",
+        "AWS_REGION": "us-east-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.eks-mcp-server": {
+        "command": "uvx",
+        "args": ["awslabs.eks-mcp-server@latest"],
+        "env": {
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "AWS_REGION": "us-east-1",
+          "FASTMCP_LOG_LEVEL": "ERROR"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - An AWS account with Amazon EKS and permissions to view (and, if enabled, manage) the target clusters.
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - "AWS credentials configured locally (for example via `aws configure` or `AWS_PROFILE`) scoped to the intended account, region, and clusters."
+  - An MCP client that supports stdio servers; the server runs locally on the same host as the client.
+safetyNotes:
+  - "The configuration above is read-only. Adding the `--allow-write` flag lets the server create, update, patch, and delete EKS/Kubernetes resources (including creating clusters via CloudFormation) and `--allow-sensitive-data-access` exposes logs and events; enable these only deliberately."
+  - This server acts on real infrastructure with your AWS credentials; scope the profile to the intended account, region, and clusters, and prefer non-production targets while evaluating it.
+  - Run it only on a trusted host, and review any generated manifests or CloudFormation actions before applying them.
+privacyNotes:
+  - Cluster state, resource manifests, ARNs, and account/region metadata can be returned through tool calls and exposed to the model.
+  - "With sensitive-data access enabled, pod logs and Kubernetes events may be returned; keep account identifiers, credentials, and log contents out of public prompts, issues, and screenshots."
+tags:
+  - aws
+  - eks
+  - kubernetes
+  - infrastructure
+  - aws-labs
+keywords:
+  - amazon eks mcp server
+  - awslabs eks-mcp-server
+  - eks mcp claude
+  - kubernetes mcp aws
+  - eks cluster management mcp
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Amazon EKS MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+Model Context Protocol server that gives AI code assistants real-time visibility
+into Amazon EKS clusters and tools to manage Kubernetes resources. It spans the
+lifecycle — from cluster setup with sane defaults, through application deployment
+and resource management, to log/event retrieval and troubleshooting — all through
+natural-language interactions.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.eks-mcp-server` Python package and uses your local AWS credentials. The
+configuration shown is read-only; write and sensitive-data access are opt-in
+flags.
+
+## Features
+
+- **Cluster setup** — create EKS clusters with prerequisites (VPC, networking,
+  Auto Mode node pools) via CloudFormation (write mode).
+- **Application deployment** — apply existing Kubernetes YAML or generate
+  deployment/service manifests from parameters (write mode).
+- **Resource lifecycle** — create, read, update, patch, and delete Kubernetes
+  resources such as Pods, Services, and Deployments (write mode).
+- **Discovery** — list Kubernetes resources filtered by namespace, labels, and
+  fields for state awareness.
+- **Operations** — retrieve pod/container logs and Kubernetes events for
+  troubleshooting and monitoring (sensitive-data mode).
+
+## Use Cases
+
+- Inspect the live state of an EKS cluster and its Kubernetes resources.
+- Troubleshoot a failing workload by pulling its logs and related events.
+- Generate and apply Kubernetes manifests for a new deployment (write mode).
+- Stand up a new EKS cluster with best-practice defaults (write mode).
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+ and `uv`.
+2. Configure an AWS profile and region scoped to the target EKS clusters.
+3. Add the server with the read-only stdio configuration above. To enable
+   mutations, append `--allow-write` (and `--allow-sensitive-data-access` for
+   logs/events) to `args` — only when you intend those operations.
+4. Verify it is connected with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration and set
+`AWS_PROFILE`/`AWS_REGION`. The first run downloads the package via `uvx`.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). The server can act on real EKS/Kubernetes
+infrastructure when write access is enabled, so scope credentials tightly, keep
+write/sensitive-data flags opt-in, and verify the configuration against the
+linked source before using it in automated workflows.

@@ -1,0 +1,156 @@
+---
+title: AWS Billing and Cost Management MCP Server
+slug: aws-billing-cost-management-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server for AWS Billing and Cost Management that lets AI
+  assistants analyze costs and usage, monitor budgets and anomalies, and surface
+  Cost Optimizer, Savings Plans, and Reserved Instance recommendations.
+cardDescription: >-
+  Connect Claude to AWS Billing and Cost Management for Cost Explorer insights,
+  budget and anomaly monitoring, and cost-optimization recommendations.
+seoTitle: "AWS Billing & Cost Management MCP Server for Claude — Cost Insights"
+seoDescription: >-
+  Connect Claude to the official AWS Labs Billing and Cost Management MCP server
+  for Cost Explorer analysis, budgets, anomaly detection, and Savings
+  Plans/Reserved Instance recommendations over stdio with uvx.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-21"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/billing-cost-management-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.billing-cost-management-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/billing-cost-management-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/billing-cost-management-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.billing-cost-management-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.billing-cost-management-mcp-server@latest
+usageSnippet: >-
+  Configure the server with uvx and a scoped AWS profile, then ask Claude to
+  break down AWS costs in Cost Explorer, check budgets and anomalies, compare
+  spend month-over-month, or surface Savings Plans and right-sizing tips.
+copySnippet: |-
+  {
+    "awslabs.billing-cost-management-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.billing-cost-management-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE}",
+        "AWS_REGION": "us-east-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.billing-cost-management-mcp-server": {
+        "command": "uvx",
+        "args": ["awslabs.billing-cost-management-mcp-server@latest"],
+        "env": {
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "AWS_REGION": "us-east-1",
+          "FASTMCP_LOG_LEVEL": "ERROR"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - An AWS account with Billing and Cost Management access (Cost Explorer, Budgets, and related APIs enabled).
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - "AWS credentials configured locally (for example via `aws configure` or `AWS_PROFILE`) with read permissions for the Cost Explorer, Budgets, Compute Optimizer, and related cost APIs."
+  - An MCP client that supports stdio servers; the server runs locally on the same host as the client.
+safetyNotes:
+  - The provided tools read cost and usage data and recommendations; they do not purchase Savings Plans or Reserved Instances or otherwise modify your account. Grant least-privilege read access to the cost APIs.
+  - This server reads billing data with your AWS credentials; scope the profile to the intended account and run it only on a trusted host.
+  - "Cost Explorer and some cost APIs charge per paid API request; broad or frequent queries can incur AWS costs, so scope time ranges and granularity deliberately."
+privacyNotes:
+  - "Cost, usage, budget, and account metadata — including linked-account identifiers and spend figures — can be returned to the model."
+  - Keep account identifiers, credentials, and spend details out of public prompts, issues, and screenshots, since billing data is sensitive business information.
+tags:
+  - aws
+  - cost-management
+  - finops
+  - billing
+  - aws-labs
+keywords:
+  - aws billing cost management mcp server
+  - awslabs billing-cost-management-mcp-server
+  - aws cost explorer mcp claude
+  - aws finops mcp
+  - savings plans reserved instance mcp
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AWS Billing and Cost Management MCP Server is an official
+[AWS Labs](https://github.com/awslabs/mcp) Model Context Protocol server that
+gives AI assistants access to AWS Billing and Cost Management capabilities. It
+lets Claude analyze historical and forecasted costs, monitor budgets and
+anomalies, and surface cost-optimization recommendations through standardized
+MCP tools.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.billing-cost-management-mcp-server` Python package and uses your local
+AWS credentials. All API calls follow AWS service limits and quotas.
+
+## Features
+
+- **Cost and usage analysis** — Cost Explorer insights with flexible grouping
+  and filtering, plus usage-metric trends.
+- **Budgets and anomalies** — check budget status against actual spend and
+  detect unusual spending patterns and their root causes.
+- **Optimization recommendations** — Compute Optimizer right-sizing and Cost
+  Optimization Hub savings opportunities.
+- **Savings Plans and Reserved Instances** — RI coverage analysis and
+  personalized Savings Plans recommendations.
+- **Comparisons and Storage Lens** — month-over-month and multi-account cost
+  comparisons, plus S3 Storage Lens metric queries.
+
+## Use Cases
+
+- Break down last month's AWS bill by service, account, or tag.
+- Check whether spending is tracking against budgets and flag anomalies.
+- Compare cost and usage month-over-month to find cost drivers.
+- Surface Savings Plans, Reserved Instance, and right-sizing recommendations.
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+ and `uv`.
+2. Configure an AWS profile with read access to the cost and billing APIs.
+3. Add the server with the stdio configuration above (command `uvx`, package
+   `awslabs.billing-cost-management-mcp-server@latest`).
+4. Verify it is connected with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration and set
+`AWS_PROFILE`/`AWS_REGION`. The first run downloads the package via `uvx`.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). The server reads cost and usage data with
+your AWS credentials and some cost APIs are billed per request, so scope
+permissions to cost reads, keep spend data private, and verify the configuration
+against the linked source before using it in automated workflows.

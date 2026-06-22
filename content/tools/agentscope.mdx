@@ -1,0 +1,204 @@
+---
+title: AgentScope
+slug: agentscope
+category: tools
+description: >-
+  Apache-2.0 Python framework for building visible, controllable, production
+  AI agents and multi-agent services with event streaming, permission controls,
+  workspaces, sandbox backends, middleware, MCP support, Mem0 memory, agent
+  teams, and multi-tenant multi-session serving.
+cardDescription: >-
+  Build and serve Python agents with event streams, permissions, workspaces,
+  middleware, MCP, Mem0 memory, and agent teams.
+seoTitle: AgentScope 2.0 Python Agent Framework for MCP, Workspaces, Permissions, and Multi-Agent Services
+seoDescription: >-
+  Use AgentScope 2.0 to build Python AI agents and multi-agent services with
+  event streaming, fine-grained permissions, local/Docker/E2B workspaces, MCP
+  support, Mem0 long-term memory, middleware, agent teams, and FastAPI service
+  examples.
+author: AgentScope
+authorProfileUrl: "https://github.com/agentscope-ai"
+dateAdded: "2026-06-18"
+websiteUrl: "https://docs.agentscope.io/"
+documentationUrl: "https://docs.agentscope.io/"
+repoUrl: "https://github.com/agentscope-ai/agentscope"
+packageUrl: "https://pypi.org/pypi/agentscope/json"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/agentscope-ai/agentscope"
+  - "https://github.com/agentscope-ai/agentscope/blob/main/README.md"
+  - "https://github.com/agentscope-ai/agentscope/blob/main/pyproject.toml"
+  - "https://github.com/agentscope-ai/agentscope/blob/main/docs/NEWS.md"
+  - "https://github.com/agentscope-ai/agentscope/tree/main/examples/agent_service"
+  - "https://github.com/agentscope-ai/agentscope/tree/main/examples/long_term_memory"
+  - "https://docs.agentscope.io/v2/building-blocks/permission-system"
+  - "https://docs.agentscope.io/v2/building-blocks/workspace"
+  - "https://docs.agentscope.io/v2/deploy/agent-service"
+  - "https://docs.agentscope.io/v2/deploy/agent-team"
+  - "https://pypi.org/pypi/agentscope/json"
+installable: true
+installCommand: "pip install agentscope"
+usageSnippet: >-
+  Install `agentscope`, configure a model credential, then compose agents with
+  event streaming, tools, permissions, middleware, workspaces, memory, MCP, or
+  the FastAPI-based agent service depending on the deployment target.
+copySnippet: |-
+  pip install agentscope
+estimatedSetupTime: 30 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.11 or newer and an isolated Python environment managed with pip, uv, or another package manager."
+  - "Model provider credentials for the selected model backend, such as DashScope, OpenAI-compatible APIs, Anthropic, Gemini, Ollama, xAI, or another supported route."
+  - "A permission policy for tools such as Bash, Grep, Glob, Read, Write, Edit, MCP tools, custom functions, and long-running background tasks."
+  - "A workspace isolation decision for local, Docker, E2B, or other sandbox backends before running code or file tools."
+  - "Storage, Redis, FastAPI, web UI, memory, telemetry, and deployment decisions when using multi-tenant or multi-session services."
+safetyNotes:
+  - "AgentScope examples can give agents Bash, file-read, file-write, edit, search, MCP, and custom tools. Scope tool permissions and approval rules before connecting a real project or account."
+  - "The README demonstrates permission control, including bypass mode. Do not use bypass-style behavior on production systems, sensitive files, paid APIs, cloud resources, or unreviewed tool chains without compensating controls."
+  - "Workspace support can run tools and code through local, Docker, or E2B backends; review filesystem mounts, network access, secrets, resource limits, and cleanup behavior."
+  - "Agent teams, background tasks, and multi-session services can continue work after the initial request; define cancellation, timeout, wakeup, escalation, and audit behavior."
+  - "Mem0 memory, Redis-backed sessions, MCP configuration, OpenTelemetry, FastAPI services, and model-provider integrations all need version pinning, credential isolation, and security review before production use."
+privacyNotes:
+  - "AgentScope workflows can process prompts, model responses, tool arguments, tool outputs, workspace files, code, credentials accidentally present in context, event streams, web UI state, logs, traces, memory records, session state, and tenant metadata."
+  - "Long-term memory through Mem0 and multi-session service storage can persist user facts, intermediate outputs, retrieved context, and tool results beyond a single conversation."
+  - "Docker, E2B, MCP servers, model providers, Redis, OpenTelemetry exporters, FastAPI deployments, and web UI integrations may send or store data outside the local Python process depending on configuration."
+  - "Do not expose private prompts, API keys, unpublished code, customer data, tenant identifiers, session transcripts, or workspace artifacts in public issues, examples, screenshots, logs, or generated reports."
+tags:
+  - agentscope
+  - agents
+  - agent-framework
+  - multi-agent
+  - python
+  - mcp
+  - sandbox
+  - memory
+keywords:
+  - AgentScope
+  - AgentScope 2.0
+  - agentscope Python
+  - agentscope MCP
+  - Python multi-agent framework
+  - AgentScope permission system
+  - AgentScope workspace sandbox
+  - AgentScope agent service
+  - AgentScope Mem0 memory
+  - AgentScope agent team
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AgentScope is an Apache-2.0 Python framework for building and serving AI
+agents. The 2.0 README emphasizes visible and controllable agents through an
+event system, fine-grained permissions, multi-tenancy, multi-session serving,
+workspace/sandbox support, and middleware.
+
+Use it when a Python team wants an agent framework that exposes agent state and
+tool activity to application code or a UI, rather than hiding agent behavior
+behind a single black-box call. It is especially relevant for MCP-enabled
+tools, sandboxed workspaces, agent services, agent teams, long-term memory, and
+human-in-the-loop control.
+
+## Install
+
+AgentScope requires Python 3.11 or newer:
+
+```bash
+pip install agentscope
+```
+
+The project also documents editable source installs:
+
+```bash
+git clone -b main https://github.com/agentscope-ai/agentscope.git
+cd agentscope
+pip install -e .
+```
+
+Optional extras in `pyproject.toml` cover model providers, service deployment,
+storage, workspace backends, tool helpers, Mem0 memory, and full development
+setups. Install the smallest set that matches the target workflow.
+
+## Agent Capabilities
+
+| Area | AgentScope Coverage |
+| --- | --- |
+| Event System | Event bus for streaming agent activity to frontends and human-in-the-loop flows |
+| Permissions | Fine-grained control over tools and resources, including confirmation and bypass-style modes |
+| Service Runtime | FastAPI-based multi-tenant, multi-session agent service examples |
+| Workspaces | Isolated local, Docker, and E2B workspace backends for tools and code |
+| Middleware | Composable hooks around the reasoning and acting loop |
+| Tools | Built-in examples for Bash, Grep, Glob, Read, Write, Edit, and custom tools |
+| Memory | Mem0-supported long-term memory example and package extra |
+| MCP | `mcp` package dependency and MCP-related configuration handling |
+| Agent Teams | Agent team support with leader and worker coordination examples |
+
+## Use Cases
+
+- Build Python agents that need streamed events for a web UI or operator view.
+- Add permission prompts around file, shell, code, MCP, or custom tool calls.
+- Serve isolated agents across tenants and sessions.
+- Run tool workloads inside local, Docker, or E2B workspaces.
+- Prototype agent teams with leader and worker coordination.
+- Add Mem0-backed long-term memory to an agent workflow.
+- Compare AgentScope with LangGraph, AutoGen/AG2, Microsoft Agent Framework,
+  Google ADK, Strands Agents, and other Python agent frameworks.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream repository describes AgentScope 2.0 as a production-ready agent
+  framework with event system, permission system, multi-tenancy and
+  multi-session service, workspace/sandbox support, and middleware.
+- The README lists Python 3.11 or newer and installs from PyPI with
+  `pip install agentscope`.
+- The README includes an agent example using `Bash`, `Grep`, `Glob`, `Read`,
+  `Write`, and `Edit` tools.
+- The README documents an agent service example with a FastAPI backend and web
+  UI, plus demos for agent teams, task planning, permission control,
+  background tool offloading, and conversation resumption.
+- The project news records Mem0 support, agent team support, and the May 2026
+  AgentScope 2.0 release.
+- `pyproject.toml` declares the `agentscope` package, Apache-2.0 licensing,
+  Python `>=3.11`, MCP dependency, OpenTelemetry dependencies, service extras,
+  Redis storage extras, workspace extras for Docker/E2B, tool extras, Mem0
+  extras, and provider extras.
+- PyPI resolves package metadata for `agentscope` version `2.0.2`.
+- The latest GitHub release is `v2.0.2`, published on 2026-06-16.
+
+## Safety and Privacy
+
+AgentScope's value is that agent behavior is visible and controllable, but it
+still sits close to high-impact operations: shell commands, file writes, custom
+tools, MCP servers, background tasks, web services, memory, sandboxes, and
+model-provider calls. Define permissions, tenant boundaries, workspace mounts,
+network access, approval checkpoints, and retention rules before using it with
+production data.
+
+For hosted or multi-session services, decide who can inspect event streams,
+sessions, traces, memory, tool outputs, Redis state, web UI logs, and
+workspace artifacts. Durable memory and session history can retain sensitive
+context after a user believes the task is over.
+
+## Duplicate Check
+
+Checked current `content/tools/`, `content/agents/`, `content/mcp/`,
+`content/skills/`, guides, open pull requests, and repository-wide content for
+`agentscope-ai/agentscope`, AgentScope, AgentScope 2.0, `agentscope` Python,
+AgentScope MCP, AgentScope workspace, AgentScope permission system, AgentScope
+agent service, and AgentScope agent team. No dedicated AgentScope tools entry,
+exact source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. AgentScope is
+Apache-2.0 open-source software; model providers, DashScope, OpenAI-compatible
+APIs, Anthropic, Gemini, Ollama, xAI, MCP servers, E2B, Docker, Mem0, Redis,
+OpenTelemetry exporters, FastAPI deployments, and other connected systems may
+have separate licenses, billing, terms, privacy controls, and access
+requirements.

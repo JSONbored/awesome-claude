@@ -1,0 +1,169 @@
+---
+title: Honeycomb MCP Server for Claude
+slug: honeycomb-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Honeycomb observability data — query traces and events, investigate alerts,
+  manage boards and triggers, create SLOs, and cross-reference production behavior with your
+  codebase — with the official Honeycomb hosted MCP server.
+cardDescription: "Official Honeycomb MCP: query traces, investigate alerts & manage SLOs from Claude."
+seoTitle: "Honeycomb MCP Server for Claude — Observability, Traces & Alerting"
+seoDescription: "Connect Claude to Honeycomb with the official hosted MCP server: query traces and events, investigate alerts, create SLOs, and manage boards — from Claude Code or Desktop. Available on all Honeycomb plans."
+author: Honeycomb
+authorProfileUrl: "https://www.honeycomb.io"
+dateAdded: "2026-06-18"
+documentationUrl: "https://docs.honeycomb.io/integrations/mcp/configuration-guide"
+websiteUrl: "https://honeycomb.io"
+retrievalSources:
+  - "https://docs.honeycomb.io/integrations/mcp/configuration-guide"
+  - "https://www.honeycomb.io/blog/hosted-mcp-now-available"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add honeycomb --transport http https://mcp.honeycomb.io/mcp"
+usageSnippet: >-
+  Ask Claude to query Honeycomb for traces matching a slow request, investigate an open alert, or summarize recent error spikes in a dataset.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "honeycomb": {
+        "command": "npx",
+        "args": ["mcp-remote", "https://mcp.honeycomb.io/mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "honeycomb": {
+        "command": "npx",
+        "args": ["mcp-remote", "https://mcp.honeycomb.io/mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Honeycomb account — any plan including the free tier."
+  - "For OAuth: authenticate via browser on first tool use."
+  - "For API key: use format `HONEYCOMB_API_KEY=<KEY_ID>:<SECRET_KEY>` in your MCP client config."
+  - "EU customers should use `https://mcp.eu1.honeycomb.io/mcp` instead of the US endpoint."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server is hosted by Honeycomb (AWS-backed) and authenticated via OAuth 2.1 or API key — write-scoped access can create/update Boards, Triggers, and SLOs."
+  - "Writing to Honeycomb resources (boards, triggers, SLOs) requires the `create` scope; verify you grant only the scopes your workflow needs."
+  - "Canvas investigations and alert management are write operations — review Claude's proposed changes before executing in production environments."
+privacyNotes:
+  - "Trace data, event fields, alert details, and query results from Honeycomb are sent through Honeycomb's hosted MCP endpoint and surfaced in Claude's context."
+  - "Honeycomb API keys (`KEY_ID:SECRET_KEY` format) are secrets — store them in your MCP client config or environment, never in repositories."
+tags:
+  - honeycomb
+  - observability
+  - tracing
+  - monitoring
+  - alerting
+  - slos
+keywords:
+  - honeycomb mcp server
+  - honeycomb mcp claude
+  - observability mcp claude code
+  - trace analysis mcp
+  - honeycomb alerting ai
+  - distributed tracing mcp claude
+  - slo management mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Honeycomb MCP Server** is the official hosted Model Context Protocol server from Honeycomb.
+It gives Claude direct access to your Honeycomb observability data — querying traces and events,
+investigating alerts, managing boards, creating triggers and SLOs, and performing Canvas
+investigations — through natural language, without leaving your IDE or AI assistant.
+
+The hosted MCP (generally available as of 2026) runs on AWS and is included in all Honeycomb
+plans at no additional charge. Authentication is via OAuth (recommended) or API key (for
+headless/automated use). Regional endpoints are available for US and EU.
+
+## Key capabilities
+
+- **Trace and event queries** — query Honeycomb datasets for spans and events matching your
+  investigation criteria.
+- **Alert management** — view and investigate open triggers and alerts.
+- **Boards** — create and update Honeycomb boards for team visibility.
+- **Triggers** — create and manage alert triggers.
+- **SLOs** — create and manage Service Level Objectives.
+- **Canvas investigations** — run structured observability investigations.
+- **Cross-referencing** — correlate production behavior with codebase changes.
+
+## How it compares
+
+| Server | Trace queries | Alert management | SLOs | Boards | Auth |
+|---|---|---|---|---|---|
+| **Honeycomb MCP** | Yes | Yes | Yes | Yes | OAuth / API key |
+| New Relic MCP | Yes (NRQL) | Yes | Limited | Yes | OAuth / API key |
+| Datadog MCP | Yes | Yes | Yes | Yes | API key |
+| Grafana MCP | Limited | Yes | Yes | Limited | API key |
+
+Honeycomb's MCP is distinct in its focus on high-cardinality trace analysis and structured
+Canvas investigations, reflecting Honeycomb's event-first observability model.
+
+## Installation
+
+### Claude Code (OAuth — recommended)
+
+```bash
+claude mcp add honeycomb --transport http https://mcp.honeycomb.io/mcp
+```
+
+Run `/mcp` in Claude Code to complete the OAuth flow and select your team and scopes.
+
+### Claude Code (API key)
+
+```bash
+claude mcp add honeycomb --transport http \
+  --header "Authorization: Bearer KEY_ID:SECRET_KEY" \
+  https://mcp.honeycomb.io/mcp
+```
+
+### Claude Desktop (OAuth)
+
+```json
+{
+  "mcpServers": {
+    "honeycomb": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.honeycomb.io/mcp"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop; you will be prompted to authenticate via OAuth on first use.
+
+### EU region
+
+Replace `https://mcp.honeycomb.io/mcp` with `https://mcp.eu1.honeycomb.io/mcp` in all commands.
+
+## Requirements
+
+- A Honeycomb account (any plan, including free tier).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- OAuth is preferred — users grant specific scopes (read vs. read+write) during the OAuth flow.
+- API keys grant the permissions assigned to that key — scope them to the minimum required.
+- `KEY_ID:SECRET_KEY` API key pairs are secrets — never commit them.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Honeycomb's MCP configuration guide at `docs.honeycomb.io/integrations/mcp/configuration-guide`
+  documents the US (`mcp.honeycomb.io/mcp`) and EU (`mcp.eu1.honeycomb.io/mcp`) endpoints, OAuth
+  2.1 and API key authentication, the write-scope capabilities (Boards, Triggers, SLOs, Canvas
+  investigations), and the Claude Code and Claude Desktop installation commands.
+- Honeycomb's blog post confirms the hosted MCP is generally available on all plans at no charge,
+  hosted on AWS, and integrated with Cursor, VS Code, and Claude Desktop.
+- Claude Code's MCP documentation describes the `--transport http` installation pattern used above.

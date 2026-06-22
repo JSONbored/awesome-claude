@@ -1,0 +1,149 @@
+---
+title: Artidrop MCP Server for Claude
+slug: ai-artidrop-artidrop-mcp-server
+category: mcp
+description: >-
+  Artidrop remote MCP server for publishing HTML, Markdown, and multi-file sites
+  from AI agents with shareable URLs via streamable HTTP, optional API keys, and
+  AFAuth agent identities.
+cardDescription: >-
+  Connect Claude to Artidrop to publish HTML, Markdown, or ZIP sites and retrieve
+  shareable artifact URLs through https://artidrop.ai/mcp.
+seoTitle: Artidrop MCP Server for Claude
+seoDescription: >-
+  Use the ai.artidrop/artidrop MCP server with Claude to publish HTML, Markdown,
+  and multi-file sites with shareable URLs via streamable HTTP at artidrop.ai/mcp.
+author: Artidrop
+authorProfileUrl: "https://artidrop.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1471
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1471"
+documentationUrl: "https://artidrop.ai/llms-full.txt"
+websiteUrl: "https://artidrop.ai"
+installable: true
+installCommand: >-
+  claude mcp add --transport http artidrop https://artidrop.ai/mcp
+usageSnippet: >-
+  Add https://artidrop.ai/mcp as a remote HTTP connector. Authenticate with an API
+  key query parameter, OAuth, or use anonymous publish tools within rate limits.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "artidrop": {
+        "url": "https://artidrop.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "artidrop": {
+        "url": "https://artidrop.ai/mcp?key=sk_YOUR_KEY",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Artidrop API key from https://artidrop.ai for authenticated list, update, and delete tools, or accept anonymous publish rate limits."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or another MCP client with streamable HTTP transport."
+  - "Review of Artidrop visibility settings (public, unlisted, private) before publishing sensitive content."
+  - "Human review of generated HTML or Markdown before publishing externally shareable artifacts."
+safetyNotes:
+  - "Publish and update tools create publicly reachable URLs when visibility is public or unlisted."
+  - "Pass content verbatim through MCP; reformatting can break HTML, script, or markdown rendering per official guidance."
+  - "Anonymous publishes are limited to five per hour per IP; authenticated keys raise limits but billable access may apply."
+  - "AFAuth agent signup provisions accounts without portal keys; review attestation and ownership policies before production use."
+privacyNotes:
+  - "Published artifacts, titles, and content are stored on Artidrop infrastructure according to its privacy terms."
+  - "API keys and OAuth tokens grant publish and management access; store them in connector headers, not chat logs."
+  - "Private visibility restricts reads to owners, but MCP tool output may still appear in Claude session history."
+tags:
+  - publishing
+  - html
+  - markdown
+  - remote-mcp
+  - agents
+keywords:
+  - artidrop mcp
+  - publish html claude mcp
+  - ai.artidrop artidrop server
+  - agent publishing mcp
+  - streamable http artidrop
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Artidrop is a hosted Model Context Protocol server for publishing agent-generated
+HTML, Markdown, and multi-file sites. The discovery document at
+[/.well-known/mcp.json](https://artidrop.ai/.well-known/mcp.json) registers the
+streamable HTTP endpoint at `https://artidrop.ai/mcp`.
+
+Full API and MCP tool documentation is published at
+[artidrop.ai/llms-full.txt](https://artidrop.ai/llms-full.txt).
+
+## Features
+
+- Remote streamable HTTP MCP at `https://artidrop.ai/mcp`.
+- Anonymous tools: publish, publish_site, get, and versions.
+- Authenticated tools with API keys: list, update, update_site, and delete.
+- Optional OAuth 2.1 and AFAuth agent identities documented in llms-full.txt.
+- Shareable artifact URLs for HTML, Markdown, and ZIP-based sites.
+
+## Use Cases
+
+- Publish agent-generated reports or dashboards as shareable URLs.
+- Version and update Markdown documentation produced during Claude sessions.
+- Deploy multi-file static sites from agent workflows with publish_site.
+- Prototype agent-first publishing with AFAuth signed requests.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter `https://artidrop.ai/mcp` or append `?key=sk_...` for authenticated tools.
+3. Complete OAuth if prompted for interactive login flows.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http artidrop https://artidrop.ai/mcp
+```
+
+## Source Notes
+
+Verified against Artidrop llms-full.txt and MCP discovery on **2026-06-16**:
+
+- MCP integration documents streamable HTTP at `POST https://artidrop.ai/mcp`.
+- Discovery metadata is published at `https://artidrop.ai/.well-known/mcp.json`.
+- Anonymous and authenticated tool lists are documented with rate limits and visibility options.
+- Official guidance requires passing publish content verbatim without reformatting through MCP.
+
+## Duplicate Check
+
+Checked content/mcp for Artidrop or agent publishing MCP coverage.
+No existing MCP entry covers ai.artidrop/artidrop as a publishing layer for AI agents.
+
+## Editorial Disclosure
+
+Submitted as an independent community MCP entry by kiannidev, based on public Artidrop
+llms-full.txt and MCP discovery documentation. No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Artidrop llms-full.txt - https://artidrop.ai/llms-full.txt
+- Artidrop MCP discovery - https://artidrop.ai/.well-known/mcp.json
+- Artidrop website - https://artidrop.ai

@@ -1,0 +1,299 @@
+---
+title: Nanobot AI
+slug: nanobot-ai
+category: tools
+description: >-
+  MIT-licensed personal AI agent framework with a small Python core, WebUI,
+  CLI, chat channels, persistent goals, memory, MCP servers, CLI Apps, cron,
+  shell and file tools, provider routing, OpenAI-compatible API serving, and
+  deployment paths for long-running self-hosted agents.
+cardDescription: >-
+  Run a self-hosted personal AI agent across CLI, WebUI, chat apps, MCP tools,
+  memory, automations, and long-running workspaces.
+seoTitle: Nanobot AI Personal Agent Framework with MCP, WebUI, Chat Apps, and CLI Apps
+seoDescription: >-
+  Use Nanobot AI to run a lightweight personal AI agent with MCP servers, CLI
+  Apps, WebUI workbench, chat channels, persistent goals, memory, provider
+  routing, OpenAI-compatible API serving, shell/file tools, cron automations,
+  and self-hosted deployment controls.
+author: HKUDS
+authorProfileUrl: "https://github.com/HKUDS"
+dateAdded: "2026-06-18"
+websiteUrl: "https://nanobot.wiki"
+documentationUrl: "https://nanobot.wiki/docs/latest/getting-started/nanobot-overview"
+repoUrl: "https://github.com/HKUDS/nanobot"
+packageUrl: "https://pypi.org/project/nanobot-ai/"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/HKUDS/nanobot/blob/main/docs/README.md"
+  - "https://github.com/HKUDS/nanobot/blob/main/docs/configuration.md"
+  - "https://github.com/HKUDS/nanobot/blob/main/docs/chat-apps.md"
+  - "https://github.com/HKUDS/nanobot/blob/main/docs/webui.md"
+  - "https://github.com/HKUDS/nanobot/blob/main/docs/architecture.md"
+  - "https://github.com/HKUDS/nanobot/releases/tag/v0.2.1"
+installable: true
+installCommand: "uv tool install nanobot-ai"
+usageSnippet: >-
+  Install the `nanobot-ai` Python package, run the onboarding wizard, configure
+  one model provider, verify `nanobot agent -m "Hello!"`, then enable WebUI,
+  chat channels, MCP servers, CLI Apps, or deployment only after the local CLI
+  path works.
+copySnippet: |-
+  uv tool install nanobot-ai
+  nanobot --version
+  nanobot onboard --wizard
+  nanobot status
+  nanobot agent -m "Hello!"
+configSnippet: |-
+  {
+    "providers": {
+      "anthropic": {
+        "apiKey": "${ANTHROPIC_API_KEY}"
+      }
+    },
+    "modelPresets": {
+      "primary": {
+        "label": "Primary",
+        "provider": "anthropic",
+        "model": "claude-sonnet-4-5",
+        "maxTokens": 8192,
+        "contextWindowTokens": 65536
+      }
+    },
+    "agents": {
+      "defaults": {
+        "modelPreset": "primary"
+      }
+    },
+    "channels": {
+      "websocket": {
+        "enabled": true
+      }
+    },
+    "tools": {
+      "restrictToWorkspace": true,
+      "exec": {
+        "sandbox": "bwrap"
+      },
+      "mcpServers": {
+        "filesystem": {
+          "command": "npx",
+          "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/dir"],
+          "enabledTools": ["read_file", "list_directory"]
+        }
+      }
+    }
+  }
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - "Python 3.11 or newer and either uv, pipx, pip in a virtual environment, or a source checkout."
+  - "At least one model provider, local model endpoint, OAuth-backed provider, or OpenAI-compatible endpoint configured with credentials or an API base URL."
+  - "A persistent `~/.nanobot` config and workspace location for sessions, memory, cron jobs, channel state, logs, generated artifacts, and WebUI runtime data."
+  - "Optional chat-channel credentials for Telegram, Discord, Slack, Matrix, Feishu, WeChat, Email, Microsoft Teams, Signal, or another supported channel."
+  - "A reviewed MCP, CLI App, shell, filesystem, and workspace policy before exposing Nanobot to long-running chat channels or shared WebUI access."
+safetyNotes:
+  - "Prefer package-manager installs such as `uv tool install nanobot-ai`, `pipx install nanobot-ai`, or a reviewed virtual-environment install. Upstream also documents downloaded installer scripts; inspect those scripts first instead of running remote shell content blindly."
+  - "Nanobot can execute shell commands, read and write workspace files, call MCP servers, fetch web content, run cron jobs, access chat channels, and keep long-running agent goals alive. Review every enabled tool surface before exposing it to nonlocal users."
+  - "`tools.restrictToWorkspace` is an application-level guard, not an operating-system sandbox. On Linux, combine it with `tools.exec.sandbox: \"bwrap\"` when shell execution should be isolated from config files and API keys."
+  - "HTTP and SSE MCP endpoints share Nanobot's SSRF guard. Keep `tools.ssrfWhitelist` narrow and prefer single-host CIDRs when private endpoints must be allowed."
+  - "Channel `allowFrom` and pairing controls decide who can talk to the bot. Avoid `allowFrom: [\"*\"]` unless the channel, workspace, and tool policy are intentionally public."
+  - "Docker deployment can require extra Linux capability settings for bubblewrap-based shell sandboxing. Review the Docker security notes before mounting secrets or persistent workspaces."
+privacyNotes:
+  - "Nanobot stores config, sessions, memory, cron jobs, workspace files, media, channel state, and logs under the configured Nanobot paths, usually `~/.nanobot`."
+  - "Provider API keys, bot tokens, email credentials, OAuth state, MCP headers, and chat-channel secrets can appear in config or environment variables. Use environment placeholders and protected files instead of literal secrets."
+  - "WebUI, chat apps, CLI sessions, and the OpenAI-compatible API can expose prompts, files, generated artifacts, tool output, screenshots or media attachments, channel IDs, user IDs, and conversation history to the selected model provider and enabled observability tools."
+  - "Langfuse tracing, if configured with environment variables and installed support, can export OpenAI-compatible provider calls to the configured Langfuse project."
+  - "Remote MCP servers, hosted search providers, image providers, chat platforms, and model providers each receive the data sent through their specific integration path."
+tags:
+  - nanobot
+  - personal-agent
+  - ai-agent
+  - mcp
+  - cli-apps
+  - webui
+  - chatbots
+  - automations
+keywords:
+  - Nanobot AI
+  - nanobot-ai
+  - HKUDS nanobot
+  - personal AI agent framework
+  - nanobot MCP
+  - nanobot WebUI
+  - nanobot CLI Apps
+  - self hosted AI agent
+  - chat app AI agent
+  - OpenAI compatible API agent
+  - persistent goals agent
+  - agent memory framework
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Nanobot AI is an open-source personal agent framework for running a lightweight
+agent across local CLI sessions, a browser WebUI, chat apps, MCP servers, CLI
+Apps, memory, cron, and long-running workspaces. It is not just a chatbot UI:
+the Python package exposes an agent runtime with channels, provider routing,
+workspace-aware tools, MCP integration, an OpenAI-compatible API surface, and
+deployment patterns for keeping the gateway online.
+
+Use it when you want a self-hosted agent that can stay connected to your own
+tools and channels without adopting a large hosted automation platform. It is
+especially relevant for searches around personal AI agents, Claude-compatible
+workbenches, Codex/OpenAI provider routing, MCP-enabled agents, and chat-native
+agent deployment.
+
+## Install
+
+Install the published Python package:
+
+```bash
+uv tool install nanobot-ai
+nanobot --version
+```
+
+Initialize or refresh the local config and workspace:
+
+```bash
+nanobot onboard --wizard
+nanobot status
+nanobot agent -m "Hello!"
+```
+
+The upstream README also documents downloaded installer scripts for macOS,
+Linux, and Windows. Those are convenience paths, but they should be inspected
+before use. For agent and automation environments, prefer a package manager,
+virtual environment, or reviewed source checkout so the install path is clear.
+
+## Configuration Model
+
+Nanobot stores its default config at `~/.nanobot/config.json` and workspace
+state under `~/.nanobot/workspace/`. The docs recommend proving a single local
+agent reply before enabling WebUI, chat channels, Docker, systemd, LaunchAgent,
+or custom tools.
+
+Minimal production-oriented settings usually cover:
+
+- Provider credentials through environment variables or a protected config file.
+- A named model preset selected by `agents.defaults.modelPreset`.
+- Workspace restriction for filesystem and shell-adjacent work.
+- Explicit channel access control through `allowFrom` or pairing.
+- Narrow MCP tool exposure with `enabledTools` when a server offers broad
+  capabilities.
+
+## Capability Map
+
+| Area | Nanobot Coverage |
+| --- | --- |
+| CLI agent | `nanobot agent`, one-shot messages, interactive chat, explicit config/workspace flags, and session selection |
+| WebUI | Browser workbench with chat sessions, model controls, project workspaces, activity rendering, Apps, Skills, settings, and automations |
+| Gateway | Long-running process for chat channels, WebSocket/WebUI, cron-backed jobs, Dream/memory jobs, and a health endpoint |
+| Chat channels | Telegram, Discord, WhatsApp, WeChat, Feishu, DingTalk, Slack, Matrix, Email, QQ, Napcat, WeCom, Microsoft Teams, Mochat, and Signal docs |
+| MCP | Stdio and HTTP/SSE MCP servers configured under `tools.mcpServers`, with optional headers, timeouts, and `enabledTools` filtering |
+| CLI Apps | Extension path for CLI-native tools, surfaced with MCP-style capability mentions in newer releases |
+| Tools | Filesystem, shell execution, web search/fetch, MCP, cron, image generation, and runtime self-inspection |
+| Memory | Session history, long-term memory, Dream consolidation, and workspace-scoped state |
+| Providers | Anthropic, OpenAI-compatible providers, local endpoints, OAuth-backed OpenAI Codex/GitHub Copilot paths, image providers, transcription, fallbacks, and model presets |
+| API | `nanobot serve` exposes OpenAI-compatible `/v1/chat/completions`, `/v1/models`, and health routes |
+| Deployment | Docker Compose, Docker CLI, Linux systemd user service, and macOS LaunchAgent docs |
+
+## MCP and Agent Workflows
+
+Nanobot treats MCP servers as native agent tools once they are configured under
+`tools.mcpServers`. Stdio servers use `command`, `args`, and optional `env`;
+remote servers use `url` and optional `headers`. HTTP and SSE MCP connections
+are checked by the shared SSRF guard before probing, before connecting, and
+again before following redirects.
+
+For broad MCP servers, use `enabledTools` to keep the active tool surface small.
+The setting accepts raw MCP tool names such as `read_file` or Nanobot-wrapped
+names such as `mcp_filesystem_read_file`.
+
+## WebUI and Channels
+
+The WebUI is served by the WebSocket channel after `nanobot gateway` starts. It
+adds session management, project workspace selection, visible agent activity,
+model settings, Apps, Skills, and automations around the same Nanobot runtime.
+
+Chat channels use a common setup pattern: configure the channel credentials,
+keep access narrow with `allowFrom` or pairing, verify `nanobot channels
+status`, then run `nanobot gateway --verbose` while debugging startup. The
+docs call out that allowing everyone on a channel should only be used when that
+is intentional.
+
+## Security Boundaries
+
+Nanobot has useful controls, but they need to be configured deliberately:
+
+- `tools.restrictToWorkspace` keeps workspace-aware file tools under the active
+  workspace and applies best-effort shell working-directory checks.
+- `tools.exec.sandbox: "bwrap"` adds Linux bubblewrap isolation for shell
+  commands and hides config files/API keys from the sandboxed process.
+- `tools.exec.enable: false` removes the shell tool entirely.
+- `tools.ssrfWhitelist` exempts private networks from the shared SSRF guard and
+  should be kept as narrow as possible.
+- Channel `allowFrom` and pairing determine who can send instructions into the
+  agent.
+
+Those controls matter because a long-running personal agent often has access to
+local files, project workspaces, chat credentials, model provider keys, and MCP
+tools at the same time.
+
+## Use Cases
+
+- Run a local personal agent with persistent workspace, sessions, memory, and
+  provider routing.
+- Connect a Claude/OpenAI-compatible model workflow to MCP servers without
+  manually wiring every tool into a separate host app.
+- Keep an AI assistant online in Discord, Telegram, Slack, Matrix, Email, or a
+  private WebUI while preserving explicit channel access controls.
+- Operate long-running goals, cron automations, and workbench sessions from a
+  self-hosted Python runtime.
+- Expose a controlled OpenAI-compatible API for local experiments around one
+  configured Nanobot instance.
+- Compare lightweight self-hosted personal-agent stacks against larger agent
+  platforms or hosted workflow automation tools.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- GitHub metadata reported `HKUDS/nanobot` as an MIT-licensed Python repository
+  with the description `Lightweight, open-source AI agent for your tools,
+  chats, and workflows`, a homepage at `nanobot.wiki`, active updates on
+  2026-06-18, latest release `v0.2.1` published on 2026-06-01, and more than
+  44,000 stars.
+- PyPI metadata for `nanobot-ai` reported version `0.2.1`, summary `A
+  lightweight personal AI assistant framework`, Python `>=3.11`, MIT license,
+  and dependencies including Anthropic, OpenAI, MCP, web, channel, document,
+  cron, and provider-related packages.
+- The docs index says the repository docs track current source while published
+  release documentation lives at `nanobot.wiki`, and points users through quick
+  start, concepts, provider, WebUI, chat app, deployment, OpenAI API, Python
+  SDK, and MCP configuration pages.
+- The configuration docs document environment-variable secret placeholders,
+  provider/model presets, channel settings, web tools, image generation, MCP
+  servers, shell/workspace controls, SSRF whitelisting, pairing, and Langfuse
+  observability.
+- The MCP configuration section documents stdio and HTTP/SSE server config,
+  optional headers, `toolTimeout`, `enabledTools`, and shared SSRF validation
+  for remote MCP endpoints.
+- The WebUI docs describe a packaged browser workbench with chat sessions,
+  visible agent activity, workspace selection, Apps, MCP presets, Skills,
+  Automations, settings, and WebSocket-channel serving.
+- The chat-app docs document a common gateway-backed setup pattern and channel
+  coverage across Telegram, Discord, WhatsApp, WeChat, Feishu, DingTalk, Slack,
+  Matrix, Email, QQ, Napcat, WeCom, Microsoft Teams, Mochat, and Signal.
+- The architecture docs map the runtime across channels, message bus, agent
+  loop, provider/tool runner, tools, state, WebUI/gateway, memory, MCP,
+  filesystem, shell, web, cron, image generation, and security boundaries.
+- Release `v0.2.1` describes WebUI workbench improvements, stronger
+  long-running goal stability, unified CLI Apps and MCP extension workflows,
+  broader provider routing, channel additions, and security/reliability
+  hardening.

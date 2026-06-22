@@ -1,0 +1,155 @@
+---
+title: AWS S3 Tables MCP Server
+slug: aws-s3-tables-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server for AWS S3 Tables that lets AI assistants create
+  and query S3-based tables, run read-only SQL for analysis, generate tables
+  from CSV files in S3, and explore table metadata — read-only by default.
+cardDescription: >-
+  Connect Claude to AWS S3 Tables to query S3-based tables with read-only SQL,
+  explore metadata, and (opt-in) create tables and append data.
+seoTitle: "AWS S3 Tables MCP Server for Claude — Query S3 Tables with SQL"
+seoDescription: >-
+  Connect Claude to the official AWS Labs S3 Tables MCP server to run read-only
+  SQL against S3-based tables, explore metadata, and optionally create tables and
+  append data over stdio with uvx using your scoped AWS credentials.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-21"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/s3-tables-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.s3-tables-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/s3-tables-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/s3-tables-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.s3-tables-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.s3-tables-mcp-server@latest
+usageSnippet: >-
+  Configure the server with uvx and a scoped AWS profile, then ask Claude to list
+  table buckets and namespaces, inspect table metadata, or run a read-only SQL
+  query against an S3 Table; enable the write flag only when you intend changes.
+copySnippet: |-
+  {
+    "awslabs.s3-tables-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.s3-tables-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE}",
+        "AWS_REGION": "us-east-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.s3-tables-mcp-server": {
+        "command": "uvx",
+        "args": ["awslabs.s3-tables-mcp-server@latest"],
+        "env": {
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "AWS_REGION": "us-east-1",
+          "FASTMCP_LOG_LEVEL": "ERROR"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - An AWS account with S3 Tables and permissions for the table buckets you intend to read (and, if enabled, write).
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - "AWS credentials configured locally (for example via `aws configure` or `AWS_PROFILE`) scoped least-privilege to the intended S3 Tables resources."
+  - An MCP client that supports stdio servers; the server runs locally on the same host as the client.
+safetyNotes:
+  - "The server is read-only by default. Adding the `--allow-write` flag (with the matching IAM permissions) enables create and append operations on S3 Tables; there is no delete or general update. Enable write only deliberately."
+  - "AWS advises that you are responsible for your agents: if you enable write, back up your data first and validate LLM-generated instructions before execution, since misconfigured permissions can cause data loss."
+  - This server acts on real S3 Tables data with your AWS credentials; scope the profile least-privilege and run it only on a trusted host.
+privacyNotes:
+  - Table schemas, metadata, query results, and bucket/namespace identifiers can be returned through tool calls and exposed to the model.
+  - Keep account identifiers, credentials, and any sensitive table data out of public prompts, issues, and screenshots.
+tags:
+  - aws
+  - s3-tables
+  - data
+  - analytics
+  - aws-labs
+keywords:
+  - aws s3 tables mcp server
+  - awslabs s3-tables-mcp-server
+  - s3 tables sql mcp claude
+  - s3 table buckets mcp
+  - csv to s3 table mcp
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AWS S3 Tables MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+Model Context Protocol server that lets AI assistants interact with S3-based
+table storage. It simplifies managing S3 Tables by providing tools to create and
+query tables, run read-only SQL for analysis, generate tables directly from CSV
+files uploaded to S3, and explore metadata through the S3 Metadata Table.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.s3-tables-mcp-server` Python package and uses your local AWS
+credentials. By default it operates in read-only mode; write access is an opt-in
+flag.
+
+## Features
+
+- **Table bucket and namespace management** — create and list table buckets and
+  namespaces to organize tabular data (no delete/update).
+- **Table management** — create, rename, and list tables within namespaces.
+- **Read-only SQL** — run read-only SQL queries directly against S3 Tables for
+  analysis and reporting; writes are append-only inserts.
+- **CSV to table** — automatically create S3 Tables from CSV files in S3.
+- **Metadata and policy discovery** — view table metadata, maintenance settings,
+  and resource policies (read-only).
+
+## Use Cases
+
+- Run analytical SQL queries over S3-stored tabular datasets.
+- Explore table schemas, metadata, and bucket/namespace structure.
+- Onboard a CSV file in S3 as a queryable S3 Table (write mode).
+- Append new rows to an existing S3 Table for incremental ingestion (write mode).
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+ and `uv`.
+2. Configure a least-privilege AWS profile for your S3 Tables resources.
+3. Add the server with the read-only stdio configuration above. To enable
+   create/append, run the server with `--allow-write` and the matching IAM
+   permissions — only when you intend those operations.
+4. Verify it is connected with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration and set
+`AWS_PROFILE`/`AWS_REGION`. The first run downloads the package via `uvx`.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). The server is read-only by default and can
+create/append S3 Tables data when write is enabled, so keep write opt-in, use
+least-privilege credentials, back up data before enabling writes, and verify the
+configuration against the linked source before using it in automated workflows.

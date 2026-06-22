@@ -1,3 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -13,7 +16,8 @@ import {
 } from "@heyclaude/registry/seo";
 import { buildEntryCitationFacts } from "@heyclaude/registry/llms";
 
-import { loadContentEntries } from "./helpers/registry-fixtures";
+import { loadContentEntries, repoRoot } from "./helpers/registry-fixtures";
+import { ENTRIES } from "../apps/web/src/data/entries";
 
 describe("SEO JSON-LD policy", () => {
   const entries = loadContentEntries();
@@ -91,6 +95,54 @@ describe("SEO JSON-LD policy", () => {
     expect(
       snapshot.documents.some((document) => document["@type"] === "WebPage"),
     ).toBe(true);
+  });
+
+  it("maps entry categories to correct JSON-LD @type via unified buildEntryJsonLd", () => {
+    const CODE_LIKE_CATEGORIES = ["commands", "hooks", "mcp", "statuslines"];
+
+    const guideEntry = entries.find((e) => e.category === "guides");
+    if (guideEntry) {
+      expect(
+        buildEntryJsonLd(guideEntry, { siteUrl: "https://heyclau.de" })[
+          "@type"
+        ],
+      ).toBe("TechArticle");
+    }
+
+    for (const category of CODE_LIKE_CATEGORIES) {
+      const codeEntry = entries.find((e) => e.category === category);
+      if (codeEntry) {
+        expect(
+          buildEntryJsonLd(codeEntry, { siteUrl: "https://heyclau.de" })[
+            "@type"
+          ],
+        ).toBe("SoftwareSourceCode");
+      }
+    }
+
+    const creativeEntry = entries.find(
+      (e) =>
+        e.category !== "guides" && !CODE_LIKE_CATEGORIES.includes(e.category),
+    );
+    if (creativeEntry) {
+      expect(
+        buildEntryJsonLd(creativeEntry, { siteUrl: "https://heyclau.de" })[
+          "@type"
+        ],
+      ).toBe("CreativeWork");
+    }
+  });
+
+  it("unified buildEntryJsonLd never emits fabricated trust-sensitive fields", () => {
+    for (const entry of entries.slice(0, 20)) {
+      const ld = buildEntryJsonLd(entry, {
+        siteUrl: "https://heyclau.de",
+      }) as Record<string, unknown>;
+      expect(ld.aggregateRating).toBeUndefined();
+      expect(ld.review).toBeUndefined();
+      expect(ld.ratingValue).toBeUndefined();
+      expect(ld.reviewCount).toBeUndefined();
+    }
   });
 
   it("emits regular WebPage schema for plain pages", () => {
@@ -368,5 +420,51 @@ describe("SEO JSON-LD policy", () => {
     // Inverted ranges are rejected rather than emitting minValue > maxValue.
     expect(baseSalaryFor("$190-150k")).toBeUndefined();
     expect(baseSalaryFor("$190k-150k")).toBeUndefined();
+  });
+});
+
+describe("entry page JSON-LD unification (#3926)", () => {
+  const entryRouteSource = fs.readFileSync(
+    path.join(repoRoot, "apps/web/src/routes/entry.$category.$slug.tsx"),
+    "utf8",
+  );
+
+  it("generates entry schema through the registry helper, not a local copy", () => {
+    expect(entryRouteSource).toContain("buildEntryJsonLd");
+    expect(entryRouteSource).toContain('from "@heyclaude/registry"');
+    // The local duplicate of the type policy must not come back (drift guard).
+    expect(entryRouteSource).not.toMatch(/function entrySchema\b/);
+    expect(entryRouteSource).not.toContain("CODE_LIKE_CATEGORIES");
+  });
+
+  it("produces conservative, correctly-typed schema for the normalized client entry shape", () => {
+    const byCat = (category: string) =>
+      ENTRIES.find((entry) => entry.category === category);
+    const cases: Array<[string, string]> = [
+      ["guides", "TechArticle"],
+      ["hooks", "SoftwareSourceCode"],
+      ["mcp", "SoftwareSourceCode"],
+      ["agents", "CreativeWork"],
+    ];
+    for (const [category, expectedType] of cases) {
+      const entry = byCat(category);
+      if (!entry) continue;
+      const ld = buildEntryJsonLd(
+        entry as Parameters<typeof buildEntryJsonLd>[0],
+        { siteUrl: "https://heyclau.de" },
+      );
+      expect(ld["@type"], category).toBe(expectedType);
+      expect(ld.url).toBe(`https://heyclau.de/entry/${category}/${entry.slug}`);
+      // Never fabricate rich-result fields the registry policy forbids.
+      const json = JSON.stringify(ld);
+      for (const banned of [
+        "aggregateRating",
+        "ratingValue",
+        "reviewCount",
+        '"review"',
+      ]) {
+        expect(json, `${category} must omit ${banned}`).not.toContain(banned);
+      }
+    }
   });
 });

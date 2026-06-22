@@ -3,18 +3,19 @@ title: Claude Code Auto Mode Policy Auditor Agent
 slug: claude-code-auto-mode-policy-auditor-agent
 category: agents
 description: >-
-  Source-backed agent that audits Claude Code auto mode configuration, reviewing
-  the trusted environment list, allow, soft_deny, and hard_deny rules, the
-  $defaults handling, and settings scope so the classifier blocks the right
-  actions, grounded in the official auto mode docs.
+  A reusable agent prompt that reviews a Claude Code auto mode setup: whether
+  autoMode.environment trusts the right repos, buckets, and domains, how the
+  allow, soft_deny, and hard_deny tiers resolve, and whether $defaults is kept
+  across settings scopes.
 cardDescription: >-
-  Audit Claude Code auto mode policy: environment trust, allow/soft_deny/hard_deny
-  rules, $defaults handling, and settings scope.
-seoTitle: Claude Code Auto Mode Policy Auditor Agent
+  Reviews autoMode.environment trust, the hard_deny/soft_deny/allow precedence,
+  and $defaults splicing so the classifier blocks exfiltration without breaking
+  routine internal work.
+seoTitle: Audit Claude Code Auto Mode Settings — Agent Prompt
 seoDescription: >-
-  Reusable agent prompt that audits Claude Code auto mode configuration,
-  reviewing the trusted environment list, allow, soft_deny, and hard_deny rules,
-  $defaults handling, and settings scope, grounded in official auto mode docs.
+  Agent prompt that audits Claude Code auto mode: autoMode.environment trust,
+  hard_deny/soft_deny/allow precedence, $defaults, and claude auto-mode CLI
+  checks.
 author: JPette1783
 authorProfileUrl: "https://github.com/JPette1783"
 submittedBy: JPette1783
@@ -23,7 +24,7 @@ dateAdded: "2026-06-05"
 submittedAt: "2026-06-05"
 documentationUrl: "https://code.claude.com/docs/en/auto-mode-config"
 installable: false
-usageSnippet: "Use this agent to audit Claude Code auto mode configuration: the trusted environment list, allow/soft_deny/hard_deny rules, $defaults handling, and which settings scope provides them."
+usageSnippet: "Point this agent at your autoMode settings to check environment trust entries, the hard_deny/soft_deny/allow tiers and their precedence, $defaults handling, and the effective rules from claude auto-mode config."
 prerequisites:
   - "A Claude Code setup using auto mode, with access to the autoMode settings block and relevant CLAUDE.md."
   - "Knowledge of your organization's trusted repos, buckets, domains, and services."

@@ -2,14 +2,7 @@
 title: Screenshot Visual Regression - Claude Code Hook
 slug: screenshot-visual-regression
 category: hooks
-description: >-
-  PostToolUse hook that catches unintended UI changes by pixel-diffing a
-  just-saved screenshot against its baseline with odiff. When a PNG lands in a
-  screenshots or snapshots directory, the hook finds the matching baseline,
-  compares the two images, writes a diff image when they differ, and reports the
-  pixel-difference summary so a visual regression is surfaced the moment the
-  screenshot is updated. Advisory only; it never overwrites the screenshot or
-  the baseline.
+description: "PostToolUse hook that catches unintended UI changes by pixel-diffing a just-saved screenshot against its baseline with odiff."
 cardDescription: >-
   Pixel-diff a new screenshot against its baseline with odiff and report visual
   regressions.

@@ -1,0 +1,135 @@
+---
+title: Hermes Tweet Hermes Agent X/Twitter Skill
+slug: hermes-tweet-hermes-agent-x-twitter
+category: skills
+description: "Safety-reviewed Agent Skill for Hermes Tweet, the Hermes Agent plugin for X/Twitter endpoint discovery, credentialed reads, and approval-gated actions through Xquik."
+cardDescription: "Hermes Agent X/Twitter plugin guidance with credential boundaries, action gates, and safe workflow setup."
+seoTitle: Hermes Tweet Hermes Agent X/Twitter Skill
+seoDescription: "Install the Hermes Tweet Agent Skill for Hermes Agent X/Twitter workflows with endpoint discovery, credentialed reads, and approval-gated actions through Xquik."
+author: Xquik-dev
+authorProfileUrl: "https://github.com/Xquik-dev"
+submittedBy: kriptoburak
+submittedByUrl: "https://github.com/kriptoburak"
+dateAdded: "2026-06-21"
+repoUrl: "https://github.com/Xquik-dev/hermes-tweet"
+documentationUrl: "https://github.com/Xquik-dev/hermes-tweet#readme"
+packageUrl: "https://github.com/Xquik-dev/hermes-tweet"
+downloadUrl: "https://github.com/Xquik-dev/hermes-tweet/archive/refs/heads/master.zip"
+installable: true
+installCommand: "npx skills add xquik-dev/hermes-tweet"
+usageSnippet: "Use the Hermes Tweet skill before installing or operating the Hermes Agent plugin for X/Twitter workflows."
+copySnippet: |-
+  # Trigger
+  "Use Hermes Tweet to plan a safe Hermes Agent X/Twitter workflow."
+
+  # Skill install
+  npx skills add xquik-dev/hermes-tweet
+
+  # Plugin source
+  https://github.com/Xquik-dev/hermes-tweet
+
+  # Required gates
+  XQUIK_API_KEY for credentialed reads
+  HERMES_TWEET_ENABLE_ACTIONS=true for account-changing actions
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-21"
+retrievalSources:
+  - "https://github.com/Xquik-dev/hermes-tweet"
+  - "https://raw.githubusercontent.com/Xquik-dev/hermes-tweet/master/skills/hermes-tweet/SKILL.md"
+  - "https://raw.githubusercontent.com/Xquik-dev/hermes-tweet/master/hermes_tweet/skills/hermes-tweet/SKILL.md"
+testedPlatforms:
+  - Hermes Agent
+  - Claude
+  - Codex
+  - Cursor
+prerequisites:
+  - Hermes Agent with plugin support
+  - Xquik API key before using account-backed reads
+  - "Agent client with Agent Skills support for `npx skills add`"
+  - "`HERMES_TWEET_ENABLE_ACTIONS=true` plus explicit user approval before posts, follows, likes, reposts, deletes, or other account-changing actions"
+safetyNotes:
+  - "Start with `tweet_explore` for credential-free planning before using credentialed tools."
+  - "Treat `tweet_action` as approval-gated and review exact endpoint, method, and payload before any public or account-changing action."
+  - Do not use Hermes Tweet for spam, deceptive engagement, harassment, impersonation, credential collection, or bulk unsolicited outreach.
+privacyNotes:
+  - Xquik API keys must stay in plugin config or environment variables, never in prompts, shared logs, issues, PRs, screenshots, or committed files.
+  - Credentialed reads can expose account-scoped timelines, searches, user data, or workflow context.
+  - Return concise summaries and source URLs without exposing raw private runtime logs or credentials.
+tags:
+  - hermes-tweet
+  - hermes-agent
+  - x
+  - twitter
+  - xquik
+  - tweet-search
+  - social-media
+  - automation
+  - agent-skills
+keywords:
+  - hermes tweet skill
+  - hermes agent twitter plugin
+  - x twitter hermes plugin
+  - tweet exploration
+  - credentialed tweet reads
+  - approval gated tweet actions
+readingTime: 4
+difficultyScore: 62
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Hermes Tweet is an Agent Skill bundled with the Hermes Agent X/Twitter plugin. It helps agents use Xquik safely by separating endpoint discovery, authenticated reads, and account-changing actions behind explicit tool gates.
+
+Use the skill when a Hermes Agent workflow needs to find the right X/Twitter endpoint, read tweets or profiles with an API key, or prepare posts and other workflow actions for approval before execution.
+
+## Install
+
+Install the reusable Agent Skill:
+
+```bash
+npx skills add xquik-dev/hermes-tweet
+```
+
+Use the canonical repository as the Hermes Agent plugin source:
+
+```bash
+https://github.com/Xquik-dev/hermes-tweet
+```
+
+After plugin install, verify that Hermes Agent lists the Hermes Tweet toolset and exposes `tweet_explore`, `tweet_read`, and `tweet_action` according to the configured environment gates.
+
+## Workflow Scope
+
+- Use `tweet_explore` first to inspect available Xquik endpoints without credentials.
+- Configure `XQUIK_API_KEY` before account-backed reads.
+- Keep `HERMES_TWEET_ENABLE_ACTIONS` disabled unless the session intentionally allows account-changing actions.
+- Use `tweet_read` for catalog-listed GET endpoints that do not change account or workflow state.
+- Use `tweet_action` only after the user approves the exact endpoint, method, payload, and expected side effects.
+
+## Safety Checklist
+
+1. Confirm the user owns or is authorized to access the account or workflow.
+2. Keep API keys out of chat, logs, screenshots, issues, PRs, and commits.
+3. Start with endpoint discovery before credentialed reads or actions.
+4. Show final post text, media choices, targets, and scheduling details before publishing.
+5. Re-confirm when scope, account, target, recurrence, or limits change.
+
+## Troubleshooting
+
+- If `tweet_read` is unavailable, configure `XQUIK_API_KEY` where the Hermes runtime executes.
+- If `tweet_action` is unavailable, set `HERMES_TWEET_ENABLE_ACTIONS=true` only for sessions that need approved actions.
+- If a route is not returned by `tweet_explore`, do not guess it or call a direct HTTP fallback.
+- If the plugin is installed in a project-local Hermes directory, enable trusted project plugins only for repositories you trust.
+
+## Retrieval Sources
+
+- https://github.com/Xquik-dev/hermes-tweet
+- https://raw.githubusercontent.com/Xquik-dev/hermes-tweet/master/skills/hermes-tweet/SKILL.md
+- https://raw.githubusercontent.com/Xquik-dev/hermes-tweet/master/hermes_tweet/skills/hermes-tweet/SKILL.md

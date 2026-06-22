@@ -3,18 +3,17 @@ title: Slash Commands in Claude Agent SDK Sessions
 slug: slash-commands-in-claude-agent-sdk-sessions
 category: guides
 description: >-
-  A practical walkthrough of using slash commands in the Claude Agent SDK:
-  discovering available commands from the init message, sending commands in the
-  prompt, built-in commands like compact and clear, and defining custom commands
-  on the filesystem.
+  A practical walkthrough of slash commands in the Claude Agent SDK. Read the
+  slash_commands array from the system init message, dispatch a command by
+  placing it in the prompt string, handle built-ins like /compact and /clear,
+  and author your own as SKILL.md files with allowed-tools frontmatter.
 cardDescription: >-
-  Use slash commands in the Claude Agent SDK: discover them from the init
-  message, send them in the prompt, and define custom ones on disk.
-seoTitle: Slash Commands in Claude Agent SDK Sessions
+  Read slash_commands from the SDK init message, dispatch a command via the
+  prompt, and ship custom SKILL.md commands with allowed-tools.
+seoTitle: "Claude Agent SDK Slash Commands: Discover, Send, Customize"
 seoDescription: >-
-  How to use slash commands in the Claude Agent SDK: discover them via the
-  system init message, send a command in the prompt, use built-ins like /compact
-  and /clear, and define custom commands as filesystem files.
+  Enumerate available slash commands from the init message, run /compact and
+  /clear, pass $ARGUMENTS, and define custom SDK commands under .claude/skills.
 author: JPette1783
 authorProfileUrl: "https://github.com/JPette1783"
 submittedBy: JPette1783

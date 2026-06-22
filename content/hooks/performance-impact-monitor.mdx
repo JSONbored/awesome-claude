@@ -11,6 +11,9 @@ seoDescription: >-
   real-t...
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+retrievalSources:
+  - "https://code.claude.com/docs/en/hooks"
 dateAdded: "2025-09-19"
 installable: true
 installCommand: >-
@@ -44,18 +47,15 @@ tags:
   - notification
   - profiling
   - alerts
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - alerts
-  - claude
-  - development
-  - hooks
-  - impact
-  - monitor
-  - monitoring
-  - notification
-  - performance
-  - profiling
-  - tools
+  - performance impact monitor hook
+  - claude code performance impact monitor hook
+  - performance impact monitor claude hook
+  - claude performance impact monitor automation
 readingTime: 3
 difficultyScore: 0
 hasTroubleshooting: true

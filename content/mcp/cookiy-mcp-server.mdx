@@ -1,0 +1,196 @@
+---
+title: Cookiy MCP Server for Claude
+slug: cookiy-mcp-server
+category: mcp
+description: >-
+  Cookiy hosted MCP server and cookiy-mcp bootstrap CLI for AI-moderated user
+  research—studies, interviews, recruitment, reports, and quantitative surveys
+  over OAuth streamable HTTP.
+cardDescription: >-
+  Connect Claude to Cookiy to create studies, run AI interviews, recruit
+  participants, and generate research reports through s-api.cookiy.ai/mcp.
+seoTitle: Cookiy MCP Server for Claude
+seoDescription: >-
+  Use the Cookiy MCP server with Claude for user research workflows including
+  study creation, AI interviews, recruitment, and reports via OAuth at
+  s-api.cookiy.ai/mcp.
+author: Cookiy
+authorProfileUrl: "https://github.com/cookiy-ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1497
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1497"
+repoUrl: "https://github.com/cookiy-ai"
+documentationUrl: "https://cookiy.ai"
+websiteUrl: "https://cookiy.ai"
+installable: true
+installCommand: >-
+  npx cookiy-mcp --client claudeCode -y
+usageSnippet: >-
+  Run npx cookiy-mcp --client claudeCode -y to install the Cookiy skill and MCP
+  connector, then authenticate via OAuth at https://s-api.cookiy.ai/mcp on first use.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "cookiy": {
+        "url": "https://s-api.cookiy.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "cookiy": {
+        "url": "https://s-api.cookiy.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Cookiy account with billing enabled when running paid interviews or recruitment."
+  - "Node.js 18+ for the cookiy-mcp bootstrap CLI from the cookiy-ai/cookiy-skill repository."
+  - "Claude Code, Cursor, Codex, Windsurf, Cline, OpenClaw, or another MCP host with HTTP and OAuth support."
+  - "Network egress allowed to s-api.cookiy.ai, including OAuth discovery endpoints."
+safetyNotes:
+  - "cookiy_create_cue and recruitment tools can incur charges; confirm budgets before approving calls."
+  - "Use cookiy_introduce and cookiy_help to understand workflow state machines before destructive actions."
+  - "OAuth tokens grant persistent Cookiy access until revoked."
+  - "Quantitative and recruitment flows may contact real participants; review scripts before launch."
+privacyNotes:
+  - "Interview transcripts, participant responses, and billing metadata are processed by Cookiy."
+  - "OAuth credentials remain in the MCP host; do not paste tokens into chat or public issues."
+  - "Research studies may contain PII from participants; follow your organization's data-handling policy."
+tags:
+  - user-research
+  - interviews
+  - recruitment
+  - surveys
+  - remote-mcp
+keywords:
+  - cookiy mcp
+  - ai user research claude
+  - cookiy-mcp install
+  - s-api.cookiy.ai mcp
+  - cookiy skill
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Cookiy provides a workflow-aware Model Context Protocol server for AI-moderated user research. Agents create studies, run simulated or live interviews, edit discussion guides, recruit participants, generate insight reports, and optionally launch quantitative surveys through official `cookiy_*` MCP tools.
+
+The production endpoint is `https://s-api.cookiy.ai/mcp`, registered as `ai.cookiy/cookiy`. Installation assets live in [cookiy-ai/cookiy-skill](https://github.com/cookiy-ai/cookiy-skill) with the [cookiy-mcp](https://www.npmjs.com/package/cookiy-mcp) bootstrap CLI.
+
+## Features
+
+- Study creation and listing through structured MCP tools.
+- AI-moderated interviews with guide editing workflows.
+- Participant recruitment and billing-aware checkout tools.
+- Report generation, sharing, and balance inspection.
+- OAuth 2.1 authentication with resumable headless flows for some clients.
+- One-command installer that adds both local skill copies and MCP config.
+
+## Use Cases
+
+- Spin up a concept-testing study from a product brief in Claude Code.
+- Run simulated interviews before spending recruitment credits.
+- Recruit participants matching a screening questionnaire.
+- Check account balance before launching a paid study wave.
+- Generate and share an insight report link with stakeholders.
+
+## Installation
+
+### Recommended bootstrap CLI
+
+```bash
+npx cookiy-mcp --client claudeCode -y
+```
+
+Supported `--client` values include `claudeCode`, `cursor`, `vscode`, `codex`, `windsurf`, `cline`, `openclaw`, and `manus`.
+
+### Manual HTTP connector
+
+```json
+{
+  "mcpServers": {
+    "cookiy": {
+      "url": "https://s-api.cookiy.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+OAuth discovery is at `https://s-api.cookiy.ai/.well-known/oauth-authorization-server`.
+
+### Verify connection
+
+After install, ask the agent to call `cookiy_introduce` to confirm authentication and tool access.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "cookiy": {
+      "url": "https://s-api.cookiy.ai/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+## Examples
+
+### Create a study
+
+```text
+Create a Cookiy study to test onboarding confusion for our mobile banking app.
+```
+
+### Run simulated interviews
+
+```text
+Run three AI-moderated interviews using the current discussion guide and summarize top friction points.
+```
+
+### Recruitment
+
+```text
+Recruit five participants who match our screening criteria for a 30-minute remote session.
+```
+
+## Security
+
+- Confirm credit costs with `cookiy_balance_get` before paid recruitment or checkout tools.
+- Review discussion guides and consent language before contacting real participants.
+- Revoke Cookiy OAuth access when offboarding contractors with MCP access.
+
+## Troubleshooting
+
+### OAuth fails on first connect
+
+Allow network egress to `s-api.cookiy.ai` and complete the browser or headless OAuth flow your host requires.
+
+### Installer did not detect client
+
+Pass `--client` explicitly, for example `npx cookiy-mcp --client cursor -y`.
+
+### Tool contract errors
+
+Use documented `cookiy_*` tools only; Cookiy is not a raw REST passthrough.
+
+### Claude Cowork network blocks
+
+Enable outbound network access and allow `s-api.cookiy.ai` in the domain allowlist.

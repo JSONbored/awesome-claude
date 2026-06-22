@@ -1,0 +1,177 @@
+---
+title: Sanity MCP Server for Claude
+slug: sanity-mcp-server
+category: mcp
+description: >-
+  Manage Sanity content from Claude — query documents with GROQ, create and publish content,
+  deploy schemas and studios, manage releases, search documentation, and generate images — with
+  the official Sanity remote MCP server hosted at mcp.sanity.io.
+cardDescription: "Official Sanity MCP: GROQ queries, content creation, schema deployment & studio management from Claude."
+seoTitle: "Sanity MCP Server for Claude — GROQ Queries, Content Creation & Schema Deployment"
+seoDescription: "Connect Claude to Sanity with the official remote MCP server at mcp.sanity.io: query content with GROQ, create and publish documents, deploy schemas, manage content releases, generate images, and search Sanity documentation — MIT licensed, OAuth authenticated."
+author: Sanity
+authorProfileUrl: "https://github.com/sanity-io"
+dateAdded: "2026-06-18"
+documentationUrl: "https://www.sanity.io/docs/ai/mcp-server"
+websiteUrl: "https://www.sanity.io"
+repoUrl: "https://github.com/sanity-io/sanity-mcp-server"
+retrievalSources:
+  - "https://raw.githubusercontent.com/sanity-io/sanity-mcp-server/main/README.md"
+  - "https://www.sanity.io/docs/ai/mcp-server"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add Sanity -t http https://mcp.sanity.io --scope user"
+usageSnippet: >-
+  Ask Claude to query your Sanity dataset with GROQ, create a new blog post draft, publish
+  pending content, deploy a schema change, manage a content release, or search Sanity
+  documentation — using your Sanity account for authentication.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "Sanity": {
+        "type": "http",
+        "url": "https://mcp.sanity.io"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "Sanity": {
+        "type": "http",
+        "url": "https://mcp.sanity.io"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Sanity account — sign up at sanity.io."
+  - "An MCP client such as Claude Code or Claude Desktop."
+  - "No local install or API tokens required — authenticate via OAuth on first connect."
+safetyNotes:
+  - "Content creation, publishing, schema deployment, and studio operations are live — changes affect your Sanity project immediately."
+  - "The `deploy_schema` and `deploy_studio` tools push changes to production; review carefully before executing."
+privacyNotes:
+  - "Document content, schema definitions, dataset configurations, release metadata, and embedding index data from your Sanity project are surfaced in Claude's context."
+  - "Authentication uses your Sanity account via OAuth — no API tokens are stored in the MCP configuration."
+disclosure: "Sanity is a commercial headless CMS platform. The MCP server is officially maintained by Sanity."
+tags:
+  - sanity
+  - cms
+  - headless-cms
+  - content-management
+  - groq
+  - schema
+keywords:
+  - sanity mcp server
+  - sanity mcp claude
+  - headless cms mcp claude code
+  - sanity groq mcp
+  - sanity content management ai
+  - sanity schema deployment mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Sanity MCP Server** is the official remote Model Context Protocol server from Sanity,
+hosted at `https://mcp.sanity.io`. It provides 40+ tools for the full Sanity headless CMS
+platform: GROQ queries, document creation and publishing, schema and studio deployment,
+content release management, semantic search, image generation and transformation, and
+documentation search. Authentication is via OAuth — no API tokens needed in the config.
+The underlying server code is MIT licensed.
+
+## Key capabilities
+
+- **GROQ queries** — query any dataset with Sanity's powerful GROQ query language.
+- **Document management** — create draft versions, patch documents, publish and unpublish.
+- **Schema operations** — get workspace schemas and deploy schema changes.
+- **Studio deployment** — deploy Sanity Studio to production.
+- **Content releases** — create and manage structured content releases.
+- **Semantic search** — search on embedding indices for vector-based retrieval.
+- **Image generation** — generate and transform images within Sanity.
+- **Documentation** — search and read Sanity documentation.
+
+## Tools (40+ total, key selection)
+
+| Tool | Purpose |
+|---|---|
+| `query_documents` | Query content with GROQ |
+| `get_document` | Fetch a specific document by ID |
+| `create_documents` / `create_version` | Create draft documents |
+| `patch_documents` | Apply precise modifications |
+| `publish_documents` / `unpublish_documents` | Publish/unpublish content |
+| `get_schema` / `deploy_schema` | Fetch or deploy workspace schema |
+| `deploy_studio` | Deploy Sanity Studio |
+| `create_release` / `list_releases` | Content release management |
+| `semantic_search` | Search on embeddings indices |
+| `generate_image` / `transform_image` | Image generation and transformation |
+| `search_docs` / `read_docs` | Search and read Sanity documentation |
+| `list_projects` / `create_project` | Project management |
+| `list_datasets` / `create_dataset` | Dataset management |
+
+## How it compares
+
+| Server | GROQ queries | Schema deploy | Releases | Semantic search | Notes |
+|---|---|---|---|---|---|
+| **Sanity MCP** | Yes | Yes | Yes | Yes | Official, hosted |
+| Contentful MCP | No (REST) | No | No | Yes (via AI Actions) | Official, stdio |
+| Strapi MCP | No | No | No | No | Community |
+| WordPress MCP | No | No | No | No | Community |
+
+Sanity's native GROQ query language and schema-first architecture make its MCP integration
+uniquely powerful for structured content operations.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add Sanity -t http https://mcp.sanity.io --scope user
+```
+
+Run `/mcp` in Claude Code to authenticate with your Sanity account via OAuth.
+
+### Claude Desktop
+
+Go to **Settings → Connectors** and enter `https://mcp.sanity.io`, or add manually:
+
+```json
+{
+  "mcpServers": {
+    "Sanity": {
+      "type": "http",
+      "url": "https://mcp.sanity.io"
+    }
+  }
+}
+```
+
+Sessions expire after 7 days; re-authenticate as needed.
+
+## Requirements
+
+- A Sanity account (sanity.io).
+- An MCP client (Claude Code or Claude Desktop).
+- No local install, no API tokens, no extra configuration.
+
+## Security
+
+- Authentication is OAuth-based using your Sanity account — no credentials are stored locally.
+- `deploy_schema` and `deploy_studio` are production-level operations — confirm before executing.
+- Document mutations are live — use draft versions to stage changes before publishing.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- Official repository `sanity-io/sanity-mcp-server` (MIT) documents the hosted server at
+  `https://mcp.sanity.io`, OAuth authentication model, 40+ tools across GROQ queries, document
+  management, schema/studio deployment, content releases, semantic search, image generation,
+  and documentation access.
+- Sanity's official MCP documentation at `www.sanity.io/docs/ai/mcp-server` (SSR, HTTP 200)
+  describes the integration setup and connection steps.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the `--transport http`
+  connection pattern used above.

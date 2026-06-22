@@ -21,6 +21,7 @@ import { CategoryPill, Kbd, TrustBadge } from "./badges";
 import { useTheme } from "@/lib/theme";
 import { useShortcuts } from "./shortcuts-dialog";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 const EXAMPLES = [
   "postgres MCP",
@@ -188,7 +189,10 @@ export function CommandBar({
   }, [q]);
 
   const submit = () => {
-    if (q.trim()) navigate({ to: "/browse", search: { q } });
+    const query = q.trim();
+    if (!query) return;
+    trackEvent("search", { q: query.slice(0, 64) });
+    navigate({ to: "/browse", search: { q } });
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {

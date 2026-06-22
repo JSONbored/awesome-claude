@@ -63,6 +63,7 @@ Current migrations include:
 - `0007_jobs_admin_indexes.sql` for reviewed job admin queues, expiry checks, and paid placement windows
 - `0008_jobs_compensation_metadata.sql` for dedicated salary, equity, bonus, and benefits/perks job metadata
 - `0009_source_repo_signals.sql` for cached source repository stars, forks, upstream update timestamps, and refresh errors
+- `0010_brief_issues.sql` for persisted Weekly Brief issues (draft/approved/sent status, JSON payload, scheduled send time)
 
 The jobs board renders active reviewed D1 rows only. Curated, employer-submitted,
 claimed, featured, and sponsored jobs all go through the same private D1-backed
@@ -189,6 +190,14 @@ longer a Next.js app.
 - `VITE_SUBMISSION_GATE_URL` or `NEXT_PUBLIC_SUBMISSION_GATE_URL` set to the
   submission-gate Worker origin:
   `https://submission-gate.heyclau.de`.
+- `VITE_UMAMI_WEBSITE_ID` and `UMAMI_WEBSITE_ID` set to the Umami website ID.
+- `VITE_UMAMI_ALLOWED_HOSTS` set to production hostnames that should emit
+  browser analytics, for example `heyclau.de,www.heyclau.de`.
+- `UMAMI_UPSTREAM_URL` set to the Umami instance origin and
+  `UMAMI_ALLOWED_UPSTREAM_ORIGINS` set to the allowed upstream origin. Browser
+  analytics is emitted by bundled first-party code and collector posts are
+  proxied through `/u/api/send`; the site does not proxy or execute the upstream
+  Umami tracker script as same-origin JavaScript.
 
 Content submission writes are routed through the private submission gate; the
 public website only runs preflight and hands the contributor to GitHub auth.
@@ -210,28 +219,15 @@ openssl pkcs8 -topk8 -nocrypt -in github-app.pem -out github-app-pkcs8.pem
 
 For local development, copy `.dev.vars.example` to `.dev.vars` and fill values.
 
-React Email source templates live in `emails/src/`. Render static Resend
-Broadcast artifacts with:
-
-```bash
-pnpm email:render
-pnpm validate:emails
-```
-
-To sync rendered templates into the Resend Templates dashboard for visual review
-and manual Broadcast use:
-
-```bash
-pnpm resend:sync-templates -- --dry-run
-RESEND_API_KEY=... pnpm resend:sync-templates -- --apply
-```
-
-If a template already exists, set the matching ignored local env var before
-running `--apply`: `RESEND_TEMPLATE_CURATED_DROP_ID`,
-`RESEND_TEMPLATE_RELEASE_NOTES_ID`, or `RESEND_TEMPLATE_MAINTAINER_CALL_ID`.
-The sync command creates or updates draft templates only. It does not publish
-templates, create Broadcasts, schedule campaigns, or send email. Keep those
-steps manual inside Resend.
+Newsletter emails (confirm, welcome, weekly digest) are generated in-worker from
+`apps/web/src/lib/newsletter-emails.ts` — a single design-system token source, no
+React Email or template-sync step. Sending is automated: the confirm email on
+signup (`api/newsletter/subscribe`), the welcome email on confirm
+(`api/public/newsletter/confirm`), and the weekly digest via the Sunday cron
+(`plugins/newsletter-digest-scheduled.ts`). Required Worker secrets:
+`RESEND_API_KEY`, `RESEND_SEGMENT_ID`, `RESEND_FROM` (a Resend-verified sender,
+e.g. `…@mail.heyclau.de`), and `NEWSLETTER_CONFIRM_SECRET`; optionally
+`RESEND_WEBHOOK_SECRET` + `DISCORD_WEBHOOK_URL` for the subscriber webhook.
 
 ## TanStack/Nitro Cloudflare notes used in this project
 

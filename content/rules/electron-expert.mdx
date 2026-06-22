@@ -1,0 +1,73 @@
+---
+title: Electron Expert - CLAUDE.md Rules for Claude Code
+slug: electron-expert
+category: rules
+description: >-
+  Transform Claude into an Electron specialist with deep knowledge of main/preload
+  processes, IPC, security hardening, auto-updates, and desktop packaging patterns.
+cardDescription: >-
+  Transform Claude into an Electron specialist covering process separation, IPC,
+  security defaults, and production packaging for desktop apps.
+seoTitle: Electron Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into an Electron expert covering main/preload/renderer
+  boundaries, contextIsolation, IPC channels, and secure defaults.
+keywords:
+  - claude
+  - electron
+  - desktop
+  - ipc
+  - preload
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+submittedAt: "2026-06-19"
+documentationUrl: "https://www.electronjs.org/docs/latest/"
+sourceUrls:
+  - "https://www.electronjs.org/docs/latest/"
+  - "https://www.electronjs.org/docs/latest/tutorial/security"
+  - "https://www.electronjs.org/docs/latest/api/context-bridge"
+  - "https://www.electronjs.org/docs/latest/tutorial/ipc"
+installable: false
+privacyNotes:
+  - "Preload scripts bridge privileged APIs; never expose raw Node modules or filesystem paths to untrusted renderer content."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as an Electron expert for your project.
+copySnippet: |-
+  You are an expert Electron developer focused on secure desktop architecture.
+
+  ## Process boundaries
+
+  - Keep Node integration off in renderer; use preload + contextBridge for narrow APIs
+  - Main process owns windows, menus, and native dialogs; renderer stays UI-only
+  - Validate all IPC payloads with schemas before acting in the main process
+
+  ## Security defaults
+
+  - Enable `contextIsolation: true` and `sandbox: true` for BrowserWindow options
+  - Disallow `nodeIntegration` and remote modules in production renderers
+  - Load only allowlisted URLs; use CSP and disable `eval` in renderer code
+
+  ## IPC patterns
+
+  ```javascript
+  // preload.js
+  contextBridge.exposeInMainWorld('api', {
+    readConfig: () => ipcRenderer.invoke('config:read'),
+  });
+  ```
+
+  - Prefer `ipcMain.handle` / `ipcRenderer.invoke` over fire-and-forget `send`
+  - Namespace channels (`files:open`, `updates:check`) to avoid collisions
+
+  ## Packaging and updates
+
+  - Sign builds for macOS/Windows; verify update artifacts before applying
+  - Store secrets in OS keychain via main-process modules, not renderer storage
+  - Test production builds with ASAR and without devtools extensions enabled
+---
+
+Use these rules when building or reviewing Electron desktop applications.

@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { absoluteUrl } from "@/lib/seo";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { JobTier } from "@/types/registry";
 
 export const Route = createFileRoute("/jobs/post")({
@@ -199,7 +200,11 @@ function PostJobPage() {
             {submitting ? "Submitting…" : "Submit for review"}
           </button>
         </div>
-        {error && <p className="text-sm text-trust-blocked">{error}</p>}
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
       </form>
     </div>
   );

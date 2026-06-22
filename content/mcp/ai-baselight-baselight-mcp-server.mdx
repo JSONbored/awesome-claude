@@ -1,0 +1,195 @@
+---
+title: Baselight MCP Server for Claude
+slug: ai-baselight-baselight-mcp-server
+category: mcp
+description: >-
+  Official Baselight remote MCP server for searching and querying a catalog of
+  70,000+ public datasets from Claude via OAuth or x-api-key authentication.
+cardDescription: >-
+  Connect Claude to Baselight to search 70,000+ public datasets and run queries
+  through a hosted remote MCP server.
+seoTitle: Baselight MCP Server for Claude
+seoDescription: >-
+  Use the Baselight MCP server with Claude to discover public datasets, inspect
+  metadata, and query data via OAuth or x-api-key on api.baselight.app.
+author: Baselight
+authorProfileUrl: "https://github.com/BaselightDB"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1477
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1477"
+repoUrl: "https://github.com/BaselightDB/mcp"
+documentationUrl: "https://github.com/BaselightDB/mcp"
+websiteUrl: "https://baselight.app"
+installable: true
+installCommand: >-
+  claude mcp add --transport http baselight https://api.baselight.app/mcp
+usageSnippet: >-
+  Add https://api.baselight.app/mcp as a custom connector, then OAuth-sign-in
+  or set the x-api-key header with your Baselight API key.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "baselight": {
+        "url": "https://api.baselight.app/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "baselight": {
+        "url": "https://api.baselight.app/mcp",
+        "type": "http",
+        "headers": {
+          "x-api-key": "YOUR_BASELIGHT_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Baselight account with API access or OAuth authorisation for dataset queries."
+  - "Claude Pro, Team, or Enterprise with Connectors support, or another MCP client with remote HTTP connectors."
+  - "Understanding of the dataset topics you plan to query to narrow catalog searches effectively."
+  - "Compliance review if exported dataset rows may contain regulated or personal data."
+safetyNotes:
+  - "Query tools may return large result sets; scope filters to avoid excessive data transfer."
+  - "Some datasets are community-contributed; validate schema and quality before production use."
+  - "OAuth tokens and API keys grant persistent catalog access until revoked."
+  - "Do not run unreviewed SQL-like queries against sensitive production mirrors without safeguards."
+privacyNotes:
+  - "Search terms and query filters are sent to Baselight and may appear in usage logs."
+  - "Dataset rows returned through MCP may include PII or licensed third-party content subject to dataset terms."
+  - "Avoid pasting raw dataset excerpts containing personal data into public channels."
+tags:
+  - datasets
+  - data-catalog
+  - analytics
+  - remote-mcp
+  - oauth
+keywords:
+  - baselight mcp
+  - public datasets claude
+  - data catalog mcp
+  - baselight.app connector
+  - dataset search mcp
+readingTime: 4
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Baselight provides a hosted Model Context Protocol server that exposes a catalog of more than 70,000 public datasets. After OAuth or `x-api-key` authentication, Claude and other MCP clients can search the catalog, inspect dataset metadata, and run queries without switching tools.
+
+The integration is documented in the [BaselightDB/mcp](https://github.com/BaselightDB/mcp) repository and hosted at `https://api.baselight.app/mcp`.
+
+## Features
+
+- Search a catalog of 70,000+ public datasets by name, topic, and tags.
+- Inspect dataset schemas, descriptions, and freshness metadata.
+- Run queries against accessible public datasets through MCP tools.
+- OAuth or `x-api-key` header authentication.
+- Hosted remote HTTP endpoint at `api.baselight.app`.
+
+## Use Cases
+
+- Discover open datasets for a machine learning benchmark.
+- Compare schema and row counts before importing a public table.
+- Answer ad hoc analytical questions against curated public data.
+- Find demographic or economic datasets for a research brief.
+- Prototype dashboards by querying sample rows in chat.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add a custom connector under **Settings → Connectors**.
+2. Enter the MCP URL: `https://api.baselight.app/mcp`.
+3. Complete OAuth sign-in or configure the `x-api-key` header.
+4. Enable the connector in your next conversation.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http baselight https://api.baselight.app/mcp
+claude mcp list
+```
+
+Add `x-api-key` in your MCP config when not using OAuth.
+
+### Other MCP clients
+
+Point a remote HTTP connector at `https://api.baselight.app/mcp` and complete OAuth or API key setup.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "baselight": {
+      "url": "https://api.baselight.app/mcp",
+      "type": "http",
+      "headers": {
+        "x-api-key": "YOUR_BASELIGHT_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Omit `headers` when authenticating through OAuth in a connector UI.
+
+## Examples
+
+### Search the catalog
+
+```text
+Search Baselight for public datasets about global temperature anomalies and list the top five matches.
+```
+
+### Inspect schema
+
+```text
+Show the schema and row count for the most recent COVID cases dataset in Baselight.
+```
+
+### Sample query
+
+```text
+Query the first 10 rows of a US census population dataset and summarise the columns.
+```
+
+## Security
+
+- Review dataset licenses before redistributing or commercial use.
+- Limit query scope to avoid downloading large sensitive extracts unintentionally.
+- Revoke API keys and OAuth tokens when offboarding users.
+- Treat returned rows as potentially sensitive even when labeled public.
+
+## Troubleshooting
+
+### OAuth or 401 errors
+
+Re-authorise the connector or verify the `x-api-key` value in Baselight account settings.
+
+### Empty search results
+
+Broaden search terms or remove restrictive tag filters; confirm the dataset is in the public catalog.
+
+### Query timeouts
+
+Add filters or reduce row limits; very wide tables may exceed default timeouts.
+
+### Schema mismatch
+
+Community datasets may change schema; refresh metadata before reusing saved queries.

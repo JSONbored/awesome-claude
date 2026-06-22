@@ -1,0 +1,213 @@
+---
+title: Obsidian Agent Skills
+slug: obsidian-agent-skills
+category: skills
+description: >-
+  Agent Skills for Obsidian by Steph Ango, teaching Claude Code, Codex,
+  OpenCode, and skills-compatible agents to work with Obsidian Flavored
+  Markdown, Bases, JSON Canvas, Obsidian CLI, vaults, plugins, themes, and
+  Defuddle-powered web-to-markdown extraction.
+cardDescription: >-
+  Obsidian skill pack for Markdown, Bases, JSON Canvas, Obsidian CLI vault
+  workflows, plugin/theme development, and clean web-to-markdown extraction.
+seoTitle: Obsidian Agent Skills for Claude Code, Codex, OpenCode, Markdown, Bases, and JSON Canvas
+seoDescription: >-
+  Install Obsidian Agent Skills for Claude Code, Codex, OpenCode, and
+  skills-compatible agents to create and edit Obsidian Markdown, Bases, JSON
+  Canvas files, vault workflows, plugin/theme projects, and clean markdown.
+author: Steph Ango
+authorProfileUrl: "https://github.com/kepano"
+dateAdded: "2026-06-18"
+repoUrl: "https://github.com/kepano/obsidian-skills"
+documentationUrl: "https://github.com/kepano/obsidian-skills#readme"
+websiteUrl: "https://github.com/kepano/obsidian-skills"
+downloadUrl: "https://github.com/kepano/obsidian-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "/plugin marketplace add kepano/obsidian-skills"
+usageSnippet: >-
+  Register the Obsidian skills repository as a Claude Code plugin marketplace,
+  install the obsidian plugin, or copy the skills directory into a compatible
+  agent host such as Codex or OpenCode.
+copySnippet: |-
+  /plugin marketplace add kepano/obsidian-skills
+  /plugin install obsidian@obsidian-skills
+
+  # npx skills with HTTPS
+  npx skills add https://github.com/kepano/obsidian-skills
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-18"
+retrievalSources:
+  - "https://github.com/kepano/obsidian-skills"
+  - "https://raw.githubusercontent.com/kepano/obsidian-skills/main/README.md"
+  - "https://raw.githubusercontent.com/kepano/obsidian-skills/main/.claude-plugin/marketplace.json"
+  - "https://raw.githubusercontent.com/kepano/obsidian-skills/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - OpenCode
+  - Agent Skills compatible hosts
+prerequisites:
+  - "An Obsidian vault or project folder where an agent is allowed to read and write Markdown, Base, Canvas, plugin, or theme files."
+  - "Claude Code plugin support, `npx skills`, Codex skills path access, OpenCode skills directory access, or another Agent Skills compatible host."
+  - "Obsidian CLI only for workflows that explicitly need vault interaction, plugin development, or theme development through the CLI."
+  - "A backup, git history, or review workflow before allowing an agent to edit important vault notes or canvases."
+safetyNotes:
+  - "Obsidian vaults often contain personal notes, private research, customer context, credentials in notes, meeting records, and unpublished plans; scope agent access carefully."
+  - "The Obsidian CLI skill can guide vault operations, plugin work, and theme development, so review commands before running them against a real vault."
+  - "JSON Canvas and Bases edits can alter knowledge organization, saved views, formulas, and linked note structures; review generated files before syncing or publishing."
+  - "Defuddle-powered extraction can bring third-party web content into a vault; check source attribution, copyright, and cleanup before sharing extracted notes."
+privacyNotes:
+  - "Using the skills can expose note contents, backlinks, properties, canvases, Base queries, plugin code, theme files, vault paths, web extracts, and personal knowledge workflows to the configured model provider."
+  - "Do not share private journals, client notes, regulated data, secret recovery phrases, API keys, unreleased plans, or internal knowledge bases unless the agent environment is approved for that data."
+  - "When committing or publishing generated vault files, review embedded links, frontmatter properties, canvas text, extracted quotes, and metadata for private information."
+tags:
+  - obsidian
+  - skills
+  - markdown
+  - json-canvas
+  - bases
+  - claude-code
+  - codex
+  - knowledge-management
+keywords:
+  - Obsidian Agent Skills
+  - Obsidian Claude Code skills
+  - Obsidian Codex skills
+  - Obsidian Markdown skill
+  - Obsidian Bases skill
+  - JSON Canvas skill
+  - Obsidian CLI agent skill
+  - Obsidian vault AI agent
+  - Defuddle skill
+  - skills-compatible Obsidian agent
+readingTime: 6
+difficultyScore: 68
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Obsidian Agent Skills
+
+`kepano/obsidian-skills` is an Agent Skills repository for Obsidian workflows.
+It teaches skills-compatible agents how to work with Obsidian Flavored
+Markdown, Obsidian Bases, JSON Canvas, Obsidian CLI, and clean
+web-to-markdown extraction through Defuddle.
+
+Use this listing when the agent task touches Obsidian vault structure, note
+syntax, Bases, Canvas files, plugin/theme development, or Obsidian-specific
+Markdown conventions.
+
+## Knowledge Freshness
+
+Obsidian Flavored Markdown, Bases syntax, JSON Canvas conventions, Obsidian CLI
+commands, plugin APIs, theme workflows, and Defuddle behavior can change. Use
+the skills as workflow guidance, then verify exact syntax and command behavior
+against current Obsidian docs, JSON Canvas docs, and local CLI help before
+editing important vault files.
+
+Because vaults often hold sensitive personal or organizational knowledge, treat
+the local vault and git history as the source of truth. Review generated note,
+Base, Canvas, plugin, and theme changes before syncing, publishing, or sharing.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The upstream `kepano/obsidian-skills` README.
+- The Claude Code marketplace metadata for plugin name, owner, version, and
+  description.
+- Repository license and GitHub metadata.
+
+## Core Workflow
+
+Install through Claude Code:
+
+```text
+/plugin marketplace add kepano/obsidian-skills
+/plugin install obsidian@obsidian-skills
+```
+
+Install with `npx skills` over HTTPS:
+
+```bash
+npx skills add https://github.com/kepano/obsidian-skills
+```
+
+For Codex, copy the `skills/` directory into the Codex skills path. For
+OpenCode, clone the full repository into the OpenCode skills directory so the
+repository structure remains intact.
+
+## Capability Scope
+
+The README lists five skills:
+
+| Skill | Use It For |
+| --- | --- |
+| `obsidian-markdown` | Creating and editing Obsidian Flavored Markdown with wikilinks, embeds, callouts, properties, and Obsidian-specific syntax |
+| `obsidian-bases` | Creating and editing Obsidian Bases with views, filters, formulas, and summaries |
+| `json-canvas` | Creating and editing JSON Canvas `.canvas` files with nodes, edges, groups, and connections |
+| `obsidian-cli` | Interacting with Obsidian vaults through Obsidian CLI, including plugin and theme development |
+| `defuddle` | Extracting clean Markdown from web pages with Defuddle to remove clutter and reduce tokens |
+
+This pack does not replace Obsidian, guarantee current CLI behavior, or make
+vault edits safe by itself. It gives agents Obsidian-specific operating
+knowledge that still needs local review and backup discipline.
+
+## Production Rules
+
+- Work in a git-backed vault or backup copy when changing important notes,
+  Bases, Canvas files, plugins, or themes.
+- Review generated Markdown properties, wikilinks, embeds, callouts, Bases
+  formulas, and Canvas connections before syncing.
+- Keep private notes, credentials, client records, and sensitive research out of
+  public prompts, screenshots, PRs, or shared generated examples.
+- Verify Obsidian CLI commands and plugin/theme steps before running them in a
+  real vault.
+- Preserve source attribution and copyright boundaries when extracting web
+  content into vault notes.
+
+## Use Cases
+
+- Ask Claude Code to convert messy notes into Obsidian Flavored Markdown with
+  properties, wikilinks, callouts, and embeds.
+- Have Codex create a JSON Canvas map that links related research notes.
+- Use an agent to draft or adjust an Obsidian Base view and formulas.
+- Ask OpenCode to scaffold an Obsidian plugin or theme workflow using the
+  Obsidian CLI skill.
+- Extract a clean Markdown note from a web page for personal research using the
+  Defuddle skill.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The README says the skills follow the Agent Skills specification and can be
+  used by skills-compatible agents including Claude Code, Codex, and OpenCode.
+- The README documents Claude Code marketplace installation, `npx skills`
+  installation over SSH or HTTPS, manual Claude Code setup, Codex skills-path
+  setup, and OpenCode clone setup.
+- The README lists five skills: `obsidian-markdown`, `obsidian-bases`,
+  `json-canvas`, `obsidian-cli`, and `defuddle`.
+- The marketplace metadata names the plugin `obsidian`, version `1.0.1`, with
+  the description "Claude Skills for Obsidian."
+- GitHub reports MIT licensing for the repository.
+
+## Duplicate Review
+
+Checked current `content/skills/`, `content/tools/`, `content/mcp/`,
+`content/agents/`, open pull requests, and repository-wide content for
+`kepano/obsidian-skills`, Obsidian Agent Skills, Obsidian Claude Code skills,
+Obsidian Codex skills, Obsidian Markdown skill, JSON Canvas skill, Obsidian
+Bases skill, Obsidian CLI skill, and Defuddle skill. No dedicated Obsidian
+Agent Skills entry, exact source URL duplicate, target file, or open duplicate
+PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The repository
+is maintained by Steph Ango and published under the MIT License.

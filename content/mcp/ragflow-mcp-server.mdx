@@ -1,0 +1,226 @@
+---
+title: RAGFlow MCP Server for Claude
+slug: ragflow-mcp-server
+category: mcp
+description: >-
+  Connect Claude to a running RAGFlow deployment through its built-in MCP server,
+  so agents can retrieve grounded chunks from selected datasets using RAGFlow's
+  DeepDoc-powered retrieval pipeline.
+cardDescription: "RAGFlow MCP: retrieve grounded chunks from RAGFlow datasets through Claude and other MCP clients."
+seoTitle: "RAGFlow MCP Server for Claude - DeepDoc Dataset Retrieval for RAG"
+seoDescription: "Launch the built-in RAGFlow MCP server and connect Claude to RAGFlow datasets for grounded retrieval over selected dataset IDs and optional document IDs."
+author: InfiniFlow
+authorProfileUrl: "https://github.com/infiniflow"
+dateAdded: "2026-06-18"
+brandName: RAGFlow
+brandDomain: ragflow.io
+documentationUrl: "https://ragflow.io/docs/launch_mcp_server"
+websiteUrl: "https://ragflow.io"
+repoUrl: "https://github.com/infiniflow/ragflow"
+retrievalSources:
+  - "https://ragflow.io/docs/launch_mcp_server"
+  - "https://ragflow.io/docs/mcp_tools"
+  - "https://ragflow.io/docs/mcp_client"
+  - "https://github.com/infiniflow/ragflow"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "uv run mcp/server/server.py --host=127.0.0.1 --port=9382 --base-url=http://127.0.0.1:9380 --api-key=ragflow-xxxxx"
+usageSnippet: >-
+  Start the RAGFlow MCP server next to a working RAGFlow v0.18.0+ deployment,
+  then ask Claude to retrieve relevant chunks from one or more RAGFlow dataset IDs
+  for a specific question.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ragflow": {
+        "type": "http",
+        "url": "http://127.0.0.1:9382/mcp",
+        "headers": {
+          "Authorization": "YOUR_RAGFLOW_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "ragflow": {
+        "type": "http",
+        "url": "http://127.0.0.1:9382/mcp",
+        "headers": {
+          "Authorization": "YOUR_RAGFLOW_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - "A working RAGFlow v0.18.0 or later deployment."
+  - "A RAGFlow API key."
+  - "Dataset IDs, and optionally document IDs, that the MCP client is allowed to query."
+  - "For source launch: Python 3.13 and uv in the RAGFlow checkout."
+  - "For Docker launch: Docker Compose and the RAGFlow MCP server command enabled in docker-compose.yml."
+safetyNotes:
+  - "The MCP server runs alongside a live RAGFlow deployment; keep it bound to localhost unless you have reviewed network exposure and authentication controls."
+  - "RAGFlow documents that its API-key authentication is a makeshift early-stage MCP approach and recommends binding local SSE servers to 127.0.0.1 instead of 0.0.0.0 in public environments."
+  - "In host mode, each client request must include a valid API key; in self-host mode, the server API key determines which tenant datasets can be accessed."
+  - "Retrieval results can influence downstream agent answers, so verify dataset scope, chunking quality, and source citations before using results in production decisions."
+privacyNotes:
+  - "Dataset names, dataset IDs, document IDs, retrieved chunks, questions, metadata, and source text can be surfaced to the MCP client and model provider."
+  - "RAGFlow datasets may contain internal documents, PDFs, spreadsheets, scanned files, customer data, credentials, or regulated information; restrict dataset IDs to the task."
+  - "Keep RAGFlow API keys out of prompts, commits, screenshots, logs, and shared support messages."
+  - "If the server is exposed beyond localhost, network logs and MCP request bodies may reveal dataset inventory and retrieval prompts."
+tags:
+  - ragflow
+  - rag
+  - retrieval
+  - deepdoc
+  - datasets
+  - self-hosted
+  - knowledge-base
+keywords:
+  - ragflow mcp server
+  - ragflow mcp claude
+  - ragflow claude code
+  - ragflow dataset retrieval mcp
+  - self hosted rag mcp
+  - deepdoc mcp retrieval
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+RAGFlow includes an MCP server that runs as an optional component next to a
+working RAGFlow deployment. It gives MCP clients such as Claude access to
+RAGFlow retrieval over selected datasets, using RAGFlow's DeepDoc-powered
+document parsing and retrieval pipeline.
+
+The current MCP surface is intentionally focused: it exposes retrieval over
+`dataset_ids` and optional `document_ids` for a user-provided question. That
+makes it a good fit for agents that need grounded chunks from an existing
+RAGFlow knowledge base without giving the agent broad control over the rest of
+the RAGFlow application.
+
+## How It Works
+
+The RAGFlow MCP server is designed as an independent component that complements
+the main RAGFlow server. It must run alongside a functioning RAGFlow deployment.
+
+RAGFlow documents two launch modes:
+
+| Mode | Authentication Model | Dataset Scope |
+|---|---|---|
+| `self-host` | MCP server starts with a RAGFlow API key | The server can access datasets for the specified tenant |
+| `host` | Each MCP client request includes an API key | Each client accesses its own RAGFlow datasets |
+
+The server supports the legacy SSE endpoint at `/sse` and streamable HTTP at
+`/mcp`. RAGFlow notes that host mode currently requires disabling streamable
+HTTP, so prefer self-host mode for streamable HTTP client setups unless your
+deployment has tested a different configuration.
+
+## Tool
+
+RAGFlow currently documents one specialized MCP retrieval tool:
+
+| Tool | Purpose | Inputs |
+|---|---|---|
+| `ragflow_retrieval` / `retrieve` | Fetch relevant chunks from the RAGFlow retrieve interface | `question`, `dataset_ids`, optional `document_ids` |
+
+The tool description includes available dataset IDs and descriptions so the
+client can decide which datasets are relevant to a question.
+
+## Launch From Source
+
+Run from a RAGFlow checkout with a working RAGFlow server:
+
+```bash
+uv run mcp/server/server.py \
+  --host=127.0.0.1 \
+  --port=9382 \
+  --base-url=http://127.0.0.1:9380 \
+  --api-key=ragflow-xxxxx
+```
+
+Host mode is available when each MCP client should provide its own key:
+
+```bash
+uv run mcp/server/server.py \
+  --host=127.0.0.1 \
+  --port=9382 \
+  --base-url=http://127.0.0.1:9380 \
+  --mode=host
+```
+
+## Launch With Docker
+
+RAGFlow's Docker workflow requires enabling the MCP server command in
+`docker/docker-compose.yml`. The documented configuration includes:
+
+```yaml
+command:
+  - --enable-mcpserver
+  - --mcp-host=0.0.0.0
+  - --mcp-port=9382
+  - --mcp-base-url=http://127.0.0.1:9380
+  - --mcp-script-path=/ragflow/mcp/server/server.py
+  - --mcp-mode=self-host
+  - --mcp-host-api-key=ragflow-xxxxxxx
+```
+
+For safer local development, bind the MCP host to `127.0.0.1` unless another
+host is explicitly required and protected.
+
+## Client Configuration
+
+For streamable HTTP clients, point the MCP client at the local `/mcp` endpoint:
+
+```json
+{
+  "mcpServers": {
+    "ragflow": {
+      "type": "http",
+      "url": "http://127.0.0.1:9382/mcp",
+      "headers": {
+        "Authorization": "YOUR_RAGFLOW_API_KEY"
+      }
+    }
+  }
+}
+```
+
+For legacy SSE clients, RAGFlow's client examples use `http://127.0.0.1:9382/sse`
+and pass the API key in either an `api_key` header or an `Authorization` header.
+
+## Use Cases
+
+- Let Claude answer implementation questions from a private RAGFlow dataset.
+- Retrieve chunks from a curated support, legal, or operations knowledge base.
+- Query only approved dataset IDs instead of exposing every document in a
+  RAGFlow deployment.
+- Test dataset chunking and retrieval quality before wiring RAGFlow into broader
+  agent workflows.
+- Keep RAG search local to an existing self-hosted RAGFlow stack.
+
+## Safety and Privacy
+
+RAGFlow MCP is retrieval-focused, but the retrieved content can still be highly
+sensitive. Scope dataset IDs deliberately, keep API keys outside prompts, and
+avoid exposing the MCP server on public interfaces without additional network
+controls. When using retrieved chunks in generated answers, preserve citations
+and verify that the dataset actually supports the claim.
+
+## Source Verification Notes
+
+Verified on **2026-06-18**:
+
+- RAGFlow's MCP launch documentation confirms source and Docker launch paths,
+  self-host and host modes, v0.18.0+ prerequisite, API-key behavior, `/sse` and
+  `/mcp` transports, and network-exposure guidance.
+- RAGFlow's MCP tools documentation confirms the retrieval-focused MCP tool for
+  fetching relevant chunks from specified dataset IDs and optional document IDs.
+- RAGFlow's MCP client examples document API-key headers, SSE initialization,
+  tool listing, and a `ragflow_retrieval` tool call.
+- The upstream `infiniflow/ragflow` repository is Apache-2.0 licensed and
+  contains the `mcp` implementation directory.

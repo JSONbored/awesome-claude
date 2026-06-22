@@ -1,0 +1,225 @@
+---
+title: Prompt Caching Cost Audit Capability Pack Skill
+slug: prompt-caching-cost-audit-capability-pack
+category: skills
+description: >-
+  Expert prompt caching cost audit capability pack for measuring Claude Code
+  cache hit rates, identifying cache invalidation triggers, and reducing token
+  spend from CLAUDE.md edits, model switches, and startup load changes.
+cardDescription: >-
+  Audit Claude Code prompt caching cost drivers, cache invalidation, and token
+  spend with source-backed checklists.
+seoTitle: Prompt Caching Cost Audit Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for prompt caching cost audit, Claude Code cache
+  invalidation review, token spend reduction, and startup load impact on caching.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-14"
+submittedAt: "2026-06-14"
+sourceSubmissionNumber: 1540
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1540"
+repoUrl: "https://github.com/anthropics/claude-code"
+documentationUrl: "https://github.com/anthropics/claude-code"
+downloadUrl: "https://github.com/anthropics/claude-code/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when Claude Code sessions show rising token cost or poor cache
+  efficiency and you need to identify prompt caching invalidation triggers and
+  reduce spend without breaking workflow quality.
+copySnippet: |-
+  # Trigger
+  "Apply the prompt caching cost audit capability pack to this session."
+
+  # Required output
+  1) Cache efficiency symptom summary
+  2) Invalidation trigger inventory
+  3) Startup load and settings change review
+  4) Minimal cost reduction plan
+  5) Privacy-safe audit summary
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-14"
+retrievalSources:
+  - "https://code.claude.com/docs/en/prompt-caching"
+  - "https://code.claude.com/docs/en/costs"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/features-overview"
+  - "https://github.com/anthropics/claude-code"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - "An active or recent Claude Code session with observed cost increase or low cache reuse."
+  - "Access to cost or usage indicators such as `/cost`, billing dashboards, or session token summaries when available."
+  - "Redacted view of CLAUDE.md, skills, MCP config, and settings changed recently in the workspace."
+  - "Knowledge of model alias or version switches during the affected session window."
+safetyNotes:
+  - "Cost reduction must not remove safety-critical instructions from CLAUDE.md or skills without explicit review."
+  - "Aggressive cache optimization that strips needed context can increase mistake rates and rework cost."
+  - "Model switches invalidate prompt caches; frequent alias changes can silently increase spend."
+  - "This skill recommends configuration changes; it must not edit CLAUDE.md, skills, or MCP config without explicit user approval."
+privacyNotes:
+  - "Cost audits may expose repository names, team usage patterns, and internal project structure from CLAUDE.md and skill inventories."
+  - "Usage dashboards and `/cost` output can include account identifiers that should not be pasted into public issues."
+  - "Public audit summaries should describe invalidation categories and recommended actions, not full settings dumps."
+tags:
+  - prompt-caching
+  - cost-audit
+  - token-usage
+  - claude-code
+  - capability-pack
+keywords:
+  - prompt caching cost audit
+  - Claude Code cache invalidation
+  - Claude Code token cost reduction
+  - prompt cache hit rate review
+  - CLAUDE.md cache impact
+  - Claude Code /cost audit
+readingTime: 9
+difficultyScore: 80
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Claude Code prompt caching, costs, skills,
+and features overview documentation verified on **2026-06-14**. Cache pricing and
+invalidation rules can change with model releases; prefer live official docs
+over remembered cache TTL assumptions.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/prompt-caching
+- https://code.claude.com/docs/en/costs
+- https://code.claude.com/docs/en/skills
+- https://code.claude.com/docs/en/features-overview
+- https://github.com/anthropics/claude-code
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified against official Claude Code prompt caching and cost documentation and
+the public Anthropic `claude-code` repository on **2026-06-14**:
+
+- Claude Code prompt caching reuses stable prefix content across turns when cache
+  keys remain valid, reducing input token cost for repeated system and project context.
+- Changes to model selection, large CLAUDE.md edits, settings updates, and startup
+  load modifications can invalidate cached prefixes and cause expensive uncached turns.
+- CLAUDE.md, skill descriptions, and MCP tool schemas contribute to startup prefix
+  content loaded on many requests when configured for automatic loading.
+- Official cost documentation describes monitoring spend and factors that affect
+  token usage in Claude Code sessions.
+- Prompt caching benefits depend on stable, reasonably sized prefix content; volatile
+  or oversized startup load reduces effective cache efficiency.
+
+## Scope Note
+
+This complements context window audit skills by focusing specifically on cache
+invalidation and cost drivers rather than general context pressure management.
+
+## Core Workflow
+
+1. Capture cost symptoms: sudden spend spikes, poor cache reuse indicators, or
+   rising input tokens after configuration changes.
+2. Establish baseline: note model alias, session age, recent `/cost` or billing
+   observations, and timeframe of the increase.
+3. Inventory invalidation triggers: model switches, CLAUDE.md edits, skill additions,
+   MCP server changes, hook output changes, and settings updates.
+4. Review startup load stability: count skills with model invocation, MCP schema
+   size, and CLAUDE.md length contributing to the cached prefix.
+5. Check session behavior: frequent unrelated task switches, `/clear` usage patterns,
+   and compaction events that reshape effective prefix stability.
+6. Prioritize fixes with highest cache impact and lowest workflow risk: stabilize
+   model alias, trim oversized descriptions, defer nonessential MCP servers, and
+   batch CLAUDE.md edits outside active sessions.
+7. Recommend verification: compare cost or token metrics across a short before/after
+   window on the same task type.
+8. Document residual uncacheable content that should remain for safety or quality.
+9. Produce a privacy-safe cost audit summary for the team.
+
+## Capability Scope
+
+- Cache efficiency symptom analysis.
+- Invalidation trigger inventory.
+- Startup load and settings change review.
+- Minimal cost reduction recommendations.
+- Verification checklist for cache improvements.
+- Privacy-safe cost audit reporting.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as an Agent Skill when investigating session cost
+  spikes, cache misses, or prefix instability after config changes.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, and Generic AGENTS workflows**: use the workflow as
+  a deterministic prompt caching audit checklist in platform runbooks.
+
+## Required Inputs
+
+- Cost or token usage observations for the affected period.
+- List of recent CLAUDE.md, skill, MCP, model, and settings changes.
+- Startup load inventory when available from `/context` or equivalent.
+- Task type used for before/after verification.
+
+## Production Rules
+
+- Do not sacrifice safety-critical instructions solely to improve cache hit rate.
+- Stabilize model alias during long task slices to avoid unnecessary invalidation.
+- Batch CLAUDE.md and skill changes outside active high-volume sessions when possible.
+- Remove unused MCP servers and disable model invocation for rarely used skills.
+- Treat cost metrics as directional; confirm improvements on repeated similar tasks.
+- Redact account and billing identifiers from public summaries.
+- Re-audit after major Claude Code upgrades or model roster changes.
+
+## Review Matrix
+
+| Trigger | Cache impact | Safer mitigation |
+| --- | --- | --- |
+| Model switch mid-session | High | Hold alias stable for task slice |
+| Large CLAUDE.md edit | High | Batch edits; restart session cleanly |
+| New MCP server | Medium–High | Add only when needed; remove unused |
+| Skill description bloat | Medium | Trim descriptions; user-only flag |
+| Frequent unrelated tasks | Medium | Use `/clear` between task types |
+| Hook output injection | Medium | Reduce verbose hook returns |
+
+## Output Contract
+
+1. Cache efficiency symptom summary.
+2. Invalidation trigger inventory ranked by impact.
+3. Startup load and settings change review.
+4. Minimal cost reduction plan with rollback notes.
+5. Verification checklist for next session window.
+6. Privacy-safe audit summary.
+
+## Duplicate Check
+
+Checked `content/skills`, `content/guides`, generated catalog text, and open
+pull requests for prompt caching cost audit, cache invalidation review, and
+Claude Code `/cost` workflows. Context window audit skills cover broader pressure
+management; no `skills` entry provides a dedicated prompt caching cost audit
+capability pack with invalidation matrix and output contract.
+
+## Editorial Disclosure
+
+Submitted as an independent source-backed HeyClaude content entry by
+`kiannidev`. It is based on public Claude Code documentation, the public
+Anthropic `claude-code` repository, and Google Search Central helpful-content
+guidance. No paid placement, referral link, affiliate link, or vendor
+sponsorship is used.

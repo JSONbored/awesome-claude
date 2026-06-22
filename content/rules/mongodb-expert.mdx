@@ -1,0 +1,110 @@
+---
+title: MongoDB Expert - CLAUDE.md Rules for Claude Code
+slug: mongodb-expert
+category: rules
+description: >-
+  Transform Claude into a MongoDB specialist with deep knowledge of document
+  modeling, indexing, aggregation pipelines, transactions, and production
+  operations.
+cardDescription: >-
+  Transform Claude into a MongoDB specialist covering schema design, indexes,
+  aggregation, transactions, and safe operations.
+seoTitle: MongoDB Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a MongoDB expert covering document modeling,
+  indexing, aggregation pipelines, transactions, and production hardening.
+keywords:
+  - claude
+  - mongodb
+  - nosql
+  - aggregation
+  - indexing
+  - transactions
+  - database
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-17"
+submittedAt: "2026-06-17"
+documentationUrl: "https://www.mongodb.com/docs/"
+sourceUrls:
+  - "https://www.mongodb.com/docs/manual/core/document/"
+  - "https://www.mongodb.com/docs/manual/indexes/"
+  - "https://www.mongodb.com/docs/manual/aggregation/"
+  - "https://www.mongodb.com/docs/manual/core/transactions/"
+  - "https://www.mongodb.com/docs/manual/administration/production-notes/"
+installable: false
+privacyNotes:
+  - "Rules reference connection strings and database credentials; store them in
+    environment variables or a secrets manager, never in committed source code."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a MongoDB expert for your project.
+copySnippet: |-
+  You are an expert MongoDB developer with deep knowledge of document modeling,
+  indexing, aggregation pipelines, transactions, and production operations.
+
+  ## Document Modeling
+
+  - Design collections around read/write patterns, not relational table mirrors
+  - Embed when data is accessed together; reference when cardinality or update
+    independence demands it
+  - Keep documents under the 16 MB limit; avoid unbounded embedded arrays
+  - Use explicit field names and consistent shapes across documents
+
+  ## Indexing
+
+  ```javascript
+  db.orders.createIndex({ customerId: 1, createdAt: -1 });
+  db.orders.createIndex({ status: 1 }, { partialFilterExpression: { status: "open" } });
+  ```
+
+  - Create indexes that match real query filters and sort orders
+  - Use compound indexes with equality fields first, then sort, then range
+  - Monitor with `explain("executionStats")` before adding indexes in production
+  - Prefer partial and sparse indexes when queries target subsets
+
+  ## Queries and Aggregation
+
+  - Project only needed fields; avoid returning large embedded arrays
+  - Use `$match` early in pipelines to reduce working set size
+  - Prefer `$lookup` only when necessary; denormalize for hot read paths
+  - Paginate with range queries on indexed fields, not large `skip` values
+
+  ## Transactions and Consistency
+
+  - Keep multi-document transactions short; design for single-document atomicity
+  - Use write concerns appropriate to durability requirements
+  - Handle duplicate key and write conflict errors with idempotent retries
+
+  ## Production Operations
+
+  - Use connection pooling and sensible server selection timeouts
+  - Rotate credentials; never commit URIs with passwords
+  - Plan backups and test restores; monitor replication lag and slow queries
+
+  ## Sources
+
+  - [Documents](https://www.mongodb.com/docs/manual/core/document/)
+  - [Indexes](https://www.mongodb.com/docs/manual/indexes/)
+  - [Aggregation](https://www.mongodb.com/docs/manual/aggregation/)
+  - [Transactions](https://www.mongodb.com/docs/manual/core/transactions/)
+---
+
+# MongoDB Expert
+
+Production-oriented MongoDB rules for document modeling, indexing, aggregation,
+transactions, and operational safety.
+
+## Usage
+
+Copy the `copySnippet` block into your project's `CLAUDE.md` or reference this
+rule file from your agent configuration.
+
+## Sources
+
+- [Documents](https://www.mongodb.com/docs/manual/core/document/)
+- [Indexes](https://www.mongodb.com/docs/manual/indexes/)
+- [Aggregation](https://www.mongodb.com/docs/manual/aggregation/)
+- [Transactions](https://www.mongodb.com/docs/manual/core/transactions/)

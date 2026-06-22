@@ -9,7 +9,7 @@ seoDescription: "Advanced AI skill for securing n8n in production with workflow 
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2026-04-10"
-documentationUrl: "https://docs.n8n.io/hosting/securing/"
+documentationUrl: "https://docs.n8n.io/hosting/securing/overview/"
 downloadUrl: /downloads/skills/n8n-production-security-capability-pack.zip
 installable: true
 installCommand: "curl -L https://heyclau.de/downloads/skills/n8n-production-security-capability-pack.zip -o n8n-production-security-capability-pack.zip && unzip -o n8n-production-security-capability-pack.zip -d ./n8n-production-security-capability-pack"
@@ -42,6 +42,12 @@ prerequisites:
   - "n8n environment inventory (workspaces, credentials, workflows)"
   - Security policy baseline
   - Alerting destination for incidents
+safetyNotes:
+  - "Can design automation for live browsers, accounts, workflows, or infrastructure; use staging targets and human approval before destructive or account-write actions."
+  - "Keep API tokens and service credentials least-privileged, and verify generated runbooks before scheduling or unattended execution."
+privacyNotes:
+  - "Inputs and outputs can include browser state, account metadata, workflow payloads, infrastructure inventory, logs, and operational screenshots."
+  - "Redact credentials, session data, customer records, internal hostnames, and private workspace details before sharing prompts or artifacts."
 tags:
   - n8n
   - security

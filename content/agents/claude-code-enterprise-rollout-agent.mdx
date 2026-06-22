@@ -3,18 +3,18 @@ title: Claude Code Enterprise Rollout Agent
 slug: claude-code-enterprise-rollout-agent
 category: agents
 description: >-
-  Source-backed agent that plans and reviews an enterprise Claude Code rollout,
-  covering server-managed settings, permission deny lists, managed MCP policy,
-  fail-closed startup, hooks for audit, and what users cannot override, grounded
-  in the official docs.
+  An agent prompt for planning an enterprise Claude Code rollout via
+  server-managed settings: permission deny lists, disableBypassPermissionsMode,
+  allowManagedPermissionRulesOnly, managed MCP allow/deny, and forceRemoteSettingsRefresh
+  fail-closed startup.
 cardDescription: >-
-  Plan an enterprise Claude Code rollout: server-managed settings, deny lists,
-  managed MCP policy, fail-closed startup, and audit hooks.
-seoTitle: Claude Code Enterprise Rollout Agent
+  Plans org-wide Claude Code policy: managed-settings deny lists, bypass lockout,
+  managed-MCP allow/deny, fail-closed startup, and audit hooks behind the security
+  approval dialog.
+seoTitle: Enterprise Claude Code Rollout Planner — Agent Prompt
 seoDescription: >-
-  Reusable agent prompt that plans and reviews an enterprise Claude Code rollout
-  using server-managed settings: permission deny lists, managed MCP policy,
-  fail-closed startup, audit hooks, and non-overridable controls.
+  Agent prompt for an enterprise Claude Code rollout: server-managed permission
+  deny lists, bypass lockout, managed-MCP policy, and fail-closed startup.
 author: JPette1783
 authorProfileUrl: "https://github.com/JPette1783"
 submittedBy: JPette1783
@@ -22,8 +22,14 @@ submittedByUrl: "https://github.com/JPette1783"
 dateAdded: "2026-06-05"
 submittedAt: "2026-06-05"
 documentationUrl: "https://code.claude.com/docs/en/server-managed-settings"
+retrievalSources:
+  - "https://code.claude.com/docs/en/server-managed-settings"
+  - "https://code.claude.com/docs/en/permissions"
+  - "https://code.claude.com/docs/en/managed-mcp"
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://code.claude.com/docs/en/settings"
 installable: false
-usageSnippet: "Use this agent to plan or review an enterprise Claude Code rollout using server-managed settings: deny lists, managed MCP policy, fail-closed startup, and audit hooks."
+usageSnippet: "Point this agent at your managed-settings plan to check the permissions.deny list, disableBypassPermissionsMode, allowManagedPermissionRulesOnly, managed-MCP allow/deny, forceRemoteSettingsRefresh, and what users can still override."
 prerequisites:
   - "Claude for Teams or Claude for Enterprise, with admin access to the managed-settings console."
   - "A target policy: which tools, commands, and MCP servers to allow or deny, and which login org to enforce."

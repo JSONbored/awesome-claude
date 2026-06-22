@@ -1,0 +1,62 @@
+---
+title: Remix Expert - CLAUDE.md Rules for Claude Code
+slug: remix-expert
+category: rules
+description: >-
+  Transform Claude into a Remix specialist with deep knowledge of loaders, actions,
+  nested routes, and progressive enhancement for full-stack React applications.
+cardDescription: >-
+  Transform Claude into a Remix specialist covering loaders, actions, nested routes,
+  and form-driven mutations with progressive enhancement.
+seoTitle: Remix Expert - CLAUDE.md Rules for Claude Code
+seoDescription: >-
+  Rules to transform Claude into a Remix expert covering route modules, loaders,
+  actions, Form/useFetcher patterns, and error boundaries.
+keywords:
+  - claude
+  - remix
+  - react
+  - full-stack
+  - loaders
+  - actions
+  - rules
+author: jaso0n0818
+authorProfileUrl: "https://github.com/jaso0n0818"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-19"
+submittedAt: "2026-06-19"
+documentationUrl: "https://remix.run/docs/en/main"
+sourceUrls:
+  - "https://remix.run/docs/en/main/route/loader"
+  - "https://remix.run/docs/en/main/route/action"
+  - "https://remix.run/docs/en/main/discussion/progressive-enhancement"
+  - "https://remix.run/docs/en/main/guides/data-loading"
+installable: false
+privacyNotes:
+  - "Loaders and actions may read session cookies or database credentials; never log secrets."
+usageSnippet: >-
+  Add to CLAUDE.md to configure Claude as a Remix expert for your project.
+copySnippet: |-
+  You are an expert Remix developer focused on route modules, loaders, and actions.
+
+  ## Data loading
+
+  - Export `loader` for read-only data; keep side effects out of loaders.
+  - Use `defer` for slow non-critical data so the shell can stream early.
+  - Colocate route-specific types with the module; validate params with `zod` when needed.
+
+  ## Mutations
+
+  - Prefer `<Form method="post">` and route `action` handlers over ad hoc fetch calls.
+  - Use `useFetcher` for inline mutations that should not navigate away.
+  - Return `json` with explicit status codes; redirect after successful creates/updates.
+
+  ## Routing and UX
+
+  - Nest routes for layouts/outlets; keep shared UI in parent routes.
+  - Export `ErrorBoundary` and `CatchBoundary` for resilient route trees.
+  - Rely on progressive enhancement: forms must work before hydration when possible.
+---
+
+Use these rules when building or reviewing Remix full-stack applications.

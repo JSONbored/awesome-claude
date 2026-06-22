@@ -1,0 +1,159 @@
+---
+title: DataStax Astra DB MCP Server for Claude
+slug: astra-db-mcp-server
+category: mcp
+description: >-
+  Connect Claude to DataStax Astra DB — manage collections and records, run bulk operations, and
+  perform vector and hybrid search — with the official Astra DB Model Context Protocol server.
+cardDescription: "Official Astra DB MCP server: manage collections, records, and vector search from Claude."
+seoTitle: "Astra DB MCP Server for Claude — Vector & Document Search"
+seoDescription: "Connect Claude to DataStax Astra DB with the official MCP server: manage collections and records, run bulk ops, and perform vector and hybrid search from Claude Code or Desktop."
+author: DataStax
+authorProfileUrl: "https://www.datastax.com"
+dateAdded: "2026-06-17"
+documentationUrl: "https://github.com/datastax/astra-db-mcp"
+websiteUrl: "https://www.datastax.com/products/datastax-astra"
+repoUrl: "https://github.com/datastax/astra-db-mcp"
+retrievalSources:
+  - "https://github.com/datastax/astra-db-mcp"
+  - "https://docs.datastax.com/en/astra-db-serverless/index.html"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://docs.pinecone.io/"
+  - "https://qdrant.tech/documentation/"
+installable: true
+installCommand: "claude mcp add astra-db -e ASTRA_DB_APPLICATION_TOKEN=<your-token> -e ASTRA_DB_API_ENDPOINT=<your-endpoint> -- npx -y @datastax/astra-db-mcp"
+usageSnippet: >-
+  Ask Claude to list collections, create records, or run a vector search over your Astra DB data.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "astra-db-mcp": {
+        "command": "npx",
+        "args": ["-y", "@datastax/astra-db-mcp"],
+        "env": {
+          "ASTRA_DB_APPLICATION_TOKEN": "<your-token>",
+          "ASTRA_DB_API_ENDPOINT": "<your-endpoint>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "astra-db-mcp": {
+        "command": "npx",
+        "args": ["-y", "@datastax/astra-db-mcp"],
+        "env": {
+          "ASTRA_DB_APPLICATION_TOKEN": "<your-token>",
+          "ASTRA_DB_API_ENDPOINT": "<your-endpoint>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "A DataStax Astra DB account and a database."
+  - "An Astra DB application token (ASTRA_DB_APPLICATION_TOKEN) and API endpoint (ASTRA_DB_API_ENDPOINT)."
+  - "Node.js (npx) and an MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Tools create, update, and delete collections and records, including bulk operations — scope the application token and confirm destructive actions."
+  - "Bulk delete/update operations affect many records at once; review before running them through Claude."
+privacyNotes:
+  - "Documents, vectors, and search results enter the MCP client context and the model's prompt."
+  - "ASTRA_DB_APPLICATION_TOKEN and ASTRA_DB_API_ENDPOINT are secrets — keep them in the client config or environment."
+tags:
+  - astra-db
+  - datastax
+  - vector-database
+  - cassandra
+  - rag
+keywords:
+  - astra db mcp server
+  - datastax astra mcp
+  - connect claude to astra db
+  - astra db vector search mcp
+  - cassandra vector database mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **DataStax Astra DB MCP Server** is the official Model Context Protocol server for Astra DB,
+DataStax's serverless database built on Apache Cassandra with native vector search. It lets Claude
+manage collections and records, run bulk operations, and perform vector and hybrid search in natural
+language. It runs over stdio via `npx @datastax/astra-db-mcp` and is licensed under Apache-2.0.
+
+## Key capabilities
+
+| Area | Tools |
+| --- | --- |
+| **Collections** | `GetCollections`, `CreateCollection`, `UpdateCollection`, `DeleteCollection`, `EstimateDocumentCount` |
+| **Records** | `ListRecords`, `GetRecord`, `CreateRecord`, `UpdateRecord`, `DeleteRecord`, `FindRecord`, `FindDistinctValues` |
+| **Bulk** | `BulkCreateRecords`, `BulkUpdateRecords`, `BulkDeleteRecords` |
+| **Search** | `VectorSearch`, `HybridSearch` |
+
+## How it compares
+
+Astra DB combines a document store with native vector search; other vector-database MCP servers
+focus on embeddings retrieval:
+
+| MCP server | Engine | Model | Notable |
+| --- | --- | --- | --- |
+| **Astra DB MCP** | Astra DB (Cassandra) | Documents + vectors | Document CRUD plus vector & hybrid search |
+| **Pinecone MCP** | Pinecone | Vector index | Fully managed vector search |
+| **Qdrant MCP** | Qdrant | Vector index | Self-host or Qdrant Cloud |
+
+Choose Astra DB when you want document storage and vector search in one managed service; the Pinecone
+and Qdrant servers cover dedicated vector indexes.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add astra-db \
+  -e ASTRA_DB_APPLICATION_TOKEN=<your-token> \
+  -e ASTRA_DB_API_ENDPOINT=<your-endpoint> -- \
+  npx -y @datastax/astra-db-mcp
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "astra-db-mcp": {
+      "command": "npx",
+      "args": ["-y", "@datastax/astra-db-mcp"],
+      "env": {
+        "ASTRA_DB_APPLICATION_TOKEN": "<your-token>",
+        "ASTRA_DB_API_ENDPOINT": "<your-endpoint>"
+      }
+    }
+  }
+}
+```
+
+## Requirements
+
+- A DataStax Astra DB account, application token, and API endpoint.
+- Node.js (`npx`) and an MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Scope the `ASTRA_DB_APPLICATION_TOKEN` to least privilege.
+- Bulk and delete tools change many records at once — review destructive actions before running.
+- Treat the token and endpoint as secrets.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- The official repository `github.com/datastax/astra-db-mcp` (Apache-2.0) documents the
+  `@datastax/astra-db-mcp` package, stdio transport, the
+  `ASTRA_DB_APPLICATION_TOKEN`/`ASTRA_DB_API_ENDPOINT` configuration, and the collection, record,
+  bulk, and vector/hybrid-search tools above.
+- DataStax's Astra DB documentation describes the underlying serverless database and vector search.
+- Claude Code's MCP documentation describes the connector setup pattern used here.

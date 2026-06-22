@@ -15,6 +15,10 @@ seoDescription: >-
   protection ...
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
+documentationUrl: "https://git-scm.com/docs/githooks"
+retrievalSources:
+  - "https://git-scm.com/docs/githooks"
+  - "https://code.claude.com/docs/en/hooks"
 dateAdded: "2025-09-19"
 installable: true
 installCommand: >-
@@ -57,17 +61,15 @@ tags:
   - branch-protection
   - workflow
   - safety
+safetyNotes:
+  - "Runs automatically on its configured Claude Code hook event and executes shell logic that can read, modify, or delete files in your project (and may run builds, installs, or network calls); review the script and scope it to expected paths before enabling."
+privacyNotes:
+  - "Receives Claude Code hook input (session metadata, file paths, and tool output) and reads local project files; review what the script logs or forwards to external services and keep credentials out of its output."
 keywords:
-  - branch
-  - branch-protection
-  - claude
-  - development
-  - git
-  - hooks
-  - protection
-  - safety
-  - tools
-  - workflow
+  - git branch protection hook
+  - claude code git branch protection hook
+  - git branch protection claude hook
+  - claude git branch protection automation
 readingTime: 1
 difficultyScore: 0
 hasTroubleshooting: true

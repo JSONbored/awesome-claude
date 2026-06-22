@@ -1,0 +1,131 @@
+---
+title: MCP OAuth Integration Reviewer Agent
+slug: mcp-oauth-integration-reviewer-agent
+category: agents
+description: >-
+  Community reusable agent prompt for reviewing Claude Code remote MCP OAuth integrations
+  using official connect-remote-servers documentation: consent flows, redirect URIs, token
+  storage, scope minimization, and connector approval checklists.
+cardDescription: Review Claude Code remote MCP OAuth integrations using official connect-remote-servers docs.
+seoTitle: MCP OAuth Integration Reviewer Agent
+seoDescription: >-
+  Reusable agent prompt for Claude Code remote MCP OAuth integration review grounded in
+  official connect-remote-servers documentation: consent, redirects, scopes, and token storage.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 1568
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/1568"
+documentationUrl: "https://modelcontextprotocol.io/docs/develop/connect-remote-servers"
+repoUrl: "https://github.com/modelcontextprotocol/modelcontextprotocol"
+installable: false
+usageSnippet: >-
+  Use this agent before approving a remote MCP OAuth connector in Claude Code to verify
+  consent flows, redirect URIs, scopes, and token handling per connect-remote-servers docs.
+prerequisites:
+  - Remote MCP server URL and OAuth client configuration for the intended Claude host.
+  - Staging evidence of authorization and token exchange flows.
+  - List of scopes requested by the connector and data each scope reaches.
+  - Enterprise MCP allowlist policy if rolling out to a large organization.
+safetyNotes:
+  - OAuth consent grants access to user or tenant data—default to least-privilege scopes.
+  - Block connectors that cannot demonstrate correct redirect URI restrictions.
+  - Tokens in connector configs must use host secret storage, not committed files.
+  - This agent reviews integration posture; it does not replace MCP authorization spec audits.
+privacyNotes:
+  - OAuth debug logs may contain authorization codes, tenant IDs, and user emails.
+  - Public review summaries should not paste tokens, claims, or refresh tokens.
+  - Staging test accounts should use synthetic data only.
+tags:
+  - mcp
+  - oauth
+  - remote-mcp
+  - claude-code
+  - integration
+keywords:
+  - mcp oauth integration reviewer agent
+  - claude code remote mcp oauth
+  - connect remote servers oauth review
+  - mcp connector scope minimization
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP OAuth Integration Reviewer Agent is a community-authored reusable prompt for reviewing
+how Claude Code hosts connect to remote MCP servers with OAuth. It applies official
+connect-remote-servers documentation—not an official Anthropic OAuth audit service.
+
+## Scope Note
+
+This prompt focuses on host integration and connector approval workflows documented for
+connecting remote MCP servers. Spec-level authorization boundary review is covered by
+mcp-authorization-boundary-review-agent.
+
+## Agent Prompt
+
+You are an MCP OAuth integration reviewer for Claude Code hosts. Evaluate remote connector
+OAuth setup using official connect-remote-servers documentation.
+
+Workflow:
+
+1. **Connector inventory.** List remote URL, transport, and requested OAuth scopes.
+2. **Consent flow.** Verify user consent screens match documented scope and data use.
+3. **Redirect URIs.** Confirm allowed redirect URIs align with Claude host requirements.
+4. **Token storage.** Ensure tokens live in host secret stores with rotation procedures.
+5. **Scope minimization.** Remove unused scopes; flag broad write scopes without policy.
+6. **Enterprise allowlist.** Check fit with org MCP allow/deny lists before rollout.
+7. **Decision.** Approve connector, approve read-only subset, or block with fixes.
+
+Output contract:
+
+- Integration summary with scopes and data reached.
+- OAuth flow findings ranked by severity.
+- Required fixes before approval.
+- Approve / limit / block recommendation.
+
+## Features
+
+- Applies connect-remote-servers docs to Claude Code connector reviews.
+- Separates host integration checks from MCP authorization spec boundary audits.
+- Emphasizes scope minimization and secret storage hygiene.
+- Produces enterprise allowlist-ready summaries.
+
+## Use Cases
+
+- Approve a SaaS MCP connector for a team Claude Code rollout.
+- Review OAuth scope changes in a connector upgrade.
+- Prepare security sign-off before enabling remote MCP in enterprise.
+- Triage 401/403 errors after OAuth client rotation.
+
+## Source Notes
+
+Verified against MCP connect-remote-servers documentation on **2026-06-16**:
+
+- Official docs describe how MCP clients connect to internet-hosted remote servers including
+  authentication patterns used by desktop and IDE hosts.
+- Documentation covers expectations for secure remote connections and user authorization when
+  remote tools access external accounts or APIs.
+- Remote connection guidance complements Claude Code MCP setup docs for connector configuration.
+
+## Duplicate Check
+
+Checked content/agents for OAuth review coverage.
+mcp-authorization-boundary-review-agent focuses on MCP authorization specification boundary
+analysis (resource metadata, audience validation). This agent focuses on Claude Code host
+OAuth integration approval using connect-remote-servers workflow steps.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by kiannidev, based on public MCP
+connect-remote-servers documentation. No paid placement, referral, or affiliate relationship.
+
+## Sources
+
+- Connect to remote MCP servers - https://modelcontextprotocol.io/docs/develop/connect-remote-servers
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization

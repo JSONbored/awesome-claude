@@ -1,0 +1,172 @@
+---
+title: "Official MCP C# SDK"
+slug: official-mcp-csharp-sdk
+category: tools
+description: >-
+  Official C# SDK for Model Context Protocol servers and clients, maintained by
+  the MCP project in collaboration with Microsoft, with NuGet packages for core
+  MCP APIs, hosting and dependency injection extensions, ASP.NET Core HTTP
+  servers, samples, API documentation, and cross-application access support.
+cardDescription: >-
+  Build official MCP clients and servers in .NET with the ModelContextProtocol
+  packages for core APIs, hosting, dependency injection, and ASP.NET Core HTTP
+  transports.
+seoTitle: "Official MCP C# SDK for .NET Model Context Protocol Apps"
+seoDescription: >-
+  Use the official Model Context Protocol C# SDK to build .NET MCP clients and
+  servers with ModelContextProtocol, ModelContextProtocol.Core,
+  ModelContextProtocol.AspNetCore, dependency injection, samples, and API docs.
+author: Model Context Protocol
+authorProfileUrl: "https://github.com/modelcontextprotocol"
+dateAdded: "2026-06-18"
+websiteUrl: "https://modelcontextprotocol.io"
+documentationUrl: "https://csharp.sdk.modelcontextprotocol.io/"
+repoUrl: "https://github.com/modelcontextprotocol/csharp-sdk"
+packageUrl: "https://www.nuget.org/packages/ModelContextProtocol"
+pricingModel: free
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/modelcontextprotocol/csharp-sdk"
+  - "https://github.com/modelcontextprotocol/csharp-sdk/blob/main/README.md"
+  - "https://github.com/modelcontextprotocol/csharp-sdk/blob/main/src/ModelContextProtocol/ModelContextProtocol.csproj"
+  - "https://github.com/modelcontextprotocol/csharp-sdk/blob/main/src/ModelContextProtocol.AspNetCore/ModelContextProtocol.AspNetCore.csproj"
+  - "https://github.com/modelcontextprotocol/csharp-sdk/blob/main/LICENSE"
+  - "https://csharp.sdk.modelcontextprotocol.io/"
+  - "https://www.nuget.org/packages/ModelContextProtocol"
+installable: true
+installCommand: "dotnet add package ModelContextProtocol"
+usageSnippet: >-
+  Add `ModelContextProtocol` for most .NET client and stdio server projects, or
+  add `ModelContextProtocol.AspNetCore` when exposing an HTTP-based MCP server.
+copySnippet: |-
+  dotnet add package ModelContextProtocol
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - ".NET project compatible with the SDK package targets and your chosen MCP transport."
+  - "A package choice: `ModelContextProtocol.Core`, `ModelContextProtocol`, or `ModelContextProtocol.AspNetCore`."
+  - "Authentication, authorization, and transport-security requirements for any HTTP-accessible MCP server."
+  - "Reviewed tool, resource, prompt, and identity-flow behavior before deploying beyond local development."
+safetyNotes:
+  - "The official C# SDK is a protocol library; production risk comes from the MCP tools, resources, prompts, transports, and identity flows you implement with it."
+  - "Treat every MCP tool handler as an API endpoint: validate arguments, enforce permissions, bound side effects, and sanitize errors."
+  - "HTTP MCP servers need normal web-service controls, including authentication, TLS, request limits, logging policy, and abuse protections."
+  - "Cross-application access and identity assertion flows are security-sensitive and should be tested against the current MCP specification and enterprise policy."
+privacyNotes:
+  - "MCP clients and servers built with the SDK may expose tool arguments, tool results, resource contents, prompt templates, user identity assertions, errors, traces, and logs."
+  - "Avoid leaking private resources, customer data, internal identifiers, tokens, privileged paths, or operational metadata in schemas, responses, examples, and logs."
+  - "Document which MCP client, server, model provider, transport, and logging system can observe each request before production use."
+tags:
+  - csharp
+  - dotnet
+  - mcp
+  - sdk
+  - official
+  - protocol
+keywords:
+  - "official MCP C# SDK"
+  - "Model Context Protocol C# SDK"
+  - "ModelContextProtocol NuGet"
+  - ".NET MCP server SDK"
+  - ".NET MCP client SDK"
+  - "ASP.NET Core MCP server"
+  - "MCP dependency injection .NET"
+  - "MCP C# examples"
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The official MCP C# SDK is the Model Context Protocol project's .NET
+implementation for building MCP clients and servers. The repository is
+maintained under the `modelcontextprotocol` organization in collaboration with
+Microsoft and publishes NuGet packages for core protocol APIs, hosting and
+dependency injection extensions, and ASP.NET Core HTTP server integrations.
+
+This entry covers the official SDK. It is distinct from community MCP libraries
+and from individual MCP servers that happen to be written in C#.
+
+## Package Options
+
+| Package | Best Fit |
+| --- | --- |
+| `ModelContextProtocol.Core` | Client or low-level server APIs with fewer dependencies |
+| `ModelContextProtocol` | Main package for most client, stdio server, hosting, and dependency injection usage |
+| `ModelContextProtocol.AspNetCore` | HTTP-based MCP servers on ASP.NET Core |
+
+## Quick Start
+
+Install the main package:
+
+```bash
+dotnet add package ModelContextProtocol
+```
+
+For an HTTP MCP server, install the ASP.NET Core package instead:
+
+```bash
+dotnet add package ModelContextProtocol.AspNetCore
+```
+
+The upstream documentation includes conceptual getting-started material,
+package-selection guidance, samples, and generated API documentation for the
+current package surface.
+
+## MCP Fit
+
+Choose the official C# SDK when a .NET application, worker service, ASP.NET Core
+app, internal platform, or enterprise integration needs first-party MCP protocol
+types and package guidance. It is especially relevant for teams that already
+standardize on .NET hosting, dependency injection, NuGet packaging, and ASP.NET
+Core operations.
+
+Because the SDK provides protocol building blocks, safe production behavior
+still depends on the application you build around it. Treat MCP tools as
+model-callable APIs and resources as model-visible data surfaces.
+
+## Use Cases
+
+- Add an MCP server to a .NET service, CLI, worker, or desktop integration.
+- Build an MCP client in C# for testing or internal automation.
+- Expose an HTTP-based MCP server with ASP.NET Core.
+- Integrate MCP server registration with .NET hosting and dependency injection.
+- Review sample MCP clients and servers before designing a production surface.
+- Evaluate cross-application access and identity assertion support in .NET.
+
+## Source Review
+
+Verified on **2026-06-18**:
+
+- The upstream README identifies `modelcontextprotocol/csharp-sdk` as the
+  official C# SDK for Model Context Protocol clients and servers.
+- The README states that the SDK is maintained in collaboration with Microsoft.
+- The README documents the three main NuGet packages:
+  `ModelContextProtocol.Core`, `ModelContextProtocol`, and
+  `ModelContextProtocol.AspNetCore`.
+- NuGet resolves the `ModelContextProtocol` package and lists current versions.
+- The documentation site resolves at `csharp.sdk.modelcontextprotocol.io`.
+- The README and license file document Apache License 2.0 licensing for the
+  project.
+
+## Safety and Privacy
+
+The SDK does not decide which local files, services, identities, resources, or
+side effects your MCP server exposes. Keep schemas narrow, require authorization
+for sensitive actions, and avoid returning private data in error messages or
+debug logs.
+
+HTTP and identity-enabled deployments should be reviewed like any other
+production API. Add authentication, transport security, request limits, audit
+logging, and clear retention rules before exposing a server outside localhost.
+
+## Duplicate Check
+
+Checked current `content/mcp/`, `content/tools/`, `content/skills/`, open pull
+requests, and repository-wide content for `modelcontextprotocol/csharp-sdk`,
+official MCP C# SDK, Model Context Protocol C# SDK, ModelContextProtocol NuGet,
+.NET MCP server SDK, ASP.NET Core MCP server, and MCP C# examples. No dedicated
+official C# SDK entry, exact source URL duplicate, target file, or open
+duplicate PR was found.

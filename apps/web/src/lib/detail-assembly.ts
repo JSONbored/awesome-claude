@@ -1,6 +1,7 @@
 import { marked } from "marked";
 import sanitizeHtml from "sanitize-html";
 
+import { sameEntry } from "@/lib/entry-identity";
 import type { ContentEntry, DirectoryEntry } from "@/lib/content.server";
 
 export function stripCodeBlocks(markdown: string) {
@@ -257,7 +258,7 @@ function hashString(value: string) {
 }
 
 export function getRelatedEntries(entry: ContentEntry, allEntries: DirectoryEntry[]) {
-  const relatedPool = allEntries.filter((item) => item.slug !== entry.slug);
+  const relatedPool = allEntries.filter((item) => !sameEntry(item, entry));
   const entryTagSet = new Set((entry.tags ?? []).map((tag) => tag.toLowerCase()));
   const anchorHash = hashString(`${entry.category}:${entry.slug}`);
 

@@ -1,0 +1,147 @@
+---
+title: Postmark MCP Server for Claude
+slug: postmark-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Postmark — send transactional email, manage templates, search messages, and
+  diagnose delivery, bounces, and suppressions — with the official ActiveCampaign Postmark MCP server.
+cardDescription: "Official Postmark MCP server: send email, manage templates, and diagnose delivery from Claude."
+seoTitle: "Postmark MCP Server for Claude — Transactional Email"
+seoDescription: "Connect Claude to Postmark with the official MCP server: send transactional email, manage templates, search messages, and diagnose delivery, bounces, and suppressions."
+author: ActiveCampaign
+authorProfileUrl: "https://postmarkapp.com"
+dateAdded: "2026-06-17"
+documentationUrl: "https://github.com/ActiveCampaign/postmark-mcp"
+websiteUrl: "https://postmarkapp.com"
+repoUrl: "https://github.com/ActiveCampaign/postmark-mcp"
+retrievalSources:
+  - "https://github.com/ActiveCampaign/postmark-mcp"
+  - "https://postmarkapp.com/developer"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://resend.com/docs"
+installable: true
+installCommand: "git clone https://github.com/ActiveCampaign/postmark-mcp && cd postmark-mcp && npm install"
+usageSnippet: >-
+  Ask Claude to send a templated email, search recent outbound messages, or diagnose a delivery issue.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "postmark": {
+        "command": "node",
+        "args": ["path/to/postmark-mcp/index.js"],
+        "env": {
+          "POSTMARK_SERVER_TOKEN": "<your-server-token>",
+          "DEFAULT_SENDER_EMAIL": "<your-sender@example.com>",
+          "DEFAULT_MESSAGE_STREAM": "outbound"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "postmark": {
+        "command": "node",
+        "args": ["path/to/postmark-mcp/index.js"],
+        "env": {
+          "POSTMARK_SERVER_TOKEN": "<your-server-token>",
+          "DEFAULT_SENDER_EMAIL": "<your-sender@example.com>",
+          "DEFAULT_MESSAGE_STREAM": "outbound"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "A Postmark account and a server API token (POSTMARK_SERVER_TOKEN)."
+  - "A verified sender signature/email (DEFAULT_SENDER_EMAIL) and a message stream (DEFAULT_MESSAGE_STREAM)."
+  - "Node.js to clone and run the server."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Send tools dispatch real transactional email; restrict the server token and confirm recipients before sending through Claude."
+  - "Template, webhook, and suppression tools change live Postmark configuration; review before running them."
+privacyNotes:
+  - "Email content, recipient addresses, message search results, and delivery stats enter the MCP client context and the model's prompt."
+  - "The POSTMARK_SERVER_TOKEN is a secret — keep it in the client config or environment, never in shared repositories."
+tags:
+  - postmark
+  - email
+  - transactional-email
+  - deliverability
+  - notifications
+keywords:
+  - postmark mcp server
+  - connect claude to postmark
+  - send transactional email with claude
+  - postmark templates mcp
+  - email deliverability mcp claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Postmark MCP Server** is the official Model Context Protocol server from ActiveCampaign for
+Postmark. It lets Claude send transactional email and manage your Postmark account in natural
+language — sending templated and batch email, managing templates, searching outbound messages, and
+diagnosing delivery, bounces, and suppressions. It runs over stdio and is licensed under MIT.
+
+## Key capabilities
+
+The server exposes 24 tools across Postmark's transactional-email surface:
+
+| Area | Tools |
+| --- | --- |
+| **Email** | `sendEmail`, `sendEmailWithTemplate`, `sendBatch`, `sendBatchWithTemplate` |
+| **Templates** | `listTemplates`, `getTemplate`, `createTemplate`, `editTemplate`, `deleteTemplate`, `validateTemplate` |
+| **Messages & diagnostics** | `searchOutboundMessages`, `getMessageDetails`, `diagnoseDelivery` |
+| **Bounces & suppressions** | `searchBounces`, `getBounceDump`, `activateBounce`, `listSuppressions`, `createSuppressions`, `deleteSuppressions` |
+| **Stats & webhooks** | `getDeliveryStats`, `getServerInfo`, `listWebhooks`, `createWebhook`, `deleteWebhook` |
+
+## Installation
+
+Clone and install the server, then point your MCP client at it:
+
+```bash
+git clone https://github.com/ActiveCampaign/postmark-mcp && cd postmark-mcp && npm install
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "postmark": {
+      "command": "node",
+      "args": ["path/to/postmark-mcp/index.js"],
+      "env": {
+        "POSTMARK_SERVER_TOKEN": "<your-server-token>",
+        "DEFAULT_SENDER_EMAIL": "<your-sender@example.com>",
+        "DEFAULT_MESSAGE_STREAM": "outbound"
+      }
+    }
+  }
+}
+```
+
+## Requirements
+
+- A Postmark account, server API token, verified sender, and a message stream.
+- Node.js and an MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- Send tools dispatch real email — restrict the server token and confirm recipients before sending.
+- Template, webhook, and suppression tools change live configuration; review destructive actions.
+- Treat `POSTMARK_SERVER_TOKEN` as a secret.
+
+## Source Verification Notes
+
+Verified on **2026-06-17**:
+
+- The official repository `github.com/ActiveCampaign/postmark-mcp` (MIT) documents the clone-and-run
+  setup, stdio transport, the `POSTMARK_SERVER_TOKEN`/`DEFAULT_SENDER_EMAIL`/`DEFAULT_MESSAGE_STREAM`
+  configuration, and the 24 tools summarized above.
+- Postmark's developer documentation describes the underlying transactional-email APIs.
+- Claude Code's MCP documentation describes the connector setup pattern used here.

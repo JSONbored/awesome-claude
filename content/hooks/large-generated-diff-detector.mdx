@@ -2,12 +2,7 @@
 title: Large Generated Diff Detector - Claude Code Hook
 slug: large-generated-diff-detector
 category: hooks
-description: >-
-  PostToolUse hook that flags two review hazards as Claude writes files: edits
-  to generated or vendored artifacts (lockfiles, minified bundles, source maps,
-  dist/build output, snapshots, protobuf output) and oversized diffs that change
-  more lines than a configurable threshold versus the committed version. It
-  keeps machine-generated churn and unreviewably large changes out of commits.
+description: "PostToolUse hook that flags two review hazards as Claude writes files: edits to generated or vendored artifacts (lockfiles, minified bundles, source maps, dist/build output, snapshots, protobuf output) and oversized diffs that change more lines than a configurable threshold versus the committed version."
 cardDescription: >-
   Flag edits to generated/vendored files and oversized diffs so machine churn
   stays out of reviewable commits.

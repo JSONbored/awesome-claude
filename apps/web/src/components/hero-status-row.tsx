@@ -4,7 +4,7 @@ import { LiveVersionBadge } from "./live-version-badge";
 /**
  * Hero status row: live-ish signals stitched together as a single line.
  * - Indexed timestamp from the generated registry manifest
- * - MCP SDK version (live from npm)
+ * - @heyclaude/mcp version (live from npm)
  * - Latest weekly brief
  */
 export function HeroStatusRow({
@@ -36,8 +36,8 @@ export function HeroStatusRow({
         className="hidden sm:inline-flex"
       >
         <LiveVersionBadge
-          pkg="@modelcontextprotocol/sdk"
-          fallbackVersion="1.0.0"
+          pkg="@heyclaude/mcp"
+          fallbackVersion="0.3.1"
           showDownloads={false}
         />
       </Link>

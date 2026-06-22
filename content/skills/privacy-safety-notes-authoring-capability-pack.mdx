@@ -1,0 +1,191 @@
+---
+title: Privacy and Safety Notes Authoring Capability Pack Skill
+slug: privacy-safety-notes-authoring-capability-pack
+category: skills
+description: >-
+  Expert capability pack for drafting accurate safetyNotes and privacyNotes on
+  HeyClaude hooks, MCP servers, skills, commands, and statuslines using
+  CONTRIBUTING.md disclosure requirements and submission examples.
+cardDescription: >-
+  Author accurate safetyNotes and privacyNotes for HeyClaude submissions with a review matrix.
+seoTitle: Privacy and Safety Notes Authoring Capability Pack Skill
+seoDescription: >-
+  Source-backed capability pack for authoring HeyClaude safetyNotes and privacyNotes
+  from CONTRIBUTING.md and submission example requirements.
+author: kiannidev
+authorProfileUrl: "https://github.com/kiannidev"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-16"
+submittedAt: "2026-06-16"
+sourceSubmissionNumber: 725
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/725"
+repoUrl: "https://github.com/JSONbored/awesome-claude"
+documentationUrl: "https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md"
+downloadUrl: "https://github.com/JSONbored/awesome-claude/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use when drafting or reviewing safetyNotes and privacyNotes for a HeyClaude
+  content submission before opening a one-file PR.
+copySnippet: |-
+  # Trigger
+  "Apply the privacy and safety notes authoring capability pack for this submission."
+
+  # Required output
+  1) Runtime behavior inventory (execution, network, writes, credentials)
+  2) Draft safetyNotes bullets with concrete risks
+  3) Draft privacyNotes bullets with data exposure paths
+  4) Review matrix pass/fail per CONTRIBUTING categories
+  5) Privacy-safe summary for maintainers
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-16"
+retrievalSources:
+  - "https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/examples/content/SUBMISSION_EXAMPLES.md"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/examples/content/SCHEMA.md"
+  - "https://code.claude.com/docs/en/security"
+  - "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+testedPlatforms:
+  - Claude Code
+  - Claude
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Draft or existing HeyClaude content entry with known runtime behavior."
+  - "Access to CONTRIBUTING.md disclosure categories for the target category."
+  - "Reviewer who can confirm network, credential, and write/delete behavior."
+safetyNotes:
+  - "This skill drafts disclosure text only; it does not execute submitted hooks or MCP servers."
+  - "Do not paste live secrets into review prompts—use placeholders when illustrating patterns."
+privacyNotes:
+  - "Review prompts may include draft submission text—redact customer or employer identifiers."
+tags:
+  - heyclaude
+  - safety
+  - privacy
+  - disclosure
+  - capability-pack
+keywords:
+  - privacy safety notes authoring capability pack
+  - HeyClaude safetyNotes privacyNotes workflow
+  - content submission disclosure skill
+readingTime: 8
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Grounded in HeyClaude CONTRIBUTING.md and submission examples verified on
+**2026-06-16**. Disclosure requirements may evolve with schema updates—confirm
+SCHEMA.md before publishing.
+
+## Retrieval Sources
+
+- https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md
+- https://github.com/JSONbored/awesome-claude/blob/main/examples/content/SUBMISSION_EXAMPLES.md
+- https://github.com/JSONbored/awesome-claude/blob/main/examples/content/SCHEMA.md
+- https://code.claude.com/docs/en/security
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## Source Verification Notes
+
+Verified on **2026-06-16**:
+
+- CONTRIBUTING.md requires **safety_notes** for code execution, package install
+  risk, write/delete actions, background workers, network access, and account writes.
+- CONTRIBUTING.md requires **privacy_notes** for local file access, logs,
+  credentials, telemetry, third-party API calls, and retained data exposure.
+- SUBMISSION_EXAMPLES.md rejects hooks and MCP servers that access home directories,
+  call third-party APIs, or write files **without** safety and privacy notes.
+- Claude Code security documentation recommends reviewing proposed commands and
+  changes for safety before approval.
+
+## Scope Note
+
+Community reusable authoring skill—not an official HeyClaude maintainer tool.
+Applies public contribution disclosure rules to draft frontmatter notes.
+
+## Core Workflow
+
+1. Inventory runtime behavior: execution, installs, writes, network, credentials, logs.
+2. Map behaviors to CONTRIBUTING safety_note categories.
+3. Map data flows to privacy_note categories (local files, telemetry, third parties).
+4. Draft concrete safetyNotes bullets—avoid generic "use with caution" only.
+5. Draft privacyNotes bullets listing what enters model context or leaves the machine.
+6. Cross-check SUBMISSION_EXAMPLES rejected cases (missing notes, hidden network calls).
+7. Produce maintainer-ready summary without live secrets.
+
+## Capability Scope
+
+- safetyNotes drafting for hooks, MCP, skills, commands, statuslines.
+- privacyNotes drafting for credential and telemetry exposure.
+- Review matrix against CONTRIBUTING categories.
+- Rejection-pattern avoidance from submission examples.
+
+## Compatibility
+
+### Native
+
+- **Claude Code**: use when preparing one-file HeyClaude content PRs.
+
+### Manual Adaptation
+
+- **Generic AGENTS**: apply checklist when reviewing any AI workflow registry submission.
+
+## Required Inputs
+
+- Target category and slug.
+- Known install/command/config behavior.
+- Network endpoints or file paths touched at runtime.
+- Whether background workers or retained logs exist.
+
+## Production Rules
+
+- Never embed live tokens in examples—use obvious placeholders.
+- Separate safety (what can break systems) from privacy (what data is exposed).
+- If behavior is read-only, say so explicitly instead of omitting notes.
+- If a field is not applicable, explain why rather than leaving it empty without context.
+- Link only to official docs in retrievalSources—no affiliate URLs.
+
+## Review Matrix
+
+| Behavior | safetyNotes | privacyNotes |
+| --- | --- | --- |
+| Bash execution | Required | If logs capture paths |
+| MCP network calls | Required | Required |
+| Read-only grep | Note read scope | If PII in files |
+| Package install | Required | If telemetry sent |
+| Background worker | Required | Required |
+
+## Output Contract
+
+1. Runtime behavior inventory.
+2. Draft safetyNotes list.
+3. Draft privacyNotes list.
+4. Review matrix with pass/fail per row.
+5. Privacy-safe maintainer summary.
+
+## Troubleshooting
+
+**Issue:** Notes too generic
+**Fix:** Name the exact tool, path, network host, or credential type affected.
+
+**Issue:** Missing privacyNotes for MCP server
+**Fix:** Document tool outputs and third-party API calls per SUBMISSION_EXAMPLES.
+
+## Duplicate Check
+
+No skills entry provides this HeyClaude-specific safetyNotes and privacyNotes
+authoring capability pack with CONTRIBUTING-aligned review matrix.
+
+## Editorial Disclosure
+
+Independent entry by `kiannidev` based on public HeyClaude contribution docs. No
+paid placement or affiliate links.
