@@ -416,6 +416,181 @@ Example body.
     );
   });
 
+  it("requires full review for external URL edits on existing entries (not low-scrutiny metadata)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const baseContent = `---
+title: Example Tool
+category: tools
+description: Example tool with a dead documentation URL.
+documentationUrl: https://example.com/dead-docs
+repoUrl: https://github.com/example/example-tool
+---
+
+Example body.
+`;
+    const updatedContent = `---
+title: Example Tool
+category: tools
+description: Example tool with a dead documentation URL.
+documentationUrl: https://example.com/live-docs
+repoUrl: https://github.com/example/example-tool
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, updatedContent, "external_direct", [
+      {
+        filename: "content/tools/example-tool.mdx",
+        status: "modified",
+        content: updatedContent,
+        baseContent,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("missing_direct_pr_submitter"),
+      ]),
+    );
+  });
+
+  it("allows external privacyNotes/safetyNotes edits on existing entries without submitter provenance (low-scrutiny metadata)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const baseContent = `---
+title: Example Tool
+category: tools
+description: Example tool entry.
+safetyNotes:
+  - Original safety note.
+privacyNotes:
+  - Original privacy note.
+---
+
+Example body.
+`;
+    const updatedContent = `---
+title: Example Tool
+category: tools
+description: Example tool entry.
+safetyNotes:
+  - Updated safety note.
+privacyNotes:
+  - Updated privacy note.
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, updatedContent, "external_direct", [
+      {
+        filename: "content/tools/example-tool.mdx",
+        status: "modified",
+        content: updatedContent,
+        baseContent,
+      },
+    ]);
+
+    expect(result.status).toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output).toMatchObject({ ok: true });
+    expect(output.failures).toEqual([]);
+  });
+
+  it("requires external contributors to keep provenance checks when changing package download links on existing entries", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const baseContent = `---
+title: Example Tool
+category: tools
+description: Example tool entry with package metadata.
+downloadUrl: https://github.com/example/example-tool/releases/download/v1.0.0/example-tool.zip
+packageUrl: https://github.com/example/example-tool/releases/tag/v1.0.0
+---
+
+Example body.
+`;
+    const updatedContent = `---
+title: Example Tool
+category: tools
+description: Example tool entry with package metadata.
+downloadUrl: https://attacker.example/package.zip
+packageUrl: https://attacker.example/package
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, updatedContent, "external_direct", [
+      {
+        filename: "content/tools/example-tool.mdx",
+        status: "modified",
+        content: updatedContent,
+        baseContent,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("missing_direct_pr_submitter"),
+      ]),
+    );
+  });
+
+  it("still blocks external provenance rewrites on existing entries", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const baseContent = `---
+title: Example Tool
+category: tools
+description: Example tool entry.
+documentationUrl: https://example.com/docs
+submittedBy: original-author
+submittedByUrl: https://github.com/original-author
+---
+
+Example body.
+`;
+    const updatedContent = `---
+title: Example Tool
+category: tools
+description: Example tool entry.
+documentationUrl: https://example.com/docs
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, updatedContent, "external_direct", [
+      {
+        filename: "content/tools/example-tool.mdx",
+        status: "modified",
+        content: updatedContent,
+        baseContent,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("direct_pr_existing_provenance_change"),
+      ]),
+    );
+  });
+
   it("still blocks external content PRs that request HeyClaude-hosted downloads", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),

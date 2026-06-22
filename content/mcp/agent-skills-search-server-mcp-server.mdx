@@ -1,0 +1,187 @@
+---
+title: Agent Skills Search Server MCP Server
+slug: agent-skills-search-server-mcp-server
+category: mcp
+description: >-
+  Hosted streamable-HTTP MCP server registered as ai.com.mcp/skills-search that
+  exposes Agent Skills Search API tools for discovering skills from the skills.sh
+  registry using the open Agent Skills format.
+cardDescription: >-
+  Connect Claude to the skills.sh registry over streamable HTTP to search Agent
+  Skills metadata, browse install counts, and discover installable skill packages.
+seoTitle: Agent Skills Search Server MCP for Claude and MCP Clients
+seoDescription: >-
+  Configure the Agent Skills Search MCP server at skills-sh.run.mcp.com.ai to
+  query the skills.sh registry, discover Agent Skills packages, and review skill
+  metadata from Claude Code, Cursor, or other streamable HTTP MCP clients.
+author: Agent Skills
+authorProfileUrl: "https://github.com/agentskills"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-22"
+brandName: Agent Skills Search Server
+brandDomain: agentskills.io
+websiteUrl: "https://agentskills.io"
+documentationUrl: "https://agentskills.io/specification"
+repoUrl: "https://github.com/agentskills/agentskills"
+installable: true
+installCommand: >-
+  Add the streamable HTTP MCP endpoint `https://skills-sh.run.mcp.com.ai/mcp`
+  to your MCP client, then call `searchSkills` to query the skills.sh registry.
+usageSnippet: >-
+  Connect to `https://skills-sh.run.mcp.com.ai/mcp`, list tools such as
+  `searchSkills`, and pass a query string with optional limits to discover
+  Agent Skills packages before installing them with a skills CLI.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "skills-search": {
+        "type": "streamable-http",
+        "url": "https://skills-sh.run.mcp.com.ai/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "skills-search": {
+        "type": "streamable-http",
+        "url": "https://skills-sh.run.mcp.com.ai/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - "An MCP client that supports streamable HTTP transport, such as Claude Code, Cursor, Cline, or Windsurf."
+  - "Review of which discovered skills the agent may install or execute before enabling autonomous workflows."
+  - "Optional Docker or HAPI CLI setup if you need a self-hosted skills-search server instead of the hosted remote."
+safetyNotes:
+  - "Search results expose skill metadata and install instructions; installing a skill can give an agent executable scripts, shell commands, and third-party repository access."
+  - "Treat discovered skills like unreviewed dependencies—inspect `SKILL.md`, scripts, and publisher sources before `npx skills add` or equivalent installers run."
+  - "Self-hosted HAPI deployments inherit API rate limits and outbound network access to `https://skills.sh/api`; scope firewall and logging policies accordingly."
+  - "Hosted remotes process search queries on vendor infrastructure; avoid sending confidential project names or customer identifiers in search strings when policy requires on-prem discovery."
+privacyNotes:
+  - "Search queries, skill names, registry metadata, and tool responses enter MCP client context and may be logged by the hosted remote operator."
+  - "skills.sh registry responses can include publisher URLs, install counts, and repository identifiers that reveal technology choices to shared clients."
+  - "Installing skills from search results may download repository archives or scripts that process local files; review each skill's privacy posture before use."
+  - "Self-hosted HAPI CLI mode keeps search traffic on your infrastructure but still contacts the public skills.sh API unless you mirror the backend."
+disclosure: >-
+  Official MCP Registry entry `ai.com.mcp/skills-search` backed by the Agent
+  Skills open format repository and a HAPI-generated remote at
+  `https://skills-sh.run.mcp.com.ai/mcp`. This entry documents the registry
+  search server, not individual skill packages or local skill installers.
+sourceUrls:
+  - "https://registry.modelcontextprotocol.io/v0/servers?search=skills-search"
+  - "https://agentskills.io/specification"
+  - "https://raw.githubusercontent.com/agentskills/agentskills/main/README.md"
+  - "https://docs.mcp.com.ai/servers-apis/openapi/skills-search.yaml"
+  - "https://raw.githubusercontent.com/la-rebelion/hapimcp/main/README.md"
+tags:
+  - agent-skills
+  - skills-search
+  - skills-sh
+  - streamable-http
+  - discovery
+keywords:
+  - Agent Skills Search Server MCP
+  - agent-skills-search-server-mcp-server
+  - ai.com.mcp/skills-search
+  - skills.sh registry MCP
+  - Claude Agent Skills search
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Agent Skills Search Server is an MCP Registry package registered as
+**`ai.com.mcp/skills-search`**. It exposes skills.sh registry search operations
+as MCP tools so agents can discover Agent Skills packages before installing
+them with a skills CLI or manual `SKILL.md` workflows.
+
+The hosted remote uses streamable HTTP at
+`https://skills-sh.run.mcp.com.ai/mcp`. Registry metadata documents public
+search endpoints against the skills.sh backend API without required
+authentication headers, though hosted operators may apply rate limits.
+
+## Source Review
+
+- https://registry.modelcontextprotocol.io/v0/servers?search=skills-search
+- https://agentskills.io/specification
+- https://github.com/agentskills/agentskills
+- https://docs.mcp.com.ai/servers-apis/openapi/skills-search.yaml
+
+## Install
+
+1. Add the hosted streamable HTTP endpoint to your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "skills-search": {
+      "type": "streamable-http",
+      "url": "https://skills-sh.run.mcp.com.ai/mcp"
+    }
+  }
+}
+```
+
+2. For Claude Code, you can register the remote directly:
+
+```bash
+claude mcp add --transport http skills-search https://skills-sh.run.mcp.com.ai/mcp
+```
+
+3. Restart the client, run `tools/list`, and confirm `searchSkills` (or the
+   current registry tool names) appear before autonomous discovery workflows.
+
+4. Optional self-host with HAPI CLI when you need a private endpoint:
+
+```bash
+docker run -p 3030:3030 -v ~/.hapi:/app/.hapi \
+  ghcr.io/apicove/hapi-cli:latest serve skills-search \
+  --port 3030 --headless --url https://skills.sh
+```
+
+Point MCP clients at `http://localhost:3030/mcp` for the self-hosted transport.
+
+## Duplicate Check
+
+Searched `content/mcp/`, `content/tools/`, `content/skills/`, open PRs, and the
+live MCP Registry for:
+
+- `ai.com.mcp/skills-search`, `skills-search`, `skills-sh.run.mcp.com.ai`
+- slug `agent-skills-search-server-mcp-server`
+- generic `hapi-mcp-server` OpenAPI tooling entry
+- `skills-cli` and individual Agent Skills capability packs
+
+No existing HeyClaude MCP entry documents this skills.sh search remote.
+`content/tools/skills-cli.mdx` covers the Vercel Labs `npx skills` installer,
+not the registry search MCP server.
+
+## Runtime Notes
+
+- Registry remote: streamable HTTP at `https://skills-sh.run.mcp.com.ai/mcp`
+- Backend API documented in registry notes: `https://skills.sh/api`
+- Example tool: `searchSkills` with parameters such as `q` and `limit`
+- Public search endpoints are documented without required Authorization headers
+- Registry publisher lists La Rebelion Labs with MIT-licensed HAPI packaging
+
+## When To Use
+
+- You want Claude or another MCP client to search the skills.sh registry before
+  installing Agent Skills packages.
+- You need fuzzy discovery of skill metadata, sources, and install counts during
+  agent planning instead of hard-coding repository names.
+- You are evaluating HAPI-hosted registry remotes for Agent Skills discovery
+  without running a local MCP process.
+
+## When Not To Use
+
+- You only need to install a known skill repository with `npx skills add` and do
+  not need live registry search tools.
+- You require fully offline skill discovery with no outbound calls to skills.sh.
+- You need authoring guidance for `SKILL.md` files rather than registry search;
+  use Agent Skills specification docs or individual skill capability packs
+  instead.

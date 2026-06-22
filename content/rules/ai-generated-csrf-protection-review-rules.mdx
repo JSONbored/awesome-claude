@@ -1,0 +1,216 @@
+---
+title: AI-Generated CSRF Protection Review Rules
+slug: ai-generated-csrf-protection-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated request handlers and forms
+  before merge for cross-site request forgery risk, covering state-changing
+  method discipline, anti-CSRF token correctness, SameSite cookie posture,
+  origin and referer checks, and safe handling of cookie-based sessions.
+cardDescription: >-
+  Review AI-generated endpoints and forms for CSRF: safe methods, anti-CSRF
+  tokens, SameSite cookies, origin checks, and cookie-session exposure.
+seoTitle: AI-Generated CSRF Protection Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated request handlers and forms: avoid
+  state changes on GET, validate anti-CSRF tokens, set SameSite cookies, check
+  origin/referer, and protect cookie-based sessions from cross-site forgery.
+author: jaso0n0818
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-22"
+documentationUrl: "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html"
+sourceUrls:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html"
+  - "https://owasp.org/www-community/attacks/csrf"
+  - "https://developer.mozilla.org/en-US/docs/Glossary/CSRF"
+  - "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite"
+  - "https://cwe.mitre.org/data/definitions/352.html"
+  - "https://portswigger.net/web-security/csrf"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits a request handler,
+  form, or fetch call that performs a state-changing action while the user is
+  authenticated through cookies.
+copySnippet: |-
+  You are reviewing AI-generated code for cross-site request forgery (CSRF) risk.
+
+  Rules:
+  1. Identify every state-changing operation and confirm it uses POST, PUT,
+     PATCH, or DELETE — never GET or HEAD — so it cannot be triggered by a
+     simple link, image, or prefetch.
+  2. For any endpoint authenticated by cookies, require a CSRF defense: a
+     synchronizer (anti-CSRF) token, a double-submit cookie, or a verified
+     origin, not ambient cookies alone.
+  3. Validate the anti-CSRF token server-side on every unsafe request, compare
+     it with a constant-time check, tie it to the user session, and reject when
+     it is missing, empty, or mismatched.
+  4. Set session and auth cookies with SameSite (Lax or Strict) plus Secure and
+     HttpOnly, and treat SameSite as defense in depth, not the only control.
+  5. Validate the Origin header (and fall back to Referer) against an allowlist
+     for unsafe requests, and reject cross-site origins rather than trusting a
+     missing header.
+  6. Confirm the token is never leaked in a URL, log, or referer, and that
+     login, logout, and password or email change flows are themselves protected.
+
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet containing an AI-generated or AI-edited request handler, form, or fetch call with enough context to know how the user is authenticated.
+  - Knowledge of how the framework manages sessions and CSRF tokens, since built-in protection, cookie defaults, and token helpers differ between frameworks.
+  - Awareness of which routes change state and which are read-only, so the review can focus on unsafe methods.
+  - Permission to block merge when a cookie-authenticated state change ships without a CSRF defense.
+safetyNotes:
+  - "A missing CSRF defense lets a malicious page perform state-changing actions as a logged-in user — transferring funds, changing email or password, or deleting data — using the victim's ambient cookies."
+  - "AI assistants often generate handlers that work in tests yet omit token validation or perform state changes on GET, because the happy path succeeds without any forged cross-site request."
+  - "Relying on SameSite cookies alone is not sufficient: defaults vary, Lax still allows top-level GET navigations, and some clients or legacy browsers do not enforce it."
+privacyNotes:
+  - "CSRF tokens are security credentials; do not paste real tokens, session cookies, or production request captures into public PR comments or issues."
+  - "Use synthetic accounts and redacted requests when demonstrating a CSRF proof of concept, and avoid attaching real user identifiers."
+  - "Be careful that anti-CSRF tokens are not written into URLs, analytics, or logs, where they can leak through referer headers or shared dashboards."
+tags:
+  - csrf
+  - web-security
+  - authentication
+  - cookies
+  - ai-generated-code
+  - code-review
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits code that performs a
+state-changing action for an authenticated user. The goal is to stop a generated
+handler or form from shipping a cross-site request forgery hole just because it
+works in tests and looks like ordinary request handling.
+
+This is a review policy, not a CSRF tutorial. It tells reviewers what must be
+true about a generated change's request methods, token handling, cookie posture,
+and origin checks before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know how the request is authenticated and what it does.
+
+- The HTTP method and route of every handler the change adds or edits.
+- How the user is authenticated on that route: cookie-based session, bearer
+  token in a header, or something else.
+- Whether the framework has built-in CSRF protection and whether this route opts
+  in or out of it.
+- The cookie attributes set for session and auth cookies (`SameSite`, `Secure`,
+  `HttpOnly`).
+- Whether the operation changes server state or is purely read-only.
+
+## State-Changing Method Rules
+
+- Treat any operation that creates, updates, deletes, or otherwise changes state
+  as unsafe and require POST, PUT, PATCH, or DELETE.
+- Never perform a state change on GET or HEAD; those can be triggered by a link,
+  image, prefetch, or preload without any script.
+- Do not rely on a hidden form field or request body alone to make a GET
+  "non-idempotent"; the method itself must be unsafe.
+- Make read endpoints side-effect free so they do not need CSRF defenses and
+  cannot be abused as state changes.
+
+## Token And Origin Rules
+
+- For cookie-authenticated unsafe requests, require a synchronizer (anti-CSRF)
+  token or a double-submit cookie; ambient session cookies are not a defense.
+- Generate tokens with a cryptographically secure random source, tie them to the
+  user session, and make them unpredictable.
+- Validate the token server-side on every unsafe request using a constant-time
+  comparison, and reject when it is missing, empty, or mismatched.
+- Validate the `Origin` header against an allowlist for unsafe requests, falling
+  back to `Referer`, and reject cross-site or missing origins rather than
+  trusting them.
+- For AJAX/fetch APIs, a required custom header (for example `X-Requested-With`
+  or `X-CSRF-Token`) adds a check that simple cross-site form posts cannot set.
+
+## Cookie And Session Rules
+
+- Set session and auth cookies with `SameSite=Lax` or `SameSite=Strict`, plus
+  `Secure` and `HttpOnly`.
+- Treat `SameSite` as defense in depth, not the only control: `Lax` still allows
+  top-level GET navigation and enforcement varies across clients.
+- Prefer non-cookie credentials (a bearer token sent in an `Authorization`
+  header) for pure APIs, since they are not attached automatically cross-site.
+- When both a cookie session and a token exist, confirm the unsafe path actually
+  checks the token and does not silently accept the cookie alone.
+
+## Merge Blockers
+
+Block merge when any of these is true.
+
+- A state-changing operation is reachable over GET or HEAD.
+- A cookie-authenticated unsafe request has no anti-CSRF token, double-submit
+  cookie, or verified origin.
+- A CSRF token is generated but never validated server-side, or is compared with
+  a non-constant-time check.
+- Session or auth cookies are set without `SameSite` and without any compensating
+  CSRF control.
+- Login, logout, or password/email change flows lack CSRF protection.
+- The token is exposed in a URL, log line, or referer-leaking link.
+
+## Review Checklist
+
+- [ ] {"task": "Unsafe methods only", "description": "Every state change uses POST/PUT/PATCH/DELETE, never GET or HEAD"}
+- [ ] {"task": "CSRF defense present", "description": "Cookie-authenticated unsafe requests require a token, double-submit cookie, or verified origin"}
+- [ ] {"task": "Token validated", "description": "The anti-CSRF token is checked server-side with a constant-time comparison and tied to the session"}
+- [ ] {"task": "Cookies hardened", "description": "Session/auth cookies set SameSite, Secure, and HttpOnly"}
+- [ ] {"task": "Origin checked", "description": "Origin/Referer is validated against an allowlist for unsafe requests"}
+- [ ] {"task": "Sensitive flows covered", "description": "Login, logout, and credential-change flows are CSRF protected and tokens never leak"}
+
+## AI Review Rules
+
+AI assistants can write and review request handlers, but they should show their
+evidence.
+
+- Ask the assistant to list every state-changing route in the change and its
+  HTTP method before judging safety.
+- Require the assistant to state how each cookie-authenticated route is protected
+  against CSRF rather than only confirming the happy path works.
+- Have the assistant show where the token is generated, where it is validated,
+  and that the comparison is constant time.
+- Do not let the assistant claim SameSite cookies alone make a route CSRF-safe.
+- Re-run review after any change to authentication, cookie attributes, request
+  methods, or token handling.
+
+## Troubleshooting
+
+- **The form submits but the action never fires cross-site:** that is expected
+  when CSRF protection works; confirm a forged cross-site request is rejected,
+  not just that the legitimate form succeeds.
+- **The token check passes with an empty token:** the validator is likely
+  treating missing or empty as valid; reject empty, missing, and mismatched
+  tokens explicitly.
+- **It works in tests but not in the browser:** tests may send the token
+  automatically; verify a real cross-site request without the token is blocked.
+- **SameSite seems to break a legitimate redirect flow:** prefer `Lax` for
+  session cookies and keep a token check rather than dropping SameSite entirely.
+
+## Duplicate And History Check
+
+Before adding or changing CSRF handling, confirm the framework does not already
+provide protection that this change is bypassing. Many frameworks enable CSRF
+middleware by default; a generated handler that opts out, disables the
+middleware, or rolls its own token should be treated as suspicious. Check whether
+an existing shared helper already issues and validates tokens before introducing
+a parallel mechanism.
+
+## Defense Reference
+
+| Defense               | What it stops                         | Caveat                                       |
+| --------------------- | ------------------------------------- | -------------------------------------------- |
+| Synchronizer token    | Forged cross-site unsafe requests     | Must be validated server-side every time     |
+| Double-submit cookie  | Same, without server-side token store | Cookie must not be readable cross-site       |
+| SameSite cookies      | Cookies sent on cross-site requests   | Lax allows top-level GET; enforcement varies |
+| Origin/Referer check  | Requests from other origins           | Referer can be absent; allowlist required    |
+| Custom request header | Simple cross-site form posts          | Only helps for fetch/XHR clients             |
+
+## Sources
+
+- OWASP Cross-Site Request Forgery Prevention Cheat Sheet
+- OWASP CSRF attack reference
+- MDN Web Docs: CSRF glossary and SameSite cookies
+- CWE-352: Cross-Site Request Forgery
+- PortSwigger Web Security Academy: CSRF
