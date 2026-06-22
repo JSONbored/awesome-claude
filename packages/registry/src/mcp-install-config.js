@@ -52,6 +52,11 @@ function isLoopbackHostname(hostname) {
 function isSafeRemoteMcpUrl(value) {
   try {
     const url = new URL(String(value).trim());
+    // Reject URLs that embed credentials (`user:pass@host`, or a bare
+    // `token@host`). Remote MCP auth belongs in the dedicated `headers` /
+    // `bearerTokenEnvVar` fields; credentials placed in the URL leak into logs
+    // and saved client configs as plaintext, so such a URL is never "safe".
+    if (url.username || url.password) return false;
     if (url.protocol === "https:") return true;
     return url.protocol === "http:" && isLoopbackHostname(url.hostname);
   } catch {
