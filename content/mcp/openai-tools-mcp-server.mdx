@@ -1,0 +1,200 @@
+---
+title: OpenAI Tools MCP Server
+slug: openai-tools-mcp-server
+category: mcp
+description: >-
+  Hosted streamable-HTTP MCP server registered as ai.com.mcp/openai-tools that
+  exposes a focused subset of OpenAI image and audio generation endpoints as MCP
+  tools via HAPI CLI, using Bearer OpenAI API keys for authentication.
+cardDescription: >-
+  Connect Claude to OpenAI DALL·E image and Whisper/TTS audio tools over
+  streamable HTTP with a Bearer API key at openai-tools.run.mcp.com.ai.
+seoTitle: OpenAI Tools MCP Server for Claude and MCP Clients
+seoDescription: >-
+  Configure the OpenAI Tools MCP server at openai-tools.run.mcp.com.ai with a
+  Bearer OpenAI API key to call image and audio generation tools from Claude
+  Code, Cursor, or other streamable HTTP MCP clients.
+author: OpenAI Tools MCP
+authorProfileUrl: "https://github.com/la-rebelion"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-22"
+brandName: OpenAI Tools MCP Server
+brandDomain: openai.com
+websiteUrl: "https://platform.openai.com/docs/api-reference"
+documentationUrl: "https://docs.mcp.com.ai/examples/mcp-servers-from-oas/openai-mcp"
+repoUrl: "https://github.com/la-rebelion/hapimcp"
+installable: true
+installCommand: >-
+  Add `https://openai-tools.run.mcp.com.ai/mcp` with streamable HTTP transport
+  and `Authorization: Bearer sk_your_openai_api_key` in your MCP client
+  settings.
+usageSnippet: >-
+  Configure the hosted remote with a Bearer OpenAI API key, list tools, and
+  call only the image and audio generation operations exposed by the focused
+  OpenAI Tools registry package.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "openai-tools": {
+        "type": "streamable-http",
+        "url": "https://openai-tools.run.mcp.com.ai/mcp",
+        "headers": {
+          "Authorization": "Bearer sk_your_openai_api_key"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "openai-tools": {
+        "type": "streamable-http",
+        "url": "https://openai-tools.run.mcp.com.ai/mcp",
+        "headers": {
+          "Authorization": "Bearer sk_your_openai_api_key"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "An OpenAI API key with billing enabled for the image and audio endpoints exposed as tools."
+  - "An MCP client that supports streamable HTTP transport, such as Claude Code, Cursor, Cline, or Windsurf."
+  - "Review of per-call cost, content policy, and data handling before enabling autonomous image or audio generation."
+  - "Optional Docker or HAPI CLI setup if you need a self-hosted openai-tools server instead of the hosted remote."
+safetyNotes:
+  - "Image and audio generation tools spend paid OpenAI API quota and may produce sensitive or policy-violating media."
+  - "Bearer API keys grant account-scoped access; rotate compromised keys immediately and never commit tokens to repositories or shared MCP config files."
+  - "Hosted remotes process prompts and generated media on vendor infrastructure; review OpenAI usage policies before production workflows."
+  - "The focused OpenAPI skim limits exposed tools, but any enabled generation endpoint can still create outbound network requests and billable usage."
+  - "Use least-privilege API keys or project-scoped credentials when your OpenAI organization supports restricted access."
+privacyNotes:
+  - "Prompts, image requests, audio inputs, generated media metadata, and API responses enter MCP client context and OpenAI processing pipelines."
+  - "Do not embed customer PII, credentials, or confidential document text in generation prompts unless approved for OpenAI processing."
+  - "Hosted HAPI remotes may log request metadata according to operator policies; self-hosted Docker mode keeps MCP traffic on your infrastructure while still contacting OpenAI APIs."
+  - "Generated images and audio files may be retained or surfaced in client sessions; review retention settings for regulated workloads."
+disclosure: >-
+  Official MCP Registry entry `ai.com.mcp/openai-tools` backed by the HAPI CLI
+  project and a hosted remote at `https://openai-tools.run.mcp.com.ai/mcp`.
+  This entry documents the focused OpenAI image/audio registry package, not the
+  generic OpenAPI-to-MCP `ai.com.mcp/hapi-mcp` workflow.
+sourceUrls:
+  - "https://registry.modelcontextprotocol.io/v0/servers?search=openai-tools"
+  - "https://docs.mcp.com.ai/examples/mcp-servers-from-oas/openai-mcp"
+  - "https://docs.mcp.com.ai/servers-apis/openapi/openai-tools.yaml"
+  - "https://platform.openai.com/docs/api-reference"
+  - "https://raw.githubusercontent.com/la-rebelion/hapimcp/main/README.md"
+tags:
+  - openai
+  - image-generation
+  - audio
+  - dalle
+  - whisper
+  - streamable-http
+keywords:
+  - OpenAI Tools MCP Server
+  - openai-tools-mcp-server
+  - ai.com.mcp/openai-tools
+  - OpenAI image audio MCP
+  - Claude OpenAI DALL-E MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+OpenAI Tools MCP Server is an MCP Registry package registered as
+**`ai.com.mcp/openai-tools`**. It exposes a focused subset of OpenAI image and
+audio generation endpoints as MCP tools so agents can call DALL·E, Whisper, and
+related operations without building a custom OpenAI MCP integration.
+
+The hosted remote uses streamable HTTP at
+`https://openai-tools.run.mcp.com.ai/mcp` and requires a Bearer OpenAI API key
+in the `Authorization` header. Registry metadata notes that HAPI CLI converts a
+skimmed OpenAI OpenAPI spec into MCP tools to avoid exposing the full OpenAI API
+surface.
+
+## Source Review
+
+- https://registry.modelcontextprotocol.io/v0/servers?search=openai-tools
+- https://docs.mcp.com.ai/examples/mcp-servers-from-oas/openai-mcp
+- https://platform.openai.com/docs/api-reference
+- https://github.com/la-rebelion/hapimcp
+
+## Install
+
+1. Create an OpenAI API key from the platform dashboard.
+
+2. Add the hosted streamable HTTP endpoint to your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "openai-tools": {
+      "type": "streamable-http",
+      "url": "https://openai-tools.run.mcp.com.ai/mcp",
+      "headers": {
+        "Authorization": "Bearer sk_your_openai_api_key"
+      }
+    }
+  }
+}
+```
+
+3. For Claude Code:
+
+```bash
+claude mcp add --transport http openai-tools https://openai-tools.run.mcp.com.ai/mcp \
+  --header "Authorization: Bearer sk_your_openai_api_key"
+```
+
+4. Restart the client, run `tools/list`, and confirm only the expected image and
+   audio tools appear before enabling autonomous generation workflows.
+
+5. Optional self-host with HAPI CLI or Docker:
+
+```bash
+docker run -p 3030:3030 hapimcp/hapi-cli:0.6.0 serve openai-tools \
+  --port 3030 --headless --url https://api.openai.com/v1 \
+  --openapi https://docs.mcp.com.ai/servers-apis/openapi/openai-tools.yaml
+```
+
+Point MCP clients at `http://localhost:3030/mcp` and supply the same Bearer
+OpenAI API key header expected by the registry remote.
+
+## Duplicate Check
+
+Searched `content/mcp/`, open PRs, and the live MCP Registry for:
+
+- `ai.com.mcp/openai-tools`, `openai-tools.run.mcp.com.ai`
+- slug `openai-tools-mcp-server`
+- generic `hapi-mcp-server` entry for `ai.com.mcp/hapi-mcp`
+- OpenAI SDK-only guides without MCP transport metadata
+
+No existing HeyClaude MCP entry documents this focused OpenAI image/audio
+registry remote. `content/mcp/hapi-mcp-server.mdx` covers generic OpenAPI-to-MCP
+`hapi-cli serve` workflows, not the hosted `openai-tools` package.
+
+## Runtime Notes
+
+- Registry remote: streamable HTTP at `https://openai-tools.run.mcp.com.ai/mcp`
+- Required header: `Authorization: Bearer <OpenAI API key>` (registry marks secret)
+- OpenAPI source: `https://docs.mcp.com.ai/servers-apis/openapi/openai-tools.yaml`
+- Upstream API base documented for self-host: `https://api.openai.com/v1`
+- Registry publisher: La Rebelion Labs; repository: `la-rebelion/hapimcp`
+
+## When To Use
+
+- You want Claude or another MCP client to call OpenAI image or audio generation
+  endpoints through a registry-hosted remote without writing custom tool wrappers.
+- You prefer a focused tool surface instead of exposing the full OpenAI API via MCP.
+- You are evaluating HAPI-generated registry remotes before self-hosting with Docker.
+
+## When Not To Use
+
+- You only need chat/completions endpoints rather than image or audio generation.
+- You require fully offline execution with no outbound calls to OpenAI APIs.
+- You need generic OpenAPI-to-MCP conversion for your own API specs; use
+  `hapi-mcp-server` or self-hosted `hapi-cli serve` with your project instead.
