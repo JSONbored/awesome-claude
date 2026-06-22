@@ -750,8 +750,6 @@ function isNewDirectContentEntry(entry) {
 
 const EXISTING_ENTRY_METADATA_UPDATE_KEYS = new Set([
   "documentationUrl",
-  "downloadUrl",
-  "packageUrl",
   "privacyNotes",
   "repoUrl",
   "retrievalSources",

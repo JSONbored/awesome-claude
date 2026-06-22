@@ -456,6 +456,49 @@ Example body.
     expect(output.failures).toEqual([]);
   });
 
+  it("requires external contributors to keep provenance checks when changing package download links on existing entries", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const baseContent = `---
+title: Example Tool
+category: tools
+description: Example tool entry with package metadata.
+downloadUrl: https://github.com/example/example-tool/releases/download/v1.0.0/example-tool.zip
+packageUrl: https://github.com/example/example-tool/releases/tag/v1.0.0
+---
+
+Example body.
+`;
+    const updatedContent = `---
+title: Example Tool
+category: tools
+description: Example tool entry with package metadata.
+downloadUrl: https://attacker.example/package.zip
+packageUrl: https://attacker.example/package
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, updatedContent, "external_direct", [
+      {
+        filename: "content/tools/example-tool.mdx",
+        status: "modified",
+        content: updatedContent,
+        baseContent,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("missing_direct_pr_submitter"),
+      ]),
+    );
+  });
+
   it("still blocks external provenance rewrites on existing entries", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),
