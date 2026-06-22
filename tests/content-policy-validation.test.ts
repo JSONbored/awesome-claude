@@ -416,6 +416,91 @@ Example body.
     );
   });
 
+  it("allows external link-health fixes on existing entries without submitter provenance", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const baseContent = `---
+title: Example Tool
+category: tools
+description: Example tool with a dead documentation URL.
+documentationUrl: https://example.com/dead-docs
+repoUrl: https://github.com/example/example-tool
+---
+
+Example body.
+`;
+    const updatedContent = `---
+title: Example Tool
+category: tools
+description: Example tool with a dead documentation URL.
+documentationUrl: https://example.com/live-docs
+repoUrl: https://github.com/example/example-tool
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, updatedContent, "external_direct", [
+      {
+        filename: "content/tools/example-tool.mdx",
+        status: "modified",
+        content: updatedContent,
+        baseContent,
+      },
+    ]);
+
+    expect(result.status).toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output).toMatchObject({ ok: true });
+    expect(output.failures).toEqual([]);
+  });
+
+  it("still blocks external provenance rewrites on existing entries", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const baseContent = `---
+title: Example Tool
+category: tools
+description: Example tool entry.
+documentationUrl: https://example.com/docs
+submittedBy: original-author
+submittedByUrl: https://github.com/original-author
+---
+
+Example body.
+`;
+    const updatedContent = `---
+title: Example Tool
+category: tools
+description: Example tool entry.
+documentationUrl: https://example.com/docs
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, updatedContent, "external_direct", [
+      {
+        filename: "content/tools/example-tool.mdx",
+        status: "modified",
+        content: updatedContent,
+        baseContent,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("direct_pr_existing_provenance_change"),
+      ]),
+    );
+  });
+
   it("still blocks external content PRs that request HeyClaude-hosted downloads", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),
