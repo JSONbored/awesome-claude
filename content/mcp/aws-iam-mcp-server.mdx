@@ -1,0 +1,157 @@
+---
+title: AWS IAM MCP Server
+slug: aws-iam-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server for AWS Identity and Access Management that lets
+  AI assistants inspect and manage IAM users, roles, groups, policies, and
+  access keys, with policy simulation and an opt-in read-only mode.
+cardDescription: >-
+  Connect Claude to AWS IAM to inspect users, roles, groups, and policies,
+  simulate permissions, and (opt-in) manage IAM — read-only mode supported.
+seoTitle: "AWS IAM MCP Server for Claude — Inspect & Manage IAM"
+seoDescription: >-
+  Connect Claude to the official AWS Labs IAM MCP server to inspect IAM users,
+  roles, groups, and policies, simulate permissions, and manage IAM over stdio
+  with uvx — with a read-only mode and least-privilege guidance.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-06-21"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/iam-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.iam-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/iam-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/iam-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.iam-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.iam-mcp-server@latest --readonly
+usageSnippet: >-
+  Configure the server with uvx, a scoped AWS profile, and the `--readonly` flag,
+  then ask Claude to list IAM users/roles/groups, review attached policies, or
+  simulate whether a policy allows an action before any change is made.
+copySnippet: |-
+  {
+    "awslabs.iam-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.iam-mcp-server@latest", "--readonly"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE}",
+        "AWS_REGION": "us-east-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.iam-mcp-server": {
+        "command": "uvx",
+        "args": ["awslabs.iam-mcp-server@latest", "--readonly"],
+        "env": {
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "AWS_REGION": "us-east-1",
+          "FASTMCP_LOG_LEVEL": "ERROR"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - An AWS account with IAM access and permissions for the IAM read (and, if write is enabled, manage) operations you intend to use.
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - "AWS credentials configured locally (for example via `aws configure` or `AWS_PROFILE`) scoped least-privilege; read-only IAM permissions are enough for the recommended `--readonly` mode."
+  - An MCP client that supports stdio servers; the server runs locally on the same host as the client.
+safetyNotes:
+  - "Run with the `--readonly` flag (shown above) to block all mutating operations. Without it the server can create and delete IAM users, roles, groups, policies, and access keys — high-impact identity changes — so enable write access only deliberately and with scoped permissions."
+  - IAM controls account-wide access; a misused write operation can grant or revoke permissions broadly. Prefer non-production accounts while evaluating, and use policy simulation to test changes before applying them.
+  - This server acts on real IAM with your AWS credentials; scope the profile tightly and run it only on a trusted host.
+privacyNotes:
+  - IAM user/role/group names, ARNs, policy documents, and account metadata can be returned through tool calls and exposed to the model.
+  - "Access key IDs and other identity material may appear in responses; never expose secret access keys, and keep account identifiers and policy contents out of public prompts, issues, and screenshots."
+tags:
+  - aws
+  - iam
+  - security
+  - identity
+  - aws-labs
+keywords:
+  - aws iam mcp server
+  - awslabs iam-mcp-server
+  - iam mcp claude
+  - aws identity access management mcp
+  - iam policy simulation mcp
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AWS IAM MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+Model Context Protocol server for AWS Identity and Access Management. It lets AI
+assistants inspect and manage IAM users, roles, groups, policies, and access
+keys while following security best practices, and includes policy simulation to
+test permissions before applying changes.
+
+It runs locally over stdio via `uvx` from the published `awslabs.iam-mcp-server`
+Python package and uses your local AWS credentials. The recommended
+configuration enables `--readonly` mode; write access is opt-in.
+
+## Features
+
+- **User, role, and group management** — create, list, retrieve, and delete IAM
+  users, roles (with trust policies), and groups (write mode).
+- **Policy management** — list and manage managed and inline policies, including
+  full CRUD for inline policies (write mode).
+- **Permission management** — attach and detach policies, and manage access keys
+  (write mode).
+- **Policy simulation** — test whether a policy allows an action without making
+  any change.
+- **Read-only mode** — the `--readonly` flag blocks all mutating operations
+  while still allowing inspection and simulation.
+
+## Use Cases
+
+- Audit IAM users, roles, groups, and attached policies (read-only).
+- Simulate whether a policy grants a specific permission before changing it.
+- Review inline and managed policy documents for least-privilege gaps.
+- Manage IAM identities and permissions when write access is explicitly enabled.
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+ and `uv`.
+2. Configure an AWS profile with (at minimum) read-only IAM permissions.
+3. Add the server with the `--readonly` stdio configuration above. To allow
+   changes, remove `--readonly` and grant the matching IAM write permissions —
+   only when you intend those operations.
+4. Verify it is connected with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above (which includes `--readonly`) to your client's MCP
+configuration and set `AWS_PROFILE`/`AWS_REGION`. The first run downloads the
+package via `uvx`.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). The server can make account-wide IAM changes
+when write access is enabled, so keep `--readonly` on by default, use
+least-privilege credentials, simulate before applying, and verify the
+configuration against the linked source before using it in automated workflows.
