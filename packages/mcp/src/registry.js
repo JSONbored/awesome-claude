@@ -120,7 +120,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "search_registry",
     description:
-      "Search read-only HeyClaude registry entries by query, category, and skill platform compatibility.",
+      "Search read-only HeyClaude registry entries by query, category, exact tag, and skill platform compatibility.",
     inputSchema: jsonSchemaForTool("search_registry"),
     outputSchema: jsonSchemaForToolOutput("search_registry"),
     annotations: {
@@ -358,12 +358,32 @@ async function readTextArtifact(relativePath, options = {}) {
   return readFile(filePath, "utf8");
 }
 
+// Generated registry artifacts are immutable for the lifetime of a server
+// instance, so an opt-in cache (wired up in `createHeyClaudeMcpServer`) lets the
+// long-lived stdio process parse each multi-MB artifact — most tools read the
+// ~2 MB search-index.json, and the workflow tools read it several times — once
+// instead of on every tool call. The cache is bypassed when a caller injects its
+// own loader, which owns its caching/revalidation.
 async function readJsonArtifact(relativePath, options = {}) {
   if (typeof options.readJsonArtifact === "function") {
     return options.readJsonArtifact(relativePath);
   }
 
-  return JSON.parse(await readTextArtifact(relativePath, options));
+  const cache = options.artifactCache;
+  if (!cache) {
+    return JSON.parse(await readTextArtifact(relativePath, options));
+  }
+
+  const cacheKey = path.join(
+    dataDirFromOptions(options),
+    safeRelativePath(relativePath),
+  );
+  if (cache.has(cacheKey)) {
+    return cache.get(cacheKey);
+  }
+  const parsed = JSON.parse(await readTextArtifact(relativePath, options));
+  cache.set(cacheKey, parsed);
+  return parsed;
 }
 
 function unwrapEntries(payload) {
@@ -932,6 +952,7 @@ export async function searchRegistry(args = {}, options = {}) {
   const query = normalizeText(args.query);
   const category = normalizeText(args.category);
   const platform = normalizePlatform(args.platform);
+  const tag = normalizeText(args.tag);
   const limit = normalizeLimit(args.limit);
   const trustFilters = parsedTrustArgs(args);
   const searchIndex = unwrapEntries(
@@ -941,6 +962,7 @@ export async function searchRegistry(args = {}, options = {}) {
   const matched = searchIndex
     .filter((entry) => !category || entry.category === category)
     .filter((entry) => entryMatchesPlatform(entry, platform))
+    .filter((entry) => entryMatchesTag(entry, tag))
     .filter((entry) => entryMatchesQuery(entry, query))
     .filter((entry) => entryMatchesTrustFilters(entry, trustFilters));
   const entries = rankSearchEntries(matched, query)
@@ -953,6 +975,7 @@ export async function searchRegistry(args = {}, options = {}) {
     query: args.query || "",
     category: category || "",
     platform: platform || "",
+    tag: tag || "",
     filters: trustFilters,
     entries,
   };

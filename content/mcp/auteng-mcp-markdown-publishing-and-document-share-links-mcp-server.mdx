@@ -1,0 +1,167 @@
+---
+title: AutEng MCP - Markdown Publishing & Document Share Links MCP Server
+slug: auteng-mcp-markdown-publishing-and-document-share-links-mcp-server
+category: mcp
+description: >-
+  Hosted streamable-HTTP MCP server registered as ai.auteng/docs that publishes
+  markdown documents as public AutEng share links with Mermaid diagram and KaTeX
+  math rendering support.
+cardDescription: >-
+  Connect Claude to AutEng over streamable HTTP to publish markdown docs as
+  shareable links with Mermaid diagrams and math notation.
+seoTitle: AutEng MCP Markdown Publishing Server for Claude
+seoDescription: >-
+  Configure the AutEng docs MCP server at auteng.ai/mcp/docs to publish markdown
+  as public share links from Claude Code, Cursor, or other streamable HTTP MCP
+  clients.
+author: AutEng
+authorProfileUrl: "https://auteng.ai"
+submittedBy: kiannidev
+submittedByUrl: "https://github.com/kiannidev"
+dateAdded: "2026-06-22"
+brandName: AutEng
+brandDomain: auteng.ai
+websiteUrl: "https://auteng.ai"
+documentationUrl: "https://auteng.ai"
+installable: true
+installCommand: >-
+  Add the streamable HTTP MCP endpoint `https://auteng.ai/mcp/docs` to your MCP
+  client, then list tools and review publish/share scope before production use.
+usageSnippet: >-
+  Connect to `https://auteng.ai/mcp/docs`, list publishing tools, and confirm
+  which markdown payloads may become public share links before enabling write
+  workflows.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "auteng-docs": {
+        "type": "streamable-http",
+        "url": "https://auteng.ai/mcp/docs"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "auteng-docs": {
+        "type": "streamable-http",
+        "url": "https://auteng.ai/mcp/docs"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - "An MCP client that supports streamable HTTP transport, such as Claude Code, Cursor, Cline, or Windsurf."
+  - "Review of which markdown documents may be published as public share links before enabling autonomous publishing tools."
+  - "Optional AutEng account if the workflow requires saved documents or authenticated publishing beyond anonymous trials."
+safetyNotes:
+  - "Publishing tools can create public share links for markdown content; treat every publish call as potentially world-readable."
+  - "Do not publish credentials, customer data, internal architecture secrets, or draft legal text without explicit approval."
+  - "Mermaid diagrams and embedded code blocks in published docs inherit the same public exposure risk as the surrounding markdown."
+  - "Review tool names and parameters after `tools/list` before granting agents unattended publish access."
+privacyNotes:
+  - "Markdown bodies, diagram source, math notation, and generated share URLs enter MCP client context and AutEng-hosted infrastructure."
+  - "Public share links may be indexed, forwarded, or accessed without additional authentication depending on AutEng link settings."
+  - "AutEng's editor supports AI-assisted generation; prompts and document content may be processed according to AutEng policies."
+  - "Avoid publishing regulated or confidential material unless AutEng's data handling meets your compliance requirements."
+disclosure: >-
+  Official MCP Registry entry `ai.auteng/docs` with a hosted streamable HTTP
+  remote at `https://auteng.ai/mcp/docs`. This entry documents AutEng markdown
+  publishing and share-link tools, not the separate `ai.auteng/mcp` document
+  publisher package.
+sourceUrls:
+  - "https://registry.modelcontextprotocol.io/v0/servers?search=ai.auteng/docs"
+  - "https://auteng.ai"
+  - "https://modelcontextprotocol.io/registry/about"
+tags:
+  - auteng
+  - markdown
+  - documentation
+  - mermaid
+  - streamable-http
+keywords:
+  - AutEng MCP markdown publishing
+  - auteng-mcp-markdown-publishing-and-document-share-links-mcp-server
+  - ai.auteng/docs
+  - AutEng document share links
+  - Claude markdown publish MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+AutEng MCP - Markdown Publishing & Document Share Links is an MCP Registry
+package registered as **`ai.auteng/docs`**. It exposes AutEng document
+publishing tools over streamable HTTP so agents can turn markdown— including
+Mermaid diagrams and KaTeX math— into publicly shareable AutEng document links.
+
+The hosted remote is available at `https://auteng.ai/mcp/docs`. MCP Registry
+metadata describes markdown publishing with Mermaid support and does not list
+required secret Authorization headers for the public remote endpoint.
+
+## Source Review
+
+- https://registry.modelcontextprotocol.io/v0/servers?search=ai.auteng/docs
+- https://auteng.ai
+- https://modelcontextprotocol.io/registry/about
+
+## Install
+
+1. Add the hosted streamable HTTP endpoint to your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "auteng-docs": {
+      "type": "streamable-http",
+      "url": "https://auteng.ai/mcp/docs"
+    }
+  }
+}
+```
+
+2. For Claude Code:
+
+```bash
+claude mcp add --transport http auteng-docs https://auteng.ai/mcp/docs
+```
+
+3. Restart the client, run `tools/list`, and confirm the publishing tools match
+   your expected share-link workflow before enabling autonomous document export.
+
+4. Review generated share URLs in a browser before distributing them to external
+   audiences.
+
+## Duplicate Check
+
+Searched `content/mcp/`, `content/tools/`, open PRs, and the live MCP Registry
+for:
+
+- `ai.auteng/docs`, `auteng.ai/mcp/docs`, `AutEng`
+- slug `auteng-mcp-markdown-publishing-and-document-share-links-mcp-server`
+- related registry name `ai.auteng/mcp`
+
+No existing HeyClaude MCP entry documents this AutEng docs publishing remote.
+
+## Runtime Notes
+
+- Registry remote: streamable HTTP at `https://auteng.ai/mcp/docs`
+- Registry package: `ai.auteng/docs` (version 1.1.0 at time of verification)
+- Transport responds to MCP HTTP methods (`GET`/`POST`/`DELETE` per endpoint probe)
+- Website documents markdown, Mermaid, and KaTeX support in the AutEng editor
+- Distinct from `ai.auteng/mcp`, a separate AutEng document publisher registry entry
+
+## When To Use
+
+- You want Claude or another MCP client to publish technical markdown as hosted
+  share links without building a custom docs export integration.
+- You need Mermaid diagrams or math notation preserved in shared documentation.
+- You are evaluating AutEng as a lightweight publishing surface for agent-generated docs.
+
+## When Not To Use
+
+- You require private or access-controlled documentation with no public link exposure.
+- You need offline-only document workflows with no cloud publishing.
+- You want generic note-taking or wiki MCP integrations rather than AutEng share links.

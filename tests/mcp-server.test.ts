@@ -675,6 +675,62 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
   });
 
+  it("filters search results by exact tag", async () => {
+    const tagged = await callRegistryTool(
+      "search_registry",
+      { category: "mcp", tag: "database", limit: 10 },
+      { dataDir },
+    );
+    expect(tagged).toMatchObject({
+      ok: true,
+      category: "mcp",
+      tag: "database",
+    });
+    expect(tagged.entries.length).toBeGreaterThan(0);
+    for (const entry of tagged.entries) {
+      expect(entry.category).toBe("mcp");
+      expect(entry.tags).toContain("database");
+    }
+
+    const noMatches = await callRegistryTool(
+      "search_registry",
+      { tag: "definitely-not-a-real-tag-zzz", limit: 10 },
+      { dataDir },
+    );
+    expect(noMatches).toMatchObject({
+      ok: true,
+      count: 0,
+      tag: "definitely-not-a-real-tag-zzz",
+    });
+    expect(noMatches.entries).toEqual([]);
+  });
+
+  it("memoizes parsed artifacts in the supplied cache without changing results", async () => {
+    const artifactCache = new Map();
+    const args = { query: "mcp", limit: 3 } as const;
+
+    const first = await callRegistryTool("search_registry", args, {
+      dataDir,
+      artifactCache,
+    });
+    expect(first.ok).toBe(true);
+
+    // The ~2 MB search-index.json is parsed once and retained for reuse.
+    const searchIndexKey = path.join(dataDir, "search-index.json");
+    expect(artifactCache.has(searchIndexKey)).toBe(true);
+    const cachedIndex = artifactCache.get(searchIndexKey);
+
+    const second = await callRegistryTool("search_registry", args, {
+      dataDir,
+      artifactCache,
+    });
+
+    // The second call reuses the same parsed object (no re-read / re-parse) and
+    // returns identical results.
+    expect(artifactCache.get(searchIndexKey)).toBe(cachedIndex);
+    expect(second).toEqual(first);
+  });
+
   it("returns a token-efficient body excerpt by default and honors bodyMode", async () => {
     const full = await callRegistryTool(
       "get_entry_detail",

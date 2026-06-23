@@ -7,6 +7,14 @@ export type RegistryArtifactLoaders = {
   dataDir?: string;
   readJsonArtifact?: <T = unknown>(relativePath: string) => Promise<T>;
   readTextArtifact?: (relativePath: string) => Promise<string>;
+  /**
+   * Opt-in cache for parsed JSON artifacts, keyed by absolute file path. The
+   * default filesystem loader memoizes immutable registry artifacts into this
+   * map so a long-lived process parses each one once. Ignored when a custom
+   * `readJsonArtifact` loader is supplied. `createHeyClaudeMcpServer` provides
+   * a fresh per-instance map automatically.
+   */
+  artifactCache?: Map<string, unknown>;
 };
 
 export const READ_ONLY_TOOL_NAMES: string[];

@@ -97,6 +97,7 @@ export const SearchRegistryInputSchema = z
     query: z.string().trim().max(240).optional(),
     category: pathPart.optional(),
     platform: platform.optional(),
+    tag: z.string().trim().min(1).max(80).optional(),
     hasSafetyNotes: trustBooleanFilter.optional(),
     hasPrivacyNotes: trustBooleanFilter.optional(),
     downloadTrust: downloadTrustFilter.optional(),

@@ -22,6 +22,16 @@ import {
 } from "./registry.js";
 
 export function createHeyClaudeMcpServer(options = {}) {
+  // Share one artifact cache across every tool/resource call for this server
+  // instance so the long-lived stdio process parses each immutable registry
+  // artifact once. Skip when a caller injects artifact loaders (e.g. the web
+  // worker, which manages its own caching/revalidation) or already supplied one.
+  const runtimeOptions =
+    options.artifactCache ||
+    typeof options.readJsonArtifact === "function" ||
+    typeof options.readTextArtifact === "function"
+      ? options
+      : { ...options, artifactCache: new Map() };
   const server = new Server(
     {
       name: "heyclaude-registry",
@@ -44,7 +54,7 @@ export function createHeyClaudeMcpServer(options = {}) {
     const result = await callRegistryTool(
       request.params.name,
       request.params.arguments || {},
-      options,
+      runtimeOptions,
     );
     return {
       isError: result.ok === false,
@@ -62,7 +72,7 @@ export function createHeyClaudeMcpServer(options = {}) {
   });
 
   server.setRequestHandler(ListResourcesRequestSchema, async (request) =>
-    listRegistryResources(request.params || {}, options),
+    listRegistryResources(request.params || {}, runtimeOptions),
   );
 
   server.setRequestHandler(ListResourceTemplatesRequestSchema, async () =>
@@ -70,7 +80,7 @@ export function createHeyClaudeMcpServer(options = {}) {
   );
 
   server.setRequestHandler(ReadResourceRequestSchema, async (request) =>
-    readRegistryResource(request.params || {}, options),
+    readRegistryResource(request.params || {}, runtimeOptions),
   );
 
   server.setRequestHandler(ListPromptsRequestSchema, async () =>
