@@ -92,4 +92,14 @@ describe("registry search query bounds", () => {
       reasons: [],
     });
   });
+
+  it("expands registry query aliases added to the shared alias map", () => {
+    const entry = makeEntry({
+      tags: ["automation", "testing"],
+      keywords: ["qa workflow"],
+    });
+
+    expect(matchesQuery(entry, "automation qa")).toBe(true);
+    expect(matchesQuery(entry, "design ux")).toBe(false);
+  });
 });
