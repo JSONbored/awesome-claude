@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1330+ file-backed entries</strong> stay useful as both an
+        <strong>1336+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1330</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1336</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -68,7 +68,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>459</code><br>
+          <code>464</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -83,7 +83,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#rules"><strong>📏 Rules</strong></a><br>
-          <code>82</code><br>
+          <code>83</code><br>
           <sub>Prompt guardrails, project rules, and operating constraints.</sub>
         </td>
 </tr>
@@ -296,7 +296,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (459)
+## 🔌 MCP Servers (464)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -309,6 +309,7 @@ packages use checksums and package trust metadata after review.
 - **[After Effects MCP Server](https://heyclau.de/entry/mcp/after-effects-mcp-server)** - MCP server for controlling Adobe After Effects through a local Node bridge and ScriptUI panel for compositions, layers, keyframes, expressions, masks, and effects.
 - **[agency.lona/trading MCP Server](https://heyclau.de/entry/mcp/agency-lona-trading-mcp-server)** - Lona trading MCP provides AI-assisted strategy development, backtesting, market data, and portfolio analysis.
 - **[Agent Device MCP Server](https://heyclau.de/entry/mcp/agent-device-mcp-server)** - Official MCP server for agent-device, Callstack's device automation CLI for inspecting, controlling, debugging, recording, and collecting evidence from iOS, Android, TV, macOS, Linux, React Native, Expo, Flutter, and native apps.
+- **[Agent Skills Search Server MCP Server](https://heyclau.de/entry/mcp/agent-skills-search-server-mcp-server)** - Hosted streamable-HTTP MCP server registered as ai.com.mcp/skills-search that exposes Agent Skills Search API tools for discovering skills from the skills.sh registry using the open Agent Skills format.
 - **[Agentage Memory MCP Server for Claude](https://heyclau.de/entry/mcp/agentage-memory-mcp-server)** - Remote Agentage Memory MCP server giving Claude one shared, portable memory across every AI you use - search, read, write, edit, list, and delete plain Markdown notes you own, over Streamable HTTP with OAuth 2.1.
 - **[AgentDM MCP Server](https://heyclau.de/entry/mcp/agentdm-mcp-server)** - AgentDM provides a hosted MCP grid for agent-to-agent messaging with OAuth or API key auth at the documented grid endpoint.
 - **[Agentgateway MCP Gateway](https://heyclau.de/entry/mcp/agentgateway-mcp-gateway)** - Apache-2.0 agentic proxy that can expose stdio, HTTP, SSE, and Streamable HTTP MCP servers through a managed gateway with federation, OAuth/JWT authentication, RBAC/CEL policy, CORS, TLS, observability, and Kubernetes Gateway API support.
@@ -348,6 +349,7 @@ packages use checksums and package trust metadata after review.
 - **[arXiv MCP Server](https://heyclau.de/entry/mcp/arxiv-mcp-server)** - MCP server for searching, downloading, reading, and analyzing arXiv papers through Claude and other MCP clients.
 - **[Asana MCP Server for Claude](https://heyclau.de/entry/mcp/asana-mcp-server)** - Interact with Asana workspaces to manage projects and tasks
 - **[DataStax Astra DB MCP Server for Claude](https://heyclau.de/entry/mcp/astra-db-mcp-server)** - Connect Claude to DataStax Astra DB — manage collections and records, run bulk operations, and perform vector and hybrid search — with the official Astra DB Model Context Protocol server.
+- **[AutEng MCP - Markdown Publishing & Document Share Links MCP Server](https://heyclau.de/entry/mcp/auteng-mcp-markdown-publishing-and-document-share-links-mcp-server)** - Hosted streamable-HTTP MCP server registered as ai.auteng/docs that publishes markdown documents as public AutEng share links with Mermaid diagram and KaTeX math rendering support.
 - **[Auth0 MCP Server for Claude](https://heyclau.de/entry/mcp/auth0-mcp-server)** - Connect Claude to Auth0's official local MCP server for tenant administration, application setup, Actions, logs, forms, and scoped Management API workflows.
 - **[AutoRFP.ai MCP Server for Claude](https://heyclau.de/entry/mcp/autorfp-ai-mcp-server)** - Official AutoRFP.ai remote MCP server for read-only access to RFP projects, requirements, approved content library search, and organisation tags from Claude and other MCP clients via OAuth.
 - **[AWS Billing and Cost Management MCP Server](https://heyclau.de/entry/mcp/aws-billing-cost-management-mcp-server)** - Official AWS Labs MCP server for AWS Billing and Cost Management that lets AI assistants analyze costs and usage, monitor budgets and anomalies, and surface Cost Optimizer, Savings Plans, and Reserved Instance recommendations.
@@ -358,10 +360,12 @@ packages use checksums and package trust metadata after review.
 - **[Amazon ECS MCP Server](https://heyclau.de/entry/mcp/aws-ecs-mcp-server)** - Official AWS Labs MCP server for Amazon ECS that helps AI assistants containerize applications, deploy them to ECS, troubleshoot deployments, and explore ECS and ECR resources across the container application lifecycle.
 - **[Amazon EKS MCP Server](https://heyclau.de/entry/mcp/aws-eks-mcp-server)** - Official AWS Labs MCP server for Amazon EKS that gives AI code assistants real-time cluster state visibility and Kubernetes/EKS resource management, from cluster setup through deployment, troubleshooting, and optimization.
 - **[AWS FinOps MCP Server](https://heyclau.de/entry/mcp/aws-finops-mcp-server)** - Read-only AWS FinOps MCP server that lets Claude query Cost Explorer cost and usage data, compare AWS CLI profiles, filter by tags or dimensions, check AWS Budgets, and audit for stopped EC2 instances, unattached EBS volumes, and unassociated Elastic IP addresses across selected regions.
+- **[AWS IAM MCP Server](https://heyclau.de/entry/mcp/aws-iam-mcp-server)** - Official AWS Labs MCP server for AWS Identity and Access Management that lets AI assistants inspect and manage IAM users, roles, groups, policies, and access keys, with policy simulation and an opt-in read-only mode.
 - **[AWS Knowledge MCP Server](https://heyclau.de/entry/mcp/aws-knowledge-mcp-server)** - Official AWS Labs fully-managed remote MCP server providing up-to-date AWS documentation, code samples, agent skills, API and CloudFormation regional availability, and CDK/Amplify/Strands guidance over a hosted HTTP endpoint.
 - **[AWS Lambda Tool MCP Server](https://heyclau.de/entry/mcp/aws-lambda-tool-mcp-server)** - Official AWS Labs MCP server that exposes selected AWS Lambda functions as MCP tools without code changes, letting AI assistants invoke your allowlisted functions to reach private resources, databases, and internal applications.
 - **[Amazon Location Service MCP Server](https://heyclau.de/entry/mcp/aws-location-mcp-server)** - Official AWS Labs MCP server for Amazon Location Service that gives AI assistants place search, geocoding, reverse geocoding, nearby and open-now search, and route calculation with waypoint optimization.
 - **[MCP Proxy for AWS](https://heyclau.de/entry/mcp/aws-mcp-proxy-for-aws)** - AWS-maintained proxy and Python library that lets MCP clients and agent frameworks connect to IAM-secured MCP servers on AWS by signing requests with AWS SigV4 credentials.
+- **[AWS S3 Tables MCP Server](https://heyclau.de/entry/mcp/aws-s3-tables-mcp-server)** - Official AWS Labs MCP server for AWS S3 Tables that lets AI assistants create and query S3-based tables, run read-only SQL for analysis, generate tables from CSV files in S3, and explore table metadata — read-only by default.
 - **[AWS Serverless MCP Server](https://heyclau.de/entry/mcp/aws-serverless-mcp-server)** - Official AWS Labs MCP server for serverless development that gives AI assistants contextual guidance plus tools to initialize, build, deploy, and troubleshoot AWS SAM and Lambda-based serverless applications.
 - **[AWS Services MCP Server - MCP Servers](https://heyclau.de/entry/mcp/aws-services-mcp-server)** - Comprehensive AWS cloud services integration for infrastructure management, deployment, and monitoring
 - **[Amazon SNS / SQS MCP Server](https://heyclau.de/entry/mcp/aws-sns-sqs-mcp-server)** - Official AWS Labs MCP server for Amazon SNS and SQS that lets AI assistants list and manage SNS topics, subscriptions, and SQS queues and send/receive messages, with resource tagging so it only modifies what it created.
@@ -528,6 +532,7 @@ packages use checksums and package trust metadata after review.
 - **[IDA Pro MCP Server](https://heyclau.de/entry/mcp/ida-pro-mcp-server)** - MCP server and Claude Code plugin for connecting IDA Pro or headless idalib to AI assistants for reverse engineering, decompilation, xref lookup, renaming, commenting, and binary analysis workflows.
 - **[Ignav Flights](https://heyclau.de/entry/mcp/ignav-flights)** - MCP server providing live flight prices and booking links.
 - **[iMCP MCP Server](https://heyclau.de/entry/mcp/imcp-mcp-server)** - macOS app and bundled stdio MCP server that lets Claude access selected local services such as Calendar, Contacts, Messages, Location, Maps, Reminders, camera, microphone, screenshots, Shortcuts, utilities, and Weather.
+- **[inference.sh MCP Server](https://heyclau.de/entry/mcp/inference-sh-mcp-server)** - Hosted streamable-HTTP MCP server that exposes inference.sh platform tools for running apps, managing tasks, proxying external MCP connectors, and calling hundreds of hosted AI models from Claude Code, Cursor, and other MCP clients.
 - **[Inferventis MCP Server for Claude](https://heyclau.de/entry/mcp/inferventis-mcp-server)** - Inferventis hosted MCP server with 20 financial tools for FX rates, stocks, crypto, news, and URL reading over streamable HTTP, with many free tools and optional premium API keys.
 - **[Inngest MCP Server for Claude](https://heyclau.de/entry/mcp/inngest-mcp-server)** - Connect Claude to your local Inngest Dev Server — list functions, send events, invoke functions, monitor run status, and search Inngest documentation — with the built-in Inngest Model Context Protocol server that ships with the Inngest dev environment.
 - **[Intercom MCP Server for Claude](https://heyclau.de/entry/mcp/intercom-mcp-server)** - Access customer conversations, tickets, and user data in real-time
@@ -1124,9 +1129,10 @@ Get a free API key on https://app.zyntra.app/
 - **[Zero-Budget SaaS Launch Capability Pack Skill](https://heyclau.de/entry/skills/zero-budget-saas-launch-capability-pack)** - Expert zero-budget launch capability pack for building and shipping SaaS using free-tier infrastructure and constrained execution plans.
 - **[Zod Schema Validation Skill](https://heyclau.de/entry/skills/zod-schema-validator)** - TypeScript-first validation skill using Zod — define schemas once, get runtime checks and inferred types for APIs, forms, and data pipelines.
 
-## 📏 Rules (82)
+## 📏 Rules (83)
 
 - **[AI Assistant Secret Handling Rules](https://heyclau.de/entry/rules/ai-assistant-secret-handling-rules)** - Source-backed rules for AI coding assistants that must avoid exposing, copying, logging, committing, or normalizing secrets while editing code, configs, tests, prompts, documentation, and CI workflows.
+- **[AI-Generated CSRF Protection Review Rules](https://heyclau.de/entry/rules/ai-generated-csrf-protection-review-rules)** - Source-backed rules for reviewing AI-generated request handlers and forms before merge for cross-site request forgery risk, covering state-changing method discipline, anti-CSRF token correctness, SameSite cookie posture, origin and referer checks, and safe handling of cookie-based sessions.
 - **[AI-Generated Frontend Accessibility Review Rules](https://heyclau.de/entry/rules/ai-generated-frontend-accessibility-review-rules)** - Source-backed rules for reviewing AI-generated frontend UI changes for accessibility before merge, with semantic HTML, keyboard paths, focus management, labels, automated scan limits, manual checks, and privacy-safe evidence.
 - **[AI-Generated Path Traversal Review Rules](https://heyclau.de/entry/rules/ai-generated-path-traversal-review-rules)** - Source-backed rules for reviewing AI-generated file-handling code for path traversal before merge, covering canonical path validation, safe root confinement, upload filename sanitization, archive extraction limits, and privacy-safe test evidence.
 - **[AI-Generated Regex Safety Review Rules](https://heyclau.de/entry/rules/ai-generated-regex-safety-review-rules)** - Source-backed rules for reviewing AI-generated regular expressions before merge, covering catastrophic backtracking and ReDoS risk, input bounds, anchor and escaping correctness, validation versus parsing, safe engines, and privacy-safe test evidence.
