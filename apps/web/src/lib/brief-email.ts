@@ -83,7 +83,10 @@ function absolute(url: string, siteUrl: string): string {
 
 function categoryLabel(category?: string): string {
   if (!category) return "";
-  return CATEGORY_LABELS[category] ?? category.charAt(0).toUpperCase() + category.slice(1);
+  if (Object.hasOwn(CATEGORY_LABELS, category)) {
+    return CATEGORY_LABELS[category];
+  }
+  return category.charAt(0).toUpperCase() + category.slice(1);
 }
 
 function shortDate(iso?: string): string {
