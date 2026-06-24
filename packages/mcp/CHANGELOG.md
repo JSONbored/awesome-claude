@@ -1,5 +1,13 @@
 # @heyclaude/mcp Changelog
 
+## Unreleased
+
+- Add the read-only `compare_entry_trust` tool that compares 2-5 entries by how
+  much trust metadata they disclose (source, package, safety, privacy, and
+  review provenance) and ranks them by deterministic signal coverage. Coverage
+  is disclosed-metadata completeness only; it is not a malware scan, a safety
+  verdict, or installation approval.
+
 ## 0.3.1 - Stdio Proxy and Planner Type Fixes
 
 - Keep submission draft helper tools local to the stdio proxy instead of

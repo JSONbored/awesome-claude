@@ -139,6 +139,13 @@ function validToolArguments(name: string) {
       ],
       platform: "claude",
     },
+    compare_entry_trust: {
+      entries: [
+        { category: skill.category, slug: skill.slug },
+        { category: otherSkill.category, slug: otherSkill.slug },
+      ],
+      platform: "claude",
+    },
   };
   if (!(name in argsByTool)) {
     throw new Error(`Missing protocol test arguments for ${name}.`);
@@ -1459,6 +1466,100 @@ describe("HeyClaude read-only MCP helpers", () => {
       reviewNotes: expect.arrayContaining([
         expect.stringContaining("metadata review"),
       ]),
+    });
+  });
+
+  it("ranks compared entries by disclosed trust-metadata coverage only", async () => {
+    const compared = await callRegistryTool(
+      "compare_entry_trust",
+      {
+        entries: [
+          { category: skill.category, slug: skill.slug },
+          { category: otherSkill.category, slug: otherSkill.slug },
+        ],
+        platform: "claude",
+      },
+      { dataDir },
+    );
+
+    expect(compared).toMatchObject({
+      ok: true,
+      count: 2,
+      platform: "claude-code",
+      signalKeys: expect.arrayContaining(["source-available", "safety-notes"]),
+      comparisonNotes: expect.arrayContaining([
+        expect.stringContaining("not a malware scan"),
+      ]),
+    });
+
+    // Every entry exposes a deterministic coverage breakdown that never
+    // exceeds the published signal set.
+    for (const entry of compared.entries) {
+      expect(entry.signalCoverage.max).toBe(compared.signalKeys.length);
+      expect(entry.signalCoverage.score).toBe(
+        entry.signalCoverage.present.length,
+      );
+      expect(
+        entry.signalCoverage.present.length +
+          entry.signalCoverage.missing.length,
+      ).toBe(compared.signalKeys.length);
+      expect(entry.trust.source.status).toEqual(expect.any(String));
+    }
+
+    // Ranking is complete, ordered by score desc, and names a bestDocumented key.
+    expect(compared.ranking).toHaveLength(2);
+    expect(compared.ranking[0].rank).toBe(1);
+    expect(compared.ranking[0].score).toBeGreaterThanOrEqual(
+      compared.ranking[1].score,
+    );
+    expect(compared.bestDocumented).toBe(compared.ranking[0].key);
+
+    // It is disclosure metadata only — never a safety verdict or install approval.
+    expect(JSON.stringify(compared)).not.toMatch(
+      /malware (detected|verdict|free)|safe to install|approved for install/i,
+    );
+
+    // Stable regardless of input order.
+    const reordered = await callRegistryTool(
+      "compare_entry_trust",
+      {
+        entries: [
+          { category: otherSkill.category, slug: otherSkill.slug },
+          { category: skill.category, slug: skill.slug },
+        ],
+      },
+      { dataDir },
+    );
+    expect(reordered.ok).toBe(true);
+    expect(reordered.ranking).toEqual(compared.ranking);
+  });
+
+  it("rejects compare_entry_trust calls with fewer than two entries", async () => {
+    const result = await callRegistryTool(
+      "compare_entry_trust",
+      { entries: [{ category: skill.category, slug: skill.slug }] },
+      { dataDir },
+    );
+    expect(result).toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
+    });
+  });
+
+  it("returns not_found when a compare_entry_trust entry is missing", async () => {
+    const result = await callRegistryTool(
+      "compare_entry_trust",
+      {
+        entries: [
+          { category: skill.category, slug: skill.slug },
+          { category: "skills", slug: "does-not-exist-entry" },
+        ],
+      },
+      { dataDir },
+    );
+    expect(result).toMatchObject({
+      ok: false,
+      error: { code: "not_found" },
     });
   });
 

@@ -182,6 +182,11 @@ export function reviewEntrySafety(
   options?: RegistryArtifactLoaders,
 ): Promise<RegistryToolResult>;
 
+export function compareEntryTrust(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
 export function listRegistryRecent(
   options?: RegistryArtifactLoaders & {
     publicApiBaseUrl?: string;
@@ -237,6 +242,7 @@ export {
   SubmissionPolicyInputSchema,
   ExplainEntryTrustInputSchema,
   ReviewEntrySafetyInputSchema,
+  CompareEntryTrustInputSchema,
   TOOL_INPUT_SCHEMAS,
   jsonSchemaForTool,
   jsonSchemaForToolOutput,

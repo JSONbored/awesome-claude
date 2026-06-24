@@ -107,6 +107,7 @@ export const READ_ONLY_TOOL_NAMES = [
   "get_submission_policy",
   "explain_entry_trust",
   "review_entry_safety",
+  "compare_entry_trust",
 ];
 
 export const LOCAL_DRAFT_TOOL_NAMES = [
@@ -299,6 +300,12 @@ export const TOOL_DEFINITIONS = [
     description:
       "Review 1-5 HeyClaude entries for source, package, safety, and privacy metadata fit before install or recommendation. This is a metadata review only and does not provide malware scanning, automatic safety guarantees, or installation approval.",
     inputSchema: jsonSchemaForTool("review_entry_safety"),
+  },
+  {
+    name: "compare_entry_trust",
+    description:
+      "Compare 2-5 HeyClaude entries side by side by how much trust metadata they disclose (source, package, safety, privacy, and review provenance) and rank them by deterministic signal coverage. This measures disclosed-metadata completeness only; it is not a malware scan, a safety verdict, or installation approval, and a higher score does not mean an entry is safe.",
+    inputSchema: jsonSchemaForTool("compare_entry_trust"),
   },
 ];
 
@@ -839,6 +846,48 @@ function entryTrustSummary(entry) {
       sourceSubmissionUrl: entry.sourceSubmissionUrl || "",
     },
     recommendations: entryTrustRecommendations(entry),
+  };
+}
+
+// Deterministic, disclosure-only trust signals. Each signal reflects whether a
+// piece of trust metadata is present, NOT whether the entry is safe. Coverage
+// is metadata completeness, never a safety verdict or install approval.
+const TRUST_SIGNAL_KEYS = [
+  "source-available",
+  "repo-url",
+  "documentation-url",
+  "trusted-package",
+  "package-checksum",
+  "safety-notes",
+  "privacy-notes",
+  "review-provenance",
+];
+
+function entryTrustSignalCoverage(entry) {
+  const trust = entryTrustSummary(entry);
+  const present = [];
+  if (trust.source.status === "available") present.push("source-available");
+  if (trust.source.repoUrl) present.push("repo-url");
+  if (trust.source.documentationUrl) present.push("documentation-url");
+  if (
+    trust.package.downloadTrust === "first-party" ||
+    trust.package.packageVerified
+  ) {
+    present.push("trusted-package");
+  }
+  if (trust.package.checksum) present.push("package-checksum");
+  if (trust.disclosures.hasSafetyNotes) present.push("safety-notes");
+  if (trust.disclosures.hasPrivacyNotes) present.push("privacy-notes");
+  if (trust.review.reviewedBy || trust.review.claimStatus === "verified") {
+    present.push("review-provenance");
+  }
+  const presentSet = new Set(present);
+  const missing = TRUST_SIGNAL_KEYS.filter((key) => !presentSet.has(key));
+  return {
+    score: present.length,
+    max: TRUST_SIGNAL_KEYS.length,
+    present,
+    missing,
   };
 }
 
@@ -2807,6 +2856,67 @@ export async function reviewEntrySafety(args = {}, options = {}) {
   };
 }
 
+export async function compareEntryTrust(args = {}, options = {}) {
+  const platform = normalizePlatform(args.platform);
+  const entries = [];
+  for (const target of args.entries || []) {
+    const category = normalizeText(target.category);
+    const slug = normalizeText(target.slug);
+    const entry = await readEntry(category, slug, options);
+    if (!entry) {
+      return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
+    }
+    const compatibility = buildSkillPlatformCompatibility(entry);
+    entries.push({
+      key: `${entry.category}:${entry.slug}`,
+      category: entry.category,
+      slug: entry.slug,
+      title: entry.title,
+      canonicalUrl: entryCanonicalUrl(entry),
+      selectedCompatibility: platform
+        ? compatibility.find(
+            (item) => normalizePlatform(item.platform) === platform,
+          ) || null
+        : null,
+      signalCoverage: entryTrustSignalCoverage(entry),
+      trust: entryTrustSummary(entry),
+    });
+  }
+
+  // Deterministic ordering: higher disclosed-metadata coverage first, then a
+  // stable tiebreak on key so the ranking never depends on input order.
+  const ranking = entries
+    .map((entry) => ({ key: entry.key, score: entry.signalCoverage.score }))
+    .sort((left, right) => {
+      if (left.score !== right.score) return right.score - left.score;
+      return left.key.localeCompare(right.key);
+    })
+    .map((item, index) => ({ ...item, rank: index + 1 }));
+
+  // Signals that no compared entry discloses, so callers can ask for them.
+  const sharedGaps = TRUST_SIGNAL_KEYS.filter((key) =>
+    entries.every((entry) => entry.signalCoverage.missing.includes(key)),
+  );
+
+  return {
+    ok: true,
+    platform: platform || "",
+    count: entries.length,
+    signalKeys: TRUST_SIGNAL_KEYS,
+    entries,
+    ranking,
+    bestDocumented: ranking[0]?.key || "",
+    sharedGaps,
+    comparisonNotes: [
+      "Coverage counts disclosed trust metadata only; it is not a malware scan, a safety verdict, or installation approval.",
+      "A higher coverage score means more trust metadata is present, not that an entry is safer or recommended to install.",
+      "bestDocumented is the entry with the most disclosed trust metadata, not the safest entry.",
+      "Inspect commands, requested permissions, external writes, and missing signals before relying on any entry.",
+      "Use explain_entry_trust for one entry's full trust breakdown and get_copyable_asset only after trust review.",
+    ],
+  };
+}
+
 export async function callRegistryTool(name, args = {}, options = {}) {
   if (!READ_ONLY_TOOL_NAMES.includes(name)) {
     return invalid(`Unknown read-only HeyClaude MCP tool: ${name}`);
@@ -2908,6 +3018,9 @@ export async function callRegistryTool(name, args = {}, options = {}) {
       break;
     case "review_entry_safety":
       result = await reviewEntrySafety(parsedArgs, options);
+      break;
+    case "compare_entry_trust":
+      result = await compareEntryTrust(parsedArgs, options);
       break;
   }
 
