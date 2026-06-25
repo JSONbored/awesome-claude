@@ -1,5 +1,12 @@
 # @heyclaude/mcp Changelog
 
+## [0.5.3](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.5.2...mcp-v0.5.3) (2026-06-25)
+
+
+### Bug Fixes
+
+* **mcp:** rename prompts to dot-notation for Smithery naming 100/100 ([#4230](https://github.com/JSONbored/awesome-claude/issues/4230)) ([633ee17](https://github.com/JSONbored/awesome-claude/commit/633ee17aea08ff0117d9f53d378f9f1edaf40f35))
+
 ## [0.5.2](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.5.1...mcp-v0.5.2) (2026-06-25)
 
 
