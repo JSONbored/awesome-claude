@@ -1,5 +1,12 @@
 # @heyclaude/mcp Changelog
 
+## [0.5.2](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.5.1...mcp-v0.5.2) (2026-06-25)
+
+
+### Bug Fixes
+
+* **mcp:** merge singleton namespaces into registry.* for Smithery naming tree ([#4227](https://github.com/JSONbored/awesome-claude/issues/4227)) ([9af8a61](https://github.com/JSONbored/awesome-claude/commit/9af8a61fb3373807a46b1fec909c0eea11b4038d))
+
 ## [0.5.1](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.5.0...mcp-v0.5.1) (2026-06-25)
 
 
