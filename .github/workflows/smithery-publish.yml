@@ -113,4 +113,5 @@ jobs:
             exit 1
           fi
           smithery --version || true
-          smithery mcp publish "$SMITHERY_MCP_URL" -n "$SMITHERY_NAMESPACE"
+          smithery mcp publish "$SMITHERY_MCP_URL" -n "$SMITHERY_NAMESPACE" \
+            --config-schema '{}'
