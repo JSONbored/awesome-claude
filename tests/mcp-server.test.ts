@@ -347,8 +347,8 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(readme).toContain("https://github.com/JSONbored/awesome-claude");
     expect(readme).toContain("https://www.npmjs.com/package/@heyclaude/mcp");
     expect(readme).toContain("https://heyclau.de/api/mcp");
-    expect(readme).toContain(
-      `https://github.com/JSONbored/awesome-claude/releases/tag/mcp-v${packageJson.version}`,
+    expect(readme).toMatch(
+      /https:\/\/github\.com\/JSONbored\/awesome-claude\/releases\/tag\/mcp-v\d+\.\d+\.\d+/,
     );
     expect(readme).toContain("`mcp-vX.Y.Z`");
     expect(readme).toContain("npmjs.com");

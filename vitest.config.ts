@@ -7,6 +7,7 @@ export default defineConfig({
     },
   },
   test: {
+    globalSetup: ["tests/helpers/sync-mcp-metadata.mts"],
     environment: "node",
     include: ["tests/**/*.test.ts"],
     exclude: ["tests/e2e/**", "node_modules/**", "integrations/**"],
