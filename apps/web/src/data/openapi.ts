@@ -336,7 +336,7 @@ const RESPONSE_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
     entry: { category: "mcp", slug: "github-mcp-server", title: "GitHub MCP Server" },
   },
   "registry.entryLlms": "# GitHub MCP Server\n\nMachine-readable entry text.",
-  "mcp.streamable": { jsonrpc: "2.0", id: 1, result: { tools: [{ name: "search_registry" }] } },
+  "mcp.streamable": { jsonrpc: "2.0", id: 1, result: { tools: [{ name: "registry.search" }] } },
   "brandAsset.read": "Binary image response.",
   "votes.query": {
     ok: true,
@@ -436,7 +436,7 @@ const RESPONSE_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
 const CLIENT_EXAMPLES: Partial<Record<ApiRouteId, Array<{ label: string; code: string }>>> = {
   "registry.search": [
     { label: "Raycast", code: "raycast://extensions/jsonbored/heyclaude/search" },
-    { label: "MCP", code: "Use the search_registry tool from the HeyClaude MCP server." },
+    { label: "MCP", code: "Use the registry.search tool from the HeyClaude MCP server." },
   ],
   "jobs.list": [
     { label: "Raycast", code: "raycast://extensions/jsonbored/heyclaude/jobs" },
@@ -444,7 +444,7 @@ const CLIENT_EXAMPLES: Partial<Record<ApiRouteId, Array<{ label: string; code: s
   ],
   "mcp.streamable": [
     { label: "Streamable HTTP endpoint", code: "https://heyclau.de/api/mcp" },
-    { label: "First tool to call", code: "tools/list, then search_registry or get_entry_detail" },
+    { label: "First tool to call", code: "tools/list, then registry.search or entry.detail" },
   ],
 };
 

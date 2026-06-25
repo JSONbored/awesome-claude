@@ -261,10 +261,10 @@ try {
     params: {},
   });
   const toolNames = tools?.result?.tools?.map((tool) => tool?.name) || [];
-  if (!toolNames.includes("search_registry")) {
+  if (!toolNames.includes("registry.search")) {
     fail("/api/mcp must expose read-only registry tools");
   }
-  if (!toolNames.includes("build_submission_urls")) {
+  if (!toolNames.includes("submission.urls")) {
     fail("/api/mcp must expose read-only submission helper tools");
   }
 
@@ -273,13 +273,13 @@ try {
     id: 2,
     method: "tools/call",
     params: {
-      name: "search_registry",
+      name: "registry.search",
       arguments: { query: "mcp", limit: 1 },
     },
   });
   const result = JSON.parse(search?.result?.content?.[0]?.text || "{}");
   if (result?.ok !== true || !Array.isArray(result.entries)) {
-    fail("/api/mcp search_registry tool did not return entries");
+    fail("/api/mcp registry.search tool did not return entries");
   }
 
   const submission = await fetchMcpJson(baseUrl, {
@@ -287,7 +287,7 @@ try {
     id: 3,
     method: "tools/call",
     params: {
-      name: "build_submission_urls",
+      name: "submission.urls",
       arguments: {
         fields: {
           category: "mcp",
@@ -308,7 +308,7 @@ try {
     submissionResult?.ok !== true ||
     !isCanonicalSubmitUrl(submissionResult.submitUrl)
   ) {
-    fail("/api/mcp build_submission_urls tool did not return submit URL");
+    fail("/api/mcp submission.urls tool did not return submit URL");
   }
 } catch (error) {
   fail(error instanceof Error ? error.message : String(error));

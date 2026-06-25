@@ -73,7 +73,7 @@ export const INTEGRATIONS: Integration[] = [
     npmPackage: "@heyclaude/mcp",
     githubRepo: "jsonbored/awesome-claude",
     bullets: [
-      "20+ tools: search, trending, compare, get_entry_detail, prepare_submission_draft, explain_entry_trust",
+      "20+ tools: search, trending, compare, entry.detail, submission.prepare, entry.trust",
       "Prompts and resources for workflow planning",
       "Stdio + remote HTTP transport",
     ],
