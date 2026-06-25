@@ -2288,7 +2288,7 @@ export async function listJobsActive(options = {}) {
 
 export const PROMPT_DEFINITIONS = [
   {
-    name: "find_best_asset",
+    name: "asset.find",
     title: "Find the best Claude asset",
     description:
       "Guide a client through searching, comparing, and recommending HeyClaude entries for a use case.",
@@ -2310,7 +2310,7 @@ export const PROMPT_DEFINITIONS = [
     ],
   },
   {
-    name: "prepare_submission",
+    name: "submission.prepare",
     title: "Prepare a HeyClaude submission",
     description:
       "Guide a user through drafting a maintainer-reviewed HeyClaude submission without opening a PR automatically.",
@@ -2324,7 +2324,7 @@ export const PROMPT_DEFINITIONS = [
     ],
   },
   {
-    name: "review_submission_before_pr",
+    name: "submission.review",
     title: "Review submission before opening PR",
     description:
       "Check a draft for schema gaps, duplicate risk, source review, and maintainer checklist items.",
@@ -2337,7 +2337,7 @@ export const PROMPT_DEFINITIONS = [
     ],
   },
   {
-    name: "install_asset_safely",
+    name: "install.asset",
     title: "Install a HeyClaude asset safely",
     description:
       "Guide installation/use of one entry while keeping source and secret-handling checks explicit.",
@@ -2500,18 +2500,18 @@ export function getRegistryPrompt(args = {}) {
   const draft = promptArgument(values, "draft");
 
   const promptTextByName = {
-    find_best_asset: `Find the best HeyClaude asset for this use case: ${useCase || "(not provided)"}.
+    "asset.find": `Find the best HeyClaude asset for this use case: ${useCase || "(not provided)"}.
 
 Use the read-only HeyClaude MCP tools. Start with registry.search or registry.list${category ? ` in category ${category}` : ""}${platform ? ` for platform ${platform}` : ""}. Compare credible candidates with entry.compare, inspect details with entry.detail, and cite exact category/slug pairs. Do not invent popularity metrics when source stats are absent.`,
-    prepare_submission: `Prepare a HeyClaude submission draft${category ? ` for category ${category}` : ""}${promptArgument(values, "name") ? ` named ${promptArgument(values, "name")}` : ""}${sourceUrl ? ` from ${sourceUrl}` : ""}.
+    "submission.prepare": `Prepare a HeyClaude submission draft${category ? ` for category ${category}` : ""}${promptArgument(values, "name") ? ` named ${promptArgument(values, "name")}` : ""}${sourceUrl ? ` from ${sourceUrl}` : ""}.
 
 Use submission.schema, submission.examples, submission.prepare, submission.review, and submission.duplicates. Return missing fields and the canonical PR-first submit URL/body. Do not create GitHub issues or publish content.`,
-    review_submission_before_pr: `Review this HeyClaude submission draft before a PR is opened:
+    "submission.review": `Review this HeyClaude submission draft before a PR is opened:
 
 ${draft || "(draft not provided)"}
 
 Use submission.review and submission.duplicates where structured fields are available. Treat schema-valid as not publish-valid, call out source-review needs, and keep the result maintainer-reviewed.`,
-    install_asset_safely: `Help install or use the HeyClaude entry ${category || "(category)"}/${slug || "(slug)"}${platform ? ` for ${platform}` : ""}.
+    "install.asset": `Help install or use the HeyClaude entry ${category || "(category)"}/${slug || "(slug)"}${platform ? ` for ${platform}` : ""}.
 
 Use install.guidance and entry.asset. Include source links, config/install text exactly as returned, and secret-handling cautions where relevant. Do not write local files or claim the install was completed.`,
   };

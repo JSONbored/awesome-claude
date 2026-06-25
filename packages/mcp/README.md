@@ -99,10 +99,10 @@ The server also exposes read-only MCP resources:
 
 Workflow prompts are available for common client flows:
 
-- `find_best_asset`
-- `prepare_submission`
-- `review_submission_before_pr`
-- `install_asset_safely`
+- `asset.find`
+- `submission.prepare`
+- `submission.review`
+- `install.asset`
 
 ## Local Stdio
 

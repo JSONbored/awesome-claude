@@ -245,7 +245,7 @@ function fakeRemoteClient() {
       return {
         prompts: [
           {
-            name: "find_best_asset",
+            name: "asset.find",
             description: "Remote prompt.",
             arguments: [],
           },
@@ -464,14 +464,14 @@ describe("HeyClaude read-only MCP helpers", () => {
 
       const prompts = await client.listPrompts();
       expect(prompts.prompts.map((prompt) => prompt.name)).toEqual([
-        "find_best_asset",
-        "prepare_submission",
-        "review_submission_before_pr",
-        "install_asset_safely",
+        "asset.find",
+        "submission.prepare",
+        "submission.review",
+        "install.asset",
       ]);
 
       const prompt = await client.getPrompt({
-        name: "find_best_asset",
+        name: "asset.find",
         arguments: {
           use_case: "find an MCP server for code review",
           category: "mcp",
@@ -531,7 +531,7 @@ describe("HeyClaude read-only MCP helpers", () => {
         uri: "heyclaude://feeds/directory",
       });
       const prompts = await client.listPrompts();
-      expect(prompts.prompts[0]).toMatchObject({ name: "find_best_asset" });
+      expect(prompts.prompts[0]).toMatchObject({ name: "asset.find" });
     });
   });
 
@@ -1749,13 +1749,13 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     expect(listRegistryPrompts()).toMatchObject({
       prompts: expect.arrayContaining([
-        expect.objectContaining({ name: "find_best_asset" }),
-        expect.objectContaining({ name: "install_asset_safely" }),
+        expect.objectContaining({ name: "asset.find" }),
+        expect.objectContaining({ name: "install.asset" }),
       ]),
     });
     expect(
       getRegistryPrompt({
-        name: "install_asset_safely",
+        name: "install.asset",
         arguments: {
           category: skill.category,
           slug: skill.slug,

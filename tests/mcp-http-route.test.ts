@@ -167,8 +167,8 @@ describe("HeyClaude remote MCP route", () => {
     const promptsPayload = await json(promptsResponse);
     expect(promptsPayload.result.prompts).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ name: "find_best_asset" }),
-        expect.objectContaining({ name: "install_asset_safely" }),
+        expect.objectContaining({ name: "asset.find" }),
+        expect.objectContaining({ name: "install.asset" }),
       ]),
     );
 
@@ -178,7 +178,7 @@ describe("HeyClaude remote MCP route", () => {
         id: 25,
         method: "prompts/get",
         params: {
-          name: "install_asset_safely",
+          name: "install.asset",
           arguments: {
             category: "mcp",
             slug: "legal-fournier-spain-legal-mcp",

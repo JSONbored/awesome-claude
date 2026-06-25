@@ -187,18 +187,18 @@ async function validateMcpTools(endpointUrl, options = {}) {
 
       const prompts = await client.listPrompts();
       assert(
-        prompts.prompts.some((prompt) => prompt.name === "find_best_asset"),
-        "MCP prompts did not expose find_best_asset.",
+        prompts.prompts.some((prompt) => prompt.name === "asset.find"),
+        "MCP prompts did not expose asset.find.",
       );
       const installPrompt = await client.getPrompt({
-        name: "install_asset_safely",
+        name: "install.asset",
         arguments: { category: "mcp", slug: "example", platform: "Codex" },
       });
       assert(
         installPrompt.messages?.[0]?.content?.text?.includes(
           "install.guidance",
         ),
-        "install_asset_safely prompt did not mention install guidance.",
+        "install.asset prompt did not mention install guidance.",
       );
     }
 

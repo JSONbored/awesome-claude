@@ -1757,7 +1757,7 @@ describe("non-UI branch matrix", () => {
     ).toContain("Unknown");
     expect(
       registryMcp.getRegistryPrompt({
-        name: "find_best_asset",
+        name: "asset.find",
         arguments: {
           use_case: "review PRs",
           category: "mcp",
