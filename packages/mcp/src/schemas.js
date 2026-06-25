@@ -619,9 +619,9 @@ export const ReviewEntrySafetyInputSchema = z
 
 export const TOOL_INPUT_SCHEMAS = {
   "registry.search": SearchRegistryInputSchema,
-  "workflow.plan": PlanWorkflowToolboxInputSchema,
+  "registry.plan": PlanWorkflowToolboxInputSchema,
   "registry.recommend": RecommendForTaskInputSchema,
-  "server.info": GetServerInfoInputSchema,
+  "registry.info": GetServerInfoInputSchema,
   "registry.list": ListCategoryEntriesInputSchema,
   "registry.updates": RecentUpdatesInputSchema,
   "entry.related": RelatedEntriesInputSchema,
@@ -633,7 +633,7 @@ export const TOOL_INPUT_SCHEMAS = {
   "install.compatibility": CompatibilityInputSchema,
   "install.guidance": InstallGuidanceInputSchema,
   "install.adapter": PlatformAdapterInputSchema,
-  "feeds.list": ListDistributionFeedsInputSchema,
+  "registry.feeds": ListDistributionFeedsInputSchema,
   "submission.schema": GetSubmissionSchemaInputSchema,
   "submission.validate": ValidateSubmissionDraftInputSchema,
   "submission.duplicates": SearchDuplicateEntriesInputSchema,

@@ -12,7 +12,7 @@ const baselineToolNames = [
   "install.compatibility",
   "install.guidance",
   "install.adapter",
-  "feeds.list",
+  "registry.feeds",
   "submission.schema",
   "submission.validate",
   "submission.duplicates",
@@ -220,10 +220,10 @@ async function validateMcpTools(endpointUrl, options = {}) {
       );
     }
 
-    if (toolNames.includes("server.info")) {
+    if (toolNames.includes("registry.info")) {
       const info = parseToolResult(
         await client.callTool({
-          name: "server.info",
+          name: "registry.info",
           arguments: {},
         }),
       );
@@ -298,7 +298,7 @@ async function validateMcpTools(endpointUrl, options = {}) {
 
     const feeds = parseToolResult(
       await client.callTool({
-        name: "feeds.list",
+        name: "registry.feeds",
         arguments: {},
       }),
     );

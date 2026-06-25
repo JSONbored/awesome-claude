@@ -81,9 +81,9 @@ const platformAliases = new Map([
 
 export const READ_ONLY_TOOL_NAMES = [
   "registry.search",
-  "workflow.plan",
+  "registry.plan",
   "registry.recommend",
-  "server.info",
+  "registry.info",
   "registry.list",
   "registry.updates",
   "entry.related",
@@ -95,7 +95,7 @@ export const READ_ONLY_TOOL_NAMES = [
   "install.compatibility",
   "install.guidance",
   "install.adapter",
-  "feeds.list",
+  "registry.feeds",
   "submission.schema",
   "submission.validate",
   "submission.duplicates",
@@ -131,11 +131,11 @@ export const TOOL_DEFINITIONS = [
     },
   },
   {
-    name: "workflow.plan",
+    name: "registry.plan",
     description:
       "Plan a read-only Claude or Codex workflow toolbox from ranked HeyClaude registry entries. Each entry includes an inline install block (install command, config snippet, download URL) and the recommended stack is summarized as a copy-pasteable installPlan, alongside trust and follow-up guidance.",
-    inputSchema: jsonSchemaForTool("workflow.plan"),
-    outputSchema: jsonSchemaForToolOutput("workflow.plan"),
+    inputSchema: jsonSchemaForTool("registry.plan"),
+    outputSchema: jsonSchemaForToolOutput("registry.plan"),
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -157,10 +157,10 @@ export const TOOL_DEFINITIONS = [
     },
   },
   {
-    name: "server.info",
+    name: "registry.info",
     description:
       "Fetch read-only HeyClaude MCP package, registry, tool, and public rate-limit metadata.",
-    inputSchema: jsonSchemaForTool("server.info"),
+    inputSchema: jsonSchemaForTool("registry.info"),
   },
   {
     name: "registry.list",
@@ -229,10 +229,10 @@ export const TOOL_DEFINITIONS = [
     inputSchema: jsonSchemaForTool("install.adapter"),
   },
   {
-    name: "feeds.list",
+    name: "registry.feeds",
     description:
       "List read-only HeyClaude registry feeds, category feeds, platform feeds, and artifact locations.",
-    inputSchema: jsonSchemaForTool("feeds.list"),
+    inputSchema: jsonSchemaForTool("registry.feeds"),
   },
   {
     name: "submission.schema",
@@ -2831,13 +2831,13 @@ export async function callRegistryTool(name, args = {}, options = {}) {
     case "registry.search":
       result = await searchRegistry(parsedArgs, options);
       break;
-    case "workflow.plan":
+    case "registry.plan":
       result = await planWorkflowToolbox(parsedArgs, options);
       break;
     case "registry.recommend":
       result = await recommendForTask(parsedArgs, options);
       break;
-    case "server.info":
+    case "registry.info":
       result = await getServerInfo(parsedArgs, options);
       break;
     case "registry.list":
@@ -2873,7 +2873,7 @@ export async function callRegistryTool(name, args = {}, options = {}) {
     case "install.adapter":
       result = await getPlatformAdapter(parsedArgs, options);
       break;
-    case "feeds.list":
+    case "registry.feeds":
       result = await listDistributionFeeds(parsedArgs, options);
       break;
     case "submission.schema":

@@ -84,9 +84,9 @@ describe("HeyClaude remote MCP route", () => {
     );
     expect(toolNames).toEqual([
       "registry.search",
-      "workflow.plan",
+      "registry.plan",
       "registry.recommend",
-      "server.info",
+      "registry.info",
       "registry.list",
       "registry.updates",
       "entry.related",
@@ -98,7 +98,7 @@ describe("HeyClaude remote MCP route", () => {
       "install.compatibility",
       "install.guidance",
       "install.adapter",
-      "feeds.list",
+      "registry.feeds",
       "submission.schema",
       "submission.validate",
       "submission.duplicates",
@@ -224,7 +224,7 @@ describe("HeyClaude remote MCP route", () => {
         jsonrpc: "2.0",
         id: 33,
         method: "tools/call",
-        params: { name: "server.info", arguments: {} },
+        params: { name: "registry.info", arguments: {} },
       }),
     );
     expect(infoResponse.status).toBe(200);

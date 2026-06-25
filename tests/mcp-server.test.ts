@@ -85,9 +85,9 @@ const validMcpSubmissionFields = {
 function validToolArguments(name: string) {
   const argsByTool: Record<string, unknown> = {
     "registry.search": { query: "mcp", limit: 1 },
-    "workflow.plan": { goal: "code review automation", limit: 2 },
+    "registry.plan": { goal: "code review automation", limit: 2 },
     "registry.recommend": { task: "code review automation", limit: 2 },
-    "server.info": {},
+    "registry.info": {},
     "registry.list": { category: "mcp", limit: 1 },
     "registry.updates": { limit: 1 },
     "entry.related": {
@@ -117,7 +117,7 @@ function validToolArguments(name: string) {
       platform: "claude",
     },
     "install.adapter": { slug: skill.slug, platform: "cursor-rules" },
-    "feeds.list": {},
+    "registry.feeds": {},
     "submission.schema": { category: "mcp" },
     "submission.validate": { fields: validMcpSubmissionFields },
     "submission.duplicates": {
@@ -540,7 +540,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       fs.readFileSync(path.join(repoRoot, "packages/mcp/package.json"), "utf8"),
     ) as { name: string; version: string };
 
-    const info = await callRegistryTool("server.info", {}, { dataDir });
+    const info = await callRegistryTool("registry.info", {}, { dataDir });
     expect(info).toMatchObject({
       ok: true,
       package: {
@@ -895,7 +895,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("plans a ranked read-only workflow toolbox", async () => {
     const result = await callRegistryTool(
-      "workflow.plan",
+      "registry.plan",
       {
         goal: "skill workflow",
         category: "skills",
@@ -1116,7 +1116,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       };
     };
     const result = await callRegistryTool(
-      "workflow.plan",
+      "registry.plan",
       {
         goal: "credential hardened",
         limit: 3,
@@ -1160,7 +1160,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     };
 
     const result = await callRegistryTool(
-      "workflow.plan",
+      "registry.plan",
       { goal: "kubernetes cluster rollouts", limit: 5 },
       { readJsonArtifact },
     );
@@ -2074,7 +2074,7 @@ describe("HeyClaude read-only MCP helpers", () => {
   });
 
   it("lists distribution feeds from the manifest and feed index", async () => {
-    const feeds = await callRegistryTool("feeds.list", {}, { dataDir });
+    const feeds = await callRegistryTool("registry.feeds", {}, { dataDir });
     expect(feeds).toMatchObject({
       ok: true,
       artifacts: {
