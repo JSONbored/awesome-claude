@@ -178,12 +178,12 @@ async function smokeMcpServer(command, args, label, options = {}) {
 
       const prompts = await client.listPrompts(undefined, { timeout: 30000 });
       assert(
-        prompts.prompts.some((prompt) => prompt.name === "find_best_asset"),
+        prompts.prompts.some((prompt) => prompt.name === "asset.find"),
         `${label} smoke did not expose workflow prompts.`,
       );
       const prompt = await client.getPrompt(
         {
-          name: "install_asset_safely",
+          name: "install.asset",
           arguments: {
             category: "skills",
             slug: "agent-evals-regression-gate",
@@ -196,7 +196,7 @@ async function smokeMcpServer(command, args, label, options = {}) {
         prompt.messages.some((message) =>
           String(message.content?.text || "").includes("entry.asset"),
         ),
-        `${label} smoke did not return install_asset_safely prompt content.`,
+        `${label} smoke did not return install.asset prompt content.`,
       );
 
       if (options.requireSafetyMetadata) {
