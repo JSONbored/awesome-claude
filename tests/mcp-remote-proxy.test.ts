@@ -76,7 +76,7 @@ function createRemoteMcpHttpFetch() {
         : {
             tools: [
               {
-                name: "search_registry",
+                name: "registry.search",
                 description: "Remote search.",
                 inputSchema: { type: "object", additionalProperties: true },
               },
@@ -102,7 +102,7 @@ describe("HeyClaude MCP remote proxy privacy boundary", () => {
         return {
           tools: [
             {
-              name: "search_registry",
+              name: "registry.search",
               description: "Remote search.",
               inputSchema: { type: "object", additionalProperties: true },
             },
@@ -137,14 +137,14 @@ describe("HeyClaude MCP remote proxy privacy boundary", () => {
     await withMcpClientForServer(server, async (client) => {
       const tools = await client.listTools();
       const toolNames = tools.tools.map((tool: { name: string }) => tool.name);
-      expect(toolNames).toContain("search_registry");
-      expect(toolNames).not.toContain("validate_submission_draft");
-      expect(toolNames).not.toContain("build_submission_urls");
-      expect(toolNames).not.toContain("prepare_submission_draft");
-      expect(toolNames).not.toContain("review_submission_draft");
+      expect(toolNames).toContain("registry.search");
+      expect(toolNames).not.toContain("submission.validate");
+      expect(toolNames).not.toContain("submission.urls");
+      expect(toolNames).not.toContain("submission.prepare");
+      expect(toolNames).not.toContain("submission.review");
 
       const result = await client.callTool({
-        name: "validate_submission_draft",
+        name: "submission.validate",
         arguments: {
           fields: {
             category: "mcp",
@@ -182,7 +182,7 @@ describe("HeyClaude MCP remote proxy privacy boundary", () => {
         return {
           tools: [
             {
-              name: "search_registry",
+              name: "registry.search",
               description: "Remote search.",
               inputSchema: { type: "object", additionalProperties: true },
             },
@@ -301,7 +301,7 @@ describe("HeyClaude MCP remote proxy privacy boundary", () => {
 
       await expect(
         client.callTool({
-          name: "search_registry",
+          name: "registry.search",
           arguments: { mode: "structured" },
         }),
       ).resolves.toMatchObject({
@@ -314,7 +314,7 @@ describe("HeyClaude MCP remote proxy privacy boundary", () => {
 
       await expect(
         client.callTool({
-          name: "search_registry",
+          name: "registry.search",
           arguments: { mode: "text-json" },
         }),
       ).resolves.toMatchObject({
@@ -327,7 +327,7 @@ describe("HeyClaude MCP remote proxy privacy boundary", () => {
 
       await expect(
         client.callTool({
-          name: "search_registry",
+          name: "registry.search",
           arguments: { mode: "text-plain" },
         }),
       ).resolves.toMatchObject({
@@ -339,7 +339,7 @@ describe("HeyClaude MCP remote proxy privacy boundary", () => {
 
       await expect(
         client.callTool({
-          name: "search_registry",
+          name: "registry.search",
           arguments: { mode: "structured-policy" },
         }),
       ).resolves.toMatchObject({
@@ -351,7 +351,7 @@ describe("HeyClaude MCP remote proxy privacy boundary", () => {
 
       await expect(
         client.callTool({
-          name: "search_registry",
+          name: "registry.search",
           arguments: { mode: "text-array" },
         }),
       ).resolves.toMatchObject({
@@ -363,7 +363,7 @@ describe("HeyClaude MCP remote proxy privacy boundary", () => {
 
       await expect(
         client.callTool({
-          name: "search_registry",
+          name: "registry.search",
           arguments: { mode: "throws" },
         }),
       ).resolves.toMatchObject({

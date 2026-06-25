@@ -228,7 +228,7 @@ describe("searchDuplicateEntries source-URL matching", () => {
 
   it("exposes sourceUrls and fielded URL args through the public MCP schema", () => {
     expect(() =>
-      parseToolArguments("search_duplicate_entries", {
+      parseToolArguments("submission.duplicates", {
         sourceUrls: ["https://github.com/domdomegg/airtable-mcp-server"],
         githubUrl: "https://github.com/domdomegg/airtable-mcp-server",
         docsUrl: "https://docs.example.com/airtable",
@@ -237,7 +237,7 @@ describe("searchDuplicateEntries source-URL matching", () => {
       }),
     ).not.toThrow();
 
-    const inputSchema = jsonSchemaForTool("search_duplicate_entries") as {
+    const inputSchema = jsonSchemaForTool("submission.duplicates") as {
       properties?: Record<string, unknown>;
     };
     expect(inputSchema.properties).toMatchObject({
@@ -251,7 +251,7 @@ describe("searchDuplicateEntries source-URL matching", () => {
 
   it("accepts fielded URL args through the public MCP tool path", async () => {
     const result = await callRegistryTool(
-      "search_duplicate_entries",
+      "submission.duplicates",
       {
         githubUrl: "https://github.com/domdomegg/airtable-mcp-server/",
         limit: 3,
@@ -279,7 +279,7 @@ describe("searchDuplicateEntries source-URL matching", () => {
 
   it("accepts sourceUrls through the public MCP tool path", async () => {
     const result = await callRegistryTool(
-      "search_duplicate_entries",
+      "submission.duplicates",
       {
         sourceUrls: [
           "https://github.com/unrelated/repo",

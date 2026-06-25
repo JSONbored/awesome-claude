@@ -10,7 +10,7 @@ import {
 
 describe("jsonSchemaForToolOutput", () => {
   it("returns a JSON-schema object for a known tool", () => {
-    const schema = jsonSchemaForToolOutput("compare_entries");
+    const schema = jsonSchemaForToolOutput("entry.compare");
     expect(schema.type).toBe("object");
     expect(schema.properties).toHaveProperty("ok");
     expect(schema.required).toContain("ok");
