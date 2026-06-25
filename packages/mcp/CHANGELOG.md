@@ -1,5 +1,12 @@
 # @heyclaude/mcp Changelog
 
+## [0.5.1](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.5.0...mcp-v0.5.1) (2026-06-25)
+
+
+### Bug Fixes
+
+* **mcp:** rename plan_workflow_toolbox to workflow.plan for dot-notation naming ([#4225](https://github.com/JSONbored/awesome-claude/issues/4225)) ([930f343](https://github.com/JSONbored/awesome-claude/commit/930f343619548c5414c6b4f5697ac2067993db3d))
+
 ## [0.5.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.4.0...mcp-v0.5.0) (2026-06-25)
 
 
