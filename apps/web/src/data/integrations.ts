@@ -1,5 +1,6 @@
 import { REGISTRY_GENERATED_AT } from "@/data/entries";
 import type { Integration } from "@/types/registry";
+import mcpPackage from "../../../../packages/mcp/package.json";
 
 const REGISTRY_UPDATED_DATE = REGISTRY_GENERATED_AT.slice(0, 10);
 
@@ -81,7 +82,7 @@ export const INTEGRATIONS: Integration[] = [
       label: "Source",
       href: "https://github.com/jsonbored/awesome-claude/tree/main/packages/mcp",
     },
-    version: "0.4.0",
+    version: mcpPackage.version,
     updatedAt: REGISTRY_UPDATED_DATE,
     install: [
       {
