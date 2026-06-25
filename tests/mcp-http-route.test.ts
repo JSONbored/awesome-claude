@@ -86,7 +86,7 @@ describe("HeyClaude remote MCP route", () => {
       "search_registry",
       "plan_workflow_toolbox",
       "recommend_for_task",
-      "server_info",
+      "get_server_info",
       "list_category_entries",
       "get_recent_updates",
       "get_related_entries",
@@ -224,7 +224,7 @@ describe("HeyClaude remote MCP route", () => {
         jsonrpc: "2.0",
         id: 33,
         method: "tools/call",
-        params: { name: "server_info", arguments: {} },
+        params: { name: "get_server_info", arguments: {} },
       }),
     );
     expect(infoResponse.status).toBe(200);

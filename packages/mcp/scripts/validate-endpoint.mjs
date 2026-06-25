@@ -222,21 +222,21 @@ async function validateMcpTools(endpointUrl, options = {}) {
       );
     }
 
-    if (toolNames.includes("server_info")) {
+    if (toolNames.includes("get_server_info")) {
       const info = parseToolResult(
         await client.callTool({
-          name: "server_info",
+          name: "get_server_info",
           arguments: {},
         }),
       );
-      assert(info.ok === true, "server_info did not return ok.");
+      assert(info.ok === true, "get_server_info did not return ok.");
       assert(
         info.endpoint?.auth === "none",
-        "server_info did not expose the public no-key access model.",
+        "get_server_info did not expose the public no-key access model.",
       );
       assert(
         info.endpoint?.rateLimit?.binding === "API_MCP_RATE_LIMIT",
-        "server_info did not expose the MCP rate-limit binding.",
+        "get_server_info did not expose the MCP rate-limit binding.",
       );
     }
 

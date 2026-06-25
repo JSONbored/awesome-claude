@@ -83,7 +83,7 @@ export const READ_ONLY_TOOL_NAMES = [
   "search_registry",
   "plan_workflow_toolbox",
   "recommend_for_task",
-  "server_info",
+  "get_server_info",
   "list_category_entries",
   "get_recent_updates",
   "get_related_entries",
@@ -157,10 +157,10 @@ export const TOOL_DEFINITIONS = [
     },
   },
   {
-    name: "server_info",
+    name: "get_server_info",
     description:
       "Fetch read-only HeyClaude MCP package, registry, tool, and public rate-limit metadata.",
-    inputSchema: jsonSchemaForTool("server_info"),
+    inputSchema: jsonSchemaForTool("get_server_info"),
   },
   {
     name: "list_category_entries",
@@ -2837,7 +2837,7 @@ export async function callRegistryTool(name, args = {}, options = {}) {
     case "recommend_for_task":
       result = await recommendForTask(parsedArgs, options);
       break;
-    case "server_info":
+    case "get_server_info":
       result = await getServerInfo(parsedArgs, options);
       break;
     case "list_category_entries":

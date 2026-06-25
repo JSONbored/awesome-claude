@@ -87,7 +87,7 @@ function validToolArguments(name: string) {
     search_registry: { query: "mcp", limit: 1 },
     plan_workflow_toolbox: { goal: "code review automation", limit: 2 },
     recommend_for_task: { task: "code review automation", limit: 2 },
-    server_info: {},
+    get_server_info: {},
     list_category_entries: { category: "mcp", limit: 1 },
     get_recent_updates: { limit: 1 },
     get_related_entries: {
@@ -540,7 +540,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       fs.readFileSync(path.join(repoRoot, "packages/mcp/package.json"), "utf8"),
     ) as { name: string; version: string };
 
-    const info = await callRegistryTool("server_info", {}, { dataDir });
+    const info = await callRegistryTool("get_server_info", {}, { dataDir });
     expect(info).toMatchObject({
       ok: true,
       package: {
