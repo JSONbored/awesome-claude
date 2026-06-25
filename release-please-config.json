@@ -21,7 +21,15 @@
     "packages/mcp": {
       "release-type": "node",
       "component": "mcp",
-      "package-name": "@heyclaude/mcp"
+      "package-name": "@heyclaude/mcp",
+      "extra-files": [
+        { "type": "json", "path": "server.json", "jsonpath": "$.version" },
+        {
+          "type": "json",
+          "path": "server.json",
+          "jsonpath": "$.packages[0].version"
+        }
+      ]
     }
   }
 }

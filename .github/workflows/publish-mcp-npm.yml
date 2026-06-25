@@ -147,3 +147,19 @@ jobs:
           gh release create "$RELEASE_TAG" \
             --title "@heyclaude/mcp v$RELEASE_VERSION" \
             --notes-file "$notes_file"
+
+      # After a successful npm publish, republish the MCP Registry listing and
+      # the Smithery listing so both reflect the new version and live tool set.
+      # The registry uses server.json (version bumped by release-please's
+      # extra-files config); Smithery re-scans the live HTTP server at
+      # https://heyclau.de/api/mcp. Run sequentially: registry first (npm-
+      # ownership validation must see the newly published package), then Smithery.
+      - name: Dispatch MCP Registry publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run publish-mcp-registry.yml --ref main
+
+      - name: Dispatch Smithery publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run smithery-publish.yml --ref main
