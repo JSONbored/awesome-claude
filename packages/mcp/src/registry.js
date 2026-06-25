@@ -2870,7 +2870,7 @@ export async function compareEntryTrust(args = {}, options = {}) {
     const category = normalizeText(target.category);
     const slug = normalizeText(target.slug);
     const entry = await readEntry(category, slug, options);
-    if (!entry) {
+    if (entry == null) {
       return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
     }
     const compatibility = buildSkillPlatformCompatibility(entry);

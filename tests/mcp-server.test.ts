@@ -1471,8 +1471,8 @@ describe("HeyClaude read-only MCP helpers", () => {
       "entry.coverage",
       {
         entries: [
-          { category: skill.category, slug: skill.slug },
-          { category: otherSkill.category, slug: otherSkill.slug },
+          { category: "mcp", slug: "airtable-mcp-server" },
+          { category: "mcp", slug: "contrastapi-mcp-server" },
         ],
         platform: "claude",
       },
@@ -1517,6 +1517,12 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     expect(Array.isArray(compared.sharedGaps)).toBe(true);
 
+    const disclosedSignals = new Set(
+      compared.entries.flatMap((entry) => entry.signalCoverage.present),
+    );
+    expect(disclosedSignals.has("trusted-package")).toBe(true);
+    expect(disclosedSignals.has("review-provenance")).toBe(true);
+
     // Ranking is complete, ordered by score desc, and names a bestDocumented key.
     expect(compared.ranking).toHaveLength(2);
     expect(compared.ranking[0].rank).toBe(1);
@@ -1535,8 +1541,8 @@ describe("HeyClaude read-only MCP helpers", () => {
       "entry.coverage",
       {
         entries: [
-          { category: otherSkill.category, slug: otherSkill.slug },
-          { category: skill.category, slug: skill.slug },
+          { category: "mcp", slug: "contrastapi-mcp-server" },
+          { category: "mcp", slug: "airtable-mcp-server" },
         ],
       },
       { dataDir },
