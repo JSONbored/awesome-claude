@@ -1,0 +1,100 @@
+name: Publish MCP Registry
+
+# Publishes the hosted HeyClaude MCP server to the canonical MCP Registry
+# (registry.modelcontextprotocol.io) from the repo-root `server.json`. Uses GitHub
+# OIDC for the `io.github.JSONbored/*` namespace — no token, no secret, no DNS.
+# Manual trigger; the registry rejects re-publishing an existing version, so bump
+# `version` in server.json before re-running.
+#
+# server.json lists BOTH a remote (streamable-http -> https://heyclau.de/api/mcp)
+# and the npm package (@heyclaude/mcp). The registry validates npm ownership via
+# the `mcpName` field in packages/mcp/package.json, so the npm version referenced
+# by server.json must already be published (with mcpName) before this runs. See
+# RELEASING.md for the ordering.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mcp-registry-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    # OIDC publishing must only run from the reviewed default branch.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      id-token: write # OIDC: proves the io.github.JSONbored namespace
+      contents: read
+    env:
+      # Pinned mcp-publisher release + the SHA256 of its linux/amd64 tarball
+      # (from registry_1.7.9_checksums.txt). Hardcoding the digest means we never
+      # trust a fetched checksums file at runtime.
+      MCP_PUBLISHER_VERSION: v1.7.9
+      MCP_PUBLISHER_SHA256: ab128162b0616090b47cf245afe0a23f3ef08936fdce19074f5ba0a4469281ac
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: refs/heads/main
+          persist-credentials: false
+
+      - name: Validate server.json
+        # The JS below is fed to node via a single-quoted heredoc, so shell never
+        # touches the ${...} template literals (and shellcheck doesn't flag them).
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const { readFileSync } = require("node:fs");
+          const s = JSON.parse(readFileSync("server.json", "utf8"));
+          if (s.name !== "io.github.JSONbored/heyclaude") {
+            throw new Error(`unexpected name: ${s.name}`);
+          }
+          if (!s.version || typeof s.version !== "string") {
+            throw new Error("server.json is missing a string version");
+          }
+          if (s.websiteUrl !== "https://heyclau.de") {
+            throw new Error(`unexpected websiteUrl: ${s.websiteUrl}`);
+          }
+          if (s.repository?.source !== "github" || s.repository?.url !== "https://github.com/JSONbored/awesome-claude") {
+            throw new Error(`unexpected repository: ${JSON.stringify(s.repository)}`);
+          }
+          if (!Array.isArray(s.remotes) || s.remotes.length !== 1) {
+            throw new Error(`expected exactly one remote: ${JSON.stringify(s.remotes)}`);
+          }
+          const [remote] = s.remotes;
+          if (remote?.type !== "streamable-http" || remote?.url !== "https://heyclau.de/api/mcp") {
+            throw new Error(`unexpected remote: ${JSON.stringify(remote)}`);
+          }
+          if (!Array.isArray(s.packages) || s.packages.length !== 1) {
+            throw new Error(`expected exactly one package: ${JSON.stringify(s.packages)}`);
+          }
+          const [pkg] = s.packages;
+          if (pkg?.registryType !== "npm" || pkg?.identifier !== "@heyclaude/mcp" || pkg?.transport?.type !== "stdio") {
+            throw new Error(`unexpected package: ${JSON.stringify(pkg)}`);
+          }
+          if (pkg.version !== s.version) {
+            throw new Error(`package version ${pkg.version} must match server version ${s.version}`);
+          }
+          console.log(`server.json ok — ${s.name} v${s.version} -> ${remote.url} + npm ${pkg.identifier}@${pkg.version}`);
+          NODE
+
+      - name: Install mcp-publisher (pinned + checksum-verified)
+        run: |
+          set -euo pipefail
+          url="https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}/mcp-publisher_linux_amd64.tar.gz"
+          curl -fsSL "$url" -o mcp-publisher.tar.gz
+          echo "${MCP_PUBLISHER_SHA256}  mcp-publisher.tar.gz" | sha256sum -c -
+          tar -xzf mcp-publisher.tar.gz mcp-publisher
+          chmod +x mcp-publisher
+          ./mcp-publisher --version || true
+
+      - name: Authenticate to MCP Registry (GitHub OIDC)
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish server to MCP Registry
+        run: ./mcp-publisher publish

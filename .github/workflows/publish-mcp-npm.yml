@@ -1,7 +1,17 @@
 name: Publish MCP Package
 
+# checkov:skip=CKV_GHA_7: The only workflow_dispatch input is an internal boolean (released_by_release_please) that release-please sets so this run skips re-tagging a release it already created. It does not influence build output; the job is main-only and npm-production environment-gated.
+
 on:
+  # release-please dispatches this workflow after it merges a Release PR and creates
+  # the mcp-v<semver> tag + GitHub Release, passing released_by_release_please=true so
+  # this run skips re-tagging. A bare manual dispatch is the override and self-tags.
   workflow_dispatch:
+    inputs:
+      released_by_release_please:
+        description: "Internal: set by release-please's dispatch so this run skips the tag/release it already created."
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -35,6 +45,8 @@ jobs:
 
       - name: Validate release version
         id: release
+        env:
+          RELEASE_PLEASE_TRIGGERED: ${{ inputs.released_by_release_please }}
         run: bash scripts/validate-mcp-release.sh
 
       - name: Build registry artifacts
@@ -84,6 +96,8 @@ jobs:
 
       - name: Validate release version
         id: release
+        env:
+          RELEASE_PLEASE_TRIGGERED: ${{ inputs.released_by_release_please }}
         run: bash scripts/validate-mcp-release.sh
 
       - name: Publish to npm
@@ -92,7 +106,11 @@ jobs:
           NPM_CONFIG_PROVENANCE: "true"
         run: npm publish --access public --provenance --ignore-scripts
 
+      # Only on a bare manual override. When release-please dispatched this run
+      # (released_by_release_please=true) it already created the tag + GitHub Release,
+      # so re-creating them here would conflict.
       - name: Create MCP release tag
+        if: ${{ inputs.released_by_release_please != true }}
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
@@ -107,6 +125,7 @@ jobs:
           git push origin "$RELEASE_TAG"
 
       - name: Create GitHub release
+        if: ${{ inputs.released_by_release_please != true }}
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
