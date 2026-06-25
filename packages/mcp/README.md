@@ -34,8 +34,8 @@ strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
   the best-match entries for a plain-language task, each with why it fits, a
   trust summary, safety/privacy notes, and an inline install block, plus a
   `topPick` and consolidated `installPlan`.
-- `server_info` - fetch package version, registry generation, tool list, public
-  access policy, and rate-limit metadata.
+- `get_server_info` - fetch package version, registry generation, tool list,
+  public access policy, and rate-limit metadata.
 - `list_category_entries` - browse entries with bounded pagination and optional
   category, platform, tag, and query filters.
 - `get_recent_updates` - list recently added or upstream-updated entries from

@@ -28,7 +28,9 @@
           "type": "json",
           "path": "server.json",
           "jsonpath": "$.packages[0].version"
-        }
+        },
+        { "type": "generic", "path": "packages/mcp/src/package-metadata.js" },
+        { "type": "generic", "path": "packages/mcp/README.md" }
       ]
     }
   }
