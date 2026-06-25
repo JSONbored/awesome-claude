@@ -1,5 +1,20 @@
 # @heyclaude/mcp Changelog
 
+## [0.4.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.3.1...mcp-v0.4.0) (2026-06-25)
+
+
+### Features
+
+* **mcp:** cache parsed artifacts and add search_registry tag filter ([#4211](https://github.com/JSONbored/awesome-claude/issues/4211)) ([0446b40](https://github.com/JSONbored/awesome-claude/commit/0446b403163136b4729dcfdd4f5b4488550ef52e))
+* **mcp:** list HeyClaude MCP server on MCP Registry + Smithery and automate releases ([#4216](https://github.com/JSONbored/awesome-claude/issues/4216)) ([0666547](https://github.com/JSONbored/awesome-claude/commit/0666547dc130ca44841cc7ab096ac327e4dbbb47))
+* **mcp:** Smithery quality — parameter descriptions, naming, badge ([#4218](https://github.com/JSONbored/awesome-claude/issues/4218)) ([41aac15](https://github.com/JSONbored/awesome-claude/commit/41aac1514dfd7453868c41034721ffb9bb295e4d))
+* **seo:** canonical platform taxonomy across registry, search, and MCP ([#4096](https://github.com/JSONbored/awesome-claude/issues/4096)) ([7a0cda0](https://github.com/JSONbored/awesome-claude/commit/7a0cda03830e59a2b5dd1187252ebdf393c2147b))
+
+
+### Bug Fixes
+
+* **mcp:** expose duplicate URL inputs ([5ad0f8c](https://github.com/JSONbored/awesome-claude/commit/5ad0f8c9a6a9638ac6776c761d26ba6c8b116452))
+
 ## 0.3.1 - Stdio Proxy and Planner Type Fixes
 
 - Keep submission draft helper tools local to the stdio proxy instead of
