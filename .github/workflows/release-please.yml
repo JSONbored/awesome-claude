@@ -1,0 +1,61 @@
+name: release-please
+
+# Conventional-commit-driven release automation for the @heyclaude/mcp package. On
+# every push to main, release-please maintains a "Release PR" that bumps the SemVer
+# and regenerates packages/mcp/CHANGELOG.md from the conventional commits. Merging
+# the Release PR tags the package (mcp-v<semver>) and creates the GitHub Release,
+# then dispatches publish-mcp-npm.yml (OIDC trusted publishing + provenance) via the
+# Dispatch step below.
+#
+# A tag-push trigger can't be used: GITHUB_TOKEN-created tags don't fire workflows,
+# and the publish gate (scripts/validate-mcp-release.sh) requires
+# GITHUB_REF=refs/heads/main. A bare manual dispatch of publish-mcp-npm.yml remains
+# the override path (it self-tags). Commits are already Conventional Commits, so the
+# changelog is generated, not hand-maintained.
+#
+# Requires the repo setting "Allow GitHub Actions to create and approve pull
+# requests" (Settings -> Actions -> General) so release-please can open the
+# Release PR with the default GITHUB_TOKEN.
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write # dispatch publish-mcp-npm after a release
+
+concurrency:
+  group: release-please
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4.4.1
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # release-please creates the component tag (mcp-v<semver>) + GitHub Release
+      # with GITHUB_TOKEN, which (by GitHub's recursion-prevention rule) does NOT
+      # fire push/tag-based workflows. workflow_dispatch IS exempt, so we explicitly
+      # dispatch the OIDC publish workflow here, telling it release-please already
+      # created the tag/release. Without this, merging a Release PR would never
+      # publish to npm.
+      - name: Dispatch npm publish
+        if: ${{ steps.release.outputs['packages/mcp--release_created'] == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run publish-mcp-npm.yml --ref main -f released_by_release_please=true
