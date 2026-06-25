@@ -99,13 +99,19 @@ export const SearchRegistryInputSchema = z
       .trim()
       .max(240)
       .optional()
-      .describe("Keywords to search for in entry titles, descriptions, and tags."),
+      .describe(
+        "Keywords to search for in entry titles, descriptions, and tags.",
+      ),
     category: pathPart
       .optional()
-      .describe("Restrict results to this category (e.g. 'mcp', 'skills', 'hooks')."),
+      .describe(
+        "Restrict results to this category (e.g. 'mcp', 'skills', 'hooks').",
+      ),
     platform: platform
       .optional()
-      .describe("Restrict to entries compatible with this platform (e.g. 'claude-desktop', 'cursor')."),
+      .describe(
+        "Restrict to entries compatible with this platform (e.g. 'claude-desktop', 'cursor').",
+      ),
     tag: z
       .string()
       .trim()
@@ -115,19 +121,29 @@ export const SearchRegistryInputSchema = z
       .describe("Return only entries carrying this exact tag."),
     hasSafetyNotes: trustBooleanFilter
       .optional()
-      .describe("Filter by whether entries include safety notes ('true', 'false', or 'all')."),
+      .describe(
+        "Filter by whether entries include safety notes ('true', 'false', or 'all').",
+      ),
     hasPrivacyNotes: trustBooleanFilter
       .optional()
-      .describe("Filter by whether entries include privacy notes ('true', 'false', or 'all')."),
+      .describe(
+        "Filter by whether entries include privacy notes ('true', 'false', or 'all').",
+      ),
     downloadTrust: downloadTrustFilter
       .optional()
-      .describe("Filter by package download trust level ('first-party', 'external', 'none', or 'all')."),
+      .describe(
+        "Filter by package download trust level ('first-party', 'external', 'none', or 'all').",
+      ),
     claimStatus: claimStatusFilter
       .optional()
-      .describe("Filter by claim or verification status ('unclaimed', 'pending', 'verified', or 'all')."),
+      .describe(
+        "Filter by claim or verification status ('unclaimed', 'pending', 'verified', or 'all').",
+      ),
     sourceStatus: sourceStatusFilter
       .optional()
-      .describe("Filter by whether the entry's source URL is reachable ('available', 'missing', or 'all')."),
+      .describe(
+        "Filter by whether the entry's source URL is reachable ('available', 'missing', or 'all').",
+      ),
     limit: z
       .number()
       .int()
@@ -145,20 +161,28 @@ export const PlanWorkflowToolboxInputSchema = z
       .trim()
       .min(2)
       .max(240)
-      .describe("Plain-language description of the workflow or goal to build a toolbox for."),
+      .describe(
+        "Plain-language description of the workflow or goal to build a toolbox for.",
+      ),
     category: pathPart
       .optional()
-      .describe("Constrain recommendations to a single category (e.g. 'mcp', 'skills')."),
+      .describe(
+        "Constrain recommendations to a single category (e.g. 'mcp', 'skills').",
+      ),
     platform: platform
       .optional()
-      .describe("Target platform or client for the toolbox (e.g. 'claude-desktop', 'cursor')."),
+      .describe(
+        "Target platform or client for the toolbox (e.g. 'claude-desktop', 'cursor').",
+      ),
     limit: z
       .number()
       .int()
       .min(1)
       .max(10)
       .optional()
-      .describe("Maximum number of recommendations to include (1–10, default 6)."),
+      .describe(
+        "Maximum number of recommendations to include (1–10, default 6).",
+      ),
   })
   .strict();
 
@@ -194,7 +218,9 @@ export const ListCategoryEntriesInputSchema = z
   .object({
     category: pathPart
       .optional()
-      .describe("Category to list entries from (e.g. 'mcp', 'skills', 'agents')."),
+      .describe(
+        "Category to list entries from (e.g. 'mcp', 'skills', 'agents').",
+      ),
     platform: platform
       .optional()
       .describe("Filter to entries compatible with this platform."),
@@ -239,7 +265,9 @@ export const RecentUpdatesInputSchema = z
       .min(4)
       .max(40)
       .optional()
-      .describe("Return only entries updated after this date, e.g. '2026-05-01'."),
+      .describe(
+        "Return only entries updated after this date, e.g. '2026-05-01'.",
+      ),
     limit: z
       .number()
       .int()
@@ -252,8 +280,12 @@ export const RecentUpdatesInputSchema = z
 
 export const RelatedEntriesInputSchema = z
   .object({
-    category: pathPart.describe("Category of the reference entry (e.g. 'mcp', 'skills')."),
-    slug: pathPart.describe("Slug of the reference entry to find related entries for."),
+    category: pathPart.describe(
+      "Category of the reference entry (e.g. 'mcp', 'skills').",
+    ),
+    slug: pathPart.describe(
+      "Slug of the reference entry to find related entries for.",
+    ),
     limit: z
       .number()
       .int()
@@ -266,7 +298,9 @@ export const RelatedEntriesInputSchema = z
 
 export const EntryDetailInputSchema = z
   .object({
-    category: pathPart.describe("Category of the entry (e.g. 'mcp', 'skills', 'agents')."),
+    category: pathPart.describe(
+      "Category of the entry (e.g. 'mcp', 'skills', 'agents').",
+    ),
     slug: pathPart.describe("Slug of the entry to fetch."),
     bodyMode: z
       .enum(["none", "excerpt", "full"])
@@ -279,11 +313,15 @@ export const EntryDetailInputSchema = z
 
 export const CopyableAssetInputSchema = z
   .object({
-    category: pathPart.describe("Category of the entry (e.g. 'mcp', 'skills')."),
+    category: pathPart.describe(
+      "Category of the entry (e.g. 'mcp', 'skills').",
+    ),
     slug: pathPart.describe("Slug of the entry to fetch the asset for."),
     platform: platform
       .optional()
-      .describe("Target platform to tailor the install command or config snippet."),
+      .describe(
+        "Target platform to tailor the install command or config snippet.",
+      ),
     assetType: z
       .enum([
         "full_content",
@@ -307,17 +345,23 @@ export const CompareEntriesInputSchema = z
       .array(
         z
           .object({
-            category: pathPart.describe("Category of the entry (e.g. 'mcp', 'skills')."),
+            category: pathPart.describe(
+              "Category of the entry (e.g. 'mcp', 'skills').",
+            ),
             slug: pathPart.describe("Slug of the entry."),
           })
           .strict(),
       )
       .min(2)
       .max(5)
-      .describe("2–5 entries to compare, each identified by category and slug."),
+      .describe(
+        "2–5 entries to compare, each identified by category and slug.",
+      ),
     platform: platform
       .optional()
-      .describe("Target platform for the comparison (affects install steps shown)."),
+      .describe(
+        "Target platform for the comparison (affects install steps shown).",
+      ),
   })
   .strict();
 
@@ -327,14 +371,18 @@ export const ClientSetupInputSchema = z
   .object({
     client: clientName
       .optional()
-      .describe("MCP client to generate a setup snippet for (e.g. 'claude-desktop', 'cursor')."),
+      .describe(
+        "MCP client to generate a setup snippet for (e.g. 'claude-desktop', 'cursor').",
+      ),
     endpointUrl: z
       .string()
       .trim()
       .url()
       .max(500)
       .optional()
-      .describe("Override the default remote MCP endpoint URL in the generated snippet."),
+      .describe(
+        "Override the default remote MCP endpoint URL in the generated snippet.",
+      ),
   })
   .strict();
 
@@ -343,23 +391,31 @@ export const CompatibilityInputSchema = z
     category: pathPart
       .optional()
       .describe("Entry category (defaults to 'skills')."),
-    slug: pathPart.describe("Slug of the skill entry to check compatibility for."),
+    slug: pathPart.describe(
+      "Slug of the skill entry to check compatibility for.",
+    ),
   })
   .strict();
 
 export const InstallGuidanceInputSchema = z
   .object({
-    category: pathPart.describe("Category of the entry (e.g. 'mcp', 'skills')."),
+    category: pathPart.describe(
+      "Category of the entry (e.g. 'mcp', 'skills').",
+    ),
     slug: pathPart.describe("Slug of the entry to get install guidance for."),
     platform: platform
       .optional()
-      .describe("Target platform to tailor the install steps (e.g. 'claude-desktop', 'cursor')."),
+      .describe(
+        "Target platform to tailor the install steps (e.g. 'claude-desktop', 'cursor').",
+      ),
   })
   .strict();
 
 export const PlatformAdapterInputSchema = z
   .object({
-    slug: pathPart.describe("Slug of the skill to generate a platform adapter for."),
+    slug: pathPart.describe(
+      "Slug of the skill to generate a platform adapter for.",
+    ),
     platform: platform
       .optional()
       .describe("Target platform for the adapter (defaults to 'cursor')."),
@@ -372,7 +428,9 @@ export const GetSubmissionSchemaInputSchema = z
   .object({
     category: submissionCategory
       .optional()
-      .describe("Submission category to fetch the schema for. Returns all schemas if omitted."),
+      .describe(
+        "Submission category to fetch the schema for. Returns all schemas if omitted.",
+      ),
   })
   .strict();
 
@@ -417,7 +475,9 @@ export const SearchDuplicateEntriesInputSchema = z
       .array(z.string().trim().min(1).max(500))
       .max(10)
       .optional()
-      .describe("Multiple source URLs to check (e.g. GitHub repo + docs site)."),
+      .describe(
+        "Multiple source URLs to check (e.g. GitHub repo + docs site).",
+      ),
     githubUrl: z
       .string()
       .trim()
@@ -452,7 +512,9 @@ export const SearchDuplicateEntriesInputSchema = z
       .min(1)
       .max(255)
       .optional()
-      .describe("Brand's canonical domain (e.g. 'example.com') to check for duplicates."),
+      .describe(
+        "Brand's canonical domain (e.g. 'example.com') to check for duplicates.",
+      ),
     limit: z
       .number()
       .int()
@@ -479,7 +541,9 @@ export const CategorySubmissionGuidanceInputSchema = z
   .object({
     category: submissionCategory
       .optional()
-      .describe("Category to fetch contribution guidelines for. Returns general guidance if omitted."),
+      .describe(
+        "Category to fetch contribution guidelines for. Returns general guidance if omitted.",
+      ),
   })
   .strict();
 
@@ -495,7 +559,9 @@ export const GetSubmissionExamplesInputSchema = z
   .object({
     category: submissionCategory
       .optional()
-      .describe("Category to fetch submission examples for. Returns cross-category examples if omitted."),
+      .describe(
+        "Category to fetch submission examples for. Returns cross-category examples if omitted.",
+      ),
   })
   .strict();
 
@@ -510,7 +576,9 @@ export const ReviewSubmissionDraftInputSchema = z
       .min(1)
       .max(10)
       .optional()
-      .describe("Maximum number of duplicate candidates to include in the review."),
+      .describe(
+        "Maximum number of duplicate candidates to include in the review.",
+      ),
   })
   .strict();
 
@@ -518,7 +586,9 @@ export const SubmissionPolicyInputSchema = z.object({}).strict();
 
 export const ExplainEntryTrustInputSchema = z
   .object({
-    category: pathPart.describe("Category of the entry (e.g. 'mcp', 'skills', 'agents')."),
+    category: pathPart.describe(
+      "Category of the entry (e.g. 'mcp', 'skills', 'agents').",
+    ),
     slug: pathPart.describe("Slug of the entry to explain trust signals for."),
   })
   .strict();
@@ -536,10 +606,14 @@ export const ReviewEntrySafetyInputSchema = z
       )
       .min(1)
       .max(5)
-      .describe("1–5 entries to review for safety and privacy metadata, each identified by category and slug."),
+      .describe(
+        "1–5 entries to review for safety and privacy metadata, each identified by category and slug.",
+      ),
     platform: platform
       .optional()
-      .describe("Target platform to contextualize safety and compatibility notes."),
+      .describe(
+        "Target platform to contextualize safety and compatibility notes.",
+      ),
   })
   .strict();
 
