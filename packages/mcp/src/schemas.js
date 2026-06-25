@@ -94,25 +94,95 @@ export const SubmissionFieldsSchema = z
 
 export const SearchRegistryInputSchema = z
   .object({
-    query: z.string().trim().max(240).optional(),
-    category: pathPart.optional(),
-    platform: platform.optional(),
-    tag: z.string().trim().min(1).max(80).optional(),
-    hasSafetyNotes: trustBooleanFilter.optional(),
-    hasPrivacyNotes: trustBooleanFilter.optional(),
-    downloadTrust: downloadTrustFilter.optional(),
-    claimStatus: claimStatusFilter.optional(),
-    sourceStatus: sourceStatusFilter.optional(),
-    limit: z.number().int().min(1).max(25).optional(),
+    query: z
+      .string()
+      .trim()
+      .max(240)
+      .optional()
+      .describe(
+        "Keywords to search for in entry titles, descriptions, and tags.",
+      ),
+    category: pathPart
+      .optional()
+      .describe(
+        "Restrict results to this category (e.g. 'mcp', 'skills', 'hooks').",
+      ),
+    platform: platform
+      .optional()
+      .describe(
+        "Restrict to entries compatible with this platform (e.g. 'claude-desktop', 'cursor').",
+      ),
+    tag: z
+      .string()
+      .trim()
+      .min(1)
+      .max(80)
+      .optional()
+      .describe("Return only entries carrying this exact tag."),
+    hasSafetyNotes: trustBooleanFilter
+      .optional()
+      .describe(
+        "Filter by whether entries include safety notes ('true', 'false', or 'all').",
+      ),
+    hasPrivacyNotes: trustBooleanFilter
+      .optional()
+      .describe(
+        "Filter by whether entries include privacy notes ('true', 'false', or 'all').",
+      ),
+    downloadTrust: downloadTrustFilter
+      .optional()
+      .describe(
+        "Filter by package download trust level ('first-party', 'external', 'none', or 'all').",
+      ),
+    claimStatus: claimStatusFilter
+      .optional()
+      .describe(
+        "Filter by claim or verification status ('unclaimed', 'pending', 'verified', or 'all').",
+      ),
+    sourceStatus: sourceStatusFilter
+      .optional()
+      .describe(
+        "Filter by whether the entry's source URL is reachable ('available', 'missing', or 'all').",
+      ),
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(25)
+      .optional()
+      .describe("Maximum number of results to return (1–25, default 10)."),
   })
   .strict();
 
 export const PlanWorkflowToolboxInputSchema = z
   .object({
-    goal: z.string().trim().min(2).max(240),
-    category: pathPart.optional(),
-    platform: platform.optional(),
-    limit: z.number().int().min(1).max(10).optional(),
+    goal: z
+      .string()
+      .trim()
+      .min(2)
+      .max(240)
+      .describe(
+        "Plain-language description of the workflow or goal to build a toolbox for.",
+      ),
+    category: pathPart
+      .optional()
+      .describe(
+        "Constrain recommendations to a single category (e.g. 'mcp', 'skills').",
+      ),
+    platform: platform
+      .optional()
+      .describe(
+        "Target platform or client for the toolbox (e.g. 'claude-desktop', 'cursor').",
+      ),
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(10)
+      .optional()
+      .describe(
+        "Maximum number of recommendations to include (1–10, default 6).",
+      ),
   })
   .strict();
 
@@ -142,43 +212,100 @@ export const RecommendForTaskInputSchema = z
   })
   .strict();
 
-export const ServerInfoInputSchema = z.object({}).strict();
+export const GetServerInfoInputSchema = z.object({}).strict();
 
 export const ListCategoryEntriesInputSchema = z
   .object({
-    category: pathPart.optional(),
-    platform: platform.optional(),
-    tag: z.string().trim().min(1).max(80).optional(),
-    query: z.string().trim().max(240).optional(),
-    offset: z.number().int().min(0).max(5000).optional(),
-    limit: z.number().int().min(1).max(25).optional(),
+    category: pathPart
+      .optional()
+      .describe(
+        "Category to list entries from (e.g. 'mcp', 'skills', 'agents').",
+      ),
+    platform: platform
+      .optional()
+      .describe("Filter to entries compatible with this platform."),
+    tag: z
+      .string()
+      .trim()
+      .min(1)
+      .max(80)
+      .optional()
+      .describe("Filter to entries carrying this exact tag."),
+    query: z
+      .string()
+      .trim()
+      .max(240)
+      .optional()
+      .describe("Keyword search to narrow the listing."),
+    offset: z
+      .number()
+      .int()
+      .min(0)
+      .max(5000)
+      .optional()
+      .describe("Pagination offset for large result sets (0–5000)."),
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(25)
+      .optional()
+      .describe("Number of entries per page (1–25, default 20)."),
   })
   .strict();
 
 export const RecentUpdatesInputSchema = z
   .object({
-    category: pathPart.optional(),
-    since: z.string().trim().min(4).max(40).optional(),
-    limit: z.number().int().min(1).max(25).optional(),
+    category: pathPart
+      .optional()
+      .describe("Restrict to a single category (e.g. 'mcp', 'hooks')."),
+    since: z
+      .string()
+      .trim()
+      .min(4)
+      .max(40)
+      .optional()
+      .describe(
+        "Return only entries updated after this date, e.g. '2026-05-01'.",
+      ),
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(25)
+      .optional()
+      .describe("Maximum entries to return (1–25, default 10)."),
   })
   .strict();
 
 export const RelatedEntriesInputSchema = z
   .object({
-    category: pathPart,
-    slug: pathPart,
-    limit: z.number().int().min(1).max(25).optional(),
+    category: pathPart.describe(
+      "Category of the reference entry (e.g. 'mcp', 'skills').",
+    ),
+    slug: pathPart.describe(
+      "Slug of the reference entry to find related entries for.",
+    ),
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(25)
+      .optional()
+      .describe("Maximum related entries to return (1–25, default 8)."),
   })
   .strict();
 
 export const EntryDetailInputSchema = z
   .object({
-    category: pathPart,
-    slug: pathPart,
+    category: pathPart.describe(
+      "Category of the entry (e.g. 'mcp', 'skills', 'agents').",
+    ),
+    slug: pathPart.describe("Slug of the entry to fetch."),
     bodyMode: z
       .enum(["none", "excerpt", "full"])
       .describe(
-        "How much entry content to return. 'excerpt' (default) trims the body markdown to a short lead and omits large copyable fields (scriptBody, fullCopyableContent, copySnippet), reporting what was dropped via bodyChars/bodyTruncated/omittedFields; 'none' also drops the body; 'full' returns everything. Use get_copyable_asset for omitted install/script content, and request 'full' only when you truly need the complete inline content — it can be tens of kilobytes.",
+        "How much entry content to return. 'excerpt' (default) trims the body markdown to a short lead and omits large copyable fields (scriptBody, fullCopyableContent, copySnippet), reporting what was dropped via bodyChars/bodyTruncated/omittedFields; 'none' also drops the body; 'full' returns everything. Use entry.asset for omitted install/script content, and request 'full' only when you truly need the complete inline content — it can be tens of kilobytes.",
       )
       .optional(),
   })
@@ -186,9 +313,15 @@ export const EntryDetailInputSchema = z
 
 export const CopyableAssetInputSchema = z
   .object({
-    category: pathPart,
-    slug: pathPart,
-    platform: platform.optional(),
+    category: pathPart.describe(
+      "Category of the entry (e.g. 'mcp', 'skills').",
+    ),
+    slug: pathPart.describe("Slug of the entry to fetch the asset for."),
+    platform: platform
+      .optional()
+      .describe(
+        "Target platform to tailor the install command or config snippet.",
+      ),
     assetType: z
       .enum([
         "full_content",
@@ -212,14 +345,23 @@ export const CompareEntriesInputSchema = z
       .array(
         z
           .object({
-            category: pathPart,
-            slug: pathPart,
+            category: pathPart.describe(
+              "Category of the entry (e.g. 'mcp', 'skills').",
+            ),
+            slug: pathPart.describe("Slug of the entry."),
           })
           .strict(),
       )
       .min(2)
-      .max(5),
-    platform: platform.optional(),
+      .max(5)
+      .describe(
+        "2–5 entries to compare, each identified by category and slug.",
+      ),
+    platform: platform
+      .optional()
+      .describe(
+        "Target platform for the comparison (affects install steps shown).",
+      ),
   })
   .strict();
 
@@ -227,30 +369,56 @@ export const RegistryStatsInputSchema = z.object({}).strict();
 
 export const ClientSetupInputSchema = z
   .object({
-    client: clientName.optional(),
-    endpointUrl: z.string().trim().url().max(500).optional(),
+    client: clientName
+      .optional()
+      .describe(
+        "MCP client to generate a setup snippet for (e.g. 'claude-desktop', 'cursor').",
+      ),
+    endpointUrl: z
+      .string()
+      .trim()
+      .url()
+      .max(500)
+      .optional()
+      .describe(
+        "Override the default remote MCP endpoint URL in the generated snippet.",
+      ),
   })
   .strict();
 
 export const CompatibilityInputSchema = z
   .object({
-    category: pathPart.optional(),
-    slug: pathPart,
+    category: pathPart
+      .optional()
+      .describe("Entry category (defaults to 'skills')."),
+    slug: pathPart.describe(
+      "Slug of the skill entry to check compatibility for.",
+    ),
   })
   .strict();
 
 export const InstallGuidanceInputSchema = z
   .object({
-    category: pathPart,
-    slug: pathPart,
-    platform: platform.optional(),
+    category: pathPart.describe(
+      "Category of the entry (e.g. 'mcp', 'skills').",
+    ),
+    slug: pathPart.describe("Slug of the entry to get install guidance for."),
+    platform: platform
+      .optional()
+      .describe(
+        "Target platform to tailor the install steps (e.g. 'claude-desktop', 'cursor').",
+      ),
   })
   .strict();
 
 export const PlatformAdapterInputSchema = z
   .object({
-    slug: pathPart,
-    platform: platform.optional(),
+    slug: pathPart.describe(
+      "Slug of the skill to generate a platform adapter for.",
+    ),
+    platform: platform
+      .optional()
+      .describe("Target platform for the adapter (defaults to 'cursor')."),
   })
   .strict();
 
@@ -258,62 +426,159 @@ export const ListDistributionFeedsInputSchema = z.object({}).strict();
 
 export const GetSubmissionSchemaInputSchema = z
   .object({
-    category: submissionCategory.optional(),
+    category: submissionCategory
+      .optional()
+      .describe(
+        "Submission category to fetch the schema for. Returns all schemas if omitted.",
+      ),
   })
   .strict();
 
 export const ValidateSubmissionDraftInputSchema = z
   .object({
-    fields: SubmissionFieldsSchema,
+    fields: SubmissionFieldsSchema.describe(
+      "Submission field values to validate against the HeyClaude content schema.",
+    ),
   })
   .strict();
 
 export const SearchDuplicateEntriesInputSchema = z
   .object({
-    category: pathPart.optional(),
-    slug: pathPart.optional(),
-    name: z.string().trim().min(1).max(240).optional(),
-    title: z.string().trim().min(1).max(240).optional(),
-    sourceUrl: z.string().trim().min(1).max(500).optional(),
-    sourceUrls: z.array(z.string().trim().min(1).max(500)).max(10).optional(),
-    githubUrl: z.string().trim().min(1).max(500).optional(),
-    docsUrl: z.string().trim().min(1).max(500).optional(),
-    downloadUrl: z.string().trim().min(1).max(500).optional(),
-    websiteUrl: z.string().trim().min(1).max(500).optional(),
-    brandDomain: z.string().trim().min(1).max(255).optional(),
-    limit: z.number().int().min(1).max(10).optional(),
+    category: pathPart
+      .optional()
+      .describe("Category to scope the duplicate search."),
+    slug: pathPart
+      .optional()
+      .describe("Slug to check for an exact existing entry."),
+    name: z
+      .string()
+      .trim()
+      .min(1)
+      .max(240)
+      .optional()
+      .describe("Tool or resource name to search for near-duplicates."),
+    title: z
+      .string()
+      .trim()
+      .min(1)
+      .max(240)
+      .optional()
+      .describe("Display title to search for near-duplicates."),
+    sourceUrl: z
+      .string()
+      .trim()
+      .min(1)
+      .max(500)
+      .optional()
+      .describe("Primary source URL to check against existing entries."),
+    sourceUrls: z
+      .array(z.string().trim().min(1).max(500))
+      .max(10)
+      .optional()
+      .describe(
+        "Multiple source URLs to check (e.g. GitHub repo + docs site).",
+      ),
+    githubUrl: z
+      .string()
+      .trim()
+      .min(1)
+      .max(500)
+      .optional()
+      .describe("GitHub repository URL to check for duplicates."),
+    docsUrl: z
+      .string()
+      .trim()
+      .min(1)
+      .max(500)
+      .optional()
+      .describe("Documentation URL to check for duplicates."),
+    downloadUrl: z
+      .string()
+      .trim()
+      .min(1)
+      .max(500)
+      .optional()
+      .describe("Download or release URL to check for duplicates."),
+    websiteUrl: z
+      .string()
+      .trim()
+      .min(1)
+      .max(500)
+      .optional()
+      .describe("Homepage or product URL to check for duplicates."),
+    brandDomain: z
+      .string()
+      .trim()
+      .min(1)
+      .max(255)
+      .optional()
+      .describe(
+        "Brand's canonical domain (e.g. 'example.com') to check for duplicates.",
+      ),
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(10)
+      .optional()
+      .describe("Maximum number of duplicate candidates to return (1–10)."),
   })
   .strict();
 
 export const BuildSubmissionUrlsInputSchema = z
   .object({
-    fields: SubmissionFieldsSchema,
-    includePrBody: z.boolean().optional(),
+    fields: SubmissionFieldsSchema.describe(
+      "Validated submission field values to encode into submit and review URLs.",
+    ),
+    includePrBody: z
+      .boolean()
+      .optional()
+      .describe("Include a pre-filled PR body in the returned URL."),
   })
   .strict();
 
 export const CategorySubmissionGuidanceInputSchema = z
   .object({
-    category: submissionCategory.optional(),
+    category: submissionCategory
+      .optional()
+      .describe(
+        "Category to fetch contribution guidelines for. Returns general guidance if omitted.",
+      ),
   })
   .strict();
 
 export const PrepareSubmissionDraftInputSchema = z
   .object({
-    fields: SubmissionFieldsSchema,
+    fields: SubmissionFieldsSchema.describe(
+      "Submission field values to compile into a canonical maintainer-reviewed PR draft.",
+    ),
   })
   .strict();
 
 export const GetSubmissionExamplesInputSchema = z
   .object({
-    category: submissionCategory.optional(),
+    category: submissionCategory
+      .optional()
+      .describe(
+        "Category to fetch submission examples for. Returns cross-category examples if omitted.",
+      ),
   })
   .strict();
 
 export const ReviewSubmissionDraftInputSchema = z
   .object({
-    fields: SubmissionFieldsSchema,
-    duplicateLimit: z.number().int().min(1).max(10).optional(),
+    fields: SubmissionFieldsSchema.describe(
+      "Submission field values to review for schema errors and maintainer checklist items.",
+    ),
+    duplicateLimit: z
+      .number()
+      .int()
+      .min(1)
+      .max(10)
+      .optional()
+      .describe(
+        "Maximum number of duplicate candidates to include in the review.",
+      ),
   })
   .strict();
 
@@ -321,8 +586,10 @@ export const SubmissionPolicyInputSchema = z.object({}).strict();
 
 export const ExplainEntryTrustInputSchema = z
   .object({
-    category: pathPart,
-    slug: pathPart,
+    category: pathPart.describe(
+      "Category of the entry (e.g. 'mcp', 'skills', 'agents').",
+    ),
+    slug: pathPart.describe("Slug of the entry to explain trust signals for."),
   })
   .strict();
 
@@ -332,14 +599,21 @@ export const ReviewEntrySafetyInputSchema = z
       .array(
         z
           .object({
-            category: pathPart,
-            slug: pathPart,
+            category: pathPart.describe("Category of the entry."),
+            slug: pathPart.describe("Slug of the entry."),
           })
           .strict(),
       )
       .min(1)
-      .max(5),
-    platform: platform.optional(),
+      .max(5)
+      .describe(
+        "1–5 entries to review for safety and privacy metadata, each identified by category and slug.",
+      ),
+    platform: platform
+      .optional()
+      .describe(
+        "Target platform to contextualize safety and compatibility notes.",
+      ),
   })
   .strict();
 
@@ -362,34 +636,34 @@ export const CompareEntryTrustInputSchema = z
   .strict();
 
 export const TOOL_INPUT_SCHEMAS = {
-  search_registry: SearchRegistryInputSchema,
-  plan_workflow_toolbox: PlanWorkflowToolboxInputSchema,
-  recommend_for_task: RecommendForTaskInputSchema,
-  server_info: ServerInfoInputSchema,
-  list_category_entries: ListCategoryEntriesInputSchema,
-  get_recent_updates: RecentUpdatesInputSchema,
-  get_related_entries: RelatedEntriesInputSchema,
-  get_entry_detail: EntryDetailInputSchema,
-  get_copyable_asset: CopyableAssetInputSchema,
-  compare_entries: CompareEntriesInputSchema,
-  get_registry_stats: RegistryStatsInputSchema,
-  get_client_setup: ClientSetupInputSchema,
-  get_compatibility: CompatibilityInputSchema,
-  get_install_guidance: InstallGuidanceInputSchema,
-  get_platform_adapter: PlatformAdapterInputSchema,
-  list_distribution_feeds: ListDistributionFeedsInputSchema,
-  get_submission_schema: GetSubmissionSchemaInputSchema,
-  validate_submission_draft: ValidateSubmissionDraftInputSchema,
-  search_duplicate_entries: SearchDuplicateEntriesInputSchema,
-  build_submission_urls: BuildSubmissionUrlsInputSchema,
-  get_category_submission_guidance: CategorySubmissionGuidanceInputSchema,
-  prepare_submission_draft: PrepareSubmissionDraftInputSchema,
-  get_submission_examples: GetSubmissionExamplesInputSchema,
-  review_submission_draft: ReviewSubmissionDraftInputSchema,
-  get_submission_policy: SubmissionPolicyInputSchema,
-  explain_entry_trust: ExplainEntryTrustInputSchema,
-  review_entry_safety: ReviewEntrySafetyInputSchema,
-  compare_entry_trust: CompareEntryTrustInputSchema,
+  "registry.search": SearchRegistryInputSchema,
+  "registry.plan": PlanWorkflowToolboxInputSchema,
+  "registry.recommend": RecommendForTaskInputSchema,
+  "registry.info": GetServerInfoInputSchema,
+  "registry.list": ListCategoryEntriesInputSchema,
+  "registry.updates": RecentUpdatesInputSchema,
+  "entry.related": RelatedEntriesInputSchema,
+  "entry.detail": EntryDetailInputSchema,
+  "entry.asset": CopyableAssetInputSchema,
+  "entry.compare": CompareEntriesInputSchema,
+  "registry.stats": RegistryStatsInputSchema,
+  "install.setup": ClientSetupInputSchema,
+  "install.compatibility": CompatibilityInputSchema,
+  "install.guidance": InstallGuidanceInputSchema,
+  "install.adapter": PlatformAdapterInputSchema,
+  "registry.feeds": ListDistributionFeedsInputSchema,
+  "submission.schema": GetSubmissionSchemaInputSchema,
+  "submission.validate": ValidateSubmissionDraftInputSchema,
+  "submission.duplicates": SearchDuplicateEntriesInputSchema,
+  "submission.urls": BuildSubmissionUrlsInputSchema,
+  "submission.guidance": CategorySubmissionGuidanceInputSchema,
+  "submission.prepare": PrepareSubmissionDraftInputSchema,
+  "submission.examples": GetSubmissionExamplesInputSchema,
+  "submission.review": ReviewSubmissionDraftInputSchema,
+  "submission.policy": SubmissionPolicyInputSchema,
+  "entry.trust": ExplainEntryTrustInputSchema,
+  "entry.safety": ReviewEntrySafetyInputSchema,
+  "entry.coverage": CompareEntryTrustInputSchema,
 };
 
 function stripUnsupportedJsonSchemaFields(value) {

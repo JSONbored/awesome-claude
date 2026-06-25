@@ -1736,12 +1736,12 @@ describe("non-UI branch matrix", () => {
       ),
       registryMcp.callRegistryTool("unknown", {}, mcpOptions),
       registryMcp.callRegistryTool(
-        "get_entry_detail",
+        "entry.detail",
         { category: skill!.category, slug: skill!.slug },
         mcpOptions,
       ),
       registryMcp.callRegistryTool(
-        "get_entry_detail",
+        "entry.detail",
         { category: "", slug: "" },
         mcpOptions,
       ),
@@ -1757,7 +1757,7 @@ describe("non-UI branch matrix", () => {
     ).toContain("Unknown");
     expect(
       registryMcp.getRegistryPrompt({
-        name: "find_best_asset",
+        name: "asset.find",
         arguments: {
           use_case: "review PRs",
           category: "mcp",
@@ -1962,7 +1962,7 @@ describe("non-UI branch matrix", () => {
     ).resolves.toMatchObject({ ok: false, error: { code: "not_found" } });
     await expect(
       registryMcp.callRegistryTool(
-        "search_registry",
+        "registry.search",
         { limit: 0 },
         syntheticOptions,
       ),

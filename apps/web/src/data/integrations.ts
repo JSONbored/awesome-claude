@@ -1,5 +1,6 @@
 import { REGISTRY_GENERATED_AT } from "@/data/entries";
 import type { Integration } from "@/types/registry";
+import mcpPackage from "../../../../packages/mcp/package.json";
 
 const REGISTRY_UPDATED_DATE = REGISTRY_GENERATED_AT.slice(0, 10);
 
@@ -72,7 +73,7 @@ export const INTEGRATIONS: Integration[] = [
     npmPackage: "@heyclaude/mcp",
     githubRepo: "jsonbored/awesome-claude",
     bullets: [
-      "20+ tools: search, trending, compare, get_entry_detail, prepare_submission_draft, explain_entry_trust",
+      "20+ tools: search, trending, compare, entry.detail, submission.prepare, entry.trust",
       "Prompts and resources for workflow planning",
       "Stdio + remote HTTP transport",
     ],
@@ -81,7 +82,7 @@ export const INTEGRATIONS: Integration[] = [
       label: "Source",
       href: "https://github.com/jsonbored/awesome-claude/tree/main/packages/mcp",
     },
-    version: "0.3.1",
+    version: mcpPackage.version,
     updatedAt: REGISTRY_UPDATED_DATE,
     install: [
       {

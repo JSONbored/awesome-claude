@@ -7,17 +7,17 @@ import { normalizeEndpointUrl } from "../src/endpoint-url.js";
 import { READ_ONLY_TOOL_NAMES } from "../src/registry.js";
 
 const baselineToolNames = [
-  "search_registry",
-  "get_entry_detail",
-  "get_compatibility",
-  "get_install_guidance",
-  "get_platform_adapter",
-  "list_distribution_feeds",
-  "get_submission_schema",
-  "validate_submission_draft",
-  "search_duplicate_entries",
-  "build_submission_urls",
-  "get_category_submission_guidance",
+  "registry.search",
+  "entry.detail",
+  "install.compatibility",
+  "install.guidance",
+  "install.adapter",
+  "registry.feeds",
+  "submission.schema",
+  "submission.validate",
+  "submission.duplicates",
+  "submission.urls",
+  "submission.guidance",
 ];
 
 function parseArgs(argv) {
@@ -55,21 +55,19 @@ function assertSubmitUrl(value) {
   try {
     url = new URL(String(value || ""));
   } catch {
-    throw new Error(
-      "build_submission_urls did not return an absolute submit URL.",
-    );
+    throw new Error("submission.urls did not return an absolute submit URL.");
   }
   assert(
     url.protocol === "https:",
-    "build_submission_urls submit URL must use HTTPS.",
+    "submission.urls submit URL must use HTTPS.",
   );
   assert(
     url.origin === "https://heyclau.de",
-    "build_submission_urls submit URL used the wrong origin.",
+    "submission.urls submit URL used the wrong origin.",
   );
   assert(
     url.pathname === "/submit",
-    "build_submission_urls did not return the submit URL.",
+    "submission.urls did not return the submit URL.",
   );
 }
 
@@ -161,7 +159,7 @@ async function validateMcpTools(endpointUrl, options = {}) {
     const tools = await client.listTools();
     const toolNames = tools.tools.map((tool) => tool.name);
     validateToolList(toolNames, options.strictTools);
-    const hasVersionTwoSurface = toolNames.includes("get_registry_stats");
+    const hasVersionTwoSurface = toolNames.includes("registry.stats");
     if (hasVersionTwoSurface) {
       assert(
         tools.tools.every((tool) => tool.annotations?.readOnlyHint === true),
@@ -189,153 +187,153 @@ async function validateMcpTools(endpointUrl, options = {}) {
 
       const prompts = await client.listPrompts();
       assert(
-        prompts.prompts.some((prompt) => prompt.name === "find_best_asset"),
-        "MCP prompts did not expose find_best_asset.",
+        prompts.prompts.some((prompt) => prompt.name === "asset.find"),
+        "MCP prompts did not expose asset.find.",
       );
       const installPrompt = await client.getPrompt({
-        name: "install_asset_safely",
+        name: "install.asset",
         arguments: { category: "mcp", slug: "example", platform: "Codex" },
       });
       assert(
         installPrompt.messages?.[0]?.content?.text?.includes(
-          "get_install_guidance",
+          "install.guidance",
         ),
-        "install_asset_safely prompt did not mention install guidance.",
+        "install.asset prompt did not mention install guidance.",
       );
     }
 
     const search = parseToolResult(
       await client.callTool({
-        name: "search_registry",
+        name: "registry.search",
         arguments: { query: "mcp", limit: 2 },
       }),
     );
-    assert(search.ok === true, "search_registry did not return ok: true.");
+    assert(search.ok === true, "registry.search did not return ok: true.");
     assert(
       Array.isArray(search.entries) && search.entries.length > 0,
-      "search_registry did not return entries.",
+      "registry.search did not return entries.",
     );
     if (options.requireSafetyMetadata) {
       assertSafetyMetadataShape(
         search.entries[0],
-        "search_registry first entry",
+        "registry.search first entry",
       );
     }
 
-    if (toolNames.includes("server_info")) {
+    if (toolNames.includes("registry.info")) {
       const info = parseToolResult(
         await client.callTool({
-          name: "server_info",
+          name: "registry.info",
           arguments: {},
         }),
       );
-      assert(info.ok === true, "server_info did not return ok.");
+      assert(info.ok === true, "server.info did not return ok.");
       assert(
         info.endpoint?.auth === "none",
-        "server_info did not expose the public no-key access model.",
+        "server.info did not expose the public no-key access model.",
       );
       assert(
         info.endpoint?.rateLimit?.binding === "API_MCP_RATE_LIMIT",
-        "server_info did not expose the MCP rate-limit binding.",
+        "server.info did not expose the MCP rate-limit binding.",
       );
     }
 
-    if (toolNames.includes("list_category_entries")) {
+    if (toolNames.includes("registry.list")) {
       const listed = parseToolResult(
         await client.callTool({
-          name: "list_category_entries",
+          name: "registry.list",
           arguments: { category: "mcp", limit: 2 },
         }),
       );
-      assert(listed.ok === true, "list_category_entries did not return ok.");
+      assert(listed.ok === true, "registry.list did not return ok.");
       assert(
         Array.isArray(listed.entries) && listed.entries.length > 0,
-        "list_category_entries did not return entries.",
+        "registry.list did not return entries.",
       );
     }
 
-    if (toolNames.includes("get_registry_stats")) {
+    if (toolNames.includes("registry.stats")) {
       const stats = parseToolResult(
         await client.callTool({
-          name: "get_registry_stats",
+          name: "registry.stats",
           arguments: {},
         }),
       );
-      assert(stats.ok === true, "get_registry_stats did not return ok.");
+      assert(stats.ok === true, "registry.stats did not return ok.");
       assert(
         stats.policy?.readOnly === true,
-        "get_registry_stats did not expose the no-write policy.",
+        "registry.stats did not expose the no-write policy.",
       );
     }
 
     const first = search.entries[0];
     const detail = parseToolResult(
       await client.callTool({
-        name: "get_entry_detail",
+        name: "entry.detail",
         arguments: { category: first.category, slug: first.slug },
       }),
     );
-    assert(detail.ok === true, "get_entry_detail did not return ok: true.");
+    assert(detail.ok === true, "entry.detail did not return ok: true.");
     assert(
       detail.key === `${first.category}:${first.slug}`,
-      "get_entry_detail returned the wrong entry.",
+      "entry.detail returned the wrong entry.",
     );
     if (options.requireSafetyMetadata) {
-      assertSafetyMetadataShape(detail.entry, "get_entry_detail entry");
+      assertSafetyMetadataShape(detail.entry, "entry.detail entry");
     }
 
-    if (toolNames.includes("get_copyable_asset")) {
+    if (toolNames.includes("entry.asset")) {
       const asset = parseToolResult(
         await client.callTool({
-          name: "get_copyable_asset",
+          name: "entry.asset",
           arguments: { category: first.category, slug: first.slug },
         }),
       );
-      assert(asset.ok === true, "get_copyable_asset did not return ok.");
+      assert(asset.ok === true, "entry.asset did not return ok.");
       assert(
         asset.primaryAsset || asset.assets?.length,
-        "get_copyable_asset did not return any copyable asset.",
+        "entry.asset did not return any copyable asset.",
       );
     }
 
     const feeds = parseToolResult(
       await client.callTool({
-        name: "list_distribution_feeds",
+        name: "registry.feeds",
         arguments: {},
       }),
     );
-    assert(feeds.ok === true, "list_distribution_feeds did not return ok.");
+    assert(feeds.ok === true, "feeds.list did not return ok.");
     assert(
       feeds.artifacts?.directory === "/data/directory-index.json",
-      "list_distribution_feeds did not expose the directory artifact.",
+      "feeds.list did not expose the directory artifact.",
     );
 
     const schema = parseToolResult(
       await client.callTool({
-        name: "get_submission_schema",
+        name: "submission.schema",
         arguments: { category: "mcp" },
       }),
     );
-    assert(schema.ok === true, "get_submission_schema did not return ok.");
+    assert(schema.ok === true, "submission.schema did not return ok.");
     assert(
       schema.prIntake?.mode === "github_app_user_fork_pr",
-      "get_submission_schema did not return PR-first intake metadata.",
+      "submission.schema did not return PR-first intake metadata.",
     );
     if (options.requireSafetyMetadata) {
       const fieldIds = schema.schema?.fields?.map((field) => field.id) || [];
       assert(
         fieldIds.includes("safety_notes"),
-        "get_submission_schema did not expose safety_notes.",
+        "submission.schema did not expose safety_notes.",
       );
       assert(
         fieldIds.includes("privacy_notes"),
-        "get_submission_schema did not expose privacy_notes.",
+        "submission.schema did not expose privacy_notes.",
       );
     }
 
     const urls = parseToolResult(
       await client.callTool({
-        name: "build_submission_urls",
+        name: "submission.urls",
         arguments: {
           fields: {
             category: "mcp",
@@ -349,13 +347,13 @@ async function validateMcpTools(endpointUrl, options = {}) {
         },
       }),
     );
-    assert(urls.ok === true, "build_submission_urls did not return ok.");
+    assert(urls.ok === true, "submission.urls did not return ok.");
     assertSubmitUrl(urls.submitUrl);
 
-    if (toolNames.includes("prepare_submission_draft")) {
+    if (toolNames.includes("submission.prepare")) {
       const prepared = parseToolResult(
         await client.callTool({
-          name: "prepare_submission_draft",
+          name: "submission.prepare",
           arguments: {
             fields: {
               category: "mcp",
@@ -371,26 +369,26 @@ async function validateMcpTools(endpointUrl, options = {}) {
       );
       assert(
         prepared.prDraft?.body,
-        "prepare_submission_draft did not return a canonical PR draft body.",
+        "submission.prepare did not return a canonical PR draft body.",
       );
       assert(
         String(prepared.submissionPolicy || "").includes(
           "may be merged automatically",
         ),
-        "prepare_submission_draft did not expose the maintainer-reviewed policy.",
+        "submission.prepare did not expose the maintainer-reviewed policy.",
       );
     }
 
     const invalid = parseToolResult(
       await client.callTool({
-        name: "search_registry",
+        name: "registry.search",
         arguments: { limit: 100, unexpected: true },
       }),
     );
-    assert(invalid.ok === false, "Invalid search_registry call did not fail.");
+    assert(invalid.ok === false, "Invalid registry.search call did not fail.");
     assert(
       invalid.error?.code === "invalid_request",
-      "Invalid search_registry call did not return invalid_request.",
+      "Invalid registry.search call did not return invalid_request.",
     );
   } finally {
     await client.close();

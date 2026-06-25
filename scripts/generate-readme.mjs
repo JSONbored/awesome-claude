@@ -180,6 +180,7 @@ const readme = `<table>
       </table>
       <p>
         <a href="https://github.com/hesreallyhim/awesome-claude-code/blob/main/README_ALTERNATIVES/README_EXTRA.md#workflows--knowledge-guides-"><img src="https://awesome.re/mentioned-badge.svg" alt="Mentioned in Awesome Claude Code"></a>
+        <a href="https://smithery.ai/servers/heyclaude/heyclaude"><img src="https://smithery.ai/badge/heyclaude/heyclaude" alt="Listed on Smithery"></a>
       </p>
       <p>
         <a href="https://gittensor.io/repositories"><img src="https://gittensor.io/favicon.ico" alt="" height="16" align="absmiddle"> <strong>Listed on Gittensor</strong></a><br>

@@ -81,10 +81,10 @@ async function smokeMcpServer(command, args, label, options = {}) {
     const tools = await client.listTools(undefined, { timeout: 30000 });
     const toolNames = tools.tools.map((tool) => tool.name);
     assert(
-      toolNames.includes("search_registry"),
-      `${label} smoke did not expose search_registry.`,
+      toolNames.includes("registry.search"),
+      `${label} smoke did not expose registry.search.`,
     );
-    if (toolNames.includes("get_registry_stats")) {
+    if (toolNames.includes("registry.stats")) {
       assert(
         tools.tools.every((tool) => tool.annotations?.readOnlyHint === true),
         `${label} smoke tools did not all advertise read-only annotations.`,
@@ -93,7 +93,7 @@ async function smokeMcpServer(command, args, label, options = {}) {
 
     const search = await client.callTool(
       {
-        name: "search_registry",
+        name: "registry.search",
         arguments: { query: "mcp", limit: 1 },
       },
       undefined,
@@ -113,14 +113,14 @@ async function smokeMcpServer(command, args, label, options = {}) {
         `${label} smoke search entry`,
       );
     }
-    if (toolNames.includes("get_registry_stats")) {
+    if (toolNames.includes("registry.stats")) {
       assert(
         search.structuredContent?.policy?.readOnly === true,
         `${label} smoke search did not include structured read-only policy.`,
       );
 
       const stats = await client.callTool(
-        { name: "get_registry_stats", arguments: {} },
+        { name: "registry.stats", arguments: {} },
         undefined,
         { timeout: 30000 },
       );
@@ -134,7 +134,7 @@ async function smokeMcpServer(command, args, label, options = {}) {
       );
 
       const setup = await client.callTool(
-        { name: "get_client_setup", arguments: { client: "codex" } },
+        { name: "install.setup", arguments: { client: "codex" } },
         undefined,
         { timeout: 30000 },
       );
@@ -178,12 +178,12 @@ async function smokeMcpServer(command, args, label, options = {}) {
 
       const prompts = await client.listPrompts(undefined, { timeout: 30000 });
       assert(
-        prompts.prompts.some((prompt) => prompt.name === "find_best_asset"),
+        prompts.prompts.some((prompt) => prompt.name === "asset.find"),
         `${label} smoke did not expose workflow prompts.`,
       );
       const prompt = await client.getPrompt(
         {
-          name: "install_asset_safely",
+          name: "install.asset",
           arguments: {
             category: "skills",
             slug: "agent-evals-regression-gate",
@@ -194,16 +194,16 @@ async function smokeMcpServer(command, args, label, options = {}) {
       );
       assert(
         prompt.messages.some((message) =>
-          String(message.content?.text || "").includes("get_copyable_asset"),
+          String(message.content?.text || "").includes("entry.asset"),
         ),
-        `${label} smoke did not return install_asset_safely prompt content.`,
+        `${label} smoke did not return install.asset prompt content.`,
       );
 
       if (options.requireSafetyMetadata) {
         const firstEntry = result.entries[0];
         const detail = await client.callTool(
           {
-            name: "get_entry_detail",
+            name: "entry.detail",
             arguments: {
               category: firstEntry.category,
               slug: firstEntry.slug,
@@ -219,7 +219,7 @@ async function smokeMcpServer(command, args, label, options = {}) {
 
         const submissionSchema = await client.callTool(
           {
-            name: "get_submission_schema",
+            name: "submission.schema",
             arguments: { category: "skills" },
           },
           undefined,
