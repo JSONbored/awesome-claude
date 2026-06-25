@@ -9,6 +9,7 @@ import * as registryModule from "../packages/mcp/src/registry.js";
 import * as schemaModule from "../packages/mcp/src/schemas.js";
 import {
   callRegistryTool,
+  compareEntryTrust,
   getClientSetup,
   getRegistryPrompt,
   listRegistryPrompts,
@@ -1499,8 +1500,22 @@ describe("HeyClaude read-only MCP helpers", () => {
         entry.signalCoverage.present.length +
           entry.signalCoverage.missing.length,
       ).toBe(compared.signalKeys.length);
+      // Present keys follow the published TRUST_SIGNAL_KEYS order.
+      for (
+        let index = 1;
+        index < entry.signalCoverage.present.length;
+        index++
+      ) {
+        expect(
+          compared.signalKeys.indexOf(entry.signalCoverage.present[index]),
+        ).toBeGreaterThan(
+          compared.signalKeys.indexOf(entry.signalCoverage.present[index - 1]),
+        );
+      }
       expect(entry.trust.source.status).toEqual(expect.any(String));
     }
+
+    expect(Array.isArray(compared.sharedGaps)).toBe(true);
 
     // Ranking is complete, ordered by score desc, and names a bestDocumented key.
     expect(compared.ranking).toHaveLength(2);
@@ -1537,6 +1552,37 @@ describe("HeyClaude read-only MCP helpers", () => {
       { dataDir },
     );
     expect(result).toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
+    });
+  });
+
+  it("rejects direct compareEntryTrust calls outside the 2-5 entry window", async () => {
+    const tooFew = await compareEntryTrust(
+      { entries: [{ category: skill.category, slug: skill.slug }] },
+      { dataDir },
+    );
+    expect(tooFew).toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
+    });
+
+    const tooMany = await compareEntryTrust(
+      {
+        entries: Array.from({ length: 6 }, (_, index) => ({
+          category: skill.category,
+          slug: `placeholder-${index}`,
+        })),
+      },
+      { dataDir },
+    );
+    expect(tooMany).toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
+    });
+
+    const missingEntries = await compareEntryTrust({}, { dataDir });
+    expect(missingEntries).toMatchObject({
       ok: false,
       error: { code: "invalid_request" },
     });

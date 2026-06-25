@@ -882,11 +882,12 @@ function entryTrustSignalCoverage(entry) {
     present.push("review-provenance");
   }
   const presentSet = new Set(present);
+  const presentOrdered = TRUST_SIGNAL_KEYS.filter((key) => presentSet.has(key));
   const missing = TRUST_SIGNAL_KEYS.filter((key) => !presentSet.has(key));
   return {
-    score: present.length,
+    score: presentOrdered.length,
     max: TRUST_SIGNAL_KEYS.length,
-    present,
+    present: presentOrdered,
     missing,
   };
 }
@@ -2863,7 +2864,7 @@ export async function compareEntryTrust(args = {}, options = {}) {
   if (requested.length < 2 || requested.length > 5) {
     return invalid("Provide between 2 and 5 entries to compare.");
   }
-  const platform = normalizePlatform(args.platform);
+  const platform = normalizePlatform(args.platform ?? "");
   const entries = [];
   for (const target of requested) {
     const category = normalizeText(target.category);
