@@ -83,33 +83,33 @@ describe("HeyClaude remote MCP route", () => {
       (tool: { name: string }) => tool.name,
     );
     expect(toolNames).toEqual([
-      "search_registry",
+      "registry.search",
       "plan_workflow_toolbox",
-      "recommend_for_task",
-      "get_server_info",
-      "list_category_entries",
-      "get_recent_updates",
-      "get_related_entries",
-      "get_entry_detail",
-      "get_copyable_asset",
-      "compare_entries",
-      "get_registry_stats",
-      "get_client_setup",
-      "get_compatibility",
-      "get_install_guidance",
-      "get_platform_adapter",
-      "list_distribution_feeds",
-      "get_submission_schema",
-      "validate_submission_draft",
-      "search_duplicate_entries",
-      "build_submission_urls",
-      "get_category_submission_guidance",
-      "prepare_submission_draft",
-      "get_submission_examples",
-      "review_submission_draft",
-      "get_submission_policy",
-      "explain_entry_trust",
-      "review_entry_safety",
+      "registry.recommend",
+      "server.info",
+      "registry.list",
+      "registry.updates",
+      "entry.related",
+      "entry.detail",
+      "entry.asset",
+      "entry.compare",
+      "registry.stats",
+      "install.setup",
+      "install.compatibility",
+      "install.guidance",
+      "install.adapter",
+      "feeds.list",
+      "submission.schema",
+      "submission.validate",
+      "submission.duplicates",
+      "submission.urls",
+      "submission.guidance",
+      "submission.prepare",
+      "submission.examples",
+      "submission.review",
+      "submission.policy",
+      "entry.trust",
+      "entry.safety",
     ]);
     expect(payload.result.tools[0]).toMatchObject({
       outputSchema: { type: "object" },
@@ -189,7 +189,7 @@ describe("HeyClaude remote MCP route", () => {
     expect(promptResponse.status).toBe(200);
     const promptPayload = await json(promptResponse);
     expect(promptPayload.result.messages[0].content.text).toContain(
-      "get_copyable_asset",
+      "entry.asset",
     );
   });
 
@@ -200,7 +200,7 @@ describe("HeyClaude remote MCP route", () => {
         id: 3,
         method: "tools/call",
         params: {
-          name: "search_registry",
+          name: "registry.search",
           arguments: { query: "discord", limit: 2 },
         },
       }),
@@ -224,7 +224,7 @@ describe("HeyClaude remote MCP route", () => {
         jsonrpc: "2.0",
         id: 33,
         method: "tools/call",
-        params: { name: "get_server_info", arguments: {} },
+        params: { name: "server.info", arguments: {} },
       }),
     );
     expect(infoResponse.status).toBe(200);
@@ -252,7 +252,7 @@ describe("HeyClaude remote MCP route", () => {
         id: 34,
         method: "tools/call",
         params: {
-          name: "list_category_entries",
+          name: "registry.list",
           arguments: { category: "mcp", limit: 2 },
         },
       }),
@@ -280,7 +280,7 @@ describe("HeyClaude remote MCP route", () => {
         id: 4,
         method: "tools/call",
         params: {
-          name: "search_registry",
+          name: "registry.search",
           arguments: { limit: 100, writePath: "/tmp/unsafe" },
         },
       }),
@@ -309,7 +309,7 @@ describe("HeyClaude remote MCP route", () => {
         id: 99,
         method: "tools/call",
         params: {
-          name: "search_registry",
+          name: "registry.search",
           arguments: { query: "x".repeat(70 * 1024) },
         },
       }),
@@ -329,7 +329,7 @@ describe("HeyClaude remote MCP route", () => {
         id: 5,
         method: "tools/call",
         params: {
-          name: "build_submission_urls",
+          name: "submission.urls",
           arguments: {
             fields: {
               category: "mcp",
@@ -369,7 +369,7 @@ describe("HeyClaude remote MCP route", () => {
         id: 6,
         method: "tools/call",
         params: {
-          name: "prepare_submission_draft",
+          name: "submission.prepare",
           arguments: {
             fields: {
               category: "guides",

@@ -305,7 +305,7 @@ export const EntryDetailInputSchema = z
     bodyMode: z
       .enum(["none", "excerpt", "full"])
       .describe(
-        "How much entry content to return. 'excerpt' (default) trims the body markdown to a short lead and omits large copyable fields (scriptBody, fullCopyableContent, copySnippet), reporting what was dropped via bodyChars/bodyTruncated/omittedFields; 'none' also drops the body; 'full' returns everything. Use get_copyable_asset for omitted install/script content, and request 'full' only when you truly need the complete inline content — it can be tens of kilobytes.",
+        "How much entry content to return. 'excerpt' (default) trims the body markdown to a short lead and omits large copyable fields (scriptBody, fullCopyableContent, copySnippet), reporting what was dropped via bodyChars/bodyTruncated/omittedFields; 'none' also drops the body; 'full' returns everything. Use entry.asset for omitted install/script content, and request 'full' only when you truly need the complete inline content — it can be tens of kilobytes.",
       )
       .optional(),
   })
@@ -618,33 +618,33 @@ export const ReviewEntrySafetyInputSchema = z
   .strict();
 
 export const TOOL_INPUT_SCHEMAS = {
-  search_registry: SearchRegistryInputSchema,
+  "registry.search": SearchRegistryInputSchema,
   plan_workflow_toolbox: PlanWorkflowToolboxInputSchema,
-  recommend_for_task: RecommendForTaskInputSchema,
-  get_server_info: GetServerInfoInputSchema,
-  list_category_entries: ListCategoryEntriesInputSchema,
-  get_recent_updates: RecentUpdatesInputSchema,
-  get_related_entries: RelatedEntriesInputSchema,
-  get_entry_detail: EntryDetailInputSchema,
-  get_copyable_asset: CopyableAssetInputSchema,
-  compare_entries: CompareEntriesInputSchema,
-  get_registry_stats: RegistryStatsInputSchema,
-  get_client_setup: ClientSetupInputSchema,
-  get_compatibility: CompatibilityInputSchema,
-  get_install_guidance: InstallGuidanceInputSchema,
-  get_platform_adapter: PlatformAdapterInputSchema,
-  list_distribution_feeds: ListDistributionFeedsInputSchema,
-  get_submission_schema: GetSubmissionSchemaInputSchema,
-  validate_submission_draft: ValidateSubmissionDraftInputSchema,
-  search_duplicate_entries: SearchDuplicateEntriesInputSchema,
-  build_submission_urls: BuildSubmissionUrlsInputSchema,
-  get_category_submission_guidance: CategorySubmissionGuidanceInputSchema,
-  prepare_submission_draft: PrepareSubmissionDraftInputSchema,
-  get_submission_examples: GetSubmissionExamplesInputSchema,
-  review_submission_draft: ReviewSubmissionDraftInputSchema,
-  get_submission_policy: SubmissionPolicyInputSchema,
-  explain_entry_trust: ExplainEntryTrustInputSchema,
-  review_entry_safety: ReviewEntrySafetyInputSchema,
+  "registry.recommend": RecommendForTaskInputSchema,
+  "server.info": GetServerInfoInputSchema,
+  "registry.list": ListCategoryEntriesInputSchema,
+  "registry.updates": RecentUpdatesInputSchema,
+  "entry.related": RelatedEntriesInputSchema,
+  "entry.detail": EntryDetailInputSchema,
+  "entry.asset": CopyableAssetInputSchema,
+  "entry.compare": CompareEntriesInputSchema,
+  "registry.stats": RegistryStatsInputSchema,
+  "install.setup": ClientSetupInputSchema,
+  "install.compatibility": CompatibilityInputSchema,
+  "install.guidance": InstallGuidanceInputSchema,
+  "install.adapter": PlatformAdapterInputSchema,
+  "feeds.list": ListDistributionFeedsInputSchema,
+  "submission.schema": GetSubmissionSchemaInputSchema,
+  "submission.validate": ValidateSubmissionDraftInputSchema,
+  "submission.duplicates": SearchDuplicateEntriesInputSchema,
+  "submission.urls": BuildSubmissionUrlsInputSchema,
+  "submission.guidance": CategorySubmissionGuidanceInputSchema,
+  "submission.prepare": PrepareSubmissionDraftInputSchema,
+  "submission.examples": GetSubmissionExamplesInputSchema,
+  "submission.review": ReviewSubmissionDraftInputSchema,
+  "submission.policy": SubmissionPolicyInputSchema,
+  "entry.trust": ExplainEntryTrustInputSchema,
+  "entry.safety": ReviewEntrySafetyInputSchema,
 };
 
 function stripUnsupportedJsonSchemaFields(value) {

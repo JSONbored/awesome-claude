@@ -80,49 +80,49 @@ const platformAliases = new Map([
 ]);
 
 export const READ_ONLY_TOOL_NAMES = [
-  "search_registry",
+  "registry.search",
   "plan_workflow_toolbox",
-  "recommend_for_task",
-  "get_server_info",
-  "list_category_entries",
-  "get_recent_updates",
-  "get_related_entries",
-  "get_entry_detail",
-  "get_copyable_asset",
-  "compare_entries",
-  "get_registry_stats",
-  "get_client_setup",
-  "get_compatibility",
-  "get_install_guidance",
-  "get_platform_adapter",
-  "list_distribution_feeds",
-  "get_submission_schema",
-  "validate_submission_draft",
-  "search_duplicate_entries",
-  "build_submission_urls",
-  "get_category_submission_guidance",
-  "prepare_submission_draft",
-  "get_submission_examples",
-  "review_submission_draft",
-  "get_submission_policy",
-  "explain_entry_trust",
-  "review_entry_safety",
+  "registry.recommend",
+  "server.info",
+  "registry.list",
+  "registry.updates",
+  "entry.related",
+  "entry.detail",
+  "entry.asset",
+  "entry.compare",
+  "registry.stats",
+  "install.setup",
+  "install.compatibility",
+  "install.guidance",
+  "install.adapter",
+  "feeds.list",
+  "submission.schema",
+  "submission.validate",
+  "submission.duplicates",
+  "submission.urls",
+  "submission.guidance",
+  "submission.prepare",
+  "submission.examples",
+  "submission.review",
+  "submission.policy",
+  "entry.trust",
+  "entry.safety",
 ];
 
 export const LOCAL_DRAFT_TOOL_NAMES = [
-  "validate_submission_draft",
-  "build_submission_urls",
-  "prepare_submission_draft",
-  "review_submission_draft",
+  "submission.validate",
+  "submission.urls",
+  "submission.prepare",
+  "submission.review",
 ];
 
 export const TOOL_DEFINITIONS = [
   {
-    name: "search_registry",
+    name: "registry.search",
     description:
       "Search read-only HeyClaude registry entries by query, category, exact tag, and skill platform compatibility.",
-    inputSchema: jsonSchemaForTool("search_registry"),
-    outputSchema: jsonSchemaForToolOutput("search_registry"),
+    inputSchema: jsonSchemaForTool("registry.search"),
+    outputSchema: jsonSchemaForToolOutput("registry.search"),
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -144,11 +144,11 @@ export const TOOL_DEFINITIONS = [
     },
   },
   {
-    name: "recommend_for_task",
+    name: "registry.recommend",
     description:
       "Answer 'what should I use to do X' in one call. Given a plain-language task (and optional platform/category), returns the best-match HeyClaude entries ranked by fit — each with why it fits, trust summary, disclosed safety/privacy notes, and an inline install block — plus a topPick and a consolidated installPlan. Unlike plan_workflow_toolbox it does not force category diversity; it returns the genuinely best matches. Collapses the search → compare → detail → asset loop into a single answer-shaped response.",
-    inputSchema: jsonSchemaForTool("recommend_for_task"),
-    outputSchema: jsonSchemaForToolOutput("recommend_for_task"),
+    inputSchema: jsonSchemaForTool("registry.recommend"),
+    outputSchema: jsonSchemaForToolOutput("registry.recommend"),
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -157,148 +157,148 @@ export const TOOL_DEFINITIONS = [
     },
   },
   {
-    name: "get_server_info",
+    name: "server.info",
     description:
       "Fetch read-only HeyClaude MCP package, registry, tool, and public rate-limit metadata.",
-    inputSchema: jsonSchemaForTool("get_server_info"),
+    inputSchema: jsonSchemaForTool("server.info"),
   },
   {
-    name: "list_category_entries",
+    name: "registry.list",
     description:
       "List read-only HeyClaude entries with bounded pagination and optional category, platform, tag, and query filters.",
-    inputSchema: jsonSchemaForTool("list_category_entries"),
+    inputSchema: jsonSchemaForTool("registry.list"),
   },
   {
-    name: "get_recent_updates",
+    name: "registry.updates",
     description:
       "List recently added or upstream-updated HeyClaude entries from generated registry metadata.",
-    inputSchema: jsonSchemaForTool("get_recent_updates"),
+    inputSchema: jsonSchemaForTool("registry.updates"),
   },
   {
-    name: "get_related_entries",
+    name: "entry.related",
     description:
       "Fetch read-only related HeyClaude entries based on category, tags, platforms, keywords, and source metadata.",
-    inputSchema: jsonSchemaForTool("get_related_entries"),
+    inputSchema: jsonSchemaForTool("entry.related"),
   },
   {
-    name: "get_entry_detail",
+    name: "entry.detail",
     description:
-      "Fetch a read-only HeyClaude registry entry detail payload by category and slug. By default (bodyMode='excerpt') the body markdown is trimmed to a short lead and large copyable fields are omitted to conserve context, with bodyChars/bodyTruncated/omittedFields describing what was dropped; pass bodyMode='full' for the complete content or 'none' to drop the body entirely. Use get_copyable_asset to retrieve omitted install/script content.",
-    inputSchema: jsonSchemaForTool("get_entry_detail"),
+      "Fetch a read-only HeyClaude registry entry detail payload by category and slug. By default (bodyMode='excerpt') the body markdown is trimmed to a short lead and large copyable fields are omitted to conserve context, with bodyChars/bodyTruncated/omittedFields describing what was dropped; pass bodyMode='full' for the complete content or 'none' to drop the body entirely. Use entry.asset to retrieve omitted install/script content.",
+    inputSchema: jsonSchemaForTool("entry.detail"),
   },
   {
-    name: "get_copyable_asset",
+    name: "entry.asset",
     description:
       "Fetch the category-aware copy/install asset for a HeyClaude entry without writing local files. Pass assetType (e.g. 'install_command', 'config_snippet') to return only that asset and avoid the full_content/script payloads when you do not need them.",
-    inputSchema: jsonSchemaForTool("get_copyable_asset"),
+    inputSchema: jsonSchemaForTool("entry.asset"),
   },
   {
-    name: "compare_entries",
+    name: "entry.compare",
     description:
       "Compare 2-5 read-only HeyClaude entries by fit, category, platforms, source metadata, and install complexity.",
-    inputSchema: jsonSchemaForTool("compare_entries"),
+    inputSchema: jsonSchemaForTool("entry.compare"),
   },
   {
-    name: "get_registry_stats",
+    name: "registry.stats",
     description:
       "Fetch aggregate read-only registry stats, freshness, category counts, and real source-signal coverage.",
-    inputSchema: jsonSchemaForTool("get_registry_stats"),
+    inputSchema: jsonSchemaForTool("registry.stats"),
   },
   {
-    name: "get_client_setup",
+    name: "install.setup",
     description:
       "Fetch read-only MCP client setup snippets for Codex, Claude Desktop, Cursor, Windsurf, or remote HTTP clients.",
-    inputSchema: jsonSchemaForTool("get_client_setup"),
+    inputSchema: jsonSchemaForTool("install.setup"),
   },
   {
-    name: "get_compatibility",
+    name: "install.compatibility",
     description:
       "Fetch platform compatibility metadata for a HeyClaude skill entry.",
-    inputSchema: jsonSchemaForTool("get_compatibility"),
+    inputSchema: jsonSchemaForTool("install.compatibility"),
   },
   {
-    name: "get_install_guidance",
+    name: "install.guidance",
     description:
       "Fetch read-only install, config, usage, and package guidance for a HeyClaude entry.",
-    inputSchema: jsonSchemaForTool("get_install_guidance"),
+    inputSchema: jsonSchemaForTool("install.guidance"),
   },
   {
-    name: "get_platform_adapter",
+    name: "install.adapter",
     description:
       "Fetch generated read-only platform adapter content, currently Cursor rule adapters for skill packages.",
-    inputSchema: jsonSchemaForTool("get_platform_adapter"),
+    inputSchema: jsonSchemaForTool("install.adapter"),
   },
   {
-    name: "list_distribution_feeds",
+    name: "feeds.list",
     description:
       "List read-only HeyClaude registry feeds, category feeds, platform feeds, and artifact locations.",
-    inputSchema: jsonSchemaForTool("list_distribution_feeds"),
+    inputSchema: jsonSchemaForTool("feeds.list"),
   },
   {
-    name: "get_submission_schema",
+    name: "submission.schema",
     description:
       "Fetch read-only HeyClaude submission schemas for PR-first intake by category.",
-    inputSchema: jsonSchemaForTool("get_submission_schema"),
+    inputSchema: jsonSchemaForTool("submission.schema"),
   },
   {
-    name: "validate_submission_draft",
+    name: "submission.validate",
     description:
       "Validate a HeyClaude content submission draft locally without creating GitHub issues, pull requests, or publishing content.",
-    inputSchema: jsonSchemaForTool("validate_submission_draft"),
+    inputSchema: jsonSchemaForTool("submission.validate"),
   },
   {
-    name: "search_duplicate_entries",
+    name: "submission.duplicates",
     description:
       "Search generated registry artifacts for likely duplicate entries before a user opens a submission PR.",
-    inputSchema: jsonSchemaForTool("search_duplicate_entries"),
+    inputSchema: jsonSchemaForTool("submission.duplicates"),
   },
   {
-    name: "build_submission_urls",
+    name: "submission.urls",
     description:
       "Build prefilled HeyClaude submit and review URLs for a validated PR-first submission draft without making write calls.",
-    inputSchema: jsonSchemaForTool("build_submission_urls"),
+    inputSchema: jsonSchemaForTool("submission.urls"),
   },
   {
-    name: "get_category_submission_guidance",
+    name: "submission.guidance",
     description:
       "Fetch category-specific HeyClaude contribution guidance, required fields, and review expectations.",
-    inputSchema: jsonSchemaForTool("get_category_submission_guidance"),
+    inputSchema: jsonSchemaForTool("submission.guidance"),
   },
   {
-    name: "prepare_submission_draft",
+    name: "submission.prepare",
     description:
       "Build a read-only maintainer-reviewed HeyClaude submission draft with canonical PR text and URLs.",
-    inputSchema: jsonSchemaForTool("prepare_submission_draft"),
+    inputSchema: jsonSchemaForTool("submission.prepare"),
   },
   {
-    name: "get_submission_examples",
+    name: "submission.examples",
     description:
       "Fetch read-only category examples and templates for faster, more accurate HeyClaude submissions.",
-    inputSchema: jsonSchemaForTool("get_submission_examples"),
+    inputSchema: jsonSchemaForTool("submission.examples"),
   },
   {
-    name: "review_submission_draft",
+    name: "submission.review",
     description:
       "Review a HeyClaude submission draft locally for schema errors, duplicate risk, and maintainer checklist items without writing to GitHub.",
-    inputSchema: jsonSchemaForTool("review_submission_draft"),
+    inputSchema: jsonSchemaForTool("submission.review"),
   },
   {
-    name: "get_submission_policy",
+    name: "submission.policy",
     description:
       "Fetch HeyClaude's read-only submission, artifact, import, and maintainer-review policy for contributors and agents.",
-    inputSchema: jsonSchemaForTool("get_submission_policy"),
+    inputSchema: jsonSchemaForTool("submission.policy"),
   },
   {
-    name: "explain_entry_trust",
+    name: "entry.trust",
     description:
       "Explain deterministic trust, source, package, safety, privacy, and review metadata signals for one HeyClaude entry. This is a metadata review only and does not provide malware scanning, automatic safety guarantees, or installation approval.",
-    inputSchema: jsonSchemaForTool("explain_entry_trust"),
+    inputSchema: jsonSchemaForTool("entry.trust"),
   },
   {
-    name: "review_entry_safety",
+    name: "entry.safety",
     description:
       "Review 1-5 HeyClaude entries for source, package, safety, and privacy metadata fit before install or recommendation. This is a metadata review only and does not provide malware scanning, automatic safety guarantees, or installation approval.",
-    inputSchema: jsonSchemaForTool("review_entry_safety"),
+    inputSchema: jsonSchemaForTool("entry.safety"),
   },
 ];
 
@@ -1076,10 +1076,10 @@ function toolboxCaveats(entry) {
 
 function toolboxNextActions(entry) {
   return [
-    `Inspect get_entry_detail with category=${entry.category} and slug=${entry.slug}.`,
-    `Run explain_entry_trust with category=${entry.category} and slug=${entry.slug}; this is still metadata review only.`,
-    "Use compare_entries with nearby candidates before recommending a final stack.",
-    `Use get_copyable_asset with category=${entry.category} and slug=${entry.slug} only after trust review.`,
+    `Inspect entry.detail with category=${entry.category} and slug=${entry.slug}.`,
+    `Run entry.trust with category=${entry.category} and slug=${entry.slug}; this is still metadata review only.`,
+    "Use entry.compare with nearby candidates before recommending a final stack.",
+    `Use entry.asset with category=${entry.category} and slug=${entry.slug} only after trust review.`,
   ];
 }
 
@@ -1088,7 +1088,7 @@ const TOOLBOX_CONFIG_SNIPPET_INLINE_LIMIT = 600;
 // Distills the ready-to-run install surface for a toolbox entry from its full
 // payload so the planner returns copy-pasteable commands instead of pointing at
 // more tool calls. Large config snippets are summarized rather than inlined to
-// preserve the lean response contract (callers use get_copyable_asset for them).
+// preserve the lean response contract (callers use entry.asset for them).
 function toolboxInstall(entry) {
   if (!entry) return null;
   const installCommand = String(
@@ -1111,7 +1111,7 @@ function toolboxInstall(entry) {
     } else {
       install.configSnippetChars = configSnippet.length;
       install.configHint =
-        "Config snippet is large; call get_copyable_asset for the full snippet.";
+        "Config snippet is large; call entry.asset for the full snippet.";
     }
   }
   if (!installCommand && !downloadUrl && !configSnippet && !usageSnippet) {
@@ -1223,17 +1223,17 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
     categoryMix: toolboxCategoryMix(selected),
     trustSummary: toolboxTrustSummary(selected),
     recommendedNextTools: [
-      "get_entry_detail",
-      "explain_entry_trust",
-      "compare_entries",
-      "get_copyable_asset",
+      "entry.detail",
+      "entry.trust",
+      "entry.compare",
+      "entry.asset",
     ],
     plannerNotes: [
       "This planner is metadata review only; it is not install approval or malware scanning, and it does not execute or install entries.",
       "Each entry carries an inline install block and the recommended stack is summarized in installPlan; still review trust before running anything.",
       "Recommendations are bounded and category-diverse where matching entries allow it.",
       "Prefer source-backed entries with safety/privacy notes for risk-bearing MCP, hooks, skills, commands, and statuslines.",
-      "Use get_entry_detail, explain_entry_trust, compare_entries, and get_copyable_asset before relying on any entry.",
+      "Use entry.detail, entry.trust, entry.compare, and entry.asset before relying on any entry.",
     ],
   };
 }
@@ -1303,7 +1303,7 @@ export async function recommendForTask(args = {}, options = {}) {
     notes: [
       "Best-match recommendations for the task; unlike plan_workflow_toolbox they are not forced to span categories.",
       "This is metadata review only — it does not execute, install, or scan entries. Review trust before running anything.",
-      "Use compare_entries to weigh the top picks and explain_entry_trust before relying on any entry.",
+      "Use entry.compare to weigh the top picks and entry.trust before relying on any entry.",
     ],
   };
 }
@@ -1529,7 +1529,7 @@ const ENTRY_BODY_EXCERPT_CHARS = 1200;
 
 // Large copyable-content fields that largely duplicate the body or the install
 // asset. In non-full modes they are omitted (and surfaced via omittedFields)
-// because the caller should pull them from get_copyable_asset when needed,
+// because the caller should pull them from entry.asset when needed,
 // rather than paying for tens of kilobytes on every detail lookup.
 const ENTRY_ASSET_FIELDS = ["scriptBody", "fullCopyableContent", "copySnippet"];
 
@@ -1551,7 +1551,7 @@ function excerptText(text, limit) {
 }
 
 // Projects an entry's heavy content to the requested verbosity so the default
-// get_entry_detail response stays token-efficient. Returns the (possibly
+// entry.detail response stays token-efficient. Returns the (possibly
 // trimmed) entry plus body metadata describing exactly what was returned.
 function projectEntryBody(entry, requestedMode) {
   const mode =
@@ -1625,7 +1625,7 @@ function projectEntryBody(entry, requestedMode) {
 function withAssetHint(bodyMeta) {
   if (bodyMeta.omittedFields.length > 0) {
     bodyMeta.assetHint =
-      "Large copyable fields were omitted to save context; call get_copyable_asset for the full script or snippet.";
+      "Large copyable fields were omitted to save context; call entry.asset for the full script or snippet.";
   }
   return bodyMeta;
 }
@@ -2502,18 +2502,18 @@ export function getRegistryPrompt(args = {}) {
   const promptTextByName = {
     find_best_asset: `Find the best HeyClaude asset for this use case: ${useCase || "(not provided)"}.
 
-Use the read-only HeyClaude MCP tools. Start with search_registry or list_category_entries${category ? ` in category ${category}` : ""}${platform ? ` for platform ${platform}` : ""}. Compare credible candidates with compare_entries, inspect details with get_entry_detail, and cite exact category/slug pairs. Do not invent popularity metrics when source stats are absent.`,
+Use the read-only HeyClaude MCP tools. Start with registry.search or registry.list${category ? ` in category ${category}` : ""}${platform ? ` for platform ${platform}` : ""}. Compare credible candidates with entry.compare, inspect details with entry.detail, and cite exact category/slug pairs. Do not invent popularity metrics when source stats are absent.`,
     prepare_submission: `Prepare a HeyClaude submission draft${category ? ` for category ${category}` : ""}${promptArgument(values, "name") ? ` named ${promptArgument(values, "name")}` : ""}${sourceUrl ? ` from ${sourceUrl}` : ""}.
 
-Use get_submission_schema, get_submission_examples, prepare_submission_draft, review_submission_draft, and search_duplicate_entries. Return missing fields and the canonical PR-first submit URL/body. Do not create GitHub issues or publish content.`,
+Use submission.schema, submission.examples, submission.prepare, submission.review, and submission.duplicates. Return missing fields and the canonical PR-first submit URL/body. Do not create GitHub issues or publish content.`,
     review_submission_before_pr: `Review this HeyClaude submission draft before a PR is opened:
 
 ${draft || "(draft not provided)"}
 
-Use review_submission_draft and search_duplicate_entries where structured fields are available. Treat schema-valid as not publish-valid, call out source-review needs, and keep the result maintainer-reviewed.`,
+Use submission.review and submission.duplicates where structured fields are available. Treat schema-valid as not publish-valid, call out source-review needs, and keep the result maintainer-reviewed.`,
     install_asset_safely: `Help install or use the HeyClaude entry ${category || "(category)"}/${slug || "(slug)"}${platform ? ` for ${platform}` : ""}.
 
-Use get_install_guidance and get_copyable_asset. Include source links, config/install text exactly as returned, and secret-handling cautions where relevant. Do not write local files or claim the install was completed.`,
+Use install.guidance and entry.asset. Include source links, config/install text exactly as returned, and secret-handling cautions where relevant. Do not write local files or claim the install was completed.`,
   };
 
   return {
@@ -2828,85 +2828,85 @@ export async function callRegistryTool(name, args = {}, options = {}) {
 
   let result;
   switch (name) {
-    case "search_registry":
+    case "registry.search":
       result = await searchRegistry(parsedArgs, options);
       break;
     case "plan_workflow_toolbox":
       result = await planWorkflowToolbox(parsedArgs, options);
       break;
-    case "recommend_for_task":
+    case "registry.recommend":
       result = await recommendForTask(parsedArgs, options);
       break;
-    case "get_server_info":
+    case "server.info":
       result = await getServerInfo(parsedArgs, options);
       break;
-    case "list_category_entries":
+    case "registry.list":
       result = await listCategoryEntries(parsedArgs, options);
       break;
-    case "get_recent_updates":
+    case "registry.updates":
       result = await getRecentUpdates(parsedArgs, options);
       break;
-    case "get_related_entries":
+    case "entry.related":
       result = await getRelatedEntries(parsedArgs, options);
       break;
-    case "get_entry_detail":
+    case "entry.detail":
       result = await getEntryDetail(parsedArgs, options);
       break;
-    case "get_copyable_asset":
+    case "entry.asset":
       result = await getCopyableAsset(parsedArgs, options);
       break;
-    case "compare_entries":
+    case "entry.compare":
       result = await compareEntries(parsedArgs, options);
       break;
-    case "get_registry_stats":
+    case "registry.stats":
       result = await getRegistryStats(parsedArgs, options);
       break;
-    case "get_client_setup":
+    case "install.setup":
       result = await getClientSetup(parsedArgs, options);
       break;
-    case "get_compatibility":
+    case "install.compatibility":
       result = await getCompatibility(parsedArgs, options);
       break;
-    case "get_install_guidance":
+    case "install.guidance":
       result = await getInstallGuidance(parsedArgs, options);
       break;
-    case "get_platform_adapter":
+    case "install.adapter":
       result = await getPlatformAdapter(parsedArgs, options);
       break;
-    case "list_distribution_feeds":
+    case "feeds.list":
       result = await listDistributionFeeds(parsedArgs, options);
       break;
-    case "get_submission_schema":
+    case "submission.schema":
       result = await getSubmissionSchema(parsedArgs, options);
       break;
-    case "validate_submission_draft":
+    case "submission.validate":
       result = await validateSubmissionDraft(parsedArgs, options);
       break;
-    case "search_duplicate_entries":
+    case "submission.duplicates":
       result = await searchDuplicateRegistryEntries(parsedArgs, options);
       break;
-    case "build_submission_urls":
+    case "submission.urls":
       result = await buildSubmissionUrls(parsedArgs, options);
       break;
-    case "get_category_submission_guidance":
+    case "submission.guidance":
       result = await getCategorySubmissionGuidance(parsedArgs, options);
       break;
-    case "prepare_submission_draft":
+    case "submission.prepare":
       result = await prepareSubmissionDraft(parsedArgs, options);
       break;
-    case "get_submission_examples":
+    case "submission.examples":
       result = await getSubmissionExamples(parsedArgs, options);
       break;
-    case "review_submission_draft":
+    case "submission.review":
       result = await reviewSubmissionDraft(parsedArgs, options);
       break;
-    case "get_submission_policy":
+    case "submission.policy":
       result = await getSubmissionPolicy(parsedArgs, options);
       break;
-    case "explain_entry_trust":
+    case "entry.trust":
       result = await explainEntryTrust(parsedArgs, options);
       break;
-    case "review_entry_safety":
+    case "entry.safety":
       result = await reviewEntrySafety(parsedArgs, options);
       break;
   }

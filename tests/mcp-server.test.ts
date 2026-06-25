@@ -84,55 +84,55 @@ const validMcpSubmissionFields = {
 
 function validToolArguments(name: string) {
   const argsByTool: Record<string, unknown> = {
-    search_registry: { query: "mcp", limit: 1 },
+    "registry.search": { query: "mcp", limit: 1 },
     plan_workflow_toolbox: { goal: "code review automation", limit: 2 },
-    recommend_for_task: { task: "code review automation", limit: 2 },
-    get_server_info: {},
-    list_category_entries: { category: "mcp", limit: 1 },
-    get_recent_updates: { limit: 1 },
-    get_related_entries: {
+    "registry.recommend": { task: "code review automation", limit: 2 },
+    "server.info": {},
+    "registry.list": { category: "mcp", limit: 1 },
+    "registry.updates": { limit: 1 },
+    "entry.related": {
       category: skill.category,
       slug: skill.slug,
       limit: 1,
     },
-    get_entry_detail: { category: skill.category, slug: skill.slug },
-    get_copyable_asset: {
+    "entry.detail": { category: skill.category, slug: skill.slug },
+    "entry.asset": {
       category: skill.category,
       slug: skill.slug,
       platform: "claude",
     },
-    compare_entries: {
+    "entry.compare": {
       entries: [
         { category: skill.category, slug: skill.slug },
         { category: otherSkill.category, slug: otherSkill.slug },
       ],
       platform: "claude",
     },
-    get_registry_stats: {},
-    get_client_setup: { client: "codex" },
-    get_compatibility: { slug: skill.slug },
-    get_install_guidance: {
+    "registry.stats": {},
+    "install.setup": { client: "codex" },
+    "install.compatibility": { slug: skill.slug },
+    "install.guidance": {
       category: skill.category,
       slug: skill.slug,
       platform: "claude",
     },
-    get_platform_adapter: { slug: skill.slug, platform: "cursor-rules" },
-    list_distribution_feeds: {},
-    get_submission_schema: { category: "mcp" },
-    validate_submission_draft: { fields: validMcpSubmissionFields },
-    search_duplicate_entries: {
+    "install.adapter": { slug: skill.slug, platform: "cursor-rules" },
+    "feeds.list": {},
+    "submission.schema": { category: "mcp" },
+    "submission.validate": { fields: validMcpSubmissionFields },
+    "submission.duplicates": {
       category: skill.category,
       slug: skill.slug,
       limit: 1,
     },
-    build_submission_urls: { fields: validMcpSubmissionFields },
-    get_category_submission_guidance: { category: "mcp" },
-    prepare_submission_draft: { fields: validMcpSubmissionFields },
-    get_submission_examples: { category: "mcp" },
-    review_submission_draft: { fields: validMcpSubmissionFields },
-    get_submission_policy: {},
-    explain_entry_trust: { category: skill.category, slug: skill.slug },
-    review_entry_safety: {
+    "submission.urls": { fields: validMcpSubmissionFields },
+    "submission.guidance": { category: "mcp" },
+    "submission.prepare": { fields: validMcpSubmissionFields },
+    "submission.examples": { category: "mcp" },
+    "submission.review": { fields: validMcpSubmissionFields },
+    "submission.policy": {},
+    "entry.trust": { category: skill.category, slug: skill.slug },
+    "entry.safety": {
       entries: [
         { category: skill.category, slug: skill.slug },
         { category: otherSkill.category, slug: otherSkill.slug },
@@ -187,7 +187,7 @@ function fakeRemoteClient() {
       return {
         tools: [
           {
-            name: "search_registry",
+            name: "registry.search",
             description: "Remote search.",
             inputSchema: { type: "object", additionalProperties: true },
             outputSchema: {
@@ -478,7 +478,7 @@ describe("HeyClaude read-only MCP helpers", () => {
           platform: "Codex",
         },
       });
-      expect(prompt.messages[0].content.text).toContain("compare_entries");
+      expect(prompt.messages[0].content.text).toContain("entry.compare");
       expect(prompt.messages[0].content.text).toContain(
         "Do not invent popularity metrics",
       );
@@ -498,7 +498,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       const tools = await client.listTools();
       expect(tools.tools).toEqual([
         expect.objectContaining({
-          name: "search_registry",
+          name: "registry.search",
           annotations: expect.objectContaining({
             readOnlyHint: true,
             destructiveHint: false,
@@ -509,7 +509,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       ]);
 
       const result = await client.callTool({
-        name: "search_registry",
+        name: "registry.search",
         arguments: { query: "mcp" },
       });
       expect(result.isError).not.toBe(true);
@@ -540,7 +540,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       fs.readFileSync(path.join(repoRoot, "packages/mcp/package.json"), "utf8"),
     ) as { name: string; version: string };
 
-    const info = await callRegistryTool("get_server_info", {}, { dataDir });
+    const info = await callRegistryTool("server.info", {}, { dataDir });
     expect(info).toMatchObject({
       ok: true,
       package: {
@@ -569,7 +569,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("validates MCP tool arguments from shared Zod schemas", async () => {
     expect(
-      parseToolArguments("search_registry", {
+      parseToolArguments("registry.search", {
         query: "discord",
         category: "mcp",
         platform: "cursor-rules",
@@ -592,7 +592,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     await expect(
       callRegistryTool(
-        "get_entry_detail",
+        "entry.detail",
         { category: "../mcp", slug: "bad" },
         { dataDir },
       ),
@@ -611,7 +611,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     await expect(
       callRegistryTool(
-        "search_registry",
+        "registry.search",
         { limit: 100, unexpected: true },
         { dataDir },
       ),
@@ -627,7 +627,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     expect(() =>
-      parseToolArguments("validate_submission_draft", {
+      parseToolArguments("submission.validate", {
         fields: {
           category: "mcp",
           name: "Too Many Notes MCP",
@@ -640,7 +640,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     ).toThrow("Use at most 8 non-empty lines, 320 characters per line.");
 
     expect(() =>
-      parseToolArguments("validate_submission_draft", {
+      parseToolArguments("submission.validate", {
         fields: {
           category: "mcp",
           name: "Long Privacy Note MCP",
@@ -652,7 +652,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("searches registry artifacts with category and platform filters", async () => {
     const result = await callRegistryTool(
-      "search_registry",
+      "registry.search",
       {
         query: "skill",
         category: "skills",
@@ -677,7 +677,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("filters search results by exact tag", async () => {
     const tagged = await callRegistryTool(
-      "search_registry",
+      "registry.search",
       { category: "mcp", tag: "database", limit: 10 },
       { dataDir },
     );
@@ -693,7 +693,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     }
 
     const noMatches = await callRegistryTool(
-      "search_registry",
+      "registry.search",
       { tag: "definitely-not-a-real-tag-zzz", limit: 10 },
       { dataDir },
     );
@@ -709,7 +709,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     const artifactCache = new Map();
     const args = { query: "mcp", limit: 3 } as const;
 
-    const first = await callRegistryTool("search_registry", args, {
+    const first = await callRegistryTool("registry.search", args, {
       dataDir,
       artifactCache,
     });
@@ -720,7 +720,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(artifactCache.has(searchIndexKey)).toBe(true);
     const cachedIndex = artifactCache.get(searchIndexKey);
 
-    const second = await callRegistryTool("search_registry", args, {
+    const second = await callRegistryTool("registry.search", args, {
       dataDir,
       artifactCache,
     });
@@ -733,7 +733,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("returns a token-efficient body excerpt by default and honors bodyMode", async () => {
     const full = await callRegistryTool(
-      "get_entry_detail",
+      "entry.detail",
       { category: skill.category, slug: skill.slug, bodyMode: "full" },
       { dataDir },
     );
@@ -747,7 +747,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(full.entry.body.length).toBe(full.bodyChars);
 
     const excerpt = await callRegistryTool(
-      "get_entry_detail",
+      "entry.detail",
       { category: skill.category, slug: skill.slug },
       { dataDir },
     );
@@ -764,7 +764,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     }
 
     const omitted = await callRegistryTool(
-      "get_entry_detail",
+      "entry.detail",
       { category: skill.category, slug: skill.slug, bodyMode: "none" },
       { dataDir },
     );
@@ -775,7 +775,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(omitted.trust).toEqual(full.trust);
   });
 
-  it("omits large copyable asset fields in lean modes and points to get_copyable_asset", async () => {
+  it("omits large copyable asset fields in lean modes and points to entry.asset", async () => {
     const directory = JSON.parse(
       fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
     ) as { entries: Array<{ category: string; slug: string }> };
@@ -808,13 +808,13 @@ describe("HeyClaude read-only MCP helpers", () => {
     if (!heavy) return; // No heavy-asset entry in this dataset; nothing to assert.
 
     const full = await callRegistryTool(
-      "get_entry_detail",
+      "entry.detail",
       { ...heavy, bodyMode: "full" },
       { dataDir },
     );
     expect(full.omittedFields).toEqual([]);
 
-    const lean = await callRegistryTool("get_entry_detail", heavy, { dataDir });
+    const lean = await callRegistryTool("entry.detail", heavy, { dataDir });
     expect(lean.omittedFields.length).toBeGreaterThan(0);
     const omittedNames = lean.omittedFields.map(
       (item: { field: string }) => item.field,
@@ -822,18 +822,18 @@ describe("HeyClaude read-only MCP helpers", () => {
     for (const field of omittedNames) {
       expect(lean.entry).not.toHaveProperty(field);
     }
-    expect(lean.assetHint).toContain("get_copyable_asset");
+    expect(lean.assetHint).toContain("entry.asset");
     // The full content is still retrievable via the dedicated asset tool.
-    const asset = await callRegistryTool("get_copyable_asset", heavy, {
+    const asset = await callRegistryTool("entry.asset", heavy, {
       dataDir,
     });
     expect(asset.ok).toBe(true);
   });
 
-  it("rejects an unknown bodyMode for get_entry_detail", async () => {
+  it("rejects an unknown bodyMode for entry.detail", async () => {
     await expect(
       callRegistryTool(
-        "get_entry_detail",
+        "entry.detail",
         { category: skill.category, slug: skill.slug, bodyMode: "summary" },
         { dataDir },
       ),
@@ -850,7 +850,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("recommends best-match entries for a task with inline install", async () => {
     const result = await callRegistryTool(
-      "recommend_for_task",
+      "registry.recommend",
       { task: "review pull requests", limit: 3 },
       { dataDir },
     );
@@ -884,9 +884,9 @@ describe("HeyClaude read-only MCP helpers", () => {
     }
   });
 
-  it("rejects an empty recommend_for_task task", async () => {
+  it("rejects an empty registry.recommend task", async () => {
     await expect(
-      callRegistryTool("recommend_for_task", { task: " " }, { dataDir }),
+      callRegistryTool("registry.recommend", { task: " " }, { dataDir }),
     ).resolves.toMatchObject({
       ok: false,
       error: { code: "invalid_request" },
@@ -910,10 +910,10 @@ describe("HeyClaude read-only MCP helpers", () => {
       category: "skills",
       count: expect.any(Number),
       recommendedNextTools: expect.arrayContaining([
-        "get_entry_detail",
-        "explain_entry_trust",
-        "compare_entries",
-        "get_copyable_asset",
+        "entry.detail",
+        "entry.trust",
+        "entry.compare",
+        "entry.asset",
       ]),
       categoryMix: expect.any(Array),
       trustSummary: expect.any(Object),
@@ -933,10 +933,10 @@ describe("HeyClaude read-only MCP helpers", () => {
       toolboxReasons: expect.any(Array),
       caveats: expect.any(Array),
       nextActions: expect.arrayContaining([
-        expect.stringContaining("get_entry_detail"),
-        expect.stringContaining("explain_entry_trust"),
-        expect.stringContaining("compare_entries"),
-        expect.stringContaining("get_copyable_asset"),
+        expect.stringContaining("entry.detail"),
+        expect.stringContaining("entry.trust"),
+        expect.stringContaining("entry.compare"),
+        expect.stringContaining("entry.asset"),
       ]),
     });
   });
@@ -1019,10 +1019,10 @@ describe("HeyClaude read-only MCP helpers", () => {
       ok: true,
       count: 3,
       recommendedNextTools: [
-        "get_entry_detail",
-        "explain_entry_trust",
-        "compare_entries",
-        "get_copyable_asset",
+        "entry.detail",
+        "entry.trust",
+        "entry.compare",
+        "entry.asset",
       ],
       categoryMix: expect.arrayContaining([
         { category: "agents", count: 1 },
@@ -1058,10 +1058,10 @@ describe("HeyClaude read-only MCP helpers", () => {
     );
     expect(result.entries[0].nextActions).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("get_entry_detail"),
-        expect.stringContaining("explain_entry_trust"),
-        expect.stringContaining("compare_entries"),
-        expect.stringContaining("get_copyable_asset"),
+        expect.stringContaining("entry.detail"),
+        expect.stringContaining("entry.trust"),
+        expect.stringContaining("entry.compare"),
+        expect.stringContaining("entry.asset"),
       ]),
     );
 
@@ -1245,7 +1245,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("searches registry artifacts with trust filters", async () => {
     const result = await callRegistryTool(
-      "search_registry",
+      "registry.search",
       {
         category: "skills",
         downloadTrust: "first-party",
@@ -1276,7 +1276,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("lists category entries with bounded pagination and filters", async () => {
     const result = await callRegistryTool(
-      "list_category_entries",
+      "registry.list",
       {
         category: "skills",
         platform: "cursor-rules",
@@ -1307,7 +1307,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("lists recent updates from generated registry metadata", async () => {
     const result = await callRegistryTool(
-      "get_recent_updates",
+      "registry.updates",
       { limit: 5 },
       { dataDir },
     );
@@ -1321,7 +1321,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     const since = await callRegistryTool(
-      "get_recent_updates",
+      "registry.updates",
       { since: result.entries[0].updatedAt, limit: 5 },
       { dataDir },
     );
@@ -1333,7 +1333,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("returns related entries without returning the requested entry", async () => {
     const result = await callRegistryTool(
-      "get_related_entries",
+      "entry.related",
       { category: skill.category, slug: skill.slug, limit: 5 },
       { dataDir },
     );
@@ -1357,7 +1357,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("fetches entry detail and install guidance without write capabilities", async () => {
     const detail = await callRegistryTool(
-      "get_entry_detail",
+      "entry.detail",
       { category: skill.category, slug: skill.slug },
       { dataDir },
     );
@@ -1379,7 +1379,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     const guidance = await callRegistryTool(
-      "get_install_guidance",
+      "install.guidance",
       { category: skill.category, slug: skill.slug, platform: "claude" },
       { dataDir },
     );
@@ -1395,11 +1395,7 @@ describe("HeyClaude read-only MCP helpers", () => {
   });
 
   it("explains submission policy and entry trust through read-only helpers", async () => {
-    const policy = await callRegistryTool(
-      "get_submission_policy",
-      {},
-      { dataDir },
-    );
+    const policy = await callRegistryTool("submission.policy", {}, { dataDir });
     expect(policy).toMatchObject({
       ok: true,
       publicPolicy: {
@@ -1423,7 +1419,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     const trust = await callRegistryTool(
-      "explain_entry_trust",
+      "entry.trust",
       { category: skill.category, slug: skill.slug },
       { dataDir },
     );
@@ -1438,7 +1434,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     const review = await callRegistryTool(
-      "review_entry_safety",
+      "entry.safety",
       {
         entries: [
           { category: skill.category, slug: skill.slug },
@@ -1462,9 +1458,9 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
   });
 
-  it("filters get_copyable_asset to a single requested assetType", async () => {
+  it("filters entry.asset to a single requested assetType", async () => {
     const full = await callRegistryTool(
-      "get_copyable_asset",
+      "entry.asset",
       { category: skill.category, slug: skill.slug },
       { dataDir },
     );
@@ -1473,7 +1469,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     const wantType = full.assets[0].type;
     const filtered = await callRegistryTool(
-      "get_copyable_asset",
+      "entry.asset",
       { category: skill.category, slug: skill.slug, assetType: wantType },
       { dataDir },
     );
@@ -1485,7 +1481,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     // Requesting an assetType the entry lacks returns an empty list, not an error.
     const absent = await callRegistryTool(
-      "get_copyable_asset",
+      "entry.asset",
       { category: skill.category, slug: skill.slug, assetType: "items" },
       { dataDir },
     );
@@ -1495,7 +1491,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     // Unknown assetType is rejected by the schema.
     await expect(
       callRegistryTool(
-        "get_copyable_asset",
+        "entry.asset",
         { category: skill.category, slug: skill.slug, assetType: "nope" },
         { dataDir },
       ),
@@ -1512,7 +1508,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("returns category-aware copyable assets and comparison metadata", async () => {
     const asset = await callRegistryTool(
-      "get_copyable_asset",
+      "entry.asset",
       { category: skill.category, slug: skill.slug, platform: "claude" },
       { dataDir },
     );
@@ -1545,7 +1541,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     );
     expect(second).toBeTruthy();
     const compared = await callRegistryTool(
-      "compare_entries",
+      "entry.compare",
       {
         entries: [
           { category: skill.category, slug: skill.slug },
@@ -1570,7 +1566,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
   });
 
-  it("reports compare_entries sharedTags only when every entry has the tag", async () => {
+  it("reports entry.compare sharedTags only when every entry has the tag", async () => {
     const fixtures = new Map([
       [
         "entries/skills/alpha.json",
@@ -1614,7 +1610,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     ]);
 
     const compared = await callRegistryTool(
-      "compare_entries",
+      "entry.compare",
       {
         entries: [
           { category: "skills", slug: "alpha" },
@@ -1639,7 +1635,7 @@ describe("HeyClaude read-only MCP helpers", () => {
   });
 
   it("returns registry stats and client setup snippets without auth requirements", async () => {
-    const stats = await callRegistryTool("get_registry_stats", {}, { dataDir });
+    const stats = await callRegistryTool("registry.stats", {}, { dataDir });
     expect(stats).toMatchObject({
       ok: true,
       package: { name: "@heyclaude/mcp" },
@@ -1655,7 +1651,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     const setup = await callRegistryTool(
-      "get_client_setup",
+      "install.setup",
       { client: "codex" },
       { dataDir },
     );
@@ -1680,7 +1676,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("rejects non-HTTPS custom endpoint URLs for client setup", async () => {
     const setup = await callRegistryTool(
-      "get_client_setup",
+      "install.setup",
       { endpointUrl: "http://evil.example/mcp" },
       { dataDir },
     );
@@ -1695,7 +1691,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("rejects explicit empty endpoint URLs for client setup", async () => {
     const setup = await callRegistryTool(
-      "get_client_setup",
+      "install.setup",
       { endpointUrl: "" },
       { dataDir },
     );
@@ -1771,7 +1767,7 @@ describe("HeyClaude read-only MCP helpers", () => {
         {
           role: "user",
           content: {
-            text: expect.stringContaining("get_install_guidance"),
+            text: expect.stringContaining("install.guidance"),
           },
         },
       ],
@@ -1780,7 +1776,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("returns compatibility and generated Cursor adapter content", async () => {
     const compatibility = await callRegistryTool(
-      "get_compatibility",
+      "install.compatibility",
       { slug: skill.slug },
       { dataDir },
     );
@@ -1798,7 +1794,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     );
 
     const adapter = await callRegistryTool(
-      "get_platform_adapter",
+      "install.adapter",
       { slug: skill.slug, platform: "cursor-rules" },
       { dataDir },
     );
@@ -1826,7 +1822,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     );
 
     const result = await callRegistryTool(
-      "get_submission_schema",
+      "submission.schema",
       { category: "skills" },
       { dataDir },
     );
@@ -1863,7 +1859,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     };
 
     await expect(
-      callRegistryTool("validate_submission_draft", { fields }, { dataDir }),
+      callRegistryTool("submission.validate", { fields }, { dataDir }),
     ).resolves.toMatchObject({
       ok: true,
       valid: true,
@@ -1875,7 +1871,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     const urls = await callRegistryTool(
-      "build_submission_urls",
+      "submission.urls",
       { fields, includePrBody: true },
       { dataDir },
     );
@@ -1894,7 +1890,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("rejects MCP skill drafts that fail registry skill rules", async () => {
     const invalid = await callRegistryTool(
-      "validate_submission_draft",
+      "submission.validate",
       {
         fields: {
           category: "skills",
@@ -1943,7 +1939,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     };
 
     const prepared = await callRegistryTool(
-      "prepare_submission_draft",
+      "submission.prepare",
       { fields },
       { dataDir },
     );
@@ -1961,7 +1957,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
 
     const reviewed = await callRegistryTool(
-      "review_submission_draft",
+      "submission.review",
       { fields },
       { dataDir },
     );
@@ -1983,7 +1979,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("returns category submission examples for faster valid drafts", async () => {
     const examples = await callRegistryTool(
-      "get_submission_examples",
+      "submission.examples",
       { category: "guides" },
       { dataDir },
     );
@@ -2005,7 +2001,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("finds likely duplicate entries before submission", async () => {
     const duplicate = await callRegistryTool(
-      "search_duplicate_entries",
+      "submission.duplicates",
       {
         category: skill.category,
         slug: skill.slug,
@@ -2029,7 +2025,7 @@ describe("HeyClaude read-only MCP helpers", () => {
   it("rejects malformed submission helper arguments from Zod schemas", async () => {
     await expect(
       callRegistryTool(
-        "build_submission_urls",
+        "submission.urls",
         {
           fields: {
             category: "skills",
@@ -2054,7 +2050,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     await expect(
       callRegistryTool(
-        "compare_entries",
+        "entry.compare",
         {
           entries: [
             { category: "skills", slug: skill.slug },
@@ -2078,11 +2074,7 @@ describe("HeyClaude read-only MCP helpers", () => {
   });
 
   it("lists distribution feeds from the manifest and feed index", async () => {
-    const feeds = await callRegistryTool(
-      "list_distribution_feeds",
-      {},
-      { dataDir },
-    );
+    const feeds = await callRegistryTool("feeds.list", {}, { dataDir });
     expect(feeds).toMatchObject({
       ok: true,
       artifacts: {
@@ -2103,7 +2095,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     await expect(
       callRegistryTool(
-        "get_entry_detail",
+        "entry.detail",
         { category: "mcp", slug: "does-not-exist" },
         { dataDir },
       ),
@@ -2143,7 +2135,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     it("explains trust for entry with safety and privacy notes", async () => {
       const trust = await callRegistryTool(
-        "explain_entry_trust",
+        "entry.trust",
         { category: "hooks", slug: "documentation-generator" },
         { dataDir },
       );
@@ -2169,7 +2161,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       if (!entryWithoutNotes) return ctx.skip(); // whole registry enriched — no note-less path to exercise
 
       const trust = await callRegistryTool(
-        "explain_entry_trust",
+        "entry.trust",
         {
           category: entryWithoutNotes!.category,
           slug: entryWithoutNotes!.slug,
@@ -2191,7 +2183,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     it("explains trust for first-party package download", async () => {
       const trust = await callRegistryTool(
-        "explain_entry_trust",
+        "entry.trust",
         { category: "skills", slug: "agent-evals-regression-gate" },
         { dataDir },
       );
@@ -2211,7 +2203,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     it("explains trust for entry without download (copyable content only)", async () => {
       const trust = await callRegistryTool(
-        "explain_entry_trust",
+        "entry.trust",
         { category: "hooks", slug: "documentation-generator" },
         { dataDir },
       );
@@ -2228,7 +2220,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     it("explains trust for entry with weak source metadata", async () => {
       const trust = await callRegistryTool(
-        "explain_entry_trust",
+        "entry.trust",
         { category: "statuslines", slug: "python-rich-statusline" },
         { dataDir },
       );
@@ -2259,7 +2251,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       }
 
       const trust = await callRegistryTool(
-        "explain_entry_trust",
+        "entry.trust",
         { category: reviewedEntry.category, slug: reviewedEntry.slug },
         { dataDir },
       );
@@ -2277,7 +2269,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
     it("reviews safety for entries with mixed trust signals", async () => {
       const review = await callRegistryTool(
-        "review_entry_safety",
+        "entry.safety",
         {
           entries: [
             { category: "hooks", slug: "documentation-generator" },
@@ -2312,7 +2304,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       if (!entryWithoutNotes) return ctx.skip(); // whole registry enriched — no note-less path to exercise
 
       const review = await callRegistryTool(
-        "review_entry_safety",
+        "entry.safety",
         {
           entries: [
             {
@@ -2339,9 +2331,9 @@ describe("HeyClaude read-only MCP helpers", () => {
       });
     });
 
-    it("review_entry_safety output clearly states metadata review scope", async () => {
+    it("entry.safety output clearly states metadata review scope", async () => {
       const review = await callRegistryTool(
-        "review_entry_safety",
+        "entry.safety",
         {
           entries: [{ category: "hooks", slug: "documentation-generator" }],
           platform: "claude",
@@ -2356,9 +2348,9 @@ describe("HeyClaude read-only MCP helpers", () => {
       expect(review.reviewNotes).not.toContain("verified malware-free");
     });
 
-    it("explain_entry_trust output remains advisory only", async () => {
+    it("entry.trust output remains advisory only", async () => {
       const trust = await callRegistryTool(
-        "explain_entry_trust",
+        "entry.trust",
         { category: "hooks", slug: "documentation-generator" },
         { dataDir },
       );
