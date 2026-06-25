@@ -84,7 +84,7 @@ describe("HeyClaude remote MCP route", () => {
     );
     expect(toolNames).toEqual([
       "registry.search",
-      "plan_workflow_toolbox",
+      "workflow.plan",
       "registry.recommend",
       "server.info",
       "registry.list",

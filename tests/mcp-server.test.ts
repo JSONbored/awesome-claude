@@ -85,7 +85,7 @@ const validMcpSubmissionFields = {
 function validToolArguments(name: string) {
   const argsByTool: Record<string, unknown> = {
     "registry.search": { query: "mcp", limit: 1 },
-    plan_workflow_toolbox: { goal: "code review automation", limit: 2 },
+    "workflow.plan": { goal: "code review automation", limit: 2 },
     "registry.recommend": { task: "code review automation", limit: 2 },
     "server.info": {},
     "registry.list": { category: "mcp", limit: 1 },
@@ -895,7 +895,7 @@ describe("HeyClaude read-only MCP helpers", () => {
 
   it("plans a ranked read-only workflow toolbox", async () => {
     const result = await callRegistryTool(
-      "plan_workflow_toolbox",
+      "workflow.plan",
       {
         goal: "skill workflow",
         category: "skills",
@@ -1116,7 +1116,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       };
     };
     const result = await callRegistryTool(
-      "plan_workflow_toolbox",
+      "workflow.plan",
       {
         goal: "credential hardened",
         limit: 3,
@@ -1160,7 +1160,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     };
 
     const result = await callRegistryTool(
-      "plan_workflow_toolbox",
+      "workflow.plan",
       { goal: "kubernetes cluster rollouts", limit: 5 },
       { readJsonArtifact },
     );

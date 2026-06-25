@@ -619,7 +619,7 @@ export const ReviewEntrySafetyInputSchema = z
 
 export const TOOL_INPUT_SCHEMAS = {
   "registry.search": SearchRegistryInputSchema,
-  plan_workflow_toolbox: PlanWorkflowToolboxInputSchema,
+  "workflow.plan": PlanWorkflowToolboxInputSchema,
   "registry.recommend": RecommendForTaskInputSchema,
   "server.info": GetServerInfoInputSchema,
   "registry.list": ListCategoryEntriesInputSchema,

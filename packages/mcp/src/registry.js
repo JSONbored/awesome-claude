@@ -81,7 +81,7 @@ const platformAliases = new Map([
 
 export const READ_ONLY_TOOL_NAMES = [
   "registry.search",
-  "plan_workflow_toolbox",
+  "workflow.plan",
   "registry.recommend",
   "server.info",
   "registry.list",
@@ -131,11 +131,11 @@ export const TOOL_DEFINITIONS = [
     },
   },
   {
-    name: "plan_workflow_toolbox",
+    name: "workflow.plan",
     description:
       "Plan a read-only Claude or Codex workflow toolbox from ranked HeyClaude registry entries. Each entry includes an inline install block (install command, config snippet, download URL) and the recommended stack is summarized as a copy-pasteable installPlan, alongside trust and follow-up guidance.",
-    inputSchema: jsonSchemaForTool("plan_workflow_toolbox"),
-    outputSchema: jsonSchemaForToolOutput("plan_workflow_toolbox"),
+    inputSchema: jsonSchemaForTool("workflow.plan"),
+    outputSchema: jsonSchemaForToolOutput("workflow.plan"),
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -146,7 +146,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "registry.recommend",
     description:
-      "Answer 'what should I use to do X' in one call. Given a plain-language task (and optional platform/category), returns the best-match HeyClaude entries ranked by fit — each with why it fits, trust summary, disclosed safety/privacy notes, and an inline install block — plus a topPick and a consolidated installPlan. Unlike plan_workflow_toolbox it does not force category diversity; it returns the genuinely best matches. Collapses the search → compare → detail → asset loop into a single answer-shaped response.",
+      "Answer 'what should I use to do X' in one call. Given a plain-language task (and optional platform/category), returns the best-match HeyClaude entries ranked by fit — each with why it fits, trust summary, disclosed safety/privacy notes, and an inline install block — plus a topPick and a consolidated installPlan. Unlike workflow.plan it does not force category diversity; it returns the genuinely best matches. Collapses the search → compare → detail → asset loop into a single answer-shaped response.",
     inputSchema: jsonSchemaForTool("registry.recommend"),
     outputSchema: jsonSchemaForToolOutput("registry.recommend"),
     annotations: {
@@ -1301,7 +1301,7 @@ export async function recommendForTask(args = {}, options = {}) {
     installPlan,
     trustSummary: toolboxTrustSummary(recommendations),
     notes: [
-      "Best-match recommendations for the task; unlike plan_workflow_toolbox they are not forced to span categories.",
+      "Best-match recommendations for the task; unlike workflow.plan they are not forced to span categories.",
       "This is metadata review only — it does not execute, install, or scan entries. Review trust before running anything.",
       "Use entry.compare to weigh the top picks and entry.trust before relying on any entry.",
     ],
@@ -2831,7 +2831,7 @@ export async function callRegistryTool(name, args = {}, options = {}) {
     case "registry.search":
       result = await searchRegistry(parsedArgs, options);
       break;
-    case "plan_workflow_toolbox":
+    case "workflow.plan":
       result = await planWorkflowToolbox(parsedArgs, options);
       break;
     case "registry.recommend":
