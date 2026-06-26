@@ -26,6 +26,8 @@ Keep submissions concrete. Include canonical source URLs, docs, install/config d
 
 > **Submit your own work, with credit to original sources.** Plagiarism — copying another contributor's PR or submission and passing it off as your own, including duplicated or lightly reworded copies filed under a different account — is a hard violation. Anyone attempting to cheat, copy from others, or farm contribution rewards is **permanently blocked from contributing across all of our repositories**. See [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 
+> Filing your own issue and then opening a PR that resolves it is welcome, and a PR with no linked issue is fine — neither is farming. What is against policy is **using more than one account you control (alt / sock-puppet accounts) — e.g. one account opening issues for another to "resolve" — to inflate contribution credit**, along with manufacturing low-value issues and bulk point-chasing submissions. Farmed work earns no linked-issue bonus, and repeat or any confirmed multi-account farming is closed on sight and blocked. Enforcement is proportional; the full ladder is in [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
+
 For accepted, rejected, and rerouted examples across agents, MCP servers, skills, hooks, commands, collections, and paid/tool listings, see [`examples/content/SUBMISSION_EXAMPLES.md`](examples/content/SUBMISSION_EXAMPLES.md).
 
 For hooks, MCP servers, skills, commands, and statuslines, disclose meaningful safety/privacy behavior in the submission fields:
