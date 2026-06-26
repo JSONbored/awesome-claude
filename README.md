@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1336+ file-backed entries</strong> stay useful as both an
+        <strong>1337+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1336</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1337</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -69,7 +69,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>464</code><br>
+          <code>465</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -297,7 +297,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (464)
+## 🔌 MCP Servers (465)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -654,6 +654,7 @@ packages use checksums and package trust metadata after review.
 - **[Pentest AI MCP Server](https://heyclau.de/entry/mcp/pentest-ai-mcp-server)** - Offensive-security MCP server from pentest-ai that lets Claude list and run wrapped security tools, plan and install missing tools, launch authorized engagements, run web, recon, API, cloud, AD, credential, vulnerability, mobile, wireless, and LLM-red-team assessments, and retrieve findings, attack chains, reports.
 - **[Perplexity MCP Server for Claude](https://heyclau.de/entry/mcp/perplexity-mcp-server)** - Official Perplexity MCP server that connects Claude to the Perplexity Sonar API for real-time, web-grounded answers with citations, so responses can draw on current information beyond the model's training data.
 - **[pg-aiguide MCP Server](https://heyclau.de/entry/mcp/pg-aiguide-mcp-server)** - PostgreSQL documentation and best-practice MCP server from Timescale that gives Claude semantic and keyword search across PostgreSQL, TimescaleDB, and PostGIS docs.
+- **[Phronesis](https://heyclau.de/entry/mcp/phronesis-hermes)** - Phronesis is a decision-assurance layer for AI agents. It returns calibrated, independently-benchmarked Decision Assets and — before a high-stakes action — an auditable action boundary (approve / review / block / seek-evidence) plus a verifiable Decision Receipt. It is advisory/assurance: it never autonomously transacts, binds, moves money, or modifies identity — the calling agent retains the action. Public read-only MCP tools are health_check and bench_query.
 - **[Pinecone Developer MCP Server](https://heyclau.de/entry/mcp/pinecone-developer-mcp-server)** - Official Pinecone Developer MCP server that connects Claude and other MCP clients to Pinecone projects and documentation for index management, record upserts, semantic search, cascading multi-index search, reranking, and documentation lookup over integrated-inference indexes.
 - **[Plaid MCP Server for Claude](https://heyclau.de/entry/mcp/plaid-mcp-server)** - Analyze, troubleshoot, and optimize Plaid integrations for banking data and financial account linking
 - **[Plane MCP Server](https://heyclau.de/entry/mcp/plane-mcp-server)** - Official Plane MCP server for connecting Claude to Plane projects, work items, cycles, modules, initiatives, comments, links, work logs, pages, and workspace metadata.
