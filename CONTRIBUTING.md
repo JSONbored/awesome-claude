@@ -24,6 +24,8 @@ Direct PRs are the advanced path. Edit source content under `content/<category>/
 
 Keep submissions concrete. Include canonical source URLs, docs, install/config details, and enough context for someone else to verify the entry.
 
+> **Submit your own work, with credit to original sources.** Plagiarism — copying another contributor's PR or submission and passing it off as your own, including duplicated or lightly reworded copies filed under a different account — is a hard violation. Anyone attempting to cheat, copy from others, or farm contribution rewards is **permanently blocked from contributing across all of our repositories**. See [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
+
 For accepted, rejected, and rerouted examples across agents, MCP servers, skills, hooks, commands, collections, and paid/tool listings, see [`examples/content/SUBMISSION_EXAMPLES.md`](examples/content/SUBMISSION_EXAMPLES.md).
 
 For hooks, MCP servers, skills, commands, and statuslines, disclose meaningful safety/privacy behavior in the submission fields:
