@@ -144,6 +144,12 @@ Maintainers may ask for:
 
 Submissions may be closed when they are incomplete, promotional without enough utility, unsafe to list, off-topic, duplicated, or abandoned.
 
+**Timing is typical, not an SLA.** When the gittensory maintainer agent is operating, most single-entry submissions are reviewed and merged or closed within **~1 hour of validation finishing**; when it is paused or under maintenance, manual review **typically takes 24–48 hours, depending on volume**. These are observations, not commitments.
+
+**If we close your submission by mistake, that's on us** — we may reopen or re-review at our discretion as time permits. There is no fixed window, and a fresh submission is usually fastest.
+
+**Don't chase reviews.** The queue is automated and best-effort, and the bot posts its status on your PR. Do **not** DM, @-mention, or comment asking for a review or status — it will not speed anything up and **will deprioritize your submission (expect at least 5 days added to its place in the manual queue)**. Persistent pestering (here, Discord, or elsewhere) is a conduct violation and may get the submission closed and the account blocked.
+
 ## Conduct
 
 Participation is covered by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
