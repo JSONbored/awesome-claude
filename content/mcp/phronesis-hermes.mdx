@@ -33,6 +33,16 @@ copySnippet: |-
       }
     }
   }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "phronesis-hermes": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "https://api.phronesisintel.com/mcp", "--header", "Authorization: Bearer ${PHRONESIS_JWT}"],
+        "env": { "PHRONESIS_JWT": "paste-your-JWT-from-/api/v1/signup" }
+      }
+    }
+  }
 safetyNotes:
   - "Remote hosted MCP server over HTTPS; no local package, shell execution, or file writes."
   - "Public tools (health_check, bench_query) are read-only."
