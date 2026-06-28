@@ -1,5 +1,11 @@
 import { ENTRIES, entryByRef } from "./entries";
 import { sameEntry } from "@/lib/entry-identity";
+import { expandedTokenCandidates } from "@/lib/search-query-aliases";
+import {
+  normalizeSearchQuery,
+  TOKEN_SPLIT_PATTERN,
+  tokenizeSearchQuery,
+} from "@/lib/search-query-tokenization";
 import type {
   Category,
   Entry,
@@ -15,30 +21,22 @@ export interface SearchFilters {
   platforms?: Platform[];
   trust?: TrustLevel[];
   source?: SourceStatus[];
+  signal?: TrustSignalFilter | "";
   installable?: boolean;
   hasSafetyNotes?: boolean;
   sort?: "popular" | "newest" | "title";
 }
 
-const TOKEN_SPLIT_PATTERN = /[^a-z0-9+#.-]+/i;
-const MAX_QUERY_LENGTH = 256;
-const MAX_QUERY_TOKENS = 12;
+export const TRUST_SIGNAL_FILTERS = [
+  "safety-notes",
+  "privacy-notes",
+  "source-backed",
+  "trusted-package",
+  "reviewed",
+  "checksums",
+] as const;
 
-const QUERY_ALIASES: Record<string, string[]> = {
-  browser: ["chrome", "playwright", "web"],
-  cc: ["claude", "claude-code"],
-  claude: ["claude-code"],
-  gh: ["github"],
-  mcp: ["model-context-protocol"],
-  repo: ["repository", "github"],
-  repos: ["repository", "github"],
-  safe: ["safety", "security", "secure", "trust", "privacy"],
-  security: ["safe", "safety", "secure", "trust"],
-  skill: ["skills"],
-  skills: ["skill"],
-  statusline: ["statuslines", "status"],
-  statuslines: ["statusline", "status"],
-};
+export type TrustSignalFilter = (typeof TRUST_SIGNAL_FILTERS)[number];
 
 interface EntrySearchProfile {
   haystack: string;
@@ -56,28 +54,7 @@ interface PreparedSearchFilters extends SearchFilters {
 
 const ENTRY_SEARCH_PROFILES = new WeakMap<Entry, EntrySearchProfile>();
 
-export function normalizeSearchQuery(query: string) {
-  return query.slice(0, MAX_QUERY_LENGTH).trim().toLowerCase();
-}
-
-function tokenizeSearchQuery(query: string) {
-  const tokens: string[] = [];
-  let token = "";
-
-  for (let index = 0; index < query.length && tokens.length < MAX_QUERY_TOKENS; index += 1) {
-    const char = query[index]!;
-    if (/[a-z0-9+#.-]/i.test(char)) {
-      token += char.toLowerCase();
-      continue;
-    }
-
-    if (token.length >= 2) tokens.push(token);
-    token = "";
-  }
-
-  if (tokens.length < MAX_QUERY_TOKENS && token.length >= 2) tokens.push(token);
-  return tokens;
-}
+export { normalizeSearchQuery } from "@/lib/search-query-tokenization";
 
 function querySearchProfile(query: string): QuerySearchProfile | null {
   const normalizedQuery = normalizeSearchQuery(query);
@@ -87,10 +64,6 @@ function querySearchProfile(query: string): QuerySearchProfile | null {
   if (!tokens.length) return null;
 
   return { normalizedQuery, tokens };
-}
-
-function expandedTokenCandidates(token: string) {
-  return [token, ...(QUERY_ALIASES[token] ?? [])];
 }
 
 function normalizedSearchText(entry: Entry) {
@@ -179,15 +152,57 @@ export function matchesSearchFilters(entry: Entry, filters: SearchFilters = {}) 
     return false;
   if (filters.trust?.length && !filters.trust.includes(entry.trust)) return false;
   if (filters.source?.length && !filters.source.includes(entry.source)) return false;
+  if (filters.signal && !entryMatchesTrustSignal(entry, filters.signal)) return false;
   if (filters.installable && !entry.installCommand && !entry.configSnippet && !entry.fullCopy)
     return false;
-  if (filters.hasSafetyNotes && !entry.safetyNotes) return false;
+  if (filters.hasSafetyNotes && !hasSafetyNotes(entry)) return false;
   if (prepared.queryProfile && !matchesEntryQueryProfile(entry, prepared.queryProfile))
     return false;
   if (prepared.q && prepared.queryProfile === null) return false;
   if (filters.q && prepared.queryProfile === undefined && !matchesEntryQuery(entry, filters.q))
     return false;
   return true;
+}
+
+function hasSafetyNotes(entry: Entry) {
+  return Boolean(entry.safetyNotes || entry.trustSignals?.hasSafetyNotes);
+}
+
+function hasPrivacyNotes(entry: Entry) {
+  return Boolean(entry.privacyNotes || entry.trustSignals?.hasPrivacyNotes);
+}
+
+function hasSourceBackedSignal(entry: Entry) {
+  return entry.source === "source-backed" || entry.trustSignals?.sourceStatus === "available";
+}
+
+function hasTrustedPackageSignal(entry: Entry) {
+  return Boolean(
+    entry.packageVerified ||
+    entry.downloadTrust === "first-party" ||
+    entry.trustSignals?.packageVerified ||
+    entry.trustSignals?.packageTrust === "first-party",
+  );
+}
+
+function hasReviewedSignal(entry: Entry) {
+  return Boolean(
+    entry.reviewed || entry.reviewedBy || entry.claimed || entry.claimStatus === "verified",
+  );
+}
+
+function hasChecksumSignal(entry: Entry) {
+  return Boolean(entry.downloadSha256 || entry.trustSignals?.checksumPresent);
+}
+
+export function entryMatchesTrustSignal(entry: Entry, signal: TrustSignalFilter) {
+  if (signal === "safety-notes") return hasSafetyNotes(entry);
+  if (signal === "privacy-notes") return hasPrivacyNotes(entry);
+  if (signal === "source-backed") return hasSourceBackedSignal(entry);
+  if (signal === "trusted-package") return hasTrustedPackageSignal(entry);
+  if (signal === "reviewed") return hasReviewedSignal(entry);
+  if (signal === "checksums") return hasChecksumSignal(entry);
+  return false;
 }
 
 export function filterSearchEntries(filters: SearchFilters = {}, entries: Entry[] = ENTRIES) {

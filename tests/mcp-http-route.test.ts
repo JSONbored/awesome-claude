@@ -110,6 +110,7 @@ describe("HeyClaude remote MCP route", () => {
       "submission.policy",
       "entry.trust",
       "entry.safety",
+      "entry.coverage",
     ]);
     expect(payload.result.tools[0]).toMatchObject({
       outputSchema: { type: "object" },

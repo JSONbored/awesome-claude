@@ -88,6 +88,11 @@ strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
   privacy metadata fit before install or recommendation. This is a metadata review
   only and does not provide malware scanning, automatic safety guarantees, or
   installation approval.
+- `entry.coverage` - compare 2-5 entries side by side and rank them by how
+  much trust metadata they disclose (source, package, safety, privacy, and review
+  provenance). This measures disclosed-metadata completeness only; it is not a
+  malware scan, a safety verdict, or installation approval, and a higher score
+  does not mean an entry is safe.
 
 ## Resources and Prompts
 

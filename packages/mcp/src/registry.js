@@ -28,6 +28,18 @@ import {
   searchDuplicateEntries,
   validateSubmissionDraftFromSpec,
 } from "./submissions.js";
+import {
+  entryClaimStatusValue,
+  entryHasPrivacyNotes,
+  entryHasSafetyNotes,
+  entryPackageTrustValue,
+  entrySourceStatusValue,
+  matchesRegistryPlatform,
+  matchesRegistryQuery,
+  normalizedRegistrySearchText,
+  rankRegistrySearchEntries,
+  tokenizeRegistrySearchQuery,
+} from "./search-ranking.js";
 
 export * from "./schemas.js";
 
@@ -107,6 +119,7 @@ export const READ_ONLY_TOOL_NAMES = [
   "submission.policy",
   "entry.trust",
   "entry.safety",
+  "entry.coverage",
 ];
 
 export const LOCAL_DRAFT_TOOL_NAMES = [
@@ -300,6 +313,12 @@ export const TOOL_DEFINITIONS = [
       "Review 1-5 HeyClaude entries for source, package, safety, and privacy metadata fit before install or recommendation. This is a metadata review only and does not provide malware scanning, automatic safety guarantees, or installation approval.",
     inputSchema: jsonSchemaForTool("entry.safety"),
   },
+  {
+    name: "entry.coverage",
+    description:
+      "Compare 2-5 HeyClaude entries side by side by how much trust metadata they disclose (source, package, safety, privacy, and review provenance) and rank them by deterministic signal coverage. This measures disclosed-metadata completeness only; it is not a malware scan, a safety verdict, or installation approval, and a higher score does not mean an entry is safe.",
+    inputSchema: jsonSchemaForTool("entry.coverage"),
+  },
 ];
 
 for (const tool of TOOL_DEFINITIONS) {
@@ -418,146 +437,23 @@ function normalizePlatform(value) {
 }
 
 function entryMatchesQuery(entry, query) {
-  if (!query) return true;
-  const haystack = [
-    entry.title,
-    entry.description,
-    entry.cardDescription,
-    entry.category,
-    entry.slug,
-    entry.author,
-    entry.submittedBy,
-    entry.brandName,
-    entry.brandDomain,
-    ...notes(entry.safetyNotes),
-    ...notes(entry.privacyNotes),
-    ...(entry.tags || []),
-    ...(entry.keywords || []),
-  ]
-    .map(normalizeText)
-    .join(" ");
-  return haystack.includes(query);
+  return matchesRegistryQuery(entry, query);
 }
 
 function searchTokens(query) {
-  return normalizeText(query)
-    .split(/[^a-z0-9+#.-]+/i)
-    .map((token) => token.trim())
-    .filter((token) => token.length >= 2)
-    .slice(0, 12);
+  return tokenizeRegistrySearchQuery(query);
 }
 
 function entrySearchText(entry) {
-  return [
-    entry.title,
-    entry.description,
-    entry.cardDescription,
-    entry.category,
-    entry.slug,
-    entry.author,
-    entry.submittedBy,
-    entry.brandName,
-    entry.brandDomain,
-    ...notes(entry.safetyNotes),
-    ...notes(entry.privacyNotes),
-    ...(entry.tags || []),
-    ...(entry.keywords || []),
-  ]
-    .map(normalizeText)
-    .join(" ")
-    .toLowerCase();
-}
-
-function scoreSearchEntry(entry, query) {
-  const normalizedQuery = normalizeText(query);
-  const tokens = searchTokens(normalizedQuery);
-  if (!tokens.length) return { score: 0, reasons: [] };
-
-  const title = normalizeText(entry.title);
-  const category = normalizeText(entry.category);
-  const tags = new Set((entry.tags || []).map(normalizeText));
-  const keywords = new Set((entry.keywords || []).map(normalizeText));
-  const haystack = entrySearchText(entry);
-  const reasons = new Set();
-  let score = 0;
-
-  if (title.includes(normalizedQuery)) {
-    score += 90;
-    reasons.add("title phrase");
-  }
-  if (category === normalizedQuery) {
-    score += 45;
-    reasons.add("category match");
-  }
-
-  for (const token of tokens) {
-    if (title.includes(token)) {
-      score += 35;
-      reasons.add("title term");
-    }
-    if (tags.has(token)) {
-      score += 24;
-      reasons.add("tag match");
-    }
-    if (keywords.has(token)) {
-      score += 18;
-      reasons.add("keyword match");
-    }
-    if (category.includes(token)) {
-      score += 12;
-      reasons.add("category term");
-    }
-    if (haystack.includes(token)) score += 4;
-  }
-
-  if (entrySourceStatus(entry) === "available") {
-    score += 8;
-    reasons.add("source-backed");
-  }
-  if (
-    entryPackageTrust(entry) === "first-party" ||
-    entry.packageVerified ||
-    entry.trustSignals?.packageVerified
-  ) {
-    score += 8;
-    reasons.add("trusted package");
-  }
-  if (notes(entry.safetyNotes).length) {
-    score += 4;
-    reasons.add("safety notes");
-  }
-  if (notes(entry.privacyNotes).length) {
-    score += 4;
-    reasons.add("privacy notes");
-  }
-  if (entry.claimStatus === "verified" || entry.reviewedBy) {
-    score += 4;
-    reasons.add("reviewed");
-  }
-
-  return { score, reasons: [...reasons].slice(0, 6) };
+  return normalizedRegistrySearchText(entry);
 }
 
 function rankSearchEntries(entries, query) {
-  return entries
-    .map((entry, index) => ({
-      entry,
-      index,
-      ...scoreSearchEntry(entry, query),
-    }))
-    .sort((left, right) => {
-      if (left.score !== right.score) return right.score - left.score;
-      const dateCompare = String(right.entry.dateAdded || "").localeCompare(
-        String(left.entry.dateAdded || ""),
-      );
-      if (dateCompare !== 0) return dateCompare;
-      return left.index - right.index;
-    });
+  return rankRegistrySearchEntries(entries, query);
 }
 
 function entryMatchesPlatform(entry, platform) {
-  if (!platform) return true;
-  return (entry.platforms || []).some((candidate) => candidate === platform);
+  return matchesRegistryPlatform(entry, platform);
 }
 
 function entryMatchesTag(entry, tag) {
@@ -573,40 +469,23 @@ function booleanFilterMatches(value, filter = "all") {
 }
 
 function entryPackageTrust(entry) {
-  return entry.downloadTrust || (entry.downloadUrl ? "external" : "none");
+  return entryPackageTrustValue(entry);
 }
 
 function entryClaimStatus(entry) {
-  return entry.claimStatus || "unclaimed";
+  return entryClaimStatusValue(entry);
 }
 
 function entrySourceStatus(entry) {
-  const sourceUrls = [
-    entry.documentationUrl,
-    entry.repoUrl,
-    entry.githubUrl,
-    entry.sourceUrl,
-  ].filter((value) => String(value || "").trim());
-  return (
-    entry.trustSignals?.sourceStatus ||
-    (sourceUrls.length ? "available" : "missing")
-  );
+  return entrySourceStatusValue(entry);
 }
 
 function entryMatchesTrustFilters(entry, args = {}) {
-  if (
-    !booleanFilterMatches(
-      notes(entry.safetyNotes).length > 0,
-      args.hasSafetyNotes,
-    )
-  ) {
+  if (!booleanFilterMatches(entryHasSafetyNotes(entry), args.hasSafetyNotes)) {
     return false;
   }
   if (
-    !booleanFilterMatches(
-      notes(entry.privacyNotes).length > 0,
-      args.hasPrivacyNotes,
-    )
+    !booleanFilterMatches(entryHasPrivacyNotes(entry), args.hasPrivacyNotes)
   ) {
     return false;
   }
@@ -839,6 +718,49 @@ function entryTrustSummary(entry) {
       sourceSubmissionUrl: entry.sourceSubmissionUrl || "",
     },
     recommendations: entryTrustRecommendations(entry),
+  };
+}
+
+// Deterministic, disclosure-only trust signals. Each signal reflects whether a
+// piece of trust metadata is present, NOT whether the entry is safe. Coverage
+// is metadata completeness, never a safety verdict or install approval.
+const TRUST_SIGNAL_KEYS = [
+  "source-available",
+  "repo-url",
+  "documentation-url",
+  "trusted-package",
+  "package-checksum",
+  "safety-notes",
+  "privacy-notes",
+  "review-provenance",
+];
+
+function entryTrustSignalCoverage(entry) {
+  const trust = entryTrustSummary(entry);
+  const present = [];
+  if (trust.source.status === "available") present.push("source-available");
+  if (trust.source.repoUrl) present.push("repo-url");
+  if (trust.source.documentationUrl) present.push("documentation-url");
+  if (
+    trust.package.downloadTrust === "first-party" ||
+    trust.package.packageVerified
+  ) {
+    present.push("trusted-package");
+  }
+  if (trust.package.checksum) present.push("package-checksum");
+  if (trust.disclosures.hasSafetyNotes) present.push("safety-notes");
+  if (trust.disclosures.hasPrivacyNotes) present.push("privacy-notes");
+  if (trust.review.reviewedBy || trust.review.claimStatus === "verified") {
+    present.push("review-provenance");
+  }
+  const presentSet = new Set(present);
+  const presentOrdered = TRUST_SIGNAL_KEYS.filter((key) => presentSet.has(key));
+  const missing = TRUST_SIGNAL_KEYS.filter((key) => !presentSet.has(key));
+  return {
+    score: presentOrdered.length,
+    max: TRUST_SIGNAL_KEYS.length,
+    present: presentOrdered,
+    missing,
   };
 }
 
@@ -2807,6 +2729,73 @@ export async function reviewEntrySafety(args = {}, options = {}) {
   };
 }
 
+export async function compareEntryTrust(args = {}, options = {}) {
+  const requested = Array.isArray(args.entries) ? args.entries : [];
+  // Schema validation already enforces 2-5 entries for the public tool path;
+  // this guard keeps the function safe for direct callers too.
+  if (requested.length < 2 || requested.length > 5) {
+    return invalid("Provide between 2 and 5 entries to compare.");
+  }
+  const platform = normalizePlatform(args.platform ?? "");
+  const entries = [];
+  for (const target of requested) {
+    const category = normalizeText(target.category);
+    const slug = normalizeText(target.slug);
+    const entry = await readEntry(category, slug, options);
+    if (entry == null) {
+      return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
+    }
+    const compatibility = buildSkillPlatformCompatibility(entry);
+    entries.push({
+      key: `${entry.category}:${entry.slug}`,
+      category: entry.category,
+      slug: entry.slug,
+      title: entry.title,
+      canonicalUrl: entryCanonicalUrl(entry),
+      selectedCompatibility: platform
+        ? compatibility.find(
+            (item) => normalizePlatform(item.platform) === platform,
+          ) || null
+        : null,
+      signalCoverage: entryTrustSignalCoverage(entry),
+      trust: entryTrustSummary(entry),
+    });
+  }
+
+  // Deterministic ordering: higher disclosed-metadata coverage first, then a
+  // stable tiebreak on key so the ranking never depends on input order.
+  const ranking = entries
+    .map((entry) => ({ key: entry.key, score: entry.signalCoverage.score }))
+    .sort((left, right) => {
+      if (left.score !== right.score) return right.score - left.score;
+      return left.key.localeCompare(right.key);
+    })
+    .map((item, index) => ({ ...item, rank: index + 1 }));
+
+  // Signals that no compared entry discloses, so callers can ask for them.
+  const sharedGaps = TRUST_SIGNAL_KEYS.filter((key) =>
+    entries.every((entry) => entry.signalCoverage.missing.includes(key)),
+  );
+
+  return {
+    ok: true,
+    platform: platform || "",
+    count: entries.length,
+    signalKeys: TRUST_SIGNAL_KEYS,
+    entries,
+    ranking,
+    bestDocumented: ranking[0]?.key || "",
+    sharedGaps,
+    comparisonNotes: [
+      "Coverage counts disclosed trust metadata only; it is not a malware scan, a safety verdict, or installation approval.",
+      "A higher coverage score means more trust metadata is present, not that an entry is safer or recommended to install.",
+      "bestDocumented is the entry with the most disclosed trust metadata, not the safest entry.",
+      "Inspect commands, requested permissions, external writes, and missing signals before relying on any entry.",
+      "Use entry.trust for one entry's full trust breakdown and entry.asset only after trust review.",
+    ],
+  };
+}
+
 export async function callRegistryTool(name, args = {}, options = {}) {
   if (!READ_ONLY_TOOL_NAMES.includes(name)) {
     return invalid(`Unknown read-only HeyClaude MCP tool: ${name}`);
@@ -2908,6 +2897,9 @@ export async function callRegistryTool(name, args = {}, options = {}) {
       break;
     case "entry.safety":
       result = await reviewEntrySafety(parsedArgs, options);
+      break;
+    case "entry.coverage":
+      result = await compareEntryTrust(parsedArgs, options);
       break;
   }
 

@@ -9,6 +9,7 @@ import * as registryModule from "../packages/mcp/src/registry.js";
 import * as schemaModule from "../packages/mcp/src/schemas.js";
 import {
   callRegistryTool,
+  compareEntryTrust,
   getClientSetup,
   getRegistryPrompt,
   listRegistryPrompts,
@@ -133,6 +134,13 @@ function validToolArguments(name: string) {
     "submission.policy": {},
     "entry.trust": { category: skill.category, slug: skill.slug },
     "entry.safety": {
+      entries: [
+        { category: skill.category, slug: skill.slug },
+        { category: otherSkill.category, slug: otherSkill.slug },
+      ],
+      platform: "claude",
+    },
+    "entry.coverage": {
       entries: [
         { category: skill.category, slug: skill.slug },
         { category: otherSkill.category, slug: otherSkill.slug },
@@ -668,7 +676,9 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
     expect(result.entries.length).toBeGreaterThan(0);
     expect(result.entries.length).toBeLessThanOrEqual(5);
-    expect(result.entries[0].platforms).toContain("cursor");
+    expect(
+      result.entries[0].platforms.map((value) => value.toLowerCase()),
+    ).toContain("cursor");
     expect(result.entries[0]).toMatchObject({
       searchScore: expect.any(Number),
       searchReasons: expect.any(Array),
@@ -1302,7 +1312,9 @@ describe("HeyClaude read-only MCP helpers", () => {
       dateAdded: expect.any(String),
     });
     expect(result.entries[0].tags).toContain("evals");
-    expect(result.entries[0].platforms).toContain("cursor");
+    expect(
+      result.entries[0].platforms.map((value) => value.toLowerCase()),
+    ).toContain("cursor");
   });
 
   it("lists recent updates from generated registry metadata", async () => {
@@ -1455,6 +1467,151 @@ describe("HeyClaude read-only MCP helpers", () => {
       reviewNotes: expect.arrayContaining([
         expect.stringContaining("metadata review"),
       ]),
+    });
+  });
+
+  it("ranks compared entries by disclosed trust-metadata coverage only", async () => {
+    const compared = await callRegistryTool(
+      "entry.coverage",
+      {
+        entries: [
+          { category: "mcp", slug: "airtable-mcp-server" },
+          { category: "mcp", slug: "contrastapi-mcp-server" },
+        ],
+        platform: "claude",
+      },
+      { dataDir },
+    );
+
+    expect(compared).toMatchObject({
+      ok: true,
+      count: 2,
+      platform: "claude-code",
+      signalKeys: expect.arrayContaining(["source-available", "safety-notes"]),
+      comparisonNotes: expect.arrayContaining([
+        expect.stringContaining("not a malware scan"),
+      ]),
+    });
+
+    // Every entry exposes a deterministic coverage breakdown that never
+    // exceeds the published signal set.
+    for (const entry of compared.entries) {
+      expect(entry.signalCoverage.max).toBe(compared.signalKeys.length);
+      expect(entry.signalCoverage.score).toBe(
+        entry.signalCoverage.present.length,
+      );
+      expect(
+        entry.signalCoverage.present.length +
+          entry.signalCoverage.missing.length,
+      ).toBe(compared.signalKeys.length);
+      // Present keys follow the published TRUST_SIGNAL_KEYS order.
+      for (
+        let index = 1;
+        index < entry.signalCoverage.present.length;
+        index++
+      ) {
+        expect(
+          compared.signalKeys.indexOf(entry.signalCoverage.present[index]),
+        ).toBeGreaterThan(
+          compared.signalKeys.indexOf(entry.signalCoverage.present[index - 1]),
+        );
+      }
+      expect(entry.trust.source.status).toEqual(expect.any(String));
+    }
+
+    expect(Array.isArray(compared.sharedGaps)).toBe(true);
+
+    const disclosedSignals = new Set(
+      compared.entries.flatMap((entry) => entry.signalCoverage.present),
+    );
+    expect(disclosedSignals.has("trusted-package")).toBe(true);
+    expect(disclosedSignals.has("review-provenance")).toBe(true);
+
+    // Ranking is complete, ordered by score desc, and names a bestDocumented key.
+    expect(compared.ranking).toHaveLength(2);
+    expect(compared.ranking[0].rank).toBe(1);
+    expect(compared.ranking[0].score).toBeGreaterThanOrEqual(
+      compared.ranking[1].score,
+    );
+    expect(compared.bestDocumented).toBe(compared.ranking[0].key);
+
+    // It is disclosure metadata only — never a safety verdict or install approval.
+    expect(JSON.stringify(compared)).not.toMatch(
+      /malware (detected|verdict|free)|safe to install|approved for install/i,
+    );
+
+    // Stable regardless of input order.
+    const reordered = await callRegistryTool(
+      "entry.coverage",
+      {
+        entries: [
+          { category: "mcp", slug: "contrastapi-mcp-server" },
+          { category: "mcp", slug: "airtable-mcp-server" },
+        ],
+      },
+      { dataDir },
+    );
+    expect(reordered.ok).toBe(true);
+    expect(reordered.ranking).toEqual(compared.ranking);
+  });
+
+  it("rejects entry.coverage calls with fewer than two entries", async () => {
+    const result = await callRegistryTool(
+      "entry.coverage",
+      { entries: [{ category: skill.category, slug: skill.slug }] },
+      { dataDir },
+    );
+    expect(result).toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
+    });
+  });
+
+  it("rejects direct compareEntryTrust calls outside the 2-5 entry window", async () => {
+    const tooFew = await compareEntryTrust(
+      { entries: [{ category: skill.category, slug: skill.slug }] },
+      { dataDir },
+    );
+    expect(tooFew).toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
+    });
+
+    const tooMany = await compareEntryTrust(
+      {
+        entries: Array.from({ length: 6 }, (_, index) => ({
+          category: skill.category,
+          slug: `placeholder-${index}`,
+        })),
+      },
+      { dataDir },
+    );
+    expect(tooMany).toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
+    });
+
+    const missingEntries = await compareEntryTrust({}, { dataDir });
+    expect(missingEntries).toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
+    });
+  });
+
+  it("returns not_found when an entry.coverage entry is missing", async () => {
+    const result = await callRegistryTool(
+      "entry.coverage",
+      {
+        entries: [
+          { category: skill.category, slug: skill.slug },
+          { category: "skills", slug: "does-not-exist-entry" },
+        ],
+      },
+      { dataDir },
+    );
+    expect(result).toMatchObject({
+      ok: false,
+      error: { code: "not_found" },
     });
   });
 

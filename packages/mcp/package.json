@@ -50,6 +50,10 @@
       "types": "./src/remote-proxy.d.ts",
       "default": "./src/remote-proxy.js"
     },
+    "./search-ranking": {
+      "types": "./src/search-ranking.d.ts",
+      "default": "./src/search-ranking.js"
+    },
     "./platforms": {
       "types": "./src/platforms.d.ts",
       "default": "./src/platforms.js"

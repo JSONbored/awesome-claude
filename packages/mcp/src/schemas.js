@@ -617,6 +617,24 @@ export const ReviewEntrySafetyInputSchema = z
   })
   .strict();
 
+export const CompareEntryTrustInputSchema = z
+  .object({
+    entries: z
+      .array(
+        z
+          .object({
+            category: pathPart,
+            slug: pathPart,
+          })
+          .strict(),
+      )
+      .min(2)
+      .max(5)
+      .describe("2-5 entries to compare by disclosed trust metadata coverage."),
+    platform: platform.optional(),
+  })
+  .strict();
+
 export const TOOL_INPUT_SCHEMAS = {
   "registry.search": SearchRegistryInputSchema,
   "registry.plan": PlanWorkflowToolboxInputSchema,
@@ -645,6 +663,7 @@ export const TOOL_INPUT_SCHEMAS = {
   "submission.policy": SubmissionPolicyInputSchema,
   "entry.trust": ExplainEntryTrustInputSchema,
   "entry.safety": ReviewEntrySafetyInputSchema,
+  "entry.coverage": CompareEntryTrustInputSchema,
 };
 
 function stripUnsupportedJsonSchemaFields(value) {

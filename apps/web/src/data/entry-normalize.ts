@@ -143,10 +143,36 @@ const CATEGORIES = new Set<Category>([
 
 const SUPPORT_ALIASES: Record<string, PlatformSupport> = {
   "native-skill": "native-skill",
+  native: "native-skill",
+  full: "native-skill",
+  complete: "native-skill",
   adapter: "adapter",
+  partial: "adapter",
+  adapted: "adapter",
   "manual-context": "manual-context",
+  manual: "manual-context",
+  context: "manual-context",
   unsupported: "unsupported",
+  none: "unsupported",
+  no: "unsupported",
 };
+
+function normalizeSupportKey(raw: unknown) {
+  return String(raw ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/_/g, "-")
+    .replace(/\s+/g, "-");
+}
+
+function normalizeSupportLevel(raw: unknown): PlatformSupport {
+  const key = normalizeSupportKey(raw);
+  if (!key) return "manual-context";
+  if (Object.hasOwn(SUPPORT_ALIASES, key)) {
+    return SUPPORT_ALIASES[key];
+  }
+  return "manual-context";
+}
 
 const HOOK_TRIGGERS = new Set<HookTrigger>([
   "PreToolUse",
@@ -267,13 +293,21 @@ function inferTrust(entry: RegistryEntry, source: SourceStatus): TrustLevel {
   return "review";
 }
 
+function normalizeClaimStatus(value: unknown): Entry["claimStatus"] {
+  const normalized = String(value ?? "")
+    .trim()
+    .toLowerCase();
+  if (normalized === "verified" || normalized === "pending") return normalized;
+  return "unclaimed";
+}
+
 function normalizeCompatibility(entry: RegistryEntry): PlatformCompatibility[] | undefined {
   const rows: PlatformCompatibility[] = [];
   for (const item of entry.platformCompatibility ?? []) {
     const platform = platformFrom(item.platform);
     if (!platform) continue;
     const rawSupport = item.support ?? item.supportLevel ?? "";
-    const support = SUPPORT_ALIASES[rawSupport] ?? "manual-context";
+    const support = normalizeSupportLevel(rawSupport);
     rows.push({
       platform,
       support,
@@ -405,11 +439,8 @@ export function buildEntry(entry: RegistryEntry): Entry {
     relatedEntries: normalizeRelatedEntries(entry.relatedEntries),
     dateAdded: entry.dateAdded ?? entry.contentUpdatedAt?.slice(0, 10) ?? "2026-01-01",
     reviewed: Boolean(reviewedAt || entry.packageVerified),
-    claimed: entry.claimStatus === "verified",
-    claimStatus:
-      entry.claimStatus === "verified" || entry.claimStatus === "pending"
-        ? entry.claimStatus
-        : "unclaimed",
+    claimed: normalizeClaimStatus(entry.claimStatus) === "verified",
+    claimStatus: normalizeClaimStatus(entry.claimStatus),
     safetyNotes,
     safetyNotesList: listText(entry.safetyNotes),
     privacyNotes,
@@ -422,6 +453,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
     codeBlocks: entry.codeBlocks,
     downloadSha256: entry.downloadSha256 ?? undefined,
     downloadUrl: entry.downloadUrl || undefined,
+    downloadTrust: entry.downloadTrust ?? undefined,
     packageVerified: entry.packageVerified,
     commandSyntax: typeof entry.commandSyntax === "string" ? entry.commandSyntax : undefined,
     argumentHint: entry.argumentHint,

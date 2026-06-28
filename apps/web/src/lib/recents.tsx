@@ -28,6 +28,7 @@ export interface SavedSearch {
   category?: string;
   trust?: string;
   source?: string;
+  signal?: string;
   platform?: string;
   sort?: string;
   savedAt: string;
