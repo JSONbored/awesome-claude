@@ -9,8 +9,13 @@ import {
   isSimilarSubmissionTitle,
   isToolsRouteError,
   looksLikeCommercialListing,
+  normalizePreflightError,
+  normalizePreflightText,
+  preflightBlocker,
+  preflightWarning,
   resolvePreflightRouteSuggestion,
   submittedSourceUrls,
+  submittedSourceValues,
 } from "../apps/web/src/lib/submission-preflight-lib";
 
 function directoryEntry(
@@ -146,6 +151,58 @@ describe("submission preflight duplicate detection", () => {
           "https://www.GitHub.com/example/demo/?utm_source=newsletter",
       }),
     ).toEqual(["https://github.com/example/demo"]);
+    expect(
+      submittedSourceValues({ website_url: "https://example.com" }),
+    ).toEqual([
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "https://example.com",
+    ]);
+  });
+
+  it("ignores source values that canonicalize but fail URL parsing", () => {
+    expect(
+      findDuplicateCandidates({
+        entries: [
+          directoryEntry({
+            category: "mcp",
+            slug: "existing",
+            title: "Existing",
+          }),
+        ],
+        category: "mcp",
+        slug: "new-entry",
+        fields: {
+          name: "New Entry",
+          docs_url: "not a url",
+        },
+      }),
+    ).toEqual([]);
+  });
+
+  it("matches duplicates using title when name is absent", () => {
+    const entries = [
+      directoryEntry({
+        category: "mcp",
+        slug: "title-only",
+        title: "Title Only MCP",
+      }),
+    ];
+    expect(
+      findDuplicateCandidates({
+        entries,
+        category: "mcp",
+        slug: "other",
+        fields: { title: "Title Only MCP" },
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        key: "mcp:title-only",
+        reasons: ["title"],
+      }),
+    ]);
   });
 });
 
@@ -157,6 +214,7 @@ describe("submission preflight routing helpers", () => {
         description: "Enterprise pricing and sponsorship options.",
       }),
     ).toBe(true);
+    expect(looksLikeCommercialListing({})).toBe(false);
     expect(
       looksLikeCommercialListing({
         name: "Open MCP Server",
@@ -166,8 +224,88 @@ describe("submission preflight routing helpers", () => {
     expect(isToolsRouteError("Use the tools/app listing flow instead.")).toBe(
       true,
     );
+    expect(
+      isToolsRouteError("Use the tools/app lead form for paid listings."),
+    ).toBe(true);
+    expect(
+      isToolsRouteError(
+        "not merged from the free resource queue without maintainer approval",
+      ),
+    ).toBe(true);
+    expect(isToolsRouteError("change the category to tools")).toBe(true);
     expect(isToolsRouteError("Missing required field: safety_notes")).toBe(
       false,
+    );
+  });
+
+  it("builds validation, commercial, and privacy warnings", () => {
+    const skipped = buildPreflightIssues({
+      validationSkipped: true,
+      validationErrors: ["Missing required field: slug"],
+      category: "prompts",
+      fields: {},
+      duplicates: [],
+    });
+    expect(skipped.blockers.map((item) => item.code)).toEqual([
+      "unsupported_category",
+      "schema_invalid",
+    ]);
+
+    const commercial = buildPreflightIssues({
+      validationSkipped: false,
+      validationErrors: [],
+      category: "mcp",
+      fields: {
+        name: "Paid SaaS Platform",
+        description: "Enterprise pricing and sponsorship options.",
+      },
+      duplicates: [],
+    });
+    expect(commercial.shouldRouteCommercial).toBe(true);
+    expect(commercial.blockers).toEqual([
+      expect.objectContaining({ code: "route_away" }),
+    ]);
+
+    const toolsCategory = buildPreflightIssues({
+      validationSkipped: false,
+      validationErrors: [],
+      category: "tools",
+      fields: {
+        name: "Paid SaaS Platform",
+        description: "Enterprise pricing and sponsorship options.",
+      },
+      duplicates: [],
+    });
+    expect(toolsCategory.shouldRouteCommercial).toBe(false);
+
+    const privacy = buildPreflightIssues({
+      validationSkipped: false,
+      validationErrors: [],
+      category: "mcp",
+      fields: { name: "Demo MCP Server" },
+      duplicates: [
+        {
+          key: "mcp:demo-server",
+          category: "mcp",
+          slug: "demo-server",
+          title: "Demo MCP Server",
+          url: "https://heyclau.de/entry/mcp/demo-server",
+          reasons: ["title"],
+          reasonLabels: ["same title"],
+        },
+      ],
+      missingPrivacySummary: "Add privacy notes.",
+    });
+    expect(privacy.warnings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: "possible_duplicate_title",
+        }),
+        expect.objectContaining({
+          code: "missing_privacy_notes",
+          message: "Add privacy notes.",
+        }),
+      ]),
     );
   });
 
@@ -244,8 +382,43 @@ describe("submission preflight routing helpers", () => {
         validationErrors: [],
         shouldRouteCommercial: false,
         blockers: [],
+        policyDecision: "maintainer_review",
+      }),
+    ).toBe("manual_review");
+    expect(
+      resolvePreflightRouteSuggestion({
+        validationErrors: [],
+        shouldRouteCommercial: false,
+        blockers: [],
+        riskTier: "critical",
+      }),
+    ).toBe("manual_review");
+    expect(
+      resolvePreflightRouteSuggestion({
+        validationErrors: [],
+        shouldRouteCommercial: false,
+        blockers: [],
       }),
     ).toBe("submit_pr");
+  });
+
+  it("normalizes preflight helper values and errors", () => {
+    expect(normalizePreflightText("  Demo  ")).toBe("Demo");
+    expect(preflightBlocker("code", "message")).toEqual({
+      code: "code",
+      message: "message",
+    });
+    expect(preflightWarning("code", "message")).toEqual({
+      code: "code",
+      message: "message",
+    });
+    expect(normalizePreflightError(new Error("directory offline"))).toEqual({
+      name: "Error",
+      message: "directory offline",
+    });
+    expect(normalizePreflightError("directory offline")).toEqual({
+      message: "directory offline",
+    });
   });
 
   it("builds PR preview metadata for valid submissions", () => {
@@ -260,6 +433,16 @@ describe("submission preflight routing helpers", () => {
       targetPath: "content/mcp/demo-server.mdx",
       branchHint: "heyclaude/submit-mcp-demo-server",
       baseRef: "main",
+    });
+    expect(
+      buildSubmissionPrPreview(
+        { title: "Add MCP Server: Demo", body: "### Name\n\nDemo" },
+        "",
+        "",
+      ),
+    ).toMatchObject({
+      targetPath: "",
+      branchHint: "",
     });
   });
 });

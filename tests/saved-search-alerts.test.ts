@@ -55,6 +55,10 @@ describe("saved-search in-app alert matching", () => {
     expect(savedSearchQueryMatchesEntry(entry, "postgres memory")).toBe(true);
     expect(savedSearchQueryMatchesEntry(entry, "repo memory")).toBe(true);
     expect(savedSearchQueryMatchesEntry(entry, "calendar memory")).toBe(false);
+    expect(savedSearchQueryMatchesEntry(entry, "")).toBe(true);
+    expect(savedSearchQueryMatchesEntry(entry, undefined)).toBe(true);
+    expect(savedSearchQueryMatchesEntry(entry, ",,,")).toBe(false);
+    expect(savedSearchQueryMatchesEntry(entry, "mcp")).toBe(true);
   });
 
   it("uses the shared alias map for saved-search query expansion", () => {
