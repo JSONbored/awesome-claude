@@ -157,7 +157,11 @@ function hasTextLikeValue(value) {
 }
 
 function expandedTokenCandidates(token) {
-  return [token, ...(QUERY_ALIASES[token] ?? [])];
+  const key = String(token || "")
+    .trim()
+    .toLowerCase();
+  if (!key || !Object.hasOwn(QUERY_ALIASES, key)) return [key];
+  return [key, ...QUERY_ALIASES[key]];
 }
 
 function expandedTokenSet(tokens) {

@@ -1,4 +1,10 @@
 import type { AlertCadence, AlertChannel } from "@/lib/recents";
+import { expandedTokenCandidates } from "@/lib/search-query-aliases";
+import {
+  normalizeSearchQuery,
+  TOKEN_SPLIT_PATTERN,
+  tokenizeSearchQuery,
+} from "@/lib/search-query-tokenization";
 import type { Category, Platform, SourceStatus, TrustLevel } from "@/types/registry";
 
 export interface SavedSearchAlertSchedule {
@@ -56,24 +62,6 @@ export interface SavedSearchAlert {
   date: string;
 }
 
-const TOKEN_SPLIT_PATTERN = /[^a-z0-9+#.-]+/i;
-
-const QUERY_ALIASES: Record<string, string[]> = {
-  browser: ["chrome", "playwright", "web"],
-  cc: ["claude", "claude-code"],
-  claude: ["claude-code"],
-  gh: ["github"],
-  mcp: ["model-context-protocol"],
-  repo: ["repository", "github"],
-  repos: ["repository", "github"],
-  safe: ["safety", "security", "secure", "trust", "privacy"],
-  security: ["safe", "safety", "secure", "trust"],
-  skill: ["skills"],
-  skills: ["skill"],
-  statusline: ["statuslines", "status"],
-  statuslines: ["statusline", "status"],
-};
-
 export function savedSearchAlertTargetId(search: Pick<SavedSearchAlertSearch, "id">) {
   return `saved-search:${search.id}`;
 }
@@ -84,18 +72,6 @@ export function activeInAppSavedSearches(
   return searches.filter(
     (search) => search.alerts?.enabled && search.alerts.channels?.includes("inapp"),
   );
-}
-
-function tokenizeSearchQuery(query: string) {
-  return query
-    .split(TOKEN_SPLIT_PATTERN)
-    .map((token) => token.trim().toLowerCase())
-    .filter((token) => token.length >= 2)
-    .slice(0, 12);
-}
-
-function expandedTokenCandidates(token: string) {
-  return [token, ...(QUERY_ALIASES[token] ?? [])];
 }
 
 function normalizedEntryText(entry: SavedSearchAlertEntry) {
@@ -128,7 +104,7 @@ export function savedSearchQueryMatchesEntry(
   entry: SavedSearchAlertEntry,
   query: string | undefined,
 ) {
-  const normalizedQuery = query?.trim().toLowerCase() ?? "";
+  const normalizedQuery = normalizeSearchQuery(query ?? "");
   if (!normalizedQuery) return true;
 
   const tokens = tokenizeSearchQuery(normalizedQuery);

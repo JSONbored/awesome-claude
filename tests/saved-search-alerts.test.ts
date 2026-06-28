@@ -57,6 +57,35 @@ describe("saved-search in-app alert matching", () => {
     expect(savedSearchQueryMatchesEntry(entry, "calendar memory")).toBe(false);
   });
 
+  it("uses the shared alias map for saved-search query expansion", () => {
+    const automationEntry: SavedSearchAlertEntry = {
+      ...entry,
+      title: "QA Automation MCP",
+      tags: ["testing", "qa"],
+      keywords: ["automated browser checks"],
+    };
+
+    expect(savedSearchQueryMatchesEntry(automationEntry, "automation qa")).toBe(
+      true,
+    );
+    expect(savedSearchQueryMatchesEntry(automationEntry, "design ux")).toBe(
+      false,
+    );
+  });
+
+  it("does not treat prototype property names as alias keys", () => {
+    const oddEntry: SavedSearchAlertEntry = {
+      ...entry,
+      title: "Constructor Fixture",
+      keywords: ["constructor"],
+    };
+
+    expect(savedSearchQueryMatchesEntry(oddEntry, "constructor")).toBe(true);
+    expect(
+      savedSearchQueryMatchesEntry(oddEntry, "constructor spreadsheet"),
+    ).toBe(false);
+  });
+
   it("honors category, platform, trust, and source filters", () => {
     expect(
       savedSearchMatchesEntry(
