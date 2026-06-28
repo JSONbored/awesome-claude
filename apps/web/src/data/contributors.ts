@@ -1,5 +1,5 @@
 import { ENTRIES } from "@/data/entries";
-import type { Contributor } from "@/types/registry";
+import type { Category, Contributor, Entry } from "@/types/registry";
 
 export function contributorSlug(value: string) {
   return value
@@ -21,8 +21,65 @@ export function githubHandle(profileUrl?: string) {
   }
 }
 
+function identitySlugs(name?: string, profileUrl?: string) {
+  const slugs = new Set<string>();
+  const add = (value?: string) => {
+    if (!value) return;
+    const slug = contributorSlug(value);
+    if (slug) slugs.add(slug);
+  };
+
+  add(name);
+  add(githubHandle(profileUrl));
+  return slugs;
+}
+
+export function contributorMatchesIdentity(
+  contributor: Contributor,
+  name?: string,
+  profileUrl?: string,
+) {
+  const contributorSlugs = identitySlugs(contributor.name, contributor.github);
+  contributorSlugs.add(contributor.slug);
+  contributorSlugs.add(contributorSlug(contributor.handle));
+
+  const candidateSlugs = identitySlugs(name, profileUrl);
+  return [...candidateSlugs].some((slug) => contributorSlugs.has(slug));
+}
+
+export type ContributorAcceptedEntryRole = "submitted" | "authored" | "submitted-authored";
+
+export function contributorAcceptedEntryRole(
+  contributor: Contributor,
+  entry: Entry,
+): ContributorAcceptedEntryRole | undefined {
+  const submitted = contributorMatchesIdentity(
+    contributor,
+    entry.submittedBy,
+    entry.submittedByUrl,
+  );
+  const authored = contributorMatchesIdentity(contributor, entry.author);
+
+  if (submitted && authored) return "submitted-authored";
+  if (submitted) return "submitted";
+  if (authored) return "authored";
+  return undefined;
+}
+
+export function contributorReviewedEntry(contributor: Contributor, entry: Entry) {
+  return contributorMatchesIdentity(contributor, entry.reviewedBy);
+}
+
+type MutableContributor = Contributor & {
+  categoryCounts: Map<Category, number>;
+};
+
+function incrementCategory(contributor: MutableContributor, category: Category) {
+  contributor.categoryCounts.set(category, (contributor.categoryCounts.get(category) ?? 0) + 1);
+}
+
 export const CONTRIBUTORS: Contributor[] = (() => {
-  const grouped = new Map<string, Contributor>();
+  const grouped = new Map<string, MutableContributor>();
 
   for (const entry of ENTRIES) {
     const name = String(entry.submittedBy || entry.author || "JSONbored").trim();
@@ -40,17 +97,42 @@ export const CONTRIBUTORS: Contributor[] = (() => {
         github: profileUrl,
         bio: "Contributor credited on accepted HeyClaude registry entries.",
         acceptedCount: 0,
-      } satisfies Contributor);
+        reviewedCount: 0,
+        sourceSubmissionCount: 0,
+        categories: [],
+        categoryCounts: new Map<Category, number>(),
+      } satisfies MutableContributor);
 
     existing.acceptedCount += 1;
+    if (entry.sourceSubmissionUrl || entry.importPrUrl) {
+      existing.sourceSubmissionCount = (existing.sourceSubmissionCount ?? 0) + 1;
+    }
+    incrementCategory(existing, entry.category);
     existing.github ||= profileUrl;
     grouped.set(slug, existing);
   }
 
-  return [...grouped.values()].sort(
-    (left, right) =>
-      right.acceptedCount - left.acceptedCount || left.name.localeCompare(right.name),
-  );
+  for (const entry of ENTRIES) {
+    for (const contributor of grouped.values()) {
+      if (contributorReviewedEntry(contributor, entry)) {
+        contributor.reviewedCount = (contributor.reviewedCount ?? 0) + 1;
+      }
+    }
+  }
+
+  return [...grouped.values()]
+    .map(({ categoryCounts, ...contributor }) => ({
+      ...contributor,
+      categories: [...categoryCounts.entries()]
+        .map(([category, count]) => ({ category, count }))
+        .sort(
+          (left, right) => right.count - left.count || left.category.localeCompare(right.category),
+        ),
+    }))
+    .sort(
+      (left, right) =>
+        right.acceptedCount - left.acceptedCount || left.name.localeCompare(right.name),
+    );
 })();
 
 export function getContributor(slug: string) {

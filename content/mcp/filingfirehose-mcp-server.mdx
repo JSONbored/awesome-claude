@@ -1,0 +1,109 @@
+---
+title: FilingFirehose MCP Server
+slug: filingfirehose-mcp-server
+category: mcp
+description: >-
+  Remote MCP server over US SEC EDGAR filings — parsed 8-K (with body-text
+  detection of suspected misclassifications under Item 8.01), Schedule 13D/G
+  with activist filer tagging, and S-3 / 424B5 ATM-offering detection.
+cardDescription: Query parsed US SEC EDGAR filings from Claude over streamable HTTP.
+seoTitle: FilingFirehose MCP Server for Claude
+seoDescription: >-
+  Configure FilingFirehose MCP Server with Claude to query US SEC EDGAR
+  filings — body-text-classified 8-Ks (catching cyber and officer-departure
+  items buried under Item 8.01), activist-tagged Schedule 13D/G, and
+  ATM-offering detection in S-3 / 424B5.
+author: FilingFirehose
+authorProfileUrl: "https://filingfirehose.com"
+submittedBy: jaablon
+submittedByUrl: "https://github.com/jaablon"
+dateAdded: "2026-06-27"
+brandName: FilingFirehose
+brandDomain: filingfirehose.com
+websiteUrl: "https://filingfirehose.com"
+documentationUrl: "https://filingfirehose.com/docs"
+retrievalSources:
+  - "https://filingfirehose.com"
+  - "https://filingfirehose.com/openapi.json"
+  - "https://filingfirehose.com/mcp"
+tags:
+  - sec
+  - edgar
+  - finance
+  - filings
+  - 8-k
+  - 13d
+  - s-3
+installable: true
+installCommand: "claude mcp add --transport http filingfirehose https://filingfirehose.com/mcp"
+usageSnippet: >-
+  Ask Claude to search the last 72h of 8-Ks for suspected buried cyber events, or
+  to list recent Schedule 13D filings tagged with a specific activist fund.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "filingfirehose": {
+        "url": "https://filingfirehose.com/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "filingfirehose": {
+        "url": "https://filingfirehose.com/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "MCP client with streamable HTTP transport support (Claude Desktop, Claude Code, Cursor, etc.)"
+  - "No account required for the free public tier (last 72 hours of filings)."
+  - "Optional API key for full archive access — set via Authorization header."
+safetyNotes:
+  - "Read-only — the server exposes no write tools."
+privacyNotes:
+  - "Queries and responses pass through the FilingFirehose backend; standard request logs apply."
+---
+
+# FilingFirehose MCP Server
+
+FilingFirehose exposes parsed US SEC EDGAR filings as MCP tools. The free public tier returns the last 72 hours of filings with no authentication; paid tiers unlock the full archive.
+
+## Tools
+
+- `search_8k_filings` — Recent 8-K filings with item classification. The body-text classifier flags suspected misclassifications under Item 8.01 (cyber incidents buried as "Other Events", silent officer departures filed under 8.01 instead of 5.02).
+- `search_13d_filings` — Schedule 13D / 13G beneficial ownership filings, with activist filer tagging (Saba, Bulldog, Karpus, Icahn, Elliott, Starboard, Pershing, +14 more).
+- `search_s3_filings` — S-3 / 424B5 prospectuses with shelf size, ATM-offering detection, and sales-agent extraction.
+
+## Setup
+
+```
+claude mcp add --transport http filingfirehose https://filingfirehose.com/mcp
+```
+
+Or paste into your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "filingfirehose": {
+      "url": "https://filingfirehose.com/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+## Verification
+
+```
+curl -X POST https://filingfirehose.com/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","method":"initialize","id":1,"params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"t","version":"1"}}}'
+# serverInfo: filingfirehose 1.28.1
+```

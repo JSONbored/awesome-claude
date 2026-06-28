@@ -11,7 +11,13 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 import { ResourceCard } from "@/components/resource-card";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
-import { countSearchResults, normalizeSearchQuery, search } from "@/data/search";
+import {
+  countSearchResults,
+  normalizeSearchQuery,
+  search,
+  TRUST_SIGNAL_FILTERS,
+  type TrustSignalFilter,
+} from "@/data/search";
 import {
   CATEGORIES,
   type Category,
@@ -60,6 +66,7 @@ function SavedSearchChipRow({
         category: s.category ?? "",
         trust: s.trust ?? "",
         source: s.source ?? "",
+        signal: s.signal ?? "",
         platform: s.platform ?? "",
         sort: (s.sort as "popular" | "newest" | "title") ?? "popular",
         view: "row" as const,
@@ -116,6 +123,7 @@ const defaultSearch = {
   category: "",
   trust: "",
   source: "",
+  signal: "",
   platform: "",
   sort: "popular" as const,
   view: "row" as const,
@@ -127,6 +135,7 @@ const searchSchema = z.object({
   category: z.string().catch(defaultSearch.category).default(defaultSearch.category),
   trust: z.string().catch(defaultSearch.trust).default(defaultSearch.trust),
   source: z.string().catch(defaultSearch.source).default(defaultSearch.source),
+  signal: z.string().catch(defaultSearch.signal).default(defaultSearch.signal),
   platform: z.string().catch(defaultSearch.platform).default(defaultSearch.platform),
   sort: z
     .enum(["popular", "newest", "title"])
@@ -144,10 +153,16 @@ export const Route = createFileRoute("/browse")({
   beforeLoad: ({ search }) => {
     // Stale/external links with unknown category values (e.g. ?category=plugins) render an
     // empty result set that Google flags as a soft 404. Redirect them to clean /browse.
-    if (search.category && !CATEGORIES.some((c) => c.id === search.category)) {
+    const invalidCategory = search.category && !CATEGORIES.some((c) => c.id === search.category);
+    const invalidSignal = search.signal && !isTrustSignalFilter(search.signal);
+    if (invalidCategory || invalidSignal) {
       throw redirect({
         to: "/browse",
-        search: { ...search, category: "" },
+        search: {
+          ...search,
+          category: invalidCategory ? "" : search.category,
+          signal: invalidSignal ? "" : search.signal,
+        },
         statusCode: 301,
         replace: true,
       });
@@ -183,6 +198,25 @@ const PLATFORM_IDS: Platform[] = [
   "cli",
   "raycast",
 ];
+const TRUST_SIGNAL_OPTIONS: { id: TrustSignalFilter; label: string }[] = [
+  { id: "safety-notes", label: "Safety notes" },
+  { id: "privacy-notes", label: "Privacy notes" },
+  { id: "source-backed", label: "Source-backed" },
+  { id: "trusted-package", label: "Trusted package" },
+  { id: "reviewed", label: "Reviewed" },
+  { id: "checksums", label: "Checksums" },
+];
+const TRUST_SIGNAL_LABEL = Object.fromEntries(
+  TRUST_SIGNAL_OPTIONS.map((option) => [option.id, option.label]),
+) as Record<TrustSignalFilter, string>;
+
+function isTrustSignalFilter(value: string): value is TrustSignalFilter {
+  return TRUST_SIGNAL_FILTERS.includes(value as TrustSignalFilter);
+}
+
+function signalLabel(value: string) {
+  return isTrustSignalFilter(value) ? TRUST_SIGNAL_LABEL[value] : "";
+}
 
 function Browse() {
   const sp = Route.useSearch();
@@ -240,6 +274,7 @@ function Browse() {
       categories: sp.category ? [sp.category as Category] : undefined,
       trust: sp.trust ? [sp.trust as TrustLevel] : undefined,
       source: sp.source ? [sp.source as SourceStatus] : undefined,
+      signal: isTrustSignalFilter(sp.signal) ? sp.signal : "",
       platforms: sp.platform ? [sp.platform as Platform] : undefined,
       sort: sp.sort,
     }),
@@ -283,6 +318,7 @@ function Browse() {
     Number(!!sp.category) +
     Number(!!sp.trust) +
     Number(!!sp.source) +
+    Number(!!sp.signal) +
     Number(!!sp.platform);
 
   const clearAll = () =>
@@ -292,6 +328,7 @@ function Browse() {
         category: "",
         trust: "",
         source: "",
+        signal: "",
         platform: "",
         sort: "popular",
         view: sp.view,
@@ -303,13 +340,14 @@ function Browse() {
     if (activeCount === 0) return;
     const label = sp.q
       ? `“${sp.q}”${sp.category ? ` · ${sp.category}` : ""}`
-      : `${sp.category || sp.trust || sp.source || sp.platform || "Filter"}`;
+      : `${sp.category || sp.trust || sp.source || signalLabel(sp.signal) || sp.platform || "Filter"}`;
     recents.saveSearch({
       label,
       q: sp.q,
       category: sp.category,
       trust: sp.trust,
       source: sp.source,
+      signal: sp.signal,
       platform: sp.platform,
       sort: sp.sort,
     });
@@ -321,19 +359,23 @@ function Browse() {
   const [shown, setShown] = React.useState(PAGE);
   React.useEffect(() => {
     setShown(PAGE);
-  }, [sp.q, sp.category, sp.trust, sp.source, sp.platform, sp.sort]);
+  }, [sp.q, sp.category, sp.trust, sp.source, sp.signal, sp.platform, sp.sort]);
 
   // Per-axis facet counts: how many results if this value were the only filter
   // in its axis. Memoized on the search params and counted without sorting so
   // sidebar counts do not pay for result ranking on every filter change.
   const facetCounts = useMemo(() => {
-    const countFor = (axis: "category" | "trust" | "source" | "platform", value: string) => {
+    const countFor = (
+      axis: "category" | "trust" | "source" | "signal" | "platform",
+      value: string,
+    ) => {
       const merged = { ...sp, [axis]: value } as typeof sp;
       return countSearchResults({
         q: merged.q,
         categories: merged.category ? [merged.category as Category] : undefined,
         trust: merged.trust ? [merged.trust as TrustLevel] : undefined,
         source: merged.source ? [merged.source as SourceStatus] : undefined,
+        signal: isTrustSignalFilter(merged.signal) ? merged.signal : "",
         platforms: merged.platform ? [merged.platform as Platform] : undefined,
         sort: merged.sort,
       });
@@ -342,12 +384,17 @@ function Browse() {
       category: Object.fromEntries(CATEGORIES.map((c) => [c.id, countFor("category", c.id)])),
       trust: Object.fromEntries(TRUST_LEVELS.map((t) => [t, countFor("trust", t)])),
       source: Object.fromEntries(SOURCE_STATUSES.map((s) => [s, countFor("source", s)])),
+      signal: Object.fromEntries(
+        TRUST_SIGNAL_OPTIONS.map((option) => [option.id, countFor("signal", option.id)]),
+      ),
       platform: Object.fromEntries(PLATFORM_IDS.map((p) => [p, countFor("platform", p)])),
     } as Record<string, Record<string, number>>;
   }, [sp]);
 
-  const axisCount = (axis: "category" | "trust" | "source" | "platform", value: string) =>
-    facetCounts[axis]?.[value] ?? 0;
+  const axisCount = (
+    axis: "category" | "trust" | "source" | "signal" | "platform",
+    value: string,
+  ) => facetCounts[axis]?.[value] ?? 0;
 
   // Focus search on "/" key.
   const searchRef = React.useRef<HTMLInputElement>(null);
@@ -387,6 +434,13 @@ function Browse() {
       value: sp.source,
       onClear: () => set({ source: "" }),
     });
+  if (isTrustSignalFilter(sp.signal))
+    activeFilters.push({
+      key: "signal",
+      label: "Signal",
+      value: signalLabel(sp.signal),
+      onClear: () => set({ signal: "" }),
+    });
   if (sp.platform)
     activeFilters.push({
       key: "platform",
@@ -402,6 +456,8 @@ function Browse() {
     const trials: { label: string; patch: Partial<typeof sp> }[] = [];
     if (sp.platform)
       trials.push({ label: `Remove platform "${sp.platform}"`, patch: { platform: "" } });
+    if (sp.signal)
+      trials.push({ label: `Remove signal "${signalLabel(sp.signal)}"`, patch: { signal: "" } });
     if (sp.source) trials.push({ label: `Remove source "${sp.source}"`, patch: { source: "" } });
     if (sp.trust) trials.push({ label: `Remove trust "${sp.trust}"`, patch: { trust: "" } });
     if (sp.category) trials.push({ label: `Search all categories`, patch: { category: "" } });
@@ -414,6 +470,7 @@ function Browse() {
           categories: merged.category ? [merged.category as Category] : undefined,
           trust: merged.trust ? [merged.trust as TrustLevel] : undefined,
           source: merged.source ? [merged.source as SourceStatus] : undefined,
+          signal: isTrustSignalFilter(merged.signal) ? merged.signal : "",
           platforms: merged.platform ? [merged.platform as Platform] : undefined,
           sort: merged.sort,
         });
@@ -627,11 +684,29 @@ function Browse() {
               currentLabel={
                 sp.q
                   ? `“${sp.q}”${sp.category ? ` · ${sp.category}` : ""}`
-                  : sp.category || sp.trust || sp.source || sp.platform || ""
+                  : sp.category ||
+                    sp.trust ||
+                    sp.source ||
+                    signalLabel(sp.signal) ||
+                    sp.platform ||
+                    ""
               }
               canSave={activeCount > 0}
               onSave={saveCurrent}
             />
+            <FilterChipGroup label="Trust signal quick filters" multi={false}>
+              {TRUST_SIGNAL_OPTIONS.map((option) => (
+                <FilterChip
+                  key={option.id}
+                  role="radio"
+                  active={sp.signal === option.id}
+                  onClick={() => set({ signal: sp.signal === option.id ? "" : option.id })}
+                  count={axisCount("signal", option.id)}
+                >
+                  {option.label}
+                </FilterChip>
+              ))}
+            </FilterChipGroup>
             <div className="hidden text-[10px] text-ink-subtle sm:block">
               <kbd className="rounded border border-border bg-surface px-1 font-mono">/</kbd> search
               · <kbd className="rounded border border-border bg-surface px-1 font-mono">[ ]</kbd>{" "}
@@ -714,6 +789,7 @@ function Browse() {
                               category: s.category ?? "",
                               trust: s.trust ?? "",
                               source: s.source ?? "",
+                              signal: s.signal ?? "",
                               platform: s.platform ?? "",
                               sort: (s.sort as typeof sp.sort) ?? "popular",
                               view: sp.view,

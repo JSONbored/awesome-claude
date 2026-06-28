@@ -453,6 +453,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
     codeBlocks: entry.codeBlocks,
     downloadSha256: entry.downloadSha256 ?? undefined,
     downloadUrl: entry.downloadUrl || undefined,
+    downloadTrust: entry.downloadTrust ?? undefined,
     packageVerified: entry.packageVerified,
     commandSyntax: typeof entry.commandSyntax === "string" ? entry.commandSyntax : undefined,
     argumentHint: entry.argumentHint,

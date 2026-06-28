@@ -676,7 +676,9 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
     expect(result.entries.length).toBeGreaterThan(0);
     expect(result.entries.length).toBeLessThanOrEqual(5);
-    expect(result.entries[0].platforms).toContain("cursor");
+    expect(
+      result.entries[0].platforms.map((value) => value.toLowerCase()),
+    ).toContain("cursor");
     expect(result.entries[0]).toMatchObject({
       searchScore: expect.any(Number),
       searchReasons: expect.any(Array),
@@ -1310,7 +1312,9 @@ describe("HeyClaude read-only MCP helpers", () => {
       dateAdded: expect.any(String),
     });
     expect(result.entries[0].tags).toContain("evals");
-    expect(result.entries[0].platforms).toContain("cursor");
+    expect(
+      result.entries[0].platforms.map((value) => value.toLowerCase()),
+    ).toContain("cursor");
   });
 
   it("lists recent updates from generated registry metadata", async () => {

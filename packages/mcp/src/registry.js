@@ -28,6 +28,18 @@ import {
   searchDuplicateEntries,
   validateSubmissionDraftFromSpec,
 } from "./submissions.js";
+import {
+  entryClaimStatusValue,
+  entryHasPrivacyNotes,
+  entryHasSafetyNotes,
+  entryPackageTrustValue,
+  entrySourceStatusValue,
+  matchesRegistryPlatform,
+  matchesRegistryQuery,
+  normalizedRegistrySearchText,
+  rankRegistrySearchEntries,
+  tokenizeRegistrySearchQuery,
+} from "./search-ranking.js";
 
 export * from "./schemas.js";
 
@@ -425,146 +437,23 @@ function normalizePlatform(value) {
 }
 
 function entryMatchesQuery(entry, query) {
-  if (!query) return true;
-  const haystack = [
-    entry.title,
-    entry.description,
-    entry.cardDescription,
-    entry.category,
-    entry.slug,
-    entry.author,
-    entry.submittedBy,
-    entry.brandName,
-    entry.brandDomain,
-    ...notes(entry.safetyNotes),
-    ...notes(entry.privacyNotes),
-    ...(entry.tags || []),
-    ...(entry.keywords || []),
-  ]
-    .map(normalizeText)
-    .join(" ");
-  return haystack.includes(query);
+  return matchesRegistryQuery(entry, query);
 }
 
 function searchTokens(query) {
-  return normalizeText(query)
-    .split(/[^a-z0-9+#.-]+/i)
-    .map((token) => token.trim())
-    .filter((token) => token.length >= 2)
-    .slice(0, 12);
+  return tokenizeRegistrySearchQuery(query);
 }
 
 function entrySearchText(entry) {
-  return [
-    entry.title,
-    entry.description,
-    entry.cardDescription,
-    entry.category,
-    entry.slug,
-    entry.author,
-    entry.submittedBy,
-    entry.brandName,
-    entry.brandDomain,
-    ...notes(entry.safetyNotes),
-    ...notes(entry.privacyNotes),
-    ...(entry.tags || []),
-    ...(entry.keywords || []),
-  ]
-    .map(normalizeText)
-    .join(" ")
-    .toLowerCase();
-}
-
-function scoreSearchEntry(entry, query) {
-  const normalizedQuery = normalizeText(query);
-  const tokens = searchTokens(normalizedQuery);
-  if (!tokens.length) return { score: 0, reasons: [] };
-
-  const title = normalizeText(entry.title);
-  const category = normalizeText(entry.category);
-  const tags = new Set((entry.tags || []).map(normalizeText));
-  const keywords = new Set((entry.keywords || []).map(normalizeText));
-  const haystack = entrySearchText(entry);
-  const reasons = new Set();
-  let score = 0;
-
-  if (title.includes(normalizedQuery)) {
-    score += 90;
-    reasons.add("title phrase");
-  }
-  if (category === normalizedQuery) {
-    score += 45;
-    reasons.add("category match");
-  }
-
-  for (const token of tokens) {
-    if (title.includes(token)) {
-      score += 35;
-      reasons.add("title term");
-    }
-    if (tags.has(token)) {
-      score += 24;
-      reasons.add("tag match");
-    }
-    if (keywords.has(token)) {
-      score += 18;
-      reasons.add("keyword match");
-    }
-    if (category.includes(token)) {
-      score += 12;
-      reasons.add("category term");
-    }
-    if (haystack.includes(token)) score += 4;
-  }
-
-  if (entrySourceStatus(entry) === "available") {
-    score += 8;
-    reasons.add("source-backed");
-  }
-  if (
-    entryPackageTrust(entry) === "first-party" ||
-    entry.packageVerified ||
-    entry.trustSignals?.packageVerified
-  ) {
-    score += 8;
-    reasons.add("trusted package");
-  }
-  if (notes(entry.safetyNotes).length) {
-    score += 4;
-    reasons.add("safety notes");
-  }
-  if (notes(entry.privacyNotes).length) {
-    score += 4;
-    reasons.add("privacy notes");
-  }
-  if (entry.claimStatus === "verified" || entry.reviewedBy) {
-    score += 4;
-    reasons.add("reviewed");
-  }
-
-  return { score, reasons: [...reasons].slice(0, 6) };
+  return normalizedRegistrySearchText(entry);
 }
 
 function rankSearchEntries(entries, query) {
-  return entries
-    .map((entry, index) => ({
-      entry,
-      index,
-      ...scoreSearchEntry(entry, query),
-    }))
-    .sort((left, right) => {
-      if (left.score !== right.score) return right.score - left.score;
-      const dateCompare = String(right.entry.dateAdded || "").localeCompare(
-        String(left.entry.dateAdded || ""),
-      );
-      if (dateCompare !== 0) return dateCompare;
-      return left.index - right.index;
-    });
+  return rankRegistrySearchEntries(entries, query);
 }
 
 function entryMatchesPlatform(entry, platform) {
-  if (!platform) return true;
-  return (entry.platforms || []).some((candidate) => candidate === platform);
+  return matchesRegistryPlatform(entry, platform);
 }
 
 function entryMatchesTag(entry, tag) {
@@ -580,40 +469,23 @@ function booleanFilterMatches(value, filter = "all") {
 }
 
 function entryPackageTrust(entry) {
-  return entry.downloadTrust || (entry.downloadUrl ? "external" : "none");
+  return entryPackageTrustValue(entry);
 }
 
 function entryClaimStatus(entry) {
-  return entry.claimStatus || "unclaimed";
+  return entryClaimStatusValue(entry);
 }
 
 function entrySourceStatus(entry) {
-  const sourceUrls = [
-    entry.documentationUrl,
-    entry.repoUrl,
-    entry.githubUrl,
-    entry.sourceUrl,
-  ].filter((value) => String(value || "").trim());
-  return (
-    entry.trustSignals?.sourceStatus ||
-    (sourceUrls.length ? "available" : "missing")
-  );
+  return entrySourceStatusValue(entry);
 }
 
 function entryMatchesTrustFilters(entry, args = {}) {
-  if (
-    !booleanFilterMatches(
-      notes(entry.safetyNotes).length > 0,
-      args.hasSafetyNotes,
-    )
-  ) {
+  if (!booleanFilterMatches(entryHasSafetyNotes(entry), args.hasSafetyNotes)) {
     return false;
   }
   if (
-    !booleanFilterMatches(
-      notes(entry.privacyNotes).length > 0,
-      args.hasPrivacyNotes,
-    )
+    !booleanFilterMatches(entryHasPrivacyNotes(entry), args.hasPrivacyNotes)
   ) {
     return false;
   }
