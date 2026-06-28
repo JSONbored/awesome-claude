@@ -1,0 +1,136 @@
+---
+title: Phronesis
+slug: phronesis-hermes
+category: mcp
+description: >-
+  Decision-assurance layer for AI agents: returns calibrated Decision Assets and an auditable
+  action boundary (approve / review / block / seek-evidence) plus a verifiable Decision Receipt
+  before high-stakes actions. Advisory only — never transacts or modifies identity. MCP tools:
+  health_check and bench_query.
+cardDescription: "Decision-assurance for AI agents — calibrated Decision Assets + an auditable action boundary and receipt before an agent acts."
+seoTitle: "Phronesis — Decision-Assurance MCP for AI Agents"
+seoDescription: "Decision-assurance MCP for AI agents: calibrated, independently-benchmarked Decision Assets plus an auditable action boundary and verifiable Decision Receipt before an agent acts."
+author: "Sustainable Finance Partners, LLC"
+submittedBy: phronesis-cc-bot
+submittedByUrl: "https://github.com/phronesis-cc-bot"
+dateAdded: "2026-06-20"
+documentationUrl: "https://phronesisintel.com/for-agents"
+websiteUrl: "https://phronesisintel.com"
+installable: true
+installCommand: 'claude mcp add --transport http phronesis-hermes https://api.phronesisintel.com/mcp --header "Authorization: Bearer $PHRONESIS_JWT"'
+usageSnippet: >-
+  Connect with a free diligence-tier JWT (get one at https://api.phronesisintel.com/api/v1/signup),
+  then call health_check (liveness + version) or bench_query (Decision Quality Bench snapshot;
+  honest insufficient_sample where unscored). All MCP tools require a JWT. No-signup public data
+  (read-only, not MCP): curl https://api.phronesisintel.com/.well-known/bench.json
+copySnippet: |-
+  {
+    "mcpServers": {
+      "phronesis-hermes": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "https://api.phronesisintel.com/mcp", "--header", "Authorization: Bearer ${PHRONESIS_JWT}"],
+        "env": { "PHRONESIS_JWT": "paste-your-JWT-from-/api/v1/signup" }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "phronesis-hermes": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "https://api.phronesisintel.com/mcp", "--header", "Authorization: Bearer ${PHRONESIS_JWT}"],
+        "env": { "PHRONESIS_JWT": "paste-your-JWT-from-/api/v1/signup" }
+      }
+    }
+  }
+safetyNotes:
+  - "Remote hosted MCP server over HTTPS; no local package, shell execution, or file writes."
+  - "Public tools (health_check, bench_query) are read-only."
+  - "Advisory/assurance, deny-by-default on money, binding, and identity — never autonomously transacts."
+  - "All tools need a Bearer JWT (free via /api/v1/signup)."
+privacyNotes:
+  - "Connecting requires a Bearer JWT, stored locally by your client."
+  - "Tool calls go over HTTPS to api.phronesisintel.com (operated by Sustainable Finance Partners, LLC)."
+  - "Public read-only tools need no personal data; nothing is sent unless you call a tool. Logged server-side."
+  - "Privacy: phronesisintel.com/privacy"
+tags:
+  - decision-assurance
+  - action-boundary
+  - decision-receipt
+  - decision-asset
+  - agent-infrastructure
+  - calibration
+  - mcp-server
+  - capital-allocation
+keywords:
+  - phronesis decision assurance mcp
+  - ai agent action boundary mcp server
+  - auditable decision receipt claude
+  - high-stakes action approval mcp
+  - agent infrastructure decision quality
+---
+
+## Overview
+
+**Phronesis** is a decision-assurance layer for AI agents, served as the `phronesis-hermes` MCP
+server (streamable-HTTP, with an `mcp-remote` stdio bridge for Claude Desktop). An agent calls
+Phronesis **before a high-stakes action** and gets back a calibrated, independently-benchmarked
+**Decision Asset**, an auditable **action boundary** (`approve / review / block / seek-evidence`),
+and a verifiable **Decision Receipt**. Phronesis is advisory/assurance: it never autonomously
+transacts, binds, moves money, or modifies identity — the calling agent and its principal retain
+the action.
+
+## Connecting
+
+All MCP tools require a Bearer JWT (free diligence tier — get one at
+`https://api.phronesisintel.com/api/v1/signup`). Endpoint: `https://api.phronesisintel.com/mcp`.
+
+```bash
+claude mcp add --transport http phronesis-hermes https://api.phronesisintel.com/mcp \
+  --header "Authorization: Bearer $PHRONESIS_JWT"
+```
+
+Claude Desktop (stdio client → remote, via the `mcp-remote` bridge):
+
+```json
+{
+  "mcpServers": {
+    "phronesis-hermes": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://api.phronesisintel.com/mcp", "--header", "Authorization: Bearer ${PHRONESIS_JWT}"],
+      "env": { "PHRONESIS_JWT": "paste-your-JWT-from-/api/v1/signup" }
+    }
+  }
+}
+```
+
+## Public read-only tools
+
+- **`health_check`** — liveness + version probe.
+- **`bench_query`** — Decision Quality Bench snapshot (eight modules; honest `insufficient_sample` where unscored).
+
+Forecast, memory, and Decision-Asset mint tools require an entitled principal and are
+deny-by-default gated. No-signup public data (read-only, REST not MCP):
+`curl https://api.phronesisintel.com/.well-known/bench.json`.
+
+## Contact
+
+Public contact: **support@phronesisintel.com** · Operator: Sustainable Finance Partners, LLC ·
+Privacy: `phronesisintel.com/privacy`
+
+## Source verification notes
+
+Verified live on 2026-06-20:
+
+- `https://api.phronesisintel.com/.well-known/mcp.json` (HTTP 200) advertises the
+  `phronesis-hermes` server, the streamable-HTTP transport, and the public read-only tools
+  `health_check` + `bench_query`.
+- `POST https://api.phronesisintel.com/mcp` without a JWT returns `401` (`auth_error`) —
+  confirming all MCP tools require authentication (no anonymous access).
+- `https://api.phronesisintel.com/.well-known/bench.json` and `/health/live` return HTTP 200
+  (the unauthenticated public read-only substrate).
+- Docs: `https://phronesisintel.com/for-agents` (HTTP 200).
+
+Phronesis is a closed-source hosted product; there is no public source repository. The
+verifiable integration surface is the public MCP manifest, the OpenAPI spec at
+`https://api.phronesisintel.com/.well-known/openapi.json`, and the docs linked above.

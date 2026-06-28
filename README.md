@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1336+ file-backed entries</strong> stay useful as both an
+        <strong>1338+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1336</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1338</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -69,7 +69,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>464</code><br>
+          <code>466</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -297,7 +297,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (464)
+## 🔌 MCP Servers (466)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -395,6 +395,7 @@ packages use checksums and package trust metadata after review.
 - **[BrowserMCP Server](https://heyclau.de/entry/mcp/browsermcp-server)** - Browser automation MCP server and Chrome extension that lets AI applications control a connected tab in the user's existing browser profile.
 - **[BrowserStack MCP Server for Claude](https://heyclau.de/entry/mcp/browserstack-mcp-server)** - Connect Claude to BrowserStack for permission-scoped web, app, accessibility, and test automation workflows.
 - **[Burp Suite MCP Server](https://heyclau.de/entry/mcp/burp-suite-mcp-server)** - PortSwigger's Burp Suite MCP Server extension connects Burp Suite to MCP clients through an SSE server or packaged stdio proxy for request, Repeater, Intruder, history, scanner, Collaborator, and configuration workflows.
+- **[BuyWhere MCP Server](https://heyclau.de/entry/mcp/buywhere-mcp-server)** - Real-time product search and price comparison across 11M+ products from Singapore, Southeast Asia, and US marketplaces via a remote streamable-HTTP MCP endpoint with API key auth.
 - **[ByteRay AI MCP Server](https://heyclau.de/entry/mcp/byteray-ai-mcp-server)** - ByteRay MCP provides AI-augmented binary vulnerability analysis with taint tracing and zero-day hunting tools.
 - **[CalendarMCP MCP Server](https://heyclau.de/entry/mcp/calendarmcp-mcp-server)** - Hosted Google Calendar MCP server that lets compatible AI clients read, create, update, delete, search, and batch-edit calendar events through an HTTP endpoint and API-key authentication.
 - **[Canva MCP Server for Claude](https://heyclau.de/entry/mcp/canva-mcp-server)** - Browse, summarize, and generate Canva designs directly from Claude
@@ -654,6 +655,7 @@ packages use checksums and package trust metadata after review.
 - **[Pentest AI MCP Server](https://heyclau.de/entry/mcp/pentest-ai-mcp-server)** - Offensive-security MCP server from pentest-ai that lets Claude list and run wrapped security tools, plan and install missing tools, launch authorized engagements, run web, recon, API, cloud, AD, credential, vulnerability, mobile, wireless, and LLM-red-team assessments, and retrieve findings, attack chains, reports.
 - **[Perplexity MCP Server for Claude](https://heyclau.de/entry/mcp/perplexity-mcp-server)** - Official Perplexity MCP server that connects Claude to the Perplexity Sonar API for real-time, web-grounded answers with citations, so responses can draw on current information beyond the model's training data.
 - **[pg-aiguide MCP Server](https://heyclau.de/entry/mcp/pg-aiguide-mcp-server)** - PostgreSQL documentation and best-practice MCP server from Timescale that gives Claude semantic and keyword search across PostgreSQL, TimescaleDB, and PostGIS docs.
+- **[Phronesis](https://heyclau.de/entry/mcp/phronesis-hermes)** - Decision-assurance layer for AI agents: returns calibrated Decision Assets and an auditable action boundary (approve / review / block / seek-evidence) plus a verifiable Decision Receipt before high-stakes actions. Advisory only — never transacts or modifies identity. MCP tools: health_check and bench_query.
 - **[Pinecone Developer MCP Server](https://heyclau.de/entry/mcp/pinecone-developer-mcp-server)** - Official Pinecone Developer MCP server that connects Claude and other MCP clients to Pinecone projects and documentation for index management, record upserts, semantic search, cascading multi-index search, reranking, and documentation lookup over integrated-inference indexes.
 - **[Plaid MCP Server for Claude](https://heyclau.de/entry/mcp/plaid-mcp-server)** - Analyze, troubleshoot, and optimize Plaid integrations for banking data and financial account linking
 - **[Plane MCP Server](https://heyclau.de/entry/mcp/plane-mcp-server)** - Official Plane MCP server for connecting Claude to Plane projects, work items, cycles, modules, initiatives, comments, links, work logs, pages, and workspace metadata.
@@ -1109,7 +1111,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Subagent Transcript Cleanup Capability Pack Skill](https://heyclau.de/entry/skills/subagent-transcript-cleanup-capability-pack)** - Expert capability pack for reviewing Claude Code subagent transcript files, documented retention settings, compaction events, and summary handoff so verbose delegated work stays out of the main conversation.
 - **[Supabase Agent Skills](https://heyclau.de/entry/skills/supabase-agent-skills)** - Official Supabase Agent Skills for AI coding agents working with Supabase Database, Auth, Edge Functions, Realtime, Storage, Vectors, CLI, MCP, RLS, migrations, and Postgres performance.
 - **[Supabase Realtime Database Builder Skill](https://heyclau.de/entry/skills/supabase-realtime-database)** - Build full-stack apps on Supabase via @supabase/supabase-js: a hosted Postgres database with row-level security, realtime subscriptions over websockets, Auth, storage, Edge Functions for serverless logic, and pgvector for embeddings.
-- **[Superpowers Skills](https://heyclau.de/entry/skills/superpowers-skills)** - MIT-licensed Superpowers skill and plugin framework by Jesse Vincent for Claude Code, Codex App, Codex CLI, Cursor, Gemini CLI, Antigravity, Kimi Code, OpenCode, Pi, GitHub Copilot CLI, and other coding agents, covering brainstorming, planning, TDD, systematic debugging, subagent-driven development, code review, git worktrees, and finish-the-branch workflows.
+- **[Superpowers Skills](https://heyclau.de/entry/skills/superpowers-skills)** - MIT-licensed skill and plugin framework by Jesse Vincent for Claude Code, Codex, Cursor, Gemini CLI, OpenCode, and other AI coding agents, covering brainstorming, planning, TDD, systematic debugging, subagent-driven development, code review, git worktrees, and finish-the-branch workflows.
 - **[Svelte SvelteKit Full-Stack Development Skill](https://heyclau.de/entry/skills/svelte-sveltekit-fullstack)** - Build full-stack web apps with Svelte and SvelteKit. Minimal runtime overhead, reactive components, and server-side rendering. The most admired frontend framework of 2025. Svelte compiles components to vanilla JavaScript at build time, resulting in zero runtime overhead and exceptional performance.
 - **[TanStack Query Data Fetching Skill](https://heyclau.de/entry/skills/tanstack-query-data-fetching)** - Build React server-state workflows with TanStack Query v5, including query keys, QueryClient setup, cache defaults, mutations, invalidation, hydration, retries, and privacy-aware data handling.
 - **[tRPC Type-Safe API Builder Skill](https://heyclau.de/entry/skills/trpc-type-safe-api)** - Build end-to-end type-safe APIs with tRPC and TypeScript, eliminating code generation and runtime bloat for full-stack applications. tRPC provides end-to-end type safety without code generation, schema stitching, or serialization layers - delivering a lighter, more intuitive developer experience than REST or GraphQL.

@@ -6,6 +6,7 @@ import {
   TOKEN_SPLIT_PATTERN,
   tokenizeSearchQuery,
 } from "@/lib/search-query-tokenization";
+import { expandedTokenCandidates, expandedTokenSet } from "@/lib/search-query-aliases";
 
 export type BooleanFilterValue = "all" | "true" | "false";
 
@@ -37,26 +38,6 @@ export type RegistrySearchFilterDimension =
   | "downloadTrust"
   | "claimStatus"
   | "sourceStatus";
-
-const QUERY_ALIASES: Record<string, string[]> = {
-  automation: ["automate", "automated", "qa", "testing"],
-  browser: ["chrome", "playwright", "web"],
-  cc: ["claude", "claude-code"],
-  claude: ["claude-code"],
-  design: ["ux", "ui"],
-  gh: ["github"],
-  ms: ["microsoft"],
-  mcp: ["model-context-protocol"],
-  msteams: ["teams", "microsoft-teams"],
-  repo: ["repository", "github"],
-  repos: ["repository", "github"],
-  safe: ["safety", "security", "secure", "trust", "privacy"],
-  security: ["safe", "safety", "secure", "trust"],
-  skill: ["skills"],
-  skills: ["skill"],
-  statusline: ["statuslines", "status"],
-  statuslines: ["statusline", "status"],
-};
 
 type QueryIntentProfile = {
   id: string;
@@ -160,14 +141,6 @@ const SEARCH_REASON_PRIORITY = [
   "installable",
   "reviewed",
 ];
-
-function expandedTokenCandidates(token: string) {
-  return [token, ...(QUERY_ALIASES[token] ?? [])];
-}
-
-function expandedTokenSet(tokens: ReadonlyArray<string>) {
-  return new Set(tokens.flatMap((token) => expandedTokenCandidates(token)));
-}
 
 function normalizedSet(values: ReadonlyArray<unknown> | undefined) {
   return new Set((values ?? []).map((value) => String(value).trim().toLowerCase()).filter(Boolean));

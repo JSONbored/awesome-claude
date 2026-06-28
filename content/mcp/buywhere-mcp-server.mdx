@@ -1,0 +1,99 @@
+---
+title: BuyWhere MCP Server
+slug: buywhere-mcp-server
+category: mcp
+description: >-
+  Real-time product search and price comparison across 11M+ products from Singapore,
+  Southeast Asia, and US marketplaces via a remote streamable-HTTP MCP endpoint with API key auth.
+cardDescription: "BuyWhere MCP: cross-border e-commerce product search and price comparison for Claude."
+seoTitle: "BuyWhere MCP Server for Claude — Cross-Border E-commerce Product Search & Price Comparison"
+seoDescription: >-
+  Connect Claude to BuyWhere's live product catalog across Singapore, SEA, and US marketplaces.
+  Search products, compare prices, retrieve deals, and list categories via a remote streamable-HTTP
+  MCP endpoint with bearer-token API key auth.
+author: BuyWhere
+authorProfileUrl: "https://github.com/BuyWhere"
+submittedBy: BuyWhere
+submittedByUrl: "https://github.com/BuyWhere"
+dateAdded: "2026-06-26"
+brandName: BuyWhere
+brandDomain: buywhere.ai
+websiteUrl: "https://buywhere.ai"
+repoUrl: "https://github.com/BuyWhere/buywhere-mcp"
+documentationUrl: "https://github.com/BuyWhere/buywhere-mcp/blob/main/README.md"
+retrievalSources:
+  - "https://raw.githubusercontent.com/BuyWhere/buywhere-mcp/main/README.md"
+  - "https://buywhere.ai/api-keys"
+  - "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json"
+installable: true
+installCommand: "claude mcp add buywhere --transport http --header \"Authorization: Bearer YOUR_BUYWHERE_API_KEY\" https://api.buywhere.ai/mcp"
+usageSnippet: >-
+  Ask Claude to search products by category and merchant, compare prices across Singapore, SEA,
+  and US marketplaces, retrieve current deals, or list supported categories from the BuyWhere
+  catalog using a remote MCP endpoint with bearer-token API key auth.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "buywhere": {
+        "type": "http",
+        "url": "https://api.buywhere.ai/mcp",
+        "headers": {
+          "Authorization": "Bearer YOUR_BUYWHERE_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "buywhere": {
+        "type": "http",
+        "url": "https://api.buywhere.ai/mcp",
+        "headers": {
+          "Authorization": "Bearer YOUR_BUYWHERE_API_KEY",
+          "X-Buywhere-Market": "SG"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A BuyWhere API key (free at https://buywhere.ai/api-keys)."
+  - "An MCP client such as Claude Code, Claude Desktop, Cursor, Windsurf, or any MCP-compatible host."
+  - "Network access to https://api.buywhere.ai."
+safetyNotes:
+  - "Read-only product catalog access by default; no write or delete operations exposed."
+  - "API key should be stored in the MCP client config or environment, never committed."
+privacyNotes:
+  - "BuyWhere API key is sent as a Bearer token in the Authorization header on every request."
+  - "Search queries are sent to BuyWhere's API to retrieve product data; no third-party analytics or telemetry is included in MCP responses."
+  - "BuyWhere may log API request metadata (endpoint, timestamp, status) for abuse prevention and billing."
+keywords:
+  - buywhere mcp server
+  - product search price comparison mcp
+  - singapore ecommerce claude integration
+  - southeast asia marketplace mcp
+  - cross-border product search claude
+---
+
+## What it does
+
+The BuyWhere MCP server exposes a real-time cross-border e-commerce catalog to Claude via the
+Model Context Protocol. It returns live product listings, prices, and deals from marketplaces
+across Singapore, Southeast Asia, and the United States.
+
+- **Search products** — query by keyword, category, merchant, or market
+- **Compare prices** — see the same product across multiple merchants in one response
+- **Retrieve deals** — fetch current promotional pricing
+- **List categories** — browse the supported taxonomy
+
+## How it works
+
+BuyWhere's MCP endpoint is a remote `streamable-http` server hosted at `https://api.buywhere.ai/mcp`.
+Authentication uses a bearer-token API key. There is no local install — connect your MCP client to
+the hosted endpoint and the catalog is immediately available.
+
+## License
+
+MIT licensed. Free API key available at https://buywhere.ai/api-keys.

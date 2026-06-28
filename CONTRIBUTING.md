@@ -24,6 +24,10 @@ Direct PRs are the advanced path. Edit source content under `content/<category>/
 
 Keep submissions concrete. Include canonical source URLs, docs, install/config details, and enough context for someone else to verify the entry.
 
+> **Submit your own work, with credit to original sources.** Plagiarism — copying another contributor's PR or submission and passing it off as your own, including duplicated or lightly reworded copies filed under a different account — is a hard violation. Anyone attempting to cheat, copy from others, or farm contribution rewards is **permanently blocked from contributing across all of our repositories**. See [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
+
+> Filing your own issue and then opening a PR that resolves it is welcome, and a PR with no linked issue is fine — neither is farming. What is against policy is **using more than one account you control (alt / sock-puppet accounts) — e.g. one account opening issues for another to "resolve" — to inflate contribution credit**, along with manufacturing low-value issues and bulk point-chasing submissions. Farmed work earns no linked-issue bonus, and repeat or any confirmed multi-account farming is closed on sight and blocked. Enforcement is proportional; the full ladder is in [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
+
 For accepted, rejected, and rerouted examples across agents, MCP servers, skills, hooks, commands, collections, and paid/tool listings, see [`examples/content/SUBMISSION_EXAMPLES.md`](examples/content/SUBMISSION_EXAMPLES.md).
 
 For hooks, MCP servers, skills, commands, and statuslines, disclose meaningful safety/privacy behavior in the submission fields:
@@ -139,6 +143,12 @@ Maintainers may ask for:
 - source-only resubmission instead of uploaded artifacts
 
 Submissions may be closed when they are incomplete, promotional without enough utility, unsafe to list, off-topic, duplicated, or abandoned.
+
+**Timing is typical, not an SLA.** When the gittensory maintainer agent is operating, most single-entry submissions are reviewed and merged or closed within **~1 hour of validation finishing**; when it is paused or under maintenance, manual review **typically takes 24–48 hours, depending on volume**. These are observations, not commitments.
+
+**If we close your submission by mistake, that's on us** — we may reopen or re-review at our discretion as time permits. There is no fixed window, and a fresh submission is usually fastest.
+
+**Don't chase reviews.** The queue is automated and best-effort, and the bot posts its status on your PR. Do **not** DM, @-mention, or comment asking for a review or status — it will not speed anything up and **will deprioritize your submission (expect at least 5 days added to its place in the manual queue)**. Persistent pestering (here, Discord, or elsewhere) is a conduct violation and may get the submission closed and the account blocked.
 
 ## Conduct
 
