@@ -18,6 +18,7 @@ import {
 
 describe("MCP config validator lib", () => {
   const openAiStyleSecret = "sk-proj-abcdefghijklmnopqrstuvwxyz12";
+  const slackStyleSecret = "xoxb-abcdefghijklmnopqrstuvwxyz12";
   const bearerSecret = "Bearer abcdefghijklmnopqrstuvwxyz123456";
 
   describe("redactEnvValue", () => {
@@ -71,7 +72,7 @@ describe("MCP config validator lib", () => {
         value: "token=${TOKEN}",
         redactedCount: 1,
       });
-      expect(redactArgValue("AKIAABCDEFGHIJKLMNOP")).toEqual({
+      expect(redactArgValue(slackStyleSecret)).toEqual({
         value: "${SECRET}",
         redactedCount: 1,
       });
