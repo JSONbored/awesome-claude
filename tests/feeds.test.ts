@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { ENTRIES } from "@/data/entries";
+import { countSearchResults } from "@/data/search";
 import {
   applySavedSearch,
   buildAtom,
@@ -189,6 +191,17 @@ describe("item builders over the real registry", () => {
     for (let n = 1; n < items.length; n++) {
       expect(items[n - 1].pubDate >= items[n].pubDate).toBe(true);
     }
+  });
+
+  it("applySavedSearch honors installable=1 and ignores other installable values", () => {
+    const all = applySavedSearch({});
+    const installableOnly = applySavedSearch({ installable: "1" });
+    const expectedCount = Math.min(50, countSearchResults({ installable: true }, ENTRIES));
+
+    expect(countSearchResults({ installable: true }, ENTRIES)).toBeLessThan(ENTRIES.length);
+    expect(installableOnly.length).toBe(expectedCount);
+    expect(applySavedSearch({ installable: "" }).length).toBe(all.length);
+    expect(applySavedSearch({ installable: "0" }).length).toBe(all.length);
   });
 
   it("siteWideItems is capped at 100 and newest-first", () => {
