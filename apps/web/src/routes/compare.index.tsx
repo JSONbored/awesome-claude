@@ -10,6 +10,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CopyButton } from "@/components/copy-button";
 import { COMPARISON_ROWS as ROWS } from "@/components/comparison-table";
 import { useCompare } from "@/lib/compare";
+import { formatCompareMarkdown } from "@/lib/compare-markdown";
 import { resolveCompareParam, serializeCompareItems } from "@/lib/compare-selection";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -86,6 +87,8 @@ function ComparePage() {
     return sig ? `${origin}/compare?ids=${encodeURIComponent(sig)}` : `${origin}/compare`;
   };
 
+  const copyMarkdown = () => formatCompareMarkdown(items);
+
   if (items.length === 0) {
     const resolvedFromUrl = resolveIds(sp.ids);
     if (resolvedFromUrl.length > 0) {
@@ -140,6 +143,7 @@ function ComparePage() {
         </div>
         <div className="flex items-center gap-2">
           <CopyButton value={copyShare()} label="Copy share link" />
+          <CopyButton value={copyMarkdown()} label="Copy as Markdown" />
           <button
             type="button"
             onClick={() => {
@@ -248,7 +252,8 @@ function ComparePage() {
       </div>
 
       <p className="mt-3 text-xs text-ink-subtle">
-        Share this comparison by copying the link above — the selection is encoded in the URL.
+        Share this comparison with the link above, or copy the Markdown table for docs, issues, and
+        PRs.
       </p>
     </div>
   );
