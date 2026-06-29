@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1338+ file-backed entries</strong> stay useful as both an
+        <strong>1339+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1338</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1339</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -69,7 +69,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>466</code><br>
+          <code>467</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -297,7 +297,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (466)
+## 🔌 MCP Servers (467)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -487,6 +487,7 @@ packages use checksums and package trust metadata after review.
 - **[Figma Context MCP Server](https://heyclau.de/entry/mcp/figma-context-mcp-server)** - Framelink MCP server that gives AI coding agents simplified Figma layout, styling, and design context for implementing Figma frames in code.
 - **[Figma MCP Server for Claude](https://heyclau.de/entry/mcp/figma-mcp-server)** - Access designs, export assets, and interact with Figma files through Claude
 - **[Filesystem MCP Server - MCP Servers](https://heyclau.de/entry/mcp/filesystem-mcp-server)** - Official MCP server providing secure file system operations for Claude Desktop and Claude Code
+- **[FilingFirehose MCP Server](https://heyclau.de/entry/mcp/filingfirehose-mcp-server)** - Remote MCP server over US SEC EDGAR filings — parsed 8-K (with body-text detection of suspected misclassifications under Item 8.01), Schedule 13D/G with activist filer tagging, and S-3 / 424B5 ATM-offering detection.
 - **[Financial Datasets MCP Server](https://heyclau.de/entry/mcp/financial-datasets-mcp-server)** - Python MCP server that lets Claude query Financial Datasets for stock statements, prices, company news, crypto prices, and SEC filings.
 - **[Firebase MCP Server](https://heyclau.de/entry/mcp/firebase-mcp-server)** - Official Firebase MCP server bundled with Firebase CLI, giving Claude project, app, Auth, Firestore, Realtime Database, Storage, Crashlytics, Data Connect, Functions, Messaging, Remote Config, rules, and deploy capabilities.
 - **[Firecrawl MCP Server](https://heyclau.de/entry/mcp/firecrawl-mcp-server)** - Official Firecrawl MCP server for scraping, crawling, mapping, searching, and extracting web content through Claude Code, Claude Desktop, Cursor, VS Code, Windsurf, and other MCP clients.
