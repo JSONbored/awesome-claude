@@ -172,8 +172,11 @@ export interface Entry extends Provenance, BrandInfo, SkillFields {
     >
   >;
   sourceUrl?: string;
+  sourceUrls?: string[];
   docsUrl?: string;
+  githubUrl?: string;
   repoUrl?: string;
+  repositoryUrl?: string;
   trust: TrustLevel;
   source: SourceStatus;
   trustSignals?: EntryTrustSignals;

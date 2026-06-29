@@ -250,6 +250,42 @@ describe("registry artifacts", () => {
     );
   });
 
+  it("requires reviewable source evidence for available source status", () => {
+    const [websiteOnly, downloadOnly, repoBacked] = buildDirectoryEntries([
+      {
+        category: "tools",
+        slug: "website-only",
+        title: "Website Only",
+        description: "Tool with only a marketing website.",
+        tags: [],
+        keywords: [],
+        websiteUrl: "https://example.com",
+      },
+      {
+        category: "skills",
+        slug: "download-only",
+        title: "Download Only",
+        description: "Skill with only a hosted package download.",
+        tags: [],
+        keywords: [],
+        downloadUrl: "https://example.com/package.zip",
+      },
+      {
+        category: "mcp",
+        slug: "repo-backed",
+        title: "Repo Backed",
+        description: "Server with a reviewable repository.",
+        tags: [],
+        keywords: [],
+        repoUrl: "https://github.com/example/repo-backed",
+      },
+    ]);
+
+    expect(websiteOnly.trustSignals.sourceStatus).toBe("missing");
+    expect(downloadOnly.trustSignals.sourceStatus).toBe("missing");
+    expect(repoBacked.trustSignals.sourceStatus).toBe("available");
+  });
+
   it("keeps public registry payloads within reviewable byte budgets", () => {
     const entryCount = contentEntries.length;
     // These budgets are growth guards, not fixed caps. The public registry

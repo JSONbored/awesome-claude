@@ -42,6 +42,9 @@ export type RegistryEntry = Record<string, unknown> & {
   documentationUrl?: string;
   githubUrl?: string;
   repoUrl?: string | null;
+  repositoryUrl?: string;
+  sourceUrl?: string;
+  sourceUrls?: string[];
   websiteUrl?: string;
   brandName?: string;
   brandDomain?: string;
@@ -275,7 +278,13 @@ function inferSource(entry: RegistryEntry): SourceStatus {
   if (entry.downloadTrust === "first-party" || entry.trustSignals?.firstPartyEditorial) {
     return "first-party";
   }
-  if (entry.repoUrl || entry.githubUrl || entry.trustSignals?.sourceStatus === "available") {
+  if (
+    entry.repoUrl ||
+    entry.githubUrl ||
+    entry.repositoryUrl ||
+    entry.sourceUrl ||
+    entry.sourceUrls?.length
+  ) {
     return "source-backed";
   }
   if (entry.documentationUrl || entry.websiteUrl) return "external";

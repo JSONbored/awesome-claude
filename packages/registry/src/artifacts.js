@@ -480,6 +480,20 @@ function sourceUrlsForEntry(entry) {
     .filter((value, index, list) => list.indexOf(value) === index);
 }
 
+function reviewableSourceUrlsForEntry(entry) {
+  return [
+    entry.repoUrl,
+    entry.githubUrl,
+    entry.repositoryUrl,
+    entry.sourceUrl,
+    ...(Array.isArray(entry.sourceUrls) ? entry.sourceUrls : []),
+    ...(Array.isArray(entry.retrievalSources) ? entry.retrievalSources : []),
+  ]
+    .map((value) => String(value || "").trim())
+    .filter(Boolean)
+    .filter((value, index, list) => list.indexOf(value) === index);
+}
+
 function lastVerifiedForEntry(entry) {
   return (
     entry.verifiedAt ||
@@ -504,6 +518,7 @@ export function buildEntryTrustSignals(entry) {
   const packageChecksum =
     entry.downloadSha256 || entry.skillPackage?.sha256 || "";
   const sourceUrls = sourceUrlsForEntry(entry);
+  const reviewableSourceUrls = reviewableSourceUrlsForEntry(entry);
   const hasSafetyNotes = noteList(entry.safetyNotes).length > 0;
   const hasPrivacyNotes = noteList(entry.privacyNotes).length > 0;
 
@@ -515,7 +530,7 @@ export function buildEntryTrustSignals(entry) {
     checksumPresent: Boolean(packageChecksum),
     sourceUrlCount: sourceUrls.length,
     sourceUrls,
-    sourceStatus: sourceUrls.length ? "available" : "missing",
+    sourceStatus: reviewableSourceUrls.length ? "available" : "missing",
     lastVerifiedAt: lastVerifiedForEntry(entry),
     adapterGenerated,
     hasSafetyNotes,

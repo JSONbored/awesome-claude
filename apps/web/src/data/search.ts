@@ -172,8 +172,18 @@ function hasPrivacyNotes(entry: Entry) {
   return Boolean(entry.privacyNotes || entry.trustSignals?.hasPrivacyNotes);
 }
 
+function hasReviewableSourceReference(entry: Entry) {
+  return Boolean(
+    entry.repoUrl ||
+    entry.githubUrl ||
+    entry.repositoryUrl ||
+    entry.sourceUrl ||
+    entry.sourceUrls?.length,
+  );
+}
+
 function hasSourceBackedSignal(entry: Entry) {
-  return entry.source === "source-backed" || entry.trustSignals?.sourceStatus === "available";
+  return entry.source === "source-backed" || hasReviewableSourceReference(entry);
 }
 
 function hasTrustedPackageSignal(entry: Entry) {

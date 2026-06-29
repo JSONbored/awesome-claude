@@ -115,6 +115,11 @@ describe("entry search filters", () => {
     const sourceSignal = entry({
       slug: "source-signal",
       source: "external",
+      repoUrl: "https://github.com/example/source-signal",
+    });
+    const broadUrlSignal = entry({
+      slug: "broad-url-signal",
+      source: "external",
       trustSignals: {
         sourceStatus: "available",
       },
@@ -151,6 +156,7 @@ describe("entry search filters", () => {
     const entries = [
       sourceBacked,
       sourceSignal,
+      broadUrlSignal,
       external,
       disclosed,
       packageEntry,
@@ -158,6 +164,9 @@ describe("entry search filters", () => {
     ];
 
     expect(entryMatchesTrustSignal(disclosed, "safety-notes")).toBe(true);
+    expect(entryMatchesTrustSignal(broadUrlSignal, "source-backed")).toBe(
+      false,
+    );
     expect(entryMatchesTrustSignal(external, "source-backed")).toBe(false);
     expect(filterSearchEntries({ signal: "privacy-notes" }, entries)).toEqual([
       disclosed,
