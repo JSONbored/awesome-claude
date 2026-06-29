@@ -45,7 +45,7 @@ describe("buildRss", () => {
     expect(xml).toContain('<rss version="2.0"');
     expect(xml).toContain("<channel>");
     expect(xml).toContain("<item>");
-    expect(xml).toContain("<guid isPermaLink=\"false\">entry:skills/a</guid>");
+    expect(xml).toContain('<guid isPermaLink="false">entry:skills/a</guid>');
     // rfc822 pubDate
     expect(xml).toContain("<pubDate>Fri, 02 Jan 2026 03:04:05 GMT</pubDate>");
   });
@@ -71,7 +71,9 @@ describe("buildRss", () => {
 
   it("defaults lastBuildDate to the newest item pubDate", () => {
     const xml = buildRss(rssOpts);
-    expect(xml).toContain("<lastBuildDate>Fri, 02 Jan 2026 03:04:05 GMT</lastBuildDate>");
+    expect(xml).toContain(
+      "<lastBuildDate>Fri, 02 Jan 2026 03:04:05 GMT</lastBuildDate>",
+    );
   });
 });
 
@@ -109,18 +111,26 @@ describe("respondFeed conditional GET", () => {
   const lastBuilt = "2026-01-02T03:04:05.000Z";
 
   it("returns 200 with cache + validator headers when unconditional", async () => {
-    const res = await respondFeed(new Request("https://heyclau.de/feed.xml"), body, lastBuilt);
+    const res = await respondFeed(
+      new Request("https://heyclau.de/feed.xml"),
+      body,
+      lastBuilt,
+    );
     expect(res.status).toBe(200);
     expect(res.headers.get("ETag")).toMatch(/^"[0-9a-f]{16}"$/);
     expect(res.headers.get("Cache-Control")).toContain("max-age=300");
-    expect(res.headers.get("Last-Modified")).toBe(new Date(lastBuilt).toUTCString());
+    expect(res.headers.get("Last-Modified")).toBe(
+      new Date(lastBuilt).toUTCString(),
+    );
     expect(await res.text()).toBe(body);
   });
 
   it("returns 304 with an empty body when If-None-Match matches", async () => {
     const etag = await etagFor(body);
     const res = await respondFeed(
-      new Request("https://heyclau.de/feed.xml", { headers: { "if-none-match": etag } }),
+      new Request("https://heyclau.de/feed.xml", {
+        headers: { "if-none-match": etag },
+      }),
       body,
       lastBuilt,
     );
@@ -146,7 +156,9 @@ describe("respondFeed conditional GET", () => {
 
   it("returns 200 when If-None-Match does not match", async () => {
     const res = await respondFeed(
-      new Request("https://heyclau.de/feed.xml", { headers: { "if-none-match": '"deadbeef"' } }),
+      new Request("https://heyclau.de/feed.xml", {
+        headers: { "if-none-match": '"deadbeef"' },
+      }),
       body,
       lastBuilt,
     );
@@ -196,9 +208,14 @@ describe("item builders over the real registry", () => {
   it("applySavedSearch honors installable=1 and ignores other installable values", () => {
     const all = applySavedSearch({});
     const installableOnly = applySavedSearch({ installable: "1" });
-    const expectedCount = Math.min(50, countSearchResults({ installable: true }, ENTRIES));
+    const expectedCount = Math.min(
+      50,
+      countSearchResults({ installable: true }, ENTRIES),
+    );
 
-    expect(countSearchResults({ installable: true }, ENTRIES)).toBeLessThan(ENTRIES.length);
+    expect(countSearchResults({ installable: true }, ENTRIES)).toBeLessThan(
+      ENTRIES.length,
+    );
     expect(installableOnly.length).toBe(expectedCount);
     expect(applySavedSearch({ installable: "" }).length).toBe(all.length);
     expect(applySavedSearch({ installable: "0" }).length).toBe(all.length);
