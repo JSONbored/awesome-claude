@@ -1,5 +1,13 @@
 # @heyclaude/mcp Changelog
 
+## [0.6.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.5.3...mcp-v0.6.0) (2026-06-29)
+
+
+### Features
+
+* **mcp:** add compare_entry_trust read-only helper ([#4215](https://github.com/JSONbored/awesome-claude/issues/4215)) ([7f3c439](https://github.com/JSONbored/awesome-claude/commit/7f3c43960ac10e1c0cc093578873c1d34ee58fe0))
+* **search:** share registry ranking across web and mcp ([#4242](https://github.com/JSONbored/awesome-claude/issues/4242)) ([c8cb601](https://github.com/JSONbored/awesome-claude/commit/c8cb601abf6ea75badaaa67a0bd9374398508270))
+
 ## [0.5.3](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.5.2...mcp-v0.5.3) (2026-06-25)
 
 
