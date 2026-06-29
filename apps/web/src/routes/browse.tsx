@@ -126,7 +126,7 @@ const defaultSearch = {
   source: "",
   signal: "",
   platform: "",
-  installable: "",
+  installable: "" as const,
   sort: "popular" as const,
   view: "row" as const,
   compare: "",
