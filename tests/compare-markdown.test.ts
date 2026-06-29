@@ -47,7 +47,9 @@ describe("formatCompareMarkdown", () => {
     expect(markdown).toContain("| Field | Alpha MCP | Beta MCP |");
     expect(markdown).toContain("| Trust | review | review |");
     expect(markdown).toContain("| Install | npx alpha-mcp@1.0.0 | — |");
-    expect(markdown).toContain("| Config | — | {\"mcpServers\":{\"beta\":{\"command\":\"beta\"}}} |");
+    expect(markdown).toContain(
+      '| Config | — | {"mcpServers":{"beta":{"command":"beta"}}} |',
+    );
     expect(markdown).toContain("### Alpha MCP");
     expect(markdown).toContain("First comparison entry.");
     expect(markdown).toContain("### Beta MCP");
