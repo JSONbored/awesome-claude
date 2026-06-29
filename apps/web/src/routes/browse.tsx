@@ -765,9 +765,7 @@ function Browse() {
             <FilterChipGroup label="Utility quick filters">
               <FilterChip
                 active={isInstallableFilter(sp.installable)}
-                onClick={() =>
-                  set({ installable: isInstallableFilter(sp.installable) ? "" : "1" })
-                }
+                onClick={() => set({ installable: isInstallableFilter(sp.installable) ? "" : "1" })}
                 count={installableCount}
               >
                 Installable only
