@@ -1,5 +1,26 @@
 import { isPinnedPackageSpec, parsePackageSpec } from "@heyclaude/registry/package-spec";
 
+export type McpConfigValidatorPatterns = {
+  SENSITIVE_ENV_PATTERN: RegExp;
+  PLACEHOLDER_PATTERN: RegExp;
+  SECRET_VALUE_PATTERN: RegExp;
+  SHELL_OPERATOR_PATTERN: RegExp;
+  SENSITIVE_SPLIT_ARG_KEYS: Set<string>;
+};
+
+let validatorPatterns: McpConfigValidatorPatterns | undefined;
+
+export function initMcpConfigValidatorLib(patterns: McpConfigValidatorPatterns) {
+  validatorPatterns = patterns;
+}
+
+function patterns() {
+  if (!validatorPatterns) {
+    throw new Error("MCP config validator lib is not initialized.");
+  }
+  return validatorPatterns;
+}
+
 export type McpConfigServerReport = {
   name: string;
   transport: "stdio" | "remote" | "unknown";
@@ -20,49 +41,6 @@ export type McpConfigValidation = {
   reportText: string;
   redactedSecretCount: number;
 };
-
-export const SENSITIVE_ENV_PATTERN =
-  /(api[_-]?key|auth|authorization|bearer|client[_-]?secret|credential|env|password|private[_-]?key|secret|token|x-api-key)/i;
-export const PLACEHOLDER_PATTERN =
-  /(\$\{[A-Z0-9_]+\}|YOUR_|REPLACE_|INSERT_|<[^>]+>|\bxxx+\b|\bTODO\b)/i;
-
-const SECRET_VALUE_PATTERN_SOURCE = [
-  "\\b(",
-  ["gh", "[pousr]_", "[A-Za-z0-9_]{20,}"].join(""),
-  "|",
-  ["git", "hub", "_pat_"].join(""),
-  "[A-Za-z0-9_]{40,}",
-  "|",
-  ["gl", "pat-"].join(""),
-  "[A-Za-z0-9_-]{20,}",
-  "|sk-(?:proj-)?[A-Za-z0-9_-]{20,}",
-  "|xox[baprs]-[A-Za-z0-9-]{20,}",
-  "|",
-  ["AK", "IA"].join(""),
-  "[0-9A-Z]{16}",
-  "|AIza[0-9A-Za-z_-]{20,}",
-  "|Bearer\\s+[A-Za-z0-9._~+/=-]{16,}",
-  ")\\b",
-].join("");
-
-export const SECRET_VALUE_PATTERN = new RegExp(SECRET_VALUE_PATTERN_SOURCE);
-export const SHELL_OPERATOR_PATTERN = /(?:&&|\|\||[;|`<>]|\$\()/;
-export const SENSITIVE_SPLIT_ARG_KEYS = new Set([
-  "api_key",
-  "apikey",
-  "auth",
-  "authorization",
-  "bearer",
-  "client_secret",
-  "clientsecret",
-  "password",
-  "private_key",
-  "privatekey",
-  "secret",
-  "token",
-  "x_api_key",
-  "xapikey",
-]);
 
 type RedactedUrlPlaceholder =
   | { kind: "username"; placeholder: string }
@@ -120,6 +98,7 @@ export function normalizeServerName(value: string) {
 
 export function redactEnvValue(key: string, value: unknown) {
   const normalized = String(value ?? "");
+  const { SENSITIVE_ENV_PATTERN, PLACEHOLDER_PATTERN, SECRET_VALUE_PATTERN } = patterns();
   if (!SENSITIVE_ENV_PATTERN.test(key) && !SECRET_VALUE_PATTERN.test(normalized)) {
     return normalized;
   }
@@ -129,6 +108,7 @@ export function redactEnvValue(key: string, value: unknown) {
 }
 
 export function redactUrlValue(value: string) {
+  const { SENSITIVE_ENV_PATTERN, SECRET_VALUE_PATTERN } = patterns();
   try {
     const parsed = new URL(value);
     let redacted = false;
@@ -170,6 +150,7 @@ export function redactUrlValue(value: string) {
 
 export function redactArgValue(value: string) {
   const normalized = value.trim();
+  const { SENSITIVE_ENV_PATTERN, SECRET_VALUE_PATTERN } = patterns();
   if (!normalized) return { value, redactedCount: 0 };
   if (/^https?:\/\//i.test(normalized)) return redactUrlValue(normalized);
   const equalIndex = normalized.indexOf("=");
@@ -192,6 +173,7 @@ export function redactArgValue(value: string) {
 
 export function splitArgPlaceholder(value: string) {
   const normalized = value.trim();
+  const { SENSITIVE_SPLIT_ARG_KEYS } = patterns();
   if (!normalized.startsWith("-") || normalized.includes("=")) return "";
   const key = normalized
     .replace(/^-+/, "")
@@ -218,7 +200,7 @@ export function redactArgArray(values: unknown[]): SanitizedValue {
       pendingPlaceholder &&
       normalized &&
       !normalized.startsWith("-") &&
-      !PLACEHOLDER_PATTERN.test(normalized)
+      !patterns().PLACEHOLDER_PATTERN.test(normalized)
     ) {
       const placeholder = pendingPlaceholder;
       redactedCount += 1;
@@ -349,6 +331,7 @@ export function extractServers(payload: unknown) {
 export function validateServer(name: string, raw: unknown) {
   const errors: string[] = [];
   const warnings: string[] = [];
+  const { SHELL_OPERATOR_PATTERN, SENSITIVE_ENV_PATTERN, PLACEHOLDER_PATTERN } = patterns();
   const normalizedName = normalizeServerName(name);
 
   if (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(normalizedName)) {
