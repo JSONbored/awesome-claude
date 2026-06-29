@@ -30,6 +30,7 @@ export interface SavedSearch {
   source?: string;
   signal?: string;
   platform?: string;
+  installable?: string;
   sort?: string;
   savedAt: string;
   alerts?: AlertSchedule;

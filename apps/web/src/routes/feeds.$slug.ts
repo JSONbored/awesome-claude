@@ -47,6 +47,7 @@ export const Route = createFileRoute("/feeds/$slug")({
             trust: url.searchParams.get("trust") ?? undefined,
             source: url.searchParams.get("source") ?? undefined,
             platform: url.searchParams.get("platform") ?? undefined,
+            installable: url.searchParams.get("installable") ?? undefined,
           };
           const label = url.searchParams.get("label") ?? "Saved search";
           items = applySavedSearch(q);

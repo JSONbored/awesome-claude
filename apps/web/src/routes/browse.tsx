@@ -68,6 +68,7 @@ function SavedSearchChipRow({
         source: s.source ?? "",
         signal: s.signal ?? "",
         platform: s.platform ?? "",
+        installable: s.installable ?? "",
         sort: (s.sort as "popular" | "newest" | "title") ?? "popular",
         view: "row" as const,
         compare: "",
@@ -125,6 +126,7 @@ const defaultSearch = {
   source: "",
   signal: "",
   platform: "",
+  installable: "",
   sort: "popular" as const,
   view: "row" as const,
   compare: "",
@@ -137,6 +139,10 @@ const searchSchema = z.object({
   source: z.string().catch(defaultSearch.source).default(defaultSearch.source),
   signal: z.string().catch(defaultSearch.signal).default(defaultSearch.signal),
   platform: z.string().catch(defaultSearch.platform).default(defaultSearch.platform),
+  installable: z
+    .enum(["", "1"])
+    .catch(defaultSearch.installable)
+    .default(defaultSearch.installable),
   sort: z
     .enum(["popular", "newest", "title"])
     .catch(defaultSearch.sort)
@@ -218,6 +224,10 @@ function signalLabel(value: string) {
   return isTrustSignalFilter(value) ? TRUST_SIGNAL_LABEL[value] : "";
 }
 
+function isInstallableFilter(value: string) {
+  return value === "1";
+}
+
 function Browse() {
   const sp = Route.useSearch();
   const navigate = Route.useNavigate();
@@ -276,6 +286,7 @@ function Browse() {
       source: sp.source ? [sp.source as SourceStatus] : undefined,
       signal: isTrustSignalFilter(sp.signal) ? sp.signal : "",
       platforms: sp.platform ? [sp.platform as Platform] : undefined,
+      installable: isInstallableFilter(sp.installable) || undefined,
       sort: sp.sort,
     }),
     [sp],
@@ -319,7 +330,8 @@ function Browse() {
     Number(!!sp.trust) +
     Number(!!sp.source) +
     Number(!!sp.signal) +
-    Number(!!sp.platform);
+    Number(!!sp.platform) +
+    Number(isInstallableFilter(sp.installable));
 
   const clearAll = () =>
     navigate({
@@ -330,6 +342,7 @@ function Browse() {
         source: "",
         signal: "",
         platform: "",
+        installable: "",
         sort: "popular",
         view: sp.view,
         compare: sp.compare,
@@ -340,7 +353,7 @@ function Browse() {
     if (activeCount === 0) return;
     const label = sp.q
       ? `“${sp.q}”${sp.category ? ` · ${sp.category}` : ""}`
-      : `${sp.category || sp.trust || sp.source || signalLabel(sp.signal) || sp.platform || "Filter"}`;
+      : `${sp.category || sp.trust || sp.source || signalLabel(sp.signal) || sp.platform || (isInstallableFilter(sp.installable) ? "Installable only" : "") || "Filter"}`;
     recents.saveSearch({
       label,
       q: sp.q,
@@ -349,6 +362,7 @@ function Browse() {
       source: sp.source,
       signal: sp.signal,
       platform: sp.platform,
+      installable: sp.installable,
       sort: sp.sort,
     });
     toast.success("Search saved", { description: label });
@@ -359,7 +373,7 @@ function Browse() {
   const [shown, setShown] = React.useState(PAGE);
   React.useEffect(() => {
     setShown(PAGE);
-  }, [sp.q, sp.category, sp.trust, sp.source, sp.signal, sp.platform, sp.sort]);
+  }, [sp.q, sp.category, sp.trust, sp.source, sp.signal, sp.platform, sp.installable, sp.sort]);
 
   // Per-axis facet counts: how many results if this value were the only filter
   // in its axis. Memoized on the search params and counted without sorting so
@@ -377,6 +391,7 @@ function Browse() {
         source: merged.source ? [merged.source as SourceStatus] : undefined,
         signal: isTrustSignalFilter(merged.signal) ? merged.signal : "",
         platforms: merged.platform ? [merged.platform as Platform] : undefined,
+        installable: isInstallableFilter(merged.installable) || undefined,
         sort: merged.sort,
       });
     };
@@ -395,6 +410,21 @@ function Browse() {
     axis: "category" | "trust" | "source" | "signal" | "platform",
     value: string,
   ) => facetCounts[axis]?.[value] ?? 0;
+
+  const installableCount = useMemo(
+    () =>
+      countSearchResults({
+        q: sp.q,
+        categories: sp.category ? [sp.category as Category] : undefined,
+        trust: sp.trust ? [sp.trust as TrustLevel] : undefined,
+        source: sp.source ? [sp.source as SourceStatus] : undefined,
+        signal: isTrustSignalFilter(sp.signal) ? sp.signal : "",
+        platforms: sp.platform ? [sp.platform as Platform] : undefined,
+        installable: true,
+        sort: sp.sort,
+      }),
+    [sp],
+  );
 
   // Focus search on "/" key.
   const searchRef = React.useRef<HTMLInputElement>(null);
@@ -448,6 +478,13 @@ function Browse() {
       value: sp.platform,
       onClear: () => set({ platform: "" }),
     });
+  if (isInstallableFilter(sp.installable))
+    activeFilters.push({
+      key: "installable",
+      label: "Utility",
+      value: "Installable only",
+      onClear: () => set({ installable: "" }),
+    });
 
   // Nearest-match: drop one filter at a time (least likely first) until we have results.
   const suggestions = useMemo(() => {
@@ -456,6 +493,8 @@ function Browse() {
     const trials: { label: string; patch: Partial<typeof sp> }[] = [];
     if (sp.platform)
       trials.push({ label: `Remove platform "${sp.platform}"`, patch: { platform: "" } });
+    if (isInstallableFilter(sp.installable))
+      trials.push({ label: "Show non-installable entries too", patch: { installable: "" } });
     if (sp.signal)
       trials.push({ label: `Remove signal "${signalLabel(sp.signal)}"`, patch: { signal: "" } });
     if (sp.source) trials.push({ label: `Remove source "${sp.source}"`, patch: { source: "" } });
@@ -472,6 +511,7 @@ function Browse() {
           source: merged.source ? [merged.source as SourceStatus] : undefined,
           signal: isTrustSignalFilter(merged.signal) ? merged.signal : "",
           platforms: merged.platform ? [merged.platform as Platform] : undefined,
+          installable: isInstallableFilter(merged.installable) || undefined,
           sort: merged.sort,
         });
         return { label: t.label, count, apply: () => set(t.patch) };
@@ -553,6 +593,20 @@ function Browse() {
                     {p}
                   </FilterChip>
                 ))}
+              </FilterChipGroup>
+            </FilterSection>
+
+            <FilterSection title="Utility">
+              <FilterChipGroup label="Utility filters">
+                <FilterChip
+                  active={isInstallableFilter(sp.installable)}
+                  onClick={() =>
+                    set({ installable: isInstallableFilter(sp.installable) ? "" : "1" })
+                  }
+                  count={installableCount}
+                >
+                  Installable only
+                </FilterChip>
               </FilterChipGroup>
             </FilterSection>
 
@@ -689,6 +743,7 @@ function Browse() {
                     sp.source ||
                     signalLabel(sp.signal) ||
                     sp.platform ||
+                    (isInstallableFilter(sp.installable) ? "Installable only" : "") ||
                     ""
               }
               canSave={activeCount > 0}
@@ -706,6 +761,17 @@ function Browse() {
                   {option.label}
                 </FilterChip>
               ))}
+            </FilterChipGroup>
+            <FilterChipGroup label="Utility quick filters">
+              <FilterChip
+                active={isInstallableFilter(sp.installable)}
+                onClick={() =>
+                  set({ installable: isInstallableFilter(sp.installable) ? "" : "1" })
+                }
+                count={installableCount}
+              >
+                Installable only
+              </FilterChip>
             </FilterChipGroup>
             <div className="hidden text-[10px] text-ink-subtle sm:block">
               <kbd className="rounded border border-border bg-surface px-1 font-mono">/</kbd> search
@@ -791,6 +857,7 @@ function Browse() {
                               source: s.source ?? "",
                               signal: s.signal ?? "",
                               platform: s.platform ?? "",
+                              installable: s.installable ?? "",
                               sort: (s.sort as typeof sp.sort) ?? "popular",
                               view: sp.view,
                               compare: sp.compare,

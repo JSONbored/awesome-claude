@@ -40,6 +40,7 @@ function applyToBrowseSearch(s: SavedSearch) {
     trust: s.trust ?? "",
     source: s.source ?? "",
     platform: s.platform ?? "",
+    installable: s.installable ?? "",
     sort: (s.sort as "popular" | "newest" | "title") ?? "popular",
     view: "row" as const,
     compare: "",
@@ -47,7 +48,7 @@ function applyToBrowseSearch(s: SavedSearch) {
 }
 
 function hashSearch(s: SavedSearch): string {
-  const raw = `${s.q}|${s.category ?? ""}|${s.trust ?? ""}|${s.source ?? ""}|${s.platform ?? ""}`;
+  const raw = `${s.q}|${s.category ?? ""}|${s.trust ?? ""}|${s.source ?? ""}|${s.platform ?? ""}|${s.installable ?? ""}`;
   let h = 0;
   for (let i = 0; i < raw.length; i++) h = (h * 31 + raw.charCodeAt(i)) | 0;
   return Math.abs(h).toString(36);
@@ -60,6 +61,7 @@ export function savedFeedUrl(s: SavedSearch): string {
   if (s.trust) p.set("trust", s.trust);
   if (s.source) p.set("source", s.source);
   if (s.platform) p.set("platform", s.platform);
+  if (s.installable) p.set("installable", s.installable);
   if (s.label) p.set("label", s.label);
   return `/feeds/saved.xml?${p.toString()}`;
 }

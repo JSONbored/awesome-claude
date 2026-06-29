@@ -242,6 +242,7 @@ export interface SavedSearchQuery {
   trust?: string;
   source?: string;
   platform?: string;
+  installable?: string;
 }
 
 export function applySavedSearch(q: SavedSearchQuery): FeedItem[] {
@@ -252,6 +253,7 @@ export function applySavedSearch(q: SavedSearchQuery): FeedItem[] {
       trust: q.trust ? [q.trust as TrustLevel] : undefined,
       source: q.source ? [q.source as SourceStatus] : undefined,
       platforms: q.platform ? [q.platform as Platform] : undefined,
+      installable: q.installable === "1" ? true : undefined,
     },
     ENTRIES,
   )

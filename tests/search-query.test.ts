@@ -174,4 +174,31 @@ describe("entry search filters", () => {
     ]);
     expect(countSearchResults({ signal: "reviewed" }, entries)).toBe(1);
   });
+
+  it("filters entries that ship install, config, or copy payloads", () => {
+    const installable = entry({
+      slug: "installable",
+      installCommand: "npx example-mcp@1.0.0",
+    });
+    const configOnly = entry({
+      slug: "config-only",
+      configSnippet: '{"mcpServers":{"demo":{}}}',
+    });
+    const copyOnly = entry({
+      slug: "copy-only",
+      fullCopy: "You are a helpful assistant.",
+    });
+    const manual = entry({
+      slug: "manual",
+      description: "Documentation-only listing.",
+    });
+    const entries = [installable, configOnly, copyOnly, manual];
+
+    expect(filterSearchEntries({ installable: true }, entries)).toEqual([
+      installable,
+      configOnly,
+      copyOnly,
+    ]);
+    expect(countSearchResults({ installable: true }, entries)).toBe(3);
+  });
 });
