@@ -87,6 +87,46 @@ export function EntryAuthorAttribution({
   );
 }
 
+export function ProvenanceAuthorAttribution({
+  entry,
+  className = "text-ink hover:underline",
+}: {
+  entry: Entry;
+  className?: string;
+}) {
+  const verifiedAuthor = contributorForVerifiedAuthor(entry.author, entry.submittedBy);
+  const authorContributor =
+    !entry.submittedBy && entry.author
+      ? findContributorForIdentity(entry.author, entry.authorProfileUrl)
+      : undefined;
+
+  if (verifiedAuthor) {
+    return (
+      <ContributorProfileLink contributor={verifiedAuthor} label={entry.author} className={className} />
+    );
+  }
+
+  if (authorContributor && !entry.submittedBy) {
+    return (
+      <ContributorProfileLink
+        contributor={authorContributor}
+        label={entry.author}
+        className={className}
+      />
+    );
+  }
+
+  if (entry.authorProfileUrl) {
+    return (
+      <a href={entry.authorProfileUrl} target="_blank" rel="noreferrer" className={className}>
+        {entry.author}
+      </a>
+    );
+  }
+
+  return <span className="text-ink">{entry.author}</span>;
+}
+
 export function ContributorIdentityLink({
   name,
   profileUrl,

@@ -1,5 +1,8 @@
 import type { Entry } from "@/types/registry";
-import { ContributorIdentityLink } from "@/components/contributor-attribution";
+import {
+  ContributorIdentityLink,
+  ProvenanceAuthorAttribution,
+} from "@/components/contributor-attribution";
 import { CLAIM_LABEL } from "@/types/registry";
 import { Github, ExternalLink } from "lucide-react";
 
@@ -11,12 +14,7 @@ export function ProvenanceBlock({ entry }: { entry: Entry }) {
       <dl className="grid grid-cols-2 gap-3">
         <Row
           label="Author"
-          value={
-            <ContributorIdentityLink
-              name={entry.author}
-              profileUrl={entry.authorProfileUrl}
-            />
-          }
+          value={<ProvenanceAuthorAttribution entry={entry} />}
         />
         {entry.submittedBy && (
           <Row
