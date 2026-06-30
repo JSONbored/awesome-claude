@@ -74,6 +74,7 @@ function normalizedSearchText(entry: Entry) {
     entry.description,
     entry.cardDescription,
     entry.author,
+    entry.submittedBy,
     entry.trust,
     entry.source,
     ...(entry.platforms ?? []),

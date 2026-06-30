@@ -15,7 +15,7 @@ import { CopyButton } from "./copy-button";
 import { EntryBrandMark } from "./entry-brand-mark";
 import { EntryFacets } from "./entry-facets";
 import { PeekButton, setHotPeek, clearHotPeek, type PeekHandle } from "./peek-button";
-import { PeekHint } from "./peek-hint";
+import { EntryAuthorAttribution } from "./contributor-attribution";
 import { useCompareActions, useIsCompared } from "@/lib/compare";
 import { cn } from "@/lib/utils";
 import { trackEvent, entryEventKey, outboundHost } from "@/lib/analytics";
@@ -237,7 +237,7 @@ function ResourceCardInner({
             <h3 className="font-display text-[15px] font-semibold tracking-tight text-ink group-hover:underline">
               {entry.title}
             </h3>
-            <span className="text-xs text-ink-subtle">by {entry.author}</span>
+            <EntryAuthorAttribution entry={entry} className="text-xs text-ink-subtle" />
           </Link>
           <p className="line-clamp-2 max-w-3xl text-sm text-ink-muted">{entry.description}</p>
           <div className="flex flex-wrap items-center gap-2 pt-0.5">
