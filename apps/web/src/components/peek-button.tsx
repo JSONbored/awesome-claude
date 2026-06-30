@@ -20,7 +20,6 @@ import {
   SourceBadge,
   PlatformChip,
 } from "./badges";
-import { SourceCitations } from "./source-citations";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
 import { EntryBrandMark } from "./entry-brand-mark";
 import { HarnessVariantPicker } from "./harness-variant-picker";
@@ -28,7 +27,7 @@ import { useHarnessPref, useCopyPref, type CopyVariant } from "@/lib/dossier-pre
 import { entryDomId } from "@/lib/entry-identity";
 import { cn } from "@/lib/utils";
 import { setHotPeek, clearHotPeek, installPeekShortcut } from "@/lib/peek-hotkey";
-import { EntryAttributionLabel } from "./entry-attribution-label";
+import { LazyEntryAuthorAttribution, LazyLinkedSourceCitations } from "./lazy-linked-attribution";
 
 export interface PeekHandle {
   open: () => void;
@@ -124,7 +123,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
-          <EntryAttributionLabel entry={entry} />
+          <LazyEntryAuthorAttribution entry={entry} />
           {typeof entry.repoStats?.stars === "number" && (
             <span className="inline-flex items-center gap-1 tabular-nums" title="Source repo stars">
               <Star className="h-3 w-3" aria-hidden />
@@ -176,7 +175,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
 
       <div className="mt-5">
         <div className="eyebrow mb-2">Sources</div>
-        <SourceCitations entry={entry} />
+        <LazyLinkedSourceCitations entry={entry} />
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-2">

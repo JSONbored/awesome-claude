@@ -17,6 +17,7 @@ type Citation = {
   hint?: string;
   Icon: React.ElementType;
   verifiedAt?: string;
+  contributorSlug?: string;
 };
 
 function hostOf(url?: string): string | undefined {
@@ -28,7 +29,13 @@ function hostOf(url?: string): string | undefined {
   }
 }
 
-export function SourceCitations({ entry }: { entry: Entry }) {
+export function SourceCitations({
+  entry,
+  resolveContributorSlug,
+}: {
+  entry: Entry;
+  resolveContributorSlug?: (name: string, profileUrl?: string) => string | undefined;
+}) {
   const cites: Citation[] = [];
   if (entry.sourceUrl) {
     cites.push({
@@ -82,11 +89,13 @@ export function SourceCitations({ entry }: { entry: Entry }) {
     });
   }
   if (entry.submittedBy) {
+    const contributorSlug = resolveContributorSlug?.(entry.submittedBy, entry.submittedByUrl);
     cites.push({
       label: `Submitted by ${entry.submittedBy}`,
-      href: entry.submittedByUrl,
+      href: contributorSlug ? undefined : entry.submittedByUrl,
       hint: entry.submittedAt,
       Icon: User,
+      contributorSlug,
     });
   }
 
@@ -120,7 +129,15 @@ export function SourceCitations({ entry }: { entry: Entry }) {
           );
           return (
             <li key={c.label}>
-              {c.href ? (
+              {c.contributorSlug ? (
+                <Link
+                  to="/contributors/$slug"
+                  params={{ slug: c.contributorSlug }}
+                  className="block rounded-md px-2 transition-colors duration-200 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+                >
+                  {body}
+                </Link>
+              ) : c.href ? (
                 <a
                   href={c.href}
                   target="_blank"

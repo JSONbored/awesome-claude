@@ -17,6 +17,7 @@ import { EntryFacets } from "./entry-facets";
 import { PeekButton, setHotPeek, clearHotPeek, type PeekHandle } from "./peek-button";
 import { PeekHint } from "./peek-hint";
 import { EntryAttributionLabel } from "./entry-attribution-label";
+import { LazyEntryAuthorAttribution } from "./lazy-linked-attribution";
 import { useCompareActions, useIsCompared } from "@/lib/compare";
 import { cn } from "@/lib/utils";
 import { trackEvent, entryEventKey, outboundHost } from "@/lib/analytics";
@@ -109,6 +110,9 @@ function ResourceCardInner({
           <span className="hidden min-w-0 max-w-[40%] truncate text-xs text-ink-muted sm:inline">
             {entry.cardDescription ?? entry.description}
           </span>
+          <span className="hidden md:inline-flex">
+            <EntryAttributionLabel entry={entry} className="truncate text-xs text-ink-subtle" />
+          </span>
           <span className="hidden sm:inline-flex">
             <SourceRepoStars entry={entry} compact />
           </span>
@@ -153,6 +157,7 @@ function ResourceCardInner({
             <p className="mt-1.5 line-clamp-2 text-sm text-ink-muted">
               {entry.cardDescription ?? entry.description}
             </p>
+            <EntryAttributionLabel entry={entry} className="mt-2" />
           </div>
           <EntryFacets entry={entry} density="card" />
           <div className="mt-auto flex flex-wrap items-center gap-1.5">
@@ -238,7 +243,7 @@ function ResourceCardInner({
             >
               {entry.title}
             </Link>
-            <EntryAttributionLabel entry={entry} />
+            <LazyEntryAuthorAttribution entry={entry} />
           </div>
           <p className="line-clamp-2 max-w-3xl text-sm text-ink-muted">{entry.description}</p>
           <div className="flex flex-wrap items-center gap-2 pt-0.5">

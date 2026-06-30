@@ -25,6 +25,7 @@ import { getEntryRedirectTarget } from "@/lib/entry-redirects";
 import { BEST_LISTS } from "@/data/entries";
 import { COMPARISONS } from "@/data/comparisons";
 import { EntryAuthorAttribution } from "@/components/contributor-attribution";
+import { findContributorForIdentity } from "@/data/contributors";
 import {
   CategoryPill,
   PlatformChip,
@@ -634,7 +635,12 @@ function Dossier() {
           </DossierSection>
 
           <DossierSection id="citations" icon={FileText} title="Source citations">
-            <SourceCitations entry={entry} />
+            <SourceCitations
+              entry={entry}
+              resolveContributorSlug={(name, profileUrl) =>
+                findContributorForIdentity(name, profileUrl)?.slug
+              }
+            />
           </DossierSection>
 
           <BadgeSection category={entry.category} slug={entry.slug} title={entry.title} />

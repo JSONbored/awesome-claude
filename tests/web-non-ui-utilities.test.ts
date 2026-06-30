@@ -684,6 +684,38 @@ describe("web non-UI utility coverage", () => {
     }
   });
 
+  it("keeps author-only contributor profiles off source-submission credit", () => {
+    const authoredOnly = ENTRIES.find(
+      (item) =>
+        item.author &&
+        item.submittedBy &&
+        item.author.toLowerCase() !== item.submittedBy.toLowerCase() &&
+        (item.sourceSubmissionUrl || item.importPrUrl),
+    );
+    expect(authoredOnly).toBeTruthy();
+    const authorProfile = getContributor(contributorSlug(authoredOnly!.author));
+    const submitterProfile = getContributor(
+      contributorSlug(authoredOnly!.submittedBy!),
+    );
+    expect(authorProfile).toBeTruthy();
+    expect(submitterProfile).toBeTruthy();
+    expect(authorProfile!.sourceSubmissionCount ?? 0).toBe(0);
+    expect(submitterProfile!.sourceSubmissionCount ?? 0).toBeGreaterThan(0);
+  });
+
+  it("resolves contributor profile slugs for linked source citations", () => {
+    const splitEntry = ENTRIES.find(
+      (item) => item.slug === "abmeter-mcp-server",
+    );
+    expect(splitEntry).toBeTruthy();
+    expect(
+      findContributorForIdentity(
+        splitEntry!.submittedBy,
+        splitEntry!.submittedByUrl,
+      )?.slug,
+    ).toBe("kiannidev");
+  });
+
   it("builds tag groups and related tags from normalized live entry tags", () => {
     expect(tagSlug(" Claude Code / MCP ")).toBe("claude-code-mcp");
     const groups = getAllTagGroups();
