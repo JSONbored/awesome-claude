@@ -93,7 +93,9 @@ function CommercialToolListingForm() {
       setDone(true);
       e.currentTarget.reset();
     } catch {
-      setError("Tool listing interest could not be submitted. Check required fields and try again.");
+      setError(
+        "Tool listing interest could not be submitted. Check required fields and try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -102,7 +104,9 @@ function CommercialToolListingForm() {
   return (
     <section className="rounded-xl border border-border bg-surface p-6">
       <div className="eyebrow">Commercial tool listing</div>
-      <h2 className="mt-2 font-display text-xl font-semibold text-ink">Featured listing interest</h2>
+      <h2 className="mt-2 font-display text-xl font-semibold text-ink">
+        Featured listing interest
+      </h2>
       <p className="mt-2 text-sm text-ink-muted">
         For paid or commercial Claude tools that need a maintainer-reviewed listing path. This does
         not replace free community submissions.
@@ -176,11 +180,7 @@ function PaidReviewInterestForm() {
         companyName: String(form.get("company") ?? "").trim(),
         listingTitle: "Paid trust/source review interest",
         websiteUrl: String(form.get("website") ?? "").trim(),
-        message: [
-          "interest:paid-trust-source-review",
-          entryRef ? `Entry: ${entryRef}` : "",
-          notes,
-        ]
+        message: ["interest:paid-trust-source-review", entryRef ? `Entry: ${entryRef}` : "", notes]
           .filter(Boolean)
           .join("\n\n"),
       });
