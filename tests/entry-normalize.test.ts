@@ -192,3 +192,32 @@ describe("buildEntry platform compatibility", () => {
     expect(entry.scriptBody).toBe("echo hello");
   });
 });
+
+describe("buildEntry provenance fields", () => {
+  it("passes through author profile and submitter attribution fields", () => {
+    const entry = buildEntry(
+      baseEntry({
+        author: "ABMeter",
+        authorProfileUrl: "https://abmeter.ai",
+        submittedBy: "kiannidev",
+        submittedByUrl: "https://github.com/kiannidev",
+      }),
+    );
+
+    expect(entry.authorProfileUrl).toBe("https://abmeter.ai");
+    expect(entry.submittedBy).toBe("kiannidev");
+    expect(entry.submittedByUrl).toBe("https://github.com/kiannidev");
+  });
+
+  it("falls back submittedByUrl to authorProfileUrl when submitter url is absent", () => {
+    const entry = buildEntry(
+      baseEntry({
+        author: "Example",
+        authorProfileUrl: "https://github.com/example",
+        submittedBy: "example",
+      }),
+    );
+
+    expect(entry.submittedByUrl).toBe("https://github.com/example");
+  });
+});

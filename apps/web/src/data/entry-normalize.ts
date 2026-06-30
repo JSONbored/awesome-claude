@@ -397,6 +397,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
   const platforms = inferPlatforms(entry);
   const reviewedAt =
     entry.reviewedAt ?? entry.trustSignals?.lastVerifiedAt ?? entry.contentUpdatedAt;
+  const authorProfileUrl = entry.authorProfileUrl;
 
   return {
     category,
@@ -407,7 +408,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
     seoDescription: entry.seoDescription,
     cardDescription: entry.cardDescription,
     author: entry.author ?? entry.submittedBy ?? entry.brandName ?? "Unknown",
-    authorProfileUrl: entry.authorProfileUrl,
+    authorProfileUrl,
     submittedBy: entry.submittedBy,
     submittedByUrl: entry.submittedByUrl ?? entry.authorProfileUrl,
     submittedAt: entry.submittedAt ?? entry.dateAdded,

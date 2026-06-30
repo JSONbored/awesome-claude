@@ -67,6 +67,7 @@ function querySearchProfile(query: string): QuerySearchProfile | null {
 }
 
 function normalizedSearchText(entry: Entry) {
+  const submittedBy = entry.submittedBy;
   return [
     entry.category,
     entry.slug,
@@ -74,7 +75,7 @@ function normalizedSearchText(entry: Entry) {
     entry.description,
     entry.cardDescription,
     entry.author,
-    entry.submittedBy,
+    submittedBy,
     entry.trust,
     entry.source,
     ...(entry.platforms ?? []),

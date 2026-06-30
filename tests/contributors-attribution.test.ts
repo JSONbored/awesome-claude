@@ -73,6 +73,16 @@ vi.mock("@/data/entries", () => ({
       sourceSubmissionUrl: "https://github.com/org/repo/pull/99",
       submittedByUrl: "https://github.com/credit-submitter",
     }),
+    fixture({
+      slug: "author-only-submitter",
+      author: "Author Only",
+      submittedBy: undefined,
+    }),
+    fixture({
+      slug: "jsonbored-fallback",
+      author: "",
+      submittedBy: "",
+    }),
   ],
 }));
 
@@ -101,6 +111,8 @@ describe("contributors attribution aggregation", () => {
     expect(getContributor("at-handle")?.handle).toBe("at-handle");
     expect(getContributor("solo-submitter")?.acceptedCount).toBe(1);
     expect(getContributor("credit-submitter")?.sourceSubmissionCount).toBe(2);
+    expect(getContributor("author-only")?.acceptedCount).toBe(1);
+    expect(getContributor("jsonbored")?.acceptedCount).toBe(1);
     expect(
       CONTRIBUTORS.some((contributor) => contributor.slug === "invalid"),
     ).toBe(false);
